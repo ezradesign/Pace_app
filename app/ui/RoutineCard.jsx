@@ -58,7 +58,14 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
 
   /* ── la línea de contexto ─────────────────────────────────────────────── */
   const trozos = [];
-  if (variant === 'breathe') {
+  const esViaje = variant === 'viaje';
+  if (esViaje) {
+    /* Un viaje no dice su ritmo -- cambia cinco veces- ni de que posicion es:
+       dice cuantos TRAMOS tiene y que lleva musica, que es lo que decide si te
+       lo pones ahora. */
+    if (routine.tramos) trozos.push({ k: 'tramos', txt: tn('lib.journey.parts', { n: routine.tramos }) });
+    trozos.push({ k: 'musica', txt: t('lib.journey.audio') });
+  } else if (variant === 'breathe') {
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
   } else {
@@ -77,14 +84,16 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
   if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre' });
 
   /* ── la tira de glifos ────────────────────────────────────────────────── */
-  const glifos = (variant === 'breathe' || !window.libraryGlifos) ? [] : window.libraryGlifos(routine);
-  const series = (variant === 'breathe' || !window.librarySeries) ? null : window.librarySeries(routine);
+  const sinArte = variant === 'breathe' || esViaje;
+  const glifos = (sinArte || !window.libraryGlifos) ? [] : window.libraryGlifos(routine);
+  const series = (sinArte || !window.librarySeries) ? null : window.librarySeries(routine);
 
   const abrir = isLocked ? undefined : onClick;
   const nombre = tR(routine.id + '.name', routine.name);
   return (
     <div
-      className={'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : '')}
+      className={'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : '')
+        + (esViaje ? ' pace-lib-card-viaje' : '')}
       data-pace-lib-card={routine.id}
       data-locked={isLocked ? '1' : undefined}
       style={{ '--tone': color }}

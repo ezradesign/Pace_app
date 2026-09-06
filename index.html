@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.116.0</title>
+  <title>PACE · Foco · Cuerpo — v0.117.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2389,6 +2389,9 @@ Object.assign(window.PACE_STRINGS.es, {
      preposicionales. No es un duplicado: es otro registro, y meter la frase
      larga aqui dejaria la linea de contexto ilegible. */
   'lib.min': 'min',
+  'lib.journeys': 'Viajes',
+  'lib.journey.parts': '{n} tramos',
+  'lib.journey.audio': 'con música',
   'lib.now': 'Para ahora',
   'lib.back': 'Volver',
   'lib.premium': 'Premium',
@@ -2519,6 +2522,9 @@ Object.assign(window.PACE_STRINGS.en, {
   /* Biblioteca redisenada (s174) — ver la nota del bloque espanol: forma
      CORTA, no la de `preview.eq.*`. */
   'lib.min': 'min',
+  'lib.journeys': 'Journeys',
+  'lib.journey.parts': '{n} parts',
+  'lib.journey.audio': 'with music',
   'lib.now': 'For now',
   'lib.back': 'Back',
   'lib.premium': 'Premium',
@@ -4938,7 +4944,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.116.0';
+const PACE_VERSION = 'v0.117.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -16719,6 +16725,30 @@ Object.assign(window, {
   display: grid; place-items: center; font-size: 11px; font-weight: 600;
 }
 .pace-lib-card-resp { padding-right: 34px; }
+
+/* EL ESTANTE DE VIAJES (s186). La tarjeta va en OSCURO y con el nombre y la
+   cifra mas grandes: la diferencia tiene que leerse antes que el texto, porque
+   lo que comunica es «esto no es una tecnica de cinco minutos». Los colores van
+   a fuego y no por token -- es una superficie invertida dentro de una pantalla
+   clara, igual que la pastilla de FOCO de la topbar. */
+.pace-lib-viajes {
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--tone); font-weight: 500;
+  /* El MISMO aire que «Para ahora» y los grupos: es un rotulo de seccion de
+     la misma familia, y con margin-top 0 quedaba pegado a los chips (visto
+     en la revision a tamano real). */
+  margin: 14px 0 9px;
+}
+.pace-lib-card-viaje {
+  background: #17150F; border-left-color: var(--tone);
+  padding: 15px 16px 15px 17px; margin-bottom: 16px;
+}
+.pace-lib-card-viaje h4 { color: #F2EDE0; font-size: 24px; }
+.pace-lib-card-viaje p { color: #BDB5A2; }
+.pace-lib-card-viaje .pace-lib-ctx { color: #9A9284; }
+.pace-lib-card-viaje .pace-lib-ctx b { color: #F2EDE0; }
+.pace-lib-card-viaje .pace-lib-hit { color: inherit; }
+.pace-lib-card-viaje .pace-lib-pill { color: #BDB5A2; border-color: #4E4634; }
 /* GRANO DE PAPEL con los valores del sistema, no unos nuevos:
    PACE_GRAIN_OPACITY y paceGrainUrl() (SessionShell.jsx). La maqueta probó
    0,055 -- cinco veces más-- y eso habría sido una decisión nueva. */
@@ -16903,7 +16933,14 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
 
   /* ── la línea de contexto ─────────────────────────────────────────────── */
   const trozos = [];
-  if (variant === 'breathe') {
+  const esViaje = variant === 'viaje';
+  if (esViaje) {
+    /* Un viaje no dice su ritmo -- cambia cinco veces- ni de que posicion es:
+       dice cuantos TRAMOS tiene y que lleva musica, que es lo que decide si te
+       lo pones ahora. */
+    if (routine.tramos) trozos.push({ k: 'tramos', txt: tn('lib.journey.parts', { n: routine.tramos }) });
+    trozos.push({ k: 'musica', txt: t('lib.journey.audio') });
+  } else if (variant === 'breathe') {
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
   } else {
@@ -16922,14 +16959,16 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
   if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre' });
 
   /* ── la tira de glifos ────────────────────────────────────────────────── */
-  const glifos = variant === 'breathe' || !window.libraryGlifos ? [] : window.libraryGlifos(routine);
-  const series = variant === 'breathe' || !window.librarySeries ? null : window.librarySeries(routine);
+  const sinArte = variant === 'breathe' || esViaje;
+  const glifos = sinArte || !window.libraryGlifos ? [] : window.libraryGlifos(routine);
+  const series = sinArte || !window.librarySeries ? null : window.librarySeries(routine);
 
   const abrir = isLocked ? undefined : onClick;
   const nombre = tR(routine.id + '.name', routine.name);
   return (/*#__PURE__*/
     React.createElement("div", {
-      className: 'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : ''),
+      className: 'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : '') + (
+      esViaje ? ' pace-lib-card-viaje' : ''),
       "data-pace-lib-card": routine.id,
       "data-locked": isLocked ? '1' : undefined,
       style: { '--tone': color } },
@@ -17047,7 +17086,8 @@ Object.assign(window, { RoutineCard, routineRhythmText });
 const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
 
 function LibraryShell(_ref)
-{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240 } = _ref;
+
+{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
@@ -17115,9 +17155,28 @@ function LibraryShell(_ref)
   );
 
 
+  /* EL ESTANTE DE VIAJES (s186). Entra por prop y NO por `groups`, y ese es el
+     mecanismo: al no estar en `todas`, ni el filtro ni el contador de los chips
+     ni «Para ahora» los ven. Las tres reglas que un viaje necesita salen de la
+     ESTRUCTURA en vez de ser tres excepciones repartidas por el archivo.
+     Se pinta ARRIBA y con otra tarjeta -- se lee «esto es otra cosa» antes de
+     leer una palabra, que es lo que evita abrir 25 minutos creyendo que abres
+     cuatro. Y si no hay ninguno no se pinta NADA, ni la cabecera: la misma
+     regla que ya gobierna los grupos vacios. */
+  const listaViajes = Array.isArray(viajes) ? viajes : [];
+
   const tarjetas = (rs) => rs.map((r) => /*#__PURE__*/
   React.createElement(RoutineCard, { key: r.id, routine: r, color: tone, variant: variant, onClick: () => onStart(r) })
   );
+
+  const bloqueViajes = listaViajes.length > 0 && /*#__PURE__*/
+  React.createElement("section", { "data-pace-lib-viajes": true }, /*#__PURE__*/
+  React.createElement("h3", { className: "pace-lib-viajes" }, t('lib.journeys')),
+  listaViajes.map((v) => /*#__PURE__*/
+  React.createElement(RoutineCard, { key: v.id, routine: v, color: tone, variant: "viaje", onClick: () => onStart(v) })
+  )
+  );
+
 
   const bloqueAhora = ahora.length > 0 && /*#__PURE__*/
   React.createElement("section", { "data-pace-lib-now": true }, /*#__PURE__*/
@@ -17221,7 +17280,7 @@ function LibraryShell(_ref)
     vista === 'tuyas' ? /*#__PURE__*/
     React.createElement("div", { className: "pace-lib-solo-movil" }, tuyas) : /*#__PURE__*/
 
-    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(React.Fragment, null,
 
 
 
@@ -17229,6 +17288,10 @@ function LibraryShell(_ref)
 
 
 
+
+
+
+    bloqueViajes, /*#__PURE__*/
     React.createElement("div", { className: "pace-lib-solo-movil" }, bloqueAhora), /*#__PURE__*/
     React.createElement("div", { className: "pace-lib-rejilla" }, listaGrupos)
     )
@@ -18412,6 +18475,7 @@ function BreatheLibrary(_ref) {let { open, onClose, onStart } = _ref;
       title: t('lib.breathe.title'), subtitle: t('lib.breathe.subtitle'),
       variant: "breathe",
       filtros: window.LIB_FILTROS_RESPIRA,
+      viajes: window.BREATHE_VIAJES,
       conTuyas: false,
       pozoAhora: (r) => !r.safety }));
 
@@ -18474,12 +18538,54 @@ function BreatheSafety(_ref2) {let { routine, onAccept, onCancel } = _ref2;
 }
 
 
-/* Sesion 49 - helper de lookup para Caminos */
+/* ============================================================
+   EL ESTANTE DE VIAJES (s186)
+   ============================================================
+   UN VIAJE NO ES UNA TECNICA MAS LARGA: es otra cosa. Dura de 15 a 45 minutos,
+   lleva musica, tiene nombre propio y se elige por como quieres acabar, no por
+   la tecnica que usa. La Fase 5 del ROADMAP lo dice con estas palabras --
+   «separar Tecnicas de Viajes»-- y esta lista es esa separacion.
+
+   VIVE EN SU PROPIA LISTA Y NO COMO UN GRUPO MAS DE `BREATHE_ROUTINES`, y esa
+   es la decision entera. De ahi salen GRATIS las tres reglas que un viaje
+   necesita, sin escribir ni una excepcion:
+     · el filtro «≤ 5 min» no los cuenta -- no estan en el catalogo que cuenta;
+     · «Para ahora» no los propone -- se calcula sobre ese mismo catalogo;
+     · no compiten en el orden de los grupos.
+   Escritas como excepciones habrian sido tres sitios que recordar cada vez que
+   alguien toca las reglas de la biblioteca. Asi no hay nada que recordar.
+
+   LO QUE SI COMPARTEN con una tecnica: la puerta. `onStart` es el mismo, asi
+   que un viaje con retencion pasa por el MISMO modal de seguridad y por el
+   mismo guard de acceso.
+
+   ESTA VACIA A PROPOSITO. El contenido CTB esta FUERA de la v1 (decision del
+   usuario, s180); lo que entra en v1 es el sitio. Con la lista vacia la
+   biblioteca no pinta nada -- ni cabecera ni hueco--, que es la misma regla que
+   ya gobierna los grupos vacios. El prototipo de la primera sesion, con su
+   guion y su pantalla, vive en `docs/proposals/ctb-marea-baja.html`.
+
+   FORMA DE UN VIAJE (cuando lo haya): lo de una rutina —`id`, `name`, `desc`,
+   `min`, `access`, `safety`— mas `tramos` (cuantas partes tiene su guion) y
+   `pista` (el archivo de musica). El runner no existe todavia. */
+window.BREATHE_VIAJES = [];
+
+/* Sesion 49 - helper de lookup para Caminos.
+
+   s186: BUSCA TAMBIEN EN LOS VIAJES, y no es una comodidad -- es cerrar un
+   agujero de premium antes de que exista. `canAccessRoutine` resuelve el id por
+   esta funcion y es FAIL-OPEN a proposito («no es trabajo del guard bloquear
+   ids que no existen»), asi que el dia que se escriba un viaje `access:
+   'premium'` su id no estaria en ningun catalogo, el guard devolveria `true` y
+   el viaje se abriria gratis. Un viaje es una rutina de Respira a todos los
+   efectos de acceso y de seguridad; lo unico que cambia es donde se pinta. */
 function getBreatheRoutine(id) {
   for (const group of Object.values(BREATHE_ROUTINES)) {
     const found = group.items.find((r) => r.id === id);
     if (found) return found;
   }
+  const viajes = window.BREATHE_VIAJES || [];
+  for (const v of viajes) if (v && v.id === id) return v;
   return null;
 }
 window.getBreatheRoutine = getBreatheRoutine;

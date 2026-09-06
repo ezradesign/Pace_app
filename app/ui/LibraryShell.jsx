@@ -40,7 +40,8 @@
 const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
 
 function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix,
-                       variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240 }) {
+                       variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240,
+                       viajes }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
@@ -108,9 +109,28 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
     </div>
   );
 
+  /* EL ESTANTE DE VIAJES (s186). Entra por prop y NO por `groups`, y ese es el
+     mecanismo: al no estar en `todas`, ni el filtro ni el contador de los chips
+     ni «Para ahora» los ven. Las tres reglas que un viaje necesita salen de la
+     ESTRUCTURA en vez de ser tres excepciones repartidas por el archivo.
+     Se pinta ARRIBA y con otra tarjeta -- se lee «esto es otra cosa» antes de
+     leer una palabra, que es lo que evita abrir 25 minutos creyendo que abres
+     cuatro. Y si no hay ninguno no se pinta NADA, ni la cabecera: la misma
+     regla que ya gobierna los grupos vacios. */
+  const listaViajes = Array.isArray(viajes) ? viajes : [];
+
   const tarjetas = (rs) => rs.map(r => (
     <RoutineCard key={r.id} routine={r} color={tone} variant={variant} onClick={() => onStart(r)} />
   ));
+
+  const bloqueViajes = listaViajes.length > 0 && (
+    <section data-pace-lib-viajes>
+      <h3 className="pace-lib-viajes">{t('lib.journeys')}</h3>
+      {listaViajes.map(v => (
+        <RoutineCard key={v.id} routine={v} color={tone} variant="viaje" onClick={() => onStart(v)} />
+      ))}
+    </section>
+  );
 
   const bloqueAhora = ahora.length > 0 && (
     <section data-pace-lib-now>
@@ -222,6 +242,10 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
                       Costó cinco medidas equivocadas en s174 antes de mover el
                       nodo en vez de seguir esquivándolo. Fuera de la rejilla no
                       necesita `grid-column` y no estorba a nadie. */}
+                  {/* Los viajes van ANTES que «Para ahora» y en las DOS
+                      pieles (no son «lo que cabe donde estas», asi que no
+                      pertenecen al lateral): son el estante de arriba. */}
+                  {bloqueViajes}
                   <div className="pace-lib-solo-movil">{bloqueAhora}</div>
                   <div className="pace-lib-rejilla">{listaGrupos}</div>
                 </React.Fragment>

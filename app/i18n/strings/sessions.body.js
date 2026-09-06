@@ -56,6 +56,9 @@ Object.assign(window.PACE_STRINGS.es, {
        preposicionales. No es un duplicado: es otro registro, y meter la frase
        larga aqui dejaria la linea de contexto ilegible. */
     'lib.min':                         'min',
+    'lib.journeys':                    'Viajes',
+    'lib.journey.parts':               '{n} tramos',
+    'lib.journey.audio':               'con música',
     'lib.now':                         'Para ahora',
     'lib.back':                        'Volver',
     'lib.premium':                     'Premium',
@@ -186,6 +189,9 @@ Object.assign(window.PACE_STRINGS.en, {
     /* Biblioteca redisenada (s174) — ver la nota del bloque espanol: forma
        CORTA, no la de `preview.eq.*`. */
     'lib.min':                         'min',
+    'lib.journeys':                    'Journeys',
+    'lib.journey.parts':               '{n} parts',
+    'lib.journey.audio':               'with music',
     'lib.now':                         'For now',
     'lib.back':                        'Back',
     'lib.premium':                     'Premium',
