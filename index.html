@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.117.1</title>
+  <title>PACE · Foco · Cuerpo — v0.118.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1522,21 +1522,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'support.sidebar.title': 'Apoya el proyecto',
 
   // Break
-  'break.tag': 'Ciclo completado',
-  'break.title': 'Pausa bien hecha',
-  'break.subtitle': 'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
-  'break.breathe.label': 'Respira',
-  'break.breathe.desc': '2 min para volver al centro',
-  'break.stretch.label': 'Estira',
-  'break.stretch.desc': 'Afloja la tensión',
-  'break.move.label': 'Muévete',
-  'break.move.desc': 'Antídoto rápido a la silla',
-  'break.water.label': 'Hidrátate',
-  'break.water.desc': 'Un vaso ahora',
-  'break.done': 'Ya hecho hoy · otra ronda si quieres',
-  'break.recommended': 'Para ti',
-  'break.shortcut': 'Atajo: B · E · M · H · Esc',
-  'break.skip': 'Saltar esta pausa',
 
   // Sidebar
   'sidebar.section.rhythm': 'Ritmo',
@@ -1762,21 +1747,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'support.sidebar.title': 'Support the project',
 
   // Break
-  'break.tag': 'Cycle complete',
-  'break.title': 'Well-earned break',
-  'break.subtitle': "You've closed a focus cycle. Choose your micro-break.",
-  'break.breathe.label': 'Breathe',
-  'break.breathe.desc': '2 min to return to center',
-  'break.stretch.label': 'Stretch',
-  'break.stretch.desc': 'Loosen the tension',
-  'break.move.label': 'Move',
-  'break.move.desc': 'Quick antidote to the chair',
-  'break.water.label': 'Hydrate',
-  'break.water.desc': 'A glass right now',
-  'break.done': 'Done today · another round if you like',
-  'break.recommended': 'For you',
-  'break.shortcut': 'Shortcut: B · E · M · H · Esc',
-  'break.skip': 'Skip this break',
 
   // Sidebar
   'sidebar.section.rhythm': 'Rhythm',
@@ -2933,6 +2903,73 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.seal.secret': 'Secret',
   'ach.seal.discover': 'To discover',
   'ach.toast.new': 'New seal'
+});
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · strings i18n — EL MENU DE PAUSA (s187)
+   Extraido de `strings/ui.js`, que llego a 503 lineas al entrar la PROPUESTA
+   del menu (regla §1 de CLAUDE.md). Es el mismo movimiento que hizo s81 con el
+   split por dominio y que repitio s148 con el cuerpo: cuando un dominio crece,
+   sale entero en vez de repartirse.
+
+   Se lleva TODO `break.*` -- las cuatro tarjetas y la propuesta-, no solo lo
+   nuevo: partir un prefijo entre dos archivos habria sido peor que el problema
+   que resuelve.
+
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx, como sus hermanos. */
+
+Object.assign(window.PACE_STRINGS.es, {
+  'break.tag': 'Ciclo completado',
+  'break.title': 'Pausa bien hecha',
+  'break.subtitle': 'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
+  'break.breathe.label': 'Respira',
+  'break.breathe.desc': '2 min para volver al centro',
+  'break.stretch.label': 'Estira',
+  'break.stretch.desc': 'Afloja la tensión',
+  'break.move.label': 'Muévete',
+  'break.move.desc': 'Antídoto rápido a la silla',
+  'break.water.label': 'Hidrátate',
+  'break.water.desc': 'Un vaso ahora',
+  'break.done': 'Ya hecho hoy · otra ronda si quieres',
+  'break.prop.sitting': 'Llevas {n} minutos sentado',
+  'break.prop.water': 'Aún no has bebido hoy',
+  'break.prop.third': 'Tercer bloque de hoy',
+  'break.prop.pending.extra': 'Hoy aún no has estirado',
+  'break.prop.pending.move': 'Hoy aún no has movido el cuerpo',
+  'break.prop.pending.breathe': 'Hoy aún no has respirado',
+  'break.prop.meta': '{n} min · {m}',
+  'break.prop.start': 'Empezar',
+  'break.recommended': 'Para ti',
+  'break.shortcut': 'Atajo: B · E · M · H · Esc',
+  'break.skip': 'Saltar esta pausa'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+  'break.tag': 'Cycle complete',
+  'break.title': 'Well-earned break',
+  'break.subtitle': "You've closed a focus cycle. Choose your micro-break.",
+  'break.breathe.label': 'Breathe',
+  'break.breathe.desc': '2 min to return to center',
+  'break.stretch.label': 'Stretch',
+  'break.stretch.desc': 'Loosen the tension',
+  'break.move.label': 'Move',
+  'break.move.desc': 'Quick antidote to the chair',
+  'break.water.label': 'Hydrate',
+  'break.water.desc': 'A glass right now',
+  'break.done': 'Done today · another round if you like',
+  'break.prop.sitting': 'You have been sitting for {n} minutes',
+  'break.prop.water': 'You have not had any water today',
+  'break.prop.third': 'Third block today',
+  'break.prop.pending.extra': 'You have not stretched today',
+  'break.prop.pending.move': 'You have not moved your body today',
+  'break.prop.pending.breathe': 'You have not breathed today',
+  'break.prop.meta': '{n} min · {m}',
+  'break.prop.start': 'Start',
+  'break.recommended': 'For you',
+  'break.shortcut': 'Shortcut: B · E · M · H · Esc',
+  'break.skip': 'Skip this break'
 });
 })();
 </script>
@@ -4944,7 +4981,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.117.1';
+const PACE_VERSION = 'v0.118.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -18593,6 +18630,12 @@ function BreatheSafety(_ref2) {let { routine, onAccept, onCancel } = _ref2;
    `pista` (el archivo de musica). El runner no existe todavia. */
 window.BREATHE_VIAJES = [];
 
+/* s187 · el catalogo tambien se publica. `MOVE_ROUTINES` y `EXTRA_ROUTINES` ya
+   lo hacian; este no, y por eso el menu de pausa no podia proponer una tecnica
+   de Respira sin duplicar la lista. Un `const` no cruza de archivo en el
+   compilado (trampa de s148), asi que va por `window` como los otros dos. */
+window.BREATHE_ROUTINES = BREATHE_ROUTINES;
+
 /* Sesion 49 - helper de lookup para Caminos.
 
    s186: BUSCA TAMBIEN EN LOS VIAJES, y no es una comodidad -- es cerrar un
@@ -23040,13 +23083,150 @@ Object.assign(window, { HydrateTracker });
 </script>
   <script>
 ;(function () {
+/* PACE · La PROPUESTA del menú de pausa (s187)
+   ============================================
+   Al terminar un Pomodoro la app sabe tres cosas —cuánto llevabas sentado, qué
+   has hecho hoy y qué hora es— y hasta s187 no usaba ninguna: ofrecía cuatro
+   módulos y te dejaba elegir entre 17 rutinas de Estira.
+
+   ESTO ES PURO Y VIVE APARTE a propósito: la regla se puede asertar sin abrir un
+   navegador, y `BreakMenu.jsx` se queda con el dibujo. Mismo patrón que
+   `library-rules.js`, del que además se reutiliza el recomendador.
+
+   LA REGLA, y su orden no es estético: va de lo que ACABA DE PASAR a lo que es
+   cierto en general. La primera condición que se cumple gana, y **si no se
+   cumple ninguna no se propone nada** — una propuesta sin motivo es publicidad,
+   y el menú vuelve a ser el de siempre.
+
+     1. bloque de 35 min o más  → Estira   · «Llevas 45 minutos sentado»
+     2. cero vasos y ya es tarde → agua    · «Aún no has bebido hoy»
+     3. tercer bloque de hoy     → Respira · «Tercer bloque de hoy»
+     4. algo pendiente del plan  → ese     · «Hoy aún no has movido el cuerpo»
+     5. nada                     → null
+
+   POR QUÉ «DE HOY» Y NO «SEGUIDO»: `state.cycle` se pone a cero en el relevo de
+   día (`state-core.support.jsx`), así que cuenta los bloques de HOY — pero no
+   dice nada de si fueron seguidos o con tres horas en medio. Decir «tercer
+   bloque seguido» sería afirmar algo que el dato no sostiene.
+
+   LO QUE NO ENTRA, y está decidido: lo que hiciste AYER (está en
+   `pace.events.v1`, pero un menú que se abre dos segundos no es sitio para
+   comparar días), el PERFIL del onboarding (mezcla una intención de hace semanas
+   con lo que pasa ahora) y cualquier RACHA o total (es presión disfrazada de
+   dato, y esto es una pausa).
+
+   LA RUTINA CONCRETA LA ELIGE `libraryParaAhora`, que ya rota por día, ordena
+   por duración y respeta el acceso premium. No se inventa un segundo
+   recomendador. Y el pozo excluye SIEMPRE las rutinas con aviso de seguridad:
+   una apnea no se propone sola al salir de un bloque de trabajo. */
+
+/* breakPozo(catalogo) -> las rutinas abiertas de un catálogo agrupado.
+
+   AQUI NO SE FILTRA LA SEGURIDAD, y es deliberado: ese filtro vive UNA sola vez,
+   en el predicado que `breakElige` le pasa a `libraryParaAhora`. La primera
+   version lo tenía en los dos sitios y el banco de mutaciones lo destapó --
+   quitarlo de aquí no ponía rojo nada, o sea que no se podía saber si alguno de
+   los dos funcionaba. Es exactamente el defecto que s166 encontró con el reloj
+   de retención.
+
+   Total: cualquier cosa rara devuelve lista vacía, y una lista vacía hace que la
+   regla siga a la condición siguiente en vez de proponer un módulo sin nada. */
+function breakPozo(catalogo) {
+  const out = [];
+  try {
+    Object.keys(catalogo || {}).forEach(function (g) {
+      ((catalogo[g] || {}).items || []).forEach(function (r) {
+        if (!r) return;
+        if (window.canAccessRoutine && !window.canAccessRoutine(r.id)) return;
+        out.push(r);
+      });
+    });
+  } catch (e) {return [];}
+  return out;
+}
+
+/* breakElige(catalogo, iso) -> UNA rutina, o null. */
+function breakElige(catalogo, iso) {
+  const pozo = breakPozo(catalogo);
+  if (!pozo.length || typeof libraryParaAhora !== 'function') return null;
+  const elegidas = libraryParaAhora(pozo, iso, 1, function (r) {return !r.safety;});
+  return elegidas && elegidas[0] || null;
+}
+
+/* breakPropuesta(state, ctx) -> { modulo, porque, datos, rutina } o null.
+   PURA: `ctx` trae la hora y el día para poder fijarlos en un test (el mismo
+   truco que `libraryParaAhora`, que recibe el ISO en vez de mirar el reloj).
+
+   `modulo` usa las MISMAS claves que las tarjetas del menú ('extra' es Estira y
+   'move' es Muévete, con los ids cruzados de siempre), así que elegir la
+   propuesta entra exactamente por donde entra pulsar su tarjeta. */
+function breakPropuesta(state, ctx) {
+  const s = state || {};
+  const c = ctx || {};
+  const iso = c.iso || (typeof todayISO === 'function' ? todayISO() : '');
+  const hora = typeof c.hora === 'number' ? c.hora : new Date().getHours();
+  const agua = s.water || { today: 0, goal: 8 };
+  const plan = s.plan || {};
+  const minutos = Number(s.focusMinutes) || 0;
+  /* El bloque que ACABA de terminar: `completePomodoro` ya subió el contador
+     antes de que este menú se abra, así que el que cuenta es el anterior. */
+  const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);
+
+  const con = (modulo, porque, rutina, extra) => ({
+    modulo: modulo, porque: porque, rutina: rutina || null,
+    datos: Object.assign({}, extra || {})
+  });
+
+  /* 1 · lo que acaba de pasar. 35 min es el primer preset que ya no es «una
+     pausa corta»: a partir de ahí el cuerpo lleva sentado más de media hora. */
+  if (minutos >= 35) {
+    const r = breakElige(window.EXTRA_ROUTINES, iso);
+    if (r) return con('extra', 'sitting', r, { n: minutos });
+  }
+
+  /* 2 · el agua no necesita rutina ni nombre: es un vaso. Solo a partir del
+     mediodía -- a las nueve de la mañana «aún no has bebido» no es un reproche
+     útil, es la hora que es. */
+  if (agua.today === 0 && hora >= 12) return con('water', 'water', null, {});
+
+  /* 3 · el tercero de hoy. Ni el primero (aún no hay historia) ni el cuarto
+     (ahí ya toca la pausa larga, que es otra conversación). */
+  if (bloqueDeHoy === 3) {
+    const r = breakElige(window.BREATHE_ROUTINES, iso);
+    if (r) return con('breathe', 'third', r, {});
+  }
+
+  /* 4 · lo que el plan del día tenga pendiente. El orden -- cuerpo antes que
+     respiración- es el que ya tenía el score del menú. */
+  const pendientes = [
+  { modulo: 'extra', hecho: plan.extra, cat: window.EXTRA_ROUTINES, key: 'pending.extra' },
+  { modulo: 'move', hecho: plan.muevete, cat: window.MOVE_ROUTINES, key: 'pending.move' },
+  { modulo: 'breathe', hecho: plan.respira, cat: window.BREATHE_ROUTINES, key: 'pending.breathe' }];
+
+  for (let i = 0; i < pendientes.length; i++) {
+    const p = pendientes[i];
+    if (p.hecho) continue;
+    const r = breakElige(p.cat, iso);
+    if (r) return con(p.modulo, p.key, r, {});
+  }
+
+  /* 5 · todo hecho: no se propone nada, y eso es correcto. */
+  return null;
+}
+
+Object.assign(window, { breakPozo, breakElige, breakPropuesta });
+;Object.assign(window, { breakPozo, breakElige, breakPropuesta });
+})();
+</script>
+  <script>
+;(function () {
 /* PACE · Menú post-Pomodoro
    Aparece tras completar un ciclo de foco.
    Las 3 opciones se reordenan según lo que el usuario ha hecho menos hoy:
    primero la actividad más necesaria, con indicador "Para ti".
 */
 
-const { useEffect: useEffectBM } = React;
+const { useEffect: useEffectBM, useRef: useRefBM } = React;
 
 /* Score: cuánto se necesita esta actividad en este momento.
    Mayor → más prioritaria. Water usa escala 0-3 según vasos restantes. */
@@ -23064,7 +23244,23 @@ function computeScore(key, state) {
 }
 
 function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
-  const { t } = useT();
+  const { t, tn, lang } = useT();
+  const tR = (key, fb) => {const v = t(key);return v === key ? fb : v;};
+  const state = getState();
+
+  /* LA PROPUESTA (s187). La regla vive en `BreakMenu.support.jsx` y es PURA;
+     aqui solo se pinta. Si devuelve `null` el menu es exactamente el de antes:
+     una propuesta sin motivo seria publicidad. */
+  const prop = typeof breakPropuesta === 'function' ? breakPropuesta(state, {}) : null;
+  const rutinaProp = prop && prop.rutina;
+  const nombreProp = rutinaProp ?
+  lang === 'en' ? tR(rutinaProp.id + '.name', rutinaProp.name) : rutinaProp.name :
+  null;
+  /* El atajo lee la propuesta por REFERENCIA: el efecto de teclado se suscribe
+     una vez por apertura, y meter un objeto que se recrea en cada render en sus
+     dependencias lo re-suscribiria sin parar. */
+  const propRef = useRefBM(null);
+  propRef.current = prop;
 
   /* `first.cycle` — Pomodoro completado + pausa activa elegida.
      El BreakMenu sólo se abre tras `completePomodoro`, así que aquí
@@ -23072,11 +23268,13 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
      activas (Respira, Mueve, Hidrátate). "Saltar" no cuenta — la
      filosofía del logro es que se cierre el ciclo de verdad.
      Sesión 28. */
-  const handleChoose = (key) => {
+  const handleChoose = (key, rutina) => {
     if (key === 'breathe' || key === 'extra' || key === 'move' || key === 'water') {
       try {unlockAchievement('first.cycle');} catch (e) {}
     }
-    onChoose(key);
+    /* La rutina viaja como SEGUNDO argumento y es opcional: quien pulse una
+       tarjeta sigue abriendo su biblioteca, exactamente como antes. */
+    onChoose(key, rutina || null);
   };
 
   // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
@@ -23092,6 +23290,12 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
       if (k === 'e') {e.preventDefault();handleChoose('extra');} else
       if (k === 'm') {e.preventDefault();handleChoose('move');} else
       if (k === 'h') {e.preventDefault();handleChoose('water');} else
+      if (e.key === 'Enter' && propRef.current) {
+        /* La propuesta estrena atajo propio y NO roba ninguno: B · E · M · H
+           siguen mapeados por actividad desde s28. */
+        e.preventDefault();
+        handleChoose(propRef.current.modulo, propRef.current.rutina);
+      } else
       if (e.key === 'Escape') {e.preventDefault();onClose();}
     };
     window.addEventListener('keydown', onKey);
@@ -23099,8 +23303,6 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
   }, [open, onChoose, onClose]);
 
   if (!open) return null;
-
-  const state = getState();
 
   /* s105: mismos glifos que la ActivityBar de la home (AB*, expuestos desde
      main/ActivityBar.jsx) + Estira anadido -> el menu ofrece las 4 actividades
@@ -23118,11 +23320,43 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
   map((o) => ({ ...o, score: computeScore(o.key, state) })).
   sort((a, b) => b.score - a.score);
 
-  const topScore = opts[0].score;
+  /* CON PROPUESTA NO HAY «PARA TI»: la razon se ha mudado arriba, con nombre y
+     duracion, y dos recomendaciones a la vez en el mismo modal se contradicen.
+     Ese hueco reservado (s139) es ademas parte del sitio que la propuesta
+     necesita para que el modal NO crezca -- medido: 616 px fijos, y a 360x640
+     solo sobran 24. */
+  const topScore = prop ? 0 : opts[0].score;
 
   return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('break.tag'), title: t('break.title'), subtitle: t('break.subtitle'), maxWidth: 720 }, /*#__PURE__*/
-    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, margin: '20px 0' } },
+    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('break.tag'), title: t('break.title'), subtitle: t('break.subtitle'), maxWidth: 720 },
+    prop && /*#__PURE__*/
+    React.createElement("div", { "data-pace-break-prop": true, style: {
+        margin: '18px 0 12px', padding: '14px 15px',
+        border: '1.5px solid var(--breathe)', background: 'var(--breathe-soft)',
+        borderRadius: 'var(--r-md)', display: 'grid', gap: 5
+      } }, /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 11.5, letterSpacing: '0.03em', color: 'var(--breathe-2)', fontWeight: 500 } },
+    prop.porque === 'sitting' ?
+    tn('break.prop.sitting', { n: prop.datos.n }) :
+    t('break.prop.' + prop.porque)
+    ),
+    nombreProp && /*#__PURE__*/React.createElement("div", { style: { ...displayItalic, fontSize: 24 } }, nombreProp),
+    rutinaProp && /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 12, color: 'var(--ink-2)' } },
+    tn('break.prop.meta', {
+      n: rutinaProp.min,
+      m: t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')
+    })
+    ), /*#__PURE__*/
+
+    React.createElement("div", { style: { marginTop: 6 } }, /*#__PURE__*/
+    React.createElement(Button, { variant: "terracota", onClick: () => handleChoose(prop.modulo, rutinaProp) },
+    t('break.prop.start')
+    )
+    )
+    ), /*#__PURE__*/
+
+    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: prop ? 10 : 12, margin: prop ? '0 0 4px' : '20px 0' } },
     opts.map((o, i) => {
       const done = o.score === 0;
       const recommended = i === 0 && topScore > 0;
@@ -23131,7 +23365,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
           onClick: () => handleChoose(o.key),
           style: {
             position: 'relative',
-            padding: '24px 18px',
+            padding: prop ? '13px 14px' : '24px 18px',
             background: o.bg,
             border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
             borderRadius: 'var(--r-md)',
@@ -23150,7 +23384,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
             position: 'absolute', top: 10, right: 10,
             width: 6, height: 6, borderRadius: '50%',
             background: o.color, opacity: 0.6
-          } }), /*#__PURE__*/
+          } }),
 
 
 
@@ -23163,15 +23397,24 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
 
 
 
+        !prop && /*#__PURE__*/
         React.createElement("div", { style: { visibility: recommended ? 'visible' : 'hidden' } }, /*#__PURE__*/
         React.createElement(Tag, { color: "var(--focus)" }, t('break.recommended'))
         ), /*#__PURE__*/
-        React.createElement("div", { style: { color: o.color, fontSize: 28 } }, o.icon), /*#__PURE__*/
+
+        React.createElement("div", { style: { color: o.color, fontSize: 28, lineHeight: 1 } }, o.icon), /*#__PURE__*/
         React.createElement("div", null, /*#__PURE__*/
-        React.createElement("div", { style: { ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 } }, o.label), /*#__PURE__*/
+        React.createElement("div", { style: { ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 } }, o.label),
+
+
+
+
+
+        !prop && /*#__PURE__*/
         React.createElement("div", { style: { fontSize: 12, color: 'var(--ink-2)' } },
         done ? t('break.done') : o.desc
         )
+
         )
         ));
 
@@ -31635,8 +31878,19 @@ function PaceApp() {
     setOpenBreakMenu(true);
   };
 
-  const handleBreakChoice = (choice) => {
+  const handleBreakChoice = (choice, rutina) => {
     setOpenBreakMenu(false);
+    /* s187 · CON RUTINA CONCRETA se entra en ELLA y no en su biblioteca -- es la
+       diferencia entre proponer y volver a preguntar-, y por las MISMAS puertas:
+       `handleStartBreathe` con su modal, y el preview de cuerpo (§18.3). Sin
+       rutina, todo sigue igual. */
+    if (rutina && rutina.id) {
+      if (choice === 'breathe') {handleStartBreathe(rutina);return;}
+      if (choice === 'extra' || choice === 'move') {
+        setPreviewRoutine({ routine: rutina, kind: choice === 'extra' ? 'extra' : 'move' });
+        return;
+      }
+    }
     if (choice === 'breathe') setOpenLibrary('breathe');else
     if (choice === 'extra') setOpenLibrary('extra'); // s105: Estira
     else if (choice === 'move') setOpenLibrary('move');else

@@ -198,6 +198,12 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
    `pista` (el archivo de musica). El runner no existe todavia. */
 window.BREATHE_VIAJES = [];
 
+/* s187 · el catalogo tambien se publica. `MOVE_ROUTINES` y `EXTRA_ROUTINES` ya
+   lo hacian; este no, y por eso el menu de pausa no podia proponer una tecnica
+   de Respira sin duplicar la lista. Un `const` no cruza de archivo en el
+   compilado (trampa de s148), asi que va por `window` como los otros dos. */
+window.BREATHE_ROUTINES = BREATHE_ROUTINES;
+
 /* Sesion 49 - helper de lookup para Caminos.
 
    s186: BUSCA TAMBIEN EN LOS VIAJES, y no es una comodidad -- es cerrar un

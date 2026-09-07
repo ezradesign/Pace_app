@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.118.0** | 2026-09-07 | feat(pausa): **la pausa que propone** — Al terminar un Pomodoro la app sabia cuanto llevabas sentado y **no lo usaba**: ofrecia cuatro modulos y te dejaba elegir entre 17 rutinas. Ahora propone UNA, con nombre, duracion y **el porque**. La regla se escribio ANTES de codificarla y va de lo que acaba de pasar a lo que es cierto en general: bloque ≥35 min → Estira («Llevas 45 minutos sentado») · cero vasos pasado el mediodia → agua · tercer bloque de hoy → Respira · si no, lo que el plan tenga pendiente · **y si no se cumple ninguna NO se propone nada** -- una propuesta sin motivo es publicidad. **LA CONDICION QUE MANDO EL DISENO ERA UNA MEDIDA**: el modal ocupa **616 px fijos** en los cuatro telefonos y a 360x640 solo le sobran **24**, asi que la propuesta no podia sumar alto -- entra en el sitio que dejan el sello «Para ti» y las descripciones de las cuatro tarjetas, **que con una rutina con nombre arriba sobran**. Medido despues: **601 px**, 15 menos que antes. **Los glifos de los cuatro modulos se quedan** (peticion del usuario): son lo que hace la tarjeta reconocible de un vistazo. La rutina la elige `libraryParaAhora`, que ya rota por dia y respeta el acceso premium, y **«Empezar» entra en ESA rutina por las mismas puertas que la biblioteca** -- el modal de apnea y el preview de §18.3-, no por un camino paralelo. **209 → 215**, con **6 mutantes en rojo**, y dos de ellos obligaron a arreglar el codigo: el filtro de seguridad estaba DUPLICADO (quitarlo de un sitio no ponia rojo nada, el defecto de s166) y el aserto de la apnea miraba un solo dia cuando el recomendador **rota por dia** -- ahora mira 30. De paso, `ui.js` paso de 500 y el dominio `break.*` sale a su propio archivo. | s187 | [session-187](./docs/sessions/session-187-la-pausa-que-propone.md) |
 | **v0.117.1** | 2026-09-06 | fix(respira): **la tarjeta de Viajes deja de ser negra** — Elegida MIRANDOLA, con **19 variantes pintadas sobre la app de verdad** y el contraste medido en cada una. Gana un **lavado del color de Respira sobre el papel de la tarjeta, con los pulmones del modulo grandes sangrando por el borde derecho**. El negro distinguia pero no decia de quien era el viaje; el dibujo dice las dos cosas -- que es otra cosa y que es Respira- sin gastar una palabra. **El terracota puro nunca fue viable**: sobre crema se queda en 2,80:1 y el cuerpo de la tarjeta es de 13 px. **El lavado se compone con TOKENS y no con un hex** (`--breathe-soft` sobre `--paper-2`), asi que vale en las dos paletas sin una sola regla de oscuro -- con un color a fuego, en la paleta oscura habria quedado un bloque claro deslumbrando. **Y hay un argumento de sistema que descarto los verdes**: cada modulo tiene su color, asi que un fondo verde dentro de Respira dice «esto es de Foco». **El contraste ya no depende de que nadie lo aclare por descuido**: dos tests lo miden EN LA PAGINA con los colores computados, uno por paleta, y su mutante —subir el lavado a `--breathe` entero— los pone rojos los dos. De paso, **la trampa del backtick se cobro otra pasada** en `library.css.jsx`, que van tres. **206 → 209**. | s186 | [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md) |
 | **v0.117.0** | 2026-09-06 | feat(respira): **el estante de Viajes** — La separacion que la Fase 5 del ROADMAP pide con estas palabras («separar Tecnicas de Viajes»), construida. Un viaje no es una tecnica mas larga: dura de 15 a 45 min, lleva musica, tiene nombre propio y se elige por como quieres acabar. **VIVE EN SU PROPIA LISTA (`window.BREATHE_VIAJES`) Y NO COMO UN GRUPO MAS**, y ahi esta la decision entera: de esa estructura salen GRATIS las tres reglas que un viaje necesita -- el filtro «≤ 5 min» no lo cuenta, «Para ahora» no lo propone y no compite en el orden de los grupos-- **sin escribir ni una excepcion**. Escritas a mano habrian sido tres sitios que recordar cada vez que alguien toca la biblioteca. **La lista esta VACIA a proposito**: el contenido CTB esta fuera de la v1 (s180) y lo que entra es el SITIO; con cero viajes no se pinta ni la cabecera. **Y se cerro un agujero de premium antes de que existiera**: `canAccessRoutine` resuelve el id preguntando al catalogo y es FAIL-OPEN con los que no conoce, asi que un viaje `access: 'premium'` se habria abierto GRATIS -- `getBreatheRoutine` busca ahora tambien en los viajes. **200 → 206**, con **5 mutantes en rojo y uno declarado que no muerde** (meter los viajes en `todas` no cambia nada en pantalla: ese `useMemo` depende de `[groups]` y se calcula al arrancar, cuando la lista aun esta vacia). | s186 | [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md) |
 | **v0.116.0** | 2026-09-06 | feat(respira): **la sesion que se puede retomar, y el sitio donde vivira CTB** — **(1) UNA SESION DE RESPIRA INTERRUMPIDA SE REANUDA**, que era la primera prioridad del brief de s180 y llevaba desde entonces escrita como deuda en `Sidebar.selectors.js` («fingirlas seria prometer una reanudacion que no existe»). Clave **`pace.breathe.v1`**, fuera de `pace.state.v2`, patron del Pomodoro (s102). **La decision esta en lo que NO se guarda**: ni la fase ni el segundo del ciclo, porque **nadie se reengancha a mitad de una inhalacion que no estaba haciendo**; se guarda la RONDA y el tiempo practicado, y al volver se entra otra vez por la cuenta atras. **No se acredita nada no presenciado** (el reloj continua, no reinicia); **caduca a 2 h y dentro del mismo dia** (juicio declarado, no medida); **se conserva al SALIR** -- ahi esta la diferencia con el Pomodoro, porque salir ES la interrupcion; y **reanudar entra por la MISMA puerta que empezar**, asi que una rutina con apnea vuelve a pedir su modal. El registro tiene **una sola dueña** (el efecto que escribe es el que borra: dos sitios haciendo lo mismo es el defecto que el banco de s166 destapo). **(2) EL PROTOTIPO DE CTB**, que es el entregable minimo que el ROADMAP pide ANTES de codigo: guion de 25 min y tres pantallas a 390x844 -- **elegida la B**, «los cinco tramos», sin cifras y sin cronometro en la retencion. Y **donde vive, respondido mirando el codigo**: ni una tecnica mas (una rutina tiene UN patron y Marea baja tiene cinco tramos) ni un Camino (funciona hoy, pero su pantalla de pasos rompe la inmersion), sino **un estante propio, «Viajes»**, que ya estaba escrito en la Fase 5. **(3) EL CENSO DE ADAPTACION cambio dos ideas que parecian listas**: 31 rutinas declaran los cinco metadatos al 100 %, pero **0 de 129 ejercicios** -- asi que «cambiar un ejercicio» es CONTENIDO, no codigo; y de 19 descansos **solo 6** son entre series. El censo **se equivoco primero** buscando los metadatos en el PASO. **(4) La revision de MOVIL** que s185 dejo declarada: sin regresion, y el numero salio mejor por accidente (29/24,5 donde antes ~38/16). **195 → 200**, con 6 mutantes en rojo. | s186 | [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md) |
@@ -387,6 +388,55 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.118.0] -- 2026-09-07 -- feat(pausa): la pausa que propone
+
+### Anadido
+- **El menu post-Pomodoro propone UNA cosa, con nombre y con el porque.** Antes ofrecia cuatro
+  modulos: elegir «Estira» te dejaba en una biblioteca de 17 rutinas y la decision seguia entera.
+- **La regla se escribio antes de codificarla** y su orden va de lo que ACABA de pasar a lo que es
+  cierto en general: (1) bloque de 35 min o mas → Estira · (2) cero vasos y pasado el mediodia →
+  agua · (3) tercer bloque de hoy → Respira · (4) lo que el plan tenga pendiente · (5) **nada**.
+- **«De hoy» y no «seguido»**: `state.cycle` se pone a cero en el relevo de dia, asi que cuenta los
+  bloques de hoy pero no dice si fueron seguidos. Decir «tercer bloque seguido» seria afirmar algo
+  que el dato no sostiene.
+- **Lo que NO entra, decidido**: lo de ayer (esta en `pace.events.v1`, pero un menu que se abre dos
+  segundos no es sitio para comparar dias), el perfil del onboarding y **cualquier racha o total**,
+  que es presion disfrazada de dato.
+- **La rutina la elige `libraryParaAhora`**, que ya rota por dia, ordena por duracion y respeta el
+  acceso premium. No se inventa un segundo recomendador. Y **«Empezar» entra en ESA rutina** por las
+  mismas puertas que la biblioteca: `handleStartBreathe` con su modal de apnea, y el preview de
+  §18.3 para cuerpo.
+
+### La medida que mando el diseno
+- **El modal ocupa 616 px FIJOS** en 390x844, 390x736, 390x667 y 360x640, y en el mas corto le
+  sobran **24 px**. La propuesta ocupa ~110: no cabia. Por eso entra en el sitio que dejan el sello
+  «Para ti» y las descripciones de las cuatro tarjetas -- redundantes cuando arriba ya hay una rutina
+  con nombre y duracion. **Medido despues: 601 px**, 15 MENOS que antes.
+- **Los glifos de los cuatro modulos se quedan** (peticion del usuario): son los mismos de la
+  ActivityBar y son lo que hace cada tarjeta reconocible de un vistazo.
+
+### Corregido por el banco de mutaciones
+- **El filtro de seguridad estaba en DOS sitios** -- el pozo y el predicado-, asi que quitarlo de uno
+  no ponia rojo nada: no habia forma de saber si alguno funcionaba. Es el defecto que s166 destapo
+  con el reloj de retencion. Ahora vive en uno.
+- **El aserto de la apnea miraba UN dia** y el recomendador **rota por dia**: pasaba por
+  casualidad. Ahora recorre 30 fechas y exige que ninguna proponga una rutina con aviso.
+
+### Anadido -- red de seguridad
+- **6 tests** en `tests/pausa-propone.spec.js`, con **6 mutantes que muerden**. El que manda es el
+  de la ALTURA: mide el modal con y sin propuesta a 360x640 y exige que con propuesta no sea mayor.
+  Si alguien devuelve las descripciones, se pone rojo.
+- La regla se prueba **en puro** (`breakPropuesta` con estados sintetizados): es una funcion sin DOM
+  y comprobar su orden de prioridades pulsando botones seria lento y ciego.
+
+### Regla §1
+- **`ui.js` paso de 500** al entrar los ocho textos nuevos: el dominio `break.*` sale ENTERO a
+  `strings/breakmenu.js`, que es lo que hizo s81 con el split y repitio s148. Partir un prefijo
+  entre dos archivos habria sido peor que el problema.
+- **`main.jsx` queda en 500 exactas.** Lo siguiente que entre ahi obliga a trocear.
 
 ---
 
