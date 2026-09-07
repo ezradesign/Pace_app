@@ -54,21 +54,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'support.sidebar.title':         'Apoya el proyecto',
 
     // Break
-    'break.tag':                     'Ciclo completado',
-    'break.title':                   'Pausa bien hecha',
-    'break.subtitle':                'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
-    'break.breathe.label':           'Respira',
-    'break.breathe.desc':            '2 min para volver al centro',
-    'break.stretch.label':           'Estira',
-    'break.stretch.desc':            'Afloja la tensión',
-    'break.move.label':              'Muévete',
-    'break.move.desc':               'Antídoto rápido a la silla',
-    'break.water.label':             'Hidrátate',
-    'break.water.desc':              'Un vaso ahora',
-    'break.done':                    'Ya hecho hoy · otra ronda si quieres',
-    'break.recommended':             'Para ti',
-    'break.shortcut':                'Atajo: B · E · M · H · Esc',
-    'break.skip':                    'Saltar esta pausa',
 
     // Sidebar
     'sidebar.section.rhythm':        'Ritmo',
@@ -294,21 +279,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'support.sidebar.title':         'Support the project',
 
     // Break
-    'break.tag':                     'Cycle complete',
-    'break.title':                   'Well-earned break',
-    'break.subtitle':                "You've closed a focus cycle. Choose your micro-break.",
-    'break.breathe.label':           'Breathe',
-    'break.breathe.desc':            '2 min to return to center',
-    'break.stretch.label':           'Stretch',
-    'break.stretch.desc':            'Loosen the tension',
-    'break.move.label':              'Move',
-    'break.move.desc':               'Quick antidote to the chair',
-    'break.water.label':             'Hydrate',
-    'break.water.desc':              'A glass right now',
-    'break.done':                    'Done today · another round if you like',
-    'break.recommended':             'For you',
-    'break.shortcut':                'Shortcut: B · E · M · H · Esc',
-    'break.skip':                    'Skip this break',
 
     // Sidebar
     'sidebar.section.rhythm':        'Rhythm',

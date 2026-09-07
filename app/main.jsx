@@ -256,8 +256,19 @@ function PaceApp() {
     setOpenBreakMenu(true);
   };
 
-  const handleBreakChoice = (choice) => {
+  const handleBreakChoice = (choice, rutina) => {
     setOpenBreakMenu(false);
+    /* s187 · CON RUTINA CONCRETA se entra en ELLA y no en su biblioteca -- es la
+       diferencia entre proponer y volver a preguntar-, y por las MISMAS puertas:
+       `handleStartBreathe` con su modal, y el preview de cuerpo (§18.3). Sin
+       rutina, todo sigue igual. */
+    if (rutina && rutina.id) {
+      if (choice === 'breathe') { handleStartBreathe(rutina); return; }
+      if (choice === 'extra' || choice === 'move') {
+        setPreviewRoutine({ routine: rutina, kind: choice === 'extra' ? 'extra' : 'move' });
+        return;
+      }
+    }
     if (choice === 'breathe') setOpenLibrary('breathe');
     else if (choice === 'extra') setOpenLibrary('extra'); // s105: Estira
     else if (choice === 'move') setOpenLibrary('move');
