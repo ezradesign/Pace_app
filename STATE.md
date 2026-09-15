@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.118.0 (s187 - **LA PAUSA QUE PROPONE**. Al terminar un Pomodoro la app sabia cuanto llevabas sentado y **no lo usaba**. Ahora propone UNA rutina, con nombre, duracion y el porque, y la regla se escribio ANTES de codificarla: bloque ≥35 → Estira · cero vasos pasado el mediodia → agua · tercer bloque de hoy → Respira · si no, lo pendiente del plan · **y si no hay motivo, NADA**. **LA CONDICION DEL DISENO ERA UNA MEDIDA**: el modal ocupa 616 px fijos y a 360x640 solo sobran 24, asi que la propuesta entra en el sitio del sello «Para ti» y de las descripciones -- medido despues, **601**. Los glifos de los cuatro modulos se quedan. **209 → 215**, 6 mutantes en rojo, y **dos obligaron a arreglar el codigo**: el filtro de seguridad estaba duplicado (el defecto de s166) y el aserto de la apnea miraba un solo dia cuando el recomendador rota por dia. Antes, el **banco del primer minuto** dijo que el onboarding no es el problema: 2 pantallas y 2 pulsaciones por el atajo, 6 y 9 por el completo, y las dos rutas acaban con una sesion corriendo.)
+**Version actual:** v0.119.0 (s188 - **AJUSTES EN CUATRO TEMAS**. El panel de Ajustes, redisenado entero y elegido MIRANDOLO en cinco rondas de maqueta con tokens, fuentes y copy reales. Lo que habia, medido: **1412 px** de contenido (1,9 pantallas de escritorio, 2,2 en movil), 30 pastillas, 7 explicaciones, 10 secciones sin agrupar y un bloque premium de **221 px que era un input deshabilitado**. Lo que hay: **Ver · Oir · Sesiones · Tus datos**, cada ajuste una fila con el nombre en cursiva y el control a la derecha. **El color dice de que modulo es el ajuste** y entra como LAVADO con el texto en tinta -- terracota, tabaco y azul con texto claro dan 2,8-3,3:1, medido. El circulo se elige entre cuatro pictogramas; el sonido apagado ATENUA en vez de esconder; «Disposicion» sale tras bandera. **743 px: cabe sin scroll a 1280x800**; movil 1,22. **215 → 224**, 8 mutantes y los 8 muerden. Antes, el cierre documental que s187 dejo a medias.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -36,7 +36,10 @@
 | `app/main/_responsive.pieles.js` | **LAS DOS PIELES (s163)**, cortadas de `_responsive.js`: el `@media (max-width: 768px)`, el de pantallas cortas y el `@media (min-width: 769px)`. **Cero interpolaciones** (medido), asi que no lleva una linea de logica. **SE INYECTA DESPUES de `_responsive.js` Y ESO ES CONTRATO**: `--pace-skin` vale `movil` en la hoja base y `escritorio` aqui, las dos veces sobre `:root` — misma especificidad, gana la de despues. Al reves, la home de escritorio se cree movil y `main.jsx` (s160) renderiza el orden de lectura equivocado | **s163 · s169 · 478 ln** |
 | `app/motion.css` | **EL COMPORTAMIENTO (s163)**, cortado de `tokens.css`, que se queda con los VALORES. Aqui viven el cruce entre paletas (s161, con sus `@property` y los dos atributos del fundido), el kill de `prefers-reduced-motion` y los dos packs de microinteracciones de s99. **Su `<link>` va entre `tokens.css` y `paths/paths.css`**: aquella declara `[data-pace-reveal] > *` y esta lo anula por ORDEN | **NUEVO s163 · 400 ln** |
 | `app/state-core.palette.jsx` | **COMO LA PALETA LLEGA AL DOM (s163)**, extraido de `state-core.jsx`: `applyTheme` y los dos marcadores del cruce (`data-pace-palette-ready`, `data-pace-palette-crossing`, s161). **El estado entra por PARAMETRO** — carga ANTES de `state-core.jsx` porque `applyTheme(_state)` se llama en el CUERPO de aquel, y alli todavia no existe ni `_state` ni `getState`. Las REGLAS que consumen esos atributos viven en `app/motion.css` | **NUEVO s163 · 107 ln** |
-| `app/tweaks/TweaksPanel.support.jsx` | **ESTILO SIN UI del panel de Ajustes (s163)**: `tweaksStyles`, la hoja responsive del bottom sheet (s27) y `TWEAKS_PILL_TRANSITION` con el porque del boton fantasma de s139. Patron de `Sidebar.support.jsx`. **Los dos nombres viajan por `window`** porque un `const` no cruza la IIFE del build (trampa de s148) | **NUEVO s163 · 100 ln** |
+| `app/tweaks/TweaksPanel.support.jsx` | **ESTILO SIN UI del panel de Ajustes (s163) y, desde s188, LA HOJA `pace-aj-*` DEL PANEL REDISENADO**, con cada decision visual escrita al lado: la pista de pildoras sin borde (era lo que hacia «caja»), el color de modulo como LAVADO con texto en tinta (`color-mix` al 22 % con el `-soft` de respaldo; el color con texto claro no pasa contraste), las filas que ENVUELVEN cuando la barra de scroll se come 17 px, el sonido apagado que atenua, y la letra de las tarjetas de actividad. Sigue con la hoja del bottom sheet (s27) y `TWEAKS_PILL_TRANSITION` (s139). **Los nombres viajan por `window`** (trampa de s148). Sin acentos graves dentro de la hoja: abortan el build | **s188 · 175 ln** |
+| `app/tweaks/TweaksPanel.parts.jsx` | **LAS PIEZAS DEL PANEL DE AJUSTES (s188)**: `AjustesSeccion`, `AjustesFila`, `AjustesPildoras` (`aria-pressed` es el estado), `AjustesInterruptor` (`role=switch`), `AjustesPaso`, `AjustesAccion`, las muestras de paleta y los cuatro pictogramas del circulo calcados de `BreatheVisual.jsx`. **El color de modulo entra por la FILA** (`data-pace-aj-modulo` + dos custom properties), no por el control: un control no sabe de que color es, la fila sabe de que modulo es el ajuste. Sin hooks; se publican en `window` | **NUEVO s188 · 150 ln** |
+| `app/i18n/strings/settings.js` | **EL DOMINIO DEL PANEL DE AJUSTES (s188)**, `settings.*`: sale entero de `ui.js` como hicieron s81, s148 y s187 con los suyos. Es el copy de la maqueta aprobada: cuatro temas, cada ajuste en frase, sin «(default)». **Los nombres de idioma no se traducen** («Espanol», «English» en los dos bloques). Conserva las claves de los ejes tras bandera (timer, layout, organico) para que devolver la bandera no exija arqueologia | **NUEVO s188 · 174 ln** |
+| `tests/ajustes.spec.js` | **EL PANEL DE AJUSTES (s188)**. 9 tests, **8 mutantes y los 8 muerden**: orden de temas y filas · «Disposicion» fuera · cabe en una pantalla a 1280x800 · movil < 1,3 · apagar el sonido no mueve el panel · el color de modulo con contraste ≥ 4,5 en las dos paletas (medido EN LA PAGINA, componiendo el alfa) · el circulo por pictogramas · «Marca la fase» como una decision · ingles · la migracion de «minimal». **Trampa**: en headless `Notification.permission` es `denied` siempre y la nota de «bloqueadas» hincha el panel 35 px; se fija a `default` por init script | **NUEVO s188 · 9 tests** |
 | `PACE.html` | Entry point de desarrollo modular | **v0.92.0** |
 | `PACE_standalone.html` | Bundle offline autocontenido — export BAJO DEMANDA (s134), NO se regenera al cerrar | **v0.71.0** |
 | `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`). **Es lo que conduce la suite E2E de s154**, nunca `PACE.html` | **v0.92.0** |
@@ -107,11 +110,11 @@
 | `app/ui/RoutinePreview.jsx` | Preview «antes de empezar» (§18.3): requisitos, posicion, duracion, intensidad y pasos con glifo. Solo desde la BIBLIOTECA | **NUEVO s144** |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.52.0** |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + notificacion + **Sesiones** + reset + legal… **s155: el reset borra los DOS almacenes** — `privacy.html` promete que desde Ajustes «puedes borrarlo todo» y que el borrado es «definitivo», y desde que existe `pace.events.v1` eso solo es cierto si pasa por `paceEventsStoreBarrier`. Lo aserta el `verify` y lo prueba la suite | **v0.88.0** |
-| `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles. **s155: el import pasa por la barrera** y REINICIA `pace.events.v1` con `activatedAt` nuevo — un backup de PACE no trae seccion de eventos, y conservar el contenedor anterior junto a un estado importado seria la MEZCLA que §17 prohibe (el baseline describiria unos contadores que ya no son los de ese estado). **El export NO cambia todavia**, a proposito: sin emisores el contenedor esta vacio, y el `verify` tiene un GATE que lo exigira en cuanto aparezca el primero | **v0.88.0** |
-| `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy… | **v0.34.5** |
+| `app/tweaks/TweaksPanel.jsx` | **EL PANEL DE AJUSTES EN CUATRO TEMAS (s188)**: Ver · Oir · Sesiones · Tus datos, compuesto con las piezas de `.parts`. Conserva el permiso de notificacion, los secretos y el gate web/file. **El reset se DEFINE aqui y se pinta en TweaksData.jsx**: `verify.eventos.js` comprueba `paceEventsWipeAll` leyendo ESTE archivo, y moverlo habria dejado el checker ciego. **s155: el reset borra los DOS almacenes** por la barrera (lo aserta el `verify` y lo prueba la suite). Ejes tras bandera: timer (s139), organico (s139), **disposicion (s188)** | **s188 · 223 ln** |
+| `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos. **s188: filas** (`AjustesAccion`) en vez de dos botones al 50 %; pinta tambien el borrado (que le llega por `onReset`), la fila de licencia y el pie con la promesa de privacidad y los enlaces legales. **s155: el import pasa por la barrera** y REINICIA `pace.events.v1` con `activatedAt` nuevo; **s169: el export lleva la seccion de eventos** | **s188 · 223 ln** |
+| `app/tweaks/PremiumSection.jsx` | **Una fila «Licencia · pronto» (s188)**, de los 221 px de sello + copy + input deshabilitado que era. Cuando llegue la validacion offline de la clave firmada (FASE 10) crece ESTE archivo y el panel no se toca. No desbloquea nada: `premiumUnlocked` sigue false | **s188 · 25 ln** |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.73.0** |
-| `app/flags.js` | **Banderas de superficie** (Fase 1.6): `SHOW_TIMER_STYLE` / `SHOW_BREATH_ORGANICO`. La MISMA bandera oculta la opcion y gobierna la migracion del valor huerfano en `loadState`. NO es codigo muerto: leer su cabecera | **NUEVO s139** |
+| `app/flags.js` | **Banderas de superficie** (Fase 1.6): `SHOW_TIMER_STYLE` / `SHOW_BREATH_ORGANICO` / **`SHOW_LAYOUT_AXIS` (s188)**. La MISMA bandera oculta la opcion y gobierna la migracion del valor huerfano en `loadState`. «Disposicion» sale porque duplicaba el boton de plegar la barra: quien tuviera «minimal» pasa a `sidebar` con la barra plegada. NO es codigo muerto: leer su cabecera | **s188** |
 | `app/breathe/BreatheVisual.support.jsx` | Hoja inyectada del loto: keyframes de giro y **vela**, tinta por paleta, reparto de alto del centro y reclamo del hueco muerto. Extraido al rebasar BreatheVisual las 500 ln | **NUEVO s139** |
 | `app/breathe/assets/loto.webp` | Loto de Respira como **MASCARA CSS** (640x640, 146 KB, alfa = densidad de tinta; el color lo pone el token) | **NUEVO s138** |
 | `scripts/ingest-loto.js` | Ingesta del loto: recorte + mascara desde luminancia + WebP con alfa SIN perdida. Regla D-4: si llega arte nuevo se RE-CORRE, no se sustituye el .webp a mano | **NUEVO s138** |
@@ -173,7 +176,7 @@
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent /… | **v0.33.2** |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline… | **v0.33.2** |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** |
-| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings +… **s151: el copy no promete gratuidad ABSOLUTA** («Nucleo gratuito / disponible», no «Siempre gratis / sin paywall») y los claims de servidor estan redactados para sobrevivir al Worker de licencia. **Sus claves EN son literales, NO posicionales** (la trampa de s144 es de otros catalogos) | **v0.84.0** |
+| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity… **s188: el dominio del panel de Ajustes SALE ENTERO a `strings/settings.js`** (69 claves fuera, 59 nuevas alli) porque el copy nuevo lo pasaba de 500; queda en 285. **s151: el copy no promete gratuidad ABSOLUTA** y los claims de servidor sobreviven al Worker de licencia. **Sus claves EN son literales, NO posicionales** | **s188 · 285 ln** |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + focus + breathe + lib.breathe + hydrate + seguridad + constructor + feedback. **El dominio CUERPO salio en s148** | **v0.81.0** |
 | `app/i18n/strings/sessions.body.js` | i18n del CUERPO (Mueve/Estira): `lib.move.*` · `lib.extra.*` · `move.*` de sesion · contrato v1 · runner guiado · capa editorial · el descanso que guia. **ES y EN juntos** (s81). Antes de `useT.jsx`; `content/*` debe seguir cargando al final (override D-1) | **NUEVO s148** |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate +… | **v0.65.0** |
@@ -208,66 +211,61 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s186 cierra una deuda escrita desde s180 —reanudar una sesion de Respira— y deja
-> decidido, con el prototipo delante, donde vivira CTB. Publica **v0.116.0**. Suite
-> **195 → 200**, `verify` en verde, artefacto regenerado.
+> s188 cierra la deuda documental de s187 y redisena el panel de Ajustes entero, elegido
+> mirandolo en cinco rondas de maqueta. Publica **v0.119.0**. Suite **215 → 224**, `verify`
+> en verde, artefacto regenerado.
 >
-> Diario: [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md)
+> Diario: [session-188](./docs/sessions/session-188-ajustes-en-cuatro-temas.md)
 
-- **[LA DECISION ESTA EN LO QUE NO SE GUARDA]** Reanudar una sesion de Respira no es
-  reanudar un video: **nadie se reengancha a mitad de una inhalacion que no estaba
-  haciendo**. Por eso el registro NO lleva ni la fase ni el segundo del ciclo, y por
-  eso al volver se entra otra vez por la cuenta atras de preparacion. Lo que se
-  guarda es la RONDA —y en las rutinas sin rondas, el tiempo practicado—, que es la
-  unidad que significa algo para quien respiraba.
+- **[LA VERSION ESTABA BIEN Y LA SECCION NO]** El commit de v0.118.0 dejo esta seccion en
+  s186, el ROADMAP en «hoy solo ordena» y ninguna fila de s187 en decisiones tecnicas. Al
+  arrancar, comprobar que «Ultima sesion» coincide con el ULTIMO DIARIO, no solo la
+  cabecera. Cerrado al arrancar, antes de tocar codigo.
 
-- **[UN REGISTRO TIENE UNA SOLA DUEÑA]** El efecto que escribe es el que borra. Poner
-  el borrado tambien en `finish()` habrian sido dos sitios haciendo lo mismo, y eso ya
-  se pago: el banco de mutaciones de s166 demostro que con las dos puestas, romper
-  cualquiera de ellas **deja los asertos en verde**.
+- **[TRES CANDIDATAS, TRES MEDIDAS]** CTB esta fuera de v1 por decision del usuario dos
+  veces (s132, s180) y su tercera pata, la musica, no existe. El sistema de pago tiene un
+  dato peor que el ROADMAP: `premiumUnlocked` **no lo puede poner a true nadie** -- 6/14 de
+  Mueve, 6/17 de Estira, 7 de Respira y el constructor estan cerrados y la suite no los
+  prueba. Queda recomendado como siguiente frente: la ingenieria de FASE 10 (clave firmada,
+  verificacion offline, tests del camino premium), no la tienda.
 
-- **[REANUDAR ENTRA POR LA PUERTA DE EMPEZAR]** No por un camino propio. Asi la rutina
-  con apnea vuelve a pedir su modal de seguridad y el guard de acceso sigue siendo el
-  mismo, sin duplicar la regla. Hay un mutante que monta la sesion saltandose la
-  puerta, y muerde.
+- **[LO QUE SE VEIA, MEDIDO]** 1412 px de contenido (1,9 pantallas a 1280x800; 2,2 en movil),
+  30 pastillas, 7 explicaciones, 10 secciones. Los dos bloques mas altos: Audio (233) y
+  **Premium (221, un input deshabilitado)**. Las tres frases del usuario --desordenado,
+  informacion de mas, audio raro-- tenian numero.
 
-- **[MEDIR CAMBIA LO QUE SE IBA A CONSTRUIR, Y ESTA VEZ DOS DE TRES]** De las tres
-  ideas que salieron de las referencias, dos no eran lo que parecian. **«Cambiar un
-  ejercicio»**: los cinco metadatos de adaptacion los declara la RUTINA (31 de 31), y
-  **ningun ejercicio los declara** (0 de 129) -- ofrecer un sustituto con criterio es
-  anotar 129 fichas, o sea CONTENIDO. **«Alargar el descanso»**: de 19 descansos solo
-  **6** son entre series; los otros 13 son cierres respiratorios que s114 dice no
-  tocar. Y **el recordatorio de agua tiene el dato pero no la entrega**: una PWA no
-  dispara un aviso con la app cerrada sin servidor de push, y este producto es
-  offline-first con licencia offline -- eso llega con Capacitor, no antes.
+- **[CINCO RONDAS, CADA UNA PINTADA ANTES DE PREGUNTAR]** Filas frente a bloques y acordeon
+  (V2) · el color como LAVADO de modulo (A) · la cursiva en los nombres y la versalita en las
+  secciones porque son sistema (T1) · pildoras sin caja, la pieza de FOCO · PAUSA · LARGA
+  (P1) · cinco afinados (P1+). **Cada ronda con la altura y el contraste calculados por la
+  propia pagina.** Lo que el usuario pidio con palabras y lo que resulto ser: «color segun lo
+  seleccionado» → un lavado, porque terracota, tabaco y azul con texto claro dan 2,8-3,3:1;
+  «me falla la tipografia» → todo era Inter salvo el titulo; «cuadrados poco elegantes» → el
+  borde de color.
 
-- **[EL CENSO SE EQUIVOCO PRIMERO, Y POR LA RAZON DE SIEMPRE]** Busco los metadatos en
-  el PASO y devolvio «0 de 87», que parecia un catalogo vacio. Estan en la RUTINA. Es
-  **la misma clase de error que dejo ciego a Estira en s178**: medir el objeto
-  equivocado y creerse el numero. Lo cazo comprobar donde vivia el dato antes de
-  reportarlo.
+- **[DOS DEFECTOS QUE SOLO SALIERON PINTANDO]** En P2 (marca + palabra) la muestra «Oscuro»
+  de la paleta era un circulo negro relleno y **se leia como elegida**; y tres anillos no
+  cabian junto a la etiqueta. Ninguno se ve leyendo la propuesta.
 
-- **[LA REGLA §1 MORDIO A MITAD DE IMPLEMENTACION]** `BreatheSession.jsx` llego a
-  **500 lineas exactas** al entrar la reanudacion. Salio el mapa de fases -- que es
-  DATO, no logica-- al `.support`, que es literalmente para lo que ese archivo nacio
-  en s166. Queda en 483. **Se lee por `window`**, porque un `const` no cruza de
-  archivo en el compilado (trampa de s148).
+- **[EL ESTADO QUE NADIE MIRO EN CUATRO RONDAS]** Con el sonido apagado el panel escondia dos
+  filas y saltaba 84 px. Ahora ATENUA. Salio en la ronda 5 por pintar el estado apagado a
+  proposito; y en la app real salio otro: **la barra de scroll se come 17 px** y «Marca la
+  fase» partia su nombre en dos. La fila envuelve.
 
-- **[EL INSTRUMENTO SE CALIBRA CONTRA UN VALOR CONOCIDO ANTES DE CREERSELO]** Mi
-  primera medida de tinta en movil uso el promedio de una ventana ancha y dio numeros
-  que no reproducian. Calibrada contra el 43/36 que s185 dejo aprobado en escritorio,
-  el instrumento corregido devuelve 43/32 alli -- y solo entonces valen sus 29/24,5 de
-  movil.
+- **[EL COLOR ENTRA POR LA FILA, NO POR EL CONTROL]** `AjustesFila` recibe el modulo y
+  publica dos custom properties; la hoja hace el resto. Un control no sabe de que color es;
+  la fila sabe de que modulo es el ajuste. Y el reset se DEFINE en `TweaksPanel.jsx` aunque
+  se pinte en `TweaksData.jsx`: `verify.eventos.js` lo busca en el primero.
 
-- **[Y UNA COSA SALIO BIEN POR ACCIDENTE, QUE TAMBIEN SE DICE]** El numero del
-  Pomodoro quedo mejor en movil (29/24,5 donde antes ~38/16) porque el margen negativo
-  es global y su compensacion es solo de escritorio. No fue una decision, y anotarlo
-  como si lo fuera seria falsificar el registro.
+- **[HEADLESS MIENTE SOBRE LAS NOTIFICACIONES]** `Notification.permission` es `denied` siempre,
+  aunque el contexto conceda el permiso; la nota de «bloqueadas» hincha el panel 35 px. El
+  test fija `default`, que es lo que ve una instalacion nueva.
 
-- **[LO QUE ESTA SESION NO CUBRE, DICHO]** Los cinco tests de reanudacion corren a
-  tamano de **escritorio**: el camino de movil no se prueba. **El estante «Viajes»
-  esta decidido y pintado, no construido.** Y la reanudacion es solo de Respira --
-  Mueve y Estira tienen su propio runner y su propio contrato de pasos.
+- **[LO QUE ESTA SESION NO CUBRE, DICHO]** Ningun pixel: que las pildoras «sean elegantes» lo
+  decidio el usuario mirando. Las filas tras bandera (timer, organico) no se prueban. El
+  permiso del navegador no se ejercita. **La hoja de movil sigue a 72 dvh** (s27): con 1,22
+  pantallas se podria subir, y es una decision aparte. Las maquetas (r1-r5) quedan en
+  `docs/proposals/` como registro de por que el panel es como es.
 
 ---
 
@@ -278,6 +276,10 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **En Ajustes el color dice de que MODULO es el ajuste, y entra como LAVADO con el texto en tinta -- nunca una pildora del color con texto claro** (s188)
+- **Un ajuste que depende de otro se ATENUA, no se esconde: el panel no salta** (s188)
+- **La pausa PROPONE UNA cosa con su motivo, y sin motivo no propone nada: la quinta rama es `null`** (s187)
+- **Un filtro que decide acceso o seguridad vive en UN solo sitio: duplicado, romper cualquiera deja los asertos en verde** (s187)
 - **Una sesion de Respira interrumpida se REANUDA por la RONDA, nunca por la fase -- y se conserva al salir** (s186)
 - **CTB vive en un ESTANTE propio dentro de Respira («Viajes»), no en el catalogo de tecnicas ni en un Camino** (s186)
 - **EN ESCRITORIO LA HOME NO HACE SCROLL VERTICAL, NUNCA -- y una DECORACION puede romperlo sin que lo vea nadie** (s185)

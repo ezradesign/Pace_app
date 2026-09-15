@@ -1,46 +1,24 @@
-/* PACE · Tweaks — superficie premium display-only
+/* PACE · Ajustes — la fila de la licencia (antes «superficie premium»)
    Creada en sesión 88 (F3b, v0.34.4) dentro de TweaksPanel; extraída a
    archivo propio en sesión 89 (v0.34.5) para devolver el panel a <500 ln.
 
-   Sello + input de licencia SIN validación + copy honesto. No desbloquea
-   nada: premiumUnlocked sigue false. La validación de clave firmada
-   offline llega post-v1.0. Reusa PremiumSeal (Primitives).
-*/
+   s188: DE 221 PX A UNA LINEA. Hasta aqui era sello + titulo + tres lineas de
+   copy + un `<input disabled>` + un boton «Pronto» + una nota: **el segundo
+   bloque mas alto del panel (221 px de 1412) y no hacia nada** -- medido en
+   la auditoria de s188. Queda una fila («Licencia · pronto») en Tus datos,
+   que es donde MONETIZATION.md dice que vivira la entrada de licencia
+   («discreta, sin upsell»). Cuando llegue la validacion offline de la clave
+   firmada (FASE 10 del ROADMAP), ESTE archivo crece y el panel no se toca:
+   la fila pasa a abrir la entrada de la clave.
+
+   No desbloquea nada: `premiumUnlocked` sigue false. */
 
 function PremiumSection() {
   const { t } = useT();
   return (
-    <div style={{ marginBottom: 4 }}>
-      <div style={{ marginBottom: 8 }}>
-        <PremiumSeal />
-      </div>
-      <div style={{ ...displayItalic, fontSize: 16, fontWeight: 500, marginBottom: 6 }}>{t('premium.tweaks.title')}</div>
-      <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5, marginBottom: 10, letterSpacing: 0.1 }}>{t('premium.tweaks.body')}</div>
-      <input
-        type="text"
-        disabled
-        placeholder={t('premium.tweaks.placeholder')}
-        style={{
-          width: '100%', boxSizing: 'border-box',
-          padding: '8px 10px', fontSize: 11,
-          color: 'var(--ink-2)', background: 'var(--paper-2)',
-          border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
-          letterSpacing: 0.2, marginBottom: 6, cursor: 'not-allowed',
-        }}
-      />
-      <button
-        disabled
-        style={{
-          width: '100%', padding: '8px', fontSize: 11, fontWeight: 500,
-          color: 'var(--premium)', background: 'var(--premium-soft)',
-          border: '1px solid var(--premium)', borderRadius: 'var(--r-sm)',
-          letterSpacing: 0.2, cursor: 'not-allowed',
-        }}
-      >{t('premium.tweaks.cta')}</button>
-      <div style={{ fontSize: 10, color: 'var(--ink-3)', lineHeight: 1.4, letterSpacing: 0.1, marginTop: 6 }}>
-        {t('premium.tweaks.note')}
-      </div>
-    </div>
+    <AjustesAccion suave derecha={t('settings.license.soon')}>
+      {t('settings.license')}
+    </AjustesAccion>
   );
 }
 

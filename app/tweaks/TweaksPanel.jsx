@@ -1,52 +1,52 @@
 /* PACE · Panel de Ajustes (antes Tweaks)
    ============================================================
-   Ejes vigentes: idioma, audio, paleta, timer, breath, layout
-   + objetivo de agua (s89). Export/Import y superficie premium
-   extraídos a TweaksData.jsx / PremiumSection.jsx (split s89).
-   Sesión 37 (v0.19.0): renombrado a "Ajustes", audio movido al
-   primer eje con pills "Activado / Silenciado", eliminados
-   circle/numero de timer y editorial de layout.
+   s188 · REDISEÑADO ENTERO, y la forma se eligió MIRÁNDOLA en cinco rondas de
+   maqueta (docs/proposals/ajustes-rediseno*.html; la aprobada es P1+ de la
+   ronda 5). Lo que había: diez secciones sin agrupar, 30 pastillas, siete
+   líneas de explicación, 1412 px de contenido (1,9 pantallas a 1280×800, 2,2
+   en móvil), un bloque de audio con dos niveles de sangría y un bloque premium
+   de 221 px que era un `<input disabled>`. Lo que hay:
+
+     VER        idioma · paleta                      (lo de toda la app)
+     OÍR        sonido · marca la fase · suena detrás (TweaksAudio.jsx)
+     SESIONES   aviso · círculo · descanso · vasos    (uno por módulo, con su color)
+     TUS DATOS  exportar · importar · borrar · licencia · pie (TweaksData.jsx)
+
+   Cada ajuste es una FILA: nombre en cursiva a la izquierda, control a la
+   derecha. Las piezas viven en `TweaksPanel.parts.jsx`; la hoja, en
+   `TweaksPanel.support.jsx` (las razones de cada decisión visual están allí).
+   Medido en la maqueta: 775 px, 1,03 pantallas.
+
+   Ejes vigentes: idioma, paleta, audio, aviso de fin de foco, círculo de
+   Respira, descanso entre series, objetivo de agua, datos. Tras bandera en
+   `app/flags.js` (el código sigue vivo, ver allí): estilo del timer (s139),
+   círculo 'orgánico' (s139) y **disposición sidebar/minimal (s188)** — este
+   último se retira porque duplicaba el botón de plegar la barra.
 
    Retirados por decisión "menos variantes, más identidad":
      - logoVariant + supportCopyVariant (sesión 19).
      - font / tipografía display (sesión 20). La identidad
        tipográfica de PACE es Cormorant Garamond (default) +
-       EB Garamond fijo para cifras de identidad (número de
-       racha, número del timer futuro). No tiene sentido dejar
-       al usuario elegir entre 3 alternativas — decide PACE.
-
+       EB Garamond fijo para cifras de identidad. Decide PACE.
    Los campos del state (`font`, `logoVariant`, `supportCopyVariant`)
-   se conservan por compatibilidad con localStorage existente pero
-   no son editables desde la UI.
+   se conservan por compatibilidad con localStorage existente.
 
    Sesión 17 (v0.12.0) — sigue vigente:
-     - Export/Import JSON (backup local portátil).
+     - Export/Import JSON (backup local portátil), en TweaksData.jsx.
      - tweak-secrets reaccionando a combinaciones específicas:
          · secret.aged       → paleta 'envejecido'.
          · secret.dark.mode  → paleta 'oscuro' durante 7 días (acumulado).
          · explore.tweaks    → abrir este panel por primera vez.
-     - Secretos dormidos (el eje que los disparaba fue retirado;
-       quedan en código por si se reintroducen como easter egg):
-         · secret.mono       → font 'mono'.
-         · secret.seal       → logo 'sello'.
-         · secret.illustrated→ logo 'ilustrado'.
-       Patrón: hook ligero que llama unlockAchievement() cuando la
-       condición se cumple. La idempotencia la garantiza
-       unlockAchievement (no dispara dos veces el mismo id).
+       Los que no dependen de la UI de este panel viven en
+       <TweakSecretsWatcher /> (app/tweaks/TweakSecretsWatcher.jsx, s41).
    ============================================================ */
 
 const { useEffect: useEffectTW } = React;
 
-/* ============================
-   ESTILO SIN UI -> TweaksPanel.support.jsx
-   ============================
-   Extraido en s163 al rebasar este archivo las 500 lineas de CLAUDE.md §1:
-   `tweaksStyles`, la hoja responsive inyectada (el bottom sheet de s27) y
-   `TWEAKS_PILL_TRANSITION` con el porque del boton fantasma de s139.
-
-   ESE ARCHIVO CARGA ANTES QUE ESTE y sus dos nombres llegan por `window`:
-   un `const` suyo no cruzaria la IIFE del build (la trampa de s148 con
-   `sidebarStyles`). Aqui se referencian pelados a proposito. */
+/* `tweaksStyles` y las piezas `Ajustes*` llegan por `window` desde
+   TweaksPanel.support.jsx y TweaksPanel.parts.jsx, que CARGAN ANTES: un `const`
+   suyo no cruzaría la IIFE del build (la trampa de s148 con `sidebarStyles`).
+   Aquí se referencian pelados a propósito. */
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
@@ -59,8 +59,8 @@ function TweaksPanel({ open, onClose }) {
   const canNotify = isWeb && typeof Notification !== 'undefined';
 
   /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
-     nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, el
-     hint de abajo lo explica; el toggle no puede encenderse. */
+     nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, la nota
+     de debajo lo explica; el interruptor no puede encenderse. */
   const enableNotify = () => {
     if (!canNotify) return;
     if (Notification.permission === 'granted') { set({ notifyFocusEnd: true }); return; }
@@ -68,7 +68,7 @@ function TweaksPanel({ open, onClose }) {
     try {
       Notification.requestPermission().then((p) => {
         /* La rama denegada escribe el MISMO false: el objeto de state nuevo
-           fuerza el re-render que hace visible el hint 'blocked' (permission
+           fuerza el re-render que hace visible la nota 'blocked' (permission
            no es reactivo por sí solo). */
         if (p === 'granted') set({ notifyFocusEnd: true });
         else set({ notifyFocusEnd: false });
@@ -76,16 +76,13 @@ function TweaksPanel({ open, onClose }) {
     } catch (e) {}
   };
 
-  /* ============================================================
-     SECRETS — detectores simples que viven mientras el panel existe.
-     No dependen de que el panel esté abierto (el hook monta siempre
-     dentro del componente, pero como TweaksPanel retorna null cuando
-     !open, el hook efectivamente sólo observa cambios mientras el
-     panel está visible). Para los secretos que NO dependen de la UI
-     de tweaks (aged, mono, seal, ilustrado, dark-days), movemos la
-     detección a un componente separado que SÍ monta siempre:
-     <TweakSecretsWatcher />, en app/tweaks/TweakSecretsWatcher.jsx (sesión 41).
-     ============================================================ */
+  /* Reset — s155: `paceEventsWipeAll` borra los DOS almacenes por la barrera;
+     sin eso `privacy.html` mentiría al prometer borrado total. Se DEFINE aquí y
+     se pinta en TweaksData.jsx: `scripts/verify.eventos.js` comprueba que el
+     reset del panel pase por la barrera leyendo ESTE archivo. */
+  const borrarTodo = () => {
+    if (confirm(t('settings.confirm.reset'))) paceEventsWipeAll(() => location.reload());
+  };
 
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
   useEffectTW(() => {
@@ -94,51 +91,29 @@ function TweaksPanel({ open, onClose }) {
 
   if (!open) return null;
 
-  /* Ejes de personalización.
-     Sesión 37: circle/numero retirados de timer, editorial retirado
-     de layout, audio promovido al primer eje como pills separadas. */
-  /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
-     'envejecido' retirado en s71 / v0.28.9. */
-  /* s161 · `palette` SALE de esta lista y pasa a bloque propio (más abajo),
-     exactamente la misma cirugía que se le hizo a `lang` en s139 y por la misma
-     razón: gana una tercera opción «Auto» que no es un valor de `state.palette`
-     —que sigue siendo siempre 'crema' u 'oscuro'— sino un MODO que vive en
-     `state.paletteAuto`. El mapeador genérico de abajo hace `set({[key]: v})`,
-     y eso no sabe apagar un modo. */
-  const ejes = [
-    /* s139 · Fase 1.6 — el eje de estilo de timer se OCULTA entero (queda
-       siempre «aro») y 'organico' sale de la lista de Respira. Las dos cosas
-       cuelgan de `app/flags.js`; el código de ambas variantes sigue vivo y la
-       migración de los valores huérfanos vive en `loadState`. NO borrar: leer
-       la cabecera de flags.js. Se filtra en vez de comentar el bloque para que
-       devolver la bandera a true no exija tocar este archivo. */
-    ...(window.SHOW_TIMER_STYLE === false ? [] : [
-      { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
-        { v: 'aro', name: t('tweaks.timer.aro') },
-        { v: 'barra', name: t('tweaks.timer.barra') },
-        { v: 'analogico', name: t('tweaks.timer.analogico') },
-      ]},
-    ]),
-    { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
-      { v: 'flor', name: t('tweaks.breath.flor') },
-      { v: 'pulso', name: t('tweaks.breath.pulso') },
-      { v: 'petalo', name: t('tweaks.breath.petalo') },
-      { v: 'ondas', name: t('tweaks.breath.ondas') },
-      ...(window.SHOW_BREATH_ORGANICO === false ? [] : [
-        { v: 'organico', name: t('tweaks.breath.organico') },
-      ]),
-    ]},
-    { key: 'layout', label: t('tweaks.eje.layout'), options: [
-      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
-      { v: 'minimal', name: t('tweaks.layout.minimal') },
-    ]},
-    /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
-       (sesión post-v0.12.1). Los campos del state se conservan por
-       compatibilidad con instalaciones existentes. */
-  ];
+  /* Idioma y paleta comparten gramática (s139 / s161): «Auto» es un MODO que
+     vive en `langAuto` / `paletteAuto`, y las otras opciones son valores.
+     Elegir un valor APAGA el modo (lo hace `setPalette`; para el idioma se
+     escribe aquí). Al entrar en Auto se resuelve YA, para que el panel cambie
+     en el momento y no al recargar. */
+  const langValor = state.langAuto ? 'auto' : state.lang;
+  const ponerLang = (v) => set(v === 'auto'
+    ? { langAuto: true, lang: detectInitialLang() }
+    : { langAuto: false, lang: v });
+  const palValor = state.paletteAuto ? 'auto' : state.palette;
+  const ponerPaleta = (v) => (v === 'auto' ? setPaletteAuto(true) : setPalette(v));
 
-  /* Export/Import JSON: extraído a TweaksData.jsx (split s89 / v0.34.5).
-     La superficie premium (s88) vive en PremiumSection.jsx. */
+  /* El círculo de Respira: cuatro dibujos (y el orgánico, tras bandera). El
+     nombre del elegido va en la línea del módulo, no en la pildora: así las
+     cuatro caben en su fila (medido en la maqueta, ronda 5). */
+  const estilosCirculo = ['flor', 'pulso', 'petalo', 'ondas']
+    .concat(window.SHOW_BREATH_ORGANICO === false ? [] : ['organico']);
+  const circuloValor = estilosCirculo.indexOf(state.breathStyle) !== -1 ? state.breathStyle : 'flor';
+
+  const goal = (state.water && state.water.goal) || 8;
+  /* Rango 4-12: el grid de vasos del tracker rinde bien hasta 12 columnas.
+     Patch funcional (no closure): clics rápidos leen siempre el goal fresco. */
+  const ponerGoal = (d) => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
     <div data-pace-tweaks-panel style={{
@@ -155,255 +130,92 @@ function TweaksPanel({ open, onClose }) {
       zIndex: 80,
       animation: 'pace-slide-up 280ms var(--ease)',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <div>
-          <Meta>{t('tweaks.meta')}</Meta>
-          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>{t('settings.title')}</div>
-        </div>
-        <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
+      <div className="pace-aj-cab">
+        <div className="pace-aj-titulo">{t('settings.title')}</div>
+        <button type="button" className="pace-aj-cerrar" onClick={onClose} aria-label={t('common.close')}>×</button>
       </div>
 
-      {/* Idioma — primer eje (s71: movido al top por frecuencia de uso) */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {/* s139 · Fase 1.6 — tercera opción «Auto». `state.lang` sigue siendo
-              siempre un idioma real; el modo vive en `state.langAuto` y
-              `loadState` lo resuelve en cada arranque. Al elegir Auto se
-              resuelve YA para que el panel cambie de idioma en el momento, sin
-              esperar a una recarga. */}
-          {[
-            { v: 'auto', name: t('tweaks.lang.auto') },
-            { v: 'es', name: t('tweaks.lang.es') },
-            { v: 'en', name: t('tweaks.lang.en') },
-          ].map(opt => {
-            const esAuto = opt.v === 'auto';
-            const active = esAuto ? !!state.langAuto : (!state.langAuto && state.lang === opt.v);
-            return (
-              <button key={opt.v} onClick={() => set(esAuto
-                ? { langAuto: true, lang: detectInitialLang() }
-                : { langAuto: false, lang: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: TWEAKS_PILL_TRANSITION,
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
+      <AjustesSeccion titulo={t('settings.sec.ver')}>
+        <AjustesFila id="lang" nombre={t('settings.lang')}>
+          <AjustesPildoras aria={t('settings.lang')} valor={langValor} onChange={ponerLang} opciones={[
+            { v: 'auto', name: t('settings.lang.auto') },
+            { v: 'es', name: t('settings.lang.es') },
+            { v: 'en', name: t('settings.lang.en') },
+          ]} />
+        </AjustesFila>
+        <AjustesFila id="palette" nombre={t('settings.palette')}>
+          <AjustesPildoras aria={t('settings.palette')} valor={palValor} onChange={ponerPaleta} opciones={[
+            { v: 'auto', name: t('settings.palette.auto'), picto: <MuestraPaleta cual="auto" /> },
+            { v: 'crema', name: t('settings.palette.crema'), picto: <MuestraPaleta cual="crema" /> },
+            { v: 'oscuro', name: t('settings.palette.oscuro'), picto: <MuestraPaleta cual="oscuro" /> },
+          ]} />
+        </AjustesFila>
+        {/* s139 · Fase 1.6 — el eje de estilo de timer se OCULTA entero (queda
+            siempre «aro»). Cuelga de `app/flags.js`; el código de las variantes
+            sigue vivo. NO borrar: leer la cabecera de flags.js. */}
+        {window.SHOW_TIMER_STYLE !== false && (
+          <AjustesFila id="timer" nombre={t('settings.timer')}>
+            <AjustesPildoras aria={t('settings.timer')} valor={state.timerStyle} onChange={(v) => set({ timerStyle: v })} opciones={[
+              { v: 'aro', name: t('settings.timer.aro') },
+              { v: 'barra', name: t('settings.timer.barra') },
+              { v: 'analogico', name: t('settings.timer.analogico') },
+            ]} />
+          </AjustesFila>
+        )}
+        {/* s188 · «Disposición» sale tras bandera: duplicaba el botón de plegar
+            la barra. La migración de 'minimal' vive en loadState. */}
+        {window.SHOW_LAYOUT_AXIS !== false && (
+          <AjustesFila id="layout" nombre={t('settings.layout')}>
+            <AjustesPildoras aria={t('settings.layout')} valor={state.layout} onChange={(v) => set({ layout: v })} opciones={[
+              { v: 'sidebar', name: t('settings.layout.sidebar') },
+              { v: 'minimal', name: t('settings.layout.minimal') },
+            ]} />
+          </AjustesFila>
+        )}
+      </AjustesSeccion>
 
-      <Divider style={{ margin: '14px 0' }} />
+      <AjustesSeccion titulo={t('settings.sec.oir')}>
+        <TweaksAudioBlock state={state} set={set} />
+      </AjustesSeccion>
 
-      {/* Paleta — segundo eje. s161 · Fase día/noche.
-          Tres pills, con la MISMA gramática que el idioma: «Auto» es un modo y
-          las otras dos son valores. Tocar crema u oscuro APAGA Auto (lo hace
-          `setPalette`), que es lo que permite que la tercera pill no necesite
-          explicación: elegir una es decir «esta, y no la que diga el sistema».
-          Al entrar en Auto se resuelve YA, para que el panel cambie en el
-          momento y no al recargar. */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.palette')}</Meta>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: 'auto', name: t('tweaks.palette.auto') },
-            { v: 'crema', name: t('tweaks.palette.crema') },
-            { v: 'oscuro', name: t('tweaks.palette.oscuro') },
-          ].map(opt => {
-            const esAuto = opt.v === 'auto';
-            const active = esAuto ? !!state.paletteAuto
-                                  : (!state.paletteAuto && state.palette === opt.v);
-            return (
-              <button key={opt.v} onClick={() => (esAuto ? setPaletteAuto(true) : setPalette(opt.v))}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: TWEAKS_PILL_TRANSITION,
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
+      <AjustesSeccion titulo={t('settings.sec.sesiones')}>
+        {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
+            disponible; el permiso se pide al activar (enableNotify). */}
+        {canNotify && (
+          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t('settings.notify.sub')} modulo="focus">
+            <AjustesInterruptor on={!!state.notifyFocusEnd && Notification.permission !== 'denied'} aria={t('settings.notify')}
+              onChange={(v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); }} />
+          </AjustesFila>
+        )}
+        {canNotify && Notification.permission === 'denied' && (
+          <div className="pace-aj-nota">{t('settings.notify.blocked')}</div>
+        )}
+        <AjustesFila id="circle" nombre={t('settings.circle')} modulo="breathe"
+                     sub={tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) })}>
+          <AjustesPildoras aria={t('settings.circle')} valor={circuloValor} onChange={(v) => set({ breathStyle: v })}
+            opciones={estilosCirculo.map(e => ({ v: e, aria: t('settings.circle.' + e), picto: <PictoCirculo estilo={e} /> }))} />
+        </AjustesFila>
+        {/* Descanso entre series (s114): SOLO afecta a los rests con
+            restKind:'betweenSets' del runner v1; los cierres respiratorios no
+            cambian. Default 30 = recomendado. */}
+        <AjustesFila id="rest" nombre={t('settings.rest')} sub={t('settings.rest.sub')} modulo="move">
+          <AjustesPildoras aria={t('settings.rest')} valor={state.restBetweenSets || 30} onChange={(v) => set({ restBetweenSets: v })} opciones={[
+            { v: 20, name: t('settings.rest.20') },
+            { v: 30, name: t('settings.rest.30') },
+            { v: 45, name: t('settings.rest.45') },
+          ]} />
+        </AjustesFila>
+        {/* Objetivo de hidratación (s89): el state (water.goal) siempre lo
+            soportó; esto solo expone la UI. */}
+        <AjustesFila id="water" nombre={t('settings.water')} sub={t('settings.water.sub')} modulo="hydrate">
+          <AjustesPaso valor={goal} onMenos={() => ponerGoal(-1)} onMas={() => ponerGoal(1)}
+                       ariaMenos={t('hydrate.less')} ariaMas={t('hydrate.more')} />
+        </AjustesFila>
+      </AjustesSeccion>
 
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* SONIDO -> `TweaksAudio.jsx` (s176). Se fue de aqui por dos razones:
-          este archivo iba por 466 lineas y el bloque nuevo lo pasaba de las 500
-          de la regla §1, y ademas dejo de ser un eje de dos pills para ser dos
-          decisiones anidadas (que marca la fase / que suena detras). El porque
-          de esa forma esta escrito alli. */}
-      <TweaksAudioBlock state={state} set={set} />
-
-      {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
-          disponible; el permiso se pide al activar (enableNotify). */}
-      {canNotify && (
-        <div style={{ marginBottom: 16 }}>
-          <Meta style={{ marginBottom: 4 }}>{t('tweaks.notify.label')}</Meta>
-          <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('tweaks.notify.hint')}</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {[
-              { v: true, name: t('tweaks.notify.on') },
-              { v: false, name: t('tweaks.notify.off') },
-            ].map(opt => {
-              const active = !!state.notifyFocusEnd === opt.v;
-              return (
-                <button key={String(opt.v)}
-                  onClick={() => { opt.v ? enableNotify() : set({ notifyFocusEnd: false }); }}
-                  style={{
-                    padding: '6px 10px',
-                    fontSize: 11,
-                    fontWeight: active ? 500 : 400,
-                    background: active ? 'var(--ink)' : 'var(--paper-2)',
-                    color: active ? 'var(--paper)' : 'var(--ink-2)',
-                    border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                    borderRadius: 'var(--r-sm)',
-                    transition: TWEAKS_PILL_TRANSITION,
-                    letterSpacing: 0.2,
-                  }}>{opt.name}</button>
-              );
-            })}
-          </div>
-          {Notification.permission === 'denied' && (
-            <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginTop: 6, letterSpacing: 0.1 }}>{t('tweaks.notify.blocked')}</div>
-          )}
-        </div>
-      )}
-
-      {/* Sesiones (s114) — descanso entre series de fuerza. SOLO afecta a los
-          rests con restKind:'betweenSets' del runner v1 (desk.pushups /
-          chair.squats); los cierres respiratorios (sin restKind) no cambian.
-          Bloque propio: es ritmo de sesión, no audio, y aloja los ajustes de
-          método que vienen (B2.2b). Default 30 = recomendado (pre-seleccionado). */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 4 }}>{t('tweaks.session.label')}</Meta>
-        <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('tweaks.session.rest.hint')}</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: 20, name: t('tweaks.rest.short') },
-            { v: 30, name: t('tweaks.rest.calm') },
-            { v: 45, name: t('tweaks.rest.wide') },
-          ].map(opt => {
-            const active = (state.restBetweenSets || 30) === opt.v;
-            return (
-              <button key={opt.v} onClick={() => set({ restBetweenSets: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: TWEAKS_PILL_TRANSITION,
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {ejes.map(eje => (
-        <div key={eje.key} style={{ marginBottom: 16 }}>
-          <Meta style={{ marginBottom: 6 }}>{eje.label}</Meta>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {eje.options.map(opt => {
-              const active = state[eje.key] === opt.v;
-              return (
-                <button key={opt.v} onClick={() => set({ [eje.key]: opt.v })}
-                  style={{
-                    padding: '6px 10px',
-                    fontSize: 11,
-                    fontWeight: active ? 500 : 400,
-                    background: active ? 'var(--ink)' : 'var(--paper-2)',
-                    color: active ? 'var(--paper)' : 'var(--ink-2)',
-                    border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                    borderRadius: 'var(--r-sm)',
-                    transition: TWEAKS_PILL_TRANSITION,
-                    letterSpacing: 0.2,
-                  }}>{opt.name}</button>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-
-      {/* Objetivo de hidratación (s89 · P0 auditoría). El state (water.goal)
-          siempre lo soportó; esto solo expone la UI. Rango 4-12: el grid de
-          vasos del tracker rinde bien hasta 12 columnas. */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.water')}</Meta>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          {/* Patch funcional (no closure): clics rápidos en el mismo render
-              leen siempre el goal fresco del store. */}
-          <button
-            onClick={() => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, (s.water.goal || 8) - 1) } }))}
-            style={tweaksStyles.stepBtn}
-            aria-label={t('hydrate.less')}
-          >−</button>
-          <span style={{ fontSize: 12, minWidth: 84, textAlign: 'center', color: 'var(--ink-2)', letterSpacing: 0.2 }}>
-            {tn('tweaks.water.value', { n: state.water.goal || 8 })}
-          </span>
-          <button
-            onClick={() => set(s => ({ ...s, water: { ...s.water, goal: Math.min(12, (s.water.goal || 8) + 1) } }))}
-            style={tweaksStyles.stepBtn}
-            aria-label={t('hydrate.more')}
-          >+</button>
-        </div>
-      </div>
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Datos — Export / Import JSON (sesión 17 / v0.12.0; extraído a
-          TweaksData.jsx en el split de sesión 89) */}
-      <TweaksDataSection />
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Premium — superficie display-only (s88 F3b; extraída a
-          PremiumSection.jsx en el split de sesión 89) */}
-      <PremiumSection />
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Reset — s155: `paceEventsWipeAll` borra los DOS almacenes por la
-          barrera; sin eso `privacy.html` mentiria al prometer borrado total. */}
-      <button
-        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) paceEventsWipeAll(() => location.reload()); }}
-        style={{
-          width: '100%',
-          padding: '8px',
-          fontSize: 11,
-          color: 'var(--ink-3)',
-          border: '1px dashed var(--line)',
-          borderRadius: 'var(--r-sm)',
-          letterSpacing: 0.2,
-        }}
-      >{t('tweaks.reset')}</button>
-
-      {/* Enlaces /safety y /privacy (s102; páginas estáticas de s101).
-          Solo en web: en file:// esas rutas no resuelven. Nueva pestaña
-          para no matar un timer corriendo. */}
-      {isWeb && (
-        <div style={{ marginTop: 12, textAlign: 'center', fontSize: 10.5, letterSpacing: 0.2 }}>
-          <a href="/safety" target="_blank" rel="noopener" style={tweaksStyles.legalLink}>{t('tweaks.legal.safety')}</a>
-          <span style={{ color: 'var(--ink-3)', margin: '0 8px' }}>·</span>
-          <a href="/privacy" target="_blank" rel="noopener" style={tweaksStyles.legalLink}>{t('tweaks.legal.privacy')}</a>
-        </div>
-      )}
+      <AjustesSeccion titulo={t('settings.sec.datos')} ultima>
+        <TweaksDataSection onReset={borrarTodo} isWeb={isWeb} />
+      </AjustesSeccion>
     </div>
   );
 }

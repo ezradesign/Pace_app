@@ -30,15 +30,13 @@ function paletaVisible(page) {
   return page.evaluate(() => document.documentElement.getAttribute('data-palette'));
 }
 
-/* La fila de pills de PALETA, acotada por «Crema dia», que solo esta ahi. */
+/* La fila de pildoras de PALETA (s188: el panel marca cada fila con data-pace-aj-fila). */
 function filaPaleta(page) {
-  return page.locator('[data-pace-tweaks-panel] div')
-    .filter({ has: page.getByRole('button', { name: 'Crema día', exact: true }) })
-    .last();
+  return page.locator('[data-pace-tweaks-panel] [data-pace-aj-fila="palette"]');
 }
 
 async function abrirAjustes(page) {
-  await page.getByRole('button', { name: 'Abrir tweaks' }).click();
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await expect(page.locator('[data-pace-tweaks-panel]')).toBeVisible();
 }
 
@@ -57,7 +55,7 @@ test.describe('paleta automatica · seguir al sistema', () => {
 
     /* salir de Auto eligiendo a mano, y repetir el gesto: ya no debe seguir */
     await abrirAjustes(page);
-    await filaPaleta(page).getByRole('button', { name: 'Crema día', exact: true }).click();
+    await filaPaleta(page).getByRole('button', { name: 'Crema', exact: true }).click();
     await expect.poll(() => paletaVisible(page)).toBe('crema');
     await expect.poll(() => page.evaluate(() => getState().paletteAuto)).toBe(false);
 
@@ -74,16 +72,16 @@ test.describe('paleta automatica · seguir al sistema', () => {
     await irAlArtefacto(page);
     await abrirAjustes(page);
     const fila = filaPaleta(page);
-    await expect(fila.getByRole('button', { name: 'Automático', exact: true })).toBeVisible();
+    await expect(fila.getByRole('button', { name: 'Auto', exact: true })).toBeVisible();
 
-    await fila.getByRole('button', { name: 'Oscuro noche', exact: true }).click();
+    await fila.getByRole('button', { name: 'Oscuro', exact: true }).click();
     await expect.poll(() => page.evaluate(() => getState().paletteAuto)).toBe(false);
     await expect.poll(() => paletaVisible(page)).toBe('oscuro');
 
     /* con el sistema en claro, volver a Auto tiene que devolver el papel claro
        SIN recargar — es lo que hace que la pill se sienta viva (s139). */
     await page.emulateMedia({ colorScheme: 'light' });
-    await fila.getByRole('button', { name: 'Automático', exact: true }).click();
+    await fila.getByRole('button', { name: 'Auto', exact: true }).click();
     await expect.poll(() => page.evaluate(() => getState().paletteAuto)).toBe(true);
     await expect.poll(() => paletaVisible(page)).toBe('crema');
   });
@@ -284,7 +282,7 @@ test.describe('paleta automatica · lo que no se regala', () => {
     /* CONTROL POSITIVO en la misma prueba: elegir oscuro A MANO si cuenta. Sin
        esto, el null de arriba podria ser «el detector no corre nunca». */
     await abrirAjustes(page);
-    await filaPaleta(page).getByRole('button', { name: 'Oscuro noche', exact: true }).click();
+    await filaPaleta(page).getByRole('button', { name: 'Oscuro', exact: true }).click();
     await expect.poll(() => page.evaluate(() => getState().paletteAuto)).toBe(false);
     await expect.poll(() => page.evaluate(c => localStorage.getItem(c), CLAVE_DIAS_OSCUROS))
       .not.toBeNull();

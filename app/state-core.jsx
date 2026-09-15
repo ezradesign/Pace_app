@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.118.0';
+const PACE_VERSION = 'v0.119.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -336,6 +336,12 @@ function loadState() {
     }
     if (window.SHOW_BREATH_ORGANICO === false && parsed.breathStyle === 'organico') {
       parsed.breathStyle = 'flor';
+    }
+    /* s188: «minimal» sale de Ajustes tras bandera. Se migra a 'sidebar' con la
+       barra PLEGADA: la persona conserva lo que veia y gana el boton de abrirla. */
+    if (window.SHOW_LAYOUT_AXIS === false && parsed.layout === 'minimal') {
+      parsed.layout = 'sidebar';
+      parsed.sidebarCollapsed = true;
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });

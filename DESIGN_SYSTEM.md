@@ -734,6 +734,35 @@ encabezado lleva **dentro** un botón que cubre la tarjeta con un `::after`.
 
 ---
 
+## ⚙️ El panel de Ajustes (s188 · v0.119.0)
+
+Cuatro temas —**Ver · Oír · Sesiones · Tus datos**— y cada ajuste es una **fila**:
+nombre a la izquierda, control a la derecha. Elegido mirándolo en cinco rondas de
+maqueta (`docs/proposals/ajustes-rediseno*.html`, la aprobada es P1+ de la ronda 5),
+cada una con la altura y el contraste calculados por la propia página. La hoja es
+`pace-aj-*` en `app/tweaks/TweaksPanel.support.jsx`; las piezas, en
+`TweaksPanel.parts.jsx`.
+
+| Pieza | Cómo es | Por qué |
+|---|---|---|
+| Título de sección | `.pace-meta` (versalita, `--ink-3`), 6 px de aire debajo | Es **sistema**, no contenido — la misma regla que BIBLIOTECA en `library.css.jsx` |
+| Nombre del ajuste | Cormorant itálica **16/500**, `--ink` | El par de las tarjetas de actividad («*Respira* / *ritmo, calma*») |
+| Línea del módulo | Cormorant itálica **12/400**, `--ink-3`, con un punto de 6 px del color del módulo | Dice de qué módulo es el ajuste; en el círculo lleva además el estilo elegido («Respira · Loto») |
+| Píldoras | Pista de `--paper-2` **sin borde**, radio 999, relleno 2 px; opción Inter 11 px, `4px 9px`; la elegida en `--ink` con texto `--paper` | La pieza de FOCO · PAUSA · LARGA. El borde era lo que hacía «caja» (ronda 4) |
+| Píldora elegida de un módulo | `color-mix(in srgb, var(--pace-aj-m) 22%, var(--paper))` con respaldo `--X-soft`, texto `--ink` | Terracota, tabaco y azul con texto claro dan 2,8–3,3:1; el lavado da 9,3:1 en oscuro |
+| Interruptor | 32×18, pista `--line-2` / encendido `--ink` (o el color del módulo), bola `--paper` | Un sí/no no son dos pastillas |
+| Escalón | ± en círculos de 26 px de `--paper-2`; la cifra en **EB Garamond 16** | Como las cifras de identidad |
+| Acción de datos | Fila de 34 px, Cormorant itálica 15, separador `--line`, icono a la derecha en `--ink-3` | Una acción se lee como una frase, no como un botón |
+| Muestras de paleta | Círculos de 10 px con los colores **literales** de cada paleta (crema `#F2EDE0`, oscuro `#1d1a14`, auto mitad y mitad) | Son la identidad de la paleta y no cambian con la activa; en oscuro el borde sube a `--ink-3` para que la muestra oscura se vea |
+| Pictogramas del círculo | 15 px, trazo 1,1 en `currentColor`, calcados de `BreatheVisual.jsx` | Loto, pulso, pétalo y ondas ya son cuatro dibujos: se eligen viéndolos |
+| Fila atenuada | `opacity: .38`, sin puntero | Un ajuste que depende de otro se atenúa, no se esconde: el panel no salta |
+| Fila que envuelve | `flex-wrap`; el control baja a su línea con `margin-left: auto` | La barra de scroll de escritorio se come 17 px y «Marca la fase» no cabía |
+
+**Medido**: 743 px de contenido; cabe sin scroll a 1280×800, 1536×864 y 1920×1080
+(1366×768 scrollea 25 px); móvil 390×844 1,22 pantallas de la hoja de 72 dvh. Antes:
+1412 px, 1,9 y 2,2. **El color de módulo entra por la fila** (`data-pace-aj-modulo` y las
+custom properties `--pace-aj-m` / `--pace-aj-ms`), nunca por el control.
+
 ## 🗂️ Dónde vive cada hoja de estilos (s148)
 
 `app/tokens.css` llegó a **613 líneas** y más de un tercio no eran tokens: era el

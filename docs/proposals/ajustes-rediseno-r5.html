@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="es" data-font="cormorant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajustes · ronda 5 · P1 refinada</title>
+<link rel="stylesheet" href="/app/tokens.css">
+<link rel="stylesheet" href="/app/motion.css">
+<style>
+  body { padding: 28px 24px 60px; }
+  .cab { max-width: 1400px; margin: 0 auto 18px; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .cab h1 { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 30px; margin: 0; }
+  .cab .nota { font-size: 12.5px; color: var(--ink-2); max-width: 720px; line-height: 1.5; }
+  .mandos { display: flex; gap: 6px; margin-left: auto; }
+  .mandos button { font-size: 11px; padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper-2); color: var(--ink-2); }
+  .mandos button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .fila { display: flex; gap: 26px; align-items: flex-start; overflow-x: auto; padding-bottom: 12px; max-width: 1400px; margin: 0 auto; }
+  .col { flex: 0 0 auto; }
+  .col > .rot { font-size: 11px; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 8px; }
+  .col > .rot b { color: var(--ink); }
+  .medida { font-size: 11.5px; color: var(--ink-2); margin-top: 10px; line-height: 1.55; max-width: 320px; }
+  .medida b { color: var(--ink); }
+  .porque { font-size: 12px; color: var(--ink-2); line-height: 1.5; max-width: 320px; margin-top: 8px; border-left: 2px solid var(--line-2); padding-left: 10px; }
+
+  .panel { width: 320px; background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: var(--sh-modal); padding: 20px; }
+  .panel.movil { width: 390px; border-radius: var(--r-lg) var(--r-lg) 0 0; border-left: 0; border-right: 0; border-bottom: 0; padding: 16px 18px 24px; max-height: 608px; overflow-y: auto; }
+
+  .meta { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .titulo { font-family: var(--font-display); font-style: italic; font-size: 22px; font-weight: 500; line-height: 1.1; }
+  .cerrar { font-size: 18px; color: var(--ink-3); width: 26px; height: 26px; display: grid; place-items: center; }
+  .cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .div { height: 1px; background: var(--line); margin: 12px 0; }
+
+  /* ---- anatomía de filas + letra T1 (aprobada) ---- */
+  .v2 .seccion > .meta { display: block; margin: 2px 0 2px; }
+  .v2 .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; padding: 4px 0; flex-wrap: wrap; }
+  .v2 .row .lbl { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
+  .v2 .row .lbl small { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
+  .v2 .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
+  .v2 .row.linea .ctl { flex: 1 0 100%; display: flex; justify-content: flex-end; margin-top: 2px; }
+  .v2 .sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; }
+  .v2 .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); }
+  .v2 .sw.on { background: var(--ink); }
+  .v2 .sw.on::after { left: 16px; }
+  .v2 .row[style*="--m"] .sw.on { background: var(--m); }
+  .v2 .stepper { display: inline-flex; align-items: center; gap: 8px; font-family: 'EB Garamond', Georgia, serif; font-size: 16px; color: var(--ink); }
+  .v2 .step { width: 26px; height: 26px; display: grid; place-items: center; font-size: 14px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: 50%; font-family: var(--font-ui); }
+  .v2 .accion { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink); border-top: 1px solid var(--line); }
+  .v2 .accion:first-of-type { border-top: 0; }
+  .v2 .accion .flecha { color: var(--ink-3); font-size: 14px; font-family: var(--font-ui); font-style: normal; }
+  .v2 .accion.suave { color: var(--ink-3); font-size: 14px; }
+  .v2 .pie { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+  .v2 .pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .v2 .sw-crema, .v2 .sw-oscuro, .v2 .sw-auto { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line-2); flex: 0 0 auto; display: inline-block; }
+  .v2 .sw-crema { background: #F2EDE0; }
+  .v2 .sw-oscuro { background: #1d1a14; }
+  .v2 .sw-auto { background: linear-gradient(90deg, #F2EDE0 50%, #1d1a14 50%); }
+  [data-palette="oscuro"] .v2 .sw-oscuro { border-color: var(--ink-3); }
+  .v2 svg.pic { width: 14px; height: 14px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---- REF · el segmentado de la ronda 3 (cajas) ---- */
+  .ref .seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; flex: 0 0 auto; }
+  .ref .seg button { padding: 5px 9px; font-size: 11px; color: var(--ink-2); background: var(--paper-2); border-left: 1px solid var(--line); letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); }
+  .ref .seg button:first-child { border-left: 0; }
+  .ref .seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+  .ref .row[style*="--m"] .seg button.on { background: var(--ms); color: var(--ink); box-shadow: inset 0 0 0 1px var(--m); }
+  .ref .row[style*="--m"] .step { border-radius: var(--r-sm); }
+  .ref .step { border-radius: var(--r-sm); }
+
+  /* ---- P1 · PÍLDORAS, como FOCO · PAUSA · LARGA de la home ---- */
+  .p1 .seg { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper-2); flex: 0 0 auto; }
+  .p1 .seg button { padding: 4px 10px; font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); }
+  .p1 .seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+  .p1 .row[style*="--m"] .seg button.on { background: var(--ms); background: color-mix(in srgb, var(--m) 22%, var(--paper)); color: var(--ink); }
+  .p1 .row[style*="--m"] .seg button.on svg.pic { stroke: var(--m); fill: var(--ms); }
+
+  /* ---- P2 · SIN CAJAS: marca + palabra ---- */
+  .p2 .opts { display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+  .p2 .opts button { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); font-family: var(--font-ui); letter-spacing: .1px; padding: 3px 0; }
+  .p2 .opts button.on { color: var(--ink); font-weight: 500; }
+  .p2 .anillo { width: 11px; height: 11px; border-radius: 50%; border: 1.2px solid var(--line-2); flex: 0 0 auto; display: inline-block; }
+  .p2 button.on .anillo { border-color: var(--ink); background: var(--ink); box-shadow: inset 0 0 0 2px var(--paper); }
+  .p2 .row[style*="--m"] button.on .anillo { border-color: var(--m); background: var(--m); }
+  .p2 .opts button svg.pic { stroke: var(--line-2); }
+  .p2 .opts button.on svg.pic { stroke: var(--ink); }
+  .p2 .row[style*="--m"] .opts button.on svg.pic { stroke: var(--m); fill: var(--ms); }
+
+  /* ---- P1+ · la refinada ---- */
+  .p1b .titulo { font-size: 24px; }
+  .p1b .seccion > .meta { margin: 2px 0 6px; }
+  .p1b .seg { display: inline-flex; gap: 2px; padding: 2px; border: 0; border-radius: 999px; background: var(--paper-2); flex: 0 0 auto; }
+  .p1b .seg button { padding: 4px 10px; font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); min-height: 24px; }
+  .p1b .seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+  .p1b .row[style*="--m"] .seg button.on { background: var(--ms); background: color-mix(in srgb, var(--m) 22%, var(--paper)); color: var(--ink); }
+  .p1b .row[style*="--m"] .seg button.on svg.pic { stroke: var(--m); fill: var(--ms); }
+  /* el círculo: cuatro pictogramas en su fila, el nombre elegido baja a la línea del módulo */
+  .p1b .seg.picto button { padding: 4px 9px; }
+  .p1b .seg.picto svg.pic { width: 15px; height: 15px; }
+  /* sonido apagado: las dos decisiones que cuelgan del maestro se atenúan, no desaparecen */
+  .p1b .row.apagada { opacity: .38; pointer-events: none; }
+  .p1b .row.apagada .seg button.on { background: var(--line); color: var(--ink-2); font-weight: 400; }
+</style>
+</head>
+<body>
+
+<div class="cab">
+  <h1>Ajustes · ronda 5 · P1, y lo que aún se podía afinar</h1>
+  <div class="nota">A la izquierda, P1 tal cual salió de la ronda 4. En medio, P1 con cinco afinados: la pista sin borde, el círculo elegido con pictogramas dentro de su fila (y el nombre en la línea del módulo), un poco más de aire bajo cada título, el título del panel un punto más grande, y el sonido apagado que ATENÚA en vez de esconder — a la derecha, ese estado, que hoy nadie mira.</div>
+  <div class="mandos">
+    <button id="pal-crema" class="on" onclick="paleta('crema')">Crema</button>
+    <button id="pal-oscuro" onclick="paleta('oscuro')">Oscuro</button>
+  </div>
+</div>
+
+<!-- pictogramas: 16x16, trazo en currentColor. Calcados de BreatheVisual.jsx:
+     loto = la flor de línea · pulso = círculo con la bola en la órbita ·
+     pétalo = seis elipses giradas · ondas = anillos concéntricos que se apagan -->
+<svg style="display:none">
+  <symbol id="pic-loto" viewBox="0 0 16 16"><path d="M8 3.2C6.6 5.8 6.6 9.2 8 12.3 9.4 9.2 9.4 5.8 8 3.2Z"/><path d="M8 12.3C5.2 11.6 3.3 9.4 3 6.4 5.4 6.9 7 8.9 8 12.3Z"/><path d="M8 12.3C10.8 11.6 12.7 9.4 13 6.4 10.6 6.9 9 8.9 8 12.3Z"/><path d="M4 13.2Q8 14.6 12 13.2"/></symbol>
+  <symbol id="pic-pulso" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.6"/><circle cx="8" cy="8" r="6.8" opacity=".35"/><circle cx="8" cy="3.4" r="1.3" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="pic-petalo" viewBox="0 0 16 16"><g><ellipse cx="8" cy="4.6" rx="1.7" ry="3.4"/><ellipse cx="8" cy="4.6" rx="1.7" ry="3.4" transform="rotate(60 8 8)"/><ellipse cx="8" cy="4.6" rx="1.7" ry="3.4" transform="rotate(120 8 8)"/><ellipse cx="8" cy="4.6" rx="1.7" ry="3.4" transform="rotate(180 8 8)"/><ellipse cx="8" cy="4.6" rx="1.7" ry="3.4" transform="rotate(240 8 8)"/><ellipse cx="8" cy="4.6" rx="1.7" ry="3.4" transform="rotate(300 8 8)"/></g></symbol>
+  <symbol id="pic-ondas" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.3"/><circle cx="8" cy="8" r="4.6" opacity=".6"/><circle cx="8" cy="8" r="6.9" opacity=".3"/></symbol>
+</svg>
+
+<template id="tpl-ref">
+  <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+  <div class="seccion"><span class="meta">Ver</span>
+    <div class="row"><div class="lbl">Idioma</div><div class="seg"><button class="on">Auto</button><button>Español</button><button>English</button></div></div>
+    <div class="row"><div class="lbl">Paleta</div><div class="seg"><button class="on"><i class="sw-auto"></i>Auto</button><button><i class="sw-crema"></i>Crema</button><button><i class="sw-oscuro"></i>Oscuro</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Oír</span>
+    <div class="row"><div class="lbl">Sonido</div><div class="sw on"></div></div>
+    <div class="row"><div class="lbl">Marca la fase</div><div class="seg"><button>Tono</button><button class="on">Voz clara</button><button>Voz grave</button></div></div>
+    <div class="row"><div class="lbl">Suena detrás</div><div class="seg"><button class="on">Nada</button><button>Ambiente</button><button>Música</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Sesiones</span>
+    <div class="row" style="--m: var(--focus); --ms: var(--focus-soft)"><div class="lbl">Aviso al terminar<small><i class="punto"></i>Foco · si la pestaña está detrás</small></div><div class="sw on"></div></div>
+    <div class="row" style="--m: var(--breathe); --ms: var(--breathe-soft)"><div class="lbl">Círculo<small><i class="punto"></i>Respira</small></div><div class="seg"><button class="on">Loto</button><button>Pulso</button><button>Pétalo</button><button>Ondas</button></div></div>
+    <div class="row" style="--m: var(--move); --ms: var(--move-soft)"><div class="lbl">Descanso entre series<small><i class="punto"></i>Mueve</small></div><div class="seg"><button>20 s</button><button class="on">30 s</button><button>45 s</button></div></div>
+    <div class="row" style="--m: var(--hydrate); --ms: var(--hydrate-soft)"><div class="lbl">Vasos al día<small><i class="punto"></i>Hidrátate</small></div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Tus datos</span>
+    <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+    <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+    <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+    <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+    <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+  </div>
+</template>
+
+<template id="tpl-p1">
+  <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+  <div class="seccion"><span class="meta">Ver</span>
+    <div class="row"><div class="lbl">Idioma</div><div class="seg"><button class="on">Auto</button><button>Español</button><button>English</button></div></div>
+    <div class="row"><div class="lbl">Paleta</div><div class="seg"><button class="on"><i class="sw-auto"></i>Auto</button><button><i class="sw-crema"></i>Crema</button><button><i class="sw-oscuro"></i>Oscuro</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Oír</span>
+    <div class="row"><div class="lbl">Sonido</div><div class="sw on"></div></div>
+    <div class="row"><div class="lbl">Marca la fase</div><div class="seg"><button>Tono</button><button class="on">Voz clara</button><button>Voz grave</button></div></div>
+    <div class="row"><div class="lbl">Suena detrás</div><div class="seg"><button class="on">Nada</button><button>Ambiente</button><button>Música</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Sesiones</span>
+    <div class="row" style="--m: var(--focus); --ms: var(--focus-soft)"><div class="lbl">Aviso al terminar<small><i class="punto"></i>Foco · si la pestaña está detrás</small></div><div class="sw on"></div></div>
+    <div class="row linea" style="--m: var(--breathe); --ms: var(--breathe-soft)"><div class="lbl">Círculo<small><i class="punto"></i>Respira</small></div><div class="ctl"><div class="seg"><button class="on"><svg class="pic"><use href="#pic-loto"/></svg>Loto</button><button><svg class="pic"><use href="#pic-pulso"/></svg>Pulso</button><button><svg class="pic"><use href="#pic-petalo"/></svg>Pétalo</button><button><svg class="pic"><use href="#pic-ondas"/></svg>Ondas</button></div></div></div>
+    <div class="row" style="--m: var(--move); --ms: var(--move-soft)"><div class="lbl">Descanso entre series<small><i class="punto"></i>Mueve</small></div><div class="seg"><button>20 s</button><button class="on">30 s</button><button>45 s</button></div></div>
+    <div class="row" style="--m: var(--hydrate); --ms: var(--hydrate-soft)"><div class="lbl">Vasos al día<small><i class="punto"></i>Hidrátate</small></div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Tus datos</span>
+    <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+    <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+    <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+    <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+    <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+  </div>
+</template>
+<template id="tpl-p1b">
+  <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+  <div class="seccion"><span class="meta">Ver</span>
+    <div class="row"><div class="lbl">Idioma</div><div class="seg"><button class="on">Auto</button><button>Español</button><button>English</button></div></div>
+    <div class="row"><div class="lbl">Paleta</div><div class="seg"><button class="on"><i class="sw-auto"></i>Auto</button><button><i class="sw-crema"></i>Crema</button><button><i class="sw-oscuro"></i>Oscuro</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Oír</span>
+    <div class="row"><div class="lbl">Sonido</div><div class="sw on"></div></div>
+    <div class="row"><div class="lbl">Marca la fase</div><div class="seg"><button>Tono</button><button class="on">Voz clara</button><button>Voz grave</button></div></div>
+    <div class="row"><div class="lbl">Suena detrás</div><div class="seg"><button class="on">Nada</button><button>Ambiente</button><button>Música</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Sesiones</span>
+    <div class="row" style="--m: var(--focus); --ms: var(--focus-soft)"><div class="lbl">Aviso al terminar<small><i class="punto"></i>Foco · si la pestaña está detrás</small></div><div class="sw on"></div></div>
+    <div class="row" style="--m: var(--breathe); --ms: var(--breathe-soft)"><div class="lbl">Círculo<small><i class="punto"></i>Respira · Loto</small></div><div class="seg picto"><button class="on" aria-label="Loto"><svg class="pic"><use href="#pic-loto"/></svg></button><button aria-label="Pulso"><svg class="pic"><use href="#pic-pulso"/></svg></button><button aria-label="Pétalo"><svg class="pic"><use href="#pic-petalo"/></svg></button><button aria-label="Ondas"><svg class="pic"><use href="#pic-ondas"/></svg></button></div></div>
+    <div class="row" style="--m: var(--move); --ms: var(--move-soft)"><div class="lbl">Descanso entre series<small><i class="punto"></i>Mueve</small></div><div class="seg"><button>20 s</button><button class="on">30 s</button><button>45 s</button></div></div>
+    <div class="row" style="--m: var(--hydrate); --ms: var(--hydrate-soft)"><div class="lbl">Vasos al día<small><i class="punto"></i>Hidrátate</small></div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Tus datos</span>
+    <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+    <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+    <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+    <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+    <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+  </div>
+</template>
+<template id="tpl-p1c">
+  <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+  <div class="seccion"><span class="meta">Ver</span>
+    <div class="row"><div class="lbl">Idioma</div><div class="seg"><button class="on">Auto</button><button>Español</button><button>English</button></div></div>
+    <div class="row"><div class="lbl">Paleta</div><div class="seg"><button class="on"><i class="sw-auto"></i>Auto</button><button><i class="sw-crema"></i>Crema</button><button><i class="sw-oscuro"></i>Oscuro</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Oír</span>
+    <div class="row"><div class="lbl">Sonido</div><div class="sw"></div></div>
+    <div class="row apagada"><div class="lbl">Marca la fase</div><div class="seg"><button>Tono</button><button class="on">Voz clara</button><button>Voz grave</button></div></div>
+    <div class="row apagada"><div class="lbl">Suena detrás</div><div class="seg"><button class="on">Nada</button><button>Ambiente</button><button>Música</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Sesiones</span>
+    <div class="row" style="--m: var(--focus); --ms: var(--focus-soft)"><div class="lbl">Aviso al terminar<small><i class="punto"></i>Foco · si la pestaña está detrás</small></div><div class="sw on"></div></div>
+    <div class="row" style="--m: var(--breathe); --ms: var(--breathe-soft)"><div class="lbl">Círculo<small><i class="punto"></i>Respira · Loto</small></div><div class="seg picto"><button class="on" aria-label="Loto"><svg class="pic"><use href="#pic-loto"/></svg></button><button aria-label="Pulso"><svg class="pic"><use href="#pic-pulso"/></svg></button><button aria-label="Pétalo"><svg class="pic"><use href="#pic-petalo"/></svg></button><button aria-label="Ondas"><svg class="pic"><use href="#pic-ondas"/></svg></button></div></div>
+    <div class="row" style="--m: var(--move); --ms: var(--move-soft)"><div class="lbl">Descanso entre series<small><i class="punto"></i>Mueve</small></div><div class="seg"><button>20 s</button><button class="on">30 s</button><button>45 s</button></div></div>
+    <div class="row" style="--m: var(--hydrate); --ms: var(--hydrate-soft)"><div class="lbl">Vasos al día<small><i class="punto"></i>Hidrátate</small></div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Tus datos</span>
+    <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+    <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+    <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+    <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+    <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+  </div>
+</template>
+
+<template id="tpl-p2">
+  <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+  <div class="seccion"><span class="meta">Ver</span>
+    <div class="row"><div class="lbl">Idioma</div><div class="opts"><button class="on"><i class="anillo"></i>Auto</button><button><i class="anillo"></i>Español</button><button><i class="anillo"></i>English</button></div></div>
+    <div class="row"><div class="lbl">Paleta</div><div class="opts"><button class="on"><i class="sw-auto"></i>Auto</button><button><i class="sw-crema"></i>Crema</button><button><i class="sw-oscuro"></i>Oscuro</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Oír</span>
+    <div class="row"><div class="lbl">Sonido</div><div class="sw on"></div></div>
+    <div class="row"><div class="lbl">Marca la fase</div><div class="opts"><button><i class="anillo"></i>Tono</button><button class="on"><i class="anillo"></i>Voz clara</button><button><i class="anillo"></i>Voz grave</button></div></div>
+    <div class="row"><div class="lbl">Suena detrás</div><div class="opts"><button class="on"><i class="anillo"></i>Nada</button><button><i class="anillo"></i>Ambiente</button><button><i class="anillo"></i>Música</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Sesiones</span>
+    <div class="row" style="--m: var(--focus); --ms: var(--focus-soft)"><div class="lbl">Aviso al terminar<small><i class="punto"></i>Foco · si la pestaña está detrás</small></div><div class="sw on"></div></div>
+    <div class="row linea" style="--m: var(--breathe); --ms: var(--breathe-soft)"><div class="lbl">Círculo<small><i class="punto"></i>Respira</small></div><div class="ctl"><div class="opts"><button class="on"><svg class="pic"><use href="#pic-loto"/></svg>Loto</button><button><svg class="pic"><use href="#pic-pulso"/></svg>Pulso</button><button><svg class="pic"><use href="#pic-petalo"/></svg>Pétalo</button><button><svg class="pic"><use href="#pic-ondas"/></svg>Ondas</button></div></div></div>
+    <div class="row" style="--m: var(--move); --ms: var(--move-soft)"><div class="lbl">Descanso entre series<small><i class="punto"></i>Mueve</small></div><div class="opts"><button><i class="anillo"></i>20 s</button><button class="on"><i class="anillo"></i>30 s</button><button><i class="anillo"></i>45 s</button></div></div>
+    <div class="row" style="--m: var(--hydrate); --ms: var(--hydrate-soft)"><div class="lbl">Vasos al día<small><i class="punto"></i>Hidrátate</small></div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+  </div>
+  <div class="div"></div>
+  <div class="seccion"><span class="meta">Tus datos</span>
+    <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+    <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+    <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+    <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+    <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+  </div>
+</template>
+
+<div class="fila" id="fila">
+  <div class="col"><div class="rot"><b>P1</b> · tal cual la ronda 4</div><div class="panel v2 p1" data-mide="P1" data-tpl="tpl-p1"></div><div class="medida" id="m-P1"></div>
+    <div class="porque">Referencia: píldoras con la pista bordeada, el círculo en su propia línea con nombre, y el sonido apagado escondería las dos filas de debajo (como hoy).</div></div>
+  <div class="col"><div class="rot"><b>P1+ · refinada</b></div><div class="panel v2 p1b" data-mide="P1+" data-tpl="tpl-p1b"></div><div class="medida" id="m-P1+"></div>
+    <div class="porque"><b>1</b> La pista pierde el borde: solo papel-2, y las píldoras pesan menos. <b>2</b> El círculo se elige entre cuatro pictogramas dentro de su fila, y la línea del módulo dice cuál está elegido («Respira · Loto»): vuelve el ritmo de una fila por ajuste. <b>3</b> Seis píxeles más de aire bajo cada título de sección. <b>4</b> «Ajustes» a 24, para que mande sobre las etiquetas de 16. <b>5</b> Con el sonido apagado, las dos decisiones que cuelgan de él se atenúan en vez de desaparecer (columna de la derecha).</div></div>
+  <div class="col"><div class="rot"><b>P1+ · con el sonido apagado</b></div><div class="panel v2 p1b" data-mide="P1+off" data-tpl="tpl-p1c"></div><div class="medida" id="m-P1+off"></div>
+    <div class="porque">Hoy, al silenciar, «Marca la fase» y «Suena detrás» desaparecen y el panel salta 84 px. Atenuadas se ve qué volverá cuando enciendas, y nada se mueve. Es el estado que nadie había mirado en ninguna ronda.</div></div>
+</div>
+
+<h2 style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:22px;margin:30px auto 10px;max-width:1400px">En móvil · hoja de 390 × 608 px</h2>
+<div class="fila" id="fila-movil"></div>
+
+<script>
+  document.querySelectorAll('.panel[data-mide]').forEach(p => p.appendChild(document.getElementById(p.dataset.tpl).content.cloneNode(true)));
+  function paleta(p) {
+    if (p === 'oscuro') document.documentElement.setAttribute('data-palette', 'oscuro'); else document.documentElement.removeAttribute('data-palette');
+    document.getElementById('pal-crema').classList.toggle('on', p === 'crema');
+    document.getElementById('pal-oscuro').classList.toggle('on', p === 'oscuro');
+    medir();
+  }
+  function rgba(s) { const m = s.match(/[\d.]+/g) || [0,0,0,1]; /* color-mix devuelve color(srgb r g b), en 0..1 */ const k = s.startsWith('color(srgb') ? 255 : 1; return { r:+m[0]*k, g:+m[1]*k, b:+m[2]*k, a: m.length > 3 ? +m[3] : 1 }; }
+  function sobre(fg, bg) { const a = fg.a; return { r: fg.r*a + bg.r*(1-a), g: fg.g*a + bg.g*(1-a), b: fg.b*a + bg.b*(1-a), a: 1 }; }
+  function lum(c) { const f = v => { v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }; return 0.2126*f(c.r) + 0.7152*f(c.g) + 0.0722*f(c.b); }
+  function contraste(a, b) { const la = lum(a), lb = lum(b); return (Math.max(la,lb)+0.05)/(Math.min(la,lb)+0.05); }
+  function fondoReal(el, papel) { const capas = []; let n = el; while (n && !n.classList.contains('panel')) { capas.push(rgba(getComputedStyle(n).backgroundColor)); n = n.parentElement; } let bg = papel; for (let i = capas.length - 1; i >= 0; i--) if (capas[i].a > 0) bg = sobre(capas[i], bg); return bg; }
+  function medir() {
+    const fila = document.getElementById('fila-movil'); fila.innerHTML = '';
+    document.querySelectorAll('.panel[data-mide]').forEach(p => {
+      const n = p.dataset.mide; const papel = rgba(getComputedStyle(p).backgroundColor);
+      const h = Math.round(p.getBoundingClientRect().height);
+      let peor = 99, peorQue = '', peorNo = 99;
+      p.querySelectorAll('.seg button.on, .opts button.on, .stepper span').forEach(el => { const c = contraste(rgba(getComputedStyle(el).color), fondoReal(el, papel)); if (c < peor) { peor = c; peorQue = el.textContent.trim().slice(0, 12); } });
+      p.querySelectorAll('.seg button:not(.on), .opts button:not(.on)').forEach(el => { const c = contraste(rgba(getComputedStyle(el).color), fondoReal(el, papel)); if (c < peorNo) peorNo = c; });
+      let peorSw = 99; p.querySelectorAll('.sw.on').forEach(el => { const c = contraste(rgba(getComputedStyle(el).backgroundColor), papel); if (c < peorSw) peorSw = c; });
+      document.getElementById('m-' + n).innerHTML = 'alto <b>' + h + ' px</b> · ' + (h/752).toFixed(2) + ' pantallas a 1280×800<br>texto elegido: <b>' + peor.toFixed(2) + ':1</b> («' + peorQue + '») · no elegido: ' + peorNo.toFixed(2) + ':1 · interruptor: ' + peorSw.toFixed(2) + ':1';
+      const col = document.createElement('div'); col.className = 'col';
+      const rot = document.createElement('div'); rot.className = 'rot'; rot.innerHTML = '<b>' + n + '</b> · móvil';
+      const clon = p.cloneNode(true); clon.classList.add('movil'); clon.removeAttribute('data-mide');
+      col.appendChild(rot); col.appendChild(clon); fila.appendChild(col);
+      const med = document.createElement('div'); med.className = 'medida'; med.innerHTML = 'contenido <b>' + clon.scrollHeight + ' px</b> en 608 → <b>' + (clon.scrollHeight/608).toFixed(2) + ' pantallas</b>'; col.appendChild(med);
+    });
+  }
+  window.addEventListener('load', () => { if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir); else medir(); });
+</script>
+</body>
+</html>

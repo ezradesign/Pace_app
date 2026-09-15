@@ -215,8 +215,8 @@ test('Tweaks: cambiar de paleta cambia los colores de verdad', async ({ page }) 
     paleta: 'crema', fondo: 'rgb(242, 237, 224)', tinta: 'rgb(31, 28, 23)',
   });
 
-  await page.getByRole('button', { name: 'Abrir tweaks' }).click();
-  await page.getByRole('button', { name: 'Oscuro noche' }).click();
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await page.getByRole('button', { name: 'Oscuro', exact: true }).click();
 
   /* Oscuro noche. No basta con que cambie el atributo: se comprueba el color
      COMPUTADO, que es lo unico que prueba que la hoja de tokens se aplico. */

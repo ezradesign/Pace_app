@@ -45,4 +45,13 @@ const SHOW_TIMER_STYLE = false;
    reactiva, hay que pasarlo por `paceGlowRamp` + `PaceDither` como los otros. */
 const SHOW_BREATH_ORGANICO = false;
 
-Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO });
+/* Eje «Disposición» de Ajustes (con barra lateral · sin barra), s188.
+   Apagado ⇒ el eje desaparece del panel. Se retira porque DUPLICA un control
+   que ya existe: la barra se pliega con su propio botón (`sidebarCollapsed`),
+   y «minimal» era lo mismo sin el botón para volver. Quien lo tuviera puesto
+   pasa a 'sidebar' CON la barra plegada -- conserva lo que veía (nada de barra)
+   y gana el botón para abrirla. La rama `state.layout !== 'minimal'` sigue
+   viva en `main.jsx`. Medido antes de decidirlo, en la maqueta de s188. */
+const SHOW_LAYOUT_AXIS = false;
+
+Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO, SHOW_LAYOUT_AXIS });

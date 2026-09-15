@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.119.0** | 2026-09-15 | feat(ajustes): **el panel en cuatro temas** — El panel de Ajustes, redisenado entero y elegido MIRANDOLO en **cinco rondas de maqueta** con los tokens, las fuentes y el copy reales. Lo que habia, medido: **1412 px de contenido** (1,9 pantallas a 1280x800, 2,2 en movil), 30 pastillas, 7 lineas de explicacion, 10 secciones sin agrupar y un bloque premium de **221 px que era un input deshabilitado**. Lo que hay: cuatro temas -- **Ver · Oir · Sesiones · Tus datos**-- y cada ajuste es una FILA con el nombre en cursiva a la izquierda y el control a la derecha. **El color dice de que modulo es el ajuste**, y solo aparece donde hay modulo: la pildora elegida lleva un LAVADO del color con el texto en tinta, porque terracota, tabaco y azul con texto claro dan **2,8-3,3:1** (medido) y el lavado da 9,3:1 en oscuro. El circulo de Respira se elige entre **cuatro pictogramas** calcados de `BreatheVisual.jsx` y el nombre del elegido baja a la linea del modulo. **Con el sonido apagado las dos filas que cuelgan de el se atenuan en vez de esconderse**: antes el panel saltaba 84 px. «Disposicion» sale tras bandera (duplicaba el boton de plegar la barra) con migracion de «minimal». Resultado: **743 px, cabe sin scroll a 1280x800**; movil 1,22 pantallas. Nace `strings/settings.js` (`ui.js` habria pasado de 500) y `TweaksPanel.parts.jsx`. **215 → 224**, 8 mutantes y los 8 muerden. Antes, se cerro la deuda documental que s187 dejo a medias. | s188 | [session-188](./docs/sessions/session-188-ajustes-en-cuatro-temas.md) |
 | **v0.118.0** | 2026-09-07 | feat(pausa): **la pausa que propone** — Al terminar un Pomodoro la app sabia cuanto llevabas sentado y **no lo usaba**: ofrecia cuatro modulos y te dejaba elegir entre 17 rutinas. Ahora propone UNA, con nombre, duracion y **el porque**. La regla se escribio ANTES de codificarla y va de lo que acaba de pasar a lo que es cierto en general: bloque ≥35 min → Estira («Llevas 45 minutos sentado») · cero vasos pasado el mediodia → agua · tercer bloque de hoy → Respira · si no, lo que el plan tenga pendiente · **y si no se cumple ninguna NO se propone nada** -- una propuesta sin motivo es publicidad. **LA CONDICION QUE MANDO EL DISENO ERA UNA MEDIDA**: el modal ocupa **616 px fijos** en los cuatro telefonos y a 360x640 solo le sobran **24**, asi que la propuesta no podia sumar alto -- entra en el sitio que dejan el sello «Para ti» y las descripciones de las cuatro tarjetas, **que con una rutina con nombre arriba sobran**. Medido despues: **601 px**, 15 menos que antes. **Los glifos de los cuatro modulos se quedan** (peticion del usuario): son lo que hace la tarjeta reconocible de un vistazo. La rutina la elige `libraryParaAhora`, que ya rota por dia y respeta el acceso premium, y **«Empezar» entra en ESA rutina por las mismas puertas que la biblioteca** -- el modal de apnea y el preview de §18.3-, no por un camino paralelo. **209 → 215**, con **6 mutantes en rojo**, y dos de ellos obligaron a arreglar el codigo: el filtro de seguridad estaba DUPLICADO (quitarlo de un sitio no ponia rojo nada, el defecto de s166) y el aserto de la apnea miraba un solo dia cuando el recomendador **rota por dia** -- ahora mira 30. De paso, `ui.js` paso de 500 y el dominio `break.*` sale a su propio archivo. | s187 | [session-187](./docs/sessions/session-187-la-pausa-que-propone.md) |
 | **v0.117.1** | 2026-09-06 | fix(respira): **la tarjeta de Viajes deja de ser negra** — Elegida MIRANDOLA, con **19 variantes pintadas sobre la app de verdad** y el contraste medido en cada una. Gana un **lavado del color de Respira sobre el papel de la tarjeta, con los pulmones del modulo grandes sangrando por el borde derecho**. El negro distinguia pero no decia de quien era el viaje; el dibujo dice las dos cosas -- que es otra cosa y que es Respira- sin gastar una palabra. **El terracota puro nunca fue viable**: sobre crema se queda en 2,80:1 y el cuerpo de la tarjeta es de 13 px. **El lavado se compone con TOKENS y no con un hex** (`--breathe-soft` sobre `--paper-2`), asi que vale en las dos paletas sin una sola regla de oscuro -- con un color a fuego, en la paleta oscura habria quedado un bloque claro deslumbrando. **Y hay un argumento de sistema que descarto los verdes**: cada modulo tiene su color, asi que un fondo verde dentro de Respira dice «esto es de Foco». **El contraste ya no depende de que nadie lo aclare por descuido**: dos tests lo miden EN LA PAGINA con los colores computados, uno por paleta, y su mutante —subir el lavado a `--breathe` entero— los pone rojos los dos. De paso, **la trampa del backtick se cobro otra pasada** en `library.css.jsx`, que van tres. **206 → 209**. | s186 | [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md) |
 | **v0.117.0** | 2026-09-06 | feat(respira): **el estante de Viajes** — La separacion que la Fase 5 del ROADMAP pide con estas palabras («separar Tecnicas de Viajes»), construida. Un viaje no es una tecnica mas larga: dura de 15 a 45 min, lleva musica, tiene nombre propio y se elige por como quieres acabar. **VIVE EN SU PROPIA LISTA (`window.BREATHE_VIAJES`) Y NO COMO UN GRUPO MAS**, y ahi esta la decision entera: de esa estructura salen GRATIS las tres reglas que un viaje necesita -- el filtro «≤ 5 min» no lo cuenta, «Para ahora» no lo propone y no compite en el orden de los grupos-- **sin escribir ni una excepcion**. Escritas a mano habrian sido tres sitios que recordar cada vez que alguien toca la biblioteca. **La lista esta VACIA a proposito**: el contenido CTB esta fuera de la v1 (s180) y lo que entra es el SITIO; con cero viajes no se pinta ni la cabecera. **Y se cerro un agujero de premium antes de que existiera**: `canAccessRoutine` resuelve el id preguntando al catalogo y es FAIL-OPEN con los que no conoce, asi que un viaje `access: 'premium'` se habria abierto GRATIS -- `getBreatheRoutine` busca ahora tambien en los viajes. **200 → 206**, con **5 mutantes en rojo y uno declarado que no muerde** (meter los viajes en `todas` no cambia nada en pantalla: ese `useMemo` depende de `[groups]` y se calcula al arrancar, cuando la lista aun esta vacia). | s186 | [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md) |
@@ -388,6 +389,62 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.119.0] -- 2026-09-15 -- feat(ajustes): el panel en cuatro temas
+
+### Cambiado
+- **El panel de Ajustes, entero.** Cuatro temas en este orden: **Ver** (idioma, paleta) · **Oir**
+  (sonido, que marca la fase, que suena detras) · **Sesiones** (aviso al terminar el foco, circulo de
+  Respira, descanso entre series, vasos al dia) · **Tus datos** (exportar, importar, borrar, licencia,
+  pie). Cada ajuste es una fila: nombre en cursiva a la izquierda, control a la derecha.
+- **La forma se eligio mirandola, en cinco rondas** (`docs/proposals/ajustes-rediseno*.html`): filas
+  frente a bloques y acordeon · el color como lavado de modulo · la cursiva en los nombres y la
+  versalita en las secciones (que son sistema) · pildoras sin caja, la pieza de FOCO · PAUSA · LARGA
+  · y cinco afinados. Cada ronda con la altura y el contraste calculados por la propia pagina.
+- **El color dice de que modulo es el ajuste.** Solo las filas de Sesiones lo llevan (punto + nombre del
+  modulo debajo del ajuste), y la pildora elegida es un LAVADO del color con el texto en TINTA: el color
+  con texto claro no pasa (terracota 2,8:1, tabaco 3,3, azul 3,2 -- medido), el lavado da 9,3:1 en oscuro.
+  Es el reparto de la tarjeta de Viajes (s186). Lo global (idioma, sonido) sigue en tinta.
+- **El circulo de respiracion se elige entre cuatro pictogramas** (loto, pulso, petalo, ondas, calcados de
+  `BreatheVisual.jsx`) dentro de su fila; el nombre del elegido va en la linea del modulo («Respira ·
+  Loto»). La voz entra en la misma fila que el tono (Tono · Voz clara · Voz grave): sigue siendo UNA
+  decision (s176) y desaparece la sangria de dos niveles.
+- **Con el sonido apagado nada desaparece**: «Marca la fase» y «Suena detras» se atenuan. Antes se
+  escondian y el panel saltaba 84 px. Es un estado que no habia mirado nadie en cuatro rondas.
+- **Fuera el ruido**: «PANEL», los «(default)», «Musica» sin tilde, «Layout» en ingles, dos de tres
+  explicaciones. Se queda una: «Todo vive en tu navegador», que es promesa de marca.
+- **Premium baja de 221 px a una linea** («Licencia · pronto») hasta la sesion de pago. **«Disposicion»
+  sale tras bandera** (`SHOW_LAYOUT_AXIS`, regla s139): duplicaba el boton de plegar la barra; quien
+  tuviera «minimal» pasa a `sidebar` con la barra plegada.
+- El interruptor del aviso de foco dice la verdad: con el permiso del navegador bloqueado no puede
+  estar encendido. Tooltip y `aria-label` de la TopBar: «Ajustes (T)» / «Abrir ajustes».
+
+### Medido
+- **1412 → 743 px** de contenido: cabe sin scroll a 1280x800, 1536x864 y 1920x1080; 1366x768 scrollea
+  25 px. Movil 390x844: **2,2 → 1,22 pantallas**.
+- **La barra de scroll se come 17 px** en el navegador de escritorio, y a 263 px de ancho «Marca la
+  fase» ya no cabia junto a sus pildoras: la fila ENVUELVE y el control baja a su linea, a la derecha.
+- En headless `Notification.permission` es `'denied'` siempre y el panel crece 35 px con la nota de
+  «bloqueadas»: el test fija el permiso a `'default'`, que es lo que ve una instalacion nueva.
+
+### Anadido -- red de seguridad
+- **9 tests** en `tests/ajustes.spec.js` y **8 mutantes que muerden**: orden de temas y filas · el eje
+  «Disposicion» fuera · cabe en una pantalla · movil < 1,3 · apagar el sonido no mueve el panel · el
+  color de modulo con contraste ≥ 4,5 en las dos paletas · el circulo por pictogramas · «Marca la fase»
+  como una decision · **ingles** · la migracion de «minimal».
+- 5 specs actualizados a los textos nuevos; el helper de la paleta pasa a `[data-pace-aj-fila]`.
+
+### Regla §1
+- **Nace `app/i18n/strings/settings.js`**: `ui.js` estaba en 457 y el copy nuevo lo pasaba de 500. Salen
+  69 claves (ninguna con consumidor, comprobado clave a clave) y entran 59 bajo `settings.*`; el censo
+  del verify pasa de 598 a 588. Nace `TweaksPanel.parts.jsx` (las piezas) y `TweaksPanel.jsx` baja de
+  410 a 223 lineas.
+
+### Antes, el cierre de s187
+- El commit de v0.118.0 dejo `STATE.md` con la «Ultima sesion» de s186, el ROADMAP diciendo que el
+  BreakMenu «solo ordena» y ninguna fila de s187 en decisiones tecnicas. Cerrado al arrancar la sesion, antes de tocar codigo.
 
 ---
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.118.0</title>
+  <title>PACE · Foco · Cuerpo — v0.119.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -143,6 +143,7 @@
   <script type="text/babel" src="app/i18n/strings/stats.js"></script>
   <script type="text/babel" src="app/i18n/strings/achievements.js"></script>
   <script type="text/babel" src="app/i18n/strings/breakmenu.js"></script>
+  <script type="text/babel" src="app/i18n/strings/settings.js"></script>
   <script type="text/babel" src="app/i18n/strings/onboarding.js"></script>
   <script type="text/babel" src="app/i18n/content/breathe.js"></script>
   <script type="text/babel" src="app/i18n/content/move.js"></script>
@@ -391,6 +392,7 @@
        consumidor: sus dos nombres viajan por `window` porque un `const` no cruza
        la IIFE del build (trampa de s148 con `sidebarStyles`). -->
   <script type="text/babel" src="app/tweaks/TweaksPanel.support.jsx"></script>
+  <script type="text/babel" src="app/tweaks/TweaksPanel.parts.jsx"></script>
   <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que
        TweaksPanel, que lo consume por el global. -->
   <script type="text/babel" src="app/tweaks/TweaksAudio.jsx"></script>
