@@ -182,13 +182,13 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ## 🧪 Checklist de cierre
 
-> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): **187 tests** de
-> Playwright sobre `index.html` en un navegador real, **~3 min** (medido en s183; nació con 65 y
+> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): **224 tests** de
+> Playwright sobre `index.html` en un navegador real, **~4,4 min** (medido en s188; nació con 65 y
 > ~25 s). Los siete puntos de abajo son lo que aserta, uno a uno. **Sigue mereciendo una mirada
 > humana** lo que la suite no cubre y declara: móvil, Caminos, premium y cualquier cosa visual —
 > no compara ni un píxel. **El inglés SÍ está cubierto** desde s167 (`logros-i18n.spec.js`).
 >
-> **Estos dos números caducan.** Se re-miden, no se copian: los de aquí son de s183 y ya han
+> **Estos dos números caducan.** Se re-miden, no se copian: los de aquí son de s188 y ya han
 > estado tres veces desactualizados.
 
 - [ ] Pomodoro cuenta y termina → abre BreakMenu

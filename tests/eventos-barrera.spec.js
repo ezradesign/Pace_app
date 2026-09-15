@@ -101,7 +101,7 @@ test('si falla la escritura del estado, el import ABORTA sin tocar los eventos',
   /* Sin esto Playwright DESCARTA el confirm por defecto, el import devuelve
      antes de empezar y la prueba falla por una razon que no es la que cree. */
   page.on('dialog', d => d.accept());
-  await page.locator('button[aria-label="Abrir tweaks"]').click();
+  await page.locator('button[aria-label="Abrir ajustes"]').click();
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-rota.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 

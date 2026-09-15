@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es" data-font="cormorant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajustes · maqueta s188</title>
+<!-- TOKENS Y RESET REALES: la maqueta se sirve desde la raíz del proyecto
+     (node .claude/static-server.js) para que /app/*.css y /fonts/* resuelvan.
+     Nada de aquí es CSS inventado: paletas, tipografías y radios son los de la app. -->
+<link rel="stylesheet" href="/app/tokens.css">
+<link rel="stylesheet" href="/app/motion.css">
+<style>
+  /* ---- marco de la maqueta (no es UI de la app) ---- */
+  body { padding: 28px 24px 60px; }
+  .cab { max-width: 1400px; margin: 0 auto 18px; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .cab h1 { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 30px; margin: 0; }
+  .cab .nota { font-size: 12.5px; color: var(--ink-2); max-width: 720px; line-height: 1.5; }
+  .mandos { display: flex; gap: 6px; margin-left: auto; }
+  .mandos button { font-size: 11px; padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper-2); color: var(--ink-2); }
+  .mandos button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .fila { display: flex; gap: 26px; align-items: flex-start; overflow-x: auto; padding-bottom: 12px; max-width: 1400px; margin: 0 auto; }
+  .col { flex: 0 0 auto; }
+  .col > .rot { font-size: 11px; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 8px; }
+  .col > .rot b { color: var(--ink); }
+  .medida { font-size: 11.5px; color: var(--ink-2); margin-top: 10px; line-height: 1.5; max-width: 320px; }
+  .medida b { color: var(--ink); }
+  .porque { font-size: 12px; color: var(--ink-2); line-height: 1.5; max-width: 320px; margin-top: 8px; border-left: 2px solid var(--line-2); padding-left: 10px; }
+
+  /* ---- el panel: caja idéntica a [data-pace-tweaks-panel] pero SIN scroll interno,
+          para que la altura total se vea y se mida ---- */
+  .panel { width: 320px; background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: var(--sh-modal); padding: 20px; }
+  .panel.movil { width: 390px; border-radius: var(--r-lg) var(--r-lg) 0 0; border-left: 0; border-right: 0; border-bottom: 0; padding: 16px 18px 24px; max-height: 608px; overflow-y: auto; }
+
+  /* ---- piezas comunes ---- */
+  .meta { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .titulo { font-family: var(--font-display); font-style: italic; font-size: 22px; font-weight: 500; line-height: 1.1; }
+  .cerrar { font-size: 18px; color: var(--ink-3); width: 26px; height: 26px; display: grid; place-items: center; }
+  .cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .div { height: 1px; background: var(--line); margin: 14px 0; }
+  .pill { padding: 6px 10px; font-size: 11px; font-weight: 400; background: var(--paper-2); color: var(--ink-2); border: 1px solid var(--line); border-radius: var(--r-sm); letter-spacing: .2px; }
+  .pill.on { font-weight: 500; background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .hint { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; }
+  .step { width: 26px; height: 26px; display: grid; place-items: center; font-size: 14px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .legal { text-align: center; font-size: 10.5px; letter-spacing: .2px; color: var(--ink-3); }
+  .legal a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  .legal .sep { margin: 0 8px; }
+
+  /* ---- ACTUAL (réplica fiel de TweaksPanel.jsx v0.118.0) ---- */
+  .act .bloque { margin-bottom: 16px; }
+  .act .bloque .meta { margin-bottom: 6px; display: block; }
+  .act .sub { font-size: 10.5px; color: var(--ink-3); margin: 9px 0 5px; letter-spacing: .1px; }
+  .act .datos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .act .datos button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; font-size: 11px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .act .sello { display: inline-flex; align-items: center; padding: 3px 10px; font-size: 10px; letter-spacing: var(--track-tag); text-transform: uppercase; border-radius: var(--r-pill); border: 1px solid var(--premium); color: var(--premium); background: var(--premium-soft); font-weight: 500; }
+  .act input { width: 100%; padding: 8px 10px; font-size: 11px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm); margin-bottom: 6px; font-family: inherit; }
+  .act .prem-cta { width: 100%; padding: 8px; font-size: 11px; font-weight: 500; color: var(--premium); background: var(--premium-soft); border: 1px solid var(--premium); border-radius: var(--r-sm); }
+  .act .reset { width: 100%; padding: 8px; font-size: 11px; color: var(--ink-3); border: 1px dashed var(--line); border-radius: var(--r-sm); }
+
+  /* ---- V1 · CUATRO BLOQUES ---- */
+  .v1 .seccion { margin-bottom: 4px; }
+  .v1 .seccion > .meta { display: block; margin-bottom: 10px; }
+  .v1 .ajuste { margin-bottom: 12px; }
+  .v1 .ajuste .nombre { font-size: 12px; color: var(--ink-2); margin-bottom: 5px; }
+  .v1 .datos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+  .v1 .datos button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; font-size: 11px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .v1 .pie { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 10px; }
+  .v1 .pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .v1 .borrar { font-size: 10.5px; color: var(--ink-3); border-bottom: 1px solid var(--line); }
+
+  /* ---- V2 · FILAS ---- */
+  .v2 .seccion > .meta { display: block; margin: 2px 0 4px; }
+  .v2 .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 36px; padding: 4px 0; flex-wrap: wrap; }
+  .v2 .row .lbl { font-size: 12.5px; color: var(--ink); flex: 1 1 auto; }
+  .v2 .row .lbl small { display: block; font-size: 10.5px; color: var(--ink-3); margin-top: 1px; }
+  .v2 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; flex: 0 0 auto; }
+  .v2 .seg button { padding: 5px 9px; font-size: 11px; color: var(--ink-2); background: var(--paper-2); border-left: 1px solid var(--line); letter-spacing: .2px; }
+  .v2 .seg button:first-child { border-left: 0; }
+  .v2 .seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+  .v2 .row.envuelve .seg { margin-left: auto; }
+  .v2 .sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; }
+  .v2 .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); }
+  .v2 .sw.on { background: var(--ink); }
+  .v2 .sw.on::after { left: 16px; }
+  .v2 .stepper { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
+  .v2 .accion { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: 12.5px; color: var(--ink); border-top: 1px solid var(--line); }
+  .v2 .accion:first-of-type { border-top: 0; }
+  .v2 .accion .flecha { color: var(--ink-3); font-size: 14px; }
+  .v2 .accion.suave { color: var(--ink-3); font-size: 12px; }
+  .v2 .pie { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+  .v2 .pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); }
+
+  /* ---- V3 · ACORDEÓN CON RESUMEN ---- */
+  .v3 .item { border-top: 1px solid var(--line); }
+  .v3 .item:first-of-type { border-top: 0; }
+  .v3 .cab3 { display: flex; align-items: center; justify-content: space-between; min-height: 44px; gap: 10px; }
+  .v3 .cab3 .n { font-size: 13px; color: var(--ink); }
+  .v3 .cab3 .r { font-size: 11.5px; color: var(--ink-3); margin-left: auto; text-align: right; }
+  .v3 .cab3 .ch { color: var(--ink-3); font-size: 12px; width: 14px; text-align: right; }
+  .v3 .abierto .cab3 .r { color: var(--ink-2); }
+  .v3 .cuerpo { padding: 2px 0 14px; }
+  .v3 .cuerpo .nombre { font-size: 11px; color: var(--ink-3); margin: 8px 0 5px; }
+  .v3 .pie { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+  .v3 .pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="cab">
+  <h1>Ajustes · tres formas, al lado de la actual</h1>
+  <div class="nota">Tokens, fuentes y copy reales; 320 px como el panel de escritorio, sin scroll interno para que se vea la altura entera. Debajo, la hoja de móvil (390 px, 72 dvh) con lo que cabe y lo que no. Las alturas las mide el JS de la página, no se escriben.</div>
+  <div class="mandos">
+    <button id="pal-crema" class="on" onclick="paleta('crema')">Crema</button>
+    <button id="pal-oscuro" onclick="paleta('oscuro')">Oscuro</button>
+  </div>
+</div>
+
+<div class="fila">
+
+  <!-- ============================== ACTUAL ============================== -->
+  <div class="col">
+    <div class="rot"><b>Actual</b> · v0.118.0</div>
+    <div class="panel act" data-mide="Actual">
+      <div class="cabecera"><div><div class="meta">Panel</div><div class="titulo">Ajustes</div></div><button class="cerrar">×</button></div>
+      <div class="bloque"><span class="meta">Idioma</span><div class="pills"><button class="pill on">Automático</button><button class="pill">Español</button><button class="pill">English</button></div></div>
+      <div class="div"></div>
+      <div class="bloque"><span class="meta">Paleta</span><div class="pills"><button class="pill on">Automático</button><button class="pill">Crema día</button><button class="pill">Oscuro noche</button></div></div>
+      <div class="div"></div>
+      <div class="bloque">
+        <span class="meta" style="margin-bottom:4px">Audio</span>
+        <div class="hint" style="margin-bottom:6px">Sonidos de la sesión</div>
+        <div class="pills"><button class="pill on">Activado</button><button class="pill">Silenciado</button></div>
+        <div class="sub">Qué marca la fase</div>
+        <div class="pills" style="margin-left:16px"><button class="pill">Tono</button><button class="pill on">Voz</button></div>
+        <div class="pills" style="margin-left:32px;margin-top:6px"><button class="pill on">Clara</button><button class="pill">Grave</button></div>
+        <div class="sub">Qué suena detrás</div>
+        <div class="pills" style="margin-left:16px"><button class="pill on">Nada</button><button class="pill">Ambiente</button><button class="pill">Musica</button></div>
+      </div>
+      <div class="bloque">
+        <span class="meta" style="margin-bottom:4px">Aviso de fin de Foco</span>
+        <div class="hint" style="margin-bottom:6px">Notificación del navegador si el Pomodoro termina con la pestaña en segundo plano.</div>
+        <div class="pills"><button class="pill on">Activado</button><button class="pill">Desactivado</button></div>
+      </div>
+      <div class="bloque">
+        <span class="meta" style="margin-bottom:4px">Sesiones</span>
+        <div class="hint" style="margin-bottom:6px">Descanso entre series en las rutinas de fuerza.</div>
+        <div class="pills"><button class="pill">Breve · 20s</button><button class="pill on">Tranquilo · 30s</button><button class="pill">Amplio · 45s</button></div>
+      </div>
+      <div class="div"></div>
+      <div class="bloque"><span class="meta">Círculo de respiración</span><div class="pills"><button class="pill on">Loto (default)</button><button class="pill">Pulso</button><button class="pill">Pétalo</button><button class="pill">Ondas</button></div></div>
+      <div class="bloque"><span class="meta">Layout</span><div class="pills"><button class="pill on">Sidebar (default)</button><button class="pill">Minimal</button></div></div>
+      <div class="bloque"><span class="meta">Objetivo de agua</span><div style="display:flex;align-items:center;gap:10px"><button class="step">−</button><span style="font-size:12px;min-width:84px;text-align:center;color:var(--ink-2)">8 vasos al día</span><button class="step">+</button></div></div>
+      <div class="div"></div>
+      <div class="bloque">
+        <span class="meta" style="margin-bottom:8px">Tus datos</span>
+        <div class="datos"><button>⤓ Exportar</button><button>⤒ Importar</button></div>
+        <div class="hint" style="margin-top:8px">Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.</div>
+      </div>
+      <div class="div"></div>
+      <div class="bloque">
+        <div style="margin-bottom:8px"><span class="sello">Premium</span></div>
+        <div class="titulo" style="font-size:16px;margin-bottom:6px">Contenido premium</div>
+        <div style="font-size:11px;color:var(--ink-2);line-height:1.5;margin-bottom:10px">El núcleo de PACE es y será gratis. Las rutinas y técnicas más profundas serán parte de una compra única, sin suscripción.</div>
+        <input disabled placeholder="Clave de licencia">
+        <button class="prem-cta" disabled>Pronto</button>
+        <div class="hint" style="margin-top:6px;font-size:10px">Aún no disponible. Cuando llegue, tu clave funcionará sin conexión.</div>
+      </div>
+      <div class="div"></div>
+      <button class="reset">Borrar todos mis datos</button>
+      <div class="legal" style="margin-top:12px"><a>Seguridad</a><span class="sep">·</span><a>Privacidad</a></div>
+    </div>
+    <div class="medida" id="m-Actual"></div>
+  </div>
+
+  <!-- ============================== V1 ============================== -->
+  <div class="col">
+    <div class="rot"><b>V1 · Cuatro bloques</b> · mismas pastillas, orden y silencio</div>
+    <div class="panel v1" data-mide="V1">
+      <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+
+      <div class="seccion"><span class="meta">Ver</span>
+        <div class="ajuste"><div class="nombre">Idioma</div><div class="pills"><button class="pill on">Automático</button><button class="pill">Español</button><button class="pill">English</button></div></div>
+        <div class="ajuste"><div class="nombre">Paleta</div><div class="pills"><button class="pill on">Automático</button><button class="pill">Crema día</button><button class="pill">Oscuro noche</button></div></div>
+      </div>
+      <div class="div"></div>
+
+      <div class="seccion"><span class="meta">Oír</span>
+        <div class="ajuste"><div class="nombre">Sonido</div><div class="pills"><button class="pill on">Activado</button><button class="pill">Silenciado</button></div></div>
+        <div class="ajuste"><div class="nombre">Qué marca la fase</div><div class="pills"><button class="pill">Tono</button><button class="pill on">Voz clara</button><button class="pill">Voz grave</button></div></div>
+        <div class="ajuste"><div class="nombre">Qué suena detrás</div><div class="pills"><button class="pill on">Nada</button><button class="pill">Ambiente</button><button class="pill">Música</button></div></div>
+      </div>
+      <div class="div"></div>
+
+      <div class="seccion"><span class="meta">Sesiones</span>
+        <div class="ajuste"><div class="nombre">Aviso si el foco termina en segundo plano</div><div class="pills"><button class="pill on">Activado</button><button class="pill">Desactivado</button></div></div>
+        <div class="ajuste"><div class="nombre">Círculo de respiración</div><div class="pills"><button class="pill on">Loto</button><button class="pill">Pulso</button><button class="pill">Pétalo</button><button class="pill">Ondas</button></div></div>
+        <div class="ajuste"><div class="nombre">Descanso entre series</div><div class="pills"><button class="pill">Breve · 20 s</button><button class="pill on">Tranquilo · 30 s</button><button class="pill">Amplio · 45 s</button></div></div>
+        <div class="ajuste"><div class="nombre">Objetivo de agua</div><div style="display:flex;align-items:center;gap:10px"><button class="step">−</button><span style="font-size:12px;min-width:84px;text-align:center;color:var(--ink-2)">8 vasos al día</span><button class="step">+</button></div></div>
+      </div>
+      <div class="div"></div>
+
+      <div class="seccion"><span class="meta">Tus datos</span>
+        <div class="datos"><button>⤓ Exportar</button><button>⤒ Importar</button></div>
+        <div class="hint">Todo vive en tu navegador; la copia es un archivo local.</div>
+        <div class="pie"><span>Licencia · pronto</span><a class="borrar">Borrar todos mis datos</a></div>
+        <div class="pie" style="justify-content:center;margin-top:12px"><span><a>Seguridad</a><span style="margin:0 8px">·</span><a>Privacidad</a></span></div>
+      </div>
+    </div>
+    <div class="medida" id="m-V1"></div>
+    <div class="porque">Lo mínimo que arregla lo que dijiste: cuatro temas (ver · oír · sesiones · datos), cada ajuste con su nombre en frase y las pastillas debajo, sin sangrías en audio (la voz entra en la misma fila: Tono · Voz clara · Voz grave, sigue siendo UNA decisión), sin «(default)», sin explicaciones salvo la promesa de privacidad, y premium reducido a una línea hasta que exista. <b>Layout sale</b>: duplica el botón de plegar la barra.</div>
+  </div>
+
+  <!-- ============================== V2 ============================== -->
+  <div class="col">
+    <div class="rot"><b>V2 · Filas</b> · nombre a la izquierda, control a la derecha</div>
+    <div class="panel v2" data-mide="V2">
+      <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+
+      <div class="seccion"><span class="meta">Ver</span>
+        <div class="row"><div class="lbl">Idioma</div><div class="seg"><button class="on">Auto</button><button>Español</button><button>English</button></div></div>
+        <div class="row"><div class="lbl">Paleta</div><div class="seg"><button class="on">Auto</button><button>Crema</button><button>Oscuro</button></div></div>
+      </div>
+      <div class="div"></div>
+
+      <div class="seccion"><span class="meta">Oír</span>
+        <div class="row"><div class="lbl">Sonido</div><div class="sw on"></div></div>
+        <div class="row"><div class="lbl">Marca la fase</div><div class="seg"><button>Tono</button><button class="on">Voz clara</button><button>Voz grave</button></div></div>
+        <div class="row"><div class="lbl">Suena detrás</div><div class="seg"><button class="on">Nada</button><button>Ambiente</button><button>Música</button></div></div>
+      </div>
+      <div class="div"></div>
+
+      <div class="seccion"><span class="meta">Sesiones</span>
+        <div class="row"><div class="lbl">Aviso de fin de foco<small>si la pestaña está en segundo plano</small></div><div class="sw on"></div></div>
+        <div class="row envuelve"><div class="lbl">Círculo de respiración</div><div class="seg"><button class="on">Loto</button><button>Pulso</button><button>Pétalo</button><button>Ondas</button></div></div>
+        <div class="row"><div class="lbl">Descanso entre series</div><div class="seg"><button>20 s</button><button class="on">30 s</button><button>45 s</button></div></div>
+        <div class="row"><div class="lbl">Vasos al día</div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+      </div>
+      <div class="div"></div>
+
+      <div class="seccion"><span class="meta">Tus datos</span>
+        <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+        <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+        <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+        <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+        <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+      </div>
+    </div>
+    <div class="medida" id="m-V2"></div>
+    <div class="porque">Una sola anatomía para todo: cada ajuste es una fila, se lee como una lista y el valor actual está siempre a la derecha. Los binarios son interruptores, no dos pastillas; las opciones van en un control segmentado (una pieza, no tres sueltas). Es la forma más corta y la más «de ajustes»; el coste es que el círculo de respiración no cabe en su fila y baja de línea.</div>
+  </div>
+
+  <!-- ============================== V3 ============================== -->
+  <div class="col">
+    <div class="rot"><b>V3 · Acordeón</b> · cada tema resume su valor; se abre el que tocas</div>
+    <div class="panel v3" data-mide="V3">
+      <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+
+      <div class="item"><div class="cab3"><span class="n">Idioma</span><span class="r">Automático</span><span class="ch">›</span></div></div>
+      <div class="item"><div class="cab3"><span class="n">Paleta</span><span class="r">Automático</span><span class="ch">›</span></div></div>
+      <div class="item abierto">
+        <div class="cab3"><span class="n">Sonido</span><span class="r">Voz clara · nada detrás</span><span class="ch">⌄</span></div>
+        <div class="cuerpo">
+          <div class="nombre">Sonido</div><div class="pills"><button class="pill on">Activado</button><button class="pill">Silenciado</button></div>
+          <div class="nombre">Qué marca la fase</div><div class="pills"><button class="pill">Tono</button><button class="pill on">Voz clara</button><button class="pill">Voz grave</button></div>
+          <div class="nombre">Qué suena detrás</div><div class="pills"><button class="pill on">Nada</button><button class="pill">Ambiente</button><button class="pill">Música</button></div>
+        </div>
+      </div>
+      <div class="item"><div class="cab3"><span class="n">Foco</span><span class="r">Aviso activado</span><span class="ch">›</span></div></div>
+      <div class="item"><div class="cab3"><span class="n">Respira</span><span class="r">Círculo Loto</span><span class="ch">›</span></div></div>
+      <div class="item"><div class="cab3"><span class="n">Cuerpo</span><span class="r">Descanso 30 s</span><span class="ch">›</span></div></div>
+      <div class="item"><div class="cab3"><span class="n">Agua</span><span class="r">8 vasos al día</span><span class="ch">›</span></div></div>
+      <div class="item"><div class="cab3"><span class="n">Tus datos</span><span class="r">Exportar · importar · borrar</span><span class="ch">›</span></div></div>
+      <div class="item"><div class="cab3"><span class="n">Licencia</span><span class="r">Pronto</span><span class="ch"></span></div></div>
+      <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+    </div>
+    <div class="medida" id="m-V3"></div>
+    <div class="porque">El panel más corto y el único que dice de un vistazo cómo está todo («Voz clara · nada detrás»). Cabe sin scroll en cualquier pantalla. El coste: cambiar dos cosas son dos toques más, y un ajuste que no ves no invita a probarlo — para un «afinador» eso puede ser lo contrario de lo que quieres.</div>
+  </div>
+
+</div>
+
+<h2 style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:22px;margin:30px auto 10px;max-width:1400px">En móvil · hoja de 390 × 608 px (72 dvh de un 844), lo que se ve sin desplazar</h2>
+<div class="fila" id="fila-movil"></div>
+
+<script>
+  function paleta(p) {
+    if (p === 'oscuro') document.documentElement.setAttribute('data-palette', 'oscuro');
+    else document.documentElement.removeAttribute('data-palette');
+    document.getElementById('pal-crema').classList.toggle('on', p === 'crema');
+    document.getElementById('pal-oscuro').classList.toggle('on', p === 'oscuro');
+  }
+  /* Clona cada variante como hoja de móvil (misma anatomía, 390 de ancho, 608 de alto
+     con scroll) y mide en las dos: alto total, pantallas de escritorio (752 útiles a
+     1280x800) y de móvil (608), y cuántos controles hay. */
+  function medir() {
+    const fila = document.getElementById('fila-movil');
+    fila.innerHTML = '';
+    document.querySelectorAll('.panel[data-mide]').forEach(p => {
+      const n = p.dataset.mide;
+      const h = Math.round(p.getBoundingClientRect().height);
+      const ctrls = p.querySelectorAll('button, .sw, .accion, .cab3').length - p.querySelectorAll('.cerrar').length;
+      const col = document.createElement('div'); col.className = 'col';
+      const rot = document.createElement('div'); rot.className = 'rot'; rot.innerHTML = '<b>' + n + '</b> · móvil';
+      const clon = p.cloneNode(true); clon.classList.add('movil'); clon.removeAttribute('data-mide');
+      col.appendChild(rot); col.appendChild(clon); fila.appendChild(col);
+      const hm = clon.scrollHeight;
+      const med = document.createElement('div'); med.className = 'medida';
+      med.innerHTML = 'contenido <b>' + hm + ' px</b> en la hoja de 608 → <b>' + (hm / 608).toFixed(2) + ' pantallas</b>';
+      col.appendChild(med);
+      document.getElementById('m-' + n).innerHTML =
+        'alto <b>' + h + ' px</b> · a 1280×800 son <b>' + (h / 752).toFixed(2) + ' pantallas</b> · ' + ctrls + ' controles';
+    });
+  }
+  window.addEventListener('load', () => { if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir); else medir(); });
+</script>
+</body>
+</html>

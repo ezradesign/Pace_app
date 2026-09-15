@@ -320,13 +320,28 @@ emitir antes de estar en `READ_WRITE`. El single-writer está probado con **dos 
 > `state-history` y normalización P1. Dato que ahorra un susto: el store **se inicializa solo**
 > (`paceEventsBoot()` al cargar `events-store.js`), no hay que arrancarlo desde producto.
 
-### FASE 3.5 · Pausa PACE (§17)
+### FASE 3.5 · Pausa PACE (§17) — 🔄 EN CURSO · la propuesta YA existe (s187, v0.118.0)
 
 **Hueco detectado en el recorrido sistemático de s137**: no estaba en ninguna fase, y es el bucle
 que hace útil la app a diario.
 
-Hoy el BreakMenu solo **ordena** módulos según lo hecho en el día. Debe **recomendar una acción
-concreta**: *«Llevas 50 minutos sentado. Te propongo Hombros ligeros, 4 minutos y sin material.»*
+> **s187 · la propuesta, entregada.** El BreakMenu propone **UNA rutina con nombre, duración y el
+> porqué**, y la regla se escribió antes de codificarla: bloque ≥35 min → Estira · cero vasos
+> pasado el mediodía → agua · tercer bloque de hoy → Respira · lo pendiente del plan → ese módulo ·
+> **y si no hay motivo, nada** (una propuesta sin motivo es publicidad). Vive pura en
+> `app/breakmenu/BreakMenu.support.jsx`, la rutina la elige `libraryParaAhora` y «Empezar»
+> entra por las mismas puertas que la biblioteca. **Lo que NO entra, decidido**: lo de ayer, el
+> perfil del onboarding y cualquier racha o total. Diario:
+> [session-187](./docs/sessions/session-187-la-pausa-que-propone.md).
+>
+> **Lo que queda de esta fase**, en el orden en que lo pedía el párrafo original: **el feedback
+> «¿te ayudó esta pausa?»** (slice `routineFeedback`, yes/some/no por rutina, capturado desde s116
+> y todavía sin consumidor) · **zona corporal** · **última pausa** · contexto habitual (que depende
+> del onboarding contextual de la Fase 8). La propuesta de hoy usa duración del bloque, agua, número
+> de bloque y plan del día, y **no se prueba en inglés**.
+
+Hasta s187 el BreakMenu solo **ordenaba** módulos según lo hecho en el día. Debe **recomendar una
+acción concreta**: *«Llevas 50 minutos sentado. Te propongo Hombros ligeros, 4 minutos y sin material.»*
 Usa duración del Foco · actividades del día · hora · contexto habitual · última pausa · zona
 corporal · tiempo disponible · **feedback anterior**.
 

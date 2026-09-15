@@ -1,6 +1,14 @@
-/* PACE · Tweaks — sección "Tus datos" (Export / Import JSON)
+/* PACE · Ajustes — sección "Tus datos" (Export / Import JSON)
    Extraída de TweaksPanel.jsx en sesión 89 (v0.34.5) para devolver el panel
    a <500 líneas. Lógica de sesión 17 (v0.12.0) intacta.
+
+   s188: LA SECCION ENTERA VIVE AQUI. Exportar, importar, borrar todo, la fila
+   de la licencia (PremiumSection) y el pie con la promesa de privacidad y los
+   enlaces legales, como FILAS (`AjustesAccion`, de TweaksPanel.parts.jsx) en
+   vez de dos botones al 50 % y una nota. El BORRADO se ejecuta en
+   TweaksPanel.jsx (`onReset`), no aqui: `scripts/verify.eventos.js` comprueba
+   que el reset del panel pase por `paceEventsWipeAll` leyendo ESE archivo, y
+   moverlo habria dejado el checker ciego sin que nadie lo notara.
 
    EXPORT — descarga un JSON con el estado completo de PACE.
    Refuerza la promesa "todo local" del modal BMC: ahora es local
@@ -18,7 +26,7 @@
 
 const { useState: useStateTD, useRef: useRefTD } = React;
 
-function TweaksDataSection() {
+function TweaksDataSection({ onReset, isWeb }) {
   const { t, tn } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
@@ -53,12 +61,12 @@ function TweaksDataSection() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
+      setMsg({ kind: 'ok', text: t('settings.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       unlockAchievement('secret.backup');
     } catch (e) {
-      setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
+      setMsg({ kind: 'err', text: t('settings.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
@@ -77,7 +85,7 @@ function TweaksDataSection() {
           || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
         );
         if (!looksValid) {
-          setMsg({ kind: 'err', text: t('tweaks.msg.import.invalid') });
+          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
           setTimeout(() => setMsg(null), 2600);
           return;
         }
@@ -88,7 +96,7 @@ function TweaksDataSection() {
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
         const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
+        const ok = confirm(tn('settings.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
         /* Escribimos y recargamos para estado limpio.
@@ -128,15 +136,15 @@ function TweaksDataSection() {
            integridad. */
         paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
           if (!r || !r.legacyWritten) {
-            setMsg({ kind: 'err', text: t('tweaks.msg.import.storage.err') });
+            setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
             setTimeout(() => setMsg(null), 2600);
             return;
           }
-          setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
+          setMsg({ kind: 'ok', text: t('settings.msg.imported') });
           setTimeout(() => location.reload(), 900);
         });
       } catch (e) {
-        setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
+        setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);
       }
     };
@@ -144,61 +152,49 @@ function TweaksDataSection() {
   };
 
   return (
-    <div>
-      <Meta style={{ marginBottom: 8 }}>{t('tweaks.data.meta')}</Meta>
-      <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-        <button
-          onClick={exportJSON}
-          style={tweaksDataStyles.dataBtn}
-          title={t('tweaks.data.export.title')}
-        >
-          <DownloadIcon /> <span>{t('tweaks.data.export')}</span>
-        </button>
-        <button
-          onClick={() => fileInputRef.current && fileInputRef.current.click()}
-          style={tweaksDataStyles.dataBtn}
-          title={t('tweaks.data.import.title')}
-        >
-          <UploadIcon /> <span>{t('tweaks.data.import')}</span>
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/json,.json"
-          style={{ display: 'none' }}
-          onChange={(e) => {
-            const f = e.target.files && e.target.files[0];
-            importJSON(f);
-            e.target.value = ''; // permitir re-importar el mismo archivo
-          }}
-        />
-      </div>
+    <React.Fragment>
+      <AjustesAccion onClick={exportJSON} title={t('settings.data.export.title')} derecha={<DownloadIcon />}>
+        {t('settings.data.export')}
+      </AjustesAccion>
+      <AjustesAccion onClick={() => fileInputRef.current && fileInputRef.current.click()} title={t('settings.data.import.title')} derecha={<UploadIcon />}>
+        {t('settings.data.import')}
+      </AjustesAccion>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/json,.json"
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          const f = e.target.files && e.target.files[0];
+          importJSON(f);
+          e.target.value = ''; // permitir re-importar el mismo archivo
+        }}
+      />
       {msg && (
-        <div style={{
-          fontSize: 10.5,
-          color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)',
-          fontFamily: 'var(--font-display)',
-          fontStyle: 'italic',
-          marginBottom: 8,
-          letterSpacing: 0.1,
-          textAlign: 'center',
-        }}>{msg.text}</div>
+        <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' }}>{msg.text}</div>
       )}
-      <div style={{
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        lineHeight: 1.4,
-        letterSpacing: 0.1,
-        marginBottom: 4,
-      }}>
-        {t('tweaks.data.note')}
+      <AjustesAccion suave onClick={onReset} derecha="›">{t('settings.data.reset')}</AjustesAccion>
+      <PremiumSection />
+      {/* El pie: la promesa de privacidad -- es de marca, se queda-- y los
+          enlaces /safety y /privacy (s102; paginas estaticas de s101), solo en
+          web: en file:// esas rutas no resuelven. Nueva pestana para no matar
+          un timer corriendo. */}
+      <div className="pace-aj-pie">
+        <span>{t('settings.foot')}</span>
+        {isWeb && (
+          <span>
+            <a href="/safety" target="_blank" rel="noopener">{t('settings.legal.safety')}</a>
+            <span style={{ margin: '0 5px' }}>·</span>
+            <a href="/privacy" target="_blank" rel="noopener">{t('settings.legal.privacy')}</a>
+          </span>
+        )}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 
 /* ============================================================
-   Iconos + estilos (nombres únicos)
+   Iconos (los mismos desde s17; el estilo de fila vive en la hoja pace-aj-*)
    ============================================================ */
 function DownloadIcon() {
   return (
@@ -223,23 +219,5 @@ function UploadIcon() {
   );
 }
 
-const tweaksDataStyles = {
-  dataBtn: {
-    flex: 1,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: '8px 10px',
-    fontSize: 11,
-    color: 'var(--ink-2)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    letterSpacing: 0.2,
-    cursor: 'pointer',
-    transition: 'all 180ms',
-  },
-};
 
 Object.assign(window, { TweaksDataSection });

@@ -38,7 +38,7 @@ test.beforeEach(async ({ context }) => { await sembrar(context); });
 /* Abre Ajustes y entrega un archivo al input de import. */
 async function importar(page, objeto) {
   page.on('dialog', d => d.accept());
-  await page.locator('button[aria-label="Abrir tweaks"]').click();
+  await page.locator('button[aria-label="Abrir ajustes"]').click();
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({
       name: 'pace-backup-20260101.json',
@@ -55,11 +55,11 @@ test('el backup que se DESCARGA lleva la seccion de eventos, con sus campos', as
   await esperarInit(page);
   await sembrarEventos(page, 3);
 
-  await page.locator('button[aria-label="Abrir tweaks"]').click();
+  await page.locator('button[aria-label="Abrir ajustes"]').click();
   /* Se lee el ARCHIVO, no el objeto: es lo que el usuario se lleva. */
   const [descarga] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Exportar', exact: true }).click(),
+    page.getByRole('button', { name: 'Exportar una copia', exact: true }).click(),
   ]);
   const ruta = await descarga.path();
   const backup = JSON.parse(require('fs').readFileSync(ruta, 'utf8'));

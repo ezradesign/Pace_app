@@ -140,7 +140,7 @@ test('«Borrar todos mis datos» de Ajustes borra los DOS almacenes', async ({ p
   const antes = await leerContenedor(page);
 
   page.on('dialog', d => d.accept());
-  await page.locator('button[aria-label="Abrir tweaks"]').click();
+  await page.locator('button[aria-label="Abrir ajustes"]').click();
   await page.getByRole('button', { name: 'Borrar todos mis datos', exact: true }).click();
 
   await page.waitForFunction(previo => {
@@ -180,7 +180,7 @@ test('importar un backup ANTIGUO reinicia el contenedor en vez de mezclarlo', as
   });
 
   page.on('dialog', d => d.accept());
-  await page.locator('button[aria-label="Abrir tweaks"]').click();
+  await page.locator('button[aria-label="Abrir ajustes"]').click();
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-20260101.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 

@@ -120,31 +120,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'topbar.stats.aria':             'Ver estadísticas',
     'topbar.achievements.title':     'Logros (L)',
     'topbar.achievements.aria':      'Ver logros',
-    'topbar.tweaks.title':           'Tweaks (T)',
-    'topbar.tweaks.aria':            'Abrir tweaks',
-
-    // Settings (panel Ajustes)
-    'settings.title':                'Ajustes',
-    'settings.audio.label':          'Audio',
-    'settings.audio.on':             'Activado',
-    'settings.audio.off':            'Silenciado',
-    'settings.audio.hint':           'Sonidos de la sesión',
-    'settings.audio.ambient':        'ambiente durante sesiones',
-
-    // s176 · el bloque de sonido pasa a DOS decisiones (qué marca la fase /
-    // qué suena detrás). `settings.audio.ambient` se conserva: la usaba la
-    // casilla que sustituyen estas pills y retirar una clave es otra decision.
-    'settings.signal.label':         'Qué marca la fase',
-    'settings.signal.tone':          'Tono',
-    'settings.signal.voice':         'Voz',
-    // Las dos voces se nombran por su TIMBRE y no por su genero: medido,
-    // sulafat va por ~193 Hz y bradford por ~121.
-    'settings.voice.clear':          'Clara',
-    'settings.voice.deep':           'Grave',
-    'settings.bg.label':             'Qué suena detrás',
-    'settings.bg.none':              'Nada',
-    'settings.bg.ambient':           'Ambiente',
-    'settings.bg.music':             'Musica',
+    'topbar.tweaks.title':           'Ajustes (T)',
+    'topbar.tweaks.aria':            'Abrir ajustes',
 
     // ActivityBar
     'activity.meta':                 'Actividades',
@@ -157,69 +134,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'activity.hydrate.label':        'Hidrátate',
     'activity.hydrate.sub':          'agua ahora',
 
-    // Tweaks
-    'tweaks.meta':                   'Panel',
-    'tweaks.eje.palette':            'Paleta',
-    'tweaks.eje.layout':             'Layout',
-    'tweaks.eje.timer':              'Estilo del timer',
-    'tweaks.eje.breath':             'Círculo de respiración',
-    'tweaks.eje.lang':               'Idioma',
-    /* s161 · «Automático» literal, el mismo que la pill de idioma: en Ajustes
-       las dos filas dicen lo mismo con la misma palabra. */
-    'tweaks.palette.auto':           'Automático',
-    'tweaks.palette.crema':          'Crema día',
-    'tweaks.palette.oscuro':         'Oscuro noche',
-    'tweaks.layout.sidebar':         'Sidebar (default)',
-    'tweaks.layout.minimal':         'Minimal',
-    'tweaks.timer.aro':              'Aro (default)',
-    'tweaks.timer.barra':            'Barra',
-    'tweaks.timer.analogico':        'Analógico',
-    'tweaks.breath.flor':            'Loto (default)',
-    'tweaks.breath.pulso':           'Pulso',
-    'tweaks.breath.petalo':          'Pétalo',
-    'tweaks.breath.ondas':           'Ondas',
-    'tweaks.breath.organico':        'Orgánico',
-    'tweaks.lang.auto':              'Automático',
-    'tweaks.lang.es':                'Español',
-    'tweaks.lang.en':                'English',
-    'tweaks.sounds.meta':            'Sonidos',
-    'tweaks.sounds.on':              'Activo',
-    'tweaks.sounds.off':             'Silencio',
-    'tweaks.data.meta':              'Tus datos',
-    'tweaks.data.export':            'Exportar',
-    'tweaks.data.import':            'Importar',
-    'tweaks.data.export.title':      'Descarga un JSON con tu estado actual',
-    'tweaks.data.import.title':      'Sobreescribe tus datos con un backup',
-    'tweaks.data.note':              'Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.',
-    'tweaks.reset':                  'Borrar todos mis datos',
-    'tweaks.msg.exported':           'Backup descargado.',
-    'tweaks.msg.export.err':         'No se pudo exportar.',
-    'tweaks.msg.imported':           'Importado — recargando…',
-    'tweaks.msg.import.invalid':     'Archivo no reconocido.',
-    'tweaks.msg.import.json.err':    'JSON inválido.',
-    'tweaks.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
-    'tweaks.confirm.reset':          '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
-    'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
-
-    // Objetivo de hidratación (s89)
-    'tweaks.eje.water':              'Objetivo de agua',
-    'tweaks.water.value':            '{n} vasos al día',
-
     // PWA (s102): aviso fin de Foco + update prompt + enlaces legales
-    'tweaks.notify.label':           'Aviso de fin de Foco',
-    'tweaks.notify.hint':            'Notificación del navegador si el Pomodoro termina con la pestaña en segundo plano.',
-    'tweaks.notify.on':              'Activado',
-    'tweaks.notify.off':             'Desactivado',
-    'tweaks.notify.blocked':         'El navegador tiene las notificaciones bloqueadas para este sitio.',
-    'tweaks.legal.safety':           'Seguridad',
-    'tweaks.legal.privacy':          'Privacidad',
 
-    // Sesiones (s114) — descanso entre series de fuerza (runner v1)
-    'tweaks.session.label':          'Sesiones',
-    'tweaks.session.rest.hint':      'Descanso entre series en las rutinas de fuerza.',
-    'tweaks.rest.short':             'Breve · 20s',
-    'tweaks.rest.calm':              'Tranquilo · 30s',
-    'tweaks.rest.wide':              'Amplio · 45s',
     'notify.focus.title':            'Foco completado',
     'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
     'update.msg':                    'Hay una versión nueva de PACE',
@@ -230,11 +146,6 @@ Object.assign(window.PACE_STRINGS.es, {
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Pronto',
-    'premium.tweaks.title':          'Contenido premium',
-    'premium.tweaks.body':           'El núcleo de PACE es y será gratis. Las rutinas y técnicas más profundas serán parte de una compra única, sin cuentas ni suscripción obligatoria.',
-    'premium.tweaks.placeholder':    'Clave de licencia',
-    'premium.tweaks.cta':            'Pronto',
-    'premium.tweaks.note':           'Aún no disponible. Cuando llegue, tu clave funcionará sin conexión.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -345,27 +256,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'topbar.stats.aria':             'View stats',
     'topbar.achievements.title':     'Achievements (L)',
     'topbar.achievements.aria':      'View achievements',
-    'topbar.tweaks.title':           'Tweaks (T)',
-    'topbar.tweaks.aria':            'Open tweaks',
-
-    // Settings (Ajustes panel)
-    'settings.title':                'Settings',
-    'settings.audio.label':          'Audio',
-    'settings.audio.on':             'On',
-    'settings.audio.off':            'Muted',
-    'settings.audio.hint':           'Session sounds',
-    'settings.audio.ambient':        'ambient sound during sessions',
-
-    // s176 · see the ES block: the sound axis became two nested decisions.
-    'settings.signal.label':         'What marks the phase',
-    'settings.signal.tone':          'Tone',
-    'settings.signal.voice':         'Voice',
-    'settings.voice.clear':          'Clear',
-    'settings.voice.deep':           'Deep',
-    'settings.bg.label':             'What plays behind',
-    'settings.bg.none':              'Nothing',
-    'settings.bg.ambient':           'Ambient',
-    'settings.bg.music':             'Music',
+    'topbar.tweaks.title':           'Settings (T)',
+    'topbar.tweaks.aria':            'Open settings',
 
     // ActivityBar
     'activity.meta':                 'Activities',
@@ -378,67 +270,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'activity.hydrate.label':        'Hydrate',
     'activity.hydrate.sub':          'water now',
 
-    // Tweaks
-    'tweaks.meta':                   'Panel',
-    'tweaks.eje.palette':            'Palette',
-    'tweaks.eje.layout':             'Layout',
-    'tweaks.eje.timer':              'Timer style',
-    'tweaks.eje.breath':             'Breathing circle',
-    'tweaks.eje.lang':               'Language',
-    'tweaks.palette.auto':           'Automatic',
-    'tweaks.palette.crema':          'Day cream',
-    'tweaks.palette.oscuro':         'Night dark',
-    'tweaks.layout.sidebar':         'Sidebar (default)',
-    'tweaks.layout.minimal':         'Minimal',
-    'tweaks.timer.aro':              'Ring (default)',
-    'tweaks.timer.barra':            'Bar',
-    'tweaks.timer.analogico':        'Analog',
-    'tweaks.breath.flor':            'Lotus (default)',
-    'tweaks.breath.pulso':           'Pulse',
-    'tweaks.breath.petalo':          'Petal',
-    'tweaks.breath.ondas':           'Waves',
-    'tweaks.breath.organico':        'Organic',
-    'tweaks.lang.auto':              'Automatic',
-    'tweaks.lang.es':                'Spanish',
-    'tweaks.lang.en':                'English',
-    'tweaks.sounds.meta':            'Sounds',
-    'tweaks.sounds.on':              'Active',
-    'tweaks.sounds.off':             'Silent',
-    'tweaks.data.meta':              'Your data',
-    'tweaks.data.export':            'Export',
-    'tweaks.data.import':            'Import',
-    'tweaks.data.export.title':      'Download a JSON with your current state',
-    'tweaks.data.import.title':      'Overwrite your data with a backup',
-    'tweaks.data.note':              'Everything lives in your browser. The backup is a local JSON file — no server, no account.',
-    'tweaks.reset':                  'Delete all my data',
-    'tweaks.msg.exported':           'Backup downloaded.',
-    'tweaks.msg.export.err':         'Could not export.',
-    'tweaks.msg.imported':           'Imported — reloading…',
-    'tweaks.msg.import.invalid':     'File not recognized.',
-    'tweaks.msg.import.json.err':    'Invalid JSON.',
-    'tweaks.msg.import.storage.err': 'Could not save. Your data is untouched.',
-    'tweaks.confirm.reset':          'Delete all your PACE data? This action cannot be undone.',
-    'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
-
-    // Water goal (s89)
-    'tweaks.eje.water':              'Water goal',
-    'tweaks.water.value':            '{n} glasses a day',
-
     // PWA (s102): focus end alert + update prompt + legal links
-    'tweaks.notify.label':           'Focus end alert',
-    'tweaks.notify.hint':            'Browser notification if the Pomodoro ends while the tab is in the background.',
-    'tweaks.notify.on':              'On',
-    'tweaks.notify.off':             'Off',
-    'tweaks.notify.blocked':         'Notifications are blocked for this site in your browser.',
-    'tweaks.legal.safety':           'Safety',
-    'tweaks.legal.privacy':          'Privacy',
 
-    // Sessions (s114) — rest between strength sets (v1 runner)
-    'tweaks.session.label':          'Sessions',
-    'tweaks.session.rest.hint':      'Rest between sets in strength routines.',
-    'tweaks.rest.short':             'Short · 20s',
-    'tweaks.rest.calm':              'Calm · 30s',
-    'tweaks.rest.wide':              'Wide · 45s',
     'notify.focus.title':            'Focus complete',
     'notify.focus.body':             'Cycle closed. Choose your micro-break.',
     'update.msg':                    'A new version of PACE is ready',
@@ -449,9 +282,4 @@ Object.assign(window.PACE_STRINGS.en, {
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Soon',
-    'premium.tweaks.title':          'Premium content',
-    'premium.tweaks.body':           'The core of PACE is and will stay free. The deeper routines and techniques will be part of a one-time purchase — no accounts, no required subscription.',
-    'premium.tweaks.placeholder':    'License key',
-    'premium.tweaks.cta':            'Soon',
-    'premium.tweaks.note':           'Not available yet. When it arrives, your key will work offline.',
 });

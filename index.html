@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.118.0</title>
+  <title>PACE · Foco · Cuerpo — v0.119.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1588,31 +1588,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'topbar.stats.aria': 'Ver estadísticas',
   'topbar.achievements.title': 'Logros (L)',
   'topbar.achievements.aria': 'Ver logros',
-  'topbar.tweaks.title': 'Tweaks (T)',
-  'topbar.tweaks.aria': 'Abrir tweaks',
-
-  // Settings (panel Ajustes)
-  'settings.title': 'Ajustes',
-  'settings.audio.label': 'Audio',
-  'settings.audio.on': 'Activado',
-  'settings.audio.off': 'Silenciado',
-  'settings.audio.hint': 'Sonidos de la sesión',
-  'settings.audio.ambient': 'ambiente durante sesiones',
-
-  // s176 · el bloque de sonido pasa a DOS decisiones (qué marca la fase /
-  // qué suena detrás). `settings.audio.ambient` se conserva: la usaba la
-  // casilla que sustituyen estas pills y retirar una clave es otra decision.
-  'settings.signal.label': 'Qué marca la fase',
-  'settings.signal.tone': 'Tono',
-  'settings.signal.voice': 'Voz',
-  // Las dos voces se nombran por su TIMBRE y no por su genero: medido,
-  // sulafat va por ~193 Hz y bradford por ~121.
-  'settings.voice.clear': 'Clara',
-  'settings.voice.deep': 'Grave',
-  'settings.bg.label': 'Qué suena detrás',
-  'settings.bg.none': 'Nada',
-  'settings.bg.ambient': 'Ambiente',
-  'settings.bg.music': 'Musica',
+  'topbar.tweaks.title': 'Ajustes (T)',
+  'topbar.tweaks.aria': 'Abrir ajustes',
 
   // ActivityBar
   'activity.meta': 'Actividades',
@@ -1625,69 +1602,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'activity.hydrate.label': 'Hidrátate',
   'activity.hydrate.sub': 'agua ahora',
 
-  // Tweaks
-  'tweaks.meta': 'Panel',
-  'tweaks.eje.palette': 'Paleta',
-  'tweaks.eje.layout': 'Layout',
-  'tweaks.eje.timer': 'Estilo del timer',
-  'tweaks.eje.breath': 'Círculo de respiración',
-  'tweaks.eje.lang': 'Idioma',
-  /* s161 · «Automático» literal, el mismo que la pill de idioma: en Ajustes
-     las dos filas dicen lo mismo con la misma palabra. */
-  'tweaks.palette.auto': 'Automático',
-  'tweaks.palette.crema': 'Crema día',
-  'tweaks.palette.oscuro': 'Oscuro noche',
-  'tweaks.layout.sidebar': 'Sidebar (default)',
-  'tweaks.layout.minimal': 'Minimal',
-  'tweaks.timer.aro': 'Aro (default)',
-  'tweaks.timer.barra': 'Barra',
-  'tweaks.timer.analogico': 'Analógico',
-  'tweaks.breath.flor': 'Loto (default)',
-  'tweaks.breath.pulso': 'Pulso',
-  'tweaks.breath.petalo': 'Pétalo',
-  'tweaks.breath.ondas': 'Ondas',
-  'tweaks.breath.organico': 'Orgánico',
-  'tweaks.lang.auto': 'Automático',
-  'tweaks.lang.es': 'Español',
-  'tweaks.lang.en': 'English',
-  'tweaks.sounds.meta': 'Sonidos',
-  'tweaks.sounds.on': 'Activo',
-  'tweaks.sounds.off': 'Silencio',
-  'tweaks.data.meta': 'Tus datos',
-  'tweaks.data.export': 'Exportar',
-  'tweaks.data.import': 'Importar',
-  'tweaks.data.export.title': 'Descarga un JSON con tu estado actual',
-  'tweaks.data.import.title': 'Sobreescribe tus datos con un backup',
-  'tweaks.data.note': 'Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.',
-  'tweaks.reset': 'Borrar todos mis datos',
-  'tweaks.msg.exported': 'Backup descargado.',
-  'tweaks.msg.export.err': 'No se pudo exportar.',
-  'tweaks.msg.imported': 'Importado — recargando…',
-  'tweaks.msg.import.invalid': 'Archivo no reconocido.',
-  'tweaks.msg.import.json.err': 'JSON inválido.',
-  'tweaks.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
-  'tweaks.confirm.reset': '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
-  'tweaks.confirm.import': '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
-
-  // Objetivo de hidratación (s89)
-  'tweaks.eje.water': 'Objetivo de agua',
-  'tweaks.water.value': '{n} vasos al día',
-
   // PWA (s102): aviso fin de Foco + update prompt + enlaces legales
-  'tweaks.notify.label': 'Aviso de fin de Foco',
-  'tweaks.notify.hint': 'Notificación del navegador si el Pomodoro termina con la pestaña en segundo plano.',
-  'tweaks.notify.on': 'Activado',
-  'tweaks.notify.off': 'Desactivado',
-  'tweaks.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
-  'tweaks.legal.safety': 'Seguridad',
-  'tweaks.legal.privacy': 'Privacidad',
 
-  // Sesiones (s114) — descanso entre series de fuerza (runner v1)
-  'tweaks.session.label': 'Sesiones',
-  'tweaks.session.rest.hint': 'Descanso entre series en las rutinas de fuerza.',
-  'tweaks.rest.short': 'Breve · 20s',
-  'tweaks.rest.calm': 'Tranquilo · 30s',
-  'tweaks.rest.wide': 'Amplio · 45s',
   'notify.focus.title': 'Foco completado',
   'notify.focus.body': 'Ciclo cerrado. Elige tu micro-pausa.',
   'update.msg': 'Hay una versión nueva de PACE',
@@ -1697,12 +1613,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   // Premium (gating de contenido · bloque Contenido+Premium F3)
   'premium.seal': 'Premium',
-  'premium.soon': 'Pronto',
-  'premium.tweaks.title': 'Contenido premium',
-  'premium.tweaks.body': 'El núcleo de PACE es y será gratis. Las rutinas y técnicas más profundas serán parte de una compra única, sin cuentas ni suscripción obligatoria.',
-  'premium.tweaks.placeholder': 'Clave de licencia',
-  'premium.tweaks.cta': 'Pronto',
-  'premium.tweaks.note': 'Aún no disponible. Cuando llegue, tu clave funcionará sin conexión.'
+  'premium.soon': 'Pronto'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -1813,27 +1724,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'topbar.stats.aria': 'View stats',
   'topbar.achievements.title': 'Achievements (L)',
   'topbar.achievements.aria': 'View achievements',
-  'topbar.tweaks.title': 'Tweaks (T)',
-  'topbar.tweaks.aria': 'Open tweaks',
-
-  // Settings (Ajustes panel)
-  'settings.title': 'Settings',
-  'settings.audio.label': 'Audio',
-  'settings.audio.on': 'On',
-  'settings.audio.off': 'Muted',
-  'settings.audio.hint': 'Session sounds',
-  'settings.audio.ambient': 'ambient sound during sessions',
-
-  // s176 · see the ES block: the sound axis became two nested decisions.
-  'settings.signal.label': 'What marks the phase',
-  'settings.signal.tone': 'Tone',
-  'settings.signal.voice': 'Voice',
-  'settings.voice.clear': 'Clear',
-  'settings.voice.deep': 'Deep',
-  'settings.bg.label': 'What plays behind',
-  'settings.bg.none': 'Nothing',
-  'settings.bg.ambient': 'Ambient',
-  'settings.bg.music': 'Music',
+  'topbar.tweaks.title': 'Settings (T)',
+  'topbar.tweaks.aria': 'Open settings',
 
   // ActivityBar
   'activity.meta': 'Activities',
@@ -1846,67 +1738,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'activity.hydrate.label': 'Hydrate',
   'activity.hydrate.sub': 'water now',
 
-  // Tweaks
-  'tweaks.meta': 'Panel',
-  'tweaks.eje.palette': 'Palette',
-  'tweaks.eje.layout': 'Layout',
-  'tweaks.eje.timer': 'Timer style',
-  'tweaks.eje.breath': 'Breathing circle',
-  'tweaks.eje.lang': 'Language',
-  'tweaks.palette.auto': 'Automatic',
-  'tweaks.palette.crema': 'Day cream',
-  'tweaks.palette.oscuro': 'Night dark',
-  'tweaks.layout.sidebar': 'Sidebar (default)',
-  'tweaks.layout.minimal': 'Minimal',
-  'tweaks.timer.aro': 'Ring (default)',
-  'tweaks.timer.barra': 'Bar',
-  'tweaks.timer.analogico': 'Analog',
-  'tweaks.breath.flor': 'Lotus (default)',
-  'tweaks.breath.pulso': 'Pulse',
-  'tweaks.breath.petalo': 'Petal',
-  'tweaks.breath.ondas': 'Waves',
-  'tweaks.breath.organico': 'Organic',
-  'tweaks.lang.auto': 'Automatic',
-  'tweaks.lang.es': 'Spanish',
-  'tweaks.lang.en': 'English',
-  'tweaks.sounds.meta': 'Sounds',
-  'tweaks.sounds.on': 'Active',
-  'tweaks.sounds.off': 'Silent',
-  'tweaks.data.meta': 'Your data',
-  'tweaks.data.export': 'Export',
-  'tweaks.data.import': 'Import',
-  'tweaks.data.export.title': 'Download a JSON with your current state',
-  'tweaks.data.import.title': 'Overwrite your data with a backup',
-  'tweaks.data.note': 'Everything lives in your browser. The backup is a local JSON file — no server, no account.',
-  'tweaks.reset': 'Delete all my data',
-  'tweaks.msg.exported': 'Backup downloaded.',
-  'tweaks.msg.export.err': 'Could not export.',
-  'tweaks.msg.imported': 'Imported — reloading…',
-  'tweaks.msg.import.invalid': 'File not recognized.',
-  'tweaks.msg.import.json.err': 'Invalid JSON.',
-  'tweaks.msg.import.storage.err': 'Could not save. Your data is untouched.',
-  'tweaks.confirm.reset': 'Delete all your PACE data? This action cannot be undone.',
-  'tweaks.confirm.import': 'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
-
-  // Water goal (s89)
-  'tweaks.eje.water': 'Water goal',
-  'tweaks.water.value': '{n} glasses a day',
-
   // PWA (s102): focus end alert + update prompt + legal links
-  'tweaks.notify.label': 'Focus end alert',
-  'tweaks.notify.hint': 'Browser notification if the Pomodoro ends while the tab is in the background.',
-  'tweaks.notify.on': 'On',
-  'tweaks.notify.off': 'Off',
-  'tweaks.notify.blocked': 'Notifications are blocked for this site in your browser.',
-  'tweaks.legal.safety': 'Safety',
-  'tweaks.legal.privacy': 'Privacy',
 
-  // Sessions (s114) — rest between strength sets (v1 runner)
-  'tweaks.session.label': 'Sessions',
-  'tweaks.session.rest.hint': 'Rest between sets in strength routines.',
-  'tweaks.rest.short': 'Short · 20s',
-  'tweaks.rest.calm': 'Calm · 30s',
-  'tweaks.rest.wide': 'Wide · 45s',
   'notify.focus.title': 'Focus complete',
   'notify.focus.body': 'Cycle closed. Choose your micro-break.',
   'update.msg': 'A new version of PACE is ready',
@@ -1916,12 +1749,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // Premium (content gating · Content+Premium block F3)
   'premium.seal': 'Premium',
-  'premium.soon': 'Soon',
-  'premium.tweaks.title': 'Premium content',
-  'premium.tweaks.body': 'The core of PACE is and will stay free. The deeper routines and techniques will be part of a one-time purchase — no accounts, no required subscription.',
-  'premium.tweaks.placeholder': 'License key',
-  'premium.tweaks.cta': 'Soon',
-  'premium.tweaks.note': 'Not available yet. When it arrives, your key will work offline.'
+  'premium.soon': 'Soon'
 });
 })();
 </script>
@@ -2970,6 +2798,184 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.recommended': 'For you',
   'break.shortcut': 'Shortcut: B · E · M · H · Esc',
   'break.skip': 'Skip this break'
+});
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · strings i18n — EL PANEL DE AJUSTES (s188)
+   Extraido de `strings/ui.js`, que estaba en 457 lineas y con el copy del panel
+   redisenado habria pasado de 500 (regla §1 de CLAUDE.md). Es el mismo
+   movimiento que hizo s81 con el split por dominio, s148 con el cuerpo y s187
+   con el menu de pausa: cuando un dominio crece, sale ENTERO en vez de
+   repartirse. Se lleva todo lo del panel -- lo que antes era `tweaks.*`,
+   `settings.*` y `premium.tweaks.*`-- bajo un solo prefijo, `settings.*`.
+
+   EL COPY ES EL DE LA MAQUETA APROBADA (docs/proposals/ajustes-rediseno-r5.html,
+   variante P1+, elegida mirandola en cinco rondas): cuatro temas (Ver · Oir ·
+   Sesiones · Tus datos), cada ajuste con su nombre en frase, sin «(default)»,
+   sin explicaciones salvo la promesa de privacidad del pie.
+
+   LOS NOMBRES DE IDIOMA NO SE TRADUCEN: «Español» y «English» se escriben en
+   su propia lengua en los dos bloques, que es como los busca quien no lee el
+   idioma que tiene puesto.
+
+   Las claves de los ejes retirados tras bandera (`settings.timer.*`,
+   `settings.layout.*`, `settings.circle.organico`) SE CONSERVAN: si
+   `app/flags.js` devuelve una bandera a true, el selector vuelve con sus
+   textos y sin arqueologia.
+
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx, como sus hermanos. */
+
+Object.assign(window.PACE_STRINGS.es, {
+  'settings.title': 'Ajustes',
+  'settings.sec.ver': 'Ver',
+  'settings.sec.oir': 'Oír',
+  'settings.sec.sesiones': 'Sesiones',
+  'settings.sec.datos': 'Tus datos',
+
+  // Ver
+  'settings.lang': 'Idioma',
+  'settings.lang.auto': 'Auto',
+  'settings.lang.es': 'Español',
+  'settings.lang.en': 'English',
+  'settings.palette': 'Paleta',
+  'settings.palette.auto': 'Auto',
+  'settings.palette.crema': 'Crema',
+  'settings.palette.oscuro': 'Oscuro',
+  'settings.timer': 'Estilo del timer',
+  'settings.timer.aro': 'Aro',
+  'settings.timer.barra': 'Barra',
+  'settings.timer.analogico': 'Analógico',
+  'settings.layout': 'Disposición',
+  'settings.layout.sidebar': 'Con barra lateral',
+  'settings.layout.minimal': 'Sin barra',
+
+  // Oír (s176: dos decisiones, qué marca la fase y qué suena detrás; s188: la
+  // voz entra en la misma fila que el tono -- sigue siendo UNA decision)
+  'settings.sound': 'Sonido',
+  'settings.signal': 'Marca la fase',
+  'settings.signal.tone': 'Tono',
+  'settings.signal.clear': 'Voz clara',
+  'settings.signal.deep': 'Voz grave',
+  'settings.bg': 'Suena detrás',
+  'settings.bg.none': 'Nada',
+  'settings.bg.ambient': 'Ambiente',
+  'settings.bg.music': 'Música',
+
+  // Sesiones: cada fila dice de que modulo es
+  'settings.notify': 'Aviso al terminar',
+  'settings.notify.sub': 'Foco · si la pestaña está detrás',
+  'settings.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
+  'settings.circle': 'Círculo',
+  'settings.circle.sub': 'Respira · {name}',
+  'settings.circle.flor': 'Loto',
+  'settings.circle.pulso': 'Pulso',
+  'settings.circle.petalo': 'Pétalo',
+  'settings.circle.ondas': 'Ondas',
+  'settings.circle.organico': 'Orgánico',
+  'settings.rest': 'Descanso entre series',
+  'settings.rest.sub': 'Mueve',
+  'settings.rest.20': '20 s',
+  'settings.rest.30': '30 s',
+  'settings.rest.45': '45 s',
+  'settings.water': 'Vasos al día',
+  'settings.water.sub': 'Hidrátate',
+
+  // Tus datos
+  'settings.data.export': 'Exportar una copia',
+  'settings.data.export.title': 'Descarga un JSON con tu estado actual',
+  'settings.data.import': 'Importar una copia',
+  'settings.data.import.title': 'Sobreescribe tus datos con un backup',
+  'settings.data.reset': 'Borrar todos mis datos',
+  'settings.license': 'Licencia',
+  'settings.license.soon': 'pronto',
+  'settings.foot': 'Todo vive en tu navegador.',
+  'settings.legal.safety': 'Seguridad',
+  'settings.legal.privacy': 'Privacidad',
+  'settings.msg.exported': 'Backup descargado.',
+  'settings.msg.export.err': 'No se pudo exportar.',
+  'settings.msg.imported': 'Importado — recargando…',
+  'settings.msg.import.invalid': 'Archivo no reconocido.',
+  'settings.msg.import.json.err': 'JSON inválido.',
+  'settings.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
+  'settings.confirm.reset': '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
+  'settings.confirm.import': '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+  'settings.title': 'Settings',
+  'settings.sec.ver': 'Look',
+  'settings.sec.oir': 'Listen',
+  'settings.sec.sesiones': 'Sessions',
+  'settings.sec.datos': 'Your data',
+
+  // Look
+  'settings.lang': 'Language',
+  'settings.lang.auto': 'Auto',
+  'settings.lang.es': 'Español',
+  'settings.lang.en': 'English',
+  'settings.palette': 'Palette',
+  'settings.palette.auto': 'Auto',
+  'settings.palette.crema': 'Cream',
+  'settings.palette.oscuro': 'Dark',
+  'settings.timer': 'Timer style',
+  'settings.timer.aro': 'Ring',
+  'settings.timer.barra': 'Bar',
+  'settings.timer.analogico': 'Analog',
+  'settings.layout': 'Layout',
+  'settings.layout.sidebar': 'With sidebar',
+  'settings.layout.minimal': 'No sidebar',
+
+  // Listen
+  'settings.sound': 'Sound',
+  'settings.signal': 'Marks the phase',
+  'settings.signal.tone': 'Tone',
+  'settings.signal.clear': 'Clear voice',
+  'settings.signal.deep': 'Deep voice',
+  'settings.bg': 'Plays behind',
+  'settings.bg.none': 'Nothing',
+  'settings.bg.ambient': 'Ambient',
+  'settings.bg.music': 'Music',
+
+  // Sessions
+  'settings.notify': 'Alert at the end',
+  'settings.notify.sub': 'Focus · if the tab is in the background',
+  'settings.notify.blocked': 'Notifications are blocked for this site in your browser.',
+  'settings.circle': 'Circle',
+  'settings.circle.sub': 'Breathe · {name}',
+  'settings.circle.flor': 'Lotus',
+  'settings.circle.pulso': 'Pulse',
+  'settings.circle.petalo': 'Petal',
+  'settings.circle.ondas': 'Waves',
+  'settings.circle.organico': 'Organic',
+  'settings.rest': 'Rest between sets',
+  'settings.rest.sub': 'Move',
+  'settings.rest.20': '20 s',
+  'settings.rest.30': '30 s',
+  'settings.rest.45': '45 s',
+  'settings.water': 'Glasses a day',
+  'settings.water.sub': 'Hydrate',
+
+  // Your data
+  'settings.data.export': 'Export a copy',
+  'settings.data.export.title': 'Download a JSON with your current state',
+  'settings.data.import': 'Import a copy',
+  'settings.data.import.title': 'Overwrite your data with a backup',
+  'settings.data.reset': 'Delete all my data',
+  'settings.license': 'License',
+  'settings.license.soon': 'soon',
+  'settings.foot': 'Everything lives in your browser.',
+  'settings.legal.safety': 'Safety',
+  'settings.legal.privacy': 'Privacy',
+  'settings.msg.exported': 'Backup downloaded.',
+  'settings.msg.export.err': 'Could not export.',
+  'settings.msg.imported': 'Imported — reloading…',
+  'settings.msg.import.invalid': 'File not recognized.',
+  'settings.msg.import.json.err': 'Invalid JSON.',
+  'settings.msg.import.storage.err': 'Could not save. Your data is untouched.',
+  'settings.confirm.reset': 'Delete all your PACE data? This action cannot be undone.',
+  'settings.confirm.import': 'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.'
 });
 })();
 </script>
@@ -4611,7 +4617,16 @@ const SHOW_TIMER_STYLE = false;
    reactiva, hay que pasarlo por `paceGlowRamp` + `PaceDither` como los otros. */
 const SHOW_BREATH_ORGANICO = false;
 
-Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO });
+/* Eje «Disposición» de Ajustes (con barra lateral · sin barra), s188.
+   Apagado ⇒ el eje desaparece del panel. Se retira porque DUPLICA un control
+   que ya existe: la barra se pliega con su propio botón (`sidebarCollapsed`),
+   y «minimal» era lo mismo sin el botón para volver. Quien lo tuviera puesto
+   pasa a 'sidebar' CON la barra plegada -- conserva lo que veía (nada de barra)
+   y gana el botón para abrirla. La rama `state.layout !== 'minimal'` sigue
+   viva en `main.jsx`. Medido antes de decidirlo, en la maqueta de s188. */
+const SHOW_LAYOUT_AXIS = false;
+
+Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO, SHOW_LAYOUT_AXIS });
 })();
 </script>
   <!-- state-core.support (s148): deteccion de entorno + MIGRACIONES + rollover,
@@ -4981,7 +4996,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.118.0';
+const PACE_VERSION = 'v0.119.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5299,6 +5314,12 @@ function loadState() {
     }
     if (window.SHOW_BREATH_ORGANICO === false && parsed.breathStyle === 'organico') {
       parsed.breathStyle = 'flor';
+    }
+    /* s188: «minimal» sale de Ajustes tras bandera. Se migra a 'sidebar' con la
+       barra PLEGADA: la persona conserva lo que veia y gana el boton de abrirla. */
+    if (window.SHOW_LAYOUT_AXIS === false && parsed.layout === 'minimal') {
+      parsed.layout = 'sidebar';
+      parsed.sidebarCollapsed = true;
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
@@ -25538,9 +25559,17 @@ Object.assign(window, { TweakSecretsWatcher });
   <!-- Split s89: secciones del panel cargan antes que TweaksPanel (que las consume) -->
   <script>
 ;(function () {
-/* PACE · Tweaks — sección "Tus datos" (Export / Import JSON)
+/* PACE · Ajustes — sección "Tus datos" (Export / Import JSON)
    Extraída de TweaksPanel.jsx en sesión 89 (v0.34.5) para devolver el panel
    a <500 líneas. Lógica de sesión 17 (v0.12.0) intacta.
+
+   s188: LA SECCION ENTERA VIVE AQUI. Exportar, importar, borrar todo, la fila
+   de la licencia (PremiumSection) y el pie con la promesa de privacidad y los
+   enlaces legales, como FILAS (`AjustesAccion`, de TweaksPanel.parts.jsx) en
+   vez de dos botones al 50 % y una nota. El BORRADO se ejecuta en
+   TweaksPanel.jsx (`onReset`), no aqui: `scripts/verify.eventos.js` comprueba
+   que el reset del panel pase por `paceEventsWipeAll` leyendo ESE archivo, y
+   moverlo habria dejado el checker ciego sin que nadie lo notara.
 
    EXPORT — descarga un JSON con el estado completo de PACE.
    Refuerza la promesa "todo local" del modal BMC: ahora es local
@@ -25558,7 +25587,7 @@ Object.assign(window, { TweakSecretsWatcher });
 
 const { useState: useStateTD, useRef: useRefTD } = React;
 
-function TweaksDataSection() {
+function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
   const { t, tn } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
@@ -25593,12 +25622,12 @@ function TweaksDataSection() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
+      setMsg({ kind: 'ok', text: t('settings.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       unlockAchievement('secret.backup');
     } catch (e) {
-      setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
+      setMsg({ kind: 'err', text: t('settings.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
@@ -25617,7 +25646,7 @@ function TweaksDataSection() {
         payload.achievements !== undefined || payload.weeklyStats !== undefined);
 
         if (!looksValid) {
-          setMsg({ kind: 'err', text: t('tweaks.msg.import.invalid') });
+          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
           setTimeout(() => setMsg(null), 2600);
           return;
         }
@@ -25628,7 +25657,7 @@ function TweaksDataSection() {
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
         const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
+        const ok = confirm(tn('settings.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
         /* Escribimos y recargamos para estado limpio.
@@ -25668,15 +25697,15 @@ function TweaksDataSection() {
            integridad. */
         paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
           if (!r || !r.legacyWritten) {
-            setMsg({ kind: 'err', text: t('tweaks.msg.import.storage.err') });
+            setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
             setTimeout(() => setMsg(null), 2600);
             return;
           }
-          setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
+          setMsg({ kind: 'ok', text: t('settings.msg.imported') });
           setTimeout(() => location.reload(), 900);
         });
       } catch (e) {
-        setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
+        setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);
       }
     };
@@ -25684,22 +25713,12 @@ function TweaksDataSection() {
   };
 
   return (/*#__PURE__*/
-    React.createElement("div", null, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 8 } }, t('tweaks.data.meta')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', gap: 6, marginBottom: 8 } }, /*#__PURE__*/
-    React.createElement("button", {
-      onClick: exportJSON,
-      style: tweaksDataStyles.dataBtn,
-      title: t('tweaks.data.export.title') }, /*#__PURE__*/
-
-    React.createElement(DownloadIcon, null), " ", /*#__PURE__*/React.createElement("span", null, t('tweaks.data.export'))
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(AjustesAccion, { onClick: exportJSON, title: t('settings.data.export.title'), derecha: /*#__PURE__*/React.createElement(DownloadIcon, null) },
+    t('settings.data.export')
     ), /*#__PURE__*/
-    React.createElement("button", {
-      onClick: () => fileInputRef.current && fileInputRef.current.click(),
-      style: tweaksDataStyles.dataBtn,
-      title: t('tweaks.data.import.title') }, /*#__PURE__*/
-
-    React.createElement(UploadIcon, null), " ", /*#__PURE__*/React.createElement("span", null, t('tweaks.data.import'))
+    React.createElement(AjustesAccion, { onClick: () => fileInputRef.current && fileInputRef.current.click(), title: t('settings.data.import.title'), derecha: /*#__PURE__*/React.createElement(UploadIcon, null) },
+    t('settings.data.import')
     ), /*#__PURE__*/
     React.createElement("input", {
       ref: fileInputRef,
@@ -25711,34 +25730,32 @@ function TweaksDataSection() {
         importJSON(f);
         e.target.value = ''; // permitir re-importar el mismo archivo
       } }
-    )
     ),
     msg && /*#__PURE__*/
-    React.createElement("div", { style: {
-        fontSize: 10.5,
-        color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)',
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        marginBottom: 8,
-        letterSpacing: 0.1,
-        textAlign: 'center'
-      } }, msg.text), /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' } }, msg.text), /*#__PURE__*/
 
-    React.createElement("div", { style: {
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        lineHeight: 1.4,
-        letterSpacing: 0.1,
-        marginBottom: 4
-      } },
-    t('tweaks.data.note')
+    React.createElement(AjustesAccion, { suave: true, onClick: onReset, derecha: "\u203A" }, t('settings.data.reset')), /*#__PURE__*/
+    React.createElement(PremiumSection, null), /*#__PURE__*/
+
+
+
+
+    React.createElement("div", { className: "pace-aj-pie" }, /*#__PURE__*/
+    React.createElement("span", null, t('settings.foot')),
+    isWeb && /*#__PURE__*/
+    React.createElement("span", null, /*#__PURE__*/
+    React.createElement("a", { href: "/safety", target: "_blank", rel: "noopener" }, t('settings.legal.safety')), /*#__PURE__*/
+    React.createElement("span", { style: { margin: '0 5px' } }, "\xB7"), /*#__PURE__*/
+    React.createElement("a", { href: "/privacy", target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
+    )
+
     )
     ));
 
 }
 
 /* ============================================================
-   Iconos + estilos (nombres únicos)
+   Iconos (los mismos desde s17; el estilo de fila vive en la hoja pace-aj-*)
    ============================================================ */
 function DownloadIcon() {
   return (/*#__PURE__*/
@@ -25763,24 +25780,6 @@ function UploadIcon() {
 
 }
 
-const tweaksDataStyles = {
-  dataBtn: {
-    flex: 1,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: '8px 10px',
-    fontSize: 11,
-    color: 'var(--ink-2)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    letterSpacing: 0.2,
-    cursor: 'pointer',
-    transition: 'all 180ms'
-  }
-};
 
 Object.assign(window, { TweaksDataSection });
 ;Object.assign(window, { TweaksDataSection, DownloadIcon, UploadIcon });
@@ -25788,48 +25787,26 @@ Object.assign(window, { TweaksDataSection });
 </script>
   <script>
 ;(function () {
-/* PACE · Tweaks — superficie premium display-only
+/* PACE · Ajustes — la fila de la licencia (antes «superficie premium»)
    Creada en sesión 88 (F3b, v0.34.4) dentro de TweaksPanel; extraída a
    archivo propio en sesión 89 (v0.34.5) para devolver el panel a <500 ln.
 
-   Sello + input de licencia SIN validación + copy honesto. No desbloquea
-   nada: premiumUnlocked sigue false. La validación de clave firmada
-   offline llega post-v1.0. Reusa PremiumSeal (Primitives).
-*/
+   s188: DE 221 PX A UNA LINEA. Hasta aqui era sello + titulo + tres lineas de
+   copy + un `<input disabled>` + un boton «Pronto» + una nota: **el segundo
+   bloque mas alto del panel (221 px de 1412) y no hacia nada** -- medido en
+   la auditoria de s188. Queda una fila («Licencia · pronto») en Tus datos,
+   que es donde MONETIZATION.md dice que vivira la entrada de licencia
+   («discreta, sin upsell»). Cuando llegue la validacion offline de la clave
+   firmada (FASE 10 del ROADMAP), ESTE archivo crece y el panel no se toca:
+   la fila pasa a abrir la entrada de la clave.
+
+   No desbloquea nada: `premiumUnlocked` sigue false. */
 
 function PremiumSection() {
   const { t } = useT();
   return (/*#__PURE__*/
-    React.createElement("div", { style: { marginBottom: 4 } }, /*#__PURE__*/
-    React.createElement("div", { style: { marginBottom: 8 } }, /*#__PURE__*/
-    React.createElement(PremiumSeal, null)
-    ), /*#__PURE__*/
-    React.createElement("div", { style: { ...displayItalic, fontSize: 16, fontWeight: 500, marginBottom: 6 } }, t('premium.tweaks.title')), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5, marginBottom: 10, letterSpacing: 0.1 } }, t('premium.tweaks.body')), /*#__PURE__*/
-    React.createElement("input", {
-      type: "text",
-      disabled: true,
-      placeholder: t('premium.tweaks.placeholder'),
-      style: {
-        width: '100%', boxSizing: 'border-box',
-        padding: '8px 10px', fontSize: 11,
-        color: 'var(--ink-2)', background: 'var(--paper-2)',
-        border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
-        letterSpacing: 0.2, marginBottom: 6, cursor: 'not-allowed'
-      } }
-    ), /*#__PURE__*/
-    React.createElement("button", {
-      disabled: true,
-      style: {
-        width: '100%', padding: '8px', fontSize: 11, fontWeight: 500,
-        color: 'var(--premium)', background: 'var(--premium-soft)',
-        border: '1px solid var(--premium)', borderRadius: 'var(--r-sm)',
-        letterSpacing: 0.2, cursor: 'not-allowed'
-      } },
-    t('premium.tweaks.cta')), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 10, color: 'var(--ink-3)', lineHeight: 1.4, letterSpacing: 0.1, marginTop: 6 } },
-    t('premium.tweaks.note')
-    )
+    React.createElement(AjustesAccion, { suave: true, derecha: t('settings.license.soon') },
+    t('settings.license')
     ));
 
 }
@@ -25853,21 +25830,47 @@ Object.assign(window, { PremiumSection });
    Extraido de TweaksPanel.jsx en s163 al rebasar este las 500 lineas de la regla
    nº 1 de CLAUDE.md. Mismo patron que `Sidebar.support.jsx` (s148),
    `MoveSessionV1.support.jsx` y `BreatheVisual.support.jsx`: lo que sale es lo
-   que no dibuja nada -- la tabla de estilos, la hoja responsive inyectada y la
+   que no dibuja nada -- la tabla de estilos, las hojas inyectadas y la
    constante de transicion de las pastillas.
 
-   LOS DOS NOMBRES VIAJAN POR `window`, y no es un descuido: en el artefacto cada
+   s188: AQUI VIVE LA HOJA DEL PANEL REDISENADO (`pace-aj-*`). El panel dejo de
+   ser cinco filas de pastillas escritas a mano y paso a una anatomia de FILAS
+   (nombre a la izquierda, control a la derecha) con cuatro piezas -- pildoras,
+   interruptor, escalon y accion-- que pintan `TweaksPanel.parts.jsx`. La forma
+   se eligio MIRANDOLA en cinco rondas de maqueta (docs/proposals/ajustes-
+   rediseno*.html, variante P1+). Lo que la hoja decide y por que:
+
+   · LA PISTA DE PILDORAS NO LLEVA BORDE: solo papel-2. El borde era lo que hacia
+     «caja» (ronda 4). Es la misma pieza que FOCO · PAUSA · LARGA de la home.
+   · EL COLOR DICE DE QUE MODULO ES EL AJUSTE, y solo aparece donde hay modulo:
+     la fila lleva `data-pace-aj-modulo` y sus dos tokens (`--pace-aj-m`, el
+     color; `--pace-aj-ms`, el lavado). La pildora elegida de esas filas es un
+     LAVADO del color con el texto en TINTA, nunca el color con texto claro:
+     terracota, tabaco y azul con texto claro dan 2,8-3,3:1 (medido en la
+     maqueta; s186 ya lo midio para la tarjeta de Viajes). Con el lavado, el
+     peor elegido da 9,3:1 en oscuro. Lo global (idioma, sonido) sigue en tinta.
+   · `color-mix` con `--pace-aj-ms` de respaldo: el lavado al 22 % sobre papel
+     se ve mejor que el -soft (12 %), y donde no haya color-mix se pinta el -soft.
+   · CON EL SONIDO APAGADO LAS FILAS QUE CUELGAN DE EL SE ATENUAN, no se esconden
+     (`data-atenuada`): asi el panel no salta 84 px y se ve que volvera.
+   · LA LETRA ES LA DE LAS TARJETAS DE ACTIVIDAD: nombre en cursiva 16/500 y el
+     modulo en cursiva 12 apagada; las secciones en versalita porque son SISTEMA
+     (regla de `library.css.jsx`); los controles en Inter.
+   · TRANSICIONES EXPLICITAS, nunca `all` (s139): el peso cambia con el estado.
+
+   LOS NOMBRES VIAJAN POR `window`, y no es un descuido: en el artefacto cada
    modulo va dentro de su IIFE, asi que un `const` de este archivo NO cruza a
    TweaksPanel.jsx. Se publican y alli se referencian PELADOS -- la misma
    solucion que `sidebarStyles` en s148, con la misma razon.
 
-   ORDEN DE CARGA: ANTES de `TweaksPanel.jsx`, que es su unico consumidor
-   (comprobado: `tweaksStyles` y `TWEAKS_PILL_TRANSITION` no aparecen en ningun
-   otro archivo de `app/`). Da igual respecto a `TweaksData.jsx` y
-   `PremiumSection.jsx`, que traen sus propios estilos. */
+   ORDEN DE CARGA: ANTES de `TweaksPanel.parts.jsx` y de `TweaksPanel.jsx`.
+
+   OJO CON LOS ACENTOS GRAVES: la hoja va dentro de un template literal. Un
+   acento grave en un comentario de dentro aborta el build (paso tres veces con
+   `library.css.jsx`). Por eso los comentarios de la hoja no llevan ninguno. */
 
 /* s139 · BUG DEL BOTÓN FANTASMA — transición EXPLÍCITA, nunca `all`.
-   Las cinco filas de pastillas de este panel cambian `fontWeight` 400↔500 al
+   Las filas de pastillas de este panel cambian `fontWeight` 400↔500 al
    activarse, y con `transition:'all'` la transición ANIMABA EL PESO. Medido: el
    peso recorría 41 valores fraccionarios mientras el ancho solo tomaba DOS ⇒ con
    las caras ESTÁTICAS de Inter Tight (s105) el trazo saltaba a mitad de vuelo y
@@ -25877,28 +25880,82 @@ Object.assign(window, { PremiumSection });
    Detalle medido en docs/sessions/session-139. */
 const TWEAKS_PILL_TRANSITION = 'background-color 180ms, border-color 180ms, color 180ms';
 
-/* ============================================================
-   Estilos (nombres únicos). Los iconos Download/Upload y el
-   estilo dataBtn viven ahora en TweaksData.jsx (split s89).
-   ============================================================ */
+/* Estilos (nombres únicos). Lo que queda aqui es lo que aun se escribe en linea. */
 const tweaksStyles = {
   legalLink: {
     color: 'var(--ink-3)',
     textDecoration: 'none',
     borderBottom: '1px solid var(--line)',
     paddingBottom: 1
-  },
-  stepBtn: {
-    width: 26, height: 26,
-    display: 'grid', placeItems: 'center',
-    fontSize: 14,
-    color: 'var(--ink-2)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    cursor: 'pointer'
   }
 };
+
+/* ============================================================
+   La hoja del panel (s188). Clases `pace-aj-*`.
+   ============================================================ */
+const _paceAjustesCss = document.getElementById('pace-ajustes-css');
+if (!_paceAjustesCss) {
+  const s = document.createElement('style');
+  s.id = 'pace-ajustes-css';
+  s.textContent = `
+    .pace-aj-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .pace-aj-titulo { font-family: var(--font-display); font-style: italic; font-size: 24px; font-weight: 500; line-height: 1.1; color: var(--ink); }
+    .pace-aj-cerrar { font-size: 18px; color: var(--ink-3); width: 26px; height: 26px; display: grid; place-items: center; }
+    .pace-aj-sec-titulo { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 2px 0 6px; }
+    .pace-aj-div { height: 1px; background: var(--line); margin: 10px 0; }
+
+    /* la fila: nombre a la izquierda, control a la derecha. ENVUELVE si no cabe:
+       cuando el panel scrollea (pantallas de menos de ~790 px de alto) la barra
+       de scroll se come 17 px y a 263 px de ancho «Marca la fase» ya no cabe
+       junto a sus tres pildoras; entonces el control baja a su propia linea,
+       a la derecha, en vez de partir el nombre en dos (visto en la app real). */
+    .pace-aj-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; min-height: 38px; padding: 3px 0; transition: opacity 180ms; }
+    .pace-aj-fila > :last-child { margin-left: auto; }
+    .pace-aj-fila[data-atenuada] { opacity: .38; pointer-events: none; }
+    .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
+    .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
+    .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
+    .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
+
+    /* pildoras: pista de papel-2 sin borde, la elegida en tinta */
+    .pace-aj-pista { display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--paper-2); flex: 0 0 auto; }
+    .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
+    .pace-aj-pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); font-weight: 500; }
+    [data-pace-aj-modulo] .pace-aj-pild[aria-pressed="true"] { background: var(--pace-aj-ms); background: color-mix(in srgb, var(--pace-aj-m) 22%, var(--paper)); color: var(--ink); }
+    .pace-aj-pild svg { width: 15px; height: 15px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+    .pace-aj-pild[data-picto] { padding: 4px 9px; }
+    [data-pace-aj-modulo] .pace-aj-pild[aria-pressed="true"] svg { stroke: var(--pace-aj-m); fill: var(--pace-aj-ms); }
+
+    /* muestras de paleta: literales a proposito, son la identidad de cada paleta
+       y no deben cambiar con la paleta activa */
+    .pace-aj-muestra { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line-2); flex: 0 0 auto; display: inline-block; }
+    .pace-aj-muestra-crema { background: #F2EDE0; }
+    .pace-aj-muestra-oscuro { background: #1d1a14; }
+    .pace-aj-muestra-auto { background: linear-gradient(90deg, #F2EDE0 50%, #1d1a14 50%); }
+    [data-palette="oscuro"] .pace-aj-muestra-oscuro { border-color: var(--ink-3); }
+
+    /* interruptor */
+    .pace-aj-sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; transition: background-color 180ms; }
+    .pace-aj-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); transition: left 180ms; }
+    .pace-aj-sw[aria-checked="true"] { background: var(--ink); }
+    .pace-aj-sw[aria-checked="true"]::after { left: 16px; }
+    [data-pace-aj-modulo] .pace-aj-sw[aria-checked="true"] { background: var(--pace-aj-m); }
+
+    /* escalon (menos · cifra · mas); la cifra en EB Garamond, como las de identidad */
+    .pace-aj-paso { display: inline-flex; align-items: center; gap: 8px; font-family: 'EB Garamond', Georgia, serif; font-size: 16px; color: var(--ink); }
+    .pace-aj-paso button { width: 26px; height: 26px; display: grid; place-items: center; font-family: var(--font-ui); font-size: 14px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: 50%; }
+
+    /* acciones de Tus datos: una fila cada una, con su icono a la derecha */
+    .pace-aj-accion { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 34px; text-align: left; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink); border-top: 1px solid var(--line); }
+    .pace-aj-accion:first-of-type { border-top: 0; }
+    .pace-aj-accion[data-suave] { color: var(--ink-3); font-size: 14px; }
+    .pace-aj-accion > span:last-child { color: var(--ink-3); display: inline-flex; align-items: center; }
+    .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
+    .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+    .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  `;
+  document.head.appendChild(s);
+}
 
 /* ============================================================
    CSS responsive del TweaksPanel (sesión 27 · v0.12.10).
@@ -25947,145 +26004,254 @@ if (!_paceTweaksResponsive) {
 Object.assign(window, { tweaksStyles, TWEAKS_PILL_TRANSITION });
 })();
 </script>
+  <script>
+;(function () {
+/* PACE - Foco - Cuerpo
+   Copyright (c) 2026 ezradesign
+   Licensed under the Elastic License 2.0 - see LICENSE
+
+   TweaksPanel.parts.jsx - LAS PIEZAS DEL PANEL DE AJUSTES (s188).
+   ============================================================
+   Hasta s187 el panel escribia la misma pastilla a mano en cinco sitios (la
+   propia `TweaksAudio.jsx` lo dejaba anotado: «unificarla es otra sesion y otro
+   diff»). Esta es esa sesion. Cuatro piezas y una fila, sin estado propio:
+
+     AjustesSeccion   titulo en versalita + contenido + divisor
+     AjustesFila      nombre (cursiva) + linea del modulo + el control a la derecha
+     AjustesPildoras  UNA decision entre varias: pista redonda, la elegida en tinta
+                      (o en el lavado de su modulo). `aria-pressed` es el estado.
+     AjustesInterruptor  un si/no: `role=switch`
+     AjustesPaso      menos · cifra · mas
+     AjustesAccion    una fila que hace algo (exportar, importar, borrar)
+
+   EL COLOR DE MODULO ENTRA POR LA FILA, no por el control: `AjustesFila` recibe
+   `modulo` ('focus' | 'breathe' | 'move' | 'hydrate'), pone `data-pace-aj-modulo`
+   y publica los dos tokens como custom properties; la hoja de
+   `TweaksPanel.support.jsx` hace el resto. Asi un control no sabe de que color
+   es -- lo sabe la fila, que es quien sabe de que modulo es el ajuste.
+
+   LOS PICTOGRAMAS DEL CIRCULO estan calcados de `BreatheVisual.jsx`: la flor de
+   linea (loto), el circulo con la bola en la orbita (pulso), las seis elipses
+   giradas (petalo) y los anillos que se apagan (ondas). Son 16x16 y van en
+   `currentColor`, para heredar la tinta de la pildora o el color del modulo.
+
+   Sin hooks: son funciones de render puras. Se publican en `window` porque un
+   `const` no cruza la IIFE del artefacto (trampa de s148). */
+
+const AJUSTES_MODULO = {
+  focus: { m: 'var(--focus)', ms: 'var(--focus-soft)' },
+  breathe: { m: 'var(--breathe)', ms: 'var(--breathe-soft)' },
+  move: { m: 'var(--move)', ms: 'var(--move-soft)' },
+  hydrate: { m: 'var(--hydrate)', ms: 'var(--hydrate-soft)' }
+};
+
+function AjustesSeccion(_ref) {let { titulo, ultima, children } = _ref;
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-sec", "data-pace-aj-seccion": titulo }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-sec-titulo" }, titulo),
+    children
+    ),
+    !ultima && /*#__PURE__*/React.createElement("div", { className: "pace-aj-div" })
+    ));
+
+}
+
+/* La fila. `sub` es la linea pequena de debajo del nombre (el modulo, y en el
+   circulo tambien el estilo elegido). `atenuada` la deja visible pero inerte:
+   es lo que hace el bloque de sonido con el maestro apagado. */
+function AjustesFila(_ref2) {let { id, nombre, sub, modulo, atenuada, children } = _ref2;
+  const tono = modulo ? AJUSTES_MODULO[modulo] : null;
+  const style = tono ? { '--pace-aj-m': tono.m, '--pace-aj-ms': tono.ms } : undefined;
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-fila", "data-pace-aj-fila": id,
+      "data-pace-aj-modulo": tono ? modulo : undefined,
+      "data-atenuada": atenuada ? '' : undefined,
+      "aria-disabled": atenuada ? 'true' : undefined,
+      style: style }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-nombre" },
+    nombre,
+    sub && /*#__PURE__*/React.createElement("div", { className: "pace-aj-sub" }, tono && /*#__PURE__*/React.createElement("i", { className: "pace-aj-punto", "aria-hidden": "true" }), sub)
+    ),
+    children
+    ));
+
+}
+
+/* opciones: [{ v, name, picto, aria }]. Con `picto` y sin `name` la pildora es
+   solo dibujo y el nombre va en `aria` (y en el title, para el raton). */
+function AjustesPildoras(_ref3) {let { opciones, valor, onChange, aria } = _ref3;
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-pista", role: "group", "aria-label": aria },
+    opciones.map((o) => /*#__PURE__*/
+    React.createElement("button", { key: String(o.v), type: "button", className: "pace-aj-pild",
+      "aria-pressed": o.v === valor,
+      "aria-label": o.name ? undefined : o.aria,
+      title: o.name ? undefined : o.aria,
+      "data-picto": o.picto && !o.name ? '' : undefined,
+      onClick: () => onChange(o.v) },
+    o.picto, o.name
+    )
+    )
+    ));
+
+}
+
+function AjustesInterruptor(_ref4) {let { on, onChange, aria } = _ref4;
+  return (/*#__PURE__*/
+    React.createElement("button", { type: "button", role: "switch", "aria-checked": !!on, "aria-label": aria,
+      className: "pace-aj-sw", onClick: () => onChange(!on) }));
+
+}
+
+function AjustesPaso(_ref5) {let { valor, onMenos, onMas, ariaMenos, ariaMas } = _ref5;
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-paso" }, /*#__PURE__*/
+    React.createElement("button", { type: "button", onClick: onMenos, "aria-label": ariaMenos }, "\u2212"), /*#__PURE__*/
+    React.createElement("span", { "data-pace-aj-cifra": true }, valor), /*#__PURE__*/
+    React.createElement("button", { type: "button", onClick: onMas, "aria-label": ariaMas }, "+")
+    ));
+
+}
+
+/* Una fila que hace algo. `derecha` es lo que va al final (icono o palabra). */
+function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title } = _ref6;
+  if (!onClick) {
+    return /*#__PURE__*/React.createElement("div", { className: "pace-aj-accion", "data-suave": suave ? '' : undefined }, /*#__PURE__*/React.createElement("span", null, children), /*#__PURE__*/React.createElement("span", null, derecha));
+  }
+  return (/*#__PURE__*/
+    React.createElement("button", { type: "button", className: "pace-aj-accion", "data-suave": suave ? '' : undefined, onClick: onClick, title: title }, /*#__PURE__*/
+    React.createElement("span", null, children), /*#__PURE__*/React.createElement("span", { "aria-hidden": "true" }, derecha)
+    ));
+
+}
+
+function MuestraPaleta(_ref7) {let { cual } = _ref7;
+  return /*#__PURE__*/React.createElement("i", { className: 'pace-aj-muestra pace-aj-muestra-' + cual, "aria-hidden": "true" });
+}
+
+/* Los cuatro dibujos del circulo de respiracion (y el blob del organico, que
+   solo se ve si `SHOW_BREATH_ORGANICO` vuelve a true). */
+function PictoCirculo(_ref8) {let { estilo } = _ref8;
+  const p = { viewBox: '0 0 16 16', 'aria-hidden': 'true', focusable: 'false' };
+  if (estilo === 'flor') return (/*#__PURE__*/
+    React.createElement("svg", p, /*#__PURE__*/React.createElement("path", { d: "M8 3.2C6.6 5.8 6.6 9.2 8 12.3 9.4 9.2 9.4 5.8 8 3.2Z" }), /*#__PURE__*/React.createElement("path", { d: "M8 12.3C5.2 11.6 3.3 9.4 3 6.4 5.4 6.9 7 8.9 8 12.3Z" }), /*#__PURE__*/React.createElement("path", { d: "M8 12.3C10.8 11.6 12.7 9.4 13 6.4 10.6 6.9 9 8.9 8 12.3Z" }), /*#__PURE__*/React.createElement("path", { d: "M4 13.2Q8 14.6 12 13.2" })));
+
+  if (estilo === 'pulso') return (/*#__PURE__*/
+    React.createElement("svg", p, /*#__PURE__*/React.createElement("circle", { cx: "8", cy: "8", r: "4.6" }), /*#__PURE__*/React.createElement("circle", { cx: "8", cy: "8", r: "6.8", opacity: ".35" }), /*#__PURE__*/React.createElement("circle", { cx: "8", cy: "3.4", r: "1.3", fill: "currentColor", stroke: "none" })));
+
+  if (estilo === 'petalo') return (/*#__PURE__*/
+    React.createElement("svg", p, [0, 60, 120, 180, 240, 300].map((g) => /*#__PURE__*/React.createElement("ellipse", { key: g, cx: "8", cy: "4.6", rx: "1.7", ry: "3.4", transform: 'rotate(' + g + ' 8 8)' }))));
+
+  if (estilo === 'organico') return (/*#__PURE__*/
+    React.createElement("svg", p, /*#__PURE__*/React.createElement("path", { d: "M8 2.6c2.6 0 5.2 2 5.2 4.9 0 3.1-2 6-5 6-3.2 0-5.4-2.4-5.4-5.4C2.8 5 5.2 2.6 8 2.6Z" })));
+
+  /* ondas */
+  return (/*#__PURE__*/
+    React.createElement("svg", p, /*#__PURE__*/React.createElement("circle", { cx: "8", cy: "8", r: "2.3" }), /*#__PURE__*/React.createElement("circle", { cx: "8", cy: "8", r: "4.6", opacity: ".6" }), /*#__PURE__*/React.createElement("circle", { cx: "8", cy: "8", r: "6.9", opacity: ".3" })));
+
+}
+
+Object.assign(window, {
+  AJUSTES_MODULO, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor,
+  AjustesPaso, AjustesAccion, MuestraPaleta, PictoCirculo
+});
+;Object.assign(window, { AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, MuestraPaleta, PictoCirculo });
+})();
+</script>
   <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que
        TweaksPanel, que lo consume por el global. -->
   <script>
 ;(function () {
-/* PACE · app/tweaks/TweaksAudio.jsx (sesión 176)
+/* PACE · app/tweaks/TweaksAudio.jsx (sesión 176 · reescrito en s188)
    ================================================
-   EL BLOQUE DE SONIDO DE AJUSTES. Sale de `TweaksPanel.jsx`, que ya iba por
-   466 líneas y con esto se pasaba de las 500 de la regla §1.
+   EL BLOQUE DE SONIDO DE AJUSTES. Sale de `TweaksPanel.jsx` en s176, que ya iba
+   por 466 líneas y con esto se pasaba de las 500 de la regla §1.
 
-   POR QUÉ CAMBIA DE FORMA, y no es una reorganización gratuita: s175 metió la
+   POR QUÉ TIENE ESTA FORMA, y no es una reorganización gratuita: s175 metió la
    voz pegada a `soundOn`, así que quien tenía sonido se encontró una locución
    y **no podía quitarla sin apagar todo el sonido**. Lo reportó el usuario al
    probarla, y en la misma frase dijo el problema de fondo: «es demasiado menús
    para voz / selección de género / música y sonido general on-off». O sea: la
    pregunta no era dónde meter un interruptor más, era cómo no acabar con cinco.
 
-   LA FORMA ELEGIDA (variante V3 de la maqueta de s176, elegida mirándola):
-   cinco controles se vuelven **dos decisiones**, porque hay dos funciones y no
-   cinco:
+   LA FORMA (V3 de la maqueta de s176, elegida mirándola; afinada en s188):
+   cinco controles se vuelven **dos decisiones**, porque hay dos funciones:
 
-     · QUÉ MARCA LA FASE -> un tono o una voz. **Nunca los dos**, y eso no es
-       una simplificación de la UI: es lo que ya hacía el código. `playSound`
-       intenta la voz y **sólo si no cabe** sintetiza (Sound.jsx). Presentarlo
-       como una casilla de «añadir voz» habría descrito mal el mecanismo.
-     · QUÉ SUENA DETRÁS -> el fondo. Hoy sólo hay «nada» y el drone de
-       ambiente; la música, cuando exista, entra aquí como tercera opción y no
-       como un eje nuevo. **No se pinta todavía**: un control que no hace nada
-       es peor que un hueco.
+     · QUÉ MARCA LA FASE -> Tono · Voz clara · Voz grave. **Nunca tono y voz a
+       la vez**, y eso no es una simplificación de la UI: es lo que ya hacía el
+       código. `playSound` intenta la voz y **sólo si no cabe** sintetiza
+       (Sound.jsx). Presentarlo como una casilla de «añadir voz» habría descrito
+       mal el mecanismo. s188 mete el TIMBRE en la misma fila que el tono: sigue
+       siendo una decisión (qué suena en la fase) y desaparece la sangría de dos
+       niveles que hacía «raro» el bloque (feedback del usuario, s188).
+     · QUÉ SUENA DETRÁS -> Nada · Ambiente · Música. Nunca dos capas a la vez.
 
-   Medido en la maqueta, a 280 px de contenido (el panel son 320 con 20 de
-   padding): el bloque ocupa **207 px** de alto con nueve controles. La variante
-   plana ocupaba 291.
+   EL MAESTRO ATENÚA, NO ESCONDE (s188): con el sonido apagado las dos filas de
+   debajo se quedan a un 38 % y sin puntero. Antes desaparecían y el panel
+   saltaba 84 px; así se ve qué vuelve al encender y nada se mueve.
 
    LAS DOS VOCES SE LLAMAN POR SU TIMBRE, no por su género: medido decodificando
    la onda, `sulafat` va por ~193 Hz y `bradford` por ~121 -- 1,59x. «Clara» y
    «Grave» dicen lo que se oye y no afirman nada que la app no sepa.
 
-   `const` a nivel de módulo NO cruza la IIFE del artefacto (trampa de s148), y
-   por eso el componente se publica en `window` al final como todo lo demás. */
+   Las piezas (`AjustesFila`, `AjustesPildoras`, `AjustesInterruptor`) vienen de
+   `TweaksPanel.parts.jsx` por `window`: un `const` no cruza la IIFE (s148). */
 
 function TweaksAudioBlock(_ref) {let { state, set } = _ref;
   const { t } = useT();
 
-  /* La pill del panel, con los mismos valores que el resto de ejes. Vive aquí
-     y no en `tweaksStyles` porque `TweaksPanel` la escribe igual en cinco
-     sitios: unificarla es otra sesión y otro diff. */
-  const pill = (activa) => ({
-    padding: '6px 10px',
-    fontSize: 11,
-    fontWeight: activa ? 500 : 400,
-    background: activa ? 'var(--ink)' : 'var(--paper-2)',
-    color: activa ? 'var(--paper)' : 'var(--ink-2)',
-    border: `1px solid ${activa ? 'var(--ink)' : 'var(--line)'}`,
-    borderRadius: 'var(--r-sm)',
-    transition: TWEAKS_PILL_TRANSITION,
-    letterSpacing: 0.2
-  });
-
-  const fila = function (opts) {let extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};return (/*#__PURE__*/
-      React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4, ...extra } },
-      opts.map((o) => /*#__PURE__*/
-      React.createElement("button", { key: o.k, onClick: o.on, style: pill(o.activa) }, o.name)
-      )
-      ));};
-
-
-  const rotulo = (txt) => /*#__PURE__*/
-  React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', margin: '9px 0 5px', letterSpacing: 0.1 } },
-  txt
-  );
-
-
-  /* El fondo es un booleano en el estado (`ambientOn`) y dos pills aquí. Al
-     apagarlo se corta el drone que ya estuviera sonando, como hacía la casilla
-     que esto sustituye. */
-  /* s177 · TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision: la fila es
-     excluyente y nunca suenan dos capas a la vez (decision de s176). Se
-     mantiene con dos booleanos en vez de un tri-estado para no migrar el
+  /* El fondo son dos booleanos en el estado (`ambientOn`, `musicOn`) y tres
+     pildoras aqui. s177: TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision:
+     la fila es excluyente y nunca suenan dos capas a la vez (decision de s176).
+     Se mantiene con dos booleanos en vez de un tri-estado para no migrar el
      `localStorage` de nadie por una prueba: la exclusion la garantiza ESTA
-     funcion, que es el unico sitio que los escribe. */
+     funcion, que es el unico sitio que los escribe. Al apagar una capa se corta
+     lo que ya estuviera sonando. */
   const ponerFondo = (cual) => {
     set({ ambientOn: cual === 'amb', musicOn: cual === 'mus' });
     if (cual !== 'amb' && window.ambientDrone) window.ambientDrone.stop(400);
     if (cual !== 'mus' && window.paceMusica) window.paceMusica.stop(400);
   };
 
-  /* Al elegir voz se PRECARGA en ese momento. Si se esperara a la primera fase
-     de la primera sesión, el clip no estaría listo (`canplaythrough`) y sonaría
-     el sintetizador esa vez -- correcto pero desconcertante justo después de
-     haber elegido una voz. */
-  const ponerVoz = (voz) => {
-    set({ voice: voz });
-    try {if (typeof window.paceVozInit === 'function') window.paceVozInit(voz);} catch (e) {/* sin Audio no hay precarga */}
+  /* Que marca la fase: 'tono' apaga la voz; 'sulafat' / 'bradford' la encienden
+     con ese timbre. Al elegir voz se PRECARGA en ese momento: si se esperara a
+     la primera fase de la primera sesion, el clip no estaria listo
+     (`canplaythrough`) y sonaria el sintetizador esa vez -- correcto pero
+     desconcertante justo despues de haber elegido una voz. */
+  const ponerSenal = (cual) => {
+    if (cual === 'tono') {set({ voiceOn: false });return;}
+    set({ voiceOn: true, voice: cual });
+    try {if (typeof window.paceVozInit === 'function') window.paceVozInit(cual);} catch (e) {/* sin Audio no hay precarga */}
   };
 
   const vozActiva = state.voice === 'bradford' ? 'bradford' : 'sulafat';
+  const senal = state.voiceOn === false ? 'tono' : vozActiva;
+  const fondo = state.musicOn ? 'mus' : state.ambientOn ? 'amb' : 'nada';
+  const apagado = !state.soundOn;
 
   return (/*#__PURE__*/
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 4 } }, t('settings.audio.label')), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 } },
-    t('settings.audio.hint')
-    ),
-    fila([
-    { k: 'on', name: t('settings.audio.on'), activa: !!state.soundOn, on: () => set({ soundOn: true }) },
-    { k: 'off', name: t('settings.audio.off'), activa: !state.soundOn, on: () => set({ soundOn: false }) }]
-    ),
-
-
-
-
-    state.soundOn && /*#__PURE__*/
-    React.createElement(React.Fragment, null,
-    rotulo(t('settings.signal.label')),
-    fila([
-    { k: 'tono', name: t('settings.signal.tone'), activa: state.voiceOn === false, on: () => set({ voiceOn: false }) },
-    { k: 'voz', name: t('settings.signal.voice'), activa: state.voiceOn !== false, on: () => set({ voiceOn: true }) }],
-    { marginLeft: 16 }),
-
-
-
-    state.voiceOn !== false && fila([
-    { k: 'clara', name: t('settings.voice.clear'), activa: vozActiva === 'sulafat', on: () => ponerVoz('sulafat') },
-    { k: 'grave', name: t('settings.voice.deep'), activa: vozActiva === 'bradford', on: () => ponerVoz('bradford') }],
-    { marginLeft: 32, marginTop: 6 }),
-
-    rotulo(t('settings.bg.label')),
-    fila([
-    { k: 'nada', name: t('settings.bg.none'), activa: !state.ambientOn && !state.musicOn, on: () => ponerFondo('nada') },
-    { k: 'amb', name: t('settings.bg.ambient'), activa: !!state.ambientOn, on: () => ponerFondo('amb') },
-    /* s177 · «Musica» YA SE PINTA porque ya hay un archivo. El brief
-       decia que no se pintara hasta entonces -- «un control que no hace
-       nada es peor que un hueco»-- y hoy hace algo: suena en las
-       rutinas de Equilibrio. En las demas familias todavia no hay
-       pieza, asi que elegirla equivale a «Nada» hasta que existan. */
-    { k: 'mus', name: t('settings.bg.music'), activa: !!state.musicOn, on: () => ponerFondo('mus') }],
-    { marginLeft: 16 })
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(AjustesFila, { id: "sound", nombre: t('settings.sound') }, /*#__PURE__*/
+    React.createElement(AjustesInterruptor, { on: !!state.soundOn, onChange: (v) => set({ soundOn: v }), aria: t('settings.sound') })
+    ), /*#__PURE__*/
+    React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), atenuada: apagado }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: senal, onChange: ponerSenal, opciones: [
+      { v: 'tono', name: t('settings.signal.tone') },
+      { v: 'sulafat', name: t('settings.signal.clear') },
+      { v: 'bradford', name: t('settings.signal.deep') }] }
     )
-
+    ), /*#__PURE__*/
+    React.createElement(AjustesFila, { id: "bg", nombre: t('settings.bg'), atenuada: apagado }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.bg'), valor: fondo, onChange: ponerFondo, opciones: [
+      { v: 'nada', name: t('settings.bg.none') },
+      { v: 'amb', name: t('settings.bg.ambient') },
+      /* s177 · «Musica» YA SE PINTA porque ya hay un archivo: suena en las
+         rutinas de Equilibrio. En las demas familias todavia no hay pieza,
+         asi que elegirla equivale a «Nada» hasta que existan. */
+      { v: 'mus', name: t('settings.bg.music') }] }
+    )
+    )
     ));
 
 }
@@ -26098,53 +26264,53 @@ Object.assign(window, { TweaksAudioBlock });
 ;(function () {
 /* PACE · Panel de Ajustes (antes Tweaks)
    ============================================================
-   Ejes vigentes: idioma, audio, paleta, timer, breath, layout
-   + objetivo de agua (s89). Export/Import y superficie premium
-   extraídos a TweaksData.jsx / PremiumSection.jsx (split s89).
-   Sesión 37 (v0.19.0): renombrado a "Ajustes", audio movido al
-   primer eje con pills "Activado / Silenciado", eliminados
-   circle/numero de timer y editorial de layout.
+   s188 · REDISEÑADO ENTERO, y la forma se eligió MIRÁNDOLA en cinco rondas de
+   maqueta (docs/proposals/ajustes-rediseno*.html; la aprobada es P1+ de la
+   ronda 5). Lo que había: diez secciones sin agrupar, 30 pastillas, siete
+   líneas de explicación, 1412 px de contenido (1,9 pantallas a 1280×800, 2,2
+   en móvil), un bloque de audio con dos niveles de sangría y un bloque premium
+   de 221 px que era un `<input disabled>`. Lo que hay:
+
+     VER        idioma · paleta                      (lo de toda la app)
+     OÍR        sonido · marca la fase · suena detrás (TweaksAudio.jsx)
+     SESIONES   aviso · círculo · descanso · vasos    (uno por módulo, con su color)
+     TUS DATOS  exportar · importar · borrar · licencia · pie (TweaksData.jsx)
+
+   Cada ajuste es una FILA: nombre en cursiva a la izquierda, control a la
+   derecha. Las piezas viven en `TweaksPanel.parts.jsx`; la hoja, en
+   `TweaksPanel.support.jsx` (las razones de cada decisión visual están allí).
+   Medido en la maqueta: 775 px, 1,03 pantallas.
+
+   Ejes vigentes: idioma, paleta, audio, aviso de fin de foco, círculo de
+   Respira, descanso entre series, objetivo de agua, datos. Tras bandera en
+   `app/flags.js` (el código sigue vivo, ver allí): estilo del timer (s139),
+   círculo 'orgánico' (s139) y **disposición sidebar/minimal (s188)** — este
+   último se retira porque duplicaba el botón de plegar la barra.
 
    Retirados por decisión "menos variantes, más identidad":
      - logoVariant + supportCopyVariant (sesión 19).
      - font / tipografía display (sesión 20). La identidad
        tipográfica de PACE es Cormorant Garamond (default) +
-       EB Garamond fijo para cifras de identidad (número de
-       racha, número del timer futuro). No tiene sentido dejar
-       al usuario elegir entre 3 alternativas — decide PACE.
-
+       EB Garamond fijo para cifras de identidad. Decide PACE.
    Los campos del state (`font`, `logoVariant`, `supportCopyVariant`)
-   se conservan por compatibilidad con localStorage existente pero
-   no son editables desde la UI.
+   se conservan por compatibilidad con localStorage existente.
 
    Sesión 17 (v0.12.0) — sigue vigente:
-     - Export/Import JSON (backup local portátil).
+     - Export/Import JSON (backup local portátil), en TweaksData.jsx.
      - tweak-secrets reaccionando a combinaciones específicas:
          · secret.aged       → paleta 'envejecido'.
          · secret.dark.mode  → paleta 'oscuro' durante 7 días (acumulado).
          · explore.tweaks    → abrir este panel por primera vez.
-     - Secretos dormidos (el eje que los disparaba fue retirado;
-       quedan en código por si se reintroducen como easter egg):
-         · secret.mono       → font 'mono'.
-         · secret.seal       → logo 'sello'.
-         · secret.illustrated→ logo 'ilustrado'.
-       Patrón: hook ligero que llama unlockAchievement() cuando la
-       condición se cumple. La idempotencia la garantiza
-       unlockAchievement (no dispara dos veces el mismo id).
+       Los que no dependen de la UI de este panel viven en
+       <TweakSecretsWatcher /> (app/tweaks/TweakSecretsWatcher.jsx, s41).
    ============================================================ */
 
 const { useEffect: useEffectTW } = React;
 
-/* ============================
-   ESTILO SIN UI -> TweaksPanel.support.jsx
-   ============================
-   Extraido en s163 al rebasar este archivo las 500 lineas de CLAUDE.md §1:
-   `tweaksStyles`, la hoja responsive inyectada (el bottom sheet de s27) y
-   `TWEAKS_PILL_TRANSITION` con el porque del boton fantasma de s139.
-
-   ESE ARCHIVO CARGA ANTES QUE ESTE y sus dos nombres llegan por `window`:
-   un `const` suyo no cruzaria la IIFE del build (la trampa de s148 con
-   `sidebarStyles`). Aqui se referencian pelados a proposito. */
+/* `tweaksStyles` y las piezas `Ajustes*` llegan por `window` desde
+   TweaksPanel.support.jsx y TweaksPanel.parts.jsx, que CARGAN ANTES: un `const`
+   suyo no cruzaría la IIFE del build (la trampa de s148 con `sidebarStyles`).
+   Aquí se referencian pelados a propósito. */
 
 function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const [state, set] = usePace();
@@ -26157,8 +26323,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const canNotify = isWeb && typeof Notification !== 'undefined';
 
   /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
-     nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, el
-     hint de abajo lo explica; el toggle no puede encenderse. */
+     nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, la nota
+     de debajo lo explica; el interruptor no puede encenderse. */
   const enableNotify = () => {
     if (!canNotify) return;
     if (Notification.permission === 'granted') {set({ notifyFocusEnd: true });return;}
@@ -26166,7 +26332,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     try {
       Notification.requestPermission().then((p) => {
         /* La rama denegada escribe el MISMO false: el objeto de state nuevo
-           fuerza el re-render que hace visible el hint 'blocked' (permission
+           fuerza el re-render que hace visible la nota 'blocked' (permission
            no es reactivo por sí solo). */
         if (p === 'granted') set({ notifyFocusEnd: true });else
         set({ notifyFocusEnd: false });
@@ -26174,16 +26340,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     } catch (e) {}
   };
 
-  /* ============================================================
-     SECRETS — detectores simples que viven mientras el panel existe.
-     No dependen de que el panel esté abierto (el hook monta siempre
-     dentro del componente, pero como TweaksPanel retorna null cuando
-     !open, el hook efectivamente sólo observa cambios mientras el
-     panel está visible). Para los secretos que NO dependen de la UI
-     de tweaks (aged, mono, seal, ilustrado, dark-days), movemos la
-     detección a un componente separado que SÍ monta siempre:
-     <TweakSecretsWatcher />, en app/tweaks/TweakSecretsWatcher.jsx (sesión 41).
-     ============================================================ */
+  /* Reset — s155: `paceEventsWipeAll` borra los DOS almacenes por la barrera;
+     sin eso `privacy.html` mentiría al prometer borrado total. Se DEFINE aquí y
+     se pinta en TweaksData.jsx: `scripts/verify.eventos.js` comprueba que el
+     reset del panel pase por la barrera leyendo ESTE archivo. */
+  const borrarTodo = () => {
+    if (confirm(t('settings.confirm.reset'))) paceEventsWipeAll(() => location.reload());
+  };
 
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
   useEffectTW(() => {
@@ -26192,51 +26355,29 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
   if (!open) return null;
 
-  /* Ejes de personalización.
-     Sesión 37: circle/numero retirados de timer, editorial retirado
-     de layout, audio promovido al primer eje como pills separadas. */
-  /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
-     'envejecido' retirado en s71 / v0.28.9. */
-  /* s161 · `palette` SALE de esta lista y pasa a bloque propio (más abajo),
-     exactamente la misma cirugía que se le hizo a `lang` en s139 y por la misma
-     razón: gana una tercera opción «Auto» que no es un valor de `state.palette`
-     —que sigue siendo siempre 'crema' u 'oscuro'— sino un MODO que vive en
-     `state.paletteAuto`. El mapeador genérico de abajo hace `set({[key]: v})`,
-     y eso no sabe apagar un modo. */
-  const ejes = [
-  /* s139 · Fase 1.6 — el eje de estilo de timer se OCULTA entero (queda
-     siempre «aro») y 'organico' sale de la lista de Respira. Las dos cosas
-     cuelgan de `app/flags.js`; el código de ambas variantes sigue vivo y la
-     migración de los valores huérfanos vive en `loadState`. NO borrar: leer
-     la cabecera de flags.js. Se filtra en vez de comentar el bloque para que
-     devolver la bandera a true no exija tocar este archivo. */
-  ...(window.SHOW_TIMER_STYLE === false ? [] : [
-  { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
-    { v: 'aro', name: t('tweaks.timer.aro') },
-    { v: 'barra', name: t('tweaks.timer.barra') },
-    { v: 'analogico', name: t('tweaks.timer.analogico') }]
-  }]),
+  /* Idioma y paleta comparten gramática (s139 / s161): «Auto» es un MODO que
+     vive en `langAuto` / `paletteAuto`, y las otras opciones son valores.
+     Elegir un valor APAGA el modo (lo hace `setPalette`; para el idioma se
+     escribe aquí). Al entrar en Auto se resuelve YA, para que el panel cambie
+     en el momento y no al recargar. */
+  const langValor = state.langAuto ? 'auto' : state.lang;
+  const ponerLang = (v) => set(v === 'auto' ?
+  { langAuto: true, lang: detectInitialLang() } :
+  { langAuto: false, lang: v });
+  const palValor = state.paletteAuto ? 'auto' : state.palette;
+  const ponerPaleta = (v) => v === 'auto' ? setPaletteAuto(true) : setPalette(v);
 
-  { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
-    { v: 'flor', name: t('tweaks.breath.flor') },
-    { v: 'pulso', name: t('tweaks.breath.pulso') },
-    { v: 'petalo', name: t('tweaks.breath.petalo') },
-    { v: 'ondas', name: t('tweaks.breath.ondas') },
-    ...(window.SHOW_BREATH_ORGANICO === false ? [] : [
-    { v: 'organico', name: t('tweaks.breath.organico') }])]
+  /* El círculo de Respira: cuatro dibujos (y el orgánico, tras bandera). El
+     nombre del elegido va en la línea del módulo, no en la pildora: así las
+     cuatro caben en su fila (medido en la maqueta, ronda 5). */
+  const estilosCirculo = ['flor', 'pulso', 'petalo', 'ondas'].
+  concat(window.SHOW_BREATH_ORGANICO === false ? [] : ['organico']);
+  const circuloValor = estilosCirculo.indexOf(state.breathStyle) !== -1 ? state.breathStyle : 'flor';
 
-  },
-  { key: 'layout', label: t('tweaks.eje.layout'), options: [
-    { v: 'sidebar', name: t('tweaks.layout.sidebar') },
-    { v: 'minimal', name: t('tweaks.layout.minimal') }]
-  }
-  /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
-     (sesión post-v0.12.1). Los campos del state se conservan por
-     compatibilidad con instalaciones existentes. */];
-
-
-  /* Export/Import JSON: extraído a TweaksData.jsx (split s89 / v0.34.5).
-     La superficie premium (s88) vive en PremiumSection.jsx. */
+  const goal = state.water && state.water.goal || 8;
+  /* Rango 4-12: el grid de vasos del tracker rinde bien hasta 12 columnas.
+     Patch funcional (no closure): clics rápidos leen siempre el goal fresco. */
+  const ponerGoal = (d) => set((s) => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (/*#__PURE__*/
     React.createElement("div", { "data-pace-tweaks-panel": true, style: {
@@ -26253,255 +26394,92 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
         zIndex: 80,
         animation: 'pace-slide-up 280ms var(--ease)'
       } }, /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement("div", null, /*#__PURE__*/
-    React.createElement(Meta, null, t('tweaks.meta')), /*#__PURE__*/
-    React.createElement("div", { style: { ...displayItalic, fontSize: 22, fontWeight: 500 } }, t('settings.title'))
-    ), /*#__PURE__*/
-    React.createElement("button", { onClick: onClose, style: { fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' } }, "\xD7")
+    React.createElement("div", { className: "pace-aj-cab" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-titulo" }, t('settings.title')), /*#__PURE__*/
+    React.createElement("button", { type: "button", className: "pace-aj-cerrar", onClick: onClose, "aria-label": t('common.close') }, "\xD7")
     ), /*#__PURE__*/
 
-
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 6 } }, t('tweaks.eje.lang')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-
-
-
-
-
-    [
-    { v: 'auto', name: t('tweaks.lang.auto') },
-    { v: 'es', name: t('tweaks.lang.es') },
-    { v: 'en', name: t('tweaks.lang.en') }].
-    map((opt) => {
-      const esAuto = opt.v === 'auto';
-      const active = esAuto ? !!state.langAuto : !state.langAuto && state.lang === opt.v;
-      return (/*#__PURE__*/
-        React.createElement("button", { key: opt.v, onClick: () => set(esAuto ?
-          { langAuto: true, lang: detectInitialLang() } :
-          { langAuto: false, lang: opt.v }),
-          style: {
-            padding: '6px 10px',
-            fontSize: 11,
-            fontWeight: active ? 500 : 400,
-            background: active ? 'var(--ink)' : 'var(--paper-2)',
-            color: active ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-sm)',
-            transition: TWEAKS_PILL_TRANSITION,
-            letterSpacing: 0.2
-          } }, opt.name));
-
-    })
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.ver') }, /*#__PURE__*/
+    React.createElement(AjustesFila, { id: "lang", nombre: t('settings.lang') }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.lang'), valor: langValor, onChange: ponerLang, opciones: [
+      { v: 'auto', name: t('settings.lang.auto') },
+      { v: 'es', name: t('settings.lang.es') },
+      { v: 'en', name: t('settings.lang.en') }] }
     )
     ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
-
-
-
-
-
-
-
-
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 6 } }, t('tweaks.eje.palette')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-    [
-    { v: 'auto', name: t('tweaks.palette.auto') },
-    { v: 'crema', name: t('tweaks.palette.crema') },
-    { v: 'oscuro', name: t('tweaks.palette.oscuro') }].
-    map((opt) => {
-      const esAuto = opt.v === 'auto';
-      const active = esAuto ? !!state.paletteAuto :
-      !state.paletteAuto && state.palette === opt.v;
-      return (/*#__PURE__*/
-        React.createElement("button", { key: opt.v, onClick: () => esAuto ? setPaletteAuto(true) : setPalette(opt.v),
-          style: {
-            padding: '6px 10px',
-            fontSize: 11,
-            fontWeight: active ? 500 : 400,
-            background: active ? 'var(--ink)' : 'var(--paper-2)',
-            color: active ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-sm)',
-            transition: TWEAKS_PILL_TRANSITION,
-            letterSpacing: 0.2
-          } }, opt.name));
-
-    })
+    React.createElement(AjustesFila, { id: "palette", nombre: t('settings.palette') }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.palette'), valor: palValor, onChange: ponerPaleta, opciones: [
+      { v: 'auto', name: t('settings.palette.auto'), picto: /*#__PURE__*/React.createElement(MuestraPaleta, { cual: "auto" }) },
+      { v: 'crema', name: t('settings.palette.crema'), picto: /*#__PURE__*/React.createElement(MuestraPaleta, { cual: "crema" }) },
+      { v: 'oscuro', name: t('settings.palette.oscuro'), picto: /*#__PURE__*/React.createElement(MuestraPaleta, { cual: "oscuro" }) }] }
     )
+    ),
+
+
+
+    window.SHOW_TIMER_STYLE !== false && /*#__PURE__*/
+    React.createElement(AjustesFila, { id: "timer", nombre: t('settings.timer') }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.timer'), valor: state.timerStyle, onChange: (v) => set({ timerStyle: v }), opciones: [
+      { v: 'aro', name: t('settings.timer.aro') },
+      { v: 'barra', name: t('settings.timer.barra') },
+      { v: 'analogico', name: t('settings.timer.analogico') }] }
+    )
+    ),
+
+
+
+    window.SHOW_LAYOUT_AXIS !== false && /*#__PURE__*/
+    React.createElement(AjustesFila, { id: "layout", nombre: t('settings.layout') }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.layout'), valor: state.layout, onChange: (v) => set({ layout: v }), opciones: [
+      { v: 'sidebar', name: t('settings.layout.sidebar') },
+      { v: 'minimal', name: t('settings.layout.minimal') }] }
+    )
+    )
+
     ), /*#__PURE__*/
 
-    React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.oir') }, /*#__PURE__*/
+    React.createElement(TweaksAudioBlock, { state: state, set: set })
+    ), /*#__PURE__*/
 
-
-
-
-
-
-    React.createElement(TweaksAudioBlock, { state: state, set: set }),
-
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.sesiones') },
 
 
     canNotify && /*#__PURE__*/
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 4 } }, t('tweaks.notify.label')), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 } }, t('tweaks.notify.hint')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-    [
-    { v: true, name: t('tweaks.notify.on') },
-    { v: false, name: t('tweaks.notify.off') }].
-    map((opt) => {
-      const active = !!state.notifyFocusEnd === opt.v;
-      return (/*#__PURE__*/
-        React.createElement("button", { key: String(opt.v),
-          onClick: () => {opt.v ? enableNotify() : set({ notifyFocusEnd: false });},
-          style: {
-            padding: '6px 10px',
-            fontSize: 11,
-            fontWeight: active ? 500 : 400,
-            background: active ? 'var(--ink)' : 'var(--paper-2)',
-            color: active ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-sm)',
-            transition: TWEAKS_PILL_TRANSITION,
-            letterSpacing: 0.2
-          } }, opt.name));
-
-    })
+    React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t('settings.notify.sub'), modulo: "focus" }, /*#__PURE__*/
+    React.createElement(AjustesInterruptor, { on: !!state.notifyFocusEnd && Notification.permission !== 'denied', aria: t('settings.notify'),
+      onChange: (v) => {v ? enableNotify() : set({ notifyFocusEnd: false });} })
     ),
-    Notification.permission === 'denied' && /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginTop: 6, letterSpacing: 0.1 } }, t('tweaks.notify.blocked'))
 
+    canNotify && Notification.permission === 'denied' && /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-nota" }, t('settings.notify.blocked')), /*#__PURE__*/
+
+    React.createElement(AjustesFila, { id: "circle", nombre: t('settings.circle'), modulo: "breathe",
+      sub: tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) }) }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.circle'), valor: circuloValor, onChange: (v) => set({ breathStyle: v }),
+      opciones: estilosCirculo.map((e) => ({ v: e, aria: t('settings.circle.' + e), picto: /*#__PURE__*/React.createElement(PictoCirculo, { estilo: e }) })) })
     ), /*#__PURE__*/
 
 
 
-
-
-
-
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 4 } }, t('tweaks.session.label')), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 } }, t('tweaks.session.rest.hint')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-    [
-    { v: 20, name: t('tweaks.rest.short') },
-    { v: 30, name: t('tweaks.rest.calm') },
-    { v: 45, name: t('tweaks.rest.wide') }].
-    map((opt) => {
-      const active = (state.restBetweenSets || 30) === opt.v;
-      return (/*#__PURE__*/
-        React.createElement("button", { key: opt.v, onClick: () => set({ restBetweenSets: opt.v }),
-          style: {
-            padding: '6px 10px',
-            fontSize: 11,
-            fontWeight: active ? 500 : 400,
-            background: active ? 'var(--ink)' : 'var(--paper-2)',
-            color: active ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-sm)',
-            transition: TWEAKS_PILL_TRANSITION,
-            letterSpacing: 0.2
-          } }, opt.name));
-
-    })
-    )
-    ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: '14px 0' } }),
-
-    ejes.map((eje) => /*#__PURE__*/
-    React.createElement("div", { key: eje.key, style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 6 } }, eje.label), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-    eje.options.map((opt) => {
-      const active = state[eje.key] === opt.v;
-      return (/*#__PURE__*/
-        React.createElement("button", { key: opt.v, onClick: () => set({ [eje.key]: opt.v }),
-          style: {
-            padding: '6px 10px',
-            fontSize: 11,
-            fontWeight: active ? 500 : 400,
-            background: active ? 'var(--ink)' : 'var(--paper-2)',
-            color: active ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-sm)',
-            transition: TWEAKS_PILL_TRANSITION,
-            letterSpacing: 0.2
-          } }, opt.name));
-
-    })
-    )
+    React.createElement(AjustesFila, { id: "rest", nombre: t('settings.rest'), sub: t('settings.rest.sub'), modulo: "move" }, /*#__PURE__*/
+    React.createElement(AjustesPildoras, { aria: t('settings.rest'), valor: state.restBetweenSets || 30, onChange: (v) => set({ restBetweenSets: v }), opciones: [
+      { v: 20, name: t('settings.rest.20') },
+      { v: 30, name: t('settings.rest.30') },
+      { v: 45, name: t('settings.rest.45') }] }
     )
     ), /*#__PURE__*/
 
 
-
-
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 6 } }, t('tweaks.eje.water')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 10 } }, /*#__PURE__*/
-
-
-    React.createElement("button", {
-      onClick: () => set((s) => ({ ...s, water: { ...s.water, goal: Math.max(4, (s.water.goal || 8) - 1) } })),
-      style: tweaksStyles.stepBtn,
-      "aria-label": t('hydrate.less') },
-    "\u2212"), /*#__PURE__*/
-    React.createElement("span", { style: { fontSize: 12, minWidth: 84, textAlign: 'center', color: 'var(--ink-2)', letterSpacing: 0.2 } },
-    tn('tweaks.water.value', { n: state.water.goal || 8 })
-    ), /*#__PURE__*/
-    React.createElement("button", {
-      onClick: () => set((s) => ({ ...s, water: { ...s.water, goal: Math.min(12, (s.water.goal || 8) + 1) } })),
-      style: tweaksStyles.stepBtn,
-      "aria-label": t('hydrate.more') },
-    "+")
+    React.createElement(AjustesFila, { id: "water", nombre: t('settings.water'), sub: t('settings.water.sub'), modulo: "hydrate" }, /*#__PURE__*/
+    React.createElement(AjustesPaso, { valor: goal, onMenos: () => ponerGoal(-1), onMas: () => ponerGoal(1),
+      ariaMenos: t('hydrate.less'), ariaMas: t('hydrate.more') })
     )
     ), /*#__PURE__*/
 
-    React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
-
-
-
-    React.createElement(TweaksDataSection, null), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
-
-
-
-    React.createElement(PremiumSection, null), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
-
-
-
-    React.createElement("button", {
-      onClick: () => {if (confirm(t('tweaks.confirm.reset'))) paceEventsWipeAll(() => location.reload());},
-      style: {
-        width: '100%',
-        padding: '8px',
-        fontSize: 11,
-        color: 'var(--ink-3)',
-        border: '1px dashed var(--line)',
-        borderRadius: 'var(--r-sm)',
-        letterSpacing: 0.2
-      } },
-    t('tweaks.reset')),
-
-
-
-
-    isWeb && /*#__PURE__*/
-    React.createElement("div", { style: { marginTop: 12, textAlign: 'center', fontSize: 10.5, letterSpacing: 0.2 } }, /*#__PURE__*/
-    React.createElement("a", { href: "/safety", target: "_blank", rel: "noopener", style: tweaksStyles.legalLink }, t('tweaks.legal.safety')), /*#__PURE__*/
-    React.createElement("span", { style: { color: 'var(--ink-3)', margin: '0 8px' } }, "\xB7"), /*#__PURE__*/
-    React.createElement("a", { href: "/privacy", target: "_blank", rel: "noopener", style: tweaksStyles.legalLink }, t('tweaks.legal.privacy'))
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.datos'), ultima: true }, /*#__PURE__*/
+    React.createElement(TweaksDataSection, { onReset: borrarTodo, isWeb: isWeb })
     )
-
     ));
 
 }

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es" data-font="cormorant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajustes · ronda 2 · V2 con color</title>
+<link rel="stylesheet" href="/app/tokens.css">
+<link rel="stylesheet" href="/app/motion.css">
+<style>
+  body { padding: 28px 24px 60px; }
+  .cab { max-width: 1400px; margin: 0 auto 18px; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .cab h1 { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 30px; margin: 0; }
+  .cab .nota { font-size: 12.5px; color: var(--ink-2); max-width: 720px; line-height: 1.5; }
+  .mandos { display: flex; gap: 6px; margin-left: auto; }
+  .mandos button { font-size: 11px; padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper-2); color: var(--ink-2); }
+  .mandos button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .fila { display: flex; gap: 26px; align-items: flex-start; overflow-x: auto; padding-bottom: 12px; max-width: 1400px; margin: 0 auto; }
+  .col { flex: 0 0 auto; }
+  .col > .rot { font-size: 11px; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 8px; }
+  .col > .rot b { color: var(--ink); }
+  .medida { font-size: 11.5px; color: var(--ink-2); margin-top: 10px; line-height: 1.55; max-width: 320px; }
+  .medida b { color: var(--ink); }
+  .porque { font-size: 12px; color: var(--ink-2); line-height: 1.5; max-width: 320px; margin-top: 8px; border-left: 2px solid var(--line-2); padding-left: 10px; }
+
+  .panel { width: 320px; background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: var(--sh-modal); padding: 20px; }
+  .panel.movil { width: 390px; border-radius: var(--r-lg) var(--r-lg) 0 0; border-left: 0; border-right: 0; border-bottom: 0; padding: 16px 18px 24px; max-height: 608px; overflow-y: auto; }
+
+  .meta { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .titulo { font-family: var(--font-display); font-style: italic; font-size: 22px; font-weight: 500; line-height: 1.1; }
+  .cerrar { font-size: 18px; color: var(--ink-3); width: 26px; height: 26px; display: grid; place-items: center; }
+  .cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .div { height: 1px; background: var(--line); margin: 12px 0; }
+
+  /* ---- V2, anatomía de filas ---- */
+  .v2 .seccion > .meta { display: block; margin: 2px 0 2px; }
+  .v2 .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 38px; padding: 4px 0; }
+  .v2 .row .lbl { font-size: 12.5px; color: var(--ink); flex: 1 1 auto; line-height: 1.25; }
+  .v2 .row .lbl small { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+  .v2 .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
+  .v2 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; flex: 0 0 auto; }
+  .v2 .seg button { padding: 5px 9px; font-size: 11px; color: var(--ink-2); background: var(--paper-2); border-left: 1px solid var(--line); letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; }
+  .v2 .seg button:first-child { border-left: 0; }
+  .v2 .seg.ancho button { padding: 5px 8px; }
+  .v2 .sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; }
+  .v2 .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); }
+  .v2 .sw.on { background: var(--ink); }
+  .v2 .sw.on::after { left: 16px; }
+  .v2 .stepper { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink); }
+  .v2 .step { width: 26px; height: 26px; display: grid; place-items: center; font-size: 14px; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .v2 .accion { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: 12.5px; color: var(--ink); border-top: 1px solid var(--line); }
+  .v2 .accion:first-of-type { border-top: 0; }
+  .v2 .accion .flecha { color: var(--ink-3); font-size: 14px; }
+  .v2 .accion.suave { color: var(--ink-3); font-size: 12px; }
+  .v2 .pie { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+  .v2 .pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); }
+  /* muestras de paleta: literales a propósito, son la identidad de cada paleta y no
+     deben cambiar con la paleta activa */
+  .v2 .sw-crema, .v2 .sw-oscuro, .v2 .sw-auto { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line-2); flex: 0 0 auto; }
+  .v2 .sw-crema { background: #F2EDE0; }
+  .v2 .sw-oscuro { background: #1d1a14; }
+  .v2 .sw-auto { background: linear-gradient(90deg, #F2EDE0 50%, #1d1a14 50%); }
+
+  /* ---- base: seleccionado = tinta (como hoy) ---- */
+  .base .seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+
+  /* ---- A · lavado de módulo: lo global sigue en tinta; lo de un módulo, lavado + borde
+          de su color y texto en tinta (el único reparto que pasa contraste con
+          terracota, tabaco y azul) ---- */
+  .lavado .seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+  .lavado .row[style*="--m"] .seg button.on { background: var(--ms); color: var(--ink); box-shadow: inset 0 0 0 1px var(--m); font-weight: 500; }
+  .lavado .row[style*="--m"] .sw.on { background: var(--m); }
+  .lavado .row[style*="--m"] .stepper span { color: var(--ink); font-weight: 500; }
+
+  /* ---- B · todo tintado: ninguna pastilla negra; lo global en papel-3 con borde de
+          tinta, lo de módulo con su lavado ---- */
+  .tintado .seg button.on { background: var(--paper-3); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink-2); font-weight: 500; }
+  .tintado .row[style*="--m"] .seg button.on { background: var(--ms); color: var(--ink); box-shadow: inset 0 0 0 1px var(--m); }
+  .tintado .sw.on { background: var(--ink-2); }
+  .tintado .row[style*="--m"] .sw.on { background: var(--m); }
+</style>
+</head>
+<body>
+
+<div class="cab">
+  <h1>Ajustes · ronda 2 · la V2, mejorada y con color</h1>
+  <div class="nota">Mejoras sobre la V2: en «Sesiones» cada fila dice de qué módulo es (punto + nombre), «Círculo» cabe en su fila, y la paleta enseña una muestra. Dos intensidades de color a elegir; el contraste de cada opción seleccionada se mide en la página, en las dos paletas.</div>
+  <div class="mandos">
+    <button id="pal-crema" class="on" onclick="paleta('crema')">Crema</button>
+    <button id="pal-oscuro" onclick="paleta('oscuro')">Oscuro</button>
+  </div>
+</div>
+
+<template id="tpl">
+  <div class="cabecera"><div class="titulo">Ajustes</div><button class="cerrar">×</button></div>
+
+  <div class="seccion"><span class="meta">Ver</span>
+    <div class="row"><div class="lbl">Idioma</div><div class="seg"><button class="on">Auto</button><button>Español</button><button>English</button></div></div>
+    <div class="row"><div class="lbl">Paleta</div><div class="seg"><button class="on"><i class="sw-auto"></i>Auto</button><button><i class="sw-crema"></i>Crema</button><button><i class="sw-oscuro"></i>Oscuro</button></div></div>
+  </div>
+  <div class="div"></div>
+
+  <div class="seccion"><span class="meta">Oír</span>
+    <div class="row"><div class="lbl">Sonido</div><div class="sw on"></div></div>
+    <div class="row"><div class="lbl">Marca la fase</div><div class="seg"><button>Tono</button><button class="on">Voz clara</button><button>Voz grave</button></div></div>
+    <div class="row"><div class="lbl">Suena detrás</div><div class="seg"><button class="on">Nada</button><button>Ambiente</button><button>Música</button></div></div>
+  </div>
+  <div class="div"></div>
+
+  <div class="seccion"><span class="meta">Sesiones</span>
+    <div class="row" style="--m: var(--focus); --ms: var(--focus-soft)"><div class="lbl">Aviso al terminar<small><i class="punto"></i>Foco · si la pestaña está detrás</small></div><div class="sw on"></div></div>
+    <div class="row" style="--m: var(--breathe); --ms: var(--breathe-soft)"><div class="lbl">Círculo<small><i class="punto"></i>Respira</small></div><div class="seg ancho"><button class="on">Loto</button><button>Pulso</button><button>Pétalo</button><button>Ondas</button></div></div>
+    <div class="row" style="--m: var(--move); --ms: var(--move-soft)"><div class="lbl">Descanso entre series<small><i class="punto"></i>Mueve</small></div><div class="seg"><button>20 s</button><button class="on">30 s</button><button>45 s</button></div></div>
+    <div class="row" style="--m: var(--hydrate); --ms: var(--hydrate-soft)"><div class="lbl">Vasos al día<small><i class="punto"></i>Hidrátate</small></div><div class="stepper"><button class="step">−</button><span>8</span><button class="step">+</button></div></div>
+  </div>
+  <div class="div"></div>
+
+  <div class="seccion"><span class="meta">Tus datos</span>
+    <div class="accion"><span>Exportar una copia</span><span class="flecha">⤓</span></div>
+    <div class="accion"><span>Importar una copia</span><span class="flecha">⤒</span></div>
+    <div class="accion suave"><span>Borrar todos mis datos</span><span class="flecha">›</span></div>
+    <div class="accion suave"><span>Licencia</span><span>pronto</span></div>
+    <div class="pie"><span>Todo vive en tu navegador.</span><span><a>Seguridad</a> · <a>Privacidad</a></span></div>
+  </div>
+</template>
+
+<div class="fila" id="fila">
+  <div class="col"><div class="rot"><b>V2 · base</b> · sin color, la de la ronda 1 mejorada</div><div class="panel v2 base" data-mide="base"></div><div class="medida" id="m-base"></div>
+    <div class="porque">Lo que cambia respecto a la ronda 1: cada ajuste de «Sesiones» lleva debajo su módulo (punto y nombre), «Círculo» cabe en una fila, y la paleta enseña de qué color es cada opción antes de elegirla.</div></div>
+  <div class="col"><div class="rot"><b>A · Lavado de módulo</b> · lo global en tinta, lo de cada módulo en su color</div><div class="panel v2 lavado" data-mide="A"></div><div class="medida" id="m-A"></div>
+    <div class="porque">El color dice «este ajuste es de Respira / de Mueve…», y aparece solo donde hay módulo. La opción elegida lleva el lavado y el borde de su módulo con el texto en tinta — el mismo reparto que la tarjeta de Viajes (s186) y el único que pasa contraste con terracota, tabaco y azul. El interruptor del aviso de Foco se pone oliva.</div></div>
+  <div class="col"><div class="rot"><b>B · Todo tintado</b> · ninguna pastilla negra</div><div class="panel v2 tintado" data-mide="B"></div><div class="medida" id="m-B"></div>
+    <div class="porque">Lo mismo que A, pero lo global también se selecciona por tinte (papel-3 con borde) y no por pastilla negra. Más calmado y más uniforme; el coste es que lo seleccionado se ve algo menos a primera vista. Es la gramática de la fila «MIN 15 25 35 45» de la home, no la de FOCO · PAUSA · LARGA.</div></div>
+</div>
+
+<h2 style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:22px;margin:30px auto 10px;max-width:1400px">En móvil · hoja de 390 × 608 px</h2>
+<div class="fila" id="fila-movil"></div>
+
+<script>
+  /* las tres columnas comparten el mismo DOM: solo cambia la clase de color */
+  document.querySelectorAll('.panel[data-mide]').forEach(p => p.appendChild(document.getElementById('tpl').content.cloneNode(true)));
+
+  function paleta(p) {
+    if (p === 'oscuro') document.documentElement.setAttribute('data-palette', 'oscuro');
+    else document.documentElement.removeAttribute('data-palette');
+    document.getElementById('pal-crema').classList.toggle('on', p === 'crema');
+    document.getElementById('pal-oscuro').classList.toggle('on', p === 'oscuro');
+    medir();
+  }
+
+  /* ---- contraste WCAG con alfa compuesta sobre el papel del panel ---- */
+  function rgba(s) { const m = s.match(/[\d.]+/g) || [0,0,0,1]; return { r:+m[0], g:+m[1], b:+m[2], a: m.length > 3 ? +m[3] : 1 }; }
+  function sobre(fg, bg) { const a = fg.a; return { r: fg.r*a + bg.r*(1-a), g: fg.g*a + bg.g*(1-a), b: fg.b*a + bg.b*(1-a), a: 1 }; }
+  function lum(c) { const f = v => { v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }; return 0.2126*f(c.r) + 0.7152*f(c.g) + 0.0722*f(c.b); }
+  function contraste(a, b) { const la = lum(a), lb = lum(b); return (Math.max(la,lb)+0.05)/(Math.min(la,lb)+0.05); }
+  function fondoReal(el, papel) {
+    /* compone hacia arriba todos los fondos con alfa hasta el papel del panel */
+    let acc = null; let n = el;
+    const capas = [];
+    while (n && !n.classList.contains('panel')) { capas.push(rgba(getComputedStyle(n).backgroundColor)); n = n.parentElement; }
+    let bg = papel;
+    for (let i = capas.length - 1; i >= 0; i--) { if (capas[i].a > 0) bg = sobre(capas[i], bg); }
+    return bg;
+  }
+  function medir() {
+    const fila = document.getElementById('fila-movil'); fila.innerHTML = '';
+    document.querySelectorAll('.panel[data-mide]').forEach(p => {
+      const n = p.dataset.mide;
+      const papel = rgba(getComputedStyle(p).backgroundColor);
+      const h = Math.round(p.getBoundingClientRect().height);
+      /* contraste del texto de CADA opción seleccionada y de la línea de módulo */
+      let peor = 99, peorQue = '', peorSub = 99;
+      p.querySelectorAll('.seg button.on, .stepper span').forEach(el => {
+        const c = contraste(rgba(getComputedStyle(el).color), fondoReal(el, papel));
+        if (c < peor) { peor = c; peorQue = el.textContent.trim().slice(0, 14); }
+      });
+      p.querySelectorAll('.lbl small').forEach(el => { const c = contraste(rgba(getComputedStyle(el).color), fondoReal(el, papel)); if (c < peorSub) peorSub = c; });
+      /* interruptores: pista encendida contra el papel (componente, umbral 3:1) */
+      let peorSw = 99;
+      p.querySelectorAll('.sw.on').forEach(el => { const c = contraste(rgba(getComputedStyle(el).backgroundColor), papel); if (c < peorSw) peorSw = c; });
+      document.getElementById('m-' + n).innerHTML =
+        'alto <b>' + h + ' px</b> · ' + (h/752).toFixed(2) + ' pantallas a 1280×800<br>' +
+        'peor contraste de texto seleccionado: <b>' + peor.toFixed(2) + ':1</b> («' + peorQue + '», umbral 4,5) · pista de interruptor: <b>' + peorSw.toFixed(2) + ':1</b> (umbral 3)';
+      const col = document.createElement('div'); col.className = 'col';
+      const rot = document.createElement('div'); rot.className = 'rot'; rot.innerHTML = '<b>' + n + '</b> · móvil';
+      const clon = p.cloneNode(true); clon.classList.add('movil'); clon.removeAttribute('data-mide');
+      col.appendChild(rot); col.appendChild(clon); fila.appendChild(col);
+      const med = document.createElement('div'); med.className = 'medida';
+      med.innerHTML = 'contenido <b>' + clon.scrollHeight + ' px</b> en 608 → <b>' + (clon.scrollHeight/608).toFixed(2) + ' pantallas</b>';
+      col.appendChild(med);
+    });
+  }
+  window.addEventListener('load', () => { if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir); else medir(); });
+</script>
+</body>
+</html>
