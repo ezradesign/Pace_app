@@ -33,7 +33,32 @@
    LA RUTINA CONCRETA LA ELIGE `libraryParaAhora`, que ya rota por día, ordena
    por duración y respeta el acceso premium. No se inventa un segundo
    recomendador. Y el pozo excluye SIEMPRE las rutinas con aviso de seguridad:
-   una apnea no se propone sola al salir de un bloque de trabajo. */
+   una apnea no se propone sola al salir de un bloque de trabajo.
+
+   ------------------------------------------------------------------------
+   LO QUE SE LE PREGUNTÓ Y NADIE ESCUCHABA (s189)
+   ------------------------------------------------------------------------
+   «¿Te ayudó esta pausa?» se captura desde s116 y ningún recomendador lo leía.
+   Ahora lo lee ESTA regla, y lo hace en pequeño a propósito, porque el banco de
+   s189 (`scripts/audit/banco-feedback-s189.js`) midió el TECHO de la señal: la
+   pregunta sale una vez por rutina y DÍA, y los pozos son de 8 a 17 rutinas, así
+   que en 30 días se proponen como mucho 11 (Estira), 12 (Respira) u 8 (Mueve)
+   distintas. Puntuar preferencias sobre eso sería ruido con decimales.
+
+     · VETO — una rutina con «No» y sin ningún «Sí»/«Un poco» sale del pozo de la
+       PROPUESTA. Sigue en la biblioteca: esto no esconde catálogo, solo deja de
+       ofrecerte lo que ya dijiste que no te servía.
+     · AMNISTÍA — si el veto vaciara el pozo, se IGNORA. Medido: quien responde
+       «No» a todo deja Estira sin pozo en 12 días (9 en Mueve, gratis), y a
+       partir de ahí un bloque de 45 minutos sentado acabaría proponiendo beber
+       agua. Antes de enmudecer, se repite una rechazada.
+     · EL «SÍ» NO ORDENA NADA — solo protege del veto. Preferir lo que ayudó
+       colapsaría la variedad que la rotación diaria busca a propósito.
+     · UNA PAUSA NO REPITE LA ANTERIOR — la rotación es por día + número de
+       bloque (`salto`). Antes de s189 dos pausas del mismo día compartían el
+       ISO y proponían la MISMA rutina, incluso con el plan ya cumplido: medido
+       en el banco, no leído. `state.cycle` se pone a cero en el relevo de día,
+       así que el salto no cruza la medianoche. */
 
 /* breakPozo(catalogo) -> las rutinas abiertas de un catálogo agrupado.
 
@@ -60,12 +85,45 @@ function breakPozo(catalogo) {
   return out;
 }
 
-/* breakElige(catalogo, iso) -> UNA rutina, o null. */
-function breakElige(catalogo, iso) {
+/* breakVetadas(routineFeedback) -> { [id]: true } de lo que se rechazó y nunca
+   ayudó. PURA y DEFENSIVA: un slice a medias, con cadenas donde van números o
+   sin la clave, devuelve el veto vacío en vez de reventar la propuesta.
+
+   «Un poco» CUENTA COMO AYUDA, y es la razón de que s116 guardase los tres
+   contadores en vez de un booleano: quien contesta «Un poco» está diciendo que
+   algo hizo, no que no le sirvió. */
+function breakVetadas(feedback) {
+  const out = {};
+  try {
+    Object.keys(feedback || {}).forEach(function (id) {
+      const f = feedback[id] || {};
+      const no = Number(f.no) || 0;
+      const ayudo = (Number(f.yes) || 0) + (Number(f.some) || 0);
+      if (no > 0 && ayudo === 0) out[id] = true;
+    });
+  } catch (e) { return {}; }
+  return out;
+}
+
+/* breakElige(catalogo, iso, opts) -> UNA rutina, o null.
+   `opts`: { vetadas, salto }. Los dos son opcionales: sin ellos esto se comporta
+   exactamente como en s187. */
+function breakElige(catalogo, iso, opts) {
+  const o = opts || {};
+  const vetadas = o.vetadas || {};
+  const salto = Number(o.salto) || 0;
   const pozo = breakPozo(catalogo);
   if (!pozo.length || typeof libraryParaAhora !== 'function') return null;
-  const elegidas = libraryParaAhora(pozo, iso, 1, function (r) { return !r.safety; });
-  return (elegidas && elegidas[0]) || null;
+  const abierta = function (r) { return !r.safety; };
+  /* EL VETO VA EN EL PREDICADO, donde ya vive el filtro de seguridad: un solo
+     sitio que decide qué puede salir. Y la AMNISTÍA es la segunda llamada: si
+     el veto no deja nada, se pregunta otra vez sin él. */
+  const conVeto = libraryParaAhora(pozo, iso, 1, function (r) {
+    return abierta(r) && !vetadas[r.id];
+  }, salto);
+  if (conVeto && conVeto[0]) return conVeto[0];
+  const sinVeto = libraryParaAhora(pozo, iso, 1, abierta, salto);
+  return (sinVeto && sinVeto[0]) || null;
 }
 
 /* breakPropuesta(state, ctx) -> { modulo, porque, datos, rutina } o null.
@@ -86,6 +144,10 @@ function breakPropuesta(state, ctx) {
   /* El bloque que ACABA de terminar: `completePomodoro` ya subió el contador
      antes de que este menú se abra, así que el que cuenta es el anterior. */
   const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);
+  /* Lo rechazado y sin ayuda, y el salto de la rotación: la PRIMERA pausa del
+     día no salta (bloque 1 → 0), la segunda coge la siguiente de la lista. */
+  const vetadas = breakVetadas(s.routineFeedback);
+  const elige = (cat) => breakElige(cat, iso, { vetadas: vetadas, salto: bloqueDeHoy - 1 });
 
   const con = (modulo, porque, rutina, extra) => ({
     modulo: modulo, porque: porque, rutina: rutina || null,
@@ -95,7 +157,7 @@ function breakPropuesta(state, ctx) {
   /* 1 · lo que acaba de pasar. 35 min es el primer preset que ya no es «una
      pausa corta»: a partir de ahí el cuerpo lleva sentado más de media hora. */
   if (minutos >= 35) {
-    const r = breakElige(window.EXTRA_ROUTINES, iso);
+    const r = elige(window.EXTRA_ROUTINES);
     if (r) return con('extra', 'sitting', r, { n: minutos });
   }
 
@@ -107,7 +169,7 @@ function breakPropuesta(state, ctx) {
   /* 3 · el tercero de hoy. Ni el primero (aún no hay historia) ni el cuarto
      (ahí ya toca la pausa larga, que es otra conversación). */
   if (bloqueDeHoy === 3) {
-    const r = breakElige(window.BREATHE_ROUTINES, iso);
+    const r = elige(window.BREATHE_ROUTINES);
     if (r) return con('breathe', 'third', r, {});
   }
 
@@ -121,7 +183,7 @@ function breakPropuesta(state, ctx) {
   for (let i = 0; i < pendientes.length; i++) {
     const p = pendientes[i];
     if (p.hecho) continue;
-    const r = breakElige(p.cat, iso);
+    const r = elige(p.cat);
     if (r) return con(p.modulo, p.key, r, {});
   }
 
@@ -129,4 +191,4 @@ function breakPropuesta(state, ctx) {
   return null;
 }
 
-Object.assign(window, { breakPozo, breakElige, breakPropuesta });
+Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });

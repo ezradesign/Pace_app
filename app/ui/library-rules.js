@@ -185,7 +185,12 @@ function libraryDiaOrdinal(iso) {
    MEDIDO al elegir el pozo: con «aquí mismo» Y «sin material» son 3 rutinas en
    Estira y 5 en Mueve, y enseñando 2 de 3 casi siempre sale lo mismo. Con
    «aquí mismo» a secas son 5 y 11, que sí rotan. */
-function libraryParaAhora(rutinas, iso, cuantas, pozoPred) {
+/* `salto` (s189) DESPLAZA la ventana dentro del mismo día, y nace de una medida:
+   la rotación entra por el día, así que dos pausas del MISMO día compartían el
+   ISO y proponían la misma rutina — incluso la que acababas de hacer. Quien
+   llama dice de qué se salta (la pausa usa el número de bloque de hoy); sin
+   `salto` el comportamiento es el de s174 y ninguna biblioteca se mueve. */
+function libraryParaAhora(rutinas, iso, cuantas, pozoPred, salto) {
   var n = cuantas || 2;
   /* EL POZO ES «LO QUE PUEDES HACER AHORA», y eso no significa lo mismo en
      todas las bibliotecas. En cuerpo es el contexto (`aqui`). En Respira ese
@@ -197,7 +202,7 @@ function libraryParaAhora(rutinas, iso, cuantas, pozoPred) {
   var pozo = (rutinas || []).filter(pozoPred || libraryPredicado('aqui'));
   pozo = pozo.slice().sort(function (a, b) { return a.min - b.min; });
   if (pozo.length <= n) return pozo;
-  var i = libraryDiaOrdinal(iso) % pozo.length;
+  var i = (libraryDiaOrdinal(iso) + (Number(salto) || 0)) % pozo.length;
   if (i < 0) i += pozo.length;
   var out = [];
   for (var k = 0; k < n; k++) out.push(pozo[(i + k) % pozo.length]);
