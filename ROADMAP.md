@@ -291,7 +291,7 @@ demás, y las cuatro superficies cuentan la misma cifra.
 > precedencia máscara → SVG heráldico → carácter deja entrar el arte por partes sin huecos, así
 > que lo que aún no tiene dibujo conserva el sistema viejo en vez de aplanarse a su categoría.
 
-### FASE 3 · Eventos web (`pace.events.v1`) — 🔄 EN CURSO · emisores YA entregados (v0.102.0)
+### FASE 3 · Eventos web (`pace.events.v1`) — ✅ HECHA (s155 · s172 · s174 · s190)
 
 Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se
 emite no se reconstruye, y de él dependen «Qué te ayuda», las comparaciones, el check-in de cierre
@@ -316,9 +316,16 @@ emitir antes de estar en `READ_WRITE`. El single-writer está probado con **dos 
 > - **s174** — la **retención por calendario** (120 d, §12) se dispara **sola**, una vez por
 >   arranque tras `loadState` (`app/events/events-store.js:370`).
 >
-> **Lo que queda de verdad** es la **Fase 3 del esquema**: reducers de `aggregates`, encaje con
-> `state-history` y normalización P1. Dato que ahorra un susto: el store **se inicializa solo**
-> (`paceEventsBoot()` al cargar `events-store.js`), no hay que arrancarlo desde producto.
+> **s190 · la Fase 3 del esquema, CERRADA.** `sessionsByRoutine` entra en el fold del baseline y
+> `paceEventsAggregates()` da el valor vivo **reutilizando el fold de la poda** (un solo contador
+> para las dos lecturas). El encaje con `state-history` se resolvió **no duplicando**: «días con
+> ritmo» y los minutos por día siguen siendo suyos, y `aggregates` solo guarda lo que ninguna otra
+> capa puede dar. La **normalización P1** también queda cerrada (`feedbackCount`): reproducía, y
+> `'3' + 1` daba `'31'`. Primer consumidor entregado: «Lo has hecho N veces» en el preview.
+> Diario: [session-190](./docs/sessions/session-190-la-memoria-larga.md).
+>
+> Dato que ahorra un susto: el store **se inicializa solo** (`paceEventsBoot()` al cargar
+> `events-store.js`), no hay que arrancarlo desde producto.
 
 ### FASE 3.5 · Pausa PACE (§17) — 🔄 EN CURSO · la propuesta YA existe (s187, v0.118.0)
 
@@ -357,7 +364,7 @@ posicionamiento (§27.3): «sé que debería parar, pero no sé qué me conviene
 
 Va después de eventos porque la recomendación necesita historial real, no contadores agregados.
 
-### FASE 4 · Stats
+### FASE 4 · Stats — 🔜 SIGUIENTE, y ya sin bloqueos (s190)
 
 Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy + Semana), según
 [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md), ya sin condicionantes

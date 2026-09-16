@@ -167,6 +167,48 @@ function paceEventsSnapshot() {
   }
 }
 
+/* AGREGADOS VIVOS (§13 · s189) -> { capturedAt, feedback, totalsByType,
+   sessionsByRoutine }.
+
+   LA REGLA DEL ESQUEMA ES UNA LINEA -- `valor vivo = baseline + fold(retenidos)`
+   -- y aqui se cumple LITERALMENTE reutilizando el fold de la poda en vez de
+   escribir un segundo contador. Eso da tres cosas gratis: la idempotencia por
+   `pruneCursor` (los ya consolidados no se recuentan), el mismo trato a los
+   tipos desconocidos, y que un arreglo en el fold arregle las dos lecturas. Dos
+   funciones que suman lo mismo es como se acaba con dos cifras distintas del
+   mismo dato en dos pantallas.
+
+   CUANDO TODAVIA NO SE HA PODADO NADA -- hoy, y hasta ~120 dias despues de la
+   primera sesion emitida-- el baseline esta vacio y esto cuenta solo eventos
+   crudos. Es el mismo numero, por el otro extremo: por eso el test simula una
+   poda en vez de esperar a diciembre.
+
+   Nunca lanza: un almacen inerte (`file://`) devuelve el agregado vacio, que es
+   degradacion y no error -- y en ese caso el consumidor no pinta nada. */
+function paceEventsAggregates() {
+  try {
+    const snap = paceEventsSnapshot();
+    return foldEventsIntoBaseline(
+      snap && snap.baseline, (snap && snap.events) || [], snap && snap.pruneCursor);
+  } catch (e) {
+    return emptyEventsBaseline();
+  }
+}
+
+/* Cuantas veces se ha completado ESTA rutina. `null` -- no `0`-- cuando el
+   almacen no puede responder: cero es una afirmacion («no lo has hecho nunca»)
+   y no saberlo es otra cosa. El consumidor distingue y no pinta. */
+function paceEventsRoutineCount(routineId) {
+  if (!routineId || !paceEventsCanWrite()) return null;
+  try {
+    const agg = paceEventsAggregates();
+    const n = agg && agg.sessionsByRoutine ? agg.sessionsByRoutine[routineId] : 0;
+    return typeof n === 'number' && isFinite(n) && n > 0 ? n : 0;
+  } catch (e) {
+    return null;
+  }
+}
+
 /* Emision. En s155 no la llama ningun modulo de producto (Fase 2). */
 function paceEventsAppend(event) {
   if (!paceEventsCanWrite()) return eventsNullResult();
@@ -381,4 +423,5 @@ Object.assign(window, {
   paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
   paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
   paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune,
+  paceEventsAggregates, paceEventsRoutineCount,
 });

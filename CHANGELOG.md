@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.121.0** | 2026-09-16 | feat(eventos+preview): **la memoria larga** — Los reducers de `aggregates` (FASE 3 del esquema de eventos), que son lo unico que desbloquea la Fase 4 (Stats). **La auditoria corrigio el encargo**: el ROADMAP decia «sin cablear» y era cierto que la palabra `aggregates` no aparece en `app/`, pero **`baseline` ya consolidaba dos de los cuatro candidatos** (`totalsByType` y los tallies de feedback) desde s155. Lo que faltaba de verdad: **una API que devuelva el valor vivo** y los **totales por rutina** -- el unico agregado que ninguna otra capa puede dar, porque `state.routineCounts` cuenta por CATEGORIA (`box`, `coherent`, `rounds`, `atg`) y no por id. `paceEventsAggregates()` cumple la regla del esquema (`valor vivo = baseline + fold(retenidos)`) **reutilizando el fold de la poda** en vez de escribir un segundo contador: de ahi salen gratis la idempotencia por cursor y que un arreglo sirva para las dos lecturas. `paceEventsRoutineCount()` distingue **tres estados y no dos** -- `null` es «el almacen no puede responder» y `0` es «nunca», y en los dos el preview CALLA. **El consumidor entra en la misma sesion**, a proposito: el feedback se capturo en s116 y tardo 28 sesiones en tener quien lo leyera. El preview de la rutina dice «Lo has hecho N veces», **sin fecha y medido**: no hay contador legacy que sembrar, las sesiones se emiten desde v0.102.0 (no desde que el contenedor se activo, 16 dias antes) y hoy el historial maximo es de **27 dias** -- con la ventana de 120, **no se ha podado nada en ninguna instalacion**. «N veces» es cierto hoy y seguira siendolo en un año. **Fuera por decision**: el desglose `natural`/`early` (aunque el dato ya viaje) y «dias con ritmo», que se queda en `state-history` como unico dueño (§14) para que no haya dos calculos del mismo numero. Los huerfanos se CONSERVAN: el total es historia. De paso se cierra la **deuda P1** (§15.3), que reproducia: `cur.yes \|\| 0` conservaba el tipo y la suma concatenaba (`'3' + 1 === '31'`), y un contador corrupto alimenta el veto de la pausa de s189. **228 → 236**, 10 mutantes y los 10 muerden -- **tres hubo que reescribirlos por medir el seam equivocado**, y uno de ellos acabo en un arreglo mejor: habia DOS guardas redundantes y ninguna mordia, asi que se quito la de sobra. | s190 | [session-190](./docs/sessions/session-190-la-memoria-larga.md) |
 | **v0.120.0** | 2026-09-16 | feat(pausa): **el feedback que nadie leia** — «¿Te ayudo esta pausa?» se captura desde s116 y **ningun recomendador lo leia en veintiocho sesiones**. Ahora lo lee la propuesta de la pausa, y **en pequeño porque el dato no da para mas**: el banco `banco-feedback-s189.js` midio el TECHO de la señal evaluando el recomendador de verdad sobre los catalogos de verdad -- la pregunta sale **una vez por rutina y dia**, y los pozos son de **11 (Estira), 12 (Respira) y 8 (Mueve)** rutinas gratis, o sea que en 30 dias se proponen como mucho esas. Puntuar preferencias sobre eso seria ruido con decimales. La regla, escrita antes de codificarla y elegida por el usuario con los numeros delante: **una rutina con «No» y sin ningun «Si»/«Un poco» sale del pozo de la PROPUESTA** (no del catalogo: se sigue pudiendo elegir a mano) · **si el veto vaciara el pozo se IGNORA** -- sin esa amnistia, quien contesta «No» a todo deja Estira muda en **12 dias** (9 en Mueve) y un bloque de 45 minutos sentado acaba proponiendo **beber agua** · **el «Si» no ordena nada**, solo protege del veto. **Y un defecto que destapo el banco, no el encargo**: la rotacion era por dia, asi que **dos pausas del MISMO dia proponian la misma rutina** -- incluso una que acababas de hacer, porque la rama de los 45 minutos no mira el plan. La rotacion pasa a ser **dia + numero de bloque** (`state.cycle`, que ya se pone a cero en el relevo de dia): **cero estado nuevo, cero migracion** y nada que dependa de `pace.events.v1`, que en `file://` es inerte por diseño. **224 → 228**, con el **primer aserto de la pausa en INGLES** (hueco declarado en s187) y **8 mutantes, los 8 muerden** -- dos hubo que reescribirlos porque median el seam equivocado. | s189 | [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md) |
 | **v0.119.0** | 2026-09-15 | feat(ajustes): **el panel en cuatro temas** — El panel de Ajustes, redisenado entero y elegido MIRANDOLO en **cinco rondas de maqueta** con los tokens, las fuentes y el copy reales. Lo que habia, medido: **1412 px de contenido** (1,9 pantallas a 1280x800, 2,2 en movil), 30 pastillas, 7 lineas de explicacion, 10 secciones sin agrupar y un bloque premium de **221 px que era un input deshabilitado**. Lo que hay: cuatro temas -- **Ver · Oir · Sesiones · Tus datos**-- y cada ajuste es una FILA con el nombre en cursiva a la izquierda y el control a la derecha. **El color dice de que modulo es el ajuste**, y solo aparece donde hay modulo: la pildora elegida lleva un LAVADO del color con el texto en tinta, porque terracota, tabaco y azul con texto claro dan **2,8-3,3:1** (medido) y el lavado da 9,3:1 en oscuro. El circulo de Respira se elige entre **cuatro pictogramas** calcados de `BreatheVisual.jsx` y el nombre del elegido baja a la linea del modulo. **Con el sonido apagado las dos filas que cuelgan de el se atenuan en vez de esconderse**: antes el panel saltaba 84 px. «Disposicion» sale tras bandera (duplicaba el boton de plegar la barra) con migracion de «minimal». Resultado: **743 px, cabe sin scroll a 1280x800**; movil 1,22 pantallas. Nace `strings/settings.js` (`ui.js` habria pasado de 500) y `TweaksPanel.parts.jsx`. **215 → 224**, 8 mutantes y los 8 muerden. Antes, se cerro la deuda documental que s187 dejo a medias. | s188 | [session-188](./docs/sessions/session-188-ajustes-en-cuatro-temas.md) |
 | **v0.118.0** | 2026-09-07 | feat(pausa): **la pausa que propone** — Al terminar un Pomodoro la app sabia cuanto llevabas sentado y **no lo usaba**: ofrecia cuatro modulos y te dejaba elegir entre 17 rutinas. Ahora propone UNA, con nombre, duracion y **el porque**. La regla se escribio ANTES de codificarla y va de lo que acaba de pasar a lo que es cierto en general: bloque ≥35 min → Estira («Llevas 45 minutos sentado») · cero vasos pasado el mediodia → agua · tercer bloque de hoy → Respira · si no, lo que el plan tenga pendiente · **y si no se cumple ninguna NO se propone nada** -- una propuesta sin motivo es publicidad. **LA CONDICION QUE MANDO EL DISENO ERA UNA MEDIDA**: el modal ocupa **616 px fijos** en los cuatro telefonos y a 360x640 solo le sobran **24**, asi que la propuesta no podia sumar alto -- entra en el sitio que dejan el sello «Para ti» y las descripciones de las cuatro tarjetas, **que con una rutina con nombre arriba sobran**. Medido despues: **601 px**, 15 menos que antes. **Los glifos de los cuatro modulos se quedan** (peticion del usuario): son lo que hace la tarjeta reconocible de un vistazo. La rutina la elige `libraryParaAhora`, que ya rota por dia y respeta el acceso premium, y **«Empezar» entra en ESA rutina por las mismas puertas que la biblioteca** -- el modal de apnea y el preview de §18.3-, no por un camino paralelo. **209 → 215**, con **6 mutantes en rojo**, y dos de ellos obligaron a arreglar el codigo: el filtro de seguridad estaba DUPLICADO (quitarlo de un sitio no ponia rojo nada, el defecto de s166) y el aserto de la apnea miraba un solo dia cuando el recomendador **rota por dia** -- ahora mira 30. De paso, `ui.js` paso de 500 y el dominio `break.*` sale a su propio archivo. | s187 | [session-187](./docs/sessions/session-187-la-pausa-que-propone.md) |
@@ -390,6 +391,62 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.121.0] -- 2026-09-16 -- feat(eventos+preview): la memoria larga
+
+### Anadido
+- **`sessionsByRoutine` en el `baseline`** (`app/events/events-model.js`): el fold cuenta las
+  `session.completed` por `routineId`. Un evento sin id NO se cuenta -- un total bajo una clave
+  vacia no es de nadie. Las rutinas que ya no existen **se conservan**: el total es historia y la
+  poda ya es irreversible.
+- **`paceEventsAggregates()`** -- el valor vivo (§13), que **reutiliza `foldEventsIntoBaseline`**,
+  el mismo fold de la poda. Un solo contador para las dos lecturas: la idempotencia por
+  `pruneCursor` y el trato a los tipos desconocidos salen gratis, y un arreglo arregla las dos.
+- **`paceEventsRoutineCount(id)`** -- `null` cuando el almacen no puede responder (`file://`,
+  contenedor ilegible), `0` cuando nunca se hizo. **Tres estados, no dos.**
+- **`preview.doneCount.one`/`.many`** (ES+EN) y la linea del preview (`RoutinePreview.jsx`): «Lo
+  has hecho N veces», en tinta terciaria y junto a las pastillas -- es una nota sobre TI, no un
+  requisito de la rutina. Con 0 o con `null`, no se pinta nada.
+
+### Corregido
+- **Deuda P1 (§15.3)**, que reproducia: `nextRoutineFeedback` guardaba con `cur.yes || 0`, que
+  conserva el TIPO, asi que un `'3'` -- de un backup editado a mano o del import, que aun no sanea
+  (deuda A-7)-- pasaba la guarda y la suma lo CONCATENABA: `'3' + 1 === '31'`. Cerrado con
+  `feedbackCount` (entero finito >= 0), el mismo criterio que `eventCount`.
+- **Una guarda de sobra, retirada.** La primera version coaccionaba en el campo Y en el
+  incremento, y **ninguno de los dos mutantes mordia**: con las dos puestas, romper cualquiera
+  dejaba los asertos en verde. Es la regla de s187 -- una guarda vive en UN sitio.
+
+### Decisiones
+- **Solo totales por rutina.** El desglose `natural`/`early` queda fuera aunque el evento ya lo
+  traiga (`completionReason`), y «dias con ritmo» **no lo calcula `aggregates`**: `state-history`
+  sigue siendo el unico dueño (§14), porque dos calculos del mismo numero acaban divergiendo.
+- **La copy no lleva fecha**, y es una medida: no hay contador legacy que sembrar, las sesiones se
+  emiten desde v0.102.0 (2026-08-20) y el contenedor se activo 16 dias antes -- decir «desde
+  agosto» exageraria. Hoy el historial maximo es de 27 dias y, con la ventana de 120,
+  **ninguna instalacion ha podado nada todavia**.
+- **El consumidor entra con el dato.** Precedente medido: el feedback de s116 tardo 28 sesiones en
+  tener quien lo leyera; los emisores de eventos, 17 versiones.
+
+### Red
+- **8 tests** en `tests/eventos-agregados.spec.js`: fold por rutina · la poda se lleva el detalle y
+  **no el total** · idempotencia al leer y al podar dos veces · el huerfano · el preview lo dice y
+  **calla** cuando no hay nada · **ingles y singular** · la **poda interrumpida** · la deuda P1.
+- **10 mutantes, los 10 muerden**, tras reescribir tres que median el seam equivocado. El del
+  `pruneCursor` no mordia porque en el camino feliz la poda borra lo que consolida: su unico sitio
+  real es la RECUPERACION (§22), y ese estado el producto no lo sabe fabricar, asi que ese test
+  --y solo ese-- escribe el contenedor a mano.
+- **Censo de i18n subido a mano**: 588 → 590, como pide el propio verify cuando el contenido crece
+  a proposito.
+
+### Lo que no cubre
+- La cuenta **no se prueba tras una sesion real**: el test siembra por el contrato (que una sesion
+  emita ya lo cubre `eventos-emisor.spec.js`).
+- **`null` vs `0` no lo defiende ningun test**: la suite sirve por HTTP y el adaptador inerte de
+  `file://` no se ejercita. Es diseño declarado, no red.
+- Movil y ni un pixel: la linea del preview se coloco leyendo, no midiendo.
 
 ---
 

@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.120.0 (s189 - **EL FEEDBACK QUE NADIE LEIA**. «¿Te ayudo esta pausa?» se captura desde s116 y **ningun recomendador lo leia en veintiocho sesiones**. Ahora lo lee la propuesta de la pausa, y en pequeño porque el dato no da para mas: medido el TECHO de la señal, la pregunta sale **una vez por rutina y dia** y los pozos son de **11 · 12 · 8** rutinas gratis (Estira · Respira · Mueve), o sea que en 30 dias se proponen como mucho esas. **Una rutina con «No» y sin ningun «Si»/«Un poco» sale del pozo de la PROPUESTA** -- no del catalogo-- y **si el veto vaciara el pozo se IGNORA**: sin esa amnistia, quien contesta «No» a todo deja Estira muda en 12 dias (9 en Mueve) y 45 minutos sentado acaban proponiendo beber agua. El «Si» no ordena nada, solo protege. **Y el banco destapo lo que el encargo no pedia**: dos pausas del MISMO dia proponian la misma rutina, incluso una que acababas de hacer -- la rotacion pasa a ser **dia + numero de bloque**, con cero estado nuevo. **224 → 228**, primer aserto de la pausa en INGLES, y 8 mutantes de los que **dos median el seam equivocado**.)
+**Version actual:** v0.121.0 (s190 - **LA MEMORIA LARGA**. Los reducers de `aggregates` (FASE 3 del esquema de eventos), lo unico que desbloquea Stats. **La auditoria corrigio el encargo**: `baseline` ya consolidaba dos de los cuatro candidatos desde s155; faltaban **la API del valor vivo** y los **totales por rutina** -- el unico agregado que ninguna otra capa puede dar, porque `routineCounts` cuenta por CATEGORIA y no por id. `paceEventsAggregates()` cumple `valor vivo = baseline + fold(retenidos)` **reutilizando el fold de la poda**, no un segundo contador. El preview dice «Lo has hecho N veces», **sin fecha y medido**: hoy el historial maximo son **27 dias** y con la ventana de 120 **nadie ha podado nada todavia**. Fuera por decision: `natural`/`early` y «dias con ritmo», que se queda en `state-history` como unico dueño. Se cierra la **deuda P1**: `cur.yes || 0` conservaba el tipo y la suma concatenaba (`'3' + 1 === '31'`). **228 → 236**, 10 mutantes y los 10 muerden -- **tres median el seam equivocado**, y uno acabo en quitar una guarda de sobra.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -69,10 +69,10 @@
 | `app/events/events-payloads.js` | **ESQUEMA DE PAYLOADS (s155)** — la mitad de la capa A donde vive la **MINIMIZACION**: cada payload se reconstruye **campo a campo** desde una **LISTA PERMITIDA**, no desde una lista de campos prohibidos (que siempre se queda corta). Lo que no esta en el esquema **no puede colarse aunque nadie lo haya previsto** — medido: un payload con `notaLibre`, `ip` y una ruta de archivo sale con tres claves. **Carga ANTES de `events-model.js`** | **NUEVO s155 · 112 ln** |
 | `scripts/verify.eventos.js` | **Tanda de `pace.events.v1` en el verify (s155)**. Como `verify.integridad.js`, **no es un script suelto**: aquella lo invoca dentro de la tanda [4/4]. Cinco comprobaciones RELACIONALES + guard de cero, y **dos de ellas defienden frases de `privacy.html`** en vez de invariantes internos. `listaCorta` llega **por parametro**: un segundo formateador daria mensajes distintos para el mismo problema | **NUEVO s155 · 176 ln** |
 | `scripts/verify.encargo.js` | **EL ENCARGO DE ARTE DICE LA VERDAD (s169)**. Como `verify.eventos.js`, lo invoca `verify.integridad.js` en la tanda [4/4]. Cruza las filas de `docs/product/GLIFOS_LOGROS_ENCARGO.md` contra el mapa de máscaras REAL, **en las dos direcciones**: lo que sobra (ids que ya no existen) se ve leyendo, pero **lo que falta —un logro sin arte que el documento no menciona— NO**, y ése es el fallo por omisión. Cuatro comprobaciones **relacionales** (ningún número vive dentro; la cifra que compara es la que el propio documento afirma) más **guard de cero**, porque cambiar el formato de la tabla las apagaría todas en silencio. Nace porque el documento **pedía 38 dibujos cuando faltaban 19**: s167 entregó y nadie volvió a marcar la lista. **Los 7 rojos, verificados** | **NUEVO s169 · 162 ln** |
-| `app/events/events-model.js` | **MODELO CANONICO de `pace.events.v1` (s155)** — capa A de `EVENTOS_SCHEMA.md`: envelope, tipos, payloads con **lista permitida**, correlacion tipada, orden canonico, retencion, baseline, presupuesto y export/validacion. **REGLA DURA: no nombra `localStorage`, `setItem`, `navigator.locks` ni SQLite.** Si una funcion de aqui necesita tocar el almacenamiento, esta en el archivo equivocado | **NUEVO s155 · 448 ln** |
+| `app/events/events-model.js` | **MODELO CANONICO de `pace.events.v1` (s155)** — capa A de `EVENTOS_SCHEMA.md`: envelope, tipos, payloads con **lista permitida**, correlacion tipada, orden canonico, retencion, baseline, presupuesto y export/validacion. **REGLA DURA: no nombra `localStorage`, `setItem`, `navigator.locks` ni SQLite.** Si una funcion de aqui necesita tocar el almacenamiento, esta en el archivo equivocado | **s190: + `sessionsByRoutine`** en el baseline y en el fold (`session.completed` por `routineId`; sin id no se cuenta). Los huerfanos se CONSERVAN: el total es historia. `normalizeCountMap` lo comparten los dos mapas de cuenta. **NUEVO s155 · 448 ln** |
 | `app/events/events-adapter-web.js` | **ADAPTADOR WEB/PWA (s155)** — capa B: `localStorage` + **Web Locks**. Toda read-modify-write corre DENTRO del lock; esta **prohibido** cualquier sucedaneo con evento `storage`, heartbeat o `BroadcastChannel` (comunican pestañas, no dan exclusion). Sin `navigator.locks` **no se emite**. Trae la poda por **presion de presupuesto**, que **destila en `baseline` antes de borrar** — y el punto de extension declarado para la poda por calendario de la Fase 3 | **NUEVO s155 · 351 ln** |
 | `app/events/events-adapter-null.js` | **ADAPTADOR INERTE (s155)**. NO es relleno: §20 prohibe que Capacitor caiga al adaptador web porque el WebView parezca `https://localhost`, y §19.2 que `file://` emita aunque el navegador exponga Web Locks. Apagar el registro **NO** convierte la app en solo-lectura (§19.5), y **no** se acumulan eventos «en memoria para guardarlos luego» | **NUEVO s155 · 70 ln** |
-| `app/events/events-store.js` | **FACHADA (s155)**: detecta runtime (§20), elige adaptador y publica el contrato. **Nadie habla con un adaptador directamente.** Aqui vive la **barrera entre almacenes**: `pace.state.v2` y `pace.events.v1` no son atomicos entre si, asi que import y reset van marcador -> estado legacy -> contenedor reiniciado, y un corte a medias lo completa el arranque. Su cabecera documenta **que guarda, donde, para que y que NO guarda** | **NUEVO s155 · 293 ln** |
+| `app/events/events-store.js` | **FACHADA (s155)**: detecta runtime (§20), elige adaptador y publica el contrato. **Nadie habla con un adaptador directamente.** Aqui vive la **barrera entre almacenes**: `pace.state.v2` y `pace.events.v1` no son atomicos entre si, asi que import y reset van marcador -> estado legacy -> contenedor reiniciado, y un corte a medias lo completa el arranque. Su cabecera documenta **que guarda, donde, para que y que NO guarda** | **s190: + `paceEventsAggregates()`/`paceEventsRoutineCount()`** -- el VALOR VIVO (§13), que **reutiliza el fold de la poda** en vez de escribir un segundo contador: idempotencia por cursor gratis. `null` = el almacen no puede responder · `0` = nunca; **tres estados, no dos**. **NUEVO s155 · 293 ln** |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome… **s151: la placa de 3 valores va en `stretch` + columna flex con el label creciendo** — con `center` un label de dos lineas arrastraba su sub 8 px (alturas reservadas, s119) | **v0.84.0** |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene… | **v0.56.0** |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo +… | **NUEVO s106** |
@@ -107,7 +107,7 @@
 | `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas (+ `sessionAtmosphere` de UNA capa con alpha compuesto, `paceGlowRamp`, `PaceDither` y `PACE_GRAIN_OPACITY` — s140) | **v0.73.1** |
 | `app/ui/SessionShell.responsive.js` | CSS responsive de las sesiones (IIFE que inyecta… | **NUEVO s116** |
 | `app/ui/SessionFeedback.jsx` | Bloque de feedback del cierre («¿Te ayudó esta pausa?») — B2.2b-2 | **NUEVO s116** |
-| `app/ui/RoutinePreview.jsx` | Preview «antes de empezar» (§18.3): requisitos, posicion, duracion, intensidad y pasos con glifo. Solo desde la BIBLIOTECA | **NUEVO s144** |
+| `app/ui/RoutinePreview.jsx` | Preview «antes de empezar» (§18.3): requisitos, posicion, duracion, intensidad y pasos con glifo. Solo desde la BIBLIOTECA | **s190: + «Lo has hecho N veces»** -- PRIMER consumidor de los agregados y lo unico del preview que no sale del catalogo. **Sin fecha**, y es una medida: hoy el historial maximo son 27 dias. Con 0 o `null` no pinta nada. **NUEVO s144** |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.52.0** |
 | `app/tweaks/TweaksPanel.jsx` | **EL PANEL DE AJUSTES EN CUATRO TEMAS (s188)**: Ver · Oir · Sesiones · Tus datos, compuesto con las piezas de `.parts`. Conserva el permiso de notificacion, los secretos y el gate web/file. **El reset se DEFINE aqui y se pinta en TweaksData.jsx**: `verify.eventos.js` comprueba `paceEventsWipeAll` leyendo ESTE archivo, y moverlo habria dejado el checker ciego. **s155: el reset borra los DOS almacenes** por la barrera (lo aserta el `verify` y lo prueba la suite). Ejes tras bandera: timer (s139), organico (s139), **disposicion (s188)** | **s188 · 223 ln** |
@@ -145,6 +145,7 @@
 | `app/breakmenu/BreakMenu.support.jsx` | **LA REGLA DE LA PROPUESTA (s187)**, pura y aparte para poder asertarla sin navegador. Su orden va de lo que ACABA de pasar a lo que es cierto en general, y **la quinta rama es no proponer nada**. Dice por escrito lo que NO entra -- lo de ayer, el perfil del onboarding y cualquier racha- y por que «de hoy» y no «seguido» (`cycle` se pone a cero en el relevo de dia). **El filtro de seguridad vive en UN solo sitio**: tenerlo en dos hacia que quitarlo de uno no pusiera rojo nada | **s189: + `breakVetadas`** -- la regla LEE «¿Te ayudo esta pausa?» (`routineFeedback`, capturado desde s116 sin consumidor). El veto va en el MISMO predicado que la seguridad, la **amnistia** es una segunda llamada sin veto (o la rama enmudece: 12 dias en Estira, 9 en Mueve) y el `salto` sale de `state.cycle`. **«Un poco» cuenta como AYUDA**. **NUEVO s187 · 194 ln** |
 | `tests/pausa-propone.spec.js` | **LA PAUSA QUE PROPONE (s187)**. 6 tests, **6 mutantes y los 6 muerden**. El que manda mide el ALTO del modal con y sin propuesta a 360x640: la propuesta no puede crecer, porque el modal ocupa 616 px fijos y ahi solo sobran 24. La regla se prueba **en puro**. Dos trampas dentro: el menu **no** es `[role=dialog]` (se busca por `[data-pace-break-shortcut]`) y un `fastForward` grande **no lo abre** -- hay que avanzar de minuto en minuto. Y el estado sembrado necesita `lastActiveDay` **en formato `toDateString()`**, no ISO, o el relevo de dia lo resetea | **s189: 6 → 10 tests** (veto · amnistia · dos pausas del mismo dia · **el primer aserto de la pausa en INGLES**, con la cadena leida de `PACE_STRINGS.en`). El CTA de la home **cambia de nombre** tras un bloque («Empezar otro ciclo») y en ingles es «Start focus»: `hastaLaPausa` recibe el nombre. **8 mutantes, los 8 muerden** -- dos hubo que reescribirlos por medir el seam equivocado. **NUEVO s187 · 10 tests** |
 | `scripts/audit/banco-feedback-s189.js` | **EL TECHO DE LA SEÑAL DEL FEEDBACK (s189)**. Carga los catalogos y evalua `libraryParaAhora` **de verdad**: pozo por rama (gratis/premium), rutinas distintas en 30 y 90 dias, si dos pausas del mismo dia repiten, en cuantos dias enmudeceria una rama sin amnistia, y que veta `breakVetadas` y que no. **No mide si la gente responde** -- eso no esta en el repo | **NUEVO s189** |
+| `tests/eventos-agregados.spec.js` | **LOS AGREGADOS (s190)**. 8 tests: el fold por rutina · que la poda se lleve el DETALLE y no el TOTAL · idempotencia · el huerfano · que el preview lo diga y **CALLE** cuando no hay nada · ingles y **singular** · la **poda interrumpida** (§22, el unico sitio donde el filtro por `pruneCursor` defiende algo -- y el unico test del archivo que escribe el contenedor a mano, por eso) · la deuda P1. Siembra con `occurredAt` inyectado porque **hoy no se ha podado nada** en ninguna instalacion. **10 mutantes, los 10 muerden**; tres median el seam equivocado. Dos trampas: el modulo del evento es `stretch`, no `extra`, y cada pieza de la biblioteca existe DOS veces en el DOM | **NUEVO s190 · 8 tests** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (modal + `Seal` + **`renderGlyph`, unico resolutor de glifo de logro**: mascara -> SVG -> caracter). El sello se ancla ARRIBA en la tarjeta (s147) | **v0.80.0** |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**96** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**88**) + la regla de denominador unico de §15.4 | **v0.79.1** |
@@ -165,7 +166,7 @@
 | `scripts/audit/logros.js` | Banco de medicion de la CURVA de logros: inventario estatico de `unlockAchievement` + simulacion con reloj controlable. `node scripts/audit/logros.js` | **NUEVO s146** |
 | `app/state-paths.jsx` | Caminos CRUD + stats | **v0.52.0** |
 | `app/state-settings.jsx` | setLang | **v0.27.5** |
-| `app/state-feedback.jsx` | Feedback ligero por rutina (B2.2b-2): slice `routineFeedback` + acciones | **NUEVO s116** |
+| `app/state-feedback.jsx` | Feedback ligero por rutina (B2.2b-2): slice `routineFeedback` + acciones | **s190: `feedbackCount`** cierra la deuda P1 (§15.3): `cur.yes || 0` conservaba el TIPO y la suma CONCATENABA (`'3' + 1 === '31'`). La guarda vive en UN solo sitio -- la version con dos no tenia mutante que mordiera. **NUEVO s116** |
 | `app/state.jsx` | Indice — re-export consolidado | **v0.60.0** |
 | ~~`app/welcome/WelcomeModule.jsx`~~ | ~~Welcome de primera vez~~ | **RETIRADO s106** |
 | `app/ui/Toast.jsx` | Notificaciones de logros — delega el glifo en `renderGlyph` (s147; era la 3.a copia del render) | **v0.80.0** |
@@ -212,42 +213,43 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s189 cierra el punto del feedback de la **Fase 3.5**: la propuesta de la pausa lee por fin
-> «¿Te ayudo esta pausa?». Publica **v0.120.0**. Suite **224 → 228**, `verify` en verde,
-> artefacto regenerado.
+> s190 cablea los agregados de `pace.events.v1` y les da su primer consumidor. Publica
+> **v0.121.0**. Suite **228 → 236**, `verify` en verde, artefacto regenerado.
 >
-> Diario: [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md)
+> Diario: [session-190](./docs/sessions/session-190-la-memoria-larga.md)
 
-- **[EL DATO DECIDIO EL DISEÑO, NO AL REVES]** Antes de escribir nada, el banco midio el TECHO de
-  la señal: una respuesta por rutina y **DIA**, y pozos de **11 (Estira) · 12 (Respira) · 8
-  (Mueve)** gratis. En 30 dias se proponen como mucho esas. Con eso delante, el «Si» **no ordena
-  nada**: puntuar preferencias sobre puñados de respuestas seria ruido con decimales.
+- **[EL ENCARGO ESTABA MEDIO HECHO, Y LOS DOS DOCUMENTOS DECIAN LA VERDAD]** «La palabra
+  `aggregates` no aparece en `app/`» era cierto y enganaba: `baseline` ya consolidaba
+  `totalsByType` y los tallies de feedback desde s155. Lo que faltaba era **la API del valor
+  vivo** y los totales por rutina. Auditar antes de escribir cambio el alcance, no lo confirmo.
 
-- **[LA AMNISTIA TIENE UN NUMERO DETRAS]** Un veto sin valvula deja Estira muda en **12 dias** (9
-  en Mueve, gratis) y entonces un bloque de 45 minutos sentado acaba proponiendo **beber agua**.
-  Si el veto vacia el pozo, se ignora. La consecuencia se midio ANTES de elegir.
+- **[UN SOLO CONTADOR PARA LAS DOS LECTURAS]** `paceEventsAggregates()` reutiliza
+  `foldEventsIntoBaseline`, el mismo fold de la poda. Gratis: idempotencia por cursor, trato
+  identico a los tipos desconocidos, y que un arreglo arregle las dos. Dos funciones que suman lo
+  mismo es como se acaba con dos cifras del mismo dato en dos pantallas.
 
-- **[EL DEFECTO QUE NO ESTABA EN EL ENCARGO]** La rotacion era por dia, asi que dos dias seguidos
-  no repetian -- pero **dos pausas del mismo dia comparten el ISO** y proponian la misma rutina,
-  incluso con `plan.extra` ya hecho (la rama de los 45 min no mira el plan). Salio de CORRER el
-  banco, no de leer el codigo. Arreglado con `salto` = numero de bloque: **cero estado nuevo**.
+- **[LA COPY SIN FECHA ES UNA MEDIDA]** No hay contador legacy que sembrar; las sesiones se emiten
+  desde v0.102.0 y el contenedor se activo **16 dias antes**, asi que «desde agosto» exageraria; y
+  hoy el historial maximo son **27 dias**. Con la ventana de 120, **ninguna instalacion ha podado
+  nada**: el baseline esta vacio en todas. «N veces» es cierto hoy y en un año.
 
-- **[DOS MUTANTES QUE MEDIAN EL SEAM EQUIVOCADO]** El del alcance no mordia: `sigueEnElPozo`
-  pregunta por la rutina que la regla **acaba de proponer**, asi que quitar una del catalogo hace
-  que proponga otra y el aserto sigue cierto -- **documenta** el alcance, no lo defiende. Y el del
-  ingles no podia ser la cadena: el test la LEE del artefacto, que es lo que lo hace relacional
-  (s152). Los seams reales: que el veto se calcule y no se entregue, y que el copy no se enrute.
+- **[TRES MUTANTES MEDIAN EL SEAM EQUIVOCADO, Y UNO MEJORO EL CODIGO]** El del `pruneCursor` no
+  mordia porque en el camino feliz la poda borra lo que consolida -- su unico sitio real es la
+  RECUPERACION (§22), que hubo que simular a mano. Y los dos de la deuda P1 no mordian por ser
+  **guardas redundantes entre si**: la solucion no fue un mutante mas fino, fue **quitar la guarda
+  de sobra** (regla de s187). Van tres sesiones seguidas con esta leccion.
 
-- **[LO QUE NO SE PUEDE MEDIR, DICHO]** **Nadie ha respondido nunca esa pregunta en una
-  instalacion real**: lo medido es el techo de lo que el sistema PUEDE saber, no lo que sabra. Sin
-  datos de uso, el veto podria no dispararse nunca -- y eso es correcto: no hace daño.
+- **[LO QUE QUEDA DE LA FASE 3]** Nada de los reducers. Stats (**FASE 4**) ya puede nacer: es el
+  escaparate del *free* y tiene su destino escrito en `STATS_DESTINO_PROPUESTA.md`.
 
-- **[LO QUE SIGUE ABIERTO DE LA FASE 3.5]** **zona corporal** y el **contexto habitual** (que
-  depende del onboarding contextual de la Fase 8). El feedback y la ultima pausa quedan cerrados.
+- **[LO QUE NO SE PROBO, DICHO]** La cuenta no se ejercita tras una sesion REAL (se siembra por el
+  contrato); `null` vs `0` no lo defiende ningun test porque la suite sirve por HTTP y el
+  adaptador inerte de `file://` no se toca; y la linea del preview se coloco leyendo, no midiendo.
 
-- **[EL ARTEFACTO CONGELADO]** `build-standalone.js` reescribe SIEMPRE los dos artefactos, y el
-  `verify` **restaura `PACE_standalone.html`** por la decision s134 (export bajo demanda; esta
-  congelado en v0.71.0 por un commit explicito). No hay que commitearlo.
+- **[DOS TRAMPAS QUE COSTARON UN ROJO]** El modulo de un evento **no se llama como la carpeta**:
+  el enum es `focus/breathe/move/stretch`, asi que `module: 'extra'` NO valida y `makeEvent`
+  devuelve null (los ids siguen cruzados; el modulo del evento, no). Y cada pieza de la biblioteca
+  existe **dos veces** en el DOM: hay que tomar la de ancho > 0.
 
 ---
 
@@ -258,6 +260,9 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **El valor vivo de un agregado se lee con el MISMO fold que lo consolida: `baseline + fold(retenidos)`** (s190)
+- **«Dias con ritmo» y los minutos por dia siguen siendo de `state-history`: `aggregates` no los calcula** (s190)
+- **Un contador persistido se coacciona a entero >= 0 al leerlo, y esa guarda vive en UN solo sitio** (s190)
 - **La pausa deja de proponer lo que se rechazo y nunca ayudo -- pero NUNCA enmudece: si el veto vacia el pozo, se ignora** (s189)
 - **La propuesta de la pausa rota por DIA + NUMERO DE BLOQUE: dos pausas del mismo dia no repiten rutina** (s189)
 - **En Ajustes el color dice de que MODULO es el ajuste, y entra como LAVADO con el texto en tinta -- nunca una pildora del color con texto claro** (s188)

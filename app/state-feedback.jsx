@@ -31,6 +31,18 @@ function sanitizeFeedbackResponse(response) {
   return FEEDBACK_RESPONSES.indexOf(response) !== -1 ? response : null;
 }
 
+/* Entero finito >= 0 (deuda P1 de §15.3 del esquema de eventos, cerrada en
+   s190). `cur.yes || 0` conservaba el TIPO: un contador que llegara como `'3'`
+   --de un backup editado a mano, o del import, que aún no sanea (deuda A-7)--
+   sobrevivía a la guarda y la suma lo CONCATENABA: `'3' + 1 === '31'`. La capa
+   de eventos ya se defendía con `eventCount`; este slice no. Medido, no
+   supuesto. */
+function feedbackCount(n) {
+  const x = typeof n === 'string' ? Number(n) : n;
+  if (typeof x !== 'number' || !isFinite(x) || x < 0) return 0;
+  return Math.floor(x);
+}
+
 /* Sanitiza el id de rutina a un string no vacío, o ''. */
 function sanitizeRoutineId(routineId) {
   return typeof routineId === 'string' ? routineId.trim() : '';
@@ -49,12 +61,17 @@ function nextRoutineFeedback(prev, routineId, response) {
   if (!id || !resp) return base;
   const cur = base[id] || {};
   const nextEntry = {
-    yes:  cur.yes  || 0,
-    some: cur.some || 0,
-    no:   cur.no   || 0,
+    yes:  feedbackCount(cur.yes),
+    some: feedbackCount(cur.some),
+    no:   feedbackCount(cur.no),
     lastPromptDay: todayISO(),
   };
-  if (resp !== 'later') nextEntry[resp] = (nextEntry[resp] || 0) + 1;
+  /* Suma sin volver a coaccionar: los tres campos de `nextEntry` ya son enteros
+     por construccion. Coaccionar aqui TAMBIEN seria una segunda guarda del
+     mismo invariante, y el banco de mutantes lo demostro -- con las dos puestas,
+     romper cualquiera de ellas dejaba los asertos en verde, o sea que no habia
+     forma de saber si alguna funcionaba (la regla de s187). */
+  if (resp !== 'later') nextEntry[resp] = nextEntry[resp] + 1;
   return { ...base, [id]: nextEntry };
 }
 
@@ -89,6 +106,7 @@ function shouldPromptRoutineFeedback(routineId) {
 }
 
 Object.assign(window, {
+  feedbackCount,
   nextRoutineFeedback,
   recordRoutineFeedback,
   shouldPromptRoutineFeedback,

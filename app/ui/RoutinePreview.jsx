@@ -44,6 +44,25 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
   const posiciones = (Array.isArray(routine.position) ? routine.position : [])
     .map(p => t(`preview.pos.${p}`));
 
+  /* CUANTAS VECES LA HAS HECHO (s189) -- el primer consumidor de los agregados
+     de `pace.events.v1`. Es el unico dato del preview que NO sale del catalogo.
+
+     TRES ESTADOS, NO DOS: `null` es «el almacen no puede responder» (`file://`,
+     adaptador inerte, contenedor ilegible) y `0` es «nunca». En los dos casos no
+     se pinta nada -- pintar «0 veces» seria ruido, y pintar cero cuando en
+     realidad no se sabe seria mentir. Solo se habla cuando hay algo que decir.
+
+     Y el numero es de lo REGISTRADO, sin fecha: las sesiones se emiten desde
+     v0.102.0, asi que hoy cubre semanas y en un año cubrira el año -- el mismo
+     texto sigue siendo cierto, y por eso no lleva «desde». */
+  const veces = (typeof paceEventsRoutineCount === 'function')
+    ? paceEventsRoutineCount(routine.id) : null;
+  const vecesLabel = (typeof veces === 'number' && veces > 0)
+    ? (veces === 1
+        ? t('preview.doneCount.one')
+        : (t('preview.doneCount.many') || '').replace('{n}', String(veces)))
+    : null;
+
   /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
      contrato v1, `min` para el resto. Nunca las dos. */
   const isV1 = !!(routine.steps && routine.steps.some(s => s && s.mode));
@@ -93,11 +112,20 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
           {tR(`${routine.id}.desc`, routine.desc)}
         </p>
 
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: vecesLabel ? 10 : 18 }}>
           <Tag color={accent}>{durLabel}</Tag>
           {intensidad && <Tag muted>{intensidad}</Tag>}
           {nivel && <Tag muted>{nivel}</Tag>}
         </div>
+
+        {/* Va con las pastillas y no en una seccion propia: es una nota sobre TI,
+            no un requisito de la rutina, y una cabecera la haria pesar mas que
+            «Que necesitas». En tinta terciaria, que es lo que hace que se lea
+            como al margen. */}
+        {vecesLabel && (
+          <div data-pace-preview-veces className="pace-meta"
+               style={{ color: 'var(--ink-3)', marginBottom: 18 }}>{vecesLabel}</div>
+        )}
 
         <Seccion titulo={t('preview.need')}>
           {necesita.length === 0 ? (

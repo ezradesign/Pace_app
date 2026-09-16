@@ -186,8 +186,15 @@ function emptyEventsBaseline() {
     capturedAt: null,
     /* Tally de `feedback.answered` puenteado desde `routineFeedback` (§15.1). */
     feedback: {},
-    /* Totales consolidados por tipo al podar (§13). Vacio hasta la Fase 3. */
+    /* Totales consolidados por tipo al podar (§13). */
     totalsByType: {},
+    /* Sesiones por RUTINA (s189 · Fase 3). Es el agregado que ninguna otra capa
+       puede dar: `state.routineCounts` cuenta por CATEGORIA (`box`, `coherent`,
+       `rounds`, `atg`), no por id, asi que aqui no hay nada legacy que sembrar y
+       la cuenta arranca en cero para todo el mundo. Las rutinas que ya no
+       existen se CONSERVAN: el total es historia, y la poda ya es
+       irreversible -- quien no sepa nombrarlas, no las pinta. */
+    sessionsByRoutine: {},
   };
 }
 
@@ -232,6 +239,7 @@ function normalizeEventsContainer(raw) {
     capturedAt: typeof b.capturedAt === 'string' ? b.capturedAt : null,
     feedback: normalizeFeedbackTally(b.feedback),
     totalsByType: normalizeTotalsByType(b.totalsByType),
+    sessionsByRoutine: normalizeSessionsByRoutine(b.sessionsByRoutine),
   };
 
   const c = raw.pruneCursor;
@@ -259,11 +267,22 @@ function normalizeFeedbackTally(raw) {
 }
 
 function normalizeTotalsByType(raw) {
+  return normalizeCountMap(raw);
+}
+
+/* `clave -> cuenta`, defensivo. Lo comparten los totales por tipo y los de
+   rutina: son la MISMA forma, y tener dos copias del mismo bucle es la clase de
+   duplicado que luego se arregla a medias en un solo sitio. */
+function normalizeCountMap(raw) {
   const out = {};
   if (!raw || typeof raw !== 'object') return out;
   const keys = Object.keys(raw);
   for (let i = 0; i < keys.length; i++) out[keys[i]] = eventCount(raw[keys[i]]);
   return out;
+}
+
+function normalizeSessionsByRoutine(raw) {
+  return normalizeCountMap(raw);
 }
 
 /* --- Baseline (§13, §15.1) ---------------------------------------------- */
@@ -317,6 +336,7 @@ function foldEventsIntoBaseline(baseline, batch, cursor) {
     capturedAt: baseline ? baseline.capturedAt : null,
     feedback: normalizeFeedbackTally(baseline ? baseline.feedback : null),
     totalsByType: normalizeTotalsByType(baseline ? baseline.totalsByType : null),
+    sessionsByRoutine: normalizeSessionsByRoutine(baseline ? baseline.sessionsByRoutine : null),
   };
   const list = Array.isArray(batch) ? batch : [];
   for (let i = 0; i < list.length; i++) {
@@ -324,6 +344,11 @@ function foldEventsIntoBaseline(baseline, batch, cursor) {
     if (!isAfterPruneCursor(e, cursor)) continue;
     if (EVENT_TYPES.indexOf(e.type) === -1) continue;
     out.totalsByType[e.type] = eventCount(out.totalsByType[e.type]) + 1;
+    if (e.type === 'session.completed') {
+      const rid = e.payload && e.payload.routineId;
+      /* Sin id no se cuenta: un total bajo una clave vacia no es de nadie. */
+      if (rid) out.sessionsByRoutine[rid] = eventCount(out.sessionsByRoutine[rid]) + 1;
+    }
     if (e.type === 'feedback.answered') {
       const id = e.payload && e.payload.routineId;
       const resp = e.payload && e.payload.response;
@@ -441,7 +466,8 @@ Object.assign(window, {
   newEventId, isEventId, makeEvent, eventCorrelationOk,
   isValidEventEnvelope, compareEvents, isAfterPruneCursor,
   emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer,
-  normalizeFeedbackTally, normalizeTotalsByType, captureEventsBaseline,
+  normalizeFeedbackTally, normalizeTotalsByType, normalizeCountMap,
+  normalizeSessionsByRoutine, captureEventsBaseline,
   eventsRetentionFloorKey, selectEventsToPrune, foldEventsIntoBaseline, nextPruneCursor,
   measureEventsBytes, utf8ByteLength, isOverEventsBudget,
   buildEventsExport, validateEventsImport, backupHasEventsSection,
