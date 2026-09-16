@@ -43,10 +43,13 @@ const sembrarEstado = (context, extra) => context.addInitScript((e) => {
     { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', lastActiveDay: hoy }, e)));
 }, extra);
 
-async function hastaLaPausa(page, minutos) {
+/* `cta` (s189) existe por el aserto en INGLES: el boton de la home se llama
+   «Start focus» con la app en ingles, asi que un nombre fijo en castellano no
+   lo encuentra y el test moria antes de llegar a la pausa. */
+async function hastaLaPausa(page, minutos, cta) {
   await page.clock.install();
   await irAlArtefacto(page);
-  await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+  await page.getByRole('button', { name: cta || 'Empezar foco', exact: true }).click();
   await page.waitForTimeout(250);
   for (let i = 0; i < (minutos || 25) + 4; i++) {
     await page.clock.fastForward(60 * 1000);
@@ -224,4 +227,119 @@ test('la regla es pura: el orden manda y la apnea nunca se propone', async ({ pa
     return malas;
   });
   expect(apneas, 'propone rutinas con aviso de seguridad en algun dia del mes').toEqual([]);
+});
+
+/* ------------------------------------------------------------------ 7
+ * s189 · EL FEEDBACK QUE NADIE LEIA
+ * =================================
+ * Se prueba en PURO y con los catalogos del artefacto: la regla es una funcion
+ * y su entrada es un slice de `routineFeedback` sintetizado. Recorrer 12 dias
+ * de pausas pulsando botones seria lento y no mediria nada mas.
+ *
+ * EL ASERTO NO ESCRIBE NINGUN ID A MANO. Se pregunta a la regla que propone,
+ * se le contesta «No» a ESA rutina y se vuelve a preguntar: la comparacion es
+ * entre dos respuestas del producto, no contra una cadena que envejece al
+ * primer cambio de catalogo. */
+test('un «No» saca esa rutina de la propuesta, y un «Si» la protege', async ({ page, context }) => {
+  await sembrarEstado(context, {});
+  await irAlArtefacto(page);
+
+  const r = await page.evaluate(() => {
+    const base = { focusMinutes: 45, cycle: 1, water: { today: 3, goal: 8 }, plan: {} };
+    const ctx = { iso: '2026-09-16', hora: 10 };
+    const prop = (fb) => {
+      const out = window.breakPropuesta(Object.assign({}, base, { routineFeedback: fb || {} }), ctx);
+      return out && out.rutina ? out.rutina.id : null;
+    };
+    const primera = prop({});
+    const tras1No = prop({ [primera]: { yes: 0, some: 0, no: 1 } });
+    const traNoYSi = prop({ [primera]: { yes: 1, some: 0, no: 1 } });
+    const traNoYPoco = prop({ [primera]: { yes: 0, some: 1, no: 1 } });
+    /* Y el veto es de la PROPUESTA, no del catalogo: la rutina vetada sigue
+       estando disponible para elegirla a mano. */
+    const sigueEnElPozo = window.breakPozo(window.EXTRA_ROUTINES).some(x => x.id === primera);
+    return { primera, tras1No, traNoYSi, traNoYPoco, sigueEnElPozo,
+             veta: window.breakVetadas({ a: { no: 2 }, b: { no: 2, some: 1 }, c: { yes: 1 } }) };
+  });
+
+  expect(r.primera, 'GUARD: la rama de los 45 minutos no propone nada').toBeTruthy();
+  expect(r.tras1No, 'se sigue proponiendo la rutina que se acaba de rechazar').not.toBe(r.primera);
+  expect(r.traNoYSi, 'un «No» posterior tumba una rutina que YA habia ayudado').toBe(r.primera);
+  expect(r.traNoYPoco, '«Un poco» no cuenta como ayuda y deberia').toBe(r.primera);
+  expect(r.sigueEnElPozo, 'el veto ha borrado la rutina del catalogo, no solo de la propuesta').toBe(true);
+  expect(r.veta, 'breakVetadas veta lo que ayudo, o perdona lo que no').toEqual({ a: true });
+});
+
+/* ------------------------------------------------------------------ 8 */
+test('con TODO rechazado la pausa sigue proponiendo (amnistia)', async ({ page, context }) => {
+  await sembrarEstado(context, {});
+  await irAlArtefacto(page);
+
+  /* Medido en el banco de s189: sin amnistia, quien contesta «No» a todo deja
+     Estira sin pozo en 12 dias y entonces un bloque de 45 minutos sentado
+     acaba proponiendo beber agua. El aserto fija la consecuencia, no el
+     mecanismo: la rama sigue siendo `extra`/`sitting`. */
+  const r = await page.evaluate(() => {
+    const fb = {};
+    window.breakPozo(window.EXTRA_ROUTINES).forEach(x => {
+      fb[x.id] = { yes: 0, some: 0, no: 3 };
+    });
+    const out = window.breakPropuesta(
+      { focusMinutes: 45, cycle: 1, water: { today: 0, goal: 8 }, plan: {}, routineFeedback: fb },
+      { iso: '2026-09-16', hora: 15 });
+    return { cuantas: Object.keys(fb).length,
+             modulo: out && out.modulo, porque: out && out.porque, id: out && out.rutina && out.rutina.id };
+  });
+
+  expect(r.cuantas, 'GUARD: no se pudo vetar ninguna rutina de Estira').toBeGreaterThan(5);
+  expect(r.modulo, 'la rama enmudecio y la pausa se fue a otra cosa').toBe('extra');
+  expect(r.porque).toBe('sitting');
+  expect(r.id, 'no propone ninguna rutina: la rama se quedo muda').toBeTruthy();
+});
+
+/* ------------------------------------------------------------------ 9 */
+test('dos pausas del mismo dia no proponen la misma rutina', async ({ page, context }) => {
+  await sembrarEstado(context, {});
+  await irAlArtefacto(page);
+
+  /* LA ROTACION ERA POR DIA, asi que dos dias seguidos ya no coincidian -- pero
+     dos pausas del MISMO dia comparten el ISO y proponian la misma rutina,
+     incluso con el plan ya cumplido. Lo destapo el banco de s189. */
+  const r = await page.evaluate(() => {
+    const ctx = { iso: '2026-09-16', hora: 10 };
+    const p = (cycle, plan) => {
+      const out = window.breakPropuesta(
+        { focusMinutes: 45, cycle: cycle, water: { today: 3, goal: 8 }, plan: plan || {} }, ctx);
+      return out && out.rutina ? out.rutina.id : null;
+    };
+    const seis = [1, 2, 3, 4, 5, 6].map(n => p(n));
+    return { bloque1: p(1), bloque2: p(2), yaEstirado: p(2, { extra: true }), seis: seis };
+  });
+
+  expect(r.bloque1, 'GUARD: la primera pausa no propone nada').toBeTruthy();
+  expect(r.bloque2, 'la segunda pausa del dia repite la rutina de la primera').not.toBe(r.bloque1);
+  expect(r.yaEstirado, 'con Estira ya hecho hoy repite la misma rutina').not.toBe(r.bloque1);
+  /* Seis pausas en un dia son seis rutinas distintas: si el salto se ignora,
+     esto colapsa a una sola. */
+  expect(new Set(r.seis).size, 'las pausas del dia no avanzan en la rotacion').toBe(6);
+});
+
+/* ------------------------------------------------------------------ 10
+ * EL PRIMER ASERTO DE LA PAUSA EN INGLES. Era un hueco declarado en s187: la
+ * regla se probaba solo en español. El porque y el boton salen de
+ * `break.prop.*`, y la cadena esperada se LEE de `PACE_STRINGS.en` -- no se
+ * copia aqui, que envejeceria al primer cambio de copy. */
+test('la propuesta habla en ingles', async ({ page, context }) => {
+  await sembrarEstado(context, { focusMinutes: 45, lang: 'en', langAuto: false });
+  await hastaLaPausa(page, 45, 'Start focus');
+
+  const prop = page.locator('[data-pace-break-prop]');
+  await expect(prop, 'no hay propuesta con la app en ingles').toHaveCount(1);
+
+  const esperado = await page.evaluate(() =>
+    String((window.PACE_STRINGS.en || {})['break.prop.sitting'] || '').replace('{n}', '45'));
+  expect(esperado, 'GUARD: no se pudo leer el copy EN del artefacto').toContain('45');
+  await expect(prop, 'el porque sigue en castellano con la app en ingles').toContainText(esperado);
+  await expect(prop.getByRole('button', { name: 'Start', exact: true }),
+    'el boton de la propuesta sigue en castellano').toBeVisible();
 });

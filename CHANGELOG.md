@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.120.0** | 2026-09-16 | feat(pausa): **el feedback que nadie leia** — «¿Te ayudo esta pausa?» se captura desde s116 y **ningun recomendador lo leia en veintiocho sesiones**. Ahora lo lee la propuesta de la pausa, y **en pequeño porque el dato no da para mas**: el banco `banco-feedback-s189.js` midio el TECHO de la señal evaluando el recomendador de verdad sobre los catalogos de verdad -- la pregunta sale **una vez por rutina y dia**, y los pozos son de **11 (Estira), 12 (Respira) y 8 (Mueve)** rutinas gratis, o sea que en 30 dias se proponen como mucho esas. Puntuar preferencias sobre eso seria ruido con decimales. La regla, escrita antes de codificarla y elegida por el usuario con los numeros delante: **una rutina con «No» y sin ningun «Si»/«Un poco» sale del pozo de la PROPUESTA** (no del catalogo: se sigue pudiendo elegir a mano) · **si el veto vaciara el pozo se IGNORA** -- sin esa amnistia, quien contesta «No» a todo deja Estira muda en **12 dias** (9 en Mueve) y un bloque de 45 minutos sentado acaba proponiendo **beber agua** · **el «Si» no ordena nada**, solo protege del veto. **Y un defecto que destapo el banco, no el encargo**: la rotacion era por dia, asi que **dos pausas del MISMO dia proponian la misma rutina** -- incluso una que acababas de hacer, porque la rama de los 45 minutos no mira el plan. La rotacion pasa a ser **dia + numero de bloque** (`state.cycle`, que ya se pone a cero en el relevo de dia): **cero estado nuevo, cero migracion** y nada que dependa de `pace.events.v1`, que en `file://` es inerte por diseño. **224 → 228**, con el **primer aserto de la pausa en INGLES** (hueco declarado en s187) y **8 mutantes, los 8 muerden** -- dos hubo que reescribirlos porque median el seam equivocado. | s189 | [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md) |
 | **v0.119.0** | 2026-09-15 | feat(ajustes): **el panel en cuatro temas** — El panel de Ajustes, redisenado entero y elegido MIRANDOLO en **cinco rondas de maqueta** con los tokens, las fuentes y el copy reales. Lo que habia, medido: **1412 px de contenido** (1,9 pantallas a 1280x800, 2,2 en movil), 30 pastillas, 7 lineas de explicacion, 10 secciones sin agrupar y un bloque premium de **221 px que era un input deshabilitado**. Lo que hay: cuatro temas -- **Ver · Oir · Sesiones · Tus datos**-- y cada ajuste es una FILA con el nombre en cursiva a la izquierda y el control a la derecha. **El color dice de que modulo es el ajuste**, y solo aparece donde hay modulo: la pildora elegida lleva un LAVADO del color con el texto en tinta, porque terracota, tabaco y azul con texto claro dan **2,8-3,3:1** (medido) y el lavado da 9,3:1 en oscuro. El circulo de Respira se elige entre **cuatro pictogramas** calcados de `BreatheVisual.jsx` y el nombre del elegido baja a la linea del modulo. **Con el sonido apagado las dos filas que cuelgan de el se atenuan en vez de esconderse**: antes el panel saltaba 84 px. «Disposicion» sale tras bandera (duplicaba el boton de plegar la barra) con migracion de «minimal». Resultado: **743 px, cabe sin scroll a 1280x800**; movil 1,22 pantallas. Nace `strings/settings.js` (`ui.js` habria pasado de 500) y `TweaksPanel.parts.jsx`. **215 → 224**, 8 mutantes y los 8 muerden. Antes, se cerro la deuda documental que s187 dejo a medias. | s188 | [session-188](./docs/sessions/session-188-ajustes-en-cuatro-temas.md) |
 | **v0.118.0** | 2026-09-07 | feat(pausa): **la pausa que propone** — Al terminar un Pomodoro la app sabia cuanto llevabas sentado y **no lo usaba**: ofrecia cuatro modulos y te dejaba elegir entre 17 rutinas. Ahora propone UNA, con nombre, duracion y **el porque**. La regla se escribio ANTES de codificarla y va de lo que acaba de pasar a lo que es cierto en general: bloque ≥35 min → Estira («Llevas 45 minutos sentado») · cero vasos pasado el mediodia → agua · tercer bloque de hoy → Respira · si no, lo que el plan tenga pendiente · **y si no se cumple ninguna NO se propone nada** -- una propuesta sin motivo es publicidad. **LA CONDICION QUE MANDO EL DISENO ERA UNA MEDIDA**: el modal ocupa **616 px fijos** en los cuatro telefonos y a 360x640 solo le sobran **24**, asi que la propuesta no podia sumar alto -- entra en el sitio que dejan el sello «Para ti» y las descripciones de las cuatro tarjetas, **que con una rutina con nombre arriba sobran**. Medido despues: **601 px**, 15 menos que antes. **Los glifos de los cuatro modulos se quedan** (peticion del usuario): son lo que hace la tarjeta reconocible de un vistazo. La rutina la elige `libraryParaAhora`, que ya rota por dia y respeta el acceso premium, y **«Empezar» entra en ESA rutina por las mismas puertas que la biblioteca** -- el modal de apnea y el preview de §18.3-, no por un camino paralelo. **209 → 215**, con **6 mutantes en rojo**, y dos de ellos obligaron a arreglar el codigo: el filtro de seguridad estaba DUPLICADO (quitarlo de un sitio no ponia rojo nada, el defecto de s166) y el aserto de la apnea miraba un solo dia cuando el recomendador **rota por dia** -- ahora mira 30. De paso, `ui.js` paso de 500 y el dominio `break.*` sale a su propio archivo. | s187 | [session-187](./docs/sessions/session-187-la-pausa-que-propone.md) |
 | **v0.117.1** | 2026-09-06 | fix(respira): **la tarjeta de Viajes deja de ser negra** — Elegida MIRANDOLA, con **19 variantes pintadas sobre la app de verdad** y el contraste medido en cada una. Gana un **lavado del color de Respira sobre el papel de la tarjeta, con los pulmones del modulo grandes sangrando por el borde derecho**. El negro distinguia pero no decia de quien era el viaje; el dibujo dice las dos cosas -- que es otra cosa y que es Respira- sin gastar una palabra. **El terracota puro nunca fue viable**: sobre crema se queda en 2,80:1 y el cuerpo de la tarjeta es de 13 px. **El lavado se compone con TOKENS y no con un hex** (`--breathe-soft` sobre `--paper-2`), asi que vale en las dos paletas sin una sola regla de oscuro -- con un color a fuego, en la paleta oscura habria quedado un bloque claro deslumbrando. **Y hay un argumento de sistema que descarto los verdes**: cada modulo tiene su color, asi que un fondo verde dentro de Respira dice «esto es de Foco». **El contraste ya no depende de que nadie lo aclare por descuido**: dos tests lo miden EN LA PAGINA con los colores computados, uno por paleta, y su mutante —subir el lavado a `--breathe` entero— los pone rojos los dos. De paso, **la trampa del backtick se cobro otra pasada** en `library.css.jsx`, que van tres. **206 → 209**. | s186 | [session-186](./docs/sessions/session-186-la-sesion-que-se-puede-retomar.md) |
@@ -389,6 +390,60 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.120.0] -- 2026-09-16 -- feat(pausa): el feedback que nadie leia
+
+### Anadido
+- **La propuesta de la pausa lee «¿Te ayudo esta pausa?»**, capturado desde s116 (v0.60.0) y sin
+  consumidor hasta hoy. `breakVetadas(routineFeedback)` -- PURA y defensiva-- devuelve lo que se
+  rechazo y nunca ayudo, y el veto entra en el **predicado** que `breakElige` le pasa a
+  `libraryParaAhora`, que es donde ya vive el filtro de seguridad: **un solo sitio decide que puede
+  salir**. Duplicarlo es el defecto que s187 documento con ese mismo filtro.
+- **Amnistia**: si el veto vaciara el pozo, se ignora y la rama propone igual. **Medido**: sin ella,
+  quien contesta «No» a todo deja Estira sin pozo en **12 dias** (17 rutinas premium: 18; Mueve
+  gratis: **9**), y a partir de ahi un bloque de 45 minutos sentado acaba proponiendo **beber agua**.
+- **`salto` en `libraryParaAhora`** (5o parametro, **opcional**): desplaza la ventana dentro del
+  mismo dia. Sin el, el comportamiento es el de s174 y **ni `Sidebar.jsx` ni `LibraryShell.jsx` se
+  mueven**.
+- **`scripts/audit/banco-feedback-s189.js`** -- el techo de la señal (pozos, rutinas distintas en
+  30 y 90 dias), que veta y que no, y la consecuencia de cada eleccion. Carga los catalogos y evalua
+  el recomendador **de verdad**, no un modelo de ellos.
+
+### Corregido
+- **Dos pausas del mismo dia proponian la MISMA rutina.** `libraryParaAhora` rota por ordinal del
+  dia, asi que dos dias seguidos nunca coincidian -- pero dos pausas del mismo dia **comparten el
+  ISO**. Y la rama de los 45 minutos **no mira el plan**: con Estira ya hecho hoy, seguia proponiendo
+  la misma. Ahora la rotacion es **dia + numero de bloque**. No estaba en el encargo: salio de correr
+  el banco, y es el punto «ultima pausa» que la Fase 3.5 tenia pendiente.
+
+### Decisiones
+- **El «Si» no ordena nada**, solo protege del veto. Con una propuesta al dia y pozos de 8 a 17,
+  preferir lo que ayudo colapsaria la variedad que la rotacion diaria busca a proposito.
+- **«Un poco» cuenta como AYUDA** -- es la razon por la que s116 guardo los tres contadores en vez
+  de un booleano.
+- **El veto es solo de la PROPUESTA**: la biblioteca y su bloque «Para ahora» no cambian. Una
+  biblioteca es un armario, no un consejero.
+- **Cero estado nuevo y cero eventos**: el salto sale de `state.cycle` (se pone a cero en el relevo
+  de dia) y la regla no lee `pace.events.v1`, que en `file://` es inerte por diseño -- una regla
+  basada en el se comportaria distinto segun el runtime sin decirlo.
+
+### Red
+- **4 tests** en `tests/pausa-propone.spec.js` (6 → 10): el veto · que «Si» y «Un poco» protegen ·
+  la amnistia · que dos pausas del dia no repiten (y que **seis pausas son seis rutinas**) · **el
+  primer aserto de la pausa en INGLES**, con la cadena esperada **leida de `PACE_STRINGS.en`** dentro
+  del artefacto.
+- **8 mutantes, los 8 muerden.** Dos hubo que reescribirlos: el del **alcance** no mordia porque el
+  aserto `sigueEnElPozo` pregunta por la rutina que la regla acaba de proponer (documenta el alcance,
+  no lo defiende) -- el seam real es que la regla **calcule** el veto y no lo entregue; y el del
+  **ingles** no podia ser la cadena, porque el test la lee del propio artefacto (defiende el
+  cableado, no el copy: la leccion de s152).
+
+### Lo que no cubre
+- **Nadie ha respondido nunca esa pregunta en una instalacion real**: lo medido es el techo de lo que
+  el sistema puede saber, no lo que sabra.
+- Movil, la UI del veto (nadie pulsa «No» en el done y vuelve a un Pomodoro) y ni un pixel.
 
 ---
 

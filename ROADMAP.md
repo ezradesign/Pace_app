@@ -334,11 +334,17 @@ que hace útil la app a diario.
 > perfil del onboarding y cualquier racha o total. Diario:
 > [session-187](./docs/sessions/session-187-la-pausa-que-propone.md).
 >
-> **Lo que queda de esta fase**, en el orden en que lo pedía el párrafo original: **el feedback
-> «¿te ayudó esta pausa?»** (slice `routineFeedback`, yes/some/no por rutina, capturado desde s116
-> y todavía sin consumidor) · **zona corporal** · **última pausa** · contexto habitual (que depende
-> del onboarding contextual de la Fase 8). La propuesta de hoy usa duración del bloque, agua, número
-> de bloque y plan del día, y **no se prueba en inglés**.
+> **s189 · el feedback y la última pausa, entregados.** La propuesta **lee** «¿te ayudó esta
+> pausa?»: una rutina con «No» y sin ningún «Sí»/«Un poco» sale del pozo de la propuesta, con
+> **amnistía** si el veto lo vaciara (medido: sin ella la rama enmudece en 9–12 días y 45 minutos
+> sentado acaban proponiendo agua) y el «Sí» **no ordena nada**, sólo protege — el techo de la señal
+> es de una respuesta por rutina y día sobre pozos de 8 a 17. Y la rotación pasa a ser **día +
+> número de bloque**, que arregla un defecto que el encargo no pedía: **dos pausas del mismo día
+> proponían la misma rutina**, incluso una ya hecha. **La propuesta ya se prueba en inglés.**
+> Diario: [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md).
+>
+> **Lo que queda de esta fase**: **zona corporal** · contexto habitual (que depende del onboarding
+> contextual de la Fase 8).
 
 Hasta s187 el BreakMenu solo **ordenaba** módulos según lo hecho en el día. Debe **recomendar una
 acción concreta**: *«Llevas 50 minutos sentado. Te propongo Hombros ligeros, 4 minutos y sin material.»*

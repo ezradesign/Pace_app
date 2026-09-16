@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.119.0 (s188 - **AJUSTES EN CUATRO TEMAS**. El panel de Ajustes, redisenado entero y elegido MIRANDOLO en cinco rondas de maqueta con tokens, fuentes y copy reales. Lo que habia, medido: **1412 px** de contenido (1,9 pantallas de escritorio, 2,2 en movil), 30 pastillas, 7 explicaciones, 10 secciones sin agrupar y un bloque premium de **221 px que era un input deshabilitado**. Lo que hay: **Ver · Oir · Sesiones · Tus datos**, cada ajuste una fila con el nombre en cursiva y el control a la derecha. **El color dice de que modulo es el ajuste** y entra como LAVADO con el texto en tinta -- terracota, tabaco y azul con texto claro dan 2,8-3,3:1, medido. El circulo se elige entre cuatro pictogramas; el sonido apagado ATENUA en vez de esconder; «Disposicion» sale tras bandera. **743 px: cabe sin scroll a 1280x800**; movil 1,22. **215 → 224**, 8 mutantes y los 8 muerden. Antes, el cierre documental que s187 dejo a medias.)
+**Version actual:** v0.120.0 (s189 - **EL FEEDBACK QUE NADIE LEIA**. «¿Te ayudo esta pausa?» se captura desde s116 y **ningun recomendador lo leia en veintiocho sesiones**. Ahora lo lee la propuesta de la pausa, y en pequeño porque el dato no da para mas: medido el TECHO de la señal, la pregunta sale **una vez por rutina y dia** y los pozos son de **11 · 12 · 8** rutinas gratis (Estira · Respira · Mueve), o sea que en 30 dias se proponen como mucho esas. **Una rutina con «No» y sin ningun «Si»/«Un poco» sale del pozo de la PROPUESTA** -- no del catalogo-- y **si el veto vaciara el pozo se IGNORA**: sin esa amnistia, quien contesta «No» a todo deja Estira muda en 12 dias (9 en Mueve) y 45 minutos sentado acaban proponiendo beber agua. El «Si» no ordena nada, solo protege. **Y el banco destapo lo que el encargo no pedia**: dos pausas del MISMO dia proponian la misma rutina, incluso una que acababas de hacer -- la rotacion pasa a ser **dia + numero de bloque**, con cero estado nuevo. **224 → 228**, primer aserto de la pausa en INGLES, y 8 mutantes de los que **dos median el seam equivocado**.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -20,7 +20,7 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
-| `app/ui/library-rules.js` | **LAS REGLAS DE LAS BIBLIOTECAS, SIN UI (s174)**: filtros, orden, «Para ahora», la tira de glifos y la linea de series, como funciones puras. Viven aparte para que se puedan asertar **sin abrir un navegador** — dentro del componente, la unica forma de probar que «Corto» filtra bien seria levantar Chromium y contar tarjetas. **El umbral de «Corto» es RELATIVO** y se calcula (el mayor cuyo recuento no pase de la mitad): con ≤3 min fijo dejaba **12 de 14 en Mueve** —quita dos: no filtra— y 3 de 14 en Estira, porque Mueve va de 1 a 4 min y Estira de 2 a 6. **`var`/`function` a proposito**: un `const` no cruza la IIFE del artefacto | **NUEVO s174 · 188 ln** |
+| `app/ui/library-rules.js` | **LAS REGLAS DE LAS BIBLIOTECAS, SIN UI (s174)**: filtros, orden, «Para ahora», la tira de glifos y la linea de series, como funciones puras. Viven aparte para que se puedan asertar **sin abrir un navegador** — dentro del componente, la unica forma de probar que «Corto» filtra bien seria levantar Chromium y contar tarjetas. **El umbral de «Corto» es RELATIVO** y se calcula (el mayor cuyo recuento no pase de la mitad): con ≤3 min fijo dejaba **12 de 14 en Mueve** —quita dos: no filtra— y 3 de 14 en Estira, porque Mueve va de 1 a 4 min y Estira de 2 a 6. **`var`/`function` a proposito**: un `const` no cruza la IIFE del artefacto | **s189: + `salto`** (5o parametro OPCIONAL) -- desplaza la ventana dentro del mismo dia, porque la rotacion entra por el DIA y dos pausas del mismo dia compartian el ISO. Sin `salto`, comportamiento de s174: ninguna biblioteca se mueve. **NUEVO s174 · 194 ln** |
 | `app/ui/RoutineCard.jsx` | **LA TARJETA, compartida por las TRES bibliotecas (s174)**. Sale de `BreatheLibrary.jsx`, donde vivia desde s34 por accidente historico. **NO es un boton gigante**, y eso no es estilo: un elemento con `role=button` vuelve **presentacionales a sus descendientes**, asi que el nombre dejaba de existir como encabezado — la primera version lo hacia y **tumbo 9 tests**. El encabezado lleva DENTRO un boton que se extiende sobre toda la tarjeta con un `::after`; se conserva el encabezado y se gana el teclado, que `Card` nunca tuvo. **La pill va FUERA del `<h4>`**: dentro, el nombre accesible pasaba a ser «Cuello · 3 min SUAVE». El gating de contenido (`access` + `canAccessRoutine`) viajo con ella, intacto | **NUEVO s174 · 155 ln** |
 | `app/ui/library.css.jsx` | **LA HOJA DE LAS TRES BIBLIOTECAS (s174)**, inyectada con su guard de id. Va en CSS y no en estilos en linea porque el color de modulo se comporta **distinto en cada piel** —filo en reposo en movil, solo en el hover en escritorio— y eso es una media query; con estilos en linea haria falta un listener de resize. **El breakpoint es 768/769, el MISMO que `--pace-skin`**. Recorta el chrome del modal solo para esta superficie con `:has(.pace-lib)` y **con `!important`, que no es pereza**: el padding del modal es un estilo EN LINEA y sin el las reglas no mueven un pixel. **Ni un backtick dentro del template literal** — el build aborta (trampa de s172b, que se cobro una pasada en s174) | **NUEVO s174 · 300 ln** |
 | `tests/viajes-estante.spec.js` | **EL ESTANTE DE VIAJES (s186)**. 6 tests, **5 mutantes que muerden y uno declarado que no**. Siembra el viaje en `window.BREATHE_VIAJES`, que es de donde saldra el dato de verdad. **El aserto que mas vale es el del PREMIUM**: `canAccessRoutine` es fail-open con los ids que no conoce, asi que un viaje de pago se abria gratis. **Y declara por escrito que sus asertos 3 y 4 son GUARDIAS y no pruebas**: su mutante no muerde porque `todas` es un `useMemo` sobre `[groups]` que se calcula al arrancar, con la lista aun vacia | **NUEVO s186 · 9 tests** |
@@ -142,8 +142,9 @@
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro). **s159: publica los CINCO mandos de la luz** en `[data-pace-home-body]` — `--pace-k` (la hora), `--pace-i` (la envolvente), `--pace-on` (interruptor), `--pace-pausado` (la pausa) y `--pace-arco` (el tono del recorrido, para que la cola lo herede). Aqui no se dibuja nada: son derivadas presentacionales de `progress` y `status`. **La PROFUNDIDAD de la pausa no se publica**, solo el interruptor: cuanto se recoge la luz es un valor por PALETA (`--sun-pausa`) y las paletas viven en CSS | **v0.90.0** |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep). **s184: en la home el recorrido es el TRAMO VISIBLE, no los 360**, y **pista y arco van en CAPAS SEPARADAS** porque no pueden llevar la misma niebla — el arco nace EN el corte y con la larga tardaba ~2,2 min en verse. -- nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho, y el angulo lo MIDE de `--pace-dial-d` y `--pace-horizon` (`asin((D/2-H)/0,475D)`), porque el ratio no es constante: **266-276 grados** segun el breakpoint. La medida devuelve `null` cuando no puede decidir -- devolver «360» congelo el aro redondo con el motor funcionando-- y la dispara un `MutationObserver` sobre el `style` de `<html>`. `pathLength=360` deja el trazo en grados y quita **0,78 px** de asimetria entre cabos. El `key` del arco cuelga del barrido: la geometria no se transiciona. **s185: el corte lo trae `--pace-corte`** (no `--pace-horizon`, que ademas mueve layout) **ya resuelto en px por el motor**, porque un custom property sin registrar devuelve TEXTO y `parseFloat` da NaN. Y el numero sube por TINTA, no por caja: un margen negativo arrastra todo lo de abajo, asi que se resta arriba y se **suma lo mismo** al subtitulo. **Caminos va por `ticks` y no cambia** | **v0.115.1 · 499 ln** |
-| `app/breakmenu/BreakMenu.support.jsx` | **LA REGLA DE LA PROPUESTA (s187)**, pura y aparte para poder asertarla sin navegador. Su orden va de lo que ACABA de pasar a lo que es cierto en general, y **la quinta rama es no proponer nada**. Dice por escrito lo que NO entra -- lo de ayer, el perfil del onboarding y cualquier racha- y por que «de hoy» y no «seguido» (`cycle` se pone a cero en el relevo de dia). **El filtro de seguridad vive en UN solo sitio**: tenerlo en dos hacia que quitarlo de uno no pusiera rojo nada | **NUEVO s187** |
-| `tests/pausa-propone.spec.js` | **LA PAUSA QUE PROPONE (s187)**. 6 tests, **6 mutantes y los 6 muerden**. El que manda mide el ALTO del modal con y sin propuesta a 360x640: la propuesta no puede crecer, porque el modal ocupa 616 px fijos y ahi solo sobran 24. La regla se prueba **en puro**. Dos trampas dentro: el menu **no** es `[role=dialog]` (se busca por `[data-pace-break-shortcut]`) y un `fastForward` grande **no lo abre** -- hay que avanzar de minuto en minuto. Y el estado sembrado necesita `lastActiveDay` **en formato `toDateString()`**, no ISO, o el relevo de dia lo resetea | **NUEVO s187 · 6 tests** |
+| `app/breakmenu/BreakMenu.support.jsx` | **LA REGLA DE LA PROPUESTA (s187)**, pura y aparte para poder asertarla sin navegador. Su orden va de lo que ACABA de pasar a lo que es cierto en general, y **la quinta rama es no proponer nada**. Dice por escrito lo que NO entra -- lo de ayer, el perfil del onboarding y cualquier racha- y por que «de hoy» y no «seguido» (`cycle` se pone a cero en el relevo de dia). **El filtro de seguridad vive en UN solo sitio**: tenerlo en dos hacia que quitarlo de uno no pusiera rojo nada | **s189: + `breakVetadas`** -- la regla LEE «¿Te ayudo esta pausa?» (`routineFeedback`, capturado desde s116 sin consumidor). El veto va en el MISMO predicado que la seguridad, la **amnistia** es una segunda llamada sin veto (o la rama enmudece: 12 dias en Estira, 9 en Mueve) y el `salto` sale de `state.cycle`. **«Un poco» cuenta como AYUDA**. **NUEVO s187 · 194 ln** |
+| `tests/pausa-propone.spec.js` | **LA PAUSA QUE PROPONE (s187)**. 6 tests, **6 mutantes y los 6 muerden**. El que manda mide el ALTO del modal con y sin propuesta a 360x640: la propuesta no puede crecer, porque el modal ocupa 616 px fijos y ahi solo sobran 24. La regla se prueba **en puro**. Dos trampas dentro: el menu **no** es `[role=dialog]` (se busca por `[data-pace-break-shortcut]`) y un `fastForward` grande **no lo abre** -- hay que avanzar de minuto en minuto. Y el estado sembrado necesita `lastActiveDay` **en formato `toDateString()`**, no ISO, o el relevo de dia lo resetea | **s189: 6 → 10 tests** (veto · amnistia · dos pausas del mismo dia · **el primer aserto de la pausa en INGLES**, con la cadena leida de `PACE_STRINGS.en`). El CTA de la home **cambia de nombre** tras un bloque («Empezar otro ciclo») y en ingles es «Start focus»: `hastaLaPausa` recibe el nombre. **8 mutantes, los 8 muerden** -- dos hubo que reescribirlos por medir el seam equivocado. **NUEVO s187 · 10 tests** |
+| `scripts/audit/banco-feedback-s189.js` | **EL TECHO DE LA SEÑAL DEL FEEDBACK (s189)**. Carga los catalogos y evalua `libraryParaAhora` **de verdad**: pozo por rama (gratis/premium), rutinas distintas en 30 y 90 dias, si dos pausas del mismo dia repiten, en cuantos dias enmudeceria una rama sin amnistia, y que veta `breakVetadas` y que no. **No mide si la gente responde** -- eso no esta en el repo | **NUEVO s189** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (modal + `Seal` + **`renderGlyph`, unico resolutor de glifo de logro**: mascara -> SVG -> caracter). El sello se ancla ARRIBA en la tarjeta (s147) | **v0.80.0** |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**96** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**88**) + la regla de denominador unico de §15.4 | **v0.79.1** |
@@ -211,61 +212,42 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s188 cierra la deuda documental de s187 y redisena el panel de Ajustes entero, elegido
-> mirandolo en cinco rondas de maqueta. Publica **v0.119.0**. Suite **215 → 224**, `verify`
-> en verde, artefacto regenerado.
+> s189 cierra el punto del feedback de la **Fase 3.5**: la propuesta de la pausa lee por fin
+> «¿Te ayudo esta pausa?». Publica **v0.120.0**. Suite **224 → 228**, `verify` en verde,
+> artefacto regenerado.
 >
-> Diario: [session-188](./docs/sessions/session-188-ajustes-en-cuatro-temas.md)
+> Diario: [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md)
 
-- **[LA VERSION ESTABA BIEN Y LA SECCION NO]** El commit de v0.118.0 dejo esta seccion en
-  s186, el ROADMAP en «hoy solo ordena» y ninguna fila de s187 en decisiones tecnicas. Al
-  arrancar, comprobar que «Ultima sesion» coincide con el ULTIMO DIARIO, no solo la
-  cabecera. Cerrado al arrancar, antes de tocar codigo.
+- **[EL DATO DECIDIO EL DISEÑO, NO AL REVES]** Antes de escribir nada, el banco midio el TECHO de
+  la señal: una respuesta por rutina y **DIA**, y pozos de **11 (Estira) · 12 (Respira) · 8
+  (Mueve)** gratis. En 30 dias se proponen como mucho esas. Con eso delante, el «Si» **no ordena
+  nada**: puntuar preferencias sobre puñados de respuestas seria ruido con decimales.
 
-- **[TRES CANDIDATAS, TRES MEDIDAS]** CTB esta fuera de v1 por decision del usuario dos
-  veces (s132, s180) y su tercera pata, la musica, no existe. El sistema de pago tiene un
-  dato peor que el ROADMAP: `premiumUnlocked` **no lo puede poner a true nadie** -- 6/14 de
-  Mueve, 6/17 de Estira, 7 de Respira y el constructor estan cerrados y la suite no los
-  prueba. Queda recomendado como siguiente frente: la ingenieria de FASE 10 (clave firmada,
-  verificacion offline, tests del camino premium), no la tienda.
+- **[LA AMNISTIA TIENE UN NUMERO DETRAS]** Un veto sin valvula deja Estira muda en **12 dias** (9
+  en Mueve, gratis) y entonces un bloque de 45 minutos sentado acaba proponiendo **beber agua**.
+  Si el veto vacia el pozo, se ignora. La consecuencia se midio ANTES de elegir.
 
-- **[LO QUE SE VEIA, MEDIDO]** 1412 px de contenido (1,9 pantallas a 1280x800; 2,2 en movil),
-  30 pastillas, 7 explicaciones, 10 secciones. Los dos bloques mas altos: Audio (233) y
-  **Premium (221, un input deshabilitado)**. Las tres frases del usuario --desordenado,
-  informacion de mas, audio raro-- tenian numero.
+- **[EL DEFECTO QUE NO ESTABA EN EL ENCARGO]** La rotacion era por dia, asi que dos dias seguidos
+  no repetian -- pero **dos pausas del mismo dia comparten el ISO** y proponian la misma rutina,
+  incluso con `plan.extra` ya hecho (la rama de los 45 min no mira el plan). Salio de CORRER el
+  banco, no de leer el codigo. Arreglado con `salto` = numero de bloque: **cero estado nuevo**.
 
-- **[CINCO RONDAS, CADA UNA PINTADA ANTES DE PREGUNTAR]** Filas frente a bloques y acordeon
-  (V2) · el color como LAVADO de modulo (A) · la cursiva en los nombres y la versalita en las
-  secciones porque son sistema (T1) · pildoras sin caja, la pieza de FOCO · PAUSA · LARGA
-  (P1) · cinco afinados (P1+). **Cada ronda con la altura y el contraste calculados por la
-  propia pagina.** Lo que el usuario pidio con palabras y lo que resulto ser: «color segun lo
-  seleccionado» → un lavado, porque terracota, tabaco y azul con texto claro dan 2,8-3,3:1;
-  «me falla la tipografia» → todo era Inter salvo el titulo; «cuadrados poco elegantes» → el
-  borde de color.
+- **[DOS MUTANTES QUE MEDIAN EL SEAM EQUIVOCADO]** El del alcance no mordia: `sigueEnElPozo`
+  pregunta por la rutina que la regla **acaba de proponer**, asi que quitar una del catalogo hace
+  que proponga otra y el aserto sigue cierto -- **documenta** el alcance, no lo defiende. Y el del
+  ingles no podia ser la cadena: el test la LEE del artefacto, que es lo que lo hace relacional
+  (s152). Los seams reales: que el veto se calcule y no se entregue, y que el copy no se enrute.
 
-- **[DOS DEFECTOS QUE SOLO SALIERON PINTANDO]** En P2 (marca + palabra) la muestra «Oscuro»
-  de la paleta era un circulo negro relleno y **se leia como elegida**; y tres anillos no
-  cabian junto a la etiqueta. Ninguno se ve leyendo la propuesta.
+- **[LO QUE NO SE PUEDE MEDIR, DICHO]** **Nadie ha respondido nunca esa pregunta en una
+  instalacion real**: lo medido es el techo de lo que el sistema PUEDE saber, no lo que sabra. Sin
+  datos de uso, el veto podria no dispararse nunca -- y eso es correcto: no hace daño.
 
-- **[EL ESTADO QUE NADIE MIRO EN CUATRO RONDAS]** Con el sonido apagado el panel escondia dos
-  filas y saltaba 84 px. Ahora ATENUA. Salio en la ronda 5 por pintar el estado apagado a
-  proposito; y en la app real salio otro: **la barra de scroll se come 17 px** y «Marca la
-  fase» partia su nombre en dos. La fila envuelve.
+- **[LO QUE SIGUE ABIERTO DE LA FASE 3.5]** **zona corporal** y el **contexto habitual** (que
+  depende del onboarding contextual de la Fase 8). El feedback y la ultima pausa quedan cerrados.
 
-- **[EL COLOR ENTRA POR LA FILA, NO POR EL CONTROL]** `AjustesFila` recibe el modulo y
-  publica dos custom properties; la hoja hace el resto. Un control no sabe de que color es;
-  la fila sabe de que modulo es el ajuste. Y el reset se DEFINE en `TweaksPanel.jsx` aunque
-  se pinte en `TweaksData.jsx`: `verify.eventos.js` lo busca en el primero.
-
-- **[HEADLESS MIENTE SOBRE LAS NOTIFICACIONES]** `Notification.permission` es `denied` siempre,
-  aunque el contexto conceda el permiso; la nota de «bloqueadas» hincha el panel 35 px. El
-  test fija `default`, que es lo que ve una instalacion nueva.
-
-- **[LO QUE ESTA SESION NO CUBRE, DICHO]** Ningun pixel: que las pildoras «sean elegantes» lo
-  decidio el usuario mirando. Las filas tras bandera (timer, organico) no se prueban. El
-  permiso del navegador no se ejercita. **La hoja de movil sigue a 72 dvh** (s27): con 1,22
-  pantallas se podria subir, y es una decision aparte. Las maquetas (r1-r5) quedan en
-  `docs/proposals/` como registro de por que el panel es como es.
+- **[EL ARTEFACTO CONGELADO]** `build-standalone.js` reescribe SIEMPRE los dos artefactos, y el
+  `verify` **restaura `PACE_standalone.html`** por la decision s134 (export bajo demanda; esta
+  congelado en v0.71.0 por un commit explicito). No hay que commitearlo.
 
 ---
 
@@ -276,6 +258,8 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **La pausa deja de proponer lo que se rechazo y nunca ayudo -- pero NUNCA enmudece: si el veto vacia el pozo, se ignora** (s189)
+- **La propuesta de la pausa rota por DIA + NUMERO DE BLOQUE: dos pausas del mismo dia no repiten rutina** (s189)
 - **En Ajustes el color dice de que MODULO es el ajuste, y entra como LAVADO con el texto en tinta -- nunca una pildora del color con texto claro** (s188)
 - **Un ajuste que depende de otro se ATENUA, no se esconde: el panel no salta** (s188)
 - **La pausa PROPONE UNA cosa con su motivo, y sin motivo no propone nada: la quinta rama es `null`** (s187)
