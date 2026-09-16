@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.120.0</title>
+  <title>PACE · Foco · Cuerpo — v0.121.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2249,6 +2249,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'preview.position': 'Posición',
   'preview.steps': 'Los pasos',
   'preview.start': 'Empezar',
+  /* s189 · lo unico del preview que sale de `pace.events.v1`. Una linea sola,
+     sin fecha: el numero es cierto (son N veces registradas) y envejece bien
+     -- en un año ese mismo texto sera el total real. Con 0 no se pinta. */
+  'preview.doneCount.one': 'Lo has hecho una vez',
+  'preview.doneCount.many': 'Lo has hecho {n} veces',
   'preview.eq.stableDesk': 'Una mesa estable',
   'preview.eq.stableChair': 'Una silla estable, sin ruedas',
   'preview.eq.bar': 'Una barra firme',
@@ -2364,6 +2369,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.position': 'Position',
   'preview.steps': 'The steps',
   'preview.start': 'Start',
+  'preview.doneCount.one': 'You have done this once',
+  'preview.doneCount.many': 'You have done this {n} times',
   'preview.eq.stableDesk': 'A stable desk',
   'preview.eq.stableChair': 'A stable chair, no wheels',
   'preview.eq.bar': 'A sturdy bar',
@@ -4996,7 +5003,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.120.0';
+const PACE_VERSION = 'v0.121.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7068,6 +7075,18 @@ function sanitizeFeedbackResponse(response) {
   return FEEDBACK_RESPONSES.indexOf(response) !== -1 ? response : null;
 }
 
+/* Entero finito >= 0 (deuda P1 de §15.3 del esquema de eventos, cerrada en
+   s190). `cur.yes || 0` conservaba el TIPO: un contador que llegara como `'3'`
+   --de un backup editado a mano, o del import, que aún no sanea (deuda A-7)--
+   sobrevivía a la guarda y la suma lo CONCATENABA: `'3' + 1 === '31'`. La capa
+   de eventos ya se defendía con `eventCount`; este slice no. Medido, no
+   supuesto. */
+function feedbackCount(n) {
+  const x = typeof n === 'string' ? Number(n) : n;
+  if (typeof x !== 'number' || !isFinite(x) || x < 0) return 0;
+  return Math.floor(x);
+}
+
 /* Sanitiza el id de rutina a un string no vacío, o ''. */
 function sanitizeRoutineId(routineId) {
   return typeof routineId === 'string' ? routineId.trim() : '';
@@ -7086,12 +7105,17 @@ function nextRoutineFeedback(prev, routineId, response) {
   if (!id || !resp) return base;
   const cur = base[id] || {};
   const nextEntry = {
-    yes: cur.yes || 0,
-    some: cur.some || 0,
-    no: cur.no || 0,
+    yes: feedbackCount(cur.yes),
+    some: feedbackCount(cur.some),
+    no: feedbackCount(cur.no),
     lastPromptDay: todayISO()
   };
-  if (resp !== 'later') nextEntry[resp] = (nextEntry[resp] || 0) + 1;
+  /* Suma sin volver a coaccionar: los tres campos de `nextEntry` ya son enteros
+     por construccion. Coaccionar aqui TAMBIEN seria una segunda guarda del
+     mismo invariante, y el banco de mutantes lo demostro -- con las dos puestas,
+     romper cualquiera de ellas dejaba los asertos en verde, o sea que no habia
+     forma de saber si alguna funcionaba (la regla de s187). */
+  if (resp !== 'later') nextEntry[resp] = nextEntry[resp] + 1;
   return { ...base, [id]: nextEntry };
 }
 
@@ -7126,11 +7150,12 @@ function shouldPromptRoutineFeedback(routineId) {
 }
 
 Object.assign(window, {
+  feedbackCount,
   nextRoutineFeedback,
   recordRoutineFeedback,
   shouldPromptRoutineFeedback
 });
-;Object.assign(window, { sanitizeFeedbackResponse, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, shouldPromptRoutineFeedback });
+;Object.assign(window, { sanitizeFeedbackResponse, feedbackCount, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, shouldPromptRoutineFeedback });
 })();
 </script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
@@ -7452,8 +7477,15 @@ function emptyEventsBaseline() {
     capturedAt: null,
     /* Tally de `feedback.answered` puenteado desde `routineFeedback` (§15.1). */
     feedback: {},
-    /* Totales consolidados por tipo al podar (§13). Vacio hasta la Fase 3. */
-    totalsByType: {}
+    /* Totales consolidados por tipo al podar (§13). */
+    totalsByType: {},
+    /* Sesiones por RUTINA (s189 · Fase 3). Es el agregado que ninguna otra capa
+       puede dar: `state.routineCounts` cuenta por CATEGORIA (`box`, `coherent`,
+       `rounds`, `atg`), no por id, asi que aqui no hay nada legacy que sembrar y
+       la cuenta arranca en cero para todo el mundo. Las rutinas que ya no
+       existen se CONSERVAN: el total es historia, y la poda ya es
+       irreversible -- quien no sepa nombrarlas, no las pinta. */
+    sessionsByRoutine: {}
   };
 }
 
@@ -7497,7 +7529,8 @@ function normalizeEventsContainer(raw) {
   base.baseline = {
     capturedAt: typeof b.capturedAt === 'string' ? b.capturedAt : null,
     feedback: normalizeFeedbackTally(b.feedback),
-    totalsByType: normalizeTotalsByType(b.totalsByType)
+    totalsByType: normalizeTotalsByType(b.totalsByType),
+    sessionsByRoutine: normalizeSessionsByRoutine(b.sessionsByRoutine)
   };
 
   const c = raw.pruneCursor;
@@ -7525,11 +7558,22 @@ function normalizeFeedbackTally(raw) {
 }
 
 function normalizeTotalsByType(raw) {
+  return normalizeCountMap(raw);
+}
+
+/* `clave -> cuenta`, defensivo. Lo comparten los totales por tipo y los de
+   rutina: son la MISMA forma, y tener dos copias del mismo bucle es la clase de
+   duplicado que luego se arregla a medias en un solo sitio. */
+function normalizeCountMap(raw) {
   const out = {};
   if (!raw || typeof raw !== 'object') return out;
   const keys = Object.keys(raw);
   for (let i = 0; i < keys.length; i++) out[keys[i]] = eventCount(raw[keys[i]]);
   return out;
+}
+
+function normalizeSessionsByRoutine(raw) {
+  return normalizeCountMap(raw);
 }
 
 /* --- Baseline (§13, §15.1) ---------------------------------------------- */
@@ -7582,7 +7626,8 @@ function foldEventsIntoBaseline(baseline, batch, cursor) {
   const out = {
     capturedAt: baseline ? baseline.capturedAt : null,
     feedback: normalizeFeedbackTally(baseline ? baseline.feedback : null),
-    totalsByType: normalizeTotalsByType(baseline ? baseline.totalsByType : null)
+    totalsByType: normalizeTotalsByType(baseline ? baseline.totalsByType : null),
+    sessionsByRoutine: normalizeSessionsByRoutine(baseline ? baseline.sessionsByRoutine : null)
   };
   const list = Array.isArray(batch) ? batch : [];
   for (let i = 0; i < list.length; i++) {
@@ -7590,6 +7635,11 @@ function foldEventsIntoBaseline(baseline, batch, cursor) {
     if (!isAfterPruneCursor(e, cursor)) continue;
     if (EVENT_TYPES.indexOf(e.type) === -1) continue;
     out.totalsByType[e.type] = eventCount(out.totalsByType[e.type]) + 1;
+    if (e.type === 'session.completed') {
+      const rid = e.payload && e.payload.routineId;
+      /* Sin id no se cuenta: un total bajo una clave vacia no es de nadie. */
+      if (rid) out.sessionsByRoutine[rid] = eventCount(out.sessionsByRoutine[rid]) + 1;
+    }
     if (e.type === 'feedback.answered') {
       const id = e.payload && e.payload.routineId;
       const resp = e.payload && e.payload.response;
@@ -7707,12 +7757,13 @@ Object.assign(window, {
   newEventId, isEventId, makeEvent, eventCorrelationOk,
   isValidEventEnvelope, compareEvents, isAfterPruneCursor,
   emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer,
-  normalizeFeedbackTally, normalizeTotalsByType, captureEventsBaseline,
+  normalizeFeedbackTally, normalizeTotalsByType, normalizeCountMap,
+  normalizeSessionsByRoutine, captureEventsBaseline,
   eventsRetentionFloorKey, selectEventsToPrune, foldEventsIntoBaseline, nextPruneCursor,
   measureEventsBytes, utf8ByteLength, isOverEventsBudget,
   buildEventsExport, validateEventsImport, backupHasEventsSection
 });
-;Object.assign(window, { newEventId, isEventId, makeEvent, eventCorrelationOk, isValidEventEnvelope, compareEvents, isAfterPruneCursor, emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer, normalizeFeedbackTally, normalizeTotalsByType, captureEventsBaseline, eventsRetentionFloorKey, selectEventsToPrune, foldEventsIntoBaseline, nextPruneCursor, measureEventsBytes, utf8ByteLength, isOverEventsBudget, buildEventsExport, validateEventsImport, backupHasEventsSection });
+;Object.assign(window, { newEventId, isEventId, makeEvent, eventCorrelationOk, isValidEventEnvelope, compareEvents, isAfterPruneCursor, emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer, normalizeFeedbackTally, normalizeTotalsByType, normalizeCountMap, normalizeSessionsByRoutine, captureEventsBaseline, eventsRetentionFloorKey, selectEventsToPrune, foldEventsIntoBaseline, nextPruneCursor, measureEventsBytes, utf8ByteLength, isOverEventsBudget, buildEventsExport, validateEventsImport, backupHasEventsSection });
 })();
 </script>
   <script>
@@ -8405,6 +8456,48 @@ function paceEventsSnapshot() {
   }
 }
 
+/* AGREGADOS VIVOS (§13 · s189) -> { capturedAt, feedback, totalsByType,
+   sessionsByRoutine }.
+
+   LA REGLA DEL ESQUEMA ES UNA LINEA -- `valor vivo = baseline + fold(retenidos)`
+   -- y aqui se cumple LITERALMENTE reutilizando el fold de la poda en vez de
+   escribir un segundo contador. Eso da tres cosas gratis: la idempotencia por
+   `pruneCursor` (los ya consolidados no se recuentan), el mismo trato a los
+   tipos desconocidos, y que un arreglo en el fold arregle las dos lecturas. Dos
+   funciones que suman lo mismo es como se acaba con dos cifras distintas del
+   mismo dato en dos pantallas.
+
+   CUANDO TODAVIA NO SE HA PODADO NADA -- hoy, y hasta ~120 dias despues de la
+   primera sesion emitida-- el baseline esta vacio y esto cuenta solo eventos
+   crudos. Es el mismo numero, por el otro extremo: por eso el test simula una
+   poda en vez de esperar a diciembre.
+
+   Nunca lanza: un almacen inerte (`file://`) devuelve el agregado vacio, que es
+   degradacion y no error -- y en ese caso el consumidor no pinta nada. */
+function paceEventsAggregates() {
+  try {
+    const snap = paceEventsSnapshot();
+    return foldEventsIntoBaseline(
+      snap && snap.baseline, snap && snap.events || [], snap && snap.pruneCursor);
+  } catch (e) {
+    return emptyEventsBaseline();
+  }
+}
+
+/* Cuantas veces se ha completado ESTA rutina. `null` -- no `0`-- cuando el
+   almacen no puede responder: cero es una afirmacion («no lo has hecho nunca»)
+   y no saberlo es otra cosa. El consumidor distingue y no pinta. */
+function paceEventsRoutineCount(routineId) {
+  if (!routineId || !paceEventsCanWrite()) return null;
+  try {
+    const agg = paceEventsAggregates();
+    const n = agg && agg.sessionsByRoutine ? agg.sessionsByRoutine[routineId] : 0;
+    return typeof n === 'number' && isFinite(n) && n > 0 ? n : 0;
+  } catch (e) {
+    return null;
+  }
+}
+
 /* Emision. En s155 no la llama ningun modulo de producto (Fase 2). */
 function paceEventsAppend(event) {
   if (!paceEventsCanWrite()) return eventsNullResult();
@@ -8618,9 +8711,10 @@ Object.assign(window, {
   paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState,
   paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
   paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
-  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune
+  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune,
+  paceEventsAggregates, paceEventsRoutineCount
 });
-;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAppend, paceEventsPrune, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
+;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAggregates, paceEventsRoutineCount, paceEventsAppend, paceEventsPrune, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
 })();
 </script>
   <!-- EL EMISOR (s172 · Fase 3, PASO 2): el puente entre el dominio y el
@@ -16219,6 +16313,25 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
   const posiciones = (Array.isArray(routine.position) ? routine.position : []).
   map((p) => t(`preview.pos.${p}`));
 
+  /* CUANTAS VECES LA HAS HECHO (s189) -- el primer consumidor de los agregados
+     de `pace.events.v1`. Es el unico dato del preview que NO sale del catalogo.
+      TRES ESTADOS, NO DOS: `null` es «el almacen no puede responder» (`file://`,
+     adaptador inerte, contenedor ilegible) y `0` es «nunca». En los dos casos no
+     se pinta nada -- pintar «0 veces» seria ruido, y pintar cero cuando en
+     realidad no se sabe seria mentir. Solo se habla cuando hay algo que decir.
+      Y el numero es de lo REGISTRADO, sin fecha: las sesiones se emiten desde
+     v0.102.0, asi que hoy cubre semanas y en un año cubrira el año -- el mismo
+     texto sigue siendo cierto, y por eso no lleva «desde». */
+
+
+  const veces = typeof paceEventsRoutineCount === 'function' ?
+  paceEventsRoutineCount(routine.id) : null;
+  const vecesLabel = typeof veces === 'number' && veces > 0 ?
+  veces === 1 ?
+  t('preview.doneCount.one') :
+  (t('preview.doneCount.many') || '').replace('{n}', String(veces)) :
+  null;
+
   /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
      contrato v1, `min` para el resto. Nunca las dos. */
   const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
@@ -16268,11 +16381,20 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
     tR(`${routine.id}.desc`, routine.desc)
     ), /*#__PURE__*/
 
-    React.createElement("div", { style: { display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 } }, /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: vecesLabel ? 10 : 18 } }, /*#__PURE__*/
     React.createElement(Tag, { color: accent }, durLabel),
     intensidad && /*#__PURE__*/React.createElement(Tag, { muted: true }, intensidad),
     nivel && /*#__PURE__*/React.createElement(Tag, { muted: true }, nivel)
-    ), /*#__PURE__*/
+    ),
+
+
+
+
+
+    vecesLabel && /*#__PURE__*/
+    React.createElement("div", { "data-pace-preview-veces": true, className: "pace-meta",
+      style: { color: 'var(--ink-3)', marginBottom: 18 } }, vecesLabel), /*#__PURE__*/
+
 
     React.createElement(Seccion, { titulo: t('preview.need') },
     necesita.length === 0 ? /*#__PURE__*/

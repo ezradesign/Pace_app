@@ -118,6 +118,11 @@ Object.assign(window.PACE_STRINGS.es, {
     'preview.position':                'Posición',
     'preview.steps':                   'Los pasos',
     'preview.start':                   'Empezar',
+    /* s189 · lo unico del preview que sale de `pace.events.v1`. Una linea sola,
+       sin fecha: el numero es cierto (son N veces registradas) y envejece bien
+       -- en un año ese mismo texto sera el total real. Con 0 no se pinta. */
+    'preview.doneCount.one':           'Lo has hecho una vez',
+    'preview.doneCount.many':          'Lo has hecho {n} veces',
     'preview.eq.stableDesk':           'Una mesa estable',
     'preview.eq.stableChair':          'Una silla estable, sin ruedas',
     'preview.eq.bar':                  'Una barra firme',
@@ -233,6 +238,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'preview.position':                'Position',
     'preview.steps':                   'The steps',
     'preview.start':                   'Start',
+    'preview.doneCount.one':           'You have done this once',
+    'preview.doneCount.many':          'You have done this {n} times',
     'preview.eq.stableDesk':           'A stable desk',
     'preview.eq.stableChair':          'A stable chair, no wheels',
     'preview.eq.bar':                  'A sturdy bar',
