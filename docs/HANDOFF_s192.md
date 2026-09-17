@@ -69,8 +69,9 @@ Plan: **FASE 3.6** del [`ROADMAP`](../ROADMAP.md).
    · Google con el permiso de solo libre/ocupado.
 9. **Datos anónimos con permiso**: junto al servidor de licencias (Fase 10); exige tocar
    `privacy.html` y el gate del `verify` que prohíbe canales de salida en `app/events/`.
-10. **Preguntar por la deuda documental**: `CHANGELOG.md` detalla 23 versiones y la
-    convención de `CLAUDE.md` pide dos. No se podó sin permiso.
+10. ~~Preguntar por la deuda documental del `CHANGELOG`~~ — **hecho**: el usuario mandó podar y
+    se podó a las dos últimas (24 secciones → 2, 2084 → 507 líneas). Cada versión conserva su
+    fila con su titular y el enlace a su diario; el texto vive en `git log -p CHANGELOG.md`.
 
 ---
 

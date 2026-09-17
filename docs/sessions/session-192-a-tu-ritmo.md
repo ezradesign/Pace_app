@@ -111,5 +111,6 @@ revisión en `scripts/audit/menu-s192*.js`.
 - **El contexto** («Junto a la mesa · Sin material») es fijo: onboarding contextual, Fase 8.
 - **Calendario**, **datos anónimos con permiso** y el **origen de cada sesión** en los eventos.
 - **Stats** aparcado con sus maquetas de s191 sin commitear.
-- **Deuda documental vista**: `CHANGELOG.md` lleva 23 versiones detalladas cuando la convención
-  pide dos.
+- **Deuda documental saldada al cierre**: `CHANGELOG.md` llevaba 24 secciones de detalle donde la
+  convención pide dos. El usuario mandó podar y quedan las dos últimas (2084 → 507 líneas); cada
+  versión conserva fila, titular y diario, y el detalle antiguo vive en `git log -p CHANGELOG.md`.
