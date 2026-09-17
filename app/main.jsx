@@ -11,8 +11,12 @@
    - app/main/_responsive.js  -- bloque <style> con reglas @media globales.
    - app/main/TopBar.jsx      -- tabs Foco/Pausa/Larga + 3 iconos top-right.
    - app/main/ActivityBar.jsx -- 4 chips Respira/Estira/Mueve/Hidratate.
+   Split en s193 (500 -> 414 ln, al tocar el limite de §1):
+   - app/main/main.eventos.jsx -- usePaceEventos: los listeners de `pace:*`
+                                  (sidebar-action, open-*, cow-click).
+   - app/main/SidebarHandle.jsx -- el asa flotante que reabre la sidebar.
    PaceApp queda como orquestador puro: state local de overlays + handlers
-   + composicion de JSX.
+   + composicion de JSX. Lo siguiente que crezca va a un hermano, no aqui.
 */
 
 const { useState: useStateMain, useEffect: useEffectMain } = React;
@@ -51,41 +55,10 @@ function PaceApp() {
   // solo un Modal escuche Escape; al cerrar, la biblioteca reaparece
   // (openLibrary conserva 'move').
   const [customBuilder, setCustomBuilder] = useStateMain(null); // null | { id }
-  useEffectMain(() => {
-    const h = (e) => setCustomBuilder({ id: (e.detail && e.detail.id) || null });
-    window.addEventListener('pace:open-custom-builder', h);
-    return () => window.removeEventListener('pace:open-custom-builder', h);
-  }, []);
 
-  // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
-  // Se escucha como evento global para que el Sidebar pueda disparar clicks
-  // sobre el logo sin acoplarse a props del root.
-  const [cowClicks, setCowClicks] = useStateMain(0);
-  useEffectMain(() => {
-    if (cowClicks >= 10) unlockAchievement('secret.cow.click');
-  }, [cowClicks]);
-  useEffectMain(() => {
-    const h = () => setCowClicks(c => c + 1);
-    window.addEventListener('pace:cow-click', h);
-    return () => window.removeEventListener('pace:cow-click', h);
-  }, []);
-
-  // Abrir colección desde sidebar
-  useEffectMain(() => {
-    const h = () => setOpenAchievements(true);
-    window.addEventListener('pace:open-achievements', h);
-    return () => window.removeEventListener('pace:open-achievements', h);
-  }, []);
-
-  // Abrir modal de apoyo desde sidebar (sesión 16 / v0.11.11).
-  // Mismo patrón que `pace:open-achievements`: el Sidebar despacha el
-  // evento y aquí lo escuchamos para abrir. Desacopla el botón del root.
-  useEffectMain(() => {
-    const h = () => setOpenSupport(true);
-    window.addEventListener('pace:open-support', h);
-    return () => window.removeEventListener('pace:open-support', h);
-  }, []);
-
+  /* LOS LISTENERS DE `pace:*` (open-custom-builder, cow-click, open-achievements,
+     open-support, sidebar-action) viven en usePaceEventos (main/main.eventos.jsx,
+     s193) y se enganchan más abajo, después de los handlers que usan. */
 
   // Auto-trigger único del SupportModal a los 7 días de racha.
   // Consumidor del helper expuesto en SupportModule.jsx; la lógica
@@ -177,62 +150,24 @@ function PaceApp() {
     setPreviewRoutine({ routine, kind: 'move' });
   };
 
-  /* Navegación desde la sidebar (s180). UN solo evento con `detail.kind` en vez
-     de un `pace:open-*` por destino: la sidebar no toca el estado interno de
-     los modales, solo dice qué quiere, y PaceApp decide con qué superficie se
-     cumple.
+  /* LO QUE EL ROOT ESCUCHA (main/main.eventos.jsx, s193): los CustomEvent con
+     los que la shell pide abrir cosas. VA AQUÍ, y no arriba con el estado de
+     los modales, porque usa `handleStartBreathe` y `setPreviewRoutine`, que se
+     declaran más arriba pero DESPUÉS de aquel bloque. Con `[]` de dependencias
+     el hook captura el binding del primer render —que ya está inicializado
+     cuando el handler corre—, pero declararlo antes de lo que usa se lee como
+     un error aunque no lo sea. */
+  usePaceEventos({
+    abrirConstructor: (id) => setCustomBuilder({ id }),
+    abrirLogros: () => setOpenAchievements(true),
+    abrirApoyo: () => setOpenSupport(true),
+    abrirStats: () => setOpenStats(true),
+    abrirBiblioteca: (kind) => setOpenLibrary(kind),
+    abrirAgua: () => setOpenHydrate(true),
+    empezarRespira: handleStartBreathe,
+    previsualizar: setPreviewRoutine,
+  });
 
-     VA AQUÍ, y no arriba con los otros listeners, porque usa
-     `handleStartBreathe` y `setPreviewRoutine`, que se declaran más arriba pero
-     DESPUÉS de aquel bloque. Con `[]` de dependencias el efecto captura el
-     binding del primer render — que ya está inicializado cuando el handler
-     corre—, pero declararlo antes de lo que usa se lee como un error aunque no
-     lo sea.
-
-     `repeat` reutiliza las MISMAS puertas que la biblioteca: `handleStartBreathe`
-     con su gate de seguridad, o el Preview de §18.3 para cuerpo. Así una rutina
-     con `safety: true` no se salta su modal por entrar desde la sidebar. */
-  useEffectMain(() => {
-    const h = (ev) => {
-      const d = (ev && ev.detail) || {};
-      if (d.kind === 'stats') { setOpenStats(true); return; }
-      if (d.kind === 'module') {
-        /* 'focus' no abre nada a propósito: el timer ES la home, así que ya
-           estás encima de él (en móvil, con el drawer cerrándose detrás). */
-        if (d.target === 'breathe') setOpenLibrary('breathe');
-        else if (d.target === 'body') setOpenLibrary('move');
-        else if (d.target === 'water') setOpenHydrate(true);
-        return;
-      }
-      if (d.kind === 'custom') {
-        /* MIS RUTINAS. Con rutinas propias abre la biblioteca de Mueve, que es
-           donde vive su seccion (s93); sin ninguna, abre el CONSTRUCTOR, porque
-           llevar a una lista vacia seria peor que no llevar. */
-        const propias = (getState().customRoutines || []).length;
-        if (propias) setOpenLibrary('move');
-        else setCustomBuilder({ id: null });
-        return;
-      }
-      if (d.kind === 'resume' && d.targetId) {
-        /* Reanudar entra por `handleStartBreathe` y no por un camino propio:
-           asi la rutina con apnea vuelve a pasar por su modal de seguridad y
-           el guard de acceso sigue siendo el mismo. */
-        const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
-        const r = g && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
-        if (r) handleStartBreathe(r, g);
-        return;
-      }
-      if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
-        /* El módulo se le pregunta al CATÁLOGO, nunca al prefijo del id (s172). */
-        const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
-        if (b) { handleStartBreathe(b); return; }
-        const body = window.resolveBodyRoutine && window.resolveBodyRoutine(d.targetId);
-        if (body && body.routine) setPreviewRoutine({ routine: body.routine, kind: body.source });
-      }
-    };
-    window.addEventListener('pace:sidebar-action', h);
-    return () => window.removeEventListener('pace:sidebar-action', h);
-  }, []);
   const handleStartExtra = (routine) => {
     /* Reutiliza MoveSession pero marca kind='extra' para que la completion
        dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
@@ -291,34 +226,13 @@ function PaceApp() {
       {/* SIDEBAR */}
       {state.layout !== 'minimal' && <Sidebar />}
 
-      {/* Handle flotante para re-abrir sidebar cuando está oculto
-          (aparece sólo en layout con sidebar y cuando está colapsado).
-          En móvil (≤768px) el CSS lo amplía a 44×44 (hit target
-          accesible) — ver app/main/_responsive.js. */}
+      {/* Asa flotante para re-abrir la sidebar cuando está oculta (sólo en
+          layout con sidebar y colapsada). El dibujo vive en
+          app/main/SidebarHandle.jsx (s193); el CSS lo amplía en móvil por
+          `data-pace-sidebar-open` — ver app/main/_responsive.js. */}
       {state.layout !== 'minimal' && state.sidebarCollapsed && (
-        <button
-          data-pace-sidebar-open
-          onClick={() => set({ sidebarCollapsed: false })}
-          title={t('sidebar.open.title')}
-          aria-label={t('sidebar.open.aria')}
-          style={{
-            position: 'fixed', top: 16, left: 14, zIndex: 50,
-            width: 30, height: 30, borderRadius: 6,
-            display: 'grid', placeItems: 'center',
-            background: 'transparent', border: '1px solid transparent',
-            color: 'var(--ink-3)', transition: 'all 180ms',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--paper-2)'; e.currentTarget.style.borderColor = 'var(--line)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="4" y1="7" x2="20" y2="7" />
-            <line x1="4" y1="12" x2="14" y2="12" />
-            <line x1="4" y1="17" x2="20" y2="17" />
-          </svg>
-        </button>
+        <SidebarHandle onOpen={() => set({ sidebarCollapsed: false })} />
       )}
-
       {/* MAIN AREA */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
         {/* Top bar */}
