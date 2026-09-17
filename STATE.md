@@ -226,7 +226,8 @@
 ## Ultima sesion -- lo que sigue vivo
 
 > s192 implementa **«A tu ritmo»**, la variante A («el menu manda») de cuatro rondas de maqueta.
-> Publica **v0.122.0**. Suite **236 -> 250**, `verify` en verde, artefacto regenerado.
+> Publica **v0.122.0**. Suite **236 -> 250**, `verify` en verde, artefacto regenerado. El CI quedo
+> verde en `30863b6`; el de la version (`c016e66`) salio ROJO por el huso del reloj de las pruebas.
 >
 > Diario: [session-192](./docs/sessions/session-192-a-tu-ritmo.md)
 
@@ -254,6 +255,13 @@
   calendario (`.ics`, Android local, Google libre/ocupado) · datos anonimos con permiso · el
   **origen de cada sesion** en los eventos (propuesta / biblioteca / Camino) · Stats «Hoy» con el
   menu.
+
+- **[LO QUE CAZO EL CI, CON LA SUITE LOCAL VERDE]** Tres pruebas de `ritmo.spec.js` sembraban el
+  reloj con `new Date(2026, 8, 17, 9, 0)`: el instante lo calcula **Node** en el huso del runner
+  (Madrid aqui, UTC en GitHub) y lo lee un navegador fijado a `Europe/Madrid` por la config, asi
+  que alli el dia empezaba dos horas mas tarde («Bloque 1 de 7»). Se siembra con offset explicito
+  y el CI se reproduce en local con `TZ=UTC npx playwright test`. **Una hora de pared sembrada
+  desde Node no vale lo mismo en las dos maquinas.**
 
 - **[DEUDA DOCUMENTAL VISTA]** `CHANGELOG.md` lleva **23 versiones detalladas** cuando la
   convencion de `CLAUDE.md` pide dos. No se podo sin preguntar.
