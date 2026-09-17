@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.122.0** | 2026-09-17 | feat(home): **A tu ritmo, el menú manda** — Las entrevistas del usuario apuntaron a lo mismo que los beta testers: el problema no es que falte contenido, es **elegir** (la home abría 4 puertas a 51 rutinas y dos recomendadores más). Ahora la home pregunta **«¿cuánto trabajas hoy?»** y **sirve la jornada**: bloques de foco y, entre ellos, pausas con nombre, duración y motivo, con la **comida a tu hora exacta** y el horario (inicio, comida, cuánto dura, salida) **editable dentro de la frase**. La carta sigue a un toque con **«Hoy voy por libre»**. Diseñado en **cuatro rondas de maqueta mirándolas** (A frente a B, nombre y glifos, horario y cubiertos, salida y llegar tarde). **El panel hereda el papel de horizonte de Actividades** (`data-pace-activitybar`), así que la geometría del aro no se tocó; **el progreso sale de `cycle`**; la **pausa** propone el plato del menú y la **barra lateral** anuncia la siguiente pausa; los **pozos salen del catálogo vivo** con el veto de s189. La suite completa cazó un defecto que ninguna maqueta veía (**1-2 px** entre el enlace de vuelta y «Ver caminos» hacían «subir» el foco) y el banco de mutantes **corrigió un comentario** que atribuía el arreglo a lo que no era. **236 → 250**, 11 mutantes y los 11 muerden. | s192 | [session-192](./docs/sessions/session-192-a-tu-ritmo.md) |
 | **v0.121.0** | 2026-09-16 | feat(eventos+preview): **la memoria larga** — Los reducers de `aggregates` (FASE 3 del esquema de eventos), que son lo unico que desbloquea la Fase 4 (Stats). **La auditoria corrigio el encargo**: el ROADMAP decia «sin cablear» y era cierto que la palabra `aggregates` no aparece en `app/`, pero **`baseline` ya consolidaba dos de los cuatro candidatos** (`totalsByType` y los tallies de feedback) desde s155. Lo que faltaba de verdad: **una API que devuelva el valor vivo** y los **totales por rutina** -- el unico agregado que ninguna otra capa puede dar, porque `state.routineCounts` cuenta por CATEGORIA (`box`, `coherent`, `rounds`, `atg`) y no por id. `paceEventsAggregates()` cumple la regla del esquema (`valor vivo = baseline + fold(retenidos)`) **reutilizando el fold de la poda** en vez de escribir un segundo contador: de ahi salen gratis la idempotencia por cursor y que un arreglo sirva para las dos lecturas. `paceEventsRoutineCount()` distingue **tres estados y no dos** -- `null` es «el almacen no puede responder» y `0` es «nunca», y en los dos el preview CALLA. **El consumidor entra en la misma sesion**, a proposito: el feedback se capturo en s116 y tardo 28 sesiones en tener quien lo leyera. El preview de la rutina dice «Lo has hecho N veces», **sin fecha y medido**: no hay contador legacy que sembrar, las sesiones se emiten desde v0.102.0 (no desde que el contenedor se activo, 16 dias antes) y hoy el historial maximo es de **27 dias** -- con la ventana de 120, **no se ha podado nada en ninguna instalacion**. «N veces» es cierto hoy y seguira siendolo en un año. **Fuera por decision**: el desglose `natural`/`early` (aunque el dato ya viaje) y «dias con ritmo», que se queda en `state-history` como unico dueño (§14) para que no haya dos calculos del mismo numero. Los huerfanos se CONSERVAN: el total es historia. De paso se cierra la **deuda P1** (§15.3), que reproducia: `cur.yes \|\| 0` conservaba el tipo y la suma concatenaba (`'3' + 1 === '31'`), y un contador corrupto alimenta el veto de la pausa de s189. **228 → 236**, 10 mutantes y los 10 muerden -- **tres hubo que reescribirlos por medir el seam equivocado**, y uno de ellos acabo en un arreglo mejor: habia DOS guardas redundantes y ninguna mordia, asi que se quito la de sobra. | s190 | [session-190](./docs/sessions/session-190-la-memoria-larga.md) |
 | **v0.120.0** | 2026-09-16 | feat(pausa): **el feedback que nadie leia** — «¿Te ayudo esta pausa?» se captura desde s116 y **ningun recomendador lo leia en veintiocho sesiones**. Ahora lo lee la propuesta de la pausa, y **en pequeño porque el dato no da para mas**: el banco `banco-feedback-s189.js` midio el TECHO de la señal evaluando el recomendador de verdad sobre los catalogos de verdad -- la pregunta sale **una vez por rutina y dia**, y los pozos son de **11 (Estira), 12 (Respira) y 8 (Mueve)** rutinas gratis, o sea que en 30 dias se proponen como mucho esas. Puntuar preferencias sobre eso seria ruido con decimales. La regla, escrita antes de codificarla y elegida por el usuario con los numeros delante: **una rutina con «No» y sin ningun «Si»/«Un poco» sale del pozo de la PROPUESTA** (no del catalogo: se sigue pudiendo elegir a mano) · **si el veto vaciara el pozo se IGNORA** -- sin esa amnistia, quien contesta «No» a todo deja Estira muda en **12 dias** (9 en Mueve) y un bloque de 45 minutos sentado acaba proponiendo **beber agua** · **el «Si» no ordena nada**, solo protege del veto. **Y un defecto que destapo el banco, no el encargo**: la rotacion era por dia, asi que **dos pausas del MISMO dia proponian la misma rutina** -- incluso una que acababas de hacer, porque la rama de los 45 minutos no mira el plan. La rotacion pasa a ser **dia + numero de bloque** (`state.cycle`, que ya se pone a cero en el relevo de dia): **cero estado nuevo, cero migracion** y nada que dependa de `pace.events.v1`, que en `file://` es inerte por diseño. **224 → 228**, con el **primer aserto de la pausa en INGLES** (hueco declarado en s187) y **8 mutantes, los 8 muerden** -- dos hubo que reescribirlos porque median el seam equivocado. | s189 | [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md) |
 | **v0.119.0** | 2026-09-15 | feat(ajustes): **el panel en cuatro temas** — El panel de Ajustes, redisenado entero y elegido MIRANDOLO en **cinco rondas de maqueta** con los tokens, las fuentes y el copy reales. Lo que habia, medido: **1412 px de contenido** (1,9 pantallas a 1280x800, 2,2 en movil), 30 pastillas, 7 lineas de explicacion, 10 secciones sin agrupar y un bloque premium de **221 px que era un input deshabilitado**. Lo que hay: cuatro temas -- **Ver · Oir · Sesiones · Tus datos**-- y cada ajuste es una FILA con el nombre en cursiva a la izquierda y el control a la derecha. **El color dice de que modulo es el ajuste**, y solo aparece donde hay modulo: la pildora elegida lleva un LAVADO del color con el texto en tinta, porque terracota, tabaco y azul con texto claro dan **2,8-3,3:1** (medido) y el lavado da 9,3:1 en oscuro. El circulo de Respira se elige entre **cuatro pictogramas** calcados de `BreatheVisual.jsx` y el nombre del elegido baja a la linea del modulo. **Con el sonido apagado las dos filas que cuelgan de el se atenuan en vez de esconderse**: antes el panel saltaba 84 px. «Disposicion» sale tras bandera (duplicaba el boton de plegar la barra) con migracion de «minimal». Resultado: **743 px, cabe sin scroll a 1280x800**; movil 1,22 pantallas. Nace `strings/settings.js` (`ui.js` habria pasado de 500) y `TweaksPanel.parts.jsx`. **215 → 224**, 8 mutantes y los 8 muerden. Antes, se cerro la deuda documental que s187 dejo a medias. | s188 | [session-188](./docs/sessions/session-188-ajustes-en-cuatro-temas.md) |
@@ -391,6 +392,57 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.122.0] -- 2026-09-17 -- feat(home): A tu ritmo, el menú manda
+
+### Anadido
+- **«A tu ritmo»** en el sitio de Actividades y del Camino sugerido (`app/ritmo/`): la pregunta
+  «¿cuánto trabajas hoy?» con cuatro opciones (una hora · dos horas · media jornada · jornada
+  entera) y su hora de fin; el menú servido con la **línea del día** (escritorio) o **Ahora /
+  Luego** y la jornada entera en una hoja (móvil); la **jornada cerrada**.
+- **El horario, editable dentro de la frase**: inicio, comida, cuánto dura y salida. La hora de
+  comer por defecto sale de la región del navegador.
+- **`ritmoComponer`** (`ritmo.regla.js`), pura: comida a su hora exacta, bloque previo
+  acortado, colas fundidas, agua hasta la meta, sin repetir rutina. **Llegar tarde** = el día
+  empieza ahora y sales a tu hora.
+- **`state-ritmo.jsx`**: `ritmo: { horario, libre, dia }`, los pozos desde el catálogo vivo y lo
+  que consultan el aro (`ritmoAro`), la pausa (`ritmoPropuesta`) y la barra lateral
+  (`ritmoSiguiente`).
+- **El aro** dice «Bloque 2 de 8», mide lo que mide el bloque y su botón es «Empezar jornada» /
+  «Empezar bloque N»; bajo él, «A TU RITMO» y **debajo** «HASTA LAS 17:00».
+- **`ABMeal`** (tenedor y cuchillo) en la familia de glifos de Actividades.
+- **53 claves** por idioma (`strings/ritmo.js`, ES + EN); censo 590 → 643.
+
+### Cambiado
+- **La home** abre con «A tu ritmo»; «Hoy voy por libre» devuelve Actividades + Camino con un
+  enlace de vuelta.
+- **La pausa** propone primero el plato del menú; **la barra lateral** dice «Siguiente pausa ·
+  9:45» detrás de reanudar y del Camino en curso.
+- **`home-geometry.js`** mide como canto de las tarjetas `[data-pace-activitybar-chip]` **o**
+  `[data-pace-ritmo-panel]`.
+- **La semilla de la suite** (`tests/helpers.js`) trae `ritmo.libre: true`.
+
+### Decisiones
+- **Variante A, «el menú manda»**, frente a un «Déjate guiar» discreto (anula §5.1 del audit; la
+  Fase 8 lo absorbe).
+- **Datos anónimos con permiso** (ROADMAP, Reglas del plan) y **Stats aparcado** (Fase 4).
+- **El panel hereda el horizonte** y **el progreso sale de `cycle`** — ver
+  `DECISIONES_TECNICAS_VIGENTES.md`.
+
+### Red
+- **`tests/ritmo.spec.js`, 14 tests**: la regla en puro, la pregunta, elegir, terminar un bloque,
+  por libre y vuelta, el horario en la frase, cambiar una parada, llegar tarde, inglés, la lista en
+  móvil y la geometría en cuatro viewports (sin scroll, sin etiquetas pisadas, banda estable y
+  corte del aro).
+- **`scripts/audit/banco-ritmo-s192.js`**: **11 mutantes, los 11 muerden**, con pasada de control.
+- **Un defecto que solo vio la suite completa**: 1-2 px entre el enlace de vuelta y «Ver caminos»
+  (`home-a11y.spec.js`). Lo arregla el envoltorio `inline-flex`, aislado con mutantes.
+
+### Lo que no cubre
+- Ni un píxel comparado; recolocar a mitad de día; llegar antes; las otras dos políticas de llegar
+  tarde; el contexto real; calendario; el origen de cada sesión en los eventos.
 
 ---
 

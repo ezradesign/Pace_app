@@ -212,7 +212,9 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
   );
 }
 
-function SuggestedPathCard() {
+/* `vuelta` (s192): el enlace de «A tu ritmo» cuando hoy vas por libre. Va a la
+   izquierda de «Ver caminos», en la misma fila, para no añadir altura a la home. */
+function SuggestedPathCard({ vuelta } = {}) {
   const [state] = usePace();
   const { t } = useT();
 
@@ -278,7 +280,8 @@ function SuggestedPathCard() {
       )}
 
       {/* Enlace a la biblioteca de Caminos */}
-      <div style={{ textAlign: 'right', marginTop: 6 }}>
+      <div style={{ textAlign: 'right', marginTop: 6, display: vuelta ? 'flex' : undefined, justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+        {vuelta || null}
         <button
           onClick={handleOpenLibrary}
           style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-3)', fontFamily: 'var(--font-display)', fontStyle: 'italic', padding: '2px 0', textDecoration: 'underline', textUnderlineOffset: 3 }}

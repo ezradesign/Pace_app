@@ -24,6 +24,12 @@ const SEMILLA = {
   lang: 'es',
   langAuto: false,
   palette: 'crema',
+  /* s192 · «A TU RITMO» OCUPA EL SITIO DE ACTIVIDADES. Las pruebas que no son de
+     ese módulo abren bibliotecas desde los chips de la home, así que aterrizan
+     con la carta SIEMPRE (`libre: true`, sin fecha). Con una fecha no valdría:
+     varias pruebas falsean el reloj y el «hoy» de la semilla no casaría con el de
+     la app. Las de A tu ritmo siembran su propio `ritmo`. */
+  ritmo: { libre: true },
 };
 
 /**

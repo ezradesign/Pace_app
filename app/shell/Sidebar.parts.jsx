@@ -274,6 +274,18 @@ function sidebarActionView(accion, t, tn, lang) {
     const v = t(accion.targetId + '.name');
     if (v !== accion.targetId + '.name') titulo = v;
   }
+  if (accion.kind === 'suggest' && accion.ritmo) {
+    /* s192 · la siguiente pausa de «A tu ritmo»: la hora en la cejilla y el
+       módulo abajo. «Siguiente pausa» y no el nombre, que ya es de Stats. */
+    const rt = accion.ritmo;
+    return {
+      kind: 'suggest',
+      eyebrow: tn('ritmo.sidebar', { h: ritmoHora(rt.hora) }),
+      color: 'var(--ink-3)',
+      titulo: titulo,
+      meta: rt.larga ? tn('ritmo.larga', { n: rt.dur }) : rt.min + ' min · ' + ritmoModulo(rt.modulo, t),
+    };
+  }
   if (accion.kind === 'suggest') {
     return {
       kind: 'suggest',

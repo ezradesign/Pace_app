@@ -389,13 +389,13 @@ function PaceApp() {
 
                 LAS KEYS SE QUEDAN: el observador de home-geometry.js vigila el
                 childList DIRECTO del stack y re-suscribe su ResizeObserver, así
-                que sigue interesando que React mueva nodos y no los remonte. */}
-            <ActivityBar
-              key="act"
+                que sigue interesando que React mueva nodos y no los remonte.
+                s192: los dos bloques los pinta RitmoHome («A tu ritmo»): el panel del
+                día o, por libre, Actividades y Camino con sus keys (ritmo/RitmoHome.jsx). */}
+            <RitmoHome
               onOpenLibrary={(kind) => setOpenLibrary(kind)}
               onOpenHydrate={() => setOpenHydrate(true)}
             />
-            <SuggestedPathCard key="spc" />
           </div>
         </div>
       </main>

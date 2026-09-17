@@ -201,7 +201,9 @@
        Sin chip o sin barra publica 0, y entonces el corte vuelve a valer el
        solapamiento: exactamente el comportamiento anterior, que es el fallback
        correcto y no una aproximacion. */
-    var chip = document.querySelector('[data-pace-activitybar-chip]');
+    /* s192: con «A tu ritmo» el horizonte es su panel (lleva data-pace-activitybar)
+       y lo que ocluye el aro es la tarjeta del día, no un chip. */
+    var chip = document.querySelector('[data-pace-activitybar-chip], [data-pace-ritmo-panel]');
     var barra = document.querySelector('[data-pace-activitybar]');
     var banda = (chip && barra)
       ? Math.max(0, Math.round(chip.getBoundingClientRect().top - barra.getBoundingClientRect().top))

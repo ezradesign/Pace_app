@@ -101,6 +101,15 @@ diferencia a PACE de un Pomodoro cualquiera, las Travesías se construyen **enci
 ejercicios, y los glifos placeholder ya eran un bloqueante de venta declarado («no se puede
 vender packs cuyos pasos rendericen `DefaultGlyph`»). Tres razones que apuntan al mismo sitio.
 
+### La segunda evidencia: las entrevistas de s192
+
+El usuario trae de sus entrevistas —entre ellas, con un experto en informática y SaaS— cinco
+ideas: **recoger datos para saber qué funciona**, el *job to be done*, el *product-market fit*,
+**demasiadas opciones** y un **menú completo** según el tiempo disponible (o el calendario) en vez
+de una carta infinita, con la capa extensa debajo. Apunta al mismo sitio que los beta testers: el
+problema no es que falte contenido, es **elegir** (medido: la home abría cuatro puertas a 51
+rutinas, un Camino sugerido y otra sugerencia en la barra lateral). De ahí nace la **FASE 3.6**.
+
 ### Fases
 
 ### FASE 1 · Dirección cerrada — ✅ HECHA (s132–s134)
@@ -364,7 +373,36 @@ posicionamiento (§27.3): «sé que debería parar, pero no sé qué me conviene
 
 Va después de eventos porque la recomendación necesita historial real, no contadores agregados.
 
-### FASE 4 · Stats — 🔜 SIGUIENTE, y ya sin bloqueos (s190)
+### FASE 3.6 · «A tu ritmo» — 🔄 EN CURSO · primera versión (s192, v0.122.0)
+
+**Una pregunta —«¿cuánto trabajas hoy?»— y PACE sirve la jornada**: bloques de foco y, entre
+ellos, pausas con nombre, duración y motivo. Ocupa el sitio de Actividades y del Camino sugerido
+(«el menú manda»); la carta sigue a un toque con **«Hoy voy por libre»**. Diseñado en cuatro
+rondas de maqueta mirándolas (`docs/proposals/menu-del-dia-r1` … `a-tu-ritmo-r4`). Absorbe el
+«Déjate guiar» de la Fase 8 y la propuesta de la Fase 3.5 cuando hay menú. Diario:
+[session-192](./docs/sessions/session-192-a-tu-ritmo.md).
+
+> **Decidido por el usuario**: nombre **«A tu ritmo»** (con «Hasta las …» debajo en el aro) ·
+> glifos de Actividades **solo en las paradas**, con el módulo escrito en la etiqueta · tenedor y
+> cuchillo para la comida · **horario editable en la frase** (inicio, comida, cuánto dura y salida;
+> la hora de comer por defecto sale de la región) · **llegar tarde = salgo a mi hora**.
+
+**Lo que queda** («implementemos esto primero y luego vamos ajustando»):
+- **Recolocar a mitad de día**: hoy las horas son las del plan aunque te retrases.
+- **Llegar antes** de tu hora y las otras dos políticas de llegar tarde (pintadas en la ronda 4).
+- **Contexto real** («Junto a la mesa · Sin material» es fijo) → onboarding contextual, Fase 8.
+- **Calendario**: el horario es lo que una sincronización rellenaría sola. En orden de coste:
+  exportar `.ics` (sin permisos) · Android leyendo el calendario del teléfono (Fase 9, sin nube) ·
+  Google con el permiso de solo libre/ocupado (exige su verificación; Outlook sería otra integración).
+- **Datos anónimos con permiso** (ver Reglas del plan) para medir si el menú funciona: el registro
+  de eventos no distingue aún si una sesión vino de la propuesta, de la biblioteca o de un Camino.
+- **Stats**: la pestaña «Hoy» debería enseñar el menú del día (motivo de aparcar la Fase 4).
+
+### FASE 4 · Stats — ⏸ APARCADA en s192 (maquetas de s191 en docs/proposals/stats-*)
+
+> **Aparcada por decisión del usuario** al abrir la Fase 3.6: si el menú manda en la home, la
+> pestaña «Hoy» tiene que mostrarlo, y diseñarla antes habría obligado a rehacerla. Las maquetas de
+> s191 (Hoy y Semana, tres rondas) quedan como punto de partida.
 
 Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy + Semana), según
 [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md), ya sin condicionantes
@@ -404,13 +442,17 @@ primera de 3 · primera de 7 · mapa visual · **logros de Travesías** (Bloque 
 Ritmo propuesto pero **nunca obligatorio**: saltarse un
 día no rompe nada ni culpabiliza.
 
+> **s192 · validar antes de abrirla.** Es «el argumento de compra» y nadie ha comprobado todavía
+> que alguien pagaría por ella: primero una ronda de entrevistas o la pregunta del PMF («¿cómo te
+> sentirías si no pudieras usar PACE?»).
+
 ### FASE 8 · Descubrimiento
 
 **Onboarding contextual** (Bloque 2, hueco detectado en s137): capturar el contexto habitual —sentado, si puede levantarse, suelo, espacio, ruido, material— de forma opcional y editable con chips. Sin esto, los filtros y la recomendación no tienen con qué filtrar.
 
 Taxonomía de necesidades y contexto · filtros · previews · reorganización de las tres bibliotecas
-para reducir scroll · «Déjate guiar» discreto · Caminos al centro de la home + After Pomodoro (lo
-que quedó huérfano del plan anterior).
+para reducir scroll · ~~«Déjate guiar» discreto~~ (**absorbido por la Fase 3.6**, que lo pone al
+frente) · Caminos al centro de la home + After Pomodoro (lo que quedó huérfano del plan anterior).
 
 ### FASE 8.5 · Saneamiento (antes de vender)
 
@@ -473,7 +515,10 @@ fecha.
   leer su fila en [`DECISIONES_TECNICAS_VIGENTES.md`](./docs/product/DECISIONES_TECNICAS_VIGENTES.md).
 - **Web y Capacitor son los objetivos canonicos** (decision s134). El standalone pasa a **export bajo demanda**: se genera cuando se pide, no en cada cierre, y no condiciona la arquitectura (nada de inlinear audio en el). Motivos medidos: no comparte `localStorage` con la web (otro origen), `file://` **no emite eventos** por diseno, instalar desde el produjo el bug de icono/pantalla completa de s128 (sin `manifest`), y el catalogo de sesiones largas es imposible de inlinear (1 hora en Opus 48 kbps = ~21 MB, +33 % en base64).
 - **local-first ≠ cero servicios**: infraestructura de compra y licencias sí; backend de producto
-  y tracking no.
+  y tracking no. **Excepción decidida en s192**: estadísticas **anónimas y con permiso explícito**
+  (apagadas por defecto, totales semanales y nunca el registro crudo), construidas junto al
+  servidor de licencias. Cambiarlo exige tocar `privacy.html` y el gate del `verify` que hoy
+  prohíbe cualquier canal de salida en `app/events/`.
 - Las fases 3 y 4 pueden adelantarse a la 2 **solo** si una sesión de la Fase 2 queda bloqueada
   esperando material del usuario (glifos dibujados, revisión fisio).
 

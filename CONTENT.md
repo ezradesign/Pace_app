@@ -305,6 +305,40 @@ Catálogo cerrado a **7 caminos**, todos `free`. Datos en
 
 ---
 
+## 🌾 A tu ritmo · el día servido (s192 · v0.122.0)
+
+No añade rutinas: **elige entre las que hay** y las ordena en la jornada. La regla es
+`ritmoComponer` (`app/ritmo/ritmo.regla.js`) y los pozos, `ritmoPozos` (`app/state-ritmo.jsx`).
+
+| Opción | Bloques de foco | Tope |
+|---|---|---|
+| Una hora | 2 × 25 min | tu salida |
+| Dos horas | 3 × 35 min | tu salida |
+| Media jornada | 4 × 45 min | tu salida |
+| Jornada entera | de 45 min, hasta tu salida | tu salida (con la comida a su hora) |
+
+**Las pausas**: cada tercera es **larga** (15 min, Respira + Estira), la anterior a la larga es
+**Mueve** y las demás **Estira**; el contador vuelve a empezar tras la comida. El cierre es una
+respiración corta. **Un vaso** al comer y otro al cerrar, y el resto de la meta de Hidrátate
+repartido entre las pausas. En un mismo día no se repite ninguna rutina.
+
+**Los pozos** son lo que cabe junto a la mesa: sin aviso de seguridad, sin suelo, sin material
+obligatorio (el opcional no cuenta) y sin retención; abiertos por acceso y sin lo que se vetó en
+la pausa (s189). Rotan por día. **Medidos en la app, en gratis**:
+
+| Pozo | Rutinas |
+|---|---|
+| Estira (6) | Escritorio express · Muñecas y manos · Hombros · círculos · Caderas de pie · Cadena posterior de pie · Cuello |
+| Mueve (4) | Grip + antebrazos · Glúteos invisibles · Postura reset · Gemelos subrepticios |
+| Respira, pausa larga (5) | Exhalación 4·6 · Rítmica yin · Diafragmática · Coherente 5·5 · Coherente 6·6 (grupos Equilibrio, Balance y Relajación, 4–10 min) |
+| Respira, cierre (1) | Suspiro fisiológico (≤ 3 min) |
+
+> **Medido en la suite** (`tests/ritmo.spec.js`, cinco horarios x cuatro opciones): ningún día
+> repite rutina. La jornada de 9 a 17 pide 4 platos de Estira, 3 de Mueve, 1 de Respira y el cierre. Si un pozo
+> se agotara, la regla volvería a empezar por él. Con premium, el pozo crece.
+
+---
+
 ## 🎯 Objetivo del bloque Contenido+Premium (post-v0.34.0)
 
 Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):

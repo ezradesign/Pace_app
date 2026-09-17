@@ -167,6 +167,22 @@ function ABDrop() {
   );
 }
 
+function ABMeal() {
+  /* Tenedor y cuchillo — la COMIDA de «A tu ritmo» (s192). Nace con las reglas
+     de la familia (28x28, trazo 1,2, remates redondos) y su detalle secundario es
+     el mantel punteado, como el suelo de Estira. Elegido por el usuario en la
+     ronda 3 de la maqueta, frente a una variante con plato. */
+  return (
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8.5 4.5v5M11 4.5v5M13.5 4.5v5" />
+      <path d="M8.5 9.5c0 2.1 1.1 3.2 2.5 3.2s2.5-1.1 2.5-3.2" />
+      <path d="M11 12.7v10.8" />
+      <path d="M19 23.5V4.5c2.5 1.5 3.4 4.8 3.3 8.7 0 .8-.5 1.3-1.3 1.3H19" />
+      <path d="M5 25.5h18" opacity="0.35" strokeDasharray="1.5 2.5" />
+    </svg>
+  );
+}
+
 function ABFocus() {
   /* Aro del Pomodoro con la cabeza del recorrido — "Foco".
      NACE EN s180 y no estaba antes por una razon: en la home Foco no es un
@@ -188,5 +204,6 @@ function ABFocus() {
 /* s105: los glifos AB* se exponen para que el BreakMenu (menu post-Pomodoro)
    use EXACTAMENTE los mismos iconos que la ActivityBar de la home -- antes
    llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual.
-   s180: la Sidebar es el tercer consumidor, y anade ABFocus. */
-Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus });
+   s180: la Sidebar es el tercer consumidor, y anade ABFocus.
+   s192: «A tu ritmo» es el cuarto, y anade ABMeal. */
+Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus, ABMeal });

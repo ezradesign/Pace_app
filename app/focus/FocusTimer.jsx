@@ -4,9 +4,8 @@
 
 const { useEffect: useEffectFT, useRef: useRefFT } = React;
 
-/* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y
-   `curvaCaida` salieron al trocear este archivo; su porque medido (la meseta
-   de 45-55 % y el enfriamiento sin repunte, s159) viaja con ellas. */
+/* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y `curvaCaida` salieron al
+   trocear este archivo; su porque medido (meseta 45-55 %, enfriamiento sin repunte, s159) va con ellas. */
 
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
@@ -111,7 +110,8 @@ function FocusTimer({ onFinish }) {
      el temporizador como el flujo MANUAL, distinto del Camino guiado, sin
      ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
      vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
-  const modeLabel = state.focusMode === 'foco' ? t('focus.manual.label')
+  const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;   // s192 «A tu ritmo»: «Bloque 2 de 8» (state-ritmo.jsx)
+  const modeLabel = aro ? aro.label : state.focusMode === 'foco' ? t('focus.manual.label')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
 
@@ -159,14 +159,14 @@ function FocusTimer({ onFinish }) {
      foco (lo vio el usuario en la web). Una sola constante para los dos sitios
      donde se arranca -- idle y completed -- porque separarlas fue justo como
      nacio el desajuste. */
-  const startLabel = isFocoMode ? t('focus.start') : t('focus.startPause');
+  const startLabel = aro ? aro.empezar : isFocoMode ? t('focus.start') : t('focus.startPause');
 
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
     ctaAction = toggle;
   } else if (isCompleted) {
-    ctaLabel = isFocoMode ? t('focus.startAnother') : startLabel;
+    ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
@@ -187,7 +187,7 @@ function FocusTimer({ onFinish }) {
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
   const cycleDotsEl = (
-    <div style={focusStyles.cycleDots}>
+    <div style={aro ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots}>
       {[0,1,2,3].map(i => (
         <span key={i} style={{
           width: 4, height: 4, borderRadius: '50%',

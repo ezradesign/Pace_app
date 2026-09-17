@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.121.0</title>
+  <title>PACE · Foco · Cuerpo — v0.122.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3105,6 +3105,132 @@ Object.assign(window.PACE_STRINGS.en, {
 </script>
   <script>
 ;(function () {
+/* PACE · strings i18n — A TU RITMO (s192)
+   El día servido: la pregunta, el horario, la línea, la lista y lo que el menú
+   le dice al aro, a la pausa y a la barra lateral. Un dominio nuevo sale en su
+   archivo (como hizo breakmenu.js en s187), y se lleva también las razones que
+   la pausa pinta cuando la propuesta viene del menú (`break.prop.ritmo.*`).
+
+   Las frases del horario llevan {marcadores} que el componente cambia por los
+   selectores de hora: la hora se edita DENTRO de la frase (ronda 3).
+
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx, como sus hermanos. */
+
+Object.assign(window.PACE_STRINGS.es, {
+  'ritmo.nombre': 'A tu ritmo',
+  'ritmo.pregunta': '¿Cuánto trabajas hoy?',
+  'ritmo.sub': 'Te preparo la jornada: cuándo parar, qué hacer y cuánto dura.',
+  'ritmo.frase': 'Empiezas a las {inicio}, comes a las {comida} durante {dur} y terminas a las {salida}.',
+  'ritmo.frase.menu': 'de {inicio} a {salida} · comida a las {comida} durante {dur}',
+  'ritmo.frase.movil': 'De {inicio} a {salida} · comida {comida} · {dur}',
+  'ritmo.hoy': 'hoy de {desde} a {hasta}',
+  'ritmo.opcion.1h': 'Una hora',
+  'ritmo.opcion.2h': 'Dos horas',
+  'ritmo.opcion.media': 'Media jornada',
+  'ritmo.opcion.jornada': 'Jornada entera',
+  'ritmo.hasta': 'Hasta las {h}',
+  'ritmo.fuera': 'Tu jornada ya terminó',
+  'ritmo.libre': 'Hoy voy por libre',
+  'ritmo.volver': 'Ponle ritmo al día',
+  'ritmo.cambiar': 'Cambiar',
+  'ritmo.otra': 'Otra',
+  'ritmo.toca': 'toca para cambiarla',
+  'ritmo.ver': 'Ver la jornada entera',
+  'ritmo.listo': 'Listo',
+  'ritmo.ctx.mesa': 'Junto a la mesa',
+  'ritmo.ctx.material': 'Sin material',
+  'ritmo.resumen': '{f} de foco · {p} pausas · {v} vasos',
+  'ritmo.resumen.una': '{f} de foco · 1 pausa · {v} vasos',
+  'ritmo.ahora': 'Ahora',
+  'ritmo.luego': 'Luego',
+  'ritmo.fila.bloque': 'Foco · bloque {n} de {m}',
+  'ritmo.foco': 'Foco · {n} min',
+  'ritmo.hueco': 'Margen libre · {n} min',
+  'ritmo.ahora.min': 'ahora',
+  'ritmo.comida': 'Comida',
+  'ritmo.comida.lejos': 'Lejos de la pantalla',
+  'ritmo.comida.lista': '{d} lejos de la pantalla',
+  'ritmo.larga': 'Pausa larga · {n} min',
+  'ritmo.larga.lista': 'Pausa larga · {n} min · Respira y Estira',
+  'ritmo.motivo.estira': 'Antídoto a la silla',
+  'ritmo.motivo.mueve': 'Cuerpo activo',
+  'ritmo.motivo.cierre': 'Para cerrar la jornada',
+  'ritmo.hecho': 'Jornada cerrada',
+  'ritmo.hecho.sub': '{f} de foco. Lo que queda del día es tuyo.',
+  'ritmo.aro.bloque': 'Bloque {n} de {m}',
+  'ritmo.aro.empezar': 'Empezar jornada',
+  'ritmo.aro.siguiente': 'Empezar bloque {n}',
+  'ritmo.sidebar': 'Siguiente pausa · {h}',
+  'ritmo.aria.inicio': 'Hora a la que empiezas',
+  'ritmo.aria.comida': 'Hora a la que comes',
+  'ritmo.aria.comidaDur': 'Cuánto dura la comida',
+  'ritmo.aria.salida': 'Hora a la que terminas',
+  'break.prop.ritmo.estira': 'A tu ritmo · antídoto a la silla',
+  'break.prop.ritmo.mueve': 'A tu ritmo · cuerpo activo',
+  'break.prop.ritmo.larga': 'A tu ritmo · pausa larga, respira y suelta',
+  'break.prop.ritmo.cierre': 'A tu ritmo · para cerrar la jornada',
+  'break.prop.ritmo.comida': 'A tu ritmo · hora de comer, lejos de la pantalla'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+  'ritmo.nombre': 'At your pace',
+  'ritmo.pregunta': 'How long are you working today?',
+  'ritmo.sub': "I'll plan your day: when to pause, what to do and for how long.",
+  'ritmo.frase': 'You start at {inicio}, have lunch at {comida} for {dur} and finish at {salida}.',
+  'ritmo.frase.menu': 'from {inicio} to {salida} · lunch at {comida} for {dur}',
+  'ritmo.frase.movil': 'From {inicio} to {salida} · lunch {comida} · {dur}',
+  'ritmo.hoy': 'today from {desde} to {hasta}',
+  'ritmo.opcion.1h': 'One hour',
+  'ritmo.opcion.2h': 'Two hours',
+  'ritmo.opcion.media': 'Half day',
+  'ritmo.opcion.jornada': 'Full day',
+  'ritmo.hasta': 'Until {h}',
+  'ritmo.fuera': 'Your workday is over',
+  'ritmo.libre': "I'll go freestyle today",
+  'ritmo.volver': 'Give your day a rhythm',
+  'ritmo.cambiar': 'Change',
+  'ritmo.otra': 'Another',
+  'ritmo.toca': 'tap to swap it',
+  'ritmo.ver': 'See the whole day',
+  'ritmo.listo': 'Done',
+  'ritmo.ctx.mesa': 'At your desk',
+  'ritmo.ctx.material': 'No equipment',
+  'ritmo.resumen': '{f} of focus · {p} breaks · {v} glasses',
+  'ritmo.resumen.una': '{f} of focus · 1 break · {v} glasses',
+  'ritmo.ahora': 'Now',
+  'ritmo.luego': 'Next',
+  'ritmo.fila.bloque': 'Focus · block {n} of {m}',
+  'ritmo.foco': 'Focus · {n} min',
+  'ritmo.hueco': 'Free time · {n} min',
+  'ritmo.ahora.min': 'now',
+  'ritmo.comida': 'Lunch',
+  'ritmo.comida.lejos': 'Away from the screen',
+  'ritmo.comida.lista': '{d} away from the screen',
+  'ritmo.larga': 'Long break · {n} min',
+  'ritmo.larga.lista': 'Long break · {n} min · Breathe and Stretch',
+  'ritmo.motivo.estira': 'Antidote to the chair',
+  'ritmo.motivo.mueve': 'Active body',
+  'ritmo.motivo.cierre': 'To close the day',
+  'ritmo.hecho': 'Day complete',
+  'ritmo.hecho.sub': '{f} of focus. The rest of the day is yours.',
+  'ritmo.aro.bloque': 'Block {n} of {m}',
+  'ritmo.aro.empezar': 'Start the day',
+  'ritmo.aro.siguiente': 'Start block {n}',
+  'ritmo.sidebar': 'Next break · {h}',
+  'ritmo.aria.inicio': 'Start time',
+  'ritmo.aria.comida': 'Lunch time',
+  'ritmo.aria.comidaDur': 'Lunch length',
+  'ritmo.aria.salida': 'Finish time',
+  'break.prop.ritmo.estira': 'At your pace · antidote to the chair',
+  'break.prop.ritmo.mueve': 'At your pace · active body',
+  'break.prop.ritmo.larga': 'At your pace · long break, breathe and let go',
+  'break.prop.ritmo.cierre': 'At your pace · to close the day',
+  'break.prop.ritmo.comida': 'At your pace · lunchtime, away from the screen'
+});
+})();
+</script>
+  <script>
+;(function () {
 /* PACE · Traducciones EN de contenido — Respira
    Split de strings-content.js (s92, F6): el patch EN final de contenido se
    troceó por módulo visual (content/breathe + move + extra) al superar las
@@ -5003,7 +5129,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.121.0';
+const PACE_VERSION = 'v0.122.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7156,6 +7282,427 @@ Object.assign(window, {
   shouldPromptRoutineFeedback
 });
 ;Object.assign(window, { sanitizeFeedbackResponse, feedbackCount, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, shouldPromptRoutineFeedback });
+})();
+</script>
+  <!-- «A tu ritmo» (s192): la REGLA pura que compone el día y su ESTADO
+       (horario, «por libre», el menú de hoy). El progreso sale de `cycle`. -->
+  <script>
+;(function () {
+/* PACE · A tu ritmo · LA REGLA que compone el día (s192)
+   ======================================================
+   Una sola pregunta —«¿cuánto trabajas hoy?»— y PACE sirve la jornada entera:
+   bloques de foco y, entre ellos, pausas con NOMBRE, duración y motivo. La carta
+   completa sigue a un toque («Hoy voy por libre»).
+
+   Nació en las entrevistas de s192 («demasiadas opciones»; mejor un menú completo
+   que una carta infinita) y se diseñó en cuatro rondas de maqueta
+   (docs/proposals/menu-del-dia-r1…a-tu-ritmo-r4). Esta es la regla de la ronda 4,
+   con una diferencia: los POZOS ya no van escritos a mano, salen del catálogo vivo
+   (`ritmoPozos`, en state-ritmo.jsx).
+
+   PURA a propósito: no lee el reloj, ni el estado, ni `window`. Todo entra por
+   parámetro, así que se puede asertar sin abrir la app. Horas en MINUTOS desde
+   medianoche. `var` y `function` (no `const`): el build solo re-expone esos
+   nombres fuera de su IIFE (s103).
+
+   EL HORARIO  `{ inicio, comida, comidaDur, salida, ahora }`
+     · «Jornada entera» va de tu inicio a tu SALIDA. Las otras opciones sirven sus
+       minutos de foco y tampoco pasan de la salida, salvo que ya estés fuera de
+       ella: entonces una hora es una hora (quien trabaja por la noche no se queda
+       sin menú).
+     · La comida empieza a TU HORA EXACTA y dura lo que digas. El bloque que la
+       cruzaría se acorta para acabar justo entonces; si le quedarían menos de
+       15 min, ese hueco es margen libre.
+     · LLEGAR TARDE (`ahora` > `inicio`): el día empieza AHORA y sales a tu hora;
+       hoy hay menos foco y nada se marca como perdido. Decisión del usuario en la
+       ronda 4 («salgo a mi hora», la recomendada; las otras dos quedan pintadas).
+     · SIN COLAS RIDÍCULAS: si tras un bloque normal quedaría un resto menor que
+       el umbral (30 min, o el bloque − 5 si es más corto), el final se sirve en UN
+       bloque (si no pasa de 60) o en DOS iguales.
+
+   LA REGLA de cada pausa (el contador se reinicia al comer):
+     1. cada tercera pausa → larga (15 min): Respira + Estira
+     2. la que va antes de la larga → Mueve
+     3. las demás → Estira (lo mismo que propone la pausa desde s187)
+     · En un mismo día no se repite ninguna rutina.
+     · El AGUA: un vaso al comer y otro al cerrar; el resto de la meta se reparte
+       entre las pausas, sin pasarse. */
+
+var RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
+var RITMO_FORMAS = {
+  '1h': { bloque: 25, foco: 50 },
+  '2h': { bloque: 35, foco: 105 },
+  'media': { bloque: 45, foco: 180 },
+  'jornada': { bloque: 45, foco: Infinity }
+};
+
+/* ritmoComponer(opcion, horario, pozos, cambios, metaAgua) -> el día, o null.
+   `pozos` = { estira: [r], mueve: [r], respira: [r], cierre: [r] } con rutinas
+   del catálogo (se usan `id`, `name` y `min`). `cambios` = { clave: n } cuando la
+   persona ha pedido «otra» n veces en esa pausa. */
+function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
+  var PAUSA = 5,LARGA = 15,MINIMO = 15,COLA = 30;
+  var forma = RITMO_FORMAS[opcion];
+  if (!forma || !horario) return null;
+  var inicio = horario.inicio,salida = horario.salida,comeA = horario.comida;
+  var comidaDur = horario.comidaDur || 60;
+  var ahora = horario.ahora != null ? horario.ahora : inicio;
+  var desde = Math.max(inicio, ahora);
+  var P = pozos || {};
+  cambios = cambios || {};
+  var meta = metaAgua || 8;
+
+  function redondo5(x) {return Math.round(x / 5) * 5;}
+
+  /* Hasta servir `foco` minutos o llegar a `fin`. Solo tramos: los platos se
+     sirven después. */
+  function componer(fin) {
+    var items = [],t = desde,hecho = 0,enMitad = 0,n = 0;
+    var foco = forma.foco;
+    var finTrabajo = fin - PAUSA; /* el cierre ocupa un hueco */
+    var falta = desde < comeA && comeA < finTrabajo; /* ¿queda comida delante? */
+    var cola = Math.min(COLA, forma.bloque - 5);
+    /* Comer «por delante» solo manda si aún queda foco que servir DESPUÉS: si
+       no, el día acaba aquí (en la maqueta, «Una hora» esperaba 245 min). */
+    function comerAntes() {return falta && foco - hecho >= MINIMO && finTrabajo - comeA - comidaDur >= MINIMO;}
+    function comer() {
+      if (t < comeA) items.push({ tipo: 'libre', desde: t, dur: comeA - t });
+      t = comeA;
+      items.push({ tipo: 'comida', desde: t, dur: comidaDur });
+      t += comidaDur;falta = false;enMitad = 0;
+    }
+    for (;;) {
+      var p = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
+      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0));
+      if (rem < MINIMO) {
+        if (comerAntes()) {comer();continue;}
+        break;
+      }
+      var dur = forma.bloque;
+      if (rem <= forma.bloque) dur = rem;else
+      if (rem - forma.bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
+      if (falta && t + dur > comeA) {
+        if (comeA - t < MINIMO) {comer();continue;}
+        dur = comeA - t;
+      }
+      n++;
+      items.push({ tipo: 'foco', desde: t, dur: dur, n: n });
+      t += dur;hecho += dur;
+      if (falta && t >= comeA) {comer();continue;}
+      var queda = Math.min(foco - hecho, finTrabajo - t - p - (falta ? comidaDur : 0));
+      if (queda < MINIMO && !comerAntes()) break;
+      if (falta && t + p > comeA) {comer();continue;}
+      enMitad++;
+      items.push({ tipo: 'pausa', larga: p === LARGA, n: enMitad, desde: t, dur: p });
+      t += p;
+    }
+    items.push({ tipo: 'cierre', desde: t, dur: PAUSA });
+    return { items: items, hasta: t + PAUSA, foco: hecho };
+  }
+
+  /* Pasada la salida, las opciones cortas no se topan con ella. La jornada sí:
+     fuera de tu horario no hay jornada que servir. */
+  var fueraDeHora = desde >= salida - PAUSA - MINIMO;
+  var fin = forma.foco !== Infinity && fueraDeHora ? 24 * 60 : salida;
+  var dia = componer(Math.min(fin, 24 * 60));
+
+  /* Los platos, en orden, sin repetir en el día. */
+  var usados = {};
+  function toma(modulo, clave) {
+    var pozo = P[modulo] || [];
+    if (!pozo.length) return null;
+    var libres = pozo.filter(function (r) {return !usados[r.id];});
+    if (!libres.length) libres = pozo;
+    var r = libres[(cambios[clave] || 0) % libres.length];
+    usados[r.id] = true;
+    return { modulo: modulo, id: r.id, name: r.name, min: r.min, clave: clave, rutina: r };
+  }
+  var i = 0;
+  dia.items.forEach(function (it) {
+    if (it.tipo === 'pausa') {
+      var clave = 'p' + ++i;
+      var platos = it.larga ? [toma('respira', clave + 'a'), toma('estira', clave + 'b')] :
+      [toma(it.n % 3 === 2 ? 'mueve' : 'estira', clave)];
+      it.platos = platos.filter(Boolean);
+      it.motivo = it.larga ? 'larga' : it.platos[0] ? it.platos[0].modulo : 'estira';
+    } else if (it.tipo === 'cierre') {
+      it.platos = [toma('cierre', 'cierre')].filter(Boolean);
+      it.motivo = 'cierre';
+    }
+  });
+
+  var pausas = dia.items.filter(function (it) {return it.tipo === 'pausa';});
+  var comidas = dia.items.filter(function (it) {return it.tipo === 'comida';});
+  comidas.forEach(function (it) {it.agua = true;});
+  dia.items[dia.items.length - 1].agua = true;
+  var quedan = Math.max(0, Math.min(pausas.length, meta - comidas.length - 1));
+  for (var k = 0; k < quedan; k++) pausas[Math.floor((k + 0.5) * pausas.length / quedan)].agua = true;
+
+  var focos = dia.items.filter(function (it) {return it.tipo === 'foco';});
+  focos.forEach(function (it) {it.de = focos.length;});
+  return {
+    opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
+    salida: salida, comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
+    focos: focos, pausas: pausas.length, focoMin: dia.foco,
+    vasos: dia.items.filter(function (it) {return it.agua;}).length
+  };
+}
+
+function ritmoHora(min) {
+  var h = Math.floor(min / 60) % 24,m = Math.round(min % 60);
+  return h + ':' + (m < 10 ? '0' : '') + m;
+}
+
+/* «1 h 30 min», «45 min», «2 h». Igual en los dos idiomas. */
+function ritmoDuracion(min, corta) {
+  var h = Math.floor(min / 60),r = min % 60;
+  var txt = (h ? h + ' h' : '') + (h && r ? ' ' : '') + (r ? r + (corta && h ? '' : ' min') : '');
+  return txt || '0 min';
+}
+
+Object.assign(window, { RITMO_OPCIONES, RITMO_FORMAS, ritmoComponer, ritmoHora, ritmoDuracion });
+;Object.assign(window, { RITMO_OPCIONES, RITMO_FORMAS, ritmoComponer, ritmoHora, ritmoDuracion });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · A tu ritmo · ESTADO y consultas (s192)
+   =============================================
+   Lo que se guarda (en `pace.state.v2`, clave `ritmo`):
+
+     horario  { inicio, comida, comidaDur, salida } en minutos, o null mientras
+              la persona no lo haya tocado (entonces se propone uno por región).
+     libre    'YYYY-MM-DD' = «hoy voy por libre» · true = la carta SIEMPRE, sin
+              fecha. `true` no tiene botón todavía: es el hueco de un ajuste
+              futuro, y hoy lo usa la suite para las pruebas que no son de este
+              módulo (tests/helpers.js), porque su reloj va falseado y una fecha
+              no casaría.
+     dia      { fecha, opcion, desde, cicloBase, cambios } — el menú elegido HOY.
+              Con otra fecha no existe (se lee como null).
+
+   EL PROGRESO NO SE GUARDA APARTE: sale de `state.cycle`, que ya cuenta los
+   bloques de foco de HOY (completePomodoro lo sube y el relevo de día lo pone a
+   cero). `cicloBase` es su valor al elegir, así que bloques hechos = cycle −
+   base. Un contador propio habría sido un segundo número del mismo hecho.
+
+   Y NO SE RECOLOCA A MITAD DEL DÍA (todavía): las horas son las del plan. Es lo
+   primero de la lista «luego vamos ajustando». */
+
+var RITMO_TIMER_KEY = 'pace.timer.v1'; /* la de FocusTimer.support: el bloque que corre */
+
+/* La hora de comer propuesta por REGIÓN del navegador. Orientativa: la persona
+   la confirma en la misma frase. Lo pidió el usuario en s192 («en cada país se
+   come a una hora distinta»). */
+var RITMO_COMIDA_REGION = {
+  'es-ES': 840, 'es-MX': 840, 'es-AR': 780, 'es-CO': 750, 'es-CL': 810, 'es': 840,
+  'en-US': 720, 'en-GB': 750, 'en': 750, 'fr': 750, 'de': 720, 'it': 780, 'pt-BR': 720, 'pt': 780
+};
+
+function ritmoHorarioInicial() {
+  var idioma = 'es-ES';
+  try {idioma = navigator.language || idioma;} catch (e) {}
+  var comida = RITMO_COMIDA_REGION[idioma] || RITMO_COMIDA_REGION[idioma.split('-')[0]] || 780;
+  return { inicio: 540, comida: comida, comidaDur: 60, salida: 1020 };
+}
+
+function ritmoHoy() {
+  return typeof todayISO === 'function' ? todayISO() : '';
+}
+
+/* La hora de ahora en minutos, a la baja de 5 en 5. */
+function ritmoAhora() {
+  var d = new Date();
+  return Math.floor((d.getHours() * 60 + d.getMinutes()) / 5) * 5;
+}
+
+/* El estado de A tu ritmo, normalizado: nunca devuelve huecos. */
+function ritmoDe(s) {
+  var r = s && s.ritmo || {};
+  var hoy = ritmoHoy();
+  return {
+    horario: Object.assign(ritmoHorarioInicial(), r.horario || {}),
+    libre: r.libre === true || !!hoy && r.libre === hoy,
+    dia: r.dia && r.dia.fecha === hoy ? r.dia : null
+  };
+}
+
+/* LOS POZOS salen del CATÁLOGO VIVO: lo gratuito (o lo que tengas abierto) que
+   cabe junto a la mesa — sin suelo, sin material obligatorio, sin aviso de
+   seguridad ni retención. La maqueta los tenía escritos a mano (6 · 4 · 12).
+   Rotan por día para que cada jornada empiece por otra rutina, y respetan el
+   VETO de la pausa (s189) con su amnistía: si el veto vaciara un pozo, se ignora. */
+function ritmoPozos(s, iso) {
+  var lista = function (cat, grupos) {
+    var out = [];
+    Object.keys(cat || {}).forEach(function (g) {
+      if (grupos && grupos.indexOf(g) === -1) return;
+      ((cat[g] || {}).items || []).forEach(function (r) {if (r) out.push(r);});
+    });
+    return out;
+  };
+  var cabe = function (r) {
+    if (!r || r.safety || r.requiresFloor) return false;
+    if ((r.equipment || []).some(function (e) {return !/Optional$/.test(e);})) return false;
+    if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
+    return !window.canAccessRoutine || window.canAccessRoutine(r.id);
+  };
+  var vetadas = typeof breakVetadas === 'function' ? breakVetadas((s || {}).routineFeedback) : {};
+  var dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(iso) : 0;
+  var prepara = function (rutinas) {
+    var pozo = rutinas.filter(cabe);
+    var sinVeto = pozo.filter(function (r) {return !vetadas[r.id];});
+    if (sinVeto.length) pozo = sinVeto;
+    if (!pozo.length) return pozo;
+    var i = (dia % pozo.length + pozo.length) % pozo.length;
+    return pozo.slice(i).concat(pozo.slice(0, i));
+  };
+  var respira = lista(window.BREATHE_ROUTINES, ['equilibrio', 'balance', 'relajacion']);
+  return {
+    estira: prepara(lista(window.EXTRA_ROUTINES)),
+    mueve: prepara(lista(window.MOVE_ROUTINES)),
+    respira: prepara(respira.filter(function (r) {return r.min >= 4 && r.min <= 10;})),
+    cierre: prepara(respira.filter(function (r) {return r.min <= 3;}))
+  };
+}
+
+/* El día de una opción con el horario guardado. `desde` es la hora a la que se
+   eligió (llegar tarde = empezar ahí). */
+function ritmoMenu(s, opcion, cambios, desde) {
+  var R = ritmoDe(s);
+  var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()) });
+  var agua = (s || {}).water && s.water.goal || 8;
+  return ritmoComponer(opcion, h, ritmoPozos(s, ritmoHoy()), cambios, agua);
+}
+
+/* EL PLAN DE HOY con su progreso, o null (sin menú, o por libre). */
+function ritmoPlan(s) {
+  var R = ritmoDe(s);
+  if (R.libre || !R.dia) return null;
+  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde);
+  if (!m) return null;
+  var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
+  var actual = m.focos[hechos] || null;
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual };
+}
+
+/* Lo que viene detrás de un tramo, saltando el margen libre. */
+function ritmoDetras(m, tramo) {
+  var i = m.items.indexOf(tramo);
+  while (i >= 0 && ++i < m.items.length) {
+    if (m.items[i].tipo !== 'libre') return m.items[i];
+  }
+  return null;
+}
+
+/* --- lo que consultan los demás ------------------------------------------ */
+
+/* El aro (FocusTimer): «Bloque 2 de 8» y su botón. null = el aro de siempre. */
+function ritmoAro(s, t, tn) {
+  var p = ritmoPlan(s);
+  if (!p || !p.actual) return null;
+  var k = p.hechos + 1;
+  return {
+    label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
+    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k })
+  };
+}
+
+/* La pausa (BreakMenu): lo que el menú sirve DETRÁS del bloque que acaba de
+   terminar. Mismo contrato que `breakPropuesta`; `modulo` usa las claves del
+   menú ('extra' es Estira y 'move' es Mueve, los ids cruzados de siempre). */
+var RITMO_A_MENU = { estira: 'extra', mueve: 'move', respira: 'breathe', cierre: 'breathe' };
+function ritmoPropuesta(s) {
+  var p = ritmoPlan(s);
+  if (!p || p.hechos < 1) return null;
+  var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
+  if (!it) return null;
+  if (it.tipo === 'comida') return { modulo: 'water', porque: 'ritmo.comida', rutina: null, datos: {} };
+  var plato = it.platos && it.platos[0];
+  if (!plato) return null;
+  return { modulo: RITMO_A_MENU[plato.modulo], porque: 'ritmo.' + it.motivo, rutina: plato.rutina, datos: {} };
+}
+
+/* La barra lateral: la siguiente parada con plato (la comida no tiene rutina
+   que abrir, así que se salta). */
+function ritmoSiguiente(s) {
+  var p = ritmoPlan(s);
+  if (!p || !p.actual) return null;
+  var it = p.actual;
+  while (it = ritmoDetras(p.m, it)) {
+    if (it.platos && it.platos[0]) {
+      var plato = it.platos[0];
+      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur };
+    }
+  }
+  return null;
+}
+
+/* ¿Hay un bloque de foco corriendo? Lo dice la clave que FocusTimer escribe
+   SOLO mientras corre. Cambiar `focusMinutes` con un bloque en marcha lo
+   reiniciaría, así que con él vivo no se toca nada. */
+function ritmoFocoCorriendo() {
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    return !!(v && v.endsAt && v.endsAt > Date.now());
+  } catch (e) {return false;}
+}
+
+/* El aro tiene que medir lo que mide el bloque que toca. */
+function ritmoSincronizar() {
+  var s = getState();
+  if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
+  var p = ritmoPlan(s);
+  if (p && p.actual && s.focusMinutes !== p.actual.dur) setState({ focusMinutes: p.actual.dur });
+}
+
+/* --- acciones -------------------------------------------------------------- */
+function ritmoGuardar(cambio) {
+  setState(function (prev) {
+    var r = Object.assign({ horario: null, libre: null, dia: null }, prev.ritmo || {});
+    return Object.assign({}, prev, { ritmo: Object.assign(r, cambio(r)) });
+  });
+}
+
+function ritmoElegir(opcion) {
+  var s = getState();
+  var R = ritmoDe(s);
+  var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
+    cicloBase: Number(s.cycle) || 0, cambios: {} };
+  ritmoGuardar(function () {return { libre: null, dia: dia };});
+  ritmoSincronizar();
+}
+
+function ritmoPreguntar() {ritmoGuardar(function () {return { dia: null };});}
+function ritmoPorLibre() {ritmoGuardar(function () {return { libre: ritmoHoy(), dia: null };});}
+function ritmoVolver() {ritmoGuardar(function () {return { libre: null };});}
+
+function ritmoOtra(claves) {
+  ritmoGuardar(function (r) {
+    if (!r.dia) return {};
+    var cambios = Object.assign({}, r.dia.cambios || {});
+    (claves || []).forEach(function (k) {cambios[k] = (cambios[k] || 0) + 1;});
+    return { dia: Object.assign({}, r.dia, { cambios: cambios }) };
+  });
+}
+
+/* Cambiar una hora recompone el día: las pausas cambiadas ya no están donde
+   estaban, así que sus cambios se olvidan. */
+function ritmoHorario(campo, valor) {
+  var R = ritmoDe(getState());
+  var horario = Object.assign({}, R.horario);
+  horario[campo] = Number(valor);
+  ritmoGuardar(function (r) {
+    return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
+  });
+  ritmoSincronizar();
+}
+
+Object.assign(window, {
+  ritmoHorarioInicial, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras,
+  ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
+  ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario
+});
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, ritmoHoy, ritmoAhora, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
@@ -14484,6 +15031,13 @@ function selectSidebarPrimaryAction(state, ctx) {
       stepIndex: typeof cur.stepIndex === 'number' ? cur.stepIndex : 0
     };
   }
+  /* s192 · «A TU RITMO»: con un menú servido hoy, la tarjeta anuncia la SIGUIENTE
+     PAUSA. Va detrás de lo que ya está en curso (reanudar, Camino) y delante de
+     repetir y de la sugerencia: el plan del día pesa más que la última sesión.
+     Es un 'suggest' con su rutina, así que se abre por la misma puerta. */
+  if (c.ritmo && c.ritmo.targetId) {
+    return { kind: 'suggest', targetId: c.ritmo.targetId, ritmo: c.ritmo };
+  }
   const last = selectSidebarLastSession(c.events);
   if (last && last.routineId) {
     return {
@@ -14805,6 +15359,18 @@ function sidebarActionView(accion, t, tn, lang) {
     const v = t(accion.targetId + '.name');
     if (v !== accion.targetId + '.name') titulo = v;
   }
+  if (accion.kind === 'suggest' && accion.ritmo) {
+    /* s192 · la siguiente pausa de «A tu ritmo»: la hora en la cejilla y el
+       módulo abajo. «Siguiente pausa» y no el nombre, que ya es de Stats. */
+    const rt = accion.ritmo;
+    return {
+      kind: 'suggest',
+      eyebrow: tn('ritmo.sidebar', { h: ritmoHora(rt.hora) }),
+      color: 'var(--ink-3)',
+      titulo: titulo,
+      meta: rt.larga ? tn('ritmo.larga', { n: rt.dur }) : rt.min + ' min · ' + ritmoModulo(rt.modulo, t)
+    };
+  }
   if (accion.kind === 'suggest') {
     return {
       kind: 'suggest',
@@ -15090,8 +15656,10 @@ function Sidebar() {
      su propia clave, y la sidebar se re-renderiza al volver a la home, que es
      cuando puede haber cambiado. */
   const reanudable = window.leerRespiraGuardada && window.leerRespiraGuardada() || null;
+  /* s192 · con «A tu ritmo», la siguiente pausa del día (state-ritmo.jsx). */
+  const ritmo = typeof ritmoSiguiente === 'function' ? ritmoSiguiente(state) : null;
   const accion = selectSidebarPrimaryAction(state,
-  { events: eventos, sugerencia: sugerencia, reanudable: reanudable });
+  { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive
@@ -17528,9 +18096,8 @@ Object.assign(window, { LibraryShell });
 
 const { useEffect: useEffectFT, useRef: useRefFT } = React;
 
-/* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y
-   `curvaCaida` salieron al trocear este archivo; su porque medido (la meseta
-   de 45-55 % y el enfriamiento sin repunte, s159) viaja con ellas. */
+/* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y `curvaCaida` salieron al
+   trocear este archivo; su porque medido (meseta 45-55 %, enfriamiento sin repunte, s159) va con ellas. */
 
 function FocusTimer(_ref) {let { onFinish } = _ref;
   const [state, set] = usePace();
@@ -17635,7 +18202,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
      el temporizador como el flujo MANUAL, distinto del Camino guiado, sin
      ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
      vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
-  const modeLabel = state.focusMode === 'foco' ? t('focus.manual.label') :
+  const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null; // s192 «A tu ritmo»: «Bloque 2 de 8» (state-ritmo.jsx)
+  const modeLabel = aro ? aro.label : state.focusMode === 'foco' ? t('focus.manual.label') :
   state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
@@ -17683,14 +18251,14 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
      foco (lo vio el usuario en la web). Una sola constante para los dos sitios
      donde se arranca -- idle y completed -- porque separarlas fue justo como
      nacio el desajuste. */
-  const startLabel = isFocoMode ? t('focus.start') : t('focus.startPause');
+  const startLabel = aro ? aro.empezar : isFocoMode ? t('focus.start') : t('focus.startPause');
 
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
     ctaAction = toggle;
   } else if (isCompleted) {
-    ctaLabel = isFocoMode ? t('focus.startAnother') : startLabel;
+    ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
@@ -17711,7 +18279,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
   const cycleDotsEl = /*#__PURE__*/
-  React.createElement("div", { style: focusStyles.cycleDots },
+  React.createElement("div", { style: aro ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots },
   [0, 1, 2, 3].map((i) => /*#__PURE__*/
   React.createElement("span", { key: i, style: {
       width: 4, height: 4, borderRadius: '50%',
@@ -23382,6 +23950,12 @@ function breakPropuesta(state, ctx) {
   const vetadas = breakVetadas(s.routineFeedback);
   const elige = (cat) => breakElige(cat, iso, { vetadas: vetadas, salto: bloqueDeHoy - 1 });
 
+  /* 0 · s192 · CON «A TU RITMO» MANDA EL MENÚ DEL DÍA: lo que sirve detrás del
+     bloque que acaba de terminar (state-ritmo.jsx), con el mismo contrato que esta
+     regla. Sin menú, o por libre, todo sigue como abajo. */
+  const delDia = typeof ritmoPropuesta === 'function' ? ritmoPropuesta(s) : null;
+  if (delDia) return delDia;
+
   const con = (modulo, porque, rutina, extra) => ({
     modulo: modulo, porque: porque, rutina: rutina || null,
     datos: Object.assign({}, extra || {})
@@ -26895,7 +27469,9 @@ function PathMiniCard(_ref) {let { pathObj, label, doneToday, onStart } = _ref;
 
 }
 
-function SuggestedPathCard() {
+/* `vuelta` (s192): el enlace de «A tu ritmo» cuando hoy vas por libre. Va a la
+   izquierda de «Ver caminos», en la misma fila, para no añadir altura a la home. */
+function SuggestedPathCard() {let { vuelta } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   const [state] = usePace();
   const { t } = useT();
 
@@ -26961,7 +27537,8 @@ function SuggestedPathCard() {
 
 
 
-    React.createElement("div", { style: { textAlign: 'right', marginTop: 6 } }, /*#__PURE__*/
+    React.createElement("div", { style: { textAlign: 'right', marginTop: 6, display: vuelta ? 'flex' : undefined, justifyContent: 'space-between', alignItems: 'center', gap: 12 } },
+    vuelta || null, /*#__PURE__*/
     React.createElement("button", {
       onClick: handleOpenLibrary,
       style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-3)', fontFamily: 'var(--font-display)', fontStyle: 'italic', padding: '2px 0', textDecoration: 'underline', textUnderlineOffset: 3 } },
@@ -29964,6 +30541,819 @@ Object.assign(window, { Onboarding });
 ;Object.assign(window, { Onboarding });
 })();
 </script>
+  <!-- «A tu ritmo» (s192): el panel del día que ocupa el sitio de Actividades
+       y del Camino sugerido. La hoja primero; RitmoHome, que los compone, al final. -->
+  <script>
+;(function () {
+/* PACE · A tu ritmo · la hoja (s192)
+   ==================================
+   Inyectada una sola vez, patrón de `library.css.jsx`: IIFE idempotente con su
+   guard de id. En CSS y no en línea porque el panel existe DOS VECES —escritorio
+   y móvil— y es una media query la que elige (768/769, el mismo corte que
+   `_responsive.pieles.js`).
+
+   Calcado de la maqueta de la ronda 4 (docs/proposals/a-tu-ritmo-r4.html), que el
+   usuario aprobó mirándola. Solo tokens de la app, y el lenguaje de lo que ya
+   existe: la tarjeta del Camino (papel, línea, radio md, sombra suave), los
+   nombres en cursiva display y la versalita para lo que es sistema. Colores por
+   módulo como en Actividades; la comida, en tinta (no es un plato del menú).
+
+   NI UN BACKTICK DENTRO DEL TEMPLATE LITERAL (trampa de s172b). */
+(function () {
+  if (document.getElementById('pace-ritmo-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-ritmo-css';
+  s.textContent = `
+.pace-rt-esc { display: block; }
+.pace-rt-mov { display: none; }
+@media (max-width: 768px) {
+  .pace-rt-esc { display: none; }
+  .pace-rt-mov { display: block; }
+}
+[data-pace-ritmo] :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* EL RÓTULO del corte del aro. Con menú lleva debajo «Hasta las …» y sube lo que
+   mide esa línea (12 + 3 px): así el panel no se mueve y el nombre ocupa el hueco
+   de la fila de ciclo, que el aro oculta sin soltar su sitio (ronda 4). */
+.pace-rt-rotulo { text-align: center; margin-bottom: 10px; }
+.pace-rt-rotulo.pace-rt-con-hasta { margin-top: -15px; }
+.pace-rt-hasta { font-size: 10px; line-height: 12px; margin-top: 3px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+
+.pace-rt-panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--sh-soft); padding: 16px 22px 14px; text-align: left; }
+.pace-rt-titulo { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.15; color: var(--ink); }
+.pace-rt-sub { font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-3); line-height: 1.3; margin-top: 2px; }
+.pace-rt-meta { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.pace-rt-enlace { font-family: var(--font-display); font-style: italic; font-size: 12px; letter-spacing: 0.04em; color: var(--ink-3);
+  text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.pace-rt-enlace:hover { color: var(--ink); }
+.pace-rt-enlace.pace-rt-fuerte { color: var(--focus-cta); }
+.pace-rt-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.pace-rt-der { display: flex; gap: 14px; align-items: center; }
+
+/* LAS OPCIONES */
+.pace-rt-chips { display: flex; gap: 10px; margin-top: 14px; }
+.pace-rt-chip { flex: 1 1 0; min-width: 0; border: 1px solid var(--line) !important; border-radius: var(--r-md);
+  padding: 10px 14px !important; text-align: left; background: var(--paper) !important;
+  transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease); }
+.pace-rt-chip:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.pace-rt-chip:disabled { opacity: 0.5; cursor: default; }
+.pace-rt-chip b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 16px; color: var(--ink); line-height: 1.1; }
+.pace-rt-chip > span { display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
+
+/* EL CONTEXTO (fijo por ahora: el onboarding contextual es la Fase 8) */
+.pace-rt-ctx { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.pace-rt-ctx span { font-size: 10px; letter-spacing: 0.08em; color: var(--ink-2); border: 1px solid var(--line);
+  border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
+
+/* EL HORARIO se edita dentro de la frase: <select> nativo con aspecto de texto
+   subrayado. El padding vertical agranda la zona de toque sin mover la línea. */
+.pace-rt-sel { appearance: none; -webkit-appearance: none; font: inherit; color: var(--ink); cursor: pointer;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%238A8372' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
+  border: 0; border-bottom: 1px dotted var(--line-2); border-radius: 0; padding: 6px 11px 1px 1px; margin: -6px 1px 0;
+  field-sizing: content; }
+.pace-rt-sel:hover { border-bottom-color: var(--ink-3); }
+.pace-rt-sel:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-frase { margin-top: 3px; }
+
+/* GLIFOS: los de Actividades, en el color de su módulo. SUSTITUYEN al punto. */
+.pace-rt-g { display: inline-grid; place-items: center; color: var(--c); line-height: 0; flex-shrink: 0; }
+.pace-rt-g svg { width: 100%; height: 100%; display: block; }
+.pace-rt-gota { width: 11px; height: 11px; margin-left: 4px; vertical-align: -2px; }
+
+/* LA LÍNEA DEL DÍA (escritorio), proporcional al tiempo */
+.pace-rt-linea { position: relative; display: flex; align-items: center; margin: 22px 4px 0; height: 24px; }
+.pace-rt-seg { height: 4px; border-radius: 2px; background: var(--paper-3); position: relative; }
+.pace-rt-seg.pace-rt-ahora { background: var(--focus); }
+.pace-rt-seg.pace-rt-hecho { background: color-mix(in srgb, var(--focus) 35%, var(--paper-3)); }
+.pace-rt-seg.pace-rt-comida { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); height: 2px; }
+.pace-rt-seg.pace-rt-libre { background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 5px); height: 2px; }
+.pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
+.pace-rt-sobre { position: absolute; right: 0; top: -21px; display: flex; align-items: center; gap: 14px; }
+.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
+.pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
+  border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
+  display: flex; align-items: center; justify-content: center; gap: 1px;
+  transition: transform var(--dur-quick) var(--ease), background var(--dur-quick) var(--ease); }
+.pace-rt-nodo .pace-rt-g { width: 16px; height: 16px; }
+.pace-rt-nodo.pace-rt-larga { width: 40px; border-radius: 12px; }
+.pace-rt-nodo.pace-rt-toca { cursor: pointer; }
+.pace-rt-nodo.pace-rt-toca:hover { transform: scale(1.12); background: color-mix(in srgb, var(--c) 12%, var(--paper)); }
+.pace-rt-nodo.pace-rt-pasado { opacity: 0.45; }
+.pace-rt-comida-nodo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px;
+  border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
+  display: grid; place-items: center; }
+.pace-rt-comida-nodo .pace-rt-g { width: 17px; height: 17px; }
+/* Las etiquetas las coloca el JS (hasta tres niveles, de forma voraz) */
+.pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
+  text-align: center; line-height: 1.22; pointer-events: none; }
+.pace-rt-seg .pace-rt-etiq { top: 18px; }
+.pace-rt-etiq.pace-rt-alta::before { content: ''; position: absolute; left: 50%; bottom: 100%; height: var(--rt-sube, 40px); border-left: 1px solid var(--line); }
+.pace-rt-etiq.pace-rt-alta.pace-rt-final::before { left: auto; right: 6px; }
+.pace-rt-etiq.pace-rt-final { left: auto; right: -6px; transform: none; text-align: right; }
+.pace-rt-etiq > span { display: block; }
+.pace-rt-etiq .pace-rt-h { font-size: 10px; letter-spacing: 0.06em; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.pace-rt-etiq .pace-rt-n { font-family: var(--font-display); font-style: italic; font-size: 13px; line-height: 1.12; color: var(--ink); }
+.pace-rt-etiq .pace-rt-m { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 1px; white-space: nowrap; }
+.pace-rt-etiq .pace-rt-gota { width: 10px; height: 10px; margin-left: 3px; }
+.pace-rt-zona { height: 52px; }
+
+/* COMPACTO (móvil) */
+.pace-rt-mini { display: flex; align-items: center; height: 12px; margin: 14px 0 10px; }
+.pace-rt-mini .pace-rt-punto { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--c); background: var(--paper); margin: 0 2px; }
+.pace-rt-mini .pace-rt-punto.pace-rt-larga { width: 14px; border-radius: 4px; }
+.pace-rt-fila { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 8px; padding: 7px 0; border-top: 1px solid var(--paper-3); }
+.pace-rt-fila .pace-rt-meta { font-size: 9px; }
+.pace-rt-que { min-width: 0; }
+.pace-rt-que .pace-rt-n { font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.15; color: var(--ink); }
+.pace-rt-que .pace-rt-m { font-size: 11px; color: var(--ink-3); margin-top: 1px; }
+.pace-rt-fila .pace-rt-g { width: 18px; height: 18px; margin-right: 6px; vertical-align: -3px; }
+.pace-rt-otra { font-size: 10px !important; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3) !important;
+  border: 1px solid var(--line) !important; border-radius: var(--r-pill); padding: 5px 10px !important; min-height: 28px; }
+.pace-rt-otra:hover { color: var(--ink) !important; border-color: var(--line-2) !important; }
+
+/* LA JORNADA ENTERA (dentro del Modal de la app) */
+.pace-rt-lista { margin-top: 14px; text-align: left; }
+.pace-rt-li { display: grid; grid-template-columns: 44px 18px 1fr auto; gap: 0 10px; align-items: start; }
+.pace-rt-li .pace-rt-h { font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; padding-top: 3px; text-align: right; }
+.pace-rt-eje { position: relative; align-self: stretch; }
+.pace-rt-eje::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; border-left: 1px solid var(--line); }
+.pace-rt-eje i { position: absolute; left: -3px; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); display: grid; place-items: center; }
+.pace-rt-eje i.pace-rt-larga { height: 42px; border-radius: 12px; grid-auto-flow: row; align-content: center; gap: 1px; }
+.pace-rt-eje i .pace-rt-g { width: 15px; height: 15px; }
+.pace-rt-li.pace-rt-tramo { min-height: 26px; }
+.pace-rt-li.pace-rt-tramo .pace-rt-txt { font-size: 11px; color: var(--ink-3); padding-top: 3px; }
+.pace-rt-li.pace-rt-tramo .pace-rt-eje::before { border-left: 3px solid var(--paper-3); left: 7px; }
+.pace-rt-li.pace-rt-hueco .pace-rt-eje::before { border-left: 1px dotted var(--line-2); left: 8px; }
+.pace-rt-li.pace-rt-plato { padding-bottom: 10px; }
+.pace-rt-li.pace-rt-pasado { opacity: 0.5; }
+.pace-rt-plato-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }
+.pace-rt-plato-m { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+
+/* El enlace de vuelta desde «por libre», junto a «Ver caminos». En móvil pierde
+   la pregunta y se queda en «Ponle ritmo al día»: entera no cabe junto al otro. */
+.pace-rt-solo-esc { display: inline; }
+@media (max-width: 768px) { .pace-rt-solo-esc { display: none; } }
+
+@media (max-width: 768px) {
+  .pace-rt-panel { padding: 12px 14px 10px; }
+  .pace-rt-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .pace-rt-chip { padding: 9px 12px !important; }
+  .pace-rt-chip b { font-size: 15px; }
+  .pace-rt-pie { margin-top: 8px; }
+  .pace-rt-titulo { font-size: 17px; }
+}
+`;
+  document.head.appendChild(s);
+})();
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · A tu ritmo · piezas compartidas (s192)
+   =============================================
+   Lo que usan a la vez el panel, la línea y la lista: el glifo de cada módulo,
+   el nombre de una rutina en su idioma, la frase con las horas editables y los
+   textos de resumen. */
+
+/* LOS GLIFOS SON LOS DE ACTIVIDADES (AB*, main/ActivityBar.jsx): el menú es su
+   cuarto consumidor, tras la home, la pausa y la barra lateral. La comida lleva
+   el suyo (ABMeal), dibujado con las mismas reglas, y va en tinta. */
+var RITMO_COLOR = {
+  estira: 'var(--extra)', mueve: 'var(--move)', respira: 'var(--breathe)', cierre: 'var(--breathe)',
+  foco: 'var(--focus)', agua: 'var(--hydrate)', comida: 'var(--ink-2)'
+};
+
+function RitmoGlifo(_ref) {let { modulo, className } = _ref;
+  const Dibujo = {
+    estira: window.ABStretch, mueve: window.ABMove, respira: window.ABBreathe, cierre: window.ABBreathe,
+    foco: window.ABFocus, agua: window.ABDrop, comida: window.ABMeal
+  }[modulo];
+  return (/*#__PURE__*/
+    React.createElement("span", { className: 'pace-rt-g' + (className ? ' ' + className : ''), style: { '--c': RITMO_COLOR[modulo] }, "aria-hidden": "true" },
+    Dibujo ? /*#__PURE__*/React.createElement(Dibujo, null) : null
+    ));
+
+}
+
+/* Mismo contrato que RoutineCard: en español manda el `name` del dato; en inglés
+   se busca la clave y se cae al dato si no existe. */
+function ritmoNombre(r, t, lang) {
+  if (!r) return '';
+  if (lang === 'en') {
+    const v = t(r.id + '.name');
+    if (v !== r.id + '.name') return v;
+  }
+  return r.name || r.id;
+}
+
+function ritmoPlatos(it, t, lang, sep) {
+  return (it.platos || []).map((p) => ritmoNombre(p.rutina, t, lang)).join(sep || ' + ');
+}
+
+function ritmoModulo(modulo, t) {
+  return t({ estira: 'activity.stretch.label', mueve: 'activity.move.label',
+    respira: 'activity.breathe.label', cierre: 'activity.breathe.label' }[modulo] || 'activity.stretch.label');
+}
+
+function ritmoResumen(m, tn) {
+  return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen',
+  { f: ritmoDuracion(m.focoMin), p: m.pausas, v: m.vasos });
+}
+
+/* «3 min · Estira · Antídoto a la silla», o la de la pausa larga. */
+function ritmoMetaPlato(it, t, tn) {
+  if (it.larga) return tn('ritmo.larga.lista', { n: it.dur });
+  const p = it.platos[0];
+  return p.min + ' min · ' + ritmoModulo(p.modulo, t) + ' · ' + t('ritmo.motivo.' + it.motivo);
+}
+
+/* La frase con {marcadores}: cada marcador se cambia por su nodo. */
+function RitmoFrase(_ref2) {let { plantilla, huecos } = _ref2;
+  const partes = String(plantilla).split(/\{(\w+)\}/);
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null,
+    partes.map((p, i) => i % 2 ? /*#__PURE__*/
+    React.createElement(React.Fragment, { key: i }, huecos[p] != null ? huecos[p] : '') : /*#__PURE__*/
+    React.createElement(React.Fragment, { key: i }, p))
+    ));
+
+}
+
+/* Una hora editable DENTRO de la frase: un <select> nativo con aspecto de texto.
+   En móvil abre el selector del sistema. */
+var RITMO_RANGOS = { inicio: [360, 780], comida: [660, 960], salida: [720, 1320] };
+function RitmoSelector(_ref3) {let { campo, horario } = _ref3;
+  const { t } = useT();
+  let valores = [];
+  if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];else
+  for (let v = RITMO_RANGOS[campo][0]; v <= RITMO_RANGOS[campo][1]; v += 30) valores.push(v);
+  const actual = horario[campo];
+  if (valores.indexOf(actual) === -1) valores = valores.concat([actual]).sort((a, b) => a - b);
+  const fmt = (v) => campo === 'comidaDur' ? v < 60 ? v + ' min' : ritmoDuracion(v, true) : ritmoHora(v);
+  return (/*#__PURE__*/
+    React.createElement("select", { className: "pace-rt-sel", "data-pace-ritmo-horario": campo, "aria-label": t('ritmo.aria.' + campo),
+      value: actual, onChange: (e) => ritmoHorario(campo, e.target.value) },
+    valores.map((v) => /*#__PURE__*/React.createElement("option", { key: v, value: v }, fmt(v)))
+    ));
+
+}
+
+function ritmoHuecos(horario) {
+  return {
+    inicio: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "inicio", horario: horario }),
+    comida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "comida", horario: horario }),
+    dur: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "comidaDur", horario: horario }),
+    salida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "salida", horario: horario })
+  };
+}
+
+Object.assign(window, {
+  RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
+  RitmoFrase, RitmoSelector, ritmoHuecos
+});
+;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoFrase, RITMO_RANGOS, RitmoSelector, ritmoHuecos });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · A tu ritmo · la LÍNEA DEL DÍA (s192)
+   ===========================================
+   Escritorio: la jornada proporcional al tiempo, con cada parada dibujada como su
+   glifo en un aro fino (la pausa larga lleva los dos, la comida sus cubiertos) y
+   su etiqueta de carta debajo: hora · plato · «3 MIN · ESTIRA» con su vaso.
+   Tocar una parada que aún no ha pasado sirve OTRA rutina del mismo módulo.
+
+   Móvil: la misma línea sin etiquetas, con puntos — a 8 px un dibujo no se lee.
+
+   LAS ETIQUETAS SE COLOCAN MIDIENDO (rondas 1 a 4 de la maqueta): si se pisan, se
+   reparten en hasta TRES niveles de forma VORAZ —cada una va al primero donde no
+   choca— y cada nivel empieza bajo la más alta del anterior. El reparto alterno
+   (par arriba, impar abajo) no miraba la última, que va alineada a la derecha, y
+   con dos paradas a 30 min chocaba. La zona reservada se mide SIEMPRE. */
+
+const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL } = React;
+
+function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang } = _ref;
+  let nombre, meta;
+  if (it.tipo === 'comida') {
+    nombre = t('ritmo.comida');
+    meta = t('ritmo.comida.lejos');
+  } else if (it.larga) {
+    nombre = it.platos.map((p, i) => /*#__PURE__*/
+    React.createElement(React.Fragment, { key: p.id }, i ? /*#__PURE__*/React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
+    );
+    meta = tn('ritmo.larga', { n: it.dur });
+  } else {
+    nombre = ritmoPlatos(it, t, lang);
+    meta = it.platos[0].min + ' min · ' + ritmoModulo(it.platos[0].modulo, t);
+  }
+  /* SPAN y no DIV: la etiqueta de una parada vive dentro de su <button>. */
+  return (/*#__PURE__*/
+    React.createElement("span", { className: 'pace-rt-etiq' + (final ? ' pace-rt-final' : ''), "data-pace-ritmo-etiq": true }, /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-h" }, ritmoHora(it.desde)), /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-n" }, nombre), /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-m" }, meta, it.agua ? /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "agua", className: "pace-rt-gota" }) : null)
+    ));
+
+}
+
+/* Hasta tres niveles, voraz. Devuelve nada: escribe `top` y el hilo. */
+function ritmoColocarEtiquetas(lin, zona) {
+  if (!lin || !zona || !lin.offsetParent) return; /* oculta (piel móvil) */
+  const l = Array.prototype.slice.call(lin.querySelectorAll('[data-pace-ritmo-etiq]'));
+  l.forEach((e) => {e.style.top = '';e.classList.remove('pace-rt-alta');});
+  if (!l.length) return;
+  const r = l.map((e) => e.getBoundingClientRect());
+  const niveles = [[], [], []];
+  l.forEach((e, i) => {
+    const cabe = (n) => niveles[n].every((j) => r[j].right + 6 <= r[i].left || r[i].right + 6 <= r[j].left);
+    niveles[cabe(0) ? 0 : cabe(1) ? 1 : 2].push(i);
+  });
+  const arriba = lin.getBoundingClientRect().top;
+  let y = 30;
+  niveles.forEach((idx, n) => {
+    if (!idx.length) return;
+    idx.forEach((i) => {
+      const padre = l[i].offsetParent ? l[i].offsetParent.getBoundingClientRect().top - arriba : 0;
+      l[i].style.top = y - padre + 'px';
+      if (n) {l[i].classList.add('pace-rt-alta');l[i].style.setProperty('--rt-sube', y - 26 + 'px');}
+    });
+    y += Math.max.apply(null, idx.map((i) => l[i].offsetHeight)) + 6;
+  });
+  const fondo = Math.max.apply(null, l.map((e) => e.getBoundingClientRect().bottom));
+  zona.style.height = Math.ceil(fondo - zona.getBoundingClientRect().top + 2) + 'px';
+}
+
+function RitmoLinea(_ref2) {let { plan, onCambiar } = _ref2;
+  const { t, tn, lang } = useT();
+  const lin = useRefRL(null);
+  const zona = useRefRL(null);
+  const m = plan.m;
+  const iActual = plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
+  const ultimo = m.items.length - 1;
+
+  useLayoutEffectRL(() => {
+    const colocar = () => ritmoColocarEtiquetas(lin.current, zona.current);
+    colocar();
+    if (!window.ResizeObserver || !lin.current) return undefined;
+    const ro = new ResizeObserver(colocar);
+    ro.observe(lin.current);
+    return () => ro.disconnect();
+  });
+
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-linea", ref: lin, "data-pace-ritmo-linea": true }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sobre" }, /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn)), /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", onClick: onCambiar }, t('ritmo.cambiar')), /*#__PURE__*/
+    React.createElement(RitmoLibre, null)
+    ),
+    m.items.map((it, i) => {
+      if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
+        const ahora = i === iActual;
+        const titulo = it.tipo === 'foco' ? tn('ritmo.foco', { n: it.dur }) + ' · ' + ritmoHora(it.desde) :
+        it.tipo === 'libre' ? tn('ritmo.hueco', { n: it.dur }) :
+        t('ritmo.comida') + ' · ' + ritmoDuracion(it.dur);
+        const clase = 'pace-rt-seg pace-rt-' + it.tipo + (ahora ? ' pace-rt-ahora' : i < iActual && it.tipo === 'foco' ? ' pace-rt-hecho' : '');
+        return (/*#__PURE__*/
+          React.createElement("div", { key: i, className: clase, style: { flex: it.dur + ' 1 0' }, title: titulo, "data-pace-ritmo-tramo": it.tipo },
+          ahora ? /*#__PURE__*/React.createElement("span", { className: "pace-rt-ahora-tag" }, t('ritmo.ahora')) : null,
+          it.tipo === 'comida' ? /*#__PURE__*/
+          React.createElement(React.Fragment, null, /*#__PURE__*/
+          React.createElement("span", { className: "pace-rt-comida-nodo" }, /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "comida" })), /*#__PURE__*/
+          React.createElement(RitmoEtiqueta, { it: it, t: t, tn: tn, lang: lang })
+          ) :
+          null
+          ));
+
+      }
+      if (!it.platos || !it.platos.length) return null;
+      const pasado = i < iActual;
+      const nombres = ritmoPlatos(it, t, lang);
+      return (/*#__PURE__*/
+        React.createElement("button", { key: i, type: "button", "data-pace-ritmo-parada": it.platos.map((p) => p.clave).join(','),
+          className: 'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca'),
+          style: { '--c': RITMO_COLOR[it.platos[0].modulo] },
+          title: pasado ? nombres : nombres + ' · ' + t('ritmo.toca'),
+          "aria-label": ritmoHora(it.desde) + ' · ' + nombres,
+          disabled: pasado,
+          onClick: () => ritmoOtra(it.platos.map((p) => p.clave)) },
+        it.platos.map((p) => /*#__PURE__*/React.createElement(RitmoGlifo, { key: p.id, modulo: p.modulo })), /*#__PURE__*/
+        React.createElement(RitmoEtiqueta, { it: it, final: i === ultimo, t: t, tn: tn, lang: lang })
+        ));
+
+    })
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-zona", ref: zona })
+    ));
+
+}
+
+/* Móvil: la misma línea, con puntos y sin etiquetas. */
+function RitmoMini(_ref3) {let { plan } = _ref3;
+  const m = plan.m;
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-mini", "aria-hidden": "true" },
+    m.items.map((it, i) => {
+      if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
+        const ahora = it === plan.actual;
+        return /*#__PURE__*/React.createElement("div", { key: i, className: 'pace-rt-seg pace-rt-' + it.tipo + (ahora ? ' pace-rt-ahora' : ''), style: { flex: it.dur + ' 1 0' } });
+      }
+      if (!it.platos || !it.platos.length) return null;
+      return /*#__PURE__*/React.createElement("span", { key: i, className: 'pace-rt-punto' + (it.larga ? ' pace-rt-larga' : ''), style: { '--c': RITMO_COLOR[it.platos[0].modulo] } });
+    })
+    ));
+
+}
+
+Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtiquetas });
+;Object.assign(window, { RitmoEtiqueta, ritmoColocarEtiquetas, RitmoLinea, RitmoMini });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · A tu ritmo · el PANEL (s192)
+   ===================================
+   Ocupa el sitio de Actividades y del Camino sugerido (variante A, «el menú
+   manda», elegida por el usuario en la ronda 1). Tres estados:
+
+     · LA PREGUNTA — «¿Cuánto trabajas hoy?», la frase del horario con sus cuatro
+       horas editables y las cuatro opciones, cada una con su hora de fin.
+     · EL MENÚ SERVIDO — escritorio: título + frase + contexto, y la línea del
+       día. Móvil: «Ahora» y «Luego» con sus glifos, la línea con puntos y la
+       jornada entera en una hoja.
+     · LA JORNADA CERRADA — cuando ya no queda bloque.
+
+   Cada estado existe dos veces (escritorio y móvil) y la hoja de estilos elige.
+   «Hoy voy por libre» es la única salida: era lo mismo que «Ver la carta» y lo
+   explica mejor (ronda 3). */
+
+var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
+
+function RitmoContexto() {
+  const { t } = useT();
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-ctx" }, /*#__PURE__*/
+    React.createElement("span", null, t('ritmo.ctx.mesa')), /*#__PURE__*/
+    React.createElement("span", null, t('ritmo.ctx.material'))
+    ));
+
+}
+
+function RitmoLibre() {
+  const { t } = useT();
+  return /*#__PURE__*/React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-libre": true, onClick: ritmoPorLibre }, t('ritmo.libre'));
+}
+
+function RitmoChips(_ref) {let { state } = _ref;
+  const { t, tn } = useT();
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-chips" },
+    RITMO_OPCIONES_UI.map((op) => {
+      const m = ritmoMenu(state, op, null, null);
+      const vacia = !m || !m.focos.length;
+      return (/*#__PURE__*/
+        React.createElement("button", { key: op, type: "button", className: "pace-rt-chip", "data-pace-ritmo-opcion": op,
+          disabled: vacia, onClick: () => ritmoElegir(op) }, /*#__PURE__*/
+        React.createElement("b", null, t('ritmo.opcion.' + op)), /*#__PURE__*/
+        React.createElement("span", null, vacia ? t('ritmo.fuera') : tn('ritmo.hasta', { h: ritmoHora(m.hasta) }))
+        ));
+
+    })
+    ));
+
+}
+
+function RitmoPregunta(_ref2) {let { state } = _ref2;
+  const { t } = useT();
+  const R = ritmoDe(state);
+  const frase = /*#__PURE__*/React.createElement(RitmoFrase, { plantilla: t('ritmo.frase'), huecos: ritmoHuecos(R.horario) });
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-panel pace-rt-esc", "data-pace-ritmo-estado": "pregunta" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-cab" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.pregunta')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub" }, t('ritmo.sub')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase)
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-der" }, /*#__PURE__*/React.createElement(RitmoLibre, null))
+    ), /*#__PURE__*/
+    React.createElement(RitmoChips, { state: state })
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "pregunta" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.pregunta')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase), /*#__PURE__*/
+    React.createElement(RitmoChips, { state: state }), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-pie" }, /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement(RitmoLibre, null))
+    )
+    ));
+
+}
+
+/* La frase del menú servido: de [inicio] a [salida] · comida a las [hora] durante
+   [dur]. Solo la jornada entera edita la salida; las otras opciones dicen a qué
+   hora acaban. Llegando tarde añade «hoy de 10:30 a 17:00» (nunca «tarde»). */
+function RitmoFraseMenu(_ref3) {let { plan, horario, plantilla, capital } = _ref3;
+  const { t, tn } = useT();
+  const m = plan.m;
+  const huecos = ritmoHuecos(horario);
+  if (m.opcion !== 'jornada') huecos.salida = ritmoHora(m.hasta);
+  /* `capital`: cuando la frase abre línea (la hoja) y no va tras «Jornada entera ·». */
+  let texto = t(plantilla);
+  if (capital) texto = texto.charAt(0).toUpperCase() + texto.slice(1);
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(RitmoFrase, { plantilla: texto, huecos: huecos }),
+    m.tarde ? ' · ' + tn('ritmo.hoy', { desde: ritmoHora(m.desde), hasta: ritmoHora(m.hasta) }) : null
+    ));
+
+}
+
+function RitmoEscritorio(_ref4) {let { state, plan } = _ref4;
+  const { t } = useT();
+  const R = ritmoDe(state);
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-panel pace-rt-esc", "data-pace-ritmo-estado": "menu" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-cab", style: { alignItems: 'center' } }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-titulo" },
+    t('ritmo.opcion.' + plan.m.opcion), ' ', /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-sub", style: { display: 'inline' } },
+    '· ', /*#__PURE__*/React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu" })
+    )
+    ), /*#__PURE__*/
+    React.createElement(RitmoContexto, null)
+    ), /*#__PURE__*/
+    React.createElement(RitmoLinea, { plan: plan, onCambiar: ritmoPreguntar })
+    ));
+
+}
+
+function RitmoFila(_ref5) {let { rotulo, modulo, nombre, meta, claves } = _ref5;
+  const { t } = useT();
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-fila" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-meta" }, rotulo), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-que" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-n" }, /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: modulo }), nombre), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-m" }, meta)
+    ),
+    claves ? /*#__PURE__*/
+    React.createElement("button", { type: "button", className: "pace-rt-otra", "data-pace-ritmo-otra": true, onClick: () => ritmoOtra(claves) }, t('ritmo.otra')) : /*#__PURE__*/
+    React.createElement("span", null)
+    ));
+
+}
+
+function RitmoMovil(_ref6) {let { state, plan, onVer } = _ref6;
+  const { t, tn, lang } = useT();
+  const R = ritmoDe(state);
+  const b = plan.actual;
+  const luego = ritmoDetras(plan.m, b);
+  const descriptor = typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
+  let filaLuego = null;
+  if (luego && luego.tipo === 'comida') {
+    filaLuego = /*#__PURE__*/React.createElement(RitmoFila, { rotulo: /*#__PURE__*/React.createElement(React.Fragment, null, t('ritmo.luego'), /*#__PURE__*/React.createElement("br", null), ritmoHora(luego.desde)),
+      modulo: "comida", nombre: t('ritmo.comida'), meta: tn('ritmo.comida.lista', { d: ritmoDuracion(luego.dur) }) });
+  } else if (luego && luego.platos && luego.platos.length) {
+    filaLuego = /*#__PURE__*/React.createElement(RitmoFila, { rotulo: /*#__PURE__*/React.createElement(React.Fragment, null, t('ritmo.luego'), /*#__PURE__*/React.createElement("br", null), ritmoHora(luego.desde)),
+      modulo: luego.platos[0].modulo, nombre: ritmoPlatos(luego, t, lang),
+      meta: /*#__PURE__*/React.createElement(React.Fragment, null, ritmoMetaPlato(luego, t, tn), luego.agua ? /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "agua", className: "pace-rt-gota" }) : null),
+      claves: luego.platos.map((p) => p.clave) });
+  }
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-cab" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.opcion.' + plan.m.opcion)), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, /*#__PURE__*/React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.movil" }))
+    ), /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar'))
+    ), /*#__PURE__*/
+    React.createElement(RitmoMini, { plan: plan }), /*#__PURE__*/
+    React.createElement(RitmoFila, { rotulo: /*#__PURE__*/React.createElement(React.Fragment, null, t('ritmo.ahora'), /*#__PURE__*/React.createElement("br", null), ritmoHora(b.desde)),
+      modulo: "foco", nombre: tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total }),
+      meta: b.dur + ' min · ' + descriptor }),
+    filaLuego, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-pie" }, /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-ver": true, onClick: onVer }, t('ritmo.ver')), /*#__PURE__*/
+    React.createElement(RitmoLibre, null)
+    )
+    ));
+
+}
+
+function RitmoHecho(_ref7) {let { plan } = _ref7;
+  const { t, tn } = useT();
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-panel", "data-pace-ritmo-estado": "hecho" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-cab" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.hecho')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub" }, tn('ritmo.hecho.sub', { f: ritmoDuracion(plan.m.focoMin) }))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-der" }, /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')), /*#__PURE__*/
+    React.createElement(RitmoLibre, null)
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, {
+  RitmoContexto, RitmoLibre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
+  RitmoFila, RitmoMovil, RitmoHecho
+});
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoMovil, RitmoHecho });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · A tu ritmo · la JORNADA ENTERA (s192)
+   ============================================
+   La lista del día, de arriba abajo: cada bloque de foco como una línea fina y
+   cada parada con su glifo en el eje, su hora, su plato y «Otra». Va en el Modal
+   de la app —el mismo marco que las bibliotecas y la pausa— y la abre «Ver la
+   jornada entera» desde el panel móvil. Lo ya pasado se atenúa y no se cambia. */
+
+function RitmoLista(_ref) {let { plan } = _ref;
+  const { t, tn, lang } = useT();
+  const m = plan.m;
+  const iActual = plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-lista", "data-pace-ritmo-lista": true },
+    m.items.map((it, i) => {
+      const pasado = i < iActual;
+      const h = /*#__PURE__*/React.createElement("div", { className: "pace-rt-h" }, ritmoHora(it.desde));
+      if (it.tipo === 'foco' || it.tipo === 'libre') {
+        return (/*#__PURE__*/
+          React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-tramo' + (it.tipo === 'libre' ? ' pace-rt-hueco' : '') + (pasado ? ' pace-rt-pasado' : '') },
+          h, /*#__PURE__*/React.createElement("div", { className: "pace-rt-eje" }), /*#__PURE__*/
+          React.createElement("div", { className: "pace-rt-txt" },
+          it.tipo === 'libre' ? tn('ritmo.hueco', { n: it.dur }) : tn('ritmo.foco', { n: it.dur }),
+          i === iActual ? /*#__PURE__*/React.createElement(React.Fragment, null, ' · ', /*#__PURE__*/React.createElement("b", { style: { color: 'var(--focus)', fontWeight: 500 } }, t('ritmo.ahora.min'))) : null
+          ), /*#__PURE__*/
+          React.createElement("span", null)
+          ));
+
+      }
+      const comida = it.tipo === 'comida';
+      if (!comida && !(it.platos && it.platos.length)) return null;
+      const modulo = comida ? 'comida' : it.platos[0].modulo;
+      const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) : ritmoMetaPlato(it, t, tn);
+      return (/*#__PURE__*/
+        React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado ? ' pace-rt-pasado' : ''), "data-pace-ritmo-fila": it.tipo },
+        h, /*#__PURE__*/
+        React.createElement("div", { className: "pace-rt-eje" }, /*#__PURE__*/
+        React.createElement("i", { className: it.larga ? 'pace-rt-larga' : '', style: { '--c': RITMO_COLOR[modulo] } },
+        comida ? /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "comida" }) : it.platos.map((p) => /*#__PURE__*/React.createElement(RitmoGlifo, { key: p.id, modulo: p.modulo }))
+        )
+        ), /*#__PURE__*/
+        React.createElement("div", null, /*#__PURE__*/
+        React.createElement("div", { className: "pace-rt-plato-n" },
+        comida ? t('ritmo.comida') : it.platos.map((p, k) => /*#__PURE__*/
+        React.createElement(React.Fragment, { key: p.id }, k ? /*#__PURE__*/React.createElement("br", null) : null, k ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
+        )
+        ), /*#__PURE__*/
+        React.createElement("div", { className: "pace-rt-plato-m" },
+        meta, it.agua ? /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "agua", className: "pace-rt-gota" }) : null
+        )
+        ),
+        comida || pasado ? /*#__PURE__*/React.createElement("span", null) : /*#__PURE__*/
+        React.createElement("button", { type: "button", className: "pace-rt-otra", "data-pace-ritmo-otra": true,
+          onClick: () => ritmoOtra(it.platos.map((p) => p.clave)) }, t('ritmo.otra'))
+
+        ));
+
+    })
+    ));
+
+}
+
+function RitmoHoja(_ref2) {let { open, onClose, plan, state } = _ref2;
+  const { t, tn } = useT();
+  if (!open || !plan) return null;
+  const R = ritmoDe(state);
+  return (/*#__PURE__*/
+    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('ritmo.nombre'), title: t('ritmo.opcion.' + plan.m.opcion), maxWidth: 600 }, /*#__PURE__*/
+    React.createElement("div", { "data-pace-ritmo": true, style: { textAlign: 'left' } }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, /*#__PURE__*/
+    React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu", capital: true })
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn)), /*#__PURE__*/
+    React.createElement("div", { style: { marginTop: 12 } }, /*#__PURE__*/React.createElement(RitmoContexto, null)), /*#__PURE__*/
+    React.createElement(RitmoLista, { plan: plan }), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-pie", style: { borderTop: '1px solid var(--paper-3)', paddingTop: 14 } }, /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", onClick: () => {onClose();ritmoPreguntar();} }, t('ritmo.cambiar')), /*#__PURE__*/
+    React.createElement(Button, { variant: "primary", onClick: onClose }, t('ritmo.listo'))
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, { RitmoLista, RitmoHoja });
+;Object.assign(window, { RitmoLista, RitmoHoja });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · A tu ritmo · el bloque de la HOME (s192)
+   ===============================================
+   Va donde iban Actividades y el Camino sugerido (main.jsx), y decide:
+
+     · por libre  → Actividades + Camino, como siempre, y junto a «Ver caminos»
+                    el enlace para volver («¿Cuánto trabajas hoy? Ponle ritmo al
+                    día»);
+     · si no      → el panel de A tu ritmo.
+
+   EL PANEL HEREDA EL PAPEL DE HORIZONTE DE ACTIVIDADES: lleva
+   `data-pace-activitybar`, así que el solapamiento con el aro, el recorte del arco
+   y los observadores de `home-geometry.js` le aplican sin tocar su geometría (s156,
+   s166, s184). Su rótulo imita el de Actividades y, con menú, lleva DEBAJO «Hasta
+   las …» y sube lo que mide esa línea (ronda 4): el panel no se mueve y el nombre
+   ocupa el hueco de la fila de ciclo, que el aro oculta sin soltar su sitio.
+
+   LAS KEYS importan: el observador de la geometría vigila los hijos DIRECTOS del
+   stack, y por libre devuelve un fragmento cuyos hijos son exactamente los dos
+   bloques de siempre, con sus keys de siempre. */
+
+const { useState: useStateRH, useEffect: useEffectRH } = React;
+
+function RitmoVuelta() {
+  const { t } = useT();
+  return (/*#__PURE__*/
+    /* EL ENVOLTORIO VA EN inline-flex, y eso es lo que importa: en línea, su caja
+       quedaba 1-2 px más baja que «Ver caminos», con el que comparte fila, y el foco
+       «subía» al tabular de uno al otro (home-a11y.spec.js lo cazó, WCAG 2.4.3).
+       Aislado con mutantes: sin inline-flex es rojo con o sin el estilo del botón.
+       El estilo (11 px, tracking 0,1 em) es solo coherencia visual con su vecino. */
+    React.createElement("span", { "data-pace-ritmo": true, style: { display: 'inline-flex' } }, /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-volver": true, onClick: ritmoVolver,
+      style: { fontSize: 11, padding: '2px 0', letterSpacing: '0.1em', lineHeight: 'normal' } }, /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-solo-esc" }, t('ritmo.pregunta') + ' '), t('ritmo.volver')
+    )
+    ));
+
+}
+
+function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
+  const [state] = usePace();
+  const { t, tn } = useT();
+  const [hoja, setHoja] = useStateRH(false);
+  const R = ritmoDe(state);
+  const plan = R.libre ? null : ritmoPlan(state);
+
+  /* El aro mide lo que mide el bloque que toca: al elegir, al cambiar una hora y
+     cada vez que un bloque termina (sube `cycle`). Con un bloque en marcha no se
+     toca nada (ritmoSincronizar lo comprueba). */
+  const firma = plan && plan.actual ? plan.hechos + ':' + plan.actual.dur : '';
+  useEffectRH(() => {ritmoSincronizar();}, [firma, state.focusMode]);
+  useEffectRH(() => {if (!plan) setHoja(false);}, [!!plan]);
+
+  if (R.libre) {
+    return (/*#__PURE__*/
+      React.createElement(React.Fragment, null, /*#__PURE__*/
+      React.createElement(ActivityBar, { key: "act", onOpenLibrary: onOpenLibrary, onOpenHydrate: onOpenHydrate }), /*#__PURE__*/
+      React.createElement(SuggestedPathCard, { key: "spc", vuelta: /*#__PURE__*/React.createElement(RitmoVuelta, null) })
+      ));
+
+  }
+
+  const conHasta = !!(plan && plan.actual);
+  return (/*#__PURE__*/
+    React.createElement("div", { key: "ritmo", "data-pace-activitybar": true, "data-pace-ritmo": true, style: { padding: '6px 40px 20px', flexShrink: 0 } }, /*#__PURE__*/
+    React.createElement("div", { className: 'pace-rt-rotulo' + (conHasta ? ' pace-rt-con-hasta' : '') }, /*#__PURE__*/
+    React.createElement(Meta, null, t('ritmo.nombre')),
+    conHasta ? /*#__PURE__*/React.createElement("div", { className: "pace-rt-hasta", "data-pace-ritmo-hasta": true }, tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })) : null
+    ), /*#__PURE__*/
+    React.createElement("div", { "data-pace-ritmo-panel": true },
+    !plan ? /*#__PURE__*/React.createElement(RitmoPregunta, { state: state }) :
+    plan.terminado ? /*#__PURE__*/React.createElement(RitmoHecho, { plan: plan }) : /*#__PURE__*/
+
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(RitmoEscritorio, { state: state, plan: plan }), /*#__PURE__*/
+    React.createElement(RitmoMovil, { state: state, plan: plan, onVer: () => setHoja(true) })
+    )
+
+    ),
+
+
+    hoja && plan ? ReactDOM.createPortal(/*#__PURE__*/
+      React.createElement(RitmoHoja, { open: true, onClose: () => setHoja(false), plan: plan, state: state }), document.body) : null
+    ));
+
+}
+
+Object.assign(window, { RitmoHome, RitmoVuelta });
+;Object.assign(window, { RitmoVuelta, RitmoHome });
+})();
+</script>
 
   <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
        _responsive.js inyecta el bloque <style> de reglas @media globales del
@@ -31759,6 +33149,22 @@ function ABDrop() {
 
 }
 
+function ABMeal() {
+  /* Tenedor y cuchillo — la COMIDA de «A tu ritmo» (s192). Nace con las reglas
+     de la familia (28x28, trazo 1,2, remates redondos) y su detalle secundario es
+     el mantel punteado, como el suelo de Estira. Elegido por el usuario en la
+     ronda 3 de la maqueta, frente a una variante con plato. */
+  return (/*#__PURE__*/
+    React.createElement("svg", { width: "26", height: "26", viewBox: "0 0 28 28", fill: "none", stroke: "currentColor", strokeWidth: "1.2", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
+    React.createElement("path", { d: "M8.5 4.5v5M11 4.5v5M13.5 4.5v5" }), /*#__PURE__*/
+    React.createElement("path", { d: "M8.5 9.5c0 2.1 1.1 3.2 2.5 3.2s2.5-1.1 2.5-3.2" }), /*#__PURE__*/
+    React.createElement("path", { d: "M11 12.7v10.8" }), /*#__PURE__*/
+    React.createElement("path", { d: "M19 23.5V4.5c2.5 1.5 3.4 4.8 3.3 8.7 0 .8-.5 1.3-1.3 1.3H19" }), /*#__PURE__*/
+    React.createElement("path", { d: "M5 25.5h18", opacity: "0.35", strokeDasharray: "1.5 2.5" })
+    ));
+
+}
+
 function ABFocus() {
   /* Aro del Pomodoro con la cabeza del recorrido — "Foco".
      NACE EN s180 y no estaba antes por una razon: en la home Foco no es un
@@ -31780,9 +33186,10 @@ function ABFocus() {
 /* s105: los glifos AB* se exponen para que el BreakMenu (menu post-Pomodoro)
    use EXACTAMENTE los mismos iconos que la ActivityBar de la home -- antes
    llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual.
-   s180: la Sidebar es el tercer consumidor, y anade ABFocus. */
-Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus });
-;Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus });
+   s180: la Sidebar es el tercer consumidor, y anade ABFocus.
+   s192: «A tu ritmo» es el cuarto, y anade ABMeal. */
+Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus, ABMeal });
+;Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABMeal, ABFocus });
 })();
 </script>
   <script>
@@ -32179,12 +33586,12 @@ function PaceApp() {
 
 
 
-    React.createElement(ActivityBar, {
-      key: "act",
+
+
+    React.createElement(RitmoHome, {
       onOpenLibrary: (kind) => setOpenLibrary(kind),
       onOpenHydrate: () => setOpenHydrate(true) }
-    ), /*#__PURE__*/
-    React.createElement(SuggestedPathCard, { key: "spc" })
+    )
     )
     )
     ), /*#__PURE__*/
@@ -32498,7 +33905,9 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
        correcto y no una aproximacion. */
 
 
-    var chip = document.querySelector('[data-pace-activitybar-chip]');
+    /* s192: con «A tu ritmo» el horizonte es su panel (lleva data-pace-activitybar)
+       y lo que ocluye el aro es la tarjeta del día, no un chip. */
+    var chip = document.querySelector('[data-pace-activitybar-chip], [data-pace-ritmo-panel]');
     var barra = document.querySelector('[data-pace-activitybar]');
     var banda = chip && barra ?
     Math.max(0, Math.round(chip.getBoundingClientRect().top - barra.getBoundingClientRect().top)) :

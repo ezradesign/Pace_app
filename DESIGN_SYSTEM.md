@@ -763,6 +763,38 @@ cada una con la altura y el contraste calculados por la propia página. La hoja 
 1412 px, 1,9 y 2,2. **El color de módulo entra por la fila** (`data-pace-aj-modulo` y las
 custom properties `--pace-aj-m` / `--pace-aj-ms`), nunca por el control.
 
+## 🌾 «A tu ritmo»: el panel del día (s192 · v0.122.0)
+
+Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas de maqueta
+(`docs/proposals/menu-del-dia-r1` … `a-tu-ritmo-r4`); la hoja vive en `app/ritmo/ritmo.css.jsx`.
+
+- **El lenguaje es el de la tarjeta del Camino**: papel, `--line`, `--r-md`, `--sh-soft`; título
+  en cursiva display (19 px), cejillas y metadatos en versalita de sistema (9–10 px, tracking
+  0,1–0,16 em).
+- **Bajo el aro**: «A TU RITMO» (el rótulo de Actividades) y, con menú, **«HASTA LAS 17:00» debajo**
+  (10 px, tracking 0,18 em, como «Ciclo»). El rótulo sube lo que mide esa línea (12 + 3 px) y la
+  fila de ciclo se oculta con `visibility`: ni el panel ni el aro se mueven.
+- **Glifos solo en las paradas**: los de Actividades (AB*), 16 px dentro de un aro de 24 px con
+  borde al 50 % del color del módulo. **Sustituyen al punto de color, nunca se suman.** La pausa
+  larga es una píldora de 40 px con los dos. La etiqueta sigue diciendo el módulo («3 MIN · ESTIRA»)
+  para quien no reconoce el dibujo, y el vaso es una gota de 10–11 px al final de esa línea.
+- **Colores**: Estira `--extra`, Mueve `--move`, Respira y cierre `--breathe`, agua `--hydrate`,
+  foco `--focus`. **La comida va en `--ink-2`**: no es un plato del menú y no se toca para cambiarla.
+- **`ABMeal`** (tenedor de tres púas en U y cuchillo de filo curvo) sigue las reglas de la familia:
+  lienzo 28×28, trazo 1,2, remates y uniones redondos, `currentColor`, y un detalle secundario a
+  opacidad 0,35 —el mantel punteado, como el suelo de Estira—.
+- **La línea del día es proporcional al tiempo**: tramos de 4 px (`--paper-3`; el actual en
+  `--focus`, los hechos al 35 %), la comida y el margen libre punteados. Las etiquetas se colocan
+  **midiendo** en hasta tres niveles, con un hilo de 1 px (`--line`) hasta su parada.
+- **Las horas se editan dentro de la frase**: un `<select>` nativo con aspecto de texto —la cifra
+  en `--ink`, subrayado punteado `--line-2`, chevron de 7×5 px en `--ink-3`— y un relleno vertical
+  que agranda la zona de toque sin mover la línea. En móvil abre el selector del sistema.
+- **Las opciones** son tarjetas de `--r-md` con el nombre en cursiva 16 px y la hora de fin en
+  versalita; en hover, lavado `--focus-soft` y borde `--focus-cta`. En móvil, rejilla 2×2.
+- **Las dos pieles son dos copias en el DOM** (`.pace-rt-esc` / `.pace-rt-mov`, corte 768/769).
+
+---
+
 ## 🗂️ Dónde vive cada hoja de estilos (s148)
 
 `app/tokens.css` llegó a **613 líneas** y más de un tercio no eran tokens: era el
