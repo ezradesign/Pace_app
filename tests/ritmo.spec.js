@@ -23,6 +23,11 @@
  *  · Cada pieza del panel existe DOS VECES (escritorio y móvil): se toma la
  *    visible (`filter({ visible: true })`).
  *  · El reloj va a las 9:00 de un jueves; `clock.install` ANTES de `goto`.
+ *  · Y esa hora se escribe CON OFFSET: el instante lo calcula Node (huso del
+ *    runner) y lo lee el navegador, que la config fija en Europe/Madrid. Un
+ *    `new Date(2026, 8, 17, 9, 0)` vale 9:00 en mi maquina y 11:00 en el CI
+ *    (runner en UTC), que es como salieron rojas tres pruebas de aqui con la
+ *    suite entera verde en local.
  *  · Un `fastForward` grande no abre la pausa: de minuto en minuto (s187).
  */
 'use strict';
@@ -30,7 +35,7 @@
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
 
-const NUEVE = new Date(2026, 8, 17, 9, 0, 0);
+const NUEVE = new Date('2026-09-17T09:00:00+02:00');   /* 9:00 en Madrid (CEST) */
 const FECHA = '2026-09-17';
 const JORNADA = { fecha: FECHA, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
 
@@ -178,7 +183,7 @@ test('tocar una parada sirve otra rutina del mismo módulo', async ({ page, cont
 });
 
 test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «tarde»', async ({ page, context }) => {
-  await abrir(page, context, {}, {}, new Date(2026, 8, 17, 10, 30, 0));
+  await abrir(page, context, {}, {}, new Date('2026-09-17T10:30:00+02:00'));
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
   await expect(panel).toContainText('hoy de 10:30 a 17:00');
