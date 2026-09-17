@@ -263,8 +263,10 @@
   y el CI se reproduce en local con `TZ=UTC npx playwright test`. **Una hora de pared sembrada
   desde Node no vale lo mismo en las dos maquinas.**
 
-- **[DEUDA DOCUMENTAL VISTA]** `CHANGELOG.md` lleva **23 versiones detalladas** cuando la
-  convencion de `CLAUDE.md` pide dos. No se podo sin preguntar.
+- **[DEUDA DOCUMENTAL SALDADA]** `CHANGELOG.md` llevaba **24 secciones de detalle** donde la
+  convencion pide dos. El usuario mando podar: quedan v0.122.0 y v0.121.0 (**2084 -> 507
+  lineas**). Cada version conserva fila, titular y enlace a su diario, y los 16 punteros
+  «[ver](#...)» que apuntaban al detalle borrado se cambiaron por «—».
 
 - **[TRAMPAS]** `wc -l` cuenta una linea menos que el trinquete en un archivo sin salto final ·
   un heredoc con comillas invertidas dentro de un template no escribe nada · el panel del
