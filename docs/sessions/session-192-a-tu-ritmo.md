@@ -92,6 +92,13 @@ revisión en `scripts/audit/menu-s192*.js`.
   tras cada build.
 - **La semilla de la suite** trae `ritmo.libre: true` (sin fecha), porque varias pruebas falsean
   el reloj y un «hoy» sembrado no casaría con el de la app.
+- **El CI cazó lo que la suite en verde no podía ver**: tres pruebas de `ritmo.spec.js` sembraban
+  el reloj con `new Date(2026, 8, 17, 9, 0)`, que **Node** resuelve en el huso del RUNNER —Madrid
+  en esta máquina, UTC en GitHub—, mientras el navegador va fijado a `Europe/Madrid` por
+  `playwright.config.js`. En el CI el día empezaba dos horas más tarde: «Bloque 1 de 7» donde aquí
+  dice 9. La hora se escribe ahora con offset explícito (`2026-09-17T09:00:00+02:00`) y el fallo se
+  reproduce en local con `TZ=UTC npx playwright test`. **Una hora de pared sembrada desde Node no
+  es la misma hora en las dos máquinas.**
 
 ---
 
