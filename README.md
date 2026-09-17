@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.121.0 · Pre-lanzamiento
+**Estado:** v0.122.0 · Pre-lanzamiento
 **Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
@@ -33,10 +33,11 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 
 ---
 
-## 📊 Estado actual (v0.121.0)
+## 📊 Estado actual (v0.122.0)
 
 | Área | Estado |
 |---|---|
+| A tu ritmo | La home pregunta «¿cuánto trabajas hoy?» y sirve la jornada: bloques de foco y pausas con nombre, según tu horario. La carta sigue a un toque |
 | Módulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
 | Caminos | Sistema completo: biblioteca, runner por pasos, pantalla de cierre, stats y heatmap anual |
 | Contenido de cuerpo | Contrato de pasos v1 (modo, lateralidad, dosis, requisitos) + preview «antes de empezar» |
@@ -44,7 +45,7 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 | i18n | ES/EN completo, catálogos troceados por dominio |
 | PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
 | Premium | Guard central de entitlement listo; la licencia real aún no existe |
-| Código | 97 archivos en `app/`, ninguno por encima de 500 líneas |
+| Código | 142 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
 | Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión |
 
 ---

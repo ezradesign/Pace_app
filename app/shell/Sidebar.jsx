@@ -115,8 +115,10 @@ function Sidebar() {
      su propia clave, y la sidebar se re-renderiza al volver a la home, que es
      cuando puede haber cambiado. */
   const reanudable = (window.leerRespiraGuardada && window.leerRespiraGuardada()) || null;
+  /* s192 · con «A tu ritmo», la siguiente pausa del día (state-ritmo.jsx). */
+  const ritmo = (typeof ritmoSiguiente === 'function') ? ritmoSiguiente(state) : null;
   const accion = selectSidebarPrimaryAction(state,
-    { events: eventos, sugerencia: sugerencia, reanudable: reanudable });
+    { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive

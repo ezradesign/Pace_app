@@ -178,6 +178,13 @@ function selectSidebarPrimaryAction(state, ctx) {
       stepIndex: typeof cur.stepIndex === 'number' ? cur.stepIndex : 0,
     };
   }
+  /* s192 · «A TU RITMO»: con un menú servido hoy, la tarjeta anuncia la SIGUIENTE
+     PAUSA. Va detrás de lo que ya está en curso (reanudar, Camino) y delante de
+     repetir y de la sugerencia: el plan del día pesa más que la última sesión.
+     Es un 'suggest' con su rutina, así que se abre por la misma puerta. */
+  if (c.ritmo && c.ritmo.targetId) {
+    return { kind: 'suggest', targetId: c.ritmo.targetId, ritmo: c.ritmo };
+  }
   const last = selectSidebarLastSession(c.events);
   if (last && last.routineId) {
     return {

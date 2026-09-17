@@ -3,7 +3,7 @@
 > Productivity and wellness web app for people who spend long hours sitting.
 > Thoughtful micro-interventions throughout the day, not lengthy workouts.
 
-**Status:** v0.121.0 · Pre-launch
+**Status:** v0.122.0 · Pre-launch
 **Build delivered:** `index.html` — web/PWA artifact, installable and offline
 **Author:** [@ezradesign](https://github.com/ezradesign)
 **Code license:** [Elastic License 2.0](./LICENSE) — see [§ License](#-license)
@@ -32,10 +32,11 @@ builder**, and an installable **PWA** that works offline.
 
 ---
 
-## 📊 Current state (v0.121.0)
+## 📊 Current state (v0.122.0)
 
 | Area | State |
 |---|---|
+| At your pace | The home asks "how long are you working today?" and serves the whole day: focus blocks and named breaks, around your schedule. The full menu is one tap away |
 | Core modules | Focus · Breathe · Move · Stretch · Hydrate — stable |
 | Paths | Complete system: library, step runner, completion screen, stats and yearly heatmap |
 | Body content | Step contract v1 (mode, sidedness, dosage, requirements) + "before you start" preview |
@@ -43,7 +44,7 @@ builder**, and an installable **PWA** that works offline.
 | i18n | Full ES/EN, catalogs split by domain |
 | PWA | `manifest.webmanifest` + service worker with precache; self-hosted fonts, zero external requests |
 | Premium | Central entitlement guard in place; the real license does not exist yet |
-| Code | 97 files under `app/`, none above 500 lines |
+| Code | 142 code files under `app/` (.js, .jsx, .css), none above 500 lines |
 | Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence |
 
 ---

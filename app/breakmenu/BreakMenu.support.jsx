@@ -149,6 +149,12 @@ function breakPropuesta(state, ctx) {
   const vetadas = breakVetadas(s.routineFeedback);
   const elige = (cat) => breakElige(cat, iso, { vetadas: vetadas, salto: bloqueDeHoy - 1 });
 
+  /* 0 · s192 · CON «A TU RITMO» MANDA EL MENÚ DEL DÍA: lo que sirve detrás del
+     bloque que acaba de terminar (state-ritmo.jsx), con el mismo contrato que esta
+     regla. Sin menú, o por libre, todo sigue como abajo. */
+  const delDia = (typeof ritmoPropuesta === 'function') ? ritmoPropuesta(s) : null;
+  if (delDia) return delDia;
+
   const con = (modulo, porque, rutina, extra) => ({
     modulo: modulo, porque: porque, rutina: rutina || null,
     datos: Object.assign({}, extra || {}),

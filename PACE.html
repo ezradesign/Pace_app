@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.121.0</title>
+  <title>PACE · Foco · Cuerpo — v0.122.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -145,6 +145,7 @@
   <script type="text/babel" src="app/i18n/strings/breakmenu.js"></script>
   <script type="text/babel" src="app/i18n/strings/settings.js"></script>
   <script type="text/babel" src="app/i18n/strings/onboarding.js"></script>
+  <script type="text/babel" src="app/i18n/strings/ritmo.js"></script>
   <script type="text/babel" src="app/i18n/content/breathe.js"></script>
   <script type="text/babel" src="app/i18n/content/move.js"></script>
   <script type="text/babel" src="app/i18n/content/extra.js"></script>
@@ -193,6 +194,10 @@
        shouldPromptRoutineFeedback. Tras state-core (getState/setState) y
        state-history (todayISO); antes de state.jsx (que lo re-exporta). -->
   <script type="text/babel" src="app/state-feedback.jsx"></script>
+  <!-- «A tu ritmo» (s192): la REGLA pura que compone el día y su ESTADO
+       (horario, «por libre», el menú de hoy). El progreso sale de `cycle`. -->
+  <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.regla.js"></script>
+  <script type="text/babel" src="app/state-ritmo.jsx"></script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
        uso. Memoria del usuario sobre su progreso, NO telemetria — no sale del
        dispositivo y no hay una sola llamada de red en los cuatro archivos.
@@ -434,6 +439,14 @@
   <script type="text/babel" data-presets="env,react" src="app/onboarding/pickFirstPath.js"></script>
   <script type="text/babel" src="app/onboarding/OnboardingScreens.jsx"></script>
   <script type="text/babel" src="app/onboarding/Onboarding.jsx"></script>
+  <!-- «A tu ritmo» (s192): el panel del día que ocupa el sitio de Actividades
+       y del Camino sugerido. La hoja primero; RitmoHome, que los compone, al final. -->
+  <script type="text/babel" src="app/ritmo/ritmo.css.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoPiezas.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoLinea.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoPanel.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoHoja.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoHome.jsx"></script>
 
   <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
        _responsive.js inyecta el bloque <style> de reglas @media globales del
