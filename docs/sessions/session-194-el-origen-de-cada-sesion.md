@@ -146,3 +146,33 @@ ser proporcional al tiempo justo ahí. Se pinta **punteado, como el margen libre
 - **El banco dio 12 de 13 en la segunda pasada** con un mutante que en la primera mordía: un `verify`
   concurrente (compila `index.html`, que es lo que sirve el 8765) lo hizo «vivir». Tercera pasada en
   limpio: **13 de 13**. Nada que compile mientras corre un banco.
+
+---
+
+# Pieza 3 · El norte, lectura A — la maqueta (sin versión: la conversación se migró aquí)
+
+## 10 · «El hilo de la semana», ronda 1
+
+El usuario pidió la maqueta con una condición nueva: «cada semana del año tiene que ser diferente o
+al menos coherente». **Antes de dibujar se midió** (censo del catálogo vivo): junto a la mesa y gratis,
+**Estira 6 · Mueve 4 · Respira 5 · cierre 1** (17 · 14 · 20 en el catálogo). Una jornada sirve ~4
+platos de Estira, así que la repetición semanal es inevitable: lo que puede variar es qué región
+lidera, el orden y la forma del día.
+
+La propuesta (`scripts/audit/semana-s194.js` → `docs/proposals/semana-r1.html`): **tema por semana
+ISO** (seis en ciclo: Cuello y hombros · Caderas y piernas · Manos y muñecas · Espalda y postura ·
+El aire · Ligera; la región del tema va primero en los pozos y decide qué módulo abre la larga) ×
+**acento por día** (arrancar · sostener · la mitad · aire · cerrar suave; fin de semana por libre) ×
+la regla del día sin tocar. Todo desde la fecha, sin datos de uso. La página lleva las 52 semanas de
+2026, dos semanas seguidas con los **platos reales** servidos por el prototipo (13 distintos cada
+una, 11 en común) y el panel fotografiado con el motivo inyectado.
+
+**Lo que destapó el prototipo, medido**: la primera tirada dejaba los cinco días iguales porque
+calculaba los pozos UNA vez para la semana (la rotación por día es lo que los diferencia); «la
+mitad» no movía la larga (entra por `previos = { pausas: 1 }`); y el lunes «arrancar» recibía el
+segundo Mueve, no el líder. Y dos consecuencias que se ven en la tabla y no en la idea: el
+miércoles cae una **segunda larga a las 13:15** por la cadencia, y el viernes el cierre sirve un
+plato de 10 min en un hueco de 5. Las dos van a la lista de decisiones.
+
+**Estado al migrar**: maqueta enviada, **sin respuesta**; nada implementado. La lista de decisiones
+y lo que hay que saber para implementarla están en `docs/HANDOFF_s194.md` §2.1.
