@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.125.1 (s195 - **LA BARRA FEA Y EL FINAL DEL DIA**. El usuario trajo una captura a 1920×1080 con el escritorio al 125 % (1536×704): «no entiendo la barra fea del medio con lineas» y «los elementos se solapan». Medido: **la pildora de s194 se llamaba igual que el tramo del retraso** (`.pace-rt-libre`) y el hueco heredaba su borde y su padding; **«AHORA» pisaba el resumen del dia** en los nueve viewports de escritorio, cada tarde; y **la caja del bloom de la luz hacia 46-52 px de scroll** con un bloque corriendo (la premisa de s185 se rompio en s192). Pildora renombrada, resumen a la cabecera con container query (en la fila del titulo si cabe: a 1536×704 el panel no crece), caja del bloom desde el centro y restando el horizonte (idéntica al pixel). **260 -> 267**, spec hermano `ritmo-linea.spec.js` con pasada de control contra HEAD (5 de 7 en rojo). La pieza 3 del norte sigue enviada y sin decidir.)
+**Version actual:** v0.125.2 (s195 - **LA BARRA FEA Y EL FINAL DEL DIA**, y de propina v0.125.2: **las etiquetas de la linea se recolocan cuando llegan las fuentes** (se colocaban con la de reserva y se quedaban: tres niveles donde caben dos, 15 px de panel y 17 de aro de menos cada manana; salio haciendo las fotos de la pagina de decision). El usuario trajo una captura a 1920×1080 con el escritorio al 125 % (1536×704): «no entiendo la barra fea del medio con lineas» y «los elementos se solapan». Medido: **la pildora de s194 se llamaba igual que el tramo del retraso** (`.pace-rt-libre`) y el hueco heredaba su borde y su padding; **«AHORA» pisaba el resumen del dia** en los nueve viewports de escritorio, cada tarde; y **la caja del bloom de la luz hacia 46-52 px de scroll** con un bloque corriendo (la premisa de s185 se rompio en s192). Pildora renombrada, resumen a la cabecera con container query (en la fila del titulo si cabe: a 1536×704 el panel no crece), caja del bloom desde el centro y restando el horizonte (idéntica al pixel). **260 -> 268**, spec hermano `ritmo-linea.spec.js` con pasada de control contra HEAD. La pieza 3 del norte: pagina nueva `por-donde-seguir-s195.html` con las cuatro rutas y cada decision de la semana dibujada o fotografiada; sin decidir.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -26,13 +26,13 @@
 | `app/state-ritmo.jsx` | **EL ESTADO DE A TU RITMO (s192)**: `ritmo: { horario, libre, dia }`. El progreso sale de `cycle − cicloBase`. Pozos desde el catalogo vivo (con el veto de s189). Lo que consultan el aro (`ritmoAro`), la pausa (`ritmoPropuesta`) y la barra lateral (`ritmoSiguiente`), y `ritmoSincronizar` (no toca `focusMinutes` con un bloque en marcha). **s193: `dia.pausa`, la pausa ABIERTA** — la abre `ritmoBloqueTerminado` (main.jsx, tras `cycle++`) y la cierra `ritmoBloqueEmpezado` (FocusTimer, solo foco, nunca al reanudar); `ritmoPlan` la devuelve solo si `pausa === hechos`; `ritmoSiguiente` la da con `ahora: true`. **s194: RECOLOCAR** — `ritmoBloqueEmpezado(minutos)` congela lo hecho en `dia.pasado` y fija `dia.desde`/`dia.primerBloque` si la hora no es la del plan; `ritmoPrevios`, `ritmoCongelar`, `ritmoHidratar`, `ritmoAhoraExacto`; `ritmoMenu` antepone la historia con el hueco del retraso | **s194** · s193 · NUEVO s192 |
 | `app/ritmo/RitmoHome.jsx` | **EL BLOQUE DE LA HOME (s192)**: el panel (con `data-pace-activitybar`: hereda el horizonte) o, por libre, Actividades + Camino con sus keys y el enlace de vuelta. La hoja va por PORTAL | **NUEVO s192** |
 | `app/ritmo/RitmoPanel.jsx` | La pregunta, el menu servido (escritorio y movil, dos copias en el DOM) y la jornada cerrada. **s193: `RitmoComo` (la frase hasta el primer bloque hecho) y `RitmoFilaParada`; con la pausa abierta, en movil «Ahora» es la parada y «Luego» el bloque** **s195: `RitmoSobre` (el resumen del dia + «Cambiar», `data-pace-ritmo-resumen`) vive en la CABECERA de escritorio, dentro de `.pace-rt-der-col`, y la pildora es `.pace-rt-porlibre`** | **s195** · s193 · NUEVO s192 |
-| `app/ritmo/RitmoLinea.jsx` | La linea del dia (escritorio) con las etiquetas colocadas MIDIENDO en hasta tres niveles, y la mini linea de movil. **s193: `ritmoIndiceAhora` (la pausa abierta manda), la parada abierta con «Ahora» y `ritmoEmpezarParada` (tocarla la empieza por `pace:sidebar-action`; s194: con `parada: true` para el origen)** **s195: la linea ya no lleva el resumen (`.pace-rt-sobre` se fue a la cabecera); sobre ella solo va «AHORA»** | **s195** · s194 · s193 · NUEVO s192 |
+| `app/ritmo/RitmoLinea.jsx` | La linea del dia (escritorio) con las etiquetas colocadas MIDIENDO en hasta tres niveles, y la mini linea de movil. **s193: `ritmoIndiceAhora` (la pausa abierta manda), la parada abierta con «Ahora» y `ritmoEmpezarParada` (tocarla la empieza por `pace:sidebar-action`; s194: con `parada: true` para el origen)** **s195: la linea ya no lleva el resumen (`.pace-rt-sobre` se fue a la cabecera); sobre ella solo va «AHORA». v0.125.2: las etiquetas se RECOLOCAN en `document.fonts.ready` (se colocaban con la fuente de reserva y el observador de la linea no lo veia: tres niveles donde caben dos)** | **s195** · s194 · s193 · NUEVO s192 |
 | `app/ritmo/RitmoHoja.jsx` | La jornada entera en el `Modal` de la app. s193: la parada abierta lleva «ahora» | **s193** · NUEVO s192 |
 | `app/ritmo/RitmoPiezas.jsx` | **s194: los rangos del horario (inicio 5:00–21:00, comida 11:00–17:00, salida 12:00–23:30; el inicio solo llegaba a las 13:00)**. Glifo por modulo, nombre en su idioma, la frase con `{marcadores}` y los selectores de hora | **NUEVO s192** |
 | `app/ritmo/ritmo.css.jsx` | La hoja inyectada (patron de `library.css.jsx`), corte 768/769. **s193: el tramo de ahora al 35 % con `::after` que mide `--pace-bloque`; lo hecho en `--focus` entero; la parada abierta con borde entero y lavado; la pasada sin atenuar** **s195: la pildora es `.pace-rt-porlibre` (`.pace-rt-libre` era ya el tramo del retraso y el hueco heredaba borde y padding); `.pace-rt-der-col` + `@container (min-width: 1000px)` sobre `.pace-rt-panel` (`container-type: inline-size`) deciden si el resumen va en la fila del titulo o bajo los chips; la linea baja de 22 a 18 de margen** | **s195** · s193 · NUEVO s192 |
 | `app/i18n/strings/ritmo.js` | 56 claves por idioma, incluidas las razones `break.prop.ritmo.*` (s193: `ritmo.empieza`, `ritmo.como`, `ritmo.sidebar.ahora`) | **s193** · NUEVO s192 |
 | `tests/ritmo.spec.js` | **20 tests** (465 ln: lo siguiente va a un spec hermano) — **s194: recolocar veinte minutos tarde, llegar antes es empezar, la regla en puro con `previos`** — la regla en puro, la home, un bloque terminado, **la linea sigue al aro (`--pace-bloque`, el ancho del `::after`, la parada abierta, «Tu pausa», empezar el bloque 2 la cierra), la pausa sembrada que sobrevive a la recarga y se empieza tocando la parada**, por libre, el horario, llegar tarde, ingles, movil (**con la pausa abierta**) y la geometria en cuatro viewports | **s193** · NUEVO s192 |
-| `tests/ritmo-linea.spec.js` | **7 tests (NUEVO s195)**, hermano de `ritmo.spec.js`: la caja del hueco del retraso (2 px, sin borde ni padding, con la pildora como GUARD) · al final del dia nada se pisa y la home no arrastra en **1536×704 · 1600×780 · 1440×789 · 1280×879** (por PARES sobre todo lo que lleva texto en el panel; GUARD de que el resumen se ha medido y de que «AHORA» esta en el ultimo tercio) · el resumen en la fila del titulo a 1536 y bajo los chips a 1280. **Pasada de control contra el `index.html` de HEAD: 5 de 7 en rojo** | **NUEVO s195** |
+| `tests/ritmo-linea.spec.js` | **8 tests (NUEVO s195)**, hermano de `ritmo.spec.js`: **las fuentes llegan 2,5 s tarde (`page.route`) y las etiquetas se recolocan (v0.125.2; con 900 ms el control contra HEAD salia verde por un re-render de la home a los 1,4 s)** · la caja del hueco del retraso (2 px, sin borde ni padding, con la pildora como GUARD) · al final del dia nada se pisa y la home no arrastra en **1536×704 · 1600×780 · 1440×789 · 1280×879** (por PARES sobre todo lo que lleva texto en el panel; GUARD de que el resumen se ha medido y de que «AHORA» esta en el ultimo tercio) · el resumen en la fila del titulo a 1536 y bajo los chips a 1280. **Pasada de control contra el `index.html` de HEAD: 5 de 7 en rojo** | **NUEVO s195** |
 | `scripts/audit/banco-ritmo-s192.js` | Banco de mutantes de A tu ritmo, con pasada de control: **11 de 11 muerden** | **NUEVO s192** |
 | `tests/eventos-origen.spec.js` | **El origen de cada sesion (s194), 4 tests**: las seis puertas sobre sesiones reales (aro con y sin plan, la propuesta de la pausa, la parada, la tarjeta de la barra lateral, una biblioteca) y, en puro, el consumo, el Camino y la lista permitida | **NUEVO s194** |
 | `scripts/audit/semana-s194.js` | **La maqueta del norte, lectura A (s194)**: el prototipo de «el hilo de la semana» como TEXTO (`REGLA`: `semanaISO`, `SEMANA_TEMAS`, `SEMANA_ACENTOS`, `semanaPozos`, `semanaComponer`) inyectado en la app real para calcular 52 semanas y dos semanas con platos reales; fotografia el panel con el motivo inyectado; escribe `docs/proposals/semana-r1.html`. **No es codigo de la app** | **NUEVO s194** |
@@ -237,11 +237,13 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s195 publica **v0.125.1, «la barra fea y el final del dia»**: tres defectos de la home con el menu
-> servido, dos de ellos los que el usuario vio en su captura. Suite **260 -> 267**, `verify` en verde
-> (22,8 s), artefacto regenerado, spec nuevo con pasada de control contra HEAD.
+> s195 publica **v0.125.1, «la barra fea y el final del dia»** (tres defectos de la home con el menu
+> servido, dos de ellos los que el usuario vio en su captura) y **v0.125.2** (las etiquetas de la linea se
+> recolocan cuando llegan las fuentes; salio haciendo las fotos de la pagina de decision). Suite
+> **260 -> 268**, `verify` en verde (22,8 / 24,0 s), artefacto regenerado, spec nuevo con control contra HEAD.
 >
 > Diario: [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) ·
+> Pagina: **`docs/proposals/por-donde-seguir-s195.html`** (las cuatro rutas + la semana dibujada y fotografiada; ENVIADA, SIN DECIDIR) ·
 > Censo de viewports: `viewports-s195.js` (temp del sistema, tres escenas × nueve viewports)
 
 - **[LO QUE VIO EL USUARIO]** A 1536×704 (1920×1080 al 125 %): «la barra fea con lineas» era el hueco
@@ -257,11 +259,15 @@
   panel tiene >= 1000 px de contenido** (1536×704: el panel no crece, el aro sube de 417 a 422) y en
   dos filas a la derecha si no (+19 px a <= 1440) · sobre la linea solo «AHORA».
 
-- **[LA PIEZA 3, SIGUE A MITAD]** La maqueta del norte (lectura A), **«el hilo de la semana»**
-  (`docs/proposals/semana-r1.html`, generada por `scripts/audit/semana-s194.js`), esta ENVIADA y sin
-  decidir. **Nada implementado.** La lista de decisiones esta en `docs/HANDOFF_s194.md` §2.1.
+- **[LA PIEZA 3, SIGUE A MITAD — AHORA CON PAGINA PROPIA]** Preguntado «¿por donde seguimos?», el
+  usuario pidio «un html para verlo graficamente». `scripts/audit/por-donde-seguir-s195.js` genera
+  **`docs/proposals/por-donde-seguir-s195.html`**: las cuatro rutas con ficha (la semana · usarla un dia
+  · los huecos · la deuda; recomendacion **1 con 2 en paralelo**) y la semana VISTA: temas A/B/C con sus
+  chips, los acentos L-V como tiras, miercoles y viernes en detalle, y **«donde se dice» con tres fotos
+  de la app real a 1536×704** (la linea · + el aro · + la barra lateral). Lista de 8 decisiones al final.
+  **Nada implementado.** La maqueta anterior (`semana-r1.html`) sigue valiendo para el detalle de la regla.
 
-- **[LO QUE QUEDA, EN ORDEN]** **La respuesta del usuario a `semana-r1.html` y su implementacion
+- **[LO QUE QUEDA, EN ORDEN]** **La respuesta del usuario a `por-donde-seguir-s195.html` y su implementacion
   (v0.126.0, con spec nuevo)** · que el usuario lo use un dia entero · `MoveSessionV1.jsx` en 500 ·
   `ritmo.spec.js` en 465 (lo siguiente a `ritmo-linea.spec.js` o a otro hermano) · los huecos: el cierre
   nunca es «Ahora», la pausa larga propone un plato de dos, el modo oscuro del panel y del hueco

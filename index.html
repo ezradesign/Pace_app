@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.125.1</title>
+  <title>PACE · Foco · Cuerpo — v0.125.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5135,7 +5135,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.125.1';
+const PACE_VERSION = 'v0.125.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -31220,10 +31220,19 @@ function RitmoLinea(_ref2) {let { plan } = _ref2;
   useLayoutEffectRL(() => {
     const colocar = () => ritmoColocarEtiquetas(lin.current, zona.current);
     colocar();
-    if (!window.ResizeObserver || !lin.current) return undefined;
+    /* s195: las etiquetas se miden con la fuente que haya EN ESE MOMENTO. Si la de
+       verdad llega después (Cormorant es más estrecha que la de reserva: la larga
+       pasa de 132×68 a 121×53), la colocación hecha con la de reserva SE QUEDA,
+       porque el observador mira la línea y su caja no cambia. Medido a 1536×704:
+       tres niveles (zona 122) donde el estado asentado tiene dos (107), o sea 15 px
+       de panel y 17 de aro de menos. Se recoloca al llegar las fuentes, como la
+       barra lateral (s181). `vivo` evita colocar sobre un nodo ya desmontado. */
+    let vivo = true;
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {if (vivo) colocar();});
+    if (!window.ResizeObserver || !lin.current) return () => {vivo = false;};
     const ro = new ResizeObserver(colocar);
     ro.observe(lin.current);
-    return () => ro.disconnect();
+    return () => {vivo = false;ro.disconnect();};
   });
 
   return (/*#__PURE__*/

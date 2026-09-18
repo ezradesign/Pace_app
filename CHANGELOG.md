@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.125.2** | 2026-09-18 | fix(ritmo): **las etiquetas se recolocan cuando llegan las fuentes** — Salió haciendo las fotos de la página «por dónde seguir»: las etiquetas de la línea se colocan con la fuente que hay en ese momento y no se recolocaban al llegar Cormorant (el observador mira la línea, cuya caja no cambia). Medido un lunes a 1536×704: tres niveles de etiquetas donde caben dos, 15 px de panel y 17 de aro de menos, cada mañana. El arreglo de la barra lateral (s181): `document.fonts.ready.then(colocar)`. El test retrasa las fuentes 2,5 s con `page.route` —detrás del re-render de los 1,4 s que en frío recolocaba por casualidad y dejó la primera pasada de control en verde—. **267 → 268**, rojo en HEAD. | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
 | **v0.125.1** | 2026-09-18 | fix(ritmo): **la barra fea y el final del día** — El usuario trajo una captura a 1920×1080 con el escritorio al 125 % (1536×704): «no entiendo la barra fea del medio con líneas» y «los elementos se solapan». Medido, no leído: **la píldora «Hoy voy por libre» de s194 se llamaba `.pace-rt-libre`, que ya era el nombre del tramo del retraso**, y el hueco heredaba su borde verde y su padding (10 px rayados); **«AHORA» pisaba el resumen del día** porque los dos vivían en la misma banda sobre la línea — en los nueve viewports de escritorio, cada tarde, no por el 125 %; y **la caja del bloom de la luz hacía 46–52 px de scroll** con un bloque corriendo (1600×780, 1440×789), porque la premisa de s185 se rompió en s192 con el panel del menú. Píldora renombrada (`.pace-rt-porlibre`, los `pace-rt-<tipo>` quedan reservados); el resumen a la cabecera, **en la fila del título si el panel tiene sitio** (container query: a 1536×704 el panel no crece y el aro sube 5 px) y en dos filas si no; la caja del bloom descrita desde el centro del aro y restando el horizonte, **idéntica al píxel**. **260 → 267**: `ritmo-linea.spec.js`, con pasada de control contra HEAD (5 de 7 en rojo). | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
 | **v0.125.0** | 2026-09-18 | feat(ritmo): **recolocar a mitad de día** — Las horas de la línea eran las del plan: si el bloque 2 empezaba a las 9:50 y lo empezabas a las 10:10, la línea seguía diciendo 9:50 y todo lo de detrás iba veinte minutos «mal»; y llegar antes no existía. Ahora, **al empezar cada bloque, si la hora no es la del plan, el resto del día se recompone desde ahora** con la política de siempre (salgo a mi hora): lo hecho se congela como historia (`dia.pasado`), el bloque que acaba de empezar dura lo que marca el aro, la comida sigue a su hora exacta, la cadencia de la pausa larga, los platos servidos, las claves y el agua continúan, y **el hueco del retraso se pinta punteado** para que la línea siga siendo proporcional al tiempo. **Llegar antes es empezar.** Maqueta con el mismo guion sobre la app de antes y la de después (`recolocar-r1.html`); el usuario: «me parecen bien las propuestas». De paso, dos cosas que él encontró usándolo diez minutos: **el selector de inicio solo llegaba a las 13:00** y **«Hoy voy por libre» no destacaba** (ahora, píldora verde en la cabecera, variante E de cinco). **257 → 260**, 13 de 13 mutantes con control (la primera pasada dio 13 de 14 y el vivo era un campo muerto: se quitó). | s194 | [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md) |
 | **v0.124.0** | 2026-09-18 | feat(eventos): **el origen de cada sesión** — `pace.events.v1` distinguía dos contextos (suelta o en un Camino) y nada más: no sabía si la persona eligió la rutina en la carta, si se la propuso la pausa, si era el plato que «A tu ritmo» sirvió o si tocó la parada. Es la primera idea del experto de s192 (datos para saber qué funciona) y el prerrequisito del norte. `session.completed` lleva ahora **`origin`** (la puerta: `aro` · `pausa` · `biblioteca` · `sidebar` · `parada` · `camino`) y **`fromMenu`** (si era lo que el menú sirvió), **dos campos y no uno compuesto** porque responden a preguntas distintas. La puerta se anota **en el gesto** y vive en memoria hasta la primera sesión que termine, que la consume; dentro de un Camino manda `camino`. No se consolida en el baseline: el consumidor previsto (Stats «Semana», lectura C del norte) lee ventanas. **Nada cambia en la pantalla.** Rev. 7 del esquema. **253 → 257**, 12 mutantes con control. Recomendación dada para el norte: **A ya, C después, B aparcada**. | s194 | [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md) |
@@ -399,6 +400,26 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.125.2] -- 2026-09-18 -- fix(ritmo): las etiquetas se recolocan cuando llegan las fuentes
+
+### Corregido
+- **Las etiquetas de la línea se quedaban colocadas con la fuente de reserva** (`RitmoLinea.jsx`): se
+  miden con la fuente que hay en ese momento y el observador mira la línea, cuya caja no cambia al
+  llegar Cormorant (la larga pasa de 132×68 a 121×53). Medido un lunes a 1536×704: tres niveles
+  (zona 122) donde el estado asentado tiene dos (107), 15 px de panel y 17 de aro de menos. Ahora
+  `document.fonts.ready.then(colocar)`, como la barra lateral desde s181, con guarda de desmontaje.
+
+### Red
+- **`tests/ritmo-linea.spec.js`, 7 → 8**: las fuentes llegan 2,5 s tarde (`page.route`) y, llegadas,
+  la colocación del DOM tiene que ser la de una fresca. Con 900 ms de retraso la pasada de control
+  contra HEAD salía verde: un re-render de la home hacia los 1,4 s recolocaba por casualidad en un
+  contexto frío. Con 2,5 s: rojo en HEAD («siguen colocadas con la fuente de reserva, zona 122»).
+
+### Lo que no cubre
+- Qué dispara ese re-render de los 1,4 s (no se buscó: el arreglo no depende de él).
+
+---
+
 ## [v0.125.1] -- 2026-09-18 -- fix(ritmo): la barra fea y el final del día
 
 ### Corregido
@@ -435,48 +456,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 - El modo oscuro del hueco y del resumen; el resumen en inglés en la fila del título (no medido);
   1280×600 por la mañana sigue pidiendo 33 px de scroll (`D_FLOOR`, el viewport extremo declarado);
   la barra lateral plegada se cubre por la container query, no por un test.
-
----
-
-## [v0.125.0] -- 2026-09-18 -- feat(ritmo): recolocar a mitad de día
-
-### Anadido
-- **`ritmoComponer(..., previos)`** (`ritmo.regla.js`): con `previos` el día empieza exactamente en
-  `ahora` (también antes de tu hora), el bloque que acaba de empezar dura lo que marca el aro
-  (`primerBloque`; si cruza la hora de comer, se come al acabarlo), y la numeración, la cadencia de
-  la pausa larga, el presupuesto de foco, los platos servidos, las claves de «otra» y el agua
-  continúan desde lo hecho; con `comidaHecha` no se sirve otra.
-- **`dia.pasado`, `dia.desde` y `dia.primerBloque`** (`state-ritmo.jsx`): `ritmoBloqueEmpezado(minutos)`
-  compara la hora exacta con la del plan y, si difieren, congela lo anterior al bloque como historia
-  (sin la rutina viva; se rehidrata del catálogo al leer) y recompone el resto. `ritmoMenu` antepone
-  la historia y pinta el hueco del retraso como margen libre.
-- **La maqueta**: `scripts/audit/recolocar-s194.js` (`--hoy` · sin él · `--pagina`) →
-  `docs/proposals/recolocar-r1.html`. Y `docs/proposals/por-libre-r1.html`: cinco variantes de «Hoy
-  voy por libre», pendientes de decisión.
-
-### Cambiado
-- **«Hoy voy por libre» destaca** (lo pidió el usuario): píldora en verde (`.pace-rt-libre`, el lenguaje
-  de los chips de contexto) que en escritorio vive en la cabecera junto al contexto y en móvil en el
-  pie. Variante **E**, elegida entre cinco fotografiadas (`por-libre-r1.html`): C y D pisaban la línea.
-- **Los rangos del horario** (`RitmoPiezas.jsx`): inicio 5:00–21:00 (llegaba solo a las 13:00: quien
-  trabaja por la tarde no podía decir su hora), comida 11:00–17:00, salida 12:00–23:30.
-- **Un aserto de s193 cambió con razón**: «Empezar bloque 2» a las 9:45 sin esperar la pausa recoloca
-  a 9:45 y la siguiente pausa dice 10:30, no 10:35.
-
-### Decisiones
-- **Se recoloca siempre** al empezar un bloque (no solo pasado un umbral) · **la cola se funde** como
-  hasta ahora cuando el día no cabe · **el bloque que empiezas dura lo que marca el aro**. El usuario:
-  «me parecen bien las propuestas por el momento».
-
-### Red
-- **`tests/ritmo.spec.js`, 17 → 20**: recolocar veinte minutos tarde (historia congelada, bloque
-  forzado, paradas movidas, comida a su hora, salida igual, retraso punteado, nada repetido, la barra
-  lateral, la recarga) · llegar antes es empezar · la regla en puro con `previos`.
-- **`scripts/audit/banco-recolocar-s194.js`**: 13 de 13 mutantes con pasada de control (ver `STATE.md`).
-
-### Lo que no cubre
-- El modo oscuro del hueco punteado; el cierre sigue sin ser «Ahora»; `primerBloque` cuando el aro y el
-  plan no coinciden (en la suite coinciden).
 
 ---
 
