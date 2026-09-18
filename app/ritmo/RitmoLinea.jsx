@@ -113,7 +113,6 @@ function RitmoLinea({ plan, onCambiar }) {
         <div className="pace-rt-sobre">
           <span className="pace-rt-meta">{ritmoResumen(m, tn)}</span>
           <button className="pace-rt-enlace" onClick={onCambiar}>{t('ritmo.cambiar')}</button>
-          <RitmoLibre />
         </div>
         {m.items.map((it, i) => {
           if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {

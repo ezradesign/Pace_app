@@ -798,6 +798,13 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
   rellena de su color.
 - **La frase de la primera vez** (`RitmoComo`) va bajo la cabecera como `.pace-rt-sub` (cursiva
   display 13 px, `--ink-3`), 5 px de margen, y desaparece con el primer bloque hecho.
+- **«Hoy voy por libre» (s194 · v0.125.0, variante E elegida entre cinco fotografiadas)**: la única
+  salida del menú es una **píldora** de 10 px en versalita (tracking 0,1 em) en `--focus-cta` con borde
+  de 1 px del mismo color y lavado `--focus-soft` al pasar; en escritorio vive en la **cabecera**, junto
+  a los chips de contexto (una píldora en la fila de la línea pisaba la línea), y en móvil en el pie.
+- **Recolocar (s194 · v0.125.0)**: cuando empiezas un bloque tarde, **el hueco del retraso se pinta
+  como margen libre** (el mismo tramo punteado de 2 px en `--line`, `.pace-rt-libre`): la línea
+  sigue siendo proporcional al tiempo y lo hecho —en verde entero— no se mueve. Ningún token nuevo.
 - **Las horas se editan dentro de la frase**: un `<select>` nativo con aspecto de texto —la cifra
   en `--ink`, subrayado punteado `--line-2`, chevron de 7×5 px en `--ink-3`— y un relleno vertical
   que agranda la zona de toque sin mover la línea. En móvil abre el selector del sistema.

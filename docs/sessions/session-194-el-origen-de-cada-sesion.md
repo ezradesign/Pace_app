@@ -72,3 +72,77 @@ de la semana» con datos. Es instrumentación: **nada cambia en la pantalla**.
   norte y «Stats Semana»; hasta entonces el dato se acumula en los 120 días de retención.
 - Siguen en la cola: **recolocar a mitad de día** (pieza 2, pintar antes) · **el norte, lectura A**
   (pieza 3) · `MoveSessionV1.jsx` en 500 líneas · los huecos declarados de s193.
+
+---
+
+# Pieza 2 · Recolocar a mitad de día (v0.125.0)
+
+**Suite:** 257 → **260** · el usuario: «me parecen bien las propuestas por el momento» (siempre · la
+cola se funde · el bloque dura lo que marca el aro).
+
+## 5 · Qué faltaba
+
+Las horas de la línea eran las del plan: si el bloque 2 empezaba a las 9:50 y lo empezabas a las
+10:10, la línea seguía diciendo 9:50 y todo lo de detrás iba veinte minutos «mal». Y llegar antes
+no existía: el plan esperaba a tu hora de inicio aunque ya estuvieras.
+
+## 6 · La maqueta, sobre la app de antes y la de después
+
+`scripts/audit/recolocar-s194.js` fotografía el MISMO guion dos veces —con `--hoy` sobre el
+artefacto anterior a la regla y sin él sobre el nuevo— y con `--pagina` compone
+`docs/proposals/recolocar-r1.html`. El guion: jornada a las 9:00 · bloque 1 · al acabar, la pausa
+y 25 minutos de espera (son las 10:10) · «Empezar bloque 2» · el bloque 2 acaba, 10 minutos más ·
+«Empezar bloque 3» · y aparte, llegar antes: a las 8:40 con el plan a las 9:00. Medido en las fotos:
+
+| Estado | Hoy | Propuesta |
+|---|---|---|
+| Bloque 2 a las 10:10 | actual «9:50», paradas 10:35 · 11:25 · 12:25 · 13:15 | actual **10:10**, paradas **10:55 · 11:45 · 12:45 · 13:35**, comida 14:00, hasta 17:00, 9 bloques, **5 h 50** de foco (eran 6 h 10) |
+| Bloque 3 con 10 min más | actual «10:40» | actual **11:10**, **8 bloques**, 5 h 30 |
+| Llegar a las 8:40 | actual «9:00» | actual **8:40**, paradas 9:25 · 10:15 · … |
+
+**Lo que se vio mirando y no leyendo**: el hueco del retraso no se pintaba y la línea dejaba de
+ser proporcional al tiempo justo ahí. Se pinta **punteado, como el margen libre** antes de la comida.
+
+## 7 · La implementación
+
+- **`ritmo.regla.js`**: `ritmoComponer(..., previos)`. Con `previos` el día empieza EXACTAMENTE en
+  `ahora` (también antes de tu hora), el bloque que acaba de empezar dura lo que marca el aro
+  (`primerBloque`, y si cruza la hora de comer, se come al acabarlo: `comer()` ya no retrocede), la
+  numeración, la cadencia de la larga, el presupuesto de foco, los platos servidos, las claves de
+  «otra» y el agua continúan desde lo hecho; con `comidaHecha` no se sirve otra.
+- **`state-ritmo.jsx`**: `ritmoBloqueEmpezado(minutos)` compara la hora exacta con la del plan y,
+  si difieren, **congela** lo anterior al bloque en `dia.pasado` (sin la rutina viva, se rehidrata
+  del catálogo al leer), fija `dia.desde` y `dia.primerBloque`. `ritmoMenu` compone el resto con
+  `ritmoPrevios(pasado)` y antepone la historia, con el hueco del retraso como `libre`.
+- **`FocusTimer.jsx`** pasa `state.focusMinutes` al empezar.
+- **`RitmoPiezas.jsx`**: el **bug del selector** que encontró el usuario a las 17:20 — el inicio solo
+  llegaba a las 13:00 (`RITMO_RANGOS`). Ahora inicio 5:00–21:00, comida 11:00–17:00, salida
+  12:00–23:30.
+
+## 8 · Lo que cazó la red
+
+- **`ritmo.spec.js`, 17 → 20**: recolocar veinte minutos tarde (desde, historia congelada, bloque
+  forzado, paradas movidas, comida a su hora, salida igual, retraso punteado, nada repetido, la
+  barra lateral, y sobrevive a la recarga) · llegar antes es empezar · la regla en puro con
+  `previos` (numeración, cadencia, sin repetir, claves, comida hecha, cruce de la comida, presupuesto
+  con bloque forzado de 35, agua).
+- **Un aserto de s193 cambió con razón**: pulsar «Empezar bloque 2» a las 9:45 sin esperar la pausa
+  recoloca a 9:45, y la siguiente pausa dice 10:30, no 10:35.
+- **`scripts/audit/banco-recolocar-s194.js`**: la primera pasada dio **13 de 14**. El vivo era `it.de`
+  (el total del día escrito en cada bloque): nadie lo leía desde s192 —el total lo da `plan.total`—,
+  así que **se quitó el campo, no se añadió un aserto** (lección de s190). Segunda pasada, 13 mutantes
+  (resultado en `STATE.md`). Dos hubo que hacer distinguibles ANTES de correrlo: el bloque forzado con
+  una duración distinta de la del plan (35, no 45) y la comida hecha con la hora de comer por delante
+  (13:00).
+- `ritmo.spec.js` está en **465 líneas**: lo siguiente que crezca ahí va a un spec hermano.
+
+## 9 · Lo que queda de esta pieza
+
+- El **modo oscuro** del hueco punteado no se ha mirado. El **cierre** sigue sin ser «Ahora».
+- «Hoy voy por libre» **debería destacar más** (el usuario): cinco variantes fotografiadas en
+  `docs/proposals/por-libre-r1.html` (C y D pisan la línea; C2 sube la fila; **E** lo muda a la
+  cabecera como píldora verde). **Eligió E**; aplicada (`.pace-rt-libre`, `RitmoLibre` fuera de la
+  fila de la línea y dentro de `.pace-rt-der` junto al contexto). Sin scroll en 1280×879 ni 1536×714.
+- **El banco dio 12 de 13 en la segunda pasada** con un mutante que en la primera mordía: un `verify`
+  concurrente (compila `index.html`, que es lo que sirve el 8765) lo hizo «vivir». Tercera pasada en
+  limpio: **13 de 13**. Nada que compile mientras corre un banco.

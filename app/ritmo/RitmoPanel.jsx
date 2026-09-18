@@ -28,9 +28,13 @@ function RitmoContexto() {
   );
 }
 
+/* «Hoy voy por libre» es la ÚNICA salida del menú, y el usuario pidió que destacara más
+   (s194). Variante E, elegida mirándola entre cinco: una píldora en verde —el lenguaje de
+   los chips de contexto— que en escritorio vive en la CABECERA junto al contexto, no en la
+   fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. */
 function RitmoLibre() {
   const { t } = useT();
-  return <button className="pace-rt-enlace" data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
+  return <button className="pace-rt-libre" data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
 }
 
 function RitmoChips({ state }) {
@@ -119,7 +123,7 @@ function RitmoEscritorio({ state, plan }) {
             {'· '}<RitmoFraseMenu plan={plan} horario={R.horario} plantilla="ritmo.frase.menu" />
           </span>
         </div>
-        <RitmoContexto />
+        <div className="pace-rt-der"><RitmoContexto /><RitmoLibre /></div>
       </div>
       <RitmoComo plan={plan} />
       <RitmoLinea plan={plan} onCambiar={ritmoPreguntar} />

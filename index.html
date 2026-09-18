@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.124.0</title>
+  <title>PACE · Foco · Cuerpo — v0.125.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5135,7 +5135,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.124.0';
+const PACE_VERSION = 'v0.125.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7326,6 +7326,17 @@ Object.assign(window, {
        el umbral (30 min, o el bloque − 5 si es más corto), el final se sirve en UN
        bloque (si no pasa de 60) o en DOS iguales.
 
+   RECOLOCAR A MITAD DE DÍA (s194 · v0.125.0): el sexto parámetro, `previos`,
+   es lo que ya pasó cuando se vuelve a componer desde AHORA —al empezar cada
+   bloque (state-ritmo.jsx, `ritmoBloqueEmpezado`)—: cuántos bloques y pausas
+   van hechos, cuánto foco, si ya se comió, qué platos se sirvieron, cuántos
+   vasos, y la duración del bloque que ACABA de empezar (el aro ya corre con
+   ella; recomponerla a mitad de pomodoro no tiene sentido). Con `previos`, el
+   día empieza EXACTAMENTE en `ahora` (también antes de tu hora: llegar antes es
+   empezar), el bloque siguiente se numera detrás de los hechos, la cadencia de
+   la pausa larga continúa y nada se repite. Lo hecho no se recompone: es
+   historia, y viaja aparte (`dia.pasado`).
+
    LA REGLA de cada pausa (el contador se reinicia al comer):
      1. cada tercera pausa → larga (15 min): Respira + Estira
      2. la que va antes de la larga → Mueve
@@ -7342,18 +7353,22 @@ var RITMO_FORMAS = {
   'jornada': { bloque: 45, foco: Infinity }
 };
 
-/* ritmoComponer(opcion, horario, pozos, cambios, metaAgua) -> el día, o null.
+/* ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) -> el día, o null.
    `pozos` = { estira: [r], mueve: [r], respira: [r], cierre: [r] } con rutinas
    del catálogo (se usan `id`, `name` y `min`). `cambios` = { clave: n } cuando la
-   persona ha pedido «otra» n veces en esa pausa. */
-function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
+   persona ha pedido «otra» n veces en esa pausa. `previos` (opcional) = { bloques,
+   pausas, foco, comidaHecha, usados: [id], vasos, claves, primerBloque } — lo ya
+   hecho cuando se recompone el resto del día desde `horario.ahora` (ver arriba). */
+function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5,LARGA = 15,MINIMO = 15,COLA = 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
   var inicio = horario.inicio,salida = horario.salida,comeA = horario.comida;
   var comidaDur = horario.comidaDur || 60;
   var ahora = horario.ahora != null ? horario.ahora : inicio;
-  var desde = Math.max(inicio, ahora);
+  var P0 = previos || null;
+  /* Sin previos, el día espera a tu hora de inicio; recolocando, empieza AHORA. */
+  var desde = P0 ? ahora : Math.max(inicio, ahora);
   var P = pozos || {};
   cambios = cambios || {};
   var meta = metaAgua || 8;
@@ -7363,33 +7378,40 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
   /* Hasta servir `foco` minutos o llegar a `fin`. Solo tramos: los platos se
      sirven después. */
   function componer(fin) {
-    var items = [],t = desde,hecho = 0,enMitad = 0,n = 0;
+    var items = [],t = desde,hecho = P0 ? P0.foco || 0 : 0,enMitad = P0 ? P0.pausas || 0 : 0,n = P0 ? P0.bloques || 0 : 0;
+    var primeros = n; /* el bloque n+1 es el que acaba de empezar */
     var foco = forma.foco;
     var finTrabajo = fin - PAUSA; /* el cierre ocupa un hueco */
-    var falta = desde < comeA && comeA < finTrabajo; /* ¿queda comida delante? */
+    var falta = !(P0 && P0.comidaHecha) && desde < comeA && comeA < finTrabajo; /* ¿queda comida delante? */
     var cola = Math.min(COLA, forma.bloque - 5);
     /* Comer «por delante» solo manda si aún queda foco que servir DESPUÉS: si
        no, el día acaba aquí (en la maqueta, «Una hora» esperaba 245 min). */
     function comerAntes() {return falta && foco - hecho >= MINIMO && finTrabajo - comeA - comidaDur >= MINIMO;}
     function comer() {
       if (t < comeA) items.push({ tipo: 'libre', desde: t, dur: comeA - t });
-      t = comeA;
+      t = Math.max(t, comeA); /* el bloque forzado puede haber cruzado la hora: se come al acabarlo */
       items.push({ tipo: 'comida', desde: t, dur: comidaDur });
       t += comidaDur;falta = false;enMitad = 0;
     }
     for (;;) {
       var p = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
-      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0));
-      if (rem < MINIMO) {
-        if (comerAntes()) {comer();continue;}
-        break;
-      }
-      var dur = forma.bloque;
-      if (rem <= forma.bloque) dur = rem;else
-      if (rem - forma.bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
-      if (falta && t + dur > comeA) {
-        if (comeA - t < MINIMO) {comer();continue;}
-        dur = comeA - t;
+      var dur;
+      if (P0 && P0.primerBloque && n === primeros) {
+        /* El bloque que acaba de empezar dura lo que marca el aro, pase lo que pase. */
+        dur = P0.primerBloque;
+      } else {
+        var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0));
+        if (rem < MINIMO) {
+          if (comerAntes()) {comer();continue;}
+          break;
+        }
+        dur = forma.bloque;
+        if (rem <= forma.bloque) dur = rem;else
+        if (rem - forma.bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
+        if (falta && t + dur > comeA) {
+          if (comeA - t < MINIMO) {comer();continue;}
+          dur = comeA - t;
+        }
       }
       n++;
       items.push({ tipo: 'foco', desde: t, dur: dur, n: n });
@@ -7412,8 +7434,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
   var fin = forma.foco !== Infinity && fueraDeHora ? 24 * 60 : salida;
   var dia = componer(Math.min(fin, 24 * 60));
 
-  /* Los platos, en orden, sin repetir en el día. */
+  /* Los platos, en orden, sin repetir en el día (tampoco los ya servidos). */
   var usados = {};
+  if (P0) (P0.usados || []).forEach(function (id) {usados[id] = true;});
   function toma(modulo, clave) {
     var pozo = P[modulo] || [];
     if (!pozo.length) return null;
@@ -7423,7 +7446,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
     usados[r.id] = true;
     return { modulo: modulo, id: r.id, name: r.name, min: r.min, clave: clave, rutina: r };
   }
-  var i = 0;
+  var i = P0 ? P0.claves || 0 : 0; /* las claves de «otra» siguen la numeración del día */
   dia.items.forEach(function (it) {
     if (it.tipo === 'pausa') {
       var clave = 'p' + ++i;
@@ -7441,11 +7464,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
   var comidas = dia.items.filter(function (it) {return it.tipo === 'comida';});
   comidas.forEach(function (it) {it.agua = true;});
   dia.items[dia.items.length - 1].agua = true;
-  var quedan = Math.max(0, Math.min(pausas.length, meta - comidas.length - 1));
+  var quedan = Math.max(0, Math.min(pausas.length, meta - (P0 ? P0.vasos || 0 : 0) - comidas.length - 1));
   for (var k = 0; k < quedan; k++) pausas[Math.floor((k + 0.5) * pausas.length / quedan)].agua = true;
 
+  /* (s194: aquí cada bloque llevaba `de`, el total del día. Nadie lo leía —el total
+     lo da `plan.total`— y el banco lo destapó como mutante vivo: fuera.) */
   var focos = dia.items.filter(function (it) {return it.tipo === 'foco';});
-  focos.forEach(function (it) {it.de = focos.length;});
   return {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
     salida: salida, comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
@@ -7503,6 +7527,16 @@ Object.assign(window, { RITMO_OPCIONES, RITMO_FORMAS, ritmoComponer, ritmoHora, 
    al que pertenece, para que un bloque hecho por otra vía (volver de «por
    libre») no reabra una pausa vieja.
 
+   RECOLOCAR A MITAD DE DÍA (s194 · v0.125.0): al empezar cada bloque, si la
+   hora no es la del plan —tarde o temprano—, el resto del día se recompone
+   DESDE AHORA (`ritmoComponer` con `previos`) y lo anterior se congela como
+   historia en `dia.pasado` (los tramos hechos, sin la referencia viva a la
+   rutina: se rehidrata del catálogo al leer). `dia.desde` pasa a ser la hora
+   de la última recomposición y `dia.primerBloque` la duración con la que el
+   aro arrancó ese bloque, que la regla respeta. Lo hecho no se recompone
+   nunca; la comida sigue a su hora exacta; se sale a la hora de siempre con
+   lo que quepa. Decisión del usuario (s194): la línea dice la verdad.
+
    Y NO SE RECOLOCA A MITAD DEL DÍA (todavía): las horas son las del plan. Es lo
    primero de la lista «luego vamos ajustando». */
 
@@ -7527,10 +7561,14 @@ function ritmoHoy() {
   return typeof todayISO === 'function' ? todayISO() : '';
 }
 
-/* La hora de ahora en minutos, a la baja de 5 en 5. */
+/* La hora de ahora en minutos, a la baja de 5 en 5 (para elegir). */
 function ritmoAhora() {
+  return Math.floor(ritmoAhoraExacto() / 5) * 5;
+}
+/* Y al minuto (para recolocar: la línea dice la hora a la que empezaste). */
+function ritmoAhoraExacto() {
   var d = new Date();
-  return Math.floor((d.getHours() * 60 + d.getMinutes()) / 5) * 5;
+  return d.getHours() * 60 + d.getMinutes();
 }
 
 /* El estado de A tu ritmo, normalizado: nunca devuelve huecos. */
@@ -7583,13 +7621,68 @@ function ritmoPozos(s, iso) {
   };
 }
 
+/* LO QUE YA PASÓ, para recomponer el resto (ver ritmoComponer). La cadencia de
+   la pausa larga cuenta desde la última comida, como en la regla. */
+function ritmoPrevios(pasado, primerBloque) {
+  var p = { bloques: 0, pausas: 0, foco: 0, comidaHecha: false, usados: [], vasos: 0, claves: 0, primerBloque: primerBloque || null };
+  (pasado || []).forEach(function (it) {
+    if (it.tipo === 'foco') {p.bloques++;p.foco += it.dur;}
+    if (it.tipo === 'pausa') {p.pausas++;p.claves++;}
+    if (it.tipo === 'comida') {p.comidaHecha = true;p.pausas = 0;}
+    if (it.agua) p.vasos++;
+    (it.platos || []).forEach(function (pl) {p.usados.push(pl.id);});
+  });
+  return p;
+}
+
+/* Congelar tramos como historia: sin la rutina viva (se rehidrata al leer). */
+function ritmoCongelar(items) {
+  return (items || []).map(function (it) {
+    var c = Object.assign({}, it);
+    if (it.platos) c.platos = it.platos.map(function (p) {return { modulo: p.modulo, id: p.id, name: p.name, min: p.min, clave: p.clave };});
+    return c;
+  });
+}
+function ritmoRutinaPorId(id) {
+  var r = window.getBreatheRoutine && window.getBreatheRoutine(id);
+  if (r) return r;
+  var b = window.resolveBodyRoutine && window.resolveBodyRoutine(id);
+  return b && b.routine ? b.routine : null;
+}
+function ritmoHidratar(pasado) {
+  return (pasado || []).map(function (it) {
+    if (!it.platos) return it;
+    return Object.assign({}, it, { platos: it.platos.map(function (p) {
+        return Object.assign({}, p, { rutina: ritmoRutinaPorId(p.id) || { id: p.id, name: p.name, min: p.min } });
+      }) });
+  });
+}
+
 /* El día de una opción con el horario guardado. `desde` es la hora a la que se
-   eligió (llegar tarde = empezar ahí). */
-function ritmoMenu(s, opcion, cambios, desde) {
+   eligió (llegar tarde = empezar ahí) o, recolocando, la de la última
+   recomposición; `pasado` son los tramos congelados que van delante. */
+function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque) {
   var R = ritmoDe(s);
   var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()) });
   var agua = (s || {}).water && s.water.goal || 8;
-  return ritmoComponer(opcion, h, ritmoPozos(s, ritmoHoy()), cambios, agua);
+  var previos = pasado ? ritmoPrevios(pasado, primerBloque) : null;
+  var m = ritmoComponer(opcion, h, ritmoPozos(s, ritmoHoy()), cambios, agua, previos);
+  if (!m || !pasado || !pasado.length) return m;
+  /* Lo hecho delante, y los totales del día entero. Si empezaste tarde, el hueco
+     entre lo último hecho y ahora se pinta como margen libre (punteado, como el de
+     antes de la comida): la línea sigue siendo proporcional al tiempo. */
+  var antes = ritmoHidratar(pasado);
+  var ultimo = antes[antes.length - 1];
+  var finPasado = ultimo.desde + ultimo.dur;
+  var hueco = m.desde > finPasado ? [{ tipo: 'libre', desde: finPasado, dur: m.desde - finPasado }] : [];
+  var items = antes.concat(hueco, m.items);
+  var focos = items.filter(function (it) {return it.tipo === 'foco';});
+  return Object.assign({}, m, {
+    items: items, focos: focos, desde: antes[0].desde, tarde: antes[0].desde > m.habitual,
+    pausas: items.filter(function (it) {return it.tipo === 'pausa';}).length,
+    vasos: items.filter(function (it) {return it.agua;}).length,
+    comida: m.comida != null ? m.comida : items.some(function (it) {return it.tipo === 'comida';}) ? R.horario.comida : null
+  });
 }
 
 /* EL PLAN DE HOY con su progreso, o null (sin menú, o por libre).
@@ -7600,7 +7693,7 @@ function ritmoMenu(s, opcion, cambios, desde) {
 function ritmoPlan(s) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
-  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde);
+  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde, R.dia.pasado || null, R.dia.primerBloque || null);
   if (!m) return null;
   var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
   var actual = m.focos[hechos] || null;
@@ -7707,10 +7800,25 @@ function ritmoBloqueTerminado() {
   if (!p || p.hechos < 1) return;
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, { pausa: p.hechos }) } : {};});
 }
-function ritmoBloqueEmpezado() {
-  var R = ritmoDe(getState());
-  if (!R.dia || R.dia.pausa == null) return;
-  ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, { pausa: null }) } : {};});
+/* Empezar un bloque cierra la pausa y, si la hora no es la del plan, RECOLOCA:
+   lo anterior al bloque se congela como historia y el resto se recompone desde
+   ahora, con la duración con la que el aro arranca (`minutos`). Llegar antes es
+   el mismo caso con la hora por delante. */
+function ritmoBloqueEmpezado(minutos) {
+  var s = getState();
+  var R = ritmoDe(s);
+  if (!R.dia) return;
+  var cambios = {};
+  if (R.dia.pausa != null) cambios.pausa = null;
+  var p = ritmoPlan(s);
+  var t = ritmoAhoraExacto();
+  if (p && p.actual && t !== p.actual.desde) {
+    cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
+    cambios.desde = t;
+    cambios.primerBloque = Number(minutos) || p.actual.dur;
+  }
+  if (!Object.keys(cambios).length) return;
+  ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
 function ritmoPorLibre() {ritmoGuardar(function () {return { libre: ritmoHoy(), dia: null };});}
 function ritmoVolver() {ritmoGuardar(function () {return { libre: null };});}
@@ -7737,12 +7845,13 @@ function ritmoHorario(campo, valor) {
 }
 
 Object.assign(window, {
-  ritmoHorarioInicial, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras,
+  ritmoHorarioInicial, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
+  ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
   ritmoBloqueTerminado, ritmoBloqueEmpezado
 });
-;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, ritmoHoy, ritmoAhora, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
@@ -18528,7 +18637,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       inicioBloqueRef.current = Date.now(); // s172: bloque nuevo, no reanudacion
       /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
          reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
-      if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado();
+      if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado(state.focusMinutes); // s194: y recoloca el dia si la hora no es la del plan
       /* s194 · y es una PUERTA para el evento de la sesión: 'aro', servido por el menú
          si hay plan (`aro` no es null). Se anota al empezar, no al reanudar. */
       if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);
@@ -30721,6 +30830,14 @@ Object.assign(window, { Onboarding });
 .pace-rt-enlace:hover { color: var(--ink); }
 .pace-rt-enlace.pace-rt-fuerte { color: var(--focus-cta); }
 .pace-rt-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+/* «HOY VOY POR LIBRE» (s194, variante E): la única salida del menú, como píldora en verde —el
+   lenguaje de los chips de contexto, con el color de la acción secundaria— en la cabecera
+   (escritorio) o en el pie (móvil). No usa .pace-rt-enlace: no es un enlace más. */
+.pace-rt-libre { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus-cta);
+  border: 1px solid var(--focus-cta); border-radius: var(--r-pill); padding: 4px 10px; white-space: nowrap;
+  transition: background var(--dur-quick) var(--ease); }
+.pace-rt-libre:hover { background: var(--focus-soft); }
+.pace-rt-libre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
 
@@ -30929,8 +31046,13 @@ function RitmoFrase(_ref2) {let { plantilla, huecos } = _ref2;
 }
 
 /* Una hora editable DENTRO de la frase: un <select> nativo con aspecto de texto.
-   En móvil abre el selector del sistema. */
-var RITMO_RANGOS = { inicio: [360, 780], comida: [660, 960], salida: [720, 1320] };
+   En móvil abre el selector del sistema.
+   RANGOS (s194): el inicio llegaba solo hasta las 13:00 y quien trabaja por la
+   tarde no podía decir su hora (lo encontró el usuario a las 17:20). Ahora:
+   inicio 5:00–21:00 · comida 11:00–17:00 · salida 12:00–23:30, de media en media
+   hora. La regla ya sabe qué hacer con un inicio tras la salida (una hora es una
+   hora) y con una comida que no cae en la jornada (no la sirve). */
+var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410] };
 function RitmoSelector(_ref3) {let { campo, horario } = _ref3;
   const { t } = useT();
   let valores = [];
@@ -31079,8 +31201,7 @@ function RitmoLinea(_ref2) {let { plan, onCambiar } = _ref2;
     React.createElement("div", { className: "pace-rt-linea", ref: lin, "data-pace-ritmo-linea": true }, /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-sobre" }, /*#__PURE__*/
     React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn)), /*#__PURE__*/
-    React.createElement("button", { className: "pace-rt-enlace", onClick: onCambiar }, t('ritmo.cambiar')), /*#__PURE__*/
-    React.createElement(RitmoLibre, null)
+    React.createElement("button", { className: "pace-rt-enlace", onClick: onCambiar }, t('ritmo.cambiar'))
     ),
     m.items.map((it, i) => {
       if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
@@ -31179,9 +31300,13 @@ function RitmoContexto() {
 
 }
 
+/* «Hoy voy por libre» es la ÚNICA salida del menú, y el usuario pidió que destacara más
+   (s194). Variante E, elegida mirándola entre cinco: una píldora en verde —el lenguaje de
+   los chips de contexto— que en escritorio vive en la CABECERA junto al contexto, no en la
+   fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. */
 function RitmoLibre() {
   const { t } = useT();
-  return /*#__PURE__*/React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-libre": true, onClick: ritmoPorLibre }, t('ritmo.libre'));
+  return /*#__PURE__*/React.createElement("button", { className: "pace-rt-libre", "data-pace-ritmo-libre": true, onClick: ritmoPorLibre }, t('ritmo.libre'));
 }
 
 function RitmoChips(_ref) {let { state } = _ref;
@@ -31270,7 +31395,7 @@ function RitmoEscritorio(_ref5) {let { state, plan } = _ref5;
     '· ', /*#__PURE__*/React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu" })
     )
     ), /*#__PURE__*/
-    React.createElement(RitmoContexto, null)
+    React.createElement("div", { className: "pace-rt-der" }, /*#__PURE__*/React.createElement(RitmoContexto, null), /*#__PURE__*/React.createElement(RitmoLibre, null))
     ), /*#__PURE__*/
     React.createElement(RitmoComo, { plan: plan }), /*#__PURE__*/
     React.createElement(RitmoLinea, { plan: plan, onCambiar: ritmoPreguntar })

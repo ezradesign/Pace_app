@@ -407,11 +407,14 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 > (necesita el origen de cada sesión y semanas de uso; saca Stats «Semana» del aparcamiento).
 > Recomendado: **A ya, C después, B aparcada**. Orden de trabajo: origen → recolocar → A.
 
+**Hecho en s194 (v0.125.0)**: **recolocar a mitad de día** — al empezar cada bloque, si la hora no es
+la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
+punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
+
 **Lo que queda** («implementemos esto primero y luego vamos ajustando»):
 - **Propuestas para cada día de la semana/mes**: que el menú varíe y se planifique entre días, no
   solo dentro del día (el norte de arriba; empezar por la lectura A). Pinta antes.
-- **Recolocar a mitad de día**: hoy las horas son las del plan aunque te retrases.
-- **Llegar antes** de tu hora y las otras dos políticas de llegar tarde (pintadas en la ronda 4).
+- Las otras dos políticas de llegar tarde (pintadas en la ronda 4 de s192); «llegar antes» ya está (s194).
 - **Contexto real** («Junto a la mesa · Sin material» es fijo) → onboarding contextual, Fase 8.
 - **Calendario**: el horario es lo que una sincronización rellenaría sola. En orden de coste:
   exportar `.ics` (sin permisos) · Android leyendo el calendario del teléfono (Fase 9, sin nube) ·

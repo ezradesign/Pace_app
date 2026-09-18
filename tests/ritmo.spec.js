@@ -11,6 +11,10 @@
  *    su «Hasta las …» DEBAJO, la barra lateral con la siguiente pausa;
  *  · el DÍA: terminar un bloque hace que la pausa proponga el plato del menú y
  *    que el aro avance;
+ *  · RECOLOCAR A MITAD DE DÍA (s194): al empezar un bloque tarde, el resto del día se
+ *    recompone desde ahora (la comida a su hora, salgo a mi hora, el hueco del retraso
+ *    punteado, lo hecho congelado); llegar antes es empezar; y la regla en puro con
+ *    `previos` (numeración, cadencia de la larga, sin repetir, el bloque forzado);
  *  · LA LÍNEA SIGUE AL ARO (s193): el tramo de ahora se rellena con el bloque
  *    (`--pace-bloque`), al acabar «Ahora» es la PARADA —y la barra lateral dice
  *    «Tu pausa»— hasta que empieza el bloque siguiente, tocarla la empieza, y la
@@ -216,8 +220,121 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   await expect(parada).not.toHaveClass(/pace-rt-ahora/);
   await expect(parada).toBeDisabled();
   await expect(tramos.nth(1)).toHaveClass(/pace-rt-ahora/);
-  await expect(lateral).toContainText('Siguiente pausa · 10:35');
+  /* s194 · RECOLOCADO: el bloque 2 se ha empezado a las 9:45, sin esperar la pausa de
+     cinco minutos del plan (9:50), así que la línea se recompone desde ahora y la
+     siguiente pausa cae a las 10:30, no a las 10:35. La línea dice la verdad. */
+  await expect(lateral).toContainText('Siguiente pausa · 10:30');
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(null);
+  expect(await page.evaluate(() => getState().ritmo.dia.desde), 'la recomposición empieza a las 9:45').toBe(585);
+});
+
+/* ------------------------------------------------------- recolocar a mitad de día (s194) */
+test('empezar el bloque 2 veinte minutos tarde recoloca el resto del día: comida a su hora, salida igual, retraso punteado', async ({ page, context }) => {
+  await abrir(page, context, { dia: JORNADA });
+  const antes = await page.evaluate(() => { const p = ritmoPlan(getState()); return { hasta: p.m.hasta, bloques: p.total, paradas: p.m.items.filter((it) => it.tipo === 'pausa').map((it) => it.desde) }; });
+  expect(antes.paradas.slice(0, 3)).toEqual([585, 635, 685]);   /* 9:45 · 10:35 · 11:25 */
+
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
+  await page.waitForTimeout(250);
+  for (let i = 0; i < 50; i++) {
+    await page.clock.fastForward(60 * 1000);
+    await page.waitForTimeout(60);
+    if (await page.locator('[data-pace-break-shortcut]').count()) break;
+  }
+  await page.keyboard.press('Escape');
+  await page.clock.fastForward(25 * 60 * 1000);   /* son las 10:10: veinte minutos tarde para el bloque 2 */
+  await page.waitForTimeout(200);
+  /* mientras esperas, nada se mueve: recolocar pasa al EMPEZAR */
+  expect(await page.evaluate(() => ritmoPlan(getState()).actual.desde)).toBe(590);
+  await page.getByRole('button', { name: 'Empezar bloque 2', exact: true }).click();
+  await page.waitForTimeout(300);
+
+  const d = await page.evaluate(() => {
+    const p = ritmoPlan(getState()), dia = getState().ritmo.dia;
+    return { desde: dia.desde, primerBloque: dia.primerBloque, pasado: dia.pasado.map((it) => it.tipo), actual: p.actual.desde, dur: p.actual.dur,
+      hasta: p.m.hasta, bloques: p.total, hechos: p.hechos, comida: p.m.items.find((it) => it.tipo === 'comida').desde,
+      paradas: p.m.items.filter((it) => it.tipo === 'pausa').map((it) => it.desde), libres: p.m.items.filter((it) => it.tipo === 'libre').map((it) => [it.desde, it.dur]),
+      ids: p.m.items.flatMap((it) => (it.platos || []).map((pl) => pl.id)), primerNombre: p.m.items[1].platos[0].name, focoMin: p.m.focoMin };
+  });
+  expect(d.desde, 'la recomposición empieza a las 10:10').toBe(610);
+  expect(d.primerBloque).toBe(45);
+  expect(d.pasado, 'lo hecho se congela: el bloque 1 y su pausa').toEqual(['foco', 'pausa']);
+  expect(d.actual, 'el bloque 2 empieza a las 10:10, no a las 9:50').toBe(610);
+  expect(d.dur, 'y dura lo que marca el aro').toBe(45);
+  expect(d.hechos).toBe(1);
+  expect(d.paradas.slice(0, 3), 'las paradas se mueven con el bloque').toEqual([585, 655, 705]);   /* 9:45 · 10:55 · 11:45 */
+  expect(d.comida, 'la comida sigue a su hora exacta').toBe(840);
+  expect(d.hasta, 'sales a tu hora').toBe(1020);
+  expect(d.libres, 'el retraso se pinta como margen libre').toContainEqual([590, 20]);
+  expect(new Set(d.ids).size, 'nada se repite, tampoco lo ya servido').toBe(d.ids.length);
+  expect(d.primerNombre, 'la parada hecha conserva su plato al rehidratarla').toBeTruthy();
+  expect(d.focoMin, 'el foco del día cuenta lo hecho').toBeLessThan(antes.bloques * 45);
+  /* la línea lo pinta: el hueco punteado y las etiquetas nuevas */
+  const linea = vis(page, '[data-pace-ritmo-linea]');
+  await expect(linea.locator('[data-pace-ritmo-tramo="libre"]')).toHaveCount(1);
+  await expect(linea).toContainText('10:55');
+  await expect(page.locator('[data-pace-sidebar]')).toContainText('Siguiente pausa · 10:55');
+  /* y sobrevive a la recarga */
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').first().waitFor({ state: 'visible' });
+  expect(await page.evaluate(() => ritmoPlan(getState()).actual.desde)).toBe(610);
+});
+
+test('llegar antes es empezar: a las 8:40 con el plan a las 9:00, el día arranca a las 8:40', async ({ page, context }) => {
+  await abrir(page, context, { dia: JORNADA }, {}, new Date('2026-09-17T08:40:00+02:00'));
+  expect(await page.evaluate(() => ritmoPlan(getState()).actual.desde)).toBe(540);
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
+  await page.waitForTimeout(300);
+  const d = await page.evaluate(() => { const p = ritmoPlan(getState()); return { desde: p.m.desde, actual: p.actual.desde, primera: p.m.items[1].desde, hasta: p.m.hasta, pasado: getState().ritmo.dia.pasado }; });
+  expect(d.actual).toBe(520);
+  expect(d.desde, 'el día empieza cuando empiezas').toBe(520);
+  expect(d.primera, 'la primera pausa se adelanta').toBe(565);
+  expect(d.hasta).toBe(1020);
+  expect(d.pasado, 'sin nada hecho, la historia está vacía').toEqual([]);
+});
+
+test('la regla con previos: numeración, cadencia de la larga, sin repetir, bloque forzado y comida ya hecha', async ({ page, context }) => {
+  await abrir(page, context);
+  const r = await page.evaluate(() => {
+    const pozos = ritmoPozos(getState(), '2026-09-17');
+    const h = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
+    const entero = ritmoComponer('jornada', h, pozos, {}, 8);
+    /* dos bloques y dos pausas hechos; el bloque 3 arranca a las 11:00 con 45 */
+    const pasado = entero.items.slice(0, entero.items.indexOf(entero.focos[2]));
+    const previos = ritmoPrevios(pasado, 45);
+    const resto = ritmoComponer('jornada', Object.assign({}, h, { ahora: 660 }), pozos, {}, 8, previos);
+    const primera = resto.items[0], pausa1 = resto.items.find((it) => it.tipo === 'pausa');
+    const usados = pasado.flatMap((it) => (it.platos || []).map((p) => p.id));
+    const nuevos = resto.items.flatMap((it) => (it.platos || []).map((p) => p.id));
+    /* comida ya hecha a las 13:00 (con la hora de comer por delante): no se sirve otra */
+    const tarde = ritmoComponer('jornada', Object.assign({}, h, { ahora: 780 }), pozos, {}, 8, Object.assign({}, previos, { comidaHecha: true }));
+    /* el bloque forzado CRUZA la hora de comer: se come al acabarlo, no antes */
+    const cruza = ritmoComponer('jornada', Object.assign({}, h, { ahora: 810 }), pozos, {}, 8, previos);
+    /* opción con presupuesto: 1 h con 25 hechos y el bloque forzado a 35 (el aro dice 35) */
+    const hora = ritmoComponer('1h', Object.assign({}, h, { ahora: 600 }), pozos, {}, 8, { bloques: 1, pausas: 1, foco: 25, comidaHecha: false, usados: [], vasos: 0, claves: 1, primerBloque: 35 });
+    return {
+      previos: { bloques: previos.bloques, pausas: previos.pausas, foco: previos.foco, claves: previos.claves },
+      primera: [primera.tipo, primera.desde, primera.dur, primera.n],
+      largaEsLaTercera: !!(pausa1 && pausa1.larga),
+      repite: nuevos.some((id) => usados.indexOf(id) !== -1),
+      claveSigue: pausa1 && pausa1.platos[0].clave,
+      tardeSinComida: !tarde.items.some((it) => it.tipo === 'comida'),
+      cruzaComida: [cruza.items[0].dur, cruza.items.find((it) => it.tipo === 'comida').desde],
+      horaBloques: hora.focos.map((f) => f.dur), horaFoco: hora.focoMin,
+      agua: resto.vasos + previos.vasos, previosVasos: previos.vasos,
+    };
+  });
+  expect(r.previos).toEqual({ bloques: 2, pausas: 2, foco: 90, claves: 2 });
+  expect(r.primera, 'el bloque forzado: foco, 11:00, 45 min, número 3').toEqual(['foco', 660, 45, 3]);
+  expect(r.largaEsLaTercera, 'con dos pausas hechas, la siguiente es la larga').toBe(true);
+  expect(r.repite, 'no repite platos ya servidos').toBe(false);
+  expect(r.claveSigue, 'las claves de «otra» siguen la numeración').toBe('p3a');
+  expect(r.tardeSinComida, 'con la comida hecha no se sirve otra').toBe(true);
+  expect(r.cruzaComida, 'el bloque forzado de 45 a las 13:30 acaba a las 14:15, y la comida empieza entonces').toEqual([45, 855]);
+  expect(r.horaBloques, 'una hora con 25 hechos: el bloque forzado de 35 y nada más').toEqual([35]);
+  expect(r.horaFoco).toBe(60);
+  expect(r.previosVasos, 'lo hecho ya sirvió agua').toBeGreaterThan(0);
+  expect(r.agua, 'el agua del día no pasa de la meta').toBeLessThanOrEqual(8);
 });
 
 test('la pausa abierta sobrevive a la recarga, y tocar la parada empieza su plato por la puerta de siempre', async ({ page, context }) => {

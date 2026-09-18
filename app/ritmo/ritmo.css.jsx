@@ -42,6 +42,14 @@
 .pace-rt-enlace:hover { color: var(--ink); }
 .pace-rt-enlace.pace-rt-fuerte { color: var(--focus-cta); }
 .pace-rt-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+/* «HOY VOY POR LIBRE» (s194, variante E): la única salida del menú, como píldora en verde —el
+   lenguaje de los chips de contexto, con el color de la acción secundaria— en la cabecera
+   (escritorio) o en el pie (móvil). No usa .pace-rt-enlace: no es un enlace más. */
+.pace-rt-libre { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus-cta);
+  border: 1px solid var(--focus-cta); border-radius: var(--r-pill); padding: 4px 10px; white-space: nowrap;
+  transition: background var(--dur-quick) var(--ease); }
+.pace-rt-libre:hover { background: var(--focus-soft); }
+.pace-rt-libre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
 

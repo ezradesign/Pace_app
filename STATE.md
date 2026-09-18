@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.124.0 (s194 - **EL ORIGEN DE CADA SESION**. `pace.events.v1` distinguia dos contextos (suelta o en un Camino) y nada mas; no sabia si una sesion la eligio la persona en la carta, se la propuso la pausa, era el plato que «A tu ritmo» sirvio o toco la parada. `session.completed` lleva ahora **`origin`** (la puerta: aro · pausa · biblioteca · sidebar · parada · camino) y **`fromMenu`**; la puerta se anota en el GESTO, vive en memoria y la consume la primera sesion que termina. **Nada cambia en la pantalla**: es la instrumentacion que hace medible el menu y el norte. **253 -> 257**, 12 de 12 mutantes muerden. Recomendacion para el norte: **A ya, C despues, B aparcada**.)
+**Version actual:** v0.125.0 (s194 - **RECOLOCAR A MITAD DE DIA**, la pieza 2 de las tres que pidio el usuario. Las horas de la linea eran las del plan aunque empezaras tarde; ahora, **al empezar cada bloque, si la hora no es la del plan, el resto del dia se recompone desde ahora**: lo hecho se congela como historia (`dia.pasado`), el bloque que acaba de empezar dura lo que marca el aro, la comida sigue a su hora, el retraso se pinta punteado y **llegar antes es empezar**. Maqueta con el mismo guion sobre la app de antes y la de despues; el usuario: «me parecen bien las propuestas». De paso, el bug del selector de inicio (solo llegaba a las 13:00). Antes, en la misma sesion, **v0.124.0: el origen de cada sesion** en `pace.events.v1`. **257 -> 260**, 13 de 13 mutantes muerden.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -20,20 +20,22 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
-| `app/ritmo/ritmo.regla.js` | **LA REGLA DE A TU RITMO (s192)**, PURA: `ritmoComponer(opcion, horario, pozos, cambios, meta)` compone el dia -- comida a su hora exacta, bloque previo acortado, colas fundidas, agua hasta la meta, sin repetir rutina, llegar tarde = sales a tu hora. No lee reloj, estado ni `window` | **NUEVO s192** |
+| `app/ritmo/ritmo.regla.js` | **LA REGLA DE A TU RITMO (s192)**, PURA: `ritmoComponer(opcion, horario, pozos, cambios, meta, previos)` compone el dia. **s194: `previos` recompone desde AHORA con lo hecho** (bloque forzado, cadencia, presupuesto, platos, claves, agua, comida hecha) -- comida a su hora exacta, bloque previo acortado, colas fundidas, agua hasta la meta, sin repetir rutina, llegar tarde = sales a tu hora. No lee reloj, estado ni `window` | **NUEVO s192** |
 | `app/state-events.jsx` | **EL EMISOR de `pace.events.v1`** (s172): un punto por tipo de evento, junto a la escritura legacy. **s194: la PUERTA de la sesion** — `paceOrigenSesion(puerta, desdeMenu)` la anota en memoria (`paceOrigenPendiente`) y `emitSessionCompleted` la consume y la escribe en `origin`/`fromMenu`; con `inPath` manda `camino` | **s194** · s172 |
 | `app/events/events-payloads.js` | La LISTA PERMITIDA de cada payload (s155). **s194: `EVENT_ORIGINS` y los campos `origin` y `fromMenu` de `session.completed`**, los dos anulables | **s194** · s155 |
-| `app/state-ritmo.jsx` | **EL ESTADO DE A TU RITMO (s192)**: `ritmo: { horario, libre, dia }`. El progreso sale de `cycle − cicloBase`. Pozos desde el catalogo vivo (con el veto de s189). Lo que consultan el aro (`ritmoAro`), la pausa (`ritmoPropuesta`) y la barra lateral (`ritmoSiguiente`), y `ritmoSincronizar` (no toca `focusMinutes` con un bloque en marcha). **s193: `dia.pausa`, la pausa ABIERTA** — la abre `ritmoBloqueTerminado` (main.jsx, tras `cycle++`) y la cierra `ritmoBloqueEmpezado` (FocusTimer, solo foco, nunca al reanudar); `ritmoPlan` la devuelve solo si `pausa === hechos`; `ritmoSiguiente` la da con `ahora: true` | **s193** · NUEVO s192 |
+| `app/state-ritmo.jsx` | **EL ESTADO DE A TU RITMO (s192)**: `ritmo: { horario, libre, dia }`. El progreso sale de `cycle − cicloBase`. Pozos desde el catalogo vivo (con el veto de s189). Lo que consultan el aro (`ritmoAro`), la pausa (`ritmoPropuesta`) y la barra lateral (`ritmoSiguiente`), y `ritmoSincronizar` (no toca `focusMinutes` con un bloque en marcha). **s193: `dia.pausa`, la pausa ABIERTA** — la abre `ritmoBloqueTerminado` (main.jsx, tras `cycle++`) y la cierra `ritmoBloqueEmpezado` (FocusTimer, solo foco, nunca al reanudar); `ritmoPlan` la devuelve solo si `pausa === hechos`; `ritmoSiguiente` la da con `ahora: true`. **s194: RECOLOCAR** — `ritmoBloqueEmpezado(minutos)` congela lo hecho en `dia.pasado` y fija `dia.desde`/`dia.primerBloque` si la hora no es la del plan; `ritmoPrevios`, `ritmoCongelar`, `ritmoHidratar`, `ritmoAhoraExacto`; `ritmoMenu` antepone la historia con el hueco del retraso | **s194** · s193 · NUEVO s192 |
 | `app/ritmo/RitmoHome.jsx` | **EL BLOQUE DE LA HOME (s192)**: el panel (con `data-pace-activitybar`: hereda el horizonte) o, por libre, Actividades + Camino con sus keys y el enlace de vuelta. La hoja va por PORTAL | **NUEVO s192** |
 | `app/ritmo/RitmoPanel.jsx` | La pregunta, el menu servido (escritorio y movil, dos copias en el DOM) y la jornada cerrada. **s193: `RitmoComo` (la frase hasta el primer bloque hecho) y `RitmoFilaParada`; con la pausa abierta, en movil «Ahora» es la parada y «Luego» el bloque** | **s193** · NUEVO s192 |
 | `app/ritmo/RitmoLinea.jsx` | La linea del dia (escritorio) con las etiquetas colocadas MIDIENDO en hasta tres niveles, y la mini linea de movil. **s193: `ritmoIndiceAhora` (la pausa abierta manda), la parada abierta con «Ahora» y `ritmoEmpezarParada` (tocarla la empieza por `pace:sidebar-action`; s194: con `parada: true` para el origen)** | **s194** · s193 · NUEVO s192 |
 | `app/ritmo/RitmoHoja.jsx` | La jornada entera en el `Modal` de la app. s193: la parada abierta lleva «ahora» | **s193** · NUEVO s192 |
-| `app/ritmo/RitmoPiezas.jsx` | Glifo por modulo, nombre en su idioma, la frase con `{marcadores}` y los selectores de hora | **NUEVO s192** |
+| `app/ritmo/RitmoPiezas.jsx` | **s194: los rangos del horario (inicio 5:00–21:00, comida 11:00–17:00, salida 12:00–23:30; el inicio solo llegaba a las 13:00)**. Glifo por modulo, nombre en su idioma, la frase con `{marcadores}` y los selectores de hora | **NUEVO s192** |
 | `app/ritmo/ritmo.css.jsx` | La hoja inyectada (patron de `library.css.jsx`), corte 768/769. **s193: el tramo de ahora al 35 % con `::after` que mide `--pace-bloque`; lo hecho en `--focus` entero; la parada abierta con borde entero y lavado; la pasada sin atenuar** | **s193** · NUEVO s192 |
 | `app/i18n/strings/ritmo.js` | 56 claves por idioma, incluidas las razones `break.prop.ritmo.*` (s193: `ritmo.empieza`, `ritmo.como`, `ritmo.sidebar.ahora`) | **s193** · NUEVO s192 |
-| `tests/ritmo.spec.js` | **17 tests**: la regla en puro, la home, un bloque terminado, **la linea sigue al aro (`--pace-bloque`, el ancho del `::after`, la parada abierta, «Tu pausa», empezar el bloque 2 la cierra), la pausa sembrada que sobrevive a la recarga y se empieza tocando la parada**, por libre, el horario, llegar tarde, ingles, movil (**con la pausa abierta**) y la geometria en cuatro viewports | **s193** · NUEVO s192 |
+| `tests/ritmo.spec.js` | **20 tests** (465 ln: lo siguiente va a un spec hermano) — **s194: recolocar veinte minutos tarde, llegar antes es empezar, la regla en puro con `previos`** — la regla en puro, la home, un bloque terminado, **la linea sigue al aro (`--pace-bloque`, el ancho del `::after`, la parada abierta, «Tu pausa», empezar el bloque 2 la cierra), la pausa sembrada que sobrevive a la recarga y se empieza tocando la parada**, por libre, el horario, llegar tarde, ingles, movil (**con la pausa abierta**) y la geometria en cuatro viewports | **s193** · NUEVO s192 |
 | `scripts/audit/banco-ritmo-s192.js` | Banco de mutantes de A tu ritmo, con pasada de control: **11 de 11 muerden** | **NUEVO s192** |
 | `tests/eventos-origen.spec.js` | **El origen de cada sesion (s194), 4 tests**: las seis puertas sobre sesiones reales (aro con y sin plan, la propuesta de la pausa, la parada, la tarjeta de la barra lateral, una biblioteca) y, en puro, el consumo, el Camino y la lista permitida | **NUEVO s194** |
+| `scripts/audit/banco-recolocar-s194.js` | **Banco de mutantes de recolocar (s194)**, con pasada de control: **13 de 13 muerden**. Declara lo que no muta: `primerBloque` cuando el aro y el plan coinciden, y la rehidratacion | **NUEVO s194** |
+| `scripts/audit/recolocar-s194.js` | **La maqueta de recolocar**: el mismo guion (tarde a las 10:10, diez mas, llegar antes) fotografiado con `--hoy` sobre el artefacto viejo y sin el sobre el nuevo; `--pagina` compone `docs/proposals/recolocar-r1.html`. Las tandas van al temp del sistema, no al repo | **NUEVO s194** |
 | `scripts/audit/banco-origen-s194.js` | **Banco de mutantes del origen (s194)**, con pasada de control: **12 de 12 muerden**. Una puerta por mutante, mas el consumo, el Camino y la lista | **NUEVO s194** |
 | `scripts/audit/banco-pausa-s193.js` | **Banco de mutantes de «la linea sigue al aro» (s193)**, con pasada de control: **12 de 12 muerden**. Declara lo que no muta: los colores y la guarda `pausa === hechos` | **NUEVO s193** |
 | `scripts/audit/pausa-s193.js` | **La maqueta de s193** sobre la app real (reloj fijado con offset, jornada sembrada): fotografia la home en cuatro estados, «hoy» y «propuesta» (DOM y hoja inyectados), recorta con `sharp` y escribe `docs/proposals/la-linea-sigue-al-aro-r1.html`, FLUIDA (la primera tirada se veia cortada) | **NUEVO s193** |
@@ -233,39 +235,40 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s194 publica **v0.124.0, «el origen de cada sesion»**: la pieza 1 de las tres que el usuario
-> pidio seguir (origen · recolocar a mitad de dia · el norte). Suite **253 -> 257**, `verify` en
-> verde, artefacto regenerado, **12 de 12 mutantes muerden** con control. Nada cambia en la
-> pantalla.
+> s194 publica dos versiones: **v0.124.0, «el origen de cada sesion»** (la instrumentacion) y
+> **v0.125.0, «recolocar a mitad de dia»**. Suite **253 -> 257 -> 260**, `verify` en verde, artefacto
+> regenerado, tres bancos de mutantes con control (origen 12/12 · recolocar 13 de 13).
 >
 > Diario: [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md) ·
-> La pagina que lo explico: `docs/proposals/por-donde-seguir-s194.html`
+> Paginas: `por-donde-seguir-s194.html` · `recolocar-r1.html` · `por-libre-r1.html`
 
-- **[LO QUE ENTRA]** `session.completed` lleva `origin` (aro · pausa · biblioteca · sidebar ·
-  parada · camino) y `fromMenu`. La puerta la anota el GESTO (`paceOrigenSesion`) y la consume
-  la primera sesion que termina; dentro de un Camino manda `camino`. Rev. 7 del esquema
-  (`EVENTOS_SCHEMA.md` §8). Decision tecnica nueva en `DECISIONES_TECNICAS_VIGENTES.md`.
+- **[PIEZA 1 · ORIGEN]** `session.completed` lleva `origin` y `fromMenu`; la puerta se anota en el
+  gesto y la consume la primera sesion que termina. Rev. 7 del esquema. Nada cambia en la pantalla.
 
-- **[EL NORTE, RECOMENDADO]** A ya (el menu varia con el dia de la semana, sin datos; hay que
-  darle motivo visible) · C despues (el sistema enseña que cambio y propone ajustes, cuando el
-  origen tenga semanas de datos; saca Stats «Semana» del aparcamiento) · B aparcada (planificar
-  la semana, hasta el calendario). Orden acordado con el usuario: **origen -> recolocar -> A**.
+- **[PIEZA 2 · RECOLOCAR]** Al empezar cada bloque, si la hora no es la del plan, el resto del dia se
+  recompone desde ahora; lo hecho se congela (`dia.pasado`); el bloque forzado dura lo que marca el
+  aro; el retraso se pinta punteado; llegar antes es empezar. **Decidido por el usuario**: siempre ·
+  la cola se funde · el bloque dura lo del aro («me parecen bien las propuestas por el momento»).
 
-- **[LO QUE QUEDA, EN ORDEN]** **Recolocar a mitad de dia** (pieza 2; pintar antes la linea con
-  retraso, hoy y propuesta; decidir: ¿un bloque menos o bloques mas cortos si el dia no cabe?) ·
-  **el norte, lectura A** (pieza 3; pintar antes) · `MoveSessionV1.jsx` en 500 · los huecos de
-  s193 (el cierre nunca es «Ahora», la pausa larga propone un plato de dos) · un consumidor de
-  `origin` (Stats «Semana») cuando haya datos.
+- **[LO QUE ENCONTRO EL USUARIO USANDOLO]** El selector de inicio solo llegaba a las 13:00 (a las
+  17:20 no podia decir su hora): arreglado, rangos ampliados. Y **«Hoy voy por libre» deberia
+  destacar mas**: cinco variantes fotografiadas (`por-libre-r1.html`), el usuario eligio la **E**
+  (pildora verde en la cabecera, junto al contexto; en movil en el pie). Aplicada.
 
-- **[DECLARADO SIN CUBRIR]** Ningun consumidor lee `origin` todavia · una sesion reanudada tras
-  recargar sale con `origin: null` (la puerta no se persiste, §7.2) · la biblioteca abierta desde
-  una tarjeta de la pausa sale como `pausa` con `fromMenu: false` (intencion, no asertado).
+- **[EL NORTE]** Recomendacion aceptada como orden: **origen -> recolocar -> A** (el menu varia con el
+  dia de la semana, con motivo visible); C cuando el origen tenga semanas de datos; B aparcada.
 
-- **[TRAMPAS]** El boton «Volver al inicio» del cierre de sesion es HERMANO de
-  `[data-pace-session-done]`, no hijo: se busca en `[data-pace-session-root]` (60 s de espera hasta
-  verlo) · `pathRunId` es opcional en `session.completed` (§7.1): con `inPath` y sin
-  `paths.current` el evento sale igual · la semilla de un bloque hecho sigue pidiendo
-  `lastActiveDay` en formato `toDateString`.
+- **[LO QUE QUEDA, EN ORDEN]** **El norte, lectura A** (pintar antes) · que el usuario lo use un dia entero · `MoveSessionV1.jsx` en 500 · `ritmo.spec.js` en 465
+  (lo siguiente a un spec hermano) · los huecos: el cierre nunca es «Ahora», la pausa larga propone un
+  plato de dos, el modo oscuro del panel.
+
+- **[TRAMPAS]** «Volver al inicio» es hermano de `[data-pace-session-done]` · `pathRunId` es opcional
+  en `session.completed` · un mutante que no se distingue del plan (bloque forzado de 45 con bloques
+  de 45) hay que hacerlo distinguible ANTES de correr el banco (35) · las tandas de fotos intermedias
+  van al temp del sistema, no a `docs/` · el servidor del 8765 de otra sesion puede desaparecer a
+  mitad (`preview_start` lo relanza) · **NADA que compile mientras corre un banco**: un `verify`
+  concurrente (que tambien construye `index.html`) hizo «vivir» a un mutante que muerde; la tercera
+  pasada, en limpio, dio 13 de 13.
 
 ---
 
@@ -276,6 +279,7 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **Recolocar es RECOMPONER desde ahora con lo hecho congelado: la regla sigue pura (`previos`), la historia viaja aparte (`dia.pasado`) y el bloque que acaba de empezar dura lo que marca el aro** (s194)
 - **El ORIGEN de una sesion se anota en el GESTO y lo consume la primera sesion que termina; son DOS campos (`origin` · `fromMenu`), viven en memoria y dentro de un Camino manda `camino`** (s194)
 - **La pausa de «A tu ritmo» es un INTERRUPTOR guardado con su numero, y la cierra EMPEZAR el bloque siguiente; el avance del bloque viaja como una variable mas de la luz** (s193)
 - **«A tu ritmo» OCUPA EL SITIO DE ACTIVIDADES Y HEREDA SU PAPEL DE HORIZONTE: el panel lleva `data-pace-activitybar`** (s192)
