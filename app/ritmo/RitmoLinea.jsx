@@ -81,11 +81,13 @@ function ritmoIndiceAhora(plan) {
 }
 
 /* Empezar el plato de la parada abierta: la misma puerta que la barra lateral
-   (usePaceEventos, `suggest`), así una rutina con aviso pasa por su modal. */
+   (usePaceEventos, `suggest`), así una rutina con aviso pasa por su modal.
+   `parada: true` es para el ORIGEN del evento (s194): la sesión sale con
+   `origin: 'parada'`, no 'sidebar'. */
 function ritmoEmpezarParada(it) {
   const plato = it.platos && it.platos[0];
   if (!plato) return;
-  window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id } }));
+  window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }
 
 function RitmoLinea({ plan, onCambiar }) {

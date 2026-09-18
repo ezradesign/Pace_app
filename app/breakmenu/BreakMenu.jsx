@@ -51,8 +51,13 @@ function BreakMenu({ open, onClose, onChoose }) {
       try { unlockAchievement('first.cycle'); } catch (e) {}
     }
     /* La rutina viaja como SEGUNDO argumento y es opcional: quien pulse una
-       tarjeta sigue abriendo su biblioteca, exactamente como antes. */
-    onChoose(key, rutina || null);
+       tarjeta sigue abriendo su biblioteca, exactamente como antes. El TERCERO
+       (s194) dice si esa rutina es el plato que sirvió «A tu ritmo»: lo sabe el
+       motivo de la propuesta (`break.prop.ritmo.*`), y va al origen del evento. */
+    const p = propRef.current;
+    const desdeMenu = !!(rutina && p && p.rutina && p.rutina.id === rutina.id
+      && typeof p.porque === 'string' && p.porque.indexOf('ritmo.') === 0);
+    onChoose(key, rutina || null, desdeMenu);
   };
 
   // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).

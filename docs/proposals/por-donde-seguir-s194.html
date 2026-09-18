@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Por dónde seguir · después de v0.123.0</title>
+<style>
+  :root { --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372; --line: #C9C0A8; --line-2: #B8AD8E;
+    --focus: #3E5A3A; --focus-2: #2A3E27; --focus-cta: #50624D; --focus-soft: rgba(62,90,58,0.10); --breathe: #C97A5D; --move: #9A7B4F; --extra: #6B7A8F; --hydrate: #5B8FA8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter Tight', system-ui, sans-serif; font-size: 15px; line-height: 1.5; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1, h2, h3 { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-weight: 500; }
+  h1 { font-size: 40px; margin: 6px 0 12px; line-height: 1.05; }
+  h2 { font-size: 28px; margin: 52px 0 6px; line-height: 1.1; }
+  h3 { font-size: 20px; margin: 22px 0 4px; }
+  p, li { max-width: 78ch; color: var(--ink-2); }
+  .ceja { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+  .pie { font-size: 12px; color: var(--ink-3); }
+  code { font-size: 13px; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; }
+  kbd { font: inherit; font-size: 12px; border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; color: var(--ink-2); background: var(--paper); }
+  .tarjeta { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; background: var(--paper); min-width: 0; }
+  .tarjeta.rec { border-color: var(--focus-cta); background: var(--focus-soft); }
+  .tarjeta.hecha { border-style: dashed; }
+  .sello { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--focus-cta); }
+  .sello.gris { color: var(--ink-3); }
+  .t { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 20px; display: block; color: var(--ink); margin: 2px 0 6px; }
+  .tarjeta p { font-size: 14px; margin: 6px 0 0; }
+  .dos { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 16px; margin-top: 10px; }
+  .tres { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 10px; }
+  @media (max-width: 820px) { .dos, .tres { grid-template-columns: minmax(0,1fr); } }
+  /* la ficha de cada opción */
+  .ficha { display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 4px 14px; font-size: 14px; margin-top: 10px; }
+  .ficha dt { color: var(--ink-3); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding-top: 3px; }
+  .ficha dd { margin: 0; color: var(--ink-2); }
+  @media (max-width: 520px) { .ficha { grid-template-columns: minmax(0,1fr); } .ficha dt { padding-top: 8px; } }
+  /* el mapa de dependencias */
+  .mapa { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px 28px; align-items: stretch; margin: 14px 0 6px; position: relative; }
+  @media (max-width: 820px) { .mapa { grid-template-columns: minmax(0,1fr); gap: 10px; } .flecha { display: none; } }
+  .nodo { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--paper); font-size: 13px; color: var(--ink-2); position: relative; }
+  .nodo b { display: block; font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); margin-bottom: 2px; }
+  .nodo.ok { border-style: dashed; color: var(--ink-3); }
+  .nodo.ok b { color: var(--ink-3); }
+  .nodo.rec { border-color: var(--focus-cta); background: var(--focus-soft); }
+  .nodo .flecha { position: absolute; right: -24px; top: 50%; width: 20px; height: 1px; background: var(--line-2); }
+  .nodo .flecha::after { content: ''; position: absolute; right: -1px; top: -3px; border: 3.5px solid transparent; border-left-color: var(--line-2); }
+  .nodo i.n { position: absolute; top: -9px; left: 10px; font-style: normal; font-size: 10px; letter-spacing: 0.12em; background: var(--paper); padding: 0 5px; color: var(--ink-3); }
+  .nodo.rec i.n { background: #e9eadf; }
+  /* las tiras (líneas del día) */
+  .tira { display: flex; align-items: center; margin: 14px 0 10px; height: 30px; }
+  .tira .s { height: 4px; border-radius: 2px; background: var(--paper-3); position: relative; }
+  .tira .s.h { background: var(--focus); }
+  .tira .s.a { background: color-mix(in srgb, var(--focus) 35%, var(--paper-3)); }
+  .tira .s.com { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); height: 2px; }
+  .tira .p { width: 20px; height: 20px; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--c, var(--extra)) 50%, transparent); background: var(--paper); margin: 0 3px; flex: 0 0 auto; position: relative; }
+  .tira .p.on { border: 1.5px solid var(--c, var(--extra)); background: color-mix(in srgb, var(--c, var(--extra)) 14%, var(--paper)); }
+  .tira .tag { position: absolute; left: 50%; transform: translateX(-50%); bottom: 22px; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+  .tira .s .tag { transform: none; left: 0; bottom: 10px; color: var(--focus); }
+  .tira .s .tag.r { left: 0; right: auto; bottom: -16px; color: #A0452B; }
+  .leyenda { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  /* los bocetos de la semana */
+  .semana { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 6px; margin-top: 12px; }
+  .dia { border: 1px solid var(--line); border-radius: 8px; padding: 8px 6px 8px; background: var(--paper); text-align: center; min-width: 0; }
+  .dia .d { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+  .dia .h { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-size: 15px; color: var(--ink); margin: 2px 0 6px; }
+  .dia .puntos { display: flex; justify-content: center; gap: 3px; flex-wrap: wrap; }
+  .dia .puntos i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; border: 1.5px solid var(--c); background: var(--paper); }
+  .dia .puntos i.f { background: var(--c); }
+  .dia.hoy { border-color: var(--focus-cta); background: var(--focus-soft); }
+  .dia.vacio { border-style: dashed; }
+  .dia .sel { display: inline-block; margin-top: 4px; font-size: 11px; color: var(--ink); border-bottom: 1px dotted var(--line-2); }
+  .frase { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-size: 16px; color: var(--ink-2); margin-top: 10px; }
+  .frase b { color: var(--ink); font-weight: 500; }
+  .decide { border-top: 1px solid var(--line); padding-top: 6px; margin-top: 30px; }
+  .decide li { margin-bottom: 8px; }
+  .orden { counter-reset: n; list-style: none; padding: 0; margin: 10px 0 0; }
+  .orden li { counter-increment: n; position: relative; padding-left: 34px; margin-bottom: 8px; max-width: none; }
+  .orden li::before { content: counter(n); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--focus-cta); color: var(--focus-cta); font-size: 12px; display: grid; place-items: center; }
+  .evento { font-family: ui-monospace, Consolas, monospace; font-size: 12px; background: var(--paper-2); border-radius: 8px; padding: 10px 12px; color: var(--ink-2); white-space: pre; overflow-x: auto; margin-top: 8px; }
+  .evento b { color: var(--focus); font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <div class="ceja">PACE · por dónde seguir · después de v0.123.0</div>
+  <h1>Lo que hay, lo que falta y en qué orden</h1>
+  <p>«A tu ritmo» ya sirve el día y, desde v0.123.0, la línea se mueve con el aro y la pausa existe. Esta página
+  explica las cuatro piezas que quedan por delante, cómo dependen unas de otras, qué se vería de cada una y qué
+  costaría, y termina con una recomendación y con lo que hay que decidir. Tú dijiste el norte: «acompañar el día
+  pero ir ofreciendo propuestas para cada día de la semana/mes». Todo lo de aquí va hacia ahí.</p>
+
+  <h2>Dónde estamos</h2>
+  <div class="tres">
+    <div class="tarjeta hecha"><span class="sello gris">Hecho · s192</span><span class="t">El menú manda</span>
+      <p>La home pregunta «¿cuánto trabajas hoy?» y sirve la jornada: bloques de foco y pausas con nombre, la comida a tu hora, el horario editable en la frase. La pausa propone el plato del menú.</p></div>
+    <div class="tarjeta hecha"><span class="sello gris">Hecho · s193</span><span class="t">La línea sigue al aro</span>
+      <p>El tramo de ahora se rellena con el pomodoro; al acabar, «Ahora» es la parada hasta que empiezas el siguiente; tocarla la empieza; la barra lateral dice «Tu pausa». Lo hecho queda en verde entero.</p></div>
+    <div class="tarjeta"><span class="sello gris">Pendiente de ti</span><span class="t">Usarlo un día entero</span>
+      <p>Nadie lo ha usado todavía en una jornada real con la línea moviéndose: las fotos son de Playwright con el reloj fijado. Es la prueba que ninguna suite hace, y de ahí saldrá la cola de verdad.</p></div>
+  </div>
+
+  <h2>Las piezas y cómo dependen unas de otras</h2>
+  <p>Dos cadenas. La de arriba es la de <b>medir</b>: sin saber de dónde viene cada sesión no se puede saber si el
+  menú funciona ni diseñar la semana con datos. La de abajo es la de <b>acompañar</b>: la pausa ya existe como
+  estado, y eso es justo lo que hacía falta para recolocar el día cuando te retrasas.</p>
+  <div class="mapa">
+    <div class="nodo rec"><i class="n">1</i><b>Origen de cada sesión</b>Que cada sesión diga si vino del menú, de la pausa, de la biblioteca, de un Camino o de la parada tocada.<span class="flecha"></span></div>
+    <div class="nodo"><b>Saber si el menú funciona</b>Cuántas pausas del menú se hacen, cuántas se saltan, cuántas se cambian por «Otra». Hoy es imposible.<span class="flecha"></span></div>
+    <div class="nodo"><i class="n">3</i><b>Propuestas por día de la semana/mes</b>El norte. Diseñarlo con datos, no a ciegas.</div>
+    <div class="nodo ok"><b>La pausa como estado</b>Hecho en s193: se abre al acabar el bloque y se cierra al empezar el siguiente.<span class="flecha"></span></div>
+    <div class="nodo"><i class="n">2</i><b>Recolocar a mitad de día</b>Al cerrar la pausa, si vas tarde, recomponer desde ahora.<span class="flecha"></span></div>
+    <div class="nodo"><b>Llegar antes · el cierre · la pausa larga</b>Los huecos declarados, que se resuelven con la misma pieza.</div>
+  </div>
+  <p class="pie">Aparte, sin cadena: <code>MoveSessionV1.jsx</code> está en 500 líneas (se trocea antes de tocarlo), Stats «Hoy» con el menú (aparcado hasta que el menú se estabilice), el contexto real (Fase 8) y el calendario.</p>
+
+  <h2>1 · El origen de cada sesión en los eventos</h2>
+  <div class="tarjeta rec">
+    <span class="sello">Recomendada para empezar</span>
+    <span class="t">Que el registro sepa de dónde vino cada sesión</span>
+    <p>Hoy <code>pace.events.v1</code> guarda cada sesión completada, pero solo distingue dos contextos: «suelta» o «dentro de un
+    Camino». No sabe si la elegiste tú en la carta, si te la propuso la pausa, si era el plato del menú o si tocaste la
+    parada. Es un campo más en el evento, y tres o cuatro sitios donde ponerlo.</p>
+    <div class="evento">{ type: "session.completed", module: "extra", routineId: "extra.cuello-hombros",
+  context: "standalone",
+  <b>origin: "menu"</b>   // menu · pausa · biblioteca · camino · parada · sidebar
+}</div>
+    <dl class="ficha">
+      <dt>Qué verías</dt><dd>Nada nuevo en la pantalla, de momento. Es instrumentación: lo que hace posible que Stats diga «hoy has hecho 4 de las 6 pausas del menú» o que la semana se diseñe sabiendo qué se hace y qué no.</dd>
+      <dt>Por qué ahora</dt><dd>Era la primera idea del experto (datos para saber qué funciona) y es el prerrequisito del norte. Cada día que pasa sin el campo es un día de uso que no se podrá medir.</dd>
+      <dt>Coste</dt><dd>Una sesión corta. Toca el esquema (<code>EVENTOS_SCHEMA.md</code>), la lista permitida de <code>events-payloads.js</code> y los puntos de emisión. Con sus tests y su fila de decisiones.</dd>
+      <dt>Riesgo</dt><dd>Bajo. Una trampa conocida de s190: <code>module: 'extra'</code> no valida en la lista permitida; hay que mirarla antes. Los eventos siguen sin salir del dispositivo (los datos anónimos con permiso son la Fase 10).</dd>
+    </dl>
+  </div>
+
+  <h2>2 · Recolocar a mitad de día</h2>
+  <div class="tarjeta">
+    <span class="sello gris">Lo que más se nota usándolo</span>
+    <span class="t">Si empiezas tarde, la línea se recompone desde ahora</span>
+    <p>Hoy las horas son las del plan: si el bloque 2 empezaba a las 9:50 y lo empiezas a las 10:10, la línea sigue diciendo
+    9:50 y todo lo que viene detrás va veinte minutos «mal». La propuesta: <b>al cerrar la pausa</b> (pulsar «Empezar bloque N»),
+    si vas por detrás, recomponer desde ahora con la misma política de siempre —<b>salgo a mi hora</b>—: menos foco hoy,
+    nada marcado como perdido, las pausas hechas conservan su cuenta.</p>
+    <div class="tira">
+      <div class="s h" style="flex:45"><span class="tag">9:00 · hecho</span></div>
+      <div class="p" style="--c:var(--extra)"><span class="tag">9:45</span></div>
+      <div class="s a" style="flex:45"><span class="tag">9:50 · plan</span><span class="tag r">son las 10:10</span></div>
+      <div class="p" style="--c:var(--move)"><span class="tag">10:35</span></div>
+      <div class="s" style="flex:45"></div><div class="p on" style="--c:var(--breathe)"><span class="tag">11:25 · larga</span></div>
+      <div class="s" style="flex:35"></div><div class="s com" style="flex:60"><span class="tag" style="color:var(--ink-3)">comida 14:00</span></div><div class="s" style="flex:45"></div>
+    </div>
+    <div class="leyenda">Hoy: el bloque 2 «empezó» a las 9:50 aunque son las 10:10; todo lo de detrás hereda el desfase.</div>
+    <div class="tira">
+      <div class="s h" style="flex:45"><span class="tag">9:00 · hecho</span></div>
+      <div class="p" style="--c:var(--extra)"><span class="tag">9:45</span></div>
+      <div class="s a" style="flex:45"><span class="tag">10:10 · ahora</span></div>
+      <div class="p" style="--c:var(--move)"><span class="tag">10:55</span></div>
+      <div class="s" style="flex:40"></div><div class="p on" style="--c:var(--breathe)"><span class="tag">11:40 · larga</span></div>
+      <div class="s" style="flex:20"></div><div class="s com" style="flex:60"><span class="tag" style="color:var(--ink-3)">comida 14:00</span></div><div class="s" style="flex:45"></div>
+    </div>
+    <div class="leyenda">Propuesta: el bloque 2 empieza a las 10:10, las paradas se mueven, la comida sigue a su hora exacta y el bloque anterior se acorta; sales a las 17:00 igual.</div>
+    <dl class="ficha">
+      <dt>Qué verías</dt><dd>La línea dice la verdad durante todo el día. La barra lateral («Tu pausa · 10:55») y el aro («Bloque 3 de 8», que puede pasar a «de 7») también.</dd>
+      <dt>Por qué ahora</dt><dd>Es el hueco que más se va a notar en una jornada real, y la pieza que lo hace natural (la pausa como estado) ya está.</dd>
+      <dt>Coste</dt><dd>Una sesión: la regla es pura (<code>ritmoComponer</code> ya sabe llegar tarde: recolocar es «llegar tarde» al bloque N), más el estado (<code>dia.desde</code> pasa a ser el de cada recomposición) y la maqueta antes/después. Sale también «llegar antes».</dd>
+      <dt>Decisión</dt><dd>Qué hacer si el retraso hace que el día ya no quepa: ¿un bloque menos (propuesto) o bloques más cortos?</dd>
+    </dl>
+  </div>
+
+  <h2>3 · El norte: propuestas para cada día de la semana/mes</h2>
+  <p>Lo dijiste en una frase, y esa frase admite al menos <b>tres lecturas</b>. Llevan a productos distintos, así que
+  antes de pintar nada hay que saber cuál es la tuya (o si son las tres, en qué orden). Los bocetos son esquemas, no
+  diseño: cuando elijas, lo pinto sobre la app real como en s192 y s193.</p>
+  <div class="tres">
+    <div class="tarjeta">
+      <span class="sello gris">Lectura A</span><span class="t">El menú varía con el día de la semana</span>
+      <p>Cada día tiene su carácter: el lunes más Mueve para arrancar, el jueves más Respira, el viernes cierre corto. Y el sistema
+      procura que en una semana no se repita nada. Sin planificar: sigues eligiendo cada mañana.</p>
+      <div class="semana">
+        <div class="dia"><div class="d">L</div><div class="h">Cuerpo</div><div class="puntos"><i style="--c:var(--move)" class="f"></i><i style="--c:var(--move)" class="f"></i><i style="--c:var(--extra)"></i><i style="--c:var(--breathe)"></i></div></div>
+        <div class="dia"><div class="d">M</div><div class="h">Silla</div><div class="puntos"><i style="--c:var(--extra)" class="f"></i><i style="--c:var(--extra)" class="f"></i><i style="--c:var(--move)"></i><i style="--c:var(--breathe)"></i></div></div>
+        <div class="dia"><div class="d">X</div><div class="h">Mixto</div><div class="puntos"><i style="--c:var(--extra)"></i><i style="--c:var(--move)"></i><i style="--c:var(--breathe)"></i><i style="--c:var(--extra)"></i></div></div>
+        <div class="dia hoy"><div class="d">J</div><div class="h">Aire</div><div class="puntos"><i style="--c:var(--breathe)" class="f"></i><i style="--c:var(--breathe)" class="f"></i><i style="--c:var(--extra)"></i><i style="--c:var(--move)"></i></div></div>
+        <div class="dia"><div class="d">V</div><div class="h">Suave</div><div class="puntos"><i style="--c:var(--extra)"></i><i style="--c:var(--breathe)" class="f"></i></div></div>
+      </div>
+      <dl class="ficha" style="grid-template-columns:90px minmax(0,1fr)">
+        <dt>Necesita</dt><dd>Solo la regla: los pozos ya rotan por día; esto es darles intención por día de la semana. Nada de datos.</dd>
+        <dt>Riesgo</dt><dd>Que la variedad se note poco (cambia el plato, no la forma del día) o que parezca arbitraria si no se explica el motivo.</dd>
+      </dl>
+    </div>
+    <div class="tarjeta">
+      <span class="sello gris">Lectura B</span><span class="t">Planificas la semana de antemano</span>
+      <p>Una vista de la semana donde dices cuánto trabajas cada día (o lo lee de tu calendario) y PACE deja servido el menú de
+      cada uno. Por la mañana no hay pregunta: el día ya está puesto, con «Cambiar» a un toque.</p>
+      <div class="semana">
+        <div class="dia"><div class="d">L</div><div class="h">Jornada</div><span class="sel">9–17</span></div>
+        <div class="dia"><div class="d">M</div><div class="h">Media</div><span class="sel">9–13</span></div>
+        <div class="dia hoy"><div class="d">X</div><div class="h">Jornada</div><span class="sel">9–17</span></div>
+        <div class="dia vacio"><div class="d">J</div><div class="h" style="color:var(--ink-3)">—</div><span class="sel">libre</span></div>
+        <div class="dia"><div class="d">V</div><div class="h">Dos horas</div><span class="sel">10–12</span></div>
+      </div>
+      <dl class="ficha" style="grid-template-columns:90px minmax(0,1fr)">
+        <dt>Necesita</dt><dd>Estado por día (<code>ritmo.semana</code>), una superficie nueva (¿en Stats? ¿bajo el aro?) y, a medio plazo, el calendario (<code>.ics</code> · Android · Google libre/ocupado).</dd>
+        <dt>Riesgo</dt><dd>Es lo más caro y lo que más se parece a «una agenda más». Gana mucho con el calendario; sin él, es una pregunta por día en vez de una.</dd>
+      </dl>
+    </div>
+    <div class="tarjeta">
+      <span class="sello gris">Lectura C</span><span class="t">El sistema te enseña qué cambió y te propone ajustes</span>
+      <p>PACE mira la semana (y el mes) y te lo cuenta en una frase con un ajuste: «Esta semana has saltado 5 de 6 pausas de
+      Mueve; ¿las cambio por Estira?». Es el «menú del día» hecho memoria: propone según lo que haces, no según el calendario.</p>
+      <div class="frase">Esta semana: <b>3 días con ritmo</b> · 11 de 14 pausas hechas · <b>Mueve casi siempre saltado</b>.<br>¿Sirvo <b>Estira</b> en su lugar la semana que viene?</div>
+      <dl class="ficha" style="grid-template-columns:90px minmax(0,1fr)">
+        <dt>Necesita</dt><dd><b>La pieza 1</b> (el origen de cada sesión) y los agregados de <code>pace.events.v1</code>, que ya existen desde s190. Y una superficie: la pestaña «Hoy/Semana» de Stats, que está aparcada justo esperando esto.</dd>
+        <dt>Riesgo</dt><dd>Sin datos suficientes habla de más (la regla de s189: el techo de la señal decide el diseño). Con pocos días, calla.</dd>
+      </dl>
+    </div>
+  </div>
+  <p class="pie">Se pueden combinar: A es barata y da variedad ya; C necesita la pieza 1 y madura con el uso; B es la grande y casi pide el calendario.</p>
+
+  <h2>4 · El resto de la cola</h2>
+  <div class="dos">
+    <div class="tarjeta"><span class="sello gris">Huecos declarados en s193</span><span class="t">Pequeños, se hacen con la pieza 2</span>
+      <p><b>El cierre</b> nunca es «Ahora» en la línea (al acabar el último bloque manda «Jornada cerrada»). <b>La pausa larga</b> sirve dos platos y el menú propone uno. <b>Llegar antes</b> de tu hora: el plan espera a tu inicio aunque ya estés. <b>La comida como parada abierta</b> no se ha fotografiado. <b>El modo oscuro</b> del panel no se ha mirado.</p></div>
+    <div class="tarjeta"><span class="sello gris">Estructura y más lejos</span><span class="t">Cuando toque</span>
+      <p><code>MoveSessionV1.jsx</code> está en <b>500 líneas</b>: se trocea antes de tocar el runner. <b>Stats «Hoy»</b> con el menú (Fase 4, aparcada). El <b>contexto real</b> («Junto a la mesa · Sin material» es fijo) → Fase 8. <b>Calendario</b> (Fase 9) y <b>datos anónimos con permiso</b> (Fase 10).</p></div>
+  </div>
+
+  <h2>Mi recomendación</h2>
+  <ol class="orden">
+    <li><b>Tú lo usas un día entero</b> con la línea moviéndose, y me cuentas qué chirría. En paralelo, yo hago la pieza <b>1</b> (el origen de cada sesión): corta, sin decisiones de diseño, y a partir de ahí todo se mide.</li>
+    <li><b>Recolocar a mitad de día</b> (pieza 2), pintado antes: la línea con retraso, hoy y propuesta, sobre la app real. De paso caen «llegar antes» y el cierre.</li>
+    <li><b>El norte</b>: eliges lectura (A, B, C o un orden) y lo pinto. Si eliges C, la pieza 1 ya estará hecha y Stats «Hoy/Semana» sale del aparcamiento con motivo.</li>
+  </ol>
+
+  <div class="decide">
+    <h2>Lo que hay que decidir</h2>
+    <ul>
+      <li><b>Por dónde empezamos</b>: <kbd>1</kbd> origen de cada sesión · <kbd>2</kbd> recolocar a mitad de día · <kbd>3</kbd> definir el norte primero · <kbd>4</kbd> otra cosa.</li>
+      <li><b>El norte</b>: <kbd>A</kbd> el menú varía con el día de la semana · <kbd>B</kbd> planificar la semana · <kbd>C</kbd> el sistema te enseña qué cambió y propone ajustes · o un orden (p. ej. «A ya, C cuando haya datos»).</li>
+      <li><b>Recolocar</b>, si el día ya no cabe: <kbd>un bloque menos</kbd> (propuesto) · <kbd>bloques más cortos</kbd>.</li>
+    </ul>
+    <p class="pie">Basta con una línea: «1 · A ya y C después · un bloque menos».</p>
+  </div>
+</main>
+</body>
+</html>

@@ -397,10 +397,19 @@ explica el enlace la primera vez. Diario: [session-193](./docs/sessions/session-
 > entre días (qué propone el lunes frente al jueves, qué ha cambiado esta semana) es lo siguiente
 > que tiene que poder decir el sistema. Hoy los pozos rotan por día y nada más.
 
+**Hecho en s194 (v0.124.0)**: **el origen de cada sesión** en `pace.events.v1` (`origin` +
+`fromMenu`, rev. 7 del esquema): la instrumentación que hace medible si el menú funciona. Nada
+cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md).
+
+> **El norte, en tres lecturas y una recomendación (s194)**: **A** · el menú varía con el día de la
+> semana (barata, sin datos; hay que darle motivo visible) · **B** · planificar la semana de antemano
+> (la cara; gana con el calendario, Fase 9) · **C** · el sistema enseña qué cambió y propone ajustes
+> (necesita el origen de cada sesión y semanas de uso; saca Stats «Semana» del aparcamiento).
+> Recomendado: **A ya, C después, B aparcada**. Orden de trabajo: origen → recolocar → A.
+
 **Lo que queda** («implementemos esto primero y luego vamos ajustando»):
 - **Propuestas para cada día de la semana/mes**: que el menú varíe y se planifique entre días, no
-  solo dentro del día (el norte de arriba). Pinta antes; depende del origen de cada sesión en los
-  eventos para saber qué funciona.
+  solo dentro del día (el norte de arriba; empezar por la lectura A). Pinta antes.
 - **Recolocar a mitad de día**: hoy las horas son las del plan aunque te retrases.
 - **Llegar antes** de tu hora y las otras dos políticas de llegar tarde (pintadas en la ronda 4).
 - **Contexto real** («Junto a la mesa · Sin material» es fijo) → onboarding contextual, Fase 8.

@@ -188,7 +188,7 @@ function Sidebar() {
       key="accion"
       accion={accion}
       vista={vistaAccion}
-      onAct={(a) => emitir(a.kind, { targetId: a.targetId })}
+      onAct={(a) => emitir(a.kind, { targetId: a.targetId, ritmo: !!a.ritmo })}
     />
   ) : null;
 

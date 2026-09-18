@@ -44,9 +44,11 @@ Decisiones fijadas en s117 (AskUserQuestion, todas la recomendación):
 > persistencia** (por runtime); contrato conceptual **EventStore**; matriz de
 > **capacidades** y de **runtimes**; **Web Locks** solo dentro del adaptador web;
 > **Android/Capacitor** con backend transaccional nativo (SQLite) previsto; `file://`
-> no emite; el P0 queda resuelto. **rev. 5** (esta): +**iOS/Capacitor** como runtime
+> no emite; el P0 queda resuelto. **rev. 5**: +**iOS/Capacitor** como runtime
 > previsto (adaptador nativo espejo de Android, mismo contrato y garantías); sin
-> reabrir el modelo canónico ni el P0. Ver §30.
+> reabrir el modelo canónico ni el P0. Ver §30. rev. 6 (s172): `routineId` de Foco =
+> `focus`. **rev. 7 (s194)**: `session.completed` lleva **`origin`** (la puerta por la que
+> se empezó) y **`fromMenu`** (si era lo que «A tu ritmo» sirvió), los dos anulables. Ver §8.
 
 ---
 
@@ -316,12 +318,34 @@ existente; un Camino tiene **un** `pathRunId`; un `pathRunId` agrupa **N** pasos
 > ayuda», que se alimenta del feedback — y en Foco **no se pide feedback**. Comparar
 > presets sigue siendo posible leyendo `plannedSeconds`.
 
+> **`origin` y `fromMenu`** (rev. 7, s194). La primera idea del experto de s192 —datos para
+> saber qué funciona— y el prerrequisito de «propuestas para cada día de la semana»: sin esto
+> el registro no distinguía si una sesión la eligió la persona en la carta, se la propuso la
+> pausa, era el plato del menú o tocó la parada de la línea. **`origin` es la PUERTA** por la
+> que se empezó: `aro` (el botón de la home) · `pausa` (el menú de la pausa, con propuesta o
+> con tarjeta de módulo) · `biblioteca` (una biblioteca abierta desde la home, la barra
+> superior, la barra lateral o un atajo) · `sidebar` (la tarjeta de acción de la barra
+> lateral: continuar, repetir, sugerencia) · `parada` (la parada abierta de la línea del día)
+> · `camino` (dentro de un Camino; manda sobre cualquier puerta anotada). **`fromMenu`** dice si
+> lo empezado era **lo que «A tu ritmo» había servido**: el bloque del aro con plan, el plato
+> de la pausa cuando el motivo es `ritmo.*`, la parada (siempre), la tarjeta de la barra
+> lateral cuando es la pausa del menú. Son **dos campos y no uno compuesto** porque responden
+> a preguntas distintas y con la puerta sola `pausa` y `sidebar` son ambiguas. **Los dos
+> admiten `null`**: la puerta se anota en el gesto y vive en memoria (como `runId`, §7.2), así
+> que una sesión que sobrevive a una recarga —Foco persistido, Respira reanudada— llega sin
+> ella; y un evento anterior a s194 no los trae. **No se consolidan en el baseline** (§13): el
+> consumidor previsto —Stats «Semana», lectura C del norte— lee **ventanas** de eventos
+> retenidos (120 días), no totales de siempre; si algún día hace falta el total, se añade al
+> fold como `sessionsByRoutine` (s190).
+
 ```
 { module:'focus'|'breathe'|'move'|'stretch', routineId:string,
   completionReason:'natural'|'early',
   elapsedSeconds:number, activeSeconds:number,
   plannedSeconds:number|null, plannedSecondsSource:'preset'|'derived'|'declared'|null,
-  variant:'v1'|'legacy'|null }
+  variant:'v1'|'legacy'|null,
+  origin:'aro'|'pausa'|'biblioteca'|'sidebar'|'parada'|'camino'|null,
+  fromMenu:boolean|null }
 ```
 **`feedback.answered`** (`v:1`) — `runId` obligatorio (referencia a la sesión)
 ```

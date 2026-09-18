@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.123.0</title>
+  <title>PACE · Foco · Cuerpo — v0.124.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5135,7 +5135,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.123.0';
+const PACE_VERSION = 'v0.124.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7791,6 +7791,16 @@ const EVENT_COMPLETION_REASONS = ['natural', 'early'];
 const EVENT_PLANNED_SOURCES = ['preset', 'derived', 'declared'];
 const EVENT_FEEDBACK_RESPONSES = ['yes', 'some', 'no']; // `later` NO emite (§15.2)
 const EVENT_VARIANTS = ['v1', 'legacy'];
+/* EL ORIGEN de una sesion (s194 · rev. 7 del esquema): la PUERTA por la que se
+   empezo -- el aro de la home, la pausa, una biblioteca, la tarjeta de la barra
+   lateral, la parada de la linea del dia o un Camino -- y, aparte, si lo que se
+   empezo era lo que «A tu ritmo» habia servido (`fromMenu`). Dos campos y no uno
+   compuesto porque responden a preguntas distintas: «¿por donde entra la gente?»
+   y «¿hace lo que el menu sirve?»; con la puerta sola, la pausa y la barra
+   lateral son ambiguas. Los dos admiten null: una sesion que sobrevive a una
+   recarga (Foco persistido, Respira reanudada) no recuerda su puerta, y un
+   evento anterior a s194 no los trae. */
+const EVENT_ORIGINS = ['aro', 'pausa', 'biblioteca', 'sidebar', 'parada', 'camino'];
 
 /* Entero finito >= 0. Cubre la deuda P1 de §15.3: un contador que llegue como
    `"3"` no debe concatenarse ni propagarse como string. */
@@ -7837,7 +7847,9 @@ function normalizeEventPayload(type, raw) {
       module: mod, routineId: routineId, completionReason: reason,
       elapsedSeconds: elapsed, activeSeconds: active,
       plannedSeconds: planned, plannedSecondsSource: source,
-      variant: eventEnum(p.variant, EVENT_VARIANTS)
+      variant: eventEnum(p.variant, EVENT_VARIANTS),
+      origin: eventEnum(p.origin, EVENT_ORIGINS),
+      fromMenu: p.fromMenu === true ? true : p.fromMenu === false ? false : null
     };
   }
 
@@ -7869,7 +7881,7 @@ function normalizeEventPayload(type, raw) {
 Object.assign(window, {
   EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
   EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
-  eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload
+  EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload
 });
 ;Object.assign(window, { eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload });
 })();
@@ -9377,6 +9389,21 @@ Object.assign(window, {
    al recargar, que es justo lo que se quiere: un DONE no sobrevive a eso. */
 let paceUltimaSesion = null;
 
+/* LA PUERTA (s194). Se anota en el GESTO —abrir una biblioteca, elegir en la
+   pausa, tocar la parada, pulsar el aro, la tarjeta de la barra lateral— y la
+   consume la PRIMERA sesión que termine; cada puerta pisa a la anterior, así que
+   una anotación que no acabó en sesión no envenena la siguiente. En memoria como
+   `paceUltimaSesion`, y por la misma razón: una sesión que sobrevive a recargar
+   (Foco persistido, Respira reanudada) llega sin puerta y sale con null, que es
+   la verdad. Dentro de un Camino la puerta es siempre `camino`, se haya anotado
+   lo que se haya anotado: el runner lo monta el Camino, no un gesto. */
+let paceOrigenPendiente = null;
+function paceOrigenSesion(puerta, desdeMenu) {
+  const enums = window.EVENT_ORIGINS || [];
+  paceOrigenPendiente = enums.indexOf(puerta) !== -1 ? { origin: puerta, fromMenu: desdeMenu === true } : null;
+}
+function paceOrigenPendienteLeer() {return paceOrigenPendiente;}
+
 /* El ÚNICO punto que escribe en el almacén de eventos. Devuelve si se intentó,
    no si se commiteó: el append es asíncrono y el llamante no espera. Si el
    almacén lo rechaza, el `.then` deshace la memoria del runId para que un
@@ -9450,6 +9477,10 @@ function emitSessionCompleted(module, routineId, datos) {
   const runId = window.newEventId ? window.newEventId() : null;
   if (!runId) return null;
   const pathRunId = d.inPath ? paceCaminoRunId() : null;
+  /* La puerta se consume aquí, pase lo que pase con el evento: si el almacén lo
+     rechaza, la puerta ya no es de nadie. */
+  const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
+  paceOrigenPendiente = null;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
     context: d.inPath ? 'path' : 'standalone',
@@ -9463,7 +9494,9 @@ function emitSessionCompleted(module, routineId, datos) {
       activeSeconds: d.activeSeconds,
       plannedSeconds: typeof d.plannedSeconds === 'number' ? d.plannedSeconds : null,
       plannedSecondsSource: d.plannedSecondsSource || null,
-      variant: d.variant || null
+      variant: d.variant || null,
+      origin: origen ? origen.origin : null,
+      fromMenu: origen ? origen.fromMenu : null
     }
   });
   if (!evento) return null;
@@ -9531,9 +9564,10 @@ Object.assign(window, {
   paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId,
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted,
-  paceUltimaSesionEmitida, paceOlvidarUltimaSesion
+  paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
+  paceOrigenSesion, paceOrigenPendienteLeer
 });
-;Object.assign(window, { paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
+;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
 })();
 </script>
   <script>
@@ -15992,7 +16026,7 @@ function Sidebar() {
     key: "accion",
     accion: accion,
     vista: vistaAccion,
-    onAct: (a) => emitir(a.kind, { targetId: a.targetId }) }
+    onAct: (a) => emitir(a.kind, { targetId: a.targetId, ritmo: !!a.ritmo }) }
   ) :
   null;
 
@@ -18495,6 +18529,9 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
          reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
       if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado();
+      /* s194 · y es una PUERTA para el evento de la sesión: 'aro', servido por el menú
+         si hay plan (`aro` no es null). Se anota al empezar, no al reanudar. */
+      if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);
     }
     try {playSound('pomodoro.start');} catch (e) {}
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
@@ -24147,8 +24184,13 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
       try {unlockAchievement('first.cycle');} catch (e) {}
     }
     /* La rutina viaja como SEGUNDO argumento y es opcional: quien pulse una
-       tarjeta sigue abriendo su biblioteca, exactamente como antes. */
-    onChoose(key, rutina || null);
+       tarjeta sigue abriendo su biblioteca, exactamente como antes. El TERCERO
+       (s194) dice si esa rutina es el plato que sirvió «A tu ritmo»: lo sabe el
+       motivo de la propuesta (`break.prop.ritmo.*`), y va al origen del evento. */
+    const p = propRef.current;
+    const desdeMenu = !!(rutina && p && p.rutina && p.rutina.id === rutina.id &&
+    typeof p.porque === 'string' && p.porque.indexOf('ritmo.') === 0);
+    onChoose(key, rutina || null, desdeMenu);
   };
 
   // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
@@ -31006,11 +31048,13 @@ function ritmoIndiceAhora(plan) {
 }
 
 /* Empezar el plato de la parada abierta: la misma puerta que la barra lateral
-   (usePaceEventos, `suggest`), así una rutina con aviso pasa por su modal. */
+   (usePaceEventos, `suggest`), así una rutina con aviso pasa por su modal.
+   `parada: true` es para el ORIGEN del evento (s194): la sesión sale con
+   `origin: 'parada'`, no 'sidebar'. */
 function ritmoEmpezarParada(it) {
   const plato = it.platos && it.platos[0];
   if (!plato) return;
-  window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id } }));
+  window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }
 
 function RitmoLinea(_ref2) {let { plan, onCambiar } = _ref2;
@@ -33409,6 +33453,8 @@ Object.assign(window, { SidebarHandle });
      abrirApoyo()           pace:open-support         (sesión 16 / v0.11.11)
      abrirStats() · abrirBiblioteca(kind) · abrirAgua() · empezarRespira(r, g)
        · previsualizar({ routine, kind })        pace:sidebar-action (s180)
+   s194: resume/repeat/suggest anotan la PUERTA de la sesión (paceOrigenSesion,
+   state-events.jsx): 'sidebar', o 'parada' si el detalle trae `parada: true`.
 
    El logro secreto de la vaca (pace:cow-click, diez clics en el logo) vive aquí
    entero: su contador no lo lee nadie más. */
@@ -33449,6 +33495,12 @@ function usePaceEventos(acciones) {
         if (propias) a.abrirBiblioteca('move');else
         a.abrirConstructor(null);
         return;
+      }
+      /* s194 · la puerta: la tarjeta de la barra lateral, o la parada de la línea del
+         día (que dispara este mismo evento con `parada: true`). `ritmo` dice si la
+         tarjeta era la pausa que sirvió el menú. */
+      if ((d.kind === 'resume' || d.kind === 'repeat' || d.kind === 'suggest') && d.targetId && typeof paceOrigenSesion === 'function') {
+        paceOrigenSesion(d.parada ? 'parada' : 'sidebar', d.parada ? true : !!d.ritmo);
       }
       if (d.kind === 'resume' && d.targetId) {
         /* Reanudar entra por `empezarRespira` y no por un camino propio:
@@ -33515,6 +33567,12 @@ function PaceApp() {
 
   // Modales
   const [openLibrary, setOpenLibrary] = useStateMain(null); // 'breathe' | 'move' | 'extra' | null
+  /* s194 · LA PUERTA de la sesión que venga (state-events.jsx): abrir una biblioteca
+     es una puerta, y lo que se empiece desde ella lleva `origin: 'biblioteca'`. Las
+     demás puertas anotan la suya en su gesto (la pausa, la barra lateral, la parada,
+     el aro); dentro de un Camino manda 'camino' sin preguntar. */
+  const anotarPuerta = (puerta, desdeMenu) => {if (typeof paceOrigenSesion === 'function') paceOrigenSesion(puerta, desdeMenu);};
+  const abrirBiblioteca = (kind) => {anotarPuerta('biblioteca', false);setOpenLibrary(kind);};
   const [openHydrate, setOpenHydrate] = useStateMain(false);
   const [openAchievements, setOpenAchievements] = useStateMain(false);
   const [openStats, setOpenStats] = useStateMain(false);
@@ -33567,7 +33625,7 @@ function PaceApp() {
     let go = null;
     try {go = new URLSearchParams(window.location.search).get('go');} catch (e) {}
     if (!go) return;
-    if (go === 'breathe' || go === 'move') setOpenLibrary(go);else
+    if (go === 'breathe' || go === 'move') abrirBiblioteca(go);else
     if (go === 'hydrate') setOpenHydrate(true);else
     if (go === 'focus') set({ focusMode: 'foco' });
     try {window.history.replaceState(null, '', window.location.pathname);} catch (e) {}
@@ -33649,7 +33707,7 @@ function PaceApp() {
     abrirLogros: () => setOpenAchievements(true),
     abrirApoyo: () => setOpenSupport(true),
     abrirStats: () => setOpenStats(true),
-    abrirBiblioteca: (kind) => setOpenLibrary(kind),
+    abrirBiblioteca: abrirBiblioteca,
     abrirAgua: () => setOpenHydrate(true),
     empezarRespira: handleStartBreathe,
     previsualizar: setPreviewRoutine
@@ -33681,8 +33739,11 @@ function PaceApp() {
     setOpenBreakMenu(true);
   };
 
-  const handleBreakChoice = (choice, rutina) => {
+  const handleBreakChoice = (choice, rutina, desdeMenu) => {
     setOpenBreakMenu(false);
+    /* s194 · la pausa es una puerta; `desdeMenu` dice si lo elegido era el plato que
+       «A tu ritmo» sirvió (BreakMenu lo sabe por el motivo de la propuesta). */
+    if (choice === 'breathe' || choice === 'extra' || choice === 'move') anotarPuerta('pausa', !!desdeMenu);
     /* s187 · CON RUTINA CONCRETA se entra en ELLA y no en su biblioteca -- es la
        diferencia entre proponer y volver a preguntar-, y por las MISMAS puertas:
        `handleStartBreathe` con su modal, y el preview de cuerpo (§18.3). Sin
@@ -33727,7 +33788,7 @@ function PaceApp() {
     React.createElement("main", { style: { flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' } }, /*#__PURE__*/
 
     React.createElement(TopBar, {
-      onOpenLibrary: (kind) => setOpenLibrary(kind),
+      onOpenLibrary: abrirBiblioteca,
       onOpenHydrate: () => setOpenHydrate(true),
       onOpenStats: () => setOpenStats(true),
       onOpenTweaks: () => setOpenTweaks(true) }
@@ -33797,7 +33858,7 @@ function PaceApp() {
 
 
     React.createElement(RitmoHome, {
-      onOpenLibrary: (kind) => setOpenLibrary(kind),
+      onOpenLibrary: abrirBiblioteca,
       onOpenHydrate: () => setOpenHydrate(true) }
     )
     )

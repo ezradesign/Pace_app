@@ -62,6 +62,21 @@
    al recargar, que es justo lo que se quiere: un DONE no sobrevive a eso. */
 let paceUltimaSesion = null;
 
+/* LA PUERTA (s194). Se anota en el GESTO —abrir una biblioteca, elegir en la
+   pausa, tocar la parada, pulsar el aro, la tarjeta de la barra lateral— y la
+   consume la PRIMERA sesión que termine; cada puerta pisa a la anterior, así que
+   una anotación que no acabó en sesión no envenena la siguiente. En memoria como
+   `paceUltimaSesion`, y por la misma razón: una sesión que sobrevive a recargar
+   (Foco persistido, Respira reanudada) llega sin puerta y sale con null, que es
+   la verdad. Dentro de un Camino la puerta es siempre `camino`, se haya anotado
+   lo que se haya anotado: el runner lo monta el Camino, no un gesto. */
+let paceOrigenPendiente = null;
+function paceOrigenSesion(puerta, desdeMenu) {
+  const enums = window.EVENT_ORIGINS || [];
+  paceOrigenPendiente = enums.indexOf(puerta) !== -1 ? { origin: puerta, fromMenu: desdeMenu === true } : null;
+}
+function paceOrigenPendienteLeer() { return paceOrigenPendiente; }
+
 /* El ÚNICO punto que escribe en el almacén de eventos. Devuelve si se intentó,
    no si se commiteó: el append es asíncrono y el llamante no espera. Si el
    almacén lo rechaza, el `.then` deshace la memoria del runId para que un
@@ -135,6 +150,10 @@ function emitSessionCompleted(module, routineId, datos) {
   const runId = window.newEventId ? window.newEventId() : null;
   if (!runId) return null;
   const pathRunId = d.inPath ? paceCaminoRunId() : null;
+  /* La puerta se consume aquí, pase lo que pase con el evento: si el almacén lo
+     rechaza, la puerta ya no es de nadie. */
+  const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
+  paceOrigenPendiente = null;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
     context: d.inPath ? 'path' : 'standalone',
@@ -149,6 +168,8 @@ function emitSessionCompleted(module, routineId, datos) {
       plannedSeconds: typeof d.plannedSeconds === 'number' ? d.plannedSeconds : null,
       plannedSecondsSource: d.plannedSecondsSource || null,
       variant: d.variant || null,
+      origin: origen ? origen.origin : null,
+      fromMenu: origen ? origen.fromMenu : null,
     },
   });
   if (!evento) return null;
@@ -217,4 +238,5 @@ Object.assign(window, {
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
+  paceOrigenSesion, paceOrigenPendienteLeer,
 });
