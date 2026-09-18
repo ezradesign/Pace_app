@@ -1,6 +1,6 @@
-# s195 · La barra fea y el final del día (v0.125.1)
+# s195 · La barra fea y el final del día (v0.125.1 + v0.125.2)
 
-**Fecha:** 2026-09-18 · **Versión publicada:** v0.125.1 · **Suite:** 260 → **267**
+**Fecha:** 2026-09-18 · **Versiones publicadas:** v0.125.1 y v0.125.2 · **Suite:** 260 → 267 → **268**
 
 > Encargo: el usuario llegó con una captura de `paceweb.pages.dev` a 1920×1080 con el escritorio
 > al 125 % (Brave al 100 %, o sea **1536×704** de viewport): «no entiendo la barra fea del medio
@@ -103,6 +103,24 @@ Censo: `viewports-s195.js` (temp del sistema, no se commitea), tres escenas por 
 - Los viewports con la barra lateral plegada se cubren por la container query, no por un test.
 - El resumen en inglés en la fila del título: no se ha medido su ancho.
 
+## 4b · v0.125.2 · las etiquetas se recolocan cuando llegan las fuentes
+
+Salió haciendo las fotos de la página «por dónde seguir»: las variantes B y C daban aro 308 y panel
+242 donde la A daba 325 y 227, con la misma pantalla. No era la variante: **las etiquetas de la
+línea se colocan con la fuente que hay en ese momento y no se recolocaban al llegar Cormorant**
+(la larga «Diafragmática + Cadena posterior de pie» mide 132×68 con la de reserva y 121×53 con la
+de verdad). El observador de `RitmoLinea` mira la línea, cuya caja no cambia con la fuente. Medido
+un lunes a 1536×704: **tres niveles (zona 122) donde el estado asentado tiene dos (107)**, o sea
+15 px de panel y 17 de aro de menos, cada mañana en cuanto la fuente llegue después del primer
+render (en un contexto frío un re-render hacia los 1,4 s lo tapaba por casualidad; en uno caliente
+no). El arreglo es el de la barra lateral en s181: `document.fonts.ready.then(colocar)`, con guarda
+de desmontaje.
+
+**El test tuvo que aprender del re-render de los 1,4 s**: con las fuentes retrasadas 900 ms por
+`page.route`, la pasada de control contra HEAD salió VERDE, porque ese re-render recolocaba antes
+de medir. Retrasadas 2,5 s (detrás del re-render) y midiendo tras `fonts.ready`: rojo en HEAD
+(«siguen colocadas con la fuente de reserva, zona 122»), verde con el arreglo. Suite 267 → **268**.
+
 ## 5 · Trampas de la sesión
 
 - **Un SW caducado en el preview mide otra versión**: purgar (`unregister` + `caches.delete`) antes
@@ -114,3 +132,7 @@ Censo: `viewports-s195.js` (temp del sistema, no se commitea), tres escenas por 
 - Los cambios de diferencia al píxel llevan siempre el arco, la bola y el relleno de la línea,
   que avanzan entre fotos: se excluyen o se leen aparte.
 - **El servidor del 8765 desaparece a mitad** (otra vez): `preview_start` lo relanza.
+- **Un contexto frío de Chromium re-renderiza la home hacia los 1,4 s**; un control contra HEAD
+  que mida después de eso puede salir verde por casualidad. Las fuentes retrasadas van DETRÁS.
+- **Esperar `document.fonts.ready` desde fuera (Playwright) no es lo mismo que la app**: en las
+  fotos dejaba la colocación de reserva; se espera reloj de pared y se comprueba la zona.

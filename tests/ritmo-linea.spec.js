@@ -26,6 +26,13 @@
  *    veía porque `home-geometria.spec.js` mide con la carta, no con el menú.
  *  · EL RESUMEN cambia de sitio con el ancho del PANEL (container query): en la
  *    fila del título si cabe (1536) y bajo los chips si no (1280).
+ *  · LAS ETIQUETAS SE RECOLOCAN CUANDO LLEGAN LAS FUENTES. Se miden con la fuente
+ *    que haya en ese momento; si Cormorant llega después, la colocación hecha con
+ *    la de reserva se quedaba (el observador mira la línea, cuya caja no cambia):
+ *    tres niveles donde caben dos, 15 px de panel y 17 de aro de menos, cada
+ *    mañana. Se prueba RETRASANDO las fuentes con `page.route`, para que la
+ *    primera colocación sea con la de reserva de verdad, y comparando la
+ *    colocación del DOM con una fresca (`ritmoColocarEtiquetas` está en window).
  *
  * EL GUION es el del usuario: «Una hora» empezada a las 17:20, bloque 1 y su
  * pausa hechos, y «Empezar bloque 2» a las 19:30, o sea recolocar con un hueco
@@ -161,5 +168,35 @@ test.describe('el resumen del día cambia de fila con el ancho del panel', () =>
       expect(m.debajo, 'el resumen no va bajo los chips').toBe(true);
       expect(m.derecha, 'el resumen no queda alineado a la derecha con la píldora').toBeLessThan(2);
     });
+  });
+});
+
+test.describe('las fuentes llegan tarde', () => {
+  test.use({ viewport: { width: 1536, height: 704 } });
+  test('las etiquetas se recolocan cuando llega la fuente de verdad', async ({ page, context }) => {
+    /* Las fuentes, 2,5 s tarde: la primera colocación es con la de reserva. Y tan tarde a
+       propósito: medido, en un contexto frío la home vuelve a renderizar hacia los 1,4 s y
+       eso recolocaba por casualidad (la pasada de control contra HEAD salió VERDE con 900 ms).
+       Con las fuentes detrás de ese re-render, solo la recolocación por fonts.ready cuenta. */
+    await context.route('**/*.woff2', async (route) => { await new Promise((r) => setTimeout(r, 2500)); await route.continue(); });
+    /* Un lunes: su carta trae «Diafragmática + Cadena posterior de pie», la etiqueta que decide el tercer nivel. */
+    await sembrar(context, { ritmo: { dia: { fecha: '2026-09-14', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
+    await page.clock.install({ time: new Date('2026-09-14T09:00:00+02:00') });
+    await irAlArtefacto(page);
+    await page.waitForTimeout(1800);   /* pasa el re-render de los 1,4 s con la fuente de reserva aún puesta */
+    const conReserva = await page.evaluate(() => ({ fuentes: document.fonts.status, zona: document.querySelector('[data-pace-ritmo-estado="menu"].pace-rt-esc .pace-rt-zona').style.height }));
+    expect(conReserva.fuentes, 'GUARD: las fuentes ya habían llegado; la prueba no ejercita el cambio').toBe('loading');
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(300);
+    const m = await page.evaluate(() => {
+      const panel = document.querySelector('[data-pace-ritmo-estado="menu"].pace-rt-esc');
+      const zona = panel.querySelector('.pace-rt-zona');
+      const enDom = zona.style.height;
+      ritmoColocarEtiquetas(panel.querySelector('[data-pace-ritmo-linea]'), zona);
+      return { fuentes: document.fonts.status, enDom, fresca: zona.style.height };
+    });
+    expect(m.fuentes, 'GUARD: las fuentes no han llegado').toBe('loaded');
+    expect(m.fresca, 'GUARD: con Cormorant la colocación tiene que ser distinta de la de reserva, o el aserto sería vacío').not.toBe(conReserva.zona);
+    expect(m.enDom, 'las etiquetas siguen colocadas con la fuente de reserva (zona ' + conReserva.zona + ')').toBe(m.fresca);
   });
 });

@@ -106,10 +106,19 @@ function RitmoLinea({ plan }) {
   useLayoutEffectRL(() => {
     const colocar = () => ritmoColocarEtiquetas(lin.current, zona.current);
     colocar();
-    if (!window.ResizeObserver || !lin.current) return undefined;
+    /* s195: las etiquetas se miden con la fuente que haya EN ESE MOMENTO. Si la de
+       verdad llega después (Cormorant es más estrecha que la de reserva: la larga
+       pasa de 132×68 a 121×53), la colocación hecha con la de reserva SE QUEDA,
+       porque el observador mira la línea y su caja no cambia. Medido a 1536×704:
+       tres niveles (zona 122) donde el estado asentado tiene dos (107), o sea 15 px
+       de panel y 17 de aro de menos. Se recoloca al llegar las fuentes, como la
+       barra lateral (s181). `vivo` evita colocar sobre un nodo ya desmontado. */
+    let vivo = true;
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (vivo) colocar(); });
+    if (!window.ResizeObserver || !lin.current) return () => { vivo = false; };
     const ro = new ResizeObserver(colocar);
     ro.observe(lin.current);
-    return () => ro.disconnect();
+    return () => { vivo = false; ro.disconnect(); };
   });
 
   return (
