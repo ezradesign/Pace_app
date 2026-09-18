@@ -28,6 +28,12 @@ function PaceApp() {
 
   // Modales
   const [openLibrary, setOpenLibrary] = useStateMain(null); // 'breathe' | 'move' | 'extra' | null
+  /* s194 · LA PUERTA de la sesión que venga (state-events.jsx): abrir una biblioteca
+     es una puerta, y lo que se empiece desde ella lleva `origin: 'biblioteca'`. Las
+     demás puertas anotan la suya en su gesto (la pausa, la barra lateral, la parada,
+     el aro); dentro de un Camino manda 'camino' sin preguntar. */
+  const anotarPuerta = (puerta, desdeMenu) => { if (typeof paceOrigenSesion === 'function') paceOrigenSesion(puerta, desdeMenu); };
+  const abrirBiblioteca = (kind) => { anotarPuerta('biblioteca', false); setOpenLibrary(kind); };
   const [openHydrate, setOpenHydrate] = useStateMain(false);
   const [openAchievements, setOpenAchievements] = useStateMain(false);
   const [openStats, setOpenStats] = useStateMain(false);
@@ -80,7 +86,7 @@ function PaceApp() {
     let go = null;
     try { go = new URLSearchParams(window.location.search).get('go'); } catch (e) {}
     if (!go) return;
-    if (go === 'breathe' || go === 'move') setOpenLibrary(go);
+    if (go === 'breathe' || go === 'move') abrirBiblioteca(go);
     else if (go === 'hydrate') setOpenHydrate(true);
     else if (go === 'focus') set({ focusMode: 'foco' });
     try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
@@ -162,7 +168,7 @@ function PaceApp() {
     abrirLogros: () => setOpenAchievements(true),
     abrirApoyo: () => setOpenSupport(true),
     abrirStats: () => setOpenStats(true),
-    abrirBiblioteca: (kind) => setOpenLibrary(kind),
+    abrirBiblioteca: abrirBiblioteca,
     abrirAgua: () => setOpenHydrate(true),
     empezarRespira: handleStartBreathe,
     previsualizar: setPreviewRoutine,
@@ -194,8 +200,11 @@ function PaceApp() {
     setOpenBreakMenu(true);
   };
 
-  const handleBreakChoice = (choice, rutina) => {
+  const handleBreakChoice = (choice, rutina, desdeMenu) => {
     setOpenBreakMenu(false);
+    /* s194 · la pausa es una puerta; `desdeMenu` dice si lo elegido era el plato que
+       «A tu ritmo» sirvió (BreakMenu lo sabe por el motivo de la propuesta). */
+    if (choice === 'breathe' || choice === 'extra' || choice === 'move') anotarPuerta('pausa', !!desdeMenu);
     /* s187 · CON RUTINA CONCRETA se entra en ELLA y no en su biblioteca -- es la
        diferencia entre proponer y volver a preguntar-, y por las MISMAS puertas:
        `handleStartBreathe` con su modal, y el preview de cuerpo (§18.3). Sin
@@ -240,7 +249,7 @@ function PaceApp() {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
         {/* Top bar */}
         <TopBar
-          onOpenLibrary={(kind) => setOpenLibrary(kind)}
+          onOpenLibrary={abrirBiblioteca}
           onOpenHydrate={() => setOpenHydrate(true)}
           onOpenStats={() => setOpenStats(true)}
           onOpenTweaks={() => setOpenTweaks(true)}
@@ -310,7 +319,7 @@ function PaceApp() {
                 s192: los dos bloques los pinta RitmoHome («A tu ritmo»): el panel del
                 día o, por libre, Actividades y Camino con sus keys (ritmo/RitmoHome.jsx). */}
             <RitmoHome
-              onOpenLibrary={(kind) => setOpenLibrary(kind)}
+              onOpenLibrary={abrirBiblioteca}
               onOpenHydrate={() => setOpenHydrate(true)}
             />
           </div>

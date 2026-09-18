@@ -30,6 +30,16 @@ const EVENT_COMPLETION_REASONS = ['natural', 'early'];
 const EVENT_PLANNED_SOURCES = ['preset', 'derived', 'declared'];
 const EVENT_FEEDBACK_RESPONSES = ['yes', 'some', 'no'];   // `later` NO emite (§15.2)
 const EVENT_VARIANTS = ['v1', 'legacy'];
+/* EL ORIGEN de una sesion (s194 · rev. 7 del esquema): la PUERTA por la que se
+   empezo -- el aro de la home, la pausa, una biblioteca, la tarjeta de la barra
+   lateral, la parada de la linea del dia o un Camino -- y, aparte, si lo que se
+   empezo era lo que «A tu ritmo» habia servido (`fromMenu`). Dos campos y no uno
+   compuesto porque responden a preguntas distintas: «¿por donde entra la gente?»
+   y «¿hace lo que el menu sirve?»; con la puerta sola, la pausa y la barra
+   lateral son ambiguas. Los dos admiten null: una sesion que sobrevive a una
+   recarga (Foco persistido, Respira reanudada) no recuerda su puerta, y un
+   evento anterior a s194 no los trae. */
+const EVENT_ORIGINS = ['aro', 'pausa', 'biblioteca', 'sidebar', 'parada', 'camino'];
 
 /* Entero finito >= 0. Cubre la deuda P1 de §15.3: un contador que llegue como
    `"3"` no debe concatenarse ni propagarse como string. */
@@ -77,6 +87,8 @@ function normalizeEventPayload(type, raw) {
       elapsedSeconds: elapsed, activeSeconds: active,
       plannedSeconds: planned, plannedSecondsSource: source,
       variant: eventEnum(p.variant, EVENT_VARIANTS),
+      origin: eventEnum(p.origin, EVENT_ORIGINS),
+      fromMenu: p.fromMenu === true ? true : (p.fromMenu === false ? false : null),
     };
   }
 
@@ -108,5 +120,5 @@ function normalizeEventPayload(type, raw) {
 Object.assign(window, {
   EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
   EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
-  eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload,
+  EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload,
 });

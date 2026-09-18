@@ -15,6 +15,8 @@
      abrirApoyo()           pace:open-support         (sesión 16 / v0.11.11)
      abrirStats() · abrirBiblioteca(kind) · abrirAgua() · empezarRespira(r, g)
        · previsualizar({ routine, kind })        pace:sidebar-action (s180)
+   s194: resume/repeat/suggest anotan la PUERTA de la sesión (paceOrigenSesion,
+   state-events.jsx): 'sidebar', o 'parada' si el detalle trae `parada: true`.
 
    El logro secreto de la vaca (pace:cow-click, diez clics en el logo) vive aquí
    entero: su contador no lo lee nadie más. */
@@ -55,6 +57,12 @@ function usePaceEventos(acciones) {
         if (propias) a.abrirBiblioteca('move');
         else a.abrirConstructor(null);
         return;
+      }
+      /* s194 · la puerta: la tarjeta de la barra lateral, o la parada de la línea del
+         día (que dispara este mismo evento con `parada: true`). `ritmo` dice si la
+         tarjeta era la pausa que sirvió el menú. */
+      if ((d.kind === 'resume' || d.kind === 'repeat' || d.kind === 'suggest') && d.targetId && typeof paceOrigenSesion === 'function') {
+        paceOrigenSesion(d.parada ? 'parada' : 'sidebar', d.parada ? true : !!d.ritmo);
       }
       if (d.kind === 'resume' && d.targetId) {
         /* Reanudar entra por `empezarRespira` y no por un camino propio:

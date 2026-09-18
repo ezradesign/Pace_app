@@ -140,6 +140,9 @@ function FocusTimer({ onFinish }) {
       /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
          reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
       if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado();
+      /* s194 · y es una PUERTA para el evento de la sesión: 'aro', servido por el menú
+         si hay plan (`aro` no es null). Se anota al empezar, no al reanudar. */
+      if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);
     }
     try { playSound('pomodoro.start'); } catch (e) {}
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
