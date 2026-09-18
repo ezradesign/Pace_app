@@ -9,13 +9,25 @@
               futuro, y hoy lo usa la suite para las pruebas que no son de este
               módulo (tests/helpers.js), porque su reloj va falseado y una fecha
               no casaría.
-     dia      { fecha, opcion, desde, cicloBase, cambios } — el menú elegido HOY.
-              Con otra fecha no existe (se lee como null).
+     dia      { fecha, opcion, desde, cicloBase, cambios, pausa } — el menú
+              elegido HOY. Con otra fecha no existe (se lee como null).
+              `pausa` (s193) = el número de bloques hechos cuando terminó el
+              último, mientras su pausa siga ABIERTA; null si no hay pausa
+              abierta. La abre terminar un bloque (ritmoBloqueTerminado, desde
+              main.jsx) y la cierra EMPEZAR el siguiente (ritmoBloqueEmpezado,
+              desde FocusTimer): hagas la rutina o la saltes, la pausa dura
+              hasta que vuelves al foco. Decisión del usuario en s193 (2A):
+              simple, sin estado que pueda quedarse colgado, y no castiga
+              saltarla. Con «Ahora» sobre la parada, la línea deja de saltar
+              por encima de la pausa que toca.
 
    EL PROGRESO NO SE GUARDA APARTE: sale de `state.cycle`, que ya cuenta los
    bloques de foco de HOY (completePomodoro lo sube y el relevo de día lo pone a
    cero). `cicloBase` es su valor al elegir, así que bloques hechos = cycle −
    base. Un contador propio habría sido un segundo número del mismo hecho.
+   `pausa` no es un contador: es un interruptor que se guarda con el número
+   al que pertenece, para que un bloque hecho por otra vía (volver de «por
+   libre») no reabra una pausa vieja.
 
    Y NO SE RECOLOCA A MITAD DEL DÍA (todavía): las horas son las del plan. Es lo
    primero de la lista «luego vamos ajustando». */
@@ -106,7 +118,11 @@ function ritmoMenu(s, opcion, cambios, desde) {
   return ritmoComponer(opcion, h, ritmoPozos(s, ritmoHoy()), cambios, agua);
 }
 
-/* EL PLAN DE HOY con su progreso, o null (sin menú, o por libre). */
+/* EL PLAN DE HOY con su progreso, o null (sin menú, o por libre).
+   `pausa` (s193) es la parada ABIERTA —lo que va detrás del último bloque
+   hecho— mientras no empiece el siguiente; null si no hay ninguna. Solo cuenta
+   si el número guardado es el de bloques hechos: si `cycle` se movió por otra
+   vía, la pausa guardada ya no es de este momento. */
 function ritmoPlan(s) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
@@ -114,7 +130,8 @@ function ritmoPlan(s) {
   if (!m) return null;
   var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
   var actual = m.focos[hechos] || null;
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual };
+  var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa };
 }
 
 /* Lo que viene detrás de un tramo, saltando el margen libre. */
@@ -154,18 +171,20 @@ function ritmoPropuesta(s) {
   return { modulo: RITMO_A_MENU[plato.modulo], porque: 'ritmo.' + it.motivo, rutina: plato.rutina, datos: {} };
 }
 
-/* La barra lateral: la siguiente parada con plato (la comida no tiene rutina
-   que abrir, así que se salta). */
+/* La barra lateral: la pausa ABIERTA si la hay («Tu pausa · 9:45», s193) y, si
+   no, la siguiente parada con plato (la comida no tiene rutina que abrir, así
+   que se salta). */
 function ritmoSiguiente(s) {
   var p = ritmoPlan(s);
   if (!p || !p.actual) return null;
-  var it = p.actual;
-  while ((it = ritmoDetras(p.m, it))) {
+  var it = p.pausa && p.pausa.platos && p.pausa.platos[0] ? p.pausa : p.actual;
+  var ahora = it === p.pausa;
+  do {
     if (it.platos && it.platos[0]) {
       var plato = it.platos[0];
-      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur };
+      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora };
     }
-  }
+  } while ((it = ritmoDetras(p.m, it)));
   return null;
 }
 
@@ -199,12 +218,26 @@ function ritmoElegir(opcion) {
   var s = getState();
   var R = ritmoDe(s);
   var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
-              cicloBase: Number(s.cycle) || 0, cambios: {} };
+              cicloBase: Number(s.cycle) || 0, cambios: {}, pausa: null };
   ritmoGuardar(function () { return { libre: null, dia: dia }; });
   ritmoSincronizar();
 }
 
 function ritmoPreguntar() { ritmoGuardar(function () { return { dia: null }; }); }
+
+/* LA PAUSA (s193). Terminar un bloque la abre con el número de bloques hechos
+   —`completePomodoro` ya subió `cycle` cuando main.jsx llama a esto—; empezar
+   el siguiente la cierra. Sin menú no hay nada que abrir. */
+function ritmoBloqueTerminado() {
+  var p = ritmoPlan(getState());
+  if (!p || p.hechos < 1) return;
+  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, { pausa: p.hechos }) } : {}; });
+}
+function ritmoBloqueEmpezado() {
+  var R = ritmoDe(getState());
+  if (!R.dia || R.dia.pausa == null) return;
+  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, { pausa: null }) } : {}; });
+}
 function ritmoPorLibre() { ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
 function ritmoVolver() { ritmoGuardar(function () { return { libre: null }; }); }
 
@@ -233,4 +266,5 @@ Object.assign(window, {
   ritmoHorarioInicial, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
+  ritmoBloqueTerminado, ritmoBloqueEmpezado,
 });

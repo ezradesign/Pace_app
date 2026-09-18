@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.122.0 (s192 - **A TU RITMO, EL MENU MANDA**. Las entrevistas del usuario (entre ellas, un experto en informatica y SaaS) apuntaron a lo mismo que los beta testers: el problema no es que falte contenido, es **elegir**. La home pregunta **«¿cuanto trabajas hoy?»** y **sirve la jornada**: bloques de foco y pausas con nombre, la comida a su hora exacta y el horario editable dentro de la frase. La carta sigue a un toque con **«Hoy voy por libre»**. Cuatro rondas de maqueta mirandolas (`docs/proposals/menu-del-dia-r1` ... `a-tu-ritmo-r4`). **El panel hereda el papel de horizonte de Actividades**, **el progreso sale de `cycle`**, la pausa y la barra lateral hablan del menu y **los pozos salen del catalogo vivo**. **236 -> 250**, 11 mutantes y los 11 muerden. **Stats (Fase 4) APARCADO** y datos **anonimos con permiso** decididos.)
+**Version actual:** v0.123.0 (s193 - **LA LINEA SIGUE AL ARO**. El usuario uso «A tu ritmo» sin acabar un pomodoro y no entendia como se enlaza el aro con la linea, las pausas y los ejercicios; el codigo confirmo un hueco: **la pausa no existia como estado** y la linea no se movia mientras el aro contaba. Una ronda de maqueta sobre la app real y tres cambios decididos mirandola: **el tramo de ahora se rellena con el pomodoro** (`--pace-bloque`), **al acabar el bloque «Ahora» es la parada** hasta empezar el siguiente (tocarla la empieza; la barra lateral dice «Tu pausa»), y **una frase la primera vez**. **Lo hecho no se atenua**. Antes, el troceo de `main.jsx` y `FocusTimer.jsx` en commit aparte. **250 -> 253**, 12 mutantes y los 12 muerden. Norte nuevo: **propuestas para cada dia de la semana/mes**.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -21,16 +21,18 @@
 | Archivo | Rol | Version |
 |---|---|---|
 | `app/ritmo/ritmo.regla.js` | **LA REGLA DE A TU RITMO (s192)**, PURA: `ritmoComponer(opcion, horario, pozos, cambios, meta)` compone el dia -- comida a su hora exacta, bloque previo acortado, colas fundidas, agua hasta la meta, sin repetir rutina, llegar tarde = sales a tu hora. No lee reloj, estado ni `window` | **NUEVO s192** |
-| `app/state-ritmo.jsx` | **EL ESTADO DE A TU RITMO (s192)**: `ritmo: { horario, libre, dia }`. El progreso sale de `cycle − cicloBase`. Pozos desde el catalogo vivo (con el veto de s189). Lo que consultan el aro (`ritmoAro`), la pausa (`ritmoPropuesta`) y la barra lateral (`ritmoSiguiente`), y `ritmoSincronizar` (no toca `focusMinutes` con un bloque en marcha) | **NUEVO s192** |
+| `app/state-ritmo.jsx` | **EL ESTADO DE A TU RITMO (s192)**: `ritmo: { horario, libre, dia }`. El progreso sale de `cycle − cicloBase`. Pozos desde el catalogo vivo (con el veto de s189). Lo que consultan el aro (`ritmoAro`), la pausa (`ritmoPropuesta`) y la barra lateral (`ritmoSiguiente`), y `ritmoSincronizar` (no toca `focusMinutes` con un bloque en marcha). **s193: `dia.pausa`, la pausa ABIERTA** — la abre `ritmoBloqueTerminado` (main.jsx, tras `cycle++`) y la cierra `ritmoBloqueEmpezado` (FocusTimer, solo foco, nunca al reanudar); `ritmoPlan` la devuelve solo si `pausa === hechos`; `ritmoSiguiente` la da con `ahora: true` | **s193** · NUEVO s192 |
 | `app/ritmo/RitmoHome.jsx` | **EL BLOQUE DE LA HOME (s192)**: el panel (con `data-pace-activitybar`: hereda el horizonte) o, por libre, Actividades + Camino con sus keys y el enlace de vuelta. La hoja va por PORTAL | **NUEVO s192** |
-| `app/ritmo/RitmoPanel.jsx` | La pregunta, el menu servido (escritorio y movil, dos copias en el DOM) y la jornada cerrada | **NUEVO s192** |
-| `app/ritmo/RitmoLinea.jsx` | La linea del dia (escritorio) con las etiquetas colocadas MIDIENDO en hasta tres niveles, y la mini linea de movil | **NUEVO s192** |
-| `app/ritmo/RitmoHoja.jsx` | La jornada entera en el `Modal` de la app | **NUEVO s192** |
+| `app/ritmo/RitmoPanel.jsx` | La pregunta, el menu servido (escritorio y movil, dos copias en el DOM) y la jornada cerrada. **s193: `RitmoComo` (la frase hasta el primer bloque hecho) y `RitmoFilaParada`; con la pausa abierta, en movil «Ahora» es la parada y «Luego» el bloque** | **s193** · NUEVO s192 |
+| `app/ritmo/RitmoLinea.jsx` | La linea del dia (escritorio) con las etiquetas colocadas MIDIENDO en hasta tres niveles, y la mini linea de movil. **s193: `ritmoIndiceAhora` (la pausa abierta manda), la parada abierta con «Ahora» y `ritmoEmpezarParada` (tocarla la empieza por `pace:sidebar-action`)** | **s193** · NUEVO s192 |
+| `app/ritmo/RitmoHoja.jsx` | La jornada entera en el `Modal` de la app. s193: la parada abierta lleva «ahora» | **s193** · NUEVO s192 |
 | `app/ritmo/RitmoPiezas.jsx` | Glifo por modulo, nombre en su idioma, la frase con `{marcadores}` y los selectores de hora | **NUEVO s192** |
-| `app/ritmo/ritmo.css.jsx` | La hoja inyectada (patron de `library.css.jsx`), corte 768/769 | **NUEVO s192** |
-| `app/i18n/strings/ritmo.js` | 53 claves por idioma, incluidas las razones `break.prop.ritmo.*` | **NUEVO s192** |
-| `tests/ritmo.spec.js` | **14 tests**: la regla en puro, la home, un bloque terminado, por libre, el horario, llegar tarde, ingles, movil y la geometria en cuatro viewports | **NUEVO s192** |
+| `app/ritmo/ritmo.css.jsx` | La hoja inyectada (patron de `library.css.jsx`), corte 768/769. **s193: el tramo de ahora al 35 % con `::after` que mide `--pace-bloque`; lo hecho en `--focus` entero; la parada abierta con borde entero y lavado; la pasada sin atenuar** | **s193** · NUEVO s192 |
+| `app/i18n/strings/ritmo.js` | 56 claves por idioma, incluidas las razones `break.prop.ritmo.*` (s193: `ritmo.empieza`, `ritmo.como`, `ritmo.sidebar.ahora`) | **s193** · NUEVO s192 |
+| `tests/ritmo.spec.js` | **17 tests**: la regla en puro, la home, un bloque terminado, **la linea sigue al aro (`--pace-bloque`, el ancho del `::after`, la parada abierta, «Tu pausa», empezar el bloque 2 la cierra), la pausa sembrada que sobrevive a la recarga y se empieza tocando la parada**, por libre, el horario, llegar tarde, ingles, movil (**con la pausa abierta**) y la geometria en cuatro viewports | **s193** · NUEVO s192 |
 | `scripts/audit/banco-ritmo-s192.js` | Banco de mutantes de A tu ritmo, con pasada de control: **11 de 11 muerden** | **NUEVO s192** |
+| `scripts/audit/banco-pausa-s193.js` | **Banco de mutantes de «la linea sigue al aro» (s193)**, con pasada de control: **12 de 12 muerden**. Declara lo que no muta: los colores y la guarda `pausa === hechos` | **NUEVO s193** |
+| `scripts/audit/pausa-s193.js` | **La maqueta de s193** sobre la app real (reloj fijado con offset, jornada sembrada): fotografia la home en cuatro estados, «hoy» y «propuesta» (DOM y hoja inyectados), recorta con `sharp` y escribe `docs/proposals/la-linea-sigue-al-aro-r1.html`, FLUIDA (la primera tirada se veia cortada) | **NUEVO s193** |
 | `scripts/audit/menu-s192*.js` | Las cuatro rondas de maqueta (calco de la home, regla, piezas, paginas y revision). **Solo la ultima se regenera tal cual** | **NUEVO s192** |
 | `app/ui/library-rules.js` | **LAS REGLAS DE LAS BIBLIOTECAS, SIN UI (s174)**: filtros, orden, «Para ahora», la tira de glifos y la linea de series, como funciones puras. Viven aparte para que se puedan asertar **sin abrir un navegador** — dentro del componente, la unica forma de probar que «Corto» filtra bien seria levantar Chromium y contar tarjetas. **El umbral de «Corto» es RELATIVO** y se calcula (el mayor cuyo recuento no pase de la mitad): con ≤3 min fijo dejaba **12 de 14 en Mueve** —quita dos: no filtra— y 3 de 14 en Estira, porque Mueve va de 1 a 4 min y Estira de 2 a 6. **`var`/`function` a proposito**: un `const` no cruza la IIFE del artefacto | **s189: + `salto`** (5o parametro OPCIONAL) -- desplaza la ventana dentro del mismo dia, porque la rotacion entra por el DIA y dos pausas del mismo dia compartian el ISO. Sin `salto`, comportamiento de s174: ninguna biblioteca se mueve. **NUEVO s174 · 194 ln** |
 | `app/ui/RoutineCard.jsx` | **LA TARJETA, compartida por las TRES bibliotecas (s174)**. Sale de `BreatheLibrary.jsx`, donde vivia desde s34 por accidente historico. **NO es un boton gigante**, y eso no es estilo: un elemento con `role=button` vuelve **presentacionales a sus descendientes**, asi que el nombre dejaba de existir como encabezado — la primera version lo hacia y **tumbo 9 tests**. El encabezado lleva DENTRO un boton que se extiende sobre toda la tarjeta con un `::after`; se conserva el encabezado y se gana el teclado, que `Card` nunca tuvo. **La pill va FUERA del `<h4>`**: dentro, el nombre accesible pasaba a ser «Cuello · 3 min SUAVE». El gating de contenido (`access` + `canAccessRoutine`) viajo con ella, intacto | **NUEVO s174 · 155 ln** |
@@ -148,10 +150,13 @@
 | `app/shell/Sidebar.hoja.jsx` | **LA HOJA CSS INYECTADA (nace en s181** al pasar `support` de 500 lineas). Responsive del cajon, rejilla de Hoy, recorte del logo, y la geometria de **la lente y la envoltura que escala**. Aqui vive lo que NO puede ir en linea: React no crea pseudo-elementos desde un estilo en linea, no hay media queries en linea, y **un estilo en linea gana a la hoja**. **CUIDADO: todo va dentro de un template literal y un backtick en un comentario ROMPE el archivo** (ha pasado cuatro veces) | **v0.113.0** |
 | `app/shell/Sidebar.support.jsx` | `sidebarStyles`, los estilos EN LINEA (la hoja se fue a `Sidebar.hoja.jsx` en s181). **Viaja por `window`** porque el build encierra cada archivo en su IIFE. **`accion` lleva `flexShrink: 0` desde s181** y no es cosmetico: con `overflow: hidden` un hijo flex pierde su minimo automatico y se come el deficit de la columna amputandose | **v0.113.0** |
 | `app/shell/Sidebar.selectors.js` | **Los cuatro selectores PUROS de la sidebar (s180)** — `selectSidebarToday` · `selectSidebarWeek` · `selectSidebarPrimaryAction` · `selectSidebarLatestAchievement`. **No leen `window`**: los eventos entran POR PARAMETRO, asi que se prueban sin montar el almacen. Aqui vive el criterio de dia activo (foco/respira/cuerpo; **el agua sola NO**) y el indice lunes-primero | **s192: la siguiente pausa del menu, detras de reanudar y del Camino** · **NUEVO s180** |
-| `app/shell/Sidebar.parts.jsx` | Piezas de UI del sidebar. **REESCRITO s180**: `SidebarToday` (rejilla 2x2 con los glifos de `ActivityBar`) · `sidebarActionView` + `SidebarPrimaryAction` · `SidebarWeek` (el bloque ENTERO es un boton) · `SidebarFooter` (lleva el ultimo logro) · `achMini` · `ChevronLeftIcon`. **RETIRADOS**: `SenderoDelDia`, `WeekDots`, `AchievementsPreview` y `StatusBar` | **s192: «Siguiente pausa · 9:45» cuando la sugerencia viene del menu** · **NUEVO s148 · reescrito s180** |
+| `app/shell/Sidebar.parts.jsx` | Piezas de UI del sidebar. **REESCRITO s180**: `SidebarToday` (rejilla 2x2 con los glifos de `ActivityBar`) · `sidebarActionView` + `SidebarPrimaryAction` · `SidebarWeek` (el bloque ENTERO es un boton) · `SidebarFooter` (lleva el ultimo logro) · `achMini` · `ChevronLeftIcon`. **RETIRADOS**: `SenderoDelDia`, `WeekDots`, `AchievementsPreview` y `StatusBar` | **s193: «Tu pausa · 9:45» con la pausa abierta** · **s192: «Siguiente pausa · 9:45» cuando la sugerencia viene del menu** · NUEVO s148 · reescrito s180 |
 | `app/main/_responsive.js` | Hoja responsive global de la app (IIFE que inyecta un `<style>`). **s160: dos cosas nuevas y ninguna es cosmetica** — (1) `transition-property: none` en `[data-pace-dial-fit]` y en sus **cuatro nodos interiores**, que es la condicion para que el motor de geometria pueda MEDIRLOS bajo reduced-motion (leer su fila en DECISIONES); (2) publica **`--pace-skin`** (`movil` global, `escritorio` dentro del `@media (min-width: 769px)`) y **desaparecen los `order`** del bloque de escritorio: el orden lo trae el DOM. **OJO AL EDITAR: ni un backtick dentro del template literal** — ha abortado el build en s139, s156, s157, s158 y **dos veces en s185**. **s185: `[data-pace-timer-wrap]` entra en la lista de exenciones de transicion** — su `margin-top` es proporcional a D, o sea depende de lo que el motor escribe, y con reduced-motion se volvia transicion y el aro convergia a 381 en vez de 379 | **s185** |
-| `app/main.jsx` | Orquestador: shell + modales + sesiones + overlays. **s160: el stack de la home renderiza el orden canonico POR PIEL**, leyendo `--pace-skin` del estilo computado (no un tercer `matchMedia` con el 769 escrito otra vez) y con **`key` estable** en los tres bloques, porque sin ella React reconcilia por posicion y **remonta** tarjeta y ActivityBar al cruzar el breakpoint | **s192: pinta `RitmoHome` donde iban Actividades y Camino · 500 ln, en el limite** · **s160** |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro). **s159: publica los CINCO mandos de la luz** en `[data-pace-home-body]` — `--pace-k` (la hora), `--pace-i` (la envolvente), `--pace-on` (interruptor), `--pace-pausado` (la pausa) y `--pace-arco` (el tono del recorrido, para que la cola lo herede). Aqui no se dibuja nada: son derivadas presentacionales de `progress` y `status`. **La PROFUNDIDAD de la pausa no se publica**, solo el interruptor: cuanto se recoge la luz es un valor por PALETA (`--sun-pausa`) y las paletas viven en CSS | **s192: el aro pregunta a `ritmoAro` («Bloque 2 de 8», su boton y la fila de ciclo oculta sin soltar su sitio) · 500 ln, en el limite** · **v0.90.0** |
+| `app/main.jsx` | Orquestador: shell + modales + sesiones + overlays. **s160: el stack de la home renderiza el orden canonico POR PIEL**, leyendo `--pace-skin` del estilo computado (no un tercer `matchMedia` con el 769 escrito otra vez) y con **`key` estable** en los tres bloques, porque sin ella React reconcilia por posicion y **remonta** tarjeta y ActivityBar al cruzar el breakpoint | **s193: troceado (500 -> 417): los listeners `pace:*` a `main/main.eventos.jsx` y el asa a `main/SidebarHandle.jsx`; `handleFocusFinish` abre la pausa de A tu ritmo (`ritmoBloqueTerminado`)** · s192: pinta `RitmoHome` donde iban Actividades y Camino · s160 |
+| `app/main/main.eventos.jsx` | **LO QUE EL ROOT ESCUCHA (s193)**: `usePaceEventos(acciones)`, los cinco listeners de `pace:*` (sidebar-action, open-custom-builder, open-achievements, open-support, cow-click) sacados de main.jsx sin cambiar ninguno; PaceApp sigue siendo el dueño del estado de los modales y cada evento se traduce a la accion que le pasa. `acciones` se captura en el primer render (`[]`), como ya hacia cada listener | **NUEVO s193** |
+| `app/main/SidebarHandle.jsx` | El asa flotante que reabre la sidebar (JSX puro, `data-pace-sidebar-open`), sacada de main.jsx | **NUEVO s193** |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro). **s159: publica los CINCO mandos de la luz** en `[data-pace-home-body]` — `--pace-k` (la hora), `--pace-i` (la envolvente), `--pace-on` (interruptor), `--pace-pausado` (la pausa) y `--pace-arco` (el tono del recorrido, para que la cola lo herede). Aqui no se dibuja nada: son derivadas presentacionales de `progress` y `status`. **La PROFUNDIDAD de la pausa no se publica**, solo el interruptor: cuanto se recoge la luz es un valor por PALETA (`--sun-pausa`) y las paletas viven en CSS | **s193: troceado (499 -> 326): la luz de la home sale a `FocusTimer.luz.jsx`; `startFocusVisual` cierra la pausa de A tu ritmo al empezar un bloque nuevo (`ritmoBloqueEmpezado`)** · s192: el aro pregunta a `ritmoAro` («Bloque 2 de 8», su boton y la fila de ciclo oculta sin soltar su sitio) · v0.90.0 |
+| `app/focus/FocusTimer.luz.jsx` | **LA LUZ DE LA HOME (s158/s159), sacada de FocusTimer.jsx en s193**: `useLuzHome({ progress, status, running, focusMode })` deriva y publica en `[data-pace-home-body]` los cinco mandos (`--pace-k`, `--pace-i`, `--pace-on`, `--pace-pausado`, `--pace-arco`) **y el sexto, `--pace-bloque`** (el avance del bloque, 96 pasos, `0` sin sesion viva), que la linea de A tu ritmo consume en CSS. Se llama donde estaban sus dos efectos: el orden de hooks no cambia. Con sus porques medidos | **NUEVO s193** |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep). **s184: en la home el recorrido es el TRAMO VISIBLE, no los 360**, y **pista y arco van en CAPAS SEPARADAS** porque no pueden llevar la misma niebla — el arco nace EN el corte y con la larga tardaba ~2,2 min en verse. -- nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho, y el angulo lo MIDE de `--pace-dial-d` y `--pace-horizon` (`asin((D/2-H)/0,475D)`), porque el ratio no es constante: **266-276 grados** segun el breakpoint. La medida devuelve `null` cuando no puede decidir -- devolver «360» congelo el aro redondo con el motor funcionando-- y la dispara un `MutationObserver` sobre el `style` de `<html>`. `pathLength=360` deja el trazo en grados y quita **0,78 px** de asimetria entre cabos. El `key` del arco cuelga del barrido: la geometria no se transiciona. **s185: el corte lo trae `--pace-corte`** (no `--pace-horizon`, que ademas mueve layout) **ya resuelto en px por el motor**, porque un custom property sin registrar devuelve TEXTO y `parseFloat` da NaN. Y el numero sube por TINTA, no por caja: un margen negativo arrastra todo lo de abajo, asi que se resta arriba y se **suma lo mismo** al subtitulo. **Caminos va por `ticks` y no cambia** | **v0.115.1 · 499 ln** |
 | `app/breakmenu/BreakMenu.support.jsx` | **LA REGLA DE LA PROPUESTA (s187)**, pura y aparte para poder asertarla sin navegador. Su orden va de lo que ACABA de pasar a lo que es cierto en general, y **la quinta rama es no proponer nada**. Dice por escrito lo que NO entra -- lo de ayer, el perfil del onboarding y cualquier racha- y por que «de hoy» y no «seguido» (`cycle` se pone a cero en el relevo de dia). **El filtro de seguridad vive en UN solo sitio**: tenerlo en dos hacia que quitarlo de uno no pusiera rojo nada | **s192: con menu, `ritmoPropuesta` va PRIMERO (paso 0)** · **s189: + `breakVetadas`** -- la regla LEE «¿Te ayudo esta pausa?» (`routineFeedback`, capturado desde s116 sin consumidor). El veto va en el MISMO predicado que la seguridad, la **amnistia** es una segunda llamada sin veto (o la rama enmudece: 12 dias en Estira, 9 en Mueve) y el `salto` sale de `state.cycle`. **«Un poco» cuenta como AYUDA**. **NUEVO s187 · 194 ln** |
@@ -184,7 +189,6 @@
 | `app/ui/Toast.jsx` | Notificaciones de logros — delega el glifo en `renderGlyph` (s147; era la 3.a copia del render) | **v0.80.0** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** |
-| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.79.0** |
 | `app/main/home-geometry.js` | Motor de geometria de la home (**las DOS pieles** desde s128): mide y publica en `:root` `--pace-timer-d`, `--pace-activities-overlap`, `--pace-home-squeeze` y (s156) `--pace-home-slack`. **s156: la tarjeta de Camino y Actividades son OPCIONALES** — exigirlas apagaba el motor entero con un Camino en curso, el UNICO estado real sin tarjeta. **Observadores en dos fases**: uno espera al montaje y se desconecta, otro vigila el `childList` **DIRECTO** del stack (sin `subtree`/`attributes`/`characterData`, o el contador del Pomodoro recalcularia 60 veces por minuto) y re-suscribe el ResizeObserver a los nodos VIVOS. **Primera pasada SINCRONA** (por rAF tardaba 1345 ms y el aro saltaba). **Nunca encoge a ciegas**: si una pasada no mejora la medida vuelve al ultimo D no desmentido — eso arreglo el aro de 244 px con `prefers-reduced-motion`. **s185: publica ademas `--pace-dial-corte`** — el mismo solapamiento menos la banda del rotulo que MIDE, mas `AIRE_HALO` (0,030 D), y **ya en px**, porque un custom property sin registrar no se computa. Ese aire no despeja el trazo del aro sino **el halo de la bola guia** (r=1,7 en viewBox 100 = 0,017 D), que es lo que se metia dentro de la tarjeta | **s192: el canto de las tarjetas puede ser `[data-pace-ritmo-panel]`** · **v0.115.1 · 413 ln** |
 | `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con las reglas @media globales del shell y **el modelo de la home**. **s156: aqui vive la RESOLUCION UNICA** — `--pace-dial-d` y `--pace-horizon` deciden en UN solo sitio si manda el motor o el fallback CSS; antes cada consumidor traia el suyo y no coincidian (Desktop tenia un `360px` a mano), asi que con el motor apagado **la tarjeta subia sobre un aro sin recortar**. **s185: el corte del ARO se parte en `--pace-corte`** (`--pace-dial-corte` del motor, con `--pace-horizon` de fallback) y lo consumen las mascaras del anillo y de la pista; `--pace-horizon` se queda solo con el layout. Recorte y solapamiento salen ya del MISMO token. Trae ademas el **amanecer** (halo + linea de alba), reutilizando `paceGlowRamp`/`paceGrainUrl` de SessionShell. **Cuidado: el CSS va en un template literal — un backtick en un comentario aborta el build** (trampa de s139, repetida en s156) | **v0.89.0** |
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent /… | **v0.33.2** |
@@ -225,53 +229,51 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s192 implementa **«A tu ritmo»**, la variante A («el menu manda») de cuatro rondas de maqueta.
-> Publica **v0.122.0**. Suite **236 -> 250**, `verify` en verde, artefacto regenerado. El CI quedo
-> verde en `30863b6`; el de la version (`c016e66`) salio ROJO por el huso del reloj de las pruebas.
+> s193 trocea `main.jsx` y `FocusTimer.jsx` (commit `2a93077`, sin version) y publica
+> **v0.123.0, «la linea sigue al aro»**. Suite **250 -> 253**, `verify` en verde, artefacto
+> regenerado, **12 de 12 mutantes muerden** con control.
 >
-> Diario: [session-192](./docs/sessions/session-192-a-tu-ritmo.md)
+> Diario: [session-193](./docs/sessions/session-193-la-linea-sigue-al-aro.md)
 
-- **[LA EVIDENCIA NUEVA]** Las entrevistas del usuario apuntan a lo mismo que los beta testers:
-  **elegir** cuesta. Anotadas en el ROADMAP como «la segunda evidencia»; faltan los detalles
-  (cuantas personas, perfil, frases literales) que el usuario no ha dado todavia.
+- **[LO QUE TRAJO EL USUARIO]** Uso «A tu ritmo» sin acabar un pomodoro y no entendia como se
+  enlaza el aro con la linea, las pausas y los ejercicios. Leyendo el codigo salio un hueco que no
+  era de explicacion: **la pausa no existia como estado** (al acabar el bloque la linea saltaba al
+  siguiente y pintaba como pasada la parada que tocaba; la barra lateral anunciaba la *siguiente*)
+  y **la linea no se movia mientras el aro contaba**.
 
-- **[DECIDIDO]** A · el menu manda · nombre «A tu ritmo» (y «Hasta las …» DEBAJO en el aro) ·
-  glifos de Actividades solo en las paradas y con el modulo escrito · «Hoy voy por libre» como
-  unica salida · tenedor y cuchillo · horario editable en la frase · llegar tarde = salgo a mi
-  hora · **datos anonimos con permiso** · **Stats aparcado** (sus maquetas de s191 siguen sin
-  commitear en `docs/proposals/stats-*`).
+- **[DECIDIDO, mirando la maqueta]** 1A · el tramo de ahora **encendido al 35 % y vacio** antes
+  de empezar, y se **rellena** con el pomodoro · 2A · **empezar el bloque siguiente cierra la
+  pausa**, hagas la rutina o la saltes · **«Tu pausa · 9:45»** en la barra lateral · **la frase se
+  queda** hasta el primer bloque hecho · **lo hecho no se atenua** (verde entero; la parada pasada
+  conserva su fuerza): «atenuado parece como si no se hubiera realizado».
 
-- **[EL PANEL NO TRAE GEOMETRIA PROPIA]** Lleva `data-pace-activitybar` y hereda el horizonte,
-  el recorte y los observadores. En el motor solo cambio que se mide como canto de las tarjetas.
-  La hoja va por portal. `main.jsx` y `FocusTimer.jsx` estan en **500 lineas**, el limite.
+- **[EL NORTE NUEVO]** «La idea es acompanar el dia pero ir ofreciendo propuestas para cada dia de
+  la semana/mes.» Anotado en el ROADMAP (Fase 3.6) como lo siguiente que el sistema tiene que poder
+  decir; hoy los pozos rotan por dia y nada mas.
 
-- **[LO QUE CAZO LA RED]** La suite completa: 1-2 px entre el enlace de vuelta y «Ver caminos»
-  hacian «subir» el foco (home-a11y). El banco de mutantes: el primer mutante del arreglo VIVIA,
-  porque lo que alinea es el envoltorio `inline-flex` y no el estilo del boton -- el comentario
-  decia lo contrario y se reescribio. **11 de 11 muerden**, con control.
+- **[COMO ESTA HECHO]** `dia.pausa` es un interruptor guardado con el numero de bloques hechos
+  (no un contador; el progreso sigue saliendo de `cycle`), y `--pace-bloque` es el sexto mando de
+  la luz: la linea se rellena en CSS sin re-renderizar. Decision tecnica nueva en
+  `DECISIONES_TECNICAS_VIGENTES.md`.
 
-- **[LO QUE QUEDA, «luego vamos ajustando»]** Recolocar a mitad de dia (hoy las horas son las del
-  plan) · llegar antes · las otras dos politicas de llegar tarde · el contexto real (Fase 8) ·
-  calendario (`.ics`, Android local, Google libre/ocupado) · datos anonimos con permiso · el
-  **origen de cada sesion** en los eventos (propuesta / biblioteca / Camino) · Stats «Hoy» con el
-  menu.
+- **[LA MAQUETA]** `scripts/audit/pausa-s193.js` fotografia la app real con el reloj fijado, «hoy»
+  y «propuesta» con el DOM inyectado. **La primera tirada se veia cortada** en el panel del usuario
+  (fotos a 1280 px fijos): se rehizo FLUIDA, con recortes y las enteras bajo desplegable. Tres
+  defectos mas se cazaron **mirando las fotos** antes de enviarla.
 
-- **[LO QUE CAZO EL CI, CON LA SUITE LOCAL VERDE]** Tres pruebas de `ritmo.spec.js` sembraban el
-  reloj con `new Date(2026, 8, 17, 9, 0)`: el instante lo calcula **Node** en el huso del runner
-  (Madrid aqui, UTC en GitHub) y lo lee un navegador fijado a `Europe/Madrid` por la config, asi
-  que alli el dia empezaba dos horas mas tarde («Bloque 1 de 7»). Se siembra con offset explicito
-  y el CI se reproduce en local con `TZ=UTC npx playwright test`. **Una hora de pared sembrada
-  desde Node no vale lo mismo en las dos maquinas.**
+- **[LO QUE QUEDA]** Propuestas para cada dia de la semana/mes (pintar antes) · recolocar a mitad
+  de dia · el origen de cada sesion en `pace.events.v1` · llegar antes · el cierre nunca es «Ahora»
+  (`RitmoHecho` manda) · la pausa larga propone un plato de dos · **`MoveSessionV1.jsx` esta en
+  500 lineas** · Stats «Hoy» con el menu · contexto real · calendario · datos anonimos.
 
-- **[DEUDA DOCUMENTAL SALDADA]** `CHANGELOG.md` llevaba **24 secciones de detalle** donde la
-  convencion pide dos. El usuario mando podar: quedan v0.122.0 y v0.121.0 (**2084 -> 507
-  lineas**). Cada version conserva fila, titular y enlace a su diario, y los 16 punteros
-  «[ver](#...)» que apuntaban al detalle borrado se cambiaron por «—».
+- **[TRAMPAS]** `String.replace` con `$&` o `$'` en el texto nuevo NO escribe ese texto (duplico
+  medio script): siempre `replace(v, () => n)` · la copia de trabajo va con CRLF y un insert con LF
+  deja el archivo mixto · el heredoc largo con backticks volvio a no ejecutarse: script a archivo ·
+  para sembrar un bloque hecho hay que sembrar `lastActiveDay` en formato `toDateString` (si no,
+  el relevo pone `cycle` a cero) · el panel del navegador no dibujo una captura.
 
-- **[TRAMPAS]** `wc -l` cuenta una linea menos que el trinquete en un archivo sin salto final ·
-  un heredoc con comillas invertidas dentro de un template no escribe nada · el panel del
-  navegador no siempre dibuja capturas (se verifico con Playwright) · `build-standalone.js`
-  reescribe `PACE_standalone.html`: se restaura.
+- **[DOCUMENTAL]** `STATE.md` tenia DOS filas de `app/main.jsx` (una decia v0.79.0): se borro la
+  caducada. `CHANGELOG.md` podado a las dos ultimas (v0.123.0 y v0.122.0).
 
 ---
 
@@ -282,6 +284,7 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **La pausa de «A tu ritmo» es un INTERRUPTOR guardado con su numero, y la cierra EMPEZAR el bloque siguiente; el avance del bloque viaja como una variable mas de la luz** (s193)
 - **«A tu ritmo» OCUPA EL SITIO DE ACTIVIDADES Y HEREDA SU PAPEL DE HORIZONTE: el panel lleva `data-pace-activitybar`** (s192)
 - **El progreso del dia SALE DE `state.cycle`, no de un contador propio — y `focusMinutes` solo se toca sin un bloque en marcha** (s192)
 - **Con un menu servido, la PAUSA y la BARRA LATERAL hablan del menu — por las mismas puertas de siempre** (s192)

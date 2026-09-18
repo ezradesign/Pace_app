@@ -5,6 +5,13 @@
    su etiqueta de carta debajo: hora · plato · «3 MIN · ESTIRA» con su vaso.
    Tocar una parada que aún no ha pasado sirve OTRA rutina del mismo módulo.
 
+   LA LÍNEA SIGUE AL ARO (s193, ronda 1 aprobada mirándola): el tramo de ahora se
+   rellena con el bloque (`--pace-bloque`, que publica useLuzHome), lo hecho queda
+   en verde entero —lo atenuado leía como «no hecho», dijo el usuario— y, al acabar
+   un bloque, «Ahora» es la PARADA (plan.pausa) hasta que empiece el siguiente:
+   tocarla la EMPIEZA, por la misma puerta que la barra lateral. Lo pasado conserva
+   su fuerza y solo deja de poder tocarse.
+
    Móvil: la misma línea sin etiquetas, con puntos — a 8 px un dibujo no se lee.
 
    LAS ETIQUETAS SE COLOCAN MIDIENDO (rondas 1 a 4 de la maqueta): si se pisan, se
@@ -66,12 +73,27 @@ function ritmoColocarEtiquetas(lin, zona) {
   zona.style.height = Math.ceil(fondo - zona.getBoundingClientRect().top + 2) + 'px';
 }
 
+/* El índice de AHORA: la pausa abierta si la hay, si no el bloque que toca. */
+function ritmoIndiceAhora(plan) {
+  const m = plan.m;
+  if (plan.pausa) return m.items.indexOf(plan.pausa);
+  return plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
+}
+
+/* Empezar el plato de la parada abierta: la misma puerta que la barra lateral
+   (usePaceEventos, `suggest`), así una rutina con aviso pasa por su modal. */
+function ritmoEmpezarParada(it) {
+  const plato = it.platos && it.platos[0];
+  if (!plato) return;
+  window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id } }));
+}
+
 function RitmoLinea({ plan, onCambiar }) {
   const { t, tn, lang } = useT();
   const lin = useRefRL(null);
   const zona = useRefRL(null);
   const m = plan.m;
-  const iActual = plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
+  const iActual = ritmoIndiceAhora(plan);
   const ultimo = m.items.length - 1;
 
   useLayoutEffectRL(() => {
@@ -112,15 +134,17 @@ function RitmoLinea({ plan, onCambiar }) {
           }
           if (!it.platos || !it.platos.length) return null;
           const pasado = i < iActual;
+          const abierta = i === iActual;
           const nombres = ritmoPlatos(it, t, lang);
           return (
             <button key={i} type="button" data-pace-ritmo-parada={it.platos.map((p) => p.clave).join(',')}
-              className={'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca')}
+              className={'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca') + (abierta ? ' pace-rt-ahora' : '')}
               style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }}
-              title={pasado ? nombres : nombres + ' · ' + t('ritmo.toca')}
-              aria-label={ritmoHora(it.desde) + ' · ' + nombres}
+              title={pasado ? nombres : nombres + ' · ' + t(abierta ? 'ritmo.empieza' : 'ritmo.toca')}
+              aria-label={ritmoHora(it.desde) + ' · ' + nombres + (abierta ? ' · ' + t('ritmo.ahora') : '')}
               disabled={pasado}
-              onClick={() => ritmoOtra(it.platos.map((p) => p.clave))}>
+              onClick={() => abierta ? ritmoEmpezarParada(it) : ritmoOtra(it.platos.map((p) => p.clave))}>
+              {abierta ? <span className="pace-rt-ahora-tag">{t('ritmo.ahora')}</span> : null}
               {it.platos.map((p) => <RitmoGlifo key={p.id} modulo={p.modulo} />)}
               <RitmoEtiqueta it={it} final={i === ultimo} t={t} tn={tn} lang={lang} />
             </button>
@@ -132,21 +156,22 @@ function RitmoLinea({ plan, onCambiar }) {
   );
 }
 
-/* Móvil: la misma línea, con puntos y sin etiquetas. */
+/* Móvil: la misma línea, con puntos y sin etiquetas. Mismo AHORA y mismo hecho. */
 function RitmoMini({ plan }) {
   const m = plan.m;
+  const iActual = ritmoIndiceAhora(plan);
   return (
     <div className="pace-rt-mini" aria-hidden="true">
       {m.items.map((it, i) => {
         if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
-          const ahora = it === plan.actual;
-          return <div key={i} className={'pace-rt-seg pace-rt-' + it.tipo + (ahora ? ' pace-rt-ahora' : '')} style={{ flex: it.dur + ' 1 0' }} />;
+          const clase = i === iActual ? ' pace-rt-ahora' : i < iActual && it.tipo === 'foco' ? ' pace-rt-hecho' : '';
+          return <div key={i} className={'pace-rt-seg pace-rt-' + it.tipo + clase} style={{ flex: it.dur + ' 1 0' }} />;
         }
         if (!it.platos || !it.platos.length) return null;
-        return <span key={i} className={'pace-rt-punto' + (it.larga ? ' pace-rt-larga' : '')} style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }} />;
+        return <span key={i} className={'pace-rt-punto' + (it.larga ? ' pace-rt-larga' : '') + (i === iActual ? ' pace-rt-ahora' : '')} style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }} />;
       })}
     </div>
   );
 }
 
-Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtiquetas });
+Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtiquetas, ritmoIndiceAhora, ritmoEmpezarParada });

@@ -387,7 +387,20 @@ rondas de maqueta mirándolas (`docs/proposals/menu-del-dia-r1` … `a-tu-ritmo-
 > cuchillo para la comida · **horario editable en la frase** (inicio, comida, cuánto dura y salida;
 > la hora de comer por defecto sale de la región) · **llegar tarde = salgo a mi hora**.
 
+**Hecho en s193 (v0.123.0), tras usarlo el usuario**: «la línea sigue al aro» — el tramo de ahora se
+rellena con el pomodoro, al acabar el bloque **«Ahora» es la pausa** hasta que empieza el siguiente
+(tocarla la empieza; la barra lateral dice «Tu pausa»), lo hecho queda en verde entero y una frase
+explica el enlace la primera vez. Diario: [session-193](./docs/sessions/session-193-la-linea-sigue-al-aro.md).
+
+> **El norte que fijó el usuario en s193**: «la idea es acompañar el día pero ir ofreciendo propuestas
+> para cada día de la semana/mes». O sea: el menú no es solo de hoy — la variedad y la planificación
+> entre días (qué propone el lunes frente al jueves, qué ha cambiado esta semana) es lo siguiente
+> que tiene que poder decir el sistema. Hoy los pozos rotan por día y nada más.
+
 **Lo que queda** («implementemos esto primero y luego vamos ajustando»):
+- **Propuestas para cada día de la semana/mes**: que el menú varíe y se planifique entre días, no
+  solo dentro del día (el norte de arriba). Pinta antes; depende del origen de cada sesión en los
+  eventos para saber qué funciona.
 - **Recolocar a mitad de día**: hoy las horas son las del plan aunque te retrases.
 - **Llegar antes** de tu hora y las otras dos políticas de llegar tarde (pintadas en la ronda 4).
 - **Contexto real** («Junto a la mesa · Sin material» es fijo) → onboarding contextual, Fase 8.
