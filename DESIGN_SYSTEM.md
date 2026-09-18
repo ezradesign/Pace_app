@@ -783,9 +783,21 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
 - **`ABMeal`** (tenedor de tres púas en U y cuchillo de filo curvo) sigue las reglas de la familia:
   lienzo 28×28, trazo 1,2, remates y uniones redondos, `currentColor`, y un detalle secundario a
   opacidad 0,35 —el mantel punteado, como el suelo de Estira—.
-- **La línea del día es proporcional al tiempo**: tramos de 4 px (`--paper-3`; el actual en
-  `--focus`, los hechos al 35 %), la comida y el margen libre punteados. Las etiquetas se colocan
-  **midiendo** en hasta tres niveles, con un hilo de 1 px (`--line`) hasta su parada.
+- **La línea del día es proporcional al tiempo**: tramos de 4 px (`--paper-3`), la comida y el
+  margen libre punteados. Las etiquetas se colocan **midiendo** en hasta tres niveles, con un hilo
+  de 1 px (`--line`) hasta su parada.
+- **La línea sigue al aro (s193 · v0.123.0)**: el tramo de AHORA está **encendido al 35 %**
+  (`color-mix(--focus 35%, --paper-3)`) y se **rellena** con el bloque —un `::after` en `--focus`
+  cuyo ancho es `--pace-bloque` (lo publica `useLuzHome` en `[data-pace-home-body]`, 96 pasos),
+  con transición de 900 ms—; **lo hecho queda en `--focus` entero** (el relleno llega al 100 % y
+  se queda) y **lo pasado no se atenúa**, porque atenuado leía como «no hecho» (el usuario). El 35 %
+  significa solo «a punto de correr». **La parada abierta** —al acabar un bloque y hasta empezar
+  el siguiente— lleva borde de 1,5 px en el color de su módulo, lavado al 14 % y la etiqueta
+  «AHORA» encima (9 px, tracking 0,16 em, en su color, 27 px sobre el aro); la pasada conserva su
+  fuerza y solo deja de poder tocarse. En la mini línea de móvil el punto de la parada abierta se
+  rellena de su color.
+- **La frase de la primera vez** (`RitmoComo`) va bajo la cabecera como `.pace-rt-sub` (cursiva
+  display 13 px, `--ink-3`), 5 px de margen, y desaparece con el primer bloque hecho.
 - **Las horas se editan dentro de la frase**: un `<select>` nativo con aspecto de texto —la cifra
   en `--ink`, subrayado punteado `--line-2`, chevron de 7×5 px en `--ink-3`— y un relleno vertical
   que agranda la zona de toque sin mover la línea. En móvil abre el selector del sistema.

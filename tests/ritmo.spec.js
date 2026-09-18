@@ -11,6 +11,10 @@
  *    su «Hasta las …» DEBAJO, la barra lateral con la siguiente pausa;
  *  · el DÍA: terminar un bloque hace que la pausa proponga el plato del menú y
  *    que el aro avance;
+ *  · LA LÍNEA SIGUE AL ARO (s193): el tramo de ahora se rellena con el bloque
+ *    (`--pace-bloque`), al acabar «Ahora» es la PARADA —y la barra lateral dice
+ *    «Tu pausa»— hasta que empieza el bloque siguiente, tocarla la empieza, y la
+ *    frase de la primera vez se va con el primer bloque hecho;
  *  · las SALIDAS: «Hoy voy por libre» y su vuelta;
  *  · el HORARIO editable dentro de la frase, y llegar tarde;
  *  · el MÓVIL (la lista entera) y el INGLÉS;
@@ -33,11 +37,16 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
 
 const NUEVE = new Date('2026-09-17T09:00:00+02:00');   /* 9:00 en Madrid (CEST) */
 const FECHA = '2026-09-17';
 const JORNADA = { fecha: FECHA, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
+/* Un bloque hecho y su pausa ABIERTA, sembrados: `cycle` cuenta el bloque y
+   `pausa` lo señala. `lastActiveDay` va con el formato del rollover
+   (toDateString) para que el relevo de día no ponga `cycle` a cero. */
+const CON_PAUSA = { ritmo: { dia: Object.assign({}, JORNADA, { pausa: 1 }) }, cycle: 1,
+                    lastActiveDay: 'Thu Sep 17 2026', _historyMigrated: true };
 
 async function abrir(page, context, ritmo, extra, hora) {
   await sembrar(context, Object.assign({ ritmo: ritmo || {} }, extra || {}));
@@ -153,6 +162,77 @@ test('al terminar un bloque, la pausa propone el plato del menú y el aro avanza
   await expect(page.getByRole('button', { name: 'Empezar bloque 2', exact: true })).toBeVisible();
 });
 
+/* ------------------------------------------------------- la línea sigue al aro (s193) */
+const bloqueDe = (page) => page.evaluate(() => document.querySelector('[data-pace-home-body]').style.getPropertyValue('--pace-bloque'));
+
+test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la parada y empezar el siguiente la cierra', async ({ page, context }) => {
+  await abrir(page, context, { dia: JORNADA });
+  const linea = vis(page, '[data-pace-ritmo-linea]');
+  const tramos = linea.locator('[data-pace-ritmo-tramo="foco"]');
+  const parada = linea.locator('[data-pace-ritmo-parada]').first();
+  const lateral = page.locator('[data-pace-sidebar]');
+  /* antes de empezar: la frase, el tramo encendido y vacío, nada abierto */
+  await expect(vis(page, '[data-pace-ritmo-como]')).toBeVisible();
+  expect(await bloqueDe(page)).toBe('0');
+  await expect(tramos.nth(0)).toHaveClass(/pace-rt-ahora/);
+  await expect(parada).not.toHaveClass(/pace-rt-ahora/);
+  await expect(lateral).toContainText('Siguiente pausa · 9:45');
+
+  /* corriendo: el relleno mide lo que lleva el bloque (12 de 45, a 96 pasos) */
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
+  await page.waitForTimeout(250);
+  await page.clock.fastForward(12 * 60 * 1000);
+  await page.waitForTimeout(1200);   /* el ::after transiciona en 900 ms */
+  const bloque = Number(await bloqueDe(page));
+  expect(bloque, '--pace-bloque a los 12 min').toBeGreaterThan(0.25);
+  expect(bloque, '--pace-bloque a los 12 min').toBeLessThan(0.29);
+  const relleno = await page.evaluate(() => {
+    const seg = Array.from(document.querySelectorAll('[data-pace-ritmo-tramo="foco"].pace-rt-ahora')).find((e) => e.offsetParent);
+    return parseFloat(getComputedStyle(seg, '::after').width) / seg.getBoundingClientRect().width;
+  });
+  expect(relleno, 'el tramo no se rellena con el bloque').toBeGreaterThan(0.24);
+  expect(relleno, 'el tramo no se rellena con el bloque').toBeLessThan(0.30);
+
+  /* acaba: la pausa propone (como siempre) y detrás AHORA es la parada */
+  for (let i = 0; i < 50; i++) {
+    await page.clock.fastForward(60 * 1000);
+    await page.waitForTimeout(60);
+    if (await page.locator('[data-pace-break-shortcut]').count()) break;
+  }
+  await page.keyboard.press('Escape');
+  await expect(parada).toHaveClass(/pace-rt-ahora/);
+  await expect(parada).toContainText('Ahora');
+  await expect(parada).toBeEnabled();
+  await expect(tramos.nth(0)).toHaveClass(/pace-rt-hecho/);
+  await expect(tramos.nth(1)).not.toHaveClass(/pace-rt-ahora/);
+  await expect(vis(page, '[data-pace-ritmo-como]')).toHaveCount(0);
+  expect(await bloqueDe(page)).toBe('0');
+  await expect(lateral).toContainText('Tu pausa · 9:45');
+  expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(1);
+
+  /* empezar el bloque 2 la cierra: la parada queda atrás, el tramo 2 es AHORA */
+  await page.getByRole('button', { name: 'Empezar bloque 2', exact: true }).click();
+  await page.waitForTimeout(250);
+  await expect(parada).not.toHaveClass(/pace-rt-ahora/);
+  await expect(parada).toBeDisabled();
+  await expect(tramos.nth(1)).toHaveClass(/pace-rt-ahora/);
+  await expect(lateral).toContainText('Siguiente pausa · 10:35');
+  expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(null);
+});
+
+test('la pausa abierta sobrevive a la recarga, y tocar la parada empieza su plato por la puerta de siempre', async ({ page, context }) => {
+  await abrir(page, context, CON_PAUSA.ritmo, { cycle: 1, lastActiveDay: CON_PAUSA.lastActiveDay, _historyMigrated: true });
+  const parada = vis(page, '[data-pace-ritmo-linea]').locator('[data-pace-ritmo-parada]').first();
+  await expect(parada).toHaveClass(/pace-rt-ahora/);
+  await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Bloque 2 de 9');
+  const plato = await page.evaluate(() => ritmoPlan(getState()).pausa.platos[0].name);
+  await parada.click();
+  /* el plato es de Estira: entra por el preview de §18.3, como desde la barra lateral */
+  const preview = overlaySuperior(page);
+  await expect(preview.getByRole('heading', { name: plato })).toBeVisible();
+  await expect(preview.getByRole('button', { name: 'Empezar', exact: true })).toBeVisible();
+});
+
 test('«Hoy voy por libre» devuelve la carta, y su enlace vuelve a la pregunta', async ({ page, context }) => {
   await abrir(page, context, { dia: JORNADA });
   await vis(page, '[data-pace-ritmo-libre]').first().click();
@@ -215,6 +295,23 @@ test.describe('móvil', () => {
     await expect(lista.locator('[data-pace-ritmo-fila="pausa"]')).toHaveCount(7);
     await page.getByRole('button', { name: 'Listo', exact: true }).click();
     await expect(lista).toHaveCount(0);
+  });
+
+  test('con la pausa abierta, «Ahora» es la parada y «Luego» el bloque; y en la lista, la parada lleva «ahora»', async ({ page, context }) => {
+    await abrir(page, context, CON_PAUSA.ritmo, { sidebarCollapsed: true, cycle: 1, lastActiveDay: CON_PAUSA.lastActiveDay, _historyMigrated: true });
+    const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
+    const filas = panel.locator('.pace-rt-fila');
+    await expect(filas.nth(0)).toContainText('Ahora');
+    await expect(filas.nth(0)).toContainText('9:45');
+    await expect(filas.nth(0).locator('[data-pace-ritmo-otra]')).toBeVisible();
+    await expect(filas.nth(1)).toContainText('Luego');
+    await expect(filas.nth(1)).toContainText('Foco · bloque 2 de 9');
+    await expect(panel.locator('.pace-rt-mini .pace-rt-punto').first()).toHaveClass(/pace-rt-ahora/);
+    await expect(panel.locator('[data-pace-ritmo-como]')).toHaveCount(0);
+    await vis(page, '[data-pace-ritmo-ver]').click();
+    const lista = page.locator('[data-pace-ritmo-lista]');
+    await expect(lista.locator('[data-pace-ritmo-fila="pausa"]').first()).toContainText('ahora');
+    await expect(lista.locator('.pace-rt-tramo').first()).toHaveClass(/pace-rt-pasado/);
   });
 });
 

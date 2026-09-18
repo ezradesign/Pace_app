@@ -189,18 +189,25 @@ function useLuzHome({ progress, status, running, focusMode }) {
     ? interpolateRingColor(Math.round(progress * 96) / 96, focusMode)
     : null;
 
-  const publicarLuz = (k, i, on, pausado, arco) => {
+  /* EL AVANCE DEL BLOQUE (s193), para que la línea de «A tu ritmo» siga al aro: el
+     tramo de ahora se rellena con esto (ritmo.css.jsx, `--pace-bloque`). Solo con
+     sesión viva: al completar, `progress` se queda en 1 y ya no hay bloque que
+     rellenar —la pausa está abierta—, y en reposo vale 0. Cuantizado a los mismos
+     96 pasos que la hora: son ~9 px por paso en la línea de escritorio. */
+  const paceBloque = haySesion ? (Math.round(progress * 96) / 96).toFixed(4) : '0';
+
+  const publicarLuz = (k, i, on, pausado, arco, bloque) => {
     const home = document.querySelector('[data-pace-home-body]');
     if (!home) return;
     for (const [nombre, valor] of [['--pace-k', k], ['--pace-i', i], ['--pace-on', on],
-                                   ['--pace-pausado', pausado], ['--pace-arco', arco]]) {
+                                   ['--pace-pausado', pausado], ['--pace-arco', arco], ['--pace-bloque', bloque]]) {
       if (valor === null) home.style.removeProperty(nombre);
       else if (home.style.getPropertyValue(nombre) !== valor) home.style.setProperty(nombre, valor);
     }
   };
-  useEffectLuz(() => { publicarLuz(paceK, paceI, paceOn, pacePausado, paceArco); },
-    [paceK, paceI, paceOn, pacePausado, paceArco]);
-  useEffectLuz(() => () => { publicarLuz(null, null, null, null, null); }, []);
+  useEffectLuz(() => { publicarLuz(paceK, paceI, paceOn, pacePausado, paceArco, paceBloque); },
+    [paceK, paceI, paceOn, pacePausado, paceArco, paceBloque]);
+  useEffectLuz(() => () => { publicarLuz(null, null, null, null, null, null); }, []);
 }
 
 Object.assign(window, { useLuzHome });

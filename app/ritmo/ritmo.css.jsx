@@ -75,11 +75,20 @@
 .pace-rt-g svg { width: 100%; height: 100%; display: block; }
 .pace-rt-gota { width: 11px; height: 11px; margin-left: 4px; vertical-align: -2px; }
 
-/* LA LÍNEA DEL DÍA (escritorio), proporcional al tiempo */
+/* LA LÍNEA DEL DÍA (escritorio), proporcional al tiempo.
+   LA LÍNEA SIGUE AL ARO (s193, ronda 1 aprobada mirándola): el tramo de AHORA está
+   encendido al 35 % y se RELLENA con el bloque —el ::after mide --pace-bloque, que
+   publica useLuzHome en [data-pace-home-body], cuantizado a 96 pasos—; lo hecho
+   queda en verde entero, porque atenuado leía como «no hecho» (el usuario). Así el
+   35 % solo significa «a punto de correr». La parada ABIERTA lleva el borde entero
+   de su módulo, su lavado y la etiqueta encima; la pasada conserva su fuerza y
+   solo deja de poder tocarse. */
 .pace-rt-linea { position: relative; display: flex; align-items: center; margin: 22px 4px 0; height: 24px; }
 .pace-rt-seg { height: 4px; border-radius: 2px; background: var(--paper-3); position: relative; }
-.pace-rt-seg.pace-rt-ahora { background: var(--focus); }
-.pace-rt-seg.pace-rt-hecho { background: color-mix(in srgb, var(--focus) 35%, var(--paper-3)); }
+.pace-rt-seg.pace-rt-ahora { background: color-mix(in srgb, var(--focus) 35%, var(--paper-3)); }
+.pace-rt-seg.pace-rt-ahora::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px;
+  width: calc(var(--pace-bloque, 0) * 100%); background: var(--focus); transition: width 900ms linear; }
+.pace-rt-seg.pace-rt-hecho { background: var(--focus); }
 .pace-rt-seg.pace-rt-comida { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); height: 2px; }
 .pace-rt-seg.pace-rt-libre { background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 5px); height: 2px; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
@@ -93,11 +102,15 @@
 .pace-rt-nodo.pace-rt-larga { width: 40px; border-radius: 12px; }
 .pace-rt-nodo.pace-rt-toca { cursor: pointer; }
 .pace-rt-nodo.pace-rt-toca:hover { transform: scale(1.12); background: color-mix(in srgb, var(--c) 12%, var(--paper)); }
-.pace-rt-nodo.pace-rt-pasado { opacity: 0.45; }
+.pace-rt-nodo.pace-rt-ahora { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--paper)); }
+.pace-rt-nodo .pace-rt-ahora-tag { left: 50%; transform: translateX(-50%); bottom: 27px; color: var(--c); }
+.pace-rt-nodo.pace-rt-pasado { cursor: default; }
 .pace-rt-comida-nodo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px;
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
   display: grid; place-items: center; }
 .pace-rt-comida-nodo .pace-rt-g { width: 17px; height: 17px; }
+/* La frase de la primera vez, bajo la cabecera (RitmoComo) */
+.pace-rt-como { margin-top: 5px; }
 /* Las etiquetas las coloca el JS (hasta tres niveles, de forma voraz) */
 .pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
   text-align: center; line-height: 1.22; pointer-events: none; }
@@ -116,6 +129,7 @@
 .pace-rt-mini { display: flex; align-items: center; height: 12px; margin: 14px 0 10px; }
 .pace-rt-mini .pace-rt-punto { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--c); background: var(--paper); margin: 0 2px; }
 .pace-rt-mini .pace-rt-punto.pace-rt-larga { width: 14px; border-radius: 4px; }
+.pace-rt-mini .pace-rt-punto.pace-rt-ahora { background: var(--c); }
 .pace-rt-fila { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 8px; padding: 7px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-fila .pace-rt-meta { font-size: 9px; }
 .pace-rt-que { min-width: 0; }

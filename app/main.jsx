@@ -187,7 +187,10 @@ function PaceApp() {
   };
 
   const handleFocusFinish = () => {
-    // Al acabar un Pomodoro → menú pausa
+    /* Al acabar un Pomodoro → menú pausa. s193: y con «A tu ritmo», la pausa del
+       día queda ABIERTA (la línea pone «Ahora» en la parada) hasta que empiece el
+       bloque siguiente. `completePomodoro` ya subió `cycle` antes de llegar aquí. */
+    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado();
     setOpenBreakMenu(true);
   };
 

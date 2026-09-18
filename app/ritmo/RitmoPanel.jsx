@@ -7,7 +7,9 @@
        horas editables y las cuatro opciones, cada una con su hora de fin.
      · EL MENÚ SERVIDO — escritorio: título + frase + contexto, y la línea del
        día. Móvil: «Ahora» y «Luego» con sus glifos, la línea con puntos y la
-       jornada entera en una hoja.
+       jornada entera en una hoja. s193: con la PAUSA ABIERTA (plan.pausa),
+       «Ahora» es la parada y «Luego» el bloque que viene; y hasta que acabe
+       el primer bloque del día, una frase dice cómo va la cosa (RitmoComo).
      · LA JORNADA CERRADA — cuando ya no queda bloque.
 
    Cada estado existe dos veces (escritorio y móvil) y la hoja de estilos elige.
@@ -96,6 +98,15 @@ function RitmoFraseMenu({ plan, horario, plantilla, capital }) {
   );
 }
 
+/* «Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.»
+   Solo hasta que acabe el primer bloque del día: después ya lo has visto pasar.
+   El usuario la dio por necesaria en s193 (ronda 1). */
+function RitmoComo({ plan }) {
+  const { t } = useT();
+  if (plan.hechos > 0) return null;
+  return <div className="pace-rt-sub pace-rt-como" data-pace-ritmo-como>{t('ritmo.como')}</div>;
+}
+
 function RitmoEscritorio({ state, plan }) {
   const { t } = useT();
   const R = ritmoDe(state);
@@ -110,6 +121,7 @@ function RitmoEscritorio({ state, plan }) {
         </div>
         <RitmoContexto />
       </div>
+      <RitmoComo plan={plan} />
       <RitmoLinea plan={plan} onCambiar={ritmoPreguntar} />
     </div>
   );
@@ -131,22 +143,34 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves }) {
   );
 }
 
-function RitmoMovil({ state, plan, onVer }) {
+/* La fila de una parada (pausa o comida) con su rótulo («Ahora» o «Luego»). */
+function RitmoFilaParada({ it, rotulo }) {
   const { t, tn, lang } = useT();
+  const cab = <React.Fragment>{t(rotulo)}<br />{ritmoHora(it.desde)}</React.Fragment>;
+  if (it.tipo === 'comida') {
+    return <RitmoFila rotulo={cab} modulo="comida" nombre={t('ritmo.comida')} meta={tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })} />;
+  }
+  if (!it.platos || !it.platos.length) return null;
+  return <RitmoFila rotulo={cab} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
+    meta={<React.Fragment>{ritmoMetaPlato(it, t, tn)}{it.agua ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}</React.Fragment>}
+    claves={it.platos.map((p) => p.clave)} />;
+}
+
+function RitmoMovil({ state, plan, onVer }) {
+  const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
-  const luego = ritmoDetras(plan.m, b);
   const descriptor = typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
-  let filaLuego = null;
-  if (luego && luego.tipo === 'comida') {
-    filaLuego = <RitmoFila rotulo={<React.Fragment>{t('ritmo.luego')}<br />{ritmoHora(luego.desde)}</React.Fragment>}
-      modulo="comida" nombre={t('ritmo.comida')} meta={tn('ritmo.comida.lista', { d: ritmoDuracion(luego.dur) })} />;
-  } else if (luego && luego.platos && luego.platos.length) {
-    filaLuego = <RitmoFila rotulo={<React.Fragment>{t('ritmo.luego')}<br />{ritmoHora(luego.desde)}</React.Fragment>}
-      modulo={luego.platos[0].modulo} nombre={ritmoPlatos(luego, t, lang)}
-      meta={<React.Fragment>{ritmoMetaPlato(luego, t, tn)}{luego.agua ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}</React.Fragment>}
-      claves={luego.platos.map((p) => p.clave)} />;
-  }
+  /* Con la pausa abierta (s193), «Ahora» es la parada y «Luego» el bloque. */
+  const filaBloque = (rotulo) => (
+    <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>}
+      modulo="foco" nombre={tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total })}
+      meta={b.dur + ' min · ' + descriptor} />
+  );
+  const luego = ritmoDetras(plan.m, b);
+  const filas = plan.pausa
+    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" />{filaBloque('ritmo.luego')}</React.Fragment>
+    : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" /> : null}</React.Fragment>;
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="menu">
       <div className="pace-rt-cab">
@@ -156,11 +180,9 @@ function RitmoMovil({ state, plan, onVer }) {
         </div>
         <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
       </div>
+      <RitmoComo plan={plan} />
       <RitmoMini plan={plan} />
-      <RitmoFila rotulo={<React.Fragment>{t('ritmo.ahora')}<br />{ritmoHora(b.desde)}</React.Fragment>}
-        modulo="foco" nombre={tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total })}
-        meta={b.dur + ' min · ' + descriptor} />
-      {filaLuego}
+      {filas}
       <div className="pace-rt-pie">
         <button className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-ver onClick={onVer}>{t('ritmo.ver')}</button>
         <RitmoLibre />
@@ -189,5 +211,5 @@ function RitmoHecho({ plan }) {
 
 Object.assign(window, {
   RitmoContexto, RitmoLibre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
-  RitmoFila, RitmoMovil, RitmoHecho,
+  RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

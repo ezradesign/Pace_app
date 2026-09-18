@@ -135,7 +135,12 @@ function FocusTimer({ onFinish }) {
      permiso de notificación. Lo comparten un arranque/reanudación normal y
      «Empezar otro ciclo», para idéntica semántica sin tocar el motor. */
   const startFocusVisual = () => {
-    if (status !== 'paused') inicioBloqueRef.current = Date.now();   // s172: bloque nuevo, no reanudacion
+    if (status !== 'paused') {
+      inicioBloqueRef.current = Date.now();   // s172: bloque nuevo, no reanudacion
+      /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
+         reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
+      if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado();
+    }
     try { playSound('pomodoro.start'); } catch (e) {}
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
   };
@@ -228,8 +233,9 @@ function FocusTimer({ onFinish }) {
   );
 
   /* LA LUZ DE LA HOME (s158 · s159) -> FocusTimer.luz.jsx (s193). Publica --pace-k,
-     --pace-i, --pace-on, --pace-pausado y --pace-arco en [data-pace-home-body] a
-     partir de `progress` y `status`. Va AQUÍ, donde estaban sus dos efectos, para
+     --pace-i, --pace-on, --pace-pausado, --pace-arco y --pace-bloque (el avance del
+     bloque, para la línea de A tu ritmo) en [data-pace-home-body] a partir de
+     `progress` y `status`. Va AQUÍ, donde estaban sus dos efectos, para
      que el orden de hooks no cambie. Sus porqués medidos viajan con ella. */
   useLuzHome({ progress, status, running, focusMode: state.focusMode });
 

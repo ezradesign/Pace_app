@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.123.0** | 2026-09-18 | feat(ritmo): **la línea sigue al aro** — El usuario usó «A tu ritmo» sin acabar un pomodoro y no entendía cómo se enlaza el aro con la línea, las pausas y los ejercicios; leyendo el código, no era solo cosa de explicarlo: **la pausa no existía como estado** (al acabar el bloque, la línea saltaba al siguiente y pintaba como pasada la parada que tocaba) y **la línea no se movía mientras el aro contaba**. Una ronda de maqueta **sobre la app real** (hoy / propuesta, fotos con el reloj fijado; la primera tirada se veía cortada y se rehízo fluida) y tres cambios decididos mirándola: **el tramo de ahora se rellena con el pomodoro** (`--pace-bloque`, una variable más de la luz, consumida en CSS), **al acabar el bloque «Ahora» es la parada** hasta que empieza el siguiente —tocarla la empieza, la barra lateral dice «Tu pausa · 9:45», en móvil «Ahora» es la parada y «Luego» el bloque— y **una frase la primera vez**. «Atenuado parece no hecho»: **lo hecho queda en verde entero y lo pasado no se atenúa**; el 35 % solo significa «a punto de correr». Antes, el troceo que pedía el handoff: `main.jsx` (500 → 417) y `FocusTimer.jsx` (499 → 326) en commit aparte. **250 → 253**, 12 mutantes con pasada de control. Dirección nueva del usuario: acompañar el día **y proponer para cada día de la semana/mes**. | s193 | [session-193](./docs/sessions/session-193-la-linea-sigue-al-aro.md) |
 | **v0.122.0** | 2026-09-17 | feat(home): **A tu ritmo, el menú manda** — Las entrevistas del usuario apuntaron a lo mismo que los beta testers: el problema no es que falte contenido, es **elegir** (la home abría 4 puertas a 51 rutinas y dos recomendadores más). Ahora la home pregunta **«¿cuánto trabajas hoy?»** y **sirve la jornada**: bloques de foco y, entre ellos, pausas con nombre, duración y motivo, con la **comida a tu hora exacta** y el horario (inicio, comida, cuánto dura, salida) **editable dentro de la frase**. La carta sigue a un toque con **«Hoy voy por libre»**. Diseñado en **cuatro rondas de maqueta mirándolas** (A frente a B, nombre y glifos, horario y cubiertos, salida y llegar tarde). **El panel hereda el papel de horizonte de Actividades** (`data-pace-activitybar`), así que la geometría del aro no se tocó; **el progreso sale de `cycle`**; la **pausa** propone el plato del menú y la **barra lateral** anuncia la siguiente pausa; los **pozos salen del catálogo vivo** con el veto de s189. La suite completa cazó un defecto que ninguna maqueta veía (**1-2 px** entre el enlace de vuelta y «Ver caminos» hacían «subir» el foco) y el banco de mutantes **corrigió un comentario** que atribuía el arreglo a lo que no era. **236 → 250**, 11 mutantes y los 11 muerden. | s192 | [session-192](./docs/sessions/session-192-a-tu-ritmo.md) |
 | **v0.121.0** | 2026-09-16 | feat(eventos+preview): **la memoria larga** — Los reducers de `aggregates` (FASE 3 del esquema de eventos), que son lo unico que desbloquea la Fase 4 (Stats). **La auditoria corrigio el encargo**: el ROADMAP decia «sin cablear» y era cierto que la palabra `aggregates` no aparece en `app/`, pero **`baseline` ya consolidaba dos de los cuatro candidatos** (`totalsByType` y los tallies de feedback) desde s155. Lo que faltaba de verdad: **una API que devuelva el valor vivo** y los **totales por rutina** -- el unico agregado que ninguna otra capa puede dar, porque `state.routineCounts` cuenta por CATEGORIA (`box`, `coherent`, `rounds`, `atg`) y no por id. `paceEventsAggregates()` cumple la regla del esquema (`valor vivo = baseline + fold(retenidos)`) **reutilizando el fold de la poda** en vez de escribir un segundo contador: de ahi salen gratis la idempotencia por cursor y que un arreglo sirva para las dos lecturas. `paceEventsRoutineCount()` distingue **tres estados y no dos** -- `null` es «el almacen no puede responder» y `0` es «nunca», y en los dos el preview CALLA. **El consumidor entra en la misma sesion**, a proposito: el feedback se capturo en s116 y tardo 28 sesiones en tener quien lo leyera. El preview de la rutina dice «Lo has hecho N veces», **sin fecha y medido**: no hay contador legacy que sembrar, las sesiones se emiten desde v0.102.0 (no desde que el contenedor se activo, 16 dias antes) y hoy el historial maximo es de **27 dias** -- con la ventana de 120, **no se ha podado nada en ninguna instalacion**. «N veces» es cierto hoy y seguira siendolo en un año. **Fuera por decision**: el desglose `natural`/`early` (aunque el dato ya viaje) y «dias con ritmo», que se queda en `state-history` como unico dueño (§14) para que no haya dos calculos del mismo numero. Los huerfanos se CONSERVAN: el total es historia. De paso se cierra la **deuda P1** (§15.3), que reproducia: `cur.yes \|\| 0` conservaba el tipo y la suma concatenaba (`'3' + 1 === '31'`), y un contador corrupto alimenta el veto de la pausa de s189. **228 → 236**, 10 mutantes y los 10 muerden -- **tres hubo que reescribirlos por medir el seam equivocado**, y uno de ellos acabo en un arreglo mejor: habia DOS guardas redundantes y ninguna mordia, asi que se quito la de sobra. | s190 | [session-190](./docs/sessions/session-190-la-memoria-larga.md) |
 | **v0.120.0** | 2026-09-16 | feat(pausa): **el feedback que nadie leia** — «¿Te ayudo esta pausa?» se captura desde s116 y **ningun recomendador lo leia en veintiocho sesiones**. Ahora lo lee la propuesta de la pausa, y **en pequeño porque el dato no da para mas**: el banco `banco-feedback-s189.js` midio el TECHO de la señal evaluando el recomendador de verdad sobre los catalogos de verdad -- la pregunta sale **una vez por rutina y dia**, y los pozos son de **11 (Estira), 12 (Respira) y 8 (Mueve)** rutinas gratis, o sea que en 30 dias se proponen como mucho esas. Puntuar preferencias sobre eso seria ruido con decimales. La regla, escrita antes de codificarla y elegida por el usuario con los numeros delante: **una rutina con «No» y sin ningun «Si»/«Un poco» sale del pozo de la PROPUESTA** (no del catalogo: se sigue pudiendo elegir a mano) · **si el veto vaciara el pozo se IGNORA** -- sin esa amnistia, quien contesta «No» a todo deja Estira muda en **12 dias** (9 en Mueve) y un bloque de 45 minutos sentado acaba proponiendo **beber agua** · **el «Si» no ordena nada**, solo protege del veto. **Y un defecto que destapo el banco, no el encargo**: la rotacion era por dia, asi que **dos pausas del MISMO dia proponian la misma rutina** -- incluso una que acababas de hacer, porque la rama de los 45 minutos no mira el plan. La rotacion pasa a ser **dia + numero de bloque** (`state.cycle`, que ya se pone a cero en el relevo de dia): **cero estado nuevo, cero migracion** y nada que dependa de `pace.events.v1`, que en `file://` es inerte por diseño. **224 → 228**, con el **primer aserto de la pausa en INGLES** (hueco declarado en s187) y **8 mutantes, los 8 muerden** -- dos hubo que reescribirlos porque median el seam equivocado. | s189 | [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md) |
@@ -395,6 +396,57 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.123.0] -- 2026-09-18 -- feat(ritmo): la línea sigue al aro
+
+### Anadido
+- **La pausa como estado del día** (`state-ritmo.jsx`): `dia.pausa` guarda el número de bloques
+  hechos cuando terminó el último mientras su pausa siga abierta. La abre terminar un bloque
+  (`ritmoBloqueTerminado`, desde `handleFocusFinish`) y la cierra **empezar el siguiente**
+  (`ritmoBloqueEmpezado`, desde `startFocusVisual`, solo en foco y nunca al reanudar). `ritmoPlan`
+  devuelve `pausa` solo si el número guardado es el de bloques hechos.
+- **`--pace-bloque`** (`FocusTimer.luz.jsx`): el avance del bloque, 96 pasos como `--pace-k`, `0`
+  sin sesión viva. La línea lo consume en el `::after` del tramo de ahora: ningún re-render.
+- **La parada abierta** (`RitmoLinea.jsx`): `ritmoIndiceAhora(plan)`, la etiqueta «Ahora», el borde
+  entero de su módulo, y **tocarla la empieza** por `pace:sidebar-action` (`suggest`), la misma
+  puerta que la barra lateral. La mini línea marca la parada y lo hecho.
+- **`RitmoComo`**: «Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.»,
+  solo hasta que acabe el primer bloque del día. **`RitmoFilaParada`** en móvil.
+- 3 claves ES/EN (`ritmo.empieza`, `ritmo.como`, `ritmo.sidebar.ahora`); censo 643 → 646.
+- **La maqueta**: `scripts/audit/pausa-s193.js` → `docs/proposals/la-linea-sigue-al-aro-r1.html`,
+  sobre la app real con el reloj fijado, fluida, con las dos variantes del tramo fotografiadas.
+
+### Cambiado
+- **La línea del día** (`ritmo.css.jsx`): el tramo de ahora **encendido al 35 % y relleno** con el
+  bloque (transición de 900 ms); **lo hecho en verde entero**; **la parada pasada sin atenuar**, solo
+  deja de poder tocarse. Antes: ahora en verde entero, hecho al 35 %, pasada al 45 % de opacidad.
+- **La barra lateral** dice **«Tu pausa · 9:45»** con su plato mientras la pausa está abierta;
+  «Siguiente pausa» el resto del tiempo (`ritmoSiguiente` con `ahora`, `Sidebar.parts.jsx`).
+- **En móvil**, con la pausa abierta, «Ahora» es la parada (con «Otra») y «Luego» el bloque; la
+  jornada entera marca la parada con «ahora».
+- **Troceo** (commit `2a93077`, antes de la versión): `main.jsx` 500 → 417 (`main/main.eventos.jsx`
+  con `usePaceEventos`, `main/SidebarHandle.jsx`) y `FocusTimer.jsx` 499 → 326
+  (`focus/FocusTimer.luz.jsx` con `useLuzHome`). Sin cambio de comportamiento.
+
+### Decisiones
+- **1A** · el tramo de ahora antes de empezar: encendido y vacío · **2A** · lo que cierra la pausa es
+  empezar el bloque siguiente, hagas la rutina o la saltes · **«Tu pausa»** en la barra lateral · **la
+  frase se queda** · **lo hecho no se atenúa**.
+- **Dirección**: acompañar el día **y proponer para cada día de la semana/mes** (ROADMAP, Fase 3.6).
+
+### Red
+- **`tests/ritmo.spec.js`, 14 → 17**: la línea sigue al aro (frase, `--pace-bloque` y el ancho
+  real del `::after`, la parada abierta, «Tu pausa», empezar el bloque 2 la cierra) · la pausa
+  sembrada sobrevive a la recarga y tocar la parada abre el preview · móvil y lista.
+- **`scripts/audit/banco-pausa-s193.js`**: 12 mutantes con pasada de control (ver `STATE.md`).
+  Declara lo que no muta: los colores y la guarda `pausa === hechos`.
+
+### Lo que no cubre
+- Ni un píxel comparado; el cierre nunca es «Ahora» (`RitmoHecho` manda); la pausa larga propone
+  un plato de dos; la comida como parada abierta no se fotografió; recolocar a mitad de día; llegar
+  antes; el origen de cada sesión en los eventos.
+
+---
+
 ## [v0.122.0] -- 2026-09-17 -- feat(home): A tu ritmo, el menú manda
 
 ### Anadido
@@ -446,62 +498,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.121.0] -- 2026-09-16 -- feat(eventos+preview): la memoria larga
-
-### Anadido
-- **`sessionsByRoutine` en el `baseline`** (`app/events/events-model.js`): el fold cuenta las
-  `session.completed` por `routineId`. Un evento sin id NO se cuenta -- un total bajo una clave
-  vacia no es de nadie. Las rutinas que ya no existen **se conservan**: el total es historia y la
-  poda ya es irreversible.
-- **`paceEventsAggregates()`** -- el valor vivo (§13), que **reutiliza `foldEventsIntoBaseline`**,
-  el mismo fold de la poda. Un solo contador para las dos lecturas: la idempotencia por
-  `pruneCursor` y el trato a los tipos desconocidos salen gratis, y un arreglo arregla las dos.
-- **`paceEventsRoutineCount(id)`** -- `null` cuando el almacen no puede responder (`file://`,
-  contenedor ilegible), `0` cuando nunca se hizo. **Tres estados, no dos.**
-- **`preview.doneCount.one`/`.many`** (ES+EN) y la linea del preview (`RoutinePreview.jsx`): «Lo
-  has hecho N veces», en tinta terciaria y junto a las pastillas -- es una nota sobre TI, no un
-  requisito de la rutina. Con 0 o con `null`, no se pinta nada.
-
-### Corregido
-- **Deuda P1 (§15.3)**, que reproducia: `nextRoutineFeedback` guardaba con `cur.yes || 0`, que
-  conserva el TIPO, asi que un `'3'` -- de un backup editado a mano o del import, que aun no sanea
-  (deuda A-7)-- pasaba la guarda y la suma lo CONCATENABA: `'3' + 1 === '31'`. Cerrado con
-  `feedbackCount` (entero finito >= 0), el mismo criterio que `eventCount`.
-- **Una guarda de sobra, retirada.** La primera version coaccionaba en el campo Y en el
-  incremento, y **ninguno de los dos mutantes mordia**: con las dos puestas, romper cualquiera
-  dejaba los asertos en verde. Es la regla de s187 -- una guarda vive en UN sitio.
-
-### Decisiones
-- **Solo totales por rutina.** El desglose `natural`/`early` queda fuera aunque el evento ya lo
-  traiga (`completionReason`), y «dias con ritmo» **no lo calcula `aggregates`**: `state-history`
-  sigue siendo el unico dueño (§14), porque dos calculos del mismo numero acaban divergiendo.
-- **La copy no lleva fecha**, y es una medida: no hay contador legacy que sembrar, las sesiones se
-  emiten desde v0.102.0 (2026-08-20) y el contenedor se activo 16 dias antes -- decir «desde
-  agosto» exageraria. Hoy el historial maximo es de 27 dias y, con la ventana de 120,
-  **ninguna instalacion ha podado nada todavia**.
-- **El consumidor entra con el dato.** Precedente medido: el feedback de s116 tardo 28 sesiones en
-  tener quien lo leyera; los emisores de eventos, 17 versiones.
-
-### Red
-- **8 tests** en `tests/eventos-agregados.spec.js`: fold por rutina · la poda se lleva el detalle y
-  **no el total** · idempotencia al leer y al podar dos veces · el huerfano · el preview lo dice y
-  **calla** cuando no hay nada · **ingles y singular** · la **poda interrumpida** · la deuda P1.
-- **10 mutantes, los 10 muerden**, tras reescribir tres que median el seam equivocado. El del
-  `pruneCursor` no mordia porque en el camino feliz la poda borra lo que consolida: su unico sitio
-  real es la RECUPERACION (§22), y ese estado el producto no lo sabe fabricar, asi que ese test
-  --y solo ese-- escribe el contenedor a mano.
-- **Censo de i18n subido a mano**: 588 → 590, como pide el propio verify cuando el contenido crece
-  a proposito.
-
-### Lo que no cubre
-- La cuenta **no se prueba tras una sesion real**: el test siembra por el contrato (que una sesion
-  emita ya lo cubre `eventos-emisor.spec.js`).
-- **`null` vs `0` no lo defiende ningun test**: la suite sirve por HTTP y el adaptador inerte de
-  `file://` no se ejercita. Es diseño declarado, no red.
-- Movil y ni un pixel: la linea del preview se coloco leyendo, no midiendo.
-
 ---
 
-> **El detalle de las versiones anteriores se podó en s192**, aplicando la convención de
+> **El detalle de las versiones anteriores se poda en cada cierre desde s192**, aplicando la convención de
 > arriba: cada una conserva su fila con su titular y el enlace a su diario, y el texto
 > completo sigue en el historial de git de este archivo (`git log -p CHANGELOG.md`).

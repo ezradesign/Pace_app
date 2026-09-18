@@ -3,12 +3,13 @@
    La lista del día, de arriba abajo: cada bloque de foco como una línea fina y
    cada parada con su glifo en el eje, su hora, su plato y «Otra». Va en el Modal
    de la app —el mismo marco que las bibliotecas y la pausa— y la abre «Ver la
-   jornada entera» desde el panel móvil. Lo ya pasado se atenúa y no se cambia. */
+   jornada entera» desde el panel móvil. Lo ya pasado se atenúa y no se cambia.
+   s193: AHORA es la pausa abierta si la hay (ritmoIndiceAhora, RitmoLinea.jsx). */
 
 function RitmoLista({ plan }) {
   const { t, tn, lang } = useT();
   const m = plan.m;
-  const iActual = plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
+  const iActual = ritmoIndiceAhora(plan);
   return (
     <div className="pace-rt-lista" data-pace-ritmo-lista>
       {m.items.map((it, i) => {
@@ -46,6 +47,7 @@ function RitmoLista({ plan }) {
               </div>
               <div className="pace-rt-plato-m">
                 {meta}{it.agua ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}
+                {i === iActual ? <React.Fragment>{' · '}<b style={{ color: 'var(--focus)', fontWeight: 500 }}>{t('ritmo.ahora.min')}</b></React.Fragment> : null}
               </div>
             </div>
             {comida || pasado ? <span /> : (
