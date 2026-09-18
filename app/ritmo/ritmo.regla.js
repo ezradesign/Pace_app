@@ -30,6 +30,17 @@
        el umbral (30 min, o el bloque − 5 si es más corto), el final se sirve en UN
        bloque (si no pasa de 60) o en DOS iguales.
 
+   RECOLOCAR A MITAD DE DÍA (s194 · v0.125.0): el sexto parámetro, `previos`,
+   es lo que ya pasó cuando se vuelve a componer desde AHORA —al empezar cada
+   bloque (state-ritmo.jsx, `ritmoBloqueEmpezado`)—: cuántos bloques y pausas
+   van hechos, cuánto foco, si ya se comió, qué platos se sirvieron, cuántos
+   vasos, y la duración del bloque que ACABA de empezar (el aro ya corre con
+   ella; recomponerla a mitad de pomodoro no tiene sentido). Con `previos`, el
+   día empieza EXACTAMENTE en `ahora` (también antes de tu hora: llegar antes es
+   empezar), el bloque siguiente se numera detrás de los hechos, la cadencia de
+   la pausa larga continúa y nada se repite. Lo hecho no se recompone: es
+   historia, y viaja aparte (`dia.pasado`).
+
    LA REGLA de cada pausa (el contador se reinicia al comer):
      1. cada tercera pausa → larga (15 min): Respira + Estira
      2. la que va antes de la larga → Mueve
@@ -46,18 +57,22 @@ var RITMO_FORMAS = {
   'jornada': { bloque: 45, foco: Infinity },
 };
 
-/* ritmoComponer(opcion, horario, pozos, cambios, metaAgua) -> el día, o null.
+/* ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) -> el día, o null.
    `pozos` = { estira: [r], mueve: [r], respira: [r], cierre: [r] } con rutinas
    del catálogo (se usan `id`, `name` y `min`). `cambios` = { clave: n } cuando la
-   persona ha pedido «otra» n veces en esa pausa. */
-function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
+   persona ha pedido «otra» n veces en esa pausa. `previos` (opcional) = { bloques,
+   pausas, foco, comidaHecha, usados: [id], vasos, claves, primerBloque } — lo ya
+   hecho cuando se recompone el resto del día desde `horario.ahora` (ver arriba). */
+function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
   var inicio = horario.inicio, salida = horario.salida, comeA = horario.comida;
   var comidaDur = horario.comidaDur || 60;
   var ahora = horario.ahora != null ? horario.ahora : inicio;
-  var desde = Math.max(inicio, ahora);
+  var P0 = previos || null;
+  /* Sin previos, el día espera a tu hora de inicio; recolocando, empieza AHORA. */
+  var desde = P0 ? ahora : Math.max(inicio, ahora);
   var P = pozos || {};
   cambios = cambios || {};
   var meta = metaAgua || 8;
@@ -67,33 +82,40 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
   /* Hasta servir `foco` minutos o llegar a `fin`. Solo tramos: los platos se
      sirven después. */
   function componer(fin) {
-    var items = [], t = desde, hecho = 0, enMitad = 0, n = 0;
+    var items = [], t = desde, hecho = P0 ? P0.foco || 0 : 0, enMitad = P0 ? P0.pausas || 0 : 0, n = P0 ? P0.bloques || 0 : 0;
+    var primeros = n;                                  /* el bloque n+1 es el que acaba de empezar */
     var foco = forma.foco;
     var finTrabajo = fin - PAUSA;                      /* el cierre ocupa un hueco */
-    var falta = desde < comeA && comeA < finTrabajo;   /* ¿queda comida delante? */
+    var falta = !(P0 && P0.comidaHecha) && desde < comeA && comeA < finTrabajo;   /* ¿queda comida delante? */
     var cola = Math.min(COLA, forma.bloque - 5);
     /* Comer «por delante» solo manda si aún queda foco que servir DESPUÉS: si
        no, el día acaba aquí (en la maqueta, «Una hora» esperaba 245 min). */
     function comerAntes() { return falta && foco - hecho >= MINIMO && finTrabajo - comeA - comidaDur >= MINIMO; }
     function comer() {
       if (t < comeA) items.push({ tipo: 'libre', desde: t, dur: comeA - t });
-      t = comeA;
+      t = Math.max(t, comeA);   /* el bloque forzado puede haber cruzado la hora: se come al acabarlo */
       items.push({ tipo: 'comida', desde: t, dur: comidaDur });
       t += comidaDur; falta = false; enMitad = 0;
     }
     for (;;) {
       var p = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
-      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0));
-      if (rem < MINIMO) {
-        if (comerAntes()) { comer(); continue; }
-        break;
-      }
-      var dur = forma.bloque;
-      if (rem <= forma.bloque) dur = rem;
-      else if (rem - forma.bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
-      if (falta && t + dur > comeA) {
-        if (comeA - t < MINIMO) { comer(); continue; }
-        dur = comeA - t;
+      var dur;
+      if (P0 && P0.primerBloque && n === primeros) {
+        /* El bloque que acaba de empezar dura lo que marca el aro, pase lo que pase. */
+        dur = P0.primerBloque;
+      } else {
+        var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0));
+        if (rem < MINIMO) {
+          if (comerAntes()) { comer(); continue; }
+          break;
+        }
+        dur = forma.bloque;
+        if (rem <= forma.bloque) dur = rem;
+        else if (rem - forma.bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
+        if (falta && t + dur > comeA) {
+          if (comeA - t < MINIMO) { comer(); continue; }
+          dur = comeA - t;
+        }
       }
       n++;
       items.push({ tipo: 'foco', desde: t, dur: dur, n: n });
@@ -116,8 +138,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
   var fin = (forma.foco !== Infinity && fueraDeHora) ? 24 * 60 : salida;
   var dia = componer(Math.min(fin, 24 * 60));
 
-  /* Los platos, en orden, sin repetir en el día. */
+  /* Los platos, en orden, sin repetir en el día (tampoco los ya servidos). */
   var usados = {};
+  if (P0) (P0.usados || []).forEach(function (id) { usados[id] = true; });
   function toma(modulo, clave) {
     var pozo = P[modulo] || [];
     if (!pozo.length) return null;
@@ -127,7 +150,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
     usados[r.id] = true;
     return { modulo: modulo, id: r.id, name: r.name, min: r.min, clave: clave, rutina: r };
   }
-  var i = 0;
+  var i = P0 ? P0.claves || 0 : 0;   /* las claves de «otra» siguen la numeración del día */
   dia.items.forEach(function (it) {
     if (it.tipo === 'pausa') {
       var clave = 'p' + (++i);
@@ -145,11 +168,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua) {
   var comidas = dia.items.filter(function (it) { return it.tipo === 'comida'; });
   comidas.forEach(function (it) { it.agua = true; });
   dia.items[dia.items.length - 1].agua = true;
-  var quedan = Math.max(0, Math.min(pausas.length, meta - comidas.length - 1));
+  var quedan = Math.max(0, Math.min(pausas.length, meta - (P0 ? P0.vasos || 0 : 0) - comidas.length - 1));
   for (var k = 0; k < quedan; k++) pausas[Math.floor((k + 0.5) * pausas.length / quedan)].agua = true;
 
+  /* (s194: aquí cada bloque llevaba `de`, el total del día. Nadie lo leía —el total
+     lo da `plan.total`— y el banco lo destapó como mutante vivo: fuera.) */
   var focos = dia.items.filter(function (it) { return it.tipo === 'foco'; });
-  focos.forEach(function (it) { it.de = focos.length; });
   return {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
     salida: salida, comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,

@@ -139,7 +139,7 @@ function FocusTimer({ onFinish }) {
       inicioBloqueRef.current = Date.now();   // s172: bloque nuevo, no reanudacion
       /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
          reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
-      if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado();
+      if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado(state.focusMinutes);   // s194: y recoloca el dia si la hora no es la del plan
       /* s194 · y es una PUERTA para el evento de la sesión: 'aro', servido por el menú
          si hay plan (`aro` no es null). Se anota al empezar, no al reanudar. */
       if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);

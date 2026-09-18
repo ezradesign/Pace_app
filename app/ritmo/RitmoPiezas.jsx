@@ -69,8 +69,13 @@ function RitmoFrase({ plantilla, huecos }) {
 }
 
 /* Una hora editable DENTRO de la frase: un <select> nativo con aspecto de texto.
-   En móvil abre el selector del sistema. */
-var RITMO_RANGOS = { inicio: [360, 780], comida: [660, 960], salida: [720, 1320] };
+   En móvil abre el selector del sistema.
+   RANGOS (s194): el inicio llegaba solo hasta las 13:00 y quien trabaja por la
+   tarde no podía decir su hora (lo encontró el usuario a las 17:20). Ahora:
+   inicio 5:00–21:00 · comida 11:00–17:00 · salida 12:00–23:30, de media en media
+   hora. La regla ya sabe qué hacer con un inicio tras la salida (una hora es una
+   hora) y con una comida que no cae en la jornada (no la sirve). */
+var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410] };
 function RitmoSelector({ campo, horario }) {
   const { t } = useT();
   let valores = [];
