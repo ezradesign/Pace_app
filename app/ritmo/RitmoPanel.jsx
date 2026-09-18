@@ -34,7 +34,21 @@ function RitmoContexto() {
    fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. */
 function RitmoLibre() {
   const { t } = useT();
-  return <button className="pace-rt-libre" data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
+  return <button className="pace-rt-porlibre" data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
+}
+
+/* El resumen del día («6 h 10 min de foco · 7 pausas · 8 vasos») con «Cambiar». s195: vive
+   en la CABECERA —en la fila del título si el panel es ancho, bajo los chips si no (la
+   hoja decide con una container query)— y no sobre la línea: allí compartía banda con la
+   etiqueta «AHORA» y se pisaban al final del día (medido en nueve viewports de escritorio). */
+function RitmoSobre({ m }) {
+  const { t, tn } = useT();
+  return (
+    <div className="pace-rt-sobre" data-pace-ritmo-resumen>
+      <span className="pace-rt-meta">{ritmoResumen(m, tn)}</span>
+      <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
+    </div>
+  );
 }
 
 function RitmoChips({ state }) {
@@ -123,10 +137,13 @@ function RitmoEscritorio({ state, plan }) {
             {'· '}<RitmoFraseMenu plan={plan} horario={R.horario} plantilla="ritmo.frase.menu" />
           </span>
         </div>
-        <div className="pace-rt-der"><RitmoContexto /><RitmoLibre /></div>
+        <div className="pace-rt-der-col">
+          <RitmoSobre m={plan.m} />
+          <div className="pace-rt-der"><RitmoContexto /><RitmoLibre /></div>
+        </div>
       </div>
       <RitmoComo plan={plan} />
-      <RitmoLinea plan={plan} onCambiar={ritmoPreguntar} />
+      <RitmoLinea plan={plan} />
     </div>
   );
 }
@@ -214,6 +231,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

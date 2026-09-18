@@ -355,8 +355,15 @@
      de esa continuación se ve en cada altura. Un solo campo de luz, sin
      segundo contorno posible. */
   const BLOOM_W = 2.2;      /* ancho de la caja, en unidades de D */
-  const BLOOM_H = 1.34;     /* alto de la caja */
-  const BLOOM_SUBE = 0.38;  /* fracción de su propio alto que se sube */
+  /* s195: la caja se describe desde el CENTRO del aro (antes BLOOM_H 1,34 ×
+     BLOOM_SUBE 0,38: 0,509 D arriba y 0,831 D abajo). Arriba sigue en 0,509 D;
+     abajo se ACORTA a 0,75 D menos el horizonte, porque «colaBloom» apaga la luz
+     en 0,72 D − horizonte y el resto era transparencia que HACÍA SCROLL: la
+     premisa de s185 (0,852 D de hueco) se rompió en s192 con el panel de «A tu
+     ritmo» (0,729 D a 1600×780, 46-52 px de scroll con un bloque corriendo).
+     Medido: scroll 0 en nueve viewports y la luz idéntica al píxel (diario s195). */
+  const BLOOM_CENTRO = 0.509; /* del borde superior de la caja al centro del aro */
+  const BLOOM_COLA = 0.75;    /* del centro al borde inferior, antes de restar el horizonte */
   const BLOOM_R = 0.77;     /* radio de la luz, desde el centro del aro */
   /* EL ALTO Y EL RADIO SALEN DE UNA MEDIDA — y en s185 hubo que REMEDIRLA.
 
@@ -372,14 +379,14 @@
      Los tres números salen de ahí: la caja acaba en cy + 0,831 D (21 px de
      margen con el aro de 520) y la luz muere en 0,77 D, o sea 0,061 D DENTRO de
      su caja — una luz no puede acabar donde acaba la suya (las dos aristas
-     rectas de s157). `BLOOM_SUBE` sube a 0,38 para que el borde superior siga
+     rectas de s157). `BLOOM_SUBE` (hoy BLOOM_CENTRO) sube a 0,38 para que el borde superior siga
      por encima de 0,5 D del centro, donde la máscara direccional pone su parada
      transparente; con 0,36 caía en negativo.
-  /* Desde el borde SUPERIOR de la caja: el centro del aro cae en BLOOM_H*SUBE,
+  /* Desde el borde SUPERIOR de la caja: el centro del aro cae en BLOOM_CENTRO,
      su borde superior media D antes y el horizonte media D después menos el
      propio horizonte. Todo sale de los mismos dos tokens que gobiernan el aro. */
   const DESDE_ARRIBA = (extra, conHorizonte) => 'calc(var(--pace-dial-d) * '
-    + (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
+    + (BLOOM_CENTRO + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
   /* Radios del aro entre paréntesis (el radio de la luz es 1,05 D). La sombra
      ocupa los 81 px finales: ancha de sobra para no leerse como un aro, y
      colocada donde la máscara direccional la deja caer — a los lados del aro y
@@ -419,7 +426,7 @@
     ['100%', 'transparent', 'rgba(0,0,0,0)'],             /* 0,840 D */
   ];
   const bloomCon = (i) => 'radial-gradient(circle ' + dd(BLOOM_R)
-    + ' at 50% ' + (BLOOM_SUBE * 100).toFixed(0) + '%, '
+    + ' at 50% ' + dd(BLOOM_CENTRO) + ', '
     + BLOOM.map(p => p[i] + ' ' + p[0]).join(', ') + ')';
 
   /* LA DIRECCIONALIDAD, en una máscara lineal LARGA. Vale cero justo en el
@@ -431,7 +438,7 @@
      grano en toda la mitad baja de la caja. */
   const direccion = 'linear-gradient(180deg, transparent 0px, '
     + 'transparent ' + DESDE_ARRIBA(-0.5, false) + ', '
-    + 'rgba(0,0,0,0.34) calc(var(--pace-dial-d) * ' + (BLOOM_H * BLOOM_SUBE).toFixed(3)
+    + 'rgba(0,0,0,0.34) calc(var(--pace-dial-d) * ' + BLOOM_CENTRO.toFixed(3)
     + ' - var(--pace-corte) * 0.5), '
     + '#000 ' + DESDE_ARRIBA(0.5, true) + ')';
 
@@ -481,13 +488,13 @@
     + '#000 calc(' + dd((centro + 0.5).toFixed(4)) + ' - var(--pace-corte)), '
     + 'transparent calc(' + dd((centro + 0.5 + LUZ_COLA).toFixed(4)) + ' - var(--pace-corte)))';
   const colaLimbo = colaEn(LIMBO_R);
-  const colaBloom = colaEn(BLOOM_H * BLOOM_SUBE);
+  const colaBloom = colaEn(BLOOM_CENTRO);
 
   /* Los DIECISEIS que cruzan. El resto es andamio y no sale de esta IIFE. */
   window.paceAtmosfera = {
     LUZ, NUCLEO, BORDE, horizonte, grano,
     horizontePista,
     LIMBO_R, limboCon, menosArriba, colaLimbo,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom,
+    BLOOM_W, BLOOM_CENTRO, BLOOM_COLA, bloomCon, direccion, colaBloom,
   };
 })();

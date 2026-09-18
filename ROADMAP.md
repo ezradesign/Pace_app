@@ -411,6 +411,10 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
 punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
 
+**Hecho en s195 (v0.125.1)**: lo que el usuario vio usándolo una tarde a 1536×704 — el hueco del
+retraso con la caja de la píldora (choque de nombres), «AHORA» pisando el resumen del día (cada
+tarde, en todos los viewports de escritorio) y un scroll de la luz que nadie veía. Nada del norte.
+
 **Lo que queda** («implementemos esto primero y luego vamos ajustando»):
 - **Propuestas para cada día de la semana/mes**: que el menú varíe y se planifique entre días, no
   solo dentro del día (el norte de arriba; empezar por la lectura A). Pinta antes.
