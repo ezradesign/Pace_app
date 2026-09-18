@@ -802,9 +802,18 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
   salida del menú es una **píldora** de 10 px en versalita (tracking 0,1 em) en `--focus-cta` con borde
   de 1 px del mismo color y lavado `--focus-soft` al pasar; en escritorio vive en la **cabecera**, junto
   a los chips de contexto (una píldora en la fila de la línea pisaba la línea), y en móvil en el pie.
+  **Se llama `.pace-rt-porlibre`** (s195): `.pace-rt-libre` era ya el tramo del retraso y, con el
+  mismo nombre, el hueco salía con el borde y el padding de la píldora (la «barra fea» del usuario).
 - **Recolocar (s194 · v0.125.0)**: cuando empiezas un bloque tarde, **el hueco del retraso se pinta
-  como margen libre** (el mismo tramo punteado de 2 px en `--line`, `.pace-rt-libre`): la línea
-  sigue siendo proporcional al tiempo y lo hecho —en verde entero— no se mueve. Ningún token nuevo.
+  como margen libre** (el mismo tramo punteado de 2 px en `--line`, `.pace-rt-seg.pace-rt-libre`): la
+  línea sigue siendo proporcional al tiempo y lo hecho —en verde entero— no se mueve. Ningún token nuevo.
+- **El resumen del día y «Cambiar» van en la cabecera, no sobre la línea (s195 · v0.125.1)**: sobre la
+  línea solo queda «AHORA», porque el resumen (versalita de 9 px, tracking 0,14 em) compartía su banda
+  y se pisaban cada tarde. **Dos formas por el ancho del panel** (container query a 1000 px de
+  contenido): con sitio, en la **fila del título**, a la izquierda de los chips —resumen · Cambiar ·
+  chips · píldora— y el panel no crece; sin sitio, **dos filas a la derecha**, chips arriba y resumen
+  debajo, 4 px entre ellas. La línea lleva 18 px de margen sobre la cabecera (eran 22): «AHORA» necesita
+  14 y sobran 4 de aire.
 - **Las horas se editan dentro de la frase**: un `<select>` nativo con aspecto de texto —la cifra
   en `--ink`, subrayado punteado `--line-2`, chevron de 7×5 px en `--ink-3`— y un relleno vertical
   que agranda la zona de toque sin mover la línea. En móvil abre el selector del sistema.

@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.125.1** | 2026-09-18 | fix(ritmo): **la barra fea y el final del día** — El usuario trajo una captura a 1920×1080 con el escritorio al 125 % (1536×704): «no entiendo la barra fea del medio con líneas» y «los elementos se solapan». Medido, no leído: **la píldora «Hoy voy por libre» de s194 se llamaba `.pace-rt-libre`, que ya era el nombre del tramo del retraso**, y el hueco heredaba su borde verde y su padding (10 px rayados); **«AHORA» pisaba el resumen del día** porque los dos vivían en la misma banda sobre la línea — en los nueve viewports de escritorio, cada tarde, no por el 125 %; y **la caja del bloom de la luz hacía 46–52 px de scroll** con un bloque corriendo (1600×780, 1440×789), porque la premisa de s185 se rompió en s192 con el panel del menú. Píldora renombrada (`.pace-rt-porlibre`, los `pace-rt-<tipo>` quedan reservados); el resumen a la cabecera, **en la fila del título si el panel tiene sitio** (container query: a 1536×704 el panel no crece y el aro sube 5 px) y en dos filas si no; la caja del bloom descrita desde el centro del aro y restando el horizonte, **idéntica al píxel**. **260 → 267**: `ritmo-linea.spec.js`, con pasada de control contra HEAD (5 de 7 en rojo). | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
 | **v0.125.0** | 2026-09-18 | feat(ritmo): **recolocar a mitad de día** — Las horas de la línea eran las del plan: si el bloque 2 empezaba a las 9:50 y lo empezabas a las 10:10, la línea seguía diciendo 9:50 y todo lo de detrás iba veinte minutos «mal»; y llegar antes no existía. Ahora, **al empezar cada bloque, si la hora no es la del plan, el resto del día se recompone desde ahora** con la política de siempre (salgo a mi hora): lo hecho se congela como historia (`dia.pasado`), el bloque que acaba de empezar dura lo que marca el aro, la comida sigue a su hora exacta, la cadencia de la pausa larga, los platos servidos, las claves y el agua continúan, y **el hueco del retraso se pinta punteado** para que la línea siga siendo proporcional al tiempo. **Llegar antes es empezar.** Maqueta con el mismo guion sobre la app de antes y la de después (`recolocar-r1.html`); el usuario: «me parecen bien las propuestas». De paso, dos cosas que él encontró usándolo diez minutos: **el selector de inicio solo llegaba a las 13:00** y **«Hoy voy por libre» no destacaba** (ahora, píldora verde en la cabecera, variante E de cinco). **257 → 260**, 13 de 13 mutantes con control (la primera pasada dio 13 de 14 y el vivo era un campo muerto: se quitó). | s194 | [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md) |
 | **v0.124.0** | 2026-09-18 | feat(eventos): **el origen de cada sesión** — `pace.events.v1` distinguía dos contextos (suelta o en un Camino) y nada más: no sabía si la persona eligió la rutina en la carta, si se la propuso la pausa, si era el plato que «A tu ritmo» sirvió o si tocó la parada. Es la primera idea del experto de s192 (datos para saber qué funciona) y el prerrequisito del norte. `session.completed` lleva ahora **`origin`** (la puerta: `aro` · `pausa` · `biblioteca` · `sidebar` · `parada` · `camino`) y **`fromMenu`** (si era lo que el menú sirvió), **dos campos y no uno compuesto** porque responden a preguntas distintas. La puerta se anota **en el gesto** y vive en memoria hasta la primera sesión que termine, que la consume; dentro de un Camino manda `camino`. No se consolida en el baseline: el consumidor previsto (Stats «Semana», lectura C del norte) lee ventanas. **Nada cambia en la pantalla.** Rev. 7 del esquema. **253 → 257**, 12 mutantes con control. Recomendación dada para el norte: **A ya, C después, B aparcada**. | s194 | [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md) |
 | **v0.123.0** | 2026-09-18 | feat(ritmo): **la línea sigue al aro** — El usuario usó «A tu ritmo» sin acabar un pomodoro y no entendía cómo se enlaza el aro con la línea, las pausas y los ejercicios; leyendo el código, no era solo cosa de explicarlo: **la pausa no existía como estado** (al acabar el bloque, la línea saltaba al siguiente y pintaba como pasada la parada que tocaba) y **la línea no se movía mientras el aro contaba**. Una ronda de maqueta **sobre la app real** (hoy / propuesta, fotos con el reloj fijado; la primera tirada se veía cortada y se rehízo fluida) y tres cambios decididos mirándola: **el tramo de ahora se rellena con el pomodoro** (`--pace-bloque`, una variable más de la luz, consumida en CSS), **al acabar el bloque «Ahora» es la parada** hasta que empieza el siguiente —tocarla la empieza, la barra lateral dice «Tu pausa · 9:45», en móvil «Ahora» es la parada y «Luego» el bloque— y **una frase la primera vez**. «Atenuado parece no hecho»: **lo hecho queda en verde entero y lo pasado no se atenúa**; el 35 % solo significa «a punto de correr». Antes, el troceo que pedía el handoff: `main.jsx` (500 → 417) y `FocusTimer.jsx` (499 → 326) en commit aparte. **250 → 253**, 12 mutantes con pasada de control. Dirección nueva del usuario: acompañar el día **y proponer para cada día de la semana/mes**. | s193 | [session-193](./docs/sessions/session-193-la-linea-sigue-al-aro.md) |
@@ -398,6 +399,45 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.125.1] -- 2026-09-18 -- fix(ritmo): la barra fea y el final del día
+
+### Corregido
+- **El hueco del retraso salía como una barra rayada de 10 px con borde verde** (`ritmo.css.jsx`): la
+  píldora «Hoy voy por libre» de s194 se llamó `.pace-rt-libre`, que era ya el nombre del tramo
+  (`.pace-rt-seg.pace-rt-libre`, por su `tipo`). La píldora es `.pace-rt-porlibre`; los nombres
+  `pace-rt-foco` · `pace-rt-comida` · `pace-rt-libre` quedan reservados a los tramos.
+- **«AHORA» pisaba «50 min de foco · 1 pausa · 2 vasos · Cambiar»** (`RitmoLinea.jsx`, `RitmoPanel.jsx`):
+  el resumen era un absoluto a 21 px sobre la línea, en la misma banda donde la etiqueta se ancla al
+  bloque de ahora. Chocaban en cuanto el bloque actual caía en el último cuarto del día, en los nueve
+  viewports de escritorio medidos. El resumen vive ahora en la cabecera (`RitmoSobre`).
+- **La home admitía 46–52 px de scroll con un bloque corriendo** a 1600×780 y 1440×789 (y 6 a 1536×704),
+  sin barra visible pero con rueda (`_responsive.atmosfera.js`, `_responsive.js`): la caja del bloom de
+  la luz acababa en cy + 0,831 D bajo la premisa de s185 («0,852 D de hueco en el peor escritorio»),
+  que se rompió en s192 con el panel de «A tu ritmo» en su estado más bajo (0,729 D). Ahora se describe
+  desde el centro del aro (`BLOOM_CENTRO` 0,509 · `BLOOM_COLA` 0,75) y resta el horizonte: acaba 0,03 D
+  por debajo de donde `colaBloom` apaga la luz. Comparada al píxel con la caja vieja en la misma página
+  (cuatro viewports, con menú y por libre): idéntica salvo el grano.
+
+### Cambiado
+- **El resumen del día cambia de fila con el ancho del PANEL** (`@container (min-width: 1000px)` sobre
+  `.pace-rt-panel`): con sitio va en la fila del título, a la izquierda de los chips, y el panel no
+  crece (a 1536×704 baja 4 px: la línea pasa de 22 a 18 de margen, y el aro sube de 417 a 422); sin
+  sitio, dos filas a la derecha, chips arriba y resumen debajo (+19 px a ≤ 1440).
+
+### Red
+- **`tests/ritmo-linea.spec.js`, 7 tests** (hermano de `ritmo.spec.js`, que está en 465): la caja del
+  hueco · nada se pisa y la home no arrastra al final del día en 1536×704, 1600×780, 1440×789 y
+  1280×879 · el resumen en cada fila. **Pasada de control contra el `index.html` de HEAD: 5 de 7 en
+  rojo** con los mensajes correctos (la primera versión buscaba el resumen por el `data-` nuevo y el
+  choque salía verde en HEAD: se busca por clase y hay GUARD de nombres).
+
+### Lo que no cubre
+- El modo oscuro del hueco y del resumen; el resumen en inglés en la fila del título (no medido);
+  1280×600 por la mañana sigue pidiendo 33 px de scroll (`D_FLOOR`, el viewport extremo declarado);
+  la barra lateral plegada se cubre por la container query, no por un test.
+
+---
+
 ## [v0.125.0] -- 2026-09-18 -- feat(ritmo): recolocar a mitad de día
 
 ### Anadido
@@ -437,43 +477,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Lo que no cubre
 - El modo oscuro del hueco punteado; el cierre sigue sin ser «Ahora»; `primerBloque` cuando el aro y el
   plan no coinciden (en la suite coinciden).
-
----
-
-## [v0.124.0] -- 2026-09-18 -- feat(eventos): el origen de cada sesión
-
-### Anadido
-- **`origin` y `fromMenu` en `session.completed`** (`events-payloads.js`, rev. 7 del esquema):
-  la puerta por la que se empezó (`aro` · `pausa` · `biblioteca` · `sidebar` · `parada` ·
-  `camino`) y si lo empezado era lo que «A tu ritmo» sirvió. Lista permitida; los dos admiten
-  `null`.
-- **La puerta se anota en el gesto** (`paceOrigenSesion`, `state-events.jsx`) y la **consume** la
-  primera sesión que termine; dentro de un Camino manda `camino`. En memoria, como el `runId`
-  del feedback (§7.2): una sesión reanudada tras recargar sale con `null`.
-- **Las seis puertas**: el aro (`FocusTimer`, con `fromMenu` si hay plan) · la pausa (`main.jsx` +
-  el tercer argumento de `onChoose` en `BreakMenu`, que sabe si el plato era del menú por el
-  motivo `ritmo.*`) · las bibliotecas (`abrirBiblioteca` en `main.jsx`: TopBar, RitmoHome, atajo,
-  barra lateral por módulo) · la tarjeta de la barra lateral (`main.eventos.jsx`, con `ritmo`
-  desde `Sidebar.jsx`) · la parada de la línea (`RitmoLinea.jsx`, `parada: true`) · el Camino.
-- **`EVENTOS_SCHEMA.md` rev. 7**: §8 con los dos campos y el porqué; el historial de revisión
-  recoge también la rev. 6 (s172), que no figuraba.
-
-### Decisiones
-- **Dos campos, no uno compuesto**; **no se consolidan en el baseline** hasta que haya un
-  consumidor que pida totales (Stats «Semana» lee ventanas de 120 días).
-- **El norte**: recomendación **A ya (el menú varía con el día de la semana), C después (el
-  sistema enseña qué cambió y propone ajustes, cuando la pieza 1 tenga datos), B aparcada
-  (planificar la semana, hasta el calendario)**. Orden 1 → 2 → 3A.
-
-### Red
-- **`tests/eventos-origen.spec.js`, 4 tests**: las seis puertas sobre sesiones reales (el aro
-  con y sin plan, la propuesta de la pausa, la parada, la tarjeta de la barra lateral, una
-  biblioteca) y, en puro, el consumo, el Camino y la lista permitida.
-- **`scripts/audit/banco-origen-s194.js`**: 12 mutantes con pasada de control (ver `STATE.md`).
-
-### Lo que no cubre
-- Ningún consumidor lee `origin` todavía; una sesión reanudada tras recargar sale con `null`;
-  la biblioteca abierta desde una tarjeta de la pausa sale como `pausa` (intención, no asertado).
 
 ---
 

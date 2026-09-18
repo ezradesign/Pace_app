@@ -44,14 +44,41 @@
 .pace-rt-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 /* «HOY VOY POR LIBRE» (s194, variante E): la única salida del menú, como píldora en verde —el
    lenguaje de los chips de contexto, con el color de la acción secundaria— en la cabecera
-   (escritorio) o en el pie (móvil). No usa .pace-rt-enlace: no es un enlace más. */
-.pace-rt-libre { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus-cta);
+   (escritorio) o en el pie (móvil). No usa .pace-rt-enlace: no es un enlace más.
+   s195: se llama .pace-rt-porlibre y NO .pace-rt-libre, porque ese nombre ya era el del
+   tramo del retraso (.pace-rt-seg.pace-rt-libre, por su tipo): con el mismo nombre, el
+   hueco heredaba el borde verde y el padding de la píldora y salía como una barra rayada
+   de 10 px (el usuario la vio en su captura; 260 tests verdes no miraban su caja). */
+.pace-rt-porlibre { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus-cta);
   border: 1px solid var(--focus-cta); border-radius: var(--r-pill); padding: 4px 10px; white-space: nowrap;
   transition: background var(--dur-quick) var(--ease); }
-.pace-rt-libre:hover { background: var(--focus-soft); }
-.pace-rt-libre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-porlibre:hover { background: var(--focus-soft); }
+.pace-rt-porlibre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
+/* La parte derecha de la cabecera del menú (escritorio, s195): el RESUMEN del día con
+   «Cambiar» y los chips con la píldora. Antes el resumen era un absoluto a 21 px sobre la
+   línea —la misma banda donde la etiqueta «AHORA» se ancla al bloque de ahora— y se
+   pisaban en cuanto el bloque actual caía en el último cuarto del día, en los nueve
+   viewports de escritorio medidos. En la cabecera no comparte banda con nada.
+   Dos formas según lo ancho que sea el PANEL (container query, porque el panel cambia de
+   ancho también al plegar la barra lateral): con sitio, todo en la fila del título
+   (resumen · chips · píldora) y el panel no crece ni un píxel; sin sitio, dos filas a la
+   derecha, chips arriba y resumen debajo (+19 px). Medido en es: resumen 246 + 14 + chips
+   327 = 587 a la derecha; el título de «Una hora» llegando tarde mide 451 y el de la
+   jornada entera unos 400. El corte va en 1000 px de contenido: por encima, al título le
+   quedan al menos 397 y como mucho se parte en dos líneas (lo que cuesta lo mismo que la
+   columna); por debajo (1366 → 962, 1280 → 876, 1024 → 620) la fila del título ya no da
+   para las dos cosas. 1536×704 (1132) y 1440×789 (1036) van en fila. */
+.pace-rt-panel { container-type: inline-size; }
+.pace-rt-der-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.pace-rt-der-col .pace-rt-sobre { order: 2; }
+.pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
+@container (min-width: 1000px) {
+  .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
+  .pace-rt-der-col .pace-rt-sobre { order: 0; }
+}
 
 /* LAS OPCIONES */
 .pace-rt-chips { display: flex; gap: 10px; margin-top: 14px; }
@@ -91,7 +118,7 @@
    35 % solo significa «a punto de correr». La parada ABIERTA lleva el borde entero
    de su módulo, su lavado y la etiqueta encima; la pasada conserva su fuerza y
    solo deja de poder tocarse. */
-.pace-rt-linea { position: relative; display: flex; align-items: center; margin: 22px 4px 0; height: 24px; }
+.pace-rt-linea { position: relative; display: flex; align-items: center; margin: 18px 4px 0; height: 24px; }
 .pace-rt-seg { height: 4px; border-radius: 2px; background: var(--paper-3); position: relative; }
 .pace-rt-seg.pace-rt-ahora { background: color-mix(in srgb, var(--focus) 35%, var(--paper-3)); }
 .pace-rt-seg.pace-rt-ahora::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px;
@@ -100,8 +127,6 @@
 .pace-rt-seg.pace-rt-comida { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); height: 2px; }
 .pace-rt-seg.pace-rt-libre { background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 5px); height: 2px; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
-.pace-rt-sobre { position: absolute; right: 0; top: -21px; display: flex; align-items: center; gap: 14px; }
-.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
 .pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
   border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
   display: flex; align-items: center; justify-content: center; gap: 1px;

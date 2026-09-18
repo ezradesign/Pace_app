@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.125.0</title>
+  <title>PACE · Foco · Cuerpo — v0.125.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5135,7 +5135,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.125.0';
+const PACE_VERSION = 'v0.125.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -30832,14 +30832,41 @@ Object.assign(window, { Onboarding });
 .pace-rt-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 /* «HOY VOY POR LIBRE» (s194, variante E): la única salida del menú, como píldora en verde —el
    lenguaje de los chips de contexto, con el color de la acción secundaria— en la cabecera
-   (escritorio) o en el pie (móvil). No usa .pace-rt-enlace: no es un enlace más. */
-.pace-rt-libre { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus-cta);
+   (escritorio) o en el pie (móvil). No usa .pace-rt-enlace: no es un enlace más.
+   s195: se llama .pace-rt-porlibre y NO .pace-rt-libre, porque ese nombre ya era el del
+   tramo del retraso (.pace-rt-seg.pace-rt-libre, por su tipo): con el mismo nombre, el
+   hueco heredaba el borde verde y el padding de la píldora y salía como una barra rayada
+   de 10 px (el usuario la vio en su captura; 260 tests verdes no miraban su caja). */
+.pace-rt-porlibre { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus-cta);
   border: 1px solid var(--focus-cta); border-radius: var(--r-pill); padding: 4px 10px; white-space: nowrap;
   transition: background var(--dur-quick) var(--ease); }
-.pace-rt-libre:hover { background: var(--focus-soft); }
-.pace-rt-libre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-porlibre:hover { background: var(--focus-soft); }
+.pace-rt-porlibre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
+/* La parte derecha de la cabecera del menú (escritorio, s195): el RESUMEN del día con
+   «Cambiar» y los chips con la píldora. Antes el resumen era un absoluto a 21 px sobre la
+   línea —la misma banda donde la etiqueta «AHORA» se ancla al bloque de ahora— y se
+   pisaban en cuanto el bloque actual caía en el último cuarto del día, en los nueve
+   viewports de escritorio medidos. En la cabecera no comparte banda con nada.
+   Dos formas según lo ancho que sea el PANEL (container query, porque el panel cambia de
+   ancho también al plegar la barra lateral): con sitio, todo en la fila del título
+   (resumen · chips · píldora) y el panel no crece ni un píxel; sin sitio, dos filas a la
+   derecha, chips arriba y resumen debajo (+19 px). Medido en es: resumen 246 + 14 + chips
+   327 = 587 a la derecha; el título de «Una hora» llegando tarde mide 451 y el de la
+   jornada entera unos 400. El corte va en 1000 px de contenido: por encima, al título le
+   quedan al menos 397 y como mucho se parte en dos líneas (lo que cuesta lo mismo que la
+   columna); por debajo (1366 → 962, 1280 → 876, 1024 → 620) la fila del título ya no da
+   para las dos cosas. 1536×704 (1132) y 1440×789 (1036) van en fila. */
+.pace-rt-panel { container-type: inline-size; }
+.pace-rt-der-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.pace-rt-der-col .pace-rt-sobre { order: 2; }
+.pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
+@container (min-width: 1000px) {
+  .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
+  .pace-rt-der-col .pace-rt-sobre { order: 0; }
+}
 
 /* LAS OPCIONES */
 .pace-rt-chips { display: flex; gap: 10px; margin-top: 14px; }
@@ -30879,7 +30906,7 @@ Object.assign(window, { Onboarding });
    35 % solo significa «a punto de correr». La parada ABIERTA lleva el borde entero
    de su módulo, su lavado y la etiqueta encima; la pasada conserva su fuerza y
    solo deja de poder tocarse. */
-.pace-rt-linea { position: relative; display: flex; align-items: center; margin: 22px 4px 0; height: 24px; }
+.pace-rt-linea { position: relative; display: flex; align-items: center; margin: 18px 4px 0; height: 24px; }
 .pace-rt-seg { height: 4px; border-radius: 2px; background: var(--paper-3); position: relative; }
 .pace-rt-seg.pace-rt-ahora { background: color-mix(in srgb, var(--focus) 35%, var(--paper-3)); }
 .pace-rt-seg.pace-rt-ahora::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px;
@@ -30888,8 +30915,6 @@ Object.assign(window, { Onboarding });
 .pace-rt-seg.pace-rt-comida { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); height: 2px; }
 .pace-rt-seg.pace-rt-libre { background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 5px); height: 2px; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
-.pace-rt-sobre { position: absolute; right: 0; top: -21px; display: flex; align-items: center; gap: 14px; }
-.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
 .pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
   border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
   display: flex; align-items: center; justify-content: center; gap: 1px;
@@ -31103,6 +31128,11 @@ Object.assign(window, {
 
    Móvil: la misma línea sin etiquetas, con puntos — a 8 px un dibujo no se lee.
 
+   s195: el resumen del día («50 min de foco · 1 pausa · 2 vasos» y «Cambiar») YA NO
+   va aquí. Era un absoluto a 21 px sobre la línea, o sea en la misma banda donde
+   «AHORA» se ancla al bloque de ahora, y se pisaban cada tarde. Ahora es RitmoSobre,
+   en la cabecera del panel, bajo los chips.
+
    LAS ETIQUETAS SE COLOCAN MIDIENDO (rondas 1 a 4 de la maqueta): si se pisan, se
    reparten en hasta TRES niveles de forma VORAZ —cada una va al primero donde no
    choca— y cada nivel empieza bajo la más alta del anterior. El reparto alterno
@@ -31179,7 +31209,7 @@ function ritmoEmpezarParada(it) {
   window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }
 
-function RitmoLinea(_ref2) {let { plan, onCambiar } = _ref2;
+function RitmoLinea(_ref2) {let { plan } = _ref2;
   const { t, tn, lang } = useT();
   const lin = useRefRL(null);
   const zona = useRefRL(null);
@@ -31198,11 +31228,7 @@ function RitmoLinea(_ref2) {let { plan, onCambiar } = _ref2;
 
   return (/*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { className: "pace-rt-linea", ref: lin, "data-pace-ritmo-linea": true }, /*#__PURE__*/
-    React.createElement("div", { className: "pace-rt-sobre" }, /*#__PURE__*/
-    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn)), /*#__PURE__*/
-    React.createElement("button", { className: "pace-rt-enlace", onClick: onCambiar }, t('ritmo.cambiar'))
-    ),
+    React.createElement("div", { className: "pace-rt-linea", ref: lin, "data-pace-ritmo-linea": true },
     m.items.map((it, i) => {
       if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
         const ahora = i === iActual;
@@ -31306,10 +31332,24 @@ function RitmoContexto() {
    fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. */
 function RitmoLibre() {
   const { t } = useT();
-  return /*#__PURE__*/React.createElement("button", { className: "pace-rt-libre", "data-pace-ritmo-libre": true, onClick: ritmoPorLibre }, t('ritmo.libre'));
+  return /*#__PURE__*/React.createElement("button", { className: "pace-rt-porlibre", "data-pace-ritmo-libre": true, onClick: ritmoPorLibre }, t('ritmo.libre'));
 }
 
-function RitmoChips(_ref) {let { state } = _ref;
+/* El resumen del día («6 h 10 min de foco · 7 pausas · 8 vasos») con «Cambiar». s195: vive
+   en la CABECERA —en la fila del título si el panel es ancho, bajo los chips si no (la
+   hoja decide con una container query)— y no sobre la línea: allí compartía banda con la
+   etiqueta «AHORA» y se pisaban al final del día (medido en nueve viewports de escritorio). */
+function RitmoSobre(_ref) {let { m } = _ref;
+  const { t, tn } = useT();
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sobre", "data-pace-ritmo-resumen": true }, /*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn)), /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar'))
+    ));
+
+}
+
+function RitmoChips(_ref2) {let { state } = _ref2;
   const { t, tn } = useT();
   return (/*#__PURE__*/
     React.createElement("div", { className: "pace-rt-chips" },
@@ -31328,7 +31368,7 @@ function RitmoChips(_ref) {let { state } = _ref;
 
 }
 
-function RitmoPregunta(_ref2) {let { state } = _ref2;
+function RitmoPregunta(_ref3) {let { state } = _ref3;
   const { t } = useT();
   const R = ritmoDe(state);
   const frase = /*#__PURE__*/React.createElement(RitmoFrase, { plantilla: t('ritmo.frase'), huecos: ritmoHuecos(R.horario) });
@@ -31358,7 +31398,7 @@ function RitmoPregunta(_ref2) {let { state } = _ref2;
 /* La frase del menú servido: de [inicio] a [salida] · comida a las [hora] durante
    [dur]. Solo la jornada entera edita la salida; las otras opciones dicen a qué
    hora acaban. Llegando tarde añade «hoy de 10:30 a 17:00» (nunca «tarde»). */
-function RitmoFraseMenu(_ref3) {let { plan, horario, plantilla, capital } = _ref3;
+function RitmoFraseMenu(_ref4) {let { plan, horario, plantilla, capital } = _ref4;
   const { t, tn } = useT();
   const m = plan.m;
   const huecos = ritmoHuecos(horario);
@@ -31377,13 +31417,13 @@ function RitmoFraseMenu(_ref3) {let { plan, horario, plantilla, capital } = _ref
 /* «Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.»
    Solo hasta que acabe el primer bloque del día: después ya lo has visto pasar.
    El usuario la dio por necesaria en s193 (ronda 1). */
-function RitmoComo(_ref4) {let { plan } = _ref4;
+function RitmoComo(_ref5) {let { plan } = _ref5;
   const { t } = useT();
   if (plan.hechos > 0) return null;
   return /*#__PURE__*/React.createElement("div", { className: "pace-rt-sub pace-rt-como", "data-pace-ritmo-como": true }, t('ritmo.como'));
 }
 
-function RitmoEscritorio(_ref5) {let { state, plan } = _ref5;
+function RitmoEscritorio(_ref6) {let { state, plan } = _ref6;
   const { t } = useT();
   const R = ritmoDe(state);
   return (/*#__PURE__*/
@@ -31395,15 +31435,18 @@ function RitmoEscritorio(_ref5) {let { state, plan } = _ref5;
     '· ', /*#__PURE__*/React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu" })
     )
     ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-der-col" }, /*#__PURE__*/
+    React.createElement(RitmoSobre, { m: plan.m }), /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-der" }, /*#__PURE__*/React.createElement(RitmoContexto, null), /*#__PURE__*/React.createElement(RitmoLibre, null))
+    )
     ), /*#__PURE__*/
     React.createElement(RitmoComo, { plan: plan }), /*#__PURE__*/
-    React.createElement(RitmoLinea, { plan: plan, onCambiar: ritmoPreguntar })
+    React.createElement(RitmoLinea, { plan: plan })
     ));
 
 }
 
-function RitmoFila(_ref6) {let { rotulo, modulo, nombre, meta, claves } = _ref6;
+function RitmoFila(_ref7) {let { rotulo, modulo, nombre, meta, claves } = _ref7;
   const { t } = useT();
   return (/*#__PURE__*/
     React.createElement("div", { className: "pace-rt-fila" }, /*#__PURE__*/
@@ -31420,7 +31463,7 @@ function RitmoFila(_ref6) {let { rotulo, modulo, nombre, meta, claves } = _ref6;
 }
 
 /* La fila de una parada (pausa o comida) con su rótulo («Ahora» o «Luego»). */
-function RitmoFilaParada(_ref7) {let { it, rotulo } = _ref7;
+function RitmoFilaParada(_ref8) {let { it, rotulo } = _ref8;
   const { t, tn, lang } = useT();
   const cab = /*#__PURE__*/React.createElement(React.Fragment, null, t(rotulo), /*#__PURE__*/React.createElement("br", null), ritmoHora(it.desde));
   if (it.tipo === 'comida') {
@@ -31432,7 +31475,7 @@ function RitmoFilaParada(_ref7) {let { it, rotulo } = _ref7;
     claves: it.platos.map((p) => p.clave) });
 }
 
-function RitmoMovil(_ref8) {let { state, plan, onVer } = _ref8;
+function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
@@ -31467,7 +31510,7 @@ function RitmoMovil(_ref8) {let { state, plan, onVer } = _ref8;
 
 }
 
-function RitmoHecho(_ref9) {let { plan } = _ref9;
+function RitmoHecho(_ref0) {let { plan } = _ref0;
   const { t, tn } = useT();
   return (/*#__PURE__*/
     React.createElement("div", { className: "pace-rt-panel", "data-pace-ritmo-estado": "hecho" }, /*#__PURE__*/
@@ -31486,10 +31529,10 @@ function RitmoHecho(_ref9) {let { plan } = _ref9;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -32056,8 +32099,15 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
      segundo contorno posible. */
 
   const BLOOM_W = 2.2; /* ancho de la caja, en unidades de D */
-  const BLOOM_H = 1.34; /* alto de la caja */
-  const BLOOM_SUBE = 0.38; /* fracción de su propio alto que se sube */
+  /* s195: la caja se describe desde el CENTRO del aro (antes BLOOM_H 1,34 ×
+     BLOOM_SUBE 0,38: 0,509 D arriba y 0,831 D abajo). Arriba sigue en 0,509 D;
+     abajo se ACORTA a 0,75 D menos el horizonte, porque «colaBloom» apaga la luz
+     en 0,72 D − horizonte y el resto era transparencia que HACÍA SCROLL: la
+     premisa de s185 (0,852 D de hueco) se rompió en s192 con el panel de «A tu
+     ritmo» (0,729 D a 1600×780, 46-52 px de scroll con un bloque corriendo).
+     Medido: scroll 0 en nueve viewports y la luz idéntica al píxel (diario s195). */
+  const BLOOM_CENTRO = 0.509; /* del borde superior de la caja al centro del aro */
+  const BLOOM_COLA = 0.75; /* del centro al borde inferior, antes de restar el horizonte */
   const BLOOM_R = 0.77; /* radio de la luz, desde el centro del aro */
   /* EL ALTO Y EL RADIO SALEN DE UNA MEDIDA — y en s185 hubo que REMEDIRLA.
       La de s158 decía «0,96 D en el peor breakpoint» y concluía que la caja no
@@ -32071,16 +32121,16 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
       Los tres números salen de ahí: la caja acaba en cy + 0,831 D (21 px de
      margen con el aro de 520) y la luz muere en 0,77 D, o sea 0,061 D DENTRO de
      su caja — una luz no puede acabar donde acaba la suya (las dos aristas
-     rectas de s157). `BLOOM_SUBE` sube a 0,38 para que el borde superior siga
+     rectas de s157). `BLOOM_SUBE` (hoy BLOOM_CENTRO) sube a 0,38 para que el borde superior siga
      por encima de 0,5 D del centro, donde la máscara direccional pone su parada
      transparente; con 0,36 caía en negativo.
-  /* Desde el borde SUPERIOR de la caja: el centro del aro cae en BLOOM_H*SUBE,
+  /* Desde el borde SUPERIOR de la caja: el centro del aro cae en BLOOM_CENTRO,
      su borde superior media D antes y el horizonte media D después menos el
      propio horizonte. Todo sale de los mismos dos tokens que gobiernan el aro. */
 
 
   const DESDE_ARRIBA = (extra, conHorizonte) => 'calc(var(--pace-dial-d) * ' +
-  (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
+  (BLOOM_CENTRO + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
   /* Radios del aro entre paréntesis (el radio de la luz es 1,05 D). La sombra
      ocupa los 81 px finales: ancha de sobra para no leerse como un aro, y
      colocada donde la máscara direccional la deja caer — a los lados del aro y
@@ -32120,7 +32170,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
   ['100%', 'transparent', 'rgba(0,0,0,0)'] /* 0,840 D */];
 
   const bloomCon = (i) => 'radial-gradient(circle ' + dd(BLOOM_R) +
-  ' at 50% ' + (BLOOM_SUBE * 100).toFixed(0) + '%, ' +
+  ' at 50% ' + dd(BLOOM_CENTRO) + ', ' +
   BLOOM.map((p) => p[i] + ' ' + p[0]).join(', ') + ')';
 
   /* LA DIRECCIONALIDAD, en una máscara lineal LARGA. Vale cero justo en el
@@ -32132,7 +32182,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
      grano en toda la mitad baja de la caja. */
   const direccion = 'linear-gradient(180deg, transparent 0px, ' +
   'transparent ' + DESDE_ARRIBA(-0.5, false) + ', ' +
-  'rgba(0,0,0,0.34) calc(var(--pace-dial-d) * ' + (BLOOM_H * BLOOM_SUBE).toFixed(3) +
+  'rgba(0,0,0,0.34) calc(var(--pace-dial-d) * ' + BLOOM_CENTRO.toFixed(3) +
   ' - var(--pace-corte) * 0.5), ' +
   '#000 ' + DESDE_ARRIBA(0.5, true) + ')';
 
@@ -32182,14 +32232,14 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
   '#000 calc(' + dd((centro + 0.5).toFixed(4)) + ' - var(--pace-corte)), ' +
   'transparent calc(' + dd((centro + 0.5 + LUZ_COLA).toFixed(4)) + ' - var(--pace-corte)))';
   const colaLimbo = colaEn(LIMBO_R);
-  const colaBloom = colaEn(BLOOM_H * BLOOM_SUBE);
+  const colaBloom = colaEn(BLOOM_CENTRO);
 
   /* Los DIECISEIS que cruzan. El resto es andamio y no sale de esta IIFE. */
   window.paceAtmosfera = {
     LUZ, NUCLEO, BORDE, horizonte, grano,
     horizontePista,
     LIMBO_R, limboCon, menosArriba, colaLimbo,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom
+    BLOOM_W, BLOOM_CENTRO, BLOOM_COLA, bloomCon, direccion, colaBloom
   };
 })();
 })();
@@ -32247,7 +32297,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
   const {
     LUZ, NUCLEO, BORDE, horizonte, horizontePista, grano,
     LIMBO_R, limboCon, menosArriba, colaLimbo,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom
+    BLOOM_W, BLOOM_CENTRO, BLOOM_COLA, bloomCon, direccion, colaBloom
   } = window.paceAtmosfera || {};
 
   const s = document.createElement('style');
@@ -32648,10 +32698,12 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
       content: '';
       position: absolute;
       left: 50%;
-      top: 50%;
+      /* s195: caja desde el centro del aro y alto que resta el horizonte, para que
+         acabe donde acaba la luz y no haga scroll (nota de BLOOM_COLA, atmosfera). */
+      top: calc(50% - var(--pace-dial-d) * ${BLOOM_CENTRO});
       width: calc(var(--pace-dial-d) * ${BLOOM_W});
-      height: calc(var(--pace-dial-d) * ${BLOOM_H});
-      transform: translate(-50%, -${(BLOOM_SUBE * 100).toFixed(0)}%);
+      height: calc(var(--pace-dial-d) * ${(BLOOM_CENTRO + BLOOM_COLA).toFixed(3)} - var(--pace-corte, 0px));
+      transform: translateX(-50%);
       pointer-events: none;
       background-image: ${grano}, ${bloomCon(1)};
       /* s184: se le anade «colaBloom» por el mismo motivo que al limbo. Por

@@ -49,7 +49,7 @@
   const {
     LUZ, NUCLEO, BORDE, horizonte, horizontePista, grano,
     LIMBO_R, limboCon, menosArriba, colaLimbo,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom,
+    BLOOM_W, BLOOM_CENTRO, BLOOM_COLA, bloomCon, direccion, colaBloom,
   } = window.paceAtmosfera || {};
 
   const s = document.createElement('style');
@@ -450,10 +450,12 @@
       content: '';
       position: absolute;
       left: 50%;
-      top: 50%;
+      /* s195: caja desde el centro del aro y alto que resta el horizonte, para que
+         acabe donde acaba la luz y no haga scroll (nota de BLOOM_COLA, atmosfera). */
+      top: calc(50% - var(--pace-dial-d) * ${BLOOM_CENTRO});
       width: calc(var(--pace-dial-d) * ${BLOOM_W});
-      height: calc(var(--pace-dial-d) * ${BLOOM_H});
-      transform: translate(-50%, -${(BLOOM_SUBE * 100).toFixed(0)}%);
+      height: calc(var(--pace-dial-d) * ${(BLOOM_CENTRO + BLOOM_COLA).toFixed(3)} - var(--pace-corte, 0px));
+      transform: translateX(-50%);
       pointer-events: none;
       background-image: ${grano}, ${bloomCon(1)};
       /* s184: se le anade «colaBloom» por el mismo motivo que al limbo. Por

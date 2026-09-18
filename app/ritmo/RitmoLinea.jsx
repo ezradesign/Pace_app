@@ -14,6 +14,11 @@
 
    Móvil: la misma línea sin etiquetas, con puntos — a 8 px un dibujo no se lee.
 
+   s195: el resumen del día («50 min de foco · 1 pausa · 2 vasos» y «Cambiar») YA NO
+   va aquí. Era un absoluto a 21 px sobre la línea, o sea en la misma banda donde
+   «AHORA» se ancla al bloque de ahora, y se pisaban cada tarde. Ahora es RitmoSobre,
+   en la cabecera del panel, bajo los chips.
+
    LAS ETIQUETAS SE COLOCAN MIDIENDO (rondas 1 a 4 de la maqueta): si se pisan, se
    reparten en hasta TRES niveles de forma VORAZ —cada una va al primero donde no
    choca— y cada nivel empieza bajo la más alta del anterior. El reparto alterno
@@ -90,7 +95,7 @@ function ritmoEmpezarParada(it) {
   window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }
 
-function RitmoLinea({ plan, onCambiar }) {
+function RitmoLinea({ plan }) {
   const { t, tn, lang } = useT();
   const lin = useRefRL(null);
   const zona = useRefRL(null);
@@ -110,10 +115,6 @@ function RitmoLinea({ plan, onCambiar }) {
   return (
     <React.Fragment>
       <div className="pace-rt-linea" ref={lin} data-pace-ritmo-linea>
-        <div className="pace-rt-sobre">
-          <span className="pace-rt-meta">{ritmoResumen(m, tn)}</span>
-          <button className="pace-rt-enlace" onClick={onCambiar}>{t('ritmo.cambiar')}</button>
-        </div>
         {m.items.map((it, i) => {
           if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
             const ahora = i === iActual;
