@@ -34,6 +34,7 @@
 | `tests/ritmo.spec.js` | **20 tests** (465 ln: lo siguiente va a un spec hermano) — **s194: recolocar veinte minutos tarde, llegar antes es empezar, la regla en puro con `previos`** — la regla en puro, la home, un bloque terminado, **la linea sigue al aro (`--pace-bloque`, el ancho del `::after`, la parada abierta, «Tu pausa», empezar el bloque 2 la cierra), la pausa sembrada que sobrevive a la recarga y se empieza tocando la parada**, por libre, el horario, llegar tarde, ingles, movil (**con la pausa abierta**) y la geometria en cuatro viewports | **s193** · NUEVO s192 |
 | `scripts/audit/banco-ritmo-s192.js` | Banco de mutantes de A tu ritmo, con pasada de control: **11 de 11 muerden** | **NUEVO s192** |
 | `tests/eventos-origen.spec.js` | **El origen de cada sesion (s194), 4 tests**: las seis puertas sobre sesiones reales (aro con y sin plan, la propuesta de la pausa, la parada, la tarjeta de la barra lateral, una biblioteca) y, en puro, el consumo, el Camino y la lista permitida | **NUEVO s194** |
+| `scripts/audit/semana-s194.js` | **La maqueta del norte, lectura A (s194)**: el prototipo de «el hilo de la semana» como TEXTO (`REGLA`: `semanaISO`, `SEMANA_TEMAS`, `SEMANA_ACENTOS`, `semanaPozos`, `semanaComponer`) inyectado en la app real para calcular 52 semanas y dos semanas con platos reales; fotografia el panel con el motivo inyectado; escribe `docs/proposals/semana-r1.html`. **No es codigo de la app** | **NUEVO s194** |
 | `scripts/audit/banco-recolocar-s194.js` | **Banco de mutantes de recolocar (s194)**, con pasada de control: **13 de 13 muerden**. Declara lo que no muta: `primerBloque` cuando el aro y el plan coinciden, y la rehidratacion | **NUEVO s194** |
 | `scripts/audit/recolocar-s194.js` | **La maqueta de recolocar**: el mismo guion (tarde a las 10:10, diez mas, llegar antes) fotografiado con `--hoy` sobre el artefacto viejo y sin el sobre el nuevo; `--pagina` compone `docs/proposals/recolocar-r1.html`. Las tandas van al temp del sistema, no al repo | **NUEVO s194** |
 | `scripts/audit/banco-origen-s194.js` | **Banco de mutantes del origen (s194)**, con pasada de control: **12 de 12 muerden**. Una puerta por mutante, mas el consumo, el Camino y la lista | **NUEVO s194** |
@@ -236,7 +237,7 @@
 ## Ultima sesion -- lo que sigue vivo
 
 > s194 publica dos versiones: **v0.124.0, «el origen de cada sesion»** (la instrumentacion) y
-> **v0.125.0, «recolocar a mitad de dia»**. Suite **253 -> 257 -> 260**, `verify` en verde, artefacto
+> **v0.125.0, «recolocar a mitad de dia»** (CI verde en `8ee4919`), y deja la pieza 3 pintada y sin decidir. Suite **253 -> 257 -> 260**, `verify` en verde, artefacto
 > regenerado, tres bancos de mutantes con control (origen 12/12 · recolocar 13 de 13).
 >
 > Diario: [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md) ·
@@ -258,7 +259,15 @@
 - **[EL NORTE]** Recomendacion aceptada como orden: **origen -> recolocar -> A** (el menu varia con el
   dia de la semana, con motivo visible); C cuando el origen tenga semanas de datos; B aparcada.
 
-- **[LO QUE QUEDA, EN ORDEN]** **El norte, lectura A** (pintar antes) · que el usuario lo use un dia entero · `MoveSessionV1.jsx` en 500 · `ritmo.spec.js` en 465
+- **[LA PIEZA 3, A MITAD — LA CONVERSACION SE MIGRO AQUI]** La maqueta del norte (lectura A), **«el
+  hilo de la semana»** (`docs/proposals/semana-r1.html`, generada por `scripts/audit/semana-s194.js`),
+  esta ENVIADA y sin decidir. Propone tema por semana ISO (seis en ciclo) x acento por dia (L-V) x la
+  regla del dia de siempre, todo desde la fecha; medido: pozos gratis 6 · 4 · 5 · 1, dos semanas dan
+  13 platos distintos cada una y 11 en comun. **Nada implementado en la app.** La lista de decisiones
+  y lo que hay que saber estan en `docs/HANDOFF_s194.md` §2.1.
+
+- **[LO QUE QUEDA, EN ORDEN]** **La respuesta del usuario a `semana-r1.html` y su implementacion
+  (v0.126.0, con spec nuevo: `ritmo.spec.js` esta en 465)** · que el usuario lo use un dia entero · `MoveSessionV1.jsx` en 500 · `ritmo.spec.js` en 465
   (lo siguiente a un spec hermano) · los huecos: el cierre nunca es «Ahora», la pausa larga propone un
   plato de dos, el modo oscuro del panel.
 
