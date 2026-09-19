@@ -411,6 +411,11 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
 punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
 
+**Hecho en s195c (v0.128.0)**: **la semana (lectura A)** — seis temas en ciclo por semana ISO × acento del
+día × la regla, todo desde la fecha, y **sin anunciarlo** (el usuario eligió «nada» entre chip, nada y
+cuatro palabras). Con v0.127.0: la tarjeta por libre, la comida como interruptor, la pausa solo con Hidrátate.
+Lo siguiente del norte: **C**, cuando `origin` tenga semanas de datos.
+
 **Hecho en s195b (v0.126.0)**: **la pausa con memoria** — el modal con menú pregunta una cosa (hacer la pausa o
 seguir), el agua va por tiempo, la pausa se recoloca también al terminar y la duración del aro manda el día, y
 la línea distingue hecha de saltada. Queda la ronda 2 (`ideas-s195-r2.html`): la tarjeta por libre, la comida

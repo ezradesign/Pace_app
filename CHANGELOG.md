@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.128.0** | 2026-09-19 | feat(ritmo): **la semana, sin decirlo** — La pieza 3 del norte (lectura A): el menú varía con la semana y con el día, todo desde la fecha —seis temas en ciclo por semana ISO que reordenan los pozos por región (cuello · caderas · manos · espalda · aire · ligera) × un acento por día de lunes a viernes (arrancar con Mueve · el día tal cual · la larga antes · respirar antes de comer · cerrar con el Respira más largo) × la regla de siempre—, y **nada lo anuncia**: se pusieron tres formas mínimas en el panel real (chip · nada · cuatro palabras) y el usuario eligió «nada» («menos es más»). `ritmo.semana.js` es pura; «la mitad» es `horario.desfaseLarga` y no un `previos` falso; los acentos respetan lo hecho; el fin de semana lleva tema y no acento. **282 → 286**, `banco-semana-s195.js` **11 de 11**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
 | **v0.127.0** | 2026-09-19 | feat(ritmo): **la tarjeta por libre, comer o no, y la pausa solo con Hidrátate** — La ronda 2 decidida: **la tarjeta «¿Cuánto trabajas hoy?» sustituye a la del Camino sugerido** por libre (misma cáscara: el motor y la luz no se enteran; cuatro losetas con la hora de fin, «Ajustar el horario» y «Ver caminos» en la cabecera; un toque sirve el día; el aro gana 8 px), **la comida se apaga con un mini interruptor** pegado a la palabra «comes» (apagado: «no comes», sin tramo, sin frase, sin vaso), y **el modal de la pausa deja solo Hidrátate** como sugerencia aparte del plato. Para la semana (7B), tres sistemas de copy en `semana-copy-s195.html`, sin decidir. **281 → 282**, 3 en rojo contra HEAD. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
 | **v0.126.0** | 2026-09-19 | feat(ritmo): **la pausa con memoria** — Cuatro decisiones del usuario con la página de ideas delante. **La pausa con menú**: al acabar un bloque el modal pregunta una sola cosa —«Tu pausa», el plato con el glifo de su ejercicio, «Hacer la pausa» · «Seguir con el bloque 2» · «Otra cosa…» plegado—; sin menú, el de siempre. **El agua va por tiempo**: un vaso por parada a ≥ 50 min del último, la comida siempre y reinicia, tope la meta del día (una hora 1, dos horas 2, la jornada 6; antes 4 y 8). **Recolocar también al terminar**: si el bloque acaba a otra hora, la pausa se abre a la hora que es y el resto se recompone con la pausa la primera; **y la duración que pones en el aro manda** el resto del día (25 con un plan de 45 → bloques de 25). **La línea tiene memoria**: la parada hecha (una sesión con la pausa abierta) se rellena; la saltada (empezar sin hacerla) va a trazos al 40 %. **277 → 281**, 4 en rojo contra HEAD. Y la ronda 2 de ideas para lo que pide diseño. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
 | **v0.125.3** | 2026-09-19 | fix(ritmo): **la auditoría de viewports y el sábado del usuario** — `auditoria-viewports-s195.js`: 16 viewports (escritorio y teléfono, incluida una tableta vertical) × 9-10 escenas, 150 celdas medidas y fotografiadas. Con las cuatro capturas del usuario: **«Una hora» a las 14:30 ya no habla de comida** (la regla no la servía; la frase no lo escuchaba), **«de 14:30 a 12:50» → «de 10:23 a 12:50»** (las opciones que empiezan cuando empiezas llevan las horas de hoy), **ninguna etiqueta se sale del marco** (la primera parada junto al borde se empuja y su hilo sigue a la parada), **la tableta vertical lleva la copia compacta del panel** (container query), **los cuatro chips de Actividades caben** a 1024 y 820 (container query), **el motor de geometría mide también la luz** (con la jornada cerrada la home arrastraba 38 px: el limbo, cuadrado, sobresalía y no se puede recortar), y **la gota del vaso va pegada a su última palabra** en móvil. **268 → 277**, 9 en rojo contra HEAD. | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
@@ -403,6 +404,29 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.128.0] -- 2026-09-19 -- feat(ritmo): la semana, sin decirlo
+
+### Añadido
+- **`app/ritmo/ritmo.semana.js`** (pura): `semanaISO`, `SEMANA_TEMAS` (seis, por semana ISO en ciclo, con tags del
+  catálogo), `SEMANA_ACENTOS` (1..7), `semanaDe`, `semanaPozos` (reordena por afinidad al tema), `semanaComponer`
+  (la regla sobre los pozos del tema + hasta tres retoques de platos: lunes Mueve primero, jueves Respira antes
+  de comer, viernes el cierre largo). El fin de semana lleva tema y no acento. Los acentos respetan `previos`.
+- **`horario.desfaseLarga`** en `ritmo.regla.js`: corre la cadencia de la larga (el miércoles, la segunda).
+- **`ritmoMenu`** compone con `semanaComponer(…, semanaDe(hoy), previos)`.
+
+### Decisiones
+- **Nada se anuncia**: ni chip, ni línea, ni nombres. La variedad se ve en la línea (usuario: «2, nada»).
+
+### Red
+- **`tests/ritmo-semana.spec.js`, 4 tests** · **`scripts/audit/banco-semana-s195.js`: 11 de 11 muerden** (dos
+  vivos en la primera pasada, los dos por escenarios que no distinguían el mutante; se endurecieron con GUARD).
+
+### Lo que no cubre
+- La hoja y Stats no saben de semanas; los nombres de los temas son dato sin consumidor; el miércoles con tres
+  largas (2.ª, 5.ª, 8.ª) queda «como sale».
+
+---
+
 ## [v0.127.0] -- 2026-09-19 -- feat(ritmo): la tarjeta por libre, comer o no, y la pausa solo con Hidrátate
 
 ### Añadido
@@ -423,36 +447,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ### Lo que no cubre
 - El copy de la semana (7B) está en `semana-copy-s195.html`, sin decidir; la regla de la semana no está.
-
----
-
-## [v0.126.0] -- 2026-09-19 -- feat(ritmo): la pausa con memoria
-
-### Añadido
-- **`app/breakmenu/BreakMenu.ritmo.jsx`**: el modal de pausa con menú. Cejilla «Bloque N de M · hecho»,
-  «Tu pausa», el plato con el glifo de su ejercicio (`libraryGlifos` + `ExerciseGlyph`; Respira, el de su
-  módulo) y «y un vaso de agua» si toca; «Hacer la pausa» · «Seguir con el bloque N+1» (`pace:ritmo-seguir`,
-  que `FocusTimer` escucha) · «Otra cosa…» (los cuatro módulos, plegados). `BreakMenu.jsx` delega cuando la
-  propuesta es `ritmo.*` y hay pausa abierta.
-- **`dia.estados`** (`state-ritmo.jsx`): hecha / saltada por ordinal de parada (`ritmoOrdinal`).
-  `ritmoPausaHecha` (desde `emitSessionCompleted`) y la marca de saltada al empezar el bloque. La línea y los
-  puntos de móvil lo pintan (`.pace-rt-hecha`, `.pace-rt-saltada`); la etiqueta dice «hecha · 3 min» o «saltada».
-- **`dia.pausaPendiente`** y **`dia.bloque`** (`state-ritmo.jsx`, `ritmo.regla.js`): recolocar al terminar
-  sirve la pausa la primera; la duración puesta en el aro manda en los bloques que vienen.
-
-### Cambiado
-- **El agua va por tiempo** (`ritmo.regla.js`): ≥ 50 min entre vasos (desde el inicio del día, también tras
-  recolocar), la comida siempre y reinicia desde que acaba, tope la meta del día.
-- `ritmoBloqueTerminado` recoloca si la hora no es la del plan; `ritmoBloqueEmpezado` también si la duración no
-  es la del plan.
-- `tests/eventos-origen.spec.js`: con menú, «Hacer la pausa».
-
-### Red
-- **`tests/ritmo-pausa.spec.js`, 4 tests**, en rojo contra el artefacto de v0.125.3.
-
-### Lo que no cubre
-- La hoja no dice hecha/saltada; Stats y la barra lateral no cuentan pausas hechas; cerrar el modal con X deja la
-  pausa abierta sin marcar; el modal con menú en móvil no está fotografiado.
 
 ---
 

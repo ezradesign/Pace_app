@@ -74,6 +74,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   /* s195b: con la comida apagada (`horario.sinComida`) no hay comida que caiga en
      el día: fuera del alcance, y la regla sigue igual. */
   var comeA = horario.sinComida ? Infinity : horario.comida;
+  /* s195c: `horario.desfaseLarga` corre la cadencia de la pausa larga (la semana lo
+     usa el miércoles: la larga es la segunda, no la tercera). 0 si no se dice. */
+  var desfase = Number(horario.desfaseLarga) || 0;
   var comidaDur = horario.comidaDur || 60;
   var ahora = horario.ahora != null ? horario.ahora : inicio;
   var P0 = previos || null;
@@ -112,7 +115,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
        la pausa es el cierre, que pone el final) o que la comida esté encima (la
        comida es la pausa; el bucle la sirve). */
     if (P0 && P0.pausaPendiente) {
-      var p0 = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
+      var p0 = (enMitad + 1 + desfase) % 3 === 0 ? LARGA : PAUSA;
       var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0));
       if ((queda0 >= MINIMO || comerAntes()) && !(falta && t + p0 > comeA)) {
         enMitad++;
@@ -121,7 +124,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       }
     }
     for (;;) {
-      var p = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
+      var p = (enMitad + 1 + desfase) % 3 === 0 ? LARGA : PAUSA;
       var dur;
       if (P0 && P0.primerBloque && n === primeros) {
         /* El bloque que acaba de empezar dura lo que marca el aro, pase lo que pase. */
