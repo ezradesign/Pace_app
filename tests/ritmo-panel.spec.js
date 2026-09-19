@@ -160,3 +160,29 @@ for (const vp of [{ w: 1536, h: 704 }, { w: 1366, h: 657 }]) {
     });
   });
 }
+
+/* ------------------------------------------------------------------ comer o no (s195c, 6C) */
+test('el interruptor de la comida: apagado, la frase se acorta, el día no sirve comida y el menú no la nombra', async ({ page, context }) => {
+  await abrir(page, context, { ritmo: {} }, new Date('2026-09-18T09:00:00+02:00'));
+  const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
+  await expect(pregunta).toContainText('comes a las');
+  const sw = vis(page, '[data-pace-ritmo-comes]');
+  await expect(sw).toHaveAttribute('aria-checked', 'true');
+  await sw.click();
+  await expect(sw).toHaveAttribute('aria-checked', 'false');
+  await expect(pregunta).toContainText('no comes y terminas');
+  await expect(pregunta).not.toContainText('durante');
+  expect(await page.evaluate(() => getState().ritmo.horario.sinComida)).toBe(true);
+  /* la jornada entera, sin comida: ni tramo ni frase */
+  await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
+  const menu = vis(page, '[data-pace-ritmo-estado="menu"]');
+  await expect(menu).toContainText('Jornada entera');
+  await expect(menu).not.toContainText('comida');
+  expect(await page.evaluate(() => { const p = ritmoPlan(getState()); return { comida: p.m.comida, tramos: p.m.items.filter((it) => it.tipo === 'comida').length }; })).toEqual({ comida: null, tramos: 0 });
+  /* y vuelve: «Cambiar» → encender → la comida vuelve a las 14:00 */
+  await vis(page, '[data-pace-ritmo-resumen] button').click();
+  await vis(page, '[data-pace-ritmo-comes]').click();
+  await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('comes a las');
+  await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
+  await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('comida a las');
+});

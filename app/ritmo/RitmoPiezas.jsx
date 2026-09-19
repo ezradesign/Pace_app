@@ -110,16 +110,33 @@ function RitmoSelector({ campo, horario }) {
   );
 }
 
+/* COMER O NO (s195b, variante 6C elegida mirándola): la palabra «comes» lleva
+   pegado un mini interruptor de 22×12 en tinta. Apagado, la frase pierde el tramo
+   de la comida (plantilla «.sin») y la regla no la sirve (`horario.sinComida`). */
+function RitmoInterruptorComida({ horario }) {
+  const { t } = useT();
+  const on = !horario.sinComida;
+  return (
+    <span className="pace-rt-comes">
+      {t(on ? 'ritmo.comes' : 'ritmo.nocomes')}
+      <button type="button" role="switch" aria-checked={on} aria-label={t('ritmo.aria.comes')}
+        className={'pace-rt-mini-int' + (on ? ' pace-rt-on' : '')} data-pace-ritmo-comes
+        onClick={() => ritmoHorario('sinComida', on ? 1 : 0)} />
+    </span>
+  );
+}
+
 function ritmoHuecos(horario) {
   return {
     inicio: <RitmoSelector campo="inicio" horario={horario} />,
     comida: <RitmoSelector campo="comida" horario={horario} />,
     dur: <RitmoSelector campo="comidaDur" horario={horario} />,
     salida: <RitmoSelector campo="salida" horario={horario} />,
+    comes: <RitmoInterruptorComida horario={horario} />,
   };
 }
 
 Object.assign(window, {
-  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
+  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
   RitmoFrase, RitmoSelector, ritmoHuecos,
 });

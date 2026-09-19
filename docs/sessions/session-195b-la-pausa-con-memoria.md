@@ -1,6 +1,6 @@
-# s195 (bis) · La pausa con memoria (v0.126.0)
+# s195 (bis) · La pausa con memoria (v0.126.0 · v0.127.0)
 
-**Fecha:** 2026-09-19 · **Versión publicada:** v0.126.0 · **Suite:** 277 → **281**
+**Fecha:** 2026-09-19 · **Versiones publicadas:** v0.126.0 y v0.127.0 · **Suite:** 277 → 281 → **282**
 
 > Con `docs/proposals/ideas-s195.html` delante, el usuario decidió: la pausa con menú (el calco,
 > «pero con un glifo del ejercicio principal»), el agua por tiempo, recolocar también al terminar,
@@ -76,3 +76,37 @@ de la tarjeta por libre (losetas · **el arco del día** · columnas), tres del 
 (casilla · **la palabra «comes / no comes»** · mini interruptor) y tres formas de nombrar los días
 (verbos · **sin título, una frase** · solo el tema) más los temas por región o **por intención**.
 Enviada, sin decidir.
+
+---
+
+## 6 · v0.127.0 · lo que el usuario decidió con la ronda 2
+
+Respuesta a `ideas-s195-r2.html`: «la pausa está bien pero quita las cuatro opciones y deja solo
+Hidrátate» · «la 5A pero más visualmente bonita, el arco no funciona para nada» · «6C» · «7B aunque
+creo que se puede mejorar más».
+
+- **La pausa, solo con Hidrátate** (`BreakMenu.ritmo.jsx`): fuera «Otra cosa…» y los cuatro módulos;
+  bajo las dos acciones, una única tarjeta «Hidrátate · agua ahora» que abre el agua. El atajo del pie
+  dice «Intro · H · Esc». (`break.ritmo.otra` sale del censo.)
+- **La tarjeta por libre** (`RitmoTarjeta.jsx`, nuevo): la 5A en el sitio y con la cáscara de la tarjeta
+  del Camino (`[data-pace-spc]` + `[data-pace-spc-card]`: el motor la observa y la luz se refleja en ella
+  igual). Cabecera en una sola fila —la pregunta en itálica 24 a la izquierda, «Ajustar el horario» y
+  «Ver caminos» a la derecha— y cuatro losetas con la hora de fin en itálica (no en versalita). Un
+  pie aparte costaba 34 px de aro a 1536×704 (medido): el aro queda en 320, ocho más que con el
+  Camino. Un toque en una loseta sirve el día; los Caminos siguen en su biblioteca. Con un Camino en
+  curso no se pinta (como antes). Las horas de los chips de la pregunta pasan también a itálica.
+- **Comer o no, 6C** (`RitmoPiezas.jsx`, `ritmo.regla.js`, `state-ritmo.jsx`): la palabra «comes» lleva
+  pegado un interruptor de 22×12 en tinta (`role="switch"`). Apagado: «no comes», la frase pierde el
+  tramo (`ritmo.frase.sin`), `horario.sinComida` y la regla pone la comida fuera del alcance
+  (`comeA = Infinity`): sin tramo, sin frase en el menú (las plantillas «.sin» de v0.125.3 ya lo
+  cubrían), sin vaso de comida.
+- **7B**: el copy se puede mejorar → `scripts/audit/semana-copy-s195.js` → **`docs/proposals/semana-copy-s195.html`**:
+  tres sistemas completos (A cercano · B sobrio · C con motivo), los seis temas y las cinco formas de
+  día leídos de lunes a viernes, uno puesto en el panel calcado, y dos decisiones más (el martes en
+  silencio; la línea se queda tras el primer bloque). Enviada, sin decidir. La regla de la semana se
+  implementa con el sistema que elija.
+
+**Red:** `ritmo.spec.js` (la tarjeta: cuatro losetas, «Ver caminos», «Ajustar» → pregunta, una loseta
+sirve el día), `ritmo-pausa.spec.js` (solo Hidrátate), `ritmo-panel.spec.js` (+1: el interruptor
+apaga la comida en la frase, en el día y en el menú, y vuelve), `home-geometria.spec.js` («Jornada
+entera» y «Ver caminos» existen una vez). Los tres nuevos, en rojo contra v0.126.0. Suite 281 → **282**.

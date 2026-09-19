@@ -70,7 +70,10 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
-  var inicio = horario.inicio, salida = horario.salida, comeA = horario.comida;
+  var inicio = horario.inicio, salida = horario.salida;
+  /* s195b: con la comida apagada (`horario.sinComida`) no hay comida que caiga en
+     el día: fuera del alcance, y la regla sigue igual. */
+  var comeA = horario.sinComida ? Infinity : horario.comida;
   var comidaDur = horario.comidaDur || 60;
   var ahora = horario.ahora != null ? horario.ahora : inicio;
   var P0 = previos || null;
@@ -211,6 +214,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   return {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
     salida: salida, comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
+    sinComida: !!horario.sinComida,
     focos: focos, pausas: pausas.length, focoMin: dia.foco,
     vasos: dia.items.filter(function (it) { return it.agua; }).length,
   };

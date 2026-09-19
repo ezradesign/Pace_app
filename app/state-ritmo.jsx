@@ -398,7 +398,8 @@ function ritmoOtra(claves) {
 function ritmoHorario(campo, valor) {
   var R = ritmoDe(getState());
   var horario = Object.assign({}, R.horario);
-  horario[campo] = Number(valor);
+  /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos */
+  horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });

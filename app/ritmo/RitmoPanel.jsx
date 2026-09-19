@@ -73,7 +73,7 @@ function RitmoChips({ state }) {
 function RitmoPregunta({ state }) {
   const { t } = useT();
   const R = ritmoDe(state);
-  const frase = <RitmoFrase plantilla={t('ritmo.frase')} huecos={ritmoHuecos(R.horario)} />;
+  const frase = <RitmoFrase plantilla={t(R.horario.sinComida ? 'ritmo.frase.sin' : 'ritmo.frase')} huecos={ritmoHuecos(R.horario)} />;
   return (
     <React.Fragment>
       <div className="pace-rt-panel pace-rt-esc" data-pace-ritmo-estado="pregunta">

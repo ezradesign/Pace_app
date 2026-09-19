@@ -12,19 +12,18 @@
      · «Hacer la pausa»  → la rutina, por la puerta de siempre (onChoose con el plato).
      · «Seguir con el bloque N+1» → cierra y arranca el aro (`pace:ritmo-seguir`, que
        FocusTimer escucha): la pausa queda SALTADA al empezar el bloque (state-ritmo).
-     · «Otra cosa…» → despliega los cuatro módulos, que siguen siendo cuatro puertas.
+     · «Hidrátate» → la única sugerencia aparte del plato (el usuario, tras verlo:
+       «quita las cuatro opciones de abajo y deja solo Hidrátate»). Abre el agua.
      · «Saltar esta pausa» → cierra sin más, como siempre (la pausa sigue abierta
        hasta que empiece el bloque).
 
    Solo se pinta cuando la propuesta viene del menú (`porque` = `ritmo.*`) y hay
    plan con pausa abierta; si no, BreakMenu es el de siempre. */
 
-const { useState: useStateBMR } = React;
-
 function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, prop, plan, opciones, nombre }) {
   const { t, tn } = useT();
-  const [otra, setOtra] = useStateBMR(false);
   if (!open || !prop || !plan) return null;
+  const agua = (opciones || []).find((o) => o.key === 'water');
   const rutina = prop.rutina;
   const pausa = plan.pausa;
   const esRespira = prop.modulo === 'breathe';
@@ -54,23 +53,19 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, prop, plan, opcione
       <div data-pace-break-acciones style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
         <Button variant="terracota" onClick={() => onChoose(prop.modulo, rutina)}>{t('break.ritmo.hacer')}</Button>
         <Button variant="secondary" onClick={onSeguir}>{tn('break.ritmo.seguir', { n: plan.hechos + 1 })}</Button>
-        <Button variant="ghost" onClick={() => setOtra(!otra)}>{t('break.ritmo.otra')}</Button>
       </div>
-      {otra && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, margin: '14px 0 4px' }}>
-          {opciones.map((o) => (
-            <button key={o.key} onClick={() => onChoose(o.key)} style={{
-              padding: '13px 14px', background: o.bg, border: '1.5px solid ' + o.color, borderRadius: 'var(--r-md)',
-              textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--ink)',
-            }}>
-              <span style={{ color: o.color, fontSize: 24, lineHeight: 1 }}>{o.icon}</span>
-              <span style={{ ...displayItalic, fontSize: 20, fontWeight: 500 }}>{o.label}</span>
-            </button>
-          ))}
-        </div>
+      {agua && (
+        <button data-pace-break-agua onClick={() => onChoose('water')} style={{
+          marginTop: 14, width: '100%', padding: '12px 14px', background: agua.bg, border: '1.5px solid ' + agua.color, borderRadius: 'var(--r-md)',
+          textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--ink)',
+        }}>
+          <span style={{ color: agua.color, fontSize: 24, lineHeight: 1 }}>{agua.icon}</span>
+          <span style={{ ...displayItalic, fontSize: 20, fontWeight: 500 }}>{agua.label}</span>
+          <span style={{ fontSize: 12, color: 'var(--ink-2)', marginLeft: 'auto' }}>{agua.desc}</span>
+        </button>
       )}
       <div data-pace-break-shortcut style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
-        <Meta>{t('break.shortcut')}</Meta>
+        <Meta>{t('break.ritmo.shortcut')}</Meta>
         <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
       </div>
     </Modal>

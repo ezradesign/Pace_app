@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.127.0** | 2026-09-19 | feat(ritmo): **la tarjeta por libre, comer o no, y la pausa solo con Hidrátate** — La ronda 2 decidida: **la tarjeta «¿Cuánto trabajas hoy?» sustituye a la del Camino sugerido** por libre (misma cáscara: el motor y la luz no se enteran; cuatro losetas con la hora de fin, «Ajustar el horario» y «Ver caminos» en la cabecera; un toque sirve el día; el aro gana 8 px), **la comida se apaga con un mini interruptor** pegado a la palabra «comes» (apagado: «no comes», sin tramo, sin frase, sin vaso), y **el modal de la pausa deja solo Hidrátate** como sugerencia aparte del plato. Para la semana (7B), tres sistemas de copy en `semana-copy-s195.html`, sin decidir. **281 → 282**, 3 en rojo contra HEAD. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
 | **v0.126.0** | 2026-09-19 | feat(ritmo): **la pausa con memoria** — Cuatro decisiones del usuario con la página de ideas delante. **La pausa con menú**: al acabar un bloque el modal pregunta una sola cosa —«Tu pausa», el plato con el glifo de su ejercicio, «Hacer la pausa» · «Seguir con el bloque 2» · «Otra cosa…» plegado—; sin menú, el de siempre. **El agua va por tiempo**: un vaso por parada a ≥ 50 min del último, la comida siempre y reinicia, tope la meta del día (una hora 1, dos horas 2, la jornada 6; antes 4 y 8). **Recolocar también al terminar**: si el bloque acaba a otra hora, la pausa se abre a la hora que es y el resto se recompone con la pausa la primera; **y la duración que pones en el aro manda** el resto del día (25 con un plan de 45 → bloques de 25). **La línea tiene memoria**: la parada hecha (una sesión con la pausa abierta) se rellena; la saltada (empezar sin hacerla) va a trazos al 40 %. **277 → 281**, 4 en rojo contra HEAD. Y la ronda 2 de ideas para lo que pide diseño. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
 | **v0.125.3** | 2026-09-19 | fix(ritmo): **la auditoría de viewports y el sábado del usuario** — `auditoria-viewports-s195.js`: 16 viewports (escritorio y teléfono, incluida una tableta vertical) × 9-10 escenas, 150 celdas medidas y fotografiadas. Con las cuatro capturas del usuario: **«Una hora» a las 14:30 ya no habla de comida** (la regla no la servía; la frase no lo escuchaba), **«de 14:30 a 12:50» → «de 10:23 a 12:50»** (las opciones que empiezan cuando empiezas llevan las horas de hoy), **ninguna etiqueta se sale del marco** (la primera parada junto al borde se empuja y su hilo sigue a la parada), **la tableta vertical lleva la copia compacta del panel** (container query), **los cuatro chips de Actividades caben** a 1024 y 820 (container query), **el motor de geometría mide también la luz** (con la jornada cerrada la home arrastraba 38 px: el limbo, cuadrado, sobresalía y no se puede recortar), y **la gota del vaso va pegada a su última palabra** en móvil. **268 → 277**, 9 en rojo contra HEAD. | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
 | **v0.125.2** | 2026-09-18 | fix(ritmo): **las etiquetas se recolocan cuando llegan las fuentes** — Salió haciendo las fotos de la página «por dónde seguir»: las etiquetas de la línea se colocan con la fuente que hay en ese momento y no se recolocaban al llegar Cormorant (el observador mira la línea, cuya caja no cambia). Medido un lunes a 1536×704: tres niveles de etiquetas donde caben dos, 15 px de panel y 17 de aro de menos, cada mañana. El arreglo de la barra lateral (s181): `document.fonts.ready.then(colocar)`. El test retrasa las fuentes 2,5 s con `page.route` —detrás del re-render de los 1,4 s que en frío recolocaba por casualidad y dejó la primera pasada de control en verde—. **267 → 268**, rojo en HEAD. | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
@@ -402,6 +403,29 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.127.0] -- 2026-09-19 -- feat(ritmo): la tarjeta por libre, comer o no, y la pausa solo con Hidrátate
+
+### Añadido
+- **`app/ritmo/RitmoTarjeta.jsx`**: por libre, la tarjeta del ritmo en el sitio del Camino sugerido, con su misma
+  cáscara (`[data-pace-spc]`, `[data-pace-spc-card]`). Cabecera de una fila (pregunta · «Ajustar el horario» ·
+  «Ver caminos») y cuatro losetas con la hora de fin en itálica; una loseta sirve el día (`ritmoElegir`).
+- **La comida como interruptor** (`RitmoInterruptorComida`, `horario.sinComida`): «comes» / «no comes» con un
+  mini interruptor de 22×12; apagado, la frase usa `ritmo.frase.sin` y la regla no sirve comida.
+
+### Cambiado
+- **El modal de la pausa con menú** deja solo «Hidrátate» bajo las dos acciones; fuera «Otra cosa…» y los
+  cuatro módulos. Atajo «Intro · H · Esc».
+- Las horas de los chips de la pregunta, en itálica (como las losetas).
+
+### Red
+- `ritmo.spec.js` (la tarjeta), `ritmo-pausa.spec.js` (solo Hidrátate), `ritmo-panel.spec.js` (+1, el
+  interruptor), `home-geometria.spec.js` (los controles por libre). Tres en rojo contra v0.126.0.
+
+### Lo que no cubre
+- El copy de la semana (7B) está en `semana-copy-s195.html`, sin decidir; la regla de la semana no está.
+
+---
+
 ## [v0.126.0] -- 2026-09-19 -- feat(ritmo): la pausa con memoria
 
 ### Añadido
@@ -429,41 +453,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Lo que no cubre
 - La hoja no dice hecha/saltada; Stats y la barra lateral no cuentan pausas hechas; cerrar el modal con X deja la
   pausa abierta sin marcar; el modal con menú en móvil no está fotografiado.
-
----
-
-## [v0.125.3] -- 2026-09-19 -- fix(ritmo): la auditoría de viewports y el sábado del usuario
-
-### Corregido
-- **«Una hora» a las 14:30 decía «comida a las 16:00 durante 30 min»** (`RitmoPanel.jsx`, `strings/ritmo.js`):
-  la regla no servía comida (`m.comida` null) y la frase no lo escuchaba. Plantillas «.sin» en es y en.
-- **«Dos horas · de 14:30 a 12:50»** (`RitmoPanel.jsx`): con el inicio habitual a las 14:30 y el día
-  empezado a las 10:23, la frase mezclaba el selector del horario con la hora de hoy. Las opciones que
-  empiezan cuando empiezas llevan las horas de hoy en texto; la jornada entera conserva selectores y «hoy de».
-- **La primera etiqueta de la línea se salía del panel** (`RitmoLinea.jsx`, `ritmo.css.jsx`): se mide
-  cuánto sobresale de la línea (16 px de aire) y se empuja con `margin-left`; el hilo (`--rt-hilo`) se
-  desplaza lo contrario. Antes de repartir niveles, para que el reparto vea las cajas empujadas.
-- **Tableta vertical (820 px, piel de escritorio)** (`ritmo.css.jsx`): `[data-pace-ritmo-panel]` es contenedor
-  y por debajo de 620 px manda la copia compacta; la línea con nueve paradas no cabía ni en tres niveles.
-- **Por libre, los chips de Actividades asomaban** a 1024 y 820 (`_responsive.pieles.js`): container query
-  sobre `[data-pace-activitybar]`, chips compactos hasta 760 y rejilla 2×2 hasta 560.
-- **Con la jornada cerrada la home arrastraba 38 px** (`home-geometry.js`): la caja del limbo (cuadrada por
-  necesidad) sobresalía del contenedor y no se puede recortar sin cortar el halo (medido). El motor mide
-  ahora también la luz (`scrollHeight` del `[data-pace-timer-wrap]`) y toma el mayor desborde; tras
-  publicar el sobrante, se vuelve a medir y se cede sobrante si la luz asoma.
-- **La gota del vaso caía sola en la línea de abajo** en móvil (`RitmoPiezas.jsx`, `RitmoMetaGota`): la última
-  palabra y la gota van en un `nowrap` (un inline-grid es un átomo para el partido de líneas).
-
-### Añadido
-- **`scripts/audit/auditoria-viewports-s195.js`**: el censo de viewports × escenas, con informe y una foto por
-  celda; se corre a mano, no es prueba.
-
-### Red
-- **`tests/ritmo-panel.spec.js`, 9 tests**, calibrados en rojo contra el artefacto de HEAD.
-
-### Lo que no cubre
-- La composición de la piel de escritorio en una tableta vertical (aro de 227 flotando): es una decisión
-  de breakpoint, no un arreglo. «BLOQUE 1 DE 9» rozando el trazo del aro a 375×667 por la mañana.
 
 ---
 

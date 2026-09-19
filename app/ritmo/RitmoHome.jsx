@@ -52,10 +52,12 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
   useEffectRH(() => { if (!plan) setHoja(false); }, [!!plan]);
 
   if (R.libre) {
+    /* s195b: por libre, la tarjeta es la del ritmo (RitmoTarjeta), en el sitio y
+       con la cáscara de la del Camino sugerido; «Ver caminos» sigue en su pie. */
     return (
       <React.Fragment>
         <ActivityBar key="act" onOpenLibrary={onOpenLibrary} onOpenHydrate={onOpenHydrate} />
-        <SuggestedPathCard key="spc" vuelta={<RitmoVuelta />} />
+        <RitmoTarjeta key="spc" />
       </React.Fragment>
     );
   }
