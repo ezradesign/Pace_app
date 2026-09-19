@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.126.0</title>
+  <title>PACE · Foco · Cuerpo — v0.127.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2784,8 +2784,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.ritmo.sub': '{h} · lo que el menú tenía para ahora.',
   'break.ritmo.hacer': 'Hacer la pausa',
   'break.ritmo.seguir': 'Seguir con el bloque {n}',
-  'break.ritmo.otra': 'Otra cosa…',
-  'break.ritmo.agua': 'y un vaso de agua'
+  'break.ritmo.agua': 'y un vaso de agua',
+  'break.ritmo.shortcut': 'Atajo: Intro · H · Esc'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -2817,8 +2817,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.ritmo.sub': '{h} · what the menu had for now.',
   'break.ritmo.hacer': 'Take the break',
   'break.ritmo.seguir': 'Go on to block {n}',
-  'break.ritmo.otra': 'Something else…',
-  'break.ritmo.agua': 'and a glass of water'
+  'break.ritmo.agua': 'and a glass of water',
+  'break.ritmo.shortcut': 'Shortcut: Enter · H · Esc'
 });
 })();
 </script>
@@ -3134,7 +3134,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.nombre': 'A tu ritmo',
   'ritmo.pregunta': '¿Cuánto trabajas hoy?',
   'ritmo.sub': 'Te preparo la jornada: cuándo parar, qué hacer y cuánto dura.',
-  'ritmo.frase': 'Empiezas a las {inicio}, comes a las {comida} durante {dur} y terminas a las {salida}.',
+  'ritmo.frase': 'Empiezas a las {inicio}, {comes} a las {comida} durante {dur} y terminas a las {salida}.',
+  'ritmo.frase.sin': 'Empiezas a las {inicio}, {comes} y terminas a las {salida}.',
+  'ritmo.comes': 'comes',
+  'ritmo.nocomes': 'no comes',
+  'ritmo.aria.comes': 'Comer hoy',
+  'ritmo.tarjeta.ajustar': 'Ajustar el horario',
   'ritmo.frase.menu': 'de {inicio} a {salida} · comida a las {comida} durante {dur}',
   'ritmo.frase.menu.sin': 'de {inicio} a {salida}',
   'ritmo.frase.movil': 'De {inicio} a {salida} · comida {comida} · {dur}',
@@ -3197,7 +3202,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.nombre': 'At your pace',
   'ritmo.pregunta': 'How long are you working today?',
   'ritmo.sub': "I'll plan your day: when to pause, what to do and for how long.",
-  'ritmo.frase': 'You start at {inicio}, have lunch at {comida} for {dur} and finish at {salida}.',
+  'ritmo.frase': 'You start at {inicio}, {comes} at {comida} for {dur} and finish at {salida}.',
+  'ritmo.frase.sin': 'You start at {inicio}, {comes} and finish at {salida}.',
+  'ritmo.comes': 'have lunch',
+  'ritmo.nocomes': 'skip lunch',
+  'ritmo.aria.comes': 'Lunch today',
+  'ritmo.tarjeta.ajustar': 'Adjust the schedule',
   'ritmo.frase.menu': 'from {inicio} to {salida} · lunch at {comida} for {dur}',
   'ritmo.frase.menu.sin': 'from {inicio} to {salida}',
   'ritmo.frase.movil': 'From {inicio} to {salida} · lunch {comida} · {dur}',
@@ -5157,7 +5167,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.126.0';
+const PACE_VERSION = 'v0.127.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7388,7 +7398,10 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5,LARGA = 15,MINIMO = 15,COLA = 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
-  var inicio = horario.inicio,salida = horario.salida,comeA = horario.comida;
+  var inicio = horario.inicio,salida = horario.salida;
+  /* s195b: con la comida apagada (`horario.sinComida`) no hay comida que caiga en
+     el día: fuera del alcance, y la regla sigue igual. */
+  var comeA = horario.sinComida ? Infinity : horario.comida;
   var comidaDur = horario.comidaDur || 60;
   var ahora = horario.ahora != null ? horario.ahora : inicio;
   var P0 = previos || null;
@@ -7529,6 +7542,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   return {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
     salida: salida, comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
+    sinComida: !!horario.sinComida,
     focos: focos, pausas: pausas.length, focoMin: dia.foco,
     vasos: dia.items.filter(function (it) {return it.agua;}).length
   };
@@ -7952,7 +7966,8 @@ function ritmoOtra(claves) {
 function ritmoHorario(campo, valor) {
   var R = ritmoDe(getState());
   var horario = Object.assign({}, R.horario);
-  horario[campo] = Number(valor);
+  /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos */
+  horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -24385,19 +24400,18 @@ Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });
      · «Hacer la pausa»  → la rutina, por la puerta de siempre (onChoose con el plato).
      · «Seguir con el bloque N+1» → cierra y arranca el aro (`pace:ritmo-seguir`, que
        FocusTimer escucha): la pausa queda SALTADA al empezar el bloque (state-ritmo).
-     · «Otra cosa…» → despliega los cuatro módulos, que siguen siendo cuatro puertas.
+     · «Hidrátate» → la única sugerencia aparte del plato (el usuario, tras verlo:
+       «quita las cuatro opciones de abajo y deja solo Hidrátate»). Abre el agua.
      · «Saltar esta pausa» → cierra sin más, como siempre (la pausa sigue abierta
        hasta que empiece el bloque).
 
    Solo se pinta cuando la propuesta viene del menú (`porque` = `ritmo.*`) y hay
    plan con pausa abierta; si no, BreakMenu es el de siempre. */
 
-const { useState: useStateBMR } = React;
-
 function BreakMenuRitmo(_ref) {let { open, onClose, onChoose, onSeguir, prop, plan, opciones, nombre } = _ref;
   const { t, tn } = useT();
-  const [otra, setOtra] = useStateBMR(false);
   if (!open || !prop || !plan) return null;
+  const agua = (opciones || []).find((o) => o.key === 'water');
   const rutina = prop.rutina;
   const pausa = plan.pausa;
   const esRespira = prop.modulo === 'breathe';
@@ -24426,24 +24440,20 @@ function BreakMenuRitmo(_ref) {let { open, onClose, onChoose, onSeguir, prop, pl
 
     React.createElement("div", { "data-pace-break-acciones": true, style: { display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' } }, /*#__PURE__*/
     React.createElement(Button, { variant: "terracota", onClick: () => onChoose(prop.modulo, rutina) }, t('break.ritmo.hacer')), /*#__PURE__*/
-    React.createElement(Button, { variant: "secondary", onClick: onSeguir }, tn('break.ritmo.seguir', { n: plan.hechos + 1 })), /*#__PURE__*/
-    React.createElement(Button, { variant: "ghost", onClick: () => setOtra(!otra) }, t('break.ritmo.otra'))
+    React.createElement(Button, { variant: "secondary", onClick: onSeguir }, tn('break.ritmo.seguir', { n: plan.hechos + 1 }))
     ),
-    otra && /*#__PURE__*/
-    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, margin: '14px 0 4px' } },
-    opciones.map((o) => /*#__PURE__*/
-    React.createElement("button", { key: o.key, onClick: () => onChoose(o.key), style: {
-        padding: '13px 14px', background: o.bg, border: '1.5px solid ' + o.color, borderRadius: 'var(--r-md)',
+    agua && /*#__PURE__*/
+    React.createElement("button", { "data-pace-break-agua": true, onClick: () => onChoose('water'), style: {
+        marginTop: 14, width: '100%', padding: '12px 14px', background: agua.bg, border: '1.5px solid ' + agua.color, borderRadius: 'var(--r-md)',
         textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--ink)'
       } }, /*#__PURE__*/
-    React.createElement("span", { style: { color: o.color, fontSize: 24, lineHeight: 1 } }, o.icon), /*#__PURE__*/
-    React.createElement("span", { style: { ...displayItalic, fontSize: 20, fontWeight: 500 } }, o.label)
-    )
-    )
+    React.createElement("span", { style: { color: agua.color, fontSize: 24, lineHeight: 1 } }, agua.icon), /*#__PURE__*/
+    React.createElement("span", { style: { ...displayItalic, fontSize: 20, fontWeight: 500 } }, agua.label), /*#__PURE__*/
+    React.createElement("span", { style: { fontSize: 12, color: 'var(--ink-2)', marginLeft: 'auto' } }, agua.desc)
     ), /*#__PURE__*/
 
     React.createElement("div", { "data-pace-break-shortcut": true, style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 } }, /*#__PURE__*/
-    React.createElement(Meta, null, t('break.shortcut')), /*#__PURE__*/
+    React.createElement(Meta, null, t('break.ritmo.shortcut')), /*#__PURE__*/
     React.createElement(Button, { variant: "ghost", onClick: onClose }, t('break.skip'))
     )
     ));
@@ -31113,7 +31123,7 @@ Object.assign(window, { Onboarding });
 .pace-rt-chip:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
 .pace-rt-chip:disabled { opacity: 0.5; cursor: default; }
 .pace-rt-chip b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 16px; color: var(--ink); line-height: 1.1; }
-.pace-rt-chip > span { display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
+.pace-rt-chip > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 4px; }   /* s195c: la hora en itálica, como en la tarjeta por libre */
 
 /* EL CONTEXTO (fijo por ahora: el onboarding contextual es la Fase 8) */
 .pace-rt-ctx { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
@@ -31225,9 +31235,50 @@ Object.assign(window, { Onboarding });
 .pace-rt-plato-m { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
 
 /* El enlace de vuelta desde «por libre», junto a «Ver caminos». En móvil pierde
-   la pregunta y se queda en «Ponle ritmo al día»: entera no cabe junto al otro. */
+   la pregunta y se queda en «Ponle ritmo al día»: entera no cabe junto al otro.
+   (s195b: ya no se pinta en la home —la tarjeta por libre lo sustituye—; queda por
+   si vuelve a hacer falta un enlace de vuelta.) */
 .pace-rt-solo-esc { display: inline; }
 @media (max-width: 768px) { .pace-rt-solo-esc { display: none; } }
+
+/* LA TARJETA POR LIBRE (s195b, 5A «pero más bonita»): la pregunta en display
+   itálica, la frase de siempre debajo, cuatro losetas con la hora de fin en
+   itálica (no en versalita: es una hora, no un rótulo) y una regla fina que
+   las separa del pie. La loseta se enciende al pasar con el lavado del foco y
+   el borde de la acción; el pie lleva «Ajustar el horario» y «Ver caminos». */
+.pace-rt-tarjeta { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--sh-soft); padding: 16px 22px 16px; text-align: left; }
+.pace-rt-tarjeta-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.pace-rt-tarjeta-enlaces { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-bottom: 2px; }
+.pace-rt-tarjeta-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 1.1; color: var(--ink); }
+.pace-rt-tarjeta-s { font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-3); margin-top: 4px; }
+.pace-rt-losetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.pace-rt-loseta { flex: 1 1 0; min-width: 0; border: 1px solid var(--line) !important; border-radius: var(--r-md);
+  padding: 12px 14px 11px !important; text-align: left; background: var(--paper) !important;
+  transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease), transform var(--dur-quick) var(--ease); }
+.pace-rt-loseta:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; transform: translateY(-1px); }
+.pace-rt-loseta:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-loseta:disabled { opacity: 0.5; cursor: default; }
+.pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
+.pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
+@media (max-width: 768px) {
+  .pace-rt-tarjeta { padding: 14px 14px 12px; }
+  .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
+  .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }
+  .pace-rt-tarjeta-t { font-size: 20px; }
+  .pace-rt-losetas { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .pace-rt-loseta { padding: 10px 12px 9px !important; }
+  .pace-rt-loseta b { font-size: 16px; }
+}
+@container (max-width: 620px) { .pace-rt-losetas { grid-template-columns: 1fr 1fr; } }
+
+/* EL MINI INTERRUPTOR DE LA COMIDA (s195b, 6C): 22×12 en tinta, pegado a la palabra. */
+.pace-rt-comes { white-space: nowrap; }
+.pace-rt-mini-int { display: inline-block; width: 22px; height: 12px; border-radius: 6px; border: 1px solid var(--ink-3) !important; vertical-align: -1px; margin: 0 2px 0 6px; position: relative; background: var(--paper) !important; padding: 0 !important; cursor: pointer; transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease); }
+.pace-rt-mini-int::after { content: ''; position: absolute; top: 1px; left: 1px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); transition: left var(--dur-quick) var(--ease), background var(--dur-quick) var(--ease); }
+.pace-rt-mini-int.pace-rt-on { background: var(--ink) !important; border-color: var(--ink) !important; }
+.pace-rt-mini-int.pace-rt-on::after { left: 11px; background: var(--paper); }
+.pace-rt-mini-int:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 
 @media (max-width: 768px) {
   .pace-rt-panel { padding: 12px 14px 10px; }
@@ -31356,20 +31407,37 @@ function RitmoSelector(_ref4) {let { campo, horario } = _ref4;
 
 }
 
+/* COMER O NO (s195b, variante 6C elegida mirándola): la palabra «comes» lleva
+   pegado un mini interruptor de 22×12 en tinta. Apagado, la frase pierde el tramo
+   de la comida (plantilla «.sin») y la regla no la sirve (`horario.sinComida`). */
+function RitmoInterruptorComida(_ref5) {let { horario } = _ref5;
+  const { t } = useT();
+  const on = !horario.sinComida;
+  return (/*#__PURE__*/
+    React.createElement("span", { className: "pace-rt-comes" },
+    t(on ? 'ritmo.comes' : 'ritmo.nocomes'), /*#__PURE__*/
+    React.createElement("button", { type: "button", role: "switch", "aria-checked": on, "aria-label": t('ritmo.aria.comes'),
+      className: 'pace-rt-mini-int' + (on ? ' pace-rt-on' : ''), "data-pace-ritmo-comes": true,
+      onClick: () => ritmoHorario('sinComida', on ? 1 : 0) })
+    ));
+
+}
+
 function ritmoHuecos(horario) {
   return {
     inicio: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "inicio", horario: horario }),
     comida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "comida", horario: horario }),
     dur: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "comidaDur", horario: horario }),
-    salida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "salida", horario: horario })
+    salida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "salida", horario: horario }),
+    comes: /*#__PURE__*/React.createElement(RitmoInterruptorComida, { horario: horario })
   };
 }
 
 Object.assign(window, {
-  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
+  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
   RitmoFrase, RitmoSelector, ritmoHuecos
 });
-;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, ritmoHuecos });
+;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, RitmoInterruptorComida, ritmoHuecos });
 })();
 </script>
   <script>
@@ -31665,7 +31733,7 @@ function RitmoChips(_ref2) {let { state } = _ref2;
 function RitmoPregunta(_ref3) {let { state } = _ref3;
   const { t } = useT();
   const R = ritmoDe(state);
-  const frase = /*#__PURE__*/React.createElement(RitmoFrase, { plantilla: t('ritmo.frase'), huecos: ritmoHuecos(R.horario) });
+  const frase = /*#__PURE__*/React.createElement(RitmoFrase, { plantilla: t(R.horario.sinComida ? 'ritmo.frase.sin' : 'ritmo.frase'), huecos: ritmoHuecos(R.horario) });
   return (/*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-panel pace-rt-esc", "data-pace-ritmo-estado": "pregunta" }, /*#__PURE__*/
@@ -31934,6 +32002,66 @@ Object.assign(window, { RitmoLista, RitmoHoja });
 </script>
   <script>
 ;(function () {
+/* PACE · A tu ritmo · LA TARJETA POR LIBRE (s195b)
+   ==============================================
+   Por libre, la home enseñaba los cuatro chips y la tarjeta del Camino sugerido
+   con «¿Cuánto trabajas hoy? Ponle ritmo al día» como un enlace pequeño. El
+   usuario: «sustituyendo a la de Caminos, que sea muy visual» — y eligió la
+   variante 5A de la ronda 2 (docs/proposals/ideas-s195-r2.html), «pero más
+   bonita». Un toque en una loseta sirve el día; «Ajustar el horario» abre la
+   pregunta entera; «Ver caminos» sigue abriendo la biblioteca de Caminos, que
+   no sale del producto: sale de la home.
+
+   MISMA CÁSCARA que la tarjeta del Camino, y eso no es pereza: `[data-pace-spc]`
+   lo observa el motor de geometría (home-geometry.js) y lo mueve la piel
+   (`_responsive.pieles.js`), y `[data-pace-spc-card]` lleva el reflejo de la luz
+   (s159: «la luz reaparece por debajo de la tarjeta»). Cambia el contenido, no el
+   sitio. Con un Camino en curso no se pinta (PathRunner manda), como antes. */
+
+function RitmoTarjeta() {
+  const [state] = usePace();
+  const { t, tn } = useT();
+  if (state.paths && state.paths.current) return null;
+  const abrirCaminos = () => window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
+  return (/*#__PURE__*/
+    React.createElement("div", { "data-pace-spc": true, style: { padding: '0 40px 12px', flexShrink: 0 } }, /*#__PURE__*/
+    React.createElement("div", { "data-pace-spc-card": true, "data-pace-ritmo-tarjeta": true, className: "pace-rt-tarjeta" }, /*#__PURE__*/
+
+
+    React.createElement("div", { className: "pace-rt-tarjeta-cab" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-tarjeta-t" }, t('ritmo.pregunta')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-tarjeta-s" }, t('ritmo.sub'))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-tarjeta-enlaces" }, /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoVolver }, t('ritmo.tarjeta.ajustar')), /*#__PURE__*/
+    React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-losetas" },
+    RITMO_OPCIONES_UI.map((op) => {
+      const m = ritmoMenu(state, op, null, null);
+      const vacia = !m || !m.focos.length;
+      return (/*#__PURE__*/
+        React.createElement("button", { key: op, type: "button", className: "pace-rt-loseta", "data-pace-ritmo-loseta": op,
+          disabled: vacia, onClick: () => ritmoElegir(op) }, /*#__PURE__*/
+        React.createElement("b", null, t('ritmo.opcion.' + op)), /*#__PURE__*/
+        React.createElement("span", null, vacia ? t('ritmo.fuera') : tn('ritmo.hasta', { h: ritmoHora(m.hasta) }))
+        ));
+
+    })
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, { RitmoTarjeta });
+;Object.assign(window, { RitmoTarjeta });
+})();
+</script>
+  <script>
+;(function () {
 /* PACE · A tu ritmo · el bloque de la HOME (s192)
    ===============================================
    Va donde iban Actividades y el Camino sugerido (main.jsx), y decide:
@@ -31988,10 +32116,12 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
   useEffectRH(() => {if (!plan) setHoja(false);}, [!!plan]);
 
   if (R.libre) {
+    /* s195b: por libre, la tarjeta es la del ritmo (RitmoTarjeta), en el sitio y
+       con la cáscara de la del Camino sugerido; «Ver caminos» sigue en su pie. */
     return (/*#__PURE__*/
       React.createElement(React.Fragment, null, /*#__PURE__*/
       React.createElement(ActivityBar, { key: "act", onOpenLibrary: onOpenLibrary, onOpenHydrate: onOpenHydrate }), /*#__PURE__*/
-      React.createElement(SuggestedPathCard, { key: "spc", vuelta: /*#__PURE__*/React.createElement(RitmoVuelta, null) })
+      React.createElement(RitmoTarjeta, { key: "spc" })
       ));
 
   }

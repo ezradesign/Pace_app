@@ -100,7 +100,7 @@
 .pace-rt-chip:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
 .pace-rt-chip:disabled { opacity: 0.5; cursor: default; }
 .pace-rt-chip b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 16px; color: var(--ink); line-height: 1.1; }
-.pace-rt-chip > span { display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
+.pace-rt-chip > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 4px; }   /* s195c: la hora en itálica, como en la tarjeta por libre */
 
 /* EL CONTEXTO (fijo por ahora: el onboarding contextual es la Fase 8) */
 .pace-rt-ctx { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
@@ -212,9 +212,50 @@
 .pace-rt-plato-m { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
 
 /* El enlace de vuelta desde «por libre», junto a «Ver caminos». En móvil pierde
-   la pregunta y se queda en «Ponle ritmo al día»: entera no cabe junto al otro. */
+   la pregunta y se queda en «Ponle ritmo al día»: entera no cabe junto al otro.
+   (s195b: ya no se pinta en la home —la tarjeta por libre lo sustituye—; queda por
+   si vuelve a hacer falta un enlace de vuelta.) */
 .pace-rt-solo-esc { display: inline; }
 @media (max-width: 768px) { .pace-rt-solo-esc { display: none; } }
+
+/* LA TARJETA POR LIBRE (s195b, 5A «pero más bonita»): la pregunta en display
+   itálica, la frase de siempre debajo, cuatro losetas con la hora de fin en
+   itálica (no en versalita: es una hora, no un rótulo) y una regla fina que
+   las separa del pie. La loseta se enciende al pasar con el lavado del foco y
+   el borde de la acción; el pie lleva «Ajustar el horario» y «Ver caminos». */
+.pace-rt-tarjeta { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--sh-soft); padding: 16px 22px 16px; text-align: left; }
+.pace-rt-tarjeta-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.pace-rt-tarjeta-enlaces { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-bottom: 2px; }
+.pace-rt-tarjeta-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 1.1; color: var(--ink); }
+.pace-rt-tarjeta-s { font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-3); margin-top: 4px; }
+.pace-rt-losetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.pace-rt-loseta { flex: 1 1 0; min-width: 0; border: 1px solid var(--line) !important; border-radius: var(--r-md);
+  padding: 12px 14px 11px !important; text-align: left; background: var(--paper) !important;
+  transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease), transform var(--dur-quick) var(--ease); }
+.pace-rt-loseta:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; transform: translateY(-1px); }
+.pace-rt-loseta:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-loseta:disabled { opacity: 0.5; cursor: default; }
+.pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
+.pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
+@media (max-width: 768px) {
+  .pace-rt-tarjeta { padding: 14px 14px 12px; }
+  .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
+  .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }
+  .pace-rt-tarjeta-t { font-size: 20px; }
+  .pace-rt-losetas { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .pace-rt-loseta { padding: 10px 12px 9px !important; }
+  .pace-rt-loseta b { font-size: 16px; }
+}
+@container (max-width: 620px) { .pace-rt-losetas { grid-template-columns: 1fr 1fr; } }
+
+/* EL MINI INTERRUPTOR DE LA COMIDA (s195b, 6C): 22×12 en tinta, pegado a la palabra. */
+.pace-rt-comes { white-space: nowrap; }
+.pace-rt-mini-int { display: inline-block; width: 22px; height: 12px; border-radius: 6px; border: 1px solid var(--ink-3) !important; vertical-align: -1px; margin: 0 2px 0 6px; position: relative; background: var(--paper) !important; padding: 0 !important; cursor: pointer; transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease); }
+.pace-rt-mini-int::after { content: ''; position: absolute; top: 1px; left: 1px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); transition: left var(--dur-quick) var(--ease), background var(--dur-quick) var(--ease); }
+.pace-rt-mini-int.pace-rt-on { background: var(--ink) !important; border-color: var(--ink) !important; }
+.pace-rt-mini-int.pace-rt-on::after { left: 11px; background: var(--paper); }
+.pace-rt-mini-int:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 
 @media (max-width: 768px) {
   .pace-rt-panel { padding: 12px 14px 10px; }

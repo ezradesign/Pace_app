@@ -836,6 +836,16 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
   ejercicio principal** a 62 px (el de las tarjetas de rutina) a la izquierda; debajo, tres acciones en fila:
   terracota (hacer la pausa), secundaria (seguir con el bloque), fantasma (otra cosa, que despliega los cuatro
   módulos en dos columnas). El pie de siempre.
+- **La tarjeta por libre (s195 · v0.127.0)**: en el sitio del Camino sugerido, mismo papel/línea/radio/sombra.
+  Cabecera en una fila: «¿Cuánto trabajas hoy?» en display itálica 24 y la frase de siempre en 13 `--ink-3`;
+  a la derecha, «Ajustar el horario» y «Ver caminos» como `.pace-rt-enlace`. Cuatro losetas (`--r-md`,
+  padding 12/14) con el nombre en itálica 19 y **la hora de fin en itálica 13 `--ink-2`** (no en versalita: es
+  una hora, no un rótulo); en hover, lavado `--focus-soft`, borde `--focus-cta` y 1 px de elevación. En móvil,
+  2×2 y los enlaces en una fila propia.
+- **La comida como interruptor (s195 · v0.127.0)**: la palabra «comes» / «no comes» seguida de un interruptor de
+  22×12 (`--ink-3` de borde y bola; encendido, relleno `--ink` y bola `--paper`), pegado con 6 px, sin texto.
+- **La pausa con menú (s195 · v0.127.0)**: bajo las dos acciones, una única tarjeta «Hidrátate · agua ahora» en
+  `--hydrate-soft` con borde `--hydrate`; nada más.
 - **Los chips de Actividades (por libre) caben siempre (s195 · v0.125.3)**: bajo 760 px de contenedor se
   compactan (padding 12/14, gap 10) y bajo 560 van en la rejilla 2×2 de móvil.
 

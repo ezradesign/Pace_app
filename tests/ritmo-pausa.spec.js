@@ -93,11 +93,10 @@ test('al acabar el bloque, «Tu pausa» con el plato y su glifo; «Seguir» arra
   const glifo = modal.locator('[data-pace-break-glifo]');
   await expect(glifo, 'el plato lleva el glifo de su ejercicio').toHaveCount(1);
   expect(await glifo.evaluate((e) => { const r = e.firstElementChild && e.firstElementChild.getBoundingClientRect(); return r ? Math.round(r.width) : 0; }), 'el glifo no pinta').toBeGreaterThan(30);
-  /* los cuatro módulos, plegados hasta «Otra cosa…» */
+  /* s195c: aparte del plato, solo «Hidrátate»; los otros tres módulos no están */
   await expect(modal.getByRole('button', { name: 'Respira', exact: true })).toHaveCount(0);
-  await modal.getByRole('button', { name: 'Otra cosa…', exact: true }).click();
-  await expect(modal.getByRole('button', { name: 'Respira', exact: true })).toBeVisible();
-  await expect(modal.getByRole('button', { name: 'Hidrátate', exact: true })).toBeVisible();
+  await expect(modal.getByRole('button', { name: 'Otra cosa…', exact: true })).toHaveCount(0);
+  await expect(modal.locator('[data-pace-break-agua]')).toContainText('Hidrátate');
   /* seguir: el aro arranca el bloque 2 y la parada 1 queda saltada */
   await modal.getByRole('button', { name: 'Seguir con el bloque 2', exact: true }).click();
   await expect(modal).toHaveCount(0);

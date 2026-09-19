@@ -350,15 +350,23 @@ test('la pausa abierta sobrevive a la recarga, y tocar la parada empieza su plat
   await expect(preview.getByRole('button', { name: 'Empezar', exact: true })).toBeVisible();
 });
 
-test('«Hoy voy por libre» devuelve la carta, y su enlace vuelve a la pregunta', async ({ page, context }) => {
+test('«Hoy voy por libre» devuelve la carta con la tarjeta del ritmo; una loseta sirve el día y «Ajustar» vuelve a la pregunta', async ({ page, context }) => {
   await abrir(page, context, { dia: JORNADA });
   await vis(page, '[data-pace-ritmo-libre]').first().click();
   await expect(vis(page, '[data-pace-activitybar-grid]')).toHaveCount(1);
   await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Foco manual');
-  const volver = vis(page, '[data-pace-ritmo-volver]');
-  await expect(volver).toHaveText('¿Cuánto trabajas hoy? Ponle ritmo al día');
-  await volver.click();
+  /* s195b: la tarjeta por libre ocupa el sitio del Camino sugerido (misma cáscara [data-pace-spc]) */
+  const tarjeta = vis(page, '[data-pace-ritmo-tarjeta]');
+  await expect(tarjeta).toContainText('¿Cuánto trabajas hoy?');
+  await expect(tarjeta.locator('[data-pace-ritmo-loseta]')).toHaveCount(4);
+  await expect(tarjeta.locator('[data-pace-ritmo-loseta="jornada"]')).toContainText('Hasta las 17:00');
+  await expect(page.locator('[data-pace-spc]')).toHaveCount(1);
+  await expect(tarjeta.locator('[data-pace-ritmo-caminos]')).toHaveText('Ver caminos');
+  await tarjeta.locator('[data-pace-ritmo-ajustar]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toHaveCount(1);
+  await vis(page, '[data-pace-ritmo-libre]').first().click();
+  await vis(page, '[data-pace-ritmo-loseta="2h"]').click();
+  await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Dos horas');
 });
 
 test('la hora de salida y la de comer se cambian dentro de la frase', async ({ page, context }) => {
