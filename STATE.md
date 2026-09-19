@@ -245,7 +245,18 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s195c publica **v0.128.1, «los acentos sirven lo que cabe»**: al re-medir la semana sobre el artefacto
+> **s196 (2026-09-19) NO PUBLICA VERSION: decide.** Cuatro paginas de propuestas con fotos de la app real
+> (`docs/proposals/por-donde-seguir-s196.html` · `lo-hecho-contado-s196.html` · `decidir-s196.html` · `ronda4-s196.html`)
+> y el usuario decidio, en este orden: **B** la hoja del dia con hecha/saltada · **C1** la frase «Llevas seis bloques y
+> cuatro pausas» en la barra lateral (itálica serif; las saltadas no se nombran) · **D** la tableta vertical lleva la piel
+> de movil hasta 1024 (`(orientation: portrait) and (max-width: 1024px)`) · **media jornada = HORARIO** propio y recordado
+> (de/a, sin comida, editable en su cabecera y en «Ajustar el horario»; fuera de hora se apaga) · **la comida solo en la
+> jornada completa** (tampoco en Una hora / Dos horas). Paquete recomendado y no contradicho: **v0.129.0 lo hecho + media
+> jornada; v0.130.0 la tableta**. Pendiente de VER: «Ajustar el horario» con las horas de la media jornada (html pedido).
+> **El usuario migra a otra cuenta: TODO esta en
+> [session-196-handoff-decisiones](./docs/sessions/session-196-handoff-decisiones.md), que se lee ANTES de tocar nada.**
+>
+> Antes, s195c publica **v0.128.1, «los acentos sirven lo que cabe»**: al re-medir la semana sobre el artefacto
 > publicado (no copiada del hilo), el jueves servia Coherente 6·6 (10') en una pausa de 5' y el viernes en
 > el cierre. La regla nunca mira duraciones porque nunca le hizo falta; los acentos fueron el primer Respira
 > fuera de la larga. Arreglo en `toma(…, cabe)`; test del invariante («cada plato cabe en su parada, los
