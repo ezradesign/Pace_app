@@ -57,11 +57,16 @@ test('«Una hora» a las 14:30 no habla de comida y dice las horas de hoy', asyn
 });
 
 test.describe('móvil', () => {
-  test.use({ viewport: { width: 412, height: 844 }, isMobile: true, hasTouch: true });
+  test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
   test('la frase compacta tampoco habla de comida, y la gota va pegada a su última palabra', async ({ page, context }) => {
-    await abrir(page, context, { sidebarCollapsed: true, ritmo: { horario: HORARIO_TARDE, dia: { fecha: '2026-09-19', opcion: '1h', desde: 870, cicloBase: 0, cambios: {} } } }, SABADO);
+    /* la tarde del usuario: «Una hora» desde las 17:20, bloque 2 recolocado a las 19:30; «Luego» es el
+       cierre («2 min · Respira · Para cerrar la jornada» + gota), que a 360 px cabe justo y la gota caía sola */
+    await abrir(page, context, { sidebarCollapsed: true, cycle: 1, lastActiveDay: VIE, _historyMigrated: true,
+      ritmo: { horario: { inicio: 780, comida: 960, comidaDur: 30, salida: 1140 }, dia: { fecha: HOY, opcion: '1h', desde: 1170, cicloBase: 0, cambios: {}, primerBloque: 25,
+        pasado: [{ tipo: 'foco', desde: 1040, dur: 25 }, { tipo: 'pausa', desde: 1065, dur: 5, motivo: 'silla', platos: [{ modulo: 'estira', id: 'move.hamstrings.standing', name: 'Cadena posterior de pie', min: 4, clave: 'p1' }] }] } } },
+      new Date('2026-09-18T19:31:00+02:00'));
     const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
-    await expect(panel).toContainText('De 14:30 a 15:30');
+    await expect(panel).toContainText('De 17:20 a 20:00');
     await expect(panel).not.toContainText('comida');
     const g = await page.evaluate(() => {
       const fila = Array.from(document.querySelectorAll('.pace-rt-mov .pace-rt-fila')).find((f) => f.querySelector('.pace-rt-gota'));

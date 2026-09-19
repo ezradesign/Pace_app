@@ -200,6 +200,14 @@ function PaceApp() {
     setOpenBreakMenu(true);
   };
 
+  /* s195 · «Seguir con el bloque N+1» (la pausa con menú): cierra el modal y arranca
+     el aro por la puerta de siempre (FocusTimer escucha `pace:ritmo-seguir` y
+     llama a su propio arranque, que cierra la pausa y la deja saltada). */
+  const handleBreakSeguir = () => {
+    setOpenBreakMenu(false);
+    window.dispatchEvent(new CustomEvent('pace:ritmo-seguir'));
+  };
+
   const handleBreakChoice = (choice, rutina, desdeMenu) => {
     setOpenBreakMenu(false);
     /* s194 · la pausa es una puerta; `desdeMenu` dice si lo elegido era el plato que
@@ -353,6 +361,7 @@ function PaceApp() {
         open={openBreakMenu}
         onClose={() => setOpenBreakMenu(false)}
         onChoose={handleBreakChoice}
+        onSeguir={handleBreakSeguir}
       />
       <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
 

@@ -34,6 +34,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'break.recommended':             'Para ti',
     'break.shortcut':                'Atajo: B · E · M · H · Esc',
     'break.skip':                    'Saltar esta pausa',
+    'break.ritmo.tag':               'Bloque {n} de {m} · hecho',
+    'break.ritmo.title':             'Tu pausa',
+    'break.ritmo.sub':               '{h} · lo que el menú tenía para ahora.',
+    'break.ritmo.hacer':             'Hacer la pausa',
+    'break.ritmo.seguir':            'Seguir con el bloque {n}',
+    'break.ritmo.otra':              'Otra cosa…',
+    'break.ritmo.agua':              'y un vaso de agua',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -60,4 +67,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'break.recommended':             'For you',
     'break.shortcut':                'Shortcut: B · E · M · H · Esc',
     'break.skip':                    'Skip this break',
+    'break.ritmo.tag':               'Block {n} of {m} · done',
+    'break.ritmo.title':             'Your break',
+    'break.ritmo.sub':               '{h} · what the menu had for now.',
+    'break.ritmo.hacer':             'Take the break',
+    'break.ritmo.seguir':            'Go on to block {n}',
+    'break.ritmo.otra':              'Something else…',
+    'break.ritmo.agua':              'and a glass of water',
 });

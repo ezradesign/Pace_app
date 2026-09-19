@@ -175,6 +175,9 @@ function emitSessionCompleted(module, routineId, datos) {
   if (!evento) return null;
   paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
   paceEmitirEvento(evento, function () { paceUltimaSesion = null; });
+  /* s195: una sesión terminada mientras la pausa de «A tu ritmo» está abierta la
+     deja HECHA (de lo que sea: hiciste una pausa). Sin pausa abierta, no hace nada. */
+  if (typeof window.ritmoPausaHecha === 'function') { try { window.ritmoPausaHecha(); } catch (e) {} }
   return runId;
 }
 

@@ -21,7 +21,7 @@ function computeScore(key, state) {
   return 0;
 }
 
-function BreakMenu({ open, onClose, onChoose }) {
+function BreakMenu({ open, onClose, onChoose, onSeguir }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { const v = t(key); return v === key ? fb : v; };
   const state = getState();
@@ -109,6 +109,15 @@ function BreakMenu({ open, onClose, onChoose }) {
      necesita para que el modal NO crezca -- medido: 616 px fijos, y a 360x640
      solo sobran 24. */
   const topScore = prop ? 0 : opts[0].score;
+
+  /* s195: CON MENÚ, OTRO MODAL. Si la propuesta es el plato de «A tu ritmo» y hay
+     una pausa abierta, la pregunta es una sola (¿haces la pausa, o sigues?) y la
+     pinta BreakMenu.ritmo.jsx. Sin menú, o por libre, este modal no cambia. */
+  const plan = (prop && typeof prop.porque === 'string' && prop.porque.indexOf('ritmo.') === 0 && typeof ritmoPlan === 'function') ? ritmoPlan(state) : null;
+  if (plan && plan.pausa && typeof BreakMenuRitmo === 'function') {
+    return <BreakMenuRitmo open={open} onClose={onClose} onSeguir={onSeguir} prop={prop} plan={plan} nombre={nombreProp}
+      opciones={baseOpts} onChoose={(key, rutina) => handleChoose(key, rutina)} />;
+  }
 
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>

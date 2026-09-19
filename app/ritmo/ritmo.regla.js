@@ -61,8 +61,11 @@ var RITMO_FORMAS = {
    `pozos` = { estira: [r], mueve: [r], respira: [r], cierre: [r] } con rutinas
    del catálogo (se usan `id`, `name` y `min`). `cambios` = { clave: n } cuando la
    persona ha pedido «otra» n veces en esa pausa. `previos` (opcional) = { bloques,
-   pausas, foco, comidaHecha, usados: [id], vasos, claves, primerBloque } — lo ya
-   hecho cuando se recompone el resto del día desde `horario.ahora` (ver arriba). */
+   pausas, foco, comidaHecha, usados: [id], vasos, ultimoVaso, claves, primerBloque,
+   pausaPendiente, bloque } — lo ya hecho cuando se recompone el resto del día desde
+   `horario.ahora` (ver arriba). `pausaPendiente` (s195): el bloque acaba de
+   TERMINAR y lo primero que se sirve es su pausa, ahora mismo. `bloque` (s195): la
+   duración que la persona puso en el aro, que manda en los bloques que vienen. */
 function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30;
   var forma = RITMO_FORMAS[opcion];
@@ -73,6 +76,10 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var P0 = previos || null;
   /* Sin previos, el día espera a tu hora de inicio; recolocando, empieza AHORA. */
   var desde = P0 ? ahora : Math.max(inicio, ahora);
+  /* s195: si la persona puso el aro a otra duración (25 con un plan de 45), el
+     resto del día va con ESA (`previos.bloque`): «si cambio la duración del
+     pomodoro, ¿se ajustan las horas?» — sí, y también los bloques que vienen. */
+  var bloque = P0 && P0.bloque ? P0.bloque : forma.bloque;
   var P = pozos || {};
   cambios = cambios || {};
   var meta = metaAgua || 8;
@@ -87,7 +94,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     var foco = forma.foco;
     var finTrabajo = fin - PAUSA;                      /* el cierre ocupa un hueco */
     var falta = !(P0 && P0.comidaHecha) && desde < comeA && comeA < finTrabajo;   /* ¿queda comida delante? */
-    var cola = Math.min(COLA, forma.bloque - 5);
+    var cola = Math.min(COLA, bloque - 5);
     /* Comer «por delante» solo manda si aún queda foco que servir DESPUÉS: si
        no, el día acaba aquí (en la maqueta, «Una hora» esperaba 245 min). */
     function comerAntes() { return falta && foco - hecho >= MINIMO && finTrabajo - comeA - comidaDur >= MINIMO; }
@@ -96,6 +103,19 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       t = Math.max(t, comeA);   /* el bloque forzado puede haber cruzado la hora: se come al acabarlo */
       items.push({ tipo: 'comida', desde: t, dur: comidaDur });
       t += comidaDur; falta = false; enMitad = 0;
+    }
+    /* s195: RECOLOCAR AL TERMINAR. El bloque acaba de acabar y su pausa se sirve
+       AHORA, antes de ningún bloque — salvo que ya no quepa otro bloque (entonces
+       la pausa es el cierre, que pone el final) o que la comida esté encima (la
+       comida es la pausa; el bucle la sirve). */
+    if (P0 && P0.pausaPendiente) {
+      var p0 = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
+      var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0));
+      if ((queda0 >= MINIMO || comerAntes()) && !(falta && t + p0 > comeA)) {
+        enMitad++;
+        items.push({ tipo: 'pausa', larga: p0 === LARGA, n: enMitad, desde: t, dur: p0 });
+        t += p0;
+      }
     }
     for (;;) {
       var p = (enMitad + 1) % 3 === 0 ? LARGA : PAUSA;
@@ -109,9 +129,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
           if (comerAntes()) { comer(); continue; }
           break;
         }
-        dur = forma.bloque;
-        if (rem <= forma.bloque) dur = rem;
-        else if (rem - forma.bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
+        dur = bloque;
+        if (rem <= bloque) dur = rem;
+        else if (rem - bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
         if (falta && t + dur > comeA) {
           if (comeA - t < MINIMO) { comer(); continue; }
           dur = comeA - t;
@@ -164,12 +184,26 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     }
   });
 
+  /* EL AGUA VA POR TIEMPO, no por pausas (s195, decisión del usuario). Antes la
+     meta del día (8) se repartía entre las pausas que hubiera: «Dos horas» daba
+     4 vasos en dos horas y cuarto, uno cada 35 min. La EFSA fija 2,0-2,5 l/día en
+     total (un 20-30 % viene de la comida): 6-8 vasos de 250 ml repartidos en el
+     día ENTERO, y en salud laboral, un vaso por hora de trabajo. Regla: un vaso
+     en cada parada a la que se llega con >= 50 min desde el último (el inicio
+     del día cuenta como último); la comida siempre lleva vaso y reinicia la
+     cuenta desde que acaba; tope, la meta del día menos lo ya bebido. Una hora
+     de trabajo son 1-2 vasos; la jornada entera, 7-8. */
+  var CADA = 50;
   var pausas = dia.items.filter(function (it) { return it.tipo === 'pausa'; });
   var comidas = dia.items.filter(function (it) { return it.tipo === 'comida'; });
-  comidas.forEach(function (it) { it.agua = true; });
-  dia.items[dia.items.length - 1].agua = true;
-  var quedan = Math.max(0, Math.min(pausas.length, meta - (P0 ? P0.vasos || 0 : 0) - comidas.length - 1));
-  for (var k = 0; k < quedan; k++) pausas[Math.floor((k + 0.5) * pausas.length / quedan)].agua = true;
+  var cupo = Math.max(0, meta - (P0 ? P0.vasos || 0 : 0));
+  var ultimo = P0 && P0.ultimoVaso != null ? P0.ultimoVaso : desde;
+  dia.items.forEach(function (it) {
+    if (it.tipo !== 'pausa' && it.tipo !== 'cierre' && it.tipo !== 'comida') return;
+    if (cupo <= 0) return;
+    if (it.tipo === 'comida') { it.agua = true; ultimo = it.desde + it.dur; cupo--; }
+    else if (it.desde - ultimo >= CADA) { it.agua = true; ultimo = it.desde; cupo--; }
+  });
 
   /* (s194: aquí cada bloque llevaba `de`, el total del día. Nadie lo leía —el total
      lo da `plan.total`— y el banco lo destapó como mutante vivo: fuera.) */

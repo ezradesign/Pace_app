@@ -155,6 +155,19 @@ function FocusTimer({ onFinish }) {
      sin tocar state.cycle. */
   const handleStartAnotherCycle = () => { startFocusVisual(); reset(); start(); };
 
+  /* s195 · «Seguir con el bloque N+1» desde la pausa con menú (BreakMenu.ritmo.jsx):
+     el mismo arranque que el botón del aro, según el estado del motor. Se escucha
+     por evento para no enhebrar un handler por main.jsx hasta aquí. */
+  useEffectFT(() => {
+    const seguir = () => {
+      if (state.focusMode !== 'foco') return;
+      if (status === 'completed') handleStartAnotherCycle();
+      else if (status === 'idle') handleNormalStart();
+    };
+    window.addEventListener('pace:ritmo-seguir', seguir);
+    return () => window.removeEventListener('pace:ritmo-seguir', seguir);
+  });
+
   /* Etiqueta + acción del botón principal por ESTADO del motor (s124, SIN
      glifos). Basado en `status` (no en remaining===totalSec) para que pausar
      dentro del primer segundo muestre «Continuar» y no «Empezar foco»:

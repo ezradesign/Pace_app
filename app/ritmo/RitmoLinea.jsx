@@ -27,11 +27,17 @@
 
 const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL } = React;
 
-function RitmoEtiqueta({ it, final, t, tn, lang }) {
+function RitmoEtiqueta({ it, final, t, tn, lang, estado }) {
   let nombre, meta;
   if (it.tipo === 'comida') {
     nombre = t('ritmo.comida');
     meta = t('ritmo.comida.lejos');
+  } else if (estado) {
+    /* s195: lo pasado dice si se hizo: «hecha · 3 min» o «saltada» */
+    nombre = it.larga ? it.platos.map((p, i) => (
+      <React.Fragment key={p.id}>{i ? <br /> : null}{i ? '+ ' : ''}{ritmoNombre(p.rutina, t, lang)}</React.Fragment>
+    )) : ritmoPlatos(it, t, lang);
+    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada');
   } else if (it.larga) {
     nombre = it.platos.map((p, i) => (
       <React.Fragment key={p.id}>{i ? <br /> : null}{i ? '+ ' : ''}{ritmoNombre(p.rutina, t, lang)}</React.Fragment>
@@ -46,7 +52,7 @@ function RitmoEtiqueta({ it, final, t, tn, lang }) {
     <span className={'pace-rt-etiq' + (final ? ' pace-rt-final' : '')} data-pace-ritmo-etiq>
       <span className="pace-rt-h">{ritmoHora(it.desde)}</span>
       <span className="pace-rt-n">{nombre}</span>
-      <span className="pace-rt-m">{meta}{it.agua ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}</span>
+      <span className="pace-rt-m">{meta}{it.agua && estado !== 'saltada' ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}</span>
     </span>
   );
 }
@@ -160,17 +166,20 @@ function RitmoLinea({ plan }) {
           const pasado = i < iActual;
           const abierta = i === iActual;
           const nombres = ritmoPlatos(it, t, lang);
+          /* s195: la parada pasada dice si se HIZO o se SALTÓ (dia.estados, por ordinal) */
+          const estado = pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
           return (
             <button key={i} type="button" data-pace-ritmo-parada={it.platos.map((p) => p.clave).join(',')}
-              className={'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca') + (abierta ? ' pace-rt-ahora' : '')}
+              data-pace-ritmo-estado-parada={estado || undefined}
+              className={'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca') + (abierta ? ' pace-rt-ahora' : '') + (estado ? ' pace-rt-' + estado : '')}
               style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }}
-              title={pasado ? nombres : nombres + ' · ' + t(abierta ? 'ritmo.empieza' : 'ritmo.toca')}
-              aria-label={ritmoHora(it.desde) + ' · ' + nombres + (abierta ? ' · ' + t('ritmo.ahora') : '')}
+              title={pasado ? nombres + (estado ? ' · ' + t('ritmo.' + estado) : '') : nombres + ' · ' + t(abierta ? 'ritmo.empieza' : 'ritmo.toca')}
+              aria-label={ritmoHora(it.desde) + ' · ' + nombres + (abierta ? ' · ' + t('ritmo.ahora') : '') + (estado ? ' · ' + t('ritmo.' + estado) : '')}
               disabled={pasado}
               onClick={() => abierta ? ritmoEmpezarParada(it) : ritmoOtra(it.platos.map((p) => p.clave))}>
               {abierta ? <span className="pace-rt-ahora-tag">{t('ritmo.ahora')}</span> : null}
               {it.platos.map((p) => <RitmoGlifo key={p.id} modulo={p.modulo} />)}
-              <RitmoEtiqueta it={it} final={i === ultimo} t={t} tn={tn} lang={lang} />
+              <RitmoEtiqueta it={it} final={i === ultimo} t={t} tn={tn} lang={lang} estado={estado} />
             </button>
           );
         })}
@@ -192,7 +201,8 @@ function RitmoMini({ plan }) {
           return <div key={i} className={'pace-rt-seg pace-rt-' + it.tipo + clase} style={{ flex: it.dur + ' 1 0' }} />;
         }
         if (!it.platos || !it.platos.length) return null;
-        return <span key={i} className={'pace-rt-punto' + (it.larga ? ' pace-rt-larga' : '') + (i === iActual ? ' pace-rt-ahora' : '')} style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }} />;
+        const estado = i < iActual ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
+        return <span key={i} className={'pace-rt-punto' + (it.larga ? ' pace-rt-larga' : '') + (i === iActual ? ' pace-rt-ahora' : '') + (estado ? ' pace-rt-' + estado : '')} style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }} />;
       })}
     </div>
   );
