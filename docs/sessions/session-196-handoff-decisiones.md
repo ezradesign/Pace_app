@@ -26,6 +26,7 @@
 | `por-donde-seguir-s196.html` (`por-donde-seguir-s196.js`) | Dónde estamos, la semana como se ve (dos lunes reales), cinco rutas con ficha, fotos de la tarde y de la tableta | El usuario pidió verlo todo pintado |
 | `lo-hecho-contado-s196.html` (`lo-hecho-contado-s196.js`) | La barra lateral con lo hecho (nada · frase · «4 de 7» · puntos), la hoja del día con hecha/saltada, media jornada con horas, miércoles, oscuro, tableta con las dos pieles | **B** hoja con hecha/saltada · C3 rechazado por redundante · **tableta con piel de móvil** («así se ve perfecto») |
 | `decidir-s196.html` (`decidir-s196.js`) | La frase o nada; cinco pantallas verticales reales (iPad 768 · Air 820 · Pro 11" 834 · Pro 12,9" 1024 · ventana 900) hoy y **con la piel de móvil forzada**; el orden; la media jornada | **C1** una frase · **D vertical hasta 1024** |
+| `ajustar-horario-s196.html` (`ajustar-horario-s196.js`) | «Ajustar el horario» con la media jornada: V1 dos frases (+22 px) · V2 una frase (+0), escritorio y teléfono | **Enviado, sin respuesta** (recomendada V1) |
 | `ronda4-s196.html` (`ronda4-s196.js`) | La frase en cuatro tipografías; la media jornada explicada (tabla de casos) con loseta y cabecera calcadas | La frase cuenta bloques y pausas · **media jornada = horario, sin comida** |
 
 Las fotos son de la app real (v0.128.1) con el DOM retocado con las clases de la app; nada dibujado a mano. Regla que
@@ -87,10 +88,13 @@ El usuario lo explicó así y se confirmó dos veces: **cada usuario tiene su ho
 - **La comida solo en la jornada completa, también para Una hora y Dos horas**: dos horas de 13:00 a 15:00 ya no sirven la
   comida. La regla se simplifica: `comeA = opcion === 'jornada' && !horario.sinComida ? horario.comida : Infinity`.
 - **Una hora / Dos horas** siguen siendo un rato desde ahora.
-- **Pendiente de ver (pedido en html, no hecho por falta de sesión)**: cómo queda «Ajustar el horario» con las horas de la media
-  jornada junto a las de la completa. El usuario: «entiendo que en ajustar horario pero muéstramelo en un html». Calco a hacer
-  sobre el estado `pregunta` del panel (`RitmoPanel.jsx`, `ritmo.frase` con `RitmoSel`): una segunda frase «Media jornada: de
-  {inicio} a {salida}.» con dos selectores, debajo de la de la completa. **Hacerlo antes de implementar**.
+- **«Ajustar el horario» con la media jornada — ENVIADO, sin respuesta**: `docs/proposals/ajustar-horario-s196.html`
+  (`scripts/audit/ajustar-horario-s196.js`). Dos formas calcadas sobre el estado `pregunta` del panel, medidas a 1536×704 y
+  390×844: **V1** una segunda frase «Media jornada: de 9:00 ⌄ a 13:00 ⌄.» bajo la de la completa (**+22 px de panel** en
+  escritorio, el número del aro pasa de 202 a 189 px; +21 en móvil) — recomendada; **V2** todo en una frase («…y terminas a las
+  17:00; y la media jornada, de 9:00 a 13:00.»), +0 px pero seis selectores y un interruptor en una línea. En las dos, el chip
+  de media jornada pasa a decir el tramo («De 9:00 a 13:00»). **Segunda letra pendiente**: si el chip/loseta dice «De 9:00 a
+  13:00» (el tramo) o «Hasta las 13:00» (como los demás). Si el usuario no contesta, V1 y «De 9:00 a 13:00».
 
 ### Paquete
 - Pregunta hecha tres veces sin respuesta directa (el usuario pidió seguir preguntando y luego el handoff). Recomendación
@@ -137,7 +141,7 @@ El usuario lo explicó así y se confirmó dos veces: **cada usuario tiene su ho
 
 - El texto exacto de la frase en singular/plural y en inglés — **mío**, dentro de la letra de arriba.
 - El mecanismo del breakpoint ((a) o (b) del apartado D) — **técnico, mío**, con DECISIONES_TECNICAS_VIGENTES.
-- «Ajustar el horario» con la media jornada — **del usuario, a la vista del html pendiente**.
+- «Ajustar el horario» con la media jornada — **del usuario, a la vista de `ajustar-horario-s196.html`** (V1 recomendada).
 - Media jornada de tarde por defecto para quien trabaja de tarde — no hace falta: se pone una vez y se recuerda.
 - El miércoles con tres largas, el modo oscuro del panel (foto en `lo-hecho-contado-s196.html`: pasa, sin defecto visible),
   el cierre nunca «Ahora», la larga con un plato de dos — siguen declarados, sin fecha.

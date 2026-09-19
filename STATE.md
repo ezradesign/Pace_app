@@ -252,7 +252,7 @@
 > de movil hasta 1024 (`(orientation: portrait) and (max-width: 1024px)`) · **media jornada = HORARIO** propio y recordado
 > (de/a, sin comida, editable en su cabecera y en «Ajustar el horario»; fuera de hora se apaga) · **la comida solo en la
 > jornada completa** (tampoco en Una hora / Dos horas). Paquete recomendado y no contradicho: **v0.129.0 lo hecho + media
-> jornada; v0.130.0 la tableta**. Pendiente de VER: «Ajustar el horario» con las horas de la media jornada (html pedido).
+> jornada; v0.130.0 la tableta**. «Ajustar el horario» con la media jornada ENVIADO (`ajustar-horario-s196.html`, V1 recomendada), sin respuesta.
 > **El usuario migra a otra cuenta: TODO esta en
 > [session-196-handoff-decisiones](./docs/sessions/session-196-handoff-decisiones.md), que se lee ANTES de tocar nada.**
 >
