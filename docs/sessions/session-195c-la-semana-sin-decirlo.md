@@ -1,6 +1,6 @@
 # s195 (ter) · La semana, sin decirlo (v0.128.0)
 
-**Fecha:** 2026-09-19 · **Versión publicada:** v0.128.0 · **Suite:** 282 → **286**
+**Fecha:** 2026-09-19 · **Versión publicada:** v0.128.0 → v0.128.1 · **Suite:** 282 → **286**
 
 > Tras `semana-copy-s195.html` (tres sistemas de copy) el usuario dudó: «no sé si pondría copy,
 > menos es más, ¿qué opinas?». Se pusieron en el panel real las tres formas mínimas —un chip, nada,
@@ -54,3 +54,26 @@ cambian con la región (Glúteos → Grip → Postura reset → Gemelos → Geme
 - La hoja no distingue los platos del acento; Stats no sabe de semanas.
 - Los nombres de los temas (por intención) no se ven en ningún sitio: si algún día se pintan, son dato.
 - El miércoles con tres largas (2.ª, 5.ª, 8.ª): opción A de la ronda 1 sin decidir; se dejó «como sale».
+
+## 4 · v0.128.1 · Los acentos sirven lo que cabe (mismo día, tras publicar)
+
+Al escribir el informe al usuario, **la semana se re-midió sobre `fa5cc56`** en vez de copiarla del hilo
+(`semana-medida.js`, en el scratchpad: los cinco días de la semana 38 y el lunes de la 39, plato a plato).
+Y el jueves decía **«Coherente 6·6 10'» en una pausa corta**; el viernes, lo mismo en el cierre. Los dos
+huecos duran 5' (`ritmo.regla.js:154,157`).
+
+**Por qué no lo vio nadie**: la regla no filtra platos por duración porque nunca le hizo falta —Estira y
+Mueve caben en 5' y Respira (4-10') solo iba a la larga de 15'—, y `toma()` de la semana se calcó de
+`toma()` de la regla. Los acentos «aire» y «cerrar suave» son **el primer Respira fuera de la larga**, y
+el test de v0.128.0 preguntaba «¿es Respira?» y «¿es el más largo?», no «¿cabe?». Otra vez: **el test
+aserta la intención y el defecto está en el invariante que nadie escribió.**
+
+**Arreglo**: `toma(modulo, clave, cabe)` filtra `min <= cabe`; «aire» pasa `it.dur` y, si no hay Respira
+que quepa, devuelve el plato a `usados` y deja la parada como la sirvió la regla; el cierre filtra por
+`cierre.dur`. Medido después: jueves **Diafragmática 5'** antes de comer, viernes cierre **Diafragmática
+5'** (la regla ponía Suspiro 2'). El test añade el invariante —**ningún plato más largo que su parada, los
+cinco días**— y el viernes pide «el más largo que cabe» con GUARD de que existe y supera al pozo del
+cierre. Banco: dos mutantes más (quitar el filtro de `toma`, quitar el del cierre), **13 de 13**.
+
+**Lección**: lo que se publica se re-mide sobre el commit, no sobre el hilo. El informe iba a decir
+«viernes cierre Coherente 6·6» como si fuera bueno.

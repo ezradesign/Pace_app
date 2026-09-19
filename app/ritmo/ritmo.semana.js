@@ -63,7 +63,7 @@ var SEMANA_ACENTOS = {
   2: { id: 'sostener' },   /* el día tal cual */
   3: { id: 'mitad' },      /* la pausa larga llega antes: la segunda, no la tercera */
   4: { id: 'aire' },       /* antes de comer se respira, no se estira */
-  5: { id: 'cierre' },     /* el cierre es el Respira más largo que quede */
+  5: { id: 'cierre' },     /* el cierre es el Respira más largo que quede y quepa (5') */
   6: { id: 'libre' },
   7: { id: 'libre' },
 };
@@ -103,9 +103,15 @@ function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos) 
   var usados = {};
   if (previos) (previos.usados || []).forEach(function (id) { usados[id] = true; });
   m.items.forEach(function (it) { (it.platos || []).forEach(function (p) { usados[p.id] = true; }); });
-  var toma = function (modulo, clave) {
-    var libres = P[modulo].filter(function (r) { return !usados[r.id]; });
-    if (!libres.length) libres = P[modulo];
+  /* `cabe`: solo platos que quepan en la parada. La regla nunca lo mira porque no le
+     hace falta (Estira y Mueve caben en 5' y Respira solo iba a la larga); los acentos
+     son el primer Respira en pausa corta y en el cierre, que duran 5', y sin esto
+     servían Coherente 6·6 (10') en un hueco de 5 (medido en s195c, en la app). */
+  var toma = function (modulo, clave, cabe) {
+    var pozo = cabe == null ? P[modulo] : P[modulo].filter(function (r) { return (r.min || 0) <= cabe; });
+    var libres = pozo.filter(function (r) { return !usados[r.id]; });
+    if (!libres.length) libres = pozo;
+    if (!libres.length) return null;
     var r = libres[(cambios[clave] || 0) % libres.length];
     if (!r) return null;
     usados[r.id] = true;
@@ -132,17 +138,19 @@ function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos) 
     for (var i = comidaI - 1; i >= 0; i--) {
       var it = m.items[i];
       if (it.tipo === 'pausa' && !it.larga && it.platos[0] && it.platos[0].modulo !== 'respira') {
-        delete usados[it.platos[0].id];
-        var r = toma('respira', it.platos[0].clave);
-        if (r) { it.platos = [r]; it.motivo = 'respira'; }
+        var antes = it.platos[0];
+        delete usados[antes.id];
+        var r = toma('respira', antes.clave, it.dur);
+        if (r) { it.platos = [r]; it.motivo = 'respira'; } else usados[antes.id] = true;
         break;
       }
     }
   }
-  /* CERRAR SUAVE: el cierre es el Respira más largo que quede sin servir. */
+  /* CERRAR SUAVE: el cierre es el Respira más largo que quede sin servir Y QUEPA en
+     el hueco del cierre (5'): 5' de Coherente donde la regla pone 2' de Suspiro. */
   if (a === 'cierre' && m.items.length) {
     var cierre = m.items[m.items.length - 1];
-    var largos = P.respira.filter(function (x) { return !usados[x.id]; }).sort(function (x, y) { return (y.min || 0) - (x.min || 0); });
+    var largos = P.respira.filter(function (x) { return !usados[x.id] && (x.min || 0) <= cierre.dur; }).sort(function (x, y) { return (y.min || 0) - (x.min || 0); });
     if (cierre && cierre.tipo === 'cierre' && largos[0]) {
       cierre.platos = [{ modulo: 'respira', id: largos[0].id, name: largos[0].name, min: largos[0].min, clave: 'cierre', rutina: largos[0] }];
       cierre.motivo = 'cierre';

@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.128.1** | 2026-09-19 | fix(ritmo): **los acentos sirven lo que cabe** — Al re-medir la semana sobre el artefacto publicado, el jueves servía Coherente 6·6 (10') en una pausa corta de 5' y el viernes lo mismo en el cierre: la regla nunca filtra por duración porque no le hacía falta (Estira y Mueve caben en 5' y Respira solo iba a la larga), y los acentos «aire» y «cerrar suave» son el primer Respira en pausa corta. Ahora `toma()` admite `cabe` y los dos acentos solo sirven Respiras con `min <= dur`; si ninguno cabe, la parada queda como la sirvió la regla. Jueves: Diafragmática 5' antes de comer; viernes: cierre Diafragmática 5' (la regla ponía Suspiro 2'). El test defiende el invariante roto (**cada plato cabe en su parada, los cinco días**) y el banco suma dos mutantes: **13 de 13**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
 | **v0.128.0** | 2026-09-19 | feat(ritmo): **la semana, sin decirlo** — La pieza 3 del norte (lectura A): el menú varía con la semana y con el día, todo desde la fecha —seis temas en ciclo por semana ISO que reordenan los pozos por región (cuello · caderas · manos · espalda · aire · ligera) × un acento por día de lunes a viernes (arrancar con Mueve · el día tal cual · la larga antes · respirar antes de comer · cerrar con el Respira más largo) × la regla de siempre—, y **nada lo anuncia**: se pusieron tres formas mínimas en el panel real (chip · nada · cuatro palabras) y el usuario eligió «nada» («menos es más»). `ritmo.semana.js` es pura; «la mitad» es `horario.desfaseLarga` y no un `previos` falso; los acentos respetan lo hecho; el fin de semana lleva tema y no acento. **282 → 286**, `banco-semana-s195.js` **11 de 11**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
 | **v0.127.0** | 2026-09-19 | feat(ritmo): **la tarjeta por libre, comer o no, y la pausa solo con Hidrátate** — La ronda 2 decidida: **la tarjeta «¿Cuánto trabajas hoy?» sustituye a la del Camino sugerido** por libre (misma cáscara: el motor y la luz no se enteran; cuatro losetas con la hora de fin, «Ajustar el horario» y «Ver caminos» en la cabecera; un toque sirve el día; el aro gana 8 px), **la comida se apaga con un mini interruptor** pegado a la palabra «comes» (apagado: «no comes», sin tramo, sin frase, sin vaso), y **el modal de la pausa deja solo Hidrátate** como sugerencia aparte del plato. Para la semana (7B), tres sistemas de copy en `semana-copy-s195.html`, sin decidir. **281 → 282**, 3 en rojo contra HEAD. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
 | **v0.126.0** | 2026-09-19 | feat(ritmo): **la pausa con memoria** — Cuatro decisiones del usuario con la página de ideas delante. **La pausa con menú**: al acabar un bloque el modal pregunta una sola cosa —«Tu pausa», el plato con el glifo de su ejercicio, «Hacer la pausa» · «Seguir con el bloque 2» · «Otra cosa…» plegado—; sin menú, el de siempre. **El agua va por tiempo**: un vaso por parada a ≥ 50 min del último, la comida siempre y reinicia, tope la meta del día (una hora 1, dos horas 2, la jornada 6; antes 4 y 8). **Recolocar también al terminar**: si el bloque acaba a otra hora, la pausa se abre a la hora que es y el resto se recompone con la pausa la primera; **y la duración que pones en el aro manda** el resto del día (25 con un plan de 45 → bloques de 25). **La línea tiene memoria**: la parada hecha (una sesión con la pausa abierta) se rellena; la saltada (empezar sin hacerla) va a trazos al 40 %. **277 → 281**, 4 en rojo contra HEAD. Y la ronda 2 de ideas para lo que pide diseño. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
@@ -404,6 +405,21 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.128.1] -- 2026-09-19 -- fix(ritmo): los acentos sirven lo que cabe
+
+### Corregido
+- **`semanaComponer`: «aire» y «cerrar suave» solo sirven Respiras que quepan en la parada** (`toma(modulo,
+  clave, cabe)` filtra `min <= cabe`; el cierre filtra `min <= cierre.dur`). Medido en la app: el jueves iba
+  Coherente 6·6 (10') en una pausa de 5' y el viernes en el cierre (5'). La regla no mira duraciones porque
+  nunca le hizo falta; el acento fue el primer Respira fuera de la larga. Si ningún Respira cabe, la parada
+  se queda como la sirvió la regla (y su plato vuelve a `usados`).
+
+### Red
+- `ritmo-semana.spec.js`: **cada plato cabe en su parada, los cinco días**; el viernes pide «el más largo que
+  cabe» con GUARD de que lo hay y de que supera al pozo del cierre. `banco-semana-s195.js`: **13 de 13**.
+
+---
+
 ## [v0.128.0] -- 2026-09-19 -- feat(ritmo): la semana, sin decirlo
 
 ### Añadido
@@ -424,29 +440,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Lo que no cubre
 - La hoja y Stats no saben de semanas; los nombres de los temas son dato sin consumidor; el miércoles con tres
   largas (2.ª, 5.ª, 8.ª) queda «como sale».
-
----
-
-## [v0.127.0] -- 2026-09-19 -- feat(ritmo): la tarjeta por libre, comer o no, y la pausa solo con Hidrátate
-
-### Añadido
-- **`app/ritmo/RitmoTarjeta.jsx`**: por libre, la tarjeta del ritmo en el sitio del Camino sugerido, con su misma
-  cáscara (`[data-pace-spc]`, `[data-pace-spc-card]`). Cabecera de una fila (pregunta · «Ajustar el horario» ·
-  «Ver caminos») y cuatro losetas con la hora de fin en itálica; una loseta sirve el día (`ritmoElegir`).
-- **La comida como interruptor** (`RitmoInterruptorComida`, `horario.sinComida`): «comes» / «no comes» con un
-  mini interruptor de 22×12; apagado, la frase usa `ritmo.frase.sin` y la regla no sirve comida.
-
-### Cambiado
-- **El modal de la pausa con menú** deja solo «Hidrátate» bajo las dos acciones; fuera «Otra cosa…» y los
-  cuatro módulos. Atajo «Intro · H · Esc».
-- Las horas de los chips de la pregunta, en itálica (como las losetas).
-
-### Red
-- `ritmo.spec.js` (la tarjeta), `ritmo-pausa.spec.js` (solo Hidrátate), `ritmo-panel.spec.js` (+1, el
-  interruptor), `home-geometria.spec.js` (los controles por libre). Tres en rojo contra v0.126.0.
-
-### Lo que no cubre
-- El copy de la semana (7B) está en `semana-copy-s195.html`, sin decidir; la regla de la semana no está.
 
 ---
 

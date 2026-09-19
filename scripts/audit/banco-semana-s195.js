@@ -43,6 +43,10 @@ const MUTANTES = [
     '  var m = ritmoComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, previos);', APP],
   ['la regla ignora el desfase de la larga', 'app/ritmo/ritmo.regla.js',
     'var desfase = Number(horario.desfaseLarga) || 0;', 'var desfase = 0;', ACENTOS],
+  ['los acentos sirven platos que no caben en la parada', 'app/ritmo/ritmo.semana.js',
+    "var pozo = cabe == null ? P[modulo] : P[modulo].filter(function (r) { return (r.min || 0) <= cabe; });", 'var pozo = P[modulo];', ACENTOS],
+  ['el cierre del viernes no mira si cabe', 'app/ritmo/ritmo.semana.js',
+    "return !usados[x.id] && (x.min || 0) <= cierre.dur;", 'return !usados[x.id];', ACENTOS],
 ];
 
 const sh = (cmd) => {
