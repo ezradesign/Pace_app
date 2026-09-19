@@ -99,19 +99,31 @@ function RitmoPregunta({ state }) {
 
 /* La frase del menú servido: de [inicio] a [salida] · comida a las [hora] durante
    [dur]. Solo la jornada entera edita la salida; las otras opciones dicen a qué
-   hora acaban. Llegando tarde añade «hoy de 10:30 a 17:00» (nunca «tarde»). */
+   hora acaban. Llegando tarde añade «hoy de 10:30 a 17:00» (nunca «tarde»).
+   s195: LA COMIDA SOLO SI EL DÍA LA SIRVE. «Una hora» a las 14:30 decía «comida a
+   las 16:00 durante 30 min» con sus dos selectores, y el usuario preguntó por qué
+   («imagino que lo de comida debería ser en sesiones largas»). La regla ya lo sabe
+   (`m.comida` es null cuando ninguna comida cae en el día): la frase lo escucha y
+   usa la plantilla «.sin». La comida se sigue editando en «Cambiar». */
 function RitmoFraseMenu({ plan, horario, plantilla, capital }) {
   const { t, tn } = useT();
   const m = plan.m;
   const huecos = ritmoHuecos(horario);
-  if (m.opcion !== 'jornada') huecos.salida = ritmoHora(m.hasta);
+  /* s195: UNA HORA, DOS HORAS Y MEDIA JORNADA EMPIEZAN CUANDO EMPIEZAS, así que su
+     frase lleva las horas de HOY en texto (desde · hasta) y no el selector del
+     horario habitual: con el inicio habitual a las 14:30 y el día empezado a las
+     10:23 decía «de 14:30 a 12:50» (captura del usuario). El horario se sigue
+     editando en «Cambiar»; la jornada entera conserva sus selectores y su «hoy de». */
+  const jornada = m.opcion === 'jornada';
+  if (!jornada) { huecos.inicio = ritmoHora(m.desde); huecos.salida = ritmoHora(m.hasta); }
+  if (m.comida == null) plantilla = plantilla + '.sin';
   /* `capital`: cuando la frase abre línea (la hoja) y no va tras «Jornada entera ·». */
   let texto = t(plantilla);
   if (capital) texto = texto.charAt(0).toUpperCase() + texto.slice(1);
   return (
     <React.Fragment>
       <RitmoFrase plantilla={texto} huecos={huecos} />
-      {m.tarde ? ' · ' + tn('ritmo.hoy', { desde: ritmoHora(m.desde), hasta: ritmoHora(m.hasta) }) : null}
+      {jornada && m.tarde ? ' · ' + tn('ritmo.hoy', { desde: ritmoHora(m.desde), hasta: ritmoHora(m.hasta) }) : null}
     </React.Fragment>
   );
 }
@@ -173,7 +185,7 @@ function RitmoFilaParada({ it, rotulo }) {
   }
   if (!it.platos || !it.platos.length) return null;
   return <RitmoFila rotulo={cab} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
-    meta={<React.Fragment>{ritmoMetaPlato(it, t, tn)}{it.agua ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}</React.Fragment>}
+    meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn)} agua={it.agua} />}
     claves={it.platos.map((p) => p.clave)} />;
 }
 

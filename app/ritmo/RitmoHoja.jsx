@@ -46,7 +46,7 @@ function RitmoLista({ plan }) {
                 ))}
               </div>
               <div className="pace-rt-plato-m">
-                {meta}{it.agua ? <RitmoGlifo modulo="agua" className="pace-rt-gota" /> : null}
+                <RitmoMetaGota texto={meta} agua={it.agua} />
                 {i === iActual ? <React.Fragment>{' · '}<b style={{ color: 'var(--focus)', fontWeight: 500 }}>{t('ritmo.ahora.min')}</b></React.Fragment> : null}
               </div>
             </div>
