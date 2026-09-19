@@ -172,7 +172,12 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
   var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()) });
   var agua = ((s || {}).water && s.water.goal) || 8;
   var previos = pasado ? ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) : null;
-  var m = ritmoComponer(opcion, h, ritmoPozos(s, ritmoHoy()), cambios, agua, previos);
+  /* s195c: LA SEMANA. El día se compone con el tema de la semana y el acento del día
+     (ritmo.semana.js), que salen de la fecha; sin la semana cargada, la regla de siempre. */
+  var hoy = ritmoHoy();
+  var m = typeof semanaComponer === 'function'
+    ? semanaComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, semanaDe(hoy), previos)
+    : ritmoComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, previos);
   if (!m || !pasado || !pasado.length) return m;
   /* Lo hecho delante, y los totales del día entero. Si empezaste tarde, el hueco
      entre lo último hecho y ahora se pinta como margen libre (punteado, como el de

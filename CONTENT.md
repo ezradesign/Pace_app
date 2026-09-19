@@ -436,3 +436,22 @@ va de fechas señaladas del año.
 > Coffee ("Ya doné"). **No hay verificación y no desbloquea contenido** —
 > es un sello, coherente con que donar no es freemium (ver
 > `MONETIZATION.md`).
+
+
+## La semana de «A tu ritmo» (s195c · v0.128.0)
+
+El menú varía con la fecha y nada lo anuncia (decisión del usuario). Seis temas en ciclo por semana ISO,
+cada uno con los tags del catálogo que van primero en cada pozo:
+
+| Tema (id) | Nombre (dato, no se pinta) | Estira | Mueve | Respira | Extra |
+|---|---|---|---|---|---|
+| `cuello` | Soltar el cuello | SIT · SHLD | POST | REL | |
+| `caderas` | Abrir la cadera | HIP · LEG · GRND | STEALTH · LEG | BAL | |
+| `manos` | Las manos que teclean | WRST · SIT | GRIP | EQU | |
+| `espalda` | La espalda larga | SPN · SHLD · HIP | POST · BACK | REL | |
+| `aire` | Respirar hondo | SIT | STEALTH | BAL · EQU | los Respira largos delante |
+| `ligera` | Semana ligera | SIT · WRST | STEALTH · GRIP | REL | los platos cortos delante |
+
+Y un acento por día: lunes **arrancar** (la primera pausa es de Mueve) · martes **sostener** (el día tal
+cual) · miércoles **la mitad** (la larga es la segunda pausa) · jueves **aire** (antes de comer, Respira) ·
+viernes **cerrar suave** (el cierre es el Respira más largo que quede) · fin de semana, ninguno.
