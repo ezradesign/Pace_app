@@ -150,6 +150,13 @@
 .pace-rt-nodo.pace-rt-ahora { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--paper)); }
 .pace-rt-nodo .pace-rt-ahora-tag { left: 50%; transform: translateX(-50%); bottom: 27px; color: var(--c); }
 .pace-rt-nodo.pace-rt-pasado { cursor: default; }
+/* s195: LA LÍNEA TIENE MEMORIA. La parada hecha se rellena con su color (22 %) y su
+   borde entero; la saltada queda al 40 % y a trazos, y arrastra su etiqueta (vive
+   dentro). Lo pasado sin marca (antes de s195, o sin sesión) sigue como estaba. */
+.pace-rt-nodo.pace-rt-hecha { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-nodo.pace-rt-saltada { opacity: 0.4; border-style: dashed; }
+.pace-rt-mini .pace-rt-punto.pace-rt-hecha { background: var(--c); }
+.pace-rt-mini .pace-rt-punto.pace-rt-saltada { opacity: 0.4; border-style: dashed; }
 .pace-rt-comida-nodo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px;
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
   display: grid; place-items: center; }

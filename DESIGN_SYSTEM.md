@@ -828,6 +828,14 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
 - **Ninguna etiqueta se sale del marco (s195 · v0.125.3)**: la que sobresale de la línea (16 px de aire) se
   empuja y su hilo sigue apuntando a la parada. **La gota va pegada a su última palabra** en las filas y en
   la hoja (un inline-grid salta de línea solo; la última palabra y la gota van en `nowrap`).
+- **La línea tiene memoria (s195 · v0.126.0)**: la parada hecha se rellena con su color al 22 % y borde entero
+  de 1,5 px; la saltada va al 40 % y a trazos, y su etiqueta dice «saltada» (la hecha, «hecha · 3 min»). Los
+  puntos de móvil igual. Lo pasado sin marca sigue como estaba.
+- **La pausa con menú (s195 · v0.126.0)**: el mismo `Modal`, con «Bloque N de M · hecho» de cejilla, «Tu pausa»
+  de título, la hora y «lo que el menú tenía para ahora». El plato en su tarjeta terracota con el **glifo del
+  ejercicio principal** a 62 px (el de las tarjetas de rutina) a la izquierda; debajo, tres acciones en fila:
+  terracota (hacer la pausa), secundaria (seguir con el bloque), fantasma (otra cosa, que despliega los cuatro
+  módulos en dos columnas). El pie de siempre.
 - **Los chips de Actividades (por libre) caben siempre (s195 · v0.125.3)**: bajo 760 px de contenedor se
   compactan (padding 12/14, gap 10) y bajo 560 van en la rejilla 2×2 de móvil.
 

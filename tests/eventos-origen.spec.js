@@ -104,7 +104,8 @@ test('el aro con plan es «aro» servido por el menú, y la propuesta de la paus
   /* La pausa propone el plato del menú («A tu ritmo · antídoto a la silla»). */
   const prop = page.locator('[data-pace-break-prop]');
   await expect(prop).toContainText('A tu ritmo');
-  await prop.getByRole('button', { name: 'Empezar', exact: true }).click();
+  /* s195: con menú, el modal es «Tu pausa» y el botón del plato es «Hacer la pausa» */
+  await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await empezarDesdePreview(page);
   await terminarSesionCuerpo(page);
   const plato = await ultimaSesion(page, 2);

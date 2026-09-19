@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.126.0** | 2026-09-19 | feat(ritmo): **la pausa con memoria** — Cuatro decisiones del usuario con la página de ideas delante. **La pausa con menú**: al acabar un bloque el modal pregunta una sola cosa —«Tu pausa», el plato con el glifo de su ejercicio, «Hacer la pausa» · «Seguir con el bloque 2» · «Otra cosa…» plegado—; sin menú, el de siempre. **El agua va por tiempo**: un vaso por parada a ≥ 50 min del último, la comida siempre y reinicia, tope la meta del día (una hora 1, dos horas 2, la jornada 6; antes 4 y 8). **Recolocar también al terminar**: si el bloque acaba a otra hora, la pausa se abre a la hora que es y el resto se recompone con la pausa la primera; **y la duración que pones en el aro manda** el resto del día (25 con un plan de 45 → bloques de 25). **La línea tiene memoria**: la parada hecha (una sesión con la pausa abierta) se rellena; la saltada (empezar sin hacerla) va a trazos al 40 %. **277 → 281**, 4 en rojo contra HEAD. Y la ronda 2 de ideas para lo que pide diseño. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
 | **v0.125.3** | 2026-09-19 | fix(ritmo): **la auditoría de viewports y el sábado del usuario** — `auditoria-viewports-s195.js`: 16 viewports (escritorio y teléfono, incluida una tableta vertical) × 9-10 escenas, 150 celdas medidas y fotografiadas. Con las cuatro capturas del usuario: **«Una hora» a las 14:30 ya no habla de comida** (la regla no la servía; la frase no lo escuchaba), **«de 14:30 a 12:50» → «de 10:23 a 12:50»** (las opciones que empiezan cuando empiezas llevan las horas de hoy), **ninguna etiqueta se sale del marco** (la primera parada junto al borde se empuja y su hilo sigue a la parada), **la tableta vertical lleva la copia compacta del panel** (container query), **los cuatro chips de Actividades caben** a 1024 y 820 (container query), **el motor de geometría mide también la luz** (con la jornada cerrada la home arrastraba 38 px: el limbo, cuadrado, sobresalía y no se puede recortar), y **la gota del vaso va pegada a su última palabra** en móvil. **268 → 277**, 9 en rojo contra HEAD. | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
 | **v0.125.2** | 2026-09-18 | fix(ritmo): **las etiquetas se recolocan cuando llegan las fuentes** — Salió haciendo las fotos de la página «por dónde seguir»: las etiquetas de la línea se colocan con la fuente que hay en ese momento y no se recolocaban al llegar Cormorant (el observador mira la línea, cuya caja no cambia). Medido un lunes a 1536×704: tres niveles de etiquetas donde caben dos, 15 px de panel y 17 de aro de menos, cada mañana. El arreglo de la barra lateral (s181): `document.fonts.ready.then(colocar)`. El test retrasa las fuentes 2,5 s con `page.route` —detrás del re-render de los 1,4 s que en frío recolocaba por casualidad y dejó la primera pasada de control en verde—. **267 → 268**, rojo en HEAD. | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
 | **v0.125.1** | 2026-09-18 | fix(ritmo): **la barra fea y el final del día** — El usuario trajo una captura a 1920×1080 con el escritorio al 125 % (1536×704): «no entiendo la barra fea del medio con líneas» y «los elementos se solapan». Medido, no leído: **la píldora «Hoy voy por libre» de s194 se llamaba `.pace-rt-libre`, que ya era el nombre del tramo del retraso**, y el hueco heredaba su borde verde y su padding (10 px rayados); **«AHORA» pisaba el resumen del día** porque los dos vivían en la misma banda sobre la línea — en los nueve viewports de escritorio, cada tarde, no por el 125 %; y **la caja del bloom de la luz hacía 46–52 px de scroll** con un bloque corriendo (1600×780, 1440×789), porque la premisa de s185 se rompió en s192 con el panel del menú. Píldora renombrada (`.pace-rt-porlibre`, los `pace-rt-<tipo>` quedan reservados); el resumen a la cabecera, **en la fila del título si el panel tiene sitio** (container query: a 1536×704 el panel no crece y el aro sube 5 px) y en dos filas si no; la caja del bloom descrita desde el centro del aro y restando el horizonte, **idéntica al píxel**. **260 → 267**: `ritmo-linea.spec.js`, con pasada de control contra HEAD (5 de 7 en rojo). | s195 | [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) |
@@ -401,6 +402,36 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.126.0] -- 2026-09-19 -- feat(ritmo): la pausa con memoria
+
+### Añadido
+- **`app/breakmenu/BreakMenu.ritmo.jsx`**: el modal de pausa con menú. Cejilla «Bloque N de M · hecho»,
+  «Tu pausa», el plato con el glifo de su ejercicio (`libraryGlifos` + `ExerciseGlyph`; Respira, el de su
+  módulo) y «y un vaso de agua» si toca; «Hacer la pausa» · «Seguir con el bloque N+1» (`pace:ritmo-seguir`,
+  que `FocusTimer` escucha) · «Otra cosa…» (los cuatro módulos, plegados). `BreakMenu.jsx` delega cuando la
+  propuesta es `ritmo.*` y hay pausa abierta.
+- **`dia.estados`** (`state-ritmo.jsx`): hecha / saltada por ordinal de parada (`ritmoOrdinal`).
+  `ritmoPausaHecha` (desde `emitSessionCompleted`) y la marca de saltada al empezar el bloque. La línea y los
+  puntos de móvil lo pintan (`.pace-rt-hecha`, `.pace-rt-saltada`); la etiqueta dice «hecha · 3 min» o «saltada».
+- **`dia.pausaPendiente`** y **`dia.bloque`** (`state-ritmo.jsx`, `ritmo.regla.js`): recolocar al terminar
+  sirve la pausa la primera; la duración puesta en el aro manda en los bloques que vienen.
+
+### Cambiado
+- **El agua va por tiempo** (`ritmo.regla.js`): ≥ 50 min entre vasos (desde el inicio del día, también tras
+  recolocar), la comida siempre y reinicia desde que acaba, tope la meta del día.
+- `ritmoBloqueTerminado` recoloca si la hora no es la del plan; `ritmoBloqueEmpezado` también si la duración no
+  es la del plan.
+- `tests/eventos-origen.spec.js`: con menú, «Hacer la pausa».
+
+### Red
+- **`tests/ritmo-pausa.spec.js`, 4 tests**, en rojo contra el artefacto de v0.125.3.
+
+### Lo que no cubre
+- La hoja no dice hecha/saltada; Stats y la barra lateral no cuentan pausas hechas; cerrar el modal con X deja la
+  pausa abierta sin marcar; el modal con menú en móvil no está fotografiado.
+
+---
+
 ## [v0.125.3] -- 2026-09-19 -- fix(ritmo): la auditoría de viewports y el sábado del usuario
 
 ### Corregido
@@ -433,26 +464,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Lo que no cubre
 - La composición de la piel de escritorio en una tableta vertical (aro de 227 flotando): es una decisión
   de breakpoint, no un arreglo. «BLOQUE 1 DE 9» rozando el trazo del aro a 375×667 por la mañana.
-
----
-
-## [v0.125.2] -- 2026-09-18 -- fix(ritmo): las etiquetas se recolocan cuando llegan las fuentes
-
-### Corregido
-- **Las etiquetas de la línea se quedaban colocadas con la fuente de reserva** (`RitmoLinea.jsx`): se
-  miden con la fuente que hay en ese momento y el observador mira la línea, cuya caja no cambia al
-  llegar Cormorant (la larga pasa de 132×68 a 121×53). Medido un lunes a 1536×704: tres niveles
-  (zona 122) donde el estado asentado tiene dos (107), 15 px de panel y 17 de aro de menos. Ahora
-  `document.fonts.ready.then(colocar)`, como la barra lateral desde s181, con guarda de desmontaje.
-
-### Red
-- **`tests/ritmo-linea.spec.js`, 7 → 8**: las fuentes llegan 2,5 s tarde (`page.route`) y, llegadas,
-  la colocación del DOM tiene que ser la de una fresca. Con 900 ms de retraso la pasada de control
-  contra HEAD salía verde: un re-render de la home hacia los 1,4 s recolocaba por casualidad en un
-  contexto frío. Con 2,5 s: rojo en HEAD («siguen colocadas con la fuente de reserva, zona 122»).
-
-### Lo que no cubre
-- Qué dispara ese re-render de los 1,4 s (no se buscó: el arreglo no depende de él).
 
 ---
 

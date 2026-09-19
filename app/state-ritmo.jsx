@@ -125,13 +125,17 @@ function ritmoPozos(s, iso) {
 
 /* LO QUE YA PASÓ, para recomponer el resto (ver ritmoComponer). La cadencia de
    la pausa larga cuenta desde la última comida, como en la regla. */
-function ritmoPrevios(pasado, primerBloque) {
-  var p = { bloques: 0, pausas: 0, foco: 0, comidaHecha: false, usados: [], vasos: 0, claves: 0, primerBloque: primerBloque || null };
+function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
+  var p = { bloques: 0, pausas: 0, foco: 0, comidaHecha: false, usados: [], vasos: 0, ultimoVaso: null, claves: 0, primerBloque: primerBloque || null, pausaPendiente: !!pausaPendiente, bloque: bloque || null };
+  /* el agua cuenta desde el inicio del día, no desde la recomposición: sin vaso en lo
+     hecho, el «último» es el arranque de lo hecho */
+  if (pasado && pasado.length) p.ultimoVaso = pasado[0].desde;
   (pasado || []).forEach(function (it) {
     if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; }
     if (it.tipo === 'pausa') { p.pausas++; p.claves++; }
     if (it.tipo === 'comida') { p.comidaHecha = true; p.pausas = 0; }
-    if (it.agua) p.vasos++;
+    /* s195: el agua va por tiempo, y la cuenta sigue desde el último vaso hecho */
+    if (it.agua) { p.vasos++; p.ultimoVaso = it.tipo === 'comida' ? it.desde + it.dur : it.desde; }
     (it.platos || []).forEach(function (pl) { p.usados.push(pl.id); });
   });
   return p;
@@ -163,11 +167,11 @@ function ritmoHidratar(pasado) {
 /* El día de una opción con el horario guardado. `desde` es la hora a la que se
    eligió (llegar tarde = empezar ahí) o, recolocando, la de la última
    recomposición; `pasado` son los tramos congelados que van delante. */
-function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque) {
+function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendiente, bloque) {
   var R = ritmoDe(s);
   var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()) });
   var agua = ((s || {}).water && s.water.goal) || 8;
-  var previos = pasado ? ritmoPrevios(pasado, primerBloque) : null;
+  var previos = pasado ? ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) : null;
   var m = ritmoComponer(opcion, h, ritmoPozos(s, ritmoHoy()), cambios, agua, previos);
   if (!m || !pasado || !pasado.length) return m;
   /* Lo hecho delante, y los totales del día entero. Si empezaste tarde, el hueco
@@ -195,12 +199,24 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque) {
 function ritmoPlan(s) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
-  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde, R.dia.pasado || null, R.dia.primerBloque || null);
+  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null);
   if (!m) return null;
   var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
   var actual = m.focos[hechos] || null;
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa };
+  /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre) */
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {} };
+}
+
+/* El ordinal de una parada (pausa o cierre) entre las del día: es la clave de
+   `dia.estados`. Las congeladas van delante, así que no cambia al recolocar. */
+function ritmoOrdinal(m, it) {
+  var n = 0;
+  for (var i = 0; i < m.items.length; i++) {
+    var x = m.items[i];
+    if (x.tipo === 'pausa' || x.tipo === 'cierre') { n++; if (x === it) return n; }
+  }
+  return null;
 }
 
 /* Lo que viene detrás de un tramo, saltando el margen libre. */
@@ -300,7 +316,34 @@ function ritmoPreguntar() { ritmoGuardar(function () { return { dia: null }; });
 function ritmoBloqueTerminado() {
   var p = ritmoPlan(getState());
   if (!p || p.hechos < 1) return;
-  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, { pausa: p.hechos }) } : {}; });
+  var cambios = { pausa: p.hechos };
+  /* s195: RECOLOCAR TAMBIÉN AL TERMINAR (decisión del usuario: «la línea dice la
+     verdad» vale también para la pausa abierta, que ya no puede estar en el
+     futuro). Si el bloque acaba a una hora que no es la del plan —acortaste el
+     pomodoro, lo pausaste—, lo hecho se congela hasta ese bloque, que dura lo que
+     duró, y el resto se recompone desde ahora con la pausa la primera. */
+  var ultimo = p.m.focos[p.hechos - 1];
+  var t = ritmoAhoraExacto();
+  if (ultimo && t !== ultimo.desde + ultimo.dur) {
+    var pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(ultimo) + 1));
+    var f = pasado[pasado.length - 1];
+    if (t > f.desde) f.dur = t - f.desde;
+    cambios.pasado = pasado; cambios.desde = t; cambios.primerBloque = null; cambios.pausaPendiente = true;
+  }
+  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
+}
+/* s195: la pausa abierta se HIZO — termina una sesión (de lo que sea: Respira,
+   Mueve, Estira) mientras está abierta. La marca vive en `dia.estados` por ordinal. */
+function ritmoPausaHecha() {
+  var p = ritmoPlan(getState());
+  if (!p || !p.pausa) return;
+  var n = ritmoOrdinal(p.m, p.pausa);
+  if (n == null) return;
+  ritmoGuardar(function (r) {
+    if (!r.dia) return {};
+    var estados = Object.assign({}, r.dia.estados || {}); estados[n] = 'hecha';
+    return { dia: Object.assign({}, r.dia, { estados: estados }) };
+  });
 }
 /* Empezar un bloque cierra la pausa y, si la hora no es la del plan, RECOLOCA:
    lo anterior al bloque se congela como historia y el resto se recompone desde
@@ -311,13 +354,29 @@ function ritmoBloqueEmpezado(minutos) {
   var R = ritmoDe(s);
   if (!R.dia) return;
   var cambios = {};
-  if (R.dia.pausa != null) cambios.pausa = null;
   var p = ritmoPlan(s);
+  if (R.dia.pausa != null) {
+    cambios.pausa = null;
+    /* s195: empezar el bloque sin haber hecho la pausa abierta la deja SALTADA */
+    if (p && p.pausa) {
+      var n = ritmoOrdinal(p.m, p.pausa);
+      if (n != null && (R.dia.estados || {})[n] !== 'hecha') {
+        cambios.estados = Object.assign({}, R.dia.estados || {}); cambios.estados[n] = 'saltada';
+      }
+    }
+  }
+  if (R.dia.pausaPendiente) cambios.pausaPendiente = false;
   var t = ritmoAhoraExacto();
-  if (p && p.actual && t !== p.actual.desde) {
+  var mins = Number(minutos) || 0;
+  /* s195: si el aro no marca lo que el plan (pusiste 25 con un plan de 45), también
+     se recoloca, y esa duración manda en los bloques que vienen (`dia.bloque`). */
+  var otraDuracion = !!(p && p.actual && mins && mins !== p.actual.dur);
+  if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
     cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
     cambios.desde = t;
-    cambios.primerBloque = Number(minutos) || p.actual.dur;
+    cambios.primerBloque = mins || p.actual.dur;
+    cambios.pausaPendiente = false;
+    if (otraDuracion) cambios.bloque = mins;
   }
   if (!Object.keys(cambios).length) return;
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
@@ -351,5 +410,5 @@ Object.assign(window, {
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
-  ritmoBloqueTerminado, ritmoBloqueEmpezado,
+  ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPausaHecha, ritmoOrdinal,
 });

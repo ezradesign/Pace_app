@@ -411,6 +411,11 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
 punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
 
+**Hecho en s195b (v0.126.0)**: **la pausa con memoria** — el modal con menú pregunta una cosa (hacer la pausa o
+seguir), el agua va por tiempo, la pausa se recoloca también al terminar y la duración del aro manda el día, y
+la línea distingue hecha de saltada. Queda la ronda 2 (`ideas-s195-r2.html`): la tarjeta por libre, la comida
+sí/no, los nombres de la semana.
+
 **Hecho en s195 (v0.125.1)**: lo que el usuario vio usándolo una tarde a 1536×704 — el hueco del
 retraso con la caja de la píldora (choque de nombres), «AHORA» pisando el resumen del día (cada
 tarde, en todos los viewports de escritorio) y un scroll de la luz que nadie veía. Nada del norte.
