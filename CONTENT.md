@@ -454,4 +454,4 @@ cada uno con los tags del catálogo que van primero en cada pozo:
 
 Y un acento por día: lunes **arrancar** (la primera pausa es de Mueve) · martes **sostener** (el día tal
 cual) · miércoles **la mitad** (la larga es la segunda pausa) · jueves **aire** (antes de comer, Respira) ·
-viernes **cerrar suave** (el cierre es el Respira más largo que quede) · fin de semana, ninguno.
+viernes **cerrar suave** (el cierre es el Respira más largo que quede **y quepa en sus 5'**: Diafragmática 5' donde la regla pone Suspiro 2') · fin de semana, ninguno. **Cada plato cabe en su parada** (v0.128.1: la pausa corta y el cierre duran 5', y sin ese filtro «aire» servía 10' en 5).

@@ -8,8 +8,10 @@
  *  · la semana ISO sin new Date("YYYY-MM-DD") y el ciclo de seis temas;
  *  · el tema LIDERA: en la semana de la cadera, la primera de Estira es de cadera/pierna;
  *  · los acentos: lunes arranca con Mueve, miércoles la larga es la segunda, jueves la
- *    última pausa antes de comer es de Respira, viernes el cierre es el Respira más largo;
- *    y el fin de semana no lleva acento (lo que sirve es la regla sobre los pozos del tema);
+ *    última pausa antes de comer es de Respira, viernes el cierre es el Respira más largo QUE
+ *    QUEPA; y el fin de semana no lleva acento (lo que sirve es la regla sobre los pozos del tema);
+ *  · CADA PLATO CABE EN SU PARADA los cinco días: la pausa corta y el cierre duran 5' y los
+ *    acentos son el primer Respira que entra ahí (la primera versión sirvió 10' en 5, medido);
  *  · los acentos respetan lo hecho: recolocando con pausas hechas, «arrancar» no toca nada;
  *  · varía: dos lunes seguidos y el lunes y el martes de la misma semana no sirven lo mismo;
  *    y es determinista: la misma fecha, el mismo día;
@@ -65,11 +67,15 @@ test('el tema lidera y los cinco acentos hacen lo que dicen; el fin de semana, l
     const comidaJ = J.m.items.findIndex((it) => it.tipo === 'comida');
     let antesDeComer = null; for (let i = comidaJ - 1; i >= 0; i--) if (J.m.items[i].tipo === 'pausa' && !J.m.items[i].larga) { antesDeComer = J.m.items[i].platos[0].modulo; break; }
     const cierreV = V.m.items[V.m.items.length - 1];
-    const respiras = ritmoPozos(getState(), '2026-09-18').respira.map((x) => x.min);
+    const pozosV = ritmoPozos(getState(), '2026-09-18');
+    const cabenV = pozosV.respira.filter((x) => x.min <= cierreV.dur).map((x) => x.min);
+    const cierrePozo = Math.max.apply(null, pozosV.cierre.map((x) => x.min));
+    /* ningún plato más largo que su parada, los cinco días (el defecto de la primera versión) */
+    const noCaben = [L, dia('2026-09-15'), X, J, V].flatMap((d) => d.m.items.filter((it) => it.platos).flatMap((it) => it.platos.filter((p) => p.min > it.dur).map((p) => p.name + ' ' + p.min + "' en " + it.dur + "'")));
     /* sábado: sin acento, el día es exactamente la regla sobre los pozos del tema */
     const plano = ritmoComponer('jornada', H, semanaPozos(ritmoPozos(getState(), '2026-09-19'), S.sem), {}, 8, null);
     const ids = (m) => m.items.flatMap((it) => (it.platos || []).map((p) => p.id));
-    return { primeraEstira, primeraEstira39, primeraL: pausas(L.m)[0].platos[0].modulo, largasX, antesDeComer, cierreMin: cierreV.platos[0].min, respiraMax: Math.max.apply(null, respiras),
+    return { primeraEstira, primeraEstira39, primeraL: pausas(L.m)[0].platos[0].modulo, largasX, antesDeComer, cierreMin: cierreV.platos[0].min, cierreDur: cierreV.dur, cabeMax: Math.max.apply(null, cabenV), cierrePozo, noCaben,
              sabado: S.sem.acento.id, sabadoIgual: JSON.stringify(ids(S.m)) === JSON.stringify(ids(plano)), diaSemana: S.sem.diaSemana };
   }, H);
   for (const tag of r.primeraEstira) expect(['HIP', 'LEG', 'GRND'], 'semana de la cadera: la primera de Estira es de cadera o pierna, los cinco días').toContain(tag);
@@ -77,7 +83,10 @@ test('el tema lidera y los cinco acentos hacen lo que dicen; el fin de semana, l
   expect(r.primeraL, 'lunes: la primera pausa activa el cuerpo').toBe('mueve');
   expect(r.largasX[0], 'miércoles: la larga es la segunda pausa').toBe(2);
   expect(r.antesDeComer, 'jueves: antes de comer se respira').toBe('respira');
-  expect(r.cierreMin, 'viernes: el cierre es el Respira más largo').toBe(r.respiraMax);
+  expect(r.cabeMax, 'GUARD: hay Respiras que caben en el cierre y son más largos que los del pozo del cierre').toBeGreaterThan(r.cierrePozo);
+  expect(r.cierreMin, 'viernes: el cierre es el Respira más largo que cabe en su hueco').toBe(r.cabeMax);
+  expect(r.cierreMin, 'y cabe').toBeLessThanOrEqual(r.cierreDur);
+  expect(r.noCaben, 'cada plato cabe en su parada, los cinco días').toEqual([]);
   expect(r.diaSemana).toBe(6);
   expect(r.sabado, 'el sábado no lleva acento').toBe('libre');
   expect(r.sabadoIgual, 'el sábado es la regla de siempre sobre los pozos del tema').toBe(true);
