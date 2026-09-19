@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.125.2</title>
+  <title>PACE · Foco · Cuerpo — v0.125.3</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3122,7 +3122,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.sub': 'Te preparo la jornada: cuándo parar, qué hacer y cuánto dura.',
   'ritmo.frase': 'Empiezas a las {inicio}, comes a las {comida} durante {dur} y terminas a las {salida}.',
   'ritmo.frase.menu': 'de {inicio} a {salida} · comida a las {comida} durante {dur}',
+  'ritmo.frase.menu.sin': 'de {inicio} a {salida}',
   'ritmo.frase.movil': 'De {inicio} a {salida} · comida {comida} · {dur}',
+  'ritmo.frase.movil.sin': 'De {inicio} a {salida}',
   'ritmo.hoy': 'hoy de {desde} a {hasta}',
   'ritmo.opcion.1h': 'Una hora',
   'ritmo.opcion.2h': 'Dos horas',
@@ -3181,7 +3183,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.sub': "I'll plan your day: when to pause, what to do and for how long.",
   'ritmo.frase': 'You start at {inicio}, have lunch at {comida} for {dur} and finish at {salida}.',
   'ritmo.frase.menu': 'from {inicio} to {salida} · lunch at {comida} for {dur}',
+  'ritmo.frase.menu.sin': 'from {inicio} to {salida}',
   'ritmo.frase.movil': 'From {inicio} to {salida} · lunch {comida} · {dur}',
+  'ritmo.frase.movil.sin': 'From {inicio} to {salida}',
   'ritmo.hoy': 'today from {desde} to {hasta}',
   'ritmo.opcion.1h': 'One hour',
   'ritmo.opcion.2h': 'Two hours',
@@ -5135,7 +5139,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.125.2';
+const PACE_VERSION = 'v0.125.3';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -30811,6 +30815,18 @@ Object.assign(window, { Onboarding });
   .pace-rt-esc { display: none; }
   .pace-rt-mov { display: block; }
 }
+/* s195: LA COPIA COMPACTA TAMBIEN CUANDO EL PANEL ES ESTRECHO, no solo cuando el
+   viewport es de movil. Una tableta en vertical (820 px) lleva la piel de
+   escritorio con su barra lateral de 280, y al panel le quedan ~460: la linea con
+   nueve paradas no cabe ni en tres niveles (etiquetas pisadas, medido en la
+   auditoria de s195) y el titulo se parte palabra a palabra. El envoltorio
+   [data-pace-ritmo-panel] es el contenedor; por debajo de 620 px manda la copia
+   de movil, que esta hecha para 360-430 y cabe de sobra. */
+[data-pace-ritmo-panel] { container-type: inline-size; }
+@container (max-width: 620px) {
+  .pace-rt-esc { display: none; }
+  .pace-rt-mov { display: block; }
+}
 [data-pace-ritmo] :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
 /* EL RÓTULO del corte del aro. Con menú lleva debajo «Hasta las …» y sube lo que
@@ -30936,8 +30952,8 @@ Object.assign(window, { Onboarding });
 .pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
   text-align: center; line-height: 1.22; pointer-events: none; }
 .pace-rt-seg .pace-rt-etiq { top: 18px; }
-.pace-rt-etiq.pace-rt-alta::before { content: ''; position: absolute; left: 50%; bottom: 100%; height: var(--rt-sube, 40px); border-left: 1px solid var(--line); }
-.pace-rt-etiq.pace-rt-alta.pace-rt-final::before { left: auto; right: 6px; }
+.pace-rt-etiq.pace-rt-alta::before { content: ''; position: absolute; left: calc(50% + var(--rt-hilo, 0px)); bottom: 100%; height: var(--rt-sube, 40px); border-left: 1px solid var(--line); }
+.pace-rt-etiq.pace-rt-alta.pace-rt-final::before { left: auto; right: calc(6px - var(--rt-hilo, 0px)); }
 .pace-rt-etiq.pace-rt-final { left: auto; right: -6px; transform: none; text-align: right; }
 .pace-rt-etiq > span { display: block; }
 .pace-rt-etiq .pace-rt-h { font-size: 10px; letter-spacing: 0.06em; color: var(--ink-3); font-variant-numeric: tabular-nums; }
@@ -31058,8 +31074,26 @@ function ritmoMetaPlato(it, t, tn) {
   return p.min + ' min · ' + ritmoModulo(p.modulo, t) + ' · ' + t('ritmo.motivo.' + it.motivo);
 }
 
+/* Un texto con la GOTA del vaso pegada a su última palabra. Un inline-grid es un
+   «átomo» para el partido de líneas: puede saltar solo aunque no haya espacio
+   delante (a 360 px, «Para cerrar la jornada» cabía justo y la gota caía sola
+   en la línea de abajo, medido en la auditoría de s195; el word joiner no lo
+   evita en Chromium). La última palabra y la gota van en un nowrap. */
+function RitmoMetaGota(_ref2) {let { texto, agua } = _ref2;
+  if (!agua) return /*#__PURE__*/React.createElement(React.Fragment, null, texto);
+  const s = String(texto);
+  const corte = s.lastIndexOf(' ');
+  const antes = corte < 0 ? '' : s.slice(0, corte + 1);
+  const ultima = corte < 0 ? s : s.slice(corte + 1);
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null,
+    antes, /*#__PURE__*/React.createElement("span", { style: { whiteSpace: 'nowrap' } }, ultima, /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "agua", className: "pace-rt-gota" }))
+    ));
+
+}
+
 /* La frase con {marcadores}: cada marcador se cambia por su nodo. */
-function RitmoFrase(_ref2) {let { plantilla, huecos } = _ref2;
+function RitmoFrase(_ref3) {let { plantilla, huecos } = _ref3;
   const partes = String(plantilla).split(/\{(\w+)\}/);
   return (/*#__PURE__*/
     React.createElement(React.Fragment, null,
@@ -31078,7 +31112,7 @@ function RitmoFrase(_ref2) {let { plantilla, huecos } = _ref2;
    hora. La regla ya sabe qué hacer con un inicio tras la salida (una hora es una
    hora) y con una comida que no cae en la jornada (no la sirve). */
 var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410] };
-function RitmoSelector(_ref3) {let { campo, horario } = _ref3;
+function RitmoSelector(_ref4) {let { campo, horario } = _ref4;
   const { t } = useT();
   let valores = [];
   if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];else
@@ -31104,10 +31138,10 @@ function ritmoHuecos(horario) {
 }
 
 Object.assign(window, {
-  RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
+  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
   RitmoFrase, RitmoSelector, ritmoHuecos
 });
-;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoFrase, RITMO_RANGOS, RitmoSelector, ritmoHuecos });
+;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, ritmoHuecos });
 })();
 </script>
   <script>
@@ -31169,8 +31203,21 @@ function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang } = _ref;
 function ritmoColocarEtiquetas(lin, zona) {
   if (!lin || !zona || !lin.offsetParent) return; /* oculta (piel móvil) */
   const l = Array.prototype.slice.call(lin.querySelectorAll('[data-pace-ritmo-etiq]'));
-  l.forEach((e) => {e.style.top = '';e.classList.remove('pace-rt-alta');});
+  l.forEach((e) => {e.style.top = '';e.style.marginLeft = '';e.style.removeProperty('--rt-hilo');e.classList.remove('pace-rt-alta');});
   if (!l.length) return;
+  /* s195: NINGUNA ETIQUETA SE SALE DEL MARCO. Van centradas bajo su parada, y la
+     primera parada de un día empezado tarde cae junto al borde: «Cadena posterior
+     de pie» asomaba 37 px fuera del panel (captura del usuario). Se mide cuánto
+     sobresale de la línea —con 16 px de aire, dentro del padding del panel— y se
+     empuja con margin-left; el hilo (--rt-hilo) se desplaza lo contrario para
+     seguir apuntando a su parada. Antes de repartir niveles, para que el
+     reparto vea las cajas ya empujadas. */
+  const marco = lin.getBoundingClientRect();
+  l.forEach((e) => {
+    const b = e.getBoundingClientRect();
+    const dx = b.left < marco.left - 16 ? marco.left - 16 - b.left : b.right > marco.right + 16 ? marco.right + 16 - b.right : 0;
+    if (dx) {e.style.marginLeft = Math.round(dx) + 'px';e.style.setProperty('--rt-hilo', Math.round(-dx) + 'px');}
+  });
   const r = l.map((e) => e.getBoundingClientRect());
   const niveles = [[], [], []];
   l.forEach((e, i) => {
@@ -31406,19 +31453,31 @@ function RitmoPregunta(_ref3) {let { state } = _ref3;
 
 /* La frase del menú servido: de [inicio] a [salida] · comida a las [hora] durante
    [dur]. Solo la jornada entera edita la salida; las otras opciones dicen a qué
-   hora acaban. Llegando tarde añade «hoy de 10:30 a 17:00» (nunca «tarde»). */
+   hora acaban. Llegando tarde añade «hoy de 10:30 a 17:00» (nunca «tarde»).
+   s195: LA COMIDA SOLO SI EL DÍA LA SIRVE. «Una hora» a las 14:30 decía «comida a
+   las 16:00 durante 30 min» con sus dos selectores, y el usuario preguntó por qué
+   («imagino que lo de comida debería ser en sesiones largas»). La regla ya lo sabe
+   (`m.comida` es null cuando ninguna comida cae en el día): la frase lo escucha y
+   usa la plantilla «.sin». La comida se sigue editando en «Cambiar». */
 function RitmoFraseMenu(_ref4) {let { plan, horario, plantilla, capital } = _ref4;
   const { t, tn } = useT();
   const m = plan.m;
   const huecos = ritmoHuecos(horario);
-  if (m.opcion !== 'jornada') huecos.salida = ritmoHora(m.hasta);
+  /* s195: UNA HORA, DOS HORAS Y MEDIA JORNADA EMPIEZAN CUANDO EMPIEZAS, así que su
+     frase lleva las horas de HOY en texto (desde · hasta) y no el selector del
+     horario habitual: con el inicio habitual a las 14:30 y el día empezado a las
+     10:23 decía «de 14:30 a 12:50» (captura del usuario). El horario se sigue
+     editando en «Cambiar»; la jornada entera conserva sus selectores y su «hoy de». */
+  const jornada = m.opcion === 'jornada';
+  if (!jornada) {huecos.inicio = ritmoHora(m.desde);huecos.salida = ritmoHora(m.hasta);}
+  if (m.comida == null) plantilla = plantilla + '.sin';
   /* `capital`: cuando la frase abre línea (la hoja) y no va tras «Jornada entera ·». */
   let texto = t(plantilla);
   if (capital) texto = texto.charAt(0).toUpperCase() + texto.slice(1);
   return (/*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
     React.createElement(RitmoFrase, { plantilla: texto, huecos: huecos }),
-    m.tarde ? ' · ' + tn('ritmo.hoy', { desde: ritmoHora(m.desde), hasta: ritmoHora(m.hasta) }) : null
+    jornada && m.tarde ? ' · ' + tn('ritmo.hoy', { desde: ritmoHora(m.desde), hasta: ritmoHora(m.hasta) }) : null
     ));
 
 }
@@ -31480,7 +31539,7 @@ function RitmoFilaParada(_ref8) {let { it, rotulo } = _ref8;
   }
   if (!it.platos || !it.platos.length) return null;
   return /*#__PURE__*/React.createElement(RitmoFila, { rotulo: cab, modulo: it.platos[0].modulo, nombre: ritmoPlatos(it, t, lang),
-    meta: /*#__PURE__*/React.createElement(React.Fragment, null, ritmoMetaPlato(it, t, tn), it.agua ? /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "agua", className: "pace-rt-gota" }) : null),
+    meta: /*#__PURE__*/React.createElement(RitmoMetaGota, { texto: ritmoMetaPlato(it, t, tn), agua: it.agua }),
     claves: it.platos.map((p) => p.clave) });
 }
 
@@ -31593,8 +31652,8 @@ function RitmoLista(_ref) {let { plan } = _ref;
         React.createElement(React.Fragment, { key: p.id }, k ? /*#__PURE__*/React.createElement("br", null) : null, k ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
         )
         ), /*#__PURE__*/
-        React.createElement("div", { className: "pace-rt-plato-m" },
-        meta, it.agua ? /*#__PURE__*/React.createElement(RitmoGlifo, { modulo: "agua", className: "pace-rt-gota" }) : null,
+        React.createElement("div", { className: "pace-rt-plato-m" }, /*#__PURE__*/
+        React.createElement(RitmoMetaGota, { texto: meta, agua: it.agua }),
         i === iActual ? /*#__PURE__*/React.createElement(React.Fragment, null, ' · ', /*#__PURE__*/React.createElement("b", { style: { color: 'var(--focus)', fontWeight: 500 } }, t('ritmo.ahora.min'))) : null
         )
         ),
@@ -33180,7 +33239,15 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
         position: relative;
         z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
         margin-top: calc(var(--pace-horizon) * -1) !important;
+        container-type: inline-size;
       }
+      /* s195: LOS CUATRO CHIPS CABEN SIEMPRE. En fila miden 756 y la home tiene 664
+         a 1024 px y 460 en tableta vertical (820): «Hidratate» asomaba (auditoria
+         s195). Por CONTENEDOR, porque plegar la barra cambia el ancho: hasta 760,
+         chips compactos; hasta 560, la rejilla 2 x 2. Estilos en linea: !important. */
+      @container (max-width: 760px) { [data-pace-activitybar-grid] { gap: 10px !important; }
+        [data-pace-activitybar-chip] { min-width: 0 !important; flex: 1 1 0 !important; padding: 12px 14px !important; gap: 10px !important; } }
+      @container (max-width: 560px) { [data-pace-activitybar-grid] { display: grid !important; grid-template-columns: 1fr 1fr; } }
       [data-pace-spc] {
         margin-top: 0 !important;   /* anula el solapamiento «atardecer» de s123 */
         /* recupera alto vertical → aro un poco mayor (sin tocar contenido ni
@@ -34440,10 +34507,24 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
        exactamente lo que este bucle controla, así que medirlo a él converge. */
 
     var stackFit = document.querySelector('[data-pace-home-stack]');
+    /* s195: LA LUZ TAMBIEN TIENE QUE CABER. Las dos capas del sol son cajas
+       absolutas colgadas de [data-pace-timer-wrap], proporcionales a D, y el
+       stack no las mide; si sobresalen del contenedor, la home hace scroll con
+       la rueda (38 px a 1536x704 con la jornada cerrada, medido). Se mide su
+       fondo con el scrollHeight del WRAP -- que si las envuelve y responde a D en
+       la misma tarea -- y se toma el mayor de los dos desbordes. No se escribe
+       aqui ninguna constante de la luz: el motor solo mide. */
+    var wrapFit = dial.closest('[data-pace-timer-wrap]');
+    var luzOver = function () {
+      if (!wrapFit) return 0;
+      var b = body.getBoundingClientRect();
+      return Math.round(wrapFit.getBoundingClientRect().top + body.scrollTop + wrapFit.scrollHeight - (b.top + body.clientHeight));
+    };
     var medirOver = function () {
-      return stackFit ?
+      var stackOver = stackFit ?
       stackFit.offsetHeight - body.clientHeight :
       body.scrollHeight - body.clientHeight;
+      return Math.max(stackOver, luzOver());
     };
     var overPrevio = null;
     var dPrevio = D;
@@ -34489,6 +34570,11 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     if (stack) {
       var libre = Math.max(0, Math.round(body.clientHeight - stack.offsetHeight));
       setVar('--pace-home-slack', libre + 'px');
+      /* s195: el reparto baja el stack (0,38 del sobrante en movil) y con el la
+         luz, que el bucle midio con sobrante cero. Si asi sobresale, se cede
+         sobrante: tres veces el desborde (1 / 0,38 = 2,6) lo quita de una. */
+      var luzTras = luzOver();
+      if (luzTras > 0) setVar('--pace-home-slack', Math.max(0, libre - luzTras * 3) + 'px');
     }
   }
 

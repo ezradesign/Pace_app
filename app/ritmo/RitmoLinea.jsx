@@ -55,8 +55,21 @@ function RitmoEtiqueta({ it, final, t, tn, lang }) {
 function ritmoColocarEtiquetas(lin, zona) {
   if (!lin || !zona || !lin.offsetParent) return;   /* oculta (piel móvil) */
   const l = Array.prototype.slice.call(lin.querySelectorAll('[data-pace-ritmo-etiq]'));
-  l.forEach((e) => { e.style.top = ''; e.classList.remove('pace-rt-alta'); });
+  l.forEach((e) => { e.style.top = ''; e.style.marginLeft = ''; e.style.removeProperty('--rt-hilo'); e.classList.remove('pace-rt-alta'); });
   if (!l.length) return;
+  /* s195: NINGUNA ETIQUETA SE SALE DEL MARCO. Van centradas bajo su parada, y la
+     primera parada de un día empezado tarde cae junto al borde: «Cadena posterior
+     de pie» asomaba 37 px fuera del panel (captura del usuario). Se mide cuánto
+     sobresale de la línea —con 16 px de aire, dentro del padding del panel— y se
+     empuja con margin-left; el hilo (--rt-hilo) se desplaza lo contrario para
+     seguir apuntando a su parada. Antes de repartir niveles, para que el
+     reparto vea las cajas ya empujadas. */
+  const marco = lin.getBoundingClientRect();
+  l.forEach((e) => {
+    const b = e.getBoundingClientRect();
+    const dx = b.left < marco.left - 16 ? marco.left - 16 - b.left : b.right > marco.right + 16 ? marco.right + 16 - b.right : 0;
+    if (dx) { e.style.marginLeft = Math.round(dx) + 'px'; e.style.setProperty('--rt-hilo', Math.round(-dx) + 'px'); }
+  });
   const r = l.map((e) => e.getBoundingClientRect());
   const niveles = [[], [], []];
   l.forEach((e, i) => {

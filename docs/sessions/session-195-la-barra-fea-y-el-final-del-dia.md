@@ -1,6 +1,6 @@
-# s195 · La barra fea y el final del día (v0.125.1 + v0.125.2)
+# s195 · La barra fea y el final del día (v0.125.1 · v0.125.2 · v0.125.3)
 
-**Fecha:** 2026-09-18 · **Versiones publicadas:** v0.125.1 y v0.125.2 · **Suite:** 260 → 267 → **268**
+**Fecha:** 2026-09-18/19 · **Versiones publicadas:** v0.125.1, v0.125.2 y v0.125.3 · **Suite:** 260 → 267 → 268 → **277**
 
 > Encargo: el usuario llegó con una captura de `paceweb.pages.dev` a 1920×1080 con el escritorio
 > al 125 % (Brave al 100 %, o sea **1536×704** de viewport): «no entiendo la barra fea del medio
@@ -121,6 +121,59 @@ de desmontaje.
 de medir. Retrasadas 2,5 s (detrás del re-render) y midiendo tras `fonts.ready`: rojo en HEAD
 («siguen colocadas con la fuente de reserva, zona 122»), verde con el arreglo. Suite 267 → **268**.
 
+## 4c · v0.125.3 · la auditoría de viewports y lo que el usuario vio un sábado
+
+El usuario pidió «comprueba los viewports de desktop y teléfono, audita todo», y trajo cuatro
+capturas más de uso real. `scripts/audit/auditoria-viewports-s195.js`: **16 viewports** (10 de
+escritorio, del 2560×1300 a la tableta vertical de 820×1100; 6 de teléfono, del 360×730 al
+768×1024) × **9-10 escenas** (pregunta · mañana · pausa abierta · tarde recolocada · el sábado del
+usuario · por libre · jornada cerrada · oscuro · inglés · la hoja en móvil), midiendo errores de
+consola, scroll real por arrastre, piezas con texto que se pisan, texto recortado, lo que se sale
+del panel y lo que asoma por el borde. **150 celdas, y una foto por celda para la mirada humana.**
+
+Lo que salió, y su arreglo:
+
+1. **«Una hora» a las 14:30 decía «comida a las 16:00 durante 30 min»** (captura). La regla ya sabía
+   que no servía comida (`m.comida` null); la frase no lo escuchaba. Plantillas «.sin» en los dos
+   idiomas (`ritmo.frase.menu.sin` · `ritmo.frase.movil.sin`), +2 claves en el censo del verify.
+2. **«Dos horas · de 14:30 a 12:50»** (captura): con el inicio habitual a las 14:30 y el día empezado
+   a las 10:23 («llegar antes es empezar»), la frase mezclaba el selector del horario con la hora
+   de hoy. Las opciones que empiezan cuando empiezas (una hora · dos horas · media jornada) llevan
+   ahora las horas de HOY en texto; la jornada entera conserva selectores y su «hoy de».
+3. **«Cadena posterior de pie» se salía del marco** (captura): la primera parada de un día recolocado
+   cae junto al borde y su etiqueta, centrada, asomaba 37 px fuera del panel. `ritmoColocarEtiquetas`
+   mide cuánto sobresale de la línea (16 px de aire) y empuja con `margin-left`; el hilo se
+   desplaza lo contrario (`--rt-hilo`) para seguir apuntando a su parada.
+4. **Tableta vertical (820×1100, piel de escritorio con barra de 280)**: al panel le quedan 460 px, la
+   línea con nueve paradas no cabía ni en tres niveles y el título se partía palabra a palabra.
+   `[data-pace-ritmo-panel]` es contenedor y por debajo de 620 px manda la copia compacta (la de
+   móvil), que está hecha para 360-430. Lo que **no** se toca: la composición de la piel de
+   escritorio a ese ancho (aro de 227 flotando en 1100 de alto) — es la pregunta de si una tableta
+   vertical debería llevar la piel de móvil, y eso es un breakpoint, no un arreglo.
+5. **Por libre, «Hidrátate» asomaba por la derecha a 1024 y a 820**: los cuatro chips miden 756 en
+   fila. Container query sobre `[data-pace-activitybar]`: hasta 760 de contenido, chips compactos;
+   hasta 560, la rejilla 2×2. Estilos en línea, así que `!important`.
+6. **Con la jornada cerrada la home arrastraba 38 px a 1536×704** (8 a 1600×780, 15 a 1366×657, 11 a
+   1280×600): el aro crece a 510 con un panel de 73 px y la caja del LIMBO (cuadrada, 1,32 D, y
+   tiene que ser cuadrada o el halo sale elipse) sobresale. No se recorta (`clip-path` no quita
+   desbordamiento desplazable; `overflow: clip` cortaría el halo en el aro, medido): **el motor de
+   geometría mide ahora también la luz** —el `scrollHeight` del `[data-pace-timer-wrap]` la
+   envuelve y responde a D en la misma tarea— y toma el mayor de los dos desbordes. El aro cede
+   lo justo (510 → 483 a 1536×704 con la jornada cerrada). Y tras publicar el sobrante, que en
+   móvil baja el stack un 38 %, se vuelve a medir y se cede sobrante si la luz asoma.
+7. **La gota del vaso caía sola en la línea de abajo** en móvil («Para cerrar la jornada 💧» a 360):
+   un inline-grid es un átomo para el partido de líneas y salta aunque no haya espacio delante; el
+   word joiner no lo evita en Chromium (medido). `RitmoMetaGota`: la última palabra y la gota en un
+   `nowrap`.
+
+Lo que se vio y **no** se tocó (para la página de ideas o para el usuario): la etiqueta «BLOQUE 1
+DE 9» rozando el trazo del aro a 375×667 por la mañana (D 306, el interior con sus fijos); la
+tableta vertical con la piel de escritorio.
+
+**Red:** `tests/ritmo-panel.spec.js`, **9 tests**, todos calibrados en rojo contra el artefacto de
+HEAD (el de la etiqueta tuvo que endurecerse: con un bloque de 4 min la etiqueta quedaba 9 px
+dentro del borde y salía verde; con uno de 2, como el del usuario, rojo). Suite **268 → 277**.
+
 ## 5 · Trampas de la sesión
 
 - **Un SW caducado en el preview mide otra versión**: purgar (`unregister` + `caches.delete`) antes
@@ -134,5 +187,7 @@ de medir. Retrasadas 2,5 s (detrás del re-render) y midiendo tras `fonts.ready`
 - **El servidor del 8765 desaparece a mitad** (otra vez): `preview_start` lo relanza.
 - **Un contexto frío de Chromium re-renderiza la home hacia los 1,4 s**; un control contra HEAD
   que mida después de eso puede salir verde por casualidad. Las fuentes retrasadas van DETRÁS.
+- **Un test de geometría que sale verde en HEAD no vigila nada**: el escenario tiene que ser el
+  del usuario (2 min, no 4) y el marco el de la regla (la línea + 16), no el borde del panel.
 - **Esperar `document.fonts.ready` desde fuera (Playwright) no es lo mismo que la app**: en las
   fotos dejaba la colocación de reserva; se espera reloj de pared y se comprueba la zona.

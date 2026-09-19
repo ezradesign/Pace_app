@@ -23,6 +23,18 @@
   .pace-rt-esc { display: none; }
   .pace-rt-mov { display: block; }
 }
+/* s195: LA COPIA COMPACTA TAMBIEN CUANDO EL PANEL ES ESTRECHO, no solo cuando el
+   viewport es de movil. Una tableta en vertical (820 px) lleva la piel de
+   escritorio con su barra lateral de 280, y al panel le quedan ~460: la linea con
+   nueve paradas no cabe ni en tres niveles (etiquetas pisadas, medido en la
+   auditoria de s195) y el titulo se parte palabra a palabra. El envoltorio
+   [data-pace-ritmo-panel] es el contenedor; por debajo de 620 px manda la copia
+   de movil, que esta hecha para 360-430 y cabe de sobra. */
+[data-pace-ritmo-panel] { container-type: inline-size; }
+@container (max-width: 620px) {
+  .pace-rt-esc { display: none; }
+  .pace-rt-mov { display: block; }
+}
 [data-pace-ritmo] :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
 /* EL RÓTULO del corte del aro. Con menú lleva debajo «Hasta las …» y sube lo que
@@ -148,8 +160,8 @@
 .pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
   text-align: center; line-height: 1.22; pointer-events: none; }
 .pace-rt-seg .pace-rt-etiq { top: 18px; }
-.pace-rt-etiq.pace-rt-alta::before { content: ''; position: absolute; left: 50%; bottom: 100%; height: var(--rt-sube, 40px); border-left: 1px solid var(--line); }
-.pace-rt-etiq.pace-rt-alta.pace-rt-final::before { left: auto; right: 6px; }
+.pace-rt-etiq.pace-rt-alta::before { content: ''; position: absolute; left: calc(50% + var(--rt-hilo, 0px)); bottom: 100%; height: var(--rt-sube, 40px); border-left: 1px solid var(--line); }
+.pace-rt-etiq.pace-rt-alta.pace-rt-final::before { left: auto; right: calc(6px - var(--rt-hilo, 0px)); }
 .pace-rt-etiq.pace-rt-final { left: auto; right: -6px; transform: none; text-align: right; }
 .pace-rt-etiq > span { display: block; }
 .pace-rt-etiq .pace-rt-h { font-size: 10px; letter-spacing: 0.06em; color: var(--ink-3); font-variant-numeric: tabular-nums; }

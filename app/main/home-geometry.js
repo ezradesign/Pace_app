@@ -281,10 +281,24 @@
        movimiento se llevaba además una home encogida un 40 %. El stack es
        exactamente lo que este bucle controla, así que medirlo a él converge. */
     var stackFit = document.querySelector('[data-pace-home-stack]');
+    /* s195: LA LUZ TAMBIEN TIENE QUE CABER. Las dos capas del sol son cajas
+       absolutas colgadas de [data-pace-timer-wrap], proporcionales a D, y el
+       stack no las mide; si sobresalen del contenedor, la home hace scroll con
+       la rueda (38 px a 1536x704 con la jornada cerrada, medido). Se mide su
+       fondo con el scrollHeight del WRAP -- que si las envuelve y responde a D en
+       la misma tarea -- y se toma el mayor de los dos desbordes. No se escribe
+       aqui ninguna constante de la luz: el motor solo mide. */
+    var wrapFit = dial.closest('[data-pace-timer-wrap]');
+    var luzOver = function () {
+      if (!wrapFit) return 0;
+      var b = body.getBoundingClientRect();
+      return Math.round(wrapFit.getBoundingClientRect().top + body.scrollTop + wrapFit.scrollHeight - (b.top + body.clientHeight));
+    };
     var medirOver = function () {
-      return stackFit
+      var stackOver = stackFit
         ? stackFit.offsetHeight - body.clientHeight
         : body.scrollHeight - body.clientHeight;
+      return Math.max(stackOver, luzOver());
     };
     var overPrevio = null;
     var dPrevio = D;
@@ -330,6 +344,11 @@
     if (stack) {
       var libre = Math.max(0, Math.round(body.clientHeight - stack.offsetHeight));
       setVar('--pace-home-slack', libre + 'px');
+      /* s195: el reparto baja el stack (0,38 del sobrante en movil) y con el la
+         luz, que el bucle midio con sobrante cero. Si asi sobresale, se cede
+         sobrante: tres veces el desborde (1 / 0,38 = 2,6) lo quita de una. */
+      var luzTras = luzOver();
+      if (luzTras > 0) setVar('--pace-home-slack', Math.max(0, libre - luzTras * 3) + 'px');
     }
   }
 

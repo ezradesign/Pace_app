@@ -819,7 +819,17 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
   que agranda la zona de toque sin mover la línea. En móvil abre el selector del sistema.
 - **Las opciones** son tarjetas de `--r-md` con el nombre en cursiva 16 px y la hora de fin en
   versalita; en hover, lavado `--focus-soft` y borde `--focus-cta`. En móvil, rejilla 2×2.
-- **Las dos pieles son dos copias en el DOM** (`.pace-rt-esc` / `.pace-rt-mov`, corte 768/769).
+- **Las dos pieles son dos copias en el DOM** (`.pace-rt-esc` / `.pace-rt-mov`, corte 768/769), **y también
+  por el ancho del panel (s195 · v0.125.3)**: bajo 620 px de contenedor manda la compacta (una tableta en
+  vertical con la piel de escritorio deja 460 px al panel).
+- **La frase del menú dice lo que el día sirve (s195 · v0.125.3)**: la comida solo si cae dentro («Una hora ·
+  de 14:30 a 15:30», sin comida), y las opciones que empiezan cuando empiezas llevan las horas de hoy en
+  texto; la jornada entera conserva los selectores y el «hoy de».
+- **Ninguna etiqueta se sale del marco (s195 · v0.125.3)**: la que sobresale de la línea (16 px de aire) se
+  empuja y su hilo sigue apuntando a la parada. **La gota va pegada a su última palabra** en las filas y en
+  la hoja (un inline-grid salta de línea solo; la última palabra y la gota van en `nowrap`).
+- **Los chips de Actividades (por libre) caben siempre (s195 · v0.125.3)**: bajo 760 px de contenedor se
+  compactan (padding 12/14, gap 10) y bajo 560 van en la rejilla 2×2 de móvil.
 
 ---
 

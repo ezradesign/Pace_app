@@ -420,7 +420,15 @@
         position: relative;
         z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
         margin-top: calc(var(--pace-horizon) * -1) !important;
+        container-type: inline-size;
       }
+      /* s195: LOS CUATRO CHIPS CABEN SIEMPRE. En fila miden 756 y la home tiene 664
+         a 1024 px y 460 en tableta vertical (820): «Hidratate» asomaba (auditoria
+         s195). Por CONTENEDOR, porque plegar la barra cambia el ancho: hasta 760,
+         chips compactos; hasta 560, la rejilla 2 x 2. Estilos en linea: !important. */
+      @container (max-width: 760px) { [data-pace-activitybar-grid] { gap: 10px !important; }
+        [data-pace-activitybar-chip] { min-width: 0 !important; flex: 1 1 0 !important; padding: 12px 14px !important; gap: 10px !important; } }
+      @container (max-width: 560px) { [data-pace-activitybar-grid] { display: grid !important; grid-template-columns: 1fr 1fr; } }
       [data-pace-spc] {
         margin-top: 0 !important;   /* anula el solapamiento «atardecer» de s123 */
         /* recupera alto vertical → aro un poco mayor (sin tocar contenido ni

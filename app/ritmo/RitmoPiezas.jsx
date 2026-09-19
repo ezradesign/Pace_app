@@ -56,6 +56,24 @@ function ritmoMetaPlato(it, t, tn) {
   return p.min + ' min · ' + ritmoModulo(p.modulo, t) + ' · ' + t('ritmo.motivo.' + it.motivo);
 }
 
+/* Un texto con la GOTA del vaso pegada a su última palabra. Un inline-grid es un
+   «átomo» para el partido de líneas: puede saltar solo aunque no haya espacio
+   delante (a 360 px, «Para cerrar la jornada» cabía justo y la gota caía sola
+   en la línea de abajo, medido en la auditoría de s195; el word joiner no lo
+   evita en Chromium). La última palabra y la gota van en un nowrap. */
+function RitmoMetaGota({ texto, agua }) {
+  if (!agua) return <React.Fragment>{texto}</React.Fragment>;
+  const s = String(texto);
+  const corte = s.lastIndexOf(' ');
+  const antes = corte < 0 ? '' : s.slice(0, corte + 1);
+  const ultima = corte < 0 ? s : s.slice(corte + 1);
+  return (
+    <React.Fragment>
+      {antes}<span style={{ whiteSpace: 'nowrap' }}>{ultima}<RitmoGlifo modulo="agua" className="pace-rt-gota" /></span>
+    </React.Fragment>
+  );
+}
+
 /* La frase con {marcadores}: cada marcador se cambia por su nodo. */
 function RitmoFrase({ plantilla, huecos }) {
   const partes = String(plantilla).split(/\{(\w+)\}/);
@@ -102,6 +120,6 @@ function ritmoHuecos(horario) {
 }
 
 Object.assign(window, {
-  RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
+  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
   RitmoFrase, RitmoSelector, ritmoHuecos,
 });
