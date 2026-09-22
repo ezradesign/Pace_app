@@ -285,6 +285,12 @@ function sidebarActionView(accion, t, tn, lang) {
       color: 'var(--ink-3)',
       titulo: titulo,
       meta: rt.larga ? tn('ritmo.larga', { n: rt.dur }) : rt.min + ' min · ' + ritmoModulo(rt.modulo, t),
+      /* s197 · la tarjeta solo miraba hacia delante: con cuatro pausas hechas y una
+         saltada decía lo mismo que a las 9:00. La línea del panel ya enseña hecha y
+         saltada nodo a nodo, así que aquí va lo único que la línea NO dice con
+         palabras —el recuento— y en el teléfono, donde la línea es una tira de puntos,
+         es lo que se lee de un vistazo en el cajón. */
+      llevas: ritmoLlevas(rt.bloques || 0, rt.pausas || 0, t, tn),
     };
   }
   if (accion.kind === 'suggest') {
@@ -318,6 +324,7 @@ function SidebarPrimaryAction({ accion, vista, onAct }) {
         <span style={sidebarStyles.accionFlecha} aria-hidden="true">→</span>
       </h4>
       {meta ? <p style={sidebarStyles.accionMeta}>{meta}</p> : null}
+      {vista.llevas ? <p style={sidebarStyles.accionLlevas} data-pace-sidebar-llevas>{vista.llevas}</p> : null}
     </div>
   );
 }

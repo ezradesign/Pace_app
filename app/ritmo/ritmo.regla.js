@@ -53,7 +53,7 @@ var RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
 var RITMO_FORMAS = {
   '1h':      { bloque: 25, foco: 50 },
   '2h':      { bloque: 35, foco: 105 },
-  'media':   { bloque: 45, foco: 180 },
+  'media':   { bloque: 45, foco: Infinity },
   'jornada': { bloque: 45, foco: Infinity },
 };
 
@@ -70,10 +70,19 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
-  var inicio = horario.inicio, salida = horario.salida;
-  /* s195b: con la comida apagada (`horario.sinComida`) no hay comida que caiga en
-     el día: fuera del alcance, y la regla sigue igual. */
-  var comeA = horario.sinComida ? Infinity : horario.comida;
+  /* s197: LA MEDIA JORNADA ES UN HORARIO PROPIO —una mañana o una tarde, de tu hora
+     a tu hora— y no «3 h de foco desde que pulsas». Decisión del usuario: «podría ser
+     de mañana o de tarde, o sea que el horario es flexible… también la jornada completa
+     depende del horario real de cada usuario». Sus horas viven aparte (`horario.media`)
+     porque son OTRAS que las de la completa y se recuerdan como preferencia. */
+  var med = (opcion === 'media' && horario.media) ? horario.media : null;
+  var inicio = med ? med.inicio : horario.inicio;
+  var salida = med ? med.salida : horario.salida;
+  /* s197: LA COMIDA ES SOLO DE LA JORNADA ENTERA («se entiende que cuando se acabe la
+     media jornada ya se hace la comida»). Antes cualquier opción que cruzara la hora la
+     servía: «Dos horas» de 13:00 a 15:00 metía la comida a las 14:00. `sinComida`
+     (s195b) sigue apagándola también en la entera. */
+  var comeA = (opcion === 'jornada' && !horario.sinComida) ? horario.comida : Infinity;
   /* s195c: `horario.desfaseLarga` corre la cadencia de la pausa larga (la semana lo
      usa el miércoles: la larga es la segunda, no la tercera). 0 si no se dice. */
   var desfase = Number(horario.desfaseLarga) || 0;

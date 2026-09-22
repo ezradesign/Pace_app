@@ -107,9 +107,11 @@ test('la home pregunta cuánto trabajas, con el horario en la frase y la hora de
   const chips = vis(page, '[data-pace-ritmo-opcion]');
   await expect(chips).toHaveCount(4);
   await expect(vis(page, '[data-pace-ritmo-opcion="1h"]')).toContainText('Hasta las 10:00');
-  await expect(vis(page, '[data-pace-ritmo-opcion="media"]')).toContainText('Hasta las 12:30');
-  await expect(vis(page, '[data-pace-ritmo-opcion="jornada"]')).toContainText('Hasta las 17:00');
-  await expect(vis(page, 'select[data-pace-ritmo-horario]')).toHaveCount(4);
+  /* s197: las dos jornadas son HORARIOS tuyos y dicen su tramo; el detalle, en ritmo-media.spec.js */
+  await expect(vis(page, '[data-pace-ritmo-opcion="media"]')).toContainText('De 9:00 a 13:00');
+  await expect(vis(page, '[data-pace-ritmo-opcion="jornada"]')).toContainText('De 9:00 a 17:00');
+  /* cuatro de la jornada entera (entrada, comida, cuánto dura, salida) + dos de la media (s197) */
+  await expect(vis(page, 'select[data-pace-ritmo-horario]')).toHaveCount(6);
   await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Foco manual');
   expect(errores).toEqual([]);
 });
@@ -359,7 +361,7 @@ test('«Hoy voy por libre» devuelve la carta con la tarjeta del ritmo; una lose
   const tarjeta = vis(page, '[data-pace-ritmo-tarjeta]');
   await expect(tarjeta).toContainText('¿Cuánto trabajas hoy?');
   await expect(tarjeta.locator('[data-pace-ritmo-loseta]')).toHaveCount(4);
-  await expect(tarjeta.locator('[data-pace-ritmo-loseta="jornada"]')).toContainText('Hasta las 17:00');
+  await expect(tarjeta.locator('[data-pace-ritmo-loseta="jornada"]')).toContainText('De 9:00 a 17:00');
   await expect(page.locator('[data-pace-spc]')).toHaveCount(1);
   await expect(tarjeta.locator('[data-pace-ritmo-caminos]')).toHaveText('Ver caminos');
   await tarjeta.locator('[data-pace-ritmo-ajustar]').click();

@@ -2,8 +2,12 @@
    =============================================
    Lo que se guarda (en `pace.state.v2`, clave `ritmo`):
 
-     horario  { inicio, comida, comidaDur, salida } en minutos, o null mientras
-              la persona no lo haya tocado (entonces se propone uno por región).
+     horario  { inicio, comida, comidaDur, salida, media: { inicio, salida } } en
+              minutos, o null mientras la persona no lo haya tocado (entonces se
+              propone uno por región). `media` (s197) son las horas de la MEDIA
+              JORNADA, que es un horario propio —una mañana o una tarde— y no una
+              duración: se recuerdan como preferencia y se editan aparte. Mientras
+              nadie las toque siguen a la entrada de la jornada (`ritmoMedia`).
      libre    'YYYY-MM-DD' = «hoy voy por libre» · true = la carta SIEMPRE, sin
               fecha. `true` no tiene botón todavía: es el hueco de un ajuste
               futuro, y hoy lo usa la suite para las pruebas que no son de este
@@ -59,6 +63,17 @@ function ritmoHorarioInicial() {
   return { inicio: 540, comida: comida, comidaDur: 60, salida: 1020 };
 }
 
+/* Las horas de la media jornada: las guardadas o, mientras nadie las toque, CUATRO
+   HORAS desde tu entrada. Derivarlas aquí (y no guardarlas de entrada) es lo que hace
+   que una instalación vieja no necesite migración: si mueves la entrada y nunca has
+   tocado la media jornada, te sigue. */
+var RITMO_MEDIA_DUR = 240;
+function ritmoMedia(h) {
+  var m = h && h.media;
+  if (m && m.inicio != null && m.salida != null) return { inicio: m.inicio, salida: m.salida };
+  return { inicio: h.inicio, salida: h.inicio + RITMO_MEDIA_DUR };
+}
+
 function ritmoHoy() {
   return typeof todayISO === 'function' ? todayISO() : '';
 }
@@ -77,8 +92,10 @@ function ritmoAhoraExacto() {
 function ritmoDe(s) {
   var r = (s && s.ritmo) || {};
   var hoy = ritmoHoy();
+  var h = Object.assign(ritmoHorarioInicial(), r.horario || {});
+  h.media = ritmoMedia(h);
   return {
-    horario: Object.assign(ritmoHorarioInicial(), r.horario || {}),
+    horario: h,
     libre: r.libre === true || (!!hoy && r.libre === hoy),
     dia: r.dia && r.dia.fecha === hoy ? r.dia : null,
   };
@@ -272,7 +289,12 @@ function ritmoSiguiente(s) {
   do {
     if (it.platos && it.platos[0]) {
       var plato = it.platos[0];
-      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora };
+      /* s197: `bloques` y `pausas` (las HECHAS, no las saltadas) para la frase de la
+         tarjeta. Los números van aquí —el estado los sabe— y las palabras en la vista. */
+      var hechas = 0;
+      Object.keys(p.estados || {}).forEach(function (k) { if (p.estados[k] === 'hecha') hechas++; });
+      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora,
+               bloques: p.hechos, pausas: hechas };
     }
   } while ((it = ritmoDetras(p.m, it)));
   return null;
@@ -403,8 +425,13 @@ function ritmoOtra(claves) {
 function ritmoHorario(campo, valor) {
   var R = ritmoDe(getState());
   var horario = Object.assign({}, R.horario);
-  /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos */
-  horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
+  /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos.
+     s197: «media.inicio» / «media.salida» escriben DENTRO de `media`, que es su propio
+     horario; tocar una de las dos fija las dos (deja de seguir a la entrada). */
+  if (campo.indexOf('media.') === 0) {
+    horario.media = Object.assign({}, ritmoMedia(horario));
+    horario.media[campo.slice(6)] = Number(valor);
+  } else horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -412,7 +439,7 @@ function ritmoHorario(campo, valor) {
 }
 
 Object.assign(window, {
-  ritmoHorarioInicial, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
+  ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,

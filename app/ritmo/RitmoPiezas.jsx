@@ -93,13 +93,17 @@ function RitmoFrase({ plantilla, huecos }) {
    inicio 5:00–21:00 · comida 11:00–17:00 · salida 12:00–23:30, de media en media
    hora. La regla ya sabe qué hacer con un inicio tras la salida (una hora es una
    hora) y con una comida que no cae en la jornada (no la sirve). */
-var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410] };
+var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410],
+  /* s197: la media jornada es de mañana O DE TARDE, así que su inicio llega hasta las
+     21:00 como el de la entera y su fin hasta la medianoche y media. */
+  'media.inicio': [300, 1260], 'media.salida': [360, 1410] };
 function RitmoSelector({ campo, horario }) {
   const { t } = useT();
   let valores = [];
   if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];
   else for (let v = RITMO_RANGOS[campo][0]; v <= RITMO_RANGOS[campo][1]; v += 30) valores.push(v);
-  const actual = horario[campo];
+  /* «media.inicio» / «media.salida» leen dentro de `horario.media` (s197). */
+  const actual = campo.indexOf('media.') === 0 ? ritmoMedia(horario)[campo.slice(6)] : horario[campo];
   if (valores.indexOf(actual) === -1) valores = valores.concat([actual]).sort((a, b) => a - b);
   const fmt = (v) => (campo === 'comidaDur' ? (v < 60 ? v + ' min' : ritmoDuracion(v, true)) : ritmoHora(v));
   return (
@@ -133,10 +137,32 @@ function ritmoHuecos(horario) {
     dur: <RitmoSelector campo="comidaDur" horario={horario} />,
     salida: <RitmoSelector campo="salida" horario={horario} />,
     comes: <RitmoInterruptorComida horario={horario} />,
+    mediaInicio: <RitmoSelector campo="media.inicio" horario={horario} />,
+    mediaSalida: <RitmoSelector campo="media.salida" horario={horario} />,
   };
+}
+
+/* LO QUE LLEVAS (s197) · la frase de la tarjeta «Siguiente pausa» de la barra lateral.
+   La línea del panel ya enseña hecha/saltada nodo a nodo; lo único que no dice con
+   palabras es el RECUENTO, y es lo que cuenta esta frase: los bloques de foco (la
+   palabra que usa el aro: «Bloque 7 de 9») y las pausas HECHAS. Las saltadas no se
+   nombran —la línea ya las enseña en gris, y nombrarlas es un reproche pequeño—; el
+   usuario pidió contar «ciclos de concentración», y «bloque» es esa palabra en la app.
+   Números en palabras hasta doce (`ritmo.numeros`) y en cifra después. Devuelve null
+   sin un solo bloque hecho: una tarjeta que dice «llevas cero» no acompaña. */
+function ritmoNumero(n, t) {
+  const lista = String(t('ritmo.numeros')).split(',');
+  return n >= 0 && n < lista.length ? lista[n] : String(n);
+}
+function ritmoLlevas(bloques, pausas, t, tn) {
+  if (!bloques) return null;
+  const b = bloques === 1 ? t('ritmo.llevas.bloque') : tn('ritmo.llevas.bloques', { n: ritmoNumero(bloques, t) });
+  if (!pausas) return tn('ritmo.llevas.solo', { b });
+  const p = pausas === 1 ? t('ritmo.llevas.pausa') : tn('ritmo.llevas.pausas', { n: ritmoNumero(pausas, t) });
+  return tn('ritmo.llevas', { b, p });
 }
 
 Object.assign(window, {
   RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
-  RitmoFrase, RitmoSelector, ritmoHuecos,
+  RitmoFrase, RitmoSelector, ritmoHuecos, ritmoNumero, ritmoLlevas,
 });

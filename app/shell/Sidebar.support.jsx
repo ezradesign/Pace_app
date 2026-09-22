@@ -213,6 +213,10 @@ const sidebarStyles = {
   accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 },
   accionBoton:   { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
   accionMeta:    { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
+  /* s197 · LO QUE LLEVAS, bajo el meta y tras un hilo: la itálica serif de las losetas
+     del ritmo, que es la que el usuario eligió mirándola («más elegante»). */
+  accionLlevas:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: 'var(--ink-2)',
+                   margin: '9px 0 0', paddingTop: 8, borderTop: '1px solid var(--line)', lineHeight: 1.5 },
   accionFlecha:  { flex: 'none', color: 'var(--ink-3)', fontSize: 15, lineHeight: 1 },
 
   semDia:   { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },

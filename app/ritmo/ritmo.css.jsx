@@ -208,6 +208,12 @@
 .pace-rt-li.pace-rt-hueco .pace-rt-eje::before { border-left: 1px dotted var(--line-2); left: 8px; }
 .pace-rt-li.pace-rt-plato { padding-bottom: 10px; }
 .pace-rt-li.pace-rt-pasado { opacity: 0.5; }
+/* s197 · LA HOJA RECUERDA, con la misma regla que la línea (s195): la parada hecha
+   conserva la tinta y su glifo se rellena al 22 % con borde de 1,5; la saltada baja
+   al 40 % y puntea. Antes lo pasado se atenuaba entero y no distinguía una de otra. */
+.pace-rt-li.pace-rt-hecha .pace-rt-eje i { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-li.pace-rt-saltada { opacity: 0.4; }
+.pace-rt-li.pace-rt-saltada .pace-rt-eje i { border-style: dashed; }
 .pace-rt-plato-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }
 .pace-rt-plato-m { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
 
