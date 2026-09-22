@@ -411,6 +411,11 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
 punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
 
+**Hecho en s197 (v0.130.0)**: **la tableta vertical lleva la piel de móvil** (toda pantalla más alta que
+ancha de hasta 1024 px). El corte entre pieles vive ahora en un solo sitio, `_responsive.corte.js`. Con esto
+queda **implementado todo lo que el usuario decidió en s196**; lo único pendiente es que use la app una
+semana entera.
+
 **Hecho en s197 (v0.129.0)**: **la media jornada como horario propio** (de mañana o de tarde, con sus horas
 recordadas y editables en la cabecera y en «Ajustar el horario»), **la comida solo en la jornada entera**, el
 tramo en los chips y las losetas de las dos jornadas, **la hoja del día con hecha/saltada** y el recuento

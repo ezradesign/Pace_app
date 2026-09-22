@@ -35,8 +35,12 @@ const OUT = process.argv[2] || path.join(os.tmpdir(), 'pace-auditoria-s195');
 const SOLO = (process.argv.find((a) => a.startsWith('solo=')) || '').slice(5).split(',').filter(Boolean);
 fs.mkdirSync(OUT, { recursive: true });
 
-const ESCRITORIO = [[1920, 950], [1536, 704], [1600, 780], [1440, 789], [1366, 657], [1280, 879], [1280, 600], [1024, 650], [820, 1100], [2560, 1300]];
-const TELEFONO = [[360, 730], [375, 667], [390, 844], [412, 844], [430, 932], [768, 1024]];
+/* s197 · v0.130.0: las VERTICALES de hasta 1024 se mudan a la piel de móvil, así que
+   820×1100 sale de ESCRITORIO (donde se auditaba con barra lateral) y entra en la lista
+   de la otra piel, junto con las tres tabletas y la ventana estrecha que decidió el
+   usuario. En escritorio entran dos apaisadas que antes no se miraban. */
+const ESCRITORIO = [[1920, 950], [1536, 704], [1600, 780], [1440, 789], [1366, 657], [1280, 879], [1280, 600], [1024, 650], [1180, 820], [1025, 1366], [2560, 1300]];
+const TELEFONO = [[360, 730], [375, 667], [390, 844], [412, 844], [430, 932], [768, 1024], [820, 1180], [834, 1194], [1024, 1366], [900, 1200]];
 
 const HOY = '2026-09-18';                                   /* viernes */
 const T0900 = new Date('2026-09-18T09:00:00+02:00');

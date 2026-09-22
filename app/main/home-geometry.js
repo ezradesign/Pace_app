@@ -67,7 +67,9 @@
 (function paceHomeGeometry() {
   if (typeof document === 'undefined') return;
 
-  var DESKTOP_MQ = '(min-width: 769px)';
+  /* s197: el corte vive en `_responsive.corte.js` (una vertical de hasta 1024 lleva
+     piel de móvil). Con el fallback de siempre por si este archivo corriera antes. */
+  var DESKTOP_MQ = typeof PACE_CORTE_ESC === 'string' ? PACE_CORTE_ESC : '(min-width: 769px)';
   /* D lo manda la ALTURA, no el ancho — como en la referencia v0.64, donde el
      aro salía de `flex:1 + 56vh`. Se arranca del mayor aro admisible y el bucle
      de abajo lo ENCOGE hasta que no haya scroll: así D es siempre el círculo

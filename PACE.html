@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.129.0</title>
+  <title>PACE · Foco · Cuerpo — v0.130.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -132,6 +132,11 @@
        modulo visual (breathe/move/extra) al superar ~470 ln con F6. Sigue
        siendo el patch FINAL EN de contenido -- carga al final para preservar
        el override de breathe.phase.inhala.mas/oceanica (D-1). -->
+  <!-- EL CORTE ENTRE LAS DOS PIELES (s197). VA EL PRIMERO: lo interpolan las hojas
+       inyectadas (pieles, ritmo, library, la hoja del sidebar, Stats) y lo consultan
+       tres `matchMedia`. Si se carga despues, esas hojas salen con `undefined`. -->
+  <script type="text/babel" src="app/main/_responsive.corte.js"></script>
+
   <script type="text/babel" src="app/i18n/strings/_bootstrap.js"></script>
   <script type="text/babel" src="app/i18n/strings/ui.js"></script>
   <script type="text/babel" src="app/i18n/strings/sessions.js"></script>
@@ -479,6 +484,9 @@
   <script type="text/babel" src="app/main/_responsive.atmosfera.js"></script>
   <script type="text/babel" src="app/main/_responsive.js"></script>
   <script type="text/babel" src="app/main/_responsive.pieles.js"></script>
+  <!-- La piel de ESCRITORIO, cortada de la anterior en s197 al pasar de 500 lineas.
+       VA JUSTO DESPUES: misma especificidad, gana quien se inyecta ultimo. -->
+  <script type="text/babel" src="app/main/_responsive.pieles.esc.js"></script>
   <script type="text/babel" src="app/main/TopBar.jsx"></script>
   <script type="text/babel" src="app/main/ActivityBar.jsx"></script>
   <!-- Sacados de main.jsx en s193 al tocar el límite de §1: el asa flotante de

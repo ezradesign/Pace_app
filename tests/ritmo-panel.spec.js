@@ -121,7 +121,12 @@ test('ninguna etiqueta de la línea se sale del panel, ni con la primera parada 
   expect(m.pisadas, 'etiquetas que se pisan tras empujarlas').toBe(0);
 });
 
-test.describe('tableta en vertical (820x1100, piel de escritorio)', () => {
+/* s195b puso aquí que a 820x1100 la piel era la de ESCRITORIO y el panel se veía en su
+   copia compacta por un container query (al panel le quedaban 460 px). s197 (v0.130.0)
+   cambia la premisa por decisión del usuario: una vertical de hasta 1024 lleva la PIEL
+   DE MÓVIL entera. La copia compacta sigue siendo la que manda —ahora porque es la de su
+   piel, no por el container query— y eso es lo que se sigue asertando. */
+test.describe('tableta en vertical (820x1100, piel de móvil desde v0.130.0)', () => {
   test.use({ viewport: { width: 820, height: 1100 } });
   test('manda la copia compacta del panel y nada se pisa', async ({ page, context }) => {
     await abrir(page, context, { ritmo: { dia: { fecha: HOY, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } }, new Date('2026-09-18T09:00:00+02:00'));
@@ -129,26 +134,37 @@ test.describe('tableta en vertical (820x1100, piel de escritorio)', () => {
       piel: getComputedStyle(document.documentElement).getPropertyValue('--pace-skin').trim(),
       esc: Array.from(document.querySelectorAll('.pace-rt-esc')).some((e) => e.getBoundingClientRect().width > 0),
       mov: Array.from(document.querySelectorAll('.pace-rt-mov')).some((e) => e.getBoundingClientRect().width > 0),
+      columna: (() => { const a = Array.from(document.querySelectorAll('[data-pace-sidebar-accion]')).find((e) => e.getBoundingClientRect().width > 0); return !!(a && a.getBoundingClientRect().left < 300); })(),
     }));
-    expect(m.piel, 'GUARD: a 820 px la piel tiene que ser la de escritorio (con barra lateral)').toBe('escritorio');
-    expect(m.mov, 'no se muestra la copia compacta').toBe(true);
-    expect(m.esc, 'la copia de escritorio sigue visible en un panel de 460 px').toBe(false);
+    expect(m.piel, 'GUARD: a 820 px en vertical la piel es la de móvil (v0.130.0)').toBe('movil');
+    expect(m.columna, 'y por tanto la barra lateral es cajón, no columna').toBe(false);
+    expect(m.mov, 'se muestra la copia compacta').toBe(true);
+    expect(m.esc, 'y no la de escritorio').toBe(false);
     await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Foco · bloque 1 de 9');
   });
 });
 
-for (const vp of [{ w: 1024, h: 650 }, { w: 820, h: 1100 }]) {
+/* s197: 820x1100 se mudó a la piel de móvil, donde la barra lateral es un cajón y no
+   deja borde izquierdo que mirar; el chequeo de que los chips caben se hace contra el
+   viewport, y el de «no los pisa la columna» solo donde hay columna. 1024x650 (apaisada)
+   sigue en escritorio y sigue midiendo las dos cosas. */
+for (const vp of [{ w: 1024, h: 650, columna: true }, { w: 820, h: 1100, columna: false }]) {
   test.describe('por libre a ' + vp.w + 'x' + vp.h, () => {
-    test.use({ viewport: { width: vp.w, height: vp.h } });
+    test.use({ viewport: { width: vp.w, height: vp.h }, isMobile: !vp.columna, hasTouch: !vp.columna });
     test('los cuatro chips de Actividades caben en la home', async ({ page, context }) => {
       await abrir(page, context, { ritmo: { libre: true } }, new Date('2026-09-18T09:00:00+02:00'));
       const m = await page.evaluate(() => {
-        const sb = document.querySelector('[data-pace-sidebar]').getBoundingClientRect();
+        const sbEl = Array.from(document.querySelectorAll('[data-pace-sidebar]')).find((e) => e.getBoundingClientRect().width > 0);
+        const sb = sbEl ? sbEl.getBoundingClientRect() : null;
         const chips = Array.from(document.querySelectorAll('[data-pace-activitybar-chip]')).map((e) => e.getBoundingClientRect());
-        return { n: chips.length, fuera: chips.filter((r) => r.right > innerWidth + 1 || r.left < sb.right - 1).length };
+        return { n: chips.length, columna: !!(sb && sb.left < 10 && sb.width > 200),
+                 fuera: chips.filter((r) => r.right > innerWidth + 1 || r.left < -1).length,
+                 pisados: sb && sb.left < 10 && sb.width > 200 ? chips.filter((r) => r.left < sb.right - 1).length : 0 };
       });
       expect(m.n, 'GUARD: no hay chips').toBe(4);
+      expect(m.columna, 'GUARD: la piel de este viewport es la esperada').toBe(vp.columna);
       expect(m.fuera, 'chips que asoman fuera de la home').toBe(0);
+      expect(m.pisados, 'chips que la columna de la barra lateral tapa').toBe(0);
     });
   });
 }

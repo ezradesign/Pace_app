@@ -261,7 +261,7 @@
    módulo entra en el HOVER, que es lo que hace Card (Primitives.jsx:115) y lo
    que la fila de s173 declara vigente: en PACE el color de módulo no dice lo
    que hay, dice lo que estás tocando. */
-@media (min-width: 769px) {
+@media ${PACE_CORTE_ESC} {
   .pace-lib-card {
     border-left-color: transparent;
     transition: transform 220ms var(--ease), box-shadow 220ms var(--ease),
@@ -322,7 +322,7 @@
    cada cambio de ancho para catorce tarjetas. Lo apagado por «display:none»
    sale del árbol de accesibilidad y no recibe clics, así que en cada momento
    hay exactamente UNA viva. */
-@media (min-width: 769px) {
+@media ${PACE_CORTE_ESC} {
   .pace-lib-solo-movil { display: none; }
   /* en escritorio «Tus rutinas» es el bloque del lateral, no un enlace: ahí
      caería en x=1194 de 1280, el punto más ignorable de la pantalla */
@@ -331,7 +331,7 @@
 /* MÓVIL. Aquí el filo TRABAJA: ves 3 o 4 tarjetas a la vez y es lo único que
    dice de un vistazo si estás en Mueve (ocre) o en Estira (azul) sin leer la
    cabecera. No es una excepción a la regla de arriba: es otra función. */
-@media (max-width: 768px) {
+@media ${PACE_CORTE_MOVIL} {
   .pace-lib-hd h2 { font-size: 24px; }
   .pace-lib-lateral { display: none; }
 }
@@ -353,11 +353,11 @@
    él no lo toca. La primera versión de este bloque no movió ni un píxel y la
    medida salió idéntica byte a byte. Es además lo que ya hace la hoja
    responsive de aquel archivo, cuyo corte está en 640 px y no en 768. */
-@media (min-width: 769px) {
+@media ${PACE_CORTE_ESC} {
   [data-pace-modal-backdrop]:has(.pace-lib) { padding: 20px !important; }
   [data-pace-modal-card]:has(.pace-lib) { padding: 22px 24px 18px !important; }
 }
-@media (max-width: 768px) {
+@media ${PACE_CORTE_MOVIL} {
   /* En un teléfono la biblioteca ES la pantalla: el margen del modal deja de
      ser un marco y pasa a ser una mordida de 42 px al contenido. */
   [data-pace-modal-backdrop]:has(.pace-lib) { padding: 8px !important; }

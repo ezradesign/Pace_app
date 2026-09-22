@@ -34,7 +34,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
   const s = document.createElement('style');
   s.id = 'pace-sidebar-responsive-css';
   s.textContent = `
-    @media (max-width: 768px) {
+    @media ${PACE_CORTE_MOVIL} {
       [data-pace-sidebar] {
         position: fixed !important;
         inset: 0 !important;
@@ -258,7 +258,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
        «Sidebar.jsx» en «--sb-alto» y aqui solo se consume. Sin esto la columna
        encogeria a la vista y el cajon seguiria midiendo lo de antes, o sea que
        la escala no habria servido de nada. */
-    @media (max-width: 768px) {
+    @media ${PACE_CORTE_MOVIL} {
       [data-pace-sidebar] [data-pace-sidebar-lente] {
         display: block !important;
         flex: none !important;

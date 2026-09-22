@@ -19,7 +19,7 @@
   s.textContent = `
 .pace-rt-esc { display: block; }
 .pace-rt-mov { display: none; }
-@media (max-width: 768px) {
+@media ${PACE_CORTE_MOVIL} {
   .pace-rt-esc { display: none; }
   .pace-rt-mov { display: block; }
 }
@@ -222,7 +222,7 @@
    (s195b: ya no se pinta en la home —la tarjeta por libre lo sustituye—; queda por
    si vuelve a hacer falta un enlace de vuelta.) */
 .pace-rt-solo-esc { display: inline; }
-@media (max-width: 768px) { .pace-rt-solo-esc { display: none; } }
+@media ${PACE_CORTE_MOVIL} { .pace-rt-solo-esc { display: none; } }
 
 /* LA TARJETA POR LIBRE (s195b, 5A «pero más bonita»): la pregunta en display
    itálica, la frase de siempre debajo, cuatro losetas con la hora de fin en
@@ -244,7 +244,7 @@
 .pace-rt-loseta:disabled { opacity: 0.5; cursor: default; }
 .pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
 .pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
-@media (max-width: 768px) {
+@media ${PACE_CORTE_MOVIL} {
   .pace-rt-tarjeta { padding: 14px 14px 12px; }
   .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
   .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }
@@ -263,7 +263,7 @@
 .pace-rt-mini-int.pace-rt-on::after { left: 11px; background: var(--paper); }
 .pace-rt-mini-int:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 
-@media (max-width: 768px) {
+@media ${PACE_CORTE_MOVIL} {
   .pace-rt-panel { padding: 12px 14px 10px; }
   .pace-rt-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
   .pace-rt-chip { padding: 9px 12px !important; }
