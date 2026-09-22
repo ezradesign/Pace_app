@@ -62,7 +62,7 @@ function RitmoChips({ state }) {
           <button key={op} type="button" className="pace-rt-chip" data-pace-ritmo-opcion={op}
             disabled={vacia} onClick={() => ritmoElegir(op)}>
             <b>{t('ritmo.opcion.' + op)}</b>
-            <span>{vacia ? t('ritmo.fuera') : tn('ritmo.hasta', { h: ritmoHora(m.hasta) })}</span>
+            <span>{ritmoSub(op, m, vacia, t, tn)}</span>
           </button>
         );
       })}
@@ -70,10 +70,31 @@ function RitmoChips({ state }) {
   );
 }
 
+/* EL SUBTÍTULO de un chip o una loseta (s197). Las dos jornadas son HORARIOS —tuyos,
+   editables— y lo dicen: «De 9:00 a 13:00». «Una hora» y «Dos horas» siguen con «Hasta
+   las…» porque son un rato desde que pulsas, no un tramo. Decisión del usuario: «tienen
+   que poder personalizarse, tanto la media jornada como la completa», así que el chip
+   enseña TUS horas, no una duración. */
+function ritmoSub(op, m, vacia, t, tn) {
+  if (vacia) return t('ritmo.fuera');
+  if (op === 'media' || op === 'jornada') return tn('ritmo.tramo', { a: ritmoHora(m.desde), b: ritmoHora(m.hasta) });
+  return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
+}
+
 function RitmoPregunta({ state }) {
   const { t } = useT();
   const R = ritmoDe(state);
-  const frase = <RitmoFrase plantilla={t(R.horario.sinComida ? 'ritmo.frase.sin' : 'ritmo.frase')} huecos={ritmoHuecos(R.horario)} />;
+  const huecos = ritmoHuecos(R.horario);
+  /* s197 (A1, elegida mirándola): DOS frases. La de arriba es la jornada entera; debajo,
+     una segunda corta con las dos horas de la media jornada. Cuesta 22 px de panel en
+     escritorio y 21 en móvil —medido— y a cambio se lee de un vistazo cuál es cuál;
+     meterlas en una sola dejaba seis selectores y un interruptor en la misma línea. */
+  const frase = (
+    <React.Fragment>
+      <RitmoFrase plantilla={t(R.horario.sinComida ? 'ritmo.frase.sin' : 'ritmo.frase')} huecos={huecos} />
+    </React.Fragment>
+  );
+  const fraseMedia = <RitmoFrase plantilla={t('ritmo.frase.media')} huecos={huecos} />;
   return (
     <React.Fragment>
       <div className="pace-rt-panel pace-rt-esc" data-pace-ritmo-estado="pregunta">
@@ -82,6 +103,7 @@ function RitmoPregunta({ state }) {
             <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
             <div className="pace-rt-sub">{t('ritmo.sub')}</div>
             <div className="pace-rt-sub pace-rt-frase">{frase}</div>
+            <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>
           </div>
           <div className="pace-rt-der"><RitmoLibre /></div>
         </div>
@@ -90,6 +112,7 @@ function RitmoPregunta({ state }) {
       <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="pregunta">
         <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
         <div className="pace-rt-sub pace-rt-frase">{frase}</div>
+        <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>
         <RitmoChips state={state} />
         <div className="pace-rt-pie"><span /><RitmoLibre /></div>
       </div>
@@ -115,7 +138,11 @@ function RitmoFraseMenu({ plan, horario, plantilla, capital }) {
      10:23 decía «de 14:30 a 12:50» (captura del usuario). El horario se sigue
      editando en «Cambiar»; la jornada entera conserva sus selectores y su «hoy de». */
   const jornada = m.opcion === 'jornada';
-  if (!jornada) { huecos.inicio = ritmoHora(m.desde); huecos.salida = ritmoHora(m.hasta); }
+  /* s197: la MEDIA JORNADA también es un horario, así que también edita sus horas aquí
+     (las suyas, `horario.media`); lo que no tiene nunca es comida. */
+  const media = m.opcion === 'media';
+  if (media) { huecos.inicio = huecos.mediaInicio; huecos.salida = huecos.mediaSalida; }
+  else if (!jornada) { huecos.inicio = ritmoHora(m.desde); huecos.salida = ritmoHora(m.hasta); }
   if (m.comida == null) plantilla = plantilla + '.sin';
   /* `capital`: cuando la frase abre línea (la hoja) y no va tras «Jornada entera ·». */
   let texto = t(plantilla);
@@ -243,6 +270,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

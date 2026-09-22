@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.129.0** | 2026-09-22 | feat(ritmo): **la media jornada es un horario, y lo hecho se cuenta** — La media jornada deja de ser «3 h de foco desde que pulsas» y pasa a ser un **tramo con sus propias horas** (`horario.media`), de mañana **o de tarde**, editable en su cabecera y en «Ajustar el horario» (dos frases), recordado como preferencia y derivado de tu entrada mientras nadie lo toque; fuera de su tramo se apaga. **La comida pasa a ser solo de la jornada entera** («Dos horas» de 13:00 a 15:00 ya no la sirve). Las dos jornadas dicen su **tramo** en el chip y en la loseta, porque son horarios tuyos. Y **lo hecho se cuenta**: la hoja del día distingue hecha de saltada (la regla de la línea) y la tarjeta «Siguiente pausa» lleva «Llevas seis bloques y cuatro pausas». **286 → 296**, `banco-media-s197.js` **13 de 13**. | s197 | [session-197](./docs/sessions/session-197-media-jornada-y-lo-contado.md) |
 | **v0.128.1** | 2026-09-19 | fix(ritmo): **los acentos sirven lo que cabe** — Al re-medir la semana sobre el artefacto publicado, el jueves servía Coherente 6·6 (10') en una pausa corta de 5' y el viernes lo mismo en el cierre: la regla nunca filtra por duración porque no le hacía falta (Estira y Mueve caben en 5' y Respira solo iba a la larga), y los acentos «aire» y «cerrar suave» son el primer Respira en pausa corta. Ahora `toma()` admite `cabe` y los dos acentos solo sirven Respiras con `min <= dur`; si ninguno cabe, la parada queda como la sirvió la regla. Jueves: Diafragmática 5' antes de comer; viernes: cierre Diafragmática 5' (la regla ponía Suspiro 2'). El test defiende el invariante roto (**cada plato cabe en su parada, los cinco días**) y el banco suma dos mutantes: **13 de 13**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
 | **v0.128.0** | 2026-09-19 | feat(ritmo): **la semana, sin decirlo** — La pieza 3 del norte (lectura A): el menú varía con la semana y con el día, todo desde la fecha —seis temas en ciclo por semana ISO que reordenan los pozos por región (cuello · caderas · manos · espalda · aire · ligera) × un acento por día de lunes a viernes (arrancar con Mueve · el día tal cual · la larga antes · respirar antes de comer · cerrar con el Respira más largo) × la regla de siempre—, y **nada lo anuncia**: se pusieron tres formas mínimas en el panel real (chip · nada · cuatro palabras) y el usuario eligió «nada» («menos es más»). `ritmo.semana.js` es pura; «la mitad» es `horario.desfaseLarga` y no un `previos` falso; los acentos respetan lo hecho; el fin de semana lleva tema y no acento. **282 → 286**, `banco-semana-s195.js` **11 de 11**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
 | **v0.127.0** | 2026-09-19 | feat(ritmo): **la tarjeta por libre, comer o no, y la pausa solo con Hidrátate** — La ronda 2 decidida: **la tarjeta «¿Cuánto trabajas hoy?» sustituye a la del Camino sugerido** por libre (misma cáscara: el motor y la luz no se enteran; cuatro losetas con la hora de fin, «Ajustar el horario» y «Ver caminos» en la cabecera; un toque sirve el día; el aro gana 8 px), **la comida se apaga con un mini interruptor** pegado a la palabra «comes» (apagado: «no comes», sin tramo, sin frase, sin vaso), y **el modal de la pausa deja solo Hidrátate** como sugerencia aparte del plato. Para la semana (7B), tres sistemas de copy en `semana-copy-s195.html`, sin decidir. **281 → 282**, 3 en rojo contra HEAD. | s195 | [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md) |
@@ -405,6 +406,38 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.129.0] -- 2026-09-22 -- feat(ritmo): la media jornada es un horario, y lo hecho se cuenta
+
+### Cambiado
+- **La media jornada es un HORARIO** (`RITMO_FORMAS.media` con `foco: Infinity`): sirve de su inicio a su fin,
+  no «3 h de foco desde ahora». Sus horas viven en **`horario.media`**, aparte de las de la entera; `ritmoMedia()`
+  las deriva de tu entrada (4 h) mientras nadie las toque —así una instalación existente no necesita migración—
+  y quedan fijas en cuanto tocas una. De mañana o **de tarde**. La hora de fin manda: empezar tarde acorta.
+- **La comida es solo de la jornada entera**: `comeA` ya no mira la hora en las opciones cortas. Rompió (y
+  reescribió) el test de s195b que defendía lo contrario.
+- **El chip y la loseta de las dos jornadas dicen su tramo** («De 9:00 a 13:00»); «Una hora» y «Dos horas»
+  siguen con «Hasta las…». Decisión del usuario: «tienen que poder personalizarse por el usuario, tanto la
+  media jornada como la completa».
+- **La hoja del día recuerda**: cada parada pasada con su estado (hecha con tinta y glifo relleno · saltada al
+  40 %, punteada y sin gota). Antes se atenuaba todo lo pasado por igual.
+
+### Añadido
+- **«Ajustar el horario» con dos frases** (A1, elegida mirándola): la segunda lleva las dos horas de la media
+  jornada. +22 px de panel en escritorio, +21 en móvil, medidos.
+- **La tarjeta «Siguiente pausa» cuenta lo que llevas**: «Llevas seis bloques y cuatro pausas», en la itálica
+  serif de las losetas, con números en palabras hasta doce (`ritmo.numeros`). Las saltadas no se nombran; sin un
+  bloque hecho no aparece. Descartadas «4 de 7» (marcador) y los puntos en miniatura (redundantes con la línea).
+
+### Red
+- `tests/ritmo-media.spec.js` (6) y `tests/ritmo-llevas.spec.js` (4), **los diez en rojo contra HEAD**.
+- `scripts/audit/banco-media-s197.js`: **13 de 13 muerden**, con pasada de control.
+- Censo i18n 662 → **673**. Tres tests existentes actualizados a la decisión nueva.
+
+### Lo que no cubre
+- La tableta vertical con piel de móvil (decidida) va en v0.130.0. Nadie ha usado la app una semana entera aún.
+
+---
+
 ## [v0.128.1] -- 2026-09-19 -- fix(ritmo): los acentos sirven lo que cabe
 
 ### Corregido
@@ -417,29 +450,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Red
 - `ritmo-semana.spec.js`: **cada plato cabe en su parada, los cinco días**; el viernes pide «el más largo que
   cabe» con GUARD de que lo hay y de que supera al pozo del cierre. `banco-semana-s195.js`: **13 de 13**.
-
----
-
-## [v0.128.0] -- 2026-09-19 -- feat(ritmo): la semana, sin decirlo
-
-### Añadido
-- **`app/ritmo/ritmo.semana.js`** (pura): `semanaISO`, `SEMANA_TEMAS` (seis, por semana ISO en ciclo, con tags del
-  catálogo), `SEMANA_ACENTOS` (1..7), `semanaDe`, `semanaPozos` (reordena por afinidad al tema), `semanaComponer`
-  (la regla sobre los pozos del tema + hasta tres retoques de platos: lunes Mueve primero, jueves Respira antes
-  de comer, viernes el cierre largo). El fin de semana lleva tema y no acento. Los acentos respetan `previos`.
-- **`horario.desfaseLarga`** en `ritmo.regla.js`: corre la cadencia de la larga (el miércoles, la segunda).
-- **`ritmoMenu`** compone con `semanaComponer(…, semanaDe(hoy), previos)`.
-
-### Decisiones
-- **Nada se anuncia**: ni chip, ni línea, ni nombres. La variedad se ve en la línea (usuario: «2, nada»).
-
-### Red
-- **`tests/ritmo-semana.spec.js`, 4 tests** · **`scripts/audit/banco-semana-s195.js`: 11 de 11 muerden** (dos
-  vivos en la primera pasada, los dos por escenarios que no distinguían el mutante; se endurecieron con GUARD).
-
-### Lo que no cubre
-- La hoja y Stats no saben de semanas; los nombres de los temas son dato sin consumidor; el miércoles con tres
-  largas (2.ª, 5.ª, 8.ª) queda «como sale».
 
 ---
 

@@ -49,11 +49,14 @@ test('«Una hora» a las 14:30 no habla de comida y dice las horas de hoy', asyn
   await expect(panel).toContainText('Una hora · de 14:30 a 15:30');
   await expect(panel).not.toContainText('comida');
   expect(await page.evaluate(() => ritmoPlan(getState()).m.comida), 'GUARD: la regla no sirve comida en una hora a las 14:30').toBeNull();
-  /* y con la comida dentro de la ventana, sí la dice (y el día se alarga lo que dura) */
+  /* s197: NI CON LA COMIDA DENTRO DE LA VENTANA. Hasta v0.128.1, poner la comida a las
+     15:00 hacía que «Una hora» la sirviera y el día se alargaba una hora. Decisión del
+     usuario: «así la comida solo iría en jornada completa». La hora se sigue editando. */
   await page.evaluate(() => ritmoHorario('comida', 900));   /* 15:00 */
-  await expect(panel).toContainText('comida a las');
-  await expect(panel).toContainText('Una hora · de 14:30 a 16:00');
-  await expect(vis(page, 'select[data-pace-ritmo-horario="comida"]')).toHaveValue('900');
+  await expect(panel).not.toContainText('comida a las');
+  await expect(panel).toContainText('Una hora · de 14:30 a 15:30');
+  expect(await page.evaluate(() => ritmoPlan(getState()).m.comida), 'la comida cae dentro y aun así no se sirve').toBeNull();
+  expect(await page.evaluate(() => getState().ritmo.horario.comida), 'pero la hora queda guardada para la jornada entera').toBe(900);
 });
 
 test.describe('móvil', () => {

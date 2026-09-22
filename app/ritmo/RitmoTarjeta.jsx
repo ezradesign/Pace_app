@@ -42,7 +42,7 @@ function RitmoTarjeta() {
               <button key={op} type="button" className="pace-rt-loseta" data-pace-ritmo-loseta={op}
                 disabled={vacia} onClick={() => ritmoElegir(op)}>
                 <b>{t('ritmo.opcion.' + op)}</b>
-                <span>{vacia ? t('ritmo.fuera') : tn('ritmo.hasta', { h: ritmoHora(m.hasta) })}</span>
+                <span>{ritmoSub(op, m, vacia, t, tn)}</span>
               </button>
             );
           })}

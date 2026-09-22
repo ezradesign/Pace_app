@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.128.1</title>
+  <title>PACE · Foco · Cuerpo — v0.129.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3152,6 +3152,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.opcion.media': 'Media jornada',
   'ritmo.opcion.jornada': 'Jornada entera',
   'ritmo.hasta': 'Hasta las {h}',
+  'ritmo.tramo': 'De {a} a {b}',
+  'ritmo.frase.media': 'Media jornada: de {mediaInicio} a {mediaSalida}.',
   'ritmo.fuera': 'Tu jornada ya terminó',
   'ritmo.libre': 'Hoy voy por libre',
   'ritmo.volver': 'Ponle ritmo al día',
@@ -3191,6 +3193,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aria.comida': 'Hora a la que comes',
   'ritmo.aria.comidaDur': 'Cuánto dura la comida',
   'ritmo.aria.salida': 'Hora a la que terminas',
+  'ritmo.aria.media.inicio': 'Hora a la que empieza tu media jornada',
+  'ritmo.aria.media.salida': 'Hora a la que termina tu media jornada',
+  'ritmo.llevas': 'Llevas {b} y {p}',
+  'ritmo.llevas.solo': 'Llevas {b}',
+  'ritmo.numeros': 'cero,un,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez,once,doce',
+  'ritmo.llevas.bloques': '{n} bloques',
+  'ritmo.llevas.bloque': 'un bloque',
+  'ritmo.llevas.pausas': '{n} pausas',
+  'ritmo.llevas.pausa': 'una pausa',
   'break.prop.ritmo.estira': 'A tu ritmo · antídoto a la silla',
   'break.prop.ritmo.mueve': 'A tu ritmo · cuerpo activo',
   'break.prop.ritmo.larga': 'A tu ritmo · pausa larga, respira y suelta',
@@ -3220,6 +3231,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.opcion.media': 'Half day',
   'ritmo.opcion.jornada': 'Full day',
   'ritmo.hasta': 'Until {h}',
+  'ritmo.tramo': 'From {a} to {b}',
+  'ritmo.frase.media': 'Half day: from {mediaInicio} to {mediaSalida}.',
   'ritmo.fuera': 'Your workday is over',
   'ritmo.libre': "I'll go freestyle today",
   'ritmo.volver': 'Give your day a rhythm',
@@ -3259,6 +3272,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aria.comida': 'Lunch time',
   'ritmo.aria.comidaDur': 'Lunch length',
   'ritmo.aria.salida': 'Finish time',
+  'ritmo.aria.media.inicio': 'Half day start time',
+  'ritmo.aria.media.salida': 'Half day finish time',
+  'ritmo.llevas': 'So far, {b} and {p}',
+  'ritmo.llevas.solo': 'So far, {b}',
+  'ritmo.numeros': 'zero,one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve',
+  'ritmo.llevas.bloques': '{n} blocks',
+  'ritmo.llevas.bloque': 'one block',
+  'ritmo.llevas.pausas': '{n} breaks',
+  'ritmo.llevas.pausa': 'one break',
   'break.prop.ritmo.estira': 'At your pace · antidote to the chair',
   'break.prop.ritmo.mueve': 'At your pace · active body',
   'break.prop.ritmo.larga': 'At your pace · long break, breathe and let go',
@@ -5167,7 +5189,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.128.1';
+const PACE_VERSION = 'v0.129.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7381,7 +7403,7 @@ var RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
 var RITMO_FORMAS = {
   '1h': { bloque: 25, foco: 50 },
   '2h': { bloque: 35, foco: 105 },
-  'media': { bloque: 45, foco: 180 },
+  'media': { bloque: 45, foco: Infinity },
   'jornada': { bloque: 45, foco: Infinity }
 };
 
@@ -7398,10 +7420,19 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5,LARGA = 15,MINIMO = 15,COLA = 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
-  var inicio = horario.inicio,salida = horario.salida;
-  /* s195b: con la comida apagada (`horario.sinComida`) no hay comida que caiga en
-     el día: fuera del alcance, y la regla sigue igual. */
-  var comeA = horario.sinComida ? Infinity : horario.comida;
+  /* s197: LA MEDIA JORNADA ES UN HORARIO PROPIO —una mañana o una tarde, de tu hora
+     a tu hora— y no «3 h de foco desde que pulsas». Decisión del usuario: «podría ser
+     de mañana o de tarde, o sea que el horario es flexible… también la jornada completa
+     depende del horario real de cada usuario». Sus horas viven aparte (`horario.media`)
+     porque son OTRAS que las de la completa y se recuerdan como preferencia. */
+  var med = opcion === 'media' && horario.media ? horario.media : null;
+  var inicio = med ? med.inicio : horario.inicio;
+  var salida = med ? med.salida : horario.salida;
+  /* s197: LA COMIDA ES SOLO DE LA JORNADA ENTERA («se entiende que cuando se acabe la
+     media jornada ya se hace la comida»). Antes cualquier opción que cruzara la hora la
+     servía: «Dos horas» de 13:00 a 15:00 metía la comida a las 14:00. `sinComida`
+     (s195b) sigue apagándola también en la entera. */
+  var comeA = opcion === 'jornada' && !horario.sinComida ? horario.comida : Infinity;
   /* s195c: `horario.desfaseLarga` corre la cadencia de la pausa larga (la semana lo
      usa el miércoles: la larga es la segunda, no la tercera). 0 si no se dice. */
   var desfase = Number(horario.desfaseLarga) || 0;
@@ -7740,8 +7771,12 @@ Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, seman
    =============================================
    Lo que se guarda (en `pace.state.v2`, clave `ritmo`):
 
-     horario  { inicio, comida, comidaDur, salida } en minutos, o null mientras
-              la persona no lo haya tocado (entonces se propone uno por región).
+     horario  { inicio, comida, comidaDur, salida, media: { inicio, salida } } en
+              minutos, o null mientras la persona no lo haya tocado (entonces se
+              propone uno por región). `media` (s197) son las horas de la MEDIA
+              JORNADA, que es un horario propio —una mañana o una tarde— y no una
+              duración: se recuerdan como preferencia y se editan aparte. Mientras
+              nadie las toque siguen a la entrada de la jornada (`ritmoMedia`).
      libre    'YYYY-MM-DD' = «hoy voy por libre» · true = la carta SIEMPRE, sin
               fecha. `true` no tiene botón todavía: es el hueco de un ajuste
               futuro, y hoy lo usa la suite para las pruebas que no son de este
@@ -7797,6 +7832,17 @@ function ritmoHorarioInicial() {
   return { inicio: 540, comida: comida, comidaDur: 60, salida: 1020 };
 }
 
+/* Las horas de la media jornada: las guardadas o, mientras nadie las toque, CUATRO
+   HORAS desde tu entrada. Derivarlas aquí (y no guardarlas de entrada) es lo que hace
+   que una instalación vieja no necesite migración: si mueves la entrada y nunca has
+   tocado la media jornada, te sigue. */
+var RITMO_MEDIA_DUR = 240;
+function ritmoMedia(h) {
+  var m = h && h.media;
+  if (m && m.inicio != null && m.salida != null) return { inicio: m.inicio, salida: m.salida };
+  return { inicio: h.inicio, salida: h.inicio + RITMO_MEDIA_DUR };
+}
+
 function ritmoHoy() {
   return typeof todayISO === 'function' ? todayISO() : '';
 }
@@ -7815,8 +7861,10 @@ function ritmoAhoraExacto() {
 function ritmoDe(s) {
   var r = s && s.ritmo || {};
   var hoy = ritmoHoy();
+  var h = Object.assign(ritmoHorarioInicial(), r.horario || {});
+  h.media = ritmoMedia(h);
   return {
-    horario: Object.assign(ritmoHorarioInicial(), r.horario || {}),
+    horario: h,
     libre: r.libre === true || !!hoy && r.libre === hoy,
     dia: r.dia && r.dia.fecha === hoy ? r.dia : null
   };
@@ -8010,7 +8058,12 @@ function ritmoSiguiente(s) {
   do {
     if (it.platos && it.platos[0]) {
       var plato = it.platos[0];
-      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora };
+      /* s197: `bloques` y `pausas` (las HECHAS, no las saltadas) para la frase de la
+         tarjeta. Los números van aquí —el estado los sabe— y las palabras en la vista. */
+      var hechas = 0;
+      Object.keys(p.estados || {}).forEach(function (k) {if (p.estados[k] === 'hecha') hechas++;});
+      return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora,
+        bloques: p.hechos, pausas: hechas };
     }
   } while (it = ritmoDetras(p.m, it));
   return null;
@@ -8141,8 +8194,13 @@ function ritmoOtra(claves) {
 function ritmoHorario(campo, valor) {
   var R = ritmoDe(getState());
   var horario = Object.assign({}, R.horario);
-  /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos */
-  horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
+  /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos.
+     s197: «media.inicio» / «media.salida» escriben DENTRO de `media`, que es su propio
+     horario; tocar una de las dos fija las dos (deja de seguir a la entrada). */
+  if (campo.indexOf('media.') === 0) {
+    horario.media = Object.assign({}, ritmoMedia(horario));
+    horario.media[campo.slice(6)] = Number(valor);
+  } else horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -8150,13 +8208,13 @@ function ritmoHorario(campo, valor) {
 }
 
 Object.assign(window, {
-  ritmoHorarioInicial, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
+  ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
   ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPausaHecha, ritmoOrdinal
 });
-;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoBloqueTerminado, ritmoPausaHecha, ritmoBloqueEmpezado, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoBloqueTerminado, ritmoPausaHecha, ritmoBloqueEmpezado, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
@@ -15492,6 +15550,10 @@ const sidebarStyles = {
   accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 },
   accionBoton: { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
   accionMeta: { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
+  /* s197 · LO QUE LLEVAS, bajo el meta y tras un hilo: la itálica serif de las losetas
+     del ritmo, que es la que el usuario eligió mirándola («más elegante»). */
+  accionLlevas: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: 'var(--ink-2)',
+    margin: '9px 0 0', paddingTop: 8, borderTop: '1px solid var(--line)', lineHeight: 1.5 },
   accionFlecha: { flex: 'none', color: 'var(--ink-3)', fontSize: 15, lineHeight: 1 },
 
   semDia: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
@@ -16082,7 +16144,13 @@ function sidebarActionView(accion, t, tn, lang) {
       eyebrow: tn(rt.ahora ? 'ritmo.sidebar.ahora' : 'ritmo.sidebar', { h: ritmoHora(rt.hora) }),
       color: 'var(--ink-3)',
       titulo: titulo,
-      meta: rt.larga ? tn('ritmo.larga', { n: rt.dur }) : rt.min + ' min · ' + ritmoModulo(rt.modulo, t)
+      meta: rt.larga ? tn('ritmo.larga', { n: rt.dur }) : rt.min + ' min · ' + ritmoModulo(rt.modulo, t),
+      /* s197 · la tarjeta solo miraba hacia delante: con cuatro pausas hechas y una
+         saltada decía lo mismo que a las 9:00. La línea del panel ya enseña hecha y
+         saltada nodo a nodo, así que aquí va lo único que la línea NO dice con
+         palabras —el recuento— y en el teléfono, donde la línea es una tira de puntos,
+         es lo que se lee de un vistazo en el cajón. */
+      llevas: ritmoLlevas(rt.bloques || 0, rt.pausas || 0, t, tn)
     };
   }
   if (accion.kind === 'suggest') {
@@ -16115,7 +16183,8 @@ function SidebarPrimaryAction(_ref3) {let { accion, vista, onAct } = _ref3;
     React.createElement("button", { style: sidebarStyles.accionBoton, onClick: () => onAct(accion) }, titulo), /*#__PURE__*/
     React.createElement("span", { style: sidebarStyles.accionFlecha, "aria-hidden": "true" }, "\u2192")
     ),
-    meta ? /*#__PURE__*/React.createElement("p", { style: sidebarStyles.accionMeta }, meta) : null
+    meta ? /*#__PURE__*/React.createElement("p", { style: sidebarStyles.accionMeta }, meta) : null,
+    vista.llevas ? /*#__PURE__*/React.createElement("p", { style: sidebarStyles.accionLlevas, "data-pace-sidebar-llevas": true }, vista.llevas) : null
     ));
 
 }
@@ -31406,6 +31475,12 @@ Object.assign(window, { Onboarding });
 .pace-rt-li.pace-rt-hueco .pace-rt-eje::before { border-left: 1px dotted var(--line-2); left: 8px; }
 .pace-rt-li.pace-rt-plato { padding-bottom: 10px; }
 .pace-rt-li.pace-rt-pasado { opacity: 0.5; }
+/* s197 · LA HOJA RECUERDA, con la misma regla que la línea (s195): la parada hecha
+   conserva la tinta y su glifo se rellena al 22 % con borde de 1,5; la saltada baja
+   al 40 % y puntea. Antes lo pasado se atenuaba entero y no distinguía una de otra. */
+.pace-rt-li.pace-rt-hecha .pace-rt-eje i { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-li.pace-rt-saltada { opacity: 0.4; }
+.pace-rt-li.pace-rt-saltada .pace-rt-eje i { border-style: dashed; }
 .pace-rt-plato-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }
 .pace-rt-plato-m { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
 
@@ -31565,13 +31640,17 @@ function RitmoFrase(_ref3) {let { plantilla, huecos } = _ref3;
    inicio 5:00–21:00 · comida 11:00–17:00 · salida 12:00–23:30, de media en media
    hora. La regla ya sabe qué hacer con un inicio tras la salida (una hora es una
    hora) y con una comida que no cae en la jornada (no la sirve). */
-var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410] };
+var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 1410],
+  /* s197: la media jornada es de mañana O DE TARDE, así que su inicio llega hasta las
+     21:00 como el de la entera y su fin hasta la medianoche y media. */
+  'media.inicio': [300, 1260], 'media.salida': [360, 1410] };
 function RitmoSelector(_ref4) {let { campo, horario } = _ref4;
   const { t } = useT();
   let valores = [];
   if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];else
   for (let v = RITMO_RANGOS[campo][0]; v <= RITMO_RANGOS[campo][1]; v += 30) valores.push(v);
-  const actual = horario[campo];
+  /* «media.inicio» / «media.salida» leen dentro de `horario.media` (s197). */
+  const actual = campo.indexOf('media.') === 0 ? ritmoMedia(horario)[campo.slice(6)] : horario[campo];
   if (valores.indexOf(actual) === -1) valores = valores.concat([actual]).sort((a, b) => a - b);
   const fmt = (v) => campo === 'comidaDur' ? v < 60 ? v + ' min' : ritmoDuracion(v, true) : ritmoHora(v);
   return (/*#__PURE__*/
@@ -31604,15 +31683,37 @@ function ritmoHuecos(horario) {
     comida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "comida", horario: horario }),
     dur: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "comidaDur", horario: horario }),
     salida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "salida", horario: horario }),
-    comes: /*#__PURE__*/React.createElement(RitmoInterruptorComida, { horario: horario })
+    comes: /*#__PURE__*/React.createElement(RitmoInterruptorComida, { horario: horario }),
+    mediaInicio: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "media.inicio", horario: horario }),
+    mediaSalida: /*#__PURE__*/React.createElement(RitmoSelector, { campo: "media.salida", horario: horario })
   };
+}
+
+/* LO QUE LLEVAS (s197) · la frase de la tarjeta «Siguiente pausa» de la barra lateral.
+   La línea del panel ya enseña hecha/saltada nodo a nodo; lo único que no dice con
+   palabras es el RECUENTO, y es lo que cuenta esta frase: los bloques de foco (la
+   palabra que usa el aro: «Bloque 7 de 9») y las pausas HECHAS. Las saltadas no se
+   nombran —la línea ya las enseña en gris, y nombrarlas es un reproche pequeño—; el
+   usuario pidió contar «ciclos de concentración», y «bloque» es esa palabra en la app.
+   Números en palabras hasta doce (`ritmo.numeros`) y en cifra después. Devuelve null
+   sin un solo bloque hecho: una tarjeta que dice «llevas cero» no acompaña. */
+function ritmoNumero(n, t) {
+  const lista = String(t('ritmo.numeros')).split(',');
+  return n >= 0 && n < lista.length ? lista[n] : String(n);
+}
+function ritmoLlevas(bloques, pausas, t, tn) {
+  if (!bloques) return null;
+  const b = bloques === 1 ? t('ritmo.llevas.bloque') : tn('ritmo.llevas.bloques', { n: ritmoNumero(bloques, t) });
+  if (!pausas) return tn('ritmo.llevas.solo', { b });
+  const p = pausas === 1 ? t('ritmo.llevas.pausa') : tn('ritmo.llevas.pausas', { n: ritmoNumero(pausas, t) });
+  return tn('ritmo.llevas', { b, p });
 }
 
 Object.assign(window, {
   RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
-  RitmoFrase, RitmoSelector, ritmoHuecos
+  RitmoFrase, RitmoSelector, ritmoHuecos, ritmoNumero, ritmoLlevas
 });
-;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, RitmoInterruptorComida, ritmoHuecos });
+;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, RitmoInterruptorComida, ritmoHuecos, ritmoNumero, ritmoLlevas });
 })();
 </script>
   <script>
@@ -31897,7 +31998,7 @@ function RitmoChips(_ref2) {let { state } = _ref2;
         React.createElement("button", { key: op, type: "button", className: "pace-rt-chip", "data-pace-ritmo-opcion": op,
           disabled: vacia, onClick: () => ritmoElegir(op) }, /*#__PURE__*/
         React.createElement("b", null, t('ritmo.opcion.' + op)), /*#__PURE__*/
-        React.createElement("span", null, vacia ? t('ritmo.fuera') : tn('ritmo.hasta', { h: ritmoHora(m.hasta) }))
+        React.createElement("span", null, ritmoSub(op, m, vacia, t, tn))
         ));
 
     })
@@ -31905,10 +32006,31 @@ function RitmoChips(_ref2) {let { state } = _ref2;
 
 }
 
+/* EL SUBTÍTULO de un chip o una loseta (s197). Las dos jornadas son HORARIOS —tuyos,
+   editables— y lo dicen: «De 9:00 a 13:00». «Una hora» y «Dos horas» siguen con «Hasta
+   las…» porque son un rato desde que pulsas, no un tramo. Decisión del usuario: «tienen
+   que poder personalizarse, tanto la media jornada como la completa», así que el chip
+   enseña TUS horas, no una duración. */
+function ritmoSub(op, m, vacia, t, tn) {
+  if (vacia) return t('ritmo.fuera');
+  if (op === 'media' || op === 'jornada') return tn('ritmo.tramo', { a: ritmoHora(m.desde), b: ritmoHora(m.hasta) });
+  return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
+}
+
 function RitmoPregunta(_ref3) {let { state } = _ref3;
   const { t } = useT();
   const R = ritmoDe(state);
-  const frase = /*#__PURE__*/React.createElement(RitmoFrase, { plantilla: t(R.horario.sinComida ? 'ritmo.frase.sin' : 'ritmo.frase'), huecos: ritmoHuecos(R.horario) });
+  const huecos = ritmoHuecos(R.horario);
+  /* s197 (A1, elegida mirándola): DOS frases. La de arriba es la jornada entera; debajo,
+     una segunda corta con las dos horas de la media jornada. Cuesta 22 px de panel en
+     escritorio y 21 en móvil —medido— y a cambio se lee de un vistazo cuál es cuál;
+     meterlas en una sola dejaba seis selectores y un interruptor en la misma línea. */
+  const frase = /*#__PURE__*/
+  React.createElement(React.Fragment, null, /*#__PURE__*/
+  React.createElement(RitmoFrase, { plantilla: t(R.horario.sinComida ? 'ritmo.frase.sin' : 'ritmo.frase'), huecos: huecos })
+  );
+
+  const fraseMedia = /*#__PURE__*/React.createElement(RitmoFrase, { plantilla: t('ritmo.frase.media'), huecos: huecos });
   return (/*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-panel pace-rt-esc", "data-pace-ritmo-estado": "pregunta" }, /*#__PURE__*/
@@ -31916,7 +32038,8 @@ function RitmoPregunta(_ref3) {let { state } = _ref3;
     React.createElement("div", null, /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.pregunta')), /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-sub" }, t('ritmo.sub')), /*#__PURE__*/
-    React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase)
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase", "data-pace-ritmo-frase-media": true }, fraseMedia)
     ), /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-der" }, /*#__PURE__*/React.createElement(RitmoLibre, null))
     ), /*#__PURE__*/
@@ -31925,6 +32048,7 @@ function RitmoPregunta(_ref3) {let { state } = _ref3;
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "pregunta" }, /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.pregunta')), /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase), /*#__PURE__*/
+    React.createElement("div", { className: "pace-rt-sub pace-rt-frase", "data-pace-ritmo-frase-media": true }, fraseMedia), /*#__PURE__*/
     React.createElement(RitmoChips, { state: state }), /*#__PURE__*/
     React.createElement("div", { className: "pace-rt-pie" }, /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement(RitmoLibre, null))
     )
@@ -31950,6 +32074,10 @@ function RitmoFraseMenu(_ref4) {let { plan, horario, plantilla, capital } = _ref
      10:23 decía «de 14:30 a 12:50» (captura del usuario). El horario se sigue
      editando en «Cambiar»; la jornada entera conserva sus selectores y su «hoy de». */
   const jornada = m.opcion === 'jornada';
+  /* s197: la MEDIA JORNADA también es un horario, así que también edita sus horas aquí
+     (las suyas, `horario.media`); lo que no tiene nunca es comida. */
+  const media = m.opcion === 'media';
+  if (media) {huecos.inicio = huecos.mediaInicio;huecos.salida = huecos.mediaSalida;} else
   if (!jornada) {huecos.inicio = ritmoHora(m.desde);huecos.salida = ritmoHora(m.hasta);}
   if (m.comida == null) plantilla = plantilla + '.sin';
   /* `capital`: cuando la frase abre línea (la hoja) y no va tras «Jornada entera ·». */
@@ -32078,10 +32206,10 @@ function RitmoHecho(_ref0) {let { plan } = _ref0;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -32118,9 +32246,18 @@ function RitmoLista(_ref) {let { plan } = _ref;
       const comida = it.tipo === 'comida';
       if (!comida && !(it.platos && it.platos.length)) return null;
       const modulo = comida ? 'comida' : it.platos[0].modulo;
-      const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) : ritmoMetaPlato(it, t, tn);
+      /* s197: la hoja RECUERDA, como la línea. Hasta ahora atenuaba TODO lo pasado al
+         50 %, hiciera la pausa o la saltara, y «lo atenuado lee como no hecho» (s193):
+         cuatro pausas hechas y una saltada se veían igual. Ahora cada parada pasada
+         lleva su estado (`dia.estados` por ordinal, el mismo que la línea): la hecha
+         recupera la tinta y su glifo se rellena; la saltada baja al 40 % y puntea. */
+      const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
+      const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) :
+      estado ? estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada') :
+      ritmoMetaPlato(it, t, tn);
       return (/*#__PURE__*/
-        React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado ? ' pace-rt-pasado' : ''), "data-pace-ritmo-fila": it.tipo },
+        React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : ''),
+          "data-pace-ritmo-fila": it.tipo, "data-pace-ritmo-estado-fila": estado || undefined },
         h, /*#__PURE__*/
         React.createElement("div", { className: "pace-rt-eje" }, /*#__PURE__*/
         React.createElement("i", { className: it.larga ? 'pace-rt-larga' : '', style: { '--c': RITMO_COLOR[modulo] } },
@@ -32134,7 +32271,7 @@ function RitmoLista(_ref) {let { plan } = _ref;
         )
         ), /*#__PURE__*/
         React.createElement("div", { className: "pace-rt-plato-m" }, /*#__PURE__*/
-        React.createElement(RitmoMetaGota, { texto: meta, agua: it.agua }),
+        React.createElement(RitmoMetaGota, { texto: meta, agua: it.agua && estado !== 'saltada' }),
         i === iActual ? /*#__PURE__*/React.createElement(React.Fragment, null, ' · ', /*#__PURE__*/React.createElement("b", { style: { color: 'var(--focus)', fontWeight: 500 } }, t('ritmo.ahora.min'))) : null
         )
         ),
@@ -32221,7 +32358,7 @@ function RitmoTarjeta() {
         React.createElement("button", { key: op, type: "button", className: "pace-rt-loseta", "data-pace-ritmo-loseta": op,
           disabled: vacia, onClick: () => ritmoElegir(op) }, /*#__PURE__*/
         React.createElement("b", null, t('ritmo.opcion.' + op)), /*#__PURE__*/
-        React.createElement("span", null, vacia ? t('ritmo.fuera') : tn('ritmo.hasta', { h: ritmoHora(m.hasta) }))
+        React.createElement("span", null, ritmoSub(op, m, vacia, t, tn))
         ));
 
     })

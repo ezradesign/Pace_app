@@ -310,12 +310,17 @@ Catálogo cerrado a **7 caminos**, todos `free`. Datos en
 No añade rutinas: **elige entre las que hay** y las ordena en la jornada. La regla es
 `ritmoComponer` (`app/ritmo/ritmo.regla.js`) y los pozos, `ritmoPozos` (`app/state-ritmo.jsx`).
 
-| Opción | Bloques de foco | Tope |
-|---|---|---|
-| Una hora | 2 × 25 min | tu salida |
-| Dos horas | 3 × 35 min | tu salida |
-| Media jornada | 4 × 45 min | tu salida |
-| Jornada entera | de 45 min, hasta tu salida | tu salida (con la comida a su hora) |
+| Opción | Qué es | Bloques de foco | Comida |
+|---|---|---|---|
+| Una hora | un rato desde que pulsas | 2 × 25 min | no |
+| Dos horas | un rato desde que pulsas | 3 × 35 min | no |
+| Media jornada | **un tramo con tus horas** (s197): de mañana o de tarde, por defecto 4 h desde tu entrada, editable y recordado | de 45 min, hasta su fin | no |
+| Jornada entera | **un tramo con tus horas**: de tu entrada a tu salida | de 45 min, hasta tu salida | **sí**, a su hora |
+
+**La comida es solo de la jornada entera** (s197, decisión del usuario: «se entiende que cuando se acabe la
+media jornada ya se hace la comida»); antes cualquier opción que cruzara la hora la servía. Las dos jornadas
+dicen su tramo en el chip y en la loseta («De 9:00 a 13:00»), porque sus horas son tuyas; las dos cortas
+dicen hasta cuándo llegan. Fuera de su tramo, una jornada se apaga.
 
 **Las pausas**: cada tercera es **larga** (15 min, Respira + Estira), la anterior a la larga es
 **Mueve** y las demás **Estira**; el contador vuelve a empezar tras la comida. El cierre es una

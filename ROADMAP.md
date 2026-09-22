@@ -411,6 +411,12 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
 punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
 
+**Hecho en s197 (v0.129.0)**: **la media jornada como horario propio** (de mañana o de tarde, con sus horas
+recordadas y editables en la cabecera y en «Ajustar el horario»), **la comida solo en la jornada entera**, el
+tramo en los chips y las losetas de las dos jornadas, **la hoja del día con hecha/saltada** y el recuento
+(«Llevas seis bloques y cuatro pausas») en la tarjeta de la barra lateral. Queda de lo decidido en s196: la
+**tableta vertical con la piel de móvil** hasta 1024 (v0.130.0).
+
 **Hecho en s195c (v0.128.0)**: **la semana (lectura A)** — seis temas en ciclo por semana ISO × acento del
 día × la regla, todo desde la fecha, y **sin anunciarlo** (el usuario eligió «nada» entre chip, nada y
 cuatro palabras). Con v0.127.0: la tarjeta por libre, la comida como interruptor, la pausa solo con Hidrátate.

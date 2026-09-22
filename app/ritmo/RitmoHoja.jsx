@@ -30,9 +30,18 @@ function RitmoLista({ plan }) {
         const comida = it.tipo === 'comida';
         if (!comida && !(it.platos && it.platos.length)) return null;
         const modulo = comida ? 'comida' : it.platos[0].modulo;
-        const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) : ritmoMetaPlato(it, t, tn);
+        /* s197: la hoja RECUERDA, como la línea. Hasta ahora atenuaba TODO lo pasado al
+           50 %, hiciera la pausa o la saltara, y «lo atenuado lee como no hecho» (s193):
+           cuatro pausas hechas y una saltada se veían igual. Ahora cada parada pasada
+           lleva su estado (`dia.estados` por ordinal, el mismo que la línea): la hecha
+           recupera la tinta y su glifo se rellena; la saltada baja al 40 % y puntea. */
+        const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
+        const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })
+          : estado ? (estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada'))
+          : ritmoMetaPlato(it, t, tn);
         return (
-          <div key={i} className={'pace-rt-li pace-rt-plato' + (pasado ? ' pace-rt-pasado' : '')} data-pace-ritmo-fila={it.tipo}>
+          <div key={i} className={'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : '')}
+            data-pace-ritmo-fila={it.tipo} data-pace-ritmo-estado-fila={estado || undefined}>
             {h}
             <div className="pace-rt-eje">
               <i className={it.larga ? 'pace-rt-larga' : ''} style={{ '--c': RITMO_COLOR[modulo] }}>
@@ -46,7 +55,7 @@ function RitmoLista({ plan }) {
                 ))}
               </div>
               <div className="pace-rt-plato-m">
-                <RitmoMetaGota texto={meta} agua={it.agua} />
+                <RitmoMetaGota texto={meta} agua={it.agua && estado !== 'saltada'} />
                 {i === iActual ? <React.Fragment>{' · '}<b style={{ color: 'var(--focus)', fontWeight: 500 }}>{t('ritmo.ahora.min')}</b></React.Fragment> : null}
               </div>
             </div>
