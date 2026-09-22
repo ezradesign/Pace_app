@@ -302,12 +302,13 @@ function Sidebar() {
   );
 }
 
-/* «Cajón» = el drawer a pantalla completa, que la hoja monta por debajo de
-   768 px. No es el mismo umbral que `isMob` (640, compactación tipográfica), y
-   confundirlos deja la acción arriba en una tablet que todavía ve la sidebar
-   como columna. */
+/* «Cajón» = el drawer a pantalla completa, que la hoja monta en la PIEL DE MÓVIL.
+   No es el mismo umbral que `isMob` (640, compactación tipográfica), y confundirlos
+   deja la acción arriba en una tableta que todavía ve la sidebar como columna.
+   s197: el corte lo manda `_responsive.corte.js`, que desde v0.130.0 mete también las
+   pantallas verticales de hasta 1024 — o sea que una tableta vertical SÍ lleva cajón. */
 function esCajon() {
-  return typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+  return typeof paceEsMovil === 'function' ? paceEsMovil() : false;
 }
 
 function fechaCortaSidebar(lang) {

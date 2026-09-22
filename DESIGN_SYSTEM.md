@@ -267,9 +267,17 @@ PACE usa un enfoque móvil-primero con **dos breakpoints principales**:
 
 | Breakpoint | Valor | Uso |
 |---|---|---|
-| Móvil | `≤ 640px` | Patrón: `<style>` + `[data-pace-*]` + `!important` (decisión sesión 22) |
-| Tablet | `≤ 768px` | `ActivityBar` pasa a grid 2×2; sidebar fullscreen |
-| Desktop | `> 768px` | Layout flex completo con sidebar de 280px |
+| Móvil (tipografía) | `≤ 640px` | Patrón: `<style>` + `[data-pace-*]` + `!important` (decisión sesión 22) |
+| **PIEL DE MÓVIL** | **`≤ 768px` O vertical `≤ 1024px`** | `ActivityBar` en grid 2×2; la barra lateral es cajón; el aro sale por ANCHO |
+| **PIEL DE ESCRITORIO** | **`≥ 1025px` O `≥ 769px` apaisado** | Layout flex completo con barra lateral de 280 px |
+
+> **s197 · v0.130.0: el corte se declara UNA VEZ** en `app/main/_responsive.corte.js`
+> (`PACE_CORTE_MOVIL` · `PACE_CORTE_ESC` · `paceEsMovil()`); las hojas lo interpolan y el JS lo consulta. Toda
+> pantalla **más alta que ancha** de hasta 1024 px —los cuatro iPad y una ventana estrecha y alta— lleva la
+> piel de móvil: lo decidió el usuario viendo las cinco a la vez. Una ventana **cuadrada** cuenta como vertical
+> (`orientation: portrait` casa con alto ≥ ancho) y un **teléfono apaisado** (844 de ancho) es escritorio, como
+> lo era antes. Se escribe con listas separadas por coma y no con `not`, que es nivel 4 (Safari < 16.4 no lo
+> tiene). La **pill de modos** vuelve a su fila a 768-1024 sin los 42 px extra del teléfono.
 
 ### Unidades de viewport
 

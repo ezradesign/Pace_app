@@ -44,7 +44,7 @@
         }
       
 
-    @media (min-width: 769px) {
+    @media ${PACE_CORTE_ESC} {
       [data-pace-stats-vistas] { min-height: 385px; }
       /* ══ s177 · EL AÑO SE LLEVA EL ANCHO, Y CADA VISTA EL SUYO ═════════════
 

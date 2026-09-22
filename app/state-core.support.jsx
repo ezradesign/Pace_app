@@ -35,7 +35,10 @@
    UTILS
    ============================ */
 
+/* s197: la misma pregunta que hace el CSS, desde `_responsive.corte.js` (una vertical
+   de hasta 1024 es móvil). Si aún no se ha evaluado, el corte de siempre. */
 function isMobileViewport() {
+  if (typeof paceEsMovil === 'function') return paceEsMovil();
   return typeof window !== 'undefined' && window.matchMedia &&
          window.matchMedia('(max-width: 768px)').matches;
 }

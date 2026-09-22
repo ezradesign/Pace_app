@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.130.0** | 2026-09-22 | feat(home): **la tableta vertical lleva la piel de móvil** — Decidido por el usuario viendo cinco pantallas verticales reales con la piel forzada en la foto (s196): «820×1100 escritorio queda raro el aro tan pequeño / 768×1100 piel de móvil: así se ve perfecto», «vertical hasta 1024». El corte deja de estar escrito a mano en **19 sitios de 8 archivos** y nace **`_responsive.corte.js`**: móvil = `≤768` **o** vertical `≤1024`; escritorio = `≥1025` **o** `≥769` apaisado (listas con coma, sin `not` de nivel 4). Estrenarlo destapó que **entre 820 y 1024 desaparecían los tres modos** de la topbar: la pill vuelve a su fila sin los 42 px del teléfono. `_responsive.pieles.js` pasó de 500 al añadir la regla y se **troceó** (340 + 191). **296 → 300**, `banco-corte-s197.js` **8 de 8**, auditoría de viewports re-medida (199 escenas). | s197 | [session-197b](./docs/sessions/session-197b-la-tableta-vertical.md) |
 | **v0.129.0** | 2026-09-22 | feat(ritmo): **la media jornada es un horario, y lo hecho se cuenta** — La media jornada deja de ser «3 h de foco desde que pulsas» y pasa a ser un **tramo con sus propias horas** (`horario.media`), de mañana **o de tarde**, editable en su cabecera y en «Ajustar el horario» (dos frases), recordado como preferencia y derivado de tu entrada mientras nadie lo toque; fuera de su tramo se apaga. **La comida pasa a ser solo de la jornada entera** («Dos horas» de 13:00 a 15:00 ya no la sirve). Las dos jornadas dicen su **tramo** en el chip y en la loseta, porque son horarios tuyos. Y **lo hecho se cuenta**: la hoja del día distingue hecha de saltada (la regla de la línea) y la tarjeta «Siguiente pausa» lleva «Llevas seis bloques y cuatro pausas». **286 → 296**, `banco-media-s197.js` **13 de 13**. | s197 | [session-197](./docs/sessions/session-197-media-jornada-y-lo-contado.md) |
 | **v0.128.1** | 2026-09-19 | fix(ritmo): **los acentos sirven lo que cabe** — Al re-medir la semana sobre el artefacto publicado, el jueves servía Coherente 6·6 (10') en una pausa corta de 5' y el viernes lo mismo en el cierre: la regla nunca filtra por duración porque no le hacía falta (Estira y Mueve caben en 5' y Respira solo iba a la larga), y los acentos «aire» y «cerrar suave» son el primer Respira en pausa corta. Ahora `toma()` admite `cabe` y los dos acentos solo sirven Respiras con `min <= dur`; si ninguno cabe, la parada queda como la sirvió la regla. Jueves: Diafragmática 5' antes de comer; viernes: cierre Diafragmática 5' (la regla ponía Suspiro 2'). El test defiende el invariante roto (**cada plato cabe en su parada, los cinco días**) y el banco suma dos mutantes: **13 de 13**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
 | **v0.128.0** | 2026-09-19 | feat(ritmo): **la semana, sin decirlo** — La pieza 3 del norte (lectura A): el menú varía con la semana y con el día, todo desde la fecha —seis temas en ciclo por semana ISO que reordenan los pozos por región (cuello · caderas · manos · espalda · aire · ligera) × un acento por día de lunes a viernes (arrancar con Mueve · el día tal cual · la larga antes · respirar antes de comer · cerrar con el Respira más largo) × la regla de siempre—, y **nada lo anuncia**: se pusieron tres formas mínimas en el panel real (chip · nada · cuatro palabras) y el usuario eligió «nada» («menos es más»). `ritmo.semana.js` es pura; «la mitad» es `horario.desfaseLarga` y no un `previos` falso; los acentos respetan lo hecho; el fin de semana lleva tema y no acento. **282 → 286**, `banco-semana-s195.js` **11 de 11**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
@@ -406,6 +407,37 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.130.0] -- 2026-09-22 -- feat(home): la tableta vertical lleva la piel de movil
+
+### Añadido
+- **`app/main/_responsive.corte.js`**: el corte entre las dos pieles en UN SOLO SITIO (`PACE_CORTE_MOVIL`,
+  `PACE_CORTE_ESC`, `paceEsMovil()`), que interpolan las hojas y consultan los tres `matchMedia`. Antes vivía
+  a mano en 19 sitios de 8 archivos.
+- **La pill de modos en tableta vertical**: a 768-1024 de ancho vuelve a su fila sin los 42 px extra del
+  teléfono. Sin esta regla, el corte nuevo dejaba la topbar SIN los tres modos entre 820 y 1024 (medido).
+
+### Cambiado
+- **Toda pantalla más alta que ancha de hasta 1024 px lleva la piel de móvil**: los cuatro iPad y una ventana
+  de escritorio estrecha y alta. Apaisado y ≥1025, escritorio. Una ventana cuadrada cuenta como vertical
+  (`orientation: portrait` casa con alto ≥ ancho); un teléfono apaisado ya era escritorio desde antes.
+- **`_responsive.pieles.js` troceado** (517 → 340) por el trinquete de §1: el bloque de escritorio sale tal
+  cual a `_responsive.pieles.esc.js` (191) y se carga JUSTO DESPUÉS — misma especificidad, gana el último.
+- La auditoría de viewports re-medida: 820×1100 pasa a la lista de la piel de móvil con las tres tabletas y la
+  ventana estrecha; escritorio gana dos apaisadas. 21 viewports × ~10 escenas.
+
+### Red
+- `tests/pieles-corte.spec.js` (4): el corte por los cuatro lados sobre 14 viewports, la tableta sin columna
+  ni scroll con la pill en su sitio, el cajón que se cierra al pulsar, y el teléfono sin cambios.
+- `scripts/audit/banco-corte-s197.js`: **8 de 8 muerden**. El de `esCajon()` vivía hasta asertar el cierre del
+  cajón: el aserto era flojo, no sobraba código.
+- Dos tests de s195b reescritos (820×1100 ya no es piel de escritorio).
+
+### Lo que no cubre
+- Cinco escenas con scroll ANTERIORES a esta versión (la tarjeta por libre arrastra 72 px a 375×667 y 32 a
+  360×730, idéntico contra HEAD). Ni un píxel comparado: las tabletas se miraron a mano.
+
+---
+
 ## [v0.129.0] -- 2026-09-22 -- feat(ritmo): la media jornada es un horario, y lo hecho se cuenta
 
 ### Cambiado
@@ -435,21 +467,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ### Lo que no cubre
 - La tableta vertical con piel de móvil (decidida) va en v0.130.0. Nadie ha usado la app una semana entera aún.
-
----
-
-## [v0.128.1] -- 2026-09-19 -- fix(ritmo): los acentos sirven lo que cabe
-
-### Corregido
-- **`semanaComponer`: «aire» y «cerrar suave» solo sirven Respiras que quepan en la parada** (`toma(modulo,
-  clave, cabe)` filtra `min <= cabe`; el cierre filtra `min <= cierre.dur`). Medido en la app: el jueves iba
-  Coherente 6·6 (10') en una pausa de 5' y el viernes en el cierre (5'). La regla no mira duraciones porque
-  nunca le hizo falta; el acento fue el primer Respira fuera de la larga. Si ningún Respira cabe, la parada
-  se queda como la sirvió la regla (y su plato vuelve a `usados`).
-
-### Red
-- `ritmo-semana.spec.js`: **cada plato cabe en su parada, los cinco días**; el viernes pide «el más largo que
-  cabe» con GUARD de que lo hay y de que supera al pozo del cierre. `banco-semana-s195.js`: **13 de 13**.
 
 ---
 
