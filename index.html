@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.132.0</title>
+  <title>PACE · Foco · Cuerpo — v0.133.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3267,6 +3267,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.comida.lista': '{d} lejos de la pantalla',
   'ritmo.larga': 'Pausa larga · {n} min',
   'ritmo.larga.lista': 'Pausa larga · {n} min · Respira y Estira',
+  /* s198 · v0.133.0 (D2, texto V1): el aviso del sistema al acabar un bloque
+     con «A tu ritmo» (ritmo/ritmo.aviso.js). */
+  'notify.ritmo.titulo': 'Tu pausa: {plato} · {min} min',
+  'notify.ritmo.larga': 'Tu pausa larga: {plato} · {min} min',
+  'notify.ritmo.cierre': 'Para cerrar: {plato} · {min} min',
+  'notify.ritmo.cuerpo': 'Bloque {n} de {total} hecho. El siguiente, a las {hora}.',
+  'notify.ritmo.ultimo': 'Bloque {n} de {total} hecho. Con esto cierras el día.',
+  'notify.ritmo.comida': 'Hora de comer',
+  'notify.ritmo.comida.cuerpo': 'Hasta las {hora}. Luego, el bloque {n}.',
   'ritmo.motivo.estira': 'Antídoto a la silla',
   'ritmo.motivo.mueve': 'Cuerpo activo',
   'ritmo.motivo.cierre': 'Para cerrar la jornada',
@@ -3346,6 +3355,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.comida.lista': '{d} away from the screen',
   'ritmo.larga': 'Long break · {n} min',
   'ritmo.larga.lista': 'Long break · {n} min · Breathe and Stretch',
+  'notify.ritmo.titulo': 'Your break: {plato} · {min} min',
+  'notify.ritmo.larga': 'Your long break: {plato} · {min} min',
+  'notify.ritmo.cierre': 'To close the day: {plato} · {min} min',
+  'notify.ritmo.cuerpo': 'Block {n} of {total} done. The next one at {hora}.',
+  'notify.ritmo.ultimo': 'Block {n} of {total} done. That is your day.',
+  'notify.ritmo.comida': 'Time for lunch',
+  'notify.ritmo.comida.cuerpo': 'Until {hora}. Then block {n}.',
   'ritmo.motivo.estira': 'Antidote to the chair',
   'ritmo.motivo.mueve': 'Active body',
   'ritmo.motivo.cierre': 'To close the day',
@@ -5488,7 +5504,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.132.0';
+const PACE_VERSION = 'v0.133.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -8108,6 +8124,74 @@ function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos) 
 
 Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, semanaPozos, semanaComponer });
 ;Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, semanaOrdenar, semanaPozos, semanaComponer });
+})();
+</script>
+  <!-- ritmo.aviso (s198 · v0.133.0): el aviso del sistema nombra la pausa que toca.
+       Solo se llama al acabar un bloque (FocusTimer); no hay nada al evaluarse. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   ritmo.aviso.js — LA PAUSA TE LLAMA POR SU NOMBRE (s198 · v0.133.0)
+   ============================================================
+   En la oficina PACE vive en una pestaña de fondo: cuando el bloque acaba, lo
+   primero que se ve NO es la app sino el aviso del sistema, y hasta v0.132.0
+   decia siempre «Foco completado · Ciclo cerrado. Elige tu micro-pausa.», con
+   o sin un dia servido. Decision del usuario (D2, texto V1, mirando
+   `docs/proposals/por-donde-seguir-s198.html`): con «A tu ritmo», el aviso dice
+   QUE pausa toca y CUANDO vuelves.
+
+     Tu pausa: Gemelos subrepticios · 1 min
+     Bloque 1 de 9 hecho. El siguiente, a las 9:50.
+
+   `ritmoAviso(s, t, tn, lang)` -> { title, body } o null (sin menu, o nada que
+   nombrar: el aviso de siempre). PURA respecto al reloj: lee el plan del estado
+   que recibe. Por eso FocusTimer la llama DESPUES de cerrar el bloque (cycle++)
+   y de que `ritmoBloqueTerminado` recoloque el dia si se llego tarde: antes, el
+   plan aun no sabe que el bloque termino.
+
+   Las mismas reglas que ya cuenta la linea del dia, para que el aviso y la app
+   digan lo mismo: la duracion de una pausa normal es la de su RUTINA (como
+   «1 MIN · MUEVE» en la linea); la de la larga, la de la parada. La comida dice
+   hasta cuando; el ultimo bloque, que el dia se cierra.
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+function ritmoAviso(s, t, tn, lang) {
+  if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
+  var p = ritmoPlan(s);
+  if (!p || p.hechos < 1) return null;
+  var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
+  if (!it) return null;
+  var sig = p.m.focos[p.hechos] || null;
+  var hora = function (min) {return typeof ritmoHora === 'function' ? ritmoHora(min) : String(min);};
+  var nombre = function (pl) {
+    return typeof ritmoNombre === 'function' ? ritmoNombre(pl.rutina || pl, t, lang) : pl.name || pl.id || '';
+  };
+
+  if (it.tipo === 'comida') {
+    return {
+      title: t('notify.ritmo.comida'),
+      body: sig ? tn('notify.ritmo.comida.cuerpo', { hora: hora(sig.desde), n: p.hechos + 1 }) : ''
+    };
+  }
+
+  var platos = it.platos || [];
+  if (!platos.length) return null;
+  var clave = it.larga ? 'notify.ritmo.larga' : it.tipo === 'cierre' ? 'notify.ritmo.cierre' : 'notify.ritmo.titulo';
+  return {
+    title: tn(clave, { plato: platos.map(nombre).join(' + '), min: it.larga ? it.dur : platos[0].min }),
+    body: sig ?
+    tn('notify.ritmo.cuerpo', { n: p.hechos, total: p.total, hora: hora(sig.desde) }) :
+    tn('notify.ritmo.ultimo', { n: p.hechos, total: p.total })
+  };
+}
+
+Object.assign(window, { ritmoAviso });
+;Object.assign(window, { ritmoAviso });
 })();
 </script>
   <script>
@@ -19633,7 +19717,7 @@ const { useEffect: useEffectFT, useRef: useRefFT } = React;
 
 function FocusTimer(_ref) {let { onFinish } = _ref;
   const [state, set] = usePace();
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
 
   /* Motor de cuenta atras basado en timestamps (s96 · app/focus/useCountdown).
      `remaining` se deriva del reloj real, no de un contador que se decrementa:
@@ -19654,21 +19738,30 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
        ultima onComplete en un ref, asi que este cierre lee el focusMode
        vigente; un cambio de modo resetea el timer antes de poder completar. */
     if (state.focusMode === 'foco') {
-      /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
-         pestaña está en segundo plano. Nunca rompe (patrón playSound). */
-      try {
-        maybeNotifyFocusEnd({
-          enabled: state.notifyFocusEnd,
-          title: t('notify.focus.title'),
-          body: t('notify.focus.body')
-        });
-      } catch (e) {}
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       completeFocusSession('home', { minutes: state.focusMinutes,
         elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
         activeSeconds: durationSec });
-      onFinish && onFinish();
+      /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
+         pestaña está en segundo plano. Nunca rompe (patrón playSound).
+         s198 · v0.133.0 (D2): con «A tu ritmo» nombra la pausa que toca y cuándo
+         vuelves (ritmo/ritmo.aviso.js). Va DESPUÉS de cerrar el bloque —antes iba
+         delante— porque el plan solo sabe qué pausa sigue cuando `cycle` ha subido
+         y `onFinish` (ritmoBloqueTerminado) ha recolocado el día si llegaste
+         tarde. El `finally` conserva lo de antes: aunque `onFinish` fallara, avisa. */
+      try {
+        onFinish && onFinish();
+      } finally {
+        try {
+          const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
+          maybeNotifyFocusEnd({
+            enabled: state.notifyFocusEnd,
+            title: aviso ? aviso.title : t('notify.focus.title'),
+            body: aviso ? aviso.body : t('notify.focus.body')
+          });
+        } catch (e) {}
+      }
     }
   });
 
