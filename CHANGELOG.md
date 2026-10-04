@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.132.0** | 2026-10-04 | feat(saneamiento): **si una parte falla, se cierra solo esa parte** — Las letras del usuario a `saneamiento-s198.html`, contestadas a pregunta: **A2 · B2 · C1 · D1**. Medido en v0.131.0: no había ningún límite de error de React, y un dato roto en caliente + abrir Estadísticas desmontaba la app entera (0 nodos en la raíz). Ahora **`app/ui/RedDeError.jsx`**: cada diálogo y cada sesión lleva su red (`red()` en `main.jsx`) y si falla pinta SU aviso de 560 px («Esta parte no ha podido abrirse» · Cerrar · Recargar) mientras el aro, la barra lateral y el bloque en marcha siguen; la app entera lleva la **global** («Algo se ha torcido» · Volver a empezar · Descargar una copia, que lee de `localStorage`); lo invisible (avisos, el vigilante de secretos) cae en **silencio**. Implementarla destapó un caso que la maqueta no tenía: **`HydrateTracker` lee `state.water` estando CERRADO**, así que una superficie cerrada que falla CALLA y se reintenta al abrirla. **B2**: la fila «Descargar la copia de rescate · 4 oct.» en «Tus datos», solo si hay rescate. **C1**: la pantalla encendida, sin interruptor. Censo i18n 673 → 684; la sección de capas (z-index) del sistema de diseño, por fin medida. Suite **312 → 316**, los 4 nuevos en rojo contra v0.131.0. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
 | **v0.131.0** | 2026-10-04 | fix(saneamiento): **que no se pierda nada y que el teclado no mienta** — Auditoría de la repo entera a petición del usuario, con una sonda de Playwright sobre el artefacto publicado que reprodujo cada sospecha antes de tocar nada. Siete defectos medidos en v0.130.0 y arreglados sin cambiar un píxel: **un campo guardado con otra forma (`weeklyStats: null`) hacía arrancar la app de fábrica y la primera escritura borraba la historia** (4321 min → 0) — ahora `state-core.sanea.js` repara campo a campo antes de migrar y guarda lo ilegible en `pace.state.v2.rescate`, que viaja en el export; **el import pasa por el mismo saneador** (A-7); **«Borrar todo» borra toda clave `pace.*`** (quedaban el bloque en marcha, la respiración a medias y los días en oscuro); **Espacio pausa** aunque la sesión venga de «Continúa» (el foco se quedaba en el botón escondido); **Escape cierra el diálogo de arriba** (con el preview encima cerraba la biblioteca); **los diálogos son diálogos** (`ui/Dialogo.jsx`: rol, nombre, foco dentro, trampa de Tab, foco devuelto; también el onboarding y las sesiones); **los atajos T·S·L** sin Ctrl/Cmd ni con una sesión delante, y Escape cierra Ajustes; **la pantalla no se apaga** en una sesión guiada (Screen Wake Lock; el Foco no). `state-core.jsx` troceado por un punto (toasts a `state-core.toast.jsx`). Lo visual (pantalla de error, aviso de rescate, interruptor de la pantalla) va a `docs/proposals/saneamiento-s198.html`, SIN DECIDIR. Suite **300 → 312**; las 11 que pueden correr contra HEAD, en rojo por la razón de su mensaje. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
 | **v0.130.0** | 2026-09-22 | feat(home): **la tableta vertical lleva la piel de móvil** — Decidido por el usuario viendo cinco pantallas verticales reales con la piel forzada en la foto (s196): «820×1100 escritorio queda raro el aro tan pequeño / 768×1100 piel de móvil: así se ve perfecto», «vertical hasta 1024». El corte deja de estar escrito a mano en **19 sitios de 8 archivos** y nace **`_responsive.corte.js`**: móvil = `≤768` **o** vertical `≤1024`; escritorio = `≥1025` **o** `≥769` apaisado (listas con coma, sin `not` de nivel 4). Estrenarlo destapó que **entre 820 y 1024 desaparecían los tres modos** de la topbar: la pill vuelve a su fila sin los 42 px del teléfono. `_responsive.pieles.js` pasó de 500 al añadir la regla y se **troceó** (340 + 191). **296 → 300**, `banco-corte-s197.js` **8 de 8**, auditoría de viewports re-medida (199 escenas). | s197 | [session-197b](./docs/sessions/session-197b-la-tableta-vertical.md) |
 | **v0.129.0** | 2026-09-22 | feat(ritmo): **la media jornada es un horario, y lo hecho se cuenta** — La media jornada deja de ser «3 h de foco desde que pulsas» y pasa a ser un **tramo con sus propias horas** (`horario.media`), de mañana **o de tarde**, editable en su cabecera y en «Ajustar el horario» (dos frases), recordado como preferencia y derivado de tu entrada mientras nadie lo toque; fuera de su tramo se apaga. **La comida pasa a ser solo de la jornada entera** («Dos horas» de 13:00 a 15:00 ya no la sirve). Las dos jornadas dicen su **tramo** en el chip y en la loseta, porque son horarios tuyos. Y **lo hecho se cuenta**: la hoja del día distingue hecha de saltada (la regla de la línea) y la tarjeta «Siguiente pausa» lleva «Llevas seis bloques y cuatro pausas». **286 → 296**, `banco-media-s197.js` **13 de 13**. | s197 | [session-197](./docs/sessions/session-197-media-jornada-y-lo-contado.md) |
@@ -408,6 +409,37 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.132.0] -- 2026-10-04 -- feat(saneamiento): si una parte falla, se cierra solo esa parte
+
+### Añadido
+- **`app/ui/RedDeError.jsx`** (`PaceRed`), decisión **A2** del usuario mirando la página: cada diálogo y cada
+  sesión lleva su red; si falla al dibujarse, pinta su propio aviso de 560 px («Esta parte no ha podido abrirse»,
+  el nombre de la superficie como rótulo, Cerrar · Recargar) y **el resto de la app sigue**, bloque en marcha
+  incluido. Alrededor de `PaceApp`, la red **global** como último recurso: «Algo se ha torcido», Volver a
+  empezar y Descargar una copia de tus datos. Los avisos y el vigilante de secretos caen en silencio.
+- **La fila de la copia de rescate** en «Tus datos» (**B2**), solo si hay rescate; baja el registro tal cual.
+- `paceDescargarCopia` y `paceDescargarRescate` (`TweaksData.jsx`): la copia sale de `localStorage`, no del árbol
+  de React, y si el estado no se puede leer viaja crudo (`stateRaw`).
+
+### Cambiado
+- **Una superficie CERRADA que falla calla** y se reintenta al abrirla: `HydrateTracker` lee `state.water` aunque
+  no se vea (medido), y sin esta regla salía un aviso de Hidrátate que nadie había abierto.
+- La pantalla encendida en las sesiones se queda **sin interruptor** (**C1**).
+- `DESIGN_SYSTEM.md`: «Cuando algo falla» y la tabla de capas (z-index), que era un TODO desde hace meses.
+
+### Red
+- `tests/red-de-error.spec.js` (4), **los 4 en rojo contra v0.131.0**: Estadísticas cae y la app sigue (y al
+  arreglar el dato vuelve a abrir), la cerrada que calla, la pantalla global con su copia y su recarga, la fila
+  del rescate.
+- `scripts/audit/banco-saneamiento-s198.js` suma 7 mutantes de la red y del rescate: **33 de 33 muerden** en la
+  pasada final del banco entero (más el declarado que vive con razón).
+
+### Lo que no cubre
+- La red de la home: barra lateral, aro y «A tu ritmo» no llevan red propia; si caen, la global (así se decidió).
+- La red silenciosa no tiene prueba: provocarla exige romper el catálogo de logros a propósito.
+
+---
+
 ## [v0.131.0] -- 2026-10-04 -- fix(saneamiento): que no se pierda nada y que el teclado no mienta
 
 ### Arreglado
@@ -444,37 +476,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 - **Ningún límite de error de React**: si algo falla al dibujarse, la app entera se desmonta (provocado y
   fotografiado). Qué se ve en su lugar es diseño: `docs/proposals/saneamiento-s198.html`, A, sin decidir.
 - La UI del rescate (B) y si la pantalla encendida lleva interruptor (C), también sin decidir.
-
----
-
-## [v0.130.0] -- 2026-09-22 -- feat(home): la tableta vertical lleva la piel de movil
-
-### Añadido
-- **`app/main/_responsive.corte.js`**: el corte entre las dos pieles en UN SOLO SITIO (`PACE_CORTE_MOVIL`,
-  `PACE_CORTE_ESC`, `paceEsMovil()`), que interpolan las hojas y consultan los tres `matchMedia`. Antes vivía
-  a mano en 19 sitios de 8 archivos.
-- **La pill de modos en tableta vertical**: a 768-1024 de ancho vuelve a su fila sin los 42 px extra del
-  teléfono. Sin esta regla, el corte nuevo dejaba la topbar SIN los tres modos entre 820 y 1024 (medido).
-
-### Cambiado
-- **Toda pantalla más alta que ancha de hasta 1024 px lleva la piel de móvil**: los cuatro iPad y una ventana
-  de escritorio estrecha y alta. Apaisado y ≥1025, escritorio. Una ventana cuadrada cuenta como vertical
-  (`orientation: portrait` casa con alto ≥ ancho); un teléfono apaisado ya era escritorio desde antes.
-- **`_responsive.pieles.js` troceado** (517 → 340) por el trinquete de §1: el bloque de escritorio sale tal
-  cual a `_responsive.pieles.esc.js` (191) y se carga JUSTO DESPUÉS — misma especificidad, gana el último.
-- La auditoría de viewports re-medida: 820×1100 pasa a la lista de la piel de móvil con las tres tabletas y la
-  ventana estrecha; escritorio gana dos apaisadas. 21 viewports × ~10 escenas.
-
-### Red
-- `tests/pieles-corte.spec.js` (4): el corte por los cuatro lados sobre 14 viewports, la tableta sin columna
-  ni scroll con la pill en su sitio, el cajón que se cierra al pulsar, y el teléfono sin cambios.
-- `scripts/audit/banco-corte-s197.js`: **8 de 8 muerden**. El de `esCajon()` vivía hasta asertar el cierre del
-  cajón: el aserto era flojo, no sobraba código.
-- Dos tests de s195b reescritos (820×1100 ya no es piel de escritorio).
-
-### Lo que no cubre
-- Cinco escenas con scroll ANTERIORES a esta versión (la tarjeta por libre arrastra 72 px a 375×667 y 32 a
-  360×730, idéntico contra HEAD). Ni un píxel comparado: las tabletas se miraron a mano.
 
 ---
 

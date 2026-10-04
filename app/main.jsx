@@ -215,6 +215,15 @@ function PaceApp() {
     window.dispatchEvent(new CustomEvent('pace:ritmo-seguir'));
   };
 
+  /* s198 · v0.132.0 — LA RED DE ERROR (ui/RedDeError.jsx, decision A2 del usuario):
+     cada dialogo y cada sesion lleva la suya, y si falla se cierra SOLO esa
+     parte; la app entera tiene la global como ultimo recurso (abajo, al montar).
+     `abierto` reinicia la red: cerrar el aviso cierra la superficie, y la
+     siguiente apertura se vuelve a intentar. */
+  const red = (nombre, abierto, cerrar, hijo) => (
+    <PaceRed modo="parte" nombre={nombre} abierto={abierto} onCerrar={cerrar}>{hijo}</PaceRed>
+  );
+
   const handleBreakChoice = (choice, rutina, desdeMenu) => {
     setOpenBreakMenu(false);
     /* s194 · la pausa es una puerta; `desdeMenu` dice si lo elegido era el plato que
@@ -341,47 +350,41 @@ function PaceApp() {
         </div>
       </main>
 
-      {/* ========== MODALS ========== */}
-      <BreatheLibrary
-        open={openLibrary === 'breathe'}
-        onClose={() => setOpenLibrary(null)}
-        onStart={handleStartBreathe}
-      />
-      <MoveLibrary
-        open={openLibrary === 'move' && !customBuilder}
-        onClose={() => setOpenLibrary(null)}
-        onStart={handleStartMove}
-      />
-      {customBuilder && (
-        <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />
-      )}
-      <ExtraLibrary
-        open={openLibrary === 'extra'}
-        onClose={() => setOpenLibrary(null)}
-        onStart={handleStartExtra}
-      />
-      <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />
-      <Achievements open={openAchievements} onClose={() => setOpenAchievements(false)} />
-      <StatsPanel open={openStats} onClose={() => setOpenStats(false)} />
-      <TweaksPanel open={openTweaks} onClose={() => setOpenTweaks(false)} />
-      <BreakMenu
-        open={openBreakMenu}
-        onClose={() => setOpenBreakMenu(false)}
-        onChoose={handleBreakChoice}
-        onSeguir={handleBreakSeguir}
-      />
-      <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
+      {/* ========== MODALS ========== (s198: cada uno con su red, ver `red`) */}
+      {red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null),
+        <BreatheLibrary open={openLibrary === 'breathe'} onClose={() => setOpenLibrary(null)} onStart={handleStartBreathe} />)}
+      {red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
+        <MoveLibrary open={openLibrary === 'move' && !customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartMove} />)}
+      {customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
+        <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />)}
+      {red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
+        <ExtraLibrary open={openLibrary === 'extra'} onClose={() => setOpenLibrary(null)} onStart={handleStartExtra} />)}
+      {red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
+        <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />)}
+      {red(t('ach.title'), openAchievements, () => setOpenAchievements(false),
+        <Achievements open={openAchievements} onClose={() => setOpenAchievements(false)} />)}
+      {red(t('stats.title'), openStats, () => setOpenStats(false),
+        <StatsPanel open={openStats} onClose={() => setOpenStats(false)} />)}
+      {red(t('settings.title'), openTweaks, () => setOpenTweaks(false),
+        <TweaksPanel open={openTweaks} onClose={() => setOpenTweaks(false)} />)}
+      {red(t('break.title'), openBreakMenu, () => setOpenBreakMenu(false),
+        <BreakMenu open={openBreakMenu} onClose={() => setOpenBreakMenu(false)} onChoose={handleBreakChoice} onSeguir={handleBreakSeguir} />)}
+      {red(null, openSupport, () => setOpenSupport(false),
+        <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />)}
 
       {/* Onboarding de primera vez (s106) — full-screen sobre las láminas
-          de Caminos; retorna null en cuanto firstSeen queda fijado. */}
-      <Onboarding />
+          de Caminos; retorna null en cuanto firstSeen queda fijado. s198: si
+          la bienvenida se rompe, «Cerrar» la da por vista (si no, volveria a
+          abrirse y a romperse). */}
+      {red(null, true, () => { if (getState().firstSeen == null) set({ firstSeen: Date.now() }); }, <Onboarding />)}
 
       {/* Observador de tweak-secrets — monta siempre, retorna null.
           Desbloquea secret.aged / dark.mode / mono / seal / illustrated
-          en función del state actual. Ver TweaksPanel.jsx. */}
-      <TweakSecretsWatcher />
+          en función del state actual. Ver TweaksPanel.jsx. s198: lo que no se
+          ve, si falla, desaparece en SILENCIO. */}
+      <PaceRed modo="silencio"><TweakSecretsWatcher /></PaceRed>
 
-      {safetyRoutine && (
+      {safetyRoutine && red(null, true, () => { setSafetyRoutine(null); setPendienteReanudar(null); },
         <BreatheSafety
           routine={safetyRoutine}
           onAccept={(r) => {
@@ -390,19 +393,17 @@ function PaceApp() {
             setPendienteReanudar(null);
           }}
           onCancel={() => { setSafetyRoutine(null); setPendienteReanudar(null); }}
-        />
-      )}
+        />)}
 
       {/* Preview §18.3 (s144). Va DESPUÉS de la biblioteca en el árbol para
           quedar por encima, igual que el modal de seguridad de Respira. */}
-      {previewRoutine && typeof RoutinePreview === 'function' && (
+      {previewRoutine && typeof RoutinePreview === 'function' && red(t('preview.tag'), true, () => setPreviewRoutine(null),
         <RoutinePreview
           routine={previewRoutine.routine}
           kind={previewRoutine.kind}
           onStart={lanzarDesdePreview}
           onClose={() => setPreviewRoutine(null)}
-        />
-      )}
+        />)}
 
       {/* ========== SESSION FULLSCREEN ==========
           NOTA (#29): los <Session/> llaman `onExit('exit')` vs `onExit('done')`
@@ -410,24 +411,23 @@ function PaceApp() {
           ambos caminos van a home y el argumento se descarta intencionalmente;
           se conserva la señal en la API para un futuro consumidor (p.ej.
           micro-animación de despedida distinta, o métrica de abandono). */}
-      {view.type === 'breathe-session' && (
-        <BreatheSession routine={view.routine} reanudar={view.reanudar} onExit={(_reason) => setView({ type: 'home' })} />
-      )}
-      {view.type === 'move-session' && (
-        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
-      )}
+      {view.type === 'breathe-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
+        <BreatheSession routine={view.routine} reanudar={view.reanudar} onExit={(_reason) => setView({ type: 'home' })} />)}
+      {view.type === 'move-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />)}
 
-      {/* ========== CAMINOS ========== */}
-      <PathRunner />
-      <PathsLibrary />
+      {/* ========== CAMINOS ========== (s198: se gestionan solos; la red, al
+          cerrar, solo se reinicia y los vuelve a montar cerrados) */}
+      {red(null, true, null, <PathRunner />)}
+      {red(t('paths.library.title'), true, null, <PathsLibrary />)}
 
       {/* ========== TOASTS ========== */}
-      <ToastHost />
+      <PaceRed modo="silencio"><ToastHost /></PaceRed>
 
       {/* Aviso de versión nueva del SW (s102 · PWA). Solo aparece cuando el
           registro en PACE.html anuncia un worker en waiting; en file:// no
           hay SW y retorna null siempre. */}
-      <UpdatePrompt />
+      <PaceRed modo="silencio"><UpdatePrompt /></PaceRed>
     </div>
   );
 }
@@ -438,5 +438,6 @@ Object.assign(window, { PaceApp });
    En el entry point modular PACE.html el montaje lo hace el script de abajo en #root. */
 if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   const root = ReactDOM.createRoot(document.getElementById('pace-root'));
-  root.render(<PaceApp />);
+  /* s198: la red GLOBAL, ultimo recurso (ui/RedDeError.jsx). */
+  root.render(<PaceRed modo="global"><PaceApp /></PaceRed>);
 }

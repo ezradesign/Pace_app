@@ -43,7 +43,7 @@ var mascaras = require('./verify.mascaras.js'); // mapa/disco/precache del arte 
 var CENSO = {
   /* i18n: claves que declaran `app/i18n/strings/*` en CADA idioma (s152; el
      split de s148 midio 195 sobre su propio alcance, no sobre el total). */
-  i18nClaves: 673,   // +11 en s197: la media jornada como horario ('ritmo.tramo', 'ritmo.frase.media', 2 aria) y la frase de lo que llevas ('ritmo.llevas' x5, 'ritmo.numeros')
+  i18nClaves: 684,   // +11 en s198: la red de error ('red.*' x9: la parte y la global) y la fila del rescate ('settings.data.rescate' + su title)
                      // +9 en s176: el bloque de sonido por funcion (8) y el filtro «Sin retencion» de Respira (1)
                      // +1 en s161: tweaks.palette.auto (tercera pill de paleta)
                      // +1 en s166: focus.startPause (el CTA en Pausa/Larga)

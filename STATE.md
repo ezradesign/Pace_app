@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.131.0 (s198 - **SANEAMIENTO: QUE NO SE PIERDA NADA Y QUE EL TECLADO NO MIENTA**: auditoria de la repo con una sonda sobre el artefacto publicado y siete defectos medidos y arreglados sin cambiar un pixel — un campo guardado roto ya no borra la historia (`state-core.sanea.js` + rescate), el import se sanea (A-7), «Borrar todo» borra toda clave `pace.*`, Espacio pausa aunque la sesion venga de «Continua», Escape cierra el dialogo de arriba, los dialogos y las sesiones gestionan el foco (`ui/Dialogo.jsx`, tambien el onboarding), los atajos no responden con Ctrl ni con una sesion delante, y la pantalla no se apaga en una sesion guiada (`ui/pantalla.js`). 300 -> 312. Lo visual va a `docs/proposals/saneamiento-s198.html`, SIN DECIDIR. Antes, v0.130.0, s197 - la tableta vertical lleva la piel de movil; el historial completo, en `CHANGELOG.md`.)
+**Version actual:** v0.132.0 (s198 - **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE**: las letras del usuario a `saneamiento-s198.html` (A2 · B2 · C1 · D1) implementadas el mismo dia — `ui/RedDeError.jsx` con una red por dialogo y por sesion (su aviso de 560 px; el resto de la app sigue, bloque en marcha incluido), la global alrededor de `PaceApp` («Algo se ha torcido» · Volver a empezar · Descargar una copia) y la silenciosa para lo invisible; una superficie CERRADA que falla calla (Hidratate lee `state.water` aunque no se vea); la fila de la copia de rescate en «Tus datos»; la pantalla encendida sin interruptor. 312 -> 316. Antes, v0.131.0, s198 - saneamiento: un dato roto ya no borra la historia, el import se sanea, «Borrar todo» borra todo, los dialogos y las sesiones gestionan el foco, la pantalla no se apaga en una sesion; el historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -20,6 +20,8 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
+| `app/ui/RedDeError.jsx` | **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE (NUEVO s198 · v0.132.0)**: `PaceRed` (clase: React solo da limites de error asi) en tres modos — `parte` (su `Modal` de 560: «Esta parte no ha podido abrirse», Cerrar · Recargar), `global` (alrededor de `PaceApp`: «Algo se ha torcido», Volver a empezar, Descargar una copia) y `silencio`. Se reinicia cuando cambia `abierto`; cerrada y fallando, calla. Los envoltorios viven en `main.jsx` (`red(nombre, abierto, cerrar, hijo)`) y en el montaje de `PACE.html` | **NUEVO s198** |
+| `tests/red-de-error.spec.js` | **4 tests (NUEVO v0.132.0)**, los 4 en rojo contra v0.131.0: Estadisticas cae y la app sigue (y al arreglar el dato vuelve a abrir) · la superficie cerrada que calla, abre si el dato se arregla y avisa si no · la pantalla global con su copia y su recarga · la fila del rescate. Los fallos se PROVOCAN con `setState` en caliente: no se simulan | **NUEVO s198** |
 | `app/state-core.sanea.js` | **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS (NUEVO s198)**, puro: `paceSanearEstado(parsed, defaultState)` repara la FORMA campo a campo antes de migrar (tipos de arriba; dentro, series de la semana, agua, racha, Caminos, historia; `FORMAS_AJENAS` para `ritmo`); `paceGuardarRescate` copia lo ilegible a `pace.state.v2.rescate`; `paceLeerRescate` lo da al export. Carga entre `state-core.support.jsx` y `state-core.jsx` | **NUEVO s198** |
 | `app/state-core.toast.jsx` | El buzon de avisos y su aplazamiento en un Camino, cortado de `state-core.jsx` POR UN PUNTO (s198) al pasar este de 500. Carga justo despues | **NUEVO s198** |
 | `app/ui/Dialogo.jsx` | **UN DIALOGO SE COMPORTA COMO UN DIALOGO (NUEVO s198)**: `usePaceDialogo(ref, abierto, { onEscape })` — pila (Escape y Tab solo para el de arriba), foco al contenedor, trampa de Tab, foco devuelto si nadie lo cogio; `paceHayDialogo()`. Lo usan `Modal`, el onboarding y `SessionShell` | **NUEVO s198** |
@@ -253,20 +255,20 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> **s198 (2026-10-04) publica v0.131.0, «saneamiento: que no se pierda nada y que el teclado no mienta».**
-> El usuario pidio revisar la repo entera y seguir desarrollando. Nada decidido estaba pendiente; la auditoria
-> (una sonda de Playwright sobre el artefacto publicado, en otro puerto) midio siete defectos de la Fase 8.5 y
-> se arreglaron sin cambiar un pixel: el dato roto que borraba la historia, el import sin sanear (A-7), el
-> borrado incompleto, Espacio que no pausaba tras «Continua», Escape que cerraba el dialogo de abajo, los
-> dialogos sin foco (tambien el onboarding: la trampa que llevaba anotada desde s183), los atajos con Ctrl y
-> en sesion, y la pantalla que se apagaba en una sesion guiada. **300 -> 312** (12 nuevos, los 11 de HEAD en
-> rojo contra v0.130.0). Diario: [session-198](./docs/sessions/session-198-saneamiento.md).
+> **s198 (2026-10-04) publica v0.131.0 y v0.132.0.** El usuario pidio revisar la repo entera y seguir
+> desarrollando. La auditoria (una sonda de Playwright sobre el artefacto publicado, en otro puerto) midio siete
+> defectos de la Fase 8.5 y **v0.131.0** los arreglo sin cambiar un pixel: el dato roto que borraba la historia,
+> el import sin sanear (A-7), el borrado incompleto, Espacio que no pausaba tras «Continua», Escape que cerraba
+> el dialogo de abajo, los dialogos sin foco (tambien el onboarding), los atajos con Ctrl y en sesion, y la
+> pantalla que se apagaba en una sesion guiada. Lo visual fue a [`saneamiento-s198.html`](./docs/proposals/saneamiento-s198.html);
+> el usuario pidio que se lo preguntara y contesto **A2 · B2 · C1 · D1**, y **v0.132.0** lo implemento el mismo
+> dia: la red de error por superficie con la global de ultimo recurso, y la fila de la copia de rescate.
+> **300 -> 316**. Diario: [session-198](./docs/sessions/session-198-saneamiento.md).
 >
-> **LO SIGUIENTE: la letra del usuario a [`saneamiento-s198.html`](./docs/proposals/saneamiento-s198.html)**
-> (ENVIADA, SIN DECIDIR): **A** que se ve si una parte falla (hoy la app entera se desmonta: provocado y
-> fotografiado) · **B** si el arranque repara o rescata (silencio / una fila en «Tus datos» / un aviso) · **C** la
-> pantalla encendida con o sin interruptor · **D** el frente siguiente (la red de A y B · la pausa con su nombre
-> en el aviso + `.ics` · Estadisticas «Hoy» · Android). Y sigue sin juicio de uso real la semana de v0.128.0.
+> **LO SIGUIENTE: nada decidido esta pendiente.** De la Fase 8.5 quedan A-6 en sentido amplio, i18n I18N-2 y
+> D-1/D-2/D-3, el bump de version automatico y el timer de Mueve por timestamps. Fuera de ella, los frentes que
+> la pagina dejo pintados para despues: **la pausa con su nombre en el aviso + `.ics`** (D2), **Estadisticas
+> «Hoy»** (D3) y **Android** (D4). Y sigue sin juicio de uso real la semana de v0.128.0.
 
 - **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
   72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
@@ -278,7 +280,7 @@
   arrancar, falla en la primera escritura · el orden de los listeners de `document` no es una politica (doce
   `Modal` con Escape «funcionaban» de uno en uno) · un fallo provocado para una foto hay que MEDIRLO (Logros
   tolera `achievements: null`; Estadisticas no tolera `weeklyStats: null` y desmonta la app entera) · los
-  documentos del repo estan en CRLF en la copia de trabajo (`core.autocrlf=true`): un reemplazo con LF no casa.
+  documentos del repo estan en CRLF en la copia de trabajo (`core.autocrlf=true`): un reemplazo con LF no casa. · **un componente que lee el estado ANTES de mirar si esta abierto falla aunque no se vea** (`HydrateTracker` con `water: null`): una red de error que no lo sepa levanta avisos de cosas que nadie abrio
 - **[TRAMPAS DE ANTES, VIGENTES]** Un SW caducado en el preview mide OTRA version (purgar antes de medir) · un
   backtick en un comentario dentro de un template literal aborta el build · una prueba de control que no
   encuentra lo que mide sale verde (GUARD de nombres) · nada que compile mientras corre un banco.
@@ -292,6 +294,7 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE: una red de error por superficie (`PaceRed`) y la global como ultimo recurso; cerrada y fallando, calla** (s198 · v0.132.0)
 - **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS: el estado se SANEA campo a campo antes de migrar y lo ilegible se guarda CRUDO en un rescate** (s198)
 - **«Borrar todo» borra toda clave `pace.*` que no es de eventos** (s198)
 - **UN DIALOGO SE COMPORTA COMO UN DIALOGO: pila unica para Escape y Tab, foco dentro, trampa y foco devuelto (`usePaceDialogo`)** (s198)

@@ -138,6 +138,17 @@ Object.assign(window.PACE_STRINGS.es, {
 
     'notify.focus.title':            'Foco completado',
     'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
+    /* s198 · la red de error (ui/RedDeError.jsx): una parte, y la global. Sin
+       absolutos (s151): «se puede recuperar», no «se recupera todo». */
+    'red.parte.titulo':              'Esta parte no ha podido abrirse',
+    'red.parte.texto':               'El resto de PACE sigue funcionando y tus datos están a salvo. Puedes cerrarla y seguir, o recargar para volver a intentarlo.',
+    'red.cerrar':                    'Cerrar',
+    'red.recargar':                  'Recargar',
+    'red.global.titulo':             'Algo se ha torcido',
+    'red.global.texto':              'Esta pantalla no ha podido dibujarse. Lo que llevas hecho sigue guardado en este dispositivo.',
+    'red.global.empezar':            'Volver a empezar',
+    'red.global.copia':              'Descargar una copia de tus datos',
+    'red.global.pie':                'Si se repite, guarda la copia: con ella se puede recuperar.',
     'update.msg':                    'Hay una versión nueva de PACE',
     'update.cta':                    'Actualizar',
     'update.applying':               'Actualizando…',
@@ -274,6 +285,15 @@ Object.assign(window.PACE_STRINGS.en, {
 
     'notify.focus.title':            'Focus complete',
     'notify.focus.body':             'Cycle closed. Choose your micro-break.',
+    'red.parte.titulo':              'This part could not open',
+    'red.parte.texto':               'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',
+    'red.cerrar':                    'Close',
+    'red.recargar':                  'Reload',
+    'red.global.titulo':             'Something went wrong',
+    'red.global.texto':              'This screen could not be drawn. What you have done is still saved on this device.',
+    'red.global.empezar':            'Start again',
+    'red.global.copia':              'Download a copy of your data',
+    'red.global.pie':                'If it happens again, keep the copy: it can be recovered from it.',
     'update.msg':                    'A new version of PACE is ready',
     'update.cta':                    'Update',
     'update.applying':               'Updating…',

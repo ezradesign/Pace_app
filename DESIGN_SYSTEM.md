@@ -859,6 +859,22 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
 
 ---
 
+## 🩹 Cuando algo falla (s198 · v0.132.0)
+
+Decidido por el usuario mirando `docs/proposals/saneamiento-s198.html` (A2 y B2). Calco exacto de la maqueta.
+
+- **Una parte** (`PaceRed modo="parte"`): su propio `Modal` de **560 px** —dentro de la caja de 1240 de
+  Estadísticas un aviso se pierde—, con el nombre de la superficie como rótulo (`tagLabel`), título serif itálica
+  30 px «Esta parte no ha podido abrirse», texto 14 px en `--ink-2`, y dos píldoras de 12 px en versalitas con
+  0,1 em: **Cerrar** llena en `--ink` y **Recargar** hueca con borde `--line-2`. Sin color de módulo: no es de
+  nadie. Funciona igual en oscuro (los tokens se invierten solos).
+- **La app entera** (`PaceRed modo="global"`, z 999): papel liso, el logo (`#pace-logo-src`, 180 px; 150 en la
+  piel de móvil), «Algo se ha torcido» en serif itálica 36/30 px, el texto centrado a 360 px, el CTA de la home
+  (`--focus-cta`, 13 px, 0,12 em) «Volver a empezar», el enlace en serif itálica subrayado «Descargar una copia de tus
+  datos», y un pie de 11,5 px en `--ink-3`. **Sin absolutos** en el copy (s151): «con ella se puede recuperar».
+- **La copia de rescate** (B2): una fila más de «Tus datos» con la misma gramática que «Exportar» (serif
+  itálica, flecha de descarga), la fecha corta en `--ink-3` detrás de un punto medio. Solo existe si hay rescate.
+
 ## 🗂️ Dónde vive cada hoja de estilos (s148)
 
 `app/tokens.css` llegó a **613 líneas** y más de un tercio no eran tokens: era el
@@ -1095,4 +1111,19 @@ El arte se mide UNA vez, cuando es definitivo.
 
 ## Z-index layers
 
-TODO: documentar capas de z-index (sidebar, toasts, modales). Pendiente de extraer de los JSX en tarea separada.
+> **Medido en s198** con `grep` sobre `app/` (las capas ≥ 50; por debajo son apilados locales de cada
+> pieza). Es un censo: si se añade una capa, se re-mide, no se copia.
+
+| z | Qué | Dónde |
+|---|---|---|
+| 50 | El asa que reabre la barra lateral | `main/SidebarHandle.jsx` |
+| 60 | La barra lateral como cajón (móvil) | `shell/Sidebar.hoja.jsx` |
+| 80 | El panel de Ajustes (flotante, no modal) | `tweaks/TweaksPanel.jsx` |
+| 90 | Una sesión a pantalla completa (`SessionShell`) | `ui/SessionShell.jsx` |
+| 100 | Todo `Modal` (bibliotecas, Estadísticas, Logros, la pausa, el aviso de la red de una parte…) | `ui/Primitives.jsx` |
+| 120 | El onboarding | `onboarding/Onboarding.jsx` |
+| 150 | El aviso de versión nueva | `ui/UpdatePrompt.jsx` |
+| 200 | Los avisos (toasts) | `ui/Toast.jsx` |
+| 900 | La biblioteca de Caminos | `paths/PathsLibrary.jsx` |
+| 999 | **La pantalla global de la red de error** — por encima de todo lo que pueda quedar montado | `ui/RedDeError.jsx` |
+| 9999 | Los globos de ayuda de los mapas de Estadísticas (siguen al puntero) | `stats/StatsPanel.jsx` · `YearView.jsx` · `PathYearView.jsx` |

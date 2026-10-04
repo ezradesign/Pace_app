@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.131.0</title>
+  <title>PACE · Foco · Cuerpo — v0.132.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1670,6 +1670,17 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'notify.focus.title': 'Foco completado',
   'notify.focus.body': 'Ciclo cerrado. Elige tu micro-pausa.',
+  /* s198 · la red de error (ui/RedDeError.jsx): una parte, y la global. Sin
+     absolutos (s151): «se puede recuperar», no «se recupera todo». */
+  'red.parte.titulo': 'Esta parte no ha podido abrirse',
+  'red.parte.texto': 'El resto de PACE sigue funcionando y tus datos están a salvo. Puedes cerrarla y seguir, o recargar para volver a intentarlo.',
+  'red.cerrar': 'Cerrar',
+  'red.recargar': 'Recargar',
+  'red.global.titulo': 'Algo se ha torcido',
+  'red.global.texto': 'Esta pantalla no ha podido dibujarse. Lo que llevas hecho sigue guardado en este dispositivo.',
+  'red.global.empezar': 'Volver a empezar',
+  'red.global.copia': 'Descargar una copia de tus datos',
+  'red.global.pie': 'Si se repite, guarda la copia: con ella se puede recuperar.',
   'update.msg': 'Hay una versión nueva de PACE',
   'update.cta': 'Actualizar',
   'update.applying': 'Actualizando…',
@@ -1806,6 +1817,15 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'notify.focus.title': 'Focus complete',
   'notify.focus.body': 'Cycle closed. Choose your micro-break.',
+  'red.parte.titulo': 'This part could not open',
+  'red.parte.texto': 'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',
+  'red.cerrar': 'Close',
+  'red.recargar': 'Reload',
+  'red.global.titulo': 'Something went wrong',
+  'red.global.texto': 'This screen could not be drawn. What you have done is still saved on this device.',
+  'red.global.empezar': 'Start again',
+  'red.global.copia': 'Download a copy of your data',
+  'red.global.pie': 'If it happens again, keep the copy: it can be recovered from it.',
   'update.msg': 'A new version of PACE is ready',
   'update.cta': 'Update',
   'update.applying': 'Updating…',
@@ -2973,6 +2993,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.data.import': 'Importar una copia',
   'settings.data.import.title': 'Sobreescribe tus datos con un backup',
   'settings.data.reset': 'Borrar todos mis datos',
+  'settings.data.rescate': 'Descargar la copia de rescate',
+  'settings.data.rescate.title': 'Lo que no se pudo leer al arrancar, tal cual estaba',
   'settings.license': 'Licencia',
   'settings.license.soon': 'pronto',
   'settings.foot': 'Todo vive en tu navegador.',
@@ -3048,6 +3070,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.data.import': 'Import a copy',
   'settings.data.import.title': 'Overwrite your data with a backup',
   'settings.data.reset': 'Delete all my data',
+  'settings.data.rescate': 'Download the rescue copy',
+  'settings.data.rescate.title': 'What could not be read at startup, exactly as it was',
   'settings.license': 'License',
   'settings.license.soon': 'soon',
   'settings.foot': 'Everything lives in your browser.',
@@ -5464,7 +5488,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.131.0';
+const PACE_VERSION = 'v0.132.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -11030,6 +11054,150 @@ if (!_paceModalResponsive) {
 
 Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic });
 ;Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal });
+})();
+</script>
+  <!-- RedDeError (s198 · v0.132.0): si una parte falla al dibujarse, se cierra
+       solo esa parte; la global, alrededor de PaceApp, es el ultimo recurso. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   RedDeError.jsx — SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE (s198 · v0.132.0)
+   ============================================================
+   MEDIDO EN v0.131.0: la app no tenia ni un limite de error de React. Con un
+   dato de la semana roto en caliente (como lo dejaria un fallo de codigo; el
+   saneado de s198 solo actua al CARGAR) y abrir Estadisticas, React desmontaba
+   la app ENTERA —0 nodos en la raiz, el papel en blanco, sin un boton—, y con
+   ella el bloque que estuviera corriendo.
+
+   DECISION DEL USUARIO (A2, mirando `docs/proposals/saneamiento-s198.html`):
+   una red por superficie, y la pantalla global solo como ultimo recurso.
+
+   `<PaceRed modo="parte|global|silencio" nombre abierto onCerrar>`:
+   · `parte`   — cada dialogo y cada sesion. Si falla, pinta SU PROPIO dialogo,
+                 del ancho de un aviso (560): dentro de la caja de 1240 de
+                 Estadisticas un aviso se pierde. «Cerrar» llama a `onCerrar`
+                 (o solo reinicia la red, si la superficie se gestiona sola) y
+                 «Recargar» recarga.
+   · `global`  — alrededor de toda la app. «Algo se ha torcido»: volver a
+                 empezar (recargar: el saneado repara lo guardado) o descargar
+                 una copia de los datos, que sale de `localStorage` y no del
+                 arbol de React, que es justo lo que se ha caido.
+   · `silencio`— lo que no se ve (avisos, el vigilante de secretos): si falla,
+                 desaparece y la app sigue.
+
+   LA RED SE REINICIA cuando `abierto` cambia: cerrar el aviso cierra la
+   superficie, y la siguiente vez que se abra se vuelve a intentar.
+
+   Es una CLASE porque React solo da limites de error con
+   `getDerivedStateFromError`/`componentDidCatch`; no hay hook equivalente.
+   ============================================================ */
+
+class PaceRed extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+    this.reiniciar = this.reiniciar.bind(this);
+    this.cerrar = this.cerrar.bind(this);
+  }
+
+  static getDerivedStateFromError(error) {
+    return { error: error || new Error('error') };
+  }
+
+  componentDidCatch(error, info) {
+    try {
+      console.error('[PACE] una parte no ha podido dibujarse (' + (this.props.nombre || this.props.modo || 'red') + '):',
+      error, info && info.componentStack ? info.componentStack.split('\n').slice(0, 4).join('\n') : '');
+    } catch (e) {}
+    window.paceUltimoFallo = { cuando: Date.now(), donde: this.props.nombre || this.props.modo || null,
+      mensaje: String(error && error.message || error).slice(0, 200) };
+  }
+
+  componentDidUpdate(prev) {
+    if (this.state.error && prev.abierto !== this.props.abierto) this.setState({ error: null });
+  }
+
+  reiniciar() {this.setState({ error: null });}
+
+  cerrar() {
+    if (typeof this.props.onCerrar === 'function') {
+      /* Primero se cierra la superficie (su `abierto` cambia y reinicia la red);
+         si no cambiara —un componente que se monta y desmonta con la vista—, el
+         reinicio de abajo no hace daño: ya no se pinta nada. */
+      try {this.props.onCerrar();} catch (e) {}
+    }
+    this.reiniciar();
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children || null;
+    const modo = this.props.modo || 'parte';
+    if (modo === 'silencio') return null;
+    /* Una superficie CERRADA que falla (Hidratate lee `state.water` aunque no se
+       vea: medido) no levanta un aviso que nadie ha pedido: calla, y al abrirla
+       `abierto` cambia, la red se reinicia y se vuelve a intentar. */
+    if (this.props.abierto === false) return null;
+    if (modo === 'global') return /*#__PURE__*/React.createElement(PaceRedGlobal, null);
+    return /*#__PURE__*/React.createElement(PaceRedParte, { nombre: this.props.nombre, onCerrar: this.cerrar });
+  }
+}
+
+function PaceRedParte(_ref) {let { nombre, onCerrar } = _ref;
+  const { t } = useT();
+  return (/*#__PURE__*/
+    React.createElement(Modal, { open: true, onClose: onCerrar, maxWidth: 560, tagLabel: nombre || undefined, ariaLabel: t('red.parte.titulo') }, /*#__PURE__*/
+    React.createElement("div", { "data-pace-red": "parte", style: paceRedStyles.parte }, /*#__PURE__*/
+    React.createElement("h2", { style: paceRedStyles.parteTitulo }, t('red.parte.titulo')), /*#__PURE__*/
+    React.createElement("p", { style: paceRedStyles.texto }, t('red.parte.texto')), /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', gap: 10, marginTop: 6, flexWrap: 'wrap' } }, /*#__PURE__*/
+    React.createElement("button", { type: "button", onClick: onCerrar, style: paceRedStyles.lleno }, t('red.cerrar')), /*#__PURE__*/
+    React.createElement("button", { type: "button", onClick: () => location.reload(), style: paceRedStyles.hueco }, t('red.recargar'))
+    )
+    )
+    ));
+
+}
+
+function PaceRedGlobal() {
+  const { t } = useT();
+  const logo = document.getElementById('pace-logo-src');
+  const movil = typeof paceEsMovil === 'function' ? paceEsMovil() : false;
+  return (/*#__PURE__*/
+    React.createElement("div", { "data-pace-red": "global", role: "alert", style: paceRedStyles.global }, /*#__PURE__*/
+    React.createElement("div", { style: paceRedStyles.columna },
+    logo && logo.src ? /*#__PURE__*/React.createElement("img", { src: logo.src, alt: "PACE", style: { width: movil ? 150 : 180, height: 'auto', marginBottom: 6 } }) : null, /*#__PURE__*/
+    React.createElement("h1", { style: { ...paceRedStyles.globalTitulo, fontSize: movil ? 30 : 36 } }, t('red.global.titulo')), /*#__PURE__*/
+    React.createElement("p", { style: { ...paceRedStyles.texto, textAlign: 'center', maxWidth: 360 } }, t('red.global.texto')), /*#__PURE__*/
+    React.createElement("button", { type: "button", onClick: () => location.reload(), style: paceRedStyles.cta }, t('red.global.empezar')), /*#__PURE__*/
+    React.createElement("button", { type: "button", onClick: () => {if (typeof paceDescargarCopia === 'function') paceDescargarCopia();}, style: paceRedStyles.enlace },
+    t('red.global.copia')
+    ), /*#__PURE__*/
+    React.createElement("p", { style: paceRedStyles.pie }, t('red.global.pie'))
+    )
+    ));
+
+}
+
+/* Calco de la maqueta aprobada (saneamiento-s198.html, A2 y A1). */
+const paceRedStyles = {
+  parte: { padding: '0 4px 6px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 },
+  parteTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 30, lineHeight: 1.1, margin: 0, color: 'var(--ink)' },
+  texto: { margin: 0, fontSize: 14, lineHeight: 1.55, color: 'var(--ink-2)' },
+  lleno: { padding: '10px 26px', borderRadius: 'var(--r-pill)', background: 'var(--ink)', color: 'var(--paper)', border: '1px solid var(--ink)', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-ui)', cursor: 'pointer' },
+  hueco: { padding: '10px 26px', borderRadius: 'var(--r-pill)', background: 'transparent', color: 'var(--ink-2)', border: '1px solid var(--line-2)', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-ui)', cursor: 'pointer' },
+  global: { position: 'fixed', inset: 0, zIndex: 999, background: 'var(--paper)', color: 'var(--ink)', display: 'grid', placeItems: 'center', padding: 24, overflowY: 'auto' },
+  columna: { maxWidth: 420, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' },
+  globalTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, lineHeight: 1.1, margin: 0 },
+  cta: { marginTop: 6, padding: '13px 40px', borderRadius: 'var(--r-pill)', background: 'var(--focus-cta)', border: '1px solid var(--focus-cta)', color: 'var(--paper)', fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-ui)', cursor: 'pointer' },
+  enlace: { background: 'transparent', border: 'none', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13.5, color: 'var(--ink-2)', textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer' },
+  pie: { margin: '6px 0 0', fontSize: 11.5, color: 'var(--ink-3)', maxWidth: 320 }
+};
+
+Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, paceRedStyles });
+;Object.assign(window, { PaceRedParte, PaceRedGlobal });
 })();
 </script>
   <!-- Reloj de tiempo activo compartido (s170): expone window.useActiveClock.
@@ -27651,55 +27819,93 @@ Object.assign(window, { TweakSecretsWatcher });
 
 const { useState: useStateTD, useRef: useRefTD } = React;
 
+/* s198 · v0.132.0 — LA COPIA, FUERA DEL PANEL. La pide tambien la pantalla
+   global de error (ui/RedDeError.jsx), que existe justo cuando el arbol de React
+   se ha caido: por eso lee de `localStorage` y no del store, y si el estado no
+   se puede leer viaja CRUDO (`stateRaw`) en vez de no viajar. Devuelve si se
+   pudo; los mensajes los pone quien la llama. */
+function paceBajarJSON(payload, nombre) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombre;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function paceDiaArchivo() {
+  return toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
+}
+
+function paceDescargarCopia() {
+  try {
+    const raw = localStorage.getItem('pace.state.v2') || '{}';
+    let parsed = null;
+    try {parsed = JSON.parse(raw);} catch (e) {}
+    /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
+       promete exportar «todo tu estado» e importarlo en otro dispositivo, y
+       desde que hay emisores eso incluye `pace.events.v1`, que vive en OTRA
+       clave. Va como seccion hermana de `state` y no dentro, porque son dos
+       almacenes con ciclos de vida independientes (s155) y mezclarlos en el
+       JSON invitaria a escribirlos como si fueran uno.
+       Si el subsistema no puede leer, `paceEventsExport()` devuelve un
+       contenedor vacio normalizado: el backup sale igual, con la seccion
+       puesta y sin eventos. El export NUNCA falla por esto. */
+    const payload = {
+      app: 'PACE',
+      version: PACE_VERSION,
+      exportedAt: new Date().toISOString(),
+      state: parsed,
+      events: paceEventsExport()
+    };
+    if (parsed === null) payload.stateRaw = raw;
+    /* s198 · si un arranque no pudo leer el estado, su cadena CRUDA vive en
+       `pace.state.v2.rescate` (state-core.sanea.js). Viaja en el backup para
+       que se pueda recuperar; el import la ignora. */
+    const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+    if (rescate) payload.rescate = rescate;
+    paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json');
+    return true;
+  } catch (e) {return false;}
+}
+
+/* s198 · B2 (decision del usuario): la copia de rescate se descarga SOLA, desde su
+   fila en «Tus datos», que solo existe si hay rescate. */
+function paceDescargarRescate() {
+  try {
+    const r = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+    if (!r) return false;
+    paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
+    'pace-rescate-' + paceDiaArchivo() + '.json');
+    return true;
+  } catch (e) {return false;}
+}
+
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
 
   const exportJSON = () => {
-    try {
-      const raw = localStorage.getItem('pace.state.v2') || '{}';
-      const parsed = JSON.parse(raw);
-      /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
-         promete exportar «todo tu estado» e importarlo en otro dispositivo, y
-         desde que hay emisores eso incluye `pace.events.v1`, que vive en OTRA
-         clave. Va como seccion hermana de `state` y no dentro, porque son dos
-         almacenes con ciclos de vida independientes (s155) y mezclarlos en el
-         JSON invitaria a escribirlos como si fueran uno.
-         Si el subsistema no puede leer, `paceEventsExport()` devuelve un
-         contenedor vacio normalizado: el backup sale igual, con la seccion
-         puesta y sin eventos. El export NUNCA falla por esto. */
-      const payload = {
-        app: 'PACE',
-        version: PACE_VERSION,
-        exportedAt: new Date().toISOString(),
-        state: parsed,
-        events: paceEventsExport()
-      };
-      /* s198 · si un arranque no pudo leer el estado, su cadena CRUDA vive en
-         `pace.state.v2.rescate` (state-core.sanea.js). Viaja en el backup para
-         que se pueda recuperar; el import la ignora. */
-      const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
-      if (rescate) payload.rescate = rescate;
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      const yyyymmdd = toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
-      a.href = url;
-      a.download = `pace-backup-${yyyymmdd}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    if (paceDescargarCopia()) {
       setMsg({ kind: 'ok', text: t('settings.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       unlockAchievement('secret.backup');
-    } catch (e) {
+    } else {
       setMsg({ kind: 'err', text: t('settings.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
+
+  /* La fila del rescate (B2): la fecha, corta y en el idioma de la app. */
+  const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+  const rescateFecha = rescate ?
+  new Date(rescate.savedAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short' }) :
+  null;
 
   const importJSON = (file) => {
     if (!file) return;
@@ -27812,7 +28018,12 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
       } }
     ),
     msg && /*#__PURE__*/
-    React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' } }, msg.text), /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' } }, msg.text),
+
+    rescate && /*#__PURE__*/
+    React.createElement(AjustesAccion, { onClick: () => paceDescargarRescate(), title: t('settings.data.rescate.title'), derecha: /*#__PURE__*/React.createElement(DownloadIcon, null) }, /*#__PURE__*/
+    React.createElement("span", { "data-pace-aj-rescate": true }, t('settings.data.rescate'), " ", /*#__PURE__*/React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: '.92em' } }, "\xB7 ", rescateFecha))
+    ), /*#__PURE__*/
 
     React.createElement(AjustesAccion, { suave: true, onClick: onReset, derecha: "\u203A" }, t('settings.data.reset')), /*#__PURE__*/
     React.createElement(PremiumSection, null), /*#__PURE__*/
@@ -27861,8 +28072,8 @@ function UploadIcon() {
 }
 
 
-Object.assign(window, { TweaksDataSection });
-;Object.assign(window, { TweaksDataSection, DownloadIcon, UploadIcon });
+Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
+;Object.assign(window, { paceBajarJSON, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>
@@ -35346,6 +35557,15 @@ function PaceApp() {
     window.dispatchEvent(new CustomEvent('pace:ritmo-seguir'));
   };
 
+  /* s198 · v0.132.0 — LA RED DE ERROR (ui/RedDeError.jsx, decision A2 del usuario):
+     cada dialogo y cada sesion lleva la suya, y si falla se cierra SOLO esa
+     parte; la app entera tiene la global como ultimo recurso (abajo, al montar).
+     `abierto` reinicia la red: cerrar el aviso cierra la superficie, y la
+     siguiente apertura se vuelve a intentar. */
+  const red = (nombre, abierto, cerrar, hijo) => /*#__PURE__*/
+  React.createElement(PaceRed, { modo: "parte", nombre: nombre, abierto: abierto, onCerrar: cerrar }, hijo);
+
+
   const handleBreakChoice = (choice, rutina, desdeMenu) => {
     setOpenBreakMenu(false);
     /* s194 · la pausa es una puerta; `desdeMenu` dice si lo elegido era el plato que
@@ -35470,49 +35690,43 @@ function PaceApp() {
     )
     )
     )
-    ), /*#__PURE__*/
-
-
-    React.createElement(BreatheLibrary, {
-      open: openLibrary === 'breathe',
-      onClose: () => setOpenLibrary(null),
-      onStart: handleStartBreathe }
-    ), /*#__PURE__*/
-    React.createElement(MoveLibrary, {
-      open: openLibrary === 'move' && !customBuilder,
-      onClose: () => setOpenLibrary(null),
-      onStart: handleStartMove }
     ),
-    customBuilder && /*#__PURE__*/
-    React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) }), /*#__PURE__*/
-
-    React.createElement(ExtraLibrary, {
-      open: openLibrary === 'extra',
-      onClose: () => setOpenLibrary(null),
-      onStart: handleStartExtra }
-    ), /*#__PURE__*/
-    React.createElement(HydrateTracker, { open: openHydrate, onClose: () => setOpenHydrate(false) }), /*#__PURE__*/
-    React.createElement(Achievements, { open: openAchievements, onClose: () => setOpenAchievements(false) }), /*#__PURE__*/
-    React.createElement(StatsPanel, { open: openStats, onClose: () => setOpenStats(false) }), /*#__PURE__*/
-    React.createElement(TweaksPanel, { open: openTweaks, onClose: () => setOpenTweaks(false) }), /*#__PURE__*/
-    React.createElement(BreakMenu, {
-      open: openBreakMenu,
-      onClose: () => setOpenBreakMenu(false),
-      onChoose: handleBreakChoice,
-      onSeguir: handleBreakSeguir }
-    ), /*#__PURE__*/
-    React.createElement(SupportModal, { open: openSupport, onClose: () => setOpenSupport(false) }), /*#__PURE__*/
 
 
-
-    React.createElement(Onboarding, null), /*#__PURE__*/
-
+    red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null), /*#__PURE__*/
+    React.createElement(BreatheLibrary, { open: openLibrary === 'breathe', onClose: () => setOpenLibrary(null), onStart: handleStartBreathe })),
+    red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null), /*#__PURE__*/
+    React.createElement(MoveLibrary, { open: openLibrary === 'move' && !customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
+    customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null), /*#__PURE__*/
+    React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) })),
+    red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null), /*#__PURE__*/
+    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
+    red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false), /*#__PURE__*/
+    React.createElement(HydrateTracker, { open: openHydrate, onClose: () => setOpenHydrate(false) })),
+    red(t('ach.title'), openAchievements, () => setOpenAchievements(false), /*#__PURE__*/
+    React.createElement(Achievements, { open: openAchievements, onClose: () => setOpenAchievements(false) })),
+    red(t('stats.title'), openStats, () => setOpenStats(false), /*#__PURE__*/
+    React.createElement(StatsPanel, { open: openStats, onClose: () => setOpenStats(false) })),
+    red(t('settings.title'), openTweaks, () => setOpenTweaks(false), /*#__PURE__*/
+    React.createElement(TweaksPanel, { open: openTweaks, onClose: () => setOpenTweaks(false) })),
+    red(t('break.title'), openBreakMenu, () => setOpenBreakMenu(false), /*#__PURE__*/
+    React.createElement(BreakMenu, { open: openBreakMenu, onClose: () => setOpenBreakMenu(false), onChoose: handleBreakChoice, onSeguir: handleBreakSeguir })),
+    red(null, openSupport, () => setOpenSupport(false), /*#__PURE__*/
+    React.createElement(SupportModal, { open: openSupport, onClose: () => setOpenSupport(false) })),
 
 
 
-    React.createElement(TweakSecretsWatcher, null),
 
-    safetyRoutine && /*#__PURE__*/
+
+    red(null, true, () => {if (getState().firstSeen == null) set({ firstSeen: Date.now() });}, /*#__PURE__*/React.createElement(Onboarding, null)), /*#__PURE__*/
+
+
+
+
+
+    React.createElement(PaceRed, { modo: "silencio" }, /*#__PURE__*/React.createElement(TweakSecretsWatcher, null)),
+
+    safetyRoutine && red(null, true, () => {setSafetyRoutine(null);setPendienteReanudar(null);}, /*#__PURE__*/
     React.createElement(BreatheSafety, {
       routine: safetyRoutine,
       onAccept: (r) => {
@@ -35521,18 +35735,17 @@ function PaceApp() {
         setPendienteReanudar(null);
       },
       onCancel: () => {setSafetyRoutine(null);setPendienteReanudar(null);} }
-    ),
+    )),
 
 
 
-
-    previewRoutine && typeof RoutinePreview === 'function' && /*#__PURE__*/
+    previewRoutine && typeof RoutinePreview === 'function' && red(t('preview.tag'), true, () => setPreviewRoutine(null), /*#__PURE__*/
     React.createElement(RoutinePreview, {
       routine: previewRoutine.routine,
       kind: previewRoutine.kind,
       onStart: lanzarDesdePreview,
       onClose: () => setPreviewRoutine(null) }
-    ),
+    )),
 
 
 
@@ -35540,25 +35753,23 @@ function PaceApp() {
 
 
 
-
-    view.type === 'breathe-session' && /*#__PURE__*/
-    React.createElement(BreatheSession, { routine: view.routine, reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) }),
-
-    view.type === 'move-session' && /*#__PURE__*/
-    React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', onExit: (_reason) => setView({ type: 'home' }) }), /*#__PURE__*/
+    view.type === 'breathe-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }), /*#__PURE__*/
+    React.createElement(BreatheSession, { routine: view.routine, reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) })),
+    view.type === 'move-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }), /*#__PURE__*/
+    React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', onExit: (_reason) => setView({ type: 'home' }) })),
 
 
 
-    React.createElement(PathRunner, null), /*#__PURE__*/
-    React.createElement(PathsLibrary, null), /*#__PURE__*/
+    red(null, true, null, /*#__PURE__*/React.createElement(PathRunner, null)),
+    red(t('paths.library.title'), true, null, /*#__PURE__*/React.createElement(PathsLibrary, null)), /*#__PURE__*/
 
 
-    React.createElement(ToastHost, null), /*#__PURE__*/
+    React.createElement(PaceRed, { modo: "silencio" }, /*#__PURE__*/React.createElement(ToastHost, null)), /*#__PURE__*/
 
 
 
 
-    React.createElement(UpdatePrompt, null)
+    React.createElement(PaceRed, { modo: "silencio" }, /*#__PURE__*/React.createElement(UpdatePrompt, null))
     ));
 
 }
@@ -35569,7 +35780,8 @@ Object.assign(window, { PaceApp });
    En el entry point modular PACE.html el montaje lo hace el script de abajo en #root. */
 if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   const root = ReactDOM.createRoot(document.getElementById('pace-root'));
-  root.render(/*#__PURE__*/React.createElement(PaceApp, null));
+  /* s198: la red GLOBAL, ultimo recurso (ui/RedDeError.jsx). */
+  root.render(/*#__PURE__*/React.createElement(PaceRed, { modo: "global" }, /*#__PURE__*/React.createElement(PaceApp, null)));
 }
 ;Object.assign(window, { PaceApp });
 })();
@@ -36037,6 +36249,7 @@ function mount(tries) {
   var container = document.getElementById('root');
   var allReady =
   typeof PaceApp === 'function' &&
+  typeof PaceRed === 'function' &&
   typeof BreakMenu === 'function' &&
   typeof TweaksPanel === 'function' &&
   typeof BreatheSession === 'function' &&
@@ -36052,7 +36265,8 @@ function mount(tries) {
 
   if (container && allReady) {
     var root = ReactDOM.createRoot(container);
-    root.render(/*#__PURE__*/React.createElement(PaceApp, null));
+    /* s198: la red GLOBAL de error, ultimo recurso (app/ui/RedDeError.jsx). */
+    root.render(/*#__PURE__*/React.createElement(PaceRed, { modo: "global" }, /*#__PURE__*/React.createElement(PaceApp, null)));
   } else if (tries < 100) {
     setTimeout(function () {mount(tries + 1);}, 50);
   } else {

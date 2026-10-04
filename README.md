@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.131.0 · Pre-lanzamiento
+**Estado:** v0.132.0 · Pre-lanzamiento
 **Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
@@ -33,7 +33,7 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 
 ---
 
-## 📊 Estado actual (v0.131.0)
+## 📊 Estado actual (v0.132.0)
 
 | Área | Estado |
 |---|---|
@@ -45,9 +45,9 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 | i18n | ES/EN completo, catálogos troceados por dominio |
 | PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
 | Premium | Guard central de entitlement listo; la licencia real aún no existe |
-| Robustez | Un dato guardado roto se repara solo (y lo ilegible queda en una copia de rescate) · los diálogos y las sesiones gestionan el foco y el teclado · la pantalla no se apaga en una sesión guiada |
+| Robustez | Un dato guardado roto se repara solo (y lo ilegible queda en una copia de rescate) · los diálogos y las sesiones gestionan el foco y el teclado · la pantalla no se apaga en una sesión guiada · si una parte falla, se cierra solo esa parte (con una pantalla de rescate como último recurso) |
 | Código | 154 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
-| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión · `npm run test:e2e` — 312 pruebas en un navegador real |
+| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión · `npm run test:e2e` — 316 pruebas en un navegador real |
 
 ---
 
