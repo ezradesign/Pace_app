@@ -5,7 +5,7 @@
    Primitivos UI compartidos: Modal, Card, Tag, Button, Divider, Meta.
 */
 
-const { useEffect } = React;
+const { useEffect, useRef: useRefPrim, useId: useIdPrim } = React;
 
 /* ============================================================
    displayItalic — helper para el par inline más repetido del repo.
@@ -29,14 +29,16 @@ const displayItalic = {
   fontStyle: 'italic',
 };
 
-function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle }) {
+function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel }) {
   const { t } = useT();
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
+     titulo para el lector de pantalla, el foco DENTRO al abrir, Tab que da la
+     vuelta, y Escape solo para el de ARRIBA -- antes cada Modal escuchaba Escape
+     por su cuenta y, con el preview encima de la biblioteca, cerraba la de
+     detras. Ni un pixel cambia. */
+  const cardRef = useRefPrim(null);
+  const tituloId = 'pace-modal-t-' + useIdPrim().replace(/:/g, '');
+  usePaceDialogo(cardRef, !!open, { onEscape: onClose ? () => onClose() : null });
 
   if (!open) return null;
 
@@ -57,8 +59,15 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
     >
       <div
         data-pace-modal-card
+        ref={cardRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? tituloId : undefined}
+        aria-label={!title ? (ariaLabel || tagLabel || undefined) : undefined}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         style={{
+          outline: 'none',
           background: 'var(--paper)',
           borderRadius: 'var(--r-lg)',
           boxShadow: 'var(--sh-modal)',
@@ -96,7 +105,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
         {(tagLabel || title) && (
           <div data-pace-modal-head style={{ marginBottom: 'var(--s-5)' }}>
             {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
-            {title && <h2 data-pace-modal-title style={{
+            {title && <h2 data-pace-modal-title id={tituloId} style={{
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic',
               fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1

@@ -3,7 +3,7 @@
 > Productivity and wellness web app for people who spend long hours sitting.
 > Thoughtful micro-interventions throughout the day, not lengthy workouts.
 
-**Status:** v0.130.0 · Pre-launch
+**Status:** v0.131.0 · Pre-launch
 **Build delivered:** `index.html` — web/PWA artifact, installable and offline
 **Author:** [@ezradesign](https://github.com/ezradesign)
 **Code license:** [Elastic License 2.0](./LICENSE) — see [§ License](#-license)
@@ -32,7 +32,7 @@ builder**, and an installable **PWA** that works offline.
 
 ---
 
-## 📊 Current state (v0.130.0)
+## 📊 Current state (v0.131.0)
 
 | Area | State |
 |---|---|
@@ -40,12 +40,13 @@ builder**, and an installable **PWA** that works offline.
 | Core modules | Focus · Breathe · Move · Stretch · Hydrate — stable |
 | Paths | Complete system: library, step runner, completion screen, stats and yearly heatmap |
 | Body content | Step contract v1 (mode, sidedness, dosage, requirements) + "before you start" preview |
-| Achievements | 96 in catalog · 88 with an active detector · 58 with dedicated artwork |
+| Achievements | 96 in catalog · 88 with an active detector · 77 with dedicated artwork |
 | i18n | Full ES/EN, catalogs split by domain |
 | PWA | `manifest.webmanifest` + service worker with precache; self-hosted fonts, zero external requests |
 | Premium | Central entitlement guard in place; the real license does not exist yet |
-| Code | 142 code files under `app/` (.js, .jsx, .css), none above 500 lines |
-| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence |
+| Robustness | A broken saved field repairs itself (anything unreadable is kept in a rescue copy) · dialogs and sessions manage focus and keyboard · the screen stays on during a guided session |
+| Code | 154 code files under `app/` (.js, .jsx, .css), none above 500 lines |
+| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence · `npm run test:e2e` — 312 tests in a real browser |
 
 ---
 

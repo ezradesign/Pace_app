@@ -89,6 +89,20 @@ function TweaksPanel({ open, onClose }) {
     if (open) unlockAchievement('explore.tweaks');
   }, [open]);
 
+  /* s198 · Escape cierra el panel. Es un panel FLOTANTE y no modal (la home
+     sigue viva detras), asi que no atrapa el foco; pero no tenia ninguna salida
+     por teclado. Si hay un dialogo encima (ui/Dialogo.jsx), el Escape es suyo. */
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key !== 'Escape' || e.__paceDialogoAtendido) return;
+      if (typeof paceHayDialogo === 'function' && paceHayDialogo()) return;
+      onClose && onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   /* Idioma y paleta comparten gramática (s139 / s161): «Auto» es un MODO que
@@ -116,7 +130,7 @@ function TweaksPanel({ open, onClose }) {
   const ponerGoal = (d) => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
-    <div data-pace-tweaks-panel style={{
+    <div data-pace-tweaks-panel role="dialog" aria-labelledby="pace-aj-titulo" style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
@@ -131,7 +145,7 @@ function TweaksPanel({ open, onClose }) {
       animation: 'pace-slide-up 280ms var(--ease)',
     }}>
       <div className="pace-aj-cab">
-        <div className="pace-aj-titulo">{t('settings.title')}</div>
+        <div className="pace-aj-titulo" id="pace-aj-titulo">{t('settings.title')}</div>
         <button type="button" className="pace-aj-cerrar" onClick={onClose} aria-label={t('common.close')}>×</button>
       </div>
 

@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.130.0 · Pre-lanzamiento
+**Estado:** v0.131.0 · Pre-lanzamiento
 **Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
@@ -33,7 +33,7 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 
 ---
 
-## 📊 Estado actual (v0.130.0)
+## 📊 Estado actual (v0.131.0)
 
 | Área | Estado |
 |---|---|
@@ -41,12 +41,13 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 | Módulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
 | Caminos | Sistema completo: biblioteca, runner por pasos, pantalla de cierre, stats y heatmap anual |
 | Contenido de cuerpo | Contrato de pasos v1 (modo, lateralidad, dosis, requisitos) + preview «antes de empezar» |
-| Logros | 96 en catálogo · 88 con detector activo · 58 con arte propio |
+| Logros | 96 en catálogo · 88 con detector activo · 77 con arte propio |
 | i18n | ES/EN completo, catálogos troceados por dominio |
 | PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
 | Premium | Guard central de entitlement listo; la licencia real aún no existe |
-| Código | 142 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
-| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión |
+| Robustez | Un dato guardado roto se repara solo (y lo ilegible queda en una copia de rescate) · los diálogos y las sesiones gestionan el foco y el teclado · la pantalla no se apaga en una sesión guiada |
+| Código | 154 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
+| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión · `npm run test:e2e` — 312 pruebas en un navegador real |
 
 ---
 

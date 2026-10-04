@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.131.0** | 2026-10-04 | fix(saneamiento): **que no se pierda nada y que el teclado no mienta** — Auditoría de la repo entera a petición del usuario, con una sonda de Playwright sobre el artefacto publicado que reprodujo cada sospecha antes de tocar nada. Siete defectos medidos en v0.130.0 y arreglados sin cambiar un píxel: **un campo guardado con otra forma (`weeklyStats: null`) hacía arrancar la app de fábrica y la primera escritura borraba la historia** (4321 min → 0) — ahora `state-core.sanea.js` repara campo a campo antes de migrar y guarda lo ilegible en `pace.state.v2.rescate`, que viaja en el export; **el import pasa por el mismo saneador** (A-7); **«Borrar todo» borra toda clave `pace.*`** (quedaban el bloque en marcha, la respiración a medias y los días en oscuro); **Espacio pausa** aunque la sesión venga de «Continúa» (el foco se quedaba en el botón escondido); **Escape cierra el diálogo de arriba** (con el preview encima cerraba la biblioteca); **los diálogos son diálogos** (`ui/Dialogo.jsx`: rol, nombre, foco dentro, trampa de Tab, foco devuelto; también el onboarding y las sesiones); **los atajos T·S·L** sin Ctrl/Cmd ni con una sesión delante, y Escape cierra Ajustes; **la pantalla no se apaga** en una sesión guiada (Screen Wake Lock; el Foco no). `state-core.jsx` troceado por un punto (toasts a `state-core.toast.jsx`). Lo visual (pantalla de error, aviso de rescate, interruptor de la pantalla) va a `docs/proposals/saneamiento-s198.html`, SIN DECIDIR. Suite **300 → 312**; las 11 que pueden correr contra HEAD, en rojo por la razón de su mensaje. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
 | **v0.130.0** | 2026-09-22 | feat(home): **la tableta vertical lleva la piel de móvil** — Decidido por el usuario viendo cinco pantallas verticales reales con la piel forzada en la foto (s196): «820×1100 escritorio queda raro el aro tan pequeño / 768×1100 piel de móvil: así se ve perfecto», «vertical hasta 1024». El corte deja de estar escrito a mano en **19 sitios de 8 archivos** y nace **`_responsive.corte.js`**: móvil = `≤768` **o** vertical `≤1024`; escritorio = `≥1025` **o** `≥769` apaisado (listas con coma, sin `not` de nivel 4). Estrenarlo destapó que **entre 820 y 1024 desaparecían los tres modos** de la topbar: la pill vuelve a su fila sin los 42 px del teléfono. `_responsive.pieles.js` pasó de 500 al añadir la regla y se **troceó** (340 + 191). **296 → 300**, `banco-corte-s197.js` **8 de 8**, auditoría de viewports re-medida (199 escenas). | s197 | [session-197b](./docs/sessions/session-197b-la-tableta-vertical.md) |
 | **v0.129.0** | 2026-09-22 | feat(ritmo): **la media jornada es un horario, y lo hecho se cuenta** — La media jornada deja de ser «3 h de foco desde que pulsas» y pasa a ser un **tramo con sus propias horas** (`horario.media`), de mañana **o de tarde**, editable en su cabecera y en «Ajustar el horario» (dos frases), recordado como preferencia y derivado de tu entrada mientras nadie lo toque; fuera de su tramo se apaga. **La comida pasa a ser solo de la jornada entera** («Dos horas» de 13:00 a 15:00 ya no la sirve). Las dos jornadas dicen su **tramo** en el chip y en la loseta, porque son horarios tuyos. Y **lo hecho se cuenta**: la hoja del día distingue hecha de saltada (la regla de la línea) y la tarjeta «Siguiente pausa» lleva «Llevas seis bloques y cuatro pausas». **286 → 296**, `banco-media-s197.js` **13 de 13**. | s197 | [session-197](./docs/sessions/session-197-media-jornada-y-lo-contado.md) |
 | **v0.128.1** | 2026-09-19 | fix(ritmo): **los acentos sirven lo que cabe** — Al re-medir la semana sobre el artefacto publicado, el jueves servía Coherente 6·6 (10') en una pausa corta de 5' y el viernes lo mismo en el cierre: la regla nunca filtra por duración porque no le hacía falta (Estira y Mueve caben en 5' y Respira solo iba a la larga), y los acentos «aire» y «cerrar suave» son el primer Respira en pausa corta. Ahora `toma()` admite `cabe` y los dos acentos solo sirven Respiras con `min <= dur`; si ninguno cabe, la parada queda como la sirvió la regla. Jueves: Diafragmática 5' antes de comer; viernes: cierre Diafragmática 5' (la regla ponía Suspiro 2'). El test defiende el invariante roto (**cada plato cabe en su parada, los cinco días**) y el banco suma dos mutantes: **13 de 13**. | s195 | [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md) |
@@ -407,6 +408,45 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.131.0] -- 2026-10-04 -- fix(saneamiento): que no se pierda nada y que el teclado no mienta
+
+### Arreglado
+- **Un dato guardado roto ya no borra la historia.** `loadState` envolvía parseo, migraciones y rollover en un
+  solo `try` cuyo `catch` devolvía el estado de fábrica: con `weeklyStats: null` la app arrancaba vacía (con
+  el onboarding) y la primera escritura pisaba todo (medido: 4321 min, logros e historia → 0). Ahora
+  **`app/state-core.sanea.js`** repara la forma campo a campo contra `defaultState` antes de migrar, y si aun así
+  algo revienta, la cadena cruda queda en **`pace.state.v2.rescate`** (el export de «Tus datos» la lleva).
+- **El import se sanea** (A-7, Fase 8.5): pasa por el mismo saneador; un backup que no es un objeto se rechaza.
+- **«Borrar todos mis datos» borra todo**: toda clave `pace.*` salvo las de eventos (las borra su barrera).
+  Antes sobrevivían `pace.timer.v1`, `pace.breathe.v1` y `pace.darkDays.v1`, contra lo que promete `privacy.html`.
+- **Espacio pausa** aunque la sesión se empiece desde un botón que sigue en el DOM («Continúa»): el foco se
+  quedaba detrás de la sesión y la tecla pulsaba ese botón.
+- **Escape cierra el diálogo de arriba**: con el preview encima de la biblioteca, cerraba la biblioteca.
+- **Ctrl+S ya no abre Estadísticas**, ni una «s» en mitad de una sesión; **Escape cierra Ajustes**.
+
+### Añadido
+- **`app/ui/Dialogo.jsx`** (`usePaceDialogo`): pila de diálogos, foco al contenedor al abrir, trampa de Tab y
+  foco devuelto. Lo usan el `Modal` (que ahora es `role="dialog"` con nombre), el **onboarding** (la trampa
+  que la Fase 8.5 llevaba anotada) y **`SessionShell`**. Ni un píxel cambia.
+- **`app/ui/pantalla.js`**: Screen Wake Lock mientras hay una sesión guiada (Respira, Mueve, Estira, pasos de
+  Camino); el Foco no la pide.
+
+### Cambiado
+- `state-core.jsx` pasó de 500 con el saneado y se troceó **por un punto**: el buzón de avisos a
+  `state-core.toast.jsx` (465 + 57).
+
+### Red
+- `tests/estado-saneado.spec.js` (5) y `tests/teclado-foco.spec.js` (7): los 11 que existen en HEAD, **en rojo
+  contra v0.130.0**, cada uno por la razón de su mensaje.
+- `scripts/audit/banco-saneamiento-s198.js`: un mutante por pieza, con dos declarados que no muerden con razón.
+
+### Lo que no cubre
+- **Ningún límite de error de React**: si algo falla al dibujarse, la app entera se desmonta (provocado y
+  fotografiado). Qué se ve en su lugar es diseño: `docs/proposals/saneamiento-s198.html`, A, sin decidir.
+- La UI del rescate (B) y si la pantalla encendida lleva interruptor (C), también sin decidir.
+
+---
+
 ## [v0.130.0] -- 2026-09-22 -- feat(home): la tableta vertical lleva la piel de movil
 
 ### Añadido
@@ -435,40 +475,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Lo que no cubre
 - Cinco escenas con scroll ANTERIORES a esta versión (la tarjeta por libre arrastra 72 px a 375×667 y 32 a
   360×730, idéntico contra HEAD). Ni un píxel comparado: las tabletas se miraron a mano.
-
----
-
-## [v0.129.0] -- 2026-09-22 -- feat(ritmo): la media jornada es un horario, y lo hecho se cuenta
-
-### Cambiado
-- **La media jornada es un HORARIO** (`RITMO_FORMAS.media` con `foco: Infinity`): sirve de su inicio a su fin,
-  no «3 h de foco desde ahora». Sus horas viven en **`horario.media`**, aparte de las de la entera; `ritmoMedia()`
-  las deriva de tu entrada (4 h) mientras nadie las toque —así una instalación existente no necesita migración—
-  y quedan fijas en cuanto tocas una. De mañana o **de tarde**. La hora de fin manda: empezar tarde acorta.
-- **La comida es solo de la jornada entera**: `comeA` ya no mira la hora en las opciones cortas. Rompió (y
-  reescribió) el test de s195b que defendía lo contrario.
-- **El chip y la loseta de las dos jornadas dicen su tramo** («De 9:00 a 13:00»); «Una hora» y «Dos horas»
-  siguen con «Hasta las…». Decisión del usuario: «tienen que poder personalizarse por el usuario, tanto la
-  media jornada como la completa».
-- **La hoja del día recuerda**: cada parada pasada con su estado (hecha con tinta y glifo relleno · saltada al
-  40 %, punteada y sin gota). Antes se atenuaba todo lo pasado por igual.
-
-### Añadido
-- **«Ajustar el horario» con dos frases** (A1, elegida mirándola): la segunda lleva las dos horas de la media
-  jornada. +22 px de panel en escritorio, +21 en móvil, medidos.
-- **La tarjeta «Siguiente pausa» cuenta lo que llevas**: «Llevas seis bloques y cuatro pausas», en la itálica
-  serif de las losetas, con números en palabras hasta doce (`ritmo.numeros`). Las saltadas no se nombran; sin un
-  bloque hecho no aparece. Descartadas «4 de 7» (marcador) y los puntos en miniatura (redundantes con la línea).
-
-### Red
-- `tests/ritmo-media.spec.js` (6) y `tests/ritmo-llevas.spec.js` (4), **los diez en rojo contra HEAD**.
-- `scripts/audit/banco-media-s197.js`: **13 de 13 muerden**, con pasada de control.
-- Censo i18n 662 → **673**. Tres tests existentes actualizados a la decisión nueva.
-
-### Lo que no cubre
-- La tableta vertical con piel de móvil (decidida) va en v0.130.0. Nadie ha usado la app una semana entera aún.
-
----
 
 ---
 
