@@ -411,6 +411,10 @@ cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-orig
 la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
 punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
 
+**Hecho en s198 (v0.133.0)**: **la pausa te llama por su nombre** — con «A tu ritmo», el aviso del sistema al
+acabar un bloque dice qué pausa toca y cuándo vuelves (D2 de `por-donde-seguir-s198.html`, texto V1). El `.ics`
+(«Calendario», abajo) queda aparcado a propósito hasta usar el aviso unos días.
+
 **Hecho en s197 (v0.130.0)**: **la tableta vertical lleva la piel de móvil** (toda pantalla más alta que
 ancha de hasta 1024 px). El corte entre pieles vive ahora en un solo sitio, `_responsive.corte.js`. Con esto
 queda **implementado todo lo que el usuario decidió en s196**; lo único pendiente es que use la app una

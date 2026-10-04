@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.132.0 (s198 - **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE**: las letras del usuario a `saneamiento-s198.html` (A2 · B2 · C1 · D1) implementadas el mismo dia — `ui/RedDeError.jsx` con una red por dialogo y por sesion (su aviso de 560 px; el resto de la app sigue, bloque en marcha incluido), la global alrededor de `PaceApp` («Algo se ha torcido» · Volver a empezar · Descargar una copia) y la silenciosa para lo invisible; una superficie CERRADA que falla calla (Hidratate lee `state.water` aunque no se vea); la fila de la copia de rescate en «Tus datos»; la pantalla encendida sin interruptor. 312 -> 316. Antes, v0.131.0, s198 - saneamiento: un dato roto ya no borra la historia, el import se sanea, «Borrar todo» borra todo, los dialogos y las sesiones gestionan el foco, la pantalla no se apaga en una sesion; el historial completo, en `CHANGELOG.md`.)
+**Version actual:** v0.133.0 (s198 - **LA PAUSA TE LLAMA POR SU NOMBRE**: con «A tu ritmo», el aviso del sistema al acabar un bloque dice qué pausa toca y cuándo vuelves («Tu pausa: Caderas de pie · 4 min · Bloque 1 de 9 hecho. El siguiente, a las 9:50»), con sus variantes para la larga, la comida y el último bloque; por libre, igual que antes. `ritmo/ritmo.aviso.js` puro; `FocusTimer` avisa DESPUÉS de cerrar el bloque. 316 -> 320, banco 10 de 10. Antes, v0.132.0 y v0.131.0, s198 - la red de error por superficie y el saneamiento; el historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -20,6 +20,8 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
+| `app/ritmo/ritmo.aviso.js` | **LA PAUSA TE LLAMA POR SU NOMBRE (NUEVO s198 · v0.133.0)**, puro: `ritmoAviso(s, t, tn, lang)` -> `{ title, body }` o `null`. Las reglas de la linea del dia (rutina vs parada, larga, comida, cierre, ultimo bloque). La llama `FocusTimer` DESPUES de cerrar el bloque | **NUEVO s198** |
+| `tests/ritmo-aviso.spec.js` · `scripts/audit/banco-aviso-s198.js` | **4 tests (NUEVO v0.133.0)** con la Notification sustituida y la pestaña oculta (3 en rojo contra v0.132.0 y un control) · banco **10 de 10** | **NUEVO s198** |
 | `app/ui/RedDeError.jsx` | **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE (NUEVO s198 · v0.132.0)**: `PaceRed` (clase: React solo da limites de error asi) en tres modos — `parte` (su `Modal` de 560: «Esta parte no ha podido abrirse», Cerrar · Recargar), `global` (alrededor de `PaceApp`: «Algo se ha torcido», Volver a empezar, Descargar una copia) y `silencio`. Se reinicia cuando cambia `abierto`; cerrada y fallando, calla. Los envoltorios viven en `main.jsx` (`red(nombre, abierto, cerrar, hijo)`) y en el montaje de `PACE.html` | **NUEVO s198** |
 | `tests/red-de-error.spec.js` | **4 tests (NUEVO v0.132.0)**, los 4 en rojo contra v0.131.0: Estadisticas cae y la app sigue (y al arreglar el dato vuelve a abrir) · la superficie cerrada que calla, abre si el dato se arregla y avisa si no · la pantalla global con su copia y su recarga · la fila del rescate. Los fallos se PROVOCAN con `setState` en caliente: no se simulan | **NUEVO s198** |
 | `app/state-core.sanea.js` | **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS (NUEVO s198)**, puro: `paceSanearEstado(parsed, defaultState)` repara la FORMA campo a campo antes de migrar (tipos de arriba; dentro, series de la semana, agua, racha, Caminos, historia; `FORMAS_AJENAS` para `ritmo`); `paceGuardarRescate` copia lo ilegible a `pace.state.v2.rescate`; `paceLeerRescate` lo da al export. Carga entre `state-core.support.jsx` y `state-core.jsx` | **NUEVO s198** |
@@ -255,21 +257,17 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> **s198 (2026-10-04) publica v0.131.0 y v0.132.0.** El usuario pidio revisar la repo entera y seguir
-> desarrollando. La auditoria (una sonda de Playwright sobre el artefacto publicado, en otro puerto) midio siete
-> defectos de la Fase 8.5 y **v0.131.0** los arreglo sin cambiar un pixel: el dato roto que borraba la historia,
-> el import sin sanear (A-7), el borrado incompleto, Espacio que no pausaba tras «Continua», Escape que cerraba
-> el dialogo de abajo, los dialogos sin foco (tambien el onboarding), los atajos con Ctrl y en sesion, y la
-> pantalla que se apagaba en una sesion guiada. Lo visual fue a [`saneamiento-s198.html`](./docs/proposals/saneamiento-s198.html);
-> el usuario pidio que se lo preguntara y contesto **A2 · B2 · C1 · D1**, y **v0.132.0** lo implemento el mismo
-> dia: la red de error por superficie con la global de ultimo recurso, y la fila de la copia de rescate.
-> **300 -> 316**. Diario: [session-198](./docs/sessions/session-198-saneamiento.md).
+> **s198 (2026-10-04) publica v0.131.0, v0.132.0 y v0.133.0.** Auditoria de la repo con una sonda sobre el
+> artefacto publicado y siete defectos de la Fase 8.5 arreglados sin cambiar un pixel (**v0.131.0**); la red de
+> error por superficie y la copia de rescate, con las letras del usuario A2 · B2 · C1 (**v0.132.0**); y, ante
+> «no sé por dónde seguir», la recomendacion aceptada: **D2, la pausa te llama por su nombre** (**v0.133.0**).
+> **300 -> 320**. Diarios: [session-198](./docs/sessions/session-198-saneamiento.md) ·
+> [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md).
 >
-> **LO SIGUIENTE: nada decidido esta pendiente.** De la Fase 8.5 quedan A-6 en sentido amplio, i18n I18N-2 y
-> D-1/D-2/D-3, el bump de version automatico y el timer de Mueve por timestamps. Fuera de ella, los frentes que
-> la pagina dejo pintados para despues: **la pausa con su nombre en el aviso + `.ics`** (D2), **Estadisticas
-> «Hoy»** (D3) y **Android** (D4). Y sigue sin juicio de uso real la semana de v0.128.0.
-
+> **LO SIGUIENTE: que el usuario use la app una semana** con el aviso nuevo (es lo unico que solo puede hacer el;
+> la semana de v0.128.0 sigue sin juicio). Despues, segun la pagina
+> [`por-donde-seguir-s198.html`](./docs/proposals/por-donde-seguir-s198.html): **D3 Estadisticas «Hoy»** (la
+> siguiente fase del plan) · el `.ics` (D2b, aparcado a proposito) · D4 Android · D5 pulido.
 - **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
   72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
   el cierre que nunca es «Ahora» · la lectura C del norte (cuando `origin` tenga semanas de datos).
@@ -294,6 +292,7 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **Con «A tu ritmo», el aviso del sistema nombra la pausa y cuando vuelves; y se calcula DESPUES de cerrar el bloque** (s198 · v0.133.0)
 - **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE: una red de error por superficie (`PaceRed`) y la global como ultimo recurso; cerrada y fallando, calla** (s198 · v0.132.0)
 - **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS: el estado se SANEA campo a campo antes de migrar y lo ilegible se guarda CRUDO en un rescate** (s198)
 - **«Borrar todo» borra toda clave `pace.*` que no es de eventos** (s198)

@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.133.0** | 2026-10-04 | feat(ritmo): **la pausa te llama por su nombre** — Decisión del usuario mirando `por-donde-seguir-s198.html` (D2, texto V1, sin `.ics`). En la oficina PACE vive en una pestaña de fondo: al acabar un bloque, lo primero que se ve es el **aviso del sistema**, y decía siempre «Foco completado · Ciclo cerrado». Con «A tu ritmo» ahora dice **qué pausa toca y cuándo vuelves**: «Tu pausa: Caderas de pie · 4 min · Bloque 1 de 9 hecho. El siguiente, a las 9:50». La larga nombra todos sus platos con la duración de la parada; la comida dice hasta cuándo; el último bloque, que el día se cierra. Por libre, igual que antes. **El aviso se calcula DESPUÉS de cerrar el bloque** (antes iba delante): solo entonces el plan sabe qué pausa sigue y ha recolocado el día si llegaste tarde. `app/ritmo/ritmo.aviso.js`, puro. Suite **316 → 320** (3 en rojo contra v0.132.0 y un control), banco `banco-aviso-s198.js` **10 de 10**. | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) |
 | **v0.132.0** | 2026-10-04 | feat(saneamiento): **si una parte falla, se cierra solo esa parte** — Las letras del usuario a `saneamiento-s198.html`, contestadas a pregunta: **A2 · B2 · C1 · D1**. Medido en v0.131.0: no había ningún límite de error de React, y un dato roto en caliente + abrir Estadísticas desmontaba la app entera (0 nodos en la raíz). Ahora **`app/ui/RedDeError.jsx`**: cada diálogo y cada sesión lleva su red (`red()` en `main.jsx`) y si falla pinta SU aviso de 560 px («Esta parte no ha podido abrirse» · Cerrar · Recargar) mientras el aro, la barra lateral y el bloque en marcha siguen; la app entera lleva la **global** («Algo se ha torcido» · Volver a empezar · Descargar una copia, que lee de `localStorage`); lo invisible (avisos, el vigilante de secretos) cae en **silencio**. Implementarla destapó un caso que la maqueta no tenía: **`HydrateTracker` lee `state.water` estando CERRADO**, así que una superficie cerrada que falla CALLA y se reintenta al abrirla. **B2**: la fila «Descargar la copia de rescate · 4 oct.» en «Tus datos», solo si hay rescate. **C1**: la pantalla encendida, sin interruptor. Censo i18n 673 → 684; la sección de capas (z-index) del sistema de diseño, por fin medida. Suite **312 → 316**, los 4 nuevos en rojo contra v0.131.0. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
 | **v0.131.0** | 2026-10-04 | fix(saneamiento): **que no se pierda nada y que el teclado no mienta** — Auditoría de la repo entera a petición del usuario, con una sonda de Playwright sobre el artefacto publicado que reprodujo cada sospecha antes de tocar nada. Siete defectos medidos en v0.130.0 y arreglados sin cambiar un píxel: **un campo guardado con otra forma (`weeklyStats: null`) hacía arrancar la app de fábrica y la primera escritura borraba la historia** (4321 min → 0) — ahora `state-core.sanea.js` repara campo a campo antes de migrar y guarda lo ilegible en `pace.state.v2.rescate`, que viaja en el export; **el import pasa por el mismo saneador** (A-7); **«Borrar todo» borra toda clave `pace.*`** (quedaban el bloque en marcha, la respiración a medias y los días en oscuro); **Espacio pausa** aunque la sesión venga de «Continúa» (el foco se quedaba en el botón escondido); **Escape cierra el diálogo de arriba** (con el preview encima cerraba la biblioteca); **los diálogos son diálogos** (`ui/Dialogo.jsx`: rol, nombre, foco dentro, trampa de Tab, foco devuelto; también el onboarding y las sesiones); **los atajos T·S·L** sin Ctrl/Cmd ni con una sesión delante, y Escape cierra Ajustes; **la pantalla no se apaga** en una sesión guiada (Screen Wake Lock; el Foco no). `state-core.jsx` troceado por un punto (toasts a `state-core.toast.jsx`). Lo visual (pantalla de error, aviso de rescate, interruptor de la pantalla) va a `docs/proposals/saneamiento-s198.html`, SIN DECIDIR. Suite **300 → 312**; las 11 que pueden correr contra HEAD, en rojo por la razón de su mensaje. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
 | **v0.130.0** | 2026-09-22 | feat(home): **la tableta vertical lleva la piel de móvil** — Decidido por el usuario viendo cinco pantallas verticales reales con la piel forzada en la foto (s196): «820×1100 escritorio queda raro el aro tan pequeño / 768×1100 piel de móvil: así se ve perfecto», «vertical hasta 1024». El corte deja de estar escrito a mano en **19 sitios de 8 archivos** y nace **`_responsive.corte.js`**: móvil = `≤768` **o** vertical `≤1024`; escritorio = `≥1025` **o** `≥769` apaisado (listas con coma, sin `not` de nivel 4). Estrenarlo destapó que **entre 820 y 1024 desaparecían los tres modos** de la topbar: la pill vuelve a su fila sin los 42 px del teléfono. `_responsive.pieles.js` pasó de 500 al añadir la regla y se **troceó** (340 + 191). **296 → 300**, `banco-corte-s197.js` **8 de 8**, auditoría de viewports re-medida (199 escenas). | s197 | [session-197b](./docs/sessions/session-197b-la-tableta-vertical.md) |
@@ -409,6 +410,33 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.133.0] -- 2026-10-04 -- feat(ritmo): la pausa te llama por su nombre
+
+### Añadido
+- **El aviso del sistema nombra la pausa servida** (D2, texto V1): «Tu pausa: {rutina} · {min} min» y «Bloque
+  {n} de {total} hecho. El siguiente, a las {hora}.». Variantes: «Tu pausa larga: … · {duración de la parada}»,
+  «Hora de comer · Hasta las {hora}. Luego, el bloque {n}.» y «Para cerrar: … · Con esto cierras el día.». En
+  inglés, con el nombre de la rutina en inglés. **Por libre, el aviso de siempre.**
+- `app/ritmo/ritmo.aviso.js` (`ritmoAviso(s, t, tn, lang)`), puro: las mismas reglas que la línea del día.
+
+### Cambiado
+- `FocusTimer` avisa **después** de `completeFocusSession` y de `onFinish` (antes, delante): con el bloque aún
+  sin cerrar, el plan nombraría la pausa equivocada (el mutante lo demuestra). Un `finally` conserva lo de
+  antes: aunque la pausa fallara al abrirse, el aviso sale.
+
+### Red
+- `tests/ritmo-aviso.spec.js` (4) con el aviso del sistema sustituido por uno falso y la pestaña oculta: el
+  plato y la hora, la larga + la comida + el último bloque, en inglés (los tres en rojo contra v0.132.0) y por
+  libre + pestaña visible (control: pasa en las dos versiones).
+- `scripts/audit/banco-aviso-s198.js`: **10 de 10 muerden**. Censo i18n 684 → 691.
+
+### Lo que no cubre
+- El aspecto del aviso lo pone el sistema (Windows, macOS, Android): no se mira. Y no se ha probado en un
+  sistema real con la pestaña de verdad en segundo plano: la API se sustituye en la prueba.
+- El `.ics` (D2b) queda fuera, a propósito: se decide después de usar el aviso unos días.
+
+---
+
 ## [v0.132.0] -- 2026-10-04 -- feat(saneamiento): si una parte falla, se cierra solo esa parte
 
 ### Añadido
@@ -437,45 +465,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Lo que no cubre
 - La red de la home: barra lateral, aro y «A tu ritmo» no llevan red propia; si caen, la global (así se decidió).
 - La red silenciosa no tiene prueba: provocarla exige romper el catálogo de logros a propósito.
-
----
-
-## [v0.131.0] -- 2026-10-04 -- fix(saneamiento): que no se pierda nada y que el teclado no mienta
-
-### Arreglado
-- **Un dato guardado roto ya no borra la historia.** `loadState` envolvía parseo, migraciones y rollover en un
-  solo `try` cuyo `catch` devolvía el estado de fábrica: con `weeklyStats: null` la app arrancaba vacía (con
-  el onboarding) y la primera escritura pisaba todo (medido: 4321 min, logros e historia → 0). Ahora
-  **`app/state-core.sanea.js`** repara la forma campo a campo contra `defaultState` antes de migrar, y si aun así
-  algo revienta, la cadena cruda queda en **`pace.state.v2.rescate`** (el export de «Tus datos» la lleva).
-- **El import se sanea** (A-7, Fase 8.5): pasa por el mismo saneador; un backup que no es un objeto se rechaza.
-- **«Borrar todos mis datos» borra todo**: toda clave `pace.*` salvo las de eventos (las borra su barrera).
-  Antes sobrevivían `pace.timer.v1`, `pace.breathe.v1` y `pace.darkDays.v1`, contra lo que promete `privacy.html`.
-- **Espacio pausa** aunque la sesión se empiece desde un botón que sigue en el DOM («Continúa»): el foco se
-  quedaba detrás de la sesión y la tecla pulsaba ese botón.
-- **Escape cierra el diálogo de arriba**: con el preview encima de la biblioteca, cerraba la biblioteca.
-- **Ctrl+S ya no abre Estadísticas**, ni una «s» en mitad de una sesión; **Escape cierra Ajustes**.
-
-### Añadido
-- **`app/ui/Dialogo.jsx`** (`usePaceDialogo`): pila de diálogos, foco al contenedor al abrir, trampa de Tab y
-  foco devuelto. Lo usan el `Modal` (que ahora es `role="dialog"` con nombre), el **onboarding** (la trampa
-  que la Fase 8.5 llevaba anotada) y **`SessionShell`**. Ni un píxel cambia.
-- **`app/ui/pantalla.js`**: Screen Wake Lock mientras hay una sesión guiada (Respira, Mueve, Estira, pasos de
-  Camino); el Foco no la pide.
-
-### Cambiado
-- `state-core.jsx` pasó de 500 con el saneado y se troceó **por un punto**: el buzón de avisos a
-  `state-core.toast.jsx` (465 + 57).
-
-### Red
-- `tests/estado-saneado.spec.js` (5) y `tests/teclado-foco.spec.js` (7): los 11 que existen en HEAD, **en rojo
-  contra v0.130.0**, cada uno por la razón de su mensaje.
-- `scripts/audit/banco-saneamiento-s198.js`: un mutante por pieza, con dos declarados que no muerden con razón.
-
-### Lo que no cubre
-- **Ningún límite de error de React**: si algo falla al dibujarse, la app entera se desmonta (provocado y
-  fotografiado). Qué se ve en su lugar es diseño: `docs/proposals/saneamiento-s198.html`, A, sin decidir.
-- La UI del rescate (B) y si la pantalla encendida lleva interruptor (C), también sin decidir.
 
 ---
 

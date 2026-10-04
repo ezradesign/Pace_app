@@ -9,7 +9,7 @@ const { useEffect: useEffectFT, useRef: useRefFT } = React;
 
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
 
   /* Motor de cuenta atras basado en timestamps (s96 · app/focus/useCountdown).
      `remaining` se deriva del reloj real, no de un contador que se decrementa:
@@ -30,21 +30,30 @@ function FocusTimer({ onFinish }) {
        ultima onComplete en un ref, asi que este cierre lee el focusMode
        vigente; un cambio de modo resetea el timer antes de poder completar. */
     if (state.focusMode === 'foco') {
-      /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
-         pestaña está en segundo plano. Nunca rompe (patrón playSound). */
-      try {
-        maybeNotifyFocusEnd({
-          enabled: state.notifyFocusEnd,
-          title: t('notify.focus.title'),
-          body: t('notify.focus.body'),
-        });
-      } catch (e) {}
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       completeFocusSession('home', { minutes: state.focusMinutes,
         elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
         activeSeconds: durationSec });
-      onFinish && onFinish();
+      /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
+         pestaña está en segundo plano. Nunca rompe (patrón playSound).
+         s198 · v0.133.0 (D2): con «A tu ritmo» nombra la pausa que toca y cuándo
+         vuelves (ritmo/ritmo.aviso.js). Va DESPUÉS de cerrar el bloque —antes iba
+         delante— porque el plan solo sabe qué pausa sigue cuando `cycle` ha subido
+         y `onFinish` (ritmoBloqueTerminado) ha recolocado el día si llegaste
+         tarde. El `finally` conserva lo de antes: aunque `onFinish` fallara, avisa. */
+      try {
+        onFinish && onFinish();
+      } finally {
+        try {
+          const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
+          maybeNotifyFocusEnd({
+            enabled: state.notifyFocusEnd,
+            title: aviso ? aviso.title : t('notify.focus.title'),
+            body: aviso ? aviso.body : t('notify.focus.body'),
+          });
+        } catch (e) {}
+      }
     }
   });
 
