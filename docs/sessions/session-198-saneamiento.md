@@ -1,6 +1,6 @@
-# s198 · Saneamiento: que no se pierda nada y que el teclado no mienta (v0.131.0)
+# s198 · Saneamiento: que no se pierda nada y que el teclado no mienta (v0.131.0 y v0.132.0)
 
-**Fecha:** 2026-10-04 · **Versión publicada:** v0.131.0 · **Suite:** 300 → **312**
+**Fecha:** 2026-10-04 · **Versiones publicadas:** v0.131.0 y v0.132.0 · **Suite:** 300 → **316**
 
 > Encargo del usuario: «revisa la repo, audita, revisa el código, plantea novedades e implementaciones,
 > mejoremos y sigamos desarrollando la app, tómate tu tiempo». Sigue a
@@ -88,7 +88,7 @@ una selección del usuario.
   con que caiga: hay que leer POR QUÉ cae. Un test de foco que cae por un selector que no existe en HEAD no
   vigila el foco.
 
-## 5 · Lo que queda, decidido por el usuario mirando
+## 5 · Lo que quedó para decidir mirando (contestado en la parte 6: A2 · B2 · C1 · D1)
 
 [`docs/proposals/saneamiento-s198.html`](../proposals/saneamiento-s198.html) (generada por
 `scripts/audit/saneamiento-s198.js`, fotos de la app real con el DOM retocado):
@@ -98,3 +98,32 @@ una selección del usuario.
 - **C** · la pantalla encendida: C1 sin interruptor (recomendada, como queda) · C2 con interruptor.
 - **D** · el frente siguiente: D1 la red de A y B (recomendada) · D2 la pausa te llama por su nombre + `.ics` ·
   D3 Estadísticas «Hoy» · D4 Android.
+
+---
+
+## 6 · Segunda parte: las letras, y v0.132.0 el mismo día
+
+Al enseñar la página, el usuario pidió «hazme preguntas». Se le hicieron las cuatro con las opciones de la
+página y una vista previa de cada forma, y contestó lo recomendado en las cuatro: **A2 · B2 · C1 · D1**. D1 era
+«implementar A y B», así que se siguió sin cambiar de sesión.
+
+- **`app/ui/RedDeError.jsx`** (`PaceRed`, una clase: React solo da límites de error con
+  `getDerivedStateFromError`): cada diálogo y cada sesión lleva su red (`red()` en `main.jsx`), que pinta su
+  propio aviso de 560 px; la app entera lleva la global (en el montaje de `PACE.html` y en el arranque directo de
+  `main.jsx`); lo invisible cae en silencio.
+- **Lo que la maqueta no sabía.** Para la prueba de la pantalla global usé `water: null`, que en v0.131.0
+  tumbaba la home… y en v0.132.0 salió **un aviso de Hidrátate que nadie había abierto**: `HydrateTracker` lee
+  `state.water` ANTES de mirar si está abierto, y su red lo atrapaba. Regla nueva: una superficie **cerrada**
+  que falla calla, y al abrirla `abierto` cambia, la red se reinicia y se vuelve a intentar. La pantalla global se
+  prueba con `plan: null`, que sí lee la propia home.
+- **La foto antes que el aserto**: la primera captura de lo implementado tenía 55 px de más entre el rótulo y el
+  título (el margen de la cabecera del `Modal` más el padding del aviso). Se quitó comparando con la maqueta.
+- **B2**: la fila «Descargar la copia de rescate · 4 oct.» en «Tus datos». La exportación sale a
+  `paceDescargarCopia()`, porque la pantalla global la necesita justo cuando el árbol de React se ha caído.
+- **C1** queda escrita en `DECISIONES_TECNICAS_VIGENTES.md`. De paso, la tabla de capas (z-index) de
+  `DESIGN_SYSTEM.md`, que era un TODO, se midió y se escribió.
+
+**Red**: `tests/red-de-error.spec.js` (4), **los 4 en rojo contra v0.131.0**; el banco suma 7 mutantes (los 7
+muerden) y destapó que uno de los de la primera parte **había dejado de aplicar** porque la extracción de la
+exportación cambió la sangría de su línea: un banco que dice «NO APLICA» también es una medida. Corregido,
+la pasada final del banco entero da **33 de 33** (más el declarado).

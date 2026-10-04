@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.131.0</title>
+  <title>PACE · Foco · Cuerpo — v0.132.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -245,6 +245,9 @@
        La pide SessionShell; el Foco no. -->
   <script type="text/babel" src="app/ui/pantalla.js"></script>
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>
+  <!-- RedDeError (s198 · v0.132.0): si una parte falla al dibujarse, se cierra
+       solo esa parte; la global, alrededor de PaceApp, es el ultimo recurso. -->
+  <script type="text/babel" src="app/ui/RedDeError.jsx"></script>
   <!-- Reloj de tiempo activo compartido (s170): expone window.useActiveClock.
        Lo consumen BreatheSession.support.jsx (retención) y los DOS runners de
        cuerpo (MoveModule / MoveSessionV1). Debe cargarse antes que los tres —
@@ -530,6 +533,7 @@
       var container = document.getElementById('root');
       var allReady = (
         typeof PaceApp          === 'function' &&
+        typeof PaceRed          === 'function' &&
         typeof BreakMenu        === 'function' &&
         typeof TweaksPanel      === 'function' &&
         typeof BreatheSession   === 'function' &&
@@ -545,7 +549,8 @@
       );
       if (container && allReady) {
         var root = ReactDOM.createRoot(container);
-        root.render(<PaceApp />);
+        /* s198: la red GLOBAL de error, ultimo recurso (app/ui/RedDeError.jsx). */
+        root.render(<PaceRed modo="global"><PaceApp /></PaceRed>);
       } else if (tries < 100) {
         setTimeout(function() { mount(tries + 1); }, 50);
       } else {

@@ -526,9 +526,9 @@ sin tests del estado es un riesgo que se paga en soporte.
   **A-7 HECHO en s198**: el import y el arranque pasan por el mismo saneador (`state-core.sanea.js`),
   que repara campo a campo y guarda lo ilegible en un rescate. Medido antes: un campo roto hacía
   arrancar la app de fábrica y la primera escritura borraba la historia. Queda A-6 en sentido amplio
-  (pruebas del estado más allá de la forma) y **la pantalla de error** (no hay límite de error de React:
-  si algo falla al dibujarse, la app entera se desmonta) — su diseño espera la letra del usuario a
-  `docs/proposals/saneamiento-s198.html`.
+  (pruebas del estado más allá de la forma). ~~**La pantalla de error**~~ **HECHA en v0.132.0** con la letra
+  del usuario (A2): una red por diálogo y por sesión —si falla, se cierra solo esa parte— y la global como último
+  recurso (`app/ui/RedDeError.jsx`); y la copia de rescate se ofrece en «Tus datos» (B2).
 - **i18n robustez (I18N-2)**: paridad de claves ES/EN, pseudolocalización, pluralización — una
   clave que falta es un **bug visible** en una app de pago. Más las deudas semánticas **D-1**
   (override silencioso en `content/breathe.js`), **D-2** («Hecho hoy» duplicado) y **D-3**

@@ -18,6 +18,10 @@
  *  · La excepcion de la trampa de Tab para otro dialogo (el «¿Salir del Camino?»):
  *    misma razon, el Camino no esta en esta suite.
  *
+ * v0.132.0 suma los de la red de error y la fila del rescate (`tests/red-de-error.spec.js`).
+ * Lo que no se muta de ellos: la red SILENCIOSA de los avisos y del vigilante de
+ * secretos (provocar que fallen exigiria romper el catalogo de logros a proposito).
+ *
  * Uso (con el servidor estatico en 8765, el de la suite):
  *   node scripts/audit/banco-saneamiento-s198.js
  */
@@ -29,6 +33,7 @@ const { execSync } = require('child_process');
 const ROOT = path.join(__dirname, '..', '..');
 const ESTADO = 'tests/estado-saneado.spec.js';
 const TECLADO = 'tests/teclado-foco.spec.js';
+const RED = 'tests/red-de-error.spec.js';
 
 const MUTANTES = [
   /* ---- el estado ---- */
@@ -63,8 +68,8 @@ const MUTANTES = [
     "    if (typeof paceGuardarRescate === 'function') paceGuardarRescate(raw, e);",
     '', ESTADO, 'rescate'],
   ['el export no lleva el rescate', 'app/tweaks/TweaksData.jsx',
-    '      if (rescate) payload.rescate = rescate;',
-    '      if (false) payload.rescate = rescate;', ESTADO, 'rescate'],
+    '    if (rescate) payload.rescate = rescate;',
+    '    if (false) payload.rescate = rescate;', ESTADO, 'rescate'],
   ['el import escribe el backup tal cual', 'app/tweaks/TweaksData.jsx',
     '        const incoming = paceSanearEstado(bruto, defaultState).estado;',
     '        const incoming = bruto;', ESTADO, 'importa SANEADO'],
@@ -113,6 +118,28 @@ const MUTANTES = [
   ['la pantalla no se suelta nunca', 'app/ui/pantalla.js',
     '    _paceLuz.cuenta = Math.max(0, _paceLuz.cuenta - 1);',
     '', TECLADO, 'pantalla'],
+  /* ---- v0.132.0 · la red de error (A2) y la fila del rescate (B2) ---- */
+  ['la red de una parte no pinta su aviso', 'app/ui/RedDeError.jsx',
+    '    return <PaceRedParte nombre={this.props.nombre} onCerrar={this.cerrar} />;',
+    '    return null;', RED, 'Estadisticas falla'],
+  ['ninguna superficie lleva su red', 'app/main.jsx',
+    '    <PaceRed modo="parte" nombre={nombre} abierto={abierto} onCerrar={cerrar}>{hijo}</PaceRed>',
+    '    hijo', RED, 'Estadisticas falla'],
+  ['una superficie cerrada que falla avisa igual', 'app/ui/RedDeError.jsx',
+    '    if (this.props.abierto === false) return null;',
+    '', RED, 'CERRADA'],
+  ['la red no se reinicia al abrir', 'app/ui/RedDeError.jsx',
+    '    if (this.state.error && prev.abierto !== this.props.abierto) this.setState({ error: null });',
+    '', RED, 'CERRADA'],
+  ['sin red global', 'PACE.html',
+    '        root.render(<PaceRed modo="global"><PaceApp /></PaceRed>);',
+    '        root.render(<PaceApp />);', RED, 'pantalla global'],
+  ['la copia de la pantalla global no baja', 'app/ui/RedDeError.jsx',
+    "if (typeof paceDescargarCopia === 'function') paceDescargarCopia();",
+    '', RED, 'pantalla global'],
+  ['sin fila del rescate', 'app/tweaks/TweaksData.jsx',
+    '      {rescate && (',
+    '      {false && (', RED, 'rescate'],
   ['DECLARADO · Espacio cuenta como control un boton de detras', 'app/ui/SessionShell.jsx',
     "  return !!(ctl && (ctl.closest('[data-pace-session-root]') || ctl.closest('[role=\"dialog\"]')));",
     '  return !!ctl;', TECLADO, 'Continua'],
@@ -124,7 +151,7 @@ const sh = (cmd) => {
 };
 
 sh('node build-standalone.js');
-if (!sh('npx playwright test ' + ESTADO + ' ' + TECLADO + ' --reporter=line').ok) {
+if (!sh('npx playwright test ' + ESTADO + ' ' + TECLADO + ' ' + RED + ' --reporter=line').ok) {
   sh('git checkout -- PACE_standalone.html');
   throw new Error('CONTROL EN ROJO: el arbol sin mutar ya falla, el banco no puede medir nada');
 }

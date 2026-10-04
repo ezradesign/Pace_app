@@ -26,55 +26,93 @@
 
 const { useState: useStateTD, useRef: useRefTD } = React;
 
+/* s198 · v0.132.0 — LA COPIA, FUERA DEL PANEL. La pide tambien la pantalla
+   global de error (ui/RedDeError.jsx), que existe justo cuando el arbol de React
+   se ha caido: por eso lee de `localStorage` y no del store, y si el estado no
+   se puede leer viaja CRUDO (`stateRaw`) en vez de no viajar. Devuelve si se
+   pudo; los mensajes los pone quien la llama. */
+function paceBajarJSON(payload, nombre) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombre;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function paceDiaArchivo() {
+  return toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
+}
+
+function paceDescargarCopia() {
+  try {
+    const raw = localStorage.getItem('pace.state.v2') || '{}';
+    let parsed = null;
+    try { parsed = JSON.parse(raw); } catch (e) {}
+    /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
+       promete exportar «todo tu estado» e importarlo en otro dispositivo, y
+       desde que hay emisores eso incluye `pace.events.v1`, que vive en OTRA
+       clave. Va como seccion hermana de `state` y no dentro, porque son dos
+       almacenes con ciclos de vida independientes (s155) y mezclarlos en el
+       JSON invitaria a escribirlos como si fueran uno.
+       Si el subsistema no puede leer, `paceEventsExport()` devuelve un
+       contenedor vacio normalizado: el backup sale igual, con la seccion
+       puesta y sin eventos. El export NUNCA falla por esto. */
+    const payload = {
+      app: 'PACE',
+      version: PACE_VERSION,
+      exportedAt: new Date().toISOString(),
+      state: parsed,
+      events: paceEventsExport(),
+    };
+    if (parsed === null) payload.stateRaw = raw;
+    /* s198 · si un arranque no pudo leer el estado, su cadena CRUDA vive en
+       `pace.state.v2.rescate` (state-core.sanea.js). Viaja en el backup para
+       que se pueda recuperar; el import la ignora. */
+    const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+    if (rescate) payload.rescate = rescate;
+    paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json');
+    return true;
+  } catch (e) { return false; }
+}
+
+/* s198 · B2 (decision del usuario): la copia de rescate se descarga SOLA, desde su
+   fila en «Tus datos», que solo existe si hay rescate. */
+function paceDescargarRescate() {
+  try {
+    const r = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+    if (!r) return false;
+    paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
+      'pace-rescate-' + paceDiaArchivo() + '.json');
+    return true;
+  } catch (e) { return false; }
+}
+
 function TweaksDataSection({ onReset, isWeb }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
 
   const exportJSON = () => {
-    try {
-      const raw = localStorage.getItem('pace.state.v2') || '{}';
-      const parsed = JSON.parse(raw);
-      /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
-         promete exportar «todo tu estado» e importarlo en otro dispositivo, y
-         desde que hay emisores eso incluye `pace.events.v1`, que vive en OTRA
-         clave. Va como seccion hermana de `state` y no dentro, porque son dos
-         almacenes con ciclos de vida independientes (s155) y mezclarlos en el
-         JSON invitaria a escribirlos como si fueran uno.
-         Si el subsistema no puede leer, `paceEventsExport()` devuelve un
-         contenedor vacio normalizado: el backup sale igual, con la seccion
-         puesta y sin eventos. El export NUNCA falla por esto. */
-      const payload = {
-        app: 'PACE',
-        version: PACE_VERSION,
-        exportedAt: new Date().toISOString(),
-        state: parsed,
-        events: paceEventsExport(),
-      };
-      /* s198 · si un arranque no pudo leer el estado, su cadena CRUDA vive en
-         `pace.state.v2.rescate` (state-core.sanea.js). Viaja en el backup para
-         que se pueda recuperar; el import la ignora. */
-      const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
-      if (rescate) payload.rescate = rescate;
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      const yyyymmdd = toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
-      a.href = url;
-      a.download = `pace-backup-${yyyymmdd}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    if (paceDescargarCopia()) {
       setMsg({ kind: 'ok', text: t('settings.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       unlockAchievement('secret.backup');
-    } catch (e) {
+    } else {
       setMsg({ kind: 'err', text: t('settings.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
+
+  /* La fila del rescate (B2): la fecha, corta y en el idioma de la app. */
+  const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+  const rescateFecha = rescate
+    ? new Date(rescate.savedAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short' })
+    : null;
 
   const importJSON = (file) => {
     if (!file) return;
@@ -189,6 +227,11 @@ function TweaksDataSection({ onReset, isWeb }) {
       {msg && (
         <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' }}>{msg.text}</div>
       )}
+      {rescate && (
+        <AjustesAccion onClick={() => paceDescargarRescate()} title={t('settings.data.rescate.title')} derecha={<DownloadIcon />}>
+          <span data-pace-aj-rescate>{t('settings.data.rescate')} <span style={{ color: 'var(--ink-3)', fontSize: '.92em' }}>· {rescateFecha}</span></span>
+        </AjustesAccion>
+      )}
       <AjustesAccion suave onClick={onReset} derecha="›">{t('settings.data.reset')}</AjustesAccion>
       <PremiumSection />
       {/* El pie: la promesa de privacidad -- es de marca, se queda-- y los
@@ -236,4 +279,4 @@ function UploadIcon() {
 }
 
 
-Object.assign(window, { TweaksDataSection });
+Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
