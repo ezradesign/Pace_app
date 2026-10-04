@@ -51,6 +51,11 @@ function TweaksDataSection({ onReset, isWeb }) {
         state: parsed,
         events: paceEventsExport(),
       };
+      /* s198 · si un arranque no pudo leer el estado, su cadena CRUDA vive en
+         `pace.state.v2.rescate` (state-core.sanea.js). Viaja en el backup para
+         que se pueda recuperar; el import la ignora. */
+      const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+      if (rescate) payload.rescate = rescate;
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -91,7 +96,18 @@ function TweaksDataSection({ onReset, isWeb }) {
         }
 
         // Soporta dos formatos: {app, state:{...}} o state plano (fallback).
-        const incoming = (payload.state && typeof payload.state === 'object') ? payload.state : payload;
+        const bruto = (payload.state && typeof payload.state === 'object') ? payload.state : payload;
+        /* s198 · A-7, EL IMPORT SANEADO. Lo que entra pasa por el MISMO saneador que
+           el arranque (state-core.sanea.js): antes se escribia tal cual, y un
+           `weeklyStats: null` dentro de un backup bastaba para que el siguiente
+           arranque cayera al estado de fabrica y borrara la historia. Un backup
+           que no es un objeto se rechaza aqui, no al recargar. */
+        if (!paceEsObjetoPlano(bruto)) {
+          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
+          setTimeout(() => setMsg(null), 2600);
+          return;
+        }
+        const incoming = paceSanearEstado(bruto, defaultState).estado;
 
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;

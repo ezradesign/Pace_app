@@ -35,6 +35,8 @@
    en SessionShell — por defecto sin gap (ningún módulo necesitaba
    exactamente 32; Breathe usaba ese gap entre visual+texto pero
    dentro de `center` ya hay flexbox column ahí que lo controla). */
+const { useRef: useRefSS, useEffect: useEffectSS } = React;
+
 const sessionShellStyles = {
   root: {
     position: 'fixed', inset: 0,
@@ -226,12 +228,27 @@ function sessionAtmosphere(soft) {
   return SESSION_ATMOS_GRAIN + ', ' + ramp(comp) + ', var(--paper)';
 }
 
-function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere }) {
+function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere, pantalla = true }) {
+  /* s198 · la pantalla no se apaga a mitad de una sesion (ui/pantalla.js). El
+     Foco de un Camino pasa `pantalla={false}`: un bloque largo no la pide. */
+  useEffectSS(() => {
+    if (!pantalla || typeof paceMantenerPantalla !== 'function') return undefined;
+    return paceMantenerPantalla();
+  }, [pantalla]);
   const rootStyle = atmosphere
-    ? { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere) }
-    : sessionShellStyles.root;
+    ? { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere), outline: 'none' }
+    : { ...sessionShellStyles.root, outline: 'none' };
+  /* s198 · LA SESION TOMA EL FOCO al montarse, y Tab no sale de ella
+     (ui/Dialogo.jsx; el Escape sigue siendo de cada sesion: no se le pasa). Si
+     se empezaba desde un boton que SIGUE en el DOM (la tarjeta «Continua» de la
+     barra lateral, una parada de «A tu ritmo»), el foco se quedaba en el,
+     escondido detras de la sesion, y la barra espaciadora lo PULSABA en vez de
+     pausar -- con «ESPACIO PAUSAR» escrito en pantalla. Medido en v0.130.0. */
+  const rootRef = useRefSS(null);
+  usePaceDialogo(rootRef, true);
   return (
-    <div data-pace-session-root style={rootStyle}>
+    <div data-pace-session-root ref={rootRef} tabIndex={-1} role="dialog" aria-modal="true"
+      aria-label={routine && routine.name ? routine.name : undefined} style={rootStyle}>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
       <div data-pace-session-center style={sessionShellStyles.center}>
         <div data-pace-session-center-body style={centerGap
@@ -403,7 +420,11 @@ function SessionStat({ label, value }) {
    ============================================================ */
 function sessionKeyOnControl(e) {
   const t = e && e.target;
-  return !!(t && t.closest && t.closest('button,a,input,select,textarea,[contenteditable="true"]'));
+  const ctl = t && t.closest && t.closest('button,a,input,select,textarea,[contenteditable="true"]');
+  /* s198: solo cuenta un control que se VE, o sea dentro de la sesion o de un
+     dialogo encima. Uno de la home detras de la sesion es foco olvidado, no una
+     intencion: la tecla es de la sesion (y su preventDefault evita pulsarlo). */
+  return !!(ctl && (ctl.closest('[data-pace-session-root]') || ctl.closest('[role="dialog"]')));
 }
 function sessionDoneKeyBlocked(e) {
   if (!e) return false;

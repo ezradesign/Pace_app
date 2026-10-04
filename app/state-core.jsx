@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.130.0';
+const PACE_VERSION = 'v0.131.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -240,8 +240,9 @@ const defaultState = {
 
 function loadState() {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
+  let raw = null;
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    raw = localStorage.getItem(LS_KEY);
     if (!raw) {
       return {
         ...defaultState,
@@ -261,7 +262,13 @@ function loadState() {
         ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
       };
     }
-    const parsed = JSON.parse(raw);
+    /* s198 · UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS (state-core.sanea.js): se
+       repara campo a campo ANTES de migrar. Sin esto, `weeklyStats: null`
+       reventaba el rollover y la primera escritura borraba la historia entera. */
+    const saneado = paceSanearEstado(JSON.parse(raw), defaultState);
+    const parsed = saneado.estado;
+    window.paceReparadosAlCargar = saneado.reparados;
+    if (saneado.reparados.length) { try { console.warn('[PACE] estado reparado al cargar:', saneado.reparados.join(', ')); } catch (e) {} }
     if (!parsed.lang) parsed.lang = _detectLang();
 
     /* s139 · idioma AUTO: se re-evalua en CADA arranque. Esto es lo que faltaba
@@ -350,6 +357,9 @@ function loadState() {
     }
     return merged;
   } catch (e) {
+    /* s198: lo que haya reventado, la cadena CRUDA queda a salvo ANTES de que la
+       primera escritura la pise con el estado de fabrica de abajo. */
+    if (typeof paceGuardarRescate === 'function') paceGuardarRescate(raw, e);
     return {
       ...defaultState,
       lang: _detectLang(),
@@ -373,9 +383,24 @@ function persistState() {
    desde s155 hay un segundo almacen (`pace.events.v1`) y el «borrar todo» de
    Ajustes lo orquesta `paceEventsWipeAll`, pero cada modulo borra LO SUYO —
    una unica fuente de verdad por dominio. No recarga ni avisa a nadie: de eso
-   se encarga quien orquesta. */
+   se encarga quien orquesta.
+   s198: EL ALMACEN LEGACY SON TODAS LAS CLAVES `pace.*` QUE NO SON DE EVENTOS.
+   Borrar solo `pace.state.v2` dejaba vivas `pace.timer.v1` (el bloque en marcha
+   volvia tras el reset), `pace.breathe.v1` (la barra lateral seguia ofreciendo
+   «Continua») y `pace.darkDays.v1`, y `privacy.html` promete que lo borrado
+   «desaparece de tu dispositivo». Se barre por PREFIJO para que una clave nueva
+   no vuelva a quedarse fuera; el exito lo decide la principal. */
 function wipeLocalState() {
-  try { localStorage.removeItem(LS_KEY); return true; } catch (e) { return false; }
+  try { localStorage.removeItem(LS_KEY); } catch (e) { return false; }
+  try {
+    const sobrantes = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf('pace.') === 0 && k.indexOf('pace.events.') !== 0) sobrantes.push(k);
+    }
+    sobrantes.forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} });
+  } catch (e) {}
+  return true;
 }
 
 function getState() { return _state; }
@@ -423,50 +448,8 @@ function ensureDayFresh() {
   }
 }
 
-/* ============================
-   TOAST (buffer pre-mount)
-   ============================ */
-
-const _toastListeners = new Set();
-const _pendingToasts = [];      // buffer pre-mount (aun sin listeners)
-const _deferredToasts = [];     // s105: aplazados mientras hay UI de Camino
-let _caminoUiActive = false;    // s105: lo fija PathRunner (pasos + Completion)
-
-function _emitToast(t) {
-  if (_toastListeners.size === 0) { _pendingToasts.push(t); return; }
-  _toastListeners.forEach(l => l(t));
-}
-
-function showToast(toast) {
-  const t = { ...toast, _id: Date.now() + Math.random() };
-  /* s105: durante un Camino (pasos, transiciones y CompletionScreen) los
-     toasts de logro se APLAZAN para no taparse sobre las pantallas del runner;
-     PathRunner marca la UI de Camino activa/inactiva via setCaminoUiActive y
-     al volver a home se vuelcan los pendientes. */
-  if (_caminoUiActive) { _deferredToasts.push(t); return; }
-  _emitToast(t);
-}
-
-function setCaminoUiActive(active) {
-  const was = _caminoUiActive;
-  _caminoUiActive = !!active;
-  if (was && !_caminoUiActive && _deferredToasts.length > 0) {
-    const drained = _deferredToasts.splice(0);
-    // pequeno respiro para que el runner desmonte antes del primer toast
-    setTimeout(() => { drained.forEach(_emitToast); }, 60);
-  }
-}
-
-function onToast(listener) {
-  const wasEmpty = _toastListeners.size === 0;
-  _toastListeners.add(listener);
-  /* Vaciar buffer pendiente en cuanto hay al menos un listener (fix StrictMode). */
-  if (wasEmpty && _pendingToasts.length > 0) {
-    const drained = _pendingToasts.splice(0);
-    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
-  }
-  return () => _toastListeners.delete(listener);
-}
+/* TOAST (buffer pre-mount) -> state-core.toast.jsx (s198, cortado por un punto al
+   pasar este archivo de 500 lineas con el saneado del estado). */
 
 // Aplicar tema al cargar
 applyTheme(_state);
@@ -479,5 +462,4 @@ applyTheme(_state);
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState,
-  showToast, onToast, setCaminoUiActive,
 });

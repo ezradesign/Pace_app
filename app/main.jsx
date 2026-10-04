@@ -94,9 +94,16 @@ function PaceApp() {
 
   // Atajos de teclado: T toggle Tweaks, S toggle Stats, L toggle Logros.
   // Ignora cuando focus esta en INPUT/TEXTAREA para no interferir con campos.
+  /* s198: y con Ctrl/Cmd/Alt (Ctrl+S abria Estadisticas ademas de «Guardar
+     como»), en un SELECT o un contenteditable, y con una SESION o una pantalla
+     completa delante (onboarding, Caminos): una «s» en mitad de una respiracion
+     abria Estadisticas encima, y el Escape siguiente se llevaba la sesion. */
   useEffectMain(() => {
     const onKey = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || e.defaultPrevented) return;
+      const tg = e.target || {};
+      if (tg.isContentEditable || tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT') return;
+      if (document.querySelector('[data-pace-session-root], [aria-modal="true"]:not([data-pace-modal-card])')) return;
       if (e.key === 't' || e.key === 'T') setOpenTweaks(o => !o);
       if (e.key === 's' || e.key === 'S') setOpenStats(o => !o);
       if (e.key === 'l' || e.key === 'L') setOpenAchievements(o => !o);

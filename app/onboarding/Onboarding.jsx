@@ -28,7 +28,7 @@
    el kill global de prefers-reduced-motion lo congela.
    ============================================================ */
 
-const { useState: useStateONB, useEffect: useEffectONB } = React;
+const { useState: useStateONB, useEffect: useEffectONB, useRef: useRefONB } = React;
 
 function Onboarding() {
   const [state, set] = usePace();
@@ -45,6 +45,12 @@ function Onboarding() {
     window.addEventListener('pace:open-onboarding', h);
     return () => window.removeEventListener('pace:open-onboarding', h);
   }, []);
+
+  /* s198 · la trampa de foco que la Fase 8.5 llevaba anotada desde s183
+     (ui/Dialogo.jsx). SIN Escape, a proposito: ver «Sin Escape ni
+     backdrop-click» en la cabecera. */
+  const raizRef = useRefONB(null);
+  usePaceDialogo(raizRef, open);
 
   if (!open) return null;
 
@@ -99,10 +105,12 @@ function Onboarding() {
   return (
     <div
       data-pace-scene-card=""
+      ref={raizRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label={t('welcome.greeting')}
-      style={onboardingStyles.root}
+      style={{ ...onboardingStyles.root, outline: 'none' }}
     >
       <OnbScene pathId={sceneId} />
 

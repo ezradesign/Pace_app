@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.130.0</title>
+  <title>PACE · Foco · Cuerpo — v0.131.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5116,6 +5116,214 @@ Object.assign(window, {
 ;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded });
 })();
 </script>
+  <!-- state-core.sanea (s198): un campo roto no se lleva todo lo demas. ANTES de
+       state-core por la misma razon que .support: loadState() la llama al
+       evaluarse. Repara campo a campo y, si aun asi revienta, guarda el rescate. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-core.sanea.js — UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS (s198)
+   ============================================================
+   EL DEFECTO, MEDIDO EN v0.130.0. `loadState` envuelve parseo, migraciones y
+   rollover en UN `try`, y su `catch` devuelve el estado de fabrica. Con un
+   solo campo de tipo equivocado —`weeklyStats: null`, que el import de
+   Ajustes aceptaba tal cual— el rollover revienta en `archiveDayToHistory`,
+   la app arranca VACIA (vuelve el onboarding) y la PRIMERA escritura persiste
+   ese estado vacio encima del bueno. Sembrado en la app real: 4321 min de
+   foco, un logro y un dia de historia -> 0, 0 y 0, sin copia en ninguna parte.
+
+   LO QUE HACE ESTE ARCHIVO, en dos piezas:
+
+   · `paceSanearEstado(parsed, defaults)` — repara CAMPO A CAMPO contra la
+     forma de `defaultState`, ANTES de migrar: lo que tiene el tipo equivocado
+     vuelve a su valor de fabrica, y SOLO eso. Un `weeklyStats` roto cuesta la
+     semana en curso, no el año. Devuelve `{ estado, reparados }`.
+   · `paceGuardarRescate(raw, motivo)` — si aun asi algo revienta, la cadena
+     CRUDA se copia a `pace.state.v2.rescate` antes de que nada la pise. Sin UI
+     todavia (la pantalla de «algo se ha torcido» es una decision visual que va
+     a su maqueta), pero el export de «Tus datos» ya la lleva, asi que se puede
+     recuperar.
+
+   LO QUE NO HACE, a proposito:
+   · No VALIDA SEMANTICA. Un `totalFocusMin` negativo es raro pero no rompe
+     nada; corregirlo seria decidir por el usuario. Aqui solo entra lo que hace
+     que el arranque REVIENTE: tipos.
+   · No toca claves que no conoce. `defaultState` no las enumera todas (el
+     `ritmo` lo añade state-ritmo.jsx), y una clave desconocida puede ser de
+     una version MAS NUEVA: tirarla seria perder datos al volver atras. Las de
+     otros modulos que si importan van en `FORMAS_AJENAS`.
+   · No coacciona contadores a entero >= 0: esa guarda vive en UN solo sitio
+     desde s190 (los agregados de eventos) y no se duplica aqui.
+
+   `var`/`function` A PROPOSITO, como `library-rules.js`: un `const` no cruza la
+   IIFE del artefacto. Carga DESPUES de state-core.support.jsx y ANTES de
+   state-core.jsx, que la llama al evaluarse (`let _state = loadState()`).
+   ============================================================ */
+
+var PACE_RESCATE_KEY = 'pace.state.v2.rescate';
+
+function paceEsObjetoPlano(v) {
+  return v !== null && typeof v === 'object' && !Array.isArray(v);
+}
+
+function paceCopiaDefecto(d) {
+  /* `defaultState` se reparte por spread superficial en loadState, asi que un
+     objeto anidado de fabrica es COMPARTIDO: devolverlo tal cual dejaria que una
+     escritura posterior lo mutara para todos. Copia profunda barata (son datos). */
+  return d !== null && typeof d === 'object' ? JSON.parse(JSON.stringify(d)) : d;
+}
+
+/* Las series de la semana: SIETE numeros, lunes primero (s69). Una serie que no
+   lo sea vuelve a ceros -- la semana en curso, no la historia. */
+var PACE_SERIES_SEMANA = ['focusMinutes', 'breathMinutes', 'moveMinutes', 'waterGlasses', 'holdSeconds'];
+
+function paceSerieValida(a) {
+  if (!Array.isArray(a) || a.length !== 7) return false;
+  for (var i = 0; i < 7; i++) if (typeof a[i] !== 'number' || !isFinite(a[i])) return false;
+  return true;
+}
+
+/* Claves que NO estan en `defaultState` pero cuyo dueño las lee al montar.
+   Solo se exige la forma de arriba: el dueño ya es defensivo con lo de dentro. */
+var FORMAS_AJENAS = { ritmo: 'objeto' };
+
+/* paceSanearEstado(parsed, defaults) -> { estado, reparados }
+   Lanza si `parsed` no es un objeto: ahi no hay nada campo a campo que salvar,
+   y el `catch` de loadState guarda el rescate. */
+function paceSanearEstado(parsed, defaults) {
+  if (!paceEsObjetoPlano(parsed)) throw new Error('el estado guardado no es un objeto');
+  var d = defaults || {};
+  var e = Object.assign({}, parsed);
+  var reparados = [];
+  var reparar = function (clave, valor) {e[clave] = valor;reparados.push(clave);};
+
+  Object.keys(d).forEach(function (k) {
+    if (!(k in e) || e[k] === undefined) return; // el merge de loadState lo rellena
+    var def = d[k],v = e[k];
+    if (def === null) {
+      /* firstSeen, lastActiveDay, supportSeenAt…: null o un primitivo. */
+      if (v !== null && typeof v === 'object') reparar(k, null);
+    } else if (typeof def === 'number') {
+      if (typeof v !== 'number' || !isFinite(v)) {
+        var n = typeof v === 'string' && v.trim() !== '' ? Number(v) : NaN;
+        reparar(k, isFinite(n) ? n : def);
+      }
+    } else if (typeof def === 'boolean') {
+      if (typeof v !== 'boolean') reparar(k, def);
+    } else if (typeof def === 'string') {
+      if (typeof v !== 'string') reparar(k, def);
+    } else if (Array.isArray(def)) {
+      if (!Array.isArray(v)) reparar(k, paceCopiaDefecto(def));
+    } else if (paceEsObjetoPlano(def)) {
+      if (!paceEsObjetoPlano(v)) reparar(k, paceCopiaDefecto(def));
+    }
+  });
+
+  /* Lo de DENTRO, solo donde el arranque lo lee sin defensa. */
+  if (paceEsObjetoPlano(e.weeklyStats)) {
+    var ws = Object.assign({}, e.weeklyStats),tocada = false;
+    PACE_SERIES_SEMANA.forEach(function (s) {
+      if (s in ws && !paceSerieValida(ws[s])) {ws[s] = [0, 0, 0, 0, 0, 0, 0];tocada = true;}
+    });
+    if (tocada) reparar('weeklyStats', ws);
+  }
+
+  if (paceEsObjetoPlano(e.history)) {
+    var h = e.history,hn = {},diasTocados = false,otraTocada = false;
+    ['days', 'months', 'years'].forEach(function (nivel) {
+      var src = h[nivel];
+      if (!paceEsObjetoPlano(src)) {hn[nivel] = {};if (src !== undefined) {otraTocada = true;if (nivel === 'days') diasTocados = true;}return;}
+      var limpio = {};
+      Object.keys(src).forEach(function (clave) {
+        if (paceEsObjetoPlano(src[clave])) limpio[clave] = src[clave];else
+        {otraTocada = true;if (nivel === 'days') diasTocados = true;}
+      });
+      hn[nivel] = limpio;
+    });
+    if (otraTocada) {
+      reparar('history', Object.assign({}, h, hn));
+      /* Si se cayo algun DIA, meses y años ya no suman lo mismo: se re-agregan
+         con la migracion que ya existe (s69), que es idempotente. */
+      if (diasTocados) e._historyRecalculated_v0_28_8 = false;
+    }
+  }
+
+  if (paceEsObjetoPlano(e.water)) {
+    var w = e.water;
+    if (typeof w.today !== 'number' || !isFinite(w.today) || typeof w.goal !== 'number' || !isFinite(w.goal)) {
+      reparar('water', Object.assign({}, paceCopiaDefecto(d.water || {}), {
+        goal: typeof w.goal === 'number' && isFinite(w.goal) ? w.goal : d.water && d.water.goal || 8
+      }));
+    }
+  }
+
+  if (paceEsObjetoPlano(e.streak)) {
+    var st = e.streak;
+    if (typeof st.current !== 'number' || typeof st.longest !== 'number') {
+      reparar('streak', {
+        current: typeof st.current === 'number' ? st.current : 0,
+        longest: typeof st.longest === 'number' ? st.longest : 0,
+        lastActiveDate: typeof st.lastActiveDate === 'string' ? st.lastActiveDate : null
+      });
+    }
+  }
+
+  if (paceEsObjetoPlano(e.paths)) {
+    var p = Object.assign({}, e.paths),pt = false;
+    if (p.completed !== undefined && !paceEsObjetoPlano(p.completed)) {p.completed = {};pt = true;}
+    if (p.history !== undefined && !Array.isArray(p.history)) {p.history = [];pt = true;}
+    if (p.current !== undefined && p.current !== null && !paceEsObjetoPlano(p.current)) {p.current = null;pt = true;}
+    if (pt) reparar('paths', p);
+  }
+
+  Object.keys(FORMAS_AJENAS).forEach(function (k) {
+    if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
+      e[k] = undefined;delete e[k];reparados.push(k);
+    }
+  });
+
+  return { estado: e, reparados: reparados };
+}
+
+/* paceGuardarRescate(raw, motivo) -> true si quedo guardada.
+   Guarda la cadena CRUDA, no el objeto: si lo que fallo fue el JSON, el objeto
+   no existe. No pisa un rescate con el MISMO contenido (cada arranque fallido
+   lo intentaria), pero si uno distinto: el ultimo estado roto es el mas cercano
+   a lo que la persona tenia. */
+function paceGuardarRescate(raw, motivo) {
+  try {
+    if (typeof raw !== 'string' || raw === '') return false;
+    var previo = localStorage.getItem(PACE_RESCATE_KEY);
+    if (previo) {
+      try {if (JSON.parse(previo).raw === raw) return true;} catch (e) {}
+    }
+    localStorage.setItem(PACE_RESCATE_KEY, JSON.stringify({
+      v: 1,
+      savedAt: Date.now(),
+      motivo: String(motivo && motivo.message || motivo || '').slice(0, 200),
+      raw: raw
+    }));
+    return true;
+  } catch (e) {return false;}
+}
+
+/* paceLeerRescate() -> el registro o null. Lo consume el export de «Tus datos». */
+function paceLeerRescate() {
+  try {
+    var g = JSON.parse(localStorage.getItem(PACE_RESCATE_KEY) || 'null');
+    return g && g.v === 1 && typeof g.raw === 'string' ? g : null;
+  } catch (e) {return null;}
+}
+
+Object.assign(window, {
+  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano
+});
+;Object.assign(window, { PACE_RESCATE_KEY, paceEsObjetoPlano, paceCopiaDefecto, PACE_SERIES_SEMANA, paceSerieValida, FORMAS_AJENAS, paceSanearEstado, paceGuardarRescate, paceLeerRescate });
+})();
+</script>
   <!-- state-core.palette (s163): como la paleta llega al DOM y como se funde
        (`applyTheme` + los marcadores `data-pace-palette-ready` y
        `data-pace-palette-crossing` de s161), extraido de state-core.jsx al
@@ -5256,7 +5464,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.130.0';
+const PACE_VERSION = 'v0.131.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5478,8 +5686,9 @@ const defaultState = {
 
 function loadState() {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
+  let raw = null;
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    raw = localStorage.getItem(LS_KEY);
     if (!raw) {
       return {
         ...defaultState,
@@ -5499,7 +5708,13 @@ function loadState() {
         ...(isMobileViewport() ? { sidebarCollapsed: true } : {})
       };
     }
-    const parsed = JSON.parse(raw);
+    /* s198 · UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS (state-core.sanea.js): se
+       repara campo a campo ANTES de migrar. Sin esto, `weeklyStats: null`
+       reventaba el rollover y la primera escritura borraba la historia entera. */
+    const saneado = paceSanearEstado(JSON.parse(raw), defaultState);
+    const parsed = saneado.estado;
+    window.paceReparadosAlCargar = saneado.reparados;
+    if (saneado.reparados.length) {try {console.warn('[PACE] estado reparado al cargar:', saneado.reparados.join(', '));} catch (e) {}}
     if (!parsed.lang) parsed.lang = _detectLang();
 
     /* s139 · idioma AUTO: se re-evalua en CADA arranque. Esto es lo que faltaba
@@ -5588,6 +5803,9 @@ function loadState() {
     }
     return merged;
   } catch (e) {
+    /* s198: lo que haya reventado, la cadena CRUDA queda a salvo ANTES de que la
+       primera escritura la pise con el estado de fabrica de abajo. */
+    if (typeof paceGuardarRescate === 'function') paceGuardarRescate(raw, e);
     return {
       ...defaultState,
       lang: _detectLang(),
@@ -5611,9 +5829,24 @@ function persistState() {
    desde s155 hay un segundo almacen (`pace.events.v1`) y el «borrar todo» de
    Ajustes lo orquesta `paceEventsWipeAll`, pero cada modulo borra LO SUYO —
    una unica fuente de verdad por dominio. No recarga ni avisa a nadie: de eso
-   se encarga quien orquesta. */
+   se encarga quien orquesta.
+   s198: EL ALMACEN LEGACY SON TODAS LAS CLAVES `pace.*` QUE NO SON DE EVENTOS.
+   Borrar solo `pace.state.v2` dejaba vivas `pace.timer.v1` (el bloque en marcha
+   volvia tras el reset), `pace.breathe.v1` (la barra lateral seguia ofreciendo
+   «Continua») y `pace.darkDays.v1`, y `privacy.html` promete que lo borrado
+   «desaparece de tu dispositivo». Se barre por PREFIJO para que una clave nueva
+   no vuelva a quedarse fuera; el exito lo decide la principal. */
 function wipeLocalState() {
-  try {localStorage.removeItem(LS_KEY);return true;} catch (e) {return false;}
+  try {localStorage.removeItem(LS_KEY);} catch (e) {return false;}
+  try {
+    const sobrantes = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf('pace.') === 0 && k.indexOf('pace.events.') !== 0) sobrantes.push(k);
+    }
+    sobrantes.forEach((k) => {try {localStorage.removeItem(k);} catch (e) {}});
+  } catch (e) {}
+  return true;
 }
 
 function getState() {return _state;}
@@ -5661,6 +5894,39 @@ function ensureDayFresh() {
   }
 }
 
+/* TOAST (buffer pre-mount) -> state-core.toast.jsx (s198, cortado por un punto al
+   pasar este archivo de 500 lineas con el saneado del estado). */
+
+// Aplicar tema al cargar
+applyTheme(_state);
+
+/* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
+   MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-
+   Today) los expone state-history.jsx (s101). */
+/* `detectInitialPalette` ya no se re-exporta aquí: vive y se publica en
+   `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
+Object.assign(window, {
+  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
+  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState
+});
+;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, usePace, ensureDayFresh });
+})();
+</script>
+  <!-- state-core.toast (s198): el buzon de avisos, cortado de state-core.jsx por
+       un punto al pasar este de 500 lineas. Nadie lo llama al evaluarse. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-core.toast.jsx — el buzon de los avisos (toasts) y su aplazamiento
+   durante un Camino. Cortado de `state-core.jsx` en s198, POR UN PUNTO y tal
+   cual, al pasar aquel de 500 lineas con el saneado del estado: el store y el
+   buzon de avisos son dos cosas y no se miran. Carga JUSTO DESPUES de
+   state-core.jsx; nadie lo llama al evaluarse (`showToast` y `onToast` se usan
+   al montar o en un gesto), asi que el orden solo importa por legibilidad.
+*/
 /* ============================
    TOAST (buffer pre-mount)
    ============================ */
@@ -5706,20 +5972,8 @@ function onToast(listener) {
   return () => _toastListeners.delete(listener);
 }
 
-// Aplicar tema al cargar
-applyTheme(_state);
-
-/* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
-   MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-
-   Today) los expone state-history.jsx (s101). */
-/* `detectInitialPalette` ya no se re-exporta aquí: vive y se publica en
-   `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
-Object.assign(window, {
-  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
-  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState,
-  showToast, onToast, setCaminoUiActive
-});
-;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
+Object.assign(window, { showToast, onToast, setCaminoUiActive });
+;Object.assign(window, { _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
@@ -10190,6 +10444,235 @@ Object.assign(window, {
 })();
 </script>
 
+  <!-- Dialogo (s198): pila de dialogos, foco dentro, trampa de Tab y foco
+       devuelto. Lo usan el Modal de Primitives y el onboarding. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Dialogo.jsx — UN DIALOGO SE COMPORTA COMO UN DIALOGO (s198)
+   ============================================================
+   LO QUE MIDIO LA AUDITORIA DE s198 sobre v0.130.0, en el artefacto publicado:
+   · El `Modal` compartido (doce superficies: bibliotecas, Stats, Logros, la
+     pausa, el agua, la hoja del dia, el preview…) no tenia rol de dialogo, el
+     foco se quedaba en `<body>` al abrirlo y **25 de 30 Tab salian al fondo**.
+   · Cada `Modal` escuchaba Escape en `document` por su cuenta. Con el preview
+     ENCIMA de la biblioteca, **un Escape cerraba la biblioteca de detras** y
+     dejaba el preview — lo contrario de lo que main.jsx promete («cerrar el
+     preview te devuelve a ella»).
+   · El onboarding si era `role=dialog`, pero sin trampa de foco: la deuda que
+     la Fase 8.5 llevaba anotada desde s183.
+
+   LO QUE HACE `usePaceDialogo(ref, abierto, opciones)`:
+   1. PILA. Cada dialogo abierto se apila; Escape y Tab solo los atiende el de
+      ARRIBA. La comprobacion se hace en el momento del evento y se marca el
+      evento como atendido, asi que el orden en que `document` reparte los
+      listeners da igual.
+   2. FOCO DENTRO al abrir: al contenedor (`tabIndex=-1`), no al primer boton.
+      Al primer boton seria peor: en la pausa, Enter ya tiene dueño (acepta la
+      propuesta, BreakMenu.jsx) y el primer boton es la ×.
+   3. TRAMPA DE TAB: el foco da la vuelta dentro del dialogo.
+   4. DEVOLVER EL FOCO al cerrar, a quien lo tenia al abrir — SALVO que ya lo
+      tenga otro (el dialogo de debajo, o una SESION que acaba de montarse: el
+      foco en un boton de la home detras de una sesion es justo el defecto de
+      «Espacio no pausa», ver SessionShell.jsx).
+
+   LO QUE NO HACE: no decide que se ve. Ni un pixel cambia — el contenedor lleva
+   `outline: none` porque el foco programatico no es una seleccion del usuario.
+
+   Los nombres van con alias (`useEffectDlg`…): en PACE.html los scripts
+   comparten el ambito global de Babel standalone y un `useEffect` pelado
+   chocaria con el de otro archivo.
+   ============================================================ */
+
+const { useEffect: useEffectDlg, useRef: useRefDlg } = React;
+
+const _paceDialogos = [];
+
+function paceDialogoArriba(yo) {
+  return _paceDialogos.length > 0 && _paceDialogos[_paceDialogos.length - 1] === yo;
+}
+
+/* ¿Hay algun dialogo abierto? Lo consultan los atajos globales de main.jsx. */
+function paceHayDialogo() {
+  return _paceDialogos.length > 0;
+}
+
+const PACE_ENFOCABLES = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
+'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+
+function paceEnfocables(cont) {
+  if (!cont) return [];
+  return Array.prototype.filter.call(cont.querySelectorAll(PACE_ENFOCABLES), (el) => {
+    if (el.getClientRects().length === 0) return false;
+    const cs = window.getComputedStyle(el);
+    return cs.visibility !== 'hidden' && cs.display !== 'none';
+  });
+}
+
+/* ¿Se puede devolver el foco a `el`? Conectado, visible y sin una sesion
+   montada encima (la sesion toma el foco ella misma). */
+function paceFocoDevolvible(el) {
+  if (!el || typeof el.focus !== 'function' || el === document.body) return false;
+  if (!document.contains(el) || el.getClientRects().length === 0) return false;
+  if (document.querySelector('[data-pace-session-root]')) {
+    const sesion = document.querySelector('[data-pace-session-root]');
+    if (!sesion.contains(el)) return false;
+  }
+  return true;
+}
+
+function usePaceDialogo(ref, abierto, opciones) {
+  const op = opciones || {};
+  const onEscapeRef = useRefDlg(op.onEscape);
+  onEscapeRef.current = op.onEscape;
+
+  useEffectDlg(() => {
+    if (!abierto) return undefined;
+    const yo = {};
+    _paceDialogos.push(yo);
+    const previo = document.activeElement;
+    const cont = ref.current;
+    if (cont && !cont.contains(document.activeElement)) {
+      try {cont.focus({ preventScroll: true });} catch (e) {}
+    }
+
+    const onKey = (e) => {
+      if (e.__paceDialogoAtendido || !paceDialogoArriba(yo)) return;
+      if (e.key === 'Escape') {
+        if (typeof onEscapeRef.current !== 'function') return;
+        e.__paceDialogoAtendido = true;
+        onEscapeRef.current(e);
+        return;
+      }
+      if (e.key !== 'Tab' || !cont) return;
+      const activo = document.activeElement;
+      /* Otro dialogo que no pasa por esta pila (el «¿Salir del Camino?» de
+         PathRunner.parts, que gestiona su foco a mano) tiene el foco: su Tab no
+         es nuestro, o lo sacariamos de un dialogo que esta ENCIMA. */
+      if (activo && activo !== document.body && !cont.contains(activo) &&
+      activo.closest && activo.closest('[role="dialog"]')) return;
+      e.__paceDialogoAtendido = true;
+      const lista = paceEnfocables(cont);
+      if (lista.length === 0) {e.preventDefault();try {cont.focus({ preventScroll: true });} catch (er) {}return;}
+      const primero = lista[0],ultimo = lista[lista.length - 1];
+      const dentro = cont.contains(activo) && activo !== cont;
+      if (e.shiftKey) {
+        if (!dentro || activo === primero) {e.preventDefault();ultimo.focus();}
+      } else if (!dentro || activo === ultimo) {
+        e.preventDefault();primero.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      const i = _paceDialogos.indexOf(yo);
+      if (i !== -1) _paceDialogos.splice(i, 1);
+      /* Devolver el foco solo si nadie lo ha cogido: si sigue en <body> (el
+         dialogo ya no esta en el DOM) o dentro de lo que se cierra. */
+      const ahora = document.activeElement;
+      const libre = !ahora || ahora === document.body || cont && cont.contains(ahora);
+      if (libre && paceFocoDevolvible(previo)) {
+        try {previo.focus({ preventScroll: true });} catch (e) {}
+      }
+    };
+  }, [abierto]);
+}
+
+Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEnfocables });
+;Object.assign(window, { paceDialogoArriba, paceHayDialogo, paceEnfocables, paceFocoDevolvible, usePaceDialogo });
+})();
+</script>
+  <!-- pantalla (s198): Screen Wake Lock mientras hay una sesion guiada montada.
+       La pide SessionShell; el Foco no. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   pantalla.js — LA PANTALLA NO SE APAGA A MITAD DE UNA SESION (s198)
+   ============================================================
+   Hasta v0.130.0 ninguna sesion pedia mantener la pantalla encendida, y en un
+   telefono el bloqueo automatico (30 s en muchos Android) la apagaba a mitad
+   de una respiracion guiada o de una plancha: justo cuando no tienes las manos
+   para tocarla. Se usa la Screen Wake Lock API (Chrome Android 84, Safari 16.4);
+   donde no existe no pasa nada.
+
+   QUIEN LA PIDE: `SessionShell` al montarse, o sea Respira, Mueve, Estira y los
+   pasos de un Camino, en sus tres pantallas (preparacion, ejercicio, final). El
+   FOCO NO: un bloque de 25 a 45 minutos con la pantalla encendida es bateria, y
+   el Pomodoro de la home nunca la ha pedido — `PathFocusStep` pasa
+   `pantalla={false}` por coherencia.
+
+   POR QUE UN CONTADOR Y UN RETRASO AL SOLTAR: cada cambio de pantalla de la
+   sesion REMONTA `SessionShell` (son ramas distintas), y soltar y volver a pedir
+   en el mismo frame es una peticion asincrona por pantalla. La cuenta absorbe el
+   relevo y el retraso de 1,5 s evita soltarla entre una rama y la siguiente.
+
+   EL NAVEGADOR LA SUELTA SOLO al ocultarse la pestaña; al volver se pide otra
+   vez si sigue habiendo sesion.
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+var _paceLuz = { cuenta: 0, centinela: null, pidiendo: false, soltar: null, pedidas: 0 };
+
+function paceLuzPedir() {
+  try {
+    if (!navigator.wakeLock || typeof navigator.wakeLock.request !== 'function') return;
+    if (document.visibilityState !== 'visible') return;
+    if (_paceLuz.centinela || _paceLuz.pidiendo) return;
+    _paceLuz.pidiendo = true;
+    _paceLuz.pedidas++;
+    navigator.wakeLock.request('screen').then(function (s) {
+      _paceLuz.pidiendo = false;
+      if (_paceLuz.cuenta === 0) {s.release().catch(function () {});return;}
+      _paceLuz.centinela = s;
+      s.addEventListener('release', function () {if (_paceLuz.centinela === s) _paceLuz.centinela = null;});
+    }).catch(function () {_paceLuz.pidiendo = false;});
+  } catch (e) {_paceLuz.pidiendo = false;}
+}
+
+/* paceMantenerPantalla() -> soltar(). Idempotente: soltar dos veces no resta dos. */
+function paceMantenerPantalla() {
+  _paceLuz.cuenta++;
+  if (_paceLuz.soltar) {clearTimeout(_paceLuz.soltar);_paceLuz.soltar = null;}
+  paceLuzPedir();
+  var hecho = false;
+  return function soltar() {
+    if (hecho) return;
+    hecho = true;
+    _paceLuz.cuenta = Math.max(0, _paceLuz.cuenta - 1);
+    if (_paceLuz.cuenta > 0) return;
+    _paceLuz.soltar = setTimeout(function () {
+      _paceLuz.soltar = null;
+      if (_paceLuz.cuenta > 0 || !_paceLuz.centinela) return;
+      var s = _paceLuz.centinela;
+      _paceLuz.centinela = null;
+      try {s.release().catch(function () {});} catch (e) {}
+    }, 1500);
+  };
+}
+
+/* Para las pruebas y para depurar: cuantas sesiones la piden y si esta cogida. */
+function paceLuzEstado() {
+  return { cuenta: _paceLuz.cuenta, activa: !!_paceLuz.centinela, pedidas: _paceLuz.pedidas };
+}
+
+try {
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && _paceLuz.cuenta > 0) paceLuzPedir();
+  });
+} catch (e) {}
+
+Object.assign(window, { paceMantenerPantalla, paceLuzEstado });
+;Object.assign(window, { _paceLuz, paceLuzPedir, paceMantenerPantalla, paceLuzEstado });
+})();
+</script>
   <script>
 ;(function () {
 /* PACE · Foco · Cuerpo
@@ -10199,7 +10682,7 @@ Object.assign(window, {
    Primitivos UI compartidos: Modal, Card, Tag, Button, Divider, Meta.
 */
 
-const { useEffect } = React;
+const { useEffect, useRef: useRefPrim, useId: useIdPrim } = React;
 
 /* ============================================================
    displayItalic — helper para el par inline más repetido del repo.
@@ -10223,14 +10706,16 @@ const displayItalic = {
   fontStyle: 'italic'
 };
 
-function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, title, subtitle } = _ref;
+function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel } = _ref;
   const { t } = useT();
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => {if (e.key === 'Escape') onClose && onClose();};
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
+     titulo para el lector de pantalla, el foco DENTRO al abrir, Tab que da la
+     vuelta, y Escape solo para el de ARRIBA -- antes cada Modal escuchaba Escape
+     por su cuenta y, con el preview encima de la biblioteca, cerraba la de
+     detras. Ni un pixel cambia. */
+  const cardRef = useRefPrim(null);
+  const tituloId = 'pace-modal-t-' + useIdPrim().replace(/:/g, '');
+  usePaceDialogo(cardRef, !!open, { onEscape: onClose ? () => onClose() : null });
 
   if (!open) return null;
 
@@ -10251,8 +10736,15 @@ function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, t
 
     React.createElement("div", {
       "data-pace-modal-card": true,
+      ref: cardRef,
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-labelledby": title ? tituloId : undefined,
+      "aria-label": !title ? ariaLabel || tagLabel || undefined : undefined,
+      tabIndex: -1,
       onClick: (e) => e.stopPropagation(),
       style: {
+        outline: 'none',
         background: 'var(--paper)',
         borderRadius: 'var(--r-lg)',
         boxShadow: 'var(--sh-modal)',
@@ -10290,7 +10782,7 @@ function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, t
     (tagLabel || title) && /*#__PURE__*/
     React.createElement("div", { "data-pace-modal-head": true, style: { marginBottom: 'var(--s-5)' } },
     tagLabel && /*#__PURE__*/React.createElement("div", { className: "pace-meta", style: { marginBottom: 6 } }, tagLabel),
-    title && /*#__PURE__*/React.createElement("h2", { "data-pace-modal-title": true, style: {
+    title && /*#__PURE__*/React.createElement("h2", { "data-pace-modal-title": true, id: tituloId, style: {
         fontFamily: 'var(--font-display)',
         fontStyle: 'italic',
         fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1
@@ -10666,6 +11158,8 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
    en SessionShell — por defecto sin gap (ningún módulo necesitaba
    exactamente 32; Breathe usaba ese gap entre visual+texto pero
    dentro de `center` ya hay flexbox column ahí que lo controla). */
+const { useRef: useRefSS, useEffect: useEffectSS } = React;
+
 const sessionShellStyles = {
   root: {
     position: 'fixed', inset: 0,
@@ -10857,12 +11351,27 @@ function sessionAtmosphere(soft) {
   return SESSION_ATMOS_GRAIN + ', ' + ramp(comp) + ', var(--paper)';
 }
 
-function SessionShell(_ref2) {let { routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere } = _ref2;
+function SessionShell(_ref2) {let { routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere, pantalla = true } = _ref2;
+  /* s198 · la pantalla no se apaga a mitad de una sesion (ui/pantalla.js). El
+     Foco de un Camino pasa `pantalla={false}`: un bloque largo no la pide. */
+  useEffectSS(() => {
+    if (!pantalla || typeof paceMantenerPantalla !== 'function') return undefined;
+    return paceMantenerPantalla();
+  }, [pantalla]);
   const rootStyle = atmosphere ?
-  { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere) } :
-  sessionShellStyles.root;
+  { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere), outline: 'none' } :
+  { ...sessionShellStyles.root, outline: 'none' };
+  /* s198 · LA SESION TOMA EL FOCO al montarse, y Tab no sale de ella
+     (ui/Dialogo.jsx; el Escape sigue siendo de cada sesion: no se le pasa). Si
+     se empezaba desde un boton que SIGUE en el DOM (la tarjeta «Continua» de la
+     barra lateral, una parada de «A tu ritmo»), el foco se quedaba en el,
+     escondido detras de la sesion, y la barra espaciadora lo PULSABA en vez de
+     pausar -- con «ESPACIO PAUSAR» escrito en pantalla. Medido en v0.130.0. */
+  const rootRef = useRefSS(null);
+  usePaceDialogo(rootRef, true);
   return (/*#__PURE__*/
-    React.createElement("div", { "data-pace-session-root": true, style: rootStyle }, /*#__PURE__*/
+    React.createElement("div", { "data-pace-session-root": true, ref: rootRef, tabIndex: -1, role: "dialog", "aria-modal": "true",
+      "aria-label": routine && routine.name ? routine.name : undefined, style: rootStyle }, /*#__PURE__*/
     React.createElement(SessionHeader, { routine: routine, onExit: onExit, extra: headerExtra }), /*#__PURE__*/
     React.createElement("div", { "data-pace-session-center": true, style: sessionShellStyles.center }, /*#__PURE__*/
     React.createElement("div", { "data-pace-session-center-body": true, style: centerGap ?
@@ -11034,7 +11543,11 @@ function SessionStat(_ref5) {let { label, value } = _ref5;
    ============================================================ */
 function sessionKeyOnControl(e) {
   const t = e && e.target;
-  return !!(t && t.closest && t.closest('button,a,input,select,textarea,[contenteditable="true"]'));
+  const ctl = t && t.closest && t.closest('button,a,input,select,textarea,[contenteditable="true"]');
+  /* s198: solo cuenta un control que se VE, o sea dentro de la sesion o de un
+     dialogo encima. Uno de la home detras de la sesion es foco olvidado, no una
+     intencion: la tecla es de la sesion (y su preventDefault evita pulsarlo). */
+  return !!(ctl && (ctl.closest('[data-pace-session-root]') || ctl.closest('[role="dialog"]')));
 }
 function sessionDoneKeyBlocked(e) {
   if (!e) return false;
@@ -27163,6 +27676,11 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
         state: parsed,
         events: paceEventsExport()
       };
+      /* s198 · si un arranque no pudo leer el estado, su cadena CRUDA vive en
+         `pace.state.v2.rescate` (state-core.sanea.js). Viaja en el backup para
+         que se pueda recuperar; el import la ignora. */
+      const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
+      if (rescate) payload.rescate = rescate;
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -27203,7 +27721,18 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
         }
 
         // Soporta dos formatos: {app, state:{...}} o state plano (fallback).
-        const incoming = payload.state && typeof payload.state === 'object' ? payload.state : payload;
+        const bruto = payload.state && typeof payload.state === 'object' ? payload.state : payload;
+        /* s198 · A-7, EL IMPORT SANEADO. Lo que entra pasa por el MISMO saneador que
+           el arranque (state-core.sanea.js): antes se escribia tal cual, y un
+           `weeklyStats: null` dentro de un backup bastaba para que el siguiente
+           arranque cayera al estado de fabrica y borrara la historia. Un backup
+           que no es un objeto se rechaza aqui, no al recargar. */
+        if (!paceEsObjetoPlano(bruto)) {
+          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
+          setTimeout(() => setMsg(null), 2600);
+          return;
+        }
+        const incoming = paceSanearEstado(bruto, defaultState).estado;
 
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
@@ -27904,6 +28433,20 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     if (open) unlockAchievement('explore.tweaks');
   }, [open]);
 
+  /* s198 · Escape cierra el panel. Es un panel FLOTANTE y no modal (la home
+     sigue viva detras), asi que no atrapa el foco; pero no tenia ninguna salida
+     por teclado. Si hay un dialogo encima (ui/Dialogo.jsx), el Escape es suyo. */
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key !== 'Escape' || e.__paceDialogoAtendido) return;
+      if (typeof paceHayDialogo === 'function' && paceHayDialogo()) return;
+      onClose && onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   /* Idioma y paleta comparten gramática (s139 / s161): «Auto» es un MODO que
@@ -27931,7 +28474,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const ponerGoal = (d) => set((s) => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (/*#__PURE__*/
-    React.createElement("div", { "data-pace-tweaks-panel": true, style: {
+    React.createElement("div", { "data-pace-tweaks-panel": true, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
         position: 'fixed',
         right: 24, bottom: 24,
         width: 320,
@@ -27946,7 +28489,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
         animation: 'pace-slide-up 280ms var(--ease)'
       } }, /*#__PURE__*/
     React.createElement("div", { className: "pace-aj-cab" }, /*#__PURE__*/
-    React.createElement("div", { className: "pace-aj-titulo" }, t('settings.title')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-aj-titulo", id: "pace-aj-titulo" }, t('settings.title')), /*#__PURE__*/
     React.createElement("button", { type: "button", className: "pace-aj-cerrar", onClick: onClose, "aria-label": t('common.close') }, "\xD7")
     ), /*#__PURE__*/
 
@@ -29695,6 +30238,7 @@ function PathFocusStep(_ref) {let { step, onExit } = _ref;
     React.createElement(SessionShell, {
       routine: routine,
       onExit: onExit,
+      pantalla: false,
       atmosphere: "var(--focus-soft)",
       footer: footer,
       footerGap: 12,
@@ -30952,7 +31496,7 @@ Object.assign(window, {
    el kill global de prefers-reduced-motion lo congela.
    ============================================================ */
 
-const { useState: useStateONB, useEffect: useEffectONB } = React;
+const { useState: useStateONB, useEffect: useEffectONB, useRef: useRefONB } = React;
 
 function Onboarding() {
   const [state, set] = usePace();
@@ -30969,6 +31513,12 @@ function Onboarding() {
     window.addEventListener('pace:open-onboarding', h);
     return () => window.removeEventListener('pace:open-onboarding', h);
   }, []);
+
+  /* s198 · la trampa de foco que la Fase 8.5 llevaba anotada desde s183
+     (ui/Dialogo.jsx). SIN Escape, a proposito: ver «Sin Escape ni
+     backdrop-click» en la cabecera. */
+  const raizRef = useRefONB(null);
+  usePaceDialogo(raizRef, open);
 
   if (!open) return null;
 
@@ -31023,10 +31573,12 @@ function Onboarding() {
   return (/*#__PURE__*/
     React.createElement("div", {
       "data-pace-scene-card": "",
+      ref: raizRef,
+      tabIndex: -1,
       role: "dialog",
       "aria-modal": "true",
       "aria-label": t('welcome.greeting'),
-      style: onboardingStyles.root }, /*#__PURE__*/
+      style: { ...onboardingStyles.root, outline: 'none' } }, /*#__PURE__*/
 
     React.createElement(OnbScene, { pathId: sceneId }), /*#__PURE__*/
 
@@ -34673,9 +35225,16 @@ function PaceApp() {
 
   // Atajos de teclado: T toggle Tweaks, S toggle Stats, L toggle Logros.
   // Ignora cuando focus esta en INPUT/TEXTAREA para no interferir con campos.
+  /* s198: y con Ctrl/Cmd/Alt (Ctrl+S abria Estadisticas ademas de «Guardar
+     como»), en un SELECT o un contenteditable, y con una SESION o una pantalla
+     completa delante (onboarding, Caminos): una «s» en mitad de una respiracion
+     abria Estadisticas encima, y el Escape siguiente se llevaba la sesion. */
   useEffectMain(() => {
     const onKey = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || e.defaultPrevented) return;
+      const tg = e.target || {};
+      if (tg.isContentEditable || tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT') return;
+      if (document.querySelector('[data-pace-session-root], [aria-modal="true"]:not([data-pace-modal-card])')) return;
       if (e.key === 't' || e.key === 'T') setOpenTweaks((o) => !o);
       if (e.key === 's' || e.key === 'S') setOpenStats((o) => !o);
       if (e.key === 'l' || e.key === 'L') setOpenAchievements((o) => !o);

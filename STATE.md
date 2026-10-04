@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.130.0 (s197 - **LA TABLETA VERTICAL LLEVA LA PIEL DE MOVIL**: toda pantalla mas alta que ancha de hasta 1024 px (los cuatro iPad y una ventana estrecha y alta); el corte deja de estar a mano en 19 sitios y vive en `_responsive.corte.js`; estrenarlo destapo que entre 820 y 1024 desaparecian los tres modos de la topbar. `_responsive.pieles.js` troceado (340 + 191) por el trinquete de §1. 296 -> 300, banco 8 de 8, auditoria de viewports re-medida. Antes, v0.129.0, s197 - **LA MEDIA JORNADA ES UN HORARIO, Y LO HECHO SE CUENTA**: la media jornada deja de ser una duracion y pasa a ser un tramo con SUS horas (`horario.media`, de mañana o de tarde, editable en su cabecera y en «Ajustar el horario» con dos frases, recordado, derivado de la entrada mientras nadie lo toque, apagado fuera de su tramo); **la comida solo en la jornada entera**; las dos jornadas dicen su TRAMO en el chip y la loseta; la hoja del dia distingue hecha de saltada y la tarjeta «Siguiente pausa» dice «Llevas seis bloques y cuatro pausas». 286 -> 296, banco 13 de 13. Antes, v0.128.1, s195c - **LOS ACENTOS SIRVEN LO QUE CABE**: al re-medir la semana sobre el artefacto publicado, el jueves iba Coherente 6·6 (10') en una pausa de 5' y el viernes en el cierre; la regla nunca filtra por duracion porque nunca le hizo falta y el acento fue el primer Respira fuera de la larga. `toma(modulo, clave, cabe)`; el test defiende «cada plato cabe en su parada, los cinco dias»; banco 13 de 13. Antes, v0.128.0, s195c - **LA SEMANA, SIN DECIRLO**: la pieza 3 del norte (lectura A) en la app —seis temas en ciclo por semana ISO que reordenan los pozos × un acento por dia de lunes a viernes × la regla de siempre— y NADA lo anuncia (el usuario: «2, nada», tras ver un chip, nada y cuatro palabras en el panel real). `ritmo.semana.js` pura, `horario.desfaseLarga`, los acentos respetan lo hecho. 282 -> 286, banco 11 de 11. Antes, v0.127.0, s195c - **LA RONDA 2 DECIDIDA**: la tarjeta «¿Cuanto trabajas hoy?» sustituye a la del Camino sugerido por libre (misma cascara; un toque sirve el dia), la comida se apaga con un mini interruptor pegado a «comes», y el modal de la pausa deja solo Hidratate. Para la semana (7B), tres sistemas de copy en `semana-copy-s195.html`, SIN DECIDIR. 281 -> 282. Antes, v0.126.0, s195b - **LA PAUSA CON MEMORIA**: la pausa con menu (una propuesta, «Hacer la pausa» · «Seguir con el bloque N+1» · «Otra cosa…» plegado, con el glifo del ejercicio), el agua por TIEMPO (>= 50 min entre vasos, la comida siempre), recolocar tambien AL TERMINAR (la pausa abierta se abre a la hora que es; y la duracion puesta en el aro manda el resto del dia), y la linea con memoria (hecha / saltada). 277 -> 281, 4 en rojo contra HEAD. Ronda 2 de ideas enviada para lo que pide diseno: la tarjeta por libre, el interruptor de la comida, los nombres de la semana. Antes, s195 - **LA BARRA FEA Y EL FINAL DEL DIA**, y de propina v0.125.2: **las etiquetas de la linea se recolocan cuando llegan las fuentes** (se colocaban con la de reserva y se quedaban: tres niveles donde caben dos, 15 px de panel y 17 de aro de menos cada manana; salio haciendo las fotos de la pagina de decision). El usuario trajo una captura a 1920×1080 con el escritorio al 125 % (1536×704): «no entiendo la barra fea del medio con lineas» y «los elementos se solapan». Medido: **la pildora de s194 se llamaba igual que el tramo del retraso** (`.pace-rt-libre`) y el hueco heredaba su borde y su padding; **«AHORA» pisaba el resumen del dia** en los nueve viewports de escritorio, cada tarde; y **la caja del bloom de la luz hacia 46-52 px de scroll** con un bloque corriendo (la premisa de s185 se rompio en s192). Pildora renombrada, resumen a la cabecera con container query (en la fila del titulo si cabe: a 1536×704 el panel no crece), caja del bloom desde el centro y restando el horizonte (idéntica al pixel). Y **v0.125.3: la AUDITORIA DE VIEWPORTS** (16 viewports × 9-10 escenas, `auditoria-viewports-s195.js`) mas cuatro capturas del usuario un sabado: la comida solo si el dia la sirve, las horas de HOY en las opciones que empiezan cuando empiezas, ninguna etiqueta fuera del marco, la copia compacta en tableta vertical, los chips por libre caben, el motor de geometria mide tambien la luz, la gota pegada a su palabra. **260 -> 277**, `ritmo-linea.spec.js` y `ritmo-panel.spec.js` con pasada de control contra HEAD. La pieza 3 del norte: `por-donde-seguir-s195.html` sin decidir, y el usuario pide seguir pensando ideas con una pagina visual.)
+**Version actual:** v0.131.0 (s198 - **SANEAMIENTO: QUE NO SE PIERDA NADA Y QUE EL TECLADO NO MIENTA**: auditoria de la repo con una sonda sobre el artefacto publicado y siete defectos medidos y arreglados sin cambiar un pixel — un campo guardado roto ya no borra la historia (`state-core.sanea.js` + rescate), el import se sanea (A-7), «Borrar todo» borra toda clave `pace.*`, Espacio pausa aunque la sesion venga de «Continua», Escape cierra el dialogo de arriba, los dialogos y las sesiones gestionan el foco (`ui/Dialogo.jsx`, tambien el onboarding), los atajos no responden con Ctrl ni con una sesion delante, y la pantalla no se apaga en una sesion guiada (`ui/pantalla.js`). 300 -> 312. Lo visual va a `docs/proposals/saneamiento-s198.html`, SIN DECIDIR. Antes, v0.130.0, s197 - la tableta vertical lleva la piel de movil; el historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -20,6 +20,12 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
+| `app/state-core.sanea.js` | **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS (NUEVO s198)**, puro: `paceSanearEstado(parsed, defaultState)` repara la FORMA campo a campo antes de migrar (tipos de arriba; dentro, series de la semana, agua, racha, Caminos, historia; `FORMAS_AJENAS` para `ritmo`); `paceGuardarRescate` copia lo ilegible a `pace.state.v2.rescate`; `paceLeerRescate` lo da al export. Carga entre `state-core.support.jsx` y `state-core.jsx` | **NUEVO s198** |
+| `app/state-core.toast.jsx` | El buzon de avisos y su aplazamiento en un Camino, cortado de `state-core.jsx` POR UN PUNTO (s198) al pasar este de 500. Carga justo despues | **NUEVO s198** |
+| `app/ui/Dialogo.jsx` | **UN DIALOGO SE COMPORTA COMO UN DIALOGO (NUEVO s198)**: `usePaceDialogo(ref, abierto, { onEscape })` — pila (Escape y Tab solo para el de arriba), foco al contenedor, trampa de Tab, foco devuelto si nadie lo cogio; `paceHayDialogo()`. Lo usan `Modal`, el onboarding y `SessionShell` | **NUEVO s198** |
+| `app/ui/pantalla.js` | **LA PANTALLA NO SE APAGA EN UNA SESION (NUEVO s198)**: Screen Wake Lock con contador (`paceMantenerPantalla()` -> soltar), suelta con 1,5 s de retraso, se re-pide al volver a la pestaña; `paceLuzEstado()` para las pruebas. La pide `SessionShell` (prop `pantalla`, por defecto true; `PathFocusStep` la apaga) | **NUEVO s198** |
+| `tests/estado-saneado.spec.js` · `tests/teclado-foco.spec.js` | **5 + 7 tests (NUEVOS s198)**, los 11 que existen en HEAD en rojo contra v0.130.0 por la razon de su mensaje: el campo roto, el saneador en puro, el rescate y su viaje, el import saneado, el borrado total · Escape del de arriba, el dialogo con nombre/foco/Tab/foco devuelto, Ctrl+S y la S en sesion, «Continua» + Tab + Espacio, Escape en Ajustes, la pantalla encendida (API falsa que cuenta), el onboarding | **NUEVO s198** |
+| `scripts/audit/banco-saneamiento-s198.js` · `scripts/audit/saneamiento-s198.js` | El banco de mutantes del saneamiento (un mutante por pieza; dos DECLARADOS que no muerden con razon) y el generador de la pagina de decisiones (fotos de la app real; «hoy» es un fallo de render provocado de verdad) | **NUEVO s198** |
 | `app/ritmo/ritmo.semana.js` | **LA SEMANA (NUEVO s195c · v0.128.0)**, PURA: `semanaISO` (sin `new Date("YYYY-MM-DD")`), `SEMANA_TEMAS` (seis en ciclo por semana ISO, tags del catalogo; los nombres son dato, no se pintan), `SEMANA_ACENTOS` (1..7), `semanaDe`, `semanaPozos` (reordena por afinidad; `corta` · `respiraLarga`), `semanaComponer` (la regla sobre los pozos del tema + retoques de PLATOS: lunes Mueve primero, jueves Respira antes de comer, viernes el cierre largo; «la mitad» via `horario.desfaseLarga`; **los retoques solo sirven lo que CABE en la parada**, v0.128.1). Los acentos respetan `previos`; el fin de semana lleva tema y no acento. **Nada se anuncia** (decision del usuario) | **NUEVO s195c** |
 | `app/ritmo/ritmo.regla.js` | **s197: la MEDIA JORNADA es un horario (`foco: Infinity` + `horario.media`), no una duracion; y `comeA` solo sirve comida en la jornada entera.** s195c: `horario.desfaseLarga` corre la cadencia de la larga (la semana lo usa el miercoles)**. **s195c: `horario.sinComida` pone la comida fuera del alcance (`comeA = Infinity`)**. **s195b: el AGUA va por tiempo (>= 50 min desde el ultimo vaso, la comida siempre y reinicia); `previos.pausaPendiente` sirve la pausa la primera al recolocar al terminar; `previos.bloque` manda la duracion de los bloques que vienen**. **LA REGLA DE A TU RITMO (s192)**, PURA: `ritmoComponer(opcion, horario, pozos, cambios, meta, previos)` compone el dia. **s194: `previos` recompone desde AHORA con lo hecho** (bloque forzado, cadencia, presupuesto, platos, claves, agua, comida hecha) -- comida a su hora exacta, bloque previo acortado, colas fundidas, agua hasta la meta, sin repetir rutina, llegar tarde = sales a tu hora. No lee reloj, estado ni `window` | **NUEVO s192** |
 | `app/state-events.jsx` | **EL EMISOR de `pace.events.v1`** (s172): un punto por tipo de evento, junto a la escritura legacy. **s194: la PUERTA de la sesion** — `paceOrigenSesion(puerta, desdeMenu)` la anota en memoria (`paceOrigenPendiente`) y `emitSessionCompleted` la consume y la escribe en `origin`/`fromMenu`; con `inPath` manda `camino` | **s194** · s172 |
@@ -247,136 +253,35 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> **s197 publica tambien v0.130.0, «la tableta vertical lleva la piel de movil»**: lo ultimo que quedaba
-> decidido del handoff de s196. El corte entre pieles nace en **`app/main/_responsive.corte.js`** (movil =
-> `≤768` **o** vertical `≤1024`; escritorio = `≥1025` **o** `≥769` apaisado, con listas separadas por coma
-> y sin `not` de nivel 4) y lo interpolan las hojas y tres `matchMedia`. Estrenarlo destapo un defecto:
-> **entre 820 y 1024 la topbar se quedaba SIN los tres modos**; la pill vuelve a su fila sin los 42 px del
-> telefono. `_responsive.pieles.js` paso de 500 lineas al añadir la regla y se **troceo por un punto**
-> (`_responsive.pieles.esc.js`, cargado JUSTO DESPUES: misma especificidad, gana el ultimo). **296 -> 300**,
-> banco `banco-corte-s197.js` **8 de 8** (el de `esCajon()` vivia hasta asertar que el cajon se cierra al
-> pulsar: aserto flojo, no codigo sobrante) y auditoria de viewports re-medida (21 viewports, 199 escenas,
-> 5 con scroll y **ninguna de las nuevas**). Diario:
-> [session-197b](./docs/sessions/session-197b-la-tableta-vertical.md).
+> **s198 (2026-10-04) publica v0.131.0, «saneamiento: que no se pierda nada y que el teclado no mienta».**
+> El usuario pidio revisar la repo entera y seguir desarrollando. Nada decidido estaba pendiente; la auditoria
+> (una sonda de Playwright sobre el artefacto publicado, en otro puerto) midio siete defectos de la Fase 8.5 y
+> se arreglaron sin cambiar un pixel: el dato roto que borraba la historia, el import sin sanear (A-7), el
+> borrado incompleto, Espacio que no pausaba tras «Continua», Escape que cerraba el dialogo de abajo, los
+> dialogos sin foco (tambien el onboarding: la trampa que llevaba anotada desde s183), los atajos con Ctrl y
+> en sesion, y la pantalla que se apagaba en una sesion guiada. **300 -> 312** (12 nuevos, los 11 de HEAD en
+> rojo contra v0.130.0). Diario: [session-198](./docs/sessions/session-198-saneamiento.md).
 >
-> **LO SIGUIENTE: nada decidido esta pendiente.** Lo unico que no puede hacer nadie mas es **usar la app
-> una semana entera** (la semana de v0.128.0 sigue sin juicio de uso real). Declarado y sin fecha: las cinco
-> escenas con scroll ANTERIORES a v0.130.0 (la tarjeta por libre arrastra 72 px a 375×667 y 32 a 360×730,
-> identico contra HEAD), el miercoles con tres largas, el modo oscuro del panel, el cierre que nunca es
-> «Ahora», y la limpieza de este mismo documento (sigue acumulando bloques de «lo que queda»).
->
-> **s197 (2026-09-22) publica v0.129.0, «la media jornada es un horario, y lo hecho se cuenta»**: lo que
-> el handoff de s196 dejo decidido, implementado. La media jornada es un TRAMO con sus horas (de mañana o
-> de tarde, editable en su cabecera y en «Ajustar el horario» —dos frases—, recordado, derivado de tu
-> entrada mientras nadie lo toque, apagado fuera de su tramo); **la comida solo en la jornada entera**; las
-> dos jornadas dicen su tramo en el chip y la loseta; la hoja del dia distingue hecha de saltada; y la
-> tarjeta «Siguiente pausa» dice «Llevas seis bloques y cuatro pausas» (las saltadas NO se nombran; sin un
-> bloque hecho no aparece). Dos correcciones del usuario cambiaron el encargo: «tienen que poder
-> personalizarse, tanto la media jornada como la completa» (de ahi el tramo en el chip) y «la media jornada
-> ya no lleva comida». **286 -> 296**, los diez nuevos en rojo contra HEAD, banco **13 de 13**. Diario:
-> [session-197](./docs/sessions/session-197-media-jornada-y-lo-contado.md).
->
-> **LO SIGUIENTE, DECIDIDO Y SIN HACER: v0.130.0, la tableta vertical con la piel de movil**
-> (`(orientation: portrait) and (max-width: 1024px)`; el corte vive hoy en 18 archivos, ver el handoff de
-> s196) con la auditoria de 16 viewports re-medida. Y **nadie ha usado la app una semana entera todavia**.
->
-> s196 (2026-09-19) NO publico version: decidio, con seis paginas de propuestas
-> (`por-donde-seguir-s196` · `lo-hecho-contado-s196` · `decidir-s196` · `ronda4-s196` · `ajustar-horario-s196`
-> · `arranque-s197`) y el handoff [session-196](./docs/sessions/session-196-handoff-decisiones.md), que
-> sigue siendo el documento de lo decidido y lo pendiente.
->
-> Antes, s195c publica **v0.128.1, «los acentos sirven lo que cabe»**: al re-medir la semana sobre el artefacto
-> publicado (no copiada del hilo), el jueves servia Coherente 6·6 (10') en una pausa de 5' y el viernes en
-> el cierre. La regla nunca mira duraciones porque nunca le hizo falta; los acentos fueron el primer Respira
-> fuera de la larga. Arreglo en `toma(…, cabe)`; test del invariante («cada plato cabe en su parada, los
-> cinco dias»); banco **13 de 13**. Diario: [session-195c](./docs/sessions/session-195c-la-semana-sin-decirlo.md).
->
-> Antes, s195c publica **v0.128.0, «la semana, sin decirlo»**: la pieza 3 del norte en la app, sin copy (el usuario
-> eligio «nada» viendo las tres formas minimas en el panel real). Suite **282 -> 286**, banco 11 de 11.
->
-> Antes, s195c publica **v0.127.0** (la ronda 2 decidida: la tarjeta por libre en el sitio del Camino, la comida
-> como interruptor, la pausa solo con Hidratate) y deja **`docs/proposals/semana-copy-s195.html`** ENVIADA
-> y sin decidir: tres sistemas de copy para la semana (A cercano · B sobrio · C con motivo) mas el martes
-> en silencio y la linea que se queda. Suite **281 -> 282**.
->
-> s195b publica **v0.126.0, «la pausa con memoria»** (las cuatro decisiones del usuario con la pagina de
-> ideas delante) y deja **`docs/proposals/ideas-s195-r2.html`** ENVIADA y sin decidir: tres variantes de la
-> tarjeta por libre (5A losetas · **5B el arco del dia** · 5C columnas), tres del interruptor de la comida
-> (6A casilla · **6B la palabra «comes / no comes»** · 6C mini) y los nombres de la semana (7A verbos ·
-> **7B sin titulo, una frase** · 7C solo el tema; temas por region o **por intencion**). Diario:
-> [session-195b](./docs/sessions/session-195b-la-pausa-con-memoria.md). Suite **277 -> 281**.
->
-> Antes, s195 publica **v0.125.1, «la barra fea y el final del dia»** (tres defectos de la home con el menu
-> servido, dos de ellos los que el usuario vio en su captura), **v0.125.2** (las etiquetas de la linea se
-> recolocan cuando llegan las fuentes) y **v0.125.3** (la auditoria de 16 viewports × 9-10 escenas y las
-> cuatro capturas del sabado del usuario: siete arreglos). Suite **260 -> 277**, `verify` en verde,
-> artefacto regenerado, dos specs nuevos con control contra HEAD.
->
-> Diario: [session-195](./docs/sessions/session-195-la-barra-fea-y-el-final-del-dia.md) ·
-> Pagina: **`docs/proposals/por-donde-seguir-s195.html`** (las cuatro rutas + la semana dibujada y fotografiada; ENVIADA, SIN DECIDIR) ·
-> Censo de viewports: `viewports-s195.js` (temp del sistema, tres escenas × nueve viewports)
+> **LO SIGUIENTE: la letra del usuario a [`saneamiento-s198.html`](./docs/proposals/saneamiento-s198.html)**
+> (ENVIADA, SIN DECIDIR): **A** que se ve si una parte falla (hoy la app entera se desmonta: provocado y
+> fotografiado) · **B** si el arranque repara o rescata (silencio / una fila en «Tus datos» / un aviso) · **C** la
+> pantalla encendida con o sin interruptor · **D** el frente siguiente (la red de A y B · la pausa con su nombre
+> en el aviso + `.ics` · Estadisticas «Hoy» · Android). Y sigue sin juicio de uso real la semana de v0.128.0.
 
-- **[LO QUE VIO EL USUARIO]** A 1536×704 (1920×1080 al 125 %): «la barra fea con lineas» era el hueco
-  del retraso con la caja de la pildora (choque de nombres `.pace-rt-libre`, s194); «se solapan» era
-  «AHORA» sobre el resumen del dia, que compartian banda sobre la linea. **Ninguno era del 125 %**:
-  el choque salia en los nueve viewports de escritorio en cuanto el bloque actual caia al final.
-
-- **[LO QUE NO SE VEIA]** Con un bloque corriendo la home admitia 46-52 px de scroll a 1600×780 y
-  1440×789 (rueda, sin barra): la caja del bloom (0,831 D) ya no cabia bajo el panel de «A tu ritmo»
-  en su estado mas bajo. Ahora se describe desde el centro y resta el horizonte; identica al pixel.
-
-- **[COMO QUEDA]** Pildora `.pace-rt-porlibre` · resumen en la cabecera, **en la fila del titulo si el
-  panel tiene >= 1000 px de contenido** (1536×704: el panel no crece, el aro sube de 417 a 422) y en
-  dos filas a la derecha si no (+19 px a <= 1440) · sobre la linea solo «AHORA».
-
-- **[LO QUE QUEDA, EN ORDEN]** **Que el usuario use la app una semana entera** con todo lo de s195 (la
-  pausa con memoria, la tarjeta por libre, la comida como interruptor, la semana) y cuente que chirria ·
-  la lectura C del norte cuando `origin` tenga semanas de datos (Stats «Semana») · media jornada con horas
-  ajustables (no se ha hecho: el usuario acepto «jornada = hasta la salida») · la hoja con hecha/saltada ·
-  «4 de 7 pausas» en la barra lateral y Stats · la tableta vertical (sin respuesta) · el miercoles con tres
-  largas (opcion A de la ronda 1, «como sale»).
-
-- **[LO QUE QUEDABA DE LA RONDA 2 — HECHO EN v0.127.0 SALVO LA SEMANA]** La letra del usuario a `ideas-s195-r2.html` y su
-  implementacion (5: la tarjeta por libre sustituye al Camino sugerido y los Caminos van a la biblioteca como
-  estante · 6: la comida si/no en la pregunta, y media jornada con horas ajustables (jornada = hasta la salida)
-  · 7: la semana, lectura A, con los nombres que elija) · la hoja con hecha/saltada · «4 de 7 pausas» en
-  la barra lateral y Stats · la tableta vertical (sin respuesta).
-
-- **[LO QUE EL USUARIO PIDIO DESPUES, USANDOLA UN SABADO — DECIDIDO EN LA RONDA 1, HECHO EN v0.126.0 SALVO 5 Y 6]**
-  (1) al acabar un pomodoro la pausa ofrece los cuatro modulos «por libre» ademas del plato del menu:
-  «deberia dejarte hacer la pausa o seguir con lo siguiente» · (2) ¿un vaso cada media hora? ¿que
-  intervalo es sano? · (3) si cambias la duracion del pomodoro, ¿se recolocan las horas? (a las 10:42 la
-  pausa abierta decia 11:16: recolocar solo pasa al EMPEZAR, no al terminar) · (4) si saltas la pausa y
-  encadenas pomodoros, la parada deberia quedar gris/translucida (hoy «lo pasado conserva su fuerza» y
-  no distingue hecho de saltado) · (5) «Hoy voy por libre» quiza sin Caminos: usar la tarjeta para
-  «¿Cuanto trabajas hoy?» de forma muy visual · (6) la pregunta deberia dar opcion a comer o no, y
-  media jornada / jornada = 4 / 8 h ajustables. Todo esto va a `docs/proposals/ideas-s195.html`.
-
-- **[LA PIEZA 3, SIGUE A MITAD — AHORA CON PAGINA PROPIA]** Preguntado «¿por donde seguimos?», el
-  usuario pidio «un html para verlo graficamente». `scripts/audit/por-donde-seguir-s195.js` genera
-  **`docs/proposals/por-donde-seguir-s195.html`**: las cuatro rutas con ficha (la semana · usarla un dia
-  · los huecos · la deuda; recomendacion **1 con 2 en paralelo**) y la semana VISTA: temas A/B/C con sus
-  chips, los acentos L-V como tiras, miercoles y viernes en detalle, y **«donde se dice» con tres fotos
-  de la app real a 1536×704** (la linea · + el aro · + la barra lateral). Lista de 8 decisiones al final.
-  **Nada implementado.** La maqueta anterior (`semana-r1.html`) sigue valiendo para el detalle de la regla.
-
-- **[LO QUE QUEDA, EN ORDEN]** **La respuesta del usuario a `por-donde-seguir-s195.html` y su implementacion
-  (v0.126.0, con spec nuevo)** · que el usuario lo use un dia entero · `MoveSessionV1.jsx` en 500 ·
-  `ritmo.spec.js` en 465 (lo siguiente a `ritmo-linea.spec.js` o a otro hermano) · los huecos: el cierre
-  nunca es «Ahora», la pausa larga propone un plato de dos, el modo oscuro del panel y del hueco
-  punteado, el resumen en ingles en la fila del titulo (no medido), 1280×600 por la manana (33 px de
-  scroll, `D_FLOOR`).
-
-- **[TRAMPAS]** Un test de geometria que sale verde en HEAD no vigila nada (el escenario tiene que ser el
-  del usuario: 2 min, no 4) · un inline-grid salta de linea aunque no haya espacio y el word joiner no lo
-  evita · `clip-path` no quita desbordamiento desplazable y `overflow: clip` en el sol corta el halo ·
-  Un SW caducado en el preview mide OTRA version (purgar antes de medir; «Hay una
-  version nueva» es la pista) · `scrollHeight` no dice QUE desborda si es un pseudo-elemento: seguir la
-  cadena de `scrollHeight` padre → hijo · un comentario CSS con backticks aborta el build (s172b, otra
-  vez) · las diferencias al pixel llevan siempre el arco, la bola y el relleno de la linea, que avanzan
-  entre fotos · el servidor del 8765 desaparece a mitad (`preview_start` lo relanza) · **una prueba
-  de control que no encuentra lo que mide sale verde**: buscar por clase, no por el `data-` nuevo, y
-  poner GUARD de nombres · las de s194 siguen (nada que compile mientras corre un banco, etc.).
+- **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
+  72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
+  el cierre que nunca es «Ahora» · la lectura C del norte (cuando `origin` tenga semanas de datos).
+- **[DE LA FASE 8.5, LO QUE QUEDA]** Tests del estado mas alla del saneado (A-6) · i18n I18N-2 (pluralizacion,
+  pseudolocalizacion) y las deudas D-1/D-2/D-3 · bump de version automatico (hoy 7 sitios a mano, los vigila el
+  `verify`) · timer de Mueve por timestamps (hoy cuenta ticks: se retrasa con la pestaña oculta).
+- **[TRAMPAS NUEVAS]** Un `catch` que devuelve el estado de fabrica es un borrado DIFERIDO: no falla al
+  arrancar, falla en la primera escritura · el orden de los listeners de `document` no es una politica (doce
+  `Modal` con Escape «funcionaban» de uno en uno) · un fallo provocado para una foto hay que MEDIRLO (Logros
+  tolera `achievements: null`; Estadisticas no tolera `weeklyStats: null` y desmonta la app entera) · los
+  documentos del repo estan en CRLF en la copia de trabajo (`core.autocrlf=true`): un reemplazo con LF no casa.
+- **[TRAMPAS DE ANTES, VIGENTES]** Un SW caducado en el preview mide OTRA version (purgar antes de medir) · un
+  backtick en un comentario dentro de un template literal aborta el build · una prueba de control que no
+  encuentra lo que mide sale verde (GUARD de nombres) · nada que compile mientras corre un banco.
 
 ---
 
@@ -387,6 +292,12 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS: el estado se SANEA campo a campo antes de migrar y lo ilegible se guarda CRUDO en un rescate** (s198)
+- **«Borrar todo» borra toda clave `pace.*` que no es de eventos** (s198)
+- **UN DIALOGO SE COMPORTA COMO UN DIALOGO: pila unica para Escape y Tab, foco dentro, trampa y foco devuelto (`usePaceDialogo`)** (s198)
+- **La sesion toma el foco y no lo suelta; Espacio solo respeta un control que se VE** (s198)
+- **Los atajos T · S · L no responden con Ctrl/Cmd/Alt, en un campo editable ni con una sesion o pantalla completa delante** (s198)
+- **La pantalla no se apaga a mitad de una sesion guiada; el Foco no la pide** (s198)
 - **El motor de geometria mide TAMBIEN LA LUZ: el aro es el circulo mas grande que cabe CON su halo, porque una caja transparente tambien hace scroll y el limbo no se puede recortar** (s195b)
 - **El panel de «A tu ritmo» y los chips de Actividades eligen su forma por el ANCHO DEL CONTENEDOR, no por el viewport: la copia compacta bajo 620 px, los chips compactos bajo 760 y en rejilla bajo 560** (s195b)
 - **La frase del menu servido dice lo que el dia SIRVE: la comida solo si cae dentro, y las opciones que empiezan cuando empiezas llevan las horas de hoy** (s195b)

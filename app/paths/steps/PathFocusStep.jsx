@@ -98,6 +98,7 @@ function PathFocusStep({ step, onExit }) {
     <SessionShell
       routine={routine}
       onExit={onExit}
+      pantalla={false}
       atmosphere="var(--focus-soft)"
       footer={footer}
       footerGap={12}

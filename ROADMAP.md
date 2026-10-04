@@ -518,8 +518,17 @@ sin tests del estado es un riesgo que se paga en soporte.
   `build-standalone.js` (**567**) y `PACE.html` (**547**), los dos fuera del censo a propósito.
 - **Accesibilidad** (Bloque 9): ~~tarjetas sin acceso por teclado~~ (resuelto en s174: la tarjeta
   lleva un botón dentro que se extiende con `::after`, y no es un `role="button"` gigante) ·
-  **onboarding sin focus trap** — verificado en s183, sigue sin trap.
-- **Tests del state (A-6)** e **import sanitizado (A-7)**, del P2 de `audit-producto-v0.34.4.md`.
+  ~~**onboarding sin focus trap**~~ **HECHO en s198 (v0.131.0)**, y con él los doce `Modal` y las
+  sesiones: rol de diálogo, foco dentro, trampa de Tab, foco devuelto y Escape solo para el de arriba
+  (`app/ui/Dialogo.jsx`). La auditoría de s198 midió además que Espacio no pausaba tras «Continúa» y
+  que Escape cerraba la biblioteca de detrás del preview.
+- **Tests del state (A-6)** e ~~**import sanitizado (A-7)**~~, del P2 de `audit-producto-v0.34.4.md`.
+  **A-7 HECHO en s198**: el import y el arranque pasan por el mismo saneador (`state-core.sanea.js`),
+  que repara campo a campo y guarda lo ilegible en un rescate. Medido antes: un campo roto hacía
+  arrancar la app de fábrica y la primera escritura borraba la historia. Queda A-6 en sentido amplio
+  (pruebas del estado más allá de la forma) y **la pantalla de error** (no hay límite de error de React:
+  si algo falla al dibujarse, la app entera se desmonta) — su diseño espera la letra del usuario a
+  `docs/proposals/saneamiento-s198.html`.
 - **i18n robustez (I18N-2)**: paridad de claves ES/EN, pseudolocalización, pluralización — una
   clave que falta es un **bug visible** en una app de pago. Más las deudas semánticas **D-1**
   (override silencioso en `content/breathe.js`), **D-2** («Hecho hoy» duplicado) y **D-3**

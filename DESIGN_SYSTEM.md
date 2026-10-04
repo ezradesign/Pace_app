@@ -910,6 +910,10 @@ Estilos definidos en `app/tokens.css` que afectan al documento entero:
 
 ### Focus visible
 - `:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-xs); }` — accesibilidad de teclado con aro finito en color de foco.
+- **s198 · los contenedores que reciben foco al abrirse no pintan aro**: la tarjeta del `Modal`, la raíz de una
+  sesión (`SessionShell`), el onboarding. Llevan `tabIndex={-1}` y `outline: none` en línea, porque ese foco lo
+  pone la app (`usePaceDialogo`, `app/ui/Dialogo.jsx`), no la persona; el aro aparece en cuanto Tab entra en un
+  control. Ningún otro elemento puede quitarse el aro.
 
 ### Scrollbar custom
 - Ancho: `10px` (horizontal y vertical).
