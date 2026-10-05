@@ -118,7 +118,7 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ solo para compilar.
 │   ├── WORKFLOW.md          ← protocolo de cierre Git
 │   ├── product/             ← decisiones vigentes de producto y técnicas
 │   ├── audits/              ← auditorías con evidencia
-│   └── sessions/            ← diario de trabajo, una entrada por sesión
+│   └── sessions/            ← diarios de sesión hasta octubre de 2026 (historia)
 │
 ├── scripts/                 ← verify, ingesta de arte, utilidades
 ├── vendor/                  ← React UMD self-hosted
@@ -219,4 +219,4 @@ El proyecto se itera en sesiones sucesivas con ayuda de asistentes de diseño. P
 1. [`STATE.md`](./STATE.md) — estado actual, backlog y próximos pasos
 2. [`CLAUDE.md`](./CLAUDE.md) — protocolo de trabajo y arquitectura
 3. [`ROADMAP.md`](./ROADMAP.md) — el camino a v1.0
-4. [`docs/sessions/`](./docs/sessions/) — diario detallado de cada sesión
+4. `git log` — qué cambió en cada versión y por qué (los diarios anteriores siguen en [`docs/sessions/`](./docs/sessions/))

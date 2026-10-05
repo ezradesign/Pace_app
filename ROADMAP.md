@@ -107,8 +107,9 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
   una vez el contenedor antiguo.
 - **Timer de Mueve por timestamps** — **HECHO en s200 (v0.135.0)**: Mueve y Estira cuentan por marcas
   de tiempo y la sesión se pausa al ocultar la página (política en `SESION_AL_OCULTAR`).
-- **Adelgazar el método**: menos documentación por sesión y cierres más cortos (ver la auditoría
-  externa de s199).
+- **Adelgazar el método** — **HECHO el 5 de octubre de 2026**: `CLAUDE.md` y `STATE.md` caben en una
+  pantalla, ya no se escriben diarios ni handoffs, el `CHANGELOG` es de una línea por versión y lo
+  anterior está en `docs/archive/`.
 
 ### FASE 2 · Capacitor Android y prueba cerrada
 
