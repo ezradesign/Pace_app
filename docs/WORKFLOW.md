@@ -106,9 +106,8 @@ Ejecutar en orden antes de cerrar Claude Code:
 - [ ] `PACE_standalone.html` **NO** se regenera — congelado desde s134 (export bajo
       demanda). El `verify` lo restaura solo; si corriste el build a mano,
       `git checkout -- PACE_standalone.html` y comprobar el hash
-- [ ] `STATE.md` reescrito con la sesion actual
-- [ ] `CHANGELOG.md` actualizado con la nueva version
-- [ ] Diario de sesion creado en `docs/sessions/session-NN-xxx.md`
+- [ ] `STATE.md` al dia, en una pantalla
+- [ ] `CHANGELOG.md`: una linea si hay version nueva
 - [ ] Merge del worktree a `main` completado
 - [ ] `git push origin main` ejecutado por el usuario
 - [ ] GitHub refleja los commits mas recientes

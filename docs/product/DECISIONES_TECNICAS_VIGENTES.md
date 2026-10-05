@@ -5,11 +5,11 @@
 > subsistema correspondiente.
 >
 > Vivían dentro de `STATE.md`, que se lee en cada arranque de sesión y debe ser ligero; se
-> extrajeron en s131 (62 KB). `STATE.md` conserva el índice de títulos y enlaza aquí.
-> Nivel 2 de la cadena de autoridad — ver [`AUDITORIA_DOCUMENTAL.md`](./AUDITORIA_DOCUMENTAL.md).
+> extrajeron en s131 (62 KB). Desde el 5 de octubre de 2026 no hay índice aparte: se busca aquí con
+> grep.
 
-Al cerrar una sesión que fije una decisión nueva: añadir la fila AQUÍ y su título en el índice
-de `STATE.md`. Al invalidar una: marcarla `SUPERSEDED por sNNN` en lugar de borrarla.
+Una decisión nueva entra como fila arriba del todo. Al invalidar una: marcarla `SUPERSEDED` en lugar
+de borrarla.
 
 ---
 

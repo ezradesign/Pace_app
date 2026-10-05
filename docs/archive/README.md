@@ -1,8 +1,8 @@
 # docs/archive — documentación retirada
 
 > **Nada de esta carpeta gobierna.** Se conserva como historia, no como fuente de
-> decisiones. El índice de autoridad vigente está en
-> [`docs/product/AUDITORIA_DOCUMENTAL.md`](../product/AUDITORIA_DOCUMENTAL.md).
+> decisiones. Qué documento manda hoy lo dice la tabla «Dónde vive cada cosa» de
+> [`CLAUDE.md`](../../CLAUDE.md).
 
 Si abres uno de estos archivos sin contexto —o lo pegas en una conversación nueva—, lee
 primero su banner: dice por qué se archivó y qué lo sustituye.
@@ -17,6 +17,10 @@ primero su banner: dice por qué se archivó y qué lo sustituye.
 | `CHANGELOG_TABLA_HISTORICA.md` | s131 | Celdas de la tabla de hasta 4.000+ caracteres (78 KB) | `CHANGELOG.md` con titulares + diarios de sesión |
 | `ROADMAP_CAMINO_V1_HISTORICO.md` | s132 | Secuencia de s93 que llevaba 23 sesiones mostrando como «siguiente» algo que nunca se hizo | Sección «Camino a v1.0» de `ROADMAP.md` (plan operativo único) |
 | `ROADMAP_CAMINO_V1_S132_HISTORICO.md` | s200 | Plan de 15 fases de s132; Ez decidió vender pronto, Android dentro y Travesías y la reescritura de Caminos fuera de v1 | Sección «Camino a v1.0» de `ROADMAP.md` (seis fases, s200) |
+| `CLAUDE_HASTA_S200.md` | 5 oct 2026 | 221 líneas de protocolo, con un cierre de 11 pasos | `CLAUDE.md` de una pantalla |
+| `STATE_HASTA_S200.md` | 5 oct 2026 | 138 KB: mapa de archivos, índice de decisiones y backlog antiguo | `STATE.md` de una pantalla |
+| `CHANGELOG_HASTA_V0.135.0.md` | 5 oct 2026 | 179 KB de detalle por versión | `CHANGELOG.md` de una línea por versión y `git log` |
+| `handoffs/` | 5 oct 2026 | 20 `HANDOFF_*` y 3 `PROMPT_*` que estaban sueltos en `docs/` | `STATE.md` y los mensajes de commit |
 
 **Nota:** las **decisiones técnicas vigentes** que salieron de `STATE.md` en s131 **NO están
 aquí**: son reglas en vigor y viven en
@@ -29,4 +33,4 @@ siendo válida como «no re-verificar».
 
 Los diarios de `docs/sessions/` **nunca** se archivan: son el registro histórico y se
 conservan tal como se escribieron, incluso si algún enlace suyo apunta a un archivo que
-después se movió aquí.
+después se movió aquí. Desde el 5 de octubre de 2026 ya no se escriben más.

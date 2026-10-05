@@ -1,6 +1,7 @@
 PACE · Auditoría documental — qué gobierna, qué es historia, qué se archiva
 
-Estado: GOBIERNA (índice de autoridad documental).
+Estado: HISTORIA desde el 5 de octubre de 2026. Qué documento manda hoy lo dice la tabla «Dónde vive
+cada cosa» de `CLAUDE.md`.
 Fecha: 2026-07-30 · sesión 130. Docs-only, sin bump.
 Motivo: los documentos vivos no declaraban si mandan o son historia, así que se discutía
 cuál manda. Esta auditoría lo resuelve con evidencia y deja una única cadena de autoridad.
