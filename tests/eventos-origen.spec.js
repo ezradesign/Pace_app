@@ -67,8 +67,8 @@ async function terminarBloque(page) {
 
 /* Espera a que haya N sesiones y devuelve la última. */
 async function ultimaSesion(page, n) {
-  await page.waitForFunction((k) => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async (k) => {
+    const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).filter((e) => e.type === 'session.completed').length >= k;
   }, n, { timeout: 5000 });
   const sesiones = ((await leerContenedor(page)).events || []).filter((e) => e.type === 'session.completed');
@@ -165,8 +165,8 @@ test('la puerta se CONSUME, dentro de un Camino manda «camino», y el esquema r
   const r = await page.evaluate(async () => {
     const out = {};
     const datos = { elapsedSeconds: 60, activeSeconds: 60, plannedSeconds: 60, plannedSecondsSource: 'declared', completionReason: 'natural' };
-    const eventos = () => (JSON.parse(localStorage.getItem('pace.events.v1') || '{}').events || []).filter((e) => e.type === 'session.completed');
-    const espera = async (n) => { for (let i = 0; i < 100 && eventos().length < n; i++) await new Promise((res) => setTimeout(res, 20)); return eventos(); };
+    const eventos = async () => (JSON.parse((await window.eventsWebReadRaw()) || '{}').events || []).filter((e) => e.type === 'session.completed');
+    const espera = async (n) => { for (let i = 0; i < 100 && (await eventos()).length < n; i++) await new Promise((res) => setTimeout(res, 20)); return eventos(); };
 
     /* 1 · anotada y consumida */
     paceOrigenSesion('biblioteca', false);

@@ -245,7 +245,7 @@ test('una poda interrumpida no cuenta dos veces lo consolidado', async ({ page, 
 
   /* Se simula el corte: el baseline YA recogio las dos, el cursor apunta a la
      ultima, y los eventos siguen ahi porque el borrado no llego a ocurrir. */
-  const r = await page.evaluate(() => {
+  const r = await page.evaluate(async () => {
     const snap = window.paceEventsSnapshot();
     const ultimo = snap.events[snap.events.length - 1];
     const roto = {
@@ -256,7 +256,7 @@ test('una poda interrumpida no cuenta dos veces lo consolidado', async ({ page, 
       pruneCursor: { occurredAt: ultimo.occurredAt, id: ultimo.id },
       marker: { op: 'prune', startedAt: new Date().toISOString() },
     };
-    localStorage.setItem('pace.events.v1', JSON.stringify(roto));
+    await window.eventsWebWriteRaw(JSON.stringify(roto));
     return {
       crudos: window.paceEventsSnapshot().events.length,
       total: window.paceEventsAggregates().sessionsByRoutine['move.hips.5'],

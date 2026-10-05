@@ -101,6 +101,7 @@ Total a archivar: **~245 KB** de documentación que hoy compite por autoridad si
   feedback beta al frente) y la secuencia anterior se archivó en
   `docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`. 38 → 15 KB. Ahora declara `GOBIERNA el ORDEN`
   en su cabecera, y el audit conserva el qué/por qué. **Deja de haber dos órdenes de trabajo.**
+  **s200**: reescrita otra vez, a **seis fases** (vender pronto, Android dentro, Travesías y Caminos fuera); el plan de 15 fases de s132 se archivó en `docs/archive/ROADMAP_CAMINO_V1_S132_HISTORICO.md`.
 - **`MONETIZATION.md`** (s21/s26) no contradice al audit §20 —las cuatro vías coinciden—
   pero su autoridad se solapa. Queda subordinado: el audit §20 fija dirección, MONETIZATION
   aporta el detalle técnico de licencia (`expiresAt`, validación offline).

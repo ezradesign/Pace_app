@@ -16,6 +16,7 @@ primero su banner: dice por qué se archivó y qué lo sustituye.
 | `RED_DE_SEGURIDAD_HISTORICO.md` | s131 | Historial por archivo que engordaba `STATE.md` (53 KB) | Tabla compacta de `STATE.md` + `CHANGELOG.md` + diarios |
 | `CHANGELOG_TABLA_HISTORICA.md` | s131 | Celdas de la tabla de hasta 4.000+ caracteres (78 KB) | `CHANGELOG.md` con titulares + diarios de sesión |
 | `ROADMAP_CAMINO_V1_HISTORICO.md` | s132 | Secuencia de s93 que llevaba 23 sesiones mostrando como «siguiente» algo que nunca se hizo | Sección «Camino a v1.0» de `ROADMAP.md` (plan operativo único) |
+| `ROADMAP_CAMINO_V1_S132_HISTORICO.md` | s200 | Plan de 15 fases de s132; Ez decidió vender pronto, Android dentro y Travesías y la reescritura de Caminos fuera de v1 | Sección «Camino a v1.0» de `ROADMAP.md` (seis fases, s200) |
 
 **Nota:** las **decisiones técnicas vigentes** que salieron de `STATE.md` en s131 **NO están
 aquí**: son reglas en vigor y viven en

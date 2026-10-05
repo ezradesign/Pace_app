@@ -78,7 +78,7 @@ test('si falla la escritura del estado, el import ABORTA sin tocar los eventos',
   await esperarInit(page);
   await sembrarEventos(page, 4);
 
-  const antesEventos = await page.evaluate(() => localStorage.getItem('pace.events.v1'));
+  const antesEventos = await page.evaluate(async () => (await window.eventsWebReadRaw()));
   await page.evaluate(() => window.setState({ totalFocusMin: 1234 }));
   const antesEstado = await page.evaluate(() => localStorage.getItem('pace.state.v2'));
 
@@ -112,7 +112,7 @@ test('si falla la escritura del estado, el import ABORTA sin tocar los eventos',
   /* Y lo esencial: NADA se movio. Los dos almacenes byte a byte, y sin
      marcador colgando — vivo, el proximo arranque «recuperaria» una operacion
      que nunca ocurrio y borraria el historial de todas formas. */
-  const trasEventos = await page.evaluate(() => localStorage.getItem('pace.events.v1'));
+  const trasEventos = await page.evaluate(async () => (await window.eventsWebReadRaw()));
   const trasEstado = await page.evaluate(() => localStorage.getItem('pace.state.v2'));
   expect(trasEstado, 'el estado legacy cambio pese a fallar la escritura').toBe(antesEstado);
   expect(JSON.parse(trasEstado).totalFocusMin).toBe(1234);
@@ -128,7 +128,7 @@ test('un contenedor de version FUTURA se lee pero no se reescribe', async ({ pag
   await irAlArtefacto(page);
   await esperarInit(page);
 
-  const futuro = await page.evaluate(() => {
+  const futuro = await page.evaluate(async () => {
     const c = {
       schemaVersion: 99,
       activatedAt: '2027-01-01T00:00:00.000Z',
@@ -138,8 +138,8 @@ test('un contenedor de version FUTURA se lee pero no se reescribe', async ({ pag
       marker: null,
       campoDelFuturo: 'algo que esta version no entiende',
     };
-    localStorage.setItem('pace.events.v1', JSON.stringify(c));
-    return localStorage.getItem('pace.events.v1');
+    await window.eventsWebWriteRaw(JSON.stringify(c));
+    return (await window.eventsWebReadRaw());
   });
 
   await page.reload();
@@ -164,7 +164,7 @@ test('un contenedor de version FUTURA se lee pero no se reescribe', async ({ pag
     const marcado = await window.eventsWebMark('import');
     return { cap, puede, reset: reset.result, append: append.result,
              directo: directo.result, marcado: marcado.result,
-             crudo: localStorage.getItem('pace.events.v1') };
+             crudo: (await window.eventsWebReadRaw()) };
   });
 
   expect(estado.cap).toBe('events.read_only');

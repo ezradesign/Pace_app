@@ -108,8 +108,8 @@ test('un backup CON seccion devuelve ese historial, no lo reinicia', async ({ pa
      un timeout mudo en vez de como el aserto que explica que paso -- medido en
      la calibracion de s169, donde reiniciar en vez de reemplazar daba
      «Timeout 15000ms exceeded» y ni una palabra mas. */
-  await page.waitForFunction(() => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async () => {
+    const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
     return JSON.parse(raw).events.length !== 8;
   }, null, { timeout: 15000 });
