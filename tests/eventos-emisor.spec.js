@@ -71,6 +71,7 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
 
   /* El append es asincrono (§10): se espera al evento, no a un timeout. */
   await page.waitForFunction(async () => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
   }, null, { timeout: 5000 });
@@ -107,6 +108,7 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
     .toBeGreaterThan(0);
   await chips.first().click();
   await page.waitForFunction(async () => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).some(e => e.type === 'feedback.answered');
   }, null, { timeout: 5000 });
@@ -328,6 +330,7 @@ test('una sesion de Respira emite su plan DECLARADO (§6.4)', async ({ page }) =
   expect(termino, 'GUARD: la sesion de Respira no llego al cierre').toBe(true);
 
   await page.waitForFunction(async () => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
   }, null, { timeout: 5000 });
@@ -394,6 +397,7 @@ test('«Finalizar» a mitad es el `early` de §6.3, y agotar el plan es `natural
   await finalizar.click();
 
   await page.waitForFunction(async () => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
   }, null, { timeout: 5000 });

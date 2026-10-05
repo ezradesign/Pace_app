@@ -144,6 +144,7 @@ test('«Borrar todos mis datos» de Ajustes borra los DOS almacenes', async ({ p
   await page.getByRole('button', { name: 'Borrar todos mis datos', exact: true }).click();
 
   await page.waitForFunction(async previo => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
     const c = JSON.parse(raw);
@@ -185,6 +186,7 @@ test('importar un backup ANTIGUO reinicia el contenedor en vez de mezclarlo', as
     .setInputFiles({ name: 'pace-backup-20260101.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 
   await page.waitForFunction(async previo => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
     const c = JSON.parse(raw);
