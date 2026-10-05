@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.136.0</title>
+  <title>PACE · Foco · Cuerpo — v0.137.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2972,6 +2972,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.notify': 'Aviso al terminar',
   'settings.notify.sub': 'Foco · si la pestaña está detrás',
   'settings.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
+  'settings.notify.sub.android': 'Foco · si la app está en segundo plano',
+  'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
   'settings.circle': 'Círculo',
   'settings.circle.sub': 'Respira · {name}',
   'settings.circle.flor': 'Loto',
@@ -2998,9 +3000,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.license': 'Licencia',
   'settings.license.soon': 'pronto',
   'settings.foot': 'Todo vive en tu navegador.',
+  'settings.foot.android': 'Todo vive en tu móvil.',
   'settings.legal.safety': 'Seguridad',
   'settings.legal.privacy': 'Privacidad',
   'settings.msg.exported': 'Backup descargado.',
+  'settings.msg.exported.android': 'Copia lista: elige dónde guardarla.',
   'settings.msg.export.err': 'No se pudo exportar.',
   'settings.msg.imported': 'Importado — recargando…',
   'settings.msg.import.invalid': 'Archivo no reconocido.',
@@ -3049,6 +3053,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.notify': 'Alert at the end',
   'settings.notify.sub': 'Focus · if the tab is in the background',
   'settings.notify.blocked': 'Notifications are blocked for this site in your browser.',
+  'settings.notify.sub.android': 'Focus · if the app is in the background',
+  'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
   'settings.circle': 'Circle',
   'settings.circle.sub': 'Breathe · {name}',
   'settings.circle.flor': 'Lotus',
@@ -3075,9 +3081,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.license': 'License',
   'settings.license.soon': 'soon',
   'settings.foot': 'Everything lives in your browser.',
+  'settings.foot.android': 'Everything lives on your phone.',
   'settings.legal.safety': 'Safety',
   'settings.legal.privacy': 'Privacy',
   'settings.msg.exported': 'Backup downloaded.',
+  'settings.msg.exported.android': 'Copy ready: choose where to save it.',
   'settings.msg.export.err': 'Could not export.',
   'settings.msg.imported': 'Imported — reloading…',
   'settings.msg.import.invalid': 'File not recognized.',
@@ -5506,7 +5514,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.136.0';
+const PACE_VERSION = 'v0.137.0';
 
 
 
@@ -11001,6 +11009,201 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
 ;Object.assign(window, { paceDialogoArriba, paceHayDialogo, paceEnfocables, paceFocoDevolvible, usePaceDialogo });
 })();
 </script>
+  <!-- android: lo que el WebView de Android no trae (boton atras, avisos,
+       pantalla encendida, copia de datos). Fuera de Android no hace nada. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   android.js — LO QUE EL WEBVIEW DE ANDROID NO TRAE
+   ============================================================
+   En Android la app es esta misma web dentro del WebView de Capacitor. Ese
+   WebView no tiene Wake Lock ni la API de avisos, no descarga archivos y el
+   boton atras del movil no es suyo. Capacitor lo da con complementos nativos
+   que el lado nativo inyecta en `window.Capacitor.Plugins` (sin bundler: aqui
+   no se importa nada). Este archivo es el UNICO que les habla: quien necesita
+   uno pide `paceAndroidPlugin('Nombre')`, y si recibe null sigue por el
+   camino web. En la web, en el standalone y en las pruebas sin Capacitor nada
+   de esto existe.
+
+   EL BOTON ATRAS hace lo mismo que Escape, que casi todo PACE ya escucha:
+   cierra lo que este encima (un dialogo, Ajustes, el menu de pausa, una
+   sesion). Se manda esa misma tecla en vez de enseñar a cada capa un evento
+   nuevo; todas las capas llevan `role="dialog"`. Si no hay ninguna abierta, la
+   app se va al fondo como cualquier otra de Android, sin cerrarse: el
+   Pomodoro sigue contando por reloj real.
+
+   EL AVISO DE FIN DE FOCO: con la app en el fondo Android congela su JS, asi
+   que el aviso no puede salir de la web cuando acaba el bloque, como en el
+   navegador. Lo programa el sistema para la hora del final, y SOLO mientras la
+   app esta en el fondo: al volver se cancela, porque delante ya lo cuenta la
+   propia app y sonarian los dos.
+
+   LA COPIA DE «TUS DATOS» se escribe en la cache de la app y se abre el menu de
+   compartir de Android, desde el que se guarda en Drive o en Archivos, o se
+   manda por correo.
+
+   LOS ENLACES LEGALES son rutas del servidor en la web (/privacy, /safety). En
+   el APK no hay servidor y abrirlas recargaba la app: van a la web publicada,
+   que Android abre en el navegador.
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+var PACE_WEB_PUBLICA = 'https://paceweb.pages.dev';
+var PACE_AVISO_FOCO_ID = 1;
+
+var _paceAndroid = { fondo: false, permiso: 'default', foco: null, programado: false, atras: 0 };
+
+function paceEsAndroid() {
+  try {
+    var cap = window.Capacitor;
+    return !!(cap && typeof cap.getPlatform === 'function' && cap.getPlatform() === 'android');
+  } catch (e) {return false;}
+}
+
+function paceAndroidPlugin(nombre) {
+  try {
+    if (!paceEsAndroid()) return null;
+    var lista = window.Capacitor.Plugins;
+    return lista && lista[nombre] || null;
+  } catch (e) {return null;}
+}
+
+
+function paceAndroidLlamar(nombre, metodo, opciones) {
+  try {
+    var p = paceAndroidPlugin(nombre);
+    if (!p || typeof p[metodo] !== 'function') return Promise.resolve(null);
+    return Promise.resolve(p[metodo](opciones)).catch(function () {return null;});
+  } catch (e) {return Promise.resolve(null);}
+}
+
+
+
+function paceAndroidAtras() {
+  try {
+    _paceAndroid.atras++;
+    if (document.querySelector('[role="dialog"]')) {
+
+
+      var activo = document.activeElement;
+      var destino = activo && activo !== document.body && document.documentElement.contains(activo) ? activo : document;
+      destino.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
+      return 'escape';
+    }
+    paceAndroidLlamar('App', 'minimizeApp');
+    return 'fondo';
+  } catch (e) {return null;}
+}
+
+
+
+function paceAndroidAvisos() {
+  return !!paceAndroidPlugin('LocalNotifications');
+}
+
+
+function paceAndroidAvisoPermiso() {
+  return _paceAndroid.permiso;
+}
+
+function paceAndroidGuardarPermiso(r) {
+  var d = r && r.display;
+  if (d === 'granted' || d === 'denied') _paceAndroid.permiso = d;else
+  if (d) _paceAndroid.permiso = 'default';
+  return _paceAndroid.permiso;
+}
+
+
+
+function paceAndroidAvisoPedir() {
+  return paceAndroidLlamar('LocalNotifications', 'requestPermissions').then(paceAndroidGuardarPermiso);
+}
+
+
+
+function paceAndroidFoco(endsAt, textos) {
+  _paceAndroid.foco = endsAt ?
+  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '' } :
+  null;
+  paceAndroidAvisoRecolocar();
+}
+
+function paceAndroidFondo(fondo) {
+  if (_paceAndroid.fondo === !!fondo) return;
+  _paceAndroid.fondo = !!fondo;
+  paceAndroidAvisoRecolocar();
+}
+
+function paceAndroidAvisoRecolocar() {
+  var f = _paceAndroid.foco;
+  if (_paceAndroid.fondo && f && f.endsAt > Date.now()) {
+    _paceAndroid.programado = true;
+    paceAndroidLlamar('LocalNotifications', 'schedule', { notifications: [{
+        id: PACE_AVISO_FOCO_ID, title: f.title, body: f.body,
+
+        schedule: { at: new Date(f.endsAt).toISOString(), allowWhileIdle: true }
+      }] });
+    return;
+  }
+  if (!_paceAndroid.programado) return;
+  _paceAndroid.programado = false;
+  paceAndroidLlamar('LocalNotifications', 'cancel', { notifications: [{ id: PACE_AVISO_FOCO_ID }] });
+}
+
+
+
+
+
+function paceAndroidGuardarArchivo(nombre, texto) {
+  if (!paceAndroidPlugin('Filesystem') || !paceAndroidPlugin('Share')) return false;
+  paceAndroidLlamar('Filesystem', 'writeFile', { path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' }).
+  then(function (r) {
+    if (!r || !r.uri) return null;
+    return paceAndroidLlamar('Share', 'share', { title: nombre, files: [r.uri] });
+  });
+  return true;
+}
+
+
+function paceEnlaceWeb(ruta) {
+  return paceEsAndroid() ? PACE_WEB_PUBLICA + ruta : ruta;
+}
+
+
+function paceAndroidEstado() {
+  return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, programado: _paceAndroid.programado,
+    foco: _paceAndroid.foco ? _paceAndroid.foco.endsAt : null, atras: _paceAndroid.atras };
+}
+
+function paceAndroidArrancar() {
+  if (!paceEsAndroid()) return;
+  var app = paceAndroidPlugin('App');
+  if (app && typeof app.addListener === 'function') {
+    try {
+      app.addListener('backButton', function () {paceAndroidAtras();});
+      app.addListener('appStateChange', function (s) {paceAndroidFondo(!(s && s.isActive));});
+    } catch (e) {}
+  }
+
+  try {
+    document.addEventListener('visibilitychange', function () {paceAndroidFondo(document.visibilityState === 'hidden');});
+  } catch (e) {}
+  paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
+}
+
+try {paceAndroidArrancar();} catch (e) {}
+
+Object.assign(window, {
+  paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
+  paceAndroidAvisoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado
+});
+;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado, paceAndroidArrancar });
+})();
+</script>
   <!-- pantalla (s198): Screen Wake Lock mientras hay una sesion guiada montada.
        La pide SessionShell; el Foco no. -->
   <script>
@@ -11031,6 +11234,10 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    EL NAVEGADOR LA SUELTA SOLO al ocultarse la pestaña; al volver se pide otra
    vez si sigue habiendo sesion.
 
+   EN ANDROID el WebView no trae Wake Lock: la pide el complemento KeepAwake
+   (ui/android.js), que marca la ventana para que no se apague. Esa marca no se
+   suelta al irse al fondo, asi que alli no hace falta volver a pedirla.
+
    `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
@@ -11038,6 +11245,16 @@ var _paceLuz = { cuenta: 0, centinela: null, pidiendo: false, soltar: null, pedi
 
 function paceLuzPedir() {
   try {
+    var nativa = typeof paceAndroidPlugin === 'function' ? paceAndroidPlugin('KeepAwake') : null;
+    if (nativa) {
+      if (_paceLuz.centinela) return;
+      _paceLuz.pedidas++;
+      _paceLuz.centinela = 'android';
+      Promise.resolve(nativa.keepAwake()).catch(function () {
+        if (_paceLuz.centinela === 'android') _paceLuz.centinela = null;
+      });
+      return;
+    }
     if (!navigator.wakeLock || typeof navigator.wakeLock.request !== 'function') return;
     if (document.visibilityState !== 'visible') return;
     if (_paceLuz.centinela || _paceLuz.pidiendo) return;
@@ -11068,6 +11285,11 @@ function paceMantenerPantalla() {
       if (_paceLuz.cuenta > 0 || !_paceLuz.centinela) return;
       var s = _paceLuz.centinela;
       _paceLuz.centinela = null;
+      if (s === 'android') {
+        var nativa = typeof paceAndroidPlugin === 'function' ? paceAndroidPlugin('KeepAwake') : null;
+        if (nativa) Promise.resolve(nativa.allowSleep()).catch(function () {});
+        return;
+      }
       try {s.release().catch(function () {});} catch (e) {}
     }, 1500);
   };
@@ -14721,11 +14943,20 @@ function getFocusDescriptorKey(minutes) {
 
 
 
+
 let _notifyPermissionAsked = false;
 function maybeRequestNotifyPermission(state, set) {
   try {
     if (_notifyPermissionAsked) return;
     if (!state || !state.notifyFocusEnd) return;
+    if (typeof paceAndroidAvisos === 'function' && paceAndroidAvisos()) {
+      if (paceAndroidAvisoPermiso() !== 'default') return;
+      _notifyPermissionAsked = true;
+      paceAndroidAvisoPedir().then((p) => {
+        if (p === 'denied') set({ notifyFocusEnd: false });
+      });
+      return;
+    }
     if (typeof Notification === 'undefined' || !Notification.requestPermission) return;
     if (!/^https?:$/.test(window.location.protocol)) return;
     if (Notification.permission !== 'default') return;
@@ -20106,6 +20337,15 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   useEffectFT(() => {
     persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
   }, [running, endsAt, state.focusMode, state.focusMinutes]);
+
+
+
+
+  useEffectFT(() => {
+    if (typeof paceAndroidFoco !== 'function') return;
+    const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
+    paceAndroidFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+  }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
 
   useEffectFT(() => {
@@ -28284,8 +28524,12 @@ const { useState: useStateTD, useRef: useRefTD } = React;
 
 
 
+
+
 function paceBajarJSON(payload, nombre) {
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const texto = JSON.stringify(payload, null, 2);
+  if (typeof paceAndroidGuardarArchivo === 'function' && paceAndroidGuardarArchivo(nombre, texto)) return;
+  const blob = new Blob([texto], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -28294,6 +28538,10 @@ function paceBajarJSON(payload, nombre) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function paceEnlaceLegal(ruta) {
+  return typeof paceEnlaceWeb === 'function' ? paceEnlaceWeb(ruta) : ruta;
 }
 
 function paceDiaArchivo() {
@@ -28351,7 +28599,8 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
   const exportJSON = () => {
     if (paceDescargarCopia()) {
-      setMsg({ kind: 'ok', text: t('settings.msg.exported') });
+      const enAndroid = typeof paceEsAndroid === 'function' && paceEsAndroid();
+      setMsg({ kind: 'ok', text: t(enAndroid ? 'settings.msg.exported.android' : 'settings.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
 
       unlockAchievement('secret.backup');
@@ -28491,13 +28740,14 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
+
     React.createElement("div", { className: "pace-aj-pie" },
-    React.createElement("span", null, t('settings.foot')),
+    React.createElement("span", null, t(typeof paceEsAndroid === 'function' && paceEsAndroid() ? 'settings.foot.android' : 'settings.foot')),
     isWeb &&
     React.createElement("span", null,
-    React.createElement("a", { href: "/safety", target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
+    React.createElement("a", { href: paceEnlaceLegal('/safety'), target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
     React.createElement("span", { style: { margin: '0 5px' } }, "\xB7"),
-    React.createElement("a", { href: "/privacy", target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
+    React.createElement("a", { href: paceEnlaceLegal('/privacy'), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
     )
 
     )
@@ -28533,7 +28783,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>
@@ -29071,17 +29321,21 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
   const isWeb = location.protocol === 'http:' || location.protocol === 'https:';
-  const canNotify = isWeb && typeof Notification !== 'undefined';
+
+
+  const avisoAndroid = typeof paceAndroidAvisos === 'function' && paceAndroidAvisos();
+  const canNotify = avisoAndroid || isWeb && typeof Notification !== 'undefined';
+  const permisoAviso = () => avisoAndroid ? paceAndroidAvisoPermiso() : Notification.permission;
 
 
 
 
   const enableNotify = () => {
     if (!canNotify) return;
-    if (Notification.permission === 'granted') {set({ notifyFocusEnd: true });return;}
-    if (Notification.permission === 'denied') return;
+    if (permisoAviso() === 'granted') {set({ notifyFocusEnd: true });return;}
+    if (permisoAviso() === 'denied') return;
     try {
-      Notification.requestPermission().then((p) => {
+      (avisoAndroid ? paceAndroidAvisoPedir() : Notification.requestPermission()).then((p) => {
 
 
 
@@ -29211,13 +29465,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
     canNotify &&
-    React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t('settings.notify.sub'), modulo: "focus" },
-    React.createElement(AjustesInterruptor, { on: !!state.notifyFocusEnd && Notification.permission !== 'denied', aria: t('settings.notify'),
+    React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t(avisoAndroid ? 'settings.notify.sub.android' : 'settings.notify.sub'), modulo: "focus" },
+    React.createElement(AjustesInterruptor, { on: !!state.notifyFocusEnd && permisoAviso() !== 'denied', aria: t('settings.notify'),
       onChange: (v) => {v ? enableNotify() : set({ notifyFocusEnd: false });} })
     ),
 
-    canNotify && Notification.permission === 'denied' &&
-    React.createElement("div", { className: "pace-aj-nota" }, t('settings.notify.blocked')),
+    canNotify && permisoAviso() === 'denied' &&
+    React.createElement("div", { className: "pace-aj-nota" }, t(avisoAndroid ? 'settings.notify.blocked.android' : 'settings.notify.blocked')),
 
     React.createElement(AjustesFila, { id: "circle", nombre: t('settings.circle'), modulo: "breathe",
       sub: tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) }) },

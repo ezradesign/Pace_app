@@ -82,6 +82,15 @@ function FocusTimer({ onFinish }) {
     persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
   }, [running, endsAt, state.focusMode, state.focusMinutes]);
 
+  /* En Android el aviso de fin de Foco lo programa el sistema (ui/android.js),
+     porque con la app en el fondo esta cuenta no corre. Aqui solo se le dice
+     cuando acaba el bloque en marcha, o que no hay ninguno. */
+  useEffectFT(() => {
+    if (typeof paceAndroidFoco !== 'function') return;
+    const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
+    paceAndroidFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+  }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
+
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
   useEffectFT(() => {
     if (!window.ambientDrone) return;

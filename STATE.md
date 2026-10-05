@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.136.0 · 5 de octubre de 2026.
+**Versión:** v0.137.0 · 5 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -10,13 +10,20 @@ de prueba en cada push a `main` (workflow `Android`, artefacto `pace-android-deb
 necesita Android Studio. Dentro del APK no hay service worker y los eventos van al IndexedDB del
 WebView (las reglas, en `DECISIONES_TECNICAS_VIGENTES.md`).
 
+Lo que el WebView no trae lo dan complementos de Capacitor, y solo `app/ui/android.js` les habla: el
+botón atrás cierra lo que esté encima (como Escape) o manda la app al fondo, el aviso de fin de Foco
+lo programa Android mientras la app está en el fondo, las sesiones guiadas mantienen la pantalla
+encendida y la copia de «Tus datos» sale por el menú de compartir. Los APK de prueba se firman con
+una clave fija del repo, así que uno nuevo se instala encima del anterior sin perder los datos.
+
 ## Lo siguiente
 
-1. **Fase 2:** probar el APK en un móvil. El WebView no trae los avisos del Pomodoro, la descarga de
-   la copia de «Tus datos» ni la pantalla encendida en las sesiones, y faltan los iconos y la
-   pantalla de arranque de PACE (hoy son los de Capacitor), el botón atrás, la barra de estado, que
-   `privacy.html` hable también de la app y el AAB firmado. Antes de publicar, comprobar en un
-   móvil que lo guardado sobrevive a una actualización.
+1. **Fase 2:** probar el APK en un móvil: lo de arriba, importar una copia y que lo guardado
+   sobreviva a una actualización. Faltan los iconos y la pantalla de arranque de PACE (hoy son los
+   de Capacitor) y la barra de estado, con maqueta antes; que `privacy.html` hable también de la app;
+   quitar en Android el enlace a Buy Me a Coffee (Google Play no deja pagar fuera de su sistema), y
+   el AAB firmado. En Android 14 o más el aviso puede llegar con retraso: Android no deja alarmas
+   exactas sin un permiso que da el usuario.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 

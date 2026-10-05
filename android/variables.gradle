@@ -13,4 +13,6 @@ ext {
     androidxJunitVersion = '1.3.0'
     androidxEspressoCoreVersion = '3.7.0'
     cordovaAndroidVersion = '14.0.1'
+    // La misma que carga build.gradle: los complementos en Kotlin la leen de aqui.
+    kotlin_version = '2.2.20'
 }

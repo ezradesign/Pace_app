@@ -9,6 +9,9 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.13.0'
         classpath 'com.google.gms:google-services:4.4.4'
+        // Los avisos y los archivos estan escritos en Kotlin, y cada complemento
+        // trae su version del plugin. Cargado aqui una sola vez, lo comparten.
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
