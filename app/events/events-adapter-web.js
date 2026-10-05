@@ -3,13 +3,14 @@
    Licensed under the Elastic License 2.0 — see LICENSE
 
    ADAPTADOR WEB / PWA del contrato EventStore (`docs/product/EVENTOS_SCHEMA.md`
-   §10, §19.1). Capa B: aqui SI se nombran `localStorage` y `navigator.locks`,
-   porque son detalles de ESTE backend. El modelo canonico
+   §10, §19.1). Capa B: aqui SI se nombran el almacen y `navigator.locks`,
+   porque son detalles de ESTE backend. Desde s200 el almacen es IndexedDB
+   (`events-adapter-web.idb.js`, que carga antes y explica el porque). El modelo canonico
    (`events-model.js`) no los conoce y no debe conocerlos.
 
    NADA DE ESTE ARCHIVO SALE DEL DISPOSITIVO. No hay `fetch`, ni `XMLHttpRequest`,
    ni `sendBeacon`, ni WebSocket, ni URL remota: el unico destino de una escritura
-   es `localStorage` del propio navegador. Si algun dia alguien anade aqui una
+   es el IndexedDB del propio navegador. Si algun dia alguien anade aqui una
    llamada de red, esta violando la premisa del subsistema, no ajustandolo.
 
    EXCLUSION (§19.1). Toda read-modify-write —activacion, emision, consolidacion,
@@ -42,17 +43,11 @@ const EVENTS_UNAVAILABLE_RESULT = 'unavailable';
 
 /* --- Sondas de entorno --------------------------------------------------- */
 
-/* ¿`localStorage` es utilizable? En modo restringido el mero ACCESO lanza
-   SecurityError, asi que la sonda escribe y borra una clave propia. */
+/* ¿El almacen es utilizable? Sincrono: existe IndexedDB y abrirlo no ha
+   fallado. La prueba de verdad es la apertura, que hace `eventsWebInitialize`;
+   si falla, esto pasa a `false` y el adaptador cae a UNAVAILABLE. */
 function eventsWebStorageUsable() {
-  try {
-    const probe = '__pace_events_probe__';
-    localStorage.setItem(probe, '1');
-    localStorage.removeItem(probe);
-    return true;
-  } catch (e) {
-    return false;
-  }
+  return eventsIdbExists();
 }
 
 function eventsWebLocksAvailable() {
@@ -66,17 +61,11 @@ function eventsWebLocksAvailable() {
 
 /* --- Lectura / escritura crudas (siempre bajo lock las mutaciones) -------- */
 
-/* Devuelve `{ container, corrupt }`. Un contenedor ilegible NO revienta la app:
-   se reporta como corrupto y el llamador lo reinicia (§23). Un contenedor
-   ausente devuelve el vacio con `corrupt:false` — no es un error, es la primera
-   vez. */
-function eventsWebRead() {
-  let raw;
-  try {
-    raw = localStorage.getItem(EVENTS_WEB_KEY);
-  } catch (e) {
-    return { container: null, corrupt: true };
-  }
+/* Interpreta una cadena cruda -> `{ container, corrupt }`. Un contenedor
+   ilegible NO revienta la app: se reporta como corrupto y el llamador lo
+   reinicia (§23). Un contenedor ausente devuelve el vacio con `corrupt:false`
+   — no es un error, es la primera vez. */
+function eventsWebParse(raw) {
   if (raw === null || raw === undefined) {
     return { container: emptyEventsContainer(), corrupt: false };
   }
@@ -87,8 +76,25 @@ function eventsWebRead() {
   }
 }
 
-/* Escribe el contenedor ENTERO. `localStorage.setItem` de una clave escribe
-   todo o no cambia nada (WHATWG Web Storage), que es lo que permite que una RMW
+/* Lectura SINCRONA, para pintar: sale del ESPEJO (`events-adapter-web.idb.js`).
+   Ninguna mutacion parte de aqui; las mutaciones releen con `eventsWebReadFresh`
+   dentro del lock. */
+function eventsWebRead() {
+  return eventsWebParse(eventsWebMirror());
+}
+
+/* Lectura FRESCA del almacen -> Promise<{ container, corrupt, failed }>.
+   `failed` NO es `corrupt`: un contenedor ilegible se reinicia (§23), pero un
+   almacen que no ha podido LEERSE no dice nada del contenedor, y reiniciarlo
+   por eso borraria el historial de alguien por un fallo pasajero. */
+function eventsWebReadFresh() {
+  return eventsWebReadRaw().then(eventsWebParse, function () {
+    return { container: null, corrupt: true, failed: true };
+  });
+}
+
+/* Escribe el contenedor ENTERO -> Promise. Una transaccion de IndexedDB con un
+   solo `put` escribe todo o no cambia nada, que es lo que permite que una RMW
    dentro del lock no deje una «poda a medias».
 
    Ante error de almacenamiento: poda una vez, consolidando en baseline, y
@@ -97,24 +103,24 @@ function eventsWebRead() {
    `catch(e){}` mudo de `persistState()`. */
 function eventsWebWrite(container) {
   const attempt = function (c) {
-    try {
-      localStorage.setItem(EVENTS_WEB_KEY, JSON.stringify(c));
-      return true;
-    } catch (e) {
-      return false;
-    }
+    let raw;
+    try { raw = JSON.stringify(c); } catch (e) { return Promise.resolve(false); }
+    return eventsWebWriteRaw(raw);
   };
 
   let target = container;
   if (isOverEventsBudget(target)) {
     target = eventsWebPruneForBudget(target);
   }
-  if (attempt(target)) return { result: EVENTS_COMMITTED, container: target };
-
-  const pruned = eventsWebPruneForBudget(target);
-  if (pruned !== target && attempt(pruned)) return { result: EVENTS_COMMITTED, container: pruned };
-
-  return { result: EVENTS_REJECTED, container: null };
+  return attempt(target).then(function (ok) {
+    if (ok) return { result: EVENTS_COMMITTED, container: target };
+    const pruned = eventsWebPruneForBudget(target);
+    if (pruned === target) return { result: EVENTS_REJECTED, container: null };
+    return attempt(pruned).then(function (ok2) {
+      return ok2 ? { result: EVENTS_COMMITTED, container: pruned }
+                 : { result: EVENTS_REJECTED, container: null };
+    });
+  });
 }
 
 /* Poda por PRESION DE PRESUPUESTO (§16), no por calendario.
@@ -178,8 +184,8 @@ function eventsWebPruneForBudget(container) {
 
    NO ESCRIBE SI NO HAY NADA QUE PODAR: devolver `container: null` deja el
    almacen intacto. Importa mas de lo que parece — cada arranque pasaria por
-   aqui, y reescribir el contenedor entero para no cambiar nada es tocar
-   `localStorage` (y despertar a la otra pestana) sin motivo. */
+   aqui, y reescribir el contenedor entero para no cambiar nada es tocar el
+   almacen sin motivo. */
 function eventsWebPruneByCalendar(todayKey) {
   if (!todayKey) return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   return eventsWebRunExclusive(function (current) {
@@ -215,39 +221,49 @@ function eventsWebRunExclusive(fn) {
     return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   }
   return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
-    const read = eventsWebRead();
+    /* s200: la promesa del callback RETIENE el lock hasta que se resuelve, asi
+       que releer, escribir y verificar ocurren todas dentro. */
+    return eventsWebReadFresh().then(function (read) {
+      return eventsWebExclusiveStep(fn, read);
+    });
+  }).catch(function () {
+    return { result: EVENTS_REJECTED, container: null };
+  });
+}
 
-    /* CONTENEDOR DE UNA VERSION FUTURA -> NI UNA ESCRITURA (§9, §18).
-       Se comprueba DENTRO del lock, que es el unico sitio autoritativo. Una
-       version antigua de PACE que reescribiera un contenedor nuevo le borraria
-       los campos que todavia no conoce, en silencio y sin vuelta atras — y con
-       web, PWA y Android compartiendo formato eso deja de ser hipotetico. Leer
-       y exportar si (READ_ONLY); reescribir, jamas. */
-    if (!read.corrupt && read.container &&
-        read.container.schemaVersion > EVENTS_SCHEMA_VERSION) {
-      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
-    }
+/* El cuerpo de la RMW, con el contenedor ya releido DENTRO del lock. */
+function eventsWebExclusiveStep(fn, read) {
+  if (read.failed) return { result: EVENTS_REJECTED, container: null };
+  /* CONTENEDOR DE UNA VERSION FUTURA -> NI UNA ESCRITURA (§9, §18).
+     Se comprueba DENTRO del lock, que es el unico sitio autoritativo. Una
+     version antigua de PACE que reescribiera un contenedor nuevo le borraria
+     los campos que todavia no conoce, en silencio y sin vuelta atras — y con
+     web, PWA y Android compartiendo formato eso deja de ser hipotetico. Leer
+     y exportar si (READ_ONLY); reescribir, jamas. */
+  if (!read.corrupt && read.container &&
+      read.container.schemaVersion > EVENTS_SCHEMA_VERSION) {
+    return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+  }
 
-    const current = read.corrupt ? emptyEventsContainer() : read.container;
-    let out;
-    try {
-      out = fn(current, read.corrupt);
-    } catch (e) {
-      return { result: EVENTS_REJECTED, container: null };
-    }
-    if (!out || !out.container) {
-      return { result: out && out.result ? out.result : EVENTS_REJECTED, container: null };
-    }
-    const written = eventsWebWrite(out.container);
+  const current = read.corrupt ? emptyEventsContainer() : read.container;
+  let out;
+  try {
+    out = fn(current, read.corrupt);
+  } catch (e) {
+    return { result: EVENTS_REJECTED, container: null };
+  }
+  if (!out || !out.container) {
+    return { result: out && out.result ? out.result : EVENTS_REJECTED, container: null };
+  }
+  return eventsWebWrite(out.container).then(function (written) {
     if (written.result !== EVENTS_COMMITTED) return written;
     /* Verificacion de relectura: si lo escrito no se puede volver a leer, la
        operacion NO se da por buena (§15.1 — nunca se habilita la emision sin
        comprobar que el contenedor se relee). */
-    const back = eventsWebRead();
-    if (back.corrupt || !back.container) return { result: EVENTS_REJECTED, container: null };
-    return { result: out.result || EVENTS_COMMITTED, container: back.container };
-  }).catch(function () {
-    return { result: EVENTS_REJECTED, container: null };
+    return eventsWebReadFresh().then(function (back) {
+      if (back.corrupt || !back.container) return { result: EVENTS_REJECTED, container: null };
+      return { result: out.result || EVENTS_COMMITTED, container: back.container };
+    });
   });
 }
 
@@ -300,9 +316,30 @@ function eventsWebClearMarker() {
    inicial de feedback. Se pasa por parametro para que este archivo no dependa
    del store: el adaptador no sabe de React ni de `getState`. */
 function eventsWebInitialize(legacyState) {
-  if (eventsWebCapability() !== EVENTS_READ_WRITE) {
+  /* s200: primero se ABRE el almacen, se migra la copia de `localStorage` (una
+     vez) y se carga el espejo; sin eso la capacidad no sabe que version hay
+     guardada. Sin Web Locks no se migra ni se escribe: solo se carga para leer. */
+  if (!eventsWebStorageUsable()) {
     return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   }
+  if (!eventsWebLocksAvailable()) {
+    return eventsWebLoadReadOnly().then(function () {
+      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+    });
+  }
+  return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
+    return eventsWebMigrateFromLocalStorage().then(eventsWebRefresh);
+  }).then(function () {
+    if (eventsWebCapability() !== EVENTS_READ_WRITE) {
+      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+    }
+    return eventsWebInitializeLocked(legacyState);
+  }, function () {
+    return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+  });
+}
+
+function eventsWebInitializeLocked(legacyState) {
   return eventsWebRunExclusive(function (current, wasCorrupt) {
     let c = current;
 
@@ -431,6 +468,7 @@ Object.assign(window, {
   EVENTS_READ_WRITE, EVENTS_READ_ONLY, EVENTS_UNAVAILABLE,
   EVENTS_COMMITTED, EVENTS_REJECTED, EVENTS_INTERRUPTED, EVENTS_UNAVAILABLE_RESULT,
   eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite,
+  eventsWebParse, eventsWebReadFresh, eventsWebExclusiveStep, eventsWebInitializeLocked,
   eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability,
   eventsWebStoredSchemaVersion, eventsWebClearMarker,
   eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot,

@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.133.2 (s199 - **auditoría externa y el artefacto sin comentarios**: `index.html` de 2,04 a 1,47 MB y `backups/` fuera del repo. Antes, v0.133.1 / v0.133.0 (s198). El historial completo, en `CHANGELOG.md`.)
+**Version actual:** v0.134.0 (s200 - **eventos en IndexedDB y el plan de v1 en seis fases**: dos pestañas ya no pierden eventos (20 de 20) y «Camino a v1.0» reescrito. Antes, v0.133.2 (s199). El historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -113,7 +113,8 @@
 | `scripts/verify.eventos.js` | **Tanda de `pace.events.v1` en el verify (s155)**. Como `verify.integridad.js`, **no es un script suelto**: aquella lo invoca dentro de la tanda [4/4]. Cinco comprobaciones RELACIONALES + guard de cero, y **dos de ellas defienden frases de `privacy.html`** en vez de invariantes internos. `listaCorta` llega **por parametro**: un segundo formateador daria mensajes distintos para el mismo problema | **NUEVO s155 · 176 ln** |
 | `scripts/verify.encargo.js` | **EL ENCARGO DE ARTE DICE LA VERDAD (s169)**. Como `verify.eventos.js`, lo invoca `verify.integridad.js` en la tanda [4/4]. Cruza las filas de `docs/product/GLIFOS_LOGROS_ENCARGO.md` contra el mapa de máscaras REAL, **en las dos direcciones**: lo que sobra (ids que ya no existen) se ve leyendo, pero **lo que falta —un logro sin arte que el documento no menciona— NO**, y ése es el fallo por omisión. Cuatro comprobaciones **relacionales** (ningún número vive dentro; la cifra que compara es la que el propio documento afirma) más **guard de cero**, porque cambiar el formato de la tabla las apagaría todas en silencio. Nace porque el documento **pedía 38 dibujos cuando faltaban 19**: s167 entregó y nadie volvió a marcar la lista. **Los 7 rojos, verificados** | **NUEVO s169 · 162 ln** |
 | `app/events/events-model.js` | **MODELO CANONICO de `pace.events.v1` (s155)** — capa A de `EVENTOS_SCHEMA.md`: envelope, tipos, payloads con **lista permitida**, correlacion tipada, orden canonico, retencion, baseline, presupuesto y export/validacion. **REGLA DURA: no nombra `localStorage`, `setItem`, `navigator.locks` ni SQLite.** Si una funcion de aqui necesita tocar el almacenamiento, esta en el archivo equivocado | **s190: + `sessionsByRoutine`** en el baseline y en el fold (`session.completed` por `routineId`; sin id no se cuenta). Los huerfanos se CONSERVAN: el total es historia. `normalizeCountMap` lo comparten los dos mapas de cuenta. **NUEVO s155 · 448 ln** |
-| `app/events/events-adapter-web.js` | **ADAPTADOR WEB/PWA (s155)** — capa B: `localStorage` + **Web Locks**. Toda read-modify-write corre DENTRO del lock; esta **prohibido** cualquier sucedaneo con evento `storage`, heartbeat o `BroadcastChannel` (comunican pestañas, no dan exclusion). Sin `navigator.locks` **no se emite**. Trae la poda por **presion de presupuesto**, que **destila en `baseline` antes de borrar** — y el punto de extension declarado para la poda por calendario de la Fase 3 | **NUEVO s155 · 351 ln** |
+| `app/events/events-adapter-web.idb.js` | **EL ALMACEN FISICO del adaptador web (NUEVO s200)**: IndexedDB (base `pace.events`, registro `pace.events.v1`, la misma cadena JSON de antes) · el **espejo** sincrono para lo que pinta, que avisa con `pace:eventos` · la **migracion unica** desde `localStorage` (copia, relee, y solo si es identica borra la clave vieja) | **NUEVO s200 · 200 ln** |
+| `app/events/events-adapter-web.js` | **ADAPTADOR WEB/PWA (s155)** — capa B: **IndexedDB desde s200** (antes `localStorage`) + **Web Locks**; la RMW entera corre dentro del lock como promesa. Toda read-modify-write corre DENTRO del lock; esta **prohibido** cualquier sucedaneo con evento `storage`, heartbeat o `BroadcastChannel` (comunican pestañas, no dan exclusion). Sin `navigator.locks` **no se emite**. Trae la poda por **presion de presupuesto**, que **destila en `baseline` antes de borrar** — y el punto de extension declarado para la poda por calendario de la Fase 3 | **NUEVO s155 · 351 ln** |
 | `app/events/events-adapter-null.js` | **ADAPTADOR INERTE (s155)**. NO es relleno: §20 prohibe que Capacitor caiga al adaptador web porque el WebView parezca `https://localhost`, y §19.2 que `file://` emita aunque el navegador exponga Web Locks. Apagar el registro **NO** convierte la app en solo-lectura (§19.5), y **no** se acumulan eventos «en memoria para guardarlos luego» | **NUEVO s155 · 70 ln** |
 | `app/events/events-store.js` | **FACHADA (s155)**: detecta runtime (§20), elige adaptador y publica el contrato. **Nadie habla con un adaptador directamente.** Aqui vive la **barrera entre almacenes**: `pace.state.v2` y `pace.events.v1` no son atomicos entre si, asi que import y reset van marcador -> estado legacy -> contenedor reiniciado, y un corte a medias lo completa el arranque. Su cabecera documenta **que guarda, donde, para que y que NO guarda** | **s190: + `paceEventsAggregates()`/`paceEventsRoutineCount()`** -- el VALOR VIVO (§13), que **reutiliza el fold de la poda** en vez de escribir un segundo contador: idempotencia por cursor gratis. `null` = el almacen no puede responder · `0` = nunca; **tres estados, no dos**. **NUEVO s155 · 293 ln** |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome… **s151: la placa de 3 valores va en `stretch` + columna flex con el label creciendo** — con `center` un label de dos lineas arrastraba su sub 8 px (alturas reservadas, s119) | **v0.84.0** |
@@ -259,17 +260,16 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> **s199 (2026-10-05), en la nube, publica v0.133.2.** Auditoría externa del proyecto
-> ([informe](./docs/audits/audit-externa-v0.133.1.md)) y tres decisiones del usuario que cambian el plan de v1:
-> **Travesías y Caminos (Fases 6 y 7) FUERA de v1** (el producto ha girado al método guiado día a día de «A tu
-> ritmo»; los 7 Caminos se quedan como están, sin reescribir y fuera de la home) · **Android SÍ en v1** · **el pago
-> pasa a ser «A tu ritmo» semanal + rutinas premium + constructor + stats de semana/año**; gratis: Pomodoro, «A tu
-> ritmo» del día, 32 rutinas, Hidrátate, logros y stats «Hoy». Se afina con la prueba cerrada de Android.
-> Diario: [session-199](./docs/sessions/session-199-auditoria-externa.md).
+> **s200 (2026-10-05), en el PC de Ez, publica v0.134.0.** Dos encargos: **(1)** «Camino a v1.0» reescrito en
+> **seis fases** con las decisiones de s199 (saneamiento corto · Android y prueba cerrada cuanto antes · «A tu ritmo»
+> semanal, lo que se paga · Stats Hoy y Semana · cerrar con lo que hay · venta), el reparto gratis/pago en tabla y la
+> regla **«ninguna fase entra en v1 sin sacar otra»**; el plan de s132, archivado. **(2)** El adaptador web de
+> `pace.events.v1` pasa a **IndexedDB** con espejo síncrono y migración única: el test de dos pestañas, **20 de 20**.
+> Diario: [session-200](./docs/sessions/session-200-plan-y-eventos-indexeddb.md).
 >
-> **LO SIGUIENTE**: reescribir «Camino a v1.0» del `ROADMAP.md` con esas decisiones (propuesta pendiente de
-> revisión del usuario) · arreglar la pérdida de eventos con dos pestañas (adaptador web a IndexedDB; ver
-> CHANGELOG v0.133.2) · adelgazar el método (la documentación es sobre todo para Claude, dice el usuario).
+> **LO SIGUIENTE (Fase 1 del plan nuevo)**: timer de Mueve por timestamps · adelgazar el método. Después, Capacitor
+> Android y abrir la prueba cerrada (confirmar en Play Console los ~12 testers durante 14 días). **Pendiente de
+> maqueta, sin fase**: quitar los Caminos de la home.
 - **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
   72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
   el cierre que nunca es «Ahora» · la lectura C del norte (cuando `origin` tenga semanas de datos).
@@ -293,6 +293,7 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **El adaptador web de `pace.events.v1` guarda en IndexedDB; lo que pinta lee un espejo en memoria y toda RMW relee dentro del lock; migracion unica desde `localStorage`** (s200 · v0.134.0)
 - **Los dias se cuentan por CALENDARIO, nunca restando 24 h; una division entre 86 400 000 se REDONDEA** (s198 · v0.133.1)
 - **La version se sube con `npm run bump -- X.Y.Z`; la lista de sus siete sitios la comparten el comando y el `verify`** (s198)
 - **Con «A tu ritmo», el aviso del sistema nombra la pausa y cuando vuelves; y se calcula DESPUES de cerrar el bloque** (s198 · v0.133.0)

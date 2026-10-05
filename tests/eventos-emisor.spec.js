@@ -70,8 +70,8 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   expect(termino, 'GUARD: la sesion no llego al cierre, no hay evento que mirar').toBe(true);
 
   /* El append es asincrono (§10): se espera al evento, no a un timeout. */
-  await page.waitForFunction(() => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async () => {
+    const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
   }, null, { timeout: 5000 });
 
@@ -106,8 +106,8 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   expect(await chips.count(), 'GUARD: el cierre no ofrecio feedback, no hay nada que correlacionar')
     .toBeGreaterThan(0);
   await chips.first().click();
-  await page.waitForFunction(() => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async () => {
+    const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).some(e => e.type === 'feedback.answered');
   }, null, { timeout: 5000 });
 
@@ -270,12 +270,12 @@ test('el feedback de otra rutina NO se cuelga de la ultima sesion', async ({ pag
      CONTROL POSITIVO al final — la misma llamada con la rutina correcta SI
      emite, asi que el cero de arriba no puede ser «el emisor no funciona». */
   const salida = await page.evaluate(async () => {
-    const cuenta = () => (JSON.parse(localStorage.getItem('pace.events.v1') || '{}').events || [])
+    const cuenta = async () => (JSON.parse((await window.eventsWebReadRaw()) || '{}').events || [])
       .filter(e => e.type === 'feedback.answered').length;
     window.paceOlvidarUltimaSesion();
     window.recordRoutineFeedback('move.neck.3', 'yes');
     await new Promise(r => setTimeout(r, 150));
-    const sinSesion = cuenta();
+    const sinSesion = await cuenta();
 
     window.emitSessionCompleted('breathe', 'breathe.478', {
       elapsedSeconds: 300, activeSeconds: 280, plannedSeconds: 300,
@@ -284,15 +284,15 @@ test('el feedback de otra rutina NO se cuelga de la ultima sesion', async ({ pag
     await new Promise(r => setTimeout(r, 150));
     window.recordRoutineFeedback('otra.rutina', 'yes');
     await new Promise(r => setTimeout(r, 150));
-    const otraRutina = cuenta();
+    const otraRutina = await cuenta();
 
     window.recordRoutineFeedback('breathe.478', 'later');
     await new Promise(r => setTimeout(r, 150));
-    const ahoraNo = cuenta();
+    const ahoraNo = await cuenta();
 
     window.recordRoutineFeedback('breathe.478', 'some');
     await new Promise(r => setTimeout(r, 250));
-    return { sinSesion, otraRutina, ahoraNo, correcto: cuenta() };
+    return { sinSesion, otraRutina, ahoraNo, correcto: await cuenta() };
   });
 
   expect(salida.sinSesion, 'sin sesion previa no hay runId al que colgarse').toBe(0);
@@ -327,8 +327,8 @@ test('una sesion de Respira emite su plan DECLARADO (§6.4)', async ({ page }) =
   }
   expect(termino, 'GUARD: la sesion de Respira no llego al cierre').toBe(true);
 
-  await page.waitForFunction(() => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async () => {
+    const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
   }, null, { timeout: 5000 });
 
@@ -393,8 +393,8 @@ test('«Finalizar» a mitad es el `early` de §6.3, y agotar el plan es `natural
     .toBeGreaterThan(0);
   await finalizar.click();
 
-  await page.waitForFunction(() => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async () => {
+    const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
   }, null, { timeout: 5000 });
 

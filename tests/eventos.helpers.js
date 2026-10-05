@@ -19,10 +19,10 @@ const CLAVE_EVENTOS = 'pace.events.v1';
    dependencia de la CARGA que s162. Se reintenta UNA vez tras asentar la carga;
    cualquier otro error se propaga tal cual, para no enterrar fallos de verdad. */
 async function leerContenedor(page) {
-  const leer = () => page.evaluate(clave => {
-    const raw = localStorage.getItem(clave);
+  const leer = () => page.evaluate(async () => {
+    const raw = await window.eventsWebReadRaw();
     return raw ? JSON.parse(raw) : null;
-  }, CLAVE_EVENTOS);
+  });
   try {
     return await leer();
   } catch (e) {
@@ -53,7 +53,7 @@ function sembrarEventos(page, n) {
       });
       await window.eventsWebAppend(e);
     }
-    return JSON.parse(localStorage.getItem('pace.events.v1')).events.length;
+    return JSON.parse(await window.eventsWebReadRaw()).events.length;
   }, n);
 }
 

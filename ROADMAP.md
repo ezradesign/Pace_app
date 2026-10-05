@@ -56,542 +56,132 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 
 ---
 
-## 🧭 Camino a v1.0 — PLAN OPERATIVO ÚNICO (reescrito en s132)
+## 🧭 Camino a v1.0 — PLAN OPERATIVO ÚNICO (reescrito en s200)
 
-> **Este es el ÚNICO orden de trabajo vigente.** Sustituye a la secuencia adoptada en s93, que
-> llevaba 23 sesiones mostrando como «siguiente» una fila (`s107 · Caminos al centro`) que nunca
-> se ejecutó, mientras las sesiones reales seguían otro orden. Texto anterior conservado en
+> **Este es el ÚNICO orden de trabajo vigente.** Sustituye al plan de 15 fases de s132, que se
+> conserva entero —con su registro de lo HECHO en las Fases 1 a 3.6— en
+> [`docs/archive/ROADMAP_CAMINO_V1_S132_HISTORICO.md`](./docs/archive/ROADMAP_CAMINO_V1_S132_HISTORICO.md).
+> El anterior a ese, el de s93, en
 > [`docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`](./docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md).
 >
 > Reparto de autoridad: [`AUDITORIA_SISTEMA_PACE.md`](./docs/product/AUDITORIA_SISTEMA_PACE.md)
-> fija el **qué y el por qué** de producto (Bloques 0–9 de su §23) · **este apartado fija el
-> ORDEN** · [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. Si el audit y este
-> plan discrepan en el orden, gana este plan; en decisión de producto, gana el audit.
+> fija el **qué y el por qué** de producto · **este apartado fija el ORDEN** ·
+> [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. La base del giro es la
+> auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
 
-### Marco de decisión (usuario, s132)
+### Marco de decisión (Ez, 5 de octubre de 2026 · s200)
 
-- **v1.0 = la primera versión PAGADA.** No es «la web pulida»: es que se pueda comprar.
-- **Travesías SÍ entran en v1** y son el **argumento principal de compra**.
-- **Viajes de respiración NO** — audio, música y facilitadores quedan para después de v1.
-  **Matiz de s175**: la *voz* sale de esta exclusión —las señales habladas de Respira entran
-  en v1—, pero los Viajes como formato siguen fuera.
-- **Sin fecha.** Se prioriza la coherencia del producto sobre el calendario.
+- **Pace se quiere vender pronto.** v1.0 sigue siendo la primera versión PAGADA: que se pueda
+  comprar, en la web y en Android.
+- **Android entra en v1**, y la prueba cerrada de Play Console se abre **cuanto antes**, con la app
+  tal como esté: el plazo de Google corre mientras se trabaja en lo demás.
+- **El producto ha girado al método guiado día a día («A tu ritmo»).** Por eso **Travesías (antigua
+  Fase 7) y la reescritura de Caminos (antigua Fase 6) SALEN de v1.** Los 7 Caminos se quedan como
+  están.
+- **Quitar los Caminos de la home NO se hace ahora**: es un cambio visual y queda anotado para una
+  maqueta futura.
+- **Sin fecha**, pero con la regla nueva de abajo: el alcance ya no puede crecer.
 
-### La evidencia que manda: lo que dijeron los beta testers
+### El reparto gratis / pago (Ez, s200)
 
-Feedback real recogido tras el envío de s128 (aportado por el usuario en s132). **Los cinco
-puntos caen en el mismo sitio: Mueve y Estira no se entienden.**
-
-1. No está claro **cómo hacer exactamente** el ejercicio.
-2. **Los glifos son flojos.**
-3. La forma de **describirlos es vaga**.
-4. En la versión española **se mezclan nombres en inglés**.
-5. Hay **ejercicios muy complejos mezclados con ejercicios muy sencillos**.
-
-Verificado contra el código en s132 (los tres puntos comprobables son ciertos):
-
-| Queja | Medición |
+| Gratis | De pago — 19,99 € una vez |
 |---|---|
-| Nombres en inglés | **34 de 93** nombres de ejercicio (37 %) llevan término inglés: `Dead hang`, `Chin tucks`, `Hollow hold`, `Scapular squeeze`, `Wall sit`, `Cossack squat`, `Superman`, `Pigeon`, `Band pull-apart`… |
-| Glifos flojos | **46 glifos definidos para 92 nombres de paso distintos** ⇒ del orden de la mitad de los pasos cae en `DefaultGlyph` (inventario exacto = tarea §19.2 del audit) |
-| Complejo mezclado con sencillo | `level` e `intensity` están **declarados 44 veces en los datos y NO los consume nadie en la UI**: la información para separar ya existe y no se muestra |
+| Pomodoro completo | «A tu ritmo» **a lo largo de la semana**: variación por día, aprende de «¿te ayudó?», lecturas A y C de s194 |
+| «A tu ritmo» **del día** | Las **19 rutinas premium** |
+| Las **32 rutinas gratuitas** | El **constructor** de rutinas propias |
+| Hidrátate | Stats de **semana y año** |
+| Logros y Stats **«Hoy»** | |
 
-**Consecuencia para el orden:** esto no es pulido, es el núcleo. Mueve y Estira son lo que
-diferencia a PACE de un Pomodoro cualquiera, las Travesías se construyen **encima** de estos
-ejercicios, y los glifos placeholder ya eran un bloqueante de venta declarado («no se puede
-vender packs cuyos pasos rendericen `DefaultGlyph`»). Tres razones que apuntan al mismo sitio.
-
-### La segunda evidencia: las entrevistas de s192
-
-El usuario trae de sus entrevistas —entre ellas, con un experto en informática y SaaS— cinco
-ideas: **recoger datos para saber qué funciona**, el *job to be done*, el *product-market fit*,
-**demasiadas opciones** y un **menú completo** según el tiempo disponible (o el calendario) en vez
-de una carta infinita, con la capa extensa debajo. Apunta al mismo sitio que los beta testers: el
-problema no es que falte contenido, es **elegir** (medido: la home abría cuatro puertas a 51
-rutinas, un Camino sugerido y otra sugerencia en la barra lateral). De ahí nace la **FASE 3.6**.
+Se afina **al final de la prueba cerrada de Android**, preguntando a los testers «¿qué echarías de
+menos?».
 
 ### Fases
 
-### FASE 1 · Dirección cerrada — ✅ HECHA (s132–s134)
-
-- **Plan operativo único** (este apartado) — s132.
-- **§37 re-decidido y CERRADO** — s133, audit §37 bis: constancia = **ritmo semanal** (fuera
-  racha y récord) · equilibrio = **tres marcas foco·cuerpo·respiración, sin nota** · calendario
-  **por tipos de jornada**, no por volumen (`computeDayScore` deja de colorear) · **check-in de
-  cierre ocasional** en cierres naturales (requiere eventos ⇒ Fase 3) · comparación
-  retrospectiva sin cambios.
-- **Precio y estructura comercial CERRADOS** — s134, ver `MONETIZATION.md`: **19,99 € lifetime
-  como único plan al lanzamiento**, formato de licencia con `expiresAt` **opcional desde el día
-  uno** · **mensual descartado** · si algún día llega un pase anual, **9,99 €** (a 4,99 €
-  canibaliza el lifetime al 25 %) · todos los planes desbloquean lo mismo.
-- **Reparto de artefactos CERRADO** — s134: **web y Capacitor son los objetivos canónicos**; el
-  standalone baja a **export bajo demanda**.
-
-Criterio de cierre **cumplido**: ninguna sesión posterior necesita adivinar el orden ni reabrir
-el §37 ni el precio.
-
-### FASE 1.5 · Pulido visible — ✅ HECHA (s138, v0.72.0)
-
-Los cuatro ítems, cerrados y verificados en runtime:
-
-1. **BUG del punto del pomodoro — MEDIDO.** Desfase real **1003 ms a 25 min** y **1999 ms a 45**.
-   Causa confirmada por predicción: el gate `progress > 0.001` equivale a segundos distintos según
-   la duración, mientras el arco avanza siempre en el segundo 1. Fix: comparar contra `0`.
-   **Verificado a 0 ms en los cuatro presets.**
-2. **Atmósfera en los ejercicios sueltos** — se levanta la restricción de s99. Obligó a una
-   **segunda pasada anti-banding**: la misma rampa repartida entre más píxeles se ve en PC.
-3. **Constructor premium en Mueve Y Estira**, y **al principio** de ambas bibliotecas. **Sin campo
-   de módulo** (decisión del usuario). De paso se cerró un agujero de crédito: las rutinas propias
-   lanzadas desde Estira no sumaban a `moveSessionsTotal`.
-4. **Loto de Respira** integrado como **máscara CSS** con el color por token — que es lo que
-   resuelve el contraste. 959 KB → 146 KB.
-
-**Cinco correcciones más** salieron del feedback del usuario durante la sesión (recorte del visual,
-capas a distinta velocidad, giro a tirones, tinta lavada en claro y salto de texto de 21 px en
-Suspiro fisiológico). **Abierto**: los aros del visual siguen siendo dos hairlines y el usuario
-quiere otra cosa; falta su dirección.
-
-### FASE 1.6 · Ajustes y dos retiradas — ✅ HECHA (s139, v0.73.0)
-
-Separada de la 1.5 a propósito: son ocho ítems de pulido en total y la regla es un frente por
-sesión, cerrado y verificado. Los cuatro entregados en s139; detalle en
-[session-139](./docs/sessions/session-139-respira-y-ajustes.md).
-
-> **Cola de la 1.5/1.6, cerrada en s140 (v0.73.1):** el **banding de la atmósfera**, que arrastraba
-> desde s100. Causa real —medida sobre los píxeles de la página, no sobre el tile— : el grano no
-> ditheraba (solo tapaba, y por debajo de lo necesario) y apilar el mismo degradado dos veces
-> duplicaba el escalón. Diario: [session-140](./docs/sessions/session-140-banding-atmosfera.md).
-
-1. **Ocultar el estilo de timer** (queda siempre «aro») y **ocultar «orgánico»** del círculo de
-   respiración. **Sin borrar**: una constante por opción en un solo sitio (`SHOW_TIMER_STYLE`,
-   `SHOW_BREATH_ORGANICO`) que retira la opción de la UI y deja el motor intacto. Reversible en
-   una línea, y la razón se anota en `DECISIONES_TECNICAS_VIGENTES.md` para que nadie lo borre
-   más adelante creyendo que es código muerto.
-2. **Migración de valores huérfanos** — la parte que no se ve y sin la cual lo anterior rompe.
-   Al cargar, si el `timerStyle` o el estilo de respiración guardados son de los que se ocultan,
-   se reescriben al que queda. Sin esto quien eligió el analógico **queda atrapado**:
-   `FocusTimer.jsx:117` sigue leyendo `state.timerStyle` y `BreatheVisual.jsx:197` conserva su
-   rama de `organico`. El default de `timerStyle` ya es `'aro'` (`state-core.jsx:33`), así que
-   solo afecta a instalaciones antiguas que lo cambiaron a mano.
-3. **BUG del botón fantasma** al cambiar el descanso entre series. Sospechoso identificado: esos
-   botones llevan `transition: 'all 180ms'` y entre lo que cambia al activarse está el
-   **`fontWeight`** (`TweaksPanel.jsx:290-295`), así que la transición anima el peso de la fuente.
-   **Es una hipótesis, no está confirmada**: reproducir y medir antes de tocar. Si se confirma, el
-   fix es declarar la transición solo de `background`, `color` y `border-color`. El mismo patrón
-   aparece en `statsPanelTabStyles.tab`: revisarlo de paso.
-4. **Idioma «Auto»**: tercera opción del selector y **default de las instalaciones nuevas**.
-   Resuelve con el idioma del dispositivo **en cada arranque**, reutilizando `detectInitialLang()`
-   (`useT.jsx:8`), que hoy solo se consulta una vez dentro de `loadState()`. Las instalaciones
-   actuales conservan su elección explícita. **Verificar** que no dispare el logro secreto
-   `secret.bilingual`, que se desbloquea con cualquier cambio de `state.lang` tras montar.
-
-Criterio de cierre: ninguna opción retirada deja a nadie atrapado, el bug medido antes de
-tocarlo, y el «Auto» verificado cambiando de verdad el idioma del sistema.
-
-### FASE 2 · Que Mueve y Estira se entiendan — 🔄 EN CURSO (s141)
-
-El bloque del feedback beta. La más importante.
-
-> **s141 · auditoría HECHA y ola A entregada** ([audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md)).
-> **Tres de las cuatro cifras de abajo NO reproducen** contra el árbol y se corrigen aquí: son
-> **65** nombres únicos y no 92 · **55 %** con inglés y no 37 % (*peor*) · **20 sin glifo = 31 %* y
-> no «la mitad» (*mejor*) · `level`/`intensity` viven en la **rutina**, no en el paso. Además, los
-> glifos son **dos problemas distintos** (20 que no existen · 15 que existen sin aprobar) y **41 de
-> 47 dibujan una sola pose estática**, que es la evidencia dura del punto 3.
-> **s142 · ola C entregada**: 30 nombres más ⇒ de 36 con término inglés queda **1** (`Superman`,
-> por decisión). Hallazgo: **5 de los 47 dibujos no se pintan nunca** — cuatro tapados por su
-> propio alias (`ExerciseGlyph` resuelve el alias primero) más `Nordics`, sin uso.
-> **s143 · ola E entregada**: las 28 rutinas declaran ya intensidad y nivel técnico (17 básicas ·
-> 9 intermedias · **2 avanzadas**), visibles en la tarjeta y **sin mezclar los dos ejes**. Dos
-> hallazgos: `advanced` **no existía** en los datos, y **«no recomendar avanzado por defecto» no
-> tiene consumidor** — nace con el recomendador de la Fase 3.5.
-> **s144 · ítem 6 entregado**: **Preview «antes de empezar»** entre la tarjeta y la sesión (qué
-> necesitas · posición · duración · intensidad · pasos con glifo), solo desde la biblioteca. Las
-> 28 rutinas declaran ya sus requisitos. **Desbloquea la reescritura editorial**: los requisitos
-> salen de la descripción, que era el motivo de que 16 de 28 sonaran a lista de la compra.
-> **Sigue pendiente: ola B** — **3 dibujos**, no 20 (corregido en la auditoría de s178: la
-> cifra era de s141 y el arte ha entrado en varias tandas desde entonces). La verdad la dice
-> el documento **generado** [`GLIFOS_EJERCICIOS_PENDIENTES.md`](./docs/product/GLIFOS_EJERCICIOS_PENDIENTES.md):
-> **62 identidades · 59 con arte · 3 pendientes**. **EN PAUSA hasta que llegue el arte.**
-
-**Arrancó por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
-de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,
-qué glifo existe · si está aprobado o es placeholder · si hay alias · una o dos poses · zona
-corporal · si el nombre lleva inglés y cuál sería su nombre en español · nivel técnico e
-intensidad declarados. De esa matriz salen las olas de trabajo, y no antes: renombrar sin tener
-el mapa completo rompe claves de glifo en silencio.
-
-1. **Nombres en español.** Los 34 nombres con inglés. Ojo: `name` ES es la **clave del glifo** y
-   de la i18n del constructor ⇒ renombrar exige tocar `exercise-glyphs.jsx` y
-   `content/*.js` **en el mismo cambio** (decisión s108); si se olvida, cae en silencio a
-   `DefaultGlyph`. Migración por olas con verificación en runtime de que la clave nueva resuelve.
-2. **Glifos: inventario y set completo.** Matriz §19.2 y cierre de la cola D-4. Los glifos que
-   dibuje o apruebe el usuario se portan **literales** (regla s84).
-3. **Dos niveles visuales** (§19.3): el glifo de 44×44 **identifica**; el **diagrama de ejecución**
-   del runner **enseña**. Hoy se le pide al pequeño que explique la técnica y por eso se percibe
-   flojo. Es la respuesta directa al «no sé cómo hacerlo».
-4. **Descripciones que enseñan.** Cerrar la **ola editorial** de las 6 rutinas legacy y subir el
-   listón de `instruction.action`/`care` en el resto. Tono ya fijado: realista y explicativo,
-   sin lenguaje de fallo/límite (BASE §7-9).
-5. **Nivel e intensidad visibles** + no mezclar: consumir los metadatos que ya existen, separar
-   **intensidad** de **nivel técnico** (§29.2) y dejar de recomendar contenido avanzado por
-   defecto (§29.4: Sissy squat, Nordics y compañía llevan requisitos y regresión).
-6. **Preview antes de empezar** (§18.3): qué necesitas, posición, duración, pasos, adaptación.
-
-Criterio de cierre: una persona que nunca ha hecho el ejercicio sabe **qué va a hacer, cómo y
-cómo cuidarse** sin salir de la app — y ningún nombre está en inglés en la versión española.
-
-### FASE 2.5 · Logros: curva, entrega y miniaturas
-
-**Bloque 6 del audit**, que faltaba en el plan hasta s136 — hueco destapado por la lista del
-usuario, no por la auditoría. Va aquí porque la **matriz de logros (§15.2)** y la **matriz de
-ejercicios (§19.2)** de la Fase 2 son el mismo tipo de trabajo y sus glifos comparten criterio
-visual: hacerlas seguidas evita repetir la discusión.
-
-El problema, en palabras del usuario: *«con hacer media cosa o incluso saltando algo ya consigues
-4 logros seguidos»*. Es literalmente lo que ya anotaban §3.4 («desbloqueos iniciales demasiado
-juntos») y §15.3 («no deben desbloquearse todos juntos»).
-
-1. **Matriz de los 106 logros** (§15.2), sin código: id · categoría · nombre · promesa · condición
-   · dificultad · momento de desbloqueo · free/premium · visible/secreto · **detector real** ·
-   estado · glifo. Sirve además para detectar los «inalcanzables presentados como implementados»
-   que señala §3.4.
-2. **Curva de progresión** (§15.3): umbrales más altos y basados en repetición o variedad real, no
-   en la primera vez. Los primeros deben enseñar el sistema y conducir a la siguiente acción.
-3. **Entrega escalonada**: como máximo **un logro nuevo por sesión y por día**; el resto espera en
-   cola. Precedente directo: los toasts de logro ya se aplazan durante un Camino (s105).
-4. ~~**Recálculo completo con las reglas nuevas** — EXCEPCIÓN CONSCIENTE a §2.5 y §2.2~~
-   **ANULADO en s146: AMNISTÍA.** Puesto delante de la decisión con las cifras medidas, el usuario
-   eligió que **nadie pierda un logro ya concedido**. Las reglas nuevas rigen solo para lo aún no
-   ganado, así que **§2.5 y §2.2 quedan intactas y no hay excepción que registrar**. Sale gratis
-   por construcción: la única escritura sobre `state.achievements` es el spread aditivo de
-   `unlockAchievement`, o sea que un logro ya ganado no se puede retirar ni queriendo — cero código
-   de migración y nada que comunicar al usuario final. Los 6 logros retirados del catálogo no
-   rompen la amnistía porque **ninguno tenía detector**: nadie podía tenerlos.
-5. **Miniaturas de la sidebar**: la lógica de «las 5 últimas sustituyendo a las antiguas» **ya
-   existe** (`Sidebar.jsx:376-379` ordena por `unlockedAt` descendente y toma 5). Lo que falta es
-   el glifo: hoy **toda miniatura desbloqueada pinta un `'✦'` fijo** (`Sidebar.jsx:403`), por eso
-   parece que no se activan. Se sustituye por el glifo real reutilizando `AchGlyph` y
-   `ACHIEVEMENT_GLYPHS`.
-6. **Cobertura de glifos: 34 de 106.** **Sello por categoría como solución de transición** para
-   los que falten (`CAT_META` ya define las 7 categorías) **+ entrada de los glifos que el usuario
-   ya tiene diseñados**, que se portan **LITERALES** (regla s84: el usuario dibuja o aprueba, se
-   porta tal cual, sin inventar versiones). El resto del set queda como cola de dibujo.
-7. **Denominadores únicos** (§15.4): sidebar, modal, stats y toasts deben contar lo mismo — §3.4
-   dice que hoy no lo hacen.
-
-Criterio de cierre: ningún logro cae en ráfaga, cada miniatura de la sidebar se distingue de las
-demás, y las cuatro superficies cuentan la misma cifra.
-
-> **Estado tras s147 — CERRADA SALVO ARTE.** Los 7 puntos están hechos: matriz y curva medidas con
-> banco propio (s146, día 1 del 35 % al 18 % de lo que da un año) · entrega escalonada (s145) ·
-> amnistía en vez de recálculo (s146) · miniaturas pintando el glifo real (s146) · denominador
-> único (s146) · **77 de 96 logros con arte propio** (s146 + s147 y las tandas posteriores;
-> la nota decía «58 de 96», cifra de s147, corregida en la auditoría de s178).
->
-> Lo que queda es **material, no diseño**: **19 logros sin dibujo** (la nota decía 38). El
-> usuario avisa cuando tenga arte nuevo y se re-corre `scripts/ingest-glifos-logro.js`. La
-> cifra viva la da `npm run verify` («máscaras de logro en el mapa»), no esta nota.
-> Prioridad dentro de esa tanda:
-> **`hydrate.week.perfect`**, único que perdió su dibujo a propósito en s147 —llevaba un pincel de
-> caligrafía— y hoy cae a su carácter; necesita un dibujo de agua.
->
-> El punto 6 anotaba «sello por categoría como solución de transición» y **no hizo falta**: la
-> precedencia máscara → SVG heráldico → carácter deja entrar el arte por partes sin huecos, así
-> que lo que aún no tiene dibujo conserva el sistema viejo en vez de aplanarse a su categoría.
-
-### FASE 3 · Eventos web (`pace.events.v1`) — ✅ HECHA (s155 · s172 · s174 · s190)
-
-Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se
-emite no se reconstruye, y de él dependen «Qué te ayuda», las comparaciones, el check-in de cierre
-y media pestaña Semana. Diseño cerrado y aprobado desde s117: no se rediseña, se implementa.
-Criterio de cierre: se emiten eventos en web/PWA con single-writer, `file://` no emite, y el
-export/import sigue siendo reemplazo total.
-
-**s155 cerró la Fase 1 del esquema** —modelo canónico, adaptador web, Web Locks, baseline,
-export/import/reset, recuperación y pruebas multi-pestaña— **sin emisores**, porque §25 prohíbe
-emitir antes de estar en `READ_WRITE`. El single-writer está probado con **dos pestañas de verdad**
-(20 emisiones concurrentes, cero pérdidas) y `file://` selecciona el adaptador inerte. Diario:
-[session-155](./docs/sessions/session-155-eventos-fase-1.md).
-
-> **PUESTO AL DÍA EN LA AUDITORÍA DE s178.** Este bloque se quedó en «queda la Fase 2 del
-> esquema: los cuatro emisores» y llevaba así **de v0.88.0 a v0.107.0**. Lo entregado desde
-> entonces:
-> - **v0.99.1** — el backup lleva y devuelve los eventos, cableado en las dos direcciones
->   **antes** que el primer emisor.
-> - **v0.102.0 (s172)** — **los cuatro emisores**, con su suite (`tests/eventos-emisor.spec.js`,
->   más `eventos-backup`, `eventos-barrera` y `eventos-retencion`). El emisor vive en
->   `app/state-events.jsx:69`.
-> - **s174** — la **retención por calendario** (120 d, §12) se dispara **sola**, una vez por
->   arranque tras `loadState` (`app/events/events-store.js:370`).
->
-> **s190 · la Fase 3 del esquema, CERRADA.** `sessionsByRoutine` entra en el fold del baseline y
-> `paceEventsAggregates()` da el valor vivo **reutilizando el fold de la poda** (un solo contador
-> para las dos lecturas). El encaje con `state-history` se resolvió **no duplicando**: «días con
-> ritmo» y los minutos por día siguen siendo suyos, y `aggregates` solo guarda lo que ninguna otra
-> capa puede dar. La **normalización P1** también queda cerrada (`feedbackCount`): reproducía, y
-> `'3' + 1` daba `'31'`. Primer consumidor entregado: «Lo has hecho N veces» en el preview.
-> Diario: [session-190](./docs/sessions/session-190-la-memoria-larga.md).
->
-> Dato que ahorra un susto: el store **se inicializa solo** (`paceEventsBoot()` al cargar
-> `events-store.js`), no hay que arrancarlo desde producto.
-
-### FASE 3.5 · Pausa PACE (§17) — 🔄 EN CURSO · la propuesta YA existe (s187, v0.118.0)
-
-**Hueco detectado en el recorrido sistemático de s137**: no estaba en ninguna fase, y es el bucle
-que hace útil la app a diario.
-
-> **s187 · la propuesta, entregada.** El BreakMenu propone **UNA rutina con nombre, duración y el
-> porqué**, y la regla se escribió antes de codificarla: bloque ≥35 min → Estira · cero vasos
-> pasado el mediodía → agua · tercer bloque de hoy → Respira · lo pendiente del plan → ese módulo ·
-> **y si no hay motivo, nada** (una propuesta sin motivo es publicidad). Vive pura en
-> `app/breakmenu/BreakMenu.support.jsx`, la rutina la elige `libraryParaAhora` y «Empezar»
-> entra por las mismas puertas que la biblioteca. **Lo que NO entra, decidido**: lo de ayer, el
-> perfil del onboarding y cualquier racha o total. Diario:
-> [session-187](./docs/sessions/session-187-la-pausa-que-propone.md).
->
-> **s189 · el feedback y la última pausa, entregados.** La propuesta **lee** «¿te ayudó esta
-> pausa?»: una rutina con «No» y sin ningún «Sí»/«Un poco» sale del pozo de la propuesta, con
-> **amnistía** si el veto lo vaciara (medido: sin ella la rama enmudece en 9–12 días y 45 minutos
-> sentado acaban proponiendo agua) y el «Sí» **no ordena nada**, sólo protege — el techo de la señal
-> es de una respuesta por rutina y día sobre pozos de 8 a 17. Y la rotación pasa a ser **día +
-> número de bloque**, que arregla un defecto que el encargo no pedía: **dos pausas del mismo día
-> proponían la misma rutina**, incluso una ya hecha. **La propuesta ya se prueba en inglés.**
-> Diario: [session-189](./docs/sessions/session-189-el-feedback-que-nadie-leia.md).
->
-> **Lo que queda de esta fase**: **zona corporal** · contexto habitual (que depende del onboarding
-> contextual de la Fase 8).
-
-Hasta s187 el BreakMenu solo **ordenaba** módulos según lo hecho en el día. Debe **recomendar una
-acción concreta**: *«Llevas 50 minutos sentado. Te propongo Hombros ligeros, 4 minutos y sin material.»*
-Usa duración del Foco · actividades del día · hora · contexto habitual · última pausa · zona
-corporal · tiempo disponible · **feedback anterior**.
-
-Aquí es donde el **feedback ligero «¿te ayudó esta pausa?»**, que se captura desde s116 **sin
-ningún consumidor**, empieza por fin a servir para algo. Y responde al **problema D** del
-posicionamiento (§27.3): «sé que debería parar, pero no sé qué me conviene».
-
-Va después de eventos porque la recomendación necesita historial real, no contadores agregados.
-
-### FASE 3.6 · «A tu ritmo» — 🔄 EN CURSO · primera versión (s192, v0.122.0)
-
-**Una pregunta —«¿cuánto trabajas hoy?»— y PACE sirve la jornada**: bloques de foco y, entre
-ellos, pausas con nombre, duración y motivo. Ocupa el sitio de Actividades y del Camino sugerido
-(«el menú manda»); la carta sigue a un toque con **«Hoy voy por libre»**. Diseñado en cuatro
-rondas de maqueta mirándolas (`docs/proposals/menu-del-dia-r1` … `a-tu-ritmo-r4`). Absorbe el
-«Déjate guiar» de la Fase 8 y la propuesta de la Fase 3.5 cuando hay menú. Diario:
-[session-192](./docs/sessions/session-192-a-tu-ritmo.md).
-
-> **Decidido por el usuario**: nombre **«A tu ritmo»** (con «Hasta las …» debajo en el aro) ·
-> glifos de Actividades **solo en las paradas**, con el módulo escrito en la etiqueta · tenedor y
-> cuchillo para la comida · **horario editable en la frase** (inicio, comida, cuánto dura y salida;
-> la hora de comer por defecto sale de la región) · **llegar tarde = salgo a mi hora**.
-
-**Hecho en s193 (v0.123.0), tras usarlo el usuario**: «la línea sigue al aro» — el tramo de ahora se
-rellena con el pomodoro, al acabar el bloque **«Ahora» es la pausa** hasta que empieza el siguiente
-(tocarla la empieza; la barra lateral dice «Tu pausa»), lo hecho queda en verde entero y una frase
-explica el enlace la primera vez. Diario: [session-193](./docs/sessions/session-193-la-linea-sigue-al-aro.md).
-
-> **El norte que fijó el usuario en s193**: «la idea es acompañar el día pero ir ofreciendo propuestas
-> para cada día de la semana/mes». O sea: el menú no es solo de hoy — la variedad y la planificación
-> entre días (qué propone el lunes frente al jueves, qué ha cambiado esta semana) es lo siguiente
-> que tiene que poder decir el sistema. Hoy los pozos rotan por día y nada más.
-
-**Hecho en s194 (v0.124.0)**: **el origen de cada sesión** en `pace.events.v1` (`origin` +
-`fromMenu`, rev. 7 del esquema): la instrumentación que hace medible si el menú funciona. Nada
-cambia en la pantalla. Diario: [session-194](./docs/sessions/session-194-el-origen-de-cada-sesion.md).
-
-> **El norte, en tres lecturas y una recomendación (s194)**: **A** · el menú varía con el día de la
-> semana (barata, sin datos; hay que darle motivo visible) · **B** · planificar la semana de antemano
-> (la cara; gana con el calendario, Fase 9) · **C** · el sistema enseña qué cambió y propone ajustes
-> (necesita el origen de cada sesión y semanas de uso; saca Stats «Semana» del aparcamiento).
-> Recomendado: **A ya, C después, B aparcada**. Orden de trabajo: origen → recolocar → A.
-
-**Hecho en s194 (v0.125.0)**: **recolocar a mitad de día** — al empezar cada bloque, si la hora no es
-la del plan, el resto del día se recompone desde ahora; lo hecho se congela; el retraso se pinta
-punteado; **llegar antes es empezar**. Y el bug del selector de inicio (solo llegaba a las 13:00).
-
-**Hecho en s198 (v0.133.0)**: **la pausa te llama por su nombre** — con «A tu ritmo», el aviso del sistema al
-acabar un bloque dice qué pausa toca y cuándo vuelves (D2 de `por-donde-seguir-s198.html`, texto V1). El `.ics`
-(«Calendario», abajo) queda aparcado a propósito hasta usar el aviso unos días.
-
-**Hecho en s197 (v0.130.0)**: **la tableta vertical lleva la piel de móvil** (toda pantalla más alta que
-ancha de hasta 1024 px). El corte entre pieles vive ahora en un solo sitio, `_responsive.corte.js`. Con esto
-queda **implementado todo lo que el usuario decidió en s196**; lo único pendiente es que use la app una
-semana entera.
-
-**Hecho en s197 (v0.129.0)**: **la media jornada como horario propio** (de mañana o de tarde, con sus horas
-recordadas y editables en la cabecera y en «Ajustar el horario»), **la comida solo en la jornada entera**, el
-tramo en los chips y las losetas de las dos jornadas, **la hoja del día con hecha/saltada** y el recuento
-(«Llevas seis bloques y cuatro pausas») en la tarjeta de la barra lateral. Queda de lo decidido en s196: la
-**tableta vertical con la piel de móvil** hasta 1024 (v0.130.0).
-
-**Hecho en s195c (v0.128.0)**: **la semana (lectura A)** — seis temas en ciclo por semana ISO × acento del
-día × la regla, todo desde la fecha, y **sin anunciarlo** (el usuario eligió «nada» entre chip, nada y
-cuatro palabras). Con v0.127.0: la tarjeta por libre, la comida como interruptor, la pausa solo con Hidrátate.
-Lo siguiente del norte: **C**, cuando `origin` tenga semanas de datos.
-
-**Hecho en s195b (v0.126.0)**: **la pausa con memoria** — el modal con menú pregunta una cosa (hacer la pausa o
-seguir), el agua va por tiempo, la pausa se recoloca también al terminar y la duración del aro manda el día, y
-la línea distingue hecha de saltada. Queda la ronda 2 (`ideas-s195-r2.html`): la tarjeta por libre, la comida
-sí/no, los nombres de la semana.
-
-**Hecho en s195 (v0.125.1)**: lo que el usuario vio usándolo una tarde a 1536×704 — el hueco del
-retraso con la caja de la píldora (choque de nombres), «AHORA» pisando el resumen del día (cada
-tarde, en todos los viewports de escritorio) y un scroll de la luz que nadie veía. Nada del norte.
-
-**Lo que queda** («implementemos esto primero y luego vamos ajustando»):
-- **Propuestas para cada día de la semana/mes**: que el menú varíe y se planifique entre días, no
-  solo dentro del día (el norte de arriba; empezar por la lectura A). Pinta antes.
-- Las otras dos políticas de llegar tarde (pintadas en la ronda 4 de s192); «llegar antes» ya está (s194).
-- **Contexto real** («Junto a la mesa · Sin material» es fijo) → onboarding contextual, Fase 8.
-- **Calendario**: el horario es lo que una sincronización rellenaría sola. En orden de coste:
-  exportar `.ics` (sin permisos) · Android leyendo el calendario del teléfono (Fase 9, sin nube) ·
-  Google con el permiso de solo libre/ocupado (exige su verificación; Outlook sería otra integración).
-- **Datos anónimos con permiso** (ver Reglas del plan) para medir si el menú funciona: el registro
-  de eventos no distingue aún si una sesión vino de la propuesta, de la biblioteca o de un Camino.
-- **Stats**: la pestaña «Hoy» debería enseñar el menú del día (motivo de aparcar la Fase 4).
-
-### FASE 4 · Stats — ⏸ APARCADA en s192 (maquetas de s191 en docs/proposals/stats-*)
-
-> **Aparcada por decisión del usuario** al abrir la Fase 3.6: si el menú manda en la home, la
-> pestaña «Hoy» tiene que mostrarlo, y diseñarla antes habría obligado a rehacerla. Las maquetas de
-> s191 (Hoy y Semana, tres rondas) quedan como punto de partida.
-
-Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy + Semana), según
-[`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md), ya sin condicionantes
-tras el cierre del §37. Es el escaparate del *free*: con eventos emitiendo puede nacer completa.
-
-### FASE 5 · Respira: sonido real y catálogo — 🔄 EN CURSO (voz s175 · música s177)
-
-- **Sonido**: inhalaciones y exhalaciones reales + fondo meditativo tipo hang drum. **Como
-  archivos** en web y Capacitor; el standalone conserva el motor sintetizado. La pista de fondo se
-  cachea al usarla, no en el precache. Si el material se genera con IA, **verificar y guardar
-  constancia de los términos de uso comercial**. **La regla «voz/TTS: NUNCA» queda ANULADA en
-  s175 por decisión explícita del usuario**: las locuciones entran, empezando por la voz
-  `sulafat`. Lo que la decisión no cambia es la física: una locución dura lo que dura, y
-  las dos voces **no caben en las mismas rutinas**: `sulafat`
-  entra en **17 de 20** (fuera, las tres de bombeo, con fases de 1 s) y `bradford` en **14**
-  (esas tres más las tres de rondas, por su «exhala» de 3,572 s). Por eso la voz se elige
-  **por fase** y cae al sintetizador cuando no cabe. Medida: `node
-  scripts/audit/censo-respira-fases.js`. **La música de fondo tiene sus briefs escritos** en
-  `docs/product/MUSICA_RESPIRA_BRIEFS.md` (s176), uno por familia y con los números del
-  catálogo detrás.
-- **Catálogo**: revisión de las 20 técnicas y **separar Técnicas de Viajes** (§9.1).
-- El **loto** ya entró en la Fase 1.5.
-
-### FASE 6 · Caminos repensados
-
-Los 7 actuales se reescriben como **experiencias editoriales** (Bloque 3 del audit: hoy reutilizan
-demasiado contenido, casi todos tienen 3 pasos y se sienten como playlists). Formatos
-Semilla/Pausa/Ritual · pasos editoriales propios · motor de hitos variables · transiciones y
-cierres · revisión de duración · láminas nuevas donde haga falta.
-**+ logros de Caminos** (Bloque 6): nacen aquí, con los Caminos ya reescritos, no antes.
-Va **antes** de las Travesías porque las Travesías se construyen encima.
-
-### FASE 7 · Travesías de 3, 7 y 14 capítulos
-
-El argumento de compra. Contrato de datos · capítulos flexibles · progreso y reanudación ·
-primera de 3 · primera de 7 · mapa visual · **logros de Travesías** (Bloque 6, nacen con ellas).
-Ritmo propuesto pero **nunca obligatorio**: saltarse un
-día no rompe nada ni culpabiliza.
-
-> **s192 · validar antes de abrirla.** Es «el argumento de compra» y nadie ha comprobado todavía
-> que alguien pagaría por ella: primero una ronda de entrevistas o la pregunta del PMF («¿cómo te
-> sentirías si no pudieras usar PACE?»).
-
-### FASE 8 · Descubrimiento
-
-**Onboarding contextual** (Bloque 2, hueco detectado en s137): capturar el contexto habitual —sentado, si puede levantarse, suelo, espacio, ruido, material— de forma opcional y editable con chips. Sin esto, los filtros y la recomendación no tienen con qué filtrar.
-
-Taxonomía de necesidades y contexto · filtros · previews · reorganización de las tres bibliotecas
-para reducir scroll · ~~«Déjate guiar» discreto~~ (**absorbido por la Fase 3.6**, que lo pone al
-frente) · Caminos al centro de la home + After Pomodoro (lo que quedó huérfano del plan anterior).
-
-### FASE 8.5 · Saneamiento (antes de vender)
-
-Agrupado a propósito justo antes de la venta: vender una app con el onboarding sin focus trap y
-sin tests del estado es un riesgo que se paga en soporte.
-
-- ~~**Trocear lo que pasa de 500 líneas** (regla propia): `tokens.css` 613, `exercise-glyphs.jsx`
-  ~513 y `Sidebar.jsx` ~510~~ **HECHO, y no en una sesión de saneamiento: fue cayendo solo**
-  porque desde s162 la regla §1 la vigila un trinquete en el `verify`. Medido en **s183**:
-  `tokens.css` **322** · `exercise-glyphs.jsx` **261** · `Sidebar.jsx` **318**, y de los **239
-  archivos** de `app/`, `tests/` y `scripts/` **ninguno pasa de 500** (el mayor es
-  `app/focus/FocusTimer.jsx`, con 500 clavados). Lo único por encima sigue siendo
-  `build-standalone.js` (**567**) y `PACE.html` (**547**), los dos fuera del censo a propósito.
-- **Accesibilidad** (Bloque 9): ~~tarjetas sin acceso por teclado~~ (resuelto en s174: la tarjeta
-  lleva un botón dentro que se extiende con `::after`, y no es un `role="button"` gigante) ·
-  ~~**onboarding sin focus trap**~~ **HECHO en s198 (v0.131.0)**, y con él los doce `Modal` y las
-  sesiones: rol de diálogo, foco dentro, trampa de Tab, foco devuelto y Escape solo para el de arriba
-  (`app/ui/Dialogo.jsx`). La auditoría de s198 midió además que Espacio no pausaba tras «Continúa» y
-  que Escape cerraba la biblioteca de detrás del preview.
-- **Tests del state (A-6)** e ~~**import sanitizado (A-7)**~~, del P2 de `audit-producto-v0.34.4.md`.
-  **A-7 HECHO en s198**: el import y el arranque pasan por el mismo saneador (`state-core.sanea.js`),
-  que repara campo a campo y guarda lo ilegible en un rescate. Medido antes: un campo roto hacía
-  arrancar la app de fábrica y la primera escritura borraba la historia. Queda A-6 en sentido amplio
-  (pruebas del estado más allá de la forma). ~~**La pantalla de error**~~ **HECHA en v0.132.0** con la letra
-  del usuario (A2): una red por diálogo y por sesión —si falla, se cierra solo esa parte— y la global como último
-  recurso (`app/ui/RedDeError.jsx`); y la copia de rescate se ofrece en «Tus datos» (B2).
-- **i18n robustez (I18N-2)**: paridad de claves ES/EN, pseudolocalización, pluralización — una
-  clave que falta es un **bug visible** en una app de pago. Más las deudas semánticas **D-1**
-  (override silencioso en `content/breathe.js`), **D-2** («Hecho hoy» duplicado) y **D-3**
-  (namespaces `path.*` / `paths.*` mezclados).
-- ~~**Automatizar el bump de versión** en el build (`package.json` como fuente).~~ **HECHO en s198, de otra
-  forma**: `npm run bump -- X.Y.Z` cambia los siete sitios de `scripts/version.sitios.js` a la vez, la misma lista
-  que vigila el `verify`. `package.json` no es la fuente: su `version` es la del paquete de build (1.0.0), no la de la app.
-- **Timer de Mueve por timestamps** (hoy `setInterval` en foreground) — necesario de todos modos
-  para el ciclo de vida en Android.
-
-### FASE 9 · Capacitor Android
-
-**Decisión del usuario (s137): Android entra en v1**, con el coste asumido (~4–6 sesiones y
-dependencia de los ciclos de revisión de Google).
-
-- Build de Capacitor y detección de runtime. La app ya es estática y sin servidor, así que el
-  envoltorio es la parte barata.
-- **Adaptadores nativos de `pace.events.v1`** (SQLite log + Preferences), que la arquitectura por
-  adaptadores de s117 ya contempla: por eso la Fase 3 debe respetarla desde el día uno y no
-  cablear `localStorage` directamente.
-- Notificaciones, safe areas, ciclo de vida, export/import.
-- Pruebas en dispositivo real.
-
-**Lo caro no es el envoltorio: es la facturación.** Google Play **obliga a usar Play Billing** para
-vender funciones dentro de la app, y eso choca de frente con la licencia offline sin cuentas ni
-backend. Implica un **segundo camino de entitlement** (`PurchaseAdapter`: web · Play) reconciliado
-con el de la clave firmada — y el entitlement debe seguir pasando por
-`app/state-entitlement.jsx` como **punto único**, o el reparto se vuelve inmanejable.
-
-### FASE 10 · Venta
-
-Licencia firmada offline ECDSA P-256 **con `expiresAt` opcional** + **trial explícito** (hoy el
-acceso es un booleano `premiumUnlocked`; exige cambiar formalmente la decisión F3b) ·
-**`PurchaseAdapter` web + Play Billing** (las tiendas son la fuente de verdad de precio y moneda:
-**no hardcodear importes en las traducciones**) · proveedor / Merchant of Record para la web ·
-landing separada de la app · **Términos y Privacidad revisados por un profesional** · revisión
-profesional del contenido corporal · **Starter Story a fondo** para validar el precio ya fijado y
-la estrategia de distribución · ficha de Play y **ASO** · QA de compra, reinstalación y cambio de
-fecha.
+### FASE 1 · Saneamiento corto
+
+Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono.
+
+- **Eventos a IndexedDB** — **HECHO en s200 (v0.134.0)**: con dos pestañas el almacén perdía hasta
+  la mitad de los eventos (`localStorage` se propaga entre procesos de forma asíncrona y el lock no
+  fuerza una lectura fresca). El adaptador web vive ahora en IndexedDB con la misma interfaz y migra
+  una vez el contenedor antiguo.
+- **Timer de Mueve por timestamps** (hoy `setInterval` en primer plano) — necesario igualmente para
+  el ciclo de vida en Android.
+- **Adelgazar el método**: menos documentación por sesión y cierres más cortos (ver la auditoría
+  externa de s199).
+
+### FASE 2 · Capacitor Android y prueba cerrada
+
+- Build de Capacitor y detección de runtime (la app ya es estática y sin servidor: el envoltorio es
+  la parte barata).
+- **Adaptadores nativos de `pace.events.v1`** (SQLite + Preferences), que la arquitectura por
+  adaptadores ya contempla: hoy Capacitor cae al adaptador inerte y no registra nada.
+- Notificaciones, safe areas, ciclo de vida, export/import; pruebas en dispositivo real.
+- **Prueba cerrada en Play Console cuanto antes, con la app tal como esté.** Las cuentas personales
+  nuevas necesitan **unos 12 testers durante 14 días** antes de poder publicar — *a confirmar en Play
+  Console*. Al final de la prueba se pregunta a los testers **«¿qué echarías de menos?»** para
+  afinar el reparto gratis/pago.
+
+### FASE 3 · «A tu ritmo» semanal — lo que se paga
+
+Lo que hoy es la Fase 3.6 a lo largo de la semana: **variación por día** (lectura A, ya empezada en
+v0.128.0), **aprende de «¿te ayudó?»** y la **lectura C** de s194 (el sistema enseña qué cambió y
+propone ajustes, con el `origin` de cada sesión que se registra desde v0.124.0). La lectura B
+(planificar la semana de antemano) sigue aparcada. El `.ics` sigue aparcado hasta usar el aviso.
+
+### FASE 4 · Stats «Hoy» y «Semana»
+
+**Se desaparca la antigua Fase 4.** «Hoy» enseña el menú del día (motivo por el que se aparcó en
+s192) y es gratis; «Semana» (y el año) es de pago. Punto de partida: las maquetas de s191
+(`docs/proposals/stats-*`) y [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md).
+
+### FASE 5 · Cerrar con lo que hay
+
+Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir trabajo nuevo:
+
+- **Fase 2** (que Mueve y Estira se entiendan) — olas A, C, E y preview hechas.
+- **Fase 2.5** (logros) — los siete puntos hechos.
+- **Fase 3.5** (Pausa PACE) — la propuesta y el feedback hechos; zona corporal y contexto habitual
+  quedan fuera.
+- **Fase 3.6** («A tu ritmo» del día) — lo que siga en la semana va a la Fase 3 de este plan.
+- **Fase 5** (Respira: voz y música) — lo entregado se queda; el catálogo y la separación Técnicas /
+  Viajes quedan fuera.
+- **Los 22 dibujos pendientes** (3 de ejercicio y 19 de logro) **entran si llegan**; si no, la
+  precedencia máscara → SVG → carácter ya cubre el hueco.
+
+### FASE 6 · Venta
+
+- **Licencia web**: firmada offline ECDSA P-256 con `expiresAt` opcional + trial explícito.
+- **Play Billing** con un **`PurchaseAdapter`** (web · Play) que pase por
+  **`app/state-entitlement.jsx` como punto único**. Las tiendas son la fuente de verdad de precio y
+  moneda: no se hardcodean importes en las traducciones.
+- **Proveedor de pago** / Merchant of Record para la web.
+- **Landing** separada de la app.
+- **Revisión legal**: Términos y Privacidad revisados por un profesional (y el contenido corporal).
+- **Ficha de Play** (y ASO); QA de compra, reinstalación y cambio de fecha.
 
 ### Reglas del plan
 
+- **NINGUNA FASE ENTRA EN v1 SIN SACAR OTRA** (s200). Si algo nuevo tiene que estar en v1, se dice
+  qué sale a cambio.
 - **Un solo frente por sesión.** Se cierra con verificación y documentación antes de abrir otro.
-- **Auditoría antes de código** en cualquier sesión que toque un subsistema con reglas propias:
-  leer su fila en [`DECISIONES_TECNICAS_VIGENTES.md`](./docs/product/DECISIONES_TECNICAS_VIGENTES.md).
-- **Web y Capacitor son los objetivos canonicos** (decision s134). El standalone pasa a **export bajo demanda**: se genera cuando se pide, no en cada cierre, y no condiciona la arquitectura (nada de inlinear audio en el). Motivos medidos: no comparte `localStorage` con la web (otro origen), `file://` **no emite eventos** por diseno, instalar desde el produjo el bug de icono/pantalla completa de s128 (sin `manifest`), y el catalogo de sesiones largas es imposible de inlinear (1 hora en Opus 48 kbps = ~21 MB, +33 % en base64).
-- **local-first ≠ cero servicios**: infraestructura de compra y licencias sí; backend de producto
-  y tracking no. **Excepción decidida en s192**: estadísticas **anónimas y con permiso explícito**
-  (apagadas por defecto, totales semanales y nunca el registro crudo), construidas junto al
-  servidor de licencias. Cambiarlo exige tocar `privacy.html` y el gate del `verify` que hoy
-  prohíbe cualquier canal de salida en `app/events/`.
-- Las fases 3 y 4 pueden adelantarse a la 2 **solo** si una sesión de la Fase 2 queda bloqueada
-  esperando material del usuario (glifos dibujados, revisión fisio).
+- **Auditoría antes de código** en cualquier subsistema con reglas propias: leer su fila en
+  [`DECISIONES_TECNICAS_VIGENTES.md`](./docs/product/DECISIONES_TECNICAS_VIGENTES.md).
+- **Web y Capacitor son los objetivos canónicos** (s134). El standalone es **export bajo demanda**.
+- **local-first ≠ cero servicios**: infraestructura de compra y licencias sí; backend de producto y
+  tracking no. Excepción decidida en s192: estadísticas **anónimas y con permiso explícito**
+  (apagadas por defecto, totales semanales), junto al servidor de licencias — exige tocar
+  `privacy.html` y el gate del `verify` que prohíbe canales de salida en `app/events/`.
 
 ### Fuera de v1 (explícito)
 
-Viajes de respiración con música/facilitadores y CTB (la **voz** ya no está fuera: s175) · **iOS** (Android SÍ entra, Fase 9) · extensión
-Chrome · Vite/ESM real (Etapa B del build) · Path Builder público · Modo Retiro · temporadas ·
-versión para empresas · Wrapped.
+**Travesías** (antigua Fase 7) · **reescritura de Caminos** (antigua Fase 6; los 7 actuales se quedan
+como están) · **Fase 8 Descubrimiento** (onboarding contextual, filtros, reorganización de
+bibliotecas) · **Viajes de respiración y CTB** (la voz sí está dentro desde s175) · **iOS** ·
+**extensión de Chrome** · **Vite/ESM** (Etapa B del build) · Path Builder público · Modo Retiro ·
+temporadas · versión para empresas · Wrapped.
+
+Pendiente de maqueta, sin fase: **quitar los Caminos de la home**.
 
 ## 🌱 Medio plazo — tras el bloque
 
@@ -629,7 +219,7 @@ persistencia vía `chrome.storage`.
 ### ~~Lanzamiento pagado v1.0~~ · **HISTÓRICO — lo gobierna «Camino a v1.0»** (marcado s149)
 
 > **Este apartado ya no manda.** El lanzamiento pagado **es v1.0** y su plan vivo es la sección
-> «Camino a v1.0» de este mismo archivo (15 fases, s137). Se conserva por sus pre-requisitos, que
+> «Camino a v1.0» de este mismo archivo (seis fases desde s200). Se conserva por sus pre-requisitos, que
 > siguen siendo correctos.
 >
 > **Lo que quedó obsoleto**: el precio es **19,99 € Lifetime y UN SOLO PLAN** (s134) — el «~20 € +

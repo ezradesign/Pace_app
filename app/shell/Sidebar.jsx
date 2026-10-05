@@ -53,6 +53,16 @@ function Sidebar() {
      hay que colgar de la envoltura que escala. */
   const escalaRef = useSidebarEscala();
 
+  /* s200 · los eventos viven en IndexedDB, que solo es asincrono: la tarjeta
+     los lee de un espejo en memoria, y este aviso la repinta cuando el espejo
+     cambia (el arranque lo carga despues del primer render). */
+  const [, repintarEventos] = React.useState(0);
+  React.useEffect(function () {
+    const alCambiar = function () { repintarEventos(function (n) { return n + 1; }); };
+    window.addEventListener('pace:eventos', alCambiar);
+    return function () { window.removeEventListener('pace:eventos', alCambiar); };
+  }, []);
+
   /* Colapsado → ocultar TOTALMENTE.
      La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
      (Antes era un rail de 56px con iconos; se quitó por petición del usuario

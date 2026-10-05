@@ -91,7 +91,7 @@ test('el payload solo guarda los campos permitidos: nada de texto libre', async 
     await window.eventsWebAppend(e);
     return {
       claves: Object.keys(e.payload),
-      crudo: localStorage.getItem('pace.events.v1'),
+      crudo: (await window.eventsWebReadRaw()),
     };
   });
 
@@ -143,8 +143,8 @@ test('«Borrar todos mis datos» de Ajustes borra los DOS almacenes', async ({ p
   await page.locator('button[aria-label="Abrir ajustes"]').click();
   await page.getByRole('button', { name: 'Borrar todos mis datos', exact: true }).click();
 
-  await page.waitForFunction(previo => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async previo => {
+    const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
     const c = JSON.parse(raw);
     return c.activatedAt !== previo && c.events.length === 0;
@@ -184,8 +184,8 @@ test('importar un backup ANTIGUO reinicia el contenedor en vez de mezclarlo', as
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-20260101.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 
-  await page.waitForFunction(previo => {
-    const raw = localStorage.getItem('pace.events.v1');
+  await page.waitForFunction(async previo => {
+    const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
     const c = JSON.parse(raw);
     return c.activatedAt !== previo && c.events.length === 0;
@@ -205,14 +205,14 @@ test('replaceFromImport REEMPLAZA (no fusiona) y es idempotente', async ({ page 
   await sembrarEventos(page, 6);
 
   const out = await page.evaluate(async () => {
-    const leer = () => JSON.parse(localStorage.getItem('pace.events.v1'));
+    const leer = async () => JSON.parse((await window.eventsWebReadRaw()));
     /* Un snapshot con UN solo evento, de los seis que hay ahora mismo. */
-    const snap = window.buildEventsExport(leer());
+    const snap = window.buildEventsExport(await leer());
     const uno = Object.assign({}, snap, { events: [snap.events[0]] });
     const r1 = await window.eventsWebReplaceFromImport(uno);
-    const tras1 = leer();
+    const tras1 = await leer();
     const r2 = await window.eventsWebReplaceFromImport(uno);
-    const tras2 = leer();
+    const tras2 = await leer();
     return {
       r1: r1.result, r2: r2.result,
       n1: tras1.events.length, n2: tras2.events.length,
@@ -238,8 +238,8 @@ test('un snapshot invalido se rechaza SIN tocar el contenedor', async ({ page })
   await sembrarEventos(page, 3);
 
   const out = await page.evaluate(async () => {
-    const crudo = () => localStorage.getItem('pace.events.v1');
-    const antes = crudo();
+    const crudo = async () => (await window.eventsWebReadRaw());
+    const antes = await crudo();
     const bueno = window.buildEventsExport(JSON.parse(antes));
     const casos = {
       noEsObjeto: 'un string cualquiera',
@@ -254,7 +254,7 @@ test('un snapshot invalido se rechaza SIN tocar el contenedor', async ({ page })
       razones[k] = window.paceEventsValidateImport(casos[k]).reason;
       resultados[k] = (await window.eventsWebReplaceFromImport(casos[k])).result;
     }
-    return { razones, resultados, intacto: crudo() === antes };
+    return { razones, resultados, intacto: (await crudo()) === antes };
   });
 
   /* Un JSON sintacticamente valido NO es un snapshot valido: cada caso da su

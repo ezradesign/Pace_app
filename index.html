@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.133.2</title>
+  <title>PACE · Foco · Cuerpo — v0.134.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5506,7 +5506,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.133.2';
+const PACE_VERSION = 'v0.134.0';
 
 
 
@@ -9274,18 +9274,224 @@ Object.assign(window, {
 </script>
   <script>
 ;(function () {
+/* PACE · events-adapter-web.idb.js
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   EL ALMACEN FISICO del adaptador web (s200): IndexedDB. Carga ANTES de
+   `events-adapter-web.js`, que es quien lo usa; nadie mas debe hablar con esto.
+
+   POR QUE NO `localStorage` (s200, medido): con dos pestanas emitiendo a la vez
+   el almacen guardaba 10 de 20 eventos. Web Locks serializaba de verdad, pero
+   Chromium propaga `localStorage` entre procesos de forma ASINCRONA: la pestana
+   que entraba al lock podia leer una copia anterior a la escritura de la otra y
+   pisar su lote. IndexedDB tiene un unico backend por origen y una lectura que
+   empieza despues de que otra transaccion haya CONFIRMADO la ve siempre. El
+   lock sigue mandando; lo que cambia es que releer dentro de el ya es releer.
+
+   QUE SE GUARDA: la MISMA cadena JSON que antes iba a `localStorage`, en un
+   unico registro. Asi el presupuesto, la comparacion byte a byte y el formato
+   del contenedor no cambian: cambia el cajon, no lo que hay dentro.
+
+   EL ESPEJO. IndexedDB solo es asincrono y la UI lee al pintar (la tarjeta de
+   la barra lateral, el «llevas N» de la vista previa, el export de «Tus datos»).
+   Esas lecturas van a una copia en memoria que se actualiza con cada lectura
+   fresca: al arrancar, despues de cada escritura de esta pestana y al volver a
+   la pestana. Es SOLO lectura para pintar; toda read-modify-write relee del
+   almacen dentro del lock y nunca parte del espejo.
+
+   MIGRACION, UNA VEZ: si el almacen esta vacio y `localStorage` tiene el
+   contenedor de antes, se copia la cadena tal cual, se relee, y SOLO si la
+   relectura es identica se borra la clave vieja. Si algo falla a medias, la
+   clave vieja sigue ahi y el siguiente arranque lo reintenta.
+
+   NADA DE ESTO SALE DEL DISPOSITIVO: IndexedDB es almacenamiento local del
+   propio navegador, igual que lo era `localStorage`. */
+
+const EVENTS_IDB_NAME = 'pace.events';
+const EVENTS_IDB_STORE = 'contenedor';
+const EVENTS_IDB_VERSION = 1;
+
+const EVENTS_IDB_RECORD = 'pace.events.v1';
+const EVENTS_LEGACY_LS_KEY = 'pace.events.v1';
+
+let _eventsIdbOpen = null;
+let _eventsIdbFailed = false;
+
+let _eventsWebMirrorRaw = null;
+
+function eventsIdbExists() {
+  try {
+    return typeof indexedDB !== 'undefined' && !!indexedDB && !_eventsIdbFailed;
+  } catch (e) {
+    return false;
+  }
+}
+
+
+
+function eventsIdbOpen() {
+  if (_eventsIdbOpen) return _eventsIdbOpen;
+  if (!eventsIdbExists()) return Promise.reject(new Error('indexedDB no disponible'));
+  _eventsIdbOpen = new Promise(function (resolve, reject) {
+    let req;
+    try {
+      req = indexedDB.open(EVENTS_IDB_NAME, EVENTS_IDB_VERSION);
+    } catch (e) {
+      reject(e);
+      return;
+    }
+    req.onupgradeneeded = function () {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(EVENTS_IDB_STORE)) db.createObjectStore(EVENTS_IDB_STORE);
+    };
+    req.onsuccess = function () {
+      const db = req.result;
+
+
+      db.onversionchange = function () {try {db.close();} catch (e) {}_eventsIdbOpen = null;};
+      resolve(db);
+    };
+    req.onerror = function () {reject(req.error || new Error('indexedDB open'));};
+    req.onblocked = function () {reject(new Error('indexedDB bloqueado'));};
+  }).catch(function (e) {
+    _eventsIdbFailed = true;
+    _eventsIdbOpen = null;
+    throw e;
+  });
+  return _eventsIdbOpen;
+}
+
+
+
+
+function eventsWebSetMirror(raw) {
+  if (raw === _eventsWebMirrorRaw) return;
+  _eventsWebMirrorRaw = raw;
+  try {window.dispatchEvent(new Event('pace:eventos'));} catch (e) {}
+}
+
+
+
+function eventsWebReadRaw() {
+  return eventsIdbOpen().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(EVENTS_IDB_STORE, 'readonly');
+      const req = tx.objectStore(EVENTS_IDB_STORE).get(EVENTS_IDB_RECORD);
+      req.onsuccess = function () {
+        const v = req.result;
+        const raw = v === undefined || v === null ? null : String(v);
+        eventsWebSetMirror(raw);
+        resolve(raw);
+      };
+      req.onerror = function () {reject(req.error || new Error('indexedDB get'));};
+    });
+  });
+}
+
+
+
+
+
+function eventsWebWriteRaw(raw) {
+  return eventsIdbOpen().then(function (db) {
+    return new Promise(function (resolve) {
+      let tx;
+      try {
+        tx = db.transaction(EVENTS_IDB_STORE, 'readwrite');
+        tx.objectStore(EVENTS_IDB_STORE).put(String(raw), EVENTS_IDB_RECORD);
+      } catch (e) {
+        resolve(false);
+        return;
+      }
+      tx.oncomplete = function () {eventsWebSetMirror(String(raw));resolve(true);};
+      tx.onerror = function () {resolve(false);};
+      tx.onabort = function () {resolve(false);};
+    });
+  }, function () {return false;});
+}
+
+
+function eventsWebMirror() {
+  return _eventsWebMirrorRaw;
+}
+
+
+function eventsWebRefresh() {
+  return eventsWebReadRaw().then(function () {return true;}, function () {return false;});
+}
+
+
+
+function eventsWebMigrateFromLocalStorage() {
+  let viejo = null;
+  try {viejo = localStorage.getItem(EVENTS_LEGACY_LS_KEY);} catch (e) {viejo = null;}
+  if (viejo === null || viejo === undefined) return Promise.resolve('nada');
+  return eventsWebReadRaw().then(function (actual) {
+    if (actual !== null) {
+
+
+
+      if (actual === viejo) {
+        try {localStorage.removeItem(EVENTS_LEGACY_LS_KEY);} catch (e) {}
+      }
+      return 'ya';
+    }
+    return eventsWebWriteRaw(viejo).then(function (ok) {
+      if (!ok) return 'fallo';
+      return eventsWebReadRaw().then(function (copia) {
+        if (copia !== viejo) return 'fallo';
+        try {localStorage.removeItem(EVENTS_LEGACY_LS_KEY);} catch (e) {}
+        return 'migrado';
+      });
+    });
+  }).catch(function () {return 'fallo';});
+}
+
+
+
+
+function eventsWebLoadReadOnly() {
+  return eventsWebReadRaw().then(function (raw) {
+    if (raw !== null) return true;
+    try {eventsWebSetMirror(localStorage.getItem(EVENTS_LEGACY_LS_KEY));} catch (e) {}
+    return true;
+  }, function () {return false;});
+}
+
+
+
+try {
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible' && _eventsIdbOpen) eventsWebRefresh();
+    });
+  }
+} catch (e) {}
+
+Object.assign(window, {
+  EVENTS_IDB_NAME, EVENTS_IDB_STORE, EVENTS_IDB_RECORD,
+  eventsIdbExists, eventsIdbOpen, eventsWebReadRaw, eventsWebWriteRaw,
+  eventsWebMirror, eventsWebSetMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebLoadReadOnly
+});
+;Object.assign(window, { eventsIdbExists, eventsIdbOpen, eventsWebSetMirror, eventsWebReadRaw, eventsWebWriteRaw, eventsWebMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebLoadReadOnly });
+})();
+</script>
+  <script>
+;(function () {
 /* PACE · events-adapter-web.js
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
    ADAPTADOR WEB / PWA del contrato EventStore (`docs/product/EVENTOS_SCHEMA.md`
-   §10, §19.1). Capa B: aqui SI se nombran `localStorage` y `navigator.locks`,
-   porque son detalles de ESTE backend. El modelo canonico
+   §10, §19.1). Capa B: aqui SI se nombran el almacen y `navigator.locks`,
+   porque son detalles de ESTE backend. Desde s200 el almacen es IndexedDB
+   (`events-adapter-web.idb.js`, que carga antes y explica el porque). El modelo canonico
    (`events-model.js`) no los conoce y no debe conocerlos.
 
    NADA DE ESTE ARCHIVO SALE DEL DISPOSITIVO. No hay `fetch`, ni `XMLHttpRequest`,
    ni `sendBeacon`, ni WebSocket, ni URL remota: el unico destino de una escritura
-   es `localStorage` del propio navegador. Si algun dia alguien anade aqui una
+   es el IndexedDB del propio navegador. Si algun dia alguien anade aqui una
    llamada de red, esta violando la premisa del subsistema, no ajustandolo.
 
    EXCLUSION (§19.1). Toda read-modify-write —activacion, emision, consolidacion,
@@ -9320,15 +9526,9 @@ const EVENTS_UNAVAILABLE_RESULT = 'unavailable';
 
 
 
+
 function eventsWebStorageUsable() {
-  try {
-    const probe = '__pace_events_probe__';
-    localStorage.setItem(probe, '1');
-    localStorage.removeItem(probe);
-    return true;
-  } catch (e) {
-    return false;
-  }
+  return eventsIdbExists();
 }
 
 function eventsWebLocksAvailable() {
@@ -9346,13 +9546,7 @@ function eventsWebLocksAvailable() {
 
 
 
-function eventsWebRead() {
-  let raw;
-  try {
-    raw = localStorage.getItem(EVENTS_WEB_KEY);
-  } catch (e) {
-    return { container: null, corrupt: true };
-  }
+function eventsWebParse(raw) {
   if (raw === null || raw === undefined) {
     return { container: emptyEventsContainer(), corrupt: false };
   }
@@ -9366,6 +9560,23 @@ function eventsWebRead() {
 
 
 
+function eventsWebRead() {
+  return eventsWebParse(eventsWebMirror());
+}
+
+
+
+
+
+function eventsWebReadFresh() {
+  return eventsWebReadRaw().then(eventsWebParse, function () {
+    return { container: null, corrupt: true, failed: true };
+  });
+}
+
+
+
+
 
 
 
@@ -9373,24 +9584,24 @@ function eventsWebRead() {
 
 function eventsWebWrite(container) {
   const attempt = function (c) {
-    try {
-      localStorage.setItem(EVENTS_WEB_KEY, JSON.stringify(c));
-      return true;
-    } catch (e) {
-      return false;
-    }
+    let raw;
+    try {raw = JSON.stringify(c);} catch (e) {return Promise.resolve(false);}
+    return eventsWebWriteRaw(raw);
   };
 
   let target = container;
   if (isOverEventsBudget(target)) {
     target = eventsWebPruneForBudget(target);
   }
-  if (attempt(target)) return { result: EVENTS_COMMITTED, container: target };
-
-  const pruned = eventsWebPruneForBudget(target);
-  if (pruned !== target && attempt(pruned)) return { result: EVENTS_COMMITTED, container: pruned };
-
-  return { result: EVENTS_REJECTED, container: null };
+  return attempt(target).then(function (ok) {
+    if (ok) return { result: EVENTS_COMMITTED, container: target };
+    const pruned = eventsWebPruneForBudget(target);
+    if (pruned === target) return { result: EVENTS_REJECTED, container: null };
+    return attempt(pruned).then(function (ok2) {
+      return ok2 ? { result: EVENTS_COMMITTED, container: pruned } :
+      { result: EVENTS_REJECTED, container: null };
+    });
+  });
 }
 
 
@@ -9491,39 +9702,49 @@ function eventsWebRunExclusive(fn) {
     return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   }
   return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
-    const read = eventsWebRead();
+
+
+    return eventsWebReadFresh().then(function (read) {
+      return eventsWebExclusiveStep(fn, read);
+    });
+  }).catch(function () {
+    return { result: EVENTS_REJECTED, container: null };
+  });
+}
+
+
+function eventsWebExclusiveStep(fn, read) {
+  if (read.failed) return { result: EVENTS_REJECTED, container: null };
 
 
 
 
 
 
+  if (!read.corrupt && read.container &&
+  read.container.schemaVersion > EVENTS_SCHEMA_VERSION) {
+    return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+  }
 
-    if (!read.corrupt && read.container &&
-    read.container.schemaVersion > EVENTS_SCHEMA_VERSION) {
-      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
-    }
-
-    const current = read.corrupt ? emptyEventsContainer() : read.container;
-    let out;
-    try {
-      out = fn(current, read.corrupt);
-    } catch (e) {
-      return { result: EVENTS_REJECTED, container: null };
-    }
-    if (!out || !out.container) {
-      return { result: out && out.result ? out.result : EVENTS_REJECTED, container: null };
-    }
-    const written = eventsWebWrite(out.container);
+  const current = read.corrupt ? emptyEventsContainer() : read.container;
+  let out;
+  try {
+    out = fn(current, read.corrupt);
+  } catch (e) {
+    return { result: EVENTS_REJECTED, container: null };
+  }
+  if (!out || !out.container) {
+    return { result: out && out.result ? out.result : EVENTS_REJECTED, container: null };
+  }
+  return eventsWebWrite(out.container).then(function (written) {
     if (written.result !== EVENTS_COMMITTED) return written;
 
 
 
-    const back = eventsWebRead();
-    if (back.corrupt || !back.container) return { result: EVENTS_REJECTED, container: null };
-    return { result: out.result || EVENTS_COMMITTED, container: back.container };
-  }).catch(function () {
-    return { result: EVENTS_REJECTED, container: null };
+    return eventsWebReadFresh().then(function (back) {
+      if (back.corrupt || !back.container) return { result: EVENTS_REJECTED, container: null };
+      return { result: out.result || EVENTS_COMMITTED, container: back.container };
+    });
   });
 }
 
@@ -9576,9 +9797,30 @@ function eventsWebClearMarker() {
 
 
 function eventsWebInitialize(legacyState) {
-  if (eventsWebCapability() !== EVENTS_READ_WRITE) {
+
+
+
+  if (!eventsWebStorageUsable()) {
     return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   }
+  if (!eventsWebLocksAvailable()) {
+    return eventsWebLoadReadOnly().then(function () {
+      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+    });
+  }
+  return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
+    return eventsWebMigrateFromLocalStorage().then(eventsWebRefresh);
+  }).then(function () {
+    if (eventsWebCapability() !== EVENTS_READ_WRITE) {
+      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+    }
+    return eventsWebInitializeLocked(legacyState);
+  }, function () {
+    return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+  });
+}
+
+function eventsWebInitializeLocked(legacyState) {
   return eventsWebRunExclusive(function (current, wasCorrupt) {
     let c = current;
 
@@ -9707,13 +9949,14 @@ Object.assign(window, {
   EVENTS_READ_WRITE, EVENTS_READ_ONLY, EVENTS_UNAVAILABLE,
   EVENTS_COMMITTED, EVENTS_REJECTED, EVENTS_INTERRUPTED, EVENTS_UNAVAILABLE_RESULT,
   eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite,
+  eventsWebParse, eventsWebReadFresh, eventsWebExclusiveStep, eventsWebInitializeLocked,
   eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability,
   eventsWebStoredSchemaVersion, eventsWebClearMarker,
   eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot,
   eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark,
   eventsWebDiagnostics
 });
-;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite, eventsWebPruneForBudget, eventsWebPruneByCalendar, eventsWebRunExclusive, eventsWebCapability, eventsWebStoredSchemaVersion, eventsWebClearMarker, eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
+;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebParse, eventsWebRead, eventsWebReadFresh, eventsWebWrite, eventsWebPruneForBudget, eventsWebPruneByCalendar, eventsWebRunExclusive, eventsWebExclusiveStep, eventsWebCapability, eventsWebStoredSchemaVersion, eventsWebClearMarker, eventsWebInitialize, eventsWebInitializeLocked, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
 })();
 </script>
   <script>
@@ -9824,8 +10067,10 @@ Object.assign(window, {
    credenciales · portapapeles · identificador de usuario, de dispositivo,
    publicitario o de fingerprint · nada del navegador mas alla de lo de arriba.
 
-   DONDE: `localStorage`, clave `pace.events.v1`, en el dispositivo. FUERA de
-   `pace.state.v2` para que su ciclo de vida sea independiente.
+   DONDE: en el dispositivo, FUERA de `pace.state.v2` para que su ciclo de vida
+   sea independiente. Desde s200, en IndexedDB (base `pace.events`, registro
+   `pace.events.v1`); hasta entonces vivia en `localStorage` con esa misma
+   clave, y el primer arranque lo traslada una vez (`events-adapter-web.idb.js`).
 
    NO HAY ENVIO REMOTO. En los cuatro archivos de `app/events/` no existe
    `fetch`, `XMLHttpRequest`, `sendBeacon`, `WebSocket`, `EventSource`, `Image()`
@@ -17214,6 +17459,16 @@ function Sidebar() {
 
 
   const escalaRef = useSidebarEscala();
+
+
+
+
+  const [, repintarEventos] = React.useState(0);
+  React.useEffect(function () {
+    const alCambiar = function () {repintarEventos(function (n) {return n + 1;});};
+    window.addEventListener('pace:eventos', alCambiar);
+    return function () {window.removeEventListener('pace:eventos', alCambiar);};
+  }, []);
 
 
 

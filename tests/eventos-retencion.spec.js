@@ -14,7 +14,7 @@
      hecho se va, la cuenta se queda en `baseline`. Si esto fallara, la poda
      dejaría de ser retención y sería pérdida de datos.
    · QUE NO ESCRIBA SI NO HAY NADA. Cada arranque pasa por aquí; reescribir el
-     contenedor entero para no cambiar nada toca `localStorage` y despierta a la
+     contenedor entero para no cambiar nada toca el almacen y despierta a la
      otra pestaña sin motivo.
    · QUE SEA IDEMPOTENTE. El cursor existe justamente para que correrla dos
      veces no cuente dos veces.
@@ -32,7 +32,7 @@ const { CLAVE_EVENTOS, leerContenedor, esperarInit } = require('./eventos.helper
    con las utilidades de la app: el día de cada evento se calcula con
    `eventsRetentionFloorKey`, no con una fecha escrita a mano. */
 async function sembrarAmbosLados(page) {
-  return page.evaluate(() => {
+  return page.evaluate(async () => {
     const hoy = window.todayISO();
     const suelo = window.eventsRetentionFloorKey(hoy);
     /* un día ANTES del suelo (se poda) y uno DESPUÉS (se queda). Las claves ISO
@@ -58,9 +58,9 @@ async function sembrarAmbosLados(page) {
       e.occurredAt = dia + 'T10:00:00.000Z';
       return e;
     };
-    const raw = JSON.parse(localStorage.getItem('pace.events.v1'));
+    const raw = JSON.parse((await window.eventsWebReadRaw()));
     raw.events = [uno(viejo, 'run-viejo'), uno(nuevo, 'run-nuevo')];
-    localStorage.setItem('pace.events.v1', JSON.stringify(raw));
+    await window.eventsWebWriteRaw(JSON.stringify(raw));
     return { hoy, suelo, viejo, nuevo };
   });
 }
@@ -122,13 +122,14 @@ test('sin nada que podar NO reescribe el contenedor', async ({ page }) => {
      después NO prueba nada: reescribir el MISMO contenedor produce la MISMA
      cadena, así que el aserto pasaba con la guarda quitada -- medido calibrando
      en rojo. Lo que importa aquí no es el valor, es que no se toque
-     `localStorage`: cada arranque pasa por esta poda, y una escritura inútil
+     el almacen: cada arranque pasa por esta poda, y una escritura inútil
      despierta a la otra pestaña por nada. */
   const escrituras = await page.evaluate(async (clave) => {
-    const real = localStorage.setItem.bind(localStorage);
+    /* s200: el almacen es IndexedDB, asi que se espia el `put` del registro. */
+    const real = IDBObjectStore.prototype.put;
     let n = 0;
-    localStorage.setItem = function (k, v) { if (k === clave) n++; return real(k, v); };
-    try { await window.paceEventsPrune(); } finally { localStorage.setItem = real; }
+    IDBObjectStore.prototype.put = function (v, k) { if (k === clave) n++; return real.apply(this, arguments); };
+    try { await window.paceEventsPrune(); } finally { IDBObjectStore.prototype.put = real; }
     return n;
   }, CLAVE_EVENTOS);
   expect(escrituras).toBe(0);
@@ -136,10 +137,11 @@ test('sin nada que podar NO reescribe el contenedor', async ({ page }) => {
      hay algo que podar, o un cero podría significar que no espía nada. */
   await sembrarAmbosLados(page);
   const conPoda = await page.evaluate(async (clave) => {
-    const real = localStorage.setItem.bind(localStorage);
+    /* s200: el almacen es IndexedDB, asi que se espia el `put` del registro. */
+    const real = IDBObjectStore.prototype.put;
     let n = 0;
-    localStorage.setItem = function (k, v) { if (k === clave) n++; return real(k, v); };
-    try { await window.paceEventsPrune(); } finally { localStorage.setItem = real; }
+    IDBObjectStore.prototype.put = function (v, k) { if (k === clave) n++; return real.apply(this, arguments); };
+    try { await window.paceEventsPrune(); } finally { IDBObjectStore.prototype.put = real; }
     return n;
   }, CLAVE_EVENTOS);
   expect(conPoda).toBeGreaterThan(0);

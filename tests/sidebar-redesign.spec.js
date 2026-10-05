@@ -109,13 +109,13 @@ async function sembrarSesion(page, routineId, modulo) {
     window.paceEventsAppend(ev);
   }, [routineId, modulo]);
   /* LA ESCRITURA NO ES SINCRONA: `paceEventsAppend` pasa por la barrera del
-     almacen y `localStorage` todavia esta a 0 en el mismo tick. Leerlo de
+     almacen y el contenedor todavia esta a 0 en el mismo tick. Leerlo de
      inmediato devolvia 0 y me hizo creer que el evento se rechazaba. */
   await page.waitForFunction(
-    () => (JSON.parse(localStorage.getItem('pace.events.v1') || '{}').events || []).length > 0,
+    async () => (JSON.parse((await window.eventsWebReadRaw()) || '{}').events || []).length > 0,
     null, { timeout: 5000 });
   return page.evaluate(
-    () => (JSON.parse(localStorage.getItem('pace.events.v1') || '{}').events || []).length);
+    async () => (JSON.parse((await window.eventsWebReadRaw()) || '{}').events || []).length);
 }
 
 /* ==========================================================================

@@ -29,8 +29,10 @@
    credenciales · portapapeles · identificador de usuario, de dispositivo,
    publicitario o de fingerprint · nada del navegador mas alla de lo de arriba.
 
-   DONDE: `localStorage`, clave `pace.events.v1`, en el dispositivo. FUERA de
-   `pace.state.v2` para que su ciclo de vida sea independiente.
+   DONDE: en el dispositivo, FUERA de `pace.state.v2` para que su ciclo de vida
+   sea independiente. Desde s200, en IndexedDB (base `pace.events`, registro
+   `pace.events.v1`); hasta entonces vivia en `localStorage` con esa misma
+   clave, y el primer arranque lo traslada una vez (`events-adapter-web.idb.js`).
 
    NO HAY ENVIO REMOTO. En los cuatro archivos de `app/events/` no existe
    `fetch`, `XMLHttpRequest`, `sendBeacon`, `WebSocket`, `EventSource`, `Image()`

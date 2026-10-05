@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.134.0** | 2026-10-05 | fix(eventos): **dos pestañas ya no se pisan** — el adaptador web de `pace.events.v1` pasa de `localStorage` a **IndexedDB** (`events-adapter-web.idb.js`): con dos pestañas el almacén guardaba a veces 10 de 20 eventos, porque Chromium propaga `localStorage` entre procesos de forma asíncrona y el lock no forzaba una lectura fresca. Misma interfaz, mismo contrato de capacidad, misma cadena JSON; un espejo en memoria para lo que se pinta y una **migración única** que solo borra la clave vieja tras releer la copia. `eventos-barrera.spec.js:23`: **20 de 20** (antes 7–12 fallos). Suite +2 (`eventos-idb.spec.js`). Y el **plan de v1 en seis fases** (`ROADMAP.md`): Android y prueba cerrada cuanto antes, «A tu ritmo» semanal como lo que se paga, Travesías y reescritura de Caminos fuera; el plan de s132, archivado. | s200 | [session-200](./docs/sessions/session-200-plan-y-eventos-indexeddb.md) |
 | **v0.133.2** | 2026-10-05 | chore(build): **el artefacto publicado sin comentarios** — `index.html` pasa de 2,04 a 1,47 MB (−28 %): el build solo conserva los avisos de copyright y licencia. Y `backups/` sale del repo (20 copias de 3 MB del standalone; ahora en `.gitignore`). Auditoría externa del proyecto. | s199 | [session-199](./docs/sessions/session-199-auditoria-externa.md) |
 | **v0.133.1** | 2026-10-04 | fix(fechas): **el cambio de hora no se come un día** — Tres sitios contaban días restando 24 h, y el domingo del cambio de primavera dura 23: **la racha** se reiniciaba si la primera actividad del lunes siguiente caía entre las 00:00 y la 01:00 («ayer» salía sábado), y **las etiquetas de mes de los dos mapas anuales** caían una columna antes que su día 1 de marzo a octubre (medido: «jun» en 2026, «sep» en 2025; las celdas ya iban bien). Arreglado por calendario o redondeando; la migración vieja de s43, con el mismo patrón, también. Y **`npm run bump -- X.Y.Z`**: la versión cambia en sus siete sitios con un comando (`scripts/version.sitios.js`, la misma lista que vigila el `verify`); esta es la primera que lo usa. Suite **320 → 323** (2 en rojo contra v0.133.0 y un control). | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) §6-7 |
 | **v0.133.0** | 2026-10-04 | feat(ritmo): **la pausa te llama por su nombre** — Decisión del usuario mirando `por-donde-seguir-s198.html` (D2, texto V1, sin `.ics`). En la oficina PACE vive en una pestaña de fondo: al acabar un bloque, lo primero que se ve es el **aviso del sistema**, y decía siempre «Foco completado · Ciclo cerrado». Con «A tu ritmo» ahora dice **qué pausa toca y cuándo vuelves**: «Tu pausa: Caderas de pie · 4 min · Bloque 1 de 9 hecho. El siguiente, a las 9:50». La larga nombra todos sus platos con la duración de la parada; la comida dice hasta cuándo; el último bloque, que el día se cierra. Por libre, igual que antes. **El aviso se calcula DESPUÉS de cerrar el bloque** (antes iba delante): solo entonces el plan sabe qué pausa sigue y ha recolocado el día si llegaste tarde. `app/ritmo/ritmo.aviso.js`, puro. Suite **316 → 320** (3 en rojo contra v0.132.0 y un control), banco `banco-aviso-s198.js` **10 de 10**. | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) |
@@ -412,6 +413,33 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.134.0] -- 2026-10-05 -- fix(eventos): dos pestañas ya no se pisan
+
+### Arreglado
+- **Pérdida de eventos con dos pestañas** (`tests/eventos-barrera.spec.js:23`, intermitente desde que existe): el
+  adaptador web guarda ahora en **IndexedDB** (base `pace.events`, registro `pace.events.v1`). Web Locks sigue
+  dando la exclusión; IndexedDB garantiza que releer dentro del lock ve lo que la otra pestaña confirmó. Medido:
+  **20 de 20** con `--repeat-each=20 --workers=2`.
+
+### Cambiado
+- **`app/events/events-adapter-web.idb.js`** (nuevo): apertura, lectura y escritura del registro, el **espejo**
+  síncrono para lo que se pinta (avisa con `pace:eventos`; `Sidebar.jsx` se repinta con él) y la **migración
+  única** desde `localStorage`: copia la cadena tal cual, relee, y solo si es idéntica borra la clave vieja; si
+  IndexedDB ya tiene otro contenedor, la clave vieja no se toca.
+- **`events-adapter-web.js`**: la RMW entera dentro del lock como promesa; un almacén que no se puede leer
+  **rechaza** en vez de reiniciar el contenedor. Interfaz `eventsWeb*`, capacidades, barrera, export y retención,
+  sin cambios.
+- **Tests**: helpers y specs leen con `eventsWebReadRaw()`; los espías de la retención miran
+  `IDBObjectStore.prototype.put`. Nuevo `tests/eventos-idb.spec.js` (2 tests, dos mutantes que muerden).
+- **`ROADMAP.md`**: «Camino a v1.0» reescrito en seis fases con el reparto gratis/pago y la regla «ninguna fase
+  entra en v1 sin sacar otra»; el plan de s132 en `docs/archive/ROADMAP_CAMINO_V1_S132_HISTORICO.md`.
+
+### Lo que no cubre
+- Una pestaña con una versión anterior aún abierta puede escribir en `localStorage` después de la migración; esos
+  eventos no se trasladan.
+
+---
+
 ## [v0.133.2] -- 2026-10-05 -- chore(build): el artefacto publicado sin comentarios
 
 ### Cambiado
@@ -429,33 +457,3 @@ versiones anteriores, la tabla enlaza al diario completo en
   eventos, así que no es una lectura atrasada del test. Causa inferida: `localStorage` se propaga entre procesos
   de Chromium de forma asíncrona y el lock no lo puede corregir. El arreglo es mover el adaptador web a IndexedDB.
 
----
-
-## [v0.133.1] -- 2026-10-04 -- fix(fechas): el cambio de hora no se come un día
-
-### Arreglado
-- **La racha** (`updateStreak`): «ayer» se calcula por calendario. Con `Date.now() - 86400000`, el lunes siguiente al
-  cambio de hora de primavera, de 00:00 a 01:00, «ayer» era el sábado y la racha volvía a 1.
-- **Las etiquetas de mes de los mapas anuales** (`YearView`, `PathYearView`): el índice del día 1 se redondea en vez
-  de truncarse. Entre los dos cambios de hora salía un día corto y la etiqueta caía una columna antes (medido:
-  «jun» en 2026, «sep» en 2025). Las celdas usaban ya el índice bueno.
-- La migración de s43 (`migrateWeeklyStatsToHistory`), con el mismo patrón, pasa a calendario (solo afecta a
-  instalaciones anteriores a v0.28).
-
-### Añadido
-- **`npm run bump -- X.Y.Z`** (`scripts/version.js`): cambia los siete sitios de la versión a la vez y se niega a
-  bajarla o a partir de sitios descuadrados. La lista vive en `scripts/version.sitios.js` y la lee también el
-  `verify`. Esta versión es la primera que lo usa.
-
-### Red
-- `tests/cambio-de-hora.spec.js` (3): la racha el lunes 30 de marzo de 2026 a las 00:30 y las doce etiquetas contra un
-  cálculo en UTC, **los dos en rojo contra v0.133.0**, y un control (un lunes cualquiera) que pasa en las dos.
-
-### Lo que no cubre
-- Otros husos con cambio de hora a otra hora del día: la suite corre en Europe/Madrid.
-
----
-
-> **El detalle de las versiones anteriores se poda en cada cierre desde s192**, aplicando la convención de
-> arriba: cada una conserva su fila con su titular y el enlace a su diario, y el texto
-> completo sigue en el historial de git de este archivo (`git log -p CHANGELOG.md`).
