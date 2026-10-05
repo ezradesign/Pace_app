@@ -58,7 +58,7 @@ Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
    `tests/logros-i18n.spec.js`
 5. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
    objetivos canónicos y `PACE_standalone.html` pasa a **export bajo demanda**. Se regenera (y se
-   rota a `backups/`, máx 20) **solo si el usuario lo pide** o antes de publicar una release.
+   guarda fuera del repo, como adjunto de una Release; `backups/` está en `.gitignore` desde s199) **solo si el usuario lo pide** o antes de publicar una release.
    Motivos: no comparte `localStorage` con la web (otro origen), `file://` no emite eventos por
    diseño, instalar desde él causó el bug de icono y pantalla completa de s128 (no lleva
    `manifest`), y el catálogo de audio largo es ininlineable
@@ -141,7 +141,7 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 │   ├── onboarding/ Onboarding.jsx · OnboardingScreens.jsx · pickFirstPath.js
 │   ├── support/   SupportModule.jsx
 │   └── i18n/      strings/ (8 dominios) · content/ (5 patches EN) · useT.jsx
-└── backups/       PACE_standalone_vX.Y_YYYYMMDD.html (máx 20)
+└── (backups/)     ignorado por git desde s199: los exports van a Releases
 ```
 
 ---

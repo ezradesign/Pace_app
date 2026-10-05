@@ -28,3 +28,6 @@ _*.png
 test-results/
 playwright-report/
 blob-report/
+
+# Exports del standalone (s199): se guardan fuera del repo (Releases de GitHub), no en git
+backups/

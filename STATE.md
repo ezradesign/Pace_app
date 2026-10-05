@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.133.1 (s198 - **EL CAMBIO DE HORA NO SE COME UN DÍA**: la racha y las etiquetas de mes de los mapas anuales contaban días restando 24 h; ahora por calendario o redondeando. Y `npm run bump -- X.Y.Z` cambia la versión en sus siete sitios. 320 -> 323. Antes, v0.133.0, s198 - **la pausa te llama por su nombre**: con «A tu ritmo», el aviso del sistema al acabar un bloque dice qué pausa toca y cuándo vuelves; y v0.132.0 / v0.131.0, la red de error y el saneamiento. El historial completo, en `CHANGELOG.md`.)
+**Version actual:** v0.133.2 (s199 - **auditoría externa y el artefacto sin comentarios**: `index.html` de 2,04 a 1,47 MB y `backups/` fuera del repo. Antes, v0.133.1 / v0.133.0 (s198). El historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -259,18 +259,17 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> **s198 (2026-10-04) publica v0.131.0, v0.132.0, v0.133.0 y v0.133.1.** Auditoria de la repo con una sonda sobre el
-> artefacto publicado y siete defectos de la Fase 8.5 arreglados sin cambiar un pixel (**v0.131.0**); la red de
-> error por superficie y la copia de rescate, con las letras del usuario A2 · B2 · C1 (**v0.132.0**); y, ante
-> «no sé por dónde seguir», la recomendacion aceptada: **D2, la pausa te llama por su nombre** (**v0.133.0**); y,
-> aprovechando, `npm run bump` y el cambio de hora que se comia un dia (**v0.133.1**).
-> **300 -> 323**. Diarios: [session-198](./docs/sessions/session-198-saneamiento.md) ·
-> [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md). **Handoff para la siguiente: [session-198-handoff](./docs/sessions/session-198-handoff.md)** (empezar por ahi).
+> **s199 (2026-10-05), en la nube, publica v0.133.2.** Auditoría externa del proyecto
+> ([informe](./docs/audits/audit-externa-v0.133.1.md)) y tres decisiones del usuario que cambian el plan de v1:
+> **Travesías y Caminos (Fases 6 y 7) FUERA de v1** (el producto ha girado al método guiado día a día de «A tu
+> ritmo»; los 7 Caminos se quedan como están, sin reescribir y fuera de la home) · **Android SÍ en v1** · **el pago
+> pasa a ser «A tu ritmo» semanal + rutinas premium + constructor + stats de semana/año**; gratis: Pomodoro, «A tu
+> ritmo» del día, 32 rutinas, Hidrátate, logros y stats «Hoy». Se afina con la prueba cerrada de Android.
+> Diario: [session-199](./docs/sessions/session-199-auditoria-externa.md).
 >
-> **LO SIGUIENTE: que el usuario use la app una semana** con el aviso nuevo (es lo unico que solo puede hacer el;
-> la semana de v0.128.0 sigue sin juicio). Despues, segun la pagina
-> [`por-donde-seguir-s198.html`](./docs/proposals/por-donde-seguir-s198.html): **D3 Estadisticas «Hoy»** (la
-> siguiente fase del plan; **ronda 1 ENVIADA y sin decidir: [`stats-hoy-s198.html`](./docs/proposals/stats-hoy-s198.html)**, H1 · H2 · H3) · el `.ics` (D2b, aparcado a proposito) · D4 Android · D5 pulido.
+> **LO SIGUIENTE**: reescribir «Camino a v1.0» del `ROADMAP.md` con esas decisiones (propuesta pendiente de
+> revisión del usuario) · arreglar la pérdida de eventos con dos pestañas (adaptador web a IndexedDB; ver
+> CHANGELOG v0.133.2) · adelgazar el método (la documentación es sobre todo para Claude, dice el usuario).
 - **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
   72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
   el cierre que nunca es «Ahora» · la lectura C del norte (cuando `origin` tenga semanas de datos).

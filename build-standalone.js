@@ -48,6 +48,9 @@ var OUTPUT = path.join(ROOT, 'PACE_standalone.html');
      helpers inyectados); es lo que los navegadores soportados ya ejecutan.
    - retainLines: los numeros de linea del output coinciden con el .jsx
      fuente -> stack traces de produccion apuntan a la linea real.
+   - shouldPrintComment: el artefacto solo conserva los avisos de copyright y
+     licencia; el resto de comentarios (el 39 % del JS publicado) se queda en
+     las fuentes.
    --------------------------------------------------------------------------- */
 var BABEL_OPTS = {
   presets: [
@@ -60,7 +63,7 @@ var BABEL_OPTS = {
   sourceType: 'script',
   retainLines: true,
   compact: false,
-  comments: true,
+  shouldPrintComment: function (c) { return /Copyright|@license/.test(c); },
   configFile: false,
   babelrc: false
 };
