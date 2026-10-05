@@ -436,6 +436,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 ### Tests
 - `tests/mueve-reloj.spec.js` (2): un `fastForward` de 12 s son 3 reps y no 1 · ocultar pausa y volver sigue en
   pausa. `tests/eventos-idb.spec.js` +1: la fusión de la pestaña antigua. Los tres, en rojo contra v0.134.0.
+- **Trampa que destapó el CI**: tras una recarga (borrar todo, importar) el `waitForFunction` se evaluaba en la página
+  nueva antes de que existiera `eventsWebReadRaw` (con `localStorage` siempre estaba). Los predicados y
+  `leerContenedor` esperan ahora a la función.
 
 ---
 

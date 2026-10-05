@@ -19,7 +19,13 @@ const CLAVE_EVENTOS = 'pace.events.v1';
    dependencia de la CARGA que s162. Se reintenta UNA vez tras asentar la carga;
    cualquier otro error se propaga tal cual, para no enterrar fallos de verdad. */
 async function leerContenedor(page) {
-  const leer = () => page.evaluate(async () => {
+  /* s200: el almacen se lee por la app (IndexedDB), asi que tras una recarga
+     hay que esperar a que sus scripts hayan cargado. */
+  const leer = async () => {
+    await page.waitForFunction(() => typeof window.eventsWebReadRaw === 'function');
+    return leerYa();
+  };
+  const leerYa = () => page.evaluate(async () => {
     const raw = await window.eventsWebReadRaw();
     return raw ? JSON.parse(raw) : null;
   });

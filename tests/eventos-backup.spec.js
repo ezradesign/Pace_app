@@ -109,6 +109,7 @@ test('un backup CON seccion devuelve ese historial, no lo reinicia', async ({ pa
      la calibracion de s169, donde reiniciar en vez de reemplazar daba
      «Timeout 15000ms exceeded» y ni una palabra mas. */
   await page.waitForFunction(async () => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
     return JSON.parse(raw).events.length !== 8;

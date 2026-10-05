@@ -68,6 +68,7 @@ async function terminarBloque(page) {
 /* Espera a que haya N sesiones y devuelve la última. */
 async function ultimaSesion(page, n) {
   await page.waitForFunction(async (k) => {
+    if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).filter((e) => e.type === 'session.completed').length >= k;
   }, n, { timeout: 5000 });
