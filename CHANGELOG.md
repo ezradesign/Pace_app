@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.133.2** | 2026-10-05 | chore(build): **el artefacto publicado sin comentarios** — `index.html` pasa de 2,04 a 1,47 MB (−28 %): el build solo conserva los avisos de copyright y licencia. Y `backups/` sale del repo (20 copias de 3 MB del standalone; ahora en `.gitignore`). Auditoría externa del proyecto. | s199 | [session-199](./docs/sessions/session-199-auditoria-externa.md) |
 | **v0.133.1** | 2026-10-04 | fix(fechas): **el cambio de hora no se come un día** — Tres sitios contaban días restando 24 h, y el domingo del cambio de primavera dura 23: **la racha** se reiniciaba si la primera actividad del lunes siguiente caía entre las 00:00 y la 01:00 («ayer» salía sábado), y **las etiquetas de mes de los dos mapas anuales** caían una columna antes que su día 1 de marzo a octubre (medido: «jun» en 2026, «sep» en 2025; las celdas ya iban bien). Arreglado por calendario o redondeando; la migración vieja de s43, con el mismo patrón, también. Y **`npm run bump -- X.Y.Z`**: la versión cambia en sus siete sitios con un comando (`scripts/version.sitios.js`, la misma lista que vigila el `verify`); esta es la primera que lo usa. Suite **320 → 323** (2 en rojo contra v0.133.0 y un control). | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) §6-7 |
 | **v0.133.0** | 2026-10-04 | feat(ritmo): **la pausa te llama por su nombre** — Decisión del usuario mirando `por-donde-seguir-s198.html` (D2, texto V1, sin `.ics`). En la oficina PACE vive en una pestaña de fondo: al acabar un bloque, lo primero que se ve es el **aviso del sistema**, y decía siempre «Foco completado · Ciclo cerrado». Con «A tu ritmo» ahora dice **qué pausa toca y cuándo vuelves**: «Tu pausa: Caderas de pie · 4 min · Bloque 1 de 9 hecho. El siguiente, a las 9:50». La larga nombra todos sus platos con la duración de la parada; la comida dice hasta cuándo; el último bloque, que el día se cierra. Por libre, igual que antes. **El aviso se calcula DESPUÉS de cerrar el bloque** (antes iba delante): solo entonces el plan sabe qué pausa sigue y ha recolocado el día si llegaste tarde. `app/ritmo/ritmo.aviso.js`, puro. Suite **316 → 320** (3 en rojo contra v0.132.0 y un control), banco `banco-aviso-s198.js` **10 de 10**. | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) |
 | **v0.132.0** | 2026-10-04 | feat(saneamiento): **si una parte falla, se cierra solo esa parte** — Las letras del usuario a `saneamiento-s198.html`, contestadas a pregunta: **A2 · B2 · C1 · D1**. Medido en v0.131.0: no había ningún límite de error de React, y un dato roto en caliente + abrir Estadísticas desmontaba la app entera (0 nodos en la raíz). Ahora **`app/ui/RedDeError.jsx`**: cada diálogo y cada sesión lleva su red (`red()` en `main.jsx`) y si falla pinta SU aviso de 560 px («Esta parte no ha podido abrirse» · Cerrar · Recargar) mientras el aro, la barra lateral y el bloque en marcha siguen; la app entera lleva la **global** («Algo se ha torcido» · Volver a empezar · Descargar una copia, que lee de `localStorage`); lo invisible (avisos, el vigilante de secretos) cae en **silencio**. Implementarla destapó un caso que la maqueta no tenía: **`HydrateTracker` lee `state.water` estando CERRADO**, así que una superficie cerrada que falla CALLA y se reintenta al abrirla. **B2**: la fila «Descargar la copia de rescate · 4 oct.» en «Tus datos», solo si hay rescate. **C1**: la pantalla encendida, sin interruptor. Censo i18n 673 → 684; la sección de capas (z-index) del sistema de diseño, por fin medida. Suite **312 → 316**, los 4 nuevos en rojo contra v0.131.0. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
@@ -411,6 +412,25 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.133.2] -- 2026-10-05 -- chore(build): el artefacto publicado sin comentarios
+
+### Cambiado
+- **`build-standalone.js`**: `comments: true` pasa a `shouldPrintComment`, que solo conserva los comentarios con
+  `Copyright` o `@license`. Medido: los comentarios eran 732 KB de los 1,86 MB de JS de `index.html` (39 %).
+  `index.html` baja de **2.039.657 a 1.470.507 bytes**. `retainLines` se mantiene: las trazas siguen apuntando a la
+  línea real del fuente.
+- **`backups/` sale del repo** y entra en `.gitignore`: los exports del standalone se guardan como adjunto de una
+  Release. El historial de git sigue conteniéndolos (no se reescribe la historia).
+
+### Lo que no cubre
+- `PACE_standalone.html` sigue en el repo, congelado en v0.71.0: sacarlo toca el `verify`, el CI y diez scripts de `scripts/audit/`.
+- **Bug conocido, sin arreglar**: `tests/eventos-barrera.spec.js:23` (dos pestañas emitiendo a la vez) pierde
+  eventos de forma intermitente (7 de 20 con carga). Medido dentro del lock: el almacén tiene de verdad menos
+  eventos, así que no es una lectura atrasada del test. Causa inferida: `localStorage` se propaga entre procesos
+  de Chromium de forma asíncrona y el lock no lo puede corregir. El arreglo es mover el adaptador web a IndexedDB.
+
+---
+
 ## [v0.133.1] -- 2026-10-04 -- fix(fechas): el cambio de hora no se come un día
 
 ### Arreglado
@@ -433,33 +453,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ### Lo que no cubre
 - Otros husos con cambio de hora a otra hora del día: la suite corre en Europe/Madrid.
-
----
-
-## [v0.133.0] -- 2026-10-04 -- feat(ritmo): la pausa te llama por su nombre
-
-### Añadido
-- **El aviso del sistema nombra la pausa servida** (D2, texto V1): «Tu pausa: {rutina} · {min} min» y «Bloque
-  {n} de {total} hecho. El siguiente, a las {hora}.». Variantes: «Tu pausa larga: … · {duración de la parada}»,
-  «Hora de comer · Hasta las {hora}. Luego, el bloque {n}.» y «Para cerrar: … · Con esto cierras el día.». En
-  inglés, con el nombre de la rutina en inglés. **Por libre, el aviso de siempre.**
-- `app/ritmo/ritmo.aviso.js` (`ritmoAviso(s, t, tn, lang)`), puro: las mismas reglas que la línea del día.
-
-### Cambiado
-- `FocusTimer` avisa **después** de `completeFocusSession` y de `onFinish` (antes, delante): con el bloque aún
-  sin cerrar, el plan nombraría la pausa equivocada (el mutante lo demuestra). Un `finally` conserva lo de
-  antes: aunque la pausa fallara al abrirse, el aviso sale.
-
-### Red
-- `tests/ritmo-aviso.spec.js` (4) con el aviso del sistema sustituido por uno falso y la pestaña oculta: el
-  plato y la hora, la larga + la comida + el último bloque, en inglés (los tres en rojo contra v0.132.0) y por
-  libre + pestaña visible (control: pasa en las dos versiones).
-- `scripts/audit/banco-aviso-s198.js`: **10 de 10 muerden**. Censo i18n 684 → 691.
-
-### Lo que no cubre
-- El aspecto del aviso lo pone el sistema (Windows, macOS, Android): no se mira. Y no se ha probado en un
-  sistema real con la pestaña de verdad en segundo plano: la API se sustituye en la prueba.
-- El `.ics` (D2b) queda fuera, a propósito: se decide después de usar el aviso unos días.
 
 ---
 
