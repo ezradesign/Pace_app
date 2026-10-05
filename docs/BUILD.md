@@ -172,6 +172,14 @@ Desde v0.136.0 la misma web se empaqueta como app de Android con Capacitor 8.
 - `npm run android:sync` hace lo mismo y lo copia al proyecto `android/` (`cap sync android`).
 - El APK de prueba lo compila GitHub en cada push a `main` (`.github/workflows/android.yml`): se
   baja de la ejecucion «Android» de la pestana Actions, como artefacto `pace-android-debug`.
+- Para ver si compila ANTES de tocar `main`, se sube la rama y se lanza el workflow sobre ella:
+  `gh workflow run android.yml --ref RAMA`. Su APK sale igual, como artefacto de esa ejecucion.
+- Los APK de prueba se firman con `android/app/pace-debug.keystore`, una clave fija y no secreta: un
+  APK nuevo se instala encima del anterior y conserva los datos. La version (`versionName` y
+  `versionCode`) sale de `PACE_VERSION`, asi que `npm run bump` tambien la cambia en Android.
+- Lo que el WebView no trae (boton atras, avisos, pantalla encendida, compartir archivos) lo dan
+  complementos de Capacitor fijados en `package.json`; tras añadir uno, `npm run android:sync` lo
+  apunta en `android/`. Solo `app/ui/android.js` les habla.
 - Compilar en local pide JDK 21 y el SDK de Android: `cd android && ./gradlew assembleDebug`. No
   hace falta para el dia a dia.
 - Las reglas (origen fijo, sin service worker, eventos en IndexedDB) estan en

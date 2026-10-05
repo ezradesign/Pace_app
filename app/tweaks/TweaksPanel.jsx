@@ -56,17 +56,21 @@ function TweaksPanel({ open, onClose }) {
      tienen sentido servidos por web — en el standalone file:// no hay SW ni
      rutas. Un solo gate para ambos bloques. */
   const isWeb = location.protocol === 'http:' || location.protocol === 'https:';
-  const canNotify = isWeb && typeof Notification !== 'undefined';
+  /* En Android el aviso lo da el sistema (ui/android.js) con su propio permiso;
+     `permisoAviso()` contesta igual en los dos: 'granted' | 'denied' | 'default'. */
+  const avisoAndroid = typeof paceAndroidAvisos === 'function' && paceAndroidAvisos();
+  const canNotify = avisoAndroid || (isWeb && typeof Notification !== 'undefined');
+  const permisoAviso = () => avisoAndroid ? paceAndroidAvisoPermiso() : Notification.permission;
 
   /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
      nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, la nota
      de debajo lo explica; el interruptor no puede encenderse. */
   const enableNotify = () => {
     if (!canNotify) return;
-    if (Notification.permission === 'granted') { set({ notifyFocusEnd: true }); return; }
-    if (Notification.permission === 'denied') return;
+    if (permisoAviso() === 'granted') { set({ notifyFocusEnd: true }); return; }
+    if (permisoAviso() === 'denied') return;
     try {
-      Notification.requestPermission().then((p) => {
+      (avisoAndroid ? paceAndroidAvisoPedir() : Notification.requestPermission()).then((p) => {
         /* La rama denegada escribe el MISMO false: el objeto de state nuevo
            fuerza el re-render que hace visible la nota 'blocked' (permission
            no es reactivo por sí solo). */
@@ -196,13 +200,13 @@ function TweaksPanel({ open, onClose }) {
         {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
             disponible; el permiso se pide al activar (enableNotify). */}
         {canNotify && (
-          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t('settings.notify.sub')} modulo="focus">
-            <AjustesInterruptor on={!!state.notifyFocusEnd && Notification.permission !== 'denied'} aria={t('settings.notify')}
+          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoAndroid ? 'settings.notify.sub.android' : 'settings.notify.sub')} modulo="focus">
+            <AjustesInterruptor on={!!state.notifyFocusEnd && permisoAviso() !== 'denied'} aria={t('settings.notify')}
               onChange={(v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); }} />
           </AjustesFila>
         )}
-        {canNotify && Notification.permission === 'denied' && (
-          <div className="pace-aj-nota">{t('settings.notify.blocked')}</div>
+        {canNotify && permisoAviso() === 'denied' && (
+          <div className="pace-aj-nota">{t(avisoAndroid ? 'settings.notify.blocked.android' : 'settings.notify.blocked')}</div>
         )}
         <AjustesFila id="circle" nombre={t('settings.circle')} modulo="breathe"
                      sub={tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) })}>
