@@ -141,12 +141,10 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   // Colocación AUTO (s111): aire para colocarse, no es el timer (R1).
   // «Empezar ya» salta; «Más tiempo» suma 5 s. En 'ready' NO corre (s112).
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'place') return;
-    if (step && step.setup && step.setup.mode === 'ready') return;
-    const intv = setInterval(() => setPlaceLeft(c => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, stepIdx]);
+  // s200: los tres relojes van por MARCA de tiempo (`useRelojSesion`, support).
+  useRelojSesion(stage === 'run' && phase === 'place' && !(step && step.setup && step.setup.mode === 'ready'),
+    n => setPlaceLeft(c => Math.max(0, c - n)), [stepIdx]);
+  useSesionAlOcultar(stage === 'run', () => setPaused(true)); // s200: politica en SESION_AL_OCULTAR
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
     if (step && step.setup && step.setup.mode === 'ready') return;
@@ -155,11 +153,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   // Ticker de trabajo (fase 'work', pausable). s113: las reps GUIADAS también
   // corren — el tiempo marca la cadencia (enmienda R2).
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || paused) return;
-    const intv = setInterval(() => setElapsed(e => e + 1), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx, side]);
+  useRelojSesion(stage === 'run' && phase === 'work' && !paused, n => setElapsed(e => e + n), [stepIdx, side]);
   // Umbrales del trabajo: tick suave por rep + avance AUTO al objetivo (reps,
   // acreditando solo las guiadas reales) · fin de segmento → cambio de lado
   // (perSide lado 0) o siguiente paso. Deps [elapsed]: exactamente una
@@ -196,11 +190,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // Transición AUTO de lado (s113, enmienda R3): cuenta que fluye sola con el
   // lado siguiente visible. Al llegar a 0 → el lado 2 empieza solo.
   // «Empezar ya» salta, «Más tiempo» +5 s, «Pausar» disponible — opcionales.
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'change' || paused) return;
-    const intv = setInterval(() => setChangeLeft(c => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx]);
+  useRelojSesion(stage === 'run' && phase === 'change' && !paused, n => setChangeLeft(c => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change' || changeLeft > 0) return;
     onSideReady();
@@ -233,7 +223,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         // 'done'): que lo active nativamente en vez de hacer preventDefault (s116).
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if ((phase === 'work' && step && step.mode !== 'rest') || phase === 'change') setPaused(p => !p);
+        if ((phase === 'work' && step && step.mode !== 'rest') || phase === 'change' || paused) setPaused(p => !p);
       }
       if (e.key === 'Escape') onExit('exit');
       // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
@@ -243,7 +233,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [stage, stepIdx, phase, step]);
+  }, [stage, stepIdx, phase, step, paused]);
 
   // PREPARACIÓN
   if (stage === 'prep') {
@@ -366,7 +356,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     : null;
 
   // s113: pausable todo lo que corre solo salvo el descanso (termina solo).
-  const canPause = (phase === 'work' && !isRest) || phase === 'change';
+  const canPause = (phase === 'work' && !isRest) || phase === 'change' || paused; // s200: en pausa, siempre «Continuar»
   const footer = (
     <React.Fragment>
       {phase !== 'change' && (

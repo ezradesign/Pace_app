@@ -14,7 +14,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, capturarErrores, irAlArtefacto } = require('./helpers');
-const { leerContenedor, esperarInit } = require('./eventos.helpers');
+const { leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 /* Un contenedor de los de antes, fabricado con el modelo de la app en una
    pestaña aparte (para no inventar a mano la forma del envelope). */
@@ -71,6 +71,41 @@ test('el historial de localStorage pasa a IndexedDB entero y la clave vieja se b
   expect(sigue, 'la clave vieja sigue ahi despues de una copia verificada').toBeNull();
   /* Y la app puede seguir escribiendo sobre lo migrado. */
   expect(await page.evaluate(() => window.paceEventsCanWrite())).toBe(true);
+  expect(errores).toEqual([]);
+});
+
+test('lo que una pestaña ANTIGUA escribe despues de migrar se fusiona al arrancar', async ({ page, context }) => {
+  /* s200 · tarea 4. Una pestaña con v0.133 abierta sigue escribiendo su
+     contenedor ENTERO en `localStorage`: el que tenia al migrar mas sus eventos
+     nuevos. El arranque siguiente añade solo los ids que faltan. */
+  const errores = capturarErrores(page);
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  await sembrarEventos(page, 2);
+  const propio = await leerContenedor(page);
+
+  const nuevoId = await page.evaluate((c) => {
+    const e = window.makeEvent({
+      type: 'session.completed', runId: 'pestana-vieja',
+      payload: { module: 'breathe', routineId: 'breathe.box',
+                 completionReason: 'natural', elapsedSeconds: 60, activeSeconds: 55 },
+    });
+    const viejo = Object.assign({}, c, { events: c.events.concat([e]) });
+    localStorage.setItem('pace.events.v1', JSON.stringify(viejo));
+    return e.id;
+  }, propio);
+
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  await esperarInit(page);
+
+  const tras = await leerContenedor(page);
+  expect(tras.events.map(e => e.id), 'el evento de la pestaña antigua se quedo fuera').toContain(nuevoId);
+  expect(tras.events.length, 'se duplicaron los eventos que ya estaban').toBe(3);
+  expect(tras.activatedAt).toBe(propio.activatedAt);
+  expect(await page.evaluate(() => localStorage.getItem('pace.events.v1')),
+    'la clave vieja sigue ahi tras una fusion verificada').toBeNull();
   expect(errores).toEqual([]);
 });
 
