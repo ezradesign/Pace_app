@@ -537,7 +537,9 @@ sin tests del estado es un riesgo que se paga en soporte.
   clave que falta es un **bug visible** en una app de pago. Más las deudas semánticas **D-1**
   (override silencioso en `content/breathe.js`), **D-2** («Hecho hoy» duplicado) y **D-3**
   (namespaces `path.*` / `paths.*` mezclados).
-- **Automatizar el bump de versión** en el build (`package.json` como fuente).
+- ~~**Automatizar el bump de versión** en el build (`package.json` como fuente).~~ **HECHO en s198, de otra
+  forma**: `npm run bump -- X.Y.Z` cambia los siete sitios de `scripts/version.sitios.js` a la vez, la misma lista
+  que vigila el `verify`. `package.json` no es la fuente: su `version` es la del paquete de build (1.0.0), no la de la app.
 - **Timer de Mueve por timestamps** (hoy `setInterval` en foreground) — necesario de todos modos
   para el ciclo de vida en Android.
 

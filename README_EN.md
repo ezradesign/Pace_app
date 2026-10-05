@@ -3,7 +3,7 @@
 > Productivity and wellness web app for people who spend long hours sitting.
 > Thoughtful micro-interventions throughout the day, not lengthy workouts.
 
-**Status:** v0.133.0 · Pre-launch
+**Status:** v0.133.1 · Pre-launch
 **Build delivered:** `index.html` — web/PWA artifact, installable and offline
 **Author:** [@ezradesign](https://github.com/ezradesign)
 **Code license:** [Elastic License 2.0](./LICENSE) — see [§ License](#-license)
@@ -32,7 +32,7 @@ builder**, and an installable **PWA** that works offline.
 
 ---
 
-## 📊 Current state (v0.133.0)
+## 📊 Current state (v0.133.1)
 
 | Area | State |
 |---|---|
@@ -46,7 +46,7 @@ builder**, and an installable **PWA** that works offline.
 | Premium | Central entitlement guard in place; the real license does not exist yet |
 | Robustness | A broken saved field repairs itself (anything unreadable is kept in a rescue copy) · dialogs and sessions manage focus and keyboard · the screen stays on during a guided session · if one part fails, only that part closes (with a recovery screen as a last resort) |
 | Code | 154 code files under `app/` (.js, .jsx, .css), none above 500 lines |
-| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence · `npm run test:e2e` — 320 tests in a real browser |
+| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence · `npm run test:e2e` — 323 tests in a real browser |
 
 ---
 

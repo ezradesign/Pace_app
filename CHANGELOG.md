@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.133.1** | 2026-10-04 | fix(fechas): **el cambio de hora no se come un día** — Tres sitios contaban días restando 24 h, y el domingo del cambio de primavera dura 23: **la racha** se reiniciaba si la primera actividad del lunes siguiente caía entre las 00:00 y la 01:00 («ayer» salía sábado), y **las etiquetas de mes de los dos mapas anuales** caían una columna antes que su día 1 de marzo a octubre (medido: «jun» en 2026, «sep» en 2025; las celdas ya iban bien). Arreglado por calendario o redondeando; la migración vieja de s43, con el mismo patrón, también. Y **`npm run bump -- X.Y.Z`**: la versión cambia en sus siete sitios con un comando (`scripts/version.sitios.js`, la misma lista que vigila el `verify`); esta es la primera que lo usa. Suite **320 → 323** (2 en rojo contra v0.133.0 y un control). | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) §6-7 |
 | **v0.133.0** | 2026-10-04 | feat(ritmo): **la pausa te llama por su nombre** — Decisión del usuario mirando `por-donde-seguir-s198.html` (D2, texto V1, sin `.ics`). En la oficina PACE vive en una pestaña de fondo: al acabar un bloque, lo primero que se ve es el **aviso del sistema**, y decía siempre «Foco completado · Ciclo cerrado». Con «A tu ritmo» ahora dice **qué pausa toca y cuándo vuelves**: «Tu pausa: Caderas de pie · 4 min · Bloque 1 de 9 hecho. El siguiente, a las 9:50». La larga nombra todos sus platos con la duración de la parada; la comida dice hasta cuándo; el último bloque, que el día se cierra. Por libre, igual que antes. **El aviso se calcula DESPUÉS de cerrar el bloque** (antes iba delante): solo entonces el plan sabe qué pausa sigue y ha recolocado el día si llegaste tarde. `app/ritmo/ritmo.aviso.js`, puro. Suite **316 → 320** (3 en rojo contra v0.132.0 y un control), banco `banco-aviso-s198.js` **10 de 10**. | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) |
 | **v0.132.0** | 2026-10-04 | feat(saneamiento): **si una parte falla, se cierra solo esa parte** — Las letras del usuario a `saneamiento-s198.html`, contestadas a pregunta: **A2 · B2 · C1 · D1**. Medido en v0.131.0: no había ningún límite de error de React, y un dato roto en caliente + abrir Estadísticas desmontaba la app entera (0 nodos en la raíz). Ahora **`app/ui/RedDeError.jsx`**: cada diálogo y cada sesión lleva su red (`red()` en `main.jsx`) y si falla pinta SU aviso de 560 px («Esta parte no ha podido abrirse» · Cerrar · Recargar) mientras el aro, la barra lateral y el bloque en marcha siguen; la app entera lleva la **global** («Algo se ha torcido» · Volver a empezar · Descargar una copia, que lee de `localStorage`); lo invisible (avisos, el vigilante de secretos) cae en **silencio**. Implementarla destapó un caso que la maqueta no tenía: **`HydrateTracker` lee `state.water` estando CERRADO**, así que una superficie cerrada que falla CALLA y se reintenta al abrirla. **B2**: la fila «Descargar la copia de rescate · 4 oct.» en «Tus datos», solo si hay rescate. **C1**: la pantalla encendida, sin interruptor. Censo i18n 673 → 684; la sección de capas (z-index) del sistema de diseño, por fin medida. Suite **312 → 316**, los 4 nuevos en rojo contra v0.131.0. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
 | **v0.131.0** | 2026-10-04 | fix(saneamiento): **que no se pierda nada y que el teclado no mienta** — Auditoría de la repo entera a petición del usuario, con una sonda de Playwright sobre el artefacto publicado que reprodujo cada sospecha antes de tocar nada. Siete defectos medidos en v0.130.0 y arreglados sin cambiar un píxel: **un campo guardado con otra forma (`weeklyStats: null`) hacía arrancar la app de fábrica y la primera escritura borraba la historia** (4321 min → 0) — ahora `state-core.sanea.js` repara campo a campo antes de migrar y guarda lo ilegible en `pace.state.v2.rescate`, que viaja en el export; **el import pasa por el mismo saneador** (A-7); **«Borrar todo» borra toda clave `pace.*`** (quedaban el bloque en marcha, la respiración a medias y los días en oscuro); **Espacio pausa** aunque la sesión venga de «Continúa» (el foco se quedaba en el botón escondido); **Escape cierra el diálogo de arriba** (con el preview encima cerraba la biblioteca); **los diálogos son diálogos** (`ui/Dialogo.jsx`: rol, nombre, foco dentro, trampa de Tab, foco devuelto; también el onboarding y las sesiones); **los atajos T·S·L** sin Ctrl/Cmd ni con una sesión delante, y Escape cierra Ajustes; **la pantalla no se apaga** en una sesión guiada (Screen Wake Lock; el Foco no). `state-core.jsx` troceado por un punto (toasts a `state-core.toast.jsx`). Lo visual (pantalla de error, aviso de rescate, interruptor de la pantalla) va a `docs/proposals/saneamiento-s198.html`, SIN DECIDIR. Suite **300 → 312**; las 11 que pueden correr contra HEAD, en rojo por la razón de su mensaje. | s198 | [session-198](./docs/sessions/session-198-saneamiento.md) |
@@ -410,6 +411,31 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.133.1] -- 2026-10-04 -- fix(fechas): el cambio de hora no se come un día
+
+### Arreglado
+- **La racha** (`updateStreak`): «ayer» se calcula por calendario. Con `Date.now() - 86400000`, el lunes siguiente al
+  cambio de hora de primavera, de 00:00 a 01:00, «ayer» era el sábado y la racha volvía a 1.
+- **Las etiquetas de mes de los mapas anuales** (`YearView`, `PathYearView`): el índice del día 1 se redondea en vez
+  de truncarse. Entre los dos cambios de hora salía un día corto y la etiqueta caía una columna antes (medido:
+  «jun» en 2026, «sep» en 2025). Las celdas usaban ya el índice bueno.
+- La migración de s43 (`migrateWeeklyStatsToHistory`), con el mismo patrón, pasa a calendario (solo afecta a
+  instalaciones anteriores a v0.28).
+
+### Añadido
+- **`npm run bump -- X.Y.Z`** (`scripts/version.js`): cambia los siete sitios de la versión a la vez y se niega a
+  bajarla o a partir de sitios descuadrados. La lista vive en `scripts/version.sitios.js` y la lee también el
+  `verify`. Esta versión es la primera que lo usa.
+
+### Red
+- `tests/cambio-de-hora.spec.js` (3): la racha el lunes 30 de marzo de 2026 a las 00:30 y las doce etiquetas contra un
+  cálculo en UTC, **los dos en rojo contra v0.133.0**, y un control (un lunes cualquiera) que pasa en las dos.
+
+### Lo que no cubre
+- Otros husos con cambio de hora a otra hora del día: la suite corre en Europe/Madrid.
+
+---
+
 ## [v0.133.0] -- 2026-10-04 -- feat(ritmo): la pausa te llama por su nombre
 
 ### Añadido
@@ -434,37 +460,6 @@ versiones anteriores, la tabla enlaza al diario completo en
 - El aspecto del aviso lo pone el sistema (Windows, macOS, Android): no se mira. Y no se ha probado en un
   sistema real con la pestaña de verdad en segundo plano: la API se sustituye en la prueba.
 - El `.ics` (D2b) queda fuera, a propósito: se decide después de usar el aviso unos días.
-
----
-
-## [v0.132.0] -- 2026-10-04 -- feat(saneamiento): si una parte falla, se cierra solo esa parte
-
-### Añadido
-- **`app/ui/RedDeError.jsx`** (`PaceRed`), decisión **A2** del usuario mirando la página: cada diálogo y cada
-  sesión lleva su red; si falla al dibujarse, pinta su propio aviso de 560 px («Esta parte no ha podido abrirse»,
-  el nombre de la superficie como rótulo, Cerrar · Recargar) y **el resto de la app sigue**, bloque en marcha
-  incluido. Alrededor de `PaceApp`, la red **global** como último recurso: «Algo se ha torcido», Volver a
-  empezar y Descargar una copia de tus datos. Los avisos y el vigilante de secretos caen en silencio.
-- **La fila de la copia de rescate** en «Tus datos» (**B2**), solo si hay rescate; baja el registro tal cual.
-- `paceDescargarCopia` y `paceDescargarRescate` (`TweaksData.jsx`): la copia sale de `localStorage`, no del árbol
-  de React, y si el estado no se puede leer viaja crudo (`stateRaw`).
-
-### Cambiado
-- **Una superficie CERRADA que falla calla** y se reintenta al abrirla: `HydrateTracker` lee `state.water` aunque
-  no se vea (medido), y sin esta regla salía un aviso de Hidrátate que nadie había abierto.
-- La pantalla encendida en las sesiones se queda **sin interruptor** (**C1**).
-- `DESIGN_SYSTEM.md`: «Cuando algo falla» y la tabla de capas (z-index), que era un TODO desde hace meses.
-
-### Red
-- `tests/red-de-error.spec.js` (4), **los 4 en rojo contra v0.131.0**: Estadísticas cae y la app sigue (y al
-  arreglar el dato vuelve a abrir), la cerrada que calla, la pantalla global con su copia y su recarga, la fila
-  del rescate.
-- `scripts/audit/banco-saneamiento-s198.js` suma 7 mutantes de la red y del rescate: **33 de 33 muerden** en la
-  pasada final del banco entero (más el declarado que vive con razón).
-
-### Lo que no cubre
-- La red de la home: barra lateral, aro y «A tu ritmo» no llevan red propia; si caen, la global (así se decidió).
-- La red silenciosa no tiene prueba: provocarla exige romper el catálogo de logros a propósito.
 
 ---
 

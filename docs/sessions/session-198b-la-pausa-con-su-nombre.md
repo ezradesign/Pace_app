@@ -64,3 +64,27 @@ nombra la pausa equivocada.
 - **Que el usuario use la app una semana** con el aviso nuevo.
 - El `.ics` (D2b), aparcado a propósito hasta usar el aviso unos días.
 - D3 Estadísticas «Hoy» (la siguiente fase del plan), D4 Android, D5 pulido.
+
+## 6 · Después: la versión con un solo comando (sin versión nueva)
+
+Tras el push de v0.133.0, «haz el handoff y sigamos aprovechando para ver qué implementar». Lo primero, algo
+invisible y sin decisiones de diseño: **`npm run bump -- X.Y.Z`** (`scripts/version.js`) cambia los siete sitios
+de la versión a la vez, con la lista en `scripts/version.sitios.js`, que ahora también lee el `verify` (antes la
+lista vivía dentro de él y el cambio se hacía a mano en siete sitios). Se niega a bajar la versión y a partir de
+sitios descuadrados. Probado: subir a 0.133.1 → `verify` coherente → volver con `--forzar` → `git diff` vacío en
+los cinco archivos (CRLF intacto); y con `sw.js` descuadrado a mano, se niega y enseña cuál dice qué. No cambia
+la app: el artefacto conserva el hash de v0.133.0.
+
+## 7 · Y el cambio de hora que se comía un día (v0.133.1)
+
+Buscando el patrón `86400000` (lo vi en la auditoría de la primera parte), tres sitios contaban días restando 24 h.
+El domingo del cambio de hora de primavera dura 23:
+- **La racha**: el lunes siguiente, de 00:00 a 01:00, «ayer» salía sábado y la racha volvía a 1 (medido con el reloj en
+  el 30 de marzo de 2026 a las 00:30: 4 esperado, 1 recibido contra v0.133.0).
+- **Las etiquetas de mes de los mapas anuales**: `Math.floor` daba un día menos entre los dos cambios y la etiqueta
+  caía una columna antes que su día 1. **Calculado antes de tocar nada** para 2025–2027: «sep» en 2025, «jun» en 2026,
+  ninguna en 2027 — un defecto que depende del año en que mires. Las celdas usaban ya el índice bueno.
+- La migración vieja de s43, con el mismo patrón (solo instalaciones anteriores a v0.28).
+
+Arreglado por calendario o redondeando, con su test en el día del cambio y un control en un lunes normal. Es la
+primera versión que se sube con `npm run bump`.

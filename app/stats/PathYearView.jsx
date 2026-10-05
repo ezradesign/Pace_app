@@ -43,7 +43,8 @@ function getPyvMonthCols(year, jan1Dow) {
   const r = {};
   for (let m = 0; m < 12; m++) {
     const d = new Date(year, m, 1);
-    const doy = Math.floor((d - new Date(year,0,0)) / 86400000) - 1;
+    /* s198 · redondear, no truncar (ver getMonthColumns en YearView.jsx). */
+    const doy = Math.round((d - new Date(year,0,1)) / 86400000);
     r[Math.floor((doy+jan1Dow)/7)] = m;
   }
   return r;

@@ -95,7 +95,11 @@ function getMonthColumns(year, jan1Dow) {
   const result = {};
   for (let m = 0; m < 12; m++) {
     const d = new Date(year, m, 1);
-    const dayOfYear = Math.floor((d - new Date(year,0,0)) / 86400000) - 1;
+    /* s198 · REDONDEAR, no truncar: entre el cambio de hora de primavera y el de
+       otoño la resta es una hora más corta y `floor` daba un día menos, así que la
+       etiqueta caía una columna antes que su día 1 (medido: «jun» en 2026, «sep» en
+       2025). Mismo índice `n` que usan las celdas en getYearData. */
+    const dayOfYear = Math.round((d - new Date(year,0,1)) / 86400000);
     result[Math.floor((dayOfYear+jan1Dow)/7)] = m;
   }
   return result;

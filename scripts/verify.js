@@ -364,26 +364,13 @@ function tandaArtefacto(html, fuentes) {
 }
 
 /* ==========================================================================
-   Coherencia de version (tres sitios que se tocan a mano cada sesion)
+   Coherencia de version (los siete sitios de `version.sitios.js`; se cambian con `npm run bump`)
    ========================================================================== */
 function tandaVersion() {
   console.log('\n[+] Version ...');
-  var puntos = [
-    { archivo: 'app/state-core.jsx', re: /const PACE_VERSION = '(v[\d.]+)'/ },
-    { archivo: 'sw.js',              re: /const CACHE_NAME = 'pace-(v[\d.]+)'/ },
-    { archivo: 'PACE.html',          re: /<title>[^<]*—\s*(v[\d.]+)\s*<\/title>/ },
-    /* s162 · LOS DOS README ENTRAN AQUI, y no por pulcritud: se quedaron en
-       v0.84.0 mientras la app llegaba a v0.92.0 — OCHO versiones de deriva en el
-       escaparate del repo. s151 los reescribio precisamente por estar
-       desactualizados, asi que el arreglo a mano ya se demostro insuficiente:
-       nada los vigilaba. Cada uno declara la version en DOS sitios (la linea de
-       estado y el titulo de seccion) y los dos van en la lista, porque bumpear
-       uno y no el otro es el modo de fallo natural. */
-    { archivo: 'README.md',          re: /\*\*Estado:\*\*\s*(v[\d.]+)/ },
-    { archivo: 'README.md',          re: /Estado actual \((v[\d.]+)\)/ },
-    { archivo: 'README_EN.md',       re: /\*\*Status:\*\*\s*(v[\d.]+)/ },
-    { archivo: 'README_EN.md',       re: /Current state \((v[\d.]+)\)/ },
-  ];
+  /* s198 · la lista vive en `scripts/version.sitios.js`, compartida con
+     `npm run bump` (scripts/version.js), que cambia los siete a la vez. */
+  var puntos = require('./version.sitios.js').PUNTOS;
   var leidos = puntos.map(function (p) {
     var m = fs.readFileSync(path.join(ROOT, p.archivo), 'utf8').match(p.re);
     if (!m) falla('no se encuentra la version en ' + p.archivo);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.133.0</title>
+  <title>PACE · Foco · Cuerpo — v0.133.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5009,7 +5009,9 @@ function migrateWeeklyStatsToHistory(state) {
   let h = state.history || { days: {}, months: {}, years: {} };
   const lastDate = new Date(state.lastActiveDay);
   for (let offset = 0; offset < 7; offset++) {
-    const d = new Date(lastDate.getTime() - offset * 86400000);
+    /* s198 · por calendario: restar 24 h por día se salta un día al cruzar el
+       cambio de hora (migración de s43, solo para instalaciones muy viejas). */
+    const d = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate() - offset);
     h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
   }
   return { ...state, history: h, _historyMigrated: true };
@@ -5504,7 +5506,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.133.0';
+const PACE_VERSION = 'v0.133.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -6752,7 +6754,11 @@ function updateStreak() {
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
   if (last === today) return;
-  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  /* s198 · «ayer» por CALENDARIO, no restando 24 h: el lunes siguiente al cambio
+     de hora de primavera, entre las 00:00 y la 01:00, `Date.now() - 86400000`
+     cae en el SÁBADO (el domingo dura 23 h) y la racha se reiniciaba. */
+  const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
+  const yesterday = ayer.toDateString();
   let current = s.streak.current;
   if (last === yesterday) current += 1;else
   current = 1;
@@ -26624,7 +26630,11 @@ function getMonthColumns(year, jan1Dow) {
   const result = {};
   for (let m = 0; m < 12; m++) {
     const d = new Date(year, m, 1);
-    const dayOfYear = Math.floor((d - new Date(year, 0, 0)) / 86400000) - 1;
+    /* s198 · REDONDEAR, no truncar: entre el cambio de hora de primavera y el de
+       otoño la resta es una hora más corta y `floor` daba un día menos, así que la
+       etiqueta caía una columna antes que su día 1 (medido: «jun» en 2026, «sep» en
+       2025). Mismo índice `n` que usan las celdas en getYearData. */
+    const dayOfYear = Math.round((d - new Date(year, 0, 1)) / 86400000);
     result[Math.floor((dayOfYear + jan1Dow) / 7)] = m;
   }
   return result;
@@ -26926,7 +26936,8 @@ function getPyvMonthCols(year, jan1Dow) {
   const r = {};
   for (let m = 0; m < 12; m++) {
     const d = new Date(year, m, 1);
-    const doy = Math.floor((d - new Date(year, 0, 0)) / 86400000) - 1;
+    /* s198 · redondear, no truncar (ver getMonthColumns en YearView.jsx). */
+    const doy = Math.round((d - new Date(year, 0, 1)) / 86400000);
     r[Math.floor((doy + jan1Dow) / 7)] = m;
   }
   return r;
