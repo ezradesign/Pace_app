@@ -162,6 +162,23 @@ powershell -File scripts/check-session.ps1
 
 ---
 
+## Android (Capacitor)
+
+Desde v0.136.0 la misma web se empaqueta como app de Android con Capacitor 8.
+
+- `npm run android:www` crea `www/` (no se versiona) con lo que va dentro del APK: el `index.html`
+  compilado, `privacy.html`, `safety.html`, el manifiesto, `icons/`, `fonts/` y los medios de
+  `app/`. Ni `PACE.html` ni las fuentes JSX.
+- `npm run android:sync` hace lo mismo y lo copia al proyecto `android/` (`cap sync android`).
+- El APK de prueba lo compila GitHub en cada push a `main` (`.github/workflows/android.yml`): se
+  baja de la ejecucion «Android» de la pestana Actions, como artefacto `pace-android-debug`.
+- Compilar en local pide JDK 21 y el SDK de Android: `cd android && ./gradlew assembleDebug`. No
+  hace falta para el dia a dia.
+- Las reglas (origen fijo, sin service worker, eventos en IndexedDB) estan en
+  `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
+
+---
+
 ## Limitaciones conocidas
 
 - **Solo sintaxis, no semantica.** El parser no detecta variables no definidas,

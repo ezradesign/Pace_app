@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.135.0</title>
+  <title>PACE · Foco · Cuerpo — v0.136.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5506,7 +5506,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.135.0';
+const PACE_VERSION = 'v0.136.0';
 
 
 
@@ -10011,10 +10011,9 @@ Object.assign(window, {
      · `file://` (PACE_standalone.html) — §19.2. NO emite en v1 aunque el
        navegador exponga Web Locks: sin origen compartido no hay coordinacion
        entre pestanas que prometer. Se elige este adaptador A PROPOSITO.
-     · Capacitor (Android / iOS) — §20. Su adaptador nativo (SQLite +
-       Preferences/UserDefaults) es de la fase de porting y todavia no existe.
-       Mientras no exista, el runtime queda UNAVAILABLE: lo que esta PROHIBIDO
-       es que caiga al adaptador web porque la URL del WebView parezca
+     · iOS (Capacitor) — §20. Hasta su fase, el runtime queda UNAVAILABLE.
+       Android NO pasa por aqui: elige el adaptador web de forma explicita
+       (`selectEventsAdapter`), nunca porque la URL del WebView parezca
        `https://localhost`.
      · Almacenamiento bloqueado o ambiguedad — §20. Ante la duda, UNAVAILABLE;
        nunca un adaptador «adivinado».
@@ -10167,8 +10166,11 @@ function detectEventsRuntime() {
 
 
 
+
+
+
 function selectEventsAdapter(runtime) {
-  return runtime === 'web' ? 'web' : 'null';
+  return runtime === 'web' || runtime === 'capacitor-android' ? 'web' : 'null';
 }
 
 function paceEventsRuntime() {
@@ -10477,7 +10479,22 @@ function paceEventsWipeAll(alTerminar) {
 
 
 
+
+function paceEventsPedirPersistencia() {
+  try {
+    if (paceEventsRuntime() !== 'capacitor-android') return;
+    const almacen = navigator.storage;
+    if (!almacen || typeof almacen.persist !== 'function') return;
+    const peticion = almacen.persist();
+    if (peticion && typeof peticion.catch === 'function') peticion.catch(function () {});
+  } catch (e) {}
+}
+
+
+
+
 function paceEventsBoot() {
+  paceEventsPedirPersistencia();
   try {
 
 
@@ -10502,9 +10519,9 @@ Object.assign(window, {
   paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
   paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
   paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune,
-  paceEventsAggregates, paceEventsRoutineCount
+  paceEventsAggregates, paceEventsRoutineCount, paceEventsPedirPersistencia
 });
-;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAggregates, paceEventsRoutineCount, paceEventsAppend, paceEventsPrune, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
+;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAggregates, paceEventsRoutineCount, paceEventsAppend, paceEventsPrune, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsPedirPersistencia, paceEventsBoot });
 })();
 </script>
   <!-- EL EMISOR (s172 · Fase 3, PASO 2): el puente entre el dominio y el
@@ -36733,7 +36750,10 @@ if (document.readyState === 'loading') {
        hace postMessage SKIP_WAITING y el controllerchange de aquí recarga.
        El guard hadController evita recargar en el primer install (claim). -->
   <script>
-    if ('serviceWorker' in navigator) {
+    /* En la app de Android (Capacitor) los archivos ya van dentro del APK: un
+       service worker solo serviria una cache vieja despues de cada actualizacion. */
+    if ('serviceWorker' in navigator &&
+        !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function(reg) {
           function announceWaiting() {

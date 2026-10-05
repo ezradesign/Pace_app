@@ -9,10 +9,9 @@
      · `file://` (PACE_standalone.html) — §19.2. NO emite en v1 aunque el
        navegador exponga Web Locks: sin origen compartido no hay coordinacion
        entre pestanas que prometer. Se elige este adaptador A PROPOSITO.
-     · Capacitor (Android / iOS) — §20. Su adaptador nativo (SQLite +
-       Preferences/UserDefaults) es de la fase de porting y todavia no existe.
-       Mientras no exista, el runtime queda UNAVAILABLE: lo que esta PROHIBIDO
-       es que caiga al adaptador web porque la URL del WebView parezca
+     · iOS (Capacitor) — §20. Hasta su fase, el runtime queda UNAVAILABLE.
+       Android NO pasa por aqui: elige el adaptador web de forma explicita
+       (`selectEventsAdapter`), nunca porque la URL del WebView parezca
        `https://localhost`.
      · Almacenamiento bloqueado o ambiguedad — §20. Ante la duda, UNAVAILABLE;
        nunca un adaptador «adivinado».

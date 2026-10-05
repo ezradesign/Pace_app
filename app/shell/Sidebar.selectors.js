@@ -78,8 +78,8 @@ function selectSidebarWeek(state, now) {
 /* selectSidebarLastSession(eventos) -> la última sesión terminada.
    Recorre la lista SIN ordenarla (no es suya) y se queda con el
    `session.completed` de `occurredAt` más reciente. Devuelve null si no hay
-   ninguno, que es el caso normal en `file://` y en Capacitor: allí el
-   adaptador de eventos está inerte y el contenedor viene vacío. */
+   ninguno, que es el caso normal en `file://`: allí el adaptador de
+   eventos está inerte y el contenedor viene vacío. */
 function selectSidebarLastSession(eventos) {
   if (!Array.isArray(eventos)) return null;
   let mejor = null, mejorT = -Infinity;
@@ -107,8 +107,8 @@ function selectSidebarLastSession(eventos) {
    donde cada `session.completed` lleva su `module` y su `localDay`.
 
    DEVUELVE `null` Y NO CEROS cuando no hay lista, y la diferencia importa: en
-   `file://` y en Capacitor el adaptador esta inerte y el contenedor viene
-   vacio, asi que pintar «0 sesiones» al lado de «25 min» seria una
+   `file://` el adaptador esta inerte y el contenedor viene vacio, asi
+   que pintar «0 sesiones» al lado de «25 min» seria una
    contradiccion a la vista. Sin dato no se pinta nada; los minutos siguen.
 
    CUERPO SUMA `move` Y `stretch`, igual que hacen sus minutos: son dos modulos

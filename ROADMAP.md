@@ -113,11 +113,14 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
 
 ### FASE 2 · Capacitor Android y prueba cerrada
 
-- Build de Capacitor y detección de runtime (la app ya es estática y sin servidor: el envoltorio es
-  la parte barata).
-- **Adaptadores nativos de `pace.events.v1`** (SQLite + Preferences), que la arquitectura por
-  adaptadores ya contempla: hoy Capacitor cae al adaptador inerte y no registra nada.
-- Notificaciones, safe areas, ciclo de vida, export/import; pruebas en dispositivo real.
+- **Build de Capacitor** — **HECHO el 5 de octubre de 2026 (v0.136.0)**: `android/` con Capacitor 8,
+  y GitHub compila un APK de prueba en cada push a `main` (workflow `Android`).
+- **Eventos en Android** — **HECHO (v0.136.0), sin adaptador nativo**: Android usa el adaptador web,
+  cuyo IndexedDB vive en el almacenamiento privado de la app como viviría un SQLite (fila en
+  `DECISIONES_TECNICAS_VIGENTES.md`). El SQLite nativo vuelve solo si un móvil real pierde datos.
+- Lo que el WebView no trae: los avisos del Pomodoro, bajar la copia de «Tus datos» y la pantalla
+  encendida en las sesiones. Y lo de cualquier app: iconos y pantalla de arranque de PACE, botón
+  atrás, barra de estado y safe areas, ciclo de vida y el AAB firmado. Todo, probado en un móvil real.
 - **Prueba cerrada en Play Console cuanto antes, con la app tal como esté.** Las cuentas personales
   nuevas necesitan **unos 12 testers durante 14 días** antes de poder publicar — *a confirmar en Play
   Console*. Al final de la prueba se pregunta a los testers **«¿qué echarías de menos?»** para

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.135.0</title>
+  <title>PACE · Foco · Cuerpo — v0.136.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -576,7 +576,10 @@
        hace postMessage SKIP_WAITING y el controllerchange de aquí recarga.
        El guard hadController evita recargar en el primer install (claim). -->
   <script>
-    if ('serviceWorker' in navigator) {
+    /* En la app de Android (Capacitor) los archivos ya van dentro del APK: un
+       service worker solo serviria una cache vieja despues de cada actualizacion. */
+    if ('serviceWorker' in navigator &&
+        !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function(reg) {
           function announceWaiting() {

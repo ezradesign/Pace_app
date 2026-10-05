@@ -31,3 +31,6 @@ blob-report/
 
 # Exports del standalone (s199): se guardan fuera del repo (Releases de GitHub), no en git
 backups/
+
+# La web que empaqueta Android: la genera `npm run android:www`
+www/

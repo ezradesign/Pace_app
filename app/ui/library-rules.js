@@ -180,7 +180,7 @@ function libraryDiaOrdinal(iso) {
    decidió que la paleta Auto va por SISTEMA y no por hora, porque «la app ya
    tiene un día de 25 min», y meter franjas horarias aquí sería un segundo
    modelo de tiempo dentro de la misma app), sin historial (que sólo tiene
-   `pace.events.v1`, y en Capacitor el adaptador es null) y asertable con
+   `pace.events.v1`, apagado en `file://`) y asertable con
    page.clock.
    MEDIDO al elegir el pozo: con «aquí mismo» Y «sin material» son 3 rutinas en
    Estira y 5 en Mueve, y enseñando 2 de 3 casi siempre sale lo mismo. Con

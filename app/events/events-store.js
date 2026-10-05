@@ -87,11 +87,14 @@ function detectEventsRuntime() {
   return 'unknown';
 }
 
-/* Elige adaptador. Solo el runtime `web` puede acabar en READ_WRITE hoy: el
-   nativo de Capacitor es de la fase de porting y `file://` no emite por
-   diseno. Ante ambiguedad, el inerte. */
+/* Elige adaptador. La web y la app de Android usan el adaptador web: en
+   Android se elige A PROPOSITO, porque el IndexedDB del WebView vive en el
+   almacenamiento privado de la app, igual que lo haria un SQLite nativo, y
+   `pace.state.v2` ya vive ahi. iOS sigue en el inerte hasta su fase (su
+   WebView puede vaciar el almacenamiento), `file://` no emite por diseno y,
+   ante ambiguedad, el inerte. */
 function selectEventsAdapter(runtime) {
-  return runtime === 'web' ? 'web' : 'null';
+  return (runtime === 'web' || runtime === 'capacitor-android') ? 'web' : 'null';
 }
 
 function paceEventsRuntime() {
@@ -219,8 +222,8 @@ function paceEventsAppend(event) {
 
 /* PODA POR CALENDARIO (§12), programada en s174. La fachada, como todas: nadie
    habla con un adaptador directamente. Con el adaptador inerte (`file://`,
-   Capacitor) devuelve el resultado nulo y no pasa nada -- alli no hay
-   contenedor que podar.
+   iOS) devuelve el resultado nulo y no pasa nada -- alli no hay contenedor
+   que podar.
    El dia se puede FIJAR desde fuera, y por eso es un parametro y no una lectura
    escondida: sin eso, probar que barre lo de hace 121 dias exigiria mover el
    reloj del sistema o esperar cuatro meses. */
@@ -397,10 +400,25 @@ function paceEventsWipeAll(alTerminar) {
 
 /* --- Arranque ------------------------------------------------------------ */
 
+/* En Android se pide almacenamiento PERSISTENTE: sin el, Chromium puede vaciar
+   el IndexedDB del WebView si el movil se queda sin espacio. Si ya lo es, no
+   cambia nada, y si no lo concede, tampoco. En la web no se pide: Firefox lo
+   pregunta con un aviso. */
+function paceEventsPedirPersistencia() {
+  try {
+    if (paceEventsRuntime() !== 'capacitor-android') return;
+    const almacen = navigator.storage;
+    if (!almacen || typeof almacen.persist !== 'function') return;
+    const peticion = almacen.persist();
+    if (peticion && typeof peticion.catch === 'function') peticion.catch(function () {});
+  } catch (e) { /* la app no se entera */ }
+}
+
 /* Se inicializa solo al cargar, sin bloquear el render (todo el contrato es
    asincrono) y sin poder romper nada: cualquier fallo cae a UNAVAILABLE.
    Se expone tambien como funcion para que las pruebas la conduzcan. */
 function paceEventsBoot() {
+  paceEventsPedirPersistencia();
   try {
     /* s174 · LA RETENCION POR CALENDARIO SE PROGRAMA AQUI, y en ningun otro
        sitio: una vez por arranque, DESPUES de que la inicializacion confirme.
@@ -425,5 +443,5 @@ Object.assign(window, {
   paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
   paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
   paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune,
-  paceEventsAggregates, paceEventsRoutineCount,
+  paceEventsAggregates, paceEventsRoutineCount, paceEventsPedirPersistencia,
 });
