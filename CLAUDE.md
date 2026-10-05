@@ -45,7 +45,9 @@ Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
    si falla, no se sigue. Va ANTES de regenerar porque su aviso «index.html difiere de las
    fuentes» es justo la señal de que toca el paso 3. **No cubre** comportamiento, catálogos,
    i18n, precache, glifos ni CSS — los declara en cada pasada (segunda tanda, D5 de s149)
-3. **Regenerar `index.html`** (el artefacto de web/PWA) con `node build-standalone.js` y verificarlo
+3. **Regenerar `index.html`** (el artefacto de web/PWA) con `node build-standalone.js` y verificarlo. **La versión
+   se sube con `npm run bump -- X.Y.Z`** (s198): cambia los siete sitios de `scripts/version.sitios.js` a la vez y se
+   niega a bajarla o a partir de sitios descuadrados; después, `verify` y regenerar
 4. **`npm run test:e2e`** — comportamiento (s154). Abre un navegador de verdad sobre el
    `index.html` **recién regenerado** y ejecuta el «Checklist de cierre» de más abajo. Va DESPUÉS
    del paso 3 a propósito: así prueba el artefacto que se va a commitear, no el anterior. Es
@@ -182,13 +184,13 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ## 🧪 Checklist de cierre
 
-> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): **320 tests** de
+> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): **323 tests** de
 > Playwright sobre `index.html` en un navegador real, **~6–7 min** (medido en s195: 6,9 y 5,9; nació con 65 y
 > ~25 s). Los siete puntos de abajo son lo que aserta, uno a uno. **Sigue mereciendo una mirada
 > humana** lo que la suite no cubre y declara: móvil, Caminos, premium y cualquier cosa visual —
 > no compara ni un píxel. **El inglés SÍ está cubierto** desde s167 (`logros-i18n.spec.js`).
 >
-> **Estos dos números caducan.** Se re-miden, no se copian: los de aquí son de s198 (320 tests, 5,3 min) y
+> **Estos dos números caducan.** Se re-miden, no se copian: los de aquí son de s198 (323 tests, 6,5 min) y
 > ya han estado tres veces desactualizados.
 
 - [ ] Pomodoro cuenta y termina → abre BreakMenu

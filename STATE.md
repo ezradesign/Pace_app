@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.133.0 (s198 - **LA PAUSA TE LLAMA POR SU NOMBRE**: con «A tu ritmo», el aviso del sistema al acabar un bloque dice qué pausa toca y cuándo vuelves («Tu pausa: Caderas de pie · 4 min · Bloque 1 de 9 hecho. El siguiente, a las 9:50»), con sus variantes para la larga, la comida y el último bloque; por libre, igual que antes. `ritmo/ritmo.aviso.js` puro; `FocusTimer` avisa DESPUÉS de cerrar el bloque. 316 -> 320, banco 10 de 10. Antes, v0.132.0 y v0.131.0, s198 - la red de error por superficie y el saneamiento; el historial completo, en `CHANGELOG.md`.)
+**Version actual:** v0.133.1 (s198 - **EL CAMBIO DE HORA NO SE COME UN DÍA**: la racha y las etiquetas de mes de los mapas anuales contaban días restando 24 h; ahora por calendario o redondeando. Y `npm run bump -- X.Y.Z` cambia la versión en sus siete sitios. 320 -> 323. Antes, v0.133.0, s198 - **la pausa te llama por su nombre**: con «A tu ritmo», el aviso del sistema al acabar un bloque dice qué pausa toca y cuándo vuelves; y v0.132.0 / v0.131.0, la red de error y el saneamiento. El historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -20,6 +20,8 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
+| `scripts/version.js` · `scripts/version.sitios.js` | **`npm run bump -- X.Y.Z` (NUEVO s198)**: los siete sitios de la version a la vez; se niega a bajarla o a partir de sitios descuadrados; `--seco`, `--forzar`. La lista la lee tambien el `verify` | **NUEVO s198** |
+| `tests/cambio-de-hora.spec.js` | **3 tests (NUEVO v0.133.1)**: la racha el lunes del cambio de hora a las 00:30 y las doce etiquetas de mes contra un calculo en UTC (en rojo contra v0.133.0) + un control | **NUEVO s198** |
 | `app/ritmo/ritmo.aviso.js` | **LA PAUSA TE LLAMA POR SU NOMBRE (NUEVO s198 · v0.133.0)**, puro: `ritmoAviso(s, t, tn, lang)` -> `{ title, body }` o `null`. Las reglas de la linea del dia (rutina vs parada, larga, comida, cierre, ultimo bloque). La llama `FocusTimer` DESPUES de cerrar el bloque | **NUEVO s198** |
 | `tests/ritmo-aviso.spec.js` · `scripts/audit/banco-aviso-s198.js` | **4 tests (NUEVO v0.133.0)** con la Notification sustituida y la pestaña oculta (3 en rojo contra v0.132.0 y un control) · banco **10 de 10** | **NUEVO s198** |
 | `app/ui/RedDeError.jsx` | **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE (NUEVO s198 · v0.132.0)**: `PaceRed` (clase: React solo da limites de error asi) en tres modos — `parte` (su `Modal` de 560: «Esta parte no ha podido abrirse», Cerrar · Recargar), `global` (alrededor de `PaceApp`: «Algo se ha torcido», Volver a empezar, Descargar una copia) y `silencio`. Se reinicia cuando cambia `abierto`; cerrada y fallando, calla. Los envoltorios viven en `main.jsx` (`red(nombre, abierto, cerrar, hijo)`) y en el montaje de `PACE.html` | **NUEVO s198** |
@@ -257,23 +259,23 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> **s198 (2026-10-04) publica v0.131.0, v0.132.0 y v0.133.0.** Auditoria de la repo con una sonda sobre el
+> **s198 (2026-10-04) publica v0.131.0, v0.132.0, v0.133.0 y v0.133.1.** Auditoria de la repo con una sonda sobre el
 > artefacto publicado y siete defectos de la Fase 8.5 arreglados sin cambiar un pixel (**v0.131.0**); la red de
 > error por superficie y la copia de rescate, con las letras del usuario A2 · B2 · C1 (**v0.132.0**); y, ante
-> «no sé por dónde seguir», la recomendacion aceptada: **D2, la pausa te llama por su nombre** (**v0.133.0**).
-> **300 -> 320**. Diarios: [session-198](./docs/sessions/session-198-saneamiento.md) ·
-> [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md).
+> «no sé por dónde seguir», la recomendacion aceptada: **D2, la pausa te llama por su nombre** (**v0.133.0**); y,
+> aprovechando, `npm run bump` y el cambio de hora que se comia un dia (**v0.133.1**).
+> **300 -> 323**. Diarios: [session-198](./docs/sessions/session-198-saneamiento.md) ·
+> [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md). **Handoff para la siguiente: [session-198-handoff](./docs/sessions/session-198-handoff.md)** (empezar por ahi).
 >
 > **LO SIGUIENTE: que el usuario use la app una semana** con el aviso nuevo (es lo unico que solo puede hacer el;
 > la semana de v0.128.0 sigue sin juicio). Despues, segun la pagina
 > [`por-donde-seguir-s198.html`](./docs/proposals/por-donde-seguir-s198.html): **D3 Estadisticas «Hoy»** (la
-> siguiente fase del plan) · el `.ics` (D2b, aparcado a proposito) · D4 Android · D5 pulido.
+> siguiente fase del plan; **ronda 1 ENVIADA y sin decidir: [`stats-hoy-s198.html`](./docs/proposals/stats-hoy-s198.html)**, H1 · H2 · H3) · el `.ics` (D2b, aparcado a proposito) · D4 Android · D5 pulido.
 - **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
   72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
   el cierre que nunca es «Ahora» · la lectura C del norte (cuando `origin` tenga semanas de datos).
 - **[DE LA FASE 8.5, LO QUE QUEDA]** Tests del estado mas alla del saneado (A-6) · i18n I18N-2 (pluralizacion,
-  pseudolocalizacion) y las deudas D-1/D-2/D-3 · bump de version automatico (hoy 7 sitios a mano, los vigila el
-  `verify`) · timer de Mueve por timestamps (hoy cuenta ticks: se retrasa con la pestaña oculta).
+  pseudolocalizacion) y las deudas D-1/D-2/D-3 · ~~bump de version automatico~~ (HECHO: `npm run bump -- X.Y.Z`) · timer de Mueve por timestamps (hoy cuenta ticks: se retrasa con la pestaña oculta).
 - **[TRAMPAS NUEVAS]** Un `catch` que devuelve el estado de fabrica es un borrado DIFERIDO: no falla al
   arrancar, falla en la primera escritura · el orden de los listeners de `document` no es una politica (doce
   `Modal` con Escape «funcionaban» de uno en uno) · un fallo provocado para una foto hay que MEDIRLO (Logros
@@ -292,6 +294,8 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **Los dias se cuentan por CALENDARIO, nunca restando 24 h; una division entre 86 400 000 se REDONDEA** (s198 · v0.133.1)
+- **La version se sube con `npm run bump -- X.Y.Z`; la lista de sus siete sitios la comparten el comando y el `verify`** (s198)
 - **Con «A tu ritmo», el aviso del sistema nombra la pausa y cuando vuelves; y se calcula DESPUES de cerrar el bloque** (s198 · v0.133.0)
 - **SI UNA PARTE FALLA, SE CIERRA SOLO ESA PARTE: una red de error por superficie (`PaceRed`) y la global como ultimo recurso; cerrada y fallando, calla** (s198 · v0.132.0)
 - **UN CAMPO ROTO NO SE LLEVA TODO LO DEMAS: el estado se SANEA campo a campo antes de migrar y lo ilegible se guarda CRUDO en un rescate** (s198)

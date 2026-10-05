@@ -73,7 +73,9 @@ function migrateWeeklyStatsToHistory(state) {
   let h = state.history || { days: {}, months: {}, years: {} };
   const lastDate = new Date(state.lastActiveDay);
   for (let offset = 0; offset < 7; offset++) {
-    const d = new Date(lastDate.getTime() - offset * 86400000);
+    /* s198 · por calendario: restar 24 h por día se salta un día al cruzar el
+       cambio de hora (migración de s43, solo para instalaciones muy viejas). */
+    const d = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate() - offset);
     h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
   }
   return { ...state, history: h, _historyMigrated: true };

@@ -267,7 +267,11 @@ function updateStreak() {
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
   if (last === today) return;
-  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  /* s198 · «ayer» por CALENDARIO, no restando 24 h: el lunes siguiente al cambio
+     de hora de primavera, entre las 00:00 y la 01:00, `Date.now() - 86400000`
+     cae en el SÁBADO (el domingo dura 23 h) y la racha se reiniciaba. */
+  const ayer = new Date(); ayer.setDate(ayer.getDate() - 1);
+  const yesterday = ayer.toDateString();
   let current = s.streak.current;
   if (last === yesterday) current += 1;
   else current = 1;

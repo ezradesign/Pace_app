@@ -5,7 +5,8 @@
   "scripts": {
     "build": "node build-standalone.js",
     "verify": "node scripts/verify.js",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "bump": "node scripts/version.js"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
