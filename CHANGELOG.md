@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.135.0** | 2026-10-05 | fix(cuerpo): **el reloj de Mueve y Estira es el reloj de verdad** — los dos runners (v1 y legacy) cuentan por MARCAS de tiempo (`useRelojSesion`), no por ticks: un intervalo estrangulado ya no retrasa la sesión, y un salto no suelta una ráfaga de sonidos. **Al ocultar la página la sesión se pausa** y al volver sigue en pausa (`SESION_AL_OCULTAR = 'pausa'`, política en una línea; en pausa siempre hay «Reanudar»). Y la migración de eventos **fusiona** lo que una pestaña con la versión anterior escriba en `localStorage` después de migrar (solo ids nuevos, mismo `activatedAt`). Suite +3, los tres en rojo contra v0.134.0. | s200 | [session-200](./docs/sessions/session-200-plan-y-eventos-indexeddb.md) |
 | **v0.134.0** | 2026-10-05 | fix(eventos): **dos pestañas ya no se pisan** — el adaptador web de `pace.events.v1` pasa de `localStorage` a **IndexedDB** (`events-adapter-web.idb.js`): con dos pestañas el almacén guardaba a veces 10 de 20 eventos, porque Chromium propaga `localStorage` entre procesos de forma asíncrona y el lock no forzaba una lectura fresca. Misma interfaz, mismo contrato de capacidad, misma cadena JSON; un espejo en memoria para lo que se pinta y una **migración única** que solo borra la clave vieja tras releer la copia. `eventos-barrera.spec.js:23`: **20 de 20** (antes 7–12 fallos). Suite +2 (`eventos-idb.spec.js`). Y el **plan de v1 en seis fases** (`ROADMAP.md`): Android y prueba cerrada cuanto antes, «A tu ritmo» semanal como lo que se paga, Travesías y reescritura de Caminos fuera; el plan de s132, archivado. | s200 | [session-200](./docs/sessions/session-200-plan-y-eventos-indexeddb.md) |
 | **v0.133.2** | 2026-10-05 | chore(build): **el artefacto publicado sin comentarios** — `index.html` pasa de 2,04 a 1,47 MB (−28 %): el build solo conserva los avisos de copyright y licencia. Y `backups/` sale del repo (20 copias de 3 MB del standalone; ahora en `.gitignore`). Auditoría externa del proyecto. | s199 | [session-199](./docs/sessions/session-199-auditoria-externa.md) |
 | **v0.133.1** | 2026-10-04 | fix(fechas): **el cambio de hora no se come un día** — Tres sitios contaban días restando 24 h, y el domingo del cambio de primavera dura 23: **la racha** se reiniciaba si la primera actividad del lunes siguiente caía entre las 00:00 y la 01:00 («ayer» salía sábado), y **las etiquetas de mes de los dos mapas anuales** caían una columna antes que su día 1 de marzo a octubre (medido: «jun» en 2026, «sep» en 2025; las celdas ya iban bien). Arreglado por calendario o redondeando; la migración vieja de s43, con el mismo patrón, también. Y **`npm run bump -- X.Y.Z`**: la versión cambia en sus siete sitios con un comando (`scripts/version.sitios.js`, la misma lista que vigila el `verify`); esta es la primera que lo usa. Suite **320 → 323** (2 en rojo contra v0.133.0 y un control). | s198 | [session-198b](./docs/sessions/session-198b-la-pausa-con-su-nombre.md) §6-7 |
@@ -413,6 +414,31 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.135.0] -- 2026-10-05 -- fix(cuerpo): el reloj de Mueve y Estira es el reloj de verdad
+
+### Arreglado
+- **Mueve y Estira contaban ticks** (`MoveSessionV1.jsx`: colocación, trabajo y cambio de lado; `MoveModule.jsx`: el
+  runner legacy). Con la pestaña en segundo plano el navegador espacia los intervalos y la sesión se quedaba atrás.
+  Ahora `useRelojSesion` (`MoveSessionV1.support.jsx`, patrón de `useCountdown`) guarda una marca de tiempo y
+  entrega de una vez los segundos enteros pasados; `visibilitychange` corrige al volver. Los avances comparan con
+  `>=` y no se pierden; los sonidos comparan con `===`/`%`, así que un salto los omite en vez de soltarlos de golpe.
+- **Pestaña antigua tras migrar**: si la clave `localStorage` 'pace.events.v1' reaparece y difiere, el arranque
+  añade dentro del lock solo los eventos con id nuevo, del mismo contenedor (`activatedAt` igual) y posteriores al
+  `pruneCursor`; no toca `baseline` ni el cursor. La clave se borra tras releer la copia.
+
+### Cambiado
+- **Política al salir de la pantalla** (`SESION_AL_OCULTAR`, una constante): `'pausa'` — la sesión se pausa como con
+  «Pausar» y al volver sigue en pausa. La alternativa `'sigue'` está preparada pero solo se pone al día DENTRO de la
+  fase en curso. La preparación de 5 s no se pausa. En pausa, el botón «Reanudar» aparece en cualquier fase
+  (también en el descanso y en la colocación, que antes no lo tenían porque nunca se pausaban).
+- **El runner legacy** ya no completa la sesión dentro del updater de `setElapsed`: el avance va en un efecto.
+
+### Tests
+- `tests/mueve-reloj.spec.js` (2): un `fastForward` de 12 s son 3 reps y no 1 · ocultar pausa y volver sigue en
+  pausa. `tests/eventos-idb.spec.js` +1: la fusión de la pestaña antigua. Los tres, en rojo contra v0.134.0.
+
+---
+
 ## [v0.134.0] -- 2026-10-05 -- fix(eventos): dos pestañas ya no se pisan
 
 ### Arreglado
@@ -436,24 +462,5 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ### Lo que no cubre
 - Una pestaña con una versión anterior aún abierta puede escribir en `localStorage` después de la migración; esos
-  eventos no se trasladan.
-
----
-
-## [v0.133.2] -- 2026-10-05 -- chore(build): el artefacto publicado sin comentarios
-
-### Cambiado
-- **`build-standalone.js`**: `comments: true` pasa a `shouldPrintComment`, que solo conserva los comentarios con
-  `Copyright` o `@license`. Medido: los comentarios eran 732 KB de los 1,86 MB de JS de `index.html` (39 %).
-  `index.html` baja de **2.039.657 a 1.470.507 bytes**. `retainLines` se mantiene: las trazas siguen apuntando a la
-  línea real del fuente.
-- **`backups/` sale del repo** y entra en `.gitignore`: los exports del standalone se guardan como adjunto de una
-  Release. El historial de git sigue conteniéndolos (no se reescribe la historia).
-
-### Lo que no cubre
-- `PACE_standalone.html` sigue en el repo, congelado en v0.71.0: sacarlo toca el `verify`, el CI y diez scripts de `scripts/audit/`.
-- **Bug conocido, sin arreglar**: `tests/eventos-barrera.spec.js:23` (dos pestañas emitiendo a la vez) pierde
-  eventos de forma intermitente (7 de 20 con carga). Medido dentro del lock: el almacén tiene de verdad menos
-  eventos, así que no es una lectura atrasada del test. Causa inferida: `localStorage` se propaga entre procesos
-  de Chromium de forma asíncrona y el lock no lo puede corregir. El arreglo es mover el adaptador web a IndexedDB.
+  eventos no se trasladan. **Cerrado en v0.135.0** (la fusión del arranque).
 

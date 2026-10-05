@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.134.0 (s200 - **eventos en IndexedDB y el plan de v1 en seis fases**: dos pestañas ya no pierden eventos (20 de 20) y «Camino a v1.0» reescrito. Antes, v0.133.2 (s199). El historial completo, en `CHANGELOG.md`.)
+**Version actual:** v0.135.0 (s200 - **el reloj de Mueve y Estira por marcas de tiempo**, la sesion se pausa al ocultar la pagina y la migracion de eventos fusiona lo que escriba una pestaña antigua. Antes, v0.134.0 (s200, eventos en IndexedDB y el plan de v1 en seis fases). El historial completo, en `CHANGELOG.md`.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -265,16 +265,19 @@
 > semanal, lo que se paga · Stats Hoy y Semana · cerrar con lo que hay · venta), el reparto gratis/pago en tabla y la
 > regla **«ninguna fase entra en v1 sin sacar otra»**; el plan de s132, archivado. **(2)** El adaptador web de
 > `pace.events.v1` pasa a **IndexedDB** con espejo síncrono y migración única: el test de dos pestañas, **20 de 20**.
+> **(3) v0.135.0**: Mueve y Estira cuentan por **marcas de tiempo** (`useRelojSesion`) y la sesión **se pausa al
+> ocultar la página** (`SESION_AL_OCULTAR = 'pausa'`, decisión por defecto, pendiente de que Ez la confirme); la
+> migración fusiona lo que escriba una pestaña antigua.
 > Diario: [session-200](./docs/sessions/session-200-plan-y-eventos-indexeddb.md).
 >
-> **LO SIGUIENTE (Fase 1 del plan nuevo)**: timer de Mueve por timestamps · adelgazar el método. Después, Capacitor
+> **LO SIGUIENTE (Fase 1 del plan nuevo)**: adelgazar el método. Después, Capacitor
 > Android y abrir la prueba cerrada (confirmar en Play Console los ~12 testers durante 14 días). **Pendiente de
 > maqueta, sin fase**: quitar los Caminos de la home.
 - **[DECLARADO, SIN FECHA]** Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra
   72 px a 375×667 y 32 a 360×730) · el miercoles con tres largas · el modo oscuro del panel de «A tu ritmo» ·
   el cierre que nunca es «Ahora» · la lectura C del norte (cuando `origin` tenga semanas de datos).
 - **[DE LA FASE 8.5, LO QUE QUEDA]** Tests del estado mas alla del saneado (A-6) · i18n I18N-2 (pluralizacion,
-  pseudolocalizacion) y las deudas D-1/D-2/D-3 · ~~bump de version automatico~~ (HECHO: `npm run bump -- X.Y.Z`) · timer de Mueve por timestamps (hoy cuenta ticks: se retrasa con la pestaña oculta).
+  pseudolocalizacion) y las deudas D-1/D-2/D-3 · ~~bump de version automatico~~ (HECHO: `npm run bump -- X.Y.Z`) · ~~timer de Mueve por timestamps~~ (HECHO en v0.135.0).
 - **[TRAMPAS NUEVAS]** Un `catch` que devuelve el estado de fabrica es un borrado DIFERIDO: no falla al
   arrancar, falla en la primera escritura · el orden de los listeners de `document` no es una politica (doce
   `Modal` con Escape «funcionaban» de uno en uno) · un fallo provocado para una foto hay que MEDIRLO (Logros
@@ -293,6 +296,7 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **Mueve y Estira cuentan por MARCAS de tiempo (`useRelojSesion`); al ocultar la pagina la sesion se PAUSA (`SESION_AL_OCULTAR`, una linea)** (s200 · v0.135.0)
 - **El adaptador web de `pace.events.v1` guarda en IndexedDB; lo que pinta lee un espejo en memoria y toda RMW relee dentro del lock; migracion unica desde `localStorage`** (s200 · v0.134.0)
 - **Los dias se cuentan por CALENDARIO, nunca restando 24 h; una division entre 86 400 000 se REDONDEA** (s198 · v0.133.1)
 - **La version se sube con `npm run bump -- X.Y.Z`; la lista de sus siete sitios la comparten el comando y el `verify`** (s198)

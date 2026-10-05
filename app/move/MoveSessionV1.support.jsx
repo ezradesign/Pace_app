@@ -340,7 +340,70 @@ function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
   };
 }
 
+/* s200 · EL RELOJ DE MUEVE Y ESTIRA, POR MARCAS DE TIEMPO (patron de
+   `useCountdown`). Hasta v0.134.0 cada contador sumaba 1 por cada disparo de
+   `setInterval`, y con la pestana en segundo plano el navegador los espacia
+   hasta uno por minuto: la sesion se quedaba atras. Ahora la verdad es una
+   MARCA (`Date.now()`); el intervalo solo comprueba cuantos segundos ENTEROS han
+   pasado desde ella, la adelanta esos segundos y se los entrega a `avanzar(n)`
+   de una vez. `visibilitychange` corrige al volver sin esperar al intervalo.
+   Mientras `activo` es falso (pausa, otra fase) no hay marca: al reanudar nace
+   una nueva, asi que lo que pasa en pausa no cuenta.
+   LOS SONIDOS NO SE PONEN AL DIA: un salto de N segundos llega como UNA
+   actualizacion, y los efectos que suenan comparan con `===` o con `%`, asi que
+   un salto se los salta en vez de soltar una rafaga de ticks perdidos. Los
+   AVANCES comparan con `>=` y no se pierden.
+   Lo usan los dos runners: el v1 (colocacion, trabajo y cambio de lado) y el
+   legacy de `MoveModule.jsx`. */
+function useRelojSesion(activo, avanzar, deps) {
+  const marcaRef = React.useRef(0);
+  const avanzarRef = React.useRef(avanzar);
+  avanzarRef.current = avanzar;
+  React.useEffect(() => {
+    if (!activo) return;
+    marcaRef.current = Date.now();
+    const comprobar = () => {
+      const n = Math.floor((Date.now() - marcaRef.current) / 1000);
+      if (n <= 0) return;
+      marcaRef.current += n * 1000;
+      avanzarRef.current(n);
+    };
+    const id = setInterval(comprobar, 1000);
+    const alVolver = () => { if (document.visibilityState === 'visible') comprobar(); };
+    document.addEventListener('visibilitychange', alVolver);
+    return () => { clearInterval(id); document.removeEventListener('visibilitychange', alVolver); };
+  }, [activo].concat(deps || []));
+}
+
+/* s200 · QUE PASA SI SALES DE LA PANTALLA EN MITAD DE UNA SESION. Politica en
+   UN sitio, para poder cambiarla en una linea:
+     'pausa'  (vigente, la recomendada) -- al pasar la pagina a `hidden` la
+              sesion se PAUSA como si se pulsara Pausa, y al volver sigue en
+              pausa con el «Continuar» de siempre. El tiempo activo no cuenta lo
+              que paso fuera (el reloj activo cierra su segmento con la pausa).
+     'sigue'  -- no se pausa: al volver, `useRelojSesion` se pone al dia con el
+              reloj real. OJO: hoy el salto se queda DENTRO de la fase en curso
+              (el sobrante no atraviesa pasos como hace el Pomodoro); si se
+              elige esta, falta ese reparto.
+   Solo actua durante la sesion (`activo`): la preparacion de 5 s no tiene
+   boton de Continuar y no se pausa. Las fases que no se pausan (colocacion
+   automatica, descanso) siguen por reloj y terminan solas; el `paused` que dejan
+   puesto lo hereda el trabajo siguiente, que si tiene «Continuar». */
+const SESION_AL_OCULTAR = 'pausa';
+
+function useSesionAlOcultar(activo, pausar) {
+  const pausarRef = React.useRef(pausar);
+  pausarRef.current = pausar;
+  React.useEffect(() => {
+    if (!activo || SESION_AL_OCULTAR !== 'pausa') return;
+    const alOcultar = () => { if (document.visibilityState === 'hidden') pausarRef.current(); };
+    document.addEventListener('visibilitychange', alOcultar);
+    return () => document.removeEventListener('visibilitychange', alOcultar);
+  }, [activo]);
+}
+
 Object.assign(window, {
+  useRelojSesion, useSesionAlOcultar, SESION_AL_OCULTAR,
   v1Instr, v1EventoSesion, v1LadoGlifo,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,

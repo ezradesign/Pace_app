@@ -154,12 +154,15 @@ function eventsWebMigrateFromLocalStorage() {
   return eventsWebReadRaw().then(function (actual) {
     if (actual !== null) {
       /* Ya migrado. Si la copia vieja es IDENTICA (un borrado que no llego a
-         hacerse), se quita; si es distinta, no se toca: borrar algo que no se
-         ha copiado es justo lo que esta migracion promete no hacer. */
+         hacerse), se quita. Si es DISTINTA, lo mas probable es una pestana con
+         la version anterior que siguio escribiendo despues de migrar: se
+         FUSIONA (`eventsWebFusionarViejo`). Nunca se borra lo que no se ha
+         copiado. */
       if (actual === viejo) {
         try { localStorage.removeItem(EVENTS_LEGACY_LS_KEY); } catch (e) {}
+        return 'ya';
       }
-      return 'ya';
+      return eventsWebFusionarViejo(actual, viejo);
     }
     return eventsWebWriteRaw(viejo).then(function (ok) {
       if (!ok) return 'fallo';
@@ -170,6 +173,41 @@ function eventsWebMigrateFromLocalStorage() {
       });
     });
   }).catch(function () { return 'fallo'; });
+}
+
+/* s200 · LO QUE ESCRIBIO UNA PESTANA ANTIGUA DESPUES DE MIGRAR. Dentro del lock
+   y en cada arranque. Se anaden SOLO los eventos cuyo id no esta ya, y solo si
+   la copia vieja es del MISMO contenedor (`activatedAt` igual): si no lo es, es
+   historial anterior a un reset o un import, y fusionarlo resucitaria lo que el
+   usuario borro -- se deja la clave como esta. `baseline` y `pruneCursor` no se
+   tocan (manda la version nueva), y por eso tampoco entra nada anterior al
+   cursor: ya esta consolidado y volver a meterlo seria contarlo dos veces. La
+   clave vieja se borra solo despues de releer la copia y ver dentro cada id. */
+function eventsWebFusionarViejo(actualRaw, viejoRaw) {
+  let actual, viejo;
+  try { actual = JSON.parse(actualRaw); viejo = JSON.parse(viejoRaw); } catch (e) { return Promise.resolve('distinto'); }
+  if (!actual || !viejo || !Array.isArray(actual.events) || !Array.isArray(viejo.events)) return Promise.resolve('distinto');
+  if (!actual.activatedAt || actual.activatedAt !== viejo.activatedAt) return Promise.resolve('distinto');
+  if (actual.schemaVersion > EVENTS_SCHEMA_VERSION) return Promise.resolve('distinto');
+  const hay = Object.create(null);
+  for (let i = 0; i < actual.events.length; i++) hay[actual.events[i].id] = true;
+  const cursor = actual.pruneCursor;
+  const nuevos = viejo.events.filter(function (e) {
+    return isValidEventEnvelope(e) && !hay[e.id] && !(cursor && compareEvents(e, cursor) <= 0);
+  });
+  const borrarViejo = function () { try { localStorage.removeItem(EVENTS_LEGACY_LS_KEY); } catch (e) {} };
+  if (!nuevos.length) { borrarViejo(); return Promise.resolve('fusionado'); }
+  const fusion = Object.assign({}, actual, { events: actual.events.concat(nuevos).sort(compareEvents) });
+  return eventsWebWriteRaw(JSON.stringify(fusion)).then(function (ok) {
+    if (!ok) return 'fallo';
+    return eventsWebReadRaw().then(function (copia) {
+      let ids = Object.create(null);
+      try { JSON.parse(copia).events.forEach(function (e) { ids[e.id] = true; }); } catch (e) { return 'fallo'; }
+      for (let i = 0; i < nuevos.length; i++) if (!ids[nuevos[i].id]) return 'fallo';
+      borrarViejo();
+      return 'fusionado';
+    });
+  });
 }
 
 /* Sin Web Locks no se escribe ni se migra, pero se puede LEER: si el almacen
@@ -197,4 +235,5 @@ Object.assign(window, {
   EVENTS_IDB_NAME, EVENTS_IDB_STORE, EVENTS_IDB_RECORD,
   eventsIdbExists, eventsIdbOpen, eventsWebReadRaw, eventsWebWriteRaw,
   eventsWebMirror, eventsWebSetMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebLoadReadOnly,
+  eventsWebFusionarViejo,
 });

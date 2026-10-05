@@ -46,5 +46,18 @@ Dos tareas tras la auditoría externa de s199 y las decisiones de Ez del mismo d
 
 - Una pestaña con una versión **anterior** de PACE todavía abierta (SW sin actualizar) seguiría
   escribiendo en `localStorage` después de migrar; esos eventos no se pasan (la migración solo copia
-  si IndexedDB está vacío y nunca borra una copia distinta). Ventana corta, sin arreglar.
+  si IndexedDB está vacío y nunca borra una copia distinta). **Cerrado en v0.135.0**, abajo.
 - El espejo de una pestaña no ve lo que escribe otra hasta que vuelve a ella (`visibilitychange`).
+
+## v0.135.0 · el reloj de Mueve y Estira y la pestaña antigua (segundo encargo del día)
+
+- **Tarea 3**: `useRelojSesion` en `MoveSessionV1.support.jsx` (marca de tiempo; el intervalo solo calcula los
+  segundos enteros pasados). Sustituye los tres intervalos del runner v1 y el del legacy. El runner v1 queda en 490
+  líneas.
+- **Política al ocultar**: `SESION_AL_OCULTAR = 'pausa'`, la recomendada, a falta de que Ez decida. Para que un
+  descanso o una colocación pausados no se queden sin salida, en pausa siempre se pinta «Reanudar». Decisión mía: la
+  preparación de 5 s no se pausa (no tiene botón). La alternativa `'sigue'` solo se pone al día dentro de la fase.
+- **Tarea 4**: `eventsWebFusionarViejo`. Decisión mía que no estaba en el encargo: solo se fusiona si
+  `activatedAt` coincide (si no, es historial anterior a un reset o un import y fusionarlo resucitaría lo borrado) y
+  solo lo posterior al `pruneCursor`.
+- Tests en rojo contra v0.134.0: los tres nuevos fallan con su mensaje.

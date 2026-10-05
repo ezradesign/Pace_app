@@ -112,25 +112,17 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
     return () => clearTimeout(t);
   }, [stage, prepCount, paused]);
 
-  // Ticker del paso activo
+  /* Reloj del paso activo — s200: por MARCA de tiempo (`useRelojSesion`, en
+     MoveSessionV1.support.jsx), no por ticks; el intervalo solo suma lo que el
+     reloj real dice. El avance va en un efecto aparte y compara con `>=`, asi
+     que un salto no se lo salta. Antes vivia dentro del updater de `setElapsed`,
+     que tambien completaba la sesion durante el render. */
+  useRelojSesion(stage === 'active' && !paused, n => setElapsed(e => e + n), [stepIdx]);
+  useSesionAlOcultar(stage === 'active', () => setPaused(true));
   useEffectMV(() => {
-    if (stage !== 'active' || paused) return;
-    const intv = setInterval(() => {
-      setElapsed(e => {
-        if (e + 1 >= step.dur) {
-          if (stepIdx + 1 >= routine.steps.length) {
-            dispatchComplete();
-            setStage('done');
-            return 0;
-          }
-          setStepIdx(i => i + 1);
-          return 0;
-        }
-        return e + 1;
-      });
-    }, 1000);
-    return () => clearInterval(intv);
-  }, [stepIdx, paused, step, routine, stage]);
+    if (stage !== 'active' || !step || elapsed < step.dur) return;
+    goNext();
+  }, [elapsed]);
 
   /* Segmentador del TIEMPO ACTIVO (s170) — misma política que el runner v1
      (§6.4 del esquema de eventos): fuera la preparación y fuera las pausas.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.134.0</title>
+  <title>PACE · Foco · Cuerpo — v0.135.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5506,7 +5506,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.134.0';
+const PACE_VERSION = 'v0.135.0';
 
 
 
@@ -9432,10 +9432,13 @@ function eventsWebMigrateFromLocalStorage() {
 
 
 
+
+
       if (actual === viejo) {
         try {localStorage.removeItem(EVENTS_LEGACY_LS_KEY);} catch (e) {}
+        return 'ya';
       }
-      return 'ya';
+      return eventsWebFusionarViejo(actual, viejo);
     }
     return eventsWebWriteRaw(viejo).then(function (ok) {
       if (!ok) return 'fallo';
@@ -9446,6 +9449,41 @@ function eventsWebMigrateFromLocalStorage() {
       });
     });
   }).catch(function () {return 'fallo';});
+}
+
+
+
+
+
+
+
+
+
+function eventsWebFusionarViejo(actualRaw, viejoRaw) {
+  let actual, viejo;
+  try {actual = JSON.parse(actualRaw);viejo = JSON.parse(viejoRaw);} catch (e) {return Promise.resolve('distinto');}
+  if (!actual || !viejo || !Array.isArray(actual.events) || !Array.isArray(viejo.events)) return Promise.resolve('distinto');
+  if (!actual.activatedAt || actual.activatedAt !== viejo.activatedAt) return Promise.resolve('distinto');
+  if (actual.schemaVersion > EVENTS_SCHEMA_VERSION) return Promise.resolve('distinto');
+  const hay = Object.create(null);
+  for (let i = 0; i < actual.events.length; i++) hay[actual.events[i].id] = true;
+  const cursor = actual.pruneCursor;
+  const nuevos = viejo.events.filter(function (e) {
+    return isValidEventEnvelope(e) && !hay[e.id] && !(cursor && compareEvents(e, cursor) <= 0);
+  });
+  const borrarViejo = function () {try {localStorage.removeItem(EVENTS_LEGACY_LS_KEY);} catch (e) {}};
+  if (!nuevos.length) {borrarViejo();return Promise.resolve('fusionado');}
+  const fusion = Object.assign({}, actual, { events: actual.events.concat(nuevos).sort(compareEvents) });
+  return eventsWebWriteRaw(JSON.stringify(fusion)).then(function (ok) {
+    if (!ok) return 'fallo';
+    return eventsWebReadRaw().then(function (copia) {
+      let ids = Object.create(null);
+      try {JSON.parse(copia).events.forEach(function (e) {ids[e.id] = true;});} catch (e) {return 'fallo';}
+      for (let i = 0; i < nuevos.length; i++) if (!ids[nuevos[i].id]) return 'fallo';
+      borrarViejo();
+      return 'fusionado';
+    });
+  });
 }
 
 
@@ -9472,9 +9510,10 @@ try {
 Object.assign(window, {
   EVENTS_IDB_NAME, EVENTS_IDB_STORE, EVENTS_IDB_RECORD,
   eventsIdbExists, eventsIdbOpen, eventsWebReadRaw, eventsWebWriteRaw,
-  eventsWebMirror, eventsWebSetMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebLoadReadOnly
+  eventsWebMirror, eventsWebSetMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebLoadReadOnly,
+  eventsWebFusionarViejo
 });
-;Object.assign(window, { eventsIdbExists, eventsIdbOpen, eventsWebSetMirror, eventsWebReadRaw, eventsWebWriteRaw, eventsWebMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebLoadReadOnly });
+;Object.assign(window, { eventsIdbExists, eventsIdbOpen, eventsWebSetMirror, eventsWebReadRaw, eventsWebWriteRaw, eventsWebMirror, eventsWebRefresh, eventsWebMigrateFromLocalStorage, eventsWebFusionarViejo, eventsWebLoadReadOnly });
 })();
 </script>
   <script>
@@ -22454,24 +22493,16 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
   }, [stage, prepCount, paused]);
 
 
+
+
+
+
+  useRelojSesion(stage === 'active' && !paused, (n) => setElapsed((e) => e + n), [stepIdx]);
+  useSesionAlOcultar(stage === 'active', () => setPaused(true));
   useEffectMV(() => {
-    if (stage !== 'active' || paused) return;
-    const intv = setInterval(() => {
-      setElapsed((e) => {
-        if (e + 1 >= step.dur) {
-          if (stepIdx + 1 >= routine.steps.length) {
-            dispatchComplete();
-            setStage('done');
-            return 0;
-          }
-          setStepIdx((i) => i + 1);
-          return 0;
-        }
-        return e + 1;
-      });
-    }, 1000);
-    return () => clearInterval(intv);
-  }, [stepIdx, paused, step, routine, stage]);
+    if (stage !== 'active' || !step || elapsed < step.dur) return;
+    goNext();
+  }, [elapsed]);
 
 
 
@@ -23564,7 +23595,70 @@ function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
   };
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function useRelojSesion(activo, avanzar, deps) {
+  const marcaRef = React.useRef(0);
+  const avanzarRef = React.useRef(avanzar);
+  avanzarRef.current = avanzar;
+  React.useEffect(() => {
+    if (!activo) return;
+    marcaRef.current = Date.now();
+    const comprobar = () => {
+      const n = Math.floor((Date.now() - marcaRef.current) / 1000);
+      if (n <= 0) return;
+      marcaRef.current += n * 1000;
+      avanzarRef.current(n);
+    };
+    const id = setInterval(comprobar, 1000);
+    const alVolver = () => {if (document.visibilityState === 'visible') comprobar();};
+    document.addEventListener('visibilitychange', alVolver);
+    return () => {clearInterval(id);document.removeEventListener('visibilitychange', alVolver);};
+  }, [activo].concat(deps || []));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const SESION_AL_OCULTAR = 'pausa';
+
+function useSesionAlOcultar(activo, pausar) {
+  const pausarRef = React.useRef(pausar);
+  pausarRef.current = pausar;
+  React.useEffect(() => {
+    if (!activo || SESION_AL_OCULTAR !== 'pausa') return;
+    const alOcultar = () => {if (document.visibilityState === 'hidden') pausarRef.current();};
+    document.addEventListener('visibilitychange', alOcultar);
+    return () => document.removeEventListener('visibilitychange', alOcultar);
+  }, [activo]);
+}
+
 Object.assign(window, {
+  useRelojSesion, useSesionAlOcultar, SESION_AL_OCULTAR,
   v1Instr, v1EventoSesion, v1LadoGlifo,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
@@ -23572,7 +23666,7 @@ Object.assign(window, {
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Instr, v1EventoSesion });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
 })();
 </script>
   <script>
@@ -23720,12 +23814,10 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'place') return;
-    if (step && step.setup && step.setup.mode === 'ready') return;
-    const intv = setInterval(() => setPlaceLeft((c) => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, stepIdx]);
+
+  useRelojSesion(stage === 'run' && phase === 'place' && !(step && step.setup && step.setup.mode === 'ready'),
+  (n) => setPlaceLeft((c) => Math.max(0, c - n)), [stepIdx]);
+  useSesionAlOcultar(stage === 'run', () => setPaused(true));
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
     if (step && step.setup && step.setup.mode === 'ready') return;
@@ -23734,11 +23826,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || paused) return;
-    const intv = setInterval(() => setElapsed((e) => e + 1), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx, side]);
+  useRelojSesion(stage === 'run' && phase === 'work' && !paused, (n) => setElapsed((e) => e + n), [stepIdx, side]);
 
 
 
@@ -23775,11 +23863,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'change' || paused) return;
-    const intv = setInterval(() => setChangeLeft((c) => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx]);
+  useRelojSesion(stage === 'run' && phase === 'change' && !paused, (n) => setChangeLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change' || changeLeft > 0) return;
     onSideReady();
@@ -23812,7 +23896,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if (phase === 'work' && step && step.mode !== 'rest' || phase === 'change') setPaused((p) => !p);
+        if (phase === 'work' && step && step.mode !== 'rest' || phase === 'change' || paused) setPaused((p) => !p);
       }
       if (e.key === 'Escape') onExit('exit');
 
@@ -23822,7 +23906,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [stage, stepIdx, phase, step]);
+  }, [stage, stepIdx, phase, step, paused]);
 
 
   if (stage === 'prep') {
@@ -23945,7 +24029,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   null;
 
 
-  const canPause = phase === 'work' && !isRest || phase === 'change';
+  const canPause = phase === 'work' && !isRest || phase === 'change' || paused;
   const footer =
   React.createElement(React.Fragment, null,
   phase !== 'change' &&

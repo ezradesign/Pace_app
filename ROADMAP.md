@@ -105,8 +105,8 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
   la mitad de los eventos (`localStorage` se propaga entre procesos de forma asíncrona y el lock no
   fuerza una lectura fresca). El adaptador web vive ahora en IndexedDB con la misma interfaz y migra
   una vez el contenedor antiguo.
-- **Timer de Mueve por timestamps** (hoy `setInterval` en primer plano) — necesario igualmente para
-  el ciclo de vida en Android.
+- **Timer de Mueve por timestamps** — **HECHO en s200 (v0.135.0)**: Mueve y Estira cuentan por marcas
+  de tiempo y la sesión se pausa al ocultar la página (política en `SESION_AL_OCULTAR`).
 - **Adelgazar el método**: menos documentación por sesión y cierres más cortos (ver la auditoría
   externa de s199).
 
