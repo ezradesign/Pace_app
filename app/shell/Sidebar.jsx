@@ -76,8 +76,8 @@ function Sidebar() {
   const ultimo = selectSidebarLatestAchievement(state);
 
   /* Los eventos entran POR PARÁMETRO al selector, que es puro. Aquí es donde
-     se toca el almacén, y con guardas: en `file://` y en Capacitor el
-     adaptador está inerte y el contenedor viene vacío, así que la tarjeta
+     se toca el almacén, y con guardas: en `file://` el adaptador está
+     inerte y el contenedor viene vacío, así que la tarjeta
      simplemente no se pinta. Eso es degradación, no error. */
   let eventos = null;
   try {

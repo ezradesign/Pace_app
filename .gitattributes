@@ -36,3 +36,6 @@
 *.wav    binary
 *.mp4    binary
 *.pdf    binary
+
+# Scripts de Windows del proyecto Android
+*.bat    text eol=crlf

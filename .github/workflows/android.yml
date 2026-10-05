@@ -1,0 +1,54 @@
+# PACE · la app de Android
+#
+# Compila un APK de prueba (debug) en GitHub, para que nadie tenga que instalar
+# Android Studio. Usa el `index.html` committeado, que el workflow CI ya
+# comprueba que esta al dia con las fuentes, y lo empaqueta con Capacitor.
+# El APK queda como artefacto de la ejecucion (pestaña Actions de GitHub).
+
+name: Android
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    name: apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - run: npm ci
+
+      # Prepara `www/` con lo que va dentro del APK y lo copia al proyecto Android.
+      - run: npm run android:sync
+
+      # En Windows git no guarda el bit de ejecucion: se pone aqui por si acaso.
+      - run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+        working-directory: android
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pace-android-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

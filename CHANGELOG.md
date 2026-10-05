@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.136.0 | 2026-10-05 | PACE se empaqueta para Android y GitHub compila un APK de prueba en cada push |
 | v0.135.0 | 2026-10-05 | Mueve y Estira cuentan con el reloj de verdad y la sesión se pausa al salir de la pantalla |
 | v0.134.0 | 2026-10-05 | Los eventos se guardan en IndexedDB: dos pestañas ya no se pisan |
 | v0.133.2 | 2026-10-05 | El `index.html` publicado va sin comentarios y `backups/` sale del repo |

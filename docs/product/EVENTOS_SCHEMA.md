@@ -49,6 +49,9 @@ Decisiones fijadas en s117 (AskUserQuestion, todas la recomendación):
 > reabrir el modelo canónico ni el P0. Ver §30. rev. 6 (s172): `routineId` de Foco =
 > `focus`. **rev. 7 (s194)**: `session.completed` lleva **`origin`** (la puerta por la que
 > se empezó) y **`fromMenu`** (si era lo que «A tu ritmo» sirvió), los dos anulables. Ver §8.
+> **rev. 8 (5 de octubre de 2026, v0.136.0)**: **Android usa el adaptador web** (IndexedDB del
+> WebView), elegido de forma explícita por la API de Capacitor; el SQLite nativo de §19.3 queda
+> aplazado. Ver §19.3.
 
 ---
 
@@ -601,6 +604,19 @@ Cada adaptador implementa el contrato EventStore (§10). El modelo canónico no 
   `localhost` puede activar el adaptador web en desarrollo; abrirlo como `file://` no.
 
 ### 19.3 Adaptador Android / Capacitor (runtime previsto)
+
+> **rev. 8 · 5 de octubre de 2026 (v0.136.0) · LO QUE MANDA HOY.** Android usa el **adaptador web**
+> (§19.1), elegido de forma explícita (§20). El IndexedDB del WebView vive en el almacenamiento
+> privado de la app, como viviría un SQLite, y `pace.state.v2` ya está ahí: un SQLite solo para los
+> eventos no protegería el estado, y escribir lo mismo en dos almacenes lo prohíbe §2.9. Lo que pide
+> este apartado queda así: persistencia entre reinicios y borrado al desinstalar, los del
+> almacenamiento de la app; atomicidad, la de las transacciones de IndexedDB; un solo escritor,
+> porque el APK tiene un solo WebView y Web Locks sigue mandando (sin él no se emite: `READ_ONLY`);
+> y contra la purga por falta de espacio, `navigator.storage.persist()` en cada arranque. Dos
+> condiciones: el **origen no cambia nunca** (`https://localhost`) y el **export/import funciona
+> dentro de la app** antes de publicar, porque es la única copia y el único puente con la PWA. Lo de
+> abajo queda como plan por si un móvil real demuestra que el WebView pierde datos.
+
 Runtime independiente. **No** asumir: que `localStorage` sea persistencia duradera
 (el WebView puede purgarlo); que `navigator.locks` esté en todas las versiones de
 WebView; que Web Locks sea necesario si el backend nativo da transacciones; que el
@@ -662,9 +678,9 @@ la vez en SQLite y `localStorage`; **asumir el mismo lifecycle que Android**.
 - La selección **no** se basa solo en `location.protocol`, `location.hostname`,
   `isSecureContext` ni en la mera presencia de `navigator.locks`.
 - **Android e iOS (Capacitor)** se detectan por la **API de Capacitor** y capacidades
-  reales, y **seleccionan explícitamente** el adaptador de su plataforma (Android o
-  iOS). **No** deben caer por accidente al adaptador web porque la URL del WebView
-  parezca `https://localhost`.
+  reales, y **seleccionan explícitamente** su adaptador: desde la rev. 8, Android el
+  **web** (§19.3) e iOS el inerte hasta su fase. **No** deben caer por accidente al
+  adaptador web porque la URL del WebView parezca `https://localhost`.
 - `file://` selecciona el adaptador `file://` (§19.2), no el web.
 - Ante ambigüedad o almacenamiento bloqueado (`SecurityError`): `UNAVAILABLE`, nunca
   un adaptador «adivinado».
@@ -845,6 +861,8 @@ se toca en s117.
   (§5, §10).
 - **Una única fuente de verdad** por dominio y runtime (§2.9, §19.3, §19.6).
 - Android **e iOS no caen por accidente** al adaptador web (§20).
+- **rev. 8:** Android usa el adaptador web **por decisión explícita** (§19.3); iOS
+  sigue con el plan nativo.
 
 El plugin SQLite concreto queda como decisión de implementación futura **con sus
 garantías mínimas ya cerradas** (§19.3).
@@ -853,12 +871,12 @@ garantías mínimas ya cerradas** (§19.3).
 
 | Runtime | Backend previsto | Exclusión / atomicidad | Escritura de eventos v1 |
 |---|---|---|---|
-| HTTPS / PWA + Web Locks | `localStorage` v1 | Web Locks | **Sí** (`READ_WRITE`) |
-| `localhost` + Web Locks | `localStorage` v1 | Web Locks | **Sí** (desarrollo) |
+| HTTPS / PWA + Web Locks | IndexedDB (desde v0.134.0) | Web Locks | **Sí** (`READ_WRITE`) |
+| `localhost` + Web Locks | IndexedDB (desde v0.134.0) | Web Locks | **Sí** (desarrollo) |
 | Extensión Chrome (validada) | adaptador web, por confirmar | Web Locks | Sí, tras validación |
 | `file://` / standalone | legacy `localStorage` | sin garantía | **No** (`READ_ONLY`/`UNAVAILABLE`) |
-| Android / Capacitor | **SQLite nativo** + Preferences | transacción nativa | **Sí**, cuando exista el adaptador |
-| Android antes del adaptador nativo | ninguno | — | **No** |
+| Android / Capacitor (rev. 8) | **IndexedDB del WebView** (adaptador web) | Web Locks + transacción de IndexedDB | **Sí** (`READ_WRITE`) |
+| Android con un WebView sin Web Locks | IndexedDB del WebView | — | **No** (`READ_ONLY`) |
 | iOS / Capacitor | **SQLite nativo** + Preferences/UserDefaults | transacción nativa | **Sí**, cuando exista el adaptador |
 | iOS antes del adaptador nativo | ninguno | — | **No** |
 | Almacenamiento bloqueado / `SecurityError` | ninguno | — | **No** (`UNAVAILABLE`) |
