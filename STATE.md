@@ -34,6 +34,11 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
+3. **La home del móvil sin scroll** (decidido por Ez el 6 de octubre de 2026): al entrar sin haber
+   contestado el día, solo «¿Cuánto trabajas hoy?» y un «Hoy voy por libre» que enseña los módulos.
+   De la maqueta eligió la **variante A, «con tu día»**. Solo en móvil; en escritorio ya cabe. La
+   maqueta se hizo en la cuenta anterior de Claude: si no se conserva, se rehace a partir de esto.
+
 ## Espera a Ez
 
 - Darse de alta en Play Console (cuenta personal) y reunir 12 testers con Android.
