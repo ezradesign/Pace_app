@@ -260,6 +260,49 @@
 }
 @container (max-width: 620px) { .pace-rt-losetas { grid-template-columns: 1fr 1fr; } }
 
+/* LA TARJETA POR LIBRE DEL MÓVIL: otra tarjeta dentro de la misma cáscara, calcada
+   de la maqueta que eligió Ez (163 px a 360×718, sin scroll). Solo el corte de
+   móvil la enseña; en escritorio sigue la de las losetas. La píldora es de papel
+   (--paper-2) con un filo verde suave y la letra del foco: invita sin competir con
+   «Empezar foco», que es la única acción rellena de la pantalla. */
+.pace-rt-tj-esc { display: block; }
+.pace-rt-tj-mov { display: none; }
+.pace-rt-tm-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pace-rt-tm-ceja { font-size: 10px; line-height: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--focus); }
+.pace-rt-tm-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 26px; color: var(--ink); margin-top: 5px; }
+.pace-rt-esquema { display: flex; align-items: center; height: 14px; margin-top: 14px; }
+.pace-rt-esq-seg { flex: 4 1 0; height: 3px; border-radius: 2px; background: var(--paper-3); }
+.pace-rt-esq-comida { flex: 8 1 0; height: 0; border-top: 2px dashed var(--line); }
+.pace-rt-esq-punto { flex: 0 0 auto; box-sizing: content-box; width: 10px; height: 10px; margin: 0 3px; border-radius: 50%; border: 2px solid var(--c); background: var(--paper); }
+.pace-rt-esq-punto.pace-rt-larga { width: 18px; border-radius: 7px; }
+.pace-rt-esq-punto:last-child { margin-right: 0; }
+.pace-rt-tm-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 44px; margin-top: 14px; }
+.pace-rt-tm-nota { font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.25; color: var(--ink-2); min-width: 0; }
+.pace-rt-tm-comienza { flex-shrink: 0; display: inline-flex; align-items: center; height: 44px; }
+.pace-rt-tm-pildora { display: inline-flex; align-items: center; gap: 10px; height: 34px; box-sizing: border-box; padding: 0 16px 0 18px;
+  border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid color-mix(in srgb, var(--focus) 35%, transparent);
+  font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 18px; line-height: 1; color: var(--focus);
+  transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease); }
+.pace-rt-tm-comienza:hover .pace-rt-tm-pildora { background: color-mix(in srgb, var(--focus) 10%, var(--paper-2)); border-color: color-mix(in srgb, var(--focus) 55%, transparent); }
+.pace-rt-tm-comienza:focus-visible { outline: none; }
+.pace-rt-tm-comienza:focus-visible .pace-rt-tm-pildora { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+@media ${PACE_CORTE_MOVIL} {
+  .pace-rt-tj-esc { display: none; }
+  .pace-rt-tj-mov { display: block; padding: 4px 2px; }
+  .pace-rt-tarjeta { padding: 12px 14px; }
+}
+/* Por debajo de 640 px la cáscara lleva padding 10/12 con !important (lo pone
+   SuggestedPathCard.jsx para todas las tarjetas de ese sitio); los 4/2 de arriba
+   la llevan a los 14 de la maqueta. En un móvil bajo (375×667) el aro ya está en
+   su suelo y lo que sobra es la tarjeta: se aprieta 22 px para que la home no
+   pida scroll. Solo toca piezas de la tarjeta de móvil, nunca la cáscara. */
+@media (max-height: 700px) {
+  .pace-rt-tj-mov { padding: 0; }
+  .pace-rt-tm-t { margin-top: 3px; }
+  .pace-rt-esquema { margin-top: 8px; }
+  .pace-rt-tm-pie { margin-top: 8px; }
+}
+
 /* EL MINI INTERRUPTOR DE LA COMIDA (s195b, 6C): 22×12 en tinta, pegado a la palabra. */
 .pace-rt-comes { white-space: nowrap; }
 .pace-rt-mini-int { display: inline-block; width: 22px; height: 12px; border-radius: 6px; border: 1px solid var(--ink-3) !important; vertical-align: -1px; margin: 0 2px 0 6px; position: relative; background: var(--paper) !important; padding: 0 !important; cursor: pointer; transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease); }
