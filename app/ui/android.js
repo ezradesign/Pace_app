@@ -26,6 +26,13 @@
    app esta en el fondo: al volver se cancela, porque delante ya lo cuenta la
    propia app y sonarian los dos.
 
+   A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
+   recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
+   retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
+   pantalla de ajustes en cada `schedule()`, y aqui eso pasaria al salir de la
+   app con un Foco en marcha: por eso solo se pide exacta si ya esta concedido,
+   y el permiso se ofrece desde Ajustes, con un toque de la persona.
+
    LA COPIA DE «TUS DATOS» se escribe en la cache de la app y se abre el menu de
    compartir de Android, desde el que se guarda en Drive o en Archivos, o se
    manda por correo.
@@ -47,7 +54,7 @@
 var PACE_WEB_PUBLICA = 'https://paceweb.pages.dev';
 var PACE_AVISO_FOCO_ID = 1; // un solo aviso de fin de Foco a la vez
 
-var _paceAndroid = { fondo: false, permiso: 'default', foco: null, programado: false, atras: 0 };
+var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: false, atras: 0 };
 
 function paceEsAndroid() {
   try {
@@ -115,6 +122,26 @@ function paceAndroidAvisoPedir() {
   return paceAndroidLlamar('LocalNotifications', 'requestPermissions').then(paceAndroidGuardarPermiso);
 }
 
+/* 'granted' | 'denied' | 'default' (aun sin mirar) para «Alarmas y recordatorios». */
+function paceAndroidAvisoExacto() {
+  return _paceAndroid.exacta;
+}
+
+function paceAndroidGuardarExacta(r) {
+  var e = r && r.exact_alarm;
+  if (e === 'granted' || e === 'denied') _paceAndroid.exacta = e;
+  return _paceAndroid.exacta;
+}
+
+function paceAndroidAvisoExactoMirar() {
+  return paceAndroidLlamar('LocalNotifications', 'checkExactNotificationSetting').then(paceAndroidGuardarExacta);
+}
+
+/* Abre la pantalla de Android y, al volver, devuelve como ha quedado. */
+function paceAndroidAvisoExactoPedir() {
+  return paceAndroidLlamar('LocalNotifications', 'changeExactNotificationSetting').then(paceAndroidGuardarExacta);
+}
+
 /* FocusTimer cuenta aqui cuando acaba el bloque en marcha (ms) y con que
    textos avisar, o null si no hay bloque o el aviso esta apagado. */
 function paceAndroidFoco(endsAt, textos) {
@@ -138,6 +165,7 @@ function paceAndroidAvisoRecolocar() {
       id: PACE_AVISO_FOCO_ID, title: f.title, body: f.body,
       /* el formato exacto que lee el complemento: ISO en UTC con milisegundos */
       schedule: { at: new Date(f.endsAt).toISOString(), allowWhileIdle: true },
+      isExactNotification: _paceAndroid.exacta === 'granted',
     }] });
     return;
   }
@@ -224,7 +252,7 @@ function paceEnlaceWeb(ruta) {
 
 /* Para las pruebas y para depurar. */
 function paceAndroidEstado() {
-  return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, programado: _paceAndroid.programado,
+  return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, exacta: _paceAndroid.exacta, programado: _paceAndroid.programado,
            foco: _paceAndroid.foco ? _paceAndroid.foco.endsAt : null, atras: _paceAndroid.atras };
 }
 
@@ -239,16 +267,22 @@ function paceAndroidArrancar() {
   }
   /* El WebView tambien se oculta al irse al fondo; lo que llegue antes manda. */
   try {
-    document.addEventListener('visibilitychange', function () { paceAndroidFondo(document.visibilityState === 'hidden'); });
+    document.addEventListener('visibilitychange', function () {
+      var oculta = document.visibilityState === 'hidden';
+      /* Al volver puede venir de los ajustes de Android con el permiso cambiado. */
+      if (!oculta) paceAndroidAvisoExactoMirar();
+      paceAndroidFondo(oculta);
+    });
   } catch (e) {}
   paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
+  paceAndroidAvisoExactoMirar();
 }
 
 try { paceAndroidArrancar(); } catch (e) {}
 
 Object.assign(window, {
   paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
-  paceAndroidAvisoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
+  paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
   paceAndroidCalendarioCrear, paceAndroidCalendarioBorrar,
 });

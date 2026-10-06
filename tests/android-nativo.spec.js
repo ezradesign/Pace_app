@@ -18,12 +18,15 @@ const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO } = require('./hel
 
 /* Un Capacitor de Android falso con los cinco complementos. `permiso` es lo que
    contesta LocalNotifications al arrancar ('granted', 'denied' o 'prompt') y
-   `concede`, lo que contesta si se le pide. */
+   `concede`, lo que contesta si se le pide. `exacta` es «Alarmas y
+   recordatorios», apagado de fabrica como en Android 14, y `concedeExacta`, como
+   queda al volver de esa pantalla de ajustes. */
 async function comoAndroid(context, opciones) {
-  const o = Object.assign({ permiso: 'prompt', concede: 'granted' }, opciones || {});
-  await context.addInitScript(([permiso, concede]) => {
+  const o = Object.assign({ permiso: 'prompt', concede: 'granted', exacta: 'denied', concedeExacta: 'granted' }, opciones || {});
+  await context.addInitScript(([permiso, concede, exacta, concedeExacta]) => {
     const nativo = window.__nativo = { llamadas: [], oyentes: {} };
     let estado = permiso;
+    let estadoExacta = exacta;
     const apunta = (plugin, metodo, contesta) => function (opts) {
       nativo.llamadas.push({ plugin, metodo, opts: opts === undefined ? null : JSON.parse(JSON.stringify(opts)) });
       return Promise.resolve(typeof contesta === 'function' ? contesta(opts) : contesta);
@@ -44,12 +47,14 @@ async function comoAndroid(context, opciones) {
           requestPermissions: apunta('LocalNotifications', 'requestPermissions', () => { estado = concede; return { display: estado }; }),
           schedule: apunta('LocalNotifications', 'schedule', { notifications: [] }),
           cancel: apunta('LocalNotifications', 'cancel'),
+          checkExactNotificationSetting: apunta('LocalNotifications', 'checkExactNotificationSetting', () => ({ exact_alarm: estadoExacta })),
+          changeExactNotificationSetting: apunta('LocalNotifications', 'changeExactNotificationSetting', () => { estadoExacta = concedeExacta; return { exact_alarm: estadoExacta }; }),
         },
       },
     };
     /* Lo que hace Android: avisar a quien escucha un evento del complemento. */
     nativo.emitir = (evento, datos) => (nativo.oyentes[evento] || []).forEach(cb => cb(datos));
-  }, [o.permiso, o.concede]);
+  }, [o.permiso, o.concede, o.exacta, o.concedeExacta]);
 }
 
 const llamadas = (page, plugin, metodo) => page.evaluate(([p, m]) =>
@@ -222,6 +227,9 @@ test.describe('en Android', () => {
     const fin = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
     expect(aviso.schedule.at, 'el aviso no es para el final del bloque').toBe(new Date(fin).toISOString());
     expect(aviso.schedule.allowWhileIdle).toBe(true);
+    /* Sin «Alarmas y recordatorios» se programa sin exactitud: pedirla haria
+       que el complemento abriera los ajustes de Android al salir de la app. */
+    expect(aviso.isExactNotification, 'pidio alarma exacta sin el permiso').toBe(false);
     expect(aviso.title).toBe('Foco completado');
     expect(await cuantas(page, 'LocalNotifications', 'requestPermissions'), 'con el permiso dado no se vuelve a pedir').toBe(0);
 
@@ -232,6 +240,45 @@ test.describe('en Android', () => {
     await page.getByRole('button', { name: 'Pausar', exact: true }).click();
     await emitir(page, 'appStateChange', { isActive: false });
     expect(await cuantas(page, 'LocalNotifications', 'schedule'), 'programo un aviso con el Foco en pausa').toBe(1);
+  });
+});
+
+test.describe('en Android, el aviso a su hora', () => {
+  test('con «Alarmas y recordatorios» concedido el aviso va exacto y Ajustes no ofrece nada', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false });
+    await comoAndroid(context, { permiso: 'granted', exacta: 'granted' });
+    await irAlArtefacto(page);
+    await abrirAjustes(page);
+    await expect(page.locator('[data-pace-aj-fila="notify"]')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Que el aviso llegue a su hora/ })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await emitir(page, 'appStateChange', { isActive: false });
+    const [programado] = await llamadas(page, 'LocalNotifications', 'schedule');
+    expect(programado.opts.notifications[0].isExactNotification).toBe(true);
+  });
+
+  test('sin el permiso, Ajustes lo ofrece con un toque y, concedido, el aviso va exacto', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false });
+    await comoAndroid(context, { permiso: 'granted', exacta: 'denied', concedeExacta: 'granted' });
+    const errores = capturarErrores(page);
+    await irAlArtefacto(page);
+    expect(await cuantas(page, 'LocalNotifications', 'changeExactNotificationSetting'), 'abrio los ajustes de Android sin que nadie tocara').toBe(0);
+    await abrirAjustes(page);
+    const pedir = page.getByRole('button', { name: /Que el aviso llegue a su hora/ });
+    await expect(pedir).toBeVisible();
+    await expect(page.getByText(/Permite «Alarmas y recordatorios» para PACE/)).toBeVisible();
+    await pedir.click();
+    await expect.poll(() => cuantas(page, 'LocalNotifications', 'changeExactNotificationSetting')).toBe(1);
+    await expect(pedir, 'con el permiso dado sigue ofreciendolo').toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await emitir(page, 'appStateChange', { isActive: false });
+    const [programado] = await llamadas(page, 'LocalNotifications', 'schedule');
+    expect(programado.opts.notifications[0].isExactNotification).toBe(true);
+    expect(errores).toEqual([]);
   });
 });
 
