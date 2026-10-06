@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>A · la semana a la vista, escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.tab{display:flex;flex-direction:column;gap:5px;padding:9px 11px 10px;border-radius:10px;border:1px solid #E1D9C5;background:none;font:inherit;color:#1F1C17;text-align:left;cursor:pointer;min-width:0}
+.mini{display:flex;align-items:center;gap:2px}
+.mini i{width:6px;height:6px;border-radius:50%;flex:none;display:block}
+.mini b{flex:1;height:2px;background:#D6CDB6;display:block}
+.chip{border:1px solid #C9C0A8;border-radius:16px;padding:5px 11px;font-size:12px;color:#4A453C;background:none;font-family:inherit}
+.stop{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;min-width:0}
+.c{width:26px;height:26px;border-radius:50%;border:1.5px solid;box-sizing:border-box;background:#F6F1E6}
+.seg{flex:1;height:4px;border-radius:2px;background:#DCD4C0;margin-top:11px}
+</style>
+</helmet>
+<div style="width:960px;height:360px;box-sizing:border-box;background:#F6F1E6;border:1px solid #D6CDB6;border-radius:16px;padding:16px 22px 18px;color:#1F1C17;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;display:flex;flex-direction:column;gap:14px">
+
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <span class="cap">Esta semana</span>
+      <span class="it" style="font-size:18px;color:#4A453C">Respirar hondo</span>
+    </div>
+    <div style="display:flex;gap:18px">
+      <a href="#" class="it" style="font-size:15px">Tu semana tipo</a>
+      <a href="#" class="it" style="font-size:15px">La semana al calendario</a>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,.7fr);gap:8px">
+    <button class="tab">
+      <span style="display:flex;justify-content:space-between"><span class="cap">Lun 5</span><span style="font-size:11px;color:#3E5A3A">hecho</span></span>
+      <span class="it" style="font-size:16px">Jornada</span>
+      <span class="mini"><i style="background:#9A7B4F"></i><b></b><i style="background:#6B7A8F"></i><b></b><i style="background:#C97A5D;width:9px"></i><b></b><i style="border:1px solid #8A8372"></i><b></b><i style="background:#6B7A8F"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D"></i></span>
+    </button>
+    <button class="tab" style="background:#EAE4D4;border-color:rgba(62,90,58,.5)">
+      <span style="display:flex;justify-content:space-between"><span class="cap" style="color:#3E5A3A">Mar 6 · hoy</span></span>
+      <span class="it" style="font-size:16px">Jornada</span>
+      <span class="mini"><i style="background:#6B7A8F"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D;width:9px"></i><b></b><i style="border:1px solid #8A8372"></i><b></b><i style="background:#6B7A8F"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D"></i></span>
+    </button>
+    <button class="tab">
+      <span class="cap">Mié 7</span>
+      <span class="it" style="font-size:16px">Media · mañana</span>
+      <span class="mini"><i style="background:#6B7A8F"></i><b></b><i style="background:#C97A5D;width:9px"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D"></i><b style="flex:3;background:none"></b></span>
+    </button>
+    <button class="tab">
+      <span class="cap">Jue 8</span>
+      <span class="it" style="font-size:16px">Jornada</span>
+      <span class="mini"><i style="background:#6B7A8F"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D"></i><b></b><i style="border:1px solid #8A8372"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D;width:9px"></i><b></b><i style="background:#C97A5D"></i></span>
+    </button>
+    <button class="tab">
+      <span class="cap">Vie 9</span>
+      <span class="it" style="font-size:16px">Media · mañana</span>
+      <span class="mini"><i style="background:#6B7A8F"></i><b></b><i style="background:#9A7B4F"></i><b></b><i style="background:#C97A5D;width:9px"></i><b></b><i style="background:#C97A5D;width:9px"></i><b style="flex:3;background:none"></b></span>
+    </button>
+    <button class="tab" style="border-style:dashed;color:#6F695B">
+      <span class="cap">Sáb · Dom</span>
+      <span class="it" style="font-size:16px">Libres</span>
+      <span class="mini"><b style="background:none;border-top:2px dotted #C9C0A8;height:0"></b></span>
+    </button>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #E1D9C5;padding-top:12px">
+    <div style="display:flex;align-items:baseline;gap:8px">
+      <span class="it" style="font-size:22px">Jornada entera</span>
+      <span class="it" style="font-size:15px;color:#6F695B">· de 9:00 a 18:00 · comida a las 14:00 durante 1 h</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="chip">Junto a la mesa</span><span class="chip">Sin material</span>
+      <button class="chip" style="border-color:#3E5A3A;color:#3E5A3A;letter-spacing:.08em;text-transform:uppercase;font-size:11px">Hoy voy por libre</button>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:6px">
+    <div class="seg" style="background:#3E5A3A"></div>
+    <div class="stop"><span class="c" style="border-color:#6B7A8F"></span><span style="font-size:11px;color:#6F695B">9:45</span><span class="it" style="font-size:14px">Cuello</span></div>
+    <div class="seg" style="background:#3E5A3A"></div>
+    <div class="stop"><span class="c" style="border-color:#9A7B4F"></span><span style="font-size:11px;color:#6F695B">10:35</span><span class="it" style="font-size:14px">Glúteos</span></div>
+    <div class="seg" style="background:#9DAE97"></div>
+    <div class="stop"><span class="c" style="border-color:#C97A5D;width:40px;border-radius:13px"></span><span style="font-size:11px;color:#6F695B">11:25</span><span class="it" style="font-size:14px">Coherente 6·6</span></div>
+    <div class="seg"></div>
+    <div class="stop"><span class="c" style="border-color:#6B7A8F"></span><span style="font-size:11px;color:#6F695B">12:25</span><span class="it" style="font-size:14px">Muñecas</span></div>
+    <div class="seg"></div>
+    <div class="stop"><span class="c" style="border-color:#8A8372"></span><span style="font-size:11px;color:#6F695B">14:00</span><span class="it" style="font-size:14px">Comida</span></div>
+    <div class="seg"></div>
+    <div class="stop"><span class="c" style="border-color:#6B7A8F"></span><span style="font-size:11px;color:#6F695B">15:45</span><span class="it" style="font-size:14px">Hombros</span></div>
+    <div class="seg"></div>
+    <div class="stop"><span class="c" style="border-color:#9A7B4F"></span><span style="font-size:11px;color:#6F695B">16:35</span><span class="it" style="font-size:14px">Core</span></div>
+    <div class="seg"></div>
+    <div class="stop"><span class="c" style="border-color:#C97A5D;width:40px;border-radius:13px"></span><span style="font-size:11px;color:#6F695B">17:10</span><span class="it" style="font-size:14px">Coherente 4·3·2</span></div>
+    <div class="seg"></div>
+    <div class="stop"><span class="c" style="border-color:#C97A5D"></span><span style="font-size:11px;color:#6F695B">17:55</span><span class="it" style="font-size:14px">Suspiro</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":360}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

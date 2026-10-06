@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>C · la carta del lunes, móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.linea{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;align-items:baseline;font-size:13px;line-height:1.45;color:#4A453C}
+.linea i{width:7px;height:7px;border-radius:50%;display:block;transform:translateY(-1px)}
+</style>
+</helmet>
+<div style="width:360px;height:718px;position:relative;overflow:hidden;background:#F2EDE0;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;color:#1F1C17">
+
+  <div style="height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;color:#4A453C">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 5h14M2 9h10M2 13h14"></path></svg>
+    <div style="display:flex;gap:24px">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 16h14M3 13l4-5 3 3 5-7"></path></svg>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="9" cy="7" r="4.5"></circle><path d="M6.5 11l-1 5 3.5-2 3.5 2-1-5"></path></svg>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="9" cy="9" r="2.5"></circle><path d="M9 1.5v2.5M9 14v2.5M1.5 9H4M14 9h2.5M3.7 3.7l1.8 1.8M12.5 12.5l1.8 1.8M3.7 14.3l1.8-1.8M12.5 5.5l1.8-1.8"></path></svg>
+    </div>
+  </div>
+
+  <div style="margin:4px 12px 0;background:#F6F1E6;border:1px solid #D6CDB6;border-radius:14px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px">
+    <span class="cap">Lunes · tu semana</span>
+    <h2 class="it" style="margin:0;font-size:28px;line-height:1.1;font-weight:500">La semana pasada</h2>
+
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div class="linea"><i style="background:#3E5A3A"></i><span>Hiciste 31 de las 40 pausas, casi todas por la mañana.</span></div>
+      <div class="linea"><i style="background:#6B7A8F"></i><span>Lo que más te ayudó: <span class="it" style="font-size:16px;color:#1F1C17">Cuello</span> y <span class="it" style="font-size:16px;color:#1F1C17">Coherente 6·6</span>.</span></div>
+      <div class="linea"><i style="background:#C97A5D"></i><span>La pausa de las 16:35 la saltaste cuatro días.</span></div>
+    </div>
+
+    <div style="border-top:1px solid #E1D9C5;padding-top:12px;display:flex;flex-direction:column;gap:8px">
+      <span class="cap">Esta semana · Respirar hondo</span>
+      <div class="linea"><i style="border:1.5px solid #9A7B4F;box-sizing:border-box"></i><span>La pausa de media tarde pasa a ser de Mueve, y más corta.</span></div>
+      <div class="linea"><i style="border:1.5px solid #C97A5D;box-sizing:border-box"></i><span>Las largas llevan más Respira.</span></div>
+      <div class="linea"><i style="border:1.5px solid #6B7A8F;box-sizing:border-box"></i><span>Cuello vuelve el martes y el jueves.</span></div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+      <a href="#" class="it" style="font-size:15px">Dejarla como estaba</a>
+      <button style="min-height:44px;display:flex;align-items:center;border:0;background:none;padding:0">
+        <span class="it" style="background:#EAE4D4;border:1px solid rgba(62,90,58,.35);border-radius:17px;height:34px;display:flex;align-items:center;padding:0 16px;color:#3E5A3A;font-size:18px">Me parece bien →</span>
+      </button>
+    </div>
+  </div>
+
+  <div style="margin:12px 12px 0;padding:12px 16px;border:1px dashed #C9C0A8;border-radius:14px;display:flex;justify-content:space-between;align-items:baseline">
+    <div>
+      <div class="cap">Después</div>
+      <div class="it" style="font-size:18px;margin-top:2px">¿Cuánto trabajas hoy?</div>
+    </div>
+    <span style="font-size:12px;color:#6F695B">el día de siempre</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":718}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

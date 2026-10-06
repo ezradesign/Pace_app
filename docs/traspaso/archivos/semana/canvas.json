@@ -1,0 +1,44 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "R2-bienvenida.dc.html": {"h": 718, "title": "1 · Al empezar: ¿cómo es tu semana? (gratis)", "w": 360, "x": 0, "y": 300, "page": "r2"},
+    "R2-manana.dc.html": {"h": 718, "title": "2 · Cada mañana: tu día ya contestado (gratis)", "w": 360, "x": 440, "y": 300, "page": "r2"},
+    "R2-carta.dc.html": {"h": 718, "title": "3 · El lunes: tu semana (premium)", "w": 360, "x": 880, "y": 300, "page": "r2"},
+    "R2-manana-escritorio.dc.html": {"h": 250, "title": "2 · Cada mañana, escritorio", "w": 960, "x": 0, "y": 1360, "page": "r2"},
+    "R2-carta-escritorio.dc.html": {"h": 360, "title": "3 · El lunes, escritorio", "w": 960, "x": 1040, "y": 1360, "page": "r2"},
+    "A-escritorio.dc.html": {"h": 360, "title": "A · escritorio, el panel bajo el aro", "w": 960, "x": 440, "y": 300, "page": "r1"},
+    "A-gratis.dc.html": {"h": 420, "title": "A · lo que ve quien no ha pagado", "w": 360, "x": 1480, "y": 300, "page": "r1"},
+    "B-escritorio.dc.html": {"h": 300, "title": "B · escritorio, el día llega contestado", "w": 960, "x": 440, "y": 1360, "page": "r1"},
+    "B-movil.dc.html": {"h": 718, "title": "B · móvil 360, la semana tipo", "w": 360, "x": 0, "y": 1360, "page": "r1"},
+    "C-escritorio.dc.html": {"h": 360, "title": "C · escritorio, el lunes", "w": 960, "x": 440, "y": 2420, "page": "r1"},
+    "C-movil.dc.html": {"h": 718, "title": "C · móvil 360, el lunes", "w": 360, "x": 0, "y": 2420, "page": "r1"},
+    "Main.dc.html": {"h": 718, "title": "A · móvil 360", "w": 360, "x": 0, "y": 300, "page": "r1"}
+  },
+  "createdOnFiles": {"at": "2026-10-06T18:20:00Z", "v": 1},
+  "designSystems": [],
+  "launch": {"view": "canvas", "page": "r2"},
+  "notes": {
+    "r2a": {"kind": "title1", "maxW": 1240, "text": "Móvil · contestas una vez, y el lunes una carta", "w": 240, "x": 0, "y": 40, "page": "r2"},
+    "r2b": {"kind": "title1", "maxW": 2000, "text": "Escritorio", "w": 240, "x": 0, "y": 1100, "page": "r2"},
+    "tA": {"kind": "title1", "maxW": 1840, "text": "A · La semana a la vista", "w": 240, "x": 0, "y": 40, "page": "r1"},
+    "tB": {"kind": "title1", "maxW": 1400, "text": "B · Contestas una vez", "w": 240, "x": 0, "y": 1100, "page": "r1"},
+    "tC": {"kind": "title1", "maxW": 1400, "text": "C · La carta del lunes", "w": 240, "x": 0, "y": 2160, "page": "r1"}
+  },
+  "order": [
+    "R2-bienvenida.dc.html",
+    "R2-manana.dc.html",
+    "R2-carta.dc.html",
+    "R2-manana-escritorio.dc.html",
+    "R2-carta-escritorio.dc.html",
+    "Main.dc.html",
+    "A-escritorio.dc.html",
+    "A-gratis.dc.html",
+    "B-movil.dc.html",
+    "B-escritorio.dc.html",
+    "C-movil.dc.html",
+    "C-escritorio.dc.html"
+  ],
+  "pages": [{"id": "r2", "name": "Ronda 2"}, {"id": "r1", "name": "Ronda 1"}],
+  "title": "«A tu ritmo» semanal"
+}
