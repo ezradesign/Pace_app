@@ -4,6 +4,11 @@
 # Android Studio. Usa el `index.html` committeado, que el workflow CI ya
 # comprueba que esta al dia con las fuentes, y lo empaqueta con Capacitor.
 # El APK queda como artefacto de la ejecucion (pestaña Actions de GitHub).
+#
+# Si el repo tiene la llave de subida a Google Play en sus secretos
+# (PACE_UPLOAD_KEYSTORE, el archivo en base64, y PACE_UPLOAD_PASSWORD), compila
+# tambien el AAB firmado que se sube a Play: artefacto `pace-android-play`. Sin
+# la llave ese paso se salta y todo lo demas sigue igual.
 
 name: Android
 
@@ -24,6 +29,8 @@ jobs:
     name: apk
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      HAY_LLAVE: ${{ secrets.PACE_UPLOAD_KEYSTORE != '' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -51,4 +58,26 @@ jobs:
         with:
           name: pace-android-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      # La version para Google Play. La llave solo existe en el disco del
+      # runner mientras dura este paso y se borra al acabar.
+      - name: aab firmado para Google Play
+        id: aab
+        env:
+          LLAVE: ${{ secrets.PACE_UPLOAD_KEYSTORE }}
+          PACE_UPLOAD_PASSWORD: ${{ secrets.PACE_UPLOAD_PASSWORD }}
+        if: env.HAY_LLAVE == 'true'
+        working-directory: android
+        run: |
+          export PACE_UPLOAD_KEYSTORE="$RUNNER_TEMP/pace-upload.jks"
+          trap 'rm -f "$PACE_UPLOAD_KEYSTORE"' EXIT
+          echo "$LLAVE" | base64 --decode > "$PACE_UPLOAD_KEYSTORE"
+          ./gradlew bundleRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        if: steps.aab.outcome == 'success'
+        with:
+          name: pace-android-play
+          path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error

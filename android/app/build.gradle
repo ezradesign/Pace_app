@@ -32,9 +32,23 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        /* La llave de subida a Google Play. Nunca vive en el repo: el workflow
+           Android la saca de los secretos de GitHub a un archivo temporal y
+           pasa aqui su ruta y su contraseña. Sin ellas no hay version firmada
+           y la compilacion de prueba sigue igual. Google firma luego la app
+           con su propia llave (Play App Signing). */
+        if (System.getenv('PACE_UPLOAD_KEYSTORE')) {
+            release {
+                storeFile file(System.getenv('PACE_UPLOAD_KEYSTORE'))
+                storePassword System.getenv('PACE_UPLOAD_PASSWORD')
+                keyAlias 'pace-upload'
+                keyPassword System.getenv('PACE_UPLOAD_PASSWORD')
+            }
+        }
     }
     buildTypes {
         release {
+            if (System.getenv('PACE_UPLOAD_KEYSTORE')) signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

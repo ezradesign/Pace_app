@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.141.0 · 6 de octubre de 2026.
+**Versión:** v0.142.0 · 6 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -37,10 +37,10 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 1. **Fase 2:** el identificador de la app se queda en `com.ezradesign.pace` (Ez, 6 de octubre de
    2026); Play lo fija en la primera subida y luego no se cambia. Probar el APK en un móvil: lo de
-   arriba, el icono y el arranque de día y en modo oscuro, importar una copia y que lo guardado
-   sobreviva a una actualización. Faltan que
-   `privacy.html` hable también de la app y el AAB firmado. En Android 14 o más el aviso puede llegar
-   con retraso: Android no deja alarmas exactas sin un permiso que da el usuario.
+   arriba, el icono y el arranque de día y en modo oscuro, importar una copia, que lo guardado
+   sobreviva a una actualización, y el aviso de Foco con la vaca y «Que el aviso llegue a su hora»
+   en Ajustes. `privacy.html` ya cubre la app. El AAB para Play lo firma el workflow `Android` en
+   cuanto el repo tenga la llave de subida.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
@@ -51,6 +51,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 ## Espera a Ez
 
+- La llave de subida a Google Play (secretos `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`) y un
+  correo de contacto para `privacy.html`, que Play exige.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.

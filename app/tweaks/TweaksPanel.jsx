@@ -41,7 +41,7 @@
        <TweakSecretsWatcher /> (app/tweaks/TweakSecretsWatcher.jsx, s41).
    ============================================================ */
 
-const { useEffect: useEffectTW } = React;
+const { useEffect: useEffectTW, useState: useStateTW } = React;
 
 /* `tweaksStyles` y las piezas `Ajustes*` llegan por `window` desde
    TweaksPanel.support.jsx y TweaksPanel.parts.jsx, que CARGAN ANTES: un `const`
@@ -61,6 +61,13 @@ function TweaksPanel({ open, onClose }) {
   const avisoAndroid = typeof paceAndroidAvisos === 'function' && paceAndroidAvisos();
   const canNotify = avisoAndroid || (isWeb && typeof Notification !== 'undefined');
   const permisoAviso = () => avisoAndroid ? paceAndroidAvisoPermiso() : Notification.permission;
+  /* «Alarmas y recordatorios» (Android 12 o más): sin él el aviso puede llegar
+     unos minutos tarde. Se mira al abrir el panel y se pide con un toque. */
+  const [exacta, setExacta] = useStateTW(() => avisoAndroid ? paceAndroidAvisoExacto() : 'granted');
+  useEffectTW(() => {
+    if (open && avisoAndroid) paceAndroidAvisoExactoMirar().then(setExacta);
+  }, [open, avisoAndroid]);
+  const pedirExacta = () => { paceAndroidAvisoExactoPedir().then(setExacta); };
 
   /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
      nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, la nota
@@ -207,6 +214,12 @@ function TweaksPanel({ open, onClose }) {
         )}
         {canNotify && permisoAviso() === 'denied' && (
           <div className="pace-aj-nota">{t(avisoAndroid ? 'settings.notify.blocked.android' : 'settings.notify.blocked')}</div>
+        )}
+        {avisoAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' && (
+          <>
+            <AjustesAccion suave onClick={pedirExacta} derecha="›">{t('settings.notify.exact')}</AjustesAccion>
+            <div className="pace-aj-nota">{t('settings.notify.exact.note')}</div>
+          </>
         )}
         <AjustesFila id="circle" nombre={t('settings.circle')} modulo="breathe"
                      sub={tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) })}>

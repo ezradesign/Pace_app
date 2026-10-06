@@ -5,6 +5,11 @@
  * colores de la paleta (el fondo del icono, del arranque y de las barras). Si
  * la web cambia y la copia no, la app sigue con lo viejo y nada falla. Aqui se
  * comparan: los PNG byte a byte y los colores contra `app/tokens.css`.
+ *
+ * El icono de los avisos (`smallIcon` de `capacitor.config.json`) no es copia:
+ * es la silueta de la vaca. Si falta en una densidad, Android pone una «i»
+ * generica y nada falla; aqui se mira que este en las cinco y que su color sea
+ * el oliva de Foco.
  */
 'use strict';
 
@@ -78,6 +83,27 @@ function chequeaAndroid(ctx) {
     distintos.forEach(function (d) { ctx.falla('android: ' + d); });
   } else {
     ctx.ok('android: los ' + COLORES.length + ' colores del icono, el arranque y las barras son los de app/tokens.css');
+  }
+  chequeaIconoAviso(ctx, css);
+}
+
+var DENSIDADES = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+
+function chequeaIconoAviso(ctx, css) {
+  var cfg = {};
+  try { cfg = JSON.parse((leer('capacitor.config.json') || '{}').toString()); } catch (e) {}
+  var ln = (cfg.plugins && cfg.plugins.LocalNotifications) || {};
+  var faltan = DENSIDADES.filter(function (d) {
+    return !ln.smallIcon || !leer(RES + 'drawable-' + d + '/' + ln.smallIcon + '.png');
+  });
+  var oliva = tokens(css, 'crema').focus;
+  if (faltan.length) {
+    ctx.falla('android: el icono de los avisos (smallIcon = ' + ln.smallIcon + ') falta en drawable-' + faltan.join(', drawable-') +
+              ' -- sin el, Android pinta una «i» generica');
+  } else if (!ln.iconColor || ln.iconColor.toUpperCase() !== oliva) {
+    ctx.falla('android: iconColor de los avisos = ' + ln.iconColor + ', y --focus de la paleta crema es ' + oliva);
+  } else {
+    ctx.ok('android: el icono de los avisos esta en las ' + DENSIDADES.length + ' densidades y va en el oliva de Foco');
   }
 }
 

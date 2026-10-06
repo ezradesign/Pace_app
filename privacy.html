@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Privacidad · PACE</title>
-<meta name="description" content="Privacidad de PACE: local-first, sin cuentas, sin analítica, sin rastreo.">
+<meta name="description" content="Privacidad de PACE en la web y en Android: local-first, sin cuentas, sin analítica, sin rastreo.">
 <!-- Página estática autocontenida (s101 · v0.46.0). Sin peticiones externas
      — esta página cumple lo que promete. Misma base visual que safety.html. -->
 <style>
@@ -64,8 +64,9 @@
 
     <p><strong>Tus datos viven en tu dispositivo.</strong> PACE es una
     aplicación local-first: todo lo que registras (minutos de foco,
-    sesiones, vasos de agua, logros, ajustes) se guarda en el almacenamiento
-    local de tu navegador y no sale de él.</p>
+    sesiones, vasos de agua, logros, ajustes) se guarda en tu dispositivo: en
+    el almacenamiento local de tu navegador o, si usas la app de Android, en
+    el de la app. No sale de ahí.</p>
 
     <h2>Lo que NO hacemos</h2>
     <ul>
@@ -73,8 +74,8 @@
       <li><strong>Sin analítica ni rastreo.</strong> No usamos cookies de
       seguimiento, píxeles ni herramientas de medición de terceros.</li>
       <li><strong>Tus datos no salen de tu dispositivo.</strong> Tu práctica se
-      guarda en tu navegador; PACE no la recibe ni la almacena en ningún
-      sitio.</li>
+      guarda en tu navegador o en tu móvil; PACE no la recibe ni la almacena
+      en ningún sitio.</li>
       <li><strong>Sin venta de datos.</strong> No hay datos que vender.</li>
     </ul>
 
@@ -82,9 +83,11 @@
     <ul>
       <li>Puedes <strong>exportar</strong> todo tu estado como archivo JSON
       desde Ajustes → Tus datos, e <strong>importarlo</strong> en otro
-      dispositivo.</li>
+      dispositivo. En Android la copia sale por el menú de compartir y tú
+      eliges dónde guardarla.</li>
       <li>Puedes <strong>borrarlo todo</strong> desde Ajustes (reset) o
-      limpiando los datos de sitio de tu navegador. El borrado es inmediato: lo
+      limpiando los datos de sitio de tu navegador; en Android, también
+      desinstalando la app o borrando sus datos. El borrado es inmediato: lo
       que borras desaparece de tu dispositivo, y PACE no conserva ninguna copia
       de tu práctica.</li>
     </ul>
@@ -106,13 +109,40 @@
       <li>PACE solo borra o cambia los eventos que creó él.</li>
     </ul>
 
+    <h2>La app de Android</h2>
+    <p>Es la misma PACE, con lo mismo guardado en tu móvil. Para hacer su
+    trabajo pide a Android estos permisos, y solo los usa para esto:</p>
+    <ul>
+      <li><strong>Notificaciones</strong>: el aviso de que ha terminado un
+      Foco mientras la app está en segundo plano. Se pide al activar el aviso
+      y puedes apagarlo en Ajustes.</li>
+      <li><strong>Alarmas y recordatorios</strong>: que ese aviso llegue a su
+      hora y no unos minutos tarde. Lo das tú desde Ajustes, si quieres.</li>
+      <li><strong>Calendario</strong>: solo si pulsas «Al calendario», como se
+      explica arriba.</li>
+      <li><strong>Mantener la pantalla encendida</strong> durante una sesión
+      guiada, y <strong>volver a programar el aviso</strong> si el móvil se
+      reinicia.</li>
+    </ul>
+    <ul>
+      <li>La app <strong>no lleva publicidad ni herramientas de analítica</strong>
+      de nadie, y no necesita conexión para funcionar. Los enlaces (esta página,
+      la de seguridad) se abren en tu navegador.</li>
+      <li>Si tienes activada la <strong>copia de seguridad de Android</strong>,
+      Android puede guardar los datos de PACE en tu cuenta de Google, cifrados,
+      para recuperarlos en un móvil nuevo. Esa copia la gestiona Google con tu
+      cuenta; PACE no la ve.</li>
+      <li>Google Play, desde donde la instalas, tiene su propia política de
+      privacidad.</li>
+    </ul>
+
     <h2>Lo técnico, con honestidad</h2>
     <ul>
-      <li>El sitio se sirve a través de <strong>Cloudflare Pages</strong>,
+      <li>La web se sirve a través de <strong>Cloudflare Pages</strong>,
       que como cualquier proveedor de hosting genera registros técnicos de
       acceso (IP, fecha) para operar y proteger el servicio. PACE no accede
       a ellos ni los usa para identificarte.</li>
-      <li>El botón de apoyo enlaza a <strong>Buy Me a Coffee</strong>, un
+      <li>En la web, el botón de apoyo enlaza a <strong>Buy Me a Coffee</strong>, un
       sitio externo con su propia política de privacidad. Donar no crea
       ninguna cuenta en PACE ni vincula tu identidad con tus datos locales.</li>
       <li>La app funciona <strong>offline</strong> una vez cargada (PWA):
@@ -132,8 +162,9 @@
 
     <p><strong>Your data lives on your device.</strong> PACE is a local-first
     app: everything you log (focus minutes, sessions, water glasses,
-    achievements, settings) is stored in your browser's local storage and
-    never leaves it.</p>
+    achievements, settings) is stored on your device: in your browser's local
+    storage or, if you use the Android app, in the app's own storage. It never
+    leaves it.</p>
 
     <h2>What we do NOT do</h2>
     <ul>
@@ -141,8 +172,8 @@
       <li><strong>No analytics or tracking.</strong> No tracking cookies,
       pixels or third-party measurement tools.</li>
       <li><strong>Your data stays on your device.</strong> Your practice is
-      stored in your browser; PACE never receives it or stores it
-      anywhere.</li>
+      stored in your browser or on your phone; PACE never receives it or
+      stores it anywhere.</li>
       <li><strong>No data selling.</strong> There is no data to sell.</li>
     </ul>
 
@@ -150,9 +181,11 @@
     <ul>
       <li>You can <strong>export</strong> your whole state as a JSON file
       from Settings → Your data, and <strong>import</strong> it on another
-      device.</li>
+      device. On Android the copy goes through the share menu and you choose
+      where to keep it.</li>
       <li>You can <strong>delete everything</strong> from Settings (reset) or
-      by clearing your browser's site data. Deletion is immediate: what you
+      by clearing your browser's site data; on Android, also by uninstalling
+      the app or clearing its data. Deletion is immediate: what you
       delete is gone from your device, and PACE keeps no copy of your
       practice.</li>
     </ul>
@@ -174,13 +207,39 @@
       <li>PACE only deletes or changes the events it created.</li>
     </ul>
 
+    <h2>The Android app</h2>
+    <p>It is the same PACE, with the same data kept on your phone. To do its
+    job it asks Android for these permissions, and uses them only for this:</p>
+    <ul>
+      <li><strong>Notifications</strong>: the alert that a Focus block has
+      ended while the app is in the background. It is asked for when you turn
+      the alert on, and you can turn it off in Settings.</li>
+      <li><strong>Alarms &amp; reminders</strong>: so that alert arrives on
+      time and not a few minutes late. You grant it from Settings, if you
+      want.</li>
+      <li><strong>Calendar</strong>: only if you tap «To my calendar», as
+      explained above.</li>
+      <li><strong>Keeping the screen on</strong> during a guided session, and
+      <strong>rescheduling the alert</strong> if the phone restarts.</li>
+    </ul>
+    <ul>
+      <li>The app carries <strong>no ads and no analytics tools</strong> from
+      anyone, and needs no connection to work. Links (this page, the safety
+      page) open in your browser.</li>
+      <li>If <strong>Android backup</strong> is on, Android may save PACE's
+      data to your Google account, encrypted, to restore it on a new phone.
+      Google manages that copy with your account; PACE never sees it.</li>
+      <li>Google Play, where you install it from, has its own privacy
+      policy.</li>
+    </ul>
+
     <h2>The technical part, honestly</h2>
     <ul>
-      <li>The site is served through <strong>Cloudflare Pages</strong>, which
+      <li>The website is served through <strong>Cloudflare Pages</strong>, which
       like any hosting provider generates technical access logs (IP, date) to
       operate and protect the service. PACE does not access them or use them
       to identify you.</li>
-      <li>The support button links to <strong>Buy Me a Coffee</strong>, an
+      <li>On the web, the support button links to <strong>Buy Me a Coffee</strong>, an
       external site with its own privacy policy. Donating creates no PACE
       account and never links your identity to your local data.</li>
       <li>The app works <strong>offline</strong> once loaded (PWA): it needs

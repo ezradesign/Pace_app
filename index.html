@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.141.0</title>
+  <title>PACE · Foco · Cuerpo — v0.142.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2974,6 +2974,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
   'settings.notify.sub.android': 'Foco · si la app está en segundo plano',
   'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
+  'settings.notify.exact': 'Que el aviso llegue a su hora',
+  'settings.notify.exact.note': 'Android puede retrasarlo unos minutos. Permite «Alarmas y recordatorios» para PACE.',
   'settings.circle': 'Círculo',
   'settings.circle.sub': 'Respira · {name}',
   'settings.circle.flor': 'Loto',
@@ -3055,6 +3057,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.notify.blocked': 'Notifications are blocked for this site in your browser.',
   'settings.notify.sub.android': 'Focus · if the app is in the background',
   'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
+  'settings.notify.exact': 'Get the alert on time',
+  'settings.notify.exact.note': 'Android may delay it by a few minutes. Allow “Alarms & reminders” for PACE.',
   'settings.circle': 'Circle',
   'settings.circle.sub': 'Breathe · {name}',
   'settings.circle.flor': 'Lotus',
@@ -5640,7 +5644,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.141.0';
+const PACE_VERSION = 'v0.142.0';
 
 
 
@@ -11935,6 +11939,13 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    app esta en el fondo: al volver se cancela, porque delante ya lo cuenta la
    propia app y sonarian los dos.
 
+   A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
+   recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
+   retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
+   pantalla de ajustes en cada `schedule()`, y aqui eso pasaria al salir de la
+   app con un Foco en marcha: por eso solo se pide exacta si ya esta concedido,
+   y el permiso se ofrece desde Ajustes, con un toque de la persona.
+
    LA COPIA DE «TUS DATOS» se escribe en la cache de la app y se abre el menu de
    compartir de Android, desde el que se guarda en Drive o en Archivos, o se
    manda por correo.
@@ -11956,7 +11967,7 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
 var PACE_WEB_PUBLICA = 'https://paceweb.pages.dev';
 var PACE_AVISO_FOCO_ID = 1;
 
-var _paceAndroid = { fondo: false, permiso: 'default', foco: null, programado: false, atras: 0 };
+var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: false, atras: 0 };
 
 function paceEsAndroid() {
   try {
@@ -12025,6 +12036,26 @@ function paceAndroidAvisoPedir() {
 }
 
 
+function paceAndroidAvisoExacto() {
+  return _paceAndroid.exacta;
+}
+
+function paceAndroidGuardarExacta(r) {
+  var e = r && r.exact_alarm;
+  if (e === 'granted' || e === 'denied') _paceAndroid.exacta = e;
+  return _paceAndroid.exacta;
+}
+
+function paceAndroidAvisoExactoMirar() {
+  return paceAndroidLlamar('LocalNotifications', 'checkExactNotificationSetting').then(paceAndroidGuardarExacta);
+}
+
+
+function paceAndroidAvisoExactoPedir() {
+  return paceAndroidLlamar('LocalNotifications', 'changeExactNotificationSetting').then(paceAndroidGuardarExacta);
+}
+
+
 
 function paceAndroidFoco(endsAt, textos) {
   _paceAndroid.foco = endsAt ?
@@ -12046,7 +12077,8 @@ function paceAndroidAvisoRecolocar() {
     paceAndroidLlamar('LocalNotifications', 'schedule', { notifications: [{
         id: PACE_AVISO_FOCO_ID, title: f.title, body: f.body,
 
-        schedule: { at: new Date(f.endsAt).toISOString(), allowWhileIdle: true }
+        schedule: { at: new Date(f.endsAt).toISOString(), allowWhileIdle: true },
+        isExactNotification: _paceAndroid.exacta === 'granted'
       }] });
     return;
   }
@@ -12133,7 +12165,7 @@ function paceEnlaceWeb(ruta) {
 
 
 function paceAndroidEstado() {
-  return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, programado: _paceAndroid.programado,
+  return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, exacta: _paceAndroid.exacta, programado: _paceAndroid.programado,
     foco: _paceAndroid.foco ? _paceAndroid.foco.endsAt : null, atras: _paceAndroid.atras };
 }
 
@@ -12148,20 +12180,26 @@ function paceAndroidArrancar() {
   }
 
   try {
-    document.addEventListener('visibilitychange', function () {paceAndroidFondo(document.visibilityState === 'hidden');});
+    document.addEventListener('visibilitychange', function () {
+      var oculta = document.visibilityState === 'hidden';
+
+      if (!oculta) paceAndroidAvisoExactoMirar();
+      paceAndroidFondo(oculta);
+    });
   } catch (e) {}
   paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
+  paceAndroidAvisoExactoMirar();
 }
 
 try {paceAndroidArrancar();} catch (e) {}
 
 Object.assign(window, {
   paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
-  paceAndroidAvisoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
+  paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
   paceAndroidCalendarioCrear, paceAndroidCalendarioBorrar
 });
-;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioCrear, paceAndroidCalendarioBorrar, paceEnlaceWeb, paceAndroidEstado, paceAndroidArrancar });
+;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioCrear, paceAndroidCalendarioBorrar, paceEnlaceWeb, paceAndroidEstado, paceAndroidArrancar });
 })();
 </script>
   <!-- pantalla (s198): Screen Wake Lock mientras hay una sesion guiada montada.
@@ -30329,7 +30367,7 @@ Object.assign(window, { TweaksAudioBlock });
 
 
 
-const { useEffect: useEffectTW } = React;
+const { useEffect: useEffectTW, useState: useStateTW } = React;
 
 
 
@@ -30349,6 +30387,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const avisoAndroid = typeof paceAndroidAvisos === 'function' && paceAndroidAvisos();
   const canNotify = avisoAndroid || isWeb && typeof Notification !== 'undefined';
   const permisoAviso = () => avisoAndroid ? paceAndroidAvisoPermiso() : Notification.permission;
+
+
+  const [exacta, setExacta] = useStateTW(() => avisoAndroid ? paceAndroidAvisoExacto() : 'granted');
+  useEffectTW(() => {
+    if (open && avisoAndroid) paceAndroidAvisoExactoMirar().then(setExacta);
+  }, [open, avisoAndroid]);
+  const pedirExacta = () => {paceAndroidAvisoExactoPedir().then(setExacta);};
 
 
 
@@ -30495,6 +30540,12 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
     canNotify && permisoAviso() === 'denied' &&
     React.createElement("div", { className: "pace-aj-nota" }, t(avisoAndroid ? 'settings.notify.blocked.android' : 'settings.notify.blocked')),
+
+    avisoAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' &&
+    React.createElement(React.Fragment, null,
+    React.createElement(AjustesAccion, { suave: true, onClick: pedirExacta, derecha: "\u203A" }, t('settings.notify.exact')),
+    React.createElement("div", { className: "pace-aj-nota" }, t('settings.notify.exact.note'))
+    ),
 
     React.createElement(AjustesFila, { id: "circle", nombre: t('settings.circle'), modulo: "breathe",
       sub: tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) }) },
