@@ -141,7 +141,13 @@ test('«Borrar todos mis datos» de Ajustes borra los DOS almacenes', async ({ p
 
   page.on('dialog', d => d.accept());
   await page.locator('button[aria-label="Abrir ajustes"]').click();
-  await page.getByRole('button', { name: 'Borrar todos mis datos', exact: true }).click();
+  /* El reset recarga la pagina al acabar de borrar. Sin esperar a esa carga, la
+     espera de abajo podia darse por buena en la pagina vieja, ya borrada, y la
+     recarga se llevaba por delante el `evaluate` siguiente. */
+  await Promise.all([
+    page.waitForEvent('load'),
+    page.getByRole('button', { name: 'Borrar todos mis datos', exact: true }).click(),
+  ]);
 
   await page.waitForFunction(async previo => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
