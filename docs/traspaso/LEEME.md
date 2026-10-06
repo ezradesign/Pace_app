@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de octubre de 2026, v0.142.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de octubre de 2026, 18:20 UTC, v0.142.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -14,6 +14,38 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de o
    (glifos, música, maquetas en imagen) y `docs/launch/google-play/` (ficha de Play).
 4. Las maquetas publicadas como artifacts (enlaces abajo) pertenecen a la cuenta anterior y puede que
    no se abran desde otra. Lo decidido en ellas está escrito aquí, así que no hace falta abrirlas.
+
+## Dónde lo dejamos (6 oct, 18:20 UTC)
+
+Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coincidan. Los hilos de la
+cuenta anterior se pararon, pero alguno puede subir algo cuando se le renueve el uso (23:00 UTC):
+haz `git pull` antes de trabajar.
+
+- **Home del móvil:** Ez eligió la opción 2. Se estaban maquetando versiones mejor colocadas; no hay
+  nada subido. Ez elige entre ellas.
+- **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
+  para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
+  aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
+  exhalar). Ez estaba eligiendo en una página de escucha. Siguiente paso: el cambio de código,
+  enseñado a Ez antes de subirlo. Los archivos estarán en `archivos/musica-respira/` si el hilo de la
+  música llegó a subirlos.
+- **Glifos:** cuatro prompts de ejercicio con figuras sin ropa, de la familia de los 59. El prompt A es
+  solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
+  bloquea. Falta comprobar qué modelo de Genspark acepta la figura. Empezar por «descanso». Prompts en
+  `archivos/glifos/prompts-glifos.md` y referencias en `archivos/glifos/referencias/`.
+- **Dominio:** Ez está eligiendo. `pacegrass.app` está libre (8 $ el primer año, 14 $ después; pegas
+  pequeñas: la doble s y el sentido de «grass» en jerga). El hilo del calendario recomienda
+  `pacegarden.com`. Un solo dominio para todo: la landing después y la app en `/app`.
+- **«A tu ritmo» semanal (lo de pago), segunda ronda:** «¿Cómo es tu semana?» en la bienvenida
+  (gratis); cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis); una
+  carta corta el lunes con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
+  «Vale» (premium); nada de tira semanal en la home. La maqueta estará en `archivos/semana/` si el
+  hilo de la maqueta llegó a subirla. Nada de código hasta que Ez elija.
+- **Android:** v0.142.0 en `main` (privacidad, icono de avisos, AAB firmado listo a falta de la llave
+  de Ez). El resultado del CI y del APK no se llegó a confirmar: míralo en GitHub Actions.
+- **Caza de bugs:** si existe la v0.142.1, sus arreglos están subidos; si no, siguen pendientes.
+- **Google Play:** la ficha está en `docs/launch/google-play/`. Espera a la revisión de identidad de
+  Google, al AAB firmado y a unos 15 testers.
 
 ## Qué es PACE
 
