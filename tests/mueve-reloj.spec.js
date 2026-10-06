@@ -13,6 +13,11 @@
  *     pasar a `hidden` la sesion se pausa, y al volver SIGUE en pausa con su
  *     «Reanudar». Lo de fuera no cuenta.
  *
+ * (c) Estira va por los MISMOS dos runners (`MoveSession` con kind 'extra'), asi
+ *     que se pausa igual: Ez lo eligio el 6 oct. 2026 («al volver sigues donde
+ *     lo dejaste»). Se mira con una rutina del runner v1 y otra del legacy, para
+ *     que un runner propio de Estira no pueda olvidarse la politica.
+ *
  * TRAMPAS: `clock.install()` va ANTES de `goto` · los nombres de boton llevan
  * glifos delante («❚❚ Pausar»), asi que se buscan por regex y dentro de la sesion.
  */
@@ -95,3 +100,51 @@ test('al ocultar la pagina la sesion se pausa, y al volver sigue en pausa', asyn
   expect(await rep(sesion)).toBe(antes + 1);
   expect(errores).toEqual([]);
 });
+
+/* Abre una rutina de Estira por su id (los de Estira empiezan por `move.`) y
+   espera a que su reloj corra: «Pausar» solo sale con el reloj en marcha. Una
+   colocacion sin cuenta atras espera a «Estoy listo», y se pulsa. */
+async function estiraEnMarcha(page, id) {
+  await page.clock.install();
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /^Estira/ }).click();
+  await page.locator(`[data-pace-lib-card="${id}"]`).getByRole('button').first().click();
+  await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
+  const sesion = page.locator('[data-pace-session-root]');
+  await expect(sesion).toHaveCount(1);
+  let enMarcha = false;
+  for (let s = 0; s < 40 && !enMarcha; s++) {
+    enMarcha = await sesion.getByRole('button', { name: /Pausar/ }).count() > 0;
+    const listo = sesion.getByRole('button', { name: 'Estoy listo' });
+    if (!enMarcha && await listo.count() > 0) await listo.click();
+    if (!enMarcha) await segundos(page, 1);
+  }
+  expect(enMarcha, 'GUARD: el reloj de la rutina nunca arranco').toBe(true);
+  await segundos(page, 2);
+  return sesion;
+}
+
+for (const [runner, id] of [['v1', 'move.shoulders.5'], ['legacy', 'move.desk.quick']]) {
+  test(`Estira tambien se pausa al ocultar la pagina (runner ${runner})`, async ({ page }) => {
+    const errores = capturarErrores(page);
+    const sesion = await estiraEnMarcha(page, id);
+    const reloj = sesion.locator('[data-pace-move-timer]');
+    const antes = await reloj.innerText();
+
+    await visibilidad(page, 'hidden');
+    await page.waitForTimeout(50);
+    await expect(sesion.getByRole('button', { name: /Reanudar/ }), 'ocultar la pagina no pauso Estira').toHaveCount(1);
+    await segundos(page, 20);
+    await visibilidad(page, 'visible');
+    await page.waitForTimeout(50);
+    await segundos(page, 3);
+    await expect(sesion.getByRole('button', { name: /Reanudar/ }), 'al volver Estira se reanudo sola').toHaveCount(1);
+    expect(await reloj.innerText(), 'el tiempo fuera de la pantalla conto en Estira').toBe(antes);
+
+    await sesion.getByRole('button', { name: /Reanudar/ }).click();
+    await page.waitForTimeout(50);
+    await segundos(page, 2);
+    expect(Number(await reloj.innerText()), 'al reanudar sigue desde donde estaba').toBe(Number(antes) - 2);
+    expect(errores).toEqual([]);
+  });
+}
