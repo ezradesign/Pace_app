@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.140.0</title>
+  <title>PACE · Foco · Cuerpo — v0.141.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3236,6 +3236,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.nocomes': 'no comes',
   'ritmo.aria.comes': 'Comer hoy',
   'ritmo.tarjeta.ajustar': 'Ajustar el horario',
+  'ritmo.tarjeta.horas': 'Tú eliges las horas',
+  'ritmo.tarjeta.comienza': 'Comienza',
   'ritmo.frase.menu': 'de {inicio} a {salida} · comida a las {comida} durante {dur}',
   'ritmo.frase.menu.sin': 'de {inicio} a {salida}',
   'ritmo.frase.movil': 'De {inicio} a {salida} · comida {comida} · {dur}',
@@ -3325,6 +3327,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.nocomes': 'skip lunch',
   'ritmo.aria.comes': 'Lunch today',
   'ritmo.tarjeta.ajustar': 'Adjust the schedule',
+  'ritmo.tarjeta.horas': 'You choose the hours',
+  'ritmo.tarjeta.comienza': 'Start',
   'ritmo.frase.menu': 'from {inicio} to {salida} · lunch at {comida} for {dur}',
   'ritmo.frase.menu.sin': 'from {inicio} to {salida}',
   'ritmo.frase.movil': 'From {inicio} to {salida} · lunch {comida} · {dur}',
@@ -5636,7 +5640,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.140.0';
+const PACE_VERSION = 'v0.141.0';
 
 
 
@@ -5711,6 +5715,7 @@ const defaultState = {
 
 
   langAuto: false,
+
 
 
 
@@ -7114,6 +7119,15 @@ function resolveAnyRoutine(routineId) {
 
 
 
+
+const PREMIUM_ABIERTO_HASTA_V1 = true;
+
+
+
+
+
+
+
 function canAccessRoutine(routineId, opts) {
   const tasting = !!(opts && opts.tasting);
   const routine = resolveAnyRoutine(routineId);
@@ -7121,7 +7135,7 @@ function canAccessRoutine(routineId, opts) {
   if (routine.access !== 'premium') return true;
   const s = getState && getState();
   const unlocked = !!(s && s.premiumUnlocked);
-  return unlocked || tasting;
+  return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
 
@@ -7150,7 +7164,7 @@ function hasPremiumEntitlement() {
   return !!(s && s.premiumUnlocked);
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement });
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, PREMIUM_ABIERTO_HASTA_V1 });
 ;Object.assign(window, { resolveAnyRoutine, canAccessRoutine, canAccessPath, hasPremiumEntitlement });
 })();
 </script>
@@ -34080,7 +34094,6 @@ Object.assign(window, { Onboarding });
 .pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
 .pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
 @media ${PACE_CORTE_MOVIL} {
-  .pace-rt-tarjeta { padding: 14px 14px 12px; }
   .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
   .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }
   .pace-rt-tarjeta-t { font-size: 20px; }
@@ -34089,6 +34102,49 @@ Object.assign(window, { Onboarding });
   .pace-rt-loseta b { font-size: 16px; }
 }
 @container (max-width: 620px) { .pace-rt-losetas { grid-template-columns: 1fr 1fr; } }
+
+/* LA TARJETA POR LIBRE DEL MÓVIL: otra tarjeta dentro de la misma cáscara, calcada
+   de la maqueta que eligió Ez (163 px a 360×718, sin scroll). Solo el corte de
+   móvil la enseña; en escritorio sigue la de las losetas. La píldora es de papel
+   (--paper-2) con un filo verde suave y la letra del foco: invita sin competir con
+   «Empezar foco», que es la única acción rellena de la pantalla. */
+.pace-rt-tj-esc { display: block; }
+.pace-rt-tj-mov { display: none; }
+.pace-rt-tm-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pace-rt-tm-ceja { font-size: 10px; line-height: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--focus); }
+.pace-rt-tm-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 26px; color: var(--ink); margin-top: 5px; }
+.pace-rt-esquema { display: flex; align-items: center; height: 14px; margin-top: 14px; }
+.pace-rt-esq-seg { flex: 4 1 0; height: 3px; border-radius: 2px; background: var(--paper-3); }
+.pace-rt-esq-comida { flex: 8 1 0; height: 0; border-top: 2px dashed var(--line); }
+.pace-rt-esq-punto { flex: 0 0 auto; box-sizing: content-box; width: 10px; height: 10px; margin: 0 3px; border-radius: 50%; border: 2px solid var(--c); background: var(--paper); }
+.pace-rt-esq-punto.pace-rt-larga { width: 18px; border-radius: 7px; }
+.pace-rt-esq-punto:last-child { margin-right: 0; }
+.pace-rt-tm-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 44px; margin-top: 14px; }
+.pace-rt-tm-nota { font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.25; color: var(--ink-2); min-width: 0; }
+.pace-rt-tm-comienza { flex-shrink: 0; display: inline-flex; align-items: center; height: 44px; }
+.pace-rt-tm-pildora { display: inline-flex; align-items: center; gap: 10px; height: 34px; box-sizing: border-box; padding: 0 16px 0 18px;
+  border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid color-mix(in srgb, var(--focus) 35%, transparent);
+  font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 18px; line-height: 1; color: var(--focus);
+  transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease); }
+.pace-rt-tm-comienza:hover .pace-rt-tm-pildora { background: color-mix(in srgb, var(--focus) 10%, var(--paper-2)); border-color: color-mix(in srgb, var(--focus) 55%, transparent); }
+.pace-rt-tm-comienza:focus-visible { outline: none; }
+.pace-rt-tm-comienza:focus-visible .pace-rt-tm-pildora { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+@media ${PACE_CORTE_MOVIL} {
+  .pace-rt-tj-esc { display: none; }
+  .pace-rt-tj-mov { display: block; padding: 4px 2px; }
+  .pace-rt-tarjeta { padding: 12px 14px; }
+}
+/* Por debajo de 640 px la cáscara lleva padding 10/12 con !important (lo pone
+   SuggestedPathCard.jsx para todas las tarjetas de ese sitio); los 4/2 de arriba
+   la llevan a los 14 de la maqueta. En un móvil bajo (375×667) el aro ya está en
+   su suelo y lo que sobra es la tarjeta: se aprieta 22 px para que la home no
+   pida scroll. Solo toca piezas de la tarjeta de móvil, nunca la cáscara. */
+@media (max-height: 700px) {
+  .pace-rt-tj-mov { padding: 0; }
+  .pace-rt-tm-t { margin-top: 3px; }
+  .pace-rt-esquema { margin-top: 8px; }
+  .pace-rt-tm-pie { margin-top: 8px; }
+}
 
 /* EL MINI INTERRUPTOR DE LA COMIDA (s195b, 6C): 22×12 en tinta, pegado a la palabra. */
 .pace-rt-comes { white-space: nowrap; }
@@ -35090,14 +35146,46 @@ Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioH
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+var RITMO_ESQUEMA = ['estira', 'mueve', ['respira', 'estira'], 'comida', 'estira', 'mueve', ['respira', 'estira'], 'estira', 'respira'];
+
+function RitmoEsquema() {
+  return (
+    React.createElement("div", { className: "pace-rt-esquema", "aria-hidden": "true", "data-pace-ritmo-esquema": true },
+    RITMO_ESQUEMA.map((paso, k) => {
+      if (paso === 'comida') return React.createElement("span", { key: k, className: "pace-rt-esq-comida" });
+      const larga = Array.isArray(paso);
+      return (
+        React.createElement(React.Fragment, { key: k },
+        React.createElement("span", { className: "pace-rt-esq-seg" }),
+        React.createElement("span", { className: 'pace-rt-esq-punto' + (larga ? ' pace-rt-larga' : ''), style: { '--c': RITMO_COLOR[larga ? paso[0] : paso] } })
+        ));
+
+    })
+    ));
+
+}
+
 function RitmoTarjeta() {
   const [state] = usePace();
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
   const abrirCaminos = () => window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
+  const conCaminos = window.SHOW_CAMINOS !== false;
   return (
     React.createElement("div", { "data-pace-spc": true, style: { padding: '0 40px 12px', flexShrink: 0 } },
     React.createElement("div", { "data-pace-spc-card": true, "data-pace-ritmo-tarjeta": true, className: "pace-rt-tarjeta" },
+    React.createElement("div", { className: "pace-rt-tj-esc" },
 
 
     React.createElement("div", { className: "pace-rt-tarjeta-cab" },
@@ -35107,7 +35195,7 @@ function RitmoTarjeta() {
     ),
     React.createElement("div", { className: "pace-rt-tarjeta-enlaces" },
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoVolver }, t('ritmo.tarjeta.ajustar')),
-    window.SHOW_CAMINOS !== false &&
+    conCaminos &&
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
 
     )
@@ -35125,13 +35213,36 @@ function RitmoTarjeta() {
 
     })
     )
+    ),
+    React.createElement("div", { className: "pace-rt-tj-mov", "data-pace-ritmo-tarjeta-movil": true },
+    React.createElement("div", { className: "pace-rt-tm-cab" },
+    React.createElement("span", { className: "pace-rt-tm-ceja" }, t('ritmo.nombre')),
+    conCaminos &&
+    React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
+
+    ),
+    React.createElement("div", { className: "pace-rt-tm-t" }, t('ritmo.pregunta')),
+    React.createElement(RitmoEsquema, null),
+    React.createElement("div", { className: "pace-rt-tm-pie" },
+    React.createElement("span", { className: "pace-rt-tm-nota" }, t('ritmo.tarjeta.horas')),
+
+    React.createElement("button", { type: "button", className: "pace-rt-tm-comienza", "data-pace-ritmo-comienza": true, onClick: ritmoVolver },
+    React.createElement("span", { className: "pace-rt-tm-pildora" },
+    t('ritmo.tarjeta.comienza'),
+    React.createElement("svg", { width: "16", height: "10", viewBox: "0 0 16 10", fill: "none", stroke: "currentColor", strokeWidth: "1.2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
+    React.createElement("path", { d: "M1 5h13" }), React.createElement("path", { d: "M10.5 1.5L14 5l-3.5 3.5" })
+    )
+    )
+    )
+    )
+    )
     )
     ));
 
 }
 
-Object.assign(window, { RitmoTarjeta });
-;Object.assign(window, { RitmoTarjeta });
+Object.assign(window, { RitmoTarjeta, RitmoEsquema, RITMO_ESQUEMA });
+;Object.assign(window, { RITMO_ESQUEMA, RitmoEsquema, RitmoTarjeta });
 })();
 </script>
   <script>
