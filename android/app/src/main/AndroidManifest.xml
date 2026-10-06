@@ -38,4 +38,9 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- «A tu ritmo» lleva el dia al calendario del movil y lee las reuniones para
+         esquivarlas (complemento CapacitorCalendar). Se piden al pulsar «Al
+         calendario», nunca al arrancar. -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 </manifest>

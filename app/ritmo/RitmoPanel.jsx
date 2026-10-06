@@ -47,6 +47,7 @@ function RitmoSobre({ m }) {
     <div className="pace-rt-sobre" data-pace-ritmo-resumen>
       <span className="pace-rt-meta">{ritmoResumen(m, tn)}</span>
       <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
+      <RitmoAlCalendario />
     </div>
   );
 }
@@ -210,6 +211,9 @@ function RitmoFilaParada({ it, rotulo }) {
   if (it.tipo === 'comida') {
     return <RitmoFila rotulo={cab} modulo="comida" nombre={t('ritmo.comida')} meta={tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })} />;
   }
+  if (it.tipo === 'ocupado') {
+    return <RitmoFila rotulo={cab} modulo="ocupado" nombre={t('ritmo.ocupado')} meta={ritmoDuracion(it.dur)} />;
+  }
   if (!it.platos || !it.platos.length) return null;
   return <RitmoFila rotulo={cab} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
     meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn)} agua={it.agua} />}
@@ -244,7 +248,10 @@ function RitmoMovil({ state, plan, onVer }) {
       <RitmoMini plan={plan} />
       {filas}
       <div className="pace-rt-pie">
-        <button className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-ver onClick={onVer}>{t('ritmo.ver')}</button>
+        <span className="pace-rt-der">
+          <button className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-ver onClick={onVer}>{t('ritmo.ver')}</button>
+          <RitmoAlCalendario />
+        </span>
         <RitmoLibre />
       </div>
     </div>

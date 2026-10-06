@@ -15,12 +15,15 @@ function RitmoLista({ plan }) {
       {m.items.map((it, i) => {
         const pasado = i < iActual;
         const h = <div className="pace-rt-h">{ritmoHora(it.desde)}</div>;
-        if (it.tipo === 'foco' || it.tipo === 'libre') {
+        if (it.tipo === 'foco' || it.tipo === 'libre' || it.tipo === 'ocupado') {
           return (
-            <div key={i} className={'pace-rt-li pace-rt-tramo' + (it.tipo === 'libre' ? ' pace-rt-hueco' : '') + (pasado ? ' pace-rt-pasado' : '')}>
+            <div key={i} className={'pace-rt-li pace-rt-tramo' + (it.tipo === 'libre' ? ' pace-rt-hueco' : '') + (it.tipo === 'ocupado' ? ' pace-rt-hueco pace-rt-ocupado-li' : '') + (pasado ? ' pace-rt-pasado' : '')}
+              data-pace-ritmo-fila={it.tipo === 'ocupado' ? 'ocupado' : undefined}>
               {h}<div className="pace-rt-eje" />
               <div className="pace-rt-txt">
-                {it.tipo === 'libre' ? tn('ritmo.hueco', { n: it.dur }) : tn('ritmo.foco', { n: it.dur })}
+                {it.tipo === 'libre' ? tn('ritmo.hueco', { n: it.dur })
+                  : it.tipo === 'ocupado' ? t('ritmo.ocupado') + ' · ' + ritmoDuracion(it.dur)
+                  : tn('ritmo.foco', { n: it.dur })}
                 {i === iActual ? <React.Fragment>{' · '}<b style={{ color: 'var(--focus)', fontWeight: 500 }}>{t('ritmo.ahora.min')}</b></React.Fragment> : null}
               </div>
               <span />

@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.139.1 · 6 de octubre de 2026.
+**Versión:** v0.140.0 · 6 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -20,6 +20,10 @@ El icono, la pantalla de arranque y las barras del sistema son de PACE: la vaca 
 crema, y en modo oscuro el arranque y las barras pasan a la paleta oscura (`verify` vigila que las
 copias de Android sigan siendo las de la web). En Android no hay «Da de pastar a la vaca»: Google
 Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del catálogo.
+
+«Al calendario», junto a «Cambiar», lleva el día de «A tu ritmo» al calendario: el del móvil en
+Android, Google Calendar u Outlook en la web y un .ics en los dos. Con «Tener en cuenta mis
+reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como esquiva la comida.
 
 Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
@@ -41,6 +45,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 ## Espera a Ez
 
+- Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
+  (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
+  verificación antes de abrirlo a más de 100 personas.
 - Darse de alta en Play Console (cuenta personal) y reunir 12 testers con Android.
 - Confirmar el identificador de la app, `com.ezradesign.pace`, antes de la primera subida a Play:
   después ya no se puede cambiar.
