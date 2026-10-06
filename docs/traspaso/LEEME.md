@@ -27,8 +27,8 @@ haz `git pull` antes de trabajar.
   para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
   aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
   exhalar). Ez estaba eligiendo en una página de escucha. Siguiente paso: el cambio de código,
-  enseñado a Ez antes de subirlo. Los archivos estarán en `archivos/musica-respira/` si el hilo de la
-  música llegó a subirlos.
+  enseñado a Ez antes de subirlo. Los tres drones están en `archivos/musica-respira/bases/`, con la
+  página de escucha (`escucha-respira.html`), los scripts de procesado y su `README.md`.
 - **Glifos:** cuatro prompts de ejercicio con figuras sin ropa, de la familia de los 59. El prompt A es
   solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
   bloquea. Falta comprobar qué modelo de Genspark acepta la figura. Empezar por «descanso». Prompts en
