@@ -123,11 +123,15 @@ function libraryOrdenar(rutinas) {
    suspension pasiva y la activa: son dos dibujos distintos y en la sesion cada
    paso conserva el suyo, pero a 20 px se leen igual, y la tira repetia en
    pequeño el dibujo grande. Ez lo vio en su movil: «al ser el mismo, ¿esto
-   realmente aporta algo?». Las otras rutinas con dos dibujos (Empuje ·
-   progresion y Gluteos invisibles) enseñan dos ejercicios distintos y no
-   cambian. La clave es la identidad visual; el valor, el gesto que la absorbe. */
+   realmente aporta algo?». Igual en «Gluteos invisibles»: el apreton de
+   gluteos y la elevacion de talones que la cierra son dos figuras de pie y de
+   perfil que en pequeño no se distinguen, y Ez la leyo como un ejercicio
+   repetido. «Empuje · progresion», la otra rutina con dos dibujos, enseña dos
+   ejercicios que se distinguen y no cambia. La clave es la identidad visual; el
+   valor, el dibujo que la absorbe en la tira. */
 var LIBRARY_MISMO_GESTO = {
   'Suspensión activa': 'Suspensión pasiva',
+  'Elevación de talones': 'Apretar glúteos',
 };
 
 function libraryGlifos(rutina) {
