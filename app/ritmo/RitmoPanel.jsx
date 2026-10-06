@@ -242,16 +242,18 @@ function RitmoMovil({ state, plan, onVer }) {
           <div className="pace-rt-titulo">{t('ritmo.opcion.' + plan.m.opcion)}</div>
           <div className="pace-rt-sub pace-rt-frase"><RitmoFraseMenu plan={plan} horario={R.horario} plantilla="ritmo.frase.movil" /></div>
         </div>
-        <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
+        {/* «Al calendario» bajo «Cambiar» y no en el pie: con «Hoy voy por libre» en inglés
+            («I'll go freestyle today») el pie no cabía a 360 px. */}
+        <div className="pace-rt-cab-der">
+          <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
+          <RitmoAlCalendario />
+        </div>
       </div>
       <RitmoComo plan={plan} />
       <RitmoMini plan={plan} />
       {filas}
       <div className="pace-rt-pie">
-        <span className="pace-rt-der">
-          <button className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-ver onClick={onVer}>{t('ritmo.ver')}</button>
-          <RitmoAlCalendario />
-        </span>
+        <button className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-ver onClick={onVer}>{t('ritmo.ver')}</button>
         <RitmoLibre />
       </div>
     </div>
