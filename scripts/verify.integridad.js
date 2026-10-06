@@ -34,6 +34,7 @@ var path = require('path');
 var eventos = require('./verify.eventos.js');   // tanda de pace.events.v1 (s155)
 var encargo = require('./verify.encargo.js');   // el encargo de arte dice la verdad (s169)
 var mascaras = require('./verify.mascaras.js'); // mapa/disco/precache del arte de ejercicio (s173)
+var android = require('./verify.android.js');   // las copias de la web en los recursos de Android
 
 /* --------------------------------------------------------------------------
    CENSO. Cada numero esta MEDIDO del arbol, no estimado, y tiene su sesion.
@@ -451,6 +452,7 @@ function tandaIntegridad(ctx, declarados) {
   chequeaContenido(ctx);
   eventos.chequeaEventos(ctx, declarados, listaCorta);
   encargo.chequeaEncargo(ctx, logros, listaCorta);
+  android.chequeaAndroid(ctx);
 }
 
 /* Lo que ESTA tanda sigue sin cubrir. Se suma al bloque que verify.js imprime
@@ -476,4 +478,5 @@ var NO_CUBRE = [
 module.exports = { tandaIntegridad: tandaIntegridad,
                    NO_CUBRE: NO_CUBRE.concat(eventos.NO_CUBRE_EVENTOS)
                                      .concat(encargo.NO_CUBRE_ENCARGO)
-                                     .concat(mascaras.NO_CUBRE_MASCARAS), CENSO: CENSO };
+                                     .concat(mascaras.NO_CUBRE_MASCARAS)
+                                     .concat(android.NO_CUBRE_ANDROID), CENSO: CENSO };

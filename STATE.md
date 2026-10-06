@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.137.0 · 5 de octubre de 2026.
+**Versión:** v0.138.0 · 6 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -16,14 +16,17 @@ lo programa Android mientras la app está en el fondo, las sesiones guiadas mant
 encendida y la copia de «Tus datos» sale por el menú de compartir. Los APK de prueba se firman con
 una clave fija del repo, así que uno nuevo se instala encima del anterior sin perder los datos.
 
+El icono, la pantalla de arranque y las barras del sistema son de PACE: la vaca de `icons/` sobre el
+crema, y en modo oscuro el arranque y las barras pasan a la paleta oscura (`verify` vigila que las
+copias de Android sigan siendo las de la web). En Android no hay «Da de pastar a la vaca»: Google
+Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del catálogo.
+
 ## Lo siguiente
 
-1. **Fase 2:** probar el APK en un móvil: lo de arriba, importar una copia y que lo guardado
-   sobreviva a una actualización. Faltan los iconos y la pantalla de arranque de PACE (hoy son los
-   de Capacitor) y la barra de estado, con maqueta antes; que `privacy.html` hable también de la app;
-   quitar en Android el enlace a Buy Me a Coffee (Google Play no deja pagar fuera de su sistema), y
-   el AAB firmado. En Android 14 o más el aviso puede llegar con retraso: Android no deja alarmas
-   exactas sin un permiso que da el usuario.
+1. **Fase 2:** probar el APK en un móvil: lo de arriba, el icono y el arranque de día y en modo
+   oscuro, importar una copia y que lo guardado sobreviva a una actualización. Faltan que
+   `privacy.html` hable también de la app y el AAB firmado. En Android 14 o más el aviso puede llegar
+   con retraso: Android no deja alarmas exactas sin un permiso que da el usuario.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 

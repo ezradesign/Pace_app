@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- El arranque en Android 7, que no entiende márgenes en porcentaje. Aquí el
+     hueco mide siempre 288 dp, así que van en dp: 169 de vaca, centrada por su
+     trazo como en drawable-v26/pace_arranque.xml. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="169dp"
+        android:height="169dp"
+        android:gravity="center"
+        android:left="10.2dp"
+        android:bottom="1.7dp">
+        <bitmap
+            android:src="@drawable/pace_logo"
+            android:mipMap="true" />
+    </item>
+</layer-list>

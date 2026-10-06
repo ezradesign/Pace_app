@@ -27,6 +27,7 @@
      - SupportButton       → pill para usar en el sidebar
      - SupportModal        → host del modal (montar 1 vez en main.jsx)
      - supportCopy(v)      → devuelve { label, title } según variante
+     - paceApoyoVisible()  → false en la app de Android, que no lleva apoyo
 */
 
 const { useEffect: useEffectSUP, useState: useStateSUP } = React;
@@ -60,6 +61,14 @@ function supportCopy() {
   return SUPPORT_COPY_DEFAULT;
 }
 
+/* En la app de Android no hay apoyo: Google Play no deja que una app lleve a
+   pagar fuera de su sistema de cobro, y Buy Me a Coffee es eso. Ni la pill, ni
+   el modal, ni el aviso de los 7 dias; en la web todo sigue igual. Es la unica
+   pregunta, y la hacen tambien el pie de la sidebar y el modal. */
+function paceApoyoVisible() {
+  return !(typeof paceEsAndroid === 'function' && paceEsAndroid());
+}
+
 function SupportIcon({ size = 13 }) {
   return <CowIcon size={size} />;
 }
@@ -74,6 +83,7 @@ function SupportIcon({ size = 13 }) {
 function SupportButton({ onOpen }) {
   const { t } = useT();
   const [hover, setHover] = useStateSUP(false);
+  if (!paceApoyoVisible()) return null;
 
   return (
     <button
@@ -164,12 +174,12 @@ function SupportModal({ open, onClose }) {
 
   // Al abrir por primera vez, marcar supportSeenAt (inhibe auto-trigger futuros).
   useEffectSUP(() => {
-    if (open && !state.supportSeenAt) {
+    if (open && !state.supportSeenAt && paceApoyoVisible()) {
       set({ supportSeenAt: Date.now() });
     }
   }, [open]);
 
-  if (!open) return null;
+  if (!open || !paceApoyoVisible()) return null;
 
   const goToBMC = () => {
     window.open(BMC_URL, '_blank', 'noopener,noreferrer');
@@ -344,7 +354,7 @@ function useSupportAutoTrigger(setOpen) {
   const [state] = usePace();
   useEffectSUP(() => {
     // Condición: racha >= 7 + no visto nunca.
-    if (state.streak?.current >= 7 && !state.supportSeenAt) {
+    if (state.streak?.current >= 7 && !state.supportSeenAt && paceApoyoVisible()) {
       // Pequeña demora tras el mount para no competir con toasts de logros.
       const t = setTimeout(() => setOpen(true), 1200);
       return () => clearTimeout(t);
@@ -432,5 +442,5 @@ const supportStyles = {
 
 Object.assign(window, {
   SupportButton, SupportModal, useSupportAutoTrigger,
-  supportCopy, BMC_URL, BMC_USERNAME,
+  supportCopy, paceApoyoVisible, BMC_URL, BMC_USERNAME,
 });

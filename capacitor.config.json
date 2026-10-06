@@ -1,5 +1,8 @@
 {
   "appId": "com.ezradesign.pace",
   "appName": "PACE",
-  "webDir": "www"
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#00000000"
+  }
 }

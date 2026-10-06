@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La vaca de la pantalla de arranque. Android la pinta en un hueco de 288 dp y
+     enseña el círculo de 192 dp del centro; con los márgenes del icono la vaca
+     entera cabe en él. La de drawable-night-v26/ es la del modo oscuro, en
+     crema, y la de drawable/ es la de Android 7. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="22.38%"
+    android:insetTop="20.31%"
+    android:insetRight="18.82%"
+    android:insetBottom="20.89%">
+    <bitmap
+        android:src="@drawable/pace_logo"
+        android:mipMap="true" />
+</inset>

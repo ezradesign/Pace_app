@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La paleta oscura de app/tokens.css, con el móvil en modo oscuro. La web hace
+     lo mismo en el primer arranque y con la paleta en «Auto»: la elige por el
+     modo del sistema. Si alguien fija la otra paleta a mano, las barras siguen
+     al sistema y no a la app. -->
+<resources>
+    <color name="pace_fondo">#1d1a14</color>
+    <bool name="pace_barras_claras">false</bool>
+</resources>

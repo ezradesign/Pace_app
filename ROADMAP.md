@@ -123,9 +123,13 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
   el menú de compartir), la pantalla encendida en las sesiones y el botón atrás (cierra lo de encima
   o manda la app al fondo). Todo pasa por `app/ui/android.js`. Los APK de prueba llevan una clave fija
   y la versión de la app.
-- Lo de cualquier app: iconos y pantalla de arranque de PACE, barra de estado y safe areas (maqueta
-  antes), `privacy.html` para la app, quitar en Android el enlace a Buy Me a Coffee (la política de
-  pagos de Google Play) y el AAB firmado. Todo, probado en un móvil real.
+- **Icono, arranque y barras** — **HECHO (v0.138.0), falta verlo en un móvil**: la vaca sobre el
+  crema (icono adaptable con capa monocroma), el arranque con la vaca y las barras del sistema en el
+  color de PACE, de día y en modo oscuro. Las copias de la web las vigila `verify`.
+- **Sin Buy Me a Coffee en Android** — **HECHO (v0.138.0)**, por la política de pagos de Google
+  Play: ni la pill, ni el modal, ni su logro secreto. En la web sigue igual.
+- Lo que queda de cualquier app: `privacy.html` para la app y el AAB firmado. Todo, probado en un
+  móvil real.
 - **Prueba cerrada en Play Console cuanto antes, con la app tal como esté.** Las cuentas personales
   nuevas necesitan **unos 12 testers durante 14 días** antes de poder publicar — *a confirmar en Play
   Console*. Al final de la prueba se pregunta a los testers **«¿qué echarías de menos?»** para

@@ -180,6 +180,10 @@ Desde v0.136.0 la misma web se empaqueta como app de Android con Capacitor 8.
 - Lo que el WebView no trae (boton atras, avisos, pantalla encendida, compartir archivos) lo dan
   complementos de Capacitor fijados en `package.json`; tras añadir uno, `npm run android:sync` lo
   apunta en `android/`. Solo `app/ui/android.js` les habla.
+- El icono, el arranque y las barras salen de `android/app/src/main/res/`: la vaca es una copia de
+  `icons/icon-512.png` (`drawable-nodpi/pace_logo.png`), el icono de Android 7 es el de iPhone y los
+  colores, los de `app/tokens.css` (`values/` y `values-night/pace_colores.xml`). Si cambia algo de
+  eso en la web, se copia otra vez: `verify` falla mientras no coincidan.
 - Compilar en local pide JDK 21 y el SDK de Android: `cd android && ./gradlew assembleDebug`. No
   hace falta para el dia a dia.
 - Las reglas (origen fijo, sin service worker, eventos en IndexedDB) estan en

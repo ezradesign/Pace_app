@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- El icono de Android 7, que no tiene iconos adaptables: el de la web en el
+     iPhone (icons/apple-touch-icon.png), crema y cuadrado. -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/pace_icono_android7"
+    android:mipMap="true" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -9,14 +9,28 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- La app ya abierta. El fondo de la ventana es el de PACE: se ve un instante
+         antes de que la web pinte, y Capacitor (SystemBars) rellena con él la
+         franja de las barras de arriba y de abajo. -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <item name="android:windowBackground">@color/pace_fondo</item>
+        <item name="android:statusBarColor">@color/pace_fondo</item>
+        <item name="android:navigationBarColor">@color/pace_fondo</item>
+        <item name="android:windowLightStatusBar">@bool/pace_barras_claras</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/pace_barras_claras</item>
+        <!-- Sin el velo que Android pone detrás de los tres botones de abajo. -->
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
     </style>
 
-
+    <!-- Mientras arranca: la vaca sobre el fondo de PACE. Desde Android 12 la pinta
+         el sistema; antes, la ventana de arranque de core-splashscreen. -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <item name="windowSplashScreenBackground">@color/pace_fondo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/pace_arranque</item>
+        <item name="android:windowLightStatusBar">@bool/pace_barras_claras</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/pace_barras_claras</item>
     </style>
 </resources>

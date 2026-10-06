@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La vaca (icons/icon-512.png) en la capa de delante del icono adaptable: un
+     lienzo de 108 dp del que el móvil enseña los 72 del centro. Va centrada por
+     su trazo, no por el PNG, y ocupa el 59 % del lienzo: así la punta de la cola,
+     que es lo más lejano, queda dentro del círculo que se ve. Es también la capa
+     monocroma de los iconos con tema de color, que solo usa la transparencia.
+     Los márgenes en porcentaje los entiende Android 8 o más: de ahí el -v26. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="22.38%"
+    android:insetTop="20.31%"
+    android:insetRight="18.82%"
+    android:insetBottom="20.89%">
+    <bitmap
+        android:src="@drawable/pace_logo"
+        android:mipMap="true" />
+</inset>
