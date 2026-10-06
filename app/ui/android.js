@@ -30,6 +30,13 @@
    compartir de Android, desde el que se guarda en Drive o en Archivos, o se
    manda por correo.
 
+   EL CALENDARIO DEL MOVIL (complemento CapacitorCalendar): «A tu ritmo» lleva
+   el dia al calendario del telefono, que ya esta sincronizado con la cuenta de
+   Google o de Microsoft que tenga la persona, y lee sus reuniones. Aqui solo
+   van las llamadas, cada una reducida a lo que PACE usa; que eventos se crean
+   y cuales se borran lo decide ritmo.calendario.destinos.js. Pide los dos
+   permisos (leer y escribir) la primera vez que se pulsa, nunca al arrancar.
+
    LOS ENLACES LEGALES son rutas del servidor en la web (/privacy, /safety). En
    el APK no hay servidor y abrirlas recargaba la app: van a la web publicada,
    que Android abre en el navegador.
@@ -153,6 +160,63 @@ function paceAndroidGuardarArchivo(nombre, texto) {
   return true;
 }
 
+/* --- El calendario del movil ---------------------------------------------- */
+
+function paceAndroidCalendario() {
+  return !!paceAndroidPlugin('CapacitorCalendar');
+}
+
+/* true si PACE puede leer y escribir en el calendario. Pregunta si hace falta. */
+function paceAndroidCalendarioPermiso() {
+  return paceAndroidLlamar('CapacitorCalendar', 'requestFullCalendarAccess').then(function (r) {
+    return !!(r && r.result === 'granted');
+  });
+}
+
+/* Lo mismo, sin preguntar: para volver a leer las reuniones al volver a la app. */
+function paceAndroidCalendarioTienePermiso() {
+  return paceAndroidLlamar('CapacitorCalendar', 'checkAllPermissions').then(function (r) {
+    var p = (r && r.result) || {};
+    return p.readCalendar === 'granted' && p.writeCalendar === 'granted';
+  });
+}
+
+/* Los calendarios donde se puede escribir: [{ id, titulo, cuenta }], el
+   predeterminado primero. */
+function paceAndroidCalendarios() {
+  return Promise.all([
+    paceAndroidLlamar('CapacitorCalendar', 'listCalendars'),
+    paceAndroidLlamar('CapacitorCalendar', 'getDefaultCalendar'),
+  ]).then(function (rs) {
+    var lista = (rs[0] && rs[0].result) || [];
+    var pre = rs[1] && rs[1].result ? String(rs[1].result.id) : null;
+    return lista.filter(function (c) { return c && c.allowsContentModifications !== false && c.visible !== false; })
+      .map(function (c) { return { id: String(c.id), titulo: c.title || c.internalTitle || '', cuenta: c.accountName || c.ownerAccount || '' }; })
+      .sort(function (a, b) { return (b.id === pre) - (a.id === pre); });
+  });
+}
+
+/* Los eventos entre dos instantes (ms): [{ id, calendario, inicio, fin, todoElDia, libre, cancelado, texto }]. */
+function paceAndroidCalendarioEventos(desde, hasta) {
+  return paceAndroidLlamar('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
+    return ((r && r.result) || []).map(function (e) {
+      return { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
+               todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled', texto: e.description || '' };
+    });
+  });
+}
+
+/* Crea un evento ocupado y sin alarmas. Devuelve su id, o null. */
+function paceAndroidCalendarioCrear(calendario, ev) {
+  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: 0, alerts: [] };
+  if (calendario) o.calendarId = String(calendario);
+  return paceAndroidLlamar('CapacitorCalendar', 'createEvent', o).then(function (r) { return r && r.id != null ? String(r.id) : null; });
+}
+
+function paceAndroidCalendarioBorrar(id) {
+  return paceAndroidLlamar('CapacitorCalendar', 'deleteEvent', { id: String(id) });
+}
+
 /* '/privacy' en la web; la pagina publicada en Android. */
 function paceEnlaceWeb(ruta) {
   return paceEsAndroid() ? PACE_WEB_PUBLICA + ruta : ruta;
@@ -185,4 +249,6 @@ try { paceAndroidArrancar(); } catch (e) {}
 Object.assign(window, {
   paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
   paceAndroidAvisoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
+  paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
+  paceAndroidCalendarioCrear, paceAndroidCalendarioBorrar,
 });

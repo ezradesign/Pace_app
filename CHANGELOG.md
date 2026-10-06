@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.140.0 | 2026-10-06 | «Al calendario» lleva el día de «A tu ritmo» al calendario del móvil, a Google, a Outlook o a un archivo, y el día esquiva tus reuniones |
 | v0.139.1 | 2026-10-06 | «Glúteos invisibles» tampoco repite su dibujo en miniatura |
 | v0.139.0 | 2026-10-06 | En el móvil el aro abarca lo que lleva dentro, el último logro secreto dice su nombre, «Colgarse» no repite su dibujo y los Caminos quedan ocultos |
 | v0.138.0 | 2026-10-06 | La app de Android lleva el icono, el arranque y las barras de PACE, y no enlaza a Buy Me a Coffee |

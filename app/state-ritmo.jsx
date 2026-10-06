@@ -25,6 +25,12 @@
               saltarla. Con «Ahora» sobre la parada, la línea deja de saltar
               por encima de la pausa que toca.
 
+     ocupado  { fecha, tramos: [[desde, dur]], fuente } — las reuniones de HOY que
+              se leyeron del calendario (solo las horas: ni títulos ni personas).
+              Con otra fecha no existe. La regla las esquiva (`horario.ocupado`).
+     calendario { destino, calendarioId, reuniones } — adónde se llevó el día la
+              última vez y si se leen las reuniones (ritmo.calendario.js).
+
    EL PROGRESO NO SE GUARDA APARTE: sale de `state.cycle`, que ya cuenta los
    bloques de foco de HOY (completePomodoro lo sube y el relevo de día lo pone a
    cero). `cicloBase` es su valor al elegir, así que bloques hechos = cycle −
@@ -98,6 +104,8 @@ function ritmoDe(s) {
     horario: h,
     libre: r.libre === true || (!!hoy && r.libre === hoy),
     dia: r.dia && r.dia.fecha === hoy ? r.dia : null,
+    ocupado: r.ocupado && r.ocupado.fecha === hoy && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [],
+    calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
   };
 }
 
@@ -186,7 +194,7 @@ function ritmoHidratar(pasado) {
    recomposición; `pasado` son los tramos congelados que van delante. */
 function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendiente, bloque) {
   var R = ritmoDe(s);
-  var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()) });
+  var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()), ocupado: R.ocupado });
   var agua = ((s || {}).water && s.water.goal) || 8;
   var previos = pasado ? ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) : null;
   /* s195c: LA SEMANA. El día se compone con el tema de la semana y el acento del día

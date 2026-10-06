@@ -83,6 +83,7 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
           Modal dentro quedaría atrapado en su contexto de apilado. */}
       {hoja && plan ? ReactDOM.createPortal(
         <RitmoHoja open onClose={() => setHoja(false)} plan={plan} state={state} />, document.body) : null}
+      <RitmoCalendarioRaiz plan={plan} />
     </div>
   );
 }

@@ -199,7 +199,7 @@ test('el interruptor de la comida: apagado, la frase se acorta, el día no sirve
   await expect(menu).not.toContainText('comida');
   expect(await page.evaluate(() => { const p = ritmoPlan(getState()); return { comida: p.m.comida, tramos: p.m.items.filter((it) => it.tipo === 'comida').length }; })).toEqual({ comida: null, tramos: 0 });
   /* y vuelve: «Cambiar» → encender → la comida vuelve a las 14:00 */
-  await vis(page, '[data-pace-ritmo-resumen] button').click();
+  await vis(page, '[data-pace-ritmo-resumen] button:not([data-pace-ritmo-calendario])').click();
   await vis(page, '[data-pace-ritmo-comes]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('comes a las');
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();

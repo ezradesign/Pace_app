@@ -14,6 +14,9 @@
 
    Móvil: la misma línea sin etiquetas, con puntos — a 8 px un dibujo no se lee.
 
+   LO OCUPADO (las reuniones leídas del calendario) es un tramo rayado y sin
+   nombre: PACE solo sabe a qué horas estás ocupado (decisión de Ez).
+
    s195: el resumen del día («50 min de foco · 1 pausa · 2 vasos» y «Cambiar») YA NO
    va aquí. Era un absoluto a 21 px sobre la línea, o sea en la misma banda donde
    «AHORA» se ancla al bloque de ahora, y se pisaban cada tarde. Ahora es RitmoSobre,
@@ -144,10 +147,11 @@ function RitmoLinea({ plan }) {
     <React.Fragment>
       <div className="pace-rt-linea" ref={lin} data-pace-ritmo-linea>
         {m.items.map((it, i) => {
-          if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
+          if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre' || it.tipo === 'ocupado') {
             const ahora = i === iActual;
             const titulo = it.tipo === 'foco' ? tn('ritmo.foco', { n: it.dur }) + ' · ' + ritmoHora(it.desde)
               : it.tipo === 'libre' ? tn('ritmo.hueco', { n: it.dur })
+              : it.tipo === 'ocupado' ? t('ritmo.ocupado') + ' · ' + ritmoHora(it.desde) + ' · ' + ritmoDuracion(it.dur)
               : t('ritmo.comida') + ' · ' + ritmoDuracion(it.dur);
             const clase = 'pace-rt-seg pace-rt-' + it.tipo + (ahora ? ' pace-rt-ahora' : i < iActual && it.tipo === 'foco' ? ' pace-rt-hecho' : '');
             return (
@@ -196,7 +200,7 @@ function RitmoMini({ plan }) {
   return (
     <div className="pace-rt-mini" aria-hidden="true">
       {m.items.map((it, i) => {
-        if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre') {
+        if (it.tipo === 'foco' || it.tipo === 'comida' || it.tipo === 'libre' || it.tipo === 'ocupado') {
           const clase = i === iActual ? ' pace-rt-ahora' : i < iActual && it.tipo === 'foco' ? ' pace-rt-hecho' : '';
           return <div key={i} className={'pace-rt-seg pace-rt-' + it.tipo + clase} style={{ flex: it.dur + ' 1 0' }} />;
         }

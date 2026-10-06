@@ -138,6 +138,11 @@
 .pace-rt-seg.pace-rt-hecho { background: var(--focus); }
 .pace-rt-seg.pace-rt-comida { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); height: 2px; }
 .pace-rt-seg.pace-rt-libre { background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 5px); height: 2px; }
+/* LO OCUPADO: una reunion de tu calendario. Rayado en diagonal y mas alto que la
+   linea, para que se lea como un hueco que no es de PACE; sin nombre. */
+.pace-rt-seg.pace-rt-ocupado { height: 8px; border-radius: 3px; border: 1px solid var(--line-2);
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--ink-2) 22%, transparent) 0 2px, transparent 2px 5px); }
+.pace-rt-li.pace-rt-ocupado-li .pace-rt-txt { color: var(--ink-3); font-style: italic; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
 .pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
   border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
@@ -262,6 +267,26 @@
 .pace-rt-mini-int.pace-rt-on { background: var(--ink) !important; border-color: var(--ink) !important; }
 .pace-rt-mini-int.pace-rt-on::after { left: 11px; background: var(--paper); }
 .pace-rt-mini-int:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+
+/* TU DIA EN EL CALENDARIO (RitmoCalendario.jsx): un destino por fila, como en la
+   maqueta; los botones son pildoras, llena la del destino conectado. */
+.pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
+.pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
+.pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }
+.pace-rt-cal-s { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.pace-rt-cal-btn { flex-shrink: 0; font-size: 11px !important; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
+  border: 1px solid var(--focus-cta) !important; border-radius: var(--r-pill); padding: 7px 14px !important; color: var(--focus-cta) !important;
+  transition: background var(--dur-quick) var(--ease); }
+.pace-rt-cal-btn:hover:not(:disabled) { background: var(--focus-soft) !important; }
+.pace-rt-cal-btn.pace-rt-lleno { background: var(--focus-cta) !important; color: var(--paper) !important; }
+.pace-rt-cal-btn.pace-rt-lleno:hover:not(:disabled) { background: var(--focus) !important; }
+.pace-rt-cal-btn:disabled { opacity: 0.5; cursor: default; }
+.pace-rt-cal-btn:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-cal-chk { display: flex; gap: 10px; align-items: flex-start; padding: 2px 0 12px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.pace-rt-cal-chk input { accent-color: var(--focus-cta); width: 16px; height: 16px; margin: 2px 0 0; flex-shrink: 0; }
+.pace-rt-cal-chk small { display: block; font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+.pace-rt-cal-aviso { font-size: 13px; color: var(--focus); background: var(--focus-soft); border-radius: var(--r-sm); padding: 10px 12px; margin-top: 4px; }
+.pace-rt-cal-aviso.pace-rt-error { color: var(--breathe-2, var(--ink)); background: var(--breathe-soft); }
 
 @media ${PACE_CORTE_MOVIL} {
   .pace-rt-panel { padding: 12px 14px 10px; }
