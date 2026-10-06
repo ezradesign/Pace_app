@@ -19,9 +19,9 @@ test('con estado limpio la app abre EN el onboarding, montado sobre la home', as
 
   expect(await page.evaluate(() => localStorage.getItem('pace.state.v2'))).toBeNull();
 
-  /* La bienvenida, por sus piezas y no por un recorte de texto. */
+  /* La bienvenida, por sus piezas y no por un recorte de texto. Sin
+     «prefiero saltarlo» mientras los Caminos estén ocultos: caminos-ocultos.spec.js. */
   await expect(page.getByRole('button', { name: 'Comenzar' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'prefiero saltarlo' })).toBeVisible();
 
   /* La placa de tres valores de s151, con el copy que NO promete absolutos. */
   await expect(page.getByText('Todo local', { exact: true })).toBeVisible();

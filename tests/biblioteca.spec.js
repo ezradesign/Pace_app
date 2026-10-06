@@ -422,3 +422,18 @@ test('«Tus rutinas» cabe en el lateral y no se sale por la derecha', async ({ 
   expect(Math.abs(m.tuyas - m.ahora), '«Tus rutinas» no alinea con «Para ahora»')
     .toBeLessThanOrEqual(1);
 });
+
+/* LA TIRA NO REPITE EN PEQUEÑO EL GESTO DE LA CAPITULAR. «Colgarse» alterna la
+   suspension pasiva y la activa: dos dibujos que a 20 px se leen igual, y la
+   tira enseñaba en pequeño lo mismo que la capitular en grande. Ez lo vio en su
+   movil. Control positivo: «Empuje · progresion» tiene dos ejercicios distintos
+   y su tira tiene que seguir ahi. */
+test('la tira no repite en pequeño el gesto de la capitular', async ({ page }) => {
+  await irAlArtefacto(page);
+  await abrir(page, /^Mueve/);
+  const colgarse = page.locator('[data-pace-lib-card="extra.hang.bar"]').locator('visible=true').first();
+  await expect(colgarse.locator('.pace-lib-cap')).toHaveCount(1);
+  await expect(colgarse.locator('.pace-lib-tira')).toHaveCount(0);
+  const empuje = page.locator('[data-pace-lib-card="extra.push.ladder"]').locator('visible=true').first();
+  await expect(empuje.locator('.pace-lib-tira')).toHaveCount(1);
+});

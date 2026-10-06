@@ -54,4 +54,14 @@ const SHOW_BREATH_ORGANICO = false;
    viva en `main.jsx`. Medido antes de decidirlo, en la maqueta de s188. */
 const SHOW_LAYOUT_AXIS = false;
 
-Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO, SHOW_LAYOUT_AXIS });
+/* Caminos, ocultos hasta después de v1. Decisión de Ez: la app ya guía el día
+   con «A tu ritmo», y los siete Caminos quedan fuera de v1 sin borrarse.
+   Apagado ⇒ desaparecen «Ver caminos» de la tarjeta de la home, la pestaña
+   Caminos de Estadísticas, el logro «Cartógrafa» (salvo si ya lo tienes) y las
+   tres preguntas de la bienvenida, que solo servían para proponer el primer
+   Camino. Nada se borra: el progreso sigue en `state.paths`, y un Camino que ya
+   estuviera en curso se puede terminar o dejar, como siempre. Con la bandera a
+   `true` vuelve todo tal como estaba. */
+const SHOW_CAMINOS = false;
+
+Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO, SHOW_LAYOUT_AXIS, SHOW_CAMINOS });
