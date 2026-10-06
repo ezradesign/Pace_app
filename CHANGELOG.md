@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.143.0 | 2026-10-06 | PACE tiene dominio propio, pacegrass.app (la dirección vieja sigue abierta), y la privacidad lleva un correo de contacto |
 | v0.142.0 | 2026-10-06 | En Android el aviso de Foco lleva la vaca, ya no abre los ajustes del sistema al salir y Ajustes ofrece que llegue a su hora; la privacidad cubre la app y hay versión firmada para Play en cuanto exista la llave |
 | v0.141.0 | 2026-10-06 | Por libre, en el móvil, la tarjeta de «A tu ritmo» es la corta (el esquema del día sin horas y «Comienza») y la home deja de pedir scroll; hasta v1 las rutinas premium están abiertas para todos |
 | v0.140.0 | 2026-10-06 | «Al calendario» lleva el día de «A tu ritmo» al calendario del móvil, a Google, a Outlook o a un archivo, y el día esquiva tus reuniones |

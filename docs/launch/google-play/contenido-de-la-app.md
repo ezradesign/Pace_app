@@ -8,11 +8,10 @@ uno y por qué. Está pensado para la app tal como es hoy: sin compras, sin anun
 
 ## 1. Política de privacidad
 
-`https://paceweb.pages.dev/privacy.html`
+`https://pacegrass.app/privacy`
 
-Tiene que mencionar el calendario (PACE lo lee y escribe en el móvil) antes de mandar la app a
-revisión. Eso lo está haciendo el hilo «Cerrar lo que falta de Android». Cuando tengas dominio propio,
-se cambia aquí.
+Ya cubre la app y el calendario (PACE lo lee y escribe en el móvil) y lleva el correo de contacto,
+`hola.ezradesign@gmail.com`.
 
 ## 2. Anuncios
 

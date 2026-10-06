@@ -28,8 +28,13 @@
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
-var CALENDARIO_MARCA = 'paceweb.pages.dev';
-var CALENDARIO_PIE = 'PACE · A tu ritmo · paceweb.pages.dev';
+/* LA MARCA es el dominio de PACE. Los eventos que puso cuando vivía en
+   paceweb.pages.dev llevan la de entonces y siguen siendo suyos: sin
+   reconocerla, volver a pulsar los dejaría duplicados y contarían como
+   reuniones. */
+var CALENDARIO_MARCA = 'pacegrass.app';
+var CALENDARIO_MARCAS_VIEJAS = ['paceweb.pages.dev'];
+var CALENDARIO_PIE = 'PACE · A tu ritmo · ' + CALENDARIO_MARCA;
 
 /* La medianoche local de `iso` más `min` minutos. Con el constructor de partes
    y no con `new Date('YYYY-MM-DD')`, que es medianoche UTC; y así un día con
@@ -148,10 +153,13 @@ function calendarioTramos(lista, iso) {
   return fuera;
 }
 
-/* ¿Este evento lo puso PACE? Por la marca de la descripción (Android) o por la
-   propiedad privada que guardan Google y Microsoft (la miran sus destinos). */
+/* ¿Este evento lo puso PACE? Por la marca de la descripción, la de ahora o una
+   vieja (Android), o por la propiedad privada que guardan Google y Microsoft
+   (la miran sus destinos). */
 function calendarioEsDePace(texto) {
-  return String(texto || '').indexOf(CALENDARIO_MARCA) !== -1 && String(texto || '').indexOf('PACE') !== -1;
+  var s = String(texto || '');
+  if (s.indexOf('PACE') === -1) return false;
+  return [CALENDARIO_MARCA].concat(CALENDARIO_MARCAS_VIEJAS).some(function (m) { return s.indexOf(m) !== -1; });
 }
 
 Object.assign(window, {
