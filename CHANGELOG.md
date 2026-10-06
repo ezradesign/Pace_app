@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.139.1 | 2026-10-06 | «Glúteos invisibles» tampoco repite su dibujo en miniatura |
 | v0.139.0 | 2026-10-06 | En el móvil el aro abarca lo que lleva dentro, el último logro secreto dice su nombre, «Colgarse» no repite su dibujo y los Caminos quedan ocultos |
 | v0.138.0 | 2026-10-06 | La app de Android lleva el icono, el arranque y las barras de PACE, y no enlaza a Buy Me a Coffee |
 | v0.137.0 | 2026-10-05 | En Android funcionan el botón atrás, el aviso de fin de Foco, la pantalla encendida y la copia de tus datos |
