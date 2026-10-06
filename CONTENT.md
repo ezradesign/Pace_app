@@ -97,7 +97,7 @@ sueltos dentro de una rutina (sería un muro de pago a mitad de flujo).
 | Valor | Significado | Estado |
 |---|---|---|
 | `free` | Disponible desde el inicio (ausente = free). | **en código** |
-| `premium` | De pago. Sin compra real hasta v1.0: sello + "Pronto", no arranca. | **en código (F3b)** |
+| `premium` | De pago. Hasta v1.0 abierta para todos con su sello «Premium» (decisión de Ez, 6 oct. 2026: `PREMIUM_ABIERTO_HASTA_V1`); sin esa bandera, sello + "Pronto" y no arranca. | **en código (F3b)** |
 | `locked.initial` | Se desbloquea al completar una de las 2 iniciales del módulo. | diseñado, post-v1.0 |
 | `locked.achievement` | Desbloqueado por un logro concreto. | diseñado, post-v1.0 |
 | `locked.both` | Por logro **o** por Lifetime/Pase. | diseñado, post-v1.0 |

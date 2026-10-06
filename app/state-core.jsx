@@ -95,8 +95,9 @@ const defaultState = {
   langAuto: false,
 
   // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del
-  // contenido premium. Sin ruta de compra real hasta v1.0: permanece false y
-  // las rutinas con access:'premium' se muestran bloqueadas (sello + 'Pronto').
+  // contenido premium. Sin ruta de compra real hasta v1.0: permanece false, y
+  // hasta entonces las rutinas premium las abre PREMIUM_ABIERTO_HASTA_V1
+  // (state-entitlement.jsx); con ella a false salen bloqueadas (sello + 'Pronto').
   // El cableado en RoutineCard ya lee este flag: ponerlo a true abre todas las
   // premium sin tocar UI. La validación de licencia real (claves firmadas,
   // expiresAt, tipos) queda para una fase posterior post-v1.0.
