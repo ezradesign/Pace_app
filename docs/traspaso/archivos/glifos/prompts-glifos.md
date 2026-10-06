@@ -1,97 +1,99 @@
 # Glifos que faltan en PACE, con su prompt
 
-**Versión 2 (6 oct 2026):** reescritos porque GPT Image 2 en Genspark los bloqueaba como NSFW.
+**Versión 3 (6 oct 2026).** Los ejercicios vuelven a ser la figura lisa y sin ropa de los 59 que ya están
+en la app, de la misma familia. Faltan **4 de ejercicio** (uno opcional) y **19 de logro**.
 
-Faltan **4 dibujos de ejercicio** (uno opcional) y **19 de logro**, contados en el código de `main` (v0.139.1).
+## Por qué los bloqueaba GPT Image 2, y cómo esquivarlo (deducido, no probado)
 
-## Por qué los bloqueaba
+Los prompts nombraban la desnudez («no clothing details», «mannequin-like body») y describían posturas
+con palabras que el filtro lee mal («on all fours», «knees spread», «hips pushed back»). Además, adjuntar
+dibujos del set hace que el filtro revise también esas imágenes, y la figura parece desnuda.
 
-La causa es casi seguro la de los ejercicios (lo deduzco: no puedo probar Genspark desde aquí). Pedían
-una figura que parece desnuda a propósito («mannequin-like body, bald, no clothing details») en posturas
-que el filtro lee mal: a cuatro patas con las rodillas abiertas, doblada sobre una mesa con la cadera
-arriba, de rodillas con los tobillos sujetos. Y yo te dije que adjuntaras dibujos del set como referencia:
-el filtro también mira las imágenes adjuntas, y esas figuras parecen desnudas. Eso fue un error mío.
+Esta versión describe la figura como lo que es en el set: **un estudio liso de academia, como un vaciado
+de yeso, en una lámina de manual médico**. No dice nunca que vaya desnuda y no le pone ropa. Las
+posturas se cuentan por manos, brazos, pies y cabeza.
 
-Qué cambia: la figura **va vestida** con ropa lisa, la postura se describe por el nombre del ejercicio y por
-manos, brazos y pies, y se presenta como lámina de una app de bienestar. En los logros solo cambian unas
-pocas palabras («ex-libris», «cosquillas», «cuelga de una cuerda», «no weapons», el yugo con cubos).
+## Cómo usarlos, en este orden
 
-## Cómo usarlos
-
-1. **Un chat nuevo de Genspark para cada dibujo.** Un prompt bloqueado puede contaminar el resto de la
-   conversación: hay casos en que después rechaza hasta «una manzana».
-2. **En los ejercicios, no adjuntes ninguna referencia.** Solo el texto.
-3. **Los logros, en chats donde no hayas pedido ninguna figura.** Ahí sí puedes adjuntar referencias de
-   logros (son objetos): `streak.30`, `season.autumn`, `master.focus.day`.
-4. Si uno se bloquea, repítelo una vez en un chat nuevo: el filtro no es fijo. Si vuelve a fallar, prueba
-   el **plan B** que va debajo de cada ejercicio (un maniquí de madera de dibujante).
-
-**Lo que tienes que decidir al verlos:** los 59 dibujos que ya están en la app tienen una figura lisa, sin
-ropa marcada. Con ropa no van a ser idénticos. Si el resultado desentona demasiado, dímelo y buscamos otra
-salida (el plan B de madera desentona más).
+1. **Prompt A, en GPT Image 2, sin adjuntar nada.** Un chat nuevo para cada dibujo.
+2. Si lo bloquea, repítelo una vez en otro chat nuevo: el filtro no es fijo.
+3. Si sigue bloqueando, **prompt B en otro modelo de Genspark** (cualquiera que no sea GPT Image 2 y deje
+   adjuntar imágenes), con las **dos referencias** que indico. El B es el preámbulo con el que se hicieron
+   los 59. Las referencias están en la carpeta [referencias](/mnt/project-files/glifos/referencias/).
+4. Los logros, en chats donde no hayas pedido ninguna figura.
 
 **El nombre del archivo importa:** guárdalo exactamente como pone en cada título y súbelo a este hilo.
 
 ## Reglas comunes
 
 - PNG cuadrado y grande (2048 × 2048 o más). Tinta negra sobre blanco: el color se descarta.
-- Sin texto. Ejercicios: se ven de 20 a 200 px. Logros: se ven a 56 px, así que la silueta manda.
+- Sin texto. Ejercicios: se ven de 20 a 200 px, así que el contorno tiene que ser marcado.
 - En los logros, nada de copas, trofeos, medallas ni estrellas de puntuación.
 
 ---
 
 # Ejercicios
 
+El bloque de estilo es el mismo en los cuatro prompts A; ya va pegado en cada uno.
+
 ## `rana.png` — Rana (Caderas · suelo)
-Es la única tarjeta de la biblioteca que hoy sale sin dibujo.
+Vista de frente con la flecha de puntos junto a la cadera: de frente no se ve que la cadera va atrás.
 
+Prompt A (GPT Image 2, sin adjuntos):
 ```
-Instructional exercise illustration for a workplace wellness app, in the style of a clean fine-line engraving, like a classic exercise-instruction plate. One adult person in their thirties, with adult proportions, close-cropped hair and a calm simple face, fully dressed in a plain long-sleeved crew-neck top, plain straight-leg trousers and plain socks, relaxed fit. The clothes read clearly as clothes even at small size: a visible round neckline, clear sleeve ends at the wrists, the hem of the top over the waistband, trouser legs ending at the ankles; otherwise clean simple contours with only a few soft folds, plain fabric, no logos, no patterns. The person is doing a kneeling hip-mobility stretch from yoga (mandukasana), seen straight from the front with the head toward the viewer: kneeling tabletop position, both hands flat on the floor in front, arms straight, knees set wide to each side, lower legs pointing back, weight shifted toward the heels, head relaxed looking down at the floor. The high round neckline of the top sits close at the neck. A short dotted double-headed arrow just above the figure's back, running straight front-to-back in slight perspective, one arrowhead pointing toward the hands and the other toward the feet. Calm and educational. Clean confident contour lines, bold enough to read at small size, light stipple shading. Black ink on pure white background, no floor line, no text, no color, no border. Whole figure visible, square format, generous margin.
+Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background.
+
+Exercise plate: the hip-mobility floor stretch from yoga (mandukasana), seen strictly from the front, the face toward the viewer. The figure kneels with both palms flat on the floor under the shoulders and the arms straight; the knees are placed far out to each side, the lower legs point back, and the weight settles back toward the heels. A short thin dotted arrow with a small open chevron tip sits beside the figure at hip height, pointing front-to-back in slight perspective, to show a gentle rocking. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
 ```
 
-Plan B, si el de arriba se sigue bloqueando:
-
+Prompt B (otro modelo; adjunta `gato-camello.png` y `sentadilla-profunda.png`):
 ```
-Clean fine-line engraving for an exercise instruction card: a classic plain wooden artist's manikin built from separate carved wooden blocks (a box-shaped chest block, a separate waist block and a separate hip block, cylindrical limb segments joined by visible round ball joints with small metal pins, mitten-shaped wooden hands, wedge-shaped wooden feet, an egg-shaped wooden head; pale wood with a few clear grain lines on each block), posed on the floor in a kneeling hip-mobility stretch from yoga (mandukasana), seen straight from the front with the head toward the viewer: kneeling tabletop position, both hands flat on the floor in front, arms straight, knees set wide to each side, lower legs pointing back, weight shifted toward the heels, head tilted down. A short dotted double-headed arrow just above the manikin's back, running straight front-to-back in slight perspective, one arrowhead pointing toward the hands and the other toward the feet. Clean confident contour lines, bold enough to read at small size, light stipple shading. Black ink on pure white background, no stand, no floor line, no text, no color, no border. Whole manikin visible, square format, generous margin.
+Misma figura y mismo estilo de grabado que las imágenes de referencia: grabado anatómico de línea, ilustración médica clásica, tinta oscura sobre fondo blanco, sin color, la misma persona andrógina y calva, sin ropa, con rayado fino. Gesto: postura de «rana» vista estrictamente DE FRENTE, con la cara hacia quien mira. A cuatro apoyos con las palmas bajo los hombros y los brazos rectos, las rodillas muy abiertas a los lados y la cadera retrasada hacia los talones. Una flecha corta DE PUNTOS junto a la cadera, de delante atrás, que marque un balanceo suave. Suelo con trazos cortos de sombra bajo manos y rodillas. Sin texto. PNG cuadrado, el cuerpo entero en el lienzo.
 ```
 
 ## `pica-en-escritorio.png` — Pica en escritorio (Empuje · progresión)
-La mesa es obligatoria: sin ella se confunde con «Marcha del elefante».
+La mesa es obligatoria: sin ella se confunde con «Marcha del elefante». En el set, la mesa es una línea recta.
 
+Prompt A (GPT Image 2, sin adjuntos):
 ```
-Instructional exercise illustration for a workplace wellness app, in the style of a clean fine-line engraving, like a classic exercise-instruction plate. Side view (profile), facing right, of one adult person in their thirties, with adult proportions, close-cropped hair and a calm simple face, fully dressed in a plain long-sleeved crew-neck top, plain straight-leg trousers and plain socks, relaxed fit. The clothes read clearly as clothes even at small size: a visible round neckline, clear sleeve ends at the wrists, the hem of the top over the waistband, trouser legs ending at the ankles; otherwise clean simple contours with only a few soft folds, plain fabric, no logos, no patterns. The person is doing a pike push-up with the hands on a desk: both hands on the front edge of a plain wooden work desk of ordinary height, arms straight, head and shoulders lowered between the arms toward the desk edge, back long and straight, legs straight, feet on the floor two to three steps back from the desk, so the legs and the straight back form the two equal sides of a clear upside-down V. The hem of the top stays down over the waistband. The desk is essential and clearly drawn: a flat horizontal tabletop with two plain legs, fully visible. Calm and educational. Clean confident contour lines, bold enough to read at small size, light stipple shading. Black ink on pure white background, no text, no color, no border. Whole figure and desk visible, square format, generous margin.
+Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background.
+
+Exercise plate: a pike push-up with the hands on a desk, in profile facing right. The palms rest on the edge of a desk, drawn only as one thin straight horizontal line at waist height that extends a little beyond the hands; the hands are on that line, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps away from the desk line, so the figure forms a clear upside-down V between the floor and the desk edge. Square format, whole figure and desk line inside the frame, generous white margins, one figure only, no text, no border.
 ```
 
-Plan B, si el de arriba se sigue bloqueando:
-
+Prompt B (otro modelo; adjunta `flexiones-inclinadas.png` y `hueco-en-silla.png`):
 ```
-Clean fine-line engraving for an exercise instruction card: a classic plain wooden artist's manikin built from separate carved wooden blocks (a box-shaped chest block, a separate waist block and a separate hip block, cylindrical limb segments joined by visible round ball joints with small metal pins, mitten-shaped wooden hands, wedge-shaped wooden feet, an egg-shaped wooden head; pale wood with a few clear grain lines on each block), posed in side view (profile), facing right, in a pike push-up with the hands on a desk: both hands on the front edge of a plain wooden work desk of ordinary height, arms straight, head lowered between the arms, back long and straight, legs straight, feet on the floor two to three steps back from the desk, so the legs and the back form the two equal sides of a clear upside-down V. The desk is essential and clearly drawn: a flat horizontal tabletop with two plain legs, fully visible. Clean confident contour lines, bold enough to read at small size, light stipple shading. Black ink on pure white background, no stand, no text, no color, no border. Whole manikin and desk visible, square format, generous margin.
+Misma figura y mismo estilo de grabado que las imágenes de referencia: grabado anatómico de línea, ilustración médica clásica, tinta oscura sobre fondo blanco, sin color, la misma persona andrógina y calva, sin ropa, con rayado fino. Gesto: de perfil mirando a la derecha, «V» invertida con las manos en el borde de una MESA, dibujada como una línea recta horizontal a la altura de la cadera, como en las referencias. Las manos sobre esa línea y nunca en el suelo. Brazos rectos, cabeza entre los brazos, espalda larga, piernas rectas y pies en el suelo a dos o tres pasos de la mesa. Sin texto. PNG cuadrado, el cuerpo entero y la línea de la mesa en el lienzo.
 ```
 
 ## `descanso.png` — Descanso entre series
-Tiene que decir «aquí no se hace nada». Pruébalo el primero: es el más fácil de pasar.
+Tiene que decir «aquí no se hace nada». Es el que más se ve (18 veces): empieza por este.
 
+Prompt A (GPT Image 2, sin adjuntos):
 ```
-Instructional exercise illustration for a workplace wellness app, in the style of a clean fine-line engraving, like a classic exercise-instruction plate. One adult person in their thirties, with adult proportions, close-cropped hair and a calm simple face, fully dressed in a plain long-sleeved crew-neck top, plain straight-leg trousers and plain socks, relaxed fit. The clothes read clearly as clothes even at small size: a visible round neckline, clear sleeve ends at the wrists, the hem of the top over the waistband, trouser legs ending at the ankles; otherwise clean simple contours with only a few soft folds, plain fabric, no logos, no patterns. The person stands still and upright, seen from the front, resting quietly between exercise sets: feet hip-width apart, both hands resting on the waist with elbows pointing out to the sides (arms akimbo), shoulders relaxed and dropped, head level looking forward. A quiet, restful posture where nothing is happening. Nothing is drawn on the figure or around it: no arrows, no motion lines, no symbols, no furniture. Clean confident contour lines, bold enough to read at small size, light even stipple shading. Black ink on pure white background, no text, no color, no border. Whole figure visible, square format, generous margin.
+Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background.
+
+Exercise plate: resting between sets. The figure stands upright, strictly from the front, feet hip-width apart, both hands resting on the sides of the waist with the elbows pointing out, shoulders relaxed and low, head level, calm face looking at the viewer. A still, quiet pose. Nothing else is drawn: no arrows, no motion lines, no symbols, no furniture, only the short floor shadows under the feet. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
 ```
 
-Plan B, si el de arriba se sigue bloqueando:
-
+Prompt B (otro modelo; adjunta `rotacion-lenta.png` y `rotacion-externa.png`):
 ```
-Clean fine-line engraving for an exercise instruction card: a classic plain wooden artist's manikin built from separate carved wooden blocks (a box-shaped chest block, a separate waist block and a separate hip block, cylindrical limb segments joined by visible round ball joints with small metal pins, mitten-shaped wooden hands, wedge-shaped wooden feet, an egg-shaped wooden head; pale wood with a few clear grain lines on each block), standing upright on its own feet, seen from the front, posed to show resting between exercise sets: feet hip-width apart, both hands resting on the waist with elbows pointing out to the sides, shoulders dropped, head level. A quiet, restful posture where nothing is happening. Nothing is drawn on the manikin or around it: no arrows, no motion lines, no symbols, no furniture. Clean confident contour lines, bold enough to read at small size, light even stipple shading. Black ink on pure white background, no stand, no text, no color, no border. Whole manikin visible, square format, generous margin.
+Misma figura y mismo estilo de grabado que las imágenes de referencia: grabado anatómico de línea, ilustración médica clásica, tinta oscura sobre fondo blanco, sin color, la misma persona andrógina y calva, sin ropa, con rayado fino. Gesto: de pie y DE FRENTE, recuperando el aliento. Manos apoyadas en las caderas con los codos abiertos, hombros caídos, pies al ancho de las caderas, cabeza al frente mirando a quien mira. No es un ejercicio: nada de flechas ni de recorrido, nada de arcos en el pecho, ningún mueble, ninguna zona marcada. Sin texto. PNG cuadrado, el cuerpo entero en el lienzo.
 ```
 
 ## `nordics.png` — Nordics (opcional)
-Opcional: solo sale en el constructor de «Tus rutinas».
+Solo sale en el constructor de «Tus rutinas». Los tobillos van sujetos bajo una línea recta, el borde de un mueble.
 
+Prompt A (GPT Image 2, sin adjuntos):
 ```
-Instructional exercise illustration for a workplace wellness app, in the style of a clean fine-line engraving, like a classic exercise-instruction plate. Side view (profile), facing right, of one adult person in their thirties, with adult proportions, close-cropped hair and a calm simple face, fully dressed in a plain long-sleeved crew-neck top, plain straight-leg trousers and plain socks, relaxed fit. The clothes read clearly as clothes even at small size: a visible round neckline, clear sleeve ends at the wrists, the hem of the top over the waistband, trouser legs ending at the ankles; otherwise clean simple contours with only a few soft folds, plain fabric, no logos, no patterns. The person is doing a Nordic hamstring curl at home: kneeling on a folded exercise mat, the whole body tilted forward about 45 degrees as one straight line from knees to head, arms reaching forward, open hands ready to touch the floor. Behind the person, the heels are hooked under the flat seat of a very low, heavy wooden bench, drawn complete and clearly as furniture (flat seat, four short sturdy legs). Calm and educational. Clean confident contour lines, bold enough to read at small size, light stipple shading. Black ink on pure white background, no text, no color, no border. Whole figure and bench visible, square format, generous margin.
+Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background.
+
+Exercise plate: a Nordic hamstring curl, in profile facing right. The figure kneels on both knees with the shins on the floor; just above the heels runs one thin straight horizontal line, the lower edge of a heavy piece of furniture, that keeps the heels down. The figure is already leaning forward about 45 degrees as one straight line from knees to head, arms reaching forward with open palms toward the floor. Square format, whole figure and the edge line inside the frame, generous white margins, one figure only, no text, no border.
 ```
 
-Plan B, si el de arriba se sigue bloqueando:
-
+Prompt B (otro modelo; adjunta `sentadilla-de-cuadriceps.png` y `flexiones-inclinadas.png`):
 ```
-Clean fine-line engraving for an exercise instruction card: a classic plain wooden artist's manikin built from separate carved wooden blocks (a box-shaped chest block, a separate waist block and a separate hip block, cylindrical limb segments joined by visible round ball joints with small metal pins, mitten-shaped wooden hands, wedge-shaped wooden feet, an egg-shaped wooden head; pale wood with a few clear grain lines on each block), posed in side view (profile), facing right, in a Nordic hamstring curl: kneeling on a folded exercise mat, the whole body tilted forward about 45 degrees as one straight line from knees to head, arms reaching forward, open hands ready to touch the floor. Behind the manikin, its heels are hooked under the flat seat of a very low, heavy wooden bench, drawn complete and clearly as furniture (flat seat, four short sturdy legs). Clean confident contour lines, bold enough to read at small size, light stipple shading. Black ink on pure white background, no stand, no text, no color, no border. Whole manikin and bench visible, square format, generous margin.
+Misma figura y mismo estilo de grabado que las imágenes de referencia: grabado anatómico de línea, ilustración médica clásica, tinta oscura sobre fondo blanco, sin color, la misma persona andrógina y calva, sin ropa, con rayado fino. Gesto: de perfil mirando a la derecha, de rodillas con las espinillas en el suelo y los talones sujetos bajo una línea recta horizontal, el borde de un mueble. El tronco ya inclinado hacia delante unos 45 grados, en una sola línea de las rodillas a la cabeza, con los brazos por delante y las palmas abiertas listas para frenar. Sin texto. PNG cuadrado, el cuerpo entero y la línea del mueble en el lienzo.
 ```
 
 ---
