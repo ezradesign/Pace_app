@@ -106,10 +106,10 @@
   /* EL ARO NO ES MAS PEQUEÑO QUE LO QUE LLEVA DENTRO (solo en la piel de movil).
      Alli el interior NO escala con D: rotulo, numero, boton y fila del ciclo
      tienen tamaño fijo por legibilidad, y el suelo de 240 ya no los contiene.
-     Medido a 360x718 con «Hoy voy por libre» (el panel de abajo es mas alto y el
-     bucle baja hasta el suelo): la esquina mas lejana del interior quedaba a
-     0,545 D del centro, por fuera del trazo (0,475 D), y «FOCO MANUAL» y el ciclo
-     se pintaban encima del aro. Pasaba igual a 375x667 sin ir por libre.
+     Pasa en cuanto lo de abajo no cabe y el bucle baja hasta el suelo (hoy, por
+     libre a 360x640 o con la pregunta del dia a 375x667): sin este suelo, la
+     esquina mas lejana del interior quedaba a 0,545 D del centro, por fuera del
+     trazo (0,475 D), y «FOCO MANUAL» y el ciclo se pintaban encima del aro.
      Por eso el suelo de movil es tambien lo que pide el interior, y se MIDE en
      vez de escribirse: depende del idioma, del estado del Pomodoro y de la
      fuente. 0,44 D es lo que usan las composiciones que se ven bien (de 0,35 a

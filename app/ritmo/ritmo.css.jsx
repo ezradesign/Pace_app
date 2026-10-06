@@ -250,7 +250,6 @@
 .pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
 .pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
 @media ${PACE_CORTE_MOVIL} {
-  .pace-rt-tarjeta { padding: 14px 14px 12px; }
   .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
   .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }
   .pace-rt-tarjeta-t { font-size: 20px; }
