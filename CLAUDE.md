@@ -8,6 +8,7 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
 ## Al empezar
 
 1. Lee `STATE.md`: versión, qué sigue y qué espera a Ez.
+   Si vienes de otra cuenta de Claude o de cero, lee también `docs/traspaso/LEEME.md`.
 2. Antes de tocar un subsistema, busca su fila en `docs/product/DECISIONES_TECNICAS_VIGENTES.md` (con
    grep: el archivo es largo).
 3. Si el cambio es visual, lee `DESIGN_SYSTEM.md`; si es de contenido, `CONTENT.md`.
@@ -23,6 +24,8 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
    móvil, los Caminos, el premium ni los píxeles: eso se comprueba a mano, a 360 px y a 1280 px.
 5. `STATE.md`: cambia lo que haya cambiado, y que siga cabiendo en una pantalla.
 6. `CHANGELOG.md`: una línea por versión nueva.
+   Si el cambio cierra un hito, una decisión de Ez o algo que espera a Ez, ponlo al día en
+   `docs/traspaso/LEEME.md`: es lo que permite seguir desde otra cuenta sin perder nada.
 7. Si nace una regla técnica que evita una regresión, una fila arriba del todo en
    `DECISIONES_TECNICAS_VIGENTES.md`.
 8. Commit sin línea `Co-Authored-By`, con el porqué en el mensaje, y push a `main`.
