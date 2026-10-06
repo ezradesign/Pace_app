@@ -163,21 +163,24 @@ test('en la web sin ids, «Al calendario» ofrece solo el archivo y lo descarga'
 
 test.describe('móvil', () => {
   test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
-  test('el enlace cabe en el pie, junto a «Ver la jornada entera» y sin pisar «Hoy voy por libre»', async ({ page, context }) => {
-    await abrir(page, context, { sidebarCollapsed: true });
-    const pie = vis(page, '[data-pace-ritmo-estado="menu"] .pace-rt-pie');
-    const cajas = await pie.evaluate((el) => {
-      const panel = el.closest('.pace-rt-panel').getBoundingClientRect();
-      return { panel: [panel.left, panel.right], hijos: Array.from(el.querySelectorAll('button')).map((b) => { const r = b.getBoundingClientRect(); return [r.left, r.right, r.top, r.bottom]; }) };
+  for (const lang of ['es', 'en']) {
+    test('el enlace va bajo «Cambiar», dentro del panel y sin pisar el título (' + lang + ')', async ({ page, context }) => {
+      await abrir(page, context, { sidebarCollapsed: true, lang });
+      const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
+      const r = await panel.evaluate((el) => {
+        const caja = (x) => { const b = x.getBoundingClientRect(); return [b.left, b.right, b.top, b.bottom]; };
+        return { panel: caja(el), titulo: caja(el.querySelector('.pace-rt-titulo')), cambiar: caja(el.querySelector('.pace-rt-cab-der > button')),
+                 enlace: caja(el.querySelector('[data-pace-ritmo-calendario]')),
+                 pie: Array.from(el.querySelectorAll('.pace-rt-pie button')).map(caja) };
+      });
+      const dentro = (c) => c[0] >= r.panel[0] && c[1] <= r.panel[1];
+      const pisa = (a, b) => a[0] < b[1] && b[0] < a[1] && a[2] < b[3] && b[2] < a[3];
+      [r.titulo, r.cambiar, r.enlace].concat(r.pie).forEach((c) => expect(dentro(c)).toBe(true));
+      expect(r.enlace[2]).toBeGreaterThanOrEqual(r.cambiar[3]);
+      expect(pisa(r.enlace, r.titulo)).toBe(false);
+      expect(pisa(r.pie[0], r.pie[1])).toBe(false);
     });
-    expect(cajas.hijos.length).toBe(3);
-    cajas.hijos.forEach((c) => { expect(c[0]).toBeGreaterThanOrEqual(cajas.panel[0]); expect(c[1]).toBeLessThanOrEqual(cajas.panel[1]); });
-    for (let i = 1; i < cajas.hijos.length; i++) {
-      const a = cajas.hijos[i - 1], b = cajas.hijos[i];
-      const pisa = a[0] < b[1] && b[0] < a[1] && a[2] < b[3] && b[2] < a[3];
-      expect(pisa).toBe(false);
-    }
-  });
+  }
 });
 
 /* ------------------------------------------------------------------ Android */

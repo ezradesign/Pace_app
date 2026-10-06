@@ -270,6 +270,7 @@
 
 /* TU DIA EN EL CALENDARIO (RitmoCalendario.jsx): un destino por fila, como en la
    maqueta; los botones son pildoras, llena la del destino conectado. */
+.pace-rt-cab-der { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 .pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
 .pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }

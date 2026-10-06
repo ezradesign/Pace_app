@@ -34100,6 +34100,7 @@ Object.assign(window, { Onboarding });
 
 /* TU DIA EN EL CALENDARIO (RitmoCalendario.jsx): un destino por fila, como en la
    maqueta; los botones son pildoras, llena la del destino conectado. */
+.pace-rt-cab-der { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 .pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
 .pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }
@@ -34770,16 +34771,18 @@ function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
     React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.opcion.' + plan.m.opcion)),
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.movil" }))
     ),
-    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar'))
+
+
+    React.createElement("div", { className: "pace-rt-cab-der" },
+    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
+    React.createElement(RitmoAlCalendario, null)
+    )
     ),
     React.createElement(RitmoComo, { plan: plan }),
     React.createElement(RitmoMini, { plan: plan }),
     filas,
     React.createElement("div", { className: "pace-rt-pie" },
-    React.createElement("span", { className: "pace-rt-der" },
     React.createElement("button", { className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-ver": true, onClick: onVer }, t('ritmo.ver')),
-    React.createElement(RitmoAlCalendario, null)
-    ),
     React.createElement(RitmoLibre, null)
     )
     ));
