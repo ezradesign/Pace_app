@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- El arranque en modo oscuro: la misma vaca, en el crema de la paleta oscura. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="22.38%"
+    android:insetTop="20.31%"
+    android:insetRight="18.82%"
+    android:insetBottom="20.89%">
+    <bitmap
+        android:src="@drawable/pace_logo"
+        android:mipMap="true"
+        android:tint="@color/pace_trazo_noche"
+        android:tintMode="src_in" />
+</inset>

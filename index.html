@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.137.0</title>
+  <title>PACE · Foco · Cuerpo — v0.138.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5514,7 +5514,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.137.0';
+const PACE_VERSION = 'v0.138.0';
 
 
 
@@ -15741,6 +15741,7 @@ Object.assign(window, { useLuzHome });
 
 
 
+
 const { useEffect: useEffectSUP, useState: useStateSUP } = React;
 
 const BMC_USERNAME = 'ezradesign';
@@ -15772,6 +15773,14 @@ function supportCopy() {
   return SUPPORT_COPY_DEFAULT;
 }
 
+
+
+
+
+function paceApoyoVisible() {
+  return !(typeof paceEsAndroid === 'function' && paceEsAndroid());
+}
+
 function SupportIcon(_ref) {let { size = 13 } = _ref;
   return React.createElement(CowIcon, { size: size });
 }
@@ -15786,6 +15795,7 @@ function SupportIcon(_ref) {let { size = 13 } = _ref;
 function SupportButton(_ref2) {let { onOpen } = _ref2;
   const { t } = useT();
   const [hover, setHover] = useStateSUP(false);
+  if (!paceApoyoVisible()) return null;
 
   return (
     React.createElement("button", {
@@ -15876,12 +15886,12 @@ function SupportModal(_ref4) {let { open, onClose } = _ref4;
 
 
   useEffectSUP(() => {
-    if (open && !state.supportSeenAt) {
+    if (open && !state.supportSeenAt && paceApoyoVisible()) {
       set({ supportSeenAt: Date.now() });
     }
   }, [open]);
 
-  if (!open) return null;
+  if (!open || !paceApoyoVisible()) return null;
 
   const goToBMC = () => {
     window.open(BMC_URL, '_blank', 'noopener,noreferrer');
@@ -16056,7 +16066,7 @@ function useSupportAutoTrigger(setOpen) {var _state$streak2;
   const [state] = usePace();
   useEffectSUP(() => {var _state$streak;
 
-    if (((_state$streak = state.streak) === null || _state$streak === void 0 ? void 0 : _state$streak.current) >= 7 && !state.supportSeenAt) {
+    if (((_state$streak = state.streak) === null || _state$streak === void 0 ? void 0 : _state$streak.current) >= 7 && !state.supportSeenAt && paceApoyoVisible()) {
 
       const t = setTimeout(() => setOpen(true), 1200);
       return () => clearTimeout(t);
@@ -16144,9 +16154,9 @@ const supportStyles = {
 
 Object.assign(window, {
   SupportButton, SupportModal, useSupportAutoTrigger,
-  supportCopy, BMC_URL, BMC_USERNAME
+  supportCopy, paceApoyoVisible, BMC_URL, BMC_USERNAME
 });
-;Object.assign(window, { supportCopy, SupportIcon, SupportButton, CowIcon, SupportModal, Value, BigCow, SupportHero, useSupportAutoTrigger });
+;Object.assign(window, { supportCopy, paceApoyoVisible, SupportIcon, SupportButton, CowIcon, SupportModal, Value, BigCow, SupportHero, useSupportAutoTrigger });
 })();
 </script>
 
@@ -17648,6 +17658,9 @@ function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
 
 function SidebarFooter(_ref6) {let { onSupport, compact, misRutinas, onMisRutinas } = _ref6;
   const { t } = useT();
+
+
+  const apoyo = typeof paceApoyoVisible !== 'function' || paceApoyoVisible();
   return (
     React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 8 : 10 } },
 
@@ -17667,8 +17680,8 @@ function SidebarFooter(_ref6) {let { onSupport, compact, misRutinas, onMisRutina
 
 
 
-    React.createElement("span", { style: sidebarStyles.pieRegla, "aria-hidden": "true" }),
-    React.createElement(SupportButton, { onOpen: onSupport }),
+    apoyo ? React.createElement("span", { style: sidebarStyles.pieRegla, "aria-hidden": "true" }) : null,
+    apoyo ? React.createElement(SupportButton, { onOpen: onSupport }) : null,
     React.createElement("div", { style: sidebarStyles.pieFila },
     React.createElement("span", { style: sidebarStyles.pieVer }, "Pace ", PACE_VERSION),
     React.createElement("span", { style: { fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' } }, "by @ezradesign")
@@ -26857,6 +26870,21 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
 'season.solstice.summer', 'season.solstice.winter',
 'season.equinox.spring', 'season.equinox.autumn']
 );
+
+
+
+
+
+
+(function () {
+  try {
+    if (typeof paceApoyoVisible !== 'function' || paceApoyoVisible()) return;
+    const st = typeof getState === 'function' ? getState() : null;
+    if (st && st.achievements && st.achievements['secret.supporter']) return;
+    const i = ACHIEVEMENT_CATALOG.findIndex((a) => a.id === 'secret.supporter');
+    if (i >= 0) ACHIEVEMENT_CATALOG.splice(i, 1);
+  } catch (e) {}
+})();
 
 
 

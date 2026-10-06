@@ -418,6 +418,9 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
    ============================================================ */
 function SidebarFooter({ onSupport, compact, misRutinas, onMisRutinas }) {
   const { t } = useT();
+  /* En la app de Android no hay pill de apoyo (SupportModule dice por que), y
+     sin ella la regla de debajo de «Mis rutinas» no separa nada. */
+  const apoyo = typeof paceApoyoVisible !== 'function' || paceApoyoVisible();
   return (
     <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 8 : 10 }}>
       {/* LA PILL NARANJA VUELVE. En v0.111.0 se degrado a enlace para ahorrar
@@ -437,8 +440,8 @@ function SidebarFooter({ onSupport, compact, misRutinas, onMisRutinas }) {
           es apoyo al proyecto-- y sin separacion se leian como una lista de dos
           botones. Va aqui y no como `borderTop` de la pill para que el pie siga
           componiendose con el `gap` de su columna. */}
-      <span style={sidebarStyles.pieRegla} aria-hidden="true"></span>
-      <SupportButton onOpen={onSupport} />
+      {apoyo ? <span style={sidebarStyles.pieRegla} aria-hidden="true"></span> : null}
+      {apoyo ? <SupportButton onOpen={onSupport} /> : null}
       <div style={sidebarStyles.pieFila}>
         <span style={sidebarStyles.pieVer}>Pace {PACE_VERSION}</span>
         <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @ezradesign</span>

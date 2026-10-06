@@ -21,7 +21,8 @@
  *   · `locale: es-ES`  -> `detectInitialLang()` (useT.jsx) devuelve 'es'. Los
  *     textos que se asertan son los espanoles; en un runner con otro locale la
  *     app arrancaria en ingles y fallaria por una razon que no es la que parece.
- *   · `timezoneId`     -> las claves ISO y el rollover dependen del huso.
+ *   · `timezoneId`     -> las claves ISO y el rollover dependen del huso (y
+ *     Node vive en el mismo, ver `HUSO`).
  *   · `colorScheme: light` -> `detectInitialPalette()` lee `prefers-color-scheme`
  *     en el primer arranque, y la prueba de Tweaks necesita salir de «crema».
  *   · `viewport 1280x720` -> Desktop, con sidebar visible (>768px).
@@ -35,6 +36,14 @@ const { defineConfig } = require('@playwright/test');
 
 const PUERTO = Number(process.env.PACE_E2E_PORT || 8765);
 const BASE = 'http://localhost:' + PUERTO;
+
+/* El huso de la app es tambien el de Node: las pruebas siembran fechas con
+   `new Date()` aqui y la app las lee en el navegador. Si no, en un runner en
+   UTC (el CI, la nube), entre las 00:00 y las 02:00 de Madrid Node va un dia
+   por detras: la app abre un dia nuevo, el agua vuelve a cero y gana
+   «Regresas». Los workers heredan el entorno de este proceso. */
+const HUSO = 'Europe/Madrid';
+process.env.TZ = HUSO;
 
 module.exports = defineConfig({
   testDir: './tests',
@@ -64,7 +73,7 @@ module.exports = defineConfig({
   use: {
     baseURL: BASE,
     locale: 'es-ES',
-    timezoneId: 'Europe/Madrid',
+    timezoneId: HUSO,
     colorScheme: 'light',
     trace: 'retain-on-failure',
   },

@@ -69,6 +69,11 @@ async function abrirBiblioteca(page, nombre) {
   await page.locator('.pace-lib').waitFor({ state: 'visible' });
 }
 
+/* Siete dias de racha que siguen vivos hoy: con ellos la web abre sola el modal
+   de apoyo (Buy Me a Coffee), 1,2 s despues de montar. */
+const rachaDe7 = () => ({ current: 7, longest: 7, lastActiveDate: new Date().toDateString() });
+const pillDeApoyo = (page) => page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Da de pastar a la vaca' });
+
 async function empezarCoherente(page) {
   await abrirBiblioteca(page, 'Respira');
   await page.locator('.pace-lib h4 button', { hasText: 'Coherente 5·5' }).filter({ visible: true }).first().click();
@@ -152,6 +157,32 @@ test.describe('en Android', () => {
     await expect(page.getByText('Todo vive en tu móvil.')).toBeVisible();
   });
 
+  test('no hay apoyo con Buy Me a Coffee: ni la pill del pie, ni el modal, ni el aviso de la racha', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false, streak: rachaDe7(), supportSeenAt: null });
+    await comoAndroid(context);
+    const errores = capturarErrores(page);
+    await irAlArtefacto(page);
+    await expect(page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Mis rutinas' })).toBeVisible();
+    await expect(pillDeApoyo(page), 'Google Play no deja enlazar a otro sistema de pago').toHaveCount(0);
+
+    await page.waitForTimeout(1600);   // el aviso de la racha salta a los 1,2 s
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:open-support')));
+    await page.waitForTimeout(300);
+    await expect(page.getByText('buymeacoffee.com/ezradesign'), 'el modal de apoyo se abrio en Android').toHaveCount(0);
+    expect((await leerEstado(page)).supportSeenAt, 'se dio por visto un modal que no existe').toBe(null);
+    /* Su secreto solo se gana en ese modal: fuera del catalogo, no infla el
+       denominador de los logros con uno que nadie puede ganar. */
+    expect(await page.evaluate(() => ACHIEVEMENT_CATALOG.some(a => a.id === 'secret.supporter'))).toBe(false);
+    expect(errores).toEqual([]);
+  });
+
+  test('quien ya tiene el secreto del apoyo (una copia de la web) lo sigue teniendo en Android', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false, achievements: { 'secret.supporter': { unlockedAt: 1759600000000 } } });
+    await comoAndroid(context);
+    await irAlArtefacto(page);
+    expect(await page.evaluate(() => ACHIEVEMENT_CATALOG.some(a => a.id === 'secret.supporter'))).toBe(true);
+  });
+
   test('el aviso de fin de Foco se ofrece en Ajustes y pide el permiso de Android', async ({ page, context }) => {
     await sembrar(context, { soundOn: false, notifyFocusEnd: false });
     await comoAndroid(context, { permiso: 'prompt', concede: 'granted' });
@@ -222,5 +253,14 @@ test.describe('en la web (control)', () => {
     ]);
     expect(descarga.suggestedFilename()).toMatch(/^pace-backup-\d{8}\.json$/);
     await expect(page.getByText('Backup descargado.')).toBeVisible();
+  });
+
+  test('el apoyo sigue: la pill del pie, y con 7 dias de racha el modal se abre solo', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false, streak: rachaDe7(), supportSeenAt: null });
+    await irAlArtefacto(page);
+    await expect(pillDeApoyo(page)).toBeVisible();
+    await expect(page.getByText('buymeacoffee.com/ezradesign'), 'la racha sembrada no abre el modal: la prueba de Android no mide nada').toBeVisible();
+    expect((await leerEstado(page)).supportSeenAt).toEqual(expect.any(Number));
+    expect(await page.evaluate(() => ACHIEVEMENT_CATALOG.some(a => a.id === 'secret.supporter'))).toBe(true);
   });
 });

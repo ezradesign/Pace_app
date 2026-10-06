@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Los colores de PACE en lo que Android pinta fuera de la web: el icono, la
+     pantalla de arranque y las barras del sistema. Son los de la paleta crema
+     de app/tokens.css; values-night/ lleva los de la oscura. -->
+<resources>
+    <!-- El fondo del icono es la marca: no cambia con el modo oscuro. -->
+    <color name="pace_icono_fondo">#F2EDE0</color>
+    <!-- El papel (paper): el arranque, la ventana y la franja de las barras. -->
+    <color name="pace_fondo">#F2EDE0</color>
+    <!-- La tinta (ink) de la paleta oscura: la vaca del arranque en modo oscuro. -->
+    <color name="pace_trazo_noche">#EDE5D3</color>
+    <!-- Sobre el crema, los iconos del sistema van en oscuro. -->
+    <bool name="pace_barras_claras">true</bool>
+</resources>

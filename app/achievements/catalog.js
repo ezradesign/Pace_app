@@ -245,6 +245,21 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'season.equinox.spring', 'season.equinox.autumn',
 ]);
 
+/* En la app de Android no hay apoyo (SupportModule.jsx: Google Play no deja
+   llevar a pagar fuera de su cobro), y `secret.supporter` solo se gana desde
+   ese modal. Ahí nadie podría ganarlo y entraría igual en el denominador de
+   abajo: se quita del catálogo, salvo si ya lo tienes (una copia importada de
+   la web). Importar recarga la app, así que esto se vuelve a decidir. */
+(function () {
+  try {
+    if (typeof paceApoyoVisible !== 'function' || paceApoyoVisible()) return;
+    const st = typeof getState === 'function' ? getState() : null;
+    if (st && st.achievements && st.achievements['secret.supporter']) return;
+    const i = ACHIEVEMENT_CATALOG.findIndex(a => a.id === 'secret.supporter');
+    if (i >= 0) ACHIEVEMENT_CATALOG.splice(i, 1);
+  } catch (e) { /* sin quitarlo, todo sigue como en la web */ }
+})();
+
 /* §15.4 · DENOMINADOR ÚNICO (s146b). Medido antes de existir esto: la sidebar
    dividía entre 96 (el catálogo entero) y el modal entre 88 (solo lo que tiene
    detector), así que el «por descubrir» de la sidebar prometía 8 logros que
