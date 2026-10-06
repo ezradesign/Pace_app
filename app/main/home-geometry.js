@@ -103,6 +103,21 @@
      que el techo no puede dar lo reparte `--pace-home-slack`, más abajo. */
   var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
+  /* EL ARO NO ES MAS PEQUEÑO QUE LO QUE LLEVA DENTRO (solo en la piel de movil).
+     Alli el interior NO escala con D: rotulo, numero, boton y fila del ciclo
+     tienen tamaño fijo por legibilidad, y el suelo de 240 ya no los contiene.
+     Medido a 360x718 con «Hoy voy por libre» (el panel de abajo es mas alto y el
+     bucle baja hasta el suelo): la esquina mas lejana del interior quedaba a
+     0,545 D del centro, por fuera del trazo (0,475 D), y «FOCO MANUAL» y el ciclo
+     se pintaban encima del aro. Pasaba igual a 375x667 sin ir por libre.
+     Por eso el suelo de movil es tambien lo que pide el interior, y se MIDE en
+     vez de escribirse: depende del idioma, del estado del Pomodoro y de la
+     fuente. 0,44 D es lo que usan las composiciones que se ven bien (de 0,35 a
+     0,44 medido en movil y en escritorio) y deja libre el halo de la bola guia,
+     que empieza en 0,458 D. Con el aro mas grande la home de movil hace algo mas
+     de scroll, que alli se admite. En escritorio el interior ya es proporcional
+     a D (_responsive.pieles.esc.js) y la home no puede hacer scroll: no se toca. */
+  var RADIO_INTERIOR = 0.44;
   var CICLO_GAP = 4;           // px de aire MÍNIMO entre CICLO y el borde de Actividades
   /* AIRE ENCIMA DEL CANTO DE LAS TARJETAS, en fraccion de D y no en px fijos
      (s185). Lo que hay que despejar no es el trazo del aro: es el HALO DE LA
@@ -161,6 +176,33 @@
       }
     }
     return best;
+  }
+
+  /* El diametro que pide el interior con el D aplicado ahora: la esquina mas
+     lejana del centro de todo lo que se pinta dentro, partida por
+     RADIO_INTERIOR. Solo cuentan las HOJAS: el bloque que las envuelve mide el
+     70 % del aro y sus esquinas quedan fuera del circulo por construccion. Lo
+     que esta oculto con visibility (la fila del ciclo cuando el panel de A tu
+     ritmo ocupa su hueco) no se pinta y no cuenta. */
+  function pisoInterior(dial) {
+    var numero = dial.querySelector('[data-pace-dial-number]');
+    var bloque = numero && numero.parentElement;
+    if (!bloque) return 0;
+    var f = dial.getBoundingClientRect();
+    var cx = f.left + f.width / 2;
+    var cy = f.top + f.height / 2;
+    var peor = 0;
+    var nodos = bloque.querySelectorAll('*');
+    for (var i = 0; i < nodos.length; i++) {
+      if (nodos[i].children.length) continue;
+      var r = nodos[i].getBoundingClientRect();
+      if (!r.width || !r.height) continue;
+      if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
+      var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
+      var dy = Math.max(Math.abs(r.top - cy), Math.abs(r.bottom - cy));
+      peor = Math.max(peor, Math.sqrt(dx * dx + dy * dy));
+    }
+    return Math.ceil(peor / RADIO_INTERIOR);
   }
 
   // Fija D y, con D ya aplicado (getBoundingClientRect fuerza layout), ancla las
@@ -271,6 +313,11 @@
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
     applyD(D, dial);
+    /* El suelo de movil sube hasta lo que pide el interior, medido con este
+       primer D, que es el mayor (ver RADIO_INTERIOR). Nunca por encima de el:
+       el techo por ancho manda, y en un telefono de 320 el aro se queda en su
+       ancho aunque el interior pida un poco mas. */
+    var piso = isDesktop ? dFloor : Math.max(dFloor, Math.min(D, pisoInterior(dial)));
 
     /* s156: el desbordamiento se mide sobre el STACK, no sobre `scrollHeight`
        de la región. `scrollHeight` es la envolvente de TODO lo que sobresale —
@@ -306,7 +353,7 @@
     var dPrevio = D;
     for (var i = 0; i < MAX_FIT_PASSES; i++) {
       var over = medirOver();
-      if (over <= 1 || D <= dFloor) { reintentos = 0; break; }
+      if (over <= 1 || D <= piso) { reintentos = 0; break; }
       /* NUNCA ENCOGER A CIEGAS (s156). Si la pasada anterior redujo D y el
          desbordamiento no mejoró, la medida no está respondiendo al cambio y
          seguir restando es dar palos: se vuelve al último D no desmentido y se
@@ -330,7 +377,7 @@
       dPrevio = D;
       // reducir D: la huella vertical del aro tras solapar es ~0.84·D, así que
       // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
-      D = Math.max(dFloor, D - Math.ceil(over / 0.84));
+      D = Math.max(piso, D - Math.ceil(over / 0.84));
       applyD(D, dial);
     }
 

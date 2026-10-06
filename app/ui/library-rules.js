@@ -119,13 +119,28 @@ function libraryOrdenar(rutinas) {
    descanso en la tira sería contar como contenido lo que es una pausa.
    Se resuelve por IDENTIDAD y no por nombre: varios ejercicios comparten dibujo
    vía VISUAL_ALIAS (s110), y mapear por nombre duplicaría entradas. */
+/* EL MISMO GESTO CUENTA UNA VEZ EN LA TARJETA. «Colgarse» alterna la
+   suspension pasiva y la activa: son dos dibujos distintos y en la sesion cada
+   paso conserva el suyo, pero a 20 px se leen igual, y la tira repetia en
+   pequeño el dibujo grande. Ez lo vio en su movil: «al ser el mismo, ¿esto
+   realmente aporta algo?». Las otras rutinas con dos dibujos (Empuje ·
+   progresion y Gluteos invisibles) enseñan dos ejercicios distintos y no
+   cambian. La clave es la identidad visual; el valor, el gesto que la absorbe. */
+var LIBRARY_MISMO_GESTO = {
+  'Suspensión activa': 'Suspensión pasiva',
+};
+
 function libraryGlifos(rutina) {
   var out = [];
+  var gestos = [];
   var resolver = window.resolveVisualId || function (n) { return n; };
   ((rutina && rutina.steps) || []).forEach(function (s) {
     if (!s || !s.name || s.name === 'Descanso') return;
     var v = resolver(s.name);
-    if (out.indexOf(v) === -1) out.push(v);
+    var gesto = LIBRARY_MISMO_GESTO[v] || v;
+    if (gestos.indexOf(gesto) !== -1) return;
+    gestos.push(gesto);
+    out.push(v);
   });
   return out;
 }

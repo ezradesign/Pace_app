@@ -54,6 +54,7 @@ function Onboarding() {
 
   if (!open) return null;
 
+  const conCaminos = window.SHOW_CAMINOS !== false;
   const questions = window.ONBOARDING_QUESTIONS || [];
   const isQuestion = step >= 1 && step <= questions.length;
   const q = isQuestion ? questions[step - 1] : null;
@@ -175,15 +176,23 @@ function Onboarding() {
                   </div>
                 ))}
               </div>
-              <div className="pace-meta" style={{ marginTop: 2 }}>
-                {t('onboarding.welcome.hint')}
-              </div>
-              <button data-pace-cta onClick={next} style={onboardingStyles.cta}>
+              {/* SIN CAMINOS NO HAY PREGUNTAS (SHOW_CAMINOS, app/flags.js): las
+                  tres solo sirven para proponer el primer Camino, así que con
+                  los Caminos ocultos «Comenzar» lleva directo a la home, y
+                  «prefiero saltarlo» y el aviso de las tres preguntas sobran. */}
+              {conCaminos && (
+                <div className="pace-meta" style={{ marginTop: 2 }}>
+                  {t('onboarding.welcome.hint')}
+                </div>
+              )}
+              <button data-pace-cta onClick={conCaminos ? next : () => finish({ pick: false })} style={onboardingStyles.cta}>
                 {t('onboarding.welcome.cta')}
               </button>
-              <button onClick={() => finish({ pick: false })} style={onboardingStyles.ghostBtn}>
-                {t('onboarding.skip')}
-              </button>
+              {conCaminos && (
+                <button onClick={() => finish({ pick: false })} style={onboardingStyles.ghostBtn}>
+                  {t('onboarding.skip')}
+                </button>
+              )}
             </React.Fragment>
           )}
 

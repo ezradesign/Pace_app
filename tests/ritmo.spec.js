@@ -363,7 +363,7 @@ test('«Hoy voy por libre» devuelve la carta con la tarjeta del ritmo; una lose
   await expect(tarjeta.locator('[data-pace-ritmo-loseta]')).toHaveCount(4);
   await expect(tarjeta.locator('[data-pace-ritmo-loseta="jornada"]')).toContainText('De 9:00 a 17:00');
   await expect(page.locator('[data-pace-spc]')).toHaveCount(1);
-  await expect(tarjeta.locator('[data-pace-ritmo-caminos]')).toHaveText('Ver caminos');
+  await expect(tarjeta.locator('[data-pace-ritmo-ajustar]')).toHaveText('Ajustar el horario');
   await tarjeta.locator('[data-pace-ritmo-ajustar]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toHaveCount(1);
   await vis(page, '[data-pace-ritmo-libre]').first().click();

@@ -5,8 +5,8 @@
    usuario: «sustituyendo a la de Caminos, que sea muy visual» — y eligió la
    variante 5A de la ronda 2 (docs/proposals/ideas-s195-r2.html), «pero más
    bonita». Un toque en una loseta sirve el día; «Ajustar el horario» abre la
-   pregunta entera; «Ver caminos» sigue abriendo la biblioteca de Caminos, que
-   no sale del producto: sale de la home.
+   pregunta entera; «Ver caminos» abre la biblioteca de Caminos, y solo se pinta
+   con `SHOW_CAMINOS` encendida (app/flags.js): hoy los Caminos están ocultos.
 
    MISMA CÁSCARA que la tarjeta del Camino, y eso no es pereza: `[data-pace-spc]`
    lo observa el motor de geometría (home-geometry.js) y lo mueve la piel
@@ -31,7 +31,9 @@ function RitmoTarjeta() {
           </div>
           <div className="pace-rt-tarjeta-enlaces">
             <button className="pace-rt-enlace" data-pace-ritmo-ajustar onClick={ritmoVolver}>{t('ritmo.tarjeta.ajustar')}</button>
-            <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
+            {window.SHOW_CAMINOS !== false && (
+              <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
+            )}
           </div>
         </div>
         <div className="pace-rt-losetas">

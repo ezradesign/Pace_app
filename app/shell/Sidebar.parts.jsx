@@ -74,11 +74,12 @@ function achMini(id, tR) {
      36 px, el 72 % deja el dibujo en ~26 px -- medido, a 62 % se quedaba en
      16,1 y no se leia. */
   const estilo = a.glyphSvg ? { width: '72%', height: '72%' } : { fontSize: '1.5em' };
-  /* El secreto sigue siendo '?' y no `ach.seal.secret`: ahi no se oculta una
-     traduccion, se oculta el logro, y el interrogante ya es el mismo signo en
-     los dos idiomas. */
+  /* Un secreto se dice con su nombre: aqui solo llega el ultimo logro GANADO, y
+     un secreto ganado ya no oculta nada. Escribirlo como «?» hacia que «Cuaderno
+     a salvo», el de exportar la copia, saliera como «?» en la barra mientras la
+     coleccion lo nombraba (Achievements.jsx solo lo oculta si no esta ganado). */
   return {
-    title: a.secret ? '?' : tR('ach.item.' + a.id + '.title', a.title),
+    title: tR('ach.item.' + a.id + '.title', a.title),
     nodo: dibuja ? dibuja(a, estilo) : (a.glyph || '✦'),
   };
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.138.0</title>
+  <title>PACE · Foco · Cuerpo — v0.139.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4931,7 +4931,17 @@ const SHOW_BREATH_ORGANICO = false;
 
 const SHOW_LAYOUT_AXIS = false;
 
-Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO, SHOW_LAYOUT_AXIS });
+
+
+
+
+
+
+
+
+const SHOW_CAMINOS = false;
+
+Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO, SHOW_LAYOUT_AXIS, SHOW_CAMINOS });
 })();
 </script>
   <!-- state-core.support (s148): deteccion de entorno + MIGRACIONES + rollover,
@@ -5514,7 +5524,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.138.0';
+const PACE_VERSION = 'v0.139.0';
 
 
 
@@ -17317,8 +17327,9 @@ function achMini(id, tR) {
 
 
 
+
   return {
-    title: a.secret ? '?' : tR('ach.item.' + a.id + '.title', a.title),
+    title: tR('ach.item.' + a.id + '.title', a.title),
     nodo: dibuja ? dibuja(a, estilo) : a.glyph || '✦'
   };
 }
@@ -19325,13 +19336,28 @@ function libraryOrdenar(rutinas) {
 
 
 
+
+
+
+
+
+
+
+var LIBRARY_MISMO_GESTO = {
+  'Suspensión activa': 'Suspensión pasiva'
+};
+
 function libraryGlifos(rutina) {
   var out = [];
+  var gestos = [];
   var resolver = window.resolveVisualId || function (n) {return n;};
   (rutina && rutina.steps || []).forEach(function (s) {
     if (!s || !s.name || s.name === 'Descanso') return;
     var v = resolver(s.name);
-    if (out.indexOf(v) === -1) out.push(v);
+    var gesto = LIBRARY_MISMO_GESTO[v] || v;
+    if (gestos.indexOf(gesto) !== -1) return;
+    gestos.push(gesto);
+    out.push(v);
   });
   return out;
 }
@@ -19443,7 +19469,7 @@ Object.assign(window, {
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio
 });
-;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
 })();
 </script>
   <script>
@@ -26890,6 +26916,20 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
 
 
 
+(function () {
+  try {
+    if (window.SHOW_CAMINOS !== false) return;
+    const st = typeof getState === 'function' ? getState() : null;
+    if (st && st.achievements && st.achievements['master.path.all7']) return;
+    const i = ACHIEVEMENT_CATALOG.findIndex((a) => a.id === 'master.path.all7');
+    if (i >= 0) ACHIEVEMENT_CATALOG.splice(i, 1);
+  } catch (e) {}
+})();
+
+
+
+
+
 
 
 
@@ -28377,7 +28417,8 @@ function StatsPanel(_ref4) {let { open, onClose } = _ref4;
     { key: 'month', label: t('stats.tab.month') },
     { key: 'year', label: t('stats.tab.year') },
     { key: 'paths', label: t('stats.tab.paths') }].
-    map((_ref5) => {let { key, label } = _ref5;return (
+
+    filter((_ref5) => {let { key } = _ref5;return key !== 'paths' || window.SHOW_CAMINOS !== false;}).map((_ref6) => {let { key, label } = _ref6;return (
         React.createElement("button", { key: key, style: statsPanelTabStyles.tab(tab === key), onClick: () => setTab(key) }, label));}
     )
     ),
@@ -32475,6 +32516,7 @@ function Onboarding() {
 
   if (!open) return null;
 
+  const conCaminos = window.SHOW_CAMINOS !== false;
   const questions = window.ONBOARDING_QUESTIONS || [];
   const isQuestion = step >= 1 && step <= questions.length;
   const q = isQuestion ? questions[step - 1] : null;
@@ -32596,15 +32638,23 @@ function Onboarding() {
     )
     )
     ),
+
+
+
+
+    conCaminos &&
     React.createElement("div", { className: "pace-meta", style: { marginTop: 2 } },
     t('onboarding.welcome.hint')
     ),
-    React.createElement("button", { "data-pace-cta": true, onClick: next, style: onboardingStyles.cta },
+
+    React.createElement("button", { "data-pace-cta": true, onClick: conCaminos ? next : () => finish({ pick: false }), style: onboardingStyles.cta },
     t('onboarding.welcome.cta')
     ),
+    conCaminos &&
     React.createElement("button", { onClick: () => finish({ pick: false }), style: onboardingStyles.ghostBtn },
     t('onboarding.skip')
     )
+
     ),
 
 
@@ -33920,7 +33970,9 @@ function RitmoTarjeta() {
     ),
     React.createElement("div", { className: "pace-rt-tarjeta-enlaces" },
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoVolver }, t('ritmo.tarjeta.ajustar')),
+    window.SHOW_CAMINOS !== false &&
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
+
     )
     ),
     React.createElement("div", { className: "pace-rt-losetas" },
@@ -36638,6 +36690,21 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
   var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  var RADIO_INTERIOR = 0.44;
   var CICLO_GAP = 4;
 
 
@@ -36696,6 +36763,33 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
       }
     }
     return best;
+  }
+
+
+
+
+
+
+
+  function pisoInterior(dial) {
+    var numero = dial.querySelector('[data-pace-dial-number]');
+    var bloque = numero && numero.parentElement;
+    if (!bloque) return 0;
+    var f = dial.getBoundingClientRect();
+    var cx = f.left + f.width / 2;
+    var cy = f.top + f.height / 2;
+    var peor = 0;
+    var nodos = bloque.querySelectorAll('*');
+    for (var i = 0; i < nodos.length; i++) {
+      if (nodos[i].children.length) continue;
+      var r = nodos[i].getBoundingClientRect();
+      if (!r.width || !r.height) continue;
+      if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
+      var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
+      var dy = Math.max(Math.abs(r.top - cy), Math.abs(r.bottom - cy));
+      peor = Math.max(peor, Math.sqrt(dx * dx + dy * dy));
+    }
+    return Math.ceil(peor / RADIO_INTERIOR);
   }
 
 
@@ -36810,6 +36904,11 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
 
+    var piso = isDesktop ? dFloor : Math.max(dFloor, Math.min(D, pisoInterior(dial)));
+
+
+
+
 
 
 
@@ -36841,7 +36940,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var dPrevio = D;
     for (var i = 0; i < MAX_FIT_PASSES; i++) {
       var over = medirOver();
-      if (over <= 1 || D <= dFloor) {reintentos = 0;break;}
+      if (over <= 1 || D <= piso) {reintentos = 0;break;}
 
 
 
@@ -36865,7 +36964,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
       dPrevio = D;
 
 
-      D = Math.max(dFloor, D - Math.ceil(over / 0.84));
+      D = Math.max(piso, D - Math.ceil(over / 0.84));
       applyD(D, dial);
     }
 

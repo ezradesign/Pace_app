@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.138.0 · 6 de octubre de 2026.
+**Versión:** v0.139.0 · 6 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -21,6 +21,10 @@ crema, y en modo oscuro el arranque y las barras pasan a la paleta oscura (`veri
 copias de Android sigan siendo las de la web). En Android no hay «Da de pastar a la vaca»: Google
 Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del catálogo.
 
+Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
+sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
+borrado nada, y un Camino que ya estuviera empezado se puede terminar.
+
 ## Lo siguiente
 
 1. **Fase 2:** probar el APK en un móvil: lo de arriba, el icono y el arranque de día y en modo
@@ -37,12 +41,13 @@ Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del cat
   después ya no se puede cambiar.
 - Mueve y Estira al salir de la pantalla: hoy la sesión se pausa (`SESION_AL_OCULTAR = 'pausa'`, en
   `app/move/MoveSessionV1.support.jsx`). La alternativa es que siga contando, como el Pomodoro.
-- Quitar los Caminos de la home: necesita maqueta antes.
+- «Pronto» en las rutinas premium del catálogo: abrirlas hasta v1.0 o dejarlas cerradas.
+- Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión).
 
 ## Deuda conocida, sin fecha
 
-- Las cinco escenas con scroll anteriores a v0.130.0 (la tarjeta por libre arrastra 72 px a 375×667 y
-  32 a 360×730).
+- Las cinco escenas con scroll anteriores a v0.130.0. Desde v0.139.0 el aro no encoge por debajo de
+  lo que lleva dentro, y por libre la home arrastra 104 px a 375×667 y 63 a 360×730 (antes, 72 y 32).
 - En «A tu ritmo»: el miércoles sale con tres largas (2.ª, 5.ª y 8.ª), el modo oscuro del panel, el
   cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga semanas de datos.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de

@@ -260,6 +260,20 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   } catch (e) { /* sin quitarlo, todo sigue como en la web */ }
 })();
 
+/* Lo mismo con «Cartógrafa» mientras los Caminos estén ocultos (SHOW_CAMINOS,
+   app/flags.js): solo se gana recorriendo los siete, y sin forma de abrirlos
+   sería un logro imposible que además contaría en el denominador. Si ya lo
+   tienes, se queda. */
+(function () {
+  try {
+    if (window.SHOW_CAMINOS !== false) return;
+    const st = typeof getState === 'function' ? getState() : null;
+    if (st && st.achievements && st.achievements['master.path.all7']) return;
+    const i = ACHIEVEMENT_CATALOG.findIndex(a => a.id === 'master.path.all7');
+    if (i >= 0) ACHIEVEMENT_CATALOG.splice(i, 1);
+  } catch (e) { /* sin quitarlo, el logro sigue a la vista */ }
+})();
+
 /* §15.4 · DENOMINADOR ÚNICO (s146b). Medido antes de existir esto: la sidebar
    dividía entre 96 (el catálogo entero) y el modal entre 88 (solo lo que tiene
    detector), así que el «por descubrir» de la sidebar prometía 8 logros que

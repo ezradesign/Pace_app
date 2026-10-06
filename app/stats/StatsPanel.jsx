@@ -448,7 +448,8 @@ function StatsPanel({ open, onClose }) {
           { key:'month', label:t('stats.tab.month') },
           { key:'year',  label:t('stats.tab.year')  },
           { key:'paths', label:t('stats.tab.paths') },
-        ].map(({ key, label }) => (
+        /* Sin Caminos (SHOW_CAMINOS, app/flags.js) su pestaña no se ofrece. */
+        ].filter(({ key }) => key !== 'paths' || window.SHOW_CAMINOS !== false).map(({ key, label }) => (
           <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
         ))}
       </div>

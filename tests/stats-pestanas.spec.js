@@ -1,6 +1,6 @@
 /* PACE · tests/stats-pestanas.spec.js (sesión 176)
    =================================================
-   LAS CUATRO PESTAÑAS DE STATS, DEL MISMO TAMAÑO Y SIN SCROLL EN ESCRITORIO.
+   LAS PESTAÑAS DE STATS, DEL MISMO TAMAÑO Y SIN SCROLL EN ESCRITORIO.
    Lo pidió el usuario mirando la app: «los paneles de estadísticas deberían ser
    todos del mismo tamaño y sin scroll, ya que cambiar entre pestañas y que
    varíe el tamaño se queda un poco raro».
@@ -18,12 +18,13 @@
    exactamente cómo el «cabe sin scroll» de s62 dejó de ser cierto.
 
    NO CUBRE móvil: allí la altura útil cambia con cada teléfono y el suelo no
-   se aplica a propósito.
+   se aplica a propósito. Ni la pestaña Caminos mientras estén ocultos
+   (SHOW_CAMINOS, app/flags.js): sin ella quedan tres.
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, esperarModalAsentado } = require('./helpers');
 
-const PESTANAS = ['Semana', 'Mes', 'Año', 'Caminos'];
+const PESTANAS = ['Semana', 'Mes', 'Año'];
 
 async function abrirStats(page) {
   await page.evaluate(() => {
@@ -59,7 +60,7 @@ async function medirPestana(page, nombre) {
   });
 }
 
-test('las cuatro pestañas de Stats miden lo mismo y ninguna se corta', async ({ page, context }) => {
+test('las pestañas de Stats miden lo mismo y ninguna se corta', async ({ page, context }) => {
   await sembrar(context);
   await irAlArtefacto(page);
   await abrirStats(page);
@@ -69,7 +70,7 @@ test('las cuatro pestañas de Stats miden lo mismo y ninguna se corta', async ({
 
   /* GUARD DE CERO: si alguna pestaña no se hubiera podido medir, las
      comparaciones de abajo cruzarían un solo valor consigo mismo. */
-  expect(Object.keys(medidas).length).toBe(4);
+  expect(Object.keys(medidas).length).toBe(PESTANAS.length);
   for (const nom of PESTANAS) {
     expect(medidas[nom].alto, nom + ' no midió nada').toBeGreaterThan(100);
   }

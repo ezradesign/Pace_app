@@ -78,6 +78,9 @@ function estadoTodoDesbloqueado(lang) {
     _historyRecalculated_v0_28_8: true,
     _historyMigrated: true,
     lastActiveDay: new Date().toDateString(),
+    /* Con los Caminos ocultos, «Cartógrafa» solo sigue en el catálogo de quien ya
+       la tiene (catalog.js). Ganada desde el arranque, se siguen leyendo los 96. */
+    achievements: { 'master.path.all7': 1 },
   };
 }
 
@@ -195,8 +198,9 @@ test('el aviso de logro nuevo tambien habla ingles', async ({ page, context }) =
    lee el selector (`Sidebar.selectors.js:191`); un numero pelado deja el
    `unlockedAt` en `undefined` y el «mas reciente» pasa a ser un empate.
 
-   LOS SECRETOS SE EXCLUYEN A PROPOSITO: la fila pinta '?' para ellos, que es
-   decision de producto, no un titulo sin traducir. */
+   LOS SECRETOS VAN APARTE, en la prueba del final: aqui se elige por titulos
+   ES y EN distintos, y lo que se les pide a ellos es otra cosa (que se digan
+   con su nombre una vez ganados). */
 async function dejarUnSoloLogro(page) {
   return page.evaluate(() => {
     const cat = window.ACHIEVEMENT_CATALOG || [];
@@ -266,6 +270,36 @@ test('en ESPANOL el ultimo logro de la sidebar sigue en castellano', async ({ pa
   expect(fila && fila.id).toBe(elegido.id);
 
   /* La otra direccion, la que se rompe al «arreglar» el ingles de mas. */
+  expect(fila.titulo).toBe(elegido.es);
+  expect(fila.tooltip).toBe(elegido.es);
+
+  expect(errores).toEqual([]);
+});
+
+/* UN SECRETO GANADO SE DICE CON SU NOMBRE. La fila los escribia como «?» aunque
+   el logro ya estuviera ganado, mientras la coleccion si lo nombraba: Ez lo vio
+   en su movil con «Cuaderno a salvo», el de exportar la copia. A la fila solo
+   llega el ultimo logro GANADO, asi que ahi no queda nada que ocultar.
+   Relacional: el secreto y su titulo salen del catalogo dentro del artefacto. */
+test('un secreto ganado sale en la sidebar con su nombre, no como «?»', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await sembrar(context, estadoTodoDesbloqueado('es'));
+  await irAlArtefacto(page);
+
+  const elegido = await page.evaluate(() => {
+    const secreto = (window.ACHIEVEMENT_CATALOG || []).find(a => a.secret);
+    if (!secreto) return null;
+    const s = JSON.parse(localStorage.getItem('pace.state.v2') || '{}');
+    s.achievements = { [secreto.id]: { unlockedAt: Date.now() } };
+    localStorage.setItem('pace.state.v2', JSON.stringify(s));
+    return { id: secreto.id, es: secreto.title };
+  });
+  expect(elegido, 'el catalogo no tiene ningun secreto').not.toBeNull();
+  await page.reload();
+  await page.locator('[data-pace-sidebar-ultimo]').waitFor({ state: 'visible' });
+
+  const fila = await leerFilaUltimo(page);
+  expect(fila && fila.id).toBe(elegido.id);
   expect(fila.titulo).toBe(elegido.es);
   expect(fila.tooltip).toBe(elegido.es);
 

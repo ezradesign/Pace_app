@@ -434,7 +434,7 @@ test.describe('geometria de la home · controles', () => {
     await irAlArtefacto(page);
 
     /* s195b: por libre, en el sitio del Camino sugerido está la tarjeta del ritmo (sus losetas) */
-    for (const nombre of ['Empezar foco', 'Jornada entera', 'Ver caminos', 'Respira', 'Hidrátate']) {
+    for (const nombre of ['Empezar foco', 'Jornada entera', 'Ajustar el horario', 'Respira', 'Hidrátate']) {
       await expect(
         page.locator('[data-pace-home-body]').getByRole('button', { name: nombre, exact: false }),
         'el control «' + nombre + '» no aparece exactamente una vez'
