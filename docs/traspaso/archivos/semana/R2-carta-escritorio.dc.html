@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>El lunes · escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;flex:1}
+.col b{width:22px;border-radius:5px 5px 2px 2px;background:#9DAE97;display:block}
+.cambio{display:grid;grid-template-columns:12px minmax(0,1fr);gap:10px;align-items:baseline;font-size:14.5px;line-height:1.45;color:#4A453C}
+.cambio i{width:9px;height:9px;border-radius:50%;border:1.5px solid;box-sizing:border-box;display:block;transform:translateY(-1px)}
+</style>
+</helmet>
+<div style="width:960px;height:360px;box-sizing:border-box;background:#F6F1E6;border:1px solid #D6CDB6;border-radius:16px;padding:20px 26px 18px;color:#1F1C17;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;display:flex;flex-direction:column;gap:14px">
+
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <span class="cap">Lunes · tu semana</span>
+    <span style="font-size:12px;color:#6F695B">del 28 de septiembre al 4 de octubre</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:40px;flex:1">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:20px;align-items:end">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="cap">Te ayudó</div>
+        <div class="it" style="font-size:28px;line-height:1.1">Cuello y Coherente 6·6</div>
+        <div style="font-size:13px;color:#6F695B">31 de 40 pausas hechas, sobre todo por la mañana</div>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:8px;height:110px">
+        <div class="col"><b style="height:70px"></b><span class="cap" style="font-size:9px">L</span></div>
+        <div class="col"><b style="height:82px"></b><span class="cap" style="font-size:9px">M</span></div>
+        <div class="col"><b style="height:36px"></b><span class="cap" style="font-size:9px">X</span></div>
+        <div class="col"><b style="height:60px"></b><span class="cap" style="font-size:9px">J</span></div>
+        <div class="col"><b style="height:32px"></b><span class="cap" style="font-size:9px">V</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:9px;border-left:1px solid #E1D9C5;padding-left:38px">
+      <div class="cap">Esta semana</div>
+      <div class="cambio"><i style="border-color:#6B7A8F"></i><span><span class="it" style="font-size:17px;color:#1F1C17">Cuello</span> vuelve el martes y el jueves.</span></div>
+      <div class="cambio"><i style="border-color:#9A7B4F"></i><span>La pausa de las 16:35, que solías saltar, pasa a ser más corta.</span></div>
+      <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center">
+        <a href="#" class="it" style="font-size:16px">Dejarla como estaba</a>
+        <button style="min-height:44px;display:flex;align-items:center;border:0;background:none;padding:0">
+          <span class="it" style="background:#EAE4D4;border:1px solid rgba(62,90,58,.35);border-radius:17px;height:34px;display:flex;align-items:center;padding:0 18px;color:#3E5A3A;font-size:19px">Vale →</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":360}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

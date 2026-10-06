@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Bienvenida · ¿cómo es tu semana?</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.dia{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:6px;height:84px;padding:10px 0 9px;border-radius:12px;border:1px solid #C9C0A8;background:#F6F1E6;font:inherit;color:#1F1C17;cursor:pointer;min-width:0;box-sizing:border-box}
+.dia.media{background:#F6F1E6}
+.dia.libre{border-style:dashed;background:none;color:#6F695B}
+.lleno{width:12px;height:30px;border-radius:6px;background:#50624D;display:block}
+.mitad{width:12px;height:30px;border-radius:6px;background:linear-gradient(#DCD4C0 50%,#50624D 50%);display:block}
+.vacio{width:12px;height:30px;border-radius:6px;border:1.5px dotted #B8AD8E;box-sizing:border-box;display:block}
+.hora{border-bottom:1px dotted #8A8372;color:#1F1C17}
+</style>
+</helmet>
+<div style="width:360px;height:718px;box-sizing:border-box;padding:24px 22px 26px;background:#F2EDE0;color:#1F1C17;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;display:flex;flex-direction:column">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;height:32px">
+    <button aria-label="Atrás" style="border:0;background:none;color:#4A453C;width:32px;height:32px;padding:0;text-align:left"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 2L4 8l6 6"></path></svg></button>
+    <span class="cap">A tu ritmo</span>
+    <span style="width:32px"></span>
+  </div>
+
+  <h1 class="it" style="margin:34px 0 10px;font-size:34px;line-height:1.1;font-weight:500">¿Cómo es tu semana?</h1>
+  <p style="margin:0 0 26px;font-size:14px;line-height:1.55;color:#4A453C">Así cada mañana tu día llega preparado. Si un día es distinto, lo cambias ese día.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px">
+    <button class="dia" aria-label="Lunes, jornada"><span class="cap" style="font-size:10px;color:#1F1C17">L</span><span class="lleno"></span></button>
+    <button class="dia" aria-label="Martes, jornada"><span class="cap" style="font-size:10px;color:#1F1C17">M</span><span class="lleno"></span></button>
+    <button class="dia media" aria-label="Miércoles, media jornada"><span class="cap" style="font-size:10px;color:#1F1C17">X</span><span class="mitad"></span></button>
+    <button class="dia" aria-label="Jueves, jornada"><span class="cap" style="font-size:10px;color:#1F1C17">J</span><span class="lleno"></span></button>
+    <button class="dia media" aria-label="Viernes, media jornada"><span class="cap" style="font-size:10px;color:#1F1C17">V</span><span class="mitad"></span></button>
+    <button class="dia libre" aria-label="Sábado, libre"><span class="cap" style="font-size:10px">S</span><span class="vacio"></span></button>
+    <button class="dia libre" aria-label="Domingo, libre"><span class="cap" style="font-size:10px">D</span><span class="vacio"></span></button>
+  </div>
+  <p class="it" style="margin:10px 0 0;font-size:14px;color:#6F695B;text-align:center">Toca un día para cambiarlo</p>
+
+  <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;border-top:1px solid #DFD8C4;padding-top:16px">
+    <div style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:center">
+      <span class="lleno" style="height:18px;width:10px;justify-self:center"></span>
+      <span class="it" style="font-size:16px;color:#4A453C"><b style="font-weight:500;color:#1F1C17">Jornada</b> de <span class="hora">9:00</span> a <span class="hora">18:00</span>, comes a las <span class="hora">14:00</span></span>
+    </div>
+    <div style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:center">
+      <span class="mitad" style="height:18px;width:10px;justify-self:center"></span>
+      <span class="it" style="font-size:16px;color:#4A453C"><b style="font-weight:500;color:#1F1C17">Media</b> de <span class="hora">9:00</span> a <span class="hora">13:00</span></span>
+    </div>
+    <div style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:center">
+      <span class="vacio" style="height:18px;width:10px;justify-self:center"></span>
+      <span class="it" style="font-size:16px;color:#4A453C"><b style="font-weight:500;color:#1F1C17">Libre</b>, sin plan: PACE te deja en paz</span>
+    </div>
+  </div>
+
+  <div style="margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:8px">
+    <button style="padding:13px 44px;border-radius:999px;background:#50624D;border:1px solid #50624D;color:#F2EDE0;font-family:inherit;font-size:13px;letter-spacing:.12em;text-transform:uppercase">Comenzar</button>
+    <button class="it" style="border:0;background:none;color:#6F695B;font-size:14px;padding:8px 10px">Cada semana es distinta</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":718}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

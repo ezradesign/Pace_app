@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>C · la carta del lunes, escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.linea{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;align-items:baseline;font-size:14px;line-height:1.45;color:#4A453C}
+.linea i{width:7px;height:7px;border-radius:50%;display:block;transform:translateY(-1px)}
+.barra{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+.barra b{width:22px;border-radius:4px 4px 2px 2px;background:#9DAE97;display:block}
+</style>
+</helmet>
+<div style="width:960px;height:360px;box-sizing:border-box;background:#F6F1E6;border:1px solid #D6CDB6;border-radius:16px;padding:20px 26px 20px;color:#1F1C17;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:36px">
+
+  <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+    <span class="cap">Lunes · tu semana</span>
+    <h2 class="it" style="margin:0;font-size:30px;line-height:1.1;font-weight:500">La semana pasada</h2>
+    <div style="display:flex;align-items:flex-end;gap:6px;height:84px;padding:0 4px;border-bottom:1px solid #E1D9C5">
+      <div class="barra"><b style="height:56px"></b><span class="cap" style="font-size:9px">L</span></div>
+      <div class="barra"><b style="height:64px"></b><span class="cap" style="font-size:9px">M</span></div>
+      <div class="barra"><b style="height:30px"></b><span class="cap" style="font-size:9px">X</span></div>
+      <div class="barra"><b style="height:48px"></b><span class="cap" style="font-size:9px">J</span></div>
+      <div class="barra"><b style="height:26px"></b><span class="cap" style="font-size:9px">V</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="linea"><i style="background:#3E5A3A"></i><span>Hiciste 31 de las 40 pausas, casi todas por la mañana.</span></div>
+      <div class="linea"><i style="background:#6B7A8F"></i><span>Lo que más te ayudó: <span class="it" style="font-size:17px;color:#1F1C17">Cuello</span> y <span class="it" style="font-size:17px;color:#1F1C17">Coherente 6·6</span>.</span></div>
+      <div class="linea"><i style="background:#C97A5D"></i><span>La pausa de las 16:35 la saltaste cuatro días.</span></div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:12px;border-left:1px solid #E1D9C5;padding-left:34px;min-width:0">
+    <span class="cap">Esta semana · Respirar hondo</span>
+    <h2 class="it" style="margin:0;font-size:30px;line-height:1.1;font-weight:500">Lo que cambia</h2>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="linea"><i style="border:1.5px solid #9A7B4F;box-sizing:border-box"></i><span>La pausa de media tarde pasa a ser de Mueve, y más corta.</span></div>
+      <div class="linea"><i style="border:1.5px solid #C97A5D;box-sizing:border-box"></i><span>Las largas llevan más Respira.</span></div>
+      <div class="linea"><i style="border:1.5px solid #6B7A8F;box-sizing:border-box"></i><span>Cuello vuelve el martes y el jueves.</span></div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between">
+      <a href="#" class="it" style="font-size:16px">Dejarla como estaba</a>
+      <button style="min-height:44px;display:flex;align-items:center;border:0;background:none;padding:0">
+        <span class="it" style="background:#EAE4D4;border:1px solid rgba(62,90,58,.35);border-radius:17px;height:34px;display:flex;align-items:center;padding:0 18px;color:#3E5A3A;font-size:18px">Me parece bien →</span>
+      </button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":360}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

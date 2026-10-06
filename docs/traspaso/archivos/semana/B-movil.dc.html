@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>B · la semana tipo, móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.fila{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #E1D9C5}
+.seg{display:flex;border:1px solid #C9C0A8;border-radius:16px;overflow:hidden}
+.seg button{border:0;background:none;font-family:inherit;font-size:12px;color:#4A453C;padding:7px 9px;min-height:32px}
+.seg button.on{background:#3E5A3A;color:#F5F0E4}
+.hora{font-size:12px;color:#4A453C;border-bottom:1px dotted #8A8372;white-space:nowrap}
+</style>
+</helmet>
+<div style="width:360px;height:718px;position:relative;overflow:hidden;background:#C9C3B4;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;color:#1F1C17">
+
+  <div style="position:absolute;left:50%;top:62px;transform:translateX(-50%);width:270px;height:270px;border-radius:50%;border:2px solid #B5AE9E"></div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;top:96px;background:#F6F1E6;border-radius:18px 18px 0 0;padding:18px 18px 16px;display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="cap">A tu ritmo</span>
+      <button aria-label="Cerrar" style="border:0;background:none;color:#4A453C;width:32px;height:32px"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"></path></svg></button>
+    </div>
+    <h2 class="it" style="margin:0;font-size:27px;line-height:1.1;font-weight:500">¿Cómo es tu semana?</h2>
+    <p style="margin:2px 0 8px;font-size:13px;line-height:1.45;color:#4A453C">Lo contestas una vez. Cada mañana tu día llega servido, y si un día cambia, lo cambias ese día.</p>
+
+    <div class="fila">
+      <span class="cap" style="font-size:11px;color:#1F1C17">Lun</span>
+      <div class="seg"><button class="on">Jornada</button><button>Media</button><button>Libre</button></div>
+      <span class="hora">9:00–18:00</span>
+    </div>
+    <div class="fila">
+      <span class="cap" style="font-size:11px;color:#1F1C17">Mar</span>
+      <div class="seg"><button class="on">Jornada</button><button>Media</button><button>Libre</button></div>
+      <span class="hora">9:00–18:00</span>
+    </div>
+    <div class="fila">
+      <span class="cap" style="font-size:11px;color:#1F1C17">Mié</span>
+      <div class="seg"><button>Jornada</button><button class="on">Media</button><button>Libre</button></div>
+      <span class="hora">9:00–13:00</span>
+    </div>
+    <div class="fila">
+      <span class="cap" style="font-size:11px;color:#1F1C17">Jue</span>
+      <div class="seg"><button class="on">Jornada</button><button>Media</button><button>Libre</button></div>
+      <span class="hora">9:00–18:00</span>
+    </div>
+    <div class="fila">
+      <span class="cap" style="font-size:11px;color:#1F1C17">Vie</span>
+      <div class="seg"><button>Jornada</button><button class="on">Media</button><button>Libre</button></div>
+      <span class="hora">9:00–13:00</span>
+    </div>
+    <div class="fila" style="color:#6F695B">
+      <span class="cap" style="font-size:11px">S · D</span>
+      <div class="seg"><button>Jornada</button><button>Media</button><button class="on">Libre</button></div>
+      <span class="hora" style="border:0;color:#8A8372">—</span>
+    </div>
+
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 0 4px;border-top:1px solid #E1D9C5;font-size:13px;color:#4A453C">
+      <input type="checkbox" checked style="width:18px;height:18px;accent-color:#3E5A3A">
+      Tener en cuenta mis reuniones
+    </label>
+
+    <div style="margin-top:auto;display:flex;justify-content:center">
+      <button style="min-height:44px;display:flex;align-items:center;border:0;background:none;padding:0">
+        <span class="it" style="background:#EAE4D4;border:1px solid rgba(62,90,58,.35);border-radius:17px;height:34px;display:flex;align-items:center;padding:0 18px;color:#3E5A3A;font-size:18px">Guardar mi semana →</span>
+      </button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":718}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

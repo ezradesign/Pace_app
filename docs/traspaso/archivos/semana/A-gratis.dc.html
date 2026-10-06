@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>A · la tira en la versión gratis</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3E5A3A}a:hover{color:#2A3E27}
+.cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F695B}
+.it{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500}
+.dia{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 7px;border-radius:10px;border:1px solid transparent;background:none;font:inherit;color:#8A8372;min-height:56px}
+.dot{width:9px;height:9px;border-radius:50%;border:2px solid;box-sizing:border-box;flex:none;background:#F5F0E4}
+.bar{height:3px;border-radius:2px;flex:1;background:#DCD4C0}
+</style>
+</helmet>
+<div style="width:360px;height:420px;box-sizing:border-box;padding:12px;background:#F2EDE0;font-family:'Inter Tight',system-ui,sans-serif;font-size:13px;color:#1F1C17">
+  <div style="background:#F6F1E6;border:1px solid #D6CDB6;border-radius:14px;padding:13px 14px 14px;display:flex;flex-direction:column;gap:10px">
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between">
+      <span class="cap">A tu ritmo</span>
+      <a href="#" class="it" style="font-size:14px">Al calendario</a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px">
+      <span class="dia"><span class="cap" style="font-size:9px">L</span><span class="it" style="font-size:17px;line-height:1">5</span></span>
+      <span class="dia" style="background:#EAE4D4;border-color:rgba(62,90,58,.45);color:#1F1C17"><span class="cap" style="font-size:9px;color:#3E5A3A">M</span><span class="it" style="font-size:17px;line-height:1">6</span></span>
+      <span class="dia"><span class="cap" style="font-size:9px">X</span><span class="it" style="font-size:17px;line-height:1">7</span></span>
+      <span class="dia"><span class="cap" style="font-size:9px">J</span><span class="it" style="font-size:17px;line-height:1">8</span></span>
+      <span class="dia"><span class="cap" style="font-size:9px">V</span><span class="it" style="font-size:17px;line-height:1">9</span></span>
+      <span class="dia"><span class="cap" style="font-size:9px">S</span><span class="it" style="font-size:17px;line-height:1">10</span></span>
+      <span class="dia"><span class="cap" style="font-size:9px">D</span><span class="it" style="font-size:17px;line-height:1">11</span></span>
+    </div>
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:10px;background:#EFE9DB">
+      <span class="it" style="font-size:15px;color:#4A453C">La semana entera, con PACE completo</span>
+      <a href="#" style="font-size:12px;white-space:nowrap">Ver qué trae</a>
+    </div>
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-top:1px solid #E1D9C5;padding-top:9px">
+      <div>
+        <div class="it" style="font-size:19px;line-height:1.15">Hoy · Jornada entera</div>
+        <div style="font-size:12px;color:#6F695B;margin-top:2px">De 9:00 a 18:00 · comida a las 14:00</div>
+      </div>
+      <a href="#" class="it" style="font-size:14px">Cambiar</a>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:3px">
+      <span class="bar" style="background:#3E5A3A"></span><span class="dot" style="border-color:#6B7A8F;background:#6B7A8F"></span>
+      <span class="bar" style="background:#3E5A3A"></span><span class="dot" style="border-color:#9A7B4F;background:#9A7B4F"></span>
+      <span class="bar" style="background:#9DAE97"></span><span class="dot" style="border-color:#C97A5D;width:15px;height:11px;border-radius:6px"></span>
+      <span class="bar"></span><span class="dot" style="border-color:#6B7A8F"></span>
+      <span class="bar"></span><span class="dot" style="border-color:#9A7B4F"></span>
+      <span class="bar" style="flex:.6;background:none;border-top:2px dashed #C9C0A8;height:0"></span><span class="dot" style="border-color:#8A8372"></span>
+      <span class="bar"></span><span class="dot" style="border-color:#6B7A8F"></span>
+      <span class="bar"></span><span class="dot" style="border-color:#9A7B4F"></span>
+      <span class="bar"></span><span class="dot" style="border-color:#C97A5D;width:15px;height:11px;border-radius:6px"></span>
+      <span class="bar"></span><span class="dot" style="border-color:#C97A5D"></span>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E1D9C5;padding-top:10px">
+      <a href="#" class="it" style="font-size:14px">Ver la jornada entera</a>
+      <button style="border:1px solid #3E5A3A;border-radius:16px;background:none;color:#3E5A3A;font-family:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px">Hoy voy por libre</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":420}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
