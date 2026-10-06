@@ -1,0 +1,455 @@
+<title>Música de Respira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&display=swap">
+<style>
+/* Mesa de escucha: lista de ejercicios a la izquierda, la sesión (aro que respira + mandos) a la derecha.
+   Tokens copiados de DESIGN_SYSTEM.md de PACE (crema día / oscuro noche, acento Respira). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372;
+  --line: #C9C0A8; --line-2: #B8AD8E;
+  --breathe: #C97A5D; --breathe-2: #A85E43; --breathe-soft: rgba(201,122,93,0.12);
+  --focus: #3E5A3A; --focus-soft: rgba(62,90,58,0.10);
+  --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544;
+  --breathe: #D99477; --breathe-2: #E8A98F; --breathe-soft: rgba(217,148,119,0.14);
+  --focus: #7A9A6D; --focus-soft: rgba(122,154,109,0.14);
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544;
+  --breathe: #D99477; --breathe-2: #E8A98F; --breathe-soft: rgba(217,148,119,0.14);
+  --focus: #7A9A6D; --focus-soft: rgba(122,154,109,0.14);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 48px; display: grid; gap: 28px; }
+header h1 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; margin: 0; text-wrap: balance; }
+header p { margin: 8px 0 0; color: var(--ink-2); max-width: 62ch; }
+.eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--breathe); font-weight: 500; }
+.layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 760px) { .layout { grid-template-columns: minmax(0, 1fr); } .lista { display: none; } }
+.selector { display: none; }
+@media (max-width: 760px) { .selector { display: grid; gap: 6px; } }
+.selector select { width: 100%; font: inherit; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; }
+
+/* lista */
+.lista { display: grid; gap: 18px; }
+.familia h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 1.25rem; margin: 0 0 6px; }
+.familia ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.ej { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: baseline; text-align: left; background: none; border: 0; border-radius: 8px; padding: 7px 10px; color: var(--ink); font: inherit; cursor: pointer; }
+.ej:hover { background: var(--paper-2); }
+.ej[aria-current="true"] { background: var(--breathe-soft); }
+.ej:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--breathe); outline-offset: 2px; }
+.ej .ciclo { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.ej .marca { display: inline-block; margin-left: 6px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus); }
+
+/* sesión */
+.sesion { border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 22px; background: var(--paper); }
+.sesion-cab { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline; }
+.sesion-cab h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 1.9rem; margin: 0; }
+.fases { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.escena { display: grid; place-items: center; min-height: 260px; position: relative; }
+.aro { width: 150px; height: 150px; border-radius: 50%; border: 1.5px solid var(--breathe); background: var(--breathe-soft); transform: scale(0.9); will-change: transform; }
+.fase-txt { position: absolute; text-align: center; pointer-events: none; }
+.fase-txt b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 1.5rem; }
+.fase-txt span { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.mandos { display: grid; gap: 16px; }
+.fila { display: grid; gap: 8px; }
+.fila > label, .fila > .lab { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { border: 1px solid var(--line); background: none; color: var(--ink); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+.pill[aria-pressed="true"] { border-color: var(--breathe); background: var(--breathe-soft); color: var(--ink); }
+.pill small { color: var(--ink-3); margin-left: 4px; }
+.desc { font-size: 13px; color: var(--ink-2); margin: 0; max-width: 60ch; }
+.deslizador { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 12px; align-items: center; }
+.deslizador output { font-size: 13px; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--breathe); }
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn { border: 1px solid var(--breathe-2); background: var(--breathe); color: var(--paper); border-radius: 999px; padding: 10px 22px; font: inherit; font-weight: 500; cursor: pointer; }
+.btn.sec { background: none; color: var(--ink); border-color: var(--line-2); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.aviso { font-size: 13px; color: var(--ink-2); }
+.nota-quieto { font-size: 13px; color: var(--ink-2); background: var(--paper-2); border-radius: 10px; padding: 10px 12px; margin: 0; }
+
+/* elecciones */
+.resumen h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 1.5rem; margin: 0 0 8px; }
+.tabla-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+td.num { font-variant-numeric: tabular-nums; }
+.vacio { color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { .aro { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">PACE · Respira</div>
+    <h1>Música que respira contigo</h1>
+    <p>Elige un ejercicio y pulsa Escuchar. Suena como en la app: el drone en Sol a 432, la voz de PACE encima y la música abriéndose al inhalar y cerrándose al exhalar. Cuando un sonido te convenza, pulsa «Me quedo con esta» y me llega tu elección.</p>
+  </header>
+
+  <div class="layout">
+    <nav class="lista" id="lista" aria-label="Ejercicios"></nav>
+
+    <section class="sesion" aria-live="polite">
+      <div class="selector fila"><label for="ej-select">Ejercicio</label><select id="ej-select"></select></div>
+      <div class="sesion-cab">
+        <h2 id="ej-nombre">Coherente 6·6</h2>
+        <div class="fases" id="ej-fases">Inhala 6 · Exhala 6 · ciclo de 12 s</div>
+      </div>
+
+      <div class="escena">
+        <div class="aro" id="aro"></div>
+        <div class="fase-txt"><b id="fase-nombre">Listo</b><span id="fase-seg">pulsa Escuchar</span></div>
+      </div>
+
+      <p class="nota-quieto" id="nota-quieto" hidden>En este ejercicio la música queda quieta: con ciclos de 2 a 4 s una música que se mueve cansa y compite con la voz.</p>
+
+      <div class="mandos">
+        <div class="fila">
+          <div class="lab">Drone</div>
+          <div class="pills" id="bases" role="group" aria-label="Drone"></div>
+          <p class="desc" id="base-desc"></p>
+        </div>
+        <div class="fila" id="fila-prof">
+          <label for="prof">Cuánto respira la música</label>
+          <div class="deslizador"><input type="range" id="prof" min="0" max="8" step="0.5" value="3"><output id="prof-out" for="prof">3 dB</output></div>
+        </div>
+        <div class="fila">
+          <label for="nivel">Volumen de la música respecto a la app</label>
+          <div class="deslizador"><input type="range" id="nivel" min="-12" max="6" step="1" value="0"><output id="nivel-out" for="nivel">0 dB</output></div>
+        </div>
+        <div class="fila">
+          <div class="lab">Voz</div>
+          <div class="pills" id="voces" role="group" aria-label="Voz">
+            <button class="pill" type="button" data-voz="sulafat" aria-pressed="true">Clara</button>
+            <button class="pill" type="button" data-voz="bradford" aria-pressed="false">Grave</button>
+            <button class="pill" type="button" data-voz="" aria-pressed="false">Sin voz</button>
+          </div>
+        </div>
+        <div class="acciones">
+          <button class="btn" type="button" id="play">Escuchar</button>
+          <button class="btn sec" type="button" id="elegir">Me quedo con esta</button>
+          <span class="aviso" id="aviso"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="resumen">
+    <h2>Tus elecciones</h2>
+    <div class="tabla-wrap"><table>
+      <thead><tr><th>Ejercicio</th><th>Drone</th><th>Respira</th><th>Volumen</th><th>Voz</th></tr></thead>
+      <tbody id="tabla"><tr><td colspan="5" class="vacio">Todavía no has elegido ninguno. Escucha un ejercicio y pulsa «Me quedo con esta».</td></tr></tbody>
+    </table></div>
+  </section>
+</div>
+
+<script>
+/* Fases copiadas de getSequence() (app/breathe/BreatheVisual.jsx). tipo: i sube, i2 sube al 80 %, s sostiene, e baja.
+   voz: qué locución le toca (inhale / hold / exhale), como playSound() en la sesión. */
+const I = (d, t) => ({ t: 'i', d, txt: t || 'Inhala', voz: 'inhale' });
+const S = (d, t) => ({ t: 's', d, txt: t || 'Sostén', voz: 'hold' });
+const E = (d, t) => ({ t: 'e', d, txt: t || 'Exhala', voz: 'exhale' });
+const FAMILIAS = [
+  { nombre: 'Energía', ej: [
+    { id: 'rondas-express', n: 'Rondas express', f: [I(2), E(2)], quieto: true },
+    { id: 'rondas', n: 'Respiración en rondas', f: [I(2), E(2)], quieto: true },
+    { id: 'rondas-profundas', n: 'Rondas profundas', f: [I(2), E(2)], quieto: true } ] },
+  { nombre: 'Equilibrio', ej: [
+    { id: 'box4', n: 'Box 4·4·4·4', f: [I(4), S(4), E(4), S(4)] },
+    { id: 'box6', n: 'Box 6·6·6·6', f: [I(6), S(6), E(6), S(6)] },
+    { id: 'diafragmatica', n: 'Diafragmática', f: [I(4, 'Inhala al vientre'), E(4)] },
+    { id: 'co2', n: 'Tolerancia CO₂', f: [I(4), E(6), S(10, 'Sostén en vacío')] } ] },
+  { nombre: 'Balance', ej: [
+    { id: 'coherente55', n: 'Coherente 5·5', f: [I(5), E(5)] },
+    { id: 'coherente66', n: 'Coherente 6·6', f: [I(6), E(6)] } ] },
+  { nombre: 'Relajación', ej: [
+    { id: '478', n: '4·7·8', f: [I(4), S(7), E(8)] },
+    { id: 'suspiro', n: 'Suspiro fisiológico', f: [{ t: 'i2', d: 2, txt: 'Inhala', voz: 'inhale' }, I(1, 'Inhala más'), E(5)] },
+    { id: 'exhala46', n: 'Exhalación 4·6', f: [I(4), E(6)] },
+    { id: 'yin', n: 'Rítmica yin', f: [I(3), E(5), S(2)] } ] },
+  { nombre: 'Pranayama', ej: [
+    { id: 'ujjayi', n: 'Ujjayi', f: [I(5, 'Inhala oceánica'), E(5, 'Exhala oceánica')] },
+    { id: 'bhramari', n: 'Bhramari · Abeja', f: [I(4), E(8, 'Exhala zumbando')] },
+    { id: 'bhastrika', n: 'Bhastrika · Fuelle', f: [I(1), E(1)], quieto: true },
+    { id: 'nadi', n: 'Nadi Shodhana', f: [I(4, 'Inhala izq.'), S(2), E(4, 'Exhala dcha.'), I(4, 'Inhala dcha.'), S(2), E(4, 'Exhala izq.')] },
+    { id: 'kumbhaka', n: 'Kumbhaka 1:4:2', f: [I(4), S(16), E(8)] },
+    { id: 'kapalabhati', n: 'Kapalabhati · Kriya', f: [I(1), E(1)], quieto: true } ] },
+];
+const EJ = {}; FAMILIAS.forEach(fa => fa.ej.forEach(e => { e.familia = fa.nombre; EJ[e.id] = e; }));
+
+/* Las tres bases salen al mismo nivel (-20 dBFS de RMS); la app las pondría a 0,158, que deja el
+   cuerpo en -36 dBFS: el nivel del drone de la app, unos 7 dB por debajo de la voz más floja. */
+const GANANCIA_APP = 0.158;
+const BASES = [
+  { id: 'sol-claro', n: 'Sol claro', desc: 'Quinta abierta Sol–Re, sin tercera, luminosa. Sale de la pista de energía de ElevenLabs con los graves bajados para que se oiga en un altavoz.' },
+  { id: 'sol-calido', n: 'Sol cálido', desc: 'Cuerdas largas y cálidas, con una tercera mayor muy suave. Sale de la pista de equilibrio de ElevenLabs, subida de Re a Sol.' },
+  { id: 'sol-menor', n: 'Sol menor', desc: 'Alfombra oscura y plana, con tercera menor. Sale de la antigua balance10 de ElevenLabs, subida de Fa a Sol.' },
+];
+/* Lo que propongo por familia; la última palabra es tuya. */
+const PROPUESTA = { 'Energía': 'sol-claro', 'Equilibrio': 'sol-calido', 'Balance': 'sol-claro', 'Relajación': 'sol-menor', 'Pranayama': 'sol-claro' };
+
+/* Locuciones: dónde empieza y acaba la palabra en cada archivo (PACE_VOZ_CLIPS de Sound.voz.jsx).
+   Suena si la palabra + 0,15 s cabe en la fase; si no, la app sintetiza un soplo y aquí también. */
+const CLIPS = {
+  sulafat: { inhale: ['inhala', 0.386, 1.79], hold: ['manten', 0.021, 1.341], exhale: ['exhala', 0.644, 2.122] },
+  bradford: { inhale: ['inhala', 0.001, 0.912], hold: ['manten', 0.001, 1.219], exhale: ['exhala', 0.108, 3.68] },
+};
+
+const est = { ej: 'coherente66', base: PROPUESTA['Balance'], prof: 3, nivel: 0, voz: 'sulafat', sonando: false, elecciones: {} };
+let ctx = null, buffers = {}, voces = {}, nodos = null, plan = null, raf = 0, timer = 0;
+const $ = id => document.getElementById(id);
+
+function cicloSeg(e) { return e.f.reduce((a, p) => a + p.d, 0); }
+function textoFases(e) { return e.f.map(p => p.txt.replace(/\.$/, '') + ' ' + p.d).join(' · ') + ' · ciclo de ' + cicloSeg(e) + ' s'; }
+
+function pintaLista() {
+  const nav = $('lista'); nav.textContent = '';
+  FAMILIAS.forEach(fa => {
+    const div = document.createElement('div'); div.className = 'familia';
+    const h = document.createElement('h2'); h.textContent = fa.nombre; div.appendChild(h);
+    const ul = document.createElement('ul');
+    fa.ej.forEach(e => {
+      const li = document.createElement('li');
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'ej'; b.dataset.id = e.id;
+      b.setAttribute('aria-current', String(e.id === est.ej));
+      const nom = document.createElement('span'); nom.textContent = e.n;
+      if (est.elecciones[e.id]) { const m = document.createElement('span'); m.className = 'marca'; m.textContent = 'elegido'; nom.appendChild(m); }
+      const c = document.createElement('span'); c.className = 'ciclo'; c.textContent = e.quieto ? 'quieto' : cicloSeg(e) + ' s';
+      b.append(nom, c); b.addEventListener('click', () => eligeEjercicio(e.id));
+      li.appendChild(b); ul.appendChild(li);
+    });
+    div.appendChild(ul); nav.appendChild(div);
+  });
+}
+
+function pintaSelector() {
+  const sel = $('ej-select'); sel.textContent = '';
+  FAMILIAS.forEach(fa => {
+    const og = document.createElement('optgroup'); og.label = fa.nombre;
+    fa.ej.forEach(e => { const o = document.createElement('option'); o.value = e.id; o.textContent = e.n + (est.elecciones[e.id] ? ' · elegido' : ''); og.appendChild(o); });
+    sel.appendChild(og);
+  });
+  sel.value = est.ej;
+}
+
+function pintaBases() {
+  const g = $('bases'); g.textContent = '';
+  const prop = PROPUESTA[EJ[est.ej].familia];
+  BASES.forEach(b => {
+    const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'pill';
+    bt.setAttribute('aria-pressed', String(b.id === est.base));
+    bt.textContent = b.n;
+    if (b.id === prop) { const s = document.createElement('small'); s.textContent = 'propuesta'; bt.appendChild(s); }
+    bt.addEventListener('click', () => { est.base = b.id; pintaBases(); if (est.sonando) cambiaBase(); });
+    g.appendChild(bt);
+  });
+  $('base-desc').textContent = BASES.find(b => b.id === est.base).desc;
+}
+
+function pintaSesion() {
+  const e = EJ[est.ej];
+  $('ej-nombre').textContent = e.n;
+  $('ej-fases').textContent = e.quieto ? textoFases(e) + ' · música quieta' : textoFases(e);
+  $('nota-quieto').hidden = !e.quieto;
+  $('fila-prof').hidden = !!e.quieto;
+  $('prof').value = est.prof; $('prof-out').textContent = est.prof + ' dB';
+  $('nivel').value = est.nivel; $('nivel-out').textContent = (est.nivel > 0 ? '+' : '') + est.nivel + ' dB';
+  document.querySelectorAll('#voces .pill').forEach(p => p.setAttribute('aria-pressed', String(p.dataset.voz === est.voz)));
+  pintaBases();
+}
+
+function eligeEjercicio(id) {
+  const sonaba = est.sonando; if (sonaba) para();
+  est.ej = id;
+  const g = est.elecciones[id];
+  if (g) { est.base = g.base; est.prof = g.profundidad; est.nivel = g.nivel_db; est.voz = g.voz; }
+  else { est.base = PROPUESTA[EJ[id].familia]; }
+  pintaLista(); pintaSelector(); pintaSesion();
+  if (sonaba) arranca();
+}
+
+/* ---------- audio ---------- */
+async function cargaBuffer(url) {
+  const r = await fetch(url); if (!r.ok) throw new Error('No se pudo cargar ' + url);
+  return ctx.decodeAudioData(await r.arrayBuffer());
+}
+async function base(id) { if (!buffers[id]) buffers[id] = await cargaBuffer('bases/' + id + '.mp3'); return buffers[id]; }
+async function vozBuf(v, archivo) { const k = v + '-' + archivo; if (!voces[k]) voces[k] = await cargaBuffer('voz/' + k + '.mp3'); return voces[k]; }
+
+function fuente(buf, t) {
+  const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true;
+  /* se saltan unos ms de cada extremo: el relleno del codificador MP3 dejaría un hueco en cada vuelta */
+  s.loopStart = 0.06; s.loopEnd = buf.duration - 0.06;
+  const g = ctx.createGain(); g.gain.value = 0; s.connect(g); g.connect(nodos.filtro);
+  s.start(t, 0.06); return { s, g };
+}
+
+const F_CERRADO = 650, F_ABIERTO = 9000;
+const ganDe = m => Math.pow(10, (m - 1) * (EJ[est.ej].quieto ? 0 : est.prof) / 20);
+const freqDe = m => EJ[est.ej].quieto ? F_ABIERTO : F_CERRADO * Math.pow(F_ABIERTO / F_CERRADO, m);
+
+function curva(desde, hasta, n, fn) {
+  const a = new Float32Array(n);
+  for (let k = 0; k < n; k++) { const x = 0.5 - 0.5 * Math.cos(Math.PI * k / (n - 1)); a[k] = fn(desde + (hasta - desde) * x); }
+  return a;
+}
+
+async function arranca() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  await ctx.resume();
+  $('play').disabled = true; $('aviso').textContent = 'Cargando…';
+  try {
+    const buf = await base(est.base);
+    if (est.voz) await Promise.all(['inhala', 'exhala', 'manten'].map(a => vozBuf(est.voz, a)));
+  } catch (err) { $('aviso').textContent = err.message; $('play').disabled = false; return; }
+  const t0 = ctx.currentTime + 0.15;
+  const master = ctx.createGain(); master.gain.value = GANANCIA_APP * Math.pow(10, est.nivel / 20); master.connect(ctx.destination);
+  const env = ctx.createGain(); env.connect(master);
+  const filtro = ctx.createBiquadFilter(); filtro.type = 'lowpass'; filtro.Q.value = 0.5; filtro.connect(env);
+  nodos = { master, env, filtro, fuente: null };
+  env.gain.setValueAtTime(ganDe(0), t0); filtro.frequency.setValueAtTime(freqDe(0), t0);
+  nodos.fuente = fuente(buffers[est.base], t0);
+  nodos.fuente.g.gain.setValueAtTime(0, t0); nodos.fuente.g.gain.linearRampToValueAtTime(1, t0 + 1.5);
+  /* la primera inhalación empieza 1,5 s después del sonido, como en la app tras el «prepárate» */
+  plan = { inicio: t0 + 1.5, idx: 0, t: t0 + 1.5, m: 0, fases: [] };
+  est.sonando = true; $('play').disabled = false; $('play').textContent = 'Parar'; $('aviso').textContent = '';
+  programa(); timer = setInterval(programa, 200); dibuja();
+}
+
+/* Programa con antelación todas las fases que empiezan en los próximos 1,5 s. */
+function programa() {
+  if (!est.sonando) return;
+  const e = EJ[est.ej];
+  while (plan.t < ctx.currentTime + 1.5) {
+    const p = e.f[plan.idx % e.f.length];
+    const hasta = p.t === 'i' ? 1 : p.t === 'i2' ? 0.8 : p.t === 'e' ? 0 : plan.m;
+    if (hasta !== plan.m) {
+      nodos.env.gain.setValueCurveAtTime(curva(plan.m, hasta, 64, ganDe), plan.t, p.d * 0.98);
+      nodos.filtro.frequency.setValueCurveAtTime(curva(plan.m, hasta, 64, freqDe), plan.t, p.d * 0.98);
+    }
+    senal(p, plan.t);
+    plan.fases.push({ t: plan.t, d: p.d, txt: p.txt, desde: plan.m, hasta });
+    if (plan.fases.length > 8) plan.fases.shift();
+    plan.m = hasta; plan.t += p.d; plan.idx++;
+  }
+}
+
+function senal(p, t) {
+  if (est.voz) {
+    const c = CLIPS[est.voz][p.voz];
+    if (c && (c[2] - c[1]) + 0.15 <= p.d) {
+      const s = ctx.createBufferSource(); s.buffer = voces[est.voz + '-' + c[0]]; s.connect(ctx.destination);
+      s.start(t, Math.max(0, c[1] - 0.04)); return;
+    }
+  }
+  if (p.voz === 'hold') return; /* los sostenes son silencio en la app */
+  soplo(p, t);
+}
+
+/* El soplo de la app (breathNoise): ruido por un paso-bajo que barre 200→800 Hz al inhalar y al revés al exhalar. */
+let ruido = null;
+function soplo(p, t) {
+  if (!ruido) { ruido = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); const d = ruido.getChannelData(0); for (let k = 0; k < d.length; k++) d[k] = Math.random() * 2 - 1; }
+  const s = ctx.createBufferSource(); s.buffer = ruido; s.loop = true;
+  const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 1.5;
+  const g = ctx.createGain(); s.connect(f); f.connect(g); g.connect(ctx.destination);
+  const sube = p.voz === 'inhale';
+  f.frequency.setValueAtTime(sube ? 200 : 800, t); f.frequency.linearRampToValueAtTime(sube ? 800 : 200, t + p.d);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.05, t + Math.min(0.4, p.d / 3));
+  g.gain.setValueAtTime(0.05, t + p.d * 0.7); g.gain.linearRampToValueAtTime(0, t + p.d);
+  s.start(t); s.stop(t + p.d + 0.05);
+}
+
+function cambiaBase() {
+  base(est.base).then(buf => {
+    if (!est.sonando) return;
+    const t = ctx.currentTime + 0.05, vieja = nodos.fuente;
+    nodos.fuente = fuente(buf, t);
+    nodos.fuente.g.gain.setValueAtTime(0, t); nodos.fuente.g.gain.linearRampToValueAtTime(1, t + 0.8);
+    vieja.g.gain.cancelScheduledValues(t); vieja.g.gain.setValueAtTime(vieja.g.gain.value, t); vieja.g.gain.linearRampToValueAtTime(0, t + 0.8);
+    vieja.s.stop(t + 0.9);
+  }).catch(err => { $('aviso').textContent = err.message; });
+}
+
+function para() {
+  est.sonando = false; clearInterval(timer); cancelAnimationFrame(raf);
+  if (nodos) { const t = ctx.currentTime; nodos.master.gain.cancelScheduledValues(t); nodos.master.gain.setValueAtTime(nodos.master.gain.value, t); nodos.master.gain.linearRampToValueAtTime(0, t + 0.4); const n = nodos; setTimeout(() => { try { n.fuente.s.stop(); n.master.disconnect(); } catch (e) {} }, 500); nodos = null; }
+  $('play').textContent = 'Escuchar'; $('fase-nombre').textContent = 'Listo'; $('fase-seg').textContent = 'pulsa Escuchar';
+  $('aro').style.transform = 'scale(0.9)';
+}
+
+function dibuja() {
+  if (!est.sonando) return;
+  const t = ctx.currentTime;
+  const f = plan.fases.filter(x => x.t <= t).pop();
+  if (f) {
+    const x = Math.min(1, (t - f.t) / f.d), k = 0.5 - 0.5 * Math.cos(Math.PI * x);
+    const m = f.desde + (f.hasta - f.desde) * k;
+    $('aro').style.transform = 'scale(' + (0.9 + 0.4 * m).toFixed(3) + ')';
+    $('fase-nombre').textContent = f.txt;
+    $('fase-seg').textContent = Math.max(1, Math.ceil(f.d - (t - f.t))) + ' s';
+  } else { $('fase-nombre').textContent = 'Prepárate'; $('fase-seg').textContent = ''; }
+  raf = requestAnimationFrame(dibuja);
+}
+
+/* ---------- mandos ---------- */
+$('ej-select').addEventListener('change', ev => eligeEjercicio(ev.target.value));
+$('play').addEventListener('click', () => { est.sonando ? para() : arranca(); });
+$('prof').addEventListener('input', ev => { est.prof = Number(ev.target.value); $('prof-out').textContent = est.prof + ' dB'; });
+$('prof').addEventListener('change', () => { if (est.sonando) { para(); arranca(); } });
+$('nivel').addEventListener('input', ev => {
+  est.nivel = Number(ev.target.value); $('nivel-out').textContent = (est.nivel > 0 ? '+' : '') + est.nivel + ' dB';
+  if (nodos) nodos.master.gain.setTargetAtTime(GANANCIA_APP * Math.pow(10, est.nivel / 20), ctx.currentTime, 0.1);
+});
+document.querySelectorAll('#voces .pill').forEach(p => p.addEventListener('click', async () => {
+  est.voz = p.dataset.voz; pintaSesion();
+  if (est.sonando && est.voz) { try { await Promise.all(['inhala', 'exhala', 'manten'].map(a => vozBuf(est.voz, a))); } catch (e) {} }
+}));
+
+/* ---------- elecciones (db) ---------- */
+let db = null;
+function pintaTabla() {
+  const tb = $('tabla'); tb.textContent = '';
+  const ids = Object.keys(est.elecciones);
+  if (!ids.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 5; td.className = 'vacio'; td.textContent = 'Todavía no has elegido ninguno. Escucha un ejercicio y pulsa «Me quedo con esta».'; tr.appendChild(td); tb.appendChild(tr); return; }
+  FAMILIAS.forEach(fa => fa.ej.forEach(e => {
+    const g = est.elecciones[e.id]; if (!g) return;
+    const tr = document.createElement('tr');
+    const celdas = [e.n, (BASES.find(b => b.id === g.base) || {}).n || g.base, e.quieto ? 'quieta' : g.profundidad + ' dB', (g.nivel_db > 0 ? '+' : '') + g.nivel_db + ' dB', g.voz === 'bradford' ? 'Grave' : g.voz ? 'Clara' : 'Sin voz'];
+    celdas.forEach((c, k) => { const td = document.createElement('td'); td.textContent = c; if (k > 1) td.className = 'num'; tr.appendChild(td); });
+    tb.appendChild(tr);
+  }));
+}
+$('elegir').addEventListener('click', async () => {
+  const e = EJ[est.ej];
+  const doc = { ejercicio: e.n, familia: e.familia, base: est.base, profundidad: e.quieto ? 0 : est.prof, nivel_db: est.nivel, voz: est.voz };
+  if (!db) { $('aviso').textContent = 'Para guardar tu elección abre la página con tu cuenta de Claude.'; return; }
+  $('elegir').disabled = true;
+  try { await db.collection('elecciones').doc(e.id).set(doc); $('aviso').textContent = 'Guardado: ' + e.n + '.'; }
+  catch (err) { $('aviso').textContent = 'No se pudo guardar (' + (err && err.code || 'error') + '). Prueba otra vez.'; }
+  $('elegir').disabled = false;
+});
+
+pintaLista(); pintaSelector(); pintaSesion(); pintaTabla();
+(async () => {
+  try { db = window.claude && await window.claude.use('db'); } catch (e) { db = null; }
+  if (!db) { $('elegir').title = 'Hace falta abrir la página con tu cuenta'; return; }
+  db.collection('elecciones').onSnapshot(snap => {
+    const nuevas = {}; snap.docs.forEach(d => { if (d.exists && EJ[d.id]) nuevas[d.id] = d.data(); });
+    est.elecciones = nuevas; pintaLista(); pintaSelector(); pintaTabla();
+  }, () => {});
+})();
+</script>
