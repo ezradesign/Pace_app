@@ -90,14 +90,14 @@ Todos en esta carpeta y con las medidas que pide Play:
 
 | Campo de Play | Archivo |
 |---|---|
-| Icono de la app (512 × 512) | [icono-512.png](/mnt/project-files/google-play/icono-512.png) |
-| Gráfico de funciones (1024 × 500) | [grafico-destacado-1024x500.png](/mnt/project-files/google-play/grafico-destacado-1024x500.png) |
-| Capturas de pantalla del teléfono (1080 × 1920, de 2 a 8) | las seis de [capturas/](/mnt/project-files/google-play/capturas/), en orden del 1 al 6 |
+| Icono de la app (512 × 512) | [icono-512.png](icono-512.png) |
+| Gráfico de funciones (1024 × 500) | [grafico-destacado-1024x500.png](grafico-destacado-1024x500.png) |
+| Capturas de pantalla del teléfono (1080 × 1920, de 2 a 8) | las seis de [capturas/](capturas/), en orden del 1 al 6 |
 
-En [capturas-sin-marco/](/mnt/project-files/google-play/capturas-sin-marco/) están las mismas
+En [capturas-sin-marco/](capturas-sin-marco/) están las mismas
 pantallas sin el título encima, por si las prefieres limpias.
 
-Las capturas son de la app tal como está hoy (v0.141.0), en un móvil de 360 px de ancho. Las tablets
+Las capturas son de la app tal como está hoy (v0.143.0), en un móvil de 360 px de ancho. Las tablets
 y el vídeo son opcionales: se pueden dejar vacíos.
 
 ---
