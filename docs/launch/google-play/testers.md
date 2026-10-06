@@ -13,8 +13,8 @@ móvil Android). Un iPhone no sirve.
 
 - Google te ha confirmado la identidad en Play Console.
 - La app está creada en Play Console con la ficha y «Contenido de la app» rellenos
-  ([ficha.md](/mnt/project-files/google-play/ficha.md) y
-  [contenido-de-la-app.md](/mnt/project-files/google-play/contenido-de-la-app.md)).
+  ([ficha.md](ficha.md) y
+  [contenido-de-la-app.md](contenido-de-la-app.md)).
 - Tienes el archivo firmado para Play (un `.aab`). Lo prepara el hilo «Cerrar lo que falta de
   Android».
 
@@ -35,7 +35,7 @@ móvil Android). Un iPhone no sirve.
    1. Si pregunta por la **firma de apps de Google Play**, acepta la opción recomendada: Google guarda
       la clave de publicación y tú solo subes.
    2. Sube el `.aab`.
-   3. En «Notas de la versión» pega las novedades de [ficha.md](/mnt/project-files/google-play/ficha.md).
+   3. En «Notas de la versión» pega las novedades de [ficha.md](ficha.md).
    4. **Siguiente** y después **Guardar**.
 7. Ve a **Resumen de la publicación** (menú de la izquierda) y pulsa **Enviar cambios a revisión**.
 8. Google revisa la app (suele tardar de unas horas a unos días). Cuando la apruebe, vuelve a
