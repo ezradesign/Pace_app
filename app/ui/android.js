@@ -51,7 +51,7 @@
    `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
-var PACE_WEB_PUBLICA = 'https://paceweb.pages.dev';
+var PACE_WEB_PUBLICA = 'https://pacegrass.app';
 var PACE_AVISO_FOCO_ID = 1; // un solo aviso de fin de Foco a la vez
 
 var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: false, atras: 0 };

@@ -124,13 +124,13 @@ test('un evento por bloque con su pausa, solo lo que queda de hoy, y un .ics que
   expect(r.tramos[8]).toEqual([985, 1020]);
   expect(r.tras10).toBe(8);
   expect(r.texto).toContain('Foco de 45 min.');
-  expect(r.texto).toContain('paceweb.pages.dev');
+  expect(r.texto).toContain('pacegrass.app');
   expect(r.vevents).toBe(9);
   expect(r.alarmas).toBe(false);
   expect(r.largas).toBe(0);
   expect(r.sinCR).toBe(false);
   expect(r.inicio).toBe('20260917T070000Z');
-  expect(r.uid).toBe('pace-20260917-foco-1@paceweb.pages.dev');
+  expect(r.uid).toBe('pace-20260917-foco-1@pacegrass.app');
   expect(r.resumen).toMatch(/^Foco 1 de 9 · luego Estira: /);
   expect(r.tramosMs).toEqual([[0, 570], [720, 30]]);
 });
@@ -219,12 +219,15 @@ async function comoAndroid(context, opciones) {
 }
 const llamadas = (page, metodo) => page.evaluate((m) => window.__nativo.llamadas.filter((l) => l.metodo === m), metodo);
 
-const MARCA = 'PACE · A tu ritmo · paceweb.pages.dev';
+const MARCA = 'PACE · A tu ritmo · pacegrass.app';
+/* p1 lo puso PACE cuando vivía en paceweb.pages.dev: sigue siendo suyo, así que
+   se borra al volver a pulsar y no cuenta como reunión. */
+const MARCA_VIEJA = 'PACE · A tu ritmo · paceweb.pages.dev';
 const EVENTOS_MOVIL = [
   { id: 'r1', title: 'Equipo', startDate: ms('12:00'), endDate: ms('12:30'), isAllDay: false, availability: 0, status: 'confirmed', description: '' },
   { id: 'r2', title: 'Santo', startDate: ms('00:00'), endDate: ms('23:59'), isAllDay: true, availability: 0, status: 'confirmed', description: '' },
   { id: 'r3', title: 'Libre', startDate: ms('15:00'), endDate: ms('16:00'), isAllDay: false, availability: 1, status: 'confirmed', description: '' },
-  { id: 'p1', title: 'Foco 4 de 9', startDate: ms('11:40'), endDate: ms('12:30'), isAllDay: false, availability: 0, status: 'confirmed', description: 'Foco de 45 min.\n\n' + MARCA },
+  { id: 'p1', title: 'Foco 4 de 9', startDate: ms('11:40'), endDate: ms('12:30'), isAllDay: false, availability: 0, status: 'confirmed', description: 'Foco de 45 min.\n\n' + MARCA_VIEJA },
 ];
 
 test.describe('en Android', () => {
@@ -268,7 +271,7 @@ test.describe('en Android', () => {
     await vis(page, '[data-pace-ritmo-calendario]').click();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toBeVisible();
-    const dePace = await page.evaluate(() => window.__nativo.eventos.filter((e) => (e.description || '').includes('paceweb.pages.dev')).length);
+    const dePace = await page.evaluate(() => window.__nativo.eventos.filter((e) => (e.description || '').includes('pacegrass.app')).length);
     expect(dePace).toBe(creados.length);
     expect(errores).toEqual([]);
   });

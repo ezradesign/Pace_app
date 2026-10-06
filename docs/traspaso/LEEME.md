@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de octubre de 2026, 18:20 UTC, v0.142.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de octubre de 2026, 19:26 UTC, v0.143.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -15,11 +15,11 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de o
 4. Las maquetas publicadas como artifacts (enlaces abajo) pertenecen a la cuenta anterior y puede que
    no se abran desde otra. Lo decidido en ellas está escrito aquí, así que no hace falta abrirlas.
 
-## Dónde lo dejamos (6 oct, 18:20 UTC)
+## Dónde lo dejamos (6 oct, 19:26 UTC)
 
-Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coincidan. Los hilos de la
-cuenta anterior se pararon, pero alguno puede subir algo cuando se le renueve el uso (23:00 UTC):
-haz `git pull` antes de trabajar.
+Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coincidan. Ez alterna dos
+cuentas de Claude según el uso que le queda a cada una, y las dos suben a `main`: haz `git pull`
+antes de trabajar y mira en `git log` qué subió la otra.
 
 - **Home del móvil:** Ez eligió la opción 2. Se estaban maquetando versiones mejor colocadas; no hay
   nada subido. Ez elige entre ellas.
@@ -33,17 +33,21 @@ haz `git pull` antes de trabajar.
   solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
   bloquea. Falta comprobar qué modelo de Genspark acepta la figura. Empezar por «descanso». Prompts en
   `archivos/glifos/prompts-glifos.md` y referencias en `archivos/glifos/referencias/`.
-- **Dominio:** Ez está eligiendo. `pacegrass.app` está libre (8 $ el primer año, 14 $ después; pegas
-  pequeñas: la doble s y el sentido de «grass» en jerga). El hilo del calendario recomienda
-  `pacegarden.com`. Un solo dominio para todo: la landing después y la app en `/app`.
+- **Dominio:** hecho en v0.143.0. PACE vive en https://pacegrass.app (el mismo proyecto de Cloudflare
+  Pages, con la app en la raíz) y `paceweb.pages.dev` sigue sirviendo lo mismo sin redirigir, porque
+  los datos de la web son de cada dominio. Enlaces legales de Android, calendario y privacidad usan
+  el dominio nuevo, y el calendario aún reconoce sus eventos con la marca vieja. La privacidad lleva
+  el correo de contacto `hola.ezradesign@gmail.com`.
 - **«A tu ritmo» semanal (lo de pago), segunda ronda:** «¿Cómo es tu semana?» en la bienvenida
   (gratis); cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis); una
   carta corta el lunes con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
   «Vale» (premium); nada de tira semanal en la home. La maqueta estará en `archivos/semana/` si el
   hilo de la maqueta llegó a subirla. Nada de código hasta que Ez elija.
-- **Android:** v0.142.0 en `main` (privacidad, icono de avisos, AAB firmado listo a falta de la llave
-  de Ez). El resultado del CI y del APK no se llegó a confirmar: míralo en GitHub Actions.
-- **Caza de bugs:** si existe la v0.142.1, sus arreglos están subidos; si no, siguen pendientes.
+- **Android:** v0.142.0 salió con el CI y el APK en verde. La llave de subida a Play se crea en el PC
+  de Ez, fuera del repo, en cuanto Ez lo confirme; con ella en los secretos, el workflow `Android`
+  firma el AAB.
+- **Caza de bugs:** si `CHANGELOG.md` no tiene una versión de arreglos después de v0.143.0, siguen
+  pendientes. Toman el siguiente número de versión libre.
 - **Google Play:** la ficha está en `docs/launch/google-play/`. Espera a la revisión de identidad de
   Google, al AAB firmado y a unos 15 testers.
 
@@ -51,9 +55,10 @@ haz `git pull` antes de trabajar.
 
 App de pausas activas para quien trabaja sentado: Foco (Pomodoro), Respira, Mueve, Estira, Hidrátate,
 logros y «A tu ritmo», una guía del día que reparte bloques de foco y pausas. Web/PWA en
-https://paceweb.pages.dev/ (Cloudflare Pages publica cada push a `main`) y Android con Capacitor 8
-(el workflow `Android` compila un APK de prueba, artefacto `pace-android-debug`). React 18 sin
-bundler. El objetivo de Ez es **vender pronto**: v1.0 es la primera versión de pago, en web y Android.
+https://pacegrass.app (Cloudflare Pages publica cada push a `main`, y `paceweb.pages.dev` sirve lo
+mismo) y Android con Capacitor 8 (el workflow `Android` compila un APK de prueba, artefacto
+`pace-android-debug`). React 18 sin bundler. El objetivo de Ez es **vender pronto**: v1.0 es la
+primera versión de pago, en web y Android.
 
 ## Cómo trabaja Ez
 
@@ -82,9 +87,9 @@ bundler. El objetivo de Ez es **vender pronto**: v1.0 es la primera versión de 
   «Premium» y sin «Pronto». El constructor sigue cerrado.
 - Travesías y Caminos fuera de v1 (Caminos ocultos con `SHOW_CAMINOS` en `app/flags.js`).
 - Icono de la app: Crema. Estilo del aro: «Aro grande». Id de la app: `com.ezradesign.pace`.
-- Home del móvil sin scroll: variante A, «con tu día». Por libre, el móvil lleva la tarjeta corta de
-  «A tu ritmo» (v0.141.0): «A TU RITMO», «¿Cuánto trabajas hoy?», la línea del día sin horas,
-  «Tú eliges las horas» y la píldora «Comienza →» en estilo «papel tonal». El escritorio no cambia.
+- Home del móvil: por libre, el móvil lleva la tarjeta corta de «A tu ritmo» (v0.141.0): «A TU RITMO»,
+  «¿Cuánto trabajas hoy?», la línea del día sin horas, «Tú eliges las horas» y la píldora «Comienza →»
+  en estilo «papel tonal». El escritorio no cambia.
 - Mueve y Estira se pausan al salir de su pantalla (lo vigila un test).
 - «Al calendario» en «A tu ritmo» (v0.140.0): calendario del móvil en Android (reuniones leídas en el
   dispositivo como «Ocupado», sin nombre), Google Calendar y Outlook en la web y un `.ics` en los dos.
@@ -100,9 +105,9 @@ bundler. El objetivo de Ez es **vender pronto**: v1.0 es la primera versión de 
 | Línea | Dónde está | Siguiente paso |
 |---|---|---|
 | Home del móvil antes de contestar el día | Ez eligió «la 2, pero mejor maquetada»: una sola frase, «Hoy voy por libre» junto a la pregunta y las horas de media jornada al elegirla. Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. | Enseñar varias maquetaciones de la 2, que Ez elija, montarla con su prueba y subirla. Imagen de las opciones en `archivos/home-movil/`. |
-| Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow ya sabe firmar el AAB. | Esperar CI y APK verdes; probar el APK en el Doogee (lista en `STATE.md`); firmar el AAB cuando haya llave. |
-| Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs usan `paceweb.pages.dev` hasta que haya dominio. |
-| Dominio propio | Se buscaba un nombre en inglés fácil de decir en español. Ez propuso `paceweb.app` y `pacetouchgrass.app`; antes se sugirieron `pacepausas.com`, `pacefoco.com`, `tupace.app`. | Recomendar uno; Ez lo compra en su cuenta de Cloudflare. Luego cambiar `paceweb.pages.dev` en el código (marca del calendario, UID del `.ics`, privacidad) y reconocer aún la marca vieja. |
+| Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow ya sabe firmar el AAB. | Probar el APK en el Doogee (lista en `STATE.md`); crear la llave de subida cuando Ez lo confirme y comprobar el AAB firmado (artefacto `pace-android-play`). |
+| Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
+| Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
@@ -112,13 +117,13 @@ bundler. El objetivo de Ez es **vender pronto**: v1.0 es la primera versión de 
 
 ## Lo que espera a Ez
 
-1. Comprar el dominio en Cloudflare.
-2. La llave de subida a Google Play (secretos del repo `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`)
-   y un correo de contacto para `privacy.html`.
-3. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
-4. Que Google termine de revisar su identidad en Play Console; luego reunir unos 15 testers con
+1. Confirmar que se cree la llave de subida a Google Play en su PC (secretos del repo
+   `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`) y luego guardar una copia de la carpeta
+   `PACE-llave-play` fuera del ordenador.
+2. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
+3. Que Google termine de revisar su identidad en Play Console; luego reunir unos 15 testers con
    Android (Google pide 12 durante 14 días).
-5. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
+4. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
 
 ## Maquetas publicadas (cuenta anterior)
 
@@ -130,8 +135,9 @@ bundler. El objetivo de Ez es **vender pronto**: v1.0 es la primera versión de 
 ## Lo que no está en el repo, a propósito
 
 Claves, contraseñas, tokens y correos personales no se suben nunca. La llave de Play va en los
-secretos de GitHub. El historial de las conversaciones no se migra: lo que importa está aquí y en
-`git log`.
+secretos de GitHub. El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es público a
+propósito (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa
+está aquí y en `git log`.
 
 ## Frase de arranque para la otra cuenta
 

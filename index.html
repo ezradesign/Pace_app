@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.142.0</title>
+  <title>PACE · Foco · Cuerpo — v0.143.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5644,7 +5644,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.142.0';
+const PACE_VERSION = 'v0.143.0';
 
 
 
@@ -8448,8 +8448,13 @@ Object.assign(window, { ritmoAviso });
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
-var CALENDARIO_MARCA = 'paceweb.pages.dev';
-var CALENDARIO_PIE = 'PACE · A tu ritmo · paceweb.pages.dev';
+
+
+
+
+var CALENDARIO_MARCA = 'pacegrass.app';
+var CALENDARIO_MARCAS_VIEJAS = ['paceweb.pages.dev'];
+var CALENDARIO_PIE = 'PACE · A tu ritmo · ' + CALENDARIO_MARCA;
 
 
 
@@ -8570,14 +8575,17 @@ function calendarioTramos(lista, iso) {
 
 
 
+
 function calendarioEsDePace(texto) {
-  return String(texto || '').indexOf(CALENDARIO_MARCA) !== -1 && String(texto || '').indexOf('PACE') !== -1;
+  var s = String(texto || '');
+  if (s.indexOf('PACE') === -1) return false;
+  return [CALENDARIO_MARCA].concat(CALENDARIO_MARCAS_VIEJAS).some(function (m) {return s.indexOf(m) !== -1;});
 }
 
 Object.assign(window, {
   CALENDARIO_MARCA, calendarioInstante, calendarioEventos, calendarioIcs, calendarioPliega, calendarioTramos, calendarioEsDePace
 });
-;Object.assign(window, { CALENDARIO_MARCA, CALENDARIO_PIE, calendarioInstante, calendarioPausaCorta, calendarioEventos, calendarioSelloUtc, calendarioEscapa, calendarioPliega, calendarioIcs, calendarioTramos, calendarioEsDePace });
+;Object.assign(window, { CALENDARIO_MARCA, CALENDARIO_MARCAS_VIEJAS, CALENDARIO_PIE, calendarioInstante, calendarioPausaCorta, calendarioEventos, calendarioSelloUtc, calendarioEscapa, calendarioPliega, calendarioIcs, calendarioTramos, calendarioEsDePace });
 })();
 </script>
   <script>
@@ -11964,7 +11972,7 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
-var PACE_WEB_PUBLICA = 'https://paceweb.pages.dev';
+var PACE_WEB_PUBLICA = 'https://pacegrass.app';
 var PACE_AVISO_FOCO_ID = 1;
 
 var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: false, atras: 0 };

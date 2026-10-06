@@ -4,10 +4,12 @@ Para que la web de PACE pueda escribir en Google Calendar y en Outlook, cada uno
 
 La app de Android no necesita nada de esto: usa el calendario del móvil.
 
-Las dos direcciones que piden los formularios son siempre estas:
+PACE vive en `pacegrass.app` y sigue abierta en `paceweb.pages.dev`, donde la tienen guardada los beta testers. Cada dirección guarda sus propios datos, así que se dan de alta las dos:
 
-- Origen: `https://paceweb.pages.dev`
-- Dirección de vuelta: `https://paceweb.pages.dev/calendario.html`
+- Orígenes: `https://pacegrass.app` y `https://paceweb.pages.dev`
+- Direcciones de vuelta: `https://pacegrass.app/calendario.html` y `https://paceweb.pages.dev/calendario.html`
+
+Si un formulario no acepta la de `pages.dev`, pon solo la de `pacegrass.app` y díselo a Claude: en la dirección vieja habría que esconder ese botón.
 
 ## Google (unos 15 minutos)
 
@@ -19,13 +21,13 @@ Las dos direcciones que piden los formularios son siempre estas:
    - Público: **Externo**.
    - Información de contacto: tu correo.
    - Acepta y pulsa **Crear**.
-5. En **Marca** (o **Branding**), rellena: página principal `https://paceweb.pages.dev`, política de privacidad `https://paceweb.pages.dev/privacy`, y en dominios autorizados `paceweb.pages.dev`. Guarda.
+5. En **Marca** (o **Branding**), rellena: página principal `https://pacegrass.app`, política de privacidad `https://pacegrass.app/privacy`, y en dominios autorizados `pacegrass.app` y `paceweb.pages.dev`. Guarda.
 6. En **Acceso a datos** (o **Data access**), pulsa **Añadir o quitar permisos**, busca `calendar.events.owned`, márcalo y guarda.
 7. En **Público** (o **Audience**), en **Usuarios de prueba**, añade tu correo y el de los beta testers (hasta 100). Mientras la app esté «en pruebas», solo ellos pueden conectar su Google Calendar.
 8. En **Clientes** (o **Credenciales → Crear credenciales → ID de cliente de OAuth**):
    - Tipo: **Aplicación web**. Nombre: `PACE web`.
-   - Orígenes de JavaScript autorizados: `https://paceweb.pages.dev`
-   - URI de redireccionamiento autorizados: `https://paceweb.pages.dev/calendario.html`
+   - Orígenes de JavaScript autorizados: `https://pacegrass.app` y, con **Añadir URI**, `https://paceweb.pages.dev`
+   - URI de redireccionamiento autorizados: `https://pacegrass.app/calendario.html` y, con **Añadir URI**, `https://paceweb.pages.dev/calendario.html`
    - Pulsa **Crear**.
 9. Copia el **ID de cliente** (acaba en `.apps.googleusercontent.com`) y pásaselo a Claude.
 
@@ -39,10 +41,11 @@ Microsoft ya no deja registrar apps con una cuenta personal suelta: hace falta u
 2. Entra en <https://entra.microsoft.com/>. En el menú, ve a **Aplicaciones → Registros de aplicaciones** y pulsa **Nuevo registro**:
    - Nombre: `PACE`.
    - Tipos de cuenta: **Cuentas en cualquier directorio organizativo y cuentas personales de Microsoft**.
-   - URI de redirección: elige la plataforma **Aplicación de página única (SPA)** y escribe `https://paceweb.pages.dev/calendario.html`.
+   - URI de redirección: elige la plataforma **Aplicación de página única (SPA)** y escribe `https://pacegrass.app/calendario.html`.
    - Pulsa **Registrar**.
 3. En la página que se abre, copia el **Id. de aplicación (cliente)**.
-4. Ve a **Permisos de API → Agregar un permiso → Microsoft Graph → Permisos delegados**, busca `Calendars.ReadWrite`, márcalo y pulsa **Agregar permisos**.
-5. Pásale a Claude el identificador del paso 3.
+4. Ve a **Autenticación**; en la plataforma de página única pulsa **Agregar URI**, escribe `https://paceweb.pages.dev/calendario.html` y guarda.
+5. Ve a **Permisos de API → Agregar un permiso → Microsoft Graph → Permisos delegados**, busca `Calendars.ReadWrite`, márcalo y pulsa **Agregar permisos**.
+6. Pásale a Claude el identificador del paso 3.
 
 Con una cuenta personal (Outlook.com, Hotmail) funciona en cuanto está dado de alta. En una cuenta de trabajo, la empresa puede exigir que su administrador apruebe apps nuevas: entonces la persona verá un aviso y tendrá que usar «Otro calendario».

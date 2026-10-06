@@ -157,8 +157,8 @@ test.describe('en Android', () => {
     await comoAndroid(context);
     await irAlArtefacto(page);
     await abrirAjustes(page);
-    await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://paceweb.pages.dev/privacy');
-    await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://paceweb.pages.dev/safety');
+    await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
+    await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety');
     await expect(page.getByText('Todo vive en tu móvil.')).toBeVisible();
   });
 

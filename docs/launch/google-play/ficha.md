@@ -3,8 +3,8 @@
 Todo lo que pide Play Console en **Crecer > Presencia en la tienda > Ficha principal de la tienda**,
 listo para copiar y pegar. Los límites de caracteres ya están comprobados.
 
-Las direcciones web van con `paceweb.pages.dev` hasta que tengas el dominio propio. Cuando lo tengas,
-solo hay que cambiarlas aquí y en Play Console.
+Las direcciones web van con el dominio propio, `pacegrass.app`. La dirección vieja, `paceweb.pages.dev`,
+sigue abierta para los beta testers, pero la ficha ya no la usa.
 
 ---
 
@@ -18,9 +18,9 @@ solo hay que cambiarlas aquí y en Play Console.
 | Gratis o de pago | Gratis (la compra de v1 irá dentro de la app; una app gratis no puede pasar a ser de pago, al revés sí) |
 | Categoría | Salud y bienestar |
 | Etiquetas (hasta 5) | Bienestar · Meditación · Fitness · Productividad · Salud |
-| Correo de contacto | El que quieras que vean los usuarios (es obligatorio y es público) |
-| Sitio web | `https://paceweb.pages.dev/` |
-| Política de privacidad | `https://paceweb.pages.dev/privacy.html` (la está ampliando el hilo «Cerrar lo que falta de Android» para que hable de la app y del calendario) |
+| Correo de contacto | `hola.ezradesign@gmail.com` (es obligatorio y es público; es el mismo de la política de privacidad) |
+| Sitio web | `https://pacegrass.app/` |
+| Política de privacidad | `https://pacegrass.app/privacy` (cubre la web, la app y el calendario, y lleva el correo de contacto) |
 
 > Si Play no deja elegir alguna etiqueta exacta, coge la más parecida de su lista.
 

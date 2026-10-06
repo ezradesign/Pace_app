@@ -1,8 +1,13 @@
 # PACE · Estado
 
-**Versión:** v0.142.0 · 6 de octubre de 2026.
+**Versión:** v0.143.0 · 6 de octubre de 2026.
 
 ## Dónde estamos
+
+La web vive en https://pacegrass.app, el dominio propio, y sigue abierta en `paceweb.pages.dev` sin
+redirigir: los datos de la web son de cada dominio y los testers no perderían de vista los suyos.
+Los enlaces legales de Android, la marca del calendario y la privacidad, que ya lleva un correo de
+contacto, usan el dominio nuevo.
 
 La Fase 1 de «Camino a v1.0» (`ROADMAP.md`) está terminada y la Fase 2 ha empezado: la app se
 empaqueta para Android con Capacitor 8 (`android/`, `capacitor.config.json`) y GitHub compila un APK
@@ -44,15 +49,14 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
-3. **La home del móvil sin scroll** (decidido por Ez el 6 de octubre de 2026): al entrar sin haber
-   contestado el día, solo «¿Cuánto trabajas hoy?» y un «Hoy voy por libre» que enseña los módulos.
-   De la maqueta eligió la **variante A, «con tu día»**. Solo en móvil; en escritorio ya cabe. La
-   maqueta se hizo en la cuenta anterior de Claude: si no se conserva, se rehace a partir de esto.
+3. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
+   (detalle en `docs/traspaso/LEEME.md`). Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. Hay
+   trabajo a medias en la rama `claude/project-thread-ft7sc2`.
 
 ## Espera a Ez
 
-- La llave de subida a Google Play (secretos `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`) y un
-  correo de contacto para `privacy.html`, que Play exige.
+- Confirmar que se cree la llave de subida a Google Play en su PC, fuera del repo; GitHub la
+  guarda en los secretos `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
