@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.140.0 · 6 de octubre de 2026.
+**Versión:** v0.141.0 · 6 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -25,14 +25,20 @@ Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del cat
 Android, Google Calendar u Outlook en la web y un .ics en los dos. Con «Tener en cuenta mis
 reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como esquiva la comida.
 
+Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
+`app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
+El constructor de rutinas propias sigue cerrado.
+
 Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 ## Lo siguiente
 
-1. **Fase 2:** probar el APK en un móvil: lo de arriba, el icono y el arranque de día y en modo
-   oscuro, importar una copia y que lo guardado sobreviva a una actualización. Faltan que
+1. **Fase 2:** el identificador de la app se queda en `com.ezradesign.pace` (Ez, 6 de octubre de
+   2026); Play lo fija en la primera subida y luego no se cambia. Probar el APK en un móvil: lo de
+   arriba, el icono y el arranque de día y en modo oscuro, importar una copia y que lo guardado
+   sobreviva a una actualización. Faltan que
    `privacy.html` hable también de la app y el AAB firmado. En Android 14 o más el aviso puede llegar
    con retraso: Android no deja alarmas exactas sin un permiso que da el usuario.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
@@ -48,18 +54,14 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
-- Darse de alta en Play Console (cuenta personal) y reunir 12 testers con Android.
-- Confirmar el identificador de la app, `com.ezradesign.pace`, antes de la primera subida a Play:
-  después ya no se puede cambiar.
-- Mueve y Estira al salir de la pantalla: hoy la sesión se pausa (`SESION_AL_OCULTAR = 'pausa'`, en
-  `app/move/MoveSessionV1.support.jsx`). La alternativa es que siga contando, como el Pomodoro.
-- «Pronto» en las rutinas premium del catálogo: abrirlas hasta v1.0 o dejarlas cerradas.
+- Play Console: la cuenta está creada y Google revisa la identidad de Ez. Después, reunir 12 testers
+  con Android.
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión).
 
 ## Deuda conocida, sin fecha
 
-- Las cinco escenas con scroll anteriores a v0.130.0. Desde v0.139.0 el aro no encoge por debajo de
-  lo que lleva dentro, y por libre la home arrastra 104 px a 375×667 y 63 a 360×730 (antes, 72 y 32).
+- Las cinco escenas con scroll anteriores a v0.130.0. Desde v0.141.0, por libre, el móvil lleva una
+  tarjeta corta y la home cabe a 360×718 y 375×667; aún pide 18 px a 360×640 y 74 a 320×568.
 - En «A tu ritmo»: el miércoles sale con tres largas (2.ª, 5.ª y 8.ª), el modo oscuro del panel, el
   cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga semanas de datos.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
