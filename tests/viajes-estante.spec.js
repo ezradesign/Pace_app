@@ -139,6 +139,9 @@ test('un viaje con retencion pasa por la MISMA puerta que una tecnica', async ({
 /* ------------------------------------------------------------------ 6 */
 test('un viaje PREMIUM esta cerrado como cualquier otra rutina de pago', async ({ page }) => {
   await irAlArtefacto(page);
+  /* Hasta v1 las premium estan abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`);
+     se apaga para medir el candado que tendran cuando se cobren. */
+  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
   await sembrarViaje(page, Object.assign({}, VIAJE, { access: 'premium', safety: false }));
   await abrirRespira(page);
 

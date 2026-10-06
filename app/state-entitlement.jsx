@@ -31,12 +31,21 @@ function resolveAnyRoutine(routineId) {
   return body ? body.routine : null;
 }
 
+/* HASTA v1, LAS RUTINAS PREMIUM ESTAN ABIERTAS PARA TODOS. Decision de Ez (6 oct.
+   2026): el cobro llega despues de cerrar Android, y asi los testers de la prueba
+   cerrada las prueban todas. Siguen con su «Premium», que dice que seran de pago,
+   pero sin «Pronto» y se pueden empezar. Solo las RUTINAS: el constructor de
+   rutinas propias sigue cerrado (`hasPremiumEntitlement`). Cuando llegue el cobro,
+   a `false`. Se lee de `window` en cada llamada porque las pruebas lo apagan para
+   medir el candado. */
+const PREMIUM_ABIERTO_HASTA_V1 = true;
+
 /* canAccessRoutine(routineId, { tasting }) -> boolean
      rutina desconocida  -> true  (fail-open: no es trabajo del guard bloquear
                                     ids que no existen; StepError/lookup ya lo
                                     manejan, y ocultarlos escondería bugs)
      access !== 'premium' -> true
-     premium              -> premiumUnlocked || tasting */
+     premium              -> premiumUnlocked || tasting || abierto hasta v1 */
 function canAccessRoutine(routineId, opts) {
   const tasting = !!(opts && opts.tasting);
   const routine = resolveAnyRoutine(routineId);
@@ -44,7 +53,7 @@ function canAccessRoutine(routineId, opts) {
   if (routine.access !== 'premium') return true;
   const s = getState && getState();
   const unlocked = !!(s && s.premiumUnlocked);
-  return unlocked || tasting;
+  return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
 /* canAccessPath(pathId) -> boolean
@@ -73,4 +82,4 @@ function hasPremiumEntitlement() {
   return !!(s && s.premiumUnlocked);
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement });
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, PREMIUM_ABIERTO_HASTA_V1 });
