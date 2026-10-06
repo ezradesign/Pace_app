@@ -168,6 +168,11 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 - **Play Billing** con un **`PurchaseAdapter`** (web · Play) que pase por
   **`app/state-entitlement.jsx` como punto único**. Las tiendas son la fuente de verdad de precio y
   moneda: no se hardcodean importes en las traducciones.
+- **Cómo se prueba el premium** (Ez, 6 oct 2026): se descarta la prueba de pago (3 días por 3,99 €)
+  porque cuesta el 20 % del precio y en tres días no se ve «A tu ritmo» a lo largo de la semana. Al
+  llegar aquí se elige entre **7 días gratis de todas las funciones** (en Android, con la fecha de
+  inicio guardada en el móvil) o una **suscripción mensual**, que en Play sí trae prueba gratis
+  propia pero cambia el «UN SOLO PLAN» de 19,99 €.
 - **Proveedor de pago** / Merchant of Record para la web.
 - **Landing** separada de la app.
 - **Revisión legal**: Términos y Privacidad revisados por un profesional (y el contenido corporal).
