@@ -7,6 +7,7 @@ El changelog largo, hasta v0.135.0, está en
 | Versión | Fecha | Qué cambia |
 |---|---|---|
 | v0.144.0 | 2026-10-07 | Respira suena con tres drones en Sol hechos con las tomas de Ez, y en los ejercicios de ritmo fijo la música se abre al inhalar y se cierra al exhalar |
+| v0.143.2 | 2026-10-07 | «Primera calistenia» llega con tu primera rutina de Mueve y «Primer estirón» con la primera de Estira (iban al revés, y a quien ya los tenía se le corrigen solos); los logros dejan de decir «Extra» |
 | v0.143.1 | 2026-10-07 | El correo de contacto de la privacidad se lee también sin JavaScript: en pacegrass.app, Cloudflare lo escondía |
 | v0.143.0 | 2026-10-06 | PACE tiene dominio propio, pacegrass.app (la dirección vieja sigue abierta), y la privacidad lleva un correo de contacto |
 | v0.142.0 | 2026-10-06 | En Android el aviso de Foco lleva la vaca, ya no abre los ajustes del sistema al salir y Ajustes ofrece que llegue a su hora; la privacidad cubre la app y hay versión firmada para Play en cuanto exista la llave |

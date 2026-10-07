@@ -274,7 +274,7 @@ runner de `MoveSession` (una rutina custom = solo datos).
   Límites: **10 rutinas · 1-12 pasos · 10-120 s por paso (saltos de 5) ·
   nombre ≤ 40**. `min` = ceil(Σ dur / 60). Cues no editables en F7.
 - **Crédito:** `completeMoveSession(id, min)` — cuenta como sesión Mueve
-  (plan.muevete, moveMinutes, moveSessionsTotal, first.stretch). Los ids
+  (plan.muevete, moveMinutes, moveSessionsTotal, first.extra). Los ids
   `custom.*` no matchean ningún mapa de logros: **cero logros de
   exploración accidentales y sin logros nuevos** (decisión F4).
 - **EN:** por nombre canónico en `app/i18n/content/custom.js`
