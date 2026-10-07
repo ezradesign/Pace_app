@@ -15,8 +15,9 @@ móvil Android). Un iPhone no sirve.
 - La app está creada en Play Console con la ficha y «Contenido de la app» rellenos
   ([ficha.md](ficha.md) y
   [contenido-de-la-app.md](contenido-de-la-app.md)).
-- Tienes el archivo firmado para Play (un `.aab`). Lo prepara el hilo «Cerrar lo que falta de
-  Android».
+- Tienes el archivo firmado para Play (un `.aab`). GitHub lo firma en cada push a `main` (workflow
+  «Android», artefacto `pace-android-play`), y Claude te lo deja en Descargas desde tu PC cuando
+  vayas a subirlo.
 
 ## Paso a paso en Play Console
 

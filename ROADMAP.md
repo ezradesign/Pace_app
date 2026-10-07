@@ -128,8 +128,9 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
   color de PACE, de día y en modo oscuro. Las copias de la web las vigila `verify`.
 - **Sin Buy Me a Coffee en Android** — **HECHO (v0.138.0)**, por la política de pagos de Google
   Play: ni la pill, ni el modal, ni su logro secreto. En la web sigue igual.
-- Lo que queda de cualquier app: `privacy.html` para la app y el AAB firmado. Todo, probado en un
-  móvil real.
+- **Lo que queda de cualquier app** — **HECHO**: `privacy.html` cubre la app (v0.142.0) y el AAB
+  sale firmado para Play (artefacto `pace-android-play`) con la llave de subida de los secretos del
+  repo. Falta probarlo todo en un móvil real.
 - **Prueba cerrada en Play Console cuanto antes, con la app tal como esté.** Las cuentas personales
   nuevas necesitan **unos 12 testers durante 14 días** antes de poder publicar — *a confirmar en Play
   Console*. Al final de la prueba se pregunta a los testers **«¿qué echarías de menos?»** para
