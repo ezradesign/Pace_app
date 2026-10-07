@@ -225,22 +225,26 @@ test.describe('el runner no se mueve entre pantallas', () => {
     await abrirRutina(page, 'Mueve', 'Flexiones de escritorio');
     await congelarPulso(page);
 
+    /* Se mide contra los HUECOS de la descripción y de la línea de abajo (las pilas), no
+       contra su texto vivo: con el runner de la opción A cada hueco mide lo que su texto
+       más largo de la rutina, y el vivo empieza arriba. Medir el texto haría que el número
+       «se descentrara» en cuanto una frase fuera más corta que su hueco, que es justo lo
+       que tiene que poder pasar sin que se mueva nada. */
     const huecos = await page.evaluate(() => {
       const vis = (s) => [...document.querySelectorAll(s)]
         .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; })[0] || null;
-      const cue = vis('[data-pace-v1-cue]'), num = vis('[data-pace-v1-num]');
-      const barra = vis('[data-pace-v1-progress]'), cuerpo = vis('[data-pace-v1-body]');
-      if (!cue || !num || !barra || !cuerpo) return null;
-      const cola = cuerpo.lastElementChild;
+      const cue = vis('[data-pace-v1-pila="cue"]'), num = vis('[data-pace-v1-num]');
+      const barra = vis('[data-pace-v1-progress]'), cola = vis('[data-pace-v1-pila="cola"]');
+      if (!cue || !num || !barra || !cola) return null;
       return {
         arriba: Math.round((num.getBoundingClientRect().top - cue.getBoundingClientRect().bottom) * 10) / 10,
         abajo: Math.round((barra.getBoundingClientRect().top - cola.getBoundingClientRect().bottom) * 10) / 10,
       };
     });
     expect(huecos, 'no encuentro las piezas para medir los huecos').not.toBeNull();
-    /* Los dos huecos son los dos `margin: auto`, así que la igualdad es por
-       construcción y no un ajuste: 2 px de tolerancia por el píxel impar.
-       Antes del arreglo eran 10,0 arriba y -15,0 abajo. */
+    /* Los dos huecos son el mismo aire (dos espaciadores flex iguales más un paso de
+       rejilla), así que la igualdad es por construcción y no un ajuste: 2 px de tolerancia
+       por el píxel impar. Antes del primer arreglo eran 10,0 arriba y -15,0 abajo. */
     expect(Math.abs(huecos.arriba - huecos.abajo),
       'el número no está equidistante: ' + huecos.arriba + ' arriba contra ' + huecos.abajo + ' abajo')
       .toBeLessThanOrEqual(2);

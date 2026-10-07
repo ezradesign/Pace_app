@@ -12,10 +12,9 @@
 
    s110 (B2.2): MOVE_ROUTINES + getMoveRoutine salieron a app/move/move.data.js
    (regla <500 ln; el módulo crece con el contrato). MoveSession pasa a ser un
-   DISPATCHER: rutinas con algún step `mode` van al runner del contrato v1
-   (MoveSessionV1.jsx); el resto sigue el runner legacy (MoveSessionLegacy,
-   idéntico a s109). R4: la completion acredita minutos REALES, no `routine.min`
-   declarado (afecta a ambos runners; los declarados heredaban la mentira). */
+   DISPATCHER: hoy todas las rutinas, las propias incluidas, van al runner del
+   contrato v1 (MoveSessionV1.jsx); MoveSessionLegacy queda como red. R4: la
+   completion acredita minutos REALES, no `routine.min` declarado. */
 
 const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
 
@@ -38,15 +37,31 @@ function MoveLibrary({ open, onClose, onStart }) {
   );
 }
 
-/* MoveSession — DISPATCHER (s110). Sin hooks propios: elige el runner según
-   el contrato del dato. Una rutina es "v1" si algún step declara `mode`; las
-   demás (22 de 28) siguen byte-idénticas en el runner legacy. El guard
-   `typeof MoveSessionV1` degrada con gracia a legacy si el archivo del
-   contrato aún no evaluó (ventana sub-segundo de la carrera de scripts). */
+/* MoveSession — DISPATCHER. Todas las rutinas del catálogo traen ya `mode` en cada paso y
+   corren en el runner guiado (MoveSessionV1.jsx). Las rutinas propias se guardan como
+   { name, dur, cue }, sin `mode`: se les da forma al abrirlas (cada paso con su tiempo y
+   «Descanso» como descanso) sin tocar lo guardado, para que también tengan el mando de tres
+   y los avisos. La forma se guarda por objeto: el runner mira la identidad de la rutina, y
+   una copia nueva en cada render reiniciaría la sesión.
+   El runner legacy queda solo como red si el archivo del runner guiado aún no evaluó
+   (ventana sub-segundo de la carrera de scripts). */
+const _moveRutinasGuiadas = new WeakMap();
+function moveRutinaGuiada(routine) {
+  if (!routine || !Array.isArray(routine.steps) || routine.steps.every(s => s.mode)) return routine;
+  if (!_moveRutinasGuiadas.has(routine)) {
+    _moveRutinasGuiadas.set(routine, {
+      ...routine,
+      steps: routine.steps.map(s => (s.mode ? s : { ...s, mode: s.name === 'Descanso' ? 'rest' : 'timed' })),
+    });
+  }
+  return _moveRutinasGuiadas.get(routine);
+}
+
 function MoveSession(props) {
   const { routine } = props;
-  const isV1 = routine && routine.steps && routine.steps.some(s => s.mode);
-  if (isV1 && typeof MoveSessionV1 === 'function') return <MoveSessionV1 {...props} />;
+  if (routine && routine.steps && typeof MoveSessionV1 === 'function') {
+    return <MoveSessionV1 {...props} routine={moveRutinaGuiada(routine)} />;
+  }
   return <MoveSessionLegacy {...props} />;
 }
 
@@ -382,4 +397,4 @@ if (!_paceMoveResponsive) {
 }
 
 /* getMoveRoutine + MOVE_ROUTINES → app/move/move.data.js (split s110). */
-Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion });
+Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion, moveRutinaGuiada });

@@ -28,8 +28,9 @@
    de Mueve — chair.dips · calves · grip.squeeze · glutes.stealth · posture.set
    (todas gratuitas, sin suelo → sin gate `ready`). Migración MECÁNICA: `mode` +
    `instruction.*` (consolida el `cue`) + `tempo`/`completion` en reps + los 5
-   metadatos; ningún `name` cambia (glifos intactos). Las 7 rutinas restantes de
-   Mueve (premium + legs.single a reescribir) siguen LEGACY byte-idénticas. */
+   metadatos; ningún `name` cambia (glifos intactos). Las que quedaban en el runner
+   antiguo pasaron después al contrato con `{ name, mode, dur, cue }` (opción A del
+   runner guiado): ya no queda ninguna rutina de catálogo sin `mode`. */
 
 var MOVE_ROUTINES = {
   empuje: {
@@ -99,11 +100,11 @@ var MOVE_ROUTINES = {
         intensity: 'moderate', level: 'intermediate',
         position: ['standing'], equipment: ['stableDesk'], requiresFloor: false,
         steps: [
-          { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Pica en escritorio', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
+          { name: 'Flexiones inclinadas', mode: 'timed', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
+          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Pica en escritorio', mode: 'timed', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
+          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Flexiones inclinadas', mode: 'timed', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
         ]},
       /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de barra
          → `timed`; los rests entre holds son SUAVES (sin restKind, patrón
@@ -280,12 +281,12 @@ var MOVE_ROUTINES = {
         intensity: 'strong', level: 'advanced',
         position: ['standing'], equipment: ['stableChair'], requiresFloor: false,
         steps: [
-          { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Zancada profunda', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Sentadilla de cuádriceps', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-          { name: 'Elevación de talones', dur: 40, cue: 'A una pierna, 12 por lado.' },
+          { name: 'Sentadilla búlgara', mode: 'timed', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
+          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Zancada profunda', mode: 'timed', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
+          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+          { name: 'Elevación de talones', mode: 'timed', dur: 40, cue: 'A una pierna, 12 por lado.' },
         ]},
     ]
   },

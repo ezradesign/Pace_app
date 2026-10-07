@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.144.0 | 2026-10-07 | Mueve y Estira se siguen sin tocar la pantalla: un mando de tres botones que no cambia entre pantallas, toda colocación cuenta sola (adiós a «Estoy listo»), «+15 s» junto a la cuenta, un aro de tiempo alrededor del dibujo y avisos de cuenco y madera; nada se mueve entre colocarse, trabajar, cambiar de lado y descansar, tampoco a 1530×702; las rutinas propias usan el mismo runner y su vista previa ya no dice «undefined min»; el descanso lleva la figura que respira; el Foco personalizado dura al menos 5 minutos; dentro del aro solo queda «Hasta las…»; y dos logros con el título repetido cambian de nombre |
 | v0.143.4 | 2026-10-07 | La preparación de Mueve y Estira ya no dice «De pie» en las rutinas de silla o de suelo; en Android la bienvenida dice que todo vive en el móvil, no en el navegador; en el móvil los botones de Hidrátate no parten su texto; y cuando la pausa propone agua, el botón dice «Un vaso más» y lo suma |
 | v0.143.3 | 2026-10-07 | En la cuenta atrás de las sesiones, la cola del 3 y del 5 ya no toca la frase de debajo en el móvil |
 | v0.143.2 | 2026-10-07 | «Primera calistenia» llega con tu primera rutina de Mueve y «Primer estirón» con la primera de Estira (iban al revés, y a quien ya los tenía se le corrigen solos); los logros dejan de decir «Extra» |

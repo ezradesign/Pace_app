@@ -160,10 +160,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.skip':                    'Saltar',
     'session.restLabel':               'Descanso',
     'move.reps':                       'reps',
-    'move.placeHint':                  'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
-    'session.imReady':                 'Estoy listo',
+    'move.placeHint':                  'Colócate sin prisa · arranca solo',
     'session.sideFirst':               'Empiezas por: {side}',
-    'move.placeReadyHint':             'Sin prisa · el ejercicio espera a que estés en posición',
     // Runner guiado (s113): reps con cadencia + transición auto de lado
     'move.repsOf':                     'de {n} reps',
     'move.finishEarly':                'Terminar antes',
@@ -280,10 +278,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.skip':                    'Skip',
     'session.restLabel':               'Rest',
     'move.reps':                       'reps',
-    'move.placeHint':                  'Get set, no rush · starts on its own · "Begin now" to skip',
-    'session.imReady':                 'I\'m ready',
+    'move.placeHint':                  'Get set, no rush · starts on its own',
     'session.sideFirst':               'Start with: {side}',
-    'move.placeReadyHint':             'No rush · the exercise waits until you\'re in position',
     // Guided runner (s113): cadenced reps + auto side transition
     'move.repsOf':                     'of {n} reps',
     'move.finishEarly':                'Finish early',

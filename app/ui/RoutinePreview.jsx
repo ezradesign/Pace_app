@@ -34,6 +34,11 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
 
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
+  /* Las rutinas propias: su nombre lo escribió quien la creó (no se traduce) y el inglés de
+     sus pasos sale del nombre del ejercicio, no de la posición (v1Clave). */
+  const propia = String(routine.id || '').indexOf('custom.') === 0;
+  const clavePaso = (idx) => (typeof v1Clave === 'function'
+    ? v1Clave(routine, idx, 'name') : `${routine.id}.s${idx}.name`);
 
   /* Requisitos. `requiresFloor` es un booleano aparte del material porque el
      suelo no es material: es sitio. Se muestra como una necesidad más. */
@@ -64,11 +69,13 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
     : null;
 
   /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
-     contrato v1, `min` para el resto. Nunca las dos. */
-  const isV1 = !!(routine.steps && routine.steps.some(s => s && s.mode));
+     contrato v1, `min` para el resto. Nunca las dos. Una rutina propia no guarda `min` (salía
+     «undefined min»): se estima con la misma forma con la que la corre el runner. */
+  const guiada = (typeof moveRutinaGuiada === 'function') ? moveRutinaGuiada(routine) : routine;
+  const isV1 = !!(guiada.steps && guiada.steps.some(s => s && s.mode));
   let durLabel = `${routine.min} min`;
   if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
+    const est = window.estimateDuration(guiada, pace.restBetweenSets);
     const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
     durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
   }
@@ -106,10 +113,10 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
 
   return (
     <Modal open={true} onClose={onClose} maxWidth={560}
-           tagLabel={t('preview.tag')} title={tR(`${routine.id}.name`, routine.name)}>
+           tagLabel={t('preview.tag')} title={propia ? routine.name : tR(`${routine.id}.name`, routine.name)}>
       <div style={{ marginTop: 4 }}>
         <p style={{ fontSize: 13.5, color: 'var(--ink-2)', lineHeight: 1.6, margin: '0 0 18px' }}>
-          {tR(`${routine.id}.desc`, routine.desc)}
+          {propia ? null : tR(`${routine.id}.desc`, routine.desc)}
         </p>
 
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: vecesLabel ? 10 : 18 }}>
@@ -154,7 +161,7 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
                       : null}
                   </span>
                   <span style={{ fontSize: 14, color: 'var(--ink)' }}>
-                    {tR(`${routine.id}.s${idx}.name`, s.name)}
+                    {tR(clavePaso(idx), s.name)}
                     {veces > 1 && (
                       <span style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` ×${veces}`}</span>
                     )}

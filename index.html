@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.143.4</title>
+  <title>PACE · Foco · Cuerpo — v0.144.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2377,10 +2377,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.skip': 'Saltar',
   'session.restLabel': 'Descanso',
   'move.reps': 'reps',
-  'move.placeHint': 'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
-  'session.imReady': 'Estoy listo',
+  'move.placeHint': 'Colócate sin prisa · arranca solo',
   'session.sideFirst': 'Empiezas por: {side}',
-  'move.placeReadyHint': 'Sin prisa · el ejercicio espera a que estés en posición',
 
   'move.repsOf': 'de {n} reps',
   'move.finishEarly': 'Terminar antes',
@@ -2497,10 +2495,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.skip': 'Skip',
   'session.restLabel': 'Rest',
   'move.reps': 'reps',
-  'move.placeHint': 'Get set, no rush · starts on its own · "Begin now" to skip',
-  'session.imReady': 'I\'m ready',
+  'move.placeHint': 'Get set, no rush · starts on its own',
   'session.sideFirst': 'Start with: {side}',
-  'move.placeReadyHint': 'No rush · the exercise waits until you\'re in position',
 
   'move.repsOf': 'of {n} reps',
   'move.finishEarly': 'Finish early',
@@ -5652,7 +5648,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.143.4';
+const PACE_VERSION = 'v0.144.0';
 
 
 
@@ -13643,6 +13639,11 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
       [data-pace-session-root] {
         padding: 18px 32px 20px !important;
       }
+      /* Con 20 px abajo, la línea de atajos (absoluta a 14 px del borde) se pintaba encima de los
+         botones del pie: medido a 1530×692, 663 px su borde de arriba y 672 el de los botones. */
+      [data-pace-session-hint] {
+        display: none !important;
+      }
       [data-pace-session-prep-num] {
         font-size: 140px !important;
       }
@@ -14392,6 +14393,63 @@ function breathNoise(ctx, dest, direction, t0, dur, peak) {
 }
 
 
+
+
+
+
+
+
+function cuenco(ctx, dest, freq, t0, peak, largo) {
+  if (peak === undefined) peak = 0.065;
+  if (largo === undefined) largo = 1;
+  var lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 3200;
+  lp.connect(dest);
+  [[1, 1, 4.2], [2.71, 0.42, 2.6], [5.15, 0.18, 1.5], [8.4, 0.07, 0.8]].forEach(function (p) {
+    [-0.45, 0.45].forEach(function (det) {
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.frequency.value = freq * p[0] + det;
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(peak * p[1] / 2, t0 + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + p[2] * largo);
+      o.connect(g);g.connect(lp);
+      o.start(t0);o.stop(t0 + p[2] * largo + 0.1);
+    });
+  });
+  var n = Math.ceil(ctx.sampleRate * 0.03);
+  var buf = ctx.createBuffer(1, n, ctx.sampleRate);
+  var d = buf.getChannelData(0);
+  for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  var src = ctx.createBufferSource();
+  var bp = ctx.createBiquadFilter();
+  var gn = ctx.createGain();
+  src.buffer = buf;
+  bp.type = 'bandpass';bp.frequency.value = freq * 2;bp.Q.value = 3;
+  gn.gain.value = peak * 0.25;
+  src.connect(bp);bp.connect(gn);gn.connect(dest);
+  src.start(t0);
+}
+
+
+function madera(ctx, dest, t0, peak) {
+  if (peak === undefined) peak = 0.09;
+  var o = ctx.createOscillator();
+  var bp = ctx.createBiquadFilter();
+  var g = ctx.createGain();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(note('G5') * 1.5, t0);
+  o.frequency.exponentialRampToValueAtTime(note('G5'), t0 + 0.05);
+  bp.type = 'bandpass';bp.frequency.value = 1400;bp.Q.value = 2;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(peak, t0 + 0.003);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.09);
+  o.connect(bp);bp.connect(g);g.connect(dest);
+  o.start(t0);o.stop(t0 + 0.12);
+}
+
+
 var SOUND_RECIPES = {
 
 
@@ -14446,21 +14504,34 @@ var SOUND_RECIPES = {
 
 
 
+
+
   'move.start': function (ctx, t0) {
-    glide(ctx, ctx.destination, note('C4'), note('G4'), t0, 0.22, 0.07, 'sine');
+    cuenco(ctx, ctx.destination, note('G4'), t0);
+  },
+  'move.go': function (ctx, t0) {
+    cuenco(ctx, ctx.destination, note('D5'), t0, 0.05, 0.35);
   },
   'move.step': function (ctx, t0) {
     tone(ctx, ctx.destination, note('A4'), t0, 0.06, 0.04, 'triangle');
   },
   'move.warn': function (ctx, t0) {
-    glide(ctx, ctx.destination, note('G4'), note('D4'), t0, 0.22, 0.05, 'sine');
+    madera(ctx, ctx.destination, t0);
+  },
+  'move.rep': function (ctx, t0) {
+    madera(ctx, ctx.destination, t0, 0.05);
   },
   'move.side': function (ctx, t0) {
-    tone(ctx, ctx.destination, note('E4'), t0, 0.07, 0.045, 'triangle');
-    tone(ctx, ctx.destination, note('B4'), t0 + 0.09, 0.10, 0.045, 'triangle');
+    cuenco(ctx, ctx.destination, note('D5'), t0, 0.055, 0.7);
+    cuenco(ctx, ctx.destination, note('G4'), t0 + 0.45, 0.05, 0.8);
+  },
+  'move.rest': function (ctx, t0) {
+    cuenco(ctx, ctx.destination, note('D4'), t0, 0.075, 1.3);
   },
   'move.end': function (ctx, t0) {
-    chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.60, 0.09, 'sine');
+    cuenco(ctx, ctx.destination, note('G4'), t0, 0.055, 1.1);
+    cuenco(ctx, ctx.destination, note('B4'), t0 + 0.32, 0.055, 1.1);
+    cuenco(ctx, ctx.destination, note('D5'), t0 + 0.64, 0.055, 1.1);
   },
 
 
@@ -14622,7 +14693,7 @@ const ambientDrone = (() => {
 })();
 
 Object.assign(window, { playSound, useSound, ambientDrone });
-;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, SOUND_RECIPES, playSound, useSound });
+;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, cuenco, madera, SOUND_RECIPES, playSound, useSound });
 })();
 </script>
   <script>
@@ -20119,6 +20190,11 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
 
 
+  const propia = String(routine.id || '').indexOf('custom.') === 0;
+  const clavePaso = (idx) => typeof v1Clave === 'function' ?
+  v1Clave(routine, idx, 'name') : `${routine.id}.s${idx}.name`;
+
+
 
   const equipo = Array.isArray(routine.equipment) ? routine.equipment : [];
   const necesita = equipo.map((e) => t(`preview.eq.${e}`));
@@ -20148,10 +20224,12 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
 
 
 
-  const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
+
+  const guiada = typeof moveRutinaGuiada === 'function' ? moveRutinaGuiada(routine) : routine;
+  const isV1 = !!(guiada.steps && guiada.steps.some((s) => s && s.mode));
   let durLabel = `${routine.min} min`;
   if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
+    const est = window.estimateDuration(guiada, pace.restBetweenSets);
     const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
     durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
   }
@@ -20189,10 +20267,10 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
 
   return (
     React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 560,
-      tagLabel: t('preview.tag'), title: tR(`${routine.id}.name`, routine.name) },
+      tagLabel: t('preview.tag'), title: propia ? routine.name : tR(`${routine.id}.name`, routine.name) },
     React.createElement("div", { style: { marginTop: 4 } },
     React.createElement("p", { style: { fontSize: 13.5, color: 'var(--ink-2)', lineHeight: 1.6, margin: '0 0 18px' } },
-    tR(`${routine.id}.desc`, routine.desc)
+    propia ? null : tR(`${routine.id}.desc`, routine.desc)
     ),
 
     React.createElement("div", { style: { display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: vecesLabel ? 10 : 18 } },
@@ -20237,7 +20315,7 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
         null
         ),
         React.createElement("span", { style: { fontSize: 14, color: 'var(--ink)' } },
-        tR(`${routine.id}.s${idx}.name`, s.name),
+        tR(clavePaso(idx), s.name),
         veces > 1 &&
         React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 12 } }, ` ×${veces}`)
 
@@ -23364,6 +23442,7 @@ Object.assign(window, { BreatheSession });
 
 
 
+
 var MOVE_ROUTINES = {
   empuje: {
     label: 'Empuje y tracción',
@@ -23432,11 +23511,11 @@ var MOVE_ROUTINES = {
       intensity: 'moderate', level: 'intermediate',
       position: ['standing'], equipment: ['stableDesk'], requiresFloor: false,
       steps: [
-      { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Pica en escritorio', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' }]
+      { name: 'Flexiones inclinadas', mode: 'timed', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Pica en escritorio', mode: 'timed', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Flexiones inclinadas', mode: 'timed', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' }]
     },
 
 
@@ -23613,12 +23692,12 @@ var MOVE_ROUTINES = {
       intensity: 'strong', level: 'advanced',
       position: ['standing'], equipment: ['stableChair'], requiresFloor: false,
       steps: [
-      { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Zancada profunda', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Sentadilla de cuádriceps', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-      { name: 'Elevación de talones', dur: 40, cue: 'A una pierna, 12 por lado.' }]
+      { name: 'Sentadilla búlgara', mode: 'timed', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Zancada profunda', mode: 'timed', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+      { name: 'Elevación de talones', mode: 'timed', dur: 40, cue: 'A una pierna, 12 por lado.' }]
     }]
 
   },
@@ -23736,8 +23815,7 @@ window.MOVE_ROUTINES = MOVE_ROUTINES;
 </script>
   <script>
 ;(function () {
-
-
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
 
 
 
@@ -23781,10 +23859,26 @@ function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
 
 
 
+
+
+
+const _moveRutinasGuiadas = new WeakMap();
+function moveRutinaGuiada(routine) {
+  if (!routine || !Array.isArray(routine.steps) || routine.steps.every((s) => s.mode)) return routine;
+  if (!_moveRutinasGuiadas.has(routine)) {
+    _moveRutinasGuiadas.set(routine, {
+      ...routine,
+      steps: routine.steps.map((s) => s.mode ? s : { ...s, mode: s.name === 'Descanso' ? 'rest' : 'timed' })
+    });
+  }
+  return _moveRutinasGuiadas.get(routine);
+}
+
 function MoveSession(props) {
   const { routine } = props;
-  const isV1 = routine && routine.steps && routine.steps.some((s) => s.mode);
-  if (isV1 && typeof MoveSessionV1 === 'function') return React.createElement(MoveSessionV1, props);
+  if (routine && routine.steps && typeof MoveSessionV1 === 'function') {
+    return React.createElement(MoveSessionV1, _extends({}, props, { routine: moveRutinaGuiada(routine) }));
+  }
   return React.createElement(MoveSessionLegacy, props);
 }
 
@@ -24120,8 +24214,8 @@ if (!_paceMoveResponsive) {
 }
 
 
-Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion });
-;Object.assign(window, { MoveLibrary, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
+Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion, moveRutinaGuiada });
+;Object.assign(window, { _extends, MoveLibrary, moveRutinaGuiada, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
 })();
 </script>
   <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
@@ -24160,449 +24254,141 @@ if (!_paceMoveV1Css) {
       50%  { transform: scale(0.86); }
       100% { transform: scale(1); }
     }
-    /* s125 · BARRA DE SCROLL OCULTA — LA REGLA SE MUDÓ, NO SE BORRÓ (s139).
-       El diagnóstico de s125 sigue siendo válido y vale la pena conservarlo: en
-       el régimen ANCHO (≥641px) el centro NO desborda (las reservas cue/care de
-       s119 absorben las 2 líneas); en MÓVIL (≤640px, sin reservas) un paso de
-       NOMBRE largo —«World's greatest stretch», <h1> clamp a 2 líneas a 360px—
-       rebasa el centro por pocos px a alturas ≤~624px (medido: 360×620 = 3 px).
-       El scroll es LEGÍTIMO; la barra clásica de 17 px para 3 px de recorrido
-       es lo que sobra.
-       En s139 el usuario elevó esto a REGLA DE PRODUCTO —ninguna actividad en
-       curso enseña barra— así que las dos declaraciones que vivían aquí,
-       confinadas con :has([data-pace-v1-progress]), pasaron a
-       app/ui/SessionShell.responsive.js aplicadas a todo
-       [data-pace-session-center]. Aquí quedarían como subconjunto exacto y
-       redundante, y una regla duplicada acaba divergiendo. NO reintroducirlas:
-       si alguna vez hay que devolver la barra a alguna superficie, la excepción
-       se declara allí, en un solo sitio.
-       OJO: este comentario vive DENTRO de un template literal — nada de
-       backticks aquí, cierran la cadena y rompen el runner (pasó en s139). */
-    /* s119 · ALTURAS RESERVADAS (anclaje del glifo, sin saltos tipográficos).
-       El bloque de contenido mantiene alto CONSTANTE entre pasos de TRABAJO: el
-       cue reserva 2 líneas (la acción más larga medida) y «Cuídate» reserva 2
-       líneas SIEMPRE, aunque el paso no la tenga. Así un paso con cue/care corto
-       (o sin care) no sube el glifo respecto a sus vecinos — el footer ya estaba
-       pinneado; lo que se movía era el glifo por el centrado del bloque de alto
-       variable. em → escala con el tamaño de cada tier (2 líneas exactas). El
-       min-height es SUELO: la colocación (setup de 3 líneas) sigue creciendo.
-       SOLO ≥641 px: en móvil (≤640) el slack de centrado es pequeño (~12 px de
-       salto potencial, ya presente pre-s119) y el coste de las reservas —con el
-       nombre a 2 líneas y fuentes grandes— desbordaba el retrato; ahí se
-       renuncia a la reserva y se conserva el ajuste móvil previo (que cabía). */
-    /* s171 · LAS RESERVAS PASAN A SER DE LAS DOS PIELES. El usuario midió en su
-       teléfono lo que s119 había aceptado como coste: el círculo se mueve entre
-       pasos. Medido aquí antes de tocar nada: top 98 → 108 → 151 px en móvil,
-       43 px de deriva con el círculo del MISMO tamaño. La renuncia de s119 era
-       a las reservas «con el nombre a 2 líneas y fuentes grandes», y desde
-       entonces el nombre móvil ya es un clamp; el desborde se vuelve a medir en
-       360×640, 375×812 y 390×844 abajo, que es donde aquella decisión dolía. */
-    /* s176 · LA RESERVA BAJO LA DESCRIPCION SE RETIRA, y no es un capricho: la
-       propia s171 dejo escrito que moverla «al final del bloque, despues de
-       Cuidate, donde no se leeria como hueco» exigia que el bloque entero
-       declarase alto minimo -- «un cambio de mecanismo con cinco tiers medidos
-       detras». ESE CAMBIO LO HIZO s172b: el bloque se alinea arriba y el
-       circulo queda clavado por construccion; su comentario lo dice con todas
-       las letras, «con el bloque anclado no hace falta reservar ningun texto».
-       La reserva se quedo por inercia y lo unico que hacia era empujar el
-       contador contra el «Cuidate».
-       LO QUE COSTABA, medido a 1536x714 (la pantalla del usuario): la barra de
-       progreso se metia 15 px DENTRO de los botones en la pantalla de trabajo,
-       y estaba 47,2 px mas abajo que en la de colocarse. Reportado mirando la
-       app: «la barra casi se superpone con los botones... deberia estar siempre
-       a la misma altura: referencia del colocate».
-       COMPROBADO que el circulo NO se mueve al quitarla: top 76,4 px en las dos
-       pantallas a 1536x714 y 58,6 en las dos a 360x730 y 375x812. */
-    /* [data-pace-v1-cue] min-height: retirada en s176 -- ver arriba */
-    [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
 
-    /* s171b · EL BLOQUE ENTERO DECLARA ALTO MINIMO, y es lo unico que hace falta.
-       El circulo y el nombre se movian hasta 65 y 94 px entre pantallas de la
-       misma rutina, por TRES causas distintas: un cue de 3 lineas, un nombre de
-       2, y el gate de tipo «ready» —el que espera al usuario porque el paso pide
-       suelo, cojin o pared— que NO PINTA CONTADOR y dejaba el bloque 130 px mas
-       corto que el de trabajo. NO era la linea «Empiezas por», que fue la
-       primera sospecha: es la AUSENCIA del contador.
-       PRIMERO INTENTE RESERVAR CADA TEXTO y fue un error que la medida corrigio
-       dos veces. Uno: las reservas son ADITIVAS y el peor caso real no tenia a
-       la vez nombre de 2 lineas y cue de 3, asi que el bloque crecio de 460 a
-       529 y desbordo donde antes cabia. Dos: al comprobarlo compare el bloque
-       contra el alto del CENTRO, y dentro del centro tambien vive la barra de
-       progreso — 61 px que no estaba contando. El desborde real era de 51 px.
-       CON EL BLOQUE ANCLADO NO HACE FALTA RESERVAR NINGUN TEXTO: por encima del
-       nombre solo hay glifo y rotulo, los dos de alto fijo, asi que el circulo y
-       el nombre quedan clavados aunque el cue crezca. Lo que varie lo hace por
-       DEBAJO, y la holgura cae detras de «Cuidate», donde no se lee como hueco.
-       EN VH Y NO EN PX porque no hay un px que valga: el bloque crece con la
-       altura del viewport (el glifo es 0,22 x alto) y su techo tambien, y los
-       intervalos validos de 780 y de 844 NO SE SOLAPAN — medido.
-       LOS SUELOS SON EL TECHO MEDIDO, no una estimacion: el bloque mas alto que
-       cabe es 70,1vh a 375x780 · 71,2 a 812 · 72,4 a 844 · 76,0 a 1280x900.
-       LO QUE ESTO NO ARREGLA, dicho: por debajo de 780 (movil) y 880 (escritorio)
-       el circulo sigue moviendose. Ahi el centro no da para anclarlo sin robarle
-       altura a las instrucciones, y esa jerarquia la fijo s119. */
-    /* s172b · EL BLOQUE SE ALINEA ARRIBA, y esto es lo que de verdad ancla el
-       circulo. Los min-height en vh de abajo solo funcionaban POR ENCIMA de sus
-       suelos: medido, con UN PIXEL menos el anclaje se apaga entero y el salto
-       vuelve — 61 px a 1280x879 y 53 px a 360x730, los dos viewports reales del
-       usuario. Era un ACANTILADO, no una curva.
-       La causa vive un nivel mas arriba: centerBody centra con margin:auto
-       (s112) un bloque cuya ALTURA VARIA con el contenido —la pantalla de
-       colocarse no pinta contador—, asi que el centrado reparte una holgura
-       distinta en cada pantalla y el circulo baja la mitad de esa diferencia.
-       Ningun alto minimo del bloque arregla eso por debajo del suelo: ahi el
-       bloque ya no llega a ese alto.
-       Se anula el margen SUPERIOR y se conserva el inferior, asi que la holgura
-       cae DEBAJO —donde s171 la queria— y el circulo queda clavado a cualquier
-       altura. El :has() acota el cambio al runner v1: Respira, Foco y Caminos
-       siguen centrando igual. Y NO se toca la regla de s112 en SessionShell:
-       margin:auto alinea arriba cuando el contenido DESBORDA, que es lo que
-       evita que un justify-content:center recorte el principio. */
-    /* El !important no es pereza: centerBody trae margin:auto como estilo
-       EN LINEA desde s112, y ninguna hoja gana a un inline sin el. Sin esto la
-       regla se aplica, no falla, y no cambia NADA — que es como se ve igual que
-       antes y uno cree que el arreglo no sirve. */
-    [data-pace-session-center-body]:has([data-pace-v1-body]) { margin-top: 0 !important; }
-
-
-
-    /* El rotulo de fase se pinta SIEMPRE —vacio cuando no hay— para que el
-       NOMBRE no suba y baje 29 px en cada cambio de fase. Pero VACIO NO CUESTA
-       NADA fuera de los suelos: a 360x640 esos 11 px eran justo los que
-       faltaban, y alli se prefiere que el nombre salte a que aparezca barra. */
-    /* s172b · EL ROTULO CIERRA SU PROPIA CAJA. s171 reservo 1.2em para el rotulo
-       VACIO, pero el lleno se pintaba con el interlineado normal de la fuente
-       (12 px x ~1.45 = 17,4), asi que la reserva quedaba 3 px CORTA y el nombre
-       seguia saltando esos 3 px entre colocarse y trabajar — con el circulo ya
-       clavado, eran lo unico que se movia. Fijar el interlineado hace que las
-       dos formas midan lo mismo por construccion, en vez de que una reserva
-       adivine lo que la otra mide. */
-    [data-pace-v1-kicker] { line-height: 1.2; }
-    [data-pace-v1-kicker]:empty { display: none; }
-    @media (max-width: 640px) and (min-height: 780px) {
-      [data-pace-v1-body] { min-height: 70vh; }
-      [data-pace-v1-kicker]:empty { display: block; min-height: 1.2em; }
-    }
-    @media (min-width: 641px) and (min-height: 880px) {
-      [data-pace-v1-body] { min-height: 72vh; }
-      [data-pace-v1-kicker]:empty { display: block; min-height: 1.2em; }
-    }
-
-    /* s171 · EL AIRE ALREDEDOR DEL CONTADOR, en la piel ancha y SOLO donde no
-       hay compactación (min-height 769: por debajo mandan los tiers de abajo,
-       que ya aprietan estos mismos márgenes). El usuario pidió el círculo un
-       30 % mayor «quitando el aire de la segunda frase de la descripción y el
-       contador de segundos»: el aumento cabe sin desbordar (medido: 0 px a
-       1440×900), así que esto no lo financia — recorta lo que él señaló.
-       La línea vacía bajo el cue NO se toca y es deliberado: ES el anclaje del
-       círculo. Quitarla devuelve la deriva que la mitad de este cambio arregla;
-       moverla al final del bloque (después de «Cuídate», donde no se leería
-       como hueco) exige que el bloque entero declare alto mínimo, y eso es un
-       cambio de mecanismo con cinco tiers medidos detrás. Queda propuesto. */
-    @media (min-width: 641px) and (min-height: 769px) {
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
-      [data-pace-v1-timer] + div { margin-top: 8px !important; }
-      [data-pace-v1-care] { margin-top: 10px !important; }
-    }
-
-    /* s119 · banda de portátil 701–768 px: con el glifo ya continuo (v1GlyphSize
-       sin salto en 720) pero SIN compactar, el bloque con reservas rebasa el
-       centro por pocos px → barra fantasma (1366×768). Se recupera altura
-       apretando el número y los espacios; NUNCA instrucciones. min-height:701
-       para no pisar el tier ≤700 (más agresivo, gobierna por debajo). */
-    @media (min-width: 641px) and (min-height: 701px) and (max-height: 768px) {
-      [data-pace-v1-timer] { font-size: 104px !important; }   /* v1 only, no legacy */
-      /* s177 · 10 -> 6 en estos dos. Con el congelado de abajo puesto pero
-         estos margenes intactos, la holgura a 1536x714 se quedaba en 5,8 px
-         por lado; a 6 sube a 9,8. No es cosmetica: s176 midio que el CI, con
-         otras metricas de fuente, se desvia hasta 9,4 px de lo que da el
-         local, asi que 5,8 de margen es quedarse sin red. Los de la
-         descripcion y «Cuidate» no hace falta tocarlos: el bloque de s177 los
-         reescribe mas abajo y gana por ser la ultima regla del archivo. */
-      [data-pace-v1-glyph] > div { margin-bottom: 6px !important; }
-      [data-pace-v1-name] { margin-bottom: 6px !important; }
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
-      [data-pace-v1-care] { margin-top: 10px !important; }
-      [data-pace-v1-progress] { margin-top: 16px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 700px) {
-      /* s114: la capa «Cuídate» suma una línea — se recupera altura apretando
-         espacios (nunca instrucciones) para mantener el delta 0 de s113.
-         s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
-         rebasaba ~21 px a 1280×600 — se recupera apretando MÁRGENES y el NÚMERO
-         (nunca instrucciones ni las reservas). */
-      [data-pace-v1-timer] { font-size: 82px !important; }   /* v1 only, no legacy */
-      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
-      [data-pace-v1-name] { margin-bottom: 4px !important; }
-      [data-pace-v1-cue] { margin-bottom: 4px !important; }
-      [data-pace-v1-care] { margin-top: 4px !important; }
-      [data-pace-v1-progress] { margin-top: 10px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 640px) {
-      /* s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
-         rebasaba ~35 px a 1024×512 — se recupera apretando MÁRGENES, NÚMERO y
-         bajando un punto las fuentes ya reducidas (nunca instrucciones ni las
-         propias reservas). Es un viewport muy corto: la compactación es fuerte
-         a propósito. */
-      [data-pace-v1-timer] { font-size: 58px !important; }   /* v1 only, no legacy */
-      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 6px !important; }
-      [data-pace-v1-name] { font-size: 24px !important; margin-bottom: 4px !important; }
-      [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 4px !important; }
-      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 8px !important; }
-      [data-pace-v1-support] { font-size: 12px !important; }
-      /* s114: en poca altura se oculta el RÓTULO «Cuídate», nunca el contenido
-         (decisión A) — la adaptación sigue visible como línea secundaria. */
-      [data-pace-v1-care] { font-size: 11px !important; margin-top: 4px !important; }
-      [data-pace-v1-care-label] { display: none !important; }
-      [data-pace-v1-progress] { margin-top: 8px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 430px) {
-      [data-pace-v1-glyph] { display: none !important; }
-      [data-pace-v1-name] { font-size: 22px !important; margin-bottom: 6px !important; }
-      [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 8px !important; }
-      [data-pace-v1-care] { font-size: 11.5px !important; margin-top: 8px !important; }
-    }
-    /* Retrato estrecho con poca altura (360×640: el paso de reps desbordaba
-       18 px): SOLO espacios — la tipografía ya la gobierna el bloque móvil
-       por anchura de SessionShell/MoveModule (s27). */
-    @media (max-width: 640px) and (max-height: 700px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 12px !important; }
-      /* s171b · de 8 a 3: el rotulo pasa a pintarse SIEMPRE (reserva del nombre)
-         y eso cuesta ~11 px en todo viewport. Aqui no sobraban: 360x640 quedaba
-         desbordando 3 px. Se recupera del margen del propio rotulo, que es lo
-         que lo causo, y no de las instrucciones — la jerarquia de s119. */
-      [data-pace-v1-kicker] { margin-bottom: 3px !important; }
-      [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
-      [data-pace-v1-support-strong] { margin-top: 10px !important; }
-      [data-pace-v1-care] { margin-top: 8px !important; }
-      [data-pace-v1-progress] { margin-top: 12px !important; }
-    }
-
-    /* VA AL FINAL DE LA HOJA A PROPOSITO, y esto costo una medida: cuatro de
-       los tiers de arriba fijan «[data-pace-v1-progress] { margin-top: N px
-       !important }» para controlar el hueco cuando la barra FLUIA. Con la misma
-       especificidad gana la ultima regla del archivo, asi que puesta antes se
-       la comian: medido tras implementarla arriba, la barra volvia a 592,7 px
-       en trabajar y 545,5 en colocarse -- casi el defecto original. Aquellas
-       reglas quedan inertes por diseno: no se borran porque son la unica
-       memoria de cuanto aire llevaba cada tramo si algun dia se vuelve atras. */
-    /* s176 · LA BARRA DE PROGRESO SE ANCLA AL CENTRO, no al contenido.
-       Fluia detras del bloque, asi que su altura dependia de si la pantalla
-       pintaba contador: 570,3 px en colocarse y 617,5 en trabajar, y ahi se
-       metia 15 px dentro del pie. Anclada, cae a la MISMA altura pinte lo que
-       pinte -- 586,5 px en las dos, con 16 px de aire hasta los botones.
-       NO BASTA CON «margin-top: auto» EN LA BARRA, y esto costo una vuelta: el
-       bloque que la contiene se CENTRA con margin:auto (s112), asi que su alto
-       es el del contenido y «auto» la pegaba al fondo del BLOQUE, no del
-       centro. Medido con solo eso: 18 px de hueco en trabajar y 52 en
-       colocarse, o sea seguian a distinta altura. Hace falta que el bloque
-       OCUPE el centro entero.
-       El !important es por el mismo motivo de siempre: centerBody trae
-       margin:auto EN LINEA desde s112, y la barra su propio margin en linea. */
-    [data-pace-session-center-body]:has([data-pace-v1-body]) {
+    /* El centro de la sesión es una columna que ocupa todo el alto: arriba el cuerpo, que se
+       estira, y debajo la barra de pasos, siempre a la misma distancia del mando. Las medidas
+       van en la raíz, que es madre de los dos. */
+    [data-pace-session-center-body]:has(> .pace-v1-raiz) {
+      margin: 0 !important; height: 100% !important;
       display: flex !important; flex-direction: column !important;
-      height: 100% !important; margin-bottom: 0 !important;
     }
-    /* Y EL BLOQUE SE LLEVA EL HUECO, en vez de dejar que «auto» lo reparta.
-       «margin-top: auto» CEDE cuando el contenido desborda: alli reparte cero y
-       la barra vuelve a caer donde la deje el texto. En local sobraban 16 px y
-       no se noto; en el runner de CI -otras metricas de fuente, otro sistema-
-       el ejercicio se pasaba y la barra se separaba **9,4 px** de la de
-       colocarse. Lo canto el aserto, no una mirada.
-       Con «flex: 1» el bloque ocupa el hueco y la barra queda DESPUES, a su
-       distancia del fondo, pinte lo que pinte la pantalla y mida lo que mida
-       el texto. «min-height: 0» porque un item flexible no encoge por debajo
-       de su contenido sin el, que es justo lo que hay que permitir aqui. */
-    [data-pace-v1-body] { flex: 1 1 auto !important; min-height: 0 !important; }
-    [data-pace-v1-progress] { flex: 0 0 auto !important; margin-top: 0 !important; margin-bottom: 16px !important; }
+    /* En escritorio el dibujo manda (es mayor que en el móvil a igual altura, la regla de la
+       piel): con el nombre a 5vh y el número a 9,5vh, a 1530x702 el texto se comía el hueco y
+       el círculo quedaba por debajo del del móvil. */
+    .pace-v1-raiz {
+      --v1-u: clamp(8px, 1.3vh, 18px);
+      --v1-nombre: clamp(28px, 4.2vh, 44px);
+      --v1-cue: 16px;
+      --v1-num: clamp(52px, 8.2vh, 84px);
+      --v1-fuerte: 20px;
+      flex: 1 1 auto; min-height: 0; width: 100%;
+      display: flex; flex-direction: column; align-items: center;
+    }
 
-    /* ══ s177 · LA PANTALLA SE CONGELA: nada se mueve ni cambia de tamanio al
-       pasar de «colocate» a «ejercicio» ══════════════════════════════════════
+    .pace-v1 {
+      flex: 1 1 auto; min-height: 0; width: 100%; max-width: 620px; margin: 0 auto;
+      padding-top: var(--v1-u);
+      display: flex; flex-direction: column; align-items: center; row-gap: var(--v1-u);
+      text-align: center;
+    }
+    .pace-v1-aire { flex: 1 1 0; min-height: 0; }
 
-       LO QUE REPORTO EL USUARIO, mirando la app: la barra de progreso se
-       superponia con las letras. Censadas las 28 rutinas paso a paso a
-       1536x714, el «Cuidate» se metia **15,0 px DENTRO de la barra en 11 de 47
-       pasos** y en 7 de las 16 rutinas libres. Lo causo el anclaje de s176: la
-       barra dejo de moverse, pero el bloque lleva 'min-height: 0' y ENCOGE por
-       debajo de su contenido, asi que el texto se sale y pinta encima.
+    /* El dibujo y su aro. StepGlyph trae su margen en línea; aquí manda la columna. */
+    .pace-v1-glifo { position: relative; flex: none; display: grid; place-items: center; }
+    .pace-v1-glifo > div:first-child { margin: 0 !important; }
+    .pace-v1-aro { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; pointer-events: none; }
+    .pace-v1-aro circle { fill: none; }
+    .pace-v1-aro-pista { stroke: var(--line); opacity: 0.55; }
+    .pace-v1-aro-arco { stroke-linecap: round; transition: stroke-dasharray 1s linear; }
 
-       Y PIDIO ALGO MAS DURO QUE «QUE NO SOLAPE»: «que no se note la transicion
-       de una pantalla a la otra, que ningun elemento se desplace de su eje o
-       tamanio». Medido antes de tocar, entre las dos pantallas se movian
-       CUATRO cosas -- el nombre y la descripcion 26,4 px (el rotulo de fase
-       vacio, que a esta altura no se reservaba), el numero 51,2 y su etiqueta
-       4,6 -- y ademas el numero cambiaba de 56 a 104 px.
+    [data-pace-v1-kicker] {
+      flex: none; min-height: 1.2em; line-height: 1.2;
+      font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500;
+    }
 
-       «SUBIR EL NUMERO» NO SE PODIA HACER MOVIENDOLO: el hueco de arriba era
-       10,0 px y el de abajo -15,0. No habia holgura que repartir, faltaba
-       sitio. Congelarlo cuesta 26,4 (rotulo) + 24,8 (descripcion a 3 lineas)
-       encima de los 15 que ya faltaban, y esos 66 px salen del glifo
-       (204 -> 181, en 'V1_GLYPH_WEB', que es fuente unica para que el circulo
-       siga relevando al de la preparacion) y del numero.
+    /* Las pilas: todos los textos posibles en la misma celda, el vivo encima. */
+    .pace-v1-pila { flex: none; width: 100%; display: grid; }
+    .pace-v1-pila > * { grid-area: 1 / 1; margin: 0; min-width: 0; }
+    .pace-v1-pila > .pace-v1-reserva { visibility: hidden; }
 
-       ELEGIDO POR EL USUARIO MIRANDOLO, entre tres tamanios pintados sobre la
-       app real: 96, 76 y 56. Gana **76**, que no es ninguno de los dos de hoy.
-       Esto ANULA la decision de s112 de que «el numero del gate no es el
-       timer»: el tamanio se unifica. El COLOR no -- el gate sigue en tinta
-       secundaria, y cambiar de color no desplaza nada.
+    .pace-v1-nombres > * {
+      align-self: center; font-family: var(--font-display); font-style: italic; font-weight: 500;
+      font-size: var(--v1-nombre); line-height: 1.12; text-wrap: balance;
+    }
+    /* La instrucción empieza siempre a la misma altura: si es más corta que su hueco, el aire
+       queda debajo y la primera línea no baja media línea al pasar de colocarse a trabajar. */
+    .pace-v1-cues > * {
+      align-self: start; justify-self: center; max-width: 460px;
+      font-size: var(--v1-cue); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;
+    }
+    .pace-v1-colas > * { align-self: start; justify-self: center; max-width: 440px; }
+    .pace-v1-colas > * > div, [data-pace-v1-cola] > div { display: grid; row-gap: 3px; }
+    .pace-v1-fuerte {
+      font-family: var(--font-display); font-style: italic; font-size: var(--v1-fuerte);
+      line-height: 1.3; color: inherit;
+    }
+    [data-pace-v1-cola] .pace-v1-fuerte { color: var(--v1-acento, var(--ink-2)); }
+    .pace-v1-apoyo { font-size: 13px; line-height: 1.45; color: var(--ink-3); }
+    .pace-v1-cuidate { font-size: 13.5px; line-height: 1.5; color: var(--ink-3); }
+    [data-pace-v1-care-label] {
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600;
+      color: var(--v1-acento, var(--ink-3));
+    }
 
-       RESULTADO MEDIDO a 1536x714: solape 0,0 y las SIETE piezas -- glifo,
-       nombre, descripcion, numero, etiqueta, cola y barra -- a 0,0 px, con las
-       siete cajas midiendo lo mismo en las dos pantallas. Huecos 10,5 / 10,4.
+    /* El número mide lo mismo en todas las fases (lo eligió el usuario en s177); solo cambia
+       el color: la cuenta de colocarse va en tinta secundaria. */
+    .pace-v1-numgrupo { flex: none; display: grid; justify-items: center; row-gap: 6px; }
+    .pace-v1 [data-pace-v1-num] {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: var(--v1-num) !important; line-height: 0.95 !important;
+      font-variant-numeric: tabular-nums;
+    }
+    .pace-v1-numfila { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 24px; }
+    [data-pace-v1-numlabel] { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
+    .pace-v1-mas {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--ink-2);
+      background: var(--paper); border: 1px solid var(--line-2); border-radius: 999px;
+      padding: 2px 10px; min-height: 24px; cursor: pointer;
+    }
+    .pace-v1-mas:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
-       ALCANCE: 'min-height: 641px'. Por debajo NO se aplica y queda como hoy,
-       y eso es una limitacion medida, no un olvido: con el glifo constante
-       (que la regla de s119 obliga a que lo sea) a 1280x600 sigue solapando
-       7,0 px con el numero a 58 y 12,7 con el numero a 64. Ese tramo necesita
-       otro mecanismo, no otro valor.
+    /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
+    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
+    .pace-v1-siguiente {
+      text-align: center; margin-top: 8px; font-size: 10px; line-height: 1.45;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+    }
 
-       VA AL FINAL DE LA HOJA por lo mismo que la barra de s176: los tiers de
-       arriba fijan 'margin-top' con '!important' y a igual especificidad gana
-       la ultima regla del archivo. Puesto antes, el bloque de margenes le
-       ganaba a «Cuidate» (6 px contra 14) y la cola se movia 8,0 px -- medido,
-       no supuesto. */
-    @media (min-width: 641px) and (min-height: 641px) {
-      /* 1 · el rotulo de fase ocupa SIEMPRE: es la causa exacta del salto de
-         26,4 px (12 px x 1,2 de interlineado + 12 de margen). La app ya lo
-         hacia por encima de 880; ahora tambien aqui. */
-      [data-pace-v1-kicker]:empty { display: block !important; min-height: 1.2em !important; }
+    /* El mando de tres. */
+    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; }
+    .pace-v1-redondo {
+      width: 48px; height: 48px; border-radius: 50%; padding: 0;
+      border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink-2);
+      display: grid; place-items: center; cursor: pointer; position: relative;
+      transition: transform 160ms var(--ease), opacity 160ms;
+    }
+    .pace-v1-redondo:active { transform: scale(0.96); }
+    .pace-v1-redondo:disabled { opacity: 0.35; cursor: default; transform: none; }
+    .pace-v1-redondo:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+    .pace-v1-redondo svg {
+      width: 22px; height: 22px; fill: none; stroke: currentColor;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .pace-v1-redondo .pace-v1-relleno { fill: currentColor; stroke: none; }
+    .pace-v1-redondo-centro { width: 60px; height: 60px; color: var(--paper); }
+    .pace-v1-oculto {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
 
-      /* 2 · la descripcion reserva su peor caso (3 lineas) y CENTRA el texto
-         dentro. Reservando a secas, un cue de 2 lineas dejaria el hueco abajo
-         y el conjunto se leeria descolgado; centrado, el nombre de arriba y el
-         numero de abajo quedan quietos y el texto respira igual. */
-      [data-pace-v1-cue] {
-        min-height: 74.4px !important;
-        display: flex !important; flex-direction: column !important;
-        justify-content: center !important; margin-bottom: 0 !important;
+    @media (max-width: 640px) {
+      .pace-v1-raiz {
+        --v1-u: clamp(6px, 1.2vh, 12px);
+        --v1-nombre: 28px;
+        --v1-cue: 15px;
+        --v1-num: clamp(48px, 8vh, 64px);
+        --v1-fuerte: 18px;
       }
-
-      /* 3 · el numero: mismo tamanio y misma caja en las dos pantallas. El
-         interlineado 0,95 no recorta nada -- los digitos no tienen
-         descendentes -- y devuelve 13,5 px de los 66 que hacian falta. */
-      [data-pace-v1-num] { line-height: 0.95 !important; }
-      [data-pace-v1-numlabel] { margin-top: 10px !important; }
-
-      /* 4 · la cola, con la misma caja pinte «Colocate sin prisa…» o
-         «Cuidate…». Sin esto el grupo mide distinto y el centrado de abajo
-         reparte distinto, que es un salto por la puerta de atras.
-         SOLO ESOS DOS, Y NO el '-support-strong': la primera version reservaba 41
-         px a los tres, y las pantallas que pintan DOS bloques de cola --las de
-         cambio de lado, «El lado siguiente empieza solo»-- sumaban el doble.
-         Medido censando las 28 rutinas: el solape original de 15,0 px se
-         convertia en 35,5 en 3 pasos de «Antidoto silla» y «Caderas». Reservar
-         de mas cuesta igual que no reservar. */
-      [data-pace-v1-care], [data-pace-v1-support] {
-        min-height: 41px !important; margin-top: 14px !important;
-      }
-      /* Y CUANDO LA COLA SON DOS BLOQUES, el segundo no reserva. Las pantallas
-         de cambio de lado pintan la linea fuerte («El lado siguiente empieza
-         solo») Y la de apoyo debajo, asi que reservar 41 px a la segunda suma
-         una caja entera de mas: medido, dejaba 27,0 px de solape en 3 pasos de
-         «Antidoto silla» y «Caderas» donde el defecto original eran 15,0.
-         Con el par ya lleno, la reserva no hace falta -- lo que reserva es
-         para que una cola de UN bloque mida lo mismo que la del otro paso. */
-      [data-pace-v1-support-strong] + [data-pace-v1-support] {
-        min-height: 0 !important; margin-top: 6px !important;
-      }
-
-      /* 5 · y el grupo se centra en el hueco que queda. CON 'auto' Y NO CON UN
-         MARGEN FIJO: un fijo solo es equidistante a una altura concreta --
-         medido, dejaba 251,7 px muertos debajo a 1920x1040 y 125,4 a 1536x900.
-         'auto' reparte, y como el grupo ya mide IGUAL en las dos pantallas,
-         reparte lo mismo en ambas: 10,5 / 10,4 a 714 y 130,8 / 130,8 a 1040. */
-      [data-pace-v1-body] { display: flex !important; flex-direction: column !important; }
-      [data-pace-v1-num] { margin-top: auto !important; }
-      [data-pace-v1-body] > *:last-child { margin-bottom: auto !important; }
-    }
-    /* El tamanio del numero SI va por tramos -- eso es practica establecida en
-       esta hoja (104 / 82 / 58) y no choca con la regla del glifo. 76 en la
-       banda del usuario y hacia arriba; 58 entre 641 y 700, donde el tramo de
-       abajo ya aprieta y con 76 no cabria. */
-    @media (min-width: 641px) and (min-height: 701px) {
-      [data-pace-v1-num] { font-size: 76px !important; }
-    }
-    @media (min-width: 641px) and (min-height: 641px) and (max-height: 700px) {
-      [data-pace-v1-num] { font-size: 58px !important; }
+      .pace-v1-cuidate { font-size: 13px; }
+      .pace-v1-mando { gap: 32px; }
     }
 
-    /* s179 · MOVIL CORTO: es el MISMO mecanismo de s176 que s177 arreglo solo en escritorio.
-       [data-pace-v1-body] lleva min-height:0 y ENCOGE por debajo de su contenido, asi que
-       el texto de la cola pinta sobre la barra. Medido a 360x640: **26,3 px dentro**.
-       s171b ya apreto el margen del rotulo de 8 a 3 por ESTE MISMO viewport cuando desbordaba
-       3 px; ahora no queda margen que dar sin tocar las instrucciones, que la jerarquia de
-       s119 prohibe.
-       SE APLICA LA DECISION s114: en poca altura se oculta el ROTULO «Cuidate», NUNCA el
-       contenido — la adaptacion sigue visible como linea secundaria. Es exactamente lo que ya
-       hace el tramo de escritorio corto, y aqui se hace igual en vez de inventar otra cosa.
-       VA AL FINAL DE LA HOJA por la razon de siempre: a igual especificidad gana la ultima
-       regla del archivo, y cuatro tiers de arriba fijan margin-top con !important.
+    /* Cuando no cabe ni con el círculo en su suelo. */
+    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 5px; --v1-num: 46px; }
 
-       s179b · EL UMBRAL ERA 660 Y ESTABA MAL PUESTO: se eligio por el viewport que se
-       estaba mirando (360x640) en vez de medir por los DOS lados, que es exactamente el
-       error que s177 cometio declarando 641 cuando el borde real estaba en 575. Barrido el
-       hueco, HEAD solapa a **375x667 — el iPhone SE/8 — con 7,2 px** y a 360x661 con 10,8,
-       los dos JUSTO POR ENCIMA de 660 y por tanto sin tramo que los cubriera; 360x680
-       sobrevivia por 1,9 px, que no es holgura sino suerte.
-       SUBE A 700, y no es un numero nuevo: es el breakpoint que esta misma hoja ya usa mas
-       arriba para «retrato estrecho con poca altura» (s27, apretado por s171b). Un tramo
-       mas de los que ya hay, no una frontera inventada. */
-    @media (max-width: 640px) and (max-height: 700px) {
-      [data-pace-v1-care-label] { display: none !important; }
-      /* El NUMERO, igual que hace el tramo corto de escritorio (58 px). Medido a 360x640:
-         era 72 px y solo con los margenes quedaban 8,3 px dentro de la barra. NO se toca el
-         cue: mide 74,4 px porque son TRES LINEAS DE TEXTO REAL a este ancho, no una reserva,
-         y la jerarquia de s119 prohibe recortar instrucciones. */
-      [data-pace-v1-timer] { font-size: 58px !important; }
-      /* s179b · Y EL NUMERO DE LA PANTALLA DE COLOCACION, QUE NO ES EL TIMER. Aqui estaba
-         el solape que quedaba: esa pantalla pinta [data-pace-v1-num] (el numero pequenio
-         de la puerta, s112) y NO -timer, asi que todos los tramos cortos —los de s119
-         tambien— comprimian un elemento que en esa pantalla ni existe. Censado a 360x640,
-         el texto que se metia en la barra era el de colocarse en 4 de los 5 casos que
-         quedaban, con 34,0 px en «Munyecas y manos». */
-      [data-pace-v1-num] { font-size: 50px !important; }
-      /* El NOMBRE baja a 30 px, y 30 NO es un numero nuevo: es el SUELO que su propio
-         clamp declara aceptable -- clamp(30px, 6.5vh, 52px) en MoveSessionV1.jsx. A 360 de
-         ancho, 6,5vh de 640 son 41,6 px y el nombre envuelve a DOS lineas: 87,3 px de una
-         pieza. Fijado al suelo del clamp cabe en una y devuelve 53,7. El cue no se toca:
-         son tres lineas de texto real y la jerarquia de s119 prohibe recortar instrucciones. */
-      [data-pace-v1-name] { font-size: 30px !important; line-height: 1.12 !important; }
-      [data-pace-v1-glyph] > div { margin-bottom: 6px !important; }
-      [data-pace-v1-name] { margin-bottom: 4px !important; }
-      [data-pace-v1-cue] { margin-bottom: 6px !important; }
-      [data-pace-v1-support-strong] { margin-top: 6px !important; }
-      [data-pace-v1-care] { font-size: 11.5px !important; margin-top: 4px !important; }
-      [data-pace-v1-support] { font-size: 12px !important; }
-      [data-pace-v1-progress] { margin-top: 8px !important; }
-    }
-
-    /* s179b · MOVIL MUY CORTO: el tramo de arriba NO BASTA. A 360x600 pasaba de 54,6 px
-       dentro de la barra a 15,5, que sigue siendo solape. Y 600 px de alto no es un movil
-       raro: es lo que le queda a un 360x640 cuando el navegador se come su barra.
-       Se sigue la escalera que ya usa el escritorio (700 -> 640 -> 430): cada tramo aprieta
-       lo mismo un punto mas. Bajan el NUMERO y los cuerpos ya reducidos; NO se toca el cue,
-       que a este ancho son tres lineas de texto real y no una reserva — la jerarquia de
-       s119 prohibe recortar instrucciones, y esa es la razon de que aqui se pague con el
-       numero y no con lo que hay que leer. */
-    @media (max-width: 640px) and (max-height: 620px) {
-      [data-pace-v1-timer] { font-size: 46px !important; }
-      [data-pace-v1-num] { font-size: 38px !important; }
-      /* s179b · el margen de la linea de apoyo, que es la que se metia: 14 px en linea desde
-         el runner. Censado a 360x600 quedaba UNA rutina dentro de la barra (Flexiones de
-         escritorio, 12,4 px) y esto es lo unico que queda por dar sin tocar el glifo -- que
-         a esta altura son 132 px y lo tiene PROHIBIDO por la fuente unica de s177 -- ni las
-         instrucciones, que prohibe s119. */
-      [data-pace-v1-support] { margin-top: 6px !important; }
-      [data-pace-v1-cue] { margin-bottom: 4px !important; }
-      [data-pace-v1-glyph] > div { margin-bottom: 2px !important; }
-      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 2px !important; }
-      [data-pace-v1-name] { font-size: 24px !important; margin-bottom: 3px !important; }
-      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 4px !important; }
-      [data-pace-v1-care] { margin-top: 3px !important; }
-      [data-pace-v1-progress] { margin-top: 6px !important; }
+    @media (prefers-reduced-motion: reduce) {
+      .pace-v1-aro-arco { transition: none; }
+      .pace-v1-redondo { transition: none; }
     }
   `;
   document.head.appendChild(s);
@@ -24635,6 +24421,11 @@ const V1_PLACE_SECONDS = 5;
 const V1_REP_SECONDS = 4;
 const V1_CHANGE_SECONDS = 10;
 const V1_PREP_SECONDS = 5;
+
+
+
+const V1_READY_SECONDS = 20;
+const V1_MAS_TIEMPO = 15;
 
 
 
@@ -24694,7 +24485,7 @@ function v1StepSetup(routine, idx) {
   const st = routine.steps[idx];
   if (!st) return { mode: 'none', estimatedSeconds: 0 };
   if (st.setup && st.setup.mode === 'ready') {
-    return { mode: 'ready', estimatedSeconds: st.setup.estimatedSeconds || V1_PLACE_SECONDS };
+    return { mode: 'auto', estimatedSeconds: Math.max(V1_READY_SECONDS, st.setup.estimatedSeconds || 0) };
   }
   if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
   const clocked = st.mode === 'timed' || st.mode === 'perSide';
@@ -24927,8 +24718,19 @@ function v1LadoGlifo(step, phase, side) {
 
 
 
+
+
+function v1Clave(routine, idx, campo) {
+  return routine.id.indexOf('custom.') === 0 ?
+  `custom.ex.${routine.steps[idx].name}.${campo}` :
+  `${routine.id}.s${idx}.${campo}`;
+}
+
 function v1Instr(tR, routine, idx, key) {
   const st = routine.steps[idx];
+
+
+  if (!st.instruction && key === 'action' && st.cue) return tR(v1Clave(routine, idx, 'cue'), st.cue);
   return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
 }
 
@@ -25017,14 +24819,292 @@ function useSesionAlOcultar(activo, pausar) {
 
 Object.assign(window, {
   useRelojSesion, useSesionAlOcultar, SESION_AL_OCULTAR,
-  v1Instr, v1EventoSesion, v1LadoGlifo,
-  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
+  v1Instr, v1Clave, v1EventoSesion, v1LadoGlifo,
+  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS, V1_READY_SECONDS, V1_MAS_TIEMPO,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, v1GlyphSizeAhora,
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
+})();
+</script>
+  <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function v1SoltarFoco(e) {
+  if (!e || !(e.detail > 0) || !e.currentTarget) return;
+  const raiz = e.currentTarget.closest('[data-pace-session-root]');
+  if (raiz) {try {raiz.focus({ preventScroll: true });} catch (err) {}}
+}
+
+function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos } = _ref;
+
+  const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
+  const pulsa = (fn) => (e) => {v1SoltarFoco(e);if (fn) fn();};
+  return (
+    React.createElement("div", { "data-pace-v1-mando": true, className: "pace-v1-mando" },
+    React.createElement("button", { type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "prev", onClick: pulsa(prev.onClick), disabled: prev.disabled,
+      title: etiqueta(textos.prev) },
+    React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M14.5 6.5 9 12l5.5 5.5" })),
+    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(textos.prev))
+    ),
+    React.createElement("button", { type: "button", className: "pace-v1-redondo pace-v1-redondo-centro", "data-pace-v1-btn": "pausa", onClick: pulsa(onPause),
+      title: etiqueta(paused ? textos.resume : textos.pause), style: { background: accent, borderColor: accent } },
+    paused ?
+    React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11l9-5.5z", className: "pace-v1-relleno" })) :
+    React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11M15 6.5v11" })),
+    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(paused ? textos.resume : textos.pause))
+    ),
+    React.createElement("button", { type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "next", onClick: pulsa(next.onClick), title: etiqueta(next.label) },
+    React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9.5 6.5 15 12l-5.5 5.5" })),
+    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(next.label))
+    )
+    ));
+
+}
+
+Object.assign(window, { MandoV1, v1SoltarFoco });
+;Object.assign(window, { v1SoltarFoco, MandoV1 });
+})();
+</script>
+  <script>
+;(function () {
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStateCV, useLayoutEffect: useLayoutEffectCV, useRef: useRefCV } = React;
+
+
+function v1Reservas(routine, t, tn, tStep, tInstr) {
+  const nombres = [],cues = [],colas = [];
+  const pon = (lista, v) => {const k = JSON.stringify(v);if (!lista.some((x) => JSON.stringify(x) === k)) lista.push(v);};
+  routine.steps.forEach((st, i) => {
+    pon(nombres, tStep(i, 'name'));
+    const setup = tInstr(i, 'setup');
+    const action = tInstr(i, 'action');
+    if (setup) pon(cues, { lead: null, text: setup });
+    if (action) pon(cues, { lead: null, text: action });
+    if (action && st.mode === 'perSide') {
+      pon(cues, { lead: t('session.sideLeft'), text: action });
+      pon(cues, { lead: t('session.sideRight'), text: action });
+    }
+    const care = st.mode !== 'rest' ? tInstr(i, 'care') : null;
+    if (care) pon(colas, { care });
+    if (st.mode === 'perSide') {
+      pon(colas, { strong: tn('session.sideFirst', { side: t('session.sideLeft') }), support: t('move.placeHint') });
+      pon(colas, { strong: tn('session.sideNext', { side: t('session.sideRight') }), support: t('move.sideAutoHint') });
+    } else {
+      pon(colas, { support: t('move.placeHint') });
+    }
+    if (st.mode === 'rest' && routine.steps[i + 1]) {
+      const luego = tn('move.restNext', { name: tStep(i + 1, 'name') });
+      pon(colas, { strong: luego });
+      pon(colas, { strong: luego, support: t('move.restReady') });
+    }
+  });
+  return { nombres, cues, colas };
+}
+
+function CueV1(_ref) {let { lead, text, accent, ...resto } = _ref;
+  return (
+    React.createElement("p", resto,
+    lead && React.createElement("strong", { style: { color: accent, fontWeight: 600 } }, lead, ". "),
+    text
+    ));
+
+}
+
+function ColaV1(_ref2) {let { strong, support, care, t, live } = _ref2;
+  const marca = (attr) => live ? { [attr]: '' } : {};
+  return (
+    React.createElement("div", null,
+    strong && React.createElement("div", _extends({ className: "pace-v1-fuerte" }, marca('data-pace-v1-support-strong')), strong),
+    support && React.createElement("div", _extends({ className: "pace-v1-apoyo" }, marca('data-pace-v1-support')), support),
+    care !== undefined &&
+    React.createElement("div", _extends({ className: "pace-v1-cuidate" }, marca('data-pace-v1-care')),
+    care && React.createElement(React.Fragment, null, React.createElement("span", { "data-pace-v1-care-label": true }, t('move.careLabel'), " \xB7 "), care)
+    )
+
+    ));
+
+}
+
+
+
+
+
+
+
+
+
+
+function useV1Glifo(cuerpoRef, firma) {
+  const [glifo, setGlifo] = useStateCV(() => v1GlyphSizeAhora());
+  const [justo, setJusto] = useStateCV(false);
+  const estado = useRefCV({ glifo, justo, antes: null, gana: 0 });
+  estado.current.glifo = glifo;
+  estado.current.justo = justo;
+  useLayoutEffectCV(() => {
+    const cuerpo = cuerpoRef.current;
+    if (!cuerpo) return undefined;
+    const medir = () => {
+      const escritorio = v1EsEscritorio();
+      const alto = window.innerHeight || 800;
+      const suelo = escritorio ? 110 : 96;
+      const techo = Math.min(escritorio ? 250 : 210, Math.round(alto * 0.3));
+      const hijos = Array.from(cuerpo.children);
+      const cs = getComputedStyle(cuerpo);
+      const hueco = parseFloat(cs.rowGap) || 0;
+      let ocupado = hueco * Math.max(0, hijos.length - 1) + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      hijos.forEach((h) => {if (!h.classList.contains('pace-v1-aire')) ocupado += h.offsetHeight;});
+      const libre = cuerpo.clientHeight - ocupado;
+      const e = estado.current;
+      const quiere = e.glifo + libre;
+      const nuevo = Math.round(Math.max(suelo, Math.min(techo, quiere)));
+      if (Math.abs(nuevo - e.glifo) >= 1) setGlifo(nuevo);
+      if (!e.justo) {
+        if (quiere < suelo) {e.antes = quiere;setJusto(true);}
+      } else {
+        if (e.antes !== null) {e.gana = Math.max(0, quiere - e.antes);e.antes = null;}
+        if (quiere - e.gana > suelo + 16) setJusto(false);
+      }
+    };
+    medir();
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(medir) : null;
+    if (ro) ro.observe(cuerpo);
+    window.addEventListener('resize', medir);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir).catch(() => {});
+    return () => {if (ro) ro.disconnect();window.removeEventListener('resize', medir);};
+  }, [firma, justo]);
+  return { glifo, justo };
+}
+
+
+
+function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
+  const f = Math.max(0, Math.min(1, fraccion || 0));
+
+
+
+  const grosor = (2.5 * 100 / Math.max(1, px)).toFixed(3);
+  return (
+    React.createElement("svg", { className: "pace-v1-aro", "data-pace-v1-aro": true, viewBox: "0 0 100 100", "aria-hidden": "true" },
+    React.createElement("circle", { className: "pace-v1-aro-pista", cx: "50", cy: "50", r: "48.5", pathLength: "100", strokeWidth: grosor }),
+    React.createElement("circle", { className: "pace-v1-aro-arco", cx: "50", cy: "50", r: "48.5", pathLength: "100", strokeWidth: grosor,
+      style: { stroke: accent, strokeDasharray: `${(f * 100).toFixed(2)} 100` } })
+    ));
+
+}
+
+function CuerpoV1(p) {
+  const { routine, stepIdx, step, side, elapsed, accent, stepAccent, stepAccentSoft, t, tn, tStep, tInstr, lang } = p;
+  const cuerpoRef = useRefCV(null);
+  const reservas = React.useMemo(() => v1Reservas(routine, t, tn, tStep, tInstr), [routine.id, lang]);
+  const { glifo, justo } = useV1Glifo(cuerpoRef, routine.id + ':' + lang);
+  const aro = glifo + 14;
+  const enTrabajo = p.phase === 'work' && step.mode !== 'rest';
+
+
+
+  return (
+    React.createElement("div", _extends({ "data-pace-v1-raiz": true, "data-pace-v1-fase": step.mode === 'rest' ? 'rest' : p.phase, className: "pace-v1-raiz", style: { '--v1-acento': stepAccent } },
+    justo ? { 'data-pace-v1-justo': '' } : {}),
+    React.createElement("div", { ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" },
+    React.createElement("div", { "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
+    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: v1LadoGlifo(step, p.phase, side) }),
+    React.createElement(AroV1, { fraccion: p.fraccion, accent: stepAccent, px: aro })
+    ),
+    React.createElement("div", { "data-pace-v1-kicker": true, style: { color: stepAccent } }, p.kicker || null),
+    React.createElement("div", { className: "pace-v1-pila pace-v1-nombres", "data-pace-v1-pila": "nombre" },
+    reservas.nombres.map((n, i) => React.createElement("h1", { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true" }, n)),
+    React.createElement("h1", { "data-pace-v1-name": true }, tStep(stepIdx, 'name'))
+    ),
+    React.createElement("div", { className: "pace-v1-pila pace-v1-cues", "data-pace-v1-pila": "cue" },
+    reservas.cues.map((c, i) => React.createElement(CueV1, { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true", lead: c.lead, text: c.text, accent: stepAccent })),
+    React.createElement(CueV1, { "data-pace-v1-cue": true, lead: p.sideLead, text: p.cueText, accent: stepAccent })
+    ),
+    React.createElement("div", { className: "pace-v1-aire" }),
+    React.createElement("div", { className: "pace-v1-numgrupo" },
+    p.gateNumber ?
+    React.createElement("div", { "data-pace-v1-num": true, "data-pace-v1-num-gate": true, style: { color: 'var(--ink-2)' } }, p.bigNumber) :
+    React.createElement("div", { "data-pace-move-timer": true, "data-pace-v1-timer": true, "data-pace-v1-num": true, style: {
+        color: 'var(--ink)',
+        ...(p.repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${p.repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: p.paused ? 'paused' : 'running' } : {})
+      } }, p.bigNumber),
+    React.createElement("div", { className: "pace-v1-numfila" },
+    React.createElement("span", { "data-pace-v1-numlabel": true }, p.bigLabel),
+    p.onMas &&
+    React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-mas": true, onClick: (e) => {v1SoltarFoco(e);p.onMas();}, title: t('session.moreTime') }, "+",
+    V1_MAS_TIEMPO, " s", React.createElement("span", { className: "pace-v1-oculto" }, " \xB7 ", t('session.moreTime'))
+    )
+
+    )
+    ),
+    React.createElement("div", { className: "pace-v1-pila pace-v1-colas", "data-pace-v1-pila": "cola" },
+    reservas.colas.map((c, i) => React.createElement("div", { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true" }, React.createElement(ColaV1, _extends({}, c, { t: t })))),
+    React.createElement("div", { "data-pace-v1-cola": true },
+    React.createElement(ColaV1, { strong: p.supportStrong, support: p.support, care: enTrabajo ? p.careText || '' : undefined, t: t, live: true })
+    )
+    ),
+    React.createElement("div", { className: "pace-v1-aire" })
+    ),
+
+    React.createElement("div", { "data-pace-v1-progress": true, className: "pace-v1-pasos" },
+    React.createElement("div", { style: { display: 'flex', gap: 4, alignItems: 'center', height: 10 } },
+    routine.steps.map((s, i) =>
+    React.createElement("div", { key: i, style: {
+        flex: v1StepWeight(s),
+        height: i === stepIdx ? 6 : 2,
+        background: i < stepIdx ? accent : i === stepIdx ? 'var(--line)' : 'var(--paper-3)',
+        borderRadius: 2, position: 'relative', overflow: 'hidden', transition: 'height 220ms'
+      } },
+    i === stepIdx &&
+    React.createElement("div", { style: { position: 'absolute', inset: 0, width: `${v1StepProgress(step, side, elapsed) * 100}%`, background: accent, transition: 'width 1s linear' } })
+
+    )
+    )
+    ),
+    React.createElement("div", { className: "pace-v1-siguiente" },
+    routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, { CuerpoV1, v1Reservas });
+;Object.assign(window, { _extends, v1Reservas, CueV1, ColaV1, useV1Glifo, AroV1, CuerpoV1 });
 })();
 </script>
   <script>
@@ -25072,12 +25152,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
   const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
-  const tStep = (idx, field) => tR(`${routine.id}.s${idx}.${field}`, routine.steps[idx][field]);
+  const tStep = (idx, field) => tR(v1Clave(routine, idx, field), routine.steps[idx][field]);
 
 
 
   const tInstr = (idx, key) => v1Instr(tR, routine, idx, key);
-  const displayRoutine = lang === 'en' ?
+
+  const displayRoutine = lang === 'en' && routine.id.indexOf('custom.') !== 0 ?
   { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
   routine;
 
@@ -25090,6 +25171,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
+  const [faseTotal, setFaseTotal] = useStateV1(0);
   const sessionStart = useRefV1(Date.now());
 
 
@@ -25124,11 +25206,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-
-
     const su = v1StepSetup(routine, idx);
-    if (su.mode === 'ready') {setPhase('place');setPlaceLeft(0);} else
-    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);} else
+    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);setFaseTotal(su.estimatedSeconds);} else
     setPhase('work');
   };
   const advanceStep = (early) => {
@@ -25136,16 +25215,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     startStep(stepIdx + 1);
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
-  const addPlaceTime = () => setPlaceLeft((c) => c + 5);
-  const addChangeTime = () => setChangeLeft((c) => c + 5);
+  const addPlaceTime = () => {setPlaceLeft((c) => c + V1_MAS_TIEMPO);setFaseTotal((c) => c + V1_MAS_TIEMPO);};
+  const addChangeTime = () => {setChangeLeft((c) => c + V1_MAS_TIEMPO);setFaseTotal((c) => c + V1_MAS_TIEMPO);};
   const onSideReady = () => {setSide(1);setPhase('work');setElapsed(0);};
 
 
   const enterChange = () => {
 
 
-    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));
-
+    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));setFaseTotal(v1TransitionSeconds(step));
 
     try {playSound('move.side');} catch (e) {}
   };
@@ -25164,6 +25242,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   }, [stage, prepCount, paused]);
 
 
+  useEffectV1(() => {
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn');} catch (e) {}}
+  }, [prepCount]);
 
 
 
@@ -25173,13 +25254,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-  useRelojSesion(stage === 'run' && phase === 'place' && !(step && step.setup && step.setup.mode === 'ready'),
+
+
+  useRelojSesion(stage === 'run' && phase === 'place' && !paused,
   (n) => setPlaceLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useSesionAlOcultar(stage === 'run', () => setPaused(true));
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
-    if (step && step.setup && step.setup.mode === 'ready') return;
-    beginWork();
+    if (stage !== 'run' || phase !== 'place') return;
+    if (placeLeft <= 0) {beginWork();return;}
+    if (placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [placeLeft]);
 
 
@@ -25202,16 +25285,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
         repsGuidedRef.current += v1RepTarget(step);
         advanceStep();
       } else if (elapsed % repSec === 0) {
-        try {playSound('tick');} catch (e) {}
+        try {playSound('move.rep');} catch (e) {}
       }
       return;
     }
     const effDur = v1StepDur(step);
 
 
-
-
-    if (effDur > 6 && elapsed === effDur - 5) {try {playSound('move.warn');} catch (e) {}}
+    if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
     if (elapsed >= effDur) {
       if (step.mode === 'perSide' && side === 0) enterChange();else
       advanceStep();
@@ -25223,13 +25304,30 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, (n) => setChangeLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'change' || changeLeft > 0) return;
-    onSideReady();
+    if (stage !== 'run' || phase !== 'change') return;
+    if (changeLeft <= 0) {onSideReady();return;}
+    if (changeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [changeLeft]);
 
 
-  useEffectV1(() => {if (stage === 'run') {try {playSound('move.start');} catch (e) {}}
-    if (stage === 'done') {try {playSound('move.end');} catch (e) {}}}, [stage]);
+
+
+
+
+
+
+  useEffectV1(() => {if (stage === 'done') {try {playSound('move.end');} catch (e) {}}}, [stage]);
+  useEffectV1(() => {
+    if (stage !== 'run' || !step) return;
+    try {playSound(step.mode === 'rest' ? 'move.rest' : 'move.start');} catch (e) {}
+  }, [stage, stepIdx]);
+  const faseAntes = useRefV1({ phase, stepIdx });
+  useEffectV1(() => {
+    const antes = faseAntes.current;
+    faseAntes.current = { phase, stepIdx };
+    if (stage !== 'run' || phase !== 'work' || antes.stepIdx !== stepIdx) return;
+    if (antes.phase === 'place' || antes.phase === 'change') {try {playSound('move.go');} catch (e) {}}
+  }, [phase, stepIdx]);
 
 
 
@@ -25243,8 +25341,6 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
   useEffectV1(() => {try {v1DevCheckDuration(routine, v1RestSeconds());} catch (e) {}}, []);
-  useEffectV1(() => {if (stage === 'run') {try {playSound('move.step');} catch (e) {}}}, [stepIdx]);
-
 
 
   useEffectV1(() => {
@@ -25254,7 +25350,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if (phase === 'work' && step && step.mode !== 'rest' || phase === 'change' || paused) setPaused((p) => !p);
+        if (stage === 'run') setPaused((p) => !p);
       }
       if (e.key === 'Escape') onExit('exit');
 
@@ -25316,24 +25412,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
-  const placeReady = !!(step.setup && step.setup.mode === 'ready');
-
-
-
-
-  const glyphSize = v1GlyphSizeAhora();
-
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;
   let repPulseSec = 0;
   if (phase === 'place') {
     kicker = t('session.place');
-    if (!placeReady) {bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');gateNumber = true;}
+    bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');gateNumber = true;
     if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
-    support = placeReady ? t('move.placeReadyHint') : t('move.placeHint');
-    primary = placeReady ?
-    { label: t('session.imReady'), onClick: beginWork } :
-    { label: t('session.beginNow'), onClick: beginWork };
+    support = t('move.placeHint');
+    primary = { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
 
 
@@ -25363,7 +25450,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
       supportStrong = tn('move.restNext', { name: tStep(stepIdx + 1, 'name') });
-      if (remaining > 0 && remaining <= 5) support = t('move.restReady');
+      if (remaining > 0 && remaining <= 3) support = t('move.restReady');
     }
     primary = isRest ?
     { label: t('session.skip'), onClick: advanceStep } :
@@ -25387,133 +25474,28 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   null;
 
 
-  const canPause = phase === 'work' && !isRest || phase === 'change' || paused;
-  const footer =
-  React.createElement(React.Fragment, null,
-  phase !== 'change' &&
-  React.createElement("button", { onClick: () => {if (stepIdx > 0) startStep(stepIdx - 1);}, disabled: stepIdx === 0, style: sessionShellStyles.ctrlBtn },
-  t('move.prev')
-  ),
-
-  (phase === 'place' && !placeReady || phase === 'change') &&
-  React.createElement("button", { onClick: phase === 'change' ? addChangeTime : addPlaceTime, style: sessionShellStyles.ctrlBtn },
-  t('session.moreTime')
-  ),
-
-  canPause &&
-  React.createElement("button", { onClick: () => setPaused((p) => !p), style: sessionShellStyles.ctrlBtn },
-  paused ? t('session.resume') : t('session.pause')
-  ),
-
-
-
-  React.createElement("button", { onClick: primary.onClick, style: {
-      ...sessionShellStyles.ctrlBtn,
-      background: stepAccent, borderColor: stepAccent,
-      color: 'var(--paper)', fontWeight: 500
-    } },
-  primary.label
-  )
-  );
-
+  const fraccion = phase === 'place' || phase === 'change' ?
+  faseTotal ? 1 - (phase === 'place' ? placeLeft : changeLeft) / faseTotal : 0 :
+  step.mode === 'reps' ? Math.min(1, elapsed / (v1RepTarget(step) * v1RepSeconds(step))) :
+  v1StepDur(step) ? elapsed / v1StepDur(step) : 0;
 
   return (
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
       headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
-      footer: footer, hint: t('session.hint') },
+      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused, onPause: () => setPaused((x) => !x),
+        prev: { onClick: () => {if (stepIdx > 0) {setPaused(false);startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
+        next: { label: primary.label, onClick: () => {setPaused(false);primary.onClick();} },
+        textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') } }),
+      hint: t('session.hint') },
 
-    React.createElement("div", { "data-pace-v1-body": true, style: { textAlign: 'center', maxWidth: 620 } },
-
-
-    React.createElement("div", { "data-pace-v1-glyph": true },
-    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize, side: v1LadoGlifo(step, phase, side) })
-    ),
-
-
-    React.createElement("div", { "data-pace-v1-kicker": true, style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 } },
-    kicker || null
-    ),
-    React.createElement("h1", { "data-pace-v1-name": true, style: { ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' } },
-    tStep(stepIdx, 'name')
-    ),
-    React.createElement("p", { "data-pace-v1-cue": true, style: { fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' } },
-    sideLead &&
-    React.createElement("strong", { style: { color: stepAccent, fontWeight: 600 } }, sideLead, ". "),
-
-    cueText
-    ),
-
-
-
-
-    bigNumber != null && gateNumber &&
-    React.createElement(React.Fragment, null,
-    React.createElement("div", { "data-pace-v1-num": true, "data-pace-v1-num-gate": true, style: { ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 } },
-    bigNumber
-    ),
-    React.createElement("div", { "data-pace-v1-numlabel": true, style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 } }, bigLabel)
-    ),
-
-
-
-    bigNumber != null && !gateNumber &&
-    React.createElement(React.Fragment, null,
-    React.createElement("div", { "data-pace-move-timer": true, "data-pace-v1-timer": true, "data-pace-v1-num": true, style: {
-        ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
-
-
-        ...(repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: paused ? 'paused' : 'running' } : {})
-      } },
-    bigNumber
-    ),
-    React.createElement("div", { "data-pace-v1-numlabel": true, style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 } }, bigLabel)
-    ),
-
-
-
-
-    supportStrong &&
-    React.createElement("div", { "data-pace-v1-support-strong": true, style: { ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 } },
-    supportStrong
-    ),
-
-    support &&
-    React.createElement("div", { "data-pace-v1-support": true, style: { fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 } },
-    support
-    ),
-
-
-
-
-
-
-    inWork && !isRest &&
-    React.createElement("div", { "data-pace-v1-care": true, style: { fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' } },
-    careText && React.createElement(React.Fragment, null, React.createElement("span", { "data-pace-v1-care-label": true, style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 } }, t('move.careLabel'), " \xB7 "), careText)
-    )
-
-    ),
-
-    React.createElement("div", { "data-pace-v1-progress": true, style: { margin: '28px auto 0', width: '100%', maxWidth: 640 } },
-    React.createElement("div", { style: { display: 'flex', gap: 4, alignItems: 'center', height: 10 } },
-    routine.steps.map((s, i) =>
-    React.createElement("div", { key: i, style: {
-        flex: v1StepWeight(s),
-        height: i === stepIdx ? 6 : 2,
-        background: i < stepIdx ? accent : i === stepIdx ? 'var(--line)' : 'var(--paper-3)',
-        borderRadius: 2, position: 'relative', overflow: 'hidden', transition: 'height 220ms'
-      } },
-    i === stepIdx &&
-    React.createElement("div", { style: { position: 'absolute', inset: 0, width: `${v1StepProgress(step, side, elapsed) * 100}%`, background: accent, transition: 'width 1s linear' } })
-
-    )
-    )
-    ),
-    React.createElement("div", { style: { textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' } },
-    routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')
-    )
-    )
+    React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused,
+      accent: accent, stepAccent: stepAccent, stepAccentSoft: stepAccentSoft, lang: lang,
+      t: t, tn: tn, tStep: tStep, tInstr: tInstr,
+      kicker: kicker, cueText: cueText, sideLead: sideLead, careText: careText,
+      bigNumber: bigNumber, bigLabel: bigLabel, gateNumber: gateNumber, repPulseSec: repPulseSec,
+      support: support, supportStrong: supportStrong, fraccion: fraccion,
+      onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null })
     ));
 
 }
@@ -25627,12 +25609,12 @@ const EXTRA_ROUTINES = {
       position: ['seated'], equipment: [], requiresFloor: false,
       desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
       steps: [
-      { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
-      { name: 'Círculos de muñeca', dur: 20, cue: '10 en cada sentido.' },
-      { name: 'Giro sentado', dur: 20, cue: 'Rota hacia el respaldo.' },
-      { name: 'Círculos de tobillo', dur: 20, cue: 'Bajo la mesa.' },
-      { name: 'Barbilla atrás', dur: 20, cue: 'Barbilla atrás 5 veces.' },
-      { name: 'Respiraciones profundas', dur: 20, cue: '3 inhalaciones completas.' }]
+      { name: 'Encogimiento de hombros', mode: 'timed', dur: 20, cue: 'Hombros arriba, luego relaja.' },
+      { name: 'Círculos de muñeca', mode: 'timed', dur: 20, cue: '10 en cada sentido.' },
+      { name: 'Giro sentado', mode: 'timed', dur: 20, cue: 'Rota hacia el respaldo.' },
+      { name: 'Círculos de tobillo', mode: 'timed', dur: 20, cue: 'Bajo la mesa.' },
+      { name: 'Barbilla atrás', mode: 'timed', dur: 20, cue: 'Barbilla atrás 5 veces.' },
+      { name: 'Respiraciones profundas', mode: 'timed', dur: 20, cue: '3 inhalaciones completas.' }]
     },
 
 
@@ -25946,22 +25928,22 @@ Object.assign(window.EXTRA_ROUTINES, {
       position: ['floor'], equipment: [], requiresFloor: true,
       desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
       steps: [
-      { name: 'Rana', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
-      { name: '90/90', dur: 70, cue: 'Rota entre lados despacio.' },
-      { name: 'Sentadilla lateral', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
-      { name: 'Sentarse y levantarse del suelo', dur: 80, cue: 'Siéntate al suelo y levántate sin manos.' },
-      { name: 'Sentadilla profunda', dur: 70, cue: 'Talones abajo, relaja al fondo.' }]
+      { name: 'Rana', mode: 'timed', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
+      { name: '90/90', mode: 'timed', dur: 70, cue: 'Rota entre lados despacio.' },
+      { name: 'Sentadilla lateral', mode: 'timed', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
+      { name: 'Sentarse y levantarse del suelo', mode: 'timed', dur: 80, cue: 'Siéntate al suelo y levántate sin manos.' },
+      { name: 'Sentadilla profunda', mode: 'timed', dur: 70, cue: 'Talones abajo, relaja al fondo.' }]
     },
     { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
       intensity: 'strong', level: 'advanced',
       position: ['standing', 'floor'], equipment: ['wall'], requiresFloor: true,
       desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
       steps: [
-      { name: 'Zancada profunda', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
-      { name: 'Elevación de puntas', dur: 45, cue: 'Contra pared, levanta pies.' },
-      { name: 'Puente isquio a una pierna', dur: 45, cue: 'Tumbado, un pie apoyado: sube y baja la cadera con control. Cambia de pierna a mitad.' },
-      { name: 'Sentadilla de cuádriceps', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-      { name: 'Marcha del elefante', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' }]
+      { name: 'Zancada profunda', mode: 'timed', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
+      { name: 'Elevación de puntas', mode: 'timed', dur: 45, cue: 'Contra pared, levanta pies.' },
+      { name: 'Puente isquio a una pierna', mode: 'timed', dur: 45, cue: 'Tumbado, un pie apoyado: sube y baja la cadera con control. Cambia de pierna a mitad.' },
+      { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+      { name: 'Marcha del elefante', mode: 'timed', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' }]
     },
 
 
@@ -26072,11 +26054,11 @@ Object.assign(window.EXTRA_ROUTINES, {
       position: ['floor', 'standing'], equipment: ['bar'], requiresFloor: true,
       desc: 'Gateo, suspensión y sentadilla profunda. Suelo y barra firme.', min: 5, access: 'premium',
       steps: [
-      { name: 'Sentadilla profunda sostenida', dur: 60, cue: 'Talones abajo, relaja.' },
-      { name: 'Gateo', dur: 60, cue: 'Contralateral, lento.' },
-      { name: 'Suspensión pasiva', dur: 45, cue: 'De una barra firme, suelta el peso.' },
-      { name: 'Sentarse y levantarse del suelo', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
-      { name: 'Apertura de costillas + respiración', dur: 45, cue: 'Movimiento de gato/vaca.' }]
+      { name: 'Sentadilla profunda sostenida', mode: 'timed', dur: 60, cue: 'Talones abajo, relaja.' },
+      { name: 'Gateo', mode: 'timed', dur: 60, cue: 'Contralateral, lento.' },
+      { name: 'Suspensión pasiva', mode: 'timed', dur: 45, cue: 'De una barra firme, suelta el peso.' },
+      { name: 'Sentarse y levantarse del suelo', mode: 'timed', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
+      { name: 'Apertura de costillas + respiración', mode: 'timed', dur: 45, cue: 'Movimiento de gato/vaca.' }]
     }]
 
   }

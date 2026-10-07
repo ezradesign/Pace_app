@@ -22,6 +22,11 @@ const V1_PLACE_SECONDS = 5;
 const V1_REP_SECONDS = 4;
 const V1_CHANGE_SECONDS = 10;
 const V1_PREP_SECONDS = 5;   // cuenta 5·4·3·2·1 antes del paso 0 (s113)
+/* Opción A del runner guiado (Ez): ningún paso espera a que pulses. La colocación que antes
+   esperaba a «Estoy listo» (suelo, pared, material) cuenta sola, con al menos 20 s, y «+15 s»
+   suma tiempo a la colocación y al cambio de lado. */
+const V1_READY_SECONDS = 20;
+const V1_MAS_TIEMPO = 15;
 
 /* isDev: localhost / 127.0.0.1 / file:// (mismo criterio que useT.jsx). Sólo
    activa el dev-check de duración declarada vs calculada — invisible en prod. */
@@ -70,18 +75,18 @@ function v1StepDur(step) {
 }
 
 /* Gate de colocación (s115): comportamiento del runner + estimación de duración
-   en UNA sola fuente. `setup:{mode:'ready',estimatedSeconds}` declarado (espera
-   al usuario, NUNCA cuenta) — floor/pared/material. El resto se DERIVA como en
-   s111/s114:
-     auto — pasos con reloj (timed/perSide) e idx>0, o el 1er set de fuerza
-            (reps con instruction.setup y NO tras un rest) → gate auto de 5 s.
-     none — resto. `setup:número` (s112) sigue siendo un gate auto explícito.
-   `ready` aporta estimatedSeconds>0 SÓLO para la duración; jamás es countdown. */
+   en UNA sola fuente. Toda colocación CUENTA SOLA (opción A del runner guiado):
+     ready — declarada en el paso (suelo, pared, material): cuenta al menos
+             V1_READY_SECONDS; antes esperaba a «Estoy listo».
+     auto  — pasos con reloj (timed/perSide) e idx>0, o el 1er set de fuerza
+             (reps con instruction.setup y NO tras un rest) → 5 s.
+     none  — resto. `setup:número` (s112) sigue siendo una cuenta explícita.
+   Las dos primeras devuelven mode 'auto': el runner no distingue. */
 function v1StepSetup(routine, idx) {
   const st = routine.steps[idx];
   if (!st) return { mode: 'none', estimatedSeconds: 0 };
   if (st.setup && st.setup.mode === 'ready') {
-    return { mode: 'ready', estimatedSeconds: st.setup.estimatedSeconds || V1_PLACE_SECONDS };
+    return { mode: 'auto', estimatedSeconds: Math.max(V1_READY_SECONDS, st.setup.estimatedSeconds || 0) };
   }
   if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
   const clocked = st.mode === 'timed' || st.mode === 'perSide';
@@ -314,8 +319,19 @@ function v1LadoGlifo(step, phase, side) {
    estaba clavado en 500 lineas y la contabilidad del evento necesitaba dos.
    Recibe el traductor con fallback (`tR`) en vez de cerrarse sobre el, porque
    quien conoce el idioma es el componente. */
+/* La clave de traducción de un campo del paso. Las rutinas propias no tienen claves por
+   posición: su inglés sale del nombre canónico del ejercicio (content/custom.js). */
+function v1Clave(routine, idx, campo) {
+  return routine.id.indexOf('custom.') === 0
+    ? `custom.ex.${routine.steps[idx].name}.${campo}`
+    : `${routine.id}.s${idx}.${campo}`;
+}
+
 function v1Instr(tR, routine, idx, key) {
   const st = routine.steps[idx];
+  /* Los pasos que venían del runner antiguo (y los de las rutinas propias) no traen
+     `instruction`: su frase es `cue`, y en inglés se traduce con la clave `.cue` de siempre. */
+  if (!st.instruction && key === 'action' && st.cue) return tR(v1Clave(routine, idx, 'cue'), st.cue);
   return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
 }
 
@@ -404,8 +420,8 @@ function useSesionAlOcultar(activo, pausar) {
 
 Object.assign(window, {
   useRelojSesion, useSesionAlOcultar, SESION_AL_OCULTAR,
-  v1Instr, v1EventoSesion, v1LadoGlifo,
-  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
+  v1Instr, v1Clave, v1EventoSesion, v1LadoGlifo,
+  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS, V1_READY_SECONDS, V1_MAS_TIEMPO,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, v1GlyphSizeAhora,
   V1_GLYPH_WEB, v1EsEscritorio,

@@ -153,6 +153,63 @@ function breathNoise(ctx, dest, direction, t0, dur, peak) {
   src.stop(t0 + dur + 0.05);
 }
 
+/* === PRIMITIVA 6: cuenco — cuenco tibetano, el aviso del runner de Mueve y Estira ===
+   Cuatro parciales inarmónicos (1 · 2,71 · 5,15 · 8,4 veces la fundamental), cada uno con dos
+   osciladores separados ±0,45 Hz para que el sonido bata como un cuenco de verdad, una caída larga
+   y un golpe de maza corto. Se oye desde la esterilla sin mirar la pantalla, que era el encargo
+   (opción A del runner guiado, elegida por Ez). `largo` estira o acorta la caída.
+   El pico por defecto es 0,065 porque los parciales SUMAN: 0,065 x 1,67 deja el cuenco en el
+   0,06-0,10 del resto de sonidos de la app (con 0,11 sonaba unos 5 dB por encima). */
+function cuenco(ctx, dest, freq, t0, peak, largo) {
+  if (peak === undefined) peak = 0.065;
+  if (largo === undefined) largo = 1;
+  var lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 3200;
+  lp.connect(dest);
+  [[1, 1, 4.2], [2.71, 0.42, 2.6], [5.15, 0.18, 1.5], [8.4, 0.07, 0.8]].forEach(function (p) {
+    [-0.45, 0.45].forEach(function (det) {
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.frequency.value = freq * p[0] + det;
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(peak * p[1] / 2, t0 + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + p[2] * largo);
+      o.connect(g); g.connect(lp);
+      o.start(t0); o.stop(t0 + p[2] * largo + 0.1);
+    });
+  });
+  var n = Math.ceil(ctx.sampleRate * 0.03);
+  var buf = ctx.createBuffer(1, n, ctx.sampleRate);
+  var d = buf.getChannelData(0);
+  for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  var src = ctx.createBufferSource();
+  var bp = ctx.createBiquadFilter();
+  var gn = ctx.createGain();
+  src.buffer = buf;
+  bp.type = 'bandpass'; bp.frequency.value = freq * 2; bp.Q.value = 3;
+  gn.gain.value = peak * 0.25;
+  src.connect(bp); bp.connect(gn); gn.connect(dest);
+  src.start(t0);
+}
+
+/* === PRIMITIVA 7: madera — toque seco de madera, para «quedan 3, 2, 1» y el pulso de las reps === */
+function madera(ctx, dest, t0, peak) {
+  if (peak === undefined) peak = 0.09;
+  var o = ctx.createOscillator();
+  var bp = ctx.createBiquadFilter();
+  var g = ctx.createGain();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(note('G5') * 1.5, t0);
+  o.frequency.exponentialRampToValueAtTime(note('G5'), t0 + 0.05);
+  bp.type = 'bandpass'; bp.frequency.value = 1400; bp.Q.value = 2;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(peak, t0 + 0.003);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.09);
+  o.connect(bp); bp.connect(g); g.connect(dest);
+  o.start(t0); o.stop(t0 + 0.12);
+}
+
 /* === CATÁLOGO DE SONIDOS === */
 var SOUND_RECIPES = {
 
@@ -199,30 +256,43 @@ var SOUND_RECIPES = {
   },
 
   /* --- MUEVE ---
-     Familia del runner guiado: misma afinación 432 y primitivas. Emparentadas
-     (comparten timbre) pero distinguibles por FUNCIÓN:
-       move.start  ascenso    → «empieza»
-       move.step   toque único→ avance de paso
-       move.warn   descenso   → aviso ÚNICO de fin de intervalo (~5 s, s114);
-                                espejo del ascenso de start, no una cuenta atrás
-       move.side   dos toques → cambio de lado (s114), gesto de «giro»
-       move.end    acorde     → cierre
-     El tick de reps (arriba, alias legacy) queda aparte y más suave. */
+     El runner guiado se sigue por el oído: cada cambio de ejercicio suena a cuenco, y la cuenta
+     de los últimos segundos a madera. Afinación 432, en Sol, como la música de Respira.
+       move.start  un cuenco          → ejercicio nuevo (al entrar en el paso, se coloque o no)
+       move.go     cuenco agudo corto → ¡ya! (acaba la cuenta de colocarse o de cambiar de lado)
+       move.side   dos cuencos        → cambia de lado (agudo y grave, el gesto de «giro»)
+       move.rest   cuenco grave largo → descanso
+       move.warn   un toque de madera → suena en cada uno de los últimos 3 segundos de una cuenta
+       move.rep    madera suave       → el pulso de cada repetición guiada
+       move.end    tres cuencos       → rutina terminada
+     Ningún cuenco baja de 200 Hz: por debajo, el altavoz de un portátil no lo reproduce (la
+     regla de banda audible de la música de Respira). move.step es del runner antiguo. */
   'move.start': function(ctx, t0) {
-    glide(ctx, ctx.destination, note('C4'), note('G4'), t0, 0.22, 0.07, 'sine');
+    cuenco(ctx, ctx.destination, note('G4'), t0);
+  },
+  'move.go': function(ctx, t0) {
+    cuenco(ctx, ctx.destination, note('D5'), t0, 0.05, 0.35);
   },
   'move.step': function(ctx, t0) {
     tone(ctx, ctx.destination, note('A4'), t0, 0.06, 0.04, 'triangle');
   },
   'move.warn': function(ctx, t0) {
-    glide(ctx, ctx.destination, note('G4'), note('D4'), t0, 0.22, 0.05, 'sine');
+    madera(ctx, ctx.destination, t0);
+  },
+  'move.rep': function(ctx, t0) {
+    madera(ctx, ctx.destination, t0, 0.05);
   },
   'move.side': function(ctx, t0) {
-    tone(ctx, ctx.destination, note('E4'), t0,        0.07, 0.045, 'triangle');
-    tone(ctx, ctx.destination, note('B4'), t0 + 0.09, 0.10, 0.045, 'triangle');
+    cuenco(ctx, ctx.destination, note('D5'), t0, 0.055, 0.7);
+    cuenco(ctx, ctx.destination, note('G4'), t0 + 0.45, 0.05, 0.8);
+  },
+  'move.rest': function(ctx, t0) {
+    cuenco(ctx, ctx.destination, note('D4'), t0, 0.075, 1.3);
   },
   'move.end': function(ctx, t0) {
-    chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.60, 0.09, 'sine');
+    cuenco(ctx, ctx.destination, note('G4'), t0, 0.055, 1.1);
+    cuenco(ctx, ctx.destination, note('B4'), t0 + 0.32, 0.055, 1.1);
+    cuenco(ctx, ctx.destination, note('D5'), t0 + 0.64, 0.055, 1.1);
   },
 
   /* --- HIDRÁTATE --- */

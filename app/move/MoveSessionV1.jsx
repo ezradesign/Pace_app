@@ -5,26 +5,26 @@
    con el runner legacy; lo que cambia es la máquina de fases.
 
    Resuelve los hallazgos R1-R5 de la auditoría B2.1, activados por `mode`.
-   s113 (runner guiado) aplica las ENMIENDAS de DECISIONES_PRODUCTO §B2 a
-   R2/R3 — principio rector: «el usuario toca para empezar, pausar o adaptar;
-   NO para empujar la rutina hacia delante»:
-     R1  placement gate POR PASO — el timer no arranca mientras se lee la
-         colocación. `setup:'ready'` (s112) sigue siendo el ÚNICO gate manual
-         (colocación compleja suelo/pared/material).
-     R2  (enmendado s113) `reps` = GUIADAS con cadencia (~4 s/rep de fuerza,
-         `repSeconds` por paso): pulso visual + tick suave + contador
-         «n de N», avance AUTO al objetivo. No es cuenta atrás competitiva:
-         «Terminar antes» siempre visible y solo se acreditan las reps
+   Principio rector: «el usuario toca para empezar, pausar o adaptar; NO para
+   empujar la rutina hacia delante». Con la opción A del runner guiado (elegida
+   por Ez) NADA espera a un toque: el mando de tres (MoveSessionV1.mando.jsx)
+   solo adelanta, retrocede o pausa.
+     R1  colocación POR PASO — el timer no arranca mientras se lee. Toda
+         colocación cuenta sola; la `ready` del dato (suelo, pared, material)
+         solo la alarga a 20 s como mínimo (v1StepSetup).
+     R2  `reps` = GUIADAS con cadencia (~4 s/rep de fuerza, `repSeconds` por
+         paso): pulso visual + madera suave + contador «n de N», avance AUTO al
+         objetivo. «Terminar antes» siempre a mano y solo se acreditan las reps
          realmente guiadas (repsGuidedRef), nunca el objetivo.
-     R3  (enmendado s113) `perSide` = lado 1 → señal suave → transición AUTO
-         (10 s, con el lado siguiente visible) → lado 2 empieza solo.
-         «Empezar ya» / «Más tiempo» / «Pausar» quedan opcionales.
+     R3  `perSide` = lado 1 → dos cuencos → transición AUTO (10 s, con el lado
+         siguiente visible) → lado 2 empieza solo.
      R4  la completion acredita minutos REALES (dispatchComplete), no
          `routine.min` declarado.
      R5  `rest` es un tipo propio, apagado; termina solo, «Saltar» opcional.
 
-   Modos: 'timed' | 'reps' | 'perSide' | 'rest'. Un step sin `mode` no llega
-   aquí (el dispatcher de MoveModule lo manda al runner legacy).
+   Modos: 'timed' | 'reps' | 'perSide' | 'rest'. Las rutinas propias, que se
+   guardan sin `mode`, llegan aquí con forma ya dada por el dispatcher de
+   MoveModule (cada paso con tiempo, «Descanso» como descanso).
 
    Consume globales (StepGlyph, SessionShell*, complete*Session, playSound,
    useT) por window/scope global — carga tras MoveModule. Las constantes del
@@ -41,12 +41,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
   const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const tStep = (idx, field) => tR(`${routine.id}.s${idx}.${field}`, routine.steps[idx][field]);
+  const tStep = (idx, field) => tR(v1Clave(routine, idx, field), routine.steps[idx][field]);
   // s115 (B2.2b-1): instruction {setup,action,care} — key i18n
   // `id.sN.instruction.<k>`, fallback al dato anidado. Reemplaza los campos
   // sueltos placeCue/cue/careCue de s114 (migración atómica; sin doble fuente).
   const tInstr = (idx, key) => v1Instr(tR, routine, idx, key);
-  const displayRoutine = lang === 'en'
+  /* El nombre de una rutina propia lo escribió quien la creó: no se traduce. */
+  const displayRoutine = lang === 'en' && routine.id.indexOf('custom.') !== 0
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
 
@@ -59,6 +60,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
+  const [faseTotal, setFaseTotal] = useStateV1(0);   // segundos de la colocación o del cambio de lado, para el aro
   const sessionStart = useRefV1(Date.now());   // wall-clock: incluye pausas y colocaciones
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
   // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
@@ -88,16 +90,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   const startStep = (idx) => {
     setStepIdx(idx); setElapsed(0); setSide(0);
-    // Gate de colocación (s115): la derivación vive en v1StepSetup (support),
-    //   ÚNICA fuente compartida con la duración estimada:
-    //   ready → espera al usuario SIN cuenta (placeLeft 0; NUNCA countdown).
-    //   auto  → cuenta que fluye sola (efecto abajo), estimatedSeconds s.
-    //   none  → directo a work. El gate nunca es el timer del ejercicio: R1
-    //   intacto. Comportamiento idéntico a s114 (ready / clocked idx>0 / 1er
-    //   set de fuerza con instruction.setup no tras rest → auto; resto none).
+    // Colocación: la derivación vive en v1StepSetup (support), ÚNICA fuente
+    //   compartida con la duración estimada:
+    //   auto → cuenta que fluye sola (efecto abajo), estimatedSeconds s; la
+    //          `ready` del dato llega aquí como auto de 20 s como mínimo.
+    //   none → directo a work. La cuenta nunca es el timer del ejercicio (R1).
     const su = v1StepSetup(routine, idx);
-    if (su.mode === 'ready') { setPhase('place'); setPlaceLeft(0); }
-    else if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); }
+    if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); setFaseTotal(su.estimatedSeconds); }
     else setPhase('work');
   };
   const advanceStep = (early) => {
@@ -105,17 +104,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     else startStep(stepIdx + 1);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
-  const addPlaceTime = () => setPlaceLeft(c => c + 5);   // «Más tiempo» en colocación
-  const addChangeTime = () => setChangeLeft(c => c + 5); // «Más tiempo» en transición
+  const addPlaceTime = () => { setPlaceLeft(c => c + V1_MAS_TIEMPO); setFaseTotal(c => c + V1_MAS_TIEMPO); };
+  const addChangeTime = () => { setChangeLeft(c => c + V1_MAS_TIEMPO); setFaseTotal(c => c + V1_MAS_TIEMPO); };
   const onSideReady = () => { setSide(1); setPhase('work'); setElapsed(0); };
   // Entrada a la transición de lado (s113, enmienda R3): señal suave de la
   // familia actual + cuenta que fluye sola (efecto abajo).
   const enterChange = () => {
     // s115: la duración de la transición sale del contrato (transition.seconds),
     // con el default s113 (10 s) si el paso no la declara.
-    setPhase('change'); setElapsed(0); setChangeLeft(v1TransitionSeconds(step));
-    // s114: señal propia de «cambio de lado» (familia move, distinguible del
-    // avance de paso `move.step`). Silencio si soundOn está apagado.
+    setPhase('change'); setElapsed(0); setChangeLeft(v1TransitionSeconds(step)); setFaseTotal(v1TransitionSeconds(step));
+    // Dos cuencos, agudo y grave: el gesto de «giro». Silencio si soundOn está apagado.
     try { playSound('move.side'); } catch (e) {}
   };
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
@@ -131,6 +129,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     const to = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
+  // La cuenta de la preparación también suena a madera en sus 3 últimos segundos. Va aparte, con
+  // [prepCount] solo: con [paused] en las dependencias sonaría otra vez al pausar y reanudar.
+  useEffectV1(() => {
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) { try { playSound('move.warn'); } catch (e) {} }
+  }, [prepCount]);
 
   // Relojes por fase — patrón s113: los intervalos SOLO decrementan/incrementan
   // su contador; los umbrales y side-effects (sonidos, avance, completion)
@@ -139,22 +142,22 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // «Cannot update a component while rendering» (pre-existía desde s110; el
   // motor guiado lo hacía constante al auto-avanzar).
 
-  // Colocación AUTO (s111): aire para colocarse, no es el timer (R1).
-  // «Empezar ya» salta; «Más tiempo» suma 5 s. En 'ready' NO corre (s112).
+  // Colocación (s111): aire para colocarse, no es el timer (R1). Siempre cuenta sola y se
+  // para con la pausa; «siguiente» salta y «+15 s» suma tiempo.
   // s200: los tres relojes van por MARCA de tiempo (`useRelojSesion`, support).
-  useRelojSesion(stage === 'run' && phase === 'place' && !(step && step.setup && step.setup.mode === 'ready'),
+  useRelojSesion(stage === 'run' && phase === 'place' && !paused,
     n => setPlaceLeft(c => Math.max(0, c - n)), [stepIdx]);
   useSesionAlOcultar(stage === 'run', () => setPaused(true)); // s200: politica en SESION_AL_OCULTAR
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
-    if (step && step.setup && step.setup.mode === 'ready') return;
-    beginWork();
+    if (stage !== 'run' || phase !== 'place') return;
+    if (placeLeft <= 0) { beginWork(); return; }
+    if (placeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
   }, [placeLeft]);
 
   // Ticker de trabajo (fase 'work', pausable). s113: las reps GUIADAS también
   // corren — el tiempo marca la cadencia (enmienda R2).
   useRelojSesion(stage === 'run' && phase === 'work' && !paused, n => setElapsed(e => e + n), [stepIdx, side]);
-  // Umbrales del trabajo: tick suave por rep + avance AUTO al objetivo (reps,
+  // Umbrales del trabajo: madera suave por rep + avance AUTO al objetivo (reps,
   // acreditando solo las guiadas reales) · fin de segmento → cambio de lado
   // (perSide lado 0) o siguiente paso. Deps [elapsed]: exactamente una
   // evaluación por segundo de trabajo; las transiciones resetean elapsed a 0
@@ -165,22 +168,20 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       const repSec = v1RepSeconds(step);
       // s115: se respeta completion.mode — sólo 'guided' auto-avanza al objetivo
       // ('manual' reservado, sin piloto: quedaría en «Terminar antes»). El pulso
-      // y el tick corren igual; los 5 pilotos son guided → comportamiento intacto.
+      // y la madera corren igual; los 5 pilotos son guided → comportamiento intacto.
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
         repsGuidedRef.current += v1RepTarget(step);
         advanceStep();
       } else if (elapsed % repSec === 0) {
-        try { playSound('tick'); } catch (e) {}
+        try { playSound('move.rep'); } catch (e) {}
       }
       return;
     }
     const effDur = v1StepDur(step);
-    // s114 · aviso sonoro ÚNICO al cruzar los últimos ~5 s (decisión 2A):
-    // descansos + pasos con reloj (timed/perSide). Una sola señal en el
-    // umbral, NO una cuenta atrás sonora; el tick de reps es aparte y más
-    // suave. Silencio total si soundOn está apagado (playSound lo respeta).
-    if (effDur > 6 && elapsed === effDur - 5) { try { playSound('move.warn'); } catch (e) {} }
+    // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
+    // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
+    if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn'); } catch (e) {} }
     if (elapsed >= effDur) {
       if (step.mode === 'perSide' && side === 0) enterChange();
       else advanceStep();
@@ -189,16 +190,33 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   // Transición AUTO de lado (s113, enmienda R3): cuenta que fluye sola con el
   // lado siguiente visible. Al llegar a 0 → el lado 2 empieza solo.
-  // «Empezar ya» salta, «Más tiempo» +5 s, «Pausar» disponible — opcionales.
+  // «siguiente» salta, «+15 s» suma y la pausa la para — opcionales.
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, n => setChangeLeft(c => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'change' || changeLeft > 0) return;
-    onSideReady();
+    if (stage !== 'run' || phase !== 'change') return;
+    if (changeLeft <= 0) { onSideReady(); return; }
+    if (changeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
   }, [changeLeft]);
 
-  // Sonidos
-  useEffectV1(() => { if (stage === 'run') { try { playSound('move.start'); } catch(e) {} }
-                      if (stage === 'done') { try { playSound('move.end'); } catch(e) {} } }, [stage]);
+  // Sonidos, para seguir la rutina sin mirar (opción A):
+  //   · ejercicio nuevo → un cuenco al entrar en el paso, se coloque o no (grave si es descanso);
+  //   · fin de la cuenta de colocarse o de cambiar de lado → «move.go», el «¡ya!»;
+  //   · cambio de lado → dos cuencos, en enterChange;
+  //   · las maderas de «3, 2, 1» van en cada cuenta (arriba) y la rutina acaba con tres cuencos.
+  // El «¡ya!» solo suena si la fase anterior era del MISMO paso: «Anterior» desde una colocación
+  // también pasa de 'place' a 'work', y ahí ya suena el cuenco del paso.
+  useEffectV1(() => { if (stage === 'done') { try { playSound('move.end'); } catch(e) {} } }, [stage]);
+  useEffectV1(() => {
+    if (stage !== 'run' || !step) return;
+    try { playSound(step.mode === 'rest' ? 'move.rest' : 'move.start'); } catch (e) {}
+  }, [stage, stepIdx]);
+  const faseAntes = useRefV1({ phase, stepIdx });
+  useEffectV1(() => {
+    const antes = faseAntes.current;
+    faseAntes.current = { phase, stepIdx };
+    if (stage !== 'run' || phase !== 'work' || antes.stepIdx !== stepIdx) return;
+    if (antes.phase === 'place' || antes.phase === 'change') { try { playSound('move.go'); } catch (e) {} }
+  }, [phase, stepIdx]);
 
   // Toasts de logro APLAZADOS durante la sesión (s112, regla s105): la
   // completion dispara logros que se apilaban sobre la ceremonia de cierre.
@@ -212,10 +230,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // sesión, con el preset de descanso actual) — para comparar con la ejecución
   // real medida. Invisible en prod; la promesa visible sale del helper puro.
   useEffectV1(() => { try { v1DevCheckDuration(routine, v1RestSeconds()); } catch (e) {} }, []);
-  useEffectV1(() => { if (stage === 'run') { try { playSound('move.step'); } catch(e) {} } }, [stepIdx]);
 
-  // Atajos. s113: Espacio pausa también reps guiadas y la transición de lado
-  // (el descanso sigue sin pausa: termina solo, «Saltar» opcional).
+  // Atajos: Espacio pausa y reanuda cualquier fase en marcha (opción A: la pausa está siempre).
   useEffectV1(() => {
     const onKey = (e) => {
       if (e.key === ' ') {
@@ -223,7 +239,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         // 'done'): que lo active nativamente en vez de hacer preventDefault (s116).
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if ((phase === 'work' && step && step.mode !== 'rest') || phase === 'change' || paused) setPaused(p => !p);
+        if (stage === 'run') setPaused(p => !p);
       }
       if (e.key === 'Escape') onExit('exit');
       // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
@@ -285,24 +301,15 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // s114: el descanso entre series toma su duración del preset de Ajustes
   // (v1StepDur → restBetweenSets); el resto de pasos usan su `dur`.
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
-  const placeReady = !!(step.setup && step.setup.mode === 'ready');
-
-  // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
-  // insignia; en poca altura cede antes que instrucciones/controles (s113).
-  // s171: el legacy usa ESTA MISMA curva (era 72 fijo, menos de la mitad).
-  const glyphSize = v1GlyphSizeAhora();
-
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;   // place/change: número pequeño, no es el timer
   let repPulseSec = 0;      // reps guiadas: duración del pulso de cadencia
   if (phase === 'place') {
     kicker = t('session.place');
-    if (!placeReady) { bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown'); gateNumber = true; }
+    bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown'); gateNumber = true;
     if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
-    support = placeReady ? t('move.placeReadyHint') : t('move.placeHint');
-    primary = placeReady
-      ? { label: t('session.imReady'), onClick: beginWork }
-      : { label: t('session.beginNow'), onClick: beginWork };
+    support = t('move.placeHint');
+    primary = { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
     // s113: la transición fluye sola — el número es de recolocación (gate),
     // el lado siguiente queda VISIBLE y «Empezar ya» pasa a opcional.
@@ -328,11 +335,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     // trabajo (abajo). El kicker del cuerpo queda solo para place/change.
     kicker = null;
     if (isRest && routine.steps[stepIdx + 1]) {
-      // s114: el descanso GUÍA — anuncia la serie que viene y avisa en los
-      // últimos ~5 s (el aviso sonoro corre en paralelo, decisión 2A). El
-      // cierre respiratorio (sin paso siguiente) no muestra nada de esto.
+      // El descanso GUÍA: anuncia la serie que viene y avisa en los últimos 3 s, los mismos de
+      // las maderas, para que lo que se lee y lo que se oye digan lo mismo a la vez. El cierre
+      // respiratorio (sin paso siguiente) no muestra nada de esto.
       supportStrong = tn('move.restNext', { name: tStep(stepIdx + 1, 'name') });
-      if (remaining > 0 && remaining <= 5) support = t('move.restReady');
+      if (remaining > 0 && remaining <= 3) support = t('move.restReady');
     }
     primary = isRest
       ? { label: t('session.skip'), onClick: advanceStep }
@@ -355,134 +362,29 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
     : null;
 
-  // s113: pausable todo lo que corre solo salvo el descanso (termina solo).
-  const canPause = (phase === 'work' && !isRest) || phase === 'change' || paused; // s200: en pausa, siempre «Continuar»
-  const footer = (
-    <React.Fragment>
-      {phase !== 'change' && (
-        <button onClick={() => { if (stepIdx > 0) startStep(stepIdx - 1); }} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
-          {t('move.prev')}
-        </button>
-      )}
-      {((phase === 'place' && !placeReady) || phase === 'change') && (
-        <button onClick={phase === 'change' ? addChangeTime : addPlaceTime} style={sessionShellStyles.ctrlBtn}>
-          {t('session.moreTime')}
-        </button>
-      )}
-      {canPause && (
-        <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn}>
-          {paused ? t('session.resume') : t('session.pause')}
-        </button>
-      )}
-      {/* s112: UNA acción primaria con peso real (rellena); las secundarias
-          quedan outline — «Saltar»/«Anterior» no compiten con «Terminé». */}
-      <button onClick={primary.onClick} style={{
-        ...sessionShellStyles.ctrlBtn,
-        background: stepAccent, borderColor: stepAccent,
-        color: 'var(--paper)', fontWeight: 500,
-      }}>
-        {primary.label}
-      </button>
-    </React.Fragment>
-  );
+  /* Lo que va del paso o de la fase en curso, para el aro del dibujo. */
+  const fraccion = phase === 'place' || phase === 'change'
+    ? (faseTotal ? 1 - (phase === 'place' ? placeLeft : changeLeft) / faseTotal : 0)
+    : step.mode === 'reps' ? Math.min(1, elapsed / (v1RepTarget(step) * v1RepSeconds(step)))
+    : (v1StepDur(step) ? elapsed / v1StepDur(step) : 0);
 
   return (
     <SessionShell
       routine={displayRoutine} onExit={onExit} atmosphere={atmo}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
-      footer={footer} hint={t('session.hint')}
+      footer={<MandoV1 accent={stepAccent} paused={paused} onPause={() => setPaused(x => !x)}
+        prev={{ onClick: () => { if (stepIdx > 0) { setPaused(false); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
+        next={{ label: primary.label, onClick: () => { setPaused(false); primary.onClick(); } }}
+        textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} />}
+      hint={t('session.hint')}
     >
-      <div data-pace-v1-body style={{ textAlign: 'center', maxWidth: 620 }}>
-        {/* s172 · el descanso TAMBIEN pinta su circulo: con `!isRest` no es que no
-            se moviera, es que DESAPARECIA. R5 se respeta por color, no por ausencia. */}
-        <div data-pace-v1-glyph>
-          <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} side={v1LadoGlifo(step, phase, side)} />
-        </div>
-        {/* s171b · SE PINTA SIEMPRE (misma reserva que «Cuidate», s119): el rotulo
-            solo existe al colocarse y movia el NOMBRE 29 px en cada cambio de fase. */}
-        <div data-pace-v1-kicker style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>
-          {kicker || null}
-        </div>
-        <h1 data-pace-v1-name style={{ ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' }}>
-          {tStep(stepIdx, 'name')}
-        </h1>
-        <p data-pace-v1-cue style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' }}>
-          {sideLead && (
-            <strong style={{ color: stepAccent, fontWeight: 600 }}>{sideLead}. </strong>
-          )}
-          {cueText}
-        </p>
-
-        {/* s112: el número del GATE no es el timer — más pequeño y en tinta
-            secundaria. s113: la transición de lado usa el mismo trato. */}
-        {/* s177 · `-num`/`-numlabel` en LAS DOS ramas: la hoja las iguala. */}
-        {bigNumber != null && gateNumber && (
-          <React.Fragment>
-            <div data-pace-v1-num data-pace-v1-num-gate style={{ ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 }}>
-              {bigNumber}
-            </div>
-            <div data-pace-v1-numlabel style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>{bigLabel}</div>
-          </React.Fragment>
-        )}
-        {/* s113: en reps guiadas el número lleva el pulso de cadencia
-            (decorativo: reduced-motion lo congela y queda el contador). */}
-        {bigNumber != null && !gateNumber && (
-          <React.Fragment>
-            <div data-pace-move-timer data-pace-v1-timer data-pace-v1-num style={{
-              ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
-              /* s119: longhand (no el shorthand `animation`) para no mezclarlo con
-                 `animationPlayState` → silencia el warning de React. Delta 0. */
-              ...(repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: paused ? 'paused' : 'running' } : {}),
-            }}>
-              {bigNumber}
-            </div>
-            <div data-pace-v1-numlabel style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 }}>{bigLabel}</div>
-          </React.Fragment>
-        )}
-
-        {/* s112: copy funcional VISIBLE (antes viajaba en el hint del shell,
-            oculto en móvil): lado siguiente/inicial y matices del método. */}
-        {supportStrong && (
-          <div data-pace-v1-support-strong style={{ ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 }}>
-            {supportStrong}
-          </div>
-        )}
-        {support && (
-          <div data-pace-v1-support style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 }}>
-            {support}
-          </div>
-        )}
-        {/* s114 · capa «Cuídate» (adaptación): visible en ejecución (decisión A);
-            el rótulo puede ocultarse en altura baja, el contenido NUNCA.
-            s119 · la ZONA se reserva SIEMPRE en trabajo (min-height 2 líneas en
-            pace-move-v1-css) aunque el paso no tenga care — así un paso sin care
-            no sube el glifo respecto a sus vecinos (anclaje). */}
-        {inWork && !isRest && (
-          <div data-pace-v1-care style={{ fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' }}>
-            {careText && <React.Fragment><span data-pace-v1-care-label style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 }}>{t('move.careLabel')} · </span>{careText}</React.Fragment>}
-          </div>
-        )}
-      </div>
-
-      <div data-pace-v1-progress style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 10 }}>
-          {routine.steps.map((s, i) => (
-            <div key={i} style={{
-              flex: v1StepWeight(s),
-              height: i === stepIdx ? 6 : 2,
-              background: i < stepIdx ? accent : i === stepIdx ? 'var(--line)' : 'var(--paper-3)',
-              borderRadius: 2, position: 'relative', overflow: 'hidden', transition: 'height 220ms',
-            }}>
-              {i === stepIdx && (
-                <div style={{ position: 'absolute', inset: 0, width: `${v1StepProgress(step, side, elapsed) * 100}%`, background: accent, transition: 'width 1s linear' }} />
-              )}
-            </div>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')}
-        </div>
-      </div>
+      <CuerpoV1 routine={routine} stepIdx={stepIdx} step={step} side={side} phase={phase} elapsed={elapsed} paused={paused}
+        accent={accent} stepAccent={stepAccent} stepAccentSoft={stepAccentSoft} lang={lang}
+        t={t} tn={tn} tStep={tStep} tInstr={tInstr}
+        kicker={kicker} cueText={cueText} sideLead={sideLead} careText={careText}
+        bigNumber={bigNumber} bigLabel={bigLabel} gateNumber={gateNumber} repPulseSec={repPulseSec}
+        support={support} supportStrong={supportStrong} fraccion={fraccion}
+        onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null} />
     </SessionShell>
   );
 }

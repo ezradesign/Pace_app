@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.143.4 · 7 de octubre de 2026.
+**Versión:** v0.144.0 · 7 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -30,6 +30,12 @@ Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del cat
 Android, Google Calendar u Outlook en la web y un .ics en los dos. Con «Tener en cuenta mis
 reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como esquiva la comida.
 
+Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
+botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
+de tiempo alrededor del dibujo y avisos de cuenco y madera. Cada texto tiene su hueco fijo y el
+dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
+ni se pisa. Las rutinas propias también van por ahí.
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
@@ -50,7 +56,15 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
-3. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
+3. **La escala con el zoom del navegador:** Ez eligió la opción 2, «Lienzo que crece» (maqueta en
+   `docs/traspaso/archivos/runner-guiado/`). Antes de montarla, un prototipo medido: un `zoom` CSS
+   sin más rompe la home (la página se hace tres veces más alta), porque el motor de la home y las
+   sesiones miden con la altura del viewport.
+4. **Los bugs sin verificar** de `docs/traspaso/CAZA_BUGS_7OCT.md` (37: modo oscuro, inglés,
+   Respira e Hidrátate): reproducir cada uno antes de arreglarlo. Foco y el estado guardado no se
+   llegaron a revisar.
+
+5. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
    (detalle en `docs/traspaso/LEEME.md`). Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. Hay
    trabajo a medias en la rama `claude/project-thread-ft7sc2`.
 
@@ -63,7 +77,10 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
   verificación antes de abrirlo a más de 100 personas.
 - Play Console: la cuenta está creada y Google revisa la identidad de Ez. Después, reunir 12 testers
   con Android.
-- Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión).
+- Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
+  los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
+  sus prompts).
+- Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha
 
