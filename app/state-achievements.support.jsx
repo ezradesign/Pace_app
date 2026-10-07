@@ -113,8 +113,8 @@ const LOGRO_MODULO = {
     'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
     'explore.bhastrika', 'explore.nadi', 'explore.ujjayi', 'explore.kapalabhati',
     'explore.physiological', 'explore.all.breathe', 'secret.rain', 'secret.zen'],
-  move: ['first.stretch', 'move.sessions.25', 'explore.all.extra'],
-  extra: ['first.extra', 'explore.hips', 'explore.shoulders', 'explore.atg',
+  move: ['first.extra', 'move.sessions.25', 'explore.all.extra'],
+  extra: ['first.stretch', 'explore.hips', 'explore.shoulders', 'explore.atg',
     'explore.ancestral', 'explore.neck', 'explore.desk', 'explore.all.move',
     'master.atg.20', 'master.hips.20', 'master.shoulders.20',
     'master.ancestral.10', 'master.antidote'],
@@ -261,8 +261,34 @@ function checkMaestriasDeVolumen() {
   if (getCount('tag.SIT') >= 50) unlockAchievement('master.antidote');
 }
 
+/* Hasta v0.142 Mueve daba `first.stretch` («Primer estirón») y Estira daba
+   `first.extra` («Primera calistenia»): justo al revés de lo que dicen. Ya se
+   desbloquean bien; a quien los tenga de antes se le cruzan UNA vez, con su
+   fecha, para que cada uno quede en el módulo que lo ganó. La marca va en el
+   estado y no en una versión, para que una copia vieja importada se corrija
+   también. Sin ninguno de los dos no se escribe nada (un arranque limpio no
+   persiste): la marca la pone `unlockAchievement` al ganar el primero. */
+const CRUCE_PRIMEROS = { 'first.stretch': 'first.extra', 'first.extra': 'first.stretch' };
+
+function cruzarPrimerosLogros() {
+  const s = getState();
+  if (s.logrosPrimerosCruzados) return;
+  const antes = s.achievements || {};
+  if (!antes['first.stretch'] && !antes['first.extra']) return;
+  const next = { ...antes };
+  for (const [viejo, nuevo] of Object.entries(CRUCE_PRIMEROS)) {
+    if (antes[viejo]) next[nuevo] = antes[viejo]; else delete next[nuevo];
+  }
+  setState({
+    achievements: next,
+    achievementQueue: (s.achievementQueue || []).map(id => CRUCE_PRIMEROS[id] || id),
+    logrosPrimerosCruzados: true,
+  });
+}
+
 /* Una sola vez, al cargar: los ids viejos se llevan su logro al nombre nuevo. */
 migrarIdsDeLogro();
+cruzarPrimerosLogros();
 
 Object.assign(window, {
   LOGRO_RENOMBRADO, migrarIdsDeLogro,

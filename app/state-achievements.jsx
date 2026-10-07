@@ -226,6 +226,8 @@ function unlockAchievement(id, note) {
   setState({
     achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } },
     achievementQueue: [...(s.achievementQueue || []), id],
+    /* ganado ya con el reparto bueno: que `cruzarPrimerosLogros` no lo toque */
+    ...((id === 'first.stretch' || id === 'first.extra') ? { logrosPrimerosCruzados: true } : {}),
   });
   checkCollectorAchievements();
   return true;
@@ -382,7 +384,7 @@ function completeMoveSession(routineId, durationMin, evento) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
     moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
   });
-  unlockAchievement('first.stretch');
+  unlockAchievement('first.extra');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   contarRutina(routineId);
   checkPlanAchievements();
@@ -407,7 +409,7 @@ function completeExtraSession(routineId, durationMin, evento) {
     plan: { ...s.plan, extra: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
-  unlockAchievement('first.extra');
+  unlockAchievement('first.stretch');
   contarRutina(routineId);
   checkPlanAchievements();
   checkTimeOfDayAchievements();
