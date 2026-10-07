@@ -34031,12 +34031,11 @@ Object.assign(window, { Onboarding });
 }
 [data-pace-ritmo] :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
-/* EL RÓTULO del corte del aro. Con menú lleva debajo «Hasta las …» y sube lo que
-   mide esa línea (12 + 3 px): así el panel no se mueve y el nombre ocupa el hueco
-   de la fila de ciclo, que el aro oculta sin soltar su sitio (ronda 4). */
-.pace-rt-rotulo { text-align: center; margin-bottom: 10px; }
-.pace-rt-rotulo.pace-rt-con-hasta { margin-top: -15px; }
-.pace-rt-hasta { font-size: 10px; line-height: 12px; margin-top: 3px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+/* EL RÓTULO del corte del aro: solo «Hasta las …», abajo del todo y donde estaba cuando
+   llevaba «A tu ritmo» encima. Mide lo que medía el nombre (11 px × 1,45), así que el panel
+   no se mueve, haya hora o no. */
+.pace-rt-rotulo { height: 15.95px; margin-bottom: 10px; display: flex; align-items: flex-end; justify-content: center; }
+.pace-rt-hasta { font-size: 10px; line-height: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
 
 .pace-rt-panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
   box-shadow: var(--sh-soft); padding: 16px 22px 14px; text-align: left; }
@@ -35438,7 +35437,7 @@ function RitmoVuelta() {
 
 function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
   const [state] = usePace();
-  const { t, tn } = useT();
+  const { tn } = useT();
   const [hoja, setHoja] = useStateRH(false);
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
@@ -35461,12 +35460,12 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
 
   }
 
-  const conHasta = !!(plan && plan.actual);
   return (
     React.createElement("div", { key: "ritmo", "data-pace-activitybar": true, "data-pace-ritmo": true, style: { padding: '6px 40px 20px', flexShrink: 0 } },
-    React.createElement("div", { className: 'pace-rt-rotulo' + (conHasta ? ' pace-rt-con-hasta' : '') },
-    React.createElement(Meta, null, t('ritmo.nombre')),
-    conHasta ? React.createElement("div", { className: "pace-rt-hasta", "data-pace-ritmo-hasta": true }, tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })) : null
+
+
+    React.createElement("div", { className: "pace-rt-rotulo" },
+    plan && plan.actual ? React.createElement("div", { className: "pace-rt-hasta", "data-pace-ritmo-hasta": true }, tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })) : null
     ),
     React.createElement("div", { "data-pace-ritmo-panel": true },
     !plan ? React.createElement(RitmoPregunta, { state: state }) :
