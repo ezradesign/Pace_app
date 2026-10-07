@@ -27327,6 +27327,15 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
   };
 
 
+  const elegirPropuesta = (p) => {
+    if (p.modulo === 'water') {
+      addWaterGlass(1);
+      try {playSound('hydrate.sip');} catch (e) {}
+    }
+    handleChoose(p.modulo, p.rutina);
+  };
+
+
 
 
   useEffectBM(() => {
@@ -27343,7 +27352,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
 
 
         e.preventDefault();
-        handleChoose(propRef.current.modulo, propRef.current.rutina);
+        elegirPropuesta(propRef.current);
       } else
       if (e.key === 'Escape') {e.preventDefault();onClose();}
     };
@@ -27408,8 +27417,8 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
     ),
 
     React.createElement("div", { style: { marginTop: 6 } },
-    React.createElement(Button, { variant: "terracota", onClick: () => handleChoose(prop.modulo, rutinaProp) },
-    t('break.prop.start')
+    React.createElement(Button, { variant: "terracota", onClick: () => elegirPropuesta(prop) },
+    t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')
     )
     )
     ),

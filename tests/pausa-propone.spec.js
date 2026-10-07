@@ -46,8 +46,8 @@ const sembrarEstado = (context, extra) => context.addInitScript((e) => {
 /* `cta` (s189) existe por el aserto en INGLES: el boton de la home se llama
    «Start focus» con la app en ingles, asi que un nombre fijo en castellano no
    lo encuentra y el test moria antes de llegar a la pausa. */
-async function hastaLaPausa(page, minutos, cta) {
-  await page.clock.install();
+async function hastaLaPausa(page, minutos, cta, desde) {
+  await page.clock.install(desde ? { time: desde } : undefined);
   await irAlArtefacto(page);
   await page.getByRole('button', { name: cta || 'Empezar foco', exact: true }).click();
   await page.waitForTimeout(250);
@@ -342,4 +342,24 @@ test('la propuesta habla en ingles', async ({ page, context }) => {
   await expect(prop, 'el porque sigue en castellano con la app en ingles').toContainText(esperado);
   await expect(prop.getByRole('button', { name: 'Start', exact: true }),
     'el boton de la propuesta sigue en castellano').toBeVisible();
+});
+
+/* ------------------------------------------------------------------ 11
+ * EL AGUA NO ES UNA RUTINA: su botón decía «Empezar» y abría Hidrátate sin
+ * sumar nada. Ahora dice «Un vaso más», lo suma y abre Hidrátate con el vaso
+ * ya contado. La hora va fija a las cuatro de la tarde porque antes del
+ * mediodía la regla no propone agua; el día sembrado es el de esa hora. */
+test('el agua propone «Un vaso más»: lo suma y abre Hidrátate con el vaso contado', async ({ page, context }) => {
+  const tarde = new Date(2026, 9, 7, 16, 0, 0);
+  const dia = tarde.toDateString();
+  await sembrarEstado(context, { focusMinutes: 25, lastActiveDay: dia, water: { goal: 8, today: 0, lastReset: dia } });
+  await hastaLaPausa(page, 25, null, tarde);
+
+  const prop = page.locator('[data-pace-break-prop]');
+  await expect(prop, 'a las cuatro sin haber bebido no propone agua').toContainText('Aún no has bebido hoy');
+  await expect(prop.getByRole('button', { name: 'Empezar', exact: true })).toHaveCount(0);
+  await prop.getByRole('button', { name: 'Un vaso más', exact: true }).click();
+
+  await expect(page.getByRole('button', { name: 'Un vaso menos' }), 'no se abrió Hidrátate').toBeVisible();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2')).water.today)).toBe(1);
 });
