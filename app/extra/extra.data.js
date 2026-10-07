@@ -96,12 +96,12 @@ const EXTRA_ROUTINES = {
         position: ['seated'], equipment: [], requiresFloor: false,
         desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
         steps: [
-          { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
-          { name: 'Círculos de muñeca', dur: 20, cue: '10 en cada sentido.' },
-          { name: 'Giro sentado', dur: 20, cue: 'Rota hacia el respaldo.' },
-          { name: 'Círculos de tobillo', dur: 20, cue: 'Bajo la mesa.' },
-          { name: 'Barbilla atrás', dur: 20, cue: 'Barbilla atrás 5 veces.' },
-          { name: 'Respiraciones profundas', dur: 20, cue: '3 inhalaciones completas.' },
+          { name: 'Encogimiento de hombros', mode: 'timed', dur: 20, cue: 'Hombros arriba, luego relaja.' },
+          { name: 'Círculos de muñeca', mode: 'timed', dur: 20, cue: '10 en cada sentido.' },
+          { name: 'Giro sentado', mode: 'timed', dur: 20, cue: 'Rota hacia el respaldo.' },
+          { name: 'Círculos de tobillo', mode: 'timed', dur: 20, cue: 'Bajo la mesa.' },
+          { name: 'Barbilla atrás', mode: 'timed', dur: 20, cue: 'Barbilla atrás 5 veces.' },
+          { name: 'Respiraciones profundas', mode: 'timed', dur: 20, cue: '3 inhalaciones completas.' },
         ]},
       /* s119 (B2.3 OLA 2): migración mecánica al contrato v1 (s115). Movilidad
          de muñecas → `timed` (exploratorio, BASE §3-B); Finger extension →

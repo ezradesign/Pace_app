@@ -24,12 +24,10 @@
 const { test, expect } = require('@playwright/test');
 const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
-/* Una v1 y una LEGACY, que es justo el par que no coincidía. Si alguna se
-   migrara al contrato v1, el test de «los dos runners coinciden» dejaría de
-   comparar dos runners — por eso comprueba también que sigan siendo distintas
-   (abajo, con el hook `[data-pace-v1-timer]`, que solo pinta el v1). */
+/* La rutina con la que se recorre la sesión. Hasta la opción A del runner guiado había una
+   segunda, del runner legacy, para comparar los dos círculos; ya no queda runner legacy (ver
+   «ninguna rutina del catálogo vuelve al runner antiguo», abajo). */
 const RUTINA_V1 = 'Antídoto silla';
-const RUTINA_LEGACY = 'Escritorio express';
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
@@ -167,28 +165,36 @@ for (const piel of [
   });
 }
 
-test('las dos rutinas dan el mismo círculo aunque corran en runners distintos', async ({ page }) => {
+/* EL DEFECTO 2 ERA DE DOS RUNNERS, y ya solo hay uno. Esta prueba comparaba el círculo de una
+   rutina del runner v1 con el de una del legacy; con la opción A del runner guiado las seis que
+   quedaban en el legacy pasaron al contrato (`{ name, mode, dur, cue }`), y las propias reciben
+   su forma al abrirse. Lo que se defiende ahora es la causa: que ninguna rutina del catálogo
+   vuelva a llegar sin `mode` al dispatcher, que es lo que la mandaría al runner antiguo. */
+test('ninguna rutina del catálogo vuelve al runner antiguo', async ({ page }) => {
   const errores = capturarErrores(page);
-
   await irAlArtefacto(page);
-  const sesionV1 = await entrarEnSesion(page, RUTINA_V1);
-  await expect(sesionV1.locator('[data-pace-v1-timer]').or(sesionV1.locator('[data-pace-v1-name]')).first()).toBeVisible();
-  const v1 = await medirCirculo(page);
+  const censo = await page.evaluate(() => {
+    const sinModo = [];
+    let rutinas = 0;
+    for (const cat of [window.MOVE_ROUTINES, window.EXTRA_ROUTINES]) {
+      for (const grupo of Object.values(cat || {})) {
+        for (const r of (grupo.items || [])) {
+          rutinas++;
+          if (!r.steps.every(st => st.mode)) sinModo.push(r.id);
+        }
+      }
+    }
+    return { rutinas, sinModo };
+  });
+  /* GUARD DE CERO: un catálogo que no se encuentra daría «ninguna sin mode» sin mirar nada. */
+  expect(censo.rutinas, 'no encuentro el catálogo de Mueve y Estira').toBeGreaterThan(25);
+  expect(censo.sinModo, 'rutinas con pasos sin `mode`: correrían en el runner antiguo').toEqual([]);
 
-  await irAlArtefacto(page);
-  await entrarEnSesion(page, RUTINA_LEGACY);
-  const legacy = await medirCirculo(page);
-
-  expect(v1, 'no se encontró el círculo en la rutina v1').not.toBeNull();
-  expect(legacy, 'no se encontró el círculo en la rutina legacy').not.toBeNull();
-  /* CONTROL POSITIVO de que siguen siendo dos runners distintos: si la legacy
-     se migrara al contrato v1, este test compararía v1 consigo mismo y pasaría
-     sin demostrar nada. El hook del contador v1 solo existe en aquel. */
-  expect(await page.locator('[data-pace-v1-timer]').count(),
-    'la rutina legacy pinta el contador del v1 — ya no son dos runners y este test dejó de comparar nada').toBe(0);
-
-  expect(legacy.w, `el círculo del runner legacy (${legacy.w}) no coincide con el del v1 (${v1.w})`).toBe(v1.w);
-
+  /* Y la que venía del legacy pinta el círculo del runner guiado, del mismo ancho en todas
+     sus pantallas (el recorrido de arriba lo mide en las que eran v1). */
+  await entrarEnSesion(page, 'Escritorio express');
+  await expect(page.locator('[data-pace-v1-mando]')).toBeVisible();
+  expect(await medirCirculo(page), 'no se encontró el círculo en la rutina migrada').not.toBeNull();
   expect(errores).toEqual([]);
 });
 

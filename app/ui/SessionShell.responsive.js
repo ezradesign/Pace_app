@@ -127,6 +127,11 @@
       [data-pace-session-root] {
         padding: 18px 32px 20px !important;
       }
+      /* Con 20 px abajo, la línea de atajos (absoluta a 14 px del borde) se pintaba encima de los
+         botones del pie: medido a 1530×692, 663 px su borde de arriba y 672 el de los botones. */
+      [data-pace-session-hint] {
+        display: none !important;
+      }
       [data-pace-session-prep-num] {
         font-size: 140px !important;
       }

@@ -13,10 +13,11 @@
  *     pasar a `hidden` la sesion se pausa, y al volver SIGUE en pausa con su
  *     «Reanudar». Lo de fuera no cuenta.
  *
- * (c) Estira va por los MISMOS dos runners (`MoveSession` con kind 'extra'), asi
- *     que se pausa igual: Ez lo eligio el 6 oct. 2026 («al volver sigues donde
- *     lo dejaste»). Se mira con una rutina del runner v1 y otra del legacy, para
- *     que un runner propio de Estira no pueda olvidarse la politica.
+ * (c) Estira va por el MISMO runner (`MoveSession` con kind 'extra'), asi que se
+ *     pausa igual: Ez lo eligio el 6 oct. 2026 («al volver sigues donde lo
+ *     dejaste»). Se mira con una rutina escrita para el contrato v1 y otra que
+ *     venia del runner antiguo (pasos `{ name, mode, dur, cue }`), para que
+ *     ninguna de las dos formas del dato pueda olvidarse la politica.
  *
  * TRAMPAS: `clock.install()` va ANTES de `goto` · los nombres de boton llevan
  * glifos delante («❚❚ Pausar»), asi que se buscan por regex y dentro de la sesion.
@@ -102,8 +103,8 @@ test('al ocultar la pagina la sesion se pausa, y al volver sigue en pausa', asyn
 });
 
 /* Abre una rutina de Estira por su id (los de Estira empiezan por `move.`) y
-   espera a que su reloj corra: «Pausar» solo sale con el reloj en marcha. Una
-   colocacion sin cuenta atras espera a «Estoy listo», y se pulsa. */
+   espera a que corra su reloj de TRABAJO. «Pausar» ya no sirve de señal: el mando
+   de tres lo lleva tambien al colocarse, y toda colocacion cuenta sola. */
 async function estiraEnMarcha(page, id) {
   await page.clock.install();
   await irAlArtefacto(page);
@@ -112,20 +113,15 @@ async function estiraEnMarcha(page, id) {
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);
-  let enMarcha = false;
-  for (let s = 0; s < 40 && !enMarcha; s++) {
-    enMarcha = await sesion.getByRole('button', { name: /Pausar/ }).count() > 0;
-    const listo = sesion.getByRole('button', { name: 'Estoy listo' });
-    if (!enMarcha && await listo.count() > 0) await listo.click();
-    if (!enMarcha) await segundos(page, 1);
-  }
-  expect(enMarcha, 'GUARD: el reloj de la rutina nunca arranco').toBe(true);
+  const reloj = sesion.locator('[data-pace-move-timer]');
+  for (let s = 0; s < 40 && !(await reloj.count()); s++) await segundos(page, 1);
+  expect(await reloj.count(), 'GUARD: el reloj de la rutina nunca arranco').toBe(1);
   await segundos(page, 2);
   return sesion;
 }
 
-for (const [runner, id] of [['v1', 'move.shoulders.5'], ['legacy', 'move.desk.quick']]) {
-  test(`Estira tambien se pausa al ocultar la pagina (runner ${runner})`, async ({ page }) => {
+for (const [forma, id] of [['contrato v1', 'move.shoulders.5'], ['venia del runner antiguo', 'move.desk.quick']]) {
+  test(`Estira tambien se pausa al ocultar la pagina (${forma})`, async ({ page }) => {
     const errores = capturarErrores(page);
     const sesion = await estiraEnMarcha(page, id);
     const reloj = sesion.locator('[data-pace-move-timer]');

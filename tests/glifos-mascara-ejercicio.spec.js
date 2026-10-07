@@ -188,8 +188,10 @@ test('el descanso entre series pinta la figura que respira, no las dos barras', 
   await page.getByRole('button', { name: 'Terminar antes' }).click();
   await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');
 
+  /* El aro del tiempo también es un SVG y vive en el mismo hueco: se mira el dibujo, no el aro. */
   const glifo = page.locator('[data-pace-v1-glyph]');
-  await expect(glifo.locator('svg'), 'sigue pintando el SVG de las dos barras').toHaveCount(0);
+  await expect(glifo.locator('svg:not(.pace-v1-aro)'), 'sigue pintando el SVG de las dos barras').toHaveCount(0);
+  await expect(glifo.locator('svg.pace-v1-aro'), 'el descanso no lleva su aro de tiempo').toHaveCount(1);
   const mascara = await glifo.evaluate(el => [...el.querySelectorAll('*')]
     .map(e => getComputedStyle(e).maskImage || getComputedStyle(e).webkitMaskImage || 'none')
     .find(m => m.indexOf('url(') === 0) || null);
