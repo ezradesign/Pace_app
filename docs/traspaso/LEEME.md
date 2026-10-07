@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, v0.143.4.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, v0.144.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -15,11 +15,34 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de o
 4. Las maquetas publicadas como artifacts (enlaces abajo) pertenecen a la cuenta anterior y puede que
    no se abran desde otra. Lo decidido en ellas está escrito aquí, así que no hace falta abrirlas.
 
-## Dónde lo dejamos (7 oct, 08:50 UTC)
+## Dónde lo dejamos (7 oct, por la tarde)
 
 Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coincidan. Ez alterna dos
 cuentas de Claude según el uso que le queda a cada una, y las dos suben a `main`: haz `git pull`
 antes de trabajar y mira en `git log` qué subió la otra.
+
+- **Runner de Mueve y Estira: hecho en v0.144.0.** Ez pidió «más dinámico, con menos botones,
+  alertas sonoras zen» y eligió la opción A, «Mando de tres»: anterior, pausa y siguiente en una
+  sola fila; toda colocación cuenta sola (ya no hay «Estoy listo»); «+15 s» junto a la cuenta; un
+  aro de tiempo alrededor del dibujo; cuencos al empezar cada ejercicio, al cambiar de lado y al
+  terminar, y maderas en los 3 últimos segundos de cada cuenta. Nada se mueve entre pantallas (su
+  queja a 1530×702, que es su 1080p al 125 %). Las rutinas propias van por el mismo runner. Reglas en
+  `DECISIONES_TECNICAS_VIGENTES.md` (las cuatro filas de v0.144.0). Falta que Ez oiga los cuencos en
+  su portátil y en el móvil.
+- **Escala con el zoom: siguiente.** Ez eligió la opción 2, «Lienzo que crece» (maqueta en
+  `archivos/runner-guiado/maqueta.html`, que trae también las opciones del runner). Hay que
+  prototiparla y medirla antes de montarla: un `zoom` CSS sin más hace la home tres veces más alta,
+  porque el motor de la home y las sesiones miden con la altura del viewport.
+- **Bugs sin verificar:** una búsqueda por el modo oscuro, el inglés y Respira con Hidrátate dejó 37
+  hallazgos con sus pasos en `CAZA_BUGS_7OCT.md` (4 de gravedad alta). Los verificadores no llegaron
+  a correr: reproduce cada uno antes de arreglarlo. Foco y el estado guardado no se revisaron.
+- **Glifos revisados:** de los 62 dibujos de ejercicio, seis no casan con su ejercicio (por ejemplo,
+  «Barbilla atrás» con la flecha al revés y «Elevación de puntas» que dibuja talones). Están en
+  `archivos/glifos/revision-glifos.html`, con un prompt para cada uno. El descanso entre series ya
+  lleva la figura que respira (alias de «Reset respiración»), así que de ese no hace falta dibujo.
+- **Hechos además en v0.144.0:** el Foco personalizado dura al menos 5 minutos; dentro del aro del
+  Pomodoro ya no va «A tu ritmo», solo «Hasta las…» (Ez quiere la hora); «Hombros reseteados» se
+  corrigió, y dos logros con título repetido son ahora «La rueda del año» y «Bisagra suelta».
 
 - **Home del móvil:** Ez eligió la opción 2. Se estaban maquetando versiones mejor colocadas; no hay
   nada subido. Ez elige entre ellas.
@@ -103,6 +126,11 @@ primera versión de pago, en web y Android.
   mareas de Balance de 10 y 12 s las sintetiza Claude exactas sobre un drone de Sol. Coherente 432
   nunca lleva música. El código que la carga es `app/ui/Sound.musica.jsx`.
 - Glifos nuevos: misma familia y estilo que los 59 dibujos existentes. Ez rechazó figuras vestidas.
+- Runner de Mueve y Estira: opción A, «Mando de tres» (7 oct.). Nada espera a un toque y la rutina se
+  sigue por el oído. La eligió frente a las manos libres (B) y a dejarlo como estaba, ordenado (C).
+- Escala con el zoom del navegador: opción 2, «Lienzo que crece» (7 oct.), con prototipo antes.
+- El Foco personalizado no baja de 5 minutos. Del rótulo del aro solo queda la hora («Hasta las…»).
+- Logros: ningún título se repite («La rueda del año», «Bisagra suelta»).
 
 ## Líneas abiertas y su siguiente paso
 
@@ -115,9 +143,10 @@ primera versión de pago, en web y Android.
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
-| Glifos | Faltan 3 de ejercicio (rana, pica en escritorio, descanso) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
+| Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
-| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Sin revisar: la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana) y el modo oscuro de las sesiones. |
+| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
+| Escala con el zoom | Ez eligió «Lienzo que crece» (opción 2). Un `zoom` CSS sin más rompe la home: la página se hace tres veces más alta. | Prototipo medido a 1530×702 (su 1080p al 125 %) y a 1920×1080 al 100 %, y enseñárselo antes de subirlo. Maqueta en `archivos/runner-guiado/maqueta.html`. |
 
 ## Lo que espera a Ez
 
