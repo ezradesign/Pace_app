@@ -12,12 +12,12 @@ const { useState: useStateFP, useEffect: useEffectFP, useRef: useRefFP } = React
 /* ===================== */
 /* MINUTES PICKER */
 /* ===================== */
-/* Presets 15/25/35/45 + "Otro" con input inline (1–180 min).
+/* Presets 15/25/35/45 + "Otro" con input inline (5–180 min).
    La pill "Otro" se expande a un input al hacer click. Al confirmar
    (Enter o blur) aplica el valor y colapsa. Si el value actual no es
    preset, la pill muestra el número en lugar de "Otro" (estado activo).
-   Rango 1–180 para cubrir desde pomodoros ultra-cortos hasta sesiones
-   deep-work sin volverse absurdo. */
+   Rango FOCO_MINIMO (5)–180: por debajo de 5, «A tu ritmo» no puede repartir el día, así
+   que un 1–4 escrito se queda en 5 en vez de descartarse. */
 function MinutesPicker({ value, onChange }) {
   const { t } = useT();
   const presets = [15, 25, 35, 45];
@@ -41,7 +41,7 @@ function MinutesPicker({ value, onChange }) {
   const commit = () => {
     const n = parseInt(draft, 10);
     if (Number.isFinite(n) && n >= 1 && n <= 180) {
-      onChange(n);
+      onChange(Math.max(FOCO_MINIMO, n));
     } else {
       setDraft(String(value)); // revert
     }
@@ -86,7 +86,7 @@ function MinutesPicker({ value, onChange }) {
         <input
           ref={inputRef}
           type="number"
-          min={1}
+          min={FOCO_MINIMO}
           max={180}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

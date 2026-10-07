@@ -50,7 +50,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
 
     // Focus
-    'focus.minutes.custom.title':      'Minutos personalizados (1–180)',
+    'focus.minutes.custom.title':      'Minutos personalizados (5–180)',
     'focus.cycle':                     'Ciclo',
     'focus.cycleOf':                   'Ciclo {n} / 4',
     'focus.cycleNext':                 'Siguiente · Ciclo {n} / 4',
@@ -229,7 +229,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.doneCopy':                   'Your body feels like yours again.',
 
     // Focus
-    'focus.minutes.custom.title':      'Custom minutes (1–180)',
+    'focus.minutes.custom.title':      'Custom minutes (5–180)',
     'focus.cycle':                     'Cycle',
     'focus.cycleOf':                   'Cycle {n} / 4',
     'focus.cycleNext':                 'Next · Cycle {n} / 4',
