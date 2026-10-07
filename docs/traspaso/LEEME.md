@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, 08:50 UTC, v0.143.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, 10:00 UTC, v0.144.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -21,8 +21,9 @@ Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coinc
 cuentas de Claude según el uso que le queda a cada una, y las dos suben a `main`: haz `git pull`
 antes de trabajar y mira en `git log` qué subió la otra.
 
-- **Home del móvil:** Ez eligió la opción 2. Se estaban maquetando versiones mejor colocadas; no hay
-  nada subido. Ez elige entre ellas.
+- **Home del móvil:** hecho en v0.144.0. De la opción 2, Ez eligió la maquetación B (imagen en
+  `archivos/home-movil/maquetaciones-de-la-2.png`): el horario de la pregunta dibujado como una línea
+  del día y «Hoy voy por libre» junto a la pregunta.
 - **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
   para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
   aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
@@ -93,6 +94,9 @@ primera versión de pago, en web y Android.
 - Home del móvil: por libre, el móvil lleva la tarjeta corta de «A tu ritmo» (v0.141.0): «A TU RITMO»,
   «¿Cuánto trabajas hoy?», la línea del día sin horas, «Tú eliges las horas» y la píldora «Comienza →»
   en estilo «papel tonal». El escritorio no cambia.
+- La pregunta del día en el móvil (v0.144.0, opción 2 y maquetación B): «Hoy voy por libre» como
+  enlace junto a la pregunta, el horario como una línea del día (horas encima; «Empiezas», «Comes» con
+  su interruptor y «Terminas» debajo) y las horas de la media jornada al elegirla. Sin pie.
 - Mueve y Estira se pausan al salir de su pantalla (lo vigila un test).
 - «Al calendario» en «A tu ritmo» (v0.140.0): calendario del móvil en Android (reuniones leídas en el
   dispositivo como «Ocupado», sin nombre), Google Calendar y Outlook en la web y un `.ics` en los dos.
@@ -107,7 +111,7 @@ primera versión de pago, en web y Android.
 
 | Línea | Dónde está | Siguiente paso |
 |---|---|---|
-| Home del móvil antes de contestar el día | Ez eligió «la 2, pero mejor maquetada»: una sola frase, «Hoy voy por libre» junto a la pregunta y las horas de media jornada al elegirla. Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. | Enseñar varias maquetaciones de la 2, que Ez elija, montarla con su prueba y subirla. Imagen de las opciones en `archivos/home-movil/`. |
+| Home del móvil antes de contestar el día | Hecho en v0.144.0: la maquetación B de la opción 2. Cabe sin scroll a 375×667 y 360×640; en inglés, a 360×640, quedan 12 px. | Nada. Las imágenes de las opciones están en `archivos/home-movil/`. |
 | Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow firma el AAB con la llave de subida, que está en los secretos desde el 7 oct. | Probar el APK en el Doogee (lista en `STATE.md`) y subir el AAB firmado (artefacto `pace-android-play`) a la prueba cerrada cuando Google apruebe la identidad de Ez. |
 | Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |

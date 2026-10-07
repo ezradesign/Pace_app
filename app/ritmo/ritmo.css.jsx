@@ -339,6 +339,57 @@
   .pace-rt-pie { margin-top: 8px; }
   .pace-rt-titulo { font-size: 17px; }
 }
+/* La fila del título de la pregunta en el móvil. Si no caben los dos (en inglés a 360 px),
+   el enlace baja a su propia línea, a la derecha. Su caja crece 14 px arriba y abajo para
+   el dedo sin mover nada: es la única salida de la pregunta. */
+.pace-rt-mov-cab { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: 12px; }
+.pace-rt-mov-cab .pace-rt-enlace { margin: -14px 0 -14px auto; padding: 14px 0; }
+
+/* LA LÍNEA DEL DÍA de la pregunta del móvil (RitmoDiaLinea, la maquetación B que eligió Ez).
+   Tres columnas (los extremos se reparten el ancho; el centro, lo que pidan la comida y su
+   duración) y tres filas: horas, línea y rótulos. Sin media query: también la usa la copia
+   compacta del panel estrecho de escritorio. */
+.pace-rt-preg .pace-rt-titulo { font-size: 20px; line-height: 23px; }
+.pace-rt-preg .pace-rt-mov-cab .pace-rt-enlace { padding: 16px 0 12px; margin: -16px 0 -12px auto; position: relative; z-index: 2; }
+.pace-rt-dia { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: 20px 14px 12px; row-gap: 3px; margin-top: 9px; }
+.pace-rt-dia > :nth-child(3n+2) { justify-content: center; }
+.pace-rt-dia > :nth-child(3n) { justify-content: flex-end; }
+.pace-rt-dia-h, .pace-rt-dia-via, .pace-rt-dia-r { display: flex; }
+.pace-rt-dia-h { align-items: baseline; }
+.pace-rt-dia-h:nth-child(2) { padding: 0 14px; }
+.pace-rt-dia-via { align-items: center; }
+.pace-rt-dia-r { font-family: var(--font-ui); font-size: 9px; line-height: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-3); white-space: nowrap; }
+.pace-rt-dia-pt { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--focus); background: var(--paper); }
+.pace-rt-dia-tramo { flex: 1 1 auto; display: flex; align-items: center; }
+.pace-rt-dia-seg { flex: 1 1 auto; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--focus) 24%, var(--paper-3)); margin: 0 4px; }
+.pace-rt-dia-tramo .pace-rt-dia-seg { margin: 0 3px; }
+.pace-rt-dia-pa { flex: 0 0 auto; width: 5px; height: 5px; border-radius: 50%; border: 1.5px solid var(--c); background: var(--paper); }
+.pace-rt-dia-comida { flex: 1 1 auto; height: 0; border-top: 2px dashed var(--line); margin: 0 2px; }
+.pace-rt-dia-pt, .pace-rt-dia-pa { box-sizing: content-box; }
+/* Las horas: el selector de la frase, en cursiva display y con la caja crecida para el
+   dedo sin mover nada. Los de los extremos bajan hasta su rótulo (tocar «EMPIEZAS» abre su
+   hora) y el del centro hasta la línea; van por encima para que el toque les llegue. */
+.pace-rt-dia-h .pace-rt-sel { position: relative; z-index: 1; font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 20px;
+  color: var(--ink); border: 0; padding: 2px 12px 10px 0; margin: -2px 0 -10px; background-position: right 1px top 10px; }
+.pace-rt-dia-h:nth-child(3n+1) .pace-rt-sel, .pace-rt-dia-h:nth-child(3n) .pace-rt-sel { padding-bottom: 32px; margin-bottom: -32px; }
+.pace-rt-dia-h [data-pace-ritmo-horario="comidaDur"] { font-size: 15px; color: var(--ink-2); }
+.pace-rt-dia-sep { font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 20px; color: var(--ink-3); margin: 0 6px 0 4px; }
+/* «COMES» y su interruptor son un solo botón; su caja crece 10 px arriba y abajo. */
+.pace-rt-dia-comes { display: inline-flex; align-items: center; gap: 8px; padding: 10px 8px !important; margin: -10px -8px; position: relative; z-index: 1;
+  text-transform: uppercase; letter-spacing: inherit; }
+.pace-rt-dia-comes .pace-rt-mini-int { margin: 0; vertical-align: 0; pointer-events: none; }
+.pace-rt-dia-comes:focus-visible { outline: none; }
+.pace-rt-dia-comes:focus-visible .pace-rt-mini-int { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-preg .pace-rt-chips { margin-top: 10px; }
+.pace-rt-preg .pace-rt-chip { padding: 6px 12px 7px !important; }
+.pace-rt-preg .pace-rt-chip b { line-height: 1.08; }
+.pace-rt-preg .pace-rt-chip > span { margin-top: 2px; line-height: 1.12; }
+/* El chip de la media jornada fuera de su hora: no es botón, son sus dos horas. Las cajas de
+   los selectores crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
+.pace-rt-chip.pace-rt-chip-horas { cursor: default; }
+.pace-rt-chip.pace-rt-chip-horas:hover { background: var(--paper) !important; border-color: var(--line) !important; }
+.pace-rt-chip-horas .pace-rt-sel { padding-top: 10px; margin-top: -10px; background-position: right 1px bottom 6px; }
 `;
   document.head.appendChild(s);
 })();

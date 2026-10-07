@@ -31,10 +31,11 @@ function RitmoContexto() {
 /* «Hoy voy por libre» es la ÚNICA salida del menú, y el usuario pidió que destacara más
    (s194). Variante E, elegida mirándola entre cinco: una píldora en verde —el lenguaje de
    los chips de contexto— que en escritorio vive en la CABECERA junto al contexto, no en la
-   fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. */
-function RitmoLibre() {
+   fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. En la pregunta
+   del móvil va como `enlace`, en la fila del título (ver RitmoPregunta). */
+function RitmoLibre({ enlace }) {
   const { t } = useT();
-  return <button className="pace-rt-porlibre" data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
+  return <button className={enlace ? 'pace-rt-enlace pace-rt-fuerte' : 'pace-rt-porlibre'} data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
 }
 
 /* El resumen del día («6 h 10 min de foco · 7 pausas · 8 vasos») con «Cambiar». s195: vive
@@ -52,13 +53,26 @@ function RitmoSobre({ m }) {
   );
 }
 
-function RitmoChips({ state }) {
+/* `editarMedia` (la pregunta del móvil): allí no está la frase de la media jornada, porque
+   sus horas se ponen al elegirla; pero pasada su hora el chip se apaga y no se podría
+   elegir para moverla a la tarde. Entonces el chip deja de ser botón y enseña sus dos horas
+   para cambiarlas en el sitio; en cuanto el tramo vuelve a caber en el día, es un chip más. */
+function RitmoChips({ state, editarMedia }) {
   const { t, tn } = useT();
+  const horas = editarMedia ? ritmoHuecos(ritmoDe(state).horario) : null;
   return (
     <div className="pace-rt-chips">
       {RITMO_OPCIONES_UI.map((op) => {
         const m = ritmoMenu(state, op, null, null);
         const vacia = !m || !m.focos.length;
+        if (horas && op === 'media' && vacia) {
+          return (
+            <div key={op} className="pace-rt-chip pace-rt-chip-horas" data-pace-ritmo-opcion={op} data-pace-ritmo-media-horas>
+              <b>{t('ritmo.opcion.media')}</b>
+              <span><RitmoFrase plantilla={t('ritmo.tramo')} huecos={{ a: horas.mediaInicio, b: horas.mediaSalida }} /></span>
+            </div>
+          );
+        }
         return (
           <button key={op} type="button" className="pace-rt-chip" data-pace-ritmo-opcion={op}
             disabled={vacia} onClick={() => ritmoElegir(op)}>
@@ -110,14 +124,50 @@ function RitmoPregunta({ state }) {
         </div>
         <RitmoChips state={state} />
       </div>
-      <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="pregunta">
-        <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
-        <div className="pace-rt-sub pace-rt-frase">{frase}</div>
-        <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>
-        <RitmoChips state={state} />
-        <div className="pace-rt-pie"><span /><RitmoLibre /></div>
+      {/* EN EL MÓVIL, SIN PIE Y CON EL HORARIO DIBUJADO (Ez eligió la opción 2 y, de sus tres
+          maquetaciones, la B): con el pie y las dos frases la home pedía 28 px de scroll a
+          375×667 y 46 a 360×640. «Hoy voy por libre» sube a la fila del título como enlace,
+          el horario es una línea del día (RitmoDiaLinea) y las horas de la media jornada se
+          ponen al elegirla (RitmoFraseMenu las edita). En escritorio no cambia nada. */}
+      <div className="pace-rt-panel pace-rt-mov pace-rt-preg" data-pace-ritmo-estado="pregunta">
+        <div className="pace-rt-mov-cab">
+          <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
+          <RitmoLibre enlace />
+        </div>
+        <RitmoDiaLinea horario={R.horario} />
+        <RitmoChips state={state} editarMedia />
       </div>
     </React.Fragment>
+  );
+}
+
+/* EL HORARIO COMO UNA LÍNEA DEL DÍA, en la pregunta del móvil: rima con el esquema de la
+   tarjeta por libre. Arriba las horas (los mismos selectores de la frase), en medio la
+   línea con sus dos extremos y la comida a trazos, y debajo los rótulos. Las pausas de la
+   línea son de muestra: el día de verdad se dibuja al elegir. Nueve celdas en una rejilla
+   de tres columnas, fila a fila. Sin comida, el tramo del centro es línea lisa. */
+function RitmoDiaLinea({ horario }) {
+  const { t } = useT();
+  const h = ritmoHuecos(horario);
+  const come = !horario.sinComida;
+  const pausa = (m) => <i className="pace-rt-dia-pa" style={{ '--c': RITMO_COLOR[m] }} />;
+  const tramo = (a, b) => (
+    <i className="pace-rt-dia-tramo">
+      <i className="pace-rt-dia-seg" />{pausa(a)}<i className="pace-rt-dia-seg" />{pausa(b)}<i className="pace-rt-dia-seg" />
+    </i>
+  );
+  return (
+    <div className="pace-rt-dia" data-pace-ritmo-dia>
+      <div className="pace-rt-dia-h">{h.inicio}</div>
+      <div className="pace-rt-dia-h">{come ? <React.Fragment>{h.comida}<span className="pace-rt-dia-sep" aria-hidden="true">·</span>{h.dur}</React.Fragment> : null}</div>
+      <div className="pace-rt-dia-h">{h.salida}</div>
+      <div className="pace-rt-dia-via" aria-hidden="true"><i className="pace-rt-dia-pt" />{tramo('estira', 'mueve')}</div>
+      <div className="pace-rt-dia-via" aria-hidden="true"><i className={come ? 'pace-rt-dia-comida' : 'pace-rt-dia-seg'} /></div>
+      <div className="pace-rt-dia-via" aria-hidden="true">{tramo('estira', 'respira')}<i className="pace-rt-dia-pt" /></div>
+      <div className="pace-rt-dia-r" aria-hidden="true">{t('ritmo.dia.empiezas')}</div>
+      <div className="pace-rt-dia-r"><RitmoInterruptorComida horario={horario} rotulo /></div>
+      <div className="pace-rt-dia-r" aria-hidden="true">{t('ritmo.dia.terminas')}</div>
+    </div>
   );
 }
 
@@ -279,6 +329,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

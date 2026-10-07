@@ -117,9 +117,22 @@ function RitmoSelector({ campo, horario }) {
 /* COMER O NO (s195b, variante 6C elegida mirándola): la palabra «comes» lleva
    pegado un mini interruptor de 22×12 en tinta. Apagado, la frase pierde el tramo
    de la comida (plantilla «.sin») y la regla no la sirve (`horario.sinComida`). */
-function RitmoInterruptorComida({ horario }) {
+function RitmoInterruptorComida({ horario, rotulo }) {
   const { t } = useT();
   const on = !horario.sinComida;
+  /* `rotulo`: en la línea del día del móvil (RitmoDiaLinea) la palabra va en versalita
+     pequeña y el interruptor solo era poco blanco para el dedo, así que palabra e
+     interruptor son UN botón. Sin aria-label: su nombre es la palabra que se ve, y quien
+     maneja el móvil con la voz dice «toca comes» (WCAG 2.5.3). */
+  if (rotulo) {
+    return (
+      <button type="button" role="switch" aria-checked={on}
+        className="pace-rt-dia-comes" data-pace-ritmo-comes onClick={() => ritmoHorario('sinComida', on ? 1 : 0)}>
+        {t(on ? 'ritmo.comes' : 'ritmo.nocomes')}
+        <i className={'pace-rt-mini-int' + (on ? ' pace-rt-on' : '')} aria-hidden="true" />
+      </button>
+    );
+  }
   return (
     <span className="pace-rt-comes">
       {t(on ? 'ritmo.comes' : 'ritmo.nocomes')}

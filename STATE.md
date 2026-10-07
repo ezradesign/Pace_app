@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.143.3 · 7 de octubre de 2026.
+**Versión:** v0.144.0 · 7 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -50,10 +50,6 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
-3. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
-   (detalle en `docs/traspaso/LEEME.md`). Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. Hay
-   trabajo a medias en la rama `claude/project-thread-ft7sc2`.
-
 ## Espera a Ez
 
 - Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
@@ -68,7 +64,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 ## Deuda conocida, sin fecha
 
 - Las cinco escenas con scroll anteriores a v0.130.0. Desde v0.141.0, por libre, el móvil lleva una
-  tarjeta corta y la home cabe a 360×718 y 375×667; aún pide 18 px a 360×640 y 74 a 320×568.
+  tarjeta corta y la home cabe a 360×718 y 375×667; aún pide 18 px a 360×640 y 74 a 320×568. Desde
+  v0.144.0 la pregunta del día dibuja el horario como una línea y cabe a 375×667 y 360×640; en
+  inglés, a 360×640, quedan 12 px.
 - En «A tu ritmo»: el miércoles sale con tres largas (2.ª, 5.ª y 8.ª), el modo oscuro del panel, el
   cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga semanas de datos.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
