@@ -124,7 +124,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.rounds.15.desc':           '15 sessions',
   'ach.item.master.atg.20.title':             'Knees of steel',
   'ach.item.master.atg.20.desc':              '20 ATG sessions',
-  'ach.item.master.hips.20.title':            'Hips set free',
+  'ach.item.master.hips.20.title':            'Loose hinge',
   'ach.item.master.hips.20.desc':             '20 hip sessions',
   'ach.item.master.shoulders.20.title':       'Shoulders set free',
   'ach.item.master.shoulders.20.desc':        '20 shoulder sessions',
@@ -218,6 +218,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.season.equinox.autumn.desc':      'September 22nd',
   'ach.item.season.four.title':               'Four seasons',
   'ach.item.season.four.desc':                'All four in one year',
-  'ach.item.season.cycle.title':              'Full cycle',
+  'ach.item.season.cycle.title':              'The wheel of the year',
   'ach.item.season.cycle.desc':               'One year plus the solstices',
 });

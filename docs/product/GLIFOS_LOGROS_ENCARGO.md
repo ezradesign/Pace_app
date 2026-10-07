@@ -113,7 +113,7 @@ elemento más**, no un dibujo distinto.
 | `master.box.15` | Caja maestra | 15 sesiones Box | carácter `▣` | El cuadrado de `explore.box` **con un segundo cuadrado inscrito**. |
 | ~~`master.rounds.15`~~ **ENTREGADO** | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. |
 | ~~`master.atg.20`~~ **ENTREGADO** | Rodillas de acero | 20 sesiones ATG | carácter `△` | La rodilla de `explore.atg` **con un remache o refuerzo** en el vértice. |
-| ~~`master.hips.20`~~ **ENTREGADO** | Caderas libres | 20 sesiones de caderas | carácter `◇` | **Una bisagra abierta de par en par**: dos placas y su eje. |
+| ~~`master.hips.20`~~ **ENTREGADO** | Bisagra suelta (antes «Caderas libres») | 20 sesiones de caderas | carácter `◇` | **Una bisagra abierta de par en par**: dos placas y su eje. |
 | `master.shoulders.20` | Hombros libres | 20 sesiones de hombros | carácter `⌢` | El yugo de `explore.shoulders` **partido o desatado**: se ha quitado el peso. |
 | ~~`master.ancestral.10`~~ **ENTREGADO** | Primitiva | 10 sesiones ancestrales | carácter `☖` | **Una lasca de sílex** o una punta de piedra tallada. |
 | ~~`master.hydrate.30`~~ **ENTREGADO** | Río constante | 30 días de 8 vasos | carácter `≈` | **Un río de tres ondas paralelas entre dos orillas.** |
