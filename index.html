@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.143.3</title>
+  <title>PACE · Foco · Cuerpo — v0.143.4</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1554,6 +1554,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'welcome.lede': 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin gamificación ni notificaciones abrumadoras.',
   'welcome.value.local.label': 'Todo local',
   'welcome.value.local.sub': 'en tu navegador',
+  'welcome.value.local.sub.android': 'en tu móvil',
   'welcome.value.accounts.label': 'Sin cuentas',
   'welcome.value.accounts.sub': 'sin registro',
   'welcome.value.free.label': 'Núcleo gratuito',
@@ -1701,6 +1702,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'welcome.lede': 'Micro-breaks for focus, breathing, mobility and hydration. No gamification, no overwhelming notifications.',
   'welcome.value.local.label': 'Fully local',
   'welcome.value.local.sub': 'in your browser',
+  'welcome.value.local.sub.android': 'on your phone',
   'welcome.value.accounts.label': 'No accounts',
   'welcome.value.accounts.sub': 'no sign-up',
   'welcome.value.free.label': 'Free core',
@@ -2354,7 +2356,10 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'move.steps': 'Pasos',
-  'move.prepCopy': 'De pie. Sin prisa. {n} pasos.',
+  'move.prepCopy.standing': 'De pie. Sin prisa. {n} pasos.',
+  'move.prepCopy.seated': 'En la silla. Sin prisa. {n} pasos.',
+  'move.prepCopy.floor': 'En el suelo. Sin prisa. {n} pasos.',
+  'move.prepCopy.any': 'Sin prisa. {n} pasos.',
   'move.next.prefix': 'Siguiente:',
   'move.finish': 'Terminar',
   'move.hint': '← → navegar · Espacio pausar · Esc salir',
@@ -2471,7 +2476,10 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'move.steps': 'Steps',
-  'move.prepCopy': 'Stand up. No rush. {n} steps.',
+  'move.prepCopy.standing': 'Stand up. No rush. {n} steps.',
+  'move.prepCopy.seated': 'In your chair. No rush. {n} steps.',
+  'move.prepCopy.floor': 'On the floor. No rush. {n} steps.',
+  'move.prepCopy.any': 'No rush. {n} steps.',
   'move.next.prefix': 'Next:',
   'move.finish': 'Finish',
   'move.hint': '← → navigate · Space pause · Esc exit',
@@ -5644,7 +5652,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.143.3';
+const PACE_VERSION = 'v0.143.4';
 
 
 
@@ -13480,8 +13488,20 @@ function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSk
 }
 
 
-Object.assign(window, { SessionPrep });
-;Object.assign(window, { SessionPrep });
+
+
+
+const PREP_SUELO = ['floor', 'supine', 'halfKneeling'];
+function sessionPrepCopy(routine, tn) {
+  const pos = Array.isArray(routine.position) ? routine.position : [];
+  const donde = pos.length && pos.every((p) => PREP_SUELO.indexOf(p) !== -1) ? 'floor' :
+  pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing') ? pos[0] :
+  'any';
+  return tn('move.prepCopy.' + donde, { n: routine.steps.length });
+}
+
+Object.assign(window, { SessionPrep, sessionPrepCopy });
+;Object.assign(window, { SessionPrep, sessionPrepCopy });
 })();
 </script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
@@ -23899,7 +23919,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
         accent: accent,
         accentSoft: accentSoft,
         prepCount: prepCount,
-        copy: tn('move.prepCopy', { n: routine.steps.length }),
+        copy: sessionPrepCopy(routine, tn),
         onSkip: () => {setPrepCount(0);setStage('active');sessionStart.current = Date.now();},
         atmosphere: atmo }
       ));
@@ -25242,7 +25262,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     return (
       React.createElement(SessionPrep, {
         routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft, prepCount: prepCount,
-        copy: tn('move.prepCopy', { n: routine.steps.length }),
+        copy: sessionPrepCopy(routine, tn),
         onSkip: () => {sessionStart.current = Date.now();setPrepCount(0);setStage('run');startStep(0);},
         atmosphere: atmo }
       ));
@@ -26920,10 +26940,11 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
       } })
     ),
 
-    React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'center' } },
-    React.createElement(Button, { variant: "secondary", onClick: () => addWaterGlass(-1), icon: "\u2212", size: "md" }, t('hydrate.less')),
+
+    React.createElement("div", { "data-pace-hidr-acciones": true, style: { display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' } },
+    React.createElement(Button, { variant: "secondary", onClick: () => addWaterGlass(-1), icon: "\u2212", size: "md", style: { whiteSpace: 'nowrap' } }, t('hydrate.less')),
     React.createElement(Button, { onClick: () => {addWaterGlass(1);try {playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip');} catch (e) {}}, icon: "+", size: "md",
-      style: { background: 'var(--hydrate)', borderColor: 'var(--hydrate)' } }, t('hydrate.more'))
+      style: { background: 'var(--hydrate)', borderColor: 'var(--hydrate)', whiteSpace: 'nowrap' } }, t('hydrate.more'))
     ),
 
     React.createElement(Divider, { style: { margin: '24px 0 16px' } }),
@@ -26933,6 +26954,23 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
     )
     ));
 
+}
+
+
+
+
+if (!document.getElementById('pace-hidr-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-hidr-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-hidr-acciones] > button {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
 }
 
 Object.assign(window, { HydrateTracker });
@@ -33563,6 +33601,8 @@ function Onboarding() {
   if (!open) return null;
 
   const conCaminos = window.SHOW_CAMINOS !== false;
+
+  const enAndroid = typeof paceEsAndroid === 'function' && paceEsAndroid();
   const questions = window.ONBOARDING_QUESTIONS || [];
   const isQuestion = step >= 1 && step <= questions.length;
   const q = isQuestion ? questions[step - 1] : null;
@@ -33679,7 +33719,7 @@ function Onboarding() {
         fontSize: 14, color: 'var(--ink)', lineHeight: 1.15, flexGrow: 1
       } }, t('welcome.value.' + k + '.label')),
     React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginTop: 3 } },
-    t('welcome.value.' + k + '.sub')
+    t('welcome.value.' + k + '.sub' + (k === 'local' && enAndroid ? '.android' : ''))
     )
     )
     )

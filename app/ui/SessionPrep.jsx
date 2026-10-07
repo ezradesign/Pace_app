@@ -21,7 +21,7 @@
      - accent         → color del número gigante (var CSS)
      - prepCount      → número a mostrar (3..0)
      - copy           → línea italic bajo el número
-                        ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
+                        ("Siéntate cómodo. Respira natural." / sessionPrepCopy)
      - onSkip         → callback del botón "Empezar ahora"
    ============================================================ */
 /* s174 PUSO AQUÍ EL ARTE DE LA RUTINA y s175 LO QUITA. Queda escrito porque la
@@ -92,5 +92,17 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosph
   );
 }
 
+/* La frase de Mueve y Estira dice dónde ponerse solo cuando la rutina tiene un único sitio:
+   «De pie» en una rutina de silla contradecía a su tarjeta, que dice «sentado». Con varias
+   posturas no se nombra ninguna, porque `position` lista las que usa la rutina y no por cuál
+   empieza (Caderas · 5 pone primero el suelo y arranca de pie). */
+const PREP_SUELO = ['floor', 'supine', 'halfKneeling'];
+function sessionPrepCopy(routine, tn) {
+  const pos = Array.isArray(routine.position) ? routine.position : [];
+  const donde = (pos.length && pos.every(p => PREP_SUELO.indexOf(p) !== -1)) ? 'floor'
+    : (pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing')) ? pos[0]
+    : 'any';
+  return tn('move.prepCopy.' + donde, { n: routine.steps.length });
+}
 
-Object.assign(window, { SessionPrep });
+Object.assign(window, { SessionPrep, sessionPrepCopy });
