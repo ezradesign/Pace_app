@@ -98,6 +98,22 @@ Object.assign(window.PACE_STRINGS.es, {
     'break.prop.ritmo.larga':        'A tu ritmo · pausa larga, respira y suelta',
     'break.prop.ritmo.cierre':       'A tu ritmo · para cerrar la jornada',
     'break.prop.ritmo.comida':       'A tu ritmo · hora de comer, lejos de la pantalla',
+    /* «¿Cómo es tu semana?»: la semana tipo (RitmoSemanaTipo.jsx). */
+    'ritmo.st.titulo':               '¿Cómo es tu semana?',
+    'ritmo.st.sub':                  'Así cada mañana tu día llega preparado. Si un día es distinto, lo cambias ese día.',
+    'ritmo.st.toca':                 'Toca un día para cambiarlo',
+    'ritmo.st.tipo.jornada':         'Jornada',
+    'ritmo.st.tipo.media':           'Media',
+    'ritmo.st.tipo.libre':           'Libre',
+    'ritmo.st.jornada':              '{nombre} de {inicio} a {salida}, comes a las {comida}',
+    'ritmo.st.jornada.sin':          '{nombre} de {inicio} a {salida}, sin parar a comer',
+    'ritmo.st.media':                '{nombre} de {mediaInicio} a {mediaSalida}',
+    'ritmo.st.libre':                '{nombre}, sin plan: PACE te deja en paz',
+    'ritmo.st.saltar':               'Cada semana es distinta',
+    'ritmo.st.guardar':              'Guardar mi semana',
+    'ritmo.st.aria':                 '{dia}, {tipo}',
+    'ritmo.st.ajustes':              'Tu semana',
+    'ritmo.dias':                    'lunes,martes,miércoles,jueves,viernes,sábado,domingo',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -187,4 +203,20 @@ Object.assign(window.PACE_STRINGS.en, {
     'break.prop.ritmo.larga':        'At your pace · long break, breathe and let go',
     'break.prop.ritmo.cierre':       'At your pace · to close the day',
     'break.prop.ritmo.comida':       'At your pace · lunchtime, away from the screen',
+    /* «What's your week like?»: the usual week (RitmoSemanaTipo.jsx). */
+    'ritmo.st.titulo':               "What's your week like?",
+    'ritmo.st.sub':                  'So each morning your day arrives ready. If a day is different, you change it that day.',
+    'ritmo.st.toca':                 'Tap a day to change it',
+    'ritmo.st.tipo.jornada':         'Full day',
+    'ritmo.st.tipo.media':           'Half day',
+    'ritmo.st.tipo.libre':           'Free',
+    'ritmo.st.jornada':              '{nombre} from {inicio} to {salida}, lunch at {comida}',
+    'ritmo.st.jornada.sin':          '{nombre} from {inicio} to {salida}, no lunch break',
+    'ritmo.st.media':                '{nombre} from {mediaInicio} to {mediaSalida}',
+    'ritmo.st.libre':                '{nombre}, no plan: PACE leaves you be',
+    'ritmo.st.saltar':               'Every week is different',
+    'ritmo.st.guardar':              'Save my week',
+    'ritmo.st.aria':                 '{dia}, {tipo}',
+    'ritmo.st.ajustes':              'Your week',
+    'ritmo.dias':                    'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
 });
