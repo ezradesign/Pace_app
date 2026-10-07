@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.143.1 · 7 de octubre de 2026.
+**Versión:** v0.143.2 · 7 de octubre de 2026.
 
 ## Dónde estamos
 

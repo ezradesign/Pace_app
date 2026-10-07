@@ -116,7 +116,7 @@ primera versión de pago, en web y Android.
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
 | Glifos | Faltan 3 de ejercicio (rana, pica en escritorio, descanso) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). | Maqueta con opciones para Ez. |
-| Caza de bugs | Con la lista de Ez. Ya conocido: el logro «Primera calistenia» dice «Tu primer ejercicio Extra» en Logros («Extra» es nombre interno). | Reproducir, arreglar y subir cada uno. |
+| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. | Revisar la app a 360 px y 1280 px y arreglar la lista de Ez. |
 
 ## Lo que espera a Ez
 

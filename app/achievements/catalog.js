@@ -22,9 +22,9 @@ const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
   { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
   { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼', glyphSvg: GLYPH_SVG['first.breath'] },
-  { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera movilidad', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
+  { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera rutina de Estira', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
   { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌', glyphSvg: GLYPH_SVG['first.sip'] },
-  { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
+  { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primera rutina de Mueve', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
   { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
   { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
   { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: 'Un día con dos actividades distintas', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
@@ -51,7 +51,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'focus.hours.100', cat: 'constancia', title: '100 horas de foco', desc: 'Tiempo acumulado', glyph: 'C', glyphSvg: GLYPH_SVG['focus.hours.100'] },
   { id: 'breathe.sessions.10', cat: 'constancia', title: '10 respiraciones', desc: 'Sesiones acumuladas', glyph: '~', glyphSvg: GLYPH_SVG['breathe.sessions.10'] },
   { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋', glyphSvg: GLYPH_SVG['breathe.sessions.50'] },
-  { id: 'move.sessions.25', cat: 'constancia', title: '25 movilidades', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
+  { id: 'move.sessions.25', cat: 'constancia', title: '25 rutinas de Mueve', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
   { id: 'hydrate.week.perfect', cat: 'constancia', title: 'Semana hidratada', desc: '8 vasos / 7 días', glyph: '◌' },
   { id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
   { id: 'stats.month.focus', cat: 'constancia', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
@@ -75,7 +75,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Tres sesiones sin levantarse', glyph: '⊡' },
   { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
   { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
-  { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
+  { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todas las rutinas de Mueve', glyph: '⚔' },
 
   // Maestría (46-64) — s168: solo PROFUNDIDAD en una practica. Los siete de
   // hora del dia y carga de jornada se fueron a «la jornada».
@@ -90,7 +90,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.ancestral.10', cat: 'maestria', title: 'Primitiva', desc: '10 sesiones ancestrales', glyph: '☖' },
   { id: 'master.hydrate.30', cat: 'maestria', title: 'Río constante', desc: '30 días 8 vasos', glyph: '≈' },
   { id: 'master.hydrate.90', cat: 'maestria', title: 'Manantial', desc: '90 días 8 vasos', glyph: '∿' },
-  { id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todos los Extra en 1 semana', glyph: '✧' },
+  { id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todas las rutinas de Mueve en una semana', glyph: '✧' },
   { id: 'master.marathon', cat: 'maestria', title: 'Maratoniana', desc: '2000 min totales', glyph: 'ℳ', glyphSvg: GLYPH_SVG['master.marathon'] },
   { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
   { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
