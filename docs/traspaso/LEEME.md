@@ -23,12 +23,13 @@ antes de trabajar y mira en `git log` qué subió la otra.
 
 - **Home del móvil:** Ez eligió la opción 2. Se estaban maquetando versiones mejor colocadas; no hay
   nada subido. Ez elige entre ellas.
-- **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
-  para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
-  aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
-  exhalar). Ez estaba eligiendo en una página de escucha. Siguiente paso: el cambio de código,
-  enseñado a Ez antes de subirlo. Los tres drones están en `archivos/musica-respira/bases/`, con la
-  página de escucha (`escucha-respira.html`), los scripts de procesado y su `README.md`.
+- **Música de Respira:** hecha en v0.144.0, en la rama `claude/project-thread-9eceyu` hasta que Ez
+  dé el sí para `main`. Tres drones en Sol hechos con las tomas de ElevenLabs de Ez (Sol claro para
+  Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación) y una
+  envolvente que respira en vivo: se abre al inhalar, se queda en el sostén y se cierra al exhalar.
+  Si Ez elige otro reparto en la página de escucha, se cambia la tabla `PACE_MUSICA` de
+  `app/ui/Sound.musica.jsx`. Las bases, la página (`escucha-respira.html`) y los scripts siguen en
+  `archivos/musica-respira/`.
 - **Glifos:** cuatro prompts de ejercicio con figuras sin ropa, de la familia de los 59. El prompt A es
   solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
   bloquea. Falta comprobar qué modelo de Genspark acepta la figura. Empezar por «descanso». Prompts en
@@ -96,11 +97,10 @@ primera versión de pago, en web y Android.
 - Mueve y Estira se pausan al salir de su pantalla (lo vigila un test).
 - «Al calendario» en «A tu ritmo» (v0.140.0): calendario del móvil en Android (reuniones leídas en el
   dispositivo como «Ocupado», sin nombre), Google Calendar y Outlook en la web y un `.ics` en los dos.
-- Música de Respira: seis pistas, una por familia (energía, equilibrio, balance-10, balance-12,
-  relajación, pranayama), con una firma sonora común, en Sol. Sin percusión, banda 200 Hz–2 kHz,
-  volumen plano, en bucle. Solo valen las generadas con ElevenLabs pidiendo la tonalidad de Sol. Las
-  mareas de Balance de 10 y 12 s las sintetiza Claude exactas sobre un drone de Sol. Coherente 432
-  nunca lleva música. El código que la carga es `app/ui/Sound.musica.jsx`.
+- Música de Respira: «mixto» (Ez, 6 oct.). Tres drones en Sol a 432, y la música respira en vivo
+  con cada ejercicio de ritmo fijo; quieta en Rondas, Bhastrika y Kapalabhati. Sin percusión, banda
+  200 Hz–2 kHz, volumen plano, en bucle. Solo valen las tomas de ElevenLabs pedidas en Sol. Coherente
+  432 nunca lleva música. El código es `app/ui/Sound.musica.jsx`.
 - Glifos nuevos: misma familia y estilo que los 59 dibujos existentes. Ez rechazó figuras vestidas.
 
 ## Líneas abiertas y su siguiente paso
@@ -113,7 +113,7 @@ primera versión de pago, en web y Android.
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
-| Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
+| Música de Respira | v0.144.0 en la rama `claude/project-thread-9eceyu`: tres drones en Sol y la envolvente que respira en vivo (Ez eligió «mixto»). Verify y las 375 pruebas en verde. | Que Ez la escuche y dé el sí para `main`. Con tomas nuevas de pranayama: `scripts/procesar.py` de `archivos/musica-respira/` (432, mono 64 kbps, bucle sin costura, -20 dBFS de RMS) y una entrada en `PACE_MUSICA_BASES`. |
 | Glifos | Faltan 3 de ejercicio (rana, pica en escritorio, descanso) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). | Maqueta con opciones para Ez. |
 | Caza de bugs | Con la lista de Ez. Ya conocido: el logro «Primera calistenia» dice «Tu primer ejercicio Extra» en Logros («Extra» es nombre interno). | Reproducir, arreglar y subir cada uno. |

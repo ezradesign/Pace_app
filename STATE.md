@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.143.1 · 7 de octubre de 2026.
+**Versión:** v0.144.0 · 7 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -34,6 +34,11 @@ Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
 
+Respira tiene música de fondo propia: tres drones en Sol a 432 hechos con las tomas de ElevenLabs de
+Ez (`app/breathe/musica/`), repartidos por familia en `PACE_MUSICA` (`app/ui/Sound.musica.jsx`). En
+los ejercicios de ritmo fijo la música respira contigo: se abre al inhalar, se queda en el sostén y
+se cierra al exhalar. Con ciclos de 4 s o menos se queda quieta, y Coherente 432 sigue con su drone.
+
 Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
@@ -64,6 +69,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 - Play Console: la cuenta está creada y Google revisa la identidad de Ez. Después, reunir 12 testers
   con Android.
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión).
+- Escuchar la música de Respira en el móvil y, si quiere otro reparto, elegirlo en la página de
+  escucha. Faltan 2 o 3 tomas de pranayama con tanpura (ElevenLabs, en Sol).
 
 ## Deuda conocida, sin fecha
 
