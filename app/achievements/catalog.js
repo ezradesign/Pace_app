@@ -68,7 +68,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.kapalabhati', cat: 'exploracion', title: 'Kapalabhati', desc: 'Tres sesiones del kriya', glyph: '✦' },
   { id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Tres suspiros fisiológicos', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
   { id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: 'Tres sesiones de caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
-  { id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: 'Tres sesiones de hombros', glyph: '⌢' },
+  { id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros reseteados', desc: 'Tres sesiones de hombros', glyph: '⌢' },
   { id: 'explore.atg', cat: 'exploracion', title: 'ATG asentado', desc: 'Tres sesiones en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
   { id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Tres sesiones ancestrales', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
   { id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: 'Tres sesiones de cuello', glyph: '~' },
