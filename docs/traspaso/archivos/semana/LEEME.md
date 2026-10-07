@@ -22,8 +22,8 @@ iniciales. Pidió algo útil, premium y nada lioso.
    tarjeta: qué te ayudó (de los «¿te ayudó?»), la semana en cinco barritas y uno o dos cambios,
    con «Vale» o «Dejarla como estaba». Los números son de ejemplo.
 
-Pregunta abierta a Ez: ¿el día ya contestado cada mañana es para todos (recomendado) o solo
-premium? No se ha tocado código.
+Ez eligió el 7 de octubre de 2026 que el día ya contestado sea para todos, y con eso aceptó la
+ronda 2 tal como está.
 
 ## Ronda 1 (descartada en parte)
 
