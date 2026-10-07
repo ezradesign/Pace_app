@@ -85,7 +85,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.coherent.15', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
   { id: 'master.rounds.15', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
   { id: 'master.atg.20', cat: 'maestria', title: 'Rodillas de acero', desc: '20 sesiones ATG', glyph: '△' },
-  { id: 'master.hips.20', cat: 'maestria', title: 'Caderas libres', desc: '20 sesiones caderas', glyph: '◇' },
+  { id: 'master.hips.20', cat: 'maestria', title: 'Bisagra suelta', desc: '20 sesiones caderas', glyph: '◇' },
   { id: 'master.shoulders.20', cat: 'maestria', title: 'Hombros libres', desc: '20 sesiones hombros', glyph: '⌢' },
   { id: 'master.ancestral.10', cat: 'maestria', title: 'Primitiva', desc: '10 sesiones ancestrales', glyph: '☖' },
   { id: 'master.hydrate.30', cat: 'maestria', title: 'Río constante', desc: '30 días 8 vasos', glyph: '≈' },
@@ -161,7 +161,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'season.equinox.spring', cat: 'estacionales', title: 'Equinoccio primavera', desc: '20 marzo', glyph: '⚖' },
   { id: 'season.equinox.autumn', cat: 'estacionales', title: 'Equinoccio otoño', desc: '22 septiembre', glyph: '⚖' },
   { id: 'season.four', cat: 'estacionales', title: 'Cuatro estaciones', desc: 'Las 4 en un año', glyph: '❀☀❦❄' },
-  { id: 'season.cycle', cat: 'estacionales', title: 'Ciclo completo', desc: '1 año + solsticios', glyph: '◉' },
+  { id: 'season.cycle', cat: 'estacionales', title: 'La rueda del año', desc: '1 año + solsticios', glyph: '◉' },
 ];
 
 const CAT_META = {

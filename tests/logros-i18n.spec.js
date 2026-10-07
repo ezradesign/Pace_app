@@ -305,3 +305,26 @@ test('un secreto ganado sale en la sidebar con su nombre, no como «?»', async 
 
   expect(errores).toEqual([]);
 });
+
+/* Dos logros no se llaman igual, en ningún idioma. «Ciclo completo» era a la vez el de un
+   Pomodoro con su pausa y el de un año con sus solsticios, y «Caderas libres» el de tres y el de
+   veinte sesiones; en la colección se leían como repetidos. */
+test('ningún título de logro se repite, ni en castellano ni en inglés', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  const repetidos = await page.evaluate(() => {
+    const out = [];
+    const en = window.PACE_STRINGS.en || {};
+    const vistos = { es: {}, en: {} };
+    window.ACHIEVEMENT_CATALOG.forEach(a => {
+      const titulos = { es: a.title, en: en['ach.item.' + a.id + '.title'] || a.title };
+      Object.keys(titulos).forEach(l => {
+        const t = titulos[l];
+        if (vistos[l][t]) out.push(l + ': «' + t + '» en ' + vistos[l][t] + ' y ' + a.id);
+        vistos[l][t] = a.id;
+      });
+    });
+    return out;
+  });
+  expect(repetidos).toEqual([]);
+});
