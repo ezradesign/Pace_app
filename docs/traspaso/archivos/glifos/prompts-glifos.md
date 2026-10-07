@@ -163,7 +163,7 @@ Vintage engraving illustration of a cross-section slice of a small tree trunk se
 Vintage engraving illustration of a single short bright flame rising from a small heap of glowing embers, with three small sparks flying upward. Copperplate engraving, hand-engraved seal style, black ink crosshatching on pure white background, single centered object, generous margin, bold readable silhouette at small size, no text, no numbers, no frame, no color.
 ```
 
-### `explore.shoulders.png` — Hombros resetados (3 sesiones de hombros)
+### `explore.shoulders.png` — Hombros reseteados (3 sesiones de hombros)
 
 ```
 Vintage engraving illustration of a traditional wooden carrying yoke, seen from the front and shown alone as a single object: one long, gently curved carved beam with a smooth rounded hollow in the middle of its underside and a small empty iron hook at each end. Copperplate engraving, hand-engraved seal style, black ink crosshatching on pure white background, single centered object, generous margin, bold readable silhouette at small size, no text, no numbers, no frame, no color.
