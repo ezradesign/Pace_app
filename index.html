@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.143.1</title>
+  <title>PACE · Foco · Cuerpo — v0.143.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4530,11 +4530,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.first.breath.title': 'First breath',
   'ach.item.first.breath.desc': 'Your first breathing session',
   'ach.item.first.stretch.title': 'First stretch',
-  'ach.item.first.stretch.desc': 'Your first mobility session',
+  'ach.item.first.stretch.desc': 'Your first Stretch routine',
   'ach.item.first.sip.title': 'First sip',
   'ach.item.first.sip.desc': 'Your first glass of water',
   'ach.item.first.extra.title': 'First calisthenics',
-  'ach.item.first.extra.desc': 'Your first Extra exercise',
+  'ach.item.first.extra.desc': 'Your first Move routine',
   'ach.item.first.cycle.title': 'Full cycle',
   'ach.item.first.cycle.desc': 'One Pomodoro plus an active break',
   'ach.item.first.ritual.title': 'First ritual',
@@ -4571,7 +4571,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.breathe.sessions.10.desc': 'Accumulated sessions',
   'ach.item.breathe.sessions.50.title': '50 breathing sessions',
   'ach.item.breathe.sessions.50.desc': 'Accumulated sessions',
-  'ach.item.move.sessions.25.title': '25 mobility sessions',
+  'ach.item.move.sessions.25.title': '25 Move routines',
   'ach.item.move.sessions.25.desc': 'Accumulated sessions',
   'ach.item.hydrate.week.perfect.title': 'A hydrated week',
   'ach.item.hydrate.week.perfect.desc': '8 glasses / 7 days',
@@ -4618,7 +4618,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.explore.all.move.title': 'Field body',
   'ach.item.explore.all.move.desc': 'Every mobility routine',
   'ach.item.explore.all.extra.title': 'Strong at the desk',
-  'ach.item.explore.all.extra.desc': 'Every Extra routine',
+  'ach.item.explore.all.extra.desc': 'Every Move routine',
 
 
   'ach.item.master.pomodoro.12.title': 'Twelve deep',
@@ -4644,7 +4644,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.hydrate.90.title': 'The spring',
   'ach.item.master.hydrate.90.desc': '90 days at 8 glasses',
   'ach.item.master.extra.all.week.title': 'A strong week',
-  'ach.item.master.extra.all.week.desc': 'Every Extra in one week',
+  'ach.item.master.extra.all.week.desc': 'Every Move routine in one week',
   'ach.item.master.marathon.title': 'The marathon',
   'ach.item.master.marathon.desc': '2000 minutes in total',
   'ach.item.master.centurion.title': 'Centurion',
@@ -5644,7 +5644,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.143.1';
+const PACE_VERSION = 'v0.143.2';
 
 
 
@@ -6277,8 +6277,8 @@ const LOGRO_MODULO = {
   'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
   'explore.bhastrika', 'explore.nadi', 'explore.ujjayi', 'explore.kapalabhati',
   'explore.physiological', 'explore.all.breathe', 'secret.rain', 'secret.zen'],
-  move: ['first.stretch', 'move.sessions.25', 'explore.all.extra'],
-  extra: ['first.extra', 'explore.hips', 'explore.shoulders', 'explore.atg',
+  move: ['first.extra', 'move.sessions.25', 'explore.all.extra'],
+  extra: ['first.stretch', 'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk', 'explore.all.move',
   'master.atg.20', 'master.hips.20', 'master.shoulders.20',
   'master.ancestral.10', 'master.antidote'],
@@ -6426,7 +6426,33 @@ function checkMaestriasDeVolumen() {
 }
 
 
+
+
+
+
+
+
+const CRUCE_PRIMEROS = { 'first.stretch': 'first.extra', 'first.extra': 'first.stretch' };
+
+function cruzarPrimerosLogros() {
+  const s = getState();
+  if (s.logrosPrimerosCruzados) return;
+  const antes = s.achievements || {};
+  if (!antes['first.stretch'] && !antes['first.extra']) return;
+  const next = { ...antes };
+  for (const [viejo, nuevo] of Object.entries(CRUCE_PRIMEROS)) {
+    if (antes[viejo]) next[nuevo] = antes[viejo];else delete next[nuevo];
+  }
+  setState({
+    achievements: next,
+    achievementQueue: (s.achievementQueue || []).map((id) => CRUCE_PRIMEROS[id] || id),
+    logrosPrimerosCruzados: true
+  });
+}
+
+
 migrarIdsDeLogro();
+cruzarPrimerosLogros();
 
 Object.assign(window, {
   LOGRO_RENOMBRADO, migrarIdsDeLogro,
@@ -6436,7 +6462,7 @@ Object.assign(window, {
   checkExploreCompleto, checkFechasSenaladas, checkSecretosDeHora, checkZen,
   checkMaestriasDeVolumen
 });
-;Object.assign(window, { migrarIdsDeLogro, bumpCount, getCount, contarHoy, encajaEnSesion, contarRutina, minutosDeVida, checkExploreCompleto, checkFechasSenaladas, checkSecretosDeHora, checkZen, checkMaestriasDeVolumen });
+;Object.assign(window, { migrarIdsDeLogro, bumpCount, getCount, contarHoy, encajaEnSesion, contarRutina, minutosDeVida, checkExploreCompleto, checkFechasSenaladas, checkSecretosDeHora, checkZen, checkMaestriasDeVolumen, cruzarPrimerosLogros });
 })();
 </script>
   <script>
@@ -6851,7 +6877,9 @@ function unlockAchievement(id, note) {
   if (s.achievements[id]) return false;
   setState({
     achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } },
-    achievementQueue: [...(s.achievementQueue || []), id]
+    achievementQueue: [...(s.achievementQueue || []), id],
+
+    ...(id === 'first.stretch' || id === 'first.extra' ? { logrosPrimerosCruzados: true } : {})
   });
   checkCollectorAchievements();
   return true;
@@ -7008,7 +7036,7 @@ function completeMoveSession(routineId, durationMin, evento) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
     moveSessionsTotal: (s.moveSessionsTotal || 0) + 1
   });
-  unlockAchievement('first.stretch');
+  unlockAchievement('first.extra');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   contarRutina(routineId);
   checkPlanAchievements();
@@ -7033,7 +7061,7 @@ function completeExtraSession(routineId, durationMin, evento) {
     plan: { ...s.plan, extra: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week }
   });
-  unlockAchievement('first.extra');
+  unlockAchievement('first.stretch');
   contarRutina(routineId);
   checkPlanAchievements();
   checkTimeOfDayAchievements();
@@ -27674,9 +27702,9 @@ const ACHIEVEMENT_CATALOG = [
 
 { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
 { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼', glyphSvg: GLYPH_SVG['first.breath'] },
-{ id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera movilidad', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
+{ id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera rutina de Estira', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
 { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌', glyphSvg: GLYPH_SVG['first.sip'] },
-{ id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
+{ id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primera rutina de Mueve', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
 { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
 { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
 { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: 'Un día con dos actividades distintas', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
@@ -27703,7 +27731,7 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'focus.hours.100', cat: 'constancia', title: '100 horas de foco', desc: 'Tiempo acumulado', glyph: 'C', glyphSvg: GLYPH_SVG['focus.hours.100'] },
 { id: 'breathe.sessions.10', cat: 'constancia', title: '10 respiraciones', desc: 'Sesiones acumuladas', glyph: '~', glyphSvg: GLYPH_SVG['breathe.sessions.10'] },
 { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋', glyphSvg: GLYPH_SVG['breathe.sessions.50'] },
-{ id: 'move.sessions.25', cat: 'constancia', title: '25 movilidades', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
+{ id: 'move.sessions.25', cat: 'constancia', title: '25 rutinas de Mueve', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
 { id: 'hydrate.week.perfect', cat: 'constancia', title: 'Semana hidratada', desc: '8 vasos / 7 días', glyph: '◌' },
 { id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
 { id: 'stats.month.focus', cat: 'constancia', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
@@ -27727,7 +27755,7 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Tres sesiones sin levantarse', glyph: '⊡' },
 { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
 { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
-{ id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
+{ id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todas las rutinas de Mueve', glyph: '⚔' },
 
 
 
@@ -27742,7 +27770,7 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'master.ancestral.10', cat: 'maestria', title: 'Primitiva', desc: '10 sesiones ancestrales', glyph: '☖' },
 { id: 'master.hydrate.30', cat: 'maestria', title: 'Río constante', desc: '30 días 8 vasos', glyph: '≈' },
 { id: 'master.hydrate.90', cat: 'maestria', title: 'Manantial', desc: '90 días 8 vasos', glyph: '∿' },
-{ id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todos los Extra en 1 semana', glyph: '✧' },
+{ id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todas las rutinas de Mueve en una semana', glyph: '✧' },
 { id: 'master.marathon', cat: 'maestria', title: 'Maratoniana', desc: '2000 min totales', glyph: 'ℳ', glyphSvg: GLYPH_SVG['master.marathon'] },
 { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
 { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
