@@ -24,6 +24,10 @@ const PACE_VERSION = 'v0.143.4';
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
 const TOAST_DURATION_MS = 3000;
 
+/* El Foco dura al menos 5 minutos: con bloques más cortos «A tu ritmo» no puede repartir un día
+   (decisión de Ez). Lo usan el selector «Otro» y la carga, que sube a 5 un valor viejo menor. */
+const FOCO_MINIMO = 5;
+
 const defaultState = {
   // Settings / Tweaks
   palette: 'crema',
@@ -292,6 +296,7 @@ function loadState() {
        oscuro por el sistema no cuenta como un dia elegido a mano (el guard
        explicito vive en TweakSecretsWatcher.jsx). */
     if (parsed.paletteAuto === true) parsed.palette = detectInitialPalette();
+    if (typeof parsed.focusMinutes === 'number' && parsed.focusMinutes < FOCO_MINIMO) parsed.focusMinutes = FOCO_MINIMO;
 
     /* Migracion defensiva s49: paths ausente en instalaciones pre-v0.26. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
@@ -461,6 +466,6 @@ applyTheme(_state);
 /* `detectInitialPalette` ya no se re-exporta aquí: vive y se publica en
    `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
 Object.assign(window, {
-  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
+  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, FOCO_MINIMO, defaultState,
   getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState,
 });

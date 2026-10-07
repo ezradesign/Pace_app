@@ -1893,7 +1893,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.doneCopy': 'El cuerpo vuelve a sentirse tuyo.',
 
 
-  'focus.minutes.custom.title': 'Minutos personalizados (1–180)',
+  'focus.minutes.custom.title': 'Minutos personalizados (5–180)',
   'focus.cycle': 'Ciclo',
   'focus.cycleOf': 'Ciclo {n} / 4',
   'focus.cycleNext': 'Siguiente · Ciclo {n} / 4',
@@ -2072,7 +2072,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.doneCopy': 'Your body feels like yours again.',
 
 
-  'focus.minutes.custom.title': 'Custom minutes (1–180)',
+  'focus.minutes.custom.title': 'Custom minutes (5–180)',
   'focus.cycle': 'Cycle',
   'focus.cycleOf': 'Cycle {n} / 4',
   'focus.cycleNext': 'Next · Cycle {n} / 4',
@@ -5658,6 +5658,10 @@ const PACE_VERSION = 'v0.143.4';
 
 const TOAST_DURATION_MS = 3000;
 
+
+
+const FOCO_MINIMO = 5;
+
 const defaultState = {
 
   palette: 'crema',
@@ -5926,6 +5930,7 @@ function loadState() {
 
 
     if (parsed.paletteAuto === true) parsed.palette = detectInitialPalette();
+    if (typeof parsed.focusMinutes === 'number' && parsed.focusMinutes < FOCO_MINIMO) parsed.focusMinutes = FOCO_MINIMO;
 
 
     if (!parsed.paths) parsed.paths = defaultState.paths;
@@ -6095,7 +6100,7 @@ applyTheme(_state);
 
 
 Object.assign(window, {
-  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
+  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, FOCO_MINIMO, defaultState,
   getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState
 });
 ;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, usePace, ensureDayFresh });
@@ -16326,7 +16331,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
   const commit = () => {
     const n = parseInt(draft, 10);
     if (Number.isFinite(n) && n >= 1 && n <= 180) {
-      onChange(n);
+      onChange(Math.max(FOCO_MINIMO, n));
     } else {
       setDraft(String(value));
     }
@@ -16371,7 +16376,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     React.createElement("input", {
       ref: inputRef,
       type: "number",
-      min: 1,
+      min: FOCO_MINIMO,
       max: 180,
       value: draft,
       onChange: (e) => setDraft(e.target.value),
@@ -19177,7 +19182,11 @@ var VISUAL_ALIAS = {
   'Apertura de pecho sentado': 'Apertura de pecho',
   'Sentadilla profunda sostenida': 'Sentadilla profunda',
   'Respiraciones profundas': 'Reset respiración',
-  'Suspensión pasiva · opcional': 'Suspensión pasiva'
+  'Suspensión pasiva · opcional': 'Suspensión pasiva',
+
+
+
+  'Descanso': 'Reset respiración'
 };
 
 
