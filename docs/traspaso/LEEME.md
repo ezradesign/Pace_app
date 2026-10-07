@@ -39,11 +39,13 @@ antes de trabajar y mira en `git log` qué subió la otra.
   el dominio nuevo, y el calendario aún reconoce sus eventos con la marca vieja. La privacidad lleva
   el correo de contacto `hola.ezradesign@gmail.com`, que desde v0.143.1 se lee también sin
   JavaScript (Cloudflare lo escondía).
-- **«A tu ritmo» semanal (lo de pago), segunda ronda:** «¿Cómo es tu semana?» en la bienvenida
-  (gratis); cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis); una
-  carta corta el lunes con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
-  «Vale» (premium); nada de tira semanal en la home. La maqueta estará en `archivos/semana/` si el
-  hilo de la maqueta llegó a subirla. Nada de código hasta que Ez elija.
+- **«A tu ritmo» semanal (lo de pago): elegido el 7 de octubre.** Ez aceptó la segunda ronda y
+  eligió que el día ya contestado sea **para todos**: «¿Cómo es tu semana?» en la bienvenida
+  (gratis), cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis), y el
+  lunes una carta corta con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
+  «Vale» (premium). Nada de tira semanal en la home. La maqueta está en `archivos/semana/`. Lo está
+  montando el hilo «Maqueta de «A tu ritmo» semanal» de la cuenta de Claude del proyecto «Pace App»:
+  primero las dos partes gratis y luego la carta. Mira `git log` antes de tocarlo.
 - **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
   están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
   secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` (artefacto
@@ -115,7 +117,7 @@ primera versión de pago, en web y Android.
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
 | Glifos | Faltan 3 de ejercicio (rana, pica en escritorio, descanso) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
-| «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). | Maqueta con opciones para Ez. |
+| «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones. | Arreglar la lista de Ez. |
 
 ## Lo que espera a Ez
