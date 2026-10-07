@@ -59,6 +59,15 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
       && typeof p.porque === 'string' && p.porque.indexOf('ritmo.') === 0);
     onChoose(key, rutina || null, desdeMenu);
   };
+  /* La propuesta del agua dice «Un vaso más», así que lo suma antes de abrir Hidrátate, donde se
+     ve contado y se deshace con «Un vaso menos». Las demás entran en su rutina. */
+  const elegirPropuesta = (p) => {
+    if (p.modulo === 'water') {
+      addWaterGlass(1);
+      try { playSound('hydrate.sip'); } catch (e) {}
+    }
+    handleChoose(p.modulo, p.rutina);
+  };
 
   // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
   // Los atajos siguen mapeados por actividad (no por posición visual),
@@ -77,7 +86,7 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
         /* La propuesta estrena atajo propio y NO roba ninguno: B · E · M · H
            siguen mapeados por actividad desde s28. */
         e.preventDefault();
-        handleChoose(propRef.current.modulo, propRef.current.rutina);
+        elegirPropuesta(propRef.current);
       }
       else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
     };
@@ -142,8 +151,8 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
             </div>
           )}
           <div style={{ marginTop: 6 }}>
-            <Button variant="terracota" onClick={() => handleChoose(prop.modulo, rutinaProp)}>
-              {t('break.prop.start')}
+            <Button variant="terracota" onClick={() => elegirPropuesta(prop)}>
+              {t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')}
             </Button>
           </div>
         </div>
