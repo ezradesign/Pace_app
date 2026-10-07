@@ -221,6 +221,7 @@
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.calendario.web.js"></script>
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.calendario.destinos.js"></script>
   <script type="text/babel" src="app/state-ritmo.jsx"></script>
+  <script type="text/babel" src="app/state-ritmo.support.jsx"></script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
        uso. Memoria del usuario sobre su progreso, NO telemetria — no sale del
        dispositivo y no hay una sola llamada de red en los cuatro archivos.
@@ -493,6 +494,7 @@
   <script type="text/babel" src="app/ritmo/RitmoHoja.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoCalendario.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoTarjeta.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoSemanaTipo.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoHome.jsx"></script>
 
   <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
@@ -563,7 +565,10 @@
            puede montar PaceApp con <OnbScene/> aun undefined. */
         typeof Onboarding       === 'function' &&
         typeof OnbScene         === 'function' &&
-        typeof pickFirstPath    === 'function'
+        typeof pickFirstPath    === 'function' &&
+        /* La bienvenida pregunta la semana (RitmoSemanaTipo.jsx y su estado). */
+        typeof RitmoSemanaEditor === 'function' &&
+        typeof ritmoGuardarSemana === 'function'
       );
       if (container && allReady) {
         var root = ReactDOM.createRoot(container);
