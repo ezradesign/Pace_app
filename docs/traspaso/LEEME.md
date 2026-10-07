@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de octubre de 2026, 19:26 UTC, v0.143.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, 08:50 UTC, v0.143.1.
 
 ## Cómo seguir desde otra cuenta
 
@@ -15,7 +15,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de o
 4. Las maquetas publicadas como artifacts (enlaces abajo) pertenecen a la cuenta anterior y puede que
    no se abran desde otra. Lo decidido en ellas está escrito aquí, así que no hace falta abrirlas.
 
-## Dónde lo dejamos (6 oct, 19:26 UTC)
+## Dónde lo dejamos (7 oct, 08:50 UTC)
 
 Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coincidan. Ez alterna dos
 cuentas de Claude según el uso que le queda a cada una, y las dos suben a `main`: haz `git pull`
@@ -37,19 +37,22 @@ antes de trabajar y mira en `git log` qué subió la otra.
   Pages, con la app en la raíz) y `paceweb.pages.dev` sigue sirviendo lo mismo sin redirigir, porque
   los datos de la web son de cada dominio. Enlaces legales de Android, calendario y privacidad usan
   el dominio nuevo, y el calendario aún reconoce sus eventos con la marca vieja. La privacidad lleva
-  el correo de contacto `hola.ezradesign@gmail.com`.
+  el correo de contacto `hola.ezradesign@gmail.com`, que desde v0.143.1 se lee también sin
+  JavaScript (Cloudflare lo escondía).
 - **«A tu ritmo» semanal (lo de pago), segunda ronda:** «¿Cómo es tu semana?» en la bienvenida
   (gratis); cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis); una
   carta corta el lunes con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
   «Vale» (premium); nada de tira semanal en la home. La maqueta estará en `archivos/semana/` si el
   hilo de la maqueta llegó a subirla. Nada de código hasta que Ez elija.
-- **Android:** v0.142.0 salió con el CI y el APK en verde. La llave de subida a Play se crea en el PC
-  de Ez, fuera del repo, en cuanto Ez lo confirme; con ella en los secretos, el workflow `Android`
-  firma el AAB.
-- **Caza de bugs:** si `CHANGELOG.md` no tiene una versión de arreglos después de v0.143.0, siguen
-  pendientes. Toman el siguiente número de versión libre.
+- **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
+  están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
+  secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` (artefacto
+  `pace-android-play`).
+- **Caza de bugs:** si `CHANGELOG.md` no tiene una versión con los arreglos del móvil después de
+  v0.143.0, siguen pendientes (v0.143.1 solo arregla el correo de la privacidad). Toman el siguiente
+  número de versión libre.
 - **Google Play:** la ficha está en `docs/launch/google-play/`. Espera a la revisión de identidad de
-  Google, al AAB firmado y a unos 15 testers.
+  Google y a unos 15 testers; el AAB firmado ya sale del workflow.
 
 ## Qué es PACE
 
@@ -105,7 +108,7 @@ primera versión de pago, en web y Android.
 | Línea | Dónde está | Siguiente paso |
 |---|---|---|
 | Home del móvil antes de contestar el día | Ez eligió «la 2, pero mejor maquetada»: una sola frase, «Hoy voy por libre» junto a la pregunta y las horas de media jornada al elegirla. Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. | Enseñar varias maquetaciones de la 2, que Ez elija, montarla con su prueba y subirla. Imagen de las opciones en `archivos/home-movil/`. |
-| Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow ya sabe firmar el AAB. | Probar el APK en el Doogee (lista en `STATE.md`); crear la llave de subida cuando Ez lo confirme y comprobar el AAB firmado (artefacto `pace-android-play`). |
+| Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow firma el AAB con la llave de subida, que está en los secretos desde el 7 oct. | Probar el APK en el Doogee (lista en `STATE.md`) y subir el AAB firmado (artefacto `pace-android-play`) a la prueba cerrada cuando Google apruebe la identidad de Ez. |
 | Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
@@ -117,9 +120,8 @@ primera versión de pago, en web y Android.
 
 ## Lo que espera a Ez
 
-1. Confirmar que se cree la llave de subida a Google Play en su PC (secretos del repo
-   `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`) y luego guardar una copia de la carpeta
-   `PACE-llave-play` fuera del ordenador.
+1. Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
+   contraseña) fuera del ordenador: un USB y su Drive, por ejemplo.
 2. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
 3. Que Google termine de revisar su identidad en Play Console; luego reunir unos 15 testers con
    Android (Google pide 12 durante 14 días).
@@ -135,9 +137,10 @@ primera versión de pago, en web y Android.
 ## Lo que no está en el repo, a propósito
 
 Claves, contraseñas, tokens y correos personales no se suben nunca. La llave de Play va en los
-secretos de GitHub. El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es público a
-propósito (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa
-está aquí y en `git log`.
+secretos de GitHub, y su original, con la contraseña, en la carpeta `PACE-llave-play` del PC de Ez.
+El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es público a propósito
+(privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa está
+aquí y en `git log`.
 
 ## Frase de arranque para la otra cuenta
 

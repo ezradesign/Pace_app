@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.143.0 · 6 de octubre de 2026.
+**Versión:** v0.143.1 · 7 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -44,8 +44,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    2026); Play lo fija en la primera subida y luego no se cambia. Probar el APK en un móvil: lo de
    arriba, el icono y el arranque de día y en modo oscuro, importar una copia, que lo guardado
    sobreviva a una actualización, y el aviso de Foco con la vaca y «Que el aviso llegue a su hora»
-   en Ajustes. `privacy.html` ya cubre la app. El AAB para Play lo firma el workflow `Android` en
-   cuanto el repo tenga la llave de subida.
+   en Ajustes. `privacy.html` ya cubre la app. El workflow `Android` firma el AAB para Play
+   (artefacto `pace-android-play`) con la llave de subida de los secretos del repo; el original y su
+   contraseña están en el PC de Ez, fuera del repo.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
@@ -55,8 +56,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 ## Espera a Ez
 
-- Confirmar que se cree la llave de subida a Google Play en su PC, fuera del repo; GitHub la
-  guarda en los secretos `PACE_UPLOAD_KEYSTORE` y `PACE_UPLOAD_PASSWORD`.
+- Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
+  contraseña) fuera del ordenador.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
