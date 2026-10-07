@@ -139,7 +139,10 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Move Session (additional)
     'move.steps':                      'Pasos',
-    'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
+    'move.prepCopy.standing':          'De pie. Sin prisa. {n} pasos.',
+    'move.prepCopy.seated':            'En la silla. Sin prisa. {n} pasos.',
+    'move.prepCopy.floor':             'En el suelo. Sin prisa. {n} pasos.',
+    'move.prepCopy.any':               'Sin prisa. {n} pasos.',
     'move.next.prefix':                'Siguiente:',
     'move.finish':                     'Terminar',
     'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
@@ -256,7 +259,10 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Move Session (additional)
     'move.steps':                      'Steps',
-    'move.prepCopy':                   'Stand up. No rush. {n} steps.',
+    'move.prepCopy.standing':          'Stand up. No rush. {n} steps.',
+    'move.prepCopy.seated':            'In your chair. No rush. {n} steps.',
+    'move.prepCopy.floor':             'On the floor. No rush. {n} steps.',
+    'move.prepCopy.any':               'No rush. {n} steps.',
     'move.next.prefix':                'Next:',
     'move.finish':                     'Finish',
     'move.hint':                       '← → navigate · Space pause · Esc exit',

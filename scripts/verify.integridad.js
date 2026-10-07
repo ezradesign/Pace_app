@@ -44,7 +44,7 @@ var android = require('./verify.android.js');   // las copias de la web en los r
 var CENSO = {
   /* i18n: claves que declaran `app/i18n/strings/*` en CADA idioma (s152; el
      split de s148 midio 195 sobre su propio alcance, no sobre el total). */
-  i18nClaves: 746,   // +2 en v0.142.0: «Alarmas y recordatorios» en Ajustes. Antes, +2 en v0.141.0: la tarjeta por libre del móvil ('ritmo.tarjeta.horas' y '.comienza'). Antes, +47 en v0.140.0: el dia en el calendario ('cal.*' x46 y 'ritmo.ocupado'). Antes, +4 en v0.137.0: los textos de Android en Ajustes (aviso, nota de bloqueo, pie y copia). Antes, +7 del aviso de la pausa con su nombre ('notify.ritmo.*' x7) y +11 de la red de error y el rescate
+  i18nClaves: 750,   // +4 en v0.143.4: la bienvenida en Android ('welcome.value.local.sub.android') y la preparacion por postura ('move.prepCopy' pasa a '.standing', '.seated', '.floor' y '.any'). Antes, +2 en v0.142.0: «Alarmas y recordatorios» en Ajustes. Antes, +2 en v0.141.0: la tarjeta por libre del móvil ('ritmo.tarjeta.horas' y '.comienza'). Antes, +47 en v0.140.0: el dia en el calendario ('cal.*' x46 y 'ritmo.ocupado'). Antes, +4 en v0.137.0: los textos de Android en Ajustes (aviso, nota de bloqueo, pie y copia). Antes, +7 del aviso de la pausa con su nombre ('notify.ritmo.*' x7) y +11 de la red de error y el rescate
                      // +9 en s176: el bloque de sonido por funcion (8) y el filtro «Sin retencion» de Respira (1)
                      // +1 en s161: tweaks.palette.auto (tercera pill de paleta)
                      // +1 en s166: focus.startPause (el CTA en Pausa/Larga)

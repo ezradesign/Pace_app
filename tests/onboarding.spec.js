@@ -27,6 +27,8 @@ test('con estado limpio la app abre EN el onboarding, montado sobre la home', as
   await expect(page.getByText('Todo local', { exact: true })).toBeVisible();
   await expect(page.getByText('Sin cuentas', { exact: true })).toBeVisible();
   await expect(page.getByText('Núcleo gratuito', { exact: true })).toBeVisible();
+  /* En la web lo local vive en el navegador; en Android, en el móvil (android-nativo.spec.js). */
+  await expect(page.getByText('en tu navegador', { exact: true })).toBeVisible();
 
   /* LA TRAMPA DE s153, convertida en aserto: el onboarding se monta AL FINAL
      del DOM (main.jsx:318), DETRAS en el arbol y DELANTE en pantalla. Leer un

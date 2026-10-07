@@ -55,6 +55,8 @@ function Onboarding() {
   if (!open) return null;
 
   const conCaminos = window.SHOW_CAMINOS !== false;
+  /* En la app de Android no hay navegador: lo local vive en el móvil, como dice Ajustes. */
+  const enAndroid = typeof paceEsAndroid === 'function' && paceEsAndroid();
   const questions = window.ONBOARDING_QUESTIONS || [];
   const isQuestion = step >= 1 && step <= questions.length;
   const q = isQuestion ? questions[step - 1] : null;
@@ -171,7 +173,7 @@ function Onboarding() {
                       fontSize: 14, color: 'var(--ink)', lineHeight: 1.15, flexGrow: 1,
                     }}>{t('welcome.value.' + k + '.label')}</div>
                     <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginTop: 3 }}>
-                      {t('welcome.value.' + k + '.sub')}
+                      {t('welcome.value.' + k + '.sub' + (k === 'local' && enAndroid ? '.android' : ''))}
                     </div>
                   </div>
                 ))}

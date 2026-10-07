@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, 08:50 UTC, v0.143.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, v0.143.4.
 
 ## Cómo seguir desde otra cuenta
 
@@ -50,9 +50,9 @@ antes de trabajar y mira en `git log` qué subió la otra.
   están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
   secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` (artefacto
   `pace-android-play`).
-- **Caza de bugs:** si `CHANGELOG.md` no tiene una versión con los arreglos del móvil después de
-  v0.143.0, siguen pendientes (v0.143.1 solo arregla el correo de la privacidad). Toman el siguiente
-  número de versión libre.
+- **Caza de bugs:** v0.143.2, v0.143.3 y v0.143.4 traen arreglos del móvil (detalle en la tabla de
+  abajo). La «lista de Ez» que citaba la tabla no está escrita en el repo: si queda algo de ella,
+  hay que pedírsela. Cada arreglo toma el siguiente número de versión libre.
 - **Google Play:** la ficha está en `docs/launch/google-play/`. Espera a la revisión de identidad de
   Google y a unos 15 testers; el AAB firmado ya sale del workflow.
 
@@ -118,7 +118,7 @@ primera versión de pago, en web y Android.
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
 | Glifos | Faltan 3 de ejercicio (rana, pica en escritorio, descanso) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
-| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones. | Arreglar la lista de Ez. |
+| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto. Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | Lo que quede de la lista de Ez. Sin revisar: la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana) y el modo oscuro de las sesiones. |
 
 ## Lo que espera a Ez
 

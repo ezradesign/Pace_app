@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
 
 /* Un Capacitor de Android falso con los cinco complementos. `permiso` es lo que
    contesta LocalNotifications al arrancar ('granted', 'denied' o 'prompt') y
@@ -86,6 +86,16 @@ async function empezarCoherente(page) {
 }
 
 test.describe('en Android', () => {
+  test('la bienvenida dice que todo vive en el móvil, no en el navegador', async ({ page, context }) => {
+    await comoAndroid(context);
+    const errores = capturarErrores(page);
+    await page.goto(RUTA_ARTEFACTO);
+    await expect(page.getByRole('button', { name: 'Comenzar' })).toBeVisible();
+    await expect(page.getByText('en tu móvil', { exact: true })).toBeVisible();
+    await expect(page.getByText('en tu navegador', { exact: true })).toHaveCount(0);
+    expect(errores).toEqual([]);
+  });
+
   test('el boton atras cierra lo que esta encima y, sin nada abierto, manda la app al fondo', async ({ page, context }) => {
     await sembrar(context, { soundOn: false });
     await comoAndroid(context);

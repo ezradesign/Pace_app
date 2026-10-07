@@ -63,10 +63,11 @@ function HydrateTracker({ open, onClose }) {
         }} />
       </div>
 
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">{t('hydrate.less')}</Button>
+      {/* Un botón nunca parte su texto: si los dos no caben en una fila, el segundo baja entero. */}
+      <div data-pace-hidr-acciones style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md" style={{ whiteSpace: 'nowrap' }}>{t('hydrate.less')}</Button>
         <Button onClick={() => { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} }} icon="+" size="md"
-          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>{t('hydrate.more')}</Button>
+          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)', whiteSpace: 'nowrap' }}>{t('hydrate.more')}</Button>
       </div>
 
       <Divider style={{ margin: '24px 0 16px' }} />
@@ -76,6 +77,23 @@ function HydrateTracker({ open, onClose }) {
       </div>
     </Modal>
   );
+}
+
+/* En el móvil el relleno de `Button` md (22 px por lado) hacía que «Un vaso menos» y «Un vaso más»
+   sumaran 308 px en una fila de 286 a 360 px de ancho, y los dos textos se partían en dos líneas.
+   Con 12 px caben en una fila desde 360 px en los dos idiomas; más estrecho, el segundo baja. */
+if (!document.getElementById('pace-hidr-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-hidr-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-hidr-acciones] > button {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
 }
 
 Object.assign(window, { HydrateTracker });

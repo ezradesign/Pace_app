@@ -190,7 +190,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         accent={accent}
         accentSoft={accentSoft}
         prepCount={prepCount}
-        copy={tn('move.prepCopy', { n: routine.steps.length })}
+        copy={sessionPrepCopy(routine, tn)}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
         atmosphere={atmo}
       />

@@ -240,7 +240,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     return (
       <SessionPrep
         routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft} prepCount={prepCount}
-        copy={tn('move.prepCopy', { n: routine.steps.length })}
+        copy={sessionPrepCopy(routine, tn)}
         onSkip={() => { sessionStart.current = Date.now(); setPrepCount(0); setStage('run'); startStep(0); }}
         atmosphere={atmo}
       />
