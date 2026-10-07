@@ -1,4 +1,4 @@
-# Glifos a dibujar · las 3 que faltan
+# Glifos a dibujar · los 2 que faltan
 
 > **Autocontenido a propósito**: no hace falta abrir ningún otro documento para
 > generar estas piezas. Sale del censo de **s173** — si el catálogo cambia, la
@@ -21,29 +21,17 @@
 
 | # | Archivo | ¿Dónde sale? | Hoy se ve como |
 |---|---|---|---|
-| 1 | `descanso.png` | **18 pasos** en 10 rutinas | dos barras de reproductor |
-| 2 | `pica-en-escritorio.png` | 1 paso | **glifo por defecto** |
-| 3 | `rana.png` | 1 paso | **glifo por defecto** |
+| 1 | `pica-en-escritorio.png` | 1 paso | **glifo por defecto** |
+| 2 | `rana.png` | 1 paso | **glifo por defecto** |
 
-**Si sólo vas a hacer una, depende de DÓNDE mires** (medido en s175, y corrige lo
-que decía antes esta línea):
+**`Descanso` ya no se dibuja** (Ez, 7 de octubre de 2026): el descanso entre series
+lleva la figura que respira de `Reset respiración`, por alias en
+`app/custom/exercise-aliases.js`, como ya hacía `Respiraciones profundas`. Las dos
+barras de pausa del SVG ya no salen en el runner.
 
-- **En el runner, la 1.** `Descanso` sale 18 veces a ~200 px y es el único paso que
-  hoy rompe el sistema visual: un símbolo de pausa entre 59 grabados.
-- **En la biblioteca, la 3.** `Rana` es la **capitular** de `Caderas · suelo` y la
-  **única de las 28 tarjetas que sale sin dibujo**. `Descanso` **no aparece en la
-  tarjeta** —`libraryGlifos` lo descarta por nombre, haya dibujo o no— ni en la
-  lista del preview, así que `descanso.png` **no cambia ni un píxel de las tres
-  bibliotecas**. El usuario reportó la de `Rana` mirando la app; la de `Descanso`
-  no la ha visto nadie ahí porque no está.
-
-> ⚠ **`descanso.png` NO ENTRA POR LA INGESTA TAL CUAL ESTÁ HOY** (medido en s173).
-> `Descanso` está excluido a mano del censo de identidades —`if (n && n !==
-> 'Descanso')` en `scripts/ingest-glifos-ejercicio.censo.js`, con el comentario «no
-> es un ejercicio»—, así que un `descanso.png` en la carpeta de origen sale listado
-> como **PNG huérfano** y no se ingesta. Cuando el dibujo llegue hay que decidir
-> antes si `Descanso` pasa a ser la identidad nº 63 o si su arte entra por otra vía.
-> Su glifo de hoy es el SVG de dos barras de `app/glyphs/exercise-glyphs.jsx`.
+**Si sólo vas a hacer una, la 2.** `Rana` es la **capitular** de `Caderas · suelo` y la
+**única de las tarjetas de la biblioteca que sale sin dibujo** (el usuario la reportó
+mirando la app). `Pica en escritorio` solo sale en el runner, en un paso.
 
 ---
 

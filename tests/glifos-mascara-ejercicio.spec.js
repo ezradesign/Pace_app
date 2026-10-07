@@ -169,3 +169,30 @@ test('cuando hay mascara, GANA al SVG — y solo para quien la tiene', async ({ 
 
   expect(errores).toEqual([]);
 });
+
+/* El descanso entre series pintaba el símbolo de pausa, dos barras de SVG entre
+   grabados. Ahora lleva la figura que respira de «Reset respiración» (decisión de
+   Ez), por alias. Se mira en el runner, que es donde sale: la tarjeta y el preview
+   no pintan el descanso. */
+test('el descanso entre series pinta la figura que respira, no las dos barras', async ({ page }) => {
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+  const igual = await page.evaluate(() =>
+    window.exerciseMaskUrl('Descanso') && window.exerciseMaskUrl('Descanso') === window.exerciseMaskUrl('Reset respiración'));
+  expect(igual, 'el descanso no resuelve al dibujo de «Reset respiración»').toBe(true);
+
+  await abrirPreview(page);
+  await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
+  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await page.getByRole('button', { name: 'Empezar ya' }).click();
+  await page.getByRole('button', { name: 'Terminar antes' }).click();
+  await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');
+
+  const glifo = page.locator('[data-pace-v1-glyph]');
+  await expect(glifo.locator('svg'), 'sigue pintando el SVG de las dos barras').toHaveCount(0);
+  const mascara = await glifo.evaluate(el => [...el.querySelectorAll('*')]
+    .map(e => getComputedStyle(e).maskImage || getComputedStyle(e).webkitMaskImage || 'none')
+    .find(m => m.indexOf('url(') === 0) || null);
+  expect(mascara, 'el descanso no pinta ninguna máscara').not.toBeNull();
+  expect(errores).toEqual([]);
+});
