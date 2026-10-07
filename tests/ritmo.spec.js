@@ -103,7 +103,8 @@ test('la home pregunta cuánto trabajas, con el horario en la frase y la hora de
   await abrir(page, context);
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toHaveCount(1);
   await expect(page.locator('[data-pace-activitybar-grid]'), 'Actividades no debería estar').toHaveCount(0);
-  await expect(page.locator('[data-pace-ritmo] .pace-meta').first()).toHaveText('A tu ritmo');
+  /* Dentro del aro no va «A tu ritmo» (Ez): sin día elegido, el rótulo queda vacío. */
+  await expect(page.locator('.pace-rt-rotulo').first()).toHaveText('');
   const chips = vis(page, '[data-pace-ritmo-opcion]');
   await expect(chips).toHaveCount(4);
   await expect(vis(page, '[data-pace-ritmo-opcion="1h"]')).toContainText('Hasta las 10:00');
@@ -131,12 +132,8 @@ test('elegir la jornada entera: el aro, el rótulo, la barra lateral y la persis
   await expect(page.getByRole('button', { name: 'Empezar jornada', exact: true })).toBeVisible();
   const hasta = page.locator('[data-pace-ritmo-hasta]');
   await expect(hasta).toHaveText('Hasta las 17:00');
-  /* «A tu ritmo» ARRIBA y la hora DEBAJO (ronda 4). */
-  const orden = await page.evaluate(() => {
-    const h = document.querySelector('[data-pace-ritmo-hasta]');
-    return h.previousElementSibling.getBoundingClientRect().bottom <= h.getBoundingClientRect().top + 1;
-  });
-  expect(orden, 'la hora no va debajo del nombre').toBe(true);
+  /* Solo la hora: «A tu ritmo» ya no se pinta dentro del aro (Ez). */
+  await expect(page.locator('.pace-rt-rotulo').first()).toHaveText('Hasta las 17:00');
   /* …y el rótulo SUBE lo que mide la línea nueva: el panel no se mueve dentro de
      su bloque (ronda 4). Sin la compensación, bajaría 15 px. */
   expect(await banda(page), 'el panel se movió al aparecer «Hasta las»').toBe(bandaAntes);
@@ -398,12 +395,12 @@ test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «ta
   await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Hasta las 17:00');
 });
 
-test('en inglés, la pregunta y el nombre', async ({ page, context }) => {
+test('en inglés, la pregunta y la hora de salida', async ({ page, context }) => {
   await abrir(page, context, {}, { lang: 'en' });
-  await expect(page.locator('[data-pace-ritmo] .pace-meta').first()).toHaveText('At your pace');
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('How long are you working today?');
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   await expect(page.getByRole('button', { name: 'Start the day', exact: true })).toBeVisible();
+  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Until 17:00');
 });
 
 /* ------------------------------------------------------------------ móvil */

@@ -39,7 +39,7 @@ function RitmoVuelta() {
 
 function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
   const [state] = usePace();
-  const { t, tn } = useT();
+  const { tn } = useT();
   const [hoja, setHoja] = useStateRH(false);
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
@@ -62,12 +62,12 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
     );
   }
 
-  const conHasta = !!(plan && plan.actual);
   return (
     <div key="ritmo" data-pace-activitybar data-pace-ritmo style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
-      <div className={'pace-rt-rotulo' + (conHasta ? ' pace-rt-con-hasta' : '')}>
-        <Meta>{t('ritmo.nombre')}</Meta>
-        {conHasta ? <div className="pace-rt-hasta" data-pace-ritmo-hasta>{tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })}</div> : null}
+      {/* Dentro del aro solo va la hora de salida: «A tu ritmo» encima no aportaba y se mezclaba
+          con el arranque del arco (Ez). El rótulo conserva su alto para que el panel no se mueva. */}
+      <div className="pace-rt-rotulo">
+        {plan && plan.actual ? <div className="pace-rt-hasta" data-pace-ritmo-hasta>{tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })}</div> : null}
       </div>
       <div data-pace-ritmo-panel>
         {!plan ? <RitmoPregunta state={state} />
