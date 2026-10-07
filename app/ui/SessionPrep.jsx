@@ -71,6 +71,11 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosph
         <div data-pace-session-prep-num style={{
           ...displayItalic,
           fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+          /* Las cifras de Cormorant son de texto: el 3 y el 5 bajan un cuarto
+             de cuerpo por debajo de la línea, y con lineHeight 0.9 esa cola
+             tocaba el caption en el móvil (y a 1280×520 se montaba). El aire va
+             en em para que crezca y mengüe con cada tamaño del numeral. */
+          paddingBottom: '0.12em',
           color: accent,
           fontVariantNumeric: 'tabular-nums',
         }}>{prepCount > 0 ? prepCount : '·'}</div>

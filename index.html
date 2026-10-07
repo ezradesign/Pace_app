@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.143.2</title>
+  <title>PACE · Foco · Cuerpo — v0.143.3</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5644,7 +5644,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.143.2';
+const PACE_VERSION = 'v0.143.3';
 
 
 
@@ -13458,6 +13458,11 @@ function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSk
     React.createElement("div", { "data-pace-session-prep-num": true, style: {
         ...displayItalic,
         fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+
+
+
+
+        paddingBottom: '0.12em',
         color: accent,
         fontVariantNumeric: 'tabular-nums'
       } }, prepCount > 0 ? prepCount : '·'),
