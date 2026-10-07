@@ -66,6 +66,10 @@ var VISUAL_ALIAS = {
   'Sentadilla profunda sostenida': 'Sentadilla profunda',
   'Respiraciones profundas':       'Reset respiración',
   'Suspensión pasiva · opcional':  'Suspensión pasiva',
+
+  /* El descanso entre series pintaba el símbolo de pausa (dos barras): un paso que se respira
+     lleva la figura que respira, como el cierre de las rutinas (decisión de Ez). */
+  'Descanso':                      'Reset respiración',
 };
 
 /* resolveVisualId(name) → identidad visual canónica (o el propio nombre). */
