@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.148.1</title>
+  <title>PACE · Foco · Cuerpo — v0.148.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2834,6 +2834,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.month.tooltip.move': 'min cuerpo',
   'stats.month.tooltip.water': 'vasos',
   'stats.month.hours.unit': 'h',
+  'stats.month.prev': 'Mes anterior',
+  'stats.month.next': 'Mes siguiente',
+  'stats.year.prev': 'Año anterior',
+  'stats.year.next': 'Año siguiente',
 
   'stats.year.empty': 'Aún no hay actividad en {year}',
   'stats.year.activeDays': '{n} días con ritmo',
@@ -2889,6 +2893,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.month.tooltip.move': 'min body',
   'stats.month.tooltip.water': 'glasses',
   'stats.month.hours.unit': 'h',
+  'stats.month.prev': 'Previous month',
+  'stats.month.next': 'Next month',
+  'stats.year.prev': 'Previous year',
+  'stats.year.next': 'Next year',
 
   'stats.year.empty': 'No activity yet in {year}',
   'stats.year.activeDays': '{n} days with rhythm',
@@ -5803,8 +5811,15 @@ function applyTheme(estado) {
 
 
 
-Object.assign(window, { applyTheme });
-;Object.assign(window, { _marcarPaletaLista, _marcarCruce, applyTheme });
+
+function applyLang(estado) {
+  if (estado && estado.lang) document.documentElement.setAttribute('lang', estado.lang);
+}
+
+
+
+Object.assign(window, { applyTheme, applyLang });
+;Object.assign(window, { _marcarPaletaLista, _marcarCruce, applyTheme, applyLang });
 })();
 </script>
   <script>
@@ -5829,7 +5844,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.148.1';
+const PACE_VERSION = 'v0.148.2';
 
 
 
@@ -6231,6 +6246,7 @@ function setState(patch) {
   if (prev.palette !== _state.palette || prev.font !== _state.font) {
     applyTheme(_state);
   }
+  if (prev.lang !== _state.lang) applyLang(_state);
 }
 
 function subscribe(listener) {
@@ -6279,6 +6295,7 @@ function ensureDayFresh(desdeDisco) {
 
 
 applyTheme(_state);
+applyLang(_state);
 
 
 
@@ -12952,10 +12969,9 @@ function Button(_ref4) {let { children, onClick, variant = 'primary', size = 'md
       },
       onMouseLeave: (e) => {
         if (disabled) return;
-        if (variant === 'primary') e.currentTarget.style.background = 'var(--focus)';
-        if (variant === 'secondary') e.currentTarget.style.background = 'transparent';
-        if (variant === 'ghost') e.currentTarget.style.background = 'transparent';
-        if (variant === 'terracota') e.currentTarget.style.background = 'var(--breathe)';
+
+
+        e.currentTarget.style.background = style.background || (variants[variant] || {}).background || '';
       } },
 
     icon && React.createElement("span", { style: { fontSize: 12 } }, icon),
@@ -20768,10 +20784,14 @@ var LIB_FILTROS_RESPIRA = ['corto', 'sinreten'];
 
 
 
+
+
+
+var LIB_PATRONES_CON_SOSTEN = ['yin', 'nadi'];
 function libraryConRetencion(r) {
   if (!r) return false;
   if (Array.isArray(r.cycle)) return r.cycle[1] > 0 || r.cycle[3] > 0;
-  return !!r.safety;
+  return !!r.safety || LIB_PATRONES_CON_SOSTEN.indexOf(r.pattern) !== -1;
 }
 
 
@@ -20981,7 +21001,7 @@ Object.assign(window, {
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio
 });
-;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
 })();
 </script>
   <script>
@@ -23455,7 +23475,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === ' ') {
+
+
+
+      if (e.key === ' ' && stage === 'active') {
 
 
         if (sessionKeyOnControl(e)) return;
@@ -23497,6 +23520,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
   const releaseHold = () => {
     if (round < routine.rounds) {
+      setPaused(false);
       setRound((r) => r + 1);
       setBreathCount(1);
       setPhase(0);
@@ -23539,7 +23563,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
         accent: "var(--breathe)",
         prepCount: prepCount,
         copy: t('breathe.prepCopy'),
-        onSkip: () => {setPrepCount(0);setStage('active');playPhaseSound(sequence[0].label, sequence[0].duration);},
+        onSkip: () => {setPaused(false);setPrepCount(0);setStage('active');playPhaseSound(sequence[0].label, sequence[0].duration);},
         atmosphere: atmo }
       ));
 
@@ -28828,12 +28852,12 @@ function YearView(_ref) {let { history, lang, firstSeen, onNavigateToMonth } = _
 
 
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 } },
-    React.createElement("button", { onClick: prevYear, disabled: !canPrev, "aria-label": "A\xF1o anterior", style: {
+    React.createElement("button", { onClick: prevYear, disabled: !canPrev, "aria-label": t('stats.year.prev'), style: {
         background: 'none', border: 'none', cursor: canPrev ? 'pointer' : 'default',
         color: canPrev ? 'var(--ink-2)' : 'var(--ink-3)', fontSize: 18, padding: '4px 10px', borderRadius: 'var(--r-sm)'
       } }, "\u2039"),
     React.createElement("span", { style: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, color: 'var(--ink)' } }, viewYear),
-    React.createElement("button", { onClick: nextYear, disabled: !canNext, "aria-label": "A\xF1o siguiente", style: {
+    React.createElement("button", { onClick: nextYear, disabled: !canNext, "aria-label": t('stats.year.next'), style: {
         background: 'none', border: 'none', cursor: canNext ? 'pointer' : 'default',
         color: canNext ? 'var(--ink-2)' : 'var(--ink-3)', fontSize: 18, padding: '4px 10px', borderRadius: 'var(--r-sm)'
       } }, "\u203A")
@@ -29730,13 +29754,13 @@ function MonthHeatmap(_ref3) {let { history, lang, initialYear, initialMonth } =
     React.createElement("div", null,
 
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 } },
-    React.createElement("button", { onClick: prevMonth, "aria-label": "Mes anterior", style: {
+    React.createElement("button", { onClick: prevMonth, "aria-label": t('stats.month.prev'), style: {
         background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-2)', fontSize: 18, padding: '4px 10px', borderRadius: 'var(--r-sm)'
       } }, "\u2039"),
     React.createElement("span", { style: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, color: 'var(--ink)', textTransform: 'capitalize' } },
     monthLabel(viewYear, viewMonth, lang)
     ),
-    React.createElement("button", { onClick: nextMonth, disabled: isCurrentMonth, "aria-label": "Mes siguiente", style: {
+    React.createElement("button", { onClick: nextMonth, disabled: isCurrentMonth, "aria-label": t('stats.month.next'), style: {
         background: 'none', border: 'none', cursor: isCurrentMonth ? 'default' : 'pointer',
         color: isCurrentMonth ? 'var(--ink-3)' : 'var(--ink-2)', fontSize: 18, padding: '4px 10px', borderRadius: 'var(--r-sm)'
       } }, "\u203A")
@@ -38458,9 +38482,10 @@ function PaceApp() {
 
   const handleStartBreathe = (routine, reanudar) => {
     if (routine.safety) {
+
+
       setSafetyRoutine(routine);
       setPendienteReanudar(reanudar || null);
-      setOpenLibrary(null);
     } else {
       setOpenLibrary(null);
       setView({ type: 'breathe-session', routine, reanudar: reanudar || null });
@@ -38729,6 +38754,7 @@ function PaceApp() {
       routine: safetyRoutine,
       onAccept: (r) => {
         setSafetyRoutine(null);
+        setOpenLibrary(null);
         setView({ type: 'breathe-session', routine: r, reanudar: pendienteReanudar });
         setPendienteReanudar(null);
       },

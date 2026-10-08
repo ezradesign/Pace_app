@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.148.1';
+const PACE_VERSION = 'v0.148.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -420,6 +420,7 @@ function setState(patch) {
   if (prev.palette !== _state.palette || prev.font !== _state.font) {
     applyTheme(_state);
   }
+  if (prev.lang !== _state.lang) applyLang(_state);
 }
 
 function subscribe(listener) {
@@ -466,8 +467,9 @@ function ensureDayFresh(desdeDisco) {
 /* TOAST (buffer pre-mount) -> state-core.toast.jsx (s198, cortado por un punto al
    pasar este archivo de 500 lineas con el saneado del estado). */
 
-// Aplicar tema al cargar
+// Aplicar tema e idioma al cargar
 applyTheme(_state);
+applyLang(_state);
 
 /* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
    MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-

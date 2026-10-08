@@ -223,10 +223,9 @@ function Button({ children, onClick, variant = 'primary', size = 'md', icon, dis
       }}
       onMouseLeave={(e) => {
         if (disabled) return;
-        if (variant === 'primary') e.currentTarget.style.background = 'var(--focus)';
-        if (variant === 'secondary') e.currentTarget.style.background = 'transparent';
-        if (variant === 'ghost') e.currentTarget.style.background = 'transparent';
-        if (variant === 'terracota') e.currentTarget.style.background = 'var(--breathe)';
+        /* Vuelve al fondo con el que se pintó, también si llegó por `style`
+           (el azul de «Un vaso más»): si no, se quedaba con el de la variante. */
+        e.currentTarget.style.background = style.background || (variants[variant] || {}).background || '';
       }}
     >
       {icon && <span style={{ fontSize: 12 }}>{icon}</span>}
