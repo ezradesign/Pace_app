@@ -75,6 +75,17 @@ test('sus horas son suyas, se recuerdan y se editan en su cabecera', async ({ pa
   expect(despues.entera, 'sin tocar las horas de la jornada entera').toEqual([540, 1020]);
 });
 
+test('mover otra hora no congela la media jornada: mientras nadie la toque, sigue a la entrada', async ({ page, context }) => {
+  await abrir(page, context, { horario: H });
+  const r = await page.evaluate(() => {
+    ritmoHorario('inicio', 600);
+    const s = getState();
+    return { guardada: s.ritmo.horario.media, derivada: ritmoDe(s).horario.media };
+  });
+  expect(r.guardada, 'tocar la entrada guardaba la media jornada derivada y dejaba de seguirla').toBeUndefined();
+  expect(r.derivada).toEqual({ inicio: 600, salida: 840 });
+});
+
 test('fuera de su tramo se apaga, como la entera tras la salida', async ({ page, context }) => {
   await abrir(page, context, { horario: Object.assign({}, H, { media: { inicio: 540, salida: 780 } }) }, HOY + 'T14:00:00+02:00');
   const chip = vis(page, '[data-pace-ritmo-opcion="media"]');
