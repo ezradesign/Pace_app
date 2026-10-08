@@ -40,6 +40,7 @@ function catalogo() {
   const errs = [
     sandbox.cargar(ctx, sb, 'app/breathe/BreatheLibrary.jsx', { __B: 'BREATHE_ROUTINES' }),
     sandbox.cargar(ctx, sb, 'app/ui/library-rules.js', { __U: 'libraryUmbralCorto', __R: 'libraryConRetencion' }),
+    sandbox.cargar(ctx, sb, 'app/breathe/BreatheVisual.jsx', { __S: 'getSequence' }),
   ].filter(Boolean);
   if (errs.length) throw new Error('no se pudo leer Respira: ' + errs.join(' · '));
   const rutinas = [];
@@ -50,7 +51,8 @@ function catalogo() {
   if (typeof sb.__U !== 'function' || typeof sb.__R !== 'function') {
     throw new Error('las reglas de biblioteca no cargaron');
   }
-  _cat = { rutinas, umbral: sb.__U(rutinas), conRetencion: sb.__R };
+  if (typeof sb.__S !== 'function') throw new Error('getSequence no cargó');
+  _cat = { rutinas, umbral: sb.__U(rutinas), conRetencion: sb.__R, secuencia: sb.__S };
   return _cat;
 }
 
@@ -157,4 +159,41 @@ test('la sugerencia del día no es una rutina con aviso de seguridad', async ({ 
   expect(ids.length, 'el bloque «Para ahora» de Respira está vacío').toBe(1);
   expect(conAviso, 'la sugerencia del día obliga a leer un aviso antes de empezar')
     .not.toContain(ids[0]);
+});
+
+/* «SIN RETENCIÓN» DICE LA VERDAD DE LA SESIÓN. El filtro miraba `cycle` y, sin
+   él, solo `safety`: «Rítmica yin» y Nadi Shodhana no declaran ninguno de los
+   dos y salían en la lista aunque su sesión pinta «Sostén» en cada ciclo. Se
+   cruza con lo que la sesión hace de verdad (`getSequence`), no con una lista
+   escrita aquí. Las de aviso quedan fuera del cruce: el filtro las quita
+   también por hiperventilar, sin sostener (Kapalabhati). */
+test('«Sin retención» no deja pasar ninguna técnica que sostenga la respiración', () => {
+  const { rutinas, conRetencion, secuencia } = catalogo();
+  const sostiene = r => secuencia(r).some(f => /^(Sostén|Retén)/.test(f.label));
+  const sinAviso = rutinas.filter(r => !r.safety);
+  /* GUARD: tiene que haber de las dos clases, o el cruce no prueba nada. */
+  expect(sinAviso.filter(sostiene).length).toBeGreaterThan(0);
+  expect(sinAviso.filter(r => !sostiene(r)).length).toBeGreaterThan(0);
+  const mal = sinAviso.filter(r => conRetencion(r) !== sostiene(r)).map(r => r.name);
+  expect(mal, 'el filtro y la sesión no coinciden en si sostiene').toEqual([]);
+});
+
+/* «Cancelar» en el aviso de seguridad vuelve a la biblioteca, como al cerrar la
+   vista previa de Mueve y Estira. Antes la cerraba y había que volver a abrir
+   Respira y buscar otra vez la técnica. */
+test('cancelar el aviso de seguridad deja la biblioteca abierta', async ({ page }) => {
+  await irAlArtefacto(page);
+  await abrirRespira(page);
+  await page.getByRole('heading', { name: 'Kumbhaka 1:4:2', exact: true }).click();
+  const cancelar = page.getByRole('button', { name: 'Cancelar' });
+  await expect(cancelar).toBeVisible();
+  await cancelar.click();
+  await expect(cancelar).toHaveCount(0);
+  await expect(visibles(page, '.pace-lib-rejilla')).toHaveCount(1);
+  /* Y aceptar sí la cierra: la sesión ocupa la pantalla. */
+  await page.getByRole('heading', { name: 'Kumbhaka 1:4:2', exact: true }).click();
+  await page.getByText('Lo he leído y asumo mi responsabilidad').click();
+  await page.getByRole('button', { name: 'Empezar sesión' }).click();
+  await expect(page.locator('[data-pace-session-root]')).toBeVisible();
+  await expect(visibles(page, '.pace-lib-rejilla')).toHaveCount(0);
 });

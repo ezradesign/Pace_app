@@ -420,6 +420,7 @@ function setState(patch) {
   if (prev.palette !== _state.palette || prev.font !== _state.font) {
     applyTheme(_state);
   }
+  if (prev.lang !== _state.lang) applyLang(_state);
 }
 
 function subscribe(listener) {
@@ -466,8 +467,9 @@ function ensureDayFresh(desdeDisco) {
 /* TOAST (buffer pre-mount) -> state-core.toast.jsx (s198, cortado por un punto al
    pasar este archivo de 500 lineas con el saneado del estado). */
 
-// Aplicar tema al cargar
+// Aplicar tema e idioma al cargar
 applyTheme(_state);
+applyLang(_state);
 
 /* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
    MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-

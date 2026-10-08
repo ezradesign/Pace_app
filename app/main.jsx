@@ -120,9 +120,10 @@ function PaceApp() {
   // Handle start de una rutina
   const handleStartBreathe = (routine, reanudar) => {
     if (routine.safety) {
+      /* La biblioteca se queda detrás del aviso: «Cancelar» vuelve a ella, como
+         al cerrar la vista previa de Mueve y Estira. Se cierra al aceptar. */
       setSafetyRoutine(routine);
       setPendienteReanudar(reanudar || null);
-      setOpenLibrary(null);
     } else {
       setOpenLibrary(null);
       setView({ type: 'breathe-session', routine, reanudar: reanudar || null });
@@ -389,6 +390,7 @@ function PaceApp() {
           routine={safetyRoutine}
           onAccept={(r) => {
             setSafetyRoutine(null);
+            setOpenLibrary(null);
             setView({ type: 'breathe-session', routine: r, reanudar: pendienteReanudar });
             setPendienteReanudar(null);
           }}
