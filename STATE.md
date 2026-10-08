@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.149.0 · 8 de octubre de 2026.
+**Versión:** v0.150.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -33,7 +33,8 @@ reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
 de tiempo alrededor del dibujo y avisos de cuenco y madera. El aro solo cuenta el ejercicio: al colocarse y al cambiar de lado se queda vacío (v0.148.1, opción A
-de Ez). Cada texto tiene su hueco fijo y el
+de Ez). La explicación de cada paso va en la serif itálica y no pasa de 95 letras (v0.150.0, opción A
+de Ez), así que cabe en dos líneas. Cada texto tiene su hueco fijo y el
 dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
 ni se pisa. Las rutinas propias también van por ahí.
 
