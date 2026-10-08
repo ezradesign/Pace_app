@@ -1,0 +1,634 @@
+<title>Respira por técnica</title>
+<meta name="description" content="Una variación del drone de Respira para cada una de las 20 técnicas, para escucharlas y elegir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Cuaderno de escucha: cabecera breve, los dos caminos lado a lado, las técnicas por familia en una
+   rejilla y una barra de escucha fija abajo. Tokens de DESIGN_SYSTEM.md de PACE (crema de día,
+   oscuro de noche, acento de Respira). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+  --line: #C9C0A8; --line-2: #B8AD8E;
+  --breathe: #C97A5D; --breathe-2: #A85E43; --breathe-soft: rgba(201,122,93,0.12);
+  --focus: #3E5A3A; --focus-soft: rgba(62,90,58,0.10);
+  --on-accent: #FBF8F1;
+  --font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --font-ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544;
+  --breathe: #D99477; --breathe-2: #E8A98F; --breathe-soft: rgba(217,148,119,0.14);
+  --focus: #7A9A6D; --focus-soft: rgba(122,154,109,0.14);
+  --on-accent: #1d1a14;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544;
+  --breathe: #D99477; --breathe-2: #E8A98F; --breathe-soft: rgba(217,148,119,0.14);
+  --focus: #7A9A6D; --focus-soft: rgba(122,154,109,0.14);
+  --on-accent: #1d1a14;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.55; margin: 0; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 150px; display: grid; gap: 52px; }
+@media (max-width: 480px) { .wrap { padding-inline: 16px; } }
+h1, h2, h3 { font-family: var(--font-display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 6vw, 3.4rem); line-height: 1.05; }
+h2 { font-size: clamp(1.6rem, 3.6vw, 2.1rem); line-height: 1.15; }
+h3 { font-size: 1.45rem; line-height: 1.15; }
+p { margin: 0; }
+.eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--breathe-2); font-weight: 600; }
+.lead { color: var(--ink-2); max-width: 64ch; font-size: 16px; }
+.sec { display: grid; gap: 18px; }
+.sec > .intro { color: var(--ink-2); max-width: 66ch; }
+header.cab { display: grid; gap: 14px; }
+.como { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--ink-2); font-size: 14px; padding: 0; margin: 4px 0 0; list-style: none; }
+.como li { display: flex; gap: 8px; align-items: baseline; }
+.como b { font-weight: 600; color: var(--ink); }
+
+/* Los dos caminos */
+.caminos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+.camino { border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.camino.rec { border-color: var(--breathe); background: var(--breathe-soft); }
+.camino .etq { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.camino .letra { font-family: var(--font-display); font-style: italic; font-size: 2.4rem; line-height: 1; color: var(--breathe-2); }
+.sello { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--focus); background: var(--focus-soft); border-radius: 999px; padding: 3px 10px; }
+.datos { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 0; font-size: 14px; }
+.datos dt { color: var(--ink-3); }
+.datos dd { margin: 0; }
+
+/* Técnicas */
+.familia { display: grid; gap: 14px; }
+.familia-cab { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.familia-cab .aside { color: var(--ink-2); font-size: 14px; }
+.familia-cab .hoy { margin-left: auto; font-size: 12px; color: var(--ink-3); }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.tec { border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; background: var(--paper); }
+.tec.sonando { border-color: var(--breathe); box-shadow: 0 0 0 1px var(--breathe) inset; }
+.tec-cab { display: grid; gap: 2px; }
+.ritmo { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.car { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; color: var(--breathe-2); }
+.porque { color: var(--ink-2); font-size: 14px; }
+.receta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 3px 12px; margin: 0; font-size: 13px; }
+.receta dt { color: var(--ink-3); }
+.receta dd { margin: 0; }
+.medida { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.botones { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--breathe-2); background: var(--breathe); color: var(--on-accent); border-radius: 999px; padding: 8px 18px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn.sec { background: transparent; color: var(--ink); border-color: var(--line-2); }
+.btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn svg { width: 12px; height: 12px; flex: none; }
+.btn:disabled { opacity: 0.55; cursor: default; }
+.eleccion { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-top: 1px dashed var(--line); padding-top: 10px; }
+.eleccion .lab { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-right: 4px; }
+.pill { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.pill[aria-pressed="true"] { border-color: var(--focus); background: var(--focus-soft); color: var(--ink); font-weight: 500; }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--breathe); outline-offset: 2px; }
+
+/* Brief B */
+.bloque { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; min-width: 0; background: var(--paper-2); }
+.bloque-cab { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+.bloque-cab b { font-weight: 600; font-size: 14px; }
+.bloque-cab span { font-size: 12px; color: var(--ink-3); }
+.texto { font-size: 13.5px; color: var(--ink-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+.copiar { border: 1px solid var(--line-2); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 12.5px; cursor: pointer; }
+.prompts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 12px; }
+.pasos { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--ink-2); max-width: 70ch; }
+
+/* Medidas */
+details.medidas { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+details.medidas summary { cursor: pointer; font-weight: 500; }
+details.medidas[open] summary { margin-bottom: 12px; }
+.tabla-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+th { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+td.n, th.n { text-align: right; }
+.nota-medida { font-size: 13px; color: var(--ink-2); max-width: 70ch; display: grid; gap: 8px; margin-top: 12px; }
+
+/* Recomendación y preguntas */
+.recomienda { border-left: 3px solid var(--breathe); padding: 4px 0 4px 18px; display: grid; gap: 10px; max-width: 70ch; }
+.recomienda p { color: var(--ink-2); }
+.recomienda p:first-child { color: var(--ink); font-size: 17px; }
+.preguntas { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; counter-reset: q; }
+.preguntas > li { display: grid; gap: 8px; counter-increment: q; }
+.preguntas > li > p::before { content: counter(q) ". "; color: var(--breathe-2); font-weight: 600; }
+.preguntas .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+textarea { width: 100%; min-height: 90px; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; resize: vertical; }
+.resumen { display: grid; gap: 10px; }
+.resumen pre { margin: 0; font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); white-space: pre-wrap; background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; overflow-wrap: anywhere; }
+.estado-guardado { font-size: 13px; color: var(--ink-3); }
+
+/* Barra de escucha */
+.barra { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--paper-3); border-top: 1px solid var(--line-2); padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px)); }
+.barra-in { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.aro-wrap { width: 40px; height: 40px; display: grid; place-items: center; flex: none; }
+.aro { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--breathe); background: var(--breathe-soft); transform: scale(0.9); will-change: transform; }
+.ahora { display: grid; min-width: 0; flex: 1 1 200px; }
+.ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 1.15rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ahora span { font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mandos { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.mandos label { font-size: 12px; color: var(--ink-3); display: flex; gap: 6px; align-items: center; }
+.mandos select { font: inherit; font-size: 13px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 4px 6px; }
+.mandos input[type="range"] { width: 110px; accent-color: var(--breathe); }
+@media (max-width: 560px) { .barra { padding-inline: 16px; } .mandos input[type="range"] { width: 90px; } }
+</style>
+
+<div class="wrap">
+  <header class="cab">
+    <div class="eyebrow">PACE · Respira · 8 de octubre de 2026</div>
+    <h1>Un drone para cada técnica</h1>
+    <p class="lead">Hoy las 20 técnicas de Respira comparten tres drones en Sol: uno claro, uno cálido y uno oscuro. Aquí cada técnica tiene el suyo, hecho a partir de esos tres, y lo puedes escuchar con la voz de PACE encima, respirando como en la app. Debajo de cada una eliges si te quedas con la propuesta, con la de hoy o si la prefieres grabada.</p>
+    <ul class="como">
+      <li><b>Escuchar</b> la propuesta para esa técnica.</li>
+      <li><b>Así suena hoy</b> para comparar.</li>
+      <li>Pruébalas con el altavoz del móvil y con cascos.</li>
+    </ul>
+  </header>
+
+  <section class="sec" aria-labelledby="h-caminos">
+    <h2 id="h-caminos">Dos caminos</h2>
+    <div class="caminos">
+      <article class="camino rec">
+        <div class="etq"><span class="letra">A</span><span class="sello">Lo que recomiendo</span></div>
+        <h3>Variaciones en directo</h3>
+        <p>Cada técnica toma los mismos tres drones y la app los cambia en el momento: otra nota de la escala de Sol, otro color, una segunda voz suave y, en algunas, un movimiento lento. Es lo que suena en esta página.</p>
+        <dl class="datos">
+          <dt>Archivos nuevos</dt><dd>Ninguno</dd>
+          <dt>Peso en la app</dt><dd>El de hoy (4,7 MB)</dd>
+          <dt>Cuándo está</dt><dd>En cuanto elijas: es una tabla y una segunda voz en el código</dd>
+          <dt>Riesgo</dt><dd>Bajo: si una no gusta, se cambia su línea de la tabla</dd>
+        </dl>
+      </article>
+      <article class="camino">
+        <div class="etq"><span class="letra">B</span></div>
+        <h3>Un drone grabado por técnica</h3>
+        <p>Generas fuera un drone distinto para cada técnica con el brief de más abajo, y yo lo afino a 432, le cierro el bucle y lo igualo de volumen. La app le sigue poniendo la respiración en directo.</p>
+        <dl class="datos">
+          <dt>Archivos nuevos</dt><dd>19, unos 30 MB más en el APK</dd>
+          <dt>Cuándo está</dt><dd>Tras generar 3 tomas de cada una (57) y elegir</dd>
+          <dt>Riesgo</dt><dd>Alto: de las 20 pistas anteriores solo valieron 4; las otras eran canciones</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-tecnicas">
+    <h2 id="h-tecnicas">Las 20 técnicas</h2>
+    <p class="intro">Cada variación tiene el mismo volumen medio que la de hoy, medido. Ninguna tiene más agudos que el drone más claro de hoy, para que la voz se siga oyendo por encima. Rondas, Bhastrika y Kapalabhati van quietas, como hoy: con ciclos de 2 segundos una música que se mueve cansa.</p>
+    <div id="familias"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-brief">
+    <h2 id="h-brief">El brief de B</h2>
+    <p class="intro">Solo hace falta si eliges B, o si marcas alguna técnica como «Grabada». Está también en <code>por-tecnica/brief-B-por-tecnica.md</code>, listo para pegar.</p>
+    <ol class="pasos">
+      <li>Usa <b>ElevenLabs Music</b>, con el interruptor de instrumental encendido: fue el único modelo cuyas pistas pasaron la criba.</li>
+      <li>Para cada técnica, pega su texto y detrás la firma de PACE. Si hay un campo de exclusiones, pega ahí la lista.</li>
+      <li>Genera 3 tomas de cada una y escúchalas por el altavoz del portátil o del móvil. Descarta las que tengan una nota suelta, una melodía, un golpe o un cambio de volumen.</li>
+      <li>Descárgalas en WAV si se puede, con el nombre de la técnica y la toma (por ejemplo <code>box-4-toma2</code>), y pásamelas. La afinación a 432, el bucle y el volumen los hago yo.</li>
+    </ol>
+    <div class="bloque">
+      <div class="bloque-cab"><b>La firma de PACE</b><button class="copiar" type="button" data-copiar="firma">Copiar</button></div>
+      <p class="texto" id="firma-b"></p>
+    </div>
+    <div class="bloque">
+      <div class="bloque-cab"><b>Exclusiones</b><button class="copiar" type="button" data-copiar="excl">Copiar</button></div>
+      <p class="texto" id="excl-b"></p>
+    </div>
+    <div class="prompts" id="prompts-b"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-medidas">
+    <h2 id="h-medidas">Cómo está medido</h2>
+    <details class="medidas">
+      <summary>Volumen, agudos y lo que se oye en el móvil, técnica por técnica</summary>
+      <div class="tabla-wrap"><table>
+        <thead><tr><th>Técnica</th><th class="n">Volumen medio hoy</th><th class="n">Propuesta</th><th class="n">Con el pulmón lleno</th><th class="n">Agudos</th><th class="n">Banda del móvil</th></tr></thead>
+        <tbody id="tabla-medidas"></tbody>
+      </table></div>
+      <div class="nota-medida">
+        <p>Cada fila se mide en Chromium con el mismo código que suena en la página: 90 segundos de cada técnica con su respiración, sin la voz. El volumen es el RMS en dBFS antes de la ganancia de la app (0,158), la misma regla con la que se igualaron los tres drones. «Con el pulmón lleno» es el momento más alto; los drones de hoy están en -20,4. «Agudos» es la energía por encima de 2 kHz, donde viven las consonantes de la voz, comparada con hoy. «Banda del móvil» es la energía entre 300 Hz y 4 kHz, que es lo que suena por un altavoz pequeño, comparada con hoy.</p>
+        <p>Cómo se montaría A en la app: una tabla por técnica en <code>app/ui/Sound.musica.jsx</code> junto a <code>PACE_MUSICA</code>, que sigue valiendo de reserva; un segundo <code>&lt;audio&gt;</code> para la segunda voz; <code>playbackRate</code> sin conservar el tono para cambiar de nota; y en Nadi Shodhana la fase le dice a la música por qué lado se respira.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="sec" aria-labelledby="h-rec">
+    <h2 id="h-rec">Lo que recomiendo</h2>
+    <div class="recomienda">
+      <p>A para las 19 técnicas con música, y B solo para las que, después de escucharlas, marques como «Grabada».</p>
+      <p>A no añade archivos ni peso a la app, se puede subir en cuanto elijas y suena como un mismo disco, porque todas salen de los tres drones que ya aprobaste. Cada técnica es una línea de una tabla, así que cambiar una que no te guste es rápido.</p>
+      <p>B da instrumentos de verdad distintos, pero la última vez solo valieron 4 pistas de 20, son 19 archivos más (unos 30 MB en el APK) y cada uno hay que afinarlo y medirlo. Merece la pena para una o dos técnicas, no para todas. La primera candidata es Pranayama con una tanpura, que ya estaba pendiente.</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-preg">
+    <h2 id="h-preg">Lo que necesito que elijas</h2>
+    <p class="intro">Además de la elección de cada técnica, estas cuatro preguntas. Lo que marques se guarda en la página y me llega.</p>
+    <ol class="preguntas" id="preguntas"></ol>
+    <div class="bloque">
+      <div class="bloque-cab"><b>Algo más que quieras decirme</b></div>
+      <textarea id="nota" aria-label="Algo más que quieras decirme" placeholder="Por ejemplo: la de 4·7·8 me suena demasiado oscura en el móvil."></textarea>
+    </div>
+    <div class="resumen">
+      <div class="bloque-cab"><b>Tus respuestas</b><button class="copiar" type="button" id="copiar-resumen">Copiar para pegármelas</button></div>
+      <pre id="resumen"></pre>
+      <p class="estado-guardado" id="estado-guardado" aria-live="polite"></p>
+    </div>
+  </section>
+</div>
+
+<div class="barra" role="region" aria-label="Escucha">
+  <div class="barra-in">
+    <div class="aro-wrap" aria-hidden="true"><div class="aro" id="aro"></div></div>
+    <div class="ahora" aria-live="polite"><b id="ahora-nombre">Nada sonando</b><span id="ahora-fase">Pulsa Escuchar en una técnica</span></div>
+    <div class="mandos">
+      <label for="voz">Voz <select id="voz"><option value="sulafat">Clara</option><option value="bradford">Grave</option><option value="">Sin voz</option></select></label>
+      <label for="nivel">Volumen <input type="range" id="nivel" min="-18" max="6" step="1" value="0"></label>
+      <button class="btn sec" type="button" id="parar" disabled>Parar</button>
+    </div>
+  </div>
+</div>
+
+<script src="tecnicas.js"></script>
+<script src="medidas.js"></script>
+<script src="motor.js"></script>
+<script>
+(function () {
+  const D = window.PACE_POR_TECNICA, M = window.PACE_MOTOR, MED = window.PACE_MEDIDAS || {};
+  const $ = (id) => document.getElementById(id);
+  const TEC = {};
+  D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => { t.fam = fa; TEC[t.id] = t; }));
+  const NOMBRE_BASE = { claro: 'Sol claro', calido: 'Sol cálido', menor: 'Sol oscuro' };
+  const ICONO_PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/></svg>';
+  const ICONO_STOP = '<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2.5" y="2.5" width="7" height="7" rx="1" fill="currentColor"/></svg>';
+  const coma = (x, d) => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x).toFixed(d == null ? 1 : d).replace('.', ',');
+
+  function ritmo(t) {
+    const ciclo = t.f.reduce((a, p) => a + p.d, 0);
+    const txt = t.f.map((p) => p.txt.replace(/\.$/, '') + ' ' + p.d).join(' · ');
+    return t.f.length > 4 ? 'Ciclo de ' + ciclo + ' s, alternando lados' : txt + (t.quieto ? '' : ' · ciclo de ' + ciclo + ' s');
+  }
+
+  /* ---------- elecciones ---------- */
+  const OPCIONES = [['A', 'Esta'], ['hoy', 'La de hoy'], ['B', 'Grabada (B)']];
+  const PREGUNTAS = [
+    { id: 'camino', txt: '¿Qué camino seguimos?', op: [['A', 'A para todas'], ['A+B', 'A, y B solo para las que marque como «Grabada»'], ['B', 'B para todas']] },
+    { id: 'notas', txt: 'Cinco técnicas cambian de nota: Box 6·6·6·6 y Coherente 6·6 bajan a Do, Kumbhaka a Re, 4·7·8 a Mi menor y Kapalabhati sube a Do. ¿Las dejamos así?', op: [['si', 'Sí, cada una en su nota'], ['sol', 'No, todas en Sol']] },
+    { id: 'nadi', txt: 'En Nadi Shodhana la música se inclina hacia el lado por el que respiras. Solo se nota con cascos. ¿La dejamos así?', op: [['si', 'Sí'], ['no', 'No, que se quede centrada']] },
+    { id: 'drone432', txt: 'El drone de Coherente 432 es un tono puro de 96 Hz, y el altavoz de un móvil casi no da notas tan graves (mira su fila en «Cómo está medido»). ¿Lo tocamos?', op: [['igual', 'Déjalo como está'], ['cuerpo', 'Dale cuerpo para que se oiga en el móvil, en otro encargo']] },
+  ];
+  const ESTADO = { elecciones: {}, respuestas: {} };
+  const CLAVE = 'pace.respiraPorTecnica.v1';
+  try { const g = JSON.parse(localStorage.getItem(CLAVE) || 'null'); if (g && g.elecciones) Object.assign(ESTADO, g); } catch (e) { /* sin almacenamiento */ }
+  function guardaLocal() { try { localStorage.setItem(CLAVE, JSON.stringify(ESTADO)); } catch (e) { /* sin almacenamiento */ } }
+
+  let db = null;
+  const colas = {};
+  function guardaDb(col, id, datos) {
+    if (!db) return;
+    const k = col + '/' + id;
+    colas[k] = (colas[k] || Promise.resolve()).then(() => db.collection(col).doc(id).set(datos))
+      .then(() => { $('estado-guardado').textContent = 'Guardado en la página.'; })
+      .catch((e) => { $('estado-guardado').textContent = 'No se ha podido guardar en la página (' + ((e && e.code) || 'error') + '). Usa «Copiar para pegármelas».'; });
+  }
+  function elige(id, op) {
+    ESTADO.elecciones[id] = op; guardaLocal(); guardaDb('elecciones', id, { opcion: op, tecnica: TEC[id].n });
+    pintaEleccion(id); pintaResumen();
+  }
+  function responde(id, op) {
+    ESTADO.respuestas[id] = op; guardaLocal(); guardaDb('respuestas', id, { opcion: op });
+    pintaPreguntas(); pintaResumen();
+  }
+
+  /* ---------- pintar ---------- */
+  function medidaCorta(id) {
+    const m = MED[id];
+    if (!m || !m.a) return '';
+    const dv = m.a.ciclo - m.hoy.ciclo;
+    const vol = Math.abs(dv) < 0.25 ? 'Volumen medio igual que hoy' : 'Volumen medio ' + coma(dv) + ' dB';
+    const tope = Math.max(...Object.values(MED).filter((x) => x.a).map((x) => x.hoy.agudos));
+    return vol + ' · ' + Math.abs(m.a.agudos - tope).toFixed(0) + ' dB menos agudos que el drone más claro de hoy · en el móvil ' + coma(m.a.banda - m.hoy.banda) + ' dB';
+  }
+  function pintaFamilias() {
+    const raiz = $('familias'); raiz.textContent = '';
+    D.FAMILIAS.forEach((fa) => {
+      const sec = document.createElement('section'); sec.className = 'familia';
+      sec.innerHTML = '<div class="familia-cab"><h3></h3><span class="aside"></span><span class="hoy"></span></div><div class="rejilla"></div>';
+      sec.querySelector('h3').textContent = fa.nombre;
+      sec.querySelector('.aside').textContent = fa.aside;
+      sec.querySelector('.hoy').textContent = 'Hoy suena: ' + NOMBRE_BASE[fa.hoy];
+      const rej = sec.querySelector('.rejilla');
+      fa.tecnicas.forEach((t) => {
+        const art = document.createElement('article'); art.className = 'tec'; art.id = 't-' + t.slug;
+        art.innerHTML = '<div class="tec-cab"><h3></h3><span class="ritmo"></span></div><p class="car"></p><p class="porque"></p>' +
+          '<dl class="receta"><dt>Nota</dt><dd data-k="nota"></dd><dt>Segunda voz</dt><dd data-k="voz2"></dd><dt>Color</dt><dd data-k="color"></dd><dt>Movimiento</dt><dd data-k="mov"></dd></dl>' +
+          '<div class="botones"></div><p class="medida"></p><div class="eleccion" role="group"></div>';
+        art.querySelector('h3').textContent = t.n;
+        art.querySelector('.ritmo').textContent = ritmo(t) + ' · ' + t.min + ' min';
+        art.querySelector('.car').textContent = t.car;
+        art.querySelector('.porque').textContent = t.porque;
+        art.querySelectorAll('[data-k]').forEach((dd) => { dd.textContent = t.chips[dd.dataset.k]; });
+        const bot = art.querySelector('.botones');
+        const modos = t.drone432 ? [['hoy', 'Escuchar su drone']] : [['a', 'Escuchar'], ['hoy', 'Así suena hoy']];
+        modos.forEach(([modo, txt], k) => {
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'btn' + (k ? ' sec' : '');
+          b.dataset.id = t.id; b.dataset.modo = modo; b.dataset.txt = txt; b.setAttribute('aria-pressed', 'false');
+          b.innerHTML = ICONO_PLAY + '<span></span>'; b.querySelector('span').textContent = txt;
+          b.addEventListener('click', () => tocar(t.id, modo));
+          bot.appendChild(b);
+        });
+        art.querySelector('.medida').textContent = t.drone432 ? 'No suena con la música de Respira: lleva su propio drone desde siempre.' : medidaCorta(t.id);
+        const el = art.querySelector('.eleccion');
+        if (t.drone432) { el.remove(); } else {
+          el.setAttribute('aria-label', 'Tu elección para ' + t.n);
+          el.innerHTML = '<span class="lab">Me quedo con</span>';
+          OPCIONES.forEach(([op, txt]) => {
+            const p = document.createElement('button'); p.type = 'button'; p.className = 'pill'; p.dataset.op = op; p.textContent = txt;
+            p.addEventListener('click', () => elige(t.id, ESTADO.elecciones[t.id] === op ? null : op));
+            el.appendChild(p);
+          });
+        }
+        rej.appendChild(art);
+      });
+      raiz.appendChild(sec);
+    });
+    Object.keys(TEC).forEach(pintaEleccion);
+  }
+  function pintaEleccion(id) {
+    const art = $('t-' + TEC[id].slug); if (!art) return;
+    art.querySelectorAll('.eleccion .pill').forEach((p) => p.setAttribute('aria-pressed', String(ESTADO.elecciones[id] === p.dataset.op)));
+  }
+  function pintaPreguntas() {
+    const ol = $('preguntas'); ol.textContent = '';
+    PREGUNTAS.forEach((q) => {
+      const li = document.createElement('li');
+      const p = document.createElement('p'); p.textContent = q.txt; li.appendChild(p);
+      const g = document.createElement('div'); g.className = 'pills'; g.setAttribute('role', 'group'); g.setAttribute('aria-label', q.txt);
+      q.op.forEach(([op, txt]) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'pill'; b.textContent = txt;
+        b.setAttribute('aria-pressed', String(ESTADO.respuestas[q.id] === op));
+        b.addEventListener('click', () => responde(q.id, ESTADO.respuestas[q.id] === op ? null : op));
+        g.appendChild(b);
+      });
+      li.appendChild(g); ol.appendChild(li);
+    });
+  }
+  function textoResumen() {
+    const L = ['Música de Respira por técnica: mis elecciones', ''];
+    D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => {
+      if (t.drone432) return;
+      const op = ESTADO.elecciones[t.id];
+      L.push('- ' + t.n + ': ' + (op ? OPCIONES.find((o) => o[0] === op)[1].toLowerCase() : 'sin elegir'));
+    }));
+    L.push('', 'Preguntas:');
+    PREGUNTAS.forEach((q, k) => { const op = q.op.find((o) => o[0] === ESTADO.respuestas[q.id]); L.push((k + 1) + '. ' + (op ? op[1] : 'sin responder')); });
+    const nota = (ESTADO.respuestas.nota || '').trim();
+    if (nota) L.push('', 'Además: ' + nota);
+    return L.join('\n');
+  }
+  function pintaResumen() { $('resumen').textContent = textoResumen(); }
+
+  function pintaMedidas() {
+    const tb = $('tabla-medidas'); tb.textContent = '';
+    const f = (x) => (x == null || !isFinite(x) ? '—' : x.toFixed(1).replace('.', ',').replace('-', '−'));
+    D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => {
+      const m = MED[t.id]; if (!m) return;
+      const tr = document.createElement('tr');
+      const celdas = t.drone432
+        ? [t.n, f(m.hoy.ciclo), '—', '—', '—', 'banda ' + f(m.hoy.banda) + ' dBFS']
+        : [t.n, f(m.hoy.ciclo), f(m.a.ciclo), f(m.a.abierto), coma(m.a.agudos - m.hoy.agudos) + ' dB', coma(m.a.banda - m.hoy.banda) + ' dB'];
+      celdas.forEach((c, k) => { const td = document.createElement('td'); td.textContent = c; if (k) td.className = 'n'; tr.appendChild(td); });
+      tb.appendChild(tr);
+    }));
+  }
+
+  /* ---------- brief B ---------- */
+  function briefEntero() {
+    const L = ['# Brief B: un drone por técnica de Respira', '', 'Firma de PACE (va detrás de cada texto):', '', D.FIRMA_B, '', 'Exclusiones:', '', D.EXCLUSIONES_B, ''];
+    D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => { if (t.b) L.push('## ' + t.slug + ' (' + t.n + ')', '', t.b + ' ' + D.FIRMA_B, ''); }));
+    return L.join('\n');
+  }
+  function pintaBrief() {
+    $('firma-b').textContent = D.FIRMA_B;
+    $('excl-b').textContent = D.EXCLUSIONES_B;
+    const raiz = $('prompts-b'); raiz.textContent = '';
+    D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => {
+      if (!t.b) return;
+      const d = document.createElement('div'); d.className = 'bloque';
+      d.innerHTML = '<div class="bloque-cab"><b></b><button class="copiar" type="button">Copiar con la firma</button></div><span class="ritmo"></span><p class="texto"></p>';
+      d.querySelector('b').textContent = t.slug;
+      d.querySelector('.ritmo').textContent = t.n + ' · ' + fa.nombre;
+      d.querySelector('.texto').textContent = t.b;
+      const bt = d.querySelector('.copiar');
+      bt.addEventListener('click', () => copiar(t.b + ' ' + D.FIRMA_B, bt));
+      raiz.appendChild(d);
+    }));
+    document.querySelectorAll('[data-copiar]').forEach((bt) => bt.addEventListener('click', () => copiar(bt.dataset.copiar === 'firma' ? D.FIRMA_B : D.EXCLUSIONES_B, bt)));
+  }
+  function copiar(txt, bt) {
+    const antes = bt.textContent;
+    const ok = () => { bt.textContent = 'Copiado'; setTimeout(() => { bt.textContent = antes; }, 1600); };
+    try {
+      navigator.clipboard.writeText(txt).then(ok, () => seleccionar(bt));
+    } catch (e) { seleccionar(bt); }
+  }
+  function seleccionar(bt) {
+    const caja = bt.closest('.bloque, .resumen');
+    const el = caja && caja.querySelector('.texto, pre');
+    if (!el) return;
+    const r = document.createRange(); r.selectNodeContents(el);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    bt.textContent = 'Seleccionado: cópialo';
+  }
+
+  /* ---------- audio ---------- */
+  const GANANCIA_APP = 0.158;
+  const ARCHIVO = { claro: 'sol-claro', calido: 'sol-calido', menor: 'sol-menor' };
+  /* Locuciones (PACE_VOZ_CLIPS de app/ui/Sound.voz.jsx): suena si la palabra cabe en la fase con
+     0,15 s de margen; si no, la app sintetiza un soplo y aquí también. */
+  const CLIPS = {
+    sulafat: { inhale: ['inhala', 0.386, 1.79], hold: ['manten', 0.021, 1.341], exhale: ['exhala', 0.644, 2.122] },
+    bradford: { inhale: ['inhala', 0.001, 0.912], hold: ['manten', 0.001, 1.219], exhale: ['exhala', 0.108, 3.68] },
+  };
+  let ctx = null, bus = null, musicaBus = null, vozBus = null;
+  const decod = {};
+  const est = { voz: 'sulafat', nivel: 0, sonando: null };
+  let motor = null, entrada = null, plan = null, timer = 0, raf = 0, vivos = [];
+
+  async function bytes(nombre, carpeta) {
+    const emb = window.PACE_AUDIO_B64 && window.PACE_AUDIO_B64[nombre];
+    if (emb) { const bin = atob(emb); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; }
+    for (const url of ['audio/' + nombre + '.mp3', carpeta + nombre + '.mp3']) {
+      try { const r = await fetch(url); if (r.ok) return await r.arrayBuffer(); } catch (e) { /* siguiente sitio */ }
+    }
+    throw new Error('No encuentro ' + nombre + '.mp3');
+  }
+  function decodifica(nombre, carpeta) {
+    if (!decod[nombre]) decod[nombre] = bytes(nombre, carpeta).then((ab) => ctx.decodeAudioData(ab)).catch((e) => { delete decod[nombre]; throw e; });
+    return decod[nombre];
+  }
+  const drone = (k) => decodifica(ARCHIVO[k], '../bases/');
+  const voz = (v, a) => decodifica(v + '-' + a, '../../../../../app/breathe/voz/');
+
+  function asegura() {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    bus = ctx.createGain(); bus.gain.value = M.dbLin(est.nivel); bus.connect(ctx.destination);
+    musicaBus = ctx.createGain(); musicaBus.gain.value = GANANCIA_APP; musicaBus.connect(bus);
+    vozBus = ctx.createGain(); vozBus.connect(bus);
+  }
+
+  async function tocar(id, modo) {
+    if (est.sonando && est.sonando.id === id && est.sonando.modo === modo) { parar(); return; }
+    parar();
+    asegura();
+    try { await ctx.resume(); } catch (e) { /* el navegador manda */ }
+    const t = TEC[id];
+    const yo = { id, modo };
+    est.sonando = yo; pintaSonando('Cargando…');
+    const rec = modo === 'a' ? Object.assign({}, t.a, { ajusteDb: (MED[id] && MED[id].ajusteDb) || 0 }) : M.recetaHoy(t.fam);
+    const bases = t.drone432 ? [] : [rec.base].concat(rec.voz2 ? [rec.voz2.base] : []);
+    let bufs = {};
+    try {
+      const lista = await Promise.all(bases.map((k) => drone(k).then((b) => [k, b])));
+      lista.forEach(([k, b]) => { bufs[k] = b; });
+      if (est.voz) await Promise.all(['inhala', 'exhala', 'manten'].map((a) => voz(est.voz, a))).catch(() => null);
+    } catch (e) {
+      if (est.sonando === yo) { est.sonando = null; pintaSonando(); $('ahora-fase').textContent = 'No se han podido cargar los sonidos. Abre el enlace publicado o la copia que te envié.'; }
+      return;
+    }
+    if (est.sonando !== yo) return;
+    const t0 = ctx.currentTime + 0.1;
+    entrada = ctx.createGain();
+    entrada.gain.setValueAtTime(0, t0); entrada.gain.linearRampToValueAtTime(1, t0 + 1.5);
+    entrada.connect(t.drone432 ? vozBus : musicaBus);
+    motor = t.drone432 ? M.montar432(ctx, entrada, t0) : M.montar(ctx, rec, bufs, entrada, t0, !!t.quieto);
+    /* La primera inhalación llega 1,5 s después del sonido, como en la app tras el «prepárate». */
+    plan = { idx: 0, t: t0 + 1.5, m: t.quieto ? 1 : 0, fases: [], tec: t };
+    const programa = () => { if (est.sonando === yo) M.programarHasta(plan, t, motor, ctx.currentTime + 1.5, senal); };
+    programa(); timer = setInterval(programa, 200);
+    pintaSonando(); dibuja();
+  }
+
+  function parar() {
+    clearInterval(timer); cancelAnimationFrame(raf);
+    if (ctx && entrada) {
+      const tt = ctx.currentTime, e = entrada, m = motor;
+      e.gain.cancelScheduledValues(tt); e.gain.setValueAtTime(e.gain.value, tt); e.gain.linearRampToValueAtTime(0, tt + 0.4);
+      m.parar(tt + 0.5);
+      vivos.forEach((s) => { try { s.stop(tt); } catch (er) { /* ya parada */ } });
+      setTimeout(() => { try { e.disconnect(); } catch (er) { /* ya desconectada */ } }, 700);
+    }
+    entrada = null; motor = null; plan = null; vivos = [];
+    est.sonando = null; pintaSonando();
+  }
+
+  function senal(p, tt) {
+    if (est.voz) {
+      const c = CLIPS[est.voz][p.voz];
+      const k = est.voz + '-' + (c && c[0]);
+      if (c && (c[2] - c[1]) + 0.15 <= p.d && decod[k]) {
+        decod[k].then((buf) => {
+          if (!plan) return;
+          const s = ctx.createBufferSource(); s.buffer = buf; s.connect(vozBus);
+          s.start(Math.max(tt, ctx.currentTime), Math.max(0, c[1] - 0.04)); vivos.push(s);
+          s.onended = () => { vivos = vivos.filter((x) => x !== s); };
+        });
+        return;
+      }
+    }
+    if (p.voz === 'hold') return;
+    soplo(p, tt);
+  }
+  /* El soplo de la app (breathNoise): ruido por un paso-bajo que barre 200→800 Hz al inhalar y al revés. */
+  let ruido = null;
+  function soplo(p, tt) {
+    if (!ruido) { ruido = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); const d = ruido.getChannelData(0); for (let k = 0; k < d.length; k++) d[k] = Math.random() * 2 - 1; }
+    const s = ctx.createBufferSource(); s.buffer = ruido; s.loop = true;
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 1.5;
+    const gn = ctx.createGain(); s.connect(f); f.connect(gn); gn.connect(vozBus);
+    const sube = p.voz === 'inhale';
+    f.frequency.setValueAtTime(sube ? 200 : 800, tt); f.frequency.linearRampToValueAtTime(sube ? 800 : 200, tt + p.d);
+    gn.gain.setValueAtTime(0, tt); gn.gain.linearRampToValueAtTime(0.05, tt + Math.min(0.4, p.d / 3));
+    gn.gain.setValueAtTime(0.05, tt + p.d * 0.7); gn.gain.linearRampToValueAtTime(0, tt + p.d);
+    s.start(tt); s.stop(tt + p.d + 0.05); vivos.push(s);
+  }
+
+  function pintaSonando(txt) {
+    const s = est.sonando;
+    document.querySelectorAll('.tec').forEach((a) => a.classList.remove('sonando'));
+    document.querySelectorAll('.botones .btn').forEach((b) => {
+      const on = !!s && b.dataset.id === s.id && b.dataset.modo === s.modo;
+      b.setAttribute('aria-pressed', String(on));
+      b.querySelector('svg').outerHTML = on ? ICONO_STOP : ICONO_PLAY;
+      b.querySelector('span').textContent = on ? 'Parar' : b.dataset.txt;
+    });
+    $('parar').disabled = !s;
+    if (!s) { $('ahora-nombre').textContent = 'Nada sonando'; $('ahora-fase').textContent = 'Pulsa Escuchar en una técnica'; $('aro').style.transform = 'scale(0.9)'; return; }
+    const t = TEC[s.id];
+    $('t-' + t.slug).classList.add('sonando');
+    $('ahora-nombre').textContent = t.n + (t.drone432 ? ' · su drone' : s.modo === 'a' ? ' · propuesta' : ' · así suena hoy');
+    if (txt) $('ahora-fase').textContent = txt;
+  }
+
+  function dibuja() {
+    if (!plan) return;
+    const tt = ctx.currentTime;
+    const f = plan.fases.filter((x) => x.t <= tt).pop();
+    if (f) {
+      const x = Math.min(1, (tt - f.t) / f.d), k = 0.5 - 0.5 * Math.cos(Math.PI * x);
+      const m = f.desde + (f.hasta - f.desde) * k;
+      $('aro').style.transform = 'scale(' + (0.7 + 0.5 * m).toFixed(3) + ')';
+      $('ahora-fase').textContent = f.txt + ' · ' + Math.max(1, Math.ceil(f.d - (tt - f.t))) + ' s' + (plan.tec.quieto ? ' · música quieta' : '');
+    } else { $('ahora-fase').textContent = 'Prepárate'; }
+    raf = requestAnimationFrame(dibuja);
+  }
+
+  /* ---------- mandos ---------- */
+  $('parar').addEventListener('click', parar);
+  $('voz').addEventListener('change', (ev) => {
+    est.voz = ev.target.value;
+    if (ctx && est.voz) ['inhala', 'exhala', 'manten'].forEach((a) => voz(est.voz, a).catch(() => null));
+  });
+  $('nivel').addEventListener('input', (ev) => {
+    est.nivel = Number(ev.target.value);
+    if (bus) bus.gain.setTargetAtTime(M.dbLin(est.nivel), ctx.currentTime, 0.1);
+  });
+  $('copiar-resumen').addEventListener('click', (ev) => copiar(textoResumen(), ev.currentTarget));
+  let notaId = 0;
+  $('nota').value = ESTADO.respuestas.nota || '';
+  $('nota').addEventListener('input', (ev) => {
+    ESTADO.respuestas.nota = ev.target.value; guardaLocal(); pintaResumen();
+    clearTimeout(notaId); notaId = setTimeout(() => guardaDb('respuestas', 'nota', { texto: ESTADO.respuestas.nota }), 900);
+  });
+
+  pintaFamilias(); pintaPreguntas(); pintaBrief(); pintaMedidas(); pintaResumen();
+  window.PACE_ESCUCHA = { briefEntero, textoResumen };
+
+  (async () => {
+    try { db = window.claude && await window.claude.use('db'); } catch (e) { db = null; }
+    if (!db) return;
+    db.collection('elecciones').onSnapshot((snap) => {
+      snap.docs.forEach((d) => { if (d.exists && TEC[d.id]) ESTADO.elecciones[d.id] = d.data().opcion || null; });
+      Object.keys(TEC).forEach(pintaEleccion); pintaResumen();
+    }, () => {});
+    db.collection('respuestas').onSnapshot((snap) => {
+      snap.docs.forEach((d) => {
+        if (!d.exists) return;
+        if (d.id === 'nota') { const v = d.data().texto || ''; ESTADO.respuestas.nota = v; if (document.activeElement !== $('nota')) $('nota').value = v; }
+        else ESTADO.respuestas[d.id] = d.data().opcion || null;
+      });
+      pintaPreguntas(); pintaResumen();
+    }, () => {});
+  })();
+})();
+</script>
