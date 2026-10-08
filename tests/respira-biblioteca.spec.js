@@ -17,6 +17,9 @@
    · QUE LA SUGERENCIA NO EXIJA LEER UN AVISO. Con el pozo de cuerpo —que en
      Respira no descarta nada— el día que tocaba salía `Kumbhaka 1:4:2`: apnea
      avanzada, premium y con modal de seguridad. Lo destapó la maqueta.
+   · QUE TODA TÉCNICA QUE BOMBEA AIRE PIDA SU AVISO. «Bhastrika · Fuelle»
+     respiraba a 30 por minuto, como Kapalabhati, y empezaba sin modal: el dato
+     `safety` se había quedado fuera de su fila (caza del 7 de octubre).
 
    TODO RELACIONAL: ningún recuento vive escrito aquí. Las cuentas se derivan
    del CATÁLOGO leído de las fuentes, así que añadir una rutina no pone el test
@@ -40,6 +43,7 @@ function catalogo() {
   const errs = [
     sandbox.cargar(ctx, sb, 'app/breathe/BreatheLibrary.jsx', { __B: 'BREATHE_ROUTINES' }),
     sandbox.cargar(ctx, sb, 'app/ui/library-rules.js', { __U: 'libraryUmbralCorto', __R: 'libraryConRetencion' }),
+    sandbox.cargar(ctx, sb, 'app/breathe/BreatheVisual.jsx'),
   ].filter(Boolean);
   if (errs.length) throw new Error('no se pudo leer Respira: ' + errs.join(' · '));
   const rutinas = [];
@@ -47,10 +51,10 @@ function catalogo() {
   /* GUARD DE CERO: con el catálogo vacío todas las comparaciones cruzarían
      conjuntos vacíos y saldrían verdes. */
   if (rutinas.length !== 20) throw new Error('catálogo de Respira incompleto: ' + rutinas.length);
-  if (typeof sb.__U !== 'function' || typeof sb.__R !== 'function') {
-    throw new Error('las reglas de biblioteca no cargaron');
+  if (typeof sb.__U !== 'function' || typeof sb.__R !== 'function' || typeof sb.getSequence !== 'function') {
+    throw new Error('las reglas de biblioteca o las secuencias no cargaron');
   }
-  _cat = { rutinas, umbral: sb.__U(rutinas), conRetencion: sb.__R };
+  _cat = { rutinas, umbral: sb.__U(rutinas), conRetencion: sb.__R, secuencia: sb.getSequence };
   return _cat;
 }
 
@@ -157,4 +161,45 @@ test('la sugerencia del día no es una rutina con aviso de seguridad', async ({ 
   expect(ids.length, 'el bloque «Para ahora» de Respira está vacío').toBe(1);
   expect(conAviso, 'la sugerencia del día obliga a leer un aviso antes de empezar')
     .not.toContain(ids[0]);
+});
+
+/* ── TODA TÉCNICA QUE BOMBEA AIRE LLEVA SU AVISO ─────────────────────────────
+   La regla del producto es que nada con hiperventilación o apnea empieza sin
+   su modal, y el dato que la cumple es `safety`, escrito a mano en cada fila.
+   Por eso se cruza con lo que la técnica HACE, que es su secuencia: se
+   deriva y no se escribe. El catálogo tiene un hueco ancho entre dos familias
+   (medido): las tranquilas no pasan de 7,5 respiraciones por minuto y las de
+   bombeo empiezan en 15. El corte va en medio, a 12, para que ni una
+   variante nueva de las unas ni de las otras caiga del lado equivocado. */
+test('toda técnica que respira a 12 o más por minuto lleva aviso de seguridad', () => {
+  const { rutinas, secuencia } = catalogo();
+  const rapidas = rutinas.filter(r => {
+    const ciclo = secuencia(r).reduce((s, f) => s + f.duration, 0);
+    return ciclo > 0 && 60 / ciclo >= 12;
+  });
+  /* GUARD: las tres de rondas, Kapalabhati y Bhastrika. Si la secuencia no se
+     leyera, la lista saldría vacía y el aserto de abajo pasaría sin mirar. */
+  expect(rapidas.length).toBeGreaterThanOrEqual(5);
+  expect(rapidas.filter(r => !r.safety).map(r => r.id),
+    'técnicas de respiración rápida que empiezan sin el modal de seguridad').toEqual([]);
+});
+
+/* Y EN LA APP: el dato no basta si la puerta no lo lee. Bhastrika es gratis,
+   así que se abre sin tocar el acceso. */
+test('Bhastrika pide el modal de seguridad antes de empezar', async ({ page }) => {
+  await irAlArtefacto(page);
+  await abrirRespira(page);
+  await page.getByRole('heading', { name: 'Bhastrika · Fuelle', exact: true }).click();
+
+  const modal = page.locator('[data-pace-modal-backdrop]').last();
+  await expect(modal.getByText('Lo he leído y asumo mi responsabilidad'),
+    'Bhastrika empieza sin el modal de seguridad').toBeVisible();
+  await expect(modal.getByRole('heading', { name: 'Bhastrika · Fuelle' })).toBeVisible();
+  /* Sin marcar la casilla no se empieza, y la sesión no está montada debajo. */
+  await expect(modal.getByRole('button', { name: 'Empezar sesión' })).toBeDisabled();
+  await expect(page.locator('[data-pace-session-root]')).toHaveCount(0);
+
+  await modal.getByText('Lo he leído y asumo mi responsabilidad').click();
+  await modal.getByRole('button', { name: 'Empezar sesión' }).click();
+  await expect(page.locator('[data-pace-session-root]').getByText('PREPÁRATE')).toBeVisible();
 });

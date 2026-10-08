@@ -22536,7 +22536,9 @@ const BREATHE_ROUTINES = {
     items: [
     { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5, 0, 5, 0] },
     { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave. La mente se aquieta.', min: 5, pattern: 'bhramari' },
-    { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
+
+
+    { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika', safety: true },
     { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada, de la tradición del yoga. Pensada para asentar la atención.', min: 8, pattern: 'nadi', access: 'premium' },
     { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
     { id: 'breathe.kumbhaka', tag: 'PRA', code: 'Pranayama', name: 'Kumbhaka 1:4:2', desc: 'Inhala 4, sostén 16, exhala 8. Solo con experiencia.', min: 6, pattern: 'pattern', cycle: [4, 16, 8, 0], safety: true, access: 'premium' }]
@@ -22991,6 +22993,37 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
 
 
 
+
+
+function respiraHecho(routine, stage, round, breathCount) {
+  if (!routine || routine.pattern !== 'rounds') return null;
+  const porRonda = routine.breaths || 0;
+  const ronda = Math.max(1, round || 1);
+  if (stage === 'hold') return { rondas: ronda, respiraciones: ronda * porRonda };
+  const sueltas = Math.min(porRonda, Math.max(0, (breathCount || 1) - 1));
+  return { rondas: ronda - 1, respiraciones: (ronda - 1) * porRonda + sueltas };
+}
+
+
+
+
+
+function respiraCifrasCierre(hecho, t) {
+  const out = [];
+  if (!hecho) return out;
+  if (hecho.rondas > 0) out.push({ label: t(hecho.rondas === 1 ? 'session.round' : 'common.rounds'), value: String(hecho.rondas) });
+  if (hecho.respiraciones > 0) out.push({ label: t(hecho.respiraciones === 1 ? 'common.breath' : 'common.breaths'), value: String(hecho.respiraciones) });
+  return out;
+}
+
+
+
+
+
+
+
+
+
 function playPhaseSound(phaseLabel, phaseDur) {
   if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
   phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
@@ -23041,9 +23074,10 @@ function useMusicaFondo(stage, paused, routine) {
 
 Object.assign(window, {
   useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia
 });
-;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, playPhaseSound, useMusicaFondo });
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, useMusicaFondo });
 })();
 </script>
   <script>
@@ -23089,6 +23123,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
   const relojHold = useHoldClock(rein.holdSec);
+  const hechoRef = useRef(null);
   const getActiveSec = () => {
     const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
     return (activeMsRef.current + open) / 1000;
@@ -23283,6 +23318,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
     completeBreathSession(routine.id, activeMin, relojHold.segundos(),
     respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
+    hechoRef.current = respiraHecho(routine, stage, round, breathCount);
     try {playSound('breathe.session.end');} catch (e) {}
     setStage('done');
   };
@@ -23312,10 +23348,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
     const stats = [
     { label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` }];
 
-    if (isRounds) {
-      stats.push({ label: t('common.rounds'), value: String(routine.rounds) });
-      stats.push({ label: t('common.breaths'), value: String(routine.breaths * routine.rounds) });
-    }
+
+    stats.push(...respiraCifrasCierre(hechoRef.current, t));
     return (
       React.createElement(SessionDone, {
         routine: displayRoutine,
