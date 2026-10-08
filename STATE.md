@@ -45,7 +45,8 @@ La home del móvil no pide scroll en ningún momento desde 360×640, en castella
 (v0.146.0, regla de Ez: «no quiero scroll de ninguna forma»). La pregunta del día dibuja el horario
 como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el día servido va sin pie:
 «Hoy voy por libre» bajo «Cambiar», «Ver todo» al final de la línea y «Al calendario» en esa hoja.
-Lo vigila `tests/home-sin-scroll.spec.js`; a 320×568 se acepta scroll.
+Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
+ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
 Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
 con un fundido que solo se ve al empezar el bloque (v0.147.0, opción A elegida por Ez). Lo vigila
@@ -72,9 +73,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    se paga.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
-   Hidrátate). El 8 de octubre dos sesiones en paralelo arreglan los tres graves de Respira e
-   Hidrátate (Bhastrika sin su aviso, «Terminar» en las rondas y el agua de ayer pasada la
-   medianoche). Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
+   Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
+   y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
+   de que Ez vea las fotos. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
    todo lo que se vea se le enseña antes en HTML.
 4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
    octubre: falta traerla a `main` y que Ez la escuche en la app.
