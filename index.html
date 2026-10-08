@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.146.0</title>
+  <title>PACE · Foco · Cuerpo — v0.146.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5786,7 +5786,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.146.0';
+const PACE_VERSION = 'v0.146.1';
 
 
 
@@ -25153,6 +25153,7 @@ function useV1Glifo(cuerpoRef, firma) {
 
 
 
+
 function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
   const f = Math.max(0, Math.min(1, fraccion || 0));
 
@@ -25163,7 +25164,7 @@ function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
     React.createElement("svg", { className: "pace-v1-aro", "data-pace-v1-aro": true, viewBox: "0 0 100 100", "aria-hidden": "true" },
     React.createElement("circle", { className: "pace-v1-aro-pista", cx: "50", cy: "50", r: "48.5", pathLength: "100", strokeWidth: grosor }),
     React.createElement("circle", { className: "pace-v1-aro-arco", cx: "50", cy: "50", r: "48.5", pathLength: "100", strokeWidth: grosor,
-      style: { stroke: accent, strokeDasharray: `${(f * 100).toFixed(2)} 100` } })
+      style: { stroke: accent, strokeDasharray: `${(f * 100).toFixed(2)} 100`, opacity: f > 0 ? 1 : 0 } })
     ));
 
 }
@@ -25312,7 +25313,6 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
-  const [faseTotal, setFaseTotal] = useStateV1(0);
   const sessionStart = useRefV1(Date.now());
 
 
@@ -25348,7 +25348,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
     const su = v1StepSetup(routine, idx);
-    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);setFaseTotal(su.estimatedSeconds);} else
+    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);} else
     setPhase('work');
   };
   const advanceStep = (early) => {
@@ -25356,15 +25356,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     startStep(stepIdx + 1);
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
-  const addPlaceTime = () => {setPlaceLeft((c) => c + V1_MAS_TIEMPO);setFaseTotal((c) => c + V1_MAS_TIEMPO);};
-  const addChangeTime = () => {setChangeLeft((c) => c + V1_MAS_TIEMPO);setFaseTotal((c) => c + V1_MAS_TIEMPO);};
+  const addPlaceTime = () => setPlaceLeft((c) => c + V1_MAS_TIEMPO);
+  const addChangeTime = () => setChangeLeft((c) => c + V1_MAS_TIEMPO);
   const onSideReady = () => {setSide(1);setPhase('work');setElapsed(0);};
 
 
   const enterChange = () => {
 
 
-    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));setFaseTotal(v1TransitionSeconds(step));
+    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));
 
     try {playSound('move.side');} catch (e) {}
   };
@@ -25615,8 +25615,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   null;
 
 
-  const fraccion = phase === 'place' || phase === 'change' ?
-  faseTotal ? 1 - (phase === 'place' ? placeLeft : changeLeft) / faseTotal : 0 :
+
+  const fraccion = phase === 'place' || phase === 'change' ? 0 :
   step.mode === 'reps' ? Math.min(1, elapsed / (v1RepTarget(step) * v1RepSeconds(step))) :
   v1StepDur(step) ? elapsed / v1StepDur(step) : 0;
 
