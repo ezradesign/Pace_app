@@ -5,9 +5,10 @@
  * entera: con la pregunta ya arreglada, el día servido seguía pidiendo 4 px en
  * su móvil (20 en inglés) y hasta 78 a 360×640, y la tarjeta corta 17.
  *
- * Aquí se recorren los cinco momentos de la home —la tarjeta corta (por libre),
+ * Aquí se recorren los momentos de la home —la tarjeta corta (por libre),
  * la pregunta, el día servido eligiéndolo a las 10:00 (llegar tarde añade una
- * línea a la frase), el día servido al empezar y con la pausa abierta— en los dos
+ * línea a la frase), el día servido al empezar, con la pausa abierta y el día ya
+ * contestado de tu semana— en los dos
  * idiomas y en las pantallas que importan, de 360×640 (el Android pequeño) a
  * 412×844. A 320×568 se acepta scroll (decisión de Ez): para caber habría que
  * encoger el aro y lo de dentro.
@@ -32,6 +33,7 @@ const MOMENTOS = [
   { nombre: 'la pregunta', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true },
   { nombre: 'el día servido llegando a las 10:00', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true, elige: 'jornada' },
   { nombre: 'el día servido al empezar', semilla: { ritmo: { dia: JORNADA } }, hora: '09:00' },
+  { nombre: 'el día ya contestado', semilla: { ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'] } }, hora: '08:30' },
   { nombre: 'la pausa abierta', semilla: { ritmo: { dia: Object.assign({}, JORNADA, { pausa: 1 }) }, cycle: 1,
     lastActiveDay: 'Thu Oct 08 2026', _historyMigrated: true }, hora: '09:50' },
 ];

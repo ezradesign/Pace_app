@@ -59,7 +59,10 @@ function RitmoSobre({ m }) {
    sus horas se ponen al elegirla; pero pasada su hora el chip se apaga y no se podría
    elegir para moverla a la tarde. Entonces el chip deja de ser botón y enseña sus dos horas
    para cambiarlas en el sitio; en cuanto el tramo vuelve a caber en el día, es un chip más. */
-function RitmoChips({ state, editarMedia }) {
+/* `tuyo` (el día ya contestado, RitmoManana.jsx): la opción de tu semana va marcada; se
+   sigue eligiendo como las otras. Sin etiqueta «Tu martes»: a 1280 partía el nombre de la
+   opción en dos líneas, y el título ya dice «Hoy, como cada martes». */
+function RitmoChips({ state, editarMedia, tuyo }) {
   const { t, tn } = useT();
   const horas = editarMedia ? ritmoHuecos(ritmoDe(state).horario) : null;
   return (
@@ -76,7 +79,7 @@ function RitmoChips({ state, editarMedia }) {
           );
         }
         return (
-          <button key={op} type="button" className="pace-rt-chip" data-pace-ritmo-opcion={op}
+          <button key={op} type="button" className={'pace-rt-chip' + (op === tuyo ? ' pace-rt-chip-tuyo' : '')} data-pace-ritmo-opcion={op}
             disabled={vacia} onClick={() => ritmoElegir(op)}>
             <b>{t('ritmo.opcion.' + op)}</b>
             <span>{ritmoSub(op, m, vacia, t, tn)}</span>
@@ -99,8 +102,12 @@ function ritmoSub(op, m, vacia, t, tn) {
 }
 
 function RitmoPregunta({ state }) {
-  const { t } = useT();
+  const { t, tn } = useT();
   const R = ritmoDe(state);
+  /* El día ya contestado (RitmoManana.jsx): con tu semana guardada, la pregunta llega con
+     la respuesta de siempre para hoy. */
+  const H = ritmoHabitual(state);
+  const dia = H ? ritmoNombreDia(H.diaSemana, t) : '';
   const huecos = ritmoHuecos(R.horario);
   /* s197 (A1, elegida mirándola): DOS frases. La de arriba es la jornada entera; debajo,
      una segunda corta con las dos horas de la media jornada. Cuesta 22 px de panel en
@@ -117,28 +124,35 @@ function RitmoPregunta({ state }) {
       <div className="pace-rt-panel pace-rt-esc" data-pace-ritmo-estado="pregunta">
         <div className="pace-rt-cab">
           <div>
-            <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
-            <div className="pace-rt-sub">{t('ritmo.sub')}</div>
+            <div className="pace-rt-titulo">{H ? tn('ritmo.manana.titulo', { dia }) : t('ritmo.pregunta')}</div>
+            {H ? null : <div className="pace-rt-sub">{t('ritmo.sub')}</div>}
             <div className="pace-rt-sub pace-rt-frase">{frase}</div>
             <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>
           </div>
           <div className="pace-rt-der"><RitmoLibre /></div>
         </div>
-        <RitmoChips state={state} />
+        {H ? (
+          <div className="pace-rt-habitual-fila" data-pace-ritmo-estado="habitual" data-pace-ritmo-habitual={H.opcion}>
+            <RitmoChips state={state} tuyo={H.opcion} />
+            <RitmoComienzaHabitual />
+          </div>
+        ) : <RitmoChips state={state} />}
       </div>
       {/* EN EL MÓVIL, SIN PIE Y CON EL HORARIO DIBUJADO (Ez eligió la opción 2 y, de sus tres
           maquetaciones, la B): con el pie y las dos frases la home pedía 28 px de scroll a
           375×667 y 46 a 360×640. «Hoy voy por libre» sube a la fila del título como enlace,
           el horario es una línea del día (RitmoDiaLinea) y las horas de la media jornada se
           ponen al elegirla (RitmoFraseMenu las edita). En escritorio no cambia nada. */}
-      <div className="pace-rt-panel pace-rt-mov pace-rt-preg" data-pace-ritmo-estado="pregunta">
-        <div className="pace-rt-mov-cab">
-          <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
-          <RitmoLibre enlace />
+      {H ? <RitmoMananaMovil h={H} /> : (
+        <div className="pace-rt-panel pace-rt-mov pace-rt-preg" data-pace-ritmo-estado="pregunta">
+          <div className="pace-rt-mov-cab">
+            <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
+            <RitmoLibre enlace />
+          </div>
+          <RitmoDiaLinea horario={R.horario} />
+          <RitmoChips state={state} editarMedia />
         </div>
-        <RitmoDiaLinea horario={R.horario} />
-        <RitmoChips state={state} editarMedia />
-      </div>
+      )}
     </React.Fragment>
   );
 }

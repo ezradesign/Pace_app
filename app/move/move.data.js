@@ -51,7 +51,7 @@ var MOVE_ROUTINES = {
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
+              setup: 'Manos en la mesa, algo más abiertas que los hombros. Pasos atrás, cuerpo recto en diagonal.',
               action: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
               care: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
@@ -78,7 +78,7 @@ var MOVE_ROUTINES = {
           { name: 'Fondos en silla', mode: 'reps', reps: 12, dur: 40,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Siéntate al borde de una silla estable y sin ruedas. Manos en el borde, a los lados de las caderas. Desliza la cadera fuera del asiento.',
+              setup: 'Al borde de una silla estable, sin ruedas. Manos junto a las caderas; desliza la cadera fuera.',
               action: 'Baja doblando los codos hacia atrás. Sube empujando con los brazos.',
               care: 'Codos apuntando atrás, no hacia fuera. Baja solo hasta donde el hombro vaya cómodo.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,

@@ -2,7 +2,51 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.148.3.
+
+## Al cerrar la nube (8 oct. 2026, tarde): lo que queda abierto
+
+Se trabajó con varias sesiones en paralelo y un coordinador (`docs/WORKFLOW.md` §9). Al acabarse el
+crédito de la nube quedó así. Cada rama lleva en el mensaje de su último commit un bloque
+`TRASPASO:` (o `CHANGELOG:`/`STATE:`/`DECISIONES:`) con lo que falta.
+
+- **`main-sig4tn`**: v0.148.0 a v0.148.3 (Fase 3 gratis: la semana tipo y el día ya contestado; el
+  aro vacío al colocarse; seis fallos de la caza; la bola del aro). **En `main` desde la noche del
+  8 oct.**, con la suite entera en verde (468) en el PC de Ez. Esa primera suite probó otra carpeta
+  sin decirlo (un servidor colgado de otra sesión en el 8765); desde entonces la suite se para si
+  el servidor no es el de su carpeta.
+- **Ramas aparcadas, a la espera de Ez** (mira su último commit):
+- **Ramas aparcadas** (mira su último commit). El 8 oct. por la noche Ez aceptó todas las
+  recomendaciones pendientes:
+  - `claude/respira-bugs-graves-31faf7`: **en `main` como v0.148.4** (Bhastrika con su aviso;
+    «Terminar» cuenta lo hecho, variante A sin ceros). El texto del aviso por técnica lo resuelve
+    respira-14 de la rama de propuestas.
+  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct.; nueve preguntas sin
+    contestar (no tenían recomendación en el resumen). Faltan sus pruebas.
+  - `claude/calendario-sincronizacion`: Google y Microsoft; faltan los ids que crea Ez.
+  - `claude/respira-musica-drones`: el drone de Respira; Ez tiene que escucharlo. Ez pidió además
+    un drone propio por técnica: sesión en paralelo en `claude/respira-drones-por-tecnica`.
+  - `claude/premium-codigos-tester`: qué se cierra y códigos de por vida para testers (en Android,
+    los códigos promocionales de Play Console). Espera la llave y la lista de testers de Ez.
+  - `claude/runner-circulo-letra`: **en `main` como v0.150.0** (serif itálica y tope de 95 letras
+    por frase; el dibujo de Mueve iguala al de Estira). «Cuídate» sigue en sans: no se preguntó.
+  - Mensaje de novedades para el grupo de testers, con tres capturas: `archivos/testers-8oct/`.
+  - La pausa más elegante (pedida por Ez): sesión en paralelo en `claude/pausa-elegante`, solo una
+    página para elegir.
+  - `claude/glifos-revision-8oct`: **en `main`**; la piedra de amolar ya está en su logro
+    (v0.148.5). Faltan los anillos de «Rondas maestra» y la vela de «Larga sesión».
+  - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez desde la nube
+    y **no está en el repo ni en ninguna rama**: si Ez no la conserva, hay que rehacerla. La
+    tanda 2, las explicaciones de ejercicios, respeta el tope de 95 letras.
+  - Barra lateral más útil y bonita (pedida por Ez): sesión en paralelo en `claude/sidebar-propuesta`,
+    solo una página para elegir.
+- **El motor de la semana** (lo de pago de «A tu ritmo»): Ez aceptó la página
+  (`archivos/motor-semana/motor-semana.html`, https://claude.ai/artifact/EGfS13xFn6oU4BpoRihdBL):
+  aprende cuatro cosas, como mucho dos cambios y 10 paradas por semana, la carta en una ventana
+  (también en semanas sin cambios) y nada sin PACE completo. **Desde v0.149.0 se guarda el resumen
+  de cada día** (`ritmo.day.closed`). El motor y la carta, cuando haya semanas de datos.
+- En la nube, Playwright 1.62.1 pedía Chromium 1234 y solo había el 1194: se apañó con
+  `PLAYWRIGHT_BROWSERS_PATH` y enlaces. En el PC de Ez no hace falta.
 
 ## Cómo seguir desde otra cuenta
 
@@ -35,6 +79,16 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
+- **La bola del aro al empezar: hecha (v0.148.3).** Ez vio que al pulsar «Empezar» la bola y su halo
+  nacían «como por debajo»: la niebla del horizonte los cortaba por la mitad. Eligió la opción A
+  viendo fotos de la app real: el mismo recorrido, la bola entera en su propia capa y un fundido (el
+  punto aparece y el halo se abre después), solo al empezar el bloque. Descartadas: sin fundido (B) y
+  empezar a las doce como un reloj (C), que escondía la bola tras la tarjeta a mitad de bloque.
+- **Aro de Mueve y Estira vacío al colocarse: hecho (v0.148.1).** Ez escribió «el aro de tiempo
+  que se rellene para empezar queda raro, mejor es vacío ya que no ha empezado el ejercicio». Vio
+  tres opciones en fotos y eligió la A (vacío del todo, solo el trazo de fondo), también en la pausa
+  de «Cambia de lado». El aro solo cuenta el ejercicio y el descanso; lo vigila
+  `tests/runner-aro-colocate.spec.js`.
 - **Home del móvil sin scroll: hecha en v0.146.0.** Ez vio la maquetación B (la pregunta con el
   horario como una línea, de la rama `claude/project-thread-ft7sc2`) en fotos de la app real y dijo
   «súbela», con una condición: «no quiero scroll de ninguna forma», tampoco en inglés. Desde
@@ -84,9 +138,13 @@ antes de trabajar y mira en `git log` qué subió la otra.
   eligió que el día ya contestado sea **para todos**: «¿Cómo es tu semana?» en la bienvenida
   (gratis), cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis), y el
   lunes una carta corta con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
-  «Vale» (premium). Nada de tira semanal en la home. La maqueta está en `archivos/semana/`. Lo está
-  montando el hilo «Maqueta de «A tu ritmo» semanal» de la cuenta de Claude del proyecto «Pace App»:
-  primero las dos partes gratis y luego la carta. Mira `git log` antes de tocarlo.
+  «Vale» (premium). Nada de tira semanal en la home. La maqueta está en `archivos/semana/`. **La
+  parte gratis está en v0.148.0** (Ez la vio en fotos de la app el 8 oct. y eligió, en el móvil,
+  «· como cada jueves» junto al título). Ez quiere que lo de pago sea que la app **te vaya
+  conociendo y cada semana adapte los ejercicios a lo que prefieres**, también con el calendario
+  conectado a veces: lo siguiente es el motor que aprende («¿te ayudó?», lo hecho y lo saltado,
+  «Otra», las horas a las que paras), con la carta del lunes como su cara, enseñado antes en una
+  página.
 - **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
   están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
   secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` y lo guarda
@@ -172,8 +230,8 @@ primera versión de pago, en web y Android.
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
-| «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
-| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, la rama `claude/caza-7oct-arreglos` arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
+| «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
+| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
 | Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez

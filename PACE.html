@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.147.0</title>
+  <title>PACE · Foco · Cuerpo — v0.150.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -228,6 +228,7 @@
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.calendario.web.js"></script>
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.calendario.destinos.js"></script>
   <script type="text/babel" src="app/state-ritmo.jsx"></script>
+  <script type="text/babel" src="app/state-ritmo.support.jsx"></script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
        uso. Memoria del usuario sobre su progreso, NO telemetria — no sale del
        dispositivo y no hay una sola llamada de red en los cuatro archivos.
@@ -254,6 +255,9 @@
        lo que hace que el gate de `verify.eventos.js` §5 vea que hay emisores y
        exija que el backup publico lleve la seccion de eventos. -->
   <script type="text/babel" src="app/state-events.jsx"></script>
+  <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
+       la semana. Va detrás del emisor, que es quien escribe en el registro. -->
+  <script type="text/babel" src="app/state-ritmo.resumen.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <!-- Dialogo (s198): pila de dialogos, foco dentro, trampa de Tab y foco
@@ -500,6 +504,8 @@
   <script type="text/babel" src="app/ritmo/RitmoHoja.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoCalendario.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoTarjeta.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoSemanaTipo.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoManana.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoHome.jsx"></script>
 
   <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
@@ -570,7 +576,10 @@
            puede montar PaceApp con <OnbScene/> aun undefined. */
         typeof Onboarding       === 'function' &&
         typeof OnbScene         === 'function' &&
-        typeof pickFirstPath    === 'function'
+        typeof pickFirstPath    === 'function' &&
+        /* La bienvenida pregunta la semana (RitmoSemanaTipo.jsx y su estado). */
+        typeof RitmoSemanaEditor === 'function' &&
+        typeof ritmoGuardarSemana === 'function'
       );
       if (container && allReady) {
         var root = ReactDOM.createRoot(container);

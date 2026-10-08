@@ -260,6 +260,28 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   }
 }
 
+/* EL PUNTO GUIA DEL ARO LLEGA CON UN FUNDIDO al empezar el Foco (TimerDial.jsx,
+   [data-pace-dial-punto-nace]). Ez pidio «lo mas elegante posible»: el punto
+   aparece despacio y sin moverse de donde marca el tiempo, y su halo se abre
+   un poco despues, como una luz que se enciende. Curva suave al final, sin
+   rebote. Decorativo, asi que el kill de reduced-motion lo deja en nada. */
+@keyframes pace-punto-nace {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pace-punto-halo {
+  from { transform: scale(0.4); }
+  to   { transform: scale(1); }
+}
+[data-pace-dial-punto-nace] {
+  animation: pace-punto-nace 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+[data-pace-dial-punto-nace] [data-pace-dial-halo] {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pace-punto-halo 2.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+}
+
 /* ============================================================
    MICROINTERACCIONES · pack de pulido global (s99 · Sesion A)
    Vive aqui (config global de interaccion), no en un <style> nuevo.

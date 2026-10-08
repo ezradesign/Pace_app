@@ -87,6 +87,10 @@ module.exports = defineConfig({
     },
   ],
 
+  /* Corre cuando el servidor ya escucha: comprueba que sirve ESTA carpeta y no
+     la de otra sesión que lo dejó encendido en el mismo puerto. */
+  globalSetup: require.resolve('./tests/servidor-propio.setup.js'),
+
   webServer: {
     command: 'node .claude/static-server.js',
     url: BASE + '/index.html',
