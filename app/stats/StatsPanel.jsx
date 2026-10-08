@@ -318,13 +318,13 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     <div>
 
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-        <button onClick={prevMonth} aria-label="Mes anterior" style={{
+        <button onClick={prevMonth} aria-label={t('stats.month.prev')} style={{
           background:'none',border:'none',cursor:'pointer',color:'var(--ink-2)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8249;</button>
         <span style={{ fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:17,color:'var(--ink)',textTransform:'capitalize' }}>
           {monthLabel(viewYear, viewMonth, lang)}
         </span>
-        <button onClick={nextMonth} disabled={isCurrentMonth} aria-label="Mes siguiente" style={{
+        <button onClick={nextMonth} disabled={isCurrentMonth} aria-label={t('stats.month.next')} style={{
           background:'none',border:'none',cursor:isCurrentMonth?'default':'pointer',
           color:isCurrentMonth?'var(--ink-3)':'var(--ink-2)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8250;</button>

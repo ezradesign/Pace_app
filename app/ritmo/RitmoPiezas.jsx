@@ -99,7 +99,9 @@ var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 141
   /* s197: la media jornada es de mañana O DE TARDE, así que su inicio llega hasta las
      21:00 como el de la entera y su fin hasta la medianoche y media. */
   'media.inicio': [300, 1260], 'media.salida': [360, 1410] };
-function RitmoSelector({ campo, horario }) {
+/* `onCambio` (opcional): un borrador que guarda otro, como la semana tipo de la bienvenida,
+   que no escribe nada hasta «Comenzar». Sin él, la hora se guarda al momento. */
+function RitmoSelector({ campo, horario, onCambio }) {
   const { t } = useT();
   let valores = [];
   if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];
@@ -110,7 +112,7 @@ function RitmoSelector({ campo, horario }) {
   const fmt = (v) => (campo === 'comidaDur' ? (v < 60 ? v + ' min' : ritmoDuracion(v, true)) : ritmoHora(v));
   return (
     <select className="pace-rt-sel" data-pace-ritmo-horario={campo} aria-label={t('ritmo.aria.' + campo)}
-      value={actual} onChange={(e) => ritmoHorario(campo, e.target.value)}>
+      value={actual} onChange={(e) => (onCambio ? onCambio(campo, Number(e.target.value)) : ritmoHorario(campo, e.target.value))}>
       {valores.map((v) => <option key={v} value={v}>{fmt(v)}</option>)}
     </select>
   );
@@ -145,15 +147,15 @@ function RitmoInterruptorComida({ horario, rotulo }) {
   );
 }
 
-function ritmoHuecos(horario) {
+function ritmoHuecos(horario, onCambio) {
   return {
-    inicio: <RitmoSelector campo="inicio" horario={horario} />,
-    comida: <RitmoSelector campo="comida" horario={horario} />,
-    dur: <RitmoSelector campo="comidaDur" horario={horario} />,
-    salida: <RitmoSelector campo="salida" horario={horario} />,
+    inicio: <RitmoSelector campo="inicio" horario={horario} onCambio={onCambio} />,
+    comida: <RitmoSelector campo="comida" horario={horario} onCambio={onCambio} />,
+    dur: <RitmoSelector campo="comidaDur" horario={horario} onCambio={onCambio} />,
+    salida: <RitmoSelector campo="salida" horario={horario} onCambio={onCambio} />,
     comes: <RitmoInterruptorComida horario={horario} />,
-    mediaInicio: <RitmoSelector campo="media.inicio" horario={horario} />,
-    mediaSalida: <RitmoSelector campo="media.salida" horario={horario} />,
+    mediaInicio: <RitmoSelector campo="media.inicio" horario={horario} onCambio={onCambio} />,
+    mediaSalida: <RitmoSelector campo="media.salida" horario={horario} onCambio={onCambio} />,
   };
 }
 

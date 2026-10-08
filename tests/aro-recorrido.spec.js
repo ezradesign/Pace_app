@@ -107,7 +107,9 @@ function sondaRecorrido(page) {
     const barrido = primerGuion(pista);
     const desfase = parseFloat(arco.getAttribute('stroke-dashoffset'));
     const avance = (barrido != null && isFinite(desfase)) ? barrido - desfase : null;
-    const punto = grupo.querySelector(':scope > g');   /* el punto guia, si existe */
+    /* El punto guia vive en su propia capa, fuera de la niebla del horizonte
+       (aro-bola-entrada.spec.js), con el mismo giro que el arco. */
+    const punto = marco.querySelector('[data-pace-dial-punto] svg > g > g');
 
     return {
       hayAro: true, hayGrupo: true, D: +D.toFixed(2), H, lecturaFiable,

@@ -1,0 +1,434 @@
+{
+  "semana": {
+    "horario": {
+      "inicio": 540,
+      "comida": 840,
+      "comidaDur": 60,
+      "salida": 1020,
+      "media": {
+        "inicio": 540,
+        "salida": 780
+      }
+    },
+    "pozos": {
+      "estira": [
+        "move.wrists · Muñecas y manos · 3'",
+        "move.shoulder.circles · Hombros · círculos · 4'",
+        "move.hips.standing · Caderas de pie · 4'",
+        "move.hamstrings.standing · Cadena posterior de pie · 4'",
+        "move.neck.3 · Cuello · 3'",
+        "move.desk.quick · Escritorio express · 2'"
+      ],
+      "mueve": [
+        "extra.core.stealth · Core silencioso · 2'",
+        "extra.posture.set · Postura reset · 2'",
+        "extra.calves · Gemelos subrepticios · 1'",
+        "extra.grip.squeeze · Grip + antebrazos · 1'",
+        "extra.glutes.stealth · Glúteos invisibles · 2'"
+      ],
+      "respira": [
+        "breathe.coherent.432 · Coherente 432 · 10'",
+        "breathe.exhale.46 · Exhalación 4·6 · 6'",
+        "breathe.diaphragm · Diafragmática · 5'",
+        "breathe.coherent.55 · Coherente 5·5 · 5'",
+        "breathe.coherent.66 · Coherente 6·6 · 10'"
+      ],
+      "cierre": [
+        "breathe.physiological · Suspiro fisiológico · 2'"
+      ]
+    },
+    "dias": [
+      {
+        "iso": "2026-10-12",
+        "tema": "Semana ligera",
+        "focos": 9,
+        "focoMin": 370,
+        "pausas": 7,
+        "largas": 1,
+        "paradas": [
+          {
+            "hora": "9:45",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Gemelos subrepticios · 1'"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Escritorio express · 2'"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "tipo": "larga",
+            "platos": [
+              "respira · Exhalación 4·6 · 6'",
+              "estira · Cuello · 3'"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Muñecas y manos · 3'"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Glúteos invisibles · 2'"
+            ]
+          },
+          {
+            "hora": "15:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Hombros · círculos · 4'"
+            ]
+          },
+          {
+            "hora": "16:20",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Grip + antebrazos · 1'"
+            ]
+          },
+          {
+            "hora": "16:55",
+            "tipo": "cierre",
+            "platos": [
+              "cierre · Suspiro fisiológico · 2'"
+            ]
+          }
+        ]
+      },
+      {
+        "iso": "2026-10-13",
+        "tema": "Semana ligera",
+        "focos": 9,
+        "focoMin": 370,
+        "pausas": 7,
+        "largas": 1,
+        "paradas": [
+          {
+            "hora": "9:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Escritorio express · 2'"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Gemelos subrepticios · 1'"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "tipo": "larga",
+            "platos": [
+              "respira · Exhalación 4·6 · 6'",
+              "estira · Cuello · 3'"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Muñecas y manos · 3'"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Glúteos invisibles · 2'"
+            ]
+          },
+          {
+            "hora": "15:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Hombros · círculos · 4'"
+            ]
+          },
+          {
+            "hora": "16:20",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Grip + antebrazos · 1'"
+            ]
+          },
+          {
+            "hora": "16:55",
+            "tipo": "cierre",
+            "platos": [
+              "cierre · Suspiro fisiológico · 2'"
+            ]
+          }
+        ]
+      },
+      {
+        "iso": "2026-10-14",
+        "tema": "Semana ligera",
+        "focos": 9,
+        "focoMin": 350,
+        "pausas": 7,
+        "largas": 3,
+        "paradas": [
+          {
+            "hora": "9:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Escritorio express · 2'"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "tipo": "larga",
+            "platos": [
+              "respira · Exhalación 4·6 · 6'",
+              "estira · Cuello · 3'"
+            ]
+          },
+          {
+            "hora": "11:35",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Muñecas y manos · 3'"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Caderas de pie · 4'"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "tipo": "larga",
+            "platos": [
+              "respira · Diafragmática · 5'",
+              "estira · Cadena posterior de pie · 4'"
+            ]
+          },
+          {
+            "hora": "15:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Hombros · círculos · 4'"
+            ]
+          },
+          {
+            "hora": "16:15",
+            "tipo": "larga",
+            "platos": [
+              "respira · Coherente 5·5 · 5'",
+              "estira · Escritorio express · 2'"
+            ]
+          },
+          {
+            "hora": "16:55",
+            "tipo": "cierre",
+            "platos": [
+              "cierre · Suspiro fisiológico · 2'"
+            ]
+          }
+        ]
+      },
+      {
+        "iso": "2026-10-15",
+        "tema": "Semana ligera",
+        "focos": 9,
+        "focoMin": 370,
+        "pausas": 7,
+        "largas": 1,
+        "paradas": [
+          {
+            "hora": "9:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Escritorio express · 2'"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Gemelos subrepticios · 1'"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "tipo": "larga",
+            "platos": [
+              "respira · Exhalación 4·6 · 6'",
+              "estira · Cuello · 3'"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Muñecas y manos · 3'"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "tipo": "pausa",
+            "platos": [
+              "respira · Coherente 5·5 · 5'"
+            ]
+          },
+          {
+            "hora": "15:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Cadena posterior de pie · 4'"
+            ]
+          },
+          {
+            "hora": "16:20",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Grip + antebrazos · 1'"
+            ]
+          },
+          {
+            "hora": "16:55",
+            "tipo": "cierre",
+            "platos": [
+              "cierre · Suspiro fisiológico · 2'"
+            ]
+          }
+        ]
+      },
+      {
+        "iso": "2026-10-16",
+        "tema": "Semana ligera",
+        "focos": 9,
+        "focoMin": 370,
+        "pausas": 7,
+        "largas": 1,
+        "paradas": [
+          {
+            "hora": "9:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Escritorio express · 2'"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Gemelos subrepticios · 1'"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "tipo": "larga",
+            "platos": [
+              "respira · Exhalación 4·6 · 6'",
+              "estira · Cuello · 3'"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Muñecas y manos · 3'"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Glúteos invisibles · 2'"
+            ]
+          },
+          {
+            "hora": "15:45",
+            "tipo": "pausa",
+            "platos": [
+              "estira · Hombros · círculos · 4'"
+            ]
+          },
+          {
+            "hora": "16:20",
+            "tipo": "pausa",
+            "platos": [
+              "mueve · Grip + antebrazos · 1'"
+            ]
+          },
+          {
+            "hora": "16:55",
+            "tipo": "cierre",
+            "platos": [
+              "respira · Diafragmática · 5'"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "antes-movil": {
+    "scroll": 0,
+    "tarjeta": 145,
+    "fuera": 0,
+    "aro": 331
+  },
+  "B-ventana-movil": {
+    "alto": 339,
+    "fuera": 0
+  },
+  "entera-movil": {
+    "scroll": 0,
+    "tarjeta": 304,
+    "fuera": 1,
+    "aro": 301
+  },
+  "A-corta-movil": {
+    "scroll": 0,
+    "tarjeta": 237,
+    "fuera": 0,
+    "aro": 331
+  },
+  "antes-movil-640": {
+    "scroll": 0,
+    "tarjeta": 145,
+    "fuera": 0,
+    "aro": 331
+  },
+  "B-ventana-movil-640": {
+    "alto": 333,
+    "fuera": 0
+  },
+  "entera-movil-640": {
+    "scroll": 0,
+    "tarjeta": 298,
+    "fuera": 59,
+    "aro": 301
+  },
+  "A-corta-movil-640": {
+    "scroll": 0,
+    "tarjeta": 231,
+    "fuera": 0,
+    "aro": 303
+  },
+  "B-ventana-escritorio": {
+    "alto": 316,
+    "fuera": 0
+  },
+  "carta-escritorio": {
+    "scroll": 0,
+    "tarjeta": 275,
+    "fuera": 0,
+    "aro": 389
+  }
+}

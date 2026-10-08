@@ -102,6 +102,13 @@ function applyTheme(estado) {
   _marcarPaletaLista();
 }
 
+/* El idioma del documento sigue al de la interfaz: con `lang="es"` fijo, el
+   lector de pantalla leía el inglés con voz castellana y Chrome ofrecía
+   «traducir del español». */
+function applyLang(estado) {
+  if (estado && estado.lang) document.documentElement.setAttribute('lang', estado.lang);
+}
+
 /* Solo `applyTheme` cruza: los dos marcadores son su mecanica interna y nadie
    de fuera tiene por que poder armar un cruce sin aplicar un tema. */
-Object.assign(window, { applyTheme });
+Object.assign(window, { applyTheme, applyLang });

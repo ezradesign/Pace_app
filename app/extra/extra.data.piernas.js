@@ -101,7 +101,7 @@ Object.assign(window.EXTRA_ROUTINES, {
         steps: [
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
-              setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+              setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
               action: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
               care: 'Recorrido corto. Mantén el tronco erguido.' } },
           { name: 'Cuádriceps en pared', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Círculo y explicaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --paper:#F2EDE0; --paper-2:#EAE3D2; --ink:#2B2620; --ink-2:#4A453C; --ink-3:#7A7364; --line:#D9D0BC; --oliva:#6B6B3A; --terracota:#A85A3C; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#1d1a14; --paper-2:#26221a; --ink:#EDE6D6; --ink-2:#c0b49e; --ink-3:#B2A995; --line:#3a342a; --oliva:#a6a66a; --terracota:#d08a6c; } }
+  :root[data-theme="dark"] { --paper:#1d1a14; --paper-2:#26221a; --ink:#EDE6D6; --ink-2:#c0b49e; --ink-3:#B2A995; --line:#3a342a; --oliva:#a6a66a; --terracota:#d08a6c; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55 'Inter Tight', system-ui, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1, h2, h3 { font-family:'Cormorant Garamond', Georgia, serif; font-style:italic; font-weight:500; line-height:1.15; }
+  h1 { font-size: 38px; margin: 0 0 8px; }
+  h2 { font-size: 28px; margin: 48px 0 12px; }
+  h3 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--ink-3); margin: 0 0 24px; }
+  p, li { color: var(--ink-2); }
+  b, strong { color: var(--ink); font-weight: 600; }
+  .clave { background: var(--paper-2); border-left: 3px solid var(--oliva); padding: 14px 18px; border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 8px 0; }
+  th, td { border-bottom: 1px solid var(--line); padding: 7px 8px; text-align: left; white-space: nowrap; }
+  th { font-weight: 500; color: var(--ink-3); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .tabla { overflow-x: auto; }
+  .m { color: var(--terracota); font-weight: 600; } .e { color: var(--oliva); font-weight: 600; }
+  .pestanas { position: sticky; top: 0; background: var(--paper); padding: 10px 0; display: flex; flex-wrap: wrap; gap: 6px; z-index: 2; border-bottom: 1px solid var(--line); }
+  .pestanas button { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--paper-2); color: var(--ink-2); border-radius: 999px; padding: 5px 14px; cursor: pointer; }
+  .pestanas button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .opc { margin: 28px 0 0; padding-top: 20px; border-top: 1px solid var(--line); }
+  .nota { margin: 0 0 12px; font-size: 15px; }
+  .par { display: grid; gap: 14px; }
+  .par.movil { grid-template-columns: repeat(2, minmax(0, 300px)); }
+  .par.pc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 640px) { .par.pc { grid-template-columns: 1fr; } }
+  figure { margin: 0; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 6px; }
+  figcaption { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+  figcaption b { font-size: 15px; }
+  ol.preguntas li { margin-bottom: 14px; }
+  .reco { border: 1px solid var(--oliva); border-radius: 6px; padding: 14px 18px; }
+</style>
+</head>
+<body>
+<main>
+<h1>El círculo de Mueve y la letra de las explicaciones</h1>
+<p class="sub">Para Ez · 8 de octubre de 2026 · medido en la app de hoy (v0.147.0), en las 31 rutinas de Mueve y Estira</p>
+
+<h2>Lo que he encontrado</h2>
+<p>El círculo del dibujo no es más pequeño por ser de Mueve. En el runner, cada texto tiene su hueco fijo durante toda la rutina (así nada salta entre pasos), y ese hueco mide lo que la explicación <b>más larga de esa rutina</b>. El círculo se lleva lo que sobra. Por eso una sola frase larga encoge el círculo de toda su rutina.</p>
+<div class="clave">
+<p style="margin:0 0 8px">En la mitad de las rutinas de Mueve el círculo mide lo mismo que en Estira. Las que se quedan pequeñas son dos, y una es justo la primera de la lista de Mueve:</p>
+<ul style="margin:0">
+<li><b>Flexiones de escritorio</b>: al colocarse dice «Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.» Son 143 letras, cuatro líneas en el móvil, y el círculo baja a <b>125 px</b> cuando en Estira suele medir 170.</li>
+<li><b>Fondos en silla</b>: 136 letras, tres líneas, círculo de 147 px.</li>
+</ul>
+</div>
+<p>En Estira pasa lo mismo, en menos: el paso «Flexor de cadera» (101 letras, en cuatro rutinas, entre ellas Antídoto silla) y Muñecas (102). La línea de abajo también cuenta: las rutinas con «Cuídate» o «Luego: …» reservan unos 25 px más. A 412×844 no hay diferencia, porque todas llegan al tamaño máximo.</p>
+
+<h2>Las medidas, en todas las rutinas</h2>
+<p>Diámetro del círculo con su aro, en píxeles. En cada casilla: <span class="m">la rutina de Mueve con el círculo más pequeño</span> · <span class="e">el círculo típico de Estira</span>.</p>
+<div class="tabla"><!--TABLA--></div>
+<p>A mejora Flexiones en el móvil pequeño (de 125 a 148), pero no la iguala, porque su frase sigue ocupando tres líneas; en el ordenador casi no cambia. B lo iguala en todas las pantallas, pero corta las frases. C mejora poco y deja la letra que no te gusta.</p>
+
+<h2>Las fotos</h2>
+<p>Las dos rutinas al empezar, en la pantalla de colocarse, que es la de la frase más larga. El número de la derecha es el diámetro del círculo.</p>
+<div class="pestanas" role="group" aria-label="Pantalla">
+  <button type="button" data-vp="360x640" aria-pressed="true">360×640</button>
+  <button type="button" data-vp="375x667" aria-pressed="false">375×667</button>
+  <button type="button" data-vp="412x844" aria-pressed="false">412×844</button>
+  <button type="button" data-vp="1280x720" aria-pressed="false">1280×720</button>
+  <button type="button" data-vp="1530x702" aria-pressed="false">1530×702</button>
+</div>
+<!--FOTOS-->
+
+<h2>Mi recomendación</h2>
+<div class="reco">
+<p style="margin-top:0"><b>A con explicaciones cortas.</b> La explicación pasa a la serif itálica de la app, como «Concentración profunda» y las frases de «A tu ritmo», y ninguna explicación pasa de dos líneas porque el texto es corto, no porque se corte.</p>
+<p>Con la serif caben unas 100 letras en dos líneas a 360 px. Propongo un tope de <b>95 letras por frase</b> (contando espacios, en español y en inglés), que deja margen para los navegadores que dibujan la letra un poco más ancha. Con ese tope, el círculo de Flexiones mide lo mismo que el de Estira en todas las pantallas (170 px a 360×640, 182 a 1280×720), como se ve en la última fila de fotos.</p>
+<p style="margin-bottom:0">Hoy pasan del tope cuatro frases distintas en español (Flexiones, Fondos, Muñecas y «Flexor de cadera») y unas ocho en inglés. La sesión que está reescribiendo las explicaciones puede respetar el tope desde ya, y yo dejo una prueba que avisa si alguna explicación vuelve a ocupar tres líneas.</p>
+</div>
+<p>B no la recomiendo: en Flexiones se perdería «Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto», que es lo que importa para colocarse, y para leer el resto habría que tocar la pantalla, cuando la idea es que la rutina se siga sin tocar.</p>
+
+<h2>Preguntas</h2>
+<ol class="preguntas">
+<li><b>¿Qué opción eliges?</b> A con explicaciones cortas (la recomendada), A sola, B o C.</li>
+<li><b>¿Te vale el tope de 95 letras por frase</b> para la sesión que reescribe las explicaciones?</li>
+<li><b>¿Qué debe vigilar la prueba?</b> Propongo: en cada pantalla, el círculo más pequeño de Mueve no queda por debajo del más pequeño de Estira, y ninguna explicación ocupa más de dos líneas a 360 px.</li>
+<li><b>Mientras llega la reescritura</b>, ¿acorto yo ya las dos frases de Mueve (Flexiones y Fondos) para que se note el cambio, o lo dejo todo a esa sesión? Recomiendo dejárselo a ella, para no escribir dos veces la misma frase.</li>
+<li><b>Las dos líneas pequeñas de abajo</b> («Colócate sin prisa · arranca solo» y «Cuídate · …») siguen en la letra de interfaz. ¿Las dejo así, o te preparo fotos con ellas también en serif? Recomiendo dejarlas: son avisos cortos y en serif a ese tamaño se leerían peor.</li>
+</ol>
+</main>
+<script>
+  document.querySelectorAll('.pestanas button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.pestanas button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.querySelectorAll('section.vp').forEach(function (s) { s.hidden = s.dataset.vp !== b.dataset.vp; });
+    });
+  });
+</script>
+</body>
+</html>
