@@ -275,7 +275,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
     if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
     if (waterGlasses > 0)  parts.push(`${waterGlasses} ${t('stats.month.tooltip.water')}`);
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = paceCaja(e.currentTarget);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, x: rect.left + rect.width / 2, y: rect.top });
   }
   function handleCellLeave() { setTooltip(null); }

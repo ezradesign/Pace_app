@@ -144,7 +144,7 @@ function PathsLibrary() {
         background: 'var(--paper-2)',
         borderRadius: 'var(--r-lg)',
         width: '100%', maxWidth: 480,
-        maxHeight: '85vh',
+        maxHeight: 'calc(85 * var(--pace-vh, 1vh))',
         display: 'flex', flexDirection: 'column',
         boxShadow: 'var(--sh-modal)',
         overflow: 'hidden',

@@ -145,7 +145,7 @@ function TweaksPanel({ open, onClose }) {
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
-      maxHeight: 'calc(100vh - 48px)',
+      maxHeight: 'calc(100 * var(--pace-vh, 1vh) - 48px)',
       overflowY: 'auto',
       background: 'var(--paper)',
       border: '1px solid var(--line-2)',

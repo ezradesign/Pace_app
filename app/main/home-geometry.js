@@ -171,7 +171,7 @@
     var nodes = dial.querySelectorAll('span, div');
     for (var i = 0; i < nodes.length; i++) {
       if (CICLO_RE.test(nodes[i].textContent || '')) {
-        var b = nodes[i].getBoundingClientRect().bottom;
+        var b = paceCaja(nodes[i]).bottom;
         if (best == null || b > best) best = b;
       }
     }
@@ -188,14 +188,14 @@
     var numero = dial.querySelector('[data-pace-dial-number]');
     var bloque = numero && numero.parentElement;
     if (!bloque) return 0;
-    var f = dial.getBoundingClientRect();
+    var f = paceCaja(dial);
     var cx = f.left + f.width / 2;
     var cy = f.top + f.height / 2;
     var peor = 0;
     var nodos = bloque.querySelectorAll('*');
     for (var i = 0; i < nodos.length; i++) {
       if (nodos[i].children.length) continue;
-      var r = nodos[i].getBoundingClientRect();
+      var r = paceCaja(nodos[i]);
       if (!r.width || !r.height) continue;
       if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
       var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
@@ -210,7 +210,7 @@
   // independientemente de la altura del botón (a11y 44px) o del interior.
   function applyD(D, dial) {
     setVar('--pace-timer-d', D + 'px');
-    var dialBottom = dial.getBoundingClientRect().bottom;
+    var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
     /* El solapamiento es el 16 % de D (contrato §0). El CICLO medido NO fija el
        valor: solo actúa de TECHO de seguridad, para que el horizonte no suba
@@ -250,7 +250,7 @@
     var chip = document.querySelector('[data-pace-activitybar-chip], [data-pace-ritmo-panel]');
     var barra = document.querySelector('[data-pace-activitybar]');
     var banda = (chip && barra)
-      ? Math.max(0, Math.round(chip.getBoundingClientRect().top - barra.getBoundingClientRect().top))
+      ? Math.max(0, Math.round(paceCaja(chip).top - paceCaja(barra).top))
       : 0;
     /* SE PUBLICA EL CORTE YA RESUELTO, no la banda, y eso NO es comodidad: un
        custom property SIN REGISTRAR no se computa -- `getPropertyValue` devuelve
@@ -287,7 +287,7 @@
     /* La compactación va ANTES de medir: cambia el presupuesto exterior y, por
        tanto, la altura útil que le queda al aro. Depende solo de innerHeight
        (no de lo que medimos después) → sin circularidad. */
-    var vh = window.innerHeight || body.clientHeight;
+    var vh = paceLienzoAlto() || body.clientHeight;
     var sq = (SQUEEZE_START - vh) / (SQUEEZE_START - SQUEEZE_FULL);
     sq = Math.max(0, Math.min(1, sq));
     setVar('--pace-home-squeeze', String(Math.round(sq * 1000) / 1000));
@@ -340,8 +340,8 @@
     var wrapFit = dial.closest('[data-pace-timer-wrap]');
     var luzOver = function () {
       if (!wrapFit) return 0;
-      var b = body.getBoundingClientRect();
-      return Math.round(wrapFit.getBoundingClientRect().top + body.scrollTop + wrapFit.scrollHeight - (b.top + body.clientHeight));
+      var b = paceCaja(body);
+      return Math.round(paceCaja(wrapFit).top + body.scrollTop + wrapFit.scrollHeight - (b.top + body.clientHeight));
     };
     var medirOver = function () {
       var stackOver = stackFit

@@ -144,7 +144,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
   function handleEnter(e, cell) {
     if (cell.score <= 0) return;
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = paceCaja(e.currentTarget);
     const text = `${formatDateLiteral(cell.d,lang)} · ${t('stats.year.tooltip.score').replace('{n}', Math.round(cell.score*10)/10)}`;
     setTooltip({ text, x: rect.left+rect.width/2, y: rect.top, key: cell.dateStr });
   }

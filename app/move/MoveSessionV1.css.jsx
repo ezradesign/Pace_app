@@ -36,10 +36,10 @@ if (!_paceMoveV1Css) {
        piel): con el nombre a 5vh y el número a 9,5vh, a 1530x702 el texto se comía el hueco y
        el círculo quedaba por debajo del del móvil. */
     .pace-v1-raiz {
-      --v1-u: clamp(8px, 1.3vh, 18px);
-      --v1-nombre: clamp(28px, 4.2vh, 44px);
+      --v1-u: clamp(8px, calc(1.3 * var(--pace-vh, 1vh)), 18px);
+      --v1-nombre: clamp(28px, calc(4.2 * var(--pace-vh, 1vh)), 44px);
       --v1-cue: 16px;
-      --v1-num: clamp(52px, 8.2vh, 84px);
+      --v1-num: clamp(52px, calc(8.2 * var(--pace-vh, 1vh)), 84px);
       --v1-fuerte: 20px;
       flex: 1 1 auto; min-height: 0; width: 100%;
       display: flex; flex-direction: column; align-items: center;

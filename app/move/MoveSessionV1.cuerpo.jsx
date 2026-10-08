@@ -92,7 +92,7 @@ function useV1Glifo(cuerpoRef, firma) {
     if (!cuerpo) return undefined;
     const medir = () => {
       const escritorio = v1EsEscritorio();
-      const alto = window.innerHeight || 800;
+      const alto = paceLienzoAlto() || 800;
       const suelo = escritorio ? 110 : 96;
       const techo = Math.min(escritorio ? 250 : 210, Math.round(alto * 0.3));
       const hijos = Array.from(cuerpo.children);

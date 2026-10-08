@@ -258,7 +258,7 @@
   padding: 0 4px;
 }
 .sendero-bar.lg .sendero-svg {
-  height: clamp(140px, 22vh, 220px);
+  height: clamp(140px, calc(22 * var(--pace-vh, 1vh)), 220px);
 }
 /* Labels en .lg: alinear max-width con el wrap (720) para que el
    calculo left: (xs[i] / 640) * 100% caiga sobre los hitos del SVG.
