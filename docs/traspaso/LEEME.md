@@ -35,7 +35,12 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
-- **Aro de Mueve y Estira vacío al colocarse: hecho (8 de octubre).** Ez escribió «el aro de tiempo
+- **La bola del aro al empezar: hecha (v0.148.3).** Ez vio que al pulsar «Empezar» la bola y su halo
+  nacían «como por debajo»: la niebla del horizonte los cortaba por la mitad. Eligió la opción A
+  viendo fotos de la app real: el mismo recorrido, la bola entera en su propia capa y un fundido (el
+  punto aparece y el halo se abre después), solo al empezar el bloque. Descartadas: sin fundido (B) y
+  empezar a las doce como un reloj (C), que escondía la bola tras la tarjeta a mitad de bloque.
+- **Aro de Mueve y Estira vacío al colocarse: hecho (v0.148.1).** Ez escribió «el aro de tiempo
   que se rellene para empezar queda raro, mejor es vacío ya que no ha empezado el ejercicio». Vio
   tres opciones en fotos y eligió la A (vacío del todo, solo el trazo de fondo), también en la pausa
   de «Cambia de lado». El aro solo cuenta el ejercicio y el descanso; lo vigila

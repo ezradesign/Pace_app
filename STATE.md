@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.148.2 · 8 de octubre de 2026.
+**Versión:** v0.148.3 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -48,6 +48,10 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 «Hoy voy por libre» bajo «Cambiar», «Ver todo» al final de la línea y «Al calendario» en esa hoja.
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
+
+Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
+con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
+`tests/aro-bola-entrada.spec.js`.
 
 «A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
 días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
