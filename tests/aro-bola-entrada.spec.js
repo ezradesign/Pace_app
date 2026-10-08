@@ -1,4 +1,4 @@
-/* PACE · E2E · LA BOLA DEL ARO NACE ENTERA (v0.148.0)
+/* PACE · E2E · LA BOLA DEL ARO NACE ENTERA
  * ===================================================
  * Ez, 8 oct. 2026: «cuando empieza el pomodoro la bola y el halo que marcan el
  * tiempo recorrido empiezan como por debajo, como si el fondo se superpusiera».
