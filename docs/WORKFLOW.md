@@ -236,6 +236,6 @@ versión y cada push cancelaba la comprobación de GitHub del anterior (`concurr
 - El coordinador junta la rama con `main`, pone el número de versión, construye, pasa la suite
   completa, sube y vigila la CI hasta verde. Los choques los resuelve él o los pregunta.
 - Cada sesión de pruebas usa su propio `PACE_E2E_PORT`: un servidor ajeno en el mismo puerto falsea
-  la suite.
+  la suite. Desde el 8 de octubre la suite lo detecta y se para (`tests/servidor-propio.setup.js`).
 
 Sin varias sesiones a la vez, el cierre de siempre de `CLAUDE.md`.
