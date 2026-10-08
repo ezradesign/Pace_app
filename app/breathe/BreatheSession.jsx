@@ -160,6 +160,14 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
     };
   }, []);
 
+  // Avisos de logro aplazados mientras dura la sesión, como en Mueve: salían
+  // encima de «Volver al inicio» en el cierre. Dentro de un Camino manda PathRunner.
+  useEffect(() => {
+    if (inPath || typeof setCaminoUiActive !== 'function') return;
+    setCaminoUiActive(true);
+    return () => setCaminoUiActive(false);
+  }, []);
+
   // Atajos de teclado
   useEffect(() => {
     const onKey = (e) => {

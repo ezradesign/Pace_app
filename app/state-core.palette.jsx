@@ -99,6 +99,11 @@ function applyTheme(estado) {
   _paletaAplicada = estado.palette;
   root.setAttribute('data-palette', estado.palette);
   root.setAttribute('data-font', estado.font);
+  /* La barra del navegador y de la PWA toma el papel de la paleta. */
+  try {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', estado.palette === 'oscuro' ? '#1d1a14' : '#F2EDE0');
+  } catch (e) {}
   _marcarPaletaLista();
 }
 
