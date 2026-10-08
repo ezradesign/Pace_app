@@ -209,7 +209,8 @@
       "Bash(node fichas.js)",
       "PowerShell(npm run verify 2>&1)",
       "mcp__claude-code-remote__create_session",
-      "mcp__claude-code-remote__send_message"
+      "mcp__claude-code-remote__send_message",
+      "mcp__claude-code-remote__delete_trigger"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
