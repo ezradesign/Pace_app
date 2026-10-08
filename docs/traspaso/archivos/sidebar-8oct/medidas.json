@@ -4277,6 +4277,650 @@
           "alto": 100
         }
       ]
+    },
+    "Cq-rotulo-1536x704-crema-vacio": {
+      "escala": 1,
+      "huecoAlPie": 86,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 131,
+          "alto": 56
+        },
+        {
+          "pieza": "hoy",
+          "y": 210,
+          "alto": 100
+        },
+        {
+          "pieza": "puertas",
+          "y": 333,
+          "alto": 61
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 417,
+          "alto": 71
+        },
+        {
+          "pieza": "logro",
+          "y": 442,
+          "alto": 46
+        },
+        {
+          "pieza": "pie",
+          "y": 586,
+          "alto": 100
+        }
+      ]
+    },
+    "Cq-dentro-1536x704-crema-vacio": {
+      "escala": 1,
+      "huecoAlPie": 86,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 131,
+          "alto": 56
+        },
+        {
+          "pieza": "hoy",
+          "y": 210,
+          "alto": 100
+        },
+        {
+          "pieza": "puertas",
+          "y": 333,
+          "alto": 61
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 417,
+          "alto": 71
+        },
+        {
+          "pieza": "logro",
+          "y": 442,
+          "alto": 46
+        },
+        {
+          "pieza": "pie",
+          "y": 586,
+          "alto": 100
+        }
+      ]
+    },
+    "Cq-rotulo-1536x704-crema-activo": {
+      "escala": 0.91,
+      "huecoAlPie": 0,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 121,
+          "alto": 75
+        },
+        {
+          "pieza": "hoy",
+          "y": 217,
+          "alto": 114
+        },
+        {
+          "pieza": "tarjeta",
+          "y": 352,
+          "alto": 59
+        },
+        {
+          "pieza": "puertas",
+          "y": 432,
+          "alto": 55
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 508,
+          "alto": 76
+        },
+        {
+          "pieza": "logro",
+          "y": 531,
+          "alto": 53
+        },
+        {
+          "pieza": "pie",
+          "y": 595,
+          "alto": 91
+        }
+      ]
+    },
+    "Cq-dentro-1536x704-crema-activo": {
+      "escala": 0.944,
+      "huecoAlPie": 0,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 125,
+          "alto": 78
+        },
+        {
+          "pieza": "hoy",
+          "y": 224,
+          "alto": 177
+        },
+        {
+          "pieza": "puertas",
+          "y": 422,
+          "alto": 57
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 501,
+          "alto": 79
+        },
+        {
+          "pieza": "logro",
+          "y": 525,
+          "alto": 55
+        },
+        {
+          "pieza": "pie",
+          "y": 592,
+          "alto": 95
+        }
+      ]
+    },
+    "Cq-rotulo-1536x704-oscuro-vacio": {
+      "escala": 1,
+      "huecoAlPie": 86,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 131,
+          "alto": 56
+        },
+        {
+          "pieza": "hoy",
+          "y": 210,
+          "alto": 100
+        },
+        {
+          "pieza": "puertas",
+          "y": 333,
+          "alto": 61
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 417,
+          "alto": 71
+        },
+        {
+          "pieza": "logro",
+          "y": 442,
+          "alto": 46
+        },
+        {
+          "pieza": "pie",
+          "y": 586,
+          "alto": 100
+        }
+      ]
+    },
+    "Cq-dentro-1536x704-oscuro-vacio": {
+      "escala": 1,
+      "huecoAlPie": 86,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 131,
+          "alto": 56
+        },
+        {
+          "pieza": "hoy",
+          "y": 210,
+          "alto": 100
+        },
+        {
+          "pieza": "puertas",
+          "y": 333,
+          "alto": 61
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 417,
+          "alto": 71
+        },
+        {
+          "pieza": "logro",
+          "y": 442,
+          "alto": 46
+        },
+        {
+          "pieza": "pie",
+          "y": 586,
+          "alto": 100
+        }
+      ]
+    },
+    "Cq-rotulo-1536x704-oscuro-activo": {
+      "escala": 0.91,
+      "huecoAlPie": 0,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 121,
+          "alto": 75
+        },
+        {
+          "pieza": "hoy",
+          "y": 217,
+          "alto": 114
+        },
+        {
+          "pieza": "tarjeta",
+          "y": 352,
+          "alto": 59
+        },
+        {
+          "pieza": "puertas",
+          "y": 432,
+          "alto": 55
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 508,
+          "alto": 76
+        },
+        {
+          "pieza": "logro",
+          "y": 531,
+          "alto": 53
+        },
+        {
+          "pieza": "pie",
+          "y": 595,
+          "alto": 91
+        }
+      ]
+    },
+    "Cq-dentro-1536x704-oscuro-activo": {
+      "escala": 0.944,
+      "huecoAlPie": 0,
+      "sobraAbajo": 18,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 125,
+          "alto": 78
+        },
+        {
+          "pieza": "hoy",
+          "y": 224,
+          "alto": 177
+        },
+        {
+          "pieza": "puertas",
+          "y": 422,
+          "alto": 57
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 501,
+          "alto": 79
+        },
+        {
+          "pieza": "logro",
+          "y": 525,
+          "alto": 55
+        },
+        {
+          "pieza": "pie",
+          "y": 592,
+          "alto": 95
+        }
+      ]
+    },
+    "Cq-rotulo-1920x960-crema-vacio": {
+      "escala": 1,
+      "huecoAlPie": 188,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 164,
+          "alto": 70
+        },
+        {
+          "pieza": "hoy",
+          "y": 263,
+          "alto": 125
+        },
+        {
+          "pieza": "puertas",
+          "y": 416,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 521,
+          "alto": 89
+        },
+        {
+          "pieza": "logro",
+          "y": 552,
+          "alto": 58
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 125
+        }
+      ]
+    },
+    "Cq-dentro-1920x960-crema-vacio": {
+      "escala": 1,
+      "huecoAlPie": 188,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 164,
+          "alto": 70
+        },
+        {
+          "pieza": "hoy",
+          "y": 263,
+          "alto": 125
+        },
+        {
+          "pieza": "puertas",
+          "y": 416,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 521,
+          "alto": 89
+        },
+        {
+          "pieza": "logro",
+          "y": 552,
+          "alto": 58
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 125
+        }
+      ]
+    },
+    "Cq-rotulo-1920x960-crema-activo": {
+      "escala": 0.997,
+      "huecoAlPie": 1,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 163,
+          "alto": 103
+        },
+        {
+          "pieza": "hoy",
+          "y": 295,
+          "alto": 156
+        },
+        {
+          "pieza": "tarjeta",
+          "y": 479,
+          "alto": 81
+        },
+        {
+          "pieza": "puertas",
+          "y": 589,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 693,
+          "alto": 104
+        },
+        {
+          "pieza": "logro",
+          "y": 724,
+          "alto": 73
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 124
+        }
+      ]
+    },
+    "Cq-dentro-1920x960-crema-activo": {
+      "escala": 1,
+      "huecoAlPie": 31,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 164,
+          "alto": 103
+        },
+        {
+          "pieza": "hoy",
+          "y": 295,
+          "alto": 234
+        },
+        {
+          "pieza": "puertas",
+          "y": 558,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 662,
+          "alto": 105
+        },
+        {
+          "pieza": "logro",
+          "y": 694,
+          "alto": 73
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 125
+        }
+      ]
+    },
+    "Cq-rotulo-1920x960-oscuro-vacio": {
+      "escala": 1,
+      "huecoAlPie": 188,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 164,
+          "alto": 70
+        },
+        {
+          "pieza": "hoy",
+          "y": 263,
+          "alto": 125
+        },
+        {
+          "pieza": "puertas",
+          "y": 416,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 521,
+          "alto": 89
+        },
+        {
+          "pieza": "logro",
+          "y": 552,
+          "alto": 58
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 125
+        }
+      ]
+    },
+    "Cq-dentro-1920x960-oscuro-vacio": {
+      "escala": 1,
+      "huecoAlPie": 188,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 164,
+          "alto": 70
+        },
+        {
+          "pieza": "hoy",
+          "y": 263,
+          "alto": 125
+        },
+        {
+          "pieza": "puertas",
+          "y": 416,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 521,
+          "alto": 89
+        },
+        {
+          "pieza": "logro",
+          "y": 552,
+          "alto": 58
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 125
+        }
+      ]
+    },
+    "Cq-rotulo-1920x960-oscuro-activo": {
+      "escala": 0.997,
+      "huecoAlPie": 1,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 163,
+          "alto": 103
+        },
+        {
+          "pieza": "hoy",
+          "y": 295,
+          "alto": 156
+        },
+        {
+          "pieza": "tarjeta",
+          "y": 479,
+          "alto": 81
+        },
+        {
+          "pieza": "puertas",
+          "y": 589,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 693,
+          "alto": 104
+        },
+        {
+          "pieza": "logro",
+          "y": 724,
+          "alto": 73
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 124
+        }
+      ]
+    },
+    "Cq-dentro-1920x960-oscuro-activo": {
+      "escala": 1,
+      "huecoAlPie": 31,
+      "sobraAbajo": 23,
+      "scrollPagina": 0,
+      "scrollBarra": 0,
+      "piezas": [
+        {
+          "pieza": "semana",
+          "y": 164,
+          "alto": 103
+        },
+        {
+          "pieza": "hoy",
+          "y": 295,
+          "alto": 234
+        },
+        {
+          "pieza": "puertas",
+          "y": 558,
+          "alto": 76
+        },
+        {
+          "pieza": "logro-sec",
+          "y": 662,
+          "alto": 105
+        },
+        {
+          "pieza": "logro",
+          "y": 694,
+          "alto": 73
+        },
+        {
+          "pieza": "pie",
+          "y": 813,
+          "alto": 125
+        }
+      ]
     }
   }
 }
