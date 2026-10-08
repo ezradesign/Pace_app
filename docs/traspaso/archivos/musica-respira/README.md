@@ -27,7 +27,7 @@
 - La página publicada (https://claude.ai/artifact/Xu2bQaNCYDAKih6PJ12y6M, en la cuenta anterior) guarda las elecciones de Ez en su base de datos (colección `elecciones`). Para usarla en la otra cuenta: abrir el HTML con `bases/` y la carpeta `app/breathe/voz/` copiada como `voz/` al lado. Las elecciones solo se guardan en la versión publicada.
 
 ## Pendiente
-1. Ez escucha y, si quiere otro reparto, lo elige en la página. Cambiarlo es tocar `PACE_MUSICA` (familia → drone) y, si hace falta, `PACE_MUSICA_RESPIRA` (profundidad y brillo) en `app/ui/Sound.musica.jsx`.
+1. Hecho el 8 oct.: cada técnica tiene su receta (`PACE_MUSICA_TECNICA`, en `app/ui/Sound.musica.parts.jsx`). Cómo se hicieron, se miden y se cambian: `por-tecnica/LEEME.md`.
 2. Regenerar Pranayama (tanpura) solo con ElevenLabs, pidiendo «in G, root G (98 Hz), body in G3-G4», prepararla con `procesar.py` y darle una entrada en `PACE_MUSICA_BASES`.
 3. Captura de los términos de Genspark y del modelo usado (ElevenLabs) antes de publicar.
 

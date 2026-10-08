@@ -52,9 +52,15 @@ elecciones de Ez se guardan en su base de datos, colecciones `elecciones` (una p
   su volumen, así que un altavoz pequeño casi no lo da.
 - Un paneo centrado (`StereoPanner`) resta 3 dB por canal; en Nadi Shodhana lo compensa el ajuste.
 
-## Si Ez elige A
+## Montado en la app (Ez eligió A el 8 oct.)
 
-Se monta en `app/ui/Sound.musica.jsx`: una tabla por técnica junto a `PACE_MUSICA` (que queda de
-reserva), un segundo `<audio>` para la segunda voz, `playbackRate` con `preservesPitch = false` para
-cambiar de nota, los filtros y el oscilador lento en la misma cadena, y `fase()` recibe el lado en
-Nadi Shodhana. Las recetas y los ajustes de `tecnicas.js` y `medidas.js` se copian tal cual.
+Ez: «aplicamos las novedades de los drones más personalizados a cada respiración y cuando los vaya
+probando te digo». Está en `app/ui/Sound.musica.jsx` con las recetas en `app/ui/Sound.musica.parts.jsx`
+(`PACE_MUSICA_TECNICA`), que copian las de `tecnicas.js` y los `ajusteDb` de `medidas.js`. La app usa
+el mismo motor que la página: los drones se descodifican a 22 050 Hz y suenan en bucle dentro de Web
+Audio, así que lo que suena es lo que se midió. `PACE_MUSICA` (por familia) queda de reserva para una
+técnica sin receta. Lo vigila `tests/respira-musica.spec.js`.
+
+Para cambiar una técnica cuando Ez la pruebe: tocar su receta en `tecnicas.js`, correr `construir.js`
+hasta «Sin avisos», escucharla en la página y copiar la receta y su `ajusteDb` a
+`Sound.musica.parts.jsx`.

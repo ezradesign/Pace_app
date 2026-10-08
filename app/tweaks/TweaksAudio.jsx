@@ -81,9 +81,9 @@ function TweaksAudioBlock({ state, set }) {
         <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
           { v: 'amb', name: t('settings.bg.ambient') },
-          /* «Musica» suena en todas las familias de Respira (tres drones en Sol,
-             reparto en `PACE_MUSICA`), salvo en Coherente 432, que lleva su
-             propio drone. Fuera de Respira no suena. */
+          /* «Musica» suena en todas las tecnicas de Respira (un drone propio por
+             tecnica sobre tres drones en Sol, en `PACE_MUSICA_TECNICA`), salvo en
+             Coherente 432, que lleva su propio drone. Fuera de Respira no suena. */
           { v: 'mus', name: t('settings.bg.music') },
         ]} />
       </AjustesFila>
