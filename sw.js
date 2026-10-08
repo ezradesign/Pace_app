@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.147.0';
+const CACHE_NAME = 'pace-v0.150.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
@@ -170,6 +170,7 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/breathe.sessions.10.webp',
   '/app/glyphs/assets/logros/explore.478.webp',
   '/app/glyphs/assets/logros/explore.all.breathe.webp',
+  '/app/glyphs/assets/logros/explore.all.extra.webp',
   '/app/glyphs/assets/logros/explore.all.move.webp',
   '/app/glyphs/assets/logros/explore.ancestral.webp',
   '/app/glyphs/assets/logros/explore.atg.webp',
@@ -217,7 +218,6 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/master.path.all7.webp',
   '/app/glyphs/assets/logros/master.pomodoro.12.webp',
   '/app/glyphs/assets/logros/master.retreat.webp',
-  '/app/glyphs/assets/logros/master.rounds.15.webp',
   '/app/glyphs/assets/logros/master.silent.day.webp',
   '/app/glyphs/assets/logros/morning.5.webp',
   '/app/glyphs/assets/logros/move.sessions.25.webp',

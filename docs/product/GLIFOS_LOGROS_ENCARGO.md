@@ -97,7 +97,7 @@ compartan familia visual: mismo peso de trazo y motivos del mismo tamaño óptic
 | ~~`explore.neck`~~ **ENTREGADO** | Cuello atendido | 3 sesiones de cuello | carácter `~` | **Tres vértebras cervicales apiladas**, muy simplificadas, con una curva suave. |
 | ~~`explore.desk`~~ **ENTREGADO** | Escritorio express | 3 sesiones sin levantarse | carácter `⊡` | **Una mesa de escritorio de perfil con su silla**: dos trazos y un plano. |
 | ~~`explore.all.move`~~ **ENTREGADO** | Cuerpo de campo | todas las movilidades | carácter `✤` | **Una brújula de cuatro puntas con hojas** en lugar de flechas: moverse en todas las direcciones. |
-| `explore.all.extra` | Fuerte en la oficina | todos los Estira | carácter `⚔` | **Una piedra de amolar con mango**, o un yunque pequeño. **Nada de espadas** — hoy es `⚔`, que choca de frente con el tono. |
+| ~~`explore.all.extra`~~ **ENTREGADO** | Fuerte en la oficina | todas las de Mueve | carácter `⚔` | **Una piedra de amolar con mango**, o un yunque pequeño. **Nada de espadas**. La piedra se dibujó y estuvo puesta en «Rondas maestra» hasta el 8 de octubre de 2026. |
 
 ---
 
@@ -111,7 +111,7 @@ elemento más**, no un dibujo distinto.
 | `master.pomodoro.8` | Jornada de ocho | 8 Pomodoros en un día | SVG | **Un reloj de sol** con ocho marcas en el arco. |
 | ~~`master.long.focus`~~ **ENTREGADO** | Larga sesión | 5 bloques de 45 min | SVG | **Una vela consumida a la mitad** con la llama alta y quieta. |
 | `master.box.15` | Caja maestra | 15 sesiones Box | carácter `▣` | El cuadrado de `explore.box` **con un segundo cuadrado inscrito**. |
-| ~~`master.rounds.15`~~ **ENTREGADO** | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. |
+| `master.rounds.15` | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. Lo que llevaba era la piedra de amolar de «Fuerte en la oficina», que pasó a su logro el 8 de octubre de 2026. |
 | ~~`master.atg.20`~~ **ENTREGADO** | Rodillas de acero | 20 sesiones ATG | carácter `△` | La rodilla de `explore.atg` **con un remache o refuerzo** en el vértice. |
 | ~~`master.hips.20`~~ **ENTREGADO** | Bisagra suelta (antes «Caderas libres») | 20 sesiones de caderas | carácter `◇` | **Una bisagra abierta de par en par**: dos placas y su eje. |
 | `master.shoulders.20` | Hombros libres | 20 sesiones de hombros | carácter `⌢` | El yugo de `explore.shoulders` **partido o desatado**: se ha quitado el peso. |

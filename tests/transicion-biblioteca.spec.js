@@ -99,7 +99,7 @@ test('las tres bibliotecas comparten la MISMA preparación', async ({ page }) =>
   await page.reload();
   await page.getByRole('button', { name: /^Respira/ }).first().click();
   await page.locator('.pace-lib').waitFor({ state: 'visible' });
-  /* una SIN modal de seguridad (las 6 con `safety` abren guía antes) */
+  /* una SIN modal de seguridad (las 7 con `safety` abren guía antes) */
   await page.getByRole('heading', { name: 'Diafragmática', exact: true }).click();
   await expect(page.locator('[data-pace-session-root]').getByText('PREPÁRATE')).toBeVisible();
   const respira = await radiografiaPrep(page);

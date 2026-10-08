@@ -41,6 +41,39 @@ const EVENT_VARIANTS = ['v1', 'legacy'];
    evento anterior a s194 no los trae. */
 const EVENT_ORIGINS = ['aro', 'pausa', 'biblioteca', 'sidebar', 'parada', 'camino'];
 
+/* EL DIA DE «A TU RITMO» (rev. 8): lo que sirvio y que paso con cada parada, para
+   que el motor de la semana aprenda. Solo horas en minutos, modulos e ids de
+   rutina del catalogo: ni textos, ni titulos de reuniones, ni nada que escriba
+   la persona. Los modulos son los de la regla del dia (ritmo.regla.js). */
+const EVENT_RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
+const EVENT_RITMO_HABITUAL = ['jornada', 'media', 'libre'];
+const EVENT_RITMO_PARADAS = ['pausa', 'larga', 'cierre'];
+const EVENT_RITMO_MODULOS = ['estira', 'mueve', 'respira', 'cierre'];
+const EVENT_RITMO_ESTADOS = ['hecha', 'saltada'];
+
+/* Minutos desde medianoche, de 0 a 1440; lo demas, null. */
+function eventMinuto(n) {
+  const x = typeof n === 'string' ? Number(n) : n;
+  if (typeof x !== 'number' || !isFinite(x) || x < 0 || x > 1440) return null;
+  return Math.round(x);
+}
+
+function eventRitmoParada(x) {
+  if (!x || typeof x !== 'object') return null;
+  const tipo = eventEnum(x.tipo, EVENT_RITMO_PARADAS);
+  const hora = eventMinuto(x.hora);
+  const platos = (Array.isArray(x.platos) ? x.platos : []).slice(0, 2).map(function (pl) {
+    const modulo = eventEnum(pl && pl.modulo, EVENT_RITMO_MODULOS);
+    const id = eventId(pl && pl.id);
+    if (!modulo || !id) return null;
+    const antes = (Array.isArray(pl.antes) ? pl.antes : []).slice(0, 5).map(eventId).filter(Boolean);
+    return { modulo: modulo, id: id, otras: eventCount(pl.otras), antes: antes };
+  }).filter(Boolean);
+  if (!tipo || hora === null || !platos.length) return null;
+  return { hora: hora, tipo: tipo, platos: platos,
+           estado: eventEnum(x.estado, EVENT_RITMO_ESTADOS), reunion: eventMinuto(x.reunion) || 0 };
+}
+
 /* Entero finito >= 0. Cubre la deuda P1 de §15.3: un contador que llegue como
    `"3"` no debe concatenarse ni propagarse como string. */
 function eventCount(n) {
@@ -114,6 +147,18 @@ function normalizeEventPayload(type, raw) {
     return { pathId: pathId, stepsCount: eventCount(p.stepsCount) };
   }
 
+  if (type === 'ritmo.day.closed') {
+    const fecha = typeof p.fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p.fecha) ? p.fecha : null;
+    const opcion = eventEnum(p.opcion, EVENT_RITMO_OPCIONES);
+    if (!fecha || !opcion || !Array.isArray(p.paradas)) return null;
+    return {
+      fecha: fecha, opcion: opcion,
+      habitual: eventEnum(p.habitual, EVENT_RITMO_HABITUAL),
+      inicio: eventMinuto(p.inicio), salida: eventMinuto(p.salida),
+      paradas: p.paradas.slice(0, 40).map(eventRitmoParada).filter(Boolean),
+    };
+  }
+
   return null;
 }
 
@@ -121,4 +166,6 @@ Object.assign(window, {
   EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
   EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
   EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload,
+  EVENT_RITMO_OPCIONES, EVENT_RITMO_HABITUAL, EVENT_RITMO_PARADAS, EVENT_RITMO_MODULOS,
+  EVENT_RITMO_ESTADOS, eventMinuto, eventRitmoParada,
 });

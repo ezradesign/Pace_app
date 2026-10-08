@@ -57,7 +57,7 @@ test('«Cartógrafa» sale de la colección, salvo para quien ya la ganó', asyn
   expect(errores).toEqual([]);
 });
 
-test('la bienvenida no hace las tres preguntas: «Comenzar» lleva a la home', async ({ page }) => {
+test('la bienvenida no hace las tres preguntas: tras la semana, «Comenzar» lleva a la home', async ({ page }) => {
   const errores = capturarErrores(page);
   await page.goto(RUTA_ARTEFACTO);   // sin sembrar: primera vez de la vida
   const bienvenida = page.locator('[data-pace-scene-card][role="dialog"]');
@@ -65,6 +65,11 @@ test('la bienvenida no hace las tres preguntas: «Comenzar» lleva a la home', a
   await expect(bienvenida).not.toContainText('Tres preguntas breves');
   await expect(page.getByRole('button', { name: 'prefiero saltarlo' })).toHaveCount(0);
 
+  await page.getByRole('button', { name: 'Comenzar' }).click();
+  /* La semana sí se pregunta: es de «A tu ritmo», no de los Caminos
+     (onboarding-semana.spec.js). Es la última pantalla y su botón dice «Comenzar». */
+  await expect(bienvenida).toContainText('¿Cómo es tu semana?');
+  await expect(bienvenida).not.toContainText('Tres preguntas breves');
   await page.getByRole('button', { name: 'Comenzar' }).click();
   await expect(bienvenida).toHaveCount(0);
 

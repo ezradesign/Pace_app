@@ -77,7 +77,9 @@ if (!_paceAjustesCss) {
     .pace-aj-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .pace-aj-titulo { font-family: var(--font-display); font-style: italic; font-size: 24px; font-weight: 500; line-height: 1.1; color: var(--ink); }
     .pace-aj-cerrar { font-size: 18px; color: var(--ink-3); width: 26px; height: 26px; display: grid; place-items: center; }
-    .pace-aj-sec-titulo { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 2px 0 6px; }
+    .pace-aj-sec-titulo { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 2px 0 6px; display: flex; justify-content: space-between; align-items: baseline; }
+    .pace-aj-sec-accion { font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1; letter-spacing: 0; text-transform: none; color: var(--ink-2); background: none; border: 0; padding: 8px 0; margin: -8px 0; cursor: pointer; }
+    .pace-aj-sec-accion:hover { color: var(--ink); }
     .pace-aj-div { height: 1px; background: var(--line); margin: 10px 0; }
 
     /* la fila: nombre a la izquierda, control a la derecha. ENVUELVE si no cabe:
