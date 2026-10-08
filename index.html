@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.145.0</title>
+  <title>PACE · Foco · Cuerpo — v0.146.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3400,7 +3400,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.toca': 'toca para cambiarla',
   'ritmo.empieza': 'toca para empezarla',
   'ritmo.como': 'Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.',
-  'ritmo.ver': 'Ver la jornada entera',
+  'ritmo.ver': 'Ver todo',
   'ritmo.listo': 'Listo',
   'ritmo.ctx.mesa': 'Junto a la mesa',
   'ritmo.ctx.material': 'Sin material',
@@ -3430,6 +3430,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.motivo.estira': 'Antídoto a la silla',
   'ritmo.motivo.mueve': 'Cuerpo activo',
   'ritmo.motivo.cierre': 'Para cerrar la jornada',
+  'ritmo.motivo.respira': 'Bajar revoluciones',
   'ritmo.hecho': 'Jornada cerrada',
   'ritmo.hecho.sub': '{f} de foco. Lo que queda del día es tuyo.',
   'ritmo.aro.bloque': 'Bloque {n} de {m}',
@@ -3454,12 +3455,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.prop.ritmo.mueve': 'A tu ritmo · cuerpo activo',
   'break.prop.ritmo.larga': 'A tu ritmo · pausa larga, respira y suelta',
   'break.prop.ritmo.cierre': 'A tu ritmo · para cerrar la jornada',
+  'break.prop.ritmo.respira': 'A tu ritmo · bajar revoluciones',
   'break.prop.ritmo.comida': 'A tu ritmo · hora de comer, lejos de la pantalla'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
   'ritmo.nombre': 'At your pace',
-  'ritmo.pregunta': 'How long are you working today?',
+  'ritmo.pregunta': 'How many hours today?',
   'ritmo.sub': "I'll plan your day: when to pause, what to do and for how long.",
   'ritmo.frase': 'You start at {inicio}, {comes} at {comida} for {dur} and finish at {salida}.',
   'ritmo.frase.sin': 'You start at {inicio}, {comes} and finish at {salida}.',
@@ -3493,7 +3495,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.toca': 'tap to swap it',
   'ritmo.empieza': 'tap to start it',
   'ritmo.como': 'Each block is a pomodoro on the ring; when it ends, I serve you the break that comes next.',
-  'ritmo.ver': 'See the whole day',
+  'ritmo.ver': 'See all',
   'ritmo.listo': 'Done',
   'ritmo.ctx.mesa': 'At your desk',
   'ritmo.ctx.material': 'No equipment',
@@ -3521,6 +3523,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.motivo.estira': 'Antidote to the chair',
   'ritmo.motivo.mueve': 'Active body',
   'ritmo.motivo.cierre': 'To close the day',
+  'ritmo.motivo.respira': 'Slow down',
   'ritmo.hecho': 'Day complete',
   'ritmo.hecho.sub': '{f} of focus. The rest of the day is yours.',
   'ritmo.aro.bloque': 'Block {n} of {m}',
@@ -3545,6 +3548,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.prop.ritmo.mueve': 'At your pace · active body',
   'break.prop.ritmo.larga': 'At your pace · long break, breathe and let go',
   'break.prop.ritmo.cierre': 'At your pace · to close the day',
+  'break.prop.ritmo.respira': 'At your pace · slow down',
   'break.prop.ritmo.comida': 'At your pace · lunchtime, away from the screen'
 });
 })();
@@ -5782,7 +5786,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.145.0';
+const PACE_VERSION = 'v0.146.0';
 
 
 
@@ -34296,6 +34300,12 @@ Object.assign(window, { Onboarding });
 
 /* COMPACTO (móvil) */
 .pace-rt-mini { display: flex; align-items: center; height: 12px; margin: 14px 0 10px; }
+/* En el día servido del móvil, «Ver todo» al final de la línea: mide lo que la línea (12 px)
+   y crece 14 px arriba y abajo para el dedo sin mover nada. */
+.pace-rt-mini-fila { display: flex; align-items: center; gap: 10px; margin: 14px 0 10px; }
+.pace-rt-mini-fila .pace-rt-mini { flex: 1 1 auto; min-width: 0; margin: 0; }
+.pace-rt-mini-fila .pace-rt-enlace { flex: 0 0 auto; line-height: 12px; padding: 14px 0; margin: -14px 0; }
+.pace-rt-hoja-enlaces { display: inline-flex; align-items: center; gap: 18px; }
 .pace-rt-mini .pace-rt-punto { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--c); background: var(--paper); margin: 0 2px; }
 .pace-rt-mini .pace-rt-punto.pace-rt-larga { width: 14px; border-radius: 4px; }
 .pace-rt-mini .pace-rt-punto.pace-rt-ahora { background: var(--c); }
@@ -34378,9 +34388,10 @@ Object.assign(window, { Onboarding });
    «Empezar foco», que es la única acción rellena de la pantalla. */
 .pace-rt-tj-esc { display: block; }
 .pace-rt-tj-mov { display: none; }
-.pace-rt-tm-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.pace-rt-tm-ceja { font-size: 10px; line-height: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--focus); }
+.pace-rt-tm-cab { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; }
 .pace-rt-tm-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 26px; color: var(--ink); margin-top: 5px; }
+/* Sin la fila de Caminos encima, el título es lo primero y no se separa de nada. */
+.pace-rt-tm-t:first-child { margin-top: 0; }
 .pace-rt-esquema { display: flex; align-items: center; height: 14px; margin-top: 14px; }
 .pace-rt-esq-seg { flex: 4 1 0; height: 3px; border-radius: 2px; background: var(--paper-3); }
 .pace-rt-esq-comida { flex: 8 1 0; height: 0; border-top: 2px dashed var(--line); }
@@ -34405,12 +34416,13 @@ Object.assign(window, { Onboarding });
 /* Por debajo de 640 px la cáscara lleva padding 10/12 con !important (lo pone
    SuggestedPathCard.jsx para todas las tarjetas de ese sitio); los 4/2 de arriba
    la llevan a los 14 de la maqueta. En un móvil bajo (375×667) el aro ya está en
-   su suelo y lo que sobra es la tarjeta: se aprieta 22 px para que la home no
-   pida scroll. Solo toca piezas de la tarjeta de móvil, nunca la cáscara. */
+   su suelo y lo que sobra es la tarjeta: se aprieta 26 px para que la home no
+   pida scroll (a 360×640 hacían falta los 4 últimos). Solo toca piezas de la
+   tarjeta de móvil, nunca la cáscara. */
 @media (max-height: 700px) {
   .pace-rt-tj-mov { padding: 0; }
   .pace-rt-tm-t { margin-top: 3px; }
-  .pace-rt-esquema { margin-top: 8px; }
+  .pace-rt-esquema { margin-top: 4px; }
   .pace-rt-tm-pie { margin-top: 8px; }
 }
 
@@ -34425,6 +34437,9 @@ Object.assign(window, { Onboarding });
 /* TU DIA EN EL CALENDARIO (RitmoCalendario.jsx): un destino por fila, como en la
    maqueta; los botones son pildoras, llena la del destino conectado. */
 .pace-rt-cab-der { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+/* Los dos enlaces de la cabecera del móvil («Cambiar» y «Hoy voy por libre») crecen 4 px
+   arriba y abajo para el dedo sin moverse ni pisarse. */
+.pace-rt-mov .pace-rt-cab-der .pace-rt-enlace { padding: 4px 0; margin: -4px 0; }
 .pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
 .pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }
@@ -34450,6 +34465,8 @@ Object.assign(window, { Onboarding });
   .pace-rt-chip b { font-size: 15px; }
   .pace-rt-pie { margin-top: 8px; }
   .pace-rt-titulo { font-size: 17px; }
+  /* Las filas de «Ahora» y «Luego» no parten su meta: una línea más eran 16 px de scroll. */
+  .pace-rt-que .pace-rt-m { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 /* La fila del título de la pregunta en el móvil. Si no caben los dos (en inglés a 360 px),
    el enlace baja a su propia línea, a la derecha. Su caja crece 14 px arriba y abajo para
@@ -34561,10 +34578,12 @@ function ritmoResumen(m, tn) {
 }
 
 
-function ritmoMetaPlato(it, t, tn) {
+
+
+function ritmoMetaPlato(it, t, tn, sinModulo) {
   if (it.larga) return tn('ritmo.larga.lista', { n: it.dur });
   const p = it.platos[0];
-  return p.min + ' min · ' + ritmoModulo(p.modulo, t) + ' · ' + t('ritmo.motivo.' + it.motivo);
+  return p.min + ' min · ' + (sinModulo ? '' : ritmoModulo(p.modulo, t) + ' · ') + t('ritmo.motivo.' + it.motivo);
 }
 
 
@@ -34933,6 +34952,7 @@ Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtique
 
 
 
+
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
 function RitmoContexto() {
@@ -34944,6 +34964,7 @@ function RitmoContexto() {
     ));
 
 }
+
 
 
 
@@ -35172,7 +35193,8 @@ function RitmoFila(_ref9) {let { rotulo, modulo, nombre, meta, claves } = _ref9;
 }
 
 
-function RitmoFilaParada(_ref0) {let { it, rotulo } = _ref0;
+
+function RitmoFilaParada(_ref0) {let { it, rotulo, corta } = _ref0;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
   if (it.tipo === 'comida') {
@@ -35183,7 +35205,7 @@ function RitmoFilaParada(_ref0) {let { it, rotulo } = _ref0;
   }
   if (!it.platos || !it.platos.length) return null;
   return React.createElement(RitmoFila, { rotulo: cab, modulo: it.platos[0].modulo, nombre: ritmoPlatos(it, t, lang),
-    meta: React.createElement(RitmoMetaGota, { texto: ritmoMetaPlato(it, t, tn), agua: it.agua }),
+    meta: React.createElement(RitmoMetaGota, { texto: ritmoMetaPlato(it, t, tn, corta), agua: it.agua }),
     claves: it.platos.map((p) => p.clave) });
 }
 
@@ -35200,8 +35222,8 @@ function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
 
   const luego = ritmoDetras(plan.m, b);
   const filas = plan.pausa ?
-  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora" }), filaBloque('ritmo.luego')) :
-  React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego" }) : null);
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), filaBloque('ritmo.luego')) :
+  React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },
     React.createElement("div", { className: "pace-rt-cab" },
@@ -35211,18 +35233,18 @@ function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
     ),
 
 
+
     React.createElement("div", { className: "pace-rt-cab-der" },
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
-    React.createElement(RitmoAlCalendario, null)
+    React.createElement(RitmoLibre, { enlace: true })
     )
     ),
-    React.createElement(RitmoComo, { plan: plan }),
+
+    React.createElement("div", { className: "pace-rt-mini-fila" },
     React.createElement(RitmoMini, { plan: plan }),
-    filas,
-    React.createElement("div", { className: "pace-rt-pie" },
-    React.createElement("button", { className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-ver": true, onClick: onVer }, t('ritmo.ver')),
-    React.createElement(RitmoLibre, null)
-    )
+    React.createElement("button", { className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-ver": true, onClick: onVer }, t('ritmo.ver'))
+    ),
+    filas
     ));
 
 }
@@ -35342,8 +35364,14 @@ function RitmoHoja(_ref2) {let { open, onClose, plan, state } = _ref2;
     React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn)),
     React.createElement("div", { style: { marginTop: 12 } }, React.createElement(RitmoContexto, null)),
     React.createElement(RitmoLista, { plan: plan }),
+
+
     React.createElement("div", { className: "pace-rt-pie", style: { borderTop: '1px solid var(--paper-3)', paddingTop: 14 } },
+    React.createElement("span", { className: "pace-rt-hoja-enlaces" },
     React.createElement("button", { className: "pace-rt-enlace", onClick: () => {onClose();ritmoPreguntar();} }, t('ritmo.cambiar')),
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-calendario": true,
+      onClick: () => {onClose();ritmoCalendarioAbrir();} }, t('cal.enlace'))
+    ),
     React.createElement(Button, { variant: "primary", onClick: onClose }, t('ritmo.listo'))
     )
     )
@@ -35357,6 +35385,7 @@ Object.assign(window, { RitmoLista, RitmoHoja });
 </script>
   <script>
 ;(function () {
+
 
 
 
@@ -35539,6 +35568,8 @@ Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioH
 
 
 
+
+
 var RITMO_ESQUEMA = ['estira', 'mueve', ['respira', 'estira'], 'comida', 'estira', 'mueve', ['respira', 'estira'], 'estira', 'respira'];
 
 function RitmoEsquema() {
@@ -35597,12 +35628,11 @@ function RitmoTarjeta() {
     )
     ),
     React.createElement("div", { className: "pace-rt-tj-mov", "data-pace-ritmo-tarjeta-movil": true },
-    React.createElement("div", { className: "pace-rt-tm-cab" },
-    React.createElement("span", { className: "pace-rt-tm-ceja" }, t('ritmo.nombre')),
     conCaminos &&
+    React.createElement("div", { className: "pace-rt-tm-cab" },
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
-
     ),
+
     React.createElement("div", { className: "pace-rt-tm-t" }, t('ritmo.pregunta')),
     React.createElement(RitmoEsquema, null),
     React.createElement("div", { className: "pace-rt-tm-pie" },

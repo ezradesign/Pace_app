@@ -2,10 +2,11 @@
  * ===========================================
  * Por libre, en el móvil, la tarjeta del ritmo con sus cuatro losetas en dos
  * filas hacía que la home pidiera scroll (85 px a 360×718, el móvil de Ez; 124 a
- * 375×667). Ez eligió en la maqueta otra tarjeta solo para el móvil: «A TU
- * RITMO», la pregunta, el esquema de la línea del día SIN HORAS, «Tú eliges las
- * horas» y la píldora «Comienza», que abre la pregunta entera. En escritorio
- * sigue la de las losetas.
+ * 375×667). Ez eligió en la maqueta otra tarjeta solo para el móvil: la
+ * pregunta, el esquema de la línea del día SIN HORAS, «Tú eliges las horas» y la
+ * píldora «Comienza», que abre la pregunta entera. En escritorio sigue la de las
+ * losetas. Desde v0.146.0 sin la ceja «A TU RITMO» encima (Ez: «no aporta nada»):
+ * a 360×640 eran los 15 px que la home no tenía.
  *
  * Contra la versión anterior fallan todas menos la de escritorio, que es el
  * control de que allí no cambia nada.
@@ -34,7 +35,7 @@ test.describe('360×718, el móvil de Ez', () => {
     await irAlArtefacto(page);
     const tarjeta = vis(page, '[data-pace-ritmo-tarjeta-movil]');
     await expect(tarjeta).toBeVisible();
-    await expect(tarjeta).toContainText('A tu ritmo');
+    await expect(tarjeta, 'la ceja «A TU RITMO» ya no va').not.toContainText('A tu ritmo');
     await expect(tarjeta).toContainText('¿Cuánto trabajas hoy?');
     await expect(tarjeta).toContainText('Tú eliges las horas');
     /* Las horas se eligen después: en la tarjeta no puede salir ninguna. */

@@ -86,8 +86,14 @@ function RitmoHoja({ open, onClose, plan, state }) {
         <div className="pace-rt-sub">{ritmoResumen(plan.m, tn)}</div>
         <div style={{ marginTop: 12 }}><RitmoContexto /></div>
         <RitmoLista plan={plan} />
+        {/* «Al calendario» vive aquí en el móvil: el día servido ya no tiene pie (RitmoMovil).
+            Cierra esta hoja antes de abrir la del calendario, para no apilar dos. */}
         <div className="pace-rt-pie" style={{ borderTop: '1px solid var(--paper-3)', paddingTop: 14 }}>
-          <button className="pace-rt-enlace" onClick={() => { onClose(); ritmoPreguntar(); }}>{t('ritmo.cambiar')}</button>
+          <span className="pace-rt-hoja-enlaces">
+            <button className="pace-rt-enlace" onClick={() => { onClose(); ritmoPreguntar(); }}>{t('ritmo.cambiar')}</button>
+            <button type="button" className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-calendario
+              onClick={() => { onClose(); ritmoCalendarioAbrir(); }}>{t('cal.enlace')}</button>
+          </span>
           <Button variant="primary" onClick={onClose}>{t('ritmo.listo')}</Button>
         </div>
       </div>

@@ -129,3 +129,34 @@ test('la app compone por la semana y no pinta ni una palabra nueva', async ({ pa
   const texto = (await vis(page, '[data-pace-ritmo-estado="menu"]').textContent()).toLowerCase();
   for (const palabra of ['esta semana', 'abrir la cadera', 'arrancar', 'la mitad', 'cerrar suave']) expect(texto, 'el panel no anuncia la semana («' + palabra + '»)').not.toContain(palabra);
 });
+
+/* EL MOTIVO DE CADA PARADA TIENE TEXTO (v0.146.0). El acento «aire» (y la regla, cuando el
+   primer plato de una pausa es de Respira) pone `motivo: 'respira'`, y esa clave no existía:
+   la hoja de «Ver todo» pintaba «ritmo.motivo.respira» y la pausa habría dicho
+   «break.prop.ritmo.respira». Ez eligió «Bajar revoluciones» · «Slow down». Se componen seis
+   semanas con las cuatro opciones y se mira que todo motivo que salga tenga sus dos textos en
+   los dos idiomas (la pausa larga lleva el suyo en `ritmo.larga.lista`). Contra v0.145.0 falla. */
+test('todo motivo que compone la semana tiene su texto en la línea y en la pausa, en los dos idiomas', async ({ page, context }) => {
+  await abrir(page, context);
+  const r = await page.evaluate((H) => {
+    const motivos = new Set();
+    for (let d = 0; d < 42; d++) {
+      const f = new Date(Date.UTC(2026, 8, 14 + d));
+      const iso = f.getUTCFullYear() + '-' + String(f.getUTCMonth() + 1).padStart(2, '0') + '-' + String(f.getUTCDate()).padStart(2, '0');
+      for (const op of ['1h', '2h', 'media', 'jornada']) {
+        const m = semanaComponer(op, H, ritmoPozos(getState(), iso), {}, 8, semanaDe(iso), null);
+        (m ? m.items : []).forEach((it) => { if (it.motivo) motivos.add(it.motivo); });
+      }
+    }
+    const faltan = [];
+    for (const lang of ['es', 'en']) {
+      motivos.forEach((mo) => {
+        if (mo !== 'larga' && PACE_STRINGS[lang]['ritmo.motivo.' + mo] === undefined) faltan.push(lang + ': ritmo.motivo.' + mo);
+        if (PACE_STRINGS[lang]['break.prop.ritmo.' + mo] === undefined) faltan.push(lang + ': break.prop.ritmo.' + mo);
+      });
+    }
+    return { motivos: Array.from(motivos).sort(), faltan };
+  }, H);
+  expect(r.motivos, 'GUARD: en seis semanas tiene que salir alguna pausa con motivo «respira»').toContain('respira');
+  expect(r.faltan).toEqual([]);
+});

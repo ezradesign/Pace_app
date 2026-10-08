@@ -2,7 +2,7 @@
  * ==================================================
  * La app ya RECORDABA qué pausas hiciste y cuáles saltaste (s195), pero solo lo enseñaba
  * en la línea del panel. Decidido con el calco delante:
- *  · LA HOJA del día (teléfono, «Ver la jornada entera») dice el estado de cada parada
+ *  · LA HOJA del día (teléfono, «Ver todo») dice el estado de cada parada
  *    pasada, con la regla de la línea: la hecha conserva la tinta y su glifo se rellena;
  *    la saltada baja y puntea, y pierde la gota del vaso. Antes se atenuaba TODO lo
  *    pasado por igual y «lo atenuado lee como no hecho» (s193).
@@ -41,7 +41,7 @@ test.describe('la hoja del día recuerda', () => {
 
   test('cada parada pasada dice si se hizo o se saltó', async ({ page, context }) => {
     await abrir(page, context);
-    await vis(page, 'text=Ver la jornada entera').first().click();
+    await vis(page, '[data-pace-ritmo-ver]').first().click();
     await page.waitForTimeout(600);
     const filas = page.locator('[data-pace-ritmo-lista] .pace-rt-plato');
     const estados = await filas.evaluateAll((els) => els.map((e) => e.getAttribute('data-pace-ritmo-estado-fila')));
@@ -56,7 +56,7 @@ test.describe('la hoja del día recuerda', () => {
 
   test('la hecha conserva la tinta y la saltada se atenúa y puntea', async ({ page, context }) => {
     await abrir(page, context);
-    await vis(page, 'text=Ver la jornada entera').first().click();
+    await vis(page, '[data-pace-ritmo-ver]').first().click();
     await page.waitForTimeout(600);
     const medidas = await page.evaluate(() => {
       const fila = (n) => document.querySelectorAll('[data-pace-ritmo-lista] .pace-rt-plato')[n];

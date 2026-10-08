@@ -161,24 +161,39 @@ test('en la web sin ids, «Al calendario» ofrece solo el archivo y lo descarga'
   expect(errores).toEqual([]);
 });
 
+/* EN EL MÓVIL, «AL CALENDARIO» VIVE EN LA HOJA DE «VER TODO» (v0.146.0). Para que la home
+   no pidiera scroll, Ez eligió quitar el pie del día servido: «Hoy voy por libre» sube bajo
+   «Cambiar» como enlace, «Ver todo» va al final de la línea y el calendario, dentro de su
+   hoja. Contra v0.145.0 falla: el enlace estaba en el panel y la hoja no lo tenía. */
+async function abrirCalendarioMovil(page) {
+  await vis(page, '[data-pace-ritmo-ver]').click();
+  await vis(page, '[data-pace-ritmo-lista]').waitFor();
+  await vis(page, '[data-pace-ritmo-calendario]').click();
+}
+
 test.describe('móvil', () => {
   test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
   for (const lang of ['es', 'en']) {
-    test('el enlace va bajo «Cambiar», dentro del panel y sin pisar el título (' + lang + ')', async ({ page, context }) => {
+    test('el panel lleva «Cambiar» y «Hoy voy por libre» sin pisar el título, y el calendario se abre desde «Ver todo» (' + lang + ')', async ({ page, context }) => {
       await abrir(page, context, { sidebarCollapsed: true, lang });
       const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
+      await expect(panel.locator('[data-pace-ritmo-calendario]'), 'el panel ya no lleva el calendario').toHaveCount(0);
+      await expect(panel.locator('.pace-rt-pie'), 'ni pie').toHaveCount(0);
       const r = await panel.evaluate((el) => {
         const caja = (x) => { const b = x.getBoundingClientRect(); return [b.left, b.right, b.top, b.bottom]; };
         return { panel: caja(el), titulo: caja(el.querySelector('.pace-rt-titulo')), cambiar: caja(el.querySelector('.pace-rt-cab-der > button')),
-                 enlace: caja(el.querySelector('[data-pace-ritmo-calendario]')),
-                 pie: Array.from(el.querySelectorAll('.pace-rt-pie button')).map(caja) };
+                 libre: caja(el.querySelector('.pace-rt-cab-der [data-pace-ritmo-libre]')), ver: caja(el.querySelector('[data-pace-ritmo-ver]')),
+                 linea: caja(el.querySelector('.pace-rt-mini')) };
       });
       const dentro = (c) => c[0] >= r.panel[0] && c[1] <= r.panel[1];
       const pisa = (a, b) => a[0] < b[1] && b[0] < a[1] && a[2] < b[3] && b[2] < a[3];
-      [r.titulo, r.cambiar, r.enlace].concat(r.pie).forEach((c) => expect(dentro(c)).toBe(true));
-      expect(r.enlace[2]).toBeGreaterThanOrEqual(r.cambiar[3]);
-      expect(pisa(r.enlace, r.titulo)).toBe(false);
-      expect(pisa(r.pie[0], r.pie[1])).toBe(false);
+      [r.titulo, r.cambiar, r.libre, r.ver].forEach((c) => expect(dentro(c)).toBe(true));
+      expect(r.libre[2], '«Hoy voy por libre» va bajo «Cambiar»').toBeGreaterThanOrEqual(r.cambiar[3]);
+      expect(pisa(r.libre, r.titulo)).toBe(false);
+      expect(r.ver[0], '«Ver todo» va al final de la línea').toBeGreaterThanOrEqual(r.linea[1]);
+      await abrirCalendarioMovil(page);
+      await expect(page.locator('[data-pace-cal]')).toBeVisible();
+      await expect(page.locator('[data-pace-ritmo-lista]'), 'la hoja del día se cierra: no se apilan dos').toHaveCount(0);
     });
   }
 });
@@ -237,7 +252,7 @@ test.describe('en Android', () => {
     const errores = capturarErrores(page);
     await comoAndroid(context, { eventos: EVENTOS_MOVIL });
     await abrir(page, context, { sidebarCollapsed: true });
-    await vis(page, '[data-pace-ritmo-calendario]').click();
+    await abrirCalendarioMovil(page);
     const hoja = page.locator('[data-pace-cal]');
     await expect(hoja.locator('[data-pace-cal-destino]')).toHaveCount(2);
     await expect(hoja.locator('[data-pace-cal-destino="android"]')).toContainText('Calendario del móvil');
@@ -268,7 +283,7 @@ test.describe('en Android', () => {
     await expect(page.locator('[data-pace-ritmo-lista] [data-pace-ritmo-fila="ocupado"]')).toHaveText(/12:00\s*Ocupado · 30 min/);
     /* Volver a pulsar no duplica: borra los suyos que quedan y vuelve a escribir. */
     await page.getByRole('button', { name: 'Listo', exact: true }).click();
-    await vis(page, '[data-pace-ritmo-calendario]').click();
+    await abrirCalendarioMovil(page);
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toBeVisible();
     const dePace = await page.evaluate(() => window.__nativo.eventos.filter((e) => (e.description || '').includes('pacegrass.app')).length);
@@ -279,7 +294,7 @@ test.describe('en Android', () => {
   test('sin permiso no escribe nada y lo dice', async ({ page, context }) => {
     await comoAndroid(context, { permiso: 'denied', eventos: EVENTOS_MOVIL });
     await abrir(page, context, { sidebarCollapsed: true });
-    await vis(page, '[data-pace-ritmo-calendario]').click();
+    await abrirCalendarioMovil(page);
     const hoja = page.locator('[data-pace-cal]');
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="error"]')).toContainText('PACE no tiene permiso para el calendario');

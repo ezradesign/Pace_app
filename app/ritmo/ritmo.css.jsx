@@ -183,6 +183,12 @@
 
 /* COMPACTO (móvil) */
 .pace-rt-mini { display: flex; align-items: center; height: 12px; margin: 14px 0 10px; }
+/* En el día servido del móvil, «Ver todo» al final de la línea: mide lo que la línea (12 px)
+   y crece 14 px arriba y abajo para el dedo sin mover nada. */
+.pace-rt-mini-fila { display: flex; align-items: center; gap: 10px; margin: 14px 0 10px; }
+.pace-rt-mini-fila .pace-rt-mini { flex: 1 1 auto; min-width: 0; margin: 0; }
+.pace-rt-mini-fila .pace-rt-enlace { flex: 0 0 auto; line-height: 12px; padding: 14px 0; margin: -14px 0; }
+.pace-rt-hoja-enlaces { display: inline-flex; align-items: center; gap: 18px; }
 .pace-rt-mini .pace-rt-punto { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--c); background: var(--paper); margin: 0 2px; }
 .pace-rt-mini .pace-rt-punto.pace-rt-larga { width: 14px; border-radius: 4px; }
 .pace-rt-mini .pace-rt-punto.pace-rt-ahora { background: var(--c); }
@@ -265,9 +271,10 @@
    «Empezar foco», que es la única acción rellena de la pantalla. */
 .pace-rt-tj-esc { display: block; }
 .pace-rt-tj-mov { display: none; }
-.pace-rt-tm-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.pace-rt-tm-ceja { font-size: 10px; line-height: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--focus); }
+.pace-rt-tm-cab { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; }
 .pace-rt-tm-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 26px; color: var(--ink); margin-top: 5px; }
+/* Sin la fila de Caminos encima, el título es lo primero y no se separa de nada. */
+.pace-rt-tm-t:first-child { margin-top: 0; }
 .pace-rt-esquema { display: flex; align-items: center; height: 14px; margin-top: 14px; }
 .pace-rt-esq-seg { flex: 4 1 0; height: 3px; border-radius: 2px; background: var(--paper-3); }
 .pace-rt-esq-comida { flex: 8 1 0; height: 0; border-top: 2px dashed var(--line); }
@@ -292,12 +299,13 @@
 /* Por debajo de 640 px la cáscara lleva padding 10/12 con !important (lo pone
    SuggestedPathCard.jsx para todas las tarjetas de ese sitio); los 4/2 de arriba
    la llevan a los 14 de la maqueta. En un móvil bajo (375×667) el aro ya está en
-   su suelo y lo que sobra es la tarjeta: se aprieta 22 px para que la home no
-   pida scroll. Solo toca piezas de la tarjeta de móvil, nunca la cáscara. */
+   su suelo y lo que sobra es la tarjeta: se aprieta 26 px para que la home no
+   pida scroll (a 360×640 hacían falta los 4 últimos). Solo toca piezas de la
+   tarjeta de móvil, nunca la cáscara. */
 @media (max-height: 700px) {
   .pace-rt-tj-mov { padding: 0; }
   .pace-rt-tm-t { margin-top: 3px; }
-  .pace-rt-esquema { margin-top: 8px; }
+  .pace-rt-esquema { margin-top: 4px; }
   .pace-rt-tm-pie { margin-top: 8px; }
 }
 
@@ -312,6 +320,9 @@
 /* TU DIA EN EL CALENDARIO (RitmoCalendario.jsx): un destino por fila, como en la
    maqueta; los botones son pildoras, llena la del destino conectado. */
 .pace-rt-cab-der { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+/* Los dos enlaces de la cabecera del móvil («Cambiar» y «Hoy voy por libre») crecen 4 px
+   arriba y abajo para el dedo sin moverse ni pisarse. */
+.pace-rt-mov .pace-rt-cab-der .pace-rt-enlace { padding: 4px 0; margin: -4px 0; }
 .pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
 .pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }
@@ -337,6 +348,8 @@
   .pace-rt-chip b { font-size: 15px; }
   .pace-rt-pie { margin-top: 8px; }
   .pace-rt-titulo { font-size: 17px; }
+  /* Las filas de «Ahora» y «Luego» no parten su meta: una línea más eran 16 px de scroll. */
+  .pace-rt-que .pace-rt-m { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 /* La fila del título de la pregunta en el móvil. Si no caben los dos (en inglés a 360 px),
    el enlace baja a su propia línea, a la derecha. Su caja crece 14 px arriba y abajo para

@@ -9,7 +9,8 @@
        día. Móvil: «Ahora» y «Luego» con sus glifos, la línea con puntos y la
        jornada entera en una hoja. s193: con la PAUSA ABIERTA (plan.pausa),
        «Ahora» es la parada y «Luego» el bloque que viene; y hasta que acabe
-       el primer bloque del día, una frase dice cómo va la cosa (RitmoComo).
+       el primer bloque del día, una frase dice cómo va la cosa (RitmoComo),
+       solo en escritorio: en el móvil eran 39 px que la home no tenía.
      · LA JORNADA CERRADA — cuando ya no queda bloque.
 
    Cada estado existe dos veces (escritorio y móvil) y la hoja de estilos elige.
@@ -31,8 +32,9 @@ function RitmoContexto() {
 /* «Hoy voy por libre» es la ÚNICA salida del menú, y el usuario pidió que destacara más
    (s194). Variante E, elegida mirándola entre cinco: una píldora en verde —el lenguaje de
    los chips de contexto— que en escritorio vive en la CABECERA junto al contexto, no en la
-   fila de la línea (allí una píldora pisaba la línea), y en móvil en el pie. En la pregunta
-   del móvil va como `enlace`, en la fila del título (ver RitmoPregunta). */
+   fila de la línea (allí una píldora pisaba la línea). En el móvil va como `enlace`: en la
+   pregunta, en la fila del título (ver RitmoPregunta), y en el día servido, bajo «Cambiar»
+   (RitmoMovil), porque el pie se quitó para que la home no pidiera scroll. */
 function RitmoLibre({ enlace }) {
   const { t } = useT();
   return <button className={enlace ? 'pace-rt-enlace pace-rt-fuerte' : 'pace-rt-porlibre'} data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
@@ -254,8 +256,9 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves }) {
   );
 }
 
-/* La fila de una parada (pausa o comida) con su rótulo («Ahora» o «Luego»). */
-function RitmoFilaParada({ it, rotulo }) {
+/* La fila de una parada (pausa o comida) con su rótulo («Ahora» o «Luego»). `corta`:
+   en el móvil, la meta sin el nombre del módulo (ritmoMetaPlato). */
+function RitmoFilaParada({ it, rotulo, corta }) {
   const { t, tn, lang } = useT();
   const cab = <React.Fragment>{t(rotulo)}<br />{ritmoHora(it.desde)}</React.Fragment>;
   if (it.tipo === 'comida') {
@@ -266,7 +269,7 @@ function RitmoFilaParada({ it, rotulo }) {
   }
   if (!it.platos || !it.platos.length) return null;
   return <RitmoFila rotulo={cab} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
-    meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn)} agua={it.agua} />}
+    meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn, corta)} agua={it.agua} />}
     claves={it.platos.map((p) => p.clave)} />;
 }
 
@@ -283,8 +286,8 @@ function RitmoMovil({ state, plan, onVer }) {
   );
   const luego = ritmoDetras(plan.m, b);
   const filas = plan.pausa
-    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" />{filaBloque('ritmo.luego')}</React.Fragment>
-    : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" /> : null}</React.Fragment>;
+    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{filaBloque('ritmo.luego')}</React.Fragment>
+    : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="menu">
       <div className="pace-rt-cab">
@@ -292,20 +295,20 @@ function RitmoMovil({ state, plan, onVer }) {
           <div className="pace-rt-titulo">{t('ritmo.opcion.' + plan.m.opcion)}</div>
           <div className="pace-rt-sub pace-rt-frase"><RitmoFraseMenu plan={plan} horario={R.horario} plantilla="ritmo.frase.movil" /></div>
         </div>
-        {/* «Al calendario» bajo «Cambiar» y no en el pie: con «Hoy voy por libre» en inglés
-            («I'll go freestyle today») el pie no cabía a 360 px. */}
+        {/* SIN PIE (Ez eligió la opción B de «la home sin scroll»): a 360×640 el día servido
+            pedía hasta 24 px. «Hoy voy por libre» sube bajo «Cambiar» como enlace, «Ver todo»
+            va al final de la línea y «Al calendario» vive en esa hoja (RitmoHoja). */}
         <div className="pace-rt-cab-der">
           <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
-          <RitmoAlCalendario />
+          <RitmoLibre enlace />
         </div>
       </div>
-      <RitmoComo plan={plan} />
-      <RitmoMini plan={plan} />
-      {filas}
-      <div className="pace-rt-pie">
+      {/* La línea es un dibujo (aria-hidden); el enlace va a su lado, fuera de ella. */}
+      <div className="pace-rt-mini-fila">
+        <RitmoMini plan={plan} />
         <button className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-ver onClick={onVer}>{t('ritmo.ver')}</button>
-        <RitmoLibre />
       </div>
+      {filas}
     </div>
   );
 }

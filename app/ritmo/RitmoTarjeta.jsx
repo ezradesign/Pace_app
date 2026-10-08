@@ -10,11 +10,13 @@
 
    EN EL MÓVIL ES OTRA TARJETA, más corta: con las cuatro losetas en dos filas,
    por libre la home pedía scroll (63 px a 360×730). Ez eligió mirándola en la
-   maqueta: «A TU RITMO», la pregunta, el ESQUEMA de la línea del día sin ninguna
+   maqueta: la pregunta, el ESQUEMA de la línea del día sin ninguna
    hora (las horas se eligen después), «Tú eliges las horas» y una píldora de
    papel «Comienza» que abre la pregunta entera. «Comienza» y no «Empieza»: arriba
    ya está «Empezar foco». Las dos versiones van en el DOM y la media query del
-   corte de móvil elige (la misma que cambia la piel), como el panel.
+   corte de móvil elige (la misma que cambia la piel), como el panel. Sin la ceja
+   «A TU RITMO» encima (Ez: «no aporta nada»): eran 15 px que la home no tenía a
+   360×640. Solo queda esa fila si hay Caminos, para su enlace.
 
    MISMA CÁSCARA que la tarjeta del Camino, y eso no es pereza: `[data-pace-spc]`
    lo observa el motor de geometría (home-geometry.js) y lo mueve la piel
@@ -83,12 +85,11 @@ function RitmoTarjeta() {
           </div>
         </div>
         <div className="pace-rt-tj-mov" data-pace-ritmo-tarjeta-movil>
-          <div className="pace-rt-tm-cab">
-            <span className="pace-rt-tm-ceja">{t('ritmo.nombre')}</span>
-            {conCaminos && (
+          {conCaminos && (
+            <div className="pace-rt-tm-cab">
               <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
-            )}
-          </div>
+            </div>
+          )}
           <div className="pace-rt-tm-t">{t('ritmo.pregunta')}</div>
           <RitmoEsquema />
           <div className="pace-rt-tm-pie">

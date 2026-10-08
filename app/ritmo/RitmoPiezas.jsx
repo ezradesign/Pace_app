@@ -49,11 +49,13 @@ function ritmoResumen(m, tn) {
     { f: ritmoDuracion(m.focoMin), p: m.pausas, v: m.vasos });
 }
 
-/* «3 min · Estira · Antídoto a la silla», o la de la pausa larga. */
-function ritmoMetaPlato(it, t, tn) {
+/* «3 min · Estira · Antídoto a la silla», o la de la pausa larga. `sinModulo` (las
+   filas del móvil): el glifo de la fila ya dice si es Estira, Mueve o Respira, y sin
+   la palabra el motivo cabe en una línea también en inglés («Antidote to the chair»). */
+function ritmoMetaPlato(it, t, tn, sinModulo) {
   if (it.larga) return tn('ritmo.larga.lista', { n: it.dur });
   const p = it.platos[0];
-  return p.min + ' min · ' + ritmoModulo(p.modulo, t) + ' · ' + t('ritmo.motivo.' + it.motivo);
+  return p.min + ' min · ' + (sinModulo ? '' : ritmoModulo(p.modulo, t) + ' · ') + t('ritmo.motivo.' + it.motivo);
 }
 
 /* Un texto con la GOTA del vaso pegada a su última palabra. Un inline-grid es un
