@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.1 · 8 de octubre de 2026.
+**Versión:** v0.147.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -48,6 +48,11 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
+«A tu ritmo» conoce tu semana (v0.147.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
+días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
+«Comienza» y «Hoy es distinto»; «Tu semana» en Ajustes la cambia. El día se deriva de la semana al
+pintar y no se escribe nada hasta que se pulsa.
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
@@ -67,8 +72,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
    `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
    en `SUBIDAS.md`.
-2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
-   se paga.
+2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
+   cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
+   «Otra» y las horas a las que paras), contado en la carta del lunes. Antes, una página para Ez.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso

@@ -5,7 +5,7 @@
    octubre de 2026). `ritmoHabitual(state)` decide si toca: hay semana, hoy no se ha hecho
    nada, no es día libre y aún queda jornada. Si no, la pregunta de siempre.
 
-     · móvil: sustituye a la pregunta. El nombre del día, «como cada martes», la frase con
+     · móvil: sustituye a la pregunta. El nombre del día con «· como cada martes», la frase con
        tus horas (que se tocan como en el día servido), la línea del día que te espera y
        «Hoy es distinto» · «Comienza →». Sin «A TU RITMO» encima: Ez lo quitó de la tarjeta
        corta en v0.146.0 porque no aportaba.
@@ -36,13 +36,15 @@ function RitmoMananaMovil({ h }) {
   const vista = { m: h.m, hechos: 0, actual: h.m.focos[0], estados: {} };
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="habitual" data-pace-ritmo-habitual={h.opcion}>
+      {/* «como cada jueves» va JUNTO AL TÍTULO (la B, elegida por Ez): en la esquina, como en
+          la maqueta, le quitaba ancho a la frase y dejaba «1 h» sola en otra línea. */}
       <div className="pace-rt-cab">
         <div>
-          <div className="pace-rt-titulo">{t('ritmo.opcion.' + h.opcion)}</div>
+          <div className="pace-rt-titulo">
+            {t('ritmo.opcion.' + h.opcion)}{' '}
+            <span className="pace-rt-habitual-como">{'· ' + tn('ritmo.manana.como', { dia: ritmoNombreDia(h.diaSemana, t) })}</span>
+          </div>
           <div className="pace-rt-sub pace-rt-frase"><RitmoFraseMenu plan={vista} horario={h.horario} plantilla="ritmo.frase.movil" /></div>
-        </div>
-        <div className="pace-rt-cab-der">
-          <span className="pace-rt-habitual-como">{tn('ritmo.manana.como', { dia: ritmoNombreDia(h.diaSemana, t) })}</span>
         </div>
       </div>
       <div className="pace-rt-mini-fila"><RitmoMini plan={vista} /></div>
