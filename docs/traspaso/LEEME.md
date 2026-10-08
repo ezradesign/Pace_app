@@ -29,10 +29,14 @@ crédito de la nube quedó así. Cada rama lleva en el mensaje de su último com
     para que el dibujo de Mueve iguale al de Estira.
   - `claude/glifos-revision-8oct`: solo documentos; qué dibujos no casan, cuáles faltan, prompts,
     y cuatro dibujos de logro cambiados de sitio que solo hay que reasignar.
-  - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez; la tanda 2,
-    las explicaciones de ejercicios, respeta el tope de 95 letras.
+  - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez desde la nube
+    y **no está en el repo ni en ninguna rama**: si Ez no la conserva, hay que rehacerla. La
+    tanda 2, las explicaciones de ejercicios, respeta el tope de 95 letras.
 - **Lo siguiente de producto**: el motor que aprende de cada persona y adapta la semana (lo de pago
-  de «A tu ritmo»), con la carta del lunes; antes, una página para Ez.
+  de «A tu ritmo»), con la carta del lunes. **La página está hecha** y espera seis respuestas de
+  Ez: `archivos/motor-semana/motor-semana.html` (https://claude.ai/artifact/EGfS13xFn6oU4BpoRihdBL),
+  con `fotos.js` para rehacer fotos y medidas. Recomendado: empezar por el resumen del día, que
+  es invisible, y poner la carta en una ventana (la de la R2 no cabe a 360×640).
 - En la nube, Playwright 1.62.1 pedía Chromium 1234 y solo había el 1194: se apañó con
   `PLAYWRIGHT_BROWSERS_PATH` y enlaces. En el PC de Ez no hace falta.
 
