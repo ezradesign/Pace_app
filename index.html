@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.148.5</title>
+  <title>PACE · Foco · Cuerpo — v0.149.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5866,7 +5866,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.148.5';
+const PACE_VERSION = 'v0.149.0';
 
 
 
@@ -9767,6 +9767,8 @@ function ritmoSincronizar() {
 function ritmoGuardar(cambio) {
   setState(function (prev) {
     var r = Object.assign({ horario: null, libre: null, dia: null }, prev.ritmo || {});
+
+    if (typeof ritmoResumenAntesDePisar === 'function') r = ritmoResumenAntesDePisar(prev, r);
     return Object.assign({}, prev, { ritmo: Object.assign(r, cambio(r)) });
   });
 }
@@ -10073,6 +10075,39 @@ const EVENT_ORIGINS = ['aro', 'pausa', 'biblioteca', 'sidebar', 'parada', 'camin
 
 
 
+
+
+const EVENT_RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
+const EVENT_RITMO_HABITUAL = ['jornada', 'media', 'libre'];
+const EVENT_RITMO_PARADAS = ['pausa', 'larga', 'cierre'];
+const EVENT_RITMO_MODULOS = ['estira', 'mueve', 'respira', 'cierre'];
+const EVENT_RITMO_ESTADOS = ['hecha', 'saltada'];
+
+
+function eventMinuto(n) {
+  const x = typeof n === 'string' ? Number(n) : n;
+  if (typeof x !== 'number' || !isFinite(x) || x < 0 || x > 1440) return null;
+  return Math.round(x);
+}
+
+function eventRitmoParada(x) {
+  if (!x || typeof x !== 'object') return null;
+  const tipo = eventEnum(x.tipo, EVENT_RITMO_PARADAS);
+  const hora = eventMinuto(x.hora);
+  const platos = (Array.isArray(x.platos) ? x.platos : []).slice(0, 2).map(function (pl) {
+    const modulo = eventEnum(pl && pl.modulo, EVENT_RITMO_MODULOS);
+    const id = eventId(pl && pl.id);
+    if (!modulo || !id) return null;
+    const antes = (Array.isArray(pl.antes) ? pl.antes : []).slice(0, 5).map(eventId).filter(Boolean);
+    return { modulo: modulo, id: id, otras: eventCount(pl.otras), antes: antes };
+  }).filter(Boolean);
+  if (!tipo || hora === null || !platos.length) return null;
+  return { hora: hora, tipo: tipo, platos: platos,
+    estado: eventEnum(x.estado, EVENT_RITMO_ESTADOS), reunion: eventMinuto(x.reunion) || 0 };
+}
+
+
+
 function eventCount(n) {
   const x = typeof n === 'string' ? Number(n) : n;
   if (typeof x !== 'number' || !isFinite(x) || x < 0) return 0;
@@ -10144,15 +10179,29 @@ function normalizeEventPayload(type, raw) {
     return { pathId: pathId, stepsCount: eventCount(p.stepsCount) };
   }
 
+  if (type === 'ritmo.day.closed') {
+    const fecha = typeof p.fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p.fecha) ? p.fecha : null;
+    const opcion = eventEnum(p.opcion, EVENT_RITMO_OPCIONES);
+    if (!fecha || !opcion || !Array.isArray(p.paradas)) return null;
+    return {
+      fecha: fecha, opcion: opcion,
+      habitual: eventEnum(p.habitual, EVENT_RITMO_HABITUAL),
+      inicio: eventMinuto(p.inicio), salida: eventMinuto(p.salida),
+      paradas: p.paradas.slice(0, 40).map(eventRitmoParada).filter(Boolean)
+    };
+  }
+
   return null;
 }
 
 Object.assign(window, {
   EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
   EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
-  EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload
+  EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload,
+  EVENT_RITMO_OPCIONES, EVENT_RITMO_HABITUAL, EVENT_RITMO_PARADAS, EVENT_RITMO_MODULOS,
+  EVENT_RITMO_ESTADOS, eventMinuto, eventRitmoParada
 });
-;Object.assign(window, { eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload });
+;Object.assign(window, { eventMinuto, eventRitmoParada, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload });
 })();
 </script>
   <script>
@@ -10198,7 +10247,9 @@ const EVENTS_RETENTION_DAYS = 120;
 const EVENTS_BUDGET_BYTES = 500 * 1024;
 
 
-const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed'];
+
+
+const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed', 'ritmo.day.closed'];
 
 
 
@@ -10207,7 +10258,8 @@ const EVENT_CORRELATION = {
   'session.completed': { runId: 'req', pathRunId: 'opt' },
   'feedback.answered': { runId: 'req', pathRunId: 'opt' },
   'path.step.completed': { runId: 'opt', pathRunId: 'req' },
-  'path.completed': { runId: 'no', pathRunId: 'req' }
+  'path.completed': { runId: 'no', pathRunId: 'req' },
+  'ritmo.day.closed': { runId: 'no', pathRunId: 'no' }
 };
 
 const EVENT_CONTEXTS = ['standalone', 'path'];
@@ -11978,13 +12030,14 @@ function paceOrigenPendienteLeer() {return paceOrigenPendiente;}
 
 
 
-function paceEmitirEvento(evento, alRechazar) {
+function paceEmitirEvento(evento, alRechazar, alConfirmar) {
   if (!evento || typeof window.paceEventsAppend !== 'function') return false;
   try {
     const p = window.paceEventsAppend(evento);
     if (p && typeof p.then === 'function') {
       p.then(function (r) {
-        if (!r || r.result !== 'committed') {if (alRechazar) alRechazar();}
+        if (!r || r.result !== 'committed') {if (alRechazar) alRechazar();} else
+        if (alConfirmar) alConfirmar();
       }, function () {if (alRechazar) alRechazar();});
     }
     return true;
@@ -12130,17 +12183,214 @@ function emitPathCompleted(pathId, stepsCount, pathRunId) {
 
 
 
+
+
+function emitRitmoDia(resumen, alConfirmar, alRechazar) {
+  if (!resumen || typeof resumen.fecha !== 'string' || typeof window.parseLocalDateKey !== 'function') return false;
+  const fin = window.parseLocalDateKey(resumen.fecha);
+  if (!fin || isNaN(fin.getTime())) return false;
+  fin.setHours(23, 59, 0, 0);
+  const evento = window.makeEvent && window.makeEvent({
+    type: 'ritmo.day.closed',
+    context: 'standalone',
+    occurredAt: fin.toISOString(),
+    payload: resumen
+  });
+  if (!evento) return false;
+  return paceEmitirEvento(evento, alRechazar, alConfirmar);
+}
+
+
+
+
 function paceUltimaSesionEmitida() {return paceUltimaSesion;}
 function paceOlvidarUltimaSesion() {paceUltimaSesion = null;}
 
 Object.assign(window, {
   paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId,
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
-  emitPathStepCompleted, emitPathCompleted,
+  emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
   paceOrigenSesion, paceOrigenPendienteLeer
 });
-;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
+;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
+})();
+</script>
+  <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
+       la semana. Va detrás del emisor, que es quien escribe en el registro. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var RITMO_RESUMEN_COLA_MAX = 14;
+var RITMO_RESUMEN_ALREDEDOR = 30;
+
+
+function ritmoMenuDe(s, dia, cambios) {
+  var r = s && s.ritmo || {};
+  var h0 = Object.assign(ritmoHorarioInicial(), r.horario || {});
+  h0.media = ritmoMedia(h0);
+  var ocupado = r.ocupado && r.ocupado.fecha === dia.fecha && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [];
+  var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado });
+  var agua = (s || {}).water && s.water.goal || 8;
+  var pasado = dia.pasado && dia.pasado.length ? dia.pasado : null;
+  var previos = pasado ? ritmoPrevios(pasado, dia.primerBloque || null, !!dia.pausaPendiente, dia.bloque || null) : null;
+  var pozos = ritmoPozos(s, dia.fecha);
+  var m = typeof semanaComponer === 'function' ?
+  semanaComponer(dia.opcion, h, pozos, cambios, agua, semanaDe(dia.fecha), previos) :
+  ritmoComponer(dia.opcion, h, pozos, cambios, agua, previos);
+  if (!m) return null;
+  var congelados = pasado ? ritmoHidratar(pasado).map(function (it) {return Object.assign({}, it, { congelado: true });}) : [];
+  return { items: congelados.concat(m.items), horario: h0, ocupado: ocupado };
+}
+
+
+
+
+function ritmoDescartados(s, dia, clave, veces) {
+  var out = [];
+  for (var k = 0; k < Math.min(veces, 5); k++) {
+    var c = Object.assign({}, dia.cambios || {});
+    c[clave] = k;
+    var m = ritmoMenuDe(s, dia, c);
+    var plato = null;
+    (m ? m.items : []).forEach(function (it) {
+      if (it.congelado) return;
+      (it.platos || []).forEach(function (pl) {if (pl.clave === clave) plato = pl;});
+    });
+    if (plato && out.indexOf(plato.id) === -1) out.push(plato.id);
+  }
+  return out;
+}
+
+
+function ritmoResumenDe(s, dia) {
+  if (!dia || typeof dia.fecha !== 'string' || !dia.opcion) return null;
+  var cambios = dia.cambios || {};
+  var m = ritmoMenuDe(s, dia, cambios);
+  if (!m) return null;
+  var r = s && s.ritmo || {};
+  var tipo = typeof ritmoSemanaTipoDe === 'function' ? ritmoSemanaTipoDe(r.semanaTipo) : null;
+  var habitual = tipo ? tipo[semanaISO(dia.fecha).diaSemana - 1] : null;
+  var reuniones = ritmoOcupadoLimpio(m.ocupado, 0, null, 0);
+  var estados = dia.estados || {};
+  var n = 0;
+  var paradas = [];
+  m.items.forEach(function (it) {
+    if (it.tipo !== 'pausa' && it.tipo !== 'cierre') return;
+    n++;
+    if (!it.platos || !it.platos.length) return;
+
+
+
+    var reunion = 0;
+    var a = it.desde - RITMO_RESUMEN_ALREDEDOR,b = it.desde + it.dur + RITMO_RESUMEN_ALREDEDOR;
+    reuniones.forEach(function (o) {reunion += Math.max(0, Math.min(o.hasta, b) - Math.max(o.desde, a));});
+    paradas.push({
+      hora: it.desde,
+      tipo: it.tipo === 'cierre' ? 'cierre' : it.larga ? 'larga' : 'pausa',
+      estado: estados[n] === 'hecha' || estados[n] === 'saltada' ? estados[n] : null,
+      reunion: reunion,
+      platos: it.platos.map(function (pl) {
+        var veces = Number(cambios[pl.clave]) || 0;
+        return { modulo: pl.modulo, id: pl.id, otras: veces,
+          antes: veces && !it.congelado ? ritmoDescartados(s, dia, pl.clave, veces) : [] };
+      })
+    });
+  });
+  var media = dia.opcion === 'media';
+  return { fecha: dia.fecha, opcion: dia.opcion, habitual: habitual,
+    inicio: media ? m.horario.media.inicio : m.horario.inicio,
+    salida: media ? m.horario.media.salida : m.horario.salida,
+    paradas: paradas };
+}
+
+
+
+function ritmoResumenAntesDePisar(s, r) {
+  var dia = r && r.dia;
+  var hoy = typeof todayISO === 'function' ? todayISO() : '';
+  if (!dia || typeof dia.fecha !== 'string' || !hoy || dia.fecha >= hoy || r.resumido === dia.fecha) return r;
+  var resumen = null;
+  try {resumen = ritmoResumenDe(s, dia);} catch (e) {resumen = null;}
+  var cola = (Array.isArray(r.resumenes) ? r.resumenes : []).filter(function (x) {return x && x.fecha !== dia.fecha;});
+  if (resumen) cola = cola.concat([resumen]).slice(-RITMO_RESUMEN_COLA_MAX);
+  return Object.assign({}, r, { resumido: dia.fecha, resumenes: cola });
+}
+
+var ritmoResumenEnviando = false;
+
+
+function ritmoResumirAhora() {
+  if (document.visibilityState === 'hidden' || ritmoResumenEnviando) return;
+  try {
+    var s = getState();
+    var r = s && s.ritmo || {};
+    if (ritmoResumenAntesDePisar(s, r) !== r) {
+      setState(function (prev) {
+        return Object.assign({}, prev, { ritmo: ritmoResumenAntesDePisar(prev, prev.ritmo || {}) });
+      });
+      r = getState().ritmo || {};
+    }
+    var cola = Array.isArray(r.resumenes) ? r.resumenes : [];
+    if (!cola.length || typeof paceEventsCanWrite !== 'function' || !paceEventsCanWrite()) return;
+    var primero = cola[0];
+    ritmoResumenEnviando = true;
+    var enviado = emitRitmoDia(primero, function () {
+      ritmoResumenEnviando = false;
+      setState(function (prev) {
+        var pr = prev.ritmo || {};
+        var resto = (Array.isArray(pr.resumenes) ? pr.resumenes : []).filter(function (x) {return !x || x.fecha !== primero.fecha;});
+        return Object.assign({}, prev, { ritmo: Object.assign({}, pr, { resumenes: resto }) });
+      });
+      ritmoResumirAhora();
+    }, function () {ritmoResumenEnviando = false;});
+    if (!enviado) ritmoResumenEnviando = false;
+  } catch (e) {ritmoResumenEnviando = false;}
+}
+
+
+
+[1500, 5000, 15000].forEach(function (ms) {setTimeout(ritmoResumirAhora, ms);});
+document.addEventListener('visibilitychange', ritmoResumirAhora);
+setInterval(ritmoResumirAhora, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
+
+Object.assign(window, {
+  RITMO_RESUMEN_COLA_MAX, RITMO_RESUMEN_ALREDEDOR, ritmoMenuDe, ritmoDescartados, ritmoResumenDe,
+  ritmoResumenAntesDePisar, ritmoResumirAhora
+});
+;Object.assign(window, { RITMO_RESUMEN_COLA_MAX, RITMO_RESUMEN_ALREDEDOR, ritmoMenuDe, ritmoDescartados, ritmoResumenDe, ritmoResumenAntesDePisar, ritmoResumenEnviando, ritmoResumirAhora });
 })();
 </script>
   <script>

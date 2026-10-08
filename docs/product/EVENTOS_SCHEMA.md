@@ -196,6 +196,7 @@ tipo sube su `v` (§9). **Añadir un `type` nuevo NO sube el `v` de los existent
 | `feedback.answered` | Respuesta a «¿Te ayudó esta pausa?». Puente con `routineFeedback`. | «qué te ayuda» · scoring v2 |
 | `path.step.completed` | Un paso de un Camino terminado. | Stats premium (Caminos) |
 | `path.completed` | Un Camino terminado por completo. | Stats premium · scoring v2 (repetición) |
+| `ritmo.day.closed` | Un día de «A tu ritmo» que ya pasó, resumido parada a parada (rev. 8). | El motor de la semana de «A tu ritmo» (premium, Fase 3) |
 
 ### 6.2 Candidatos APLAZADOS (fuera del schema inicial)
 `achievement.unlocked` (sin consumidor de lectura claro) · `hydrate.glass` (ya
@@ -363,6 +364,15 @@ existente; un Camino tiene **un** `pathRunId`; un `pathRunId` agrupa **N** pasos
 ```
 { pathId:string, stepsCount:number }
 ```
+**`ritmo.day.closed`** (`v:1`, rev. 8, 8 oct. 2026) — sin `runId` ni `pathRunId`; `occurredAt` a las 23:59 del día resumido, así que `localDay` es ese día
+```
+{ fecha:'YYYY-MM-DD', opcion:'1h'|'2h'|'media'|'jornada', habitual:'jornada'|'media'|'libre'|null,
+  inicio:minutos|null, salida:minutos|null,
+  paradas:[{ hora:minutos, tipo:'pausa'|'larga'|'cierre', estado:'hecha'|'saltada'|null,
+             reunion:minutos (de reunión media hora antes y después),
+             platos:[{ modulo:'estira'|'mueve'|'respira'|'cierre', id:string, otras:n, antes:[id] }] }] }
+```
+> Lo arma `app/state-ritmo.resumen.jsx` recomponiendo el día con la misma regla que lo sirvió y cruzándolo con `ritmo.dia` (estados y «Otra»), que solo vive el día de hoy. `otras` es cuántas veces se pidió «Otra» en ese plato y `antes`, lo que se enseñó y se descartó (hasta 5). Lista permitida en `events-payloads.js`: ni textos, ni títulos de reuniones, ni nombres. Consumidor: el motor de la semana, que mira las cuatro últimas semanas (página de Ez en `docs/traspaso/archivos/motor-semana/`).
 
 ---
 
