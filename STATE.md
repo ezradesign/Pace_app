@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.1 · 8 de octubre de 2026.
+**Versión:** v0.147.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -49,8 +49,12 @@ Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
-`app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
-El constructor de rutinas propias sigue cerrado.
+`app/state-entitlement.jsx`), para que los testers las prueben. Lo de pago se llama **PACE completo**
+(v0.147.0, opción B elegida por Ez): lo cerrado lleva un candado de línea fina y, al tocarlo, una
+invitación que dice qué trae y que llega con la versión 1. En la web, un **código de por vida**
+(enlace `#codigo=…` o «Tengo un código») lo abre todo, también «Tus rutinas», que sin código sigue
+cerrado: es una licencia firmada que la app comprueba sin servidor (`app/state-licencia.js`). En
+Android no hay códigos propios: llegarán los de Play cuando haya Play Billing.
 
 Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
@@ -77,6 +81,11 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    octubre: falta traerla a `main` y que Ez la escuche en la app.
 
 ## Espera a Ez
+
+- En su PC, una vez: `npm run licencia:llaves` (crea la llave en `~/PACE-llave-licencias`, fuera del
+  repo, y escribe la pública en `app/licencia.llaves.js`, que se sube); copia de esa carpeta fuera
+  del ordenador. Luego `npm run licencia:codigo -- 1-15` da el enlace de cada tester. Y la lista de
+  testers: número y si usan web, Android o los dos.
 
 - Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
   contraseña) fuera del ordenador.

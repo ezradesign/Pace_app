@@ -152,6 +152,7 @@
   <script type="text/babel" src="app/i18n/strings/achievements.js"></script>
   <script type="text/babel" src="app/i18n/strings/breakmenu.js"></script>
   <script type="text/babel" src="app/i18n/strings/settings.js"></script>
+  <script type="text/babel" src="app/i18n/strings/premium.js"></script>
   <script type="text/babel" src="app/i18n/strings/onboarding.js"></script>
   <script type="text/babel" src="app/i18n/strings/ritmo.js"></script>
   <script type="text/babel" src="app/i18n/strings/calendario.js"></script>
@@ -203,6 +204,10 @@
   <script type="text/babel" src="app/state-timer.jsx"></script>
   <script type="text/babel" src="app/state-hydrate.jsx"></script>
   <script type="text/babel" src="app/state-achievements.jsx"></script>
+  <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
+       comprobación sin servidor. Antes del guard, que pregunta por el código. -->
+  <script type="text/babel" src="app/licencia.llaves.js"></script>
+  <script type="text/babel" src="app/state-licencia.js"></script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
        Antes de state-paths (getSuggestedPath lo consume) y del resto de
        consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
@@ -294,6 +299,8 @@
   <script type="text/babel" src="app/ui/Sound.voz.jsx"></script>
   <script type="text/babel" src="app/ui/Sound.musica.jsx"></script>
   <script type="text/babel" src="app/ui/Toast.jsx"></script>
+  <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
+  <script type="text/babel" src="app/ui/PremiumInvitacion.jsx"></script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
        registro (pace:sw-waiting); main.jsx lo monta junto al ToastHost. -->
   <script type="text/babel" src="app/ui/UpdatePrompt.jsx"></script>

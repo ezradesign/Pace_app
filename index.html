@@ -3244,6 +3244,90 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
 
+
+Object.assign(window.PACE_STRINGS.es, {
+  'premium.name': 'PACE completo',
+  'premium.part': 'Es parte de PACE completo.',
+  'premium.locked.aria': 'Cerrada · es parte de PACE completo',
+  'premium.inc.routines': 'Las rutinas más hondas',
+  'premium.inc.routines.d': 'Respira, Mueve, Estira',
+  'premium.inc.custom': 'Tus propias rutinas',
+  'premium.inc.custom.d': 'con el catálogo',
+  'premium.inc.letter': 'La carta del lunes',
+  'premium.inc.letter.d': 'qué te ayudó',
+  'premium.inc.stats': 'Tu mes y tu año',
+  'premium.inc.stats.d': 'estadísticas',
+  'premium.v1': 'Llega con la versión 1.',
+  'premium.later': 'Ahora no',
+  'premium.code.have': 'Tengo un código',
+  'premium.code.label': 'Tu código o tu enlace',
+  'premium.code.placeholder': 'PACE1…',
+  'premium.code.redeem': 'Canjear',
+  'premium.code.checking': 'Comprobando…',
+  'premium.err.title': 'Ese código no ha funcionado',
+  'premium.err.formato': 'No está entero. Cópialo completo, o abre el enlace que te llegó.',
+  'premium.err.firma': 'No es un código de PACE.',
+  'premium.err.anulada': 'Ese código ya no vale. Escríbenos y lo miramos.',
+  'premium.err.caducada': 'Ese código ha caducado.',
+  'premium.err.navegador': 'Este navegador no puede comprobarlo. Prueba con otro.',
+  'premium.ok.title': 'PACE completo es tuyo, para siempre.',
+  'premium.ok.tester': 'Gracias por probarlo antes que nadie.',
+  'premium.ok.other': 'Gracias por apoyar PACE.',
+  'premium.ok.continue': 'Seguir',
+  'premium.settings.forever': 'Para siempre',
+  'premium.settings.until': 'Hasta el {fecha}',
+  'premium.settings.enter': 'Introducir código',
+  'premium.settings.code': 'Código',
+  'premium.settings.tester': 'Tester n.º {n}'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+  'premium.name': 'PACE Complete',
+  'premium.part': 'Part of PACE Complete.',
+  'premium.locked.aria': 'Locked · part of PACE Complete',
+  'premium.inc.routines': 'The deeper routines',
+  'premium.inc.routines.d': 'Breathe, Move, Stretch',
+  'premium.inc.custom': 'Your own routines',
+  'premium.inc.custom.d': 'from the catalogue',
+  'premium.inc.letter': 'The Monday letter',
+  'premium.inc.letter.d': 'what helped',
+  'premium.inc.stats': 'Your month and year',
+  'premium.inc.stats.d': 'stats',
+  'premium.v1': 'Arrives with version 1.',
+  'premium.later': 'Not now',
+  'premium.code.have': 'I have a code',
+  'premium.code.label': 'Your code or link',
+  'premium.code.placeholder': 'PACE1…',
+  'premium.code.redeem': 'Redeem',
+  'premium.code.checking': 'Checking…',
+  'premium.err.title': "That code didn't work",
+  'premium.err.formato': "It isn't complete. Copy all of it, or open the link you received.",
+  'premium.err.firma': "It isn't a PACE code.",
+  'premium.err.anulada': 'That code is no longer valid. Write to us and we will look into it.',
+  'premium.err.caducada': 'That code has expired.',
+  'premium.err.navegador': "This browser can't check it. Try another one.",
+  'premium.ok.title': 'PACE Complete is yours, for good.',
+  'premium.ok.tester': 'Thank you for trying it before anyone else.',
+  'premium.ok.other': 'Thank you for supporting PACE.',
+  'premium.ok.continue': 'Continue',
+  'premium.settings.forever': 'For good',
+  'premium.settings.until': 'Until {fecha}',
+  'premium.settings.enter': 'Enter code',
+  'premium.settings.code': 'Code',
+  'premium.settings.tester': 'Tester no. {n}'
+});
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
 Object.assign(window.PACE_STRINGS.es, {
 
   'onboarding.back': 'Atrás',
@@ -5878,6 +5962,9 @@ const defaultState = {
   premiumUnlocked: false,
 
 
+  licencia: null,
+
+
   focusMode: 'foco',
   focusMinutes: 25,
   cycle: 0,
@@ -7313,6 +7400,234 @@ Object.assign(window, {
 ;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, completeBreathSession, completeMoveSession, completeExtraSession });
 })();
 </script>
+  <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
+       comprobación sin servidor. Antes del guard, que pregunta por el código. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PACE_LLAVES_LICENCIA = {
+};
+
+var PACE_LICENCIAS_ANULADAS = [];
+
+
+Object.assign(window, { PACE_LLAVES_LICENCIA: PACE_LLAVES_LICENCIA, PACE_LICENCIAS_ANULADAS: PACE_LICENCIAS_ANULADAS });
+;Object.assign(window, { PACE_LLAVES_LICENCIA, PACE_LICENCIAS_ANULADAS });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PACE_LICENCIA_PREFIJO = 'PACE1';
+var _paceLicenciaRechazada = null;
+
+function paceB64urlBytes(s) {
+  var b = String(s).replace(/-/g, '+').replace(/_/g, '/');
+  while (b.length % 4) b += '=';
+  var bin = atob(b);
+  var out = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+
+
+function paceLicenciaLimpiar(texto) {
+
+
+  var s = String(texto || '').replace(/\s+/g, '');
+  var m = s.match(/[#?&]codigo=([^&#]+)/);
+  if (m) s = m[1];
+  try {s = decodeURIComponent(s);} catch (e) {}
+  return s;
+}
+
+
+function paceLicenciaLeer(texto) {
+  var s = paceLicenciaLimpiar(texto);
+  var partes = s.split('.');
+  if (partes.length !== 3 || partes[0] !== PACE_LICENCIA_PREFIJO) return null;
+  try {
+    var datos = JSON.parse(new TextDecoder().decode(paceB64urlBytes(partes[1])));
+    var firma = paceB64urlBytes(partes[2]);
+    if (!datos || typeof datos !== 'object' || Array.isArray(datos)) return null;
+    if (typeof datos.keyId !== 'string' || typeof datos.type !== 'string') return null;
+    if (firma.length !== 64) return null;
+    return { codigo: s, firmado: partes[0] + '.' + partes[1], firma: firma, datos: datos };
+  } catch (e) {return null;}
+}
+
+function paceLicenciaLlave(keyId) {
+  var llaves = window.PACE_LLAVES_LICENCIA || {};
+  return Object.prototype.hasOwnProperty.call(llaves, keyId) ? llaves[keyId] : null;
+}
+
+function paceLicenciaAnulada(datos) {
+  var lista = window.PACE_LICENCIAS_ANULADAS || [];
+  return datos.tester != null && lista.indexOf(datos.keyId + ':' + datos.tester) !== -1;
+}
+
+
+
+function paceLicenciaCaducada(datos, ahora) {
+  var e = datos.expiresAt;
+  if (e == null) return false;
+  var fin = typeof e === 'number' ? e :
+  typeof e === 'string' && typeof parseLocalDateKey === 'function' ?
+  parseLocalDateKey(e).getTime() + 24 * 3600 * 1000 : NaN;
+  return !(fin > ahora);
+}
+
+
+function paceLicenciaMotivo(leida) {
+  if (!leida) return 'formato';
+  if (!paceLicenciaLlave(leida.datos.keyId)) return 'firma';
+  if (paceLicenciaAnulada(leida.datos)) return 'anulada';
+  if (paceLicenciaCaducada(leida.datos, Date.now())) return 'caducada';
+  return null;
+}
+
+function paceLicenciaPermitida() {
+  return !(typeof paceEsAndroid === 'function' && paceEsAndroid());
+}
+
+
+
+function paceLicenciaComprobar(texto) {
+  var leida = paceLicenciaLeer(texto);
+  var motivo = paceLicenciaMotivo(leida);
+  if (motivo) return Promise.resolve({ ok: false, motivo: motivo });
+  var sutil = window.crypto && window.crypto.subtle;
+  if (!sutil) return Promise.resolve({ ok: false, motivo: 'navegador' });
+  var llave = paceLicenciaLlave(leida.datos.keyId);
+  return Promise.resolve().
+  then(function () {
+    return sutil.importKey('jwk', { kty: 'EC', crv: 'P-256', x: llave.x, y: llave.y },
+    { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+  }).
+  then(function (k) {
+    return sutil.verify({ name: 'ECDSA', hash: 'SHA-256' }, k, leida.firma, new TextEncoder().encode(leida.firmado));
+  }).
+  then(function (bueno) {
+    return bueno ? { ok: true, codigo: leida.codigo, datos: leida.datos } : { ok: false, motivo: 'firma' };
+  }, function () {return { ok: false, motivo: 'navegador' };});
+}
+
+
+function paceLicenciaCanjear(texto) {
+  if (!paceLicenciaPermitida()) return Promise.resolve({ ok: false, motivo: 'android' });
+  return paceLicenciaComprobar(texto).then(function (r) {
+    if (r.ok) {
+      _paceLicenciaRechazada = null;
+      setState({ licencia: r.codigo });
+    }
+    return r;
+  });
+}
+
+
+
+function paceLicenciaVigente() {
+  if (!paceLicenciaPermitida()) return null;
+  var s = typeof getState === 'function' ? getState() : null;
+  var c = s && typeof s.licencia === 'string' ? s.licencia : null;
+  if (!c || c === _paceLicenciaRechazada) return null;
+  var leida = paceLicenciaLeer(c);
+  return paceLicenciaMotivo(leida) ? null : leida.datos;
+}
+
+
+
+function paceLicenciaDelEnlace() {
+  var h = '';
+  try {h = window.location.hash || '';} catch (e) {}
+  if (h.indexOf('codigo=') === -1) return;
+  try {history.replaceState(null, '', window.location.pathname + window.location.search);} catch (e) {}
+  if (!paceLicenciaPermitida()) return;
+  paceLicenciaCanjear(h).then(function (r) {
+    try {showToast({ type: 'licencia', ok: r.ok, motivo: r.motivo, tester: !!(r.ok && r.datos.tester != null) });} catch (e) {}
+  });
+}
+
+function paceLicenciaArranque() {
+  var s = typeof getState === 'function' ? getState() : null;
+  var guardado = s && typeof s.licencia === 'string' ? s.licencia : null;
+  if (guardado && paceLicenciaPermitida()) {
+    paceLicenciaComprobar(guardado).then(function (r) {
+
+
+      if (!r.ok && r.motivo === 'firma') {
+        _paceLicenciaRechazada = guardado;
+        setState(function (x) {return Object.assign({}, x);});
+      }
+    });
+  }
+  paceLicenciaDelEnlace();
+}
+
+setTimeout(paceLicenciaArranque, 0);
+try {window.addEventListener('hashchange', paceLicenciaDelEnlace);} catch (e) {}
+
+Object.assign(window, {
+  paceLicenciaLeer: paceLicenciaLeer,
+  paceLicenciaLimpiar: paceLicenciaLimpiar,
+  paceLicenciaComprobar: paceLicenciaComprobar,
+  paceLicenciaCanjear: paceLicenciaCanjear,
+  paceLicenciaVigente: paceLicenciaVigente,
+  paceLicenciaPermitida: paceLicenciaPermitida
+});
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaRechazada, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque });
+})();
+</script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
        Antes de state-paths (getSuggestedPath lo consume) y del resto de
        consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
@@ -7324,12 +7639,13 @@ Object.assign(window, {
 
    Guard central de acceso a contenido (sesion 95 / v0.40.0).
 
-   ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath.
-   Hoy derivan del booleano `premiumUnlocked` (state-core). Cuando llegue la
-   pre-venta (licencia‖trial — decision F3b, hoy diferida) SOLO cambia este
-   archivo: `premiumUnlocked` pasara a derivarse de una clave firmada o de un
-   trial, y los consumidores (RoutineCard, PathBreatheStep/PathBodyStep,
-   getSuggestedPath) no se tocan.
+   ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath /
+   hasPremiumEntitlement. Abren PACE completo dos cosas: el booleano
+   `premiumUnlocked` (state-core, sin ruta de compra todavía) y un CÓDIGO
+   firmado que vale (`paceLicenciaVigente`, state-licencia.js: el de los
+   testers, y mañana el de quien compre en la web). Cuando llegue Play Billing
+   entra aquí como una tercera fuente, y los consumidores (RoutineCard,
+   CustomRoutines, PathBreatheStep/PathBodyStep, getSuggestedPath) no se tocan.
 
    Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
    el guard concede acceso a una rutina premium aunque premiumUnlocked sea
@@ -7353,6 +7669,12 @@ function resolveAnyRoutine(routineId) {
 
 
 
+function tieneLicenciaPremium() {
+  return !!(window.paceLicenciaVigente && window.paceLicenciaVigente());
+}
+
+
+
 
 
 
@@ -7372,7 +7694,7 @@ function canAccessRoutine(routineId, opts) {
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
   const s = getState && getState();
-  const unlocked = !!(s && s.premiumUnlocked);
+  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
   return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
@@ -7385,7 +7707,7 @@ function canAccessPath(pathId) {
   if (!path) return true;
   if (path.access !== 'premium') return true;
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked);
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
 }
 
 
@@ -7399,11 +7721,11 @@ function canAccessPath(pathId) {
 
 function hasPremiumEntitlement() {
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked);
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, PREMIUM_ABIERTO_HASTA_V1 });
-;Object.assign(window, { resolveAnyRoutine, canAccessRoutine, canAccessPath, hasPremiumEntitlement });
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, PREMIUM_ABIERTO_HASTA_V1 });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement });
 })();
 </script>
   <script>
@@ -15339,27 +15661,35 @@ function ToastHost() {
         const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
         if (!a) return;
 
-
-
         const full = { ...toast,
           title: tR('ach.item.' + a.id + '.title', a.title),
           desc: tR('ach.item.' + a.id + '.desc', a.desc),
           glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
-        setToasts((prev) => [...prev, full]);
         try {playSound(a.secret ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}
-        const durationMs = typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000;
-        const fadeMs = 300;
+        mostrar(full, typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000);
+      }
 
-        setTimeout(() => {
-          setToasts((prev) => prev.map((x) => x._id === full._id ? { ...x, exiting: true } : x));
-        }, durationMs);
 
-        setTimeout(() => {
-          setToasts((prev) => prev.filter((x) => x._id !== full._id));
-        }, durationMs + fadeMs);
+      if (toast.type === 'licencia') {
+        mostrar({ ...toast, exiting: false, licencia: true,
+          eyebrow: t('premium.settings.code'),
+          title: t(toast.ok ? 'premium.ok.title' : 'premium.err.title'),
+          desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other') :
+          t('premium.err.' + (toast.motivo || 'formato')) }, 6000);
       }
     });
   }, []);
+
+
+  function mostrar(full, durationMs) {
+    setToasts((prev) => [...prev, full]);
+    setTimeout(() => {
+      setToasts((prev) => prev.map((x) => x._id === full._id ? { ...x, exiting: true } : x));
+    }, durationMs);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((x) => x._id !== full._id));
+    }, durationMs + 300);
+  }
 
   return (
     React.createElement("div", {
@@ -15375,24 +15705,25 @@ function ToastHost() {
       } },
 
     toasts.map((toast) =>
-    React.createElement("div", { key: toast._id, style: {
+    React.createElement("div", { key: toast._id, "data-pace-toast": toast.licencia ? 'licencia' : 'logro', style: {
         display: 'flex', alignItems: 'center', gap: 14,
         padding: '12px 20px',
         background: 'var(--paper)',
-        border: '1px solid var(--achievement)',
+        border: '1px solid ' + (toast.licencia ? 'var(--premium)' : 'var(--achievement)'),
         borderRadius: 'var(--r-md)',
         boxShadow: 'var(--sh-card)',
         animation: 'pace-slide-up 320ms var(--ease)',
         minWidth: 280,
+        maxWidth: 'calc(100vw - 32px)',
         opacity: toast.exiting ? 0 : 1,
         transition: 'opacity 300ms ease-out'
       } },
     React.createElement("div", { style: {
         width: 40, height: 40,
         borderRadius: '50%',
-        border: '1px solid var(--achievement)',
-        display: 'grid', placeItems: 'center',
-        color: 'var(--achievement)',
+        border: '1px solid ' + (toast.licencia ? 'var(--premium)' : 'var(--achievement)'),
+        display: 'grid', placeItems: 'center', flex: 'none',
+        color: toast.licencia ? 'var(--premium)' : 'var(--achievement)',
         fontFamily: 'var(--font-display)',
         fontStyle: 'italic',
         fontSize: 18
@@ -15404,13 +15735,14 @@ function ToastHost() {
 
 
 
+    toast.licencia ? React.createElement(PaceCandado, { size: 14, abierto: !!toast.ok }) :
     window.renderGlyph ?
     window.renderGlyph(toast) :
     React.createElement("span", { style: { fontStyle: 'italic' } }, toast.glyph)
 
     ),
     React.createElement("div", null,
-    React.createElement("div", { style: { fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' } }, t('ach.toast.new')),
+    React.createElement("div", { style: { fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' } }, toast.eyebrow || t('ach.toast.new')),
     React.createElement("div", { style: { ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 } }, toast.title),
     React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-3)' } }, toast.desc)
     )
@@ -15422,6 +15754,174 @@ function ToastHost() {
 
 Object.assign(window, { ToastHost });
 ;Object.assign(window, { ToastHost });
+})();
+</script>
+  <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStatePI, useEffect: useEffectPI, useRef: useRefPI } = React;
+
+
+function PaceCandado(_ref) {let { size = 11, abierto = false } = _ref;
+  return (
+    React.createElement("svg", { width: size, height: Math.round(size * 13 / 11), viewBox: "0 0 11 13", "aria-hidden": "true", focusable: "false",
+      "data-pace-candado": true, style: { verticalAlign: '-1px', marginRight: 4, flex: 'none' } },
+    React.createElement("rect", { x: "1", y: "5.5", width: "9", height: "7", rx: "1.5", fill: "none", stroke: "currentColor", strokeWidth: "1.1" }),
+    React.createElement("path", { d: abierto ? 'M3 5.5V4a2.5 2.5 0 0 1 5 0' : 'M3 5.5V4a2.5 2.5 0 0 1 5 0v1.5', fill: "none", stroke: "currentColor", strokeWidth: "1.1" })
+    ));
+
+}
+
+function paceAbrirPremium(detalle) {
+  try {window.dispatchEvent(new CustomEvent('pace:open-premium', { detail: detalle || {} }));} catch (e) {}
+}
+
+const PREMIUM_INCLUYE = ['routines', 'custom', 'letter', 'stats'];
+
+function PremiumInvitacion() {
+  const { t } = useT();
+  const [abierta, setAbierta] = useStatePI(null);
+  const [modo, setModo] = useStatePI('invita');
+  const [texto, setTexto] = useStatePI('');
+  const [error, setError] = useStatePI(null);
+  const [comprobando, setComprobando] = useStatePI(false);
+  const [tester, setTester] = useStatePI(false);
+  const campoRef = useRefPI(null);
+
+  useEffectPI(() => {
+    const abrir = (e) => {
+      const d = e && e.detail || {};
+      const conCodigo = d.modo === 'codigo' && window.paceLicenciaPermitida && window.paceLicenciaPermitida();
+      setAbierta({ nombre: d.nombre || null });
+      setModo(conCodigo ? 'codigo' : 'invita');
+      setTexto('');setError(null);setComprobando(false);
+    };
+    window.addEventListener('pace:open-premium', abrir);
+    return () => window.removeEventListener('pace:open-premium', abrir);
+  }, []);
+
+  useEffectPI(() => {
+    if (modo === 'codigo' && campoRef.current) campoRef.current.focus();
+  }, [modo]);
+
+
+  if (!abierta) return null;
+
+  const cerrar = () => setAbierta(null);
+  const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
+
+  const canjear = () => {
+    if (comprobando || !texto.trim() || !window.paceLicenciaCanjear) return;
+    setComprobando(true);setError(null);
+    window.paceLicenciaCanjear(texto).then((r) => {
+      setComprobando(false);
+      if (r.ok) {setTester(r.datos && r.datos.tester != null);setModo('ok');} else
+      setError(r.motivo || 'formato');
+    });
+  };
+
+  const titulo = modo === 'ok' ? t('premium.ok.title') : abierta.nombre || t('premium.name');
+
+  return (
+    React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
+    React.createElement("div", { "data-pace-premium-hoja": modo },
+    modo !== 'ok' && React.createElement(PremiumSeal, null),
+    React.createElement("h2", { style: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' } }, titulo),
+
+    modo === 'ok' ?
+    React.createElement(React.Fragment, null,
+    React.createElement("p", { style: premiumInvitacionStyles.sub }, t(tester ? 'premium.ok.tester' : 'premium.ok.other')),
+    React.createElement(Button, { onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.ok.continue'))
+    ) :
+
+    React.createElement(React.Fragment, null,
+    React.createElement("p", { style: premiumInvitacionStyles.sub }, t('premium.part')),
+    React.createElement("ul", { style: premiumInvitacionStyles.lista },
+    PREMIUM_INCLUYE.map((k) =>
+    React.createElement("li", { key: k, style: premiumInvitacionStyles.item },
+    React.createElement("span", null, t('premium.inc.' + k)),
+    React.createElement("span", { style: premiumInvitacionStyles.detalle }, t('premium.inc.' + k + '.d'))
+    )
+    )
+    ),
+
+    modo === 'codigo' ?
+    React.createElement("form", { onSubmit: (e) => {e.preventDefault();canjear();} },
+    React.createElement("label", { htmlFor: "pace-premium-codigo", style: premiumInvitacionStyles.etiqueta }, t('premium.code.label')),
+    React.createElement("input", {
+      id: "pace-premium-codigo", ref: campoRef, "data-pace-premium-codigo": true,
+      value: texto, onChange: (e) => {setTexto(e.target.value);setError(null);},
+      placeholder: t('premium.code.placeholder'),
+      autoComplete: "off", autoCapitalize: "off", autoCorrect: "off", spellCheck: false,
+      style: premiumInvitacionStyles.campo }
+    ),
+    error &&
+    React.createElement("p", { role: "alert", "data-pace-premium-error": error, style: premiumInvitacionStyles.error },
+    t('premium.err.' + error) === 'premium.err.' + error ? t('premium.err.title') : t('premium.err.' + error)
+    ),
+
+    React.createElement(Button, { type: "submit", disabled: comprobando || !texto.trim(), style: premiumInvitacionStyles.ancho },
+    t(comprobando ? 'premium.code.checking' : 'premium.code.redeem')
+    ),
+    React.createElement(Button, { variant: "secondary", onClick: cerrar, style: { ...premiumInvitacionStyles.ancho, marginTop: 8 } }, t('premium.later'))
+    ) :
+
+    React.createElement(React.Fragment, null,
+    React.createElement("p", { style: premiumInvitacionStyles.v1 }, t('premium.v1')),
+    React.createElement(Button, { variant: "secondary", onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.later')),
+    permitida &&
+    React.createElement("button", { type: "button", "data-pace-premium-tengo": true, onClick: () => setModo('codigo'), style: premiumInvitacionStyles.enlace },
+    t('premium.code.have')
+    )
+
+    )
+
+    )
+
+    )
+    ));
+
+}
+
+const premiumInvitacionStyles = {
+  sub: { ...displayItalic, fontSize: 17, color: 'var(--ink-2)', margin: '0 0 14px' },
+  lista: { listStyle: 'none', padding: 0, margin: '0 0 16px', fontSize: 14, color: 'var(--ink-2)' },
+  item: { display: 'flex', justifyContent: 'space-between', gap: 12, padding: '8px 0', borderBottom: '1px dashed var(--line)' },
+  detalle: { color: 'var(--ink-3)', fontSize: 13, textAlign: 'right' },
+  v1: { ...displayItalic, fontSize: 18, color: 'var(--ink)', margin: '0 0 14px' },
+  ancho: { width: '100%', justifyContent: 'center', borderRadius: 'var(--r-pill)' },
+  enlace: { display: 'block', margin: '14px auto 0', background: 'none', border: 0, cursor: 'pointer',
+    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+  etiqueta: { display: 'block', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 6 },
+  campo: { width: '100%', boxSizing: 'border-box', padding: '10px 12px', marginBottom: 10, fontSize: 14,
+    fontFamily: 'var(--font-mono)', color: 'var(--ink)', background: 'var(--paper-2)',
+    border: '1px solid var(--line-2)', borderRadius: 'var(--r-sm)' },
+  error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 }
+};
+
+Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium });
+;Object.assign(window, { PaceCandado, paceAbrirPremium, PremiumInvitacion });
 })();
 </script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
@@ -21216,6 +21716,11 @@ Object.assign(window, {
 
 
 
+
+
+
+
+
 function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = _ref;
   const { t, tn, lang } = useT();
   const [pace] = usePace();
@@ -21269,15 +21774,15 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
       trozos.push({ k: 'lado', txt: t('lib.perSide') });
     }
   }
-  if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre' });
+  if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre', candado: isLocked });
 
 
   const sinArte = variant === 'breathe' || esViaje;
   const glifos = sinArte || !window.libraryGlifos ? [] : window.libraryGlifos(routine);
   const series = sinArte || !window.librarySeries ? null : window.librarySeries(routine);
 
-  const abrir = isLocked ? undefined : onClick;
   const nombre = tR(routine.id + '.name', routine.name);
+  const abrir = isLocked ? () => paceAbrirPremium({ nombre }) : onClick;
   return (
     React.createElement("div", {
       className: 'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : '') + (
@@ -21315,15 +21820,15 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
 
     React.createElement("div", { className: "pace-lib-titulo" },
     React.createElement("h4", null, abrir ?
-    React.createElement("button", { type: "button", className: "pace-lib-hit", onClick: abrir }, nombre) :
+    React.createElement("button", { type: "button", className: "pace-lib-hit", onClick: abrir,
+      title: isLocked ? t('premium.locked.aria') : undefined }, nombre) :
     nombre),
     pill && React.createElement("i", { className: "pace-lib-pill" }, pill)
     ),
     React.createElement("p", null, tR(routine.id + '.desc', routine.desc)),
     React.createElement("div", { className: "pace-lib-ctx" },
     React.createElement("b", null, cifra), React.createElement("u", null, t('lib.min')),
-    trozos.map((x) => React.createElement("em", { key: x.k, className: x.cls }, x.txt)),
-    isLocked && React.createElement("em", { className: "pace-lib-soon" }, t('premium.soon'))
+    trozos.map((x) => React.createElement("em", { key: x.k, className: x.cls }, x.candado && React.createElement(PaceCandado, null), x.txt))
     ),
     glifos.length > 1 &&
     React.createElement("div", { className: "pace-lib-tira", "aria-hidden": "true" },
@@ -21411,6 +21916,7 @@ function LibraryShell(_ref)
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
   const [vista, setVista] = useStateLib('catalogo');
+  usePace();
 
 
 
@@ -21444,7 +21950,10 @@ function LibraryShell(_ref)
 
 
 
-  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
+
+
+  const abiertas = visibles.filter((r) => !window.canAccessRoutine || window.canAccessRoutine(r.id));
+  const ahora = libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
 
@@ -26526,6 +27035,7 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
 
+  const invitar = () => paceAbrirPremium({ nombre: t('custom.section.title') });
   const openBuilder = (id) => {
     window.dispatchEvent(new CustomEvent('pace:open-custom-builder', { detail: { id: id || null } }));
   };
@@ -26554,16 +27064,17 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
     !unlocked ?
     React.createElement("div", { style: { display: 'grid', gridTemplateColumns: REJILLA_TUS_RUTINAS, gap: 10 } },
-    React.createElement(Card, { padded: false, style: { padding: '16px 18px' } },
+    React.createElement(Card, { padded: false, onClick: invitar, accent: "var(--premium)", style: { padding: '16px 18px' } },
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } },
     t('custom.locked.copy')
     ),
     React.createElement("div", { style: { display: 'flex', justifyContent: 'flex-end', borderTop: '1px dashed var(--line)', paddingTop: 8 } },
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, t('premium.soon'))
+    React.createElement("button", { type: "button", "data-pace-custom-cerrado": true, onClick: (e) => {e.stopPropagation();invitar();},
+      style: customRoutinesStyles.candado }, React.createElement(PaceCandado, null), t('lib.premium'))
     )
     ),
     routines.map((r) =>
-    React.createElement(CustomRoutineCard, { key: r.id, routine: r, accent: accent, locked: true })
+    React.createElement(CustomRoutineCard, { key: r.id, routine: r, accent: accent, locked: true, onClick: invitar })
     )
     ) :
 
@@ -26613,7 +27124,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
   t('custom.steps.one') :
   tn('custom.steps.many', { n: routine.steps.length });
   return (
-    React.createElement(Card, { accent: locked ? undefined : accent, onClick: locked ? undefined : onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
+    React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, onClick: onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
     !locked &&
     React.createElement("button", {
       onClick: (e) => {e.stopPropagation();onEdit();},
@@ -26641,7 +27152,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
     t('custom.code')
     ),
     locked ?
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, t('premium.soon')) :
+    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, React.createElement(PaceCandado, null), t('lib.premium')) :
 
     React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: accent, fontWeight: 500 } }, routine.min, " min")
 
@@ -26661,6 +27172,10 @@ const customRoutinesStyles = {
     color: 'var(--ink-2)',
     minHeight: 130,
     transition: 'all 220ms var(--ease)'
+  },
+  candado: {
+    ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500,
+    background: 'none', border: 0, padding: 0, cursor: 'pointer'
   },
   editBtn: {
     position: 'absolute', top: 10, right: 10,
@@ -30144,10 +30659,40 @@ Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarResc
 
 
 function PremiumSection() {
-  const { t } = useT();
+  const { t, tn, lang } = useT();
+  usePace();
+  const datos = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
+  const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
+
+  if (datos) {
+    let estado = t('premium.settings.forever');
+    if (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') {
+      const f = parseLocalDateKey(datos.expiresAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+      estado = tn('premium.settings.until', { fecha: f });
+    }
+    return (
+      React.createElement(React.Fragment, null,
+      React.createElement(AjustesAccion, { derecha: React.createElement("span", { "data-pace-licencia-estado": true, style: { color: 'var(--focus)' } }, estado) },
+      t('premium.name')
+      ),
+      datos.tester != null &&
+      React.createElement(AjustesAccion, { suave: true, derecha: tn('premium.settings.tester', { n: datos.tester }) },
+      t('premium.settings.code')
+      )
+
+      ));
+
+  }
+  if (permitida) {
+    return (
+      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }), derecha: t('premium.settings.enter') },
+      t('premium.name')
+      ));
+
+  }
   return (
     React.createElement(AjustesAccion, { suave: true, derecha: t('settings.license.soon') },
-    t('settings.license')
+    t('premium.name')
     ));
 
 }
@@ -38276,6 +38821,10 @@ function PaceApp() {
 
     red(null, true, null, React.createElement(PathRunner, null)),
     red(t('paths.library.title'), true, null, React.createElement(PathsLibrary, null)),
+
+
+
+    red(null, true, null, React.createElement(PremiumInvitacion, null)),
 
 
     React.createElement(PaceRed, { modo: "silencio" }, React.createElement(ToastHost, null)),
