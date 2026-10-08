@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.148.5 | 2026-10-08 | El logro «Fuerte en la oficina» luce por fin su dibujo, la piedra de amolar, que estaba puesta por error en «Rondas maestra»; «Rondas maestra» vuelve a su símbolo hasta que tenga el suyo |
 | v0.148.4 | 2026-10-08 | Respira: «Bhastrika · Fuelle» pide el aviso de seguridad antes de empezar, como Kapalabhati, porque es respiración rápida, y deja de proponerse en «Para ahora» y en la pausa; y «Terminar» a mitad de una técnica de rondas dice las rondas y respiraciones hechas, no las del plan |
 | v0.148.3 | 2026-10-08 | Al empezar el Foco, la bola que marca el tiempo y su halo salen enteros y en primer plano, con un fundido suave (el halo se abre después), en vez de nacer cortados por la niebla del horizonte; el fundido solo sale al empezar el bloque. |
 | v0.148.2 | 2026-10-08 | Seis fallos de la caza del 7 de octubre que no cambian el diseño: en Respira, Espacio ya no pausa a escondidas la preparación ni la retención, «Cancelar» en el aviso de seguridad vuelve a la biblioteca y «Sin retención» deja fuera Rítmica yin y Nadi Shodhana, que sostienen; «Un vaso más» recupera su azul al apartar el ratón; y en inglés la página se declara en inglés y las flechas de Estadísticas se anuncian en inglés |

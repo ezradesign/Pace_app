@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.148.4 · 8 de octubre de 2026.
+**Versión:** v0.148.5 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -103,7 +103,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
   inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
   los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
-  sus prompts).
+  sus prompts). De logro, los anillos de «Rondas maestra» y la vela de «Larga sesión»
+  (`archivos/glifos/revision-8oct/GLIFOS_8OCT.md`).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha

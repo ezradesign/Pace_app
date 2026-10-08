@@ -212,7 +212,7 @@ Dudosos, sin prisa: «Primer aliento» parece una semilla con raíz, o un renacu
 
 ## Logros con el dibujo cambiado de sitio (reasignar, sin dibujar)
 
-Comparado con `docs/product/GLIFOS_LOGROS_ENCARGO.md`. No aplicado: cambia lo que se ve y espera al sí de Ez. Recomendación: piedra de amolar a explore.all.extra y dibujar la vela de master.long.focus.
+Comparado con `docs/product/GLIFOS_LOGROS_ENCARGO.md`. La piedra de amolar ya está en explore.all.extra (v0.148.5, Ez aceptó la recomendación). Falta dibujar los anillos de master.rounds.15 y la vela de master.long.focus; lo demás espera a Ez.
 
 - **Rondas maestra (master.rounds.15):** Lleva la piedra de amolar con mango, que se encargó para «Fuerte en la oficina» (explore.all.extra, hoy dos espadas ⚔). Moverla allí da dibujo a un logro que no lo tiene; «Rondas maestra» pasa a necesitar los anillos de árbol (su prompt está arriba).
 - **ATG asentado (explore.atg):** Lleva la huella de pie descalzo, que se encargó para «Ancestral» (explore.ancestral). Para ATG se encargó una rodilla doblada de perfil: si la huella se mueve, ATG asentado se queda sin dibujo hasta que se haga.
