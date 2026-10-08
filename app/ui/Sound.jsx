@@ -453,4 +453,6 @@ const ambientDrone = (() => {
   return { start: start, stop: stop, pause: pause, resume: resume, isActive: isActive };
 })();
 
-Object.assign(window, { playSound, useSound, ambientDrone });
+/* `paceAudioCtx`: la música de Respira se cuelga del MISMO contexto, que el navegador
+   ya ha desbloqueado con el primer toque; un segundo contexto podría nacer suspendido. */
+Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx });

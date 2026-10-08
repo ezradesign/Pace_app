@@ -278,15 +278,21 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
 // Helper: reproduce el sonido de una fase por su label.
 // (Decía «Sostén → silencio intencional» hasta s175; ver la rama del sostén.)
 function playPhaseSound(phaseLabel, phaseDur) {
+  /* La música de fondo respira con la misma fase: se abre al inhalar y se cierra
+     al exhalar (`Sound.musica.jsx`). Va aparte del sonido de señal para que un
+     fallo de uno no se lleve al otro. */
+  const musica = (tipo) => { try { if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur); } catch (e) {} };
   if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
       phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
       phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
       phaseLabel === 'Inhala al vientre') {
     try { playSound('breathe.inhale', phaseDur); } catch (e) {}
+    musica('in');
   } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
              phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
              phaseLabel === 'Exhala zumbando') {
     try { playSound('breathe.exhale', phaseDur); } catch (e) {}
+    musica('out');
   } else if (phaseLabel === 'Sostén' || phaseLabel === 'Sostén en vacío') {
     /* s175 · EL SOSTÉN DEJA DE SER SILENCIO, y esto cambia una decisión
        anterior a propósito. El silencio era lo correcto mientras el sonido
@@ -320,7 +326,12 @@ function useMusicaFondo(stage, paused, routine) {
     if (stage === 'prep' || stage === 'hold') return;
     if (paused) m.pause();
     else if (m.isActive()) m.resume();
-    else m.start(routine.tag, routine.drone === true);
+    else {
+      /* El ciclo decide si la música respira o se queda quieta (Rondas, Bhastrika). */
+      let ciclo = null;
+      try { ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0); } catch (e) { ciclo = null; }
+      m.start(routine.tag, routine.drone === true, ciclo);
+    }
   }, [stage, paused]);
 }
 
