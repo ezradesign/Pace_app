@@ -204,6 +204,9 @@ function TweaksPanel({ open, onClose }) {
       </AjustesSeccion>
 
       <AjustesSeccion titulo={t('settings.sec.sesiones')}>
+        {/* «¿Cómo es tu semana?» para quien instaló antes de la bienvenida que la pregunta, o
+            quiere cambiarla. La hoja (RitmoSemanaTipo.jsx) se abre encima de Ajustes. */}
+        <AjustesAccion onClick={ritmoSemanaAbrir} derecha="›">{t('ritmo.st.ajustes')}</AjustesAccion>
         {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
             disponible; el permiso se pide al activar (enableNotify). */}
         {canNotify && (

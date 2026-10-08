@@ -58,12 +58,23 @@ function Onboarding() {
   /* En la app de Android no hay navegador: lo local vive en el móvil, como dice Ajustes. */
   const enAndroid = typeof paceEsAndroid === 'function' && paceEsAndroid();
   const questions = window.ONBOARDING_QUESTIONS || [];
-  const isQuestion = step >= 1 && step <= questions.length;
-  const q = isQuestion ? questions[step - 1] : null;
-  const isSummary = step === questions.length + 1;
+  /* LAS PANTALLAS, en una lista: la bienvenida, «¿Cómo es tu semana?» (siempre, porque
+     es de «A tu ritmo» y no de los Caminos) y, con los Caminos, sus tres preguntas y el
+     primer Camino. Contar pasos a pelo confundía la semana con la primera pregunta. */
+  const pantallas = ['bienvenida', 'semana']
+    .concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : [])
+    .concat(conCaminos ? ['primer'] : []);
+  const pantalla = pantallas[step];
+  const isSemana = pantalla === 'semana';
+  const isQuestion = !!pantalla && pantalla.charAt(0) === 'q';
+  const qIndex = isQuestion ? Number(pantalla.slice(1)) : -1;
+  const q = isQuestion ? questions[qIndex] : null;
+  const isSummary = pantalla === 'primer';
+  const ultima = step === pantallas.length - 1;
 
   const pickedPath = (isSummary && picked && typeof getPath === 'function') ? getPath(picked) : null;
   const sceneId = step === 0 ? 'path.dawn'
+    : isSemana ? null
     : isQuestion ? q.sceneId
     : (picked || 'path.dawn');
 
@@ -74,7 +85,7 @@ function Onboarding() {
 
   const back = () => setStep(s => Math.max(s - 1, 0));
   const next = () => {
-    if (step === questions.length) {
+    if (pantallas[step + 1] === 'primer') {
       /* El pick se congela al ENTRAR al resumen (no en render): así no
          puede cambiar bajo el usuario si un re-render cruza un límite
          horario de getSuggestedPath. */
@@ -126,7 +137,8 @@ function Onboarding() {
             </button>
           )}
         </div>
-        {isQuestion ? <OnbDots total={questions.length} active={step - 1} /> : <span />}
+        {isQuestion ? <OnbDots total={questions.length} active={qIndex} />
+          : isSemana ? <span className="pace-meta">{t('ritmo.nombre')}</span> : <span />}
         <div style={{ width: 86, display: 'flex', justifyContent: 'flex-end' }}>
           {step === 0 && (
             <button
@@ -187,7 +199,7 @@ function Onboarding() {
                   {t('onboarding.welcome.hint')}
                 </div>
               )}
-              <button data-pace-cta onClick={conCaminos ? next : () => finish({ pick: false })} style={onboardingStyles.cta}>
+              <button data-pace-cta onClick={next} style={onboardingStyles.cta}>
                 {t('onboarding.welcome.cta')}
               </button>
               {conCaminos && (
@@ -196,6 +208,12 @@ function Onboarding() {
                 </button>
               )}
             </React.Fragment>
+          )}
+
+          {/* ---------- ¿CÓMO ES TU SEMANA? ---------- */}
+          {isSemana && (
+            <OnbSemanaPaso state={state} ultima={ultima}
+              onSeguir={() => (ultima ? finish({ pick: false }) : next())} />
           )}
 
           {/* ---------- 1-3 · PREGUNTAS ---------- */}
@@ -287,6 +305,29 @@ function Onboarding() {
         </div>
       </div>
     </div>
+  );
+}
+
+/* «¿Cómo es tu semana?» (maqueta R2-bienvenida, elegida por Ez el 7 de octubre de 2026).
+   Su propio componente para que el borrador (días y horas) viva solo mientras se ve: la
+   bienvenida no lee «A tu ritmo» hasta llegar aquí, ni escribe nada hasta «Comenzar» o
+   «Cada semana es distinta», que guardan y siguen. Cinco hijos para el reveal. */
+function OnbSemanaPaso({ state, ultima, onSeguir }) {
+  const { t } = useT();
+  const b = useRitmoSemanaBorrador(state);
+  const guardar = (tipo) => { ritmoGuardarSemana(tipo, b.horas); onSeguir(); };
+  return (
+    <React.Fragment>
+      <h2 style={onboardingStyles.title}>{t('ritmo.st.titulo')}</h2>
+      <p style={onboardingStyles.lede}>{t('ritmo.st.sub')}</p>
+      <RitmoSemanaEditor dias={b.dias} onDias={b.setDias} horario={b.horario} onHora={b.onHora} />
+      <button data-pace-cta data-pace-semana-guardar onClick={() => guardar(b.dias)} style={onboardingStyles.cta}>
+        {t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')}
+      </button>
+      <button data-pace-semana-saltar onClick={() => guardar(null)} style={onboardingStyles.ghostBtn}>
+        {t('ritmo.st.saltar')}
+      </button>
+    </React.Fragment>
   );
 }
 

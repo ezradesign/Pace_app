@@ -371,6 +371,8 @@ function PaceApp() {
         <BreakMenu open={openBreakMenu} onClose={() => setOpenBreakMenu(false)} onChoose={handleBreakChoice} onSeguir={handleBreakSeguir} />)}
       {red(null, openSupport, () => setOpenSupport(false),
         <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />)}
+      {/* «Tu semana», desde Ajustes: la hoja se abre con un evento (RitmoSemanaTipo.jsx). */}
+      <PaceRed modo="parte" nombre={t('ritmo.st.ajustes')}><RitmoSemanaRaiz /></PaceRed>
 
       {/* Onboarding de primera vez (s106) — full-screen sobre las láminas
           de Caminos; retorna null en cuanto firstSeen queda fijado. s198: si
