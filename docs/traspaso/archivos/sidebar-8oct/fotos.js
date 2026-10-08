@@ -29,6 +29,10 @@ const { spawn } = require('child_process');
 const RAIZ = path.resolve(__dirname, '../../../..');
 const { chromium } = require(path.join(RAIZ, 'node_modules', '@playwright', 'test'));
 const OPCIONES = require('./opciones.js');
+/* Las variantes del Cuaderno con la siguiente pausa y las tres semanas (semanas.js). */
+OPCIONES.lista.push(...require('./semanas.js').lista);
+/* OPS=A,Cp-hierba repite solo esas opciones; las medidas de las demás se conservan. */
+const SOLO_OPS = process.env.OPS ? process.env.OPS.split(',') : null;
 
 const PUERTO = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || 8781);
 const BASE = 'http://localhost:' + PUERTO;
@@ -226,7 +230,9 @@ async function main() {
   fs.mkdirSync(SALIDA, { recursive: true });
   const srv = await servidor();
   const browser = await chromium.launch();
-  const medidas = { antes: {}, despues: {} };
+  const ARCHIVO = path.join(__dirname, 'medidas.json');
+  const medidas = (SOLO_OPS || process.env.SOLO) && fs.existsSync(ARCHIVO)
+    ? JSON.parse(fs.readFileSync(ARCHIVO, 'utf8')) : { antes: {}, despues: {} };
   try {
     for (const [ancho, alto] of PANTALLAS) {
       for (const paleta of PALETAS) {
@@ -237,7 +243,7 @@ async function main() {
           await page.screenshot({ path: path.join(SALIDA, 'antes-' + clave + '.jpg'), type: 'jpeg', quality: 82 });
           await fotoBarra(page, 'antes-barra-' + clave);
           const datos = await page.evaluate(OPCIONES.datos);
-          for (const op of OPCIONES.lista) {
+          for (const op of OPCIONES.lista.filter((o) => !SOLO_OPS || SOLO_OPS.includes(o.id))) {
             const { html, css } = op.pintar(datos);
             await ponerOpcion(page, html, css);
             const k = op.id + '-' + clave;
