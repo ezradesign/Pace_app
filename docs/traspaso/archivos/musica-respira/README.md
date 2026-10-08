@@ -2,7 +2,7 @@
 
 ## Qué se decidió
 - **Mixto** (Ez, 6 oct): la música respira con cada ejercicio de ciclo fijo. Sube al inhalar, se queda quieta en el sostén y baja al exhalar. Rondas, Bhastrika y Kapalabhati (ciclos de 2-4 s) llevan la música quieta. Coherente 432 sigue sin música (tiene su propio drone).
-- La envolvente **no la hace la IA**: se aplica sobre un drone limpio en Sol a 432. En la app irá en directo (WebAudio), llamada desde `playPhaseSound()` en `app/breathe/BreatheSession.support.jsx` en cada fase. Así nunca se desfasa, ni al pausar. **Hecho en v0.144.0** (`app/ui/Sound.musica.jsx`), con los tres drones en `app/breathe/musica/`.
+- La envolvente **no la hace la IA**: se aplica sobre un drone limpio en Sol a 432. En la app irá en directo (WebAudio), llamada desde `playPhaseSound()` en `app/breathe/BreatheSession.support.jsx` en cada fase. Así nunca se desfasa, ni al pausar. **Hecho y aprobado por Ez el 8 oct. 2026** (`app/ui/Sound.musica.jsx`), con los tres drones en `app/breathe/musica/`.
 
 ## Las 20 pistas de Genspark (44 archivos, 20 distintos)
 - Solo sirven 4, todas de ElevenLabs. Las otras 16 son canciones: melodía, cambios de acorde, golpes o batería, otras tonalidades. La provisional que tenía la app (`energia.mp3`, igual que `pace_energia_lyria`, ya retirada) estaba en Do menor y tenía ataques.
