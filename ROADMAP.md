@@ -172,7 +172,7 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 ### FASE 6 · Venta
 
 - **Licencia web**: firmada offline ECDSA P-256 con `expiresAt` opcional + trial explícito.
-  **La comprobación y los códigos de tester, HECHOS en v0.147.0** (`app/state-licencia.js`,
+  **La comprobación y los códigos de tester, HECHOS el 8 oct. 2026** (`app/state-licencia.js`,
   `scripts/licencias/`): falta que la tienda de la web emita el mismo código al comprar.
 - **Códigos de por vida para los testers** (Ez, 8 oct. 2026): en la web, un enlace firmado; en
   Android, un código promocional de Play Console del producto «PACE completo» (hasta 500 por
