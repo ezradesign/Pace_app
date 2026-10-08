@@ -332,7 +332,11 @@ function pintarB(d) {
    que toca; aquí se apunta lo que llevas. Sin cajas ni ceros: un día en blanco se
    dice con una frase. Con el día servido no repite la siguiente pausa.
    ====================================================================== */
-function pintarC(d) {
+/* `o` (opcional), para las variantes de `semanas.js`: `o.pausa` añade la siguiente pausa
+   en una frase, `o.semana(d)` cambia el dibujo de la semana ({ html, css }) y
+   `o.compacta` pone las puertas en una fila con el glifo al lado del nombre. */
+function pintarC(d, o) {
+  o = o || {};
   const h = d.hoy;
   const linea = (glifo, color, texto) => '<p class="sbc-linea">' + ic(glifo, color, 16) + '<span>' + texto + '</span></p>';
   const lineas = [];
@@ -348,8 +352,8 @@ function pintarC(d) {
     : '<p class="sbc-blanco">Tu día empieza en blanco. Lo que hagas se queda aquí.</p>' + agua;
   const hoy = '<div data-sb-pieza="hoy"><div class="sbp-cab"><span class="sbp-meta" style="color:var(--ink-2)">Hoy</span><span class="sbp-meta sbp-fecha">' + d.fecha + '</span></div>' +
     '<div class="sbc-cuaderno">' + cuerpo + '</div></div>';
-  const puerta = (glifo, color, nombre) => '<button class="sbp-puerta sbc-puerta">' + ic(glifo, color, 22) + '<span>' + nombre + '</span></button>';
-  const puertas = '<div data-sb-pieza="puertas"><div class="sbp-cab"><span class="sbp-meta">Bibliotecas</span></div><div class="sbc-puertas">' +
+  const puerta = (glifo, color, nombre) => '<button class="sbp-puerta sbc-puerta">' + ic(glifo, color, o.compacta ? 18 : 22) + '<span>' + nombre + '</span></button>';
+  const puertas = '<div data-sb-pieza="puertas"><div class="sbp-cab"><span class="sbp-meta">Bibliotecas</span></div><div class="sbc-puertas' + (o.compacta ? ' compactas' : '') + '">' +
     puerta(d.g.respira, 'var(--breathe)', 'Respira') + puerta(d.g.estira, 'var(--extra)', 'Estira') + puerta(d.g.mueve, 'var(--move)', 'Mueve') + '</div></div>';
   /* Con la home enseñando «A tu ritmo», la tarjeta calla: la siguiente pausa ya está en
      la línea. Vuelve para lo que la home no dice: reanudar, repetir, para ahora (por libre). */
@@ -357,8 +361,19 @@ function pintarC(d) {
   const tarjeta = (t && !d.homeConRitmo) ? '<div class="sba-tarjeta" data-sb-pieza="tarjeta"><span class="sba-eyebrow">' + t.eyebrow + '</span>' +
     '<span class="sba-titulo"><button>' + t.titulo + '</button><span class="sba-flecha">→</span></span></div>' : '';
   const logro = '<div data-sb-pieza="logro-sec"><div class="sbp-cab"><span class="sbp-meta">Último logro</span></div>' + logroFila(d, false) + '</div>';
-  const html = REGLA + semana(d, true, true) + REGLA + hoy + (tarjeta ? REGLA + tarjeta : '') + REGLA + puertas + REGLA + logro + HUECO + pieQuieto(d);
-  const css = CSS_BASE + `
+  const sem = o.semana ? o.semana(d) : { html: semana(d, true, true), css: '' };
+  const pausa = o.pausa ? pausaCuaderno(d) : '';
+  const html = REGLA + sem.html + REGLA + hoy + (pausa ? REGLA + pausa : (tarjeta ? REGLA + tarjeta : '')) + REGLA + puertas + REGLA + logro + HUECO + pieQuieto(d);
+  const css = CSS_BASE + sem.css + `
+    .sbc-puertas.compactas .sbc-puerta { flex-direction: row; justify-content: center; gap: 7px; padding: 7px 0 !important; }
+    .sbc-pausa { display: grid !important; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 10px; align-items: start; width: 100%;
+      padding: 0 2px !important; text-align: left; }
+    .sbc-pausa .sbp-ic { margin-top: 3px; }
+    .sbc-pausa-t { display: flex; flex-direction: column; gap: 2px; }
+    .sbc-pausa-f { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.25; color: var(--ink-2); }
+    .sbc-pausa-f b { font-weight: 500; color: var(--ink); }
+    .sbc-pausa-m { font-size: 11.5px; color: var(--ink-3); }
+    .sbc-pausa-fl { color: var(--ink-3); font-size: 15px; align-self: center; }
     .sbc-cuaderno { display: flex; flex-direction: column; gap: 7px; padding: 0 2px; }
     .sbc-linea { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--font-display); font-style: italic;
       font-size: 17px; line-height: 1.25; color: var(--ink-2); }
@@ -383,7 +398,25 @@ function pintarC(d) {
   return { html, css };
 }
 
+/* LA SIGUIENTE PAUSA DICHA COMO EL CUADERNO: una frase con la hora y la rutina, y debajo
+   cuánto dura y de qué módulo. Sale de `ritmoSiguiente`, igual que la tarjeta de hoy; sin
+   día servido no hay frase (en el día vacío la home está preguntando por el día). */
+function pausaCuaderno(d) {
+  const t = d.tarjeta, s = d.siguiente;
+  if (!t || !s) return '';
+  const MOD = { estira: ['estira', 'var(--extra)', 'Estira'], mueve: ['mueve', 'var(--move)', 'Mueve'],
+                respira: ['respira', 'var(--breathe)', 'Respira'], cierre: ['respira', 'var(--breathe)', 'Respira'] };
+  const m = MOD[s.modulo] || MOD.respira;
+  const hora = Math.floor(s.hora / 60) + ':' + String(s.hora % 60).padStart(2, '0');
+  const frase = (s.ahora ? 'Ahora, ' : 'A las ' + hora + ', ') + '<b>' + t.titulo + '</b>';
+  const meta = s.larga ? 'Pausa larga de ' + enPalabras(s.dur) : mayus(enPalabras(s.min)) + ' de ' + m[2];
+  return '<div data-sb-pieza="tarjeta"><div class="sbp-cab"><span class="sbp-meta">' + (s.ahora ? 'Tu pausa' : 'Siguiente pausa') + '</span></div>' +
+    '<button class="sbc-pausa">' + ic(d.g[m[0]], m[1], 16) + '<span class="sbc-pausa-t"><span class="sbc-pausa-f">' + frase + '</span>' +
+    '<span class="sbc-pausa-m">' + meta + '</span></span><span class="sbc-pausa-fl">→</span></button></div>';
+}
+
 module.exports = {
+  util: { pintarC, ic, enPalabras, mayus },
   datos,
   lista: [
     { id: 'A', nombre: 'Afinada', pintar: pintarA },
