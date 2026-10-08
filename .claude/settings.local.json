@@ -207,7 +207,8 @@
       "Bash(awk -F'|' 'NR>2 {gsub\\(/ /,\"\",$3\\); gsub\\(/ /,\"\",$9\\); if\\($9==\"sí\"\\){ if\\($3==\"sí\"\\) con++; else sin++ }} END {print \"con ingles Y con glifo \\(ola C\\): \" con \"\\\\ncon ingles y SIN glifo: \" sin}')",
       "Bash(rm -f inventario.json glifos.json /tmp/m.md)",
       "Bash(node fichas.js)",
-      "PowerShell(npm run verify 2>&1)"
+      "PowerShell(npm run verify 2>&1)",
+      "mcp__claude-code-remote__create_session"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
