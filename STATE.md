@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.147.0 · 8 de octubre de 2026.
+**Versión:** v0.146.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -27,10 +27,8 @@ copias de Android sigan siendo las de la web). En Android no hay «Da de pastar 
 Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del catálogo.
 
 «Al calendario», junto a «Cambiar», lleva el día de «A tu ritmo» al calendario: el del móvil en
-Android, Google Calendar u Outlook en la web (solo en `pacegrass.app`, en un calendario propio
-«PACE») y un .ics en los dos. Con «Tener en cuenta mis reuniones», el día esquiva las horas ocupadas
-como esquiva la comida. Desde v0.147.0 (opción B de Ez) se pone al día solo tras conectar, mientras
-la app está abierta.
+Android, Google Calendar u Outlook en la web y un .ics en los dos. Con «Tener en cuenta mis
+reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como esquiva la comida.
 
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
@@ -81,10 +79,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 - Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
   contraseña) fuera del ordenador.
-- Dar de alta PACE en Google Cloud y en Microsoft Entra con la guía nueva
-  (`docs/CALENDARIO_ALTAS.md`), decir si Google marca los dos permisos como «no sensibles» y pasar
-  los dos ids: hasta entonces la web solo ofrece el archivo. Luego, Search Console y la verificación
-  de Google, antes de abrirlo a más de 100 personas.
+- Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
+  (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
+  verificación antes de abrirlo a más de 100 personas.
 - Play Console: la cuenta está creada y Google revisa la identidad de Ez. Después, reunir 12 testers
   con Android.
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
