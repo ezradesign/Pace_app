@@ -30,7 +30,7 @@ function WeekView({ state }) {
        (completeMoveSession + completeExtraSession escriben al mismo cubo);
        etiquetarla "Mueve" mentia por omision. */
     { key: 'move',   label: t('stats.label.body'),        color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
-    { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
+    { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses'), unit1: t('stats.unit.glasses.1') },
   ];
 
   /* Compactado en sesion 61 (v0.28.2), 62 (v0.28.3) y 63 (v0.28.4):
@@ -74,7 +74,7 @@ function WeekView({ state }) {
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1,
             }}>{totals[b.key]}</div>
-            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{b.unit}</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{totals[b.key] === 1 && b.unit1 ? b.unit1 : b.unit}</div>
           </div>
         ))}
       </div>

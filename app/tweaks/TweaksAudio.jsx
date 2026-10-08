@@ -34,7 +34,7 @@
    `TweaksPanel.parts.jsx` por `window`: un `const` no cruza la IIFE (s148). */
 
 function TweaksAudioBlock({ state, set }) {
-  const { t } = useT();
+  const { t, lang } = useT();
 
   /* El fondo son dos booleanos en el estado (`ambientOn`, `musicOn`) y tres
      pildoras aqui. s177: TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision:
@@ -70,7 +70,10 @@ function TweaksAudioBlock({ state, set }) {
       <AjustesFila id="sound" nombre={t('settings.sound')}>
         <AjustesInterruptor on={!!state.soundOn} onChange={(v) => set({ soundOn: v })} aria={t('settings.sound')} />
       </AjustesFila>
-      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}>
+      {/* En inglés suena el tono aunque se elija una voz (Sound.voz.jsx): las
+          locuciones son en castellano, y la fila lo dice. */}
+      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}
+                   sub={lang === 'en' ? t('settings.signal.sub.en') : undefined}>
         <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} opciones={[
           { v: 'tono', name: t('settings.signal.tone') },
           { v: 'sulafat', name: t('settings.signal.clear') },
