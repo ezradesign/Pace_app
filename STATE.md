@@ -62,9 +62,11 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    2026); Play lo fija en la primera subida y luego no se cambia. Probar el APK en un móvil: lo de
    arriba, el icono y el arranque de día y en modo oscuro, importar una copia, que lo guardado
    sobreviva a una actualización, y el aviso de Foco con la vaca y «Que el aviso llegue a su hora»
-   en Ajustes. `privacy.html` ya cubre la app. El workflow `Android` firma el AAB para Play
-   (artefacto `pace-android-play`) con la llave de subida de los secretos del repo; el original y su
-   contraseña están en el PC de Ez, fuera del repo.
+   en Ajustes. `privacy.html` ya cubre la app. El workflow `Android` firma el AAB para Play con la
+   llave de subida de los secretos y en `main` lo guarda en el borrador de release `vX.Y.Z`
+   (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
+   `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
+   en `SUBIDAS.md`.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
@@ -78,13 +80,13 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 ## Espera a Ez
 
-- Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
-  contraseña) fuera del ordenador.
+- Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
+  contraseña aparte.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
-- Play Console: la cuenta está creada y Google revisa la identidad de Ez. Después, reunir 12 testers
-  con Android.
+- Play Console: identidad y móvil verificados (8 oct.). Crear la app con la ficha en español y en
+  inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
   los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
   sus prompts).
