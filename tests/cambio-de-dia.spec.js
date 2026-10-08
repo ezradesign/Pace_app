@@ -11,6 +11,8 @@
  *    vencidos corren UNA vez (`fastForward`);
  *  · la pestaña pasa la noche de fondo: oculta no escribe nada (llevaría una
  *    copia vieja del estado) y al volver al frente cambia el día enseguida;
+ *  · con dos pestañas, la que vuelve al frente releva el día con lo guardado
+ *    y no con su copia, que no sabe lo que hizo la otra;
  *  · la medianoche pasa con un Foco en marcha: el bloque sigue y sus minutos
  *    van al día en que termina, como antes;
  *  · y el CONTROL: un día que no cambia no escribe nada.
@@ -125,6 +127,54 @@ test('la pestaña pasa la noche de fondo: oculta no escribe nada, y al volver al
      pestaña, tardaría un minuto. */
   await ponerVisibilidad(page, 'visible');
   await esJuevesSinVasos(page, 2000);
+});
+
+/* Otra pestaña escribe en lo guardado mientras esta está de fondo: se simula escribiendo en
+   `localStorage` como lo haría ella, sin avisar a esta página. */
+async function otraPestanaEscribe(page, cambio) {
+  await page.evaluate((c) => {
+    const s = JSON.parse(localStorage.getItem('pace.state.v2'));
+    Object.assign(s, c.raiz || {});
+    Object.assign(s.water, c.agua || {});
+    if (c.vasosMiercoles != null) s.weeklyStats.waterGlasses[2] = c.vasosMiercoles;   // lunes primero
+    localStorage.setItem('pace.state.v2', JSON.stringify(s));
+  }, cambio);
+}
+
+test('dos pestañas: la que vuelve al frente releva el día con lo guardado, no con su copia vieja', async ({ page, context }) => {
+  await cincoVasosDeNoche(page, context);
+  await ponerVisibilidad(page, 'hidden');
+  /* A las 23:55, en otra pestaña, dos vasos más: el miércoles acaba con siete. */
+  await otraPestanaEscribe(page, { agua: { today: 7 }, vasosMiercoles: 7 });
+  await page.clock.fastForward(MANANA.getTime() - NOCHE.getTime());
+
+  await ponerVisibilidad(page, 'visible');
+  await expect(celdaAgua(page)).toHaveAttribute('data-cero', '1', { timeout: 2000 });
+  const s = await page.evaluate(() => {
+    const st = getState();
+    return { hoy: st.water.today, ayer: (st.history.days['2026-10-07'] || {}).waterGlasses };
+  });
+  expect(s, 'el miércoles se archivó con la copia de esta pestaña').toEqual({ hoy: 0, ayer: 7 });
+});
+
+test('dos pestañas: si la otra ya cambió el día y bebió, volver al frente no lo pisa', async ({ page, context }) => {
+  await cincoVasosDeNoche(page, context);
+  await ponerVisibilidad(page, 'hidden');
+  await page.clock.fastForward(MANANA.getTime() - NOCHE.getTime());
+  /* El jueves por la mañana, la otra pestaña ya archivó el miércoles y lleva un vaso. */
+  await otraPestanaEscribe(page, {
+    raiz: { lastActiveDay: 'Thu Oct 08 2026', history: { days: { '2026-10-07': { waterGlasses: 5 } }, months: {}, years: {} } },
+    agua: { today: 1, lastReset: 'Thu Oct 08 2026' },
+  });
+
+  await ponerVisibilidad(page, 'visible');
+  await expect.poll(() => page.evaluate(() => getState().lastActiveDay), { timeout: 2000 }).toBe('Thu Oct 08 2026');
+  const s = await page.evaluate(() => {
+    const st = getState();
+    const guardado = JSON.parse(localStorage.getItem('pace.state.v2'));
+    return { hoy: st.water.today, guardado: guardado.water.today };
+  });
+  expect(s, 'el vaso de hoy de la otra pestaña se perdió').toEqual({ hoy: 1, guardado: 1 });
 });
 
 test('la medianoche pasa con un Foco en marcha: el bloque sigue y sus minutos van al jueves', async ({ page, context }) => {

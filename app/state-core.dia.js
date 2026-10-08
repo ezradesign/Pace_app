@@ -19,7 +19,8 @@
 
    CON LA PÁGINA OCULTA NO SE HACE NADA, a propósito. Una pestaña de fondo guarda el estado de cuando se
    abrió; si relevara el día ella sola, escribiría esa copia vieja encima de lo que hiciste en la otra.
-   Lo hace al volver al frente, como antes lo hacía con el primer gesto.
+   Lo hace al volver al frente, y entonces parte de lo guardado y no de su copia (`ensureDayFresh(true)`):
+   lo guardado ya lleva lo que hicieron las otras pestañas.
 
    `ensureDayFresh` no escribe si el día no ha cambiado (compara dos cadenas), así que mirar cada minuto
    ni toca `localStorage` ni despierta a otra pestaña. Un Foco en marcha sigue: sus minutos van al día
@@ -30,7 +31,7 @@ var PACE_DIA_CADA_MS = 60 * 1000;
 
 function paceDiaMirar() {
   if (document.visibilityState === 'hidden') return;
-  ensureDayFresh();
+  ensureDayFresh(true);
 }
 
 document.addEventListener('visibilitychange', paceDiaMirar);
