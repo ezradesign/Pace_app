@@ -444,8 +444,17 @@ function usePace() {
   return [state, setState];
 }
 
-function ensureDayFresh() {
-  const next = rolloverIfNeeded(_state);
+/* `desdeDisco` lo pide el cambio de día sin gesto (state-core.dia.js). Sin estado compartido
+   entre pestañas, la que vuelve al frente puede llevar una copia de hace horas: relevar el día
+   sobre ella archivaría un ayer incompleto y pisaría lo que otra pestaña ya hizo hoy. Lo guardado
+   es siempre lo más nuevo, porque cada cambio se guarda al momento, así que el relevo parte de ahí.
+   Si lo guardado no se puede leer, se sigue con la copia propia: nunca con el estado de fábrica. */
+function ensureDayFresh(desdeDisco) {
+  let base = _state;
+  if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
+    try { if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(); } catch (e) {}
+  }
+  const next = rolloverIfNeeded(base);
   if (next !== _state) {
     _state = next;
     persistState();
