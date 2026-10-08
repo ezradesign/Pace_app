@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PACE en Google Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+    --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372;
+    --line: #C9C0A8; --olive: #3E5A3A; --olive-soft: rgba(62,90,58,.10);
+    --terra: #A85E43; --terra-soft: rgba(201,122,93,.13);
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+      --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --olive: #98B58B; --olive-soft: rgba(122,154,109,.14);
+      --terra: #D99A80; --terra-soft: rgba(201,122,93,.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+    --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --olive: #98B58B; --olive-soft: rgba(122,154,109,.14);
+    --terra: #D99A80; --terra-soft: rgba(201,122,93,.16);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 600; line-height: 1.15; color: var(--ink); }
+  h1 { font-size: 2.6rem; margin: 0 0 8px; }
+  h2 { font-size: 1.85rem; margin: 56px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.35rem; margin: 28px 0 8px; }
+  .num { color: var(--terra); margin-right: 6px; }
+  .sub { color: var(--ink-2); font-size: 1.05rem; margin: 0 0 28px; }
+  p, li { color: var(--ink-2); }
+  strong { color: var(--ink); font-weight: 600; }
+  a { color: var(--olive); }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; color: var(--ink); overflow-wrap: anywhere; }
+  ol, ul { padding-left: 1.3em; }
+  li { margin: 6px 0; }
+  .path { font-weight: 500; color: var(--ink); }
+  .card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 18px 0; }
+  .card > :first-child { margin-top: 0; } .card > :last-child { margin-bottom: 0; }
+  .ok { border-left: 4px solid var(--olive); background: var(--olive-soft); }
+  .warn { border-left: 4px solid var(--terra); background: var(--terra-soft); }
+  .tag { display: inline-block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--terra); margin-bottom: 4px; }
+  .road { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin: 22px 0; padding: 0; list-style: none; }
+  .road li { margin: 0; background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: .9rem; }
+  .road li b { display: block; font-family: var(--display); font-style: italic; font-size: 1.15rem; color: var(--ink); font-weight: 600; }
+  .road li.now { border-color: var(--terra); background: var(--terra-soft); }
+  .road li.done { border-color: var(--olive); background: var(--olive-soft); }
+  .tbl { width: 100%; overflow-x: auto; margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; color: var(--ink); background: var(--paper-2); }
+  td { color: var(--ink-2); }
+  nav.toc { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  nav.toc ol { margin: 4px 0 0; }
+  nav.toc a { text-decoration: none; }
+  .check li { list-style: none; position: relative; padding-left: 4px; }
+  .check li::before { content: ""; position: absolute; left: -1.2em; top: .45em; width: .75em; height: .75em; border: 1.5px solid var(--olive); border-radius: 3px; }
+  .q li { margin: 12px 0; }
+  footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--ink-3); }
+  footer p { color: var(--ink-3); }
+  @media (max-width: 520px) { h1 { font-size: 2.1rem; } h2 { font-size: 1.55rem; } main { padding-top: 32px; } }
+</style>
+</head>
+<body>
+<main>
+
+<h1>PACE en Google Play</h1>
+<p class="sub">Cómo publicarla la primera vez y, sobre todo, cómo subir cada versión nueva sin perderte. Escrito el 8 de octubre de 2026, con PACE en la v0.146.0, y puesto al día con tus respuestas.</p>
+
+<ol class="road">
+  <li class="done"><b>Llave</b>Hecha el 7 oct.</li>
+  <li class="done"><b>Cuenta</b>Creada</li>
+  <li class="done"><b>Identidad</b>Confirmada</li>
+  <li class="now"><b>Ficha</b>Toca subirla, en español y en inglés</li>
+  <li><b>Prueba cerrada</b>Tienes 5 o 6 de 15</li>
+  <li><b>Producción</b>Se pide al acabar</li>
+</ol>
+
+<nav class="toc">
+  <strong>En esta guía</strong>
+  <ol>
+    <li><a href="#llave">Las dos llaves, y cómo guardar la tuya</a></li>
+    <li><a href="#aab">Dónde está el archivo de cada versión</a></li>
+    <li><a href="#primera">Lo que se rellena una sola vez</a></li>
+    <li><a href="#cerrada">La prueba cerrada</a></li>
+    <li><a href="#subir">Subir una versión nueva, paso a paso</a></li>
+    <li><a href="#produccion">De prueba cerrada a producción</a></li>
+    <li><a href="#rutina">La rutina: actualizar con orden</a></li>
+    <li><a href="#errores">Errores típicos y qué hacer</a></li>
+    <li><a href="#propuestas">Lo que ya está hecho en el repo</a></li>
+    <li><a href="#preguntas">Lo que queda pendiente</a></li>
+  </ol>
+</nav>
+
+<div class="card ok">
+  <p><strong>Lo que ya tienes hecho.</strong> En <code>docs/launch/google-play/</code> está todo el texto
+  listo para copiar: la ficha (<code>ficha.md</code>), las respuestas de los cuestionarios
+  (<code>contenido-de-la-app.md</code>) y el kit de testers con las invitaciones
+  (<code>testers.md</code>). Esta guía no repite esos textos: te dice en qué orden va cada cosa y qué
+  hacer cada vez que haya versión nueva.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="llave"><span class="num">1</span>Las dos llaves, y cómo guardar la tuya</h2>
+
+<p>Una app de Android va «firmada»: es como un sello que demuestra que viene de ti. Con Google Play hay
+<strong>dos</strong> sellos distintos:</p>
+
+<div class="tbl"><table>
+  <tr><th>Llave</th><th>Quién la tiene</th><th>Para qué sirve</th></tr>
+  <tr><td><strong>Llave de la app</strong></td><td>Google, y nadie más</td><td>Es la que llevan los móviles de la gente. La crea Google la primera vez que subes («firma de apps de Google Play», <em>Play App Signing</em>). Tú no la ves nunca.</td></tr>
+  <tr><td><strong>Llave de subida</strong></td><td>Tú: la carpeta <code>PACE-llave-play</code> de tu PC, y una copia en los secretos de GitHub</td><td>Solo demuestra a Google que el archivo que subes es tuyo. GitHub la usa para firmar el <code>.aab</code> en cada versión.</td></tr>
+</table></div>
+
+<p>La primera vez que subas el archivo, Play te preguntará por la firma de apps. <strong>Acepta la
+opción que Google recomienda</strong> (que Google genere y guarde la llave de la app). Es obligatoria para
+apps nuevas y es lo que hace que perder tu llave tenga arreglo.</p>
+
+<h3>Si un día pierdes la llave de subida</h3>
+<p>No se pierde la app ni los datos de nadie: la gente sigue recibiendo actualizaciones con la llave de
+Google. Lo que pasa es que no puedes subir versiones hasta que Google te acepte una llave nueva:</p>
+<ol>
+  <li>Se crea una llave nueva (lo hago yo y te dejo un archivo <code>.pem</code>, que es solo la parte pública).</li>
+  <li>En Play Console, dentro de la app: <span class="path">Probar y publicar → Configuración de la app → Integridad de la app → Firma de apps</span>, busca <strong>«Solicitar restablecimiento de la llave de subida»</strong>. Solo puede pedirlo la propietaria de la cuenta, o sea tú.</li>
+  <li>Eliges el motivo, subes el <code>.pem</code> y envías.</li>
+  <li>Google no da un plazo fijo; quien lo ha hecho cuenta de 2 a 4 días. Mientras tanto no se puede subir nada.</li>
+  <li>Cuando Google lo confirme, se cambian los dos secretos de GitHub y todo sigue igual.</li>
+</ol>
+<p>Lo mismo si crees que alguien ha visto la llave y su contraseña: se pide el restablecimiento igual.</p>
+
+<div class="card warn">
+  <span class="tag">Pendiente</span>
+  <p><strong>Cómo guardarla bien.</strong> Hoy la llave vive en tu PC y en GitHub. Si el PC se rompe,
+  GitHub no te la devuelve: los secretos no se pueden leer, solo usar. Por eso:</p>
+  <ul>
+    <li>Copia la carpeta <code>PACE-llave-play</code> a <strong>un pendrive</strong> que guardes en casa, y a <strong>un segundo sitio</strong> fuera de casa (otro pendrive en casa de alguien de confianza, o una nube con contraseña fuerte y verificación en dos pasos).</li>
+    <li>Guarda <strong>la contraseña aparte</strong> del archivo: en un gestor de contraseñas, o en papel. Llave y contraseña juntas en la misma nube es lo único que no conviene.</li>
+    <li>Una vez al año, comprueba que el pendrive se sigue leyendo.</li>
+    <li>Nunca la mandes por WhatsApp ni por correo, y nunca la subas al repo.</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="aab"><span class="num">2</span>Dónde está el archivo de cada versión</h2>
+
+<p>Google Play no quiere el APK que instalas a mano, sino un <strong>paquete <code>.aab</code></strong>
+firmado con tu llave de subida. GitHub lo prepara solo cada vez que algo llega a <code>main</code> y lo
+<strong>guarda para siempre</strong>, una ficha por versión:</p>
+
+<ol>
+  <li>Abre <a href="https://github.com/ezradesign/Pace_app/releases">github.com/ezradesign/Pace_app → Releases</a> (con tu sesión de GitHub iniciada).</li>
+  <li>Busca la versión que quieres subir, por ejemplo <strong>PACE 0.146.0</strong>. Lleva la etiqueta <em>Draft</em> (borrador): es a propósito, porque el repo es público y un borrador solo lo ves tú.</li>
+  <li>Abajo, en <strong>Assets</strong>, pulsa <code>PACE-0.146.0.aab</code>. Ese es el archivo que se sube a Play, ya con su nombre. Nada que descomprimir ni renombrar.</li>
+  <li>Encima del archivo está la línea del <code>CHANGELOG.md</code> de esa versión, para que recuerdes qué trae.</li>
+</ol>
+
+<div class="card">
+  <p><strong>No publiques esos borradores</strong> (el botón «Publish release»): dejarían el archivo a
+  la vista de cualquiera. Si una versión recibe varios cambios sin cambiar de número, su borrador se
+  queda con el archivo del último. El mismo archivo sale también en <span class="path">Actions →
+  Android → la ejecución → Artifacts</span> como <code>pace-play-v0.146.0</code>, pero allí caduca a
+  los 90 días; el de Releases no.</p>
+</div>
+
+<h3>El número interno de versión</h3>
+<p>Además del nombre que ve la gente (<em>0.146.0</em>), Google mira un número interno que tiene que
+<strong>crecer en cada subida y no repetirse nunca</strong>. En PACE sale solo del número de versión:</p>
+<div class="tbl"><table>
+  <tr><th>Versión</th><th>Número interno</th></tr>
+  <tr><td>0.146.0</td><td>146000</td></tr>
+  <tr><td>0.146.1</td><td>146001</td></tr>
+  <tr><td>0.147.0</td><td>147000</td></tr>
+  <tr><td>1.0.0</td><td>1000000</td></tr>
+</table></div>
+<p>Así que basta con que cada versión que subas sea más alta que la anterior. No hace falta subir todas:
+puedes saltar de la 0.146.0 a la 0.152.0 sin problema.</p>
+
+<!-- ============================================================ -->
+<h2 id="primera"><span class="num">3</span>Lo que se rellena una sola vez</h2>
+
+<p>Todo esto se hace cuando Google te confirme la identidad. Lleva una tarde. Los textos exactos están
+en <code>ficha.md</code> y <code>contenido-de-la-app.md</code>.</p>
+
+<h3>3.1 · Antes de crear la app</h3>
+<ul class="check">
+  <li><strong>Identidad confirmada</strong> por Google (en ello).</li>
+  <li><strong>Verificar que tienes un móvil Android.</strong> A las cuentas personales nuevas Google les pide instalar la app <em>Play Console</em> en un móvil Android real (Android 10 o más, sin root), entrar con la misma cuenta y pulsar «Verificar». Lo verás como tarea en la página de inicio de Play Console; mientras no esté hecho, no podrás publicar.</li>
+</ul>
+
+<h3>3.2 · Crear la app</h3>
+<p>En Play Console, <strong>Crear aplicación</strong>:</p>
+<ul>
+  <li>Nombre: <code>PACE: pausas activas y foco</code> · Idioma: Español (España) · Aplicación · <strong>Gratis</strong>.</li>
+  <li>Acepta las dos declaraciones (políticas y leyes de exportación).</li>
+</ul>
+<p>Gratis es importante: una app gratis no puede pasar a ser de pago, pero sí puede llevar compras
+dentro, que es lo previsto para v1.</p>
+
+<h3>3.3 · Contenido de la app</h3>
+<p>Está en <span class="path">Supervisar y mejorar → Política y programas → Contenido de la app</span>.
+Resumen de lo que contestar:</p>
+<div class="tbl"><table>
+  <tr><th>Apartado</th><th>Respuesta</th></tr>
+  <tr><td>Política de privacidad</td><td><code>https://pacegrass.app/privacy</code>. Antes de pegarla, ábrela en el móvil: Google comprueba que carga.</td></tr>
+  <tr><td>Anuncios</td><td>No contiene anuncios.</td></tr>
+  <tr><td>Acceso a la app</td><td>Todo disponible sin restricciones (no hay inicio de sesión).</td></tr>
+  <tr><td>Clasificación de contenido</td><td>Categoría «Todas las demás». «No» a todo. Sale PEGI 3.</td></tr>
+  <tr><td>Público objetivo</td><td>Solo «18 años o más». No atrae a niños.</td></tr>
+  <tr><td>Seguridad de los datos</td><td>«No recoge ni comparte datos». Es cierto porque todo se queda en el móvil, también el calendario. Si algún día la app se conecta a internet para algo, se rehace.</td></tr>
+  <tr><td>Apps de salud</td><td>Actividad y forma física · Gestión del estrés y relajación. Nada de medicina.</td></tr>
+  <tr><td>ID de publicidad</td><td>No lo usa.</td></tr>
+  <tr><td>Noticias, gobierno, finanzas</td><td>No.</td></tr>
+</table></div>
+
+<h3>3.4 · Ficha de la tienda</h3>
+<p>En <span class="path">Crecer → Presencia en la tienda → Ficha principal</span>. Los textos, el icono
+(<code>icono-512.png</code>), el gráfico destacado (<code>grafico-destacado-1024x500.png</code>) y las
+seis capturas están en <code>docs/launch/google-play/</code>. Categoría: Salud y bienestar. Correo:
+<code>hola.ezradesign@gmail.com</code> (es público).</p>
+
+<h3>3.5 · La prueba interna, solo para ti</h3>
+<p>Antes de la prueba cerrada, y después cada viernes, usarás la <strong>prueba interna</strong>:
+hasta 100 personas, sin revisión larga, disponible en minutos. Ahí instalas PACE desde Play en tu móvil
+con Android 15 y compruebas que todo va antes de que lo vea nadie. <strong>No cuenta</strong> para los
+14 días de la cerrada. Se crea en <span class="path">Probar y publicar → Pruebas → Prueba interna →
+Testers</span>: una lista con tu correo y ya.</p>
+<div class="card warn">
+  <p><strong>Tu APK de prueba de ahora y la app de Play.</strong> Desde este cambio, el APK de prueba
+  que hace GitHub es <strong>otra app</strong>, «PACE prueba», y puede convivir con la de Play. Pero el
+  APK que ya tienes instalado es de antes y choca con la de Play: Android no deja instalar una encima de
+  la otra. La primera vez, en este orden:</p>
+  <ol>
+    <li>En el PACE que tienes ahora: <em>Ajustes → Tus datos → exportar</em> la copia.</li>
+    <li>Desinstala ese PACE (ojo: con esto se borran sus datos, por eso va primero la copia).</li>
+    <li>Instala PACE desde Play (prueba interna) e importa la copia.</li>
+    <li>Si quieres seguir probando los APK sueltos, instala «PACE prueba» al lado: empieza vacía.</li>
+  </ol>
+  <p>A los testers no les des nunca el APK suelto: solo el enlace de Play.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="cerrada"><span class="num">4</span>La prueba cerrada</h2>
+
+<p>Lo he comprobado con la ayuda oficial de Google (la página «Requisitos de pruebas para cuentas
+personales nuevas»): las cuentas personales creadas después del 13 de noviembre de 2023 tienen que hacer
+una prueba cerrada con <strong>al menos 12 testers apuntados de forma continua durante los últimos 14
+días</strong> antes de poder pedir producción.</p>
+<ul>
+  <li><strong>Continua</strong> quiere decir que si alguien se sale, su cuenta de días se pierde. Y los 12 tienen que seguir apuntados el día que pidas producción.</li>
+  <li>Por eso apunta <strong>15</strong>: si se cae alguno, sigues llegando.</li>
+  <li>Cuenta <strong>apuntarse</strong> con el enlace, no recibir la invitación. Cada tester tiene que pulsar «Hacerte tester» con la misma cuenta de Google que usa en Play Store, en un Android (un iPhone no sirve).</li>
+  <li>La prueba interna no vale para esto; tiene que ser la cerrada.</li>
+  <li>Puedes subir versiones nuevas durante la prueba: los días no se reinician por eso.</li>
+</ul>
+<p>El paso a paso de Play Console (crear la lista de correos, países, primera versión) y los cuatro
+mensajes para los testers están en <code>testers.md</code>. En resumen:</p>
+<ol>
+  <li><span class="path">Probar y publicar → Pruebas → Prueba cerrada → Gestionar pista</span>.</li>
+  <li>Pestaña <strong>Testers</strong>: lista «Testers PACE» con los correos; tu correo para comentarios.</li>
+  <li>Pestaña <strong>Países</strong>: España y donde vivan tus testers.</li>
+  <li><strong>Crear nueva versión</strong>: acepta la firma de apps de Google, sube el <code>.aab</code>, notas, guardar.</li>
+  <li><strong>Resumen de la publicación → Enviar cambios a revisión.</strong> La primera revisión puede tardar varios días.</li>
+  <li>Cuando la aprueben, copia el enlace «Unirse desde la web» y mándalo.</li>
+  <li>Apunta en el calendario el día 1 y el día 15.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="subir"><span class="num">5</span>Subir una versión nueva, paso a paso</h2>
+
+<p>Esto es lo que vas a repetir cada vez. Ten la guía a mano las primeras veces; luego son cinco
+minutos.</p>
+
+<h3>A · En GitHub</h3>
+<ol class="check">
+  <li>Que la versión esté en <code>main</code> y la compilación <strong>Android</strong> salga en verde (de eso me encargo yo al cerrar cada cambio).</li>
+  <li>Comprueba que es <strong>más alta</strong> que la última que subiste a Play.</li>
+  <li>Descarga <code>PACE-X.Y.Z.aab</code> del borrador de esa versión en <strong>Releases</strong> (<a href="#aab">punto 2</a>).</li>
+</ol>
+
+<h3>B · En Play Console</h3>
+<ol class="check">
+  <li>Abre PACE → <span class="path">Probar y publicar</span> → <strong>Prueba interna</strong>. Las versiones nuevas entran siempre por ahí; a la cerrada y a producción llegan con «Promocionar versión» (<a href="#rutina">la rutina</a>).</li>
+  <li><strong>Crear nueva versión</strong>.</li>
+  <li>Arrastra el <code>.aab</code>. Espera a que lo procese: debe aparecer el número interno (por ejemplo 147000) sin errores en rojo.</li>
+  <li><strong>Nombre de la versión</strong>: déjalo como lo pone (0.147.0).</li>
+  <li><strong>Notas de la versión</strong>: dos o tres frases de lo que cambia, en español (<code>&lt;es-ES&gt;</code>), como máximo 500 caracteres. Te las puedo preparar a partir del <code>CHANGELOG.md</code>.</li>
+  <li><strong>Siguiente</strong>. Lee los avisos: los amarillos se pueden seguir; los rojos no (ver <a href="#errores">errores</a>).</li>
+  <li><strong>Guardar</strong>.</li>
+  <li>Ve a <strong>Resumen de la publicación</strong> y pulsa <strong>Enviar cambios a revisión</strong>. Sin este paso no pasa nada, aunque parezca subido.</li>
+  <li>Cuando Google la apruebe (de horas a un par de días), a los testers les llega como actualización normal. No pierden datos.</li>
+  <li>Apunta en tu carpeta qué versión subiste y cuándo.</li>
+</ol>
+
+<div class="card">
+  <p><strong>No hace falta subir cada versión.</strong> Durante la prueba, una subida por semana o
+  cuando haya algo que los testers deban ver es suficiente. Muchas subidas seguidas solo multiplican las
+  revisiones.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="produccion"><span class="num">6</span>De prueba cerrada a producción</h2>
+<ol>
+  <li>Pasados los 14 días con 12 o más testers dentro, en el <strong>Panel</strong> aparece <strong>Solicitar acceso a producción</strong>.</li>
+  <li>Google pregunta cómo fue la prueba: cómo encontraste a los testers, qué te dijeron, qué cambiaste, a quién va dirigida la app. El borrador está al final de <code>testers.md</code>; rellénalo con lo que te cuenten.</li>
+  <li>Google lo revisa y te contesta por correo, normalmente en unos días (puede llegar a una semana o algo más). Si lo rechaza, dice por qué: suele pedir más tiempo de prueba o más detalle en las respuestas, y se puede volver a pedir.</li>
+  <li>Con el acceso concedido: <span class="path">Probar y publicar → Producción → Países</span>, elige dónde se publica.</li>
+  <li><strong>Crear nueva versión</strong>. No hace falta subir de nuevo: puedes <strong>reutilizar el paquete</strong> de la prueba cerrada («Añadir desde biblioteca»), siempre que sea la versión que quieres publicar.</li>
+  <li>Te ofrecerá un <strong>lanzamiento por fases</strong> (un porcentaje de la gente primero). Para la primera versión da igual: no hay nadie todavía. Más adelante, empezar con el 20 % y subir al 100 % a los dos o tres días es una buena costumbre.</li>
+  <li>Guardar → Resumen de la publicación → Enviar a revisión. La primera de producción suele ser la revisión más lenta.</li>
+</ol>
+<p>La prueba cerrada no se cierra: déjala abierta, con sus testers, para probar ahí cada versión antes
+de llevarla a producción. Desde entonces el ritmo es: <strong>subir a prueba cerrada → unos días →
+llevar esa misma versión a producción</strong>.</p>
+
+<!-- ============================================================ -->
+<h2 id="rutina"><span class="num">6½</span>La rutina: actualizar con orden</h2>
+<p>Mientras PACE siga mejorando, la clave es separar dos cosas: <strong>las versiones que hacemos</strong>
+(varias por semana, como hasta ahora) y <strong>las versiones que llegan a Play</strong> (pocas y
+elegidas). No todo lo que entra en <code>main</code> tiene que llegar a los testers.</p>
+
+<h3>Tres escalones, siempre en el mismo orden</h3>
+<div class="tbl"><table>
+  <tr><th>Escalón</th><th>Quién la ve</th><th>Cuándo</th></tr>
+  <tr><td><strong>1 · Prueba interna</strong></td><td>Solo tú, en tu móvil con Android 15</td><td>Cuando quieras. Llega en minutos, sin esperar revisión larga.</td></tr>
+  <tr><td><strong>2 · Prueba cerrada</strong></td><td>Tus testers (y después, siempre los mismos)</td><td>Una vez por semana, si en la interna todo fue bien.</td></tr>
+  <tr><td><strong>3 · Producción</strong></td><td>Todo el mundo</td><td>Cuando Google te dé acceso, y cada versión tras unos días en la cerrada.</td></tr>
+</table></div>
+<p>Una versión <strong>sube una vez</strong> (a la interna) y luego se <strong>promociona</strong>: en
+Play Console, en la versión, el botón <strong>«Promocionar versión»</strong> la lleva a la pista
+siguiente sin volver a subir nada. Así lo que ven los testers es exactamente lo que tú ya probaste.</p>
+
+<h3>La semana tipo</h3>
+<ol>
+  <li><strong>De lunes a jueves</strong>, seguimos mejorando PACE como siempre. Cada cambio con su versión.</li>
+  <li><strong>El viernes</strong>, me dices «toca Play». Yo te digo qué versión es la buena, preparo las notas en dos o tres frases a partir del <code>CHANGELOG.md</code> y las apunto en un registro.</li>
+  <li>Subes ese <code>.aab</code> a la <strong>prueba interna</strong> y la instalas en tu móvil desde Play.</li>
+  <li>La usas el fin de semana. Si algo falla, lo arreglamos con una versión nueva (por ejemplo 0.152.1) y vuelta al paso 3.</li>
+  <li><strong>El lunes</strong>, si está bien: «Promocionar versión» → prueba cerrada → enviar a revisión.</li>
+</ol>
+
+<h3>Si algo se rompe en manos de los testers</h3>
+<p>No se «retira» una versión: se sube otra encima, con el último número un poco más alto (de 0.152.0
+a 0.152.1), solo con el arreglo. Llega como actualización normal y nadie pierde datos.</p>
+
+<h3>Llevar la cuenta</h3>
+<p>Cada subida es una línea en <code>docs/launch/google-play/SUBIDAS.md</code> (fecha, versión, pista y
+las notas que leen los testers, en español y en inglés). La pongo yo al día cada viernes, así nunca
+hay que preguntarse «¿esto ya lo tienen los testers?» ni se repite un número de versión.</p>
+
+<div class="card">
+  <span class="tag">Más adelante</span>
+  <p><strong>Que GitHub suba él solo a la prueba interna.</strong> Te quedaría solo probar en el móvil y
+  pulsar «Promocionar». Hace falta dar a GitHub un permiso en Play Console (una «cuenta de servicio» de
+  Google, unos diez minutos que hacemos juntos) y la primera subida tiene que ser a mano. Lo propongo
+  cuando hayan pasado dos o tres viernes y la rutina esté rodada.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="errores"><span class="num">7</span>Errores típicos y qué hacer</h2>
+<div class="tbl"><table>
+  <tr><th>Lo que dice Play (más o menos)</th><th>Qué significa</th><th>Qué hacer</th></tr>
+  <tr><td>«El código de versión 146000 ya se ha usado»</td><td>Ya subiste esa versión alguna vez, aunque fuera a otra pista o la descartaras.</td><td>Hace falta una versión más alta. Me lo dices y saco la siguiente (por ejemplo 0.146.1).</td></tr>
+  <tr><td>«El paquete está firmado con una llave incorrecta» (y enseña dos huellas)</td><td>El archivo no lleva tu llave de subida. Casi siempre, que subiste el APK de prueba o un archivo de otra parte.</td><td>Sube el <code>PACE-X.Y.Z.aab</code> de Releases, nunca un <code>.apk</code>. Si pasa con el bueno, avísame: es que los secretos de GitHub no son tu llave.</td></tr>
+  <tr><td>«Has subido un APK o paquete depurable» / «se debe firmar en modo release»</td><td>Es el APK de prueba.</td><td>Igual: el archivo es el <code>PACE-X.Y.Z.aab</code> de Releases.</td></tr>
+  <tr><td>«Debe tener como objetivo Android 16 (nivel de API 36)»</td><td>Desde el 31 de agosto de 2026 Google exige apuntar a Android 16.</td><td>PACE ya apunta a Android 16. Cada agosto Google sube el listón; cuando llegue, lo actualizo yo.</td></tr>
+  <tr><td>Aviso amarillo: «no hay archivo de desofuscación» o «símbolos de depuración nativos»</td><td>Son ayudas para leer informes de fallos. PACE no las necesita.</td><td>Se puede seguir.</td></tr>
+  <tr><td>La versión queda «Lista para enviar» y no avanza</td><td>Falta el último paso.</td><td>Resumen de la publicación → Enviar cambios a revisión.</td></tr>
+  <tr><td>Rechazo por la política de privacidad</td><td>Google no pudo abrir la URL o no casa con lo que dices en «Seguridad de los datos».</td><td>Comprueba que <code>pacegrass.app/privacy</code> abre y me lo pasas.</td></tr>
+  <tr><td>Tester: «Esta app no está disponible»</td><td>Acaba de unirse, su país no está en la lista o usa otra cuenta de Google en Play Store.</td><td>Esperar una hora, revisar países y cuenta.</td></tr>
+  <tr><td>Tester: «App no instalada» / conflicto</td><td>Tiene puesto un APK de prueba de antes del 8 de octubre (los de ahora son «PACE prueba» y no chocan).</td><td>Copia de «Tus datos», desinstalar, instalar desde Play, importar.</td></tr>
+  <tr><td>«Solicitar acceso a producción» no aparece</td><td>No hay 12 testers apuntados durante 14 días seguidos.</td><td>Mira el Panel: dice cuántos llevas y desde cuándo.</td></tr>
+  <tr><td>«Restablecimiento de la llave de subida» que nunca pediste</td><td>Alguien intenta usar tu cuenta.</td><td>Cambia la contraseña de Google y avísame enseguida.</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="propuestas"><span class="num">8</span>Lo que ya está hecho en el repo</h2>
+<p>Elegiste «la más profesional», así que van las tres:</p>
+<div class="tbl"><table>
+  <tr><th>Qué</th><th>Para qué</th></tr>
+  <tr><td><strong>Cada versión, guardada para siempre</strong> en un borrador de Releases, con su archivo <code>PACE-X.Y.Z.aab</code> y su línea del CHANGELOG</td><td>Que el archivo que subiste se encuentre siempre, con su nombre, sin caducar ni renombrar.</td></tr>
+  <tr><td><strong>El APK de prueba es otra app</strong>, «PACE prueba»</td><td>Tener la de Play y la de prueba en el mismo móvil sin desinstalar ni perder datos.</td></tr>
+  <tr><td><strong>Registro de subidas</strong> (<code>SUBIDAS.md</code>)</td><td>Saber qué tiene cada grupo y qué números de versión ya se gastaron.</td></tr>
+  <tr><td><strong>Ficha en inglés</strong> (al final de <code>ficha.md</code>)</td><td>Publicar en todo el mundo: fuera de España la gente la lee en inglés.</td></tr>
+  <tr><td><strong>Mensajes para WhatsApp y LinkedIn</strong> (en <code>testers.md</code>)</td><td>Pasar de 5 o 6 testers a 15.</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="preguntas"><span class="num">9</span>Lo que queda pendiente</h2>
+<ol class="q">
+  <li><strong>Encontrar el disco duro</strong> y copiar en él la carpeta <code>PACE-llave-play</code>. La contraseña, aparte (gestor de contraseñas o papel). Mejor aún si hay una segunda copia fuera de casa.</li>
+  <li><strong>Mandar los mensajes</strong> de WhatsApp y LinkedIn de <code>testers.md</code> hasta tener unos 15 correos.</li>
+  <li><strong>Crear la app en Play Console</strong> y rellenar lo del <a href="#primera">punto 3</a>, con la ficha en español y en inglés y todos los países.</li>
+  <li><strong>Primer viernes:</strong> subir a la prueba interna, probar en tu móvil y, si va bien, abrir la prueba cerrada y mandar el enlace.</li>
+</ol>
+
+<footer>
+  <p>Contrastado el 8 de octubre de 2026 con la ayuda oficial de Google Play (requisitos de pruebas para
+  cuentas personales nuevas, verificación del dispositivo, firma de apps y nivel de API objetivo) y con
+  el repo: <code>android/app/build.gradle</code>, <code>.github/workflows/android.yml</code> y la
+  compilación Android de la v0.146.0. Google cambia los nombres de los menús y estos requisitos de vez
+  en cuando: si algo no está donde dice la guía, búscalo por el nombre en el buscador de Play
+  Console.</p>
+</footer>
+
+</main>
+</body>
+</html>
