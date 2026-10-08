@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.148.3 · 8 de octubre de 2026.
+**Versión:** v0.148.4 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -84,8 +84,7 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
-   y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
-   de que Ez vea las fotos. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
+   y «Terminar» en las rondas, en v0.148.4. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
    v0.147.0. Seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de
    ingles-6), en v0.148.2; los que sí lo cambian están montados en `claude/caza-bugs-propuestas`, a
    la espera de que Ez elija en su página. Todo lo que se vea se le enseña antes en HTML.
