@@ -403,12 +403,12 @@
 .pace-rt-chip.pace-rt-chip-horas:hover { background: var(--paper) !important; border-color: var(--line) !important; }
 .pace-rt-chip-horas .pace-rt-sel { padding-top: 10px; margin-top: -10px; background-position: right 1px bottom 6px; }
 /* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
-   derecha de las cuatro. Móvil: «como cada martes» en la esquina y el pie sin margen propio,
-   porque la línea ya deja el suyo. */
+   derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
+   partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
 .pace-rt-habitual-fila { display: flex; align-items: flex-end; gap: 16px; }
 .pace-rt-habitual-fila .pace-rt-chips { flex: 1 1 auto; min-width: 0; }
 .pace-rt-chip.pace-rt-chip-tuyo { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
-.pace-rt-habitual-como { font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.2; color: var(--ink-2); white-space: nowrap; }
+.pace-rt-habitual-como { font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); white-space: nowrap; margin-left: 2px; }
 .pace-rt-habitual-pie { margin-top: 0; }
 `;
   document.head.appendChild(s);
