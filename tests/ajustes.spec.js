@@ -101,7 +101,8 @@ test.describe('ajustes · el panel de s188', () => {
     await expect(page.locator(PANEL + ' [data-pace-aj-fila="layout"]')).toHaveCount(0);
     /* Y el bloque premium de 221 px es ahora una linea: ningun input salvo el de importar. */
     await expect(page.locator(PANEL + ' input:not([type="file"])')).toHaveCount(0);
-    await expect(page.locator(PANEL)).toContainText('Licencia');
+    /* La fila de la licencia es «PACE completo · Introducir código» desde que hay códigos. */
+    await expect(page.locator(PANEL)).toContainText('PACE completo');
     expect(errores).toEqual([]);
   });
 

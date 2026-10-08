@@ -421,6 +421,10 @@ function PaceApp() {
       {red(null, true, null, <PathRunner />)}
       {red(t('paths.library.title'), true, null, <PathsLibrary />)}
 
+      {/* La invitación a PACE completo se gestiona sola (pace:open-premium) y va
+          al final para quedar encima de la biblioteca desde la que se abre. */}
+      {red(null, true, null, <PremiumInvitacion />)}
+
       {/* ========== TOASTS ========== */}
       <PaceRed modo="silencio"><ToastHost /></PaceRed>
 

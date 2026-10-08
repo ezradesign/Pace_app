@@ -34,3 +34,8 @@ backups/
 
 # La web que empaqueta Android: la genera `npm run android:www`
 www/
+
+# Llaves privadas: NUNCA en el repo. La de los códigos de PACE completo vive en
+# ~/PACE-llave-licencias y la de Play en PACE-llave-play, las dos fuera de aquí.
+*.pem
+PACE-llave-*/

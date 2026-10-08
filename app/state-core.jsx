@@ -106,6 +106,9 @@ const defaultState = {
   // premium sin tocar UI. La validación de licencia real (claves firmadas,
   // expiresAt, tipos) queda para una fase posterior post-v1.0.
   premiumUnlocked: false,
+  // El código de PACE completo tal como se canjeó (state-licencia.js). Va en el
+  // estado para que viaje con la copia de «Tus datos».
+  licencia: null,
 
   // Foco
   focusMode: 'foco',

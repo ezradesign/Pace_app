@@ -153,7 +153,8 @@ test('un viaje PREMIUM esta cerrado como cualquier otra rutina de pago', async (
 
   const tarjeta = page.locator('[data-pace-lib-card="breathe.viaje.prueba"]');
   await expect(tarjeta, 'la tarjeta no se marca como bloqueada').toHaveAttribute('data-locked', '1');
-  await expect(tarjeta).toContainText('Pronto');
+  /* Cerrada como las demás: su candado delante de «Premium» (ya no «Pronto»). */
+  await expect(tarjeta.locator('[data-pace-candado]')).toHaveCount(1);
 });
 
 /* ------------------------------------------------------------------ 7 */

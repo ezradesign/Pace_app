@@ -89,8 +89,13 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 | Pomodoro completo | «A tu ritmo» **a lo largo de la semana**: variación por día, aprende de «¿te ayudó?», lecturas A y C de s194 |
 | «A tu ritmo» **del día** | Las **19 rutinas premium** |
 | Las **32 rutinas gratuitas** | El **constructor** de rutinas propias |
-| Hidrátate | Stats de **semana y año** |
-| Logros y Stats **«Hoy»** | |
+| Hidrátate | Stats de **mes y año** y «qué te ayuda» |
+| Logros y Stats **«Hoy»** y **«Semana»** | |
+
+**Afinado el 8 de octubre de 2026** (opción B de `docs/proposals/premium-pace-completo.html`): las
+estadísticas de la semana quedan gratis, porque la barra lateral ya enseña la semana a todos y «el
+premium cierra la interpretación, nunca tus datos». Lo de pago se llama **PACE completo**. Lo
+cerrado lleva un candado de línea fina y, al tocarlo, una invitación; nada propone algo cerrado.
 
 Se afina **al final de la prueba cerrada de Android**, preguntando a los testers «¿qué echarías de
 menos?».
@@ -146,7 +151,8 @@ propone ajustes, con el `origin` de cada sesión que se registra desde v0.124.0)
 ### FASE 4 · Stats «Hoy» y «Semana»
 
 **Se desaparca la antigua Fase 4.** «Hoy» enseña el menú del día (motivo por el que se aparcó en
-s192) y es gratis; «Semana» (y el año) es de pago. Punto de partida: las maquetas de s191
+s192) y es gratis; «Semana» también es gratis, y el mes, el año y «qué te ayuda» son de pago
+(8 oct. 2026). Punto de partida: las maquetas de s191
 (`docs/proposals/stats-*`) y [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md).
 
 ### FASE 5 · Cerrar con lo que hay
@@ -166,6 +172,11 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 ### FASE 6 · Venta
 
 - **Licencia web**: firmada offline ECDSA P-256 con `expiresAt` opcional + trial explícito.
+  **La comprobación y los códigos de tester, HECHOS en v0.147.0** (`app/state-licencia.js`,
+  `scripts/licencias/`): falta que la tienda de la web emita el mismo código al comprar.
+- **Códigos de por vida para los testers** (Ez, 8 oct. 2026): en la web, un enlace firmado; en
+  Android, un código promocional de Play Console del producto «PACE completo» (hasta 500 por
+  trimestre para compras únicas), cuando la app lleve Play Billing.
 - **Play Billing** con un **`PurchaseAdapter`** (web · Play) que pase por
   **`app/state-entitlement.jsx` como punto único**. Las tiendas son la fuente de verdad de precio y
   moneda: no se hardcodean importes en las traducciones.

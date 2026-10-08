@@ -8,7 +8,9 @@
     "test:e2e": "playwright test",
     "bump": "node scripts/version.js",
     "android:www": "node scripts/android-www.js",
-    "android:sync": "node scripts/android-www.js && cap sync android"
+    "android:sync": "node scripts/android-www.js && cap sync android",
+    "licencia:llaves": "node scripts/licencias/crear-llaves.js",
+    "licencia:codigo": "node scripts/licencias/firmar.js"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

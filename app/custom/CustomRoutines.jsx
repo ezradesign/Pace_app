@@ -1,11 +1,11 @@
 /* PACE · Tus rutinas — sección del constructor en la biblioteca Mueve
    (F7 · s93 · v0.38.0)
 
-   Superficie premium ENTERA: con premiumUnlocked=false muestra sello +
-   copy + "Pronto" sin nada clicable (sin muro a mitad de flujo, mismo
-   lenguaje que RoutineCard bloqueada — el mecanismo de gating no se
-   toca). Si existieran rutinas creadas con el flag apagado, se listan
-   bloqueadas sin borrar datos.
+   Superficie premium ENTERA: cerrada, muestra sello + copy y un pie con
+   candado que abre la invitación a PACE completo (el mismo lenguaje que la
+   RoutineCard cerrada; el mecanismo de gating no se toca). Si existieran
+   rutinas creadas sin acceso, se listan cerradas sin borrar datos. La abre
+   también un código de tester (`hasPremiumEntitlement`).
 
    Crear/editar abre CustomBuilder vía CustomEvent
    `pace:open-custom-builder` (patrón overlay s50+); el estado del
@@ -56,6 +56,7 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
 
+  const invitar = () => paceAbrirPremium({ nombre: t('custom.section.title') });
   const openBuilder = (id) => {
     window.dispatchEvent(new CustomEvent('pace:open-custom-builder', { detail: { id: id || null } }));
   };
@@ -84,16 +85,17 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
 
       {!unlocked ? (
         <div style={{ display: 'grid', gridTemplateColumns: REJILLA_TUS_RUTINAS, gap: 10 }}>
-          <Card padded={false} style={{ padding: '16px 18px' }}>
+          <Card padded={false} onClick={invitar} accent="var(--premium)" style={{ padding: '16px 18px' }}>
             <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>
               {t('custom.locked.copy')}
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px dashed var(--line)', paddingTop: 8 }}>
-              <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
+              <button type="button" data-pace-custom-cerrado onClick={(e) => { e.stopPropagation(); invitar(); }}
+                style={customRoutinesStyles.candado}><PaceCandado />{t('lib.premium')}</button>
             </div>
           </Card>
           {routines.map(r => (
-            <CustomRoutineCard key={r.id} routine={r} accent={accent} locked />
+            <CustomRoutineCard key={r.id} routine={r} accent={accent} locked onClick={invitar} />
           ))}
         </div>
       ) : (
@@ -143,7 +145,7 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
     ? t('custom.steps.one')
     : tn('custom.steps.many', { n: routine.steps.length });
   return (
-    <Card accent={locked ? undefined : accent} onClick={locked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={locked ? 'var(--premium)' : accent} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {!locked && (
         <button
           onClick={(e) => { e.stopPropagation(); onEdit(); }}
@@ -171,7 +173,7 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
           {t('custom.code')}
         </span>
         {locked ? (
-          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
+          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}><PaceCandado />{t('lib.premium')}</span>
         ) : (
           <span style={{ ...displayItalic, fontSize: 16, color: accent, fontWeight: 500 }}>{routine.min} min</span>
         )}
@@ -191,6 +193,10 @@ const customRoutinesStyles = {
     color: 'var(--ink-2)',
     minHeight: 130,
     transition: 'all 220ms var(--ease)',
+  },
+  candado: {
+    ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500,
+    background: 'none', border: 0, padding: 0, cursor: 'pointer',
   },
   editBtn: {
     position: 'absolute', top: 10, right: 10,
