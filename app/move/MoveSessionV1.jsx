@@ -60,7 +60,6 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
-  const [faseTotal, setFaseTotal] = useStateV1(0);   // segundos de la colocación o del cambio de lado, para el aro
   const sessionStart = useRefV1(Date.now());   // wall-clock: incluye pausas y colocaciones
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
   // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
@@ -96,7 +95,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     //          `ready` del dato llega aquí como auto de 20 s como mínimo.
     //   none → directo a work. La cuenta nunca es el timer del ejercicio (R1).
     const su = v1StepSetup(routine, idx);
-    if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); setFaseTotal(su.estimatedSeconds); }
+    if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); }
     else setPhase('work');
   };
   const advanceStep = (early) => {
@@ -104,15 +103,15 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     else startStep(stepIdx + 1);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
-  const addPlaceTime = () => { setPlaceLeft(c => c + V1_MAS_TIEMPO); setFaseTotal(c => c + V1_MAS_TIEMPO); };
-  const addChangeTime = () => { setChangeLeft(c => c + V1_MAS_TIEMPO); setFaseTotal(c => c + V1_MAS_TIEMPO); };
+  const addPlaceTime = () => setPlaceLeft(c => c + V1_MAS_TIEMPO);
+  const addChangeTime = () => setChangeLeft(c => c + V1_MAS_TIEMPO);
   const onSideReady = () => { setSide(1); setPhase('work'); setElapsed(0); };
   // Entrada a la transición de lado (s113, enmienda R3): señal suave de la
   // familia actual + cuenta que fluye sola (efecto abajo).
   const enterChange = () => {
     // s115: la duración de la transición sale del contrato (transition.seconds),
     // con el default s113 (10 s) si el paso no la declara.
-    setPhase('change'); setElapsed(0); setChangeLeft(v1TransitionSeconds(step)); setFaseTotal(v1TransitionSeconds(step));
+    setPhase('change'); setElapsed(0); setChangeLeft(v1TransitionSeconds(step));
     // Dos cuencos, agudo y grave: el gesto de «giro». Silencio si soundOn está apagado.
     try { playSound('move.side'); } catch (e) {}
   };
@@ -362,9 +361,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
     : null;
 
-  /* Lo que va del paso o de la fase en curso, para el aro del dibujo. */
-  const fraccion = phase === 'place' || phase === 'change'
-    ? (faseTotal ? 1 - (phase === 'place' ? placeLeft : changeLeft) / faseTotal : 0)
+  /* Lo que va del ejercicio, para el aro del dibujo. Colocarse y cambiar de lado no son el
+     ejercicio: el aro se queda vacío y empieza a dibujarse cuando empieza el trabajo (Ez). */
+  const fraccion = phase === 'place' || phase === 'change' ? 0
     : step.mode === 'reps' ? Math.min(1, elapsed / (v1RepTarget(step) * v1RepSeconds(step)))
     : (v1StepDur(step) ? elapsed / v1StepDur(step) : 0);
 
