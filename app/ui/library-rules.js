@@ -35,18 +35,22 @@ var LIB_FILTROS = ['aqui', 'sinmat', 'corto'];
    exactamente las tres que «Sin retencion» ya quita, porque ninguna declara
    `cycle` y las tres llevan `safety`. Un chip que no puede cambiar el resultado
    de otro es decoracion.
-   Recuentos sobre el catalogo: «<= 5 min» deja 9 de 20 y «Sin retencion» 11. */
+   Recuentos sobre el catalogo: «<= 5 min» deja 9 de 20 y «Sin retencion» 9. */
 var LIB_FILTROS_RESPIRA = ['corto', 'sinreten'];
 
 /* «Con retencion» = la respiracion se PARA en algun momento, llena o vacia.
    El dato vive en `cycle` como [inhala, sosten, exhala, vacio], asi que basta
    con mirar las posiciones 1 y 3. Las rutinas SIN `cycle` -rondas, kapalabhati,
    los patrones con motor propio- no lo declaran, y ahi manda `safety`: las seis
-   que llevan aviso son precisamente las de apnea o hiperventilacion. */
+   que llevan aviso son precisamente las de apnea o hiperventilacion.
+   Dos patrones con motor propio sostienen sin aviso: «Rítmica yin» reposa en
+   vacío tras exhalar y Nadi Shodhana sostiene lleno en cada lado (sus fases
+   «Sostén» de getSequence). Lo vigila respira-biblioteca.spec.js. */
+var LIB_PATRONES_CON_SOSTEN = ['yin', 'nadi'];
 function libraryConRetencion(r) {
   if (!r) return false;
   if (Array.isArray(r.cycle)) return r.cycle[1] > 0 || r.cycle[3] > 0;
-  return !!r.safety;
+  return !!r.safety || LIB_PATRONES_CON_SOSTEN.indexOf(r.pattern) !== -1;
 }
 
 /* EL UMBRAL DE «CORTO» ES RELATIVO A CADA BIBLIOTECA, y no un número escrito

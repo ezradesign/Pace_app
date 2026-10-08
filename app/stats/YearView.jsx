@@ -186,12 +186,12 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
       {/* Navegación de año */}
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16 }}>
-        <button onClick={prevYear} disabled={!canPrev} aria-label="Año anterior" style={{
+        <button onClick={prevYear} disabled={!canPrev} aria-label={t('stats.year.prev')} style={{
           background:'none',border:'none',cursor:canPrev?'pointer':'default',
           color:canPrev?'var(--ink-2)':'var(--ink-3)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8249;</button>
         <span style={{ fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:20,color:'var(--ink)' }}>{viewYear}</span>
-        <button onClick={nextYear} disabled={!canNext} aria-label="Año siguiente" style={{
+        <button onClick={nextYear} disabled={!canNext} aria-label={t('stats.year.next')} style={{
           background:'none',border:'none',cursor:canNext?'pointer':'default',
           color:canNext?'var(--ink-2)':'var(--ink-3)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8250;</button>
