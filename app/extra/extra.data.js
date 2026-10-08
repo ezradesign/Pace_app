@@ -42,7 +42,7 @@ const EXTRA_ROUTINES = {
               care: 'El giro nace del tronco, no del cuello.' } },
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
-              setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+              setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
               action: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
               care: 'Recorrido corto. No fuerces la zona lumbar.' } },
           { name: 'Zancada con apertura', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
@@ -117,7 +117,7 @@ const EXTRA_ROUTINES = {
               care: 'Muñecas sueltas, sin apretar.' } },
           { name: 'Estiramiento de muñeca', mode: 'timed', dur: 40,
             instruction: {
-              action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano. Cambia de mano a mitad.',
+              action: 'Muñeca en flexión y luego en extensión, ayudándote con la otra mano. Cambia de mano a mitad.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
           { name: 'Palmas al suelo', mode: 'timed', dur: 40,
             instruction: {

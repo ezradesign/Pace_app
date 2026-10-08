@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.148.5 · 8 de octubre de 2026.
+**Versión:** v0.150.1 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -33,7 +33,8 @@ reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
 de tiempo alrededor del dibujo y avisos de cuenco y madera. El aro solo cuenta el ejercicio: al colocarse y al cambiar de lado se queda vacío (v0.148.1, opción A
-de Ez). Cada texto tiene su hueco fijo y el
+de Ez). La explicación de cada paso va en la serif itálica y no pasa de 95 letras (v0.150.0, opción A
+de Ez), así que cabe en dos líneas, y «Cuídate» también va en serif (v0.150.1). Cada texto tiene su hueco fijo y el
 dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
 ni se pisa. Las rutinas propias también van por ahí.
 
@@ -79,8 +80,10 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    en `SUBIDAS.md`.
 2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
    cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
-   «Otra» y las horas a las que paras), contado en la carta del lunes. La página para Ez está en
-   `docs/traspaso/archivos/motor-semana/` y espera sus seis respuestas.
+   «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
+   cuatro cosas, dos cambios por semana, la carta en una ventana, también sin cambios, nada sin
+   PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
+   la carta llegan cuando haya semanas de datos.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
