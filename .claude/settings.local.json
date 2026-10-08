@@ -208,7 +208,8 @@
       "Bash(rm -f inventario.json glifos.json /tmp/m.md)",
       "Bash(node fichas.js)",
       "PowerShell(npm run verify 2>&1)",
-      "mcp__claude-code-remote__create_session"
+      "mcp__claude-code-remote__create_session",
+      "mcp__claude-code-remote__send_message"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
