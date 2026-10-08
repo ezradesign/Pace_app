@@ -293,7 +293,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/terminar-rondas-360.png; salida de terminar-rondas.js: antes de Terminar {breath:'Respiración 7 de 30', round:'1'} -> cierre ['0:24 TIEMPO','3 RONDAS','90 RESPIRACIONES']
 - **Código sospechoso:** app/breathe/BreatheSession.jsx:266-267: el cierre pinta siempre `routine.rounds` y `routine.breaths * routine.rounds` en vez de `round` y `breathCount`.
 
-### [alta] respira-3 · Pasada la medianoche sin recargar, Hidrátate y «Hoy» siguen mostrando los vasos de ayer, y el primer «+» salta de 5/8 a 1/8
+### ~~[alta] respira-3 · Pasada la medianoche sin recargar, Hidrátate y «Hoy» siguen mostrando los vasos de ayer, y el primer «+» salta de 5/8 a 1/8~~
+- **Arreglado en v0.146.1:** el cambio de día corre al volver la página al frente y cada minuto con la página a la vista, y parte de lo guardado para no pisar otra pestaña (`app/state-core.dia.js`, `tests/cambio-de-dia.spec.js`).
 - **Dónde:** 1530x702 (y cualquiera: la pestaña o la PWA abiertas toda la noche, o el portátil cerrado y abierto por la mañana)
 - **Pasos:** Con el reloj el 7 oct a las 23:50, abrir Hidrátate y sumar 5 vasos. Cerrar. Dejar pasar la noche sin recargar (page.clock.fastForward a las 08:20 del 8 oct). Mirar la barra lateral y abrir Hidrátate.
 - **Debería:** «HOY JUE 8 OCT · AGUA 0 de 8» y el contador a «0 / 8» con los vasos vacíos.
