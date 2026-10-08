@@ -221,3 +221,21 @@ despues del primer run del workflow**; hasta entonces la lista sale vacia.
 ---
 
 Ver tambien: [`docs/BUILD.md`](./BUILD.md) para el pipeline de build.
+
+## 9. Varias sesiones a la vez: un coordinador sube a `main` (8 oct. 2026)
+
+Cuando Ez trabaja con varias sesiones de Claude en paralelo, **solo una, el coordinador, sube a
+`main`**. Lo pidió Ez el 8 de octubre: cinco sesiones subiendo a la vez se quitaban los números de
+versión y cada push cancelaba la comprobación de GitHub del anterior (`concurrency` del CI).
+
+- Cada sesión trabaja en su rama y sube solo a ella. No hace `npm run bump` ni toca `CHANGELOG.md`
+  ni la línea de versión de `STATE.md`; lo que quiera que digan va en el mensaje de su último commit,
+  bajo `CHANGELOG:`, `STATE:` y `DECISIONES:`.
+- Cuando su cambio está listo (sí de Ez, `verify` y su suite en verde sobre un `origin/main`
+  reciente), termina con la línea exacta `LISTO PARA MAIN: rama <nombre>, commit <sha>`.
+- El coordinador junta la rama con `main`, pone el número de versión, construye, pasa la suite
+  completa, sube y vigila la CI hasta verde. Los choques los resuelve él o los pregunta.
+- Cada sesión de pruebas usa su propio `PACE_E2E_PORT`: un servidor ajeno en el mismo puerto falsea
+  la suite.
+
+Sin varias sesiones a la vez, el cierre de siempre de `CLAUDE.md`.
