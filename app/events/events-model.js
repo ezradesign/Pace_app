@@ -38,8 +38,10 @@ const EVENTS_RETENTION_DAYS = 120;
    que los backups sean comparables entre runtimes. */
 const EVENTS_BUDGET_BYTES = 500 * 1024;
 
-/* Tipos aprobados (§6.1). Anadir un `type` NO sube el `v` de los demas. */
-const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed'];
+/* Tipos aprobados (§6.1). Anadir un `type` NO sube el `v` de los demas.
+   `ritmo.day.closed` (rev. 8): el resumen de un dia de «A tu ritmo», que lee el
+   motor de la semana; lo arma state-ritmo.resumen.jsx cuando el dia ya paso. */
+const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed', 'ritmo.day.closed'];
 
 /* Correlacion TIPADA (§7.1) — no hay un `runId` universal, y no se inventan
    `runId` ficticios para el tipo que no lo lleva.
@@ -49,6 +51,7 @@ const EVENT_CORRELATION = {
   'feedback.answered':   { runId: 'req', pathRunId: 'opt' },
   'path.step.completed': { runId: 'opt', pathRunId: 'req' },
   'path.completed':      { runId: 'no',  pathRunId: 'req' },
+  'ritmo.day.closed':    { runId: 'no',  pathRunId: 'no' },
 };
 
 const EVENT_CONTEXTS = ['standalone', 'path'];
