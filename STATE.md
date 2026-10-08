@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.1 · 8 de octubre de 2026.
+**Versión:** v0.146.2 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -33,7 +33,7 @@ reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
 de tiempo alrededor del dibujo y avisos de cuenco y madera. El aro solo cuenta el ejercicio: al
-colocarse y al cambiar de lado se queda vacío (v0.146.1, opción A de Ez). Cada texto tiene su hueco fijo y el
+colocarse y al cambiar de lado se queda vacío (v0.146.2, opción A de Ez). Cada texto tiene su hueco fijo y el
 dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
 ni se pisa. Las rutinas propias también van por ahí.
 
@@ -46,7 +46,8 @@ La home del móvil no pide scroll en ningún momento desde 360×640, en castella
 (v0.146.0, regla de Ez: «no quiero scroll de ninguna forma»). La pregunta del día dibuja el horario
 como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el día servido va sin pie:
 «Hoy voy por libre» bajo «Cambiar», «Ver todo» al final de la línea y «Al calendario» en esa hoja.
-Lo vigila `tests/home-sin-scroll.spec.js`; a 320×568 se acepta scroll.
+Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
+ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
@@ -69,9 +70,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    se paga.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
-   Hidrátate). El 8 de octubre dos sesiones en paralelo arreglan los tres graves de Respira e
-   Hidrátate (Bhastrika sin su aviso, «Terminar» en las rondas y el agua de ayer pasada la
-   medianoche). Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
+   Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
+   y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
+   de que Ez vea las fotos. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
    todo lo que se vea se le enseña antes en HTML.
 4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
    octubre: falta traerla a `main` y que Ez la escuche en la app.

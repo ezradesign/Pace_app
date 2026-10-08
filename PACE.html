@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.146.1</title>
+  <title>PACE · Foco · Cuerpo — v0.146.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -192,6 +192,10 @@
   <!-- state-core.toast (s198): el buzon de avisos, cortado de state-core.jsx por
        un punto al pasar este de 500 lineas. Nadie lo llama al evaluarse. -->
   <script type="text/babel" src="app/state-core.toast.jsx"></script>
+  <!-- state-core.dia: el cambio de dia con la app abierta (al volver la pagina al
+       frente y cada minuto a la vista). DESPUES de state-core, que define
+       `ensureDayFresh`; arma sus escuchas al evaluarse. -->
+  <script type="text/babel" src="app/state-core.dia.js"></script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
        los detectores que faltaban. ANTES de state-timer y state-hydrate, que
        usan bumpCount/getCount para los logros de volumen. -->

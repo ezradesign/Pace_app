@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.146.1';
+const PACE_VERSION = 'v0.146.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -444,8 +444,17 @@ function usePace() {
   return [state, setState];
 }
 
-function ensureDayFresh() {
-  const next = rolloverIfNeeded(_state);
+/* `desdeDisco` lo pide el cambio de día sin gesto (state-core.dia.js). Sin estado compartido
+   entre pestañas, la que vuelve al frente puede llevar una copia de hace horas: relevar el día
+   sobre ella archivaría un ayer incompleto y pisaría lo que otra pestaña ya hizo hoy. Lo guardado
+   es siempre lo más nuevo, porque cada cambio se guarda al momento, así que el relevo parte de ahí.
+   Si lo guardado no se puede leer, se sigue con la copia propia: nunca con el estado de fábrica. */
+function ensureDayFresh(desdeDisco) {
+  let base = _state;
+  if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
+    try { if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(); } catch (e) {}
+  }
+  const next = rolloverIfNeeded(base);
   if (next !== _state) {
     _state = next;
     persistState();
