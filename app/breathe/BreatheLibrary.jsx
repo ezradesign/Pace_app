@@ -13,10 +13,14 @@ const BREATHE_ROUTINES = {
     items: [
       /* B1.2 (s108): Bhastrika (PRA) se mudó al grupo Pranayama — era el único
          pranayama colado en Energía. rounds.express pasó a FREE para que el
-         grupo tenga entrada usable sin premium. */
-      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
-      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
-      { id: 'breathe.rounds.long', tag: 'ENE', code: 'Energía', name: 'Rondas profundas', desc: '5 rondas de 35 respiraciones. La práctica más larga e intensa.', min: 20, pattern: 'rounds', rounds: 5, breaths: 35, safety: true, access: 'premium' },
+         grupo tenga entrada usable sin premium.
+         Los minutos de las rondas suponen UN MINUTO de retención por ronda,
+         lo que respira alguien que empieza, más lo respirado (2 s + 2 s por
+         respiración): 5, 9 y 17. Antes eran 4, 12 y 20, cada una con su propia
+         retención supuesta (Ez, 8 oct. 2026). */
+      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 5, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
+      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 9, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
+      { id: 'breathe.rounds.long', tag: 'ENE', code: 'Energía', name: 'Rondas profundas', desc: '5 rondas de 35 respiraciones. La práctica más larga e intensa.', min: 17, pattern: 'rounds', rounds: 5, breaths: 35, safety: true, access: 'premium' },
     ]
   },
   equilibrio: {

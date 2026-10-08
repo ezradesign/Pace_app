@@ -449,7 +449,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
             una fraccion de sesion que existe de verdad (4B).
           · Por BLOQUES (3 de rondas): un segmento por ronda. Estas NO terminan
             por reloj — la retencion no tiene duracion fijada (B1), asi que sus
-            4/12/20 min son NOMINALES y una barra de tiempo aqui dibujaria una
+            5/9/17 min son NOMINALES y una barra de tiempo aqui dibujaria una
             duracion que nadie conoce. Medido en el censo de s165.
           El segmento en curso se marca con CARRIL, no rellenandose por
           respiraciones: ese detalle lo lleva el texto de arriba. Vocabulario
