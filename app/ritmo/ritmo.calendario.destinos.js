@@ -20,10 +20,17 @@
    «Otro calendario» (`archivo`) es el .ics: se descarga en la web y sale por
    el menú de compartir en Android. No lee reuniones.
 
-   AL VOLVER A LA APP, si el último destino fue uno conectado y el acceso sigue
-   vivo (el permiso de Android, o el pase de la web dentro de su hora), las
-   reuniones se vuelven a leer sin preguntar nada, como mucho cada 5 minutos.
-   Solo se lee: los eventos se reescriben cuando la persona pulsa otra vez.
+   AL DÍA SOLO (opción B, elegida por Ez): tras conectar, el destino queda
+   puesto (`ritmo.calendario.auto`) y, mientras PACE está abierta y el acceso
+   sigue vivo sin preguntar (el permiso de Android, el pase de Google dentro de
+   su hora, la llave de Microsoft dentro de sus 24 h), cada cambio del día se
+   lleva solo: unos segundos después de cambiar el estado se compara la FIRMA
+   del día entero con la última escrita y, si no casa, se borra lo de PACE que
+   queda de hoy y se escribe lo nuevo. La firma es del día entero y no de lo
+   que queda, para que no se reescriba cada vez que acaba un bloque. «Hoy voy
+   por libre» firma vacío: se quitan los bloques que quedaban. Las reuniones
+   se vuelven a leer al volver a la app y como mucho cada 5 minutos; si
+   cambian, el día cambia y se lleva solo.
 
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
@@ -68,7 +75,13 @@ function calendarioAcceso(destino) {
     return paceAndroidCalendarioPermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
   }
   var pase = calendarioPaseGuardado(destino);
-  return pase ? Promise.resolve(pase) : calendarioPedirPase(destino);
+  if (pase) return Promise.resolve(pase);
+  /* Con la llave de Microsoft no hace falta ventana; si la llave ya no vale, el
+     siguiente toque la abre (después de esperar, el navegador la bloquearía). */
+  if (calendarioWebVivo(destino)) {
+    return calendarioPaseSilencioso(destino).then(function (p) { if (!p) throw new Error('pase'); return p; });
+  }
+  return calendarioPedirPase(destino);
 }
 
 /* Las reuniones de hoy, ya filtradas: [{ inicio, fin }] en ms. */
@@ -95,11 +108,34 @@ function calendarioEscribirAndroid(eventos, iso, ahoraMs, calendarioId) {
   });
 }
 
-function calendarioEscribirWeb(destino, pase, eventos, iso, ahoraMs) {
-  return calendarioWebBorrar(destino, pase, iso, ahoraMs).then(function () {
-    return eventos.reduce(function (p, ev) {
-      return p.then(function () { return calendarioWebCrear(destino, pase, iso, ev); });
-    }, Promise.resolve());
+/* El calendario «PACE» de este destino: el guardado o, si no hay, el que se
+   encuentra o se crea. */
+function calendarioCalPace(destino, pase) {
+  var guardado = (ritmoDe(getState()).calendario.cal || {})[destino];
+  if (guardado) return Promise.resolve(guardado);
+  return calendarioWebCalendarioPace(destino, pase).then(function (id) {
+    var cal = Object.assign({}, ritmoDe(getState()).calendario.cal || {});
+    cal[destino] = id;
+    calendarioGuardarAjustes({ cal: cal });
+    return id;
+  });
+}
+
+/* Si la persona borró el calendario «PACE», se olvida su id y se vuelve a
+   empezar una vez: se encuentra o se crea otro. */
+function calendarioEscribirWeb(destino, pase, eventos, iso, ahoraMs, reintento) {
+  return calendarioCalPace(destino, pase).then(function (cal) {
+    return calendarioWebBorrar(destino, pase, cal, iso, ahoraMs).then(function () {
+      return eventos.reduce(function (p, ev) {
+        return p.then(function () { return calendarioWebCrear(destino, pase, cal, iso, ev); });
+      }, Promise.resolve());
+    });
+  }).catch(function (e) {
+    if (reintento || !e || e.message !== 'no-esta') throw e;
+    var sinEste = Object.assign({}, ritmoDe(getState()).calendario.cal || {});
+    delete sinEste[destino];
+    calendarioGuardarAjustes({ cal: sinEste });
+    return calendarioEscribirWeb(destino, pase, eventos, iso, ahoraMs, true);
   });
 }
 
@@ -107,7 +143,7 @@ function calendarioEscribirWeb(destino, pase, eventos, iso, ahoraMs) {
    instantes en ms. */
 function calendarioEventosDeHoy(iso, textos) {
   var plan = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
-  if (!plan) return null;
+  if (!plan) return ritmoDe(getState()).libre ? [] : null;
   var ahora = typeof ritmoAhoraExacto === 'function' ? ritmoAhoraExacto() : 0;
   return calendarioEventos(plan.m, ahora, textos.t, textos.tn, textos.lang).map(function (e) {
     return Object.assign({}, e, { inicio: calendarioInstante(iso, e.desde).getTime(), fin: calendarioInstante(iso, e.hasta).getTime() });
@@ -134,6 +170,12 @@ function calendarioLlevar(destino, opciones) {
   var acceso;
   try { acceso = calendarioAcceso(destino); } catch (e) { return Promise.reject(e); }
   var leidas = null;
+  /* Mientras se lleva a mano, el «al día solo» espera: escribirían los dos. */
+  _calendarioAlDia.enCurso = true;
+  var soltar = function () {
+    _calendarioAlDia.enCurso = false;
+    if (_calendarioAlDia.otraVez) { _calendarioAlDia.otraVez = false; calendarioAlDiaPronto(); }
+  };
   return acceso.then(function (pase) {
     var lectura = o.reuniones
       ? calendarioLeer(destino, pase, iso).then(function (lista) {
@@ -148,12 +190,95 @@ function calendarioLlevar(destino, opciones) {
         ? calendarioEscribirAndroid(evs, iso, ahoraMs, o.calendarioId || null)
         : calendarioEscribirWeb(destino, pase, evs, iso, ahoraMs);
       return escribir.then(function () {
-        calendarioGuardarAjustes({ destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso });
+        calendarioGuardarAjustes({ destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso,
+          auto: true, firma: calendarioFirma(iso, o) });
         _calendarioRefresco.ultimo = Date.now();
         return { n: evs.length, reuniones: leidas };
       });
     });
-  });
+  }).then(function (r) { soltar(); return r; }, function (e) { soltar(); throw e; });
+}
+
+/* --- Al día solo ----------------------------------------------------------- */
+
+/* Los textos de la app fuera de React, en el idioma de ahora (como useT). */
+function calendarioTextos() {
+  var lang = (getState() || {}).lang || 'en';
+  var S = window.PACE_STRINGS || {};
+  var t = function (k) {
+    if (S[lang] && S[lang][k] !== undefined) return S[lang][k];
+    return S.en && S.en[k] !== undefined ? S.en[k] : k;
+  };
+  var tn = function (k, v) {
+    var x = t(k);
+    Object.keys(v || {}).forEach(function (n) { x = x.split('{' + n + '}').join(String(v[n])); });
+    return x;
+  };
+  return { t: t, tn: tn, lang: lang };
+}
+
+/* La firma del DÍA ENTERO (ver arriba): fecha, y desde, hasta y título de cada
+   bloque. null si el día no está elegido; '' si vas por libre. */
+function calendarioFirma(iso, textos) {
+  var R = ritmoDe(getState());
+  var plan = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
+  if (!plan) return R.libre ? iso + '|' : null;
+  var x = textos || calendarioTextos();
+  return iso + '|' + calendarioEventos(plan.m, null, x.t, x.tn, x.lang).map(function (e) {
+    return e.desde + '-' + e.hasta + ' ' + e.titulo;
+  }).join('|');
+}
+
+/* El acceso sin preguntar nada, o null. */
+function calendarioAccesoSilencioso(destino) {
+  if (destino === 'android') return paceAndroidCalendarioTienePermiso().then(function (ok) { return ok ? '' : null; });
+  return calendarioPaseSilencioso(destino);
+}
+
+var _calendarioAlDia = { reloj: null, enCurso: false, otraVez: false, espera: 4000 };
+
+/* Pone el calendario al día si hace falta. Resuelve con true si escribió. */
+function calendarioPonerAlDia() {
+  try {
+    if (_calendarioAlDia.enCurso) { _calendarioAlDia.otraVez = true; return Promise.resolve(false); }
+    var c = ritmoDe(getState()).calendario;
+    if (!c.auto || !calendarioConectado(c.destino) || calendarioDestinos().indexOf(c.destino) === -1) return Promise.resolve(false);
+    var iso = ritmoHoy();
+    var textos = calendarioTextos();
+    var firma = calendarioFirma(iso, textos);
+    if (firma == null || firma === c.firma) return Promise.resolve(false);
+    _calendarioAlDia.enCurso = true;
+    return calendarioAccesoSilencioso(c.destino).then(function (pase) {
+      if (pase == null) return false;
+      var evs = calendarioEventosDeHoy(iso, textos) || [];
+      var ahoraMs = Date.now();
+      var escribir = c.destino === 'android'
+        ? calendarioEscribirAndroid(evs, iso, ahoraMs, c.calendarioId || null)
+        : calendarioEscribirWeb(c.destino, pase, evs, iso, ahoraMs);
+      return escribir.then(function () {
+        calendarioGuardarAjustes({ firma: firma, fecha: iso });
+        return true;
+      });
+    }).catch(function () { return false; }).then(function (r) {
+      _calendarioAlDia.enCurso = false;
+      if (_calendarioAlDia.otraVez) { _calendarioAlDia.otraVez = false; calendarioAlDiaPronto(); }
+      return r;
+    });
+  } catch (e) { _calendarioAlDia.enCurso = false; return Promise.resolve(false); }
+}
+
+/* Unos segundos después del último cambio: elegir el día, «Cambiar» o una
+   reunión nueva suelen ser varios cambios seguidos. */
+function calendarioAlDiaPronto() {
+  clearTimeout(_calendarioAlDia.reloj);
+  _calendarioAlDia.reloj = setTimeout(calendarioPonerAlDia, _calendarioAlDia.espera);
+}
+
+/* «Desconectar»: deja de llevar el día y olvida el acceso de la web. Lo ya
+   escrito se queda en el calendario. */
+function calendarioDesconectar(destino) {
+  if (destino === 'google' || destino === 'microsoft') calendarioWebOlvidar(destino);
+  calendarioGuardarAjustes({ destino: null, auto: false, firma: null });
 }
 
 /* El archivo: descarga en la web; en Android, el menú de compartir. */
@@ -184,9 +309,8 @@ function calendarioRefrescarReuniones(forzar) {
     if (c.destino === 'android') {
       acceso = paceAndroidCalendarioTienePermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
     } else {
-      var pase = calendarioPaseGuardado(c.destino);
-      if (!pase) return Promise.resolve(false);
-      acceso = Promise.resolve(pase);
+      if (!calendarioWebVivo(c.destino)) return Promise.resolve(false);
+      acceso = calendarioPaseSilencioso(c.destino).then(function (p) { if (!p) throw new Error('pase'); return p; });
     }
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
@@ -205,6 +329,10 @@ function calendarioArrancar() {
     if (v && !(v.t > Date.now() - 5 * 60 * 1000)) localStorage.removeItem('pace.calendario.vuelta');
   } catch (e) {}
   setTimeout(function () { calendarioRefrescarReuniones(true); }, 1500);
+  /* Cualquier cambio del estado puede cambiar el día. Que la firma no cambie
+     cuesta un cálculo, no una escritura. */
+  try { subscribe(calendarioAlDiaPronto); } catch (e) {}
+  calendarioAlDiaPronto();
   try {
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') calendarioRefrescarReuniones(false);
@@ -216,5 +344,5 @@ try { calendarioArrancar(); } catch (e) {}
 
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
-  calendarioGuardarOcupado, calendarioBajarIcs,
+  calendarioGuardarOcupado, calendarioBajarIcs, calendarioPonerAlDia, calendarioDesconectar, calendarioFirma,
 });

@@ -162,7 +162,7 @@ primera versión de pago, en web y Android.
 | Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
-| Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
+| Calendario con Google y Microsoft | Hecho en código y, desde v0.147.0, al día solo (opción B, elegida por Ez el 8 oct.): calendario propio «PACE», Google con permisos pequeños (`calendar.app.created` y `calendar.freebusy`), Microsoft conectado 24 h, «Desconectar» y «Renovar», solo en `pacegrass.app`. Página `/acerca` y logo `docs/marca/pace-logo-120.png` para la verificación. Sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra con la guía nueva (`docs/CALENDARIO_ALTAS.md`), dice si Google marca los dos permisos como «no sensibles» y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Después, verificar en Search Console y pedir la verificación de Google. |
 | Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
@@ -173,7 +173,8 @@ primera versión de pago, en web y Android.
 
 1. Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
    contraseña) fuera del ordenador: un USB y su Drive, por ejemplo.
-2. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
+2. Dar de alta PACE en Google Cloud y Microsoft Entra con `docs/CALENDARIO_ALTAS.md`, decir si Google
+   marca los dos permisos como «no sensibles», pasar los ids y pedir la verificación de Google.
 3. Que Google termine de revisar su identidad en Play Console; luego reunir unos 15 testers con
    Android (Google pide 12 durante 14 días).
 4. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
@@ -182,6 +183,7 @@ primera versión de pago, en web y Android.
 
 - Tarjeta por libre en el móvil (elegida la R3-tono): https://claude.ai/artifact/2jmBfnmmpq1K66372JwQTa
 - PACE al calendario: https://claude.ai/artifact/MAK3Wc3LuK5RqnxLo2Crri
+- Calendario al día (elegida la B): `docs/proposals/calendario-sincronizacion.html`
 - Icono de avisos (elegida la C): https://claude.ai/artifact/AeRGsq65WfvGm8DXe8aEZu
 - Imágenes guardadas en el repo: `archivos/tarjeta-hoy/` y `archivos/home-movil/`.
 

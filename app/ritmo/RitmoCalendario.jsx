@@ -7,6 +7,10 @@
    Google y Outlook (si PACE está dado de alta en ellos) y el archivo. Lo que hace
    cada botón vive en ritmo.calendario.destinos.js.
 
+   UN DESTINO CONECTADO SE PONE AL DÍA SOLO: su fila dice «Al día» y ofrece
+   «Desconectar»; si su acceso caducó (el pase de Google dura una hora),
+   «Renovar», que vuelve a llevar el día.
+
    EL ENLACE NO SABE DE LA HOJA: avisa con un evento de ventana y la hoja la
    monta RitmoCalendarioRaiz, una sola vez, en RitmoHome. Así el enlace puede ir
    en las dos copias del panel (escritorio y móvil) sin duplicar la hoja, y la
@@ -42,6 +46,7 @@ var CAL_ERRORES = ['permiso', 'bloqueada', 'cerrada', 'denegado', 'pase', 'red',
 
 function ritmoCalendarioHecho(destino, r, t, tn) {
   let texto = destino === 'archivo' ? t('cal.hecho.archivo') : r.n === 1 ? t('cal.hecho.uno') : tn('cal.hecho', { n: r.n });
+  if (destino !== 'archivo') texto += ' ' + t('cal.hecho.solo');
   if (r.reuniones != null) {
     texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna')
       : r.reuniones === 1 ? t('cal.hecho.reuniones.una') : tn('cal.hecho.reuniones', { r: r.reuniones }));
@@ -92,24 +97,56 @@ function RitmoCalendarioHoja({ plan, onClose }) {
       });
   };
 
+  const alDia = (destino) => calendarioConectado(destino) && !!c.auto && c.destino === destino;
+  const accesible = (destino) => destino === 'android' || calendarioWebVivo(destino);
+
+  const desconectar = (destino) => {
+    calendarioDesconectar(destino);
+    setAviso({ tipo: 'ok', texto: t('cal.hecho.desconectado') });
+  };
+
+  /* Las reuniones se pueden encender y apagar con el día ya al día: apagarlas
+     olvida las de hoy y el día vuelve a su regla (y se lleva solo). */
+  const cambiarReuniones = (si) => {
+    setReuniones(si);
+    if (!destinos.some(alDia)) return;
+    ritmoGuardar((r) => Object.assign({ calendario: Object.assign({}, r.calendario || {}, { reuniones: si }) }, si ? {} : { ocupado: null }));
+    if (si) calendarioRefrescarReuniones(true);
+  };
+
+  const elegirCalendario = (id) => {
+    setCalId(id);
+    if (alDia('android')) ritmoGuardar((r) => ({ calendario: Object.assign({}, r.calendario || {}, { calendarioId: id, firma: null }) }));
+  };
+
   const boton = (destino) => {
     if (destino === 'archivo') return t(android ? 'cal.btn.compartir' : 'cal.btn.descargar');
+    if (alDia(destino)) return t(accesible(destino) ? 'cal.btn.desconectar' : 'cal.btn.renovar');
     if (destino === 'android') return t('cal.btn.anadir');
     return t(calendarioPaseGuardado(destino) ? 'cal.btn.anadir' : 'cal.btn.conectar');
   };
+  const elegir = () => (
+    <React.Fragment>
+      {t('cal.dest.android.en')}{' '}
+      <select className="pace-rt-sel" id="pace-cal-calendario" data-pace-cal-calendario value={calId || calendarios[0].id}
+        onChange={(e) => elegirCalendario(e.target.value)}>
+        {calendarios.map((k) => <option key={k.id} value={k.id}>{k.cuenta && k.cuenta !== k.titulo ? k.titulo + ' · ' + k.cuenta : k.titulo}</option>)}
+      </select>
+    </React.Fragment>
+  );
   const sub = (destino) => {
     if (destino === 'archivo') return t(android ? 'cal.dest.archivo.sub.android' : 'cal.dest.archivo.sub');
-    if (destino === 'android' && calendarios && calendarios.length > 1) {
+    const varios = destino === 'android' && calendarios && calendarios.length > 1;
+    if (alDia(destino)) {
+      if (!accesible(destino)) return <span data-pace-cal-estado="caducada">{t('cal.caducada')}</span>;
       return (
         <React.Fragment>
-          {t('cal.dest.android.en')}{' '}
-          <select className="pace-rt-sel" id="pace-cal-calendario" data-pace-cal-calendario value={calId || calendarios[0].id}
-            onChange={(e) => setCalId(e.target.value)}>
-            {calendarios.map((k) => <option key={k.id} value={k.id}>{k.cuenta && k.cuenta !== k.titulo ? k.titulo + ' · ' + k.cuenta : k.titulo}</option>)}
-          </select>
+          <span className="pace-rt-cal-ok" data-pace-cal-estado="al-dia">{t('cal.aldia')}</span><br />
+          {destino === 'android' ? (varios ? elegir() : null) : t('cal.dest.pace')}
         </React.Fragment>
       );
     }
+    if (varios) return elegir();
     return t('cal.dest.' + destino + '.sub');
   };
 
@@ -119,8 +156,9 @@ function RitmoCalendarioHoja({ plan, onClose }) {
         <div className="pace-rt-cal-n">{t('cal.dest.' + destino)}</div>
         <div className="pace-rt-cal-s">{sub(destino)}</div>
       </div>
-      <button type="button" className={'pace-rt-cal-btn' + (destino !== 'archivo' ? ' pace-rt-lleno' : '')}
-        disabled={!!trabajo || !evs.length} onClick={() => llevar(destino)}>
+      <button type="button" className={'pace-rt-cal-btn' + (alDia(destino) && accesible(destino) ? ' pace-rt-suave' : destino !== 'archivo' ? ' pace-rt-lleno' : '')}
+        disabled={!!trabajo || (!evs.length && !(alDia(destino) && accesible(destino)))}
+        onClick={() => (alDia(destino) && accesible(destino) ? desconectar(destino) : llevar(destino))}>
         {trabajo === destino ? t('cal.trabajando') : boton(destino)}
       </button>
     </div>
@@ -134,7 +172,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
         {conectados.map(fila)}
         {conectados.length ? (
           <label className="pace-rt-cal-chk">
-            <input type="checkbox" id="pace-cal-reuniones" data-pace-cal-reuniones checked={reuniones} onChange={(e) => setReuniones(e.target.checked)} />
+            <input type="checkbox" id="pace-cal-reuniones" data-pace-cal-reuniones checked={reuniones} onChange={(e) => cambiarReuniones(e.target.checked)} />
             <span>{t('cal.reuniones')}<small>{t('cal.reuniones.sub')}</small></span>
           </label>
         ) : null}
