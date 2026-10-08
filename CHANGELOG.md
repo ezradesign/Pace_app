@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.150.0 | 2026-10-08 | En Mueve y Estira, la explicación de cada paso va en la letra itálica de la app y ninguna pasa de dos líneas: las ocho más largas se han acortado, en castellano y en inglés, y el dibujo de Flexiones de escritorio y de Fondos en silla ya no sale más pequeño que el de Estira |
 | v0.149.0 | 2026-10-08 | Primer paso del motor de la semana, sin nada que se vea: cuando un día de «A tu ritmo» ya ha pasado, PACE guarda en tu dispositivo qué pausas sirvió y qué pasó con cada una (hecha, saltada, cuántas veces pediste «Otra» y qué descartaste, y si había una reunión cerca), para que el motor tenga semanas de las que aprender cuando llegue |
 | v0.148.5 | 2026-10-08 | El logro «Fuerte en la oficina» luce por fin su dibujo, la piedra de amolar, que estaba puesta por error en «Rondas maestra»; «Rondas maestra» vuelve a su símbolo hasta que tenga el suyo |
 | v0.148.4 | 2026-10-08 | Respira: «Bhastrika · Fuelle» pide el aviso de seguridad antes de empezar, como Kapalabhati, porque es respiración rápida, y deja de proponerse en «Para ahora» y en la pausa; y «Terminar» a mitad de una técnica de rondas dice las rondas y respiraciones hechas, no las del plan |
