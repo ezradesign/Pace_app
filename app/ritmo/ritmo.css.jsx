@@ -114,6 +114,23 @@
   field-sizing: content; }
 .pace-rt-sel:hover { border-bottom-color: var(--ink-3); }
 .pace-rt-sel:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+/* LA LISTA ABIERTA. Donde el navegador deja dibujarla (appearance: base-select, Chrome y
+   Android), la pinta PACE: papel, línea, la serif itálica y la hora elegida con el lavado
+   de Foco en vez del azul del sistema (opción C, elegida por Ez). Donde no, sale la del
+   sistema, y las horas llevan papel y tinta: heredaban el crema de la frase y el
+   navegador les ponía fondo blanco, y en oscuro no se leían. */
+.pace-rt-sel option { background-color: var(--paper); color: var(--ink); }
+@supports (appearance: base-select) {
+  .pace-rt-sel, .pace-rt-sel::picker(select) { appearance: base-select; }
+  .pace-rt-sel::picker-icon { display: none; }
+  .pace-rt-sel::picker(select) { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line);
+    border-radius: var(--r-md); box-shadow: var(--sh-card); padding: 4px; max-height: 280px; font-size: 15px; }
+  .pace-rt-sel option { background: transparent; font-family: var(--font-display); font-style: italic;
+    padding: 6px 16px; border-radius: var(--r-sm); cursor: pointer; }
+  .pace-rt-sel option::checkmark { display: none; }
+  .pace-rt-sel option:hover, .pace-rt-sel option:focus-visible { background: var(--paper-3); outline: none; }
+  .pace-rt-sel option:checked { background: var(--focus-soft); color: var(--ink); }
+}
 .pace-rt-frase { margin-top: 3px; }
 
 /* GLIFOS: los de Actividades, en el color de su módulo. SUSTITUYEN al punto. */

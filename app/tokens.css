@@ -303,6 +303,9 @@
      parecer terminada. */
   --sun-pausa: 0.45;
 }
+/* Las casillas las pinta el navegador, y sin esto salen como un cuadrado blanco
+   sobre el papel oscuro: se le dice que aquí son oscuras. */
+[data-palette="oscuro"] input[type="checkbox"] { color-scheme: dark; }
 
 
 /* ============================================
