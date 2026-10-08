@@ -175,7 +175,13 @@ Desde v0.136.0 la misma web se empaqueta como app de Android con Capacitor 8.
 - Para ver si compila ANTES de tocar `main`, se sube la rama y se lanza el workflow sobre ella:
   `gh workflow run android.yml --ref RAMA`. Su APK sale igual, como artefacto de esa ejecucion.
 - Los APK de prueba se firman con `android/app/pace-debug.keystore`, una clave fija y no secreta: un
-  APK nuevo se instala encima del anterior y conserva los datos. La version (`versionName` y
+  APK nuevo se instala encima del anterior y conserva los datos. Son otra app,
+  `com.ezradesign.pace.prueba` («PACE prueba», nombre en `android/app/src/debug/res/`), para convivir
+  en el mismo móvil con la de Google Play.
+- El AAB para Play lo firma el mismo workflow con la llave de subida de los secretos: artefacto
+  `pace-play-vX.Y.Z` con `PACE-X.Y.Z.aab`, y en `main` también el borrador de release `vX.Y.Z`
+  (pestaña Releases), que no caduca. Las subidas a Play se apuntan en
+  `docs/launch/google-play/SUBIDAS.md`; la guía para Ez es `docs/launch/google-play/guia.html`. La version (`versionName` y
   `versionCode`) sale de `PACE_VERSION`, asi que `npm run bump` tambien la cambia en Android.
 - Lo que el WebView no trae (boton atras, avisos, pantalla encendida, compartir archivos) lo dan
   complementos de Capacitor fijados en `package.json`; tras añadir uno, `npm run android:sync` lo
