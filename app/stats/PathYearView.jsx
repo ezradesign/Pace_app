@@ -88,7 +88,7 @@ function PathYearView({ history, lang }) {
     const txt = `${fmtDate(cell.d)} · ${cell.count} ${unitWord(cell.count)}`;
     if (mobile) { setTooltip({ text:txt, key:cell.dateStr, mobile:true }); }
     else {
-      const r = e.currentTarget.getBoundingClientRect();
+      const r = paceCaja(e.currentTarget);
       setTooltip({ text:txt, x:r.left+r.width/2, y:r.top, key:cell.dateStr });
     }
   }

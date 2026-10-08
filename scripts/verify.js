@@ -44,6 +44,8 @@ var integridad = require('./verify.integridad.js');
    misma razon que vigila — escrita aqui dentro, dejo este archivo en 544 lineas
    y se puso roja sobre si misma en su primera pasada. */
 var tamano = require('./verify.tamano.js');
+/* Que las medidas de la ventana pasen por el lienzo que crece (app/main/_lienzo.js). */
+var lienzo = require('./verify.lienzo.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -401,7 +403,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -415,6 +417,7 @@ function main() {
   tandaArtefacto(html, declarados);
   integridad.tandaIntegridad({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   tamano.tandaTamano({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
+  lienzo.tandaLienzo({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

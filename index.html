@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.144.0</title>
+  <title>PACE · Foco · Cuerpo — v0.145.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1015,7 +1015,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   padding: 0 4px;
 }
 .sendero-bar.lg .sendero-svg {
-  height: clamp(140px, 22vh, 220px);
+  height: clamp(140px, calc(22 * var(--pace-vh, 1vh)), 220px);
 }
 /* Labels en .lg: alinear max-width con el wrap (720) para que el
    calculo left: (xs[i] / 640) * 100% caiga sobre los hitos del SVG.
@@ -1449,6 +1449,136 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
   <!-- EL CORTE ENTRE LAS DOS PIELES (s197). VA EL PRIMERO: lo interpolan las hojas
        inyectadas (pieles, ritmo, library, la hoja del sidebar, Stats) y lo consultan
        tres `matchMedia`. Si se carga despues, esas hojas salen con `undefined`. -->
+  <!-- EL LIENZO QUE CRECE. VA ANTES QUE TODO: pone el zoom de la raíz y publica la
+       escala, y quien mida la ventana tiene que encontrarla ya puesta. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PACE_LIENZO_ANCHO = 1536;
+var PACE_LIENZO_ALTO = 704;
+
+(function () {
+  var raiz = document.documentElement;
+  var escala = 1;
+
+  function calcular() {
+    var w = window.innerWidth || 0;
+    var h = window.innerHeight || 0;
+    if (!w || !h) return 1;
+    var s = Math.min(w / PACE_LIENZO_ANCHO, h / PACE_LIENZO_ALTO);
+    return s > 1 ? Math.floor(s * 1000) / 1000 : 1;
+  }
+
+  var ultima = '';
+  function aplicar() {
+    var s = calcular();
+
+
+    var clave = s + '|' + window.innerHeight;
+    if (clave === ultima) return;
+    ultima = clave;
+    if (s === 1) {
+      raiz.style.removeProperty('zoom');
+      raiz.style.removeProperty('--pace-vh');
+      raiz.style.removeProperty('--pace-dvh');
+      raiz.removeAttribute('data-pace-lienzo');
+    } else {
+      var vh = (window.innerHeight / s / 100).toFixed(4) + 'px';
+      raiz.style.setProperty('zoom', String(s));
+      raiz.style.setProperty('--pace-vh', vh);
+      raiz.style.setProperty('--pace-dvh', vh);
+      raiz.setAttribute('data-pace-lienzo', String(s));
+    }
+    var cambia = s !== escala;
+    escala = s;
+    window.paceLienzo.escala = s;
+    if (cambia) {
+      try {window.dispatchEvent(new CustomEvent('pace:lienzo', { detail: { escala: s } }));} catch (e) {}
+    }
+  }
+
+  window.paceLienzo = { escala: 1 };
+  window.paceLienzoAlto = function () {return (window.innerHeight || 0) / escala;};
+  window.paceLienzoAncho = function () {return (window.innerWidth || 0) / escala;};
+
+
+  window.paceCaja = function (el) {
+    var r = el.getBoundingClientRect();
+    if (escala === 1) return r;
+    return {
+      top: r.top / escala, bottom: r.bottom / escala, left: r.left / escala, right: r.right / escala,
+      width: r.width / escala, height: r.height / escala, x: r.x / escala, y: r.y / escala
+    };
+  };
+
+
+
+
+
+  if (!document.getElementById('pace-lienzo-css')) {
+    var hoja = document.createElement('style');
+    hoja.id = 'pace-lienzo-css';
+    hoja.textContent = [
+    'html[data-pace-lienzo] [data-pace-app-root] {',
+    '  height: calc(100 * var(--pace-vh));',
+    '  max-height: calc(100 * var(--pace-vh));',
+    '}',
+    'html[data-pace-lienzo] [data-pace-home-body] {',
+    '  --pace-home-timer-size: min(86vw, 520px, max(300px, calc(58 * var(--pace-vh))));',
+    '}'].
+    join(String.fromCharCode(10));
+    document.head.appendChild(hoja);
+  }
+
+  aplicar();
+  window.addEventListener('resize', aplicar);
+
+
+
+
+  if (typeof window.ResizeObserver === 'function') {
+    try {new window.ResizeObserver(aplicar).observe(raiz);} catch (e) {}
+  }
+})();
+
+Object.assign(window, { PACE_LIENZO_ANCHO, PACE_LIENZO_ALTO });
+;Object.assign(window, { PACE_LIENZO_ANCHO, PACE_LIENZO_ALTO });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -5648,7 +5778,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.144.0';
+const PACE_VERSION = 'v0.145.0';
 
 
 
@@ -12430,7 +12560,7 @@ function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, t
         boxShadow: 'var(--sh-modal)',
         padding: 'var(--s-6)',
         maxWidth, width: '100%',
-        maxHeight: '85vh',
+        maxHeight: 'calc(85 * var(--pace-vh, 1vh))',
         overflowY: 'auto',
         position: 'relative',
         border: '1px solid var(--line)',
@@ -15487,7 +15617,7 @@ const DIAL_VUELTA = 360;
 
 
 function medirBarridoVisible(marco) {
-  const D = marco.getBoundingClientRect().height;
+  const D = paceCaja(marco).height;
   if (!(D > 0)) return null;
   const H = parseFloat(getComputedStyle(marco).getPropertyValue('--pace-corte'));
   if (!isFinite(H)) return null;
@@ -15750,8 +15880,8 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
 const timerDialStyles = {
   frame: {
     position: 'relative',
-    height: 'min(56vh, 86vw, 520px)',
-    width: 'min(56vh, 86vw, 520px)',
+    height: 'min(calc(56 * var(--pace-vh, 1vh)), 86vw, 520px)',
+    width: 'min(calc(56 * var(--pace-vh, 1vh)), 86vw, 520px)',
     aspectRatio: '1 / 1',
     flexShrink: 0,
     display: 'grid',
@@ -17887,8 +18017,8 @@ const sidebarStyles = {
   root: {
     position: 'relative',
     width: 280,
-    height: '100vh',
-    maxHeight: '100vh',
+    height: 'calc(100 * var(--pace-vh, 1vh))',
+    maxHeight: 'calc(100 * var(--pace-vh, 1vh))',
     background: 'var(--paper-2)',
     borderRight: '1px solid var(--line)',
     padding: '18px 18px',
@@ -24098,7 +24228,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
     ),
     React.createElement("h1", { style: {
         ...displayItalic,
-        fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500,
+        fontSize: 'clamp(30px, calc(6.5 * var(--pace-vh, 1vh)), 52px)', fontWeight: 500,
         lineHeight: 1.05, margin: '0 0 14px'
       } }, tStep(stepIdx, 'name')),
     React.createElement("p", { style: {
@@ -24266,10 +24396,10 @@ if (!_paceMoveV1Css) {
        piel): con el nombre a 5vh y el número a 9,5vh, a 1530x702 el texto se comía el hueco y
        el círculo quedaba por debajo del del móvil. */
     .pace-v1-raiz {
-      --v1-u: clamp(8px, 1.3vh, 18px);
-      --v1-nombre: clamp(28px, 4.2vh, 44px);
+      --v1-u: clamp(8px, calc(1.3 * var(--pace-vh, 1vh)), 18px);
+      --v1-nombre: clamp(28px, calc(4.2 * var(--pace-vh, 1vh)), 44px);
       --v1-cue: 16px;
-      --v1-num: clamp(52px, 8.2vh, 84px);
+      --v1-num: clamp(52px, calc(8.2 * var(--pace-vh, 1vh)), 84px);
       --v1-fuerte: 20px;
       flex: 1 1 auto; min-height: 0; width: 100%;
       display: flex; flex-direction: column; align-items: center;
@@ -24574,7 +24704,7 @@ function v1GlyphSize(vpH, escritorio) {
 
 
 function v1GlyphSizeAhora() {
-  return v1GlyphSize(typeof window !== 'undefined' && window.innerHeight || 800);
+  return v1GlyphSize(typeof window !== 'undefined' && paceLienzoAlto() || 800);
 }
 
 
@@ -24980,7 +25110,7 @@ function useV1Glifo(cuerpoRef, firma) {
     if (!cuerpo) return undefined;
     const medir = () => {
       const escritorio = v1EsEscritorio();
-      const alto = window.innerHeight || 800;
+      const alto = paceLienzoAlto() || 800;
       const suelo = escritorio ? 110 : 96;
       const techo = Math.min(escritorio ? 250 : 210, Math.round(alto * 0.3));
       const hijos = Array.from(cuerpo.children);
@@ -28414,7 +28544,7 @@ function YearView(_ref) {let { history, lang, firstSeen, onNavigateToMonth } = _
 
   function handleEnter(e, cell) {
     if (cell.score <= 0) return;
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = paceCaja(e.currentTarget);
     const text = `${formatDateLiteral(cell.d, lang)} · ${t('stats.year.tooltip.score').replace('{n}', Math.round(cell.score * 10) / 10)}`;
     setTooltip({ text, x: rect.left + rect.width / 2, y: rect.top, key: cell.dateStr });
   }
@@ -28716,7 +28846,7 @@ function PathYearView(_ref) {let { history, lang } = _ref;
     const txt = `${fmtDate(cell.d)} · ${cell.count} ${unitWord(cell.count)}`;
     if (mobile) {setTooltip({ text: txt, key: cell.dateStr, mobile: true });} else
     {
-      const r = e.currentTarget.getBoundingClientRect();
+      const r = paceCaja(e.currentTarget);
       setTooltip({ text: txt, x: r.left + r.width / 2, y: r.top, key: cell.dateStr });
     }
   }
@@ -29315,7 +29445,7 @@ function MonthHeatmap(_ref3) {let { history, lang, initialYear, initialMonth } =
     if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
     if (moveMinutes > 0) parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
     if (waterGlasses > 0) parts.push(`${waterGlasses} ${t('stats.month.tooltip.water')}`);
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = paceCaja(e.currentTarget);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, x: rect.left + rect.width / 2, y: rect.top });
   }
   function handleCellLeave() {setTooltip(null);}
@@ -30550,7 +30680,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
         position: 'fixed',
         right: 24, bottom: 24,
         width: 320,
-        maxHeight: 'calc(100vh - 48px)',
+        maxHeight: 'calc(100 * var(--pace-vh, 1vh) - 48px)',
         overflowY: 'auto',
         background: 'var(--paper)',
         border: '1px solid var(--line-2)',
@@ -31112,7 +31242,7 @@ function PathsLibrary() {
         background: 'var(--paper-2)',
         borderRadius: 'var(--r-lg)',
         width: '100%', maxWidth: 480,
-        maxHeight: '85vh',
+        maxHeight: 'calc(85 * var(--pace-vh, 1vh))',
         display: 'flex', flexDirection: 'column',
         boxShadow: 'var(--sh-modal)',
         overflow: 'hidden'
@@ -32045,7 +32175,7 @@ const pathTransitionStyles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '10vh 32px 6vh',
+    padding: 'calc(10 * var(--pace-vh, 1vh)) 32px calc(6 * var(--pace-vh, 1vh))',
     background: 'var(--paper)',
     cursor: 'pointer',
     userSelect: 'none',
@@ -34569,31 +34699,31 @@ function ritmoColocarEtiquetas(lin, zona) {
 
 
 
-  const marco = lin.getBoundingClientRect();
+  const marco = paceCaja(lin);
   l.forEach((e) => {
-    const b = e.getBoundingClientRect();
+    const b = paceCaja(e);
     const dx = b.left < marco.left - 16 ? marco.left - 16 - b.left : b.right > marco.right + 16 ? marco.right + 16 - b.right : 0;
     if (dx) {e.style.marginLeft = Math.round(dx) + 'px';e.style.setProperty('--rt-hilo', Math.round(-dx) + 'px');}
   });
-  const r = l.map((e) => e.getBoundingClientRect());
+  const r = l.map((e) => paceCaja(e));
   const niveles = [[], [], []];
   l.forEach((e, i) => {
     const cabe = (n) => niveles[n].every((j) => r[j].right + 6 <= r[i].left || r[i].right + 6 <= r[j].left);
     niveles[cabe(0) ? 0 : cabe(1) ? 1 : 2].push(i);
   });
-  const arriba = lin.getBoundingClientRect().top;
+  const arriba = paceCaja(lin).top;
   let y = 30;
   niveles.forEach((idx, n) => {
     if (!idx.length) return;
     idx.forEach((i) => {
-      const padre = l[i].offsetParent ? l[i].offsetParent.getBoundingClientRect().top - arriba : 0;
+      const padre = l[i].offsetParent ? paceCaja(l[i].offsetParent).top - arriba : 0;
       l[i].style.top = y - padre + 'px';
       if (n) {l[i].classList.add('pace-rt-alta');l[i].style.setProperty('--rt-sube', y - 26 + 'px');}
     });
     y += Math.max.apply(null, idx.map((i) => l[i].offsetHeight)) + 6;
   });
-  const fondo = Math.max.apply(null, l.map((e) => e.getBoundingClientRect().bottom));
-  zona.style.height = Math.ceil(fondo - zona.getBoundingClientRect().top + 2) + 'px';
+  const fondo = Math.max.apply(null, l.map((e) => paceCaja(e).bottom));
+  zona.style.height = Math.ceil(fondo - paceCaja(zona).top + 2) + 'px';
 }
 
 
@@ -38138,7 +38268,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var nodes = dial.querySelectorAll('span, div');
     for (var i = 0; i < nodes.length; i++) {
       if (CICLO_RE.test(nodes[i].textContent || '')) {
-        var b = nodes[i].getBoundingClientRect().bottom;
+        var b = paceCaja(nodes[i]).bottom;
         if (best == null || b > best) best = b;
       }
     }
@@ -38155,14 +38285,14 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var numero = dial.querySelector('[data-pace-dial-number]');
     var bloque = numero && numero.parentElement;
     if (!bloque) return 0;
-    var f = dial.getBoundingClientRect();
+    var f = paceCaja(dial);
     var cx = f.left + f.width / 2;
     var cy = f.top + f.height / 2;
     var peor = 0;
     var nodos = bloque.querySelectorAll('*');
     for (var i = 0; i < nodos.length; i++) {
       if (nodos[i].children.length) continue;
-      var r = nodos[i].getBoundingClientRect();
+      var r = paceCaja(nodos[i]);
       if (!r.width || !r.height) continue;
       if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
       var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
@@ -38177,7 +38307,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
   function applyD(D, dial) {
     setVar('--pace-timer-d', D + 'px');
-    var dialBottom = dial.getBoundingClientRect().bottom;
+    var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
 
 
@@ -38217,7 +38347,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var chip = document.querySelector('[data-pace-activitybar-chip], [data-pace-ritmo-panel]');
     var barra = document.querySelector('[data-pace-activitybar]');
     var banda = chip && barra ?
-    Math.max(0, Math.round(chip.getBoundingClientRect().top - barra.getBoundingClientRect().top)) :
+    Math.max(0, Math.round(paceCaja(chip).top - paceCaja(barra).top)) :
     0;
 
 
@@ -38254,7 +38384,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
 
-    var vh = window.innerHeight || body.clientHeight;
+    var vh = paceLienzoAlto() || body.clientHeight;
     var sq = (SQUEEZE_START - vh) / (SQUEEZE_START - SQUEEZE_FULL);
     sq = Math.max(0, Math.min(1, sq));
     setVar('--pace-home-squeeze', String(Math.round(sq * 1000) / 1000));
@@ -38307,8 +38437,8 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var wrapFit = dial.closest('[data-pace-timer-wrap]');
     var luzOver = function () {
       if (!wrapFit) return 0;
-      var b = body.getBoundingClientRect();
-      return Math.round(wrapFit.getBoundingClientRect().top + body.scrollTop + wrapFit.scrollHeight - (b.top + body.clientHeight));
+      var b = paceCaja(body);
+      return Math.round(paceCaja(wrapFit).top + body.scrollTop + wrapFit.scrollHeight - (b.top + body.clientHeight));
     };
     var medirOver = function () {
       var stackOver = stackFit ?

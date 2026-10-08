@@ -281,7 +281,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         </div>
         <h1 style={{
           ...displayItalic,
-          fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500,
+          fontSize: 'clamp(30px, calc(6.5 * var(--pace-vh, 1vh)), 52px)', fontWeight: 500,
           lineHeight: 1.05, margin: '0 0 14px',
         }}>{tStep(stepIdx, 'name')}</h1>
         <p style={{

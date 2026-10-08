@@ -132,7 +132,7 @@ const DIAL_VUELTA = 360;
    respuestas distintas, y devolver la segunda CONGELA el circulo completo — el
    observer que deberia corregirlo no vuelve a disparar porque D no cambia. */
 function medirBarridoVisible(marco) {
-  const D = marco.getBoundingClientRect().height;
+  const D = paceCaja(marco).height;
   if (!(D > 0)) return null;
   const H = parseFloat(getComputedStyle(marco).getPropertyValue('--pace-corte'));
   if (!isFinite(H)) return null;           /* el token aun no existe */
@@ -395,8 +395,8 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
 const timerDialStyles = {
   frame: {
     position: 'relative',
-    height: 'min(56vh, 86vw, 520px)',
-    width: 'min(56vh, 86vw, 520px)',
+    height: 'min(calc(56 * var(--pace-vh, 1vh)), 86vw, 520px)',
+    width: 'min(calc(56 * var(--pace-vh, 1vh)), 86vw, 520px)',
     aspectRatio: '1 / 1',
     flexShrink: 0,
     display: 'grid',

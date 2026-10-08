@@ -73,31 +73,31 @@ function ritmoColocarEtiquetas(lin, zona) {
      empuja con margin-left; el hilo (--rt-hilo) se desplaza lo contrario para
      seguir apuntando a su parada. Antes de repartir niveles, para que el
      reparto vea las cajas ya empujadas. */
-  const marco = lin.getBoundingClientRect();
+  const marco = paceCaja(lin);
   l.forEach((e) => {
-    const b = e.getBoundingClientRect();
+    const b = paceCaja(e);
     const dx = b.left < marco.left - 16 ? marco.left - 16 - b.left : b.right > marco.right + 16 ? marco.right + 16 - b.right : 0;
     if (dx) { e.style.marginLeft = Math.round(dx) + 'px'; e.style.setProperty('--rt-hilo', Math.round(-dx) + 'px'); }
   });
-  const r = l.map((e) => e.getBoundingClientRect());
+  const r = l.map((e) => paceCaja(e));
   const niveles = [[], [], []];
   l.forEach((e, i) => {
     const cabe = (n) => niveles[n].every((j) => r[j].right + 6 <= r[i].left || r[i].right + 6 <= r[j].left);
     niveles[cabe(0) ? 0 : cabe(1) ? 1 : 2].push(i);
   });
-  const arriba = lin.getBoundingClientRect().top;
+  const arriba = paceCaja(lin).top;
   let y = 30;
   niveles.forEach((idx, n) => {
     if (!idx.length) return;
     idx.forEach((i) => {
-      const padre = l[i].offsetParent ? l[i].offsetParent.getBoundingClientRect().top - arriba : 0;
+      const padre = l[i].offsetParent ? paceCaja(l[i].offsetParent).top - arriba : 0;
       l[i].style.top = (y - padre) + 'px';
       if (n) { l[i].classList.add('pace-rt-alta'); l[i].style.setProperty('--rt-sube', (y - 26) + 'px'); }
     });
     y += Math.max.apply(null, idx.map((i) => l[i].offsetHeight)) + 6;
   });
-  const fondo = Math.max.apply(null, l.map((e) => e.getBoundingClientRect().bottom));
-  zona.style.height = Math.ceil(fondo - zona.getBoundingClientRect().top + 2) + 'px';
+  const fondo = Math.max.apply(null, l.map((e) => paceCaja(e).bottom));
+  zona.style.height = Math.ceil(fondo - paceCaja(zona).top + 2) + 'px';
 }
 
 /* El índice de AHORA: la pausa abierta si la hay, si no el bloque que toca. */

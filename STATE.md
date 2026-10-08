@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.144.0 · 7 de octubre de 2026.
+**Versión:** v0.145.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -36,6 +36,11 @@ de tiempo alrededor del dibujo y avisos de cuenco y madera. Cada texto tiene su 
 dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
 ni se pisa. Las rutinas propias también van por ahí.
 
+Con el zoom del navegador alejado o en un monitor grande, la app crece en proporción y se ve como en
+el portátil de Ez al 100 % (v0.145.0, el «lienzo que crece» de `app/main/_lienzo.js`). Toda medida
+nueva de la ventana pasa por él: `paceCaja`, `paceLienzoAlto` y `var(--pace-vh, 1vh)` (lo vigila
+`verify`).
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
@@ -56,15 +61,11 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
-3. **La escala con el zoom del navegador:** Ez eligió la opción 2, «Lienzo que crece» (maqueta en
-   `docs/traspaso/archivos/runner-guiado/`). Antes de montarla, un prototipo medido: un `zoom` CSS
-   sin más rompe la home (la página se hace tres veces más alta), porque el motor de la home y las
-   sesiones miden con la altura del viewport.
-4. **Los bugs sin verificar** de `docs/traspaso/CAZA_BUGS_7OCT.md` (37: modo oscuro, inglés,
-   Respira e Hidrátate): reproducir cada uno antes de arreglarlo. Foco y el estado guardado no se
-   llegaron a revisar.
+3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
+   Hidrátate) se están reproduciendo, y Foco y el estado guardado se revisan por primera vez. Se
+   arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez.
 
-5. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
+4. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
    (detalle en `docs/traspaso/LEEME.md`). Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. Hay
    trabajo a medias en la rama `claude/project-thread-ft7sc2`.
 

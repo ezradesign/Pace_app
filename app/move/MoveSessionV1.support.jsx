@@ -175,7 +175,7 @@ function v1GlyphSize(vpH, escritorio) {
    uno se desviara, el círculo de la sesión no relevaría al de la preparación
    sino que saltaría. Una fuente, y se acabó la coincidencia por costumbre. */
 function v1GlyphSizeAhora() {
-  return v1GlyphSize((typeof window !== 'undefined' && window.innerHeight) || 800);
+  return v1GlyphSize((typeof window !== 'undefined' && paceLienzoAlto()) || 800);
 }
 
 /* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de

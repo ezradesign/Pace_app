@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de octubre de 2026, v0.144.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.145.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -15,7 +15,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de o
 4. Las maquetas publicadas como artifacts (enlaces abajo) pertenecen a la cuenta anterior y puede que
    no se abran desde otra. Lo decidido en ellas está escrito aquí, así que no hace falta abrirlas.
 
-## Dónde lo dejamos (7 oct, por la tarde)
+## Dónde lo dejamos (8 oct)
 
 Esto es lo último y manda sobre la tabla de «Líneas abiertas» donde no coincidan. Ez alterna dos
 cuentas de Claude según el uso que le queda a cada una, y las dos suben a `main`: haz `git pull`
@@ -29,13 +29,19 @@ antes de trabajar y mira en `git log` qué subió la otra.
   queja a 1530×702, que es su 1080p al 125 %). Las rutinas propias van por el mismo runner. Reglas en
   `DECISIONES_TECNICAS_VIGENTES.md` (las cuatro filas de v0.144.0). Falta que Ez oiga los cuencos en
   su portátil y en el móvil.
-- **Escala con el zoom: siguiente.** Ez eligió la opción 2, «Lienzo que crece» (maqueta en
-  `archivos/runner-guiado/maqueta.html`, que trae también las opciones del runner). Hay que
-  prototiparla y medirla antes de montarla: un `zoom` CSS sin más hace la home tres veces más alta,
-  porque el motor de la home y las sesiones miden con la altura del viewport.
-- **Bugs sin verificar:** una búsqueda por el modo oscuro, el inglés y Respira con Hidrátate dejó 37
-  hallazgos con sus pasos en `CAZA_BUGS_7OCT.md` (4 de gravedad alta). Los verificadores no llegaron
-  a correr: reproduce cada uno antes de arreglarlo. Foco y el estado guardado no se revisaron.
+- **Escala con el zoom: hecha en v0.145.0.** Ez vio el prototipo medido y dijo «súbelo así»,
+  también en monitores grandes: si la ventana pasa de 1536 × 704, PACE crece en proporción y se ve
+  como en su portátil al 100 % (`app/main/_lienzo.js`). La regla que no se puede romper está en
+  `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
+  ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
+  en Safari de Mac.
+- **Bugs: reproduciéndose.** Los 37 hallazgos de `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e
+  Hidrátate) se están reproduciendo uno a uno, y Foco y el estado guardado se están revisando por
+  primera vez. Los que se confirmen se arreglan con su prueba; los de texto o criterio, Ez elige.
+  Mira `git log` y este archivo antes de tocar ninguno.
+- **Ramas abiertas de otros hilos:** `claude/project-thread-ft7sc2` (la pregunta del día en el móvil)
+  se llama v0.144.0, número que ya está en `main`: al subirla toma el siguiente libre.
+  `claude/project-thread-jid37a` («¿Cómo es tu semana?» en la bienvenida) está a medias.
 - **Glifos revisados:** de los 62 dibujos de ejercicio, seis no casan con su ejercicio (por ejemplo,
   «Barbilla atrás» con la flecha al revés y «Elevación de puntas» que dibuja talones). Están en
   `archivos/glifos/revision-glifos.html`, con un prompt para cada uno. El descanso entre series ya
@@ -128,7 +134,8 @@ primera versión de pago, en web y Android.
 - Glifos nuevos: misma familia y estilo que los 59 dibujos existentes. Ez rechazó figuras vestidas.
 - Runner de Mueve y Estira: opción A, «Mando de tres» (7 oct.). Nada espera a un toque y la rutina se
   sigue por el oído. La eligió frente a las manos libres (B) y a dejarlo como estaba, ordenado (C).
-- Escala con el zoom del navegador: opción 2, «Lienzo que crece» (7 oct.), con prototipo antes.
+- Escala con el zoom del navegador: opción 2, «Lienzo que crece» (7 oct.), hecha en v0.145.0 y también
+  en monitores grandes al 100 % (Ez, 8 oct., viendo el prototipo).
 - El Foco personalizado no baja de 5 minutos. Del rótulo del aro solo queda la hora («Hasta las…»).
 - Logros: ningún título se repite («La rueda del año», «Bisagra suelta»).
 
@@ -146,7 +153,7 @@ primera versión de pago, en web y Android.
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
-| Escala con el zoom | Ez eligió «Lienzo que crece» (opción 2). Un `zoom` CSS sin más rompe la home: la página se hace tres veces más alta. | Prototipo medido a 1530×702 (su 1080p al 125 %) y a 1920×1080 al 100 %, y enseñárselo antes de subirlo. Maqueta en `archivos/runner-guiado/maqueta.html`. |
+| Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez
 

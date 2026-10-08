@@ -73,7 +73,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           boxShadow: 'var(--sh-modal)',
           padding: 'var(--s-6)',
           maxWidth, width: '100%',
-          maxHeight: '85vh',
+          maxHeight: 'calc(85 * var(--pace-vh, 1vh))',
           overflowY: 'auto',
           position: 'relative',
           border: '1px solid var(--line)',

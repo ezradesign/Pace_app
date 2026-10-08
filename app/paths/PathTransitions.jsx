@@ -288,7 +288,7 @@ const pathTransitionStyles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '10vh 32px 6vh',
+    padding: 'calc(10 * var(--pace-vh, 1vh)) 32px calc(6 * var(--pace-vh, 1vh))',
     background: 'var(--paper)',
     cursor: 'pointer',
     userSelect: 'none',

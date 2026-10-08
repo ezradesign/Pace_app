@@ -35,8 +35,8 @@ const sidebarStyles = {
   root: {
     position: 'relative',  // contexto para toggleFloating (v0.11.7)
     width: 280,
-    height: '100vh',
-    maxHeight: '100vh',
+    height: 'calc(100 * var(--pace-vh, 1vh))',
+    maxHeight: 'calc(100 * var(--pace-vh, 1vh))',
     background: 'var(--paper-2)',
     borderRight: '1px solid var(--line)',
     padding: '18px 18px',
