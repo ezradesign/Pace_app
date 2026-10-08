@@ -190,6 +190,32 @@ function useBarridoVisible(marcoRef, activo) {
   return barrido;
 }
 
+/* El punto guia del aro de la home, en su capa propia. El fundido de entrada
+   (motion.css: `pace-punto-nace` en la capa y `pace-punto-halo` en el halo) se
+   decide UNA vez, al montar: solo si el bloque esta empezando (progreso 0). Al
+   recargar o al volver a la home a mitad de bloque el punto ya existia, asi que
+   aparece en su sitio sin ceremonia; pausar y reanudar no lo desmontan. */
+function TimerDialPunto({ giro, angulo, color, nace }) {
+  const naceRef = useRefTD(nace);
+  const R = DIAL_R;
+  return (
+    <div data-pace-dial-punto data-pace-dial-punto-nace={naceRef.current ? '' : undefined}
+         style={timerDialStyles.ringLayer}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+        <g transform={`rotate(${giro.toFixed(3)} 50 50)`}>
+          <g transform={`rotate(${angulo.toFixed(3)} 50 50)`}
+             style={{ transition: 'transform 1s linear' }}>
+            <circle data-pace-dial-halo cx={50 + R} cy="50" r="1.7" fill={color} opacity="0.22" />
+            <circle cx={50 + R} cy="50" r="0.85" fill={color}
+              style={{ transition: 'fill 1s linear' }} />
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused }) {
   const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
@@ -323,53 +349,27 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
             strokeLinecap="round"
             strokeDasharray={trazo} strokeDashoffset={(barrido * (1 - progress)).toFixed(3)}
             style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
-          {/* Punto guia en la punta del progreso (halo + nucleo).
-              s138 — el gate era `progress > 0.001` y hacia que el punto
-              montara MAS TARDE que el primer avance del arco. Medido con
-              MutationObserver sobre el SVG: el umbral se traduce en segundos
-              distintos segun la duracion (0.001 x 1500 s = 1,5 s -> el punto
-              espera al segundo 2; 0.001 x 2700 s = 2,7 s -> al segundo 3),
-              mientras el arco avanza SIEMPRE en el segundo 1. Desfase real
-              1003 ms a 25 min y 1999 ms a 45 min (0 s a 15, 2 s a 35).
-              `progress` es `1 - remaining/totalSec` (FocusTimer.jsx:93):
-              aritmetica exacta que vale 0 clavado en reposo, asi que el
-              umbral no protegia de ruido de coma flotante. Comparar contra 0
-              monta el punto en el MISMO tick en que el arco arranca, con
-              cualquier duracion (incluida la de "Otro"). */}
-          {/* s139 — ENMIENDA al gate de s138. Comparar contra 0 alineó el punto
-              con el arco, pero `progress` vale 0 exacto durante todo el primer
-              segundo, así que el punto seguía sin EXISTIR ahí: montaba en el
-              primer tick ya rotado. Medido con MutationObserver a 25 min:
-              aparece a t=1039 ms directamente en **0,24°** = 360/1500 clavado,
-              o sea nunca pasa por las 12 (reportado por el usuario como «no
-              empieza exactamente en 0, sino un poco más adelantado»); no es que
-              se adelante al avanzar, es que nace desplazado y sin transición
-              desde el origen.
-              Con `running` el punto existe desde el instante del arranque, donde
-              `progress` es 0 y el ángulo por tanto 0: sale de las 12 y avanza
-              con su transición. Lo que s138 protegía —que no haya punto en
-              reposo— lo sigue cubriendo `progress > 0`: en idle a cero no corre
-              nada. Pausado a mitad y completado conservan el punto por esa misma
-              rama. */}
-          {/* s184 — el punto guia recorre el MISMO barrido que el arco, no los
-              360: va dentro del grupo girado, asi que su rotacion 0 ya es el
-              extremo izquierdo y su maximo es la punta del arco. Lo que s138 y
-              s139 dejaron atado —que monte en el mismo tick que el arco y que
-              nazca en el origen, no desplazado— se conserva intacto: el gate
-              es el mismo y con progress 0 el angulo sigue siendo 0. */}
-          {(running || progress > 0) && (
-            <g transform={`rotate(${(progress * barrido).toFixed(3)} 50 50)`}
-               style={{ transition: 'transform 1s linear' }}>
-              <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />
-              <circle cx={50 + R} cy="50" r="0.85" fill={ringColor}
-                style={{ transition: 'fill 1s linear' }} />
-            </g>
-          )}
           </g>
         </svg>
         </React.Fragment>
       )}
       </div>
+
+      {/* EL PUNTO GUIA VA EN SU PROPIA CAPA, FUERA DE LA NIEBLA DEL HORIZONTE.
+          Al empezar, el punto nace en el cabo izquierdo, justo en la linea donde
+          la mascara de [data-pace-dial-ring] llega a cero: dentro de esa capa
+          salia cortado por la mitad y desvaido, como si naciera por debajo del
+          fondo (Ez, 8 oct. 2026: «queda raro; quizas debieran estar en primer
+          plano y aparecer con un fundido»). El arco sigue en la niebla, que es
+          su remate; el punto es la senal de AHORA y va entero. Mismo viewBox,
+          misma rotacion y mismo giro que el arco, asi que cae en su punta.
+          Llega con un fundido SOLO al empezar el bloque (ver `TimerDialPunto`).
+          Lo que s138 y s139 dejaron atado se conserva: existe desde el arranque
+          (`running`) y nace en el origen; `progress > 0` cubre pausado y hecho.
+          El recorrido es el MISMO barrido que el arco (s184), no los 360. */}
+      {!ticks && (running || progress > 0) && (
+        <TimerDialPunto giro={giroInicio} angulo={progress * barrido} color={ringColor} nace={progress === 0} />
+      )}
 
       <div style={timerDialStyles.inner}>
         {/* data-pace-dial-* (s126): hooks PRESENTACIONALES para el escalado
@@ -421,7 +421,6 @@ const timerDialStyles = {
     inset: 0,
     pointerEvents: 'none',
   },
-
   inner: {
     /* EL BLOQUE INTERIOR SUBE (s185, peticion del usuario). Va como transform y
        no como margen para no cambiar el ALTO del bloque: el marco lo centra con
