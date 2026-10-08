@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.148.3.
 
 ## Al cerrar la nube (8 oct. 2026, tarde): lo que queda abierto
 
@@ -11,10 +11,10 @@ crédito de la nube quedó así. Cada rama lleva en el mensaje de su último com
 `TRASPASO:` (o `CHANGELOG:`/`STATE:`/`DECISIONES:`) con lo que falta.
 
 - **`main-sig4tn`**: v0.148.0 a v0.148.3 (Fase 3 gratis: la semana tipo y el día ya contestado; el
-  aro vacío al colocarse; seis fallos de la caza; la bola del aro). `verify` en verde en cada versión;
-  la suite completa estaba corriendo al cerrar. Si `main` aún no lo tiene: en `main`,
-  `git merge origin/main-sig4tn`, `npm run verify`, `node build-standalone.js`, `npm run test:e2e`,
-  push y CI.
+  aro vacío al colocarse; seis fallos de la caza; la bola del aro). **En `main` desde la noche del
+  8 oct.**, con la suite entera en verde (468) en el PC de Ez. Esa primera suite probó otra carpeta
+  sin decirlo (un servidor colgado de otra sesión en el 8765); desde entonces la suite se para si
+  el servidor no es el de su carpeta.
 - **Ramas aparcadas, a la espera de Ez** (mira su último commit):
   - `claude/respira-bugs-graves-31faf7`: Bhastrika con su aviso y «Terminar» que cuenta lo hecho.
     Tres preguntas en `archivos/respira-7oct/LEEME.md`; el texto del aviso por técnica lo resuelve
