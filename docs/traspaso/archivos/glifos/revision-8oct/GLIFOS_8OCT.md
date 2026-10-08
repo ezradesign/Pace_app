@@ -210,6 +210,22 @@ Vintage engraving illustration of a small owl perched on a short bare branch at 
 
 Dudosos, sin prisa: «Primer aliento» parece una semilla con raíz, o un renacuajo. Se puede dejar. «Caderas libres» es una enredadera en una vara: no dice cadera, pero tampoco confunde.
 
+## Logros con el dibujo cambiado de sitio (reasignar, sin dibujar)
+
+Comparado con `docs/product/GLIFOS_LOGROS_ENCARGO.md`. No aplicado: cambia lo que se ve y espera al sí de Ez. Recomendación: piedra de amolar a explore.all.extra y dibujar la vela de master.long.focus.
+
+- **Rondas maestra (master.rounds.15):** Lleva la piedra de amolar con mango, que se encargó para «Fuerte en la oficina» (explore.all.extra, hoy dos espadas ⚔). Moverla allí da dibujo a un logro que no lo tiene; «Rondas maestra» pasa a necesitar los anillos de árbol (su prompt está arriba).
+- **ATG asentado (explore.atg):** Lleva la huella de pie descalzo, que se encargó para «Ancestral» (explore.ancestral). Para ATG se encargó una rodilla doblada de perfil: si la huella se mueve, ATG asentado se queda sin dibujo hasta que se haga.
+- **Ancestral (explore.ancestral):** Lleva la lasca de sílex, que se encargó para «Primitiva» (master.ancestral.10). «Primitiva» lleva hoy unas sandalias de cuerda, que no estaban en el encargo pero también casan: si la lasca se mueve, las sandalias se quedan sin logro.
+- **Larga sesión (master.long.focus):** Lleva una aceitera con pitorro; se encargó una vela a medio consumir. No es un cambio de sitio: la vela que hay es la de «Modo oscuro», apagada y humeando, y allí casa bien. Hace falta dibujar la vela.
+- **Semana fuerte (master.extra.all.week):** Encontrado al comprobarlo: «Semana fuerte» lleva un banco de madera y se encargó una gavilla de siete tallos atada. Se entiende como «fuerte», pero no dice «semana».
+
+`master.long.focus.png`
+
+```
+Vintage engraving illustration of a single tall candle burned down to half its height, standing in a simple flat holder, with a tall, perfectly still flame and a little melted wax at the rim. Copperplate engraving, hand-engraved seal style, black ink crosshatching on pure white background, single centered object, generous margin, bold readable silhouette at small size, no text, no numbers, no frame, no color.
+```
+
 ## Logros sin dibujo propio (19), por lo pronto que se ganan
 
 Hoy llevan un dibujo viejo en código o un carácter. Los secretos enseñan «?» también después de conseguirlos. Los prompts (y sus planes B) están en `../prompts-glifos.md`; aquí el de primera opción.
