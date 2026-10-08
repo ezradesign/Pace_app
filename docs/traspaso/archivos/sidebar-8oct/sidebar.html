@@ -81,6 +81,12 @@ code { font-size: .88em; background: var(--papel-2); padding: 1px 5px; border-ra
 .barra img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--linea); background: var(--papel-2); }
 .barra figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .barra figcaption b { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 20px; }
+.barra .desc { font-size: 13.5px; line-height: 1.45; color: var(--tinta-2); }
+.barra .sello { align-self: flex-start; }
+.elegido { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.elegido li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; color: var(--tinta-2); }
+.elegido li::before { content: ''; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%; background: var(--oliva); }
+.elegido.falta li::before { background: none; border: 1.5px solid var(--bronce); }
 .tam { font-size: 12px; color: var(--tinta-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tam.bien { color: var(--oliva); }
 
@@ -136,25 +142,34 @@ td.ok { color: var(--oliva); }
 <main class="hoja">
 
   <header class="seccion" style="gap:18px">
-    <span class="rotulo">PACE · v0.148.5 · 8 de octubre de 2026</span>
+    <span class="rotulo">PACE · v0.148.5 · 8 de octubre de 2026 · segunda vuelta</span>
     <h1>La barra lateral</h1>
-    <p class="entrada">Pediste que fuera más útil, más elegante y más bonita. Aquí está cómo se ve hoy en tres pantallas, qué le sobra y qué le falta, y tres maneras de rehacerla, pintadas encima de la app de verdad.</p>
+    <p class="entrada">Pediste que fuera más útil, más elegante y más bonita. Aquí está cómo se ve hoy en tres pantallas, qué le sobra y qué le falta, y tres maneras de rehacerla, pintadas encima de la app de verdad. Con lo que contestaste después hay una segunda vuelta: el Cuaderno con la siguiente pausa y cuatro maneras de dibujar la semana.</p>
   </header>
 
   <section class="corto" aria-label="En corto">
     <div>
-      <h3>Recomiendo la B, «Puertas»</h3>
-      <p style="color:var(--tinta-2)">Cabe sin encogerse, deja de repetir lo que ya dice la home y hace dos cosas que hoy no se pueden hacer desde allí: abrir Estira y apuntar un vaso con un botón que se ve. Conserva los colores de cada módulo y la semana gana sus minutos.</p>
+      <h3>Recomiendo el Cuaderno con la siguiente pausa y la semana «Brotes»</h3>
+      <p style="color:var(--tinta-2)">Lleva lo que ya elegiste, dice la siguiente pausa en una frase sin copiar la tarjeta de la home, abre Estira y apunta el vaso con un botón que se ve. «Brotes» es la barra más limpia que conserva el color de cada módulo, y cabe sin encogerse a 1280 × 800.</p>
+      <p style="margin-top:10px"><a href="#cuaderno-pausa">Ver la segunda vuelta</a></p>
     </div>
-    <div>
-      <span class="rotulo">Lo que tienes que elegir</span>
-      <ul style="margin-top:8px">
-        <li>Qué opción: A, B o C (o B con algo de C).</li>
-        <li>Dónde va la siguiente pausa de «A tu ritmo».</li>
-        <li>Si la semana lleva barras o se queda con puntos.</li>
-        <li>Si «Mis rutinas» y «Da de pastar a la vaca» pasan a texto.</li>
-        <li>Qué número de vasos manda. <a href="#preguntas">Las seis preguntas</a></li>
-      </ul>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <span class="rotulo">Ya elegido</span>
+        <ul class="elegido" style="margin-top:8px">
+          <li>La semana va con barras de minutos, más elegantes que las de la primera vuelta.</li>
+          <li>«Mis rutinas» y «Da de pastar a la vaca», en dos filas de texto.</li>
+          <li>Vuelve la racha bajo la semana.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="rotulo">Falta elegir</span>
+        <ul class="elegido falta" style="margin-top:8px">
+          <li>El Cuaderno con la pausa o la B, «Puertas».</li>
+          <li>Qué semana: Cápsulas, Tinta, Brotes o Hierba.</li>
+          <li>Si te gustan las frases del Cuaderno y qué número de vasos manda. <a href="#preguntas">Las preguntas</a></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -247,8 +262,8 @@ td.ok { color: var(--oliva); }
           <div><dt>Lo que no arregla</dt><dd>Estira sigue sin puerta, el vaso sigue escondido y la tarjeta sigue repitiendo la home.</dd></div>
         </dl>
       </article>
-      <article class="op recomendada">
-        <div class="op-cab"><h3>Puertas</h3><span class="sello">Recomendada</span><span class="op-letra">B</span></div>
+      <article class="op">
+        <div class="op-cab"><h3>Puertas</h3><span class="sello">Primera vuelta</span><span class="op-letra">B</span></div>
         <p>La barra hace lo que la home no hace: abrir las bibliotecas y apuntar el agua.</p>
         <dl>
           <div><dt>Qué cambia</dt><dd>Hoy es una lista: cada nombre es una puerta (Respira, Mueve, Estira) y el agua lleva «+ vaso». La semana pinta sus minutos y recupera la racha. El pie pasa a texto.</dd></div>
@@ -284,16 +299,43 @@ td.ok { color: var(--oliva); }
     <p class="nota">El porcentaje es el tamaño al que se ve la barra en esa pantalla: por debajo de 100 % se encoge entera para no pedir scroll.</p>
   </section>
 
+  <!-- 3b · SEGUNDA VUELTA -->
+  <section class="seccion" id="cuaderno-pausa">
+    <header>
+      <span class="rotulo">Segunda vuelta</span>
+      <h2>El Cuaderno con la siguiente pausa</h2>
+    </header>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>Preguntaste por el Cuaderno con la siguiente pausa y por unas barras más bonitas. Después contestaste que la semana va con barras de minutos, que el pie pasa a texto y que vuelve la racha. Las cuatro barras de abajo llevan ya todo eso, y solo cambia el dibujo de la semana.</p>
+      <p>La pausa se dice como el resto del cuaderno: «A las 12:25, <i>Caderas de pie</i>» y, debajo, «Cuatro minutos de Estira». Con la pausa ya abierta diría «Ahora, …». En el día vacío no sale, porque la home está preguntando cómo es tu día y todavía no hay pausa. Bajo los días, un hilo oliva une los que forman la racha.</p>
+    </div>
+    <div class="mandos" data-mandos="semanas">
+      <div class="grupo"><span>Pantalla</span><div class="pildoras" data-k="pantalla">
+        <button data-v="1280x800" aria-pressed="true">1280 × 800</button><button data-v="1536x704" aria-pressed="false">1536 × 704</button><button data-v="1920x960" aria-pressed="false">1920 × 960</button></div></div>
+      <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
+        <button data-v="crema" aria-pressed="true">Crema</button><button data-v="oscuro" aria-pressed="false">Oscura</button></div></div>
+      <div class="grupo"><span>Día</span><div class="pildoras" data-k="dia">
+        <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
+    </div>
+    <div class="cuatro">
+      <figure class="barra" style="margin:0"><figcaption><b>Cápsulas</b><span class="tam" data-tam="Cp-capsulas"></span></figcaption><img data-barra="Cp-capsulas" alt="El Cuaderno con la semana en cápsulas" src="fotos/despues-barra-Cp-capsulas-1280x800-crema-activo.png"><p class="desc">Cada día, una cápsula con su hueco a la vista. El hueco entero es tu mejor día de la semana.</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Tinta</b><span class="tam" data-tam="Cp-tinta"></span></figcaption><img data-barra="Cp-tinta" alt="El Cuaderno con la semana en tinta" src="fotos/despues-barra-Cp-tinta-1280x800-crema-activo.png"><p class="desc">Una barra oliva por día, sobre una línea de suelo. Hoy va en tinta entera y con sus minutos encima.</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Brotes</b><span class="tam" data-tam="Cp-brotes"></span></figcaption><img data-barra="Cp-brotes" alt="El Cuaderno con la semana en brotes" src="fotos/despues-barra-Cp-brotes-1280x800-crema-activo.png"><span class="sello">Recomendada</span><p class="desc">La barra de Tinta con un punto encima por cada módulo más: terracota si respiraste y tabaco si te moviste.</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Hierba</b><span class="tam" data-tam="Cp-hierba"></span></figcaption><img data-barra="Cp-hierba" alt="El Cuaderno con la semana como hierba" src="fotos/despues-barra-Cp-hierba-1280x800-crema-activo.png"><p class="desc">No es una barra: una mata por día, con una brizna por cada bloque de foco y otra por módulo. Es la vaca que pace del logo.</p></figure>
+    </div>
+    <p class="nota">Las cuatro miden con la misma escala: la barra más alta es el día de la semana con más minutos de foco, respira y cuerpo juntos. El agua no tiene barra, porque tampoco enciende el día.</p>
+  </section>
+
   <!-- 4 · CON LA HOME -->
   <section class="seccion" id="con-la-home">
     <header>
       <span class="rotulo">Junto a la home</span>
       <h2>La pantalla entera</h2>
     </header>
-    <p class="texto">Para ver si la barra repite algo de la home, hay que mirarlas juntas. La línea del día ya dice la siguiente pausa, su hora y su módulo.</p>
+    <p class="texto">Para ver si la barra repite algo de la home, hay que mirarlas juntas. La línea del día ya dice la siguiente pausa, su hora y su módulo; el Cuaderno con pausa la dice en una frase, con la semana «Brotes».</p>
     <div class="mandos" data-mandos="entera">
       <div class="grupo"><span>Barra</span><div class="pildoras" data-k="vista">
-        <button data-v="hoy" aria-pressed="false">Hoy</button><button data-v="A" aria-pressed="false">A</button><button data-v="B" aria-pressed="true">B</button><button data-v="C" aria-pressed="false">C</button></div></div>
+        <button data-v="hoy" aria-pressed="false">Hoy</button><button data-v="A" aria-pressed="false">A</button><button data-v="B" aria-pressed="false">B</button><button data-v="C" aria-pressed="false">C</button><button data-v="Cp-brotes" aria-pressed="true">Cuaderno con pausa</button></div></div>
       <div class="grupo"><span>Pantalla</span><div class="pildoras" data-k="pantalla">
         <button data-v="1280x800" aria-pressed="true">1280 × 800</button><button data-v="1536x704" aria-pressed="false">1536 × 704</button></div></div>
       <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
@@ -302,7 +344,7 @@ td.ok { color: var(--oliva); }
         <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
     </div>
     <figure class="pantalla" style="margin:0">
-      <img data-foto="entera" src="fotos/despues-B-1280x800-crema-activo.jpg" alt="La app a 1280 por 800 con la opción B en la barra lateral" width="2560" height="1600">
+      <img data-foto="entera" src="fotos/despues-Cp-brotes-1280x800-crema-activo.jpg" alt="La app a 1280 por 800 con el Cuaderno con la siguiente pausa en la barra lateral" width="2560" height="1600">
     </figure>
   </section>
 
@@ -310,13 +352,19 @@ td.ok { color: var(--oliva); }
   <section class="seccion" id="medidas">
     <header>
       <span class="rotulo">Medido en la app</span>
-      <h2>Las tres caben sin encogerse</h2>
+      <h2>Todas caben sin pedir scroll</h2>
     </header>
-    <p class="texto">Tamaño al que se ve la barra y aire que queda encima del pie, en píxeles. En ninguna de las doce combinaciones, ni hoy ni con las opciones, la página o la barra piden scroll. La paleta oscura mide lo mismo que la crema.</p>
+    <p class="texto">Tamaño al que se ve la barra y aire que queda encima del pie, en píxeles. En ninguna combinación, ni hoy ni con las opciones, la página o la barra piden scroll. La paleta oscura mide lo mismo que la crema. <span data-resumen-cp></span></p>
     <div class="tabla">
       <table>
         <thead><tr><th>Pantalla · día</th><th>Hoy</th><th>A</th><th>B</th><th>C</th></tr></thead>
-        <tbody data-tabla></tbody>
+        <tbody data-tabla="A,B,C"></tbody>
+      </table>
+    </div>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Cuaderno con pausa</th><th>Hoy</th><th>Cápsulas</th><th>Tinta</th><th>Brotes</th><th>Hierba</th></tr></thead>
+        <tbody data-tabla="Cp-capsulas,Cp-tinta,Cp-brotes,Cp-hierba"></tbody>
       </table>
     </div>
   </section>
@@ -325,12 +373,12 @@ td.ok { color: var(--oliva); }
   <section class="seccion" id="recomendacion">
     <header>
       <span class="rotulo">Recomendación</span>
-      <h2>La B, con la semana en barras</h2>
+      <h2>El Cuaderno con la pausa y la semana «Brotes»</h2>
     </header>
     <div class="texto" style="display:flex;flex-direction:column;gap:14px;color:var(--tinta-2)">
-      <p>La B es la única que responde a las tres cosas que pediste a la vez. Es <b>más útil</b> porque abre Respira, Mueve y Estira desde donde estás y apunta el vaso con un botón que se ve, que son las dos cosas que la home no hace en un día de trabajo. Es <b>más elegante</b> porque quita las ocho cajas y deja papel, filas y una sola línea para la siguiente pausa. Y es <b>más bonita</b> porque ya no se encoge: a 1536 × 704 se ve al 94 % en vez de al 78 %, y la semana gana color con los minutos de cada módulo.</p>
-      <p>La A es la apuesta segura si quieres que todo siga igual por dentro, pero deja los tres huecos de uso tal cual. La C es la más tranquila y la que más se parece a un cuaderno, pero se lee más despacio y obliga a escribir frases nuevas en dos idiomas. Si te gusta su voz, se puede poner su frase del día vacío en la B.</p>
-      <p>Para «A tu ritmo», la B conserva la siguiente pausa a la vista, pero en una línea: la hora y el nombre, sin repetir el módulo, los minutos ni lo que llevas.</p>
+      <p>En la primera vuelta recomendé la B porque era la única que, a la vez, abría Estira, apuntaba el vaso con un botón visible y dejaba de repetir la home. El Cuaderno con la pausa hace ahora esas tres cosas y añade lo que preguntaste: dice lo que llevas con palabras, y la siguiente pausa en una frase con la hora y la rutina, sin la caja ni los números que ya están en la línea del día. Un día vacío es una frase y no cuatro ceros.</p>
+      <p>Para la semana, «Brotes». Las barras de la primera vuelta partían cada barra en franjas de color, y con cinco minutos de Respira la franja era una raya que hacía parecer la barra una pila. Brotes deja la barra entera en oliva, pone hoy en tinta entera con sus minutos y saca el color a un punto por módulo. «Tinta» es la misma sin los puntos, si la quieres más sobria; «Cápsulas» enseña el hueco de cada día; «Hierba» es la más nuestra, pero no es una barra.</p>
+      <p>La B sigue valiendo si prefieres leer cifras en filas en vez de frases. El Cuaderno obliga a escribir sus frases también en inglés.</p>
     </div>
   </section>
 
@@ -341,13 +389,12 @@ td.ok { color: var(--oliva); }
       <h2>Lo que tienes que elegir</h2>
     </header>
     <ol class="preguntas">
-      <li><b>¿Qué opción subimos: A, B o C?</b><span>Se puede mezclar: por ejemplo, la B con la frase del día vacío de la C.</span></li>
-      <li><b>¿Dónde va la siguiente pausa de «A tu ritmo»?</b><span>En su tarjeta como hoy (A), en una línea (B) o fuera mientras la home la enseña (C). En el móvil propongo dejar la tarjeta como está, porque allí la línea del día es una tira de puntos.</span></li>
-      <li><b>¿La semana con barras de minutos o con puntos?</b><span>Las barras dicen cuánto hiciste cada día con el color de cada módulo. Los puntos solo dicen si hiciste algo.</span></li>
-      <li><b>¿«Mis rutinas» y «Da de pastar a la vaca» pasan a texto?</b><span>En septiembre pediste la píldora naranja para «Mis rutinas». Hoy es lo que más llama la atención de la barra y lleva a algo cerrado. La A las deja como están; la B y la C las pasan a dos filas de texto.</span></li>
+      <li><b>¿El Cuaderno con la pausa o la B?</b><span>Las dos llevan ya lo que elegiste: barras de minutos, el pie en texto y la racha. Se puede mezclar, por ejemplo la B con la pausa en una frase.</span></li>
+      <li><b>¿Qué semana: Cápsulas, Tinta, Brotes o Hierba?</b><span>Recomiendo Brotes. Si ninguna te convence, dime qué te sobra o qué te falta de la que más se acerque.</span></li>
+      <li><b>¿Te suenan bien las frases del Cuaderno?</b><span>«Dos horas y media de foco», «Cinco minutos respirando», «Siete minutos moviéndote», «Cuatro vasos de ocho» y, para la pausa, «A las 12:25, Caderas de pie» con «Cuatro minutos de Estira» debajo. Los números van con letra hasta doce, como en «A tu ritmo».</span></li>
       <li><b>¿Qué número de vasos manda?</b><span>La barra dice «4 de 8» (tu meta del día) y la home «6 vasos» (los que el día reparte entre tus horas). Propongo que la barra siga con tu meta y que la home cambie a «6 vasos en tus horas», pero es tu decisión.</span></li>
-      <li><b>¿Volvemos a enseñar la racha?</b><span>«4 días en ritmo · mejor 9» bajo la semana, con la frase que ya existe en la app. Se quitó cuando la semana perdió su rótulo.</span></li>
     </ol>
+    <p class="nota">En el móvil propongo dejar la tarjeta de la pausa como está, porque allí la línea del día es una tira de puntos; se mira cuando elijas.</p>
   </section>
 
   <!-- 8 · CÓMO SE HIZO -->
@@ -357,7 +404,7 @@ td.ok { color: var(--oliva); }
       <h2>Cómo se hizo y qué falta</h2>
     </header>
     <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2);font-size:15px">
-      <p>Las fotos las hace <code>fotos.js</code>, junto a esta página, sobre el <code>index.html</code> de v0.148.5: <code>node docs/traspaso/archivos/sidebar-8oct/fotos.js</code>. Levanta su propio servidor en el puerto 8781 y se para si ese puerto lo sirve otra carpeta. Siembra el estado como <code>tests/helpers.js</code> (con <code>lastActiveDay</code> y las guardas de migración) y crea las sesiones de hoy con la fábrica de eventos de la app. Las opciones viven en <code>opciones.js</code>: esconden lo que pinta React, conservan el logo y añaden su propio HTML, que lee los mismos selectores que la barra. Las medidas quedan en <code>medidas.json</code>.</p>
+      <p>Las fotos las hace <code>fotos.js</code>, junto a esta página, sobre el <code>index.html</code> de v0.148.5: <code>node docs/traspaso/archivos/sidebar-8oct/fotos.js</code>. Levanta su propio servidor en el puerto 8781 y se para si ese puerto lo sirve otra carpeta. Siembra el estado como <code>tests/helpers.js</code> (con <code>lastActiveDay</code> y las guardas de migración) y crea las sesiones de hoy con la fábrica de eventos de la app. Las opciones viven en <code>opciones.js</code>: esconden lo que pinta React, conservan el logo y añaden su propio HTML, que lee los mismos selectores que la barra. Las medidas quedan en <code>medidas.json</code>. La segunda vuelta vive en <code>semanas.js</code>: el Cuaderno con la pausa (la frase sale de <code>ritmoSiguiente</code>, como la tarjeta de hoy) y los cuatro dibujos de la semana. <code>OPS=Cp-brotes SOLO=1280x800</code> repite solo esa opción en esa pantalla y conserva las medidas de las demás.</p>
       <p><b>No cubre:</b> el cajón del móvil (la opción elegida se mide después a 360 × 640 y con el suelo de 0,80), el inglés, «Continúa» y «Repetir» en un día por libre, ni el foco del teclado de las filas nuevas.</p>
       <p><b>Al implementar:</b> la puerta de Estira necesita un destino nuevo en <code>app/main/main.eventos.jsx</code> (hoy <code>body</code> abre solo Mueve). Las barras de la semana leen <code>weeklyStats</code> con el índice lunes-primero y el mismo criterio de día activo que <code>selectSidebarWeek</code>; el agua no tiene barra. Hay que conservar los ganchos que usan las pruebas (<code>data-pace-hoy-celda</code>, <code>data-pace-semana</code>, <code>data-pace-sidebar-ultimo-titulo</code>, <code>data-pace-sidebar-accion</code>) y revisar <code>tests/sidebar-redesign.spec.js</code> y <code>tests/sidebar-altura.spec.js</code>. El motor de la escala se queda como red para pantallas más bajas.</p>
     </div>
@@ -367,13 +414,15 @@ td.ok { color: var(--oliva); }
 
 <script>
 /* Lo medido en la app (medidas.json): tamaño al que se ve la barra y aire sobre el pie. */
-const MEDIDAS = /*MEDIDAS*/{"antes":{"1280x800-crema-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-crema-activo":{"escala":0.896,"huecoAlPie":0},"1280x800-oscuro-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-oscuro-activo":{"escala":0.896,"huecoAlPie":0},"1536x704-crema-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-crema-activo":{"escala":0.783,"huecoAlPie":0},"1536x704-oscuro-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-oscuro-activo":{"escala":0.783,"huecoAlPie":0},"1920x960-crema-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-crema-activo":{"escala":0.861,"huecoAlPie":1},"1920x960-oscuro-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-oscuro-activo":{"escala":0.861,"huecoAlPie":1}},"despues":{"A-1280x800-crema-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-crema-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-crema-vacio":{"escala":1,"huecoAlPie":123},"A-1280x800-crema-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-crema-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-crema-activo":{"escala":1,"huecoAlPie":51},"A-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":123},"A-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":51},"A-1536x704-crema-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-crema-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-crema-vacio":{"escala":1,"huecoAlPie":27},"A-1536x704-crema-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-crema-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-crema-activo":{"escala":0.937,"huecoAlPie":0},"A-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":27},"A-1536x704-oscuro-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-oscuro-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-oscuro-activo":{"escala":0.937,"huecoAlPie":0},"A-1920x960-crema-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-crema-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-crema-vacio":{"escala":1,"huecoAlPie":115},"A-1920x960-crema-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-crema-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-crema-activo":{"escala":1,"huecoAlPie":26},"A-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":115},"A-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":26}}};
+const MEDIDAS = /*MEDIDAS*/{"antes":{"1280x800-crema-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-crema-activo":{"escala":0.896,"huecoAlPie":0},"1280x800-oscuro-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-oscuro-activo":{"escala":0.896,"huecoAlPie":0},"1536x704-crema-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-crema-activo":{"escala":0.783,"huecoAlPie":0},"1536x704-oscuro-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-oscuro-activo":{"escala":0.783,"huecoAlPie":0},"1920x960-crema-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-crema-activo":{"escala":0.861,"huecoAlPie":1},"1920x960-oscuro-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-oscuro-activo":{"escala":0.861,"huecoAlPie":1}},"despues":{"A-1280x800-crema-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-crema-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-crema-vacio":{"escala":1,"huecoAlPie":123},"Cp-capsulas-1280x800-crema-vacio":{"escala":1,"huecoAlPie":182},"Cp-tinta-1280x800-crema-vacio":{"escala":1,"huecoAlPie":175},"Cp-brotes-1280x800-crema-vacio":{"escala":1,"huecoAlPie":165},"Cp-hierba-1280x800-crema-vacio":{"escala":1,"huecoAlPie":179},"A-1280x800-crema-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-crema-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-crema-activo":{"escala":1,"huecoAlPie":51},"Cp-capsulas-1280x800-crema-activo":{"escala":1,"huecoAlPie":23},"Cp-tinta-1280x800-crema-activo":{"escala":1,"huecoAlPie":16},"Cp-brotes-1280x800-crema-activo":{"escala":1,"huecoAlPie":6},"Cp-hierba-1280x800-crema-activo":{"escala":1,"huecoAlPie":20},"A-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":123},"Cp-capsulas-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":182},"Cp-tinta-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":175},"Cp-brotes-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":165},"Cp-hierba-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":179},"A-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":51},"Cp-capsulas-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":23},"Cp-tinta-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":16},"Cp-brotes-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":6},"Cp-hierba-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":20},"A-1536x704-crema-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-crema-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-crema-vacio":{"escala":1,"huecoAlPie":27},"Cp-capsulas-1536x704-crema-vacio":{"escala":1,"huecoAlPie":86},"Cp-tinta-1536x704-crema-vacio":{"escala":1,"huecoAlPie":79},"Cp-brotes-1536x704-crema-vacio":{"escala":1,"huecoAlPie":69},"Cp-hierba-1536x704-crema-vacio":{"escala":1,"huecoAlPie":83},"A-1536x704-crema-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-crema-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-crema-activo":{"escala":0.937,"huecoAlPie":0},"Cp-capsulas-1536x704-crema-activo":{"escala":0.902,"huecoAlPie":0},"Cp-tinta-1536x704-crema-activo":{"escala":0.893,"huecoAlPie":0},"Cp-brotes-1536x704-crema-activo":{"escala":0.881,"huecoAlPie":0},"Cp-hierba-1536x704-crema-activo":{"escala":0.898,"huecoAlPie":0},"A-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":27},"Cp-capsulas-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":86},"Cp-tinta-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":79},"Cp-brotes-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":69},"Cp-hierba-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":83},"A-1536x704-oscuro-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-oscuro-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-oscuro-activo":{"escala":0.937,"huecoAlPie":0},"Cp-capsulas-1536x704-oscuro-activo":{"escala":0.902,"huecoAlPie":0},"Cp-tinta-1536x704-oscuro-activo":{"escala":0.893,"huecoAlPie":0},"Cp-brotes-1536x704-oscuro-activo":{"escala":0.881,"huecoAlPie":0},"Cp-hierba-1536x704-oscuro-activo":{"escala":0.898,"huecoAlPie":0},"A-1920x960-crema-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-crema-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-crema-vacio":{"escala":1,"huecoAlPie":115},"Cp-capsulas-1920x960-crema-vacio":{"escala":1,"huecoAlPie":188},"Cp-tinta-1920x960-crema-vacio":{"escala":1,"huecoAlPie":180},"Cp-brotes-1920x960-crema-vacio":{"escala":1,"huecoAlPie":167},"Cp-hierba-1920x960-crema-vacio":{"escala":1,"huecoAlPie":185},"A-1920x960-crema-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-crema-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-crema-activo":{"escala":1,"huecoAlPie":26},"Cp-capsulas-1920x960-crema-activo":{"escala":0.988,"huecoAlPie":1},"Cp-tinta-1920x960-crema-activo":{"escala":0.979,"huecoAlPie":1},"Cp-brotes-1920x960-crema-activo":{"escala":0.966,"huecoAlPie":1},"Cp-hierba-1920x960-crema-activo":{"escala":0.984,"huecoAlPie":1},"A-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":115},"Cp-capsulas-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":188},"Cp-tinta-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":180},"Cp-brotes-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":167},"Cp-hierba-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":185},"A-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":26},"Cp-capsulas-1920x960-oscuro-activo":{"escala":0.988,"huecoAlPie":1},"Cp-tinta-1920x960-oscuro-activo":{"escala":0.979,"huecoAlPie":1},"Cp-brotes-1920x960-oscuro-activo":{"escala":0.966,"huecoAlPie":1},"Cp-hierba-1920x960-oscuro-activo":{"escala":0.984,"huecoAlPie":1}}};
 
 const estado = {
   hoy: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   cuatro: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
-  entera: { vista: 'B', pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
+  semanas: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
+  entera: { vista: 'Cp-brotes', pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
 };
+const GRUPOS = { cuatro: ['hoy', 'A', 'B', 'C'], semanas: ['Cp-capsulas', 'Cp-tinta', 'Cp-brotes', 'Cp-hierba'] };
 const NOMBRE = { '1280x800': '1280 × 800', '1536x704': '1536 × 704', '1920x960': '1920 × 960' };
 const pct = (x) => Math.round(x * 100) + ' %';
 
@@ -386,14 +435,15 @@ function pintar() {
   document.querySelector('[data-pie="hoy"]').textContent = m
     ? 'A ' + NOMBRE[h.pantalla] + ' la barra se ve al ' + pct(m.escala) + ' de su tamaño para caber sin scroll.' : '';
 
-  const c = estado.cuatro, kc = clave(c);
-  document.querySelector('[data-barra="hoy"]').src = 'fotos/antes-barra-' + kc + '.png';
-  ['A', 'B', 'C'].forEach((o) => { document.querySelector('[data-barra="' + o + '"]').src = 'fotos/despues-barra-' + o + '-' + kc + '.png'; });
   const tam = (el, x) => { el.textContent = x == null ? '' : 'se ve al ' + pct(x); el.classList.toggle('bien', x >= 0.93); };
-  tam(document.querySelector('[data-tam="hoy"]'), MEDIDAS.antes && MEDIDAS.antes[kc] && MEDIDAS.antes[kc].escala);
-  ['A', 'B', 'C'].forEach((o) => {
-    const v = MEDIDAS.despues && MEDIDAS.despues[o + '-' + kc];
-    tam(document.querySelector('[data-tam="' + o + '"]'), v && v.escala);
+  Object.keys(GRUPOS).forEach((g) => {
+    const kc = clave(estado[g]);
+    GRUPOS[g].forEach((o) => {
+      const hoy = o === 'hoy';
+      document.querySelector('[data-barra="' + o + '"]').src = hoy ? 'fotos/antes-barra-' + kc + '.png' : 'fotos/despues-barra-' + o + '-' + kc + '.png';
+      const v = hoy ? (MEDIDAS.antes && MEDIDAS.antes[kc]) : (MEDIDAS.despues && MEDIDAS.despues[o + '-' + kc]);
+      tam(document.querySelector('[data-tam="' + o + '"]'), v && v.escala);
+    });
   });
 
   const e = estado.entera, ke = clave(e);
@@ -414,9 +464,9 @@ document.querySelectorAll('[data-mandos]').forEach((mandos) => {
   });
 });
 
-(function tabla() {
-  const cuerpo = document.querySelector('[data-tabla]');
+document.querySelectorAll('[data-tabla]').forEach(function tabla(cuerpo) {
   if (!MEDIDAS.antes) return;
+  const ops = cuerpo.getAttribute('data-tabla').split(',');
   const filas = [];
   ['1280x800', '1536x704', '1920x960'].forEach((p) => {
     ['activo', 'vacio'].forEach((d) => {
@@ -424,10 +474,19 @@ document.querySelectorAll('[data-mandos]').forEach((mandos) => {
       const celda = (v, hoy) => v ? '<td class="' + (hoy ? 'hoy' : (v.escala >= 0.93 ? 'ok' : '')) + '">' + pct(v.escala) +
         (hoy ? '' : ' · ' + Math.max(0, v.huecoAlPie || 0) + ' px') + '</td>' : '<td>—</td>';
       filas.push('<tr><td>' + NOMBRE[p] + ' · ' + (d === 'activo' ? 'con actividad' : 'vacío') + '</td>' + celda(MEDIDAS.antes[k], true) +
-        ['A', 'B', 'C'].map((o) => celda(MEDIDAS.despues[o + '-' + k], false)).join('') + '</tr>');
+        ops.map((o) => celda(MEDIDAS.despues[o + '-' + k], false)).join('') + '</tr>');
     });
   });
   cuerpo.innerHTML = filas.join('');
+});
+
+/* Lo que se dice de la segunda vuelta sale de las medidas, no se escribe a mano. */
+(function resumen() {
+  const el = document.querySelector('[data-resumen-cp]');
+  if (!el || !MEDIDAS.despues) return;
+  const v = MEDIDAS.despues['Cp-brotes-1280x800-crema-activo'];
+  const w = MEDIDAS.despues['Cp-brotes-1536x704-crema-activo'];
+  if (v && w) el.textContent = 'El Cuaderno con la pausa y la semana Brotes se ve al ' + pct(v.escala) + ' a 1280 × 800 y al ' + pct(w.escala) + ' a 1536 × 704, con el día lleno.';
 })();
 
 pintar();
