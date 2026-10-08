@@ -6,7 +6,6 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
-| v0.147.1 | 2026-10-08 | En Mueve y Estira el aro del dibujo se queda vacío mientras te colocas y al cambiar de lado, y empieza a dibujarse cuando empieza el ejercicio: antes se llenaba durante «Colócate» y se vaciaba de golpe al arrancar |
 | v0.147.0 | 2026-10-08 | La lista de horas de «A tu ritmo» se leía mal en modo oscuro (blanca con las horas en crema): ahora la dibuja PACE en las dos paletas, con su papel y su letra; y la casilla del aviso de apnea ya no es un cuadrado blanco en oscuro ni azul al marcarla. |
 | v0.146.1 | 2026-10-08 | Pasada la medianoche con la app abierta, el agua y «Hoy» empiezan el día a cero sin tocar nada (antes enseñaban los vasos de ayer hasta el primer gesto), sin que una pestaña vieja pise lo hecho en otra; y en inglés la frase de llegar tarde dice «today 10:00–17:00», que con otro navegador partía el horario en tres líneas y pedía scroll |
 | v0.146.0 | 2026-10-08 | La home del móvil ya no pide scroll en ningún momento desde 360×640, ni en inglés: la pregunta del día dibuja el horario como una línea, la tarjeta corta pierde «A TU RITMO», y el día servido pierde la frase del aro y su pie («Hoy voy por libre» sube junto a «Cambiar», «Ver todo» va en la línea y «Al calendario» dentro); en inglés la pregunta es «How many hours today?»; y las pausas de Respira dicen «Bajar revoluciones» en vez de enseñar una clave en bruto |
