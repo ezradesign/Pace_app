@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.1 · 8 de octubre de 2026.
+**Versión:** v0.147.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -48,6 +48,12 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
+Con «Suena detrás: Música», Respira suena sobre tres drones en Sol (v0.147.0, Ez lo escuchó y dijo
+que sí): oscuro en Relajación, cálido en Equilibrio y claro en Energía, Balance y Pranayama. En los
+ejercicios pausados la música se abre al inhalar y se cierra al exhalar; con ciclos de menos de 5 s
+se queda quieta, y Coherente 432 sigue con su drone. El reparto es `PACE_MUSICA`, en
+`app/ui/Sound.musica.jsx`.
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
@@ -73,8 +79,6 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
    de que Ez vea las fotos. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
    todo lo que se vea se le enseña antes en HTML.
-4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
-   octubre: falta traerla a `main` y que Ez la escuche en la app.
 
 ## Espera a Ez
 

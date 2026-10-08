@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.146.1</title>
+  <title>PACE · Foco · Cuerpo — v0.147.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5788,7 +5788,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.146.1';
+const PACE_VERSION = 'v0.147.0';
 
 
 
@@ -14892,7 +14892,9 @@ const ambientDrone = (() => {
   return { start: start, stop: stop, pause: pause, resume: resume, isActive: isActive };
 })();
 
-Object.assign(window, { playSound, useSound, ambientDrone });
+
+
+Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx });
 ;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, cuenco, madera, SOUND_RECIPES, playSound, useSound });
 })();
 </script>
@@ -15170,122 +15172,184 @@ Object.assign(window, {
 
 
 
+const PACE_MUSICA_BASES = {
+  claro: 'app/breathe/musica/sol-claro.mp3',
+  calido: 'app/breathe/musica/sol-calido.mp3',
+  menor: 'app/breathe/musica/sol-menor.mp3'
+};
 
 
 
 
 
 
+const PACE_MUSICA = {
+  ENE: 'claro', EQU: 'calido', BAL: 'claro', REL: 'menor', PRA: 'claro', KRI: 'claro'
+};
+
+const PACE_MUSICA_GANANCIA = 0.158;
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const PACE_MUSICA = (() => {
-  const pieza = { archivo: 'app/breathe/musica/energia.mp3', ganancia: 0.09, bucle: true };
-  const m = {};
-  ['ENE', 'EQU', 'BAL', 'REL', 'PRA', 'KRI'].forEach((tag) => {m[tag] = pieza;});
-  return m;
-})();
+const PACE_MUSICA_RESPIRA = { profundidadDb: 3, cerradoHz: 650, abiertoHz: 9000, cicloMinimo: 5 };
 
 const paceMusica = (() => {
   let audio = null;
+  let nodos = null;
+  let respira = false;
 
 
 
-
+  let pendiente = null;
 
 
 
   let ultimo = { motivo: 'sin intentar' };
+
+
+
+
+  let objetivo = null;
+  let restante = 0;
+
+
+  let pausaId = null;
+  const cfg = PACE_MUSICA_RESPIRA;
 
   function activa() {return !!audio;}
   function no(motivo, extra) {
     ultimo = Object.assign({ motivo }, extra || {});
     return undefined;
   }
+  function ctxAudio() {
+    try {return typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;} catch (e) {return null;}
+  }
+  const volDe = (v) => Math.pow(10, (v - 1) * cfg.profundidadDb / 20);
+  const brilloDe = (v) => cfg.cerradoHz * Math.pow(cfg.abiertoHz / cfg.cerradoHz, v);
 
-  function start(tag, forzarDrone) {
+
+
+
+  function rampa(p, destino, t, dur, exponencial) {
+    const desde = p.value;
+    const curva = new Float32Array(32);
+    for (let k = 0; k < 32; k++) {
+      const x = 0.5 - 0.5 * Math.cos(Math.PI * k / 31);
+      curva[k] = exponencial ? desde * Math.pow(destino / desde, x) : desde + (destino - desde) * x;
+    }
+    if (p.cancelAndHoldAtTime) p.cancelAndHoldAtTime(t);else p.cancelScheduledValues(t);
+    p.setValueCurveAtTime(curva, t + 0.005, dur);
+  }
+
+
+  function fase(tipo, dur) {
+    if (tipo !== 'in' && tipo !== 'out') return;
+    if (!(dur > 0)) return;
+    if (!audio) {pendiente = { tipo, dur, t: Date.now() };return;}
+    if (!nodos || !respira) return;
+    mover(tipo === 'in' ? 1 : 0, Math.max(0.2, dur * 0.97));
+  }
+  function mover(v, d) {
+    try {
+      const t = nodos.ctx.currentTime;
+      objetivo = { v, fin: t + d };
+      rampa(nodos.env.gain, volDe(v), t, d, false);
+      rampa(nodos.filtro.frequency, brilloDe(v), t, d, true);
+    } catch (e) {}
+  }
+
+  function start(tag, forzarDrone, cicloSeg) {
     if (audio) return no('ya sonaba');
-
-
     if (forzarDrone) return no('la rutina fuerza su drone (Coherente 432)');
     let s = null;
     try {s = typeof getState === 'function' ? getState() : null;} catch (e) {s = null;}
     if (!s) return no('no hay estado');
     if (!s.soundOn) return no('el sonido maestro esta apagado');
     if (!s.musicOn) return no('el fondo no esta en Musica');
-    const ficha = PACE_MUSICA[tag];
-    if (!ficha) return no('esta familia no tiene pieza', { tag: tag, hay: Object.keys(PACE_MUSICA) });
+    const archivo = PACE_MUSICA_BASES[PACE_MUSICA[tag]];
+    if (!archivo) return no('esta familia no tiene pieza', { tag: tag });
     try {
-      const a = new Audio(ficha.archivo);
+      const a = new Audio(archivo);
       a.preload = 'auto';
+      a.loop = true;
+      respira = typeof cicloSeg === 'number' && cicloSeg >= cfg.cicloMinimo;
+
+      const v0 = respira ? 0 : 1;
+      const ctx = ctxAudio();
+      nodos = null;
+      if (ctx) {
+        try {
+          const src = ctx.createMediaElementSource(a);
+          const filtro = ctx.createBiquadFilter();
+          filtro.type = 'lowpass';
+          filtro.Q.value = 0.5;
+          filtro.frequency.value = brilloDe(v0);
+          const env = ctx.createGain();
+          env.gain.value = volDe(v0);
+          const vol = ctx.createGain();
+          vol.gain.value = PACE_MUSICA_GANANCIA;
+          src.connect(filtro);filtro.connect(env);env.connect(vol);vol.connect(ctx.destination);
+          nodos = { ctx, src, filtro, env, vol };
+          if (ctx.state === 'suspended') ctx.resume();
+        } catch (e) {nodos = null;}
+      }
+
+      if (!nodos) respira = false;
+      a.volume = nodos ? 1 : PACE_MUSICA_GANANCIA;
 
 
 
 
-
-
-      a.loop = ficha.bucle === true;
-      a.volume = ficha.ganancia;
-
-
-
-      a.addEventListener('error', () => {audio = null;ultimo = { motivo: 'el archivo no carga', src: ficha.archivo };});
+      a.addEventListener('error', () => {if (audio === a) {audio = null;nodos = null;}ultimo = { motivo: 'el archivo no carga', src: archivo };});
       const pr = a.play();
-      if (pr && pr.catch) pr.catch((e) => {audio = null;ultimo = { motivo: 'el navegador rechazo play()', error: e && e.name };});
+      if (pr && pr.catch) pr.catch((e) => {if (audio === a) {audio = null;nodos = null;}ultimo = { motivo: 'el navegador rechazo play()', error: e && e.name };});
       audio = a;
-      ultimo = { motivo: 'sonando', src: ficha.archivo, ganancia: ficha.ganancia };
-    } catch (e) {audio = null;no('excepcion al crear el Audio', { error: e && e.message });}
+      objetivo = null;
+      restante = 0;
+      ultimo = { motivo: 'sonando', src: archivo, respira: respira };
+      const p = pendiente;
+      pendiente = null;
+      if (p && Date.now() - p.t < 1500) fase(p.tipo, p.dur - (Date.now() - p.t) / 1000);
+    } catch (e) {audio = null;nodos = null;no('excepcion al crear el Audio', { error: e && e.message });}
   }
 
-  function pause() {try {if (audio) audio.pause();} catch (e) {}}
+
+
+
+  function pause() {
+    try {
+      if (!audio) return;
+      const a = audio;
+      clearTimeout(pausaId);
+      if (!nodos) {a.pause();return;}
+      const t = nodos.ctx.currentTime;
+      restante = objetivo ? Math.max(0, objetivo.fin - t) : 0;
+      [nodos.env.gain, nodos.filtro.frequency].forEach((p) => {
+        if (p.cancelAndHoldAtTime) p.cancelAndHoldAtTime(t);else {const v = p.value;p.cancelScheduledValues(t);p.setValueAtTime(v, t);}
+      });
+      const g = nodos.vol.gain;
+      g.cancelScheduledValues(t);
+      g.setValueAtTime(g.value, t);
+      g.linearRampToValueAtTime(0, t + 0.3);
+      pausaId = setTimeout(() => {try {a.pause();} catch (e) {}}, 320);
+    } catch (e) {}
+  }
   function resume() {
     try {
       if (!audio) return;
+      clearTimeout(pausaId);
+      pausaId = null;
       const pr = audio.play();
       if (pr && pr.catch) pr.catch(() => {});
+      if (!nodos) return;
+      const t = nodos.ctx.currentTime;
+      const g = nodos.vol.gain;
+      g.cancelScheduledValues(t);
+      g.setValueAtTime(g.value, t);
+      g.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + 0.4);
+      if (respira && objetivo && restante > 0.2) mover(objetivo.v, restante);
+      restante = 0;
     } catch (e) {}
   }
 
@@ -15294,9 +15358,28 @@ const paceMusica = (() => {
   function stop(ms) {
     if (!audio) return;
     const a = audio;
+    const n = nodos;
     audio = null;
+    nodos = null;
+    pendiente = null;
+    objetivo = null;
+    clearTimeout(pausaId);
+    pausaId = null;
+    const total = Math.max(40, ms || 400);
+
+
+    if (n) {
+      try {
+        const t = n.ctx.currentTime;
+        const g = n.vol.gain;
+        g.cancelScheduledValues(t);
+        g.setValueAtTime(g.value, t);
+        g.linearRampToValueAtTime(0, t + total / 1000);
+      } catch (e) {}
+      setTimeout(() => {try {a.pause();n.vol.disconnect();} catch (e) {}}, total + 40);
+      return;
+    }
     const paso = 40;
-    const total = Math.max(paso, ms || 400);
     const caida = a.volume / (total / paso);
     const id = setInterval(() => {
       try {
@@ -15307,15 +15390,13 @@ const paceMusica = (() => {
     }, paso);
   }
 
-
-
   return {
-    start, stop, pause, resume, isActive: activa,
+    start, stop, pause, resume, fase, isActive: activa,
     get ultimo() {return ultimo;}
   };
 })();
 
-Object.assign(window, { paceMusica, PACE_MUSICA });
+Object.assign(window, { paceMusica, PACE_MUSICA, PACE_MUSICA_BASES, PACE_MUSICA_RESPIRA });
 })();
 </script>
   <script>
@@ -23062,15 +23143,21 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
 
 
 function playPhaseSound(phaseLabel, phaseDur) {
+
+
+
+  const musica = (tipo) => {try {if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur);} catch (e) {}};
   if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
   phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
   phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
   phaseLabel === 'Inhala al vientre') {
     try {playSound('breathe.inhale', phaseDur);} catch (e) {}
+    musica('in');
   } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
   phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
   phaseLabel === 'Exhala zumbando') {
     try {playSound('breathe.exhale', phaseDur);} catch (e) {}
+    musica('out');
   } else if (phaseLabel === 'Sostén' || phaseLabel === 'Sostén en vacío') {
 
 
@@ -23104,7 +23191,12 @@ function useMusicaFondo(stage, paused, routine) {
     if (stage === 'prep' || stage === 'hold') return;
     if (paused) m.pause();else
     if (m.isActive()) m.resume();else
-    m.start(routine.tag, routine.drone === true);
+    {
+
+      let ciclo = null;
+      try {ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0);} catch (e) {ciclo = null;}
+      m.start(routine.tag, routine.drone === true, ciclo);
+    }
   }, [stage, paused]);
 }
 

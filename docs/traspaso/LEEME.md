@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.147.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -51,9 +51,10 @@ antes de trabajar y mira en `git log` qué subió la otra.
   pasada la medianoche). Lo visual se le enseña antes a Ez en HTML. El resto de
   `CAZA_BUGS_7OCT.md` sigue sin verificar; Foco y el estado guardado no se han revisado. Mira
   `git log` y ese archivo antes de tocar ninguno.
-- **Ramas abiertas de otros hilos:** `claude/project-thread-9eceyu` (la música de Respira, hecha y
-  sin subir: falta que Ez la escuche en la app) y `claude/project-thread-jid37a` («¿Cómo es tu
-  semana?» en la bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
+- **Música de Respira: subida en v0.147.0.** Ez la escuchó grabada de la app real y dijo «así está
+  bien». `claude/project-thread-9eceyu` ya está en `main` y no hay que retomarla.
+- **Ramas abiertas de otros hilos:** `claude/project-thread-jid37a` («¿Cómo es tu semana?» en la
+  bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
 - **Glifos revisados:** de los 62 dibujos de ejercicio, seis no casan con su ejercicio (por ejemplo,
   «Barbilla atrás» con la flecha al revés y «Elevación de puntas» que dibuja talones). Están en
   `archivos/glifos/revision-glifos.html`, con un prompt para cada uno. El descanso entre series ya
@@ -64,9 +65,8 @@ antes de trabajar y mira en `git log` qué subió la otra.
 
 - **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
   para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
-  aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
-  exhalar). Ez estaba eligiendo en una página de escucha. Siguiente paso: el cambio de código,
-  enseñado a Ez antes de subirlo. Los tres drones están en `archivos/musica-respira/bases/`, con la
+  aplica una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
+  exhalar). En la app desde v0.147.0, con el sí de Ez. Los tres drones están en `archivos/musica-respira/bases/`, con la
   página de escucha (`escucha-respira.html`), los scripts de procesado y su `README.md`.
 - **Glifos:** cuatro prompts de ejercicio con figuras sin ropa, de la familia de los 59. El prompt A es
   solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
@@ -163,7 +163,7 @@ primera versión de pago, en web y Android.
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
-| Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
+| Música de Respira | Hecha en v0.147.0: tres drones en Sol (claro, cálido y menor) que respiran con la fase, quietos con ciclos de menos de 5 s y sin sonar en Coherente 432. Ez la aprobó escuchándola. | Si Ez quiere otro reparto, se cambia `PACE_MUSICA`. Una toma de Pranayama con tanpura, si llega, se prepara con `archivos/musica-respira/scripts/procesar.py` y entra en `PACE_MUSICA_BASES`. |
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
