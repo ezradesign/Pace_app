@@ -122,8 +122,9 @@ function useV1Glifo(cuerpoRef, firma) {
   return { glifo, justo };
 }
 
-/* El aro alrededor del dibujo: lo que va de la fase en curso (colocarse, trabajo, cambio de lado
-   o descanso). Empieza arriba y avanza en el sentido del reloj. */
+/* El aro alrededor del dibujo: lo que va del ejercicio o del descanso. Empieza arriba y avanza
+   en el sentido del reloj. Vacío, el arco no se pinta: con el remate redondo, un arco de
+   largo 0 dejaba un punto arriba. */
 function AroV1({ fraccion, accent, px }) {
   const f = Math.max(0, Math.min(1, fraccion || 0));
   /* El grosor va en unidades del dibujo (2,5 px a cualquier tamaño). Con un grosor fijo en
@@ -134,7 +135,7 @@ function AroV1({ fraccion, accent, px }) {
     <svg className="pace-v1-aro" data-pace-v1-aro viewBox="0 0 100 100" aria-hidden="true">
       <circle className="pace-v1-aro-pista" cx="50" cy="50" r="48.5" pathLength="100" strokeWidth={grosor} />
       <circle className="pace-v1-aro-arco" cx="50" cy="50" r="48.5" pathLength="100" strokeWidth={grosor}
-        style={{ stroke: accent, strokeDasharray: `${(f * 100).toFixed(2)} 100` }} />
+        style={{ stroke: accent, strokeDasharray: `${(f * 100).toFixed(2)} 100`, opacity: f > 0 ? 1 : 0 }} />
     </svg>
   );
 }

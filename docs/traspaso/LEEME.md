@@ -35,6 +35,11 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
+- **Aro de Mueve y Estira vacío al colocarse: hecho (8 de octubre).** Ez escribió «el aro de tiempo
+  que se rellene para empezar queda raro, mejor es vacío ya que no ha empezado el ejercicio». Vio
+  tres opciones en fotos y eligió la A (vacío del todo, solo el trazo de fondo), también en la pausa
+  de «Cambia de lado». El aro solo cuenta el ejercicio y el descanso; lo vigila
+  `tests/runner-aro-colocate.spec.js`.
 - **Home del móvil sin scroll: hecha en v0.146.0.** Ez vio la maquetación B (la pregunta con el
   horario como una línea, de la rama `claude/project-thread-ft7sc2`) en fotos de la app real y dijo
   «súbela», con una condición: «no quiero scroll de ninguna forma», tampoco en inglés. Desde
