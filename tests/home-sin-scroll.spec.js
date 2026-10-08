@@ -12,7 +12,8 @@
  * 412×844. A 320×568 se acepta scroll (decisión de Ez): para caber habría que
  * encoger el aro y lo de dentro.
  *
- * Contra v0.145.0 falla en 360×640, 375×667 y 360×718.
+ * Contra v0.145.0 falla en 360×640, 375×667 y 360×718. La segunda medida, con
+ * la letra más ancha (MARGEN_LETRA), falla contra v0.146.0 en inglés a 360×640.
  */
 'use strict';
 
@@ -37,6 +38,12 @@ const MOMENTOS = [
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 
+/* Cada navegador dibuja la letra a su ancho: el Chromium de la CI, unas décimas más ancho que el
+   de los contenedores, partía en tres líneas la frase del horario en inglés (7 px de scroll a
+   360×640) y aquí cabía con 0,3 px. Así que cada momento se mide otra vez con la letra un poco más
+   ancha: un texto que va al límite sale en rojo en cualquier máquina, antes de llegar a un móvil. */
+const MARGEN_LETRA = 0.3;
+
 for (const lang of ['es', 'en']) {
   for (const vp of [{ w: 360, h: 640 }, { w: 375, h: 667 }, { w: 360, h: 718 }, { w: 412, h: 844 }]) {
     test(lang + ' · ' + vp.w + '×' + vp.h + ': ningún momento de la home pide scroll', async ({ browser }) => {
@@ -54,11 +61,16 @@ for (const lang of ['es', 'en']) {
         await expect(vis(page, '[data-pace-ritmo-estado], [data-pace-ritmo-tarjeta-movil]').first()).toBeVisible();
         await page.mouse.move(1, 1);
         await asentarGeometria(page);
-        const sobra = await page.evaluate(() => {
+        const medir = () => page.evaluate(() => {
           const body = Array.from(document.querySelectorAll('[data-pace-home-body]')).find((e) => e.getBoundingClientRect().width > 0);
           return body.scrollHeight - body.clientHeight;
         });
+        const sobra = await medir();
         if (sobra > 1) fallos.push(m.nombre + ': ' + sobra + ' px');
+        await page.addStyleTag({ content: '[data-pace-home-body] * { letter-spacing: ' + MARGEN_LETRA + 'px !important }' });
+        await asentarGeometria(page);
+        const sobraAncha = await medir();
+        if (sobraAncha > 1) fallos.push(m.nombre + ' con la letra ' + MARGEN_LETRA + ' px más ancha: ' + sobraAncha + ' px');
         await context.close();
       }
       expect(fallos, 'la home pide scroll').toEqual([]);
