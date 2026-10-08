@@ -124,7 +124,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.frase.movil.sin':         'From {inicio} to {salida}',
     'ritmo.hecha':                   'done',
     'ritmo.saltada':                 'skipped',
-    'ritmo.hoy':                     'today from {desde} to {hasta}',
+    /* Corta a propósito (elegido por Ez): con «today from … to …» la frase del móvil cabía con
+       0,3 px en dos líneas y un Chromium que ensancha la letra la partía en tres (scroll a 360×640). */
+    'ritmo.hoy':                     'today {desde}–{hasta}',
     'ritmo.opcion.1h':               'One hour',
     'ritmo.opcion.2h':               'Two hours',
     'ritmo.opcion.media':            'Half day',
