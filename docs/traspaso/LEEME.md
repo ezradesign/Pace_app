@@ -16,27 +16,32 @@ crédito de la nube quedó así. Cada rama lleva en el mensaje de su último com
   sin decirlo (un servidor colgado de otra sesión en el 8765); desde entonces la suite se para si
   el servidor no es el de su carpeta.
 - **Ramas aparcadas, a la espera de Ez** (mira su último commit):
-  - `claude/respira-bugs-graves-31faf7`: Bhastrika con su aviso y «Terminar» que cuenta lo hecho.
-    Tres preguntas en `archivos/respira-7oct/LEEME.md`; el texto del aviso por técnica lo resuelve
+- **Ramas aparcadas** (mira su último commit). El 8 oct. por la noche Ez aceptó todas las
+  recomendaciones pendientes:
+  - `claude/respira-bugs-graves-31faf7`: **en `main` como v0.148.4** (Bhastrika con su aviso;
+    «Terminar» cuenta lo hecho, variante A sin ceros). El texto del aviso por técnica lo resuelve
     respira-14 de la rama de propuestas.
-  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct.; nueve preguntas.
-    Faltan sus pruebas.
+  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct.; nueve preguntas sin
+    contestar (no tenían recomendación en el resumen). Faltan sus pruebas.
   - `claude/calendario-sincronizacion`: Google y Microsoft; faltan los ids que crea Ez.
-  - `claude/respira-musica-drones`: el drone de Respira; Ez tiene que escucharlo.
+  - `claude/respira-musica-drones`: el drone de Respira; Ez tiene que escucharlo. Ez pidió además
+    un drone propio por técnica: sesión en paralelo en `claude/respira-drones-por-tecnica`.
   - `claude/premium-codigos-tester`: qué se cierra y códigos de por vida para testers (en Android,
-    los códigos promocionales de Play Console).
-  - `claude/runner-circulo-letra`: recomendación A, serif itálica y tope de 95 letras por frase,
-    para que el dibujo de Mueve iguale al de Estira.
-  - `claude/glifos-revision-8oct`: solo documentos; qué dibujos no casan, cuáles faltan, prompts,
-    y cuatro dibujos de logro cambiados de sitio que solo hay que reasignar.
+    los códigos promocionales de Play Console). Espera la llave y la lista de testers de Ez.
+  - `claude/runner-circulo-letra`: **aceptada la A** (serif itálica y tope de 95 letras por frase,
+    para que el dibujo de Mueve iguale al de Estira). Falta implementarla con su prueba.
+  - `claude/glifos-revision-8oct`: **en `main`**; la piedra de amolar ya está en su logro
+    (v0.148.5). Faltan los anillos de «Rondas maestra» y la vela de «Larga sesión».
   - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez desde la nube
     y **no está en el repo ni en ninguna rama**: si Ez no la conserva, hay que rehacerla. La
     tanda 2, las explicaciones de ejercicios, respeta el tope de 95 letras.
-- **Lo siguiente de producto**: el motor que aprende de cada persona y adapta la semana (lo de pago
-  de «A tu ritmo»), con la carta del lunes. **La página está hecha** y espera seis respuestas de
-  Ez: `archivos/motor-semana/motor-semana.html` (https://claude.ai/artifact/EGfS13xFn6oU4BpoRihdBL),
-  con `fotos.js` para rehacer fotos y medidas. Recomendado: empezar por el resumen del día, que
-  es invisible, y poner la carta en una ventana (la de la R2 no cabe a 360×640).
+  - Barra lateral más útil y bonita (pedida por Ez): sesión en paralelo en `claude/sidebar-propuesta`,
+    solo una página para elegir.
+- **El motor de la semana** (lo de pago de «A tu ritmo»): Ez aceptó la página
+  (`archivos/motor-semana/motor-semana.html`, https://claude.ai/artifact/EGfS13xFn6oU4BpoRihdBL):
+  aprende cuatro cosas, como mucho dos cambios y 10 paradas por semana, la carta en una ventana
+  (también en semanas sin cambios) y nada sin PACE completo. **Desde v0.149.0 se guarda el resumen
+  de cada día** (`ritmo.day.closed`). El motor y la carta, cuando haya semanas de datos.
 - En la nube, Playwright 1.62.1 pedía Chromium 1234 y solo había el 1194: se apañó con
   `PLAYWRIGHT_BROWSERS_PATH` y enlaces. En el PC de Ez no hace falta.
 

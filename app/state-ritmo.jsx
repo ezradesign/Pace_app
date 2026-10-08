@@ -343,6 +343,8 @@ function ritmoSincronizar() {
 function ritmoGuardar(cambio) {
   setState(function (prev) {
     var r = Object.assign({ horario: null, libre: null, dia: null }, prev.ritmo || {});
+    /* El día de ayer no se pisa sin resumirlo antes (state-ritmo.resumen.jsx). */
+    if (typeof ritmoResumenAntesDePisar === 'function') r = ritmoResumenAntesDePisar(prev, r);
     return Object.assign({}, prev, { ritmo: Object.assign(r, cambio(r)) });
   });
 }

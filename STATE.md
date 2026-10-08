@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.148.5 · 8 de octubre de 2026.
+**Versión:** v0.149.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -79,8 +79,10 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    en `SUBIDAS.md`.
 2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
    cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
-   «Otra» y las horas a las que paras), contado en la carta del lunes. La página para Ez está en
-   `docs/traspaso/archivos/motor-semana/` y espera sus seis respuestas.
+   «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
+   cuatro cosas, dos cambios por semana, la carta en una ventana, también sin cambios, nada sin
+   PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
+   la carta llegan cuando haya semanas de datos.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
