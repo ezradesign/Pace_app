@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.0 · 8 de octubre de 2026.
+**Versión:** v0.147.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -70,7 +70,7 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El 8 de octubre dos sesiones en paralelo arreglan los tres graves de Respira e
    Hidrátate (Bhastrika sin su aviso, «Terminar» en las rondas y el agua de ayer pasada la
-   medianoche). Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
+   medianoche), y en v0.147.0 la lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4). Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
    todo lo que se vea se le enseña antes en HTML.
 4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
    octubre: falta traerla a `main` y que Ez la escuche en la app.

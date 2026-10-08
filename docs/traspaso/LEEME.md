@@ -48,7 +48,9 @@ antes de trabajar y mira en `git log` qué subió la otra.
   Las páginas con las que decidió están en `archivos/home-movil/` (`home-*.html`).
 - **Bugs: dos sesiones en paralelo (8 oct).** Una arregla respira-1 y respira-2 (Bhastrika sin su
   aviso de seguridad y el cierre de «Terminar» en las rondas) y otra respira-3 (el agua de ayer
-  pasada la medianoche). Lo visual se le enseña antes a Ez en HTML. El resto de
+  pasada la medianoche). Lo visual se le enseña antes a Ez en HTML. En v0.147.0 se cerraron
+  oscuro-1 y oscuro-4: Ez eligió que la lista de horas de «A tu ritmo» la dibuje PACE en las dos
+  paletas (la opción C de `archivos/oscuro/horas-oscuro.html`) y arreglar la casilla de apnea. El resto de
   `CAZA_BUGS_7OCT.md` sigue sin verificar; Foco y el estado guardado no se han revisado. Mira
   `git log` y ese archivo antes de tocar ninguno.
 - **Ramas abiertas de otros hilos:** `claude/project-thread-9eceyu` (la música de Respira, hecha y
