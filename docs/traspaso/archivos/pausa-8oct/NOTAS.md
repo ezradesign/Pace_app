@@ -1,7 +1,8 @@
 # La pausa más elegante (8 oct. 2026)
 
 Encargo de Ez: «¿el breakmenú puede ser más elegante y con una mejor tipografía? Desentona con el
-resto de la app». La página para elegir es `pausa-8oct.html` (abre las fotos de `fotos/`). Nada de
+resto de la app». La página para elegir es `pausa-8oct.html` (abre las fotos de `fotos/`), publicada en
+https://claude.ai/artifact/KnwHp9p2kt5YdXFZzTPmoH (de la cuenta de Ez del 8 oct.). Nada de
 `app/` ha cambiado: las opciones se pintan encima de la ventana real.
 
 ## Qué hay en esta carpeta
