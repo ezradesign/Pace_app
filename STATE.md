@@ -79,7 +79,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    en `SUBIDAS.md`.
 2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
    cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
-   «Otra» y las horas a las que paras), contado en la carta del lunes. Antes, una página para Ez.
+   «Otra» y las horas a las que paras), contado en la carta del lunes. La página para Ez está en
+   `docs/traspaso/archivos/motor-semana/` y espera sus seis respuestas.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
@@ -88,8 +89,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    v0.147.0. Seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de
    ingles-6), en v0.148.2; los que sí lo cambian están montados en `claude/caza-bugs-propuestas`, a
    la espera de que Ez elija en su página. Todo lo que se vea se le enseña antes en HTML.
-4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
-   octubre: falta traerla a `main` y que Ez la escuche en la app.
+4. **La música de Respira** (tres drones en Sol) está lista en la rama
+   `claude/respira-musica-drones`, con su suite en verde: falta que Ez la escuche y traerla a `main`.
 
 ## Espera a Ez
 
