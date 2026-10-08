@@ -38,7 +38,7 @@ if (!_paceMoveV1Css) {
     .pace-v1-raiz {
       --v1-u: clamp(8px, calc(1.3 * var(--pace-vh, 1vh)), 18px);
       --v1-nombre: clamp(28px, calc(4.2 * var(--pace-vh, 1vh)), 44px);
-      --v1-cue: 16px;
+      --v1-cue: 18px;
       --v1-num: clamp(52px, calc(8.2 * var(--pace-vh, 1vh)), 84px);
       --v1-fuerte: 20px;
       flex: 1 1 auto; min-height: 0; width: 100%;
@@ -76,10 +76,14 @@ if (!_paceMoveV1Css) {
       font-size: var(--v1-nombre); line-height: 1.12; text-wrap: balance;
     }
     /* La instrucción empieza siempre a la misma altura: si es más corta que su hueco, el aire
-       queda debajo y la primera línea no baja media línea al pasar de colocarse a trabajar. */
+       queda debajo y la primera línea no baja media línea al pasar de colocarse a trabajar.
+       Va en la serif itálica de la app, como el nombre (opción A elegida por Ez el 8 oct. 2026):
+       en letra de interfaz desentonaba. Con el tope de 95 letras por frase cabe en dos líneas y
+       el dibujo de Mueve no encoge más que el de Estira (tests/runner-letra.spec.js). */
     .pace-v1-cues > * {
       align-self: start; justify-self: center; max-width: 460px;
-      font-size: var(--v1-cue); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;
+      font-family: var(--font-display); font-style: italic;
+      font-size: var(--v1-cue); line-height: 1.32; color: var(--ink-2); text-wrap: pretty;
     }
     .pace-v1-colas > * { align-self: start; justify-self: center; max-width: 440px; }
     .pace-v1-colas > * > div, [data-pace-v1-cola] > div { display: grid; row-gap: 3px; }
@@ -145,7 +149,7 @@ if (!_paceMoveV1Css) {
       .pace-v1-raiz {
         --v1-u: clamp(6px, 1.2vh, 12px);
         --v1-nombre: 28px;
-        --v1-cue: 15px;
+        --v1-cue: 17px;
         --v1-num: clamp(48px, 8vh, 64px);
         --v1-fuerte: 18px;
       }
