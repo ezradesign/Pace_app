@@ -37,11 +37,17 @@ const AJUSTES_MODULO = {
   hydrate: { m: 'var(--hydrate)', ms: 'var(--hydrate-soft)' },
 };
 
-function AjustesSeccion({ titulo, ultima, children }) {
+/* `accion` ({ texto, onClick }): un enlace en la MISMA línea que el título, a la derecha. No
+   suma alto: el panel tiene que caber sin scroll a 1280×800 (ajustes.spec.js), y una fila más
+   para «Tu semana» lo pasaba de 27 px. */
+function AjustesSeccion({ titulo, ultima, accion, children }) {
   return (
     <React.Fragment>
       <div className="pace-aj-sec" data-pace-aj-seccion={titulo}>
-        <div className="pace-aj-sec-titulo">{titulo}</div>
+        <div className="pace-aj-sec-titulo">
+          {titulo}
+          {accion ? <button type="button" className="pace-aj-sec-accion" onClick={accion.onClick}>{accion.texto}<span aria-hidden="true"> ›</span></button> : null}
+        </div>
         {children}
       </div>
       {!ultima && <div className="pace-aj-div" />}
