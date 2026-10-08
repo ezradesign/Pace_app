@@ -1,4 +1,4 @@
-/* PACE · E2E · LA BOLA DEL ARO NACE ENTERA (v0.147.0)
+/* PACE · E2E · LA BOLA DEL ARO NACE ENTERA (v0.148.0)
  * ===================================================
  * Ez, 8 oct. 2026: «cuando empieza el pomodoro la bola y el halo que marcan el
  * tiempo recorrido empiezan como por debajo, como si el fondo se superpusiera».
@@ -15,7 +15,7 @@
  * el peor caso medido); la de antes, nada abajo. Se mira con
  * «A tu ritmo» a 1920 (lo que vio Ez), por libre a 1280 y en el movil.
  *
- * Contra v0.146.0 falla en las tres pantallas (abajo cambiaban 0 pixeles).
+ * Contra v0.147.0 falla en las tres pantallas (abajo cambiaban 0 pixeles).
  */
 'use strict';
 
