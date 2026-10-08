@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.148.3 | 2026-10-08 | Al empezar el Foco, la bola que marca el tiempo y su halo salen enteros y en primer plano, con un fundido suave (el halo se abre después), en vez de nacer cortados por la niebla del horizonte; el fundido solo sale al empezar el bloque. |
 | v0.148.2 | 2026-10-08 | Seis fallos de la caza del 7 de octubre que no cambian el diseño: en Respira, Espacio ya no pausa a escondidas la preparación ni la retención, «Cancelar» en el aviso de seguridad vuelve a la biblioteca y «Sin retención» deja fuera Rítmica yin y Nadi Shodhana, que sostienen; «Un vaso más» recupera su azul al apartar el ratón; y en inglés la página se declara en inglés y las flechas de Estadísticas se anuncian en inglés |
 | v0.148.1 | 2026-10-08 | En Mueve y Estira el aro del dibujo se queda vacío mientras te colocas y al cambiar de lado, y empieza a dibujarse cuando empieza el ejercicio: antes se llenaba durante «Colócate» y se vaciaba de golpe al arrancar |
 | v0.148.0 | 2026-10-08 | «¿Cómo es tu semana?»: la bienvenida pregunta tu semana una vez (qué días son jornada, media o libres, y tus horas), y desde entonces cada mañana el día llega ya contestado («Jornada entera · como cada jueves», con «Comienza» y «Hoy es distinto»; en escritorio, tu opción marcada); los días libres de tu semana son «Hoy voy por libre», y «Tu semana» en Ajustes la cambia |
