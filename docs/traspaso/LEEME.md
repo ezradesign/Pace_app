@@ -4,6 +4,38 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
 
+## Al cerrar la nube (8 oct. 2026, tarde): lo que queda abierto
+
+Se trabajó con varias sesiones en paralelo y un coordinador (`docs/WORKFLOW.md` §9). Al acabarse el
+crédito de la nube quedó así. Cada rama lleva en el mensaje de su último commit un bloque
+`TRASPASO:` (o `CHANGELOG:`/`STATE:`/`DECISIONES:`) con lo que falta.
+
+- **`main-sig4tn`**: v0.148.0 a v0.148.3 (Fase 3 gratis: la semana tipo y el día ya contestado; el
+  aro vacío al colocarse; seis fallos de la caza; la bola del aro). `verify` en verde en cada versión;
+  la suite completa estaba corriendo al cerrar. Si `main` aún no lo tiene: en `main`,
+  `git merge origin/main-sig4tn`, `npm run verify`, `node build-standalone.js`, `npm run test:e2e`,
+  push y CI.
+- **Ramas aparcadas, a la espera de Ez** (mira su último commit):
+  - `claude/respira-bugs-graves-31faf7`: Bhastrika con su aviso y «Terminar» que cuenta lo hecho.
+    Tres preguntas en `archivos/respira-7oct/LEEME.md`; el texto del aviso por técnica lo resuelve
+    respira-14 de la rama de propuestas.
+  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct.; nueve preguntas.
+    Faltan sus pruebas.
+  - `claude/calendario-sincronizacion`: Google y Microsoft; faltan los ids que crea Ez.
+  - `claude/respira-musica-drones`: el drone de Respira; Ez tiene que escucharlo.
+  - `claude/premium-codigos-tester`: qué se cierra y códigos de por vida para testers (en Android,
+    los códigos promocionales de Play Console).
+  - `claude/runner-circulo-letra`: recomendación A, serif itálica y tope de 95 letras por frase,
+    para que el dibujo de Mueve iguale al de Estira.
+  - `claude/glifos-revision-8oct`: solo documentos; qué dibujos no casan, cuáles faltan, prompts,
+    y cuatro dibujos de logro cambiados de sitio que solo hay que reasignar.
+  - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez; la tanda 2,
+    las explicaciones de ejercicios, respeta el tope de 95 letras.
+- **Lo siguiente de producto**: el motor que aprende de cada persona y adapta la semana (lo de pago
+  de «A tu ritmo»), con la carta del lunes; antes, una página para Ez.
+- En la nube, Playwright 1.62.1 pedía Chromium 1234 y solo había el 1194: se apañó con
+  `PLAYWRIGHT_BROWSERS_PATH` y enlaces. En el PC de Ez no hace falta.
+
 ## Cómo seguir desde otra cuenta
 
 1. Ez crea un proyecto nuevo en la otra cuenta con el repo `ezradesign/Pace_app` y pega la frase de
