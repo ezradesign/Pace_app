@@ -35,13 +35,13 @@ var LIB_FILTROS = ['aqui', 'sinmat', 'corto'];
    exactamente las tres que «Sin retencion» ya quita, porque ninguna declara
    `cycle` y las tres llevan `safety`. Un chip que no puede cambiar el resultado
    de otro es decoracion.
-   Recuentos sobre el catalogo: «<= 5 min» deja 9 de 20 y «Sin retencion» 11. */
+   Recuentos sobre el catalogo: «<= 5 min» deja 9 de 20 y «Sin retencion» 10. */
 var LIB_FILTROS_RESPIRA = ['corto', 'sinreten'];
 
 /* «Con retencion» = la respiracion se PARA en algun momento, llena o vacia.
    El dato vive en `cycle` como [inhala, sosten, exhala, vacio], asi que basta
    con mirar las posiciones 1 y 3. Las rutinas SIN `cycle` -rondas, kapalabhati,
-   los patrones con motor propio- no lo declaran, y ahi manda `safety`: las seis
+   los patrones con motor propio- no lo declaran, y ahi manda `safety`: las siete
    que llevan aviso son precisamente las de apnea o hiperventilacion. */
 function libraryConRetencion(r) {
   if (!r) return false;

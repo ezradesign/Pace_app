@@ -139,7 +139,7 @@ pranayama 5.
 | `breathe.box.6` | Box 6·6·6·6 | equilibrio | 7 | — | free (variante larga, no avanzada) |
 | `breathe.coherent.66` | Coherente 6·6 | balance | 10 | — | free (variante larga, no avanzada) |
 | `breathe.ujjayi` | Ujjayi | pranayama | 6 | — | free (oceánica accesible) |
-| `breathe.bellows` | Bhastrika · Fuelle | pranayama | 3 | — | free (B1.2: mudado de Energía — es pranayama, tag PRA) |
+| `breathe.bellows` | Bhastrika · Fuelle | pranayama | 3 | ⚠ | free (B1.2: mudado de Energía — es pranayama, tag PRA; ⚠ como Kapalabhati: 1 s y 1 s, 30 por minuto) |
 | `breathe.diaphragm` | Diafragmática | equilibrio | 5 | — | free (F4 — la base de todo) |
 | `breathe.exhale.46` | Exhalación 4·6 | relajacion | 6 | — | free (F4 — freno simple) |
 | `breathe.yin` | Rítmica yin | relajacion | 8 | — | free (F4 — meditativa accesible) |
@@ -156,7 +156,9 @@ pranayama 5.
 > **Seguridad:** toda técnica con `safety: true` (retención / hiperventilación
 > / apnea) abre el modal de seguridad obligatorio antes de empezar
 > (`BreatheSafety`). Sin excepción — F4 lo aplicó a kumbhaka, co2 y
-> rounds.long.
+> rounds.long, y a bellows le faltaba hasta el 8 de octubre de 2026. Que toda
+> técnica a 12 o más respiraciones por minuto lleve `safety` lo vigila
+> `tests/respira-biblioteca.spec.js` a partir de su secuencia, no de esta tabla.
 >
 > **Coherente 432** lleva `drone: true`: fuerza el drone ambiente (base
 > 432 Hz) durante la sesión aunque el toggle Ambiente esté apagado; `soundOn`

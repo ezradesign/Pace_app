@@ -269,8 +269,8 @@ test('la tarjeta de Respira va sin capitular y con el ritmo dicho', async ({ pag
   await expect(box).toContainText('4·4·4·4');
   const rondas = page.locator('[data-pace-lib-card="breathe.rounds.express"] .pace-lib-ctx');
   await expect(rondas).toContainText('2');
-  /* el sello de seguridad va por el dato `safety`, que son SEIS rutinas y no
-     las cinco de apnea: Kapalabhati es respiración rápida y también lo lleva */
+  /* el sello de seguridad va por el dato `safety`, que son SIETE rutinas y no
+     las cinco de apnea: Kapalabhati y Bhastrika son respiración rápida y también lo llevan */
   const conSello = await page.locator('.pace-lib .pace-lib-safety').count();
   const esperados = catalogoFuente().breathe.filter(r => r.safety).length;
   expect(conSello).toBe(esperados);
