@@ -1,0 +1,2 @@
+.pace-v1-raiz .pace-v1-cues > * { font-size: 15px; line-height: 1.45; }
+@media (max-width: 640px) { .pace-v1-raiz .pace-v1-cues > * { font-size: 13.5px; } }

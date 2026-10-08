@@ -28,8 +28,11 @@ crédito de la nube quedó así. Cada rama lleva en el mensaje de su último com
     un drone propio por técnica: sesión en paralelo en `claude/respira-drones-por-tecnica`.
   - `claude/premium-codigos-tester`: qué se cierra y códigos de por vida para testers (en Android,
     los códigos promocionales de Play Console). Espera la llave y la lista de testers de Ez.
-  - `claude/runner-circulo-letra`: **aceptada la A** (serif itálica y tope de 95 letras por frase,
-    para que el dibujo de Mueve iguale al de Estira). Falta implementarla con su prueba.
+  - `claude/runner-circulo-letra`: **en `main` como v0.150.0** (serif itálica y tope de 95 letras
+    por frase; el dibujo de Mueve iguala al de Estira). «Cuídate» sigue en sans: no se preguntó.
+  - Mensaje de novedades para el grupo de testers, con tres capturas: `archivos/testers-8oct/`.
+  - La pausa más elegante (pedida por Ez): sesión en paralelo en `claude/pausa-elegante`, solo una
+    página para elegir.
   - `claude/glifos-revision-8oct`: **en `main`**; la piedra de amolar ya está en su logro
     (v0.148.5). Faltan los anillos de «Rondas maestra» y la vela de «Larga sesión».
   - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez desde la nube
