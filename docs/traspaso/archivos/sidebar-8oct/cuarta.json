@@ -1,0 +1,991 @@
+{
+  "cajon-hoy-crema-activo": {
+    "escala": 0.8,
+    "huecoAlPie": null,
+    "sobraAbajo": -21,
+    "scrollPagina": 0,
+    "scrollBarra": 43,
+    "piezas": [],
+    "fuera": 44
+  },
+  "cajon-dentro-crema-activo": {
+    "escala": 0.843,
+    "huecoAlPie": 0,
+    "sobraAbajo": 22,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 113,
+        "alto": 73
+      },
+      {
+        "pieza": "hoy",
+        "y": 206,
+        "alto": 158
+      },
+      {
+        "pieza": "puertas",
+        "y": 383,
+        "alto": 51
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 454,
+        "alto": 70
+      },
+      {
+        "pieza": "pie",
+        "y": 534,
+        "alto": 85
+      }
+    ],
+    "fuera": 1
+  },
+  "cajon-rotulo-crema-activo": {
+    "escala": 0.813,
+    "huecoAlPie": 0,
+    "sobraAbajo": 22,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 110,
+        "alto": 70
+      },
+      {
+        "pieza": "hoy",
+        "y": 199,
+        "alto": 102
+      },
+      {
+        "pieza": "tarjeta",
+        "y": 320,
+        "alto": 53
+      },
+      {
+        "pieza": "puertas",
+        "y": 391,
+        "alto": 49
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 459,
+        "alto": 68
+      },
+      {
+        "pieza": "pie",
+        "y": 537,
+        "alto": 82
+      }
+    ],
+    "fuera": 1
+  },
+  "cajon-hoy-crema-vacio": {
+    "escala": 0.8,
+    "huecoAlPie": null,
+    "sobraAbajo": 2,
+    "scrollPagina": 0,
+    "scrollBarra": 21,
+    "piezas": [],
+    "fuera": 21
+  },
+  "cajon-dentro-crema-vacio": {
+    "escala": 1,
+    "huecoAlPie": 0,
+    "sobraAbajo": 37,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "puertas",
+        "y": 337,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 421,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 504,
+        "alto": 100
+      }
+    ],
+    "fuera": 0
+  },
+  "cajon-rotulo-crema-vacio": {
+    "escala": 1,
+    "huecoAlPie": 0,
+    "sobraAbajo": 37,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "puertas",
+        "y": 337,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 421,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 504,
+        "alto": 100
+      }
+    ],
+    "fuera": 0
+  },
+  "cajon-hoy-oscuro-activo": {
+    "escala": 0.8,
+    "huecoAlPie": null,
+    "sobraAbajo": -21,
+    "scrollPagina": 0,
+    "scrollBarra": 43,
+    "piezas": [],
+    "fuera": 44
+  },
+  "cajon-dentro-oscuro-activo": {
+    "escala": 0.843,
+    "huecoAlPie": 0,
+    "sobraAbajo": 22,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 113,
+        "alto": 73
+      },
+      {
+        "pieza": "hoy",
+        "y": 206,
+        "alto": 158
+      },
+      {
+        "pieza": "puertas",
+        "y": 383,
+        "alto": 51
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 454,
+        "alto": 70
+      },
+      {
+        "pieza": "pie",
+        "y": 534,
+        "alto": 85
+      }
+    ],
+    "fuera": 1
+  },
+  "cajon-rotulo-oscuro-activo": {
+    "escala": 0.813,
+    "huecoAlPie": 0,
+    "sobraAbajo": 22,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 110,
+        "alto": 70
+      },
+      {
+        "pieza": "hoy",
+        "y": 199,
+        "alto": 102
+      },
+      {
+        "pieza": "tarjeta",
+        "y": 320,
+        "alto": 53
+      },
+      {
+        "pieza": "puertas",
+        "y": 391,
+        "alto": 49
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 459,
+        "alto": 68
+      },
+      {
+        "pieza": "pie",
+        "y": 537,
+        "alto": 82
+      }
+    ],
+    "fuera": 1
+  },
+  "cajon-hoy-oscuro-vacio": {
+    "escala": 0.8,
+    "huecoAlPie": null,
+    "sobraAbajo": 2,
+    "scrollPagina": 0,
+    "scrollBarra": 21,
+    "piezas": [],
+    "fuera": 21
+  },
+  "cajon-dentro-oscuro-vacio": {
+    "escala": 1,
+    "huecoAlPie": 0,
+    "sobraAbajo": 37,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "puertas",
+        "y": 337,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 421,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 504,
+        "alto": 100
+      }
+    ],
+    "fuera": 0
+  },
+  "cajon-rotulo-oscuro-vacio": {
+    "escala": 1,
+    "huecoAlPie": 0,
+    "sobraAbajo": 37,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "puertas",
+        "y": 337,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 421,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 504,
+        "alto": 100
+      }
+    ],
+    "fuera": 0
+  },
+  "en-1280x800-activo": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "en-1280x800-vacio": {
+    "escala": 1,
+    "huecoAlPie": 178,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "puertas",
+        "y": 337,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 421,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "en-1536x704-activo": {
+    "escala": 0.938,
+    "huecoAlPie": 0,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 124,
+        "alto": 81
+      },
+      {
+        "pieza": "hoy",
+        "y": 227,
+        "alto": 176
+      },
+      {
+        "pieza": "puertas",
+        "y": 424,
+        "alto": 57
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 502,
+        "alto": 78
+      },
+      {
+        "pieza": "pie",
+        "y": 592,
+        "alto": 94
+      }
+    ]
+  },
+  "en-1536x704-vacio": {
+    "escala": 1,
+    "huecoAlPie": 82,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "puertas",
+        "y": 337,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 421,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 586,
+        "alto": 100
+      }
+    ]
+  },
+  "en-360x640-activo": {
+    "escala": 0.843,
+    "huecoAlPie": 0,
+    "sobraAbajo": 22,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 113,
+        "alto": 73
+      },
+      {
+        "pieza": "hoy",
+        "y": 206,
+        "alto": 158
+      },
+      {
+        "pieza": "puertas",
+        "y": 383,
+        "alto": 51
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 454,
+        "alto": 70
+      },
+      {
+        "pieza": "pie",
+        "y": 534,
+        "alto": 85
+      }
+    ],
+    "fuera": 1
+  },
+  "en-360x640-vacio": {
+    "escala": 1,
+    "huecoAlPie": 0,
+    "sobraAbajo": 59,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 78
+      },
+      {
+        "pieza": "puertas",
+        "y": 315,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 398,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 481,
+        "alto": 100
+      }
+    ],
+    "fuera": 0
+  },
+  "libre-repetir-dentro-es": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-repetir-rotulo-es": {
+    "escala": 1,
+    "huecoAlPie": 26,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 125
+      },
+      {
+        "pieza": "tarjeta",
+        "y": 389,
+        "alto": 65
+      },
+      {
+        "pieza": "puertas",
+        "y": 477,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 560,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-repetir-dentro-en": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-ahora-dentro-es": {
+    "escala": 1,
+    "huecoAlPie": 116,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 162
+      },
+      {
+        "pieza": "puertas",
+        "y": 399,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 483,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-ahora-rotulo-es": {
+    "escala": 1,
+    "huecoAlPie": 90,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 100
+      },
+      {
+        "pieza": "tarjeta",
+        "y": 337,
+        "alto": 65
+      },
+      {
+        "pieza": "puertas",
+        "y": 425,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 509,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-ahora-dentro-en": {
+    "escala": 1,
+    "huecoAlPie": 116,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 60
+      },
+      {
+        "pieza": "hoy",
+        "y": 214,
+        "alto": 162
+      },
+      {
+        "pieza": "puertas",
+        "y": 399,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 483,
+        "alto": 71
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-continua-dentro-es": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-continua-rotulo-es": {
+    "escala": 1,
+    "huecoAlPie": 26,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 125
+      },
+      {
+        "pieza": "tarjeta",
+        "y": 389,
+        "alto": 65
+      },
+      {
+        "pieza": "puertas",
+        "y": 477,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 560,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "libre-continua-dentro-en": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "largas-es": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "largas-en": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "tinta-crema": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  },
+  "tinta-oscuro": {
+    "escala": 1,
+    "huecoAlPie": 52,
+    "sobraAbajo": 18,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "piezas": [
+      {
+        "pieza": "semana",
+        "y": 131,
+        "alto": 86
+      },
+      {
+        "pieza": "hoy",
+        "y": 240,
+        "alto": 187
+      },
+      {
+        "pieza": "puertas",
+        "y": 451,
+        "alto": 61
+      },
+      {
+        "pieza": "logro-sec",
+        "y": 534,
+        "alto": 84
+      },
+      {
+        "pieza": "pie",
+        "y": 682,
+        "alto": 100
+      }
+    ]
+  }
+}

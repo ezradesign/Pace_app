@@ -34,7 +34,7 @@ OPCIONES.lista.push(...require('./semanas.js').lista);
 /* OPS=A,Cp-hierba repite solo esas opciones; las medidas de las demás se conservan. */
 const SOLO_OPS = process.env.OPS ? process.env.OPS.split(',') : null;
 
-const PUERTO = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || 8781);
+const PUERTO = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || process.env.PUERTO || 8781);
 const BASE = 'http://localhost:' + PUERTO;
 const SALIDA = path.join(__dirname, 'fotos');
 const LV = ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'];
@@ -301,7 +301,10 @@ function ponerMedidasEnLaPagina(medidas) {
   fs.writeFileSync(pagina, nuevo);
 }
 
-if (process.argv.includes('--pagina')) {
+/* `cuarta.js` reutiliza el servidor, la siembra y las medidas sin volver a hacer las fotos. */
+if (require.main !== module) {
+  module.exports = { RAIZ, PUERTO, estado, servidor, abrir, sembrarSesiones, medir, medirOpcion, ponerOpcion, HORA, HOY_TEXTO };
+} else if (process.argv.includes('--pagina')) {
   ponerMedidasEnLaPagina(JSON.parse(fs.readFileSync(path.join(__dirname, 'medidas.json'), 'utf8')));
   console.log('Medidas puestas en sidebar.html.');
 } else {
