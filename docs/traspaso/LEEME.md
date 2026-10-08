@@ -21,8 +21,13 @@ crédito de la nube quedó así. Cada rama lleva en el mensaje de su último com
   - `claude/respira-bugs-graves-31faf7`: **en `main` como v0.148.4** (Bhastrika con su aviso;
     «Terminar» cuenta lo hecho, variante A sin ceros). El texto del aviso por técnica lo resuelve
     respira-14 de la rama de propuestas.
-  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct.; nueve preguntas sin
-    contestar (no tenían recomendación en el resumen). Faltan sus pruebas.
+  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct. **Ez contestó las
+    nueve preguntas el 8 oct. por la noche**: sí a todo lo montado; en inglés, el tono en vez de la
+    voz castellana hasta grabar la voz en inglés (pendiente, «tenlo en cuenta»); cambiar de modo
+    con un Foco en marcha pregunta antes; pestaña en el idioma y la PWA «PACE»; «stamp» para el
+    sello; Pulso y Ondas, un poco más pequeños; rondas de 5, 9 y 17 min; «Un vaso más» en su azul
+    más oscuro. En la pausa solo se enseñan Intro y Esc (lo pinta la sesión de la pausa). La
+    sesión que lo monta trabaja en `claude/caza-bugs-final` y avisa con «LISTO PARA MAIN».
   - `claude/calendario-sincronizacion`: Google y Microsoft; faltan los ids que crea Ez.
   - `claude/respira-musica-drones`: el drone de Respira; Ez tiene que escucharlo. Ez pidió además
     un drone propio por técnica: sesión en paralelo en `claude/respira-drones-por-tecnica`.

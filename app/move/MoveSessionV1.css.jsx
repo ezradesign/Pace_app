@@ -93,8 +93,13 @@ if (!_paceMoveV1Css) {
     }
     [data-pace-v1-cola] .pace-v1-fuerte { color: var(--v1-acento, var(--ink-2)); }
     .pace-v1-apoyo { font-size: 13px; line-height: 1.45; color: var(--ink-3); }
-    .pace-v1-cuidate { font-size: 13.5px; line-height: 1.5; color: var(--ink-3); }
+    /* «Cuídate» con la misma voz que la explicación (Ez, 8 oct. 2026); el rótulo, en interfaz. */
+    .pace-v1-cuidate {
+      font-family: var(--font-display); font-style: italic;
+      font-size: 16px; line-height: 1.3; color: var(--ink-3);
+    }
     [data-pace-v1-care-label] {
+      font-family: var(--font-ui); font-style: normal;
       font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600;
       color: var(--v1-acento, var(--ink-3));
     }
@@ -153,7 +158,7 @@ if (!_paceMoveV1Css) {
         --v1-num: clamp(48px, 8vh, 64px);
         --v1-fuerte: 18px;
       }
-      .pace-v1-cuidate { font-size: 13px; }
+      .pace-v1-cuidate { font-size: 15px; }
       .pace-v1-mando { gap: 32px; }
     }
 
