@@ -24,7 +24,7 @@
   validan en la Fase 9** con la revisión a fondo de Starter Story. Fijado ≠ blindado: si esa
   revisión aporta evidencia contraria, se revisa **antes** de publicar la tienda.
 
-**Ya construido (v0.147.0, 8 oct. 2026):** la comprobación de la licencia firmada en la web
+**Ya construido (8 oct. 2026):** la comprobación de la licencia firmada en la web
 (`app/state-licencia.js`, formato `PACE1.<datos>.<firma>`, ECDSA P-256, `expiresAt` opcional), los
 códigos de por vida para los testers (`scripts/licencias/`, con la llave privada fuera del repo) y su
 fila en Ajustes. Lo de pago se llama **PACE completo**. En Android no se aceptan códigos propios

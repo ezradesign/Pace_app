@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.147.0 · 8 de octubre de 2026.
+**Versión:** v0.146.1 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -50,7 +50,7 @@ ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben. Lo de pago se llama **PACE completo**
-(v0.147.0, opción B elegida por Ez): lo cerrado lleva un candado de línea fina y, al tocarlo, una
+(8 oct., opción B elegida por Ez): lo cerrado lleva un candado de línea fina y, al tocarlo, una
 invitación que dice qué trae y que llega con la versión 1. En la web, un **código de por vida**
 (enlace `#codigo=…` o «Tengo un código») lo abre todo, también «Tus rutinas», que sin código sigue
 cerrado: es una licencia firmada que la app comprueba sin servidor (`app/state-licencia.js`). En
