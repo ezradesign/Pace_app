@@ -263,7 +263,36 @@ El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es públi
 (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa está
 aquí y en `git log`.
 
+## Relevo de la noche del 8 oct. (la cuenta coordinadora se quedó sin sesión)
+
+`main` va por **v0.150.1**, con la suite entera en verde en el PC de Ez y la CI en verde hasta v0.150.0
+(la de v0.150.1, si no consta, se mira con `gh run list --branch main`). Había cuatro sesiones en
+paralelo en la cuenta que se acabó; cada una sube solo a su rama y deja un bloque `TRASPASO:` en su
+último commit (`git log -1 origin/<rama>`):
+
+- `claude/caza-bugs-final`: monta las nueve respuestas de Ez de la caza (resumen arriba, en la línea
+  de `claude/caza-bugs-propuestas`), una prueba por arreglo y fotos de lo nuevo para Ez. Si quedó a
+  medias, se retoma desde su TRASPASO.
+- `claude/pausa-elegante`: página de la pausa más elegante (fotos, opciones, recomendación).
+  En la pausa solo se enseñan Intro y Esc.
+- `claude/sidebar-propuesta`: segunda vuelta en `main` (merge d0da2c5), publicada en
+  https://claude.ai/artifact/CQwq5epfkXUN8m8m25cM2S. Ez elige: Cuaderno con la pausa o la B,
+  el dibujo de la semana (recomendado «Brotes»), las frases y qué número de vasos manda. Ya dijo:
+  barras de minutos «mucho más elegantes», el pie en texto y la racha de vuelta.
+- `claude/respira-drones-por-tecnica`: terminada, encima de `claude/respira-musica-drones`. Ez
+  escucha y marca en https://claude.ai/artifact/E6ourw8dU6NBuAPRJYR5s9 (sus elecciones quedan en la
+  base de datos del artefacto, colecciones `elecciones` y `respuestas`). Después: subir las dos
+  ramas de música juntas.
+
+La sesión nueva es la **coordinadora** (docs/WORKFLOW.md §9): la única que sube a `main`. Junta cada
+rama cuando diga «LISTO PARA MAIN», pone la versión, construye, pasa la suite entera con un
+`PACE_E2E_PORT` propio y vigila la CI. A Ez no se le repiten preguntas que ya contesta en una sesión
+en paralelo; se le guía en lo que no tiene sesión. Espera a Ez, sin sesión: los ids del calendario,
+la llave y la lista de testers para los códigos, y la propuesta de textos de logros si la conserva.
+
 ## Frase de arranque para la otra cuenta
 
-> Retoma el proyecto PACE desde el repo ezradesign/Pace_app. Antes de nada lee CLAUDE.md, STATE.md y
-> docs/traspaso/LEEME.md, y dime en pocas líneas dónde estamos y qué harías ahora. Háblame en español.
+> Retoma el proyecto PACE desde el repo ezradesign/Pace_app como sesión COORDINADORA. Antes de nada
+> lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md (sobre todo «Relevo de la noche del 8 oct.»),
+> mira el último commit de cada rama que nombra y dime en pocas líneas dónde estamos, qué espera mi
+> respuesta y qué harías ahora. Háblame en español.
