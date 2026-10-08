@@ -267,9 +267,12 @@
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
   /* El bronce de premium sube de valor sobre papel oscuro, como --focus y
-     --breathe: el de crema daba 2,7:1 en el sello. */
+     --breathe: el de crema daba 2,7:1 en el sello. El fondo suave va al 8 % y
+     no al 14 %: en «Mis rutinas» de la barra lateral el sello va dentro de un
+     botón con el mismo fondo, las dos capas se suman y al 14 % se quedaba en
+     3,9:1; al 8 % da 4,8. */
   --premium: #C99A5B;
-  --premium-soft: rgba(201, 154, 91, 0.14);
+  --premium-soft: rgba(201, 154, 91, 0.08);
   /* Las horas del sol en oscuro (s158). Sobre papel oscuro la misma luz
      necesita algo más de cuerpo para no desaparecer, y los tonos suben de
      valor: un azul profundo de paleta clara sobre #1d1a14 sería un agujero
