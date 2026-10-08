@@ -46,6 +46,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.month.tooltip.move':        'min cuerpo',
     'stats.month.tooltip.water':       'vasos',
     'stats.month.hours.unit':          'h',
+    'stats.month.prev':                'Mes anterior',
+    'stats.month.next':                'Mes siguiente',
+    'stats.year.prev':                 'Año anterior',
+    'stats.year.next':                 'Año siguiente',
     // Vista anual — sesión 44
     'stats.year.empty':                'Aún no hay actividad en {year}',
     'stats.year.activeDays':           '{n} días con ritmo',
@@ -101,6 +105,10 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.month.tooltip.move':        'min body',
     'stats.month.tooltip.water':       'glasses',
     'stats.month.hours.unit':          'h',
+    'stats.month.prev':                'Previous month',
+    'stats.month.next':                'Next month',
+    'stats.year.prev':                 'Previous year',
+    'stats.year.next':                 'Next year',
     // Year view — session 44
     'stats.year.empty':                'No activity yet in {year}',
     'stats.year.activeDays':           '{n} days with rhythm',

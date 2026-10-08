@@ -163,7 +163,10 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
   // Atajos de teclado
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === ' ') {
+      /* Espacio solo pausa donde la pausa se ve: en la preparación y en la
+         retención no hay botón ni aviso, y pausar ahí dejaba la sesión quieta
+         sin decirlo. */
+      if (e.key === ' ' && stage === 'active') {
         // No robar Espacio a un control con foco (chips de feedback / CTA en
         // 'done'): activación nativa en vez de preventDefault (guard s116).
         if (sessionKeyOnControl(e)) return;
@@ -205,6 +208,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
 
   const releaseHold = () => {
     if (round < routine.rounds) {
+      setPaused(false);
       setRound(r => r + 1);
       setBreathCount(1);
       setPhase(0);
@@ -247,7 +251,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         accent="var(--breathe)"
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
-        onSkip={() => { setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
+        onSkip={() => { setPaused(false); setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
         atmosphere={atmo}
       />
     );

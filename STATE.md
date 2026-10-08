@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.148.1 · 8 de octubre de 2026.
+**Versión:** v0.148.2 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -81,13 +81,15 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
    y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
    de que Ez vea las fotos. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
-   v0.147.0. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
-   todo lo que se vea se le enseña antes en HTML.
+   v0.147.0. Seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de
+   ingles-6), en v0.148.2; los que sí lo cambian están montados en `claude/caza-bugs-propuestas`, a
+   la espera de que Ez elija en su página. Todo lo que se vea se le enseña antes en HTML.
 4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
    octubre: falta traerla a `main` y que Ez la escuche en la app.
 
 ## Espera a Ez
 
+- Elegir en la página de la caza de bugs qué cambios visibles se suben (`claude/caza-bugs-propuestas`).
 - Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
   contraseña aparte.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
