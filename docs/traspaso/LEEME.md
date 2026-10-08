@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.145.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -35,13 +35,25 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
-- **Bugs: reproduciéndose.** Los 37 hallazgos de `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e
-  Hidrátate) se están reproduciendo uno a uno, y Foco y el estado guardado se están revisando por
-  primera vez. Los que se confirmen se arreglan con su prueba; los de texto o criterio, Ez elige.
-  Mira `git log` y este archivo antes de tocar ninguno.
-- **Ramas abiertas de otros hilos:** `claude/project-thread-ft7sc2` (la pregunta del día en el móvil)
-  se llama v0.144.0, número que ya está en `main`: al subirla toma el siguiente libre.
-  `claude/project-thread-jid37a` («¿Cómo es tu semana?» en la bienvenida) está a medias.
+- **Home del móvil sin scroll: hecha en v0.146.0.** Ez vio la maquetación B (la pregunta con el
+  horario como una línea, de la rama `claude/project-thread-ft7sc2`) en fotos de la app real y dijo
+  «súbela», con una condición: «no quiero scroll de ninguna forma», tampoco en inglés. Desde
+  360×640, ningún momento de la home lo pide: la tarjeta corta va sin «A TU RITMO» («no aporta
+  nada»); la pregunta en inglés es «How many hours today?»; el día servido del móvil va sin la frase
+  del aro, con las filas sin el nombre del módulo y sin pie (opción B: «Hoy voy por libre» como
+  enlace bajo «Cambiar», «Ver todo» al final de la línea y «Al calendario» en esa hoja, que sí se
+  desplaza porque es una lista). A 320×568 se acepta scroll. Descartado mirándolo: esconder los
+  minutos en el día servido y quitar «Trabajo en profundidad» del aro. Las pausas de Respira con
+  motivo «respira» enseñaban una clave en bruto: ahora dicen «Bajar revoluciones» · «Slow down».
+  Las páginas con las que decidió están en `archivos/home-movil/` (`home-*.html`).
+- **Bugs: dos sesiones en paralelo (8 oct).** Una arregla respira-1 y respira-2 (Bhastrika sin su
+  aviso de seguridad y el cierre de «Terminar» en las rondas) y otra respira-3 (el agua de ayer
+  pasada la medianoche). Lo visual se le enseña antes a Ez en HTML. El resto de
+  `CAZA_BUGS_7OCT.md` sigue sin verificar; Foco y el estado guardado no se han revisado. Mira
+  `git log` y ese archivo antes de tocar ninguno.
+- **Ramas abiertas de otros hilos:** `claude/project-thread-9eceyu` (la música de Respira, hecha y
+  sin subir: falta que Ez la escuche en la app) y `claude/project-thread-jid37a` («¿Cómo es tu
+  semana?» en la bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
 - **Glifos revisados:** de los 62 dibujos de ejercicio, seis no casan con su ejercicio (por ejemplo,
   «Barbilla atrás» con la flecha al revés y «Elevación de puntas» que dibuja talones). Están en
   `archivos/glifos/revision-glifos.html`, con un prompt para cada uno. El descanso entre series ya
@@ -50,8 +62,6 @@ antes de trabajar y mira en `git log` qué subió la otra.
   Pomodoro ya no va «A tu ritmo», solo «Hasta las…» (Ez quiere la hora); «Hombros reseteados» se
   corrigió, y dos logros con título repetido son ahora «La rueda del año» y «Bisagra suelta».
 
-- **Home del móvil:** Ez eligió la opción 2. Se estaban maquetando versiones mejor colocadas; no hay
-  nada subido. Ez elige entre ellas.
 - **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
   para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
   aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
@@ -120,9 +130,13 @@ primera versión de pago, en web y Android.
   «Premium» y sin «Pronto». El constructor sigue cerrado.
 - Travesías y Caminos fuera de v1 (Caminos ocultos con `SHOW_CAMINOS` en `app/flags.js`).
 - Icono de la app: Crema. Estilo del aro: «Aro grande». Id de la app: `com.ezradesign.pace`.
-- Home del móvil: por libre, el móvil lleva la tarjeta corta de «A tu ritmo» (v0.141.0): «A TU RITMO»,
-  «¿Cuánto trabajas hoy?», la línea del día sin horas, «Tú eliges las horas» y la píldora «Comienza →»
-  en estilo «papel tonal». El escritorio no cambia.
+- Home del móvil: por libre, el móvil lleva la tarjeta corta de «A tu ritmo» (v0.141.0, sin «A TU
+  RITMO» desde v0.146.0): «¿Cuánto trabajas hoy?», la línea del día sin horas, «Tú eliges las horas»
+  y la píldora «Comienza →» en estilo «papel tonal». El escritorio no cambia.
+- La home del móvil no pide scroll en ningún momento desde 360×640, en los dos idiomas (v0.146.0,
+  «no quiero scroll de ninguna forma»); a 320×568 se acepta. Una lista (la hoja de «Ver todo») sí
+  se desplaza.
+- Motivo de las pausas de Respira: «Bajar revoluciones» · «Slow down».
 - Mueve y Estira se pausan al salir de su pantalla (lo vigila un test).
 - «Al calendario» en «A tu ritmo» (v0.140.0): calendario del móvil en Android (reuniones leídas en el
   dispositivo como «Ocupado», sin nombre), Google Calendar y Outlook en la web y un `.ics` en los dos.
@@ -143,7 +157,7 @@ primera versión de pago, en web y Android.
 
 | Línea | Dónde está | Siguiente paso |
 |---|---|---|
-| Home del móvil antes de contestar el día | Ez eligió «la 2, pero mejor maquetada»: una sola frase, «Hoy voy por libre» junto a la pregunta y las horas de media jornada al elegirla. Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. | Enseñar varias maquetaciones de la 2, que Ez elija, montarla con su prueba y subirla. Imagen de las opciones en `archivos/home-movil/`. |
+| Home del móvil | Hecha en v0.146.0: la pregunta con el horario como una línea (la B), y ningún momento de la home pide scroll desde 360×640 en los dos idiomas (lo vigila `tests/home-sin-scroll.spec.js`). | Nada. Si algo añade alto a la home del móvil, se mide con esa prueba antes de subirlo. |
 | Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow firma el AAB con la llave de subida, que está en los secretos desde el 7 oct. | Probar el APK en el Doogee (lista en `STATE.md`) y subir el AAB firmado (artefacto `pace-android-play`) a la prueba cerrada cuando Google apruebe la identidad de Ez. |
 | Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |

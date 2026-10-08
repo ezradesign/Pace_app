@@ -1,7 +1,8 @@
 /* PACE · A tu ritmo · TU DÍA EN EL CALENDARIO
    ==========================================
-   El enlace «Al calendario» (junto a «Cambiar» en escritorio y en el pie del
-   móvil: opción A de la maqueta, elegida por Ez) y la hoja que abre, con un
+   El enlace «Al calendario» (junto a «Cambiar» en escritorio; en el móvil, en el
+   pie de la hoja de «Ver todo»: el día servido ya no tiene pie para que la home
+   no pida scroll) y la hoja que abre, con un
    destino por fila. En Android, el calendario del móvil y el archivo; en la web,
    Google y Outlook (si PACE está dado de alta en ellos) y el archivo. Lo que hace
    cada botón vive en ritmo.calendario.destinos.js.

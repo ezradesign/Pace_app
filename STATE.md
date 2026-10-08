@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.145.0 · 8 de octubre de 2026.
+**Versión:** v0.146.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -41,6 +41,12 @@ el portátil de Ez al 100 % (v0.145.0, el «lienzo que crece» de `app/main/_lie
 nueva de la ventana pasa por él: `paceCaja`, `paceLienzoAlto` y `var(--pace-vh, 1vh)` (lo vigila
 `verify`).
 
+La home del móvil no pide scroll en ningún momento desde 360×640, en castellano y en inglés
+(v0.146.0, regla de Ez: «no quiero scroll de ninguna forma»). La pregunta del día dibuja el horario
+como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el día servido va sin pie:
+«Hoy voy por libre» bajo «Cambiar», «Ver todo» al final de la línea y «Al calendario» en esa hoja.
+Lo vigila `tests/home-sin-scroll.spec.js`; a 320×568 se acepta scroll.
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
@@ -62,12 +68,12 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    se paga.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
-   Hidrátate) se están reproduciendo, y Foco y el estado guardado se revisan por primera vez. Se
-   arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez.
-
-4. **La home del móvil antes de contestar el día:** Ez eligió «la 2, pero mejor maquetada»
-   (detalle en `docs/traspaso/LEEME.md`). Hoy pide 28 px de scroll a 375×667 y 46 a 360×640. Hay
-   trabajo a medias en la rama `claude/project-thread-ft7sc2`.
+   Hidrátate). El 8 de octubre dos sesiones en paralelo arreglan los tres graves de Respira e
+   Hidrátate (Bhastrika sin su aviso, «Terminar» en las rondas y el agua de ayer pasada la
+   medianoche). Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
+   todo lo que se vea se le enseña antes en HTML.
+4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
+   octubre: falta traerla a `main` y que Ez la escuche en la app.
 
 ## Espera a Ez
 
@@ -85,8 +91,9 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
 ## Deuda conocida, sin fecha
 
-- Las cinco escenas con scroll anteriores a v0.130.0. Desde v0.141.0, por libre, el móvil lleva una
-  tarjeta corta y la home cabe a 360×718 y 375×667; aún pide 18 px a 360×640 y 74 a 320×568.
+- A 320×568 la home del móvil pide scroll (de 49 a 137 px según el momento): Ez lo acepta, porque
+  caber exigiría encoger el aro y lo de dentro. Fuera de la home, las escenas con scroll anteriores
+  a v0.130.0.
 - En «A tu ritmo»: el miércoles sale con tres largas (2.ª, 5.ª y 8.ª), el modo oscuro del panel, el
   cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga semanas de datos.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de

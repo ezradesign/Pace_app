@@ -6,8 +6,9 @@
  * pintaban encima del trazo. Lo vio Ez en su movil, por libre.
  *
  * Cada caso es la vista mas baja medida en la que su estado todavia no cabe, asi
- * que el aro tiene que bajar hasta su suelo: por libre a 360x640 (a 360x718 la
- * tarjeta corta del movil ya cabe) y con la pregunta del dia a 375x600 (con el
+ * que el aro tiene que bajar hasta su suelo: por libre a 360x600 (desde v0.146.0,
+ * sin «A TU RITMO» en la tarjeta corta, a 360x640 ya cabe) y con la pregunta del
+ * dia a 375x600 (con el
  * horario dibujado como linea del dia, a 375x667 y a 375x640 ya cabe). Si un
  * cambio hace que quepa, el GUARD lo dice: el caso ya no probaria el suelo.
  *
@@ -48,7 +49,7 @@ function medirInterior(page) {
 }
 
 const CASOS = [
-  { nombre: 'por libre a 360x640', viewport: { width: 360, height: 640 }, extra: { ritmo: { libre: true } } },
+  { nombre: 'por libre a 360x600', viewport: { width: 360, height: 600 }, extra: { ritmo: { libre: true } } },
   { nombre: 'con la pregunta del dia a 375x600', viewport: { width: 375, height: 600 }, extra: { ritmo: {} } },
 ];
 
