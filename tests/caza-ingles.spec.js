@@ -86,6 +86,34 @@ test('ingles-3 · arriba dice Break y Long break, y con un Foco empezado pregunt
   expect(await modo()).toBe('larga');
 });
 
+/* «Long break» es más largo que «Long»: en el móvil partía en dos líneas y la
+   pill bajaba sobre los iconos. Se mide contra todos los controles, como
+   topbar-pill-movil.spec.js (el botón de menú vive fuera de la topbar). */
+for (const [w, h] of [[390, 844], [412, 915]]) {
+  test(`ingles-3 · en el móvil «Long break» cabe en una línea y no pisa nada · ${w}`, async ({ page, context }) => {
+    await page.setViewportSize({ width: w, height: h });
+    await sembrar(context, EN);
+    await irAlArtefacto(page);
+    const r = await page.evaluate(() => {
+      const pill = document.querySelector('[data-pace-tabs]');
+      const p = pill.getBoundingClientRect();
+      const lineas = [...pill.querySelectorAll('button')].map((b) => {
+        const rg = document.createRange(); rg.selectNodeContents(b);
+        return new Set([...rg.getClientRects()].map((q) => Math.round(q.top))).size;
+      });
+      const pisa = [...document.querySelectorAll('button, a, [role="button"]')]
+        .filter((e) => !pill.contains(e) && e.getBoundingClientRect().width > 0)
+        .filter((e) => { const q = e.getBoundingClientRect();
+          return Math.min(q.right, p.right) - Math.max(q.left, p.left) > 0 && Math.min(q.bottom, p.bottom) - Math.max(q.top, p.top) > 0; })
+        .map((e) => e.getAttribute('aria-label') || e.textContent.trim());
+      return { visible: p.width > 0, lineas, pisa };
+    });
+    expect(r.visible, 'GUARD: la pill no se ve a este tamaño').toBe(true);
+    expect(r.lineas, 'una pestaña parte su texto').toEqual([1, 1, 1]);
+    expect(r.pisa, 'la pill pisa otros controles').toEqual([]);
+  });
+}
+
 /* ingles-4 */
 test('ingles-4 · la cabecera de Estira dice la categoría y no la etiqueta interna', async ({ page, context }) => {
   await sembrar(context, EN);

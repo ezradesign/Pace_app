@@ -191,6 +191,15 @@
           top: calc(10px - 4px * var(--pace-home-squeeze, 0)) !important;
           transform: translateX(-50%) !important;
         }
+        /* En inglés «LONG BREAK» no cabía: partía en dos líneas y la pill bajaba
+           6 px sobre los iconos. Con menos aire entre letras y a los lados mide
+           lo que mide en castellano (unos 246 px), así que el hueco con el menú
+           sigue siendo el de arriba. El castellano no cambia. */
+        html[lang="en"] [data-pace-topbar] [data-pace-tabs] button {
+          padding: 6px 11px !important;
+          letter-spacing: 0.12em !important;
+          white-space: nowrap;
+        }
       }
 
       /* LA PILL EN TABLETA VERTICAL · s197: a 768-1024 de ancho ya no se solapa con
