@@ -2,7 +2,7 @@
    ganancia de la app (0,158), y el ajuste de nivel de cada variación. */
 window.PACE_MEDIDAS = {
  "breathe.rounds.express": {
-  "ajusteDb": -0.34,
+  "ajusteDb": -0.22,
   "hoy": {
    "ciclo": -20.51,
    "abierto": -20.51,
@@ -12,13 +12,13 @@ window.PACE_MEDIDAS = {
   "a": {
    "ciclo": -20.51,
    "abierto": -20.51,
-   "banda": -20.9,
-   "agudos": -30.83,
-   "pico": -6.69
+   "banda": -20.99,
+   "agudos": -32.17,
+   "pico": -6.84
   }
  },
  "breathe.rounds.full": {
-  "ajusteDb": -0.03,
+  "ajusteDb": 0.02,
   "hoy": {
    "ciclo": -20.51,
    "abierto": -20.51,
@@ -28,9 +28,9 @@ window.PACE_MEDIDAS = {
   "a": {
    "ciclo": -20.51,
    "abierto": -20.51,
-   "banda": -21.06,
-   "agudos": -31.67,
-   "pico": -7.02
+   "banda": -21.1,
+   "agudos": -32.29,
+   "pico": -7.12
   }
  },
  "breathe.rounds.long": {
@@ -282,7 +282,7 @@ window.PACE_MEDIDAS = {
   }
  },
  "breathe.kapalabhati": {
-  "ajusteDb": -0.28,
+  "ajusteDb": 0.05,
   "hoy": {
    "ciclo": -20.51,
    "abierto": -20.51,
@@ -292,9 +292,9 @@ window.PACE_MEDIDAS = {
   "a": {
    "ciclo": -20.51,
    "abierto": -20.51,
-   "banda": -19.87,
-   "agudos": -27.34,
-   "pico": -6.57
+   "banda": -20.07,
+   "agudos": -31.92,
+   "pico": -6.82
   }
  },
  "breathe.kumbhaka": {
