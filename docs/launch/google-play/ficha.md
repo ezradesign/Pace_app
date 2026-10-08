@@ -107,3 +107,61 @@ y el vídeo son opcionales: se pueden dejar vacíos.
 ```
 Primera versión de prueba de PACE en Android. Gracias por probarla: cuéntame lo que falle y lo que echarías de menos.
 ```
+
+---
+
+## La ficha en inglés (en-US)
+
+Ez decidió publicar en todo el mundo (8 de octubre de 2026), y la app ya va en inglés. En Play
+Console: **Ficha principal de la tienda → Gestionar traducciones → Añadir tus propias traducciones →
+Inglés (Estados Unidos) – en-US**, y se pegan estos textos. Sin traducción, fuera de España la gente
+vería la ficha en español. Las capturas pueden quedarse las mismas: Play usa las del idioma
+predeterminado si no hay otras (unas en inglés serían mejor, cuando se hagan).
+
+| Campo | Qué poner |
+|---|---|
+| Nombre de la app (máx. 30) | `PACE: active breaks & focus` |
+
+### Descripción breve (máx. 80)
+
+```
+Pomodoro with guided breaks: breathe, stretch and move without leaving your desk
+```
+
+### Descripción completa (máx. 4000)
+
+```
+PACE is an antidote to the chair. If you spend the day sitting in front of a screen, it helps you work with focus and stop in time: a little breathing, a little mobility, a glass of water. Short, guided breaks that fit between two tasks.
+
+AT YOUR PACE
+Tell PACE how long you're working today and it splits the day into focus blocks and named breaks, around your schedule and your lunch. At the end of each block it serves the break that fits. If you have meetings, PACE reads them from your calendar and works around them. And if you like, it puts the whole day in your calendar.
+
+FOCUS
+A calm pomodoro of 15, 25, 35 or 45 minutes, or whatever you choose. A reminder when it ends, even with the app in the background.
+
+BREATHE
+Twenty guided techniques: coherent breathing, box breathing, 4·7·8, the physiological sigh, pranayamas and round breathing. Intense techniques always come with a safety notice.
+
+MOVE AND STRETCH
+More than thirty short routines of mobility and quiet strength: neck, shoulders, hips, back, legs. Many can be done seated and with no equipment, without anyone in the office noticing. Every step with its drawing and its explanation.
+
+HYDRATE
+One tap per glass. No goals that weigh on you.
+
+ACHIEVEMENTS
+More than eighty field-notebook stamps, drawn by hand. For exploring, not for competing.
+
+CALM BY DESIGN
+Earthy colours, careful typography and dark mode. No ads, no streaks that punish you, no nagging notifications.
+
+YOUR DATA IS YOURS
+No account and no sign-up. Everything is stored on your phone: PACE has no servers, no analytics and no tracking. You can export a copy whenever you want.
+
+PACE is not a medical device and does not replace the advice of a professional. If you have any medical condition, check with them before doing the intense breathing exercises.
+```
+
+### Países
+
+**Probar y publicar → Producción → Países / regiones → Añadir países / regiones → todos.** En la
+prueba cerrada también conviene abrirla a todos: así un tester de fuera no se queda sin poder
+instalarla.
