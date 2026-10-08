@@ -47,6 +47,14 @@ android {
         }
     }
     buildTypes {
+        /* El APK de prueba es OTRA app (com.ezradesign.pace.prueba, «PACE prueba»,
+           nombre en src/debug/res): asi convive en el mismo movil con la de Google
+           Play. Con el mismo id, Android no deja instalar una encima de la otra
+           (las firman llaves distintas) y desinstalar borra los datos. */
+        debug {
+            applicationIdSuffix ".prueba"
+            versionNameSuffix "-prueba"
+        }
         release {
             if (System.getenv('PACE_UPLOAD_KEYSTORE')) signingConfig signingConfigs.release
             minifyEnabled false

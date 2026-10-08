@@ -7,8 +7,16 @@
 #
 # Si el repo tiene la llave de subida a Google Play en sus secretos
 # (PACE_UPLOAD_KEYSTORE, el archivo en base64, y PACE_UPLOAD_PASSWORD), compila
-# tambien el AAB firmado que se sube a Play: artefacto `pace-android-play`. Sin
-# la llave ese paso se salta y todo lo demas sigue igual.
+# tambien el AAB firmado que se sube a Play: artefacto `pace-play-vX.Y.Z`, con
+# `PACE-X.Y.Z.aab` dentro. Sin la llave ese paso se salta y todo lo demas sigue
+# igual.
+#
+# En `main`, cada version deja ademas su AAB en un BORRADOR de release de GitHub
+# (`vX.Y.Z`): los artefactos caducan a los 90 dias y Play no deja volver a subir
+# un numero de version, asi que el archivo que se subio tiene que poder
+# encontrarse siempre. Es borrador porque el repo es publico: un borrador solo
+# lo ven quienes pueden escribir en el repo. Si llegan varios commits con la
+# misma version, el borrador se queda con el AAB del ultimo.
 
 name: Android
 
@@ -17,8 +25,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# write: para dejar el AAB de cada version en su borrador de release.
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: android-${{ github.ref }}
@@ -74,10 +83,37 @@ jobs:
           trap 'rm -f "$PACE_UPLOAD_KEYSTORE"' EXIT
           echo "$LLAVE" | base64 --decode > "$PACE_UPLOAD_KEYSTORE"
           ./gradlew bundleRelease --no-daemon
+          # La misma version que lee build.gradle, para el nombre del archivo.
+          VERSION=$(sed -n "s/.*PACE_VERSION = 'v\([0-9.]*\)'.*/\1/p" ../app/state-core.jsx | head -1)
+          test -n "$VERSION"
+          cp app/build/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/PACE-$VERSION.aab"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-artifact@v4
         if: steps.aab.outcome == 'success'
         with:
-          name: pace-android-play
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          name: pace-play-v${{ steps.aab.outputs.version }}
+          path: ${{ runner.temp }}/PACE-${{ steps.aab.outputs.version }}.aab
           if-no-files-found: error
+
+      # El borrador de release de la version, con su AAB y su linea del
+      # CHANGELOG. Solo desde main: una rama no debe pisar el archivo de una
+      # version que quiza ya se subio a Play.
+      - name: guardar el aab en el borrador de la version
+        if: steps.aab.outcome == 'success' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.aab.outputs.version }}
+        run: |
+          TAG="v$VERSION"
+          AAB="$RUNNER_TEMP/PACE-$VERSION.aab"
+          NOTAS=$(grep -F "| $TAG |" CHANGELOG.md | head -1 | awk -F' \\| ' '{print $3}' | sed 's/ |$//')
+          [ -n "$NOTAS" ] || NOTAS="Sin linea en el CHANGELOG."
+          CUERPO=$(printf '%s\n\nCommit: %s\n\nBorrador: no se publica. Guarda el archivo que se sube a Google Play.' "$NOTAS" "$GITHUB_SHA")
+          # Los borradores no tienen etiqueta todavia, asi que se buscan en la lista.
+          if gh release list --limit 200 --json tagName --jq '.[].tagName' | grep -qxF "$TAG"; then
+            gh release upload "$TAG" "$AAB" --clobber
+            gh release edit "$TAG" --target "$GITHUB_SHA" --notes "$CUERPO"
+          else
+            gh release create "$TAG" "$AAB" --draft --target "$GITHUB_SHA" --title "PACE $VERSION" --notes "$CUERPO"
+          fi
