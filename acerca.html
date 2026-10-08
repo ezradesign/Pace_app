@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qué es PACE</title>
+<meta name="description" content="PACE: pausas activas para quien trabaja sentado. Foco, respiración, movimiento y agua, a tu ritmo.">
+<!-- La página principal que Google pide para verificar PACE (qué es la app y
+     enlace a la privacidad): pacegrass.app abre la app directamente. Estática
+     y autocontenida, como privacy.html; la landing de verdad es de la Fase 6. -->
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4;
+    --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372;
+    --line: #C9C0A8; --focus: #3E5A3A; --focus-cta: #50624D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1d1a14; --paper-2: #26211a;
+      --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --focus: #7A9A6D; --focus-cta: #7A9A6D;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: system-ui, -apple-system, sans-serif;
+    font-size: 16px; line-height: 1.65; }
+  main { max-width: 560px; margin: 0 auto; padding: 56px 24px 48px; }
+  img { display: block; width: 96px; height: 96px; margin: 0 0 20px -8px; }
+  .kicker { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 8px; }
+  h1, h2 { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 500; line-height: 1.1; margin: 0 0 16px; }
+  h1 { font-size: 40px; }
+  h2 { font-size: 26px; margin-top: 8px; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  .abrir { display: inline-block; background: var(--focus-cta); color: var(--paper); text-decoration: none; border-radius: 999px;
+    padding: 10px 24px; margin: 8px 0 4px; font-size: 15px; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  a { color: var(--focus); }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <img src="/icons/icon-192.png" alt="La vaca de PACE">
+  <section lang="es">
+    <div class="kicker">PACE · Foco · Cuerpo</div>
+    <h1>Trabaja a tu ritmo</h1>
+    <p>PACE es una app de pausas activas para quien trabaja sentado. Alterna bloques de foco con pausas
+    cortas para respirar, moverte, estirar y beber agua, y con «A tu ritmo» reparte tu jornada sin que
+    tengas que pensarlo.</p>
+    <p>Si quieres, lleva tu día a Google Calendar, a Outlook o al calendario del móvil, y coloca las
+    pausas alrededor de tus reuniones. Tus datos se quedan en tu dispositivo: sin cuentas y sin
+    rastreo.</p>
+    <a class="abrir" href="/">Abrir PACE</a>
+  </section>
+  <hr>
+  <section lang="en">
+    <h2>Work at your own pace</h2>
+    <p>PACE is an active-break app for people who work sitting down. It alternates focus blocks with
+    short breaks to breathe, move, stretch and drink water, and «At your pace» lays out your workday
+    for you.</p>
+    <p>If you like, it puts your day in Google Calendar, Outlook or your phone's calendar, and plans
+    the breaks around your meetings. Your data stays on your device: no accounts and no tracking.</p>
+    <a class="abrir" href="/">Open PACE</a>
+  </section>
+  <div class="footer">
+    <span>Pace · by @ezradesign</span>
+    <span><a href="/privacy">Privacidad · Privacy</a> · <a href="/safety">Seguridad · Safety</a></span>
+  </div>
+</main>
+</body>
+</html>

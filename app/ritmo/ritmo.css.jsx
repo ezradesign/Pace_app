@@ -334,6 +334,9 @@
 .pace-rt-cal-btn.pace-rt-lleno { background: var(--focus-cta) !important; color: var(--paper) !important; }
 .pace-rt-cal-btn.pace-rt-lleno:hover:not(:disabled) { background: var(--focus) !important; }
 .pace-rt-cal-btn:disabled { opacity: 0.5; cursor: default; }
+.pace-rt-cal-btn.pace-rt-suave { border-color: var(--line) !important; color: var(--ink-3) !important; }
+.pace-rt-cal-ok { color: var(--focus); }
+.pace-rt-cal-ok::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
 .pace-rt-cal-btn:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-cal-chk { display: flex; gap: 10px; align-items: flex-start; padding: 2px 0 12px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
 .pace-rt-cal-chk input { accent-color: var(--focus-cta); width: 16px; height: 16px; margin: 2px 0 0; flex-shrink: 0; }

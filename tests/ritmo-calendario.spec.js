@@ -13,8 +13,11 @@
  *  · ANDROID con un CapacitorCalendar espía: pide permiso, lee las reuniones,
  *    borra lo de PACE que queda de hoy (y nada más) y escribe el día ya
  *    recompuesto; sin permiso no escribe nada;
- *  · GOOGLE y MICROSOFT con su red interceptada: la ventana del permiso vuelve
- *    por /calendario.html y localStorage, y se escribe lo mismo que en Android.
+ *  · AL DÍA SOLO en Android: tras añadir, cambiar el día reescribe lo que queda
+ *    sin pulsar nada.
+ *
+ * Google y Outlook, con su calendario «PACE» y el «al día solo» de la web, van
+ * en ritmo-calendario-web.spec.js.
  *
  * NO CUBRE: Android de verdad (que el complemento compile lo dice el workflow
  * Android; que escriba en el calendario del móvil, un móvil), ni Google ni
@@ -291,6 +294,35 @@ test.describe('en Android', () => {
     expect(errores).toEqual([]);
   });
 
+  test('al día solo: tras añadir, cambiar el día reescribe lo que queda sin pulsar nada', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await comoAndroid(context, { eventos: EVENTOS_MOVIL });
+    await abrir(page, context, { sidebarCollapsed: true });
+    await abrirCalendarioMovil(page);
+    const hoja = page.locator('[data-pace-cal]');
+    await hoja.locator('[data-pace-cal-destino="android"] button').click();
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('A partir de ahora se pone al día solo');
+    await expect(hoja.locator('[data-pace-cal-destino="android"] [data-pace-cal-estado="al-dia"]')).toBeVisible();
+    await expect(hoja.locator('[data-pace-cal-destino="android"] button')).toHaveText('Desconectar');
+    await page.getByRole('button', { name: 'Listo', exact: true }).click();
+    const creados = (await llamadas(page, 'createEvent')).length;
+
+    await page.evaluate(() => ritmoGuardar((r) => ({ dia: Object.assign({}, r.dia, { opcion: 'media' }) })));
+    await page.clock.runFor(6000);
+    await expect.poll(async () => (await llamadas(page, 'createEvent')).length).toBeGreaterThan(creados);
+    /* Lo de PACE que queda en el móvil es el plan de ahora, sin duplicados, y la reunión sigue. */
+    const r = await page.evaluate(() => {
+      const t = (k) => PACE_STRINGS.es[k] || k;
+      const tn = (k, v) => t(k).replace(/\{(\w+)\}/g, (_, x) => v[x]);
+      const quedan = window.__nativo.eventos.filter((e) => (e.description || '').includes('pacegrass.app') && e.endDate > Date.now()).length;
+      const p = ritmoPlan(getState());
+      return { quedan, plan: calendarioEventos(p.m, ritmoAhoraExacto(), t, tn, 'es').length, reunion: window.__nativo.eventos.some((e) => e.id === 'r1') };
+    });
+    expect(r.quedan).toBe(r.plan);
+    expect(r.reunion).toBe(true);
+    expect(errores).toEqual([]);
+  });
+
   test('sin permiso no escribe nada y lo dice', async ({ page, context }) => {
     await comoAndroid(context, { permiso: 'denied', eventos: EVENTOS_MOVIL });
     await abrir(page, context, { sidebarCollapsed: true });
@@ -302,97 +334,3 @@ test.describe('en Android', () => {
     expect(await llamadas(page, 'deleteEvent')).toHaveLength(0);
   });
 });
-
-/* ------------------------------------------------------------------ Google y Microsoft */
-/* La ventana del permiso: el proveedor «contesta» volviendo a /calendario.html
-   con lo que mandaría, y su `state`. */
-async function proveedorFalso(context, host, vuelta) {
-  await context.route('https://' + host + '/**', (route) => {
-    const url = new URL(route.request().url());
-    if (url.pathname.endsWith('/token')) {
-      return route.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ access_token: 'pase-ms', expires_in: 3600 }) });
-    }
-    const destino = url.searchParams.get('redirect_uri') + '#' + vuelta + '&state=' + url.searchParams.get('state');
-    return route.fulfill({ status: 302, headers: { location: destino } });
-  });
-}
-
-function apiFalsa(context, host, responde) {
-  const vistas = [];
-  return context.route('https://' + host + '/**', async (route) => {
-    const req = route.request();
-    if (req.method() === 'OPTIONS') {
-      return route.fulfill({ status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': '*' } });
-    }
-    vistas.push({ metodo: req.method(), url: req.url(), cuerpo: req.postDataJSON ? (() => { try { return req.postDataJSON(); } catch (e) { return null; } })() : null, auth: req.headers().authorization });
-    const r = responde(req, vistas);
-    return route.fulfill(Object.assign({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' } }, r));
-  }).then(() => vistas);
-}
-
-for (const prov of ['google', 'microsoft']) {
-  test('con ' + prov + ': la ventana del permiso vuelve por localStorage, lee las reuniones y escribe el día', async ({ page, context }) => {
-    const errores = capturarErrores(page);
-    const google = prov === 'google';
-    await proveedorFalso(context, google ? 'accounts.google.com' : 'login.microsoftonline.com',
-      google ? 'access_token=pase-g&expires_in=3600&token_type=Bearer' : 'code=codigo-ms');
-    const reunion = google
-      ? { id: 'r1', start: { dateTime: '2026-09-17T12:00:00+02:00' }, end: { dateTime: '2026-09-17T12:30:00+02:00' } }
-      : { start: { dateTime: '2026-09-17T10:00:00.0000000' }, end: { dateTime: '2026-09-17T10:30:00.0000000' }, showAs: 'busy' };
-    const rechazada = google
-      ? { id: 'r2', start: { dateTime: '2026-09-17T15:00:00+02:00' }, end: { dateTime: '2026-09-17T16:00:00+02:00' }, attendees: [{ self: true, responseStatus: 'declined' }] }
-      : { start: { dateTime: '2026-09-17T13:00:00.0000000' }, end: { dateTime: '2026-09-17T14:00:00.0000000' }, showAs: 'free' };
-    const vistas = await apiFalsa(context, google ? 'www.googleapis.com' : 'graph.microsoft.com', (req) => {
-      const u = req.url();
-      if (req.method() === 'POST') return { body: JSON.stringify({ id: 'nuevo' }) };
-      if (req.method() === 'DELETE') return { status: 204, body: '' };
-      if (google) {
-        return u.includes('privateExtendedProperty')
-          ? { body: JSON.stringify({ items: [{ id: 'viejo', end: { dateTime: '2026-09-17T12:30:00+02:00' } }] }) }
-          : { body: JSON.stringify({ items: [reunion, rechazada] }) };
-      }
-      return u.includes('/calendarView')
-        ? { body: JSON.stringify({ value: [reunion, rechazada] }) }
-        : { body: JSON.stringify({ value: [{ id: 'viejo', end: { dateTime: '2026-09-17T10:30:00.0000000' } }] }) };
-    });
-    await abrir(page, context);
-    await page.evaluate((p) => { CALENDARIO_IDS[p] = 'id-de-prueba'; }, prov);
-    await vis(page, '[data-pace-ritmo-calendario]').click();
-    const hoja = page.locator('[data-pace-cal]');
-    const fila = hoja.locator('[data-pace-cal-destino="' + prov + '"]');
-    await expect(fila.locator('button')).toHaveText('Conectar');
-    await fila.locator('button').click();
-    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.', { timeout: 15_000 });
-
-    const escritos = vistas.filter((v) => v.metodo === 'POST');
-    const borrados = vistas.filter((v) => v.metodo === 'DELETE');
-    expect(borrados).toHaveLength(1);
-    expect(borrados[0].url).toContain('viejo');
-    expect(escritos.length).toBeGreaterThan(5);
-    vistas.forEach((v) => expect(v.auth).toBe('Bearer ' + (google ? 'pase-g' : 'pase-ms')));
-    /* La reunión es a las 12:00 de Madrid en los dos (Microsoft la da en UTC). */
-    escritos.forEach((v) => {
-      const c = v.cuerpo;
-      const ini = google ? Date.parse(c.start.dateTime) : Date.parse(c.start.dateTime + 'Z');
-      const fin = google ? Date.parse(c.end.dateTime) : Date.parse(c.end.dateTime + 'Z');
-      expect(ini < ms('12:30') && fin > ms('12:00')).toBe(false);
-      if (google) {
-        expect(c.reminders).toEqual({ useDefault: false, overrides: [] });
-        expect(c.transparency).toBe('opaque');
-        expect(c.extendedProperties.private).toEqual({ pace: 'ritmo', paceDia: FECHA });
-      } else {
-        expect(c.isReminderOn).toBe(false);
-        expect(c.showAs).toBe('busy');
-        expect(c.singleValueExtendedProperties[0].value).toBe(FECHA);
-      }
-    });
-    const estado = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2')).ritmo.ocupado);
-    expect(estado.tramos).toEqual([[720, 30]]);
-    /* La vuelta no se queda en el navegador, y el pase vive solo en la pestaña. */
-    expect(await page.evaluate(() => localStorage.getItem('pace.calendario.vuelta'))).toBeNull();
-    expect(await page.evaluate(() => Object.keys(JSON.parse(sessionStorage.getItem('pace.calendario.pase'))))).toEqual([prov]);
-    await expect(fila.locator('button')).toHaveText('Añadir');
-    expect(errores).toEqual([]);
-  });
-}

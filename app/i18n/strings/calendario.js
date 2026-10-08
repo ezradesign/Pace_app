@@ -53,6 +53,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'cal.error.pase':                'El permiso ha caducado. Vuelve a pulsar para conectar.',
     'cal.error.red':                 'No se pudo hablar con el calendario. Prueba otra vez en un momento.',
     'cal.error.sin-dia':             'Elige antes cuánto trabajas hoy.',
+    'cal.btn.desconectar':           'Desconectar',
+    'cal.btn.renovar':               'Renovar',
+    'cal.aldia':                     'Al día · se pone al día solo',
+    'cal.dest.pace':                 'En tu calendario «PACE»',
+    'cal.caducada':                  'La conexión ha caducado: un toque la renueva',
+    'cal.hecho.solo':                'A partir de ahora se pone al día solo mientras PACE esté abierta.',
+    'cal.hecho.desconectado':        'Desconectado. Lo que ya estaba en tu calendario se queda.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -103,4 +110,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'cal.error.pase':                'The permission expired. Tap again to connect.',
     'cal.error.red':                 'Could not reach the calendar. Try again in a moment.',
     'cal.error.sin-dia':             'First choose how long you work today.',
+    'cal.btn.desconectar':           'Disconnect',
+    'cal.btn.renovar':               'Renew',
+    'cal.aldia':                     'Up to date · keeps itself current',
+    'cal.dest.pace':                 'In your «PACE» calendar',
+    'cal.caducada':                  'The connection expired: one tap renews it',
+    'cal.hecho.solo':                'From now on it keeps itself current while PACE is open.',
+    'cal.hecho.desconectado':        'Disconnected. What was already in your calendar stays.',
 });
