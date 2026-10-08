@@ -109,9 +109,16 @@ function applyTheme(estado) {
 
 /* El idioma del documento sigue al de la interfaz: con `lang="es"` fijo, el
    lector de pantalla leía el inglés con voz castellana y Chrome ofrecía
-   «traducir del español». */
+   «traducir del español». La pestaña también: el nombre se traduce y el sufijo
+   « — vX.Y.Z» se conserva tal como lo trae el <title>, porque al cargar
+   `PACE_VERSION` todavía no está en window. */
 function applyLang(estado) {
-  if (estado && estado.lang) document.documentElement.setAttribute('lang', estado.lang);
+  if (!estado || !estado.lang) return;
+  document.documentElement.setAttribute('lang', estado.lang);
+  try {
+    const sufijo = (document.title.match(/\s—\s*v[\d.]+\s*$/) || [''])[0];
+    document.title = (estado.lang === 'en' ? 'PACE · Focus · Body' : 'PACE · Foco · Cuerpo') + sufijo;
+  } catch (e) {}
 }
 
 /* Solo `applyTheme` cruza: los dos marcadores son su mecanica interna y nadie

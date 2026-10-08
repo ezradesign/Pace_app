@@ -135,6 +135,10 @@ function paceVozEncendida() {
   var st = paceVozEstado();
   /* sin estado no se adivina: se cae al sintetizador, que es lo de siempre */
   if (!st) return false;
+  /* Las locuciones dicen «inhala / mantén / exhala»: con la app en inglés suena
+     el tono hasta que haya voz grabada en inglés (Ez, 8 oct. 2026). La elección
+     de Ajustes se guarda tal cual y vuelve al pasar a castellano. */
+  if (st.lang === 'en') return false;
   return st.voiceOn !== false;
 }
 
