@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.148.1 | 2026-10-08 | En Mueve y Estira el aro del dibujo se queda vacío mientras te colocas y al cambiar de lado, y empieza a dibujarse cuando empieza el ejercicio: antes se llenaba durante «Colócate» y se vaciaba de golpe al arrancar |
 | v0.148.0 | 2026-10-08 | «¿Cómo es tu semana?»: la bienvenida pregunta tu semana una vez (qué días son jornada, media o libres, y tus horas), y desde entonces cada mañana el día llega ya contestado («Jornada entera · como cada jueves», con «Comienza» y «Hoy es distinto»; en escritorio, tu opción marcada); los días libres de tu semana son «Hoy voy por libre», y «Tu semana» en Ajustes la cambia |
 | v0.147.0 | 2026-10-08 | La lista de horas de «A tu ritmo» se leía mal en modo oscuro (blanca con las horas en crema): ahora la dibuja PACE en las dos paletas, con su papel y su letra; y la casilla del aviso de apnea ya no es un cuadrado blanco en oscuro ni azul al marcarla. |
 | v0.146.1 | 2026-10-08 | Pasada la medianoche con la app abierta, el agua y «Hoy» empiezan el día a cero sin tocar nada (antes enseñaban los vasos de ayer hasta el primer gesto), sin que una pestaña vieja pise lo hecho en otra; y en inglés la frase de llegar tarde dice «today 10:00–17:00», que con otro navegador partía el horario en tres líneas y pedía scroll |
