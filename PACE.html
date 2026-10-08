@@ -192,6 +192,10 @@
   <!-- state-core.toast (s198): el buzon de avisos, cortado de state-core.jsx por
        un punto al pasar este de 500 lineas. Nadie lo llama al evaluarse. -->
   <script type="text/babel" src="app/state-core.toast.jsx"></script>
+  <!-- state-core.dia: el cambio de dia con la app abierta (al volver la pagina al
+       frente y cada minuto a la vista). DESPUES de state-core, que define
+       `ensureDayFresh`; arma sus escuchas al evaluarse. -->
+  <script type="text/babel" src="app/state-core.dia.js"></script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
        los detectores que faltaban. ANTES de state-timer y state-hydrate, que
        usan bumpCount/getCount para los logros de volumen. -->
