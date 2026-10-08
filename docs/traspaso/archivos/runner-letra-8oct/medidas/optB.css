@@ -1,0 +1,2 @@
+.pace-v1-raiz .pace-v1-cues > * { font-family: var(--font-display); font-style: italic; font-size: 18px; line-height: 1.32; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+@media (max-width: 640px) { .pace-v1-raiz .pace-v1-cues > * { font-size: 17px; } }
