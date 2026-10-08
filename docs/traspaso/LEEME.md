@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.2.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.147.1.
 
 ## Cómo seguir desde otra cuenta
 
@@ -35,7 +35,7 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
-- **Aro de Mueve y Estira vacío al colocarse: hecho en v0.146.2.** Ez escribió «el aro de tiempo
+- **Aro de Mueve y Estira vacío al colocarse: hecho en v0.147.1.** Ez escribió «el aro de tiempo
   que se rellene para empezar queda raro, mejor es vacío ya que no ha empezado el ejercicio». Vio
   tres opciones en fotos y eligió la A (vacío del todo, solo el trazo de fondo), también en la pausa
   de «Cambia de lado». El aro solo cuenta el ejercicio y el descanso; lo vigila
@@ -53,7 +53,9 @@ antes de trabajar y mira en `git log` qué subió la otra.
   Las páginas con las que decidió están en `archivos/home-movil/` (`home-*.html`).
 - **Bugs: dos sesiones en paralelo (8 oct).** Una arregla respira-1 y respira-2 (Bhastrika sin su
   aviso de seguridad y el cierre de «Terminar» en las rondas) y otra respira-3 (el agua de ayer
-  pasada la medianoche). Lo visual se le enseña antes a Ez en HTML. El resto de
+  pasada la medianoche). Lo visual se le enseña antes a Ez en HTML. En v0.147.0 se cerraron
+  oscuro-1 y oscuro-4: Ez eligió que la lista de horas de «A tu ritmo» la dibuje PACE en las dos
+  paletas (la opción C de `archivos/oscuro/horas-oscuro.html`) y arreglar la casilla de apnea. El resto de
   `CAZA_BUGS_7OCT.md` sigue sin verificar; Foco y el estado guardado no se han revisado. Mira
   `git log` y ese archivo antes de tocar ninguno.
 - **Ramas abiertas de otros hilos:** `claude/project-thread-9eceyu` (la música de Respira, hecha y
@@ -92,12 +94,17 @@ antes de trabajar y mira en `git log` qué subió la otra.
   primero las dos partes gratis y luego la carta. Mira `git log` antes de tocarlo.
 - **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
   están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
-  secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` (artefacto
-  `pace-android-play`).
+  secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` y lo guarda
+  en el borrador de release `vX.Y.Z` (`PACE-X.Y.Z.aab`). El APK de prueba es otra app, «PACE prueba»
+  (`com.ezradesign.pace.prueba`).
 - **Caza de bugs:** v0.143.2, v0.143.3 y v0.143.4 traen arreglos del móvil (detalle en la tabla de
   abajo). De la lista de Ez no queda nada. Cada arreglo toma el siguiente número de versión libre.
-- **Google Play:** la ficha está en `docs/launch/google-play/`. Espera a la revisión de identidad de
-  Google y a unos 15 testers; el AAB firmado ya sale del workflow.
+- **Google Play:** identidad y móvil de Ez verificados el 8 de octubre. La guía para Ez es
+  `docs/launch/google-play/guia.html`, con la rutina que eligió: el viernes Ez dice «toca Play»,
+  Claude elige la versión y escribe sus notas en `SUBIDAS.md`, Ez la sube a la prueba interna y el
+  lunes la promociona a la cerrada. Se publica en todo el mundo, con la ficha también en inglés
+  (`ficha.md`). Faltan testers: tiene 5 o 6 de unos 15 (mensajes de WhatsApp y LinkedIn en
+  `testers.md`).
 
 ## Qué es PACE
 
@@ -163,8 +170,8 @@ primera versión de pago, en web y Android.
 | Línea | Dónde está | Siguiente paso |
 |---|---|---|
 | Home del móvil | Hecha en v0.146.0: la pregunta con el horario como una línea (la B), y ningún momento de la home pide scroll desde 360×640 en los dos idiomas (lo vigila `tests/home-sin-scroll.spec.js`). | Nada. Si algo añade alto a la home del móvil, se mide con esa prueba antes de subirlo. |
-| Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow firma el AAB con la llave de subida, que está en los secretos desde el 7 oct. | Probar el APK en el Doogee (lista en `STATE.md`) y subir el AAB firmado (artefacto `pace-android-play`) a la prueba cerrada cuando Google apruebe la identidad de Ez. |
-| Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla cuando Google apruebe la identidad de Ez. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
+| Android, Fase 2 | v0.142.0: el aviso de Foco llega a su hora sin abrir ajustes, lleva la vaca, icono de avisos (la C), `privacy.html` cubre la app y el workflow firma el AAB con la llave de subida, que está en los secretos desde el 7 oct. | Crear la app en Play Console, subir `PACE-X.Y.Z.aab` (borrador de release de su versión) a la prueba interna, probarla en el móvil de Ez y abrir la prueba cerrada. Antes, Ez exporta «Tus datos» del APK de prueba viejo y lo desinstala (choca con la de Play). |
+| Ficha de Google Play | Lista en `docs/launch/google-play/`: textos, respuestas de contenido (no recoge datos, 18+), icono, gráfico, capturas y el kit de testers. | Subirla ya (identidad aprobada el 8 oct.), en español y en inglés y para todos los países. Las URLs ya usan `pacegrass.app` y el correo de contacto es `hola.ezradesign@gmail.com`. |
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
@@ -176,11 +183,11 @@ primera versión de pago, en web y Android.
 
 ## Lo que espera a Ez
 
-1. Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
-   contraseña) fuera del ordenador: un USB y su Drive, por ejemplo.
+1. Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con
+   la contraseña aparte.
 2. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
-3. Que Google termine de revisar su identidad en Play Console; luego reunir unos 15 testers con
-   Android (Google pide 12 durante 14 días).
+3. Crear la app en Play Console y reunir unos 15 testers con Android (Google pide 12 durante 14
+   días; tiene 5 o 6).
 4. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
 
 ## Maquetas publicadas (cuenta anterior)

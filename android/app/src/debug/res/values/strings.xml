@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- El APK de prueba se llama distinto para no confundirlo con el de Google Play
+     cuando estan los dos en el mismo movil. Lo demas sale de src/main. -->
+<resources>
+    <string name="app_name">PACE prueba</string>
+    <string name="title_activity_main">PACE prueba</string>
+</resources>

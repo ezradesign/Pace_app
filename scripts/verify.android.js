@@ -85,6 +85,28 @@ function chequeaAndroid(ctx) {
     ctx.ok('android: los ' + COLORES.length + ' colores del icono, el arranque y las barras son los de app/tokens.css');
   }
   chequeaIconoAviso(ctx, css);
+  chequeaPlay(ctx);
+}
+
+/* Lo que separa la app de Google Play de la de prueba y guarda cada AAB. Si se
+   pierde, el APK de prueba vuelve a chocar con la app de Play (instalar una
+   obliga a desinstalar la otra, y eso borra los datos) o el archivo que se subio
+   a Play deja de encontrarse, o queda a la vista en un repo publico. */
+function chequeaPlay(ctx) {
+  var gradle = (leer('android/app/build.gradle') || '').toString();
+  var nombres = (leer('android/app/src/debug/res/values/strings.xml') || '').toString();
+  var flujo = (leer('.github/workflows/android.yml') || '').toString();
+  var malas = [];
+  if (!/applicationId "com\.ezradesign\.pace"/.test(gradle)) malas.push('el applicationId de Play ya no es com.ezradesign.pace, y Play no deja cambiarlo');
+  if (!/debug\s*\{[^}]*applicationIdSuffix "\.prueba"/.test(gradle)) malas.push('el APK de prueba ha perdido su applicationIdSuffix ".prueba" y choca con la app de Play');
+  if (!/name="app_name">PACE prueba</.test(nombres)) malas.push('el APK de prueba ya no se llama «PACE prueba» (android/app/src/debug/res/values/strings.xml)');
+  if (!/gh release create[^\n]*--draft/.test(flujo)) malas.push('el workflow Android ya no deja el AAB en un BORRADOR de release: en un repo publico quedaria a la vista');
+  if (!/github\.ref == 'refs\/heads\/main'/.test(flujo)) malas.push('el borrador de release ya no se limita a main: una rama podria pisar el AAB de una version');
+  if (malas.length) {
+    malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  } else {
+    ctx.ok('android: el APK de prueba es «PACE prueba» (com.ezradesign.pace.prueba) y cada AAB de Play queda en un borrador de release desde main');
+  }
 }
 
 var DENSIDADES = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
