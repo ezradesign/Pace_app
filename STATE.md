@@ -50,11 +50,14 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
-Con «Suena detrás: Música», Respira suena sobre tres drones en Sol (Ez lo escuchó el 8 de octubre y dijo
-que sí): oscuro en Relajación, cálido en Equilibrio y claro en Energía, Balance y Pranayama. En los
-ejercicios pausados la música se abre al inhalar y se cierra al exhalar; con ciclos de menos de 5 s
-se queda quieta, y Coherente 432 sigue con su drone. El reparto es `PACE_MUSICA`, en
-`app/ui/Sound.musica.jsx`.
+Con «Suena detrás: Música», cada técnica de Respira suena con su propio drone (Ez lo eligió el 8 de
+octubre escuchando la página de `docs/traspaso/archivos/musica-respira/por-tecnica/`): sale de tres
+drones en Sol con otra nota de la escala, un color, una segunda voz suave y, en algunas, un
+movimiento lento, sin archivos nuevos. En los ejercicios pausados la música se abre al inhalar y se
+cierra al exhalar (en Nadi Shodhana, además, se inclina hacia el lado por el que respiras); con
+ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las recetas son
+`PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`) y su volumen se mide con `construir.js`. Falta
+que Ez las pruebe en la app y diga cuáles cambiar.
 
 Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
 con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila

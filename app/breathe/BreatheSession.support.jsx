@@ -312,7 +312,9 @@ function playPhaseSound(phaseLabel, phaseDur) {
   /* La música de fondo respira con la misma fase: se abre al inhalar y se cierra
      al exhalar (`Sound.musica.jsx`). Va aparte del sonido de señal para que un
      fallo de uno no se lleve al otro. */
-  const musica = (tipo) => { try { if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur); } catch (e) {} };
+  /* La etiqueta viaja con la fase: dice el lado en Nadi Shodhana y distingue
+     la primera inhalación del Suspiro de «Inhala más». */
+  const musica = (tipo) => { try { if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur, phaseLabel); } catch (e) {} };
   if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
       phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
       phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
@@ -361,7 +363,9 @@ function useMusicaFondo(stage, paused, routine) {
       /* El ciclo decide si la música respira o se queda quieta (Rondas, Bhastrika). */
       let ciclo = null;
       try { ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0); } catch (e) { ciclo = null; }
-      m.start(routine.tag, routine.drone === true, ciclo);
+      /* El id elige la receta de la técnica (`PACE_MUSICA_TECNICA`); sin
+         receta, suena el drone de su familia por el `tag`. */
+      m.start(routine.tag, routine.drone === true, ciclo, routine.id);
     }
   }, [stage, paused]);
 }
