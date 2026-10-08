@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.0 · 8 de octubre de 2026.
+**Versión:** v0.147.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -46,6 +46,10 @@ La home del móvil no pide scroll en ningún momento desde 360×640, en castella
 como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el día servido va sin pie:
 «Hoy voy por libre» bajo «Cambiar», «Ver todo» al final de la línea y «Al calendario» en esa hoja.
 Lo vigila `tests/home-sin-scroll.spec.js`; a 320×568 se acepta scroll.
+
+Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
+con un fundido que solo se ve al empezar el bloque (v0.147.0, opción A elegida por Ez). Lo vigila
+`tests/aro-bola-entrada.spec.js`.
 
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».

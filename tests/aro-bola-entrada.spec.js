@@ -7,7 +7,7 @@
  * lleva la niebla del horizonte, y al empezar se para justo en la linea donde
  * esa mascara llega a cero. Salia partido por la mitad (la de abajo no se
  * pintaba) y a medio tono. Ahora va en su propia capa, por encima, y entra con
- * un fundido corto (opcion A, elegida por Ez).
+ * un fundido solo al empezar el bloque (opcion A, elegida por Ez).
  *
  * COMO SE MIDE: dos capturas del MISMO momento, con la bola y sin ella, y se
  * cuentan los pixeles que cambian por encima y por debajo de su centro. Una bola
@@ -64,8 +64,9 @@ for (const p of PANTALLAS) {
     await page.mouse.move(1, 1);
     await asentarGeometria(page);
     await page.locator('[data-pace-cta]').filter({ visible: true }).first().click();
-    /* El fundido dura 1,2 s y corre en tiempo real, no en el reloj de la prueba. */
-    await page.waitForTimeout(1600);
+    /* El fundido (1,6 s, y el halo 2,2 s tras 0,2) corre en tiempo real, no en
+       el reloj de la prueba. */
+    await page.waitForTimeout(2800);
 
     const halo = page.locator('[data-pace-dial-fit] circle[r="1.7"]');
     await expect(halo, 'no hay bola con el Foco en marcha').toHaveCount(1);
@@ -96,3 +97,21 @@ for (const p of PANTALLAS) {
     await context.close();
   });
 }
+
+/* El fundido es del COMIENZO del bloque. A mitad de bloque (al recargar o al
+   volver a la home) la bola ya existia y aparece en su sitio sin fundido. */
+test('a mitad de bloque, al recargar, la bola no repite el fundido', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await sembrar(context);
+  await page.clock.install({ time: new Date(FECHA + 'T14:42:00+02:00') });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+  await expect(page.locator('[data-pace-dial-punto-nace]')).toHaveCount(1);
+  await page.clock.fastForward(2 * 60 * 1000);
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  await expect(page.locator('[data-pace-dial-punto]'), 'tras recargar no hay bola').toHaveCount(1);
+  await expect(page.locator('[data-pace-dial-punto-nace]'), 'la bola repite el fundido a mitad de bloque').toHaveCount(0);
+  expect(errores).toEqual([]);
+});
