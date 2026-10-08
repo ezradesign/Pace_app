@@ -96,6 +96,40 @@ test('la explicación va en la serif itálica de la app: 17 px en el móvil y 18
   expect(esc.tam).toBe(18);
 });
 
+/* «Cuídate» va con la misma voz que la explicación (Ez, 8 oct. 2026): su frase en la serif
+   itálica, a 15 px en el móvil y 16 en escritorio; su rótulo sigue en versalitas de interfaz.
+   Sale mientras se trabaja, así que se espera a que acabe la cuenta de colocarse. */
+async function leerCuidate(browser, ancho, alto) {
+  const baseURL = test.info().project.use.baseURL;
+  const movil = ancho < 768;
+  const context = await browser.newContext({ baseURL, viewport: { width: ancho, height: alto }, isMobile: movil, hasTouch: movil,
+    locale: 'es-ES', timezoneId: 'Europe/Madrid' });
+  const page = await context.newPage();
+  await sembrar(context, movil ? { sidebarCollapsed: true } : {});
+  await irAlArtefacto(page);
+  await abrirPorId(page, 'Mueve', 'extra.desk.pushups');
+  await page.locator('[data-pace-v1-care]').first().waitFor({ state: 'visible', timeout: 20000 });
+  const r = await page.evaluate(() => {
+    const c = document.querySelector('[data-pace-v1-care]');
+    const rot = c.querySelector('[data-pace-v1-care-label]');
+    const cs = getComputedStyle(c), cr = getComputedStyle(rot);
+    return { familia: cs.fontFamily, estilo: cs.fontStyle, tam: parseFloat(cs.fontSize), rotulo: cr.fontFamily, rotuloEstilo: cr.fontStyle };
+  });
+  await context.close();
+  return r;
+}
+
+test('«Cuídate» va en la serif itálica (15 px en el móvil, 16 en escritorio) y su rótulo en interfaz', async ({ browser }) => {
+  for (const [w, h, tam] of [[360, 640, 15], [1280, 720, 16]]) {
+    const c = await leerCuidate(browser, w, h);
+    expect(c.familia, w + ' px').toMatch(/Garamond/);
+    expect(c.estilo).toBe('italic');
+    expect(c.tam).toBe(tam);
+    expect(c.rotulo).toMatch(/Inter Tight/);
+    expect(c.rotuloEstilo).toBe('normal');
+  }
+});
+
 /* Lo que de verdad importaba: en el móvil pequeño las dos rutinas de Mueve de frase más larga
    caben en dos líneas y su dibujo no es más pequeño que el de una rutina de Estira de frases
    cortas. Cadena posterior es la que la página de Ez usó como referencia. */
