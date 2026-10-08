@@ -260,6 +260,14 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   }
 }
 
+/* EL PUNTO GUIA DEL ARO LLEGA CON UN FUNDIDO al empezar el Foco (TimerDial.jsx,
+   [data-pace-dial-punto]). Solo opacidad: no se mueve ni crece, para que nazca
+   donde marca el tiempo. Decorativo, asi que el kill de arriba lo deja en nada. */
+@keyframes pace-punto-nace {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ============================================================
    MICROINTERACCIONES · pack de pulido global (s99 · Sesion A)
    Vive aqui (config global de interaccion), no en un <style> nuevo.

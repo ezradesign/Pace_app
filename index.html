@@ -606,6 +606,14 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   }
 }
 
+/* EL PUNTO GUIA DEL ARO LLEGA CON UN FUNDIDO al empezar el Foco (TimerDial.jsx,
+   [data-pace-dial-punto]). Solo opacidad: no se mueve ni crece, para que nazca
+   donde marca el tiempo. Decorativo, asi que el kill de arriba lo deja en nada. */
+@keyframes pace-punto-nace {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ============================================================
    MICROINTERACCIONES · pack de pulido global (s99 · Sesion A)
    Vive aqui (config global de interaccion), no en un <style> nuevo.
@@ -15818,7 +15826,12 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
       strokeOpacity: "0.92",
       strokeLinecap: "round",
       strokeDasharray: trazo, strokeDashoffset: (barrido * (1 - progress)).toFixed(3),
-      style: { transition: 'stroke-dashoffset 1s linear, stroke 1s linear' } }),
+      style: { transition: 'stroke-dashoffset 1s linear, stroke 1s linear' } })
+    )
+    )
+    )
+
+    ),
 
 
 
@@ -15833,39 +15846,21 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    (running || progress > 0) &&
+    !ticks && (running || progress > 0) &&
+    React.createElement("div", { "data-pace-dial-punto": true, style: timerDialStyles.puntoLayer },
+    React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
+      style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
+    React.createElement("g", { transform: `rotate(${giroInicio.toFixed(3)} 50 50)` },
     React.createElement("g", { transform: `rotate(${(progress * barrido).toFixed(3)} 50 50)`,
       style: { transition: 'transform 1s linear' } },
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "1.7", fill: ringColor, opacity: "0.22" }),
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "0.85", fill: ringColor,
       style: { transition: 'fill 1s linear' } })
     )
-
     )
     )
-    )
-
     ),
+
 
     React.createElement("div", { style: timerDialStyles.inner },
 
@@ -15916,6 +15911,14 @@ const timerDialStyles = {
     position: 'absolute',
     inset: 0,
     pointerEvents: 'none'
+  },
+
+
+  puntoLayer: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    animation: 'pace-punto-nace 1.2s ease-out both'
   },
 
   inner: {
