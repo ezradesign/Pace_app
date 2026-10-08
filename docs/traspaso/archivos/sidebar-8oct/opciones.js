@@ -343,13 +343,15 @@ function pintarC(d, o) {
   if (h.focusMinutes) lineas.push(linea(d.g.foco, 'var(--focus)', '<b>' + mayus(enPalabras(h.focusMinutes)) + '</b> de foco'));
   if (h.breatheMinutes) lineas.push(linea(d.g.respira, 'var(--breathe)', '<b>' + mayus(enPalabras(h.breatheMinutes)) + '</b> respirando'));
   if (h.bodyMinutes) lineas.push(linea(d.g.mueve, 'var(--move)', '<b>' + mayus(enPalabras(h.bodyMinutes)) + '</b> moviéndote'));
-  const vasos = h.waterGlasses ? '<b>' + mayus(h.waterGlasses === 1 ? 'un vaso' : (NUM[h.waterGlasses] || h.waterGlasses) + ' vasos') + '</b> de ' + (NUM[h.waterGoal] || h.waterGoal)
+  const vasos = o.aguaMeta ? fraseAgua(h.waterGlasses, h.waterGoal)
+    : h.waterGlasses ? '<b>' + mayus(h.waterGlasses === 1 ? 'un vaso' : (NUM[h.waterGlasses] || h.waterGlasses) + ' vasos') + '</b> de ' + (NUM[h.waterGoal] || h.waterGoal)
     : 'Aún ningún vaso';
   const agua = '<p class="sbc-linea">' + ic(d.g.agua, 'var(--hydrate)', 16) + '<span>' + vasos + '</span>' +
-    '<button class="sbp-mas sbc-mas" title="Apuntar un vaso">+ un vaso</button></p>';
+    '<button class="sbp-mas sbc-mas" title="Apuntar un vaso">' + (o.aguaMeta ? '+ vaso' : '+ un vaso') + '</button></p>';
+  const luego = o.pausaEnHoy ? pausaCuaderno(d, true) : '';
   const cuerpo = lineas.length
-    ? lineas.join('') + agua
-    : '<p class="sbc-blanco">Tu día empieza en blanco. Lo que hagas se queda aquí.</p>' + agua;
+    ? lineas.join('') + agua + luego
+    : '<p class="sbc-blanco">Tu día empieza en blanco. Lo que hagas se queda aquí.</p>' + agua + luego;
   const hoy = '<div data-sb-pieza="hoy"><div class="sbp-cab"><span class="sbp-meta" style="color:var(--ink-2)">Hoy</span><span class="sbp-meta sbp-fecha">' + d.fecha + '</span></div>' +
     '<div class="sbc-cuaderno">' + cuerpo + '</div></div>';
   const puerta = (glifo, color, nombre) => '<button class="sbp-puerta sbc-puerta">' + ic(glifo, color, o.compacta ? 18 : 22) + '<span>' + nombre + '</span></button>';
@@ -374,6 +376,8 @@ function pintarC(d, o) {
     .sbc-pausa-f b { font-weight: 500; color: var(--ink); }
     .sbc-pausa-m { font-size: 11.5px; color: var(--ink-3); }
     .sbc-pausa-fl { color: var(--ink-3); font-size: 15px; align-self: center; }
+    .sbc-pausa.sbc-luego { position: relative; margin-top: 7px; padding-top: 10px !important; }
+    .sbc-pausa.sbc-luego::before { content: ''; position: absolute; top: 0; left: 28px; right: 0; height: 1px; background: var(--line); }
     .sbc-cuaderno { display: flex; flex-direction: column; gap: 7px; padding: 0 2px; }
     .sbc-linea { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--font-display); font-style: italic;
       font-size: 17px; line-height: 1.25; color: var(--ink-2); }
@@ -401,7 +405,8 @@ function pintarC(d, o) {
 /* LA SIGUIENTE PAUSA DICHA COMO EL CUADERNO: una frase con la hora y la rutina, y debajo
    cuánto dura y de qué módulo. Sale de `ritmoSiguiente`, igual que la tarjeta de hoy; sin
    día servido no hay frase (en el día vacío la home está preguntando por el día). */
-function pausaCuaderno(d) {
+/* `enLinea`: la misma frase como última línea de Hoy, sin rótulo propio y con «Luego». */
+function pausaCuaderno(d, enLinea) {
   const t = d.tarjeta, s = d.siguiente;
   if (!t || !s) return '';
   const MOD = { estira: ['estira', 'var(--extra)', 'Estira'], mueve: ['mueve', 'var(--move)', 'Mueve'],
@@ -410,13 +415,36 @@ function pausaCuaderno(d) {
   const hora = Math.floor(s.hora / 60) + ':' + String(s.hora % 60).padStart(2, '0');
   const frase = (s.ahora ? 'Ahora, ' : 'A las ' + hora + ', ') + '<b>' + t.titulo + '</b>';
   const meta = s.larga ? 'Pausa larga de ' + enPalabras(s.dur) : mayus(enPalabras(s.min)) + ' de ' + m[2];
+  if (enLinea) {
+    /* Dentro de Hoy la hora baja a la línea de abajo: «Luego, a las 12:25, Caderas de pie»
+       no cabía en una línea. */
+    const fraseL = (s.ahora ? 'Ahora, ' : 'Luego, ') + '<b>' + t.titulo + '</b>';
+    const metaL = (s.ahora ? '' : 'A las ' + hora + ' · ') + (s.larga ? 'pausa larga de ' + enPalabras(s.dur) : enPalabras(s.min) + ' de ' + m[2]);
+    return '<button class="sbc-pausa sbc-luego" data-sb-pausa>' + ic(d.g[m[0]], m[1], 16) + '<span class="sbc-pausa-t"><span class="sbc-pausa-f">' + fraseL + '</span>' +
+      '<span class="sbc-pausa-m">' + mayus(metaL) + '</span></span><span class="sbc-pausa-fl">→</span></button>';
+  }
   return '<div data-sb-pieza="tarjeta"><div class="sbp-cab"><span class="sbp-meta">' + (s.ahora ? 'Tu pausa' : 'Siguiente pausa') + '</span></div>' +
     '<button class="sbc-pausa">' + ic(d.g[m[0]], m[1], 16) + '<span class="sbc-pausa-t"><span class="sbc-pausa-f">' + frase + '</span>' +
     '<span class="sbc-pausa-m">' + meta + '</span></span><span class="sbc-pausa-fl">→</span></button></div>';
 }
 
+/* EL AGUA CON TU META (Ez, 8 oct.: «que se modifique dependiendo del número que elija el
+   usuario en settings»). `water.goal` va de 4 a 12 en Ajustes, así que la meta siempre se
+   dice con letra; los vasos, con letra hasta doce y en cifra después.
+   CABE EN UNA LÍNEA junto a «+ vaso», medido: «Aún ningún vaso de los ocho» y «Once vasos,
+   más de tus diez» se partían en dos. Por eso pasarse de la meta usa la misma forma que
+   quedarse corto («Once vasos de diez»: el número ya lo dice), y llegar justo es lo único
+   que cambia de frase. */
+function fraseAgua(n, m) {
+  const meta = NUM[m] || String(m);
+  const vasos = (k) => (k === 1 ? 'un vaso' : (NUM[k] || k) + ' vasos');
+  if (!n) return 'Ningún vaso de ' + meta;
+  if (n === m) return '<b>Los ' + meta + ' vasos</b> del día';
+  return '<b>' + mayus(vasos(n)) + '</b> de ' + meta;
+}
+
 module.exports = {
-  util: { pintarC, ic, enPalabras, mayus },
+  util: { pintarC, ic, enPalabras, mayus, fraseAgua },
   datos,
   lista: [
     { id: 'A', nombre: 'Afinada', pintar: pintarA },

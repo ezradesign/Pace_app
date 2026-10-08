@@ -124,13 +124,13 @@ async function sembrarSesiones(page) {
     (JSON.parse((await window.eventsWebReadRaw()) || '{}').events || []).length >= 5, null, { timeout: 8000 });
 }
 
-async function abrir(browser, ancho, alto, dia, paleta) {
+async function abrir(browser, ancho, alto, dia, paleta, extra) {
   const context = await browser.newContext({ baseURL: BASE, viewport: { width: ancho, height: alto },
     locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: paleta === 'oscuro' ? 'dark' : 'light', deviceScaleFactor: 2 });
   await context.addInitScript((e) => {
     try { Object.defineProperty(Notification, 'permission', { get: () => 'default' }); } catch (x) {}
     if (!localStorage.getItem('pace.state.v2')) localStorage.setItem('pace.state.v2', JSON.stringify(e));
-  }, estado(dia, paleta));
+  }, Object.assign(estado(dia, paleta), extra || {}));
   const page = await context.newPage();
   await page.clock.install({ time: new Date(HORA[dia]) });
   await page.goto('/index.html');
@@ -258,6 +258,7 @@ async function main() {
         }
       }
     }
+    if (!SOLO_OPS || SOLO_OPS.includes('Cq-rotulo')) await fotosAgua(browser);
   } finally {
     await browser.close();
     srv.kill();
@@ -265,6 +266,24 @@ async function main() {
   fs.writeFileSync(path.join(__dirname, 'medidas.json'), JSON.stringify(medidas, null, 2));
   ponerMedidasEnLaPagina(medidas);
   console.log('\nHecho: ' + Object.keys(medidas.antes).length + ' pantallas de hoy y ' + Object.keys(medidas.despues).length + ' de las opciones.');
+}
+
+/* LA FRASE DEL AGUA CON OTRAS METAS. La meta es `water.goal`, la que se elige en Ajustes
+   (de 4 a 12): se siembra en el estado, como la escribiría Ajustes, y se fotografía solo
+   el bloque de Hoy de la tercera vuelta. fotos/agua-m<meta>-v<vasos>.png */
+async function fotosAgua(browser) {
+  /* El caso más largo de cada frase con la palabra más larga (cuatro): si cabe, caben todas. */
+  const CASOS = [[6, 4], [8, 0], [4, 4], [10, 11], [9, 4]];
+  for (const [meta, vasos] of CASOS) {
+    const { context, page } = await abrir(browser, 1280, 800, 'activo', 'crema',
+      { water: { goal: meta, today: vasos, lastReset: null } });
+    const datos = await page.evaluate(OPCIONES.datos);
+    const op = OPCIONES.lista.find((o) => o.id === 'Cq-rotulo');
+    const { html, css } = op.pintar(datos);
+    await ponerOpcion(page, html, css);
+    await page.locator('[data-sb-op][data-sb-pieza="hoy"]').screenshot({ path: path.join(SALIDA, 'agua-m' + meta + '-v' + vasos + '.png') });
+    await context.close();
+  }
 }
 
 /* La página lleva dentro lo que necesita de las medidas (la escala y el hueco al pie)
