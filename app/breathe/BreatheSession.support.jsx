@@ -269,6 +269,37 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
   };
 }
 
+/* LO HECHO EN UNA TECNICA DE RONDAS, para el cierre. El cierre pintaba el PLAN
+   (`routine.rounds` y `rounds × breaths`), asi que «Terminar» a mitad de la
+   primera ronda decia «3 rondas · 90 respiraciones» tras seis.
+     · Una RONDA esta hecha cuando se suelta su retencion. Desde la retencion
+       solo se llega al cierre soltando la ultima, asi que en 'hold' la ronda en
+       curso cuenta; en 'active' no, porque le falta su retencion.
+     · Una RESPIRACION esta hecha cuando acaba su exhalacion: `breathCount` es
+       la que esta EN CURSO («Respiracion 7 de 30» son seis hechas).
+   Lee la ronda y la respiracion de la sesion, que en una reanudada vienen del
+   registro, asi que lo hecho antes de irse tambien cuenta. */
+function respiraHecho(routine, stage, round, breathCount) {
+  if (!routine || routine.pattern !== 'rounds') return null;
+  const porRonda = routine.breaths || 0;
+  const ronda = Math.max(1, round || 1);
+  if (stage === 'hold') return { rondas: ronda, respiraciones: ronda * porRonda };
+  const sueltas = Math.min(porRonda, Math.max(0, (breathCount || 1) - 1));
+  return { rondas: ronda - 1, respiraciones: (ronda - 1) * porRonda + sueltas };
+}
+
+/* Las cifras del cierre a partir de lo hecho. Lo que vale cero no se pinta:
+   «0 rondas» no le cuenta nada a quien paro en la primera, y Respira no mide
+   contra un objetivo. El singular sale de claves que ya existian (la cabecera
+   de la retencion y el contador). */
+function respiraCifrasCierre(hecho, t) {
+  const out = [];
+  if (!hecho) return out;
+  if (hecho.rondas > 0) out.push({ label: t(hecho.rondas === 1 ? 'session.round' : 'common.rounds'), value: String(hecho.rondas) });
+  if (hecho.respiraciones > 0) out.push({ label: t(hecho.respiraciones === 1 ? 'common.breath' : 'common.breaths'), value: String(hecho.respiraciones) });
+  return out;
+}
+
 /* s175 · EL MAPEO DE ETIQUETA A SONIDO SALE AQUI. `BreatheSession.jsx` llego
    a 509 lineas al anadir la senal del sosten, y STATE ya dejaba dicho desde
    s166 que «lo siguiente que entre ahi va a su .support». Es ademas lo que
@@ -327,5 +358,6 @@ function useMusicaFondo(stage, paused, routine) {
 
 Object.assign(window, {
   useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia,
 });

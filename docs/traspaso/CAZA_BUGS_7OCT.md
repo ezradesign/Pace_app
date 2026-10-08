@@ -291,7 +291,8 @@ UN AVISO SOBRE LAS MEDIDAS: con page.clock.install() el reloj virtual sigue corr
 
 Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/.
 
-### [alta] respira-1 · «Bhastrika · Fuelle» empieza sin el modal de seguridad, aunque es hiperventilación al doble de ritmo que «Rondas express»
+### ~~[alta] respira-1 · «Bhastrika · Fuelle» empieza sin el modal de seguridad, aunque es hiperventilación al doble de ritmo que «Rondas express»~~
+- **Arreglado en v0.148.4:** Bhastrika lleva `safety` y pide el aviso como Kapalabhati; deja de salir en «Para ahora» y en la pausa. Una prueba exige el aviso a toda técnica de 12 o más respiraciones por minuto, sacadas de su secuencia (`tests/respira-biblioteca.spec.js`).
 - **Dónde:** 360x718 y 1530x702 (no depende del tamaño)
 - **Pasos:** Home → Respira → pulsar el encabezado «Bhastrika · Fuelle» (grupo Pranayama, gratis).
 - **Debería:** Que aparezca el modal «Antes de empezar» con la casilla «Lo he leído y asumo mi responsabilidad», igual que en «Kapalabhati · Kriya» y en las rondas. Son 3 minutos seguidos de inhalar 1 s y exhalar 1 s (30 respiraciones por minuto), que es hiperventilación. CONTENT.md:156 dice que toda técnica con hiperventilación abre el modal «sin excepción».
@@ -299,7 +300,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/run-360x718-rondas_express.json (Bhastrika: safety=false, 87 ciclos de Inhala 1 s y Exhala 1 s; Kapalabhati: safety=true, misma secuencia); /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/out-360.txt; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/out-1530.txt
 - **Código sospechoso:** app/breathe/BreatheLibrary.jsx:57 (breathe.bellows sin `safety: true`) frente a :59 (breathe.kapalabhati con `safety: true`); la fila de CONTENT.md:142 copia la misma omisión.
 
-### [alta] respira-2 · Al pulsar «Terminar» en una técnica de rondas, el cierre dice que hiciste todas las rondas y respiraciones
+### ~~[alta] respira-2 · Al pulsar «Terminar» en una técnica de rondas, el cierre dice que hiciste todas las rondas y respiraciones~~
+- **Arreglado en v0.148.4** (variante A, elegida por Ez): el cierre cuenta lo hecho, una ronda al soltar su retención y una respiración al acabar su exhalación, sin pintar los ceros (`tests/respira-cierre.spec.js`).
 - **Dónde:** 360x718 (igual en todos)
 - **Pasos:** Respira → «Respiración en rondas» → aceptar el modal de seguridad → dejar correr unos 24 s (lleva «Respiración 7 de 30», ronda 1) → pulsar «▶| Terminar».
 - **Debería:** Que el cierre diga lo que se hizo (ronda 1, unas 6 respiraciones) o que no dé esas cifras.
