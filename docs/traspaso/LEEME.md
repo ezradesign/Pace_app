@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.147.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -35,7 +35,7 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
-- **Aro de Mueve y Estira vacío al colocarse: hecho en v0.147.1.** Ez escribió «el aro de tiempo
+- **Aro de Mueve y Estira vacío al colocarse: hecho (8 de octubre).** Ez escribió «el aro de tiempo
   que se rellene para empezar queda raro, mejor es vacío ya que no ha empezado el ejercicio». Vio
   tres opciones en fotos y eligió la A (vacío del todo, solo el trazo de fondo), también en la pausa
   de «Cambia de lado». El aro solo cuenta el ejercicio y el descanso; lo vigila
