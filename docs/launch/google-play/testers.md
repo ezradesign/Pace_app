@@ -15,9 +15,9 @@ móvil Android). Un iPhone no sirve.
 - La app está creada en Play Console con la ficha y «Contenido de la app» rellenos
   ([ficha.md](ficha.md) y
   [contenido-de-la-app.md](contenido-de-la-app.md)).
-- Tienes el archivo firmado para Play (un `.aab`). GitHub lo firma en cada push a `main` (workflow
-  «Android», artefacto `pace-android-play`), y Claude te lo deja en Descargas desde tu PC cuando
-  vayas a subirlo.
+- Tienes el archivo firmado para Play, `PACE-X.Y.Z.aab`. GitHub lo firma en cada push a `main` y lo
+  guarda en el borrador de release de su versión (GitHub → Releases → `vX.Y.Z`); también sale como
+  artefacto `pace-play-vX.Y.Z` del workflow «Android», que caduca a los 90 días.
 
 ## Paso a paso en Play Console
 
@@ -49,6 +49,58 @@ móvil Android). Un iPhone no sirve.
 
 En el **Panel** aparece **Solicitar acceso a producción**. Google hace unas preguntas sobre la prueba.
 Al final de este archivo hay un borrador de respuestas para rellenar entonces.
+
+---
+
+## Para encontrar más testers (WhatsApp y LinkedIn)
+
+Con 5 o 6 apalabrados faltan unos 10. Estos dos mensajes son para pedirlo en abierto: el de WhatsApp,
+para grupos o para reenviar; el de LinkedIn, como publicación. A quien conteste se le manda después
+«La invitación» de abajo.
+
+### WhatsApp (grupos y reenvíos)
+
+```
+¡Hola! Un favor pequeño: estoy sacando PACE, una app de pausas activas para quien trabaja sentado (foco, respiración, estiramientos y agua; sin cuentas ni anuncios).
+
+Para publicarla, Google me pide que la prueben 12 personas durante 14 días. Solo hace falta un móvil Android y dejarla instalada esas dos semanas; usarla, cuando te apetezca.
+
+Si te animas, contéstame con el correo de tu cuenta de Google (el de Play Store) y te mando el enlace. Y si se lo pasas a alguien que pase el día delante del ordenador, mejor todavía. ¡Gracias!
+```
+
+### LinkedIn (publicación)
+
+```
+Llevo meses construyendo PACE, una app para quien pasa la jornada sentado frente a una pantalla: reparte el día en bloques de foco y te sirve pausas cortas y guiadas (respirar, estirar, moverte, beber agua) que caben entre dos tareas.
+
+Sin cuentas, sin anuncios y con tus datos solo en tu móvil.
+
+Ya está lista para Android, y antes de publicarla Google pide una prueba cerrada: 12 personas durante 14 días. Busco a esas personas.
+
+Si tienes un móvil Android y te apetece probarla (y decirme qué echarías de menos), escríbeme por privado o comenta «yo» y te paso el enlace. Solo necesito el correo de tu cuenta de Google.
+
+La versión web ya se puede probar en pacegrass.app
+
+#productividad #bienestar #pomodoro #pausasactivas #android
+```
+
+La misma, en inglés, para quien te siga desde fuera (PACE también está en inglés):
+
+```
+I've spent months building PACE, an app for people who spend the workday sitting in front of a screen: it splits your day into focus blocks and serves short, guided breaks (breathe, stretch, move, drink water) that fit between two tasks.
+
+No accounts, no ads, and your data stays on your phone.
+
+It's ready for Android, and before it goes public Google asks for a closed test: 12 people for 14 days. I'm looking for those people.
+
+If you have an Android phone and fancy trying it (and telling me what you'd miss), send me a message or comment "me" and I'll share the link. All I need is the email of your Google account.
+
+You can already try the web version at pacegrass.app
+
+#productivity #wellbeing #pomodoro #activebreaks #android
+```
+
+Los comentarios de LinkedIn son públicos: pide el correo por mensaje privado, nunca en el hilo.
 
 ---
 

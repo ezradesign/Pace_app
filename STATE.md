@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.146.1 · 8 de octubre de 2026.
+**Versión:** v0.147.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -66,16 +66,19 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    2026); Play lo fija en la primera subida y luego no se cambia. Probar el APK en un móvil: lo de
    arriba, el icono y el arranque de día y en modo oscuro, importar una copia, que lo guardado
    sobreviva a una actualización, y el aviso de Foco con la vaca y «Que el aviso llegue a su hora»
-   en Ajustes. `privacy.html` ya cubre la app. El workflow `Android` firma el AAB para Play
-   (artefacto `pace-android-play`) con la llave de subida de los secretos del repo; el original y su
-   contraseña están en el PC de Ez, fuera del repo.
+   en Ajustes. `privacy.html` ya cubre la app. El workflow `Android` firma el AAB para Play con la
+   llave de subida de los secretos y en `main` lo guarda en el borrador de release `vX.Y.Z`
+   (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
+   `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
+   en `SUBIDAS.md`.
 2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
    se paga.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
    y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
-   de que Ez vea las fotos. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
+   de que Ez vea las fotos. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
+   v0.147.0. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
    todo lo que se vea se le enseña antes en HTML.
 4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
    octubre: falta traerla a `main` y que Ez la escuche en la app.
@@ -86,14 +89,13 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
   repo, y escribe la pública en `app/licencia.llaves.js`, que se sube); copia de esa carpeta fuera
   del ordenador. Luego `npm run licencia:codigo -- 1-15` da el enlace de cada tester. Y la lista de
   testers: número y si usan web, Android o los dos.
-
-- Guardar una copia de la carpeta `PACE-llave-play` de su PC (la llave de subida a Play y su
-  contraseña) fuera del ordenador.
+- Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
+  contraseña aparte.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
-- Play Console: la cuenta está creada y Google revisa la identidad de Ez. Después, reunir 12 testers
-  con Android.
+- Play Console: identidad y móvil verificados (8 oct.). Crear la app con la ficha en español y en
+  inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
   los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
   sus prompts).
