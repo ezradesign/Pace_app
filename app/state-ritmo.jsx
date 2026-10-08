@@ -431,8 +431,11 @@ function ritmoOtra(claves) {
 /* Cambiar una hora recompone el día: las pausas cambiadas ya no están donde
    estaban, así que sus cambios se olvidan. */
 function ritmoHorario(campo, valor) {
-  var R = ritmoDe(getState());
-  var horario = Object.assign({}, R.horario);
+  /* Se parte de lo GUARDADO y no de `ritmoDe`, que ya trae la media jornada derivada:
+     guardar esa copia la congelaba al tocar cualquier otra hora, y dejaba de seguir a
+     la entrada. */
+  var r = (getState() || {}).ritmo || {};
+  var horario = Object.assign(ritmoHorarioInicial(), r.horario || {});
   /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos.
      s197: «media.inicio» / «media.salida» escriben DENTRO de `media`, que es su propio
      horario; tocar una de las dos fija las dos (deja de seguir a la entrada). */
