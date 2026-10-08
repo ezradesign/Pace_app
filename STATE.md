@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.147.0 · 8 de octubre de 2026.
+**Versión:** v0.148.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -48,7 +48,7 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
-Con «Suena detrás: Música», Respira suena sobre tres drones en Sol (v0.147.0, Ez lo escuchó y dijo
+Con «Suena detrás: Música», Respira suena sobre tres drones en Sol (v0.148.0, Ez lo escuchó y dijo
 que sí): oscuro en Relajación, cálido en Equilibrio y claro en Energía, Balance y Pranayama. En los
 ejercicios pausados la música se abre al inhalar y se cierra al exhalar; con ciclos de menos de 5 s
 se queda quieta, y Coherente 432 sigue con su drone. El reparto es `PACE_MUSICA`, en
@@ -79,7 +79,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
    y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
-   de que Ez vea las fotos. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
+   de que Ez vea las fotos. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
+   v0.147.0. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
    todo lo que se vea se le enseña antes en HTML.
 
 ## Espera a Ez

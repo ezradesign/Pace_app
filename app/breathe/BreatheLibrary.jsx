@@ -154,7 +154,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
       }}>
         {/* secret.safety.read (B1, sustituto de apnea): marcar "lo he leído"
             es la señal de lectura real de la guía de seguridad. */}
-        <input type="checkbox" checked={checked} onChange={(e) => { setChecked(e.target.checked); if (e.target.checked) unlockAchievement('secret.safety.read'); }} />
+        <input type="checkbox" style={{ accentColor: 'var(--focus-cta)' }} checked={checked} onChange={(e) => { setChecked(e.target.checked); if (e.target.checked) unlockAchievement('secret.safety.read'); }} />
         <span>{t('breathe.safety.check')}</span>
       </label>
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
