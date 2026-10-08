@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.146.0</title>
+  <title>PACE · Foco · Cuerpo — v0.147.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -607,11 +607,25 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 }
 
 /* EL PUNTO GUIA DEL ARO LLEGA CON UN FUNDIDO al empezar el Foco (TimerDial.jsx,
-   [data-pace-dial-punto]). Solo opacidad: no se mueve ni crece, para que nazca
-   donde marca el tiempo. Decorativo, asi que el kill de arriba lo deja en nada. */
+   [data-pace-dial-punto-nace]). Ez pidio «lo mas elegante posible»: el punto
+   aparece despacio y sin moverse de donde marca el tiempo, y su halo se abre
+   un poco despues, como una luz que se enciende. Curva suave al final, sin
+   rebote. Decorativo, asi que el kill de reduced-motion lo deja en nada. */
 @keyframes pace-punto-nace {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+@keyframes pace-punto-halo {
+  from { transform: scale(0.4); }
+  to   { transform: scale(1); }
+}
+[data-pace-dial-punto-nace] {
+  animation: pace-punto-nace 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+[data-pace-dial-punto-nace] [data-pace-dial-halo] {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pace-punto-halo 2.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
 }
 
 /* ============================================================
@@ -5794,7 +5808,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.146.0';
+const PACE_VERSION = 'v0.147.0';
 
 
 
@@ -15694,7 +15708,33 @@ function useBarridoVisible(marcoRef, activo) {
   return barrido;
 }
 
-function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused } = _ref2;
+
+
+
+
+
+function TimerDialPunto(_ref2) {let { giro, angulo, color, nace } = _ref2;
+  const naceRef = useRefTD(nace);
+  const R = DIAL_R;
+  return (
+    React.createElement("div", { "data-pace-dial-punto": true, "data-pace-dial-punto-nace": naceRef.current ? '' : undefined,
+      style: timerDialStyles.ringLayer },
+    React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
+      style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
+    React.createElement("g", { transform: `rotate(${giro.toFixed(3)} 50 50)` },
+    React.createElement("g", { transform: `rotate(${angulo.toFixed(3)} 50 50)`,
+      style: { transition: 'transform 1s linear' } },
+    React.createElement("circle", { "data-pace-dial-halo": true, cx: 50 + R, cy: "50", r: "1.7", fill: color, opacity: "0.22" }),
+    React.createElement("circle", { cx: 50 + R, cy: "50", r: "0.85", fill: color,
+      style: { transition: 'fill 1s linear' } })
+    )
+    )
+    )
+    ));
+
+}
+
+function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused } = _ref3;
   const R = DIAL_R;
 
   const ringColor = interpolateRingColor(progress, mode);
@@ -15845,21 +15885,8 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
 
 
 
-
     !ticks && (running || progress > 0) &&
-    React.createElement("div", { "data-pace-dial-punto": true, style: timerDialStyles.puntoLayer },
-    React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
-      style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
-    React.createElement("g", { transform: `rotate(${giroInicio.toFixed(3)} 50 50)` },
-    React.createElement("g", { transform: `rotate(${(progress * barrido).toFixed(3)} 50 50)`,
-      style: { transition: 'transform 1s linear' } },
-    React.createElement("circle", { cx: 50 + R, cy: "50", r: "1.7", fill: ringColor, opacity: "0.22" }),
-    React.createElement("circle", { cx: 50 + R, cy: "50", r: "0.85", fill: ringColor,
-      style: { transition: 'fill 1s linear' } })
-    )
-    )
-    )
-    ),
+    React.createElement(TimerDialPunto, { giro: giroInicio, angulo: progress * barrido, color: ringColor, nace: progress === 0 }),
 
 
     React.createElement("div", { style: timerDialStyles.inner },
@@ -15912,15 +15939,6 @@ const timerDialStyles = {
     inset: 0,
     pointerEvents: 'none'
   },
-
-
-  puntoLayer: {
-    position: 'absolute',
-    inset: 0,
-    pointerEvents: 'none',
-    animation: 'pace-punto-nace 1.2s ease-out both'
-  },
-
   inner: {
 
 
@@ -15996,7 +16014,7 @@ const timerDialStyles = {
 };
 
 Object.assign(window, { TimerDial, interpolateRingColor });
-;Object.assign(window, { interpolateRingColor, TimerTicks, medirBarridoVisible, useBarridoVisible, TimerDial });
+;Object.assign(window, { interpolateRingColor, TimerTicks, medirBarridoVisible, useBarridoVisible, TimerDialPunto, TimerDial });
 })();
 </script>
   <!-- Motor de cuenta atras timestamp-based (s96): expone window.useCountdown,

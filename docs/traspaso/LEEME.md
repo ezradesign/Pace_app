@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.147.0.
 
 ## Cómo seguir desde otra cuenta
 
@@ -35,6 +35,12 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
+- **La bola del aro al empezar: hecha en v0.147.0.** Ez vio que al pulsar «Empezar» la bola y su
+  halo nacían «como por debajo»: la niebla del horizonte los cortaba por la mitad. Eligió la opción A
+  viendo fotos de la app real: el mismo recorrido, la bola entera en su propia capa y un fundido «lo
+  más elegante posible» (el punto aparece y el halo se abre después). El fundido solo sale al
+  empezar el bloque, no al recargar ni al volver a la home. Descartadas: sin fundido (B) y empezar
+  a las doce como un reloj (C), que escondía la bola tras la tarjeta a mitad de bloque.
 - **Home del móvil sin scroll: hecha en v0.146.0.** Ez vio la maquetación B (la pregunta con el
   horario como una línea, de la rama `claude/project-thread-ft7sc2`) en fotos de la app real y dijo
   «súbela», con una condición: «no quiero scroll de ninguna forma», tampoco en inglés. Desde

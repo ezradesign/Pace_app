@@ -190,6 +190,32 @@ function useBarridoVisible(marcoRef, activo) {
   return barrido;
 }
 
+/* El punto guia del aro de la home, en su capa propia. El fundido de entrada
+   (motion.css: `pace-punto-nace` en la capa y `pace-punto-halo` en el halo) se
+   decide UNA vez, al montar: solo si el bloque esta empezando (progreso 0). Al
+   recargar o al volver a la home a mitad de bloque el punto ya existia, asi que
+   aparece en su sitio sin ceremonia; pausar y reanudar no lo desmontan. */
+function TimerDialPunto({ giro, angulo, color, nace }) {
+  const naceRef = useRefTD(nace);
+  const R = DIAL_R;
+  return (
+    <div data-pace-dial-punto data-pace-dial-punto-nace={naceRef.current ? '' : undefined}
+         style={timerDialStyles.ringLayer}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+        <g transform={`rotate(${giro.toFixed(3)} 50 50)`}>
+          <g transform={`rotate(${angulo.toFixed(3)} 50 50)`}
+             style={{ transition: 'transform 1s linear' }}>
+            <circle data-pace-dial-halo cx={50 + R} cy="50" r="1.7" fill={color} opacity="0.22" />
+            <circle cx={50 + R} cy="50" r="0.85" fill={color}
+              style={{ transition: 'fill 1s linear' }} />
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused }) {
   const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
@@ -337,25 +363,12 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
           plano y aparecer con un fundido»). El arco sigue en la niebla, que es
           su remate; el punto es la senal de AHORA y va entero. Mismo viewBox,
           misma rotacion y mismo giro que el arco, asi que cae en su punta.
-          Llega con un fundido corto (`pace-punto-nace`, motion.css), que el kill
-          de reduced-motion deja en nada.
+          Llega con un fundido SOLO al empezar el bloque (ver `TimerDialPunto`).
           Lo que s138 y s139 dejaron atado se conserva: existe desde el arranque
           (`running`) y nace en el origen; `progress > 0` cubre pausado y hecho.
           El recorrido es el MISMO barrido que el arco (s184), no los 360. */}
       {!ticks && (running || progress > 0) && (
-        <div data-pace-dial-punto style={timerDialStyles.puntoLayer}>
-          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-            <g transform={`rotate(${giroInicio.toFixed(3)} 50 50)`}>
-              <g transform={`rotate(${(progress * barrido).toFixed(3)} 50 50)`}
-                 style={{ transition: 'transform 1s linear' }}>
-                <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />
-                <circle cx={50 + R} cy="50" r="0.85" fill={ringColor}
-                  style={{ transition: 'fill 1s linear' }} />
-              </g>
-            </g>
-          </svg>
-        </div>
+        <TimerDialPunto giro={giroInicio} angulo={progress * barrido} color={ringColor} nace={progress === 0} />
       )}
 
       <div style={timerDialStyles.inner}>
@@ -408,15 +421,6 @@ const timerDialStyles = {
     inset: 0,
     pointerEvents: 'none',
   },
-  /* El punto entra con un fundido y no tapa el interior: el interior (zIndex 1)
-     va despues y por encima. */
-  puntoLayer: {
-    position: 'absolute',
-    inset: 0,
-    pointerEvents: 'none',
-    animation: 'pace-punto-nace 1.2s ease-out both',
-  },
-
   inner: {
     /* EL BLOQUE INTERIOR SUBE (s185, peticion del usuario). Va como transform y
        no como margen para no cambiar el ALTO del bloque: el marco lo centra con
