@@ -94,18 +94,31 @@ function ritmoAhoraExacto() {
   return d.getHours() * 60 + d.getMinutes();
 }
 
-/* El estado de A tu ritmo, normalizado: nunca devuelve huecos. */
+/* El estado de A tu ritmo, normalizado: nunca devuelve huecos.
+   LA SEMANA TIPO (`semanaTipo`, state-ritmo.support.jsx) se lee aquí y no se escribe
+   nunca al leer: `habitual` es lo de hoy según tu semana, y `propuesta` lo que la
+   tarjeta del día trae ya contestado mientras hoy no hayas hecho nada (ni elegido, ni
+   ido por libre, ni pedido la pregunta entera con `distinto`). Un día libre de tu
+   semana se lee como «Hoy voy por libre». Sin semana guardada, todo es como siempre. */
 function ritmoDe(s) {
   var r = (s && s.ritmo) || {};
   var hoy = ritmoHoy();
   var h = Object.assign(ritmoHorarioInicial(), r.horario || {});
   h.media = ritmoMedia(h);
+  var dia = r.dia && r.dia.fecha === hoy ? r.dia : null;
+  var tipo = typeof ritmoSemanaTipoDe === 'function' ? ritmoSemanaTipoDe(r.semanaTipo) : null;
+  var dSem = tipo && hoy && typeof semanaISO === 'function' ? semanaISO(hoy).diaSemana : 0;
+  var habitual = tipo && dSem ? tipo[dSem - 1] : null;
+  var distinto = !!hoy && r.distinto === hoy;
+  var libre = r.libre === true || (!!hoy && r.libre === hoy) || (habitual === 'libre' && !dia && !distinto);
   return {
     horario: h,
-    libre: r.libre === true || (!!hoy && r.libre === hoy),
-    dia: r.dia && r.dia.fecha === hoy ? r.dia : null,
+    libre: libre,
+    dia: dia,
     ocupado: r.ocupado && r.ocupado.fecha === hoy && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [],
     calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
+    semanaTipo: tipo, diaSemana: dSem, habitual: habitual, distinto: distinto,
+    propuesta: !libre && !dia && !distinto && (habitual === 'jornada' || habitual === 'media') ? habitual : null,
   };
 }
 
@@ -330,11 +343,16 @@ function ritmoSincronizar() {
 function ritmoGuardar(cambio) {
   setState(function (prev) {
     var r = Object.assign({ horario: null, libre: null, dia: null }, prev.ritmo || {});
+    /* El día de ayer no se pisa sin resumirlo antes (state-ritmo.resumen.jsx). */
+    if (typeof ritmoResumenAntesDePisar === 'function') r = ritmoResumenAntesDePisar(prev, r);
     return Object.assign({}, prev, { ritmo: Object.assign(r, cambio(r)) });
   });
 }
 
 function ritmoElegir(opcion) {
+  /* Una pestaña o un APK que siguen abiertos desde ayer guardan el `cycle` de ayer: sin
+     el relevo, `cicloBase` saldría de él y el plan se quedaría en el primer bloque. */
+  if (typeof ensureDayFresh === 'function') ensureDayFresh();
   var s = getState();
   var R = ritmoDe(s);
   var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
@@ -343,7 +361,9 @@ function ritmoElegir(opcion) {
   ritmoSincronizar();
 }
 
-function ritmoPreguntar() { ritmoGuardar(function () { return { dia: null }; }); }
+/* «Cambiar» y «Hoy es distinto» llevan a la pregunta entera: con `distinto`, tu semana
+   tipo deja de proponer el día hasta mañana. */
+function ritmoPreguntar() { ritmoGuardar(function () { return { dia: null, distinto: ritmoHoy() }; }); }
 
 /* LA PAUSA (s193). Terminar un bloque la abre con el número de bloques hechos
    —`completePomodoro` ya subió `cycle` cuando main.jsx llama a esto—; empezar
@@ -417,7 +437,7 @@ function ritmoBloqueEmpezado(minutos) {
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
 function ritmoPorLibre() { ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
-function ritmoVolver() { ritmoGuardar(function () { return { libre: null }; }); }
+function ritmoVolver() { ritmoGuardar(function () { return { libre: null, distinto: ritmoHoy() }; }); }
 
 function ritmoOtra(claves) {
   ritmoGuardar(function (r) {

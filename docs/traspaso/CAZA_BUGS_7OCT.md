@@ -13,6 +13,14 @@ Cómo usarla desde otra cuenta:
 3. Si se reproduce, arréglalo con su prueba (regla de `CLAUDE.md`) y táchalo con la versión.
 4. Los de la app en inglés de severidad baja son de copy: enséñaselos a Ez en bloque antes de tocarlos.
 
+**Estado el 8 de octubre.** Se han reproducido todos los que no llevaban otras sesiones (respira-1, 2 y 3,
+oscuro-1 y 4): ninguno se tacha por no reproducirse. Los que no cambian lo que se ve están tachados aquí
+abajo, arreglados en `claude/caza-7oct-arreglos`. Los que sí lo cambian (oscuro-2, 3, 5 y 6; ingles-1, 3,
+4, 5, 7, 8, 10, 11, 12, 14, 15 y 16; respira-5, 6, 9, 10 y 14) están montados en
+`claude/caza-bugs-propuestas` y esperan el sí de Ez a una página de antes y después. Quedan como
+preguntas a Ez, sin montar: ingles-2 (la voz en castellano), ingles-6 (pestaña y PWA), ingles-13 (atajos),
+ingles-17 (horas y meses), respira-12 (los aros de «Pulso» y «Ondas») y respira-13 (minutos de las rondas).
+
 Por gravedad: **alta** es que algo no funciona o es inseguro; **media**, que se ve mal o confunde;
 **baja**, pulido.
 
@@ -97,6 +105,7 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Código sospechoso:** app/stats/YearView.jsx:327 y :329 usan t('stats.year.activeDays' / 'stats.year.maxStreak').replace('{n}', …) sin variante para 1 (cadenas en app/i18n/strings/stats.js)
 
 ### [media] ingles-6 · El html sigue con lang="es" y la pestaña, el manifiesto y los atajos de la PWA siguen en castellano con la app en inglés
+- **En parte, en v0.148.2:** `<html lang>` sigue al idioma al arrancar y al cambiarlo (`tests/idioma-documento.spec.js`). El título de la pestaña y el manifiesto de la PWA cambian lo que se ve y esperan a Ez.
 - **Dónde:** todos
 - **Pasos:** lang 'en' (o cambiar a English en Ajustes). Leer document.documentElement.lang y document.title. Instalar la PWA o mirar manifest.webmanifest.
 - **Debería:** <html lang="en"> mientras la interfaz va en inglés, para que el lector de pantalla pronuncie en inglés y Chrome no ofrezca «traducir del español». Título de pestaña neutro o traducido.
@@ -120,7 +129,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** walk12.js, volcado support-1280: @title "Marca un sello privado — confía en ti"; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/support-1280.png
 - **Código sospechoso:** app/support/SupportModule.jsx:266, title escrito a mano sin t()
 
-### [baja] ingles-9 · Las flechas de Estadísticas › Mes y › Año se anuncian en castellano
+### ~~[baja] ingles-9 · Las flechas de Estadísticas › Mes y › Año se anuncian en castellano~~
+- **Arreglado en v0.148.2.** Las cuatro flechas leen su etiqueta de `stats.month.prev/next` y `stats.year.prev/next` (`tests/idioma-documento.spec.js`).
 - **Dónde:** todos (lector de pantalla)
 - **Pasos:** lang 'en'. Estadísticas > Month / Year. Leer el aria-label de ‹ y ›.
 - **Debería:** «Previous month / Next month», «Previous year / Next year».
@@ -281,7 +291,8 @@ UN AVISO SOBRE LAS MEDIDAS: con page.clock.install() el reloj virtual sigue corr
 
 Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/.
 
-### [alta] respira-1 · «Bhastrika · Fuelle» empieza sin el modal de seguridad, aunque es hiperventilación al doble de ritmo que «Rondas express»
+### ~~[alta] respira-1 · «Bhastrika · Fuelle» empieza sin el modal de seguridad, aunque es hiperventilación al doble de ritmo que «Rondas express»~~
+- **Arreglado en v0.148.4:** Bhastrika lleva `safety` y pide el aviso como Kapalabhati; deja de salir en «Para ahora» y en la pausa. Una prueba exige el aviso a toda técnica de 12 o más respiraciones por minuto, sacadas de su secuencia (`tests/respira-biblioteca.spec.js`).
 - **Dónde:** 360x718 y 1530x702 (no depende del tamaño)
 - **Pasos:** Home → Respira → pulsar el encabezado «Bhastrika · Fuelle» (grupo Pranayama, gratis).
 - **Debería:** Que aparezca el modal «Antes de empezar» con la casilla «Lo he leído y asumo mi responsabilidad», igual que en «Kapalabhati · Kriya» y en las rondas. Son 3 minutos seguidos de inhalar 1 s y exhalar 1 s (30 respiraciones por minuto), que es hiperventilación. CONTENT.md:156 dice que toda técnica con hiperventilación abre el modal «sin excepción».
@@ -289,7 +300,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/run-360x718-rondas_express.json (Bhastrika: safety=false, 87 ciclos de Inhala 1 s y Exhala 1 s; Kapalabhati: safety=true, misma secuencia); /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/out-360.txt; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/out-1530.txt
 - **Código sospechoso:** app/breathe/BreatheLibrary.jsx:57 (breathe.bellows sin `safety: true`) frente a :59 (breathe.kapalabhati con `safety: true`); la fila de CONTENT.md:142 copia la misma omisión.
 
-### [alta] respira-2 · Al pulsar «Terminar» en una técnica de rondas, el cierre dice que hiciste todas las rondas y respiraciones
+### ~~[alta] respira-2 · Al pulsar «Terminar» en una técnica de rondas, el cierre dice que hiciste todas las rondas y respiraciones~~
+- **Arreglado en v0.148.4** (variante A, elegida por Ez): el cierre cuenta lo hecho, una ronda al soltar su retención y una respiración al acabar su exhalación, sin pintar los ceros (`tests/respira-cierre.spec.js`).
 - **Dónde:** 360x718 (igual en todos)
 - **Pasos:** Respira → «Respiración en rondas» → aceptar el modal de seguridad → dejar correr unos 24 s (lleva «Respiración 7 de 30», ronda 1) → pulsar «▶| Terminar».
 - **Debería:** Que el cierre diga lo que se hizo (ronda 1, unas 6 respiraciones) o que no dé esas cifras.
@@ -306,7 +318,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/medianoche-tracker-1530.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/medianoche-sidebar.png; salida de medianoche.js: 08:20 {today:5,last:'Wed Oct 07 2026'} · tracker '5 / 8' · tras «Un vaso más» '1 / 8'
 - **Código sospechoso:** `ensureDayFresh()` (app/state-core.jsx:447) solo lo llaman las acciones que acreditan (addWaterGlass, completeBreathSession, timer). Ni HydrateTracker (app/hydrate/HydrateModule.jsx:6, lee `state.water.today`) ni Sidebar.selectors.js:47 hacen el cambio de día al pintar, y no hay nada que lo dispare con visibilitychange ni con un temporizador.
 
-### [media] respira-4 · La barra espaciadora pausa a escondidas en la preparación y en la retención, y la sesión sigue congelada
+### ~~[media] respira-4 · La barra espaciadora pausa a escondidas en la preparación y en la retención, y la sesión sigue congelada~~
+- **Arreglado en v0.148.2.** Espacio solo pausa en la sesión activa, y «Empezar ahora» y «Respirar de nuevo» arrancan sin pausa (`tests/respira-espacio.spec.js`).
 - **Dónde:** 1530x702 (escritorio, con teclado)
 - **Pasos:** A) Respira → «Box 4·4·4·4» → en «Prepárate 3» pulsar Espacio → esperar 6 s → pulsar «Empezar ahora». B) Respira → «Rondas express» → aceptar el modal → llegar a «Retén sin aire» → pulsar Espacio → pulsar «Respirar de nuevo».
 - **Debería:** Que Espacio no haga nada donde no hay pausa visible, o que la pantalla diga que está en pausa. Que «Empezar ahora» y «Respirar de nuevo» arranquen respirando.
@@ -330,7 +343,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/agua-toast-360.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/agua-toast-1530.png; salida de agua-toast.js: botones [44,560,183,602],[193,560,316,602]; tarjetas [40,534,320,698]
 - **Código sospechoso:** app/state-hydrate.jsx:70 (`flushAchievementToast('hydrate')` en cada vaso) y app/ui/Toast.jsx:48 (pila abajo y centrada).
 
-### [media] respira-7 · «Un vaso más» se queda verde de Foco después de pasar el ratón por encima
+### ~~[media] respira-7 · «Un vaso más» se queda verde de Foco después de pasar el ratón por encima~~
+- **Arreglado en v0.148.2.** `Button` vuelve al fondo que recibió por `style` al apartar el ratón. El verde de Foco al pasar por encima sigue: es de diseño y va en la página para Ez (`tests/hidratate-botones.spec.js`).
 - **Dónde:** 1530x702 (escritorio, con ratón)
 - **Pasos:** Hidrátate → pasar el ratón sobre «Un vaso más» → apartarlo.
 - **Debería:** Que vuelva al azul de Hidrátate (#5F8A9B).
@@ -338,7 +352,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/hover-vaso-mas.png; salida de hover.js: antes bg rgb(95,138,155) · hover rgb(42,62,39) · tras salir el ratón rgb(62,90,58) con inline 'var(--focus)'; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/agua-360-3.png
 - **Código sospechoso:** app/ui/Primitives.jsx:226: onMouseLeave escribe `var(--focus)` sin tener en cuenta el `style.background` recibido. Lo usa app/hydrate/HydrateModule.jsx:70.
 
-### [media] respira-8 · El filtro «Sin retención» muestra Rítmica yin y Nadi Shodhana, que tienen fases de «Sostén»
+### ~~[media] respira-8 · El filtro «Sin retención» muestra Rítmica yin y Nadi Shodhana, que tienen fases de «Sostén»~~
+- **Arreglado en v0.148.2.** «Sin retención» quita también Rítmica yin y Nadi Shodhana: el chip pasa de 11 a 9 (`tests/respira-biblioteca.spec.js` lo cruza con `getSequence`).
 - **Dónde:** 360x718
 - **Pasos:** Respira → activar el chip «Sin retención» (11) → abrir «Rítmica yin» o «Nadi Shodhana».
 - **Debería:** Que no salgan técnicas en las que la respiración se para. Según su propia definición, «con retención» es que la respiración se para llena o vacía.
@@ -362,7 +377,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/num-360-tira.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/agua-360-3-zoom.png
 - **Código sospechoso:** app/hydrate/HydrateModule.jsx:16 (fontSize 96, lineHeight 1) y :21 (rótulo con marginTop 8).
 
-### [baja] respira-11 · «Cancelar» en el modal de seguridad cierra también la biblioteca de Respira
+### ~~[baja] respira-11 · «Cancelar» en el modal de seguridad cierra también la biblioteca de Respira~~
+- **Arreglado en v0.148.2.** «Cancelar» deja la biblioteca abierta detrás; aceptar la cierra (`tests/respira-biblioteca.spec.js`).
 - **Dónde:** 360x718 (igual en escritorio)
 - **Pasos:** Respira → bajar hasta «Kumbhaka 1:4:2» → pulsar su encabezado → en el modal de seguridad pulsar «Cancelar» (o la ×).
 - **Debería:** Volver a la biblioteca donde estabas, como al cerrar el preview de Mueve y Estira, que la deja abierta detrás.

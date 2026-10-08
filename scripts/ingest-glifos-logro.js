@@ -157,7 +157,8 @@ const MAPEO = {
   "explore.neck":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994002665.png",
   "explore.desk":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994006895.png",
   "explore.all.move":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994016561.png",
-  "master.rounds.15":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994024193.png",
+  /* La piedra de amolar se encargó para «Fuerte en la oficina»; «Rondas maestra» espera sus anillos de árbol. */
+  "explore.all.extra":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994024193.png",
   "secret.dark.mode":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994220532.png",
   "master.hips.20":           "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994228138.png",
   "master.extra.all.week":    "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994524540.png",

@@ -43,6 +43,10 @@ http.createServer(function (req, res) {
       // verificacion ve codigo viejo (s93; segunda capa ademas del SW de
       // s91/s92). Preview siempre fresco: nada de cache.
       'Cache-Control': 'no-store',
+      // Qué carpeta sirve: la suite lo compara con la suya antes de empezar,
+      // porque reutiliza cualquier servidor que ya escuche en su puerto
+      // (tests/servidor-propio.setup.js).
+      'X-Pace-Raiz': encodeURIComponent(ROOT),
     });
     fs.createReadStream(file).pipe(res);
   });

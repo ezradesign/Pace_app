@@ -81,13 +81,14 @@ function paceOrigenPendienteLeer() { return paceOrigenPendiente; }
    no si se commiteó: el append es asíncrono y el llamante no espera. Si el
    almacén lo rechaza, el `.then` deshace la memoria del runId para que un
    feedback posterior no referencie una sesión que no existe. */
-function paceEmitirEvento(evento, alRechazar) {
+function paceEmitirEvento(evento, alRechazar, alConfirmar) {
   if (!evento || typeof window.paceEventsAppend !== 'function') return false;
   try {
     const p = window.paceEventsAppend(evento);
     if (p && typeof p.then === 'function') {
       p.then(function (r) {
         if (!r || r.result !== 'committed') { if (alRechazar) alRechazar(); }
+        else if (alConfirmar) alConfirmar();
       }, function () { if (alRechazar) alRechazar(); });
     }
     return true;
@@ -230,6 +231,26 @@ function emitPathCompleted(pathId, stepsCount, pathRunId) {
   return paceEmitirEvento(evento);
 }
 
+/* ritmo.day.closed — el resumen de un día de «A tu ritmo» que ya pasó. Lo arma
+   state-ritmo.resumen.jsx y aquí solo se envuelve: sin `runId` ni `pathRunId`, y
+   con el instante al final de ESE día (23:59 de su hora), para que `localDay` sea
+   el día resumido y no el de hoy. Devuelve si se intentó; `alConfirmar` llega solo
+   si el almacén lo guardó, que es cuando el resumen puede salir de la cola. */
+function emitRitmoDia(resumen, alConfirmar, alRechazar) {
+  if (!resumen || typeof resumen.fecha !== 'string' || typeof window.parseLocalDateKey !== 'function') return false;
+  const fin = window.parseLocalDateKey(resumen.fecha);
+  if (!fin || isNaN(fin.getTime())) return false;
+  fin.setHours(23, 59, 0, 0);
+  const evento = window.makeEvent && window.makeEvent({
+    type: 'ritmo.day.closed',
+    context: 'standalone',
+    occurredAt: fin.toISOString(),
+    payload: resumen,
+  });
+  if (!evento) return false;
+  return paceEmitirEvento(evento, alRechazar, alConfirmar);
+}
+
 /* Sólo para pruebas: leer y limpiar la correlación en memoria. No lo usa la
    app — existe para que un test pueda comprobar la regla de §7.1 sin abrir el
    almacén. */
@@ -239,7 +260,7 @@ function paceOlvidarUltimaSesion() { paceUltimaSesion = null; }
 Object.assign(window, {
   paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId,
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
-  emitPathStepCompleted, emitPathCompleted,
+  emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
   paceOrigenSesion, paceOrigenPendienteLeer,
 });

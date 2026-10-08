@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.147.0 · 8 de octubre de 2026.
+**Versión:** v0.150.0 · 8 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -32,7 +32,9 @@ reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como
 
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
-de tiempo alrededor del dibujo y avisos de cuenco y madera. Cada texto tiene su hueco fijo y el
+de tiempo alrededor del dibujo y avisos de cuenco y madera. El aro solo cuenta el ejercicio: al colocarse y al cambiar de lado se queda vacío (v0.148.1, opción A
+de Ez). La explicación de cada paso va en la serif itálica y no pasa de 95 letras (v0.150.0, opción A
+de Ez), así que cabe en dos líneas. Cada texto tiene su hueco fijo y el
 dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
 ni se pisa. Las rutinas propias también van por ahí.
 
@@ -54,6 +56,15 @@ ejercicios pausados la música se abre al inhalar y se cierra al exhalar; con ci
 se queda quieta, y Coherente 432 sigue con su drone. El reparto es `PACE_MUSICA`, en
 `app/ui/Sound.musica.jsx`.
 
+Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
+con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
+`tests/aro-bola-entrada.spec.js`.
+
+«A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
+días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
+«Comienza» y «Hoy es distinto»; «Tu semana» en Ajustes la cambia. El día se deriva de la semana al
+pintar y no se escribe nada hasta que se pulsa.
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben: llevan su «Premium» pero no «Pronto».
 El constructor de rutinas propias sigue cerrado.
@@ -73,18 +84,23 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
    `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
    en `SUBIDAS.md`.
-2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
-   se paga.
+2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
+   cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
+   «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
+   cuatro cosas, dos cambios por semana, la carta en una ventana, también sin cambios, nada sin
+   PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
+   la carta llegan cuando haya semanas de datos.
 
 3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
    Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
-   y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
-   de que Ez vea las fotos. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
-   v0.147.0. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
-   todo lo que se vea se le enseña antes en HTML.
+   y «Terminar» en las rondas, en v0.148.4. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
+   v0.147.0. Seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de
+   ingles-6), en v0.148.2; los que sí lo cambian están montados en `claude/caza-bugs-propuestas`, a
+   la espera de que Ez elija en su página. Todo lo que se vea se le enseña antes en HTML.
 
 ## Espera a Ez
 
+- Elegir en la página de la caza de bugs qué cambios visibles se suben (`claude/caza-bugs-propuestas`).
 - Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
   contraseña aparte.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
@@ -94,7 +110,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
   inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
   los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
-  sus prompts).
+  sus prompts). De logro, los anillos de «Rondas maestra» y la vela de «Larga sesión»
+  (`archivos/glifos/revision-8oct/GLIFOS_8OCT.md`).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha

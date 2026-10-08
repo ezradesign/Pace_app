@@ -61,3 +61,21 @@ test('en escritorio el relleno sigue siendo el de Button md', async ({ page, con
     expect(b.lineas, b.texto).toBe(1);
   });
 });
+
+/* Al apartar el ratón, «Un vaso más» vuelve a su azul. El botón pinta el fondo
+   por `style` y, al salir, `Button` escribía el verde de Foco de su variante:
+   se quedaba verde hasta reabrir Hidrátate (caza de bugs del 7 de octubre). */
+test('«Un vaso más» recupera su color al apartar el ratón', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /Hidrátate/ }).first().click();
+  const mas = page.getByRole('button', { name: /Un vaso más/ });
+  await mas.waitFor({ state: 'visible' });
+  await page.waitForTimeout(400);
+  const fondo = () => mas.evaluate(el => getComputedStyle(el).backgroundColor);
+  const antes = await fondo();
+  await mas.hover();
+  await page.mouse.move(2, 2);
+  /* La transición del botón dura 180 ms. */
+  await expect.poll(fondo, { timeout: 2000 }).toBe(antes);
+});
