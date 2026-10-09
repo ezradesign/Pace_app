@@ -137,7 +137,10 @@ jobs:
     name: e2e
     runs-on: ubuntu-latest
     needs: verify
-    timeout-minutes: 15
+    # 25 desde v0.151.0: con el proyecto webkit y las pruebas de la caza, la
+    # suite tarda 13,7 min y el job llegó a los 15 justo al guardar la cache,
+    # con todos los pasos en verde; GitHub lo dio por cancelado.
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
