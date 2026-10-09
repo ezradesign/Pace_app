@@ -49,9 +49,16 @@ test('con la página ya controlada, un worker nuevo en espera sí se anuncia', a
   await irAlArtefacto(page);
   await workerAsentado(page);
   /* Segunda visita: la página carga ya controlada, como la de cualquiera que
-     vuelve después de un despliegue. */
-  await irAlArtefacto(page);
-  expect(await page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
+     vuelve después de un despliegue. Con el PC cargado, la primera recarga
+     puede llegar aún sin controlar (se vio en la suite entera de la pausa, el
+     9 oct.): se recarga hasta tres veces, porque lo que se prueba empieza con
+     una página que YA estaba controlada al cargar. */
+  let controlada = false;
+  for (let i = 0; i < 3 && !controlada; i++) {
+    await irAlArtefacto(page);
+    controlada = await page.evaluate(() => !!navigator.serviceWorker.controller);
+  }
+  expect(controlada, 'la página no llegó a cargar controlada por el worker').toBe(true);
   await page.evaluate(() => navigator.serviceWorker.register('sw.js?prueba=version-nueva'));
   await expect(page.locator('[data-pace-update-prompt]')).toBeVisible({ timeout: 15_000 });
   expect(await page.evaluate(async () => !!(await navigator.serviceWorker.getRegistration()).waiting)).toBe(true);

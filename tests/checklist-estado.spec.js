@@ -61,9 +61,12 @@ test('Logros: el primer sello se gana al instante, se anuncia y sobrevive a la r
      sin pasarlo, y por eso drena su propia cola (state-hydrate.jsx:70). El
      toast vive 3 s, asi que se aserta aqui y no despues.
      Desde la caza de bugs (respira-6) el aviso espera a que se cierre
-     Hidrátate: se apilaba encima de «Un vaso menos / Un vaso más». */
-  await page.keyboard.press('Escape');
+     Hidrátate: se apilaba encima de «Un vaso menos / Un vaso más». Un
+     sello no pisa una ventana (Ez, 8 oct. 2026). */
   const toast = page.locator('div[aria-live="polite"][aria-atomic="true"]');
+  await page.waitForTimeout(900);
+  expect(await toast.textContent(), 'el aviso sale encima de Hidratate').not.toContain('Nuevo sello');
+  await page.keyboard.press('Escape');
   await expect(toast).toContainText('Nuevo sello');
   await expect(toast).toContainText('Primer sorbo');
 

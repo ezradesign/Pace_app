@@ -2,15 +2,18 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de octubre de 2026, v0.151.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de octubre de 2026, v0.152.0.
 
 ## 9 oct. 2026: lo nuevo desde el relevo
 
 - La coordinadora sigue en la cuenta nueva, con cuatro sesiones en paralelo (caza, pausa, barra
   lateral y drones), cada una en su carpeta de `.claude/worktrees/` y con su puerto. Cuando el
   límite de uso se acabó a la vez en todas, se reanudan de dos en dos (decisión de Ez).
-- **La caza de bugs está en `main` como v0.151.0**, con el sí de Ez a todo; solo queda ingles-13,
-  que lleva la pausa, y grabar la voz de Respira en inglés.
+- **La caza de bugs está en `main` como v0.151.0**, con el sí de Ez a todo; solo queda grabar la
+  voz de Respira en inglés.
+- **La pausa más elegante está en `main` como v0.152.0**: opción A de Ez, «Ir a comer» suma el vaso
+  y los sellos esperan a que no haya nada abierto (en la home, dentro del aro). Página con la que
+  Ez dio el sí: `archivos/pausa-9oct/pausa-9oct.html`.
 - **iPhone (Ez, 9 oct.): PACE en Safari ahora y la app de la App Store después de v1.** La
   revisión en el motor de Safari encontró el aviso falso de «versión nueva» en la primera visita
   (arreglado en v0.151.0) y nada más en la home. Falta que un tester con iPhone mire el sonido.

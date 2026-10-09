@@ -1,0 +1,1154 @@
+{
+ "antes-corta-360x640": {
+  "alto": 484,
+  "arriba": 144,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-corta-360x640": {
+  "alto": 467,
+  "arriba": 161,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-corta-360x640": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-corta-360x640": {
+  "alto": 475,
+  "arriba": 153,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-corta-360x718": {
+  "alto": 484,
+  "arriba": 222,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-corta-360x718": {
+  "alto": 467,
+  "arriba": 239,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-corta-360x718": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-corta-360x718": {
+  "alto": 475,
+  "arriba": 231,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-corta-1280x800": {
+  "alto": 460,
+  "arriba": 170,
+  "abajo": 630,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-corta-1280x800": {
+  "alto": 439,
+  "arriba": 180,
+  "abajo": 620,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-corta-1280x800": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-corta-1280x800": {
+  "alto": 447,
+  "arriba": 176,
+  "abajo": 624,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-corta-1920x1080": {
+  "alto": 573,
+  "arriba": 254,
+  "abajo": 826,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-corta-1920x1080": {
+  "alto": 549,
+  "arriba": 265,
+  "abajo": 815,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-corta-1920x1080": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-corta-1920x1080": {
+  "alto": 559,
+  "arriba": 261,
+  "abajo": 819,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-corta-360x640-oscuro": {
+  "alto": 484,
+  "arriba": 144,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-corta-360x640-oscuro": {
+  "alto": 467,
+  "arriba": 161,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-corta-360x640-oscuro": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-corta-360x640-oscuro": {
+  "alto": 475,
+  "arriba": 153,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-corta-360x718-oscuro": {
+  "alto": 484,
+  "arriba": 222,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-corta-360x718-oscuro": {
+  "alto": 467,
+  "arriba": 239,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-corta-360x718-oscuro": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-corta-360x718-oscuro": {
+  "alto": 475,
+  "arriba": 231,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-corta-1280x800-oscuro": {
+  "alto": 460,
+  "arriba": 170,
+  "abajo": 630,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-corta-1280x800-oscuro": {
+  "alto": 439,
+  "arriba": 180,
+  "abajo": 620,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-corta-1280x800-oscuro": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-corta-1280x800-oscuro": {
+  "alto": 447,
+  "arriba": 176,
+  "abajo": 624,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-corta-1920x1080-oscuro": {
+  "alto": 573,
+  "arriba": 254,
+  "abajo": 826,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-corta-1920x1080-oscuro": {
+  "alto": 549,
+  "arriba": 265,
+  "abajo": 815,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-corta-1920x1080-oscuro": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-corta-1920x1080-oscuro": {
+  "alto": 559,
+  "arriba": 261,
+  "abajo": 819,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-larga-360x640": {
+  "alto": 518,
+  "arriba": 110,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-larga-360x640": {
+  "alto": 502,
+  "arriba": 126,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-larga-360x640": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-larga-360x640": {
+  "alto": 496,
+  "arriba": 132,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-larga-360x718": {
+  "alto": 518,
+  "arriba": 188,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-larga-360x718": {
+  "alto": 502,
+  "arriba": 204,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-larga-360x718": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-larga-360x718": {
+  "alto": 496,
+  "arriba": 210,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-larga-1280x800": {
+  "alto": 460,
+  "arriba": 170,
+  "abajo": 630,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-larga-1280x800": {
+  "alto": 439,
+  "arriba": 180,
+  "abajo": 620,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-larga-1280x800": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-larga-1280x800": {
+  "alto": 447,
+  "arriba": 176,
+  "abajo": 624,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-larga-1920x1080": {
+  "alto": 573,
+  "arriba": 254,
+  "abajo": 826,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-larga-1920x1080": {
+  "alto": 549,
+  "arriba": 265,
+  "abajo": 815,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-larga-1920x1080": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-larga-1920x1080": {
+  "alto": 559,
+  "arriba": 261,
+  "abajo": 819,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-larga-360x640-oscuro": {
+  "alto": 518,
+  "arriba": 110,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-larga-360x640-oscuro": {
+  "alto": 502,
+  "arriba": 126,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-larga-360x640-oscuro": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-larga-360x640-oscuro": {
+  "alto": 496,
+  "arriba": 132,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-larga-360x718-oscuro": {
+  "alto": 518,
+  "arriba": 188,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-larga-360x718-oscuro": {
+  "alto": 502,
+  "arriba": 204,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-larga-360x718-oscuro": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-larga-360x718-oscuro": {
+  "alto": 496,
+  "arriba": 210,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-larga-1280x800-oscuro": {
+  "alto": 460,
+  "arriba": 170,
+  "abajo": 630,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-larga-1280x800-oscuro": {
+  "alto": 439,
+  "arriba": 180,
+  "abajo": 620,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-larga-1280x800-oscuro": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-larga-1280x800-oscuro": {
+  "alto": 447,
+  "arriba": 176,
+  "abajo": 624,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-larga-1920x1080-oscuro": {
+  "alto": 573,
+  "arriba": 254,
+  "abajo": 826,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-larga-1920x1080-oscuro": {
+  "alto": 549,
+  "arriba": 265,
+  "abajo": 815,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-larga-1920x1080-oscuro": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-larga-1920x1080-oscuro": {
+  "alto": 559,
+  "arriba": 261,
+  "abajo": 819,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-comida-360x640": {
+  "alto": 431,
+  "arriba": 197,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-comida-360x640": {
+  "alto": 407,
+  "arriba": 221,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-comida-360x640": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-comida-360x640": {
+  "alto": 410,
+  "arriba": 218,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-comida-360x718": {
+  "alto": 431,
+  "arriba": 275,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-comida-360x718": {
+  "alto": 407,
+  "arriba": 299,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-comida-360x718": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-comida-360x718": {
+  "alto": 410,
+  "arriba": 296,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-comida-1280x800": {
+  "alto": 408,
+  "arriba": 196,
+  "abajo": 604,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-comida-1280x800": {
+  "alto": 379,
+  "arriba": 211,
+  "abajo": 589,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-comida-1280x800": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-comida-1280x800": {
+  "alto": 382,
+  "arriba": 209,
+  "abajo": 591,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-comida-1920x1080": {
+  "alto": 508,
+  "arriba": 286,
+  "abajo": 794,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-comida-1920x1080": {
+  "alto": 474,
+  "arriba": 303,
+  "abajo": 777,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-comida-1920x1080": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-comida-1920x1080": {
+  "alto": 478,
+  "arriba": 301,
+  "abajo": 779,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-comida-360x640-oscuro": {
+  "alto": 431,
+  "arriba": 197,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-comida-360x640-oscuro": {
+  "alto": 407,
+  "arriba": 221,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-comida-360x640-oscuro": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-comida-360x640-oscuro": {
+  "alto": 410,
+  "arriba": 218,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-comida-360x718-oscuro": {
+  "alto": 431,
+  "arriba": 275,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-comida-360x718-oscuro": {
+  "alto": 407,
+  "arriba": 299,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-comida-360x718-oscuro": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-comida-360x718-oscuro": {
+  "alto": 410,
+  "arriba": 296,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-comida-1280x800-oscuro": {
+  "alto": 408,
+  "arriba": 196,
+  "abajo": 604,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-comida-1280x800-oscuro": {
+  "alto": 379,
+  "arriba": 211,
+  "abajo": 589,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-comida-1280x800-oscuro": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-comida-1280x800-oscuro": {
+  "alto": 382,
+  "arriba": 209,
+  "abajo": 591,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-comida-1920x1080-oscuro": {
+  "alto": 508,
+  "arriba": 286,
+  "abajo": 794,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-comida-1920x1080-oscuro": {
+  "alto": 474,
+  "arriba": 303,
+  "abajo": 777,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-comida-1920x1080-oscuro": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-comida-1920x1080-oscuro": {
+  "alto": 478,
+  "arriba": 301,
+  "abajo": 779,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-libre-360x640": {
+  "alto": 601,
+  "arriba": 27,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-libre-360x640": {
+  "alto": 590,
+  "arriba": 38,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-libre-360x640": {
+  "alto": 594,
+  "arriba": 34,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-libre-360x640": {
+  "alto": 592,
+  "arriba": 36,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-libre-360x718": {
+  "alto": 601,
+  "arriba": 105,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-libre-360x718": {
+  "alto": 590,
+  "arriba": 116,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-libre-360x718": {
+  "alto": 594,
+  "arriba": 112,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-libre-360x718": {
+  "alto": 592,
+  "arriba": 114,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-libre-1280x800": {
+  "alto": 611,
+  "arriba": 94,
+  "abajo": 706,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-libre-1280x800": {
+  "alto": 614,
+  "arriba": 93,
+  "abajo": 707,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-libre-1280x800": {
+  "alto": 629,
+  "arriba": 86,
+  "abajo": 714,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-libre-1280x800": {
+  "alto": 616,
+  "arriba": 92,
+  "abajo": 708,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-libre-1920x1080": {
+  "alto": 763,
+  "arriba": 158,
+  "abajo": 922,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-libre-1920x1080": {
+  "alto": 767,
+  "arriba": 156,
+  "abajo": 924,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-libre-1920x1080": {
+  "alto": 785,
+  "arriba": 147,
+  "abajo": 933,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-libre-1920x1080": {
+  "alto": 769,
+  "arriba": 155,
+  "abajo": 925,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-libre-360x640-oscuro": {
+  "alto": 601,
+  "arriba": 27,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-libre-360x640-oscuro": {
+  "alto": 590,
+  "arriba": 38,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-libre-360x640-oscuro": {
+  "alto": 594,
+  "arriba": 34,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-libre-360x640-oscuro": {
+  "alto": 592,
+  "arriba": 36,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-libre-360x718-oscuro": {
+  "alto": 601,
+  "arriba": 105,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-libre-360x718-oscuro": {
+  "alto": 590,
+  "arriba": 116,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-libre-360x718-oscuro": {
+  "alto": 594,
+  "arriba": 112,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-libre-360x718-oscuro": {
+  "alto": 592,
+  "arriba": 114,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-libre-1280x800-oscuro": {
+  "alto": 611,
+  "arriba": 94,
+  "abajo": 706,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-libre-1280x800-oscuro": {
+  "alto": 614,
+  "arriba": 93,
+  "abajo": 707,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-libre-1280x800-oscuro": {
+  "alto": 629,
+  "arriba": 86,
+  "abajo": 714,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-libre-1280x800-oscuro": {
+  "alto": 616,
+  "arriba": 92,
+  "abajo": 708,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-libre-1920x1080-oscuro": {
+  "alto": 763,
+  "arriba": 158,
+  "abajo": 922,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-libre-1920x1080-oscuro": {
+  "alto": 767,
+  "arriba": 156,
+  "abajo": 924,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-libre-1920x1080-oscuro": {
+  "alto": 785,
+  "arriba": 147,
+  "abajo": 933,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-libre-1920x1080-oscuro": {
+  "alto": 769,
+  "arriba": 155,
+  "abajo": 925,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "antes-corta-360x640-en": {
+  "alto": 500,
+  "arriba": 128,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-corta-360x640-en": {
+  "alto": 467,
+  "arriba": 161,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-corta-360x640-en": {
+  "alto": 414,
+  "arriba": 214,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-corta-360x640-en": {
+  "alto": 475,
+  "arriba": 153,
+  "abajo": 628,
+  "pantalla": 640,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-corta-360x718-en": {
+  "alto": 500,
+  "arriba": 206,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "A-corta-360x718-en": {
+  "alto": 467,
+  "arriba": 239,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "B-corta-360x718-en": {
+  "alto": 414,
+  "arriba": 292,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "C-corta-360x718-en": {
+  "alto": 475,
+  "arriba": 231,
+  "abajo": 706,
+  "pantalla": 718,
+  "sobra": 0,
+  "ancho": 336
+ },
+ "antes-corta-1280x800-en": {
+  "alto": 460,
+  "arriba": 170,
+  "abajo": 630,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "A-corta-1280x800-en": {
+  "alto": 439,
+  "arriba": 180,
+  "abajo": 620,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "B-corta-1280x800-en": {
+  "alto": 397,
+  "arriba": 201,
+  "abajo": 599,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "C-corta-1280x800-en": {
+  "alto": 447,
+  "arriba": 176,
+  "abajo": 624,
+  "pantalla": 800,
+  "sobra": 0,
+  "ancho": 720
+ },
+ "antes-corta-1920x1080-en": {
+  "alto": 573,
+  "arriba": 254,
+  "abajo": 826,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "A-corta-1920x1080-en": {
+  "alto": 549,
+  "arriba": 265,
+  "abajo": 815,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "B-corta-1920x1080-en": {
+  "alto": 496,
+  "arriba": 292,
+  "abajo": 788,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ },
+ "C-corta-1920x1080-en": {
+  "alto": 559,
+  "arriba": 261,
+  "abajo": 819,
+  "pantalla": 1080,
+  "sobra": 0,
+  "ancho": 900
+ }
+}
