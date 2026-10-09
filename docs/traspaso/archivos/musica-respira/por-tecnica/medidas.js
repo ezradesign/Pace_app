@@ -65,7 +65,7 @@ window.PACE_MEDIDAS = {
    },
    "m": {
     "vecina": "breathe.co2",
-    "d": 5.9
+    "d": 6.7
    }
   }
  },
@@ -221,12 +221,12 @@ window.PACE_MEDIDAS = {
    "pico": -7.46
   },
   "m": {
-   "ajusteDb": -1.39,
+   "ajusteDb": -2.29,
    "ciclo": -21.61,
-   "abierto": -19.78,
-   "banda": -22.8,
-   "agudos": -46.41,
-   "pico": -6.32
+   "abierto": -19.82,
+   "banda": -23.41,
+   "agudos": -45.97,
+   "pico": -6.34
   },
   "distinta": {
    "a": {
@@ -235,7 +235,7 @@ window.PACE_MEDIDAS = {
    },
    "m": {
     "vecina": "breathe.rounds.full",
-    "d": 5.9
+    "d": 6.7
    }
   }
  },
@@ -302,8 +302,8 @@ window.PACE_MEDIDAS = {
     "d": 8.1
    },
    "m": {
-    "vecina": "breathe.nadi.shodhana",
-    "d": 5.2
+    "vecina": "breathe.ujjayi",
+    "d": 7.7
    }
   }
  },
@@ -331,12 +331,12 @@ window.PACE_MEDIDAS = {
    "pico": -8.83
   },
   "m": {
-   "ajusteDb": -1.37,
+   "ajusteDb": -0.76,
    "ciclo": -20.58,
-   "abierto": -19.77,
-   "banda": -24.42,
-   "agudos": -85.88,
-   "pico": -8.21
+   "abierto": -19.78,
+   "banda": -23.81,
+   "agudos": -83.48,
+   "pico": -8.37
   },
   "distinta": {
    "a": {
@@ -345,7 +345,7 @@ window.PACE_MEDIDAS = {
    },
    "m": {
     "vecina": "breathe.exhale.46",
-    "d": 10
+    "d": 9.7
    }
   }
  },
@@ -413,7 +413,7 @@ window.PACE_MEDIDAS = {
    },
    "m": {
     "vecina": "breathe.478",
-    "d": 10
+    "d": 9.7
    }
   }
  },
@@ -569,12 +569,12 @@ window.PACE_MEDIDAS = {
    "pico": -6.33
   },
   "m": {
-   "ajusteDb": 3.18,
-   "ciclo": -21.63,
+   "ajusteDb": 2.94,
+   "ciclo": -21.62,
    "abierto": -19.01,
-   "banda": -22.27,
-   "agudos": -35.07,
-   "pico": -5.18
+   "banda": -21.66,
+   "agudos": -35,
+   "pico": -4.99
   },
   "distinta": {
    "a": {
@@ -582,8 +582,8 @@ window.PACE_MEDIDAS = {
     "d": 1.7
    },
    "m": {
-    "vecina": "breathe.coherent.66",
-    "d": 5.2
+    "vecina": "breathe.rounds.full",
+    "d": 7
    }
   }
  },
@@ -650,8 +650,8 @@ window.PACE_MEDIDAS = {
     "d": 9.3
    },
    "m": {
-    "vecina": "breathe.coherent.66",
-    "d": 8.3
+    "vecina": "breathe.co2",
+    "d": 8.2
    }
   }
  }

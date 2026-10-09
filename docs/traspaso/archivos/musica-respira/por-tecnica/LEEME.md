@@ -16,7 +16,8 @@ la envolvente en directo) y propone dos caminos:
 | Archivo | Qué es |
 |---|---|
 | `escucha-por-tecnica.html` | La página: escuchar cada técnica (propuesta y «así suena hoy») con la voz encima, elegir y responder. |
-| `tecnicas.js` | Las 20 técnicas: fases, receta de A, por qué le va y texto de B. **Lo único que se edita a mano.** |
+| `marcadas.html`, `marcadas.js` | La página de las marcadas (9 oct.): «Marcada» y «Ahora» por técnica, un recorrido de 12 s por todas y el resumen para pegar. Se abre desde el servidor de PACE (lee los audios del repo). |
+| `tecnicas.js` | Las 20 técnicas: fases, receta de A, la marcada `m` (bloque `MARCADAS`), por qué le va y texto de B. **Lo único que se edita a mano.** |
 | `motor.js` | El motor de Web Audio, el mismo para la página y para el medidor. |
 | `medidas.js` | Generado: medidas y ajuste de nivel de cada variación. |
 | `brief-B-por-tecnica.md` | Generado: el brief de B, listo para pegar. |
@@ -64,3 +65,20 @@ técnica sin receta. Lo vigila `tests/respira-musica.spec.js`.
 Para cambiar una técnica cuando Ez la pruebe: tocar su receta en `tecnicas.js`, correr `construir.js`
 hasta «Sin avisos», escucharla en la página y copiar la receta y su `ajusteDb` a
 `Sound.musica.parts.jsx`.
+
+## Las marcadas (9 oct.)
+
+Ez, al escuchar las de A: «¿no te da la sensación que todos suenan igual?». Medido, sí: con la
+distancia de color (espectro por tercios de octava de 50 Hz a 8 kHz, volumen igualado, raíz
+cuadrática media de las diferencias en dB) nueve técnicas tenían una casi gemela a menos de 4
+puntos; entre el drone claro y el cálido hay 8,3. Ez eligió «variaciones mucho más marcadas», sin
+grabar nada. La receta `m` usa los mismos campos que `a`, así que la app no cambia de código: otra
+nota, acordes que se oyen, colores como de vocal y movimientos que se notan en medio minuto.
+`construir.js` mide también `m` (su ajuste va en `medidas.js`, dentro de `m`) y avisa si una queda a
+menos de 6 de su vecina: con las marcadas la pareja más cercana está a 6,3 y no queda ninguna
+gemela. Las medidas de `a` no cambian.
+
+Para escucharlas, con el servidor de PACE en marcha (por ejemplo en el puerto 8792):
+`http://localhost:8792/docs/traspaso/archivos/musica-respira/por-tecnica/marcadas.html`. Si en ese
+localhost se abrió la app, su service worker guarda copias de todo lo que cuelga de él: la página
+carga sus scripts con `?v=` y hay que subir ese número si cambian.
