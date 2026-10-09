@@ -79,6 +79,13 @@ async function conUnaSesion(page, context) {
   await sembrarSesion(page, 'breathe.box.4', 'breathe');
   await page.reload();
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  /* Tras recargar, los eventos llegan al espejo en memoria DESPUÉS del primer pintado
+     (IndexedDB es asíncrono) y la barra se repinta con `pace:eventos`. Con el PC
+     cargado eso pasó de 10 s una vez en la suite entera: se espera al espejo. */
+  await page.waitForFunction(() => {
+    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    return !!(snap && (snap.events || []).length);
+  }, null, { timeout: 30000 });
 }
 
 /* ==========================================================================
