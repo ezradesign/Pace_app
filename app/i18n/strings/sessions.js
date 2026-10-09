@@ -153,7 +153,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'breathe.safety.start':            'Empezar sesión',
     'breathe.safety.required':         'Requiere lectura de seguridad',
     'breathe.safety.body.intro.pre':   'Esta técnica implica ',
-    'breathe.safety.body.intro.bold':  'hiperventilación controlada y apnea',
+    'breathe.safety.body.intro.bold.both':  'hiperventilación controlada y apnea',
+    'breathe.safety.body.intro.bold.apnea': 'retenciones largas de la respiración',
+    'breathe.safety.body.intro.bold.hiper': 'hiperventilación controlada',
     'breathe.safety.body.intro.post':  '. Puede causar mareo, cosquilleo o desmayo.',
     'breathe.safety.body.rule1.pre':   'Practícala ',
     'breathe.safety.body.rule1.bold':  'sentado o tumbado',
@@ -300,7 +302,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // Light closing feedback (s116 · B2.2b-2). One optional, skippable question
     // at the end; equal-weight responses semantically aligned + secondary
     // «Not now» + minimal acknowledgement. No percentages.
-    'session.feedback.question':       'Did this pause help?',
+    'session.feedback.question':       'Did this break help?',
     'session.feedback.yes':            'Yes',
     'session.feedback.some':           'A little',
     'session.feedback.no':             'No',
@@ -324,7 +326,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'breathe.safety.start':            'Start session',
     'breathe.safety.required':         'Safety briefing required',
     'breathe.safety.body.intro.pre':   'This technique involves ',
-    'breathe.safety.body.intro.bold':  'controlled hyperventilation and breath holds',
+    'breathe.safety.body.intro.bold.both':  'controlled hyperventilation and breath holds',
+    'breathe.safety.body.intro.bold.apnea': 'long breath holds',
+    'breathe.safety.body.intro.bold.hiper': 'controlled hyperventilation',
     'breathe.safety.body.intro.post':  '. It can cause dizziness, tingling or fainting.',
     'breathe.safety.body.rule1.pre':   'Practice it ',
     'breathe.safety.body.rule1.bold':  'sitting or lying down',

@@ -275,9 +275,8 @@ function esCajon() {
 
 function fechaCortaSidebar(lang) {
   try {
-    const loc = lang === 'en' ? 'en-GB' : 'es-ES';
-    return new Date()
-      .toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'short' })
+    /* paceFechaCorta (useT.jsx) deja «Sep» en inglés, como Estadísticas. */
+    return paceFechaCorta(new Date(), lang, { weekday: 'short', day: 'numeric', month: 'short' })
       /* `es-ES` devuelve «mar, 1 sept»: fuera la coma y los puntos. El rotulo
          va en versalitas, asi que la puntuacion sobra. */
       .replace(/[.,]/g, '');
