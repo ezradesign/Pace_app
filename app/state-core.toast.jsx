@@ -15,7 +15,9 @@
 
 const _toastListeners = new Set();
 const _pendingToasts = [];      // buffer pre-mount (aun sin listeners)
-const _esperando = [];          // avisos que esperan a que no haya nada encima de la home
+/* s105, ampliada el 9 oct. 2026: la MISMA cola de los avisos aplazados en un Camino es
+   ahora la de todo lo que espera a que no haya nada encima de la home. */
+const _deferredToasts = [];
 let _esperaTimer = null;
 let _caminoUiActive = false;    // s105: lo fija PathRunner (pasos + Completion)
 
@@ -50,9 +52,9 @@ function _avisoTaparia() {
 
 function _intentarAvisos() {
   _esperaTimer = null;
-  if (!_esperando.length) return;
+  if (!_deferredToasts.length) return;
   if (_avisoTaparia()) { _esperaTimer = setTimeout(_intentarAvisos, AVISO_REINTENTO_MS); return; }
-  _esperando.splice(0).forEach(_emitToast);
+  _deferredToasts.splice(0).forEach(_emitToast);
 }
 
 function _esperarHueco(ms) {
@@ -67,7 +69,7 @@ function _emitToast(t) {
 
 function showToast(toast) {
   const t = { ...toast, _id: Date.now() + Math.random() };
-  _esperando.push(t);
+  _deferredToasts.push(t);
   _esperarHueco(AVISO_RESPIRO_MS);
 }
 
@@ -77,7 +79,7 @@ function showToast(toast) {
 function setCaminoUiActive(active) {
   const was = _caminoUiActive;
   _caminoUiActive = !!active;
-  if (was && !_caminoUiActive && _esperando.length > 0) _esperarHueco(60);
+  if (was && !_caminoUiActive && _deferredToasts.length > 0) _esperarHueco(60);
 }
 
 function onToast(listener) {
