@@ -59,15 +59,23 @@ function selectSidebarWeek(state, now) {
   const ws = s.weeklyStats || {};
   const hoy = sidebarDayIndex(now);
   const days = [];
+  /* LOS MINUTOS DE CADA DÍA dibujan su cápsula (8 oct. 2026): foco, respira y cuerpo
+     juntos, sin el agua, que tampoco enciende el día. `escala` es el día con más
+     minutos de la semana, y nunca menos de una hora: así un día de diez minutos no
+     llena su cápsula como si fuera el mejor. */
+  let escala = 60;
   for (let i = 0; i < 7; i++) {
+    const minutos = sidebarAt(ws.focusMinutes, i) + sidebarAt(ws.breathMinutes, i) + sidebarAt(ws.moveMinutes, i);
     const activo = sidebarAt(ws.focusMinutes, i) > 0
                 || sidebarAt(ws.breathMinutes, i) > 0
                 || sidebarAt(ws.moveMinutes, i) > 0;
-    days.push({ active: activo, isToday: i === hoy });
+    days.push({ active: activo, isToday: i === hoy, minutes: minutos });
+    if (minutos > escala) escala = minutos;
   }
   const streak = s.streak || {};
   return {
     days: days,
+    escala: escala,
     todayIndex: hoy,
     activeCount: days.filter(function (d) { return d.active; }).length,
     currentStreak: streak.current || 0,
@@ -80,12 +88,18 @@ function selectSidebarWeek(state, now) {
    `session.completed` de `occurredAt` más reciente. Devuelve null si no hay
    ninguno, que es el caso normal en `file://`: allí el adaptador de
    eventos está inerte y el contenedor viene vacío. */
+/* EL FOCO NO CUENTA (8 oct. 2026): no tiene rutina que repetir (emite `routineId:
+   'focus'`, state-events.jsx), y cuando era lo último que hiciste la tarjeta se quedaba
+   sin nada que nombrar y DESAPARECÍA, sin pasar a «Para ahora». Se medía en la página de
+   la barra lateral: por libre y tras un bloque, la barra no ofrecía nada. Ahora «Repetir»
+   es lo último de Respira, Mueve o Estira. */
 function selectSidebarLastSession(eventos) {
   if (!Array.isArray(eventos)) return null;
   let mejor = null, mejorT = -Infinity;
   for (let i = 0; i < eventos.length; i++) {
     const e = eventos[i];
     if (!e || e.type !== 'session.completed' || !e.payload) continue;
+    if (e.payload.module === 'focus') continue;
     const t = Date.parse(e.occurredAt);
     if (isNaN(t) || t < mejorT) continue;
     mejorT = t; mejor = e;
@@ -185,6 +199,11 @@ function selectSidebarPrimaryAction(state, ctx) {
   if (c.ritmo && c.ritmo.targetId) {
     return { kind: 'suggest', targetId: c.ritmo.targetId, ritmo: c.ritmo };
   }
+  /* CON «A TU RITMO» EN LA HOME Y SIN PAUSA QUE ANUNCIAR, NADA (8 oct. 2026, en las
+     fotos que eligió Ez). A las 9:10 la home pregunta cómo es tu día y ofrece
+     «Comienza»; un «Para ahora, Postura reset» al lado eran dos voces para la misma
+     decisión. Lo que está a medias (arriba) sí se sigue ofreciendo: es tuyo. */
+  if (c.conRitmo) return null;
   const last = selectSidebarLastSession(c.events);
   if (last && last.routineId) {
     return {
@@ -216,7 +235,68 @@ function selectSidebarLatestAchievement(state) {
   return mejor ? { id: mejor, unlockedAt: mejorT > 0 ? mejorT : null } : null;
 }
 
+/* LAS PALABRAS DEL CUADERNO (8 oct. 2026, elegidas por Ez mirándolas): Hoy no se
+   cuenta en cifras sino con frases, «Dos horas y media de foco», «Cuatro vasos de
+   ocho». Aquí se arma solo la cantidad con su unidad; la frase entera es de i18n
+   (`sidebar.hoy.*`, `sidebar.agua.*`), que pone `{x}` en su sitio.
+   Hasta doce con letra, como en «A tu ritmo»; más allá, la cifra («Una hora y 40
+   minutos»). La media hora y el cuarto se dicen como se dicen. Es pura y se prueba
+   sin montar nada: un idioma nuevo es una tabla más. */
+const SIDEBAR_NUM = {
+  es: ['cero', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce'],
+  esF: ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce'],
+  en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'],
+};
+
+function sidebarNumero(n, lang, femenino) {
+  const tabla = lang === 'en' ? SIDEBAR_NUM.en : (femenino ? SIDEBAR_NUM.esF : SIDEBAR_NUM.es);
+  return n >= 0 && n <= 12 ? tabla[n] : String(n);
+}
+
+function sidebarMayuscula(t) {
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+}
+
+/* «dos horas y media», «una hora y 40 minutos», «siete minutos»; en inglés «two and a
+   half hours», «one hour and 40 minutes». En minúscula: la mayúscula la pone quien
+   empieza la frase. */
+function sidebarMinutosEnPalabras(min, lang) {
+  const m = Math.max(0, Math.round(min || 0));
+  const en = lang === 'en';
+  const minutos = (k) => (k === 1 ? (en ? 'one minute' : 'un minuto') : sidebarNumero(k, lang) + (en ? ' minutes' : ' minutos'));
+  if (m < 60) return minutos(m);
+  const h = Math.floor(m / 60), r = m % 60;
+  if (en) {
+    if (r === 30) return h === 1 ? 'an hour and a half' : sidebarNumero(h, 'en') + ' and a half hours';
+    if (r === 15) return h === 1 ? 'an hour and a quarter' : sidebarNumero(h, 'en') + ' and a quarter hours';
+    const horas = h === 1 ? 'one hour' : sidebarNumero(h, 'en') + ' hours';
+    return r ? horas + ' and ' + minutos(r) : horas;
+  }
+  const horas = h === 1 ? 'una hora' : sidebarNumero(h, 'es', true) + ' horas';
+  if (r === 30) return horas + ' y media';
+  if (r === 15) return horas + ' y cuarto';
+  return r ? horas + ' y ' + minutos(r) : horas;
+}
+
+/* Los vasos de hoy frente a la meta de Ajustes (de 4 a 12, `water.goal`). Devuelve la
+   clave de i18n y sus piezas: `x` va en tinta («Cuatro vasos») y `m` es la meta con
+   letra; llegar justo a la meta lleva su propia frase, y su `x` también es de i18n
+   (`xClave`, «Los ocho vasos»). Pasarse de la meta se dice como quedarse corto, «Once
+   vasos de diez»: el número ya lo dice, y la otra forma no cabía en una línea junto a
+   «+ vaso» (medido). */
+function sidebarAguaEnPalabras(n, meta, lang) {
+  const m = sidebarNumero(meta, lang);
+  if (!n) return { clave: 'sidebar.agua.ninguno', x: '', m: m };
+  if (n === meta) return { clave: 'sidebar.agua.meta', xClave: 'sidebar.agua.meta.x', x: '', m: m };
+  const vasos = n === 1 ? (lang === 'en' ? 'one glass' : 'un vaso') : sidebarNumero(n, lang) + (lang === 'en' ? ' glasses' : ' vasos');
+  return { clave: 'sidebar.agua.de', x: sidebarMayuscula(vasos), m: m };
+}
+
 Object.assign(window, {
+  sidebarNumero,
+  sidebarMayuscula,
+  sidebarMinutosEnPalabras,
+  sidebarAguaEnPalabras,
   sidebarDayIndex,
   selectSidebarToday,
   selectSidebarWeek,
