@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.150.1 · 8 de octubre de 2026.
+**Versión:** v0.152.0 · 9 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -50,14 +50,20 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
-Con «Suena detrás: Música», cada técnica de Respira suena con su propio drone (Ez lo eligió el 8 de
-octubre escuchando la página de `docs/traspaso/archivos/musica-respira/por-tecnica/`): sale de tres
-drones en Sol con otra nota de la escala, un color, una segunda voz suave y, en algunas, un
-movimiento lento, sin archivos nuevos. En los ejercicios pausados la música se abre al inhalar y se
-cierra al exhalar (en Nadi Shodhana, además, se inclina hacia el lado por el que respiras); con
-ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las recetas son
-`PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`) y su volumen se mide con `construir.js`. Falta
-que Ez las pruebe en la app y diga cuáles cambiar.
+Con «Suena detrás: Música», cada técnica de Respira suena con su propio drone, hecho en directo a
+partir de tres drones en Sol, sin archivos nuevos (Ez lo eligió el 8 de octubre). Las primeras
+variaciones se parecían demasiado y el 9 de octubre Ez eligió las «marcadas»: cada técnica cambia de
+nota, de acorde, de color o de movimiento, y ninguna queda a menos de 6 puntos de color de su vecina
+(`docs/traspaso/archivos/musica-respira/por-tecnica/marcadas.html`). En los ejercicios pausados la
+música se abre al inhalar y se cierra al exhalar (en Nadi Shodhana, además, se va hacia el lado por
+el que respiras); con ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las
+recetas son `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`), copiadas de `tecnicas.js` con el
+volumen que mide `construir.js`.
+
+La pausa al terminar un bloque sigue la opción A de Ez (v0.152.0, `BreakMenu.css.jsx`): el plato como
+la tarjeta de la biblioteca, píldoras en serif itálica del color del módulo y sin atajos a la vista
+(Intro y Esc siguen). El aviso de un sello espera a que no haya nada abierto y en la home sale
+dentro del aro, en el sitio de su línea en cursiva (`tests/sello-espera.spec.js`).
 
 Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
 con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
@@ -75,6 +81,10 @@ El constructor de rutinas propias sigue cerrado.
 Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
+
+iPhone: la app de la App Store llega después de v1; hasta entonces, PACE en Safari (Ez, 9 oct.). La
+suite tiene un proyecto `webkit`, el motor de Safari, para los `*.safari.spec.js` y la home sin
+scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mira un tester con iPhone.
 
 ## Lo siguiente
 
@@ -94,18 +104,16 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
    la carta llegan cuando haya semanas de datos.
 
-3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
-   Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
-   y «Terminar» en las rondas, en v0.148.4. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
-   v0.147.0. Seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de
-   ingles-6), en v0.148.2; los que sí lo cambian están montados en `claude/caza-bugs-propuestas`, a
-   la espera de que Ez elija en su página. Todo lo que se vea se le enseña antes en HTML.
+3. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
+   (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
+   entonces, en inglés suena el tono.
 
 ## Espera a Ez
 
-- Elegir en la página de la caza de bugs qué cambios visibles se suben (`claude/caza-bugs-propuestas`).
-- Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
-  contraseña aparte.
+- Copiar las carpetas `PACE-llave-play` y `PACE-llave-licencias` (la de los códigos de tester, creada
+  el 9 oct.) de su PC en su disco duro, con la contraseña de Play aparte.
+- Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
+- Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.

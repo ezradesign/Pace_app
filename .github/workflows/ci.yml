@@ -137,7 +137,10 @@ jobs:
     name: e2e
     runs-on: ubuntu-latest
     needs: verify
-    timeout-minutes: 15
+    # 25 desde v0.151.0: con el proyecto webkit y las pruebas de la caza, la
+    # suite tarda 13,7 min y el job llegó a los 15 justo al guardar la cache,
+    # con todos los pasos en verde; GitHub lo dio por cancelado.
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
@@ -191,20 +194,29 @@ jobs:
       # La clave lleva `package-lock.json` porque de ahi sale la version de
       # Playwright: al subirla, el navegador cacheado ya no sirve y la clave
       # cambia sola.
-      - name: Cache de Chromium
+      #
+      # La clave lleva `-webkit` desde que la suite tiene el proyecto del motor
+      # de Safari (9 oct. 2026): una cache guardada solo con Chromium no lo trae.
+      - name: Cache de Chromium y WebKit
         id: cache-chromium
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-webkit-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      # Solo chromium: la suite declara ese unico proyecto en
-      # playwright.config.js. SIN `--with-deps` a proposito (ver arriba): las
-      # librerias del navegador ya estan en la imagen y lo unico que anadia era
-      # la descarga de fuentes.
-      - name: Instalar Chromium
+      # Los dos proyectos de playwright.config.js: chromium para todo y webkit
+      # solo para `*.safari.spec.js`. Chromium, SIN `--with-deps` a proposito
+      # (ver arriba): sus librerias ya estan en la imagen y lo unico que anadia
+      # era la descarga de fuentes.
+      - name: Instalar Chromium y WebKit
         if: steps.cache-chromium.outputs.cache-hit != 'true'
-        run: npx playwright install chromium
+        run: npx playwright install chromium webkit
+
+      # Las librerias de WebKit NO estan en la imagen, y no se cachean (son de
+      # `apt`): se instalan en cada run, con cache y sin ella. Solo las de
+      # WebKit, no las de Chromium, que eran las que bajaban fuentes.
+      - name: Librerias de WebKit
+        run: npx playwright install-deps webkit
 
       # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
       # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.

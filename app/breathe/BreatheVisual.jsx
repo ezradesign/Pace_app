@@ -113,6 +113,16 @@ const LOTO_SRC = 'app/breathe/assets/loto.webp';
    wrap del loto reserva el tamaño a ESTA escala, no en reposo. */
 const BREATH_MAX_SCALE = 1.35;
 
+/* Pulso y Ondas pintan fuera de su caja de 260 px, y en «Inhala más» cruzaban la
+   palabra de la fase: el aro fijo de Pulso mide 380 px y entraba 28 px en ella; el
+   aro de fuera de Ondas llegaba a 351 y entraba 13. Entre la caja y la palabra hay
+   32 px (medido a 360×640 y a 1280×800), así que lo pintado tiene que caber en
+   unos 312: Pulso se dibuja entero a 0,82 (380 → 312) y Ondas a 0,89 (260 × 1,35
+   → 312), con la misma composición. Ez eligió encogerlos antes que quitar el aro
+   fijo (8 oct. 2026). La caja sigue en 260, así que la palabra no se mueve. */
+const PULSO_ESCALA = 0.82;
+const ONDAS_ESCALA = 0.89;
+
 const breathVisualStyles = {
   /* s138 — wrap PROPIO del loto. El wrap compartido mide 260x260 fijos mientras
      sus capas pintaban 420x420 por los insets negativos: el aro exterior se
@@ -346,7 +356,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
       <div data-pace-essential style={breathVisualStyles.wrap}>
         {[0,1,2,3].map(i => (
           <div key={i} style={{
-            position: 'absolute', inset: 0,
+            position: 'absolute', inset: 260 * (1 - ONDAS_ESCALA) / 2,
             border: '1px solid var(--breathe)',
             borderRadius: '50%',
             opacity: 0.15 + i * 0.1,
@@ -354,7 +364,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
             transition: `transform ${transitionDur} ${transitionEase}`,
           }} />
         ))}
-        <div style={{ ...breathVisualStyles.core, background: 'var(--breathe-soft)' }} />
+        <div style={{ ...breathVisualStyles.core, width: 160 * ONDAS_ESCALA, height: 160 * ONDAS_ESCALA, background: 'var(--breathe-soft)' }} />
       </div>
     );
   }
@@ -392,10 +402,11 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
   // Default: pulso
   return (
     <div data-pace-essential style={breathVisualStyles.wrap}>
-      <div style={{ position: 'absolute', inset: -30, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
-      <div style={{ position: 'absolute', inset: -60, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
+      <div style={{ position: 'absolute', inset: (260 - 320 * PULSO_ESCALA) / 2, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
+      <div style={{ position: 'absolute', inset: (260 - 380 * PULSO_ESCALA) / 2, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
       <div style={{
         ...breathVisualStyles.core,
+        width: 160 * PULSO_ESCALA, height: 160 * PULSO_ESCALA,
         background: 'var(--breathe-soft)',
         border: '1.5px solid var(--breathe)',
         transform: `scale(${scale})`,
@@ -406,7 +417,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
         width: 8, height: 8, borderRadius: '50%',
         background: 'var(--breathe-2)',
         top: '50%', left: '50%',
-        transform: `translate(-50%, -50%) rotate(${progress * 360}deg) translateY(-110px)`,
+        transform: `translate(-50%, -50%) rotate(${progress * 360}deg) translateY(${-110 * PULSO_ESCALA}px)`,
         transition: 'transform 1s linear',
       }} />
     </div>

@@ -217,14 +217,6 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     if (antes.phase === 'place' || antes.phase === 'change') { try { playSound('move.go'); } catch (e) {} }
   }, [phase, stepIdx]);
 
-  // Toasts de logro APLAZADOS durante la sesión (s112, regla s105): la
-  // completion dispara logros que se apilaban sobre la ceremonia de cierre.
-  // Reutiliza el flag de Camino; dentro de un Camino lo gobierna PathRunner.
-  useEffectV1(() => {
-    if (inPath || typeof setCaminoUiActive !== 'function') return;
-    setCaminoUiActive(true);
-    return () => setCaminoUiActive(false);
-  }, []);
   // s115 · dev-check: duración declarada vs calculada (sólo dev; una vez por
   // sesión, con el preset de descanso actual) — para comparar con la ejecución
   // real medida. Invisible en prod; la promesa visible sale del helper puro.

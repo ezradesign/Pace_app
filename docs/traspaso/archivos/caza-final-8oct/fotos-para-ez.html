@@ -1,0 +1,249 @@
+<title>Caza de bugs, vuelta final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura; cada cambio es un bloque con su porqué y sus fotos de antes y después. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F685A;
+  --line: #C9C0A8; --focus: #3E5A3A; --breathe: #A9583B; --hydrate: #4B7384;
+  --display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #9DB98F; --breathe: #E2A588; --hydrate: #9EC0CE; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #9DB98F; --breathe: #E2A588; --hydrate: #9EC0CE; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+main { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 36px 96px; display: grid; gap: 8px; }
+h1, h2 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; line-height: 1.12; }
+h1 { font-size: clamp(34px, 6vw, 46px); }
+h2 { font-size: clamp(25px, 4vw, 31px); }
+p { margin: 0; max-width: 68ch; }
+.meta { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.lede { color: var(--ink-2); font-size: 17px; }
+.intro { display: grid; gap: 14px; padding-bottom: 20px; }
+.estado { display: grid; gap: 6px; padding: 14px 18px; border-left: 3px solid var(--focus); background: var(--paper-2); border-radius: 0 10px 10px 0; }
+section { display: grid; gap: 12px; padding-block: 30px 6px; border-top: 1px solid var(--line); }
+.cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.cod { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.pide { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--breathe); font-weight: 600; }
+.texto { display: grid; gap: 8px; color: var(--ink-2); }
+.texto b { color: var(--ink); font-weight: 600; }
+.fotos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-items: start; }
+.fotos.movil { grid-template-columns: repeat(auto-fit, minmax(150px, 230px)); }
+.fotos.ancho { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.fotos.cerca { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figcaption { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+figcaption b { color: var(--focus); font-weight: 600; }
+img { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); }
+.grupo { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+.tabla { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+td, th { border-bottom: 1px solid var(--line); padding: 9px 8px; text-align: left; vertical-align: top; }
+th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+code { font-size: 14px; }
+a { color: var(--focus); }
+</style>
+
+<main>
+  <div class="intro">
+    <div class="meta">PACE · caza de bugs del 7 de octubre · 8 de octubre de 2026</div>
+    <h1>Tus respuestas, montadas</h1>
+    <p class="lede">Contestaste las nueve preguntas de la caza de bugs. Así ha quedado cada respuesta en la app de verdad: a la izquierda, la app de hoy (la v0.150.1 que está publicada); a la derecha, la rama con los cambios. Las fotos son a 360×640 y a 1280×800. No he subido nada a la versión publicada.</p>
+    <div class="estado">
+      <p><b>Lo que ya aprobaste en la página anterior</b> sigue igual y no lo repito aquí: el número del filtro en oscuro, la barra del navegador en oscuro, «Octubre de 2026», los títulos y textos en inglés, los avisos de logro que ya no tapan botones, los vasos en dos filas, el aire bajo el número de vasos y el aviso de seguridad por técnica.</p>
+      <p><b>Pruebas:</b> cada arreglo tiene la suya, 33 en total, y con la rama pasan todas. Contra la app de hoy fallan 31; las otras dos miden la pastilla de arriba en inglés, que la app de hoy todavía no tiene.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="cab"><h2>La voz de Respira en inglés</h2><span class="cod">ingles-2</span></div>
+    <div class="texto">
+      <p>Con la app en inglés suena el tono, porque la voz dice «inhala, mantén, exhala» en castellano. En Ajustes, debajo de «Marks the phase», una línea lo explica. Lo que tengas elegido se guarda: al volver al castellano vuelve la voz. En castellano Ajustes no cambia.</p>
+    </div>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-voz-360.jpg" alt="Ajustes en inglés sin explicación bajo Marks the phase" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-voz-360.jpg" alt="Ajustes en inglés con la línea: The voice only speaks Spanish: in English you hear the tone" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-voz-1280.jpg" alt="Ajustes en escritorio, antes" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-voz-1280.jpg" alt="Ajustes en escritorio, con la línea nueva" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>Cambiar de modo con un Foco empezado</h2><span class="cod">ingles-3</span></div>
+    <div class="texto">
+      <p>Hoy, si el Foco va por la mitad y pulsas «Pausa» o «Larga» arriba, el bloque se pierde sin avisar (foto de la izquierda: salta a la pausa corta de 5 minutos). Ahora pregunta antes, en los dos idiomas. El botón verde es seguir con el Foco, que es lo seguro; «Cambiar» hace lo de siempre. Si el Foco no ha empezado, cambia sin preguntar, como hasta ahora.</p>
+      <p>Arriba solo hay pestañas en el escritorio y en móviles de 390 px o más, así que a 360×640 no hay nada que ver. Las fotos de móvil son a 390×844.</p>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280 · tras pulsar «Pausa»</figcaption><img src="antes-modo-es-1280.jpg" alt="El bloque desaparece y sale la pausa corta de 5 minutos" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280 · tras pulsar «Pausa»</figcaption><img src="despues-modo-es-1280.jpg" alt="Diálogo: ¿Pasar a la pausa corta? con Cambiar y Seguir con el Foco" loading="lazy"></figure>
+      <figure><figcaption>Antes · 1280 · en inglés</figcaption><img src="antes-modo-en-1280.jpg" alt="En inglés, el bloque desaparece" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280 · en inglés</figcaption><img src="despues-modo-en-1280.jpg" alt="Diálogo en inglés: Switch to a short break?" loading="lazy"></figure>
+    </div>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 390</figcaption><img src="antes-modo-es-390.jpg" alt="Móvil: el bloque desaparece" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 390</figcaption><img src="despues-modo-es-390.jpg" alt="Móvil: la pregunta sale abajo, como las demás hojas" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>«LONG BREAK» en el móvil</h2><span class="cod">ingles-3 · nuevo</span><span class="pide">Ez eligió: así</span></div>
+    <div class="texto">
+      <p>Al cambiar «Pause · Long» por «Break · Long break», en inglés y en móviles de 390 px o más «LONG BREAK» partía en dos líneas y la pastilla bajaba 6 px encima de los iconos. Lo encontré al medir. El arreglo: en el móvil y solo en inglés, las letras de la pastilla van un poco más juntas y con menos margen a los lados. Así mide lo mismo que en castellano y queda en una línea. El castellano y el escritorio no cambian.</p>
+    </div>
+    <div class="fotos cerca">
+      <figure><figcaption>La rama sin el arreglo · 390</figcaption><img src="rama-sin-arreglo-pill-cerca.jpg" alt="LONG BREAK partido en dos líneas, la pastilla toca los iconos" loading="lazy"></figure>
+      <figure><figcaption><b>Con el arreglo</b> · 390</figcaption><img src="despues-pill-cerca.jpg" alt="FOCUS, BREAK, LONG BREAK en una línea" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280 · en inglés</figcaption><img src="antes-pill-en-1280.jpg" alt="Escritorio en inglés: FOCUS, PAUSE, LONG" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280 · en inglés</figcaption><img src="despues-pill-en-1280.jpg" alt="Escritorio en inglés: FOCUS, BREAK, LONG BREAK" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>La pestaña y la app instalada</h2><span class="cod">ingles-6</span></div>
+    <div class="texto">
+      <p>Esto no sale en una foto de la app, porque vive en el navegador. Con la app en inglés, la pestaña dice <b>PACE · Focus · Body — v0.150.1</b>, y en castellano sigue diciendo <b>PACE · Foco · Cuerpo — v0.150.1</b>; cambia en el momento en que cambias el idioma. La app instalada en el móvil o en el ordenador se llama <b>PACE</b> en los dos idiomas. Los atajos de la app instalada (Foco, Respira, Mueve, Hidrátate) siguen en castellano, como acordamos.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>«Stamp» para el sello</h2><span class="cod">ingles-14</span></div>
+    <div class="texto">
+      <p>En inglés el sello se llama siempre «stamp» y la colección «achievements». El aviso de logro decía «New seal» y ahora dice «New stamp»; los logros «Forty-five seals» y «Seventy-five seals» pasan a «stamps». No queda ningún «seal» ni «badge» en los textos en inglés (lo comprueba una prueba).</p>
+    </div>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-sello-360.jpg" alt="Aviso: NEW SEAL, First sip" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-sello-360.jpg" alt="Aviso: NEW STAMP, First sip" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-sello-1280.jpg" alt="Escritorio: NEW SEAL" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-sello-1280.jpg" alt="Escritorio: NEW STAMP" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>«1 glass» en la semana</h2><span class="cod">ingles-7</span></div>
+    <div class="texto">
+      <p>La caza vio «1 glasses» en tres sitios. El total del mes y el día ya estaban arreglados; faltaba la tarjeta de Hidrátate de la semana, que decía «1 / glasses». Ahora dice «glass» cuando es uno (y «vaso» en castellano).</p>
+    </div>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-semana-360.jpg" alt="Semana: Hydrate 1 glasses" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-semana-360.jpg" alt="Semana: Hydrate 1 glass" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-semana-1280.jpg" alt="Semana en escritorio: 1 glasses" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-semana-1280.jpg" alt="Semana en escritorio: 1 glass" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>Pulso y Ondas en «Inhala más»</h2><span class="cod">respira-12</span></div>
+    <div class="texto">
+      <p>Lo medí antes de tocar nada. En Pulso, lo que pisaba la palabra era el aro fijo de fuera, que mide 380 px: entraba 28 px en «Inhala más» en las dos pantallas, y en el móvil además se cortaba por los lados. En Ondas, el aro de fuera entraba 13 px. Entre el dibujo y la palabra hay 32 px.</p>
+      <p>Encogí los dos dibujos enteros, con la misma composición y el aro fijo en su sitio: Pulso a un 82 % y Ondas a un 89 %. Ahora lo más grande queda a 6 px de la palabra (el loto queda a 4) y la palabra no se mueve. Lo medí en siete pantallas, de 360×568 a 1530×702. El loto no cambia.</p>
+    </div>
+    <p class="grupo">Pulso</p>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-aros-pulso-360.jpg" alt="Pulso: el aro de fuera cruza Inhala más y se corta por los lados" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-aros-pulso-360.jpg" alt="Pulso más pequeño: el aro queda por encima de la palabra" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-aros-pulso-1280.jpg" alt="Pulso en escritorio, antes" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-aros-pulso-1280.jpg" alt="Pulso en escritorio, después" loading="lazy"></figure>
+    </div>
+    <p class="grupo">Ondas</p>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-aros-ondas-360.jpg" alt="Ondas: el aro de fuera roza la palabra" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-aros-ondas-360.jpg" alt="Ondas más pequeño, sin rozar la palabra" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-aros-ondas-1280.jpg" alt="Ondas en escritorio, antes" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-aros-ondas-1280.jpg" alt="Ondas en escritorio, después" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>Los minutos de las rondas</h2><span class="cod">respira-13</span></div>
+    <div class="texto">
+      <p>Las tres técnicas de rondas cuentan ahora lo mismo: lo respirado (2 s y 2 s por respiración) y un minuto de retención por ronda.</p>
+    </div>
+    <div class="tabla"><table>
+      <thead><tr><th>Técnica</th><th>Rondas</th><th>Antes</th><th>Ahora</th></tr></thead>
+      <tbody>
+        <tr><td>Rondas express</td><td class="num">2 × 25</td><td class="num">4 min</td><td class="num">5 min</td></tr>
+        <tr><td>Respiración en rondas</td><td class="num">3 × 30</td><td class="num">12 min</td><td class="num">9 min</td></tr>
+        <tr><td>Rondas profundas</td><td class="num">5 × 35</td><td class="num">20 min</td><td class="num">17 min</td></tr>
+      </tbody>
+    </table></div>
+    <p class="texto">«Rondas express» sigue saliendo con el filtro «≤ 5 min».</p>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-rondas-360.jpg" alt="Biblioteca de Respira con 4, 12 y 20 minutos" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-rondas-360.jpg" alt="Biblioteca de Respira con 5, 9 y 17 minutos" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-rondas-1280.jpg" alt="Biblioteca en escritorio, antes" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-rondas-1280.jpg" alt="Biblioteca en escritorio, después" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>«Un vaso más» con el ratón encima</h2><span class="cod">tu respuesta 9</span><span class="pide">Ez eligió: en oscuro se aclara</span></div>
+    <div class="texto">
+      <p>Hoy se pone verde de Foco al pasar el ratón. Ahora se queda en su azul, un punto hacia la tinta. En crema eso lo oscurece, como pediste. <b>En oscuro lo aclara</b>, porque allí la tinta es clara: si lo oscureciera, el texto del botón (que es oscuro) bajaría a 3,2:1 y costaría leerlo. Es lo mismo que hace el verde de Foco en oscuro. Las fotos son de cerca y al doble de tamaño; en el móvil no hay ratón, así que no cambia nada.</p>
+    </div>
+    <p class="grupo">Crema</p>
+    <div class="fotos cerca">
+      <figure><figcaption>Quieto (igual antes y después)</figcaption><img src="despues-vaso-crema-quieto-cerca.jpg" alt="Un vaso más en su azul" loading="lazy"></figure>
+      <figure><figcaption>Antes · ratón encima</figcaption><img src="antes-vaso-crema-encima-cerca.jpg" alt="Un vaso más en verde oscuro" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · ratón encima</figcaption><img src="despues-vaso-crema-encima-cerca.jpg" alt="Un vaso más en un azul más oscuro" loading="lazy"></figure>
+    </div>
+    <p class="grupo">Oscuro</p>
+    <div class="fotos cerca">
+      <figure><figcaption>Quieto (igual antes y después)</figcaption><img src="despues-vaso-oscuro-quieto-cerca.jpg" alt="Un vaso más en azul, en oscuro" loading="lazy"></figure>
+      <figure><figcaption>Antes · ratón encima</figcaption><img src="antes-vaso-oscuro-encima-cerca.jpg" alt="Un vaso más en verde, en oscuro" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · ratón encima</figcaption><img src="despues-vaso-oscuro-encima-cerca.jpg" alt="Un vaso más en un azul más claro, en oscuro" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Después · 1280 · crema</figcaption><img src="despues-vaso-crema-1280.jpg" alt="Hidrátate en crema con el ratón encima de Un vaso más" loading="lazy"></figure>
+      <figure><figcaption>Después · 1280 · oscuro</figcaption><img src="despues-vaso-oscuro-1280.jpg" alt="Hidrátate en oscuro con el ratón encima de Un vaso más" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>El sello «Premium» en oscuro</h2><span class="cod">oscuro-5 · ajuste</span></div>
+    <div class="texto">
+      <p>Esto ya lo aprobaste, pero al escribir su prueba vi que no bastaba. En «Mis rutinas» de la barra lateral, el sello va dentro de un botón con el mismo fondo bronce transparente, y los dos fondos se suman: con el bronce nuevo se quedaba en 3,9:1 y hace falta 4,5. He bajado ese fondo transparente en oscuro (del 14 % al 8 %). El bronce es el mismo y ahora da 4,8:1. La diferencia apenas se ve; en crema no cambia nada.</p>
+    </div>
+    <div class="fotos cerca">
+      <figure><figcaption>Antes (la app de hoy) · 2,7:1</figcaption><img src="antes-premium-cerca.jpg" alt="Sello Premium en bronce oscuro, poco legible" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 4,8:1</figcaption><img src="despues-premium-cerca.jpg" alt="Sello Premium en un bronce más claro" loading="lazy"></figure>
+    </div>
+    <div class="fotos ancho">
+      <figure><figcaption>Antes · 1280</figcaption><img src="antes-premium-1280.jpg" alt="Inicio en oscuro, antes" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 1280</figcaption><img src="despues-premium-1280.jpg" alt="Inicio en oscuro, después" loading="lazy"></figure>
+    </div>
+    <div class="fotos movil">
+      <figure><figcaption>Antes · 360</figcaption><img src="antes-premium-360.jpg" alt="Biblioteca de Respira en oscuro, antes" loading="lazy"></figure>
+      <figure><figcaption><b>Después</b> · 360</figcaption><img src="despues-premium-360.jpg" alt="Biblioteca de Respira en oscuro, después" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cab"><h2>Horas y meses en inglés</h2><span class="cod">ingles-17</span><span class="pide">Ez eligió: 24 h y «Sep»</span></div>
+    <div class="texto">
+      <p>Esto quedó sin decidir. En inglés, siete logros hablan en horas de 12 («before 7am», «after 9pm», «after 11pm», «between 2 and 4am», «at 2pm»), mientras el resto de la app usa 24 h («Until 17:00», «9:45»). Y en septiembre la fecha de la barra lateral dice «Sept» y Estadísticas «Sep».</p>
+      <p>Arreglarlo es rápido: los siete textos pasarían a «before 7:00», «after 21:00», etc., y «Sept» a «Sep» en los cuatro sitios donde sale una fecha corta. Uno de esos sitios es la barra lateral, que lleva otra sesión; se lo diría a la coordinadora antes de tocarlo.</p>
+      <p><b>Hecho (9 oct.):</b> los siete logros van en 24 h y todas las fechas cortas dicen «Sep». Pasar toda la app a am/pm en inglés serían 18 sitios y volver a medir la home del móvil, así que queda para cuando lo pida alguien de habla inglesa.</p>
+    </div>
+  </section>
+</main>

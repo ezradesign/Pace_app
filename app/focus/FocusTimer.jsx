@@ -91,6 +91,12 @@ function FocusTimer({ onFinish }) {
     paceAndroidFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
+  /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado. */
+  useEffectFT(() => {
+    paceFocoEmpezadoPon(state.focusMode === 'foco' && (status === 'running' || status === 'paused'));
+    return () => paceFocoEmpezadoPon(false);
+  }, [state.focusMode, status]);
+
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
   useEffectFT(() => {
     if (!window.ambientDrone) return;

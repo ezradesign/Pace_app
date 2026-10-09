@@ -85,6 +85,17 @@ module.exports = defineConfig({
       name: 'chromium',
       use: { browserName: 'chromium', viewport: { width: 1280, height: 720 } },
     },
+    /* El motor de Safari (iPhone y Mac), solo para `*.safari.spec.js` (lo que
+       ya se vio fallar en Safari y no en Chromium: el aviso falso de versión
+       nueva en la primera visita) y para la home sin scroll, la regla de Ez
+       que más depende de cómo dibuja la letra cada navegador. La suite entera
+       en WebKit no: es más lenta y varias pruebas miden cosas de Chromium. En
+       local hace falta `npx playwright install webkit` una vez. */
+    {
+      name: 'webkit',
+      testMatch: [/\.safari\.spec\.js$/, /home-sin-scroll\.spec\.js$/],
+      use: { browserName: 'webkit', viewport: { width: 1280, height: 720 } },
+    },
   ],
 
   /* Corre cuando el servidor ya escucha: comprueba que sirve ESTA carpeta y no
