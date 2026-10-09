@@ -469,6 +469,16 @@
     [data-pace-home-body] [data-pace-main-content] {
       position: relative;
     }
+    /* LA HOME NO SE ANCLA (v0.153.0). [data-pace-home-body] es un contenedor de
+       scroll y las capas del sol lo ensanchan por dentro (518 px de ancho a 360),
+       aunque no se vea. Al abrirse la pausa, a veces el anclaje de scroll del
+       navegador lo corría 117 px de lado, y así se quedaba al cerrarla. Medido a
+       360x640: 3 de 24 pausas sin esto, 0 de 30 con esto. Ningún código lo movía
+       (ni focus, ni scrollIntoView, ni scrollLeft): lo hacía el navegador. La home
+       no tiene un scroll que conservar. */
+    [data-pace-home-body] {
+      overflow-anchor: none;
+    }
     /* AQUÍ NO SE RECORTA NADA, Y ESO ES EL ARREGLO — no la falta de él.
 
        El problema real: las dos capas del sol son cajas ABSOLUTAS y
