@@ -46,9 +46,10 @@ function RitmoLibre({ enlace }) {
    etiqueta «AHORA» y se pisaban al final del día (medido en nueve viewports de escritorio). */
 function RitmoSobre({ m }) {
   const { t, tn } = useT();
+  const [st] = usePace();
   return (
     <div className="pace-rt-sobre" data-pace-ritmo-resumen>
-      <span className="pace-rt-meta">{ritmoResumen(m, tn)}</span>
+      <span className="pace-rt-meta">{ritmoResumen(m, tn, ritmoMetaVasos(st))}</span>
       <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
       <RitmoAlCalendario />
     </div>

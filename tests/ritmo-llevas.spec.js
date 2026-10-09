@@ -6,9 +6,8 @@
  *    pasada, con la regla de la línea: la hecha conserva la tinta y su glifo se rellena;
  *    la saltada baja y puntea, y pierde la gota del vaso. Antes se atenuaba TODO lo
  *    pasado por igual y «lo atenuado lee como no hecho» (s193).
- *  · LA TARJETA «Siguiente pausa» de la barra lateral lleva el RECUENTO en palabras:
- *    «Llevas seis bloques y cuatro pausas». Es lo único que la línea no dice con
- *    palabras; las saltadas no se nombran. Sin un solo bloque hecho no aparece.
+ *  · LA BARRA LATERAL ya no lleva el recuento («Llevas seis bloques y cuatro pausas»):
+ *    desde el 9 oct. 2026 es un cuaderno que dice lo hecho con sus minutos.
  *
  * TRAMPA: el progreso NO sale de la hora, sale de `cycle − cicloBase`; para sembrar una
  * tarde con bloques hechos hace falta `cycle` Y `lastActiveDay` en el formato del
@@ -75,21 +74,12 @@ test.describe('la hoja del día recuerda', () => {
   });
 });
 
-test('la barra lateral cuenta lo que llevas, en palabras', async ({ page, context }) => {
+/* LA BARRA LATERAL YA NO CUENTA BLOQUES (9 oct. 2026). «Llevas seis bloques y cuatro
+   pausas» se fue con la tarjeta: la barra es un cuaderno que dice lo hecho con sus
+   minutos («Dos horas y media de foco») y la siguiente pausa con su rótulo. Ez lo vio
+   así en las fotos y lo eligió. */
+test('la barra lateral dice la siguiente pausa con su rótulo y ya no cuenta bloques', async ({ page, context }) => {
   await abrir(page, context);
-  const llevas = vis(page, '[data-pace-sidebar-llevas]');
-  await expect(llevas).toHaveCount(1);
-  await expect(llevas, 'seis bloques (cycle) y cuatro pausas HECHAS; la saltada no se nombra').toHaveText('Llevas seis bloques y cuatro pausas');
-  const estilo = await llevas.evaluate((e) => { const c = getComputedStyle(e); return { italica: c.fontStyle, serif: /Garamond|serif/i.test(c.fontFamily), hilo: c.borderTopWidth }; });
-  expect(estilo.italica, 'en la itálica serif de las losetas').toBe('italic');
-  expect(estilo.serif).toBe(true);
-  expect(parseFloat(estilo.hilo), 'con un hilo encima').toBeGreaterThan(0);
-});
-
-test('en singular, y sin un bloque hecho no aparece', async ({ page, context }) => {
-  await abrir(page, context, { ciclos: 1, estados: { 1: 'hecha' }, hora: new Date(HOY + 'T10:00:00+02:00') });
-  await expect(vis(page, '[data-pace-sidebar-llevas]')).toHaveText('Llevas un bloque y una pausa');
-  await page.evaluate(() => { const s = getState(); setState({ cycle: 0, ritmo: Object.assign({}, s.ritmo, { dia: Object.assign({}, s.ritmo.dia, { estados: {} }) }) }); });
-  await page.waitForTimeout(400);
-  await expect(vis(page, '[data-pace-sidebar-llevas]'), 'recién empezado el día, la tarjeta no cuenta nada').toHaveCount(0);
+  await expect(vis(page, '[data-pace-sidebar-llevas]')).toHaveCount(0);
+  await expect(vis(page, '[data-pace-sidebar-accion]')).toContainText('Siguiente pausa');
 });

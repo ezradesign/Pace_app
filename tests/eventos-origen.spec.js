@@ -129,10 +129,10 @@ test('tocar la parada abierta es «parada», siempre del menú; la tarjeta de la
   expect(s1.payload.fromMenu).toBe(true);
 
   /* De vuelta en la home, la barra lateral sigue ofreciendo la pausa abierta («Tu
-     pausa · 9:45»): su tarjeta es otra puerta. */
+     pausa» · «Ahora, …»): su fila es otra puerta. */
   await volverAlInicio(page);
   const lateral = page.locator('[data-pace-sidebar]');
-  await expect(lateral).toContainText('Tu pausa · 9:45');
+  await expect(lateral).toContainText(/Tu pausa\s*Ahora, /);
   const plato = await page.evaluate(() => ritmoPlan(getState()).pausa.platos[0].name);
   await lateral.getByRole('button', { name: plato }).click();
   await empezarDesdePreview(page);
