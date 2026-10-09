@@ -216,6 +216,10 @@ function Button({ children, onClick, variant = 'primary', size = 'md', icon, dis
       }}
       onMouseEnter={(e) => {
         if (disabled) return;
+        /* Un botón con su propio color (el azul de «Un vaso más») se oscurece en
+           ese color, no en el verde de Foco: un paso hacia la tinta, que en
+           crema oscurece y en oscuro aclara, como --focus-2 en cada paleta. */
+        if (style.background) { e.currentTarget.style.background = 'color-mix(in srgb, ' + style.background + ' 78%, var(--ink))'; return; }
         if (variant === 'primary') e.currentTarget.style.background = 'var(--focus-2)';
         if (variant === 'secondary') e.currentTarget.style.background = 'var(--paper-2)';
         if (variant === 'ghost') e.currentTarget.style.background = 'var(--paper-2)';

@@ -324,9 +324,9 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
           marginTop:12,padding:'10px 14px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',
           fontSize:12,color:'var(--ink-2)',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center',
         }}>
-          <span>{t('stats.year.activeDays').replace('{n}', activeDays)}</span>
+          <span>{activeDays === 1 ? t('stats.year.activeDays.1') : t('stats.year.activeDays').replace('{n}', activeDays)}</span>
           <span style={{ color:'var(--ink-3)' }}>·</span>
-          <span>{t('stats.year.maxStreak').replace('{n}', maxStreak)}</span>
+          <span>{maxStreak === 1 ? t('stats.year.maxStreak.1') : t('stats.year.maxStreak').replace('{n}', maxStreak)}</span>
         </div>
       )}
 

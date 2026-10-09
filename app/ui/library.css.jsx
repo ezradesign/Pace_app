@@ -88,7 +88,7 @@
   font-weight: 500; margin-left: 7px; color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
-.pace-lib-chip[aria-pressed="true"] b { color: rgba(242, 237, 224, .7); }
+.pace-lib-chip[aria-pressed="true"] b { color: color-mix(in srgb, var(--paper) 70%, transparent); }
 
 /* ── grupos y estado vacío ────────────────────────────────────────────── */
 .pace-lib-grp {
