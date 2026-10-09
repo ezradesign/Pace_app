@@ -3038,7 +3038,7 @@ Object.assign(window.PACE_STRINGS.en, {
 Object.assign(window.PACE_STRINGS.es, {
   'break.tag': 'Ciclo completado',
   'break.title': 'Pausa bien hecha',
-  'break.subtitle': 'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
+  'break.subtitle': 'Has cerrado un bloque. Elige tu pausa.',
   'break.breathe.label': 'Respira',
   'break.breathe.desc': '2 min para volver al centro',
   'break.stretch.label': 'Estira',
@@ -3057,21 +3057,23 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.prop.meta': '{n} min · {m}',
   'break.prop.start': 'Empezar',
   'break.recommended': 'Para ti',
-  'break.shortcut': 'Atajo: B · E · M · H · Esc',
   'break.skip': 'Saltar esta pausa',
   'break.ritmo.tag': 'Bloque {n} de {m} · hecho',
   'break.ritmo.title': 'Tu pausa',
-  'break.ritmo.sub': '{h} · lo que el menú tenía para ahora.',
+  'break.ritmo.sub': '{h} · Lo que toca ahora.',
   'break.ritmo.hacer': 'Hacer la pausa',
   'break.ritmo.seguir': 'Seguir con el bloque {n}',
   'break.ritmo.agua': 'y un vaso de agua',
-  'break.ritmo.shortcut': 'Atajo: Intro · H · Esc'
+  'break.ritmo.vaso': 'un vaso ahora',
+  'break.ritmo.comida': 'Hora de comer',
+  'break.ritmo.conAgua': 'con un vaso de agua',
+  'break.ritmo.comer': 'Ir a comer'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
   'break.tag': 'Cycle complete',
   'break.title': 'Well-earned break',
-  'break.subtitle': "You've closed a focus cycle. Choose your micro-break.",
+  'break.subtitle': "You've closed a block. Pick your break.",
   'break.breathe.label': 'Breathe',
   'break.breathe.desc': '2 min to return to center',
   'break.stretch.label': 'Stretch',
@@ -3090,15 +3092,17 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.prop.meta': '{n} min · {m}',
   'break.prop.start': 'Start',
   'break.recommended': 'For you',
-  'break.shortcut': 'Shortcut: B · E · M · H · Esc',
   'break.skip': 'Skip this break',
   'break.ritmo.tag': 'Block {n} of {m} · done',
   'break.ritmo.title': 'Your break',
-  'break.ritmo.sub': "{h} · what's on the menu now.",
+  'break.ritmo.sub': '{h} · What comes next.',
   'break.ritmo.hacer': 'Take the break',
   'break.ritmo.seguir': 'Go on to block {n}',
   'break.ritmo.agua': 'and a glass of water',
-  'break.ritmo.shortcut': 'Shortcut: Enter · H · Esc'
+  'break.ritmo.vaso': 'a glass now',
+  'break.ritmo.comida': 'Lunchtime',
+  'break.ritmo.conAgua': 'with a glass of water',
+  'break.ritmo.comer': 'Go and eat'
 });
 })();
 </script>
@@ -3515,12 +3519,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.llevas.bloque': 'un bloque',
   'ritmo.llevas.pausas': '{n} pausas',
   'ritmo.llevas.pausa': 'una pausa',
-  'break.prop.ritmo.estira': 'A tu ritmo · antídoto a la silla',
-  'break.prop.ritmo.mueve': 'A tu ritmo · cuerpo activo',
-  'break.prop.ritmo.larga': 'A tu ritmo · pausa larga, respira y suelta',
-  'break.prop.ritmo.cierre': 'A tu ritmo · para cerrar la jornada',
-  'break.prop.ritmo.respira': 'A tu ritmo · bajar revoluciones',
-  'break.prop.ritmo.comida': 'A tu ritmo · hora de comer, lejos de la pantalla',
+  'break.prop.ritmo.estira': 'Antídoto a la silla',
+  'break.prop.ritmo.mueve': 'Cuerpo activo',
+  'break.prop.ritmo.larga': 'Pausa larga: respira y suelta',
+  'break.prop.ritmo.cierre': 'Para cerrar la jornada',
+  'break.prop.ritmo.respira': 'Bajar revoluciones',
+  'break.prop.ritmo.comida': 'Lejos de la pantalla',
 
   'ritmo.st.titulo': '¿Cómo es tu semana?',
   'ritmo.st.sub': 'Así cada mañana tu día llega preparado. Si un día es distinto, lo cambias ese día.',
@@ -3629,12 +3633,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.llevas.bloque': 'one block',
   'ritmo.llevas.pausas': '{n} breaks',
   'ritmo.llevas.pausa': 'one break',
-  'break.prop.ritmo.estira': 'At your pace · antidote to the chair',
-  'break.prop.ritmo.mueve': 'At your pace · active body',
-  'break.prop.ritmo.larga': 'At your pace · long break, breathe and let go',
-  'break.prop.ritmo.cierre': 'At your pace · to close the day',
-  'break.prop.ritmo.respira': 'At your pace · slow down',
-  'break.prop.ritmo.comida': 'At your pace · lunchtime, away from the screen',
+  'break.prop.ritmo.estira': 'Antidote to the chair',
+  'break.prop.ritmo.mueve': 'Active body',
+  'break.prop.ritmo.larga': 'Long break: breathe and let go',
+  'break.prop.ritmo.cierre': 'To close the day',
+  'break.prop.ritmo.respira': 'Slow down',
+  'break.prop.ritmo.comida': 'Away from the screen',
 
   'ritmo.st.titulo': "What's your week like?",
   'ritmo.st.sub': 'So each morning your day arrives ready. If a day is different, you change it that day.',
@@ -6389,12 +6393,12 @@ Object.assign(window, {
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
-   state-core.toast.jsx — el buzon de los avisos (toasts) y su aplazamiento
-   durante un Camino. Cortado de `state-core.jsx` en s198, POR UN PUNTO y tal
-   cual, al pasar aquel de 500 lineas con el saneado del estado: el store y el
-   buzon de avisos son dos cosas y no se miran. Carga JUSTO DESPUES de
-   state-core.jsx; nadie lo llama al evaluarse (`showToast` y `onToast` se usan
-   al montar o en un gesto), asi que el orden solo importa por legibilidad.
+   state-core.toast.jsx — el buzon de los avisos (toasts) y su espera. Cortado de
+   `state-core.jsx` en s198, POR UN PUNTO y tal cual, al pasar aquel de 500 lineas
+   con el saneado del estado: el store y el buzon de avisos son dos cosas y no se
+   miran. Carga JUSTO DESPUES de state-core.jsx; nadie lo llama al evaluarse
+   (`showToast` y `onToast` se usan al montar o en un gesto), asi que el orden solo
+   importa por legibilidad.
 */
 
 
@@ -6402,8 +6406,56 @@ Object.assign(window, {
 
 const _toastListeners = new Set();
 const _pendingToasts = [];
+
+
 const _deferredToasts = [];
+let _esperaTimer = null;
 let _caminoUiActive = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const AVISO_RESPIRO_MS = 400;
+const AVISO_REINTENTO_MS = 500;
+
+function _avisoTaparia() {
+  if (_caminoUiActive) return true;
+  try {
+    if (typeof paceHayDialogo === 'function' && paceHayDialogo()) return true;
+    if (document.querySelector('[data-pace-session-root]')) return true;
+  } catch (e) {}
+  return false;
+}
+
+function _intentarAvisos() {
+  _esperaTimer = null;
+  if (!_deferredToasts.length) return;
+  if (_avisoTaparia()) {_esperaTimer = setTimeout(_intentarAvisos, AVISO_REINTENTO_MS);return;}
+  _deferredToasts.splice(0).forEach(_emitToast);
+}
+
+function _esperarHueco(ms) {
+  if (_esperaTimer) clearTimeout(_esperaTimer);
+  _esperaTimer = setTimeout(_intentarAvisos, ms);
+}
 
 function _emitToast(t) {
   if (_toastListeners.size === 0) {_pendingToasts.push(t);return;}
@@ -6412,22 +6464,17 @@ function _emitToast(t) {
 
 function showToast(toast) {
   const t = { ...toast, _id: Date.now() + Math.random() };
-
-
-
-
-  if (_caminoUiActive) {_deferredToasts.push(t);return;}
-  _emitToast(t);
+  _deferredToasts.push(t);
+  _esperarHueco(AVISO_RESPIRO_MS);
 }
+
+
+
 
 function setCaminoUiActive(active) {
   const was = _caminoUiActive;
   _caminoUiActive = !!active;
-  if (was && !_caminoUiActive && _deferredToasts.length > 0) {
-    const drained = _deferredToasts.splice(0);
-
-    setTimeout(() => {drained.forEach(_emitToast);}, 60);
-  }
+  if (was && !_caminoUiActive && _deferredToasts.length > 0) _esperarHueco(60);
 }
 
 function onToast(listener) {
@@ -6442,7 +6489,7 @@ function onToast(listener) {
 }
 
 Object.assign(window, { showToast, onToast, setCaminoUiActive });
-;Object.assign(window, { _emitToast, showToast, setCaminoUiActive, onToast });
+;Object.assign(window, { _avisoTaparia, _intentarAvisos, _esperarHueco, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
   <!-- state-core.dia: el cambio de dia con la app abierta (al volver la pagina al
@@ -15842,6 +15889,34 @@ Object.assign(window, { paceMusica, PACE_MUSICA });
 
 const { useState: useStateTO, useEffect: useEffectTO } = React;
 
+
+
+
+
+
+
+
+function toastHuecoDelAro() {
+  try {
+    const sub = document.querySelector('[data-pace-dial-subtitle]');
+    if (!sub || !sub.getClientRects().length) return null;
+
+    if (typeof window.paceCaja !== 'function') return null;
+    const r = window.paceCaja(sub);
+    const caja = window.paceCaja(sub.parentElement);
+
+    const escala = sub.offsetHeight ? r.height / sub.offsetHeight : 1;
+    const fs = parseFloat(getComputedStyle(sub).fontSize) * escala;
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2, ancho: Math.round(caja.width), fs: fs };
+  } catch (e) {return null;}
+}
+if (!document.getElementById('pace-toast-css')) {
+  const st = document.createElement('style');
+  st.id = 'pace-toast-css';
+  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }';
+  document.head.appendChild(st);
+}
+
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
   const { t, lang } = useT();
@@ -15862,7 +15937,7 @@ function ToastHost() {
         const full = { ...toast,
           title: tR('ach.item.' + a.id + '.title', a.title),
           desc: tR('ach.item.' + a.id + '.desc', a.desc),
-          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
+          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false, aro: toastHuecoDelAro() };
         setToasts((prev) => [...prev, full]);
         try {playSound(a.secret ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}
         const durationMs = typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000;
@@ -15879,20 +15954,41 @@ function ToastHost() {
     });
   }, []);
 
+
+  const enAro = toasts.some((x) => x.aro);
+  useEffectTO(() => {
+    document.documentElement.toggleAttribute('data-pace-sello-en-aro', enAro);
+  }, [enAro]);
+
+
   return (
     React.createElement("div", {
       "aria-live": "polite",
       "aria-atomic": "true",
       style: {
         position: 'fixed',
-        bottom: 20, left: '50%',
-        transform: 'translateX(-50%)',
+        bottom: 20, left: 0, right: 0,
         zIndex: 200,
-        display: 'flex', flexDirection: 'column', gap: 8,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
         pointerEvents: 'none'
       } },
 
-    toasts.map((toast) =>
+    toasts.map((toast, i) => toast.aro ?
+    React.createElement("div", { key: toast._id, "data-pace-sello-aro": true, style: {
+        position: 'fixed', left: toast.aro.x, top: toast.aro.y - i * toast.aro.fs * 1.5,
+        transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
+        display: 'flex', alignItems: 'center', gap: Math.round(toast.aro.fs * 0.45),
+        whiteSpace: 'nowrap', color: 'var(--achievement)',
+        fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: toast.aro.fs, lineHeight: 1.2,
+        animation: 'pace-fade-in 320ms var(--ease)',
+        opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
+      } },
+    React.createElement("span", { style: { flexShrink: 0, width: Math.round(toast.aro.fs * 1.35), height: Math.round(toast.aro.fs * 1.35), display: 'grid', placeItems: 'center', fontSize: toast.aro.fs } },
+    window.renderGlyph ? window.renderGlyph(toast) : toast.glyph
+    ),
+    React.createElement("span", { style: { overflow: 'hidden', textOverflow: 'ellipsis' } }, t('ach.toast.new'), " \xB7 ", toast.title)
+    ) :
+
     React.createElement("div", { key: toast._id, style: {
         display: 'flex', alignItems: 'center', gap: 14,
         padding: '12px 20px',
@@ -15939,7 +16035,7 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost });
-;Object.assign(window, { ToastHost });
+;Object.assign(window, { toastHuecoDelAro, ToastHost });
 })();
 </script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
@@ -23874,14 +23970,6 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
   }, []);
 
 
-
-  useEffect(() => {
-    if (inPath || typeof setCaminoUiActive !== 'function') return;
-    setCaminoUiActive(true);
-    return () => setCaminoUiActive(false);
-  }, []);
-
-
   useEffect(() => {
     const onKey = (e) => {
 
@@ -26145,14 +26233,6 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-  useEffectV1(() => {
-    if (inPath || typeof setCaminoUiActive !== 'function') return;
-    setCaminoUiActive(true);
-    return () => setCaminoUiActive(false);
-  }, []);
-
-
-
   useEffectV1(() => {try {v1DevCheckDuration(routine, v1RestSeconds());} catch (e) {}}, []);
 
 
@@ -27687,13 +27767,6 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
   const { today, goal } = state.water;
   const pct = Math.min(100, today / goal * 100);
 
-
-  React.useEffect(() => {
-    if (!open || typeof setCaminoUiActive !== 'function') return;
-    setCaminoUiActive(true);
-    return () => setCaminoUiActive(false);
-  }, [open]);
-
   return (
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('hydrate.tag'), title: t('hydrate.title'), subtitle: t('hydrate.subtitle'), maxWidth: 580 },
 
@@ -27787,6 +27860,96 @@ if (!document.getElementById('pace-hidr-responsive-css')) {
 
 Object.assign(window, { HydrateTracker });
 ;Object.assign(window, { HydrateTracker });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function () {
+  if (document.getElementById('pace-break-css')) return;
+  var s = document.createElement('style');
+  s.id = 'pace-break-css';
+  s.textContent = `
+.pace-break-plato {
+  --c: var(--extra);
+  background: var(--paper-2); border-radius: var(--r-md); border-left: 3px solid var(--c);
+  padding: 14px 16px 14px 14px; display: grid; grid-template-columns: 60px minmax(0, 1fr);
+  gap: 0 16px; align-items: center; color: var(--ink);
+}
+.pace-break-plato.pace-break-sin-glifo { grid-template-columns: minmax(0, 1fr); }
+.pace-break-glifo { color: var(--c); width: 60px; height: 60px; display: grid; place-items: center; line-height: 1; }
+/* Los glifos de módulo (pulmones, gota, cubiertos) son de 26 px: crecen a la caja. Los de
+   ejercicio ya llegan a su tamaño. */
+.pace-break-glifo-mod > svg { width: 74%; height: 74%; }
+.pace-break-motivo {
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
+  color: var(--c); line-height: 1.35;
+}
+.pace-break-nombre {
+  font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 26px;
+  line-height: 1.12; margin: 2px 0 3px; color: var(--ink);
+}
+.pace-break-acciones { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.pace-break-pildora {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
+  box-sizing: border-box; padding: 0 24px; border-radius: var(--r-pill); cursor: pointer;
+  font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px;
+  line-height: 1; white-space: nowrap;
+  transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease);
+}
+.pace-break-llena { --c: var(--extra); background: var(--c); color: var(--paper); border: 1px solid var(--c); }
+.pace-break-llena:hover { background: color-mix(in srgb, var(--c) 86%, var(--ink)); }
+.pace-break-tonal { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line-2); }
+.pace-break-tonal:hover { border-color: var(--ink-3); }
+.pace-break-pildora:focus-visible, .pace-break-agua:focus-visible, .pace-break-saltar:focus-visible {
+  outline: 2px solid var(--focus-cta); outline-offset: 2px;
+}
+.pace-break-agua {
+  display: flex; align-items: center; gap: 12px; width: 100%; background: none; border: 0;
+  border-top: 1px solid var(--line); padding: 12px 2px 4px; color: var(--ink); cursor: pointer;
+  text-align: left; font: inherit;
+}
+.pace-break-agua .pace-break-glifo { --c: var(--hydrate); width: 22px; height: 22px; }
+.pace-break-agua .pace-break-glifo > svg { width: 22px; height: 22px; }
+.pace-break-agua b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
+.pace-break-agua .pace-break-mas { font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-3); }
+.pace-break-agua i { margin-left: auto; font-style: normal; color: var(--ink-3); font-size: 18px; }
+.pace-break-agua:hover i { color: var(--ink); }
+.pace-break-pie { display: flex; justify-content: flex-end; align-items: center; }
+.pace-break-saltar {
+  background: none; border: 0; padding: 10px 0; cursor: pointer; white-space: nowrap;
+  font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-3);
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.pace-break-saltar:hover { color: var(--ink); }
+
+/* El móvil: las píldoras una debajo de otra y a lo ancho, como «Empezar» en la vista
+   previa de una rutina; partidas en dos filas de anchos distintos quedaban torcidas. */
+@media (max-width: 640px) {
+  .pace-break-acciones { flex-direction: column; align-items: stretch; gap: 8px; }
+  .pace-break-acciones .pace-break-pildora { width: 100%; }
+  .pace-break-plato { grid-template-columns: 52px minmax(0, 1fr); gap: 0 14px; }
+  .pace-break-plato .pace-break-glifo { width: 52px; height: 52px; }
+}
+`;
+  document.head.appendChild(s);
+})();
 })();
 </script>
   <script>
@@ -27996,6 +28159,7 @@ Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });
 </script>
   <script>
 ;(function () {
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
 
 
 
@@ -28018,60 +28182,90 @@ Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });
 
 
 
-function BreakMenuRitmo(_ref) {let { open, onClose, onChoose, onSeguir, prop, plan, opciones, nombre } = _ref;
-  const { t, tn } = useT();
-  if (!open || !prop || !plan) return null;
-  const agua = (opciones || []).find((o) => o.key === 'water');
-  const rutina = prop.rutina;
-  const pausa = plan.pausa;
-  const esRespira = prop.modulo === 'breathe';
-  const glifos = !esRespira && rutina && window.libraryGlifos ? window.libraryGlifos(rutina) : [];
-  const meta = rutina ?
-  tn('break.prop.meta', { n: rutina.min, m: t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label') }) + (
-  pausa && pausa.agua ? ' · ' + t('break.ritmo.agua') : '') :
-  '';
+
+
+
+
+
+const BREAK_COLOR = { extra: 'var(--extra)', move: 'var(--move)', breathe: 'var(--breathe)', water: 'var(--hydrate)' };
+
+
+
+function breakGlifo(modulo, rutina) {
+  const glifos = modulo !== 'breathe' && modulo !== 'water' && rutina && window.libraryGlifos ? window.libraryGlifos(rutina) : [];
+  if (glifos.length) {
+    const movil = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+    return { nodo: React.createElement(ExerciseGlyph, { id: glifos[0], size: movil ? 52 : 60 }), modulo: false };
+  }
+  if (modulo === 'breathe') return { nodo: React.createElement(ABBreathe, null), modulo: true };
+  if (modulo === 'water') return { nodo: React.createElement(ABDrop, null), modulo: true };
+  return null;
+}
+
+
+
+function BreakPlato(_ref) {let { color, glifo, motivo, nombre, ctx, children, datos } = _ref;
   return (
-    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: tn('break.ritmo.tag', { n: plan.hechos, m: plan.total }),
-      title: t('break.ritmo.title'), subtitle: tn('break.ritmo.sub', { h: pausa ? ritmoHora(pausa.desde) : '' }), maxWidth: 720 },
-    React.createElement("div", { "data-pace-break-prop": true, "data-pace-break-ritmo": true, style: {
-        margin: '18px 0 12px', padding: '14px 16px',
-        border: '1.5px solid var(--breathe)', background: 'var(--breathe-soft)',
-        borderRadius: 'var(--r-md)', display: 'grid', gridTemplateColumns: glifos.length || esRespira ? '62px minmax(0, 1fr)' : 'minmax(0, 1fr)', gap: '4px 16px', alignItems: 'center'
-      } },
-    glifos.length > 0 ?
-    React.createElement("div", { style: { color: 'var(--breathe-2)', gridRow: 'span 3' }, "data-pace-break-glifo": true }, React.createElement(ExerciseGlyph, { id: glifos[0], size: 62 })) :
-    esRespira ?
-    React.createElement("div", { style: { color: 'var(--breathe)', fontSize: 44, lineHeight: 1, gridRow: 'span 3', display: 'grid', placeItems: 'center' }, "data-pace-break-glifo": true }, React.createElement(ABBreathe, null)) :
-    null,
-    React.createElement("div", { style: { fontSize: 11.5, letterSpacing: '0.03em', color: 'var(--breathe-2)', fontWeight: 500 } }, t('break.prop.' + prop.porque)),
-    React.createElement("div", { style: { ...displayItalic, fontSize: 24 } }, nombre),
-    React.createElement("div", { style: { fontSize: 12, color: 'var(--ink-2)' } }, meta)
+    React.createElement("div", _extends({ className: 'pace-break-plato' + (glifo ? '' : ' pace-break-sin-glifo'), style: { '--c': color } }, datos),
+    glifo &&
+    React.createElement("div", { className: 'pace-break-glifo' + (glifo.modulo ? ' pace-break-glifo-mod' : ''), style: { gridRow: 'span 3' }, "data-pace-break-glifo": true },
+    glifo.nodo
     ),
 
-    React.createElement("div", { "data-pace-break-acciones": true, style: { display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' } },
-    React.createElement(Button, { variant: "terracota", onClick: () => onChoose(prop.modulo, rutina) }, t('break.ritmo.hacer')),
-    React.createElement(Button, { variant: "secondary", onClick: onSeguir }, tn('break.ritmo.seguir', { n: plan.hechos + 1 }))
-    ),
-    agua &&
-    React.createElement("button", { "data-pace-break-agua": true, onClick: () => onChoose('water'), style: {
-        marginTop: 14, width: '100%', padding: '12px 14px', background: agua.bg, border: '1.5px solid ' + agua.color, borderRadius: 'var(--r-md)',
-        textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--ink)'
-      } },
-    React.createElement("span", { style: { color: agua.color, fontSize: 24, lineHeight: 1 } }, agua.icon),
-    React.createElement("span", { style: { ...displayItalic, fontSize: 20, fontWeight: 500 } }, agua.label),
-    React.createElement("span", { style: { fontSize: 12, color: 'var(--ink-2)', marginLeft: 'auto' } }, agua.desc)
-    ),
-
-    React.createElement("div", { "data-pace-break-shortcut": true, style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 } },
-    React.createElement(Meta, null, t('break.ritmo.shortcut')),
-    React.createElement(Button, { variant: "ghost", onClick: onClose }, t('break.skip'))
+    React.createElement("div", { style: { minWidth: 0 } },
+    motivo && React.createElement("div", { className: "pace-break-motivo" }, motivo),
+    nombre && React.createElement("div", { className: "pace-break-nombre" }, nombre),
+    ctx && React.createElement("div", { className: "pace-lib-ctx" }, ctx),
+    children
     )
     ));
 
 }
 
-Object.assign(window, { BreakMenuRitmo });
-;Object.assign(window, { BreakMenuRitmo });
+function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropuesta, prop, plan, opciones, nombre } = _ref2;
+  const { t, tn } = useT();
+  if (!open || !prop || !plan) return null;
+  const agua = (opciones || []).find((o) => o.key === 'water');
+  const rutina = prop.rutina;
+  const pausa = plan.pausa;
+  const comida = prop.porque === 'ritmo.comida';
+  const plato = comida ?
+  { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: React.createElement(ABMeal, null), modulo: true }, nombre: t('break.ritmo.comida'),
+    ctx: React.createElement(React.Fragment, null, React.createElement("b", null, pausa ? pausa.dur : ''), React.createElement("u", null, t('lib.min')), pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.conAgua'))) } :
+  { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina), nombre,
+    ctx: rutina ? React.createElement(React.Fragment, null, React.createElement("b", null, rutina.min), React.createElement("u", null, t('lib.min')), React.createElement("em", null, t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')),
+    pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.agua'))) : null };
+  return (
+    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: tn('break.ritmo.tag', { n: plan.hechos, m: plan.total }),
+      title: t('break.ritmo.title'), subtitle: tn('break.ritmo.sub', { h: pausa ? ritmoHora(pausa.desde) : '' }), maxWidth: 720 },
+    React.createElement(BreakPlato, { color: plato.color, glifo: plato.glifo, motivo: t('break.prop.' + prop.porque), nombre: plato.nombre, ctx: plato.ctx,
+      datos: { 'data-pace-break-prop': '', 'data-pace-break-ritmo': '' } }),
+    React.createElement("div", { "data-pace-break-acciones": true, className: "pace-break-acciones", style: { marginTop: 16 } },
+    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--c': plato.boton }, onClick: onPropuesta },
+    t(comida ? 'break.ritmo.comer' : 'break.ritmo.hacer')
+    ),
+    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-tonal", onClick: onSeguir }, tn('break.ritmo.seguir', { n: plan.hechos + 1 }))
+    ),
+
+    agua && !comida &&
+    React.createElement("button", { type: "button", "data-pace-break-agua": true, className: "pace-break-agua", style: { marginTop: 16 }, onClick: () => onChoose('water') },
+    React.createElement("span", { className: "pace-break-glifo" }, agua.icon),
+    React.createElement("b", null, agua.label),
+    React.createElement("span", { className: "pace-break-mas" }, "\xB7 ", t('break.ritmo.vaso')),
+    React.createElement("i", { "aria-hidden": "true" }, "\u203A")
+    ),
+
+
+
+    React.createElement("div", { "data-pace-break-shortcut": true, className: "pace-break-pie", style: { marginTop: 6 } },
+    React.createElement("button", { type: "button", className: "pace-break-saltar", onClick: onClose }, t('break.skip'))
+    )
+    ));
+
+}
+
+Object.assign(window, { BreakMenuRitmo, BreakPlato, breakGlifo, BREAK_COLOR });
+;Object.assign(window, { _extends, breakGlifo, BreakPlato, BreakMenuRitmo });
 })();
 </script>
   <script>
@@ -28139,13 +28333,22 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
   };
 
 
+
+
+
   const elegirPropuesta = (p) => {
     if (p.modulo === 'water') {
       addWaterGlass(1);
       try {playSound('hydrate.sip');} catch (e) {}
     }
+    if (p.porque === 'ritmo.comida') {
+      try {unlockAchievement('first.cycle');} catch (e) {}
+      onClose();
+      return;
+    }
     handleChoose(p.modulo, p.rutina);
   };
+
 
 
 
@@ -28203,34 +28406,24 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
   const plan = prop && typeof prop.porque === 'string' && prop.porque.indexOf('ritmo.') === 0 && typeof ritmoPlan === 'function' ? ritmoPlan(state) : null;
   if (plan && plan.pausa && typeof BreakMenuRitmo === 'function') {
     return React.createElement(BreakMenuRitmo, { open: open, onClose: onClose, onSeguir: onSeguir, prop: prop, plan: plan, nombre: nombreProp,
-      opciones: baseOpts, onChoose: (key, rutina) => handleChoose(key, rutina) });
+      opciones: baseOpts, onChoose: (key, rutina) => handleChoose(key, rutina), onPropuesta: () => elegirPropuesta(prop) });
   }
 
+
+
+  const colorProp = prop ? BREAK_COLOR[prop.modulo] : null;
   return (
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('break.tag'), title: t('break.title'), subtitle: t('break.subtitle'), maxWidth: 720 },
     prop &&
-    React.createElement("div", { "data-pace-break-prop": true, style: {
-        margin: '18px 0 12px', padding: '14px 15px',
-        border: '1.5px solid var(--breathe)', background: 'var(--breathe-soft)',
-        borderRadius: 'var(--r-md)', display: 'grid', gap: 5
-      } },
-    React.createElement("div", { style: { fontSize: 11.5, letterSpacing: '0.03em', color: 'var(--breathe-2)', fontWeight: 500 } },
-    prop.porque === 'sitting' ?
-    tn('break.prop.sitting', { n: prop.datos.n }) :
-    t('break.prop.' + prop.porque)
-    ),
-    nombreProp && React.createElement("div", { style: { ...displayItalic, fontSize: 24 } }, nombreProp),
-    rutinaProp &&
-    React.createElement("div", { style: { fontSize: 12, color: 'var(--ink-2)' } },
-    tn('break.prop.meta', {
-      n: rutinaProp.min,
-      m: t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')
-    })
-    ),
-
-    React.createElement("div", { style: { marginTop: 6 } },
-    React.createElement(Button, { variant: "terracota", onClick: () => elegirPropuesta(prop) },
+    React.createElement("div", { style: { margin: '0 0 12px' } },
+    React.createElement(BreakPlato, { color: colorProp, glifo: breakGlifo(prop.modulo, rutinaProp), datos: { 'data-pace-break-prop': '' },
+      motivo: prop.porque === 'sitting' ? tn('break.prop.sitting', { n: prop.datos.n }) : t('break.prop.' + prop.porque),
+      nombre: nombreProp || (prop.modulo === 'water' ? t('break.water.label') : null),
+      ctx: rutinaProp ? React.createElement(React.Fragment, null, React.createElement("b", null, rutinaProp.min), React.createElement("u", null, t('lib.min')), React.createElement("em", null, t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label'))) : null },
+    React.createElement("div", { className: "pace-break-acciones", style: { marginTop: 12 } },
+    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--c': colorProp }, onClick: () => elegirPropuesta(prop) },
     t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')
+    )
     )
     )
     ),
@@ -28300,9 +28493,9 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
     })
     ),
 
-    React.createElement("div", { "data-pace-break-shortcut": true, style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 } },
-    React.createElement(Meta, null, t('break.shortcut')),
-    React.createElement(Button, { variant: "ghost", onClick: onClose }, t('break.skip'))
+
+    React.createElement("div", { "data-pace-break-shortcut": true, className: "pace-break-pie", style: { marginTop: prop ? 8 : 4 } },
+    React.createElement("button", { type: "button", className: "pace-break-saltar", onClick: onClose }, t('break.skip'))
     )
     ));
 
@@ -28311,21 +28504,6 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
 
 
 
-
-
-const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
-if (!_paceBreakResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-break-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-break-shortcut] .pace-meta {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
 
 Object.assign(window, { BreakMenu });
 ;Object.assign(window, { computeScore, BreakMenu });

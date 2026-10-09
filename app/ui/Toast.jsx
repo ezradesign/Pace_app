@@ -2,6 +2,34 @@
 
 const { useState: useStateTO, useEffect: useEffectTO } = React;
 
+/* EN LA HOME, EL SELLO HABLA DESDE EL ARO (Ez, 9 oct. 2026: «que tampoco tape en la home»).
+   El aviso ya espera a que no haya ninguna ventana ni sesión abierta (state-core.toast.jsx),
+   pero en la home salía abajo, en una caja encima de la tarjeta o la línea del día, y en el
+   móvil no queda ningún hueco libre: todo el alto está ocupado para que no haya scroll. Así
+   que ocupa, mientras dura, el sitio de la línea en cursiva de dentro del aro («Ciclo
+   completado», «Trabajo en profundidad»): esa línea se esconde y en su lugar se lee «Nuevo
+   sello · Primer paso» en dorado, con su dibujo. Sin aro a la vista, la caja de siempre. */
+function toastHuecoDelAro() {
+  try {
+    const sub = document.querySelector('[data-pace-dial-subtitle]');
+    if (!sub || !sub.getClientRects().length) return null;
+    /* En px CSS, por el lienzo (app/main/_lienzo.js): con el zoom alejado la app crece entera. */
+    if (typeof window.paceCaja !== 'function') return null;
+    const r = window.paceCaja(sub);
+    const caja = window.paceCaja(sub.parentElement);
+    /* El interior del aro escala en escritorio: la letra se mide como se pinta. */
+    const escala = sub.offsetHeight ? r.height / sub.offsetHeight : 1;
+    const fs = parseFloat(getComputedStyle(sub).fontSize) * escala;
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2, ancho: Math.round(caja.width), fs: fs };
+  } catch (e) { return null; }
+}
+if (!document.getElementById('pace-toast-css')) {
+  const st = document.createElement('style');
+  st.id = 'pace-toast-css';
+  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }';
+  document.head.appendChild(st);
+}
+
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
   const { t, lang } = useT();
@@ -22,7 +50,7 @@ function ToastHost() {
         const full = { ...toast,
           title: tR('ach.item.' + a.id + '.title', a.title),
           desc: tR('ach.item.' + a.id + '.desc', a.desc),
-          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
+          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false, aro: toastHuecoDelAro() };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         const durationMs = (typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000;
@@ -39,20 +67,41 @@ function ToastHost() {
     });
   }, []);
 
+  /* La línea del aro se esconde mientras haya un sello en su sitio, también durante el fundido. */
+  const enAro = toasts.some(x => x.aro);
+  useEffectTO(() => {
+    document.documentElement.toggleAttribute('data-pace-sello-en-aro', enAro);
+  }, [enAro]);
+
+  /* Sin `transform` en la caja: un hijo `fixed` se colocaría respecto a ella y no a la ventana. */
   return (
     <div
       aria-live="polite"
       aria-atomic="true"
       style={{
         position: 'fixed',
-        bottom: 20, left: '50%',
-        transform: 'translateX(-50%)',
+        bottom: 20, left: 0, right: 0,
         zIndex: 200,
-        display: 'flex', flexDirection: 'column', gap: 8,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
         pointerEvents: 'none',
       }}
     >
-      {toasts.map(toast => (
+      {toasts.map((toast, i) => toast.aro ? (
+        <div key={toast._id} data-pace-sello-aro style={{
+          position: 'fixed', left: toast.aro.x, top: toast.aro.y - i * toast.aro.fs * 1.5,
+          transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
+          display: 'flex', alignItems: 'center', gap: Math.round(toast.aro.fs * 0.45),
+          whiteSpace: 'nowrap', color: 'var(--achievement)',
+          fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: toast.aro.fs, lineHeight: 1.2,
+          animation: 'pace-fade-in 320ms var(--ease)',
+          opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out',
+        }}>
+          <span style={{ flexShrink: 0, width: Math.round(toast.aro.fs * 1.35), height: Math.round(toast.aro.fs * 1.35), display: 'grid', placeItems: 'center', fontSize: toast.aro.fs }}>
+            {window.renderGlyph ? window.renderGlyph(toast) : toast.glyph}
+          </span>
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('ach.toast.new')} · {toast.title}</span>
+        </div>
+      ) : (
         <div key={toast._id} style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '12px 20px',
