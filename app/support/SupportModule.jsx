@@ -263,7 +263,7 @@ function SupportModal({ open, onClose }) {
           <button
             onClick={markAsDonated}
             style={supportStyles.alreadyLink}
-            title="Marca un sello privado — confía en ti"
+            title={t('support.donated.title')}
           >
             {thanked ? (
               state.achievements['secret.supporter']

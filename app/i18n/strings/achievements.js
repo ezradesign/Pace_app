@@ -41,5 +41,5 @@ Object.assign(window.PACE_STRINGS.en, {
     'ach.seal.soon':                   'Soon',
     'ach.seal.secret':                 'Secret',
     'ach.seal.discover':               'To discover',
-    'ach.toast.new':                   'New seal',
+    'ach.toast.new':                   'New stamp',
 });
