@@ -316,8 +316,17 @@ function focoElapsedSec(inicioMs, durationSec) {
   return Math.max(durationSec, Math.round((Date.now() - inicioMs) / 1000));
 }
 
+/* ¿Hay un bloque de Foco empezado (en marcha o en pausa)? Lo publica FocusTimer
+   y lo lee la barra de arriba: cambiar allí a Pausa o Larga reinicia la cuenta y
+   el bloque se pierde sin contar, así que antes se pregunta (Ez, 8 oct. 2026).
+   `var`, no `const`: tiene que cruzar la IIFE del build. */
+var _paceFocoEmpezado = false;
+function paceFocoEmpezadoPon(v) { _paceFocoEmpezado = !!v; }
+function paceFocoEmpezado() { return _paceFocoEmpezado; }
+
 Object.assign(window, {
   focoElapsedSec,
+  paceFocoEmpezadoPon, paceFocoEmpezado,
   /* s163 · lo que entro con el troceo de FocusTimer.jsx */
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */

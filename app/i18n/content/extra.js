@@ -18,7 +18,7 @@ Object.assign(window.PACE_STRINGS.en, {
   // ── Estira — rutinas (ids move.*) ────────────────────────────────
   'move.chair.antidote.name':                  'Chair Antidote',
   'move.chair.antidote.desc':                  'Exact antidote to 4h seated. Hips, lumbar, neck. You\'ll spend time on the floor.',
-  'move.chair.antidote.code':                  'SIT',
+  'move.chair.antidote.code':                  'Chair antidote',
   'move.chair.antidote.s0.name':               'Chest opening',
   'move.chair.antidote.s0.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
   'move.chair.antidote.s0.instruction.care':   'Only open as far as your chest stretches without discomfort.',
@@ -66,7 +66,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hips.standing.s4.instruction.action': '3 full breaths to finish.',
   'move.hips.5.name':                    'Hips',
   'move.hips.5.desc':                    '5 steps to unlock deep hips. Mostly on the floor.',
-  'move.hips.5.code':                    'HIP',
+  'move.hips.5.code':                    'Hips',
   'move.hips.5.s0.name':                 'Cossack squat',
   'move.hips.5.s0.instruction.action':   'Feet very wide. Shift your weight to this side, the other leg straight. Rise slowly.',
   'move.hips.5.s0.instruction.care':     'Heel down. Only go as low as you can control.',
@@ -88,7 +88,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'move.shoulders.5.name':               'Shoulders',
   'move.shoulders.5.desc':               'Shoulder reset: rotators, chest, traps. You\'ll need a wall; bar optional.',
-  'move.shoulders.5.code':               'SHLD',
+  'move.shoulders.5.code':               'Shoulders',
   'move.shoulders.5.s0.name':            'Scapular wall slides',
   'move.shoulders.5.s0.instruction.setup':  'Stand with your back to the wall, arms out against it.',
   'move.shoulders.5.s0.instruction.action': 'Slide your arms up and down along the wall, like wings.',
@@ -110,7 +110,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'move.atg.knees.name':                 'ATG · Knees over toes',
   'move.atg.knees.desc':                 'Knees over toes, through deep ranges. You\'ll need a wall and the floor.',
-  'move.atg.knees.code':                 'ATG',
+  'move.atg.knees.code':                 'Knees',
   'move.atg.knees.s0.name':              'ATG split squat',
   'move.atg.knees.s0.cue':               'Deep lunge. Knee goes past foot.',
   'move.atg.knees.s1.name':              'Tibialis raise',
@@ -124,7 +124,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'move.ancestral.name':                 'Ancestral',
   'move.ancestral.desc':                 'Ancestral techniques: crawl, hang, deep squat. Floor and a sturdy bar.',
-  'move.ancestral.code':                 'ANC',
+  'move.ancestral.code':                 'Ancestral',
   'move.ancestral.s0.name':              'Deep squat hold',
   'move.ancestral.s0.cue':               'Heels down, relax.',
   'move.ancestral.s1.name':              'Crawling',
@@ -138,7 +138,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'move.neck.3.name':                    'Neck',
   'move.neck.3.desc':                    'Micro-break for tense cervicals.',
-  'move.neck.3.code':                    'SIT',
+  'move.neck.3.code':                    'Neck',
   'move.neck.3.s0.name':                 'Chin tucks',
   'move.neck.3.s0.instruction.setup':    'Sit tall, shoulders loose. Look straight ahead.',
   'move.neck.3.s0.instruction.action':   'Glide your chin straight back. The back of your neck lengthens. Hold and release.',
@@ -158,7 +158,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'move.desk.quick.name':                'Desk Express',
   'move.desk.quick.desc':                'Without standing up. 6 movements in the chair.',
-  'move.desk.quick.code':                'SIT',
+  'move.desk.quick.code':                'Desk',
   'move.desk.quick.s0.name':             'Shrug + round',
   'move.desk.quick.s0.cue':              'Shoulders up, then relax.',
   'move.desk.quick.s1.name':             'Wrist circles',

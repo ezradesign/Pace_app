@@ -32,7 +32,7 @@ function PathTable({ byPath, lang, t }) {
   function fmtDate(iso) {
     if (!iso) return '-';
     const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+    return paceFechaCorta(d, lang, { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
   return (

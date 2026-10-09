@@ -159,7 +159,7 @@ test('el aviso de logro nuevo tambien habla ingles', async ({ page, context }) =
   await page.getByRole('button', { name: /^Hydrate/i }).click();
   await page.locator('[data-pace-modal-backdrop]').last()
     .getByRole('button', { name: /One more glass|Un vaso más/i }).click();
-  /* El aviso espera a que se cierre Hidrátate: un sello no pisa una ventana (8 oct.). */
+  /* El aviso sale al cerrar Hidrátate (respira-6, caza de bugs). */
   await page.keyboard.press('Escape');
 
   const toast = page.locator('div[aria-live="polite"][aria-atomic="true"]');

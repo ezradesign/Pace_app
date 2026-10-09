@@ -166,7 +166,7 @@ function Onboarding() {
               <OnbLogo />
               <h1 style={onboardingStyles.title}>
                 {t('welcome.tagline')}{' '}
-                <span style={{ color: 'var(--ink-3)' }}>{t('welcome.tagline.sub')}</span>
+                <span style={{ color: 'var(--ink-3)', whiteSpace: 'nowrap' }}>{t('welcome.tagline.sub')}</span>
               </h1>
               <p style={onboardingStyles.lede}>{t('welcome.lede')}</p>
               <div style={onboardingStyles.valuesPlate}>
