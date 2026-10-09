@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.152.0 · 9 de octubre de 2026.
+**Versión:** v0.153.0 · 9 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -54,6 +54,12 @@ La pausa al terminar un bloque sigue la opción A de Ez (v0.152.0, `BreakMenu.cs
 la tarjeta de la biblioteca, píldoras en serif itálica del color del módulo y sin atajos a la vista
 (Intro y Esc siguen). El aviso de un sello espera a que no haya nada abierto y en la home sale
 dentro del aro, en el sitio de su línea en cursiva (`tests/sello-espera.spec.js`).
+
+La barra lateral es un cuaderno (v0.153.0, elegida por Ez en cuatro vueltas de fotos,
+`docs/traspaso/archivos/sidebar-8oct/`): la semana en cápsulas con la racha debajo, Hoy con frases
+(«Dos horas y media de foco», «Cuatro vasos de ocho», con la meta de Ajustes y su «+ vaso»), la
+siguiente pausa con su rótulo, las tres bibliotecas y el último logro; el mismo orden en el cajón del
+móvil, que cabe entero desde 360×640. La home dice «6 de 8 vasos».
 
 Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
 con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
