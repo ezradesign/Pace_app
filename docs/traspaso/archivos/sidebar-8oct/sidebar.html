@@ -149,16 +149,16 @@ td.ok { color: var(--oliva); }
 <main class="hoja">
 
   <header class="seccion" style="gap:18px">
-    <span class="rotulo">PACE · v0.150.1 · 8 de octubre de 2026 · cuarta vuelta</span>
+    <span class="rotulo">PACE · v0.150.1 · 9 de octubre de 2026 · ya montada</span>
     <h1>La barra lateral</h1>
     <p class="entrada">Pediste que fuera más útil, más elegante y más bonita. Aquí está cómo se ve hoy en tres pantallas, qué le sobra y qué le falta, y tres maneras de rehacerla, pintadas encima de la app de verdad. Con lo que contestaste después hay una segunda vuelta (el Cuaderno con la siguiente pausa y cuatro semanas), una tercera (Cápsulas sin el hilo de la racha y el agua con tu meta de Ajustes) y una cuarta con lo que faltaba medir: el móvil, el inglés y un día por libre.</p>
   </header>
 
   <section class="corto" aria-label="En corto">
     <div>
-      <h3>Cuarta vuelta: cabe en el móvil, en inglés y por libre</h3>
-      <p style="color:var(--tinta-2)">Lo que ya elegiste, medido donde faltaba. En el cajón del móvil cabe entero, cuando la barra de hoy no cabe. En inglés cabe en una línea en todas las pantallas. Un día por libre ya tiene su frase. Para la pausa sigo recomendando que vaya dentro de «Hoy», y para las cápsulas, una versión afinada con el tubo dibujado a trazo fino.</p>
-      <p style="margin-top:10px"><a href="#cuarta">Ver la cuarta vuelta</a> · <a href="#tercera">la tercera</a></p>
+      <h3>Ya montada: así queda en la app</h3>
+      <p style="color:var(--tinta-2)">Con lo que elegiste el 9 de octubre: la pausa con su rótulo, las frases tal cual, las cápsulas afinadas y la home con tu meta de vasos. Cabe sin scroll en las tres pantallas, en las dos paletas y en el cajón del móvil. Un solo cambio: la home dice «6 de 8 vasos», sin «tus», porque con «tus» el título del día se partía.</p>
+      <p style="margin-top:10px"><a href="#montada">Ver las fotos</a> · <a href="#cuarta">la cuarta vuelta</a> · <a href="#tercera">la tercera</a></p>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
       <div>
@@ -169,18 +169,66 @@ td.ok { color: var(--oliva); }
           <li>La racha bajo la semana («4 días en ritmo · mejor 9»).</li>
           <li>«Mis rutinas» y «Da de pastar a la vaca», en dos filas de texto.</li>
           <li>La frase del agua sigue tu meta de Ajustes.</li>
+          <li>La siguiente pausa con su rótulo «Siguiente pausa».</li>
+          <li>Las frases, en castellano y en inglés.</li>
+          <li>La home también sigue tu meta de vasos.</li>
+          <li>Las cápsulas afinadas.</li>
         </ul>
       </div>
       <div>
-        <span class="rotulo">Falta elegir</span>
+        <span class="rotulo">Falta</span>
         <ul class="elegido falta" style="margin-top:8px">
-          <li>La pausa con su rótulo o dentro de «Hoy».</li>
-          <li>Si te suenan bien las frases, en castellano y en inglés.</li>
-          <li>Si la home también sigue tu meta de vasos.</li>
-          <li>Las cápsulas como están o afinadas. <a href="#preguntas">Las preguntas</a></li>
+          <li>Tu sí a cómo queda montada. <a href="#montada">Las fotos</a></li>
         </ul>
       </div>
     </div>
+  </section>
+
+  <!-- 000 · YA MONTADA -->
+  <section class="seccion" id="montada">
+    <header>
+      <span class="rotulo">Ya montada · 9 de octubre</span>
+      <h2>Así queda en la app</h2>
+    </header>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>Con lo que elegiste: la pausa con su rótulo, las frases tal cual, las cápsulas afinadas y la home con tu meta de vasos. Son fotos de la app de la rama, sin nada pintado encima, del mismo jueves que las vueltas anteriores. En ninguna pantalla hay scroll: con el día lleno, la barra se ve entera a 1280 × 800 y a 1920 × 960, y al 91 % a 1536 × 704.</p>
+      <p>Hay un cambio respecto a lo que viste: la home dice <b>«6 de 8 vasos»</b> y no «6 de tus 8 vasos». Con «tus», el título del día («Jornada entera · de 9:00 a 17:00 …») se partía en dos líneas en las pantallas de 1536 px de ancho para arriba; lo medí en nueve pantallas y sin «tus» queda como estaba. Si cambias la meta a 12 en Ajustes, dice «6 de 12 vasos».</p>
+    </div>
+    <div class="mandos" data-mandos="montada">
+      <div class="grupo"><span>Pantalla</span><div class="pildoras" data-k="pantalla">
+        <button data-v="1280x800" aria-pressed="true">1280 × 800</button><button data-v="1536x704" aria-pressed="false">1536 × 704</button><button data-v="1920x960" aria-pressed="false">1920 × 960</button></div></div>
+      <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
+        <button data-v="crema" aria-pressed="true">Crema</button><button data-v="oscuro" aria-pressed="false">Oscura</button></div></div>
+      <div class="grupo"><span>Día</span><div class="pildoras" data-k="dia">
+        <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
+    </div>
+    <figure class="pantalla" style="margin:0">
+      <img data-foto="montada" src="fotos/montada-1280x800-crema-activo.jpg" alt="La app a 1280 por 800 con la barra lateral ya montada" width="2560" height="1600">
+    </figure>
+
+    <h3 class="sub">El cajón del móvil, a 360 × 640</h3>
+    <p class="texto" style="color:var(--tinta-2)">Cabe entero: con el día lleno se ve al 85 % y con el día vacío, a su tamaño.</p>
+    <div class="cuatro">
+      <figure class="barra" style="margin:0"><figcaption><b>Crema · lleno</b></figcaption><img src="fotos/montada-cajon-crema-activo.png" alt="El cajón del móvil en crema, con el día lleno"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Crema · vacío</b></figcaption><img src="fotos/montada-cajon-crema-vacio.png" alt="El cajón del móvil en crema, con el día vacío"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Oscura · lleno</b></figcaption><img src="fotos/montada-cajon-oscuro-activo.png" alt="El cajón del móvil en la paleta oscura, con el día lleno"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Oscura · vacío</b></figcaption><img src="fotos/montada-cajon-oscuro-vacio.png" alt="El cajón del móvil en la paleta oscura, con el día vacío"></figure>
+    </div>
+
+    <h3 class="sub">En inglés y por libre</h3>
+    <div class="cuatro">
+      <figure class="barra" style="margin:0"><figcaption><b>Inglés</b></figcaption><img src="fotos/montada-barra-en-1280x800.png" alt="La barra en inglés"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Repetir</b></figcaption><img src="fotos/montada-barra-libre-repetir.png" alt="Por libre, con algo hecho: Repetir"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Para ahora</b></figcaption><img src="fotos/montada-barra-libre-ahora.png" alt="Por libre, con el día vacío: Para ahora"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Continúa</b></figcaption><img src="fotos/montada-barra-libre-continua.png" alt="Por libre, con Respira a medias: Continúa"></figure>
+    </div>
+
+    <h3 class="sub">La home con otra meta de vasos</h3>
+    <div class="casos" style="grid-template-columns:repeat(auto-fill, minmax(320px, 1fr))">
+      <figure class="caso"><img src="fotos/montada-home-meta-12.jpg" alt="La home con la meta de 12 vasos: 6 de 12 vasos"><figcaption>Meta de 12 · «6 de 12 vasos»</figcaption></figure>
+      <figure class="caso"><img src="fotos/montada-home-meta-6.jpg" alt="La home con la meta de 6 vasos: 6 de 6 vasos"><figcaption>Meta de 6 · «6 de 6 vasos»</figcaption></figure>
+    </div>
+    <p class="nota">De paso se arregló un fallo que ya estaba: yendo por libre, si lo último que hiciste era un bloque de Foco, la barra se quedaba sin nada que ofrecer. Ahora «Repetir» busca lo último de Respira, Mueve o Estira. La línea «Llevas tres bloques y dos pausas» ya no está, como en las fotos que elegiste.</p>
   </section>
 
   <!-- 00 · CUARTA VUELTA -->
@@ -581,6 +629,7 @@ const CUARTA = /*CUARTA*/{"cajon-hoy-crema-activo":{"escala":0.8,"fuera":44},"ca
 
 const estado = {
   cajon: { paleta: 'crema', dia: 'activo' },
+  montada: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   hoy: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   cuatro: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   semanas: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
@@ -624,6 +673,8 @@ function pintar() {
       el.classList.toggle('bien', !!v && v.fuera <= 1);
     }
   });
+
+  document.querySelector('[data-foto="montada"]').src = 'fotos/montada-' + clave(estado.montada) + '.jpg';
 
   const e = estado.entera, ke = clave(e);
   document.querySelector('[data-foto="entera"]').src = e.vista === 'hoy' ? 'fotos/antes-' + ke + '.jpg' : 'fotos/despues-' + e.vista + '-' + ke + '.jpg';
