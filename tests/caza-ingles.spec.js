@@ -242,8 +242,12 @@ test('ingles-12 · la pausa de «A tu ritmo» habla inglés natural', async ({ p
     await page.waitForTimeout(60);
     if (await page.locator('[data-pace-break-shortcut]').count()) break;
   }
+  /* El texto final lo pone la sesión de la pausa (claude/pausa-elegante), que reescribe
+     'break.ritmo.sub': aquí solo se pide que no vuelva la traducción literal ni la clave. */
   const modal = page.locator('[data-pace-modal-backdrop]');
-  await expect(modal).toContainText("9:45 · what's on the menu now.");
+  await expect(modal).toContainText('Your break');
+  await expect(modal).not.toContainText('what the menu had for now');
+  await expect(modal).not.toContainText('break.ritmo.sub');
 });
 
 /* ingles-14 */
@@ -290,6 +294,12 @@ test('ingles-17 · horas en 24 h y «Sep» en septiembre', async ({ page, contex
   const globo = page.getByText(/18 Sep/).first();
   await expect(globo, 'el día del mes dice «Sept»').toBeVisible();
   await expect(globo).not.toContainText('Sept');
+  /* En castellano la barra lateral sigue igual: sin puntos ni comas («vie 18 sept»). */
+  await page.keyboard.press('Escape');
+  await page.evaluate(() => setState({ lang: 'es' }));
+  const fecha = page.getByText(/^vie 18 sept$/i).first();
+  await expect(fecha, 'la fecha castellana de la barra lateral cambió').toBeVisible();
+  expect(await fecha.textContent()).not.toMatch(/[.,]/);
 });
 
 /* ingles-16 */
