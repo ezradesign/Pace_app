@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.150.1 · 8 de octubre de 2026.
+**Versión:** v0.151.0 · 9 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -67,6 +67,10 @@ Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
+iPhone: la app de la App Store llega después de v1; hasta entonces, PACE en Safari (Ez, 9 oct.). La
+suite tiene un proyecto `webkit`, el motor de Safari, para los `*.safari.spec.js` y la home sin
+scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mira un tester con iPhone.
+
 ## Lo siguiente
 
 1. **Fase 2:** el identificador de la app se queda en `com.ezradesign.pace` (Ez, 6 de octubre de
@@ -85,20 +89,18 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
    la carta llegan cuando haya semanas de datos.
 
-3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
-   Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
-   y «Terminar» en las rondas, en v0.148.4. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
-   v0.147.0. Seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de
-   ingles-6), en v0.148.2; los que sí lo cambian están montados en `claude/caza-bugs-propuestas`, a
-   la espera de que Ez elija en su página. Todo lo que se vea se le enseña antes en HTML.
-4. **La música de Respira** (tres drones en Sol) está lista en la rama
-   `claude/respira-musica-drones`, con su suite en verde: falta que Ez la escuche y traerla a `main`.
+3. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
+   salvo ingles-13, que lleva la rama de la pausa. Queda grabar la voz de Respira en inglés: hasta
+   entonces, en inglés suena el tono.
+4. **La música de Respira**, un drone por técnica, está en `claude/respira-drones-por-tecnica`
+   (con `claude/respira-musica-drones` dentro): falta que Ez la escuche en la app y traerla a `main`.
 
 ## Espera a Ez
 
-- Elegir en la página de la caza de bugs qué cambios visibles se suben (`claude/caza-bugs-propuestas`).
-- Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
-  contraseña aparte.
+- Copiar las carpetas `PACE-llave-play` y `PACE-llave-licencias` (la de los códigos de tester, creada
+  el 9 oct.) de su PC en su disco duro, con la contraseña de Play aparte.
+- Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
+- Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
