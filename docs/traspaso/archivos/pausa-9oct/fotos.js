@@ -6,7 +6,8 @@
    su servidor (8785 por defecto, nunca el 8765 ni el 8775) y se para si ese puerto lo sirve
    otra carpeta. Deja en fotos/ la pausa corta, la larga, la comida, sin «A tu ritmo» (45 min:
    Estira) y el agua sin «A tu ritmo» (las 16:00 sin haber bebido), a 360×640 y 1280×800, en
-   crema y en oscuro, y la corta en inglés; y medidas.json con el alto de la ventana. */
+   crema y en oscuro, y la corta en inglés; el primer Pomodoro con la pausa abierta (el sello
+   espera) y en la home al saltarla (sale); y medidas.json con el alto de la ventana. */
 'use strict';
 
 const path = require('path');
@@ -32,6 +33,9 @@ const CASOS = {
   comida: { hora: '13:20', estado: { cycle: 5, ritmo: { dia: dia() } }, boton: { es: 'Empezar bloque 6', en: 'Start block 6' } },
   libre: { hora: '11:00', estado: { focusMinutes: 45, ritmo: { libre: true } }, boton: { es: 'Empezar foco', en: 'Start focus' } },
   agua: { hora: '15:40', estado: { focusMinutes: 25, ritmo: { libre: true } }, boton: { es: 'Empezar foco', en: 'Start focus' } },
+  /* El primer Pomodoro de alguien nuevo: gana «Primer paso». Foto con la pausa abierta (el
+     aviso espera) y otra al saltarla (sale en la home). */
+  sello: { hora: '10:00', estado: { focusMinutes: 15, achievements: {}, ritmo: { libre: true } }, boton: { es: 'Empezar foco', en: 'Start focus' } },
 };
 const TAMANOS = [[360, 640, true], [1280, 800, false]];
 
@@ -73,7 +77,7 @@ async function abrirPausa(browser, caso, paleta, lang, [ancho, alto, movil]) {
     await page.waitForTimeout(40);
     if (await page.locator('[data-pace-break-shortcut]').count()) break;
   }
-  await page.waitForTimeout(900);
+  await page.waitForTimeout(caso === 'sello' ? 1500 : 900);
   if (!(await page.locator('[data-pace-break-shortcut]').count())) throw new Error('No se abrió la pausa: ' + caso);
   return { context, page };
 }
@@ -103,7 +107,7 @@ async function guardar(png, nombre, m, ancho, alto) {
   try {
     const tandas = [];
     for (const caso of Object.keys(CASOS)) for (const paleta of ['crema', 'oscuro']) tandas.push([caso, paleta, 'es']);
-    tandas.push(['corta', 'crema', 'en'], ['comida', 'crema', 'en']);
+    tandas.push(['corta', 'crema', 'en']);
     for (const [caso, paleta, lang] of tandas) {
       for (const tam of TAMANOS) {
         const { context, page } = await abrirPausa(browser, caso, paleta, lang, tam);
@@ -112,6 +116,12 @@ async function guardar(png, nombre, m, ancho, alto) {
         medidas[nombre] = await medir(page);
         await guardar(png, nombre, medidas[nombre], tam[0], tam[1]);
         console.log(nombre, JSON.stringify(medidas[nombre]));
+        if (caso === 'sello') {
+          await page.getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
+          await page.locator('div[aria-live="polite"] > div').first().waitFor({ state: 'visible' });
+          await page.waitForTimeout(500);
+          await sharp(await page.screenshot()).webp({ quality: 84 }).toFile(path.join(SALIDA, nombre.replace('sello', 'sello-home') + '.webp'));
+        }
         await context.close();
       }
     }
