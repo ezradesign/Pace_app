@@ -139,6 +139,34 @@
   "izquierda": 280,
   "sobra": 0
  },
+ "sello-360x640": {
+  "alto": 564,
+  "arriba": 64,
+  "ancho": 336,
+  "izquierda": 12,
+  "sobra": 0
+ },
+ "sello-1280x800": {
+  "alto": 595,
+  "arriba": 103,
+  "ancho": 720,
+  "izquierda": 280,
+  "sobra": 0
+ },
+ "sello-360x640-oscuro": {
+  "alto": 564,
+  "arriba": 64,
+  "ancho": 336,
+  "izquierda": 12,
+  "sobra": 0
+ },
+ "sello-1280x800-oscuro": {
+  "alto": 595,
+  "arriba": 103,
+  "ancho": 720,
+  "izquierda": 280,
+  "sobra": 0
+ },
  "corta-360x640-en": {
   "alto": 457,
   "arriba": 171,
@@ -147,20 +175,6 @@
   "sobra": 0
  },
  "corta-1280x800-en": {
-  "alto": 436,
-  "arriba": 182,
-  "ancho": 720,
-  "izquierda": 280,
-  "sobra": 0
- },
- "comida-360x640-en": {
-  "alto": 457,
-  "arriba": 171,
-  "ancho": 336,
-  "izquierda": 12,
-  "sobra": 0
- },
- "comida-1280x800-en": {
   "alto": 436,
   "arriba": 182,
   "ancho": 720,
