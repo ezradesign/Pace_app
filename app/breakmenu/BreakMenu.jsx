@@ -60,18 +60,27 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
     onChoose(key, rutina || null, desdeMenu);
   };
   /* La propuesta del agua dice «Un vaso más», así que lo suma antes de abrir Hidrátate, donde se
-     ve contado y se deshace con «Un vaso menos». Las demás entran en su rutina. */
+     ve contado y se deshace con «Un vaso menos». Las demás entran en su rutina.
+     LA COMIDA de «A tu ritmo» («Ir a comer») suma el vaso que lleva y cierra la pausa: no
+     hay rutina que abrir, y abrir Hidrátate era lo mismo que la fila de debajo (Ez, 8 oct.).
+     Cuenta como pausa elegida, igual que cuando abría Hidrátate. */
   const elegirPropuesta = (p) => {
     if (p.modulo === 'water') {
       addWaterGlass(1);
       try { playSound('hydrate.sip'); } catch (e) {}
     }
+    if (p.porque === 'ritmo.comida') {
+      try { unlockAchievement('first.cycle'); } catch (e) {}
+      onClose();
+      return;
+    }
     handleChoose(p.modulo, p.rutina);
   };
 
-  // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
-  // Los atajos siguen mapeados por actividad (no por posición visual),
-  // así el reordenamiento inteligente no los rompe.
+  // Atajos: Intro (la propuesta) y Esc (saltar) son los únicos que se enseñan... en
+  // ningún sitio: Ez quitó la línea de atajos del pie (8 oct.). B (Respira) · E (Estira) ·
+  // M (Muévete) · H (Hidrátate) siguen funcionando, mapeados por actividad y no por
+  // posición visual, así el reordenamiento inteligente no los rompe.
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -125,36 +134,26 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
   const plan = (prop && typeof prop.porque === 'string' && prop.porque.indexOf('ritmo.') === 0 && typeof ritmoPlan === 'function') ? ritmoPlan(state) : null;
   if (plan && plan.pausa && typeof BreakMenuRitmo === 'function') {
     return <BreakMenuRitmo open={open} onClose={onClose} onSeguir={onSeguir} prop={prop} plan={plan} nombre={nombreProp}
-      opciones={baseOpts} onChoose={(key, rutina) => handleChoose(key, rutina)} />;
+      opciones={baseOpts} onChoose={(key, rutina) => handleChoose(key, rutina)} onPropuesta={() => elegirPropuesta(prop)} />;
   }
 
+  /* La propuesta va vestida como la tarjeta de su rutina, con su botón dentro (la opción A
+     de Ez, BreakMenu.css.jsx); el agua no tiene rutina y lleva la gota y «Hidrátate». */
+  const colorProp = prop ? BREAK_COLOR[prop.modulo] : null;
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
       {prop && (
-        <div data-pace-break-prop style={{
-          margin: '18px 0 12px', padding: '14px 15px',
-          border: '1.5px solid var(--breathe)', background: 'var(--breathe-soft)',
-          borderRadius: 'var(--r-md)', display: 'grid', gap: 5,
-        }}>
-          <div style={{ fontSize: 11.5, letterSpacing: '0.03em', color: 'var(--breathe-2)', fontWeight: 500 }}>
-            {prop.porque === 'sitting'
-              ? tn('break.prop.sitting', { n: prop.datos.n })
-              : t('break.prop.' + prop.porque)}
-          </div>
-          {nombreProp && <div style={{ ...displayItalic, fontSize: 24 }}>{nombreProp}</div>}
-          {rutinaProp && (
-            <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-              {tn('break.prop.meta', {
-                n: rutinaProp.min,
-                m: t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label'),
-              })}
+        <div style={{ margin: '0 0 12px' }}>
+          <BreakPlato color={colorProp} glifo={breakGlifo(prop.modulo, rutinaProp)} datos={{ 'data-pace-break-prop': '' }}
+            motivo={prop.porque === 'sitting' ? tn('break.prop.sitting', { n: prop.datos.n }) : t('break.prop.' + prop.porque)}
+            nombre={nombreProp || (prop.modulo === 'water' ? t('break.water.label') : null)}
+            ctx={rutinaProp ? <><b>{rutinaProp.min}</b><u>{t('lib.min')}</u><em>{t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em></> : null}>
+            <div className="pace-break-acciones" style={{ marginTop: 12 }}>
+              <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--c': colorProp }} onClick={() => elegirPropuesta(prop)}>
+                {t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')}
+              </button>
             </div>
-          )}
-          <div style={{ marginTop: 6 }}>
-            <Button variant="terracota" onClick={() => elegirPropuesta(prop)}>
-              {t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')}
-            </Button>
-          </div>
+          </BreakPlato>
         </div>
       )}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: prop ? 10 : 12, margin: prop ? '0 0 4px' : '20px 0' }}>
@@ -222,9 +221,9 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
         })}
       </div>
 
-      <div data-pace-break-shortcut style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-        <Meta>{t('break.shortcut')}</Meta>
-        <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
+      {/* El pie, sin línea de atajos (Ez, 8 oct.); su `data-*` lo usan las pruebas. */}
+      <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: prop ? 8 : 4 }}>
+        <button type="button" className="pace-break-saltar" onClick={onClose}>{t('break.skip')}</button>
       </div>
     </Modal>
   );
@@ -233,20 +232,5 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
 /* s105: los iconos locales BM* (viento / monigote / gota generica) se
    retiraron -- el menu usa ahora los glifos AB* de la ActivityBar (pulmones /
    puente / mancuerna / gota), importados via window desde main/ActivityBar.jsx. */
-
-/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
-const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
-if (!_paceBreakResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-break-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-break-shortcut] .pace-meta {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
 
 Object.assign(window, { BreakMenu });

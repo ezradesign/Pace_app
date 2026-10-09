@@ -59,8 +59,12 @@ test('Logros: el primer sello se gana al instante, se anuncia y sobrevive a la r
   /* EL AVISO. Desde s145 `unlockAchievement` ENCOLA y el aviso se escalona: lo
      drena un cierre de sesion. El vaso de agua es la unica accion que acredita
      sin pasarlo, y por eso drena su propia cola (state-hydrate.jsx:70). El
-     toast vive 3 s, asi que se aserta aqui y no despues. */
+     toast vive 3 s, asi que se aserta aqui y no despues. Y sale al CERRAR
+     Hidratate: un sello no pisa una ventana (Ez, 8 oct. 2026). */
   const toast = page.locator('div[aria-live="polite"][aria-atomic="true"]');
+  await page.waitForTimeout(900);
+  await expect(toast, 'el aviso sale encima de Hidratate').not.toContainText('Nuevo sello');
+  await page.keyboard.press('Escape');
   await expect(toast).toContainText('Nuevo sello');
   await expect(toast).toContainText('Primer sorbo');
 
