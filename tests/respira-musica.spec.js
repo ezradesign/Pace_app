@@ -6,7 +6,8 @@
      `PACE_MUSICA_TECNICA`; aquí se cruza lo que suena con esa tabla, así que
      cambiar una receta no pone esto rojo y romper el camino sí. Y que la tabla
      cubra el catálogo entero: una técnica nueva sin receta sonaría con el drone
-     de su familia sin que nadie lo decidiera.
+     de su familia sin que nadie lo decidiera. Y que cada receta sea la marcada
+     que se midió (`tecnicas.js` y `medidas.js`), con su ajuste de volumen.
    · QUE SE ABRA AL INHALAR Y SE CIERRE AL EXHALAR, en fase con lo que pone la
      pantalla. Se mira el paso-bajo de la envolvente al cambiar de fase: al
      acabar la inhalación tiene que estar abierto y al acabar la exhalación,
@@ -65,8 +66,32 @@ test('cada técnica de Respira tiene su receta, con drones que existen', async (
   expect(r.sinAjuste, 'recetas sin su ajuste de volumen medido').toEqual([]);
 });
 
+/* La tabla de la app se copia de lo medido: la receta marcada `m` de `tecnicas.js` y su ajuste de
+   `medidas.js`. Un ajuste tocado a mano es un volumen que nadie ha medido, y una receta cambiada
+   solo aquí es una técnica que nadie ha comprobado que se distinga de las demás. */
+test('cada receta de la app es la marcada de tecnicas.js, con el ajuste que midió construir.js', async ({ page }) => {
+  await irAlArtefacto(page);
+  const r = await page.evaluate(async () => {
+    const carpeta = '/docs/traspaso/archivos/musica-respira/por-tecnica/';
+    const g = {};
+    for (const f of ['tecnicas.js', 'medidas.js']) new Function('window', 'globalThis', await (await fetch(carpeta + f)).text())(g, g);
+    const malas = [];
+    g.PACE_POR_TECNICA.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => {
+      if (!t.m) return;
+      const app = PACE_MUSICA_TECNICA[t.id] || {};
+      const { ajusteDb, primeraInhalacion, ...receta } = app;
+      if (JSON.stringify(receta) !== JSON.stringify(t.m)) malas.push(t.id + ': receta');
+      if (ajusteDb !== g.PACE_MEDIDAS[t.id].m.ajusteDb) malas.push(t.id + ': ajusteDb');
+      const dosPeldanos = t.f.some((p) => p.t === 'i2');
+      if (dosPeldanos !== (primeraInhalacion === 0.8)) malas.push(t.id + ': primeraInhalacion');
+    }));
+    return malas;
+  });
+  expect(r, 'recetas de la app que no son las medidas').toEqual([]);
+});
+
 test('un ejercicio de ciclo fijo suena con su receta, abre al inhalar y cierra al exhalar', async ({ page }) => {
-  test.setTimeout(45_000);
+  test.setTimeout(60_000);
   await empezar(page, 'Exhalación 4·6');
   const fase = page.locator('[data-pace-breathe-phase]');
   const r = await page.evaluate(() => ({ ultimo: paceMusica.ultimo, esperado: PACE_MUSICA_BASES[PACE_MUSICA_TECNICA['breathe.exhale.46'].base] }));
@@ -74,6 +99,9 @@ test('un ejercicio de ciclo fijo suena con su receta, abre al inhalar y cierra a
   expect(r.ultimo.receta).toBe('breathe.exhale.46');
   expect(r.ultimo.respira).toBe(true);
 
+  /* Una inhalación entera con la música ya cargada antes de medir: si los drones llegan a media
+     exhalación, la primera «Exhala» la encuentra ya cerrándose. */
+  await expect(fase).toHaveText(/^Inhala/, { timeout: 10_000 });
   await expect(fase).toHaveText(/^Exhala/, { timeout: 8_000 });
   const lleno = await estado(page);
   await expect(fase).toHaveText(/^Inhala/, { timeout: 10_000 });
@@ -109,14 +137,30 @@ test('el Suspiro abre en dos peldaños: la primera inhalación se queda a medias
   await empezar(page, 'Suspiro fisiológico');
   const fase = page.locator('[data-pace-breathe-phase]');
   await expect(fase).toHaveText(/^Exhala/, { timeout: 8_000 });
-  await expect(fase).toHaveText(/^Inhala más/, { timeout: 12_000 });
-  const peldano = await estado(page);
-  await expect(fase).toHaveText(/^Exhala/, { timeout: 4_000 });
-  const arriba = await estado(page);
-  const medio = peldano.cerradoHz * Math.pow(peldano.abiertoHz / peldano.cerradoHz, 0.8);
-  expect(peldano.brilloHz, 'tras la primera inhalación, a 0,8').toBeGreaterThan(medio * 0.85);
-  expect(peldano.brilloHz).toBeLessThan(medio * 1.15);
-  expect(arriba.brilloHz, 'tras «Inhala más», abierto del todo').toBeGreaterThan(arriba.abiertoHz * 0.9);
+  /* Se muestrea DENTRO de la página, cada 40 ms durante un ciclo y medio, y se toma el valor justo
+     antes de cada cambio de fase. Leerlo desde fuera al ver «Inhala más» llegaba unos 400 ms tarde
+     con el PC cargado, y en una fase de 1 s eso ya es medio peldaño subido. */
+  const r = await page.evaluate(async () => {
+    const el = document.querySelector('[data-pace-breathe-phase]');
+    const m = [];
+    for (const fin = Date.now() + 12_000; Date.now() < fin;) {
+      m.push({ txt: el.textContent.trim(), hz: paceMusica.estado().brilloHz });
+      await new Promise((ok) => setTimeout(ok, 40));
+    }
+    const mas = (x) => x.txt.startsWith('Inhala más');
+    const primera = (x) => x.txt.startsWith('Inhala') && !mas(x);
+    let peldano = null, arriba = null;
+    for (let i = 1; i < m.length; i++) {
+      if (peldano == null && mas(m[i]) && primera(m[i - 1])) peldano = m[i - 1].hz;
+      if (peldano != null && arriba == null && m[i].txt.startsWith('Exhala') && mas(m[i - 1])) arriba = m[i - 1].hz;
+    }
+    const e = paceMusica.estado();
+    return { peldano, arriba, cerradoHz: e.cerradoHz, abiertoHz: e.abiertoHz };
+  });
+  const medio = r.cerradoHz * Math.pow(r.abiertoHz / r.cerradoHz, 0.8);
+  expect(r.peldano, 'al acabar la primera inhalación, a 0,8').toBeGreaterThan(medio * 0.85);
+  expect(r.peldano).toBeLessThan(medio * 1.15);
+  expect(r.arriba, 'al acabar «Inhala más», abierto del todo').toBeGreaterThan(r.abiertoHz * 0.9);
 });
 
 test('con ciclos cortos la música suena quieta y abierta', async ({ page }) => {
