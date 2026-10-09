@@ -43,6 +43,10 @@ test('el primer Pomodoro: el sello no sale encima de la pausa, se gana igual y s
   await sinAviso(page, 'el sello sale encima de la pausa');
   await page.getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
   await expect(aviso(page), 'al cerrar la pausa el sello no sale').toContainText('Primer paso');
+  /* y en la home sale DENTRO del aro, en el sitio de su línea en cursiva, que se esconde (Ez) */
+  await expect(page.locator('[data-pace-sello-aro]'), 'el sello no sale dentro del aro').toBeVisible();
+  expect(await page.locator('[data-pace-dial-subtitle]').evaluate((e) => getComputedStyle(e).visibility),
+    'la línea del aro sigue a la vista debajo del sello').toBe('hidden');
   expect(errores).toEqual([]);
 });
 
