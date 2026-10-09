@@ -101,13 +101,15 @@ async function guardar(png, nombre, m, ancho, alto) {
 
 (async () => {
   fs.mkdirSync(SALIDA, { recursive: true });
-  const medidas = {};
+  const medidas = fs.existsSync(MEDIDAS) ? JSON.parse(fs.readFileSync(MEDIDAS, 'utf8')) : {};
   const srv = await servidor();
   const browser = await chromium.launch();
   try {
     const tandas = [];
-    for (const caso of Object.keys(CASOS)) for (const paleta of ['crema', 'oscuro']) tandas.push([caso, paleta, 'es']);
-    tandas.push(['corta', 'crema', 'en']);
+    /* FOTOS_CASOS=sello repite solo una parte. */
+    const casos = (process.env.FOTOS_CASOS || Object.keys(CASOS).join(',')).split(',');
+    for (const caso of casos) for (const paleta of ['crema', 'oscuro']) tandas.push([caso, paleta, 'es']);
+    if (!process.env.FOTOS_CASOS) tandas.push(['corta', 'crema', 'en']);
     for (const [caso, paleta, lang] of tandas) {
       for (const tam of TAMANOS) {
         const { context, page } = await abrirPausa(browser, caso, paleta, lang, tam);
@@ -119,7 +121,7 @@ async function guardar(png, nombre, m, ancho, alto) {
         if (caso === 'sello') {
           await page.getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
           await page.locator('div[aria-live="polite"] > div').first().waitFor({ state: 'visible' });
-          await page.waitForTimeout(500);
+          await page.waitForTimeout(600);
           await sharp(await page.screenshot()).webp({ quality: 84 }).toFile(path.join(SALIDA, nombre.replace('sello', 'sello-home') + '.webp'));
         }
         await context.close();
