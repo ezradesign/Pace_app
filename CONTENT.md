@@ -146,12 +146,12 @@ pranayama 5.
 | `breathe.bhramari` | Bhramari · Abeja | pranayama | 5 | — | free (F4 — pranayama accesible) |
 | `breathe.nadi.shodhana` | Nadi Shodhana | pranayama | 8 | — | **premium** (pranayama avanzado) |
 | `breathe.kapalabhati` | Kapalabhati · Kriya | pranayama | 3 | ⚠ | **premium** (kriya avanzado) |
-| `breathe.rounds.express` | Rondas express (2×25) | energia | 4 | ⚠ | free (B1.2: era premium; sin ella Energía quedaba sin entrada free) |
-| `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 12 | ⚠ | **premium** (rondas) |
+| `breathe.rounds.express` | Rondas express (2×25) | energia | 5 | ⚠ | free (B1.2: era premium; sin ella Energía quedaba sin entrada free) |
+| `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 9 | ⚠ | **premium** (rondas) |
 | `breathe.coherent.432` | Coherente 432 | balance | 10 | — | **premium** (F4 — inmersiva, drone forzado) |
 | `breathe.kumbhaka` | Kumbhaka 1:4:2 | pranayama | 6 | ⚠ | **premium** (F4 — retención clásica) |
 | `breathe.co2` | Tolerancia CO₂ | equilibrio | 6 | ⚠ | **premium** (F4 — apnea en vacío) |
-| `breathe.rounds.long` | Rondas profundas (5×35) | energia | 20 | ⚠ | **premium** (F4 — precursora CTB) |
+| `breathe.rounds.long` | Rondas profundas (5×35) | energia | 17 | ⚠ | **premium** (F4 — precursora CTB) |
 
 > **Seguridad:** toda técnica con `safety: true` (retención / hiperventilación
 > / apnea) abre el modal de seguridad obligatorio antes de empezar

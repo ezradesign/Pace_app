@@ -5,6 +5,13 @@ function HydrateTracker({ open, onClose }) {
   const { t } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, (today / goal) * 100);
+  /* Los avisos de logro esperan a que se cierre Hidrátate: se apilaban encima
+     de «Un vaso menos / Un vaso más». */
+  React.useEffect(() => {
+    if (!open || typeof setCaminoUiActive !== 'function') return;
+    setCaminoUiActive(true);
+    return () => setCaminoUiActive(false);
+  }, [open]);
 
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('hydrate.tag')} title={t('hydrate.title')} subtitle={t('hydrate.subtitle')} maxWidth={580}>
@@ -14,6 +21,7 @@ function HydrateTracker({ open, onClose }) {
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
           fontSize: 96, fontWeight: 400, lineHeight: 1,
+          paddingBottom: '0.12em',
           color: 'var(--hydrate)',
         }}>
           {today}<span style={{ color: 'var(--ink-3)', fontSize: 40 }}> / {goal}</span>
@@ -22,7 +30,7 @@ function HydrateTracker({ open, onClose }) {
       </div>
 
       {/* Vasos visuales */}
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal > 8 ? Math.ceil(goal / 2) : goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
             onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} } }}

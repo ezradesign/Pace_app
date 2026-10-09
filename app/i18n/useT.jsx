@@ -52,4 +52,11 @@ function useT() {
   return { t, tn, lang };
 }
 
-Object.assign(window, { useT, detectInitialLang });
+/* Una fecha corta en el idioma de la app. En inglés Chrome escribe «Sept» (en-GB)
+   y Estadísticas «Sep»: se deja «Sep», como los otros once meses (Ez, 8 oct. 2026). */
+function paceFechaCorta(fecha, lang, opciones) {
+  const s = new Date(fecha).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', opciones);
+  return lang === 'en' ? s.replace(/\bSept\b/g, 'Sep') : s;
+}
+
+Object.assign(window, { useT, detectInitialLang, paceFechaCorta });

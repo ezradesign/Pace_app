@@ -120,7 +120,7 @@ function TweaksDataSection({ onReset, isWeb }) {
   /* La fila del rescate (B2): la fecha, corta y en el idioma de la app. */
   const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
   const rescateFecha = rescate
-    ? new Date(rescate.savedAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short' })
+    ? paceFechaCorta(rescate.savedAt, lang, { day: 'numeric', month: 'short' })
     : null;
 
   const importJSON = (file) => {

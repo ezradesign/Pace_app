@@ -30,7 +30,7 @@ function WeekView({ state }) {
        (completeMoveSession + completeExtraSession escriben al mismo cubo);
        etiquetarla "Mueve" mentia por omision. */
     { key: 'move',   label: t('stats.label.body'),        color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
-    { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
+    { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses'), unit1: t('stats.unit.glasses.1') },
   ];
 
   /* Compactado en sesion 61 (v0.28.2), 62 (v0.28.3) y 63 (v0.28.4):
@@ -74,7 +74,7 @@ function WeekView({ state }) {
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1,
             }}>{totals[b.key]}</div>
-            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{b.unit}</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{totals[b.key] === 1 && b.unit1 ? b.unit1 : b.unit}</div>
           </div>
         ))}
       </div>
@@ -211,15 +211,15 @@ function fmtTime(min, hourUnit) {
 }
 
 function monthLabel(year, month, lang) {
-  return new Date(year, month, 1).toLocaleDateString(
+  /* Mayúscula solo en la primera letra: `capitalize` ponía «Octubre De 2026». */
+  const s = new Date(year, month, 1).toLocaleDateString(
     lang === 'en' ? 'en-GB' : 'es-ES', { month: 'long', year: 'numeric' }
   );
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function dayLabel(year, month, day, lang) {
-  return new Date(year, month, day).toLocaleDateString(
-    lang === 'en' ? 'en-GB' : 'es-ES', { weekday: 'short', day: 'numeric', month: 'short' }
-  );
+  return paceFechaCorta(new Date(year, month, day), lang, { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 function daysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
@@ -274,7 +274,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     if (focusMinutes > 0)  parts.push(`${focusMinutes} ${t('stats.month.tooltip.focus')}`);
     if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
     if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
-    if (waterGlasses > 0)  parts.push(`${waterGlasses} ${t('stats.month.tooltip.water')}`);
+    if (waterGlasses > 0)  parts.push(`${waterGlasses} ${waterGlasses === 1 ? t('stats.unit.glasses.1') : t('stats.month.tooltip.water')}`);
     const rect = paceCaja(e.currentTarget);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, x: rect.left + rect.width / 2, y: rect.top });
   }
@@ -289,7 +289,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     if (focusMinutes > 0)  parts.push(`${focusMinutes} ${t('stats.month.tooltip.focus')}`);
     if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
     if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
-    if (waterGlasses > 0)  parts.push(`${waterGlasses} ${t('stats.month.tooltip.water')}`);
+    if (waterGlasses > 0)  parts.push(`${waterGlasses} ${waterGlasses === 1 ? t('stats.unit.glasses.1') : t('stats.month.tooltip.water')}`);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, key: cell.key, mobile: true });
   }
 
@@ -321,7 +321,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         <button onClick={prevMonth} aria-label={t('stats.month.prev')} style={{
           background:'none',border:'none',cursor:'pointer',color:'var(--ink-2)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8249;</button>
-        <span style={{ fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:17,color:'var(--ink)',textTransform:'capitalize' }}>
+        <span style={{ fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:17,color:'var(--ink)' }}>
           {monthLabel(viewYear, viewMonth, lang)}
         </span>
         <button onClick={nextMonth} disabled={isCurrentMonth} aria-label={t('stats.month.next')} style={{
@@ -372,7 +372,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         <span style={{ color:'var(--ink-3)' }}>·</span>
         <span><strong style={{ color:'var(--move)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.move')}</strong>{' '}{fmtTime(totalMove,hourUnit)}</span>
         <span style={{ color:'var(--ink-3)' }}>·</span>
-        <span><strong style={{ color:'var(--hydrate)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{totalWater}</strong>{' '}{t('stats.month.total.water')}</span>
+        <span><strong style={{ color:'var(--hydrate)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{totalWater}</strong>{' '}{totalWater === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water')}</span>
       </div>
 
       {tooltip && !tooltip.mobile && (
