@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.151.0 · 9 de octubre de 2026.
+**Versión:** v0.152.0 · 9 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -50,6 +50,11 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
+La pausa al terminar un bloque sigue la opción A de Ez (v0.152.0, `BreakMenu.css.jsx`): el plato como
+la tarjeta de la biblioteca, píldoras en serif itálica del color del módulo y sin atajos a la vista
+(Intro y Esc siguen). El aviso de un sello espera a que no haya nada abierto y en la home sale
+dentro del aro, en el sitio de su línea en cursiva (`tests/sello-espera.spec.js`).
+
 Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
 con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
 `tests/aro-bola-entrada.spec.js`.
@@ -90,7 +95,7 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
    la carta llegan cuando haya semanas de datos.
 
 3. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
-   salvo ingles-13, que lleva la rama de la pausa. Queda grabar la voz de Respira en inglés: hasta
+   (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
    entonces, en inglés suena el tono.
 4. **La música de Respira**, un drone por técnica, está en `claude/respira-drones-por-tecnica`
    (con `claude/respira-musica-drones` dentro): falta que Ez la escuche en la app y traerla a `main`.
