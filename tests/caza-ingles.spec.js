@@ -272,6 +272,26 @@ test('ingles-15 · el cierre pregunta «Did this break help?»', async ({ page, 
   await expect(sesion).toContainText('Did this break help?');
 });
 
+/* ingles-17 · Ez eligió 24 h, como el resto de la app («Until 17:00»), y «Sep» para
+   septiembre, como Estadísticas: Chrome escribe «Sept» en en-GB. */
+test('ingles-17 · horas en 24 h y «Sep» en septiembre', async ({ page, context }) => {
+  await sembrar(context, EN);
+  await page.clock.install({ time: new Date('2026-09-18T10:00:00') });
+  await irAlArtefacto(page);
+  const doceHoras = await page.evaluate(() => Object.entries(window.PACE_STRINGS.en)
+    .filter(([, v]) => /\d\s*(am|pm)\b/i.test(String(v))).map(([k, v]) => k + ' = ' + v));
+  expect(doceHoras, 'quedan horas en am/pm').toEqual([]);
+  await expect(page.getByText(/Fri 18 Sep/i).first(), 'la barra lateral dice «Sept»').toBeVisible();
+  await expect(page.getByText(/\bSept\b/)).toHaveCount(0);
+  await page.evaluate(() => completeBreathSession('breathe.box', 2, 0));
+  await page.keyboard.press('s');
+  await page.getByRole('button', { name: 'Month', exact: true }).click();
+  await page.locator('.pace-heatmap-cell.has-data').first().hover();
+  const globo = page.getByText(/18 Sep/).first();
+  await expect(globo, 'el día del mes dice «Sept»').toBeVisible();
+  await expect(globo).not.toContainText('Sept');
+});
+
 /* ingles-16 */
 test('ingles-16 · el aviso de grupo vacío no dice «All 2 in flows»', async ({ page, context }) => {
   await sembrar(context, EN);
