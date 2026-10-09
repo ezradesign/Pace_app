@@ -5,13 +5,6 @@ function HydrateTracker({ open, onClose }) {
   const { t } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, (today / goal) * 100);
-  /* Los avisos de logro esperan a que se cierre Hidrátate: se apilaban encima
-     de «Un vaso menos / Un vaso más». */
-  React.useEffect(() => {
-    if (!open || typeof setCaminoUiActive !== 'function') return;
-    setCaminoUiActive(true);
-    return () => setCaminoUiActive(false);
-  }, [open]);
 
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('hydrate.tag')} title={t('hydrate.title')} subtitle={t('hydrate.subtitle')} maxWidth={580}>

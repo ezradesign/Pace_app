@@ -87,8 +87,8 @@ test('al acabar el bloque, «Tu pausa» con el plato y su glifo; «Seguir» arra
   const modal = page.locator('[data-pace-modal-backdrop]');
   await expect(modal).toContainText('Bloque 1 de 9 · hecho');
   await expect(modal).toContainText('Tu pausa');
-  await expect(modal).toContainText('9:45 · lo que el menú tenía para ahora');
-  await expect(modal.locator('[data-pace-break-ritmo]')).toContainText('A tu ritmo · antídoto a la silla');
+  await expect(modal).toContainText('9:45 · Lo que toca ahora.');
+  await expect(modal.locator('[data-pace-break-ritmo]')).toContainText('Antídoto a la silla');
   /* el glifo es una máscara CSS o un SVG según el arte que haya (s138): se mide que pinte algo */
   const glifo = modal.locator('[data-pace-break-glifo]');
   await expect(glifo, 'el plato lleva el glifo de su ejercicio').toHaveCount(1);
@@ -134,6 +134,27 @@ test('«Hacer la pausa» entra en el plato, y al terminarlo la parada queda hech
   await expect(vis(page, '[data-pace-ritmo-linea]').locator('[data-pace-ritmo-parada]').first()).toHaveAttribute('data-pace-ritmo-estado-parada', 'hecha');
 });
 
+/* La comida no tiene rutina que abrir: «Ir a comer» suma el vaso que la comida lleva y cierra
+   la pausa (Ez, 8 oct. 2026). Antes «Hacer la pausa» abría Hidrátate, lo mismo que su fila. */
+test('a la hora de comer, «Ir a comer» suma el vaso de la comida y cierra, sin abrir Hidrátate', async ({ page, context }) => {
+  /* el jueves 8 de octubre la comida va detrás del bloque 6, como en las fotos de Ez; sin
+     `lastActiveDay` el relevo de día pondría `cycle` a cero */
+  const JUEVES = Object.assign({}, JORNADA, { fecha: '2026-10-08' });
+  await abrir(page, context, { cycle: 5, lastActiveDay: 'Thu Oct 08 2026', ritmo: { dia: JUEVES } }, new Date('2026-10-08T13:20:00+02:00'));
+  await page.getByRole('button', { name: 'Empezar bloque 6', exact: true }).filter({ visible: true }).first().click();
+  await page.waitForTimeout(250);
+  await terminarBloque(page);
+  const modal = page.locator('[data-pace-modal-backdrop]');
+  await expect(modal).toContainText('Hora de comer');
+  await expect(modal).toContainText('Lejos de la pantalla');
+  await expect(modal.locator('[data-pace-break-agua]'), 'la comida ya lleva su vaso: sin fila de Hidrátate').toHaveCount(0);
+  const antes = await page.evaluate(() => getState().water.today);
+  await modal.getByRole('button', { name: 'Ir a comer', exact: true }).click();
+  await expect(modal, '«Ir a comer» no cierra la pausa').toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Un vaso menos' }), '«Ir a comer» abre Hidrátate').toHaveCount(0);
+  expect(await page.evaluate(() => getState().water.today), '«Ir a comer» no suma el vaso').toBe(antes + 1);
+});
+
 /* ------------------------------------------------------------------ recolocar al terminar */
 test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba tarde, la pausa se abre a la hora que es', async ({ page, context }) => {
   await abrir(page, context, { ritmo: { dia: JORNADA } });
@@ -161,7 +182,7 @@ test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba
   expect(d.pendiente).toBe(true);
   expect(d.primera, 'tras lo hecho, primero la pausa').toEqual(['foco', 'pausa', 'foco']);
   expect(d.siguiente, 'y el bloque 2 detrás de ella').toBe(573);
-  await expect(page.locator('[data-pace-modal-backdrop]')).toContainText('9:28 · lo que el menú tenía para ahora');
+  await expect(page.locator('[data-pace-modal-backdrop]')).toContainText('9:28 · Lo que toca ahora.');
   await expect(page.locator('[data-pace-sidebar]')).toContainText('Tu pausa · 9:28');
   /* y al empezar el bloque 2 a las 9:34, se recoloca otra vez (la pieza de s194) */
   await page.keyboard.press('Escape');

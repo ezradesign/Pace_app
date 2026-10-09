@@ -158,7 +158,7 @@ test('al terminar un bloque, la pausa propone el plato del menú y el aro avanza
     if (await page.locator('[data-pace-break-shortcut]').count()) break;
   }
   const prop = page.locator('[data-pace-break-prop]');
-  await expect(prop).toContainText('A tu ritmo · antídoto a la silla');
+  await expect(prop).toContainText('Antídoto a la silla');
   await expect(prop).toContainText(plato);
   await page.keyboard.press('Escape');
   await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Bloque 2 de 9');
