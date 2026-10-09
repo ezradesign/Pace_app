@@ -13,9 +13,11 @@ function toastHuecoDelAro() {
   try {
     const sub = document.querySelector('[data-pace-dial-subtitle]');
     if (!sub || !sub.getClientRects().length) return null;
-    const r = sub.getBoundingClientRect();
-    const caja = sub.parentElement.getBoundingClientRect();
-    /* El interior del aro escala en escritorio (el lienzo que crece): la letra se mide pintada. */
+    /* En px CSS, por el lienzo (app/main/_lienzo.js): con el zoom alejado la app crece entera. */
+    if (typeof window.paceCaja !== 'function') return null;
+    const r = window.paceCaja(sub);
+    const caja = window.paceCaja(sub.parentElement);
+    /* El interior del aro escala en escritorio: la letra se mide como se pinta. */
     const escala = sub.offsetHeight ? r.height / sub.offsetHeight : 1;
     const fs = parseFloat(getComputedStyle(sub).fontSize) * escala;
     return { x: r.left + r.width / 2, y: r.top + r.height / 2, ancho: Math.round(caja.width), fs: fs };

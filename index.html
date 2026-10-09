@@ -15838,8 +15838,10 @@ function toastHuecoDelAro() {
   try {
     const sub = document.querySelector('[data-pace-dial-subtitle]');
     if (!sub || !sub.getClientRects().length) return null;
-    const r = sub.getBoundingClientRect();
-    const caja = sub.parentElement.getBoundingClientRect();
+
+    if (typeof window.paceCaja !== 'function') return null;
+    const r = window.paceCaja(sub);
+    const caja = window.paceCaja(sub.parentElement);
 
     const escala = sub.offsetHeight ? r.height / sub.offsetHeight : 1;
     const fs = parseFloat(getComputedStyle(sub).fontSize) * escala;
