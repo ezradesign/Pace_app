@@ -1,0 +1,163 @@
+{
+  "1280x800-crema-activo": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "1280x800-crema-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "1280x800-oscuro-activo": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "1280x800-oscuro-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "1536x704-crema-activo": {
+    "escala": 0.911,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "1536x704-crema-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "1536x704-oscuro-activo": {
+    "escala": 0.911,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "1536x704-oscuro-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "1920x960-crema-activo": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "1920x960-crema-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "1920x960-oscuro-activo": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "1920x960-oscuro-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "cajon-crema-activo": {
+    "escala": 0.854,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "cajon-crema-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "cajon-oscuro-activo": {
+    "escala": 0.854,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 8 vasos"
+  },
+  "cajon-oscuro-vacio": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "en-1280x800": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min of focus · 7 breaks · 6 of 8 glasses"
+  },
+  "en-cajon": {
+    "escala": 0.854,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min of focus · 7 breaks · 6 of 8 glasses"
+  },
+  "libre-repetir": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "libre-ahora": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "libre-continua": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": null
+  },
+  "home-meta-6": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 6 vasos"
+  },
+  "home-meta-12": {
+    "escala": 1,
+    "scrollPagina": 0,
+    "scrollBarra": 0,
+    "pieBajoElBorde": 0,
+    "resumen": "6 h 10 min de foco · 7 pausas · 6 de 12 vasos"
+  }
+}
