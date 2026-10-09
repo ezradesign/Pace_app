@@ -219,9 +219,7 @@ function monthLabel(year, month, lang) {
 }
 
 function dayLabel(year, month, day, lang) {
-  return new Date(year, month, day).toLocaleDateString(
-    lang === 'en' ? 'en-GB' : 'es-ES', { weekday: 'short', day: 'numeric', month: 'short' }
-  );
+  return paceFechaCorta(new Date(year, month, day), lang, { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 function daysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
