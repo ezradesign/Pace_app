@@ -1,0 +1,317 @@
+<title>La pausa más elegante</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=EB+Garamond&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Una hoja de trabajo de PACE: columna de lectura estrecha y tiras de fotos que se abren a
+   lo ancho. La paleta y las letras son las de la app (crema y oscuro), porque lo que se
+   decide aquí es cómo se ve la app. */
+:root {
+  --papel: #F2EDE0;
+  --papel-2: #EAE4D4;
+  --tinta: #1F1C17;
+  --tinta-2: #4A453C;
+  --tinta-3: #756E5F;
+  --linea: #C9C0A8;
+  --oliva: #3E5A3A;
+  --oliva-suave: rgba(62, 90, 58, 0.10);
+  --serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --cifras: 'EB Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --texto: 68ch;
+  --ancho: 1240px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #1d1a14; --papel-2: #26211a; --tinta: #EDE5D3; --tinta-2: #c0b49e; --tinta-3: #B2A995;
+    --linea: #4d4536; --oliva: #98B58B; --oliva-suave: rgba(122, 154, 109, 0.14); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #1d1a14; --papel-2: #26211a; --tinta: #EDE5D3; --tinta-2: #c0b49e; --tinta-3: #B2A995;
+  --linea: #4d4536; --oliva: #98B58B; --oliva-suave: rgba(122, 154, 109, 0.14); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.6 var(--ui); padding-inline: 20px; padding-block: 40px 72px; }
+main { max-width: var(--ancho); margin: 0 auto; display: flex; flex-direction: column; gap: 64px; }
+section, header { display: flex; flex-direction: column; gap: 16px; }
+.col { max-width: var(--texto); }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; line-height: 1.1; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(40px, 6vw, 60px); }
+h2 { font-size: clamp(30px, 4vw, 38px); }
+h3 { font-size: 24px; }
+p, ul, ol { margin: 0; }
+.meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); font-weight: 500; }
+.lead { font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1.4; color: var(--tinta-2); }
+.nota { color: var(--tinta-3); font-size: 14px; }
+code { font: 13px/1.4 ui-monospace, 'Cascadia Mono', Consolas, monospace; background: var(--papel-2); padding: 1px 5px; border-radius: 4px; }
+ul.lista { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+ul.lista li::marker { color: var(--tinta-3); }
+
+/* La recomendación: lo único con caja en la cabecera. */
+.veredicto { border-left: 3px solid var(--oliva); background: var(--oliva-suave); border-radius: 0 12px 12px 0; padding: 18px 22px; display: flex; flex-direction: column; gap: 8px; max-width: var(--texto); }
+.veredicto b { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 26px; line-height: 1.2; }
+
+/* Hallazgos: texto a la izquierda, fotos de hoy a la derecha. */
+.hallazgos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 32px; align-items: start; }
+.fotos-hoy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.fotos-hoy figure:first-child { grid-column: 1 / -1; }
+
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--linea); background: var(--papel-2); cursor: zoom-in; }
+figcaption { font-size: 13px; color: var(--tinta-2); line-height: 1.4; }
+figcaption b { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 18px; color: var(--tinta); }
+figcaption .alto { font-family: var(--cifras); font-size: 15px; color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+
+/* Las opciones. */
+.opciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.opcion { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--linea); padding-top: 14px; }
+.opcion .meta { color: var(--tinta-3); }
+.opcion.rec .meta { color: var(--oliva); }
+
+/* El comparador. */
+.mandos { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: flex-end; }
+.mando { display: flex; flex-direction: column; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--linea); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg button { font: 500 13px/1 var(--ui); color: var(--tinta-2); background: transparent; border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); }
+.seg button:disabled { opacity: .35; cursor: not-allowed; }
+.seg button:focus-visible, .lb-cerrar:focus-visible { outline: 2px solid var(--oliva); outline-offset: 2px; }
+.rejilla { display: grid; gap: 20px 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.rejilla.escritorio { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rejilla figure.rec img { border-color: var(--oliva); box-shadow: 0 0 0 1px var(--oliva); }
+.etiqueta-rec { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--oliva); font-weight: 500; margin-left: 6px; }
+
+/* Tablas. */
+.tabla { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font: 400 14px/1.5 var(--ui); color: var(--tinta); }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-3); font-weight: 500; }
+td.n { font-family: var(--cifras); font-size: 17px; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+th.n { text-align: right; }
+td.hoy { color: var(--tinta-3); }
+td .serif { font-family: var(--serif); font-style: italic; font-size: 17px; }
+td del { color: var(--tinta-3); }
+#texto table { min-width: 680px; }
+
+/* Preguntas: van numeradas porque Ez contesta por número. */
+ol.preguntas { padding-left: 0; list-style: none; counter-reset: p; display: flex; flex-direction: column; gap: 18px; max-width: var(--texto); }
+ol.preguntas li { counter-increment: p; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 0 10px; }
+ol.preguntas li::before { content: counter(p); font-family: var(--cifras); font-size: 26px; line-height: 1; color: var(--oliva); }
+ol.preguntas b { font-weight: 500; }
+ol.preguntas .rec { display: block; color: var(--tinta-2); font-size: 15px; margin-top: 2px; }
+.respuesta { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--tinta-2); }
+
+/* La foto en grande. */
+.lb { position: fixed; inset: 0; background: rgba(20, 18, 14, .82); display: grid; place-items: center; padding: 24px; z-index: 10; cursor: zoom-out; }
+.lb img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+.lb-cerrar { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: 16px; font: 500 14px var(--ui); color: #F2EDE0; background: transparent; border: 1px solid rgba(242, 237, 224, .5); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+
+@media (max-width: 980px) {
+  .hallazgos { grid-template-columns: minmax(0, 1fr); }
+  .opciones { grid-template-columns: minmax(0, 1fr); }
+  .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  body { padding-inline: 16px; }
+  .rejilla.escritorio { grid-template-columns: minmax(0, 1fr); }
+  .fotos-hoy { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+</style>
+
+<main>
+  <header>
+    <div class="meta">PACE · 8 de octubre de 2026 · para Ez</div>
+    <h1>La pausa más elegante</h1>
+    <p class="lead col">Preguntaste si la ventana que sale al terminar un bloque de Foco podía ser más elegante, con mejor letra, porque desentona con el resto de la app. Aquí está cómo es hoy, tres maneras de arreglarla pintadas encima de la app real y lo que tienes que elegir.</p>
+    <div class="veredicto">
+      <span class="meta">Recomendación</span>
+      <b>La B, «Sin cajas».</b>
+      <p>El plato queda entre dos líneas finas, los botones pasan a ser píldoras en serif itálica con el color de su módulo, y Hidrátate y «Saltar esta pausa» comparten una línea al pie. Es la más tranquila y la que menos ocupa en el móvil.</p>
+    </div>
+  </header>
+
+  <section id="hoy">
+    <div class="meta">Hoy</div>
+    <h2>Lo que desentona</h2>
+    <div class="hallazgos">
+      <ul class="lista col">
+        <li><b>Los botones van en letra de interfaz y con esquinas.</b> En el resto de la app, las llamadas principales son píldoras en serif itálica: «Empezar foco», «Comienza» y el «Empezar» de cada rutina.</li>
+        <li><b>Todo va en terracota, el color de Respira</b>, aunque la rutina sea de Estira o de Mueve. Sin «A tu ritmo» se nota aún más: la propuesta de Estira sale en terracota y, justo debajo, la puerta de Estira lleva su gris azulado.</li>
+        <li><b>Hidrátate es otra tarjeta rellena</b>, de otro color y con otra forma, y compite con el plato por ser lo principal.</li>
+        <li><b>El subtítulo suena a máquina:</b> «9:45 · lo que el menú tenía para ahora».</li>
+        <li><b>«A tu ritmo ·» se repite</b> delante de cada motivo, cuando arriba ya pone «Bloque 1 de 9 · hecho».</li>
+        <li><b>A la hora de comer la tarjeta sale vacía</b>, solo con el motivo, y «Hacer la pausa» abre Hidrátate, igual que la tarjeta azul de debajo.</li>
+        <li><b>En el móvil los dos botones se parten</b> en dos filas de anchos distintos.</li>
+        <li><b>Sin «A tu ritmo», el subtítulo se corta</b> en «micro-» y «pausa» a 360 px.</li>
+        <li><b>La primera vez, el aviso «Nuevo sello» tapa el pie</b> de la ventana en el móvil, «Saltar esta pausa» incluido. Solo pasa con el primer Pomodoro.</li>
+        <li><b>La línea de atajos ya está decidida:</b> desaparece. Intro hace la pausa propuesta y Esc la salta; B, E, M y H siguen funcionando, pero no se enseñan en ningún sitio. Las tres opciones ya van así.</li>
+      </ul>
+      <div class="fotos-hoy">
+        <figure><img src="fotos/antes-corta-1920x1080-recorte.webp" data-grande="fotos/antes-corta-1920x1080.webp" alt="La pausa de hoy a 1920 px: botones en letra de interfaz y todo en terracota" loading="lazy"><figcaption>Pausa corta a 1920 × 1080, como en tu captura.</figcaption></figure>
+        <figure><img src="fotos/antes-libre-360x640.webp" alt="Sin A tu ritmo: la propuesta de Estira en terracota y la puerta de Estira en gris azulado" loading="lazy"><figcaption>Sin «A tu ritmo»: Estira en dos colores.</figcaption></figure>
+        <figure><img src="fotos/antes-comida-360x640.webp" alt="La pausa de la comida con la tarjeta vacía" loading="lazy"><figcaption>La comida: la tarjeta vacía.</figcaption></figure>
+        <figure><img src="fotos/hallazgo-sello-libre-360x640.webp" alt="El aviso Nuevo sello tapa el pie de la ventana" loading="lazy"><figcaption>El primer sello tapa el pie.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="opciones">
+    <div class="meta">Después</div>
+    <h2>Tres maneras de arreglarla</h2>
+    <p class="col">Las tres comparten lo que ya se sabe que falla: los botones pasan a ser píldoras en serif itálica, como «Empezar foco»; el botón principal lleva el color del módulo de la rutina (gris azulado en Estira, terracota en Respira, verde en la comida); la duración se escribe como en la biblioteca, con la cifra en la letra del reloj; el texto es el nuevo y no hay línea de atajos. Cambia cómo se viste el plato y dónde va Hidrátate.</p>
+    <div class="opciones">
+      <div class="opcion"><span class="meta">Opción A</span><h3>Como su tarjeta</h3><p>El plato es la tarjeta de su rutina en la biblioteca: papel tonal, un filo de 3 px en el color del módulo y el dibujo grande a la izquierda. Hidrátate pasa a ser una fila sin caja, bajo una línea fina.</p></div>
+      <div class="opcion rec"><span class="meta">Opción B · recomendada</span><h3>Sin cajas</h3><p>El plato queda entre dos líneas finas, sin caja ni relleno. El color vive en el dibujo, el motivo y el botón. Hidrátate y «Saltar esta pausa» comparten una línea al pie. Sin «A tu ritmo», las cuatro puertas pasan a papel, como los chips de la home.</p></div>
+      <div class="opcion"><span class="meta">Opción C</span><h3>En su color</h3><p>La ventana de hoy con el color corregido: la tarjeta del plato se rellena del color de su módulo, y Hidrátate es la misma tarjeta en pequeño, con el dibujo alineado al del plato.</p></div>
+    </div>
+
+    <div class="mandos" role="group" aria-label="Qué fotos ver">
+      <div class="mando"><span class="meta">Pausa</span><div class="seg" data-mando="caso">
+        <button type="button" data-v="corta" aria-pressed="true">Corta</button>
+        <button type="button" data-v="larga" aria-pressed="false">Larga</button>
+        <button type="button" data-v="comida" aria-pressed="false">Comida</button>
+        <button type="button" data-v="libre" aria-pressed="false">Sin «A tu ritmo»</button>
+      </div></div>
+      <div class="mando"><span class="meta">Pantalla</span><div class="seg" data-mando="tam">
+        <button type="button" data-v="360x640" aria-pressed="true">360 × 640</button>
+        <button type="button" data-v="360x718" aria-pressed="false">360 × 718</button>
+        <button type="button" data-v="1280x800" aria-pressed="false">1280 × 800</button>
+        <button type="button" data-v="1920x1080" aria-pressed="false">1920 × 1080</button>
+      </div></div>
+      <div class="mando"><span class="meta">Paleta</span><div class="seg" data-mando="paleta">
+        <button type="button" data-v="crema" aria-pressed="true">Crema</button>
+        <button type="button" data-v="oscuro" aria-pressed="false">Oscuro</button>
+      </div></div>
+      <div class="mando"><span class="meta">Idioma</span><div class="seg" data-mando="idioma">
+        <button type="button" data-v="es" aria-pressed="true">Español</button>
+        <button type="button" data-v="en" aria-pressed="false">Inglés</button>
+      </div></div>
+    </div>
+    <p class="nota" id="aviso-idioma" hidden>En inglés está la pausa corta en crema, en los cuatro tamaños.</p>
+    <div class="rejilla" id="rejilla"></div>
+    <p class="nota">Toca una foto para verla en grande. En escritorio se ve la ventana recortada; en grande, la pantalla entera.</p>
+  </section>
+
+  <section id="alto">
+    <div class="meta">La regla del alto</div>
+    <h2>Ninguna hace crecer la ventana</h2>
+    <p class="col">La propuesta no puede hacer crecer la ventana en un teléfono de 360 × 640 (lo vigila <code>tests/pausa-propone.spec.js</code>). Medido en la app real, en px: las tres miden lo mismo o menos que hoy en cada caso, en crema y en oscuro, y ninguna de las 144 fotos tiene que desplazarse por dentro.</p>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>A 360 × 640</th><th class="n">Hoy</th><th class="n">A</th><th class="n">B</th><th class="n">C</th></tr></thead>
+        <tbody>
+          <tr><td>Pausa corta</td><td class="n hoy">484</td><td class="n">467</td><td class="n">414</td><td class="n">475</td></tr>
+          <tr><td>Pausa larga</td><td class="n hoy">518</td><td class="n">502</td><td class="n">414</td><td class="n">496</td></tr>
+          <tr><td>Comida</td><td class="n hoy">431</td><td class="n">407</td><td class="n">414</td><td class="n">410</td></tr>
+          <tr><td>Sin «A tu ritmo»</td><td class="n hoy">601</td><td class="n">590</td><td class="n">594</td><td class="n">592</td></tr>
+          <tr><td>Pausa corta, en inglés</td><td class="n hoy">500</td><td class="n">467</td><td class="n">414</td><td class="n">475</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota col">En escritorio, sin «A tu ritmo», la B mide 18 px más que hoy (629 frente a 611 a 1280 × 800) porque las puertas llevan borde en vez de relleno. Cabe de sobra.</p>
+  </section>
+
+  <section id="texto">
+    <div class="meta">El texto nuevo</div>
+    <h2>Lo que dice</h2>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Dónde</th><th>Hoy</th><th>Propuesta</th><th>En inglés</th></tr></thead>
+        <tbody>
+          <tr><td>Bajo «Tu pausa»</td><td><del>9:45 · lo que el menú tenía para ahora.</del></td><td>9:45 · Lo que toca ahora.</td><td>9:45 · What comes next.</td></tr>
+          <tr><td>Motivo de la pausa corta</td><td><del>A tu ritmo · antídoto a la silla</del></td><td>Antídoto a la silla</td><td>Antidote to the chair</td></tr>
+          <tr><td>Los demás motivos</td><td><del>A tu ritmo · …</del></td><td>Cuerpo activo · Pausa larga: respira y suelta · Para cerrar la jornada · Bajar revoluciones</td><td>Active body · Long break: breathe and let go · To close the day · Slow down</td></tr>
+          <tr><td>La comida</td><td><del>A tu ritmo · hora de comer, lejos de la pantalla</del>, y la tarjeta vacía</td><td>Lejos de la pantalla · <span class="serif">Hora de comer</span> · 60 min con un vaso de agua · «Ir a comer»</td><td>Away from the screen · <span class="serif">Lunchtime</span> · 60 min with a glass of water · «Go and eat»</td></tr>
+          <tr><td>Sin «A tu ritmo»</td><td><del>Has cerrado un ciclo de foco. Elige tu micro-pausa.</del></td><td>Has cerrado un bloque. Elige tu pausa.</td><td>You've closed a block. Pick your break.</td></tr>
+          <tr><td>Hidrátate</td><td><del>Un vaso ahora</del></td><td>Hidrátate · un vaso ahora</td><td>Hydrate · a glass now</td></tr>
+          <tr><td>El pie</td><td><del>Atajo: Intro · H · Esc</del></td><td>Nada: solo «Saltar esta pausa»</td><td>Only «Skip this break»</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota col">«Hacer la pausa» y «Seguir con el bloque 2» no cambian. «Lo que toca ahora» sirve a cualquier hora sin pelearse con «la» y «las».</p>
+  </section>
+
+  <section id="elegir">
+    <div class="meta">Lo que tienes que elegir</div>
+    <h2>Cinco preguntas</h2>
+    <ol class="preguntas">
+      <li><div><b>¿A, B o C?</b><span class="rec">Recomiendo la B: es la más tranquila, deja el color donde dice algo (el dibujo, el motivo y el botón) y en el móvil mide entre 17 y 104 px menos que hoy.</span></div></li>
+      <li><div><b>La comida: ¿«Ir a comer» cierra la ventana y suma el vaso de agua que la comida ya lleva, en vez de abrir Hidrátate?</b><span class="rec">Recomiendo que sí. Hoy el botón principal y la tarjeta azul hacen lo mismo, y a la hora de comer nadie quiere abrir otra pantalla.</span></div></li>
+      <li><div><b>Sin «A tu ritmo», las cuatro puertas: ¿pasan a papel con el dibujo en su color, como en la B, o se quedan rellenas de color, como hoy?</b><span class="rec">Si eliges la B, que pasen a papel, como los chips de la home. Con la A o la C se quedan como hoy.</span></div></li>
+      <li><div><b>El texto de arriba: ¿te vale, o prefieres otra frase?</b><span class="rec">Sobre todo «9:45 · Lo que toca ahora.» y «Has cerrado un bloque. Elige tu pausa.».</span></div></li>
+      <li><div><b>El aviso «Nuevo sello» que tapa la ventana con el primer Pomodoro: ¿lo sacamos cuando se cierre la pausa?</b><span class="rec">Recomiendo que sí. Es un arreglo pequeño y aparte del estilo.</span></div></li>
+    </ol>
+    <p class="respuesta col">Puedes contestar así: «B · 2 sí · 3 papel · 4 vale · 5 sí».</p>
+  </section>
+
+  <section id="nota">
+    <div class="meta">Lo que no cambia y cómo se hizo</div>
+    <ul class="lista col">
+      <li>La pausa sigue proponiendo una sola cosa con su motivo, el plato lleva su dibujo y, aparte, solo Hidrátate.</li>
+      <li>Las fotos son de la app real (v0.150.0) en una jornada de prueba del jueves 8 de octubre desde las 9:00: la pausa corta tras el bloque 1, la larga tras el 3 y la comida tras el 6. Sin «A tu ritmo», un bloque de 45 minutos.</li>
+      <li>Las opciones se pintan encima de la ventana real con las letras, los colores y los dibujos de la app. No se ha tocado nada de la app: el guion de las fotos (<code>fotos.js</code>) y el de las opciones (<code>opciones.js</code>) están junto a esta página, en <code>docs/traspaso/archivos/pausa-8oct/</code>.</li>
+    </ul>
+  </section>
+</main>
+
+<div class="lb" id="lb" hidden><button type="button" class="lb-cerrar" id="lb-cerrar">Cerrar</button><img id="lb-img" alt=""></div>
+
+<script>
+(function () {
+  var estado = { caso: 'corta', tam: '360x640', paleta: 'crema', idioma: 'es' };
+  var NOMBRES = [['antes', 'Hoy'], ['A', 'A · Como su tarjeta'], ['B', 'B · Sin cajas'], ['C', 'C · En su color']];
+  var ALTOS = {"A-comida-1280x800":379,"A-comida-1280x800-oscuro":379,"A-comida-1920x1080":474,"A-comida-1920x1080-oscuro":474,"A-comida-360x640":407,"A-comida-360x640-oscuro":407,"A-comida-360x718":407,"A-comida-360x718-oscuro":407,"A-corta-1280x800":439,"A-corta-1280x800-en":439,"A-corta-1280x800-oscuro":439,"A-corta-1920x1080":549,"A-corta-1920x1080-en":549,"A-corta-1920x1080-oscuro":549,"A-corta-360x640":467,"A-corta-360x640-en":467,"A-corta-360x640-oscuro":467,"A-corta-360x718":467,"A-corta-360x718-en":467,"A-corta-360x718-oscuro":467,"A-larga-1280x800":439,"A-larga-1280x800-oscuro":439,"A-larga-1920x1080":549,"A-larga-1920x1080-oscuro":549,"A-larga-360x640":502,"A-larga-360x640-oscuro":502,"A-larga-360x718":502,"A-larga-360x718-oscuro":502,"A-libre-1280x800":614,"A-libre-1280x800-oscuro":614,"A-libre-1920x1080":767,"A-libre-1920x1080-oscuro":767,"A-libre-360x640":590,"A-libre-360x640-oscuro":590,"A-libre-360x718":590,"A-libre-360x718-oscuro":590,"B-comida-1280x800":397,"B-comida-1280x800-oscuro":397,"B-comida-1920x1080":496,"B-comida-1920x1080-oscuro":496,"B-comida-360x640":414,"B-comida-360x640-oscuro":414,"B-comida-360x718":414,"B-comida-360x718-oscuro":414,"B-corta-1280x800":397,"B-corta-1280x800-en":397,"B-corta-1280x800-oscuro":397,"B-corta-1920x1080":496,"B-corta-1920x1080-en":496,"B-corta-1920x1080-oscuro":496,"B-corta-360x640":414,"B-corta-360x640-en":414,"B-corta-360x640-oscuro":414,"B-corta-360x718":414,"B-corta-360x718-en":414,"B-corta-360x718-oscuro":414,"B-larga-1280x800":397,"B-larga-1280x800-oscuro":397,"B-larga-1920x1080":496,"B-larga-1920x1080-oscuro":496,"B-larga-360x640":414,"B-larga-360x640-oscuro":414,"B-larga-360x718":414,"B-larga-360x718-oscuro":414,"B-libre-1280x800":629,"B-libre-1280x800-oscuro":629,"B-libre-1920x1080":785,"B-libre-1920x1080-oscuro":785,"B-libre-360x640":594,"B-libre-360x640-oscuro":594,"B-libre-360x718":594,"B-libre-360x718-oscuro":594,"C-comida-1280x800":382,"C-comida-1280x800-oscuro":382,"C-comida-1920x1080":478,"C-comida-1920x1080-oscuro":478,"C-comida-360x640":410,"C-comida-360x640-oscuro":410,"C-comida-360x718":410,"C-comida-360x718-oscuro":410,"C-corta-1280x800":447,"C-corta-1280x800-en":447,"C-corta-1280x800-oscuro":447,"C-corta-1920x1080":559,"C-corta-1920x1080-en":559,"C-corta-1920x1080-oscuro":559,"C-corta-360x640":475,"C-corta-360x640-en":475,"C-corta-360x640-oscuro":475,"C-corta-360x718":475,"C-corta-360x718-en":475,"C-corta-360x718-oscuro":475,"C-larga-1280x800":447,"C-larga-1280x800-oscuro":447,"C-larga-1920x1080":559,"C-larga-1920x1080-oscuro":559,"C-larga-360x640":496,"C-larga-360x640-oscuro":496,"C-larga-360x718":496,"C-larga-360x718-oscuro":496,"C-libre-1280x800":616,"C-libre-1280x800-oscuro":616,"C-libre-1920x1080":769,"C-libre-1920x1080-oscuro":769,"C-libre-360x640":592,"C-libre-360x640-oscuro":592,"C-libre-360x718":592,"C-libre-360x718-oscuro":592,"antes-comida-1280x800":408,"antes-comida-1280x800-oscuro":408,"antes-comida-1920x1080":508,"antes-comida-1920x1080-oscuro":508,"antes-comida-360x640":431,"antes-comida-360x640-oscuro":431,"antes-comida-360x718":431,"antes-comida-360x718-oscuro":431,"antes-corta-1280x800":460,"antes-corta-1280x800-en":460,"antes-corta-1280x800-oscuro":460,"antes-corta-1920x1080":573,"antes-corta-1920x1080-en":573,"antes-corta-1920x1080-oscuro":573,"antes-corta-360x640":484,"antes-corta-360x640-en":500,"antes-corta-360x640-oscuro":484,"antes-corta-360x718":484,"antes-corta-360x718-en":500,"antes-corta-360x718-oscuro":484,"antes-larga-1280x800":460,"antes-larga-1280x800-oscuro":460,"antes-larga-1920x1080":573,"antes-larga-1920x1080-oscuro":573,"antes-larga-360x640":518,"antes-larga-360x640-oscuro":518,"antes-larga-360x718":518,"antes-larga-360x718-oscuro":518,"antes-libre-1280x800":611,"antes-libre-1280x800-oscuro":611,"antes-libre-1920x1080":763,"antes-libre-1920x1080-oscuro":763,"antes-libre-360x640":601,"antes-libre-360x640-oscuro":601,"antes-libre-360x718":601,"antes-libre-360x718-oscuro":601};
+  var rejilla = document.getElementById('rejilla');
+
+  function nombre(op) {
+    return op + '-' + estado.caso + '-' + estado.tam + (estado.idioma === 'en' ? '-en' : '') + (estado.paleta === 'oscuro' ? '-oscuro' : '');
+  }
+  function pintar() {
+    var escritorio = estado.tam.indexOf('360') !== 0;
+    rejilla.className = 'rejilla' + (escritorio ? ' escritorio' : '');
+    rejilla.innerHTML = NOMBRES.map(function (n) {
+      var base = nombre(n[0]);
+      var src = 'fotos/' + base + (escritorio ? '-recorte' : '') + '.webp';
+      var alto = ALTOS[base];
+      return '<figure class="' + (n[0] === 'B' ? 'rec' : '') + '"><img src="' + src + '" data-grande="fotos/' + base + '.webp" alt="' + n[1] + '" loading="lazy">' +
+        '<figcaption><b>' + n[1] + '</b>' + (n[0] === 'B' ? '<span class="etiqueta-rec">Recomendada</span>' : '') +
+        (alto ? '<br>Alto de la ventana: <span class="alto">' + alto + ' px</span>' : '') + '</figcaption></figure>';
+    }).join('');
+  }
+  function marcar() {
+    document.querySelectorAll('.seg').forEach(function (seg) {
+      var k = seg.getAttribute('data-mando');
+      seg.querySelectorAll('button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === estado[k]));
+        /* En inglés solo hay pausa corta en crema. */
+        var fijo = estado.idioma === 'en' && ((k === 'caso' && b.getAttribute('data-v') !== 'corta') || (k === 'paleta' && b.getAttribute('data-v') !== 'crema'));
+        b.disabled = fijo;
+      });
+    });
+    document.getElementById('aviso-idioma').hidden = estado.idioma !== 'en';
+  }
+  document.querySelectorAll('.seg').forEach(function (seg) {
+    seg.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b || b.disabled) return;
+      estado[seg.getAttribute('data-mando')] = b.getAttribute('data-v');
+      if (estado.idioma === 'en') { estado.caso = 'corta'; estado.paleta = 'crema'; }
+      marcar(); pintar();
+    });
+  });
+
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lb-img');
+  document.addEventListener('click', function (e) {
+    var img = e.target.closest('figure img');
+    if (img) { lbImg.src = img.getAttribute('data-grande') || img.src; lbImg.alt = img.alt; lb.hidden = false; document.getElementById('lb-cerrar').focus(); return; }
+    if (!lb.hidden && (e.target === lb || e.target === lbImg || e.target.id === 'lb-cerrar')) { lb.hidden = true; lbImg.removeAttribute('src'); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) { lb.hidden = true; lbImg.removeAttribute('src'); } });
+
+  marcar(); pintar();
+})();
+</script>

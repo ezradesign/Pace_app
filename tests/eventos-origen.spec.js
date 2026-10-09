@@ -102,9 +102,10 @@ test('el aro con plan es «aro» servido por el menú, y la propuesta de la paus
   expect(foco.payload.origin, 'el bloque se empezó en el aro').toBe('aro');
   expect(foco.payload.fromMenu, 'con plan, el bloque es del menú').toBe(true);
 
-  /* La pausa propone el plato del menú («A tu ritmo · antídoto a la silla»). */
+  /* La pausa propone el plato del menú («Antídoto a la silla»). */
   const prop = page.locator('[data-pace-break-prop]');
-  await expect(prop).toContainText('A tu ritmo');
+  await expect(prop).toContainText('Antídoto a la silla');
+  await expect(prop, 'la propuesta no es la del menú').toHaveAttribute('data-pace-break-ritmo', '');
   /* s195: con menú, el modal es «Tu pausa» y el botón del plato es «Hacer la pausa» */
   await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await empezarDesdePreview(page);
@@ -131,7 +132,7 @@ test('tocar la parada abierta es «parada», siempre del menú; la tarjeta de la
      pausa» · «Ahora, …»): su fila es otra puerta. */
   await volverAlInicio(page);
   const lateral = page.locator('[data-pace-sidebar]');
-  await expect(lateral).toContainText(/Tu pausas*Ahora, /);
+  await expect(lateral).toContainText(/Tu pausa\s*Ahora, /);
   const plato = await page.evaluate(() => ritmoPlan(getState()).pausa.platos[0].name);
   await lateral.getByRole('button', { name: plato }).click();
   await empezarDesdePreview(page);
