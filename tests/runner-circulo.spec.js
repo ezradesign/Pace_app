@@ -51,7 +51,10 @@ async function medirCirculo(page) {
 
 async function abrirBiblioteca(page, rutina) {
   await page.getByRole('button', { name: /^Estira/ }).click();
-  await page.getByRole('heading', { name: rutina, exact: true }).click();
+  /* El título se busca DENTRO de la biblioteca: «Para ahora», en la barra
+     lateral, propone una rutina según el día y la hora, y el 9 oct. proponía
+     «Escritorio express»; buscado en toda la página salía dos veces. */
+  await overlaySuperior(page).getByRole('heading', { name: rutina, exact: true }).click();
   const preview = overlaySuperior(page);
   await expect(preview.getByText('LOS PASOS')).toBeVisible();
   return preview;
