@@ -64,25 +64,80 @@ async function medirEnPagina(cfg) {
     const r2 = (x) => Math.round(x * 100) / 100;
     return { ciclo: r2(rms(b.getChannelData(0), a)), banda: r2(rms(b.getChannelData(1), a)), agudos: r2(rms(b.getChannelData(2), a)), pico: r2(pico(b.getChannelData(0), a)) };
   }
+  /* El ajuste de una receta: su volumen medio igual al de hoy, sin pasar de 1,5 dB por encima de hoy
+     con el pulmón lleno. Lo mismo para la receta `a` y para la marcada `m`. */
+  async function medirReceta(tec, receta, q, hC, hA) {
+    const r0 = Object.assign({}, receta, { ajusteDb: 0 });
+    const rC = await render(tec, r0, q), rA = await render(tec, r0, true);
+    let aj = hC.ciclo - rC.ciclo;
+    if (rA.ciclo + aj > hA.ciclo + 1.5) aj = hA.ciclo + 1.5 - rA.ciclo;
+    aj = Math.round(aj * 100) / 100;
+    const r1 = Object.assign({}, receta, { ajusteDb: aj });
+    const rC1 = await render(tec, r1, q), rA1 = await render(tec, r1, true);
+    return { aj, med: { ciclo: rC1.ciclo, abierto: rA1.ciclo, banda: rC1.banda, agudos: rC1.agudos, pico: rA1.pico } };
+  }
+
+  /* LO DISTINTA QUE ES: el color de cada técnica abierta y quieta (24 s), en tercios de octava de
+     50 Hz a 8 kHz con el volumen igualado, y la distancia en dB (raíz cuadrática media de las
+     diferencias) a la técnica más parecida. Entre el drone claro y el cálido hay 8,3. */
+  const N = 8192;
+  function fft(re, im) {
+    const n = re.length;
+    for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+    for (let len = 2; len <= n; len <<= 1) {
+      const ang = -2 * Math.PI / len;
+      for (let i = 0; i < n; i += len) for (let k = 0; k < len / 2; k++) {
+        const c = Math.cos(ang * k), s = Math.sin(ang * k), h = i + k + len / 2;
+        const vr = re[h] * c - im[h] * s, vi = re[h] * s + im[h] * c;
+        re[h] = re[i + k] - vr; im[h] = im[i + k] - vi; re[i + k] += vr; im[i + k] += vi;
+      }
+    }
+  }
+  const tercios = []; for (let f = 50; f < 8000; f *= Math.pow(2, 1 / 3)) tercios.push(f);
+  async function color(receta) {
+    const ctx = new OfflineAudioContext(1, sr * 24, sr);
+    M.montar(ctx, Object.assign({}, receta, { ajusteDb: 0 }), bufs, ctx.destination, 0, true);
+    const d = (await ctx.startRendering()).getChannelData(0);
+    const pot = new Float64Array(N / 2);
+    for (let a = sr * 4; a + N < d.length; a += N) {
+      const re = new Float64Array(N), im = new Float64Array(N);
+      for (let i = 0; i < N; i++) re[i] = d[a + i] * (0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1)));
+      fft(re, im);
+      for (let k = 0; k < N / 2; k++) pot[k] += re[k] * re[k] + im[k] * im[k];
+    }
+    const e = (lo, hi) => { let s = 0; for (let k = Math.ceil(lo * N / sr); k <= Math.min(N / 2 - 1, Math.floor(hi * N / sr)); k++) s += pot[k]; return s; };
+    const tot = e(20, 11000);
+    return tercios.map((f) => Math.max(10 * Math.log10(e(f / Math.pow(2, 1 / 6), f * Math.pow(2, 1 / 6)) / tot + 1e-20), -60));
+  }
+  const distancia = (a, b) => Math.sqrt(a.reduce((s, x, i) => s + (x - b[i]) ** 2, 0) / a.length);
+  function vecinas(colores) {
+    const out = {};
+    Object.keys(colores).forEach((id) => {
+      let mejor = null;
+      Object.keys(colores).forEach((j) => { if (j === id) return; const dd = distancia(colores[id], colores[j]); if (!mejor || dd < mejor.d) mejor = { id: j, d: dd }; });
+      out[id] = { vecina: mejor.id, d: Math.round(mejor.d * 10) / 10 };
+    });
+    return out;
+  }
+
   const res = {};
+  const colA = {}, colM = {};
   for (const fa of D.FAMILIAS) for (const tec of fa.tecnicas) {
     if (tec.drone432) { res[tec.id] = { hoy: await render(tec, null, false, true) }; continue; }
     const q = !!tec.quieto;
     const hoy = M.recetaHoy(fa);
     const hC = await render(tec, hoy, q), hA = await render(tec, hoy, true);
-    const a0 = Object.assign({}, tec.a, { ajusteDb: 0 });
-    const aC = await render(tec, a0, q), aA = await render(tec, a0, true);
-    let aj = hC.ciclo - aC.ciclo;
-    if (aA.ciclo + aj > hA.ciclo + 1.5) aj = hA.ciclo + 1.5 - aA.ciclo;
-    aj = Math.round(aj * 100) / 100;
-    const a1 = Object.assign({}, tec.a, { ajusteDb: aj });
-    const aC1 = await render(tec, a1, q), aA1 = await render(tec, a1, true);
-    res[tec.id] = {
-      ajusteDb: aj,
-      hoy: { ciclo: hC.ciclo, abierto: hA.ciclo, banda: hC.banda, agudos: hC.agudos },
-      a: { ciclo: aC1.ciclo, abierto: aA1.ciclo, banda: aC1.banda, agudos: aC1.agudos, pico: aA1.pico },
-    };
+    const a = await medirReceta(tec, tec.a, q, hC, hA);
+    res[tec.id] = { ajusteDb: a.aj, hoy: { ciclo: hC.ciclo, abierto: hA.ciclo, banda: hC.banda, agudos: hC.agudos }, a: a.med };
+    colA[tec.id] = await color(tec.a);
+    if (tec.m) {
+      const m = await medirReceta(tec, tec.m, q, hC, hA);
+      res[tec.id].m = Object.assign({ ajusteDb: m.aj }, m.med);
+      colM[tec.id] = await color(tec.m);
+    }
   }
+  const vA = vecinas(colA), vM = Object.keys(colM).length > 1 ? vecinas(colM) : {};
+  Object.keys(vA).forEach((id) => { res[id].distinta = { a: vA[id] }; if (vM[id]) res[id].distinta.m = vM[id]; });
   return res;
 }
 
@@ -104,20 +159,38 @@ function comprobar(med, D) {
   const avisos = [];
   const filas = [];
   const tope = topeAgudos(med);
+  const nombre = {};
+  D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => { nombre[t.id] = t.n; }));
+  const revisa = (t, m, r, cual) => {
+    const dv = r.ciclo - m.hoy.ciclo, dt = r.agudos - tope, db = r.banda - m.hoy.banda, dA = r.abierto - m.hoy.abierto;
+    const aj = cual === 'a' ? m.ajusteDb : r.ajusteDb;
+    filas.push([t.n + (cual === 'm' ? ' (marcada)' : ''), m.hoy.ciclo, r.ciclo, r.abierto, 'agudos/tope ' + dt.toFixed(1), 'banda ' + db.toFixed(1), 'ajuste ' + aj]);
+    const n = t.n + (cual === 'm' ? ' (marcada)' : '');
+    if (Math.abs(dv) > 0.5) avisos.push(n + ': volumen medio ' + dv.toFixed(2) + ' dB respecto a hoy');
+    if (dA > 1.55) avisos.push(n + ': con el pulmón lleno ' + dA.toFixed(2) + ' dB por encima de hoy');
+    if (dt > 0) avisos.push(n + ': ' + dt.toFixed(2) + ' dB más de agudos que el drone más claro de hoy');
+    if (db < -3) avisos.push(n + ': ' + db.toFixed(2) + ' dB menos en la banda del móvil');
+    if (r.pico > -1) avisos.push(n + ': pico ' + r.pico + ' dBFS');
+  };
   D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => {
     const m = med[t.id];
     if (t.drone432) { filas.push([t.n, m.hoy.ciclo, '', '', '', 'banda ' + m.hoy.banda]); return; }
-    const dv = m.a.ciclo - m.hoy.ciclo, dt = m.a.agudos - tope, db = m.a.banda - m.hoy.banda, dA = m.a.abierto - m.hoy.abierto;
-    filas.push([t.n, m.hoy.ciclo, m.a.ciclo, m.a.abierto, 'agudos/tope ' + dt.toFixed(1), 'banda ' + db.toFixed(1), 'ajuste ' + m.ajusteDb]);
-    if (Math.abs(dv) > 0.5) avisos.push(t.n + ': volumen medio ' + dv.toFixed(2) + ' dB respecto a hoy');
-    if (dA > 1.55) avisos.push(t.n + ': con el pulmón lleno ' + dA.toFixed(2) + ' dB por encima de hoy');
-    if (dt > 0) avisos.push(t.n + ': ' + dt.toFixed(2) + ' dB más de agudos que el drone más claro de hoy');
-    if (db < -3) avisos.push(t.n + ': ' + db.toFixed(2) + ' dB menos en la banda del móvil');
-    if (m.a.pico > -1) avisos.push(t.n + ': pico ' + m.a.pico + ' dBFS');
+    revisa(t, m, m.a, 'a');
+    if (m.m) revisa(t, m, m.m, 'm');
   }));
   filas.forEach((f) => console.log(f.map((x) => String(x).padEnd(12)).join(' ')));
+
+  /* Las marcadas existen para que ninguna se confunda con otra: menos de 6 puntos de su vecina
+     es un aviso (con `a` había nueve por debajo de 4). */
+  console.log('\nLo distinta que es cada una (distancia de color a la más parecida; claro↔cálido = 8,3):');
+  D.FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => {
+    const d = med[t.id].distinta; if (!d) return;
+    const txt = (x) => (x ? (x.d.toFixed(1) + ' (' + nombre[x.vecina] + ')').padEnd(34) : '');
+    console.log(' ' + t.n.padEnd(24) + ' ahora ' + txt(d.a) + (d.m ? ' marcada ' + txt(d.m) : ''));
+    if (d.m && d.m.d < 6) avisos.push(t.n + ' (marcada): a ' + d.m.d + ' de ' + nombre[d.m.vecina] + ', menos de 6');
+  }));
   if (avisos.length) { console.log('\nAVISOS:'); avisos.forEach((a) => console.log(' - ' + a)); }
-  else console.log('\nSin avisos: volumen medio igual que hoy, ninguna con más agudos que el drone más claro de hoy y ninguna pierde más de 3 dB en la banda del móvil.');
+  else console.log('\nSin avisos: volumen medio igual que hoy, ninguna con más agudos que el drone más claro de hoy, ninguna pierde más de 3 dB en la banda del móvil y ninguna marcada a menos de 6 de su vecina.');
   return avisos;
 }
 

@@ -158,6 +158,97 @@
     ] },
   ];
 
+  /* LAS MARCADAS (9 oct. 2026). Ez, al escuchar `a` en la página: «¿no te da la sensación que todos
+     suenan igual?». Medido, sí: nueve técnicas tenían una casi gemela a menos de 4 puntos de
+     distancia de color (espectro por tercios de octava con el volumen igualado; entre el drone claro
+     y el cálido hay 8,3). Las 19 salían de los mismos tres drones con cambios muy suaves: segunda voz
+     de -10 a -17 dB, movimientos de 20 a 90 s y casi todas en Sol. Ez eligió marcar más las
+     variaciones sin grabar nada, así que la receta `m` usa los mismos campos que `a` y el mismo motor:
+     cada técnica se separa por la nota (de una octava abajo a una quinta arriba), por un acorde que se
+     oye (segunda voz de -1 a -8 dB), por un color como de vocal (picos a 300-1400 Hz) o por un
+     movimiento que se nota en medio minuto. `construir.js` mide que ninguna quede a menos de 6 puntos
+     de su vecina, además del volumen, los agudos y la banda del móvil de siempre.
+     `qm` dice qué cambia respecto a `a`, y `cm` es la ficha de la marcada. */
+  const MARCADAS = {
+    'breathe.rounds.express': {
+      qm: 'La quinta se oye de verdad y la luz va y viene cada 10 segundos, no cada 30.',
+      cm: { nota: 'Sol', voz2: 'La quinta (Re), bien presente', color: 'Claro, con menos filo', mov: 'La luz crece y mengua cada 10 s' },
+      m: { base: 'claro', voz2: { base: 'claro', ratio: 3 / 2, db: -6, lp: 2600, of: 37 }, tinte: [{ t: 'highshelf', hz: 2500, db: -8 }], mov: { tipo: 'brillo', periodo: 10, de: 1800, a: 4200 } } },
+    'breathe.rounds.full': {
+      qm: 'Baja a Re, el Sol de arriba forma un acorde abierto y entra y sale cada 14 segundos.',
+      cm: { nota: 'Re, más grave', voz2: 'Sol encima, bien presente', color: 'Más cuerpo en el medio', mov: 'La voz de arriba entra y sale cada 14 s' },
+      m: { base: 'claro', ratio: 3 / 4, voz2: { base: 'claro', ratio: 1, db: -5, lp: 2400, of: 53 }, tinte: [{ t: 'peaking', hz: 1400, q: 1.2, db: 5 }, { t: 'highshelf', hz: 2500, db: -6 }], mov: { tipo: 'voz', periodo: 14 } } },
+    'breathe.rounds.long': {
+      qm: 'Baja a Do, pierde casi todo el brillo y el cruce entre los dos drones se oye cada 18 segundos.',
+      cm: { nota: 'Do, más grave', voz2: 'El drone cálido, al mismo nivel', color: 'Mucho menos agudo', mov: 'Claro y cálido se cruzan cada 18 s' },
+      m: { base: 'claro', ratio: 2 / 3, voz2: { base: 'calido', ratio: 2 / 3, db: -1, of: 11 }, tinte: [{ t: 'lowpass', hz: 1800, q: 0.6 }], mov: { tipo: 'cruce', periodo: 18 } } },
+    'breathe.box.4': {
+      qm: 'La quinta suena a la mitad de volumen y no a una quinta parte: un acorde lleno y quieto.',
+      cm: { nota: 'Sol', voz2: 'La quinta del cálido, bien presente', color: 'Cálido y lleno', mov: 'Solo la respiración' },
+      m: { base: 'calido', voz2: { base: 'calido', ratio: 3 / 2, db: -5, lp: 3000, of: 29 }, filtro: { c: 500, a: 6000, q: 0.5 } } },
+    'breathe.box.6': {
+      qm: 'Un Do grave con otro una octava por debajo y un color redondo, como de «o».',
+      cm: { nota: 'Do, más grave', voz2: 'Do una octava más abajo', color: 'Redondo, como una «o»', mov: 'Solo la respiración, más honda' },
+      m: { base: 'calido', ratio: 2 / 3, voz2: { base: 'calido', ratio: 1 / 3, db: -4, lp: 600, of: 41 }, tinte: [{ t: 'peaking', hz: 450, q: 1.4, db: 5 }], filtro: { c: 320, a: 4500, q: 0.5 }, prof: 4 } },
+    'breathe.diaphragm': {
+      qm: 'Una sola voz con un color hueco, como de «u», que se llena desde abajo.',
+      cm: { nota: 'Sol', voz2: 'Ninguna', color: 'Hueco y grave, como una «u»', mov: 'Solo la respiración, más honda' },
+      m: { base: 'calido', tinte: [{ t: 'peaking', hz: 320, q: 1.2, db: 6 }, { t: 'lowshelf', hz: 160, db: 3 }], filtro: { c: 360, a: 3800, q: 0.5 }, prof: 4 } },
+    'breathe.co2': {
+      qm: 'Baja a Re con una octava grave debajo, que abriga durante el sostén en vacío.',
+      cm: { nota: 'Re, más grave', voz2: 'Re una octava más abajo, presente', color: 'Más oscuro al cerrar', mov: 'Solo la respiración, más corta' },
+      m: { base: 'calido', ratio: 3 / 4, voz2: { base: 'calido', ratio: 3 / 8, db: -3, lp: 400, of: 19 }, filtro: { c: 300, a: 4000, q: 0.5 }, prof: 2.5 } },
+    'breathe.coherent.55': {
+      qm: 'Sube a Do, con el Sol por debajo entrando y saliendo cada 20 segundos, que son dos respiraciones.',
+      cm: { nota: 'Do, más agudo', voz2: 'Sol por debajo', color: 'Claro, con menos filo', mov: 'La voz de abajo entra y sale cada 20 s' },
+      m: { base: 'claro', ratio: 4 / 3, voz2: { base: 'claro', ratio: 1, db: -6, lp: 2200, of: 23 }, tinte: [{ t: 'highshelf', hz: 2000, db: -9 }], mov: { tipo: 'voz', periodo: 20 } } },
+    'breathe.coherent.66': {
+      qm: 'Baja una octava entera y respira con mucho recorrido: una marea grave.',
+      cm: { nota: 'Sol, una octava más grave', voz2: 'Sol una octava arriba, suave', color: 'Más oscuro al cerrar', mov: 'Solo la respiración, muy honda' },
+      m: { base: 'claro', ratio: 1 / 2, voz2: { base: 'claro', ratio: 1, db: -6, lp: 1800, of: 37 }, filtro: { c: 300, a: 5000, q: 0.5 }, prof: 4.5 } },
+    'breathe.478': {
+      qm: 'La octava grave se oye el doble y el filtro cierra aún más: casi a oscuras en el sostén.',
+      cm: { nota: 'Mi menor, más grave', voz2: 'Una octava grave, presente', color: 'Mucho más oscuro al cerrar', mov: 'Solo la respiración, más honda' },
+      m: { base: 'menor', ratio: 5 / 6, voz2: { base: 'menor', ratio: 5 / 12, db: -5, lp: 320, of: 31 }, filtro: { c: 200, a: 1500, q: 0.5 }, prof: 4 } },
+    'breathe.physiological': {
+      qm: 'Sube a Do, más ligera que las de noche, y respira con mucho recorrido: los dos peldaños se oyen.',
+      cm: { nota: 'Do, más agudo', voz2: 'Sol una octava arriba, suave', color: 'Oscuro pero ligero', mov: 'Dos peldaños bien marcados' },
+      m: { base: 'menor', ratio: 4 / 3, voz2: { base: 'menor', ratio: 2, db: -8, lp: 1500, of: 17 }, filtro: { c: 260, a: 3200, q: 0.5 }, prof: 5 } },
+    'breathe.exhale.46': {
+      qm: 'La octava grave suena fuerte al inhalar y se apaga en cada exhalación: el freno se oye.',
+      cm: { nota: 'Sol', voz2: 'Una octava grave, presente', color: 'Más oscuro al cerrar', mov: 'La octava grave se apaga al exhalar' },
+      m: { base: 'menor', voz2: { base: 'menor', ratio: 1 / 2, db: -3, lp: 400, of: 43, prof: 10 }, filtro: { c: 220, a: 2000, q: 0.5 } } },
+    'breathe.yin': {
+      qm: 'Las dos voces casi iguales suenan igual de fuertes y se separan más: un vaivén lento que se oye.',
+      cm: { nota: 'Sol', voz2: 'Una copia casi igual, presente', color: 'Más oscuro al cerrar', mov: 'Un vaivén lento que se oye, cada 40 s' },
+      m: { base: 'menor', voz2: { base: 'menor', ratio: 1.0012, db: -2, of: 61 }, mov: { tipo: 'deriva', periodo: 40, cents: 7 }, filtro: { c: 300, a: 2200, q: 0.5 }, prof: 2 } },
+    'breathe.ujjayi': {
+      qm: 'El filtro resuena mucho más, así que cada respiración se oye como una ola que sube y baja.',
+      cm: { nota: 'Sol', voz2: 'El drone cálido, una octava abajo', color: 'Una ola que suena', mov: 'La ola sube al inhalar y baja al exhalar' },
+      m: { base: 'claro', voz2: { base: 'calido', ratio: 1 / 2, db: -8, lp: 400, of: 47 }, filtro: { c: 300, a: 1600, q: 5 } } },
+    'breathe.bhramari': {
+      qm: 'Baja una octava y suena como un «mmm» grave, para zumbar encima.',
+      cm: { nota: 'Sol, una octava más grave', voz2: 'Ninguna', color: 'Un «mmm» grave', mov: 'Solo la respiración' },
+      m: { base: 'claro', ratio: 1 / 2, tinte: [{ t: 'peaking', hz: 300, q: 2, db: 6 }, { t: 'lowpass', hz: 1100, q: 0.7 }], filtro: { c: 240, a: 1100, q: 0.5 } } },
+    'breathe.bellows': {
+      qm: 'Sube a Do, más cálida y luminosa, y brilla y se apaga cada 8 segundos.',
+      cm: { nota: 'Do, más agudo', voz2: 'El Sol del drone claro', color: 'Cálido', mov: 'Brilla y se apaga cada 8 s, como una brasa' },
+      m: { base: 'calido', ratio: 4 / 3, voz2: { base: 'claro', ratio: 1, db: -6, lp: 2400, of: 13 }, tinte: [{ t: 'highshelf', hz: 2500, db: -4 }], mov: { tipo: 'brillo', periodo: 8, de: 1500, a: 3800 } } },
+    'breathe.nadi.shodhana': {
+      qm: 'Sube a La, con su octava grave, y con cascos se va casi entera al lado por el que respiras.',
+      cm: { nota: 'La', voz2: 'La una octava más abajo', color: 'Como hoy', mov: 'Se va mucho más al lado por el que respiras (con cascos)' },
+      m: { base: 'claro', ratio: 9 / 8, voz2: { base: 'claro', ratio: 9 / 16, db: -4, lp: 600, of: 27 }, tinte: [{ t: 'highshelf', hz: 2200, db: -4 }], filtro: { c: 500, a: 6000, q: 0.5 }, pan: 0.85 } },
+    'breathe.kapalabhati': {
+      qm: 'Sube a Re: la más aguda de todas, limpia y quieta.',
+      cm: { nota: 'Re, más agudo', voz2: 'Ninguna', color: 'Claro y limpio', mov: 'Quieta' },
+      m: { base: 'claro', ratio: 3 / 2, tinte: [{ t: 'highshelf', hz: 1800, db: -10 }, { t: 'lowpass', hz: 2600, q: 0.7 }], filtro: { c: 650, a: 2000, q: 0.5 } } },
+    'breathe.kumbhaka': {
+      qm: 'Baja una octava con la quinta encima: amplia y solemne para el sostén largo.',
+      cm: { nota: 'Sol, una octava más grave', voz2: 'Re, la quinta, presente', color: 'Redondo y solemne', mov: 'Solo la respiración, más honda' },
+      m: { base: 'calido', ratio: 1 / 2, voz2: { base: 'calido', ratio: 3 / 4, db: -4, lp: 1500, of: 39 }, tinte: [{ t: 'peaking', hz: 400, q: 1.5, db: 5 }], filtro: { c: 380, a: 4000, q: 0.5 }, prof: 4 } },
+  };
+  FAMILIAS.forEach((fa) => fa.tecnicas.forEach((t) => { if (MARCADAS[t.id]) Object.assign(t, MARCADAS[t.id]); }));
+
   /* El brief de B reutiliza la firma del encargo anterior (../encargo-genspark.md), con lo que
      enseñó la criba de las 20 pistas: 16 eran canciones y solo pasaron las de ElevenLabs. */
   const FIRMA_B = 'Part of one album for a calm, handcrafted breathing app: earthy, warm and intimate, like a wooden room at dusk. This is not a song: one sustained drone from the first second to the last. Tonal center low G. Instrumental only. No percussion, no beat, no melody, no chord changes, no vocals. Constant, flat volume: no build-up, no swells, no fade in or out. Harmonically rich mid-range timbres (bowed strings, reed harmonium, a soft sawtooth pad through a gentle low-pass) so it is clearly audible on a phone or laptop speaker, with very little brightness above 2 kHz so a quiet spoken voice stays clear on top. Designed to loop seamlessly. 4 minutes.';

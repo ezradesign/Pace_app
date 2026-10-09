@@ -1,0 +1,182 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Respira, más distintas</title>
+<meta name="description" content="Las 19 técnicas de Respira con su drone más marcado, al lado del que suena hoy en la app, para oír si ya se distinguen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Mismo cuaderno que escucha-por-tecnica.html (tokens de DESIGN_SYSTEM.md): cabecera, recorrido,
+   las técnicas por familia y la barra de escucha fija abajo. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+  --line: #C9C0A8; --line-2: #B8AD8E;
+  --breathe: #C97A5D; --breathe-2: #A85E43; --breathe-soft: rgba(201,122,93,0.12);
+  --focus: #3E5A3A; --focus-soft: rgba(62,90,58,0.10);
+  --on-accent: #FBF8F1;
+  --font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --font-ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544;
+  --breathe: #D99477; --breathe-2: #E8A98F; --breathe-soft: rgba(217,148,119,0.14);
+  --focus: #7A9A6D; --focus-soft: rgba(122,154,109,0.14);
+  --on-accent: #1d1a14; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544;
+  --breathe: #D99477; --breathe-2: #E8A98F; --breathe-soft: rgba(217,148,119,0.14);
+  --focus: #7A9A6D; --focus-soft: rgba(122,154,109,0.14);
+  --on-accent: #1d1a14; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.55; margin: 0; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 160px; display: grid; gap: 44px; }
+@media (max-width: 480px) { .wrap { padding-inline: 16px; } }
+h1, h2, h3 { font-family: var(--font-display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 6vw, 3.4rem); line-height: 1.05; }
+h2 { font-size: clamp(1.6rem, 3.6vw, 2.1rem); line-height: 1.15; }
+h3 { font-size: 1.4rem; line-height: 1.15; }
+p { margin: 0; }
+.eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--breathe-2); font-weight: 600; }
+.lead { color: var(--ink-2); max-width: 66ch; font-size: 16px; }
+header.cab, .sec { display: grid; gap: 14px; }
+.sec > .intro { color: var(--ink-2); max-width: 66ch; }
+.como { display: grid; gap: 6px; color: var(--ink-2); font-size: 14px; padding: 0; margin: 2px 0 0; list-style: none; max-width: 70ch; }
+.como b { font-weight: 600; color: var(--ink); }
+.cifras { display: flex; flex-wrap: wrap; gap: 10px; }
+.cifra { border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: grid; gap: 2px; min-width: 150px; }
+.cifra b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 1.9rem; line-height: 1; }
+.cifra span { font-size: 12.5px; color: var(--ink-3); }
+.cifra.nueva { border-color: var(--breathe); background: var(--breathe-soft); }
+.recorrido { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: grid; gap: 10px; background: var(--paper-2); }
+.recorrido p { color: var(--ink-2); font-size: 14px; max-width: 70ch; }
+.botones { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--breathe-2); background: var(--breathe); color: var(--on-accent); border-radius: 999px; padding: 8px 18px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn.sec { background: transparent; color: var(--ink); border-color: var(--line-2); }
+.btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn svg { width: 12px; height: 12px; flex: none; }
+.btn:disabled { opacity: 0.55; cursor: default; }
+.familia { display: grid; gap: 14px; }
+.familia-cab { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.familia-cab .aside { color: var(--ink-2); font-size: 14px; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.tec { border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; background: var(--paper); }
+.tec.sonando { border-color: var(--breathe); box-shadow: 0 0 0 1px var(--breathe) inset; }
+.tec-cab { display: grid; gap: 2px; }
+.ritmo { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.cambia { font-family: var(--font-display); font-style: italic; font-size: 1.12rem; line-height: 1.3; color: var(--breathe-2); }
+.receta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 3px 12px; margin: 0; font-size: 13px; }
+.receta dt { color: var(--ink-3); }
+.receta dd { margin: 0; }
+.distinta { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.distinta b { color: var(--ink); font-weight: 600; }
+.eleccion { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-top: 1px dashed var(--line); padding-top: 10px; }
+.eleccion .lab { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-right: 4px; }
+.pill { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.pill[aria-pressed="true"] { border-color: var(--focus); background: var(--focus-soft); font-weight: 500; }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--breathe); outline-offset: 2px; }
+details.medidas { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+details.medidas summary { cursor: pointer; font-weight: 500; }
+details.medidas[open] summary { margin-bottom: 12px; }
+.tabla-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+th { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+td.n, th.n { text-align: right; }
+.nota-medida { font-size: 13px; color: var(--ink-2); max-width: 70ch; display: grid; gap: 8px; margin-top: 12px; }
+textarea { width: 100%; min-height: 80px; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; resize: vertical; }
+.bloque-cab { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+.copiar { border: 1px solid var(--line-2); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 12.5px; cursor: pointer; }
+.resumen pre { margin: 0; font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); white-space: pre-wrap; background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; overflow-wrap: anywhere; }
+.barra { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--paper-3); border-top: 1px solid var(--line-2); padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px)); }
+.barra-in { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.aro-wrap { width: 40px; height: 40px; display: grid; place-items: center; flex: none; }
+.aro { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--breathe); background: var(--breathe-soft); transform: scale(0.9); will-change: transform; }
+.ahora { display: grid; min-width: 0; flex: 1 1 200px; }
+.ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 1.15rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ahora span { font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mandos { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.mandos label { font-size: 12px; color: var(--ink-3); display: flex; gap: 6px; align-items: center; }
+.mandos select { font: inherit; font-size: 13px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 4px 6px; }
+.mandos input[type="range"] { width: 110px; accent-color: var(--breathe); }
+@media (max-width: 560px) { .barra { padding-inline: 16px; } .mandos input[type="range"] { width: 90px; } }
+</style>
+
+<div class="wrap">
+  <header class="cab">
+    <div class="eyebrow">PACE · Respira · 9 de octubre de 2026</div>
+    <h1>Cada técnica, más suya</h1>
+    <p class="lead">Me dijiste que todas sonaban igual, y era verdad. Aquí están las mismas técnicas con los cambios marcados: otra nota, un acorde que se oye, un color como de vocal o un movimiento que se nota en medio minuto. Siguen saliendo de los tres drones de siempre, sin archivos nuevos, con el mismo volumen que hoy y sin tapar la voz.</p>
+    <div class="cifras" id="cifras"></div>
+    <ul class="como">
+      <li><b>Marcada</b> es la propuesta nueva. <b>Ahora</b> es la que ya está en la app.</li>
+      <li><b>Pasar por todas</b> pone 12 segundos de cada una, seguidas: es la mejor forma de oír si se distinguen.</li>
+      <li>Pruébalas con la voz encima, como en la app, y si puedes también con cascos.</li>
+    </ul>
+  </header>
+
+  <section class="recorrido" aria-labelledby="h-rec">
+    <h2 id="h-rec">Pasar por todas</h2>
+    <p>Las 19 seguidas, 12 segundos cada una, con su nombre abajo. Primero las marcadas; si quieres comparar, después las de ahora.</p>
+    <div class="botones">
+      <button class="btn" type="button" id="rec-m" data-txt="Las marcadas" aria-pressed="false"></button>
+      <button class="btn sec" type="button" id="rec-a" data-txt="Las de ahora" aria-pressed="false"></button>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-tecnicas">
+    <h2 id="h-tecnicas">Técnica por técnica</h2>
+    <div id="familias"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-resp">
+    <h2 id="h-resp">Lo que eliges</h2>
+    <p class="intro">Marca en cada técnica con cuál te quedas. Cuando termines, copia el resumen y pégamelo en el chat.</p>
+    <div class="bloque-cab"><b>Algo más que quieras decirme</b></div>
+    <textarea id="nota" aria-label="Algo más que quieras decirme" placeholder="Por ejemplo: la de Ujjayi suena demasiado a ola."></textarea>
+    <div class="resumen">
+      <div class="bloque-cab"><b>Tus respuestas</b><button class="copiar" type="button" id="copiar-resumen">Copiar para pegármelas</button></div>
+      <pre id="resumen"></pre>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-medidas">
+    <h2 id="h-medidas">Cómo está medido</h2>
+    <details class="medidas">
+      <summary>Volumen, agudos, banda del móvil y lo distinta que es cada una</summary>
+      <div class="tabla-wrap"><table>
+        <thead><tr><th>Técnica</th><th class="n">Volumen hoy</th><th class="n">Marcada</th><th class="n">Pulmón lleno</th><th class="n">Agudos</th><th class="n">Banda del móvil</th><th class="n">Distinta ahora</th><th class="n">Marcada</th></tr></thead>
+        <tbody id="tabla-medidas"></tbody>
+      </table></div>
+      <div class="nota-medida">
+        <p>Cada fila se mide en Chromium con el mismo motor que suena aquí y en la app: 90 segundos de cada técnica con su respiración, sin la voz. El volumen es el medio, antes de la ganancia de la app. «Agudos» es lo que hay por encima de 2 kHz, donde viven las consonantes de la voz, comparado con el drone más claro de hoy, que es el tope. «Banda del móvil» es lo que suena entre 300 Hz y 4 kHz, comparado con hoy.</p>
+        <p>«Distinta» es la distancia de color con la técnica que más se le parece: cómo se reparte el sonido de graves a agudos, con el volumen igualado, en puntos. Entre el drone claro y el cálido, que se distinguen bien, hay 8,3. Ninguna marcada baja de 6.</p>
+      </div>
+    </details>
+  </section>
+</div>
+
+<div class="barra" role="region" aria-label="Escucha">
+  <div class="barra-in">
+    <div class="aro-wrap" aria-hidden="true"><div class="aro" id="aro"></div></div>
+    <div class="ahora" aria-live="polite"><b id="ahora-nombre">Nada sonando</b><span id="ahora-fase">Pulsa Marcada o Ahora en una técnica</span></div>
+    <div class="mandos">
+      <label for="voz">Voz <select id="voz"><option value="sulafat">Clara</option><option value="bradford">Grave</option><option value="">Sin voz</option></select></label>
+      <label for="nivel">Volumen <input type="range" id="nivel" min="-18" max="6" step="1" value="0"></label>
+      <button class="btn sec" type="button" id="parar" disabled>Parar</button>
+    </div>
+  </div>
+</div>
+
+<!-- El número de versión evita que un service worker de la app, en el mismo localhost, sirva una copia vieja. -->
+<script src="tecnicas.js?v=9oct-1"></script>
+<script src="medidas.js?v=9oct-1"></script>
+<script src="motor.js?v=9oct-1"></script>
+<script src="marcadas.js?v=9oct-1"></script>
