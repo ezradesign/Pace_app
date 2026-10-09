@@ -65,6 +65,22 @@
 .pace-break-agua .pace-break-mas { font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-3); }
 .pace-break-agua i { margin-left: auto; font-style: normal; color: var(--ink-3); font-size: 18px; }
 .pace-break-agua:hover i { color: var(--ink); }
+/* Con propuesta, las otras tres puertas en una sola línea, con su dibujo y sin caja (la B
+   de Ez, 9 oct.): la del módulo propuesto ya está arriba. Caben en una línea desde 360 px
+   (tests/pausa-sin-repetir.spec.js). */
+.pace-break-otras {
+  display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;
+  gap: 4px 16px; margin: 6px 0 0;
+}
+.pace-break-otra {
+  --c: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 2px;
+  background: none; border: 0; cursor: pointer; color: var(--ink); white-space: nowrap;
+  font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; line-height: 1;
+}
+.pace-break-otra-glifo { color: var(--c); display: inline-grid; place-items: center; line-height: 0; }
+.pace-break-otra:hover .pace-break-otra-nombre { text-decoration: underline; text-underline-offset: 3px; }
+.pace-break-otra:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; border-radius: 4px; }
 .pace-break-pie { display: flex; justify-content: flex-end; align-items: center; }
 .pace-break-saltar {
   background: none; border: 0; padding: 10px 0; cursor: pointer; white-space: nowrap;
