@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.153.0 · 9 de octubre de 2026.
+**Versión:** v0.154.0 · 9 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -50,7 +50,7 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
-Con «Suena detrás: Música», cada técnica de Respira suena con su propio drone, hecho en directo a
+Con «Suena detrás: Música» (v0.154.0), cada técnica de Respira suena con su propio drone, hecho en directo a
 partir de tres drones en Sol, sin archivos nuevos (Ez lo eligió el 8 de octubre). Las primeras
 variaciones se parecían demasiado y el 9 de octubre Ez eligió las «marcadas»: cada técnica cambia de
 nota, de acorde, de color o de movimiento, y ninguna queda a menos de 6 puntos de color de su vecina

@@ -11,6 +11,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de o
   límite de uso se acabó a la vez en todas, se reanudan de dos en dos (decisión de Ez).
 - **La caza de bugs está en `main` como v0.151.0**, con el sí de Ez a todo; solo queda grabar la
   voz de Respira en inglés.
+- **La música de Respira está en `main` como v0.154.0**: tres drones en Sol que respiran y una receta «marcada» por técnica, con el sí de Ez («suenan bien, súbelas»).
 - **La barra lateral (el cuaderno) está en `main` como v0.153.0**, con el sí de Ez a la app montada.
 - **La pausa más elegante está en `main` como v0.152.0**: opción A de Ez, «Ir a comer» suma el vaso
   y los sellos esperan a que no haya nada abierto (en la home, dentro del aro). Página con la que
