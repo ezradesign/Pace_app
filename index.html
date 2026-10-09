@@ -39683,9 +39683,20 @@ if (document.readyState === 'loading') {
     if ('serviceWorker' in navigator &&
         !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) {
       window.addEventListener('load', function() {
+        /* Un worker nuevo solo es una VERSIÓN NUEVA si otro ya controlaba la
+           página; si no, es la primera instalación. Se decide con lo que había
+           al cargar (y el primer `controllerchange`), nunca mirando
+           `navigator.serviceWorker.controller` al llegar 'installed': Safari
+           avisa de 'installed' cuando el worker ya se ha activado y reclamado
+           la página, con `reg.waiting` aún apuntando a él, y la primera visita
+           salía con «Hay una versión nueva» (tests/sw-aviso.safari.spec.js). */
+        var hadController = !!navigator.serviceWorker.controller;
         navigator.serviceWorker.register('sw.js').then(function(reg) {
           function announceWaiting() {
-            if (!reg.waiting) return;
+            if (!reg.waiting || !hadController) return;
+            /* El mismo worker que ya manda no es una versión nueva (Safari
+               puede dejarlo un instante en `waiting` tras activarlo). */
+            if (reg.waiting === reg.active || reg.waiting === navigator.serviceWorker.controller) return;
             window.__paceSwWaitingReg = reg;
             window.dispatchEvent(new CustomEvent('pace:sw-waiting'));
           }
@@ -39694,13 +39705,10 @@ if (document.readyState === 'loading') {
             var nw = reg.installing;
             if (!nw) return;
             nw.addEventListener('statechange', function() {
-              if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-                announceWaiting();
-              }
+              if (nw.state === 'installed') announceWaiting();
             });
           });
         }).catch(function() {});
-        var hadController = !!navigator.serviceWorker.controller;
         navigator.serviceWorker.addEventListener('controllerchange', function() {
           if (!hadController) { hadController = true; return; }
           window.location.reload();
