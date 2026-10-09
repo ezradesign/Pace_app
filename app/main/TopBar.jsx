@@ -12,8 +12,9 @@
    - Stats y Tweaks abren via props (onOpenStats / onOpenTweaks).
    - Logros abre via CustomEvent('pace:open-achievements') -- coherente
      con Sidebar.jsx que dispara el mismo evento. PaceApp lo escucha.
-   - Tabs Foco/Pausa/Larga cambian state.focusMode (no reinicia el
-     Pomodoro -- solo cambia el modo activo).
+   - Tabs Foco/Pausa/Larga cambian state.focusMode. Cambiar de modo reinicia
+     la cuenta, así que con un bloque de Foco empezado (en marcha o en pausa)
+     se pregunta antes: el bloque se perdería sin contar (Ez, 8 oct. 2026).
    - Tabs ocultos en movil (@media max-width: 768px en _responsive.js).
    - data-pace-* selectors usados por _responsive.js: data-pace-topbar,
      data-pace-tabs, data-pace-topbar-icon.
@@ -25,9 +26,18 @@
      onOpenTweaks   -- abre TweaksPanel
 */
 
+const { useState: useStateTB } = React;
+
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
   const { t } = useT();
+  /* El modo al que se quiere pasar mientras se pregunta; null sin pregunta. */
+  const [pendiente, setPendiente] = useStateTB(null);
+  const elegirModo = (v) => {
+    if (v === state.focusMode) return;
+    if (typeof paceFocoEmpezado === 'function' && paceFocoEmpezado()) { setPendiente(v); return; }
+    set({ focusMode: v });
+  };
   const modes = [
     { v: 'foco', label: t('topbar.mode.focus') },
     { v: 'pausa', label: t('topbar.mode.pause') },
@@ -54,7 +64,7 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
         gap: 2,
       }}>
         {modes.map(m => (
-          <button key={m.v} onClick={() => set({ focusMode: m.v })}
+          <button key={m.v} onClick={() => elegirModo(m.v)}
             style={{
               padding: '6px 18px',
               fontSize: 11,
@@ -86,6 +96,21 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
       </button>
+
+      <Modal open={!!pendiente} onClose={() => setPendiente(null)} maxWidth={440}
+             title={pendiente ? t('topbar.cambio.title.' + pendiente) : undefined}>
+        <p data-pace-cambio-modo style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>
+          {t('topbar.cambio.body')}
+        </p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+          <Button variant="secondary" onClick={() => { set({ focusMode: pendiente }); setPendiente(null); }}>
+            {t('topbar.cambio.cambiar')}
+          </Button>
+          <Button variant="primary" onClick={() => setPendiente(null)}>
+            {t('topbar.cambio.seguir')}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

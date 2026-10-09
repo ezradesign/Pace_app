@@ -31,9 +31,13 @@ let _caminoUiActive = false;    // s105: lo fija PathRunner (pasos + Completion)
 
    Lo que cuenta como «algo abierto», mirado en el momento y no apuntado por cada
    superficie: un dialogo de la pila (`paceHayDialogo`: la pausa, Hidratate, cualquier
-   Modal, el onboarding y la sesion de Respira, que pasa por SessionShell), una sesion
-   montada (`[data-pace-session-root]`, tambien la de Mueve y Estira) y la UI de un
-   Camino (s105). Asi una superficie nueva queda cubierta sin acordarse de nadie.
+   Modal, el onboarding), una sesion montada (`[data-pace-session-root]`: Respira, Mueve
+   y Estira pasan por SessionShell) y la UI de un Camino (s105), que es lo unico que se
+   apunta a mano. Asi una superficie nueva queda cubierta sin acordarse de nadie.
+   La caza de bugs (respira-6, v0.151.0) llego a lo mismo marcando la bandera de los
+   Caminos desde Respira, Hidratate y Mueve; se quito al juntarlo con esto, porque era
+   una sola bandera para varias superficies y la primera que se cerraba la apagaba
+   aunque otra siguiera abierta.
 
    EL RESPIRO DEL PRINCIPIO es lo que lo hace funcionar con la pausa: el sello de
    «Primer paso» se encola al CERRAR el bloque y la pausa se monta en ese mismo gesto,

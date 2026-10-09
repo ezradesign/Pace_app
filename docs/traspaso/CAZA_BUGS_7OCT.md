@@ -13,13 +13,7 @@ Cómo usarla desde otra cuenta:
 3. Si se reproduce, arréglalo con su prueba (regla de `CLAUDE.md`) y táchalo con la versión.
 4. Los de la app en inglés de severidad baja son de copy: enséñaselos a Ez en bloque antes de tocarlos.
 
-**Estado el 8 de octubre.** Se han reproducido todos los que no llevaban otras sesiones (respira-1, 2 y 3,
-oscuro-1 y 4): ninguno se tacha por no reproducirse. Los que no cambian lo que se ve están tachados aquí
-abajo, arreglados en `claude/caza-7oct-arreglos`. Los que sí lo cambian (oscuro-2, 3, 5 y 6; ingles-1, 3,
-4, 5, 7, 8, 10, 11, 12, 14, 15 y 16; respira-5, 6, 9, 10 y 14) están montados en
-`claude/caza-bugs-propuestas` y esperan el sí de Ez a una página de antes y después. Quedan como
-preguntas a Ez, sin montar: ingles-2 (la voz en castellano), ingles-6 (pestaña y PWA), ingles-13 (atajos),
-ingles-17 (horas y meses), respira-12 (los aros de «Pulso» y «Ondas») y respira-13 (minutos de las rondas).
+**Estado el 9 de octubre.** Se reprodujeron todos (ninguno se tacha por no reproducirse) y están tachados los 36 arreglados: diez ya en main (de v0.146.1 a v0.148.4) y el resto en `claude/caza-bugs-final`, con el sí de Ez a dos páginas de fotos de antes y después (`archivos/caza-final-8oct/fotos-para-ez.html`) y una prueba cada uno en `tests/caza-ingles.spec.js`, `caza-oscuro.spec.js` y `caza-respira.spec.js`. Queda abierto ingles-13 (los atajos), que lleva la sesión de la pausa (`claude/pausa-elegante`). Pendiente aparte: grabar la voz en inglés (ingles-2).
 
 Por gravedad: **alta** es que algo no funciona o es inseguro; **media**, que se ve mal o confunde;
 **baja**, pulido.
@@ -64,7 +58,8 @@ Por gravedad: **alta** es que algo no funciona o es inseguro; **media**, que se 
 
 Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/.
 
-### [media] ingles-1 · El modal de seguridad de Respira pone el nombre de la rutina en castellano
+### ~~[media] ingles-1 · El modal de seguridad de Respira pone el nombre de la rutina en castellano~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). El aviso de seguridad se titula como la tarjeta (`tests/caza-ingles.spec.js`).
 - **Dónde:** 360x718 y 1280x720
 - **Pasos:** lang 'en'. Home > Breathe > pulsar «Express Rounds» (o «Full Round Breathing», «Deep Rounds»).
 - **Debería:** El modal «Before you start» se titula «Express Rounds», como la tarjeta de la biblioteca y la cabecera de la sesión.
@@ -72,7 +67,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/br-safety-360.png; recheck2.js (en la misma carpeta) → «Express Rounds => Rondas express», «Full Round Breathing => Respiración en rondas», «Deep Rounds => Rondas profundas»
 - **Código sospechoso:** app/breathe/BreatheLibrary.jsx:133 pinta `{routine.name}` en bruto, sin el `tR(routine.id + '.name', …)` que usan RoutineCard y BreatheSession.jsx:19
 
-### [media] ingles-2 · Con la app en inglés, la voz de Respira dice «inhala / mantén / exhala» en castellano
+### ~~[media] ingles-2 · Con la app en inglés, la voz de Respira dice «inhala / mantén / exhala» en castellano~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Ez: en inglés suena el tono y Ajustes dice que la voz solo habla castellano; la elección se guarda. Queda grabar la voz en inglés (`tests/caza-ingles.spec.js`).
 - **Dónde:** 1280x720 (no depende del viewport)
 - **Pasos:** Semilla con lang 'en' y soundOn true (voiceOn viene a true por defecto y en Ajustes sale marcado «Clear voice»). Breathe > Box 4·4·4·4 > Start now. Escuchar las fases.
 - **Debería:** En inglés: o hay locuciones en inglés, o se usa el tono, o la opción de voz avisa de que solo existe en castellano.
@@ -80,7 +76,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** voz.js (misma carpeta): state {lang:'en', soundOn:true, voiceOn:true, voice:'sulafat'}; plays ['sulafat-manten.mp3','sulafat-exhala.mp3','sulafat-manten.mp3']; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/settings-360-full.png («Clear voice» marcado por defecto)
 - **Código sospechoso:** app/ui/Sound.voz.jsx:103-114 (PACE_VOZ_CLIPS, solo en castellano) y paceVozCabe, línea 187: no mira state.lang. app/breathe/voz/ solo tiene archivos *-inhala/manten/exhala.mp3
 
-### [media] ingles-3 · En inglés hay dos botones «Pause»: el de la barra de arriba descarta el bloque de Foco en marcha
+### ~~[media] ingles-3 · En inglés hay dos botones «Pause»: el de la barra de arriba descarta el bloque de Foco en marcha~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Arriba «Focus · Break · Long break» y, con un Foco empezado, se pregunta antes de cambiar de modo (los dos idiomas). En el móvil en inglés las pestañas van más juntas para caber (`tests/caza-ingles.spec.js`).
 - **Dónde:** 1280x720 (la pastilla Focus/Pause/Long solo sale en escritorio)
 - **Pasos:** lang 'en'. Start focus y dejar correr 5 min. Arriba hay «FOCUS · PAUSE · LONG» y en el aro el botón «Pause». Pulsar el «PAUSE» de arriba creyendo que pausa.
 - **Debería:** Etiquetas que no se confundan. En castellano son «Pausa» (modo) y «Pausar» (acción). El inglés debería usar «Break» / «Long break» para los modos, como ya hace el aro («Short break», «Start break»).
@@ -88,7 +85,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/focus-running-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/pausemode-after-1280.png; pausemode.js: «buttons named Pause: 2» · before 20:00 → after {num:'05:00', label:'Short break'}
 - **Código sospechoso:** app/i18n/strings/ui.js:266 'topbar.mode.pause': 'Pause' frente a app/i18n/strings/sessions.js:242 'focus.pause': 'Pause'; pestaña en app/main/TopBar.jsx:33
 
-### [media] ingles-4 · La cabecera de varias sesiones de Estira muestra etiquetas internas (SIT, HIP, SHLD, ATG, ANC)
+### ~~[media] ingles-4 · La cabecera de varias sesiones de Estira muestra etiquetas internas (SIT, HIP, SHLD, ATG, ANC)~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). La cabecera dice la categoría («Neck», «Hips»…), no la etiqueta interna (`tests/caza-ingles.spec.js`).
 - **Dónde:** 360x718 y 1280x720
 - **Pasos:** lang 'en'. Stretch > Neck > Start. Mirar el antetítulo de la cabecera, encima de «Neck». Probar también Hips y Shoulders.
 - **Debería:** Una categoría legible, como en castellano («CUELLO», «CADERAS», «HOMBROS») y como en el resto de rutinas inglesas («Hamstrings», «Calves», «Energy»).
@@ -96,7 +94,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** es-neck.js: es Cuello => «CUELLO | Cuello» · en Neck => «SIT | Neck» · en Hips => «HIP | Hips» · en Shoulders => «SHLD | Shoulders»; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/hdr-en-Neck.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/hdr-es-Cuello.png
 - **Código sospechoso:** app/i18n/content/extra.js: 'move.chair.antidote.code' (l.21), 'move.hips.5.code' (l.69), 'move.shoulders.5.code' (l.91), 'move.atg.knees.code' (l.113), 'move.ancestral.code' (l.127), 'move.neck.3.code' (l.141) y 'move.desk.quick.code' (l.161) llevan el `tag` en vez de traducir el `code` castellano. Se pinta en SessionHeader (app/ui/SessionShell.jsx:283)
 
-### [media] ingles-5 · Estadísticas › Año: «1 days with rhythm · max streak: 1 days»
+### ~~[media] ingles-5 · Estadísticas › Año: «1 days with rhythm · max streak: 1 days»~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «1 day with rhythm · max streak: 1 day», también en castellano (`tests/caza-ingles.spec.js`).
 - **Dónde:** 1280x720 (igual en 360)
 - **Pasos:** lang 'en'. Hacer cualquier actividad hoy (un vaso de agua y un Physiological Sigh) > icono de estadísticas > Year.
 - **Debería:** «1 day with rhythm · max streak: 1 day».
@@ -104,8 +103,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/stats1-Year-1280.png
 - **Código sospechoso:** app/stats/YearView.jsx:327 y :329 usan t('stats.year.activeDays' / 'stats.year.maxStreak').replace('{n}', …) sin variante para 1 (cadenas en app/i18n/strings/stats.js)
 
-### [media] ingles-6 · El html sigue con lang="es" y la pestaña, el manifiesto y los atajos de la PWA siguen en castellano con la app en inglés
-- **En parte, en v0.148.2:** `<html lang>` sigue al idioma al arrancar y al cambiarlo (`tests/idioma-documento.spec.js`). El título de la pestaña y el manifiesto de la PWA cambian lo que se ve y esperan a Ez.
+### ~~[media] ingles-6 · El html sigue con lang="es" y la pestaña, el manifiesto y los atajos de la PWA siguen en castellano con la app en inglés~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). El `lang` en v0.148.2; la pestaña sigue al idioma («PACE · Focus · Body») y la PWA se llama «PACE». Los atajos siguen en castellano (`tests/caza-ingles.spec.js`).
 - **Dónde:** todos
 - **Pasos:** lang 'en' (o cambiar a English en Ajustes). Leer document.documentElement.lang y document.title. Instalar la PWA o mirar manifest.webmanifest.
 - **Debería:** <html lang="en"> mientras la interfaz va en inglés, para que el lector de pantalla pronuncie en inglés y Chrome no ofrezca «traducir del español». Título de pestaña neutro o traducido.
@@ -113,7 +112,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** htmllang.js: home {lang:'es', title:'PACE · Foco · Cuerpo — v0.143.4'} · after-switch-en {lang:'es', …}; index.html:2 <html lang="es"> · index.html:6 <title>; manifest.webmanifest:3-6 y 24-43
 - **Código sospechoso:** Nadie escribe en document.documentElement.lang ni en document.title (grep vacío en app/); el lang solo vive en el estado (app/state-core.jsx:277-285)
 
-### [baja] ingles-7 · «1 glasses» en Estadísticas: semana, total del mes y tooltip del día
+### ~~[baja] ingles-7 · «1 glasses» en Estadísticas: semana, total del mes y tooltip del día~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «1 glass» en la semana, el total del mes y el día (`tests/caza-ingles.spec.js`).
 - **Dónde:** 1280x720 y 360x718
 - **Pasos:** lang 'en'. Hydrate > One more glass (1 vaso). Estadísticas: tarjeta Hydrate de Week, línea de totales de Month y tooltip del día 7 en Month.
 - **Debería:** «1 glass».
@@ -121,7 +121,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/stats1-week-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/month-tooltip-1280.png; walk8.js: tooltip month ['Wed, 7 Oct · 2 min breathe, 1 glasses']
 - **Código sospechoso:** app/stats/StatsPanel.jsx:33 (unit fijo t('stats.unit.glasses')), :277 y :292 (tooltip) y :375 (total del mes)
 
-### [baja] ingles-8 · Tooltip en castellano en «I donated →» del modal de apoyo
+### ~~[baja] ingles-8 · Tooltip en castellano en «I donated →» del modal de apoyo~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). El título de «I donated →» va en el idioma (`tests/caza-ingles.spec.js`).
 - **Dónde:** 1280x720 (hover en escritorio)
 - **Pasos:** lang 'en'. Sidebar > Feed the cow > pasar el ratón por «I donated →».
 - **Debería:** Tooltip en inglés.
@@ -138,7 +139,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** walk1.js 1280: ES? "Mes anterior" BUTTON@aria-label, "Año anterior" BUTTON@aria-label; walk8.js: month aria ['Close','Mes anterior','Mes siguiente','Wed, 7 Oct']
 - **Código sospechoso:** app/stats/StatsPanel.jsx:321 y :327; app/stats/YearView.jsx:189 y :194
 
-### [baja] ingles-10 · El titular de la bienvenida en inglés parte «At your / own pace.» en dos líneas
+### ~~[baja] ingles-10 · El titular de la bienvenida en inglés parte «At your / own pace.» en dos líneas~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «At your own pace.» no se parte (`tests/caza-ingles.spec.js`).
 - **Dónde:** 360x718, 375x667, 390x844, 412x915 y 1280x720
 - **Pasos:** Semilla sin firstSeen y con lang 'en'. Mirar el h1 de la bienvenida.
 - **Debería:** «At your own pace.» entera en su línea, como el castellano, que a 360 cabe en una sola («Antídoto a la silla. A tu ritmo.»).
@@ -146,7 +148,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/welcome-en-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/welcome1-360.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/welcome-es-360.png; welcome-es.js: rects de líneas por viewport
 - **Código sospechoso:** app/onboarding/Onboarding.jsx:155-158: el span de 'welcome.tagline.sub' no lleva white-space:nowrap ni salto propio (cadena en app/i18n/strings/ui.js:169)
 
-### [baja] ingles-11 · La propuesta de la pausa dice «You have not breathed today»
+### ~~[baja] ingles-11 · La propuesta de la pausa dice «You have not breathed today»~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «No breathing session yet today» y sus dos hermanas (`tests/caza-ingles.spec.js`).
 - **Dónde:** todos
 - **Pasos:** lang 'en'. Terminar un Foco cuando ya hay estiramiento y movimiento hoy pero ninguna sesión de Respira. La tarjeta propuesta lleva el motivo de la clave break.prop.pending.breathe.
 - **Debería:** Algo como «No breathing session yet today».
@@ -154,7 +157,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** app/i18n/strings/breakmenu.js:64; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/break-360.png (variante «You have not stretched today» del mismo bloque)
 - **Código sospechoso:** app/i18n/strings/breakmenu.js:64
 
-### [baja] ingles-12 · Pausa de «A tu ritmo»: «9:45 · what the menu had for now.» es una traducción literal
+### ~~[baja] ingles-12 · Pausa de «A tu ritmo»: «9:45 · what the menu had for now.» es una traducción literal~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «9:45 · what's on the menu now.» (`tests/caza-ingles.spec.js`).
 - **Dónde:** 360x718 y 1280x720
 - **Pasos:** lang 'en', día de A tu ritmo sembrado (como en ritmo-pausa.spec). Start the day y dejar acabar el bloque 1.
 - **Debería:** Inglés natural, por ejemplo «9:45 · what's on the menu now».
@@ -163,6 +167,7 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Código sospechoso:** app/i18n/strings/breakmenu.js:72 'break.ritmo.sub'
 
 ### [baja] ingles-13 · Los atajos de teclado anunciados en inglés usan las iniciales castellanas
+- **Sin tocar aquí.** Ez: sin letras de atajo en las tarjetas; la línea «ATAJO» de la pausa la quita `claude/pausa-elegante`.
 - **Dónde:** 1280x720
 - **Pasos:** lang 'en'. Terminar un Foco: la pausa dice «Shortcut: B · E · M · H · Esc». Pasar el ratón por los iconos de arriba: «Achievements (L)», «Settings (T)».
 - **Debería:** Letras que se entiendan en inglés, o la letra junto a cada tarjeta.
@@ -170,7 +175,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/break-1280.png; app/breakmenu/BreakMenu.jsx:81-84 (b→breathe, e→extra/Stretch, m→move, h→water)
 - **Código sospechoso:** app/i18n/strings/breakmenu.js:68; app/i18n/strings/ui.js:270 y :272
 
-### [baja] ingles-14 · Cuatro nombres en inglés para lo mismo: achievements, badge, seal y stamps
+### ~~[baja] ingles-14 · Cuatro nombres en inglés para lo mismo: achievements, badge, seal y stamps~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «stamp» para el sello y «achievements» para la colección; ni un «seal» ni un «badge» en inglés (`tests/caza-ingles.spec.js`).
 - **Dónde:** todos
 - **Pasos:** lang 'en'. Sidebar: «Latest badge». Al ganar uno, aviso «New seal». Colección: título «Achievements», subtítulo «Field notebook stamps…», logros «Forty-five seals». Apoyo: «✦ thanks · badge saved».
 - **Debería:** Una sola palabra para el objeto, como el castellano, que usa «sello» y «logro».
@@ -178,7 +184,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/break-360.png (toast «New seal»); /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/home-1280.png («Latest badge»); /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/ach-1280.png («stamps»)
 - **Código sospechoso:** app/i18n/strings/ui.js:252 y :200; app/i18n/strings/achievements.js:31 y :44
 
-### [baja] ingles-15 · El cierre de sesión pregunta «Did this pause help?» y el resto del inglés llama «break» a la pausa
+### ~~[baja] ingles-15 · El cierre de sesión pregunta «Did this pause help?» y el resto del inglés llama «break» a la pausa~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «Did this break help?» (`tests/caza-ingles.spec.js`).
 - **Dónde:** 360x718
 - **Pasos:** lang 'en'. Terminar cualquier sesión (Physiological Sigh, Desk Push-ups, Neck) y mirar la pregunta de feedback.
 - **Debería:** «Did this break help?», en línea con «Well-earned break», «Skip this break» y «Short break».
@@ -186,7 +193,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/br-PhysiologicalSigh-end-360.png
 - **Código sospechoso:** app/i18n/strings/sessions.js:303
 
-### [baja] ingles-16 · El aviso de grupo vacío en la biblioteca dice «All 2 in flows need the floor.»
+### ~~[baja] ingles-16 · El aviso de grupo vacío en la biblioteca dice «All 2 in flows need the floor.»~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «Every routine in … needs the floor.» y «Clear the filter» (`tests/caza-ingles.spec.js`).
 - **Dónde:** 360x718
 - **Pasos:** lang 'en'. Stretch > filtro «Right here» (o «≤ 4 min»): el grupo Flows queda vacío. Move > «No gear»: Push & Pull y Legs.
 - **Debería:** Inglés natural, por ejemplo «Both routines in Flows need the floor.» o «All 4 Push & Pull routines…».
@@ -194,7 +202,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** filt.js (misma carpeta): textos de cada filtro; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/ingles/filt-Move-No_gear.png
 - **Código sospechoso:** app/i18n/strings/sessions.body.js:223-227; app/ui/LibraryShell.jsx:166-167 (g: label.toLowerCase())
 
-### [baja] ingles-17 · Horas y fechas con formatos mezclados en inglés: «7am / 9pm / 11pm» frente a 24 h, y «Sept» frente a «Sep»
+### ~~[baja] ingles-17 · Horas y fechas con formatos mezclados en inglés: «7am / 9pm / 11pm» frente a 24 h, y «Sept» frente a «Sep»~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Ez: 24 h en los logros («before 7:00») y «Sep» en todas las fechas cortas. Am/pm en toda la app, solo si lo piden testers de habla inglesa (`tests/caza-ingles.spec.js`).
 - **Dónde:** todos
 - **Pasos:** lang 'en'. Logros > The day: «Five days with a session before 7am», «after 9pm», «30 days with no use after 11pm». En el resto de la app: «Until 17:00», «From 10:00 to 13:00», «9:45». Con fecha de septiembre: sidebar «Fri 18 Sept» y cabecera del año en Stats «Sep».
 - **Debería:** Un solo formato de hora (24 h, como el resto) y una sola abreviatura de mes.
@@ -215,7 +224,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/select-popup-oscuro.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/select-popup-oscuro-zoom.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/select-popup-crema-zoom.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/select-popup-oscuro-fix2-zoom.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/select-donde-360.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/select.js
 - **Código sospechoso:** app/ritmo/ritmo.css.jsx:111-114 (`.pace-rt-sel { color: var(--ink); background: transparent ... }` sin reglas para `option`). La misma clase la usa el <select> de calendario en app/ritmo/RitmoCalendario.jsx:105. Además ninguna hoja declara `color-scheme` para la paleta oscura.
 
-### [media] oscuro-2 · El número de un filtro activo de las bibliotecas desaparece en oscuro (crema sobre crema)
+### ~~[media] oscuro-2 · El número de un filtro activo de las bibliotecas desaparece en oscuro (crema sobre crema)~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). El número del filtro activo sale del papel de la paleta (`tests/caza-oscuro.spec.js`).
 - **Dónde:** 360x718 y 1280x720
 - **Pasos:** 1) Paleta 'oscuro'. 2) Abre Respira, Mueve o Estira. 3) Pulsa un filtro: «≤ 5 min», «Aquí mismo» o «Sin material».
 - **Debería:** El filtro activo sigue mostrando cuántas rutinas quedan, como en crema («≤ 5 min 9»).
@@ -223,7 +233,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/chip-Mueve-360.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/chip-Respira-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/chip-full-Estira-360.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/chip.js
 - **Código sospechoso:** app/ui/library.css.jsx:91 `.pace-lib-chip[aria-pressed="true"] b { color: rgba(242, 237, 224, .7); }`: el color está escrito a mano y debería salir de var(--paper), por ejemplo con color-mix al 70 %.
 
-### [media] oscuro-3 · La barra del navegador o de la PWA sigue en crema con la paleta oscura (theme-color fijo)
+### ~~[media] oscuro-3 · La barra del navegador o de la PWA sigue en crema con la paleta oscura (theme-color fijo)~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). La barra del navegador toma el papel de la paleta al cambiarla (`tests/caza-oscuro.spec.js`).
 - **Dónde:** 360x718 (móvil web o PWA instalada)
 - **Pasos:** 1) Paleta 'oscuro' elegida a mano, o 'Auto' con el sistema en oscuro (lo he emulado con colorScheme 'dark' y paletteAuto:true). 2) Carga index.html y mira meta[name=theme-color].
 - **Debería:** El color de la barra del navegador o de la PWA sigue al papel de la paleta activa, #1d1a14 en oscuro. En Android nativo ya lo hace values-night.
@@ -241,7 +252,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/apnea-check-oscuro-off.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/apnea-check-oscuro-on.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/s-respiraApnea-360.png
 - **Código sospechoso:** app/breathe/BreatheLibrary.jsx:157 (`<input type="checkbox">` sin accent-color). Comparar con app/ritmo/ritmo.css.jsx:328.
 
-### [baja] oscuro-5 · --premium no tiene valor para oscuro: el sello «Premium» y los «Premium», «Tus rutinas» y «Pronto» bronce quedan por debajo de 4,5:1
+### ~~[baja] oscuro-5 · --premium no tiene valor para oscuro: el sello «Premium» y los «Premium», «Tus rutinas» y «Pronto» bronce quedan por debajo de 4,5:1~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Bronce propio en oscuro (#C99A5B) y su fondo suave al 8 %, porque en «Mis rutinas» se sumaban dos capas: 4,8:1 (`tests/caza-oscuro.spec.js`). En crema sigue por debajo de 4,5, como avisaba la caza.
 - **Dónde:** 1280x720 (sello de la barra lateral) y 360x718 / 1280x720 (bibliotecas)
 - **Pasos:** 1) Paleta 'oscuro'. 2) Mira el sello PREMIUM de «Mis rutinas» en la barra lateral a 1280 o en el panel a 360. 3) Abre Respira o Mueve y mira el «· Premium» de las tarjetas y el «Tus rutinas» o «Pronto» de Mueve y Estira.
 - **Debería:** Un bronce subido para el papel oscuro, como se hizo con --focus y --breathe, con al menos 4,5:1 en un texto de 10 a 15 px.
@@ -249,7 +261,8 @@ Scripts, volcados y capturas en /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/home-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/s-respiraLib-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/s-mueveLib-1280.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/oscuro/dbg3.js
 - **Código sospechoso:** app/tokens.css:251-307 (bloque oscuro sin --premium ni --premium-soft) y app/ui/Primitives.jsx:259-273 (PremiumSeal en color var(--premium)).
 
-### [baja] oscuro-6 · El título del mes en Estadísticas › Mes dice «Octubre De 2026» (la «De» en mayúscula)
+### ~~[baja] oscuro-6 · El título del mes en Estadísticas › Mes dice «Octubre De 2026» (la «De» en mayúscula)~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). «Octubre de 2026»: mayúscula solo en la primera letra (`tests/caza-oscuro.spec.js`).
 - **Dónde:** 360x718 y 1280x720 (en las dos paletas)
 - **Pasos:** 1) Abre Estadísticas desde el icono de la barra superior. 2) Pestaña «Mes».
 - **Debería:** «Octubre de 2026».
@@ -327,7 +340,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/espacio-prep-1530.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/espacio-prep-luego-1530.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/espacio-hold-luego-1530.png; salida de espacio.js: A tras Espacio + 6 s prepNum '3'; tras Empezar ahora + 6 s footer '▶ Reanudar ▶| Terminar'; B tras Respirar de nuevo + 8 s 'Respiración 1 de 25', footer '▶ Reanudar'
 - **Código sospechoso:** app/breathe/BreatheSession.jsx:166: el atajo de Espacio cambia `paused` en cualquier stage. :74: la preparación se para si `paused`. :250 (`onSkip`) y :206 (`releaseHold`) no ponen `paused` a false, y ni la preparación ni la retención pintan el estado de pausa.
 
-### [media] respira-5 · El aviso de logro tapa «Volver al inicio» y «Ahora no» en el cierre de la sesión
+### ~~[media] respira-5 · El aviso de logro tapa «Volver al inicio» y «Ahora no» en el cierre de la sesión~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Los avisos de logro esperan a que se cierre la sesión (`tests/caza-respira.spec.js`).
 - **Dónde:** 360x718 y 1530x702
 - **Pasos:** Estado nuevo → Respira → «Suspiro fisiológico» (o cualquier técnica) → dejarla terminar.
 - **Debería:** Que el aviso «Nuevo sello · Primer aliento» no tape la acción principal de la pantalla de cierre.
@@ -335,7 +349,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/toast-360-1200.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/toast-1530-1200.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/1530x702-rondas_express-4done.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/toast-360-tras8s.png (después: el botón vuelve a verse)
 - **Código sospechoso:** app/ui/Toast.jsx:48 (`bottom: 20`, centrado, z 200) frente al pie de SessionDone (app/ui/SessionShell.jsx, footer). La regla de DECISIONES_TECNICAS_VIGENTES.md:174 («cualquier UI full-screen que no deba ser interrumpida por toasts reutiliza setCaminoUiActive») no se aplica a las sesiones sueltas.
 
-### [media] respira-6 · En Hidrátate cada vaso saca un aviso de logro, y se apilan encima de «Un vaso menos / Un vaso más»
+### ~~[media] respira-6 · En Hidrátate cada vaso saca un aviso de logro, y se apilan encima de «Un vaso menos / Un vaso más»~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Los avisos esperan a que se cierre Hidrátate (`tests/caza-respira.spec.js`).
 - **Dónde:** 360x718 (también a 1530x702)
 - **Pasos:** Estado nuevo → abrir Ajustes y cerrarlo (desbloquea «Curiosidad», que queda en cola) → Hidrátate → pulsar «Un vaso más» dos veces seguidas.
 - **Debería:** Un solo aviso que no tape los botones del contador (la regla es un aviso por sesión, §16.2).
@@ -361,7 +376,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/filtro-sinreten-yin.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/filtro-yin-sosten.png; salida de filtro.js: «Sin retención» incluye 'Rítmica yin' y 'Nadi Shodhana'; fases de yin: Inhala, Exhala, Sostén
 - **Código sospechoso:** app/ui/library-rules.js:46-50 (`libraryConRetencion`). Sin `cycle` devuelve `!!r.safety`, pero getSequence (app/breathe/BreatheVisual.jsx) da 'Sostén' a los patrones 'yin' y 'nadi'.
 
-### [baja] respira-9 · Con la meta en 12 vasos, a 360 px los vasos miden 17×21 y la línea del agua tacha los números
+### ~~[baja] respira-9 · Con la meta en 12 vasos, a 360 px los vasos miden 17×21 y la línea del agua tacha los números~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Con más de 8 vasos van en dos filas (`tests/caza-respira.spec.js`).
 - **Dónde:** 360x718
 - **Pasos:** Ajustes → «Vasos al día» → subir a 12 → Hidrátate → sumar varios vasos.
 - **Debería:** Vasos legibles y pulsables. La meta en Ajustes llega a 12 y el comentario dice que la rejilla «rinde bien hasta 12 columnas».
@@ -369,7 +385,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/agua2-360-meta12.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/agua2-360-meta12-zoom.png; salida de agua2.js: '1:17x21* … 12:17x21'
 - **Código sospechoso:** app/hydrate/HydrateModule.jsx:25 (`repeat(goal, 1fr)` sin tope de ancho en móvil) y :46 (relleno con `top: '40%'`, número abajo con 8 px de padding).
 
-### [baja] respira-10 · En Hidrátate, la cola del 3, el 5, el 7 y el 9 baja hasta la línea de «VASOS HOY»
+### ~~[baja] respira-10 · En Hidrátate, la cola del 3, el 5, el 7 y el 9 baja hasta la línea de «VASOS HOY»~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). El número lleva el aire de «Prepárate» debajo (`tests/caza-respira.spec.js`).
 - **Dónde:** 360x718 (el numeral mide 96 px en todos los tamaños)
 - **Pasos:** Hidrátate → sumar vasos hasta 3, 5, 7 o 9.
 - **Debería:** Aire entre la cifra y el rótulo, como el que se le dio al numeral de «Prepárate» para este mismo problema de Cormorant (paddingBottom 0.12em en SessionPrep.jsx).
@@ -386,7 +403,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/safety-cancelar.png; salida de filtro.js: 'tras Cancelar, biblioteca abierta? false'
 - **Código sospechoso:** app/main.jsx:122-125: `handleStartBreathe` hace `setOpenLibrary(null)` antes de enseñar el modal, en vez de solo al aceptar.
 
-### [baja] respira-12 · Con los círculos «Pulso» y «Ondas», a escala máxima los aros pisan la palabra de la fase
+### ~~[baja] respira-12 · Con los círculos «Pulso» y «Ondas», a escala máxima los aros pisan la palabra de la fase~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Ez: Pulso se dibuja a 0,82 y Ondas a 0,89, con el aro fijo; quedan a 6 px de la palabra (`tests/caza-respira.spec.js`).
 - **Dónde:** 360x718, 375x667, 1280x720 y 1530x702
 - **Pasos:** Ajustes → Círculo → «Pulso» (o «Ondas») → Respira → «Suspiro fisiológico» → fase «Inhala más» (escala 1,35).
 - **Debería:** Que ningún aro cruce «Inhala más», como pasa con el loto.
@@ -394,7 +412,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/est2-pulso-zoom.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/est2-360x718-pulso-Suspir.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/est2-1530x702-ondas-Suspir.png; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/est2-ondas1530-zoom.png
 - **Código sospechoso:** app/breathe/BreatheVisual.jsx: el wrap fijo de 260×260 para pulso/ondas/petalo (`breathVisualStyles.wrap`), con los aros de pulso en `inset: -60` y las ondas escaladas hasta 1,35. El arreglo de s138 y s139 solo cubrió el loto.
 
-### [baja] respira-13 · Las duraciones de las tres técnicas de rondas suponen retenciones muy distintas, y dos se alejan mucho de lo que dura la sesión
+### ~~[baja] respira-13 · Las duraciones de las tres técnicas de rondas suponen retenciones muy distintas, y dos se alejan mucho de lo que dura la sesión~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). Ez: un minuto de retención por ronda, 5, 9 y 17 min (`tests/caza-respira.spec.js`).
 - **Dónde:** todos
 - **Pasos:** Hacer cada técnica de rondas soltando cada retención a los 12 s y comparar el «Tiempo» del cierre con los minutos de la tarjeta.
 - **Debería:** Un tiempo cercano a lo que anuncia la tarjeta, o duraciones calculadas con el mismo criterio.
@@ -402,7 +421,8 @@ Todos los scripts, capturas y JSON están en /tmp/claude-0/-home-user-Pace-app/6
 - **Prueba:** /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/out-360.txt; /tmp/claude-0/-home-user-Pace-app/63e26906-7c7e-5b17-9cf1-8297eb950c27/scratchpad/hunt/respira/out-1530.txt
 - **Código sospechoso:** app/breathe/BreatheLibrary.jsx:16-18 (`min: 4/12/20`). El propio BreatheSession.jsx los llama «NOMINALES», pero no dice qué retención suponen.
 
-### [baja] respira-14 · El modal de seguridad dice «hiperventilación controlada y apnea» también en técnicas que no tienen una de las dos
+### ~~[baja] respira-14 · El modal de seguridad dice «hiperventilación controlada y apnea» también en técnicas que no tienen una de las dos~~
+- **Arreglado en `claude/caza-bugs-final`** (sin número de versión todavía). El aviso dice lo que tiene cada técnica: hiperventilación, retenciones o las dos (`tests/caza-respira.spec.js`).
 - **Dónde:** todos
 - **Pasos:** Respira → «Kumbhaka 1:4:2» (o «Kapalabhati · Kriya», o «Tolerancia CO₂») → leer el modal.
 - **Debería:** Un texto que describa la técnica: Kumbhaka es respiración lenta con retenciones (4·16·8) y no hiperventila; Kapalabhati en la app es 1 s y 1 s sin retención.

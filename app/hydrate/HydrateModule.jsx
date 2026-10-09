@@ -14,6 +14,7 @@ function HydrateTracker({ open, onClose }) {
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
           fontSize: 96, fontWeight: 400, lineHeight: 1,
+          paddingBottom: '0.12em',
           color: 'var(--hydrate)',
         }}>
           {today}<span style={{ color: 'var(--ink-3)', fontSize: 40 }}> / {goal}</span>
@@ -22,7 +23,7 @@ function HydrateTracker({ open, onClose }) {
       </div>
 
       {/* Vasos visuales */}
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal > 8 ? Math.ceil(goal / 2) : goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
             onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} } }}
