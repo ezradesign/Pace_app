@@ -45,7 +45,11 @@ function usePaceEventos(acciones) {
         /* 'focus' no abre nada a propósito: el timer ES la home, así que ya
            estás encima de él (en móvil, con el drawer cerrándose detrás). */
         if (d.target === 'breathe') a.abrirBiblioteca('breathe');
-        else if (d.target === 'body') a.abrirBiblioteca('move');
+        /* Las tres puertas de la barra (8 oct. 2026). Estira no tenía ninguna: con el
+           día de «A tu ritmo» en la home solo se llegaba por una parada o por la pausa.
+           Las claves de la biblioteca son las de la ActivityBar: 'extra' es Estira. */
+        else if (d.target === 'stretch') a.abrirBiblioteca('extra');
+        else if (d.target === 'move' || d.target === 'body') a.abrirBiblioteca('move');
         else if (d.target === 'water') a.abrirAgua();
         return;
       }

@@ -109,7 +109,11 @@ test.describe('en tableta vertical, la home es la de móvil', () => {
      asertar sin ambigüedad. Sin ella, el mutante que devuelve el corte viejo a `esCajon`
      sobrevivía al resto del archivo (banco s197). */
   test('el cajón se abre, trae la acción y se cierra al pulsarla', async ({ page, context }) => {
-    await sembrar(context, { ritmo: { dia: { fecha: new Date().toISOString().slice(0, 10), opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
+    /* A las 9:30 de un día servido hay siguiente pausa. Sin reloj fijo, de noche el día ya
+       había acabado y, desde que la barra no propone nada con «A tu ritmo» en la home,
+       el cajón no traía ninguna acción. */
+    await sembrar(context, { ritmo: { dia: { fecha: '2026-10-08', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
+    await page.clock.install({ time: new Date('2026-10-08T09:30:00+02:00') });
     await irAlArtefacto(page);
     await vis(page, '[data-pace-sidebar-toggle], [aria-label="Abrir panel"]').first().click();
     await page.waitForTimeout(500);
