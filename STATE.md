@@ -50,6 +50,16 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
+Con «Suena detrás: Música», cada técnica de Respira suena con su propio drone, hecho en directo a
+partir de tres drones en Sol, sin archivos nuevos (Ez lo eligió el 8 de octubre). Las primeras
+variaciones se parecían demasiado y el 9 de octubre Ez eligió las «marcadas»: cada técnica cambia de
+nota, de acorde, de color o de movimiento, y ninguna queda a menos de 6 puntos de color de su vecina
+(`docs/traspaso/archivos/musica-respira/por-tecnica/marcadas.html`). En los ejercicios pausados la
+música se abre al inhalar y se cierra al exhalar (en Nadi Shodhana, además, se va hacia el lado por
+el que respiras); con ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las
+recetas son `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`), copiadas de `tecnicas.js` con el
+volumen que mide `construir.js`.
+
 La pausa al terminar un bloque sigue la opción A de Ez (v0.152.0, `BreakMenu.css.jsx`): el plato como
 la tarjeta de la biblioteca, píldoras en serif itálica del color del módulo y sin atajos a la vista
 (Intro y Esc siguen). El aviso de un sello espera a que no haya nada abierto y en la home sale
@@ -103,8 +113,6 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
 3. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
    (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
    entonces, en inglés suena el tono.
-4. **La música de Respira**, un drone por técnica, está en `claude/respira-drones-por-tecnica`
-   (con `claude/respira-musica-drones` dentro): falta que Ez la escuche en la app y traerla a `main`.
 
 ## Espera a Ez
 
