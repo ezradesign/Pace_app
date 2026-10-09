@@ -195,9 +195,9 @@
       cm: { nota: 'Sol', voz2: 'Ninguna', color: 'Hueco y grave, como una «u»', mov: 'Solo la respiración, más honda' },
       m: { base: 'calido', tinte: [{ t: 'peaking', hz: 320, q: 1.2, db: 6 }, { t: 'lowshelf', hz: 160, db: 3 }], filtro: { c: 360, a: 3800, q: 0.5 }, prof: 4 } },
     'breathe.co2': {
-      qm: 'Baja a Re con una octava grave debajo, que abriga durante el sostén en vacío.',
-      cm: { nota: 'Re, más grave', voz2: 'Re una octava más abajo, presente', color: 'Más oscuro al cerrar', mov: 'Solo la respiración, más corta' },
-      m: { base: 'calido', ratio: 3 / 4, voz2: { base: 'calido', ratio: 3 / 8, db: -3, lp: 400, of: 19 }, filtro: { c: 300, a: 4000, q: 0.5 }, prof: 2.5 } },
+      qm: 'Baja a Re, más grave y apagada, con una octava debajo que abriga durante el sostén en vacío.',
+      cm: { nota: 'Re, más grave', voz2: 'Re una octava más abajo, presente', color: 'Grave y apagado', mov: 'Solo la respiración, más corta' },
+      m: { base: 'calido', ratio: 3 / 4, voz2: { base: 'calido', ratio: 3 / 8, db: -3, lp: 400, of: 19 }, tinte: [{ t: 'lowshelf', hz: 200, db: 1.5 }, { t: 'lowpass', hz: 2500, q: 0.6 }], filtro: { c: 300, a: 4000, q: 0.5 }, prof: 2.5 } },
     'breathe.coherent.55': {
       qm: 'Sube a Do, con el Sol por debajo entrando y saliendo cada 20 segundos, que son dos respiraciones.',
       cm: { nota: 'Do, más agudo', voz2: 'Sol por debajo', color: 'Claro, con menos filo', mov: 'La voz de abajo entra y sale cada 20 s' },
@@ -207,9 +207,9 @@
       cm: { nota: 'Sol, una octava más grave', voz2: 'Sol una octava arriba, suave', color: 'Más oscuro al cerrar', mov: 'Solo la respiración, muy honda' },
       m: { base: 'claro', ratio: 1 / 2, voz2: { base: 'claro', ratio: 1, db: -6, lp: 1800, of: 37 }, filtro: { c: 300, a: 5000, q: 0.5 }, prof: 4.5 } },
     'breathe.478': {
-      qm: 'La octava grave se oye el doble y el filtro cierra aún más: casi a oscuras en el sostén.',
-      cm: { nota: 'Mi menor, más grave', voz2: 'Una octava grave, presente', color: 'Mucho más oscuro al cerrar', mov: 'Solo la respiración, más honda' },
-      m: { base: 'menor', ratio: 5 / 6, voz2: { base: 'menor', ratio: 5 / 12, db: -5, lp: 320, of: 31 }, filtro: { c: 200, a: 1500, q: 0.5 }, prof: 4 } },
+      qm: 'Ya era la más distinta, así que cambia poco: la octava grave se oye algo más y respira más hondo.',
+      cm: { nota: 'Mi menor, más grave', voz2: 'Una octava grave, algo más presente', color: 'Mucho más oscuro al cerrar', mov: 'Solo la respiración, más honda' },
+      m: { base: 'menor', ratio: 5 / 6, voz2: { base: 'menor', ratio: 5 / 12, db: -8, lp: 320, of: 31 }, filtro: { c: 220, a: 1800, q: 0.5 }, prof: 4 } },
     'breathe.physiological': {
       qm: 'Sube a Do, más ligera que las de noche, y respira con mucho recorrido: los dos peldaños se oyen.',
       cm: { nota: 'Do, más agudo', voz2: 'Sol una octava arriba, suave', color: 'Oscuro pero ligero', mov: 'Dos peldaños bien marcados' },
@@ -235,9 +235,9 @@
       cm: { nota: 'Do, más agudo', voz2: 'El Sol del drone claro', color: 'Cálido', mov: 'Brilla y se apaga cada 8 s, como una brasa' },
       m: { base: 'calido', ratio: 4 / 3, voz2: { base: 'claro', ratio: 1, db: -6, lp: 2400, of: 13 }, tinte: [{ t: 'highshelf', hz: 2500, db: -4 }], mov: { tipo: 'brillo', periodo: 8, de: 1500, a: 3800 } } },
     'breathe.nadi.shodhana': {
-      qm: 'Sube a La, con su octava grave, y con cascos se va casi entera al lado por el que respiras.',
-      cm: { nota: 'La', voz2: 'La una octava más abajo', color: 'Como hoy', mov: 'Se va mucho más al lado por el que respiras (con cascos)' },
-      m: { base: 'claro', ratio: 9 / 8, voz2: { base: 'claro', ratio: 9 / 16, db: -4, lp: 600, of: 27 }, tinte: [{ t: 'highshelf', hz: 2200, db: -4 }], filtro: { c: 500, a: 6000, q: 0.5 }, pan: 0.85 } },
+      qm: 'Sube a La con un Re cálido por debajo, un acorde mayor, y con cascos se va casi entera al lado por el que respiras.',
+      cm: { nota: 'La', voz2: 'Re del drone cálido, por debajo', color: 'Como hoy', mov: 'Se va mucho más al lado por el que respiras (con cascos)' },
+      m: { base: 'claro', ratio: 9 / 8, voz2: { base: 'calido', ratio: 3 / 4, db: -4, lp: 2000, of: 27 }, tinte: [{ t: 'highshelf', hz: 2200, db: -4 }], filtro: { c: 500, a: 6000, q: 0.5 }, pan: 0.85 } },
     'breathe.kapalabhati': {
       qm: 'Sube a Re: la más aguda de todas, limpia y quieta.',
       cm: { nota: 'Re, más agudo', voz2: 'Ninguna', color: 'Claro y limpio', mov: 'Quieta' },

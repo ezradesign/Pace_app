@@ -138,11 +138,11 @@
   const est = { voz: 'sulafat', nivel: 0, sonando: null, recorrido: null };
   let motor = null, entrada = null, plan = null, timer = 0, raf = 0, vivos = [];
 
+  /* Los audios se leen de su sitio en el repo: la página se abre desde el servidor de PACE. */
   async function bytes(nombre, carpeta) {
-    for (const url of ['audio/' + nombre + '.mp3', carpeta + nombre + '.mp3']) {
-      try { const r = await fetch(url); if (r.ok) return await r.arrayBuffer(); } catch (e) { /* siguiente sitio */ }
-    }
-    throw new Error('No encuentro ' + nombre + '.mp3');
+    const r = await fetch(carpeta + nombre + '.mp3');
+    if (!r.ok) throw new Error('No encuentro ' + nombre + '.mp3');
+    return r.arrayBuffer();
   }
   function decodifica(nombre, carpeta) {
     if (!decod[nombre]) decod[nombre] = bytes(nombre, carpeta).then((ab) => ctx.decodeAudioData(ab)).catch((e) => { delete decod[nombre]; throw e; });
