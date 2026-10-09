@@ -51,7 +51,9 @@ async function medirCirculo(page) {
 
 async function abrirBiblioteca(page, rutina) {
   await page.getByRole('button', { name: /^Estira/ }).click();
-  await page.getByRole('heading', { name: rutina, exact: true }).click();
+  /* En la ventana de la biblioteca: la tarjeta «Siguiente pausa» de la barra lateral también
+     es un h4 con el nombre de una rutina, la del día, y el 9 oct. era «Escritorio express». */
+  await page.locator('[role="dialog"]').getByRole('heading', { name: rutina, exact: true }).click();
   const preview = overlaySuperior(page);
   await expect(preview.getByText('LOS PASOS')).toBeVisible();
   return preview;
