@@ -57,14 +57,15 @@ elecciones de Ez se guardan en su base de datos, colecciones `elecciones` (una p
 
 Ez: «aplicamos las novedades de los drones más personalizados a cada respiración y cuando los vaya
 probando te digo». Está en `app/ui/Sound.musica.jsx` con las recetas en `app/ui/Sound.musica.parts.jsx`
-(`PACE_MUSICA_TECNICA`), que copian las de `tecnicas.js` y los `ajusteDb` de `medidas.js`. La app usa
+(`PACE_MUSICA_TECNICA`), que desde el 9 oct. son las marcadas: la `m` de `tecnicas.js` y su `ajusteDb`
+(dentro de `m` en `medidas.js`). La app usa
 el mismo motor que la página: los drones se descodifican a 22 050 Hz y suenan en bucle dentro de Web
 Audio, así que lo que suena es lo que se midió. `PACE_MUSICA` (por familia) queda de reserva para una
-técnica sin receta. Lo vigila `tests/respira-musica.spec.js`.
+técnica sin receta. Lo vigila `tests/respira-musica.spec.js`, que además comprueba que cada receta
+de la app sea la marcada de `tecnicas.js` con su ajuste medido.
 
-Para cambiar una técnica cuando Ez la pruebe: tocar su receta en `tecnicas.js`, correr `construir.js`
-hasta «Sin avisos», escucharla en la página y copiar la receta y su `ajusteDb` a
-`Sound.musica.parts.jsx`.
+Para cambiar una técnica: tocar su `m` en `tecnicas.js`, correr `construir.js` hasta «Sin avisos»,
+escucharla en `marcadas.html` y copiar la receta y su `ajusteDb` a `Sound.musica.parts.jsx`.
 
 ## Las marcadas (9 oct.)
 
@@ -76,7 +77,8 @@ grabar nada. La receta `m` usa los mismos campos que `a`, así que la app no cam
 nota, acordes que se oyen, colores como de vocal y movimientos que se notan en medio minuto.
 `construir.js` mide también `m` (su ajuste va en `medidas.js`, dentro de `m`) y avisa si una queda a
 menos de 6 de su vecina: con las marcadas la pareja más cercana está a 6,3 y no queda ninguna
-gemela. Las medidas de `a` no cambian.
+gemela. Las medidas de `a` no cambian. Ez las escuchó en la página y en la app y dijo «suenan bien,
+súbelas» (9 oct.): son las que suenan en la app.
 
 Para escucharlas, con el servidor de PACE en marcha (por ejemplo en el puerto 8792):
 `http://localhost:8792/docs/traspaso/archivos/musica-respira/por-tecnica/marcadas.html`. Si en ese
