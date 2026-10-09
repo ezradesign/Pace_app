@@ -158,126 +158,90 @@ const sidebarStyles = {
     marginTop: 4,
   },
 
-  /* ---------- s180 ---------- */
+  /* ---------- el cuaderno (8 oct. 2026) ----------
+     Los números salen de la página de Ez (`docs/traspaso/archivos/sidebar-8oct/
+     cuaderno.js`), medidos en la app: a 1280x800 la barra entera cabe sin encoger. */
 
   /* Cabecera centrada + la fecha. La fecha va al MISMO cuerpo que el rotulo
      (11 px) y no a 10: con 10 compartian linea base pero se veia mas baja,
      porque su altura de x es menor. Lo unico que la separa es el color. */
   sectionHeaderCentro: {
     display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 7,
-    marginBottom: 10,
+    marginBottom: 9,
   },
   fecha: {
     fontSize: 'var(--size-meta)', letterSpacing: 'var(--track-meta)',
     textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.75,
   },
 
-  hoyIc:     { width: 24, height: 24, color: 'var(--ink-2)' },
-  hoyNombre: { fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 },
-  hoyValor:  { fontFamily: 'var(--font-display)', fontSize: 22, lineHeight: 0.95, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums', marginTop: 'auto' },
-  hoyUnidad: { fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--ink-3)', marginLeft: 3 },
-  hoyValorCero: { color: 'var(--ink-3)', opacity: 0.55 },
+  /* La cantidad de cada frase va en tinta entera; el resto, en la secundaria. */
+  tinta: { fontWeight: 500, color: 'var(--ink)' },
 
-  /* `minHeight` = el alto exacto de una gota (7). Es lo que RESERVA la fila
-     cuando todavia no hay ninguna bola, y sin ella los valores de Foco,
-     Respira y Cuerpo caian 9 px por debajo del de Agua. `alignItems`
-     porque las bolas de sesion miden 4 y las gotas 7: sin el, unas se
-     apoyarian arriba y otras llenarian la fila. */
-  gotas: { display: 'flex', gap: 3, justifyContent: 'center', alignItems: 'center', marginTop: 2, minHeight: 7 },
-  /* LOS PUNTOS DE SESION NO SON LOS VASOS, y por eso no comparten forma. El
-     agua tiene META (8) y sus gotas dicen «vas por 3 de 8»; Foco, Respira y
-     Cuerpo no tienen meta, asi que sus puntos solo CUENTAN. Un circulo lleno
-     donde el agua pone una gota hueca: mismo sitio, dos significados
-     distintos, dibujos distintos. */
-  sesion: { width: 4, height: 4, borderRadius: '50%', flex: 'none' },
-  gota:  { width: 5, height: 7, borderRadius: '0 0 50% 50% / 0 0 40% 40%', border: '1px solid var(--hydrate)', opacity: 0.35 },
-  gotaOn:{ background: 'var(--hydrate)', opacity: 1 },
+  /* HOY: una línea por módulo, en la itálica de los títulos. `textWrap` reparte
+     en dos líneas iguales la frase que no quepa («Dos horas y 43 minutos
+     moviéndote»), en vez de dejar una palabra sola abajo. */
+  cuaderno:  { display: 'flex', flexDirection: 'column', gap: 5, padding: '0 2px' },
+  linea:     { display: 'flex', alignItems: 'center', gap: 10, margin: 0, fontFamily: 'var(--font-display)', fontStyle: 'italic',
+               fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)', textWrap: 'balance' },
+  lineaIc:   { width: 16, height: 16, flex: 'none', display: 'inline-grid', placeItems: 'center' },
+  /* La línea del agua es un botón: hereda la línea y se quita lo de botón. */
+  lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
+  vaso:      { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
+               color: 'var(--hydrate)', border: '1px solid var(--hydrate)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
+               whiteSpace: 'nowrap', background: 'var(--hydrate-soft)' },
+  vacioCopy: { margin: '0 0 4px', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.4,
+               color: 'var(--ink-3)', textAlign: 'center', padding: '0 6px', textWrap: 'balance' },
 
-  /* La tarjeta ENTERA es el objetivo (patron s174: el titulo lleva DENTRO el
-     boton y este se extiende con un `::after`). Sin CTA suelto se ahorran
-     55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
-  /* MAS AIRE ENTRE LINEAS, pedido mirandolo: sube el padding vertical y con
-     el `line-height` de sus tres piezas la tarjeta pasa de 98 a ~118 px. */
-  accion:        { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden', flexShrink: 0 },
-  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 },
-  /* SIN `position: relative`: el `::after` del boton se posiciona contra el
-     ancestro posicionado mas cercano, y ese tiene que ser la TARJETA. Con
-     el h4 relativo, el objetivo se quedaba del tamanio del titulo. */
-  /* FILA, no bloque: el titulo y la flecha comparten linea. Antes la flecha
-     iba ABSOLUTA contra el fondo de la tarjeta y caia encima de la meta --
-     medido a 1536x864: **15 px de solape horizontal y 9,3 de vertical**. Con
-     un texto corto no se veia; con uno mas largo, o a otra escala de
-     escritorio, si. Lo reporto el usuario a 1920x1080 con Windows al 125 %, y
-     su apanio (bajar el zoom al 90 %) lo que hacia era justamente subir la
-     flecha a esta linea. */
-  accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 },
-  accionBoton:   { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
-  accionMeta:    { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
-  /* s197 · LO QUE LLEVAS, bajo el meta y tras un hilo: la itálica serif de las losetas
-     del ritmo, que es la que el usuario eligió mirándola («más elegante»). */
-  accionLlevas:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: 'var(--ink-2)',
-                   margin: '9px 0 0', paddingTop: 8, borderTop: '1px solid var(--line)', lineHeight: 1.5 },
-  accionFlecha:  { flex: 'none', color: 'var(--ink-3)', fontSize: 15, lineHeight: 1 },
+  /* LA PAUSA: el glifo de su módulo, la frase con la rutina en tinta, debajo cuánto
+     dura, y la flecha. La fila entera es el botón. */
+  pausa:      { display: 'grid', gridTemplateColumns: '16px minmax(0, 1fr) auto', gap: 10, alignItems: 'start', width: '100%',
+                padding: '0 2px', textAlign: 'left', background: 'none', border: 0, cursor: 'pointer', color: 'inherit' },
+  pausaIc:    { width: 16, height: 16, marginTop: 3, display: 'inline-grid', placeItems: 'center' },
+  pausaTexto: { display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 },
+  pausaFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)' },
+  pausaMeta:  { fontFamily: 'var(--font-ui)', fontSize: 11.5, color: 'var(--ink-3)' },
+  flecha:     { color: 'var(--ink-3)', fontSize: 15, alignSelf: 'center' },
 
-  semDia:   { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
-  semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
-  semPunto: { width: 6, height: 6, borderRadius: '50%', background: 'var(--line)' },
-  semPie:   { fontSize: 11, color: 'var(--ink-3)', marginTop: 11 },
+  /* LA SEMANA: siete cápsulas de 7 x 40. El trazo y los colores, en la hoja. */
+  semana:      { color: 'inherit' },
+  semDias:     { display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' },
+  semDia:      { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 },
+  capsula:     { display: 'flex', flexDirection: 'column-reverse', overflow: 'hidden', width: 7, height: 40, borderRadius: 3.5 },
+  semLetra:    { fontFamily: 'var(--font-ui)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-3)', lineHeight: 1 },
+  semLetraHoy: { color: 'var(--ink)', fontWeight: 600 },
+  semPie:      { display: 'block', textAlign: 'center', marginTop: 6, fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                 fontSize: 14, color: 'var(--ink-2)' },
 
-  /* El ultimo logro, en SECCION propia y COMPACTA (L2/L4). El sello va a 28 y
-     no a 38, y no lleva fecha: «hace 2 dias» no es lo que la persona se
-     pregunta -- se pregunta CUAL fue-- y esos dos recortes son los que hacen
-     que la seccion quepa sin sacar nada de sitio. */
-  /* CENTRADO y no a la izquierda, como el resto de la columna -- lo pidio el
-     usuario viendolo junto a «Hoy» y «Esta semana», que ya van centradas. */
-  /* CAJA como la de Repetir (pedido mirandolo): el logro deja de ser una fila
-     suelta y comparte el lenguaje de la tarjeta de accion -- mismo borde, mismo
-     radio, mismo papel. */
-  logroFila:   { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
-                 border: '1px solid var(--line)', borderRadius: 'var(--r-md)',
-                 padding: '12px 14px', background: 'var(--paper)' },
-  logroSello:  { width: 36, height: 36, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
-  /* MAS FINA Y SIN NEGRITA: el 500 lo hacia competir con el nombre de la
-     rutina de la tarjeta, que es el unico titulo que deberia pesar. */
-  logroTitulo: { fontSize: 12.5, fontWeight: 400, color: 'var(--ink-2)', lineHeight: 1.3, letterSpacing: '0.01em' },
+  /* LAS BIBLIOTECAS: tres puertas en una fila, el glifo al lado del nombre. En la serif
+     de los títulos pero de pie, como Ez las vio: son nombres, no frases del cuaderno. */
+  puertas:  { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 },
+  puerta:   { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, minHeight: 36, padding: '7px 0',
+              borderRadius: 'var(--r-md)', fontFamily: 'var(--font-display)', fontStyle: 'normal', fontSize: 15,
+              color: 'var(--ink)', background: 'none', border: 0, cursor: 'pointer' },
+  puertaIc: { width: 18, height: 18, flex: 'none', display: 'inline-grid', placeItems: 'center' },
 
-  /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
-     columna mas valiosa (44 del boton menos 10 del texto). */
-  pieFila:   { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
-  /* PILL NARANJA (s181, pedido por el usuario). Antes era texto suelto al lado
-     de la pill de apoyo, y las dos filas del pie no se parecian en nada aunque
-     hicieran lo mismo: llevar a otro sitio. Toma la FORMA de `SupportButton`
-     -- mismo radio de pill, mismo padding-- y el color de `--premium`, que es
-     el token del gating y el que ya lleva el sello de dentro. El texto se
-     queda en tinta secundaria: con el borde y el sello ya hay naranja de
-     sobra, y ponerlo tambien en el rotulo lo hacia gritar. */
-  pieMisRutinas: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                   width: '100%', minHeight: 34, fontSize: 11.5, color: 'var(--ink-2)',
-                   padding: '9px 14px', background: 'var(--premium-soft)',
-                   border: '1px solid var(--premium)', borderRadius: 'var(--r-pill)',
-                   cursor: 'pointer', transition: 'background 220ms var(--ease)' },
-  /* La regla del pie: un hilo, no un borde de nadie. Como el pie es una
-     columna con `gap`, un elemento propio se separa solo por los dos
-     lados y no hay que compensar margenes. */
-  pieRegla: { display: 'block', height: 1, background: 'var(--line)' },
-  pieEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3 },
-  /* «Ver la coleccion» se muda del pie a la seccion del ultimo logro: es donde
-     significa algo -- al lado del sello del que viene-- y ahi el pie recupera
-     su sitio para la pill de apoyo. */
-  logroEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3, display: 'block', margin: '10px auto 0' },
-  pieVer:    { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
+  /* EL ÚLTIMO LOGRO: sello de 46 con el trazo legible (la hoja lo pinta a 1,2 px:
+     a 26 px «Ciclo completo» era un círculo vacío), nombre, descripción y enlace. */
+  logroFila:   { display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'none',
+                 border: 0, padding: 0, cursor: 'pointer', color: 'inherit' },
+  logroSello:  { width: 46, height: 46, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
+                 placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
+  logroTexto:  { display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 },
+  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)' },
+  logroDesc:   { fontFamily: 'var(--font-ui)', fontSize: 11.5, lineHeight: 1.35, color: 'var(--ink-3)' },
+  logroEnlace: { fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline',
+                 textUnderlineOffset: 3, marginTop: 2 },
 
-  vacioCopy: { fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.5, fontStyle: 'italic', fontFamily: 'var(--font-display)', textAlign: 'center', padding: '6px 4px' },
-  /* NOTA histórica: los estilos de Recordatorios (v0.11.6) e Intención
-     (v0.12.1) se eliminaron aquí cuando esas secciones se quitaron del
-     sidebar. Los campos `state.reminders` y `state.intention` siguen
-     existiendo en state.jsx (retro-compat + captura en Welcome). */
-  footer: {
-    marginTop: 14,
-    paddingTop: 12,
-    borderTop: '1px solid var(--line)',
-    display: 'flex', flexDirection: 'column', gap: 10,
-  },
+  /* EL PIE: dos filas de texto y la versión. */
+  footer:     { display: 'flex', flexDirection: 'column', gap: 2, borderTop: '1px solid var(--line)', paddingTop: 8, marginTop: 12 },
+  pieFila:    { display: 'flex', alignItems: 'center', gap: 8, width: '100%', minHeight: 32, padding: '7px 2px', textAlign: 'left',
+                fontFamily: 'var(--font-ui)', fontSize: 12, color: 'var(--ink-2)', background: 'none', border: 0, cursor: 'pointer' },
+  pieApoyo:   { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14 },
+  pieChev:    { marginLeft: 'auto', color: 'var(--ink-3)' },
+  pieSello:   { fontSize: 9, padding: '2px 7px' },
+  pieVersion: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 },
+  pieVer:     { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
+  pieFirma:   { fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' },
 
   footerRow: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',

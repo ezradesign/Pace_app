@@ -83,7 +83,7 @@ function RitmoHoja({ open, onClose, plan, state }) {
         <div className="pace-rt-sub pace-rt-frase">
           <RitmoFraseMenu plan={plan} horario={R.horario} plantilla="ritmo.frase.menu" capital />
         </div>
-        <div className="pace-rt-sub">{ritmoResumen(plan.m, tn)}</div>
+        <div className="pace-rt-sub">{ritmoResumen(plan.m, tn, ritmoMetaVasos(state))}</div>
         <div style={{ marginTop: 12 }}><RitmoContexto /></div>
         <RitmoLista plan={plan} />
         {/* «Al calendario» vive aquí en el móvil: el día servido ya no tiene pie (RitmoMovil).

@@ -1766,18 +1766,24 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.open.aria': 'Abrir panel',
 
   'sidebar.today': 'Hoy',
-  'sidebar.today.focus': 'Foco',
-  'sidebar.today.breathe': 'Respira',
-  'sidebar.today.body': 'Cuerpo',
-  'sidebar.today.water': 'Agua',
-  'sidebar.unit.min': 'min',
-  'sidebar.unit.of': 'de {n}',
+
+
+  'sidebar.hoy.focus': '{x} de foco',
+  'sidebar.hoy.breathe': '{x} respirando',
+  'sidebar.hoy.body': '{x} moviéndote',
+  'sidebar.agua.ninguno': 'Ningún vaso de {m}',
+  'sidebar.agua.de': '{x} de {m}',
+  'sidebar.agua.meta': '{x} del día',
+  'sidebar.agua.meta.x': 'Los {m} vasos',
+  'sidebar.agua.mas': '+ vaso',
   'sidebar.open.module': 'Abrir {m}',
   'sidebar.water.add': 'Añadir un vaso',
   'sidebar.week': 'Esta semana',
   'sidebar.week.rhythm': '{n} días en ritmo · mejor {m}',
   'sidebar.week.rhythm.one': '1 día en ritmo · mejor {m}',
   'sidebar.week.none': 'Sin días todavía · mejor {m}',
+  'sidebar.week.rhythm.sin': '{n} días en ritmo',
+  'sidebar.week.rhythm.one.sin': '1 día en ritmo',
   'sidebar.week.open': 'Ver la semana en Estadísticas',
   'sidebar.action.continue': 'Continúa',
   'sidebar.action.repeat': 'Repetir',
@@ -1787,6 +1793,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.action.resume.meta': 'La dejaste a medias',
   'sidebar.action.now': 'Para ahora',
   'sidebar.action.now.meta': 'Cabe donde estás',
+  'sidebar.pausa': 'Siguiente pausa',
+  'sidebar.pausa.ahora': 'Tu pausa',
+  'sidebar.pausa.a': 'A las {h}, ',
+  'sidebar.pausa.ya': 'Ahora, ',
+  'sidebar.pausa.meta': '{x} de {m}',
+  'sidebar.pausa.larga': 'Pausa larga de {x}',
+  'sidebar.libraries': 'Bibliotecas',
   'sidebar.mine': 'Mis rutinas',
   'sidebar.latest': 'Último logro',
   'sidebar.latest.none': 'Aún no hay ninguno',
@@ -1914,18 +1927,22 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.open.aria': 'Open panel',
 
   'sidebar.today': 'Today',
-  'sidebar.today.focus': 'Focus',
-  'sidebar.today.breathe': 'Breathe',
-  'sidebar.today.body': 'Body',
-  'sidebar.today.water': 'Water',
-  'sidebar.unit.min': 'min',
-  'sidebar.unit.of': 'of {n}',
+  'sidebar.hoy.focus': '{x} of focus',
+  'sidebar.hoy.breathe': '{x} breathing',
+  'sidebar.hoy.body': '{x} moving',
+  'sidebar.agua.ninguno': 'None of {m} glasses',
+  'sidebar.agua.de': '{x} of {m}',
+  'sidebar.agua.meta': '{x} today',
+  'sidebar.agua.meta.x': 'All {m} glasses',
+  'sidebar.agua.mas': '+ glass',
   'sidebar.open.module': 'Open {m}',
   'sidebar.water.add': 'Add a glass',
   'sidebar.week': 'This week',
   'sidebar.week.rhythm': '{n} days in rhythm · best {m}',
   'sidebar.week.rhythm.one': '1 day in rhythm · best {m}',
   'sidebar.week.none': 'No days yet · best {m}',
+  'sidebar.week.rhythm.sin': '{n} days in rhythm',
+  'sidebar.week.rhythm.one.sin': '1 day in rhythm',
   'sidebar.week.open': 'See the week in Stats',
   'sidebar.action.continue': 'Continue',
   'sidebar.action.repeat': 'Repeat',
@@ -1935,6 +1952,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.action.resume.meta': 'You left it unfinished',
   'sidebar.action.now': 'Right now',
   'sidebar.action.now.meta': 'Fits where you are',
+  'sidebar.pausa': 'Next break',
+  'sidebar.pausa.ahora': 'Your break',
+  'sidebar.pausa.a': 'At {h}, ',
+  'sidebar.pausa.ya': 'Now, ',
+  'sidebar.pausa.meta': '{x} of {m}',
+  'sidebar.pausa.larga': 'Long break of {x}',
+  'sidebar.libraries': 'Libraries',
   'sidebar.mine': 'My routines',
   'sidebar.latest': 'Latest badge',
   'sidebar.latest.none': 'None yet',
@@ -3437,8 +3461,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.listo': 'Listo',
   'ritmo.ctx.mesa': 'Junto a la mesa',
   'ritmo.ctx.material': 'Sin material',
-  'ritmo.resumen': '{f} de foco · {p} pausas · {v} vasos',
-  'ritmo.resumen.una': '{f} de foco · 1 pausa · {v} vasos',
+  'ritmo.resumen': '{f} de foco · {p} pausas · {v}',
+  'ritmo.resumen.una': '{f} de foco · 1 pausa · {v}',
+  'ritmo.vasos': '{v} de {m} vasos',
   'ritmo.ahora': 'Ahora',
   'ritmo.luego': 'Luego',
   'ritmo.fila.bloque': 'Foco · bloque {n} de {m}',
@@ -3469,21 +3494,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aro.bloque': 'Bloque {n} de {m}',
   'ritmo.aro.empezar': 'Empezar jornada',
   'ritmo.aro.siguiente': 'Empezar bloque {n}',
-  'ritmo.sidebar': 'Siguiente pausa · {h}',
-  'ritmo.sidebar.ahora': 'Tu pausa · {h}',
   'ritmo.aria.inicio': 'Hora a la que empiezas',
   'ritmo.aria.comida': 'Hora a la que comes',
   'ritmo.aria.comidaDur': 'Cuánto dura la comida',
   'ritmo.aria.salida': 'Hora a la que terminas',
   'ritmo.aria.media.inicio': 'Hora a la que empieza tu media jornada',
   'ritmo.aria.media.salida': 'Hora a la que termina tu media jornada',
-  'ritmo.llevas': 'Llevas {b} y {p}',
-  'ritmo.llevas.solo': 'Llevas {b}',
-  'ritmo.numeros': 'cero,un,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez,once,doce',
-  'ritmo.llevas.bloques': '{n} bloques',
-  'ritmo.llevas.bloque': 'un bloque',
-  'ritmo.llevas.pausas': '{n} pausas',
-  'ritmo.llevas.pausa': 'una pausa',
   'break.prop.ritmo.estira': 'A tu ritmo · antídoto a la silla',
   'break.prop.ritmo.mueve': 'A tu ritmo · cuerpo activo',
   'break.prop.ritmo.larga': 'A tu ritmo · pausa larga, respira y suelta',
@@ -3553,8 +3569,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.listo': 'Done',
   'ritmo.ctx.mesa': 'At your desk',
   'ritmo.ctx.material': 'No equipment',
-  'ritmo.resumen': '{f} of focus · {p} breaks · {v} glasses',
-  'ritmo.resumen.una': '{f} of focus · 1 break · {v} glasses',
+  'ritmo.resumen': '{f} of focus · {p} breaks · {v}',
+  'ritmo.resumen.una': '{f} of focus · 1 break · {v}',
+  'ritmo.vasos': '{v} of {m} glasses',
   'ritmo.ahora': 'Now',
   'ritmo.luego': 'Next',
   'ritmo.fila.bloque': 'Focus · block {n} of {m}',
@@ -3583,21 +3600,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aro.bloque': 'Block {n} of {m}',
   'ritmo.aro.empezar': 'Start the day',
   'ritmo.aro.siguiente': 'Start block {n}',
-  'ritmo.sidebar': 'Next break · {h}',
-  'ritmo.sidebar.ahora': 'Your break · {h}',
   'ritmo.aria.inicio': 'Start time',
   'ritmo.aria.comida': 'Lunch time',
   'ritmo.aria.comidaDur': 'Lunch length',
   'ritmo.aria.salida': 'Finish time',
   'ritmo.aria.media.inicio': 'Half day start time',
   'ritmo.aria.media.salida': 'Half day finish time',
-  'ritmo.llevas': 'So far, {b} and {p}',
-  'ritmo.llevas.solo': 'So far, {b}',
-  'ritmo.numeros': 'zero,one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve',
-  'ritmo.llevas.bloques': '{n} blocks',
-  'ritmo.llevas.bloque': 'one block',
-  'ritmo.llevas.pausas': '{n} breaks',
-  'ritmo.llevas.pausa': 'one break',
   'break.prop.ritmo.estira': 'At your pace · antidote to the chair',
   'break.prop.ritmo.mueve': 'At your pace · active body',
   'break.prop.ritmo.larga': 'At your pace · long break, breathe and let go',
@@ -17998,7 +18006,6 @@ Object.assign(window, {
 
 
 
-
 if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-responsive-css')) {
   const s = document.createElement('style');
   s.id = 'pace-sidebar-responsive-css';
@@ -18124,52 +18131,57 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       top: -63.41% !important;
     }
 
-    /* Hoy · rejilla 2x2. Las celdas son BOTONES: abren su modulo. Antes, para
-       ir a Respira habia que salir de la sidebar. */
-    [data-pace-sidebar] [data-pace-hoy] {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
-      /* Sin esto la fila del agua crece con sus ocho vasos y la rejilla queda
-         con filas de 87 y 99 px. Medido en la app, no supuesto. */
-      grid-auto-rows: 1fr;
-    }
-    [data-pace-sidebar] [data-pace-hoy-celda] {
-      border: 1px solid var(--line); border-radius: var(--r-sm);
-      padding: 9px 10px 8px; background: var(--paper);
-      display: flex; flex-direction: column; gap: 5px;
-      min-height: 74px; width: 100%; align-items: center; text-align: center;
-      transition: border-color 180ms, background 180ms;
-    }
-    [data-pace-sidebar] [data-pace-hoy-celda]:hover { border-color: var(--line-2); }
-    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] { background: transparent; }
-    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] [data-pace-hoy-ic] { opacity: 0.3; }
+    /* EL CUADERNO (8 oct. 2026). Lo que no puede ir en línea: los glifos llenan su
+       caja, los estados al pasar el ratón y con el teclado, y las cápsulas.
+       Los glifos de «ActivityBar» traen su propio tamaño; aquí ocupan la caja que
+       les da cada pieza (16 en Hoy y en la pausa, 18 en las bibliotecas). */
+    [data-pace-sidebar] [data-pace-hoy-ic] svg,
+    [data-pace-sidebar] [data-pace-sb-ic] svg { width: 100%; height: 100%; display: block; }
 
-    /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
-       su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
-    /* LA TARJETA ENTERA ES EL OBJETIVO, y esto NO puede vivir en los estilos
-       en linea: React no crea pseudo-elementos. Sin esta regla el objetivo es
-       solo el titulo -- medido, 74 x 23 px de una tarjeta de 243 x 117, y un
-       click en la mitad de abajo cae en un div. Lo reporto el usuario, y luego
-       un corte de CSS se la llevo por delante: la cazo su test, que prueba las
-       CUATRO esquinas y el centro.
-       El patron es el de s174: el encabezado lleva DENTRO el boton y este se
-       extiende con un '::after' absoluto, para conservar el <h4> en el arbol de
-       accesibilidad. */
-    [data-pace-sidebar] [data-pace-sidebar-accion] h4 button::after {
-      content: ''; position: absolute; inset: 0; z-index: 1;
+    [data-pace-sidebar] [data-pace-hoy-celda][data-modulo="water"]:hover [data-pace-hoy-vaso] { background: var(--paper); }
+    [data-pace-sidebar] [data-pace-sidebar-accion-boton]:hover [data-pace-sidebar-accion-titulo],
+    [data-pace-sidebar] [data-pace-sidebar-pie] button:hover > span:first-child {
+      text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
     }
-    [data-pace-sidebar] [data-pace-sidebar-accion]:hover { border-color: var(--line-2); }
+    [data-pace-sidebar] [data-pace-biblioteca]:hover { background: var(--paper-3); }
+    [data-pace-sidebar] [data-pace-sidebar-ultimo]:hover [data-pace-sidebar-ultimo-titulo] { text-decoration: underline; text-underline-offset: 3px; }
+    [data-pace-sidebar] [data-pace-hoy] button:focus-visible,
+    [data-pace-sidebar] [data-pace-sidebar-accion] button:focus-visible,
+    [data-pace-sidebar] [data-pace-biblioteca]:focus-visible,
+    [data-pace-sidebar] [data-pace-sidebar-ultimo]:focus-visible,
+    [data-pace-sidebar] [data-pace-sidebar-pie] button:focus-visible {
+      outline: 2px solid var(--focus); outline-offset: 3px; border-radius: var(--r-sm);
+    }
+
+    /* EL SELLO DEL ÚLTIMO LOGRO, LEGIBLE: los dibujos finos (0,6 de 44) se pintan a
+       1,2 px reales. A este tamaño, con el trazo escalado, «Ciclo completo» era un
+       círculo vacío. */
+    [data-pace-sidebar] [data-pace-sidebar-ultimo] svg * { vector-effect: non-scaling-stroke; stroke-width: 1.2px; }
+
+    /* LAS CÁPSULAS AFINADAS (Ez, 9 oct. 2026). El tubo es un TRAZO de 1 px y no una
+       mancha: vacío pesaba casi tanto como lleno. Los días que vienen, con el trazo
+       a media tinta. El relleno de los días pasados es un oliva claro SÓLIDO: el de
+       antes era el oliva transparente, y sobre el beige del tubo se volvía gris y
+       parecía apagado (más en la paleta oscura). Hoy, en tinta entera.
+       Sin «color-mix» (navegadores viejos) queda el oliva a media opacidad, que es
+       como era. */
+    [data-pace-sidebar] [data-pace-capsula] { box-shadow: inset 0 0 0 1px var(--line); }
+    [data-pace-sidebar] [data-futuro="1"] [data-pace-capsula] { opacity: .55; }
+    [data-pace-sidebar] [data-pace-capsula-relleno] { display: block; flex: none; border-radius: 3.5px; background: var(--focus); opacity: .55; }
+    @supports (background: color-mix(in oklab, red, blue)) {
+      [data-pace-sidebar] [data-pace-capsula-relleno] { opacity: 1; background: color-mix(in oklab, var(--focus) 58%, var(--paper-2)); }
+    }
+    [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: var(--focus); opacity: 1; }
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
-       ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
-    /* SIN ROTULO, EL BOTON TIENE QUE PONER SU PROPIO ALTO. La fila de puntos
-       mide 21 px y el minimo tactil son 44: el padding de 12 lo sube a 45 sin
-       anadir nada visible. Antes ese alto lo daba el rotulo de la seccion, que
-       se retiro. */
+       ancho util son 243. El padding y el margen negativo dan aire al fondo que
+       sale al pasar el raton sin mover las capsulas de su sitio. */
     [data-pace-sidebar] [data-pace-semana] {
-      display: block; width: 100%; text-align: left;
-      border-radius: var(--r-sm); padding: 12px 6px; margin: -12px -6px;
+      display: block; width: calc(100% + 12px); text-align: left; background: none; border: 0; cursor: pointer;
+      border-radius: var(--r-sm); padding: 6px 6px; margin: -6px -6px;
     }
     [data-pace-sidebar] [data-pace-semana]:hover { background: var(--focus-soft); }
+    [data-pace-sidebar] [data-pace-semana]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
     /* LA ENVOLTURA QUE SE ESCALA (s181). La sidebar se ve IGUAL en cualquier
        resolucion: cuando no cabe, encoge entera en vez de recolocarse. El
@@ -18255,24 +18267,8 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       [data-pace-sidebar]::-webkit-scrollbar {
         display: none;                    /* WebKit / Blink */
       }
-
-      /* EL AIRE DE LA TARJETA, SOLO EN EL CAJON (s182, encargo B del usuario).
-         Bajo la ultima linea habia 28 px -- 16 de padding mas 12 del descender--
-         y bajar el padding a 8 devuelve 8 px exactos: a 428x800 el pie pasa de
-         quedar 1,4 px por DEBAJO del borde a tener 6,6 dentro.
-         VA AQUI Y NO EN «sidebarStyles.accion» porque ese objeto lo comparten
-         las dos pieles, y en escritorio el aire se afino mirandolo en s180.
-         Y LLEVA «!important» POR NECESIDAD, NO POR PEREZA: el padding lo pone un
-         estilo EN LINEA, que gana a la hoja sin que haga falta «!important» del
-         otro lado (misma trampa que s180 con el recorte del logo). */
-      [data-pace-sidebar] [data-pace-sidebar-accion] { padding-bottom: 8px !important; }
     }
 
-    @media (max-width: 640px) {
-      /* El logo ya iba capado a 200 px desde s66; con el recorte eso son
-         200 x 79,5 en vez de los 121 de alto que daba sin tope a 390 px. */
-      [data-pace-sidebar] [data-pace-hoy] { gap: 8px; }
-    }
   `;
   document.head.appendChild(s);
 }
@@ -18674,121 +18670,85 @@ const sidebarStyles = {
 
 
 
+
+
   sectionHeaderCentro: {
     display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 7,
-    marginBottom: 10
+    marginBottom: 9
   },
   fecha: {
     fontSize: 'var(--size-meta)', letterSpacing: 'var(--track-meta)',
     textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.75
   },
 
-  hoyIc: { width: 24, height: 24, color: 'var(--ink-2)' },
-  hoyNombre: { fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 },
-  hoyValor: { fontFamily: 'var(--font-display)', fontSize: 22, lineHeight: 0.95, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums', marginTop: 'auto' },
-  hoyUnidad: { fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--ink-3)', marginLeft: 3 },
-  hoyValorCero: { color: 'var(--ink-3)', opacity: 0.55 },
+
+  tinta: { fontWeight: 500, color: 'var(--ink)' },
 
 
 
 
+  cuaderno: { display: 'flex', flexDirection: 'column', gap: 5, padding: '0 2px' },
+  linea: { display: 'flex', alignItems: 'center', gap: 10, margin: 0, fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)', textWrap: 'balance' },
+  lineaIc: { width: 16, height: 16, flex: 'none', display: 'inline-grid', placeItems: 'center' },
 
-
-  gotas: { display: 'flex', gap: 3, justifyContent: 'center', alignItems: 'center', marginTop: 2, minHeight: 7 },
-
-
-
-
-
-  sesion: { width: 4, height: 4, borderRadius: '50%', flex: 'none' },
-  gota: { width: 5, height: 7, borderRadius: '0 0 50% 50% / 0 0 40% 40%', border: '1px solid var(--hydrate)', opacity: 0.35 },
-  gotaOn: { background: 'var(--hydrate)', opacity: 1 },
-
-
-
+  lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
+  vaso: { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
+    color: 'var(--hydrate)', border: '1px solid var(--hydrate)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
+    whiteSpace: 'nowrap', background: 'var(--hydrate-soft)' },
+  vacioCopy: { margin: '0 0 4px', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.4,
+    color: 'var(--ink-3)', textAlign: 'center', padding: '0 6px', textWrap: 'balance' },
 
 
 
-  accion: { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden', flexShrink: 0 },
-  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 },
+  pausa: { display: 'grid', gridTemplateColumns: '16px minmax(0, 1fr) auto', gap: 10, alignItems: 'start', width: '100%',
+    padding: '0 2px', textAlign: 'left', background: 'none', border: 0, cursor: 'pointer', color: 'inherit' },
+  pausaIc: { width: 16, height: 16, marginTop: 3, display: 'inline-grid', placeItems: 'center' },
+  pausaTexto: { display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 },
+  pausaFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)' },
+  pausaMeta: { fontFamily: 'var(--font-ui)', fontSize: 11.5, color: 'var(--ink-3)' },
+  flecha: { color: 'var(--ink-3)', fontSize: 15, alignSelf: 'center' },
+
+
+  semana: { color: 'inherit' },
+  semDias: { display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' },
+  semDia: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 },
+  capsula: { display: 'flex', flexDirection: 'column-reverse', overflow: 'hidden', width: 7, height: 40, borderRadius: 3.5 },
+  semLetra: { fontFamily: 'var(--font-ui)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-3)', lineHeight: 1 },
+  semLetraHoy: { color: 'var(--ink)', fontWeight: 600 },
+  semPie: { display: 'block', textAlign: 'center', marginTop: 6, fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 14, color: 'var(--ink-2)' },
 
 
 
+  puertas: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 },
+  puerta: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, minHeight: 36, padding: '7px 0',
+    borderRadius: 'var(--r-md)', fontFamily: 'var(--font-display)', fontStyle: 'normal', fontSize: 15,
+    color: 'var(--ink)', background: 'none', border: 0, cursor: 'pointer' },
+  puertaIc: { width: 18, height: 18, flex: 'none', display: 'inline-grid', placeItems: 'center' },
 
 
 
+  logroFila: { display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'none',
+    border: 0, padding: 0, cursor: 'pointer', color: 'inherit' },
+  logroSello: { width: 46, height: 46, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
+    placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
+  logroTexto: { display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 },
+  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)' },
+  logroDesc: { fontFamily: 'var(--font-ui)', fontSize: 11.5, lineHeight: 1.35, color: 'var(--ink-3)' },
+  logroEnlace: { fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline',
+    textUnderlineOffset: 3, marginTop: 2 },
 
 
-
-
-  accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 },
-  accionBoton: { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
-  accionMeta: { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
-
-
-  accionLlevas: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: 'var(--ink-2)',
-    margin: '9px 0 0', paddingTop: 8, borderTop: '1px solid var(--line)', lineHeight: 1.5 },
-  accionFlecha: { flex: 'none', color: 'var(--ink-3)', fontSize: 15, lineHeight: 1 },
-
-  semDia: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
-  semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
-  semPunto: { width: 6, height: 6, borderRadius: '50%', background: 'var(--line)' },
-  semPie: { fontSize: 11, color: 'var(--ink-3)', marginTop: 11 },
-
-
-
-
-
-
-
-
-
-
-  logroFila: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
-    border: '1px solid var(--line)', borderRadius: 'var(--r-md)',
-    padding: '12px 14px', background: 'var(--paper)' },
-  logroSello: { width: 36, height: 36, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
-
-
-  logroTitulo: { fontSize: 12.5, fontWeight: 400, color: 'var(--ink-2)', lineHeight: 1.3, letterSpacing: '0.01em' },
-
-
-
-  pieFila: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
-
-
-
-
-
-
-
-  pieMisRutinas: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-    width: '100%', minHeight: 34, fontSize: 11.5, color: 'var(--ink-2)',
-    padding: '9px 14px', background: 'var(--premium-soft)',
-    border: '1px solid var(--premium)', borderRadius: 'var(--r-pill)',
-    cursor: 'pointer', transition: 'background 220ms var(--ease)' },
-
-
-
-  pieRegla: { display: 'block', height: 1, background: 'var(--line)' },
-  pieEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3 },
-
-
-
-  logroEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3, display: 'block', margin: '10px auto 0' },
+  footer: { display: 'flex', flexDirection: 'column', gap: 2, borderTop: '1px solid var(--line)', paddingTop: 8, marginTop: 12 },
+  pieFila: { display: 'flex', alignItems: 'center', gap: 8, width: '100%', minHeight: 32, padding: '7px 2px', textAlign: 'left',
+    fontFamily: 'var(--font-ui)', fontSize: 12, color: 'var(--ink-2)', background: 'none', border: 0, cursor: 'pointer' },
+  pieApoyo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14 },
+  pieChev: { marginLeft: 'auto', color: 'var(--ink-3)' },
+  pieSello: { fontSize: 9, padding: '2px 7px' },
+  pieVersion: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 },
   pieVer: { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
-
-  vacioCopy: { fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.5, fontStyle: 'italic', fontFamily: 'var(--font-display)', textAlign: 'center', padding: '6px 4px' },
-
-
-
-
-  footer: {
-    marginTop: 14,
-    paddingTop: 12,
-    borderTop: '1px solid var(--line)',
-    display: 'flex', flexDirection: 'column', gap: 10
-  },
+  pieFirma: { fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' },
 
   footerRow: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between'
@@ -18861,15 +18821,23 @@ function selectSidebarWeek(state, now) {
   const ws = s.weeklyStats || {};
   const hoy = sidebarDayIndex(now);
   const days = [];
+
+
+
+
+  let escala = 60;
   for (let i = 0; i < 7; i++) {
+    const minutos = sidebarAt(ws.focusMinutes, i) + sidebarAt(ws.breathMinutes, i) + sidebarAt(ws.moveMinutes, i);
     const activo = sidebarAt(ws.focusMinutes, i) > 0 ||
     sidebarAt(ws.breathMinutes, i) > 0 ||
     sidebarAt(ws.moveMinutes, i) > 0;
-    days.push({ active: activo, isToday: i === hoy });
+    days.push({ active: activo, isToday: i === hoy, minutes: minutos });
+    if (minutos > escala) escala = minutos;
   }
   const streak = s.streak || {};
   return {
     days: days,
+    escala: escala,
     todayIndex: hoy,
     activeCount: days.filter(function (d) {return d.active;}).length,
     currentStreak: streak.current || 0,
@@ -18882,12 +18850,18 @@ function selectSidebarWeek(state, now) {
 
 
 
+
+
+
+
+
 function selectSidebarLastSession(eventos) {
   if (!Array.isArray(eventos)) return null;
   let mejor = null,mejorT = -Infinity;
   for (let i = 0; i < eventos.length; i++) {
     const e = eventos[i];
     if (!e || e.type !== 'session.completed' || !e.payload) continue;
+    if (e.payload.module === 'focus') continue;
     const t = Date.parse(e.occurredAt);
     if (isNaN(t) || t < mejorT) continue;
     mejorT = t;mejor = e;
@@ -18987,6 +18961,11 @@ function selectSidebarPrimaryAction(state, ctx) {
   if (c.ritmo && c.ritmo.targetId) {
     return { kind: 'suggest', targetId: c.ritmo.targetId, ritmo: c.ritmo };
   }
+
+
+
+
+  if (c.conRitmo) return null;
   const last = selectSidebarLastSession(c.events);
   if (last && last.routineId) {
     return {
@@ -19018,7 +18997,68 @@ function selectSidebarLatestAchievement(state) {
   return mejor ? { id: mejor, unlockedAt: mejorT > 0 ? mejorT : null } : null;
 }
 
+
+
+
+
+
+
+
+const SIDEBAR_NUM = {
+  es: ['cero', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce'],
+  esF: ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce'],
+  en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
+};
+
+function sidebarNumero(n, lang, femenino) {
+  const tabla = lang === 'en' ? SIDEBAR_NUM.en : femenino ? SIDEBAR_NUM.esF : SIDEBAR_NUM.es;
+  return n >= 0 && n <= 12 ? tabla[n] : String(n);
+}
+
+function sidebarMayuscula(t) {
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+}
+
+
+
+
+function sidebarMinutosEnPalabras(min, lang) {
+  const m = Math.max(0, Math.round(min || 0));
+  const en = lang === 'en';
+  const minutos = (k) => k === 1 ? en ? 'one minute' : 'un minuto' : sidebarNumero(k, lang) + (en ? ' minutes' : ' minutos');
+  if (m < 60) return minutos(m);
+  const h = Math.floor(m / 60),r = m % 60;
+  if (en) {
+    if (r === 30) return h === 1 ? 'an hour and a half' : sidebarNumero(h, 'en') + ' and a half hours';
+    if (r === 15) return h === 1 ? 'an hour and a quarter' : sidebarNumero(h, 'en') + ' and a quarter hours';
+    const horas = h === 1 ? 'one hour' : sidebarNumero(h, 'en') + ' hours';
+    return r ? horas + ' and ' + minutos(r) : horas;
+  }
+  const horas = h === 1 ? 'una hora' : sidebarNumero(h, 'es', true) + ' horas';
+  if (r === 30) return horas + ' y media';
+  if (r === 15) return horas + ' y cuarto';
+  return r ? horas + ' y ' + minutos(r) : horas;
+}
+
+
+
+
+
+
+
+function sidebarAguaEnPalabras(n, meta, lang) {
+  const m = sidebarNumero(meta, lang);
+  if (!n) return { clave: 'sidebar.agua.ninguno', x: '', m: m };
+  if (n === meta) return { clave: 'sidebar.agua.meta', xClave: 'sidebar.agua.meta.x', x: '', m: m };
+  const vasos = n === 1 ? lang === 'en' ? 'one glass' : 'un vaso' : sidebarNumero(n, lang) + (lang === 'en' ? ' glasses' : ' vasos');
+  return { clave: 'sidebar.agua.de', x: sidebarMayuscula(vasos), m: m };
+}
+
 Object.assign(window, {
+  sidebarNumero,
+  sidebarMayuscula,
+  sidebarMinutosEnPalabras,
+  sidebarAguaEnPalabras,
   sidebarDayIndex,
   selectSidebarToday,
   selectSidebarWeek,
@@ -19027,24 +19067,11 @@ Object.assign(window, {
   selectSidebarPrimaryAction,
   selectSidebarLatestAchievement
 });
-;Object.assign(window, { sidebarDayIndex, sidebarAt, selectSidebarToday, selectSidebarWeek, selectSidebarLastSession, selectSidebarTodayCounts, selectSidebarPrimaryAction, selectSidebarLatestAchievement });
+;Object.assign(window, { sidebarDayIndex, sidebarAt, selectSidebarToday, selectSidebarWeek, selectSidebarLastSession, selectSidebarTodayCounts, selectSidebarPrimaryAction, selectSidebarLatestAchievement, sidebarNumero, sidebarMayuscula, sidebarMinutosEnPalabras, sidebarAguaEnPalabras });
 })();
 </script>
   <script>
 ;(function () {
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -19084,89 +19111,30 @@ function ChevronLeftIcon() {
 
 
 
-
-
-
-
-
-
-
-
-
-
 function achMini(id, tR) {
   const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === id);
-  if (!a) return { title: id, nodo: '✦' };
+  if (!a) return { title: id, desc: '', nodo: '✦' };
   const dibuja = window.renderGlyph;
 
 
-
-
-
-
-
-
-
-  const estilo = a.glyphSvg ? { width: '72%', height: '72%' } : { fontSize: '1.5em' };
-
-
-
-
+  const estilo = a.glyphSvg ? { width: '84%', height: '84%' } : { fontSize: '1.5em' };
   return {
     title: tR('ach.item.' + a.id + '.title', a.title),
+    desc: tR('ach.item.' + a.id + '.desc', a.desc || ''),
     nodo: dibuja ? dibuja(a, estilo) : a.glyph || '✦'
   };
 }
 
 
 
-
-
-
-
-function SidebarHoyCelda(_ref) {let { modulo, glifo, color, nombre, valor, unidad, onOpen, extra, etiqueta } = _ref;
-  const cero = !valor;
-  const dentro =
-  React.createElement(React.Fragment, null,
-  React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.hoyIc, color: cero ? 'var(--ink-3)' : color } },
-  glifo
-  ),
-  React.createElement("span", { style: sidebarStyles.hoyNombre }, nombre),
-  React.createElement("span", { style: { ...sidebarStyles.hoyValor, ...(cero ? sidebarStyles.hoyValorCero : null) } },
-  valor,
-  React.createElement("span", { style: sidebarStyles.hoyUnidad }, unidad)
-  ),
-  extra
-  );
-
-
-
-
-
-  if (!onOpen) {
-    return (
-      React.createElement("div", { "data-pace-hoy-celda": true, "data-modulo": modulo, "data-cero": cero ? '1' : '0', "data-inerte": "1" },
-      dentro
-      ));
-
-  }
-
-
-
-
-
-
-
+function SidebarFrase(_ref) {let { plantilla, x } = _ref;
+  const i = plantilla.indexOf('{x}');
+  if (i < 0 || !x) return React.createElement("span", null, plantilla.replace('{x}', ''));
   return (
-    React.createElement("button", {
-      "data-pace-hoy-celda": true,
-      "data-modulo": modulo,
-      "data-cero": cero ? '1' : '0',
-      onClick: onOpen,
-      "aria-label": etiqueta,
-      title: etiqueta },
-
-    dentro
+    React.createElement("span", null,
+    plantilla.slice(0, i),
+    React.createElement("b", { style: sidebarStyles.tinta }, i === 0 ? sidebarMayuscula(x) : x),
+    plantilla.slice(i + 3)
     ));
 
 }
@@ -19178,75 +19146,37 @@ function SidebarHoyCelda(_ref) {let { modulo, glifo, color, nombre, valor, unida
 
 
 
-
-
-
-
-function puntosSesion(n, color) {
-  const p = [];
-  const cuantas = typeof n === 'number' && n > 0 ? Math.min(n, 8) : 0;
-  for (let i = 0; i < cuantas; i++) {
-    p.push(React.createElement("i", { key: i, style: { ...sidebarStyles.sesion, background: color } }));
-  }
-  return React.createElement("span", { style: sidebarStyles.gotas }, p);
-}
-
-function SidebarToday(_ref2) {let { hoy, cuentas, onOpen } = _ref2;
-  const { t, tn } = useT();
-  const c = cuentas || {};
-  const gotas = [];
-  for (let i = 0; i < hoy.waterGoal; i++) {
-    gotas.push(
-      React.createElement("i", { key: i, style: { ...sidebarStyles.gota, ...(i < hoy.waterGlasses ? sidebarStyles.gotaOn : null) } })
-    );
-  }
+function SidebarToday(_ref2) {let { hoy, enBlanco, onWater } = _ref2;
+  const { t, tn, lang } = useT();
+  const linea = (modulo, glifo, color, minutos, clave) => minutos ?
+  React.createElement("p", { key: modulo, "data-pace-hoy-celda": true, "data-modulo": modulo, "data-cero": "0", style: sidebarStyles.linea },
+  React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.lineaIc, color } }, glifo),
+  React.createElement(SidebarFrase, { plantilla: t(clave), x: sidebarMinutosEnPalabras(minutos, lang) })
+  ) :
+  null;
+  const agua = sidebarAguaEnPalabras(hoy.waterGlasses, hoy.waterGoal, lang);
+  const xAgua = agua.xClave ? tn(agua.xClave, { m: agua.m }) : agua.x;
+  const fraseAgua = sidebarMayuscula(tn(agua.clave, { m: agua.m, x: xAgua }));
   return (
-    React.createElement("div", { "data-pace-hoy": true },
-    React.createElement(SidebarHoyCelda, {
-      modulo: "focus", glifo: React.createElement(ABFocus, null), color: "var(--focus)",
-      nombre: t('sidebar.today.focus'), valor: hoy.focusMinutes, unidad: t('sidebar.unit.min'),
-      extra: puntosSesion(c.focus, 'var(--focus)') }
-    ),
-    React.createElement(SidebarHoyCelda, {
-      modulo: "breathe", glifo: React.createElement(ABBreathe, null), color: "var(--breathe)",
-      nombre: t('sidebar.today.breathe'), valor: hoy.breatheMinutes, unidad: t('sidebar.unit.min'),
-      etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.breathe') }),
-      onOpen: () => onOpen('breathe'),
-      extra: puntosSesion(c.breathe, 'var(--breathe)') }
-    ),
-    React.createElement(SidebarHoyCelda, {
-      modulo: "body", glifo: React.createElement(ABMove, null), color: "var(--move)",
-      nombre: t('sidebar.today.body'), valor: hoy.bodyMinutes, unidad: t('sidebar.unit.min'),
-      etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.body') }),
-      onOpen: () => onOpen('body'),
-      extra: puntosSesion(c.body, 'var(--move)') }
-    ),
+    React.createElement("div", { "data-pace-hoy": true, style: sidebarStyles.cuaderno },
+    enBlanco ? React.createElement("p", { "data-pace-hoy-vacio": true, style: sidebarStyles.vacioCopy }, t('sidebar.empty')) : null,
+    linea('focus', React.createElement(ABFocus, null), 'var(--focus)', hoy.focusMinutes, 'sidebar.hoy.focus'),
+    linea('breathe', React.createElement(ABBreathe, null), 'var(--breathe)', hoy.breatheMinutes, 'sidebar.hoy.breathe'),
+    linea('body', React.createElement(ABMove, null), 'var(--move)', hoy.bodyMinutes, 'sidebar.hoy.body'),
+    React.createElement("button", {
+      "data-pace-hoy-celda": true, "data-modulo": "water", "data-cero": hoy.waterGlasses ? '0' : '1',
+      onClick: onWater,
+      "aria-label": fraseAgua + '. ' + t('sidebar.water.add'),
+      title: t('sidebar.water.add'),
+      style: { ...sidebarStyles.linea, ...sidebarStyles.lineaAgua } },
 
-
-
-
-
-
-    React.createElement(SidebarHoyCelda, {
-      modulo: "water", glifo: React.createElement(ABDrop, null), color: "var(--hydrate)",
-      nombre: t('sidebar.today.water'), valor: hoy.waterGlasses,
-      unidad: tn('sidebar.unit.of', { n: hoy.waterGoal }),
-      etiqueta: t('sidebar.water.add'),
-      onOpen: () => onOpen('water'),
-      extra: React.createElement("span", { style: sidebarStyles.gotas }, gotas) }
+    React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.lineaIc, color: 'var(--hydrate)' } }, React.createElement(ABDrop, null)),
+    React.createElement(SidebarFrase, { plantilla: tn(agua.clave, { m: agua.m }), x: xAgua }),
+    React.createElement("span", { "data-pace-hoy-vaso": true, "aria-hidden": "true", style: sidebarStyles.vaso }, t('sidebar.agua.mas'))
     )
     ));
 
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -19261,26 +19191,17 @@ function SidebarToday(_ref2) {let { hoy, cuentas, onOpen } = _ref2;
 
 function sidebarActionView(accion, t, tn, lang) {
   if (!accion) return null;
+  const nombre = (id, dato) => {
+    if (lang !== 'en') return dato;
+    const v = t(id + '.name');
+    return v !== id + '.name' ? v : dato;
+  };
   if (accion.kind === 'resume') {
     const r = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId);
     if (!r) return null;
-
-
-
-
-    let titulo = r.name;
-    if (lang === 'en') {
-      const v = t(accion.targetId + '.name');
-      if (v !== accion.targetId + '.name') titulo = v;
-    }
     return {
-      kind: 'resume',
-      eyebrow: t('sidebar.action.continue'),
-      color: 'var(--breathe)',
-      titulo: titulo,
-      meta: accion.rondas ?
-      tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) :
-      t('sidebar.action.resume.meta')
+      rotulo: t('sidebar.action.continue'), antes: '', titulo: nombre(accion.targetId, r.name), modulo: 'respira',
+      meta: accion.rondas ? tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) : t('sidebar.action.resume.meta')
     };
   }
   if (accion.kind === 'path') {
@@ -19288,81 +19209,64 @@ function sidebarActionView(accion, t, tn, lang) {
     if (!camino) return null;
     const pasos = camino.steps && camino.steps.length || 0;
     return {
-      kind: 'path',
-      eyebrow: t('sidebar.action.continue'),
-      color: 'var(--focus)',
-      titulo: camino.title || camino.name || accion.targetId,
+      rotulo: t('sidebar.action.continue'), antes: '', titulo: camino.title || camino.name || accion.targetId, modulo: 'foco',
       meta: pasos ? tn('sidebar.action.path.meta', { n: Math.min(accion.stepIndex + 1, pasos), m: pasos }) : null
     };
   }
 
 
-
-
   const b = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId) || null;
-  const c = b || (window.resolveBodyRoutine && window.resolveBodyRoutine(accion.targetId) || {}).routine || null;
+  const cuerpo = b ? null : window.resolveBodyRoutine && window.resolveBodyRoutine(accion.targetId) || null;
+  const c = b || cuerpo && cuerpo.routine || null;
   if (!c) return null;
-
-
-  let titulo = c.name;
-  if (lang === 'en') {
-    const v = t(accion.targetId + '.name');
-    if (v !== accion.targetId + '.name') titulo = v;
-  }
+  const titulo = nombre(accion.targetId, c.name);
+  const modulo = b ? 'respira' : cuerpo.source === 'move' ? 'mueve' : 'estira';
   if (accion.kind === 'suggest' && accion.ritmo) {
-
-
-
     const rt = accion.ritmo;
+    const cuanto = rt.larga ?
+    tn('sidebar.pausa.larga', { x: sidebarMinutosEnPalabras(rt.dur, lang) }) :
+    sidebarMayuscula(tn('sidebar.pausa.meta', { x: sidebarMinutosEnPalabras(rt.min, lang), m: ritmoModulo(rt.modulo, t) }));
     return {
-      kind: 'suggest',
-      eyebrow: tn(rt.ahora ? 'ritmo.sidebar.ahora' : 'ritmo.sidebar', { h: ritmoHora(rt.hora) }),
-      color: 'var(--ink-3)',
-      titulo: titulo,
-      meta: rt.larga ? tn('ritmo.larga', { n: rt.dur }) : rt.min + ' min · ' + ritmoModulo(rt.modulo, t),
-
-
-
-
-
-      llevas: ritmoLlevas(rt.bloques || 0, rt.pausas || 0, t, tn)
+      rotulo: t(rt.ahora ? 'sidebar.pausa.ahora' : 'sidebar.pausa'),
+      antes: rt.ahora ? t('sidebar.pausa.ya') : tn('sidebar.pausa.a', { h: ritmoHora(rt.hora) }),
+      titulo: titulo, meta: cuanto,
+      modulo: rt.modulo === 'mueve' ? 'mueve' : rt.modulo === 'estira' ? 'estira' : 'respira'
     };
   }
   if (accion.kind === 'suggest') {
-    return {
-      kind: 'suggest',
-      eyebrow: t('sidebar.action.now'),
-
-
-      color: 'var(--ink-3)',
-      titulo: titulo,
-      meta: t('sidebar.action.now.meta')
-    };
+    return { rotulo: t('sidebar.action.now'), antes: '', titulo: titulo, meta: t('sidebar.action.now.meta'), modulo: modulo };
   }
-  return {
-    kind: 'repeat',
-    eyebrow: t('sidebar.action.repeat'),
-    color: b ? 'var(--breathe)' : 'var(--move)',
-    titulo: titulo,
-    meta: t('sidebar.action.repeat.meta')
-  };
+  return { rotulo: t('sidebar.action.repeat'), antes: '', titulo: titulo, meta: t('sidebar.action.repeat.meta'), modulo: modulo };
 }
+
+const SIDEBAR_MODULO = {
+  respira: ['ABBreathe', 'var(--breathe)'],
+  estira: ['ABStretch', 'var(--extra)'],
+  mueve: ['ABMove', 'var(--move)'],
+  foco: ['ABFocus', 'var(--focus)']
+};
 
 function SidebarPrimaryAction(_ref3) {let { accion, vista, onAct } = _ref3;
   if (!vista) return null;
-  const eyebrow = vista.eyebrow,color = vista.color,titulo = vista.titulo,meta = vista.meta;
+  const [g, color] = SIDEBAR_MODULO[vista.modulo] || SIDEBAR_MODULO.respira;
+  const Glifo = window[g];
   return (
-    React.createElement("div", { style: sidebarStyles.accion, "data-pace-sidebar-accion": true, "data-kind": accion.kind },
-    React.createElement("div", { style: { ...sidebarStyles.accionEyebrow, color } }, eyebrow),
-    React.createElement("h4", { style: sidebarStyles.accionTitulo },
-    React.createElement("button", { style: sidebarStyles.accionBoton, onClick: () => onAct(accion) }, titulo),
-    React.createElement("span", { style: sidebarStyles.accionFlecha, "aria-hidden": "true" }, "\u2192")
+    React.createElement("div", { "data-pace-sidebar-accion": true, "data-kind": accion.kind, style: sidebarStyles.section },
+    React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, React.createElement(Meta, null, vista.rotulo)),
+    React.createElement("button", { "data-pace-sidebar-accion-boton": true, onClick: () => onAct(accion), style: sidebarStyles.pausa },
+    React.createElement("span", { "data-pace-sb-ic": true, style: { ...sidebarStyles.pausaIc, color } }, Glifo ? React.createElement(Glifo, null) : null),
+    React.createElement("span", { style: sidebarStyles.pausaTexto },
+    React.createElement("span", { style: sidebarStyles.pausaFrase },
+    vista.antes, React.createElement("b", { "data-pace-sidebar-accion-titulo": true, style: sidebarStyles.tinta }, vista.titulo)
     ),
-    meta ? React.createElement("p", { style: sidebarStyles.accionMeta }, meta) : null,
-    vista.llevas ? React.createElement("p", { style: sidebarStyles.accionLlevas, "data-pace-sidebar-llevas": true }, vista.llevas) : null
+    vista.meta ? React.createElement("span", { style: sidebarStyles.pausaMeta }, vista.meta) : null
+    ),
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.flecha }, "\u2192")
+    )
     ));
 
 }
+
 
 
 
@@ -19374,23 +19278,26 @@ function SidebarPrimaryAction(_ref3) {let { accion, vista, onAct } = _ref3;
 function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
   const { t, tn } = useT();
   const letras = t('sidebar.days').split(',');
+  const n = semana.currentStreak,mejor = semana.longestStreak;
+  const racha = !n ? null :
+  mejor > n ? tn(n === 1 ? 'sidebar.week.rhythm.one' : 'sidebar.week.rhythm', { n, m: mejor }) :
+  tn(n === 1 ? 'sidebar.week.rhythm.one.sin' : 'sidebar.week.rhythm.sin', { n });
   return (
-    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": t('sidebar.week.open'), title: t('sidebar.week.open') },
-    React.createElement("span", { style: { display: 'flex', gap: 6 } },
-    semana.days.map((d, i) =>
-    React.createElement("span", { key: i, style: sidebarStyles.semDia },
-    React.createElement("span", { style: { ...sidebarStyles.semLetra, color: d.isToday ? 'var(--ink)' : 'var(--ink-3)', fontWeight: d.isToday ? 600 : 400 } },
-    letras[i]
+    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": t('sidebar.week.open'), title: t('sidebar.week.open'), style: sidebarStyles.semana },
+    React.createElement("span", { style: sidebarStyles.semDias },
+    semana.days.map((d, i) => {
+      const alto = d.active ? Math.max(8, Math.round(d.minutes / semana.escala * 40)) : 0;
+      return (
+        React.createElement("span", { key: i, "data-pace-semana-dia": i, "data-hoy": d.isToday ? '1' : '0', "data-futuro": i > semana.todayIndex ? '1' : '0', style: sidebarStyles.semDia },
+        React.createElement("span", { "data-pace-capsula": true, style: sidebarStyles.capsula },
+        alto ? React.createElement("span", { "data-pace-capsula-relleno": true, style: { height: alto } }) : null
+        ),
+        React.createElement("span", { style: { ...sidebarStyles.semLetra, ...(d.isToday ? sidebarStyles.semLetraHoy : null) } }, letras[i])
+        ));
+
+    })
     ),
-    React.createElement("span", { style: {
-        ...sidebarStyles.semPunto,
-        background: d.active ? 'var(--focus)' : 'var(--line)',
-        outline: d.isToday ? '2px solid var(--ink-2)' : 'none',
-        outlineOffset: 2
-      } })
-    )
-    )
-    )
+    racha ? React.createElement("span", { style: sidebarStyles.semPie }, racha) : null
     ));
 
 }
@@ -19401,48 +19308,60 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
 
 
 
+function SidebarLibraries(_ref5) {let { onOpen } = _ref5;
+  const { t, tn } = useT();
+  const puertas = [
+  ['breathe', 'ABBreathe', 'var(--breathe)', 'activity.breathe.label'],
+  ['stretch', 'ABStretch', 'var(--extra)', 'activity.stretch.label'],
+  ['move', 'ABMove', 'var(--move)', 'activity.move.label']];
 
-function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
+  return (
+    React.createElement("div", { "data-pace-bibliotecas": true, style: sidebarStyles.puertas },
+    puertas.map((_ref6) => {let [destino, g, tono, clave] = _ref6;
+      const Glifo = window[g];
+      const etiqueta = tn('sidebar.open.module', { m: t(clave) });
+      return (
+        React.createElement("button", { key: destino, "data-pace-biblioteca": destino, onClick: () => onOpen(destino), "aria-label": etiqueta, title: etiqueta, style: sidebarStyles.puerta },
+        React.createElement("span", { "data-pace-sb-ic": true, style: { ...sidebarStyles.puertaIc, color: tono } }, Glifo ? React.createElement(Glifo, null) : null),
+        React.createElement("span", null, t(clave))
+        ));
+
+    })
+    ));
+
+}
+
+
+
+
+
+
+function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   const { t, lang } = useT();
 
 
-
-
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
-
-
-
-
-  const enlace =
-  React.createElement("button", { style: sidebarStyles.logroEnlace, onClick: onOpen }, t('sidebar.collection'));
-
+  const enlace = React.createElement("span", { style: sidebarStyles.logroEnlace }, t('sidebar.collection'));
   if (!ultimo) {
     return (
-      React.createElement(React.Fragment, null,
-      React.createElement("div", { style: sidebarStyles.logroFila, "data-pace-sidebar-ultimo": "" },
-      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.4 } }, "\xB7"),
-      React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none'))
-      ),
+      React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, "data-pace-sidebar-ultimo": "" },
+      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 } }, "\xB7"),
+      React.createElement("span", { style: sidebarStyles.logroTexto },
+      React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none')),
       enlace
+      )
       ));
 
   }
   const mini = achMini(ultimo.id, tR);
   return (
-    React.createElement(React.Fragment, null,
-    React.createElement("button", {
-      style: sidebarStyles.logroFila,
-      onClick: onOpen,
-      title: mini.title,
-      "data-pace-sidebar-ultimo": ultimo.id },
-
+    React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title, "data-pace-sidebar-ultimo": ultimo.id },
     React.createElement("span", { style: sidebarStyles.logroSello }, mini.nodo),
-
-
-
-    React.createElement("span", { style: sidebarStyles.logroTitulo, "data-pace-sidebar-ultimo-titulo": true }, mini.title)
-    ),
+    React.createElement("span", { style: sidebarStyles.logroTexto },
+    React.createElement("span", { style: sidebarStyles.logroTitulo, "data-pace-sidebar-ultimo-titulo": true }, mini.title),
+    mini.desc ? React.createElement("span", { style: sidebarStyles.logroDesc }, mini.desc) : null,
     enlace
+    )
     ));
 
 }
@@ -19451,35 +19370,27 @@ function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
 
 
 
-function SidebarFooter(_ref6) {let { onSupport, compact, misRutinas, onMisRutinas } = _ref6;
+
+
+function SidebarFooter(_ref8) {let { onSupport, onMisRutinas } = _ref8;
   const { t } = useT();
-
-
   const apoyo = typeof paceApoyoVisible !== 'function' || paceApoyoVisible();
   return (
-    React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 8 : 10 } },
-
-
-
-
-
-
-
-
-    React.createElement("button", { style: sidebarStyles.pieMisRutinas, onClick: onMisRutinas },
+    React.createElement("div", { style: sidebarStyles.footer, "data-pace-sidebar-pie": true },
+    React.createElement("button", { style: sidebarStyles.pieFila, onClick: onMisRutinas },
     React.createElement("span", null, t('sidebar.mine')),
-    typeof PremiumSeal === 'function' ? React.createElement(PremiumSeal, null) : null
+    typeof PremiumSeal === 'function' ? React.createElement(PremiumSeal, { style: sidebarStyles.pieSello }) : null,
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
     ),
-
-
-
-
-
-    apoyo ? React.createElement("span", { style: sidebarStyles.pieRegla, "aria-hidden": "true" }) : null,
-    apoyo ? React.createElement(SupportButton, { onOpen: onSupport }) : null,
-    React.createElement("div", { style: sidebarStyles.pieFila },
+    apoyo ?
+    React.createElement("button", { style: { ...sidebarStyles.pieFila, ...sidebarStyles.pieApoyo }, onClick: onSupport, title: t('support.sidebar.title') },
+    React.createElement("span", null, t('support.sidebar.label')),
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
+    ) :
+    null,
+    React.createElement("div", { style: sidebarStyles.pieVersion },
     React.createElement("span", { style: sidebarStyles.pieVer }, "Pace ", PACE_VERSION),
-    React.createElement("span", { style: { fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' } }, "by @ezradesign")
+    React.createElement("span", { style: sidebarStyles.pieFirma }, "by @ezradesign")
     )
     ));
 
@@ -19488,32 +19399,20 @@ function SidebarFooter(_ref6) {let { onSupport, compact, misRutinas, onMisRutina
 Object.assign(window, {
   ChevronLeftIcon,
   achMini,
+  SidebarFrase,
   SidebarToday,
   sidebarActionView,
   SidebarPrimaryAction,
   SidebarWeek,
+  SidebarLibraries,
   SidebarLatestAchievement,
   SidebarFooter
 });
-;Object.assign(window, { ChevronLeftIcon, achMini, SidebarHoyCelda, puntosSesion, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarLatestAchievement, SidebarFooter });
+;Object.assign(window, { ChevronLeftIcon, achMini, SidebarFrase, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarLibraries, SidebarLatestAchievement, SidebarFooter });
 })();
 </script>
   <script>
 ;(function () {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -19588,14 +19487,11 @@ function Sidebar() {
   } catch (e) {eventos = null;}
 
 
-
-
   const hoyISO = function () {
     const d = new Date();
     const dd = (n) => (n < 10 ? '0' : '') + n;
     return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate());
   }();
-  const cuentas = selectSidebarTodayCounts(eventos, hoyISO);
 
 
 
@@ -19629,8 +19525,12 @@ function Sidebar() {
   const reanudable = window.leerRespiraGuardada && window.leerRespiraGuardada() || null;
 
   const ritmo = typeof ritmoSiguiente === 'function' ? ritmoSiguiente(state) : null;
+
+
+  const R = typeof ritmoDe === 'function' ? ritmoDe(state) : null;
+  const conRitmo = !!(R && !R.libre && (R.dia || R.propuesta));
   const accion = selectSidebarPrimaryAction(state,
-  { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo });
+  { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo, conRitmo: conRitmo });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
 
@@ -19644,20 +19544,10 @@ function Sidebar() {
     if (esCajon()) set({ sidebarCollapsed: true });
   };
 
-  const diaEnBlanco = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes && !hoy.waterGlasses;
 
 
-
-
-
-
-
-
-
-
-
-
-
+  const sinMinutos = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes;
+  const enBlanco = sinMinutos && !(accion && accion.kind === 'resume');
 
 
 
@@ -19665,32 +19555,19 @@ function Sidebar() {
   const sep = { marginTop: isMob ? 9 : 12, marginBottom: isMob ? 9 : 12 };
 
 
-  const aireSemana = {};
-  const aire = {};
-  const accionPrimero = esCajon();
-
-
-
 
 
 
   const seccionHoy =
-  React.createElement("div", { style: { ...sidebarStyles.section, ...aire }, key: "hoy" },
+  React.createElement("div", { style: sidebarStyles.section, key: "hoy" },
   React.createElement("div", { style: sidebarStyles.sectionHeaderCentro },
   React.createElement(Meta, null, t('sidebar.today')),
   React.createElement("span", { style: sidebarStyles.fecha }, fechaCortaSidebar(lang))
   ),
-
-
-
-
   React.createElement(SidebarToday, {
     hoy: hoy,
-    cuentas: cuentas,
-    onOpen: (m) => {
-      if (m === 'water') {try {addWaterGlass(1);} catch (e) {}return;}
-      emitir('module', { target: m });
-    } }
+    enBlanco: enBlanco,
+    onWater: () => {try {addWaterGlass(1);} catch (e) {}} }
   )
   );
 
@@ -19706,17 +19583,18 @@ function Sidebar() {
 
 
 
-  const seccionVacio = !seccionAccion && diaEnBlanco ?
-  React.createElement("p", { style: sidebarStyles.vacioCopy, key: "vacio" }, t('sidebar.empty')) :
-  null;
-
-
-
+  const seccionBibliotecas =
+  React.createElement("div", { style: sidebarStyles.section, key: "bibliotecas" },
+  React.createElement("div", { style: sidebarStyles.sectionHeaderCentro },
+  React.createElement(Meta, null, t('sidebar.libraries'))
+  ),
+  React.createElement(SidebarLibraries, { onOpen: (destino) => emitir('module', { target: destino }) })
+  );
 
 
 
   const seccionLogro =
-  React.createElement("div", { style: { ...sidebarStyles.section, ...aire }, key: "logro" },
+  React.createElement("div", { style: sidebarStyles.section, key: "logro" },
   React.createElement("div", { style: sidebarStyles.sectionHeaderCentro },
   React.createElement(Meta, null, t('sidebar.latest'))
   ),
@@ -19727,13 +19605,10 @@ function Sidebar() {
   );
 
 
+
+
   const seccionSemana =
-  React.createElement("div", { style: { ...sidebarStyles.section, ...aireSemana }, key: "semana" },
-
-
-
-
-
+  React.createElement("div", { style: sidebarStyles.section, key: "semana" },
   React.createElement(SidebarWeek, { semana: semana, onOpen: () => emitir('stats') })
   );
 
@@ -19743,15 +19618,7 @@ function Sidebar() {
 
 
 
-
-
-
-
-
-  const secciones = (accionPrimero ?
-  [seccionAccion, seccionSemana, seccionHoy, seccionVacio, seccionLogro] :
-  [seccionSemana, seccionHoy, seccionAccion, seccionVacio, seccionLogro]).
-  filter(Boolean);
+  const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
   return (
     React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
@@ -19803,8 +19670,6 @@ function Sidebar() {
     React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1, minHeight: 0 } }),
 
     React.createElement(SidebarFooter, {
-      compact: isMob,
-      misRutinas: (state.customRoutines || []).length,
       onMisRutinas: () => emitir('custom'),
       onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
     )
@@ -35218,9 +35083,19 @@ function ritmoModulo(modulo, t) {
     respira: 'activity.breathe.label', cierre: 'activity.breathe.label' }[modulo] || 'activity.stretch.label');
 }
 
-function ritmoResumen(m, tn) {
-  return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen',
-  { f: ritmoDuracion(m.focoMin), p: m.pausas, v: m.vasos });
+
+function ritmoMetaVasos(s) {
+  return (s || {}).water && s.water.goal || 8;
+}
+
+
+
+
+
+
+function ritmoResumen(m, tn, meta) {
+  const vasos = tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });
+  return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen', { f: ritmoDuracion(m.focoMin), p: m.pausas, v: vasos });
 }
 
 
@@ -35333,31 +35208,11 @@ function ritmoHuecos(horario, onCambio) {
   };
 }
 
-
-
-
-
-
-
-
-
-function ritmoNumero(n, t) {
-  const lista = String(t('ritmo.numeros')).split(',');
-  return n >= 0 && n < lista.length ? lista[n] : String(n);
-}
-function ritmoLlevas(bloques, pausas, t, tn) {
-  if (!bloques) return null;
-  const b = bloques === 1 ? t('ritmo.llevas.bloque') : tn('ritmo.llevas.bloques', { n: ritmoNumero(bloques, t) });
-  if (!pausas) return tn('ritmo.llevas.solo', { b });
-  const p = pausas === 1 ? t('ritmo.llevas.pausa') : tn('ritmo.llevas.pausas', { n: ritmoNumero(pausas, t) });
-  return tn('ritmo.llevas', { b, p });
-}
-
 Object.assign(window, {
-  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
-  RitmoFrase, RitmoSelector, ritmoHuecos, ritmoNumero, ritmoLlevas
+  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaVasos, ritmoMetaPlato,
+  RitmoFrase, RitmoSelector, ritmoHuecos
 });
-;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, RitmoInterruptorComida, ritmoHuecos, ritmoNumero, ritmoLlevas });
+;Object.assign(window, { RITMO_COLOR, RitmoGlifo, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoMetaVasos, ritmoResumen, ritmoMetaPlato, RitmoMetaGota, RitmoFrase, RITMO_RANGOS, RitmoSelector, RitmoInterruptorComida, ritmoHuecos });
 })();
 </script>
   <script>
@@ -35630,9 +35485,10 @@ function RitmoLibre(_ref) {let { enlace } = _ref;
 
 function RitmoSobre(_ref2) {let { m } = _ref2;
   const { t, tn } = useT();
+  const [st] = usePace();
   return (
     React.createElement("div", { className: "pace-rt-sobre", "data-pace-ritmo-resumen": true },
-    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn)),
+    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn, ritmoMetaVasos(st))),
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
     React.createElement(RitmoAlCalendario, null)
     ));
@@ -36023,7 +35879,7 @@ function RitmoHoja(_ref2) {let { open, onClose, plan, state } = _ref2;
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" },
     React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu", capital: true })
     ),
-    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn)),
+    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn, ritmoMetaVasos(state))),
     React.createElement("div", { style: { marginTop: 12 } }, React.createElement(RitmoContexto, null)),
     React.createElement(RitmoLista, { plan: plan }),
 
@@ -38620,7 +38476,11 @@ function usePaceEventos(acciones) {
 
 
         if (d.target === 'breathe') a.abrirBiblioteca('breathe');else
-        if (d.target === 'body') a.abrirBiblioteca('move');else
+
+
+
+        if (d.target === 'stretch') a.abrirBiblioteca('extra');else
+        if (d.target === 'move' || d.target === 'body') a.abrirBiblioteca('move');else
         if (d.target === 'water') a.abrirAgua();
         return;
       }

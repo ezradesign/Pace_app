@@ -6,18 +6,17 @@
    nombraba por separado -- la hoja CSS que se inyecta una vez y el objeto de
    estilos en línea-- y son de naturaleza distinta.
 
-     · Sidebar.hoja.jsx     (este) → la hoja inyectada: responsive, la rejilla
-                                     de Hoy, el recorte del logo, la lente y la
-                                     envoltura que escala
+     · Sidebar.hoja.jsx     (este) → la hoja inyectada: el cajón, el recorte del
+                                     logo, las cápsulas de la semana, los estados
+                                     de las piezas, la lente y la envoltura que escala
      · Sidebar.support.jsx         → `sidebarStyles`, los estilos en línea
      · Sidebar.selectors.js        → los selectores puros
      · Sidebar.parts.jsx           → las piezas de UI
      · Sidebar.jsx                 → el orquestador
 
-   AQUI VIVE LO QUE NO PUEDE IR EN LINEA, y no es una preferencia: React no crea
-   pseudo-elementos desde un estilo en línea (el `::after` que hace clicable la
-   tarjeta entera), las media queries no existen en línea, y un estilo en línea
-   GANA a la hoja sin `!important` -- por eso el recorte del logo lo lleva.
+   AQUI VIVE LO QUE NO PUEDE IR EN LINEA, y no es una preferencia: un estilo en
+   línea no tiene :hover, :focus-visible, @supports ni media queries, y GANA a la
+   hoja sin `!important` -- por eso el recorte del logo lo lleva.
 
    CUIDADO AL EDITAR: todo esto vive dentro de un template literal, así que un
    backtick en un comentario ROMPE el archivo. Ha pasado CINCO veces (s180 tres,
@@ -155,52 +154,57 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       top: -63.41% !important;
     }
 
-    /* Hoy · rejilla 2x2. Las celdas son BOTONES: abren su modulo. Antes, para
-       ir a Respira habia que salir de la sidebar. */
-    [data-pace-sidebar] [data-pace-hoy] {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
-      /* Sin esto la fila del agua crece con sus ocho vasos y la rejilla queda
-         con filas de 87 y 99 px. Medido en la app, no supuesto. */
-      grid-auto-rows: 1fr;
-    }
-    [data-pace-sidebar] [data-pace-hoy-celda] {
-      border: 1px solid var(--line); border-radius: var(--r-sm);
-      padding: 9px 10px 8px; background: var(--paper);
-      display: flex; flex-direction: column; gap: 5px;
-      min-height: 74px; width: 100%; align-items: center; text-align: center;
-      transition: border-color 180ms, background 180ms;
-    }
-    [data-pace-sidebar] [data-pace-hoy-celda]:hover { border-color: var(--line-2); }
-    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] { background: transparent; }
-    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] [data-pace-hoy-ic] { opacity: 0.3; }
+    /* EL CUADERNO (8 oct. 2026). Lo que no puede ir en línea: los glifos llenan su
+       caja, los estados al pasar el ratón y con el teclado, y las cápsulas.
+       Los glifos de «ActivityBar» traen su propio tamaño; aquí ocupan la caja que
+       les da cada pieza (16 en Hoy y en la pausa, 18 en las bibliotecas). */
+    [data-pace-sidebar] [data-pace-hoy-ic] svg,
+    [data-pace-sidebar] [data-pace-sb-ic] svg { width: 100%; height: 100%; display: block; }
 
-    /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
-       su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
-    /* LA TARJETA ENTERA ES EL OBJETIVO, y esto NO puede vivir en los estilos
-       en linea: React no crea pseudo-elementos. Sin esta regla el objetivo es
-       solo el titulo -- medido, 74 x 23 px de una tarjeta de 243 x 117, y un
-       click en la mitad de abajo cae en un div. Lo reporto el usuario, y luego
-       un corte de CSS se la llevo por delante: la cazo su test, que prueba las
-       CUATRO esquinas y el centro.
-       El patron es el de s174: el encabezado lleva DENTRO el boton y este se
-       extiende con un '::after' absoluto, para conservar el <h4> en el arbol de
-       accesibilidad. */
-    [data-pace-sidebar] [data-pace-sidebar-accion] h4 button::after {
-      content: ''; position: absolute; inset: 0; z-index: 1;
+    [data-pace-sidebar] [data-pace-hoy-celda][data-modulo="water"]:hover [data-pace-hoy-vaso] { background: var(--paper); }
+    [data-pace-sidebar] [data-pace-sidebar-accion-boton]:hover [data-pace-sidebar-accion-titulo],
+    [data-pace-sidebar] [data-pace-sidebar-pie] button:hover > span:first-child {
+      text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
     }
-    [data-pace-sidebar] [data-pace-sidebar-accion]:hover { border-color: var(--line-2); }
+    [data-pace-sidebar] [data-pace-biblioteca]:hover { background: var(--paper-3); }
+    [data-pace-sidebar] [data-pace-sidebar-ultimo]:hover [data-pace-sidebar-ultimo-titulo] { text-decoration: underline; text-underline-offset: 3px; }
+    [data-pace-sidebar] [data-pace-hoy] button:focus-visible,
+    [data-pace-sidebar] [data-pace-sidebar-accion] button:focus-visible,
+    [data-pace-sidebar] [data-pace-biblioteca]:focus-visible,
+    [data-pace-sidebar] [data-pace-sidebar-ultimo]:focus-visible,
+    [data-pace-sidebar] [data-pace-sidebar-pie] button:focus-visible {
+      outline: 2px solid var(--focus); outline-offset: 3px; border-radius: var(--r-sm);
+    }
+
+    /* EL SELLO DEL ÚLTIMO LOGRO, LEGIBLE: los dibujos finos (0,6 de 44) se pintan a
+       1,2 px reales. A este tamaño, con el trazo escalado, «Ciclo completo» era un
+       círculo vacío. */
+    [data-pace-sidebar] [data-pace-sidebar-ultimo] svg * { vector-effect: non-scaling-stroke; stroke-width: 1.2px; }
+
+    /* LAS CÁPSULAS AFINADAS (Ez, 9 oct. 2026). El tubo es un TRAZO de 1 px y no una
+       mancha: vacío pesaba casi tanto como lleno. Los días que vienen, con el trazo
+       a media tinta. El relleno de los días pasados es un oliva claro SÓLIDO: el de
+       antes era el oliva transparente, y sobre el beige del tubo se volvía gris y
+       parecía apagado (más en la paleta oscura). Hoy, en tinta entera.
+       Sin «color-mix» (navegadores viejos) queda el oliva a media opacidad, que es
+       como era. */
+    [data-pace-sidebar] [data-pace-capsula] { box-shadow: inset 0 0 0 1px var(--line); }
+    [data-pace-sidebar] [data-futuro="1"] [data-pace-capsula] { opacity: .55; }
+    [data-pace-sidebar] [data-pace-capsula-relleno] { display: block; flex: none; border-radius: 3.5px; background: var(--focus); opacity: .55; }
+    @supports (background: color-mix(in oklab, red, blue)) {
+      [data-pace-sidebar] [data-pace-capsula-relleno] { opacity: 1; background: color-mix(in oklab, var(--focus) 58%, var(--paper-2)); }
+    }
+    [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: var(--focus); opacity: 1; }
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
-       ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
-    /* SIN ROTULO, EL BOTON TIENE QUE PONER SU PROPIO ALTO. La fila de puntos
-       mide 21 px y el minimo tactil son 44: el padding de 12 lo sube a 45 sin
-       anadir nada visible. Antes ese alto lo daba el rotulo de la seccion, que
-       se retiro. */
+       ancho util son 243. El padding y el margen negativo dan aire al fondo que
+       sale al pasar el raton sin mover las capsulas de su sitio. */
     [data-pace-sidebar] [data-pace-semana] {
-      display: block; width: 100%; text-align: left;
-      border-radius: var(--r-sm); padding: 12px 6px; margin: -12px -6px;
+      display: block; width: calc(100% + 12px); text-align: left; background: none; border: 0; cursor: pointer;
+      border-radius: var(--r-sm); padding: 6px 6px; margin: -6px -6px;
     }
     [data-pace-sidebar] [data-pace-semana]:hover { background: var(--focus-soft); }
+    [data-pace-sidebar] [data-pace-semana]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
     /* LA ENVOLTURA QUE SE ESCALA (s181). La sidebar se ve IGUAL en cualquier
        resolucion: cuando no cabe, encoge entera en vez de recolocarse. El
@@ -286,24 +290,8 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       [data-pace-sidebar]::-webkit-scrollbar {
         display: none;                    /* WebKit / Blink */
       }
-
-      /* EL AIRE DE LA TARJETA, SOLO EN EL CAJON (s182, encargo B del usuario).
-         Bajo la ultima linea habia 28 px -- 16 de padding mas 12 del descender--
-         y bajar el padding a 8 devuelve 8 px exactos: a 428x800 el pie pasa de
-         quedar 1,4 px por DEBAJO del borde a tener 6,6 dentro.
-         VA AQUI Y NO EN «sidebarStyles.accion» porque ese objeto lo comparten
-         las dos pieles, y en escritorio el aire se afino mirandolo en s180.
-         Y LLEVA «!important» POR NECESIDAD, NO POR PEREZA: el padding lo pone un
-         estilo EN LINEA, que gana a la hoja sin que haga falta «!important» del
-         otro lado (misma trampa que s180 con el recorte del logo). */
-      [data-pace-sidebar] [data-pace-sidebar-accion] { padding-bottom: 8px !important; }
     }
 
-    @media (max-width: 640px) {
-      /* El logo ya iba capado a 200 px desde s66; con el recorte eso son
-         200 x 79,5 en vez de los 121 de alto que daba sin tope a 390 px. */
-      [data-pace-sidebar] [data-pace-hoy] { gap: 8px; }
-    }
   `;
   document.head.appendChild(s);
 }

@@ -1,41 +1,27 @@
 /* PACE · Sidebar izquierdo — colapsable
-   Secciones: Hoy · acción principal · Esta semana · último logro. Pie con
-   colección, apoyo, versión y autor.
+   La barra es un CUADERNO (8 oct. 2026, elegido por Ez en cuatro vueltas de fotos):
+   la semana en cápsulas · Hoy con palabras · la siguiente pausa con su rótulo (o, por
+   libre, lo que puedes continuar, repetir o hacer ahora) · las tres bibliotecas · el
+   último logro. Pie con «Mis rutinas», el apoyo, la versión y el autor.
 
-   TROCEADO EN s148 (llegó a 570 ln; el límite de CLAUDE.md es 500) y
-   REESCRITO EN s180. Este archivo es el ORQUESTADOR: compone las secciones,
-   no dibuja ninguna por dentro y no decide ninguna. Lo demás vive en tres
-   hermanos, con el mismo patrón que Foco (`FocusTimer` + `.support` +
-   `.parts`):
+   Este archivo es el ORQUESTADOR: compone las secciones, no dibuja ninguna por
+   dentro y no decide ninguna. Lo demás vive en sus hermanos, que cargan ANTES en
+   PACE.html:
 
+     · `Sidebar.hoja.jsx`      → la hoja inyectada: cajón, logo, cápsulas, escala
      · `Sidebar.escala.jsx`    → el motor de la escala (s182)
-     · `Sidebar.support.jsx`   → hoja responsive inyectada + `sidebarStyles`
-                                 (que viaja por window: leer su cabecera)
-     · `Sidebar.selectors.js`  → los cuatro selectores PUROS
+     · `Sidebar.support.jsx`   → `sidebarStyles` (viaja por window: leer su cabecera)
+     · `Sidebar.selectors.js`  → los selectores PUROS y las palabras del cuaderno
      · `Sidebar.parts.jsx`     → las piezas de UI
 
-   Los tres cargan ANTES que este archivo en PACE.html.
+   Lo retirado, por si alguien lo echa de menos: la rejilla de cuatro casillas de Hoy
+   (decía «0 min» cuatro veces y parecía un panel de control), la tarjeta con caja de
+   la pausa (repetía la línea de la home, y «Llevas tres bloques y dos pausas» repetía
+   el aro) y las dos píldoras del pie. Antes: el plan del día, los recordatorios, la
+   intención, los contadores, el sendero y la rejilla de cinco logros.
 
-   QUÉ PREGUNTA RESPONDE AHORA (s180). La sidebar informaba pero ayudaba poco
-   a decidir. Ahora contesta cuatro cosas: qué he hecho hoy, qué puedo
-   continuar, cómo va la semana y cuál fue mi último logro. Menos panel de
-   estadísticas decorativo y más brújula cotidiana.
-
-   El ÚLTIMO LOGRO no tiene sección: vive en el pie. Ver `SidebarFooter`.
-
-   Historial de lo eliminado (no revivir sin justificación de producto):
-     - "Plan" del día — v0.11.2 (redundante con ActivityBar).
-     - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
-     - "Intención" — v0.12.1 (la misma pregunta se hace en el onboarding y se
-       guarda en `state.intention`).
-     - Contadores pomodoros/rondas/racha — v0.28.2.
-     - s180: la CIFRA GRANDE de racha (44 px), el SENDERO abstracto del día y
-       la rejilla de CINCO miniaturas de logro. La racha sigue, como texto
-       secundario dentro de "Esta semana".
-
-   RESPONSIVE (sesión 22 · v0.12.5): en ≤768px el sidebar se desacopla y pasa a
-   ser un drawer fullscreen por encima del main. Las reglas viven en
-   `Sidebar.support.jsx`.
+   RESPONSIVE: en la piel de móvil la barra es un cajón a pantalla completa por
+   encima de la home (`Sidebar.hoja.jsx`) y cabe entera con la misma composición.
 */
 
 function Sidebar() {
@@ -85,15 +71,12 @@ function Sidebar() {
     eventos = (snap && Array.isArray(snap.events)) ? snap.events : null;
   } catch (e) { eventos = null; }
 
-  /* Las cuentas de hoy salen de los MISMOS eventos que la tarjeta, y con el
-     dia local que la app escribe. `null` cuando el almacen no puede responder:
-     ahi no se pinta nada, en vez de pintar cero. */
+  /* El día local que la app escribe, para que la sugerencia rote con él. */
   const hoyISO = (function () {
     const d = new Date();
     const dd = n => (n < 10 ? '0' : '') + n;
     return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate());
   })();
-  const cuentas = selectSidebarTodayCounts(eventos, hoyISO);
 
   /* LA SUGERENCIA REUTILIZA LA REGLA DE LA BIBLIOTECA (`libraryParaAhora`), no
      una propia: ya rota por dia, ya ordena por duracion y su pozo es «lo que
@@ -127,8 +110,12 @@ function Sidebar() {
   const reanudable = (window.leerRespiraGuardada && window.leerRespiraGuardada()) || null;
   /* s192 · con «A tu ritmo», la siguiente pausa del día (state-ritmo.jsx). */
   const ritmo = (typeof ritmoSiguiente === 'function') ? ritmoSiguiente(state) : null;
+  /* ¿La home enseña «A tu ritmo»? El día servido o la pregunta ya contestada por la
+     semana; por libre, no. */
+  const R = (typeof ritmoDe === 'function') ? ritmoDe(state) : null;
+  const conRitmo = !!(R && !R.libre && (R.dia || R.propuesta));
   const accion = selectSidebarPrimaryAction(state,
-    { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo });
+    { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo, conRitmo: conRitmo });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive
@@ -142,53 +129,30 @@ function Sidebar() {
     if (esCajon()) set({ sidebarCollapsed: true });
   };
 
-  const diaEnBlanco = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes && !hoy.waterGlasses;
-  /* AIRE REPARTIDO (L3/L4). El sobrante se reparte ENTRE las reglas con
-     `margin: auto`, en vez de acumularse al final: a 1030 px de alto el hueco
-     del pie eran **389 px** y la sidebar parecia incompleta.
-     `paddingBottom` en las secciones es el SUELO: con `margin:auto` a solas,
-     en una pantalla justa el sobrante es 0 y las secciones quedarian pegadas
-     a la regla. Asi nunca baja de la separacion de siempre. */
-  /* GEOMETRIA FIJA EN ESCRITORIO (decision del usuario). El aire NO se reparte
-     con la resolucion: la columna mide lo mismo en un portatil que en un
-     monitor de 1440, y lo que sobra se va al final, con el pie anclado abajo.
-     Se probo lo contrario -- repartirlo con `margin: auto`-- y el usuario pidio
-     volver: una barra que cambia de ritmo segun la pantalla no se puede
-     afinar, porque cada numero vale una cosa distinta en cada equipo.
-     Estos son LOS numeros del ritmo, y estan afinados uno a uno sobre medidas:
-       · `sepHoy` es la regla que separa el logo de Hoy. Sube un 20 % respecto
-         a las demas, que es lo que pidio el usuario mirandolo.
-       · `aireSemana` baja «Esta semana» un 15 %, para que quede mas centrada
-         entre sus dos reglas. */
+  /* El día en blanco lo dice una frase, salvo si hay una sesión a medias: decir
+     «tu día empieza en blanco» encima de «Continúa» sería mentir. */
+  const sinMinutos = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes;
+  const enBlanco = sinMinutos && !(accion && accion.kind === 'resume');
+  /* GEOMETRÍA FIJA EN ESCRITORIO (decisión del usuario): el aire no se reparte con
+     la resolución y lo que sobra se va al final, con el pie anclado abajo. El margen
+     de las reglas es 12 (9 en el móvil estrecho) y de él depende la simetría del
+     logo: ver `logoBar` en `Sidebar.support.jsx`. */
   const sep = { marginTop: isMob ? 9 : 12, marginBottom: isMob ? 9 : 12 };
-  /* Ya no necesita el +15 % que llevaba cuando iba la ultima: ahora abre la
-     columna y su regla le da el aire. */
-  const aireSemana = {};
-  const aire = {};
-  const accionPrimero = esCajon();
 
   /* LAS SECCIONES SE COMPONEN Y LOS SEPARADORES VAN ENTRE ELLAS. Colgar el
-     `<Divider/>` de cada bloque parece equivalente y no lo es: con la acción
-     cambiando de sitio según la piel salieron DOS reglas seguidas en
-     escritorio y ninguna antes de la tarjeta. Con la lista, un bloque que no
-     se pinta no deja su regla huérfana, y el orden es lo único que cambia. */
+     `<Divider/>` de cada bloque parece equivalente y no lo es: un bloque que no se
+     pinta (la pausa, cuando no hay nada que ofrecer) dejaba su regla huérfana y
+     salían dos reglas seguidas. Con la lista, eso no puede pasar. */
   const seccionHoy = (
-    <div style={{ ...sidebarStyles.section, ...aire }} key="hoy">
+    <div style={sidebarStyles.section} key="hoy">
       <div style={sidebarStyles.sectionHeaderCentro}>
         <Meta>{t('sidebar.today')}</Meta>
         <span style={sidebarStyles.fecha}>{fechaCortaSidebar(lang)}</span>
       </div>
-      {/* AGUA SUMA UN VASO AL PULSARLA, y por eso el «+» desaparece: era un
-          segundo objetivo dentro de una celda de 117 px y ademas pisaba los
-          ocho vasos. Es la unica celda que ACTUA en vez de navegar -- las otras
-          tres abren su modulo-- y eso se dice en su etiqueta. */}
       <SidebarToday
         hoy={hoy}
-        cuentas={cuentas}
-        onOpen={(m) => {
-          if (m === 'water') { try { addWaterGlass(1); } catch (e) { /* el store manda */ } return; }
-          emitir('module', { target: m });
-        }}
+        enBlanco={enBlanco}
+        onWater={() => { try { addWaterGlass(1); } catch (e) { /* el store manda */ } }}
       />
     </div>
   );
@@ -202,19 +166,20 @@ function Sidebar() {
     />
   ) : null;
 
-  /* El día en blanco solo habla cuando NO hay tarjeta: si hay algo que
-     continuar, decir «tu día empieza en blanco» sería mentir. */
-  const seccionVacio = (!seccionAccion && diaEnBlanco)
-    ? <p style={sidebarStyles.vacioCopy} key="vacio">{t('sidebar.empty')}</p>
-    : null;
+  /* LAS BIBLIOTECAS: con «A tu ritmo» en la home no hay botones de actividades, y
+     esta es la única puerta que abre las tres desde cualquier sitio. */
+  const seccionBibliotecas = (
+    <div style={sidebarStyles.section} key="bibliotecas">
+      <div style={sidebarStyles.sectionHeaderCentro}>
+        <Meta>{t('sidebar.libraries')}</Meta>
+      </div>
+      <SidebarLibraries onOpen={(destino) => emitir('module', { target: destino })} />
+    </div>
+  );
 
-  /* EL ULTIMO LOGRO RECUPERA SU ROTULO (s180, tras verlo el usuario en
-     produccion): en el pie, un titulo suelto al lado de «Apoyar PACE» no dice
-     que es -- «se entiende raro», con sus palabras. Vuelve a tener seccion,
-     pero COMPACTA: sin la fecha y con el sello a 28 en vez de 38, que es lo
-     que la maqueta pinto como L2. */
+  /* El último logro con su rótulo: sin él, un título suelto «se entiende raro». */
   const seccionLogro = (
-    <div style={{ ...sidebarStyles.section, ...aire }} key="logro">
+    <div style={sidebarStyles.section} key="logro">
       <div style={sidebarStyles.sectionHeaderCentro}>
         <Meta>{t('sidebar.latest')}</Meta>
       </div>
@@ -225,31 +190,20 @@ function Sidebar() {
     </div>
   );
 
+  /* La semana va sin rótulo: siete cápsulas con la inicial de cada día ya se leen
+     como una semana. El nombre vive en el `aria-label` del botón. */
   const seccionSemana = (
-    <div style={{ ...sidebarStyles.section, ...aireSemana }} key="semana">
-      {/* SIN ROTULO NI FLECHA (idea del usuario): siete puntos con la inicial de
-          cada dia ya SE LEEN como una semana, y el rotulo repetia lo que el
-          dibujo dice. Lo que se pierde es la pista de que abre Estadisticas;
-          se conserva en el `aria-label` del boton y en su hover.
-          El nombre sigue existiendo para quien no ve la pantalla. */}
+    <div style={sidebarStyles.section} key="semana">
       <SidebarWeek semana={semana} onOpen={() => emitir('stats')} />
     </div>
   );
 
-  /* EN MÓVIL LA ACCIÓN VA PRIMERA. El pulgar llega antes a lo que se pulsa que
-     a lo que se lee, y en un cajón a pantalla completa lo accionable no puede
-     quedar debajo de cuatro cifras. En escritorio no: allí se lee de arriba
-     abajo y Hoy es el contexto de la acción.
-     Es orden de DOM y no `order` de CSS: s160 midió que el orden visual y el
-     de foco tienen que ser el mismo, y `order` los separa. */
-  /* ORDEN, elegido por el usuario mirandolo: Esta semana -> Hoy -> Continua
-     -> Ultimo logro. En movil la accion se adelanta y el resto le sigue.
-     (El comentario decia otro orden distinto del que compone el array de
-     abajo, y el bueno siempre fue el array: corregido en s181.) */
-  const secciones = (accionPrimero
-    ? [seccionAccion, seccionSemana, seccionHoy, seccionVacio, seccionLogro]
-    : [seccionSemana, seccionHoy, seccionAccion, seccionVacio, seccionLogro]
-  ).filter(Boolean);
+  /* EL MISMO ORDEN EN LAS DOS PIELES (9 oct. 2026). En el móvil la tarjeta iba
+     primera para que el pulgar llegara antes; con el cuaderno la pausa queda a media
+     pantalla y el cajón cabe entero a 360x640 (medido: al 81 %, cuando la barra de
+     antes se quedaba en el suelo del 80 % con 44 px fuera). El orden lo trae el DOM
+     y no `order` de CSS: el visual y el de foco tienen que ser el mismo (s160). */
+  const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
   return (
     <aside style={sidebarStyles.root} data-pace-sidebar data-escalado="0">
@@ -301,8 +255,6 @@ function Sidebar() {
       <div data-pace-sidebar-spacer style={{ flex: 1, minHeight: 0 }} />
 
       <SidebarFooter
-        compact={isMob}
-        misRutinas={(state.customRoutines || []).length}
         onMisRutinas={() => emitir('custom')}
         onSupport={() => window.dispatchEvent(new CustomEvent('pace:open-support'))}
       />
@@ -313,10 +265,10 @@ function Sidebar() {
 }
 
 /* «Cajón» = el drawer a pantalla completa, que la hoja monta en la PIEL DE MÓVIL.
-   No es el mismo umbral que `isMob` (640, compactación tipográfica), y confundirlos
-   deja la acción arriba en una tableta que todavía ve la sidebar como columna.
-   s197: el corte lo manda `_responsive.corte.js`, que desde v0.130.0 mete también las
-   pantallas verticales de hasta 1024 — o sea que una tableta vertical SÍ lleva cajón. */
+   No es el mismo umbral que `isMob` (640, compactación tipográfica): de este dependen
+   que el cajón se cierre al elegir y de dónde saca la escala el alto disponible.
+   El corte lo manda `_responsive.corte.js`, que mete también las pantallas verticales
+   de hasta 1024: una tableta vertical SÍ lleva cajón. */
 function esCajon() {
   return typeof paceEsMovil === 'function' ? paceEsMovil() : false;
 }

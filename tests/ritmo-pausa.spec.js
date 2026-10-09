@@ -162,7 +162,7 @@ test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba
   expect(d.primera, 'tras lo hecho, primero la pausa').toEqual(['foco', 'pausa', 'foco']);
   expect(d.siguiente, 'y el bloque 2 detrás de ella').toBe(573);
   await expect(page.locator('[data-pace-modal-backdrop]')).toContainText('9:28 · lo que el menú tenía para ahora');
-  await expect(page.locator('[data-pace-sidebar]')).toContainText('Tu pausa · 9:28');
+  await expect(page.locator('[data-pace-sidebar]')).toContainText(/Tu pausas*Ahora, /);
   /* y al empezar el bloque 2 a las 9:34, se recoloca otra vez (la pieza de s194) */
   await page.keyboard.press('Escape');
   await page.clock.fastForward(6 * 60 * 1000);
