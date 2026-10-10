@@ -137,7 +137,7 @@ test('elegir la jornada entera: el aro, el rótulo, la barra lateral y la persis
   /* …y el rótulo SUBE lo que mide la línea nueva: el panel no se mueve dentro de
      su bloque (ronda 4). Sin la compensación, bajaría 15 px. */
   expect(await banda(page), 'el panel se movió al aparecer «Hasta las»').toBe(bandaAntes);
-  await expect(page.locator('[data-pace-sidebar-accion]')).toContainText('Siguiente pausa · 9:45');
+  await expect(page.locator('[data-pace-sidebar-accion]')).toContainText(/Siguiente pausa\s*A las 9:45, /);
   const guardado = await page.evaluate(() => getState().ritmo.dia);
   expect(guardado).toMatchObject({ fecha: FECHA, opcion: 'jornada', desde: 540 });
   await page.reload();
@@ -179,7 +179,7 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   expect(await bloqueDe(page)).toBe('0');
   await expect(tramos.nth(0)).toHaveClass(/pace-rt-ahora/);
   await expect(parada).not.toHaveClass(/pace-rt-ahora/);
-  await expect(lateral).toContainText('Siguiente pausa · 9:45');
+  await expect(lateral).toContainText(/Siguiente pausa\s*A las 9:45, /);
 
   /* corriendo: el relleno mide lo que lleva el bloque (12 de 45, a 96 pasos) */
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
@@ -210,7 +210,7 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   await expect(tramos.nth(1)).not.toHaveClass(/pace-rt-ahora/);
   await expect(vis(page, '[data-pace-ritmo-como]')).toHaveCount(0);
   expect(await bloqueDe(page)).toBe('0');
-  await expect(lateral).toContainText('Tu pausa · 9:45');
+  await expect(lateral).toContainText(/Tu pausa\s*Ahora, /);
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(1);
 
   /* empezar el bloque 2 la cierra: la parada queda atrás, el tramo 2 es AHORA */
@@ -222,7 +222,7 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   /* s194 · RECOLOCADO: el bloque 2 se ha empezado a las 9:45, sin esperar la pausa de
      cinco minutos del plan (9:50), así que la línea se recompone desde ahora y la
      siguiente pausa cae a las 10:30, no a las 10:35. La línea dice la verdad. */
-  await expect(lateral).toContainText('Siguiente pausa · 10:30');
+  await expect(lateral).toContainText(/Siguiente pausa\s*A las 10:30, /);
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(null);
   expect(await page.evaluate(() => getState().ritmo.dia.desde), 'la recomposición empieza a las 9:45').toBe(585);
 });
@@ -272,7 +272,7 @@ test('empezar el bloque 2 veinte minutos tarde recoloca el resto del día: comid
   const linea = vis(page, '[data-pace-ritmo-linea]');
   await expect(linea.locator('[data-pace-ritmo-tramo="libre"]')).toHaveCount(1);
   await expect(linea).toContainText('10:55');
-  await expect(page.locator('[data-pace-sidebar]')).toContainText('Siguiente pausa · 10:55');
+  await expect(page.locator('[data-pace-sidebar]')).toContainText(/Siguiente pausa\s*A las 10:55, /);
   /* y sobrevive a la recarga */
   await page.reload();
   await page.locator('[data-pace-dial-number]').first().waitFor({ state: 'visible' });

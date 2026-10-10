@@ -87,6 +87,13 @@ code { font-size: .88em; background: var(--papel-2); padding: 1px 5px; border-ra
 .elegido li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; color: var(--tinta-2); }
 .elegido li::before { content: ''; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%; background: var(--oliva); }
 .elegido.falta li::before { background: none; border: 1.5px solid var(--bronce); }
+.tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; max-width: 860px; }
+.casos { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.caso { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.caso img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--linea); }
+.caso figcaption { font-size: 12.5px; color: var(--tinta-3); }
+h3.sub { font-size: 24px; margin-top: 10px; }
+@media (max-width: 860px) { .tres { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .tam { font-size: 12px; color: var(--tinta-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tam.bien { color: var(--oliva); }
 
@@ -142,35 +149,228 @@ td.ok { color: var(--oliva); }
 <main class="hoja">
 
   <header class="seccion" style="gap:18px">
-    <span class="rotulo">PACE · v0.148.5 · 8 de octubre de 2026 · segunda vuelta</span>
+    <span class="rotulo">PACE · v0.150.1 · 9 de octubre de 2026 · ya montada</span>
     <h1>La barra lateral</h1>
-    <p class="entrada">Pediste que fuera más útil, más elegante y más bonita. Aquí está cómo se ve hoy en tres pantallas, qué le sobra y qué le falta, y tres maneras de rehacerla, pintadas encima de la app de verdad. Con lo que contestaste después hay una segunda vuelta: el Cuaderno con la siguiente pausa y cuatro maneras de dibujar la semana.</p>
+    <p class="entrada">Pediste que fuera más útil, más elegante y más bonita. Aquí está cómo se ve hoy en tres pantallas, qué le sobra y qué le falta, y tres maneras de rehacerla, pintadas encima de la app de verdad. Con lo que contestaste después hay una segunda vuelta (el Cuaderno con la siguiente pausa y cuatro semanas), una tercera (Cápsulas sin el hilo de la racha y el agua con tu meta de Ajustes) y una cuarta con lo que faltaba medir: el móvil, el inglés y un día por libre.</p>
   </header>
 
   <section class="corto" aria-label="En corto">
     <div>
-      <h3>Recomiendo el Cuaderno con la siguiente pausa y la semana «Brotes»</h3>
-      <p style="color:var(--tinta-2)">Lleva lo que ya elegiste, dice la siguiente pausa en una frase sin copiar la tarjeta de la home, abre Estira y apunta el vaso con un botón que se ve. «Brotes» es la barra más limpia que conserva el color de cada módulo, y cabe sin encogerse a 1280 × 800.</p>
-      <p style="margin-top:10px"><a href="#cuaderno-pausa">Ver la segunda vuelta</a></p>
+      <h3>Ya montada: así queda en la app</h3>
+      <p style="color:var(--tinta-2)">Con lo que elegiste el 9 de octubre: la pausa con su rótulo, las frases tal cual, las cápsulas afinadas y la home con tu meta de vasos. Cabe sin scroll en las tres pantallas, en las dos paletas y en el cajón del móvil. Un solo cambio: la home dice «6 de 8 vasos», sin «tus», porque con «tus» el título del día se partía.</p>
+      <p style="margin-top:10px"><a href="#montada">Ver las fotos</a> · <a href="#cuarta">la cuarta vuelta</a> · <a href="#tercera">la tercera</a></p>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
       <div>
         <span class="rotulo">Ya elegido</span>
         <ul class="elegido" style="margin-top:8px">
-          <li>La semana va con barras de minutos, más elegantes que las de la primera vuelta.</li>
+          <li>El Cuaderno con la siguiente pausa.</li>
+          <li>La semana en Cápsulas, sin el hilo verde de la racha.</li>
+          <li>La racha bajo la semana («4 días en ritmo · mejor 9»).</li>
           <li>«Mis rutinas» y «Da de pastar a la vaca», en dos filas de texto.</li>
-          <li>Vuelve la racha bajo la semana.</li>
+          <li>La frase del agua sigue tu meta de Ajustes.</li>
+          <li>La siguiente pausa con su rótulo «Siguiente pausa».</li>
+          <li>Las frases, en castellano y en inglés.</li>
+          <li>La home también sigue tu meta de vasos.</li>
+          <li>Las cápsulas afinadas.</li>
         </ul>
       </div>
       <div>
-        <span class="rotulo">Falta elegir</span>
+        <span class="rotulo">Falta</span>
         <ul class="elegido falta" style="margin-top:8px">
-          <li>El Cuaderno con la pausa o la B, «Puertas».</li>
-          <li>Qué semana: Cápsulas, Tinta, Brotes o Hierba.</li>
-          <li>Si te gustan las frases del Cuaderno y qué número de vasos manda. <a href="#preguntas">Las preguntas</a></li>
+          <li>Tu sí a cómo queda montada. <a href="#montada">Las fotos</a></li>
         </ul>
       </div>
     </div>
+  </section>
+
+  <!-- 000 · YA MONTADA -->
+  <section class="seccion" id="montada">
+    <header>
+      <span class="rotulo">Ya montada · 9 de octubre</span>
+      <h2>Así queda en la app</h2>
+    </header>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>Con lo que elegiste: la pausa con su rótulo, las frases tal cual, las cápsulas afinadas y la home con tu meta de vasos. Son fotos de la app de la rama, sin nada pintado encima, del mismo jueves que las vueltas anteriores. En ninguna pantalla hay scroll: con el día lleno, la barra se ve entera a 1280 × 800 y a 1920 × 960, y al 91 % a 1536 × 704.</p>
+      <p>Hay un cambio respecto a lo que viste: la home dice <b>«6 de 8 vasos»</b> y no «6 de tus 8 vasos». Con «tus», el título del día («Jornada entera · de 9:00 a 17:00 …») se partía en dos líneas en las pantallas de 1536 px de ancho para arriba; lo medí en nueve pantallas y sin «tus» queda como estaba. Si cambias la meta a 12 en Ajustes, dice «6 de 12 vasos».</p>
+    </div>
+    <div class="mandos" data-mandos="montada">
+      <div class="grupo"><span>Pantalla</span><div class="pildoras" data-k="pantalla">
+        <button data-v="1280x800" aria-pressed="true">1280 × 800</button><button data-v="1536x704" aria-pressed="false">1536 × 704</button><button data-v="1920x960" aria-pressed="false">1920 × 960</button></div></div>
+      <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
+        <button data-v="crema" aria-pressed="true">Crema</button><button data-v="oscuro" aria-pressed="false">Oscura</button></div></div>
+      <div class="grupo"><span>Día</span><div class="pildoras" data-k="dia">
+        <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
+    </div>
+    <figure class="pantalla" style="margin:0">
+      <img data-foto="montada" src="fotos/montada-1280x800-crema-activo.jpg" alt="La app a 1280 por 800 con la barra lateral ya montada" width="2560" height="1600">
+    </figure>
+
+    <h3 class="sub">El cajón del móvil, a 360 × 640</h3>
+    <p class="texto" style="color:var(--tinta-2)">Cabe entero: con el día lleno se ve al 85 % y con el día vacío, a su tamaño.</p>
+    <div class="cuatro">
+      <figure class="barra" style="margin:0"><figcaption><b>Crema · lleno</b></figcaption><img src="fotos/montada-cajon-crema-activo.png" alt="El cajón del móvil en crema, con el día lleno"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Crema · vacío</b></figcaption><img src="fotos/montada-cajon-crema-vacio.png" alt="El cajón del móvil en crema, con el día vacío"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Oscura · lleno</b></figcaption><img src="fotos/montada-cajon-oscuro-activo.png" alt="El cajón del móvil en la paleta oscura, con el día lleno"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Oscura · vacío</b></figcaption><img src="fotos/montada-cajon-oscuro-vacio.png" alt="El cajón del móvil en la paleta oscura, con el día vacío"></figure>
+    </div>
+
+    <h3 class="sub">En inglés y por libre</h3>
+    <div class="cuatro">
+      <figure class="barra" style="margin:0"><figcaption><b>Inglés</b></figcaption><img src="fotos/montada-barra-en-1280x800.png" alt="La barra en inglés"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Repetir</b></figcaption><img src="fotos/montada-barra-libre-repetir.png" alt="Por libre, con algo hecho: Repetir"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Para ahora</b></figcaption><img src="fotos/montada-barra-libre-ahora.png" alt="Por libre, con el día vacío: Para ahora"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Continúa</b></figcaption><img src="fotos/montada-barra-libre-continua.png" alt="Por libre, con Respira a medias: Continúa"></figure>
+    </div>
+
+    <h3 class="sub">La home con otra meta de vasos</h3>
+    <div class="casos" style="grid-template-columns:repeat(auto-fill, minmax(320px, 1fr))">
+      <figure class="caso"><img src="fotos/montada-home-meta-12.jpg" alt="La home con la meta de 12 vasos: 6 de 12 vasos"><figcaption>Meta de 12 · «6 de 12 vasos»</figcaption></figure>
+      <figure class="caso"><img src="fotos/montada-home-meta-6.jpg" alt="La home con la meta de 6 vasos: 6 de 6 vasos"><figcaption>Meta de 6 · «6 de 6 vasos»</figcaption></figure>
+    </div>
+    <p class="nota">De paso se arregló un fallo que ya estaba: yendo por libre, si lo último que hiciste era un bloque de Foco, la barra se quedaba sin nada que ofrecer. Ahora «Repetir» busca lo último de Respira, Mueve o Estira. La línea «Llevas tres bloques y dos pausas» ya no está, como en las fotos que elegiste.</p>
+  </section>
+
+  <!-- 00 · CUARTA VUELTA -->
+  <section class="seccion" id="cuarta">
+    <header>
+      <span class="rotulo">Cuarta vuelta</span>
+      <h2>Lo que faltaba medir</h2>
+    </header>
+    <p class="texto" style="color:var(--tinta-2)">La tercera vuelta solo miraba el escritorio, en castellano y con el día de «A tu ritmo» en marcha. Aquí está el resto, con lo que ya elegiste pintado en la app real: Cápsulas sin el hilo, «Hoy» con palabras, el agua con tu meta, las tres puertas y el pie en texto. Primero, las cápsulas de cerca.</p>
+
+    <h3 class="sub">Las cápsulas, de cerca</h3>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>Pediste unas barras «mucho más elegantes». Frente a las de la primera vuelta lo son: ya no se parten en franjas de color ni salen rayas de cinco minutos. De cerca les veo dos cosas que las abaratan. Los días pasados son un verde transparente que, sobre el beige del tubo, se vuelve gris y parece apagado, y en la paleta oscura más. Y el tubo vacío es una mancha que pesa casi tanto como lo hecho.</p>
+      <p>La versión <b>afinada</b> dibuja el tubo con un trazo fino, como las reglas de la barra, lo estrecha de 10 a 7 px y pinta los días pasados en un oliva claro y sólido. Hoy sigue en tinta entera. Mide lo mismo de alto, así que no cambia ninguna medida de la página.</p>
+    </div>
+    <div class="casos">
+      <figure class="caso"><img src="fotos/cuarta-semana-actual-crema.png" alt="Las cápsulas de la tercera vuelta, en crema"><figcaption>Como las elegiste · crema</figcaption></figure>
+      <figure class="caso"><img src="fotos/cuarta-semana-tinta-crema.png" alt="Las cápsulas afinadas, en crema"><figcaption>Afinadas · crema</figcaption></figure>
+      <figure class="caso"><img src="fotos/cuarta-semana-actual-oscuro.png" alt="Las cápsulas de la tercera vuelta, en oscuro"><figcaption>Como las elegiste · oscura</figcaption></figure>
+      <figure class="caso"><img src="fotos/cuarta-semana-tinta-oscuro.png" alt="Las cápsulas afinadas, en oscuro"><figcaption>Afinadas · oscura</figcaption></figure>
+    </div>
+    <div class="tres">
+      <figure class="barra" style="margin:0"><figcaption><b>Afinadas · crema</b></figcaption><img src="fotos/cuarta-barra-tinta-crema.png" alt="La barra entera con las cápsulas afinadas, en crema"><span class="sello">Recomendada</span></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Afinadas · oscura</b></figcaption><img src="fotos/cuarta-barra-tinta-oscuro.png" alt="La barra entera con las cápsulas afinadas, en oscuro"></figure>
+    </div>
+
+    <h3 class="sub">El cajón del móvil, a 360 × 640</h3>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>En el móvil la barra es un cajón que tapa la pantalla. La de hoy no cabe: con el día lleno se queda en su tamaño mínimo, el 80 %, y aun así 44 px quedan por debajo del borde. El Cuaderno cabe entero, <span data-resumen-cajon></span>. Con el día vacío caben las dos sin encogerse.</p>
+      <p>En el móvil la tarjeta de la pausa iba la primera. En el Cuaderno va en su sitio, dentro de «Hoy», a media pantalla, donde el pulgar llega igual. Se pierde la línea «Llevas tres bloques y dos pausas», porque el cuaderno ya dice lo hecho con sus minutos.</p>
+    </div>
+    <div class="mandos" data-mandos="cajon">
+      <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
+        <button data-v="crema" aria-pressed="true">Crema</button><button data-v="oscuro" aria-pressed="false">Oscura</button></div></div>
+      <div class="grupo"><span>Día</span><div class="pildoras" data-k="dia">
+        <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
+    </div>
+    <div class="tres">
+      <figure class="barra" style="margin:0"><figcaption><b>Hoy</b><span class="tam" data-tam-cajon="hoy"></span></figcaption><img data-cajon="hoy" alt="El cajón del móvil como es hoy" src="fotos/cuarta-cajon-hoy-crema-activo.png"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Dentro de «Hoy»</b><span class="tam" data-tam-cajon="dentro"></span></figcaption><img data-cajon="dentro" alt="El Cuaderno en el cajón, con la pausa dentro de Hoy" src="fotos/cuarta-cajon-dentro-crema-activo.png"><span class="sello">Recomendada</span></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Con su rótulo</b><span class="tam" data-tam-cajon="rotulo"></span></figcaption><img data-cajon="rotulo" alt="El Cuaderno en el cajón, con la pausa con su rótulo" src="fotos/cuarta-cajon-rotulo-crema-activo.png"></figure>
+    </div>
+
+    <h3 class="sub">En inglés</h3>
+    <p class="texto" style="color:var(--tinta-2)">Todas las frases caben en una línea, también a 1536 × 704, donde la barra se ve al 94 % como en castellano. Los rótulos, los días y el pie usan los textos en inglés que la app ya tiene.</p>
+    <div class="cuatro">
+      <figure class="barra" style="margin:0"><figcaption><b>1280 × 800</b></figcaption><img src="fotos/cuarta-en-1280x800-activo.png" alt="La barra en inglés a 1280 por 800, con el día lleno"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>1536 × 704</b></figcaption><img src="fotos/cuarta-en-1536x704-activo.png" alt="La barra en inglés a 1536 por 704, con el día lleno"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Día vacío</b></figcaption><img src="fotos/cuarta-en-1280x800-vacio.png" alt="La barra en inglés con el día vacío"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Cajón</b></figcaption><img src="fotos/cuarta-en-360x640-activo.png" alt="El cajón del móvil en inglés"></figure>
+    </div>
+    <div class="tabla" style="max-width:760px">
+      <table>
+        <thead><tr><th>Castellano</th><th>Inglés</th></tr></thead>
+        <tbody>
+          <tr><td>Dos horas y media de foco</td><td>Two and a half hours of focus</td></tr>
+          <tr><td>Cinco minutos respirando</td><td>Five minutes breathing</td></tr>
+          <tr><td>Siete minutos moviéndote</td><td>Seven minutes moving</td></tr>
+          <tr><td>Ningún vaso de ocho</td><td>None of eight glasses</td></tr>
+          <tr><td>Cuatro vasos de ocho</td><td>Four glasses of eight</td></tr>
+          <tr><td>Los ocho vasos del día</td><td>All eight glasses today</td></tr>
+          <tr><td>+ vaso</td><td>+ glass</td></tr>
+          <tr><td>Luego, Caderas de pie · A las 12:25 · cuatro minutos de Estira</td><td>Next, Standing Hips · At 12:25 · four minutes of Stretch</td></tr>
+          <tr><td>Ahora, Caderas de pie</td><td>Now, Standing Hips</td></tr>
+          <tr><td>Otra vez, Antídoto silla · Lo último que hiciste</td><td>Again, Chair Antidote · The last thing you did</td></tr>
+          <tr><td>Para ahora, Postura reset · Cabe donde estás</td><td>Right now, Posture Reset · Fits where you are</td></tr>
+          <tr><td>Continúa, Rondas express · Ronda 2 de 2</td><td>Continue, Express Rounds · Round 2 of 2</td></tr>
+          <tr><td>Bibliotecas</td><td>Libraries</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">Un día por libre</h3>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>Por libre no hay siguiente pausa, y la tarjeta de hoy dice «Repetir», «Para ahora» o «Continúa». Con la pausa dentro, eso pasa a ser la última línea de «Hoy», escrita igual que el resto del cuaderno. Con su rótulo, el rótulo es el de hoy y debajo va la rutina.</p>
+      <p>Al medirlo salió un fallo que ya está en la app: por libre, si lo último que hiciste fue un bloque de Foco, la tarjeta desaparece, porque intenta repetir el Foco y el Foco no es una rutina. Al montarlo, «Otra vez» buscará lo último que hiciste de Respira, Mueve o Estira y, si no hay nada, dirá «Para ahora».</p>
+    </div>
+    <div class="tres">
+      <figure class="barra" style="margin:0"><figcaption><b>Repetir</b></figcaption><img src="fotos/cuarta-libre-repetir-dentro-es.png" alt="Por libre, con algo hecho: Otra vez, Antídoto silla"><p class="desc">Con algo hecho: «Otra vez, <i>Antídoto silla</i>» · «Lo último que hiciste».</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Para ahora</b></figcaption><img src="fotos/cuarta-libre-ahora-dentro-es.png" alt="Por libre, con el día vacío: Para ahora, Postura reset"><p class="desc">Con el día vacío: «Para ahora, <i>Postura reset</i>» · «Cabe donde estás».</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Continúa</b></figcaption><img src="fotos/cuarta-libre-continua-dentro-es.png" alt="Por libre, con Respira a medias: Continúa, Rondas express"><p class="desc">Con Respira a medias: «Continúa, <i>Rondas express</i>» · «Ronda 2 de 2».</p></figure>
+    </div>
+    <div class="tres">
+      <figure class="barra" style="margin:0"><figcaption><b>Con su rótulo · Repetir</b></figcaption><img src="fotos/cuarta-libre-repetir-rotulo-es.png" alt="Por libre, con la pausa con su rótulo: Repetir"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Con su rótulo · Para ahora</b></figcaption><img src="fotos/cuarta-libre-ahora-rotulo-es.png" alt="Por libre, con la pausa con su rótulo: Para ahora"></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Con su rótulo · Continúa</b></figcaption><img src="fotos/cuarta-libre-continua-rotulo-es.png" alt="Por libre, con la pausa con su rótulo: Continúa"></figure>
+    </div>
+
+    <h3 class="sub">Las frases más largas</h3>
+    <p class="texto" style="color:var(--tinta-2)">Seis horas y 47 minutos de foco, una hora y 43 minutos de cuerpo y once vasos de una meta de doce: caben en una línea en los dos idiomas. Si alguna no cupiera, se parte en dos líneas equilibradas y no se corta.</p>
+    <div class="casos" style="grid-template-columns:repeat(auto-fill, minmax(280px, 1fr))">
+      <figure class="caso"><img src="fotos/cuarta-largas-es.png" alt="Las frases más largas en castellano"><figcaption>Castellano</figcaption></figure>
+      <figure class="caso"><img src="fotos/cuarta-largas-en.png" alt="Las frases más largas en inglés"><figcaption>Inglés</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 0 · TERCERA VUELTA -->
+  <section class="seccion" id="tercera">
+    <header>
+      <span class="rotulo">Tercera vuelta</span>
+      <h2>Cápsulas, sin el hilo, y la pausa en dos sitios</h2>
+    </header>
+    <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2)">
+      <p>El hilo verde bajo los días se va: tenías razón, repetía lo que ya dicen la frase «4 días en ritmo» y las cápsulas llenas. El botón del agua pasa a «+ vaso» para que la frase quepa siempre en una línea.</p>
+      <p>La siguiente pausa, en dos formas. <b>Con su rótulo</b>, como en la segunda vuelta: «Siguiente pausa» y debajo «A las 12:25, <i>Caderas de pie</i>». <b>Dentro de «Hoy»</b>, como la última línea del cuaderno, tras un hilo corto: «Luego, <i>Caderas de pie</i>» y debajo «A las 12:25 · cuatro minutos de Estira».</p>
+    </div>
+    <div class="mandos" data-mandos="tercera">
+      <div class="grupo"><span>Pantalla</span><div class="pildoras" data-k="pantalla">
+        <button data-v="1280x800" aria-pressed="true">1280 × 800</button><button data-v="1536x704" aria-pressed="false">1536 × 704</button><button data-v="1920x960" aria-pressed="false">1920 × 960</button></div></div>
+      <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
+        <button data-v="crema" aria-pressed="true">Crema</button><button data-v="oscuro" aria-pressed="false">Oscura</button></div></div>
+      <div class="grupo"><span>Día</span><div class="pildoras" data-k="dia">
+        <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
+    </div>
+    <div class="tres">
+      <figure class="barra" style="margin:0"><figcaption><b>Segunda vuelta</b><span class="tam" data-tam="Cp-capsulas"></span></figcaption><img data-barra="Cp-capsulas" alt="Cápsulas con el hilo de la racha, como en la segunda vuelta" src="fotos/despues-barra-Cp-capsulas-1280x800-crema-activo.png"><p class="desc">Como la viste: con el hilo verde bajo los días.</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Con su rótulo</b><span class="tam" data-tam="Cq-rotulo"></span></figcaption><img data-barra="Cq-rotulo" alt="La pausa con su rótulo, sin el hilo" src="fotos/despues-barra-Cq-rotulo-1280x800-crema-activo.png"><p class="desc">Sin el hilo. La pausa sigue siendo una sección, con «Siguiente pausa» encima.</p></figure>
+      <figure class="barra" style="margin:0"><figcaption><b>Dentro de «Hoy»</b><span class="tam" data-tam="Cq-dentro"></span></figcaption><img data-barra="Cq-dentro" alt="La pausa como última línea de Hoy, sin el hilo" src="fotos/despues-barra-Cq-dentro-1280x800-crema-activo.png"><span class="sello">Recomendada</span><p class="desc">Sin el hilo. La pausa es la última línea del cuaderno: primero lo que llevas, luego lo que viene.</p></figure>
+    </div>
+
+    <h3 class="sub">La frase del agua sigue tu meta</h3>
+    <p class="texto" style="color:var(--tinta-2)">La meta es la que eliges en Ajustes, de 4 a 12 vasos, y siempre se dice con letra. Las fotos son el bloque de «Hoy» con otras metas sembradas como las guardaría Ajustes. He elegido los casos más largos: si caben estos, caben todos.</p>
+    <div class="tabla" style="max-width:640px">
+      <table>
+        <thead><tr><th>Vasos de hoy</th><th>La frase (meta de 8)</th></tr></thead>
+        <tbody>
+          <tr><td>Ninguno</td><td>Ningún vaso de ocho</td></tr>
+          <tr><td>Uno</td><td>Un vaso de ocho</td></tr>
+          <tr><td>Menos de la meta</td><td>Cuatro vasos de ocho</td></tr>
+          <tr><td>Justo la meta</td><td>Los ocho vasos del día</td></tr>
+          <tr><td>Más que la meta</td><td>Nueve vasos de ocho</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="casos">
+      <figure class="caso"><img src="fotos/agua-m6-v4.png" alt="Cuatro vasos de seis"><figcaption>Meta 6 · cuatro vasos</figcaption></figure>
+      <figure class="caso"><img src="fotos/agua-m9-v4.png" alt="Cuatro vasos de nueve"><figcaption>Meta 9 · cuatro vasos</figcaption></figure>
+      <figure class="caso"><img src="fotos/agua-m8-v0.png" alt="Ningún vaso de ocho"><figcaption>Meta 8 · ninguno</figcaption></figure>
+      <figure class="caso"><img src="fotos/agua-m4-v4.png" alt="Los cuatro vasos del día"><figcaption>Meta 4 · la meta justa</figcaption></figure>
+      <figure class="caso"><img src="fotos/agua-m10-v11.png" alt="Once vasos de diez"><figcaption>Meta 10 · uno más</figcaption></figure>
+    </div>
+    <p class="nota">Pasarse de la meta usa la misma frase que quedarse corto: «Once vasos de diez» ya dice que te has pasado. Se probó «Once vasos, más de tus diez» y se partía en dos líneas.</p>
   </section>
 
   <!-- 1 · HOY -->
@@ -335,7 +535,7 @@ td.ok { color: var(--oliva); }
     <p class="texto">Para ver si la barra repite algo de la home, hay que mirarlas juntas. La línea del día ya dice la siguiente pausa, su hora y su módulo; el Cuaderno con pausa la dice en una frase, con la semana «Brotes».</p>
     <div class="mandos" data-mandos="entera">
       <div class="grupo"><span>Barra</span><div class="pildoras" data-k="vista">
-        <button data-v="hoy" aria-pressed="false">Hoy</button><button data-v="A" aria-pressed="false">A</button><button data-v="B" aria-pressed="false">B</button><button data-v="C" aria-pressed="false">C</button><button data-v="Cp-brotes" aria-pressed="true">Cuaderno con pausa</button></div></div>
+        <button data-v="hoy" aria-pressed="false">Hoy</button><button data-v="A" aria-pressed="false">A</button><button data-v="B" aria-pressed="false">B</button><button data-v="C" aria-pressed="false">C</button><button data-v="Cp-brotes" aria-pressed="false">Cuaderno con pausa</button><button data-v="Cq-dentro" aria-pressed="true">Tercera vuelta</button></div></div>
       <div class="grupo"><span>Pantalla</span><div class="pildoras" data-k="pantalla">
         <button data-v="1280x800" aria-pressed="true">1280 × 800</button><button data-v="1536x704" aria-pressed="false">1536 × 704</button></div></div>
       <div class="grupo"><span>Paleta</span><div class="pildoras" data-k="paleta">
@@ -344,7 +544,7 @@ td.ok { color: var(--oliva); }
         <button data-v="activo" aria-pressed="true">Con actividad</button><button data-v="vacio" aria-pressed="false">Vacío</button></div></div>
     </div>
     <figure class="pantalla" style="margin:0">
-      <img data-foto="entera" src="fotos/despues-Cp-brotes-1280x800-crema-activo.jpg" alt="La app a 1280 por 800 con el Cuaderno con la siguiente pausa en la barra lateral" width="2560" height="1600">
+      <img data-foto="entera" src="fotos/despues-Cq-dentro-1280x800-crema-activo.jpg" alt="La app a 1280 por 800 con la tercera vuelta en la barra lateral" width="2560" height="1600">
     </figure>
   </section>
 
@@ -367,15 +567,23 @@ td.ok { color: var(--oliva); }
         <tbody data-tabla="Cp-capsulas,Cp-tinta,Cp-brotes,Cp-hierba"></tbody>
       </table>
     </div>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Tercera vuelta</th><th>Hoy</th><th>Con su rótulo</th><th>Dentro de «Hoy»</th></tr></thead>
+        <tbody data-tabla="Cq-rotulo,Cq-dentro"></tbody>
+      </table>
+    </div>
   </section>
 
   <!-- 6 · RECOMENDACIÓN -->
   <section class="seccion" id="recomendacion">
     <header>
       <span class="rotulo">Recomendación</span>
-      <h2>El Cuaderno con la pausa y la semana «Brotes»</h2>
+      <h2>El Cuaderno con Cápsulas y la pausa dentro de «Hoy»</h2>
     </header>
     <div class="texto" style="display:flex;flex-direction:column;gap:14px;color:var(--tinta-2)">
+      <p><b>Cuarta vuelta.</b> Con la pausa dentro, el Cuaderno cabe entero en el cajón del móvil y en inglés, y un día por libre se dice con la misma voz («Otra vez», «Para ahora», «Continúa»). Para la semana recomiendo las cápsulas afinadas: lo que elegiste, con el tubo dibujado y sin el verde que se vuelve gris. La home, con sus «6 vasos», la dejaría como está.</p>
+      <p><b>Tercera vuelta.</b> Elegiste Cápsulas, y sin el hilo la semana queda más limpia. Para la pausa recomiendo la forma dentro de «Hoy»: el cuaderno se lee de arriba abajo como un día (lo que llevas y, al final, lo que viene), la barra se ahorra una regla y un rótulo, y gana aire, <span data-resumen-cq></span>. Lo que se pierde es el rótulo «Siguiente pausa», que pasa a decirlo la palabra «Luego». Lo de abajo es la recomendación de la segunda vuelta, que se queda como historia.</p>
       <p>En la primera vuelta recomendé la B porque era la única que, a la vez, abría Estira, apuntaba el vaso con un botón visible y dejaba de repetir la home. El Cuaderno con la pausa hace ahora esas tres cosas y añade lo que preguntaste: dice lo que llevas con palabras, y la siguiente pausa en una frase con la hora y la rutina, sin la caja ni los números que ya están en la línea del día. Un día vacío es una frase y no cuatro ceros.</p>
       <p>Para la semana, «Brotes». Las barras de la primera vuelta partían cada barra en franjas de color, y con cinco minutos de Respira la franja era una raya que hacía parecer la barra una pila. Brotes deja la barra entera en oliva, pone hoy en tinta entera con sus minutos y saca el color a un punto por módulo. «Tinta» es la misma sin los puntos, si la quieres más sobria; «Cápsulas» enseña el hueco de cada día; «Hierba» es la más nuestra, pero no es una barra.</p>
       <p>La B sigue valiendo si prefieres leer cifras en filas en vez de frases. El Cuaderno obliga a escribir sus frases también en inglés.</p>
@@ -389,12 +597,12 @@ td.ok { color: var(--oliva); }
       <h2>Lo que tienes que elegir</h2>
     </header>
     <ol class="preguntas">
-      <li><b>¿El Cuaderno con la pausa o la B?</b><span>Las dos llevan ya lo que elegiste: barras de minutos, el pie en texto y la racha. Se puede mezclar, por ejemplo la B con la pausa en una frase.</span></li>
-      <li><b>¿Qué semana: Cápsulas, Tinta, Brotes o Hierba?</b><span>Recomiendo Brotes. Si ninguna te convence, dime qué te sobra o qué te falta de la que más se acerque.</span></li>
-      <li><b>¿Te suenan bien las frases del Cuaderno?</b><span>«Dos horas y media de foco», «Cinco minutos respirando», «Siete minutos moviéndote», «Cuatro vasos de ocho» y, para la pausa, «A las 12:25, Caderas de pie» con «Cuatro minutos de Estira» debajo. Los números van con letra hasta doce, como en «A tu ritmo».</span></li>
-      <li><b>¿Qué número de vasos manda?</b><span>La barra dice «4 de 8» (tu meta del día) y la home «6 vasos» (los que el día reparte entre tus horas). Propongo que la barra siga con tu meta y que la home cambie a «6 vasos en tus horas», pero es tu decisión.</span></li>
+      <li><b>¿La pausa con su rótulo o dentro de «Hoy»?</b><span>Recomiendo dentro. Las dos están en la tercera vuelta, en las tres pantallas y en las dos paletas, y en la cuarta, en el cajón del móvil y en un día por libre.</span></li>
+      <li><b>¿Te suenan bien las frases?</b><span>Del agua: «Ningún vaso de ocho», «Un vaso de ocho», «Cuatro vasos de ocho», «Los ocho vasos del día» y «Nueve vasos de ocho». Del cuaderno: «Dos horas y media de foco», «Cinco minutos respirando», «Siete minutos moviéndote» y «Luego, Caderas de pie». Por libre: «Otra vez», «Para ahora» y «Continúa». Los números van con letra hasta doce, como en «A tu ritmo». En inglés, las de la tabla de la cuarta vuelta.</span></li>
+      <li><b>¿La home también sigue tu meta de vasos?</b><span>Recomiendo dejarla como está. La home resume el plan del día: «6 vasos» son las paradas de agua que el día te propone entre tus horas. La barra cuenta lo que llevas frente a tu meta: «Cuatro vasos de ocho». «6 de tus 8 vasos» en la home se leería como que el plan se queda corto.</span></li>
+      <li><b>¿Las cápsulas como las elegiste o afinadas?</b><span>Recomiendo las afinadas: el tubo a trazo fino, un poco más estrechas y los días pasados en un oliva sólido que no se vuelve gris. Están de cerca y en la barra entera, en la cuarta vuelta.</span></li>
     </ol>
-    <p class="nota">En el móvil propongo dejar la tarjeta de la pausa como está, porque allí la línea del día es una tira de puntos; se mira cuando elijas.</p>
+    <p class="nota">En el móvil la pausa va en el mismo sitio que en el escritorio: así el Cuaderno cabe entero en el cajón a 360 × 640.</p>
   </section>
 
   <!-- 8 · CÓMO SE HIZO -->
@@ -404,8 +612,9 @@ td.ok { color: var(--oliva); }
       <h2>Cómo se hizo y qué falta</h2>
     </header>
     <div class="texto" style="display:flex;flex-direction:column;gap:12px;color:var(--tinta-2);font-size:15px">
-      <p>Las fotos las hace <code>fotos.js</code>, junto a esta página, sobre el <code>index.html</code> de v0.148.5: <code>node docs/traspaso/archivos/sidebar-8oct/fotos.js</code>. Levanta su propio servidor en el puerto 8781 y se para si ese puerto lo sirve otra carpeta. Siembra el estado como <code>tests/helpers.js</code> (con <code>lastActiveDay</code> y las guardas de migración) y crea las sesiones de hoy con la fábrica de eventos de la app. Las opciones viven en <code>opciones.js</code>: esconden lo que pinta React, conservan el logo y añaden su propio HTML, que lee los mismos selectores que la barra. Las medidas quedan en <code>medidas.json</code>. La segunda vuelta vive en <code>semanas.js</code>: el Cuaderno con la pausa (la frase sale de <code>ritmoSiguiente</code>, como la tarjeta de hoy) y los cuatro dibujos de la semana. <code>OPS=Cp-brotes SOLO=1280x800</code> repite solo esa opción en esa pantalla y conserva las medidas de las demás.</p>
-      <p><b>No cubre:</b> el cajón del móvil (la opción elegida se mide después a 360 × 640 y con el suelo de 0,80), el inglés, «Continúa» y «Repetir» en un día por libre, ni el foco del teclado de las filas nuevas.</p>
+      <p>Las fotos las hace <code>fotos.js</code>, junto a esta página, sobre el <code>index.html</code> de v0.148.5: <code>node docs/traspaso/archivos/sidebar-8oct/fotos.js</code>. Levanta su propio servidor en el puerto 8781 y se para si ese puerto lo sirve otra carpeta. Siembra el estado como <code>tests/helpers.js</code> (con <code>lastActiveDay</code> y las guardas de migración) y crea las sesiones de hoy con la fábrica de eventos de la app. Las opciones viven en <code>opciones.js</code>: esconden lo que pinta React, conservan el logo y añaden su propio HTML, que lee los mismos selectores que la barra. Las medidas quedan en <code>medidas.json</code>. La segunda vuelta vive en <code>semanas.js</code>: el Cuaderno con la pausa (la frase sale de <code>ritmoSiguiente</code>, como la tarjeta de hoy) y los cuatro dibujos de la semana. <code>OPS=Cp-brotes SOLO=1280x800</code> repite solo esa opción en esa pantalla y conserva las medidas de las demás. La tercera vuelta son <code>Cq-rotulo</code> y <code>Cq-dentro</code> en <code>semanas.js</code>; la frase del agua es <code>fraseAgua</code> en <code>opciones.js</code>, y sus fotos (<code>fotos/agua-*.png</code>) salen con <code>Cq-rotulo</code>.</p>
+      <p><b>La cuarta vuelta</b> la hacen <code>cuaderno.js</code> (lo elegido, en castellano y en inglés, con la pausa dentro o con su rótulo y las dos cápsulas) y <code>cuarta.js</code>, que reutiliza el servidor y la siembra de <code>fotos.js</code>: <code>PUERTO=8791 node docs/traspaso/archivos/sidebar-8oct/cuarta.js</code>. Deja <code>fotos/cuarta-*.png</code> y <code>cuarta.json</code>, y pone en esta página las medidas del cajón. Por libre siembra <code>ritmo.libre</code> con la fecha de hoy; «Continúa» siembra <code>pace.breathe.v1</code> con unas rondas a medias. <b>Sigue sin cubrir:</b> el foco del teclado de las filas nuevas, que se prueba al montarlo.</p>
+      <p><b>La app montada</b> (9 oct.) la fotografía <code>montada.js</code> sin inyectar nada, sobre el <code>index.html</code> de la rama: <code>PUERTO=8791 node docs/traspaso/archivos/sidebar-8oct/montada.js</code>. Deja <code>fotos/montada-*</code> y <code>montada.json</code> (escala, scroll de la página y de la barra, y el resumen de la home). Lo que dice cada pieza lo vigila <code>tests/sidebar-cuaderno.spec.js</code>.</p>
       <p><b>Al implementar:</b> la puerta de Estira necesita un destino nuevo en <code>app/main/main.eventos.jsx</code> (hoy <code>body</code> abre solo Mueve). Las barras de la semana leen <code>weeklyStats</code> con el índice lunes-primero y el mismo criterio de día activo que <code>selectSidebarWeek</code>; el agua no tiene barra. Hay que conservar los ganchos que usan las pruebas (<code>data-pace-hoy-celda</code>, <code>data-pace-semana</code>, <code>data-pace-sidebar-ultimo-titulo</code>, <code>data-pace-sidebar-accion</code>) y revisar <code>tests/sidebar-redesign.spec.js</code> y <code>tests/sidebar-altura.spec.js</code>. El motor de la escala se queda como red para pantallas más bajas.</p>
     </div>
   </section>
@@ -414,15 +623,22 @@ td.ok { color: var(--oliva); }
 
 <script>
 /* Lo medido en la app (medidas.json): tamaño al que se ve la barra y aire sobre el pie. */
-const MEDIDAS = /*MEDIDAS*/{"antes":{"1280x800-crema-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-crema-activo":{"escala":0.896,"huecoAlPie":0},"1280x800-oscuro-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-oscuro-activo":{"escala":0.896,"huecoAlPie":0},"1536x704-crema-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-crema-activo":{"escala":0.783,"huecoAlPie":0},"1536x704-oscuro-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-oscuro-activo":{"escala":0.783,"huecoAlPie":0},"1920x960-crema-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-crema-activo":{"escala":0.861,"huecoAlPie":1},"1920x960-oscuro-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-oscuro-activo":{"escala":0.861,"huecoAlPie":1}},"despues":{"A-1280x800-crema-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-crema-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-crema-vacio":{"escala":1,"huecoAlPie":123},"Cp-capsulas-1280x800-crema-vacio":{"escala":1,"huecoAlPie":182},"Cp-tinta-1280x800-crema-vacio":{"escala":1,"huecoAlPie":175},"Cp-brotes-1280x800-crema-vacio":{"escala":1,"huecoAlPie":165},"Cp-hierba-1280x800-crema-vacio":{"escala":1,"huecoAlPie":179},"A-1280x800-crema-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-crema-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-crema-activo":{"escala":1,"huecoAlPie":51},"Cp-capsulas-1280x800-crema-activo":{"escala":1,"huecoAlPie":23},"Cp-tinta-1280x800-crema-activo":{"escala":1,"huecoAlPie":16},"Cp-brotes-1280x800-crema-activo":{"escala":1,"huecoAlPie":6},"Cp-hierba-1280x800-crema-activo":{"escala":1,"huecoAlPie":20},"A-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":123},"Cp-capsulas-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":182},"Cp-tinta-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":175},"Cp-brotes-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":165},"Cp-hierba-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":179},"A-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":51},"Cp-capsulas-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":23},"Cp-tinta-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":16},"Cp-brotes-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":6},"Cp-hierba-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":20},"A-1536x704-crema-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-crema-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-crema-vacio":{"escala":1,"huecoAlPie":27},"Cp-capsulas-1536x704-crema-vacio":{"escala":1,"huecoAlPie":86},"Cp-tinta-1536x704-crema-vacio":{"escala":1,"huecoAlPie":79},"Cp-brotes-1536x704-crema-vacio":{"escala":1,"huecoAlPie":69},"Cp-hierba-1536x704-crema-vacio":{"escala":1,"huecoAlPie":83},"A-1536x704-crema-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-crema-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-crema-activo":{"escala":0.937,"huecoAlPie":0},"Cp-capsulas-1536x704-crema-activo":{"escala":0.902,"huecoAlPie":0},"Cp-tinta-1536x704-crema-activo":{"escala":0.893,"huecoAlPie":0},"Cp-brotes-1536x704-crema-activo":{"escala":0.881,"huecoAlPie":0},"Cp-hierba-1536x704-crema-activo":{"escala":0.898,"huecoAlPie":0},"A-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":27},"Cp-capsulas-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":86},"Cp-tinta-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":79},"Cp-brotes-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":69},"Cp-hierba-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":83},"A-1536x704-oscuro-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-oscuro-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-oscuro-activo":{"escala":0.937,"huecoAlPie":0},"Cp-capsulas-1536x704-oscuro-activo":{"escala":0.902,"huecoAlPie":0},"Cp-tinta-1536x704-oscuro-activo":{"escala":0.893,"huecoAlPie":0},"Cp-brotes-1536x704-oscuro-activo":{"escala":0.881,"huecoAlPie":0},"Cp-hierba-1536x704-oscuro-activo":{"escala":0.898,"huecoAlPie":0},"A-1920x960-crema-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-crema-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-crema-vacio":{"escala":1,"huecoAlPie":115},"Cp-capsulas-1920x960-crema-vacio":{"escala":1,"huecoAlPie":188},"Cp-tinta-1920x960-crema-vacio":{"escala":1,"huecoAlPie":180},"Cp-brotes-1920x960-crema-vacio":{"escala":1,"huecoAlPie":167},"Cp-hierba-1920x960-crema-vacio":{"escala":1,"huecoAlPie":185},"A-1920x960-crema-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-crema-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-crema-activo":{"escala":1,"huecoAlPie":26},"Cp-capsulas-1920x960-crema-activo":{"escala":0.988,"huecoAlPie":1},"Cp-tinta-1920x960-crema-activo":{"escala":0.979,"huecoAlPie":1},"Cp-brotes-1920x960-crema-activo":{"escala":0.966,"huecoAlPie":1},"Cp-hierba-1920x960-crema-activo":{"escala":0.984,"huecoAlPie":1},"A-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":115},"Cp-capsulas-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":188},"Cp-tinta-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":180},"Cp-brotes-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":167},"Cp-hierba-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":185},"A-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":26},"Cp-capsulas-1920x960-oscuro-activo":{"escala":0.988,"huecoAlPie":1},"Cp-tinta-1920x960-oscuro-activo":{"escala":0.979,"huecoAlPie":1},"Cp-brotes-1920x960-oscuro-activo":{"escala":0.966,"huecoAlPie":1},"Cp-hierba-1920x960-oscuro-activo":{"escala":0.984,"huecoAlPie":1}}};
+const MEDIDAS = /*MEDIDAS*/{"antes":{"1280x800-crema-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-crema-activo":{"escala":0.896,"huecoAlPie":0},"1280x800-oscuro-vacio":{"escala":0.926,"huecoAlPie":0},"1280x800-oscuro-activo":{"escala":0.896,"huecoAlPie":0},"1536x704-crema-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-crema-activo":{"escala":0.783,"huecoAlPie":0},"1536x704-oscuro-vacio":{"escala":0.81,"huecoAlPie":0},"1536x704-oscuro-activo":{"escala":0.783,"huecoAlPie":0},"1920x960-crema-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-crema-activo":{"escala":0.861,"huecoAlPie":1},"1920x960-oscuro-vacio":{"escala":0.892,"huecoAlPie":0},"1920x960-oscuro-activo":{"escala":0.861,"huecoAlPie":1}},"despues":{"A-1280x800-crema-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-crema-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-crema-vacio":{"escala":1,"huecoAlPie":123},"Cp-capsulas-1280x800-crema-vacio":{"escala":1,"huecoAlPie":182},"Cp-tinta-1280x800-crema-vacio":{"escala":1,"huecoAlPie":175},"Cp-brotes-1280x800-crema-vacio":{"escala":1,"huecoAlPie":165},"Cp-hierba-1280x800-crema-vacio":{"escala":1,"huecoAlPie":179},"A-1280x800-crema-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-crema-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-crema-activo":{"escala":1,"huecoAlPie":51},"Cp-capsulas-1280x800-crema-activo":{"escala":1,"huecoAlPie":23},"Cp-tinta-1280x800-crema-activo":{"escala":1,"huecoAlPie":16},"Cp-brotes-1280x800-crema-activo":{"escala":1,"huecoAlPie":6},"Cp-hierba-1280x800-crema-activo":{"escala":1,"huecoAlPie":20},"A-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":97},"B-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":120},"C-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":123},"Cp-capsulas-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":182},"Cp-tinta-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":175},"Cp-brotes-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":165},"Cp-hierba-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":179},"A-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":84},"B-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":53},"C-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":51},"Cp-capsulas-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":23},"Cp-tinta-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":16},"Cp-brotes-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":6},"Cp-hierba-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":20},"A-1536x704-crema-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-crema-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-crema-vacio":{"escala":1,"huecoAlPie":27},"Cp-capsulas-1536x704-crema-vacio":{"escala":1,"huecoAlPie":86},"Cp-tinta-1536x704-crema-vacio":{"escala":1,"huecoAlPie":79},"Cp-brotes-1536x704-crema-vacio":{"escala":1,"huecoAlPie":69},"Cp-hierba-1536x704-crema-vacio":{"escala":1,"huecoAlPie":83},"A-1536x704-crema-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-crema-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-crema-activo":{"escala":0.937,"huecoAlPie":0},"Cp-capsulas-1536x704-crema-activo":{"escala":0.902,"huecoAlPie":0},"Cp-tinta-1536x704-crema-activo":{"escala":0.893,"huecoAlPie":0},"Cp-brotes-1536x704-crema-activo":{"escala":0.881,"huecoAlPie":0},"Cp-hierba-1536x704-crema-activo":{"escala":0.898,"huecoAlPie":0},"A-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":1},"B-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":24},"C-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":27},"Cp-capsulas-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":86},"Cp-tinta-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":79},"Cp-brotes-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":69},"Cp-hierba-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":83},"A-1536x704-oscuro-activo":{"escala":0.981,"huecoAlPie":1},"B-1536x704-oscuro-activo":{"escala":0.94,"huecoAlPie":0},"C-1536x704-oscuro-activo":{"escala":0.937,"huecoAlPie":0},"Cp-capsulas-1536x704-oscuro-activo":{"escala":0.902,"huecoAlPie":0},"Cp-tinta-1536x704-oscuro-activo":{"escala":0.893,"huecoAlPie":0},"Cp-brotes-1536x704-oscuro-activo":{"escala":0.881,"huecoAlPie":0},"Cp-hierba-1536x704-oscuro-activo":{"escala":0.898,"huecoAlPie":0},"A-1920x960-crema-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-crema-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-crema-vacio":{"escala":1,"huecoAlPie":115},"Cp-capsulas-1920x960-crema-vacio":{"escala":1,"huecoAlPie":188},"Cp-tinta-1920x960-crema-vacio":{"escala":1,"huecoAlPie":180},"Cp-brotes-1920x960-crema-vacio":{"escala":1,"huecoAlPie":167},"Cp-hierba-1920x960-crema-vacio":{"escala":1,"huecoAlPie":185},"A-1920x960-crema-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-crema-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-crema-activo":{"escala":1,"huecoAlPie":26},"Cp-capsulas-1920x960-crema-activo":{"escala":0.988,"huecoAlPie":1},"Cp-tinta-1920x960-crema-activo":{"escala":0.979,"huecoAlPie":1},"Cp-brotes-1920x960-crema-activo":{"escala":0.966,"huecoAlPie":1},"Cp-hierba-1920x960-crema-activo":{"escala":0.984,"huecoAlPie":1},"A-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":83},"B-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":111},"C-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":115},"Cp-capsulas-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":188},"Cp-tinta-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":180},"Cp-brotes-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":167},"Cp-hierba-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":185},"A-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":67},"B-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":28},"C-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":26},"Cp-capsulas-1920x960-oscuro-activo":{"escala":0.988,"huecoAlPie":1},"Cp-tinta-1920x960-oscuro-activo":{"escala":0.979,"huecoAlPie":1},"Cp-brotes-1920x960-oscuro-activo":{"escala":0.966,"huecoAlPie":1},"Cp-hierba-1920x960-oscuro-activo":{"escala":0.984,"huecoAlPie":1},"Cq-rotulo-1280x800-crema-vacio":{"escala":1,"huecoAlPie":182},"Cq-dentro-1280x800-crema-vacio":{"escala":1,"huecoAlPie":182},"Cq-rotulo-1280x800-crema-activo":{"escala":1,"huecoAlPie":30},"Cq-dentro-1280x800-crema-activo":{"escala":1,"huecoAlPie":56},"Cq-rotulo-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":182},"Cq-dentro-1280x800-oscuro-vacio":{"escala":1,"huecoAlPie":182},"Cq-rotulo-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":30},"Cq-dentro-1280x800-oscuro-activo":{"escala":1,"huecoAlPie":56},"Cq-rotulo-1536x704-crema-vacio":{"escala":1,"huecoAlPie":86},"Cq-dentro-1536x704-crema-vacio":{"escala":1,"huecoAlPie":86},"Cq-rotulo-1536x704-crema-activo":{"escala":0.91,"huecoAlPie":0},"Cq-dentro-1536x704-crema-activo":{"escala":0.944,"huecoAlPie":0},"Cq-rotulo-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":86},"Cq-dentro-1536x704-oscuro-vacio":{"escala":1,"huecoAlPie":86},"Cq-rotulo-1536x704-oscuro-activo":{"escala":0.91,"huecoAlPie":0},"Cq-dentro-1536x704-oscuro-activo":{"escala":0.944,"huecoAlPie":0},"Cq-rotulo-1920x960-crema-vacio":{"escala":1,"huecoAlPie":188},"Cq-dentro-1920x960-crema-vacio":{"escala":1,"huecoAlPie":188},"Cq-rotulo-1920x960-crema-activo":{"escala":0.997,"huecoAlPie":1},"Cq-dentro-1920x960-crema-activo":{"escala":1,"huecoAlPie":31},"Cq-rotulo-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":188},"Cq-dentro-1920x960-oscuro-vacio":{"escala":1,"huecoAlPie":188},"Cq-rotulo-1920x960-oscuro-activo":{"escala":0.997,"huecoAlPie":1},"Cq-dentro-1920x960-oscuro-activo":{"escala":1,"huecoAlPie":31}}};
+
+/* Lo medido del cajón del móvil en la cuarta vuelta (cuarta.json): escala y px bajo el borde. */
+const CUARTA = /*CUARTA*/{"cajon-hoy-crema-activo":{"escala":0.8,"fuera":44},"cajon-dentro-crema-activo":{"escala":0.843,"fuera":1},"cajon-rotulo-crema-activo":{"escala":0.813,"fuera":1},"cajon-hoy-crema-vacio":{"escala":0.8,"fuera":21},"cajon-dentro-crema-vacio":{"escala":1,"fuera":0},"cajon-rotulo-crema-vacio":{"escala":1,"fuera":0},"cajon-hoy-oscuro-activo":{"escala":0.8,"fuera":44},"cajon-dentro-oscuro-activo":{"escala":0.843,"fuera":1},"cajon-rotulo-oscuro-activo":{"escala":0.813,"fuera":1},"cajon-hoy-oscuro-vacio":{"escala":0.8,"fuera":21},"cajon-dentro-oscuro-vacio":{"escala":1,"fuera":0},"cajon-rotulo-oscuro-vacio":{"escala":1,"fuera":0}};
 
 const estado = {
+  cajon: { paleta: 'crema', dia: 'activo' },
+  montada: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   hoy: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   cuatro: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
   semanas: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
-  entera: { vista: 'Cp-brotes', pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
+  tercera: { pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
+  entera: { vista: 'Cq-dentro', pantalla: '1280x800', paleta: 'crema', dia: 'activo' },
 };
-const GRUPOS = { cuatro: ['hoy', 'A', 'B', 'C'], semanas: ['Cp-capsulas', 'Cp-tinta', 'Cp-brotes', 'Cp-hierba'] };
+const GRUPOS = { cuatro: ['hoy', 'A', 'B', 'C'], semanas: ['Cp-capsulas', 'Cp-tinta', 'Cp-brotes', 'Cp-hierba'],
+  tercera: ['Cp-capsulas', 'Cq-rotulo', 'Cq-dentro'] };
 const NOMBRE = { '1280x800': '1280 × 800', '1536x704': '1536 × 704', '1920x960': '1920 × 960' };
 const pct = (x) => Math.round(x * 100) + ' %';
 
@@ -440,11 +656,26 @@ function pintar() {
     const kc = clave(estado[g]);
     GRUPOS[g].forEach((o) => {
       const hoy = o === 'hoy';
-      document.querySelector('[data-barra="' + o + '"]').src = hoy ? 'fotos/antes-barra-' + kc + '.png' : 'fotos/despues-barra-' + o + '-' + kc + '.png';
+      const zona = document.querySelector('[data-mandos="' + g + '"]').parentElement;
+      zona.querySelector('[data-barra="' + o + '"]').src = hoy ? 'fotos/antes-barra-' + kc + '.png' : 'fotos/despues-barra-' + o + '-' + kc + '.png';
       const v = hoy ? (MEDIDAS.antes && MEDIDAS.antes[kc]) : (MEDIDAS.despues && MEDIDAS.despues[o + '-' + kc]);
-      tam(document.querySelector('[data-tam="' + o + '"]'), v && v.escala);
+      tam(zona.querySelector('[data-tam="' + o + '"]'), v && v.escala);
     });
   });
+
+  const cj = estado.cajon, kcaj = cj.paleta + '-' + cj.dia;
+  document.querySelectorAll('[data-cajon]').forEach((img) => {
+    const f = img.getAttribute('data-cajon');
+    img.src = 'fotos/cuarta-cajon-' + f + '-' + kcaj + '.png';
+    const v = CUARTA['cajon-' + f + '-' + kcaj];
+    const el = document.querySelector('[data-tam-cajon="' + f + '"]');
+    if (el) {
+      el.textContent = v ? 'se ve al ' + pct(v.escala) + (v.fuera > 1 ? ' · ' + v.fuera + ' px fuera' : ' · cabe') : '';
+      el.classList.toggle('bien', !!v && v.fuera <= 1);
+    }
+  });
+
+  document.querySelector('[data-foto="montada"]').src = 'fotos/montada-' + clave(estado.montada) + '.jpg';
 
   const e = estado.entera, ke = clave(e);
   document.querySelector('[data-foto="entera"]').src = e.vista === 'hoy' ? 'fotos/antes-' + ke + '.jpg' : 'fotos/despues-' + e.vista + '-' + ke + '.jpg';
@@ -481,6 +712,21 @@ document.querySelectorAll('[data-tabla]').forEach(function tabla(cuerpo) {
 });
 
 /* Lo que se dice de la segunda vuelta sale de las medidas, no se escribe a mano. */
+(function resumenCq() {
+  const el = document.querySelector('[data-resumen-cq]');
+  if (!el || !MEDIDAS.despues) return;
+  const a = MEDIDAS.despues['Cq-dentro-1280x800-crema-activo'], b = MEDIDAS.despues['Cq-rotulo-1280x800-crema-activo'];
+  const c = MEDIDAS.despues['Cq-dentro-1536x704-crema-activo'], e = MEDIDAS.despues['Cq-rotulo-1536x704-crema-activo'];
+  if (a && b && c && e) el.textContent = 'medido con el día lleno: a 1280 × 800 quedan ' + a.huecoAlPie + ' px de aire sobre el pie en vez de ' + b.huecoAlPie +
+    ', y a 1536 × 704 se ve al ' + pct(c.escala) + ' en vez de al ' + pct(e.escala);
+})();
+
+(function resumenCajon() {
+  const el = document.querySelector('[data-resumen-cajon]');
+  const a = CUARTA['cajon-dentro-crema-activo'], b = CUARTA['cajon-rotulo-crema-activo'];
+  if (el && a && b) el.textContent = 'con la pausa dentro al ' + pct(a.escala) + ' y con su rótulo al ' + pct(b.escala);
+})();
+
 (function resumen() {
   const el = document.querySelector('[data-resumen-cp]');
   if (!el || !MEDIDAS.despues) return;
