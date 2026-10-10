@@ -7,7 +7,8 @@
  *
  * Tres cosas que se miden en el móvil, en castellano y en inglés:
  *  · el texto cabe entero: nada recortado por dentro (scrollWidth > clientWidth);
- *  · el dibujo es el del sello y se ve: su caja mide al menos 26 px y lleva su máscara;
+ *  · va sin dibujo: Ez eligió la opción B, solo el texto, mirando fotos (10 oct.); el dibujo
+ *    diminuto era el «}» o el «?» que vio;
  *  · dos sellos van uno detrás de otro (fila de s145): nunca hay dos a la vista, y ninguno toca
  *    el contador ni la raya de debajo.
  *
@@ -39,10 +40,9 @@ const foto = (page) => page.evaluate(() => {
     raya: caja(document.querySelector('[data-pace-dial-divider]')),
     sellos: sellos.map((d) => {
       const texto = d.querySelector('[data-pace-sello-texto]') || d.lastElementChild;
-      const glifo = d.querySelector('[data-pace-sello-glifo]') || d.firstElementChild;
-      const g = glifo.getBoundingClientRect();
-      return { caja: caja(d), texto: d.textContent, cortado: texto.scrollWidth > texto.clientWidth + 1,
-        glifo: { w: Math.round(g.width), h: Math.round(g.height), html: glifo.innerHTML } };
+      /* un dibujo es cualquier cosa que no sea el texto: la máscara, un SVG o el carácter */
+      const dibujo = [...d.children].some((c) => c !== texto) || !!d.querySelector('svg, [style*="mask"]');
+      return { caja: caja(d), texto: d.textContent, cortado: texto.scrollWidth > texto.clientWidth + 1, dibujo };
     }),
   };
 });
@@ -50,7 +50,7 @@ const choca = (a, b) => !!(a && b && a.l < b.r && b.l < a.r && a.t < b.b && b.t 
 
 for (const [ancho, alto] of [[360, 640], [360, 718]]) {
   for (const lang of ['es', 'en']) {
-    test(`${ancho}×${alto} · ${lang} · el sello más largo cabe entero y su dibujo se ve`, async ({ page, context }) => {
+    test(`${ancho}×${alto} · ${lang} · el sello más largo cabe entero, y va sin dibujo`, async ({ page, context }) => {
       await home(page, context, ancho, alto, lang);
       const titulo = await page.evaluate((id) => {
         const a = window.ACHIEVEMENT_CATALOG.find((x) => x.id === id);
@@ -64,8 +64,7 @@ for (const [ancho, alto] of [[360, 640], [360, 718]]) {
       const s = f.sellos[0];
       expect(s.texto, 'falta el título del sello').toContain(titulo);
       expect(s.cortado, `el texto sale cortado: «${s.texto}»`).toBe(false);
-      expect(Math.min(s.glifo.w, s.glifo.h), 'el dibujo del sello es demasiado pequeño para leerse').toBeGreaterThanOrEqual(26);
-      expect(s.glifo.html, 'el dibujo no es el del sello').toContain('logros/' + LARGO);
+      expect(s.dibujo, 'el sello del aro lleva dibujo (Ez eligió solo el texto)').toBe(false);
       expect(choca(s.caja, f.numero), 'el sello pisa el contador').toBe(false);
       expect(choca(s.caja, f.raya), 'el sello pisa la raya del aro').toBe(false);
     });

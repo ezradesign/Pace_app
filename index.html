@@ -16255,6 +16255,7 @@ const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: '
 
 
 
+
 function SelloEnAro(_ref) {let { toast, t } = _ref;
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
@@ -16267,25 +16268,16 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
     if (ajuste.escala === 1) setAjuste({ escala: Math.max(0.6, cabe * 0.98), corto: true });
   }, [ajuste]);
   const fs = toast.aro.fs;
-  const d = Math.max(28, Math.round(fs * 1.75));
   return (
     React.createElement("div", { "data-pace-sello-aro": true, style: {
         position: 'fixed', left: toast.aro.x, top: toast.aro.y,
         transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
-        display: 'flex', alignItems: 'center', gap: Math.round(fs * 0.5),
+        display: 'flex', alignItems: 'center',
         whiteSpace: 'nowrap', color: 'var(--achievement)',
         fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
         animation: 'pace-fade-in 320ms var(--ease)',
         opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
       } },
-    React.createElement("span", { "data-pace-sello-glifo": true, style: {
-        flexShrink: 0, width: d, height: d, borderRadius: '50%', border: '1px solid var(--achievement)',
-        display: 'grid', placeItems: 'center', fontSize: Math.round(d * 0.5), lineHeight: 1
-      } },
-    React.createElement("span", { style: { width: '72%', height: '72%', display: 'grid', placeItems: 'center' } },
-    window.renderGlyph ? window.renderGlyph(toast) : toast.glyph
-    )
-    ),
     React.createElement("span", { "data-pace-sello-texto": true, ref: textoRef, style: { minWidth: 0, overflow: 'hidden' } },
     React.createElement("span", { style: ajuste.corto ? toastSoloLector : undefined }, t('ach.toast.new'), " \xB7 "), toast.title
     )
