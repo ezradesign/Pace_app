@@ -241,8 +241,14 @@
      minutos no tenían señal. El reparto sale de una frase que ya estaba en
      `tokens.css`, **arco = información, halo = ambiente**: la escala puede
      disolverse todo lo que haga falta; el recorrido no puede desaparecer. */
+  /* v0.155.0 · EL ARCO SE FUNDE COMO LA PISTA. Con 0,035 el recorrido llegaba
+     casi entero a la tarjeta y se leía cortado en seco («hace como un corte
+     brusco», Ez, 10 oct., con foto). El motivo de la niebla corta ya no existe:
+     desde v0.148.3 la bola va en su propia capa, FUERA de esta niebla, y es la
+     señal desde el primer segundo, así que el arco puede disolverse como la
+     escala. Ez eligió la B (0,14) viendo fotos de la app real al minuto 1 y al 5. */
   const NIEBLA_PISTA = 0.14;   /* la escala se disuelve */
-  const NIEBLA_ARCO  = 0.035;  /* el recorrido solo se remata */
+  const NIEBLA_ARCO  = 0.14;   /* y el recorrido entra en el horizonte con ella */
   /* CON CURVA, NO LINEAL: la recta cae uniforme y pierde el tramo útil antes.
      Así se mantiene el 94 % de presencia en tres cuartas partes del recorrido.
      Pares [fracción del recorrido desde el horizonte hacia arriba, alfa]. */

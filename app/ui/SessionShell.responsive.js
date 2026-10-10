@@ -236,6 +236,13 @@
         font-size: 60px !important;
       }
     }
+    /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
+       (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-header] button {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 16px;
+    }
   `;
   document.head.appendChild(s);
 })();

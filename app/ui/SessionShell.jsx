@@ -333,9 +333,14 @@ function SessionDone({
      dónde comprobarse. Mismo recurso que `data-pace-week-hold` (s166): el
      número viaja en el atributo y la vista sigue diciendo lo que decía. */
   const label = doneButtonLabel || t('session.backToHome');
+  /* El cierre habla con la letra de la app (la A de Ez, 10 oct.): la salida es una píldora
+     en la serif itálica, como «Empezar foco» y las de la pausa; el color sigue siendo el
+     del módulo (variante o buttonStyle). */
+  const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
+    borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
   const btn = buttonVariant
-    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{label}</Button>
-    : <Button onClick={() => onExit('done')} style={buttonStyle}>{label}</Button>;
+    ? <Button variant={buttonVariant} onClick={() => onExit('done')} style={ctaCierre}>{label}</Button>
+    : <Button onClick={() => onExit('done')} style={{ ...ctaCierre, ...buttonStyle }}>{label}</Button>;
 
   return (
     <SessionShell routine={routine} onExit={onExit} atmosphere={atmosphere} footer={btn}>
