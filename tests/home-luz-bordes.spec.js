@@ -176,18 +176,20 @@ test.describe('la home · los bordes de la luz', () => {
     const reposo = await leerHorizonte();
     comprobar(reposo, 'en reposo');
 
-    /* EL REPARTO DE NIEBLAS, que es el arreglo de la enmienda de s184 y sin este
-       aserto no lo vigila nadie (comprobado: igualar las dos no ponia rojo nada).
-       La PISTA es la escala y puede disolverse; el ARCO es informacion y nace
-       EN el horizonte, asi que con la niebla larga tardaba **~2,2 min** en llegar
-       a plena opacidad en un bloque de 25 -- el usuario lo reporto como «tarda en
-       aparecer el contador de la parte izquierda». La relacion, y no los valores:
-       los dos numeros son decisiones vivas, lo que no puede cambiar es cual de
-       las dos capas se disuelve mas. */
+    /* EL RECORRIDO ENTRA EN EL HORIZONTE CON LA PISTA (v0.155.0). De s184 a
+       v0.154.0 este aserto exigia lo contrario —la pista, mas del doble de niebla
+       que el arco—, porque el arco nacia en el horizonte y con niebla larga
+       tardaba ~2,2 min en verse («tarda en aparecer el contador de la parte
+       izquierda»). Desde v0.148.3 la bola va FUERA de esta niebla y es la senal
+       desde el primer segundo (lo vigila aro-bola-entrada.spec.js), y la niebla
+       corta se leia como un corte: el arco seguia entero donde la pista ya se
+       habia disuelto («hace como un corte brusco», Ez, 10 oct.). Ez eligio que
+       el arco se funda como la pista. La relacion, y no el valor: el recorrido
+       no puede seguir entero donde la escala ya no esta. */
     expect(reposo.nieblaPista, 'la pista no tiene capa propia con su niebla').not.toBeNull();
-    expect(reposo.nieblaPista, 'la pista no se disuelve mas que el recorrido: se pierde el reparto '
-      + '(pista ' + reposo.nieblaPista + ' contra arco ' + reposo.nieblaArco + ')')
-      .toBeGreaterThan(reposo.nieblaArco * 2);
+    expect(reposo.nieblaArco, 'el recorrido se corta antes que la pista: vuelve el corte brusco '
+      + '(arco ' + reposo.nieblaArco + ' contra pista ' + reposo.nieblaPista + ')')
+      .toBeGreaterThanOrEqual(reposo.nieblaPista * 0.9);
 
     await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
     await expect(page.locator('[data-pace-dial-fit]')).toHaveAttribute('data-pace-dial-running', '');
