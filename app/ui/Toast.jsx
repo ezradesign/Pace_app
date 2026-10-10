@@ -48,11 +48,12 @@ if (!document.getElementById('pace-toast-css')) {
 /* Lo que solo oye el lector de pantalla. */
 const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
 
-/* EL SELLO DENTRO DEL ARO. El dibujo va en su círculo, como en la colección y en la caja de
-   siempre: a 22 px y sin círculo, el brote de «Primer paso» se leía como un «}» y el «?» de un
-   secreto sin dibujo parecía un fallo. El círculo cabe entre el contador y la raya (lo mide
-   tests/sello-aro.spec.js). Si el texto no cabe, primero encoge la letra (hasta un 82 %) y
-   luego «Nuevo sello ·» pasa al lector de pantalla: el título se lee siempre entero. */
+/* EL SELLO DENTRO DEL ARO VA SOLO CON TEXTO (Ez, 10 oct. 2026, opción B mirando fotos). Con
+   dibujo, a 22 px, el brote de «Primer paso» se leía como un «}» y el «?» de un secreto sin
+   dibujo parecía un fallo; se probó en un círculo dorado y Ez prefirió el texto solo. El dibujo
+   sigue en la colección y en la caja de siempre. Si el texto no cabe, primero encoge la letra
+   (hasta un 82 %) y luego «Nuevo sello ·» pasa al lector de pantalla: el título se lee siempre
+   entero (lo mide tests/sello-aro.spec.js). */
 function SelloEnAro({ toast, t }) {
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
@@ -65,25 +66,16 @@ function SelloEnAro({ toast, t }) {
     else if (ajuste.escala === 1) setAjuste({ escala: Math.max(0.6, cabe * 0.98), corto: true });
   }, [ajuste]);
   const fs = toast.aro.fs;
-  const d = Math.max(28, Math.round(fs * 1.75));
   return (
     <div data-pace-sello-aro style={{
       position: 'fixed', left: toast.aro.x, top: toast.aro.y,
       transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
-      display: 'flex', alignItems: 'center', gap: Math.round(fs * 0.5),
+      display: 'flex', alignItems: 'center',
       whiteSpace: 'nowrap', color: 'var(--achievement)',
       fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
       animation: 'pace-fade-in 320ms var(--ease)',
       opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out',
     }}>
-      <span data-pace-sello-glifo style={{
-        flexShrink: 0, width: d, height: d, borderRadius: '50%', border: '1px solid var(--achievement)',
-        display: 'grid', placeItems: 'center', fontSize: Math.round(d * 0.5), lineHeight: 1,
-      }}>
-        <span style={{ width: '72%', height: '72%', display: 'grid', placeItems: 'center' }}>
-          {window.renderGlyph ? window.renderGlyph(toast) : toast.glyph}
-        </span>
-      </span>
       <span data-pace-sello-texto ref={textoRef} style={{ minWidth: 0, overflow: 'hidden' }}>
         <span style={ajuste.corto ? toastSoloLector : undefined}>{t('ach.toast.new')} · </span>{toast.title}
       </span>
