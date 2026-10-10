@@ -50,14 +50,14 @@ function frase(d) {
     (s.longestStreak > s.currentStreak ? ' · mejor ' + s.longestStreak : '') + '</span>';
 }
 
-function envolver(d, clase, columnas, css) {
+function envolver(d, clase, columnas, css, sinHilo) {
   const dias = columnas.map((fig, i) => {
     const x = d.semana.days[i];
     return '<span class="sbw-dia' + (x.isToday ? ' hoy' : '') + (i > d.semana.todayIndex ? ' futuro' : '') + '">' +
       '<span class="sbw-fig">' + fig + '</span><span class="sbw-l">' + L[i] + '</span></span>';
   }).join('');
   const html = '<button class="sbp-sem sbw ' + clase + '" data-sb-pieza="semana" title="Ver la semana en Estadísticas">' +
-    '<span class="sbw-dias">' + dias + hiloRacha(d) + '</span>' + frase(d) + '</button>';
+    '<span class="sbw-dias">' + dias + (sinHilo ? '' : hiloRacha(d)) + '</span>' + frase(d) + '</button>';
   return { html, css: CSS_SEMANA + css };
 }
 
@@ -74,7 +74,7 @@ const CSS_SEMANA = `
 /* ---------- Cápsulas ---------- */
 /* Cada día una cápsula con su hueco a la vista: el hueco entero es el mejor día de la
    semana y el relleno oliva, lo de ese día. Hoy, a tinta entera; los demás, a media. */
-function capsulas(d) {
+function capsulas(d, sinHilo) {
   const b = base(d);
   const cols = b.dias.map((x, i) => {
     const relleno = x.active ? '<span class="sbw-relleno" style="height:' + Math.max(10, Math.round(b.tot(i) / b.max * 40)) + 'px"></span>' : '';
@@ -86,7 +86,7 @@ function capsulas(d) {
     .sbw-dia.futuro .sbw-pista { opacity: .5; }
     .sbw-relleno { display: block; border-radius: 5px; background: var(--focus); opacity: .5; }
     .capsulas .sbw-dia.hoy .sbw-relleno { opacity: 1; }
-  `);
+  `, sinHilo);
 }
 
 /* ---------- Hierba ---------- */
@@ -172,8 +172,19 @@ const conPausa = (semana) => (d) => {
   return { html: r.html, css: r.css + APRIETA };
 };
 
+const tercera = (dentro) => (d) => {
+  const r = util.pintarC(d, { pausa: !dentro, pausaEnHoy: dentro, compacta: true, aguaMeta: true,
+    semana: (x) => capsulas(x, true) });
+  return { html: r.html, css: r.css + APRIETA };
+};
+
 module.exports = {
   lista: [
+    /* TERCERA VUELTA (Ez, 8 oct.): Cápsulas, sin el hilo de la racha («¿no es redundante?»:
+       sí, la frase y las cápsulas llenas ya lo dicen), el agua con la meta de Ajustes y la
+       siguiente pausa en dos sitios para elegir: con su rótulo o como última línea de Hoy. */
+    { id: 'Cq-rotulo', nombre: 'Tercera vuelta · pausa con su rótulo', pintar: tercera(false) },
+    { id: 'Cq-dentro', nombre: 'Tercera vuelta · pausa dentro de Hoy', pintar: tercera(true) },
     { id: 'Cp-capsulas', nombre: 'Cuaderno con pausa · Cápsulas', pintar: conPausa(capsulas) },
     { id: 'Cp-tinta', nombre: 'Cuaderno con pausa · Tinta', pintar: conPausa((d) => tinta(d, false)) },
     { id: 'Cp-brotes', nombre: 'Cuaderno con pausa · Brotes', pintar: conPausa((d) => tinta(d, true)) },

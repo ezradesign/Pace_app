@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de octubre de 2026, v0.152.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de octubre de 2026, v0.154.0.
 
 ## 9 oct. 2026: lo nuevo desde el relevo
 
@@ -11,6 +11,8 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de o
   límite de uso se acabó a la vez en todas, se reanudan de dos en dos (decisión de Ez).
 - **La caza de bugs está en `main` como v0.151.0**, con el sí de Ez a todo; solo queda grabar la
   voz de Respira en inglés.
+- **La música de Respira está en `main` como v0.154.0**: tres drones en Sol que respiran y una receta «marcada» por técnica, con el sí de Ez («suenan bien, súbelas»).
+- **La barra lateral (el cuaderno) está en `main` como v0.153.0**, con el sí de Ez a la app montada.
 - **La pausa más elegante está en `main` como v0.152.0**: opción A de Ez, «Ir a comer» suma el vaso
   y los sellos esperan a que no haya nada abierto (en la home, dentro del aro). Página con la que
   Ez dio el sí: `archivos/pausa-9oct/pausa-9oct.html`.
@@ -48,8 +50,12 @@ crédito de la nube quedó así. Cada rama lleva en el mensaje de su último com
     más oscuro. En la pausa solo se enseñan Intro y Esc (lo pinta la sesión de la pausa). La
     sesión que lo monta trabaja en `claude/caza-bugs-final` y avisa con «LISTO PARA MAIN».
   - `claude/calendario-sincronizacion`: Google y Microsoft; faltan los ids que crea Ez.
-  - `claude/respira-musica-drones`: el drone de Respira; Ez tiene que escucharlo. Ez pidió además
-    un drone propio por técnica: sesión en paralelo en `claude/respira-drones-por-tecnica`.
+  - `claude/respira-drones-por-tecnica` (contiene `claude/respira-musica-drones`): **un drone por
+    técnica de Respira, montado en la app**. Las primeras variaciones sonaban casi iguales («¿no te
+    da la sensación que todos suenan igual?») y el 9 oct. Ez eligió las **marcadas**
+    (`archivos/musica-respira/por-tecnica/marcadas.html`), las oyó en la app y dijo «suenan bien,
+    súbelas». Recetas en `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`); cambiar una es tocar
+    la `m` de `tecnicas.js`, medir con `construir.js` hasta «Sin avisos» y copiar receta y ajuste.
   - `claude/premium-codigos-tester`: qué se cierra y códigos de por vida para testers (en Android,
     los códigos promocionales de Play Console). Espera la llave y la lista de testers de Ez.
   - `claude/runner-circulo-letra`: **en `main` como v0.150.0** (serif itálica y tope de 95 letras
@@ -131,9 +137,10 @@ antes de trabajar y mira en `git log` qué subió la otra.
   paletas (la opción C de `archivos/oscuro/horas-oscuro.html`) y arreglar la casilla de apnea. El resto de
   `CAZA_BUGS_7OCT.md` sigue sin verificar; Foco y el estado guardado no se han revisado. Mira
   `git log` y ese archivo antes de tocar ninguno.
-- **Ramas abiertas de otros hilos:** `claude/project-thread-9eceyu` (la música de Respira, hecha y
-  sin subir: falta que Ez la escuche en la app) y `claude/project-thread-jid37a` («¿Cómo es tu
-  semana?» en la bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
+- **Música de Respira: aprobada por Ez el 8 oct.** Ez la escuchó grabada de la app real y dijo «así está
+  bien». Va a `main` desde `claude/respira-musica-drones`; `claude/project-thread-9eceyu` no hay que retomarla.
+- **Ramas abiertas de otros hilos:** `claude/project-thread-jid37a` («¿Cómo es tu semana?» en la
+  bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
 - **Glifos revisados:** de los 62 dibujos de ejercicio, seis no casan con su ejercicio (por ejemplo,
   «Barbilla atrás» con la flecha al revés y «Elevación de puntas» que dibuja talones). Están en
   `archivos/glifos/revision-glifos.html`, con un prompt para cada uno. El descanso entre series ya
@@ -144,9 +151,8 @@ antes de trabajar y mira en `git log` qué subió la otra.
 
 - **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
   para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
-  aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
-  exhalar). Ez estaba eligiendo en una página de escucha. Siguiente paso: el cambio de código,
-  enseñado a Ez antes de subirlo. Los tres drones están en `archivos/musica-respira/bases/`, con la
+  aplica una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
+  exhalar). Aprobada por Ez el 8 oct. Los tres drones están en `archivos/musica-respira/bases/`, con la
   página de escucha (`escucha-respira.html`), los scripts de procesado y su `README.md`.
 - **Glifos:** cuatro prompts de ejercicio con figuras sin ropa, de la familia de los 59. El prompt A es
   solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
@@ -252,7 +258,7 @@ primera versión de pago, en web y Android.
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
-| Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
+| Música de Respira | Aprobada por Ez el 8 oct.: tres drones en Sol (claro, cálido y menor) que respiran con la fase, quietos con ciclos de menos de 5 s y sin sonar en Coherente 432. El mismo día eligió un drone por técnica, hecho en directo con esos tres (`PACE_MUSICA_TECNICA`), y el 9 oct. las «marcadas», que se distinguen de verdad; las oyó en la app y dijo que suenan bien. | Si una deja de convencer: se toca su `m` en `archivos/musica-respira/por-tecnica/tecnicas.js`, se mide con `construir.js` hasta «Sin avisos» (también que no quede a menos de 6 de su vecina) y se copian receta y `ajusteDb`. Si una no se arregla así, se graba con `brief-B-por-tecnica.md`. |
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
@@ -299,9 +305,8 @@ paralelo en la cuenta que se acabó; cada una sube solo a su rama y deja un bloq
   el dibujo de la semana (recomendado «Brotes»), las frases y qué número de vasos manda. Ya dijo:
   barras de minutos «mucho más elegantes», el pie en texto y la racha de vuelta.
 - `claude/respira-drones-por-tecnica`: terminada, encima de `claude/respira-musica-drones`. Ez
-  escucha y marca en https://claude.ai/artifact/E6ourw8dU6NBuAPRJYR5s9 (sus elecciones quedan en la
-  base de datos del artefacto, colecciones `elecciones` y `respuestas`). Después: subir las dos
-  ramas de música juntas.
+  eligió las marcadas el 9 oct. y, oídas en la app, dijo «suenan bien, súbelas»: las dos ramas de
+  música suben juntas.
 
 La sesión nueva es la **coordinadora** (docs/WORKFLOW.md §9): la única que sube a `main`. Junta cada
 rama cuando diga «LISTO PARA MAIN», pone la versión, construye, pasa la suite entera con un

@@ -13,11 +13,13 @@
 # que su aviso de deriva es `[INFO]` a proposito y jamas se pondra rojo.
 # Esperar que lo haga no funciona: hay que comprobarlo aparte, y aqui es donde.
 #
-# DOS JOBS (s154):
+# DOS JOBS (s154), Y UN TERCERO DESDE v0.154.0:
 #   verify -> `npm run verify` + frescura del artefacto.
 #   e2e    -> `npm run test:e2e`, el checklist de cierre EJECUTADO en un
 #             navegador de verdad. Cubre el primer hueco que el verify declara
 #             («no abre navegador, no monta la app, no pulsa nada»).
+#   e2e-safari (9 oct. 2026) -> el proyecto webkit de esa misma suite, aparte
+#             porque sus librerias salen de `apt` (ver el job).
 # Los dos siguen la misma regla: INVOCAN un comando que corre igual en local.
 
 name: CI
@@ -137,9 +139,9 @@ jobs:
     name: e2e
     runs-on: ubuntu-latest
     needs: verify
-    # 25 desde v0.151.0: con el proyecto webkit y las pruebas de la caza, la
-    # suite tarda 13,7 min y el job llegó a los 15 justo al guardar la cache,
-    # con todos los pasos en verde; GitHub lo dio por cancelado.
+    # 25 desde v0.151.0: con las pruebas de la caza, la suite tardaba 13,7 min
+    # y el job llegó a los 15 justo al guardar la cache, con todos los pasos en
+    # verde; GitHub lo dio por cancelado. El proyecto webkit va en e2e-safari.
     timeout-minutes: 25
 
     steps:
@@ -212,16 +214,12 @@ jobs:
         if: steps.cache-chromium.outputs.cache-hit != 'true'
         run: npx playwright install chromium webkit
 
-      # Las librerias de WebKit NO estan en la imagen, y no se cachean (son de
-      # `apt`): se instalan en cada run, con cache y sin ella. Solo las de
-      # WebKit, no las de Chromium, que eran las que bajaban fuentes.
-      - name: Librerias de WebKit
-        run: npx playwright install-deps webkit
-
+      # Aqui solo el proyecto chromium: el webkit va en su propio job (abajo),
+      # porque sus librerias salen de `apt`, que es la cola variable de s169.
       # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
       # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.
-      - name: npm run test:e2e
-        run: npm run test:e2e
+      - name: npm run test:e2e (chromium)
+        run: npm run test:e2e -- --project=chromium
 
       # Diagnostico, no comprobacion: si algo se pone rojo, la traza dice donde
       # sin tener que reproducirlo a ciegas.
@@ -230,5 +228,59 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ==========================================================================
+  # e2e-safari (9 oct. 2026): EL PROYECTO WEBKIT DE LA SUITE, EN SU PROPIO JOB.
+  #
+  # Las librerias de WebKit NO estan en la imagen de `ubuntu-latest` y salen de
+  # `apt`, que no se cachea: es la misma cola variable de s169. Medido: 37 s en
+  # v0.151.0 y 14 min 20 s en v0.154.0, que dejaron la suite entera sin tiempo
+  # dentro del tope de 25 min con todas las pruebas en verde. Aparte, la lentitud
+  # de `apt` solo retrasa este job, que corre en paralelo y prueba poco (los
+  # `*.safari.spec.js` y la home sin scroll), y no tumba el de chromium.
+  # ==========================================================================
+  e2e-safari:
+    name: e2e-safari
+    runs-on: ubuntu-latest
+    needs: verify
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Cache de Chromium y WebKit
+        id: cache-chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-webkit-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Instalar Chromium y WebKit
+        if: steps.cache-chromium.outputs.cache-hit != 'true'
+        run: npx playwright install chromium webkit
+
+      # Solo las librerias de WebKit, no las de Chromium (que eran las que
+      # bajaban fuentes): se instalan en cada run, con cache y sin ella.
+      - name: Librerias de WebKit
+        run: npx playwright install-deps webkit
+
+      - name: npm run test:e2e (webkit)
+        run: npm run test:e2e -- --project=webkit
+
+      - name: Guardar el informe si fallo
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-safari
           path: playwright-report/
           retention-days: 7

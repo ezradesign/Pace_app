@@ -84,9 +84,9 @@ function TweaksAudioBlock({ state, set }) {
         <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
           { v: 'amb', name: t('settings.bg.ambient') },
-          /* s177 · «Musica» YA SE PINTA porque ya hay un archivo: suena en las
-             rutinas de Equilibrio. En las demas familias todavia no hay pieza,
-             asi que elegirla equivale a «Nada» hasta que existan. */
+          /* «Musica» suena en todas las tecnicas de Respira (un drone propio por
+             tecnica sobre tres drones en Sol, en `PACE_MUSICA_TECNICA`), salvo en
+             Coherente 432, que lleva su propio drone. Fuera de Respira no suena. */
           { v: 'mus', name: t('settings.bg.music') },
         ]} />
       </AjustesFila>
