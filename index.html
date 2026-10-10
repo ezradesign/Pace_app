@@ -14067,9 +14067,14 @@ function SessionDone(_ref4)
 
 
   const label = doneButtonLabel || t('session.backToHome');
+
+
+
+  const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
+    borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
   const btn = buttonVariant ?
-  React.createElement(Button, { variant: buttonVariant, onClick: () => onExit('done') }, label) :
-  React.createElement(Button, { onClick: () => onExit('done'), style: buttonStyle }, label);
+  React.createElement(Button, { variant: buttonVariant, onClick: () => onExit('done'), style: ctaCierre }, label) :
+  React.createElement(Button, { onClick: () => onExit('done'), style: { ...ctaCierre, ...buttonStyle } }, label);
 
   return (
     React.createElement(SessionShell, { routine: routine, onExit: onExit, atmosphere: atmosphere, footer: btn },
@@ -14535,6 +14540,13 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
         font-size: 60px !important;
       }
     }
+    /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
+       (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-header] button {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 16px;
+    }
   `;
   document.head.appendChild(s);
 })();
@@ -14646,23 +14658,29 @@ const sessionFeedbackStyles = {
   },
   question: {
     ...displayItalic,
-    fontSize: 16, color: 'var(--ink-2)',
+    fontSize: 17, color: 'var(--ink-2)',
     marginBottom: 14
   },
   chips: {
     display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 10
   },
+
+
+
   chip: {
-    padding: '9px 18px', fontSize: 13,
+    ...displayItalic,
+    padding: '0 22px', minHeight: 42, fontSize: 17, fontWeight: 500,
     border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
+    borderRadius: 'var(--r-pill)',
     background: 'var(--paper-2)', color: 'var(--ink)',
     transition: 'border-color 160ms ease, color 160ms ease, background 160ms ease'
   },
+
   ghost: {
-    marginTop: 12, fontSize: 12, color: 'var(--ink-3)',
+    ...displayItalic,
+    marginTop: 12, fontSize: 15, color: 'var(--ink-3)',
     background: 'none', border: 'none', padding: '4px 10px',
-    letterSpacing: '0.04em',
+    textDecoration: 'underline', textUnderlineOffset: 3,
     transition: 'color 160ms ease'
   },
   thanks: {
@@ -14692,27 +14710,25 @@ if (!_paceSessionFeedbackCss) {
     [data-pace-fb-chip]:disabled { opacity: 0.6; cursor: default; }
     [data-pace-fb-ghost]:hover:not(:disabled) {
       color: var(--ink-2) !important;
-      text-decoration: underline;
-      text-underline-offset: 3px;
     }
 
     @media (max-width: 640px) {
       [data-pace-session-feedback] { margin-top: 2px !important; }
       [data-pace-fb-rule] { margin-bottom: 14px !important; }
-      [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 12px !important; }
-      [data-pace-fb-chip] { padding: 8px 15px !important; }
+      [data-pace-fb-question] { margin-bottom: 12px !important; }
+      [data-pace-fb-chip] { padding: 0 20px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }
       [data-pace-fb-question] { font-size: 15px !important; margin-bottom: 10px !important; }
-      [data-pace-fb-chip] { padding: 8px 16px !important; }
+      [data-pace-fb-chip] { padding: 0 18px !important; min-height: 38px !important; }
       [data-pace-fb-ghost] { margin-top: 8px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-session-feedback] { margin-top: 0 !important; }
       [data-pace-fb-rule] { display: none !important; }
       [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 8px !important; }
-      [data-pace-fb-chip] { padding: 7px 14px !important; font-size: 12px !important; }
+      [data-pace-fb-chip] { padding: 0 16px !important; min-height: 34px !important; font-size: 15px !important; }
       [data-pace-fb-ghost] { margin-top: 6px !important; }
     }
   `;
@@ -28118,6 +28134,22 @@ Object.assign(window, { HydrateTracker });
 .pace-break-agua .pace-break-mas { font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-3); }
 .pace-break-agua i { margin-left: auto; font-style: normal; color: var(--ink-3); font-size: 18px; }
 .pace-break-agua:hover i { color: var(--ink); }
+/* Con propuesta, las otras tres puertas en una sola línea, con su dibujo y sin caja (la B
+   de Ez, 9 oct.): la del módulo propuesto ya está arriba. Caben en una línea desde 360 px
+   (tests/pausa-sin-repetir.spec.js). */
+.pace-break-otras {
+  display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;
+  gap: 4px 16px; margin: 6px 0 0;
+}
+.pace-break-otra {
+  --c: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 2px;
+  background: none; border: 0; cursor: pointer; color: var(--ink); white-space: nowrap;
+  font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; line-height: 1;
+}
+.pace-break-otra-glifo { color: var(--c); display: inline-grid; place-items: center; line-height: 0; }
+.pace-break-otra:hover .pace-break-otra-nombre { text-decoration: underline; text-underline-offset: 3px; }
+.pace-break-otra:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; border-radius: 4px; }
 .pace-break-pie { display: flex; justify-content: flex-end; align-items: center; }
 .pace-break-saltar {
   background: none; border: 0; padding: 10px 0; cursor: pointer; white-space: nowrap;
@@ -28584,8 +28616,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
 
 
 
-
-  const topScore = prop ? 0 : opts[0].score;
+  const topScore = opts[0].score;
 
 
 
@@ -28615,7 +28646,22 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
     )
     ),
 
-    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: prop ? 10 : 12, margin: prop ? '0 0 4px' : '20px 0' } },
+
+
+
+
+
+    prop &&
+    React.createElement("div", { className: "pace-break-otras", "data-pace-break-otras": true },
+    opts.filter((o) => o.key !== prop.modulo).map((o) =>
+    React.createElement("button", { key: o.key, type: "button", className: "pace-break-otra", style: { '--c': o.color }, onClick: () => handleChoose(o.key) },
+    React.createElement("span", { className: "pace-break-otra-glifo" }, o.icon),
+    React.createElement("span", { className: "pace-break-otra-nombre" }, o.label)
+    )
+    )
+    ),
+
+    !prop && React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, margin: '20px 0' } },
     opts.map((o, i) => {
       const done = o.score === 0;
       const recommended = i === 0 && topScore > 0;
@@ -28624,7 +28670,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
           onClick: () => handleChoose(o.key),
           style: {
             position: 'relative',
-            padding: prop ? '13px 14px' : '24px 18px',
+            padding: '24px 18px',
             background: o.bg,
             border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
             borderRadius: 'var(--r-md)',
@@ -28656,24 +28702,15 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
 
 
 
-        !prop &&
         React.createElement("div", { style: { visibility: recommended ? 'visible' : 'hidden' } },
         React.createElement(Tag, { color: "var(--focus)" }, t('break.recommended'))
         ),
-
         React.createElement("div", { style: { color: o.color, fontSize: 28, lineHeight: 1 } }, o.icon),
         React.createElement("div", null,
         React.createElement("div", { style: { ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 } }, o.label),
-
-
-
-
-
-        !prop &&
         React.createElement("div", { style: { fontSize: 12, color: 'var(--ink-2)' } },
         done ? t('break.done') : o.desc
         )
-
         )
         ));
 
@@ -37368,8 +37405,14 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
 
 
 
+
+
+
+
+
+
   const NIEBLA_PISTA = 0.14;
-  const NIEBLA_ARCO = 0.035;
+  const NIEBLA_ARCO = 0.14;
 
 
 
@@ -38099,6 +38142,16 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
     }
     [data-pace-home-body] [data-pace-main-content] {
       position: relative;
+    }
+    /* LA HOME NO SE ANCLA (v0.153.0). [data-pace-home-body] es un contenedor de
+       scroll y las capas del sol lo ensanchan por dentro (518 px de ancho a 360),
+       aunque no se vea. Al abrirse la pausa, a veces el anclaje de scroll del
+       navegador lo corría 117 px de lado, y así se quedaba al cerrarla. Medido a
+       360x640: 3 de 24 pausas sin esto, 0 de 30 con esto. Ningún código lo movía
+       (ni focus, ni scrollIntoView, ni scrollLeft): lo hacía el navegador. La home
+       no tiene un scroll que conservar. */
+    [data-pace-home-body] {
+      overflow-anchor: none;
     }
     /* AQUÍ NO SE RECORTA NADA, Y ESO ES EL ARREGLO — no la falta de él.
 
