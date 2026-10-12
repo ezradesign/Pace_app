@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.155.0 · 10 de octubre de 2026.
+**Versión:** v0.156.0 · 12 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -59,6 +59,10 @@ música se abre al inhalar y se cierra al exhalar (en Nadi Shodhana, además, se
 el que respiras); con ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las
 recetas son `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`), copiadas de `tecnicas.js` con el
 volumen que mide `construir.js`.
+
+En v0.156.0, Respira entra en la cuenta atrás (la voz ya precargada y la música subiendo) y sale
+despacio, en 6 s; el cierre de las sesiones lleva el dibujo de la rutina y una salida tonal; y el sello
+del aro va solo con texto, entero y uno detrás de otro.
 
 Desde v0.155.0 la pausa por libre no repite lo que propone (las otras tres puertas van en una
 línea), el cierre de las sesiones va en la serif itálica con píldoras y la línea del Pomodoro se funde
