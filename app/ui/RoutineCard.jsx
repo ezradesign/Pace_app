@@ -26,7 +26,12 @@
 
    EL GATING NO SE TOCA (s87/s95): `access: 'premium'` marca contenido de pago
    y el sello se ve siempre; el bloqueo real pasa por `canAccessRoutine`.
-   Cambiar esto aquí abriría premium sin ruta de compra. */
+   Cambiar esto aquí abriría premium sin ruta de compra.
+
+   LA CERRADA SE PUEDE TOCAR (Ez, 8 oct. 2026): lleva un candado de línea fina
+   delante de su «Premium» y, al tocarla, abre la invitación a PACE completo en
+   vez de la rutina. Antes decía «Pronto» y no respondía: no explicaba nada y
+   dejaría de ser verdad el día que se pudiera comprar. */
 
 function RoutineCard({ routine, color, onClick, variant = 'body' }) {
   const { t, tn, lang } = useT();
@@ -81,15 +86,15 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
       trozos.push({ k: 'lado', txt: t('lib.perSide') });
     }
   }
-  if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre' });
+  if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre', candado: isLocked });
 
   /* ── la tira de glifos ────────────────────────────────────────────────── */
   const sinArte = variant === 'breathe' || esViaje;
   const glifos = (sinArte || !window.libraryGlifos) ? [] : window.libraryGlifos(routine);
   const series = (sinArte || !window.librarySeries) ? null : window.librarySeries(routine);
 
-  const abrir = isLocked ? undefined : onClick;
   const nombre = tR(routine.id + '.name', routine.name);
+  const abrir = isLocked ? () => paceAbrirPremium({ nombre }) : onClick;
   return (
     <div
       className={'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : '')
@@ -127,15 +132,15 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
             encabezado pasaba a ser «Cuello · 3 min SUAVE». */}
         <div className="pace-lib-titulo">
           <h4>{abrir
-            ? <button type="button" className="pace-lib-hit" onClick={abrir}>{nombre}</button>
+            ? <button type="button" className="pace-lib-hit" onClick={abrir}
+                title={isLocked ? t('premium.locked.aria') : undefined}>{nombre}</button>
             : nombre}</h4>
           {pill && <i className="pace-lib-pill">{pill}</i>}
         </div>
         <p>{tR(routine.id + '.desc', routine.desc)}</p>
         <div className="pace-lib-ctx">
           <b>{cifra}</b><u>{t('lib.min')}</u>
-          {trozos.map(x => <em key={x.k} className={x.cls}>{x.txt}</em>)}
-          {isLocked && <em className="pace-lib-soon">{t('premium.soon')}</em>}
+          {trozos.map(x => <em key={x.k} className={x.cls}>{x.candado && <PaceCandado />}{x.txt}</em>)}
         </div>
         {glifos.length > 1 && (
           <div className="pace-lib-tira" aria-hidden="true">
