@@ -129,7 +129,13 @@ function TweaksDataSection({ onReset, isWeb }) {
     reader.onload = (ev) => {
       try {
         const raw = String(ev.target.result || '');
-        const payload = JSON.parse(raw);
+        let payload = JSON.parse(raw);
+        /* La copia de rescate (la fila de arriba) lleva el estado como la cadena CRUDA que un
+           arranque no pudo leer. Si ahora se lee, entra como una copia normal, por el mismo
+           saneado; si no, es un JSON roto y lo dice el catch (caza del 10 oct., estado-4). */
+        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
+          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
+        }
 
         // Validación mínima: tiene que parecerse a un backup de PACE.
         const looksValid = payload && (

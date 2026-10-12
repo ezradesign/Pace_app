@@ -31171,7 +31171,13 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     reader.onload = (ev) => {
       try {
         const raw = String(ev.target.result || '');
-        const payload = JSON.parse(raw);
+        let payload = JSON.parse(raw);
+
+
+
+        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
+          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
+        }
 
 
         const looksValid = payload && (
