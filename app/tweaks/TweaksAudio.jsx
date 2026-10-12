@@ -34,7 +34,7 @@
    `TweaksPanel.parts.jsx` por `window`: un `const` no cruza la IIFE (s148). */
 
 function TweaksAudioBlock({ state, set }) {
-  const { t } = useT();
+  const { t, lang } = useT();
 
   /* El fondo son dos booleanos en el estado (`ambientOn`, `musicOn`) y tres
      pildoras aqui. s177: TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision:
@@ -70,7 +70,10 @@ function TweaksAudioBlock({ state, set }) {
       <AjustesFila id="sound" nombre={t('settings.sound')}>
         <AjustesInterruptor on={!!state.soundOn} onChange={(v) => set({ soundOn: v })} aria={t('settings.sound')} />
       </AjustesFila>
-      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}>
+      {/* En inglés suena el tono aunque se elija una voz (Sound.voz.jsx): las
+          locuciones son en castellano, y la fila lo dice. */}
+      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}
+                   sub={lang === 'en' ? t('settings.signal.sub.en') : undefined}>
         <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} opciones={[
           { v: 'tono', name: t('settings.signal.tone') },
           { v: 'sulafat', name: t('settings.signal.clear') },
@@ -81,9 +84,9 @@ function TweaksAudioBlock({ state, set }) {
         <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
           { v: 'amb', name: t('settings.bg.ambient') },
-          /* s177 · «Musica» YA SE PINTA porque ya hay un archivo: suena en las
-             rutinas de Equilibrio. En las demas familias todavia no hay pieza,
-             asi que elegirla equivale a «Nada» hasta que existan. */
+          /* «Musica» suena en todas las tecnicas de Respira (un drone propio por
+             tecnica sobre tres drones en Sol, en `PACE_MUSICA_TECNICA`), salvo en
+             Coherente 432, que lleva su propio drone. Fuera de Respira no suena. */
           { v: 'mus', name: t('settings.bg.music') },
         ]} />
       </AjustesFila>

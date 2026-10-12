@@ -139,24 +139,26 @@ pranayama 5.
 | `breathe.box.6` | Box 6·6·6·6 | equilibrio | 7 | — | free (variante larga, no avanzada) |
 | `breathe.coherent.66` | Coherente 6·6 | balance | 10 | — | free (variante larga, no avanzada) |
 | `breathe.ujjayi` | Ujjayi | pranayama | 6 | — | free (oceánica accesible) |
-| `breathe.bellows` | Bhastrika · Fuelle | pranayama | 3 | — | free (B1.2: mudado de Energía — es pranayama, tag PRA) |
+| `breathe.bellows` | Bhastrika · Fuelle | pranayama | 3 | ⚠ | free (B1.2: mudado de Energía — es pranayama, tag PRA; ⚠ como Kapalabhati: 1 s y 1 s, 30 por minuto) |
 | `breathe.diaphragm` | Diafragmática | equilibrio | 5 | — | free (F4 — la base de todo) |
 | `breathe.exhale.46` | Exhalación 4·6 | relajacion | 6 | — | free (F4 — freno simple) |
 | `breathe.yin` | Rítmica yin | relajacion | 8 | — | free (F4 — meditativa accesible) |
 | `breathe.bhramari` | Bhramari · Abeja | pranayama | 5 | — | free (F4 — pranayama accesible) |
 | `breathe.nadi.shodhana` | Nadi Shodhana | pranayama | 8 | — | **premium** (pranayama avanzado) |
 | `breathe.kapalabhati` | Kapalabhati · Kriya | pranayama | 3 | ⚠ | **premium** (kriya avanzado) |
-| `breathe.rounds.express` | Rondas express (2×25) | energia | 4 | ⚠ | free (B1.2: era premium; sin ella Energía quedaba sin entrada free) |
-| `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 12 | ⚠ | **premium** (rondas) |
+| `breathe.rounds.express` | Rondas express (2×25) | energia | 5 | ⚠ | free (B1.2: era premium; sin ella Energía quedaba sin entrada free) |
+| `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 9 | ⚠ | **premium** (rondas) |
 | `breathe.coherent.432` | Coherente 432 | balance | 10 | — | **premium** (F4 — inmersiva, drone forzado) |
 | `breathe.kumbhaka` | Kumbhaka 1:4:2 | pranayama | 6 | ⚠ | **premium** (F4 — retención clásica) |
 | `breathe.co2` | Tolerancia CO₂ | equilibrio | 6 | ⚠ | **premium** (F4 — apnea en vacío) |
-| `breathe.rounds.long` | Rondas profundas (5×35) | energia | 20 | ⚠ | **premium** (F4 — precursora CTB) |
+| `breathe.rounds.long` | Rondas profundas (5×35) | energia | 17 | ⚠ | **premium** (F4 — precursora CTB) |
 
 > **Seguridad:** toda técnica con `safety: true` (retención / hiperventilación
 > / apnea) abre el modal de seguridad obligatorio antes de empezar
 > (`BreatheSafety`). Sin excepción — F4 lo aplicó a kumbhaka, co2 y
-> rounds.long.
+> rounds.long, y a bellows le faltaba hasta el 8 de octubre de 2026. Que toda
+> técnica a 12 o más respiraciones por minuto lleve `safety` lo vigila
+> `tests/respira-biblioteca.spec.js` a partir de su secuencia, no de esta tabla.
 >
 > **Coherente 432** lleva `drone: true`: fuerza el drone ambiente (base
 > 432 Hz) durante la sesión aunque el toggle Ambiente esté apagado; `soundOn`

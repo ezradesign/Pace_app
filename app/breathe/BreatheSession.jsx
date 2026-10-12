@@ -39,6 +39,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
      que se acredita (activeMsRef ya sumaba 'hold' desde s98): saca un numero
      que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
   const relojHold = useHoldClock(rein.holdSec);
+  const hechoRef = useRef(null);   // rondas y respiraciones hechas al cerrar (respiraHecho, en el support)
   const getActiveSec = () => {
     const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
     return (activeMsRef.current + open) / 1000;
@@ -115,15 +116,15 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
     if (!window.ambientDrone) return;
     const drone = window.ambientDrone;
 
-    if (stage === 'done') { drone.stop(800); return; }
-    if (stage === 'prep') return; // no arranca en preparación
+    /* Entra en la cuenta atrás y sale en 6 s, como la música (useMusicaFondo). */
+    if (stage === 'done') { drone.stop(PACE_RESPIRA_SALIDA_MS); return; }
 
     if (stage === 'hold') {
       // Drone sigue sonando durante hold (retención) — sin tocar
       return;
     }
 
-    // stage === 'active'
+    // stage === 'prep' o 'active'
     if (paused) {
       drone.pause();
     } else {
@@ -163,7 +164,10 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
   // Atajos de teclado
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === ' ') {
+      /* Espacio solo pausa donde la pausa se ve: en la preparación y en la
+         retención no hay botón ni aviso, y pausar ahí dejaba la sesión quieta
+         sin decirlo. */
+      if (e.key === ' ' && stage === 'active') {
         // No robar Espacio a un control con foco (chips de feedback / CTA en
         // 'done'): activación nativa en vez de preventDefault (guard s116).
         if (sessionKeyOnControl(e)) return;
@@ -205,6 +209,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
 
   const releaseHold = () => {
     if (round < routine.rounds) {
+      setPaused(false);
       setRound(r => r + 1);
       setBreathCount(1);
       setPhase(0);
@@ -233,6 +238,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
        separa el plan agotado ('natural') de «Finalizar» ('early', §6.3). */
     completeBreathSession(routine.id, activeMin, relojHold.segundos(),
       respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
+    hechoRef.current = respiraHecho(routine, stage, round, breathCount);
     try { playSound('breathe.session.end'); } catch (e) {}
     setStage('done');
   };
@@ -247,7 +253,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         accent="var(--breathe)"
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
-        onSkip={() => { setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
+        onSkip={() => { setPaused(false); setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
         atmosphere={atmo}
       />
     );
@@ -262,10 +268,8 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
     const stats = [
       { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
     ];
-    if (isRounds) {
-      stats.push({ label: t('common.rounds'), value: String(routine.rounds) });
-      stats.push({ label: t('common.breaths'), value: String(routine.breaths * routine.rounds) });
-    }
+    // Lo hecho y no el plan: «Terminar» a mitad no puede decir todas las rondas.
+    stats.push(...respiraCifrasCierre(hechoRef.current, t));
     return (
       <SessionDone
         routine={displayRoutine}
@@ -437,7 +441,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
             una fraccion de sesion que existe de verdad (4B).
           · Por BLOQUES (3 de rondas): un segmento por ronda. Estas NO terminan
             por reloj — la retencion no tiene duracion fijada (B1), asi que sus
-            4/12/20 min son NOMINALES y una barra de tiempo aqui dibujaria una
+            5/9/17 min son NOMINALES y una barra de tiempo aqui dibujaria una
             duracion que nadie conoce. Medido en el censo de s165.
           El segmento en curso se marca con CARRIL, no rellenandose por
           respiraciones: ese detalle lo lleva el texto de arriba. Vocabulario

@@ -2,7 +2,83 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de octubre de 2026, v0.146.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.156.0.
+
+## 9 oct. 2026: lo nuevo desde el relevo
+
+- La coordinadora sigue en la cuenta nueva, con cuatro sesiones en paralelo (caza, pausa, barra
+  lateral y drones), cada una en su carpeta de `.claude/worktrees/` y con su puerto. Cuando el
+  límite de uso se acabó a la vez en todas, se reanudan de dos en dos (decisión de Ez).
+- **La caza de bugs está en `main` como v0.151.0**, con el sí de Ez a todo; solo queda grabar la
+  voz de Respira en inglés.
+- **12 oct., v0.156.0:** Respira entra en la cuenta atrás y sale despacio (Ez lo escuchó), el cierre con el dibujo de la rutina y la salida tonal, y el sello del aro solo con texto. En pausa, a petición de Ez: el miércoles de «A tu ritmo» (tres pausas largas frente a una; hay que explicárselo mejor) y la parada de cierre, que no se ve al terminar el último bloque (la tarjeta pasa a «Jornada cerrada»). Sigue en marcha la caza en Foco y lo guardado (dos pestañas).
+- **10 oct., v0.155.0:** la pausa por libre sin la puerta repetida (B), el cierre de las sesiones en itálica (A) y la línea del Pomodoro fundida con el horizonte (B), las tres elegidas por Ez con fotos; y la home ya no se queda corrida de lado al cerrar una pausa. En marcha: la caza en Foco y en lo guardado, y el arreglo de los sellos cortados dentro del aro.
+- **La música de Respira está en `main` como v0.154.0**: tres drones en Sol que respiran y una receta «marcada» por técnica, con el sí de Ez («suenan bien, súbelas»).
+- **La barra lateral (el cuaderno) está en `main` como v0.153.0**, con el sí de Ez a la app montada.
+- **La pausa más elegante está en `main` como v0.152.0**: opción A de Ez, «Ir a comer» suma el vaso
+  y los sellos esperan a que no haya nada abierto (en la home, dentro del aro). Página con la que
+  Ez dio el sí: `archivos/pausa-9oct/pausa-9oct.html`.
+- **iPhone (Ez, 9 oct.): PACE en Safari ahora y la app de la App Store después de v1.** La
+  revisión en el motor de Safari encontró el aviso falso de «versión nueva» en la primera visita
+  (arreglado en v0.151.0) y nada más en la home. Falta que un tester con iPhone mire el sonido.
+- La llave de los códigos de tester existe desde el 9 oct. (`PACE-llave-licencias`, en el PC de
+  Ez; la pública, `k1`, en `claude/premium-codigos-tester`). Ez tiene ya los ids del calendario,
+  la lista de testers y los textos de logros, y los está pasando.
+- El logo (`app/ui/pace-logo.png`) dice «FVFN» en vez de «EVEN» en la propia imagen: Ez lo
+  vuelve a exportar.
+
+## Al cerrar la nube (8 oct. 2026, tarde): lo que queda abierto
+
+Se trabajó con varias sesiones en paralelo y un coordinador (`docs/WORKFLOW.md` §9). Al acabarse el
+crédito de la nube quedó así. Cada rama lleva en el mensaje de su último commit un bloque
+`TRASPASO:` (o `CHANGELOG:`/`STATE:`/`DECISIONES:`) con lo que falta.
+
+- **`main-sig4tn`**: v0.148.0 a v0.148.3 (Fase 3 gratis: la semana tipo y el día ya contestado; el
+  aro vacío al colocarse; seis fallos de la caza; la bola del aro). **En `main` desde la noche del
+  8 oct.**, con la suite entera en verde (468) en el PC de Ez. Esa primera suite probó otra carpeta
+  sin decirlo (un servidor colgado de otra sesión en el 8765); desde entonces la suite se para si
+  el servidor no es el de su carpeta.
+- **Ramas aparcadas, a la espera de Ez** (mira su último commit):
+- **Ramas aparcadas** (mira su último commit). El 8 oct. por la noche Ez aceptó todas las
+  recomendaciones pendientes:
+  - `claude/respira-bugs-graves-31faf7`: **en `main` como v0.148.4** (Bhastrika con su aviso;
+    «Terminar» cuenta lo hecho, variante A sin ceros). El texto del aviso por técnica lo resuelve
+    respira-14 de la rama de propuestas.
+  - `claude/caza-bugs-propuestas`: los cambios visibles de la caza del 7 oct. **Ez contestó las
+    nueve preguntas el 8 oct. por la noche**: sí a todo lo montado; en inglés, el tono en vez de la
+    voz castellana hasta grabar la voz en inglés (pendiente, «tenlo en cuenta»); cambiar de modo
+    con un Foco en marcha pregunta antes; pestaña en el idioma y la PWA «PACE»; «stamp» para el
+    sello; Pulso y Ondas, un poco más pequeños; rondas de 5, 9 y 17 min; «Un vaso más» en su azul
+    más oscuro. En la pausa solo se enseñan Intro y Esc (lo pinta la sesión de la pausa). La
+    sesión que lo monta trabaja en `claude/caza-bugs-final` y avisa con «LISTO PARA MAIN».
+  - `claude/calendario-sincronizacion`: Google y Microsoft; faltan los ids que crea Ez.
+  - `claude/respira-drones-por-tecnica` (contiene `claude/respira-musica-drones`): **un drone por
+    técnica de Respira, montado en la app**. Las primeras variaciones sonaban casi iguales («¿no te
+    da la sensación que todos suenan igual?») y el 9 oct. Ez eligió las **marcadas**
+    (`archivos/musica-respira/por-tecnica/marcadas.html`), las oyó en la app y dijo «suenan bien,
+    súbelas». Recetas en `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`); cambiar una es tocar
+    la `m` de `tecnicas.js`, medir con `construir.js` hasta «Sin avisos» y copiar receta y ajuste.
+  - `claude/premium-codigos-tester`: qué se cierra y códigos de por vida para testers (en Android,
+    los códigos promocionales de Play Console). Espera la llave y la lista de testers de Ez.
+  - `claude/runner-circulo-letra`: **en `main` como v0.150.0** (serif itálica y tope de 95 letras
+    por frase; el dibujo de Mueve iguala al de Estira). «Cuídate» sigue en sans: no se preguntó.
+  - Mensaje de novedades para el grupo de testers, con tres capturas: `archivos/testers-8oct/`.
+  - La pausa más elegante (pedida por Ez): sesión en paralelo en `claude/pausa-elegante`, solo una
+    página para elegir.
+  - `claude/glifos-revision-8oct`: **en `main`**; la piedra de amolar ya está en su logro
+    (v0.148.5). Faltan los anillos de «Rondas maestra» y la vela de «Larga sesión».
+  - La propuesta de nombres y descripciones de los 96 logros (tanda 1) se envió a Ez desde la nube
+    y **no está en el repo ni en ninguna rama**: si Ez no la conserva, hay que rehacerla. La
+    tanda 2, las explicaciones de ejercicios, respeta el tope de 95 letras.
+  - Barra lateral más útil y bonita (pedida por Ez): sesión en paralelo en `claude/sidebar-propuesta`,
+    solo una página para elegir.
+- **El motor de la semana** (lo de pago de «A tu ritmo»): Ez aceptó la página
+  (`archivos/motor-semana/motor-semana.html`, https://claude.ai/artifact/EGfS13xFn6oU4BpoRihdBL):
+  aprende cuatro cosas, como mucho dos cambios y 10 paradas por semana, la carta en una ventana
+  (también en semanas sin cambios) y nada sin PACE completo. **Desde v0.149.0 se guarda el resumen
+  de cada día** (`ritmo.day.closed`). El motor y la carta, cuando haya semanas de datos.
+- En la nube, Playwright 1.62.1 pedía Chromium 1234 y solo había el 1194: se apañó con
+  `PLAYWRIGHT_BROWSERS_PATH` y enlaces. En el PC de Ez no hace falta.
 
 ## Cómo seguir desde otra cuenta
 
@@ -35,6 +111,16 @@ antes de trabajar y mira en `git log` qué subió la otra.
   `DECISIONES_TECNICAS_VIGENTES.md` (fila de v0.145.0) y la vigila `verify`: ninguna medida de la
   ventana a la manera de siempre (`paceCaja`, `paceLienzoAlto`, `var(--pace-vh, 1vh)`). Sin probar
   en Safari de Mac.
+- **La bola del aro al empezar: hecha (v0.148.3).** Ez vio que al pulsar «Empezar» la bola y su halo
+  nacían «como por debajo»: la niebla del horizonte los cortaba por la mitad. Eligió la opción A
+  viendo fotos de la app real: el mismo recorrido, la bola entera en su propia capa y un fundido (el
+  punto aparece y el halo se abre después), solo al empezar el bloque. Descartadas: sin fundido (B) y
+  empezar a las doce como un reloj (C), que escondía la bola tras la tarjeta a mitad de bloque.
+- **Aro de Mueve y Estira vacío al colocarse: hecho (v0.148.1).** Ez escribió «el aro de tiempo
+  que se rellene para empezar queda raro, mejor es vacío ya que no ha empezado el ejercicio». Vio
+  tres opciones en fotos y eligió la A (vacío del todo, solo el trazo de fondo), también en la pausa
+  de «Cambia de lado». El aro solo cuenta el ejercicio y el descanso; lo vigila
+  `tests/runner-aro-colocate.spec.js`.
 - **Home del móvil sin scroll: hecha en v0.146.0.** Ez vio la maquetación B (la pregunta con el
   horario como una línea, de la rama `claude/project-thread-ft7sc2`) en fotos de la app real y dijo
   «súbela», con una condición: «no quiero scroll de ninguna forma», tampoco en inglés. Desde
@@ -53,9 +139,10 @@ antes de trabajar y mira en `git log` qué subió la otra.
   paletas (la opción C de `archivos/oscuro/horas-oscuro.html`) y arreglar la casilla de apnea. El resto de
   `CAZA_BUGS_7OCT.md` sigue sin verificar; Foco y el estado guardado no se han revisado. Mira
   `git log` y ese archivo antes de tocar ninguno.
-- **Ramas abiertas de otros hilos:** `claude/project-thread-9eceyu` (la música de Respira, hecha y
-  sin subir: falta que Ez la escuche en la app) y `claude/project-thread-jid37a` («¿Cómo es tu
-  semana?» en la bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
+- **Música de Respira: aprobada por Ez el 8 oct.** Ez la escuchó grabada de la app real y dijo «así está
+  bien». Va a `main` desde `claude/respira-musica-drones`; `claude/project-thread-9eceyu` no hay que retomarla.
+- **Ramas abiertas de otros hilos:** `claude/project-thread-jid37a` («¿Cómo es tu semana?» en la
+  bienvenida, a medias; ya puede montarse encima de `main`, que trae la B).
 - **Glifos revisados:** de los 62 dibujos de ejercicio, seis no casan con su ejercicio (por ejemplo,
   «Barbilla atrás» con la flecha al revés y «Elevación de puntas» que dibuja talones). Están en
   `archivos/glifos/revision-glifos.html`, con un prompt para cada uno. El descanso entre series ya
@@ -66,9 +153,8 @@ antes de trabajar y mira en `git log` qué subió la otra.
 
 - **Música de Respira:** hay tres drones en Sol hechos con las tomas de ElevenLabs de Ez: Sol claro
   para Energía, Balance y Pranayama; Sol cálido para Equilibrio; Sol menor para Relajación. La app les
-  aplicaría una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
-  exhalar). Ez estaba eligiendo en una página de escucha. Siguiente paso: el cambio de código,
-  enseñado a Ez antes de subirlo. Los tres drones están en `archivos/musica-respira/bases/`, con la
+  aplica una envolvente que respira en vivo (se abre al inhalar, se queda en el sostén, se cierra al
+  exhalar). Aprobada por Ez el 8 oct. Los tres drones están en `archivos/musica-respira/bases/`, con la
   página de escucha (`escucha-respira.html`), los scripts de procesado y su `README.md`.
 - **Glifos:** cuatro prompts de ejercicio con figuras sin ropa, de la familia de los 59. El prompt A es
   solo para GPT Image 2; el B es el preámbulo original más dos dibujos de referencia, por si A se
@@ -84,9 +170,13 @@ antes de trabajar y mira en `git log` qué subió la otra.
   eligió que el día ya contestado sea **para todos**: «¿Cómo es tu semana?» en la bienvenida
   (gratis), cada mañana la tarjeta del día llega ya contestada, con «Hoy es distinto» (gratis), y el
   lunes una carta corta con lo que ayudó, la semana en cinco barras y uno o dos cambios aplicados con
-  «Vale» (premium). Nada de tira semanal en la home. La maqueta está en `archivos/semana/`. Lo está
-  montando el hilo «Maqueta de «A tu ritmo» semanal» de la cuenta de Claude del proyecto «Pace App»:
-  primero las dos partes gratis y luego la carta. Mira `git log` antes de tocarlo.
+  «Vale» (premium). Nada de tira semanal en la home. La maqueta está en `archivos/semana/`. **La
+  parte gratis está en v0.148.0** (Ez la vio en fotos de la app el 8 oct. y eligió, en el móvil,
+  «· como cada jueves» junto al título). Ez quiere que lo de pago sea que la app **te vaya
+  conociendo y cada semana adapte los ejercicios a lo que prefieres**, también con el calendario
+  conectado a veces: lo siguiente es el motor que aprende («¿te ayudó?», lo hecho y lo saltado,
+  «Otra», las horas a las que paras), con la carta del lunes como su cara, enseñado antes en una
+  página.
 - **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
   están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
   secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` y lo guarda
@@ -179,11 +269,11 @@ primera versión de pago, en web y Android.
 | Dominio propio | Hecho en v0.143.0: `pacegrass.app`, comprado por Ez en Cloudflare, sirve la app en la raíz y `paceweb.pages.dev` sigue abierto sin redirigir (los datos son de cada dominio). | Nada. `www.pacegrass.app` no tiene DNS: si Ez la quiere, se añade en Cloudflare. |
 | Landing | No hace falta ya. Hará falta antes de la verificación de Google y antes de vender. | Entonces: landing en la raíz y la app en `/app` del mismo dominio, con maqueta antes. |
 | Calendario con Google y Microsoft | Hecho en código; sin ids la web solo ofrece el `.ics`. | Ez da de alta PACE en Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`) y pasa los dos ids, que van en `CALENDARIO_IDS` de `app/ritmo/ritmo.calendario.web.js`. Con Google, verificación antes de pasar de 100 usuarios. |
-| Música de Respira | De 20 tomas distintas de Ez solo 4 sirven, todas de ElevenLabs. Se estaba midiendo con un medidor propio. Pendiente que Ez decida si la música «respira» al ritmo del ejercicio (recomendado: mixto, sí en los de ritmo fijo y quieta en Rondas, Bhastrika y Kapalabhati). | Con las tomas nuevas: bajar a 432 (−31,77 cents), mono 64 kbps, bucle sin costura, medir banda y ciclo. Brief en `archivos/musica-respira/`. |
+| Música de Respira | Aprobada por Ez el 8 oct.: tres drones en Sol (claro, cálido y menor) que respiran con la fase, quietos con ciclos de menos de 5 s y sin sonar en Coherente 432. El mismo día eligió un drone por técnica, hecho en directo con esos tres (`PACE_MUSICA_TECNICA`), y el 9 oct. las «marcadas», que se distinguen de verdad; las oyó en la app y dijo que suenan bien. | Si una deja de convencer: se toca su `m` en `archivos/musica-respira/por-tecnica/tecnicas.js`, se mide con `construir.js` hasta «Sin avisos» (también que no quede a menos de 6 de su vecina) y se copian receta y `ajusteDb`. Si una no se arregla así, se graba con `brief-B-por-tecnica.md`. |
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
-| «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). Ez eligió la segunda ronda el 7 oct, con el día ya contestado para todos. | Montarla: la semana en la bienvenida y el día contestado (gratis), y la carta del lunes (premium). Maqueta en `archivos/semana/`. |
-| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
-| PACE completo y códigos de tester | Hecho el 8 oct. en la web: candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts `npm run licencia:llaves` y `npm run licencia:codigo`. `app/licencia.llaves.js` está vacío hasta que Ez cree la llave. | Ez crea la llave en su PC y se sube la pública; luego los enlaces. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. |
+| «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
+| Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
+| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, en `PACE-llave-licencias` del PC de Ez) y los 15 enlaces de tester, desde el 12 oct., en `codigos-tester.csv` de esa carpeta. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. |
 | Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez
@@ -215,7 +305,35 @@ El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es públi
 (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa está
 aquí y en `git log`.
 
+## Relevo de la noche del 8 oct. (la cuenta coordinadora se quedó sin sesión)
+
+`main` va por **v0.150.1**, con la suite entera en verde en el PC de Ez y la CI en verde hasta v0.150.0
+(la de v0.150.1, si no consta, se mira con `gh run list --branch main`). Había cuatro sesiones en
+paralelo en la cuenta que se acabó; cada una sube solo a su rama y deja un bloque `TRASPASO:` en su
+último commit (`git log -1 origin/<rama>`):
+
+- `claude/caza-bugs-final`: monta las nueve respuestas de Ez de la caza (resumen arriba, en la línea
+  de `claude/caza-bugs-propuestas`), una prueba por arreglo y fotos de lo nuevo para Ez. Si quedó a
+  medias, se retoma desde su TRASPASO.
+- `claude/pausa-elegante`: página de la pausa más elegante (fotos, opciones, recomendación).
+  En la pausa solo se enseñan Intro y Esc.
+- `claude/sidebar-propuesta`: segunda vuelta en `main` (merge d0da2c5), publicada en
+  https://claude.ai/artifact/CQwq5epfkXUN8m8m25cM2S. Ez elige: Cuaderno con la pausa o la B,
+  el dibujo de la semana (recomendado «Brotes»), las frases y qué número de vasos manda. Ya dijo:
+  barras de minutos «mucho más elegantes», el pie en texto y la racha de vuelta.
+- `claude/respira-drones-por-tecnica`: terminada, encima de `claude/respira-musica-drones`. Ez
+  eligió las marcadas el 9 oct. y, oídas en la app, dijo «suenan bien, súbelas»: las dos ramas de
+  música suben juntas.
+
+La sesión nueva es la **coordinadora** (docs/WORKFLOW.md §9): la única que sube a `main`. Junta cada
+rama cuando diga «LISTO PARA MAIN», pone la versión, construye, pasa la suite entera con un
+`PACE_E2E_PORT` propio y vigila la CI. A Ez no se le repiten preguntas que ya contesta en una sesión
+en paralelo; se le guía en lo que no tiene sesión. Espera a Ez, sin sesión: los ids del calendario,
+la llave y la lista de testers para los códigos, y la propuesta de textos de logros si la conserva.
+
 ## Frase de arranque para la otra cuenta
 
-> Retoma el proyecto PACE desde el repo ezradesign/Pace_app. Antes de nada lee CLAUDE.md, STATE.md y
-> docs/traspaso/LEEME.md, y dime en pocas líneas dónde estamos y qué harías ahora. Háblame en español.
+> Retoma el proyecto PACE desde el repo ezradesign/Pace_app como sesión COORDINADORA. Antes de nada
+> lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md (sobre todo «Relevo de la noche del 8 oct.»),
+> mira el último commit de cada rama que nombra y dime en pocas líneas dónde estamos, qué espera mi
+> respuesta y qué harías ahora. Háblame en español.

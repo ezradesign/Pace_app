@@ -60,18 +60,27 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
     onChoose(key, rutina || null, desdeMenu);
   };
   /* La propuesta del agua dice «Un vaso más», así que lo suma antes de abrir Hidrátate, donde se
-     ve contado y se deshace con «Un vaso menos». Las demás entran en su rutina. */
+     ve contado y se deshace con «Un vaso menos». Las demás entran en su rutina.
+     LA COMIDA de «A tu ritmo» («Ir a comer») suma el vaso que lleva y cierra la pausa: no
+     hay rutina que abrir, y abrir Hidrátate era lo mismo que la fila de debajo (Ez, 8 oct.).
+     Cuenta como pausa elegida, igual que cuando abría Hidrátate. */
   const elegirPropuesta = (p) => {
     if (p.modulo === 'water') {
       addWaterGlass(1);
       try { playSound('hydrate.sip'); } catch (e) {}
     }
+    if (p.porque === 'ritmo.comida') {
+      try { unlockAchievement('first.cycle'); } catch (e) {}
+      onClose();
+      return;
+    }
     handleChoose(p.modulo, p.rutina);
   };
 
-  // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
-  // Los atajos siguen mapeados por actividad (no por posición visual),
-  // así el reordenamiento inteligente no los rompe.
+  // Atajos: Intro (la propuesta) y Esc (saltar) son los únicos que se enseñan... en
+  // ningún sitio: Ez quitó la línea de atajos del pie (8 oct.). B (Respira) · E (Estira) ·
+  // M (Muévete) · H (Hidrátate) siguen funcionando, mapeados por actividad y no por
+  // posición visual, así el reordenamiento inteligente no los rompe.
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -114,10 +123,9 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
 
   /* CON PROPUESTA NO HAY «PARA TI»: la razon se ha mudado arriba, con nombre y
      duracion, y dos recomendaciones a la vez en el mismo modal se contradicen.
-     Ese hueco reservado (s139) es ademas parte del sitio que la propuesta
-     necesita para que el modal NO crezca -- medido: 616 px fijos, y a 360x640
-     solo sobran 24. */
-  const topScore = prop ? 0 : opts[0].score;
+     Con propuesta tampoco hay tarjetas: las otras tres van en una línea (abajo),
+     así que «Para ti» solo vive en las cuatro tarjetas del menú sin propuesta. */
+  const topScore = opts[0].score;
 
   /* s195: CON MENÚ, OTRO MODAL. Si la propuesta es el plato de «A tu ritmo» y hay
      una pausa abierta, la pregunta es una sola (¿haces la pausa, o sigues?) y la
@@ -125,39 +133,44 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
   const plan = (prop && typeof prop.porque === 'string' && prop.porque.indexOf('ritmo.') === 0 && typeof ritmoPlan === 'function') ? ritmoPlan(state) : null;
   if (plan && plan.pausa && typeof BreakMenuRitmo === 'function') {
     return <BreakMenuRitmo open={open} onClose={onClose} onSeguir={onSeguir} prop={prop} plan={plan} nombre={nombreProp}
-      opciones={baseOpts} onChoose={(key, rutina) => handleChoose(key, rutina)} />;
+      opciones={baseOpts} onChoose={(key, rutina) => handleChoose(key, rutina)} onPropuesta={() => elegirPropuesta(prop)} />;
   }
 
+  /* La propuesta va vestida como la tarjeta de su rutina, con su botón dentro (la opción A
+     de Ez, BreakMenu.css.jsx); el agua no tiene rutina y lleva la gota y «Hidrátate». */
+  const colorProp = prop ? BREAK_COLOR[prop.modulo] : null;
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
       {prop && (
-        <div data-pace-break-prop style={{
-          margin: '18px 0 12px', padding: '14px 15px',
-          border: '1.5px solid var(--breathe)', background: 'var(--breathe-soft)',
-          borderRadius: 'var(--r-md)', display: 'grid', gap: 5,
-        }}>
-          <div style={{ fontSize: 11.5, letterSpacing: '0.03em', color: 'var(--breathe-2)', fontWeight: 500 }}>
-            {prop.porque === 'sitting'
-              ? tn('break.prop.sitting', { n: prop.datos.n })
-              : t('break.prop.' + prop.porque)}
-          </div>
-          {nombreProp && <div style={{ ...displayItalic, fontSize: 24 }}>{nombreProp}</div>}
-          {rutinaProp && (
-            <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-              {tn('break.prop.meta', {
-                n: rutinaProp.min,
-                m: t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label'),
-              })}
+        <div style={{ margin: '0 0 12px' }}>
+          <BreakPlato color={colorProp} glifo={breakGlifo(prop.modulo, rutinaProp)} datos={{ 'data-pace-break-prop': '' }}
+            motivo={prop.porque === 'sitting' ? tn('break.prop.sitting', { n: prop.datos.n }) : t('break.prop.' + prop.porque)}
+            nombre={nombreProp || (prop.modulo === 'water' ? t('break.water.label') : null)}
+            ctx={rutinaProp ? <><b>{rutinaProp.min}</b><u>{t('lib.min')}</u><em>{t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em></> : null}>
+            <div className="pace-break-acciones" style={{ marginTop: 12 }}>
+              <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--c': colorProp }} onClick={() => elegirPropuesta(prop)}>
+                {t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')}
+              </button>
             </div>
-          )}
-          <div style={{ marginTop: 6 }}>
-            <Button variant="terracota" onClick={() => elegirPropuesta(prop)}>
-              {t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')}
-            </Button>
-          </div>
+          </BreakPlato>
         </div>
       )}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: prop ? 10 : 12, margin: prop ? '0 0 4px' : '20px 0' }}>
+      {/* Con propuesta, las otras tres en una sola línea, con su dibujo y sin caja (la B de
+          Ez, 9 oct., docs/traspaso/archivos/pausa-repetida-9oct/): la puerta del módulo
+          propuesto ya está arriba, y repetirla abajo decía dos veces lo mismo («te
+          recomienda Hidrátate y abajo también sale Hidrátate»). Sin propuesta, las cuatro
+          tarjetas de siempre. */}
+      {prop && (
+        <div className="pace-break-otras" data-pace-break-otras>
+          {opts.filter((o) => o.key !== prop.modulo).map((o) => (
+            <button key={o.key} type="button" className="pace-break-otra" style={{ '--c': o.color }} onClick={() => handleChoose(o.key)}>
+              <span className="pace-break-otra-glifo">{o.icon}</span>
+              <span className="pace-break-otra-nombre">{o.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      {!prop && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map((o, i) => {
           const done = o.score === 0;
           const recommended = i === 0 && topScore > 0;
@@ -166,7 +179,7 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
               onClick={() => handleChoose(o.key)}
               style={{
                 position: 'relative',
-                padding: prop ? '13px 14px' : '24px 18px',
+                padding: '24px 18px',
                 background: o.bg,
                 border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
                 borderRadius: 'var(--r-md)',
@@ -198,33 +211,24 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
                   contenido. `visibility:hidden` lo saca además del árbol de
                   accesibilidad, así que «Para ti» no se anuncia en las tres
                   tarjetas que no lo son. */}
-              {!prop && (
-                <div style={{ visibility: recommended ? 'visible' : 'hidden' }}>
-                  <Tag color="var(--focus)">{t('break.recommended')}</Tag>
-                </div>
-              )}
+              <div style={{ visibility: recommended ? 'visible' : 'hidden' }}>
+                <Tag color="var(--focus)">{t('break.recommended')}</Tag>
+              </div>
               <div style={{ color: o.color, fontSize: 28, lineHeight: 1 }}>{o.icon}</div>
               <div>
                 <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
-                {/* Con propuesta arriba la descripcion sobra: ya hay una rutina
-                    con nombre y duracion, y estas cuatro vuelven a ser lo que
-                    siempre fueron -- cuatro puertas. LOS GLIFOS SE QUEDAN: son
-                    los mismos de la ActivityBar y son lo que hace la tarjeta
-                    reconocible de un vistazo (peticion del usuario, s187). */}
-                {!prop && (
-                  <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-                    {done ? t('break.done') : o.desc}
-                  </div>
-                )}
+                <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
+                  {done ? t('break.done') : o.desc}
+                </div>
               </div>
             </button>
           );
         })}
-      </div>
+      </div>}
 
-      <div data-pace-break-shortcut style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-        <Meta>{t('break.shortcut')}</Meta>
-        <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
+      {/* El pie, sin línea de atajos (Ez, 8 oct.); su `data-*` lo usan las pruebas. */}
+      <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: prop ? 8 : 4 }}>
+        <button type="button" className="pace-break-saltar" onClick={onClose}>{t('break.skip')}</button>
       </div>
     </Modal>
   );
@@ -233,20 +237,5 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
 /* s105: los iconos locales BM* (viento / monigote / gota generica) se
    retiraron -- el menu usa ahora los glifos AB* de la ActivityBar (pulmones /
    puente / mancuerna / gota), importados via window desde main/ActivityBar.jsx. */
-
-/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
-const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
-if (!_paceBreakResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-break-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-break-shortcut] .pace-meta {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
 
 Object.assign(window, { BreakMenu });

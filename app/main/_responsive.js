@@ -107,6 +107,7 @@
        @supports (height:1dvh). Solo la home lleva estas variables y
        [data-pace-dial-fit]; Caminos conserva el marco clásico. */
     [data-pace-home-body] {
+      overflow-anchor: none; /* v0.155.0: el anclaje la corría 117 px de lado al abrir la pausa (DECISIONES) */
       --pace-home-timer-size: min(86vw, 520px, max(300px, 58vh));
       --pace-home-sunset-overlap: max(6px, min(calc(var(--pace-home-timer-size) * 0.19), calc((var(--pace-home-timer-size) - 244px) / 2 - 6px)));
 

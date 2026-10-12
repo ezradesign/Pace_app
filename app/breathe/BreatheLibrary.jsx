@@ -13,10 +13,14 @@ const BREATHE_ROUTINES = {
     items: [
       /* B1.2 (s108): Bhastrika (PRA) se mudó al grupo Pranayama — era el único
          pranayama colado en Energía. rounds.express pasó a FREE para que el
-         grupo tenga entrada usable sin premium. */
-      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
-      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
-      { id: 'breathe.rounds.long', tag: 'ENE', code: 'Energía', name: 'Rondas profundas', desc: '5 rondas de 35 respiraciones. La práctica más larga e intensa.', min: 20, pattern: 'rounds', rounds: 5, breaths: 35, safety: true, access: 'premium' },
+         grupo tenga entrada usable sin premium.
+         Los minutos de las rondas suponen UN MINUTO de retención por ronda,
+         lo que respira alguien que empieza, más lo respirado (2 s + 2 s por
+         respiración): 5, 9 y 17. Antes eran 4, 12 y 20, cada una con su propia
+         retención supuesta (Ez, 8 oct. 2026). */
+      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 5, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
+      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 9, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
+      { id: 'breathe.rounds.long', tag: 'ENE', code: 'Energía', name: 'Rondas profundas', desc: '5 rondas de 35 respiraciones. La práctica más larga e intensa.', min: 17, pattern: 'rounds', rounds: 5, breaths: 35, safety: true, access: 'premium' },
     ]
   },
   equilibrio: {
@@ -54,7 +58,9 @@ const BREATHE_ROUTINES = {
     items: [
       { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5,0,5,0] },
       { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave. La mente se aquieta.', min: 5, pattern: 'bhramari' },
-      { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
+      /* `safety` como Kapalabhati: misma secuencia de 1 s y 1 s, 30 respiraciones
+         por minuto, o sea hiperventilación. Lo vigila tests/respira-biblioteca. */
+      { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika', safety: true },
       { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada, de la tradición del yoga. Pensada para asentar la atención.', min: 8, pattern: 'nadi', access: 'premium' },
       { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
       { id: 'breathe.kumbhaka', tag: 'PRA', code: 'Pranayama', name: 'Kumbhaka 1:4:2', desc: 'Inhala 4, sostén 16, exhala 8. Solo con experiencia.', min: 6, pattern: 'pattern', cycle: [4,16,8,0], safety: true, access: 'premium' },
@@ -115,8 +121,16 @@ function BreatheLibrary({ open, onClose, onStart }) {
    Mueve obligaba a abrir el módulo de Respira. El gating de contenido (`access`
    + `canAccessRoutine`) se fue con ella, intacto. */
 
+/* Qué tiene la técnica que pide aviso: las rondas hiperventilan y sostienen en
+   vacío; Kumbhaka y Tolerancia CO₂ solo sostienen; Kapalabhati solo hiperventila. */
+function breatheSafetyRiesgo(r) {
+  if (r.pattern === 'rounds') return 'both';
+  if (r.pattern === 'co2' || (Array.isArray(r.cycle) && (r.cycle[1] > 0 || r.cycle[3] > 0))) return 'apnea';
+  return 'hiper';
+}
+
 function BreatheSafety({ routine, onAccept, onCancel }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
   return (
@@ -130,11 +144,11 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         }}>⚠</div>
         <div>
           <div className="pace-meta" style={{ marginBottom: 4 }}>{t('breathe.safety.before')}</div>
-          <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{routine.name}</h3>
+          <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name}</h3>
         </div>
       </div>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' }}>
-        {t('breathe.safety.body.intro.pre')}<strong style={{ color: 'var(--ink)' }}>{t('breathe.safety.body.intro.bold')}</strong>{t('breathe.safety.body.intro.post')}
+        {t('breathe.safety.body.intro.pre')}<strong style={{ color: 'var(--ink)' }}>{t('breathe.safety.body.intro.bold.' + breatheSafetyRiesgo(routine))}</strong>{t('breathe.safety.body.intro.post')}
       </p>
       <ul style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink-2)', paddingLeft: 18, margin: '0 0 20px' }}>
         <li>{t('breathe.safety.body.rule1.pre')}<strong style={{color:'var(--ink)'}}>{t('breathe.safety.body.rule1.bold')}</strong>{t('breathe.safety.body.rule1.post')}</li>

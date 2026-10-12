@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.147.0 · 8 de octubre de 2026.
+**Versión:** v0.156.0 · 12 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -32,7 +32,9 @@ reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como
 
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
-de tiempo alrededor del dibujo y avisos de cuenco y madera. Cada texto tiene su hueco fijo y el
+de tiempo alrededor del dibujo y avisos de cuenco y madera. El aro solo cuenta el ejercicio: al colocarse y al cambiar de lado se queda vacío (v0.148.1, opción A
+de Ez). La explicación de cada paso va en la serif itálica y no pasa de 95 letras (v0.150.0, opción A
+de Ez), así que cabe en dos líneas, y «Cuídate» también va en serif (v0.150.1). Cada texto tiene su hueco fijo y el
 dibujo se lleva el espacio que sobra: medido en 12 pantallas, de 360×600 a 1920×960, nada se mueve
 ni se pisa. Las rutinas propias también van por ahí.
 
@@ -48,6 +50,44 @@ como una línea (la maquetación B), la tarjeta corta va sin «A TU RITMO» y el
 Lo vigila `tests/home-sin-scroll.spec.js`, que mide cada momento también con la letra 0,3 px más
 ancha, porque cada navegador la dibuja a su ancho; a 320×568 se acepta scroll.
 
+Con «Suena detrás: Música» (v0.154.0), cada técnica de Respira suena con su propio drone, hecho en directo a
+partir de tres drones en Sol, sin archivos nuevos (Ez lo eligió el 8 de octubre). Las primeras
+variaciones se parecían demasiado y el 9 de octubre Ez eligió las «marcadas»: cada técnica cambia de
+nota, de acorde, de color o de movimiento, y ninguna queda a menos de 6 puntos de color de su vecina
+(`docs/traspaso/archivos/musica-respira/por-tecnica/marcadas.html`). En los ejercicios pausados la
+música se abre al inhalar y se cierra al exhalar (en Nadi Shodhana, además, se va hacia el lado por
+el que respiras); con ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las
+recetas son `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`), copiadas de `tecnicas.js` con el
+volumen que mide `construir.js`.
+
+En v0.156.0, Respira entra en la cuenta atrás (la voz ya precargada y la música subiendo) y sale
+despacio, en 6 s; el cierre de las sesiones lleva el dibujo de la rutina y una salida tonal; y el sello
+del aro va solo con texto, entero y uno detrás de otro.
+
+Desde v0.155.0 la pausa por libre no repite lo que propone (las otras tres puertas van en una
+línea), el cierre de las sesiones va en la serif itálica con píldoras y la línea del Pomodoro se funde
+con el horizonte como el aro gris (decisiones de Ez del 9 y el 10 oct., con fotos de la app real).
+
+La pausa al terminar un bloque sigue la opción A de Ez (v0.152.0, `BreakMenu.css.jsx`): el plato como
+la tarjeta de la biblioteca, píldoras en serif itálica del color del módulo y sin atajos a la vista
+(Intro y Esc siguen). El aviso de un sello espera a que no haya nada abierto y en la home sale
+dentro del aro, en el sitio de su línea en cursiva (`tests/sello-espera.spec.js`).
+
+La barra lateral es un cuaderno (v0.153.0, elegida por Ez en cuatro vueltas de fotos,
+`docs/traspaso/archivos/sidebar-8oct/`): la semana en cápsulas con la racha debajo, Hoy con frases
+(«Dos horas y media de foco», «Cuatro vasos de ocho», con la meta de Ajustes y su «+ vaso»), la
+siguiente pausa con su rótulo, las tres bibliotecas y el último logro; el mismo orden en el cajón del
+móvil, que cabe entero desde 360×640. La home dice «6 de 8 vasos».
+
+Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
+con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
+`tests/aro-bola-entrada.spec.js`.
+
+«A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
+días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
+«Comienza» y «Hoy es distinto»; «Tu semana» en Ajustes la cambia. El día se deriva de la semana al
+pintar y no se escribe nada hasta que se pulsa.
+
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben. Lo de pago se llama **PACE completo**
 (8 oct., opción B elegida por Ez): lo cerrado lleva un candado de línea fina y, al tocarlo, una
@@ -60,6 +100,10 @@ Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
+iPhone: la app de la App Store llega después de v1; hasta entonces, PACE en Safari (Ez, 9 oct.). La
+suite tiene un proyecto `webkit`, el motor de Safari, para los `*.safari.spec.js` y la home sin
+scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mira un tester con iPhone.
+
 ## Lo siguiente
 
 1. **Fase 2:** el identificador de la app se queda en `com.ezradesign.pace` (Ez, 6 de octubre de
@@ -71,26 +115,23 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
    (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
    `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
    en `SUBIDAS.md`.
-2. **Fase 3**, mientras corre la prueba cerrada: «A tu ritmo» a lo largo de la semana, que es lo que
-   se paga.
+2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
+   cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
+   «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
+   cuatro cosas, dos cambios por semana, la carta en una ventana, también sin cambios, nada sin
+   PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
+   la carta llegan cuando haya semanas de datos.
 
-3. **Los bugs de `docs/traspaso/CAZA_BUGS_7OCT.md`** (37: modo oscuro, inglés, Respira e
-   Hidrátate). El agua de ayer pasada la medianoche se arregló en v0.146.1. Bhastrika sin su aviso
-   y «Terminar» en las rondas están arreglados en `claude/respira-bugs-graves-31faf7`, a la espera
-   de que Ez vea las fotos. La lista de horas y la casilla de apnea en oscuro (oscuro-1 y 4), en
-   v0.147.0. Se arreglan los confirmados, con su prueba; los de texto o criterio los elige Ez, y
-   todo lo que se vea se le enseña antes en HTML.
-4. **La música de Respira** está hecha en la rama `claude/project-thread-9eceyu` desde el 7 de
-   octubre: falta traerla a `main` y que Ez la escuche en la app.
+3. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
+   (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
+   entonces, en inglés suena el tono.
 
 ## Espera a Ez
 
-- En su PC, una vez: `npm run licencia:llaves` (crea la llave en `~/PACE-llave-licencias`, fuera del
-  repo, y escribe la pública en `app/licencia.llaves.js`, que se sube); copia de esa carpeta fuera
-  del ordenador. Luego `npm run licencia:codigo -- 1-15` da el enlace de cada tester. Y la lista de
-  testers: número y si usan web, Android o los dos.
-- Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con la
-  contraseña aparte.
+- Copiar las carpetas `PACE-llave-play` y `PACE-llave-licencias` (la de los códigos de tester, creada
+  el 9 oct., con los 15 enlaces del 12 oct. en `codigos-tester.csv`) de su PC en su disco duro, con la contraseña de Play aparte.
+- Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
+- Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.
@@ -98,7 +139,8 @@ borrado nada, y un Camino que ya estuviera empezado se puede terminar.
   inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
 - Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
   los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
-  sus prompts).
+  sus prompts). De logro, los anillos de «Rondas maestra» y la vela de «Larga sesión»
+  (`archivos/glifos/revision-8oct/GLIFOS_8OCT.md`).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha

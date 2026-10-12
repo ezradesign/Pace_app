@@ -236,6 +236,29 @@
         font-size: 60px !important;
       }
     }
+    /* El dibujo del cierre (sessionDoneGlifo) llena su caja; la caja encoge con la
+       altura igual que el círculo de antes, pero sin su borde ni su fondo. */
+    [data-pace-session-done-hero][data-pace-session-done-glifo] {
+      width: 72px !important; height: 72px !important; background: none !important; border: 0 !important;
+    }
+    [data-pace-session-done-hero][data-pace-session-done-glifo] > *,
+    [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
+      width: 100% !important; height: 100% !important;
+    }
+    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button {
+      background: var(--paper-2) !important; color: var(--ink) !important; border: 1px solid var(--line-2) !important;
+    }
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:hover {
+      border-color: var(--ink-3) !important;
+    }
+    /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
+       (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-header] button {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 16px;
+    }
   `;
   document.head.appendChild(s);
 })();

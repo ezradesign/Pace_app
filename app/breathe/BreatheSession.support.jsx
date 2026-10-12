@@ -269,6 +269,37 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
   };
 }
 
+/* LO HECHO EN UNA TECNICA DE RONDAS, para el cierre. El cierre pintaba el PLAN
+   (`routine.rounds` y `rounds × breaths`), asi que «Terminar» a mitad de la
+   primera ronda decia «3 rondas · 90 respiraciones» tras seis.
+     · Una RONDA esta hecha cuando se suelta su retencion. Desde la retencion
+       solo se llega al cierre soltando la ultima, asi que en 'hold' la ronda en
+       curso cuenta; en 'active' no, porque le falta su retencion.
+     · Una RESPIRACION esta hecha cuando acaba su exhalacion: `breathCount` es
+       la que esta EN CURSO («Respiracion 7 de 30» son seis hechas).
+   Lee la ronda y la respiracion de la sesion, que en una reanudada vienen del
+   registro, asi que lo hecho antes de irse tambien cuenta. */
+function respiraHecho(routine, stage, round, breathCount) {
+  if (!routine || routine.pattern !== 'rounds') return null;
+  const porRonda = routine.breaths || 0;
+  const ronda = Math.max(1, round || 1);
+  if (stage === 'hold') return { rondas: ronda, respiraciones: ronda * porRonda };
+  const sueltas = Math.min(porRonda, Math.max(0, (breathCount || 1) - 1));
+  return { rondas: ronda - 1, respiraciones: (ronda - 1) * porRonda + sueltas };
+}
+
+/* Las cifras del cierre a partir de lo hecho. Lo que vale cero no se pinta:
+   «0 rondas» no le cuenta nada a quien paro en la primera, y Respira no mide
+   contra un objetivo. El singular sale de claves que ya existian (la cabecera
+   de la retencion y el contador). */
+function respiraCifrasCierre(hecho, t) {
+  const out = [];
+  if (!hecho) return out;
+  if (hecho.rondas > 0) out.push({ label: t(hecho.rondas === 1 ? 'session.round' : 'common.rounds'), value: String(hecho.rondas) });
+  if (hecho.respiraciones > 0) out.push({ label: t(hecho.respiraciones === 1 ? 'common.breath' : 'common.breaths'), value: String(hecho.respiraciones) });
+  return out;
+}
+
 /* s175 · EL MAPEO DE ETIQUETA A SONIDO SALE AQUI. `BreatheSession.jsx` llego
    a 509 lineas al anadir la senal del sosten, y STATE ya dejaba dicho desde
    s166 que «lo siguiente que entre ahi va a su .support». Es ademas lo que
@@ -278,15 +309,23 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
 // Helper: reproduce el sonido de una fase por su label.
 // (Decía «Sostén → silencio intencional» hasta s175; ver la rama del sostén.)
 function playPhaseSound(phaseLabel, phaseDur) {
+  /* La música de fondo respira con la misma fase: se abre al inhalar y se cierra
+     al exhalar (`Sound.musica.jsx`). Va aparte del sonido de señal para que un
+     fallo de uno no se lleve al otro. */
+  /* La etiqueta viaja con la fase: dice el lado en Nadi Shodhana y distingue
+     la primera inhalación del Suspiro de «Inhala más». */
+  const musica = (tipo) => { try { if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur, phaseLabel); } catch (e) {} };
   if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
       phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
       phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
       phaseLabel === 'Inhala al vientre') {
     try { playSound('breathe.inhale', phaseDur); } catch (e) {}
+    musica('in');
   } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
              phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
              phaseLabel === 'Exhala zumbando') {
     try { playSound('breathe.exhale', phaseDur); } catch (e) {}
+    musica('out');
   } else if (phaseLabel === 'Sostén' || phaseLabel === 'Sostén en vacío') {
     /* s175 · EL SOSTÉN DEJA DE SER SILENCIO, y esto cambia una decisión
        anterior a propósito. El silencio era lo correcto mientras el sonido
@@ -311,21 +350,49 @@ function playPhaseSound(phaseLabel, phaseDur) {
    FUERZA su drone pase lo que pase, no acabe con las dos capas encima. El resto
    del porque -- que pieza, a que ganancia y que le falta todavia-- vive en
    `Sound.musica.jsx`, que es quien la toca. */
+/* LA ENTRADA Y LA SALIDA (v0.156.0). Ez: «el drone y la voz a veces entran una
+   respiración después de empezar, y acaban de manera muy brusca». Las dos cosas
+   tenían causa: la voz solo se precargaba al pedir su primera señal (en la primera
+   respiración, así que esa sonaba con el sintetizador) y la música no arrancaba en
+   la cuenta atrás, así que se descargaba, descodificaba y subía DESPUÉS de la primera
+   fase; al terminar, se apagaba en 0,8 s mientras saltaba el cierre. Ahora, como en
+   las sesiones guiadas que Ez tomó de referencia: en la cuenta atrás se precarga la
+   voz y la música entra despacio, y al terminar sigue sonando y se va en 6 s. */
+var PACE_RESPIRA_ENTRADA_S = 2.5;
+var PACE_RESPIRA_SALIDA_MS = 6000;
+
+function respiraPrecargarVoz() {
+  try {
+    if (typeof window.paceVozEncendida === 'function' && window.paceVozEncendida() && typeof window.paceVozInit === 'function') {
+      window.paceVozInit(window.paceVozActiva());
+    }
+  } catch (e) { /* sin Audio no hay voz, y ya esta */ }
+}
+
 function useMusicaFondo(stage, paused, routine) {
   const { useEffect: useEffectM } = React;
   useEffectM(() => {
+    if (stage === 'prep') respiraPrecargarVoz();
     if (!window.paceMusica) return;
     const m = window.paceMusica;
-    if (stage === 'done') { m.stop(800); return; }
-    if (stage === 'prep' || stage === 'hold') return;
+    if (stage === 'done') { m.stop(PACE_RESPIRA_SALIDA_MS); return; }
+    if (stage === 'hold') return;
     if (paused) m.pause();
     else if (m.isActive()) m.resume();
-    else m.start(routine.tag, routine.drone === true);
+    else {
+      /* El ciclo decide si la música respira o se queda quieta (Rondas, Bhastrika). */
+      let ciclo = null;
+      try { ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0); } catch (e) { ciclo = null; }
+      /* El id elige la receta de la técnica (`PACE_MUSICA_TECNICA`); sin
+         receta, suena el drone de su familia por el `tag`. */
+      m.start(routine.tag, routine.drone === true, ciclo, routine.id, stage === 'prep' ? PACE_RESPIRA_ENTRADA_S : undefined);
+    }
   }, [stage, paused]);
 }
 
 
 Object.assign(window, {
-  useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia,
 });

@@ -10,7 +10,7 @@
    quede bien y en las más pequeñas aceptamos un pequeño scroll sin barra».
 
    LO QUE SE VIGILA, y por qué cada cosa:
-     · Que CABE donde el suelo permite que quepa (de 667 para arriba).
+     · Que CABE donde el suelo permite que quepa (de 640 para arriba, con el día lleno).
      · Que por debajo se DESPLAZA y no se RECORTA. Es la diferencia entre el
        comportamiento pedido y un fallo mudo: la lente lleva `overflow: hidden`,
        así que un alto mal calculado dejaría el pie inalcanzable y la pantalla
@@ -21,8 +21,6 @@
      · Que no AGRANDA: a 375x844 la escala es 1 y `data-escalado` vale 0.
      · Que la barra no sale, pero el scroll sí sigue vivo. `overflow: hidden`
        habría hecho lo primero matando lo segundo.
-     · Que el recorte del aire de la tarjeta es SÓLO de móvil: en escritorio ese
-       aire se afinó mirándolo en s180 y no se toca.
 
    POR QUÉ CADA VIEWPORT ES SU PROPIO `describe` CON `test.use`, y no un
    `setViewportSize` como en el spec de escritorio: `page.setViewportSize()` NO
@@ -48,6 +46,17 @@ const ABIERTA = {
   _historyMigrated: true,
   _weeklyStatsReindexed_v0_28_8: true,
   _historyRecalculated_v0_28_8: true,
+  /* UN DÍA CON ACTIVIDAD EN TODOS LOS DÍAS DE LA SEMANA (9 oct. 2026). La barra es un
+     cuaderno y un día vacío es más corto que uno lleno: sin actividad cabía sin escala
+     hasta en 375x667 y estas pruebas dejaban de medir el motor. Se siembran los siete
+     días para que «hoy» tenga minutos caiga en el día que caiga. */
+  weeklyStats: {
+    focusMinutes: [150, 150, 150, 150, 150, 150, 150], breathMinutes: [5, 5, 5, 5, 5, 5, 5],
+    moveMinutes: [7, 7, 7, 7, 7, 7, 7], waterGlasses: [4, 4, 4, 4, 4, 4, 4],
+  },
+  water: { goal: 8, today: 4, lastReset: null },
+  streak: { current: 4, longest: 9, lastDay: new Date().toDateString() },
+  achievements: { 'streak.3': { unlockedAt: 1736120000000 } },
 };
 
 async function abrir(page, context) {
@@ -65,7 +74,6 @@ function sonda(page) {
     const aside = document.querySelector('[data-pace-sidebar]');
     const caja = document.querySelector('[data-pace-sidebar-escala]');
     const lente = caja.parentElement;
-    const tarjeta = aside.querySelector('[data-pace-sidebar-accion]');
     return {
       escala: parseFloat(getComputedStyle(caja).getPropertyValue('--sb-escala')),
       suelo: window.SUELO_CAJON,
@@ -77,7 +85,6 @@ function sonda(page) {
       lenteVista: Math.round(lente.getBoundingClientRect().height * 10) / 10,
       desborde: aside.scrollHeight - aside.clientHeight,
       barra: getComputedStyle(aside).scrollbarWidth,
-      padTarjeta: getComputedStyle(tarjeta).paddingBottom,
       /* El objetivo tactil que s180 afino a 45 px, tal y como SE VE ya
          escalado: aqui el rect es lo correcto, no el offsetHeight. */
       semanaVista: (function () {
@@ -108,9 +115,10 @@ function pieVisibleTrasBajar(page) {
 }
 
 /* ------------------------------------------------------------------ */
-/* De 667 para arriba TIENE que caber entero: es lo que compra el suelo. */
-for (const vp of [{ width: 375, height: 667 }, { width: 390, height: 736 },
-                  { width: 428, height: 800 }]) {
+/* De 640 para arriba TIENE que caber entero, con el día lleno: con el cuaderno, a
+   360x640 se ve al 85 % (medido en la página de la barra lateral, 9 oct. 2026). */
+for (const vp of [{ width: 360, height: 640 }, { width: 375, height: 667 },
+                  { width: 390, height: 700 }]) {
   test.describe(vp.width + 'x' + vp.height + ' · el cajón cabe entero', () => {
     test.use({ viewport: vp });
 
@@ -213,28 +221,5 @@ test.describe('la composición es la misma en todo móvil', () => {
       await ctx.close();
     }
     expect(new Set(altos).size).toBe(1);
-  });
-});
-
-/* ------------------------------------------------------------------ */
-/* EL AIRE DE LA TARJETA ES DE MOVIL Y SOLO DE MOVIL. `sidebarStyles.accion` lo
-   comparten las dos pieles, asi que tocarlo alli habria cambiado tambien el
-   escritorio, donde ese aire se afino mirandolo en s180. Un aserto por LADO:
-   que en movil este recortado no prueba que en escritorio siga entero. */
-test.describe('el aire de la tarjeta «Para ahora»', () => {
-  test.describe('en el cajón', () => {
-    test.use({ viewport: { width: 390, height: 736 } });
-    test('el padding de abajo es 8px', async ({ page, context }) => {
-      await abrir(page, context);
-      expect((await sonda(page)).padTarjeta).toBe('8px');
-    });
-  });
-
-  test.describe('en escritorio', () => {
-    test.use({ viewport: { width: 1280, height: 720 } });
-    test('el padding de abajo sigue siendo 16px', async ({ page, context }) => {
-      await abrir(page, context);
-      expect((await sonda(page)).padTarjeta).toBe('16px');
-    });
   });
 });

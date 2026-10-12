@@ -44,9 +44,19 @@ function ritmoModulo(modulo, t) {
              respira: 'activity.breathe.label', cierre: 'activity.breathe.label' }[modulo] || 'activity.stretch.label');
 }
 
-function ritmoResumen(m, tn) {
-  return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen',
-    { f: ritmoDuracion(m.focoMin), p: m.pausas, v: m.vasos });
+/* La meta de vasos de Ajustes, la misma con la que el plan reparte el agua. */
+function ritmoMetaVasos(s) {
+  return ((s || {}).water && s.water.goal) || 8;
+}
+
+/* El resumen del día: «6 h 10 min de foco · 7 pausas · 6 de 8 vasos». Los vasos son las
+   paradas de agua que el plan reparte (nunca más que la meta: el cupo de `ritmo.regla.js`),
+   dichas frente a tu meta de Ajustes (Ez, 9 oct. 2026: que la home cambie cuando cambias
+   la meta). «6 de TUS 8 vasos» partía el título del día en dos líneas de 1536 px de ancho
+   para arriba (medido en nueve pantallas); «6 de 8» deja la cabecera como estaba. */
+function ritmoResumen(m, tn, meta) {
+  const vasos = tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });
+  return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen', { f: ritmoDuracion(m.focoMin), p: m.pausas, v: vasos });
 }
 
 /* «3 min · Estira · Antídoto a la silla», o la de la pausa larga. `sinModulo` (las
@@ -99,7 +109,9 @@ var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 141
   /* s197: la media jornada es de mañana O DE TARDE, así que su inicio llega hasta las
      21:00 como el de la entera y su fin hasta la medianoche y media. */
   'media.inicio': [300, 1260], 'media.salida': [360, 1410] };
-function RitmoSelector({ campo, horario }) {
+/* `onCambio` (opcional): un borrador que guarda otro, como la semana tipo de la bienvenida,
+   que no escribe nada hasta «Comenzar». Sin él, la hora se guarda al momento. */
+function RitmoSelector({ campo, horario, onCambio }) {
   const { t } = useT();
   let valores = [];
   if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];
@@ -110,7 +122,7 @@ function RitmoSelector({ campo, horario }) {
   const fmt = (v) => (campo === 'comidaDur' ? (v < 60 ? v + ' min' : ritmoDuracion(v, true)) : ritmoHora(v));
   return (
     <select className="pace-rt-sel" data-pace-ritmo-horario={campo} aria-label={t('ritmo.aria.' + campo)}
-      value={actual} onChange={(e) => ritmoHorario(campo, e.target.value)}>
+      value={actual} onChange={(e) => (onCambio ? onCambio(campo, Number(e.target.value)) : ritmoHorario(campo, e.target.value))}>
       {valores.map((v) => <option key={v} value={v}>{fmt(v)}</option>)}
     </select>
   );
@@ -145,39 +157,19 @@ function RitmoInterruptorComida({ horario, rotulo }) {
   );
 }
 
-function ritmoHuecos(horario) {
+function ritmoHuecos(horario, onCambio) {
   return {
-    inicio: <RitmoSelector campo="inicio" horario={horario} />,
-    comida: <RitmoSelector campo="comida" horario={horario} />,
-    dur: <RitmoSelector campo="comidaDur" horario={horario} />,
-    salida: <RitmoSelector campo="salida" horario={horario} />,
+    inicio: <RitmoSelector campo="inicio" horario={horario} onCambio={onCambio} />,
+    comida: <RitmoSelector campo="comida" horario={horario} onCambio={onCambio} />,
+    dur: <RitmoSelector campo="comidaDur" horario={horario} onCambio={onCambio} />,
+    salida: <RitmoSelector campo="salida" horario={horario} onCambio={onCambio} />,
     comes: <RitmoInterruptorComida horario={horario} />,
-    mediaInicio: <RitmoSelector campo="media.inicio" horario={horario} />,
-    mediaSalida: <RitmoSelector campo="media.salida" horario={horario} />,
+    mediaInicio: <RitmoSelector campo="media.inicio" horario={horario} onCambio={onCambio} />,
+    mediaSalida: <RitmoSelector campo="media.salida" horario={horario} onCambio={onCambio} />,
   };
 }
 
-/* LO QUE LLEVAS (s197) · la frase de la tarjeta «Siguiente pausa» de la barra lateral.
-   La línea del panel ya enseña hecha/saltada nodo a nodo; lo único que no dice con
-   palabras es el RECUENTO, y es lo que cuenta esta frase: los bloques de foco (la
-   palabra que usa el aro: «Bloque 7 de 9») y las pausas HECHAS. Las saltadas no se
-   nombran —la línea ya las enseña en gris, y nombrarlas es un reproche pequeño—; el
-   usuario pidió contar «ciclos de concentración», y «bloque» es esa palabra en la app.
-   Números en palabras hasta doce (`ritmo.numeros`) y en cifra después. Devuelve null
-   sin un solo bloque hecho: una tarjeta que dice «llevas cero» no acompaña. */
-function ritmoNumero(n, t) {
-  const lista = String(t('ritmo.numeros')).split(',');
-  return n >= 0 && n < lista.length ? lista[n] : String(n);
-}
-function ritmoLlevas(bloques, pausas, t, tn) {
-  if (!bloques) return null;
-  const b = bloques === 1 ? t('ritmo.llevas.bloque') : tn('ritmo.llevas.bloques', { n: ritmoNumero(bloques, t) });
-  if (!pausas) return tn('ritmo.llevas.solo', { b });
-  const p = pausas === 1 ? t('ritmo.llevas.pausa') : tn('ritmo.llevas.pausas', { n: ritmoNumero(pausas, t) });
-  return tn('ritmo.llevas', { b, p });
-}
-
 Object.assign(window, {
-  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaPlato,
-  RitmoFrase, RitmoSelector, ritmoHuecos, ritmoNumero, ritmoLlevas,
+  RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaVasos, ritmoMetaPlato,
+  RitmoFrase, RitmoSelector, ritmoHuecos,
 });

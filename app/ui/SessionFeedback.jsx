@@ -99,23 +99,29 @@ const sessionFeedbackStyles = {
   },
   question: {
     ...displayItalic,
-    fontSize: 16, color: 'var(--ink-2)',
+    fontSize: 17, color: 'var(--ink-2)',
     marginBottom: 14,
   },
   chips: {
     display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 10,
   },
+  /* Las respuestas son píldoras en la serif itálica, como las de la pausa (la A de Ez,
+     10 oct., docs/traspaso/archivos/cierre-y-linea-10oct/): con la letra de interfaz de
+     antes, la pantalla final «mantenía la tipografía estándar» y se veía «un poco cutre». */
   chip: {
-    padding: '9px 18px', fontSize: 13,
+    ...displayItalic,
+    padding: '0 22px', minHeight: 42, fontSize: 17, fontWeight: 500,
     border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
+    borderRadius: 'var(--r-pill)',
     background: 'var(--paper-2)', color: 'var(--ink)',
     transition: 'border-color 160ms ease, color 160ms ease, background 160ms ease',
   },
+  /* «Ahora no» es un enlace, como «Saltar esta pausa». */
   ghost: {
-    marginTop: 12, fontSize: 12, color: 'var(--ink-3)',
+    ...displayItalic,
+    marginTop: 12, fontSize: 15, color: 'var(--ink-3)',
     background: 'none', border: 'none', padding: '4px 10px',
-    letterSpacing: '0.04em',
+    textDecoration: 'underline', textUnderlineOffset: 3,
     transition: 'color 160ms ease',
   },
   thanks: {
@@ -145,27 +151,25 @@ if (!_paceSessionFeedbackCss) {
     [data-pace-fb-chip]:disabled { opacity: 0.6; cursor: default; }
     [data-pace-fb-ghost]:hover:not(:disabled) {
       color: var(--ink-2) !important;
-      text-decoration: underline;
-      text-underline-offset: 3px;
     }
 
     @media (max-width: 640px) {
       [data-pace-session-feedback] { margin-top: 2px !important; }
       [data-pace-fb-rule] { margin-bottom: 14px !important; }
-      [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 12px !important; }
-      [data-pace-fb-chip] { padding: 8px 15px !important; }
+      [data-pace-fb-question] { margin-bottom: 12px !important; }
+      [data-pace-fb-chip] { padding: 0 20px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }
       [data-pace-fb-question] { font-size: 15px !important; margin-bottom: 10px !important; }
-      [data-pace-fb-chip] { padding: 8px 16px !important; }
+      [data-pace-fb-chip] { padding: 0 18px !important; min-height: 38px !important; }
       [data-pace-fb-ghost] { margin-top: 8px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-session-feedback] { margin-top: 0 !important; }
       [data-pace-fb-rule] { display: none !important; }
       [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 8px !important; }
-      [data-pace-fb-chip] { padding: 7px 14px !important; font-size: 12px !important; }
+      [data-pace-fb-chip] { padding: 0 16px !important; min-height: 34px !important; font-size: 15px !important; }
       [data-pace-fb-ghost] { margin-top: 6px !important; }
     }
   `;
