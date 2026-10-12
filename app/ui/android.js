@@ -54,7 +54,12 @@
 var PACE_WEB_PUBLICA = 'https://pacegrass.app';
 var PACE_AVISO_FOCO_ID = 1; // un solo aviso de fin de Foco a la vez
 
-var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: false, atras: 0 };
+/* `programado` nace en true: al arrancar no se sabe si el proceso anterior, que Android pudo cerrar
+   con la app en el fondo, dejó un aviso de fin de Foco puesto. Si se diera por apagado, pausar o
+   reiniciar el bloque recuperado no lo quitaría y llegaría «Foco completado» a la hora vieja (o
+   sonaría dos veces con la app delante). Así lo primero que se recoloca con la app delante lo
+   cancela (caza del 10 oct., foco-4). */
+var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: true, atras: 0 };
 
 function paceEsAndroid() {
   try {

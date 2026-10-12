@@ -243,13 +243,39 @@ test.describe('en Android', () => {
     expect(aviso.title).toBe('Foco completado');
     expect(await cuantas(page, 'LocalNotifications', 'requestPermissions'), 'con el permiso dado no se vuelve a pedir').toBe(0);
 
+    /* Se cuenta desde aquí: al arrancar ya se cancela el aviso que pudiera dejar el proceso anterior. */
+    const cancelados = await cuantas(page, 'LocalNotifications', 'cancel');
     await emitir(page, 'appStateChange', { isActive: true });
-    expect(await cuantas(page, 'LocalNotifications', 'cancel'), 'al volver no se cancelo: sonarian dos').toBe(1);
+    expect(await cuantas(page, 'LocalNotifications', 'cancel') - cancelados, 'al volver no se cancelo: sonarian dos').toBe(1);
 
     /* En pausa no hay final que avisar. */
     await page.getByRole('button', { name: 'Pausar', exact: true }).click();
     await emitir(page, 'appStateChange', { isActive: false });
     expect(await cuantas(page, 'LocalNotifications', 'schedule'), 'programo un aviso con el Foco en pausa').toBe(1);
+  });
+});
+
+test.describe('en Android, cuando el sistema cierra PACE', () => {
+  /* Caza del 10 oct., foco-4. Android puede cerrar PACE con la app en el fondo y el aviso de fin
+     de Foco ya programado. Al volver, el bloque sigue en marcha (pace.timer.v1), pero la app nueva
+     no sabia que habia un aviso puesto: pausar no lo quitaba y llegaba «Foco completado» a la hora
+     vieja. En v0.154.0 no se llamaba a `cancel` ni una vez. */
+  test('al volver, pausar el bloque recuperado quita el aviso que dejó el proceso anterior', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false });
+    await comoAndroid(context, { permiso: 'granted' });
+    await irAlArtefacto(page);
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await emitir(page, 'appStateChange', { isActive: false });
+    expect(await cuantas(page, 'LocalNotifications', 'schedule'), 'al irse al fondo no se programo').toBe(1);
+
+    /* Android cierra el proceso y la persona vuelve a abrir PACE: el espia empieza de cero. */
+    await page.reload();
+    await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+    await expect(page.getByRole('button', { name: 'Pausar', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Pausar', exact: true }).click();
+    const cancelados = await llamadas(page, 'LocalNotifications', 'cancel');
+    expect(cancelados.length, 'el aviso del proceso anterior sigue programado').toBeGreaterThan(0);
+    expect(cancelados[0].opts.notifications[0].id).toBe(1);
   });
 });
 
