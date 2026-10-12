@@ -1,0 +1,158 @@
+<title>El sello del aro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Tres columnas por caso: antes, A y B. Fotos de la app real; la paleta y las letras son las de la app. */
+:root {
+  --papel: #F2EDE0;
+  --papel-2: #EAE4D4;
+  --tinta: #1F1C17;
+  --tinta-2: #4A453C;
+  --tinta-3: #756E5F;
+  --linea: #C9C0A8;
+  --oliva: #3E5A3A;
+  --oliva-suave: rgba(62, 90, 58, 0.10);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #1d1a14; --papel-2: #26211a; --tinta: #EDE5D3; --tinta-2: #c0b49e; --tinta-3: #B2A995;
+    --linea: #4d4536; --oliva: #98B58B; --oliva-suave: rgba(122, 154, 109, 0.14); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #1d1a14; --papel-2: #26211a; --tinta: #EDE5D3; --tinta-2: #c0b49e; --tinta-3: #B2A995;
+  --linea: #4d4536; --oliva: #98B58B; --oliva-suave: rgba(122, 154, 109, 0.14); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.6 var(--ui); padding-inline: 20px; padding-block: 36px 72px; }
+main { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+header, section { display: flex; flex-direction: column; gap: 14px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; line-height: 1.1; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(36px, 6vw, 52px); }
+h2 { font-size: 26px; }
+p { margin: 0; max-width: 68ch; }
+.meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); font-weight: 500; }
+.lead { font-family: var(--serif); font-style: italic; font-size: 21px; line-height: 1.4; color: var(--tinta-2); }
+
+.diferencias { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.dif { border-top: 1px solid var(--linea); padding-top: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dif.rec .meta { color: var(--oliva); }
+.dif ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 15px; color: var(--tinta-2); }
+.veredicto { border-left: 3px solid var(--oliva); background: var(--oliva-suave); border-radius: 0 12px 12px 0; padding: 14px 18px; max-width: 68ch; }
+
+.mandos { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: flex-end; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--papel); padding-block: 10px; z-index: 2; }
+.mando { display: flex; flex-direction: column; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--linea); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg button { font: 500 13px/1 var(--ui); color: var(--tinta-2); background: transparent; border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); }
+.seg button:focus-visible, .lb-cerrar:focus-visible { outline: 2px solid var(--oliva); outline-offset: 2px; }
+
+.caso { display: flex; flex-direction: column; gap: 10px; }
+.par { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.par.movil { max-width: 760px; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--linea); background: var(--papel-2); cursor: zoom-in; }
+figure.rec img { border-color: var(--oliva); box-shadow: 0 0 0 1px var(--oliva); }
+figcaption { font-size: 13px; color: var(--tinta-2); }
+figcaption b { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 18px; color: var(--tinta); }
+.alto { font-variant-numeric: tabular-nums; }
+
+.lb { position: fixed; inset: 0; background: rgba(20, 18, 14, .82); display: grid; place-items: center; padding: 24px; z-index: 10; cursor: zoom-out; }
+.lb img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+.lb-cerrar { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: 16px; font: 500 14px var(--ui); color: #F2EDE0; background: transparent; border: 1px solid rgba(242, 237, 224, .5); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+
+@media (max-width: 640px) {
+  body { padding-inline: 16px; }
+  .diferencias { grid-template-columns: minmax(0, 1fr); }
+  .par { gap: 10px; }
+}
+</style>
+<style>
+.tres { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tres.ancha { grid-template-columns: minmax(0, 1fr); }
+figure.rec img { border-color: var(--oliva); box-shadow: 0 0 0 1px var(--oliva); }
+.nota { font-size: 13px; color: var(--tinta-3); }
+@media (max-width: 640px) { .tres { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<main>
+  <header>
+    <div class="meta">PACE · el sello del aro · para Ez · 10 de octubre</div>
+    <h1>El sello del aro</h1>
+    <p class="lead">Lo que viste en tu móvil, reproducido en la app: el texto cortado («Nuevo sello · Prim…»), el dibujo como un «}» o un «?» diminuto y, con varios sellos a la vez, unos encima de otros y del contador. Ya está arreglado; falta que elijas cómo va el dibujo.</p>
+    <div class="diferencias">
+      <div class="dif rec"><span class="meta">A · recomendada</span><h2>Con su círculo</h2>
+        <ul>
+          <li>El dibujo va dentro de un círculo dorado, como en la colección de sellos.</li>
+          <li>Los secretos sin dibujo enseñan su «?» dentro del círculo, que se lee como un sello y no como un fallo.</li>
+        </ul>
+      </div>
+      <div class="dif"><span class="meta">B</span><h2>Solo el texto</h2>
+        <ul>
+          <li>Sin dibujo: «Nuevo sello · Primer paso» en dorado, en el sitio de la línea del aro.</li>
+          <li>Más sobrio, pero el sello pierde su dibujo, que es lo que lo hace reconocible.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="veredicto">En las dos: el texto cabe siempre entero (se mide el ancho del círculo a esa altura y, si hiciera falta, la letra encoge un poco), y si llegan varios sellos salen uno detrás de otro, cada uno sus 3 segundos.</p>
+  </header>
+
+  <div class="mandos" role="group" aria-label="Qué fotos ver">
+    <div class="mando"><span class="meta">Caso</span><div class="seg" data-mando="caso">
+      <button type="button" data-v="primer-paso-360x718" aria-pressed="true">Primer paso</button>
+      <button type="button" data-v="tres-360x718" aria-pressed="false">Tres a la vez</button>
+      <button type="button" data-v="largo-360x640" aria-pressed="false">Título largo</button>
+      <button type="button" data-v="largo-360x718-en" aria-pressed="false">En inglés</button>
+      <button type="button" data-v="secreto-360x640" aria-pressed="false">Un secreto</button>
+      <button type="button" data-v="primer-paso-360x718-oscuro" aria-pressed="false">Oscuro</button>
+      <button type="button" data-v="largo-1280x800" aria-pressed="false">Portátil</button>
+    </div></div>
+    <div class="mando"><span class="meta">Vista</span><div class="seg" data-mando="vista">
+      <button type="button" data-v="cerca" aria-pressed="true">De cerca</button>
+      <button type="button" data-v="entera" aria-pressed="false">Pantalla entera</button>
+    </div></div>
+  </div>
+  <div class="tres" id="fotos"></div>
+  <p class="nota">Las fotos se hacen a los 0,9 s de salir el sello. Con «Tres a la vez», en la A y la B se ve el primero; los otros dos salen después, uno detrás de otro. Toca una foto para verla en grande.</p>
+</main>
+
+<div class="lb" id="lb" hidden><button type="button" class="lb-cerrar" id="lb-cerrar">Cerrar</button><img id="lb-img" alt=""></div>
+
+<script>
+(function () {
+  var estado = { caso: 'primer-paso-360x718', vista: 'cerca' };
+  var COLS = [['antes', 'Antes (v0.154.0)'], ['despues', 'A · Con su círculo'], ['sin-dibujo', 'B · Solo el texto']];
+  function pintar() {
+    var escritorio = estado.caso.indexOf('1280') >= 0;
+    var cerca = estado.vista === 'cerca' && !escritorio;
+    var cont = document.getElementById('fotos');
+    cont.className = 'tres' + (escritorio ? ' ancha' : '');
+    cont.innerHTML = COLS.map(function (c) {
+      var base = 'fotos/' + c[0] + '-' + estado.caso;
+      return '<figure class="' + (c[0] === 'despues' ? 'rec' : '') + '"><img src="' + base + (cerca ? '-cerca' : '') + '.webp" data-grande="' + base + '.webp" alt="' + c[1] + '" loading="lazy"><figcaption><b>' + c[1] + '</b></figcaption></figure>';
+    }).join('');
+  }
+  document.querySelectorAll('.seg').forEach(function (seg) {
+    seg.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      estado[seg.getAttribute('data-mando')] = b.getAttribute('data-v');
+      seg.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      pintar();
+    });
+  });
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lb-img');
+  function cerrar() { lb.hidden = true; lbImg.removeAttribute('src'); }
+  document.addEventListener('click', function (e) {
+    var img = e.target.closest('figure img');
+    if (img) { lbImg.src = img.getAttribute('data-grande'); lbImg.alt = img.alt; lb.hidden = false; document.getElementById('lb-cerrar').focus(); return; }
+    if (!lb.hidden && (e.target === lb || e.target === lbImg || e.target.id === 'lb-cerrar')) cerrar();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) cerrar(); });
+  pintar();
+})();
+</script>

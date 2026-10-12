@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.155.0</title>
+  <title>PACE · Foco · Cuerpo — v0.156.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -5952,7 +5952,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.155.0';
+const PACE_VERSION = 'v0.156.0';
 
 
 
@@ -14141,15 +14141,23 @@ function SessionDone(_ref4)
 
 
 
+
+
+
   const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
     borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
-  const btn = buttonVariant ?
-  React.createElement(Button, { variant: buttonVariant, onClick: () => onExit('done'), style: ctaCierre }, label) :
-  React.createElement(Button, { onClick: () => onExit('done'), style: { ...ctaCierre, ...buttonStyle } }, label);
+  const btn = React.createElement(Button, { variant: "secondary", onClick: () => onExit('done'), style: ctaCierre }, label);
+  const glifo = sessionDoneGlifo(routine);
 
   return (
     React.createElement(SessionShell, { routine: routine, onExit: onExit, atmosphere: atmosphere, footer: btn },
     React.createElement("div", _extends({ "data-pace-session-done": true }, rootData || {}, { style: { textAlign: 'center', maxWidth: 520 } }),
+    glifo ?
+    React.createElement("div", { "data-pace-session-done-hero": true, "data-pace-session-done-glifo": true, style: {
+        width: 72, height: 72, margin: '0 auto 22px', color: accent,
+        display: 'grid', placeItems: 'center', animation: 'pace-fade-in 600ms ease'
+      } }, glifo) :
+
     React.createElement("div", { "data-pace-session-done-hero": true, style: {
         width: 120, height: 120, margin: '0 auto 24px',
         borderRadius: '50%',
@@ -14164,6 +14172,7 @@ function SessionDone(_ref4)
     React.createElement("path", { d: "M20 6L9 17l-5-5" })
     )
     ),
+
     React.createElement("div", { style: {
         fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginBottom: 12
@@ -14186,6 +14195,19 @@ function SessionDone(_ref4)
     )
     ));
 
+}
+
+
+
+
+
+function sessionDoneGlifo(routine) {
+  try {
+    const ids = routine && Array.isArray(routine.steps) && typeof window.libraryGlifos === 'function' ? window.libraryGlifos(routine) : [];
+    if (ids.length && typeof ExerciseGlyph === 'function') return React.createElement(ExerciseGlyph, { id: ids[0], size: 72 });
+    if (routine && String(routine.id || '').indexOf('breathe.') === 0 && typeof ABBreathe === 'function') return React.createElement(ABBreathe, null);
+  } catch (e) {}
+  return null;
 }
 
 
@@ -14247,7 +14269,7 @@ Object.assign(window, {
   paceGrainUrl, paceGlowRamp, PaceDither,
   sessionKeyOnControl, sessionDoneKeyBlocked
 });
-;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, sessionDoneGlifo, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
 })();
 </script>
   <!-- Pantalla de preparación (s174), extraída de SessionShell.jsx al pasar
@@ -14610,6 +14632,22 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
       [data-pace-move-timer] {
         font-size: 60px !important;
       }
+    }
+    /* El dibujo del cierre (sessionDoneGlifo) llena su caja; la caja encoge con la
+       altura igual que el círculo de antes, pero sin su borde ni su fondo. */
+    [data-pace-session-done-hero][data-pace-session-done-glifo] {
+      width: 72px !important; height: 72px !important; background: none !important; border: 0 !important;
+    }
+    [data-pace-session-done-hero][data-pace-session-done-glifo] > *,
+    [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
+      width: 100% !important; height: 100% !important;
+    }
+    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button {
+      background: var(--paper-2) !important; color: var(--ink) !important; border: 1px solid var(--line-2) !important;
+    }
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:hover {
+      border-color: var(--ink-3) !important;
     }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
        (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */
@@ -16157,7 +16195,9 @@ const paceMusica = (() => {
     mover(n, hasta, Math.max(0.2, dur * 0.97), lado);
   }
 
-  function start(tag, forzarDrone, cicloSeg, rutinaId) {
+
+
+  function start(tag, forzarDrone, cicloSeg, rutinaId, entradaSeg) {
     if (sesion) return no('ya sonaba');
     if (forzarDrone) return no('la rutina fuerza su drone (Coherente 432)');
     let s = null;
@@ -16193,7 +16233,7 @@ const paceMusica = (() => {
         const t = ctx.currentTime;
         crearFuentes(n, t);
         n.vol.gain.setValueAtTime(0, t);
-        n.vol.gain.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + 1.2);
+        n.vol.gain.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + (entradaSeg > 0 ? entradaSeg : 1.2));
       }
       ultimo = { motivo: 'sonando', src, receta: yo.receta, respira: !quieto };
     }).catch((e) => {
@@ -16289,7 +16329,13 @@ Object.assign(window, { paceMusica, PACE_MUSICA, PACE_MUSICA_BASES, PACE_MUSICA_
 ;(function () {
 
 
-const { useState: useStateTO, useEffect: useEffectTO } = React;
+const { useState: useStateTO, useEffect: useEffectTO, useLayoutEffect: useLayoutEffectTO, useRef: useRefTO } = React;
+
+
+
+
+
+
 
 
 
@@ -16309,7 +16355,16 @@ function toastHuecoDelAro() {
 
     const escala = sub.offsetHeight ? r.height / sub.offsetHeight : 1;
     const fs = parseFloat(getComputedStyle(sub).fontSize) * escala;
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2, ancho: Math.round(caja.width), fs: fs };
+    const x = r.left + r.width / 2,y = r.top + r.height / 2;
+    let ancho = caja.width;
+    const marco = sub.closest('[data-pace-dial-fit]');
+    if (marco) {
+      const m = window.paceCaja(marco);
+      const radio = Math.min(m.width, m.height) / 2;
+      const dy = y - (m.top + m.height / 2);
+      if (radio > Math.abs(dy)) ancho = 2 * Math.sqrt(radio * radio - dy * dy) - radio * 0.24;
+    }
+    return { x: x, y: y, ancho: Math.round(ancho), fs: fs };
   } catch (e) {return null;}
 }
 if (!document.getElementById('pace-toast-css')) {
@@ -16317,6 +16372,44 @@ if (!document.getElementById('pace-toast-css')) {
   st.id = 'pace-toast-css';
   st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }';
   document.head.appendChild(st);
+}
+
+
+const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
+
+
+
+
+
+
+
+function SelloEnAro(_ref) {let { toast, t } = _ref;
+  const textoRef = useRefTO(null);
+  const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
+  useLayoutEffectTO(() => {
+    const el = textoRef.current;
+    if (!el || el.scrollWidth <= el.clientWidth + 1) return;
+    const cabe = el.clientWidth / el.scrollWidth;
+    if (!ajuste.corto && ajuste.escala === 1 && cabe >= 0.82) setAjuste({ escala: cabe * 0.98, corto: false });else
+    if (!ajuste.corto) setAjuste({ escala: 1, corto: true });else
+    if (ajuste.escala === 1) setAjuste({ escala: Math.max(0.6, cabe * 0.98), corto: true });
+  }, [ajuste]);
+  const fs = toast.aro.fs;
+  return (
+    React.createElement("div", { "data-pace-sello-aro": true, style: {
+        position: 'fixed', left: toast.aro.x, top: toast.aro.y,
+        transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
+        display: 'flex', alignItems: 'center',
+        whiteSpace: 'nowrap', color: 'var(--achievement)',
+        fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
+        animation: 'pace-fade-in 320ms var(--ease)',
+        opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
+      } },
+    React.createElement("span", { "data-pace-sello-texto": true, ref: textoRef, style: { minWidth: 0, overflow: 'hidden' } },
+    React.createElement("span", { style: ajuste.corto ? toastSoloLector : undefined }, t('ach.toast.new'), " \xB7 "), toast.title
+    )
+    ));
+
 }
 
 function ToastHost() {
@@ -16327,31 +16420,43 @@ function ToastHost() {
 
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
 
+
+
+
+
+  const colaRef = useRefTO([]);
+  const activoRef = useRefTO(false);
+  const siguienteRef = useRefTO(null);
+  siguienteRef.current = () => {
+    if (activoRef.current || !colaRef.current.length) return;
+    const full = Object.assign({}, colaRef.current.shift(), { aro: toastHuecoDelAro() });
+    activoRef.current = true;
+    setToasts((prev) => [...prev, full]);
+    try {playSound(full.secreto ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}
+    const durationMs = typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000;
+    const fadeMs = 300;
+
+    setTimeout(() => {
+      setToasts((prev) => prev.map((x) => x._id === full._id ? { ...x, exiting: true } : x));
+    }, durationMs);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((x) => x._id !== full._id));
+      activoRef.current = false;
+      siguienteRef.current();
+    }, durationMs + fadeMs);
+  };
+
   useEffectTO(() => {
     return onToast((toast) => {
 
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
         if (!a) return;
-
-
-
-        const full = { ...toast,
+        colaRef.current.push({ ...toast,
           title: tR('ach.item.' + a.id + '.title', a.title),
           desc: tR('ach.item.' + a.id + '.desc', a.desc),
-          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false, aro: toastHuecoDelAro() };
-        setToasts((prev) => [...prev, full]);
-        try {playSound(a.secret ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}
-        const durationMs = typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000;
-        const fadeMs = 300;
-
-        setTimeout(() => {
-          setToasts((prev) => prev.map((x) => x._id === full._id ? { ...x, exiting: true } : x));
-        }, durationMs);
-
-        setTimeout(() => {
-          setToasts((prev) => prev.filter((x) => x._id !== full._id));
-        }, durationMs + fadeMs);
+          glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
+        siguienteRef.current();
       }
     });
   }, []);
@@ -16375,21 +16480,8 @@ function ToastHost() {
         pointerEvents: 'none'
       } },
 
-    toasts.map((toast, i) => toast.aro ?
-    React.createElement("div", { key: toast._id, "data-pace-sello-aro": true, style: {
-        position: 'fixed', left: toast.aro.x, top: toast.aro.y - i * toast.aro.fs * 1.5,
-        transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
-        display: 'flex', alignItems: 'center', gap: Math.round(toast.aro.fs * 0.45),
-        whiteSpace: 'nowrap', color: 'var(--achievement)',
-        fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: toast.aro.fs, lineHeight: 1.2,
-        animation: 'pace-fade-in 320ms var(--ease)',
-        opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
-      } },
-    React.createElement("span", { style: { flexShrink: 0, width: Math.round(toast.aro.fs * 1.35), height: Math.round(toast.aro.fs * 1.35), display: 'grid', placeItems: 'center', fontSize: toast.aro.fs } },
-    window.renderGlyph ? window.renderGlyph(toast) : toast.glyph
-    ),
-    React.createElement("span", { style: { overflow: 'hidden', textOverflow: 'ellipsis' } }, t('ach.toast.new'), " \xB7 ", toast.title)
-    ) :
+    toasts.map((toast) => toast.aro ?
+    React.createElement(SelloEnAro, { key: toast._id, toast: toast, t: t }) :
 
     React.createElement("div", { key: toast._id, style: {
         display: 'flex', alignItems: 'center', gap: 14,
@@ -16437,7 +16529,7 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost });
-;Object.assign(window, { toastHuecoDelAro, ToastHost });
+;Object.assign(window, { toastHuecoDelAro, SelloEnAro, ToastHost });
 })();
 </script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
@@ -24275,13 +24367,33 @@ function playPhaseSound(phaseLabel, phaseDur) {
 
 
 
+
+
+
+
+
+
+
+
+var PACE_RESPIRA_ENTRADA_S = 2.5;
+var PACE_RESPIRA_SALIDA_MS = 6000;
+
+function respiraPrecargarVoz() {
+  try {
+    if (typeof window.paceVozEncendida === 'function' && window.paceVozEncendida() && typeof window.paceVozInit === 'function') {
+      window.paceVozInit(window.paceVozActiva());
+    }
+  } catch (e) {}
+}
+
 function useMusicaFondo(stage, paused, routine) {
   const { useEffect: useEffectM } = React;
   useEffectM(() => {
+    if (stage === 'prep') respiraPrecargarVoz();
     if (!window.paceMusica) return;
     const m = window.paceMusica;
-    if (stage === 'done') {m.stop(800);return;}
-    if (stage === 'prep' || stage === 'hold') return;
+    if (stage === 'done') {m.stop(PACE_RESPIRA_SALIDA_MS);return;}
+    if (stage === 'hold') return;
     if (paused) m.pause();else
     if (m.isActive()) m.resume();else
     {
@@ -24290,18 +24402,18 @@ function useMusicaFondo(stage, paused, routine) {
       try {ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0);} catch (e) {ciclo = null;}
 
 
-      m.start(routine.tag, routine.drone === true, ciclo, routine.id);
+      m.start(routine.tag, routine.drone === true, ciclo, routine.id, stage === 'prep' ? PACE_RESPIRA_ENTRADA_S : undefined);
     }
   }, [stage, paused]);
 }
 
 
 Object.assign(window, {
-  useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia
 });
-;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, useMusicaFondo });
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
 })();
 </script>
   <script>
@@ -24424,8 +24536,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
     if (!window.ambientDrone) return;
     const drone = window.ambientDrone;
 
-    if (stage === 'done') {drone.stop(800);return;}
-    if (stage === 'prep') return;
+
+    if (stage === 'done') {drone.stop(PACE_RESPIRA_SALIDA_MS);return;}
 
     if (stage === 'hold') {
 

@@ -350,13 +350,33 @@ function playPhaseSound(phaseLabel, phaseDur) {
    FUERZA su drone pase lo que pase, no acabe con las dos capas encima. El resto
    del porque -- que pieza, a que ganancia y que le falta todavia-- vive en
    `Sound.musica.jsx`, que es quien la toca. */
+/* LA ENTRADA Y LA SALIDA (v0.156.0). Ez: «el drone y la voz a veces entran una
+   respiración después de empezar, y acaban de manera muy brusca». Las dos cosas
+   tenían causa: la voz solo se precargaba al pedir su primera señal (en la primera
+   respiración, así que esa sonaba con el sintetizador) y la música no arrancaba en
+   la cuenta atrás, así que se descargaba, descodificaba y subía DESPUÉS de la primera
+   fase; al terminar, se apagaba en 0,8 s mientras saltaba el cierre. Ahora, como en
+   las sesiones guiadas que Ez tomó de referencia: en la cuenta atrás se precarga la
+   voz y la música entra despacio, y al terminar sigue sonando y se va en 6 s. */
+var PACE_RESPIRA_ENTRADA_S = 2.5;
+var PACE_RESPIRA_SALIDA_MS = 6000;
+
+function respiraPrecargarVoz() {
+  try {
+    if (typeof window.paceVozEncendida === 'function' && window.paceVozEncendida() && typeof window.paceVozInit === 'function') {
+      window.paceVozInit(window.paceVozActiva());
+    }
+  } catch (e) { /* sin Audio no hay voz, y ya esta */ }
+}
+
 function useMusicaFondo(stage, paused, routine) {
   const { useEffect: useEffectM } = React;
   useEffectM(() => {
+    if (stage === 'prep') respiraPrecargarVoz();
     if (!window.paceMusica) return;
     const m = window.paceMusica;
-    if (stage === 'done') { m.stop(800); return; }
-    if (stage === 'prep' || stage === 'hold') return;
+    if (stage === 'done') { m.stop(PACE_RESPIRA_SALIDA_MS); return; }
+    if (stage === 'hold') return;
     if (paused) m.pause();
     else if (m.isActive()) m.resume();
     else {
@@ -365,14 +385,14 @@ function useMusicaFondo(stage, paused, routine) {
       try { ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0); } catch (e) { ciclo = null; }
       /* El id elige la receta de la técnica (`PACE_MUSICA_TECNICA`); sin
          receta, suena el drone de su familia por el `tag`. */
-      m.start(routine.tag, routine.drone === true, ciclo, routine.id);
+      m.start(routine.tag, routine.drone === true, ciclo, routine.id, stage === 'prep' ? PACE_RESPIRA_ENTRADA_S : undefined);
     }
   }, [stage, paused]);
 }
 
 
 Object.assign(window, {
-  useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia,
 });
