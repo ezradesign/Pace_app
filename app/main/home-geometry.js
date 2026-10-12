@@ -118,6 +118,7 @@
      de scroll, que alli se admite. En escritorio el interior ya es proporcional
      a D (_responsive.pieles.esc.js) y la home no puede hacer scroll: no se toca. */
   var RADIO_INTERIOR = 0.44;
+  var RADIO_HALO = 0.458;      // donde empieza el halo de la bola: el limite de verdad
   var CICLO_GAP = 4;           // px de aire MÍNIMO entre CICLO y el borde de Actividades
   /* AIRE ENCIMA DEL CANTO DE LAS TARJETAS, en fraccion de D y no en px fijos
      (s185). Lo que hay que despejar no es el trazo del aro: es el HALO DE LA
@@ -379,6 +380,21 @@
       // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
       D = Math.max(piso, D - Math.ceil(over / 0.84));
       applyD(D, dial);
+    }
+
+    /* A UN PASO DE CABER, CABE (regla de Ez: la home del movil sin scroll). Con el bloque terminado,
+       «Siguiente · Ciclo 2 / 4» sube el piso a 318 y a 360x640 sobraban 8 px. Si encoger basta y lo
+       de dentro sigue fuera del halo de la bola (RADIO_HALO), se encoge; si no basta (320x568, scroll
+       aceptado), se deja como estaba. */
+    if (!isDesktop && D <= piso) {
+      var duro = Math.max(dFloor, Math.ceil(piso * RADIO_INTERIOR / RADIO_HALO));
+      var dAntes = D, sobra = medirOver();
+      for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
+        D -= Math.ceil(sobra / 0.84);
+        applyD(D, dial);
+        sobra = medirOver();
+      }
+      if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial); }
     }
 
     /* SOBRANTE VERTICAL (s156). Con el aro ya fijado, lo que queda libre en la

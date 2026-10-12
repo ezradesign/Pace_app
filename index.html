@@ -12219,10 +12219,18 @@ function paceOrigenPendienteLeer() {return paceOrigenPendiente;}
 
 
 
+
+
+
+
+
 function paceEmitirEvento(evento, alRechazar, alConfirmar) {
   if (!evento || typeof window.paceEventsAppend !== 'function') return false;
   try {
-    const p = window.paceEventsAppend(evento);
+    const abierto = typeof window.paceEventsInitialize === 'function' ? window.paceEventsInitialize() : null;
+    const p = abierto && typeof abierto.then === 'function' ?
+    abierto.then(function () {return window.paceEventsAppend(evento);}) :
+    window.paceEventsAppend(evento);
     if (p && typeof p.then === 'function') {
       p.then(function (r) {
         if (!r || r.result !== 'committed') {if (alRechazar) alRechazar();} else
@@ -40214,6 +40222,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
   var RADIO_INTERIOR = 0.44;
+  var RADIO_HALO = 0.458;
   var CICLO_GAP = 4;
 
 
@@ -40475,6 +40484,21 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
       D = Math.max(piso, D - Math.ceil(over / 0.84));
       applyD(D, dial);
+    }
+
+
+
+
+
+    if (!isDesktop && D <= piso) {
+      var duro = Math.max(dFloor, Math.ceil(piso * RADIO_INTERIOR / RADIO_HALO));
+      var dAntes = D,sobra = medirOver();
+      for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
+        D -= Math.ceil(sobra / 0.84);
+        applyD(D, dial);
+        sobra = medirOver();
+      }
+      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial);}
     }
 
 

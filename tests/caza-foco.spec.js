@@ -122,6 +122,38 @@ test('foco-3 · un bloque que terminó hoy con PACE cerrado cuenta al volver, y 
   expect(await page.evaluate(() => getState().cycle)).toBe(1);
 });
 
+/* El bloque de arriba se cuenta al montar la home, antes de que el arranque termine de abrir el
+   registro de eventos, y su `session.completed` se perdía sin aviso: con la suite cargada caía uno
+   de cada pocos pases, y en un móvil lento pasaría igual. Aquí el registro se abre a propósito
+   DESPUÉS de contar (su candado espera a la prueba), así que cae siempre sin el arreglo de
+   `paceEmitirEvento`, que espera a esa apertura. */
+test('foco-3 · aunque el registro de eventos tarde en abrirse, el bloque contado al volver queda apuntado', async ({ page, context }) => {
+  await abrirConReloj(page, context);
+  await cta(page).click();
+  await context.clock.fastForward(5 * 60 * 1000);
+  await page.goto('about:blank');
+  await context.clock.fastForward(30 * 60 * 1000);
+  await context.addInitScript(() => {
+    if (!navigator.locks) return;
+    const pedir = navigator.locks.request.bind(navigator.locks);
+    let soltar;
+    const suelto = new Promise((r) => { soltar = r; });
+    window.__paceSoltarRegistro = soltar;
+    navigator.locks.request = function (nombre) {
+      const args = arguments;
+      return nombre === 'pace.events.writer.v1' ? suelto.then(() => pedir.apply(null, args)) : pedir.apply(null, args);
+    };
+  });
+  await page.goto(RUTA_ARTEFACTO);
+  await numero(page).waitFor({ state: 'visible' });
+  await context.clock.runFor(2000);
+  await expect.poll(() => page.evaluate(() => getState().cycle)).toBe(1);
+  expect(await page.evaluate(() => window.paceEventsCanWrite()), 'el registro ya estaba abierto: la prueba no mide nada').toBe(false);
+
+  await page.evaluate(() => window.__paceSoltarRegistro());
+  await expect.poll(() => focosContados(page)).toBe(1);
+});
+
 test('CONTROL · un bloque que terminó ayer con PACE cerrado no cuenta hoy', async ({ page, context }) => {
   const NOCHE = new Date('2026-10-06T23:00:00+02:00');   // termina a las 23:26, ayer
   await abrirConReloj(page, context, NOCHE);

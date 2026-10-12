@@ -80,11 +80,19 @@ function paceOrigenPendienteLeer() { return paceOrigenPendiente; }
 /* El ÚNICO punto que escribe en el almacén de eventos. Devuelve si se intentó,
    no si se commiteó: el append es asíncrono y el llamante no espera. Si el
    almacén lo rechaza, el `.then` deshace la memoria del runId para que un
-   feedback posterior no referencie una sesión que no existe. */
+   feedback posterior no referencie una sesión que no existe.
+   Espera a que el almacén termine de abrirse: un Foco que acabó con PACE cerrado
+   se cuenta al montar la home, antes de que el arranque lo abra, y el evento se
+   perdía sin aviso (en un móvil lento, o con la suite cargada). No es una cola
+   para luego: es la apertura que ya está en marcha, y si no deja escribir, el
+   evento se pierde como siempre. */
 function paceEmitirEvento(evento, alRechazar, alConfirmar) {
   if (!evento || typeof window.paceEventsAppend !== 'function') return false;
   try {
-    const p = window.paceEventsAppend(evento);
+    const abierto = typeof window.paceEventsInitialize === 'function' ? window.paceEventsInitialize() : null;
+    const p = abierto && typeof abierto.then === 'function'
+      ? abierto.then(function () { return window.paceEventsAppend(evento); })
+      : window.paceEventsAppend(evento);
     if (p && typeof p.then === 'function') {
       p.then(function (r) {
         if (!r || r.result !== 'committed') { if (alRechazar) alRechazar(); }

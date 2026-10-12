@@ -88,7 +88,7 @@ test('tras un bloque largo propone una rutina, con nombre y con el porque', asyn
 });
 
 /* ------------------------------------------------------------------ 2 */
-test('la propuesta NO hace crecer el modal · 360x640', async ({ page, context }) => {
+test('la propuesta NO hace crecer el modal · 360x640', async ({ page, context, browser }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await sembrarEstado(context, { focusMinutes: 45 });
   await hastaLaPausa(page, 45);
@@ -96,8 +96,15 @@ test('la propuesta NO hace crecer el modal · 360x640', async ({ page, context }
   expect(await page.locator('[data-pace-break-prop]').count(), 'GUARD: no hay propuesta que medir').toBe(1);
 
   /* El mismo menu SIN propuesta: todo el plan hecho, agua llena y bloque corto.
-     Es el estado en el que la regla devuelve `null` a proposito. */
-  const page2 = await page.context().newPage();
+     Es el estado en el que la regla devuelve `null` a proposito. En su PROPIO
+     navegador: una segunda pestaña del mismo comparte el estado y el bloque
+     (FocusTimer.pestanas.jsx), así que la primera seguía el bloque y la pausa se
+     abría allí y no en esta (caza del Foco, 12 oct. 2026). */
+  const usa = test.info().project.use;
+  const context2 = await browser.newContext({ baseURL: usa.baseURL, locale: usa.locale, timezoneId: usa.timezoneId,
+    colorScheme: usa.colorScheme, viewport: { width: 360, height: 640 } });
+  await sembrarEstado(context2, {});
+  const page2 = await context2.newPage();
   await page2.clock.install();
   await irAlArtefacto(page2);
   await page2.setViewportSize({ width: 360, height: 640 });
@@ -120,6 +127,7 @@ test('la propuesta NO hace crecer el modal · 360x640', async ({ page, context }
   }
   await page2.waitForTimeout(700);
   const sinProp = await altoDelModal(page2);
+  await context2.close();
 
   expect(sinProp, 'GUARD: no se pudo medir el menu sin propuesta').toBeGreaterThan(300);
   expect(conProp, 'la propuesta hace crecer el modal: en un telefono de 640 no cabe')

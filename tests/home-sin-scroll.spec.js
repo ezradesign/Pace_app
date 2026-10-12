@@ -8,13 +8,15 @@
  * Aquí se recorren los momentos de la home —la tarjeta corta (por libre),
  * la pregunta, el día servido eligiéndolo a las 10:00 (llegar tarde añade una
  * línea a la frase), el día servido al empezar, con la pausa abierta y el día ya
- * contestado de tu semana— en los dos
+ * contestado de tu semana, y el bloque que terminó con PACE cerrado— en los dos
  * idiomas y en las pantallas que importan, de 360×640 (el Android pequeño) a
  * 412×844. A 320×568 se acepta scroll (decisión de Ez): para caber habría que
  * encoger el aro y lo de dentro.
  *
  * Contra v0.145.0 falla en 360×640, 375×667 y 360×718. La segunda medida, con
  * la letra más ancha (MARGEN_LETRA), falla contra v0.146.0 en inglés a 360×640.
+ * El bloque terminado (al volver se cuenta, foco-3) pedía 8 px a 360×640 en
+ * castellano: «Siguiente · Ciclo 2 / 4» agrandaba el aro.
  */
 'use strict';
 
@@ -36,6 +38,7 @@ const MOMENTOS = [
   { nombre: 'el día ya contestado', semilla: { ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'] } }, hora: '08:30' },
   { nombre: 'la pausa abierta', semilla: { ritmo: { dia: Object.assign({}, JORNADA, { pausa: 1 }) }, cycle: 1,
     lastActiveDay: 'Thu Oct 08 2026', _historyMigrated: true }, hora: '09:50' },
+  { nombre: 'el bloque terminado al volver', semilla: { ritmo: { libre: true } }, hora: '10:40', terminoA: '10:35' },
 ];
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
@@ -55,11 +58,23 @@ for (const lang of ['es', 'en']) {
         const context = await browser.newContext({ baseURL, viewport: { width: vp.w, height: vp.h }, isMobile: true, hasTouch: true,
           locale: 'es-ES', timezoneId: 'Europe/Madrid' });
         await sembrar(context, Object.assign({ lang, sidebarCollapsed: true }, m.semilla));
+        /* Un bloque de 25 que terminó con PACE cerrado: al abrir cuenta y abre la pausa (foco-3). */
+        if (m.terminoA) await context.addInitScript((fin) => {
+          if (!localStorage.getItem('pace.timer.v1')) localStorage.setItem('pace.timer.v1', JSON.stringify({ endsAt: fin, mode: 'foco', minutes: 25, id: 'vuelta' }));
+        }, hora(m.terminoA).getTime());
         const page = await context.newPage();
         await page.clock.install({ time: hora(m.hora) });
         await irAlArtefacto(page);
         if (m.comienza) await vis(page, '[data-pace-ritmo-comienza]').click();
         if (m.elige) await vis(page, 'button[data-pace-ritmo-opcion="' + m.elige + '"]').click();
+        if (m.terminoA) {
+          await expect(page.locator('[data-pace-break-shortcut]')).toHaveCount(1);
+          /* En WebKit el Escape puede llegar antes de que la pausa lo escuche: se repite hasta que cierra. */
+          await expect(async () => {
+            await page.keyboard.press('Escape');
+            await expect(page.locator('[data-pace-break-shortcut]')).toHaveCount(0, { timeout: 1000 });
+          }).toPass();
+        }
         await expect(vis(page, '[data-pace-ritmo-estado], [data-pace-ritmo-tarjeta-movil]').first()).toBeVisible();
         await page.mouse.move(1, 1);
         await asentarGeometria(page);
