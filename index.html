@@ -6171,7 +6171,9 @@ const defaultState = {
 
 
 
-function loadState() {
+
+
+function loadState(estricto) {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   let raw = null;
   try {
@@ -6291,6 +6293,7 @@ function loadState() {
     }
     return merged;
   } catch (e) {
+    if (estricto) throw e;
 
 
     if (typeof paceGuardarRescate === 'function') paceGuardarRescate(raw, e);
@@ -6358,6 +6361,16 @@ function subscribe(listener) {
 
 
 
+function paceAdoptarEstado(nuevo) {
+  const prev = _state;
+  _state = nuevo;
+  _listeners.forEach((l) => l());
+  if (prev.palette !== _state.palette || prev.font !== _state.font) applyTheme(_state);
+  if (prev.lang !== _state.lang) applyLang(_state);
+}
+
+
+
 
 
 
@@ -6381,7 +6394,7 @@ function usePace() {
 function ensureDayFresh(desdeDisco) {
   let base = _state;
   if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
-    try {if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState();} catch (e) {}
+    try {if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(true);} catch (e) {}
   }
   const next = rolloverIfNeeded(base);
   if (next !== _state) {
@@ -6406,9 +6419,9 @@ applyLang(_state);
 
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, FOCO_MINIMO, defaultState,
-  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState
+  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState, loadState, paceAdoptarEstado
 });
-;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, usePace, ensureDayFresh });
+;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, paceAdoptarEstado, usePace, ensureDayFresh });
 })();
 </script>
   <!-- state-core.toast (s198): el buzon de avisos, cortado de state-core.jsx por
@@ -6564,6 +6577,48 @@ setInterval(paceDiaMirar, PACE_DIA_CADA_MS);
 
 Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
 ;Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
+})();
+</script>
+  <!-- state-core.pestanas: lo que guarda otra pestaña pasa a esta sin reescribirlo, para que
+       la que lleva rato abierta no pise lo hecho en la otra. DESPUES de state-core. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-core.pestanas.js — varias pestañas, un solo estado.
+
+   Cada pestaña (o la app instalada junto a una pestaña del navegador) lleva su copia de
+   `pace.state.v2` en memoria y, en cada gesto, la escribe ENTERA. Sin esto, la pestaña que se abrió
+   antes no sabía nada de lo que hiciste en la otra y lo borraba al tocar cualquier cosa: tres vasos
+   en una y uno en la otra dejaban un vaso; un bloque de Foco desaparecía; «Borrar todo» en una y un
+   vaso en la otra devolvían todo lo borrado; una copia importada se perdía igual.
+
+   El navegador avisa a las DEMÁS pestañas con `storage` cada vez que una guarda, así que aquí se
+   adopta lo guardado (`paceAdoptarEstado`) sin volver a escribirlo. Se lee con `loadState(true)`:
+   el mismo saneado y las mismas migraciones que al arrancar, pero si lo guardado no se puede leer
+   lanza y esta pestaña se queda con su copia, nunca con el estado de fábrica (un estado de fábrica
+   en memoria es un borrado diferido: la siguiente escritura lo guardaría encima). Si la clave
+   desaparece (Borrar todo), `loadState` da el de una instalación nueva, que es lo que hay en disco.
+
+   La pestaña oculta también adopta: adoptar no escribe, así que no pisa a nadie, y cuando vuelva al
+   frente ya tendrá lo último. Carga después de state-core.jsx, que define las dos funciones. */
+
+function paceOtraPestanaGuardo(e) {
+  try {
+    if (e.storageArea && e.storageArea !== localStorage) return;
+    if (e.key !== LS_KEY && e.key !== null) return;
+  } catch (err) {return;}
+  var nuevo;
+  try {nuevo = loadState(true);} catch (err) {return;}
+  paceAdoptarEstado(nuevo);
+}
+
+window.addEventListener('storage', paceOtraPestanaGuardo);
+
+Object.assign(window, { paceOtraPestanaGuardo });
+;Object.assign(window, { paceOtraPestanaGuardo });
 })();
 </script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +

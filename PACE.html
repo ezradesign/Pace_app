@@ -196,6 +196,9 @@
        frente y cada minuto a la vista). DESPUES de state-core, que define
        `ensureDayFresh`; arma sus escuchas al evaluarse. -->
   <script type="text/babel" src="app/state-core.dia.js"></script>
+  <!-- state-core.pestanas: lo que guarda otra pestaña pasa a esta sin reescribirlo, para que
+       la que lleva rato abierta no pise lo hecho en la otra. DESPUES de state-core. -->
+  <script type="text/babel" src="app/state-core.pestanas.js"></script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
        los detectores que faltaban. ANTES de state-timer y state-hydrate, que
        usan bumpCount/getCount para los logros de volumen. -->
