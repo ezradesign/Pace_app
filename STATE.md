@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.154.0 · 9 de octubre de 2026.
+**Versión:** v0.155.0 · 10 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -59,6 +59,10 @@ música se abre al inhalar y se cierra al exhalar (en Nadi Shodhana, además, se
 el que respiras); con ciclos de menos de 5 s se queda quieta, y Coherente 432 sigue con su drone. Las
 recetas son `PACE_MUSICA_TECNICA` (`app/ui/Sound.musica.parts.jsx`), copiadas de `tecnicas.js` con el
 volumen que mide `construir.js`.
+
+Desde v0.155.0 la pausa por libre no repite lo que propone (las otras tres puertas van en una
+línea), el cierre de las sesiones va en la serif itálica con píldoras y la línea del Pomodoro se funde
+con el horizonte como el aro gris (decisiones de Ez del 9 y el 10 oct., con fotos de la app real).
 
 La pausa al terminar un bloque sigue la opción A de Ez (v0.152.0, `BreakMenu.css.jsx`): el plato como
 la tarjeta de la biblioteca, píldoras en serif itálica del color del módulo y sin atajos a la vista

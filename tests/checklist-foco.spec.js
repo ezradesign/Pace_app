@@ -66,13 +66,19 @@ test('el Pomodoro cuenta, se pausa, se reanuda y al terminar abre el BreakMenu',
      segundo plano, donde el navegador throttlea el intervalo a ~1/min. */
   await page.clock.fastForward(25 * 60 * 1000);
 
-  /* Y ABRE EL BREAKMENU, con sus cuatro salidas y su escape. */
+  /* Y ABRE EL BREAKMENU, con sus cuatro salidas y su escape. Desde v0.155.0 la del
+     módulo propuesto va ARRIBA, en la propuesta, y no se repite abajo (Ez: «te
+     recomienda Hidrátate y abajo también sale»): cada actividad está UNA vez, como
+     puerta o como propuesta. Cuál se propone depende de la hora y del plan del día. */
   const menu = page.locator('[data-pace-modal-backdrop]').last();
   await expect(menu.getByText('Pausa bien hecha', { exact: true })).toBeVisible();
-  await expect(menu.getByRole('button', { name: /Hidrátate/ })).toBeVisible();
-  await expect(menu.getByRole('button', { name: /Respira/ })).toBeVisible();
-  await expect(menu.getByRole('button', { name: /Estira/ })).toBeVisible();
-  await expect(menu.getByRole('button', { name: /Muévete/ })).toBeVisible();
+  const prop = menu.locator('[data-pace-break-prop]');
+  const textoProp = (await prop.count()) ? ((await prop.textContent()) || '') : '';
+  for (const nombre of ['Hidrátate', 'Respira', 'Estira', 'Muévete']) {
+    const puertas = await menu.getByRole('button', { name: new RegExp(nombre) }).count();
+    const propuesta = textoProp.indexOf(nombre) !== -1 ? 1 : 0;
+    expect(puertas + propuesta, '«' + nombre + '» no está, o está dos veces (puertas ' + puertas + ', propuesta ' + propuesta + ')').toBe(1);
+  }
   await expect(menu.getByRole('button', { name: 'Saltar esta pausa', exact: true })).toBeVisible();
 
   /* El ciclo queda cerrado: el CTA de la home ya ofrece el siguiente. */
