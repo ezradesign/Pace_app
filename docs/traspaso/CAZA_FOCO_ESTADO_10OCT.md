@@ -132,3 +132,15 @@ van juntos.
 - En Android el origen (`https://localhost`) y la firma del APK de prueba no cambian entre versiones,
   así que un APK encima del anterior conserva los datos. Esto se ha leído en la configuración, no se
   ha probado en un móvil.
+
+## Lo que queda para un móvil de verdad
+
+Las pruebas simulan Android; esto solo se ve en un teléfono, y conviene mirarlo en la prueba interna:
+
+- Empezar un Foco, irse a otra app hasta que Android cierre PACE y volver: si el bloque seguía en
+  marcha, sigue; si estaba en pausa, vuelve en pausa (foco-2); si ya terminó, cuenta y abre la
+  pausa (foco-3); y si se pausa al volver, no llega el aviso de «Foco completado» (foco-4).
+- Instalar un APK encima del anterior y comprobar que los datos siguen ahí.
+
+Se dejó a propósito: en Safari anterior a 15.4, que no tiene Web Locks, un bloque abierto en dos
+pestañas puede contar dos veces, como antes de este arreglo.
