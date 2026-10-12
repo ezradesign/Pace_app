@@ -4,6 +4,32 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.156.0.
 
+## Relevo del 12 oct. 2026 (la cuenta se queda sin uso; Ez sigue desde otra)
+
+`main` va por **v0.156.0**, con la suite entera en verde en el PC de Ez (555 de 555); su CI estaba
+corriendo al cerrar (mírala con `gh run list --branch main`; v0.155.0 salió entera en verde). El CI tiene
+tres jobs: verify, e2e (chromium) y e2e-safari (webkit, aparte porque sus librerías salen de `apt`).
+La coordinadora es la única que sube a `main` (`docs/WORKFLOW.md` §9) y usa `PACE_E2E_PORT=8775`.
+
+- **`claude/premium-codigos-tester` (PACE completo):** ya juntada con v0.156.0, choques resueltos y
+  `verify` en verde (5a9a905). Falta: la suite entera; fotos para Ez del candado, la invitación y
+  «Tengo un código» en la app de hoy; su sí; subirla como v0.157.0. Ez ya dijo «sí, y enséñamelo».
+  Los 15 enlaces de tester están en `~/PACE-llave-licencias/codigos-tester.csv` y solo funcionan
+  cuando esto esté publicado.
+- **`claude/caza-foco-estado-d6bd17` (caza en Foco y lo guardado):** once hallazgos reproducidos en
+  `docs/traspaso/CAZA_FOCO_ESTADO_10OCT.md`; el arreglo de las dos pestañas (pierde datos) estaba en
+  marcha. Su sesión también se para: retomar desde el TRASPASO de su último commit. Usa los puertos
+  8792 y 8793; dejó un servidor colgado en el 8765.
+- **`claude/calendario-sincronizacion`:** espera los dos ids de Ez; va muy por detrás de `main`.
+- **En pausa por Ez:** el miércoles de «A tu ritmo» (tres pausas largas frente a una; hay que
+  explicárselo mejor, con fotos) y la parada de cierre, que no se ve al terminar el último bloque.
+- **Espera a Ez:** los ids del calendario, los textos de los logros, crear la app en Play Console y
+  subir a la prueba interna, volver a exportar el logo («FVFN») y pasar la lista de Safari a su
+  tester con iPhone.
+- **Limpieza:** las carpetas de `.claude/worktrees/` de ramas ya en `main` (safari, una-linea,
+  respira-es, upbeat-yonath-9cf99e, respira-bugs-graves-31faf7, agua-medianoche-fd7d5d,
+  nice-benz-7fa598, caza-propuestas) se pueden borrar; no guardan nada pendiente.
+
 ## 9 oct. 2026: lo nuevo desde el relevo
 
 - La coordinadora sigue en la cuenta nueva, con cuatro sesiones en paralelo (caza, pausa, barra
