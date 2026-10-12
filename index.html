@@ -14070,15 +14070,23 @@ function SessionDone(_ref4)
 
 
 
+
+
+
   const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
     borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
-  const btn = buttonVariant ?
-  React.createElement(Button, { variant: buttonVariant, onClick: () => onExit('done'), style: ctaCierre }, label) :
-  React.createElement(Button, { onClick: () => onExit('done'), style: { ...ctaCierre, ...buttonStyle } }, label);
+  const btn = React.createElement(Button, { variant: "secondary", onClick: () => onExit('done'), style: ctaCierre }, label);
+  const glifo = sessionDoneGlifo(routine);
 
   return (
     React.createElement(SessionShell, { routine: routine, onExit: onExit, atmosphere: atmosphere, footer: btn },
     React.createElement("div", _extends({ "data-pace-session-done": true }, rootData || {}, { style: { textAlign: 'center', maxWidth: 520 } }),
+    glifo ?
+    React.createElement("div", { "data-pace-session-done-hero": true, "data-pace-session-done-glifo": true, style: {
+        width: 72, height: 72, margin: '0 auto 22px', color: accent,
+        display: 'grid', placeItems: 'center', animation: 'pace-fade-in 600ms ease'
+      } }, glifo) :
+
     React.createElement("div", { "data-pace-session-done-hero": true, style: {
         width: 120, height: 120, margin: '0 auto 24px',
         borderRadius: '50%',
@@ -14093,6 +14101,7 @@ function SessionDone(_ref4)
     React.createElement("path", { d: "M20 6L9 17l-5-5" })
     )
     ),
+
     React.createElement("div", { style: {
         fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginBottom: 12
@@ -14115,6 +14124,19 @@ function SessionDone(_ref4)
     )
     ));
 
+}
+
+
+
+
+
+function sessionDoneGlifo(routine) {
+  try {
+    const ids = routine && Array.isArray(routine.steps) && typeof window.libraryGlifos === 'function' ? window.libraryGlifos(routine) : [];
+    if (ids.length && typeof ExerciseGlyph === 'function') return React.createElement(ExerciseGlyph, { id: ids[0], size: 72 });
+    if (routine && String(routine.id || '').indexOf('breathe.') === 0 && typeof ABBreathe === 'function') return React.createElement(ABBreathe, null);
+  } catch (e) {}
+  return null;
 }
 
 
@@ -14176,7 +14198,7 @@ Object.assign(window, {
   paceGrainUrl, paceGlowRamp, PaceDither,
   sessionKeyOnControl, sessionDoneKeyBlocked
 });
-;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, sessionDoneGlifo, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
 })();
 </script>
   <!-- Pantalla de preparación (s174), extraída de SessionShell.jsx al pasar
@@ -14539,6 +14561,22 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
       [data-pace-move-timer] {
         font-size: 60px !important;
       }
+    }
+    /* El dibujo del cierre (sessionDoneGlifo) llena su caja; la caja encoge con la
+       altura igual que el círculo de antes, pero sin su borde ni su fondo. */
+    [data-pace-session-done-hero][data-pace-session-done-glifo] {
+      width: 72px !important; height: 72px !important; background: none !important; border: 0 !important;
+    }
+    [data-pace-session-done-hero][data-pace-session-done-glifo] > *,
+    [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
+      width: 100% !important; height: 100% !important;
+    }
+    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button {
+      background: var(--paper-2) !important; color: var(--ink) !important; border: 1px solid var(--line-2) !important;
+    }
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:hover {
+      border-color: var(--ink-3) !important;
     }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
        (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */

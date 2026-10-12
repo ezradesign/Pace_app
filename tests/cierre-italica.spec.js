@@ -6,7 +6,7 @@
  * Eligió la A viendo fotos de la app real (docs/traspaso/archivos/cierre-y-linea-10oct/):
  * píldoras en la serif itálica, como las de la pausa, y «Ahora no» como enlace.
  *
- * Contra v0.154.0 cae: ninguno de los cuatro va en itálica.
+ * Contra v0.154.0 cae: ninguno de los cuatro va en itálica. Contra v0.155.0, por la «V» y el botón de color.
  */
 'use strict';
 
@@ -59,6 +59,17 @@ for (const vp of [{ w: 360, h: 640 }, { w: 1280, h: 800 }]) {
     const volver = await letra(sesion.locator('[data-pace-session-footer]').getByRole('button', { name: 'Volver al inicio', exact: true }));
     expect(volver.estilo, '«Volver al inicio» no va en itálica').toBe('italic');
     expect(volver.radio, '«Volver al inicio» no es una píldora').toBeGreaterThanOrEqual(volver.alto / 2 - 1);
+    /* Desde el 12 oct. (Ez: «la V en el círculo no queda nada bonita» y el botón «no es nada
+       estético»): arriba va el dibujo de la rutina, sin la marca, y la salida es tonal. */
+    const heroe = sesion.locator('[data-pace-session-done-hero]');
+    expect(await heroe.locator('path[d="M20 6L9 17l-5-5"]').count(), 'arriba sigue la «V» del círculo').toBe(0);
+    expect(await heroe.locator('svg, span').count(), 'arriba no está el dibujo de la rutina').toBeGreaterThan(0);
+    const fondo = await sesion.locator('[data-pace-session-footer] button').first().evaluate((el) => {
+      const p = document.createElement('div'); p.style.background = 'var(--paper-2)'; document.body.appendChild(p);
+      const papel = getComputedStyle(p).backgroundColor; p.remove();
+      return { boton: getComputedStyle(el).backgroundColor, papel };
+    });
+    expect(fondo.boton, '«Volver al inicio» no es tonal').toBe(fondo.papel);
     const salir = await letra(sesion.locator('[data-pace-session-header] button').first());
     expect(salir.estilo, '«Salir» no va en itálica en el cierre').toBe('italic');
 
