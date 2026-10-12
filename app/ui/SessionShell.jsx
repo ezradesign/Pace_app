@@ -336,15 +336,23 @@ function SessionDone({
   /* El cierre habla con la letra de la app (la A de Ez, 10 oct.): la salida es una píldora
      en la serif itálica, como «Empezar foco» y las de la pausa; el color sigue siendo el
      del módulo (variante o buttonStyle). */
+  /* Y desde el 12 oct. es TONAL, como «Pausar» en el aro (Ez: «el botón no es nada
+     estético»): el papel claro y el filo fino los pone SessionShell.responsive.js, que
+     también le da su hover; buttonVariant y buttonStyle ya no colorean la salida. */
   const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
     borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
-  const btn = buttonVariant
-    ? <Button variant={buttonVariant} onClick={() => onExit('done')} style={ctaCierre}>{label}</Button>
-    : <Button onClick={() => onExit('done')} style={{ ...ctaCierre, ...buttonStyle }}>{label}</Button>;
+  const btn = <Button variant="secondary" onClick={() => onExit('done')} style={ctaCierre}>{label}</Button>;
+  const glifo = sessionDoneGlifo(routine);
 
   return (
     <SessionShell routine={routine} onExit={onExit} atmosphere={atmosphere} footer={btn}>
       <div data-pace-session-done {...(rootData || {})} style={{ textAlign: 'center', maxWidth: 520 }}>
+        {glifo ? (
+          <div data-pace-session-done-hero data-pace-session-done-glifo style={{
+            width: 72, height: 72, margin: '0 auto 22px', color: accent,
+            display: 'grid', placeItems: 'center', animation: 'pace-fade-in 600ms ease',
+          }}>{glifo}</div>
+        ) : (
         <div data-pace-session-done-hero style={{
           width: 120, height: 120, margin: '0 auto 24px',
           borderRadius: '50%',
@@ -359,6 +367,7 @@ function SessionDone({
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </div>
+        )}
         <div style={{
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 12,
@@ -381,6 +390,19 @@ function SessionDone({
       </div>
     </SessionShell>
   );
+}
+
+/* EL DIBUJO DEL CIERRE (Ez, 12 oct.: «la V en el círculo no queda nada bonita»): el de
+   la rutina, como en su tarjeta de la biblioteca y en la pausa. Mueve y Estira llevan el
+   del ejercicio principal (libraryGlifos); Respira, el de su módulo. Sin dibujo (el Foco
+   de un Camino), el círculo con la marca de siempre. */
+function sessionDoneGlifo(routine) {
+  try {
+    const ids = (routine && Array.isArray(routine.steps) && typeof window.libraryGlifos === 'function') ? window.libraryGlifos(routine) : [];
+    if (ids.length && typeof ExerciseGlyph === 'function') return <ExerciseGlyph id={ids[0]} size={72} />;
+    if (routine && String(routine.id || '').indexOf('breathe.') === 0 && typeof ABBreathe === 'function') return <ABBreathe />;
+  } catch (e) { /* sin dibujo, el círculo de siempre */ }
+  return null;
 }
 
 /* ============================================================

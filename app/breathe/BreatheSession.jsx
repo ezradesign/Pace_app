@@ -116,15 +116,15 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
     if (!window.ambientDrone) return;
     const drone = window.ambientDrone;
 
-    if (stage === 'done') { drone.stop(800); return; }
-    if (stage === 'prep') return; // no arranca en preparación
+    /* Entra en la cuenta atrás y sale en 6 s, como la música (useMusicaFondo). */
+    if (stage === 'done') { drone.stop(PACE_RESPIRA_SALIDA_MS); return; }
 
     if (stage === 'hold') {
       // Drone sigue sonando durante hold (retención) — sin tocar
       return;
     }
 
-    // stage === 'active'
+    // stage === 'prep' o 'active'
     if (paused) {
       drone.pause();
     } else {
