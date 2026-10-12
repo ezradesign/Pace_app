@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de octubre de 2026, v0.154.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de octubre de 2026, v0.155.0.
 
 ## 9 oct. 2026: lo nuevo desde el relevo
 
@@ -11,6 +11,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de o
   límite de uso se acabó a la vez en todas, se reanudan de dos en dos (decisión de Ez).
 - **La caza de bugs está en `main` como v0.151.0**, con el sí de Ez a todo; solo queda grabar la
   voz de Respira en inglés.
+- **10 oct., v0.155.0:** la pausa por libre sin la puerta repetida (B), el cierre de las sesiones en itálica (A) y la línea del Pomodoro fundida con el horizonte (B), las tres elegidas por Ez con fotos; y la home ya no se queda corrida de lado al cerrar una pausa. En marcha: la caza en Foco y en lo guardado, y el arreglo de los sellos cortados dentro del aro.
 - **La música de Respira está en `main` como v0.154.0**: tres drones en Sol que respiran y una receta «marcada» por técnica, con el sí de Ez («suenan bien, súbelas»).
 - **La barra lateral (el cuaderno) está en `main` como v0.153.0**, con el sí de Ez a la app montada.
 - **La pausa más elegante está en `main` como v0.152.0**: opción A de Ez, «Ir a comer» suma el vaso

@@ -234,15 +234,15 @@
   const LUZ_TECHO = 0.52;   /* la luz muere a esta distancia del centro, hacia arriba */
   const LUZ_PLENO = 0.24;   /* y desde aquí ya está a pleno */
   const LUZ_COLA  = 0.22;   /* cuánto sigue la luz por debajo del horizonte */
-  /* DOS NIEBLAS, Y LA DIFERENCIA ENTRE ELLAS ES UN ARREGLO. Hubo una sola,
-     larga, sobre la capa del anillo entero — y como el arco NACE en el
-     horizonte, justo donde esa máscara vale cero, tardaba **~2,2 min** en llegar
-     a plena opacidad en un bloque de 25 (medido a 1280×800): los primeros
-     minutos no tenían señal. El reparto sale de una frase que ya estaba en
-     `tokens.css`, **arco = información, halo = ambiente**: la escala puede
-     disolverse todo lo que haga falta; el recorrido no puede desaparecer. */
+  /* DOS NIEBLAS, HOY DEL MISMO LARGO. De s184 a v0.154.0 el arco llevaba una
+     corta (0,035): nace en el horizonte y con la larga tardaba ~2,2 min en
+     verse. Pero se leía cortado al llegar a la tarjeta («hace como un corte
+     brusco», Ez, 10 oct.), y desde v0.148.3 la señal es la BOLA, que va fuera
+     de esta niebla. Ez eligió que el recorrido se funda como la escala (la B,
+     con fotos al minuto 1 y al 5). Siguen siendo dos constantes porque son dos
+     decisiones: la de la pista no tiene por qué seguir a la del arco. */
   const NIEBLA_PISTA = 0.14;   /* la escala se disuelve */
-  const NIEBLA_ARCO  = 0.035;  /* el recorrido solo se remata */
+  const NIEBLA_ARCO  = 0.14;   /* y el recorrido entra en el horizonte con ella */
   /* CON CURVA, NO LINEAL: la recta cae uniforme y pierde el tramo útil antes.
      Así se mantiene el 94 % de presencia en tres cuartas partes del recorrido.
      Pares [fracción del recorrido desde el horizonte hacia arriba, alfa]. */
