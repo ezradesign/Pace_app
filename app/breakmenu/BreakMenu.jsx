@@ -123,10 +123,9 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
 
   /* CON PROPUESTA NO HAY «PARA TI»: la razon se ha mudado arriba, con nombre y
      duracion, y dos recomendaciones a la vez en el mismo modal se contradicen.
-     Ese hueco reservado (s139) es ademas parte del sitio que la propuesta
-     necesita para que el modal NO crezca -- medido: 616 px fijos, y a 360x640
-     solo sobran 24. */
-  const topScore = prop ? 0 : opts[0].score;
+     Con propuesta tampoco hay tarjetas: las otras tres van en una línea (abajo),
+     así que «Para ti» solo vive en las cuatro tarjetas del menú sin propuesta. */
+  const topScore = opts[0].score;
 
   /* s195: CON MENÚ, OTRO MODAL. Si la propuesta es el plato de «A tu ritmo» y hay
      una pausa abierta, la pregunta es una sola (¿haces la pausa, o sigues?) y la
@@ -156,7 +155,22 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
           </BreakPlato>
         </div>
       )}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: prop ? 10 : 12, margin: prop ? '0 0 4px' : '20px 0' }}>
+      {/* Con propuesta, las otras tres en una sola línea, con su dibujo y sin caja (la B de
+          Ez, 9 oct., docs/traspaso/archivos/pausa-repetida-9oct/): la puerta del módulo
+          propuesto ya está arriba, y repetirla abajo decía dos veces lo mismo («te
+          recomienda Hidrátate y abajo también sale Hidrátate»). Sin propuesta, las cuatro
+          tarjetas de siempre. */}
+      {prop && (
+        <div className="pace-break-otras" data-pace-break-otras>
+          {opts.filter((o) => o.key !== prop.modulo).map((o) => (
+            <button key={o.key} type="button" className="pace-break-otra" style={{ '--c': o.color }} onClick={() => handleChoose(o.key)}>
+              <span className="pace-break-otra-glifo">{o.icon}</span>
+              <span className="pace-break-otra-nombre">{o.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      {!prop && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map((o, i) => {
           const done = o.score === 0;
           const recommended = i === 0 && topScore > 0;
@@ -165,7 +179,7 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
               onClick={() => handleChoose(o.key)}
               style={{
                 position: 'relative',
-                padding: prop ? '13px 14px' : '24px 18px',
+                padding: '24px 18px',
                 background: o.bg,
                 border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
                 borderRadius: 'var(--r-md)',
@@ -197,29 +211,20 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
                   contenido. `visibility:hidden` lo saca además del árbol de
                   accesibilidad, así que «Para ti» no se anuncia en las tres
                   tarjetas que no lo son. */}
-              {!prop && (
-                <div style={{ visibility: recommended ? 'visible' : 'hidden' }}>
-                  <Tag color="var(--focus)">{t('break.recommended')}</Tag>
-                </div>
-              )}
+              <div style={{ visibility: recommended ? 'visible' : 'hidden' }}>
+                <Tag color="var(--focus)">{t('break.recommended')}</Tag>
+              </div>
               <div style={{ color: o.color, fontSize: 28, lineHeight: 1 }}>{o.icon}</div>
               <div>
                 <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
-                {/* Con propuesta arriba la descripcion sobra: ya hay una rutina
-                    con nombre y duracion, y estas cuatro vuelven a ser lo que
-                    siempre fueron -- cuatro puertas. LOS GLIFOS SE QUEDAN: son
-                    los mismos de la ActivityBar y son lo que hace la tarjeta
-                    reconocible de un vistazo (peticion del usuario, s187). */}
-                {!prop && (
-                  <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-                    {done ? t('break.done') : o.desc}
-                  </div>
-                )}
+                <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
+                  {done ? t('break.done') : o.desc}
+                </div>
               </div>
             </button>
           );
         })}
-      </div>
+      </div>}
 
       {/* El pie, sin línea de atajos (Ez, 8 oct.); su `data-*` lo usan las pruebas. */}
       <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: prop ? 8 : 4 }}>
