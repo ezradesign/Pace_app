@@ -432,6 +432,7 @@ function PaceApp() {
           registro en PACE.html anuncia un worker en waiting; en file:// no
           hay SW y retorna null siempre. */}
       <PaceRed modo="silencio"><UpdatePrompt /></PaceRed>
+      <PaceRed modo="silencio"><AvisoNoGuarda /></PaceRed>
     </div>
   );
 }

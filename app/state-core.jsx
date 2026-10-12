@@ -384,8 +384,11 @@ function loadState(estricto) {
 let _state = loadState();
 const _listeners = new Set();
 
+/* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda). */
 function persistState() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {}
+  try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {
+    try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
+  }
 }
 
 /* Borra el almacen legacy. Vive AQUI porque `pace.state.v2` es de este modulo:

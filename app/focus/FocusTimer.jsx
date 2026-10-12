@@ -2,7 +2,7 @@
    Temporizador funcional real. 4 estilos visuales de tweaks.
 */
 
-const { useEffect: useEffectFT, useRef: useRefFT } = React;
+const { useEffect: useEffectFT, useRef: useRefFT, useState: useStateFT } = React;
 
 /* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y `curvaCaida` salieron al
    trocear este archivo; su porque medido (meseta 45-55 %, enfriamiento sin repunte, s159) va con ellas. */
@@ -20,7 +20,7 @@ function FocusTimer({ onFinish }) {
                      : state.focusMode === 'pausa' ? 5
                      : 15) * 60;
 
-  const { remaining, running, status, endsAt, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
+  const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
        bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado).
        Pausa(5)/larga(15) tickan y suenan pero NO acreditan (decision historica). */
@@ -64,9 +64,10 @@ function FocusTimer({ onFinish }) {
 
   /* Persistencia del Pomodoro en recarga (s102, resuelve el fork s96).
      Clave pace.timer.v1 FUERA de pace.state.v2 (el timer sigue siendo
-     local, decisión s96). Al montar: reanuda solo si el foco guardado
-     sigue VIVO y modo/minutos coinciden; expirado estando fuera se
-     descarta sin acreditar (helpers en FocusTimer.support.jsx). */
+     local, decisión s96). Al montar, si modo/minutos coinciden: el bloque en
+     marcha sigue, el que está en pausa vuelve en pausa y el que terminó hoy
+     con la página cerrada se cuenta (Ez, 12 oct. 2026; helpers y porqué en
+     FocusTimer.support.jsx). */
   /* s172 · reloj de PARED del bloque, solo para el evento (§6.4 lo quiere CON
      las pausas dentro y `useCountdown` no guarda el inicio). Se fija al empezar
      un bloque, NUNCA al reanudar: eso borraria la pausa que esto va a contar. */
@@ -77,21 +78,28 @@ function FocusTimer({ onFinish }) {
   useEffectFT(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
-    const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
+    const g = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
     /* Reanudado tras recargar: el inicio real se fue con la pestaña y se DERIVA
        del final guardado — estimacion que ignora las pausas previas, por eso no
-       toca `activeSeconds`, que sigue siendo exacto. */
-    if (endsAtSaved) {
-      inicioBloqueRef.current = endsAtSaved - durationSec * 1000;
-      bloqueRef.current = paceFocoIdGuardado(endsAtSaved);
-      restore(endsAtSaved);
+       toca `activeSeconds`, que sigue siendo exacto. Si ya venció, `restore` lo
+       completa y lo cuenta en el acto. */
+    if (g && g.endsAt) {
+      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      bloqueRef.current = g.id || ('e' + g.endsAt);
+      restore(g.endsAt);
+    } else if (g && g.pausaMs) {
+      inicioBloqueRef.current = g.inicio;
+      bloqueRef.current = g.id || paceFocoNuevoId();
+      congelar(g.pausaMs);
     }
   }, []);
 
-  // Escribe mientras hay un foco running; pausa/reset/fin/otros modos limpian.
+  // Escribe mientras hay un foco en marcha o en pausa; reiniciar, el fin y los otros modos limpian.
   useEffectFT(() => {
-    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes, bloqueRef.current);
-  }, [running, endsAt, state.focusMode, state.focusMinutes]);
+    const foco = state.focusMode === 'foco';
+    persistFocusTimer(running && foco, endsAt, state.focusMinutes, bloqueRef.current,
+      foco && status === 'paused' ? restanteMs : null, inicioBloqueRef.current);
+  }, [running, endsAt, status, restanteMs, state.focusMode, state.focusMinutes]);
 
   /* Lo que se hace aquí con el bloque se repite en las otras pestañas, y al revés. Empezar y
      continuar se avisan cuando el motor ya tiene su final (`avisarCorreRef`). */
@@ -162,6 +170,13 @@ function FocusTimer({ onFinish }) {
                   : t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
+  /* Otros minutos con un bloque empezado lo tirarían sin contar: se pregunta antes, como la barra
+     de arriba al cambiar de modo (Ez, 12 oct. 2026, foco-1). Guarda los minutos que se pidieron. */
+  const [minPendiente, setMinPendiente] = useStateFT(null);
+  const elegirMinutos = (v) => {
+    if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) { setMinPendiente(v); return; }
+    set({ focusMinutes: v });
+  };
   const isCompleted = status === 'completed';
 
   /* Subtítulo del aro/barra/analógico (s124):
@@ -330,7 +345,7 @@ function FocusTimer({ onFinish }) {
          las pills de MinutesPicker); el gap:14 del root aplica igual a ambos,
          asi el aro queda en la MISMA posicion en los tres modos. */}
       {state.focusMode === 'foco' ? (
-        <MinutesPicker value={state.focusMinutes} onChange={(v) => set({ focusMinutes: v })} />
+        <MinutesPicker value={state.focusMinutes} onChange={elegirMinutos} />
       ) : (
         <div aria-hidden="true" style={{ height: 26 }} />
       )}
@@ -364,6 +379,15 @@ function FocusTimer({ onFinish }) {
           paused={status === 'paused'}
         />
       </div>
+
+      <Modal open={minPendiente != null} onClose={() => setMinPendiente(null)} maxWidth={440}
+             title={minPendiente != null ? tn('focus.cambioMin.title', { n: minPendiente }) : undefined}>
+        <p data-pace-cambio-minutos style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{t('topbar.cambio.body')}</p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+          <Button variant="secondary" onClick={() => { set({ focusMinutes: minPendiente }); setMinPendiente(null); }}>{t('topbar.cambio.cambiar')}</Button>
+          <Button variant="primary" onClick={() => setMinPendiente(null)}>{t('topbar.cambio.seguir')}</Button>
+        </div>
+      </Modal>
 
       {/* Controles + ciclo fuera del aro — solo para estilos no-aro */}
       {!isAro && (

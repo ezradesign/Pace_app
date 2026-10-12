@@ -1867,6 +1867,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'update.cta': 'Actualizar',
   'update.applying': 'Actualizando…',
   'update.later': 'Luego',
+  'guardar.aviso': 'Este navegador no deja guardar: lo que hagas se perderá al cerrar PACE.',
+  'guardar.entendido': 'Entendido',
 
 
   'premium.seal': 'Premium',
@@ -2030,6 +2032,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'update.cta': 'Update',
   'update.applying': 'Updating…',
   'update.later': 'Later',
+  'guardar.aviso': 'This browser is not letting PACE save: what you do will be lost when you close it.',
+  'guardar.entendido': 'Got it',
 
 
   'premium.seal': 'Premium',
@@ -2099,6 +2103,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.other': 'Otro',
   'focus.restart': 'Reiniciar',
   'focus.restartBlock': 'Reiniciar bloque',
+  'focus.cambioMin.title': '¿Cambiar a un bloque de {n} min?',
   'focus.start': 'Empezar foco',
 
 
@@ -2280,6 +2285,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.other': 'Other',
   'focus.restart': 'Restart',
   'focus.restartBlock': 'Restart focus',
+  'focus.cambioMin.title': 'Switch to a {n}-minute block?',
   'focus.start': 'Start focus',
   'focus.startPause': 'Start break',
   'focus.pause': 'Pause',
@@ -6312,8 +6318,11 @@ function loadState(estricto) {
 let _state = loadState();
 const _listeners = new Set();
 
+
 function persistState() {
-  try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {}
+  try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {
+    try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
+  }
 }
 
 
@@ -9931,7 +9940,7 @@ function ritmoSiguiente(s) {
 function ritmoFocoCorriendo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
-    return !!(v && v.endsAt && v.endsAt > Date.now());
+    return !!(v && (v.endsAt && v.endsAt > Date.now() || v.pausaMs > 0 && v.dia === new Date().toDateString()));
   } catch (e) {return false;}
 }
 
@@ -16552,8 +16561,37 @@ const updatePromptStyles = {
   }
 };
 
-Object.assign(window, { UpdatePrompt });
-;Object.assign(window, { UpdatePrompt });
+
+
+
+
+
+
+function AvisoNoGuarda() {
+  const { t } = useT();
+  const [visto, setVisto] = useStateUP(!!window.__paceNoGuarda);
+  const [cerrado, setCerrado] = useStateUP(false);
+  useEffectUP(() => {
+    const h = () => setVisto(true);
+    window.addEventListener('pace:no-guarda', h);
+    return () => window.removeEventListener('pace:no-guarda', h);
+  }, []);
+  if (!visto || cerrado) return null;
+  return (
+    React.createElement("div", { "data-pace-no-guarda": true, style: updatePromptStyles.wrap },
+    React.createElement("div", { role: "status", style: { ...updatePromptStyles.bar, flexWrap: 'wrap', maxWidth: 520 } },
+    React.createElement("span", { style: { ...updatePromptStyles.msg, whiteSpace: 'normal', flex: '1 1 220px' } }, t('guardar.aviso')),
+    React.createElement("button", { onClick: () => {try {paceDescargarCopia(getState());} catch (e) {}}, style: updatePromptStyles.cta },
+    t('settings.data.export')
+    ),
+    React.createElement("button", { onClick: () => setCerrado(true), style: updatePromptStyles.later }, t('guardar.entendido'))
+    )
+    ));
+
+}
+
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
+;Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
 })();
 </script>
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
@@ -17203,9 +17241,13 @@ function useCountdown(durationSec, onComplete) {
 
 
 
+
+
+
   const restore = useCallbackUC((endsAtMs) => {
     if (statusRef.current !== 'idle') return;
-    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    if (typeof endsAtMs !== 'number') return;
+    if (endsAtMs <= Date.now()) {complete();return;}
     firedRef.current = false;
     endsAtRef.current = endsAtMs;
     statusRef.current = 'running';
@@ -17239,6 +17281,8 @@ function useCountdown(durationSec, onComplete) {
 
 
     endsAt: status === 'running' ? endsAtRef.current : null,
+
+    restanteMs: status === 'paused' ? remainingMsRef.current : null,
     start, pause, resume: start, toggle, reset, restore, seguir, congelar
   };
 }
@@ -17252,6 +17296,12 @@ Object.assign(window, { useCountdown });
        FocusTimer (su consumidor). -->
   <script>
 ;(function () {
+
+
+
+
+
+
 
 
 
@@ -17356,19 +17406,25 @@ function maybeNotifyFocusEnd(opts) {
 
 
 
+
+
+
 function loadPersistedFocusTimer(focusMode, focusMinutes) {
   try {
     const raw = localStorage.getItem(PACE_TIMER_KEY);
     if (!raw) return null;
     const saved = JSON.parse(raw);
     const durMs = focusMinutes * 60 * 1000;
-    const valid = saved &&
-    typeof saved.endsAt === 'number' &&
-    saved.mode === 'foco' && focusMode === 'foco' &&
-    saved.minutes === focusMinutes &&
-    saved.endsAt > Date.now() &&
-    saved.endsAt - Date.now() <= durMs;
-    if (valid) return saved.endsAt;
+    const ahora = Date.now(),hoy = new Date().toDateString();
+    const casa = saved && saved.mode === 'foco' && focusMode === 'foco' && saved.minutes === focusMinutes;
+    const id = casa && typeof saved.id === 'string' ? saved.id : null;
+    if (casa && typeof saved.endsAt === 'number' && saved.endsAt - ahora <= durMs) {
+      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id };
+      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, vencido: true };
+    }
+    if (casa && typeof saved.pausaMs === 'number' && saved.pausaMs > 0 && saved.pausaMs <= durMs && saved.dia === hoy) {
+      return { pausaMs: saved.pausaMs, id, inicio: typeof saved.inicio === 'number' ? saved.inicio : null };
+    }
     localStorage.removeItem(PACE_TIMER_KEY);
     return null;
   } catch (e) {
@@ -17380,10 +17436,14 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
 
 
 
-function persistFocusTimer(runningFoco, endsAt, minutes, id) {
+
+function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   try {
+    const base = id ? { mode: 'foco', minutes, id } : { mode: 'foco', minutes };
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(id ? { endsAt, mode: 'foco', minutes, id } : { endsAt, mode: 'foco', minutes }));
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, base)));
+    } else if (typeof pausaMs === 'number' && pausaMs > 0) {
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ pausaMs, dia: new Date().toDateString(), inicio: inicio || null }, base)));
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }
@@ -18115,16 +18175,6 @@ function paceFocoNuevoId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
-
-
-function paceFocoIdGuardado(endsAt) {
-  try {
-    var v = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
-    if (v && v.endsAt === endsAt && typeof v.id === 'string' && v.id) return v.id;
-  } catch (e) {}
-  return 'e' + endsAt;
-}
-
 function paceFocoContar(id, contar) {
   var ya = function () {var s = getState();return !!(s && s.focoContado === id);};
   if (ya()) return;
@@ -18180,8 +18230,8 @@ function useFocoPestanas(o) {
   };
 }
 
-Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoIdGuardado, paceFocoContar, useFocoPestanas });
-;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoIdGuardado, paceFocoContar, useFocoPestanas });
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas });
+;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas });
 })();
 </script>
 
@@ -22641,7 +22691,7 @@ Object.assign(window, { LibraryShell });
 
 
 
-const { useEffect: useEffectFT, useRef: useRefFT } = React;
+const { useEffect: useEffectFT, useRef: useRefFT, useState: useStateFT } = React;
 
 
 
@@ -22659,7 +22709,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   state.focusMode === 'pausa' ? 5 :
   15) * 60;
 
-  const { remaining, running, status, endsAt, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
+  const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
 
 
 
@@ -22709,6 +22759,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
+
   const inicioBloqueRef = useRefFT(null);
 
   const bloqueRef = useRefFT(null);
@@ -22716,21 +22767,28 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   useEffectFT(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
-    const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
+    const g = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
 
 
 
-    if (endsAtSaved) {
-      inicioBloqueRef.current = endsAtSaved - durationSec * 1000;
-      bloqueRef.current = paceFocoIdGuardado(endsAtSaved);
-      restore(endsAtSaved);
+
+    if (g && g.endsAt) {
+      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      bloqueRef.current = g.id || 'e' + g.endsAt;
+      restore(g.endsAt);
+    } else if (g && g.pausaMs) {
+      inicioBloqueRef.current = g.inicio;
+      bloqueRef.current = g.id || paceFocoNuevoId();
+      congelar(g.pausaMs);
     }
   }, []);
 
 
   useEffectFT(() => {
-    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes, bloqueRef.current);
-  }, [running, endsAt, state.focusMode, state.focusMinutes]);
+    const foco = state.focusMode === 'foco';
+    persistFocusTimer(running && foco, endsAt, state.focusMinutes, bloqueRef.current,
+    foco && status === 'paused' ? restanteMs : null, inicioBloqueRef.current);
+  }, [running, endsAt, status, restanteMs, state.focusMode, state.focusMinutes]);
 
 
 
@@ -22801,6 +22859,13 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
+
+
+  const [minPendiente, setMinPendiente] = useStateFT(null);
+  const elegirMinutos = (v) => {
+    if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) {setMinPendiente(v);return;}
+    set({ focusMinutes: v });
+  };
   const isCompleted = status === 'completed';
 
 
@@ -22969,7 +23034,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
     state.focusMode === 'foco' ?
-    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: (v) => set({ focusMinutes: v }) }) :
+    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: elegirMinutos }) :
 
     React.createElement("div", { "aria-hidden": "true", style: { height: 26 } }),
 
@@ -23001,6 +23066,15 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       running: running,
       fitHeight: isAro,
       paused: status === 'paused' }
+    )
+    ),
+
+    React.createElement(Modal, { open: minPendiente != null, onClose: () => setMinPendiente(null), maxWidth: 440,
+      title: minPendiente != null ? tn('focus.cambioMin.title', { n: minPendiente }) : undefined },
+    React.createElement("p", { "data-pace-cambio-minutos": true, style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } }, t('topbar.cambio.body')),
+    React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
+    React.createElement(Button, { variant: "secondary", onClick: () => {set({ focusMinutes: minPendiente });setMinPendiente(null);} }, t('topbar.cambio.cambiar')),
+    React.createElement(Button, { variant: "primary", onClick: () => setMinPendiente(null) }, t('topbar.cambio.seguir'))
     )
     ),
 
@@ -31134,11 +31208,14 @@ function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, '');
 }
 
-function paceDescargarCopia() {
+
+
+function paceDescargarCopia(enMemoria) {
   try {
-    const raw = localStorage.getItem('pace.state.v2') || '{}';
-    let parsed = null;
-    try {parsed = JSON.parse(raw);} catch (e) {}
+    let raw = '{}';
+    if (!enMemoria) {try {raw = localStorage.getItem('pace.state.v2') || '{}';} catch (e) {}}
+    let parsed = enMemoria || null;
+    if (!parsed) {try {parsed = JSON.parse(raw);} catch (e) {}}
 
 
 
@@ -39882,7 +39959,8 @@ function PaceApp() {
 
 
 
-    React.createElement(PaceRed, { modo: "silencio" }, React.createElement(UpdatePrompt, null))
+    React.createElement(PaceRed, { modo: "silencio" }, React.createElement(UpdatePrompt, null)),
+    React.createElement(PaceRed, { modo: "silencio" }, React.createElement(AvisoNoGuarda, null))
     ));
 
 }

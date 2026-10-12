@@ -115,4 +115,33 @@ const updatePromptStyles = {
   },
 };
 
-Object.assign(window, { UpdatePrompt });
+/* AvisoNoGuarda — cuando el navegador no deja guardar (almacenamiento lleno o bloqueado: algunos
+   modos privados, cookies bloqueadas para el sitio), PACE sigue funcionando y no guarda nada.
+   Antes no lo decía y al recargar se había perdido el día. La primera escritura que falla lo
+   anuncia (`pace:no-guarda`, desde persistState) y sale UNA vez por visita, con la barra de la
+   versión nueva y la copia de lo que hay en memoria, que es lo único al día (Ez, 12 oct. 2026,
+   estado-5 de la caza del Foco y lo guardado). */
+function AvisoNoGuarda() {
+  const { t } = useT();
+  const [visto, setVisto] = useStateUP(!!window.__paceNoGuarda);
+  const [cerrado, setCerrado] = useStateUP(false);
+  useEffectUP(() => {
+    const h = () => setVisto(true);
+    window.addEventListener('pace:no-guarda', h);
+    return () => window.removeEventListener('pace:no-guarda', h);
+  }, []);
+  if (!visto || cerrado) return null;
+  return (
+    <div data-pace-no-guarda style={updatePromptStyles.wrap}>
+      <div role="status" style={{ ...updatePromptStyles.bar, flexWrap: 'wrap', maxWidth: 520 }}>
+        <span style={{ ...updatePromptStyles.msg, whiteSpace: 'normal', flex: '1 1 220px' }}>{t('guardar.aviso')}</span>
+        <button onClick={() => { try { paceDescargarCopia(getState()); } catch (e) {} }} style={updatePromptStyles.cta}>
+          {t('settings.data.export')}
+        </button>
+        <button onClick={() => setCerrado(true)} style={updatePromptStyles.later}>{t('guardar.entendido')}</button>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda });

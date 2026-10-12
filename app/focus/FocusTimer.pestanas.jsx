@@ -33,16 +33,6 @@ function paceFocoNuevoId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
-/* El id del bloque guardado en `pace.timer.v1`. Uno guardado antes de que hubiera ids lo identifica
-   igual su final, que es el mismo para todas las pestañas. */
-function paceFocoIdGuardado(endsAt) {
-  try {
-    var v = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
-    if (v && v.endsAt === endsAt && typeof v.id === 'string' && v.id) return v.id;
-  } catch (e) {}
-  return 'e' + endsAt;
-}
-
 function paceFocoContar(id, contar) {
   var ya = function () { var s = getState(); return !!(s && s.focoContado === id); };
   if (ya()) return;
@@ -98,4 +88,4 @@ function useFocoPestanas(o) {
   };
 }
 
-Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoIdGuardado, paceFocoContar, useFocoPestanas });
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas });

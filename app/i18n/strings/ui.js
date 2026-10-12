@@ -173,6 +173,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'update.cta':                    'Actualizar',
     'update.applying':               'Actualizando…',
     'update.later':                  'Luego',
+    'guardar.aviso':                 'Este navegador no deja guardar: lo que hagas se perderá al cerrar PACE.',
+    'guardar.entendido':             'Entendido',
 
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
@@ -336,6 +338,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'update.cta':                    'Update',
     'update.applying':               'Updating…',
     'update.later':                  'Later',
+    'guardar.aviso':                 'This browser is not letting PACE save: what you do will be lost when you close it.',
+    'guardar.entendido':             'Got it',
 
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',

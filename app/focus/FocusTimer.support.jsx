@@ -16,12 +16,18 @@
    2) loadPersistedFocusTimer / persistFocusTimer — persistencia del Pomodoro
       running en recarga (s102, resuelve el fork s96). Clave localStorage
       `pace.timer.v1` FUERA de pace.state.v2: el timer sigue siendo local
-      (decisión s96), solo sobrevive a la recarga. Se persiste ÚNICAMENTE
-      running en modo foco; pausar/reset/completar limpian. Al montar,
-      FocusTimer reanuda solo si endsAt sigue en el futuro Y modo/minutos
-      coinciden con el state; un timer expirado estando fuera se descarta en
-      silencio — no se acreditan minutos no presenciados (tracking honesto,
-      línea s101). */
+      (decisión s96), solo sobrevive a la recarga. Se persiste el bloque de
+      foco en marcha y, desde el 12 oct. 2026, también EN PAUSA; reiniciar,
+      completar y los modos pausa/larga limpian. Al montar, FocusTimer lo
+      recupera solo si modo/minutos coinciden con el state. Decisiones de Ez
+      del 12 oct. 2026 (caza del Foco y lo guardado), que revisan s102:
+      · foco-2: el bloque en pausa vuelve en pausa donde estaba, el mismo día.
+        Al recargar, con «Hay una versión nueva» y cuando Android cierra la app
+        en el fondo, perderlo desanimaba.
+      · foco-3: el bloque que terminó HOY con la página cerrada cuenta al volver,
+        como cuenta al volver a una pestaña que siguió abierta (y como dice el
+        aviso de Android). Uno que terminó otro día se descarta: el día ya
+        empezó de cero. */
 
 const PACE_TIMER_KEY = 'pace.timer.v1';
 
@@ -99,22 +105,28 @@ function maybeNotifyFocusEnd(opts) {
   } catch (e) {}
 }
 
-/* Devuelve el endsAt (ms epoch) a reanudar, o null (y limpia la clave si
-   estaba corrupta/expirada/incoherente). El caller pasa el modo y los
-   minutos VIGENTES del state: si no coinciden con lo guardado, se descarta. */
+/* Devuelve el bloque a recuperar o null (y limpia la clave si estaba corrupta,
+   era de otro día o no casa). El caller pasa el modo y los minutos VIGENTES del
+   state: si no coinciden con lo guardado, se descarta. Tres formas:
+     { endsAt, id }          en marcha (endsAt en el futuro)
+     { endsAt, id, vencido } terminó hoy con la página cerrada: se cuenta al montar
+     { pausaMs, id, inicio } en pausa, guardado hoy */
 function loadPersistedFocusTimer(focusMode, focusMinutes) {
   try {
     const raw = localStorage.getItem(PACE_TIMER_KEY);
     if (!raw) return null;
     const saved = JSON.parse(raw);
     const durMs = focusMinutes * 60 * 1000;
-    const valid = saved
-      && typeof saved.endsAt === 'number'
-      && saved.mode === 'foco' && focusMode === 'foco'
-      && saved.minutes === focusMinutes
-      && saved.endsAt > Date.now()
-      && saved.endsAt - Date.now() <= durMs; // blindaje contra relojes raros
-    if (valid) return saved.endsAt;
+    const ahora = Date.now(), hoy = new Date().toDateString();
+    const casa = saved && saved.mode === 'foco' && focusMode === 'foco' && saved.minutes === focusMinutes;
+    const id = casa && typeof saved.id === 'string' ? saved.id : null;
+    if (casa && typeof saved.endsAt === 'number' && saved.endsAt - ahora <= durMs) {   // blindaje contra relojes raros
+      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id };
+      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, vencido: true };
+    }
+    if (casa && typeof saved.pausaMs === 'number' && saved.pausaMs > 0 && saved.pausaMs <= durMs && saved.dia === hoy) {
+      return { pausaMs: saved.pausaMs, id, inicio: typeof saved.inicio === 'number' ? saved.inicio : null };
+    }
     localStorage.removeItem(PACE_TIMER_KEY);
     return null;
   } catch (e) {
@@ -123,13 +135,17 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
   }
 }
 
-/* Escribe la clave mientras hay un foco running; cualquier otro estado la
-   limpia (pausa, reset, completado, modos pausa/larga). `id` es el del bloque,
-   para que otra pestaña que lo recoja lo cuente una sola vez (FocusTimer.pestanas). */
-function persistFocusTimer(runningFoco, endsAt, minutes, id) {
+/* Escribe la clave mientras hay un foco en marcha o en pausa (`pausaMs`, con el
+   día y el inicio para el evento); cualquier otro estado la limpia (reinicio,
+   completado, modos pausa/larga). `id` es el del bloque, para que otra pestaña
+   que lo recoja lo cuente una sola vez (FocusTimer.pestanas). */
+function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   try {
+    const base = id ? { mode: 'foco', minutes, id } : { mode: 'foco', minutes };
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(id ? { endsAt, mode: 'foco', minutes, id } : { endsAt, mode: 'foco', minutes }));
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, base)));
+    } else if (typeof pausaMs === 'number' && pausaMs > 0) {
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ pausaMs, dia: new Date().toDateString(), inicio: inicio || null }, base)));
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }

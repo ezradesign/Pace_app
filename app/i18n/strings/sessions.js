@@ -58,6 +58,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'focus.other':                     'Otro',
     'focus.restart':                   'Reiniciar',
     'focus.restartBlock':              'Reiniciar bloque',
+    'focus.cambioMin.title':           '¿Cambiar a un bloque de {n} min?',
     'focus.start':                     'Empezar foco',
     /* s166: el CTA del Pomodoro dependia SOLO del estado del motor, nunca del
        modo, asi que en Pausa y Larga invitaba a 'Empezar foco' encima de un
@@ -239,6 +240,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'focus.other':                     'Other',
     'focus.restart':                   'Restart',
     'focus.restartBlock':              'Restart focus',
+    'focus.cambioMin.title':           'Switch to a {n}-minute block?',
     'focus.start':                     'Start focus',
     'focus.startPause':                'Start break',
     'focus.pause':                     'Pause',

@@ -55,11 +55,14 @@ function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
 }
 
-function paceDescargarCopia() {
+/* `enMemoria`: el estado de la app, para cuando el navegador no deja guardar (AvisoNoGuarda) y lo
+   guardado es viejo o ni se puede leer. */
+function paceDescargarCopia(enMemoria) {
   try {
-    const raw = localStorage.getItem('pace.state.v2') || '{}';
-    let parsed = null;
-    try { parsed = JSON.parse(raw); } catch (e) {}
+    let raw = '{}';
+    if (!enMemoria) { try { raw = localStorage.getItem('pace.state.v2') || '{}'; } catch (e) {} }
+    let parsed = enMemoria || null;
+    if (!parsed) { try { parsed = JSON.parse(raw); } catch (e) {} }
     /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
        promete exportar «todo tu estado» e importarlo en otro dispositivo, y
        desde que hay emisores eso incluye `pace.events.v1`, que vive en OTRA
