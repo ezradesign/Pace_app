@@ -6965,10 +6965,12 @@ function addFocusMinutes(mins) {
   checkFocusDayAchievement();
 }
 
-function completePomodoro() {
+
+
+function completePomodoro(bloque) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
-  setState((prev) => ({ ...prev, cycle: prev.cycle + 1 }));
+  setState((prev) => ({ ...prev, cycle: prev.cycle + 1, ...(bloque ? { focoContado: bloque } : {}) }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
@@ -7003,7 +7005,7 @@ function completeFocusSession(context, opts) {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    completePomodoro();
+    completePomodoro(opts && opts.bloque);
   }
 
 
@@ -17189,6 +17191,26 @@ function useCountdown(durationSec, onComplete) {
     setStatus('running');
   }, []);
 
+
+
+
+  const seguir = useCallbackUC((endsAtMs) => {
+    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    firedRef.current = false;
+    endsAtRef.current = endsAtMs;
+    statusRef.current = 'running';
+    setStatus('running');
+    forceTick((n) => n + 1);
+  }, []);
+  const congelar = useCallbackUC((restanteMs) => {
+    firedRef.current = false;
+    endsAtRef.current = null;
+    remainingMsRef.current = Math.max(0, Math.min(restanteMs, durationSec * 1000));
+    statusRef.current = 'paused';
+    setStatus('paused');
+    forceTick((n) => n + 1);
+  }, [durationSec]);
+
   return {
     remaining,
     running: status === 'running',
@@ -17196,7 +17218,7 @@ function useCountdown(durationSec, onComplete) {
 
 
     endsAt: status === 'running' ? endsAtRef.current : null,
-    start, pause, resume: start, toggle, reset, restore
+    start, pause, resume: start, toggle, reset, restore, seguir, congelar
   };
 }
 
@@ -17336,10 +17358,11 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
 
 
 
-function persistFocusTimer(runningFoco, endsAt, minutes) {
+
+function persistFocusTimer(runningFoco, endsAt, minutes, id) {
   try {
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify({ endsAt, mode: 'foco', minutes }));
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(id ? { endsAt, mode: 'foco', minutes, id } : { endsAt, mode: 'foco', minutes }));
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }
@@ -18030,6 +18053,114 @@ function useLuzHome(_ref) {let { progress, status, running, focusMode } = _ref;
 
 Object.assign(window, { useLuzHome });
 ;Object.assign(window, { useLuzHome });
+})();
+</script>
+  <!-- Un bloque de Foco en varias pestañas: lo que se hace en una se repite en las otras y se
+       cuenta una sola vez (`useFocoPestanas`, `paceFocoContar`). Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   FocusTimer.pestanas — un bloque de Foco, aunque PACE esté abierto en dos pestañas.
+
+   Una pestaña que se abre con un bloque en marcha lo recoge de `pace.timer.v1` y lo enseña (s102).
+   Hasta aquí cada una seguía después por su cuenta: pausar en una no pausaba la otra, que terminaba
+   el bloque y lo contaba mientras la primera decía «Continuar»; y si las dos llegaban al final, el
+   bloque contaba dos veces (dos eventos de Foco; y con el estado compartido de
+   state-core.pestanas.js, también dos bloques y 50 minutos en «Hoy»). Caza del 10 oct., foco-5 y -6.
+
+   DOS PIEZAS, y cada una con la herramienta que le toca:
+
+   · LO QUE SE VE va por `BroadcastChannel`: empezar o continuar, pausar y reiniciar en una pestaña
+     se repite en las demás con el mismo bloque (`id`) y el mismo final. Si un aviso llega antes que
+     los minutos nuevos del estado, espera a que casen. Un aviso perdido solo deja una pestaña con
+     otra cara; contar lo decide lo de abajo.
+   · CONTAR UNA VEZ es exclusión entre pestañas, y eso solo lo da Web Locks: la primera que llega al
+     final coge el candado del bloque SIN esperar y cuenta (campana, minutos, la pausa); la que llega
+     a la vez no lo consigue y se calla. Quien cuenta guarda el candado diez minutos, y además deja
+     el `id` en el estado (`focoContado`), que ya viaja a las demás: una pestaña dormida que despierte
+     más tarde ve que está contado. Sin Web Locks (Safari anterior a 15.4) se cuenta como siempre.
+
+   Los modos Pausa y Larga no cuentan nada y siguen siendo de cada pestaña. */
+
+const { useEffect: useEffectFTP, useRef: useRefFTP } = React;
+
+var PACE_FOCO_CANAL = 'pace.foco.v1';
+var PACE_FOCO_CANDADO_MS = 10 * 60 * 1000;
+
+function paceFocoNuevoId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+
+
+function paceFocoIdGuardado(endsAt) {
+  try {
+    var v = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
+    if (v && v.endsAt === endsAt && typeof v.id === 'string' && v.id) return v.id;
+  } catch (e) {}
+  return 'e' + endsAt;
+}
+
+function paceFocoContar(id, contar) {
+  var ya = function () {var s = getState();return !!(s && s.focoContado === id);};
+  if (ya()) return;
+  var locks = typeof navigator !== 'undefined' ? navigator.locks : null;
+  if (!locks || typeof locks.request !== 'function') {contar();return;}
+  locks.request('pace.foco.bloque.' + id, { ifAvailable: true }, function (candado) {
+    if (!candado || ya()) return;
+    contar();
+    return new Promise(function (r) {setTimeout(r, PACE_FOCO_CANDADO_MS);});
+  }).catch(function () {});
+}
+
+
+
+function useFocoPestanas(o) {
+  const vivo = useRefFTP(o);
+  vivo.current = o;
+  const canalRef = useRefFTP(null);
+  const pendienteRef = useRefFTP(null);
+
+  const aplicar = (m) => {
+    const u = vivo.current;
+    if (!u.activo) return;
+    if (m.tipo === 'corre') {
+      if (m.minutos !== u.minutos) {pendienteRef.current = m;return;}
+      pendienteRef.current = null;
+      u.bloqueRef.current = m.id;
+      u.inicioRef.current = m.endsAt - u.minutos * 60 * 1000;
+      u.seguir(m.endsAt);
+    } else if (m.id && m.id === u.bloqueRef.current) {
+      if (m.tipo === 'pausa') u.congelar(m.restanteMs);else
+      if (m.tipo === 'reinicia') u.reset();
+    }
+  };
+
+  useEffectFTP(() => {
+    if (typeof BroadcastChannel !== 'function') return undefined;
+    let canal;
+    try {canal = new BroadcastChannel(PACE_FOCO_CANAL);} catch (e) {return undefined;}
+    canalRef.current = canal;
+    canal.onmessage = (ev) => {try {aplicar(ev.data || {});} catch (e) {}};
+    return () => {canalRef.current = null;try {canal.close();} catch (e) {}};
+  }, []);
+
+
+  useEffectFTP(() => {
+    const m = pendienteRef.current;
+    if (m && o.activo && m.minutos === o.minutos && m.endsAt > Date.now()) aplicar(m);
+  }, [o.minutos, o.activo]);
+
+  return (m) => {
+    try {if (canalRef.current) canalRef.current.postMessage(Object.assign({ minutos: vivo.current.minutos }, m));} catch (e) {}
+  };
+}
+
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoIdGuardado, paceFocoContar, useFocoPestanas });
+;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoIdGuardado, paceFocoContar, useFocoPestanas });
 })();
 </script>
 
@@ -22507,20 +22638,25 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   state.focusMode === 'pausa' ? 5 :
   15) * 60;
 
-  const { remaining, running, status, endsAt, start, toggle, reset, restore } = useCountdown(durationSec, () => {
-
-
-    try {playSound('pomodoro.end');} catch (e) {}
+  const { remaining, running, status, endsAt, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
 
 
 
+    if (state.focusMode !== 'foco') {try {playSound('pomodoro.end');} catch (e) {}return;}
 
 
-    if (state.focusMode === 'foco') {
 
 
-      completeFocusSession('home', { minutes: state.focusMinutes,
-        elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
+
+
+    const bloque = bloqueRef.current || 'e' + Date.now();
+    const minutos = state.focusMinutes,inicio = inicioBloqueRef.current,avisoOn = state.notifyFocusEnd;
+    paceFocoContar(bloque, () => {
+      try {playSound('pomodoro.end');} catch (e) {}
+
+
+      completeFocusSession('home', { minutes: minutos, bloque,
+        elapsedSeconds: focoElapsedSec(inicio, durationSec),
         activeSeconds: durationSec });
 
 
@@ -22535,13 +22671,13 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({
-            enabled: state.notifyFocusEnd,
+            enabled: avisoOn,
             title: aviso ? aviso.title : t('notify.focus.title'),
             body: aviso ? aviso.body : t('notify.focus.body')
           });
         } catch (e) {}
       }
-    }
+    });
   });
 
 
@@ -22553,6 +22689,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const inicioBloqueRef = useRefFT(null);
+
+  const bloqueRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
@@ -22561,13 +22699,28 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-    if (endsAtSaved) {inicioBloqueRef.current = endsAtSaved - durationSec * 1000;restore(endsAtSaved);}
+    if (endsAtSaved) {
+      inicioBloqueRef.current = endsAtSaved - durationSec * 1000;
+      bloqueRef.current = paceFocoIdGuardado(endsAtSaved);
+      restore(endsAtSaved);
+    }
   }, []);
 
 
   useEffectFT(() => {
-    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
+    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes, bloqueRef.current);
   }, [running, endsAt, state.focusMode, state.focusMinutes]);
+
+
+
+  const avisarPestanas = useFocoPestanas({ activo: state.focusMode === 'foco', minutos: state.focusMinutes,
+    bloqueRef, inicioRef: inicioBloqueRef, seguir, congelar, reset });
+  const avisarCorreRef = useRefFT(false);
+  useEffectFT(() => {
+    if (!avisarCorreRef.current || !running || !endsAt) return;
+    avisarCorreRef.current = false;
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
+  }, [running, endsAt]);
 
 
 
@@ -22648,6 +22801,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const startFocusVisual = () => {
     if (status !== 'paused') {
       inicioBloqueRef.current = Date.now();
+      bloqueRef.current = paceFocoNuevoId();
 
 
       if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado(state.focusMinutes);
@@ -22659,24 +22813,33 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
   };
 
-  const handleNormalStart = () => {startFocusVisual();toggle();};
+  const handleNormalStart = () => {startFocusVisual();avisarCorreRef.current = true;toggle();};
 
 
 
 
-  const handleStartAnotherCycle = () => {startFocusVisual();reset();start();};
+  const handleStartAnotherCycle = () => {startFocusVisual();avisarCorreRef.current = true;reset();start();};
+
+  const handlePause = () => {
+    if (state.focusMode === 'foco' && endsAt) avisarPestanas({ tipo: 'pausa', id: bloqueRef.current, restanteMs: Math.max(0, endsAt - Date.now()) });
+    toggle();
+  };
+  const handleReset = () => {
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'reinicia', id: bloqueRef.current });
+    reset();
+  };
 
 
 
 
   useEffectFT(() => {
-    const seguir = () => {
+    const alSeguir = () => {
       if (state.focusMode !== 'foco') return;
       if (status === 'completed') handleStartAnotherCycle();else
       if (status === 'idle') handleNormalStart();
     };
-    window.addEventListener('pace:ritmo-seguir', seguir);
-    return () => window.removeEventListener('pace:ritmo-seguir', seguir);
+    window.addEventListener('pace:ritmo-seguir', alSeguir);
+    return () => window.removeEventListener('pace:ritmo-seguir', alSeguir);
   });
 
 
@@ -22696,7 +22859,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
-    ctaAction = toggle;
+    ctaAction = handlePause;
   } else if (isCompleted) {
     ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
@@ -22748,7 +22911,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   status === 'paused' &&
   React.createElement("button", {
-    onClick: reset,
+    onClick: handleReset,
     style: focusStyles.resetTextBtn,
     title: t('focus.restartBlock'),
     "aria-label": t('focus.restartBlock') },

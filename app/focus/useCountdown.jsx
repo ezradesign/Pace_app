@@ -144,6 +144,26 @@ function useCountdown(durationSec, onComplete) {
     setStatus('running');
   }, []);
 
+  /* Otra pestaña lleva el mismo bloque (FocusTimer.pestanas.jsx) y manda: `seguir` lo pone a
+     correr hasta SU final, venga de donde venga, y `congelar` lo deja en pausa con SU resto.
+     Ninguno pasa por 'completed' ni avisa a `onComplete`: eso solo lo hace el reloj. */
+  const seguir = useCallbackUC((endsAtMs) => {
+    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    firedRef.current = false;
+    endsAtRef.current = endsAtMs;
+    statusRef.current = 'running';
+    setStatus('running');
+    forceTick(n => n + 1);
+  }, []);
+  const congelar = useCallbackUC((restanteMs) => {
+    firedRef.current = false;
+    endsAtRef.current = null;
+    remainingMsRef.current = Math.max(0, Math.min(restanteMs, durationSec * 1000));
+    statusRef.current = 'paused';
+    setStatus('paused');
+    forceTick(n => n + 1);
+  }, [durationSec]);
+
   return {
     remaining,
     running: status === 'running',
@@ -151,7 +171,7 @@ function useCountdown(durationSec, onComplete) {
     /* endsAt expuesto solo en running (para persistencia s102); null en el
        resto de estados. */
     endsAt: status === 'running' ? endsAtRef.current : null,
-    start, pause, resume: start, toggle, reset, restore,
+    start, pause, resume: start, toggle, reset, restore, seguir, congelar,
   };
 }
 

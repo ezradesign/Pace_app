@@ -124,11 +124,12 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
 }
 
 /* Escribe la clave mientras hay un foco running; cualquier otro estado la
-   limpia (pausa, reset, completado, modos pausa/larga). */
-function persistFocusTimer(runningFoco, endsAt, minutes) {
+   limpia (pausa, reset, completado, modos pausa/larga). `id` es el del bloque,
+   para que otra pestaña que lo recoja lo cuente una sola vez (FocusTimer.pestanas). */
+function persistFocusTimer(runningFoco, endsAt, minutes, id) {
   try {
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify({ endsAt, mode: 'foco', minutes }));
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(id ? { endsAt, mode: 'foco', minutes, id } : { endsAt, mode: 'foco', minutes }));
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }
