@@ -2,7 +2,32 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.156.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.157.0.
+
+## 12 oct. 2026, noche: la coordinadora sigue en la cuenta nueva
+
+Manda sobre el relevo de abajo.
+
+- **PACE completo está en `main` como v0.157.0.** Ez dio el sí al verlo en fotos de la app real
+  (`archivos/premium-12oct/fotos-premium.html`, nueve pantallas a 360 y 1280 px) y pidió que
+  «Tus rutinas» dijera «Es parte de PACE completo», como la invitación. Los 15 enlaces de tester ya
+  funcionan en la web: falta que Ez los mande.
+- **La caza en Foco y lo guardado** (`claude/caza-foco-estado-d6bd17`, último commit 40e0308 con su
+  TRASPASO): los once hallazgos arreglados con su prueba y las cuatro visibles con la opción A de Ez.
+  Ya está junta con v0.156.0 y `verify` pasa; la suite dio dos fallos de foco-3 que ya están
+  arreglados en 40e0308. **Falta:** la suite entera otra vez, rehacer las fotos con
+  `docs/traspaso/archivos/caza-foco-10oct/fotos-caza.js` y `pagina-caza.js`, el sí de Ez y
+  «LISTO PARA MAIN». Antes hay que juntarla con v0.157.0. Su sesión fue la de la carpeta
+  `.claude/worktrees/cranky-bun-83cb7c`.
+- **Pregunta abierta para Ez (sin contestar):** con dos pestañas, la pausa se abre en la primera
+  que llega al final, que puede no ser la que miras. No se pierde nada y el bloque cuenta una sola
+  vez. La coordinadora recomienda abrirla en la pestaña visible; si no, apuntarlo como deuda.
+- **Puertos:** el 8765 y el 8793 siguen ocupados por servidores de la cuenta anterior; la caza usa
+  el 8785 o el 8794 y la coordinadora, el 8775.
+- **`verify` desde la carpeta principal** tardaba más de veinte minutos porque recorría las copias de
+  `.claude/worktrees/`; ya no entra ahí (fila arriba de `DECISIONES_TECNICAS_VIGENTES.md`).
+- **Aviso de GitHub:** desde el 19 oct. `ubuntu-latest` pasa a Ubuntu 26. El job `e2e-safari` instala
+  sus librerías con `apt` y puede romperse ese día: si sale en rojo, fijar `ubuntu-24.04`.
 
 ## Relevo del 12 oct. 2026 (la cuenta se queda sin uso; Ez sigue desde otra)
 
@@ -359,7 +384,10 @@ la llave y la lista de testers para los códigos, y la propuesta de textos de lo
 
 ## Frase de arranque para la otra cuenta
 
-> Retoma el proyecto PACE desde el repo ezradesign/Pace_app como sesión COORDINADORA. Antes de nada
-> lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md (sobre todo «Relevo de la noche del 8 oct.»),
-> mira el último commit de cada rama que nombra y dime en pocas líneas dónde estamos, qué espera mi
-> respuesta y qué harías ahora. Háblame en español.
+> Retoma el proyecto PACE (repo ezradesign/Pace_app, en esta carpeta) como sesión COORDINADORA. Háblame
+> en español, en frases completas y sin jerga. Lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md, sobre
+> todo «12 oct. 2026, noche», que manda sobre lo anterior; solo tú subes a main (docs/WORKFLOW.md §9) y
+> usas PACE_E2E_PORT=8775. Comprueba que la CI de v0.157.0 salió en verde (gh run list --branch main) y,
+> si no, arréglala antes que nada. Luego retoma la caza en Foco desde el TRASPASO de
+> origin/claude/caza-foco-estado-d6bd17 (una sesión en paralelo como mucho), pregúntame lo de las dos
+> pestañas con AskUserQuestion y dime en pocas líneas dónde estamos, qué espera mi respuesta y qué harías ahora.

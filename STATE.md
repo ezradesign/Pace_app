@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.156.0 · 12 de octubre de 2026.
+**Versión:** v0.157.0 · 12 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -90,7 +90,7 @@ pintar y no se escribe nada hasta que se pulsa.
 
 Hasta v1 las rutinas premium están abiertas para todos (`PREMIUM_ABIERTO_HASTA_V1`, en
 `app/state-entitlement.jsx`), para que los testers las prueben. Lo de pago se llama **PACE completo**
-(8 oct., opción B elegida por Ez): lo cerrado lleva un candado de línea fina y, al tocarlo, una
+(v0.157.0; opción B de Ez, que la vio en la app real el 12 oct.): lo cerrado lleva un candado de línea fina y, al tocarlo, una
 invitación que dice qué trae y que llega con la versión 1. En la web, un **código de por vida**
 (enlace `#codigo=…` o «Tengo un código») lo abre todo, también «Tus rutinas», que sin código sigue
 cerrado: es una licencia firmada que la app comprueba sin servidor (`app/state-licencia.js`). En
@@ -130,6 +130,8 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
 
 - Copiar las carpetas `PACE-llave-play` y `PACE-llave-licencias` (la de los códigos de tester, creada
   el 9 oct., con los 15 enlaces del 12 oct. en `codigos-tester.csv`) de su PC en su disco duro, con la contraseña de Play aparte.
+- Mandar a cada tester su enlace de `codigos-tester.csv` y apuntar a quién da cuál: funcionan desde
+  v0.157.0, en la web (en Android no hay códigos propios).
 - Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
 - Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
