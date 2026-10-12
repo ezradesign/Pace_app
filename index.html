@@ -16070,7 +16070,9 @@ const paceMusica = (() => {
     mover(n, hasta, Math.max(0.2, dur * 0.97), lado);
   }
 
-  function start(tag, forzarDrone, cicloSeg, rutinaId) {
+
+
+  function start(tag, forzarDrone, cicloSeg, rutinaId, entradaSeg) {
     if (sesion) return no('ya sonaba');
     if (forzarDrone) return no('la rutina fuerza su drone (Coherente 432)');
     let s = null;
@@ -16106,7 +16108,7 @@ const paceMusica = (() => {
         const t = ctx.currentTime;
         crearFuentes(n, t);
         n.vol.gain.setValueAtTime(0, t);
-        n.vol.gain.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + 1.2);
+        n.vol.gain.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + (entradaSeg > 0 ? entradaSeg : 1.2));
       }
       ultimo = { motivo: 'sonando', src, receta: yo.receta, respira: !quieto };
     }).catch((e) => {
@@ -23962,13 +23964,33 @@ function playPhaseSound(phaseLabel, phaseDur) {
 
 
 
+
+
+
+
+
+
+
+
+var PACE_RESPIRA_ENTRADA_S = 2.5;
+var PACE_RESPIRA_SALIDA_MS = 6000;
+
+function respiraPrecargarVoz() {
+  try {
+    if (typeof window.paceVozEncendida === 'function' && window.paceVozEncendida() && typeof window.paceVozInit === 'function') {
+      window.paceVozInit(window.paceVozActiva());
+    }
+  } catch (e) {}
+}
+
 function useMusicaFondo(stage, paused, routine) {
   const { useEffect: useEffectM } = React;
   useEffectM(() => {
+    if (stage === 'prep') respiraPrecargarVoz();
     if (!window.paceMusica) return;
     const m = window.paceMusica;
-    if (stage === 'done') {m.stop(800);return;}
-    if (stage === 'prep' || stage === 'hold') return;
+    if (stage === 'done') {m.stop(PACE_RESPIRA_SALIDA_MS);return;}
+    if (stage === 'hold') return;
     if (paused) m.pause();else
     if (m.isActive()) m.resume();else
     {
@@ -23977,18 +23999,18 @@ function useMusicaFondo(stage, paused, routine) {
       try {ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0);} catch (e) {ciclo = null;}
 
 
-      m.start(routine.tag, routine.drone === true, ciclo, routine.id);
+      m.start(routine.tag, routine.drone === true, ciclo, routine.id, stage === 'prep' ? PACE_RESPIRA_ENTRADA_S : undefined);
     }
   }, [stage, paused]);
 }
 
 
 Object.assign(window, {
-  useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia
 });
-;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, useMusicaFondo });
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
 })();
 </script>
   <script>
@@ -24111,8 +24133,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
     if (!window.ambientDrone) return;
     const drone = window.ambientDrone;
 
-    if (stage === 'done') {drone.stop(800);return;}
-    if (stage === 'prep') return;
+
+    if (stage === 'done') {drone.stop(PACE_RESPIRA_SALIDA_MS);return;}
 
     if (stage === 'hold') {
 

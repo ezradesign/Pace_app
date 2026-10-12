@@ -261,7 +261,9 @@ const paceMusica = (() => {
     mover(n, hasta, Math.max(0.2, dur * 0.97), lado);
   }
 
-  function start(tag, forzarDrone, cicloSeg, rutinaId) {
+  /* `entradaSeg`: cuánto tarda en subir. En la cuenta atrás de Respira es la ENTRADA
+     (PACE_RESPIRA_ENTRADA_S), y sin él, el fundido corto de siempre. */
+  function start(tag, forzarDrone, cicloSeg, rutinaId, entradaSeg) {
     if (sesion) return no('ya sonaba');
     if (forzarDrone) return no('la rutina fuerza su drone (Coherente 432)');
     let s = null;
@@ -297,7 +299,7 @@ const paceMusica = (() => {
         const t = ctx.currentTime;
         crearFuentes(n, t);
         n.vol.gain.setValueAtTime(0, t);
-        n.vol.gain.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + 1.2);
+        n.vol.gain.linearRampToValueAtTime(PACE_MUSICA_GANANCIA, t + (entradaSeg > 0 ? entradaSeg : 1.2));
       }
       ultimo = { motivo: 'sonando', src, receta: yo.receta, respira: !quieto };
     }).catch((e) => {
