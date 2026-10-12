@@ -21,7 +21,9 @@ var path = require('path');
 
 /* Partida en dos para que este archivo no se encuentre a sí mismo. */
 var MARCA_PRIVADA = new RegExp('-----BEGIN (EC |RSA |ENCRYPTED )?' + 'PRIVATE KEY-----');
-var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|test-results|playwright-report|build|\.gradle)([\\/]|$)/;
+/* .claude/worktrees: las copias de las sesiones en paralelo son otros checkouts
+   (cada uno pasa su propio verify) y leerlas todas costaba ~40 s. */
+var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|test-results|playwright-report|build|\.gradle|\.claude[\\/]worktrees)([\\/]|$)/;
 var TEXTO = /\.(js|jsx|json|html|md|txt|css|yml|yaml|pem|key|env|xml|properties|gradle|csv)$/i;
 
 function recorrer(dir, out) {

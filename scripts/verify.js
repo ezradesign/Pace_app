@@ -89,9 +89,13 @@ var PLATAFORMA = new Set([
   'Float32Array', 'Float64Array', 'BigInt64Array', 'BigUint64Array',
 ]);
 
-/* Rutas que no se validan: dependencias, React vendorizado y los backups
-   historicos del standalone (son artefactos congelados, no fuente viva). */
-var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git)([\\/]|$)/;
+/* Rutas que no se validan: dependencias, React vendorizado, los backups
+   historicos del standalone (son artefactos congelados, no fuente viva), lo
+   que deja la suite (sus trazas guardan .js de la pagina que no son del repo)
+   y las copias de las sesiones en paralelo en .claude/worktrees: cada una es
+   otro checkout entero y desde la carpeta principal verify las recorria todas,
+   un `node --check` por archivo, hasta tardar mas de veinte minutos. */
+var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git|test-results|playwright-report|\.claude[\\/]worktrees)([\\/]|$)/;
 
 var fallos = [];
 var avisos = [];
