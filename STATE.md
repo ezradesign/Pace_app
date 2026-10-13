@@ -133,6 +133,7 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
   el 9 oct., con los 15 enlaces del 12 oct. en `codigos-tester.csv`) de su PC en su disco duro, con la contraseña de Play aparte.
 - Mandar a cada tester su enlace de `codigos-tester.csv` y apuntar a quién da cuál: funcionan desde
   v0.157.0, en la web (en Android no hay códigos propios).
+- Apagar las propuestas automáticas de Dependabot (GitHub › Settings › Code security), dejando las alertas: sus actualizaciones las aplica una sesión con su nombre.
 - Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
 - Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids

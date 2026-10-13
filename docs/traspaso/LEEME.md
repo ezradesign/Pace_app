@@ -22,6 +22,12 @@ Manda sobre el relevo de abajo.
   y dio el sí a lo montado y pulido en `stats-montado-ligera.html`: sin scroll en el escritorio con la
   nota, la misma altura en las tres pestañas del móvil con los totales arriba, el año en dos filas en
   el móvil y barras que crecen con su cifra. En un móvil de 360 × 640 las tres piden algo de scroll.
+- **Historial reescrito el 13 oct. (con el sí de Ez):** todos los commits de main los firma Ez y sin
+  «Co-Authored-By», para que en GitHub solo salga él. Los identificadores de los commits cambiaron:
+  **cualquier copia o sesión anterior se vuelve a clonar y no se sube**. La copia previa completa está en
+  `PACE-historial-antes-13oct.bundle`, junto a la carpeta del proyecto. `verify` lo vigila. Se borraron
+  las 27 ramas ya juntadas; quedan `claude/calendario-sincronizacion` (reescrita), `claude/play-rutina-subidas`
+  y `main-sig4tn` (copia vieja de main del 8 oct., pendiente de que Ez diga si se borra).
 - **Recorrido por la app, 13 oct.** (v0.161.0): «Mis rutinas» saltaba el candado de PACE completo, «Sentadilla en pared»
   declaraba 2 min y duraba 3, y una treintena de botones del móvil eran pequeños para el dedo. Arreglado con sus pruebas.
   **Ronda 2, decidida por Ez y pendiente de fotos:** en un plan, el reloj enseña los minutos del bloque siguiente en vez

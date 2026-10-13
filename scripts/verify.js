@@ -48,6 +48,8 @@ var tamano = require('./verify.tamano.js');
 var lienzo = require('./verify.lienzo.js');
 /* Que la llave privada de los códigos de PACE completo no entre nunca en el repo. */
 var licencia = require('./verify.licencia.js');
+/* Que todo el historial lo firme Ez: en GitHub solo sale él como contribuidor. */
+var autoria = require('./verify.autoria.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -429,6 +431,7 @@ function main() {
   tamano.tandaTamano({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   lienzo.tandaLienzo({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   licencia.tandaLicencia({ ROOT: ROOT, falla: falla, ok: ok, info: info, rel: rel });
+  autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

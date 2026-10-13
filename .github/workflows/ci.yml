@@ -47,6 +47,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        # El historial entero: verify comprueba que todos los commits los firma Ez
+        # (scripts/verify.autoria.js), y con la copia superficial solo vería el último.
+        with:
+          fetch-depth: 0
 
       # Node 24 = el del desarrollo local (v24.15.0). `package.json` no declara
       # `engines`, asi que la version vive aqui: si algun dia se anade ese campo,
