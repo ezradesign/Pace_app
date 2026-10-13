@@ -108,7 +108,9 @@ function sha(buf) { return crypto.createHash('sha256').update(buf).digest('hex')
 function listar(dir, ext, out) {
   fs.readdirSync(dir).forEach(function (entry) {
     var full = path.join(dir, entry);
-    if (EXCLUIDAS.test(full)) return;
+    /* Se mira la ruta RELATIVA a la raíz: con la absoluta, un verify lanzado DENTRO de una
+       copia de .claude/worktrees se saltaba el repo entero («no encontró un solo archivo»). */
+    if (EXCLUIDAS.test(path.relative(ROOT, full))) return;
     var st;
     try { st = fs.statSync(full); } catch (e) { return; }
     if (st.isDirectory()) listar(full, ext, out);
