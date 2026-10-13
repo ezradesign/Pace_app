@@ -41,7 +41,7 @@ const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = 
 
 function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix,
                        variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240,
-                       viajes }) {
+                       viajes, enPausa = false }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
@@ -49,7 +49,10 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   usePace(); // al canjear un código, «Para ahora» vuelve a contar con lo que se abrió
 
   /* El modal se OCULTA, no se desmonta: sin esto el filtro y la vista
-     sobreviven al cierre y la próxima apertura arranca a medio filtrar. */
+     sobreviven al cierre y la próxima apertura arranca a medio filtrar.
+     `enPausa` la esconde SIN cerrarla (el constructor de «Tus rutinas» abierto
+     encima): al guardar, Ez volvía al catálogo en el móvil y no veía su rutina
+     nueva. Solo un cierre de verdad (`open` falso) la devuelve al catálogo. */
   useEffectLib(() => {
     if (!open) { setActivos([]); setVista('catalogo'); }
   }, [open]);
@@ -204,7 +207,7 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
     : null;
 
   return (
-    <Modal open={open} onClose={onClose} maxWidth={ancho}>
+    <Modal open={open && !enPausa} onClose={onClose} maxWidth={ancho}>
       <div className="pace-lib" style={{ '--tone': tone }}>
         <div className="pace-lib-cuerpo">
           {/* LATERAL: sólo escritorio (la hoja lo oculta por debajo de 769 px).

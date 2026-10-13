@@ -138,7 +138,8 @@ function CustomBuilder({ editId, onClose }) {
               <span style={customBuilderStyles.stepGlyph}>
                 <ExerciseGlyph id={s.name} size={24} />
               </span>
-              <span style={{ flex: 1, fontSize: 14, lineHeight: 1.3, minWidth: 0 }}>{tEx(s.name)}</span>
+              <span style={customBuilderStyles.stepName}>{tEx(s.name)}</span>
+              <span style={customBuilderStyles.controles}>
               <span style={customBuilderStyles.durGroup}>
                 <button onClick={() => nudgeDur(idx, -limits.durStep)} disabled={s.dur <= limits.minDur} aria-label="−5 s" style={customBuilderStyles.iconBtn}>−</button>
                 <span style={customBuilderStyles.durValue}>{s.dur} s</span>
@@ -148,6 +149,7 @@ function CustomBuilder({ editId, onClose }) {
                 <button onClick={() => moveStep(idx, -1)} disabled={idx === 0} title={t('custom.step.up')} aria-label={t('custom.step.up')} style={customBuilderStyles.iconBtn}>↑</button>
                 <button onClick={() => moveStep(idx, 1)} disabled={idx === steps.length - 1} title={t('custom.step.down')} aria-label={t('custom.step.down')} style={customBuilderStyles.iconBtn}>↓</button>
                 <button onClick={() => removeStep(idx)} title={t('custom.step.remove')} aria-label={t('custom.step.remove')} style={customBuilderStyles.iconBtn}>×</button>
+              </span>
               </span>
             </div>
           ))}
@@ -204,8 +206,11 @@ const customBuilderStyles = {
     border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
     letterSpacing: 0.2,
   },
+  /* SI NO CABEN, LOS CONTROLES BAJAN A SU LÍNEA (Ez, 13 oct.: a 360 px el nombre se montaba
+     encima del «−»: dibujo, duración y flechas fijas dejaban al nombre unos 20 px). El nombre
+     pide 120 px antes de partirse; si no los tiene, duración y flechas pasan abajo, a la derecha. */
   stepRow: {
-    display: 'flex', alignItems: 'center', gap: 10,
+    display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', rowGap: 6,
     padding: '8px 10px',
     border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
     background: 'var(--paper)',
@@ -216,6 +221,8 @@ const customBuilderStyles = {
     background: 'var(--move-soft)', color: 'var(--move)',
     display: 'grid', placeItems: 'center',
   },
+  stepName: { flex: '1 1 120px', fontSize: 14, lineHeight: 1.3, minWidth: 0 },
+  controles: { display: 'inline-flex', alignItems: 'center', gap: 10, marginLeft: 'auto', flexShrink: 0 },
   durGroup: {
     display: 'inline-flex', alignItems: 'center', gap: 4,
     flexShrink: 0,
