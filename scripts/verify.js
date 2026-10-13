@@ -96,9 +96,7 @@ var PLATAFORMA = new Set([
    que deja la suite (sus trazas guardan .js de la pagina que no son del repo)
    y las copias de las sesiones en paralelo en .claude/worktrees: cada una es
    otro checkout entero y desde la carpeta principal verify las recorria todas,
-   un `node --check` por archivo, hasta tardar mas de veinte minutos. Se mira
-   la ruta RELATIVA a la raiz: una sesion trabaja dentro de .claude/worktrees y,
-   con la absoluta, su propio verify no encontraba un solo archivo. */
+   un `node --check` por archivo, hasta tardar mas de veinte minutos. */
 var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git|test-results|playwright-report|\.claude[\\/]worktrees)([\\/]|$)/;
 
 var fallos = [];
@@ -112,6 +110,8 @@ function sha(buf) { return crypto.createHash('sha256').update(buf).digest('hex')
 function listar(dir, ext, out) {
   fs.readdirSync(dir).forEach(function (entry) {
     var full = path.join(dir, entry);
+    /* Se mira la ruta RELATIVA a la raíz: con la absoluta, un verify lanzado DENTRO de una
+       copia de .claude/worktrees se saltaba el repo entero («no encontró un solo archivo»). */
     if (EXCLUIDAS.test(path.relative(ROOT, full))) return;
     var st;
     try { st = fs.statSync(full); } catch (e) { return; }
