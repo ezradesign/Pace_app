@@ -12,11 +12,12 @@ cuentas dicen algo que no pasó) y **molesta** (no se pierde nada, pero confunde
 esos esperan el sí de Ez con fotos de antes y después. Los demás se arreglan sin preguntar, con una
 prueba que falla en `main` y pasa en la rama.
 
-**Estado el 12 de octubre: los once arreglados** en `claude/caza-foco-estado-d6bd17`, cada uno con su
+**Estado el 13 de octubre: los once arreglados** en `claude/caza-foco-estado-d6bd17`, cada uno con su
 prueba (roja contra `main`, verde en la rama). Los cuatro que cambian lo que se ve, con la opción A
-que eligió Ez mirando `archivos/caza-foco-10oct/fotos-para-ez.html`. Al arreglar estado-1 apareció que
+que eligió Ez mirando `archivos/caza-foco-10oct/fotos-para-ez.html`; el 13 de octubre dio el sí a
+subirlos mirando la app de hoy (`archivos/caza-foco-10oct/fotos-app-13oct.html`). Al arreglar estado-1 apareció que
 foco-6 empeoraba (con el estado compartido, el bloque contaba dos veces también en «Hoy»), así que
-van juntos.
+van juntos. Con dos pestañas, la pausa sale en la que miras (Ez, 13 oct., ver foco-6).
 
 ## Lo guardado
 
@@ -66,7 +67,7 @@ van juntos.
 ## El Foco
 
 ### ~~foco-1 · Tocar otros minutos con el bloque en marcha lo tira sin preguntar~~
-- **Arreglado con la opción A de Ez:** pregunta antes, como la barra de arriba (`tests/caza-foco.spec.js`).
+- **Arreglado con la opción A de Ez:** pregunta antes, como la barra de arriba (`tests/caza-foco.spec.js`). La ventana tapa toda la pantalla: en la maqueta se pintaba dentro del aro y su fondo dejaba las actividades por encima.
 - **Gravedad:** descuadra (se pierde el bloque a medias). **Cambia lo que se ve:** sí.
 - **Pasos:** Empezar foco (25). A los 20 minutos toca «35» arriba del aro, por ejemplo para alargar:
   el aro vuelve a 35:00 parado con «Empezar foco» y los 20 minutos no cuentan. Lo mismo con el
@@ -108,7 +109,7 @@ van juntos.
   «Continuar». Si luego continúas en la primera, al terminar cuenta otra vez.
 
 ### ~~foco-6 · Dos pestañas con el mismo bloque: el registro apunta dos sesiones de Foco~~
-- **Arreglado:** la pestaña que llega primera coge el candado del bloque (Web Locks) y es la única que cuenta, suena y abre la pausa (`tests/pestanas-foco.spec.js`).
+- **Arreglado:** la pestaña que llega primera coge el candado del bloque (Web Locks) y es la única que cuenta y suena (`tests/pestanas-foco.spec.js`). La pausa la abre la pestaña que miras, o la primera que vuelva al frente si no miras ninguna (Ez, 13 oct.: «En la que estás mirando»; `tests/pestanas-pausa.spec.js`).
 - **Gravedad:** descuadra (los eventos de `pace.events.v1`, que leerá el motor de la semana).
   **Cambia lo que se ve:** no.
 - **Pasos:** un bloque en marcha con dos pestañas abiertas y se deja terminar: `cycle` queda en 1,
