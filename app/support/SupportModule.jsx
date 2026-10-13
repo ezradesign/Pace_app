@@ -260,7 +260,7 @@ function SupportModal({ open, onClose }) {
             buymeacoffee.com/{BMC_USERNAME}
           </div>
 
-          <button
+          <button data-pace-toque
             onClick={markAsDonated}
             style={supportStyles.alreadyLink}
             title={t('support.donated.title')}

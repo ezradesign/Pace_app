@@ -132,7 +132,7 @@ function Onboarding() {
       <div style={onboardingStyles.header}>
         <div style={{ width: 86, display: 'flex' }}>
           {step > 0 && (
-            <button onClick={back} style={onboardingStyles.ghostBtn}>
+            <button data-pace-toque onClick={back} style={onboardingStyles.ghostBtn}>
               ← {t('onboarding.back')}
             </button>
           )}
@@ -141,7 +141,7 @@ function Onboarding() {
           : isSemana ? <span className="pace-meta">{t('ritmo.nombre')}</span> : <span />}
         <div style={{ width: 86, display: 'flex', justifyContent: 'flex-end' }}>
           {step === 0 && (
-            <button
+            <button data-pace-toque
               onClick={toggleLang}
               title={t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs')}
               style={onboardingStyles.langToggle}

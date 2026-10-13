@@ -31,6 +31,19 @@ function usePaceEventos(acciones) {
 
   useEffectEv(() => {
     const a = acciones;
+    /* «TUS RUTINAS» ES DE PACE COMPLETO: sin él, la invitación y no el constructor. La
+       barra lateral lo abría directo y se podía crear una rutina que luego salía cerrada.
+       El nombre se lee en el idioma de AHORA (este efecto vive desde el primer render). */
+    const constructor = (id) => {
+      if (typeof hasPremiumEntitlement === 'function' && !hasPremiumEntitlement()) {
+        const s = window.PACE_STRINGS || {};
+        const l = getState().lang || 'es';
+        const nombre = (s[l] && s[l]['custom.section.title']) || (s.en && s.en['custom.section.title']) || null;
+        if (typeof paceAbrirPremium === 'function') paceAbrirPremium({ nombre });
+        return;
+      }
+      a.abrirConstructor(id);
+    };
     /* Navegación desde la sidebar (s180). UN solo evento con `detail.kind` en vez
        de un `pace:open-*` por destino: la sidebar no toca el estado interno de
        los modales, solo dice qué quiere, y PaceApp decide con qué superficie se
@@ -59,7 +72,7 @@ function usePaceEventos(acciones) {
            llevar a una lista vacia seria peor que no llevar. */
         const propias = (getState().customRoutines || []).length;
         if (propias) a.abrirBiblioteca('move');
-        else a.abrirConstructor(null);
+        else constructor(null);
         return;
       }
       /* s194 · la puerta: la tarjeta de la barra lateral, o la parada de la línea del
@@ -87,7 +100,7 @@ function usePaceEventos(acciones) {
     };
     const escuchas = {
       'pace:cow-click': () => setCowClicks((c) => c + 1),
-      'pace:open-custom-builder': (e) => a.abrirConstructor((e.detail && e.detail.id) || null),
+      'pace:open-custom-builder': (e) => constructor((e.detail && e.detail.id) || null),
       'pace:open-achievements': () => a.abrirLogros(),
       'pace:open-support': () => a.abrirApoyo(),
       'pace:sidebar-action': sidebar,

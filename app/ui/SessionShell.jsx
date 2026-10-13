@@ -288,7 +288,7 @@ function SessionHeader({ routine, onExit, extra }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {extra}
-        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>{t('session.exit')}</button>
+        <button data-pace-toque onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>{t('session.exit')}</button>
       </div>
     </div>
   );

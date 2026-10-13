@@ -74,7 +74,7 @@ function MinutesPicker({ value, onChange }) {
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
       }}>{t('focus.min')}</span>
       {presets.map(m => (
-        <button key={m} onClick={() => { onChange(m); setEditing(false); }}
+        <button key={m} data-pace-toque onClick={() => { onChange(m); setEditing(false); }}
           style={{
             ...pillBase,
             fontWeight: value === m ? 600 : 400,
@@ -108,7 +108,7 @@ function MinutesPicker({ value, onChange }) {
           }}
         />
       ) : isCustom ? (
-        <button
+        <button data-pace-toque
           onClick={() => setEditing(true)}
           title={t('focus.minutes.custom.title')}
           style={{
@@ -120,7 +120,7 @@ function MinutesPicker({ value, onChange }) {
           {value}
         </button>
       ) : (
-        <button
+        <button data-pace-toque
           onClick={() => setEditing(true)}
           title={t('focus.minutes.custom.title')}
           style={{

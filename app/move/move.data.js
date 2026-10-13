@@ -262,7 +262,7 @@ var MOVE_ROUTINES = {
          contra la pared). La 2ª tanda reparte el cue legacy: acción + care («elige
          una altura»). `name` intactos → glifos sin tocar. Acceso premium SIN
          cambios. */
-      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
+      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 3, access: 'premium',
         position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
           { name: 'Silla en la pared', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },

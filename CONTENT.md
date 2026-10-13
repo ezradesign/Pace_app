@@ -193,7 +193,7 @@ con los ids `move.*` de Estira).
 | `extra.glutes.stealth` | Glúteos invisibles | sigilo | 2 | free (F6 — micro discreto) |
 | `extra.core.stealth` | Core silencioso | sigilo | 2 | **premium** (hollow al límite) |
 | `extra.chair.squats` | Sentadillas de silla | piernas | 3 | free (F6 — el patrón más útil) |
-| `extra.wall.sit` | Sentadilla en pared | piernas | 2 | **premium** (isométrico exigente) |
+| `extra.wall.sit` | Sentadilla en pared | piernas | 3 | **premium** (isométrico exigente) |
 | `extra.legs.single` | Piernas · a una | piernas | 4 | **premium** (F6 — unilateral avanzado) |
 | `extra.posture.set` | Postura reset | espalda | 2 | **free** (inicial) |
 | `extra.back.desk` | Espalda de oficina | espalda | 3 | free (F6 — tracción accesible) |

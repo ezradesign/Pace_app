@@ -22,6 +22,11 @@ Manda sobre el relevo de abajo.
   y dio el sí a lo montado y pulido en `stats-montado-ligera.html`: sin scroll en el escritorio con la
   nota, la misma altura en las tres pestañas del móvil con los totales arriba, el año en dos filas en
   el móvil y barras que crecen con su cifra. En un móvil de 360 × 640 las tres piden algo de scroll.
+- **Recorrido por la app, 13 oct.** (v0.161.0): «Mis rutinas» saltaba el candado de PACE completo, «Sentadilla en pared»
+  declaraba 2 min y duraba 3, y una treintena de botones del móvil eran pequeños para el dedo. Arreglado con sus pruebas.
+  **Ronda 2, decidida por Ez y pendiente de fotos:** en un plan, el reloj enseña los minutos del bloque siguiente en vez
+  de 00:00; «Tus rutinas» y «PACE completo» en todas partes (en vez de «Mis rutinas» y el sello «Premium»); y en inglés
+  las voces atenuadas con su nota y «Plays behind» → «In the background».
 - **Puertos:** el 8765 y el 8793 siguen ocupados por servidores de la cuenta anterior; la caza usa
   el 8785 o el 8794 y la coordinadora, el 8775.
 - **`verify` desde la carpeta principal** tardaba más de veinte minutos porque recorría las copias de

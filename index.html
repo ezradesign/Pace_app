@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.160.0</title>
+  <title>PACE · Foco · Cuerpo — v0.161.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6036,7 +6036,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.160.0';
+const PACE_VERSION = 'v0.161.0';
 
 
 
@@ -13912,6 +13912,56 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
 ;Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal });
 })();
 </script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function () {
+  if (document.getElementById('pace-toques-css')) return;
+  var s = document.createElement('style');
+  s.id = 'pace-toques-css';
+  s.textContent = `
+    @media (max-width: 640px), (pointer: coarse) {
+      [data-pace-toque], .pace-aj-pild, .pace-aj-cerrar, .pace-aj-paso > button, .pace-aj-sw,
+      .pace-lib-link, [data-pace-hoy-celda], [data-pace-semana-saltar], [data-pace-stats-tabs] > button {
+        position: relative;
+      }
+      [data-pace-toque]::before, .pace-aj-pild::before, .pace-aj-cerrar::before, .pace-aj-paso > button::before,
+      .pace-aj-sw::before, .pace-lib-link::before, [data-pace-hoy-celda]::before,
+      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before {
+        content: ''; position: absolute; inset: -9px 0;
+      }
+      /* Píldoras de Ajustes: 14 px entre filas, 7 cada una. */
+      .pace-aj-pild::before { inset: -7px 0; }
+      /* Interruptor: 11 px libres encima en la fila más justa. */
+      .pace-aj-sw::before { inset: -5px -8px; }
+      .pace-aj-cerrar::before { inset: -9px; }
+      .pace-aj-paso > button::before { inset: -7px -4px; }
+      /* «Tus rutinas»: 8 px encima y 12 debajo hasta los filtros. */
+      .pace-lib-link::before { inset: -4px -6px -6px; }
+      /* «Cada semana es distinta»: 17 px encima, 5 debajo. */
+      [data-pace-semana-saltar]::before { inset: -10px 0 -2px; }
+      [data-pace-hoy-celda]::before { inset: -11px 0; }
+      [data-pace-stats-tabs] > button::before { inset: -7px 0; }
+    }
+  `;
+  document.head.appendChild(s);
+})();
+})();
+</script>
   <!-- RedDeError (s198 · v0.132.0): si una parte falla al dibujarse, se cierra
        solo esa parte; la global, alrededor de PaceApp, es el ultimo recurso. -->
   <script>
@@ -14435,7 +14485,7 @@ function SessionHeader(_ref3) {let { routine, onExit, extra } = _ref3;
     ),
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 16 } },
     extra,
-    React.createElement("button", { onClick: () => onExit('exit'), style: sessionShellStyles.exitBtn }, t('session.exit'))
+    React.createElement("button", { "data-pace-toque": true, onClick: () => onExit('exit'), style: sessionShellStyles.exitBtn }, t('session.exit'))
     )
     ));
 
@@ -18347,7 +18397,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500
       } }, t('focus.min')),
     presets.map((m) =>
-    React.createElement("button", { key: m, onClick: () => {onChange(m);setEditing(false);},
+    React.createElement("button", { key: m, "data-pace-toque": true, onClick: () => {onChange(m);setEditing(false);},
       style: {
         ...pillBase,
         fontWeight: value === m ? 600 : 400,
@@ -18381,7 +18431,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
       } }
     ) :
     isCustom ?
-    React.createElement("button", {
+    React.createElement("button", { "data-pace-toque": true,
       onClick: () => setEditing(true),
       title: t('focus.minutes.custom.title'),
       style: {
@@ -18393,7 +18443,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     value
     ) :
 
-    React.createElement("button", {
+    React.createElement("button", { "data-pace-toque": true,
       onClick: () => setEditing(true),
       title: t('focus.minutes.custom.title'),
       style: {
@@ -19158,7 +19208,7 @@ function SupportModal(_ref4) {let { open, onClose } = _ref4;
     BMC_USERNAME
     ),
 
-    React.createElement("button", {
+    React.createElement("button", { "data-pace-toque": true,
       onClick: markAsDonated,
       style: supportStyles.alreadyLink,
       title: t('support.donated.title') },
@@ -25756,7 +25806,7 @@ var MOVE_ROUTINES = {
 
 
 
-    { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
+    { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 3, access: 'premium',
       position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
       steps: [
       { name: 'Silla en la pared', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
@@ -36051,7 +36101,7 @@ function Onboarding() {
     React.createElement("div", { style: onboardingStyles.header },
     React.createElement("div", { style: { width: 86, display: 'flex' } },
     step > 0 &&
-    React.createElement("button", { onClick: back, style: onboardingStyles.ghostBtn }, "\u2190 ",
+    React.createElement("button", { "data-pace-toque": true, onClick: back, style: onboardingStyles.ghostBtn }, "\u2190 ",
     t('onboarding.back')
     )
 
@@ -36060,7 +36110,7 @@ function Onboarding() {
     isSemana ? React.createElement("span", { className: "pace-meta" }, t('ritmo.nombre')) : React.createElement("span", null),
     React.createElement("div", { style: { width: 86, display: 'flex', justifyContent: 'flex-end' } },
     step === 0 &&
-    React.createElement("button", {
+    React.createElement("button", { "data-pace-toque": true,
       onClick: toggleLang,
       title: t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
       style: onboardingStyles.langToggle },
@@ -40287,6 +40337,19 @@ function usePaceEventos(acciones) {
 
 
 
+    const constructor = (id) => {
+      if (typeof hasPremiumEntitlement === 'function' && !hasPremiumEntitlement()) {
+        const s = window.PACE_STRINGS || {};
+        const l = getState().lang || 'es';
+        const nombre = s[l] && s[l]['custom.section.title'] || s.en && s.en['custom.section.title'] || null;
+        if (typeof paceAbrirPremium === 'function') paceAbrirPremium({ nombre });
+        return;
+      }
+      a.abrirConstructor(id);
+    };
+
+
+
 
 
 
@@ -40312,7 +40375,7 @@ function usePaceEventos(acciones) {
 
         const propias = (getState().customRoutines || []).length;
         if (propias) a.abrirBiblioteca('move');else
-        a.abrirConstructor(null);
+        constructor(null);
         return;
       }
 
@@ -40340,7 +40403,7 @@ function usePaceEventos(acciones) {
     };
     const escuchas = {
       'pace:cow-click': () => setCowClicks((c) => c + 1),
-      'pace:open-custom-builder': (e) => a.abrirConstructor(e.detail && e.detail.id || null),
+      'pace:open-custom-builder': (e) => constructor(e.detail && e.detail.id || null),
       'pace:open-achievements': () => a.abrirLogros(),
       'pace:open-support': () => a.abrirApoyo(),
       'pace:sidebar-action': sidebar
