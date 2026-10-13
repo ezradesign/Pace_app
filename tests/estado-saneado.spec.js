@@ -162,6 +162,26 @@ test('un backup con campos rotos se importa SANEADO: tras recargar, la persona s
   expect(s.racha).toBe('number');
 });
 
+test('la copia de rescate que descarga PACE se puede importar (caza del 10 oct., estado-4)', async ({ context, page }) => {
+  /* Lo que guarda `paceDescargarRescate`: el estado viaja como la cadena que un arranque no pudo
+     leer. Si una version nueva ya la lee, importarla tiene que devolverla. En v0.154.0 daba
+     «Archivo no reconocido.». */
+  await sembrar(context);
+  await irAlArtefacto(page);
+  page.on('dialog', d => d.accept());
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  const recarga = page.waitForEvent('load');
+  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+    name: 'pace-rescate-20261010.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ app: 'PACE', kind: 'rescate', version: 'v0.154.0', exportedAt: '2026-10-10T10:00:00Z',
+      rescate: { v: 1, savedAt: 1791000000000, motivo: 'x', raw: JSON.stringify(CON_HISTORIA) } })),
+  });
+  await expect(page.locator('.pace-aj-msg')).toHaveText('Importado — recargando…');
+  await recarga;
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  expect(await page.evaluate(() => window.getState().totalFocusMin)).toBe(4321);
+});
+
 test('«Borrar todos mis datos» borra TODAS las claves de PACE, no solo el estado', async ({ context, page }) => {
   await sembrar(context);
   await irAlArtefacto(page);

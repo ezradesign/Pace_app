@@ -32,10 +32,12 @@ function addFocusMinutes(mins) {
   checkFocusDayAchievement();
 }
 
-function completePomodoro() {
+/* `bloque`: el id del bloque que se cuenta. Viaja en el estado (`focoContado`) para que otra
+   pestaña con el mismo bloque sepa que ya está contado (focus/FocusTimer.pestanas.jsx). */
+function completePomodoro(bloque) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
-  setState(prev => ({ ...prev, cycle: prev.cycle + 1 }));
+  setState(prev => ({ ...prev, cycle: prev.cycle + 1, ...(bloque ? { focoContado: bloque } : {}) }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
@@ -70,7 +72,7 @@ function completeFocusSession(context, opts) {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    completePomodoro();
+    completePomodoro(opts && opts.bloque);
   }
   /* s172 · DUAL-WRITE: el evento va DESPUES de la escritura legacy y no puede
      alterarla (`emitSessionCompleted` se traga sus propios fallos). Foco solo

@@ -2,7 +2,7 @@
    Temporizador funcional real. 4 estilos visuales de tweaks.
 */
 
-const { useEffect: useEffectFT, useRef: useRefFT } = React;
+const { useEffect: useEffectFT, useRef: useRefFT, useState: useStateFT } = React;
 
 /* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y `curvaCaida` salieron al
    trocear este archivo; su porque medido (meseta 45-55 %, enfriamiento sin repunte, s159) va con ellas. */
@@ -20,20 +20,25 @@ function FocusTimer({ onFinish }) {
                      : state.focusMode === 'pausa' ? 5
                      : 15) * 60;
 
-  const { remaining, running, status, endsAt, start, toggle, reset, restore } = useCountdown(durationSec, () => {
+  const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
-       bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado). */
-    try { playSound('pomodoro.end'); } catch (e) {}
+       bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado).
+       Pausa(5)/larga(15) tickan y suenan pero NO acreditan (decision historica). */
+    if (state.focusMode !== 'foco') { try { playSound('pomodoro.end'); } catch (e) {} return; }
     /* Solo el modo foco acredita: cycle + logros de pomodoro via
-       completeFocusSession('home') -> completePomodoro. Pausa(5)/larga(15)
-       tickan y suenan pero NO acreditan (decision historica). El hook fija la
+       completeFocusSession('home') -> completePomodoro. El hook fija la
        ultima onComplete en un ref, asi que este cierre lee el focusMode
-       vigente; un cambio de modo resetea el timer antes de poder completar. */
-    if (state.focusMode === 'foco') {
+       vigente; un cambio de modo resetea el timer antes de poder completar.
+       Con el bloque abierto en otra pestaña, solo una lo cuenta, y solo esa
+       suena y avisa; la pausa la abre la que miras (FocusTimer.pestanas.jsx). */
+    const bloque = bloqueRef.current || ('e' + Date.now());
+    const minutos = state.focusMinutes, inicio = inicioBloqueRef.current, avisoOn = state.notifyFocusEnd;
+    paceFocoContar(bloque, () => {
+      try { playSound('pomodoro.end'); } catch (e) {}
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
-      completeFocusSession('home', { minutes: state.focusMinutes,
-        elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
+      completeFocusSession('home', { minutes: minutos, bloque,
+        elapsedSeconds: focoElapsedSec(inicio, durationSec),
         activeSeconds: durationSec });
       /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
          pestaña está en segundo plano. Nunca rompe (patrón playSound).
@@ -45,42 +50,68 @@ function FocusTimer({ onFinish }) {
       try {
         onFinish && onFinish();
       } finally {
+        try { paceFocoPausaPendiente(bloque); } catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({
-            enabled: state.notifyFocusEnd,
+            enabled: avisoOn,
             title: aviso ? aviso.title : t('notify.focus.title'),
             body: aviso ? aviso.body : t('notify.focus.body'),
           });
         } catch (e) {}
       }
-    }
+    });
   });
 
   /* Persistencia del Pomodoro en recarga (s102, resuelve el fork s96).
      Clave pace.timer.v1 FUERA de pace.state.v2 (el timer sigue siendo
-     local, decisión s96). Al montar: reanuda solo si el foco guardado
-     sigue VIVO y modo/minutos coinciden; expirado estando fuera se
-     descarta sin acreditar (helpers en FocusTimer.support.jsx). */
+     local, decisión s96). Al montar, si modo/minutos coinciden: el bloque en
+     marcha sigue, el que está en pausa vuelve en pausa y el que terminó hoy
+     con la página cerrada se cuenta (Ez, 12 oct. 2026; helpers y porqué en
+     FocusTimer.support.jsx). */
   /* s172 · reloj de PARED del bloque, solo para el evento (§6.4 lo quiere CON
      las pausas dentro y `useCountdown` no guarda el inicio). Se fija al empezar
      un bloque, NUNCA al reanudar: eso borraria la pausa que esto va a contar. */
   const inicioBloqueRef = useRefFT(null);
+  /* El bloque de foco que se ve, el mismo en todas las pestañas (FocusTimer.pestanas.jsx). */
+  const bloqueRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
-    const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
+    const g = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
     /* Reanudado tras recargar: el inicio real se fue con la pestaña y se DERIVA
        del final guardado — estimacion que ignora las pausas previas, por eso no
-       toca `activeSeconds`, que sigue siendo exacto. */
-    if (endsAtSaved) { inicioBloqueRef.current = endsAtSaved - durationSec * 1000; restore(endsAtSaved); }
+       toca `activeSeconds`, que sigue siendo exacto. Si ya venció, `restore` lo
+       completa y lo cuenta en el acto. */
+    if (g && g.endsAt) {
+      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      bloqueRef.current = g.id || ('e' + g.endsAt);
+      restore(g.endsAt);
+    } else if (g && g.pausaMs) {
+      inicioBloqueRef.current = g.inicio;
+      bloqueRef.current = g.id || paceFocoNuevoId();
+      congelar(g.pausaMs);
+    }
   }, []);
 
-  // Escribe mientras hay un foco running; pausa/reset/fin/otros modos limpian.
+  // Escribe mientras hay un foco en marcha o en pausa; reiniciar, el fin y los otros modos limpian.
   useEffectFT(() => {
-    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
-  }, [running, endsAt, state.focusMode, state.focusMinutes]);
+    const foco = state.focusMode === 'foco';
+    persistFocusTimer(running && foco, endsAt, state.focusMinutes, bloqueRef.current,
+      foco && status === 'paused' ? restanteMs : null, inicioBloqueRef.current);
+  }, [running, endsAt, status, restanteMs, state.focusMode, state.focusMinutes]);
+
+  /* Lo que se hace aquí con el bloque se repite en las otras pestañas, y al revés. Empezar y
+     continuar se avisan cuando el motor ya tiene su final (`avisarCorreRef`). */
+  const avisarPestanas = useFocoPestanas({ activo: state.focusMode === 'foco', minutos: state.focusMinutes,
+    bloqueRef, inicioRef: inicioBloqueRef, seguir, congelar, reset });
+  const avisarCorreRef = useRefFT(false);
+  useEffectFT(() => {
+    if (!avisarCorreRef.current || !running || !endsAt) return;
+    avisarCorreRef.current = false;
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
+  }, [running, endsAt]);
 
   /* En Android el aviso de fin de Foco lo programa el sistema (ui/android.js),
      porque con la app en el fondo esta cuenta no corre. Aqui solo se le dice
@@ -140,6 +171,13 @@ function FocusTimer({ onFinish }) {
                   : t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
+  /* Otros minutos con un bloque empezado lo tirarían sin contar: se pregunta antes, como la barra
+     de arriba al cambiar de modo (Ez, 12 oct. 2026, foco-1). Guarda los minutos que se pidieron. */
+  const [minPendiente, setMinPendiente] = useStateFT(null);
+  const elegirMinutos = (v) => {
+    if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) { setMinPendiente(v); return; }
+    set({ focusMinutes: v });
+  };
   const isCompleted = status === 'completed';
 
   /* Subtítulo del aro/barra/analógico (s124):
@@ -161,6 +199,7 @@ function FocusTimer({ onFinish }) {
   const startFocusVisual = () => {
     if (status !== 'paused') {
       inicioBloqueRef.current = Date.now();   // s172: bloque nuevo, no reanudacion
+      bloqueRef.current = paceFocoNuevoId();
       /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
          reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
       if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado(state.focusMinutes);   // s194: y recoloca el dia si la hora no es la del plan
@@ -172,24 +211,33 @@ function FocusTimer({ onFinish }) {
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
   };
   // Arranque/reanudación normal (idle|paused -> running). Pausar no pasa por aquí.
-  const handleNormalStart = () => { startFocusVisual(); toggle(); };
+  const handleNormalStart = () => { startFocusVisual(); avisarCorreRef.current = true; toggle(); };
   /* Fix del 'completed' inerte (s124): handler DEDICADO — reset + start. El
      motor sigue con 'completed' TERMINAL (toggle() ahí es no-op). reset NO
      acredita, start NO acredita: el 2º bloque empieza en durationSec completo
      sin tocar state.cycle. */
-  const handleStartAnotherCycle = () => { startFocusVisual(); reset(); start(); };
+  const handleStartAnotherCycle = () => { startFocusVisual(); avisarCorreRef.current = true; reset(); start(); };
+  /* Pausar y reiniciar aquí pausan y reinician el mismo bloque en las otras pestañas. */
+  const handlePause = () => {
+    if (state.focusMode === 'foco' && endsAt) avisarPestanas({ tipo: 'pausa', id: bloqueRef.current, restanteMs: Math.max(0, endsAt - Date.now()) });
+    toggle();
+  };
+  const handleReset = () => {
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'reinicia', id: bloqueRef.current });
+    reset();
+  };
 
   /* s195 · «Seguir con el bloque N+1» desde la pausa con menú (BreakMenu.ritmo.jsx):
      el mismo arranque que el botón del aro, según el estado del motor. Se escucha
      por evento para no enhebrar un handler por main.jsx hasta aquí. */
   useEffectFT(() => {
-    const seguir = () => {
+    const alSeguir = () => {
       if (state.focusMode !== 'foco') return;
       if (status === 'completed') handleStartAnotherCycle();
       else if (status === 'idle') handleNormalStart();
     };
-    window.addEventListener('pace:ritmo-seguir', seguir);
-    return () => window.removeEventListener('pace:ritmo-seguir', seguir);
+    window.addEventListener('pace:ritmo-seguir', alSeguir);
+    return () => window.removeEventListener('pace:ritmo-seguir', alSeguir);
   });
 
   /* Etiqueta + acción del botón principal por ESTADO del motor (s124, SIN
@@ -209,7 +257,7 @@ function FocusTimer({ onFinish }) {
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
-    ctaAction = toggle;
+    ctaAction = handlePause;
   } else if (isCompleted) {
     ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
@@ -261,7 +309,7 @@ function FocusTimer({ onFinish }) {
           s123 no se desplazan. focus.restart queda intacta (PathFocusStep). */}
       {status === 'paused' && (
         <button
-          onClick={reset}
+          onClick={handleReset}
           style={focusStyles.resetTextBtn}
           title={t('focus.restartBlock')}
           aria-label={t('focus.restartBlock')}
@@ -298,7 +346,7 @@ function FocusTimer({ onFinish }) {
          las pills de MinutesPicker); el gap:14 del root aplica igual a ambos,
          asi el aro queda en la MISMA posicion en los tres modos. */}
       {state.focusMode === 'foco' ? (
-        <MinutesPicker value={state.focusMinutes} onChange={(v) => set({ focusMinutes: v })} />
+        <MinutesPicker value={state.focusMinutes} onChange={elegirMinutos} />
       ) : (
         <div aria-hidden="true" style={{ height: 26 }} />
       )}
@@ -332,6 +380,16 @@ function FocusTimer({ onFinish }) {
           paused={status === 'paused'}
         />
       </div>
+
+      {/* A document.body: dentro del aro, recortado al horizonte, el fondo se quedaba arriba. */}
+      {minPendiente != null && ReactDOM.createPortal(
+        <Modal open onClose={() => setMinPendiente(null)} maxWidth={440} title={tn('focus.cambioMin.title', { n: minPendiente })}>
+          <p data-pace-cambio-minutos style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{t('topbar.cambio.body')}</p>
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+            <Button variant="secondary" onClick={() => { set({ focusMinutes: minPendiente }); setMinPendiente(null); }}>{t('topbar.cambio.cambiar')}</Button>
+            <Button variant="primary" onClick={() => setMinPendiente(null)}>{t('topbar.cambio.seguir')}</Button>
+          </div>
+        </Modal>, document.body)}
 
       {/* Controles + ciclo fuera del aro — solo para estilos no-aro */}
       {!isAro && (

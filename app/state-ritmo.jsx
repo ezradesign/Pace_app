@@ -321,13 +321,13 @@ function ritmoSiguiente(s) {
   return null;
 }
 
-/* ¿Hay un bloque de foco corriendo? Lo dice la clave que FocusTimer escribe
-   SOLO mientras corre. Cambiar `focusMinutes` con un bloque en marcha lo
-   reiniciaría, así que con él vivo no se toca nada. */
+/* ¿Hay un bloque de foco empezado? Lo dice la clave que FocusTimer escribe mientras corre y,
+   desde el 12 oct. 2026, también en pausa (hoy). Cambiar `focusMinutes` con un bloque empezado
+   lo reiniciaría, así que con él vivo no se toca nada. */
 function ritmoFocoCorriendo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
-    return !!(v && v.endsAt && v.endsAt > Date.now());
+    return !!(v && ((v.endsAt && v.endsAt > Date.now()) || (v.pausaMs > 0 && v.dia === new Date().toDateString())));
   } catch (e) { return false; }
 }
 

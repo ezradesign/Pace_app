@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.158.0</title>
+  <title>PACE · Foco · Cuerpo — v0.159.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1867,6 +1867,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'update.cta': 'Actualizar',
   'update.applying': 'Actualizando…',
   'update.later': 'Luego',
+  'guardar.aviso': 'Este navegador no deja guardar: lo que hagas se perderá al cerrar PACE.',
+  'guardar.entendido': 'Entendido',
 
 
   'premium.seal': 'Premium',
@@ -2030,6 +2032,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'update.cta': 'Update',
   'update.applying': 'Updating…',
   'update.later': 'Later',
+  'guardar.aviso': 'This browser is not letting PACE save: what you do will be lost when you close it.',
+  'guardar.entendido': 'Got it',
 
 
   'premium.seal': 'Premium',
@@ -2099,6 +2103,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.other': 'Otro',
   'focus.restart': 'Reiniciar',
   'focus.restartBlock': 'Reiniciar bloque',
+  'focus.cambioMin.title': '¿Cambiar a un bloque de {n} min?',
   'focus.start': 'Empezar foco',
 
 
@@ -2280,6 +2285,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.other': 'Other',
   'focus.restart': 'Restart',
   'focus.restartBlock': 'Restart focus',
+  'focus.cambioMin.title': 'Switch to a {n}-minute block?',
   'focus.start': 'Start focus',
   'focus.startPause': 'Start break',
   'focus.pause': 'Pause',
@@ -6030,7 +6036,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.158.0';
+const PACE_VERSION = 'v0.159.0';
 
 
 
@@ -6258,7 +6264,9 @@ const defaultState = {
 
 
 
-function loadState() {
+
+
+function loadState(estricto) {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   let raw = null;
   try {
@@ -6378,6 +6386,7 @@ function loadState() {
     }
     return merged;
   } catch (e) {
+    if (estricto) throw e;
 
 
     if (typeof paceGuardarRescate === 'function') paceGuardarRescate(raw, e);
@@ -6396,8 +6405,11 @@ function loadState() {
 let _state = loadState();
 const _listeners = new Set();
 
+
 function persistState() {
-  try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {}
+  try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {
+    try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
+  }
 }
 
 
@@ -6444,6 +6456,15 @@ function subscribe(listener) {
 }
 
 
+function paceAdoptarEstado(nuevo) {
+  const prev = _state;
+  _state = nuevo;
+  _listeners.forEach((l) => l());
+  if (prev.palette !== _state.palette || prev.font !== _state.font) applyTheme(_state);
+  if (prev.lang !== _state.lang) applyLang(_state);
+}
+
+
 
 
 
@@ -6468,7 +6489,7 @@ function usePace() {
 function ensureDayFresh(desdeDisco) {
   let base = _state;
   if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
-    try {if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState();} catch (e) {}
+    try {if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(true);} catch (e) {}
   }
   const next = rolloverIfNeeded(base);
   if (next !== _state) {
@@ -6493,9 +6514,9 @@ applyLang(_state);
 
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, FOCO_MINIMO, defaultState,
-  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState
+  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState, loadState, paceAdoptarEstado
 });
-;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, usePace, ensureDayFresh });
+;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, paceAdoptarEstado, usePace, ensureDayFresh });
 })();
 </script>
   <!-- state-core.toast (s198): el buzon de avisos, cortado de state-core.jsx por
@@ -6651,6 +6672,48 @@ setInterval(paceDiaMirar, PACE_DIA_CADA_MS);
 
 Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
 ;Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
+})();
+</script>
+  <!-- state-core.pestanas: lo que guarda otra pestaña pasa a esta sin reescribirlo, para que
+       la que lleva rato abierta no pise lo hecho en la otra. DESPUES de state-core. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-core.pestanas.js — varias pestañas, un solo estado.
+
+   Cada pestaña (o la app instalada junto a una pestaña del navegador) lleva su copia de
+   `pace.state.v2` en memoria y, en cada gesto, la escribe ENTERA. Sin esto, la pestaña que se abrió
+   antes no sabía nada de lo que hiciste en la otra y lo borraba al tocar cualquier cosa: tres vasos
+   en una y uno en la otra dejaban un vaso; un bloque de Foco desaparecía; «Borrar todo» en una y un
+   vaso en la otra devolvían todo lo borrado; una copia importada se perdía igual.
+
+   El navegador avisa a las DEMÁS pestañas con `storage` cada vez que una guarda, así que aquí se
+   adopta lo guardado (`paceAdoptarEstado`) sin volver a escribirlo. Se lee con `loadState(true)`:
+   el mismo saneado y las mismas migraciones que al arrancar, pero si lo guardado no se puede leer
+   lanza y esta pestaña se queda con su copia, nunca con el estado de fábrica (un estado de fábrica
+   en memoria es un borrado diferido: la siguiente escritura lo guardaría encima). Si la clave
+   desaparece (Borrar todo), `loadState` da el de una instalación nueva, que es lo que hay en disco.
+
+   La pestaña oculta también adopta: adoptar no escribe, así que no pisa a nadie, y cuando vuelva al
+   frente ya tendrá lo último. Carga después de state-core.jsx, que define las dos funciones. */
+
+function paceOtraPestanaGuardo(e) {
+  try {
+    if (e.storageArea && e.storageArea !== localStorage) return;
+    if (e.key !== LS_KEY && e.key !== null) return;
+  } catch (err) {return;}
+  var nuevo;
+  try {nuevo = loadState(true);} catch (err) {return;}
+  paceAdoptarEstado(nuevo);
+}
+
+window.addEventListener('storage', paceOtraPestanaGuardo);
+
+Object.assign(window, { paceOtraPestanaGuardo });
+;Object.assign(window, { paceOtraPestanaGuardo });
 })();
 </script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
@@ -6997,10 +7060,12 @@ function addFocusMinutes(mins) {
   checkFocusDayAchievement();
 }
 
-function completePomodoro() {
+
+
+function completePomodoro(bloque) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
-  setState((prev) => ({ ...prev, cycle: prev.cycle + 1 }));
+  setState((prev) => ({ ...prev, cycle: prev.cycle + 1, ...(bloque ? { focoContado: bloque } : {}) }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
@@ -7035,7 +7100,7 @@ function completeFocusSession(context, opts) {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    completePomodoro();
+    completePomodoro(opts && opts.bloque);
   }
 
 
@@ -10197,7 +10262,7 @@ function ritmoSiguiente(s) {
 function ritmoFocoCorriendo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
-    return !!(v && v.endsAt && v.endsAt > Date.now());
+    return !!(v && (v.endsAt && v.endsAt > Date.now() || v.pausaMs > 0 && v.dia === new Date().toDateString()));
   } catch (e) {return false;}
 }
 
@@ -12476,10 +12541,18 @@ function paceOrigenPendienteLeer() {return paceOrigenPendiente;}
 
 
 
+
+
+
+
+
 function paceEmitirEvento(evento, alRechazar, alConfirmar) {
   if (!evento || typeof window.paceEventsAppend !== 'function') return false;
   try {
-    const p = window.paceEventsAppend(evento);
+    const abierto = typeof window.paceEventsInitialize === 'function' ? window.paceEventsInitialize() : null;
+    const p = abierto && typeof abierto.then === 'function' ?
+    abierto.then(function () {return window.paceEventsAppend(evento);}) :
+    window.paceEventsAppend(evento);
     if (p && typeof p.then === 'function') {
       p.then(function (r) {
         if (!r || r.result !== 'committed') {if (alRechazar) alRechazar();} else
@@ -13119,7 +13192,12 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
 var PACE_WEB_PUBLICA = 'https://pacegrass.app';
 var PACE_AVISO_FOCO_ID = 1;
 
-var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: false, atras: 0 };
+
+
+
+
+
+var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: true, atras: 0 };
 
 function paceEsAndroid() {
   try {
@@ -17087,8 +17165,37 @@ const updatePromptStyles = {
   }
 };
 
-Object.assign(window, { UpdatePrompt });
-;Object.assign(window, { UpdatePrompt });
+
+
+
+
+
+
+function AvisoNoGuarda() {
+  const { t } = useT();
+  const [visto, setVisto] = useStateUP(!!window.__paceNoGuarda);
+  const [cerrado, setCerrado] = useStateUP(false);
+  useEffectUP(() => {
+    const h = () => setVisto(true);
+    window.addEventListener('pace:no-guarda', h);
+    return () => window.removeEventListener('pace:no-guarda', h);
+  }, []);
+  if (!visto || cerrado) return null;
+  return (
+    React.createElement("div", { "data-pace-no-guarda": true, style: updatePromptStyles.wrap },
+    React.createElement("div", { role: "status", style: { ...updatePromptStyles.bar, flexWrap: 'wrap', maxWidth: 520 } },
+    React.createElement("span", { style: { ...updatePromptStyles.msg, whiteSpace: 'normal', flex: '1 1 220px' } }, t('guardar.aviso')),
+    React.createElement("button", { onClick: () => {try {paceDescargarCopia(getState());} catch (e) {}}, style: updatePromptStyles.cta },
+    t('settings.data.export')
+    ),
+    React.createElement("button", { onClick: () => setCerrado(true), style: updatePromptStyles.later }, t('guardar.entendido'))
+    )
+    ));
+
+}
+
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
+;Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
 })();
 </script>
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
@@ -17738,14 +17845,38 @@ function useCountdown(durationSec, onComplete) {
 
 
 
+
+
+
   const restore = useCallbackUC((endsAtMs) => {
     if (statusRef.current !== 'idle') return;
-    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    if (typeof endsAtMs !== 'number') return;
+    if (endsAtMs <= Date.now()) {complete();return;}
     firedRef.current = false;
     endsAtRef.current = endsAtMs;
     statusRef.current = 'running';
     setStatus('running');
   }, []);
+
+
+
+
+  const seguir = useCallbackUC((endsAtMs) => {
+    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    firedRef.current = false;
+    endsAtRef.current = endsAtMs;
+    statusRef.current = 'running';
+    setStatus('running');
+    forceTick((n) => n + 1);
+  }, []);
+  const congelar = useCallbackUC((restanteMs) => {
+    firedRef.current = false;
+    endsAtRef.current = null;
+    remainingMsRef.current = Math.max(0, Math.min(restanteMs, durationSec * 1000));
+    statusRef.current = 'paused';
+    setStatus('paused');
+    forceTick((n) => n + 1);
+  }, [durationSec]);
 
   return {
     remaining,
@@ -17754,7 +17885,9 @@ function useCountdown(durationSec, onComplete) {
 
 
     endsAt: status === 'running' ? endsAtRef.current : null,
-    start, pause, resume: start, toggle, reset, restore
+
+    restanteMs: status === 'paused' ? remainingMsRef.current : null,
+    start, pause, resume: start, toggle, reset, restore, seguir, congelar
   };
 }
 
@@ -17767,6 +17900,12 @@ Object.assign(window, { useCountdown });
        FocusTimer (su consumidor). -->
   <script>
 ;(function () {
+
+
+
+
+
+
 
 
 
@@ -17871,19 +18010,25 @@ function maybeNotifyFocusEnd(opts) {
 
 
 
+
+
+
 function loadPersistedFocusTimer(focusMode, focusMinutes) {
   try {
     const raw = localStorage.getItem(PACE_TIMER_KEY);
     if (!raw) return null;
     const saved = JSON.parse(raw);
     const durMs = focusMinutes * 60 * 1000;
-    const valid = saved &&
-    typeof saved.endsAt === 'number' &&
-    saved.mode === 'foco' && focusMode === 'foco' &&
-    saved.minutes === focusMinutes &&
-    saved.endsAt > Date.now() &&
-    saved.endsAt - Date.now() <= durMs;
-    if (valid) return saved.endsAt;
+    const ahora = Date.now(),hoy = new Date().toDateString();
+    const casa = saved && saved.mode === 'foco' && focusMode === 'foco' && saved.minutes === focusMinutes;
+    const id = casa && typeof saved.id === 'string' ? saved.id : null;
+    if (casa && typeof saved.endsAt === 'number' && saved.endsAt - ahora <= durMs) {
+      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id };
+      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, vencido: true };
+    }
+    if (casa && typeof saved.pausaMs === 'number' && saved.pausaMs > 0 && saved.pausaMs <= durMs && saved.dia === hoy) {
+      return { pausaMs: saved.pausaMs, id, inicio: typeof saved.inicio === 'number' ? saved.inicio : null };
+    }
     localStorage.removeItem(PACE_TIMER_KEY);
     return null;
   } catch (e) {
@@ -17894,10 +18039,15 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
 
 
 
-function persistFocusTimer(runningFoco, endsAt, minutes) {
+
+
+function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   try {
+    const base = id ? { mode: 'foco', minutes, id } : { mode: 'foco', minutes };
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify({ endsAt, mode: 'foco', minutes }));
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, base)));
+    } else if (typeof pausaMs === 'number' && pausaMs > 0) {
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ pausaMs, dia: new Date().toDateString(), inicio: inicio || null }, base)));
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }
@@ -18588,6 +18738,145 @@ function useLuzHome(_ref) {let { progress, status, running, focusMode } = _ref;
 
 Object.assign(window, { useLuzHome });
 ;Object.assign(window, { useLuzHome });
+})();
+</script>
+  <!-- Un bloque de Foco en varias pestañas: lo que se hace en una se repite en las otras y se
+       cuenta una sola vez (`useFocoPestanas`, `paceFocoContar`). Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   FocusTimer.pestanas — un bloque de Foco, aunque PACE esté abierto en dos pestañas.
+
+   Una pestaña que se abre con un bloque en marcha lo recoge de `pace.timer.v1` y lo enseña (s102).
+   Hasta aquí cada una seguía después por su cuenta: pausar en una no pausaba la otra, que terminaba
+   el bloque y lo contaba mientras la primera decía «Continuar»; y si las dos llegaban al final, el
+   bloque contaba dos veces (dos eventos de Foco; y con el estado compartido de
+   state-core.pestanas.js, también dos bloques y 50 minutos en «Hoy»). Caza del 10 oct., foco-5 y -6.
+
+   DOS PIEZAS, y cada una con la herramienta que le toca:
+
+   · LO QUE SE VE va por `BroadcastChannel`: empezar o continuar, pausar y reiniciar en una pestaña
+     se repite en las demás con el mismo bloque (`id`) y el mismo final. Si un aviso llega antes que
+     los minutos nuevos del estado, espera a que casen. Un aviso perdido solo deja una pestaña con
+     otra cara; contar lo decide lo de abajo.
+   · CONTAR UNA VEZ es exclusión entre pestañas, y eso solo lo da Web Locks: la primera que llega al
+     final coge el candado del bloque SIN esperar y cuenta (campana, minutos, evento); la que llega
+     a la vez no lo consigue y se calla. Quien cuenta guarda el candado diez minutos, y además deja
+     el `id` en el estado (`focoContado`), que ya viaja a las demás: una pestaña dormida que despierte
+     más tarde ve que está contado. Sin Web Locks (Safari anterior a 15.4) se cuenta como siempre.
+
+   · LA PAUSA SALE EN LA PESTAÑA QUE MIRAS (Ez, 13 oct.: «En la que estás mirando»). Quien cuenta
+     puede ser una pestaña de fondo, y antes abría la pausa ella misma: la que tenías delante se
+     quedaba en «Empezar otro ciclo». Ahora la deja PENDIENTE en el estado (`focoPausa`, que viaja
+     a las demás) y la abre la pestaña visible, o la primera que vuelva al frente. Dos ventanas pueden
+     verse a la vez, así que abrirla también va con candado, y quien lo coge la quita del estado.
+     Solo vale el día del bloque, como el bloque que terminó con PACE cerrado; sin Web Locks la abre
+     toda pestaña visible que la vea.
+
+   Los modos Pausa y Larga no cuentan nada y siguen siendo de cada pestaña. */
+
+const { useEffect: useEffectFTP, useRef: useRefFTP } = React;
+
+var PACE_FOCO_CANAL = 'pace.foco.v1';
+var PACE_FOCO_CANDADO_MS = 10 * 60 * 1000;
+
+function paceFocoNuevoId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function paceFocoContar(id, contar) {
+  var ya = function () {var s = getState();return !!(s && s.focoContado === id);};
+  if (ya()) return;
+  var locks = typeof navigator !== 'undefined' ? navigator.locks : null;
+  if (!locks || typeof locks.request !== 'function') {contar();return;}
+  locks.request('pace.foco.bloque.' + id, { ifAvailable: true }, function (candado) {
+    if (!candado || ya()) return;
+    contar();
+    return new Promise(function (r) {setTimeout(r, PACE_FOCO_CANDADO_MS);});
+  }).catch(function () {});
+}
+
+function paceFocoPausaPendiente(id) {
+  setState((prev) => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString() } }));
+}
+
+
+function usePausaALaVista(pendiente, abrir) {
+  const abrirRef = useRefFTP(abrir);
+  abrirRef.current = abrir;
+  useEffectFTP(() => {
+    const intentar = () => {
+      const p = getState().focoPausa;
+      if (!p || !p.id || p.dia !== new Date().toDateString() || document.visibilityState !== 'visible') return;
+      const coger = () => {
+        const s = getState();
+        if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
+        setState((prev) => ({ ...prev, focoPausa: null }));
+        abrirRef.current();
+        return true;
+      };
+      const locks = typeof navigator !== 'undefined' ? navigator.locks : null;
+      if (!locks || typeof locks.request !== 'function') {coger();return;}
+      locks.request('pace.foco.pausa.' + p.id, { ifAvailable: true }, function (candado) {
+        if (!candado || !coger()) return;
+        return new Promise(function (r) {setTimeout(r, PACE_FOCO_CANDADO_MS);});
+      }).catch(function () {});
+    };
+    intentar();
+    document.addEventListener('visibilitychange', intentar);
+    return () => document.removeEventListener('visibilitychange', intentar);
+  }, [pendiente]);
+}
+
+
+
+function useFocoPestanas(o) {
+  const vivo = useRefFTP(o);
+  vivo.current = o;
+  const canalRef = useRefFTP(null);
+  const pendienteRef = useRefFTP(null);
+
+  const aplicar = (m) => {
+    const u = vivo.current;
+    if (!u.activo) return;
+    if (m.tipo === 'corre') {
+      if (m.minutos !== u.minutos) {pendienteRef.current = m;return;}
+      pendienteRef.current = null;
+      u.bloqueRef.current = m.id;
+      u.inicioRef.current = m.endsAt - u.minutos * 60 * 1000;
+      u.seguir(m.endsAt);
+    } else if (m.id && m.id === u.bloqueRef.current) {
+      if (m.tipo === 'pausa') u.congelar(m.restanteMs);else
+      if (m.tipo === 'reinicia') u.reset();
+    }
+  };
+
+  useEffectFTP(() => {
+    if (typeof BroadcastChannel !== 'function') return undefined;
+    let canal;
+    try {canal = new BroadcastChannel(PACE_FOCO_CANAL);} catch (e) {return undefined;}
+    canalRef.current = canal;
+    canal.onmessage = (ev) => {try {aplicar(ev.data || {});} catch (e) {}};
+    return () => {canalRef.current = null;try {canal.close();} catch (e) {}};
+  }, []);
+
+
+  useEffectFTP(() => {
+    const m = pendienteRef.current;
+    if (m && o.activo && m.minutos === o.minutos && m.endsAt > Date.now()) aplicar(m);
+  }, [o.minutos, o.activo]);
+
+  return (m) => {
+    try {if (canalRef.current) canalRef.current.postMessage(Object.assign({ minutos: vivo.current.minutos }, m));} catch (e) {}
+  };
+}
+
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas,
+  paceFocoPausaPendiente, usePausaALaVista });
+;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, paceFocoPausaPendiente, usePausaALaVista, useFocoPestanas });
 })();
 </script>
 
@@ -23059,7 +23348,7 @@ Object.assign(window, { LibraryShell });
 
 
 
-const { useEffect: useEffectFT, useRef: useRefFT } = React;
+const { useEffect: useEffectFT, useRef: useRefFT, useState: useStateFT } = React;
 
 
 
@@ -23077,20 +23366,25 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   state.focusMode === 'pausa' ? 5 :
   15) * 60;
 
-  const { remaining, running, status, endsAt, start, toggle, reset, restore } = useCountdown(durationSec, () => {
-
-
-    try {playSound('pomodoro.end');} catch (e) {}
+  const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
 
 
 
+    if (state.focusMode !== 'foco') {try {playSound('pomodoro.end');} catch (e) {}return;}
 
 
-    if (state.focusMode === 'foco') {
 
 
-      completeFocusSession('home', { minutes: state.focusMinutes,
-        elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
+
+
+    const bloque = bloqueRef.current || 'e' + Date.now();
+    const minutos = state.focusMinutes,inicio = inicioBloqueRef.current,avisoOn = state.notifyFocusEnd;
+    paceFocoContar(bloque, () => {
+      try {playSound('pomodoro.end');} catch (e) {}
+
+
+      completeFocusSession('home', { minutes: minutos, bloque,
+        elapsedSeconds: focoElapsedSec(inicio, durationSec),
         activeSeconds: durationSec });
 
 
@@ -23102,16 +23396,17 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       try {
         onFinish && onFinish();
       } finally {
+        try {paceFocoPausaPendiente(bloque);} catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({
-            enabled: state.notifyFocusEnd,
+            enabled: avisoOn,
             title: aviso ? aviso.title : t('notify.focus.title'),
             body: aviso ? aviso.body : t('notify.focus.body')
           });
         } catch (e) {}
       }
-    }
+    });
   });
 
 
@@ -23122,22 +23417,47 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
+
   const inicioBloqueRef = useRefFT(null);
+
+  const bloqueRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
-    const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
+    const g = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
 
 
 
-    if (endsAtSaved) {inicioBloqueRef.current = endsAtSaved - durationSec * 1000;restore(endsAtSaved);}
+
+    if (g && g.endsAt) {
+      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      bloqueRef.current = g.id || 'e' + g.endsAt;
+      restore(g.endsAt);
+    } else if (g && g.pausaMs) {
+      inicioBloqueRef.current = g.inicio;
+      bloqueRef.current = g.id || paceFocoNuevoId();
+      congelar(g.pausaMs);
+    }
   }, []);
 
 
   useEffectFT(() => {
-    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
-  }, [running, endsAt, state.focusMode, state.focusMinutes]);
+    const foco = state.focusMode === 'foco';
+    persistFocusTimer(running && foco, endsAt, state.focusMinutes, bloqueRef.current,
+    foco && status === 'paused' ? restanteMs : null, inicioBloqueRef.current);
+  }, [running, endsAt, status, restanteMs, state.focusMode, state.focusMinutes]);
+
+
+
+  const avisarPestanas = useFocoPestanas({ activo: state.focusMode === 'foco', minutos: state.focusMinutes,
+    bloqueRef, inicioRef: inicioBloqueRef, seguir, congelar, reset });
+  const avisarCorreRef = useRefFT(false);
+  useEffectFT(() => {
+    if (!avisarCorreRef.current || !running || !endsAt) return;
+    avisarCorreRef.current = false;
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
+  }, [running, endsAt]);
 
 
 
@@ -23197,6 +23517,13 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
+
+
+  const [minPendiente, setMinPendiente] = useStateFT(null);
+  const elegirMinutos = (v) => {
+    if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) {setMinPendiente(v);return;}
+    set({ focusMinutes: v });
+  };
   const isCompleted = status === 'completed';
 
 
@@ -23218,6 +23545,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const startFocusVisual = () => {
     if (status !== 'paused') {
       inicioBloqueRef.current = Date.now();
+      bloqueRef.current = paceFocoNuevoId();
 
 
       if (state.focusMode === 'foco' && typeof ritmoBloqueEmpezado === 'function') ritmoBloqueEmpezado(state.focusMinutes);
@@ -23229,24 +23557,33 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
   };
 
-  const handleNormalStart = () => {startFocusVisual();toggle();};
+  const handleNormalStart = () => {startFocusVisual();avisarCorreRef.current = true;toggle();};
 
 
 
 
-  const handleStartAnotherCycle = () => {startFocusVisual();reset();start();};
+  const handleStartAnotherCycle = () => {startFocusVisual();avisarCorreRef.current = true;reset();start();};
+
+  const handlePause = () => {
+    if (state.focusMode === 'foco' && endsAt) avisarPestanas({ tipo: 'pausa', id: bloqueRef.current, restanteMs: Math.max(0, endsAt - Date.now()) });
+    toggle();
+  };
+  const handleReset = () => {
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'reinicia', id: bloqueRef.current });
+    reset();
+  };
 
 
 
 
   useEffectFT(() => {
-    const seguir = () => {
+    const alSeguir = () => {
       if (state.focusMode !== 'foco') return;
       if (status === 'completed') handleStartAnotherCycle();else
       if (status === 'idle') handleNormalStart();
     };
-    window.addEventListener('pace:ritmo-seguir', seguir);
-    return () => window.removeEventListener('pace:ritmo-seguir', seguir);
+    window.addEventListener('pace:ritmo-seguir', alSeguir);
+    return () => window.removeEventListener('pace:ritmo-seguir', alSeguir);
   });
 
 
@@ -23266,7 +23603,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
-    ctaAction = toggle;
+    ctaAction = handlePause;
   } else if (isCompleted) {
     ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
@@ -23318,7 +23655,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   status === 'paused' &&
   React.createElement("button", {
-    onClick: reset,
+    onClick: handleReset,
     style: focusStyles.resetTextBtn,
     title: t('focus.restartBlock'),
     "aria-label": t('focus.restartBlock') },
@@ -23355,7 +23692,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
     state.focusMode === 'foco' ?
-    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: (v) => set({ focusMinutes: v }) }) :
+    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: elegirMinutos }) :
 
     React.createElement("div", { "aria-hidden": "true", style: { height: 26 } }),
 
@@ -23389,6 +23726,16 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       paused: status === 'paused' }
     )
     ),
+
+
+    minPendiente != null && ReactDOM.createPortal(
+      React.createElement(Modal, { open: true, onClose: () => setMinPendiente(null), maxWidth: 440, title: tn('focus.cambioMin.title', { n: minPendiente }) },
+      React.createElement("p", { "data-pace-cambio-minutos": true, style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } }, t('topbar.cambio.body')),
+      React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
+      React.createElement(Button, { variant: "secondary", onClick: () => {set({ focusMinutes: minPendiente });setMinPendiente(null);} }, t('topbar.cambio.cambiar')),
+      React.createElement(Button, { variant: "primary", onClick: () => setMinPendiente(null) }, t('topbar.cambio.seguir'))
+      )
+      ), document.body),
 
 
     !isAro &&
@@ -31558,11 +31905,14 @@ function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, '');
 }
 
-function paceDescargarCopia() {
+
+
+function paceDescargarCopia(enMemoria) {
   try {
-    const raw = localStorage.getItem('pace.state.v2') || '{}';
-    let parsed = null;
-    try {parsed = JSON.parse(raw);} catch (e) {}
+    let raw = '{}';
+    if (!enMemoria) {try {raw = localStorage.getItem('pace.state.v2') || '{}';} catch (e) {}}
+    let parsed = enMemoria || null;
+    if (!parsed) {try {parsed = JSON.parse(raw);} catch (e) {}}
 
 
 
@@ -31632,7 +31982,13 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     reader.onload = (ev) => {
       try {
         const raw = String(ev.target.result || '');
-        const payload = JSON.parse(raw);
+        let payload = JSON.parse(raw);
+
+
+
+        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
+          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
+        }
 
 
         const looksValid = payload && (
@@ -39938,6 +40294,8 @@ function PaceApp() {
   const [openStats, setOpenStats] = useStateMain(false);
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
+
+  usePausaALaVista(state.focoPausa && state.focoPausa.id, () => setOpenBreakMenu(true));
   const [openSupport, setOpenSupport] = useStateMain(false);
 
 
@@ -40103,8 +40461,8 @@ function PaceApp() {
 
 
 
+
     if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado();
-    setOpenBreakMenu(true);
   };
 
 
@@ -40334,7 +40692,8 @@ function PaceApp() {
 
 
 
-    React.createElement(PaceRed, { modo: "silencio" }, React.createElement(UpdatePrompt, null))
+    React.createElement(PaceRed, { modo: "silencio" }, React.createElement(UpdatePrompt, null)),
+    React.createElement(PaceRed, { modo: "silencio" }, React.createElement(AvisoNoGuarda, null))
     ));
 
 }
@@ -40476,6 +40835,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
   var RADIO_INTERIOR = 0.44;
+  var RADIO_HALO = 0.458;
   var CICLO_GAP = 4;
 
 
@@ -40737,6 +41097,21 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
       D = Math.max(piso, D - Math.ceil(over / 0.84));
       applyD(D, dial);
+    }
+
+
+
+
+
+    if (!isDesktop && D <= piso) {
+      var duro = Math.max(dFloor, Math.ceil(piso * RADIO_INTERIOR / RADIO_HALO));
+      var dAntes = D,sobra = medirOver();
+      for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
+        D -= Math.ceil(sobra / 0.84);
+        applyD(D, dial);
+        sobra = medirOver();
+      }
+      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial);}
     }
 
 

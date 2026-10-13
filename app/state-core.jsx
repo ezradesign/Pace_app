@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.158.0';
+const PACE_VERSION = 'v0.159.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -246,7 +246,9 @@ const defaultState = {
    STORE PRIMITIVO
    ============================ */
 
-function loadState() {
+/* `estricto`: quien ya tiene una copia buena en memoria (otra pestaña que guarda, el cambio de
+   día) pide que un fallo LANCE en vez de volver al estado de fábrica, para quedarse con la suya. */
+function loadState(estricto) {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   let raw = null;
   try {
@@ -366,6 +368,7 @@ function loadState() {
     }
     return merged;
   } catch (e) {
+    if (estricto) throw e;
     /* s198: lo que haya reventado, la cadena CRUDA queda a salvo ANTES de que la
        primera escritura la pise con el estado de fabrica de abajo. */
     if (typeof paceGuardarRescate === 'function') paceGuardarRescate(raw, e);
@@ -384,8 +387,11 @@ function loadState() {
 let _state = loadState();
 const _listeners = new Set();
 
+/* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda). */
 function persistState() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {}
+  try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {
+    try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
+  }
 }
 
 /* Borra el almacen legacy. Vive AQUI porque `pace.state.v2` es de este modulo:
@@ -431,6 +437,15 @@ function subscribe(listener) {
   return () => _listeners.delete(listener);
 }
 
+/* Otra pestaña guardó: su copia pasa a ser la de esta, SIN escribir (el porqué, en state-core.pestanas.js). */
+function paceAdoptarEstado(nuevo) {
+  const prev = _state;
+  _state = nuevo;
+  _listeners.forEach(l => l());
+  if (prev.palette !== _state.palette || prev.font !== _state.font) applyTheme(_state);
+  if (prev.lang !== _state.lang) applyLang(_state);
+}
+
 /* ============================
    PALETA -> state-core.palette.jsx
    ============================
@@ -456,7 +471,7 @@ function usePace() {
 function ensureDayFresh(desdeDisco) {
   let base = _state;
   if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
-    try { if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(); } catch (e) {}
+    try { if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(true); } catch (e) {}
   }
   const next = rolloverIfNeeded(base);
   if (next !== _state) {
@@ -481,5 +496,5 @@ applyLang(_state);
    `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, FOCO_MINIMO, defaultState,
-  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState,
+  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState, loadState, paceAdoptarEstado,
 });

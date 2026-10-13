@@ -47,8 +47,10 @@ async function terminarBloque(page, boton, oculta) {
   for (let i = 0; i < 80; i++) {
     await page.clock.fastForward(60 * 1000);
     await page.waitForTimeout(50);
-    if (await page.locator('[data-pace-break-shortcut]').count()) break;
+    if (await page.evaluate(() => !!getState().focoPausa) || await page.locator('[data-pace-break-shortcut]').count()) break;
   }
+  /* Con la pestaña oculta la pausa espera a que vuelvas (Ez, 13 oct. 2026): se vuelve, como quien lee el aviso. */
+  await page.evaluate(() => { window.__oculta = false; document.dispatchEvent(new Event('visibilitychange')); });
   await expect(page.locator('[data-pace-break-shortcut]'), 'GUARD: el bloque no termino').not.toHaveCount(0);
   await page.waitForTimeout(200);
   return page.evaluate(() => window.__avisos.slice());

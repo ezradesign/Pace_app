@@ -79,6 +79,8 @@ var PLATAFORMA = new Set([
   'AbortController', 'Headers', 'Request', 'Response', 'FormData', 'DOMParser',
   'Element', 'HTMLElement', 'Node', 'Event', 'KeyboardEvent', 'MouseEvent',
   'SVGElement', 'Worker', 'caches', 'indexedDB', 'sessionStorage', 'crypto',
+  /* El canal entre pestañas del Foco (FocusTimer.pestanas.jsx, caza del 10 oct.). */
+  'BroadcastChannel',
   /* Arrays tipados (s155). `Uint8Array` entro con el fallback de UUIDv4 de
      `events-model.js`; el resto de la familia va con el, porque son
      intrinsecos del LENGUAJE y ningun identificador de PACE puede llamarse

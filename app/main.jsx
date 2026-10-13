@@ -39,6 +39,8 @@ function PaceApp() {
   const [openStats, setOpenStats] = useStateMain(false);
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
+  /* La pausa de un bloque terminado sale en la pestaña que miras (FocusTimer.pestanas.jsx). */
+  usePausaALaVista(state.focoPausa && state.focoPausa.id, () => setOpenBreakMenu(true));
   const [openSupport, setOpenSupport] = useStateMain(false);
 
   // Flujo de seguridad para respiración
@@ -201,11 +203,11 @@ function PaceApp() {
   };
 
   const handleFocusFinish = () => {
-    /* Al acabar un Pomodoro → menú pausa. s193: y con «A tu ritmo», la pausa del
+    /* Al acabar un Pomodoro → menú pausa, que abre la pestaña que miras
+       (usePausaALaVista, arriba). s193: y con «A tu ritmo», la pausa del
        día queda ABIERTA (la línea pone «Ahora» en la parada) hasta que empiece el
        bloque siguiente. `completePomodoro` ya subió `cycle` antes de llegar aquí. */
     if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado();
-    setOpenBreakMenu(true);
   };
 
   /* s195 · «Seguir con el bloque N+1» (la pausa con menú): cierra el modal y arranca
@@ -436,6 +438,7 @@ function PaceApp() {
           registro en PACE.html anuncia un worker en waiting; en file:// no
           hay SW y retorna null siempre. */}
       <PaceRed modo="silencio"><UpdatePrompt /></PaceRed>
+      <PaceRed modo="silencio"><AvisoNoGuarda /></PaceRed>
     </div>
   );
 }

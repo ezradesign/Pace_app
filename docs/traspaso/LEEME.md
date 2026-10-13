@@ -12,16 +12,16 @@ Manda sobre el relevo de abajo.
   (`archivos/premium-12oct/fotos-premium.html`, nueve pantallas a 360 y 1280 px) y pidió que
   «Tus rutinas» dijera «Es parte de PACE completo», como la invitación. Los 15 enlaces de tester ya
   funcionan en la web: falta que Ez los mande.
-- **La caza en Foco y lo guardado** (`claude/caza-foco-estado-d6bd17`, último commit 40e0308 con su
-  TRASPASO): los once hallazgos arreglados con su prueba y las cuatro visibles con la opción A de Ez.
-  Ya está junta con v0.156.0 y `verify` pasa; la suite dio dos fallos de foco-3 que ya están
-  arreglados en 40e0308. **Falta:** la suite entera otra vez, rehacer las fotos con
-  `docs/traspaso/archivos/caza-foco-10oct/fotos-caza.js` y `pagina-caza.js`, el sí de Ez y
-  «LISTO PARA MAIN». Antes hay que juntarla con v0.157.0. Su sesión fue la de la carpeta
-  `.claude/worktrees/cranky-bun-83cb7c`.
-- **Pregunta abierta para Ez (sin contestar):** con dos pestañas, la pausa se abre en la primera
-  que llega al final, que puede no ser la que miras. No se pierde nada y el bloque cuenta una sola
-  vez. La coordinadora recomienda abrirla en la pestaña visible; si no, apuntarlo como deuda.
+- **La caza en Foco y lo guardado está en `main` como v0.159.0** (13 oct.), con el sí de Ez mirando
+  la app de hoy (`archivos/caza-foco-10oct/fotos-app-13oct.html`). Los once hallazgos, tachados con
+  su arreglo y su prueba, en `CAZA_FOCO_ESTADO_10OCT.md`. Lo de las dos pestañas lo contestó Ez:
+  la pausa sale en la que miras. La rama `claude/caza-foco-estado-d6bd17` ya no guarda nada pendiente.
+- **«Tus rutinas» en el móvil, v0.158.0** (13 oct.): el nombre ya no pisa los botones, la rutina
+  nueva se ve al guardar y «Crear rutina» es un botón (`tests/tus-rutinas.spec.js`).
+- **Estadísticas, a medio diseñar (nada en el repo):** sin scroll en el escritorio de Ez
+  conservando la nota, la misma altura en las tres pestañas del móvil y un año más cuidado. Al
+  medir salieron dos fallos de hoy: las barras de la semana miden todas 4 px sea cual sea la cifra
+  y, en el móvil, la cifra pisa el nombre de la fila. Falta enseñar las fotos a Ez y que elija.
 - **Puertos:** el 8765 y el 8793 siguen ocupados por servidores de la cuenta anterior; la caza usa
   el 8785 o el 8794 y la coordinadora, el 8775.
 - **`verify` desde la carpeta principal** tardaba más de veinte minutos porque recorría las copias de

@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.158.0 · 13 de octubre de 2026.
+**Versión:** v0.159.0 · 13 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -122,7 +122,8 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
    PACE completo. Desde v0.149.0 se guarda el resumen de cada día (`ritmo.day.closed`); el motor y
    la carta llegan cuando haya semanas de datos.
 
-3. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
+3. **La caza del 10 oct. en el Foco y lo guardado** (`docs/traspaso/CAZA_FOCO_ESTADO_10OCT.md`) está cerrada en
+   v0.159.0. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
    (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
    entonces, en inglés suena el tono.
 

@@ -131,18 +131,42 @@ function useCountdown(durationSec, onComplete) {
   }, [durationSec]);
 
   /* s102: reanuda una sesion running persistida (pace.timer.v1) con su
-     endsAt original. Solo desde 'idle' y con endsAt en el futuro; la
-     coherencia de duracion/modo la valida el caller (FocusTimer.support).
+     endsAt original. Solo desde 'idle'; la coherencia de duracion/modo la
+     valida el caller (FocusTimer.support).
      A diferencia de start(), NO recalcula endsAt: el tiempo que paso
-     durante la recarga cuenta como transcurrido. */
+     durante la recarga cuenta como transcurrido. Y si ya ha pasado del todo
+     (el bloque termino con la pagina cerrada), se completa en el acto, con su
+     `onComplete`, igual que al volver a una pestaña que siguio abierta (Ez,
+     12 oct. 2026: «que cuente»; si cuenta o no lo decide el caller). */
   const restore = useCallbackUC((endsAtMs) => {
     if (statusRef.current !== 'idle') return;
-    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    if (typeof endsAtMs !== 'number') return;
+    if (endsAtMs <= Date.now()) { complete(); return; }
     firedRef.current = false;
     endsAtRef.current = endsAtMs;
     statusRef.current = 'running';
     setStatus('running');
   }, []);
+
+  /* Otra pestaña lleva el mismo bloque (FocusTimer.pestanas.jsx) y manda: `seguir` lo pone a
+     correr hasta SU final, venga de donde venga, y `congelar` lo deja en pausa con SU resto.
+     Ninguno pasa por 'completed' ni avisa a `onComplete`: eso solo lo hace el reloj. */
+  const seguir = useCallbackUC((endsAtMs) => {
+    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    firedRef.current = false;
+    endsAtRef.current = endsAtMs;
+    statusRef.current = 'running';
+    setStatus('running');
+    forceTick(n => n + 1);
+  }, []);
+  const congelar = useCallbackUC((restanteMs) => {
+    firedRef.current = false;
+    endsAtRef.current = null;
+    remainingMsRef.current = Math.max(0, Math.min(restanteMs, durationSec * 1000));
+    statusRef.current = 'paused';
+    setStatus('paused');
+    forceTick(n => n + 1);
+  }, [durationSec]);
 
   return {
     remaining,
@@ -151,7 +175,9 @@ function useCountdown(durationSec, onComplete) {
     /* endsAt expuesto solo en running (para persistencia s102); null en el
        resto de estados. */
     endsAt: status === 'running' ? endsAtRef.current : null,
-    start, pause, resume: start, toggle, reset, restore,
+    /* Lo que queda de un bloque en pausa, en ms, para guardarlo (FocusTimer.support). */
+    restanteMs: status === 'paused' ? remainingMsRef.current : null,
+    start, pause, resume: start, toggle, reset, restore, seguir, congelar,
   };
 }
 
