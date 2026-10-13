@@ -22821,12 +22821,15 @@ const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = 
 
 function LibraryShell(_ref)
 
-{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes } = _ref;
+{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
   const [vista, setVista] = useStateLib('catalogo');
   usePace();
+
+
+
 
 
 
@@ -22984,7 +22987,7 @@ function LibraryShell(_ref)
   null;
 
   return (
-    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: ancho },
+    React.createElement(Modal, { open: open && !enPausa, onClose: onClose, maxWidth: ancho },
     React.createElement("div", { className: "pace-lib", style: { '--tone': tone } },
     React.createElement("div", { className: "pace-lib-cuerpo" },
 
@@ -25565,11 +25568,11 @@ const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React
 
 
 
-function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
+function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
       groups: MOVE_ROUTINES, tone: "var(--move)", catPrefix: "mueve",
       title: t('lib.move.title'), subtitle: t('lib.move.subtitle') }));
 
@@ -28102,17 +28105,21 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
     )
     ),
     !atLimit ?
-    React.createElement("div", {
+    React.createElement("button", {
+      type: "button",
+      "data-pace-custom-crear": true,
       onClick: () => openBuilder(null),
       style: customRoutinesStyles.createCard,
       onMouseEnter: (e) => {e.currentTarget.style.borderColor = accent;e.currentTarget.style.color = 'var(--ink)';},
       onMouseLeave: (e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.color = 'var(--ink-2)';} },
 
-    React.createElement("div", { style: { textAlign: 'center', padding: '8px 14px' } },
-    React.createElement("div", { style: { fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"),
-    React.createElement("div", { style: { ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.create')),
+
+
+    React.createElement("span", { style: { display: 'block', textAlign: 'center', padding: '8px 14px' } },
+    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"),
+    React.createElement("span", { style: { display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.create')),
     routines.length === 0 &&
-    React.createElement("p", { style: { fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
+    React.createElement("span", { style: { display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
     t('custom.empty.copy')
     )
 
@@ -28176,6 +28183,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
 
 const customRoutinesStyles = {
   createCard: {
+    width: '100%', background: 'transparent', font: 'inherit',
     border: '1px dashed var(--line-2)',
     borderRadius: 'var(--r-md)',
     padding: '16px 18px',
@@ -28348,7 +28356,8 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
     React.createElement("span", { style: customBuilderStyles.stepGlyph },
     React.createElement(ExerciseGlyph, { id: s.name, size: 24 })
     ),
-    React.createElement("span", { style: { flex: 1, fontSize: 14, lineHeight: 1.3, minWidth: 0 } }, tEx(s.name)),
+    React.createElement("span", { style: customBuilderStyles.stepName }, tEx(s.name)),
+    React.createElement("span", { style: customBuilderStyles.controles },
     React.createElement("span", { style: customBuilderStyles.durGroup },
     React.createElement("button", { onClick: () => nudgeDur(idx, -limits.durStep), disabled: s.dur <= limits.minDur, "aria-label": "\u22125 s", style: customBuilderStyles.iconBtn }, "\u2212"),
     React.createElement("span", { style: customBuilderStyles.durValue }, s.dur, " s"),
@@ -28358,6 +28367,7 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
     React.createElement("button", { onClick: () => moveStep(idx, -1), disabled: idx === 0, title: t('custom.step.up'), "aria-label": t('custom.step.up'), style: customBuilderStyles.iconBtn }, "\u2191"),
     React.createElement("button", { onClick: () => moveStep(idx, 1), disabled: idx === steps.length - 1, title: t('custom.step.down'), "aria-label": t('custom.step.down'), style: customBuilderStyles.iconBtn }, "\u2193"),
     React.createElement("button", { onClick: () => removeStep(idx), title: t('custom.step.remove'), "aria-label": t('custom.step.remove'), style: customBuilderStyles.iconBtn }, "\xD7")
+    )
     )
     )
     )
@@ -28414,8 +28424,11 @@ const customBuilderStyles = {
     border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
     letterSpacing: 0.2
   },
+
+
+
   stepRow: {
-    display: 'flex', alignItems: 'center', gap: 10,
+    display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', rowGap: 6,
     padding: '8px 10px',
     border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
     background: 'var(--paper)'
@@ -28426,6 +28439,8 @@ const customBuilderStyles = {
     background: 'var(--move-soft)', color: 'var(--move)',
     display: 'grid', placeItems: 'center'
   },
+  stepName: { flex: '1 1 120px', fontSize: 14, lineHeight: 1.3, minWidth: 0 },
+  controles: { display: 'inline-flex', alignItems: 'center', gap: 10, marginLeft: 'auto', flexShrink: 0 },
   durGroup: {
     display: 'inline-flex', alignItems: 'center', gap: 4,
     flexShrink: 0
@@ -40239,7 +40254,7 @@ function PaceApp() {
     red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null),
     React.createElement(BreatheLibrary, { open: openLibrary === 'breathe', onClose: () => setOpenLibrary(null), onStart: handleStartBreathe })),
     red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
-    React.createElement(MoveLibrary, { open: openLibrary === 'move' && !customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
+    React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
     customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
     React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) })),
     red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),

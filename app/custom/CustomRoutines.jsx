@@ -110,22 +110,26 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
             />
           ))}
           {!atLimit ? (
-            <div
+            <button
+              type="button"
+              data-pace-custom-crear
               onClick={() => openBuilder(null)}
               style={customRoutinesStyles.createCard}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = accent; e.currentTarget.style.color = 'var(--ink)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-2)'; }}
             >
-              <div style={{ textAlign: 'center', padding: '8px 14px' }}>
-                <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</div>
-                <div style={{ ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.create')}</div>
+              {/* Un BOTÓN y no un div: con el teclado no se llegaba y el lector de pantalla no
+                  lo anunciaba. Dentro solo van spans (un <p> no vale dentro de un botón). */}
+              <span style={{ display: 'block', textAlign: 'center', padding: '8px 14px' }}>
+                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</span>
+                <span style={{ display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.create')}</span>
                 {routines.length === 0 && (
-                  <p style={{ fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
+                  <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
                     {t('custom.empty.copy')}
-                  </p>
+                  </span>
                 )}
-              </div>
-            </div>
+              </span>
+            </button>
           ) : (
             <div style={{ ...customRoutinesStyles.createCard, cursor: 'default' }}>
               <Meta style={{ textAlign: 'center' }}>{tn('custom.limit', { n: limits.maxRoutines })}</Meta>
@@ -184,6 +188,7 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
 
 const customRoutinesStyles = {
   createCard: {
+    width: '100%', background: 'transparent', font: 'inherit',
     border: '1px dashed var(--line-2)',
     borderRadius: 'var(--r-md)',
     padding: '16px 18px',

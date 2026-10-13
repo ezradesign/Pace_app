@@ -355,7 +355,7 @@ function PaceApp() {
       {red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null),
         <BreatheLibrary open={openLibrary === 'breathe'} onClose={() => setOpenLibrary(null)} onStart={handleStartBreathe} />)}
       {red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
-        <MoveLibrary open={openLibrary === 'move' && !customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartMove} />)}
+        <MoveLibrary open={openLibrary === 'move'} enPausa={!!customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartMove} />)}
       {customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
         <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />)}
       {red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
