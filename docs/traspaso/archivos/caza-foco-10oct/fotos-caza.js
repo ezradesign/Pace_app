@@ -118,7 +118,8 @@ const ESCENAS = {
     await vaso();
     await expect(page.locator('[data-pace-no-guarda]')).toBeVisible();
     if (ancho === 360) {
-      await page.keyboard.press('Escape');
+      /* Con su botón: en v0.157.0 Escape no cierra el cajón del móvil. */
+      await page.locator('[data-pace-sidebar-toggle]').filter({ visible: true }).first().click();
       await page.waitForTimeout(600);
     }
     await foto(page, 'estado5-hoy-' + ancho, ancho);

@@ -16,7 +16,7 @@ const sinScroll = (clave) => medidas[clave] != null && medidas[clave] <= 1 ? 'si
 
 const SECCIONES = [
   { cod: 'foco-1', h: 'Tocar otros minutos con un bloque empezado pregunta antes',
-    p: 'Con el bloque por el minuto 20, tocar «35» pregunta «¿Cambiar a un bloque de 35 min?» con el texto y los botones de la barra de arriba. «Seguir con el Foco» no toca nada.',
+    p: 'Con el bloque por el minuto 20, tocar «35» pregunta «¿Cambiar a un bloque de 35 min?» con el texto y los botones de la barra de arriba. «Seguir con el Foco» no toca nada. Un cambio desde la maqueta: allí la ventana se pintaba dentro del aro, así que su fondo solo tapaba la parte de arriba y las actividades salían por encima (en el móvil, «ACTIVIDADES» cruzaba los botones). Ahora tapa toda la pantalla como las demás ventanas de PACE, y en el móvil sale desde abajo, como todas.',
     fotos: [['movil', 'foco1-A-360.jpg', 'foco1-hoy-360.jpg', 'La pregunta antes de cambiar los minutos, a 360', '360'],
             ['ancho', 'foco1-A-1280.jpg', 'foco1-hoy-1280.jpg', 'La misma pregunta a 1280', '1280']] },
   { cod: 'foco-2', h: 'El bloque en pausa vuelve en pausa al recargar',
@@ -89,9 +89,9 @@ img { display: block; width: 100%; height: auto; border: 1px solid var(--line); 
 <body>
 <main>
   <div class="intro">
-    <span class="meta">PACE · caza del Foco y lo guardado · 12 de octubre de 2026</span>
+    <span class="meta">PACE · caza del Foco y lo guardado · 13 de octubre de 2026</span>
     <h1>Las cuatro, en la app de verdad</h1>
-    <p class="lede">El 12 de octubre elegiste la A en las cuatro mirando la maqueta. Estas fotos son de la app construida desde la rama de la caza, ya junta con la v0.156.0 de hoy. En cada pareja, a la izquierda la maqueta que elegiste y a la derecha la app de hoy, en el mismo momento y a 360 y a 1280 px.</p>
+    <p class="lede">El 12 de octubre elegiste la A en las cuatro mirando la maqueta. Estas fotos son de la app construida desde la rama de la caza, ya junta con la v0.157.0 de hoy (PACE completo). En cada pareja, a la izquierda la maqueta que elegiste y a la derecha la app de hoy, en el mismo momento y a 360 y a 1280 px.</p>
     ${extra}
   </div>
 ${cuerpo}

@@ -41,6 +41,11 @@ test('foco-1 · otros minutos con un bloque empezado preguntan antes, y «Seguir
   await page.getByRole('button', { name: '35', exact: true }).click();
   await expect(pregunta(page)).toBeVisible();
   await expect(pregunta(page)).toContainText('¿Cambiar a un bloque de 35 min?');
+  /* Tapa toda la home, como las demás ventanas: dentro del aro, recortado al horizonte, su fondo
+     se quedaba arriba y las actividades salían por encima. */
+  const respira = await page.getByRole('button', { name: /Respira/ }).filter({ visible: true }).first().boundingBox();
+  expect(await page.evaluate(([x, y]) => !!document.elementFromPoint(x, y).closest('[data-pace-modal-backdrop]'),
+    [respira.x + respira.width / 2, respira.y + respira.height / 2]), 'las actividades salen por encima de la pregunta').toBe(true);
   await pregunta(page).getByRole('button', { name: 'Seguir con el Foco' }).click();
   await expect(cta(page)).toHaveText('Pausar');
   expect(await numero(page).textContent(), 'seguir cambió el bloque').toBe(antes);

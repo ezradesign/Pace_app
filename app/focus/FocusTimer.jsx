@@ -381,14 +381,15 @@ function FocusTimer({ onFinish }) {
         />
       </div>
 
-      <Modal open={minPendiente != null} onClose={() => setMinPendiente(null)} maxWidth={440}
-             title={minPendiente != null ? tn('focus.cambioMin.title', { n: minPendiente }) : undefined}>
-        <p data-pace-cambio-minutos style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{t('topbar.cambio.body')}</p>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-          <Button variant="secondary" onClick={() => { set({ focusMinutes: minPendiente }); setMinPendiente(null); }}>{t('topbar.cambio.cambiar')}</Button>
-          <Button variant="primary" onClick={() => setMinPendiente(null)}>{t('topbar.cambio.seguir')}</Button>
-        </div>
-      </Modal>
+      {/* A document.body: dentro del aro, recortado al horizonte, el fondo se quedaba arriba. */}
+      {minPendiente != null && ReactDOM.createPortal(
+        <Modal open onClose={() => setMinPendiente(null)} maxWidth={440} title={tn('focus.cambioMin.title', { n: minPendiente })}>
+          <p data-pace-cambio-minutos style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{t('topbar.cambio.body')}</p>
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+            <Button variant="secondary" onClick={() => { set({ focusMinutes: minPendiente }); setMinPendiente(null); }}>{t('topbar.cambio.cambiar')}</Button>
+            <Button variant="primary" onClick={() => setMinPendiente(null)}>{t('topbar.cambio.seguir')}</Button>
+          </div>
+        </Modal>, document.body)}
 
       {/* Controles + ciclo fuera del aro — solo para estilos no-aro */}
       {!isAro && (
