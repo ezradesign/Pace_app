@@ -46,6 +46,8 @@ var integridad = require('./verify.integridad.js');
 var tamano = require('./verify.tamano.js');
 /* Que las medidas de la ventana pasen por el lienzo que crece (app/main/_lienzo.js). */
 var lienzo = require('./verify.lienzo.js');
+/* Que la llave privada de los códigos de PACE completo no entre nunca en el repo. */
+var licencia = require('./verify.licencia.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -89,9 +91,15 @@ var PLATAFORMA = new Set([
   'Float32Array', 'Float64Array', 'BigInt64Array', 'BigUint64Array',
 ]);
 
-/* Rutas que no se validan: dependencias, React vendorizado y los backups
-   historicos del standalone (son artefactos congelados, no fuente viva). */
-var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git)([\\/]|$)/;
+/* Rutas que no se validan: dependencias, React vendorizado, los backups
+   historicos del standalone (son artefactos congelados, no fuente viva), lo
+   que deja la suite (sus trazas guardan .js de la pagina que no son del repo)
+   y las copias de las sesiones en paralelo en .claude/worktrees: cada una es
+   otro checkout entero y desde la carpeta principal verify las recorria todas,
+   un `node --check` por archivo, hasta tardar mas de veinte minutos. Se mira
+   la ruta RELATIVA a la raiz: una sesion trabaja dentro de .claude/worktrees y,
+   con la absoluta, su propio verify no encontraba un solo archivo. */
+var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git|test-results|playwright-report|\.claude[\\/]worktrees)([\\/]|$)/;
 
 var fallos = [];
 var avisos = [];
@@ -104,7 +112,7 @@ function sha(buf) { return crypto.createHash('sha256').update(buf).digest('hex')
 function listar(dir, ext, out) {
   fs.readdirSync(dir).forEach(function (entry) {
     var full = path.join(dir, entry);
-    if (EXCLUIDAS.test(full)) return;
+    if (EXCLUIDAS.test(path.relative(ROOT, full))) return;
     var st;
     try { st = fs.statSync(full); } catch (e) { return; }
     if (st.isDirectory()) listar(full, ext, out);
@@ -420,6 +428,7 @@ function main() {
   integridad.tandaIntegridad({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   tamano.tandaTamano({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   lienzo.tandaLienzo({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
+  licencia.tandaLicencia({ ROOT: ROOT, falla: falla, ok: ok, info: info, rel: rel });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

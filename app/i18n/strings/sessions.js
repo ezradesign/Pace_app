@@ -168,7 +168,7 @@ Object.assign(window.PACE_STRINGS.es, {
     // Constructor de rutinas (F7 · s93)
     'custom.section.title':            'Tus rutinas',
     'custom.section.aside':            'En Mueve y en Estira',
-    'custom.locked.copy':              'Combina ejercicios del catálogo y guarda tus propias rutinas. Parte del contenido premium.',
+    'custom.locked.copy':              'Combina ejercicios del catálogo y guarda tus propias rutinas. Es parte de PACE completo.',
     'custom.empty.copy':               'Combina ejercicios del catálogo y guarda tu propia rutina.',
     'custom.create':                   'Crear rutina',
     'custom.limit':                    'Has llegado a las {n} rutinas.',
@@ -342,7 +342,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // Routine builder (F7 · s93)
     'custom.section.title':            'Your routines',
     'custom.section.aside':            'In Move and Stretch',
-    'custom.locked.copy':              'Combine exercises from the catalog and save your own routines. Part of the premium content.',
+    'custom.locked.copy':              'Combine exercises from the catalog and save your own routines. Part of PACE Complete.',
     'custom.empty.copy':               'Combine exercises from the catalog and save your own routine.',
     'custom.create':                   'Create routine',
     'custom.limit':                    'You have reached {n} routines.',

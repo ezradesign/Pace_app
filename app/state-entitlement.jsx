@@ -4,12 +4,13 @@
 
    Guard central de acceso a contenido (sesion 95 / v0.40.0).
 
-   ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath.
-   Hoy derivan del booleano `premiumUnlocked` (state-core). Cuando llegue la
-   pre-venta (licencia‖trial — decision F3b, hoy diferida) SOLO cambia este
-   archivo: `premiumUnlocked` pasara a derivarse de una clave firmada o de un
-   trial, y los consumidores (RoutineCard, PathBreatheStep/PathBodyStep,
-   getSuggestedPath) no se tocan.
+   ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath /
+   hasPremiumEntitlement. Abren PACE completo dos cosas: el booleano
+   `premiumUnlocked` (state-core, sin ruta de compra todavía) y un CÓDIGO
+   firmado que vale (`paceLicenciaVigente`, state-licencia.js: el de los
+   testers, y mañana el de quien compre en la web). Cuando llegue Play Billing
+   entra aquí como una tercera fuente, y los consumidores (RoutineCard,
+   CustomRoutines, PathBreatheStep/PathBodyStep, getSuggestedPath) no se tocan.
 
    Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
    el guard concede acceso a una rutina premium aunque premiumUnlocked sea
@@ -31,6 +32,12 @@ function resolveAnyRoutine(routineId) {
   return body ? body.routine : null;
 }
 
+/* ¿Hay un código de PACE completo que vale? Se lee de `window` al llamarse: el
+   guard carga después de state-licencia, pero el artefacto son scripts sueltos. */
+function tieneLicenciaPremium() {
+  return !!(window.paceLicenciaVigente && window.paceLicenciaVigente());
+}
+
 /* HASTA v1, LAS RUTINAS PREMIUM ESTAN ABIERTAS PARA TODOS. Decision de Ez (6 oct.
    2026): el cobro llega despues de cerrar Android, y asi los testers de la prueba
    cerrada las prueban todas. Siguen con su «Premium», que dice que seran de pago,
@@ -45,27 +52,27 @@ const PREMIUM_ABIERTO_HASTA_V1 = true;
                                     ids que no existen; StepError/lookup ya lo
                                     manejan, y ocultarlos escondería bugs)
      access !== 'premium' -> true
-     premium              -> premiumUnlocked || tasting || abierto hasta v1 */
+     premium              -> premiumUnlocked || código || tasting || abierto hasta v1 */
 function canAccessRoutine(routineId, opts) {
   const tasting = !!(opts && opts.tasting);
   const routine = resolveAnyRoutine(routineId);
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
   const s = getState && getState();
-  const unlocked = !!(s && s.premiumUnlocked);
+  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
   return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
 /* canAccessPath(pathId) -> boolean
      path desconocido / access !== 'premium' -> true
-     premium -> premiumUnlocked
+     premium -> premiumUnlocked || código
    Hoy los 7 Caminos son access:'free' -> siempre true (sin cambio observable). */
 function canAccessPath(pathId) {
   const path = (window.getPath && window.getPath(pathId)) || null;
   if (!path) return true;
   if (path.access !== 'premium') return true;
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked);
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
 }
 
 /* hasPremiumEntitlement() -> boolean   (s149)
@@ -79,7 +86,7 @@ function canAccessPath(pathId) {
      llegar la licencia real SOLO cambia este archivo. */
 function hasPremiumEntitlement() {
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked);
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, PREMIUM_ABIERTO_HASTA_V1 });
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, PREMIUM_ABIERTO_HASTA_V1 });

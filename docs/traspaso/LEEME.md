@@ -2,7 +2,32 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.156.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.157.0.
+
+## 12 oct. 2026, noche: la coordinadora sigue en la cuenta nueva
+
+Manda sobre el relevo de abajo.
+
+- **PACE completo está en `main` como v0.157.0.** Ez dio el sí al verlo en fotos de la app real
+  (`archivos/premium-12oct/fotos-premium.html`, nueve pantallas a 360 y 1280 px) y pidió que
+  «Tus rutinas» dijera «Es parte de PACE completo», como la invitación. Los 15 enlaces de tester ya
+  funcionan en la web: falta que Ez los mande.
+- **La caza en Foco y lo guardado** (`claude/caza-foco-estado-d6bd17`, último commit 40e0308 con su
+  TRASPASO): los once hallazgos arreglados con su prueba y las cuatro visibles con la opción A de Ez.
+  Ya está junta con v0.156.0 y `verify` pasa; la suite dio dos fallos de foco-3 que ya están
+  arreglados en 40e0308. **Falta:** la suite entera otra vez, rehacer las fotos con
+  `docs/traspaso/archivos/caza-foco-10oct/fotos-caza.js` y `pagina-caza.js`, el sí de Ez y
+  «LISTO PARA MAIN». Antes hay que juntarla con v0.157.0. Su sesión fue la de la carpeta
+  `.claude/worktrees/cranky-bun-83cb7c`.
+- **Pregunta abierta para Ez (sin contestar):** con dos pestañas, la pausa se abre en la primera
+  que llega al final, que puede no ser la que miras. No se pierde nada y el bloque cuenta una sola
+  vez. La coordinadora recomienda abrirla en la pestaña visible; si no, apuntarlo como deuda.
+- **Puertos:** el 8765 y el 8793 siguen ocupados por servidores de la cuenta anterior; la caza usa
+  el 8785 o el 8794 y la coordinadora, el 8775.
+- **`verify` desde la carpeta principal** tardaba más de veinte minutos porque recorría las copias de
+  `.claude/worktrees/`; ya no entra ahí (fila arriba de `DECISIONES_TECNICAS_VIGENTES.md`).
+- **Aviso de GitHub:** desde el 19 oct. `ubuntu-latest` pasa a Ubuntu 26. El job `e2e-safari` instala
+  sus librerías con `apt` y puede romperse ese día: si sale en rojo, fijar `ubuntu-24.04`.
 
 ## Relevo del 12 oct. 2026 (la cuenta se queda sin uso; Ez sigue desde otra)
 
@@ -250,7 +275,16 @@ primera versión de pago, en web y Android.
   abre un único interruptor, `app/state-entitlement.jsx`. Ez descartó la prueba de pago de 3 días a
   3,99 €; cuando lleguen los pagos sopesará una prueba gratis de 7 días o una suscripción mensual.
 - **Hasta v1 las rutinas premium están abiertas para todos** (`PREMIUM_ABIERTO_HASTA_V1`), con su
-  «Premium» y sin «Pronto». El constructor sigue cerrado.
+  «Premium». El constructor sigue cerrado salvo con código.
+- **PACE completo y el código de por vida de los testers** (8 oct. 2026). Ez eligió la
+  tarjeta cerrada con candado de línea fina y la invitación al tocarla; se tomó la opción B
+  (semana de estadísticas gratis; mes, año y «qué te ayuda» de pago), propuesta en
+  `docs/proposals/premium-pace-completo.html`. En la web el código es un enlace firmado que la app
+  comprueba sin servidor; la llave privada la crea Ez en su PC con `npm run licencia:llaves`
+  (carpeta `~/PACE-llave-licencias`, fuera del repo) y cada enlace sale con
+  `npm run licencia:codigo -- N`. En Android, Google Play no deja códigos propios: los testers
+  recibirán un código promocional de Play del producto «PACE completo» (hasta 500 por trimestre)
+  cuando la app lleve Play Billing (Fase 6).
 - Travesías y Caminos fuera de v1 (Caminos ocultos con `SHOW_CAMINOS` en `app/flags.js`).
 - Icono de la app: Crema. Estilo del aro: «Aro grande». Id de la app: `com.ezradesign.pace`.
 - Home del móvil: por libre, el móvil lleva la tarjeta corta de «A tu ritmo» (v0.141.0, sin «A TU
@@ -290,6 +324,7 @@ primera versión de pago, en web y Android.
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
+| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, en `PACE-llave-licencias` del PC de Ez) y los 15 enlaces de tester, desde el 12 oct., en `codigos-tester.csv` de esa carpeta. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. |
 | Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez
@@ -300,6 +335,9 @@ primera versión de pago, en web y Android.
 3. Crear la app en Play Console y reunir unos 15 testers con Android (Google pide 12 durante 14
    días; tiene 5 o 6).
 4. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
+5. En su PC, una vez: `npm run licencia:llaves` (o pedírselo a Claude allí) y una copia de la carpeta
+   `PACE-llave-licencias` fuera del ordenador, como la de Play. Luego, la lista de testers (número y
+   si usan web, Android o los dos) y `npm run licencia:codigo -- 1-15` para sus enlaces.
 
 ## Maquetas publicadas (cuenta anterior)
 
@@ -312,6 +350,8 @@ primera versión de pago, en web y Android.
 
 Claves, contraseñas, tokens y correos personales no se suben nunca. La llave de Play va en los
 secretos de GitHub, y su original, con la contraseña, en la carpeta `PACE-llave-play` del PC de Ez.
+La llave privada de los códigos de PACE completo vive en `~/PACE-llave-licencias` del PC de Ez, con
+la lista de enlaces dados (`codigos-tester.csv`); `verify` falla si una llave privada entra aquí.
 El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es público a propósito
 (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa está
 aquí y en `git log`.
@@ -344,7 +384,10 @@ la llave y la lista de testers para los códigos, y la propuesta de textos de lo
 
 ## Frase de arranque para la otra cuenta
 
-> Retoma el proyecto PACE desde el repo ezradesign/Pace_app como sesión COORDINADORA. Antes de nada
-> lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md (sobre todo «Relevo de la noche del 8 oct.»),
-> mira el último commit de cada rama que nombra y dime en pocas líneas dónde estamos, qué espera mi
-> respuesta y qué harías ahora. Háblame en español.
+> Retoma el proyecto PACE (repo ezradesign/Pace_app, en esta carpeta) como sesión COORDINADORA. Háblame
+> en español, en frases completas y sin jerga. Lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md, sobre
+> todo «12 oct. 2026, noche», que manda sobre lo anterior; solo tú subes a main (docs/WORKFLOW.md §9) y
+> usas PACE_E2E_PORT=8775. Comprueba que la CI de v0.157.0 salió en verde (gh run list --branch main) y,
+> si no, arréglala antes que nada. Luego retoma la caza en Foco desde el TRASPASO de
+> origin/claude/caza-foco-estado-d6bd17 (una sesión en paralelo como mucho), pregúntame lo de las dos
+> pestañas con AskUserQuestion y dime en pocas líneas dónde estamos, qué espera mi respuesta y qué harías ahora.

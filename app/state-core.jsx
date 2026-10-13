@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.156.0';
+const PACE_VERSION = 'v0.157.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -106,6 +106,9 @@ const defaultState = {
   // premium sin tocar UI. La validación de licencia real (claves firmadas,
   // expiresAt, tipos) queda para una fase posterior post-v1.0.
   premiumUnlocked: false,
+  // El código de PACE completo tal como se canjeó (state-licencia.js). Va en el
+  // estado para que viaje con la copia de «Tus datos».
+  licencia: null,
 
   // Foco
   focusMode: 'foco',
@@ -434,8 +437,7 @@ function subscribe(listener) {
   return () => _listeners.delete(listener);
 }
 
-/* Otra pestaña acaba de guardar: su copia pasa a ser la de esta, SIN escribir (ya está guardada).
-   La llama state-core.pestanas.js; el porqué va allí. */
+/* Otra pestaña guardó: su copia pasa a ser la de esta, SIN escribir (el porqué, en state-core.pestanas.js). */
 function paceAdoptarEstado(nuevo) {
   const prev = _state;
   _state = nuevo;

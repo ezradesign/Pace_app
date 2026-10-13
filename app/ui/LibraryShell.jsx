@@ -46,6 +46,7 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
   const [vista, setVista] = useStateLib('catalogo');
+  usePace(); // al canjear un código, «Para ahora» vuelve a contar con lo que se abrió
 
   /* El modal se OCULTA, no se desmonta: sin esto el filtro y la vista
      sobreviven al cierre y la próxima apertura arranca a medio filtrar. */
@@ -79,7 +80,10 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
      dos en móvil y una en el lateral dejaría la segunda sin aparecer en ninguna
      parte de la pantalla de escritorio. Que difieran exigiría leer la piel en
      JS, que es justo lo que s166 quitó a propósito. */
-  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
+  /* «Para ahora» NO PROPONE LO CERRADO: proponer algo que no se puede empezar es
+     un muro sin avisar. Lo cerrado sigue en su grupo, con su candado. */
+  const abiertas = visibles.filter(r => !window.canAccessRoutine || window.canAccessRoutine(r.id));
+  const ahora = libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
   /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya

@@ -100,11 +100,12 @@ function ToastHost() {
   const siguienteRef = useRefTO(null);
   siguienteRef.current = () => {
     if (activoRef.current || !colaRef.current.length) return;
-    const full = Object.assign({}, colaRef.current.shift(), { aro: toastHuecoDelAro() });
+    const sig = colaRef.current.shift();
+    const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
     setToasts(prev => [...prev, full]);
-    try { playSound(full.secreto ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
-    const durationMs = (typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000;
+    if (!full.licencia) { try { playSound(full.secreto ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {} }
+    const durationMs = full.duracion || ((typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000);
     const fadeMs = 300;
     /* s79: tres fases. Visible (durationMs) -> exiting (opacity 1->0) -> fuera del array. */
     setTimeout(() => {
@@ -127,6 +128,17 @@ function ToastHost() {
           title: tR('ach.item.' + a.id + '.title', a.title),
           desc: tR('ach.item.' + a.id + '.desc', a.desc),
           glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
+        siguienteRef.current();
+      }
+      /* El enlace de un código de PACE completo (state-licencia.js). Va en la misma fila, pero
+         sin sonido (no es un logro), abajo en su caja (nunca en el aro) y el doble de rato,
+         porque llega al abrir la app y hay que leerlo. */
+      if (toast.type === 'licencia') {
+        colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
+          eyebrow: t('premium.settings.code'),
+          title: t(toast.ok ? 'premium.ok.title' : 'premium.err.title'),
+          desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other')
+            : t('premium.err.' + (toast.motivo || 'formato')) });
         siguienteRef.current();
       }
     });
@@ -154,24 +166,25 @@ function ToastHost() {
       {toasts.map(toast => toast.aro ? (
         <SelloEnAro key={toast._id} toast={toast} t={t} />
       ) : (
-        <div key={toast._id} style={{
+        <div key={toast._id} data-pace-toast={toast.licencia ? 'licencia' : 'logro'} style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '12px 20px',
           background: 'var(--paper)',
-          border: '1px solid var(--achievement)',
+          border: '1px solid ' + (toast.licencia ? 'var(--premium)' : 'var(--achievement)'),
           borderRadius: 'var(--r-md)',
           boxShadow: 'var(--sh-card)',
           animation: 'pace-slide-up 320ms var(--ease)',
           minWidth: 280,
+          maxWidth: 'calc(100vw - 32px)',
           opacity: toast.exiting ? 0 : 1,
           transition: 'opacity 300ms ease-out',
         }}>
           <div style={{
             width: 40, height: 40,
             borderRadius: '50%',
-            border: '1px solid var(--achievement)',
-            display: 'grid', placeItems: 'center',
-            color: 'var(--achievement)',
+            border: '1px solid ' + (toast.licencia ? 'var(--premium)' : 'var(--achievement)'),
+            display: 'grid', placeItems: 'center', flex: 'none',
+            color: toast.licencia ? 'var(--premium)' : 'var(--achievement)',
             fontFamily: 'var(--font-display)',
             fontStyle: 'italic',
             fontSize: 18,
@@ -183,13 +196,14 @@ function ToastHost() {
                 el `renderGlyph` compartido —la misma función, no una copia—, que
                 resuelve máscara → SVG → carácter. `toast` ya lleva id/glyph/glyphSvg,
                 que es todo lo que esa función lee. */}
-            {window.renderGlyph
+            {toast.licencia ? <PaceCandado size={14} abierto={!!toast.ok} />
+              : window.renderGlyph
               ? window.renderGlyph(toast)
               : <span style={{ fontStyle: 'italic' }}>{toast.glyph}</span>
             }
           </div>
           <div>
-            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
+            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' }}>{toast.eyebrow || t('ach.toast.new')}</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{toast.desc}</div>
           </div>
