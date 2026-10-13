@@ -20,8 +20,8 @@
    vista puede medir 384,9. Por eso el calendario se compacta en vez de estirar
    la caja: estirarla habría fijado el tamaño DEJANDO el scroll, que es la mitad
    de lo que se pidió.
-   SÓLO EN ESCRITORIO: en móvil la altura útil cambia con cada teléfono y un
-   suelo fijo forzaría scroll donde hoy no lo hay. */
+   EN EL MÓVIL TAMBIÉN desde v0.160.0: con los cuatro totales arriba en las tres
+   pestañas, su suelo es la más alta de las tres (ver el bloque del móvil). */
 (function () {
   if (document.getElementById('pace-stats-css')) return;
   var s = document.createElement('style');
@@ -35,17 +35,55 @@
         .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
         .pace-heatmap-empty { width:42px;height:42px; }
         @media (max-width:640px) {
-          .pace-heatmap-cell { width:32px !important;height:32px !important; }
-          .pace-heatmap-grid { grid-template-columns:repeat(7, 32px) !important;gap:4px !important; }
-          .pace-heatmap-header-day { width:32px !important;font-size:9px !important; }
-          .pace-heatmap-day-num { font-size:10px !important; }
-          .pace-heatmap-empty { width:32px !important;height:32px !important; }
-          .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
+          .pace-heatmap-cell { width:36px !important;height:36px !important; }
+          .pace-heatmap-grid { grid-template-columns:repeat(7, 36px) !important;gap:4px !important; }
+          .pace-heatmap-header-day { width:36px !important;font-size:9px !important; }
+          .pace-heatmap-day-num { font-size:11px !important; }
+          .pace-heatmap-empty { width:36px !important;height:36px !important; }
+          /* Las pestañas van en la cabecera del modal, que en el móvil se guarda 36 px a la
+             derecha para la X. Ellas van debajo de la X, así que recuperan ese ancho. */
+          [data-pace-modal-head] > [data-pace-stats-tabs] { margin-right: -36px !important; margin-top: var(--s-4) !important; }
         }
-      
+
+    /* ══ v0.160.0 · EL MÓVIL (todo lo que no es escritorio) ═══════════════════
+       Las tres pestañas con la misma forma: los cuatro totales arriba (2 x 2) y su
+       dibujo debajo. En el mes, las tarjetas sustituyen a la línea de totales. La
+       nota de la semana no cabe y se queda en el escritorio. El año va en dos filas
+       de medio año, con la celda ajustada al ancho (8 px a 360 px de pantalla).
+       EL SUELO: la más alta de las tres (el año, o un mes de seis semanas) mide
+       472 px a 360 x 718; con él, ninguna salta al cambiar de pestaña y ninguna se
+       queda medio vacía. Lo mide tests/stats-pestanas.spec.js. */
+    [data-pace-stats-vistas] { min-height: 472px; }
+    [data-pace-stats-totales] { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; margin-bottom: 12px !important; }
+    .pace-heatmap-totals { display: none !important; }
+    [data-pace-week-note] { display: none; }
+    [data-pace-week-eje="2"] { display: none !important; }
+    [data-pace-week-bar-row] { margin-bottom: 8px; }
+    [data-pace-bar-col] { height: 36px !important; }
+    [data-pace-year-view] { --pace-celda-ano: min(8px, calc((100vw - 84px) / 28 - 2px)); }
+    [data-pace-year-cell] { width: var(--pace-celda-ano) !important; height: var(--pace-celda-ano) !important; }
+    [data-pace-year-month-lbl] { width: var(--pace-celda-ano) !important; font-size: 8px !important; }
+    [data-pace-year-day-lbl] { height: var(--pace-celda-ano) !important; font-size: 7px !important; }
 
     @media ${PACE_CORTE_ESC} {
-      [data-pace-stats-vistas] { min-height: 385px; }
+      /* v0.160.0 · EL SUELO DEL ESCRITORIO es un mes de seis semanas con celdas de 38 px
+         (la más alta de las tres pestañas). Con las pestañas al lado del título, cabe
+         sin scroll en una ventana de 640 px de alto. */
+      [data-pace-stats-vistas] { min-height: 368px; padding-top: 6px; }
+      [data-pace-stats-tabs] { flex: 0 0 360px !important; margin: 0 44px 0 0 !important; }
+      [data-pace-stats-totales] { grid-template-columns: repeat(4, 1fr) !important; gap: 10px !important; margin-bottom: 14px !important; }
+      [data-pace-month-view] [data-pace-stats-totales], [data-pace-year-view] [data-pace-stats-totales] { display: none !important; }
+      .pace-heatmap-totals { display: flex !important; }
+      [data-pace-week-note] { display: block; }
+      [data-pace-week-filas] { display: grid; grid-template-columns: 1fr 1fr; column-gap: 36px; }
+      [data-pace-week-eje="2"] { display: flex !important; }
+      [data-pace-bar-col] { height: 40px !important; }
+      .pace-heatmap-cell, .pace-heatmap-empty { width: 38px; height: 38px; }
+      .pace-heatmap-grid { grid-template-columns: repeat(7, 38px); }
+      .pace-heatmap-header-day { width: 38px; }
+      [data-pace-year-mitades] { flex-direction: row !important; gap: 0 !important; }
+      [data-pace-year-mitad="1"] [data-pace-year-day-col] { display: none !important; }
+      [data-pace-year-mitad="1"] [data-pace-year-meses] { margin-left: 0 !important; }
       /* ══ s177 · EL AÑO SE LLEVA EL ANCHO, Y CADA VISTA EL SUYO ═════════════
 
          LO QUE REPORTO EL USUARIO: «la vista de calendario podia ajustarse mas
@@ -92,19 +130,14 @@
         display: flex; flex-direction: column; justify-content: center;
       }
       [data-pace-stats-vistas]:not(:has([data-pace-year-grid-wrap])) > * {
-        max-width: 820px; margin-left: auto; margin-right: auto;
+        max-width: 920px; margin-left: auto; margin-right: auto;
       }
       [data-pace-year-cell] { width: 19px !important; height: 19px !important; border-radius: 3px !important; }
       [data-pace-year-month-lbl] { width: 19px !important; font-size: 11px !important; }
       [data-pace-year-day-lbl] { height: 19px !important; font-size: 11px !important; }
 
-      /* LOS 13 PX QUE LE SOBRABAN A «SEMANA». Con el calendario ya compactado,
-         era la unica pestana que seguia con scroll. Salen del hueco ENTRE las
-         cuatro filas de barras -- 8 px x 4 = 32, que pasan a 4 x 4 = 16-- y no
-         de la altura de las barras: acortar la barra cambia lo que el grafico
-         dice, y el hueco entre filas no dice nada.
-         El !important es porque el margen es un estilo EN LINEA del JSX. */
-      [data-pace-week-bar-row] { margin-bottom: 4px !important; }
+      /* Con las filas en dos columnas sobra sitio: 8 px entre fila y fila. */
+      [data-pace-week-bar-row] { margin-bottom: 8px; }
     }
   `;
   document.head.appendChild(s);

@@ -1,183 +1,11 @@
 /* PACE · Panel de estadísticas — sesión 43/44
-   Tabs Semana | Mes | Año. WeekView sin cambios (s43). YearView nuevo (s44).
+   Pestañas Semana | Mes | Año. La semana está en StatsSemana.jsx y el año en YearView.jsx;
+   aquí quedan el mes y el panel.
 */
 
 const { useState, useRef, useEffect } = React;
 
-/* =====================================================================
-   WEEK VIEW — sin cambios desde sesión 43
-   ===================================================================== */
-
-function WeekView({ state }) {
-  const { t, tn } = useT();
-  const w = state.weeklyStats;
-  /* RETENCION (s166). Lectura DEFENSIVA y no `w.holdSeconds` a secas: el
-     merge de loadState es superficial, asi que una instalacion anterior a
-     s166 trae un weeklyStats de cuatro claves y esta no viene. */
-  const holdSeg = ((w && w.holdSeconds) || []).reduce((a, b) => a + (b || 0), 0);
-
-  const totals = {
-    focus:  w.focusMinutes.reduce((a,b)=>a+b, 0),
-    breath: w.breathMinutes.reduce((a,b)=>a+b, 0),
-    move:   w.moveMinutes.reduce((a,b)=>a+b, 0),
-    water:  w.waterGlasses.reduce((a,b)=>a+b, 0),
-  };
-
-  const bars = [
-    { key: 'focus',  label: t('topbar.mode.focus'),       color: 'var(--focus)',   data: w.focusMinutes,  unit: t('stats.unit.min') },
-    { key: 'breath', label: t('activity.breathe.label'),  color: 'var(--breathe)', data: w.breathMinutes, unit: t('stats.unit.min') },
-    /* s101: la fila es "Cuerpo" -- moveMinutes acumula Mueve Y Estira
-       (completeMoveSession + completeExtraSession escriben al mismo cubo);
-       etiquetarla "Mueve" mentia por omision. */
-    { key: 'move',   label: t('stats.label.body'),        color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
-    { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses'), unit1: t('stats.unit.glasses.1') },
-  ];
-
-  /* Compactado en sesion 61 (v0.28.2), 62 (v0.28.3) y 63 (v0.28.4):
-       - Cards: padding 16/14 -> 10/12, numero 28 -> 22, gap 12 -> 10.
-       - Margen tras cards: 8/0/24 -> 4/0/14.
-       - WeekBarRow: marginBottom 18 -> 8, chart 64 -> 36.
-       - Nota inferior: eliminada en s63 (subtitulo del modal ya transmite el mensaje).
-       - Movil (s63): cards 4x1 -> 2x2 via CSS, barras compactas. */
-  return (
-    <div data-pace-week-view>
-      <style>{`
-        @media (max-width: 640px) {
-          [data-pace-week-view] [data-pace-week-cards] {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 8px !important;
-            margin-bottom: 10px !important;
-          }
-          [data-pace-week-view] [data-pace-week-bar-row] {
-            margin-bottom: 6px !important;
-          }
-          [data-pace-week-view] [data-pace-week-bar-row] [data-pace-bar-chart] {
-            height: 28px !important;
-          }
-          /* Nota inferior oculta en móvil — espacio crítico */
-          [data-pace-week-view] [data-pace-week-note] {
-            display: none !important;
-          }
-        }
-      `}</style>
-      <div data-pace-week-cards style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
-        {bars.map(b => (
-          <div key={b.key} style={{
-            padding: '10px 12px',
-            background: 'var(--paper-2)',
-            borderRadius: 'var(--r-md)',
-            border: '1px solid var(--line)',
-            borderTop: `3px solid ${b.color}`,
-          }}>
-            <Meta style={{ fontSize: 10, marginBottom: 4 }}>{b.label}</Meta>
-            <div style={{
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1,
-            }}>{totals[b.key]}</div>
-            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{totals[b.key] === 1 && b.unit1 ? b.unit1 : b.unit}</div>
-          </div>
-        ))}
-      </div>
-
-      {bars.map(b => (
-        <WeekBarRow key={b.key} label={b.label} data={b.data} color={b.color} unit={b.unit} />
-      ))}
-
-      {/* LA RETENCION VA AQUI Y NO ARRIBA, y es la decision, no la maqueta.
-          Las cuatro tarjetas y las cuatro filas son el plano donde se compara
-          un dia con otro; la retencion no se compara -- B1/s89 le quito la
-          cifra por ser un RECORD. Una linea al pie la deja legible sin
-          invitar a perseguirla, que es el mismo criterio de s139 §A4: gana lo
-          mas periferico que todavia orienta.
-
-          NO APARECE SI VALE CERO. Un «0 s» permanente en la pantalla de
-          alguien que no practica rondas es exactamente el recordatorio de una
-          metrica sin cumplir que §2.5 y el tono del producto rechazan; y solo
-          3 de las 20 rutinas de Respira tienen retencion, asi que para la
-          mayoria de la gente el cero es el estado normal, no un hueco. */}
-      {holdSeg > 0 && (
-        <div data-pace-week-hold={String(holdSeg)} style={{
-          marginTop: 10, display: 'flex', justifyContent: 'space-between',
-          alignItems: 'baseline', padding: '0 2px',
-        }}>
-          <Meta style={{ fontSize: 9 }}>{t('stats.hold.label')}</Meta>
-          <span style={{
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-            fontSize: 15, color: 'var(--ink-2)', fontVariantNumeric: 'tabular-nums',
-          }}>{holdSeg < 60
-            ? tn('stats.hold.sec', { s: holdSeg })
-            : tn('stats.hold.min', { m: Math.floor(holdSeg / 60), s: String(holdSeg % 60).padStart(2, '0') })}</span>
-        </div>
-      )}
-
-      <div data-pace-week-note style={{
-        marginTop: 10, padding: 8,
-        background: 'var(--paper-2)',
-        borderRadius: 'var(--r-sm)',
-        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
-      }}>
-        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
-        {t('stats.note')}
-      </div>
-    </div>
-  );
-}
-
-function WeekBarRow({ label, data, color, unit }) {
-  const { t } = useT();
-  const days = t('stats.days').split(',');
-  /* Sesion 69 (v0.28.8): weeklyStats ahora indexa lunes-primero (data[0]=lunes).
-     Eliminado el reordering [data[1],...,data[0]] que rotaba desde getDay(). */
-  const today = (new Date().getDay() + 6) % 7;
-  const max = Math.max(1, ...data);
-
-  return (
-    <div data-pace-week-bar-row style={{ marginBottom: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
-        <Meta>{unit}</Meta>
-      </div>
-      <div data-pace-bar-chart style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 36 }}>
-        {data.map((v, i) => {
-          const h = (v / max) * 100;
-          const isToday = i === today;
-          return (
-            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'flex-end', position: 'relative' }}>
-                <div style={{
-                  width: '100%',
-                  height: `${h}%`,
-                  minHeight: v > 0 ? 4 : 2,
-                  background: v > 0 ? color : 'var(--line)',
-                  opacity: isToday ? 1 : (v > 0 ? 0.8 : 0.4),
-                  borderRadius: '3px 3px 0 0',
-                  transition: 'height 320ms var(--ease)',
-                  position: 'relative',
-                }}>
-                  {v > 0 && (
-                    <span style={{
-                      position: 'absolute', bottom: '100%', left: '50%',
-                      transform: 'translateX(-50%)',
-                      fontSize: 10, color: 'var(--ink-3)',
-                      marginBottom: 4,
-                      fontVariantNumeric: 'tabular-nums',
-                    }}>{v}</span>
-                  )}
-                </div>
-              </div>
-              <span style={{
-                fontSize: 10,
-                color: isToday ? 'var(--ink)' : 'var(--ink-3)',
-                fontWeight: isToday ? 600 : 400,
-                letterSpacing: 0.3,
-              }}>{days[i]}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+/* La semana y las cuatro tarjetas de totales viven en StatsSemana.jsx. */
 
 /* =====================================================================
    MONTH HEATMAP — sesión 43 (sin cambios funcionales; +initialYear/Month s44)
@@ -263,7 +91,8 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     const isoKey = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     const entry  = history.days && history.days[isoKey] ? history.days[isoKey] : null;
     const isToday = isCurrentMonth && d === now.getDate();
-    cells.push({ type: 'day', key: isoKey, d, entry, isToday });
+    const isFuture = isCurrentMonth && d > now.getDate();
+    cells.push({ type: 'day', key: isoKey, d, entry, isToday, isFuture });
   }
 
   function handleCellEnter(e, cell) {
@@ -313,9 +142,16 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
      momento -- medido a 1536x714, la pestana del mes desbordaba 37 px-, y 6
      filas de 42 con 5 huecos de 6 dan 282 px, exactamente los 36 que sobraban.
      El ancho baja de 372 a 330 px sobre ~756 utiles: sobra sitio de sobra.
-       - movil: override a 32px sin gap. */
+       - movil: override a 32px sin gap.
+     v0.160.0: en el escritorio 38 px, para que un mes de seis semanas quepa sin scroll
+     con una ventana de 640 px; en el móvil 36 px, que llenan el ancho debajo de los totales.
+
+     LOS TOTALES DEL MES: en el móvil son las mismas cuatro tarjetas que la semana, arriba
+     (así las tres pestañas tienen la misma forma y la misma altura); en el escritorio,
+     la línea de abajo, que cabe sin scroll al lado de un calendario ancho. */
   return (
-    <div>
+    <div data-pace-month-view>
+      <StatsTotales items={statsTotalesDe(monthData, t)} />
 
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
         <button onClick={prevMonth} aria-label={t('stats.month.prev')} style={{
@@ -343,10 +179,14 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
           const totalMin = hasData ? (cell.entry.focusMinutes||0)+(cell.entry.breathMinutes||0)+(cell.entry.moveMinutes||0) : 0;
           const opacity  = hasData ? intensityOpacity(totalMin) : 0;
           const domColor = hasData ? dominantModule(cell.entry).color : 'var(--paper-3)';
+          /* Un día sin nada es un hilo fino con su número, no una losa: con 31 losas beige
+             el mes se leía como un muro y los días con ritmo no destacaban. Los que aún no
+             han llegado, más tenues. Sobre un color intenso el número va en claro. */
+          const vacio = cell.isFuture ? 'none' : 'inset 0 0 0 1px var(--line)';
           return (
             <div key={cell.key}
               className={`pace-heatmap-cell${hasData?' has-data':''}`}
-              style={{ background:hasData?'transparent':'var(--paper-3)', outline:cell.isToday?'2px solid var(--ink-2)':'none', outlineOffset:1, position:'relative' }}
+              style={{ background:'transparent', boxShadow:hasData?'none':vacio, outline:cell.isToday?'1.5px solid var(--ink-2)':'none', outlineOffset:2, position:'relative', opacity:cell.isFuture?0.5:1 }}
               onMouseEnter={hasData?(e)=>handleCellEnter(e,cell):undefined}
               onMouseLeave={hasData?handleCellLeave:undefined}
               onTouchEnd={hasData?(e)=>{e.preventDefault();handleCellTap(e,cell);}:undefined}
@@ -354,7 +194,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
             >
               {hasData && <div style={{ position:'absolute',inset:0,borderRadius:'inherit',background:domColor,opacity }} />}
               <span className="pace-heatmap-day-num" style={{
-                color:hasData?'var(--ink)':'var(--ink-3)',
+                color:hasData?(opacity>=0.58?'var(--paper)':'var(--ink)'):'var(--ink-3)',
                 fontWeight:cell.isToday?700:400,
               }}>{cell.d}</span>
             </div>
@@ -398,8 +238,11 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
    ===================================================================== */
 
 const statsPanelTabStyles = {
+  /* Va en la cabecera del modal: en el móvil, a todo el ancho debajo del subtítulo; en el
+     escritorio, al lado del título (la hoja la estrecha a 360 px). Así la semana, con su
+     nota, cabe sin scroll en una ventana de 680 px. */
   container: {
-    display: 'flex', gap: 2, marginBottom: 14,
+    display: 'flex', gap: 2, flex: '1 1 100%', marginTop: 'var(--s-5)',
     background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', padding: 3,
   },
   tab: (active) => ({
@@ -438,21 +281,24 @@ function StatsPanel({ open, onClose }) {
     setTab('month');
   }
 
+  const pestanas = (
+    <div data-pace-stats-tabs style={statsPanelTabStyles.container}>
+      {[
+        { key:'week',  label:t('stats.tab.week')  },
+        { key:'month', label:t('stats.tab.month') },
+        { key:'year',  label:t('stats.tab.year')  },
+        { key:'paths', label:t('stats.tab.paths') },
+      /* Sin Caminos (SHOW_CAMINOS, app/flags.js) su pestaña no se ofrece. */
+      ].filter(({ key }) => key !== 'paths' || window.SHOW_CAMINOS !== false).map(({ key, label }) => (
+        <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
+      ))}
+    </div>
+  );
+
   return (
-    <Modal open={open} onClose={onClose}
+    <Modal open={open} onClose={onClose} cabecera={pestanas}
             tagLabel={t('stats.tag')} title={t('stats.title')} subtitle={t('stats.subtitle')} maxWidth={1240}
     >
-      <div style={statsPanelTabStyles.container}>
-        {[
-          { key:'week',  label:t('stats.tab.week')  },
-          { key:'month', label:t('stats.tab.month') },
-          { key:'year',  label:t('stats.tab.year')  },
-          { key:'paths', label:t('stats.tab.paths') },
-        /* Sin Caminos (SHOW_CAMINOS, app/flags.js) su pestaña no se ofrece. */
-        ].filter(({ key }) => key !== 'paths' || window.SHOW_CAMINOS !== false).map(({ key, label }) => (
-          <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
-        ))}
-      </div>
 
       {/* s176 · LAS CUATRO PESTANAS COMPARTEN CAJA EN ESCRITORIO. Medido a
           1536x714 antes de tocar nada: el modal saltaba de 443,7 px en «Ano» a
@@ -465,8 +311,9 @@ function StatsPanel({ open, onClose }) {
           come 220,1, asi que la vista puede medir 384,9. Por eso se compacta el
           calendario en vez de estirar la caja: estirarla habria fijado el
           tamano DEJANDO el scroll, que es la mitad de lo que se pidio.
-          SOLO EN ESCRITORIO. En movil la altura util cambia con cada telefono y
-          un suelo fijo forzaria scroll donde hoy no lo hay. */}
+          EN EL MOVIL TAMBIEN (v0.160.0): con los cuatro totales arriba en las tres
+          pestanas, el suelo es la mas alta de las tres, que ya cabe en el telefono
+          de Ez sin scroll; las otras dos dejan de saltar y no quedan medio vacias. */}
       <div data-pace-stats-vistas>
         {tab==='week'  && <WeekView state={state} />}
         {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}

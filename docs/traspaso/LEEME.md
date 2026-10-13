@@ -18,10 +18,10 @@ Manda sobre el relevo de abajo.
   la pausa sale en la que miras. La rama `claude/caza-foco-estado-d6bd17` ya no guarda nada pendiente.
 - **«Tus rutinas» en el móvil, v0.158.0** (13 oct.): el nombre ya no pisa los botones, la rutina
   nueva se ve al guardar y «Crear rutina» es un botón (`tests/tus-rutinas.spec.js`).
-- **Estadísticas, a medio diseñar (nada en el repo):** sin scroll en el escritorio de Ez
-  conservando la nota, la misma altura en las tres pestañas del móvil y un año más cuidado. Al
-  medir salieron dos fallos de hoy: las barras de la semana miden todas 4 px sea cual sea la cifra
-  y, en el móvil, la cifra pisa el nombre de la fila. Falta enseñar las fotos a Ez y que elija.
+- **Estadísticas, v0.160.0** (13 oct.): Ez eligió las cuatro A mirando `docs/proposals/stats-alturas-r2-ligera.html`
+  y dio el sí a lo montado y pulido en `stats-montado-ligera.html`: sin scroll en el escritorio con la
+  nota, la misma altura en las tres pestañas del móvil con los totales arriba, el año en dos filas en
+  el móvil y barras que crecen con su cifra. En un móvil de 360 × 640 las tres piden algo de scroll.
 - **Puertos:** el 8765 y el 8793 siguen ocupados por servidores de la cuenta anterior; la caza usa
   el 8785 o el 8794 y la coordinadora, el 8775.
 - **`verify` desde la carpeta principal** tardaba más de veinte minutos porque recorría las copias de

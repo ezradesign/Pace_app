@@ -29,7 +29,7 @@ const displayItalic = {
   fontStyle: 'italic',
 };
 
-function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel }) {
+function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera }) {
   const { t } = useT();
   /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
      titulo para el lector de pantalla, el foco DENTRO al abrir, Tab que da la
@@ -41,6 +41,20 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
   usePaceDialogo(cardRef, !!open, { onEscape: onClose ? () => onClose() : null });
 
   if (!open) return null;
+
+  const titulo = (
+    <React.Fragment>
+      {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
+      {title && <h2 data-pace-modal-title id={tituloId} style={{
+        fontFamily: 'var(--font-display)',
+        fontStyle: 'italic',
+        fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1
+      }}>{title}</h2>}
+      {subtitle && <p data-pace-modal-subtitle style={{
+        color: 'var(--ink-3)', fontSize: 14, margin: '6px 0 0', maxWidth: '90%'
+      }}>{subtitle}</p>}
+    </React.Fragment>
+  );
 
   return (
     <div
@@ -102,17 +116,15 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
             onMouseLeave={(e) => e.currentTarget.style.color = 'var(--ink-3)'}
           >×</button>
         )}
+        {/* `cabecera`: algo que va AL LADO del título cuando cabe (las pestañas de
+            Estadísticas en el escritorio) y debajo cuando no. Sin ella, la cabecera es la
+            de siempre, sin una caja de más. */}
         {(tagLabel || title) && (
-          <div data-pace-modal-head style={{ marginBottom: 'var(--s-5)' }}>
-            {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
-            {title && <h2 data-pace-modal-title id={tituloId} style={{
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic',
-              fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1
-            }}>{title}</h2>}
-            {subtitle && <p data-pace-modal-subtitle style={{
-              color: 'var(--ink-3)', fontSize: 14, margin: '6px 0 0', maxWidth: '90%'
-            }}>{subtitle}</p>}
+          <div data-pace-modal-head style={cabecera
+            ? { marginBottom: 14, display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: 'var(--s-5)' }
+            : { marginBottom: 'var(--s-5)' }}>
+            {cabecera ? <div style={{ flex: '1 1 280px', minWidth: 0 }}>{titulo}</div> : titulo}
+            {cabecera}
           </div>
         )}
         {children}

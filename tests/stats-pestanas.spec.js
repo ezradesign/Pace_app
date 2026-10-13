@@ -17,9 +17,9 @@
    calendario o en la semana lo rompe sin que nadie lo note -- que es
    exactamente cómo el «cabe sin scroll» de s62 dejó de ser cierto.
 
-   NO CUBRE móvil: allí la altura útil cambia con cada teléfono y el suelo no
-   se aplica a propósito. Ni la pestaña Caminos mientras estén ocultos
-   (SHOW_CAMINOS, app/flags.js): sin ella quedan tres.
+   NO CUBRE el móvil ni la ventana baja de Ez: los mide stats-alturas.spec.js
+   (v0.160.0). Ni la pestaña Caminos mientras estén ocultos (SHOW_CAMINOS,
+   app/flags.js): sin ella quedan tres.
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, esperarModalAsentado } = require('./helpers');

@@ -134,6 +134,11 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   const jan1Dow   = (new Date(viewYear,0,1).getDay()+6)%7;
   const totalCols = Math.ceil((yearData.length+jan1Dow)/7);
   const monthCols = getMonthColumns(viewYear, jan1Dow);
+  /* El año en DOS MITADES: enero-junio y julio-diciembre. En el móvil van una debajo de
+     otra (ya no hay que deslizar de lado); en el escritorio, una al lado de otra, y se
+     leen como la fila única de siempre. Corta en la columna del 1 de julio. */
+  const corte = Math.floor((Math.round((new Date(viewYear,6,1) - new Date(viewYear,0,1)) / 86400000) + jan1Dow) / 7);
+  const columnas = (desde, hasta) => Array.from({ length: hasta - desde }, (_, i) => desde + i);
   const hasAnyData = yearData.some(c => c.score > 0);
   const monthNames = t('stats.year.months.short').split(',');
   const dayRowLabels = t('stats.year.days.label').split(',');
@@ -170,19 +175,31 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
     return () => document.removeEventListener('touchstart', onOutside);
   }, [tooltip]);
 
+  const leyenda = (
+    <div data-pace-year-leyenda style={{ display:'flex',alignItems:'center',gap:5,marginLeft:'auto' }}>
+      <span style={{ fontSize:10,color:'var(--ink-3)' }}>{t('stats.year.legend.less')}</span>
+      {[0,1,2,3,4].map(lvl => {
+        const ls = yearLevelStyles[lvl];
+        return (
+          <div key={lvl} style={{
+            width:12,height:12,borderRadius:2,position:'relative',
+            background: lvl===0 ? 'var(--paper-3)' : 'transparent',
+          }}>
+            {lvl>0 && <div style={{ position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op }} />}
+          </div>
+        );
+      })}
+      <span style={{ fontSize:10,color:'var(--ink-3)' }}>{t('stats.year.legend.more')}</span>
+    </div>
+  );
+
   return (
     <div data-pace-year-view>
-      <style>{`
-        /* Sesion 62 (v0.28.3): celdas 12 -> 11 + month labels alineados con
-           cell stride (16 -> 11) para que las 53 columnas + day-label col
-           quepan en el modal de 820px sin scroll horizontal.
-           Movil sin cambios (sigue con scroll horizontal y celdas 11). */
-        @media (max-width:640px) {
-          [data-pace-year-view] [data-pace-year-grid-wrap] { scroll-snap-type:x mandatory !important; }
-          [data-pace-year-view] [data-pace-year-month-lbl] { font-size:8px !important; }
-          [data-pace-year-view] [data-pace-year-day-lbl] { font-size:8px !important;width:12px !important; }
-        }
-      `}</style>
+      {/* El tamaño de las celdas va en StatsPanel.css.jsx: en el móvil se ajusta al ancho
+          para que medio año quepa en una fila; en el escritorio, 19 px. */}
+
+      {/* Los totales del año: en el móvil, las mismas cuatro tarjetas que la semana y el mes. */}
+      <StatsTotales items={statsTotalesDe(history.years && history.years[viewYear], t)} />
 
       {/* Navegación de año */}
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16 }}>
@@ -197,116 +214,106 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
         }}>&#8250;</button>
       </div>
 
-      {/* Grid con scroll horizontal en móvil */}
+      {/* Rejilla: dos mitades (ver `corte`). El scroll lateral queda solo como red, si un
+          teléfono muy estrecho no llegara a medio año. */}
       <div data-pace-year-grid-wrap style={{ overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch' }}>
-        <div style={{ display:'inline-block',minWidth:'max-content' }}>
-
-          {/* Etiquetas de meses -- ancho alineado con cell stride (11+2) */}
-          <div style={{ display:'flex',marginLeft:18,marginBottom:4 }}>
-            {Array.from({ length: totalCols }, (_,col) => (
-              <div key={col} data-pace-year-month-lbl style={{
-                width:11,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',
-                letterSpacing:0.2,overflow:'visible',whiteSpace:'nowrap',
-              }}>
-                {monthCols[col] !== undefined ? monthNames[monthCols[col]] : ''}
+        <div data-pace-year-mitades style={{ display:'inline-flex',flexDirection:'column',gap:10,minWidth:'max-content' }}>
+          {[[0, corte], [corte, totalCols]].map(([desde, hasta], mitad) => (
+            <div key={mitad} data-pace-year-mitad={mitad}>
+              {/* Etiquetas de meses -- ancho alineado con el paso de columna */}
+              <div data-pace-year-meses style={{ display:'flex',marginLeft:18,marginBottom:4 }}>
+                {columnas(desde, hasta).map(col => (
+                  <div key={col} data-pace-year-month-lbl style={{
+                    width:11,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',
+                    letterSpacing:0.2,overflow:'visible',whiteSpace:'nowrap',
+                  }}>
+                    {monthCols[col] !== undefined ? monthNames[monthCols[col]] : ''}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Grid de días */}
-          <div style={{ display:'flex' }}>
-            {/* Etiquetas de dia (L M X J V S D, los 7 -- sesion 62) */}
-            <div style={{ display:'flex',flexDirection:'column',gap:2,marginRight:4 }}>
-              {[0,1,2,3,4,5,6].map(row => (
-                <div key={row} data-pace-year-day-lbl style={{
-                  width:14,height:11,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
-                }}>
-                  {dayRowLabels[row] || ''}
-                </div>
-              ))}
-            </div>
-
-            {/* Columnas de semanas */}
-            {Array.from({ length: totalCols }, (_,col) => (
-              <div key={col} style={{ display:'flex',flexDirection:'column',gap:2,marginRight:2 }}>
-                {[0,1,2,3,4,5,6].map(row => {
-                  const cell = cellMap[`${col}-${row}`];
-
-                  // Celda fuera del año (offset inicio/fin) -> hueco invisible.
-                  if (!cell) {
-                    return <div key={row} data-pace-year-cell style={{ width:11,height:11,borderRadius:2 }} />;
-                  }
-
-                  // Dia futuro: solo borde tenue sin relleno (s63) para
-                  // distinguirlos de los dias pasados sin actividad (lvl=0).
-                  if (cell.isFuture) {
-                    return (
-                      <div key={row} data-pace-year-cell style={{
-                        width:11,height:11,borderRadius:2,
-                        background:'transparent',border:'1px solid var(--line)',opacity:0.3,
-                      }} />
-                    );
-                  }
-
-                  // Pre-uso: crema con borde muy tenue
-                  if (cell.isPreUse) {
-                    return (
-                      <div key={row} data-pace-year-cell style={{
-                        width:11,height:11,borderRadius:2,
-                        background:'var(--paper-2)',border:'1px solid var(--line)',opacity:0.35,
-                      }} />
-                    );
-                  }
-
-                  const lvl     = cell.level;
-                  const ls      = yearLevelStyles[lvl] || yearLevelStyles[0];
-                  const hasData = cell.score > 0;
-
-                  return (
-                    <div key={row} data-pace-year-cell
-                      onClick={hasData ? ()=>handleClick(cell) : undefined}
-                      onMouseEnter={hasData ? (e)=>handleEnter(e,cell) : undefined}
-                      onMouseLeave={hasData ? handleLeave : undefined}
-                      onTouchEnd={hasData ? (e)=>handleTap(e,cell) : undefined}
-                      style={{
-                        width:11,height:11,borderRadius:2,position:'relative',
-                        background: lvl===0 ? 'var(--paper-3)' : 'transparent',
-                        border: lvl===0 ? '1px solid var(--line)' : 'none',
-                        cursor: hasData ? 'pointer' : 'default',
-                      }}
-                    >
-                      {lvl > 0 && (
-                        <div style={{
-                          position:'absolute',inset:0,borderRadius:'inherit',
-                          background:ls.bg,opacity:ls.op,
-                        }} />
-                      )}
+              <div style={{ display:'flex' }}>
+                {/* Etiquetas de dia (L M X J V S D) */}
+                <div data-pace-year-day-col style={{ display:'flex',flexDirection:'column',gap:2,marginRight:4 }}>
+                  {[0,1,2,3,4,5,6].map(row => (
+                    <div key={row} data-pace-year-day-lbl style={{
+                      width:14,height:11,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
+                    }}>
+                      {dayRowLabels[row] || ''}
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+
+                {/* Columnas de semanas */}
+                {columnas(desde, hasta).map(col => (
+                  <div key={col} style={{ display:'flex',flexDirection:'column',gap:2,marginRight:2 }}>
+                    {[0,1,2,3,4,5,6].map(row => {
+                      const cell = cellMap[`${col}-${row}`];
+
+                      // Celda fuera del año (offset inicio/fin) -> hueco invisible.
+                      if (!cell) {
+                        return <div key={row} data-pace-year-cell style={{ width:11,height:11,borderRadius:2 }} />;
+                      }
+
+                      // Dia futuro: solo borde tenue sin relleno (s63) para
+                      // distinguirlos de los dias pasados sin actividad (lvl=0).
+                      if (cell.isFuture) {
+                        return (
+                          <div key={row} data-pace-year-cell style={{
+                            width:11,height:11,borderRadius:2,
+                            background:'transparent',border:'1px solid var(--line)',opacity:0.3,
+                          }} />
+                        );
+                      }
+
+                      // Pre-uso: crema con borde muy tenue
+                      if (cell.isPreUse) {
+                        return (
+                          <div key={row} data-pace-year-cell style={{
+                            width:11,height:11,borderRadius:2,
+                            background:'var(--paper-2)',border:'1px solid var(--line)',opacity:0.35,
+                          }} />
+                        );
+                      }
+
+                      const lvl     = cell.level;
+                      const ls      = yearLevelStyles[lvl] || yearLevelStyles[0];
+                      const hasData = cell.score > 0;
+
+                      return (
+                        <div key={row} data-pace-year-cell
+                          onClick={hasData ? ()=>handleClick(cell) : undefined}
+                          onMouseEnter={hasData ? (e)=>handleEnter(e,cell) : undefined}
+                          onMouseLeave={hasData ? handleLeave : undefined}
+                          onTouchEnd={hasData ? (e)=>handleTap(e,cell) : undefined}
+                          style={{
+                            width:11,height:11,borderRadius:2,position:'relative',
+                            /* Un día sin nada es un punto tenue sin borde: con borde, los meses
+                               vacíos se leían como un muro de cuadritos. */
+                            background: lvl===0 ? 'var(--paper-3)' : 'transparent',
+                            cursor: hasData ? 'pointer' : 'default',
+                          }}
+                        >
+                          {lvl > 0 && (
+                            <div style={{
+                              position:'absolute',inset:0,borderRadius:'inherit',
+                              background:ls.bg,opacity:ls.op,
+                            }} />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Leyenda */}
-      <div style={{ display:'flex',alignItems:'center',gap:5,marginTop:10,justifyContent:'flex-end' }}>
-        <span style={{ fontSize:10,color:'var(--ink-3)' }}>{t('stats.year.legend.less')}</span>
-        {[0,1,2,3,4].map(lvl => {
-          const ls = yearLevelStyles[lvl];
-          return (
-            <div key={lvl} style={{
-              width:12,height:12,borderRadius:2,position:'relative',
-              background: lvl===0 ? 'var(--paper-3)' : 'transparent',
-              border: lvl===0 ? '1px solid var(--line)' : 'none',
-            }}>
-              {lvl>0 && <div style={{ position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op }} />}
-            </div>
-          );
-        })}
-        <span style={{ fontSize:10,color:'var(--ink-3)' }}>{t('stats.year.legend.more')}</span>
-      </div>
+      {/* Sin datos, la leyenda va sola a la derecha; con datos, dentro de la línea de
+          «días con ritmo» (en el móvil baja a su propia línea dentro de la misma caja). */}
+      {!hasAnyData && <div style={{ display:'flex',marginTop:10 }}>{leyenda}</div>}
 
       {/* Año vacío */}
       {!hasAnyData && (
@@ -322,11 +329,12 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
       {hasAnyData && (
         <div style={{
           marginTop:12,padding:'10px 14px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',
-          fontSize:12,color:'var(--ink-2)',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center',
+          fontSize:12,color:'var(--ink-2)',display:'flex',flexWrap:'wrap',gap:8,rowGap:6,alignItems:'center',
         }}>
           <span>{activeDays === 1 ? t('stats.year.activeDays.1') : t('stats.year.activeDays').replace('{n}', activeDays)}</span>
           <span style={{ color:'var(--ink-3)' }}>·</span>
           <span>{maxStreak === 1 ? t('stats.year.maxStreak.1') : t('stats.year.maxStreak').replace('{n}', maxStreak)}</span>
+          {leyenda}
         </div>
       )}
 
