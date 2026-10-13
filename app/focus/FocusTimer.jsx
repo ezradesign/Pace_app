@@ -30,7 +30,7 @@ function FocusTimer({ onFinish }) {
        ultima onComplete en un ref, asi que este cierre lee el focusMode
        vigente; un cambio de modo resetea el timer antes de poder completar.
        Con el bloque abierto en otra pestaña, solo una lo cuenta, y solo esa
-       suena, abre la pausa y avisa (FocusTimer.pestanas.jsx). */
+       suena y avisa; la pausa la abre la que miras (FocusTimer.pestanas.jsx). */
     const bloque = bloqueRef.current || ('e' + Date.now());
     const minutos = state.focusMinutes, inicio = inicioBloqueRef.current, avisoOn = state.notifyFocusEnd;
     paceFocoContar(bloque, () => {
@@ -50,6 +50,7 @@ function FocusTimer({ onFinish }) {
       try {
         onFinish && onFinish();
       } finally {
+        try { paceFocoPausaPendiente(bloque); } catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({

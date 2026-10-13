@@ -17,10 +17,18 @@
      los minutos nuevos del estado, espera a que casen. Un aviso perdido solo deja una pestaña con
      otra cara; contar lo decide lo de abajo.
    · CONTAR UNA VEZ es exclusión entre pestañas, y eso solo lo da Web Locks: la primera que llega al
-     final coge el candado del bloque SIN esperar y cuenta (campana, minutos, la pausa); la que llega
+     final coge el candado del bloque SIN esperar y cuenta (campana, minutos, evento); la que llega
      a la vez no lo consigue y se calla. Quien cuenta guarda el candado diez minutos, y además deja
      el `id` en el estado (`focoContado`), que ya viaja a las demás: una pestaña dormida que despierte
      más tarde ve que está contado. Sin Web Locks (Safari anterior a 15.4) se cuenta como siempre.
+
+   · LA PAUSA SALE EN LA PESTAÑA QUE MIRAS (Ez, 13 oct.: «En la que estás mirando»). Quien cuenta
+     puede ser una pestaña de fondo, y antes abría la pausa ella misma: la que tenías delante se
+     quedaba en «Empezar otro ciclo». Ahora la deja PENDIENTE en el estado (`focoPausa`, que viaja
+     a las demás) y la abre la pestaña visible, o la primera que vuelva al frente. Dos ventanas pueden
+     verse a la vez, así que abrirla también va con candado, y quien lo coge la quita del estado.
+     Solo vale el día del bloque, como el bloque que terminó con PACE cerrado; sin Web Locks la abre
+     toda pestaña visible que la vea.
 
    Los modos Pausa y Larga no cuentan nada y siguen siendo de cada pestaña. */
 
@@ -43,6 +51,38 @@ function paceFocoContar(id, contar) {
     contar();
     return new Promise(function (r) { setTimeout(r, PACE_FOCO_CANDADO_MS); });
   }).catch(function () {});
+}
+
+function paceFocoPausaPendiente(id) {
+  setState(prev => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString() } }));
+}
+
+/* `pendiente` es el id de `state.focoPausa`: el efecto se rehace cuando otra pestaña la deja o la quita. */
+function usePausaALaVista(pendiente, abrir) {
+  const abrirRef = useRefFTP(abrir);
+  abrirRef.current = abrir;
+  useEffectFTP(() => {
+    const intentar = () => {
+      const p = getState().focoPausa;
+      if (!p || !p.id || p.dia !== new Date().toDateString() || document.visibilityState !== 'visible') return;
+      const coger = () => {
+        const s = getState();
+        if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
+        setState(prev => ({ ...prev, focoPausa: null }));
+        abrirRef.current();
+        return true;
+      };
+      const locks = typeof navigator !== 'undefined' ? navigator.locks : null;
+      if (!locks || typeof locks.request !== 'function') { coger(); return; }
+      locks.request('pace.foco.pausa.' + p.id, { ifAvailable: true }, function (candado) {
+        if (!candado || !coger()) return;
+        return new Promise(function (r) { setTimeout(r, PACE_FOCO_CANDADO_MS); });
+      }).catch(function () {});
+    };
+    intentar();
+    document.addEventListener('visibilitychange', intentar);
+    return () => document.removeEventListener('visibilitychange', intentar);
+  }, [pendiente]);
 }
 
 /* El canal. Devuelve `avisar(mensaje)`, que las acciones de ESTA pestaña llaman; lo que llega de
@@ -88,4 +128,5 @@ function useFocoPestanas(o) {
   };
 }
 
-Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas });
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas,
+  paceFocoPausaPendiente, usePausaALaVista });
