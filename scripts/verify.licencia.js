@@ -26,11 +26,14 @@ var MARCA_PRIVADA = new RegExp('-----BEGIN (EC |RSA |ENCRYPTED )?' + 'PRIVATE KE
 var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|test-results|playwright-report|build|\.gradle|\.claude[\\/]worktrees)([\\/]|$)/;
 var TEXTO = /\.(js|jsx|json|html|md|txt|css|yml|yaml|pem|key|env|xml|properties|gradle|csv)$/i;
 
-function recorrer(dir, out) {
+/* `base` es la raíz del recorrido: SALTAR se mira sobre la ruta RELATIVA a ella, porque
+   con la absoluta un verify lanzado dentro de .claude/worktrees se lo saltaba todo. */
+function recorrer(dir, out, base) {
+  base = base || dir;
   fs.readdirSync(dir, { withFileTypes: true }).forEach(function (d) {
     var p = path.join(dir, d.name);
-    if (SALTAR.test(p)) return;
-    if (d.isDirectory()) recorrer(p, out);
+    if (SALTAR.test(path.relative(base, p))) return;
+    if (d.isDirectory()) recorrer(p, out, base);
     else out.push(p);
   });
   return out;
