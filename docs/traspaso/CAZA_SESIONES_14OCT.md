@@ -16,9 +16,11 @@ no pasó) y **molesta** (no se pierde nada, pero confunde).
 esos esperan el sí de Ez con fotos de antes y después. Los demás se arreglan sin preguntar, con una
 prueba que falla en `main` y pasa en la rama.
 
-**Estado el 14 de octubre:** seis arreglados en `claude/caza-sesiones-a8e105`, cada uno con su
-prueba en `tests/caza-sesiones.spec.js` (roja contra v0.162.0, verde en la rama). Los tres que
-cambian lo que se ve (sesiones-7, 8 y 9) esperan a Ez.
+**Estado el 14 de octubre:** los seis que no cambian lo que se ve están en v0.163.0, cada uno con su
+prueba en `tests/caza-sesiones.spec.js` (roja contra v0.162.0). Los tres que sí lo cambian
+(sesiones-7, 8 y 9) los vio Ez con fotos de la app real (`docs/proposals/sesiones-tres-preguntas.html`)
+y eligió A en los tres; están arreglados en `claude/caza-sesiones-a8e105`, con sus pruebas rojas
+contra v0.163.0 y un banco de 8 mutantes, todos muertos.
 
 «Dormido» es el equipo en reposo o la app congelada por el sistema: el reloj de la pared sigue y la
 página no corre ni se entera de que se ha ocultado (un portátil que se cierra, Android con la app en
@@ -90,9 +92,12 @@ el fondo). En las pruebas se hace saltando el reloj sin disparar ningún tempori
   dos cuentan.
 - **Medido:** `breatheSessionsTotal` 2, dos `session.completed` y un minuto en cada uno.
 
-## Lo que necesita a Ez
+## Lo que eligió Ez
 
-### sesiones-7 · «Terminar» nada más empezar cuenta una sesión entera
+### ~~sesiones-7 · «Terminar» nada más empezar cuenta una sesión entera~~
+- **Arreglado (Ez eligió A):** con menos de medio minuto de práctica no cuenta nada y el cierre lo
+  dice, «Sesión sin contar», sin cifras ni «¿Te ayudó esta pausa?»; en un Camino, el paso sigue como
+  saltado. Desde 30 s el redondeo ya daba un minuto, así que por encima no cambia nada.
 - **Gravedad:** descuadra. **Cambia lo que se ve:** sí.
 - **Pasos:** Box 4·4·4·4 → «Empezar ahora» → «Terminar»: «Sesión completada · 0:00 TIEMPO». Tres
   veces seguidas dan tres logros: «Primer aliento», el de explorar Box (que pide tres sesiones de la
@@ -101,12 +106,18 @@ el fondo). En las pruebas se hace saltando el reloj sin disparar ningún tempori
 - **Medido:** cada una suma 1 minuto (el mínimo que se acredita «si hubo práctica») y un evento con
   `activeSeconds: 0`.
 
-### sesiones-8 · El «Tiempo» del cierre de Mueve y Estira lleva las pausas dentro
+### ~~sesiones-8 · El «Tiempo» del cierre de Mueve y Estira lleva las pausas dentro~~
+- **Arreglado (Ez eligió A):** el cierre dice el tiempo de la sesión sin las pausas, el mismo número
+  que va a la semana (con colocarse, cambiar de lado y los descansos).
 - **Gravedad:** molesta. **Cambia lo que se ve:** sí.
-- **Pasos:** el de sesiones-2: tras 1:35 de rutina y una pausa de 20 minutos, el cierre dice
-  «20:12 TIEMPO». En Respira, el mismo caso dice el tiempo respirado, sin la pausa.
+- **Pasos:** Gemelos subrepticios con una pausa de 20 minutos a mitad (en la vida real, bloquear el
+  móvil a mitad, que pausa la sesión, y volver al rato): el cierre decía «21:35 TIEMPO» tras 1:35 de
+  rutina. En Respira, el mismo caso dice el tiempo respirado, sin la pausa.
 
-### sesiones-9 · Recargar o salir a mitad de Mueve y Estira lo pierde todo
+### ~~sesiones-9 · Recargar o salir a mitad de Mueve y Estira lo pierde todo~~
+- **Arreglado (Ez eligió A):** como Respira, la barra ofrece «Continúa · Cuello · Paso 2 de 4»; al
+  tocarla se entra por «Prepárate» al principio de ese paso y lo hecho antes se suma al terminar.
+  Dura dos horas y el mismo día; en un Camino no se guarda.
 - **Gravedad:** descuadra. **Cambia lo que se ve:** sí (haría falta ofrecer seguir).
 - **Pasos:** Cuello (Estira), un minuto dentro, recargar (o «Hay una versión nueva», o «Salir»): la
   sesión desaparece, no cuenta nada y la barra lateral no ofrece seguir. En Respira, la misma
@@ -127,7 +138,7 @@ el fondo). En las pruebas se hace saltando el reloj sin disparar ningún tempori
   inglés: el descanso va como descanso, cuentan como Mueve entren por donde entren y su evento lleva
   su plan.
 - El botón atrás de Android sale de la sesión como Escape (`tests/android-nativo.spec.js`): en
-  Respira se puede seguir después; en Mueve y Estira es sesiones-9.
+  Respira se puede seguir después, y desde sesiones-9 también en Mueve y Estira.
 - El sonido al salir a mitad: la música se apaga con su fundido y no queda nada sonando.
 
 **Trampa de las pruebas.** La semilla de `tests/helpers.js` no lleva `weeklyStats` ni la marca de la

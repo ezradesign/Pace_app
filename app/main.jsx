@@ -49,8 +49,8 @@ function PaceApp() {
      Estira: `pace.cuerpo.v1`). Se lee al montar y se
      RE-LEE al volver a la home, que es cuando puede haber cambiado (acabas de
      salir de una sesion, o de terminarla). Vive aqui y no en el estado global
-     porque no es estado de la app: es una nota de `pace.breathe.v1`, la clave
-     aparte que sigue el patron del Pomodoro (s102). `pendienteReanudar` guarda
+     porque no es estado de la app: es una nota en su propia clave (como
+     `pace.timer.v1` del Pomodoro, s102). `pendienteReanudar` guarda
      el registro mientras el modal de seguridad esta delante -- reanudar pasa
      por la MISMA puerta que empezar, asi que una rutina con apnea vuelve a
      pedir su confirmacion. */
