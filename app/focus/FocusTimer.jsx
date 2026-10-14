@@ -113,13 +113,13 @@ function FocusTimer({ onFinish }) {
     if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
   }, [running, endsAt]);
 
-  /* En Android el aviso de fin de Foco lo programa el sistema (ui/android.js),
-     porque con la app en el fondo esta cuenta no corre. Aqui solo se le dice
-     cuando acaba el bloque en marcha, o que no hay ninguno. */
+  /* En las apps (Android y iPhone) el aviso de fin de Foco lo programa el sistema
+     (ui/nativo.js), porque con la app en el fondo esta cuenta no corre. Aqui solo
+     se le dice cuando acaba el bloque en marcha, o que no hay ninguno. */
   useEffectFT(() => {
-    if (typeof paceAndroidFoco !== 'function') return;
+    if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
-    paceAndroidFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado. */

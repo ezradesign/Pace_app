@@ -5,6 +5,16 @@
   "android": {
     "backgroundColor": "#00000000"
   },
+  "ios": {
+    "allowsLinkPreview": false,
+    "includePlugins": [
+      "@capacitor/app",
+      "@capacitor/filesystem",
+      "@capacitor/local-notifications",
+      "@capacitor/share",
+      "@capacitor-community/keep-awake"
+    ]
+  },
   "plugins": {
     "LocalNotifications": {
       "smallIcon": "pace_aviso",

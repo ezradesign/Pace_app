@@ -102,14 +102,18 @@ test('en la web no se pide almacenamiento persistente', async ({ page, context }
   expect(await page.evaluate(() => window.__persistencias)).toBe(0);
 });
 
-test('control: en iOS los eventos siguen apagados', async ({ page, context }) => {
+/* El iPhone tambien usa el adaptador web desde que se prepara su app (14 oct.
+   2026; lo prueba tests/ios-nativo.safari.spec.js). El control es ahora otra
+   plataforma de Capacitor: el adaptador web se elige por plataforma, no por
+   haber Capacitor. */
+test('control: otra plataforma de Capacitor sigue con los eventos apagados', async ({ page, context }) => {
   await context.addInitScript(() => {
-    window.Capacitor = { getPlatform: () => 'ios', isNativePlatform: () => true };
+    window.Capacitor = { getPlatform: () => 'electron', isNativePlatform: () => true };
   });
   await irAlArtefacto(page);
   await esperarInit(page);
 
-  expect(await page.evaluate(() => window.paceEventsRuntime())).toBe('capacitor-ios');
+  expect(await page.evaluate(() => window.paceEventsRuntime())).toBe('capacitor-other');
   expect(await page.evaluate(() => window.paceEventsAdapter())).toBe('null');
   expect(await page.evaluate(() => window.paceEventsCanWrite())).toBe(false);
 });

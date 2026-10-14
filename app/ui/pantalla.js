@@ -24,9 +24,10 @@
    EL NAVEGADOR LA SUELTA SOLO al ocultarse la pestaña; al volver se pide otra
    vez si sigue habiendo sesion.
 
-   EN ANDROID el WebView no trae Wake Lock: la pide el complemento KeepAwake
-   (ui/android.js), que marca la ventana para que no se apague. Esa marca no se
-   suelta al irse al fondo, asi que alli no hace falta volver a pedirla.
+   EN LAS APPS (Android y iPhone) el WebView no trae Wake Lock: la pide el
+   complemento KeepAwake (ui/nativo.js), que marca la ventana para que no se
+   apague. Esa marca no se suelta al irse al fondo, asi que alli no hace falta
+   volver a pedirla.
 
    `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
@@ -35,13 +36,13 @@ var _paceLuz = { cuenta: 0, centinela: null, pidiendo: false, soltar: null, pedi
 
 function paceLuzPedir() {
   try {
-    var nativa = typeof paceAndroidPlugin === 'function' ? paceAndroidPlugin('KeepAwake') : null;
+    var nativa = typeof paceNativoPlugin === 'function' ? paceNativoPlugin('KeepAwake') : null;
     if (nativa) {
       if (_paceLuz.centinela) return;
       _paceLuz.pedidas++;
-      _paceLuz.centinela = 'android';
+      _paceLuz.centinela = 'nativa';
       Promise.resolve(nativa.keepAwake()).catch(function () {
-        if (_paceLuz.centinela === 'android') _paceLuz.centinela = null;
+        if (_paceLuz.centinela === 'nativa') _paceLuz.centinela = null;
       });
       return;
     }
@@ -75,8 +76,8 @@ function paceMantenerPantalla() {
       if (_paceLuz.cuenta > 0 || !_paceLuz.centinela) return;
       var s = _paceLuz.centinela;
       _paceLuz.centinela = null;
-      if (s === 'android') {
-        var nativa = typeof paceAndroidPlugin === 'function' ? paceAndroidPlugin('KeepAwake') : null;
+      if (s === 'nativa') {
+        var nativa = typeof paceNativoPlugin === 'function' ? paceNativoPlugin('KeepAwake') : null;
         if (nativa) Promise.resolve(nativa.allowSleep()).catch(function () {});
         return;
       }

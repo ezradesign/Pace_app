@@ -1,0 +1,21 @@
+{
+  "_que": "De que salio cada recurso de la app de iOS. Lo escribe `npm run ios:recursos` y lo compara scripts/verify.ios.js: no se edita a mano.",
+  "origen": {
+    "archivo": "icons/icon-512.png",
+    "sha256": "7db694137e25627e38cb4a79953e508fa4fc30f4f911dadcf249daf29788037f"
+  },
+  "colores": {
+    "papel": "#F2EDE0",
+    "papelNoche": "#1D1A14",
+    "tintaNoche": "#EDE5D3"
+  },
+  "icono": {
+    "archivo": "ios/App/App/Assets.xcassets/AppIcon.appiconset/pace-icono-1024.png",
+    "sha256": "764a06d6e2efdc832aefd44ecc601c3180d582594f5d45676c85a25d13eefc74",
+    "ladoVaca": 764
+  },
+  "arranqueNoche": {
+    "archivo": "ios/App/App/Assets.xcassets/PaceArranque.imageset/pace-logo-noche.png",
+    "sha256": "3d3c7155dd95a4492ee3102d8782d35549cdd8c3e711e5fbaebb08711b3e259f"
+  }
+}

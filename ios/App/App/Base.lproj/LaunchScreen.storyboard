@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- El arranque de PACE: la vaca sobre el papel, como en Android. Los dos salen de
+     la web (npm run ios:recursos) y en modo oscuro pasan a la paleta oscura. La
+     vaca mide 169 pt y va centrada por su trazo, no por el PNG: 5 pt a la derecha
+     y 1 hacia arriba, lo mismo que el arranque de Android. -->
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Pc0-Fo-Ndo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="PaceArranque" translatesAutoresizingMaskIntoConstraints="NO" id="Pc0-Va-Ca1">
+                                <rect key="frame" x="127.5" y="362.5" width="169" height="169"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="169" id="Pc0-An-Ch1"/>
+                                    <constraint firstAttribute="height" constant="169" id="Pc0-Al-To1"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Pc0-Sa-Fe1"/>
+                        <color key="backgroundColor" name="PaceFondo"/>
+                        <constraints>
+                            <constraint firstItem="Pc0-Va-Ca1" firstAttribute="centerX" secondItem="Pc0-Fo-Ndo" secondAttribute="centerX" constant="5" id="Pc0-Ce-X01"/>
+                            <constraint firstItem="Pc0-Va-Ca1" firstAttribute="centerY" secondItem="Pc0-Fo-Ndo" secondAttribute="centerY" constant="-1" id="Pc0-Ce-Y01"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="PaceArranque" width="512" height="512"/>
+        <namedColor name="PaceFondo">
+            <color red="0.94901960784313721" green="0.92941176470588238" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
