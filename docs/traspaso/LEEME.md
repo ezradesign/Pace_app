@@ -8,7 +8,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de 
 
 Manda sobre todo lo de abajo.
 
-**Relevo de las 12:50:** esta cuenta llegó al 85 % con v0.164.0 (iOS) commiteada en `main` en local. Si
+**Si esta cuenta se agotó con v0.164.0 (iOS) commiteada en `main` en local y sin subir:** si
 `git status` dice que va por delante de `origin/main`, la suite de v0.164.0 estaba corriendo
 (`%TEMP%\suite-164.log`): si acabó en verde, push y CI. Si no, `PACE_E2E_PORT=8775 npm run test:e2e`. La
 sesión de iOS pasó la suite entera (635) sobre el mismo código. Lo siguiente:
@@ -19,7 +19,7 @@ sesión de iOS pasó la suite entera (635) sobre el mismo código. Lo siguiente:
 La cuenta anterior se quedó sin uso a las 11:35 y se repone a las 15:30;
 esta, la que tomó el relevo a las 11:45, se repone a las 16:30. Con tres sesiones a la vez, esta cuenta
 gastó el 58 % de sus 5 horas en 50 minutos: Ez decidió seguir con las dos en paralelo, y cada una hace su
-«wip» y su push sola al pasar del 85 %.
+«wip» y su push sola al llegar al 92 % (el tope es el 95 %, WORKFLOW §10).
 
 - **Hallazgo nuevo de Ez (14 oct.), en manos de `caza-sesiones` como sesiones-10:** en el navegador de su
   móvil (Doogee Blade 20 Max, Android), la voz masculina de Respira (bradford) se oye entrecortada y la
