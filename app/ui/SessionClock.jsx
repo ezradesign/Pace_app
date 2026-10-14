@@ -6,7 +6,7 @@
    ============================================
    Un acumulador segmentado: se le dice en cada render si la sesión está
    trabajando AHORA y él suma solo esos tramos. Es el mecanismo que Respira
-   tiene desde s98 (`activeMsRef`) y que Mueve/Estira NO tenían: hasta s170 su
+   tiene desde s98 (hoy, este mismo reloj) y que Mueve/Estira NO tenían: hasta s170 su
    único tiempo era de pared —`Date.now() - sessionStart`— o sea **con las
    pausas dentro**.
 
@@ -30,9 +30,24 @@
    CARGA ANTES de sus consumidores: BreatheSession.support.jsx, MoveModule.jsx
    y MoveSessionV1.jsx. Vive en `app/ui/` porque es el primer bloque que los
    tres tienen por delante en el orden de PACE.html.
+
+   EL RATO EN QUE LA PÁGINA NO CORRE NO CUENTA. Con el equipo dormido o la app
+   congelada por el sistema, el reloj de la pared sigue y la página no se
+   entera: al volver, el tramo abierto llevaba dentro media hora que nadie
+   practicó, y se acreditaba (caza del 14 oct., sesiones-1 y sesiones-4). El
+   reloj late cada segundo mientras está abierto; si entre dos latidos pasa más
+   que `PACE_HUECO_MS`, lo de antes del hueco cuenta y el hueco no. Una página
+   viva late cada segundo aunque esté oculta (los navegadores espacian sus
+   temporizadores a uno por segundo, y a uno por minuto solo si está callada),
+   así que la pestaña oculta con la voz o la música de Respira sigue contando.
 */
 
-const { useRef: useRefSC } = React;
+const { useRef: useRefSC, useEffect: useEffectSC } = React;
+
+/* Más que esto entre dos latidos es una página que no corría. Holgado frente al
+   segundo de un latido normal, y muy por debajo del minuto con que un
+   navegador espacia los temporizadores de una pestaña oculta y callada. */
+const PACE_HUECO_MS = 15000;
 
 /**
  * Reloj de tiempo activo. Devuelve { marcar, segundos }:
@@ -57,22 +72,43 @@ const { useRef: useRefSC } = React;
 function useActiveClock(semillaMs) {
   const acumuladoMs = useRefSC(Number.isFinite(semillaMs) && semillaMs > 0 ? semillaMs : 0);
   const inicioSeg   = useRefSC(null);
+  const latido      = useRefSC(null);
+
+  /* Pone al día el tramo abierto. Lo llaman el latido, `marcar` y `segundos`,
+     así que el primero que corre al despertar ya deja fuera el hueco. */
+  const alDia = (ahora) => {
+    if (inicioSeg.current == null) return;
+    if (ahora - latido.current > PACE_HUECO_MS) {
+      acumuladoMs.current += latido.current - inicioSeg.current;
+      inicioSeg.current = ahora;
+    }
+    latido.current = ahora;
+  };
+
+  useEffectSC(() => {
+    const id = setInterval(() => alDia(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const marcar = (activo) => {
+    const ahora = Date.now();
+    alDia(ahora);
     if (activo) {
-      if (inicioSeg.current == null) inicioSeg.current = Date.now();
+      if (inicioSeg.current == null) { inicioSeg.current = ahora; latido.current = ahora; }
     } else if (inicioSeg.current != null) {
-      acumuladoMs.current += Date.now() - inicioSeg.current;
+      acumuladoMs.current += ahora - inicioSeg.current;
       inicioSeg.current = null;
     }
   };
 
   const segundos = () => {
-    const abierto = inicioSeg.current != null ? Date.now() - inicioSeg.current : 0;
+    const ahora = Date.now();
+    alDia(ahora);
+    const abierto = inicioSeg.current != null ? ahora - inicioSeg.current : 0;
     return (acumuladoMs.current + abierto) / 1000;
   };
 
   return { marcar, segundos };
 }
 
-Object.assign(window, { useActiveClock });
+Object.assign(window, { useActiveClock, PACE_HUECO_MS });

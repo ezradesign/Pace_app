@@ -28,39 +28,31 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
   const [breathCount, setBreathCount] = useState(rein.breaths);
   const [paused, setPaused] = useState(false);
   const sessionStart = useRef(rein.startedAt);   // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
-  // Reloj de TIEMPO ACTIVO (s98): acumulador timestamp-based, local al modulo.
-  // Suma solo el tiempo en 'active'/'hold' SIN pausar (excluye pausas manuales;
-  // el tiempo con pestana oculta cuenta, igual que useCountdown de Focus).
+  // Reloj de TIEMPO ACTIVO (s98): suma solo el tiempo en 'active'/'hold' SIN
+  // pausar (excluye pausas manuales; el tiempo con pestana oculta cuenta, igual
+  // que useCountdown de Focus, y el rato con la pagina congelada no: SessionClock).
   // Verdad unica para: fin de sesion no-rounds, barra de progreso no-rounds y
   // el credito a stats/logros. Honra la decision s96 (timers nuevos = timestamp).
-  const activeMsRef = useRef(rein.activeMs);   // ms activos acumulados entre pausas (s186: continua los de una sesion interrumpida)
-  const segStartRef = useRef(null);   // inicio del segmento activo en curso, o null
+  // s186: continua los ms de una sesion interrumpida.
+  const relojActivo = useActiveClock(rein.activeMs);
   /* s166 · el mismo tiempo, contado APARTE cuando es retencion. No cambia lo
-     que se acredita (activeMsRef ya sumaba 'hold' desde s98): saca un numero
+     que se acredita (el activo ya sumaba 'hold' desde s98): saca un numero
      que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
   const relojHold = useHoldClock(rein.holdSec);
   const hechoRef = useRef(null);   // rondas y respiraciones hechas al cerrar (respiraHecho, en el support)
-  const getActiveSec = () => {
-    const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
-    return (activeMsRef.current + open) / 1000;
-  };
+  const getActiveSec = () => relojActivo.segundos();
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
   useRespiraPersistencia({ routine, stage, round, breathCount, paused, getActiveSec,   // s186
     holdSec: relojHold.segundos, startedAt: sessionStart.current });
+  useRespiraViva(routine, stage);   // otra pestaña no la ofrece a medias mientras late aquí
 
   // Segmentador del reloj de tiempo activo (s98): abre segmento cuando la
-  // sesion corre ('active'|'hold' sin pausa) y lo cierra (acumulando en
-  // activeMsRef) al pausar o salir de esos stages.
+  // sesion corre ('active'|'hold' sin pausa) y lo cierra al pausar o salir
+  // de esos stages.
   useEffect(() => {
-    const running = (stage === 'active' || stage === 'hold') && !paused;
-    if (running) {
-      if (segStartRef.current == null) segStartRef.current = Date.now();
-    } else if (segStartRef.current != null) {
-      activeMsRef.current += Date.now() - segStartRef.current;
-      segStartRef.current = null;
-    }
+    relojActivo.marcar((stage === 'active' || stage === 'hold') && !paused);
     /* s166: en el MISMO efecto y no en uno propio, para que los dos relojes
        abran y cierren en la misma tarea. Con dos efectos, pausar durante la
        retencion los cerraria en ordenes distintos segun el orden de montaje
@@ -109,7 +101,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
 
   /* B1 (decisión apnea): fuera el ticker de retención — sin cronómetro ni
      logros por aguantar. La retención es guía calmada con salida siempre
-     visible; el tiempo activo real lo sigue sumando activeMsRef. */
+     visible; el tiempo activo real lo sigue sumando relojActivo. */
 
   // Drone ambiente — efecto paralelo sobre stage y paused
   useEffect(() => {

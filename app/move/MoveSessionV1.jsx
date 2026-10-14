@@ -71,14 +71,20 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
      reloj de pared CON LAS PAUSAS DENTRO. La política de qué cuenta vive en
      `v1TrabajoActivo` (support), que es donde puede probarse sola. */
   const relojActivo = useV1ActiveClock(stage, phase, step, paused);
+  /* Lo que se acredita a la semana: la sesión en marcha con sus colocaciones y
+     descansos (R4), pero sin las pausas ni el rato con la página congelada. Con
+     el reloj de pared, una pausa de 20 minutos eran 20 minutos de Mueve. */
+  const relojSesion = useV1SessionClock(stage, paused);
+  const paredSecRef = useRefV1(0);    // el «Tiempo» del cierre, congelado al completar
 
   const dispatchComplete = (early) => {
-    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
+    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
     /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
        tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
        s166); el efecto lo cierra al pasar a 'done'. Y se congela en un ref
-       porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo — el
-       defecto que ya tiene el `totalSec` de esa pantalla y que aquí no se hereda. */
+       porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo, como
+       le pasaba al «Tiempo» del cierre: contestar «¿te ayudó?» lo movía. */
     activeSecRef.current = Math.round(relojActivo.segundos());
     /* s172 · los datos del evento (dual-write) se arman en el support: el plan
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
@@ -256,7 +262,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   // COMPLETADO
   if (stage === 'done') {
-    const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
+    const totalSec = paredSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):

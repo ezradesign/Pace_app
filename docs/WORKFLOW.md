@@ -264,10 +264,25 @@ Las sesiones en paralelo son de la cuenta que las abrió y se paran con ella; la
 abrir en la MISMA carpeta (`.claude/worktrees/...`), con la misma rama y el mismo puerto. Las dos cuentas trabajan
 en esta carpeta del PC; la firma de git es global (ezradesign), así que cualquiera firma bien.
 
+**Para retomar una sesión en paralelo**, sobre todo si se paró sin su «wip»:
+
+- Lo que no llegó a commitear sigue en su carpeta, y su conversación sigue en `~/.claude/projects/`, que las dos
+  cuentas comparten en este PC.
+- La coordinadora corre `node scripts/relevo-hilo.js .claude/worktrees/<carpeta>`. Escribe
+  `<carpeta>/.claude/relevo/HILO.md` con el encargo, lo que la sesión iba diciendo y lo que Ez contestó en sus
+  preguntas. Es una nota local: `.claude/relevo/` está en `.git/info/exclude`.
+- Al lado deja un `RELEVO.md` con dónde se quedó y qué sigue.
+- Ez abre una sesión nueva y le pega un texto corto: quién es, su carpeta, rama y puerto, «entra con EnterWorktree
+  en esa carpeta», «lee `.claude/relevo/`» y, si hay cambios sin commitear, «commit wip y push antes de nada».
+- La sesión nueva arranca en la carpeta principal, donde la coordinadora puede tener un merge a medias: no ejecuta
+  nada de git ahí antes de entrar en la suya.
+- No se reanuda el hilo viejo con `claude --resume`: arrastra todo su contexto (unos 400 000 tokens) en cada
+  turno (Ez, 14 oct.).
+
 **Para cambiar de cuenta**, Ez abre esta carpeta en la otra cuenta y pega:
 
 ```
-Eres la sesión COORDINADORA de PACE (carpeta C:UsersezravDesktopProyectosDesarrollo de aplicacionesPace_app).
+Eres la sesión COORDINADORA de PACE (carpeta C:\Users\ezrav\Desktop\Proyectos\Desarrollo de aplicaciones\Pace_app).
 Retomas el trabajo de la otra cuenta de Ez. Lee CLAUDE.md, STATE.md y el relevo de arriba de docs/traspaso/LEEME.md,
 mira el CI de main y el uso de esta cuenta (get_usage), retoma las sesiones en paralelo que diga el relevo en sus
 mismas carpetas y sigue la sección 10 de docs/WORKFLOW.md (relevo por el uso) y la 9 (solo tú subes a main).

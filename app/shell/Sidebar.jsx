@@ -49,6 +49,28 @@ function Sidebar() {
     return function () { window.removeEventListener('pace:eventos', alCambiar); };
   }, []);
 
+  /* La Respira a medias también cambia en OTRA pestaña: se empieza, se sigue o
+     se deja allí (caza del 14 oct., sesiones-6). La tarjeta se vuelve a mirar
+     cuando cambian su registro o su latido, y cuando el latido caduca; el valor
+     solo cambia si cambia lo que se ofrece, así que latir no repinta nada. */
+  const respiraClave = function () {
+    const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
+    return g ? g.routineId + '|' + g.savedAt : '';
+  };
+  const [, mirarRespira] = React.useState(respiraClave);
+  React.useEffect(function () {
+    let caduca = null;
+    const mirar = function (e) {
+      if (e && e.key && e.key.indexOf('pace.breathe.') !== 0) return;
+      mirarRespira(respiraClave());
+      clearTimeout(caduca);
+      const viva = window.respiraVivaFuera && window.respiraVivaFuera();
+      if (viva) caduca = setTimeout(mirar, viva.hasta - Date.now() + 50);
+    };
+    window.addEventListener('storage', mirar);
+    return function () { window.removeEventListener('storage', mirar); clearTimeout(caduca); };
+  }, []);
+
   /* Colapsado → ocultar TOTALMENTE.
      La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
      (Antes era un rail de 56px con iconos; se quitó por petición del usuario
