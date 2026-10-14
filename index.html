@@ -3609,6 +3609,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.larga.lista': 'Pausa larga · {n} min · Respira y Estira',
 
 
+  'ritmo.y': '{a} y {b}',
+  'ritmo.sigue.meta': 'Pausa larga · {k} de {m}',
+  'ritmo.sigue.cta': 'Seguir con {modulo}',
+  'ritmo.pausa.luego': 'Luego, el bloque {n} de {m}',
+  'ritmo.pausa.ya': 'Empezar ya el bloque {n}',
+
+
   'notify.ritmo.titulo': 'Tu pausa: {plato} · {min} min',
   'notify.ritmo.larga': 'Tu pausa larga: {plato} · {min} min',
   'notify.ritmo.cierre': 'Para cerrar: {plato} · {min} min',
@@ -3724,6 +3731,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.comida.lista': '{d} away from the screen',
   'ritmo.larga': 'Long break · {n} min',
   'ritmo.larga.lista': 'Long break · {n} min · Breathe and Stretch',
+  'ritmo.y': '{a} and {b}',
+  'ritmo.sigue.meta': 'Long break · {k} of {m}',
+  'ritmo.sigue.cta': 'Go on to {modulo}',
+  'ritmo.pausa.luego': 'Then, block {n} of {m}',
+  'ritmo.pausa.ya': 'Start block {n} now',
   'notify.ritmo.titulo': 'Your break: {plato} · {min} min',
   'notify.ritmo.larga': 'Your long break: {plato} · {min} min',
   'notify.ritmo.cierre': 'To close the day: {plato} · {min} min',
@@ -10010,6 +10022,8 @@ Object.assign(window, {
 
 
 
+
+
 var RITMO_TIMER_KEY = 'pace.timer.v1';
 
 
@@ -10252,7 +10266,8 @@ function ritmoPropuesta(s) {
   var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
   if (!it) return null;
   if (it.tipo === 'comida') return { modulo: 'water', porque: 'ritmo.comida', rutina: null, datos: {} };
-  var plato = it.platos && it.platos[0];
+
+  var plato = typeof ritmoPlatoQueToca === 'function' && ritmoPlatoQueToca(s) || it.platos && it.platos[0];
   if (!plato) return null;
   return { modulo: RITMO_A_MENU[plato.modulo], porque: 'ritmo.' + it.motivo, rutina: plato.rutina, datos: {} };
 }
@@ -10267,7 +10282,7 @@ function ritmoSiguiente(s) {
   var ahora = it === p.pausa;
   do {
     if (it.platos && it.platos[0]) {
-      var plato = it.platos[0];
+      var plato = it === p.pausa && typeof ritmoPlatoQueToca === 'function' && ritmoPlatoQueToca(s) || it.platos[0];
 
 
       var hechas = 0;
@@ -10347,18 +10362,6 @@ function ritmoBloqueTerminado() {
 }
 
 
-function ritmoPausaHecha() {
-  var p = ritmoPlan(getState());
-  if (!p || !p.pausa) return;
-  var n = ritmoOrdinal(p.m, p.pausa);
-  if (n == null) return;
-  ritmoGuardar(function (r) {
-    if (!r.dia) return {};
-    var estados = Object.assign({}, r.dia.estados || {});estados[n] = 'hecha';
-    return { dia: Object.assign({}, r.dia, { estados: estados }) };
-  });
-}
-
 
 
 
@@ -10370,6 +10373,7 @@ function ritmoBloqueEmpezado(minutos) {
   var p = ritmoPlan(s);
   if (R.dia.pausa != null) {
     cambios.pausa = null;
+    cambios.pausaHasta = null;
 
     if (p && p.pausa) {
       var n = ritmoOrdinal(p.m, p.pausa);
@@ -10432,9 +10436,9 @@ Object.assign(window, {
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
-  ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPausaHecha, ritmoOrdinal
+  ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoOrdinal
 });
-;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoBloqueTerminado, ritmoPausaHecha, ritmoBloqueEmpezado, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <script>
@@ -10548,6 +10552,167 @@ Object.assign(window, {
   ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia
 });
 ;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia });
+})();
+</script>
+  <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function ritmoPausaAbierta(s) {
+  var st = s || getState();
+  var p = ritmoPlan(st);
+  if (!p || !p.pausa || !p.pausa.platos || !p.pausa.platos.length) return null;
+  var n = ritmoOrdinal(p.m, p.pausa);
+  if (n == null) return null;
+  var dia = ritmoDe(st).dia || {};
+  var hechos = (dia.platos || {})[n];
+  return { p: p, it: p.pausa, n: n, platos: p.pausa.platos, hechos: Array.isArray(hechos) ? hechos : [] };
+}
+
+
+
+function ritmoPlatoQueToca(s) {
+  var a = ritmoPausaAbierta(s);
+  if (!a) return null;
+  for (var i = 0; i < a.platos.length; i++) {
+    if (a.hechos.indexOf(a.platos[i].id) === -1) return a.platos[i];
+  }
+  return a.platos[0];
+}
+
+
+
+
+function ritmoPausaSigue(routineId, s) {
+  var a = ritmoPausaAbierta(s);
+  if (!a || !routineId) return null;
+  var i = -1;
+  for (var x = 0; x < a.platos.length; x++) if (a.platos[x].id === routineId) {i = x;break;}
+  if (i < 0) return null;
+  for (var j = i + 1; j < a.platos.length; j++) {
+    if (a.hechos.indexOf(a.platos[j].id) === -1) return { plato: a.platos[j], k: i + 1, de: a.platos.length };
+  }
+  return null;
+}
+
+
+
+
+var RITMO_METAS_DE_FIN = ['session.doneMeta', 'session.stretchDone', 'session.moveDone', 'session.antidoteDone'];
+function ritmoSigueCierre(routine, doneMeta, t) {
+  var sigue = routine ? ritmoPausaSigue(routine.id) : null;
+  if (!sigue) return null;
+  var fmt = function (k, v) {
+    var str = t(k);
+    Object.keys(v).forEach(function (c) {str = str.split('{' + c + '}').join(String(v[c]));});
+    return str;
+  };
+  var esFin = RITMO_METAS_DE_FIN.some(function (k) {return t(k) === doneMeta;});
+  return {
+    sigue: sigue,
+    meta: esFin ? fmt('ritmo.sigue.meta', { k: sigue.k, m: sigue.de }) : doneMeta,
+    cta: fmt('ritmo.sigue.cta', { modulo: typeof ritmoModulo === 'function' ? ritmoModulo(sigue.plato.modulo, t) : sigue.plato.modulo })
+  };
+}
+
+
+
+function ritmoPausaHecha(routineId) {
+  var a = ritmoPausaAbierta();
+  if (!a) return;
+  var esPlato = !!routineId && a.platos.some(function (pl) {return pl.id === routineId;});
+  ritmoGuardar(function (r) {
+    if (!r.dia) return {};
+    var cambio = { estados: Object.assign({}, r.dia.estados || {}) };
+    cambio.estados[a.n] = 'hecha';
+    if (esPlato) {
+      cambio.platos = Object.assign({}, r.dia.platos || {});
+      var ya = Array.isArray(cambio.platos[a.n]) ? cambio.platos[a.n] : [];
+      if (ya.indexOf(routineId) === -1) cambio.platos[a.n] = ya.concat([routineId]);
+    }
+    return { dia: Object.assign({}, r.dia, cambio) };
+  });
+}
+
+
+
+
+
+
+function ritmoPausaEmpieza(fin) {
+  var a = ritmoPausaAbierta();
+  if (!a || a.it.tipo !== 'pausa') return;
+  var ahora = Date.now();
+  var hasta = (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + a.it.dur * 60000;
+  if (hasta <= ahora) return;
+  var modo = a.it.larga ? 'larga' : 'pausa';
+  setState(function (prev) {
+    var r = prev.ritmo || {};
+    if (!r.dia) return prev;
+    return Object.assign({}, prev, { focusMode: modo,
+      ritmo: Object.assign({}, r, { dia: Object.assign({}, r.dia, { pausaHasta: hasta }) }) });
+  });
+}
+
+
+
+
+function ritmoPausaCuenta(s) {
+  var r = s && s.ritmo || {};
+  var hasta = r.dia && r.dia.pausaHasta;
+  if (!(typeof hasta === 'number' && hasta > 0)) return null;
+  var a = ritmoPausaAbierta(s);
+  if (!a || a.it.tipo !== 'pausa') return null;
+  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total };
+}
+
+
+
+
+function ritmoPausaHuerfana(s) {
+  var r = s && s.ritmo || {};
+  return !!(r.dia && typeof r.dia.pausaHasta === 'number' && r.dia.pausaHasta > 0) && !ritmoPausaCuenta(s);
+}
+
+
+
+function ritmoPausaAcabada() {
+  setState(function (prev) {
+    var r = prev.ritmo || {};
+    var cambio = {};
+    if (prev.focusMode === 'pausa' || prev.focusMode === 'larga') cambio.focusMode = 'foco';
+    if (r.dia && r.dia.pausaHasta != null) {
+      cambio.ritmo = Object.assign({}, r, { dia: Object.assign({}, r.dia, { pausaHasta: null }) });
+    }
+    return Object.keys(cambio).length ? Object.assign({}, prev, cambio) : prev;
+  });
+  if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
+}
+
+Object.assign(window, {
+  ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada
+});
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada });
 })();
 </script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
@@ -12565,6 +12730,11 @@ function paceOrigenPendienteLeer() {return paceOrigenPendiente;}
 
 
 
+let paceUltimaPuerta = null;
+function paceOrigenRepetir() {if (!paceOrigenPendiente) paceOrigenPendiente = paceUltimaPuerta;}
+
+
+
 
 
 
@@ -12649,6 +12819,7 @@ function emitSessionCompleted(module, routineId, datos) {
 
   const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
   paceOrigenPendiente = null;
+  paceUltimaPuerta = origen;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
     context: d.inPath ? 'path' : 'standalone',
@@ -12672,7 +12843,8 @@ function emitSessionCompleted(module, routineId, datos) {
   paceEmitirEvento(evento, function () {paceUltimaSesion = null;});
 
 
-  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha();} catch (e) {}}
+
+  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha(routineId);} catch (e) {}}
   return runId;
 }
 
@@ -12756,9 +12928,9 @@ Object.assign(window, {
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
-  paceOrigenSesion, paceOrigenPendienteLeer
+  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir
 });
-;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
+;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
 })();
 </script>
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
@@ -14957,7 +15129,12 @@ function SessionDone(_ref4)
 
 
 
-  const label = doneButtonLabel || t('session.backToHome');
+
+
+
+  const sigue = !doneButtonLabel && typeof ritmoSigueCierre === 'function' ? ritmoSigueCierre(routine, doneMeta, t) : null;
+  if (sigue) doneMeta = sigue.meta;
+  const label = doneButtonLabel || (sigue ? sigue.cta : t('session.backToHome'));
 
 
 
@@ -19251,7 +19428,8 @@ function useLuzHome(_ref) {let { progress, status, running, focusMode } = _ref;
 
 
 
-  const paceBloque = haySesion ? (Math.round(progress * 96) / 96).toFixed(4) : '0';
+
+  const paceBloque = haySesion && focusMode === 'foco' ? (Math.round(progress * 96) / 96).toFixed(4) : '0';
 
   const publicarLuz = (k, i, on, pausado, arco, bloque) => {
     const home = document.querySelector('[data-pace-home-body]');
@@ -23929,11 +24107,26 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   state.focusMode === 'pausa' ? 5 :
   15) * 60;
 
+
+
+
+
+  const pausaRitmo = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(state) : null;
+  const enPausaRitmo = !!pausaRitmo && state.focusMode === pausaRitmo.modo;
+
   const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
 
 
 
-    if (state.focusMode !== 'foco') {try {playSound('pomodoro.end');} catch (e) {}return;}
+    if (state.focusMode !== 'foco') {
+
+
+
+      const callar = enPausaRitmo && !!document.querySelector('[data-pace-session-root]');
+      if (!callar) {try {playSound('pomodoro.end');} catch (e) {}}
+      if (enPausaRitmo) {ritmoPausaAcabada();reset();}
+      return;
+    }
 
 
 
@@ -23942,6 +24135,9 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
     const bloque = bloqueRef.current || 'e' + Date.now();
     const minutos = state.focusMinutes,inicio = inicioBloqueRef.current,avisoOn = state.notifyFocusEnd;
+
+
+    const finBloque = endsAt || (inicio ? inicio + durationSec * 1000 : Date.now());
     paceFocoContar(bloque, () => {
       try {playSound('pomodoro.end');} catch (e) {}
 
@@ -23960,6 +24156,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
         onFinish && onFinish();
       } finally {
         try {paceFocoPausaPendiente(bloque);} catch (e) {}
+        try {if (typeof ritmoPausaEmpieza === 'function') ritmoPausaEmpieza(finBloque);} catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({
@@ -24101,7 +24298,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-  const subtitle = isFocoMode ?
+  const subtitle = enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
+  isFocoMode ?
   isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)) :
   state.focusMode === 'pausa' ? t('focus.subtitle.pause') :
   t('focus.subtitle.long');
@@ -24145,8 +24343,29 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
+  const pausaHuerfana = !pausaRitmo && typeof ritmoPausaHuerfana === 'function' && ritmoPausaHuerfana(state);
+  useEffectFT(() => {
+    if (pausaHuerfana) {ritmoPausaAcabada();return;}
+    if (!enPausaRitmo) return;
+    if (status === 'running' && endsAt === pausaRitmo.hasta) return;
+    if (pausaRitmo.hasta <= Date.now()) {ritmoPausaAcabada();return;}
+    if (status !== 'idle') reset();
+    restore(pausaRitmo.hasta);
+  }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
+  const seguirTrasPausaRef = useRefFT(false);
+  const empezarYa = () => {seguirTrasPausaRef.current = true;reset();ritmoPausaAcabada();};
+  useEffectFT(() => {
+    if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
+    seguirTrasPausaRef.current = false;
+    handleNormalStart();
+  });
+
+
+
+
   useEffectFT(() => {
     const alSeguir = () => {
+      if (enPausaRitmo) {empezarYa();return;}
       if (state.focusMode !== 'foco') return;
       if (status === 'completed') handleStartAnotherCycle();else
       if (status === 'idle') handleNormalStart();
@@ -24170,7 +24389,10 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const startLabel = aro ? aro.empezar : isFocoMode ? t('focus.start') : t('focus.startPause');
 
   let ctaLabel, ctaAction;
-  if (running) {
+  if (enPausaRitmo) {
+    ctaLabel = tn('ritmo.pausa.ya', { n: pausaRitmo.n });
+    ctaAction = empezarYa;
+  } else if (running) {
     ctaLabel = t('focus.pause');
     ctaAction = handlePause;
   } else if (isCompleted) {
@@ -24195,7 +24417,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
   const cycleDotsEl =
-  React.createElement("div", { style: aro ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots },
+  React.createElement("div", { style: aro || enPausaRitmo ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots },
   [0, 1, 2, 3].map((i) =>
   React.createElement("span", { key: i, style: {
       width: 4, height: 4, borderRadius: '50%',
@@ -30209,17 +30431,24 @@ function BreakPlato(_ref) {let { color, glifo, motivo, nombre, ctx, children, da
 }
 
 function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropuesta, prop, plan, opciones, nombre } = _ref2;
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   if (!open || !prop || !plan) return null;
   const agua = (opciones || []).find((o) => o.key === 'water');
   const rutina = prop.rutina;
   const pausa = plan.pausa;
   const comida = prop.porque === 'ritmo.comida';
+
+
+
+  const dos = !comida && pausa && pausa.platos && pausa.platos.length > 1;
   const plato = comida ?
   { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: React.createElement(ABMeal, null), modulo: true }, nombre: t('break.ritmo.comida'),
     ctx: React.createElement(React.Fragment, null, React.createElement("b", null, pausa ? pausa.dur : ''), React.createElement("u", null, t('lib.min')), pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.conAgua'))) } :
-  { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina), nombre,
-    ctx: rutina ? React.createElement(React.Fragment, null, React.createElement("b", null, rutina.min), React.createElement("u", null, t('lib.min')), React.createElement("em", null, t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')),
+  { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina),
+    nombre: dos ? ritmoPlatos(pausa, t, lang) : nombre,
+    ctx: rutina ? React.createElement(React.Fragment, null, React.createElement("b", null, dos ? pausa.dur : rutina.min), React.createElement("u", null, t('lib.min')),
+    React.createElement("em", null, dos ? tn('ritmo.y', { a: ritmoModulo(pausa.platos[0].modulo, t), b: ritmoModulo(pausa.platos[1].modulo, t) }) :
+    t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')),
     pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.agua'))) : null };
   return (
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: tn('break.ritmo.tag', { n: plan.hechos, m: plan.total }),
@@ -37891,8 +38120,9 @@ function ritmoIndiceAhora(plan) {
 
 
 
+
 function ritmoEmpezarParada(it) {
-  const plato = it.platos && it.platos[0];
+  const plato = typeof ritmoPlatoQueToca === 'function' && ritmoPlatoQueToca() || it.platos && it.platos[0];
   if (!plato) return;
   window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }
@@ -41381,6 +41611,23 @@ function PaceApp() {
 
 
 
+  const alSalirDeSesion = (motivo, routine) => {
+    const sigue = motivo !== 'exit' && routine && typeof ritmoPausaSigue === 'function' ? ritmoPausaSigue(routine.id) : null;
+    const r = sigue && sigue.plato.rutina;
+    if (!r || !r.id) {setView({ type: 'home' });return;}
+    if (typeof paceOrigenRepetir === 'function') paceOrigenRepetir();
+    const b = window.getBreatheRoutine && window.getBreatheRoutine(r.id);
+    if (b) {setView({ type: 'home' });handleStartBreathe(b);return;}
+    const cuerpo = window.resolveBodyRoutine && window.resolveBodyRoutine(r.id);
+    if (cuerpo && cuerpo.routine) setView({ type: 'move-session', routine: cuerpo.routine, kind: cuerpo.source });else
+    setView({ type: 'home' });
+  };
+
+
+
+
+
+
   const red = (nombre, abierto, cerrar, hijo) =>
   React.createElement(PaceRed, { modo: "parte", nombre: nombre, abierto: abierto, onCerrar: cerrar }, hijo);
 
@@ -41574,11 +41821,10 @@ function PaceApp() {
 
 
 
-
     view.type === 'breathe-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
-    React.createElement(BreatheSession, { routine: view.routine, reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) })),
+    React.createElement(BreatheSession, { routine: view.routine, reanudar: view.reanudar, onExit: (motivo) => alSalirDeSesion(motivo, view.routine) })),
     view.type === 'move-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
-    React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) })),
+    React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', reanudar: view.reanudar, onExit: (motivo) => alSalirDeSesion(motivo, view.routine) })),
 
 
 

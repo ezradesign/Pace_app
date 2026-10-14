@@ -20,11 +20,26 @@ function FocusTimer({ onFinish }) {
                      : state.focusMode === 'pausa' ? 5
                      : 15) * 60;
 
+  /* LA PAUSA DE «A TU RITMO» (Ez, 14 oct. 2026, 2A · 3A): al acabar un bloque el aro
+     cuenta la pausa que va detrás, con el modo «Pausa» o «Larga», hasta `dia.pausaHasta`
+     (state-ritmo.pausa.jsx). Lo guarda el estado, así que sigue en las otras pestañas y
+     al recargar. Con otro modo elegido a mano, el aro es el de siempre. */
+  const pausaRitmo = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(state) : null;
+  const enPausaRitmo = !!pausaRitmo && state.focusMode === pausaRitmo.modo;
+
   const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
        bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado).
        Pausa(5)/larga(15) tickan y suenan pero NO acreditan (decision historica). */
-    if (state.focusMode !== 'foco') { try { playSound('pomodoro.end'); } catch (e) {} return; }
+    if (state.focusMode !== 'foco') {
+      /* La de «A tu ritmo» calla si acaba con una sesión delante: Mueve y Estira avisan
+         con cuencos, y una campana a mitad de un ejercicio se confundiría con ellos. Al
+         acabar, el aro vuelve al foco con el bloque que toca, sin arrancarlo. */
+      const callar = enPausaRitmo && !!document.querySelector('[data-pace-session-root]');
+      if (!callar) { try { playSound('pomodoro.end'); } catch (e) {} }
+      if (enPausaRitmo) { ritmoPausaAcabada(); reset(); }
+      return;
+    }
     /* Solo el modo foco acredita: cycle + logros de pomodoro via
        completeFocusSession('home') -> completePomodoro. El hook fija la
        ultima onComplete en un ref, asi que este cierre lee el focusMode
@@ -33,6 +48,9 @@ function FocusTimer({ onFinish }) {
        suena y avisa; la pausa la abre la que miras (FocusTimer.pestanas.jsx). */
     const bloque = bloqueRef.current || ('e' + Date.now());
     const minutos = state.focusMinutes, inicio = inicioBloqueRef.current, avisoOn = state.notifyFocusEnd;
+    /* La hora a la que acabó el bloque, para contar su pausa desde ahí: el final del motor
+       o, si terminó con PACE cerrado, el que se guardó (el inicio se derivó de él). */
+    const finBloque = endsAt || (inicio ? inicio + durationSec * 1000 : Date.now());
     paceFocoContar(bloque, () => {
       try { playSound('pomodoro.end'); } catch (e) {}
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
@@ -51,6 +69,7 @@ function FocusTimer({ onFinish }) {
         onFinish && onFinish();
       } finally {
         try { paceFocoPausaPendiente(bloque); } catch (e) {}
+        try { if (typeof ritmoPausaEmpieza === 'function') ritmoPausaEmpieza(finBloque); } catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({
@@ -192,7 +211,8 @@ function FocusTimer({ onFinish }) {
        descriptor en el MISMO slot (no añade altura estructural → no toca el
        atardecer de s123).
      - pausa/larga: conservan su copy propio (invariante: copys de pausa). */
-  const subtitle = isFocoMode
+  const subtitle = enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de })
+    : isFocoMode
     ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
     : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
     : t('focus.subtitle.long');
@@ -233,11 +253,32 @@ function FocusTimer({ onFinish }) {
     reset();
   };
 
+  /* La pausa de «A tu ritmo» corre desde su hora guardada (arriba); ya pasada, el aro
+     vuelve al foco. «Empezar ya el bloque N» (y «Seguir con el bloque» de la ventana) la
+     corta: vuelve al foco y, en cuanto el motor está parado, arranca el bloque. */
+  const pausaHuerfana = !pausaRitmo && typeof ritmoPausaHuerfana === 'function' && ritmoPausaHuerfana(state);
+  useEffectFT(() => {
+    if (pausaHuerfana) { ritmoPausaAcabada(); return; }
+    if (!enPausaRitmo) return;
+    if (status === 'running' && endsAt === pausaRitmo.hasta) return;
+    if (pausaRitmo.hasta <= Date.now()) { ritmoPausaAcabada(); return; }
+    if (status !== 'idle') reset();
+    restore(pausaRitmo.hasta);
+  }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
+  const seguirTrasPausaRef = useRefFT(false);
+  const empezarYa = () => { seguirTrasPausaRef.current = true; reset(); ritmoPausaAcabada(); };
+  useEffectFT(() => {
+    if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
+    seguirTrasPausaRef.current = false;
+    handleNormalStart();
+  });
+
   /* s195 · «Seguir con el bloque N+1» desde la pausa con menú (BreakMenu.ritmo.jsx):
      el mismo arranque que el botón del aro, según el estado del motor. Se escucha
      por evento para no enhebrar un handler por main.jsx hasta aquí. */
   useEffectFT(() => {
     const alSeguir = () => {
+      if (enPausaRitmo) { empezarYa(); return; }
       if (state.focusMode !== 'foco') return;
       if (status === 'completed') handleStartAnotherCycle();
       else if (status === 'idle') handleNormalStart();
@@ -261,7 +302,10 @@ function FocusTimer({ onFinish }) {
   const startLabel = aro ? aro.empezar : isFocoMode ? t('focus.start') : t('focus.startPause');
 
   let ctaLabel, ctaAction;
-  if (running) {
+  if (enPausaRitmo) {
+    ctaLabel = tn('ritmo.pausa.ya', { n: pausaRitmo.n });
+    ctaAction = empezarYa;
+  } else if (running) {
     ctaLabel = t('focus.pause');
     ctaAction = handlePause;
   } else if (isCompleted) {
@@ -286,7 +330,7 @@ function FocusTimer({ onFinish }) {
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
   const cycleDotsEl = (
-    <div style={aro ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots}>
+    <div style={aro || enPausaRitmo ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots}>
       {[0,1,2,3].map(i => (
         <span key={i} style={{
           width: 4, height: 4, borderRadius: '50%',

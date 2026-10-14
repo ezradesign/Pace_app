@@ -76,6 +76,11 @@ function paceOrigenSesion(puerta, desdeMenu) {
   paceOrigenPendiente = enums.indexOf(puerta) !== -1 ? { origin: puerta, fromMenu: desdeMenu === true } : null;
 }
 function paceOrigenPendienteLeer() { return paceOrigenPendiente; }
+/* La pausa entera (14 oct. 2026): el segundo plato de una pausa entra solo al cerrar el
+   primero, sin gesto propio, así que sale por la MISMA puerta que el primero. Si la del
+   primero no se consumió (una sesión que no contó), sigue valiendo esa. */
+let paceUltimaPuerta = null;
+function paceOrigenRepetir() { if (!paceOrigenPendiente) paceOrigenPendiente = paceUltimaPuerta; }
 
 /* El ÚNICO punto que escribe en el almacén de eventos. Devuelve si se intentó,
    no si se commiteó: el append es asíncrono y el llamante no espera. Si el
@@ -163,6 +168,7 @@ function emitSessionCompleted(module, routineId, datos) {
      rechaza, la puerta ya no es de nadie. */
   const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
   paceOrigenPendiente = null;
+  paceUltimaPuerta = origen;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
     context: d.inPath ? 'path' : 'standalone',
@@ -185,8 +191,9 @@ function emitSessionCompleted(module, routineId, datos) {
   paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
   paceEmitirEvento(evento, function () { paceUltimaSesion = null; });
   /* s195: una sesión terminada mientras la pausa de «A tu ritmo» está abierta la
-     deja HECHA (de lo que sea: hiciste una pausa). Sin pausa abierta, no hace nada. */
-  if (typeof window.ritmoPausaHecha === 'function') { try { window.ritmoPausaHecha(); } catch (e) {} }
+     deja HECHA (de lo que sea: hiciste una pausa), y apunta su plato si es uno de
+     los de la pausa. Sin pausa abierta, no hace nada. */
+  if (typeof window.ritmoPausaHecha === 'function') { try { window.ritmoPausaHecha(routineId); } catch (e) {} }
   return runId;
 }
 
@@ -270,5 +277,5 @@ Object.assign(window, {
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
-  paceOrigenSesion, paceOrigenPendienteLeer,
+  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir,
 });

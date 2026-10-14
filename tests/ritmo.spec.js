@@ -161,8 +161,11 @@ test('al terminar un bloque, la pausa propone el plato del menú y el aro avanza
   await expect(prop).toContainText('Antídoto a la silla');
   await expect(prop).toContainText(plato);
   await page.keyboard.press('Escape');
-  await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Bloque 2 de 9');
-  await expect(page.getByRole('button', { name: 'Empezar bloque 2', exact: true })).toBeVisible();
+  /* Ez, 14 oct. 2026 (2A): el aro cuenta la pausa que va detrás, con el bloque 2 a mano
+     (ritmo-pausa-entera.spec.js). Antes se quedaba esperando el bloque 2. */
+  await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Pausa corta');
+  await expect(page.locator('[data-pace-dial-subtitle]').first()).toHaveText('Luego, el bloque 2 de 9');
+  await expect(page.getByRole('button', { name: 'Empezar ya el bloque 2', exact: true })).toBeVisible();
 });
 
 /* ------------------------------------------------------- la línea sigue al aro (s193) */
@@ -213,8 +216,9 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   await expect(lateral).toContainText(/Tu pausa\s*Ahora, /);
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(1);
 
-  /* empezar el bloque 2 la cierra: la parada queda atrás, el tramo 2 es AHORA */
-  await page.getByRole('button', { name: 'Empezar bloque 2', exact: true }).click();
+  /* empezar el bloque 2 la cierra: la parada queda atrás, el tramo 2 es AHORA. Con el aro
+     contando la pausa (Ez, 14 oct. 2026), el bloque se empieza con «Empezar ya». */
+  await page.getByRole('button', { name: 'Empezar ya el bloque 2', exact: true }).click();
   await page.waitForTimeout(250);
   await expect(parada).not.toHaveClass(/pace-rt-ahora/);
   await expect(parada).toBeDisabled();

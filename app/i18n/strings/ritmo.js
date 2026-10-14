@@ -64,6 +64,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.comida.lista':            '{d} lejos de la pantalla',
     'ritmo.larga':                   'Pausa larga · {n} min',
     'ritmo.larga.lista':             'Pausa larga · {n} min · Respira y Estira',
+    /* La pausa entera (Ez, 14 oct. 2026): los dos platos seguidos y el aro que la cuenta
+       (state-ritmo.pausa.jsx). */
+    'ritmo.y':                       '{a} y {b}',
+    'ritmo.sigue.meta':              'Pausa larga · {k} de {m}',
+    'ritmo.sigue.cta':               'Seguir con {modulo}',
+    'ritmo.pausa.luego':             'Luego, el bloque {n} de {m}',
+    'ritmo.pausa.ya':                'Empezar ya el bloque {n}',
     /* s198 · v0.133.0 (D2, texto V1): el aviso del sistema al acabar un bloque
        con «A tu ritmo» (ritmo/ritmo.aviso.js). */
     'notify.ritmo.titulo':           'Tu pausa: {plato} · {min} min',
@@ -181,6 +188,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.comida.lista':            '{d} away from the screen',
     'ritmo.larga':                   'Long break · {n} min',
     'ritmo.larga.lista':             'Long break · {n} min · Breathe and Stretch',
+    'ritmo.y':                       '{a} and {b}',
+    'ritmo.sigue.meta':              'Long break · {k} of {m}',
+    'ritmo.sigue.cta':               'Go on to {modulo}',
+    'ritmo.pausa.luego':             'Then, block {n} of {m}',
+    'ritmo.pausa.ya':                'Start block {n} now',
     'notify.ritmo.titulo':           'Your break: {plato} · {min} min',
     'notify.ritmo.larga':            'Your long break: {plato} · {min} min',
     'notify.ritmo.cierre':           'To close the day: {plato} · {min} min',
