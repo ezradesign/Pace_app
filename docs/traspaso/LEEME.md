@@ -18,7 +18,11 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
      `pausa-propone`, `pestanas-foco`, `pestanas-pausa` y `home-sin-scroll`), con la suite de
      `pausa-cuello` corriendo a la vez en el 8797. Repetirlas solas:
      `PACE_E2E_PORT=8794 npx playwright test tests/eventos-origen.spec.js tests/pausa-propone.spec.js tests/pestanas-foco.spec.js tests/pestanas-pausa.spec.js tests/home-sin-scroll.spec.js --workers=2`.
-     En la vuelta anterior (sin los glifos ni el bump) estos archivos pasaron enteros.
+     En la vuelta anterior (sin los glifos ni el bump, a las 16:00) estos archivos pasaron enteros.
+     **Ya repetidas a las 18:40: 38 pasan y sigue cayendo `eventos-origen.spec.js:120`** («tocar la
+     parada abierta es "parada"…»). Sospecha: depende de la hora del día (la línea del día cambia sus
+     paradas por la tarde), no de v0.165.0. Comprobarlo (con el reloj fijado o contra `origin/main` a la
+     misma hora) antes de subir.
   2. Si salen en verde: `git fetch` y, si `origin/main` no se ha movido, `git push origin HEAD:main` y
      `gh run watch` hasta que `verify` y `e2e` salgan en verde. Si alguna cae sola, mirar si la causa son
      los glifos nuevos o el bump antes de subir.
