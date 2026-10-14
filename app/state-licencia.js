@@ -15,10 +15,11 @@
    invitación. El código se guarda en el estado (`licencia`), así que viaja con
    la copia de «Tus datos» y se recupera al importarla.
 
-   EN ANDROID NO: Google Play no deja desbloquear contenido digital con códigos
-   propios, ni con licencias compradas fuera, sin pasar por su sistema de pagos.
-   Allí ni se canjea ni se lee el que trajera una copia de la web; los testers de
-   Android reciben un código promocional de Play cuando la app lleve Play Billing.
+   EN LAS APPS (ANDROID Y IPHONE) NO: ni Google Play ni la App Store dejan
+   desbloquear contenido digital con códigos propios, ni con licencias compradas
+   fuera, sin pasar por su sistema de pagos. Allí ni se canjea ni se lee el que
+   trajera una copia de la web; los testers reciben un código promocional de la
+   tienda cuando la app lleve su compra integrada.
 
    LO QUE NO HACE: no protege de quien edite el almacenamiento del navegador (eso
    abre cualquier web). La firma impide FABRICAR códigos, que es lo que importa.
@@ -99,11 +100,11 @@ function paceLicenciaMotivo(leida) {
 }
 
 function paceLicenciaPermitida() {
-  return !(typeof paceEsAndroid === 'function' && paceEsAndroid());
+  return !(typeof paceEsNativo === 'function' && paceEsNativo());
 }
 
 /* -> Promise<{ ok: true, codigo, datos } | { ok: false, motivo }>
-   motivo: formato · firma · anulada · caducada · navegador (sin WebCrypto) */
+   motivo: formato · firma · anulada · caducada · navegador (sin WebCrypto) · tienda (en las apps) */
 function paceLicenciaComprobar(texto) {
   var leida = paceLicenciaLeer(texto);
   var motivo = paceLicenciaMotivo(leida);
@@ -126,7 +127,7 @@ function paceLicenciaComprobar(texto) {
 
 /* Comprueba y, si vale, lo guarda. */
 function paceLicenciaCanjear(texto) {
-  if (!paceLicenciaPermitida()) return Promise.resolve({ ok: false, motivo: 'android' });
+  if (!paceLicenciaPermitida()) return Promise.resolve({ ok: false, motivo: 'tienda' });
   return paceLicenciaComprobar(texto).then(function (r) {
     if (r.ok) {
       _paceLicenciaRechazada = null;
@@ -176,7 +177,21 @@ function paceLicenciaArranque() {
   paceLicenciaDelEnlace();
 }
 
-setTimeout(paceLicenciaArranque, 0);
+/* No arranca hasta que esté ui/nativo.js, que carga después: la app es una lista
+   de scripts y el navegador puede correr un temporizador entre dos de ellos
+   (Chromium lo hace). Sin esa capa, `paceLicenciaPermitida()` no sabe que está en
+   la app de una tienda y el enlace se leería también allí. El tope (unos diez
+   segundos) es para un artefacto sin esa capa, que entonces es la web. */
+var _paceLicenciaEsperas = 0;
+function paceLicenciaCuandoSepa() {
+  if (typeof paceEsNativo !== 'function' && _paceLicenciaEsperas++ < 500) {
+    setTimeout(paceLicenciaCuandoSepa, 20);
+    return;
+  }
+  paceLicenciaArranque();
+}
+
+setTimeout(paceLicenciaCuandoSepa, 0);
 try { window.addEventListener('hashchange', paceLicenciaDelEnlace); } catch (e) {}
 
 Object.assign(window, {

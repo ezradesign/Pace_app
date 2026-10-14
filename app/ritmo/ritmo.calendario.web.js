@@ -71,13 +71,15 @@ function calendarioVuelta() {
   return location.origin + '/calendario.html';
 }
 
-/* ¿Se puede ofrecer este proveedor aquí? En la app de Android no: allí está el
-   calendario del móvil, y Google no deja pedir permiso dentro de un WebView. */
+/* ¿Se puede ofrecer este proveedor aquí? En las apps (Android y iPhone) no:
+   Google no deja pedir permiso dentro de un WebView, y en Android ya está el
+   calendario del móvil. En el iPhone `location.hostname` también es
+   'localhost' (capacitor://localhost): sin esta pregunta se ofrecería. */
 function calendarioWebDisponible(prov) {
   try {
     var p = CALENDARIO_PROVEEDORES[prov];
     if (!p || !p.id()) return false;
-    if (typeof paceEsAndroid === 'function' && paceEsAndroid()) return false;
+    if (typeof paceEsNativo === 'function' && paceEsNativo()) return false;
     return location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   } catch (e) { return false; }
 }

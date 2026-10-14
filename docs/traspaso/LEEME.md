@@ -2,11 +2,32 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.163.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.164.0.
 
 ## 14 oct. 2026, mañana: relevo hecho, la coordinadora sigue en la otra cuenta
 
-Manda sobre todo lo de abajo. La cuenta anterior se quedó sin uso a las 11:35 y se repone a las 15:30.
+Manda sobre todo lo de abajo.
+
+**Si esta cuenta se agotó con v0.164.0 (iOS) commiteada en `main` en local y sin subir:** si
+`git status` dice que va por delante de `origin/main`, la suite de v0.164.0 estaba corriendo
+(`%TEMP%\suite-164.log`): si acabó en verde, push y CI. Si no, `PACE_E2E_PORT=8775 npm run test:e2e`. La
+sesión de iOS pasó la suite entera (635) sobre el mismo código. Lo siguiente:
+- juntar `caza-sesiones` cuando dé el LISTO;
+- montar las voces en inglés, si no lo hizo ella;
+- abrir el hilo del calendario.
+
+La cuenta anterior se quedó sin uso a las 11:35 y se repone a las 15:30;
+esta, la que tomó el relevo a las 11:45, se repone a las 16:30. Con tres sesiones a la vez, esta cuenta
+gastó el 58 % de sus 5 horas en 50 minutos: Ez decidió seguir con las dos en paralelo, y cada una hace su
+«wip» y su push sola al llegar al 92 % (el tope es el 95 %, WORKFLOW §10).
+
+- **Hallazgo nuevo de Ez (14 oct.), en manos de `caza-sesiones` como sesiones-10:** en el navegador de su
+  móvil (Doogee Blade 20 Max, Android), la voz masculina de Respira (bradford) se oye entrecortada y la
+  femenina no. Los MP3 de bradford son MPEG-1 a 44,1 kHz y empiezan a sonar en el primer milisegundo; los de
+  sulafat, MPEG-2 a 24 kHz y con 0,39 s de silencio delante.
+- **Para Ez, de la coordinadora:** los prompts de todo lo que falta por dibujar y grabar están en
+  `archivos/encargos-14oct/` (imagen y audio por separado). Pendiente de su decisión: renombrar
+  «Palmas al suelo» a «Palmas en la mesa».
 
 - **v0.163.0 en `main`:** los seis arreglos de la caza de las sesiones guiadas
   (`CAZA_SESIONES_14OCT.md`, sesiones-1 a sesiones-6), que no cambian lo que se ve. Quedan para Ez, con
@@ -16,13 +37,26 @@ Manda sobre todo lo de abajo. La cuenta anterior se quedó sin uso a las 11:35 y
   - **sesiones-9:** recargar a mitad de Mueve o Estira la pierde.
 - **Sesiones en paralelo**, abiertas otra vez en sus carpetas tras el relevo, una sesión nueva cada una:
   - `caza-sesiones`: `.claude/worktrees/caza-sesiones-a8e105`, rama `claude/caza-sesiones-a8e105`, puerto 8794.
-    Prepara las fotos de sesiones-7, 8 y 9.
-  - `ios-preparar`: `.claude/worktrees/ios-preparar-03219e`, rama `claude/ios-preparar-03219e`, puerto 8796.
-    Su trabajo está en el commit «wip(ios)» `58a5ebe`. Le falta:
-    - la guía de la App Store;
-    - calibrar en rojo una prueba;
-    - la suite;
-    - el workflow `iOS` en verde.
+    sesiones-7, 8 y 9 hechas en su rama (`d9cd64a`). Ez eligió A en las tres:
+    - medio minuto no cuenta, y el cierre dice «Sesión sin contar»;
+    - el «Tiempo» de Mueve y Estira va sin las pausas;
+    - Mueve y Estira a medias ofrecen «Continúa · Paso n de m».
+    Al relevo, su suite corría en el 8794; después da el LISTO.
+    Se paró al 87 % con un «wip» (`8e80fc5`). Le falta que la suite entera pase: caen ingles-15 y respira-5,
+    seguramente porque practican menos de medio minuto y ahora ven «Sesión sin contar». Lo que queda, en
+    `.claude/relevo/RELEVO.md` de su carpeta.
+    También tiene las voces de Respira en inglés que grabó Ez (`Audio - Respira\voces-en\`, fuera del repo).
+    - Medidas dos veces a −50 dBFS: bradford cabe entera (0,74 · 0,58 · 0,93 s), y sulafat «hold», también
+      (0,99 s).
+    - sulafat «inhale» mide 1,97 s y «exhale» 1,82 s, pero la palabra que se oye (RMS por encima de −40 dB)
+      dura 1,50 y 0,94 s. Lo que sobra es una cola baja: en «inhale», de 1,78 a 2,26 s; en «exhale», de
+      1,88 a 2,65 s.
+    - Lo siguiente: recortar esas colas con un fundido corto, sin regrabar; volver a medir; montarlas
+      (nombres con guion: `sulafat-inhale.mp3`…), y que Ez las oiga antes de subir.
+  - `ios-preparar` terminó: **el iPhone está preparado en v0.164.0** (proyecto `ios/`, `nativo.js` e
+    `ios.js`, workflow `iOS` y la guía `docs/launch/app-store/guia.html`). Para TestFlight espera la
+    cuenta de Apple Developer de Ez y su llave de la API (`PACE-llave-apple`). Su hueco es para el
+    calendario (abajo), cuando haya uso para abrir una sesión.
 - **iPhone, decisiones de Ez (14 oct.):**
   - la cuenta de Apple Developer, a su nombre (todavía no está creada);
   - sin Mac: todo por GitHub y TestFlight;

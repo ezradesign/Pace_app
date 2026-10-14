@@ -252,10 +252,14 @@ cuando cruza un umbral:
 
 | Uso de las 5 horas | Qué se hace |
 |---|---|
-| menos del 70 % | trabajo normal |
-| 70-85 % | no se empieza nada largo ni se abren sesiones nuevas; se termina la pieza en curso |
-| 85 % | **relevo**: cada sesión en paralelo hace un commit «wip(...)» y push de su rama; la coordinadora pone al día el relevo de LEEME (versión, CI, sesiones con carpeta, rama y puerto, preguntas pendientes para Ez, y a qué hora se repone esta cuenta) y le dice a Ez que cambie |
-| 95 % | nada que no se pueda dejar a medias sin perder trabajo |
+| menos del 85 % | trabajo normal |
+| 85-92 % | no se abren sesiones nuevas ni se empieza nada largo; se termina lo que está en marcha |
+| 92 % | **relevo**: cada sesión en paralelo hace un commit «wip(...)» y push de su rama, sin esperar a que se lo pidan; la coordinadora pone al día el relevo de LEEME (versión, CI, sesiones con carpeta, rama y puerto, preguntas pendientes para Ez, y a qué hora se repone esta cuenta) |
+| 95 % | **tope**: se para todo y Ez cambia de cuenta. Nada pasa de aquí |
+
+El tope es del 95 % y no del 85 % por decisión de Ez (14 oct.): así se aprovecha la sesión entera. El margen
+entre el 92 y el 95 % es para el «wip» y el relevo. Con tres sesiones a la vez, la cuenta llegó a gastar un
+punto por minuto.
 
 Si la semanal pasa del 85 %, se prefiere la otra cuenta el resto de la semana.
 

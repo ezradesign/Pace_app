@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.164.0 | 2026-10-14 | La app del iPhone, preparada: proyecto de iOS con Capacitor que compila en un Mac de GitHub sin firmar, las reglas de la App Store (sin apoyo ni códigos propios) y su guía; y el código del enlace ya no se lee en las apps aunque la capa nativa cargue tarde. En la web y en Android no cambia nada a la vista |
 | v0.163.0 | 2026-10-14 | Las sesiones guiadas cuentan lo que de verdad se hizo (caza del 14 oct.): el rato con el equipo dormido o la app congelada ya no cuenta como respirado ni como ejercicio (Mueve y Estira se quedan en pausa en el mismo paso); la semana de Mueve y Estira se acredita sin las pausas; una sesión que arranca con la página oculta empieza en pausa; el «Tiempo» del cierre deja de correr al contestar «¿te ayudó?»; y una segunda pestaña ya no ofrece seguir una Respira que sigue viva en la primera |
 | v0.162.1 | 2026-10-14 | Repaso del modo oscuro: toda la app se lee bien en oscuro; el «AHORA» de la línea del día, que se leía poco (2,7:1), va más claro solo en oscuro (4,8:1). La bienvenida sigue en crema a propósito, por sus láminas |
 | v0.162.0 | 2026-10-14 | En un plan de «A tu ritmo», al terminar un bloque el reloj enseña los minutos del siguiente (15:00) en vez de 00:00, que se leía como un bloque de cero minutos; y en inglés Ajustes marca «Tone», que es lo que suena, con las voces atenuadas hasta que haya voz inglesa (lo elegido se conserva), y «Plays behind» pasa a «In the background» |

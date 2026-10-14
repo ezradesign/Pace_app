@@ -31,11 +31,12 @@ const { useState: useStateTD, useRef: useRefTD } = React;
    se ha caido: por eso lee de `localStorage` y no del store, y si el estado no
    se puede leer viaja CRUDO (`stateRaw`) en vez de no viajar. Devuelve si se
    pudo; los mensajes los pone quien la llama.
-   En Android el WebView no descarga: la copia sale por el menu de compartir
-   (ui/android.js), desde el que se guarda en Drive o en Archivos. */
+   En las apps (Android y iPhone) el WebView no descarga: la copia sale por el
+   menu de compartir (ui/nativo.js), desde el que se guarda en Drive, en Archivos
+   o en iCloud. */
 function paceBajarJSON(payload, nombre) {
   const texto = JSON.stringify(payload, null, 2);
-  if (typeof paceAndroidGuardarArchivo === 'function' && paceAndroidGuardarArchivo(nombre, texto)) return;
+  if (typeof paceNativoGuardarArchivo === 'function' && paceNativoGuardarArchivo(nombre, texto)) return;
   const blob = new Blob([texto], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -48,7 +49,7 @@ function paceBajarJSON(payload, nombre) {
 }
 
 function paceEnlaceLegal(ruta) {
-  return typeof paceEnlaceWeb === 'function' ? paceEnlaceWeb(ruta) : ruta;
+  return typeof paceNativoEnlace === 'function' ? paceNativoEnlace(ruta) : ruta;
 }
 
 function paceDiaArchivo() {
@@ -109,8 +110,8 @@ function TweaksDataSection({ onReset, isWeb }) {
 
   const exportJSON = () => {
     if (paceDescargarCopia()) {
-      const enAndroid = typeof paceEsAndroid === 'function' && paceEsAndroid();
-      setMsg({ kind: 'ok', text: t(enAndroid ? 'settings.msg.exported.android' : 'settings.msg.exported') });
+      const enApp = typeof paceEsNativo === 'function' && paceEsNativo();
+      setMsg({ kind: 'ok', text: t(enApp ? 'settings.msg.exported.app' : 'settings.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       unlockAchievement('secret.backup');
@@ -255,10 +256,11 @@ function TweaksDataSection({ onReset, isWeb }) {
       {/* El pie: la promesa de privacidad -- es de marca, se queda-- y los
           enlaces /safety y /privacy (s102; paginas estaticas de s101), solo en
           web: en file:// esas rutas no resuelven. Nueva pestana para no matar
-          un timer corriendo. En Android van a la web publicada, que se abre en
-          el navegador: en el APK no hay servidor que resuelva esas rutas. */}
+          un timer corriendo. En las apps (Android y iPhone) van a la web
+          publicada, que se abre en el navegador: dentro de la app no hay servidor
+          que resuelva esas rutas. */}
       <div className="pace-aj-pie">
-        <span>{t(typeof paceEsAndroid === 'function' && paceEsAndroid() ? 'settings.foot.android' : 'settings.foot')}</span>
+        <span>{t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.foot.app' : 'settings.foot')}</span>
         {isWeb && (
           <span>
             <a href={paceEnlaceLegal('/safety')} target="_blank" rel="noopener">{t('settings.legal.safety')}</a>

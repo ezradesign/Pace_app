@@ -87,14 +87,16 @@ function detectEventsRuntime() {
   return 'unknown';
 }
 
-/* Elige adaptador. La web y la app de Android usan el adaptador web: en
-   Android se elige A PROPOSITO, porque el IndexedDB del WebView vive en el
-   almacenamiento privado de la app, igual que lo haria un SQLite nativo, y
-   `pace.state.v2` ya vive ahi. iOS sigue en el inerte hasta su fase (su
-   WebView puede vaciar el almacenamiento), `file://` no emite por diseno y,
+/* Elige adaptador. La web y las apps de Android y del iPhone usan el adaptador
+   web: en las apps se elige A PROPOSITO, porque el IndexedDB del WebView vive en
+   el almacenamiento privado de la app, igual que lo haria un SQLite nativo, y
+   `pace.state.v2` ya vive ahi. iOS estuvo en el inerte hasta preparar su app
+   (14 oct. 2026): su WebView puede vaciar el almacenamiento con el iPhone sin
+   espacio, pero eso le pasaria igual a `pace.state.v2`, y sin eventos las
+   estadisticas y «A tu ritmo» no aprendian. `file://` no emite por diseno y,
    ante ambiguedad, el inerte. */
 function selectEventsAdapter(runtime) {
-  return (runtime === 'web' || runtime === 'capacitor-android') ? 'web' : 'null';
+  return (runtime === 'web' || runtime === 'capacitor-android' || runtime === 'capacitor-ios') ? 'web' : 'null';
 }
 
 function paceEventsRuntime() {
@@ -400,13 +402,14 @@ function paceEventsWipeAll(alTerminar) {
 
 /* --- Arranque ------------------------------------------------------------ */
 
-/* En Android se pide almacenamiento PERSISTENTE: sin el, Chromium puede vaciar
-   el IndexedDB del WebView si el movil se queda sin espacio. Si ya lo es, no
-   cambia nada, y si no lo concede, tampoco. En la web no se pide: Firefox lo
-   pregunta con un aviso. */
+/* En las apps se pide almacenamiento PERSISTENTE: sin el, el WebView (Chromium
+   en Android, WebKit en el iPhone) puede vaciar el IndexedDB si el movil se
+   queda sin espacio. Si ya lo es, no cambia nada, y si no lo concede, tampoco.
+   En la web no se pide: Firefox lo pregunta con un aviso. */
 function paceEventsPedirPersistencia() {
   try {
-    if (paceEventsRuntime() !== 'capacitor-android') return;
+    const runtime = paceEventsRuntime();
+    if (runtime !== 'capacitor-android' && runtime !== 'capacitor-ios') return;
     const almacen = navigator.storage;
     if (!almacen || typeof almacen.persist !== 'function') return;
     const peticion = almacen.persist();
