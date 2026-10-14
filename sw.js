@@ -251,6 +251,7 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/streak.30.webp',
   '/app/glyphs/assets/logros/streak.365.webp',
   '/app/glyphs/assets/logros/streak.60.webp',
+  '/app/glyphs/assets/logros/streak.7.webp',
   /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
      (el standalone las inlinea como data URI); precache = offline fiel. */
   '/fonts/ebgaramond-400-italic.woff2',

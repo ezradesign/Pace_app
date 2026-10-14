@@ -53,8 +53,8 @@ var CENSO = {
 
   /* glifos */
   glifosEjercicio: 47,          // exercise-glyphs.jsx + .extra.jsx (s148)
-  mascarasLogro: 77,            // achievement-masks.js (s146/s147; +19 en s167)
-  mascarasVisiblesDeSalida: 69, // las que un usuario nuevo ve pintadas (+17 en s167,
+  mascarasLogro: 78,            // achievement-masks.js (s146/s147; +19 en s167; +1 el 14 oct.: «Cuarto creciente»)
+  mascarasVisiblesDeSalida: 70, // las que un usuario nuevo ve pintadas (+1 el 14 oct.: «Cuarto creciente»; +17 en s167,
                                 //   -1 al pasar explore.tweaks a secreto)
   mascarasDeSecreto: 8,         // + estas, solo al desbloquear su secreto (+2 en s167:
                                 //   secret.dark.mode y secret.lunch)
@@ -73,7 +73,7 @@ var CENSO = {
   respira: 20, mueve: 14, estira: 17, caminos: 7,
 
   /* service worker */
-  precache: 235,                // +6 el 14 oct.: las voces de Respira en inglés (las dos voces, tres palabras). Antes, +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
+  precache: 236,                // +1 el 14 oct.: el dibujo de «Cuarto creciente». Antes, +6 el 14 oct.: las voces de Respira en inglés (las dos voces, tres palabras). Antes, +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
                                 //  +20 en s171: la 2a tanda sube el arte de ejercicio de 47 a 57 identidades, y cada una son DOS filas;
                                 //  +4 en s173: la 3a tanda son 4 dibujos pero solo DOS identidades nuevas -- «Fondos en silla» y
                                 //  «Deslizamientos en pared» ya tenian fila y la reutilizan, asi que suman 0)

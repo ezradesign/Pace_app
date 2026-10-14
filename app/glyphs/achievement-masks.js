@@ -116,6 +116,7 @@ const ACHIEVEMENT_MASKS = {
   'streak.30':                'app/glyphs/assets/logros/streak.30.webp',
   'streak.365':               'app/glyphs/assets/logros/streak.365.webp',
   'streak.60':                'app/glyphs/assets/logros/streak.60.webp',
+  'streak.7':                 'app/glyphs/assets/logros/streak.7.webp',
 };
 
 function achievementMaskUrl(id) {

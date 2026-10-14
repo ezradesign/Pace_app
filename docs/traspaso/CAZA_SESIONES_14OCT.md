@@ -138,10 +138,18 @@ el fondo). En las pruebas se hace saltando el reloj sin disparar ningún tempori
   lleva 0,39 s de silencio delante. Si Android tarda en abrir la salida del elemento de audio, el
   arranque de bradford se come la palabra. La música de Respira es Web Audio en directo y puede
   cargar la CPU de un móvil modesto: probar con la música apagada.
-- **Lo siguiente:** leer cómo se precarga y arranca el clip (`app/ui/Sound.voz.jsx`) y elegir entre
-  recodificar bradford como sulafat, ponerle un silencio corto delante (y volver a medir ini y fin a
-  −50 dBFS) o calentar la salida antes de la primera palabra. Va junto con las voces en inglés, que
-  tocan los mismos archivos.
+- **Lo que se probó (14 oct.):** una página con la palabra sonando de cuatro maneras
+  (https://claude.ai/artifact/8X535itr15XDyTheDewDrq, en la cuenta nueva): como hoy (un `<audio>`
+  por palabra, rebobinado), con una décima de silencio delante (cuatro tramas MP3 de silencio
+  metidas tras la trama «Info», sin recodificar), con un silencio de fondo sonando durante la
+  prueba, y por Web Audio. En el móvil de Ez **la de hoy ya se oye limpia**, así que el corte no
+  viene de cómo arranca el clip, sino de lo que la app hace a la vez: la música de Respira (tres
+  MP3 de 1,6 MB descodificados en Web Audio y un drone sintetizado), el tono, la animación.
+- **Lo siguiente:** que Ez lo pruebe en la app, en el móvil, en castellano con «Voz grave», con
+  la música puesta y con «Suena detrás: Nada». Si solo se corta con música, el arreglo probable es
+  que la voz salga por el mismo Web Audio que la música (la variante 4 de la página), o no
+  descodificar la música mientras habla la voz. Si se corta también sin música, mirar la
+  animación y el resto de la sesión con el perfil de rendimiento de Chrome en el móvil.
 
 ## Lo que se probó y no falla
 

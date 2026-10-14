@@ -49,7 +49,10 @@ const ROOT = path.resolve(__dirname, '..');
    vive en UNA sola carpeta fuera del repo (lo que la app consume son las
    mascaras .webp de DESTINO, que si estan versionadas). Los 19 dibujos nuevos
    se movieron aqui, y se reconocen por el prefijo `exlibris_handcraft`. */
-const ORIGEN = path.resolve(ROOT, '..', '.old', 'Glifos_logros');
+/* Desde una carpeta de trabajo (`.claude/worktrees/<rama>`) la carpeta de originales sigue
+   colgando del repo principal, no de la carpeta de trabajo. */
+const REPO = ROOT.split(path.sep + '.claude' + path.sep + 'worktrees' + path.sep)[0];
+const ORIGEN = path.resolve(REPO, '..', '.old', 'Glifos_logros');
 const DESTINO = path.join(ROOT, 'app', 'glyphs', 'assets', 'logros');
 
 const SUELO = 238;
@@ -82,7 +85,9 @@ const MAPEO = {
   "explore.ujjayi":           "Premium_editorial_zen_seal_three_rhythmic_hairlin-1785709298327.png",
   "first.breath":             "35bsw04l3",
   "first.cycle":              "9j3y5oet7",
-  "first.day":                "4ge0ksckf",
+  /* 14 oct. 2026 · el sol saliendo sobre el horizonte que pedía el encargo: la luna creciente
+     de antes era la misma que la de «Ocaso» y casi la del «Búho». */
+  "first.day":                "bjyi3wuwo",
   "first.extra":              "uxj5jdlym",
   "first.plan":               "os48f5hru",
   "first.return":             "y0xmmncb2",
@@ -113,7 +118,9 @@ const MAPEO = {
   "season.equinox.spring":    "u1rbeljzr",
   "season.four":              "Premium_editorial_zen_seal_a_precise_circular_whe-1785709550699.png",
   "season.solstice.summer":   "Premium_editorial_zen_seal_a_radiant_sun_at_the_c-1785709408863.png",
-  "season.solstice.winter":   "Premium_editorial_zen_seal_a_hexagonal_dendrite_s-1785709579776.png",
+  /* 14 oct. 2026 · el árbol desnudo con la luna arriba: el copo de antes se leía igual que el de
+     «Invierno» a tamaño de sello. */
+  "season.solstice.winter":   "zvbby8tgb",
   "season.spring":            "gu806iwct",
   "season.winter":            "taaeioi3e",
   "secret.backup":            "ns6eokage",
@@ -136,6 +143,8 @@ const MAPEO = {
   "streak.3":                 "x1l37xssb",
   "streak.30":                "Premium_editorial_zen_seal_full_moon_disk_encircl-1785709239515.png",
   "streak.365":               "y4hlfp12j",
+  /* 14 oct. 2026 · la media luna (cuarto creciente): siete días, un cuarto de la luna. */
+  "streak.7":                 "ybpc85ksi",
   /* Bambu: crece por NUDOS, un tramo cada vez. «Estacion» son 60 dias seguidos. */
   "streak.60":                "rgi1ck55q",
 

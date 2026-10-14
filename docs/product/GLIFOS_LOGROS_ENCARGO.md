@@ -1,7 +1,7 @@
-# Encargo de arte · los 19 glifos de LOGRO que faltan
+# Encargo de arte · los 18 glifos de LOGRO que faltan
 
 **Remedido del árbol en s169 (v0.99.0).** Catálogo: **96 logros** · con arte:
-**77** · **sin arte: 19**.
+**78** · **sin arte: 18** (el 14 oct. de 2026 entró «Cuarto creciente», `streak.7`).
 
 > **Este documento decía 38 y ya sólo faltan 19.** El cálculo original es de s164
 > (v0.94.0), cuando había 58 con arte; **s167 entregó los 19 que faltaban para
@@ -12,7 +12,7 @@
 > Cómo se remidió: cargando `catalog.js` y `achievement-masks.js` —cada uno en su
 > propia IIFE, como en el artefacto— y cruzando **id a id** las filas de este
 > documento contra el mapa de máscaras real. La cuenta cierra por **biyección**:
-> **19 entregadas + 19 sin arte = 38 filas**, **cero** ids que no existan en el
+> **20 entregadas + 18 sin arte = 38 filas**, **cero** ids que no existan en el
 > catálogo y **cero** logros sin arte que este documento no liste. Si algún día
 > no cierra, es que una de las dos partes se movió sin la otra.
 
@@ -75,7 +75,7 @@ huecos sueltos y este es un **desparejado**, que se ve más.
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
-| `streak.7` | *(ver nota de nombre abajo)* | 7 días seguidos | SVG heráldico | **Siete espigas de trigo atadas en un haz.** Encaja con la vaca y el pacer; siete tallos contables de un vistazo. |
+| ~~`streak.7`~~ **ENTREGADO** (14 oct. 2026: la media luna del cuarto creciente) | *(ver nota de nombre abajo)* | 7 días seguidos | SVG heráldico | **Siete espigas de trigo atadas en un haz.** Encaja con la vaca y el pacer; siete tallos contables de un vistazo. |
 | `streak.14` | Quince días | 14 días seguidos | carácter `XIV` | **Dos haces de siete cruzados**, o una luna en cuarto creciente con catorce muescas en el borde. Debe leerse como «el doble del anterior». |
 | `breathe.sessions.50` | 50 respiraciones | sesiones acumuladas | SVG heráldico | **Un fuelle de herrero**, o un abanico de cinco pliegues abierto. Aire acumulado, no aire soplando. |
 

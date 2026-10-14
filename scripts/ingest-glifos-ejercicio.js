@@ -100,6 +100,8 @@ const numArg = (nombre, porDefecto) => {
 const RECORTE = numArg('--recorte', 220);
 const GAMMA = numArg('--gamma', 3.0);
 const SIN_ROJO = !args.includes('--con-rojo');
+/* Curva de más por dibujo, para los que llegan con más rayado que el resto (ver el paso 3). */
+const ACLARADO = { 'hueco-abdominal': 1.64, 'elevacion-de-puntas': 1.14 };
 /* SUELO DE LUMINANCIA DEL ROJO (s170, y nace de un defecto que el usuario vio
    antes que yo). El detector original era solo de TONO —`r - max(g,b) > 18`— y
    la tinta de estos grabados es SEPIA, o sea calida: medido, entre el 39 % y el
@@ -304,6 +306,12 @@ const PISO = RECORTE > 0 ? RECORTE : SUELO;
       const base = L >= PISO ? 0 : Math.min(1, (PISO - L) / rango);
       alfa[i] = Math.round(Math.pow(base, 1 / GAMMA) * 255);
     }
+    /* RAYADO DE MÁS: el generador cargó la espalda y la sombra del suelo en estos dos, y
+       al lado de los demás se veían más sombreados (Ez, 14 oct. 2026). La curva baja el
+       rayado suave y apenas toca el contorno; cada `k` deja su dibujo en la mediana de
+       «rayado por contorno» de los 57 integrados (tinta suave / tinta fuerte = 0,52). */
+    const aclarado = ACLARADO[p.s];
+    if (aclarado) for (let i = 0; i < alfa.length; i++) alfa[i] = Math.round(Math.pow(alfa[i] / 255, aclarado) * 255);
     /* AJUSTE FINO SOBRE EL ALFA YA MONTADO (s170). El recorte de arriba mide la
        tinta con `RECORTE`, pero la mascara incluye todo lo que este por debajo
        de `SUELO` — y entre los dos umbrales hay material tenue que la gamma
