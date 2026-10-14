@@ -123,6 +123,26 @@ el fondo). En las pruebas se hace saltando el reloj sin disparar ningún tempori
   sesión desaparece, no cuenta nada y la barra lateral no ofrece seguir. En Respira, la misma
   recarga deja «Continúa · La dejaste a medias», por la ronda o por el tiempo practicado (s186).
 
+## Lo que falta
+
+### sesiones-10 · La voz masculina (bradford) se oye entrecortada en el navegador de un Android
+- **Gravedad:** molesta. **Cambia lo que se ve:** no, pero cambia cómo suena: Ez lo oye en su móvil
+  antes de subirlo.
+- **Pasos (lo vio Ez; aquí no se ha reproducido):** Respira con la voz masculina en castellano, en
+  el navegador de un Doogee Blade 20 Max (Android, MediaTek de gama media): se oye entrecortada. La
+  femenina (sulafat) se oye bien en el mismo móvil. No se sabe si sonaba la música. De la APK no ha
+  dicho nada.
+- **Pistas, sin comprobar en un móvil:** los MP3 son distintos (bradford, MPEG-1 a 44,1 kHz y
+  128 kbps; sulafat, MPEG-2 a 24 kHz y 160 kbps). bradford empieza a sonar en el primer
+  milisegundo («inhala» y «mantén», ini 0,001) y su «exhala» llega al final del archivo; sulafat
+  lleva 0,39 s de silencio delante. Si Android tarda en abrir la salida del elemento de audio, el
+  arranque de bradford se come la palabra. La música de Respira es Web Audio en directo y puede
+  cargar la CPU de un móvil modesto: probar con la música apagada.
+- **Lo siguiente:** leer cómo se precarga y arranca el clip (`app/ui/Sound.voz.jsx`) y elegir entre
+  recodificar bradford como sulafat, ponerle un silencio corto delante (y volver a medir ini y fin a
+  −50 dBFS) o calentar la salida antes de la primera palabra. Va junto con las voces en inglés, que
+  tocan los mismos archivos.
+
 ## Lo que se probó y no falla
 
 - Respira: pausar y seguir (el tiempo en pausa no cuenta; la música se apaga y vuelve); recargar a
