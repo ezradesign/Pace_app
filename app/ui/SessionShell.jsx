@@ -315,9 +315,16 @@ function SessionHeader({ routine, onExit, extra }) {
 function SessionDone({
   routine, onExit, accent, accentSoft,
   doneMeta, doneCopy, stats = [],
-  buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData,
+  buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData, sinContar,
 }) {
   const { t } = useT();
+  /* SIN CONTAR (Ez, 14 oct.: menos de PACE_MINIMO_CUENTA_S): el cierre lo dice, sin cifras ni
+     «¿te ayudó?», y en un Camino el paso sigue como saltado, no como hecho. */
+  if (sinContar) {
+    doneMeta = t('session.notCounted'); doneCopy = t('session.notCountedCopy'); stats = []; feedback = null;
+    rootData = Object.assign({}, rootData, { 'data-pace-sin-contar': '1' });
+    const salir = onExit; onExit = (r) => salir(r === 'done' ? 'skip' : r);
+  }
   /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
      sesion pasa t('session.next') ("Siguiente") -- onExit('done') ya avanza
      el Camino; sin el override el label por defecto es "Volver al inicio"

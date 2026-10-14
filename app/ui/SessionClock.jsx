@@ -111,4 +111,55 @@ function useActiveClock(semillaMs) {
   return { marcar, segundos };
 }
 
-Object.assign(window, { useActiveClock, PACE_HUECO_MS });
+/* MENOS DE MEDIO MINUTO NO CUENTA (Ez, 14 oct. 2026, sesiones-7). «Terminar» a
+   los pocos segundos, o saltar todos los pasos, contaba una sesión entera: el
+   minuto mínimo, la sesión, sus logros y el plan del día. Por debajo de esto el
+   cierre dice «Sesión sin contar» y no se acredita nada. No es un número nuevo:
+   desde 30 s el redondeo a minutos ya daba uno; por debajo, el minuto se lo
+   inventaba el `Math.max(1, …)`. */
+const PACE_MINIMO_CUENTA_S = 30;
+
+/* UNA SESIÓN VIVA EN OTRA PESTAÑA no está a medias (caza del 14 oct., sesiones-6).
+   El registro de una sesión interrumpida se escribe mientras se practica, así que
+   otra pestaña lo leía como «a medias» con la sesión viva aquí, y si se seguía
+   allí contaban las dos. La pestaña con la sesión abierta deja un LATIDO en su
+   clave (cada 5 s, válido 15 s); mientras late en otra, aquí no se ofrece. Al
+   terminar, salir o cerrar se borra; si la pestaña muere sin borrarlo, caduca.
+   Va aparte del registro porque es otra cosa: el registro dice por dónde ibas,
+   el latido dice que alguien sigue ahí. Lo usan Respira y Mueve/Estira. */
+const PACE_VIVA_MS = 15000;
+const PACE_PESTANA = Math.random().toString(36).slice(2);
+
+function sesionVivaFuera(clave, ahora) {
+  try {
+    const v = JSON.parse(localStorage.getItem(clave) || 'null');
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    const late = v && v.pestana !== PACE_PESTANA && Number.isFinite(v.hasta) &&
+      v.hasta > t && v.hasta - t <= PACE_VIVA_MS;
+    return late ? v : null;
+  } catch (e) { return null; }
+}
+
+function useSesionViva(clave, routineId, viva) {
+  useEffectSC(() => {
+    if (!viva || !routineId) return undefined;
+    const latir = () => {
+      try {
+        localStorage.setItem(clave, JSON.stringify({
+          pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
+      } catch (e) {}
+    };
+    const soltar = () => {
+      try {
+        const v = JSON.parse(localStorage.getItem(clave) || 'null');
+        if (v && v.pestana === PACE_PESTANA) localStorage.removeItem(clave);
+      } catch (e) {}
+    };
+    latir();
+    const id = setInterval(latir, 5000);
+    window.addEventListener('pagehide', soltar);
+    return () => { clearInterval(id); window.removeEventListener('pagehide', soltar); soltar(); };
+  }, [viva]);
+}
+
+Object.assign(window, { useActiveClock, PACE_HUECO_MS, PACE_MINIMO_CUENTA_S, sesionVivaFuera, useSesionViva });

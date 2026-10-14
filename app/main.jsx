@@ -45,7 +45,8 @@ function PaceApp() {
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
-  /* s186 · LA SESION DE RESPIRA QUE SE QUEDO A MEDIAS. Se lee al montar y se
+  /* s186 · LA SESION QUE SE QUEDO A MEDIAS (Respira y, desde sesiones-9, Mueve y
+     Estira: `pace.cuerpo.v1`). Se lee al montar y se
      RE-LEE al volver a la home, que es cuando puede haber cambiado (acabas de
      salir de una sesion, o de terminarla). Vive aqui y no en el estado global
      porque no es estado de la app: es una nota de `pace.breathe.v1`, la clave
@@ -54,7 +55,7 @@ function PaceApp() {
      por la MISMA puerta que empezar, asi que una rutina con apnea vuelve a
      pedir su confirmacion. */
   const [reanudable, setReanudable] = useStateMain(
-    () => (window.leerRespiraGuardada && window.leerRespiraGuardada()) || null);
+    () => (window.sesionAMedias && window.sesionAMedias()) || null);
   const [pendienteReanudar, setPendienteReanudar] = useStateMain(null);
 
   // Constructor de rutinas premium (F7 · s93). Overlay singleton abierto vía
@@ -116,7 +117,7 @@ function PaceApp() {
 
   useEffectMain(() => {
     if (view.type !== 'home') return;
-    setReanudable((window.leerRespiraGuardada && window.leerRespiraGuardada()) || null);
+    setReanudable((window.sesionAMedias && window.sesionAMedias()) || null);
   }, [view.type]);
 
   // Handle start de una rutina
@@ -182,6 +183,10 @@ function PaceApp() {
     abrirAgua: () => setOpenHydrate(true),
     empezarRespira: handleStartBreathe,
     previsualizar: setPreviewRoutine,
+    seguirCuerpo: (routine, kind, reanudar) => {   // Mueve o Estira a medias (sesiones-9)
+      setOpenLibrary(null);
+      setView({ type: 'move-session', routine, kind, reanudar });
+    },
   });
 
   const handleStartExtra = (routine) => {
@@ -420,7 +425,7 @@ function PaceApp() {
       {view.type === 'breathe-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
         <BreatheSession routine={view.routine} reanudar={view.reanudar} onExit={(_reason) => setView({ type: 'home' })} />)}
       {view.type === 'move-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
-        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />)}
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} reanudar={view.reanudar} onExit={(_reason) => setView({ type: 'home' })} />)}
 
       {/* ========== CAMINOS ========== (s198: se gestionan solos; la red, al
           cerrar, solo se reinicia y los vuelve a montar cerrados) */}

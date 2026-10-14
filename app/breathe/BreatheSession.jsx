@@ -40,6 +40,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
      que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
   const relojHold = useHoldClock(rein.holdSec);
   const hechoRef = useRef(null);   // rondas y respiraciones hechas al cerrar (respiraHecho, en el support)
+  const sinContarRef = useRef(false);   // cerrada antes de PACE_MINIMO_CUENTA_S: no se acredita
   const getActiveSec = () => relojActivo.segundos();
 
   const sequence = getSequence(routine);
@@ -169,7 +170,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
       // Enter cierra el DONE salvo foco en un control / modificadores / IME —
       // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -217,8 +218,9 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
     // Credito = TIEMPO ACTIVO real (s98), no el nominal routine.min. Excluye
     // pausas y no sobre-acredita al pulsar "Finalizar" pronto. Aplica igual a
     // rounds (retenciones incluidas -> mas honesto) que a no-rounds. Minimo 1
-    // min si hubo practica (las sesiones muy cortas cuentan en stats/plan).
+    // min si hubo practica; por debajo de PACE_MINIMO_CUENTA_S no cuenta nada (sesiones-7).
     const activeMin = Math.max(1, Math.round(getActiveSec() / 60));
+    const sinContar = getActiveSec() < PACE_MINIMO_CUENTA_S;
     /* NO se cierra el reloj aqui, y es deliberado: `segundos()` ya cuenta el
        segmento abierto —igual que `getActiveSec()` justo arriba—, asi que
        cerrarlo antes de leer era una SEGUNDA forma de hacer lo mismo. El banco
@@ -228,9 +230,10 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
        cierra el segmento al pasar a 'done', que es donde toca. */
     /* s172 · el 4o argumento son los datos del evento (dual-write); `motivo`
        separa el plan agotado ('natural') de «Finalizar» ('early', §6.3). */
-    completeBreathSession(routine.id, activeMin, relojHold.segundos(),
+    if (!sinContar) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
       respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
     hechoRef.current = respiraHecho(routine, stage, round, breathCount);
+    sinContarRef.current = sinContar;
     try { playSound('breathe.session.end'); } catch (e) {}
     setStage('done');
   };
@@ -275,6 +278,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
         feedback={inPath ? undefined : <SessionFeedback routineId={routine.id} kind="breathe" accent="var(--breathe)" />}
+        sinContar={sinContarRef.current}
       />
     );
   }

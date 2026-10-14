@@ -96,14 +96,17 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   // este componente). R4 (s110): acredita minutos REALES medidos, no el
   // `routine.min` declarado (las stats heredaban el número declarado).
   const dispatchComplete = () => {
-    /* Sin las pausas, como el runner v1 (useV1SessionClock); el «Tiempo» del
-       cierre se congela aquí y no sigue corriendo en cada pintada. */
-    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
-    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
+    /* Sin las pausas, como el runner v1 (useV1SessionClock), también en el «Tiempo»
+       del cierre, que se congela aquí; y con menos de medio minuto, no cuenta. */
+    const sesionSec = relojSesion.segundos();
+    const realMin = Math.max(1, Math.round(sesionSec / 60));
+    tiempoSecRef.current = Math.round(sesionSec);
+    sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S;
     /* s170 · igual que en el runner v1: se LEE sin cerrar el reloj (segundos()
        ya cuenta el segmento abierto) y se congela en un ref, porque el 'done'
        se re-renderiza. */
     activeSecRef.current = Math.round(relojActivo.segundos());
+    if (sinContarRef.current) return;
     /* s172 · el tercer argumento son los datos del evento (dual-write): se arma
        aquí porque `sessionStart` y el reloj activo solo existen aquí. */
     const ev = legacyEventoSesion(routine, sessionStart.current, activeSecRef.current, inPath);
@@ -121,7 +124,8 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   const relojActivo = useActiveClock();
   const activeSecRef = useRefMV(0);
   const relojSesion = useV1SessionClock(stage, paused, 'active');
-  const paredSecRef = useRefMV(0);
+  const tiempoSecRef = useRefMV(0);
+  const sinContarRef = useRefMV(false);
   const step = routine.steps[stepIdx];
 
   // Preparación 3s
@@ -170,7 +174,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
       if (e.key === 'ArrowLeft') goPrev();
       // Enter cierra el DONE salvo foco en un control / modificadores / IME —
       // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -219,7 +223,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
 
   // COMPLETADO
   if (stage === 'done') {
-    const totalSec = paredSecRef.current;
+    const totalSec = tiempoSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     return (
@@ -239,6 +243,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
         feedback={inPath ? undefined : <SessionFeedback routineId={routine.id} kind={kind} accent={accent} />}
+        sinContar={sinContarRef.current}
       />
     );
   }

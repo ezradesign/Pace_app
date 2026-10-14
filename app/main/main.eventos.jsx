@@ -14,7 +14,8 @@
      abrirLogros()          pace:open-achievements
      abrirApoyo()           pace:open-support         (sesión 16 / v0.11.11)
      abrirStats() · abrirBiblioteca(kind) · abrirAgua() · empezarRespira(r, g)
-       · previsualizar({ routine, kind })        pace:sidebar-action (s180)
+       · previsualizar({ routine, kind }) · seguirCuerpo(r, kind, g)
+                                                 pace:sidebar-action (s180)
    s194: resume/repeat/suggest anotan la PUERTA de la sesión (paceOrigenSesion,
    state-events.jsx): 'sidebar', o 'parada' si el detalle trae `parada: true`.
 
@@ -84,10 +85,15 @@ function usePaceEventos(acciones) {
       if (d.kind === 'resume' && d.targetId) {
         /* Reanudar entra por `empezarRespira` y no por un camino propio:
            asi la rutina con apnea vuelve a pasar por su modal de seguridad y
-           el guard de acceso sigue siendo el mismo. */
+           el guard de acceso sigue siendo el mismo. Mueve y Estira (sesiones-9)
+           van directos a su sesion, sin la vista previa: su guard de acceso ya
+           lo pasa `leerCuerpoGuardada`. */
         const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
-        const r = g && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
-        if (r) a.empezarRespira(r, g);
+        const r = g && g.routineId === d.targetId && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
+        if (r) { a.empezarRespira(r, g); return; }
+        const c = window.leerCuerpoGuardada && window.leerCuerpoGuardada();
+        const cu = c && c.routineId === d.targetId && window.cuerpoRutina(c.routineId);
+        if (cu) a.seguirCuerpo(cu.routine, c.kind, c);
         return;
       }
       if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {

@@ -123,11 +123,16 @@ function sidebarActionView(accion, t, tn, lang) {
     return v !== id + '.name' ? v : dato;
   };
   if (accion.kind === 'resume') {
+    /* Respira, o Mueve y Estira por su paso (sesiones-9); las propias van como Mueve. */
     const r = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId);
-    if (!r) return null;
+    const cu = r ? null : (window.cuerpoRutina && window.cuerpoRutina(accion.targetId));
+    const c = r || (cu && cu.routine);
+    if (!c) return null;
     return {
-      rotulo: t('sidebar.action.continue'), antes: '', titulo: nombre(accion.targetId, r.name), modulo: 'respira',
-      meta: accion.rondas ? tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) : t('sidebar.action.resume.meta'),
+      rotulo: t('sidebar.action.continue'), antes: '', titulo: nombre(accion.targetId, c.name),
+      modulo: r ? 'respira' : (cu.source === 'move' ? 'mueve' : 'estira'),
+      meta: accion.pasos ? tn('sidebar.action.resume.step', { n: accion.paso, m: accion.pasos })
+        : accion.rondas ? tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) : t('sidebar.action.resume.meta'),
     };
   }
   if (accion.kind === 'path') {

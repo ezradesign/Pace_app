@@ -49,23 +49,26 @@ function Sidebar() {
     return function () { window.removeEventListener('pace:eventos', alCambiar); };
   }, []);
 
-  /* La Respira a medias también cambia en OTRA pestaña: se empieza, se sigue o
-     se deja allí (caza del 14 oct., sesiones-6). La tarjeta se vuelve a mirar
-     cuando cambian su registro o su latido, y cuando el latido caduca; el valor
-     solo cambia si cambia lo que se ofrece, así que latir no repinta nada. */
-  const respiraClave = function () {
-    const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
+  /* La sesión a medias (Respira, Mueve o Estira) también cambia en OTRA pestaña:
+     se empieza, se sigue o se deja allí (caza del 14 oct., sesiones-6). La tarjeta
+     se vuelve a mirar cuando cambian su registro o su latido, y cuando el latido
+     caduca; el valor solo cambia si cambia lo que se ofrece, así que latir no
+     repinta nada. */
+  const medias = function () { return (window.sesionAMedias && window.sesionAMedias()) || null; };
+  const mediasClave = function () {
+    const g = medias();
     return g ? g.routineId + '|' + g.savedAt : '';
   };
-  const [, mirarRespira] = React.useState(respiraClave);
+  const [, mirarMedias] = React.useState(mediasClave);
   React.useEffect(function () {
     let caduca = null;
     const mirar = function (e) {
-      if (e && e.key && e.key.indexOf('pace.breathe.') !== 0) return;
-      mirarRespira(respiraClave());
+      if (e && e.key && e.key.indexOf('pace.breathe.') !== 0 && e.key.indexOf('pace.cuerpo.') !== 0) return;
+      mirarMedias(mediasClave());
       clearTimeout(caduca);
-      const viva = window.respiraVivaFuera && window.respiraVivaFuera();
-      if (viva) caduca = setTimeout(mirar, viva.hasta - Date.now() + 50);
+      const vivas = ['pace.breathe.viva', 'pace.cuerpo.viva']
+        .map(function (k) { return window.sesionVivaFuera && window.sesionVivaFuera(k); }).filter(Boolean);
+      if (vivas.length) caduca = setTimeout(mirar, Math.min.apply(null, vivas.map(function (v) { return v.hasta; })) - Date.now() + 50);
     };
     window.addEventListener('storage', mirar);
     return function () { window.removeEventListener('storage', mirar); clearTimeout(caduca); };
@@ -125,11 +128,11 @@ function Sidebar() {
     } catch (e) { return null; }
   })();
 
-  /* s186 · el registro de una sesion de Respira interrumpida. Se lee aqui, en
-     el cuerpo, igual que `sugerencia`: no es estado de la app sino una nota en
-     su propia clave, y la sidebar se re-renderiza al volver a la home, que es
-     cuando puede haber cambiado. */
-  const reanudable = (window.leerRespiraGuardada && window.leerRespiraGuardada()) || null;
+  /* s186 · el registro de una sesion interrumpida (Respira y, desde sesiones-9,
+     Mueve y Estira). Se lee aqui, en el cuerpo, igual que `sugerencia`: no es
+     estado de la app sino una nota en su propia clave, y la sidebar se
+     re-renderiza al volver a la home, que es cuando puede haber cambiado. */
+  const reanudable = medias();
   /* s192 · con «A tu ritmo», la siguiente pausa del día (state-ritmo.jsx). */
   const ritmo = (typeof ritmoSiguiente === 'function') ? ritmoSiguiente(state) : null;
   /* ¿La home enseña «A tu ritmo»? El día servido o la pregunta ya contestada por la

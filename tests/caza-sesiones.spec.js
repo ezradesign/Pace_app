@@ -120,7 +120,7 @@ test('una pausa larga en Mueve no suma sus minutos a la semana', async ({ page }
   await page.clock.install();
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
-  await segundos(page, 5 + 12);
+  await segundos(page, 5 + 40);   // más de medio minuto, o no cuenta (sesiones-7)
   await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
   await page.clock.runFor(20 * 60 * 1000);
   await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
@@ -132,7 +132,7 @@ test('con la página oculta una hora (la sesión en pausa), Estira no suma esa h
   await page.clock.install();
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'move.neck.3');
-  await segundos(page, 5 + 12);
+  await segundos(page, 5 + 40);
   await visibilidad(page, 'hidden');
   await dormir(page, 60 * 60 * 1000);
   await visibilidad(page, 'visible');
@@ -180,6 +180,7 @@ test('con el equipo dormido, Estira se queda en pausa en el mismo paso y no lo c
     .toHaveAttribute('title', /Reanudar/);
 
   await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
+  await segundos(page, 30);
   await hastaElCierre(page);
   const [ev] = await sesiones(page);
   expect(ev.activeSeconds, 'el rato dormido entró como trabajo').toBeLessThan(60);
@@ -191,7 +192,7 @@ test('el tiempo del cierre de Mueve no sigue corriendo al contestar «¿te ayud�
   await page.clock.install();
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
-  await segundos(page, 5 + 20);
+  await segundos(page, 5 + 40);
   await hastaElCierre(page);
   const antes = await tiempoDelCierre(page);
   await segundos(page, 30);
@@ -214,6 +215,130 @@ test('dos pestañas: la segunda no ofrece seguir una Respira que sigue viva en l
     'la segunda pestaña ofrece «Continúa» de la sesión viva en la primera').not.toBe('resume');
 
   /* Al salir en la primera, la sesión sí queda a medias, y entonces se ofrece. */
+  await sesion(a).getByRole('button', { name: /Salir/ }).click();
+  await expect(tarjeta(b), 'al salir en la primera, la segunda no ofrece seguir').toHaveAttribute('data-kind', 'resume');
+});
+
+/* ------------------------------------------------- sesiones-7 (Ez eligió A) */
+test('«Terminar» a los pocos segundos no cuenta, y el cierre dice «Sesión sin contar»', async ({ page }) => {
+  const errores = capturarErrores(page);
+  await page.clock.install();
+  await irAlArtefacto(page);
+  /* Tres veces seguidas: antes daban tres logros (Primer aliento, explorar Box, Lluvia). */
+  for (let i = 0; i < 3; i++) {
+    await abrirRespira(page, 'Box 4·4·4·4');
+    await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+    await segundos(page, 4);
+    await sesion(page).getByRole('button', { name: /Terminar/ }).click();
+    await expect(sesion(page).locator('[data-pace-sin-contar]'), 'el cierre no dice que no ha contado').toHaveCount(1);
+    await expect(sesion(page)).toContainText('Sesión sin contar');
+    await expect(sesion(page).locator('[data-pace-session-stats]')).toHaveCount(0);
+    await expect(sesion(page).getByText('¿Te ayudó esta pausa?')).toHaveCount(0);
+    await sesion(page).getByRole('button', { name: /Volver al inicio/ }).click();
+    await expect(sesion(page)).toHaveCount(0);
+  }
+  const s = await leerEstado(page);
+  expect(s.breatheSessionsTotal || 0, 'cuatro segundos contaron como sesión').toBe(0);
+  expect(hoy(s.weeklyStats && s.weeklyStats.breathMinutes), 'cuatro segundos contaron un minuto').toBe(0);
+  expect(Object.keys(s.achievements || {}), 'cuatro segundos dieron logros').toEqual([]);
+  expect(await sesiones(page)).toEqual([]);
+
+  /* Con medio minuto, sí. */
+  await abrirRespira(page, 'Box 4·4·4·4');
+  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await segundos(page, 31);
+  await sesion(page).getByRole('button', { name: /Terminar/ }).click();
+  await expect(sesion(page)).toContainText('Sesión completada');
+  expect((await sesiones(page)).length).toBe(1);
+  expect(errores).toEqual([]);
+});
+
+test('saltar todos los pasos de Estira no cuenta ni hace el plan del día', async ({ page }) => {
+  await page.clock.install();
+  await irAlArtefacto(page);
+  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await hastaElCierre(page);
+  await expect(sesion(page).locator('[data-pace-sin-contar]'), 'saltarlo todo dice «completado»').toHaveCount(1);
+  const s = await leerEstado(page);
+  expect(hoy(s.weeklyStats && s.weeklyStats.moveMinutes)).toBe(0);
+  expect((s.plan || {}).extra, 'saltarlo todo hizo el plan del día').toBeFalsy();
+  expect(await sesiones(page)).toEqual([]);
+});
+
+/* ------------------------------------------------- sesiones-8 (Ez eligió A) */
+test('el «Tiempo» del cierre de Mueve deja fuera las pausas, como la semana', async ({ page }) => {
+  await page.clock.install();
+  await irAlArtefacto(page);
+  await abrirCuerpo(page, 'Mueve', 'extra.calves');
+  await segundos(page, 5 + 40);
+  await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
+  await page.clock.runFor(20 * 60 * 1000);
+  await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
+  await segundos(page, 5);
+  await hastaElCierre(page);
+  const tiempo = await tiempoDelCierre(page);
+  expect(tiempo, 'el cierre lleva la pausa de 20 minutos dentro').toBeLessThan(60);
+  expect(tiempo).toBeGreaterThanOrEqual(45);
+  expect(hoy((await leerEstado(page)).weeklyStats.moveMinutes)).toBe(1);
+});
+
+/* ------------------------------------------------- sesiones-9 (Ez eligió A) */
+const tarjeta = (p) => p.locator('[data-pace-sidebar-accion]');
+
+test('recargar a mitad de Estira deja «Continúa · Paso 2 de 4», y se sigue por ese paso con lo hecho', async ({ page }) => {
+  const errores = capturarErrores(page);
+  await page.clock.install();
+  await irAlArtefacto(page);
+  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await segundos(page, 5 + 60);
+  await expect(sesion(page), 'GUARD: al minuto no se está en el paso 2').toContainText('Paso 2 de 4');
+
+  await page.reload();
+  await expect(tarjeta(page), 'tras recargar, la barra no ofrece seguir').toHaveAttribute('data-kind', 'resume');
+  await expect(tarjeta(page)).toContainText('Cuello');
+  await expect(tarjeta(page)).toContainText('Paso 2 de 4');
+  expect(hoy((await leerEstado(page)).weeklyStats && (await leerEstado(page)).weeklyStats.moveMinutes)).toBe(0);
+  expect(await sesiones(page), 'a medias ya contaba').toEqual([]);
+
+  await tarjeta(page).locator('[data-pace-sidebar-accion-boton]').click();
+  await expect(sesion(page)).toHaveCount(1);
+  await segundos(page, 6);
+  await expect(sesion(page), 'no siguió por el paso donde se dejó').toContainText('Paso 2 de 4');
+  await hastaElCierre(page);
+  await expect(sesion(page)).toContainText('Estiramiento completado');
+  expect(await tiempoDelCierre(page), 'el minuto de antes de recargar se perdió').toBeGreaterThanOrEqual(60);
+  const [ev] = await sesiones(page);
+  expect(ev && ev.module).toBe('stretch');
+  expect(hoy((await leerEstado(page)).weeklyStats.moveMinutes)).toBe(1);
+
+  await sesion(page).getByRole('button', { name: /Volver al inicio/ }).click();
+  expect(await tarjeta(page).getAttribute('data-kind'), 'terminada, se sigue ofreciendo').not.toBe('resume');
+  expect(errores).toEqual([]);
+});
+
+test('«Salir» a mitad de Mueve también la deja para seguir', async ({ page }) => {
+  await page.clock.install();
+  await irAlArtefacto(page);
+  await abrirCuerpo(page, 'Mueve', 'extra.calves');
+  await segundos(page, 5 + 20);
+  await sesion(page).getByRole('button', { name: /Salir/ }).click();
+  await expect(tarjeta(page)).toHaveAttribute('data-kind', 'resume');
+  await expect(tarjeta(page)).toContainText('Gemelos subrepticios');
+  await expect(tarjeta(page)).toContainText('Paso 1 de');
+});
+
+test('dos pestañas: la segunda no ofrece seguir una Estira que sigue viva en la primera', async ({ context }) => {
+  const abrir = async () => { const p = await context.newPage(); await irAlArtefacto(p); return p; };
+  const a = await abrir();
+  await abrirCuerpo(a, 'Estira', 'move.neck.3');
+  await a.waitForTimeout(5000 + 2500);
+
+  const b = await abrir();
+  await expect(tarjeta(b), 'GUARD: la barra lateral no tiene tarjeta').toHaveCount(1);
+  await b.waitForTimeout(500);
+  expect(await tarjeta(b).getAttribute('data-kind'),
+    'la segunda pestaña ofrece «Continúa» de la sesión viva en la primera').not.toBe('resume');
   await sesion(a).getByRole('button', { name: /Salir/ }).click();
   await expect(tarjeta(b), 'al salir en la primera, la segunda no ofrece seguir').toHaveAttribute('data-kind', 'resume');
 });

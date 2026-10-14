@@ -281,9 +281,9 @@ function v1DoneStats(routine, guided, tiempo, t) {
      · los descansos entre series (`mode:'rest'`) — están en la rutina, pero
        descansar no es moverse.
      · las pausas explícitas.
-   Todo eso sigue vivo en el reloj de pared de `sessionStart`, que es el que
-   alimenta los minutos acreditados: esto NO cambia lo que se acredita, saca un
-   número que hasta ahora no existía. */
+   Colocaciones y descansos sí entran en el reloj de la sesión
+   (`useV1SessionClock`), que es el que alimenta los minutos acreditados: este
+   número es el `activeSeconds` del evento, no lo que va a la semana. */
 function v1TrabajoActivo(stage, phase, step, paused) {
   return stage === 'run' && phase === 'work' && !!step && step.mode !== 'rest' && !paused;
 }
@@ -294,8 +294,8 @@ function v1TrabajoActivo(stage, phase, step, paused) {
    Las deps NO llevan `side` a propósito: cambiar de lado no interrumpe el
    trabajo, y `marcar` es idempotente. Sí llevan `step`, porque de él depende
    `step.mode` — sin él, entrar en un descanso no cerraría el segmento. */
-function useV1ActiveClock(stage, phase, step, paused) {
-  const reloj = useActiveClock();
+function useV1ActiveClock(stage, phase, step, paused, semillaMs) {
+  const reloj = useActiveClock(semillaMs);
   React.useEffect(() => {
     reloj.marcar(v1TrabajoActivo(stage, phase, step, paused));
   }, [stage, phase, step, paused]);
@@ -305,9 +305,10 @@ function useV1ActiveClock(stage, phase, step, paused) {
 /* El reloj de lo que se ACREDITA a la semana (caza del 14 oct., sesiones-2):
    la sesión en marcha, con colocaciones, cambios de lado y descansos —los
    «minutos reales» de R4—, pero sin las pausas, que hasta hoy entraban porque
-   se medía de pared. Lo usan los dos runners. */
-function useV1SessionClock(stage, paused, enMarcha) {
-  const reloj = useActiveClock();
+   se medía de pared. Lo usan los dos runners, y desde sesiones-8 es también el
+   «Tiempo» del cierre. La semilla continúa una rutina a medias. */
+function useV1SessionClock(stage, paused, enMarcha, semillaMs) {
+  const reloj = useActiveClock(semillaMs);
   React.useEffect(() => {
     reloj.marcar(stage === (enMarcha || 'run') && !paused);
   }, [stage, paused]);

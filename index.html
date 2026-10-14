@@ -1798,6 +1798,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.action.path.meta': 'Paso {n} de {m}',
   'sidebar.action.repeat.meta': 'Lo último que hiciste',
   'sidebar.action.resume.round': 'Ronda {n} de {m}',
+  'sidebar.action.resume.step': 'Paso {n} de {m}',
   'sidebar.action.resume.meta': 'La dejaste a medias',
   'sidebar.action.now': 'Para ahora',
   'sidebar.action.now.meta': 'Cabe donde estás',
@@ -1965,6 +1966,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.action.path.meta': 'Step {n} of {m}',
   'sidebar.action.repeat.meta': 'The last thing you did',
   'sidebar.action.resume.round': 'Round {n} of {m}',
+  'sidebar.action.resume.step': 'Step {n} of {m}',
   'sidebar.action.resume.meta': 'You left it unfinished',
   'sidebar.action.now': 'Right now',
   'sidebar.action.now.meta': 'Fits where you are',
@@ -2074,6 +2076,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.antidoteDone': 'Antídoto completado',
   'session.moveDone': 'Movimiento completado',
   'session.stretchDone': 'Estiramiento completado',
+  'session.notCounted': 'Sesión sin contar',
+  'session.notCountedCopy': 'Con menos de medio minuto no se cuenta. Vuelve cuando quieras.',
   'session.hold': 'Retén sin aire',
   'session.breatheAgain': 'Respirar de nuevo',
   'session.holdCue': 'Pulsa cuando sientas la necesidad de respirar.',
@@ -2256,6 +2260,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.antidoteDone': 'Antidote completed',
   'session.moveDone': 'Movement completed',
   'session.stretchDone': 'Stretch completed',
+  'session.notCounted': 'Not counted',
+  'session.notCountedCopy': 'Under half a minute doesn’t count. Come back whenever you like.',
   'session.hold': 'Hold your breath',
   'session.breatheAgain': 'Breathe again',
   'session.holdCue': 'Press when you feel the need to breathe.',
@@ -14225,8 +14231,59 @@ function useActiveClock(semillaMs) {
   return { marcar, segundos };
 }
 
-Object.assign(window, { useActiveClock, PACE_HUECO_MS });
-;Object.assign(window, { useActiveClock });
+
+
+
+
+
+
+const PACE_MINIMO_CUENTA_S = 30;
+
+
+
+
+
+
+
+
+
+const PACE_VIVA_MS = 15000;
+const PACE_PESTANA = Math.random().toString(36).slice(2);
+
+function sesionVivaFuera(clave, ahora) {
+  try {
+    const v = JSON.parse(localStorage.getItem(clave) || 'null');
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    const late = v && v.pestana !== PACE_PESTANA && Number.isFinite(v.hasta) &&
+    v.hasta > t && v.hasta - t <= PACE_VIVA_MS;
+    return late ? v : null;
+  } catch (e) {return null;}
+}
+
+function useSesionViva(clave, routineId, viva) {
+  useEffectSC(() => {
+    if (!viva || !routineId) return undefined;
+    const latir = () => {
+      try {
+        localStorage.setItem(clave, JSON.stringify({
+          pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
+      } catch (e) {}
+    };
+    const soltar = () => {
+      try {
+        const v = JSON.parse(localStorage.getItem(clave) || 'null');
+        if (v && v.pestana === PACE_PESTANA) localStorage.removeItem(clave);
+      } catch (e) {}
+    };
+    latir();
+    const id = setInterval(latir, 5000);
+    window.addEventListener('pagehide', soltar);
+    return () => {clearInterval(id);window.removeEventListener('pagehide', soltar);soltar();};
+  }, [viva]);
+}
+
+Object.assign(window, { useActiveClock, PACE_HUECO_MS, PACE_MINIMO_CUENTA_S, sesionVivaFuera, useSesionViva });
+;Object.assign(window, { useActiveClock, sesionVivaFuera, useSesionViva });
 })();
 </script>
   <script>
@@ -14549,8 +14606,15 @@ function SessionDone(_ref4)
 
 
 
-{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData } = _ref4;
+{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData, sinContar } = _ref4;
   const { t } = useT();
+
+
+  if (sinContar) {
+    doneMeta = t('session.notCounted');doneCopy = t('session.notCountedCopy');stats = [];feedback = null;
+    rootData = Object.assign({}, rootData, { 'data-pace-sin-contar': '1' });
+    const salir = onExit;onExit = (r) => salir(r === 'done' ? 'skip' : r);
+  }
 
 
 
@@ -20413,7 +20477,8 @@ function selectSidebarPrimaryAction(state, ctx) {
   if (r && r.routineId) {
     return {
       kind: 'resume', targetId: r.routineId,
-      round: r.round || 1, rondas: r.rondas || 0
+      round: r.round || 1, rondas: r.rondas || 0,
+      paso: r.paso || 0, pasos: r.pasos || 0
     };
   }
   const cur = s.paths && s.paths.current || null;
@@ -20667,11 +20732,16 @@ function sidebarActionView(accion, t, tn, lang) {
     return v !== id + '.name' ? v : dato;
   };
   if (accion.kind === 'resume') {
+
     const r = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId);
-    if (!r) return null;
+    const cu = r ? null : window.cuerpoRutina && window.cuerpoRutina(accion.targetId);
+    const c = r || cu && cu.routine;
+    if (!c) return null;
     return {
-      rotulo: t('sidebar.action.continue'), antes: '', titulo: nombre(accion.targetId, r.name), modulo: 'respira',
-      meta: accion.rondas ? tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) : t('sidebar.action.resume.meta')
+      rotulo: t('sidebar.action.continue'), antes: '', titulo: nombre(accion.targetId, c.name),
+      modulo: r ? 'respira' : cu.source === 'move' ? 'mueve' : 'estira',
+      meta: accion.pasos ? tn('sidebar.action.resume.step', { n: accion.paso, m: accion.pasos }) :
+      accion.rondas ? tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) : t('sidebar.action.resume.meta')
     };
   }
   if (accion.kind === 'path') {
@@ -20938,19 +21008,22 @@ function Sidebar() {
 
 
 
-  const respiraClave = function () {
-    const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
+
+  const medias = function () {return window.sesionAMedias && window.sesionAMedias() || null;};
+  const mediasClave = function () {
+    const g = medias();
     return g ? g.routineId + '|' + g.savedAt : '';
   };
-  const [, mirarRespira] = React.useState(respiraClave);
+  const [, mirarMedias] = React.useState(mediasClave);
   React.useEffect(function () {
     let caduca = null;
     const mirar = function (e) {
-      if (e && e.key && e.key.indexOf('pace.breathe.') !== 0) return;
-      mirarRespira(respiraClave());
+      if (e && e.key && e.key.indexOf('pace.breathe.') !== 0 && e.key.indexOf('pace.cuerpo.') !== 0) return;
+      mirarMedias(mediasClave());
       clearTimeout(caduca);
-      const viva = window.respiraVivaFuera && window.respiraVivaFuera();
-      if (viva) caduca = setTimeout(mirar, viva.hasta - Date.now() + 50);
+      const vivas = ['pace.breathe.viva', 'pace.cuerpo.viva'].
+      map(function (k) {return window.sesionVivaFuera && window.sesionVivaFuera(k);}).filter(Boolean);
+      if (vivas.length) caduca = setTimeout(mirar, Math.min.apply(null, vivas.map(function (v) {return v.hasta;})) - Date.now() + 50);
     };
     window.addEventListener('storage', mirar);
     return function () {window.removeEventListener('storage', mirar);clearTimeout(caduca);};
@@ -21014,7 +21087,7 @@ function Sidebar() {
 
 
 
-  const reanudable = window.leerRespiraGuardada && window.leerRespiraGuardada() || null;
+  const reanudable = medias();
 
   const ritmo = typeof ritmoSiguiente === 'function' ? ritmoSiguiente(state) : null;
 
@@ -24868,47 +24941,10 @@ function olvidarRespiraGuardada() {
 
 
 
-
-
-
-
-
 const RESPIRA_VIVA_KEY = 'pace.breathe.viva';
-const RESPIRA_VIVA_MS = 15000;
-const RESPIRA_PESTANA = Math.random().toString(36).slice(2);
-
-function respiraVivaFuera(ahora) {
-  try {
-    const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
-    const t = Number.isFinite(ahora) ? ahora : Date.now();
-    const late = v && v.pestana !== RESPIRA_PESTANA && Number.isFinite(v.hasta) &&
-    v.hasta > t && v.hasta - t <= RESPIRA_VIVA_MS;
-    return late ? v : null;
-  } catch (e) {return null;}
-}
-
-function useRespiraViva(routine, stage) {
-  const viva = stage !== 'done';
-  useEffectBS(() => {
-    if (!viva || !routine) return undefined;
-    const latir = () => {
-      try {
-        localStorage.setItem(RESPIRA_VIVA_KEY, JSON.stringify({
-          pestana: RESPIRA_PESTANA, routineId: routine.id, hasta: Date.now() + RESPIRA_VIVA_MS }));
-      } catch (e) {}
-    };
-    const soltar = () => {
-      try {
-        const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
-        if (v && v.pestana === RESPIRA_PESTANA) localStorage.removeItem(RESPIRA_VIVA_KEY);
-      } catch (e) {}
-    };
-    latir();
-    const id = setInterval(latir, 5000);
-    window.addEventListener('pagehide', soltar);
-    return () => {clearInterval(id);window.removeEventListener('pagehide', soltar);soltar();};
-  }, [viva]);
-}
+const respiraVivaFuera = (ahora) => sesionVivaFuera(RESPIRA_VIVA_KEY, ahora);
+const useRespiraViva = (routine, stage) =>
+useSesionViva(RESPIRA_VIVA_KEY, routine && routine.id, stage !== 'done');
 
 
 
@@ -25152,7 +25188,7 @@ Object.assign(window, {
   respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraVivaFuera, useRespiraViva
 });
-;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraVivaFuera, useRespiraViva, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
 })();
 </script>
   <script>
@@ -25199,6 +25235,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
   const relojHold = useHoldClock(rein.holdSec);
   const hechoRef = useRef(null);
+  const sinContarRef = useRef(false);
   const getActiveSec = () => relojActivo.segundos();
 
   const sequence = getSequence(routine);
@@ -25328,7 +25365,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
 
 
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -25378,6 +25415,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
     const activeMin = Math.max(1, Math.round(getActiveSec() / 60));
+    const sinContar = getActiveSec() < PACE_MINIMO_CUENTA_S;
 
 
 
@@ -25387,9 +25425,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
 
-    completeBreathSession(routine.id, activeMin, relojHold.segundos(),
+    if (!sinContar) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
     respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
     hechoRef.current = respiraHecho(routine, stage, round, breathCount);
+    sinContarRef.current = sinContar;
     try {playSound('breathe.session.end');} catch (e) {}
     setStage('done');
   };
@@ -25433,7 +25472,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
         buttonVariant: "terracota",
         doneButtonLabel: inPath ? t('session.next') : undefined,
         atmosphere: atmo,
-        feedback: inPath ? undefined : React.createElement(SessionFeedback, { routineId: routine.id, kind: "breathe", accent: "var(--breathe)" }) }
+        feedback: inPath ? undefined : React.createElement(SessionFeedback, { routineId: routine.id, kind: "breathe", accent: "var(--breathe)" }),
+        sinContar: sinContarRef.current }
       ));
 
   }
@@ -26150,12 +26190,15 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
   const dispatchComplete = () => {
 
 
-    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
-    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
+    const sesionSec = relojSesion.segundos();
+    const realMin = Math.max(1, Math.round(sesionSec / 60));
+    tiempoSecRef.current = Math.round(sesionSec);
+    sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S;
 
 
 
     activeSecRef.current = Math.round(relojActivo.segundos());
+    if (sinContarRef.current) return;
 
 
     const ev = legacyEventoSesion(routine, sessionStart.current, activeSecRef.current, inPath);
@@ -26173,7 +26216,8 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
   const relojActivo = useActiveClock();
   const activeSecRef = useRefMV(0);
   const relojSesion = useV1SessionClock(stage, paused, 'active');
-  const paredSecRef = useRefMV(0);
+  const tiempoSecRef = useRefMV(0);
+  const sinContarRef = useRefMV(false);
   const step = routine.steps[stepIdx];
 
 
@@ -26222,7 +26266,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
       if (e.key === 'ArrowLeft') goPrev();
 
 
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -26271,7 +26315,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
 
 
   if (stage === 'done') {
-    const totalSec = paredSecRef.current;
+    const totalSec = tiempoSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     return (
@@ -26290,7 +26334,8 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
         atmosphere: atmo,
-        feedback: inPath ? undefined : React.createElement(SessionFeedback, { routineId: routine.id, kind: kind, accent: accent }) }
+        feedback: inPath ? undefined : React.createElement(SessionFeedback, { routineId: routine.id, kind: kind, accent: accent }),
+        sinContar: sinContarRef.current }
       ));
 
   }
@@ -26942,8 +26987,8 @@ function v1TrabajoActivo(stage, phase, step, paused) {
 
 
 
-function useV1ActiveClock(stage, phase, step, paused) {
-  const reloj = useActiveClock();
+function useV1ActiveClock(stage, phase, step, paused, semillaMs) {
+  const reloj = useActiveClock(semillaMs);
   React.useEffect(() => {
     reloj.marcar(v1TrabajoActivo(stage, phase, step, paused));
   }, [stage, phase, step, paused]);
@@ -26954,8 +26999,9 @@ function useV1ActiveClock(stage, phase, step, paused) {
 
 
 
-function useV1SessionClock(stage, paused, enMarcha) {
-  const reloj = useActiveClock();
+
+function useV1SessionClock(stage, paused, enMarcha, semillaMs) {
+  const reloj = useActiveClock(semillaMs);
   React.useEffect(() => {
     reloj.marcar(stage === (enMarcha || 'run') && !paused);
   }, [stage, paused]);
@@ -27388,6 +27434,143 @@ Object.assign(window, { CuerpoV1, v1Reservas });
 ;Object.assign(window, { _extends, v1Reservas, CueV1, ColaV1, useV1Glifo, AroV1, CuerpoV1 });
 })();
 </script>
+  <!-- La rutina a medias (pace.cuerpo.v1): se puede seguir como Respira. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const CUERPO_KEY = 'pace.cuerpo.v1';
+const CUERPO_VIVA_KEY = 'pace.cuerpo.viva';
+const CUERPO_VENTANA_MS = 2 * 60 * 60 * 1000;
+
+
+
+function cuerpoRutina(id) {
+  const c = window.resolveBodyRoutine && window.resolveBodyRoutine(id);
+  if (c && c.routine) return c;
+  const propia = window.getCustomRoutine && window.getCustomRoutine(id);
+  return propia ? { routine: propia, source: 'move' } : null;
+}
+
+
+
+function leerCuerpoGuardada(ahora) {
+  try {
+    const g = JSON.parse(localStorage.getItem(CUERPO_KEY) || 'null');
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    if (!g || g.v !== 1 || typeof g.routineId !== 'string') return null;
+    if (!Number.isFinite(g.savedAt) || t < g.savedAt || t - g.savedAt > CUERPO_VENTANA_MS) return null;
+    if (toISODate(g.savedAt) !== toISODate(t)) return null;
+    const c = cuerpoRutina(g.routineId);
+    const pasos = c && Array.isArray(c.routine.steps) ? c.routine.steps.length : 0;
+    if (!Number.isInteger(g.step) || g.step < 0 || g.step >= pasos) return null;
+    if (window.canAccessRoutine && !window.canAccessRoutine(g.routineId)) return null;
+    if (sesionVivaFuera(CUERPO_VIVA_KEY, t)) return null;
+
+
+    const planS = Math.max(60, (c.routine.min || 0) * 60,
+    estimateDuration(moveRutinaGuiada(c.routine), v1RestSeconds()).maxSec || 0);
+    if (!Number.isFinite(g.sesionMs) || g.sesionMs < 0 || g.sesionMs > planS * 3000) return null;
+    return Object.assign({}, g, {
+      kind: g.kind === 'extra' ? 'extra' : 'move', paso: g.step + 1, pasos: pasos,
+      startedAt: Number.isFinite(g.startedAt) ? g.startedAt : g.savedAt
+    });
+  } catch (e) {return null;}
+}
+
+function olvidarCuerpoGuardada() {
+  try {localStorage.removeItem(CUERPO_KEY);} catch (e) {}
+}
+
+
+
+function cuerpoReanudacion(routine, guardado) {
+  const ahora = Date.now();
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false };
+  if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
+  const n = (x) => Number.isFinite(x) && x > 0 ? x : 0;
+  return {
+    step: Math.min(Math.max(0, guardado.step | 0), routine.steps.length - 1),
+    sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
+    startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
+    reanudada: true
+  };
+}
+
+
+
+function sesionAMedias() {
+  const r = window.leerRespiraGuardada && window.leerRespiraGuardada() || null;
+  const c = leerCuerpoGuardada();
+  if (r && c) return c.savedAt > r.savedAt ? c : r;
+  return r || c;
+}
+
+
+
+
+function useCuerpoPersistencia(d) {
+  const ref = React.useRef(d);
+  ref.current = d;
+  const escribir = () => {
+    const c = ref.current;
+    if (!c || !c.routine || c.inPath || c.stage !== 'run') return;
+    try {
+      localStorage.setItem(CUERPO_KEY, JSON.stringify({
+        v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx,
+        sesionMs: Math.round(c.relojSesion.segundos() * 1000),
+        activoMs: Math.round(c.relojActivo.segundos() * 1000),
+        reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now()
+      }));
+    } catch (e) {}
+  };
+  React.useEffect(() => {
+    if (d.stage === 'done') {olvidarCuerpoGuardada();return;}
+    escribir();
+  }, [d.stage, d.stepIdx, d.paused]);
+  React.useEffect(() => {
+    const alEsconder = () => {if (document.visibilityState === 'hidden') escribir();};
+    window.addEventListener('pagehide', escribir);
+    document.addEventListener('visibilitychange', alEsconder);
+    return () => {
+      window.removeEventListener('pagehide', escribir);
+      document.removeEventListener('visibilitychange', alEsconder);
+      escribir();
+    };
+  }, []);
+  useSesionViva(CUERPO_VIVA_KEY, d.inPath ? null : d.routine && d.routine.id, d.stage !== 'done');
+}
+
+Object.assign(window, {
+  cuerpoRutina, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia
+});
+;Object.assign(window, { cuerpoRutina, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -27425,7 +27608,7 @@ Object.assign(window, { CuerpoV1, v1Reservas });
 
 const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
 
-function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _ref;
+function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, reanudar } = _ref;
   const { t, tn, lang } = useT();
 
 
@@ -27443,41 +27626,51 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
   routine;
 
+
+  const [rein] = useStateV1(() => cuerpoReanudacion(routine, reanudar));
   const [stage, setStage] = useStateV1('prep');
   const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS);
-  const [stepIdx, setStepIdx] = useStateV1(0);
+  const [stepIdx, setStepIdx] = useStateV1(rein.step);
   const [phase, setPhase] = useStateV1('place');
   const [side, setSide] = useStateV1(0);
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
-  const sessionStart = useRefV1(Date.now());
+  const sessionStart = useRefV1(rein.startedAt);
 
 
-  const repsGuidedRef = useRefV1(0);
+  const repsGuidedRef = useRefV1(rein.reps);
   const activeSecRef = useRefV1(0);
   const step = routine.steps[stepIdx];
 
 
 
 
-  const relojActivo = useV1ActiveClock(stage, phase, step, paused);
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
 
 
 
-  const relojSesion = useV1SessionClock(stage, paused);
-  const paredSecRef = useRefV1(0);
+  const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
+  const tiempoSecRef = useRefV1(0);
+  const sinContarRef = useRefV1(false);
+  useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
+    reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current });
 
   const dispatchComplete = (early) => {
-    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
-    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
+
+
+    const sesionSec = relojSesion.segundos();
+    const realMin = Math.max(1, Math.round(sesionSec / 60));
+    tiempoSecRef.current = Math.round(sesionSec);
+    sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S;
 
 
 
 
 
     activeSecRef.current = Math.round(relojActivo.segundos());
+    if (sinContarRef.current) return;
 
 
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, early, inPath);
@@ -27520,9 +27713,10 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   };
 
 
+  const arrancar = () => {if (!rein.reanudada) sessionStart.current = Date.now();setStage('run');startStep(rein.step);};
   useEffectV1(() => {
     if (stage !== 'prep' || paused) return;
-    if (prepCount <= 0) {sessionStart.current = Date.now();setStage('run');startStep(0);return;}
+    if (prepCount <= 0) {arrancar();return;}
     const to = setTimeout(() => setPrepCount((c) => Math.max(0, c - 1)), 1000);
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
@@ -27634,7 +27828,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -27646,7 +27840,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
       React.createElement(SessionPrep, {
         routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft, prepCount: prepCount,
         copy: sessionPrepCopy(routine, tn),
-        onSkip: () => {sessionStart.current = Date.now();setPrepCount(0);setStage('run');startStep(0);},
+        onSkip: () => {setPrepCount(0);arrancar();},
         atmosphere: atmo }
       ));
 
@@ -27654,7 +27848,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
   if (stage === 'done') {
-    const totalSec = paredSecRef.current;
+    const totalSec = tiempoSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
 
@@ -27673,7 +27867,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
         atmosphere: atmo,
-        feedback: inPath ? undefined : React.createElement(SessionFeedback, { routineId: routine.id, kind: kind, accent: accent }) }
+        feedback: inPath ? undefined : React.createElement(SessionFeedback, { routineId: routine.id, kind: kind, accent: accent }),
+        sinContar: sinContarRef.current }
       ));
 
   }
@@ -40471,6 +40666,7 @@ Object.assign(window, { SidebarHandle });
 
 
 
+
 const { useState: useStateEv, useEffect: useEffectEv } = React;
 
 function usePaceEventos(acciones) {
@@ -40535,9 +40731,14 @@ function usePaceEventos(acciones) {
 
 
 
+
+
         const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
-        const r = g && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
-        if (r) a.empezarRespira(r, g);
+        const r = g && g.routineId === d.targetId && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
+        if (r) {a.empezarRespira(r, g);return;}
+        const c = window.leerCuerpoGuardada && window.leerCuerpoGuardada();
+        const cu = c && c.routineId === d.targetId && window.cuerpoRutina(c.routineId);
+        if (cu) a.seguirCuerpo(cu.routine, c.kind, c);
         return;
       }
       if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
@@ -40621,8 +40822,9 @@ function PaceApp() {
 
 
 
+
   const [reanudable, setReanudable] = useStateMain(
-    () => window.leerRespiraGuardada && window.leerRespiraGuardada() || null);
+    () => window.sesionAMedias && window.sesionAMedias() || null);
   const [pendienteReanudar, setPendienteReanudar] = useStateMain(null);
 
 
@@ -40684,7 +40886,7 @@ function PaceApp() {
 
   useEffectMain(() => {
     if (view.type !== 'home') return;
-    setReanudable(window.leerRespiraGuardada && window.leerRespiraGuardada() || null);
+    setReanudable(window.sesionAMedias && window.sesionAMedias() || null);
   }, [view.type]);
 
 
@@ -40749,7 +40951,11 @@ function PaceApp() {
     abrirBiblioteca: abrirBiblioteca,
     abrirAgua: () => setOpenHydrate(true),
     empezarRespira: handleStartBreathe,
-    previsualizar: setPreviewRoutine
+    previsualizar: setPreviewRoutine,
+    seguirCuerpo: (routine, kind, reanudar) => {
+      setOpenLibrary(null);
+      setView({ type: 'move-session', routine, kind, reanudar });
+    }
   });
 
   const handleStartExtra = (routine) => {
@@ -40988,7 +41194,7 @@ function PaceApp() {
     view.type === 'breathe-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
     React.createElement(BreatheSession, { routine: view.routine, reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) })),
     view.type === 'move-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
-    React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', onExit: (_reason) => setView({ type: 'home' }) })),
+    React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) })),
 
 
 

@@ -155,50 +155,13 @@ function olvidarRespiraGuardada() {
   try { localStorage.removeItem(RESPIRA_KEY); } catch (e) {}
 }
 
-/* DOS PESTAÑAS (caza del 14 oct., sesiones-6). El registro se escribe en cuanto
-   se empieza a respirar, así que otra pestaña lo leía como «a medias» mientras
-   la sesión seguía viva aquí; si se seguía allí, respiraban las dos y contaban
-   las dos. La pestaña que tiene la sesión abierta deja un LATIDO en su propia
-   clave (cada 5 s, válido 15 s), y mientras late en otra, aquí no se ofrece.
-   Al terminar, salir o cerrar se borra y vuelve a ofrecerse; si la pestaña
-   muere sin borrarlo, caduca solo. Va aparte del registro porque es otra cosa:
-   el registro dice por dónde ibas, el latido dice que alguien sigue ahí. */
+/* DOS PESTAÑAS (caza del 14 oct., sesiones-6): la pestaña con la sesión abierta
+   late en su clave y las demás no la ofrecen a medias mientras late. El latido
+   es el de Mueve y Estira (`useSesionViva`, SessionClock.jsx). */
 const RESPIRA_VIVA_KEY = 'pace.breathe.viva';
-const RESPIRA_VIVA_MS = 15000;
-const RESPIRA_PESTANA = Math.random().toString(36).slice(2);
-
-function respiraVivaFuera(ahora) {
-  try {
-    const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
-    const t = Number.isFinite(ahora) ? ahora : Date.now();
-    const late = v && v.pestana !== RESPIRA_PESTANA && Number.isFinite(v.hasta) &&
-      v.hasta > t && v.hasta - t <= RESPIRA_VIVA_MS;
-    return late ? v : null;
-  } catch (e) { return null; }
-}
-
-function useRespiraViva(routine, stage) {
-  const viva = stage !== 'done';
-  useEffectBS(() => {
-    if (!viva || !routine) return undefined;
-    const latir = () => {
-      try {
-        localStorage.setItem(RESPIRA_VIVA_KEY, JSON.stringify({
-          pestana: RESPIRA_PESTANA, routineId: routine.id, hasta: Date.now() + RESPIRA_VIVA_MS }));
-      } catch (e) {}
-    };
-    const soltar = () => {
-      try {
-        const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
-        if (v && v.pestana === RESPIRA_PESTANA) localStorage.removeItem(RESPIRA_VIVA_KEY);
-      } catch (e) {}
-    };
-    latir();
-    const id = setInterval(latir, 5000);
-    window.addEventListener('pagehide', soltar);
-    return () => { clearInterval(id); window.removeEventListener('pagehide', soltar); soltar(); };
-  }, [viva]);
-}
+const respiraVivaFuera = (ahora) => sesionVivaFuera(RESPIRA_VIVA_KEY, ahora);
+const useRespiraViva = (routine, stage) =>
+  useSesionViva(RESPIRA_VIVA_KEY, routine && routine.id, stage !== 'done');
 
 /* respiraReanudacion(routine, guardado) -> los valores de arranque de la
    sesión. PURA. Sin registro utilizable devuelve el comienzo de siempre, así

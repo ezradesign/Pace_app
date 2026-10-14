@@ -182,6 +182,7 @@ function selectSidebarPrimaryAction(state, ctx) {
     return {
       kind: 'resume', targetId: r.routineId,
       round: r.round || 1, rondas: r.rondas || 0,
+      paso: r.paso || 0, pasos: r.pasos || 0,   // Mueve y Estira (sesiones-9)
     };
   }
   const cur = (s.paths && s.paths.current) || null;

@@ -33,7 +33,7 @@
 
 const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
 
-function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
+function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const { t, tn, lang } = useT();
   // s138: atmosfera tambien fuera de Caminos (revisa s99); el color sigue
   // saliendo del kind, como en el runner legacy.
@@ -51,41 +51,51 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
 
+  /* Una rutina a medias sigue por su paso, con lo hecho (MoveSessionV1.reanudar.jsx). */
+  const [rein] = useStateV1(() => cuerpoReanudacion(routine, reanudar));
   const [stage, setStage] = useStateV1('prep');    // 'prep' | 'run' | 'done'
   const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS); // s113: prep 5 s (antes 3)
-  const [stepIdx, setStepIdx] = useStateV1(0);
+  const [stepIdx, setStepIdx] = useStateV1(rein.step);
   const [phase, setPhase] = useStateV1('place');   // 'place' | 'work' | 'change'
   const [side, setSide] = useStateV1(0);           // 0 = 1er lado, 1 = 2º lado
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
-  const sessionStart = useRefV1(Date.now());   // wall-clock: incluye pausas y colocaciones
+  const sessionStart = useRefV1(rein.startedAt);   // wall-clock: incluye pausas y colocaciones
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
   // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
-  const repsGuidedRef = useRefV1(0);
+  const repsGuidedRef = useRefV1(rein.reps);
   const activeSecRef = useRefV1(0);   // congelado al completar, no al renderizar
   const step = routine.steps[stepIdx];
   /* Reloj de TIEMPO ACTIVO (s170) — lo que Respira tiene desde s98 y esta
      familia no tenía: hasta ahora su único tiempo era `sessionStart`, o sea
      reloj de pared CON LAS PAUSAS DENTRO. La política de qué cuenta vive en
      `v1TrabajoActivo` (support), que es donde puede probarse sola. */
-  const relojActivo = useV1ActiveClock(stage, phase, step, paused);
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
   /* Lo que se acredita a la semana: la sesión en marcha con sus colocaciones y
      descansos (R4), pero sin las pausas ni el rato con la página congelada. Con
      el reloj de pared, una pausa de 20 minutos eran 20 minutos de Mueve. */
-  const relojSesion = useV1SessionClock(stage, paused);
-  const paredSecRef = useRefV1(0);    // el «Tiempo» del cierre, congelado al completar
+  const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
+  const tiempoSecRef = useRefV1(0);    // el «Tiempo» del cierre, congelado al completar
+  const sinContarRef = useRefV1(false); // menos de PACE_MINIMO_CUENTA_S: no se acredita (sesiones-7)
+  useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
+    reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current });
 
   const dispatchComplete = (early) => {
-    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
-    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
+    /* El «Tiempo» del cierre es el de la sesión sin pausas, el mismo que va a la
+       semana (Ez, sesiones-8); con la pared, 20 min de pausa eran «21:35». */
+    const sesionSec = relojSesion.segundos();
+    const realMin = Math.max(1, Math.round(sesionSec / 60));
+    tiempoSecRef.current = Math.round(sesionSec);
+    sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S;
     /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
        tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
        s166); el efecto lo cierra al pasar a 'done'. Y se congela en un ref
        porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo, como
        le pasaba al «Tiempo» del cierre: contestar «¿te ayudó?» lo movía. */
     activeSecRef.current = Math.round(relojActivo.segundos());
+    if (sinContarRef.current) return;   // saltar todos los pasos no es haberla hecho
     /* s172 · los datos del evento (dual-write) se arman en el support: el plan
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, early, inPath);
@@ -127,10 +137,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     advanceStep(true);   // s172: «Terminar antes» ES el `early` de §6.3
   };
 
-  // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).
+  // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún); el de la rutina a medias, si la hay.
+  const arrancar = () => { if (!rein.reanudada) sessionStart.current = Date.now(); setStage('run'); startStep(rein.step); };
   useEffectV1(() => {
     if (stage !== 'prep' || paused) return;
-    if (prepCount <= 0) { sessionStart.current = Date.now(); setStage('run'); startStep(0); return; }
+    if (prepCount <= 0) { arrancar(); return; }
     const to = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
@@ -242,7 +253,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
       // el propio CTA se activan por su onClick) o haya modificadores/IME —
       // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -254,7 +265,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       <SessionPrep
         routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft} prepCount={prepCount}
         copy={sessionPrepCopy(routine, tn)}
-        onSkip={() => { sessionStart.current = Date.now(); setPrepCount(0); setStage('run'); startStep(0); }}
+        onSkip={() => { setPrepCount(0); arrancar(); }}
         atmosphere={atmo}
       />
     );
@@ -262,7 +273,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   // COMPLETADO
   if (stage === 'done') {
-    const totalSec = paredSecRef.current;
+    const totalSec = tiempoSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):
@@ -282,6 +293,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
         feedback={inPath ? undefined : <SessionFeedback routineId={routine.id} kind={kind} accent={accent} />}
+        sinContar={sinContarRef.current}
       />
     );
   }
