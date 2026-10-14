@@ -33,7 +33,8 @@ test('respira-5 · el aviso de logro no tapa el cierre de la sesión: sale al vo
   const sesion = page.locator('[data-pace-session-root]');
   await sesion.getByRole('button', { name: 'Empezar ahora' }).click();
   await expect(page.locator('[data-pace-breathe-phase]')).toBeVisible();
-  for (let i = 0; i < 4; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
+  /* Más de medio minuto: con menos, el cierre es «Sesión sin contar» (sesiones-7). */
+  for (let i = 0; i < 31; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
   await sesion.getByRole('button', { name: /Terminar/ }).click();
   await page.locator('[data-pace-session-stats]').waitFor();
   await page.clock.fastForward(500);

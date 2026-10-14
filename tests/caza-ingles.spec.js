@@ -271,7 +271,8 @@ test('ingles-15 · el cierre pregunta «Did this break help?»', async ({ page, 
   const sesion = page.locator('[data-pace-session-root]');
   await sesion.getByRole('button', { name: 'Start now', exact: true }).click();
   await expect(page.locator('[data-pace-breathe-phase]')).toBeVisible();
-  for (let i = 0; i < 4; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
+  /* Más de medio minuto: con menos, el cierre es «Sesión sin contar» (sesiones-7). */
+  for (let i = 0; i < 31; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
   await sesion.getByRole('button', { name: /Finish/ }).click();
   await expect(sesion).toContainText('Did this break help?');
 });
