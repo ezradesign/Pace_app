@@ -117,6 +117,9 @@ test('Respira: la retención tampoco cuenta el rato dormido', async ({ page }) =
 
 /* ---------------------------------------------------------------- sesiones-2 */
 test('una pausa larga en Mueve no suma sus minutos a la semana', async ({ page }) => {
+  /* Veinte minutos de reloj virtual con la sesión montada son ~50 s reales a solas: con la
+     suite entera el minuto de serie se queda corto. */
+  test.setTimeout(120_000);
   await page.clock.install();
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
@@ -268,6 +271,7 @@ test('saltar todos los pasos de Estira no cuenta ni hace el plan del día', asyn
 
 /* ------------------------------------------------- sesiones-8 (Ez eligió A) */
 test('el «Tiempo» del cierre de Mueve deja fuera las pausas, como la semana', async ({ page }) => {
+  test.setTimeout(120_000);   // la pausa de 20 minutos, como en sesiones-2
   await page.clock.install();
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');

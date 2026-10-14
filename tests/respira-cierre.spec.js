@@ -91,7 +91,9 @@ test('«Terminar» en la ronda 1 dice las respiraciones hechas y ninguna ronda',
   await page.getByRole('button', { name: /^Respira/ }).click();
   await page.getByRole('heading', { name: 'Rondas express', exact: true }).click();
   await aceptarAviso(page);
-  await segundos(page, 24);
+  /* Más de medio minuto: con menos, el cierre es «Sesión sin contar» y no
+     pinta cifras (sesiones-7). El GUARD de abajo sigue pidiendo la ronda 1. */
+  await segundos(page, 34);
 
   const iba = await enCurso(page);
   /* GUARD: a mitad de la ronda 1 y con alguna respiración ya hecha; si no, el

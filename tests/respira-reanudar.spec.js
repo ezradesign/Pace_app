@@ -95,7 +95,8 @@ test('mientras la sesion vive hay registro, y lleva la RONDA y el tiempo practic
 /* ------------------------------------------------------------------ 2 */
 test('al TERMINAR la sesion el registro desaparece', async ({ page }) => {
   await abrirRondas(page);
-  await segundos(page, 6);
+  /* Más de medio minuto: con menos, el cierre es «Sesión sin contar» (sesiones-7). */
+  await segundos(page, 31);
   expect(await leerRegistro(page), 'GUARD: no hay registro que borrar').toBeTruthy();
 
   await page.getByRole('button', { name: /Terminar/ }).click();

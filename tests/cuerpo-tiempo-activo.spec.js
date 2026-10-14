@@ -96,13 +96,22 @@ test('el tiempo activo deja fuera descansos y pausas; el de pared los lleva dent
   expect(termino, 'GUARD: la sesion no llego al cierre, asi que no hay nada que medir').toBe(true);
 
   const activo = Number(await done.getAttribute('data-pace-active-sec'));
-  /* El tiempo de PARED se lee de la pantalla, que es donde el usuario lo ve:
-     el stat «Tiempo» en mm:ss. Leerlo de ahi y no de otro ref es lo que hace
-     que el aserto compare los DOS numeros que la app dice, no dos formas de
-     calcular el mismo. */
+  /* El «Tiempo» del cierre se lee de la pantalla, que es donde el usuario lo
+     ve, en mm:ss. Es la sesion SIN las pausas (Ez, sesiones-8): lleva dentro
+     la colocacion y los descansos, pero no los 30 s de pausa ni la preparacion. */
   const reloj = await sesion.getByText(/^\d+:\d\d$/).first().innerText();
   const [mm, ss] = reloj.split(':').map(Number);
-  const pared = mm * 60 + ss;
+  const tiempo = mm * 60 + ss;
+  /* El de PARED, con todo dentro, ya no sale en pantalla: vive en el
+     `elapsedSeconds` del evento, que es donde §6.4 lo pide. La escritura en
+     IndexedDB es asincrona, de ahi el poll. */
+  let pared = NaN;
+  await expect.poll(async () => {
+    const raw = await page.evaluate(async () => window.eventsWebReadRaw && await window.eventsWebReadRaw());
+    const ev = (raw ? JSON.parse(raw).events : []).filter(e => e.type === 'session.completed');
+    pared = ev.length ? ev[ev.length - 1].payload.elapsedSeconds : NaN;
+    return Number.isFinite(pared);
+  }, { message: 'GUARD: la sesion no dejo su session.completed' }).toBe(true);
 
   /* GUARD de cero: un `data-pace-active-sec` ausente da NaN y un 0 pasaria
      algunos de los asertos de abajo por el lado equivocado. */
@@ -122,6 +131,14 @@ test('el tiempo activo deja fuera descansos y pausas; el de pared los lleva dent
   expect(pared - activo,
     'pared y activo casi coinciden: los descansos y la pausa se estan contando como trabajo')
     .toBeGreaterThanOrEqual(75);
+
+  /* Y el «Tiempo» del cierre queda en medio, cada cosa en su sitio: deja fuera
+     la pausa y la preparacion (~35 s con la pared) y lleva dentro la colocacion
+     y los descansos (~65 s sobre el activo). Igualarlo a la pared, que es lo
+     que hacia antes de sesiones-8, o al activo cae en una de las dos lineas. */
+  expect(pared - tiempo, 'el «Tiempo» del cierre lleva la pausa dentro').toBeGreaterThanOrEqual(25);
+  expect(pared - tiempo, 'el «Tiempo» del cierre deja fuera mas que la pausa').toBeLessThanOrEqual(45);
+  expect(tiempo - activo, 'el «Tiempo» del cierre deja fuera los descansos').toBeGreaterThanOrEqual(45);
 
   expect(errores).toEqual([]);
 });
