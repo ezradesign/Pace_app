@@ -30,15 +30,9 @@ Manda sobre el relevo de abajo.
   y `main-sig4tn` (copia vieja de main del 8 oct., pendiente de que Ez diga si se borra).
 - **Recorrido por la app, 13 oct.** (v0.161.0): «Mis rutinas» saltaba el candado de PACE completo, «Sentadilla en pared»
   declaraba 2 min y duraba 3, y una treintena de botones del móvil eran pequeños para el dedo. Arreglado con sus pruebas.
-  **Ronda 2, decidida por Ez y pendiente de fotos:** en un plan, el reloj enseña los minutos del bloque siguiente en vez
-  de 00:00; «Tus rutinas» y «PACE completo» en todas partes (en vez de «Mis rutinas» y el sello «Premium»); y en inglés
-  las voces atenuadas con su nota y «Plays behind» → «In the background».
-- **Puertos:** el 8765 y el 8793 siguen ocupados por servidores de la cuenta anterior; la caza usa
-  el 8785 o el 8794 y la coordinadora, el 8775.
-- **`verify` desde la carpeta principal** tardaba más de veinte minutos porque recorría las copias de
-  `.claude/worktrees/`; ya no entra ahí (fila arriba de `DECISIONES_TECNICAS_VIGENTES.md`).
-- **Aviso de GitHub:** desde el 19 oct. `ubuntu-latest` pasa a Ubuntu 26. El job `e2e-safari` instala
-  sus librerías con `apt` y puede romperse ese día: si sale en rojo, fijar `ubuntu-24.04`.
+  **Ronda 2, en v0.162.0:** el reloj del bloque siguiente en un plan y, en inglés, las voces atenuadas y
+  «In the background». Los nombres se quedan como estaban: «Mis rutinas» con el sello «Premium» en la barra y
+  «Tus rutinas» en la biblioteca (Ez, 14 oct.: «Mis rutinas Premium me gusta más»).
 
 ## Relevo del 12 oct. 2026 (la cuenta se queda sin uso; Ez sigue desde otra)
 

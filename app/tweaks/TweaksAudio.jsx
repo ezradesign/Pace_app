@@ -71,13 +71,15 @@ function TweaksAudioBlock({ state, set }) {
         <AjustesInterruptor on={!!state.soundOn} onChange={(v) => set({ soundOn: v })} aria={t('settings.sound')} />
       </AjustesFila>
       {/* En inglés suena el tono aunque se elija una voz (Sound.voz.jsx): las
-          locuciones son en castellano, y la fila lo dice. */}
+          locuciones son en castellano. La fila lo dice, marca «Tono», que es lo que
+          suena, y las dos voces se ven atenuadas hasta que haya voz inglesa (Ez, 13
+          oct. 2026). Lo guardado no se toca: al volver al castellano vuelve la voz. */}
       <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}
                    sub={lang === 'en' ? t('settings.signal.sub.en') : undefined}>
-        <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} opciones={[
+        <AjustesPildoras aria={t('settings.signal')} valor={lang === 'en' ? 'tono' : senal} onChange={ponerSenal} opciones={[
           { v: 'tono', name: t('settings.signal.tone') },
-          { v: 'sulafat', name: t('settings.signal.clear') },
-          { v: 'bradford', name: t('settings.signal.deep') },
+          { v: 'sulafat', name: t('settings.signal.clear'), off: lang === 'en' },
+          { v: 'bradford', name: t('settings.signal.deep'), off: lang === 'en' },
         ]} />
       </AjustesFila>
       <AjustesFila id="bg" nombre={t('settings.bg')} atenuada={apagado}>

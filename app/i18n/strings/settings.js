@@ -138,7 +138,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.signal.clear':         'Clear voice',
     'settings.signal.deep':          'Deep voice',
     'settings.signal.sub.en':        'The voice only speaks Spanish: in English you hear the tone',
-    'settings.bg':                   'Plays behind',
+    'settings.bg':                   'In the background',
     'settings.bg.none':              'Nothing',
     'settings.bg.ambient':           'Ambient',
     'settings.bg.music':             'Music',

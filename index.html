@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.161.0</title>
+  <title>PACE · Foco · Cuerpo — v0.162.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3278,7 +3278,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.signal.clear': 'Clear voice',
   'settings.signal.deep': 'Deep voice',
   'settings.signal.sub.en': 'The voice only speaks Spanish: in English you hear the tone',
-  'settings.bg': 'Plays behind',
+  'settings.bg': 'In the background',
   'settings.bg.none': 'Nothing',
   'settings.bg.ambient': 'Ambient',
   'settings.bg.music': 'Music',
@@ -6036,7 +6036,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.161.0';
+const PACE_VERSION = 'v0.162.0';
 
 
 
@@ -23564,16 +23564,22 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     }
   }, [state.soundOn]);
 
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
-  const totalSec = durationSec;
-  const progress = 1 - remaining / totalSec;
-
 
 
 
 
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;
+  const siguienteDelPlan = status === 'completed' && !!aro;
+  const mostrado = siguienteDelPlan ? durationSec : remaining;
+  const mins = Math.floor(mostrado / 60);
+  const secs = mostrado % 60;
+  const totalSec = durationSec;
+  const progress = 1 - mostrado / totalSec;
+
+
+
+
+
   const modeLabel = aro ? aro.label : state.focusMode === 'foco' ? t('focus.manual.label') :
   state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
@@ -32473,6 +32479,7 @@ if (!_paceAjustesCss) {
     .pace-aj-pista { display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--paper-2); flex: 0 0 auto; }
     .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
     .pace-aj-pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); font-weight: 500; }
+    .pace-aj-pild:disabled { opacity: .4; cursor: default; }
     [data-pace-aj-modulo] .pace-aj-pild[aria-pressed="true"] { background: var(--pace-aj-ms); background: color-mix(in srgb, var(--pace-aj-m) 22%, var(--paper)); color: var(--ink); }
     .pace-aj-pild svg { width: 15px; height: 15px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
     .pace-aj-pild[data-picto] { padding: 4px 9px; }
@@ -32643,7 +32650,7 @@ function AjustesPildoras(_ref3) {let { opciones, valor, onChange, aria } = _ref3
     React.createElement("div", { className: "pace-aj-pista", role: "group", "aria-label": aria },
     opciones.map((o) =>
     React.createElement("button", { key: String(o.v), type: "button", className: "pace-aj-pild",
-      "aria-pressed": o.v === valor,
+      "aria-pressed": o.v === valor, disabled: !!o.off,
       "aria-label": o.name ? undefined : o.aria,
       title: o.name ? undefined : o.aria,
       "data-picto": o.picto && !o.name ? '' : undefined,
@@ -32795,12 +32802,14 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
     ),
 
 
+
+
     React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), atenuada: apagado,
       sub: lang === 'en' ? t('settings.signal.sub.en') : undefined },
-    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: senal, onChange: ponerSenal, opciones: [
+    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: lang === 'en' ? 'tono' : senal, onChange: ponerSenal, opciones: [
       { v: 'tono', name: t('settings.signal.tone') },
-      { v: 'sulafat', name: t('settings.signal.clear') },
-      { v: 'bradford', name: t('settings.signal.deep') }] }
+      { v: 'sulafat', name: t('settings.signal.clear'), off: lang === 'en' },
+      { v: 'bradford', name: t('settings.signal.deep'), off: lang === 'en' }] }
     )
     ),
     React.createElement(AjustesFila, { id: "bg", nombre: t('settings.bg'), atenuada: apagado },

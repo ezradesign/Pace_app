@@ -83,7 +83,7 @@ function AjustesPildoras({ opciones, valor, onChange, aria }) {
     <div className="pace-aj-pista" role="group" aria-label={aria}>
       {opciones.map(o => (
         <button key={String(o.v)} type="button" className="pace-aj-pild"
-                aria-pressed={o.v === valor}
+                aria-pressed={o.v === valor} disabled={!!o.off}
                 aria-label={o.name ? undefined : o.aria}
                 title={o.name ? undefined : o.aria}
                 data-picto={o.picto && !o.name ? '' : undefined}

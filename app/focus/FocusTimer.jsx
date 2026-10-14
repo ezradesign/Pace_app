@@ -156,16 +156,22 @@ function FocusTimer({ onFinish }) {
     }
   }, [state.soundOn]);
 
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
+  /* EN UN PLAN, AL TERMINAR UN BLOQUE la etiqueta ya habla del SIGUIENTE («Bloque 2 de 3» y
+     «Empezar bloque 2»): el reloj enseña lo que dura ese bloque, con el aro vacío, y no el 00:00
+     del que acabó, que se leía como un bloque de cero minutos (Ez, 13 oct. 2026). Sin plan, el
+     00:00 se queda: allí la etiqueta sigue siendo la del bloque terminado. */
+  const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;   // s192 «A tu ritmo»: «Bloque 2 de 8» (state-ritmo.jsx)
+  const siguienteDelPlan = status === 'completed' && !!aro;
+  const mostrado = siguienteDelPlan ? durationSec : remaining;
+  const mins = Math.floor(mostrado / 60);
+  const secs = mostrado % 60;
   const totalSec = durationSec;
-  const progress = 1 - (remaining / totalSec);
+  const progress = 1 - (mostrado / totalSec);
 
   /* Rótulo DENTRO del círculo. En modo foco es "Foco manual" (s122): etiqueta
      el temporizador como el flujo MANUAL, distinto del Camino guiado, sin
      ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
      vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
-  const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;   // s192 «A tu ritmo»: «Bloque 2 de 8» (state-ritmo.jsx)
   const modeLabel = aro ? aro.label : state.focusMode === 'foco' ? t('focus.manual.label')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
