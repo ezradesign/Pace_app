@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.162.0 · 14 de octubre de 2026.
+**Versión:** v0.163.0 · 14 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -126,6 +126,15 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
    v0.159.0. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
    (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
    entonces, en inglés suena el tono.
+4. **La caza del 14 oct. en las sesiones guiadas** (`docs/traspaso/CAZA_SESIONES_14OCT.md`): seis
+   arreglos en v0.163.0 (lo que se cuenta con el equipo dormido, las pausas, la página oculta y dos
+   pestañas); sesiones-7, 8 y 9 cambian lo que se ve y esperan a Ez con fotos.
+5. **iPhone**: una sesión prepara el proyecto de iOS con Capacitor, su compilación en un Mac de
+   GitHub y la guía de la App Store (rama `claude/ios-preparar-03219e`). Prepara, no publica: la
+   app de la tienda sigue siendo para después de v1.
+6. **El calendario se mantiene solo** (Ez, 14 oct.), cuando se libere una de las dos sesiones: el
+   día se corrige solo en el calendario cada vez que cambia, con aviso en las pausas. Es parte de
+   PACE completo (llevar el día y esquivar reuniones siguen gratis). Detalle en el relevo de LEEME.
 
 ## Espera a Ez
 

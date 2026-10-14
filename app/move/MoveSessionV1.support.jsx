@@ -302,6 +302,18 @@ function useV1ActiveClock(stage, phase, step, paused) {
   return reloj;
 }
 
+/* El reloj de lo que se ACREDITA a la semana (caza del 14 oct., sesiones-2):
+   la sesión en marcha, con colocaciones, cambios de lado y descansos —los
+   «minutos reales» de R4—, pero sin las pausas, que hasta hoy entraban porque
+   se medía de pared. Lo usan los dos runners. */
+function useV1SessionClock(stage, paused, enMarcha) {
+  const reloj = useActiveClock();
+  React.useEffect(() => {
+    reloj.marcar(stage === (enMarcha || 'run') && !paused);
+  }, [stage, paused]);
+  return reloj;
+}
+
 /* s172 · EL LADO QUE PINTA EL GLIFO en un paso por lados. Politica pura, aqui
    y no en el runner, por la misma razon que `v1TrabajoActivo`: es una decision
    y asi puede probarse sola.
@@ -370,7 +382,12 @@ function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
    un salto se los salta en vez de soltar una rafaga de ticks perdidos. Los
    AVANCES comparan con `>=` y no se pierden.
    Lo usan los dos runners: el v1 (colocacion, trabajo y cambio de lado) y el
-   legacy de `MoveModule.jsx`. */
+   legacy de `MoveModule.jsx`.
+   UN HUECO NO ES TIEMPO DE SESION (caza del 14 oct., sesiones-4): mas de
+   `PACE_HUECO_MS` sin comprobar es una pagina que no corria (el equipo dormido,
+   la app congelada), no un intervalo espaciado; con la politica 'pausa' ese
+   rato no avanza nada y `useSesionAlOcultar` pausa la sesion, como al ocultar.
+   Antes llegaba entero como segundos de ejercicio y saltaba el paso. */
 function useRelojSesion(activo, avanzar, deps) {
   const marcaRef = React.useRef(0);
   const avanzarRef = React.useRef(avanzar);
@@ -379,7 +396,9 @@ function useRelojSesion(activo, avanzar, deps) {
     if (!activo) return;
     marcaRef.current = Date.now();
     const comprobar = () => {
-      const n = Math.floor((Date.now() - marcaRef.current) / 1000);
+      const pasado = Date.now() - marcaRef.current;
+      if (SESION_AL_OCULTAR === 'pausa' && pasado > window.PACE_HUECO_MS) { marcaRef.current = Date.now(); return; }
+      const n = Math.floor(pasado / 1000);
       if (n <= 0) return;
       marcaRef.current += n * 1000;
       avanzarRef.current(n);
@@ -404,7 +423,12 @@ function useRelojSesion(activo, avanzar, deps) {
    Solo actua durante la sesion (`activo`): la preparacion de 5 s no tiene
    boton de Continuar y no se pausa. Las fases que no se pausan (colocacion
    automatica, descanso) siguen por reloj y terminan solas; el `paused` que dejan
-   puesto lo hereda el trabajo siguiente, que si tiene «Continuar». */
+   puesto lo hereda el trabajo siguiente, que si tiene «Continuar».
+   Y DOS CASOS QUE NO PASAN POR `visibilitychange` (caza del 14 oct.): si la
+   pagina ya esta oculta cuando la sesion arranca (se oculto en «Preparate»), se
+   pausa al arrancar —antes se hacia sola entera y contaba (sesiones-3)—; y si
+   entre dos latidos pasa mas que un hueco, la pagina no corria (equipo
+   dormido): se pausa igual que al ocultarla (sesiones-4). */
 const SESION_AL_OCULTAR = 'pausa';
 
 function useSesionAlOcultar(activo, pausar) {
@@ -412,9 +436,16 @@ function useSesionAlOcultar(activo, pausar) {
   pausarRef.current = pausar;
   React.useEffect(() => {
     if (!activo || SESION_AL_OCULTAR !== 'pausa') return;
+    if (document.visibilityState === 'hidden') pausarRef.current();
     const alOcultar = () => { if (document.visibilityState === 'hidden') pausarRef.current(); };
+    let latido = Date.now();
+    const id = setInterval(() => {
+      const ahora = Date.now();
+      if (ahora - latido > window.PACE_HUECO_MS) pausarRef.current();
+      latido = ahora;
+    }, 1000);
     document.addEventListener('visibilitychange', alOcultar);
-    return () => document.removeEventListener('visibilitychange', alOcultar);
+    return () => { clearInterval(id); document.removeEventListener('visibilitychange', alOcultar); };
   }, [activo]);
 }
 
@@ -425,5 +456,5 @@ Object.assign(window, {
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, v1GlyphSizeAhora,
   V1_GLYPH_WEB, v1EsEscritorio,
-  estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock,
+  estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock,
 });

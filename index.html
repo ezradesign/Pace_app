@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.162.0</title>
+  <title>PACE · Foco · Cuerpo — v0.163.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6038,7 +6038,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.162.0';
+const PACE_VERSION = 'v0.163.0';
 
 
 
@@ -14450,7 +14450,7 @@ Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, paceRedStyles });
    ============================================
    Un acumulador segmentado: se le dice en cada render si la sesión está
    trabajando AHORA y él suma solo esos tramos. Es el mecanismo que Respira
-   tiene desde s98 (`activeMsRef`) y que Mueve/Estira NO tenían: hasta s170 su
+   tiene desde s98 (hoy, este mismo reloj) y que Mueve/Estira NO tenían: hasta s170 su
    único tiempo era de pared —`Date.now() - sessionStart`— o sea **con las
    pausas dentro**.
 
@@ -14474,9 +14474,24 @@ Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, paceRedStyles });
    CARGA ANTES de sus consumidores: BreatheSession.support.jsx, MoveModule.jsx
    y MoveSessionV1.jsx. Vive en `app/ui/` porque es el primer bloque que los
    tres tienen por delante en el orden de PACE.html.
+
+   EL RATO EN QUE LA PÁGINA NO CORRE NO CUENTA. Con el equipo dormido o la app
+   congelada por el sistema, el reloj de la pared sigue y la página no se
+   entera: al volver, el tramo abierto llevaba dentro media hora que nadie
+   practicó, y se acreditaba (caza del 14 oct., sesiones-1 y sesiones-4). El
+   reloj late cada segundo mientras está abierto; si entre dos latidos pasa más
+   que `PACE_HUECO_MS`, lo de antes del hueco cuenta y el hueco no. Una página
+   viva late cada segundo aunque esté oculta (los navegadores espacian sus
+   temporizadores a uno por segundo, y a uno por minuto solo si está callada),
+   así que la pestaña oculta con la voz o la música de Respira sigue contando.
 */
 
-const { useRef: useRefSC } = React;
+const { useRef: useRefSC, useEffect: useEffectSC } = React;
+
+
+
+
+const PACE_HUECO_MS = 15000;
 
 
 
@@ -14501,25 +14516,46 @@ const { useRef: useRefSC } = React;
 function useActiveClock(semillaMs) {
   const acumuladoMs = useRefSC(Number.isFinite(semillaMs) && semillaMs > 0 ? semillaMs : 0);
   const inicioSeg = useRefSC(null);
+  const latido = useRefSC(null);
+
+
+
+  const alDia = (ahora) => {
+    if (inicioSeg.current == null) return;
+    if (ahora - latido.current > PACE_HUECO_MS) {
+      acumuladoMs.current += latido.current - inicioSeg.current;
+      inicioSeg.current = ahora;
+    }
+    latido.current = ahora;
+  };
+
+  useEffectSC(() => {
+    const id = setInterval(() => alDia(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const marcar = (activo) => {
+    const ahora = Date.now();
+    alDia(ahora);
     if (activo) {
-      if (inicioSeg.current == null) inicioSeg.current = Date.now();
+      if (inicioSeg.current == null) {inicioSeg.current = ahora;latido.current = ahora;}
     } else if (inicioSeg.current != null) {
-      acumuladoMs.current += Date.now() - inicioSeg.current;
+      acumuladoMs.current += ahora - inicioSeg.current;
       inicioSeg.current = null;
     }
   };
 
   const segundos = () => {
-    const abierto = inicioSeg.current != null ? Date.now() - inicioSeg.current : 0;
+    const ahora = Date.now();
+    alDia(ahora);
+    const abierto = inicioSeg.current != null ? ahora - inicioSeg.current : 0;
     return (acumuladoMs.current + abierto) / 1000;
   };
 
   return { marcar, segundos };
 }
 
-Object.assign(window, { useActiveClock });
+Object.assign(window, { useActiveClock, PACE_HUECO_MS });
 ;Object.assign(window, { useActiveClock });
 })();
 </script>
@@ -21234,6 +21270,28 @@ function Sidebar() {
 
 
 
+  const respiraClave = function () {
+    const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
+    return g ? g.routineId + '|' + g.savedAt : '';
+  };
+  const [, mirarRespira] = React.useState(respiraClave);
+  React.useEffect(function () {
+    let caduca = null;
+    const mirar = function (e) {
+      if (e && e.key && e.key.indexOf('pace.breathe.') !== 0) return;
+      mirarRespira(respiraClave());
+      clearTimeout(caduca);
+      const viva = window.respiraVivaFuera && window.respiraVivaFuera();
+      if (viva) caduca = setTimeout(mirar, viva.hasta - Date.now() + 50);
+    };
+    window.addEventListener('storage', mirar);
+    return function () {window.removeEventListener('storage', mirar);clearTimeout(caduca);};
+  }, []);
+
+
+
+
+
 
 
   if (collapsed) return null;
@@ -25118,6 +25176,7 @@ function leerRespiraGuardada(ahora) {
     if (respiraDiaLocal(g.savedAt) !== respiraDiaLocal(t)) return null;
     const rutina = window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
     if (!rutina) return null;
+    if (respiraVivaFuera(t)) return null;
 
 
     const techoMs = Math.max(1, rutina.min || 1) * 60 * 1000 * 3;
@@ -25136,6 +25195,51 @@ function leerRespiraGuardada(ahora) {
 
 function olvidarRespiraGuardada() {
   try {localStorage.removeItem(RESPIRA_KEY);} catch (e) {}
+}
+
+
+
+
+
+
+
+
+
+const RESPIRA_VIVA_KEY = 'pace.breathe.viva';
+const RESPIRA_VIVA_MS = 15000;
+const RESPIRA_PESTANA = Math.random().toString(36).slice(2);
+
+function respiraVivaFuera(ahora) {
+  try {
+    const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    const late = v && v.pestana !== RESPIRA_PESTANA && Number.isFinite(v.hasta) &&
+    v.hasta > t && v.hasta - t <= RESPIRA_VIVA_MS;
+    return late ? v : null;
+  } catch (e) {return null;}
+}
+
+function useRespiraViva(routine, stage) {
+  const viva = stage !== 'done';
+  useEffectBS(() => {
+    if (!viva || !routine) return undefined;
+    const latir = () => {
+      try {
+        localStorage.setItem(RESPIRA_VIVA_KEY, JSON.stringify({
+          pestana: RESPIRA_PESTANA, routineId: routine.id, hasta: Date.now() + RESPIRA_VIVA_MS }));
+      } catch (e) {}
+    };
+    const soltar = () => {
+      try {
+        const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
+        if (v && v.pestana === RESPIRA_PESTANA) localStorage.removeItem(RESPIRA_VIVA_KEY);
+      } catch (e) {}
+    };
+    latir();
+    const id = setInterval(latir, 5000);
+    window.addEventListener('pagehide', soltar);
+    return () => {clearInterval(id);window.removeEventListener('pagehide', soltar);soltar();};
+  }, [viva]);
 }
 
 
@@ -25378,9 +25482,9 @@ function useMusicaFondo(stage, paused, routine) {
 Object.assign(window, {
   useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
-  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia
+  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraVivaFuera, useRespiraViva
 });
-;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraVivaFuera, useRespiraViva, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
 })();
 </script>
   <script>
@@ -25420,34 +25524,26 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
 
-  const activeMsRef = useRef(rein.activeMs);
-  const segStartRef = useRef(null);
+
+  const relojActivo = useActiveClock(rein.activeMs);
 
 
 
   const relojHold = useHoldClock(rein.holdSec);
   const hechoRef = useRef(null);
-  const getActiveSec = () => {
-    const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
-    return (activeMsRef.current + open) / 1000;
-  };
+  const getActiveSec = () => relojActivo.segundos();
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
   useRespiraPersistencia({ routine, stage, round, breathCount, paused, getActiveSec,
     holdSec: relojHold.segundos, startedAt: sessionStart.current });
+  useRespiraViva(routine, stage);
 
 
 
 
   useEffect(() => {
-    const running = (stage === 'active' || stage === 'hold') && !paused;
-    if (running) {
-      if (segStartRef.current == null) segStartRef.current = Date.now();
-    } else if (segStartRef.current != null) {
-      activeMsRef.current += Date.now() - segStartRef.current;
-      segStartRef.current = null;
-    }
+    relojActivo.marcar((stage === 'active' || stage === 'hold') && !paused);
 
 
 
@@ -26384,7 +26480,10 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
 
 
   const dispatchComplete = () => {
-    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+
+
+    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
+    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
 
 
 
@@ -26405,6 +26504,8 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
 
   const relojActivo = useActiveClock();
   const activeSecRef = useRefMV(0);
+  const relojSesion = useV1SessionClock(stage, paused, 'active');
+  const paredSecRef = useRefMV(0);
   const step = routine.steps[stepIdx];
 
 
@@ -26502,7 +26603,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
 
 
   if (stage === 'done') {
-    const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
+    const totalSec = paredSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     return (
@@ -27185,6 +27286,18 @@ function useV1ActiveClock(stage, phase, step, paused) {
 
 
 
+function useV1SessionClock(stage, paused, enMarcha) {
+  const reloj = useActiveClock();
+  React.useEffect(() => {
+    reloj.marcar(stage === (enMarcha || 'run') && !paused);
+  }, [stage, paused]);
+  return reloj;
+}
+
+
+
+
+
 
 
 
@@ -27250,6 +27363,11 @@ function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
 
 
 
+
+
+
+
+
 function useRelojSesion(activo, avanzar, deps) {
   const marcaRef = React.useRef(0);
   const avanzarRef = React.useRef(avanzar);
@@ -27258,7 +27376,9 @@ function useRelojSesion(activo, avanzar, deps) {
     if (!activo) return;
     marcaRef.current = Date.now();
     const comprobar = () => {
-      const n = Math.floor((Date.now() - marcaRef.current) / 1000);
+      const pasado = Date.now() - marcaRef.current;
+      if (SESION_AL_OCULTAR === 'pausa' && pasado > window.PACE_HUECO_MS) {marcaRef.current = Date.now();return;}
+      const n = Math.floor(pasado / 1000);
       if (n <= 0) return;
       marcaRef.current += n * 1000;
       avanzarRef.current(n);
@@ -27284,6 +27404,11 @@ function useRelojSesion(activo, avanzar, deps) {
 
 
 
+
+
+
+
+
 const SESION_AL_OCULTAR = 'pausa';
 
 function useSesionAlOcultar(activo, pausar) {
@@ -27291,9 +27416,16 @@ function useSesionAlOcultar(activo, pausar) {
   pausarRef.current = pausar;
   React.useEffect(() => {
     if (!activo || SESION_AL_OCULTAR !== 'pausa') return;
+    if (document.visibilityState === 'hidden') pausarRef.current();
     const alOcultar = () => {if (document.visibilityState === 'hidden') pausarRef.current();};
+    let latido = Date.now();
+    const id = setInterval(() => {
+      const ahora = Date.now();
+      if (ahora - latido > window.PACE_HUECO_MS) pausarRef.current();
+      latido = ahora;
+    }, 1000);
     document.addEventListener('visibilitychange', alOcultar);
-    return () => document.removeEventListener('visibilitychange', alOcultar);
+    return () => {clearInterval(id);document.removeEventListener('visibilitychange', alOcultar);};
   }, [activo]);
 }
 
@@ -27304,9 +27436,9 @@ Object.assign(window, {
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, v1GlyphSizeAhora,
   V1_GLYPH_WEB, v1EsEscritorio,
-  estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
+  estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock, v1LadoGlifo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
 })();
 </script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
@@ -27664,8 +27796,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
   const relojActivo = useV1ActiveClock(stage, phase, step, paused);
 
+
+
+  const relojSesion = useV1SessionClock(stage, paused);
+  const paredSecRef = useRefV1(0);
+
   const dispatchComplete = (early) => {
-    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
+    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
 
 
 
@@ -27848,7 +27986,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
   if (stage === 'done') {
-    const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
+    const totalSec = paredSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
 
@@ -36950,6 +37088,9 @@ Object.assign(window, { Onboarding });
   background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--ink-2) 22%, transparent) 0 2px, transparent 2px 5px); }
 .pace-rt-li.pace-rt-ocupado-li .pace-rt-txt { color: var(--ink-3); font-style: italic; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
+/* En oscuro, el verde del «AHORA» de 9 px se leía a 2,7:1 sobre el papel oscuro: se aclara
+   mezclándolo con la tinta, solo en oscuro (Ez, 14 oct. 2026). */
+[data-palette="oscuro"] .pace-rt-ahora-tag { color: color-mix(in srgb, var(--focus) 40%, var(--ink)); }
 .pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
   border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
   display: flex; align-items: center; justify-content: center; gap: 1px;

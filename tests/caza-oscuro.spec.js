@@ -97,3 +97,15 @@ test('oscuro-6 · el mes de Estadísticas dice «Octubre de 2026», no «Octubre
   const visto = await titulo.evaluate((el) => el.innerText);
   expect(visto, 'cada palabra en mayúscula').toMatch(/^\p{Lu}\p{Ll}+ de \d{4}$/u);
 });
+
+/* Repaso del modo oscuro, 14 oct. 2026: el «AHORA» verde de la línea del día (9 px) se leía a
+   2,7:1 sobre el papel oscuro. Ez pidió aclararlo solo en oscuro. Contra v0.162.0 cae. */
+test('oscuro · el «AHORA» de la línea del día se lee en oscuro', async ({ page, context }) => {
+  await sembrar(context, Object.assign({ ritmo: {} }, OSCURO));
+  await page.clock.install({ time: new Date('2026-10-14T10:00:00') });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /Una hora/ }).filter({ visible: true }).first().click();
+  const ahora = page.locator('.pace-rt-ahora-tag').filter({ visible: true }).first();
+  await expect(ahora).toBeVisible();
+  expect(await ahora.evaluate(contrasteDe), 'el «AHORA» por debajo de 4,5:1').toBeGreaterThanOrEqual(4.5);
+});

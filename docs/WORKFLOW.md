@@ -239,3 +239,51 @@ versión y cada push cancelaba la comprobación de GitHub del anterior (`concurr
   la suite. Desde el 8 de octubre la suite lo detecta y se para (`tests/servidor-propio.setup.js`).
 
 Sin varias sesiones a la vez, el cierre de siempre de `CLAUDE.md`.
+
+## 10. Dos cuentas de Claude: relevo por el uso (14 oct. 2026)
+
+Ez trabaja con dos cuentas (plan Pro). Cada una tiene un límite de 5 horas y otro semanal. Cuando una se acerca al
+tope, el trabajo pasa a la otra, y para entonces la primera suele haberse repuesto. El repo es la única memoria
+compartida: el bloque de arriba de `docs/traspaso/LEEME.md` es el relevo.
+
+**La coordinadora mira el uso** (`get_usage`, ventana de 5 horas) al empezar, antes de cualquier tarea larga (la
+suite entera, unos 14 minutos; un recorrido; una reescritura) y cada vez que cierra una pieza. Se lo dice a Ez
+cuando cruza un umbral:
+
+| Uso de las 5 horas | Qué se hace |
+|---|---|
+| menos del 70 % | trabajo normal |
+| 70-85 % | no se empieza nada largo ni se abren sesiones nuevas; se termina la pieza en curso |
+| 85 % | **relevo**: cada sesión en paralelo hace un commit «wip(...)» y push de su rama; la coordinadora pone al día el relevo de LEEME (versión, CI, sesiones con carpeta, rama y puerto, preguntas pendientes para Ez, y a qué hora se repone esta cuenta) y le dice a Ez que cambie |
+| 95 % | nada que no se pueda dejar a medias sin perder trabajo |
+
+Si la semanal pasa del 85 %, se prefiere la otra cuenta el resto de la semana.
+
+**Una sola coordinadora a la vez**: la de la cuenta con uso. Tras el relevo, la anterior no vuelve a subir a `main`.
+Las sesiones en paralelo son de la cuenta que las abrió y se paran con ella; la coordinadora nueva las vuelve a
+abrir en la MISMA carpeta (`.claude/worktrees/...`), con la misma rama y el mismo puerto. Las dos cuentas trabajan
+en esta carpeta del PC; la firma de git es global (ezradesign), así que cualquiera firma bien.
+
+**Para retomar una sesión en paralelo**, sobre todo si se paró sin su «wip»:
+
+- Lo que no llegó a commitear sigue en su carpeta, y su conversación sigue en `~/.claude/projects/`, que las dos
+  cuentas comparten en este PC.
+- La coordinadora corre `node scripts/relevo-hilo.js .claude/worktrees/<carpeta>`. Escribe
+  `<carpeta>/.claude/relevo/HILO.md` con el encargo, lo que la sesión iba diciendo y lo que Ez contestó en sus
+  preguntas. Es una nota local: `.claude/relevo/` está en `.git/info/exclude`.
+- Al lado deja un `RELEVO.md` con dónde se quedó y qué sigue.
+- Ez abre una sesión nueva y le pega un texto corto: quién es, su carpeta, rama y puerto, «entra con EnterWorktree
+  en esa carpeta», «lee `.claude/relevo/`» y, si hay cambios sin commitear, «commit wip y push antes de nada».
+- La sesión nueva arranca en la carpeta principal, donde la coordinadora puede tener un merge a medias: no ejecuta
+  nada de git ahí antes de entrar en la suya.
+- No se reanuda el hilo viejo con `claude --resume`: arrastra todo su contexto (unos 400 000 tokens) en cada
+  turno (Ez, 14 oct.).
+
+**Para cambiar de cuenta**, Ez abre esta carpeta en la otra cuenta y pega:
+
+```
+Eres la sesión COORDINADORA de PACE (carpeta C:\Users\ezrav\Desktop\Proyectos\Desarrollo de aplicaciones\Pace_app).
+Retomas el trabajo de la otra cuenta de Ez. Lee CLAUDE.md, STATE.md y el relevo de arriba de docs/traspaso/LEEME.md,
+mira el CI de main y el uso de esta cuenta (get_usage), retoma las sesiones en paralelo que diga el relevo en sus
+mismas carpetas y sigue la sección 10 de docs/WORKFLOW.md (relevo por el uso) y la 9 (solo tú subes a main).
+```

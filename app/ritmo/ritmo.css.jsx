@@ -160,6 +160,9 @@
   background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--ink-2) 22%, transparent) 0 2px, transparent 2px 5px); }
 .pace-rt-li.pace-rt-ocupado-li .pace-rt-txt { color: var(--ink-3); font-style: italic; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
+/* En oscuro, el verde del «AHORA» de 9 px se leía a 2,7:1 sobre el papel oscuro: se aclara
+   mezclándolo con la tinta, solo en oscuro (Ez, 14 oct. 2026). */
+[data-palette="oscuro"] .pace-rt-ahora-tag { color: color-mix(in srgb, var(--focus) 40%, var(--ink)); }
 .pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
   border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
   display: flex; align-items: center; justify-content: center; gap: 1px;

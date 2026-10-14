@@ -96,7 +96,10 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   // este componente). R4 (s110): acredita minutos REALES medidos, no el
   // `routine.min` declarado (las stats heredaban el número declarado).
   const dispatchComplete = () => {
-    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    /* Sin las pausas, como el runner v1 (useV1SessionClock); el «Tiempo» del
+       cierre se congela aquí y no sigue corriendo en cada pintada. */
+    const realMin = Math.max(1, Math.round(relojSesion.segundos() / 60));
+    paredSecRef.current = Math.round((Date.now() - sessionStart.current) / 1000);
     /* s170 · igual que en el runner v1: se LEE sin cerrar el reloj (segundos()
        ya cuenta el segmento abierto) y se congela en un ref, porque el 'done'
        se re-renderiza. */
@@ -117,6 +120,8 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
      `mode` emitirían un tiempo activo que en realidad es de pared. */
   const relojActivo = useActiveClock();
   const activeSecRef = useRefMV(0);
+  const relojSesion = useV1SessionClock(stage, paused, 'active');
+  const paredSecRef = useRefMV(0);
   const step = routine.steps[stepIdx];
 
   // Preparación 3s
@@ -214,7 +219,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
 
   // COMPLETADO
   if (stage === 'done') {
-    const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
+    const totalSec = paredSecRef.current;
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     return (
