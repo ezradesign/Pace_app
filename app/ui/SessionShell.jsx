@@ -360,7 +360,8 @@ function SessionDone({
     <SessionShell routine={routine} onExit={onExit} atmosphere={atmosphere} footer={btn}>
       <div data-pace-session-done {...(rootData || {})} style={{ textAlign: 'center', maxWidth: 520 }}>
         {glifo ? (
-          <div data-pace-session-done-hero data-pace-session-done-glifo style={{
+          <div data-pace-session-done-hero data-pace-session-done-glifo
+            data-pace-session-done-cuerpo={glifo.type === window.ExerciseGlyph ? '' : undefined} style={{
             width: 72, height: 72, margin: '0 auto 22px', color: accent,
             display: 'grid', placeItems: 'center', animation: 'pace-fade-in 600ms ease',
           }}>{glifo}</div>
