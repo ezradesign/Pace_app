@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.162.0 · 14 de octubre de 2026.
+**Versión:** v0.163.0 · 14 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -126,6 +126,15 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
    v0.159.0. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
    (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
    entonces, en inglés suena el tono.
+4. **La caza del 14 oct. en las sesiones guiadas** (`docs/traspaso/CAZA_SESIONES_14OCT.md`): seis
+   arreglos en v0.163.0 (lo que se cuenta con el equipo dormido, las pausas, la página oculta y dos
+   pestañas); sesiones-7, 8 y 9 cambian lo que se ve y esperan a Ez con fotos.
+5. **iPhone**: una sesión prepara el proyecto de iOS con Capacitor, su compilación en un Mac de
+   GitHub y la guía de la App Store (rama `claude/ios-preparar-03219e`). Prepara, no publica: la
+   app de la tienda sigue siendo para después de v1.
+6. **El calendario se mantiene solo** (Ez, 14 oct.), cuando se libere una de las dos sesiones: el
+   día se corrige solo en el calendario cada vez que cambia, con aviso en las pausas. Es parte de
+   PACE completo (llevar el día y esquivar reuniones siguen gratis). Detalle en el relevo de LEEME.
 
 ## Espera a Ez
 
@@ -141,10 +150,11 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
   verificación antes de abrirlo a más de 100 personas.
 - Play Console: identidad y móvil verificados (8 oct.). Crear la app con la ficha en español y en
   inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
-- Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
-  los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
-  sus prompts). De logro, los anillos de «Rondas maestra» y la vela de «Larga sesión»
-  (`archivos/glifos/revision-8oct/GLIFOS_8OCT.md`).
+- Los dibujos y las voces que faltan, con sus prompts listos para pegar (14 oct.):
+  - imágenes, en `docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md`: 8 ejercicios con el
+    dibujo equivocado, «Rana» y «Pica en escritorio», 7 logros con el dibujo equivocado o repetido
+    y 18 sin dibujo propio;
+  - audio, en `PROMPTS_AUDIO.md` de la misma carpeta: «Inhale», «Hold» y «Exhale» con las dos voces.
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha

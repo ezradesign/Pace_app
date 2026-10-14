@@ -2,7 +2,48 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de octubre de 2026, v0.157.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.163.0.
+
+## 14 oct. 2026, mañana: relevo hecho, la coordinadora sigue en la otra cuenta
+
+Manda sobre todo lo de abajo. La cuenta anterior se quedó sin uso a las 11:35 y se repone a las 15:30.
+
+- **v0.163.0 en `main`:** los seis arreglos de la caza de las sesiones guiadas
+  (`CAZA_SESIONES_14OCT.md`, sesiones-1 a sesiones-6), que no cambian lo que se ve. Quedan para Ez, con
+  fotos, otros tres:
+  - **sesiones-7:** «Terminar» a los 0 s cuenta una sesión entera.
+  - **sesiones-8:** el «Tiempo» del cierre de Mueve y Estira lleva las pausas dentro.
+  - **sesiones-9:** recargar a mitad de Mueve o Estira la pierde.
+- **Sesiones en paralelo**, abiertas otra vez en sus carpetas tras el relevo, una sesión nueva cada una:
+  - `caza-sesiones`: `.claude/worktrees/caza-sesiones-a8e105`, rama `claude/caza-sesiones-a8e105`, puerto 8794.
+    Prepara las fotos de sesiones-7, 8 y 9.
+  - `ios-preparar`: `.claude/worktrees/ios-preparar-03219e`, rama `claude/ios-preparar-03219e`, puerto 8796.
+    Su trabajo está en el commit «wip(ios)» `58a5ebe`. Le falta:
+    - la guía de la App Store;
+    - calibrar en rojo una prueba;
+    - la suite;
+    - el workflow `iOS` en verde.
+- **iPhone, decisiones de Ez (14 oct.):**
+  - la cuenta de Apple Developer, a su nombre (todavía no está creada);
+  - sin Mac: todo por GitHub y TestFlight;
+  - en la tienda se llama «PACE: pausas activas y foco»;
+  - solo iPhone;
+  - con el interruptor de silencio puesto, PACE no suena, como en Safari.
+- **Siguiente hilo, cuando se libere una de las dos sesiones: el calendario se mantiene solo** (Ez, 14 oct.).
+  Lo pide para quien teletrabaja y quiere el calendario sincronizado:
+  - Una vez conectado, el día se escribe y se corrige solo cada vez que cambia en PACE (cambiar el día, una
+    reunión nueva que lo recoloca), sin volver a pulsar «Al calendario».
+  - Las pausas llevan aviso, así que Outlook o Google avisan aunque PACE esté cerrado.
+  - Llevar el día y esquivar reuniones siguen gratis; lo que se mantiene solo es de PACE completo.
+  - Por ahora no eligió el Foco como «Ocupado», las pausas entre reuniones ni la semana entera.
+  - En la web depende de los dos ids de `docs/CALENDARIO_ALTAS.md`; en Android usa el calendario del móvil.
+  - La sesión investiga lo técnico (en la web, sin servidor, el token de Google dura una hora) y trae la propuesta
+    pintada antes de montar nada.
+- **Una sesión que se para sin commit no se pierde.** Su conversación queda en este PC
+  (`~/.claude/projects/`, que comparten las dos cuentas). `node scripts/relevo-hilo.js <carpeta>` saca a
+  `<carpeta>/.claude/relevo/HILO.md` el encargo, lo que la sesión iba diciendo y las respuestas de Ez, y la
+  sesión nueva empieza leyéndolo (`docs/WORKFLOW.md` §10). Ez lo prefirió a reanudar el hilo viejo, que
+  arrastra unos 400 000 tokens en cada turno.
 
 ## 12 oct. 2026, noche: la coordinadora sigue en la cuenta nueva
 
@@ -22,6 +63,17 @@ Manda sobre el relevo de abajo.
   y dio el sí a lo montado y pulido en `stats-montado-ligera.html`: sin scroll en el escritorio con la
   nota, la misma altura en las tres pestañas del móvil con los totales arriba, el año en dos filas en
   el móvil y barras que crecen con su cifra. En un móvil de 360 × 640 las tres piden algo de scroll.
+- **Repaso del modo oscuro, 14 oct.** (v0.162.1): recorrida toda la app en oscuro, en el móvil y en el escritorio, sin
+  errores ni manchas claras; solo se aclaró el «AHORA» de la línea del día. La bienvenida sigue en crema por decisión de
+  Ez (sus láminas están dibujadas sobre papel).
+- **Dos sesiones en paralelo (abiertas el 14 oct. desde la cuenta que se queda sin uso; pueden pararse a medias):**
+  - `caza-sesiones`: carpeta `.claude/worktrees/caza-sesiones-a8e105`, rama `claude/caza-sesiones-a8e105`, puerto 8794.
+    Caza de fallos en Respira, Mueve y Estira; sus hallazgos, en `docs/traspaso/CAZA_SESIONES_14OCT.md`.
+  - `ios-preparar`: carpeta `.claude/worktrees/ios-preparar-03219e`, rama `claude/ios-preparar-03219e`, puerto 8796.
+    Proyecto de iOS con Capacitor, compilación en un runner macOS y guía `docs/launch/app-store/guia.html`.
+  Si se pararon, la coordinadora de la otra cuenta las vuelve a abrir en esas carpetas. Las dos avisan con «LISTO
+  PARA MAIN» y solo la coordinadora junta y sube. Como mucho dos en paralelo: el siguiente hilo recomendado es
+  preparar el cobro de PACE completo en la web (opciones para Ez, nada sin su sí).
 - **Historial reescrito el 13 oct. (con el sí de Ez):** todos los commits de main los firma Ez y sin
   «Co-Authored-By», para que en GitHub solo salga él. Los identificadores de los commits cambiaron:
   **cualquier copia o sesión anterior se vuelve a clonar y no se sube**. La copia previa completa está en
