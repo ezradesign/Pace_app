@@ -6,7 +6,18 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de 
 
 ## 14 oct. 2026, mañana: relevo hecho, la coordinadora sigue en la otra cuenta
 
-Manda sobre todo lo de abajo. La cuenta anterior se quedó sin uso a las 11:35 y se repone a las 15:30.
+Manda sobre todo lo de abajo. La cuenta anterior se quedó sin uso a las 11:35 y se repone a las 15:30;
+esta, la que tomó el relevo a las 11:45, se repone a las 16:30. Con tres sesiones a la vez, esta cuenta
+gastó el 58 % de sus 5 horas en 50 minutos: Ez decidió seguir con las dos en paralelo, y cada una hace su
+«wip» y su push sola al pasar del 85 %.
+
+- **Hallazgo nuevo de Ez (14 oct.), en manos de `caza-sesiones` como sesiones-10:** en el navegador de su
+  móvil (Doogee Blade 20 Max, Android), la voz masculina de Respira (bradford) se oye entrecortada y la
+  femenina no. Los MP3 de bradford son MPEG-1 a 44,1 kHz y empiezan a sonar en el primer milisegundo; los de
+  sulafat, MPEG-2 a 24 kHz y con 0,39 s de silencio delante.
+- **Para Ez, de la coordinadora:** los prompts de todo lo que falta por dibujar y grabar están en
+  `archivos/encargos-14oct/` (imagen y audio por separado). Pendiente de su decisión: renombrar
+  «Palmas al suelo» a «Palmas en la mesa».
 
 - **v0.163.0 en `main`:** los seis arreglos de la caza de las sesiones guiadas
   (`CAZA_SESIONES_14OCT.md`, sesiones-1 a sesiones-6), que no cambian lo que se ve. Quedan para Ez, con
