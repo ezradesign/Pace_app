@@ -11,6 +11,18 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **AL 91 % (14 oct., 18:35 en Madrid; esta cuenta se repone a las 20:30): v0.165.0 está commiteada en la
+  rama y subida a la rama, PERO NO EN `main`.** Lo primero en la cuenta nueva, desde la carpeta de
+  `caza-sesiones`:
+  1. La suite entera de v0.165.0 dio 638 de 646, con 8 caídas en 5 archivos (`eventos-origen`,
+     `pausa-propone`, `pestanas-foco`, `pestanas-pausa` y `home-sin-scroll`), con la suite de
+     `pausa-cuello` corriendo a la vez en el 8797. Repetirlas solas:
+     `PACE_E2E_PORT=8794 npx playwright test tests/eventos-origen.spec.js tests/pausa-propone.spec.js tests/pestanas-foco.spec.js tests/pestanas-pausa.spec.js tests/home-sin-scroll.spec.js --workers=2`.
+     En la vuelta anterior (sin los glifos ni el bump) estos archivos pasaron enteros.
+  2. Si salen en verde: `git fetch` y, si `origin/main` no se ha movido, `git push origin HEAD:main` y
+     `gh run watch` hasta que `verify` y `e2e` salgan en verde. Si alguna cae sola, mirar si la causa son
+     los glifos nuevos o el bump antes de subir.
+  3. Después, juntar `pausa-cuello` cuando dé el LISTO.
 - **v0.165.0:** sesiones-7, 8 y 9 con lo que eligió Ez; las voces de Respira en inglés (Ez las oyó en el
   portátil y en el móvil; el volumen se queda como está); `PACE_VOZ_FASE_MIN` (sin voz en fases de 1 s);
   cinco dibujos nuevos (tres logros y dos ejercicios, estos con el rayado igualado a los demás).
@@ -19,6 +31,13 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
 - **sesiones-10 sigue abierta:** la voz grave entrecortada en el navegador de su Android. En una página de
   prueba se oye limpia, así que el corte viene de lo que suena a la vez. Falta que Ez la pruebe en la app con
   música y con «Suena detrás: Nada» (`CAZA_SESIONES_14OCT.md`).
+  **Pista nueva de Ez (14 oct., tarde), en el PC:** en «Exhalación 4·6» con la voz grave en castellano oye
+  clics entre el «inhala» y el «exhala». Las medidas lo explican: «inhala» y «mantén» de bradford empiezan
+  en el primer milisegundo (ini 0,001) y su «exhala» suena hasta el último (fin = duración, 3,68 s), así
+  que arrancan y se cortan de golpe. Arreglo propuesto: la voz por Web Audio (el mismo camino que la
+  música, como la variante 4 de la página de prueba) con un fundido de unos 5 ms al entrar y al salir de
+  cada palabra. Quita el clic sea cual sea el archivo y puede ser también lo entrecortado del móvil. Cambia
+  cómo suena: Ez lo oye en el portátil y en el móvil antes de subir.
 - **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`, puerto 8797), abierta a petición de Ez: la
   pausa «Exhalación 4·6 + Cuello» hizo Respira y los 15 minutos, pero no el cuello. Juntarla cuando dé el LISTO.
 - **Intermitentes vistos en la suite entera** (pasan solos): `pausa-sin-repetir.spec.js:78` (la home, corrida
@@ -26,6 +45,32 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   en chromium (el service worker no llega a controlar a tiempo con la suite cargada).
 - El mortero y la corona de roble que dibujó Ez están en `.old/Glifos_logros`, sin logro (Ez).
 - El hilo del calendario sigue sin abrir.
+- **Hallazgo de Ez (14 oct., tarde):** en el cierre de Mueve y Estira («Estiramiento completado») el
+  dibujo de la rutina sale muy pequeño: unos 90 px de alto en 1920×1080 con la escala de Windows al
+  125 % (Brave, zoom 100 %), con mucho aire alrededor. Cambia lo que se ve: opciones pintadas sobre la
+  app real y Ez elige.
+- **Los 8 dibujos de ejercicio que faltan** (Ez los hace en Genspark con referencias de
+  `archivos/glifos/referencias/`): barbilla-atras, hueco-en-silla, 90-90, palmas-al-suelo,
+  apretar-gluteos, sentadilla-de-cuadriceps, rana y pica-en-escritorio. Al ingestarlos, si traen más
+  rayado que el resto, `ACLARADO` en `scripts/ingest-glifos-ejercicio.js` (Ez quiere la intensidad de
+  los demás).
+- **Hilo nuevo pedido por Ez (14 oct., tarde): «PACE que aprende», el mejor ejercicio para cada momento.**
+  Es la Fase 3 ya aceptada (carta del lunes, dos cambios por semana) más una capa que sirve desde el
+  primer día. Lo que se le propuso y le pareció bien:
+  - **Capa 1, la elección del momento (sin historial):** la pausa puntúa las opciones con lo que sabe ya:
+    cuánto llevas sentado, qué has hecho hoy (equilibrio Respira, Mueve, Estira y agua), qué zonas no has
+    movido, cuánto falta para el siguiente bloque o reunión y la hora (activar por la mañana, moverse en
+    el bajón de después de comer, calmar al final). Propone la mejor con una frase de motivo.
+  - **Capa 2, aprender (PACE completo):** la puntuación se ajusta con «¿te ayudó?» (pesa más), lo
+    saltado (con cuidado: saltar por una reunión no es que no guste), «Otra» y las horas reales de
+    pausa. Los cambios, explicados en la carta del lunes y reversibles.
+  - **Condiciones:** todo en el dispositivo (promesa pública; `verify` vigila que `app/events/` no tenga
+    red), reglas con puntuación y no un modelo opaco, cada propuesta con su porqué, una de cada cinco
+    es algo que no sueles hacer, ningún consejo de salud sin aviso, nada de gamificación agresiva.
+  - **Primer paso:** inventario de lo que ya se guarda (`pace.events.v1`, `ritmo.day.closed`, «¿te
+    ayudó?», `origin`) y de cuántos datos tienen los testers; la puntuación escrita como tabla de casos;
+    y la propuesta de la pausa con su motivo pintada con opciones para que Ez elija viéndola. Antes,
+    leer la propuesta de la pausa (s187), «A tu ritmo» (s192) y `docs/traspaso/archivos/motor-semana/`.
 
 ## 14 oct. 2026, mañana: relevo hecho, la coordinadora sigue en la otra cuenta
 
