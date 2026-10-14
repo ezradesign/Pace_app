@@ -72,6 +72,18 @@ async function abrirAjustes(page) {
 /* No vale (no lo firma la llave de PACE): en la web se lee y se dice que no ha funcionado. */
 const CODIGO_FALSO = '#codigo=PACE1.e30.AAAA';
 
+/* Apunta si el aviso del código sale EN ALGÚN MOMENTO. Mirar al final no sirve:
+   el aviso se va solo, y `toHaveCount(0)` espera a que se vaya y sale verde. */
+async function vigilarAvisoLicencia(context) {
+  await context.addInitScript(() => {
+    window.__avisoLicencia = false;
+    new MutationObserver(() => {
+      if (document.querySelector('[data-pace-toast="licencia"]')) window.__avisoLicencia = true;
+    }).observe(document, { childList: true, subtree: true });
+  });
+}
+const salioAvisoLicencia = (page) => page.evaluate(() => window.__avisoLicencia);
+
 const rachaDe7 = () => ({ current: 7, longest: 7, lastActiveDate: new Date().toDateString() });
 
 test.describe('en el iPhone', () => {
@@ -102,11 +114,12 @@ test.describe('en el iPhone', () => {
   test('un enlace con código de tester ni se lee: se borra de la barra y no avisa de nada', async ({ page, context }) => {
     await sembrar(context, { soundOn: false });
     await comoIphone(context);
+    await vigilarAvisoLicencia(context);
     await page.goto(RUTA_ARTEFACTO + CODIGO_FALSO);
     await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
     /* En la web el aviso sale en menos de un segundo (el control de abajo); aquí no debe salir. */
     await page.waitForTimeout(2500);
-    await expect(page.locator('[data-pace-toast="licencia"]'), 'la App Store no deja abrir contenido con códigos propios').toHaveCount(0);
+    expect(await salioAvisoLicencia(page), 'la App Store no deja abrir contenido con códigos propios').toBe(false);
     expect((await leerEstado(page)).licencia).toBeFalsy();
     expect(await page.evaluate(() => location.hash), 'el código se queda a la vista').toBe('');
   });
@@ -273,9 +286,11 @@ test.describe('fuera del iPhone (control)', () => {
 
   test('en la web el mismo enlace de código se lee y, como no vale, lo dice', async ({ page, context }) => {
     await sembrar(context, { soundOn: false });
+    await vigilarAvisoLicencia(context);
     await page.goto(RUTA_ARTEFACTO + CODIGO_FALSO);
     await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
     await expect(page.locator('[data-pace-toast="licencia"]'), 'el enlace no se lee: la prueba del iPhone no mide nada').toHaveCount(1);
+    expect(await salioAvisoLicencia(page), 'el vigilante no ve el aviso: la prueba del iPhone no mide nada').toBe(true);
   });
 
   test('en Android la capa común llama a android.js y no a ios.js', async ({ page, context }) => {

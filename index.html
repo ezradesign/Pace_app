@@ -7886,7 +7886,21 @@ function paceLicenciaArranque() {
   paceLicenciaDelEnlace();
 }
 
-setTimeout(paceLicenciaArranque, 0);
+
+
+
+
+
+var _paceLicenciaEsperas = 0;
+function paceLicenciaCuandoSepa() {
+  if (typeof paceEsNativo !== 'function' && _paceLicenciaEsperas++ < 500) {
+    setTimeout(paceLicenciaCuandoSepa, 20);
+    return;
+  }
+  paceLicenciaArranque();
+}
+
+setTimeout(paceLicenciaCuandoSepa, 0);
 try {window.addEventListener('hashchange', paceLicenciaDelEnlace);} catch (e) {}
 
 Object.assign(window, {
@@ -7897,7 +7911,7 @@ Object.assign(window, {
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaRechazada, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaRechazada, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
 })();
 </script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.

@@ -177,7 +177,21 @@ function paceLicenciaArranque() {
   paceLicenciaDelEnlace();
 }
 
-setTimeout(paceLicenciaArranque, 0);
+/* No arranca hasta que esté ui/nativo.js, que carga después: la app es una lista
+   de scripts y el navegador puede correr un temporizador entre dos de ellos
+   (Chromium lo hace). Sin esa capa, `paceLicenciaPermitida()` no sabe que está en
+   la app de una tienda y el enlace se leería también allí. El tope (unos diez
+   segundos) es para un artefacto sin esa capa, que entonces es la web. */
+var _paceLicenciaEsperas = 0;
+function paceLicenciaCuandoSepa() {
+  if (typeof paceEsNativo !== 'function' && _paceLicenciaEsperas++ < 500) {
+    setTimeout(paceLicenciaCuandoSepa, 20);
+    return;
+  }
+  paceLicenciaArranque();
+}
+
+setTimeout(paceLicenciaCuandoSepa, 0);
 try { window.addEventListener('hashchange', paceLicenciaDelEnlace); } catch (e) {}
 
 Object.assign(window, {
