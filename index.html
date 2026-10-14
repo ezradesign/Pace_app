@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.162.0</title>
+  <title>PACE · Foco · Cuerpo — v0.162.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6036,7 +6036,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.162.0';
+const PACE_VERSION = 'v0.162.1';
 
 
 
@@ -36609,6 +36609,9 @@ Object.assign(window, { Onboarding });
   background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--ink-2) 22%, transparent) 0 2px, transparent 2px 5px); }
 .pace-rt-li.pace-rt-ocupado-li .pace-rt-txt { color: var(--ink-3); font-style: italic; }
 .pace-rt-ahora-tag { position: absolute; left: 0; bottom: 16px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); white-space: nowrap; }
+/* En oscuro, el verde del «AHORA» de 9 px se leía a 2,7:1 sobre el papel oscuro: se aclara
+   mezclándolo con la tinta, solo en oscuro (Ez, 14 oct. 2026). */
+[data-palette="oscuro"] .pace-rt-ahora-tag { color: color-mix(in srgb, var(--focus) 40%, var(--ink)); }
 .pace-rt-nodo { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; margin: 0 2px; position: relative;
   border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: var(--paper);
   display: flex; align-items: center; justify-content: center; gap: 1px;

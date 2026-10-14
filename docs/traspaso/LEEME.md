@@ -22,6 +22,17 @@ Manda sobre el relevo de abajo.
   y dio el sí a lo montado y pulido en `stats-montado-ligera.html`: sin scroll en el escritorio con la
   nota, la misma altura en las tres pestañas del móvil con los totales arriba, el año en dos filas en
   el móvil y barras que crecen con su cifra. En un móvil de 360 × 640 las tres piden algo de scroll.
+- **Repaso del modo oscuro, 14 oct.** (v0.162.1): recorrida toda la app en oscuro, en el móvil y en el escritorio, sin
+  errores ni manchas claras; solo se aclaró el «AHORA» de la línea del día. La bienvenida sigue en crema por decisión de
+  Ez (sus láminas están dibujadas sobre papel).
+- **Dos sesiones en paralelo (abiertas el 14 oct. desde la cuenta que se queda sin uso; pueden pararse a medias):**
+  - `caza-sesiones`: carpeta `.claude/worktrees/caza-sesiones-a8e105`, rama `claude/caza-sesiones-a8e105`, puerto 8794.
+    Caza de fallos en Respira, Mueve y Estira; sus hallazgos, en `docs/traspaso/CAZA_SESIONES_14OCT.md`.
+  - `ios-preparar`: carpeta `.claude/worktrees/ios-preparar-03219e`, rama `claude/ios-preparar-03219e`, puerto 8796.
+    Proyecto de iOS con Capacitor, compilación en un runner macOS y guía `docs/launch/app-store/guia.html`.
+  Si se pararon, la coordinadora de la otra cuenta las vuelve a abrir en esas carpetas. Las dos avisan con «LISTO
+  PARA MAIN» y solo la coordinadora junta y sube. Como mucho dos en paralelo: el siguiente hilo recomendado es
+  preparar el cobro de PACE completo en la web (opciones para Ez, nada sin su sí).
 - **Historial reescrito el 13 oct. (con el sí de Ez):** todos los commits de main los firma Ez y sin
   «Co-Authored-By», para que en GitHub solo salga él. Los identificadores de los commits cambiaron:
   **cualquier copia o sesión anterior se vuelve a clonar y no se sube**. La copia previa completa está en
