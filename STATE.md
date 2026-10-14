@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.165.0 · 14 de octubre de 2026.
+**Versión:** v0.166.0 · 14 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -82,6 +82,10 @@ móvil, que cabe entero desde 360×640. La home dice «6 de 8 vasos».
 Al empezar el Foco, la bola del aro y su halo salen enteros y por encima de la niebla del horizonte,
 con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida por Ez). Lo vigila
 `tests/aro-bola-entrada.spec.js`.
+
+Una pausa de «A tu ritmo» se hace entera (v0.166.0, A · 2A · 3A de Ez): la larga encadena sus
+dos platos («Seguir con Estira») y el aro cuenta la pausa corta y la larga desde que acaba el bloque,
+nunca la comida (`app/state-ritmo.pausa.jsx`).
 
 «A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
 días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con

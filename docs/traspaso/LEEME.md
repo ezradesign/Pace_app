@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.165.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.166.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,22 +11,13 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **AL 91 % (14 oct., 18:35 en Madrid; esta cuenta se repone a las 20:30): v0.165.0 está commiteada en la
-  rama y subida a la rama, PERO NO EN `main`.** Lo primero en la cuenta nueva, desde la carpeta de
-  `caza-sesiones`:
-  1. La suite entera de v0.165.0 dio 638 de 646, con 8 caídas en 5 archivos (`eventos-origen`,
-     `pausa-propone`, `pestanas-foco`, `pestanas-pausa` y `home-sin-scroll`), con la suite de
-     `pausa-cuello` corriendo a la vez en el 8797. Repetirlas solas:
-     `PACE_E2E_PORT=8794 npx playwright test tests/eventos-origen.spec.js tests/pausa-propone.spec.js tests/pestanas-foco.spec.js tests/pestanas-pausa.spec.js tests/home-sin-scroll.spec.js --workers=2`.
-     En la vuelta anterior (sin los glifos ni el bump, a las 16:00) estos archivos pasaron enteros.
-     **Ya repetidas a las 18:40: 38 pasan y sigue cayendo `eventos-origen.spec.js:120`** («tocar la
-     parada abierta es "parada"…»). Sospecha: depende de la hora del día (la línea del día cambia sus
-     paradas por la tarde), no de v0.165.0. Comprobarlo (con el reloj fijado o contra `origin/main` a la
-     misma hora) antes de subir.
-  2. Si salen en verde: `git fetch` y, si `origin/main` no se ha movido, `git push origin HEAD:main` y
-     `gh run watch` hasta que `verify` y `e2e` salgan en verde. Si alguna cae sola, mirar si la causa son
-     los glifos nuevos o el bump antes de subir.
-  3. Después, juntar `pausa-cuello` cuando dé el LISTO.
+- **v0.165.0 y v0.166.0 en `main` (14 oct., noche, en la cuenta que tomó el relevo a las 18:40).**
+  La caída de `eventos-origen.spec.js:120` no era de la hora ni de v0.165.0: sobre `origin/main` y
+  sobre la rama tarda lo mismo (unos 25 s sola) y el grupo de cinco archivos pasa entero en las dos.
+  Recorre dos sesiones enteras segundo a segundo y con otra suite corriendo pasaba de los 60 s: lleva
+  120 s de margen. v0.166.0 junta `pausa-cuello` (la pausa larga se hace entera, A · 2A · 3A de Ez):
+  no llegó a dar el LISTO, pero su suite acabó con 640 en verde y una caída por tiempo que pasa sola;
+  junta en la rama, la suite entera dio 650 en verde.
 - **v0.165.0:** sesiones-7, 8 y 9 con lo que eligió Ez; las voces de Respira en inglés (Ez las oyó en el
   portátil y en el móvil; el volumen se queda como está); `PACE_VOZ_FASE_MIN` (sin voz en fases de 1 s);
   cinco dibujos nuevos (tres logros y dos ejercicios, estos con el rayado igualado a los demás).
@@ -42,8 +33,8 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   música, como la variante 4 de la página de prueba) con un fundido de unos 5 ms al entrar y al salir de
   cada palabra. Quita el clic sea cual sea el archivo y puede ser también lo entrecortado del móvil. Cambia
   cómo suena: Ez lo oye en el portátil y en el móvil antes de subir.
-- **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`, puerto 8797), abierta a petición de Ez: la
-  pausa «Exhalación 4·6 + Cuello» hizo Respira y los 15 minutos, pero no el cuello. Juntarla cuando dé el LISTO.
+- **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`) está en `main` desde v0.166.0: su carpeta
+  y su rama ya no hacen falta.
 - **Intermitentes vistos en la suite entera** (pasan solos): `pausa-sin-repetir.spec.js:78` (la home, corrida
   117 px de lado al cerrar la pausa: fallo de verdad que vuelve 1 de cada muchas) y `sw-aviso.safari.spec.js:47`
   en chromium (el service worker no llega a controlar a tiempo con la suite cargada).
