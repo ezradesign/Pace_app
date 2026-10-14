@@ -118,6 +118,9 @@ test('el aro con plan es «aro» servido por el menú, y la propuesta de la paus
 });
 
 test('tocar la parada abierta es «parada», siempre del menú; la tarjeta de la barra lateral es «sidebar»', async ({ page, context }) => {
+  /* Dos sesiones de cuerpo enteras, de segundo en segundo: unos 25 s sola, y con
+     otra suite corriendo en la máquina pasaba de los 60 s y caía sin fallo real. */
+  test.setTimeout(120_000);
   await abrir(page, context, CON_PAUSA);
   const parada = vis(page, '[data-pace-ritmo-linea]').locator('[data-pace-ritmo-parada]').first();
   await expect(parada).toHaveClass(/pace-rt-ahora/);
