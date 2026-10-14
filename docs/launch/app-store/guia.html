@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PACE en la App Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+    --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372;
+    --line: #C9C0A8; --olive: #3E5A3A; --olive-soft: rgba(62,90,58,.10);
+    --terra: #A85E43; --terra-soft: rgba(201,122,93,.13);
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+      --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --olive: #98B58B; --olive-soft: rgba(122,154,109,.14);
+      --terra: #D99A80; --terra-soft: rgba(201,122,93,.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+    --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --olive: #98B58B; --olive-soft: rgba(122,154,109,.14);
+    --terra: #D99A80; --terra-soft: rgba(201,122,93,.16);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 600; line-height: 1.15; color: var(--ink); }
+  h1 { font-size: 2.6rem; margin: 0 0 8px; }
+  h2 { font-size: 1.85rem; margin: 56px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.35rem; margin: 28px 0 8px; }
+  .num { color: var(--terra); margin-right: 6px; }
+  .sub { color: var(--ink-2); font-size: 1.05rem; margin: 0 0 28px; }
+  p, li { color: var(--ink-2); }
+  strong { color: var(--ink); font-weight: 600; }
+  a { color: var(--olive); }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; color: var(--ink); overflow-wrap: anywhere; }
+  ol, ul { padding-left: 1.3em; }
+  li { margin: 6px 0; }
+  .path { font-weight: 500; color: var(--ink); }
+  .card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 18px 0; }
+  .card > :first-child { margin-top: 0; } .card > :last-child { margin-bottom: 0; }
+  .ok { border-left: 4px solid var(--olive); background: var(--olive-soft); }
+  .warn { border-left: 4px solid var(--terra); background: var(--terra-soft); }
+  .tag { display: inline-block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--terra); margin-bottom: 4px; }
+  .road { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin: 22px 0; padding: 0; list-style: none; }
+  .road li { margin: 0; background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: .9rem; }
+  .road li b { display: block; font-family: var(--display); font-style: italic; font-size: 1.15rem; color: var(--ink); font-weight: 600; }
+  .road li.now { border-color: var(--terra); background: var(--terra-soft); }
+  .road li.done { border-color: var(--olive); background: var(--olive-soft); }
+  .tbl { width: 100%; overflow-x: auto; margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; color: var(--ink); background: var(--paper-2); }
+  td { color: var(--ink-2); }
+  nav.toc { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  nav.toc ol { margin: 4px 0 0; }
+  nav.toc a { text-decoration: none; }
+  .check li { list-style: none; position: relative; padding-left: 4px; }
+  .check li::before { content: ""; position: absolute; left: -1.2em; top: .45em; width: .75em; height: .75em; border: 1.5px solid var(--olive); border-radius: 3px; }
+  .q li { margin: 12px 0; }
+  footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--ink-3); }
+  footer p { color: var(--ink-3); }
+  @media (max-width: 520px) { h1 { font-size: 2.1rem; } h2 { font-size: 1.55rem; } main { padding-top: 32px; } }
+</style>
+</head>
+<body>
+<main>
+
+<h1>PACE en la App Store</h1>
+<p class="sub">Cómo llevar PACE al iPhone sin tener un Mac: la cuenta, TestFlight para tu tester, la compra de PACE completo y la revisión de Apple. Escrito el 14 de octubre de 2026, cuando se preparó la app del iPhone, y con tus respuestas de ese día.</p>
+
+<ol class="road">
+  <li class="done"><b>Proyecto</b>Hecho el 14 oct.</li>
+  <li class="done"><b>Compila</b>En un Mac de GitHub</li>
+  <li class="now"><b>Cuenta</b>Toca crearla, a tu nombre</li>
+  <li><b>Firma</b>La llave de la API</li>
+  <li><b>TestFlight</b>Tu tester con iPhone</li>
+  <li><b>Compra</b>PACE completo, con Apple</li>
+  <li><b>App Store</b>Con v1</li>
+</ol>
+
+<nav class="toc">
+  <strong>En esta guía</strong>
+  <ol>
+    <li><a href="#voy">Dónde voy</a></li>
+    <li><a href="#sinmac">Sin Mac: GitHub hace de Mac</a></li>
+    <li><a href="#cuenta">La cuenta de Apple Developer</a></li>
+    <li><a href="#firma">La firma: una llave y un certificado</a></li>
+    <li><a href="#ficha">Lo que se rellena una sola vez</a></li>
+    <li><a href="#privacidad">Privacidad: etiquetas y política</a></li>
+    <li><a href="#testflight">TestFlight</a></li>
+    <li><a href="#compra">PACE completo con la compra de Apple</a></li>
+    <li><a href="#revision">La revisión, y que no parezca «solo una web»</a></li>
+    <li><a href="#errores">Errores típicos y qué hacer</a></li>
+  </ol>
+</nav>
+
+<div class="card ok">
+  <p><strong>Lo que ya decidiste.</strong> La cuenta va <strong>a tu nombre</strong>. No hay Mac: todo
+  pasa por GitHub y TestFlight. El nombre es el mismo que en Google Play,
+  <code>PACE: pausas activas y foco</code>. Solo <strong>iPhone</strong>, sin iPad. Y con el interruptor
+  de silencio puesto, PACE <strong>no suena</strong>, como en Safari.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="voy"><span class="num">1</span>Dónde voy</h2>
+
+<h3>Hecho</h3>
+<ul>
+  <li><strong>La app del iPhone existe</strong> (carpeta <code>ios/</code>), con el mismo identificador que la de Android, <code>com.ezradesign.pace</code>. En la pantalla del iPhone se llama «PACE».</li>
+  <li><strong>El icono y el arranque</strong> llevan la vaca y el papel de PACE, sacados de la web. Si la web cambia y el iPhone no, la comprobación de cada cambio (<code>verify</code>) lo dice.</li>
+  <li><strong>La pantalla</strong>: PACE va entre la isla (o el notch) y la barra de inicio, y esas dos franjas llevan el papel crema, u oscuro si el iPhone está en modo oscuro.</li>
+  <li><strong>Lo que Safari no hace solo</strong>: el aviso de fin de Foco con la app en el fondo, la pantalla encendida durante una sesión, la copia de «Tus datos» por el menú de compartir y el sonido, que se despierta con el primer toque.</li>
+  <li><strong>Las reglas de la tienda</strong>, como en Android: sin «Da de pastar a la vaca», sin códigos de PACE completo, sin pedir permiso a Google o Microsoft para el calendario (el día se lleva como archivo), ningún texto que hable del navegador ni de Android, y los enlaces de Privacidad y Seguridad abren la web publicada.</li>
+  <li><strong>Estadísticas y «A tu ritmo» aprenden</strong> también en el iPhone.</li>
+  <li><strong>GitHub compila la app</strong> en un Mac suyo cada vez que hay un cambio, y 28 pruebas hacen como si fueran un iPhone para comprobar que PACE le pide lo correcto.</li>
+  <li><strong>Los papeles que Apple pide dentro de la app</strong>: el manifiesto de privacidad y la respuesta a la pregunta del cifrado, para que no la haga en cada subida.</li>
+</ul>
+
+<h3>Falta, y lo hago yo cuando tengas la cuenta</h3>
+<ul>
+  <li>Que GitHub <strong>firme y suba</strong> cada versión a TestFlight (<a href="#firma">punto 4</a>).</li>
+  <li>Las <strong>capturas</strong> para la ficha, sacadas del simulador del Mac de GitHub.</li>
+  <li>Un apartado <strong>«La app del iPhone»</strong> en <code>privacy.html</code>, como el de Android. Te lo enseño antes de subirlo (<a href="#privacidad">punto 6</a>).</li>
+  <li>Una <strong>página de soporte</strong>: Apple pide una dirección web, no vale solo el correo.</li>
+  <li>La <strong>compra de PACE completo</strong> con Apple, a la vez que la de Google Play (Fase 6 del <code>ROADMAP.md</code>).</li>
+</ul>
+
+<h3>Espera a ti</h3>
+<ol class="q">
+  <li><strong>Crear la cuenta de Apple Developer</strong> a tu nombre (<a href="#cuenta">punto 3</a>).</li>
+  <li><strong>Crear la llave de la API</strong> y guardarla como la de Play (<a href="#firma">punto 4</a>).</li>
+  <li><strong>Crear la app en App Store Connect</strong> y el grupo de TestFlight con tu tester (<a href="#ficha">punto 5</a> y <a href="#testflight">punto 7</a>).</li>
+  <li><strong>Más adelante, para v1</strong>: si en Europa se ve tu dirección o un apartado de correos, el programa de pequeñas empresas y «Compartir en familia» (<a href="#cuenta">punto 3</a> y <a href="#compra">punto 8</a>).</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="sinmac"><span class="num">2</span>Sin Mac: GitHub hace de Mac</h2>
+
+<p>Una app de iPhone solo se puede compilar con Xcode, y Xcode solo funciona en un Mac. GitHub presta
+uno: cada vez que llega un cambio, la compilación <strong>iOS</strong> monta la app en un Mac de GitHub
+y dice si compila. El repo es público, así que no gasta minutos ni cuesta nada.</p>
+<ul>
+  <li>Lo que sale hoy es una app <strong>para el simulador</strong> (<span class="path">Actions → iOS → la ejecución → Artifacts → <code>pace-ios-simulador</code></span>). Solo se abre en el simulador de un Mac, no en un iPhone: sirve para saber que compila.</li>
+  <li>Para un iPhone de verdad la app tiene que ir <strong>firmada</strong> con tu cuenta. Eso llega con el <a href="#firma">punto 4</a>, y desde entonces la misma compilación la subirá a TestFlight.</li>
+  <li>Apple solo acepta apps hechas con <strong>Xcode 26 o más nuevo</strong> (desde el 28 de abril de 2026). La compilación elige siempre el más nuevo del Mac de GitHub: el 14 de octubre era Xcode 26.6.</li>
+</ul>
+
+<h3>El número de cada versión</h3>
+<p>Como en Android, Apple mira un número interno que tiene que crecer en cada subida. Sale solo del
+número de versión: la 0.163.0 es la 163000, y la 1.0.0, la 1000000. Basta con que cada versión que
+subas sea más alta que la anterior.</p>
+
+<!-- ============================================================ -->
+<h2 id="cuenta"><span class="num">3</span>La cuenta de Apple Developer</h2>
+
+<p>Es el equivalente a la cuenta de Play Console, pero se paga <strong>cada año</strong>: 99 dólares,
+que Apple cobra en euros al precio de su página (mira la cifra antes de pagar). Sin ella no hay
+TestFlight ni App Store.</p>
+<ol>
+  <li><strong>Tu cuenta de Apple</strong> (el «Apple ID»): con tu nombre legal, la región España y la verificación en dos pasos. El segundo paso puede ser un SMS a tu móvil Android.</li>
+  <li><strong>Apúntate como persona</strong> («Individual») en <a href="https://developer.apple.com/programs/enroll/">developer.apple.com/programs/enroll</a>. Con un iPhone o iPad, la app <em>Apple Developer</em> lo hace más rápido (escanea el DNI); sin ellos, desde la web.</li>
+  <li><strong>Tu nombre legal será el del vendedor</strong> en la App Store: debajo de PACE se leerá tu nombre, no «ezradesign». Escríbelo exactamente como en el DNI, o la aprobación se retrasa.</li>
+  <li>Apple lo revisa y contesta por correo, normalmente en uno o dos días.</li>
+</ol>
+<div class="card warn">
+  <span class="tag">Para v1, no para TestFlight</span>
+  <p><strong>Tu dirección, visible en Europa.</strong> Una ley europea (la de servicios digitales) obliga
+  a quien vende en la App Store a mostrar <strong>dirección, teléfono y correo</strong> en la ficha de la
+  app en la UE. Con PACE completo a la venta, cuentas como vendedora. Apple deja poner <strong>un
+  apartado de correos</strong> en vez de tu casa. No hace falta decidirlo hasta publicar: TestFlight no lo
+  pide.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="firma"><span class="num">4</span>La firma: una llave y un certificado</h2>
+
+<p>Como en Android, la app va firmada para demostrar que viene de ti. En Apple son dos piezas:</p>
+<div class="tbl"><table>
+  <tr><th>Pieza</th><th>Quién la tiene</th><th>Para qué sirve</th></tr>
+  <tr><td><strong>Llave de la API de App Store Connect</strong> (un archivo <code>.p8</code>)</td><td>Tú, en una carpeta <code>PACE-llave-apple</code>, y una copia en los secretos de GitHub</td><td>Deja a GitHub hablar con Apple en tu nombre: preparar la firma y subir cada versión a TestFlight.</td></tr>
+  <tr><td><strong>Certificado de distribución</strong></td><td>Igual: la carpeta y los secretos de GitHub</td><td>Es el sello que lleva cada versión. Normalmente se crea en un Mac; aquí lo creo yo en tu PC, sin Mac, y Apple lo firma.</td></tr>
+</table></div>
+
+<h3>Lo que haces tú (unos diez minutos)</h3>
+<ol class="check">
+  <li>En <a href="https://appstoreconnect.apple.com">App Store Connect</a>: <span class="path">Usuarios y acceso → Integraciones → API de App Store Connect</span>. La primera vez pide aceptar el acceso a la API.</li>
+  <li><strong>Generar una llave de equipo</strong>, con el nombre «GitHub PACE» y el acceso <strong>Administrador</strong> (hace falta para crear el certificado).</li>
+  <li><strong>Descargar la llave</strong>: un archivo <code>AuthKey_XXXX.p8</code>. <strong>Solo se puede descargar una vez.</strong> Guárdalo en una carpeta nueva <code>PACE-llave-apple</code>, al lado de la de Play.</li>
+  <li>Apunta en un papel, o en esa carpeta, los dos códigos que salen en la página: el <strong>ID de la llave</strong> y el <strong>ID del emisor</strong>.</li>
+  <li>Me dices «la llave de Apple está» y hago el resto: el certificado, los secretos de GitHub y la subida a TestFlight.</li>
+</ol>
+
+<div class="card warn">
+  <span class="tag">Cómo guardarla</span>
+  <p>Lo mismo que con la llave de Play: una copia en el pendrive y otra fuera de casa, nunca por WhatsApp
+  ni por correo y nunca en el repo. La diferencia buena es que en Apple <strong>perderla tiene arreglo
+  inmediato</strong>: se revoca en la misma página y se crea otra, sin esperar a nadie. Las versiones ya
+  subidas no se enteran. El certificado caduca cada año; te aviso yo cuando toque renovarlo.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="ficha"><span class="num">5</span>Lo que se rellena una sola vez</h2>
+
+<h3>5.1 · Crear la app</h3>
+<p>En App Store Connect, <span class="path">Apps → + → Nueva app</span>:</p>
+<div class="tbl"><table>
+  <tr><th>Campo</th><th>Qué poner</th></tr>
+  <tr><td>Plataforma</td><td>iOS</td></tr>
+  <tr><td>Nombre</td><td><code>PACE: pausas activas y foco</code> (27 caracteres; Apple deja 30). Tiene que ser único en la App Store: si estuviera cogido, me lo dices y buscamos una variante.</td></tr>
+  <tr><td>Idioma principal</td><td>Español (España)</td></tr>
+  <tr><td>ID del paquete</td><td><code>com.ezradesign.pace</code>. Si no sale en la lista, primero se registra en <span class="path">developer.apple.com → Certificates, IDs &amp; Profiles → Identifiers</span>, o lo hago yo con la llave de la API.</td></tr>
+  <tr><td>SKU</td><td><code>pace-ios</code> (es interno; nadie lo ve)</td></tr>
+  <tr><td>Acceso de usuarios</td><td>Acceso completo</td></tr>
+</table></div>
+
+<h3>5.2 · Información de la app</h3>
+<div class="tbl"><table>
+  <tr><th>Apartado</th><th>Respuesta</th></tr>
+  <tr><td>Categoría</td><td>Principal: <strong>Salud y forma física</strong>. Secundaria: <strong>Productividad</strong>, por el Foco.</td></tr>
+  <tr><td>Clasificación por edades</td><td>El cuestionario nuevo de Apple. «No» a todo menos a los temas de salud y bienestar (Respira, Mueve y Estira). Debería salir <strong>4+</strong>; si sale otra, me lo dices.</td></tr>
+  <tr><td>Precio</td><td><strong>Gratis</strong>. PACE completo irá dentro, como compra.</td></tr>
+  <tr><td>Disponibilidad</td><td>Todos los países. En el mismo apartado, <strong>quita</strong> «Mac con chip de Apple» y «Apple Vision Pro»: la app no está probada ahí.</td></tr>
+  <tr><td>URL de la política de privacidad</td><td><code>https://pacegrass.app/privacy</code>, cuando lleve el apartado del iPhone.</td></tr>
+  <tr><td>URL de soporte</td><td>Pendiente: una página con el correo <code>hola.ezradesign@gmail.com</code>.</td></tr>
+  <tr><td>Copyright</td><td><code>2026 ezradesign</code></td></tr>
+</table></div>
+
+<h3>5.3 · La ficha</h3>
+<p>Los textos de la ficha de Play (<code>docs/launch/google-play/ficha.md</code>) sirven casi tal cual,
+en español y en inglés, quitando cualquier mención a Android. Las diferencias de Apple: un
+<strong>subtítulo</strong> de 30 caracteres debajo del nombre, un campo de <strong>palabras clave</strong>
+de 100 caracteres, y las capturas en el tamaño del iPhone más grande (6,9 pulgadas, 1320 × 2868). Apple
+las ajusta solo a los demás iPhone. Tienen que enseñar la app en uso, no una portada.</p>
+
+<!-- ============================================================ -->
+<h2 id="privacidad"><span class="num">6</span>Privacidad: etiquetas y política</h2>
+
+<h3>Las etiquetas de la ficha</h3>
+<p>En <span class="path">App Store Connect → la app → Privacidad de la app</span> Apple pregunta qué
+datos recoges, y lo enseña en la ficha. La respuesta es <strong>«Datos no recopilados»</strong>, y es
+cierta en el iPhone:</p>
+<ul>
+  <li>Todo se queda en el iPhone: no hay cuentas, ni analítica, ni anuncios, ni servicios de terceros.</li>
+  <li>La app no carga nada de internet: las letras, los sonidos y los dibujos van dentro.</li>
+  <li>En el iPhone no se conecta a Google ni a Microsoft para el calendario: el día se lleva como archivo, por el menú de compartir.</li>
+</ul>
+<p>Si un día la app enviara algo fuera (la compra a través de un servicio de terceros, por ejemplo), las
+etiquetas se rehacen. Por eso la recomendación del <a href="#compra">punto 8</a>.</p>
+
+<h3>La política, en <code>privacy.html</code></h3>
+<p>Apple exige el enlace en dos sitios: en App Store Connect y dentro de la app. Dentro ya está:
+<span class="path">Ajustes → Privacidad</span> abre <code>pacegrass.app/privacy</code>. Lo que falta es
+que la página hable del iPhone, como ya habla de Android. El apartado diría, en resumen:</p>
+<ul>
+  <li>La app de iPhone guarda lo mismo, y solo en el iPhone.</li>
+  <li>Pide un único permiso: los <strong>avisos</strong>, para el fin del Foco con la app en el fondo. Se puede quitar en los Ajustes del iPhone.</li>
+  <li>Si tienes activada la <strong>copia de iCloud</strong>, el iPhone puede guardar los datos de PACE en tu iCloud, como hace con las demás apps.</li>
+  <li>La copia de «Tus datos» sale por el menú de compartir y tú eliges dónde va.</li>
+  <li>La App Store, desde donde la instalas, tiene su propia política.</li>
+</ul>
+<p>La página es pública, así que te la enseño antes de subirla.</p>
+
+<!-- ============================================================ -->
+<h2 id="testflight"><span class="num">7</span>TestFlight</h2>
+
+<p>TestFlight es la prueba de Apple: la gente instala la app <em>TestFlight</em> en su iPhone y desde ahí,
+PACE. Es lo que en Play eran la prueba interna y la cerrada, con una diferencia que facilita las cosas:
+<strong>Apple no exige un número de testers ni días de prueba</strong> para publicar.</p>
+<div class="tbl"><table>
+  <tr><th>Tipo</th><th>Quién</th><th>Revisión</th></tr>
+  <tr><td><strong>Interna</strong></td><td>Hasta 100 personas de tu equipo en App Store Connect</td><td>Ninguna: llega en cuanto Apple procesa la versión</td></tr>
+  <tr><td><strong>Externa</strong></td><td>Hasta 10.000 personas, por correo o con un enlace</td><td>La primera versión pasa una revisión corta («Beta App Review»), normalmente en un día</td></tr>
+</table></div>
+<p>Para tu tester con iPhone, la <strong>externa</strong> es lo más sencillo:</p>
+<ol>
+  <li><span class="path">TestFlight → Pruebas externas → +</span>, un grupo «Testers PACE».</li>
+  <li><strong>Información de la prueba</strong>: qué probar, el correo para comentarios, la URL de privacidad y «no hace falta iniciar sesión». El texto de «qué probar» te lo preparo yo.</li>
+  <li>Añade la versión al grupo y el correo de tu tester. Cuando Apple la apruebe, le llega un correo con el enlace.</li>
+  <li>Tu tester instala TestFlight, acepta y abre PACE. Cada versión nueva le llega como actualización, sin perder datos.</li>
+</ol>
+<ul>
+  <li><strong>Cada versión caduca a los 90 días.</strong> Si en tres meses no sube nada, TestFlight deja de abrirla: hay que subir otra.</li>
+  <li><strong>En TestFlight las compras son de prueba</strong>: cuando haya compra de PACE completo, tu tester la tendrá gratis, sin código.</li>
+  <li>Sin iPhone no puedes verla tú. Tu tester puede mandarte capturas con comentarios desde la propia TestFlight: al hacer una captura de PACE, el iPhone ofrece enviarla como comentario de la beta, y te llega a App Store Connect.</li>
+</ul>
+
+<h3>Qué tiene que mirar tu tester</h3>
+<p>Lo que ni GitHub ni las pruebas pueden comprobar, porque necesita un iPhone de verdad:</p>
+<ul class="check">
+  <li>Empezar un Foco, salir de la app y que el aviso llegue a su hora (y solo uno).</li>
+  <li>Que la pantalla no se apague durante una sesión de Respira.</li>
+  <li>Ajustes → Tus datos → exportar: que salga el menú de compartir y se pueda guardar en Archivos.</li>
+  <li>El sonido: que suene al tocar; con el interruptor de silencio puesto, que no suene.</li>
+  <li>Arriba y abajo: nada tapado por la isla ni por la barra de inicio, en claro y en oscuro.</li>
+  <li>El icono y la pantalla de arranque.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="compra"><span class="num">8</span>PACE completo con la compra de Apple</h2>
+
+<p>Las reglas de Apple (apartado 3.1.1) son las mismas que las de Google Play:</p>
+<ul>
+  <li>Abrir contenido de pago dentro de la app tiene que ir por la <strong>compra integrada de Apple</strong>. PACE completo será una compra única de 19,99 € («no consumible»), no una suscripción.</li>
+  <li><strong>Nada de códigos propios</strong>: Apple prohíbe abrir contenido con «claves de licencia». Por eso en el iPhone no está «Tengo un código» y el enlace del código no se lee.</li>
+  <li><strong>Nada de «Da de pastar a la vaca»</strong>: el apoyo con Buy Me a Coffee lleva a pagar fuera. Si algún día hay propina en el iPhone, tendría que ser también una compra de Apple.</li>
+  <li>Hace falta un botón <strong>«Restaurar compras»</strong>, para quien cambie de iPhone o reinstale.</li>
+  <li>Los <strong>testers</strong> recibirán un <strong>código de oferta</strong> de Apple para PACE completo, el equivalente al código promocional de Play. Apple los permite para compras únicas desde finales de 2025. El código caduca si no se usa, pero lo que abre es para siempre.</li>
+</ul>
+
+<h3>Cuándo y cómo</h3>
+<p>Con la Fase 6, a la vez que Play Billing: la compra de Apple será una tercera vía (web · Play · App
+Store) que abre lo mismo, por el mismo interruptor (<code>app/state-entitlement.jsx</code>). Apple
+obliga a enviar la primera compra junto con una versión de la app, así que llegan juntas.</p>
+<div class="card">
+  <span class="tag">Recomendación</span>
+  <p>Hacer la compra con un complemento <strong>sin servidor propio</strong>, que hable directamente con
+  Apple y con Google. Los servicios que cobran por gestionar las compras (RevenueCat y parecidos) envían
+  datos de cada compra a sus servidores, y entonces PACE dejaría de ser «Datos no recopilados».</p>
+</div>
+
+<h3>Lo que Apple pide para cobrar</h3>
+<ol>
+  <li>Aceptar el <strong>acuerdo de apps de pago</strong> en <span class="path">App Store Connect → Negocio</span>, con tu cuenta bancaria y el formulario de impuestos (como residente en España, el W-8BEN).</li>
+  <li>Apuntarte al <strong>programa para pequeñas empresas</strong> (<em>App Store Small Business Program</em>): Apple se queda el <strong>15 %</strong> en vez del 30 % mientras ganes menos de un millón de dólares al año. No es automático: se pide.</li>
+  <li>Decidir <strong>«Compartir en familia»</strong> para PACE completo: una compra para toda la familia. Se puede encender más tarde, pero <strong>no apagar</strong>, así que mi recomendación es empezar sin.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="revision"><span class="num">9</span>La revisión, y que no parezca «solo una web»</h2>
+
+<p>Cada versión que vaya a la App Store la revisa una persona de Apple. Apple dice que la mayoría se
+revisan en menos de 24 horas; la primera suele tardar más. Si la rechaza, explica el motivo con el número
+de la regla y se contesta en el mismo sitio.</p>
+
+<h3>La regla 4.2</h3>
+<p>Es la que más preocupa con PACE: Apple rechaza las apps que son <strong>«una web empaquetada»</strong>.
+Lo que hace que PACE no lo sea:</p>
+<ul>
+  <li>Todo va <strong>dentro de la app</strong> y funciona sin internet. No abre ninguna web.</li>
+  <li>Hace cosas de app: el <strong>aviso de fin de Foco</strong> con la app cerrada, la <strong>pantalla encendida</strong> durante una sesión y la copia de «Tus datos» por el <strong>menú de compartir</strong>.</li>
+  <li>No tiene nada de navegador: ni barras, ni textos que hablen de él, y respeta la isla, la barra de inicio, el modo oscuro y el interruptor de silencio del iPhone.</li>
+</ul>
+<p>Si aun así la rechazara, por orden de coste:</p>
+<ol>
+  <li><strong>Vibración suave</strong> en Respira, en cada cambio de fase. Un complemento pequeño, solo en las apps.</li>
+  <li><strong>El Foco en la pantalla de bloqueo</strong> (y en la isla), con su cuenta atrás. Es trabajo nativo de iPhone, de varios días.</li>
+  <li><strong>Minutos de atención plena</strong> en la app Salud de Apple al terminar Respira. Pide un permiso más y cambia la política de privacidad.</li>
+</ol>
+<p>Mi recomendación es enviar la primera con lo que hay y una buena nota para quien la revisa, y tener la
+vibración como primera reserva.</p>
+
+<h3>Las otras reglas que tocan a PACE</h3>
+<div class="tbl"><table>
+  <tr><th>Regla</th><th>Qué pide</th><th>Cómo está PACE</th></tr>
+  <tr><td>5.1.1 · Privacidad</td><td>Enlace a la política en App Store Connect y dentro de la app</td><td>Dentro, hecho (Ajustes). La página necesita el apartado del iPhone.</td></tr>
+  <tr><td>2.3.10 · Otras plataformas</td><td>Ni la app ni la ficha nombran Android ni Google Play</td><td>Hecho en la app: los textos de Android solo salen en Android. Ojo al copiar la ficha de Play.</td></tr>
+  <tr><td>1.4.1 · Salud</td><td>Nada que pueda pasar por consejo médico sin aviso</td><td>La apnea lleva su aviso de seguridad, y Ajustes enlaza <code>safety.html</code>.</td></tr>
+  <tr><td>2.3.3 · Capturas</td><td>Que enseñen la app en uso</td><td>Pendiente: las saco del simulador.</td></tr>
+  <tr><td>3.1.1 · Compras</td><td>Compra integrada, sin códigos propios y con «Restaurar»</td><td>Códigos y apoyo fuera, hecho. La compra, con la Fase 6.</td></tr>
+</table></div>
+
+<div class="card">
+  <span class="tag">Borrador de la nota para quien revisa (va en inglés)</span>
+  <p><em>PACE is an offline app for people who work sitting down: a Focus timer and short guided breaks to
+  breathe, move, stretch and drink water. No account is needed and all data stays on the device; the app
+  makes no network requests. To see the native features: start a Focus session and send the app to the
+  background (a local notification arrives when it ends); open any Breathe session (the screen stays
+  on); Settings → Your data → Export opens the share sheet.</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="errores"><span class="num">10</span>Errores típicos y qué hacer</h2>
+<div class="tbl"><table>
+  <tr><th>Lo que dice Apple (más o menos)</th><th>Qué significa</th><th>Qué hacer</th></tr>
+  <tr><td>La versión no aparece en TestFlight</td><td>Apple la está procesando: suele tardar de 10 a 30 minutos y avisa por correo.</td><td>Esperar. Si a la hora no está, mira el correo: Apple dice qué falló.</td></tr>
+  <tr><td>«Missing Compliance» (falta el cumplimiento)</td><td>Apple pregunta si la app usa cifrado.</td><td>No debería salir: la respuesta va dentro de la app. Si sale, «No» (solo el de serie del iPhone) y me avisas.</td></tr>
+  <tr><td>Rechazo por el SDK o la versión de Xcode</td><td>Apple subió el mínimo.</td><td>Lo arreglo yo: es elegir otro Xcode en el Mac de GitHub.</td></tr>
+  <tr><td>Rechazo por el manifiesto de privacidad</td><td>Algún complemento usa algo que no está declarado.</td><td>Me pasas el correo y lo declaro.</td></tr>
+  <tr><td>«Guideline 4.2 – Minimum Functionality»</td><td>Les parece una web empaquetada.</td><td>Contestar explicando lo nativo (<a href="#revision">punto 9</a>) y, si insisten, la vibración.</td></tr>
+  <tr><td>«Guideline 2.3.10»</td><td>Algo nombra Android o Google Play.</td><td>Casi siempre la ficha o las capturas. Me dices dónde y lo quito.</td></tr>
+  <tr><td>«Guideline 5.1.1»</td><td>La política no abre o no habla de la app.</td><td>Comprueba que <code>pacegrass.app/privacy</code> abre y lleva el apartado del iPhone.</td></tr>
+  <tr><td>Tester: la beta ya no está disponible</td><td>La versión pasó los 90 días.</td><td>Subir una versión nueva.</td></tr>
+  <tr><td>La llave de la API deja de funcionar</td><td>Se revocó o alguien cambió su acceso.</td><td>Crear otra (<a href="#firma">punto 4</a>) y me la pasas para los secretos de GitHub.</td></tr>
+</table></div>
+
+<footer>
+  <p>Contrastado el 14 de octubre de 2026 con las normas de revisión de la App Store (3.1.1, 4.2, 5.1.1,
+  1.4.1, 2.3.3 y 2.3.10), la ayuda de App Store Connect (TestFlight, la ley europea de servicios
+  digitales, capturas y códigos de oferta), los requisitos de Xcode 26 desde el 28 de abril de 2026, y
+  con el repo: <code>ios/</code>, <code>.github/workflows/ios.yml</code> y la compilación para el
+  simulador del 14 de octubre (Xcode 26.6). Apple cambia los nombres de los menús y estas reglas de vez
+  en cuando: si algo no está donde dice la guía, búscalo por el nombre en App Store Connect.</p>
+</footer>
+
+</main>
+</body>
+</html>
