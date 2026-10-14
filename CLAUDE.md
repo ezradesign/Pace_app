@@ -8,6 +8,7 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
 ## Al empezar
 
 1. Lee `STATE.md`: versión, qué sigue y qué espera a Ez.
+   Mira el uso de la cuenta (`get_usage`): con dos cuentas, el relevo sigue `docs/WORKFLOW.md` §10.
    Si vienes de otra cuenta de Claude o de cero, lee también `docs/traspaso/LEEME.md`.
 2. Antes de tocar un subsistema, busca su fila en `docs/product/DECISIONES_TECNICAS_VIGENTES.md` (con
    grep: el archivo es largo).

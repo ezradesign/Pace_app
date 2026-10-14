@@ -239,3 +239,36 @@ versión y cada push cancelaba la comprobación de GitHub del anterior (`concurr
   la suite. Desde el 8 de octubre la suite lo detecta y se para (`tests/servidor-propio.setup.js`).
 
 Sin varias sesiones a la vez, el cierre de siempre de `CLAUDE.md`.
+
+## 10. Dos cuentas de Claude: relevo por el uso (14 oct. 2026)
+
+Ez trabaja con dos cuentas (plan Pro). Cada una tiene un límite de 5 horas y otro semanal. Cuando una se acerca al
+tope, el trabajo pasa a la otra, y para entonces la primera suele haberse repuesto. El repo es la única memoria
+compartida: el bloque de arriba de `docs/traspaso/LEEME.md` es el relevo.
+
+**La coordinadora mira el uso** (`get_usage`, ventana de 5 horas) al empezar, antes de cualquier tarea larga (la
+suite entera, unos 14 minutos; un recorrido; una reescritura) y cada vez que cierra una pieza. Se lo dice a Ez
+cuando cruza un umbral:
+
+| Uso de las 5 horas | Qué se hace |
+|---|---|
+| menos del 70 % | trabajo normal |
+| 70-85 % | no se empieza nada largo ni se abren sesiones nuevas; se termina la pieza en curso |
+| 85 % | **relevo**: cada sesión en paralelo hace un commit «wip(...)» y push de su rama; la coordinadora pone al día el relevo de LEEME (versión, CI, sesiones con carpeta, rama y puerto, preguntas pendientes para Ez, y a qué hora se repone esta cuenta) y le dice a Ez que cambie |
+| 95 % | nada que no se pueda dejar a medias sin perder trabajo |
+
+Si la semanal pasa del 85 %, se prefiere la otra cuenta el resto de la semana.
+
+**Una sola coordinadora a la vez**: la de la cuenta con uso. Tras el relevo, la anterior no vuelve a subir a `main`.
+Las sesiones en paralelo son de la cuenta que las abrió y se paran con ella; la coordinadora nueva las vuelve a
+abrir en la MISMA carpeta (`.claude/worktrees/...`), con la misma rama y el mismo puerto. Las dos cuentas trabajan
+en esta carpeta del PC; la firma de git es global (ezradesign), así que cualquiera firma bien.
+
+**Para cambiar de cuenta**, Ez abre esta carpeta en la otra cuenta y pega:
+
+```
+Eres la sesión COORDINADORA de PACE (carpeta C:UsersezravDesktopProyectosDesarrollo de aplicacionesPace_app).
+Retomas el trabajo de la otra cuenta de Ez. Lee CLAUDE.md, STATE.md y el relevo de arriba de docs/traspaso/LEEME.md,
+mira el CI de main y el uso de esta cuenta (get_usage), retoma las sesiones en paralelo que diga el relevo en sus
+mismas carpetas y sigue la sección 10 de docs/WORKFLOW.md (relevo por el uso) y la 9 (solo tú subes a main).
+```
