@@ -7,7 +7,7 @@
    CARGA ANTES QUE `BreatheSession.jsx` — el componente lo llama en su cuerpo.
 
    QUÉ CUENTA, y por qué no es «empezar a contar la apnea». El tiempo de
-   retención YA se acreditaba: `activeMsRef` (s98) suma 'active' Y 'hold', así
+   retención YA se acreditaba: el reloj activo (s98) suma 'active' Y 'hold', así
    que la retención lleva desde entonces entrando en los minutos de Respira. Lo
    que faltaba era poder DECIRLO por separado. Este reloj no cambia lo que se
    acredita; saca un número que ya estaba dentro de otro.
@@ -134,6 +134,7 @@ function leerRespiraGuardada(ahora) {
     if (respiraDiaLocal(g.savedAt) !== respiraDiaLocal(t)) return null;
     const rutina = window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
     if (!rutina) return null;
+    if (respiraVivaFuera(t)) return null;   // sigue viva en otra pestaña: no está a medias
     /* Blindaje, como el `endsAt-now <= duracion` de s102: un activo mayor que
        tres veces el plan de la rutina es un registro corrupto, no una sesión. */
     const techoMs = Math.max(1, (rutina.min || 1)) * 60 * 1000 * 3;
@@ -152,6 +153,51 @@ function leerRespiraGuardada(ahora) {
 
 function olvidarRespiraGuardada() {
   try { localStorage.removeItem(RESPIRA_KEY); } catch (e) {}
+}
+
+/* DOS PESTAÑAS (caza del 14 oct., sesiones-6). El registro se escribe en cuanto
+   se empieza a respirar, así que otra pestaña lo leía como «a medias» mientras
+   la sesión seguía viva aquí; si se seguía allí, respiraban las dos y contaban
+   las dos. La pestaña que tiene la sesión abierta deja un LATIDO en su propia
+   clave (cada 5 s, válido 15 s), y mientras late en otra, aquí no se ofrece.
+   Al terminar, salir o cerrar se borra y vuelve a ofrecerse; si la pestaña
+   muere sin borrarlo, caduca solo. Va aparte del registro porque es otra cosa:
+   el registro dice por dónde ibas, el latido dice que alguien sigue ahí. */
+const RESPIRA_VIVA_KEY = 'pace.breathe.viva';
+const RESPIRA_VIVA_MS = 15000;
+const RESPIRA_PESTANA = Math.random().toString(36).slice(2);
+
+function respiraVivaFuera(ahora) {
+  try {
+    const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    const late = v && v.pestana !== RESPIRA_PESTANA && Number.isFinite(v.hasta) &&
+      v.hasta > t && v.hasta - t <= RESPIRA_VIVA_MS;
+    return late ? v : null;
+  } catch (e) { return null; }
+}
+
+function useRespiraViva(routine, stage) {
+  const viva = stage !== 'done';
+  useEffectBS(() => {
+    if (!viva || !routine) return undefined;
+    const latir = () => {
+      try {
+        localStorage.setItem(RESPIRA_VIVA_KEY, JSON.stringify({
+          pestana: RESPIRA_PESTANA, routineId: routine.id, hasta: Date.now() + RESPIRA_VIVA_MS }));
+      } catch (e) {}
+    };
+    const soltar = () => {
+      try {
+        const v = JSON.parse(localStorage.getItem(RESPIRA_VIVA_KEY) || 'null');
+        if (v && v.pestana === RESPIRA_PESTANA) localStorage.removeItem(RESPIRA_VIVA_KEY);
+      } catch (e) {}
+    };
+    latir();
+    const id = setInterval(latir, 5000);
+    window.addEventListener('pagehide', soltar);
+    return () => { clearInterval(id); window.removeEventListener('pagehide', soltar); soltar(); };
+  }, [viva]);
 }
 
 /* respiraReanudacion(routine, guardado) -> los valores de arranque de la
@@ -394,5 +440,5 @@ function useMusicaFondo(stage, paused, routine) {
 Object.assign(window, {
   useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
-  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia,
+  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraVivaFuera, useRespiraViva,
 });
