@@ -100,9 +100,12 @@ Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
 
-iPhone: la app de la App Store llega después de v1; hasta entonces, PACE en Safari (Ez, 9 oct.). La
-suite tiene un proyecto `webkit`, el motor de Safari, para los `*.safari.spec.js` y la home sin
-scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mira un tester con iPhone.
+iPhone: el proyecto de iOS está preparado desde v0.164.0 (`ios/`, Capacitor 8). `app/ui/ios.js`
+habla con los complementos y `app/ui/nativo.js` es la capa común con Android. El workflow `iOS` lo
+compila para el simulador en un Mac de GitHub en cada push a `main`, sin firmar. La App Store sigue
+siendo para después de v1; TestFlight puede llegar antes, con la cuenta de Apple de Ez. Guía:
+`docs/launch/app-store/guia.html`. Hasta entonces, PACE en Safari: la suite tiene un proyecto `webkit`
+para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae Web Audio).
 
 ## Lo siguiente
 
@@ -129,9 +132,9 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
 4. **La caza del 14 oct. en las sesiones guiadas** (`docs/traspaso/CAZA_SESIONES_14OCT.md`): seis
    arreglos en v0.163.0 (lo que se cuenta con el equipo dormido, las pausas, la página oculta y dos
    pestañas); sesiones-7, 8 y 9 cambian lo que se ve y esperan a Ez con fotos.
-5. **iPhone**: una sesión prepara el proyecto de iOS con Capacitor, su compilación en un Mac de
-   GitHub y la guía de la App Store (rama `claude/ios-preparar-03219e`). Prepara, no publica: la
-   app de la tienda sigue siendo para después de v1.
+5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
+   certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
+   apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
 6. **El calendario se mantiene solo** (Ez, 14 oct.), cuando se libere una de las dos sesiones: el
    día se corrige solo en el calendario cada vez que cambia, con aviso en las pausas. Es parte de
    PACE completo (llevar el día y esquivar reuniones siguen gratis). Detalle en el relevo de LEEME.
@@ -145,6 +148,8 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
 - Apagar las propuestas automáticas de Dependabot (GitHub › Settings › Code security), dejando las alertas: sus actualizaciones las aplica una sesión con su nombre.
 - Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
 - Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
+- Crear la cuenta de Apple Developer a su nombre y la llave de la API de App Store Connect, con
+  acceso Administrador, en `PACE-llave-apple` (`docs/launch/app-store/guia.html`, puntos 3 y 4).
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
   (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
   verificación antes de abrirlo a más de 100 personas.

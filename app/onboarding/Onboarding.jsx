@@ -55,8 +55,8 @@ function Onboarding() {
   if (!open) return null;
 
   const conCaminos = window.SHOW_CAMINOS !== false;
-  /* En la app de Android no hay navegador: lo local vive en el móvil, como dice Ajustes. */
-  const enAndroid = typeof paceEsAndroid === 'function' && paceEsAndroid();
+  /* En las apps (Android y iPhone) no hay navegador: lo local vive en el móvil, como dice Ajustes. */
+  const enApp = typeof paceEsNativo === 'function' && paceEsNativo();
   const questions = window.ONBOARDING_QUESTIONS || [];
   /* LAS PANTALLAS, en una lista: la bienvenida, «¿Cómo es tu semana?» (siempre, porque
      es de «A tu ritmo» y no de los Caminos) y, con los Caminos, sus tres preguntas y el
@@ -185,7 +185,7 @@ function Onboarding() {
                       fontSize: 14, color: 'var(--ink)', lineHeight: 1.15, flexGrow: 1,
                     }}>{t('welcome.value.' + k + '.label')}</div>
                     <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginTop: 3 }}>
-                      {t('welcome.value.' + k + '.sub' + (k === 'local' && enAndroid ? '.android' : ''))}
+                      {t('welcome.value.' + k + '.sub' + (k === 'local' && enApp ? '.app' : ''))}
                     </div>
                   </div>
                 ))}

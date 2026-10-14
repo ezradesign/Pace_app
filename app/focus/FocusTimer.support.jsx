@@ -56,16 +56,17 @@ function getFocusDescriptorKey(minutes) {
    aquí, el flag baja a false para que el toggle de Ajustes refleje la
    realidad (cerrar el prompt sin responder lo deja en 'default' y se
    re-intentará en otra carga). Solo en web: en file:// no hay aviso.
-   En Android pide el permiso del sistema (Android 13 o más) con la misma regla. */
+   En las apps pide el permiso del sistema (Android 13 o más, y el iPhone) con la
+   misma regla. */
 let _notifyPermissionAsked = false;
 function maybeRequestNotifyPermission(state, set) {
   try {
     if (_notifyPermissionAsked) return;
     if (!state || !state.notifyFocusEnd) return;
-    if (typeof paceAndroidAvisos === 'function' && paceAndroidAvisos()) {
-      if (paceAndroidAvisoPermiso() !== 'default') return;
+    if (typeof paceNativoAvisos === 'function' && paceNativoAvisos()) {
+      if (paceNativoAvisoPermiso() !== 'default') return;
       _notifyPermissionAsked = true;
-      paceAndroidAvisoPedir().then((p) => {
+      paceNativoAvisoPedir().then((p) => {
         if (p === 'denied') set({ notifyFocusEnd: false });
       });
       return;

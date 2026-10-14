@@ -54,19 +54,25 @@ function TweaksPanel({ open, onClose }) {
 
   /* s102 · PWA: el aviso de fin de Foco y los enlaces /safety /privacy solo
      tienen sentido servidos por web — en el standalone file:// no hay SW ni
-     rutas. Un solo gate para ambos bloques. */
-  const isWeb = location.protocol === 'http:' || location.protocol === 'https:';
-  /* En Android el aviso lo da el sistema (ui/android.js) con su propio permiso;
-     `permisoAviso()` contesta igual en los dos: 'granted' | 'denied' | 'default'. */
-  const avisoAndroid = typeof paceAndroidAvisos === 'function' && paceAndroidAvisos();
-  const canNotify = avisoAndroid || (isWeb && typeof Notification !== 'undefined');
-  const permisoAviso = () => avisoAndroid ? paceAndroidAvisoPermiso() : Notification.permission;
+     rutas. Un solo gate para ambos bloques. La app del iPhone se sirve desde
+     capacitor://localhost, sin http, y cuenta como web: la App Store pide que la
+     política de privacidad se abra desde dentro de la app. */
+  const isWeb = location.protocol === 'http:' || location.protocol === 'https:' ||
+    (typeof paceEsNativo === 'function' && paceEsNativo());
+  /* En las apps el aviso lo da el sistema (ui/nativo.js) con su propio permiso;
+     `permisoAviso()` contesta igual en todos: 'granted' | 'denied' | 'default'. */
+  const avisoNativo = typeof paceNativoAvisos === 'function' && paceNativoAvisos();
+  const plataforma = typeof pacePlataformaNativa === 'function' ? pacePlataformaNativa() : null;
+  const canNotify = avisoNativo || (isWeb && typeof Notification !== 'undefined');
+  const permisoAviso = () => avisoNativo ? paceNativoAvisoPermiso() : Notification.permission;
   /* «Alarmas y recordatorios» (Android 12 o más): sin él el aviso puede llegar
-     unos minutos tarde. Se mira al abrir el panel y se pide con un toque. */
-  const [exacta, setExacta] = useStateTW(() => avisoAndroid ? paceAndroidAvisoExacto() : 'granted');
+     unos minutos tarde. Se mira al abrir el panel y se pide con un toque. El
+     iPhone no tiene nada parecido: entrega el aviso a su hora. */
+  const exactaAndroid = avisoNativo && plataforma === 'android';
+  const [exacta, setExacta] = useStateTW(() => exactaAndroid ? paceAndroidAvisoExacto() : 'granted');
   useEffectTW(() => {
-    if (open && avisoAndroid) paceAndroidAvisoExactoMirar().then(setExacta);
-  }, [open, avisoAndroid]);
+    if (open && exactaAndroid) paceAndroidAvisoExactoMirar().then(setExacta);
+  }, [open, exactaAndroid]);
   const pedirExacta = () => { paceAndroidAvisoExactoPedir().then(setExacta); };
 
   /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
@@ -77,7 +83,7 @@ function TweaksPanel({ open, onClose }) {
     if (permisoAviso() === 'granted') { set({ notifyFocusEnd: true }); return; }
     if (permisoAviso() === 'denied') return;
     try {
-      (avisoAndroid ? paceAndroidAvisoPedir() : Notification.requestPermission()).then((p) => {
+      (avisoNativo ? paceNativoAvisoPedir() : Notification.requestPermission()).then((p) => {
         /* La rama denegada escribe el MISMO false: el objeto de state nuevo
            fuerza el re-render que hace visible la nota 'blocked' (permission
            no es reactivo por sí solo). */
@@ -210,15 +216,15 @@ function TweaksPanel({ open, onClose }) {
         {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
             disponible; el permiso se pide al activar (enableNotify). */}
         {canNotify && (
-          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoAndroid ? 'settings.notify.sub.android' : 'settings.notify.sub')} modulo="focus">
+          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub')} modulo="focus">
             <AjustesInterruptor on={!!state.notifyFocusEnd && permisoAviso() !== 'denied'} aria={t('settings.notify')}
               onChange={(v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); }} />
           </AjustesFila>
         )}
         {canNotify && permisoAviso() === 'denied' && (
-          <div className="pace-aj-nota">{t(avisoAndroid ? 'settings.notify.blocked.android' : 'settings.notify.blocked')}</div>
+          <div className="pace-aj-nota">{t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')}</div>
         )}
-        {avisoAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' && (
+        {exactaAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' && (
           <>
             <AjustesAccion suave onClick={pedirExacta} derecha="›">{t('settings.notify.exact')}</AjustesAccion>
             <div className="pace-aj-nota">{t('settings.notify.exact.note')}</div>

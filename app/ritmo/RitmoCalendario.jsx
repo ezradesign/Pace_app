@@ -55,6 +55,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   const c = ritmoDe(state).calendario || {};
   const destinos = calendarioDestinos();
   const android = destinos.indexOf('android') !== -1;
+  /* En las apps el archivo no se descarga: sale por el menú de compartir. */
+  const compartir = typeof paceEsNativo === 'function' && paceEsNativo();
   const [reuniones, setReuniones] = useStateRC(c.reuniones !== false);
   const [calendarios, setCalendarios] = useStateRC(null);
   const [calId, setCalId] = useStateRC(c.calendarioId || '');
@@ -93,12 +95,12 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   };
 
   const boton = (destino) => {
-    if (destino === 'archivo') return t(android ? 'cal.btn.compartir' : 'cal.btn.descargar');
+    if (destino === 'archivo') return t(compartir ? 'cal.btn.compartir' : 'cal.btn.descargar');
     if (destino === 'android') return t('cal.btn.anadir');
     return t(calendarioPaseGuardado(destino) ? 'cal.btn.anadir' : 'cal.btn.conectar');
   };
   const sub = (destino) => {
-    if (destino === 'archivo') return t(android ? 'cal.dest.archivo.sub.android' : 'cal.dest.archivo.sub');
+    if (destino === 'archivo') return t(compartir ? 'cal.dest.archivo.sub.app' : 'cal.dest.archivo.sub');
     if (destino === 'android' && calendarios && calendarios.length > 1) {
       return (
         <React.Fragment>

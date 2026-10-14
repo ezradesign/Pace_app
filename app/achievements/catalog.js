@@ -245,11 +245,12 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'season.equinox.spring', 'season.equinox.autumn',
 ]);
 
-/* En la app de Android no hay apoyo (SupportModule.jsx: Google Play no deja
-   llevar a pagar fuera de su cobro), y `secret.supporter` solo se gana desde
-   ese modal. Ahí nadie podría ganarlo y entraría igual en el denominador de
-   abajo: se quita del catálogo, salvo si ya lo tienes (una copia importada de
-   la web). Importar recarga la app, así que esto se vuelve a decidir. */
+/* En las apps de Android y del iPhone no hay apoyo (SupportModule.jsx: ni Google
+   Play ni la App Store dejan llevar a pagar fuera de su cobro), y
+   `secret.supporter` solo se gana desde ese modal. Ahí nadie podría ganarlo y
+   entraría igual en el denominador de abajo: se quita del catálogo, salvo si ya
+   lo tienes (una copia importada de la web). Importar recarga la app, así que
+   esto se vuelve a decidir. */
 (function () {
   try {
     if (typeof paceApoyoVisible !== 'function' || paceApoyoVisible()) return;

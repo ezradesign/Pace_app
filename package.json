@@ -9,6 +9,8 @@
     "bump": "node scripts/version.js",
     "android:www": "node scripts/android-www.js",
     "android:sync": "node scripts/android-www.js && cap sync android",
+    "ios:sync": "node scripts/android-www.js && cap sync ios",
+    "ios:recursos": "node scripts/ios-recursos.js",
     "licencia:llaves": "node scripts/licencias/crear-llaves.js",
     "licencia:codigo": "node scripts/licencias/firmar.js"
   },
@@ -23,6 +25,7 @@
     "@capacitor/cli": "8.5.2",
     "@capacitor/core": "8.5.2",
     "@capacitor/filesystem": "8.1.4",
+    "@capacitor/ios": "8.5.2",
     "@capacitor/local-notifications": "8.3.1",
     "@capacitor/share": "8.0.3",
     "@ebarooni/capacitor-calendar": "8.8.0",

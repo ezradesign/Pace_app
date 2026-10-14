@@ -156,9 +156,9 @@ function calendarioLlevar(destino, opciones) {
   });
 }
 
-/* El archivo: descarga en la web; en Android, el menú de compartir. */
+/* El archivo: descarga en la web; en las apps (Android y iPhone), el menú de compartir. */
 function calendarioBajarIcs(texto, nombre) {
-  if (typeof paceAndroidGuardarArchivo === 'function' && paceAndroidGuardarArchivo(nombre, texto)) return;
+  if (typeof paceNativoGuardarArchivo === 'function' && paceNativoGuardarArchivo(nombre, texto)) return;
   var blob = new Blob([texto], { type: 'text/calendar;charset=utf-8' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');

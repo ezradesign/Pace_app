@@ -27,7 +27,7 @@
      - SupportButton       → pill para usar en el sidebar
      - SupportModal        → host del modal (montar 1 vez en main.jsx)
      - supportCopy(v)      → devuelve { label, title } según variante
-     - paceApoyoVisible()  → false en la app de Android, que no lleva apoyo
+     - paceApoyoVisible()  → false en las apps de Android y del iPhone, que no llevan apoyo
 */
 
 const { useEffect: useEffectSUP, useState: useStateSUP } = React;
@@ -61,12 +61,13 @@ function supportCopy() {
   return SUPPORT_COPY_DEFAULT;
 }
 
-/* En la app de Android no hay apoyo: Google Play no deja que una app lleve a
-   pagar fuera de su sistema de cobro, y Buy Me a Coffee es eso. Ni la pill, ni
-   el modal, ni el aviso de los 7 dias; en la web todo sigue igual. Es la unica
-   pregunta, y la hacen tambien el pie de la sidebar y el modal. */
+/* En las apps de Android y del iPhone no hay apoyo: ni Google Play ni la App
+   Store dejan que una app lleve a pagar fuera de su sistema de cobro, y Buy Me
+   a Coffee es eso. Ni la pill, ni el modal, ni el aviso de los 7 dias; en la
+   web todo sigue igual. Es la unica pregunta, y la hacen tambien el pie de la
+   sidebar y el modal. */
 function paceApoyoVisible() {
-  return !(typeof paceEsAndroid === 'function' && paceEsAndroid());
+  return !(typeof paceEsNativo === 'function' && paceEsNativo());
 }
 
 function SupportIcon({ size = 13 }) {
