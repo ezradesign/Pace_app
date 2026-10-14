@@ -71,7 +71,9 @@ Say it in English, in a calm, warm and unhurried voice, like a breathing teacher
 
 ## Cuando los tengas
 
-Déjalos en una carpeta con esos nombres y avisa a Claude. Para ponerlos en la app:
+Guárdalos con esos nombres en `Audio - Respira\voces-en\`, la carpeta junto a `Pace_app` donde están
+los originales de las voces castellanas. No van dentro del repo. Luego avisa a Claude. Para ponerlos
+en la app:
 - se mide dónde empieza y dónde acaba cada palabra (a −50 dBFS, como las castellanas) y se cuenta en
   cuántas técnicas cabe;
 - se iguala el volumen;
