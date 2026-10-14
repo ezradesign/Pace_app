@@ -193,8 +193,9 @@ function useLuzHome({ progress, status, running, focusMode }) {
      tramo de ahora se rellena con esto (ritmo.css.jsx, `--pace-bloque`). Solo con
      sesión viva: al completar, `progress` se queda en 1 y ya no hay bloque que
      rellenar —la pausa está abierta—, y en reposo vale 0. Cuantizado a los mismos
-     96 pasos que la hora: son ~9 px por paso en la línea de escritorio. */
-  const paceBloque = haySesion ? (Math.round(progress * 96) / 96).toFixed(4) : '0';
+     96 pasos que la hora: son ~9 px por paso en la línea de escritorio. Solo un
+     bloque de FOCO: la pausa que el aro cuenta con «A tu ritmo» no es un bloque. */
+  const paceBloque = haySesion && focusMode === 'foco' ? (Math.round(progress * 96) / 96).toFixed(4) : '0';
 
   const publicarLuz = (k, i, on, pausado, arco, bloque) => {
     const home = document.querySelector('[data-pace-home-body]');

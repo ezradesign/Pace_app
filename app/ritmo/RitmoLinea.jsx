@@ -110,9 +110,10 @@ function ritmoIndiceAhora(plan) {
 /* Empezar el plato de la parada abierta: la misma puerta que la barra lateral
    (usePaceEventos, `suggest`), así una rutina con aviso pasa por su modal.
    `parada: true` es para el ORIGEN del evento (s194): la sesión sale con
-   `origin: 'parada'`, no 'sidebar'. */
+   `origin: 'parada'`, no 'sidebar'. La pausa larga trae dos platos: abre el
+   primero sin hacer (state-ritmo.pausa.jsx), no siempre el primero. */
 function ritmoEmpezarParada(it) {
-  const plato = it.platos && it.platos[0];
+  const plato = (typeof ritmoPlatoQueToca === 'function' && ritmoPlatoQueToca()) || (it.platos && it.platos[0]);
   if (!plato) return;
   window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }

@@ -127,8 +127,10 @@ test('«Hacer la pausa» entra en el plato, y al terminarlo la parada queda hech
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(1);
   const parada = vis(page, '[data-pace-ritmo-linea]').locator('[data-pace-ritmo-parada]').first();
   await expect(parada).toHaveClass(/pace-rt-ahora/);
-  /* y al empezar el bloque 2, hecha se queda (no se pisa con saltada) */
-  await page.getByRole('button', { name: 'Empezar bloque 2', exact: true }).click();
+  /* y al empezar el bloque 2, hecha se queda (no se pisa con saltada). Desde el 14 oct. el
+     aro cuenta la pausa (Ez, 2A): según lo que haya durado la sesión, el botón es «Empezar
+     ya el bloque 2» o, acabada la pausa, «Empezar bloque 2». */
+  await page.getByRole('button', { name: /^Empezar (ya el )?bloque 2$/ }).click();
   await page.waitForTimeout(300);
   expect(await page.evaluate(() => getState().ritmo.dia.estados)).toEqual({ 1: 'hecha' });
   await expect(vis(page, '[data-pace-ritmo-linea]').locator('[data-pace-ritmo-parada]').first()).toHaveAttribute('data-pace-ritmo-estado-parada', 'hecha');

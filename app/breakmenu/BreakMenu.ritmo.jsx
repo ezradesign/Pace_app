@@ -62,17 +62,24 @@ function BreakPlato({ color, glifo, motivo, nombre, ctx, children, datos }) {
 }
 
 function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, plan, opciones, nombre }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   if (!open || !prop || !plan) return null;
   const agua = (opciones || []).find((o) => o.key === 'water');
   const rutina = prop.rutina;
   const pausa = plan.pausa;
   const comida = prop.porque === 'ritmo.comida';
+  /* LA PAUSA LARGA TRAE DOS (Ez, 14 oct. 2026): el plato los nombra a los dos, con los
+     minutos de la parada y sus dos módulos. «Hacer la pausa» entra en el que toca y su
+     cierre lleva al otro (state-ritmo.pausa.jsx). */
+  const dos = !comida && pausa && pausa.platos && pausa.platos.length > 1;
   const plato = comida
     ? { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: <ABMeal />, modulo: true }, nombre: t('break.ritmo.comida'),
         ctx: <><b>{pausa ? pausa.dur : ''}</b><u>{t('lib.min')}</u>{pausa && pausa.agua && <em>{t('break.ritmo.conAgua')}</em>}</> }
-    : { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina), nombre,
-        ctx: rutina ? <><b>{rutina.min}</b><u>{t('lib.min')}</u><em>{t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em>
+    : { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina),
+        nombre: dos ? ritmoPlatos(pausa, t, lang) : nombre,
+        ctx: rutina ? <><b>{dos ? pausa.dur : rutina.min}</b><u>{t('lib.min')}</u>
+          <em>{dos ? tn('ritmo.y', { a: ritmoModulo(pausa.platos[0].modulo, t), b: ritmoModulo(pausa.platos[1].modulo, t) })
+            : t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em>
           {pausa && pausa.agua && <em>{t('break.ritmo.agua')}</em>}</> : null };
   return (
     <Modal open={open} onClose={onClose} tagLabel={tn('break.ritmo.tag', { n: plan.hechos, m: plan.total })}

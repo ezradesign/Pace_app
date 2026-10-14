@@ -332,7 +332,12 @@ function SessionDone({
      de `session.completed` (Fase 3) — hasta que exista, el dato no tendría
      dónde comprobarse. Mismo recurso que `data-pace-week-hold` (s166): el
      número viaja en el atributo y la vista sigue diciendo lo que decía. */
-  const label = doneButtonLabel || t('session.backToHome');
+  /* LA PAUSA SIGUE (Ez, 14 oct. 2026): fuera de un Camino, si esta sesión es un plato de
+     la pausa de «A tu ritmo» y detrás queda otro, el cierre dice «Pausa larga · 1 de 2» y
+     su botón es «Seguir con Estira»; main.jsx entra en él (state-ritmo.pausa.jsx). */
+  const sigue = !doneButtonLabel && typeof ritmoSigueCierre === 'function' ? ritmoSigueCierre(routine, doneMeta, t) : null;
+  if (sigue) doneMeta = sigue.meta;
+  const label = doneButtonLabel || (sigue ? sigue.cta : t('session.backToHome'));
   /* El cierre habla con la letra de la app (la A de Ez, 10 oct.): la salida es una píldora
      en la serif itálica, como «Empezar foco» y las de la pausa; el color sigue siendo el
      del módulo (variante o buttonStyle). */

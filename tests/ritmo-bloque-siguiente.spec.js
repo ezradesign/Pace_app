@@ -26,6 +26,9 @@ test('con el plan «Una hora», al terminar el bloque 1 el reloj dice los 15:00 
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /Una hora/ }).filter({ visible: true }).first().click();
   await bloqueDe15(page);
+  /* Desde el 14 oct. el aro cuenta antes la pausa de 5 minutos (Ez, 2A); al acabarla vuelve
+     al bloque 2, con su reloj. */
+  await page.clock.runFor(5 * 60 * 1000 + 2000);
   await expect(page.locator('[data-pace-dial-label]')).toHaveText(/Bloque 2 de 3/i);
   await expect(page.locator('[data-pace-dial-number]'), 'el reloj del bloque siguiente').toHaveText('15:00');
   await expect(page.locator('[data-pace-cta]')).toHaveText(/Empezar bloque 2/);

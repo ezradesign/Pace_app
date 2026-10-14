@@ -23,7 +23,9 @@
               hasta que vuelves al foco. Decisión del usuario en s193 (2A):
               simple, sin estado que pueda quedarse colgado, y no castiga
               saltarla. Con «Ahora» sobre la parada, la línea deja de saltar
-              por encima de la pausa que toca.
+              por encima de la pausa que toca. Lo hecho de cada plato
+              (`platos`) y hasta cuándo cuenta el aro la pausa (`pausaHasta`),
+              en state-ritmo.pausa.jsx (14 oct. 2026).
 
      ocupado  { fecha, tramos: [[desde, dur]], fuente } — las reuniones de HOY que
               se leyeron del calendario (solo las horas: ni títulos ni personas).
@@ -294,7 +296,8 @@ function ritmoPropuesta(s) {
   var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
   if (!it) return null;
   if (it.tipo === 'comida') return { modulo: 'water', porque: 'ritmo.comida', rutina: null, datos: {} };
-  var plato = it.platos && it.platos[0];
+  /* la pausa larga trae dos: el que toca es el primero sin hacer (state-ritmo.pausa.jsx) */
+  var plato = (typeof ritmoPlatoQueToca === 'function' && ritmoPlatoQueToca(s)) || (it.platos && it.platos[0]);
   if (!plato) return null;
   return { modulo: RITMO_A_MENU[plato.modulo], porque: 'ritmo.' + it.motivo, rutina: plato.rutina, datos: {} };
 }
@@ -309,7 +312,7 @@ function ritmoSiguiente(s) {
   var ahora = it === p.pausa;
   do {
     if (it.platos && it.platos[0]) {
-      var plato = it.platos[0];
+      var plato = (it === p.pausa && typeof ritmoPlatoQueToca === 'function' && ritmoPlatoQueToca(s)) || it.platos[0];
       /* s197: `bloques` y `pausas` (las HECHAS, no las saltadas) para la frase de la
          tarjeta. Los números van aquí —el estado los sabe— y las palabras en la vista. */
       var hechas = 0;
@@ -387,19 +390,7 @@ function ritmoBloqueTerminado() {
   }
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
-/* s195: la pausa abierta se HIZO — termina una sesión (de lo que sea: Respira,
-   Mueve, Estira) mientras está abierta. La marca vive en `dia.estados` por ordinal. */
-function ritmoPausaHecha() {
-  var p = ritmoPlan(getState());
-  if (!p || !p.pausa) return;
-  var n = ritmoOrdinal(p.m, p.pausa);
-  if (n == null) return;
-  ritmoGuardar(function (r) {
-    if (!r.dia) return {};
-    var estados = Object.assign({}, r.dia.estados || {}); estados[n] = 'hecha';
-    return { dia: Object.assign({}, r.dia, { estados: estados }) };
-  });
-}
+/* La pausa hecha, lo hecho de cada plato y la cuenta del aro: state-ritmo.pausa.jsx. */
 /* Empezar un bloque cierra la pausa y, si la hora no es la del plan, RECOLOCA:
    lo anterior al bloque se congela como historia y el resto se recompone desde
    ahora, con la duración con la que el aro arranca (`minutos`). Llegar antes es
@@ -412,6 +403,7 @@ function ritmoBloqueEmpezado(minutos) {
   var p = ritmoPlan(s);
   if (R.dia.pausa != null) {
     cambios.pausa = null;
+    cambios.pausaHasta = null;   /* el aro deja de contar la pausa (state-ritmo.pausa.jsx) */
     /* s195: empezar el bloque sin haber hecho la pausa abierta la deja SALTADA */
     if (p && p.pausa) {
       var n = ritmoOrdinal(p.m, p.pausa);
@@ -474,5 +466,5 @@ Object.assign(window, {
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
-  ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPausaHecha, ritmoOrdinal,
+  ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoOrdinal,
 });

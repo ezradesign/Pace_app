@@ -218,6 +218,23 @@ function PaceApp() {
     window.dispatchEvent(new CustomEvent('pace:ritmo-seguir'));
   };
 
+  /* LA PAUSA SIGUE (Ez, 14 oct. 2026, opción A): al cerrar un plato de la pausa de
+     «A tu ritmo» con otro detrás («Seguir con Estira», o Intro), se entra directo en
+     él, sin la ficha de antes de empezar: ya se eligió en la pausa. Respira pasa por
+     su puerta, con su aviso de seguridad. La X ('exit') vuelve a la home, y la pausa
+     sigue ofreciendo lo que falta (state-ritmo.pausa.jsx). */
+  const alSalirDeSesion = (motivo, routine) => {
+    const sigue = motivo !== 'exit' && routine && typeof ritmoPausaSigue === 'function' ? ritmoPausaSigue(routine.id) : null;
+    const r = sigue && sigue.plato.rutina;
+    if (!r || !r.id) { setView({ type: 'home' }); return; }
+    if (typeof paceOrigenRepetir === 'function') paceOrigenRepetir();
+    const b = window.getBreatheRoutine && window.getBreatheRoutine(r.id);
+    if (b) { setView({ type: 'home' }); handleStartBreathe(b); return; }
+    const cuerpo = window.resolveBodyRoutine && window.resolveBodyRoutine(r.id);
+    if (cuerpo && cuerpo.routine) setView({ type: 'move-session', routine: cuerpo.routine, kind: cuerpo.source });
+    else setView({ type: 'home' });
+  };
+
   /* s198 · v0.132.0 — LA RED DE ERROR (ui/RedDeError.jsx, decision A2 del usuario):
      cada dialogo y cada sesion lleva la suya, y si falla se cierra SOLO esa
      parte; la app entera tiene la global como ultimo recurso (abajo, al montar).
@@ -413,14 +430,13 @@ function PaceApp() {
 
       {/* ========== SESSION FULLSCREEN ==========
           NOTA (#29): los <Session/> llaman `onExit('exit')` vs `onExit('done')`
-          para diferenciar salida voluntaria de finalización completa. Hoy
-          ambos caminos van a home y el argumento se descarta intencionalmente;
-          se conserva la señal en la API para un futuro consumidor (p.ej.
-          micro-animación de despedida distinta, o métrica de abandono). */}
+          para diferenciar salida voluntaria de finalización completa. Los dos
+          van a home salvo uno: cerrar un plato de la pausa con otro detrás
+          entra en él, y solo la X ('exit') no lo hace (alSalirDeSesion). */}
       {view.type === 'breathe-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
-        <BreatheSession routine={view.routine} reanudar={view.reanudar} onExit={(_reason) => setView({ type: 'home' })} />)}
+        <BreatheSession routine={view.routine} reanudar={view.reanudar} onExit={(motivo) => alSalirDeSesion(motivo, view.routine)} />)}
       {view.type === 'move-session' && red(view.routine && view.routine.name, true, () => setView({ type: 'home' }),
-        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />)}
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(motivo) => alSalirDeSesion(motivo, view.routine)} />)}
 
       {/* ========== CAMINOS ========== (s198: se gestionan solos; la red, al
           cerrar, solo se reinicia y los vuelve a montar cerrados) */}
