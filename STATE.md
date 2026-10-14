@@ -150,10 +150,11 @@ scroll. El sonido no se puede probar ahí (ese WebKit no trae Web Audio): lo mir
   verificación antes de abrirlo a más de 100 personas.
 - Play Console: identidad y móvil verificados (8 oct.). Crear la app con la ficha en español y en
   inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
-- Los dibujos de «Rana» (Caderas · suelo) y «Pica en escritorio» (Empuje · progresión), y rehacer
-  los seis que no casan con su ejercicio (`docs/traspaso/archivos/glifos/revision-glifos.html`, con
-  sus prompts). De logro, los anillos de «Rondas maestra» y la vela de «Larga sesión»
-  (`archivos/glifos/revision-8oct/GLIFOS_8OCT.md`).
+- Los dibujos y las voces que faltan, con sus prompts listos para pegar (14 oct.):
+  - imágenes, en `docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md`: 8 ejercicios con el
+    dibujo equivocado, «Rana» y «Pica en escritorio», 7 logros con el dibujo equivocado o repetido
+    y 18 sin dibujo propio;
+  - audio, en `PROMPTS_AUDIO.md` de la misma carpeta: «Inhale», «Hold» y «Exhale» con las dos voces.
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha
