@@ -16766,6 +16766,74 @@ var PACE_VOZ_PREV = 0.04;
 
 
 
+
+
+
+
+
+
+var PACE_VOZ_FUNDIDO = 0.005;
+
+
+
+
+function paceVozDescodifica(slot, url) {
+  try {
+    var Fuera = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!Fuera || typeof fetch !== 'function') return;
+    fetch(url).
+    then(function (r) {if (!r.ok) throw new Error('HTTP ' + r.status);return r.arrayBuffer();}).
+    then(function (ab) {
+      var dc = new Fuera(1, 1, 44100);
+      return new Promise(function (ok, ko) {var p = dc.decodeAudioData(ab, ok, ko);if (p && p.then) p.then(ok, ko);});
+    }).
+    then(function (buf) {slot.buffer = buf;}).
+    catch(function () {});
+  } catch (e) {}
+}
+
+
+
+function paceVozWebAudio(slot, desde) {
+  var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+  if (!ctx || !slot.buffer) return false;
+  if (ctx.state === 'suspended') {try {ctx.resume();} catch (e) {}}
+  if (ctx.state !== 'running') return false;
+  var f = PACE_VOZ_FUNDIDO;
+  var t0 = ctx.currentTime;
+
+  if (slot.fuente) {
+    try {
+      slot.fuente.g.gain.cancelScheduledValues(t0);
+      slot.fuente.g.gain.setValueAtTime(slot.fuente.g.gain.value, t0);
+      slot.fuente.g.gain.linearRampToValueAtTime(0, t0 + f);
+      slot.fuente.s.stop(t0 + f + 0.01);
+    } catch (e) {}
+  }
+  var resto = slot.buffer.duration - desde;
+  if (!(resto > 2 * f)) return false;
+  var s = ctx.createBufferSource();
+  var g = ctx.createGain();
+  s.buffer = slot.buffer;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(1, t0 + f);
+  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(0, t0 + resto);
+  s.connect(g);
+  g.connect(ctx.destination);
+  s.start(t0, desde);
+  s.stop(t0 + resto + 0.01);
+  var esta = { s: s, g: g };
+  slot.fuente = esta;
+  s.onended = function () {if (slot.fuente === esta) slot.fuente = null;try {g.disconnect();} catch (e) {}};
+  return true;
+}
+
+
+
+
+
+
 function paceVozEstado() {
   try {return typeof getState === 'function' ? getState() : null;} catch (e) {return null;}
 }
@@ -16806,10 +16874,12 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
+    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null };
     juego[nombre] = slot;
+    var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
+    paceVozDescodifica(slot, url);
     try {
-      var a = new Audio('app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3');
+      var a = new Audio(url);
       a.preload = 'auto';
       a.addEventListener('canplaythrough', function () {
 
@@ -16860,7 +16930,9 @@ function paceVozIntenta(nombre, faseSeg) {
 
 
 
-    slot.audio.currentTime = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    if (paceVozWebAudio(slot, desde)) return true;
+    slot.audio.currentTime = desde;
     var p = slot.audio.play();
 
 
@@ -16881,12 +16953,13 @@ Object.assign(window, {
   paceVozIdioma: paceVozIdioma,
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
   PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
+  PACE_VOZ_FUNDIDO: PACE_VOZ_FUNDIDO,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,
   paceVozIntenta: paceVozIntenta
 });
-;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
+;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, PACE_VOZ_FUNDIDO, paceVozDescodifica, paceVozWebAudio, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
 })();
 </script>
   <!-- La receta de cada técnica de Respira (datos que Sound.musica.jsx lee al empezar). -->
