@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.163.0 · 14 de octubre de 2026.
+**Versión:** v0.165.0 · 14 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -127,11 +127,11 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 
 3. **La caza del 10 oct. en el Foco y lo guardado** (`docs/traspaso/CAZA_FOCO_ESTADO_10OCT.md`) está cerrada en
    v0.159.0. **La caza de bugs del 7 oct.** (`docs/traspaso/CAZA_BUGS_7OCT.md`) está cerrada en v0.151.0,
-   (ingles-13, en v0.152.0, con la pausa). Queda grabar la voz de Respira en inglés: hasta
-   entonces, en inglés suena el tono.
+   (ingles-13, en v0.152.0, con la pausa). Las voces de Respira hablan inglés desde v0.165.0.
 4. **La caza del 14 oct. en las sesiones guiadas** (`docs/traspaso/CAZA_SESIONES_14OCT.md`): seis
    arreglos en v0.163.0 (lo que se cuenta con el equipo dormido, las pausas, la página oculta y dos
-   pestañas); sesiones-7, 8 y 9 cambian lo que se ve y esperan a Ez con fotos.
+   pestañas); sesiones-7, 8 y 9, con lo que eligió Ez, en v0.165.0. Queda sesiones-10: la voz grave
+   entrecortada en el navegador del Android de Ez, que tiene que probarla en la app con y sin música.
 5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
    certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
@@ -159,7 +159,9 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   - imágenes, en `docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md`: 8 ejercicios con el
     dibujo equivocado, «Rana» y «Pica en escritorio», 7 logros con el dibujo equivocado o repetido
     y 18 sin dibujo propio;
-  - audio, en `PROMPTS_AUDIO.md` de la misma carpeta: «Inhale», «Hold» y «Exhale» con las dos voces.
+  - entraron en v0.165.0 las voces en inglés y cinco dibujos: «Primer día», «Cuarto creciente»,
+    «Solsticio invierno», «Hueco abdominal» y «Elevación de puntas».
+- Probar en el móvil la voz grave de Respira, en la app, con música y sin ella (sesiones-10).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha
@@ -171,7 +173,7 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga semanas de datos.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
   claves D-1, D-2 y D-3.
-- Los 22 dibujos pendientes (3 de ejercicio y 19 de logro) entran si llegan.
+- Los 21 dibujos pendientes (3 de ejercicio y 18 de logro) entran si llegan.
 
 El `STATE.md` anterior, con el mapa de archivos, el índice de decisiones y el backlog antiguo, está en
 `docs/archive/STATE_HASTA_S200.md`.

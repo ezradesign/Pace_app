@@ -2,11 +2,32 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.164.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.165.0.
+
+## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
+
+Manda sobre todo lo de abajo. Ez lo decidió: mientras se siga en esta cuenta, coordina la sesión que
+trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-a8e105`, puerto 8794).
+Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
+carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
+
+- **v0.165.0:** sesiones-7, 8 y 9 con lo que eligió Ez; las voces de Respira en inglés (Ez las oyó en el
+  portátil y en el móvil; el volumen se queda como está); `PACE_VOZ_FASE_MIN` (sin voz en fases de 1 s);
+  cinco dibujos nuevos (tres logros y dos ejercicios, estos con el rayado igualado a los demás).
+- **Para probar una rama en el móvil de Ez:** `http://192.168.1.129:<puerto>/index.html` con el mismo wifi
+  (el servidor de cada carpeta escucha en todas las interfaces).
+- **sesiones-10 sigue abierta:** la voz grave entrecortada en el navegador de su Android. En una página de
+  prueba se oye limpia, así que el corte viene de lo que suena a la vez. Falta que Ez la pruebe en la app con
+  música y con «Suena detrás: Nada» (`CAZA_SESIONES_14OCT.md`).
+- **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`, puerto 8797), abierta a petición de Ez: la
+  pausa «Exhalación 4·6 + Cuello» hizo Respira y los 15 minutos, pero no el cuello. Juntarla cuando dé el LISTO.
+- **Intermitentes vistos en la suite entera** (pasan solos): `pausa-sin-repetir.spec.js:78` (la home, corrida
+  117 px de lado al cerrar la pausa: fallo de verdad que vuelve 1 de cada muchas) y `sw-aviso.safari.spec.js:47`
+  en chromium (el service worker no llega a controlar a tiempo con la suite cargada).
+- El mortero y la corona de roble que dibujó Ez están en `.old/Glifos_logros`, sin logro (Ez).
+- El hilo del calendario sigue sin abrir.
 
 ## 14 oct. 2026, mañana: relevo hecho, la coordinadora sigue en la otra cuenta
-
-Manda sobre todo lo de abajo.
 
 **Si esta cuenta se agotó con v0.164.0 (iOS) commiteada en `main` en local y sin subir:** si
 `git status` dice que va por delante de `origin/main`, la suite de v0.164.0 estaba corriendo
