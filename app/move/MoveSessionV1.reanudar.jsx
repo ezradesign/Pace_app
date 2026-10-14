@@ -91,9 +91,13 @@ function sesionAMedias() {
   return r || c;
 }
 
-/* Escribe al cambiar de paso o de pausa, al ocultarse o cerrarse la página y al
-   salir (desmontar); borra al terminar. `d` trae los relojes y dos lectores
-   (`reps`, `startedAt`) porque sus valores viven en refs del runner. */
+/* Escribe al cambiar de paso o de pausa, al ocultarse la página y al salir
+   (desmontar); borra al terminar. `d` trae los relojes y dos lectores
+   (`reps`, `startedAt`) porque sus valores viven en refs del runner.
+   UN SOLO ESCRITOR AL IRSE: ocultarse llega antes que todo lo demás al recargar,
+   cerrar la pestaña o mandar la app al fondo. Con `pagehide` también, el banco
+   de mutantes lo destapó: quitar cualquiera de los dos dejaba las pruebas en
+   verde, así que no había forma de saber si alguno funcionaba. */
 function useCuerpoPersistencia(d) {
   const ref = React.useRef(d);
   ref.current = d;
@@ -115,10 +119,8 @@ function useCuerpoPersistencia(d) {
   }, [d.stage, d.stepIdx, d.paused]);
   React.useEffect(() => {
     const alEsconder = () => { if (document.visibilityState === 'hidden') escribir(); };
-    window.addEventListener('pagehide', escribir);
     document.addEventListener('visibilitychange', alEsconder);
     return () => {
-      window.removeEventListener('pagehide', escribir);
       document.removeEventListener('visibilitychange', alEsconder);
       escribir();   // salir ES la interrupción que se quiere recuperar
     };

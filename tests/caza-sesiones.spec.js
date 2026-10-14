@@ -317,15 +317,20 @@ test('recargar a mitad de Estira deja «Continúa · Paso 2 de 4», y se sigue p
   expect(errores).toEqual([]);
 });
 
-test('«Salir» a mitad de Mueve también la deja para seguir', async ({ page }) => {
+test('«Salir» a mitad de Mueve también la deja para seguir, con lo hecho', async ({ page }) => {
   await page.clock.install();
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
-  await segundos(page, 5 + 20);
+  await segundos(page, 5 + 40);
   await sesion(page).getByRole('button', { name: /Salir/ }).click();
   await expect(tarjeta(page)).toHaveAttribute('data-kind', 'resume');
   await expect(tarjeta(page)).toContainText('Gemelos subrepticios');
   await expect(tarjeta(page)).toContainText('Paso 1 de');
+
+  await tarjeta(page).locator('[data-pace-sidebar-accion-boton]').click();
+  await segundos(page, 6);
+  await hastaElCierre(page);
+  expect(await tiempoDelCierre(page), 'lo hecho antes de salir se perdió').toBeGreaterThanOrEqual(40);
 });
 
 test('dos pestañas: la segunda no ofrece seguir una Estira que sigue viva en la primera', async ({ context }) => {

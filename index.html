@@ -27533,6 +27533,10 @@ function sesionAMedias() {
 
 
 
+
+
+
+
 function useCuerpoPersistencia(d) {
   const ref = React.useRef(d);
   ref.current = d;
@@ -27554,10 +27558,8 @@ function useCuerpoPersistencia(d) {
   }, [d.stage, d.stepIdx, d.paused]);
   React.useEffect(() => {
     const alEsconder = () => {if (document.visibilityState === 'hidden') escribir();};
-    window.addEventListener('pagehide', escribir);
     document.addEventListener('visibilitychange', alEsconder);
     return () => {
-      window.removeEventListener('pagehide', escribir);
       document.removeEventListener('visibilitychange', alEsconder);
       escribir();
     };
