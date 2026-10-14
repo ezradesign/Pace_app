@@ -42,8 +42,17 @@ gastó el 58 % de sus 5 horas en 50 minutos: Ez decidió seguir con las dos en p
     - el «Tiempo» de Mueve y Estira va sin las pausas;
     - Mueve y Estira a medias ofrecen «Continúa · Paso n de m».
     Al relevo, su suite corría en el 8794; después da el LISTO.
-    También tiene las voces de Respira en inglés que grabó Ez (`Audio - Respira\voces-en\`, fuera del
-    repo): medirlas, montarlas y que Ez las oiga antes de subir.
+    Se paró al 87 % con un «wip» (`8e80fc5`). Le falta que la suite entera pase: caen ingles-15 y respira-5,
+    seguramente porque practican menos de medio minuto y ahora ven «Sesión sin contar». Lo que queda, en
+    `.claude/relevo/RELEVO.md` de su carpeta.
+    También tiene las voces de Respira en inglés que grabó Ez (`Audio - Respira\voces-en\`, fuera del repo).
+    - Medidas dos veces a −50 dBFS: bradford cabe entera (0,74 · 0,58 · 0,93 s), y sulafat «hold», también
+      (0,99 s).
+    - sulafat «inhale» mide 1,97 s y «exhale» 1,82 s, pero la palabra que se oye (RMS por encima de −40 dB)
+      dura 1,50 y 0,94 s. Lo que sobra es una cola baja: en «inhale», de 1,78 a 2,26 s; en «exhale», de
+      1,88 a 2,65 s.
+    - Lo siguiente: recortar esas colas con un fundido corto, sin regrabar; volver a medir; montarlas
+      (nombres con guion: `sulafat-inhale.mp3`…), y que Ez las oiga antes de subir.
   - `ios-preparar` terminó: **el iPhone está preparado en v0.164.0** (proyecto `ios/`, `nativo.js` e
     `ios.js`, workflow `iOS` y la guía `docs/launch/app-store/guia.html`). Para TestFlight espera la
     cuenta de Apple Developer de Ez y su llave de la API (`PACE-llave-apple`). Su hueco es para el
