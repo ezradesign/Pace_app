@@ -3199,7 +3199,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.signal.tone': 'Tono',
   'settings.signal.clear': 'Voz clara',
   'settings.signal.deep': 'Voz grave',
-  'settings.signal.sub.en': 'La voz solo habla castellano: en inglés suena el tono',
   'settings.bg': 'Suena detrás',
   'settings.bg.none': 'Nada',
   'settings.bg.ambient': 'Ambiente',
@@ -3283,7 +3282,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.signal.tone': 'Tone',
   'settings.signal.clear': 'Clear voice',
   'settings.signal.deep': 'Deep voice',
-  'settings.signal.sub.en': 'The voice only speaks Spanish: in English you hear the tone',
   'settings.bg': 'In the background',
   'settings.bg.none': 'Nothing',
   'settings.bg.ambient': 'Ambient',
@@ -16206,18 +16204,50 @@ var PACE_VOZ_MARGEN = 0.15;
 
 
 
+
+
+
+
+
+
+
+
+
+
 var PACE_VOZ_CLIPS = {
-  sulafat: {
-    'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
-    'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
-    'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+  es: {
+    sulafat: {
+      'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
+      'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
+      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+    },
+    bradford: {
+      'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
+      'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 }
+    }
   },
-  bradford: {
-    'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
-    'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-    'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 }
+  en: {
+    sulafat: {
+      'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
+      'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
+      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 }
+    },
+    bradford: {
+      'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
+      'breathe.hold': { archivo: 'hold', dur: 0.72, ini: 0.031, fin: 0.612 },
+      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 }
+    }
   }
 };
+
+
+
+
+
+
+
+var PACE_VOZ_FASE_MIN = 1.5;
 
 
 
@@ -16241,12 +16271,16 @@ function paceVozEncendida() {
   var st = paceVozEstado();
 
   if (!st) return false;
-
-
-
-  if (st.lang === 'en') return false;
   return st.voiceOn !== false;
 }
+
+
+
+function paceVozIdioma() {
+  var st = paceVozEstado();
+  return st && st.lang === 'en' ? 'en' : 'es';
+}
+
 
 
 
@@ -16257,10 +16291,12 @@ var _paceVoz = {};
 
 function paceVozInit(voz) {
   var cual = PACE_VOCES.indexOf(voz) !== -1 ? voz : paceVozActiva();
-  if (_paceVoz[cual]) return _paceVoz[cual];
+  var idioma = paceVozIdioma();
+  var clave = idioma + '.' + cual;
+  if (_paceVoz[clave]) return _paceVoz[clave];
   var juego = {};
-  _paceVoz[cual] = juego;
-  var fichas = PACE_VOZ_CLIPS[cual] || {};
+  _paceVoz[clave] = juego;
+  var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
     var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
@@ -16300,7 +16336,7 @@ function paceVozCabe(nombre, faseSeg) {
   if (!paceVozEncendida()) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
-  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg <= 0) return false;
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg < PACE_VOZ_FASE_MIN) return false;
 
 
   return slot.palabra + PACE_VOZ_MARGEN <= faseSeg;
@@ -16310,7 +16346,7 @@ function paceVozCabe(nombre, faseSeg) {
 
 function paceVozIntenta(nombre, faseSeg) {
   if (!paceVozCabe(nombre, faseSeg)) return false;
-  var slot = _paceVoz[paceVozActiva()][nombre];
+  var slot = paceVozInit(paceVozActiva())[nombre];
   try {
 
 
@@ -16335,13 +16371,15 @@ Object.assign(window, {
   PACE_VOZ_DEFECTO: PACE_VOZ_DEFECTO,
   paceVozActiva: paceVozActiva,
   paceVozEncendida: paceVozEncendida,
+  paceVozIdioma: paceVozIdioma,
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
+  PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,
   paceVozIntenta: paceVozIntenta
 });
-;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_PREV, paceVozEstado, paceVozActiva, paceVozEncendida, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
+;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
 })();
 </script>
   <!-- La receta de cada técnica de Respira (datos que Sound.musica.jsx lee al empezar). -->
@@ -33099,7 +33137,7 @@ Object.assign(window, {
 
 
 function TweaksAudioBlock(_ref) {let { state, set } = _ref;
-  const { t, lang } = useT();
+  const { t } = useT();
 
 
 
@@ -33137,14 +33175,11 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
     ),
 
 
-
-
-    React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), atenuada: apagado,
-      sub: lang === 'en' ? t('settings.signal.sub.en') : undefined },
-    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: lang === 'en' ? 'tono' : senal, onChange: ponerSenal, opciones: [
+    React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), atenuada: apagado },
+    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: senal, onChange: ponerSenal, opciones: [
       { v: 'tono', name: t('settings.signal.tone') },
-      { v: 'sulafat', name: t('settings.signal.clear'), off: lang === 'en' },
-      { v: 'bradford', name: t('settings.signal.deep'), off: lang === 'en' }] }
+      { v: 'sulafat', name: t('settings.signal.clear') },
+      { v: 'bradford', name: t('settings.signal.deep') }] }
     )
     ),
     React.createElement(AjustesFila, { id: "bg", nombre: t('settings.bg'), atenuada: apagado },

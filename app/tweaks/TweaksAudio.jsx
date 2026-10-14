@@ -34,7 +34,7 @@
    `TweaksPanel.parts.jsx` por `window`: un `const` no cruza la IIFE (s148). */
 
 function TweaksAudioBlock({ state, set }) {
-  const { t, lang } = useT();
+  const { t } = useT();
 
   /* El fondo son dos booleanos en el estado (`ambientOn`, `musicOn`) y tres
      pildoras aqui. s177: TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision:
@@ -70,16 +70,13 @@ function TweaksAudioBlock({ state, set }) {
       <AjustesFila id="sound" nombre={t('settings.sound')}>
         <AjustesInterruptor on={!!state.soundOn} onChange={(v) => set({ soundOn: v })} aria={t('settings.sound')} />
       </AjustesFila>
-      {/* En inglés suena el tono aunque se elija una voz (Sound.voz.jsx): las
-          locuciones son en castellano. La fila lo dice, marca «Tono», que es lo que
-          suena, y las dos voces se ven atenuadas hasta que haya voz inglesa (Ez, 13
-          oct. 2026). Lo guardado no se toca: al volver al castellano vuelve la voz. */}
-      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}
-                   sub={lang === 'en' ? t('settings.signal.sub.en') : undefined}>
-        <AjustesPildoras aria={t('settings.signal')} valor={lang === 'en' ? 'tono' : senal} onChange={ponerSenal} opciones={[
+      {/* Las dos voces hablan castellano e inglés (Sound.voz.jsx): la palabra sale
+          en el idioma de la app, así que la fila es la misma en los dos. */}
+      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}>
+        <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} opciones={[
           { v: 'tono', name: t('settings.signal.tone') },
-          { v: 'sulafat', name: t('settings.signal.clear'), off: lang === 'en' },
-          { v: 'bradford', name: t('settings.signal.deep'), off: lang === 'en' },
+          { v: 'sulafat', name: t('settings.signal.clear') },
+          { v: 'bradford', name: t('settings.signal.deep') },
         ]} />
       </AjustesFila>
       <AjustesFila id="bg" nombre={t('settings.bg')} atenuada={apagado}>

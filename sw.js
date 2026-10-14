@@ -158,6 +158,13 @@ const PRECACHE = [
   '/app/breathe/voz/bradford-inhala.mp3',
   '/app/breathe/voz/bradford-manten.mp3',
   '/app/breathe/voz/bradford-exhala.mp3',
+  /* Las mismas voces en inglés (14 oct. 2026), 269 KB más. */
+  '/app/breathe/voz/sulafat-inhale.mp3',
+  '/app/breathe/voz/sulafat-hold.mp3',
+  '/app/breathe/voz/sulafat-exhale.mp3',
+  '/app/breathe/voz/bradford-inhale.mp3',
+  '/app/breathe/voz/bradford-hold.mp3',
+  '/app/breathe/voz/bradford-exhale.mp3',
   /* s146: glifos de logro del usuario, MASCARAS CSS.
      Mismo trato que el loto: archivo en web + precache, data URI solo en el
      standalone.

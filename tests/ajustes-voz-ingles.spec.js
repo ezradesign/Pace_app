@@ -1,32 +1,32 @@
-/* PACE · E2E · EN INGLÉS, AJUSTES NO OFRECE UNA VOZ QUE NO SUENA (v0.162.0)
- * =========================================================================
- * Las locuciones de Respira solo existen en castellano: en inglés suena el tono aunque se elija
- * una voz. Hasta v0.161.0 Ajustes dejaba marcada «Clear voice» debajo de la nota que lo
- * explicaba. Ez eligió (13 oct.) que en inglés quede marcado «Tone», que es lo que suena, y las
- * dos voces atenuadas, sin tocar lo guardado: al volver al castellano vuelve la voz elegida.
- * Y «Plays behind» pasa a «In the background».
+/* PACE · E2E · EN INGLÉS, AJUSTES OFRECE LAS VOCES COMO EN CASTELLANO
+ * ===================================================================
+ * Desde v0.162.0 y hasta que hubo voces grabadas en inglés, Ajustes marcaba «Tone» con la app en
+ * inglés y atenuaba las dos voces, con una línea que decía que la voz solo hablaba castellano
+ * (Ez, 13 oct.). Con «Inhale / Hold / Exhale» grabadas (14 oct.) la fila es la misma en los dos
+ * idiomas: marca la voz elegida, se puede cambiar, y la línea se va. «In the background» sigue.
  *
- * Contra v0.161.0 cae: «Clear voice» salía marcada y se podía pulsar.
+ * Contra v0.163.0 cae: en inglés salía marcado «Tone» y las voces no se podían pulsar.
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
 
-test('en inglés las voces se ven atenuadas y marca «Tone»; en castellano vuelve la voz', async ({ page, context }) => {
+test('en inglés Ajustes marca la voz elegida, deja cambiarla y no dice que solo hable castellano', async ({ page, context }) => {
   await sembrar(context, { lang: 'en', voice: 'sulafat', voiceOn: true, soundOn: true });
   await irAlArtefacto(page);
   await page.keyboard.press('t');
   const fila = page.locator('[data-pace-aj-fila="signal"]');
-  await expect(fila.getByRole('button', { name: 'Tone' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(fila.getByRole('button', { name: 'Clear voice' })).toBeDisabled();
-  await expect(fila.getByRole('button', { name: 'Deep voice' })).toBeDisabled();
+  await expect(fila.getByRole('button', { name: 'Clear voice' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(fila.getByRole('button', { name: 'Deep voice' })).toBeEnabled();
+  await expect(fila).not.toContainText('Spanish');
   await expect(page.locator('[data-pace-aj-fila="bg"]')).toContainText('In the background');
-  /* Lo guardado no se toca. */
-  expect(await page.evaluate(() => window.getState().voice)).toBe('sulafat');
+
+  await fila.getByRole('button', { name: 'Deep voice' }).click();
+  await expect(fila.getByRole('button', { name: 'Deep voice' })).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.evaluate(() => window.getState().voice)).toBe('bradford');
 
   await page.getByRole('button', { name: 'Español', exact: true }).click();
   const filaEs = page.locator('[data-pace-aj-fila="signal"]');
-  await expect(filaEs.getByRole('button', { name: 'Voz clara' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(filaEs.getByRole('button', { name: 'Voz clara' })).toBeEnabled();
+  await expect(filaEs.getByRole('button', { name: 'Voz grave' })).toHaveAttribute('aria-pressed', 'true');
 });

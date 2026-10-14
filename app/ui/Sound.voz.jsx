@@ -99,19 +99,51 @@ var PACE_VOZ_MARGEN = 0.15;
 
    Y SU «EXHALA» LLEGA HASTA EL FINAL DEL ARCHIVO (fin 3,68 = duracion): no
    tiene cola muda. Si algun dia se recorta el MP3, estos numeros cambian y hay
-   que volver a medirlos. */
+   que volver a medirlos.
+
+   EN INGLES, LAS MISMAS DOS VOCES DICEN «Inhale / Hold / Exhale» (14 oct. 2026),
+   medidas igual, a -50 dBFS. Las de bradford son las mas cortas de todas (0,74 ·
+   0,58 · 0,93 s) y caben en las 17 tecnicas con voz. Las de sulafat no: su
+   «Inhale» dura 1,97 s y no entra en las inhalaciones de 2 s de las tres de
+   rondas, donde suena el tono al inhalar (Ez lo eligio asi); su «Exhale» dura
+   1,82 s porque se apaga despacio, y cabe en las 17. El «Inhale» de sulafat es
+   un archivo de 6,88 s con casi todo silencio detras: no molesta, ver `fin`.
+   Por eso la tabla va POR IDIOMA y dentro POR VOZ: el idioma lo pone la app
+   (`state.lang`) y la voz, Ajustes. */
 var PACE_VOZ_CLIPS = {
-  sulafat: {
-    'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
-    'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
-    'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 },
+  es: {
+    sulafat: {
+      'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
+      'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
+      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 },
+    },
+    bradford: {
+      'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
+      'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 },
+    },
   },
-  bradford: {
-    'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
-    'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-    'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 },
+  en: {
+    sulafat: {
+      'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
+      'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
+      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 },
+    },
+    bradford: {
+      'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
+      'breathe.hold': { archivo: 'hold', dur: 0.72, ini: 0.031, fin: 0.612 },
+      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 },
+    },
   },
 };
+
+/* NINGUNA VOZ EN UNA FASE DE 1 s, quepa o no la palabra. En castellano ninguna
+   cabia, y Suspiro fisiologico («Inhala mas»), Bhastrika y Kapalabhati sonaban
+   con el tono; las palabras inglesas de bradford si cabrian, y esas dos tecnicas
+   dirian «Inhale» cada segundo, noventa veces. Ez eligio (14 oct. 2026) que
+   sigan con el tono en cualquier idioma. Las fases del catalogo son de segundos
+   enteros: el corte cae entre 1 y 2. */
+var PACE_VOZ_FASE_MIN = 1.5;
 
 /* Pre-rodadura al saltar el silencio inicial: arrancar EXACTAMENTE en `ini`
    corta el ataque de la consonante. 40 ms es inaudible como silencio y devuelve
@@ -135,26 +167,32 @@ function paceVozEncendida() {
   var st = paceVozEstado();
   /* sin estado no se adivina: se cae al sintetizador, que es lo de siempre */
   if (!st) return false;
-  /* Las locuciones dicen «inhala / mantén / exhala»: con la app en inglés suena
-     el tono hasta que haya voz grabada en inglés (Ez, 8 oct. 2026). La elección
-     de Ajustes se guarda tal cual y vuelve al pasar a castellano. */
-  if (st.lang === 'en') return false;
   return st.voiceOn !== false;
 }
+/* El idioma de las palabras es el de la app: cambiarlo en Ajustes a mitad de
+   una sesion cambia la siguiente palabra (la primera vez, mientras se precarga,
+   suena el tono). */
+function paceVozIdioma() {
+  var st = paceVozEstado();
+  return st && st.lang === 'en' ? 'en' : 'es';
+}
 
-/* UN JUEGO DE CLIPS POR VOZ. Se precarga la que este activa, no las dos: son
-   seis archivos y solo suena uno de cada tres. Al cambiar de voz en Ajustes la
-   nueva se precarga en ese momento (`TweaksPanel` llama a `paceVozInit`), asi
-   que para cuando empieza una sesion ya esta lista. Si no lo estuviera,
-   `paceVozCabe` dice que no y suena el sintetizador -- nunca un silencio. */
+/* UN JUEGO DE CLIPS POR VOZ E IDIOMA. Se precarga el que este activo, no los
+   cuatro: son doce archivos y solo suena uno de cada tres. Al cambiar de voz en
+   Ajustes la nueva se precarga en ese momento (`TweaksPanel` llama a
+   `paceVozInit`), asi que para cuando empieza una sesion ya esta lista. Si no lo
+   estuviera, `paceVozCabe` dice que no y suena el sintetizador -- nunca un
+   silencio. */
 var _paceVoz = {};
 
 function paceVozInit(voz) {
   var cual = PACE_VOCES.indexOf(voz) !== -1 ? voz : paceVozActiva();
-  if (_paceVoz[cual]) return _paceVoz[cual];
+  var idioma = paceVozIdioma();
+  var clave = idioma + '.' + cual;
+  if (_paceVoz[clave]) return _paceVoz[clave];
   var juego = {};
-  _paceVoz[cual] = juego;
-  var fichas = PACE_VOZ_CLIPS[cual] || {};
+  _paceVoz[clave] = juego;
+  var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
     var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
@@ -194,7 +232,7 @@ function paceVozCabe(nombre, faseSeg) {
   if (!paceVozEncendida()) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
-  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg <= 0) return false;
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg < PACE_VOZ_FASE_MIN) return false;
   /* Lo que puede pisar la senal siguiente es la PALABRA, no el archivo: la cola
      muda puede seguir corriendo sin molestar a nadie. */
   return (slot.palabra + PACE_VOZ_MARGEN) <= faseSeg;
@@ -204,7 +242,7 @@ function paceVozCabe(nombre, faseSeg) {
    locución; `playSound` usa esa respuesta para decidir si además sintetiza. */
 function paceVozIntenta(nombre, faseSeg) {
   if (!paceVozCabe(nombre, faseSeg)) return false;
-  var slot = _paceVoz[paceVozActiva()][nombre];
+  var slot = paceVozInit(paceVozActiva())[nombre];
   try {
     /* Rebobinar en vez de clonar: la misma señal se repite decenas de veces por
        sesión y clonar dejaría un elemento nuevo por ciclo. Si el clip anterior
@@ -229,7 +267,9 @@ Object.assign(window, {
   PACE_VOZ_DEFECTO: PACE_VOZ_DEFECTO,
   paceVozActiva: paceVozActiva,
   paceVozEncendida: paceVozEncendida,
+  paceVozIdioma: paceVozIdioma,
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
+  PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,

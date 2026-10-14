@@ -7,8 +7,8 @@
  * (la pausa de «A tu ritmo», el cierre de una sesión) lo recorren con el reloj
  * de Playwright, como las pruebas de las que copian el escenario.
  *
- * Decisiones de Ez del 8 de octubre que se defienden aquí: en inglés suena el
- * tono y no la voz castellana (ingles-2); cambiar de modo arriba con un Foco
+ * Decisiones de Ez del 8 de octubre que se defienden aquí: en inglés nunca
+ * suena la voz castellana (ingles-2; desde el 14 oct., la voz habla inglés); cambiar de modo arriba con un Foco
  * empezado pregunta antes (ingles-3); la pestaña sigue al idioma y la PWA se
  * llama «PACE» (ingles-6); «stamp» para el sello (ingles-14).
  */
@@ -34,23 +34,27 @@ test('ingles-1 · el aviso de seguridad se titula como la tarjeta', async ({ pag
   await expect(overlaySuperior(page).locator('h3')).toHaveText('Express Rounds');
 });
 
-/* ingles-2 */
-test('ingles-2 · en inglés suena el tono, y Ajustes dice que la voz habla castellano', async ({ page, context }) => {
+/* ingles-2 · Ez, 8 oct.: en inglés no podía sonar la voz castellana, y sonaba el tono. Desde el
+   14 oct. hay voces inglesas: en inglés suena la voz, en inglés, y nunca la castellana. */
+test('ingles-2 · en inglés la voz habla inglés, nunca castellano', async ({ page, context }) => {
   await sembrar(context, Object.assign({ soundOn: true, voiceOn: true, voice: 'sulafat' }, EN));
   await irAlArtefacto(page);
-  const voz = () => page.evaluate(() => ({
-    encendida: paceVozEncendida(),
-    cabe: ['breathe.inhale', 'breathe.hold', 'breathe.exhale'].map((s) => paceVozCabe(s, 6)),
-  }));
-  expect(await voz(), 'con la app en inglés suena la voz castellana').toEqual({ encendida: false, cabe: [false, false, false] });
-  /* La elección se guarda: al volver al castellano la voz vuelve sola. */
-  expect((await page.evaluate(() => getState())).voiceOn).toBe(true);
-  await page.evaluate(() => setState({ lang: 'es' }));
-  expect((await voz()).encendida, 'en castellano la voz tiene que volver').toBe(true);
-  await page.evaluate(() => setState({ lang: 'en' }));
+  const voz = () => page.evaluate(async () => {
+    const v = paceVozInit(paceVozActiva());
+    const hasta = Date.now() + 6000;
+    while (Date.now() < hasta && !Object.keys(v).every((k) => v[k].listo)) await new Promise((res) => setTimeout(res, 100));
+    return {
+      encendida: paceVozEncendida(),
+      cabe: ['breathe.inhale', 'breathe.hold', 'breathe.exhale'].map((s) => paceVozCabe(s, 6)),
+      archivos: Object.keys(v).map((k) => v[k].audio.src.split('/').pop()).sort(),
+    };
+  });
+  expect(await voz(), 'con la app en inglés suena la voz castellana, o ninguna').toEqual({
+    encendida: true, cabe: [true, true, true],
+    archivos: ['sulafat-exhale.mp3', 'sulafat-hold.mp3', 'sulafat-inhale.mp3'],
+  });
   await page.keyboard.press('t');
-  const fila = page.locator('[data-pace-aj-fila="signal"]');
-  await expect(fila.locator('.pace-aj-sub')).toHaveText('The voice only speaks Spanish: in English you hear the tone');
+  await expect(page.locator('[data-pace-aj-fila="signal"]')).not.toContainText('only speaks Spanish');
 });
 
 /* ingles-3 */
