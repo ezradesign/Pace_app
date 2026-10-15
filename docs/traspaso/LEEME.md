@@ -11,7 +11,11 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **v0.167.0 (14 oct., noche):** la voz de Respira por Web Audio con un fundido de 5 ms (Ez dijo «súbela y
+- **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
+  y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
+  hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:
+  `node scripts/relevo-hilo.js <carpeta>` (WORKFLOW §10); carpetas y ramas, con `git worktree list`.
+- **v0.167.0 (14 oct., noche), en `main` con la CI en verde:** la voz de Respira por Web Audio con un fundido de 5 ms (Ez dijo «súbela y
   luego la pruebo en la página»: falta que la oiga en pacegrass.app) y el dibujo del cierre de Mueve y
   Estira que crece con la pantalla (opción B de Ez, https://claude.ai/artifact/GoDfzkXwq8wPufh1MwS92t).
 - **Cuatro sesiones en paralelo, abiertas por la coordinadora el 14 oct. por la noche** (Ez pidió las
