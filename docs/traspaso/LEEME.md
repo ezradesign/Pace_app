@@ -11,6 +11,15 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **RELEVO (15 oct., tarde, al 95 %).** La CI de v0.169.0 cayó en `ritmo-pausa.spec.js:161` (la prueba
+  veía la pausa un minuto tarde en una máquina lenta); el arreglo, solo de la prueba y calibrado, está en
+  `main` (21bb146) y su CI corría al cortar: mírala con `gh run list --branch main`. Si sale verde,
+  v0.169.0 queda cerrada. Esperan:
+  - **Cobro de PACE completo:** Ez eligió (Stripe, código firmado con k2, 2,99 €/mes con 7 días gratis
+    y 19,99 € de por vida, landing en `/premium`). Rama `claude/practical-antonelli-3f03e9` (6e4f160),
+    solo documentos y con v0.169.0 dentro: falta el sí de Ez para juntarla en `main` (sin suite).
+  - **Starter Story** (sesión abierta por la del cobro) y **Estadísticas «Hoy» y «Semana»** (rama junta
+    con v0.169.0 en 98beeda, suite en marcha): se les pidió guardar con «wip» y su RELEVO.md.
 - **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
   **v0.168.0 en `main`, con la CI en verde:** la home corrida y la página de las series. Las 14 caídas
   de su suite (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
