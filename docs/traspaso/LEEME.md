@@ -18,7 +18,7 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   `eventos-origen.spec.js` :93, :120 y :148 y `home-sin-scroll.spec.js` es 360×640 y 375×667. Repetirlas
   solas: si `home-sin-scroll` cae sola, la causa es el arreglo de la home corrida (`app/main.jsx` y
   `app/main/_responsive.js`, a74e49d), y se arregla o se saca antes de subir. NO subir a `main` sin eso.
-  - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 3a03986, 8798): montado lo que eligió Ez («Dos
+  - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 4232186, 8798; parada, todo subido): montado lo que eligió Ez («Dos
     horas» acaba a su hora con las reuniones dentro, larga solo tras 75 min de foco, el miércoles con una
     larga adelantada y el «AHORA» en oscuro); verify pasa, falta la suite entera.
   - Para ahorrar: juntar `ritmo-deudas` y `calendario-solo` en la rama de la coordinadora y pasar UNA
