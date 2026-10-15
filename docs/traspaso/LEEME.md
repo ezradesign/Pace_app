@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.167.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 15 de octubre de 2026, v0.168.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,20 +11,15 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **RELEVO (15 oct., ~08:25 en Madrid, al 84 %; esta cuenta se repone a las 12:40).** `main` en v0.167.0
-  con la CI en verde. En la rama de caza-sesiones (sin subir a `main`): la home corrida (LISTO, b36fc4e)
-  y la página de las series (rehecha con la firma de Ez: sus commits venían con el correo de Hotmail y
-  `verify` los rechaza). **La suite de esas dos (`%TEMP%\suite-168.log`) acabó con 645 en verde y 14 caídas en 54,6 min**
-  (con otras dos suites corriendo a la vez: casi todo, tiempo agotado; la única de texto es
-  `ritmo-bloque-siguiente.spec.js:23`, a mirar sola). Las primeras cinco:
-  `eventos-origen.spec.js` :93, :120 y :148 y `home-sin-scroll.spec.js` es 360×640 y 375×667. Repetirlas
-  solas: si `home-sin-scroll` cae sola, la causa es el arreglo de la home corrida (`app/main.jsx` y
-  `app/main/_responsive.js`, a74e49d), y se arregla o se saca antes de subir. NO subir a `main` sin eso.
+- **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
+  **v0.168.0 en `main`:** la home corrida y la página de las series. Las 14 caídas de la suite de esa
+  versión (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
+  entero caen por tiempo con cuatro navegadores y Brave ocupando 5 GB, y con uno pasan (37 de 37).
+  Para repetir caídas en este PC: `--workers=1`. Lo siguiente: juntar `ritmo-deudas` y
+  `calendario-solo` en esta rama, una suite para las dos y v0.169.0.
   - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 4232186, 8798; parada, todo subido): montado lo que eligió Ez («Dos
     horas» acaba a su hora con las reuniones dentro, larga solo tras 75 min de foco, el miércoles con una
     larga adelantada y el «AHORA» en oscuro); verify pasa, falta la suite entera.
-  - Para ahorrar: juntar `ritmo-deudas` y `calendario-solo` en la rama de la coordinadora y pasar UNA
-    suite para las dos, después de resolver lo de arriba.
   - `calendario-solo` (rama `claude/calendario-solo-4f0d26`, 41f7b73, 8799): PLAN.md montado (Ez eligió A
     en las cuatro), verify en verde; le falta la suite entera (cayó `caza-sesiones.spec.js:149`, ajena,
     a repetir sola) para dar el LISTO.
@@ -76,9 +71,9 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   **Montado en v0.167.0** con el sí de Ez; lo oye en pacegrass.app en el PC y en el móvil.
 - **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`) está en `main` desde v0.166.0: su carpeta
   y su rama ya no hacen falta.
-- **Intermitentes vistos en la suite entera** (pasan solos): `pausa-sin-repetir.spec.js:78` (la home, corrida
-  117 px de lado al cerrar la pausa: fallo de verdad que vuelve 1 de cada muchas) y `sw-aviso.safari.spec.js:47`
-  en chromium (el service worker no llega a controlar a tiempo con la suite cargada).
+- **Intermitente visto en la suite entera** (pasa solo): `sw-aviso.safari.spec.js:47` en chromium (el
+  service worker no llega a controlar a tiempo con la suite cargada). El de `pausa-sin-repetir.spec.js:78`,
+  la home corrida 117 px, está arreglado en v0.168.0.
 - El mortero y la corona de roble que dibujó Ez están en `.old/Glifos_logros`, sin logro (Ez).
 - El hilo del calendario sigue sin abrir.
 - **Hallazgo de Ez (14 oct., tarde):** en el cierre de Mueve y Estira («Estiramiento completado») el

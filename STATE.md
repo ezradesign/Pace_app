@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.167.0 · 14 de octubre de 2026.
+**Versión:** v0.168.0 · 15 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -140,10 +140,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
    certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
-6. **Cuatro sesiones en paralelo** (14 oct., noche; carpetas, ramas y puertos en el relevo de LEEME):
-   las series de las pausas y «PACE que aprende» (investigar y proponer), «A tu ritmo» («Dos horas»
-   dura dos horas de reloj aunque el aro esté corto, el miércoles con tres largas y el modo oscuro
-   del panel), la home que se corre de lado al cerrar la pausa y el calendario que se mantiene solo.
+6. **Hilos abiertos** (carpetas, ramas y puertos en el relevo de LEEME): la home ya no se corre de
+   lado (v0.168.0). «A tu ritmo» («Dos horas» dura su reloj, el miércoles con una sola larga y el
+   «AHORA» en oscuro) y el calendario que se mantiene solo están montados y se juntan en la versión
+   siguiente. Las series de pausas con lógica y la capa 1 de «PACE que aprende», gratis, las eligió
+   Ez el 15 oct. (`docs/traspaso/archivos/series-15oct/`): se montan después, porque tocan
+   `ritmo.regla.js` como «A tu ritmo».
 
 ## Espera a Ez
 
