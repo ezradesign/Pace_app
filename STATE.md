@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.167.0 · 14 de octubre de 2026.
+**Versión:** v0.169.0 · 15 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -29,6 +29,10 @@ Play no deja llevar a pagar fuera de su sistema, y su logro secreto sale del cat
 «Al calendario», junto a «Cambiar», lleva el día de «A tu ritmo» al calendario: el del móvil en
 Android, Google Calendar u Outlook en la web y un .ics en los dos. Con «Tener en cuenta mis
 reuniones», PACE lee a qué horas estás ocupado hoy y el día las esquiva como esquiva la comida.
+Con «Mantenerlo al día solo» (v0.169.0; PACE completo, abierto hasta v1), el día se corrige solo
+en el calendario mientras PACE está abierto: la pausa abre cada evento y avisa, y con el Foco en
+marcha avisa solo PACE. En Android, siempre; en la web, Outlook un día por conexión y Google una
+hora, y luego «Poner al día».
 
 Mueve y Estira se siguen sin tocar la pantalla (v0.144.0, opción A elegida por Ez): un mando de tres
 botones (anterior, pausa, siguiente), toda colocación cuenta sola, «+15 s» junto a la cuenta, un aro
@@ -85,7 +89,9 @@ con un fundido que solo se ve al empezar el bloque (v0.148.3, opción A elegida 
 
 Una pausa de «A tu ritmo» se hace entera (v0.166.0, A · 2A · 3A de Ez): la larga encadena sus
 dos platos («Seguir con Estira») y el aro cuenta la pausa corta y la larga desde que acaba el bloque,
-nunca la comida (`app/state-ritmo.pausa.jsx`).
+nunca la comida (`app/state-ritmo.pausa.jsx`). «Una hora» y «Dos horas» duran su reloj, contado
+desde que empieza el día y con las reuniones dentro: con bloques cortos hay menos foco, y la larga
+llega tras 75 min de foco; el miércoles adelanta una sola (v0.169.0, Ez, 15 oct.).
 
 «A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
 días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
@@ -140,10 +146,9 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
    certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
-6. **Cuatro sesiones en paralelo** (14 oct., noche; carpetas, ramas y puertos en el relevo de LEEME):
-   las series de las pausas y «PACE que aprende» (investigar y proponer), «A tu ritmo» («Dos horas»
-   dura dos horas de reloj aunque el aro esté corto, el miércoles con tres largas y el modo oscuro
-   del panel), la home que se corre de lado al cerrar la pausa y el calendario que se mantiene solo.
+6. **Las series de pausas con lógica y la capa 1 de «PACE que aprende»**, gratis: las eligió Ez el
+   15 oct. (`docs/traspaso/archivos/series-15oct/`) y se pueden montar desde v0.169.0, que trae la
+   regla nueva de «A tu ritmo». Los números de la página se vuelven a medir sobre esa regla.
 
 ## Espera a Ez
 
@@ -157,8 +162,10 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 - Crear la cuenta de Apple Developer a su nombre y la llave de la API de App Store Connect, con
   acceso Administrador, en `PACE-llave-apple` (`docs/launch/app-store/guia.html`, puntos 3 y 4).
 - Dar de alta PACE en Google Cloud y en Microsoft Entra y pasar sus dos ids
-  (`docs/CALENDARIO_ALTAS.md`): hasta entonces la web solo ofrece el archivo. Con Google, pedir la
-  verificación antes de abrirlo a más de 100 personas.
+  (`docs/CALENDARIO_ALTAS.md`; Microsoft pide también `offline_access`): hasta entonces la web solo
+  ofrece el archivo. Con Google, pedir la verificación antes de abrirlo a más de 100 personas.
+- Leer `privacy.html` (es pública), que desde v0.169.0 cuenta «Mantenerlo al día solo», y probar
+  el calendario que se mantiene solo en su Android.
 - Play Console: identidad y móvil verificados (8 oct.). Crear la app con la ficha en español y en
   inglés, para todos los países, y reunir unos 15 testers (tiene 5 o 6; mensajes en `testers.md`).
 - Los dibujos y las voces que faltan, con sus prompts listos para pegar (14 oct.):
@@ -176,8 +183,8 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 - A 320×568 la home del móvil pide scroll (de 49 a 137 px según el momento): Ez lo acepta, porque
   caber exigiría encoger el aro y lo de dentro. Fuera de la home, las escenas con scroll anteriores
   a v0.130.0.
-- En «A tu ritmo»: el miércoles sale con tres largas (2.ª, 5.ª y 8.ª), el modo oscuro del panel, el
-  cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga semanas de datos.
+- En «A tu ritmo»: el cierre que nunca es «Ahora» y la lectura C, que espera a que `origin` tenga
+  semanas de datos.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
   claves D-1, D-2 y D-3.
 - Los 21 dibujos pendientes (3 de ejercicio y 18 de logro) entran si llegan.

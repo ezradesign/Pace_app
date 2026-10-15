@@ -325,7 +325,17 @@ function PaceApp() {
               composición. margin-top/bottom:auto lo CENTRA verticalmente cuando
               hay espacio y, cuando desborda, los márgenes colapsan a 0 y la
               región (home-body) SCROLLEA sin recortar (patrón centrar-o-scrollear
-              fiable en flex). El orden del DOM es FIJO (s166, abajo). */}
+              fiable en flex). El orden del DOM es FIJO (s166, abajo).
+
+              SE RECORTA DE LADO AQUÍ, y no en la región de arriba: el bloom del sol
+              mide 2,2 veces el aro y en móvil asoma por los dos lados (518 px de
+              ancho a 360). `hidden` solo quita la barra: la región seguía teniendo
+              esos 158 px para correrse, y cualquier «llevar a la vista» con
+              alineación al borde (Playwright al reintentar un clic, una ayuda de
+              accesibilidad) la dejaba corrida sin que nadie pudiera devolverla.
+              `clip` recorta sin dejar nada que desplazar, y en vertical sigue
+              `visible`. Esta caja mide lo mismo que la región, así que el borde
+              del recorte es el de siempre. Lo vigila tests/pausa-sin-repetir.spec.js. */}
           <div data-pace-home-stack style={{
             marginTop: 'auto',
             marginBottom: 'auto',
@@ -333,6 +343,7 @@ function PaceApp() {
             flexDirection: 'column',
             width: '100%',
             flexShrink: 0,
+            overflowX: 'clip',
           }}>
             {/* Content — el aro. Altura de CONTENIDO (no crece): su base queda
                 adyacente a la tarjeta, sin espacio de centrado variable, para que

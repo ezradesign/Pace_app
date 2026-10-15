@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.167.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 15 de octubre de 2026, v0.168.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,24 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
+  **v0.168.0 en `main`, con la CI en verde:** la home corrida y la página de las series. Las 14 caídas
+  de su suite (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
+  entero caen por tiempo con cuatro navegadores y Brave ocupando 5 GB, y con uno pasan (37 de 37).
+  Para repetir caídas en este PC: `--workers=1`.
+  **v0.169.0 en `main`:** `ritmo-deudas` y `calendario-solo` juntas (una suite para las dos: 669 en
+  verde y una caída de la prueba, no de la app: `sello-espera.spec.js:28` dependía de la hora y, si el
+  bloque acababa entre las 14:00 y las 14:59, ganaba también «Pausa de mediodía»; ahora corre a las 10).
+  Sus carpetas y ramas ya no guardan nada pendiente.
+  - Lo siguiente: **montar las series** que eligió Ez (la forma 2, la frase B, Piernas de pie, Espalda
+    de pie y la mesa en el catálogo, sin el paseo, y la capa 1 de «PACE que aprende» gratis;
+    `docs/traspaso/archivos/series-15oct/`). Ya puede, porque `ritmo.regla.js` está en `main`; los
+    números de la página se vuelven a medir sobre la regla nueva.
+  - Propuestas a Ez como sesión aparte (una sola, por la regla de dos): el cobro de PACE completo en la
+    web (opciones, sin tocar la app; recomendada) o las Estadísticas «Hoy» y «Semana» (Fase 4).
+  - Falta que Ez lea `privacy.html` (cuenta «Mantenerlo al día solo») y pruebe el calendario solo en su
+    Android.
+  - Ez eligió seguir con dos sesiones a la vez, no cuatro: al reanudarse, cuatro gastaron un 28 % en 3 min.
 - **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
   y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
   hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:
@@ -54,9 +72,9 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   **Montado en v0.167.0** con el sí de Ez; lo oye en pacegrass.app en el PC y en el móvil.
 - **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`) está en `main` desde v0.166.0: su carpeta
   y su rama ya no hacen falta.
-- **Intermitentes vistos en la suite entera** (pasan solos): `pausa-sin-repetir.spec.js:78` (la home, corrida
-  117 px de lado al cerrar la pausa: fallo de verdad que vuelve 1 de cada muchas) y `sw-aviso.safari.spec.js:47`
-  en chromium (el service worker no llega a controlar a tiempo con la suite cargada).
+- **Intermitente visto en la suite entera** (pasa solo): `sw-aviso.safari.spec.js:47` en chromium (el
+  service worker no llega a controlar a tiempo con la suite cargada). El de `pausa-sin-repetir.spec.js:78`,
+  la home corrida 117 px, está arreglado en v0.168.0.
 - El mortero y la corona de roble que dibujó Ez están en `.old/Glifos_logros`, sin logro (Ez).
 - El hilo del calendario sigue sin abrir.
 - **Hallazgo de Ez (14 oct., tarde):** en el cierre de Mueve y Estira («Estiramiento completado») el

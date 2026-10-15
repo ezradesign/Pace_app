@@ -7,7 +7,8 @@
  * QUE DEFIENDE, en puro (ritmo.semana.js es pura, como la regla) y por la app:
  *  · la semana ISO sin new Date("YYYY-MM-DD") y el ciclo de seis temas;
  *  · el tema LIDERA: en la semana de la cadera, la primera de Estira es de cadera/pierna;
- *  · los acentos: lunes arranca con Mueve, miércoles la larga es la segunda, jueves la
+ *  · los acentos: lunes arranca con Mueve, miércoles la primera larga es la segunda pausa (y
+ *    el día no tiene más largas que otro), jueves la
  *    última pausa antes de comer es de Respira, viernes el cierre es el Respira más largo QUE
  *    QUEPA; y el fin de semana no lleva acento (lo que sirve es la regla sobre los pozos del tema);
  *  · CADA PLATO CABE EN SU PARADA los cinco días: la pausa corta y el cierre duran 5' y los
@@ -90,6 +91,28 @@ test('el tema lidera y los cinco acentos hacen lo que dicen; el fin de semana, l
   expect(r.diaSemana).toBe(6);
   expect(r.sabado, 'el sábado no lleva acento').toBe('libre');
   expect(r.sabadoIgual, 'el sábado es la regla de siempre sobre los pozos del tema').toBe(true);
+});
+
+/* El miércoles salía con tres largas (2.ª, 5.ª y la 2.ª de la tarde) porque se corría toda la
+   cuenta de la larga. Ez (15 oct.): una sola, como cualquier día, pero antes. Contra v0.167.0 cae. */
+test('el miércoles adelanta la primera larga y no añade más: las mismas que el martes', async ({ page, context }) => {
+  await abrir(page, context);
+  const r = await page.evaluate((h) => {
+    const largas = (op, iso, extra) => {
+      const m = semanaComponer(op, Object.assign({}, h, { ahora: h.inicio }, extra || {}), ritmoPozos(getState(), iso), {}, 8, semanaDe(iso));
+      return m.items.filter((it) => it.tipo === 'pausa' && it.larga).map((it) => ritmoHora(it.desde));
+    };
+    return {
+      martes: largas('jornada', '2026-10-13'), miercoles: largas('jornada', '2026-10-14'),
+      martesSin: largas('jornada', '2026-10-13', { sinComida: true, salida: 1080 }).length,
+      miercolesSin: largas('jornada', '2026-10-14', { sinComida: true, salida: 1080 }).length,
+      dosHoras: largas('2h', '2026-10-14'),
+    };
+  }, H);
+  expect(r.martes).toEqual(['11:25']);
+  expect(r.miercoles, 'el miércoles, una larga y antes').toEqual(['10:35']);
+  expect(r.miercolesSin, 'sin comida, tantas largas como el martes').toBe(r.martesSin);
+  expect(r.dosHoras, '«Dos horas» no tiene larga ningún día').toEqual([]);
 });
 
 test('los acentos respetan lo hecho, la semana varía y es determinista', async ({ page, context }) => {

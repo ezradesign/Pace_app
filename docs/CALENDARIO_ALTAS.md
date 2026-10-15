@@ -45,7 +45,7 @@ Microsoft ya no deja registrar apps con una cuenta personal suelta: hace falta u
    - Pulsa **Registrar**.
 3. En la página que se abre, copia el **Id. de aplicación (cliente)**.
 4. Ve a **Autenticación**; en la plataforma de página única pulsa **Agregar URI**, escribe `https://paceweb.pages.dev/calendario.html` y guarda.
-5. Ve a **Permisos de API → Agregar un permiso → Microsoft Graph → Permisos delegados**, busca `Calendars.ReadWrite`, márcalo y pulsa **Agregar permisos**.
+5. Ve a **Permisos de API → Agregar un permiso → Microsoft Graph → Permisos delegados**, busca `Calendars.ReadWrite`, márcalo; busca también `offline_access` (está en el grupo **OpenId**), márcalo, y pulsa **Agregar permisos**. El segundo es el que deja a PACE poner el calendario al día solo durante un día sin volver a preguntar («Mantenerlo al día solo»).
 6. Pásale a Claude el identificador del paso 3.
 
 Con una cuenta personal (Outlook.com, Hotmail) funciona en cuanto está dado de alta. En una cuenta de trabajo, la empresa puede exigir que su administrador apruebe apps nuevas: entonces la persona verá un aviso y tendrá que usar «Otro calendario».

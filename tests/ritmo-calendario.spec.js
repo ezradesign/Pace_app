@@ -16,6 +16,10 @@
  *  · GOOGLE y MICROSOFT con su red interceptada: la ventana del permiso vuelve
  *    por /calendario.html y localStorage, y se escribe lo mismo que en Android.
  *
+ * Todo esto es «Añadir» DE UNA VEZ, con «Mantenerlo al día solo» desmarcado: la
+ * casilla viene marcada desde el 14 oct. 2026 y lo que hace marcada lo prueba
+ * tests/ritmo-calendario-solo.spec.js.
+ *
  * NO CUBRE: Android de verdad (que el complemento compile lo dice el workflow
  * Android; que escriba en el calendario del móvil, un móvil), ni Google ni
  * Microsoft de verdad (sus altas las hace Ez: docs/CALENDARIO_ALTAS.md).
@@ -74,12 +78,14 @@ test('la regla esquiva lo ocupado: nada lo pisa, cada reunión es su tramo y la 
       m.focos.forEach((f) => { if (f.dur < 15) out.push(tag + ': bloque de ' + f.dur + ' min'); });
       const comida = m.items.find((it) => it.tipo === 'comida');
       if (comida && comida.desde !== 840) out.push(tag + ': la comida no empieza a su hora');
-      if (op === '1h' && m.focoMin !== 50) out.push(tag + ': «Una hora» sirve ' + m.focoMin + ' min');
+      /* las reuniones cuentan en el reloj de las dos cortas (Ez, 15 oct.): no pasan de su hora */
+      if (op === '1h' && m.hasta > 600) out.push(tag + ': «Una hora» acaba a las ' + m.hasta);
+      if (op === '2h' && m.hasta > 660) out.push(tag + ': «Dos horas» acaba a las ' + m.hasta);
     }));
     /* Un bloque que llegaría tarde a la reunión deja sitio a su pausa: llegas con ella hecha. */
-    const m = ritmoComponer('1h', Object.assign({}, H, { ocupado: [[570, 30]] }), pozos, {}, 8);
+    const m = ritmoComponer('2h', Object.assign({}, H, { ocupado: [[570, 30]] }), pozos, {}, 8);
     const tipos = m.items.map((it) => it.tipo + '@' + it.desde + '+' + it.dur).join(' ');
-    if (tipos !== 'foco@540+25 pausa@565+5 ocupado@570+30 foco@600+25 cierre@625+5') out.push('1h con reunión a las 9:30: ' + tipos);
+    if (tipos !== 'foco@540+25 pausa@565+5 ocupado@570+30 foco@600+55 cierre@655+5') out.push('2h con reunión a las 9:30: ' + tipos);
     /* La reunión que cruza la comida pierde el trozo de la comida. */
     const c = ritmoOcupadoLimpio([[810, 90]], 540, 840, 60);
     if (JSON.stringify(c) !== JSON.stringify([{ desde: 810, hasta: 840 }])) out.push('reunión en la comida: ' + JSON.stringify(c));
@@ -257,6 +263,7 @@ test.describe('en Android', () => {
     await expect(hoja.locator('[data-pace-cal-destino]')).toHaveCount(2);
     await expect(hoja.locator('[data-pace-cal-destino="android"]')).toContainText('Calendario del móvil');
     await expect(hoja.locator('[data-pace-cal-reuniones]')).toBeChecked();
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.');
 
@@ -362,6 +369,7 @@ for (const prov of ['google', 'microsoft']) {
     const hoja = page.locator('[data-pace-cal]');
     const fila = hoja.locator('[data-pace-cal-destino="' + prov + '"]');
     await expect(fila.locator('button')).toHaveText('Conectar');
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
     await fila.locator('button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.', { timeout: 15_000 });
 

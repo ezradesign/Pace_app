@@ -6,9 +6,14 @@
    ============================================================
    La web habla DIRECTAMENTE con Google y con Microsoft desde el navegador: no
    hay servidor de PACE en medio y nada del calendario pasa por otro sitio. El
-   permiso dura una hora (el pase que dan), vive solo en esta pestaña
-   (sessionStorage) y no se renueva solo: al caducar, el siguiente «Añadir»
-   vuelve a preguntar.
+   pase vive solo en esta pestaña (sessionStorage) y se olvida al cerrarla.
+
+   CUÁNTO DURA: el de Google, una hora, y sin un servidor no se renueva sin un
+   clic (Google pide un gesto para cada pase nuevo). El de Microsoft, una hora,
+   pero con `offline_access` llega con un pase de renovación que dura 24 h fijas
+   en una app de navegador (renovarlo no alarga el plazo): mientras viva, el
+   calendario que se mantiene solo (ritmo.calendario.motor.js) pide pases nuevos
+   sin ventana. Pasado eso, «Poner al día» vuelve a preguntar.
 
    EL PERMISO SE PIDE EN UNA VENTANA APARTE que vuelve a /calendario.html.
    Esa página no le habla a la app por `window.opener`: la página de Google o de
@@ -40,6 +45,10 @@ var CALENDARIO_PASE_CLAVE = 'pace.calendario.pase';
    un GUID propio de PACE y un nombre. No cambiar: es como se encuentran los
    eventos de días anteriores. */
 var CALENDARIO_MS_PROP = 'String {7b3f2c1e-8d4a-4e6b-9a5c-2f1e0d9c8b7a} Name paceRitmo';
+/* La clave de cada evento del calendario que se mantiene solo (ritmo.calendario.solo.js). */
+var CALENDARIO_MS_CLAVE = 'String {7b3f2c1e-8d4a-4e6b-9a5c-2f1e0d9c8b7a} Name paceClave';
+var CALENDARIO_MS_SCOPE = 'offline_access https://graph.microsoft.com/Calendars.ReadWrite';
+var CALENDARIO_MS_TOKEN = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 
 var CALENDARIO_PROVEEDORES = {
   google: {
@@ -56,7 +65,7 @@ var CALENDARIO_PROVEEDORES = {
     url: function (o) {
       return 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?' + calendarioQuery({
         client_id: CALENDARIO_IDS.microsoft, redirect_uri: o.vuelta, response_type: 'code', response_mode: 'fragment',
-        state: o.estado, scope: 'https://graph.microsoft.com/Calendars.ReadWrite', code_challenge: o.reto,
+        state: o.estado, scope: CALENDARIO_MS_SCOPE, code_challenge: o.reto,
         code_challenge_method: 'S256', prompt: 'select_account',
       });
     },
@@ -86,21 +95,56 @@ function calendarioWebDisponible(prov) {
 
 /* --- El pase --------------------------------------------------------------- */
 
-function calendarioPaseGuardado(prov) {
-  try {
-    var todos = JSON.parse(sessionStorage.getItem(CALENDARIO_PASE_CLAVE) || '{}');
-    var p = todos[prov];
-    return p && p.token && p.caduca > Date.now() + 60000 ? p.token : null;
-  } catch (e) { return null; }
+function calendarioPaseLeer(prov) {
+  try { return JSON.parse(sessionStorage.getItem(CALENDARIO_PASE_CLAVE) || '{}')[prov] || null; } catch (e) { return null; }
 }
 
-function calendarioPaseGuardar(prov, token, segundos) {
+function calendarioPaseGuardado(prov) {
+  var p = calendarioPaseLeer(prov);
+  return p && p.token && p.caduca > Date.now() + 60000 ? p.token : null;
+}
+
+/* `renovar` = { token, segundos }: el pase de renovación de Microsoft. Uno
+   renovado conserva el plazo del primero (no se alarga). */
+function calendarioPaseGuardar(prov, token, segundos, renovar) {
   try {
     var todos = JSON.parse(sessionStorage.getItem(CALENDARIO_PASE_CLAVE) || '{}');
-    if (token) todos[prov] = { token: token, caduca: Date.now() + (Number(segundos) || 3600) * 1000 };
-    else delete todos[prov];
+    if (token) {
+      var antes = todos[prov] || {};
+      var p = { token: token, caduca: Date.now() + (Number(segundos) || 3600) * 1000 };
+      if (renovar && renovar.token) {
+        var hasta = Date.now() + (Number(renovar.segundos) || 86400) * 1000;
+        p.renovar = renovar.token;
+        p.renovarHasta = antes.renovarHasta ? Math.min(antes.renovarHasta, hasta) : hasta;
+      }
+      todos[prov] = p;
+    } else delete todos[prov];
     sessionStorage.setItem(CALENDARIO_PASE_CLAVE, JSON.stringify(todos));
   } catch (e) {}
+}
+
+/* Hasta cuándo puede PACE escribir sin preguntar (ms), o 0. */
+function calendarioPaseHasta(prov) {
+  var p = calendarioPaseLeer(prov);
+  if (!p || !p.token) return 0;
+  return Math.max(p.caduca || 0, p.renovar ? p.renovarHasta || 0 : 0);
+}
+
+/* Un pase sin abrir ninguna ventana: el que hay o, en Microsoft, uno renovado.
+   Resuelve con el pase o con null. */
+function calendarioPaseSinGesto(prov) {
+  var vivo = calendarioPaseGuardado(prov);
+  if (vivo) return Promise.resolve(vivo);
+  var p = calendarioPaseLeer(prov);
+  if (prov !== 'microsoft' || !p || !p.renovar || !(p.renovarHasta > Date.now() + 60000)) return Promise.resolve(null);
+  return fetch(CALENDARIO_MS_TOKEN, {
+    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: calendarioQuery({ client_id: CALENDARIO_IDS.microsoft, grant_type: 'refresh_token', refresh_token: p.renovar, scope: CALENDARIO_MS_SCOPE }),
+  }).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j || !j.access_token) { calendarioPaseGuardar(prov, null); return null; }
+    calendarioPaseGuardar(prov, j.access_token, j.expires_in, { token: j.refresh_token || p.renovar, segundos: j.refresh_token_expires_in });
+    return j.access_token;
+  }).catch(function () { return null; });
 }
 
 function calendarioAleatorio(n) {
@@ -138,13 +182,13 @@ function calendarioPedirPase(prov) {
       calendarioPaseGuardar(prov, params.access_token, params.expires_in);
       return params.access_token;
     }
-    return fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+    return fetch(CALENDARIO_MS_TOKEN, {
       method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: calendarioQuery({ client_id: CALENDARIO_IDS.microsoft, grant_type: 'authorization_code', code: params.code,
-        redirect_uri: vuelta, code_verifier: verificador, scope: 'https://graph.microsoft.com/Calendars.ReadWrite' }),
+        redirect_uri: vuelta, code_verifier: verificador, scope: CALENDARIO_MS_SCOPE }),
     }).then(function (r) { return r.json(); }).then(function (j) {
       if (!j || !j.access_token) throw new Error('denegado');
-      calendarioPaseGuardar(prov, j.access_token, j.expires_in);
+      calendarioPaseGuardar(prov, j.access_token, j.expires_in, j.refresh_token ? { token: j.refresh_token, segundos: j.refresh_token_expires_in } : null);
       return j.access_token;
     });
   });
@@ -195,7 +239,8 @@ function calendarioEsperarVuelta(ventana, estado) {
 /* fetch con el pase. Un 401 borra el pase (caducó o se retiró) y falla con
    'pase': el siguiente «Añadir» pedirá permiso otra vez. */
 function calendarioFetch(prov, token, url, opciones) {
-  var o = Object.assign({ method: 'GET' }, opciones || {});
+  /* Sin caché: una lista de ayer haría crear otra vez lo que ya está. */
+  var o = Object.assign({ method: 'GET', cache: 'no-store' }, opciones || {});
   o.headers = Object.assign({ Authorization: 'Bearer ' + token }, o.body ? { 'Content-Type': 'application/json' } : {},
     prov === 'microsoft' ? { Prefer: 'outlook.timezone="UTC"' } : {}, o.headers || {});
   return fetch(url, o).then(function (r) {
@@ -266,25 +311,84 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
   });
 }
 
-/* Crea un evento de PACE: ocupado, sin recordatorios y marcado con su día. */
-function calendarioWebCrear(prov, token, iso, ev) {
+/* Lo que comparten crear y cambiar: horas, título, texto y aviso al empezar.
+   Sin `solo` (los de «Añadir» de una vez) nunca hay aviso. */
+function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(), b = new Date(ev.fin).toISOString();
+  var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
-    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API, { method: 'POST', body: JSON.stringify({
-      summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b },
-      transparency: 'opaque', reminders: { useDefault: false, overrides: [] },
-      extendedProperties: { private: { pace: 'ritmo', paceDia: iso } },
-    }) });
+    return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b },
+             reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
-  return calendarioFetch(prov, token, CALENDARIO_GRAPH + 'events', { method: 'POST', body: JSON.stringify({
-    subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
-    start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-    showAs: 'busy', isReminderOn: false,
-    singleValueExtendedProperties: [{ id: CALENDARIO_MS_PROP, value: iso }],
-  }) });
+  var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
+                 start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
+                 isReminderOn: aviso };
+  if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
+  return cuerpo;
+}
+
+/* Crea un evento de PACE: ocupado y marcado con su día y, si se mantiene solo,
+   con su clave. Resuelve con el id que le da el calendario. */
+function calendarioWebCrear(prov, token, iso, ev, solo) {
+  var cuerpo = calendarioWebCuerpo(prov, ev, solo);
+  if (prov === 'google') {
+    var privado = { pace: 'ritmo', paceDia: iso };
+    if (solo) privado.paceClave = ev.clave;
+    cuerpo.transparency = 'opaque';
+    cuerpo.extendedProperties = { private: privado };
+    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API, { method: 'POST', body: JSON.stringify(cuerpo) })
+      .then(function (j) { return j && j.id ? String(j.id) : null; });
+  }
+  cuerpo.showAs = 'busy';
+  cuerpo.singleValueExtendedProperties = [{ id: CALENDARIO_MS_PROP, value: iso }].concat(solo ? [{ id: CALENDARIO_MS_CLAVE, value: ev.clave }] : []);
+  return calendarioFetch(prov, token, CALENDARIO_GRAPH + 'events', { method: 'POST', body: JSON.stringify(cuerpo) })
+    .then(function (j) { return j && j.id ? String(j.id) : null; });
+}
+
+function calendarioWebUrlEvento(prov, id) {
+  return prov === 'google' ? CALENDARIO_GOOGLE_API + '/' + encodeURIComponent(id) : CALENDARIO_GRAPH + 'events/' + encodeURIComponent(id);
+}
+
+/* Cambia un evento que ya está: el mismo id, sin crear otro. */
+function calendarioWebCambiar(prov, token, id, ev) {
+  return calendarioFetch(prov, token, calendarioWebUrlEvento(prov, id), { method: 'PATCH', body: JSON.stringify(calendarioWebCuerpo(prov, ev, true)) });
+}
+
+function calendarioWebQuitar(prov, token, id) {
+  return calendarioFetch(prov, token, calendarioWebUrlEvento(prov, id), { method: 'DELETE' });
+}
+
+/* Los eventos de PACE del día `iso` tal como están en el calendario:
+   [{ id, clave, inicio, fin, titulo, texto, aviso }]. Los de «Añadir» de una vez
+   no llevan clave. */
+function calendarioWebListar(prov, token, iso) {
+  if (prov === 'google') {
+    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({
+      privateExtendedProperty: 'paceDia=' + iso, singleEvents: 'true', maxResults: '100',
+    })).then(function (j) {
+      return ((j && j.items) || []).filter(function (e) { return e.start && e.start.dateTime && e.status !== 'cancelled'; }).map(function (e) {
+        var priv = (e.extendedProperties && e.extendedProperties.private) || {};
+        var r = e.reminders || {};
+        return { id: String(e.id), clave: priv.paceClave || null, inicio: Date.parse(e.start.dateTime), fin: Date.parse(e.end.dateTime),
+                 titulo: e.summary || '', texto: e.description || '', aviso: !r.useDefault && (r.overrides || []).length > 0 };
+      });
+    });
+  }
+  return calendarioFetch(prov, token, CALENDARIO_GRAPH + 'events?' + calendarioQuery({
+    $filter: "singleValueExtendedProperties/Any(ep: ep/id eq '" + CALENDARIO_MS_PROP + "' and ep/value eq '" + iso + "')",
+    $select: 'id,subject,body,start,end,isReminderOn', $top: '100',
+    $expand: "singleValueExtendedProperties($filter=id eq '" + CALENDARIO_MS_CLAVE + "')",
+  }), { headers: { Prefer: 'outlook.timezone="UTC", outlook.body-content-type="text"' } }).then(function (j) {
+    return ((j && j.value) || []).map(function (e) {
+      var clave = (e.singleValueExtendedProperties || []).filter(function (p) { return /paceClave$/i.test(String(p.id || '')); })[0];
+      return { id: String(e.id), clave: clave ? clave.value : null, inicio: calendarioMsInstante(e.start), fin: calendarioMsInstante(e.end),
+               titulo: e.subject || '', texto: (e.body && e.body.content) || '', aviso: !!e.isReminderOn };
+    });
+  });
 }
 
 Object.assign(window, {
   CALENDARIO_IDS, CALENDARIO_PROVEEDORES, calendarioWebDisponible, calendarioPaseGuardado, calendarioPaseGuardar, calendarioPedirPase,
-  calendarioWebReuniones, calendarioWebBorrar, calendarioWebCrear, calendarioMsInstante,
+  calendarioPaseHasta, calendarioPaseSinGesto, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCrear, calendarioWebCambiar,
+  calendarioWebQuitar, calendarioWebListar, calendarioMsInstante,
 });
