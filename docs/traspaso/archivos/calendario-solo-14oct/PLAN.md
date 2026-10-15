@@ -1,5 +1,21 @@
 # El calendario se mantiene solo · decisiones de Ez y plan de montaje (14 oct. 2026)
 
+**Montado el 15 oct. 2026** en la rama `claude/calendario-solo-4f0d26`, como dice el plan de abajo y con
+las pruebas de `tests/ritmo-calendario-solo.spec.js`. Fotos de lo montado, iguales a la maqueta. Lo que se
+aparta de ella, a contar a Ez:
+
+- Con un calendario ya conectado, la hoja no ofrece los otros dos destinos (escribiría el día en dos
+  calendarios y avisaría dos veces); «Otro calendario» sigue.
+- En la nota de «Poner al día» hay un enlace pequeño «Desconectar», porque en ese estado no hay otra salida.
+- La casilla cerrada (sin PACE completo) es un botón con la casilla dibujada, para que se pueda usar con el
+  teclado.
+
+Y un fallo de antes que salió al probarlo: el service worker guardaba las respuestas de Google y Microsoft
+y devolvía siempre la primera (las reuniones nuevas no llegaban desde v0.140.0). Arreglado en `sw.js`.
+
+Espera a Ez: los dos ids (`docs/CALENDARIO_ALTAS.md`, que ya pide `offline_access` en Microsoft), leer el
+cambio de `privacy.html` antes de subirlo, y probarlo en su Android.
+
 Página que vio Ez: `propuesta.html` (esta carpeta; publicada en https://claude.ai/artifact/BceaWgs9dbLKYWdhhpMgKb).
 Las fotos son de la app real (v0.166.0) con los textos nuevos puestos encima: lo que se monte tiene
 que verse así. Los scripts que la generan no se versionan: se rehacen con Playwright si hace falta.
