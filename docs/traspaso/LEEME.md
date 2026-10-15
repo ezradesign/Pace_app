@@ -11,12 +11,18 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **RELEVO (15 oct., ~08:20 en Madrid, al 79 %; esta cuenta se repone a las 12:40).** `main` en v0.167.0
+- **RELEVO (15 oct., ~08:25 en Madrid, al 84 %; esta cuenta se repone a las 12:40).** `main` en v0.167.0
   con la CI en verde. En la rama de caza-sesiones (sin subir a `main`): la home corrida (LISTO, b36fc4e)
   y la página de las series (rehecha con la firma de Ez: sus commits venían con el correo de Hotmail y
-  `verify` los rechaza). La suite entera de esas dos corría (`%TEMP%\suite-168.log`): si sale en verde,
-  bump v0.168.0, CHANGELOG/STATE y push a `main`; si cae algo, repetirlo solo.
-  - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 8798): esperaba una respuesta de Ez en su sesión.
+  `verify` los rechaza). **La suite de esas dos (`%TEMP%\suite-168.log`) llevaba 5 caídas a mitad**:
+  `eventos-origen.spec.js` :93, :120 y :148 y `home-sin-scroll.spec.js` es 360×640 y 375×667. Repetirlas
+  solas: si `home-sin-scroll` cae sola, la causa es el arreglo de la home corrida (`app/main.jsx` y
+  `app/main/_responsive.js`, a74e49d), y se arregla o se saca antes de subir. NO subir a `main` sin eso.
+  - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 3a03986, 8798): montado lo que eligió Ez («Dos
+    horas» acaba a su hora con las reuniones dentro, larga solo tras 75 min de foco, el miércoles con una
+    larga adelantada y el «AHORA» en oscuro); verify pasa, falta la suite entera.
+  - Para ahorrar: juntar `ritmo-deudas` y `calendario-solo` en la rama de la coordinadora y pasar UNA
+    suite para las dos, después de resolver lo de arriba.
   - `calendario-solo` (rama `claude/calendario-solo-4f0d26`, 41f7b73, 8799): PLAN.md montado (Ez eligió A
     en las cuatro), verify en verde; le falta la suite entera (cayó `caza-sesiones.spec.js:149`, ajena,
     a repetir sola) para dar el LISTO.
