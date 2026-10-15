@@ -80,6 +80,7 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
 .tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);border-radius:999px;padding:1px 8px;color:var(--ink-3);margin-top:4px}
 .tag.ok{border-color:var(--olive);color:var(--olive)}
 .tag.no{border-color:var(--terra);color:var(--terra)}
+td>.tag:first-child{margin:0 6px 4px 0}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
 .opts.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .opt{background:var(--paper-2);border-radius:14px;padding:18px;border:1px solid transparent;min-width:0}
@@ -104,7 +105,7 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
 <h1>Cómo se cobra PACE completo en la web</h1>
 <p class="lead">Quién cobra, cómo le llega el código a quien paga, cómo se prueba antes de pagar y dónde vive la página de venta. Cada pregunta trae opciones y una recomendación. No se contrata ni se crea nada: eso lo haces tú cuando elijas.</p>
 <div class="nav">
-  <a href="#resumen">En corto</a><a href="#quien">Quién cobra</a><a href="#codigo">El código</a><a href="#prueba">Probar antes de pagar</a><a href="#landing">La landing</a><a href="#casos">Casos</a><a href="#tu">Lo que harías tú</a><a href="#fuentes">Fuentes</a>
+  <a href="#resumen">En corto</a><a href="#quien">Quién cobra</a><a href="#codigo">El código</a><a href="#prueba">Probar antes de pagar</a><a href="#landing">La landing</a><a href="#starter">Starter Story</a><a href="#casos">Casos</a><a href="#tu">Lo que harías tú</a><a href="#fuentes">Fuentes</a>
 </div>
 
 <h2 id="resumen">En corto</h2>
@@ -226,9 +227,7 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
   <p>Encaja con un solo plan de 19,99 €, no pide nada a nadie y la app sigue sin servidor. En Europa, quien compra algo digital tiene 14 días para echarse atrás salvo que renuncie al empezar a usarlo: propongo no pedirle esa renuncia y devolver sin preguntas. Es una segunda prueba y encaja con el tono (la comisión de esa venta no vuelve).</p>
   <p><strong>El día de v1:</strong> hoy las rutinas premium están abiertas para todos hasta v1. Quien ya las usaba recibiría su semana de prueba sola, con un aviso, en vez de encontrarse el candado de golpe.</p>
 </div>
-<div class="box warn">
-  <p><strong>Starter Story, sin hacer.</strong> La revisión a fondo que pediste (los dos canales, el vídeo de monetización y las reseñas de la competencia) no está hecha: va antes de fijar el precio y los textos de la landing. De pasada vi que el vídeo que guardaste trata de cómo una app de 40.000 $ al mes enseña la prueba dentro de la bienvenida, y que otros fundadores cuentan que pedir el pago o la prueba al entrar les subió las ventas. Eso es el modelo de suscripción con muro, lo contrario del tono de PACE, así que no cambia nada de aquí. Te propongo una sesión aparte para hacerla.</p>
-</div>
+<p class="small">Starter Story apunta en la misma dirección: la app de su canal que más se parece a PACE vende sobre todo de por vida (sección 5).</p>
 
 <h2 id="landing">4 · Dónde vive la landing y qué lleva</h2>
 <p>La app tiene que quedarse en la raíz de pacegrass.app: lo guardado es de cada dirección, la app instalada abre la raíz y los enlaces de los testers apuntan ahí.</p>
@@ -249,7 +248,37 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
 </ol>
 <p><strong>Lo que no lleva:</strong> cuentas atrás, «ofertas», opiniones inventadas ni nada que siga las visitas. Y en la app de Android, nada que lleve a pagar fuera de Play.</p>
 
-<h2 id="casos">5 · Casos</h2>
+<h2 id="starter">5 · Lo que dice Starter Story</h2>
+<p>Revisé los 30 vídeos de los últimos tres meses del canal y el de monetización que guardaste. Desde aquí YouTube no deja ver los vídeos enteros, así que leí sus descripciones y capítulos y los resúmenes escritos de los más parecidos a PACE. Casi todos son apps de una sola persona, con cifras que da el propio fundador.</p>
+<p>La mayoría cobra por semana o por año, pone un muro de pago al entrar y crece con anuncios en TikTok. Eso no encaja con PACE. La que más se le parece hace justo lo contrario.</p>
+<div class="box">
+  <h3>El caso más cercano: Cat on Chair</h3>
+  <ul>
+    <li>Un temporizador Pomodoro en el que un gato se sube a tu silla mientras te concentras. Lo hizo un diseñador de producto que dejó su trabajo, con su pareja, que es ilustradora.</li>
+    <li>Se descarga gratis. Lo de pago cuesta <span class="price">29,99 $ de por vida</span> o 19,99 $ al año, y él cuenta que casi todo entra por el de por vida.</li>
+    <li>127.000 descargas y unos 80.000 $ en nueve meses. En los últimos 30 días, 18.000 $ con 24.400 descargas: unos 0,74 $ por descarga.</li>
+    <li>Sin anuncios ni prensa. Lo movieron sus probadores en Red Note, cuentas de Instagram que lo sacaron en sus listas de apps favoritas (un vídeo llegó a 2 millones de vistas) y una ola en Threads de Taiwán que dobló las ventas.</li>
+    <li>Compite por cómo se siente, no por funciones. Añadió un maullido al tocar el gato porque la gente lo tocaba sin parar, y eso se compartía.</li>
+  </ul>
+</div>
+<div class="tablewrap"><table>
+<thead><tr><th>Idea</th><th>De dónde sale</th><th>Para PACE</th></tr></thead>
+<tbody>
+<tr><td>Lo de por vida vende en apps tranquilas y hechas a mano</td><td>Cat on Chair</td><td><span class="tag ok">sí</span> Confirma un solo plan de por vida y que no haga falta el mensual.</td></tr>
+<tr><td>Un Pomodoro cuidado se vende a unos 30 $ de por vida</td><td>Cat on Chair, con un anual de 19,99 $ al lado que hace de ancla</td><td><span class="tag">para pensar</span> PACE trae más (Respira, Mueve, Estira, «A tu ritmo») por 19,99 €. No cambio nada: es un dato para cuando se revise el precio, antes de abrir la tienda.</td></tr>
+<tr><td>La venta se decide en la bienvenida</td><td>El vídeo que guardaste (Prayer Lock): según un resumen, alargar la bienvenida de 5 a 15 minutos triplicó las compras. Otros ponen un muro duro.</td><td><span class="tag">lo decides tú</span> Una versión tranquila: que la bienvenida de PACE acabe enseñando una sola vez qué trae PACE completo, con «Probar 7 días» y «Ahora no». Roza la regla de no recordar a nadie que podría comprar.</td></tr>
+<tr><td>Lo que se ve bonito se comparte solo</td><td>Cat on Chair; casi todos crecen con vídeos cortos</td><td><span class="tag ok">sí</span> El horizonte, la vaca y el sol son el gancho de PACE. Vídeos cortos de la app en uso, hechos por ti, antes que anuncios.</td></tr>
+<tr><td>Anuncios de pago cuando salen las cuentas</td><td>Chart Detector, «el método perezoso»</td><td><span class="tag no">ahora no</span> Saber qué anuncio trae cada compra choca con la promesa de no seguir a nadie.</td></tr>
+<tr><td>Un cliente concreto al que nadie mira</td><td>Voicy, hecha para el padre del fundador</td><td><span class="tag ok">sí</span> «Quien trabaja sentado» ya lo es. En la ficha de Play, sus palabras: Pomodoro, pausas activas, estiramientos en la oficina.</td></tr>
+<tr><td>Una idea probada, para tu propio mercado</td><td>Cal Buddy copió una app de éxito para su país</td><td><span class="tag ok">sí</span> PACE nace en castellano, donde hay menos competencia que en inglés: la landing y la ficha, primero en castellano.</td></tr>
+<tr><td>Poner el botón de comprar pronto</td><td>El reto del que hizo 100 apps y ganó 0 $</td><td><span class="tag ok">sí</span> Abrir la venta en la web en cuanto esté lo mínimo, sin esperar a tenerlo todo.</td></tr>
+<tr><td>Mirar cuánto entra por descarga</td><td>Casi todos: ingresos por descarga y quién sigue a la semana</td><td><span class="tag ok">sí</span> Sin seguir a nadie: las instalaciones de Play Console y las ventas de Stripe dan el «por descarga».</td></tr>
+</tbody></table></div>
+<div class="box rec">
+  <p><strong>Cómo cambia lo de arriba:</strong> las cuatro recomendaciones se quedan como están, y salen dos cosas para que decidas tú: la bienvenida que enseña PACE completo una vez y el precio. Del encargo de la memoria quedan sin mirar el canal hermano (Starter Story Build) y las reseñas de la competencia en Play y en la App Store.</p>
+</div>
+
+<h2 id="casos">6 · Casos</h2>
 <p>Con lo recomendado: Stripe, la firma automática, 7 días gratis y la landing en <code>/completo</code>.</p>
 <div class="tablewrap"><table>
 <thead><tr><th>Si…</th><th>Qué pasa</th></tr></thead>
@@ -271,7 +300,7 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
 <tr><td>Compra una empresa y quiere factura</td><td>La hace Link, a nombre de la empresa.</td></tr>
 </tbody></table></div>
 
-<h2 id="tu">6 · Lo que harías tú, y lo que viene después</h2>
+<h2 id="tu">7 · Lo que harías tú, y lo que viene después</h2>
 <h3>Tú, cuando elijas</h3>
 <ol class="flow">
   <li>Preguntar a un gestor cómo darte de alta para cobrar, antes de la primera venta.</li>
@@ -281,7 +310,7 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
 </ol>
 <h3>Claude, en otras sesiones (esta no toca la app)</h3>
 <ol class="flow">
-  <li>La landing <code>/completo</code>, después de la revisión de Starter Story, con maqueta para que elijas.</li>
+  <li>La landing <code>/completo</code>, con maqueta para que elijas.</li>
   <li>La prueba de 7 días en la app y, el día de v1, cerrar lo que hoy está abierto hasta v1.</li>
   <li>La llave k2 (la creas tú en tu PC con el script; la pública va a la app y la privada a los secretos de Cloudflare), el número de pedido en los códigos y la lista de anulados por pedido.</li>
   <li>La función de firma, la página de gracias y <code>/recuperar</code>, probadas con el modo de pruebas de Stripe antes de cobrar a nadie.</li>
@@ -295,7 +324,8 @@ tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
   <li><a href="https://www.lemonsqueezy.com/pricing">Lemon Squeezy, precios</a> · <a href="https://docs.lemonsqueezy.com/help/getting-started/fees">comisiones</a> · <a href="https://dodopayments.com/blogs/lemonsqueezy-review">reseña con la actualización de 2026</a></li>
   <li><a href="https://polar.sh/docs/merchant-of-record/fees">Polar, comisiones</a> · <a href="https://docs.creem.io/features/licenses/introduction">Creem, claves</a> · <a href="https://checkoutpage.com/blog/gumroad-fees">Gumroad, comisiones (terceros)</a></li>
   <li><a href="https://developers.cloudflare.com/email-service/platform/pricing/">Cloudflare Email Service, precio</a> · <a href="https://support.google.com/googleplay/android-developer/answer/10281818?hl=en">Google Play, normas de pagos</a></li>
-  <li><a href="https://www.youtube.com/watch?v=Di973jC2Jio">El vídeo de monetización que guardaste</a> · <a href="https://saas-accelerator.beehiiv.com/p/this-onboarding-mistake-cost-me-thousands-of">un fundador sobre pedir la prueba al entrar</a></li>
+  <li><a href="https://www.youtube.com/@starterstory/videos">Starter Story, los vídeos</a> · <a href="https://www.youtube.com/watch?v=V_4kiR3R4QU">Cat on Chair en el canal</a> · <a href="https://www.startupfinder.co/posts/how-a-simple-cat-app-makes-18kmonth-v4ki">resumen con precios y cifras</a> · <a href="https://finance.biggo.com/news/d62c695862a154ca">otro resumen</a></li>
+  <li><a href="https://www.youtube.com/watch?v=Di973jC2Jio">El vídeo de monetización que guardaste</a> · <a href="https://onepage-research.sliplane.app/articles/youtube.com/yt-yBjcmM-03dd483e">resumen de Prayer Lock</a> · <a href="https://saas-accelerator.beehiiv.com/p/this-onboarding-mistake-cost-me-thousands-of">un fundador sobre pedir la prueba al entrar</a> · <a href="https://www.yorkartur.com/notes/starter-story-founder-patterns">cómo consiguieron clientes diez fundadores</a></li>
   <li>En el repo: <code>MONETIZATION.md</code>, <code>ROADMAP.md</code> (Fase 6), <code>app/state-licencia.js</code>, <code>app/state-entitlement.jsx</code>, <code>scripts/licencias/</code>.</li>
 </ul>
 </main>
