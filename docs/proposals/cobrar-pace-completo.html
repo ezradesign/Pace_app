@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cobrar PACE completo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Una columna de lectura, como las propuestas de PACE: papel crema, oliva para lo recomendado,
+   el ocre de PACE completo para precios, terracota para riesgos. Tablas con scroll propio. */
+:root{
+  --paper:#F2EDE0;--paper-2:#EAE4D4;--paper-3:#DFD8C4;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#7A7363;
+  --line:#C9C0A8;--line-2:#B8AD8E;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.10);
+  --terra:#A85E43;--terra-soft:rgba(201,122,93,.13);
+  --premium:#8A5D24;--premium-soft:rgba(156,107,46,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;--line-2:#5f5544;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.14);
+  --premium:#D9B07A;--premium-soft:rgba(217,176,122,.12);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;--line-2:#5f5544;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.14);
+  --premium:#D9B07A;--premium-soft:rgba(217,176,122,.12);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:940px;margin:0 auto;padding-inline:16px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,46px)}
+h2{font-size:clamp(26px,4.4vw,32px);margin:56px 0 10px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:22px;margin:26px 0 8px}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+ul,ol{margin:0 0 12px;padding-left:20px;color:var(--ink-2)} li{margin:5px 0;max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+a{color:var(--olive)}
+a:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--paper-3);padding:1px 5px;border-radius:4px;word-break:break-all}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink-2);line-height:1.45;margin-top:14px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0}
+.nav a{font-size:13px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.nav a:hover{border-color:var(--ink-3)}
+.box{background:var(--paper-2);border-radius:14px;padding:18px 20px;margin:14px 0}
+.box.rec{background:var(--olive-soft);border:1px solid var(--olive)}
+.box.warn{background:var(--terra-soft);border:1px solid var(--terra)}
+.box>*:last-child{margin-bottom:0}
+.box h3{margin-top:0}
+.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.summary .box{margin:0}
+.summary .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.summary .v{font-family:var(--display);font-style:italic;font-size:21px;color:var(--ink);line-height:1.25;margin-bottom:6px}
+.summary p{font-size:14px}
+@media (max-width:680px){.summary{grid-template-columns:1fr}}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+th,td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+td{color:var(--ink-2)}
+td.num{font-family:var(--display);font-size:19px;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.rec td{background:var(--olive-soft)}
+tr.rec td:first-child{box-shadow:inset 3px 0 0 var(--olive)}
+.name{font-family:var(--display);font-style:italic;font-size:18px;color:var(--ink);display:block}
+.tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);border-radius:999px;padding:1px 8px;color:var(--ink-3);margin-top:4px}
+.tag.ok{border-color:var(--olive);color:var(--olive)}
+.tag.no{border-color:var(--terra);color:var(--terra)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+.opts.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.opt{background:var(--paper-2);border-radius:14px;padding:18px;border:1px solid transparent;min-width:0}
+.opt.rec{border-color:var(--olive);background:var(--olive-soft)}
+.opt h3{margin:4px 0 6px;font-size:23px}
+.opt h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--ink-3);margin:14px 0 4px}
+.opt p,.opt ul{font-size:14px}
+.opt ul{padding-left:18px}
+@media (max-width:820px){.opts,.opts.three{grid-template-columns:1fr}}
+.small{font-size:13px;color:var(--ink-3)}
+.price{color:var(--premium);font-family:var(--display);font-style:italic}
+.flow{list-style:none;padding:0;margin:12px 0;counter-reset:f}
+.flow li{counter-increment:f;position:relative;padding:4px 0 8px 38px;max-width:none}
+.flow li::before{content:counter(f);position:absolute;left:0;top:3px;width:25px;height:25px;border-radius:50%;border:1px solid var(--line-2);font-family:var(--display);font-style:italic;text-align:center;line-height:23px;color:var(--ink-2)}
+.src li{font-size:13px;color:var(--ink-3)}
+.src a{color:var(--ink-3)}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">PACE · propuesta para Ez · 15 de octubre de 2026</div>
+<h1>Cómo se cobra PACE completo en la web</h1>
+<p class="lead">Quién cobra, cómo le llega el código a quien paga, cómo se prueba antes de pagar y dónde vive la página de venta. Cada pregunta trae opciones y una recomendación. No se contrata ni se crea nada: eso lo haces tú cuando elijas.</p>
+<div class="nav">
+  <a href="#resumen">En corto</a><a href="#quien">Quién cobra</a><a href="#codigo">El código</a><a href="#prueba">Probar antes de pagar</a><a href="#landing">La landing</a><a href="#casos">Casos</a><a href="#tu">Lo que harías tú</a><a href="#fuentes">Fuentes</a>
+</div>
+
+<h2 id="resumen">En corto</h2>
+<p>Lo que recomiendo, en cuatro líneas. Abajo está cada pregunta con sus opciones.</p>
+<div class="summary">
+  <div class="box rec"><div class="k">1 · Quién cobra</div><div class="v">Stripe, en su modo «vende por ti»</div><p>Stripe vende en tu nombre, cobra el IVA de cada país y lo paga. De cada <span class="price">19,99 €</span> pagados en España te quedan unos <strong>15,27 €</strong>. Si Stripe no te admite, Paddle (15,09 €).</p></div>
+  <div class="box rec"><div class="k">2 · El código</div><div class="v">Se firma solo, con una llave nueva para ventas</div><p>Al pagar, una función pequeña en Cloudflare comprueba el pago y firma el código con una llave <strong>k2</strong> solo para ventas. La de los testers (k1) no sale de tu PC.</p></div>
+  <div class="box rec"><div class="k">3 · Probar antes de pagar</div><div class="v">7 días gratis de todo</div><p>Sin tarjeta y sin correo. Empieza cuando la persona pulsa «Probar 7 días». Sigue habiendo un solo plan, 19,99 € de por vida. Nada de mensual.</p></div>
+  <div class="box rec"><div class="k">4 · La landing</div><div class="v">En pacegrass.app/completo</div><p>Una página suelta en el mismo sitio que la app, como la de privacidad. La app no se mueve de la raíz, así que nada cambia para quien ya la tiene.</p></div>
+</div>
+
+<h2 id="quien">1 · Quién cobra</h2>
+<p>Hay dos maneras de cobrar. Con un <strong>«vendedor por ti»</strong> (en inglés, <em>Merchant of Record</em>), es él quien vende legalmente: cobra el IVA del país de cada comprador, lo declara, hace las facturas y atiende devoluciones y reclamaciones al banco. Tú le facturas a él una vez al mes. Sin él, cada venta es tuya: el IVA de cada país europeo, una factura por comprador y, fuera de Europa, las reglas de cada sitio.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Proveedor</th><th>Te quedan de 19,99 €*</th><th>Qué te piden para empezar</th><th>Devoluciones</th><th>Lo bueno y lo malo</th></tr></thead>
+<tbody>
+<tr class="rec"><td><span class="name">Stripe, modo «vende por ti»</span><span class="tag ok">recomendado</span></td><td class="num">15,27 €</td><td>Una cuenta de Stripe a tu nombre (DNI, dirección, cuenta del banco y la web) y que Stripe revise que PACE encaja: software digital, sí. España está en su lista.</td><td>Las haces tú desde el panel. Link, la marca con la que vende Stripe, atiende al comprador y puede devolver hasta 60 días después; si no contestas en 48 horas, puede devolver sin preguntarte.</td><td>Lo que más te queda en Europa; cobras en euros en tu banco; el pago es un enlace que ya viene hecho. Pero es nuevo (abierto a todos desde abril de 2026), en el extracto del comprador sale «LINK.COM* PACE» y la página de pago no puede ir en tu dominio.</td></tr>
+<tr><td><span class="name">Paddle</span><span class="tag">plan B</span></td><td class="num">15,09 €</td><td>Revisa tu web antes de dejarte vender: qué vendes, el precio, los términos con tu nombre legal, devoluciones y privacidad, todo publicado. Y tu identidad: DNI y un vídeo-selfie.</td><td>14 días para quien compra en Europa; después, Paddle decide caso a caso.</td><td>El más veterano y muy usado por apps de una sola persona. Pero a veces rechaza a vendedores sueltos con producto nuevo, la landing tiene que existir antes de pedir el alta y paga una vez al mes, desde 100 $.</td></tr>
+<tr><td><span class="name">Lemon Squeezy</span><span class="tag no">no</span></td><td class="num">14,64 €</td><td>Alta sencilla.</td><td>Las decides tú.</td><td>Manda claves solo. Pero desde enero de 2026 su dueño, Stripe, dice que su futuro es el modo «vende por ti» de Stripe y reconoce un soporte más lento. Cobra 1,5 % más fuera de EE. UU. y 1 % al pasarte el dinero.</td></tr>
+<tr><td><span class="name">Polar</span></td><td class="num">≈ 14,70 €</td><td>Alta con Stripe por debajo.</td><td>Puede devolver hasta 60 días.</td><td>Joven y pensado para programadores. Mismo 1,5 % de más fuera de EE. UU., y 2 $ al mes por recibir pagos.</td></tr>
+<tr><td><span class="name">Creem</span></td><td class="num">≈ 15,40 €</td><td>Alta en línea.</td><td>Las decides tú.</td><td>Barato sobre el papel, pero la cifra es de terceros: su web no la da entera. Joven.</td></tr>
+<tr><td><span class="name">Gumroad</span><span class="tag no">no</span></td><td class="num">14,09 €</td><td>Alta en línea.</td><td>Las decides tú.</td><td>Cobra el doble que los demás (10 % + 0,50 $).</td></tr>
+<tr><td><span class="name">Stripe a secas, vendes tú</span><span class="tag no">no</span></td><td class="num">15,87 €</td><td>Además de Stripe: darte de alta en la ventanilla única europea del IVA y declarar cada trimestre lo de cada país.</td><td>Tuyas, y las reclamaciones al banco también.</td><td>60 céntimos más por venta a cambio de todo el papeleo del IVA, de una factura por comprador y de las reglas de Reino Unido, Suiza y los demás. No compensa.</td></tr>
+</tbody></table></div>
+<p class="small">* Comprador en España: de 19,99 €, 3,47 € son IVA (21 %) y van a Hacienda; quedan 16,52 € y de ahí sale la comisión. Con el IVA alemán (19 %) quedan 16,80 € antes de comisión; con el sueco (25 %), 15,99 €. Con Stripe, una tarjeta europea premium o de empresa deja 15,01 € y una de fuera de Europa 14,94 €. Dólar a 0,86 €. Cifras de las páginas de precios de cada uno a 15 de octubre de 2026, salvo Creem, que es de terceros.</p>
+<div class="box">
+  <p><strong>Lo que es igual con todos.</strong> Con un «vendedor por ti» solo le facturas a él, una vez al mes. Pero lo que ganas sigue siendo tuyo ante Hacienda: antes de la primera venta, pregúntale a un gestor cómo darte de alta y si te toca hacerte autónomo. Eso no lo puedo decidir yo.</p>
+</div>
+<div class="box rec">
+  <h3>Recomendación: Stripe en modo «vende por ti»</h3>
+  <p>Es lo que más te deja en Europa, admite vendedores de España, te paga en euros y no hay que programar la página de pago. Lemon Squeezy, que era el candidato de <code>MONETIZATION.md</code>, se está mudando justo ahí. Atiende al comprador y las reclamaciones al banco por ti. Si Stripe no te admite en su revisión, Paddle es el plan B: cuesta 18 céntimos más por venta y te pide la landing hecha antes.</p>
+</div>
+
+<h2 id="codigo">2 · Cómo le llega el código a quien paga</h2>
+<p>Hoy un código es una frase larga, <code>PACE1.…</code>, firmada con tu llave secreta <strong>k1</strong>, que solo está en tu PC. La app comprueba la firma sin conexión y sin servidor. Para vender hay que firmar un código por cada compra. Lo que cambia de una opción a otra es <strong>dónde está la llave que firma</strong>.</p>
+<div class="opts">
+  <div class="opt"><span class="tag">A</span><h3>A mano</h3>
+    <p>Stripe te avisa por correo de cada venta. En tu PC lanzas un script (una variante del de los testers) y le mandas el enlace a quien pagó.</p>
+    <h4>Riesgo</h4><p>Ninguno nuevo: la llave no sale de tu PC.</p>
+    <h4>Pega</h4><p>Quien compra a las 23:00 espera hasta que lo veas, te cuesta unos minutos por venta y en vacaciones no le llega a nadie.</p>
+  </div>
+  <div class="opt rec"><span class="tag ok">B · recomendada</span><h3>Firma automática, con llave aparte</h3>
+    <p>Al pagar, Stripe devuelve al comprador a <code>pacegrass.app/gracias</code>. Esa página pide el código a una función pequeña de Cloudflare, en el mismo proyecto que la web, que pregunta a Stripe si el pago es de verdad y firma con <strong>k2</strong>, una llave nueva solo para ventas. El enlace abre PACE y el código se guarda, como el de los testers.</p>
+    <h4>Riesgo</h4><p>k2 vive en los secretos de Cloudflare. Si alguien entrara en tu cuenta de Cloudflare podría fabricar códigos de venta hasta que se cambie k2.</p>
+    <h4>Cómo se acota</h4><p>Verificación en dos pasos en Cloudflare. k1 no se mueve de tu PC. Si k2 se escapara, se cambia por k3 en la versión siguiente y cada comprador recupera el suyo en <code>pacegrass.app/recuperar</code>, porque las compras siguen en Stripe. Lo peor: unas semanas de gente usando PACE completo sin pagar.</p>
+  </div>
+  <div class="opt"><span class="tag">C</span><h3>Un lote firmado en casa</h3>
+    <p>Firmas en tu PC 200 códigos con k2 y se suben a Cloudflare. Tras comprobar el pago, la función entrega el siguiente.</p>
+    <h4>Riesgo</h4><p>Menor: quien entrara se llevaría los códigos que quedan, pero no podría fabricar más, y se anulan por su número.</p>
+    <h4>Pega</h4><p>Hay que reponer el lote, y Cloudflare tiene que recordar qué código dio a quién: un almacén más que mantener.</p>
+  </div>
+  <div class="opt"><span class="tag no">D · no</span><h3>Las claves del vendedor</h3>
+    <p>Lemon Squeezy, Polar o Creem mandan su propia clave en el recibo, y la app la cambiaría por un código PACE llamando a internet.</p>
+    <h4>Por qué no</h4><p>Solo con esos proveedores (ni Stripe ni Paddle tienen claves propias), la llave seguiría en Cloudflare y la app tendría que conectarse para canjear.</p>
+  </div>
+</div>
+<div class="tablewrap"><table>
+<thead><tr><th>Opción</th><th>Dónde está la llave</th><th>Si alguien entra en tu Cloudflare</th><th>Cuánto espera quien paga</th><th>Tu trabajo por venta</th></tr></thead>
+<tbody>
+<tr><td>A · a mano</td><td>En tu PC</td><td>No pasa nada</td><td>Horas, hasta que lo veas</td><td>Unos minutos</td></tr>
+<tr class="rec"><td>B · automática con k2</td><td>k2 en Cloudflare; k1 en tu PC</td><td>Puede fabricar códigos de venta hasta que se cambie k2</td><td>Segundos</td><td>Ninguno</td></tr>
+<tr><td>C · lote firmado</td><td>En tu PC; en Cloudflare, códigos ya firmados</td><td>Se lleva los que queden; no fabrica más</td><td>Segundos</td><td>Reponer el lote cada 200 ventas</td></tr>
+<tr><td>D · claves del vendedor</td><td>k2 en Cloudflare</td><td>Como en B</td><td>Segundos, y canjear con internet</td><td>Ninguno</td></tr>
+</tbody></table></div>
+<h3>Lo que llevan todas</h3>
+<ul>
+  <li><strong>Cada código de venta lleva dentro su número de pedido.</strong> Hoy la lista de anulados solo sirve para los testers, por su número. Con el pedido dentro, un código devuelto o compartido se anula solo a él. Es un cambio pequeño en la app, para cuando se monte.</li>
+  <li><strong>Una devolución anula ese código en la versión siguiente.</strong> Como hoy, nunca se borra nada guardado.</li>
+  <li><strong>Recuperar el código:</strong> en <code>pacegrass.app/recuperar</code>, con el correo de la compra y el número del recibo, la función lo busca en Stripe y lo vuelve a firmar. Y siempre se puede escribir a hola.ezradesign@gmail.com.</li>
+  <li><strong>No se guarda nada de nadie.</strong> La función pregunta a Stripe en el momento y firma. La página de privacidad tendrá que decir que la compra la lleva Stripe y que PACE solo mira el pago para firmar el código.</li>
+  <li><strong>Sin correo propio al principio.</strong> Mandar el código por correo pide un servicio de correo (el de Cloudflare está en pruebas y pide el plan de 5 $ al mes). La página de gracias lo abre en PACE y deja copiarlo, y la copia de «Tus datos» ya lo lleva dentro.</li>
+  <li><strong>Abre PACE completo en la web,</strong> en el PC y en el navegador del móvil. En la app de Android no (abajo).</li>
+</ul>
+<div class="box rec">
+  <h3>Recomendación: B, la firma automática con k2</h3>
+  <p>Quien paga tiene su código en segundos y a cualquier hora, tú no haces nada por venta y el riesgo queda acotado. La función cabe gratis en el Cloudflare que ya sirve la web (100.000 peticiones al día). Si el día de abrir la tienda la función no estuviera lista, las primeras ventas pueden ir a mano (A).</p>
+  <p>La llave aparte sirve para esto: si un día hubiera que cambiarla, los códigos de los testers siguen valiendo y k1 no tiene que salir nunca de tu PC.</p>
+</div>
+<div class="box">
+  <p><strong>Una pregunta abierta para cuando toque Android.</strong> Google deja que una app sin compras dentro abra lo que se compró fuera, siempre que dentro no invite a comprar fuera. No está claro si vale también para una app que vende con Play. Si valiera, quien comprara en la web tendría PACE completo también en Android. Hoy no cambia nada: la app de Android no lee códigos.</p>
+</div>
+
+<h2 id="prueba">3 · Cómo se prueba antes de pagar</h2>
+<p>Lo que quedó pendiente en la Fase 6: siete días gratis de todo o una suscripción mensual. La prueba de pago (3 días por 3,99 €) ya está descartada.</p>
+<div class="opts">
+  <div class="opt rec"><span class="tag ok">recomendada</span><h3>7 días gratis de todo</h3>
+    <ul>
+      <li>Empieza al pulsar «Probar 7 días» en la invitación de lo cerrado, no al instalar: así nadie la gasta sin darse cuenta.</li>
+      <li>Una vez por navegador o por móvil. La fecha de inicio se guarda en el equipo y la app sigue sin servidor.</li>
+      <li>Al acabar, un aviso tranquilo y sin cuenta atrás: «Tu semana de PACE completo ha terminado».</li>
+      <li>Lo que hiciste dentro, como «Tus rutinas», se queda guardado y cerrado, y vuelve al comprar.</li>
+      <li>Siete días dan para ver una carta del lunes de «A tu ritmo».</li>
+      <li>En Android, igual: Google Play no tiene prueba gratis para lo que se paga una vez, así que la fecha va en el móvil.</li>
+    </ul>
+  </div>
+  <div class="opt"><span class="tag">la otra</span><h3>Suscripción mensual</h3>
+    <ul>
+      <li>Por ejemplo 2,99 € al mes con su prueba gratis, junto a los 19,99 € de por vida.</li>
+      <li>En la web, sin cuentas, la app no sabe si sigues pagando: o pegas un código nuevo cada mes (se descartó por eso) o la app pregunta a internet cada mes.</li>
+      <li>En Android, Play sí trae prueba gratis, avisos y bajas, pero pide tarjeta al empezar.</li>
+      <li>Con 2,99 € lo fijo de cada cobro pesa: Stripe se lleva un 13 %, Paddle un 19 % y Play un 15 %.</li>
+      <li>Las normas de consumo de las suscripciones: avisar antes de renovar y dejar darse de baja tan fácil como de alta.</li>
+    </ul>
+  </div>
+</div>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>7 días gratis</th><th>Suscripción mensual</th></tr></thead>
+<tbody>
+<tr><td>Qué se pide al empezar</td><td>Nada: ni tarjeta ni correo</td><td>Tarjeta, en la web y en Play</td></tr>
+<tr><td>En la web</td><td>Una fecha en el equipo; sin servidor</td><td>Comprobar por internet cada mes, o un código nuevo cada mes</td></tr>
+<tr><td>En Android</td><td>Igual que en la web</td><td>La prueba y las bajas las lleva Play</td></tr>
+<tr><td>Lo que se lleva la tienda</td><td>Nada hasta que se compra</td><td>13–19 % de cada cobro en la web, 15 % en Play</td></tr>
+<tr><td>El precio</td><td>Sigue un solo plan, 19,99 €</td><td>Dos planes; cambia lo que se decidió en julio</td></tr>
+<tr><td>Hacer trampa</td><td>Borrar los datos y empezar otra semana; se acepta</td><td>Difícil</td></tr>
+<tr><td>Trabajo en la app</td><td>Una fecha, un aviso y el botón «Probar 7 días»</td><td>Suscripciones en la web y en Play, comprobar al abrir y la privacidad</td></tr>
+</tbody></table></div>
+<div class="box rec">
+  <h3>Recomendación: 7 días gratis, y devolver sin preguntas en 14 días</h3>
+  <p>Encaja con un solo plan de 19,99 €, no pide nada a nadie y la app sigue sin servidor. En Europa, quien compra algo digital tiene 14 días para echarse atrás salvo que renuncie al empezar a usarlo: propongo no pedirle esa renuncia y devolver sin preguntas. Es una segunda prueba y encaja con el tono (la comisión de esa venta no vuelve).</p>
+  <p><strong>El día de v1:</strong> hoy las rutinas premium están abiertas para todos hasta v1. Quien ya las usaba recibiría su semana de prueba sola, con un aviso, en vez de encontrarse el candado de golpe.</p>
+</div>
+<div class="box warn">
+  <p><strong>Starter Story, sin hacer.</strong> La revisión a fondo que pediste (los dos canales, el vídeo de monetización y las reseñas de la competencia) no está hecha: va antes de fijar el precio y los textos de la landing. De pasada vi que el vídeo que guardaste trata de cómo una app de 40.000 $ al mes enseña la prueba dentro de la bienvenida, y que otros fundadores cuentan que pedir el pago o la prueba al entrar les subió las ventas. Eso es el modelo de suscripción con muro, lo contrario del tono de PACE, así que no cambia nada de aquí. Te propongo una sesión aparte para hacerla.</p>
+</div>
+
+<h2 id="landing">4 · Dónde vive la landing y qué lleva</h2>
+<p>La app tiene que quedarse en la raíz de pacegrass.app: lo guardado es de cada dirección, la app instalada abre la raíz y los enlaces de los testers apuntan ahí.</p>
+<div class="opts three">
+  <div class="opt rec"><span class="tag ok">recomendada</span><h3>pacegrass.app/completo</h3><p>Una página suelta en el mismo proyecto de Cloudflare, como la de privacidad. Se publica con cada versión, Stripe y Paddle revisan un solo dominio y la página de gracias vive al lado.</p></div>
+  <div class="opt"><span class="tag">posible</span><h3>Otro dominio</h3><p>Un dominio o subdominio solo para vender. Más separado, pero es otro sitio que mantener y otro dominio que revisan.</p></div>
+  <div class="opt"><span class="tag no">no</span><h3>La landing en la raíz</h3><p>Lo habitual en otras webs, con la app en <code>/app</code>. Aquí rompería la app instalada y los enlaces de los testers.</p></div>
+</div>
+<h3>Lo mínimo que lleva</h3>
+<ol class="flow">
+  <li>Qué es PACE en una frase, con una imagen de la app real.</li>
+  <li>Qué es gratis y qué trae PACE completo: la misma lista que la invitación de la app.</li>
+  <li>El precio: <span class="price">19,99 € una vez, IVA incluido</span>, para siempre en la web.</li>
+  <li>Dos botones: «Probar 7 días», que abre la app, y «Comprar», que lleva a la página de pago.</li>
+  <li>Preguntas: web y Android; sin cuentas; tus datos se quedan en tu equipo; cómo recuperar el código; devoluciones en 14 días.</li>
+  <li>Al pie, lo legal: condiciones de venta, privacidad, devoluciones y un aviso legal con tu nombre, tu NIF y un contacto, que en España lo pide la ley para cualquier web que venda. Lo revisa un profesional antes del primer cobro, como dice la Fase 6.</li>
+  <li>En castellano y en inglés, como la app.</li>
+</ol>
+<p><strong>Lo que no lleva:</strong> cuentas atrás, «ofertas», opiniones inventadas ni nada que siga las visitas. Y en la app de Android, nada que lleve a pagar fuera de Play.</p>
+
+<h2 id="casos">5 · Casos</h2>
+<p>Con lo recomendado: Stripe, la firma automática, 7 días gratis y la landing en <code>/completo</code>.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Si…</th><th>Qué pasa</th></tr></thead>
+<tbody>
+<tr><td>Paga y vuelve a la página de gracias</td><td>El enlace abre pacegrass.app y el código queda guardado.</td></tr>
+<tr><td>Paga y cierra la pestaña antes de volver</td><td>Le llega el recibo de Link. En <code>/recuperar</code>, con su correo y el número del recibo, lo vuelve a tener. Si no, te escribe.</td></tr>
+<tr><td>Usa PACE en paceweb.pages.dev</td><td>Copia el código en la página de gracias y lo pega allí, en «Tengo un código».</td></tr>
+<tr><td>Cambia de ordenador o de navegador</td><td>Abre su enlace otra vez o lo pega en «Tengo un código». La copia de «Tus datos» también lo lleva.</td></tr>
+<tr><td>Borra los datos del navegador</td><td>Igual: su enlace o <code>/recuperar</code>.</td></tr>
+<tr><td>Pide la devolución en 14 días</td><td>Se le devuelve. Su código entra en la lista de anulados y deja de abrir en la versión siguiente; lo guardado no se borra.</td></tr>
+<tr><td>Reclama el cargo a su banco</td><td>Lo lleva Stripe, y el código se anula igual.</td></tr>
+<tr><td>Usa la app de Android</td><td>La compra de la web no la abre. Se dice antes de pagar, en la landing; en Android se comprará en Play.</td></tr>
+<tr><td>Prueba 7 días y no compra</td><td>Se cierra lo de pago; sus rutinas propias quedan guardadas y cerradas.</td></tr>
+<tr><td>Prueba, borra los datos y vuelve a probar</td><td>Puede. Se acepta, como se acepta que quien toca el navegador abra cualquier web.</td></tr>
+<tr><td>Es tester con su enlace de k1</td><td>Sigue igual: k1 no se toca.</td></tr>
+<tr><td>Comparte su código en un foro</td><td>Se anula ese código, que lleva su número de pedido, y se le da uno nuevo a quien pagó.</td></tr>
+<tr><td>Alguien entra en tu Cloudflare</td><td>Se cambia k2 por k3 en la versión siguiente; los compradores recuperan el suyo en <code>/recuperar</code>.</td></tr>
+<tr><td>Compra desde Reino Unido o EE. UU.</td><td>Link cobra el impuesto de allí y le enseña el precio en su moneda.</td></tr>
+<tr><td>Compra una empresa y quiere factura</td><td>La hace Link, a nombre de la empresa.</td></tr>
+</tbody></table></div>
+
+<h2 id="tu">6 · Lo que harías tú, y lo que viene después</h2>
+<h3>Tú, cuando elijas</h3>
+<ol class="flow">
+  <li>Preguntar a un gestor cómo darte de alta para cobrar, antes de la primera venta.</li>
+  <li>Crear la cuenta de Stripe a tu nombre, con verificación en dos pasos, y pedir el modo «vende por ti» (Managed Payments).</li>
+  <li>Poner la verificación en dos pasos en Cloudflare, si no la tiene.</li>
+  <li>Decidir qué nombre, NIF y contacto van en el aviso legal.</li>
+</ol>
+<h3>Claude, en otras sesiones (esta no toca la app)</h3>
+<ol class="flow">
+  <li>La landing <code>/completo</code>, después de la revisión de Starter Story, con maqueta para que elijas.</li>
+  <li>La prueba de 7 días en la app y, el día de v1, cerrar lo que hoy está abierto hasta v1.</li>
+  <li>La llave k2 (la creas tú en tu PC con el script; la pública va a la app y la privada a los secretos de Cloudflare), el número de pedido en los códigos y la lista de anulados por pedido.</li>
+  <li>La función de firma, la página de gracias y <code>/recuperar</code>, probadas con el modo de pruebas de Stripe antes de cobrar a nadie.</li>
+  <li>La privacidad, con lo que ve Stripe y lo que ve PACE.</li>
+</ol>
+
+<h2 id="fuentes">Fuentes</h2>
+<ul class="src">
+  <li><a href="https://stripe.com/es/pricing">Stripe, precios en España</a> · <a href="https://docs.stripe.com/payments/managed-payments/eligibility">Managed Payments: países y productos</a> · <a href="https://docs.stripe.com/payments/managed-payments/how-it-works">cómo funciona</a></li>
+  <li><a href="https://www.paddle.com/pricing">Paddle, precios</a> · <a href="https://www.paddle.com/help/start/account-verification/what-is-account-verification">verificación de la cuenta</a> · <a href="https://www.paddle.com/help/manage/get-paid/when-and-how-do-i-get-paid">pagos al vendedor</a> · <a href="https://www.paddle.com/legal/refund-policy">devoluciones</a></li>
+  <li><a href="https://www.lemonsqueezy.com/pricing">Lemon Squeezy, precios</a> · <a href="https://docs.lemonsqueezy.com/help/getting-started/fees">comisiones</a> · <a href="https://dodopayments.com/blogs/lemonsqueezy-review">reseña con la actualización de 2026</a></li>
+  <li><a href="https://polar.sh/docs/merchant-of-record/fees">Polar, comisiones</a> · <a href="https://docs.creem.io/features/licenses/introduction">Creem, claves</a> · <a href="https://checkoutpage.com/blog/gumroad-fees">Gumroad, comisiones (terceros)</a></li>
+  <li><a href="https://developers.cloudflare.com/email-service/platform/pricing/">Cloudflare Email Service, precio</a> · <a href="https://support.google.com/googleplay/android-developer/answer/10281818?hl=en">Google Play, normas de pagos</a></li>
+  <li><a href="https://www.youtube.com/watch?v=Di973jC2Jio">El vídeo de monetización que guardaste</a> · <a href="https://saas-accelerator.beehiiv.com/p/this-onboarding-mistake-cost-me-thousands-of">un fundador sobre pedir la prueba al entrar</a></li>
+  <li>En el repo: <code>MONETIZATION.md</code>, <code>ROADMAP.md</code> (Fase 6), <code>app/state-licencia.js</code>, <code>app/state-entitlement.jsx</code>, <code>scripts/licencias/</code>.</li>
+</ul>
+</main>
+</body>
+</html>
