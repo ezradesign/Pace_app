@@ -28,6 +28,9 @@ test('si Estadisticas falla, sale SU aviso y la app sigue: el aro, la barra late
 
   await page.evaluate(() => window.setState({ weeklyStats: null }));
   await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+  /* Estadísticas se abre en «Hoy» (Fase 4), que lee los totales por `selectSidebarToday` y no
+     cae con la semana rota; la semana sí, que es el fallo que esta prueba provoca. */
+  await page.locator('[data-pace-stats-tab="week"]').click();
 
   const aviso = page.getByRole('dialog').filter({ hasText: 'Esta parte no ha podido abrirse' });
   await expect(aviso, 'Estadisticas cayo y no salio su aviso').toBeVisible();
