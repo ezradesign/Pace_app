@@ -8,7 +8,8 @@
  * en una sola línea, con su dibujo y sin caja; sin propuesta, las cuatro
  * tarjetas de siempre.
  *
- * Contra v0.152.0 caen las dos primeras: la puerta repetida sigue ahí.
+ * Contra v0.152.0 caen las dos primeras: la puerta repetida sigue ahí. Contra
+ * v0.166.0 caen siempre las de la home corrida de lado.
  */
 'use strict';
 
@@ -71,20 +72,51 @@ test('con una rutina de Estira propuesta, su puerta no se repite y las otras tre
   await expect(page.locator('[data-pace-break-shortcut]')).toHaveCount(0);
 });
 
-/* LA HOME NO SE QUEDA CORRIDA DE LADO AL CERRAR LA PAUSA. Lo destapó una foto de esta
-   misma rama: a 360x640, a veces (3 de 24) el anclaje de scroll del navegador corría
-   [data-pace-home-body] 117 px y así seguía al cerrar la pausa. Como el fallo es
-   intermitente, se mira también la causa: el anclaje apagado en esa caja. */
+/* LA HOME NO SE QUEDA CORRIDA DE LADO AL CERRAR LA PAUSA. A 360x640, 1 de cada muchas
+   pasadas [data-pace-home-body] seguía 117 px corrida al cerrar la pausa. No era el
+   anclaje de scroll (v0.155.0 lo apagó y siguió pasando): el bloom del sol asoma por
+   los dos lados y deja a la región 158 px de ancho que no se ven, y cuando el botón
+   «Empezar foco» aún se mueve al cargar, Playwright reintenta el clic llevándolo a la
+   vista con `inline: 'start'` y la corre justo hasta él (117 px, su borde izquierdo).
+   La causa se mira siempre: que no quede ancho que correr. */
+const homeVisible = (page) => page.locator('[data-pace-home-body]').filter({ visible: true }).first();
+const anchoQueSobra = (home) => home.evaluate((el) => el.scrollWidth - el.clientWidth);
+
 test('al cerrar la pausa, la home no se queda corrida de lado', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await sembrarEstado(context, { focusMinutes: 25, water: { today: 0, goal: 8 } });
   await hastaLaPausa(page, 25, new Date('2026-10-09T13:00:00+02:00'));
   await page.keyboard.press('Escape');
   await expect(page.locator('[data-pace-break-shortcut]')).toHaveCount(0);
-  const home = page.locator('[data-pace-home-body]').filter({ visible: true }).first();
-  expect(await home.evaluate((el) => getComputedStyle(el).overflowAnchor), 'el anclaje de scroll sigue encendido en la home').toBe('none');
+  const home = homeVisible(page);
+  expect(await anchoQueSobra(home), 'la home tiene ancho de sobra para correrse de lado').toBeLessThanOrEqual(0);
   expect(await home.evaluate((el) => el.scrollLeft), 'la home se ha quedado corrida de lado').toBe(0);
 });
+
+/* Lo que corría la home, provocado a propósito en cada botón: «llevar a la vista» con
+   las alineaciones al borde que usa Playwright al reintentar un clic (y que puede usar
+   cualquier ayuda de accesibilidad). Contra v0.166.0, «Empezar foco» la corre 117 px. */
+for (const [ancho, alto] of [[320, 568], [360, 640], [390, 844], [768, 1024]]) {
+  test('a ' + ancho + 'x' + alto + ', llevar un botón a la vista no corre la home de lado', async ({ page, context }) => {
+    await page.setViewportSize({ width: ancho, height: alto });
+    await sembrarEstado(context, { focusMinutes: 25, water: { today: 0, goal: 8 } });
+    await irAlArtefacto(page);
+    const home = homeVisible(page);
+    expect.soft(await anchoQueSobra(home), 'la home tiene ancho de sobra para correrse de lado').toBeLessThanOrEqual(0);
+    const corridas = await home.evaluate((el) => {
+      const out = [];
+      for (const b of el.querySelectorAll('button')) {
+        for (const inline of ['start', 'center', 'end']) {
+          b.scrollIntoView({ block: 'nearest', inline });
+          if (el.scrollLeft !== 0) out.push((b.getAttribute('aria-label') || b.textContent.trim()).slice(0, 30) + ' (' + inline + '): ' + el.scrollLeft + ' px');
+          el.scrollLeft = 0;
+        }
+      }
+      return out;
+    });
+    expect(corridas, 'la home se corre de lado').toEqual([]);
+  });
+}
 
 test('a 360×640 las tres caben en una línea', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 640 });
