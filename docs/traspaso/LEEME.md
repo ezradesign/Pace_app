@@ -34,6 +34,10 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
     con el sí de Ez): lo que eligió Ez, abajo en «Cómo se vende PACE completo». No queda ninguna sesión
     abierta. Lo siguiente, con la semana al 83 % de uso (se repone el lunes), una sola sesión: las
     series y la pausa corta cada 30 min de foco, que tocan los dos `ritmo.regla.js`.
+  - **Series y pausa corta, a medias (15 oct., noche):** rama `claude/series-montaje-7bf9e0` (e07809a, wip y
+    subida; su RELEVO.md). La pausa corta con el aro corto está montada (Ez: «nunca más de 30» y que el
+    aro espere) y la suite pasa (679); faltan las fotos a 360 y 1280 para Ez. Las series, sin empezar:
+    las re-medidas no cambian lo elegido. Se paró con la semana al 91 %: seguir el lunes.
 - **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
   **v0.168.0 en `main`, con la CI en verde:** la home corrida y la página de las series. Las 14 caídas
   de su suite (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
