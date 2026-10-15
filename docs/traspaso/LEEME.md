@@ -30,10 +30,10 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
        para Ez, como los de `archivos/encargos-14oct/`.
   - **v0.170.0: Estadísticas abre en «Hoy»** (Fase 4, 1A 2A 3A 4A de Ez), desde
     `claude/elastic-gould-a3278d` (98beeda, LISTO con 677 en verde). Su carpeta ya no guarda nada.
-  - **Starter Story** (el canal hermano y las reseñas de la competencia; rama
-    `claude/zealous-engelbart-dad1fc`, abierta por la del cobro) se cortó por el límite y se le pidió
-    guardar. Su contexto pasa de 380 000 tokens: si se retoma, sesión nueva con
-    `node scripts/relevo-hilo.js <carpeta>`, no la vieja.
+  - **Starter Story, terminada y en `main`** (rama `claude/zealous-engelbart-dad1fc`, solo documentos,
+    con el sí de Ez): lo que eligió Ez, abajo en «Cómo se vende PACE completo». No queda ninguna sesión
+    abierta. Lo siguiente, con la semana al 83 % de uso (se repone el lunes), una sola sesión: las
+    series y la pausa corta cada 30 min de foco, que tocan los dos `ritmo.regla.js`.
 - **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
   **v0.168.0 en `main`, con la CI en verde:** la home corrida y la página de las series. Las 14 caídas
   de su suite (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
