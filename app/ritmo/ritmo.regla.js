@@ -135,7 +135,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     var cola = Math.min(COLA, bloque - 5);
     /* El bloque más corto que se sirve: 15 min, o lo que marque el aro si es menos (con
        el aro a 10, un último bloque de 10 es un bloque; si no, el día perdía el final). */
-    var minimo = Math.min(MINIMO, bloque);
+    var minimo = Math.min(MINIMO, bloque, bloque * 2 <= JUNTOS ? 10 : MINIMO);   /* aro corto: el último puede ser de 10 */
     /* LA LARGA: la tercera pausa desde la anterior larga (o la comida, o el inicio), y
        solo si desde entonces llevas 75 min de foco; si no, la primera que los cumpla
        (Ez, 15 oct.). Con bloques de 25 o más es la tercera de siempre; con el aro a 5

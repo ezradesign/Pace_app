@@ -94,7 +94,8 @@ test('la tabla de casos: «Una hora» y «Dos horas» no pasan de su reloj, con 
     '2h 17:51 aro 15': '19:51', '2h 17:51 aro 20': '19:51', '2h 17:51 aro 25': '19:51',
     '2h 17:51 aro 45': '19:46',
     '2h 16:00 plan': '17:00', '2h 16:00 aro 5': '17:00',
-    '2h 17:51 recolocado a las 18:30': '19:51',
+    /* con el aro corto los bloques se juntan hasta 30 min (Ez, 15 oct.): el minuto que sobra no da para otro de 5 */
+    '2h 17:51 recolocado a las 18:30': '19:50',
     '2h 16:30 recolocado a las 16:50': '17:00',
     '2h 9:00 plan, reunión 9:30-10:00': '11:00', '2h 9:00 aro 5, reunión 9:30-10:00': '11:00',
   });
@@ -128,14 +129,18 @@ test('«Dos horas» a las 17:51 con el aro a 5: el plan acaba a las 19:51 bloque
     vistos.push(p.hasta);
     expect(p.hasta, 'tras empezar el bloque ' + k + ', el plan acaba a las ' + p.hasta).toBeLessThanOrEqual(1071 + 120);
     if (!p.dur) break;
+    /* con el aro corto los bloques se juntan hasta 30 min (Ez, 15 oct.): sin pausa detrás no
+       hay ventana y el aro espera el bloque siguiente */
+    const seguir = page.getByRole('button', { name: 'Seguir con el bloque ' + (k + 1), exact: true });
+    const empezar = page.getByRole('button', { name: 'Empezar bloque ' + (k + 1), exact: true });
     for (let i = 0; i < 20; i++) {
       await page.clock.fastForward(60 * 1000);
       await page.waitForTimeout(60);
-      if (await page.locator('[data-pace-break-shortcut]').count()) break;
+      if (await page.locator('[data-pace-break-shortcut]').count() || await empezar.count()) break;
     }
-    const seguir = page.getByRole('button', { name: 'Seguir con el bloque ' + (k + 1), exact: true });
-    if (!(await seguir.count())) break;
-    await seguir.click();
+    if (await seguir.count()) await seguir.click();
+    else if (await empezar.count()) await empezar.first().click();
+    else break;
     await page.waitForTimeout(250);
   }
   expect(vistos.length, 'GUARD: el día no llegó a recolocarse').toBeGreaterThan(3);
