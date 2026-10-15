@@ -42,13 +42,24 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   - **Landing en `pacegrass.app/premium`.** La bienvenida enseña PACE completo una vez, al final, con
     «Ahora no».
   - Starter Story, revisado el canal principal (30 vídeos): el caso más cercano, Cat on Chair (un
-    Pomodoro hecho a mano), vende sobre todo de por vida a 29,99 $ y creció sin anuncios. Falta el
-    canal hermano y las reseñas de la competencia.
+    Pomodoro hecho a mano), vende sobre todo de por vida a 29,99 $ y creció sin anuncios. El canal
+    hermano y las reseñas de la competencia, en el punto siguiente.
   - **Lo que espera a Ez:** un gestor (cómo darse de alta para cobrar), la cuenta de Stripe a su nombre
     con verificación en dos pasos y la petición de Managed Payments, dos pasos en Cloudflare y los
     datos del aviso legal (nombre, NIF, contacto). **Lo que lo construye (otra sesión, Fase 6):** k2,
     el número de pedido en los códigos y los anulados por pedido, la función, gracias y `/recuperar`,
     la renovación del mensual, la prueba en Play, la bienvenida, `/premium` y `privacy.html`.
+- **Cómo se vende PACE completo, decidido por Ez (15 oct., noche; sesión `zealous-engelbart`, solo
+  documentos).** Página: `docs/proposals/vender-pace-ideas.html`
+  (https://claude.ai/artifact/BmiBesD83nMCPt4zT7iobJ): el canal hermano de Starter Story (65 vídeos)
+  y 17.532 reseñas de 23 competidores. Cierra la revisión que pedía la memoria de Starter Story.
+  - Ez eligió: el día de v1, la semana de prueba **y las rutinas premium ya hechas abiertas para
+    siempre**; en la landing, las tres promesas (lo gratis sigue gratis, lo comprado no se quita, tu
+    precio no sube), el aviso dos días antes del fin de la prueba con cancelar en dos toques y «si no
+    puedes pagarlo, escríbeme»; la valoración de Play una sola vez, tras la quinta pausa entera; la
+    bienvenida con los dos precios. No quiso el párrafo de «quién lo hace».
+  - `docs/launch/google-play/ficha.md` ya cuenta los dos planes y no dice «dibujados a mano» (los
+    dibujos salen de GPT Image). Detalle en `DECISIONES_PRODUCTO.md`; lo construye la Fase 6.
 - **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
   y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
   hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:

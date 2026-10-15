@@ -21,6 +21,42 @@
 
 ---
 
+## Cómo se vende PACE completo: lo que sale de las reseñas (Ez, 15 oct. 2026)
+
+Elegido sobre `docs/proposals/vender-pace-ideas.html`
+(https://claude.ai/artifact/BmiBesD83nMCPt4zT7iobJ): el canal hermano de Starter Story (65 vídeos) y
+17.532 reseñas de 23 apps parecidas en la App Store y en Google Play. Completa «Cómo se cobra PACE
+completo» (abajo) y no cambia nada de lo que se decidió allí.
+
+1. **El día de v1 nadie pierde lo que ya usaba.** Quien usaba PACE antes de v1 recibe su semana de
+   prueba con un aviso y, además, las rutinas premium que ya hizo alguna vez se le quedan abiertas
+   para siempre; las demás se cierran al acabar la prueba. La lista sale de lo guardado en su equipo
+   y se fija una sola vez, al pasar a v1. Lo que más castigan las reseñas es que se quite lo que ya se
+   tenía (Forest, Plant Nanny, Tide, Focus To-Do).
+2. **Tres promesas en la landing:** lo que hoy es gratis sigue gratis; lo que compras no se quita; si
+   un día sube el precio, el tuyo no (Stripe y Play dejan la suscripción de quien ya paga en su
+   precio).
+3. **Aviso antes del cobro:** dos días antes de que acabe la prueba, la app lo avisa (sabe cuándo
+   empezó, sin servidor) y la prueba se cancela en dos toques desde Ajustes: en la web, la página de
+   Stripe para gestionar la suscripción; en Android, las suscripciones de Google Play. La landing lo
+   cuenta antes de pagar.
+4. **«Si ahora no puedes pagarlo, escríbeme»**, en las preguntas de la landing. Ez manda a mano un
+   código firmado con k1.
+5. **Sin el párrafo de «quién lo hace»** (una persona, en España, sin inversores): Ez no lo marcó.
+6. **La valoración en Google Play se pide una sola vez:** con la ventana de Google (In-App Review), al
+   terminar la quinta pausa entera. Google no dice si la persona valoró o la cerró, así que no se
+   vuelve a lanzar nunca. Nunca en la bienvenida ni en la web.
+7. **La ficha de Play** (`docs/launch/google-play/ficha.md`, ya cambiada): el párrafo de PACE completo
+   cuenta los dos planes; fuera «dibujados a mano» y «drawn by hand», porque los dibujos salen de GPT
+   Image (del arte de PACE nunca se dice «hecho a mano»; de PACE, «hecha por una persona», sí); el
+   orden de las capturas se prueba con un experimento de ficha; Ez contesta todas las reseñas.
+8. **La bienvenida, con el precio claro:** en la primera pantalla, «Núcleo gratuito · disponible»
+   pasa a «Gratis · lo esencial, siempre» (medido a 360 px); la última, la de PACE completo, enseña los
+   dos precios y «Ahora no» igual de grande que «Probar 7 días gratis». Maqueta antes de tocarla.
+9. **Lo que no se hace:** creadores pagados ni anuncios medidos (choca con «sin rastreo»), ofertas
+   únicas ni descuentos al instalar, precios distintos según quién o cuándo, pedir la compra cada vez
+   que se abre la app ni pedir datos antes de enseñar el precio.
+
 ## Cómo se cobra PACE completo (Ez, 15 oct. 2026)
 
 Elegido sobre la página `docs/proposals/cobrar-pace-completo.html`

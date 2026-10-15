@@ -15,6 +15,13 @@ con la llave k2 y la landing vive en `pacegrass.app/premium`. Detalle y porqués
 desbloquea lo mismo y la estrategia se valida antes de abrir la tienda. El mensual ya no obliga a
 pegar un código cada mes: la app lo renueva sola con la función.
 
+**Lo que se promete y cómo se pasa a v1 (Ez, 15 oct. 2026, tras leer las reseñas de la competencia):**
+lo que hoy es gratis sigue gratis, lo que compras no se quita y, si un día sube el precio, el de
+quien ya paga no. El día de v1, quien ya usaba PACE recibe su semana de prueba y se queda para
+siempre las rutinas premium que ya hizo. La app avisa dos días antes de que acabe la prueba y se
+cancela en dos toques. Detalle en `docs/product/DECISIONES_PRODUCTO.md` («Cómo se vende PACE
+completo»).
+
 ## PRECIO Y ESTRUCTURA — CERRADO en s134 (en parte sustituido: ver el bloque de arriba)
 
 **Al lanzamiento hay UN solo plan: Lifetime 19,99 €.**
