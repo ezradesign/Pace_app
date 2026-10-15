@@ -139,6 +139,55 @@
       /* Con las filas en dos columnas sobra sitio: 8 px entre fila y fila. */
       [data-pace-week-bar-row] { margin-bottom: 8px; }
     }
+    /* ══ HOY (Fase 4) · cada parada del menú como una tarjeta ════════════════
+       El papel de las tarjetas de totales (paper-2, r-md) con el glifo de la parada en su
+       aro, como en la línea del día: la hecha rellena al 22 % con borde entero, la saltada
+       al 40 % y a trazos, la que toca con su color (Ez, 15 oct., opción A). En el móvil, una
+       fila fina por parada para que quepa con los totales arriba; en el escritorio, cinco
+       tarjetas por fila con el nombre en hasta dos líneas. Con más de diez paradas, el móvil
+       pasa a dos columnas y el escritorio a una línea por nombre; con más de quince, a seis
+       por fila: una jornada de 5:00 a 23:30 cabe sin scroll en el escritorio. */
+    .pace-sh-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 2px 8px; }
+    .pace-sh-rejilla { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .pace-sh-t { display: flex; gap: 10px; align-items: center; padding: 3px 2px; min-width: 0; min-height: 28px;
+      border-bottom: 1px solid var(--paper-3); }
+    .pace-sh-t:last-child { border-bottom: 0; }
+    .pace-sh-aro { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+      grid-auto-flow: column; background: var(--paper); border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); }
+    .pace-sh-aro.pace-sh-larga { width: 36px; border-radius: 11px; gap: 1px; }
+    .pace-sh-aro .pace-rt-g { width: 13px; height: 13px; }
+    .pace-sh-hecha .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+    .pace-sh-saltada { opacity: 0.45; }
+    .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
+    .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
+    .pace-sh-ahora .pace-sh-m { color: var(--c); font-weight: 500; }
+    .pace-sh-comida .pace-sh-aro { border-style: dotted; }
+    .pace-sh-txt { min-width: 0; flex: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    .pace-sh-n { font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.15; color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pace-sh-m { flex: none; font-size: 10px; color: var(--ink-3); letter-spacing: 0.02em; white-space: nowrap; }
+    .pace-sh-ahora { border-radius: var(--r-sm); }
+    .pace-sh-h { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+    .pace-sh-mucho { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+    .pace-sh-mucho .pace-sh-txt { display: block; }
+    .pace-sh-mucho .pace-sh-m { overflow: hidden; text-overflow: ellipsis; }
+    .pace-sh-vacio { font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-3); margin: 6px 2px; line-height: 1.4; }
+
+    @media ${PACE_CORTE_ESC} {
+      .pace-sh-rejilla { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+      .pace-sh-t { align-items: flex-start; gap: 9px; padding: 10px 11px; border-bottom: 0; background: var(--paper-2); border-radius: var(--r-md); }
+      .pace-sh-aro { width: 28px; height: 28px; }
+      .pace-sh-aro.pace-sh-larga { width: 42px; height: 28px; border-radius: 13px; }
+      .pace-sh-aro .pace-rt-g { width: 15px; height: 15px; }
+      .pace-sh-txt { display: block; }
+      .pace-sh-m { margin-top: 2px; overflow: hidden; text-overflow: ellipsis; }
+      .pace-sh-n { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 2.3em; }
+      .pace-sh-cab { margin-bottom: 10px; }
+      .pace-sh-mucho { grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 8px; }
+      .pace-sh-mucho .pace-sh-t { padding: 8px 10px; }
+      .pace-sh-mucho .pace-sh-n { display: block; white-space: nowrap; min-height: 0; }
+      .pace-sh-muchisimo { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    }
   `;
   document.head.appendChild(s);
 })();

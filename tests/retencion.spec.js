@@ -170,6 +170,7 @@ test('en Ritmo la retencion es un ACUMULADO de la semana, no un maximo', async (
   }]);
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+  await page.locator('[data-pace-stats-tab="week"]').click();   /* se abre en «Hoy» (Fase 4) */
   await page.locator('[data-pace-week-view]').waitFor({ state: 'visible' });
 
   const linea = page.locator('[data-pace-week-hold]');
@@ -187,6 +188,7 @@ test('sin retencion en la semana la linea NO existe, y el backup la lleva igual'
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+  await page.locator('[data-pace-stats-tab="week"]').click();   /* se abre en «Hoy» (Fase 4) */
   await page.locator('[data-pace-week-view]').waitFor({ state: 'visible' });
 
   /* Una semana a cero NO pinta un «0 s» permanente: solo 3 de las 20 rutinas

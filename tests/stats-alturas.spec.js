@@ -40,6 +40,8 @@ async function abrirStats(page) {
   });
   await page.locator('[data-pace-stats-vistas]').waitFor({ state: 'visible' });
   await esperarModalAsentado(page);
+  /* Estadísticas se abre en «Hoy» (Fase 4); estas pruebas miden la semana, el mes y el año. */
+  await pestana(page, 'Semana');
 }
 
 async function pestana(page, nombre) {
