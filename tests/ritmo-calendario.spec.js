@@ -74,12 +74,14 @@ test('la regla esquiva lo ocupado: nada lo pisa, cada reunión es su tramo y la 
       m.focos.forEach((f) => { if (f.dur < 15) out.push(tag + ': bloque de ' + f.dur + ' min'); });
       const comida = m.items.find((it) => it.tipo === 'comida');
       if (comida && comida.desde !== 840) out.push(tag + ': la comida no empieza a su hora');
-      if (op === '1h' && m.focoMin !== 50) out.push(tag + ': «Una hora» sirve ' + m.focoMin + ' min');
+      /* las reuniones cuentan en el reloj de las dos cortas (Ez, 15 oct.): no pasan de su hora */
+      if (op === '1h' && m.hasta > 600) out.push(tag + ': «Una hora» acaba a las ' + m.hasta);
+      if (op === '2h' && m.hasta > 660) out.push(tag + ': «Dos horas» acaba a las ' + m.hasta);
     }));
     /* Un bloque que llegaría tarde a la reunión deja sitio a su pausa: llegas con ella hecha. */
-    const m = ritmoComponer('1h', Object.assign({}, H, { ocupado: [[570, 30]] }), pozos, {}, 8);
+    const m = ritmoComponer('2h', Object.assign({}, H, { ocupado: [[570, 30]] }), pozos, {}, 8);
     const tipos = m.items.map((it) => it.tipo + '@' + it.desde + '+' + it.dur).join(' ');
-    if (tipos !== 'foco@540+25 pausa@565+5 ocupado@570+30 foco@600+25 cierre@625+5') out.push('1h con reunión a las 9:30: ' + tipos);
+    if (tipos !== 'foco@540+25 pausa@565+5 ocupado@570+30 foco@600+55 cierre@655+5') out.push('2h con reunión a las 9:30: ' + tipos);
     /* La reunión que cruza la comida pierde el trozo de la comida. */
     const c = ritmoOcupadoLimpio([[810, 90]], 540, 840, 60);
     if (JSON.stringify(c) !== JSON.stringify([{ desde: 810, hasta: 840 }])) out.push('reunión en la comida: ' + JSON.stringify(c));

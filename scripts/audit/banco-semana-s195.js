@@ -19,6 +19,7 @@ const ISO = 'la semana ISO';
 const ACENTOS = 'el tema lidera';
 const HECHO = 'respetan lo hecho';
 const APP = 'la app compone';
+const MIERCOLES = 'el miércoles adelanta';
 const MUTANTES = [
   ['la semana ISO va una por delante', 'app/ritmo/ritmo.semana.js',
     "return { n: Math.ceil(((d - inicioAno) / 86400000 + 1) / 7),", "return { n: Math.ceil(((d - inicioAno) / 86400000 + 1) / 7) + 1,", ISO],
@@ -29,7 +30,7 @@ const MUTANTES = [
   ['el lunes no arranca con Mueve', 'app/ritmo/ritmo.semana.js',
     "if (a === 'arranque' && !(previos && previos.pausas > 0) &&", "if (false &&", ACENTOS],
   ['el miércoles la larga sigue siendo la tercera', 'app/ritmo/ritmo.semana.js',
-    "var h = a === 'mitad' ? Object.assign({}, horario, { desfaseLarga: 1 }) : horario;", 'var h = horario;', ACENTOS],
+    "var h = mitad ? Object.assign({}, horario, { adelantaLarga: true }) : horario;", 'var h = horario;', ACENTOS],
   ['el jueves no se respira antes de comer', 'app/ritmo/ritmo.semana.js',
     "if (a === 'aire') {", 'if (false) {', ACENTOS],
   ['el viernes el cierre no es el Respira largo', 'app/ritmo/ritmo.semana.js',
@@ -41,8 +42,10 @@ const MUTANTES = [
   ['la app no compone por la semana', 'app/state-ritmo.jsx',
     "  var m = typeof semanaComponer === 'function'\n    ? semanaComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, semanaDe(hoy), previos)\n    : ritmoComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, previos);",
     '  var m = ritmoComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, previos);', APP],
-  ['la regla ignora el desfase de la larga', 'app/ritmo/ritmo.regla.js',
-    'var desfase = Number(horario.desfaseLarga) || 0;', 'var desfase = 0;', ACENTOS],
+  ['la regla ignora el adelanto de la larga', 'app/ritmo/ritmo.regla.js',
+    'var adelanta = !!horario.adelantaLarga;', 'var adelanta = false;', ACENTOS],
+  ['el miércoles mete más largas que otro día', 'app/ritmo/ritmo.regla.js',
+    'var faltan = adelanta && manana && !largasManana ? 2 : 3 + Math.max(0, 3 - largaEn);', 'var faltan = adelanta && manana && !largasManana ? 2 : 3;', MIERCOLES],
   ['los acentos sirven platos que no caben en la parada', 'app/ritmo/ritmo.semana.js',
     "var pozo = cabe == null ? P[modulo] : P[modulo].filter(function (r) { return (r.min || 0) <= cabe; });", 'var pozo = P[modulo];', ACENTOS],
   ['el cierre del viernes no mira si cabe', 'app/ritmo/ritmo.semana.js',

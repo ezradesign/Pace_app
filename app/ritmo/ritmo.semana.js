@@ -26,7 +26,7 @@
    Es PURA como la regla: no lee reloj, estado ni window. Prototipo: la REGLA de
    scripts/audit/semana-s194.js, con tres diferencias medidas al portarla:
      · «la mitad» ya no se falsea con `previos` (eso hacía empezar el día en «ahora»
-       aunque eligieras antes de tu hora): es `horario.desfaseLarga`, que la regla
+       aunque eligieras antes de tu hora): es `horario.adelantaLarga`, que la regla
        entiende y que sobrevive a recolocar;
      · los acentos respetan `previos`: «arrancar» solo si la primera pausa del día
        es de esta composición, y las claves de «otra» son las de la pausa;
@@ -61,7 +61,7 @@ var SEMANA_TEMAS = [
 var SEMANA_ACENTOS = {
   1: { id: 'arranque' },   /* la primera pausa activa el cuerpo (Mueve) */
   2: { id: 'sostener' },   /* el día tal cual */
-  3: { id: 'mitad' },      /* la pausa larga llega antes: la segunda, no la tercera */
+  3: { id: 'mitad' },      /* la primera larga llega antes: la segunda pausa, no la tercera */
   4: { id: 'aire' },       /* antes de comer se respira, no se estira */
   5: { id: 'cierre' },     /* el cierre es el Respira más largo que quede y quepa (5') */
   6: { id: 'libre' },
@@ -96,7 +96,10 @@ function semanaPozos(pozos, semana) {
 function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos) {
   var P = semanaPozos(pozos, semana);
   var a = semana.acento ? semana.acento.id : 'libre';
-  var h = a === 'mitad' ? Object.assign({}, horario, { desfaseLarga: 1 }) : horario;
+  /* «La mitad» adelanta la primera larga, y solo donde la hay: en la media y en la
+     jornada. «Dos horas» no tiene larga ningún día, y el miércoles le metía una. */
+  var mitad = a === 'mitad' && (opcion === 'media' || opcion === 'jornada');
+  var h = mitad ? Object.assign({}, horario, { adelantaLarga: true }) : horario;
   var m = ritmoComponer(opcion, h, P, cambios, meta, previos);
   if (!m) return m;
   cambios = cambios || {};
