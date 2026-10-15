@@ -14,6 +14,20 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
 - **15 oct., tarde: v0.169.0 cerrada, con la CI en verde** tras arreglar `ritmo-pausa.spec.js:161` (la
   prueba veía la pausa un minuto tarde en una máquina lenta; 21bb146). **El cobro de PACE completo está en
   `main`** (rama `claude/practical-antonelli-3f03e9`, solo documentos, con el sí de Ez; detalle abajo).
+  - **Hallazgos de Ez (15 oct., tarde), para tener en cuenta** (sin sesión todavía):
+    1. **El cierre de las sesiones en el escritorio:** en «Escritorio express» (1920×1080 al 125 %), el
+       «Ahora no» de «¿Te ayudó esta pausa?» (`session.feedback.later`) queda tapado por «Volver al
+       inicio»: solo asoman sus primeras letras. Seguramente viene de v0.167.0, el dibujo del cierre
+       que crece con la pantalla. Cambia lo que se ve: fotos y opciones para Ez.
+    2. **«Gemelos subrepticios» (`extra.calves`, en `app/move/move.data.js`):** la 2.ª ronda dice «Más
+       lentas ahora», pero lleva el mismo ritmo (1 s arriba, 1 s abajo) y 20 repeticiones frente a 25,
+       así que dura 40 s frente a 50. Mirar si otras rutinas prometen en el texto lo que el ritmo no da.
+    3. **La pausa corta con bloques cortos:** con el aro a 10 min, Ez quiere la pausa corta como mucho
+       cada 30 min de foco (tres bloques de 10), no tras cada bloque. Toca `pausaDe` en
+       `app/ritmo/ritmo.regla.js`, como las series: que lo monte la misma sesión.
+    4. **El suspiro fisiológico** (doble inhalación) necesita una segunda voz para el segundo tramo de
+       inhalar («un poco más» o parecido), en castellano y en inglés y con las dos voces: encargo de audio
+       para Ez, como los de `archivos/encargos-14oct/`.
   - **Cortadas por el límite de uso, a retomar con `node scripts/relevo-hilo.js <carpeta>`:**
     Estadísticas «Hoy» y «Semana» (Ez eligió 1A, 2A, 3A y 4A; «Hoy» montado en
     `claude/elastic-gould-a3278d`, 98beeda, junta con v0.169.0; falta la suite entera; su RELEVO.md) y
