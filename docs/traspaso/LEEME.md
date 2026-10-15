@@ -14,7 +14,9 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
 - **RELEVO (15 oct., ~08:25 en Madrid, al 84 %; esta cuenta se repone a las 12:40).** `main` en v0.167.0
   con la CI en verde. En la rama de caza-sesiones (sin subir a `main`): la home corrida (LISTO, b36fc4e)
   y la página de las series (rehecha con la firma de Ez: sus commits venían con el correo de Hotmail y
-  `verify` los rechaza). **La suite de esas dos (`%TEMP%\suite-168.log`) llevaba 5 caídas a mitad**:
+  `verify` los rechaza). **La suite de esas dos (`%TEMP%\suite-168.log`) acabó con 645 en verde y 14 caídas en 54,6 min**
+  (con otras dos suites corriendo a la vez: casi todo, tiempo agotado; la única de texto es
+  `ritmo-bloque-siguiente.spec.js:23`, a mirar sola). Las primeras cinco:
   `eventos-origen.spec.js` :93, :120 y :148 y `home-sin-scroll.spec.js` es 360×640 y 375×667. Repetirlas
   solas: si `home-sin-scroll` cae sola, la causa es el arreglo de la home corrida (`app/main.jsx` y
   `app/main/_responsive.js`, a74e49d), y se arregla o se saca antes de subir. NO subir a `main` sin eso.
