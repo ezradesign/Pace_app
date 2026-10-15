@@ -2899,6 +2899,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.hold.label': 'Retención esta semana',
   'stats.hold.min': '{m} min {s} s',
   'stats.hold.sec': '{s} s',
+  'stats.tab.today': 'Hoy',
+
+  'stats.hoy.vasos.de': 'de {m} vasos',
+  'stats.hoy.libre': 'Por libre',
+  'stats.hoy.vacio': 'Todavía no has hecho ninguna pausa hoy.',
+  'stats.cerrado': 'Es parte de PACE completo',
   'stats.tab.week': 'Semana',
   'stats.tab.month': 'Mes',
   'stats.tab.year': 'Año',
@@ -2961,6 +2967,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.hold.label': 'Breath holds this week',
   'stats.hold.min': '{m} min {s} s',
   'stats.hold.sec': '{s} s',
+  'stats.tab.today': 'Today',
+
+  'stats.hoy.vasos.de': 'of {m} glasses',
+  'stats.hoy.libre': 'Freestyle',
+  'stats.hoy.vacio': 'No breaks yet today.',
+  'stats.cerrado': 'Part of PACE Complete',
   'stats.tab.week': 'Week',
   'stats.tab.month': 'Month',
   'stats.tab.year': 'Year',
@@ -32568,6 +32580,152 @@ Object.assign(window, { StatsTotales, statsSeries, statsTotalesDe, WeekView, Wee
 ;(function () {
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const STATS_HOY_MODULO = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
+
+
+function statsHoyParadas(plan) {
+  const m = plan.m;
+  const iActual = ritmoIndiceAhora(plan);
+  const out = [];
+  m.items.forEach((it, i) => {
+    if (it.tipo === 'comida') {out.push({ it, comida: true });return;}
+    if (!(it.tipo === 'pausa' || it.tipo === 'cierre') || !it.platos || !it.platos.length) return;
+    const marca = (plan.estados || {})[ritmoOrdinal(m, it)] || null;
+    out.push({ it, estado: i === iActual ? 'ahora' : i < iActual ? marca || 'pasada' : null });
+  });
+  return out;
+}
+
+
+
+function statsHoySesiones() {
+  let ev = [];
+  try {
+    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    ev = snap && Array.isArray(snap.events) ? snap.events : [];
+  } catch (e) {ev = [];}
+  const hoy = typeof todayISO === 'function' ? todayISO() : '';
+  return ev.filter((e) => e && e.type === 'session.completed' && e.localDay === hoy && e.payload && STATS_HOY_MODULO[e.payload.module]).
+  map((e) => {
+    const f = new Date(e.occurredAt);
+    const rutina = window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId) || { id: e.payload.routineId, name: e.payload.routineId };
+    return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
+      min: Math.max(1, Math.round((e.payload.activeSeconds || 0) / 60)) };
+  }).
+  sort((a, b) => a.desde - b.desde);
+}
+
+
+function statsHoyTotales(state, t) {
+  const h = selectSidebarToday(state);
+  const v = { focus: h.focusMinutes, breath: h.breatheMinutes, move: h.bodyMinutes, water: h.waterGlasses };
+  return statsSeries(t).map((s) => ({ key: s.key, label: s.label, color: s.color, valor: v[s.key],
+    unidad: s.key === 'water' ? t('stats.hoy.vasos.de').replace('{m}', h.waterGoal) : s.unit }));
+}
+
+
+
+function StatsHoyTarjeta(_ref) {let { modulos, nombre, hora, meta, estado, larga } = _ref;
+  return (
+    React.createElement("div", { className: 'pace-sh-t' + (estado ? ' pace-sh-' + estado : ''), "data-pace-hoy-parada": estado || 'luego',
+      style: { '--c': RITMO_COLOR[modulos[0]] } },
+    React.createElement("i", { className: 'pace-sh-aro' + (larga ? ' pace-sh-larga' : '') },
+    modulos.map((m, k) => React.createElement(RitmoGlifo, { key: k, modulo: m }))
+    ),
+    React.createElement("div", { className: "pace-sh-txt" },
+    React.createElement("div", { className: "pace-sh-n" }, nombre),
+    React.createElement("div", { className: "pace-sh-m" }, React.createElement("span", { className: "pace-sh-h" }, hora), meta ? ' · ' + meta : '')
+    )
+    ));
+
+}
+
+function statsHoyMeta(p, t) {
+  const { it, estado } = p;
+  if (p.comida) return ritmoDuracion(it.dur);
+  if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
+  if (estado === 'saltada') return t('ritmo.saltada');
+  if (estado === 'ahora') return t('ritmo.ahora.min');
+  return it.dur + ' min';
+}
+
+function StatsHoyRejilla(_ref2) {let { n, children } = _ref2;
+  const clase = 'pace-sh-rejilla' + (n > 10 ? ' pace-sh-mucho' : '') + (n > 15 ? ' pace-sh-muchisimo' : '');
+  return React.createElement("div", { className: clase, "data-pace-hoy-rejilla": n }, children);
+}
+
+function StatsHoy(_ref3) {let { state } = _ref3;
+  const { t, lang } = useT();
+  const R = ritmoDe(state);
+  const plan = R.libre ? null : ritmoPlan(state);
+
+  if (plan) {
+    const paradas = statsHoyParadas(plan);
+    return (
+      React.createElement("div", { "data-pace-hoy-view": "menu" },
+      React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
+      React.createElement("div", { className: "pace-sh-cab" },
+      React.createElement(Meta, null, t('ritmo.opcion.' + plan.m.opcion) + ' · ' + ritmoHora(plan.m.desde) + '–' + ritmoHora(plan.m.hasta))
+      ),
+      React.createElement(StatsHoyRejilla, { n: paradas.length },
+      paradas.map((p, k) => {
+        const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
+        return React.createElement(StatsHoyTarjeta, { key: k, modulos: modulos, larga: p.it.larga,
+          nombre: p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang), hora: ritmoHora(p.it.desde),
+          meta: statsHoyMeta(p, t), estado: p.comida ? 'comida' : p.estado });
+      })
+      )
+      ));
+
+  }
+
+
+  const sesiones = statsHoySesiones();
+  return (
+    React.createElement("div", { "data-pace-hoy-view": "libre" },
+    React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
+    React.createElement("div", { className: "pace-sh-cab" },
+    React.createElement(Meta, null, t('stats.hoy.libre')),
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: ritmoVolver }, t('ritmo.volver'))
+    ),
+    sesiones.length ?
+    React.createElement(StatsHoyRejilla, { n: sesiones.length },
+    sesiones.map((s, k) =>
+    React.createElement(StatsHoyTarjeta, { key: k, modulos: [s.modulo], nombre: ritmoNombre(s.rutina, t, lang),
+      hora: ritmoHora(s.desde), meta: s.min + ' min', estado: "hecha" })
+    )
+    ) :
+    React.createElement("p", { className: "pace-sh-vacio", "data-pace-hoy-vacio": true }, t('stats.hoy.vacio'))
+    ));
+
+}
+
+Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoyTotales });
+;Object.assign(window, { statsHoyParadas, statsHoySesiones, statsHoyTotales, StatsHoyTarjeta, statsHoyMeta, StatsHoyRejilla, StatsHoy });
+})();
+</script>
+  <script>
+;(function () {
+
+
 const { useState, useRef, useEffect } = React;
 
 
@@ -33370,6 +33528,55 @@ Object.assign(window, { PathStats });
       /* Con las filas en dos columnas sobra sitio: 8 px entre fila y fila. */
       [data-pace-week-bar-row] { margin-bottom: 8px; }
     }
+    /* ══ HOY (Fase 4) · cada parada del menú como una tarjeta ════════════════
+       El papel de las tarjetas de totales (paper-2, r-md) con el glifo de la parada en su
+       aro, como en la línea del día: la hecha rellena al 22 % con borde entero, la saltada
+       al 40 % y a trazos, la que toca con su color (Ez, 15 oct., opción A). En el móvil, una
+       fila fina por parada para que quepa con los totales arriba; en el escritorio, cinco
+       tarjetas por fila con el nombre en hasta dos líneas. Con más de diez paradas, el móvil
+       pasa a dos columnas y el escritorio a una línea por nombre; con más de quince, a seis
+       por fila: una jornada de 5:00 a 23:30 cabe sin scroll en el escritorio. */
+    .pace-sh-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 2px 8px; }
+    .pace-sh-rejilla { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .pace-sh-t { display: flex; gap: 10px; align-items: center; padding: 3px 2px; min-width: 0; min-height: 28px;
+      border-bottom: 1px solid var(--paper-3); }
+    .pace-sh-t:last-child { border-bottom: 0; }
+    .pace-sh-aro { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+      grid-auto-flow: column; background: var(--paper); border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); }
+    .pace-sh-aro.pace-sh-larga { width: 36px; border-radius: 11px; gap: 1px; }
+    .pace-sh-aro .pace-rt-g { width: 13px; height: 13px; }
+    .pace-sh-hecha .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+    .pace-sh-saltada { opacity: 0.45; }
+    .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
+    .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
+    .pace-sh-ahora .pace-sh-m { color: var(--c); font-weight: 500; }
+    .pace-sh-comida .pace-sh-aro { border-style: dotted; }
+    .pace-sh-txt { min-width: 0; flex: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    .pace-sh-n { font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.15; color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pace-sh-m { flex: none; font-size: 10px; color: var(--ink-3); letter-spacing: 0.02em; white-space: nowrap; }
+    .pace-sh-ahora { border-radius: var(--r-sm); }
+    .pace-sh-h { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+    .pace-sh-mucho { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+    .pace-sh-mucho .pace-sh-txt { display: block; }
+    .pace-sh-mucho .pace-sh-m { overflow: hidden; text-overflow: ellipsis; }
+    .pace-sh-vacio { font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-3); margin: 6px 2px; line-height: 1.4; }
+
+    @media ${PACE_CORTE_ESC} {
+      .pace-sh-rejilla { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+      .pace-sh-t { align-items: flex-start; gap: 9px; padding: 10px 11px; border-bottom: 0; background: var(--paper-2); border-radius: var(--r-md); }
+      .pace-sh-aro { width: 28px; height: 28px; }
+      .pace-sh-aro.pace-sh-larga { width: 42px; height: 28px; border-radius: 13px; }
+      .pace-sh-aro .pace-rt-g { width: 15px; height: 15px; }
+      .pace-sh-txt { display: block; }
+      .pace-sh-m { margin-top: 2px; overflow: hidden; text-overflow: ellipsis; }
+      .pace-sh-n { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 2.3em; }
+      .pace-sh-cab { margin-bottom: 10px; }
+      .pace-sh-mucho { grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 8px; }
+      .pace-sh-mucho .pace-sh-t { padding: 8px 10px; }
+      .pace-sh-mucho .pace-sh-n { display: block; white-space: nowrap; min-height: 0; }
+      .pace-sh-muchisimo { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    }
   `;
   document.head.appendChild(s);
 })();
@@ -33642,7 +33849,14 @@ const statsPanelTabStyles = {
 function StatsPanel(_ref2) {let { open, onClose } = _ref2;
   const [state] = usePace();
   const { t } = useT();
-  const [tab, setTab] = useState('week');
+
+  const [tab, setTab] = useState('today');
+
+
+
+
+  const cerrada = (key) => (key === 'month' || key === 'year') &&
+  !(window.PREMIUM_ABIERTO_HASTA_V1 || window.hasPremiumEntitlement && window.hasPremiumEntitlement());
   const [jumpYear, setJumpYear] = useState(null);
   const [jumpMonth, setJumpMonth] = useState(null);
 
@@ -33663,13 +33877,19 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
   const pestanas =
   React.createElement("div", { "data-pace-stats-tabs": true, style: statsPanelTabStyles.container },
   [
+  { key: 'today', label: t('stats.tab.today') },
   { key: 'week', label: t('stats.tab.week') },
   { key: 'month', label: t('stats.tab.month') },
   { key: 'year', label: t('stats.tab.year') },
   { key: 'paths', label: t('stats.tab.paths') }].
 
   filter((_ref3) => {let { key } = _ref3;return key !== 'paths' || window.SHOW_CAMINOS !== false;}).map((_ref4) => {let { key, label } = _ref4;return (
-      React.createElement("button", { key: key, style: statsPanelTabStyles.tab(tab === key), onClick: () => setTab(key) }, label));}
+      React.createElement("button", { key: key, style: statsPanelTabStyles.tab(tab === key), "data-pace-stats-tab": key,
+        "data-pace-stats-cerrada": cerrada(key) ? '' : undefined,
+        "aria-label": cerrada(key) ? label + ' · ' + t('stats.cerrado') : undefined,
+        onClick: () => {if (cerrada(key)) {paceAbrirPremium({ nombre: label });return;}setTab(key);} },
+      cerrada(key) ? React.createElement(PaceCandado, { size: 10 }) : null, label
+      ));}
   )
   );
 
@@ -33694,6 +33914,7 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
 
 
     React.createElement("div", { "data-pace-stats-vistas": true },
+    tab === 'today' && React.createElement(StatsHoy, { state: state }),
     tab === 'week' && React.createElement(WeekView, { state: state }),
     tab === 'month' && React.createElement(MonthHeatmap, { history: history, lang: lang, initialYear: jumpYear, initialMonth: jumpMonth }),
     tab === 'year' && React.createElement(YearView, { history: history, lang: lang, firstSeen: state.firstSeen, onNavigateToMonth: handleNavigateToMonth }),

@@ -1,6 +1,6 @@
 /* PACE · Panel de estadísticas — sesión 43/44
-   Pestañas Semana | Mes | Año. La semana está en StatsSemana.jsx y el año en YearView.jsx;
-   aquí quedan el mes y el panel.
+   Pestañas Hoy | Semana | Mes | Año. Hoy está en StatsHoy.jsx, la semana en StatsSemana.jsx y
+   el año en YearView.jsx; aquí quedan el mes y el panel.
 */
 
 const { useState, useRef, useEffect } = React;
@@ -263,7 +263,14 @@ const statsPanelTabStyles = {
 function StatsPanel({ open, onClose }) {
   const [state] = usePace();
   const { t } = useT();
-  const [tab, setTab]           = useState('week');
+  /* Se abre en «Hoy» (§37.4; Ez, 15 oct. 2026): lo primero es tu día. */
+  const [tab, setTab]           = useState('today');
+  /* MES Y AÑO SON DE PACE COMPLETO (Ez, 8 oct.); hasta v1, abiertos para todos
+     (PREMIUM_ABIERTO_HASTA_V1). Cerrados llevan el candado de línea fina en su pestaña y, al
+     tocarla, se abre la invitación de siempre sin cambiar de pestaña (Ez, 15 oct., opción A):
+     tus datos no se tapan, y la copia de «Tus datos» los sigue llevando todos. */
+  const cerrada = (key) => (key === 'month' || key === 'year')
+    && !(window.PREMIUM_ABIERTO_HASTA_V1 || (window.hasPremiumEntitlement && window.hasPremiumEntitlement()));
   const [jumpYear, setJumpYear] = useState(null);
   const [jumpMonth, setJumpMonth] = useState(null);
 
@@ -284,13 +291,19 @@ function StatsPanel({ open, onClose }) {
   const pestanas = (
     <div data-pace-stats-tabs style={statsPanelTabStyles.container}>
       {[
+        { key:'today', label:t('stats.tab.today') },
         { key:'week',  label:t('stats.tab.week')  },
         { key:'month', label:t('stats.tab.month') },
         { key:'year',  label:t('stats.tab.year')  },
         { key:'paths', label:t('stats.tab.paths') },
       /* Sin Caminos (SHOW_CAMINOS, app/flags.js) su pestaña no se ofrece. */
       ].filter(({ key }) => key !== 'paths' || window.SHOW_CAMINOS !== false).map(({ key, label }) => (
-        <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
+        <button key={key} style={statsPanelTabStyles.tab(tab===key)} data-pace-stats-tab={key}
+          data-pace-stats-cerrada={cerrada(key) ? '' : undefined}
+          aria-label={cerrada(key) ? label + ' · ' + t('stats.cerrado') : undefined}
+          onClick={()=>{ if (cerrada(key)) { paceAbrirPremium({ nombre: label }); return; } setTab(key); }}>
+          {cerrada(key) ? <PaceCandado size={10} /> : null}{label}
+        </button>
       ))}
     </div>
   );
@@ -315,6 +328,7 @@ function StatsPanel({ open, onClose }) {
           pestanas, el suelo es la mas alta de las tres, que ya cabe en el telefono
           de Ez sin scroll; las otras dos dejan de saltar y no quedan medio vacias. */}
       <div data-pace-stats-vistas>
+        {tab==='today' && <StatsHoy state={state} />}
         {tab==='week'  && <WeekView state={state} />}
         {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
         {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}

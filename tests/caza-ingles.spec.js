@@ -162,6 +162,7 @@ test('ingles-7 · «1 glass» en la semana, en el total del mes y en el día', a
   await irAlArtefacto(page);
   await page.evaluate(() => addWaterGlass(1));
   await page.keyboard.press('s');
+  await page.getByRole('button', { name: 'Week', exact: true }).click();   /* se abre en «Today» (Fase 4) */
   const tarjeta = page.locator('[data-pace-week-cards] > div').nth(3);
   await expect(tarjeta.locator('> div').last(), 'la tarjeta decía «1 / glasses»').toHaveText('glass');
   await page.getByRole('button', { name: 'Month', exact: true }).click();
