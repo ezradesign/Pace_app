@@ -4,7 +4,18 @@
 > [audit](./docs/product/AUDITORIA_SISTEMA_PACE.md), que fija la dirección. Índice de autoridad:
 > [`docs/product/AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md).
 
-## PRECIO Y ESTRUCTURA — CERRADO en s134 (esto manda sobre todo lo de abajo)
+## CAMBIO DE EZ, 15 OCT. 2026: DOS PLANES (esto manda sobre el bloque de s134)
+
+**Al lanzamiento hay dos planes: 2,99 € al mes, con 7 días gratis, y 19,99 € de por vida.** Los dos
+abren lo mismo. Cobra Stripe en su modo «vende por ti», el código lo firma una función de Cloudflare
+con la llave k2 y la landing vive en `pacegrass.app/premium`. Detalle y porqués en
+`docs/product/DECISIONES_PRODUCTO.md` («Cómo se cobra PACE completo») y en
+`docs/proposals/cobrar-pace-completo.html`. Del bloque de s134 dejan de valer «un solo plan» y
+«mensual descartado»; lo demás sigue: `expiresAt` opcional, el anual a 9,99 € si llega, todo
+desbloquea lo mismo y la estrategia se valida antes de abrir la tienda. El mensual ya no obliga a
+pegar un código cada mes: la app lo renueva sola con la función.
+
+## PRECIO Y ESTRUCTURA — CERRADO en s134 (en parte sustituido: ver el bloque de arriba)
 
 **Al lanzamiento hay UN solo plan: Lifetime 19,99 €.**
 

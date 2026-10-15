@@ -29,6 +29,26 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   - Falta que Ez lea `privacy.html` (cuenta «Mantenerlo al día solo») y pruebe el calendario solo en su
     Android.
   - Ez eligió seguir con dos sesiones a la vez, no cuatro: al reanudarse, cuatro gastaron un 28 % en 3 min.
+- **Cómo se cobra PACE completo, decidido por Ez (15 oct., tarde; sesión `practical-antonelli`, solo
+  documentos, sin tocar la app).** Página: `docs/proposals/cobrar-pace-completo.html`
+  (https://claude.ai/artifact/FKQomZTtG6eqNGHRhLUTuJ). Detalle en `DECISIONES_PRODUCTO.md`.
+  - Cobra **Stripe en modo «vende por ti»** (Managed Payments): unos 15,27 € de cada 19,99 €. Plan B,
+    Paddle.
+  - **El código se firma solo**: una función de Cloudflare Pages comprueba el pago y firma con **k2**,
+    una llave nueva solo para ventas; k1 no sale del PC de Ez.
+  - **Dos planes: 2,99 € al mes con 7 días gratis, y 19,99 € de por vida.** Cambia «un solo plan» de
+    s134 (`MONETIZATION.md` ya lo dice). En la web, el mensual se renueva con la función: la única
+    conexión de la app, solo para quien paga al mes.
+  - **Landing en `pacegrass.app/premium`.** La bienvenida enseña PACE completo una vez, al final, con
+    «Ahora no».
+  - Starter Story, revisado el canal principal (30 vídeos): el caso más cercano, Cat on Chair (un
+    Pomodoro hecho a mano), vende sobre todo de por vida a 29,99 $ y creció sin anuncios. Falta el
+    canal hermano y las reseñas de la competencia.
+  - **Lo que espera a Ez:** un gestor (cómo darse de alta para cobrar), la cuenta de Stripe a su nombre
+    con verificación en dos pasos y la petición de Managed Payments, dos pasos en Cloudflare y los
+    datos del aviso legal (nombre, NIF, contacto). **Lo que lo construye (otra sesión, Fase 6):** k2,
+    el número de pedido en los códigos y los anulados por pedido, la función, gracias y `/recuperar`,
+    la renovación del mensual, la prueba en Play, la bienvenida, `/premium` y `privacy.html`.
 - **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
   y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
   hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:
@@ -513,7 +533,7 @@ primera versión de pago, en web y Android.
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
-| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, en `PACE-llave-licencias` del PC de Ez) y los 15 enlaces de tester, desde el 12 oct., en `codigos-tester.csv` de esa carpeta. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. |
+| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, en `PACE-llave-licencias` del PC de Ez) y los 15 enlaces de tester, desde el 12 oct., en `codigos-tester.csv` de esa carpeta. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. Cómo se cobra en la web (Stripe, firma automática con k2, 2,99 € al mes con 7 días gratis y 19,99 € de por vida, landing en `/premium`), decidido por Ez el 15 oct.: `DECISIONES_PRODUCTO.md`. |
 | Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez

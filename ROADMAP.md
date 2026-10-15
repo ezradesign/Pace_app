@@ -180,13 +180,14 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 - **Play Billing** con un **`PurchaseAdapter`** (web · Play) que pase por
   **`app/state-entitlement.jsx` como punto único**. Las tiendas son la fuente de verdad de precio y
   moneda: no se hardcodean importes en las traducciones.
-- **Cómo se prueba el premium** (Ez, 6 oct 2026): se descarta la prueba de pago (3 días por 3,99 €)
-  porque cuesta el 20 % del precio y en tres días no se ve «A tu ritmo» a lo largo de la semana. Al
-  llegar aquí se elige entre **7 días gratis de todas las funciones** (en Android, con la fecha de
-  inicio guardada en el móvil) o una **suscripción mensual**, que en Play sí trae prueba gratis
-  propia pero cambia el «UN SOLO PLAN» de 19,99 €.
-- **Proveedor de pago** / Merchant of Record para la web.
-- **Landing** separada de la app.
+- **Cómo se prueba y qué planes hay** (Ez, 15 oct. 2026): **2,99 € al mes con 7 días gratis, y
+  19,99 € de por vida** al lado; la prueba es la de la suscripción (Stripe en la web, Play en
+  Android). La bienvenida enseña PACE completo una vez, al final, con «Ahora no». Se descartó la
+  prueba de pago (3 días por 3,99 €, 6 oct.) y los 7 días gratis sin tarjeta.
+- **Proveedor de pago** (Ez, 15 oct. 2026): **Stripe en modo «vende por ti»** (Managed Payments);
+  Paddle si Stripe no lo admite. El código lo firma una función de Cloudflare Pages con la llave
+  **k2**, solo para ventas; k1 sigue en el PC de Ez. Detalle en `DECISIONES_PRODUCTO.md`.
+- **Landing** en **`pacegrass.app/premium`** (Ez, 15 oct. 2026), página suelta junto a la app.
 - **Revisión legal**: Términos y Privacidad revisados por un profesional (y el contenido corporal).
 - **Ficha de Play** (y ASO); QA de compra, reinstalación y cambio de fecha.
 

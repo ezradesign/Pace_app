@@ -21,6 +21,43 @@
 
 ---
 
+## Cómo se cobra PACE completo (Ez, 15 oct. 2026)
+
+Elegido sobre la página `docs/proposals/cobrar-pace-completo.html`
+(https://claude.ai/artifact/FKQomZTtG6eqNGHRhLUTuJ). Nada contratado todavía: las altas son de Ez.
+
+1. **Cobra Stripe en su modo «vende por ti»** (Managed Payments, Merchant of Record): Link vende,
+   cobra y paga el IVA de cada país, atiende al comprador y las reclamaciones al banco. A Ez le quedan
+   unos 15,27 € de cada 19,99 € pagados en España (comisión del 5 % + 0,25 €). Si Stripe no lo admite
+   en su revisión, Paddle (unos 15,09 €; pide la landing publicada antes del alta). Lemon Squeezy, no:
+   su dueño, Stripe, lo está mudando a este mismo modo.
+2. **El código se firma solo.** Stripe devuelve al comprador a una página de gracias; una función de
+   Cloudflare Pages comprueba el pago con Stripe y firma el código `PACE1` con una llave nueva, **k2,
+   solo para ventas**, guardada en los secretos de Cloudflare. **k1 (testers) no sale del PC de Ez.**
+   Cada código de venta lleva su número de pedido o de suscripción, para anularlo solo a él (hoy la
+   lista de anulados solo sirve para los testers). Habrá `/recuperar` con el correo y el número del
+   recibo. Si k2 se escapara, se cambia por k3 y los compradores recuperan el suyo.
+3. **Planes: 2,99 € al mes con 7 días gratis, y 19,99 € de por vida al lado.** Cambia lo cerrado en
+   s134 («mensual descartado», «un solo plan»): `MONETIZATION.md` lo recoge. Ez preguntó por 3 días y
+   eligió 7 al saber que en tres no se ve una semana de «A tu ritmo». La prueba es la de la
+   suscripción (Stripe en la web, Play en Android), así que pide tarjeta. En la web, el código del
+   mensual lleva `expiresAt` (el periodo pagado y unos días de margen) y la app pide uno nuevo a la
+   función al acercarse el final: es la única conexión de la app, solo para quien paga al mes, y
+   `privacy.html` tendrá que contarla. El de por vida no se conecta nunca. Si un día hay anual, a
+   9,99 € (s134 sigue valiendo en eso).
+4. **La landing vive en `pacegrass.app/premium`**, página suelta en el mismo proyecto de Cloudflare;
+   la app no se mueve de la raíz. Lleva qué es PACE, qué es gratis y qué trae PACE completo, los dos
+   precios con el IVA incluido, «Probar gratis» y «Comprar», preguntas (web y Android, sin cuentas,
+   recuperar el código, devoluciones), lo legal (condiciones, privacidad, devoluciones y aviso legal
+   con nombre, NIF y contacto) y castellano e inglés. Sin cuentas atrás ni rastreo.
+5. **La bienvenida enseña PACE completo una vez, al final**, con «Probar gratis» y «Ahora no» (idea de
+   Starter Story: la venta se decide en la bienvenida). Fuera de eso, solo al tocar algo cerrado.
+6. **Lo que se compra en la web abre la web**, no la app de Android (Play): se dice en la landing antes
+   de pagar. Pregunta abierta para la Fase 6: si una app que vende con Play puede abrir también lo
+   comprado fuera.
+
+Antes de la primera venta, Ez pregunta a un gestor cómo darse de alta para cobrar.
+
 ## Decisiones tomadas (2026-07-16, sesión de auditoría)
 
 1. **Apnea — retirar.** Fuera los 3 logros secretos `secret.breath.hold.60/90/120`
