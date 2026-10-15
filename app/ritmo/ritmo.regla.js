@@ -57,9 +57,14 @@
        entre las pausas, sin pasarse. */
 
 var RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
+/* `reloj`: lo que dura el día, de reloj, desde que empieza. «Dos horas» acaba a
+   las dos horas pase lo que pase (Ez, 14 oct.): con el aro más corto que el
+   bloque del plan cada bloque lleva su pausa detrás, y sin este tope los 105 min
+   de foco se servían a trozos hasta pasadas las tres horas. Con bloques cortos hay
+   menos foco, no más reloj. */
 var RITMO_FORMAS = {
-  '1h':      { bloque: 25, foco: 50 },
-  '2h':      { bloque: 35, foco: 105 },
+  '1h':      { bloque: 25, foco: 50, reloj: 60 },
+  '2h':      { bloque: 35, foco: 105, reloj: 120 },
   'media':   { bloque: 45, foco: Infinity },
   'jornada': { bloque: 45, foco: Infinity },
 };
@@ -72,7 +77,8 @@ var RITMO_FORMAS = {
    pausaPendiente, bloque } — lo ya hecho cuando se recompone el resto del día desde
    `horario.ahora` (ver arriba). `pausaPendiente` (s195): el bloque acaba de
    TERMINAR y lo primero que se sirve es su pausa, ahora mismo. `bloque` (s195): la
-   duración que la persona puso en el aro, que manda en los bloques que vienen. */
+   duración que la persona puso en el aro, que manda en los bloques que vienen.
+   `inicio`: la hora a la que empezó el día, de donde se cuenta el `reloj`. */
 function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30;
   var forma = RITMO_FORMAS[opcion];
@@ -90,9 +96,11 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
      servía: «Dos horas» de 13:00 a 15:00 metía la comida a las 14:00. `sinComida`
      (s195b) sigue apagándola también en la entera. */
   var comeA = (opcion === 'jornada' && !horario.sinComida) ? horario.comida : Infinity;
-  /* s195c: `horario.desfaseLarga` corre la cadencia de la pausa larga (la semana lo
-     usa el miércoles: la larga es la segunda, no la tercera). 0 si no se dice. */
-  var desfase = Number(horario.desfaseLarga) || 0;
+  /* EL MIÉRCOLES («la mitad», ritmo.semana.js) la PRIMERA larga llega una parada antes:
+     la segunda de la mañana y no la tercera; las demás van donde irían cualquier otro
+     día (Ez, 14 oct.). Antes se corría toda la cadencia y el miércoles salía con tres
+     largas donde los demás días hay una. `horario.adelantaLarga`; sin él, lo de siempre. */
+  var adelanta = !!horario.adelantaLarga;
   var comidaDur = horario.comidaDur || 60;
   var ahora = horario.ahora != null ? horario.ahora : inicio;
   var P0 = previos || null;
@@ -118,6 +126,13 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     var finTrabajo = fin - PAUSA;                      /* el cierre ocupa un hueco */
     var falta = !(P0 && P0.comidaHecha) && desde < comeA && comeA < finTrabajo;   /* ¿queda comida delante? */
     var cola = Math.min(COLA, bloque - 5);
+    /* La cadencia de la larga: cada tercera pausa desde la comida (o el inicio). La
+       «mañana» es lo de antes de la comida: ahí vive la larga que el miércoles adelanta. */
+    var manana = !(P0 && P0.comidaHecha);
+    function pausaDe(k) {
+      if (adelanta && manana && (k === 2 || k === 3)) return k === 2 ? LARGA : PAUSA;
+      return k % 3 === 0 ? LARGA : PAUSA;
+    }
     /* Comer «por delante» solo manda si aún queda foco que servir DESPUÉS: si
        no, el día acaba aquí (en la maqueta, «Una hora» esperaba 245 min). */
     function comerAntes() { return falta && foco - hecho >= MINIMO && finTrabajo - comeA - comidaDur >= MINIMO; }
@@ -125,7 +140,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       if (t < comeA) items.push({ tipo: 'libre', desde: t, dur: comeA - t });
       t = Math.max(t, comeA);   /* el bloque forzado puede haber cruzado la hora: se come al acabarlo */
       items.push({ tipo: 'comida', desde: t, dur: comidaDur });
-      t += comidaDur; falta = false; enMitad = 0;
+      t += comidaDur; falta = false; enMitad = 0; manana = false;
     }
     /* Lo ocupado: la próxima reunión que aún no ha acabado, los minutos de
        reunión que quedan antes de `b` y el paso de ir a ella (con el margen libre
@@ -151,8 +166,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
        la pausa es el cierre, que pone el final) o que la comida esté encima (la
        comida es la pausa; el bucle la sirve). */
     if (P0 && P0.pausaPendiente) {
-      var p0 = (enMitad + 1 + desfase) % 3 === 0 ? LARGA : PAUSA;
+      var p0 = pausaDe(enMitad + 1);
       var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      if (queda0 < MINIMO && p0 === LARGA && forma.reloj && queda0 + LARGA - PAUSA >= MINIMO) { p0 = PAUSA; queda0 += LARGA - PAUSA; }
       var o0 = sigOcupado();
       if ((queda0 >= MINIMO || comerAntes()) && !(falta && t + p0 > comeA) && !(o0 && t + p0 > o0.desde)) {
         enMitad++;
@@ -161,7 +177,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       }
     }
     for (var vuelta = 0; vuelta < 200; vuelta++) {
-      var p = (enMitad + 1 + desfase) % 3 === 0 ? LARGA : PAUSA;
+      var p = pausaDe(enMitad + 1);
       var dur;
       var o = sigOcupado();
       var enMarcha = P0 && P0.primerBloque && n === primeros;
@@ -195,6 +211,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       t += dur; hecho += dur;
       if (falta && t >= comeA) { comer(); continue; }
       var queda = Math.min(foco - hecho, finTrabajo - t - p - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      /* Al final de una opción con `reloj`, una larga que ya no deja sitio a otro bloque
+         se sirve corta: si no, «Dos horas» con el aro a 10 acababa veinte minutos antes. */
+      if (queda < MINIMO && p === LARGA && forma.reloj && queda + LARGA - PAUSA >= MINIMO) { p = PAUSA; queda += LARGA - PAUSA; }
       if (queda < MINIMO && !comerAntes()) break;
       if (falta && t + p > comeA) { comer(); continue; }
       o = sigOcupado();
@@ -208,9 +227,14 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   }
 
   /* Pasada la salida, las opciones cortas no se topan con ella. La jornada sí:
-     fuera de tu horario no hay jornada que servir. */
-  var fueraDeHora = desde >= salida - PAUSA - MINIMO;
+     fuera de tu horario no hay jornada que servir. Las cortas, además, acaban a su
+     `reloj` contado desde que EMPEZÓ el día (`previos.inicio`), no desde la última
+     recomposición: si no, cada bloque empezado tarde movería el final. Por eso
+     también «fuera de hora» se mira en ese arranque. */
+  var arranque = P0 && P0.inicio != null ? P0.inicio : desde;
+  var fueraDeHora = arranque >= salida - PAUSA - MINIMO;
   var fin = (forma.foco !== Infinity && fueraDeHora) ? 24 * 60 : salida;
+  if (forma.reloj) fin = Math.min(fin, arranque + forma.reloj);
   var dia = componer(Math.min(fin, 24 * 60));
 
   /* Los platos, en orden, sin repetir en el día (tampoco los ya servidos). */

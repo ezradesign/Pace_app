@@ -170,6 +170,8 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
   /* el agua cuenta desde el inicio del día, no desde la recomposición: sin vaso en lo
      hecho, el «último» es el arranque de lo hecho */
   if (pasado && pasado.length) p.ultimoVaso = pasado[0].desde;
+  /* «Dos horas» se cuenta desde aquí, no desde la recomposición (ritmo.regla.js) */
+  p.inicio = pasado && pasado.length ? pasado[0].desde : null;
   (pasado || []).forEach(function (it) {
     if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; }
     if (it.tipo === 'pausa') { p.pausas++; p.claves++; }
