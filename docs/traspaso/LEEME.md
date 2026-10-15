@@ -11,6 +11,20 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **RELEVO (15 oct., ~08:20 en Madrid, al 79 %; esta cuenta se repone a las 12:40).** `main` en v0.167.0
+  con la CI en verde. En la rama de caza-sesiones (sin subir a `main`): la home corrida (LISTO, b36fc4e)
+  y la página de las series (rehecha con la firma de Ez: sus commits venían con el correo de Hotmail y
+  `verify` los rechaza). La suite entera de esas dos corría (`%TEMP%\suite-168.log`): si sale en verde,
+  bump v0.168.0, CHANGELOG/STATE y push a `main`; si cae algo, repetirlo solo.
+  - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 8798): esperaba una respuesta de Ez en su sesión.
+  - `calendario-solo` (rama `claude/calendario-solo-4f0d26`, 41f7b73, 8799): PLAN.md montado (Ez eligió A
+    en las cuatro), verify en verde; le falta la suite entera (cayó `caza-sesiones.spec.js:149`, ajena,
+    a repetir sola) para dar el LISTO.
+  - `series-aprende`: hecho. Ez eligió la forma 2, la frase B, Piernas de pie, Espalda de pie y la mesa
+    en el catálogo, sin el paseo, y la capa 1 de «PACE que aprende» gratis
+    (`docs/traspaso/archivos/series-15oct/`). Montarlo es otra sesión, DESPUÉS de juntar `ritmo-deudas`,
+    porque las dos tocan `ritmo.regla.js`.
+  - Ez eligió seguir con dos sesiones a la vez, no cuatro: al reanudarse, cuatro gastaron un 28 % en 3 min.
 - **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
   y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
   hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:
