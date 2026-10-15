@@ -150,6 +150,74 @@ var PACE_VOZ_FASE_MIN = 1.5;
    la «e» de «exhala» entera. */
 var PACE_VOZ_PREV = 0.04;
 
+/* LA VOZ SALE POR WEB AUDIO, CON UN FUNDIDO DE 5 ms AL ENTRAR Y AL SALIR. Las
+   palabras de bradford en castellano empiezan en el primer milisegundo del
+   archivo («inhala» y «mantén», ini 0,001) y su «exhala» suena hasta el último
+   (fin = dur): un `<audio>` las arranca y las corta de golpe, y eso se oye como
+   un clic entre palabra y palabra (Ez, en «Exhalación 4·6», en el PC). Con el
+   fundido no hay clic sea cual sea el archivo, y la voz va por el mismo Web
+   Audio que la música, que es lo que se sospecha del entrecortado del móvil.
+   5 ms no se oyen como fundido: no le quitan nada a la consonante.
+   El `<audio>` sigue cargándose: dice cuándo la palabra está lista
+   (`canplaythrough`) y suena él si el Web Audio no puede (sin contexto, o
+   todavía suspendido antes del primer gesto). */
+var PACE_VOZ_FUNDIDO = 0.005;
+
+/* Se descodifica fuera de línea, como la música (Sound.musica.jsx): así no hace
+   falta el contexto de audio de la app, que antes del primer gesto no puede
+   arrancar. Un AudioBuffer vale para cualquier contexto. */
+function paceVozDescodifica(slot, url) {
+  try {
+    var Fuera = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!Fuera || typeof fetch !== 'function') return;
+    fetch(url)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+      .then(function (ab) {
+        var dc = new Fuera(1, 1, 44100);
+        return new Promise(function (ok, ko) { var p = dc.decodeAudioData(ab, ok, ko); if (p && p.then) p.then(ok, ko); });
+      })
+      .then(function (buf) { slot.buffer = buf; })
+      .catch(function () { /* sin buffer suena el <audio>, como antes */ });
+  } catch (e) { /* idem */ }
+}
+
+/* Suena la palabra desde `desde` (segundos del archivo) con el fundido a los dos
+   lados. Devuelve false si no puede, y entonces suena el `<audio>`. */
+function paceVozWebAudio(slot, desde) {
+  var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+  if (!ctx || !slot.buffer) return false;
+  if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+  if (ctx.state !== 'running') return false;
+  var f = PACE_VOZ_FUNDIDO;
+  var t0 = ctx.currentTime;
+  /* La palabra anterior de este mismo clip, si aún sonara, sale con su fundido. */
+  if (slot.fuente) {
+    try {
+      slot.fuente.g.gain.cancelScheduledValues(t0);
+      slot.fuente.g.gain.setValueAtTime(slot.fuente.g.gain.value, t0);
+      slot.fuente.g.gain.linearRampToValueAtTime(0, t0 + f);
+      slot.fuente.s.stop(t0 + f + 0.01);
+    } catch (e) {}
+  }
+  var resto = slot.buffer.duration - desde;
+  if (!(resto > 2 * f)) return false;
+  var s = ctx.createBufferSource();
+  var g = ctx.createGain();
+  s.buffer = slot.buffer;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(1, t0 + f);
+  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(0, t0 + resto);
+  s.connect(g);
+  g.connect(ctx.destination);
+  s.start(t0, desde);
+  s.stop(t0 + resto + 0.01);
+  var esta = { s: s, g: g };
+  slot.fuente = esta;
+  s.onended = function () { if (slot.fuente === esta) slot.fuente = null; try { g.disconnect(); } catch (e) {} };
+  return true;
+}
+
 /* QUE VOZ SUENA, Y SI SUENA SIQUIERA. Las dos preguntas se contestan leyendo el
    estado en el MOMENTO de sonar, no al cargar: el usuario puede cambiarlas
    desde Ajustes en mitad de una sesion.
@@ -195,10 +263,12 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
+    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null };
     juego[nombre] = slot;
+    var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
+    paceVozDescodifica(slot, url);
     try {
-      var a = new Audio('app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3');
+      var a = new Audio(url);
       a.preload = 'auto';
       a.addEventListener('canplaythrough', function () {
         /* GUARD: los extremos de voz estan medidos sobre ESTE archivo. Si el
@@ -249,7 +319,9 @@ function paceVozIntenta(nombre, faseSeg) {
        siguiera sonando —no debería, porque cabe— se corta y empieza. */
     /* Se entra por donde EMPIEZA LA VOZ, no por el principio del archivo: si no,
        la senal llega tarde -- 0,65 s en el «exhala». */
-    slot.audio.currentTime = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    if (paceVozWebAudio(slot, desde)) return true;
+    slot.audio.currentTime = desde;
     var p = slot.audio.play();
     /* `play()` devuelve promesa en los navegadores modernos. Se ignora su
        rechazo A PROPÓSITO: el caso real es la política de autoplay antes del
@@ -270,6 +342,7 @@ Object.assign(window, {
   paceVozIdioma: paceVozIdioma,
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
   PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
+  PACE_VOZ_FUNDIDO: PACE_VOZ_FUNDIDO,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,

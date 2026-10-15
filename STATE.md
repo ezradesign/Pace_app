@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.166.0 · 14 de octubre de 2026.
+**Versión:** v0.167.0 · 14 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -134,14 +134,16 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    (ingles-13, en v0.152.0, con la pausa). Las voces de Respira hablan inglés desde v0.165.0.
 4. **La caza del 14 oct. en las sesiones guiadas** (`docs/traspaso/CAZA_SESIONES_14OCT.md`): seis
    arreglos en v0.163.0 (lo que se cuenta con el equipo dormido, las pausas, la página oculta y dos
-   pestañas); sesiones-7, 8 y 9, con lo que eligió Ez, en v0.165.0. Queda sesiones-10: la voz grave
-   entrecortada en el navegador del Android de Ez, que tiene que probarla en la app con y sin música.
+   pestañas); sesiones-7, 8 y 9, con lo que eligió Ez, en v0.165.0. sesiones-10 (la voz grave con
+   clics en el PC y entrecortada en el Android de Ez): desde v0.167.0 la voz suena por Web Audio con
+   un fundido de 5 ms (`PACE_VOZ_FUNDIDO`, `app/ui/Sound.voz.jsx`); falta que Ez lo oiga en la web.
 5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
    certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
-6. **El calendario se mantiene solo** (Ez, 14 oct.), cuando se libere una de las dos sesiones: el
-   día se corrige solo en el calendario cada vez que cambia, con aviso en las pausas. Es parte de
-   PACE completo (llevar el día y esquivar reuniones siguen gratis). Detalle en el relevo de LEEME.
+6. **Cuatro sesiones en paralelo** (14 oct., noche; carpetas, ramas y puertos en el relevo de LEEME):
+   las series de las pausas y «PACE que aprende» (investigar y proponer), «A tu ritmo» («Dos horas»
+   dura dos horas de reloj aunque el aro esté corto, el miércoles con tres largas y el modo oscuro
+   del panel), la home que se corre de lado al cerrar la pausa y el calendario que se mantiene solo.
 
 ## Espera a Ez
 
@@ -165,7 +167,8 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
     y 18 sin dibujo propio;
   - entraron en v0.165.0 las voces en inglés y cinco dibujos: «Primer día», «Cuarto creciente»,
     «Solsticio invierno», «Hueco abdominal» y «Elevación de puntas».
-- Probar en el móvil la voz grave de Respira, en la app, con música y sin ella (sesiones-10).
+- Oír la voz grave de Respira en pacegrass.app, en el PC y en el móvil, con música y sin ella: desde
+  v0.167.0 entra y sale con un fundido (sesiones-10).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
 
 ## Deuda conocida, sin fecha
