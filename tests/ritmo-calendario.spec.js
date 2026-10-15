@@ -16,6 +16,10 @@
  *  · GOOGLE y MICROSOFT con su red interceptada: la ventana del permiso vuelve
  *    por /calendario.html y localStorage, y se escribe lo mismo que en Android.
  *
+ * Todo esto es «Añadir» DE UNA VEZ, con «Mantenerlo al día solo» desmarcado: la
+ * casilla viene marcada desde el 14 oct. 2026 y lo que hace marcada lo prueba
+ * tests/ritmo-calendario-solo.spec.js.
+ *
  * NO CUBRE: Android de verdad (que el complemento compile lo dice el workflow
  * Android; que escriba en el calendario del móvil, un móvil), ni Google ni
  * Microsoft de verdad (sus altas las hace Ez: docs/CALENDARIO_ALTAS.md).
@@ -257,6 +261,7 @@ test.describe('en Android', () => {
     await expect(hoja.locator('[data-pace-cal-destino]')).toHaveCount(2);
     await expect(hoja.locator('[data-pace-cal-destino="android"]')).toContainText('Calendario del móvil');
     await expect(hoja.locator('[data-pace-cal-reuniones]')).toBeChecked();
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.');
 
@@ -362,6 +367,7 @@ for (const prov of ['google', 'microsoft']) {
     const hoja = page.locator('[data-pace-cal]');
     const fila = hoja.locator('[data-pace-cal-destino="' + prov + '"]');
     await expect(fila.locator('button')).toHaveText('Conectar');
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
     await fila.locator('button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.', { timeout: 15_000 });
 

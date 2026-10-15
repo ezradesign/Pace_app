@@ -360,6 +360,11 @@
 .pace-rt-cal-chk small { display: block; font-size: 11px; color: var(--ink-3); margin-top: 2px; }
 .pace-rt-cal-aviso { font-size: 13px; color: var(--focus); background: var(--focus-soft); border-radius: var(--r-sm); padding: 10px 12px; margin-top: 4px; }
 .pace-rt-cal-aviso.pace-rt-error { color: var(--breathe-2, var(--ink)); background: var(--breathe-soft); }
+/* El calendario que se mantiene solo: los dos botones de «Desconectar» y la casilla cerrada. */
+.pace-rt-cal-dos { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.pace-rt-cal-aviso .pace-rt-enlace { color: var(--focus); text-decoration: underline; text-underline-offset: 2px; margin-left: 4px; }
+.pace-rt-cal-chk.pace-rt-cerrado { opacity: 0.62; width: 100%; background: none; border: 0; margin: 0; font: inherit; text-align: left; }
+.pace-rt-cal-caja { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; box-sizing: border-box; border: 1px solid var(--ink-3); border-radius: 3px; }
 
 @media ${PACE_CORTE_MOVIL} {
   .pace-rt-panel { padding: 12px 14px 10px; }

@@ -41,10 +41,11 @@ function tieneLicenciaPremium() {
 /* HASTA v1, LAS RUTINAS PREMIUM ESTAN ABIERTAS PARA TODOS. Decision de Ez (6 oct.
    2026): el cobro llega despues de cerrar Android, y asi los testers de la prueba
    cerrada las prueban todas. Siguen con su «Premium», que dice que seran de pago,
-   pero sin «Pronto» y se pueden empezar. Solo las RUTINAS: el constructor de
-   rutinas propias sigue cerrado (`hasPremiumEntitlement`). Cuando llegue el cobro,
-   a `false`. Se lee de `window` en cada llamada porque las pruebas lo apagan para
-   medir el candado. */
+   pero sin «Pronto» y se pueden empezar. Las RUTINAS y el calendario que se
+   mantiene solo (`puedeMantenerCalendario`, Ez, 14 oct.: en Android no hay
+   códigos y nadie podría probarlo): el constructor de rutinas propias sigue
+   cerrado (`hasPremiumEntitlement`). Cuando llegue el cobro, a `false`. Se lee de
+   `window` en cada llamada porque las pruebas lo apagan para medir el candado. */
 const PREMIUM_ABIERTO_HASTA_V1 = true;
 
 /* canAccessRoutine(routineId, { tasting }) -> boolean
@@ -89,4 +90,11 @@ function hasPremiumEntitlement() {
   return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, PREMIUM_ABIERTO_HASTA_V1 });
+/* puedeMantenerCalendario() -> boolean   (14 oct. 2026)
+     «Mantenerlo al día solo» en «Al calendario» es de PACE completo; llevar el
+     día y esquivar reuniones siguen gratis. Hasta v1, abierto como las rutinas. */
+function puedeMantenerCalendario() {
+  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, PREMIUM_ABIERTO_HASTA_V1 });
