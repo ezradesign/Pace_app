@@ -21,9 +21,12 @@
    el menú de compartir en Android. No lee reuniones.
 
    AL VOLVER A LA APP, si el último destino fue uno conectado y el acceso sigue
-   vivo (el permiso de Android, o el pase de la web dentro de su hora), las
-   reuniones se vuelven a leer sin preguntar nada, como mucho cada 5 minutos.
-   Solo se lee: los eventos se reescriben cuando la persona pulsa otra vez.
+   vivo (el permiso de Android, o el pase de la web), las reuniones se vuelven a
+   leer sin preguntar nada, como mucho cada 5 minutos. Sin «Mantenerlo al día
+   solo», solo se lee: los eventos se reescriben cuando la persona pulsa otra vez.
+   Con él, el paso 3 lo hace el motor (ritmo.calendario.motor.js), que cambia los
+   eventos que ya están en vez de borrar y crear, y vuelve a hacerlo solo cada
+   vez que el día cambia.
 
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
@@ -68,7 +71,12 @@ function calendarioAcceso(destino) {
     return paceAndroidCalendarioPermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
   }
   var pase = calendarioPaseGuardado(destino);
-  return pase ? Promise.resolve(pase) : calendarioPedirPase(destino);
+  if (pase) return Promise.resolve(pase);
+  /* Microsoft renueva sin ventana mientras dure su pase de renovación. */
+  if (calendarioPaseHasta(destino) > Date.now() + 60000) {
+    return calendarioPaseSinGesto(destino).then(function (p) { if (!p) throw new Error('pase'); return p; });
+  }
+  return calendarioPedirPase(destino);
 }
 
 /* Las reuniones de hoy, ya filtradas: [{ inicio, fin }] en ms. */
@@ -114,20 +122,23 @@ function calendarioEventosDeHoy(iso, textos) {
   });
 }
 
-/* LLEVAR EL DÍA. `opciones`: { reuniones, calendarioId, t, tn, lang }.
-   Resuelve con { n, reuniones } (reuniones = cuántas se leyeron, o null) y
-   falla con Error('permiso' | 'bloqueada' | 'cerrada' | 'denegado' | 'pase' |
-   'red' | 'sin-dia'). Hay que llamarla DENTRO del clic. */
+/* LLEVAR EL DÍA. `opciones`: { reuniones, calendarioId, mantener, t, tn, lang }.
+   Resuelve con { n, reuniones, solo } (reuniones = cuántas se leyeron, o null;
+   solo = si desde ahora se mantiene solo) y falla con Error('permiso' |
+   'bloqueada' | 'cerrada' | 'denegado' | 'pase' | 'red' | 'sin-dia'). Hay que
+   llamarla DENTRO del clic. */
 function calendarioLlevar(destino, opciones) {
   var o = opciones || {};
   var iso = ritmoHoy();
   var ahoraMs = Date.now();
+  var solo = !!o.mantener && calendarioConectado(destino) && (typeof puedeMantenerCalendario !== 'function' || puedeMantenerCalendario());
   if (destino === 'archivo') {
     try {
       var evs = calendarioEventosDeHoy(iso, o);
       if (!evs) return Promise.reject(new Error('sin-dia'));
       calendarioBajarIcs(calendarioIcs(evs, iso, ahoraMs), 'pace-' + iso + '.ics');
-      calendarioGuardarAjustes({ destino: destino });
+      /* Un archivo no le quita el sitio al calendario que se mantiene solo. */
+      if (!(typeof calendarioSoloActivo === 'function' && calendarioSoloActivo())) calendarioGuardarAjustes({ destino: destino });
       return Promise.resolve({ n: evs.length, reuniones: null });
     } catch (e) { return Promise.reject(e); }
   }
@@ -142,15 +153,26 @@ function calendarioLlevar(destino, opciones) {
         })
       : Promise.resolve();
     return lectura.then(function () {
+      var ajustes = { destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso, mantener: solo };
+      if (solo) {
+        /* Desde aquí lo escribe el motor, en la forma con aviso y cambiando lo que ya está. */
+        var deseados = calendarioDeseados(getState(), o);
+        if (!deseados) throw new Error('sin-dia');
+        calendarioGuardarAjustes(ajustes);
+        _calendarioRefresco.ultimo = Date.now();
+        return calendarioSoloEscribir(Promise.resolve(pase)).then(function () {
+          return { n: deseados.eventos.filter(function (e) { return e.fin > Date.now(); }).length, reuniones: leidas, solo: true };
+        });
+      }
       var evs = calendarioEventosDeHoy(iso, o);
       if (!evs) throw new Error('sin-dia');
       var escribir = destino === 'android'
         ? calendarioEscribirAndroid(evs, iso, ahoraMs, o.calendarioId || null)
         : calendarioEscribirWeb(destino, pase, evs, iso, ahoraMs);
       return escribir.then(function () {
-        calendarioGuardarAjustes({ destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso });
+        calendarioGuardarAjustes(ajustes);
         _calendarioRefresco.ultimo = Date.now();
-        return { n: evs.length, reuniones: leidas };
+        return { n: evs.length, reuniones: leidas, solo: false };
       });
     });
   });
@@ -184,9 +206,8 @@ function calendarioRefrescarReuniones(forzar) {
     if (c.destino === 'android') {
       acceso = paceAndroidCalendarioTienePermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
     } else {
-      var pase = calendarioPaseGuardado(c.destino);
-      if (!pase) return Promise.resolve(false);
-      acceso = Promise.resolve(pase);
+      if (!(calendarioPaseHasta(c.destino) > Date.now())) return Promise.resolve(false);
+      acceso = calendarioPaseSinGesto(c.destino).then(function (p) { if (!p) throw new Error('pase'); return p; });
     }
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();

@@ -40,9 +40,10 @@
    EL CALENDARIO DEL MOVIL (complemento CapacitorCalendar): «A tu ritmo» lleva
    el dia al calendario del telefono, que ya esta sincronizado con la cuenta de
    Google o de Microsoft que tenga la persona, y lee sus reuniones. Aqui solo
-   van las llamadas, cada una reducida a lo que PACE usa; que eventos se crean
-   y cuales se borran lo decide ritmo.calendario.destinos.js. Pide los dos
-   permisos (leer y escribir) la primera vez que se pulsa, nunca al arrancar.
+   van las llamadas, cada una reducida a lo que PACE usa; que eventos se crean,
+   se cambian y se borran lo deciden ritmo.calendario.destinos.js y el motor del
+   calendario que se mantiene solo. Pide los dos permisos (leer y escribir) la
+   primera vez que se pulsa, nunca al arrancar.
 
    LOS ENLACES LEGALES son rutas del servidor en la web (/privacy, /safety). En
    el APK no hay servidor y abrirlas recargaba la app: van a la web publicada,
@@ -229,21 +230,38 @@ function paceAndroidCalendarios() {
   });
 }
 
-/* Los eventos entre dos instantes (ms): [{ id, calendario, inicio, fin, todoElDia, libre, cancelado, texto }]. */
+/* Los eventos entre dos instantes (ms):
+   [{ id, calendario, inicio, fin, todoElDia, libre, cancelado, titulo, texto, aviso }]. */
 function paceAndroidCalendarioEventos(desde, hasta) {
   return paceAndroidLlamar('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
     return ((r && r.result) || []).map(function (e) {
       return { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
-               todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled', texto: e.description || '' };
+               todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled', titulo: e.title || '',
+               texto: e.description || '', aviso: (e.alerts || []).length > 0 };
     });
   });
 }
 
-/* Crea un evento ocupado y sin alarmas. Devuelve su id, o null. */
+/* EL AVISO es una alarma al empezar (`alerts: [0]`): el complemento lee los
+   minutos con signo (negativo = antes) y Google no acepta alarmas después de
+   empezar al sincronizar, así que nunca un número positivo. Sin `ev.aviso`
+   (los de «Añadir» de una vez), sin alarmas. */
+function paceAndroidCalendarioAlarmas(ev) {
+  return ev.aviso ? [0] : [];
+}
+
+/* Crea un evento ocupado. Devuelve su id, o null. */
 function paceAndroidCalendarioCrear(calendario, ev) {
-  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: 0, alerts: [] };
+  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: 0, alerts: paceAndroidCalendarioAlarmas(ev) };
   if (calendario) o.calendarId = String(calendario);
   return paceAndroidLlamar('CapacitorCalendar', 'createEvent', o).then(function (r) { return r && r.id != null ? String(r.id) : null; });
+}
+
+/* Cambia un evento que ya está. Solo con un id que acaba de salir en la lista:
+   sobre uno que no existe, el complemento no falla y deja alarmas sueltas. */
+function paceAndroidCalendarioCambiar(id, ev) {
+  return paceAndroidLlamar('CapacitorCalendar', 'modifyEvent', { id: String(id), title: ev.titulo, description: ev.texto,
+    startDate: ev.inicio, endDate: ev.fin, alerts: paceAndroidCalendarioAlarmas(ev) });
 }
 
 function paceAndroidCalendarioBorrar(id) {
@@ -289,5 +307,5 @@ Object.assign(window, {
   paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
   paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
-  paceAndroidCalendarioCrear, paceAndroidCalendarioBorrar,
+  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar,
 });

@@ -328,6 +328,12 @@ self.addEventListener('fetch', (event) => {
      NO se arregla con un `.catch()` mudo a proposito: enterrar el error deja el
      fallo indistinguible de que no lo haya (la leccion de s177). */
   if (event.request.method !== 'GET') return;
+  /* LO DE OTROS DOMINIOS NO SE GUARDA (14 oct. 2026). Todo lo de PACE es del
+     propio dominio (las fuentes también); fuera solo están Google y Microsoft,
+     y guardar su respuesta devolvía SIEMPRE la primera lista de eventos y de
+     reuniones: el calendario creaba otra vez lo que ya estaba y las reuniones
+     nuevas no llegaban. */
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
