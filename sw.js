@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.168.0';
+const CACHE_NAME = 'pace-v0.169.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
@@ -328,6 +328,12 @@ self.addEventListener('fetch', (event) => {
      NO se arregla con un `.catch()` mudo a proposito: enterrar el error deja el
      fallo indistinguible de que no lo haya (la leccion de s177). */
   if (event.request.method !== 'GET') return;
+  /* LO DE OTROS DOMINIOS NO SE GUARDA (14 oct. 2026). Todo lo de PACE es del
+     propio dominio (las fuentes también); fuera solo están Google y Microsoft,
+     y guardar su respuesta devolvía SIEMPRE la primera lista de eventos y de
+     reuniones: el calendario creaba otra vez lo que ya estaba y las reuniones
+     nuevas no llegaban. */
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)

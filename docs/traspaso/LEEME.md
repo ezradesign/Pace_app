@@ -12,21 +12,22 @@ Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
 - **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
-  **v0.168.0 en `main`:** la home corrida y la página de las series. Las 14 caídas de la suite de esa
-  versión (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
+  **v0.168.0 en `main`, con la CI en verde:** la home corrida y la página de las series. Las 14 caídas
+  de su suite (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque
   entero caen por tiempo con cuatro navegadores y Brave ocupando 5 GB, y con uno pasan (37 de 37).
-  Para repetir caídas en este PC: `--workers=1`. Lo siguiente: juntar `ritmo-deudas` y
-  `calendario-solo` en esta rama, una suite para las dos y v0.169.0.
-  - `ritmo-deudas` (rama `claude/ritmo-deudas-c4cc5c`, 4232186, 8798; parada, todo subido): montado lo que eligió Ez («Dos
-    horas» acaba a su hora con las reuniones dentro, larga solo tras 75 min de foco, el miércoles con una
-    larga adelantada y el «AHORA» en oscuro); verify pasa, falta la suite entera.
-  - `calendario-solo` (rama `claude/calendario-solo-4f0d26`, 41f7b73, 8799): PLAN.md montado (Ez eligió A
-    en las cuatro), verify en verde; le falta la suite entera (cayó `caza-sesiones.spec.js:149`, ajena,
-    a repetir sola) para dar el LISTO.
-  - `series-aprende`: hecho. Ez eligió la forma 2, la frase B, Piernas de pie, Espalda de pie y la mesa
-    en el catálogo, sin el paseo, y la capa 1 de «PACE que aprende» gratis
-    (`docs/traspaso/archivos/series-15oct/`). Montarlo es otra sesión, DESPUÉS de juntar `ritmo-deudas`,
-    porque las dos tocan `ritmo.regla.js`.
+  Para repetir caídas en este PC: `--workers=1`.
+  **v0.169.0 en `main`:** `ritmo-deudas` y `calendario-solo` juntas (una suite para las dos: 669 en
+  verde y una caída de la prueba, no de la app: `sello-espera.spec.js:28` dependía de la hora y, si el
+  bloque acababa entre las 14:00 y las 14:59, ganaba también «Pausa de mediodía»; ahora corre a las 10).
+  Sus carpetas y ramas ya no guardan nada pendiente.
+  - Lo siguiente: **montar las series** que eligió Ez (la forma 2, la frase B, Piernas de pie, Espalda
+    de pie y la mesa en el catálogo, sin el paseo, y la capa 1 de «PACE que aprende» gratis;
+    `docs/traspaso/archivos/series-15oct/`). Ya puede, porque `ritmo.regla.js` está en `main`; los
+    números de la página se vuelven a medir sobre la regla nueva.
+  - Propuestas a Ez como sesión aparte (una sola, por la regla de dos): el cobro de PACE completo en la
+    web (opciones, sin tocar la app; recomendada) o las Estadísticas «Hoy» y «Semana» (Fase 4).
+  - Falta que Ez lea `privacy.html` (cuenta «Mantenerlo al día solo») y pruebe el calendario solo en su
+    Android.
   - Ez eligió seguir con dos sesiones a la vez, no cuatro: al reanudarse, cuatro gastaron un 28 % en 3 min.
 - **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
   y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una

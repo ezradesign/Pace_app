@@ -28,7 +28,13 @@ const sinAviso = async (page, porque) => {
 test('el primer Pomodoro: el sello no sale encima de la pausa, se gana igual y sale al cerrarla', async ({ page, context }) => {
   const errores = capturarErrores(page);
   await sembrar(context, { focusMinutes: 15 });
-  await page.clock.install();
+  /* A las 10 de hoy, y no a la hora que sea: el bloque adelanta el reloj 15 min y, si acaba
+     entre las 14:00 y las 14:59, gana también «Pausa de mediodía» (secret.lunch), que pasa a
+     ser el último sello. Así cayó la suite empezada a las 13:28. Hoy, porque `sembrar` siembra
+     las fechas de hoy; por eso un día señalado (primer lunes del mes, solsticio) aún puede
+     sumar su sello secreto y caer. */
+  const aLasDiez = new Date(); aLasDiez.setHours(10, 0, 0, 0);
+  await page.clock.install({ time: aLasDiez });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
   await page.waitForTimeout(250);

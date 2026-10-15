@@ -186,9 +186,11 @@ test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba
   expect(d.siguiente, 'y el bloque 2 detrás de ella').toBe(573);
   await expect(page.locator('[data-pace-modal-backdrop]')).toContainText('9:28 · Lo que toca ahora.');
   await expect(page.locator('[data-pace-sidebar]')).toContainText(/Tu pausa\s*Ahora, /);
-  /* y al empezar el bloque 2 a las 9:34, se recoloca otra vez (la pieza de s194) */
+  /* y al empezar el bloque 2 a las 9:34, se recoloca otra vez (la pieza de s194). Hasta las 9:34
+     justas y no «6 min más»: `terminarBloque` avanza de minuto en minuto y en una máquina lenta ve
+     la pausa un minuto tarde (en la CI de v0.169.0 el bloque 2 empezó a las 9:35). */
   await page.keyboard.press('Escape');
-  await page.clock.fastForward(6 * 60 * 1000);
+  await page.clock.fastForward(await page.evaluate(() => { const t = new Date(); t.setHours(9, 34, 0, 0); return t.getTime() - Date.now(); }));
   await page.waitForTimeout(200);
   await page.getByRole('button', { name: 'Empezar bloque 2', exact: true }).click();
   await page.waitForTimeout(300);

@@ -91,8 +91,7 @@ function RitmoHoja({ open, onClose, plan, state }) {
         <div className="pace-rt-pie" style={{ borderTop: '1px solid var(--paper-3)', paddingTop: 14 }}>
           <span className="pace-rt-hoja-enlaces">
             <button className="pace-rt-enlace" onClick={() => { onClose(); ritmoPreguntar(); }}>{t('ritmo.cambiar')}</button>
-            <button type="button" className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-calendario
-              onClick={() => { onClose(); ritmoCalendarioAbrir(); }}>{t('cal.enlace')}</button>
+            <RitmoAlCalendario antes={onClose} />
           </span>
           <Button variant="primary" onClick={onClose}>{t('ritmo.listo')}</Button>
         </div>
