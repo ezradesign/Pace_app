@@ -236,10 +236,24 @@
         font-size: 60px !important;
       }
     }
-    /* El dibujo del cierre (sessionDoneGlifo) llena su caja; la caja encoge con la
-       altura igual que el círculo de antes, pero sin su borde ni su fondo. */
+    /* El dibujo del cierre (sessionDoneGlifo) llena su caja, sin el borde ni el fondo
+       del círculo de antes. En Mueve y Estira CRECE CON EL ALTO QUE SOBRA (Ez, 14 oct.,
+       opción B): a 72 px fijos se perdía en una pantalla grande. 120 px a 720 de alto,
+       216 desde 816, y en el móvil de 72 a 140. Medido sin scroll de 360x640 a
+       1920x1080; a 360x568 el cierre ya pedía scroll con 72 px y el mínimo del móvil lo
+       deja igual. Respira sigue a 72: Ez no lo ha visto. */
     [data-pace-session-done-hero][data-pace-session-done-glifo] {
-      width: 72px !important; height: 72px !important; background: none !important; border: 0 !important;
+      --pace-cierre-glifo: 72px;
+      width: var(--pace-cierre-glifo) !important; height: var(--pace-cierre-glifo) !important;
+      background: none !important; border: 0 !important;
+    }
+    [data-pace-session-done-hero][data-pace-session-done-cuerpo] {
+      --pace-cierre-glifo: clamp(120px, calc(100 * var(--pace-vh, 1vh) - 600px), 216px);
+    }
+    @media (max-width: 640px) {
+      [data-pace-session-done-hero][data-pace-session-done-cuerpo] {
+        --pace-cierre-glifo: clamp(72px, calc(100 * var(--pace-vh, 1vh) - 500px), 140px);
+      }
     }
     [data-pace-session-done-hero][data-pace-session-done-glifo] > *,
     [data-pace-session-done-hero][data-pace-session-done-glifo] svg {

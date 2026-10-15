@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.166.0</title>
+  <title>PACE · Foco · Cuerpo — v0.167.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6054,7 +6054,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.166.0';
+const PACE_VERSION = 'v0.167.0';
 
 
 
@@ -15150,7 +15150,8 @@ function SessionDone(_ref4)
     React.createElement(SessionShell, { routine: routine, onExit: onExit, atmosphere: atmosphere, footer: btn },
     React.createElement("div", _extends({ "data-pace-session-done": true }, rootData || {}, { style: { textAlign: 'center', maxWidth: 520 } }),
     glifo ?
-    React.createElement("div", { "data-pace-session-done-hero": true, "data-pace-session-done-glifo": true, style: {
+    React.createElement("div", { "data-pace-session-done-hero": true, "data-pace-session-done-glifo": true,
+      "data-pace-session-done-cuerpo": glifo.type === window.ExerciseGlyph ? '' : undefined, style: {
         width: 72, height: 72, margin: '0 auto 22px', color: accent,
         display: 'grid', placeItems: 'center', animation: 'pace-fade-in 600ms ease'
       } }, glifo) :
@@ -15630,10 +15631,24 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
         font-size: 60px !important;
       }
     }
-    /* El dibujo del cierre (sessionDoneGlifo) llena su caja; la caja encoge con la
-       altura igual que el círculo de antes, pero sin su borde ni su fondo. */
+    /* El dibujo del cierre (sessionDoneGlifo) llena su caja, sin el borde ni el fondo
+       del círculo de antes. En Mueve y Estira CRECE CON EL ALTO QUE SOBRA (Ez, 14 oct.,
+       opción B): a 72 px fijos se perdía en una pantalla grande. 120 px a 720 de alto,
+       216 desde 816, y en el móvil de 72 a 140. Medido sin scroll de 360x640 a
+       1920x1080; a 360x568 el cierre ya pedía scroll con 72 px y el mínimo del móvil lo
+       deja igual. Respira sigue a 72: Ez no lo ha visto. */
     [data-pace-session-done-hero][data-pace-session-done-glifo] {
-      width: 72px !important; height: 72px !important; background: none !important; border: 0 !important;
+      --pace-cierre-glifo: 72px;
+      width: var(--pace-cierre-glifo) !important; height: var(--pace-cierre-glifo) !important;
+      background: none !important; border: 0 !important;
+    }
+    [data-pace-session-done-hero][data-pace-session-done-cuerpo] {
+      --pace-cierre-glifo: clamp(120px, calc(100 * var(--pace-vh, 1vh) - 600px), 216px);
+    }
+    @media (max-width: 640px) {
+      [data-pace-session-done-hero][data-pace-session-done-cuerpo] {
+        --pace-cierre-glifo: clamp(72px, calc(100 * var(--pace-vh, 1vh) - 500px), 140px);
+      }
     }
     [data-pace-session-done-hero][data-pace-session-done-glifo] > *,
     [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
@@ -16766,6 +16781,74 @@ var PACE_VOZ_PREV = 0.04;
 
 
 
+
+
+
+
+
+
+var PACE_VOZ_FUNDIDO = 0.005;
+
+
+
+
+function paceVozDescodifica(slot, url) {
+  try {
+    var Fuera = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!Fuera || typeof fetch !== 'function') return;
+    fetch(url).
+    then(function (r) {if (!r.ok) throw new Error('HTTP ' + r.status);return r.arrayBuffer();}).
+    then(function (ab) {
+      var dc = new Fuera(1, 1, 44100);
+      return new Promise(function (ok, ko) {var p = dc.decodeAudioData(ab, ok, ko);if (p && p.then) p.then(ok, ko);});
+    }).
+    then(function (buf) {slot.buffer = buf;}).
+    catch(function () {});
+  } catch (e) {}
+}
+
+
+
+function paceVozWebAudio(slot, desde) {
+  var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+  if (!ctx || !slot.buffer) return false;
+  if (ctx.state === 'suspended') {try {ctx.resume();} catch (e) {}}
+  if (ctx.state !== 'running') return false;
+  var f = PACE_VOZ_FUNDIDO;
+  var t0 = ctx.currentTime;
+
+  if (slot.fuente) {
+    try {
+      slot.fuente.g.gain.cancelScheduledValues(t0);
+      slot.fuente.g.gain.setValueAtTime(slot.fuente.g.gain.value, t0);
+      slot.fuente.g.gain.linearRampToValueAtTime(0, t0 + f);
+      slot.fuente.s.stop(t0 + f + 0.01);
+    } catch (e) {}
+  }
+  var resto = slot.buffer.duration - desde;
+  if (!(resto > 2 * f)) return false;
+  var s = ctx.createBufferSource();
+  var g = ctx.createGain();
+  s.buffer = slot.buffer;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(1, t0 + f);
+  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(0, t0 + resto);
+  s.connect(g);
+  g.connect(ctx.destination);
+  s.start(t0, desde);
+  s.stop(t0 + resto + 0.01);
+  var esta = { s: s, g: g };
+  slot.fuente = esta;
+  s.onended = function () {if (slot.fuente === esta) slot.fuente = null;try {g.disconnect();} catch (e) {}};
+  return true;
+}
+
+
+
+
+
+
 function paceVozEstado() {
   try {return typeof getState === 'function' ? getState() : null;} catch (e) {return null;}
 }
@@ -16806,10 +16889,12 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
+    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null };
     juego[nombre] = slot;
+    var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
+    paceVozDescodifica(slot, url);
     try {
-      var a = new Audio('app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3');
+      var a = new Audio(url);
       a.preload = 'auto';
       a.addEventListener('canplaythrough', function () {
 
@@ -16860,7 +16945,9 @@ function paceVozIntenta(nombre, faseSeg) {
 
 
 
-    slot.audio.currentTime = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    if (paceVozWebAudio(slot, desde)) return true;
+    slot.audio.currentTime = desde;
     var p = slot.audio.play();
 
 
@@ -16881,12 +16968,13 @@ Object.assign(window, {
   paceVozIdioma: paceVozIdioma,
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
   PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
+  PACE_VOZ_FUNDIDO: PACE_VOZ_FUNDIDO,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,
   paceVozIntenta: paceVozIntenta
 });
-;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
+;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, PACE_VOZ_FUNDIDO, paceVozDescodifica, paceVozWebAudio, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
 })();
 </script>
   <!-- La receta de cada técnica de Respira (datos que Sound.musica.jsx lee al empezar). -->

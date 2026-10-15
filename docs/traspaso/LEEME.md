@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.166.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de octubre de 2026, v0.167.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,25 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
+  y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
+  hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:
+  `node scripts/relevo-hilo.js <carpeta>` (WORKFLOW §10); carpetas y ramas, con `git worktree list`.
+- **v0.167.0 (14 oct., noche), en `main` con la CI en verde:** la voz de Respira por Web Audio con un fundido de 5 ms (Ez dijo «súbela y
+  luego la pruebo en la página»: falta que la oiga en pacegrass.app) y el dibujo del cierre de Mueve y
+  Estira que crece con la pantalla (opción B de Ez, https://claude.ai/artifact/GoDfzkXwq8wPufh1MwS92t).
+- **Cuatro sesiones en paralelo, abiertas por la coordinadora el 14 oct. por la noche** (Ez pidió las
+  cuatro). Cada una da su LISTO y la coordinadora la junta:
+  - `series-aprende` (puerto 8795): investiga series de pausas con lógica (Ez: «casi todas las pausas eran
+    Escritorio express») y el primer paso de «PACE que aprende». Solo propone, con una página.
+  - `ritmo-deudas` (8798): «Dos horas» dura dos horas de reloj aunque el aro esté corto (Ez lo eligió;
+    con el aro a 5 min el día de 17:51 acababa a las 22:01 con 18 pausas), el miércoles con tres
+    largas y el panel en modo oscuro. Es la única que toca `ritmo.regla.js` y `ritmo.semana.js`.
+  - `home-corrida` (8796): la home que se queda 117 px corrida al cerrar la pausa
+    (`pausa-sin-repetir.spec.js:78`).
+  - `calendario-solo` (8799): el calendario que se mantiene solo; investiga y propone antes de montar.
+  Sus carpetas las crea la app en `.claude/worktrees/` con ramas `claude/<nombre>…`: mira
+  `git worktree list`.
 - **v0.165.0 y v0.166.0 en `main` (14 oct., noche, en la cuenta que tomó el relevo a las 18:40).**
   La caída de `eventos-origen.spec.js:120` no era de la hora ni de v0.165.0: sobre `origin/main` y
   sobre la rama tarda lo mismo (unos 25 s sola) y el grupo de cinco archivos pasa entero en las dos.
@@ -31,8 +50,8 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   en el primer milisegundo (ini 0,001) y su «exhala» suena hasta el último (fin = duración, 3,68 s), así
   que arrancan y se cortan de golpe. Arreglo propuesto: la voz por Web Audio (el mismo camino que la
   música, como la variante 4 de la página de prueba) con un fundido de unos 5 ms al entrar y al salir de
-  cada palabra. Quita el clic sea cual sea el archivo y puede ser también lo entrecortado del móvil. Cambia
-  cómo suena: Ez lo oye en el portátil y en el móvil antes de subir.
+  cada palabra. Quita el clic sea cual sea el archivo y puede ser también lo entrecortado del móvil.
+  **Montado en v0.167.0** con el sí de Ez; lo oye en pacegrass.app en el PC y en el móvil.
 - **`pausa-cuello`** (`.claude/worktrees/pausa-cuello-b4792a`) está en `main` desde v0.166.0: su carpeta
   y su rama ya no hacen falta.
 - **Intermitentes vistos en la suite entera** (pasan solos): `pausa-sin-repetir.spec.js:78` (la home, corrida
