@@ -1,0 +1,416 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ideas para vender PACE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Una columna de lectura, como las propuestas de PACE: papel crema, oliva para lo que encaja,
+   ocre para precios, terracota para lo que no. Las barras de las reseñas, a escala, con su cifra. */
+:root{
+  --paper:#F2EDE0;--paper-2:#EAE4D4;--paper-3:#DFD8C4;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#7A7363;
+  --line:#C9C0A8;--line-2:#B8AD8E;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.10);--olive-bar:#6F8A63;
+  --terra:#A85E43;--terra-soft:rgba(201,122,93,.13);--terra-bar:#C27C61;
+  --premium:#8A5D24;--premium-soft:rgba(156,107,46,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;--line-2:#5f5544;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);--olive-bar:#7E9C70;
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.14);--terra-bar:#C98A70;
+  --premium:#D9B07A;--premium-soft:rgba(217,176,122,.12);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;--line-2:#5f5544;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);--olive-bar:#7E9C70;
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.14);--terra-bar:#C98A70;
+  --premium:#D9B07A;--premium-soft:rgba(217,176,122,.12);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:960px;margin:0 auto;padding-inline:16px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,46px)}
+h2{font-size:clamp(26px,4.4vw,32px);margin:56px 0 10px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:22px;margin:26px 0 8px}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+ul,ol{margin:0 0 12px;padding-left:20px;color:var(--ink-2)} li{margin:5px 0;max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+a{color:var(--olive)}
+a:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--paper-3);padding:1px 5px;border-radius:4px;word-break:break-word}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink-2);line-height:1.45;margin-top:14px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0}
+.nav a{font-size:13px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.nav a:hover{border-color:var(--ink-3)}
+.box{background:var(--paper-2);border-radius:14px;padding:18px 20px;margin:14px 0}
+.box.rec{background:var(--olive-soft);border:1px solid var(--olive)}
+.box.warn{background:var(--terra-soft);border:1px solid var(--terra)}
+.box>*:last-child{margin-bottom:0}
+.box h3{margin-top:0}
+.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.summary .box{margin:0}
+.summary .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.summary .v{font-family:var(--display);font-style:italic;font-size:21px;color:var(--ink);line-height:1.25;margin-bottom:6px}
+.summary p{font-size:14px}
+@media (max-width:680px){.summary{grid-template-columns:1fr}}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:680px}
+th,td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+td{color:var(--ink-2)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+td.idea{color:var(--ink);font-weight:500;width:24%}
+td.fit{white-space:nowrap;width:1%}
+.name{font-family:var(--display);font-style:italic;font-size:18px;color:var(--ink);display:block}
+.tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);border-radius:999px;padding:1px 8px;color:var(--ink-3);white-space:nowrap}
+.tag.ok{border-color:var(--olive);color:var(--olive)}
+.tag.ya{border-color:var(--olive);color:var(--olive);background:var(--olive-soft)}
+.tag.cambio{border-color:var(--premium);color:var(--premium)}
+.tag.tu{border-color:var(--ink-2);color:var(--ink)}
+.tag.no{border-color:var(--terra);color:var(--terra)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 4px;font-size:13px;color:var(--ink-3);align-items:center}
+.small{font-size:13px;color:var(--ink-3)}
+.price{color:var(--premium);font-family:var(--display);font-style:italic}
+/* Barras: el ancho es el porcentaje sobre la escala del bloque (--max). */
+.bars{display:grid;gap:7px;margin:14px 0 6px}
+.bar{display:grid;grid-template-columns:minmax(0,13.5em) minmax(0,1fr) 3.6em;gap:10px;align-items:center;font-size:14px}
+.bar .lbl{color:var(--ink-2);min-width:0}
+.bar .lbl small{display:block;font-size:11.5px;color:var(--ink-3);line-height:1.3}
+.bar .track{height:12px;background:var(--paper-3);border-radius:3px;position:relative;overflow:hidden}
+.bar .fill{position:absolute;inset:0 auto 0 0;width:calc(var(--v) / var(--max) * 100%);border-radius:3px;background:var(--terra-bar)}
+.bars.good .fill{background:var(--olive-bar)}
+.bar .val{font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;font-size:13.5px}
+.scale{display:grid;grid-template-columns:minmax(0,13.5em) minmax(0,1fr) 3.6em;gap:10px;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.scale .ticks{display:flex;justify-content:space-between}
+@media (max-width:560px){.bar,.scale{grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 3.2em}}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.col{background:var(--paper-2);border-radius:14px;padding:18px;min-width:0}
+.col h3{margin:0 0 8px;font-size:23px}
+.col ul{font-size:14px;padding-left:18px}
+@media (max-width:860px){.cols3{grid-template-columns:1fr}}
+.copy{background:var(--paper);border:1px dashed var(--line-2);border-radius:10px;padding:14px 16px;margin:10px 0;font-family:var(--display);font-size:18px;color:var(--ink);line-height:1.4}
+.copy .ttl{font-style:italic;font-size:21px;display:block;margin-bottom:6px}
+.copy .sub{font-family:var(--ui);font-size:13px;color:var(--ink-3)}
+.copy ul{font-family:var(--display);font-size:17px;color:var(--ink);margin:4px 0 0}
+.copy del{color:var(--terra);text-decoration-thickness:1px}
+.copy ins{text-decoration:none;background:var(--olive-soft);color:var(--ink)}
+.q{background:var(--paper-2);border-radius:14px;padding:18px 20px;margin:14px 0}
+.q h3{margin:0 0 6px}
+.q ol{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px}
+.q li{max-width:none;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.q li.rec{border-color:var(--olive);background:var(--olive-soft)}
+.q li b{font-weight:500;color:var(--ink)}
+.src li{font-size:13px;color:var(--ink-3)}
+.src a{color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<main>
+<div class="eyebrow">PACE · propuesta para Ez · 15 de octubre de 2026</div>
+<h1>Ideas para vender PACE</h1>
+<p class="lead">Lo que enseñan el canal hermano de Starter Story y 17.532 reseñas de 23 apps parecidas a PACE. Cada idea dice de dónde sale y si encaja. Al final, lo que cambiaría en la página de venta, en la ficha de Google Play y en la bienvenida, y cuatro preguntas para ti.</p>
+<div class="nav">
+  <a href="#corto">En corto</a><a href="#ideas">Las ideas</a><a href="#cambios">Qué cambiaría</a><a href="#decidir">Lo que hay que decidir</a><a href="#build">Starter Story Build</a><a href="#resenas">Las reseñas</a><a href="#precios">Precios de los demás</a><a href="#como">Cómo se hizo</a><a href="#fuentes">Fuentes</a>
+</div>
+
+<div class="box rec" style="margin-top:28px">
+  <h3>Lo que eligió Ez (15 de octubre, por la noche)</h3>
+  <ul>
+    <li><strong>El día de v1:</strong> la semana de prueba y, además, las rutinas premium que ya hizo cada uno se le quedan abiertas para siempre.</li>
+    <li><strong>En la landing:</strong> las tres promesas, el aviso dos días antes de que acabe la prueba con cancelar en dos toques, y «si ahora no puedes pagarlo, escríbeme». Sin el párrafo de «quién lo hace».</li>
+    <li><strong>Valoraciones:</strong> se piden una sola vez en Google Play, al terminar la quinta pausa entera.</li>
+    <li><strong>Ficha y bienvenida:</strong> los dos precios en la ficha, fuera «dibujados a mano», un experimento con el orden de las capturas y la bienvenida con el precio claro.</li>
+  </ul>
+  <p class="small">Apuntado en <code>docs/product/DECISIONES_PRODUCTO.md</code>; <code>docs/launch/google-play/ficha.md</code> ya está cambiada. Lo de abajo es la propuesta tal como se presentó.</p>
+</div>
+
+<h2 id="corto">En corto</h2>
+<div class="summary">
+  <div class="box warn"><div class="k">Lo que más enfada</div><div class="v">Que lo gratis no deje probar nada, y que se quite lo que ya tenías</div><p>Unas 15 de las 50 quejas más votadas son de gente que no pudo probar casi nada sin pagar. Las más rabiosas son de quien llevaba años y vio cerrarse lo que usaba (Forest, Plant Nanny, Tide). PACE tiene ese riesgo el día de v1: hoy las rutinas premium están abiertas para todos.</p></div>
+  <div class="box warn"><div class="k">Lo segundo</div><div class="v">El cobro al acabar la prueba y el precio que llega tarde</div><p>Una de cada cinco quejas de una o dos estrellas habla de pruebas, cobros o bajas. Se repite el cuestionario que acaba en un muro de pago y el aviso de fin de prueba que no llega.</p></div>
+  <div class="box rec"><div class="k">Lo que más se elogia</div><div class="v">Que ayude a concentrarse, que sea sencilla y bonita, sin cuenta ni anuncios</div><p>Cuando lo gratis es generoso, la gente paga para apoyar a quien la hace. Y quien solo quiere pagar una vez lo dice muy claro.</p></div>
+  <div class="box rec"><div class="k">La ficha de Play</div><div class="v">«Pausas activas» casi no tiene competencia en España</div><p>Las primeras apps que salen en Play al buscarlo tienen 10.000 descargas y 206 valoraciones. Para «pomodoro» salen apps de 10 millones. El nombre de la ficha ya lleva «pausas activas».</p></div>
+</div>
+<p class="small" style="margin-top:12px">Nada de esto cambia lo que ya elegiste el 15 de octubre (Stripe, 2,99 € al mes con 7 días gratis y 19,99 € de por vida, la landing en /premium y la bienvenida que enseña PACE completo una vez). Lo confirma: el modelo de HabitKit, la app que más se le parece en cómo cobra, es justo ese.</p>
+
+<h2 id="ideas">Las ideas</h2>
+<p>De dónde sale cada una y si encaja con PACE. Las que dicen «tú decides» están en las preguntas del final.</p>
+<div class="legend"><span class="tag ok">sí</span> encaja tal cual <span class="tag ya">ya está</span> PACE ya lo hace o ya lo decidiste <span class="tag cambio">con cambios</span> encaja si se adapta <span class="tag tu">tú decides</span> <span class="tag no">no</span></div>
+<div class="tablewrap"><table>
+<thead><tr><th>Idea</th><th>De dónde sale</th><th>Encaja</th><th>Por qué</th></tr></thead>
+<tbody>
+<tr><td class="idea">Escribir que lo gratis no se cierra y lo comprado no se quita</td><td>Reseñas de Forest, Plant Nanny, Tide, Focus To-Do, Breathwrk y Focus Keeper</td><td class="fit"><span class="tag ok">sí</span></td><td>Es la queja más rabiosa, la de quien llevaba años. PACE puede prometerlo porque no paga servidores por cada persona.</td></tr>
+<tr><td class="idea">Que el día de v1 nadie pierda de golpe lo que ya usaba</td><td>Forest quitó en 2020 árboles que la gente había comprado. Hoy PACE abre las rutinas premium a todos hasta v1</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Pregunta 1. Lo decidido hasta ahora es una semana de prueba con aviso.</td></tr>
+<tr><td class="idea">Que lo gratis sirva de verdad</td><td>Bend: casi nada gratis (su queja más votada tiene 1.323 votos). También Moova y Wakeout. Al revés, Cat on Chair y Prana Breath se elogian por lo que dan gratis</td><td class="fit"><span class="tag ya">ya está</span></td><td>PACE gratis trae Foco, Respira, Mueve, Estira, Hidrátate y «A tu ritmo» cada día. Falta decirlo con la lista exacta.</td></tr>
+<tr><td class="idea">El precio, a la vista desde el principio</td><td>Moova, Breathwrk y Bend: primero un cuestionario o tus datos, después el muro de pago</td><td class="fit"><span class="tag cambio">con cambios</span></td><td>La bienvenida de PACE pregunta por tu semana y al final enseña PACE completo. Si la primera pantalla no dice «gratis» con claridad, la última puede parecer una trampa.</td></tr>
+<tr><td class="idea">Sin «oferta única», sin descuento al instalar, el mismo precio para todos</td><td>Bend: un descuento que caduca al cerrar y un precio que cambió al reinstalar</td><td class="fit"><span class="tag ya">ya está</span></td><td>Ya decidiste sin cuentas atrás. Se añade que el precio no cambia según quién ni cuándo.</td></tr>
+<tr><td class="idea">Avisar dos días antes de que acabe la prueba y cancelar en dos toques</td><td>Finch prometió avisar y no avisó; en Fabulous y Breathwrk no había forma de darse de baja</td><td class="fit"><span class="tag tu">tú decides</span></td><td>La app sabe cuándo acaba la prueba y puede avisar sin servidor. Pregunta 2.</td></tr>
+<tr><td class="idea">Tu precio no sube</td><td>Tide subió el anual a quien ya pagaba; Focus Friend también subió</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Stripe y Play dejan mantener el precio de quien ya está suscrito. Va en las tres promesas (pregunta 2).</td></tr>
+<tr><td class="idea">Sin cuenta, sin anuncios y sin datos, dicho arriba</td><td>Se elogia en HabitKit y Focus Friend. En Bend, Plant Nanny y Breathwrk la cuenta falla y se pierde lo hecho o no se puede cancelar</td><td class="fit"><span class="tag ya">ya está</span></td><td>Es una ventaja real de PACE. En la landing va arriba, no escondida en las preguntas.</td></tr>
+<tr><td class="idea">Recuperar lo comprado en otro equipo sin escribir a nadie</td><td>Focus To-Do y Prana Breath: pagaron y otro dispositivo no lo reconocía</td><td class="fit"><span class="tag ya">ya está</span></td><td><code>/recuperar</code> ya está decidido. Hay que contarlo antes de pagar.</td></tr>
+<tr><td class="idea">Pedir la compra una sola vez</td><td>(Not Boring) Habits y Forest enseñan la oferta cada vez que abres la app</td><td class="fit"><span class="tag ya">ya está</span></td><td>Decidido: una vez en la bienvenida y luego solo al tocar algo cerrado.</td></tr>
+<tr><td class="idea">Pagar para apoyar a quien la hace</td><td>Focus Friend, Prana Breath, Focus To-Do y Cat on Chair: gente que paga aunque lo gratis le baste</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Un párrafo con tu voz en la landing: una persona, en España, sin inversores. Es verdad y la gente lo valora. Pregunta 2.</td></tr>
+<tr><td class="idea">«Si ahora no puedes pagarlo, escríbeme»</td><td>Breathwrk regala suscripciones a quien no puede pagar</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Cuesta poco: firmas un código a mano con k1. Encaja con el tono. Pregunta 2.</td></tr>
+<tr><td class="idea">No decir «dibujado a mano»</td><td>En Cat on Chair, una reseña celebra no ver IA y otra apunta que el desarrollador la usó. Los dibujos de PACE salen de GPT Image</td><td class="fit"><span class="tag tu">tú decides</span></td><td>La ficha de Play dice «sellos dibujados a mano» y no es así. «Hecha por una persona» sí es verdad. Pregunta 4.</td></tr>
+<tr><td class="idea">«Pausas activas» en el nombre de la ficha</td><td>El vídeo de ASO de HabitKit y una búsqueda en Play España</td><td class="fit"><span class="tag ya">ya está</span></td><td>El nombre preparado ya es «PACE: pausas activas y foco», y la descripción breve empieza por «Pomodoro».</td></tr>
+<tr><td class="idea">Primera captura: lo más bonito y real de la app</td><td>Vídeo de ASO: sus capturas hechas en casa ganaron a las de un diseñador en una prueba A/B</td><td class="fit"><span class="tag tu">tú decides</span></td><td>La primera de la ficha ya es la jornada con el horizonte. Play deja probar dos órdenes a la vez (experimentos de ficha). Pregunta 4.</td></tr>
+<tr><td class="idea">Pedir la valoración en un buen momento, una sola vez</td><td>Vídeo de ASO: justo después del primer hábito cumplido, nunca en la bienvenida, y sin insistir</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Las valoraciones suben la ficha, pero pedirlas roza la regla de no recordarle nada a nadie. Pregunta 3.</td></tr>
+<tr><td class="idea">Contestar todas las reseñas</td><td>Vídeo de ASO; elogios a quien contesta en Focus To-Do y Waterllama</td><td class="fit"><span class="tag ok">sí</span></td><td>Quien ve su problema arreglado a veces cambia una estrella por cinco. Lo haces tú desde Play Console.</td></tr>
+<tr><td class="idea">Paciencia con la tienda</td><td>HabitKit tardó 6 meses en entrar en el top 10 de Reino Unido y Alemania y casi 3 años en estar fijo en el top 5 de EE. UU.</td><td class="fit"><span class="tag ok">sí</span></td><td>Lo que se cambie en la ficha tarda meses en notarse. Mientras, la web y la landing.</td></tr>
+<tr><td class="idea">Mensual y de por vida, uno al lado del otro</td><td>HabitKit cobra así y la mitad le entra por el de por vida; también Cat on Chair y Focus Friend. Hay reseñas que pagarían una vez y nunca al mes</td><td class="fit"><span class="tag ya">ya está</span></td><td>Es lo que elegiste. En la landing, el de por vida delante.</td></tr>
+<tr><td class="idea">Vídeos cortos de la app en uso</td><td>Playkit (1.000 descargas en 30 días con vídeos cortos) y PushScroll (el vídeo antes que la app)</td><td class="fit"><span class="tag cambio">con cambios</span></td><td>Hechos por ti, enseñando el horizonte y una pausa entera. Sin pagar a creadores.</td></tr>
+<tr><td class="idea">Creadores pagados y anuncios medidos</td><td>Cal AI, en el vídeo de su jefe de marketing</td><td class="fit"><span class="tag no">no</span></td><td>Saber qué anuncio trae cada compra choca con «sin rastreo».</td></tr>
+<tr><td class="idea">Una mascota propia</td><td>Vídeo de diseño: las apps hechas con IA se parecen todas. Cat on Chair, Focus Friend y Finch viven de su personaje</td><td class="fit"><span class="tag ya">ya está</span></td><td>La vaca. Que salga en la landing y en la primera captura.</td></tr>
+<tr><td class="idea">Ni rachas que castigan ni monedas imposibles</td><td>Quejas de Finch (misiones con amigos), Focus To-Do (cada vez cuesta más avanzar) y Cat on Chair (lo caro de su tienda)</td><td class="fit"><span class="tag ya">ya está</span></td><td>PACE va sin rachas que castigan. Que lo de pago tampoco las traiga.</td></tr>
+<tr><td class="idea">Que las novedades no compliquen lo de siempre</td><td>Focus Keeper metió un calendario en el temporizador; Forest y Finch se recargaron</td><td class="fit"><span class="tag ok">sí</span></td><td>Para después de v1: lo nuevo no tapa lo que la gente ya usa.</td></tr>
+<tr><td class="idea">En español de verdad</td><td>Tide y Plant Nanny: entre sus quejas más votadas está que no hablan español</td><td class="fit"><span class="tag ya">ya está</span></td><td>PACE nace en castellano. La landing y la ficha, primero en castellano.</td></tr>
+<tr><td class="idea">Enero es el mes de los hábitos</td><td>HabitKit gana más en enero que en ningún otro mes</td><td class="fit"><span class="tag ok">sí</span></td><td>Si v1 llega en invierno, que la landing esté lista antes de enero.</td></tr>
+</tbody></table></div>
+
+<h2 id="cambios">Qué cambiaría</h2>
+<p>Encima de lo que ya decidiste. Los textos son borradores: la landing y la bienvenida tendrán su maqueta antes de tocar nada.</p>
+<div class="cols3">
+  <div class="col">
+    <h3>La landing, /premium</h3>
+    <ul>
+      <li>Arriba, que PACE es gratis y la lista de lo gratis. Después, lo que añade PACE completo.</li>
+      <li>Los dos precios a la vista, el de por vida delante: <span class="price">19,99 € una vez</span>, o <span class="price">2,99 € al mes</span> con 7 días gratis.</li>
+      <li>Tres promesas, si las quieres.</li>
+      <li>«Sin cuenta, sin anuncios, sin rastreo», arriba.</li>
+      <li>La prueba contada: el aviso antes de que acabe y cómo se cancela.</li>
+      <li>Quién lo hace, con tu voz.</li>
+      <li>En las preguntas: cambiar de móvil u ordenador, y quizá «si ahora no puedes pagarlo».</li>
+      <li>Nada de «dibujado a mano» ni de descuentos de bienvenida.</li>
+    </ul>
+  </div>
+  <div class="col">
+    <h3>La ficha de Play</h3>
+    <ul>
+      <li>El párrafo de PACE completo de <code>ficha.md</code> dice «con un único pago, sin suscripción». Pasa a contar los dos planes.</li>
+      <li>Quitar «dibujados a mano» en castellano y «drawn by hand» en inglés.</li>
+      <li>El nombre se queda: «PACE: pausas activas y foco».</li>
+      <li>Probar el orden de las capturas con un experimento de ficha.</li>
+      <li>Contestar cada reseña.</li>
+      <li>Si lo eliges, la valoración dentro de la app, una vez.</li>
+    </ul>
+  </div>
+  <div class="col">
+    <h3>La bienvenida</h3>
+    <ul>
+      <li>La primera pantalla ya enseña «Todo local · Sin cuentas · Núcleo gratuito». Propongo cambiar «Núcleo gratuito, disponible» por «Gratis, lo esencial siempre»: se entiende mejor.</li>
+      <li>La última, la que enseña PACE completo, con los dos precios y «Ahora no» igual de grande que «Probar 7 días gratis».</li>
+      <li>Nunca pedir una valoración ni datos en la bienvenida.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Borradores</h3>
+<p class="small">Las tres promesas, para la landing:</p>
+<div class="copy"><span class="ttl">Tres cosas que no van a cambiar</span>
+  <ul><li>Lo que hoy es gratis, sigue gratis.</li><li>Lo que compras no se quita.</li><li>Si un día sube el precio, el tuyo no.</li></ul>
+</div>
+<p class="small">La prueba, contada en la landing y en la app:</p>
+<div class="copy">Dos días antes de que acabe la prueba te avisamos. Si no quieres seguir, la cancelas en dos toques desde Ajustes.<br><span class="sub">En la web, el enlace lleva a la página de Stripe para gestionar la suscripción; en Android, a las suscripciones de Google Play.</span></div>
+<p class="small">El párrafo de PACE completo en la ficha de Play, en lugar del que hay en <code>ficha.md</code>:</p>
+<div class="copy"><span class="ttl">PACE COMPLETO</span>
+  <del>La mayor parte de PACE es gratis. Con un único pago, sin suscripción, desbloqueas «A tu ritmo» para toda la semana, las rutinas premium, tus propias rutinas y las estadísticas de semana y año.</del><br>
+  <ins>Casi todo PACE es gratis, y lo seguirá siendo. PACE completo añade las rutinas más hondas, tus propias rutinas, una semana a tu medida con la carta del lunes y tu mes y tu año. Pruébalo 7 días gratis y sigue por 2,99 € al mes, o págalo una vez, 19,99 €, y es tuyo para siempre.</ins>
+  <span class="sub" style="display:block;margin-top:6px">En Play los importes son los que fije Play en cada país. En inglés, el mismo párrafo traducido.</span>
+</div>
+<p class="small">Y en la lista de logros de la ficha:</p>
+<div class="copy">Más de ochenta sellos de libreta de campo<del>, dibujados a mano</del>. Para explorar, no para competir.<br><span class="sub">En inglés: «More than eighty field-notebook stamps<del>, drawn by hand</del>.»</span></div>
+<p class="small">La última pantalla de la bienvenida:</p>
+<div class="copy"><span class="sub">PACE COMPLETO</span><br><span class="ttl">PACE es gratis. Si un día quieres más:</span>
+  <ul><li>las rutinas más hondas de Respira, Mueve y Estira</li><li>tus propias rutinas</li><li>una semana a tu medida, con la carta del lunes</li><li>tu mes y tu año</li></ul>
+  <span class="price">19,99 € una vez, o 2,99 € al mes con 7 días gratis.</span><br>
+  <span class="sub">[ Probar 7 días gratis ]   [ Ahora no ]   · Te avisamos antes de que acabe la prueba.</span>
+</div>
+
+<h2 id="decidir">Lo que hay que decidir</h2>
+<p>Las mismas cuatro preguntas que te hago en el chat. En la recomendada, el fondo verde.</p>
+<div class="q"><h3>1 · El día de la versión 1</h3>
+  <p>Ese día, las rutinas que hoy son gratis para todos pasan a PACE completo. ¿Qué pasa con quien ya las usa?</p>
+  <ol>
+    <li class="rec"><b>A · Prueba y lo ya hecho.</b> Recibe su semana de prueba con un aviso y, además, las rutinas premium que ya hizo alguna vez se le quedan abiertas. Así nadie pierde lo que ya usaba y lo nuevo sigue siendo de pago.</li>
+    <li><b>B · Solo la semana de prueba.</b> Lo decidido hasta ahora: una semana de PACE completo con aviso y luego se cierra.</li>
+    <li><b>C · Todo gratis para ellos.</b> Quien llegó antes de v1 se queda PACE completo entero, para siempre.</li>
+  </ol>
+</div>
+<div class="q"><h3>2 · La landing y la prueba</h3>
+  <p>¿Qué añadimos? Puedes elegir varias.</p>
+  <ol>
+    <li class="rec"><b>Las tres promesas.</b> Lo gratis sigue gratis, lo comprado no se quita y, si sube el precio, el tuyo no.</li>
+    <li class="rec"><b>Aviso antes del cobro.</b> Dos días antes de que acabe la prueba, y cancelar en dos toques.</li>
+    <li class="rec"><b>Quién lo hace.</b> Un párrafo con tu voz: una persona, en España, sin inversores.</li>
+    <li><b>Si no puedes pagarlo.</b> Una pregunta en la landing: «Si ahora no puedes pagarlo, escríbeme» y le mandas un código.</li>
+  </ol>
+</div>
+<div class="q"><h3>3 · Pedir valoraciones en Google Play</h3>
+  <ol>
+    <li class="rec"><b>A · Una vez, en buen momento.</b> Al terminar su quinta pausa entera, con la ventana de Google. Si dice que no, no se vuelve a pedir.</li>
+    <li><b>B · Nunca.</b> Solo contestar las reseñas que lleguen.</li>
+  </ol>
+</div>
+<div class="q"><h3>4 · La ficha de Play y la bienvenida</h3>
+  <p>¿Qué cambio? Puedes elegir varias.</p>
+  <ol>
+    <li class="rec"><b>Los dos precios en la ficha.</b> El párrafo de PACE completo pasa a contar el mensual y el de por vida.</li>
+    <li class="rec"><b>Quitar «dibujados a mano».</b> Los dibujos salen de GPT Image.</li>
+    <li class="rec"><b>Probar el orden de las capturas.</b> Un experimento de Play con dos primeras capturas distintas.</li>
+    <li class="rec"><b>Bienvenida con precio claro.</b> «Gratis, lo esencial siempre» en la primera pantalla y los dos precios en la última, con «Ahora no» igual de grande.</li>
+  </ol>
+</div>
+
+<h2 id="build">El canal hermano: Starter Story Build</h2>
+<p><a href="https://www.youtube.com/@StarterStoryBuild">@StarterStoryBuild</a> tiene 83.100 suscriptores y 65 vídeos, de enero de 2025 a octubre de 2026. Casi todo son retos de programar con IA, ideas de pequeños programas para empresas y tutoriales para hacer una app en una tarde. Para PACE sirven diez. Leí las descripciones y capítulos de los 65, la transcripción entera del de ASO (la única que hay escrita) y los resúmenes de los demás. El de onboarding ya estaba en la propuesta anterior.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Vídeo</th><th>Qué cuenta</th><th>Para PACE</th></tr></thead>
+<tbody>
+<tr><td><span class="name">My App Makes $50K/Month: This Is My ASO Playbook</span><span class="small">mayo 2026 · 244.000 vistas</span></td><td>Sebastian Röhl, de HabitKit y FocusKit (un Pomodoro). El 98 % de su gente llega buscando en la tienda. La palabra clave va en el nombre: su app se llama «Habit Tracker – HabitKit». La primera captura enseña lo más bonito y real. Pide la valoración justo después del primer hábito, nunca en la bienvenida, y si dicen que no, espera. Contesta todas las reseñas y añade una línea pidiendo valoración en sus correos de soporte.</td><td>La ficha, las capturas, las valoraciones y la paciencia. FocusKit es un competidor nuevo del Foco.</td></tr>
+<tr><td><span class="name">I Found 3 NEW Apps Making $10,000+ Per Month</span><span class="small">febrero 2025 · el caso HabitKit</span></td><td>HabitKit cobra al mes, al año y de por vida. En 2024 sacaba unos 7.800 $ al mes de suscripciones y 7.300 $ al mes de compras de por vida, y casi todo entra en enero. Hoy, con cuatro apps, 50.000 $ al mes.</td><td>El modelo que elegiste es el suyo. La mitad del dinero viene del de por vida.</td></tr>
+<tr><td><span class="name">Why I Ditched Subscriptions For A Lifetime Deal</span><span class="small">agosto 2025</span></td><td>Pat Walls cuenta por qué cambió la suscripción de su app por un pago de por vida. Un capítulo es sobre Deven, de SuperGrow, que vendió de por vida 65.000 $ en 3 días con 300 plazas; la plataforma se quedó el 40 % y solo un 10 % de compradores siguió usándola. Lo de por vida trae dinero y primeros fieles; el riesgo es el soporte y los servidores sin ingresos nuevos.</td><td>PACE no tiene servidores, así que su de por vida no arrastra ese coste. Venderlo en tu web, no en una plataforma de ofertas.</td></tr>
+<tr><td><span class="name">The Onboarding Behind My $40K/Month App</span><span class="small">abril 2026</span></td><td>Una bienvenida en tres partes: presentación, el momento en que la app te enseña lo que hará por ti, y cierre con la oferta.</td><td>Ya decidiste la bienvenida que enseña PACE completo una vez.</td></tr>
+<tr><td><span class="name">How to Get 1,000 Downloads On Your App in 30 Days</span><span class="small">mayo 2026 · 107.000 vistas</span></td><td>Julia, de Playkit: conocer al público, abrir cuentas nuevas y calentarlas, publicar vídeos cortos con un calendario fijo y mirar qué funciona.</td><td>Encaja si los vídeos los haces tú y enseñan la app tal cual.</td></tr>
+<tr><td><span class="name">How to Validate Your App Idea Before Building Anything</span><span class="small">enero 2026</span></td><td>PushScroll: el vídeo antes que la app. Una app que se ve bien en un vídeo y que apetece compartir.</td><td>El horizonte, el sol y la vaca son el vídeo de PACE.</td></tr>
+<tr><td><span class="name">Watch Me Design And Build a Mobile App In 18 minutes</span><span class="small">febrero 2026 · 238.000 vistas</span></td><td>Las apps hechas con IA se parecen todas; una mascota y dibujos propios las distinguen.</td><td>La vaca ya lo hace.</td></tr>
+<tr><td><span class="name">Apps so simple you won't believe they make money</span><span class="small">agosto 2025 · 420.000 vistas</span></td><td>Apps que hacen una sola cosa bien (un temporizador para charlas, una app pequeña de Mac) y viven de eso.</td><td>PACE no necesita más funciones para vender.</td></tr>
+<tr><td><span class="name">How to Build an App Worth 7 Figures</span><span class="small">abril 2026</span></td><td>Josh, que ha comprado apps por 150 millones: el nicho importa poco, las cuentas tienen que estar ordenadas y el marketing se gasta con cabeza.</td><td>Llevar ordenadas las ventas de Stripe y de Play desde el primer día.</td></tr>
+<tr><td><span class="name">I Built A $30M iOS App: This is My Growth Playbook</span><span class="small">octubre 2026</span></td><td>Cal AI creció pagando a creadores de vídeos y midiendo qué trae cada uno.</td><td><span class="tag no">no</span> Pagar y medir a cada persona no encaja.</td></tr>
+</tbody></table></div>
+<p class="small">De paso: los borradores de <code>docs/launch/reddit-drafts.md</code> hablan de la v0.18.0 y de pace.pages.dev. Si un día se usan, hay que rehacerlos.</p>
+
+<h2 id="resenas">Las reseñas</h2>
+<p>23 apps parecidas a PACE, en cuatro grupos: <strong>foco y Pomodoro</strong> (Cat on Chair, Forest, Focus To-Do, Focus Friend, FocusKit, Flora, Focus Keeper, Tide), <strong>respiración</strong> (Prana Breath, Breathwrk, iBreathe), <strong>estiramientos y pausas en la oficina</strong> (Bend, Moova, Stand Up!, Wakeout!, Pausa Activa) y <strong>hábitos y agua</strong> (Finch, HabitKit, Fabulous, Streaks, (Not Boring) Habits, Waterllama, Plant Nanny). 17.532 reseñas: 3.417 de una o dos estrellas y 12.680 de cuatro o cinco.</p>
+
+<h3>Lo que se repite en las quejas</h3>
+<p class="small">Qué parte de las 3.417 reseñas de una o dos estrellas menciona cada tema. Una reseña puede tocar varios.</p>
+<div class="bars" style="--max:40">
+  <div class="bar"><span class="lbl">Precio o suscripción</span><span class="track"><span class="fill" style="--v:33.8"></span></span><span class="val">33,8 %</span></div>
+  <div class="bar"><span class="lbl">Prueba, cobros y bajas</span><span class="track"><span class="fill" style="--v:19.9"></span></span><span class="val">19,9 %</span></div>
+  <div class="bar"><span class="lbl">Errores y cierres</span><span class="track"><span class="fill" style="--v:15"></span></span><span class="val">15,0 %</span></div>
+  <div class="bar"><span class="lbl">Avisos y sonidos<small>que no llegan, o que asustan</small></span><span class="track"><span class="fill" style="--v:13.2"></span></span><span class="val">13,2 %</span></div>
+  <div class="bar"><span class="lbl">Una actualización la empeoró</span><span class="track"><span class="fill" style="--v:9.8"></span></span><span class="val">9,8 %</span></div>
+  <div class="bar"><span class="lbl">Recargada o confusa</span><span class="track"><span class="fill" style="--v:8.8"></span></span><span class="val">8,8 %</span></div>
+  <div class="bar"><span class="lbl">Cuenta obligatoria o que falla</span><span class="track"><span class="fill" style="--v:7.3"></span></span><span class="val">7,3 %</span></div>
+  <div class="bar"><span class="lbl">Presión, culpa o insistencia</span><span class="track"><span class="fill" style="--v:6.6"></span></span><span class="val">6,6 %</span></div>
+  <div class="bar"><span class="lbl">Anuncios</span><span class="track"><span class="fill" style="--v:6.3"></span></span><span class="val">6,3 %</span></div>
+  <div class="bar"><span class="lbl">Datos perdidos</span><span class="track"><span class="fill" style="--v:4.1"></span></span><span class="val">4,1 %</span></div>
+  <div class="bar"><span class="lbl">Cerraron lo que era gratis</span><span class="track"><span class="fill" style="--v:3.1"></span></span><span class="val">3,1 %</span></div>
+  <div class="bar"><span class="lbl">Pide pagar una sola vez</span><span class="track"><span class="fill" style="--v:2.8"></span></span><span class="val">2,8 %</span></div>
+  <div class="bar"><span class="lbl">Se para en segundo plano</span><span class="track"><span class="fill" style="--v:2.7"></span></span><span class="val">2,7 %</span></div>
+</div>
+<div class="scale"><span></span><span class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40 %</span></span><span></span></div>
+<p style="margin-top:14px">Pocas reseñas dicen «cerraron lo que era gratis», pero son las más votadas y las más largas: gente que llevaba dos o cuatro años con la app. Lo que más se lee en las quejas, contado sin citar:</p>
+<ul>
+  <li><strong>Lo gratis no deja probar nada.</strong> En Bend solo hay una rutina sin pagar, y se enteran después de contestar el cuestionario del principio. En Moova, lo gratis es un despertador.</li>
+  <li><strong>Te quitan lo que tenías.</strong> Forest pasó a la versión de pago árboles que la gente había comprado con monedas; Plant Nanny cerró sus plantas tras una suscripción de 80 $ al año; Focus To-Do cerró poder cambiar la duración de un pomodoro. Forest había prometido que el pago único quitaba los anuncios para siempre y ahora enseña los de su suscripción.</li>
+  <li><strong>El precio llega tarde.</strong> Primero el cuestionario o tus datos, después el muro. Y una «oferta única» con descuento que caduca al cerrarla.</li>
+  <li><strong>La prueba que cobra.</strong> Finch prometió avisar dos días antes y no lo hizo; en Fabulous y Breathwrk no encontraban cómo darse de baja.</li>
+  <li><strong>La cuenta.</strong> Móvil nuevo, «usuario no encontrado» y todo perdido; o no poder cancelar porque te diste de alta con Google.</li>
+  <li><strong>Avisos.</strong> El temporizador no avisa al acabar, o el sonido es tan fuerte que asusta a quien tiene ansiedad.</li>
+  <li><strong>En España, el idioma.</strong> Dos de las quejas más votadas de Tide y Plant Nanny son que no están en español.</li>
+</ul>
+
+<h3>Lo que se repite en los elogios</h3>
+<p class="small">Qué parte de las 12.680 reseñas de cuatro o cinco estrellas menciona cada tema.</p>
+<div class="bars good" style="--max:30">
+  <div class="bar"><span class="lbl">Ayuda a concentrarse</span><span class="track"><span class="fill" style="--v:25.8"></span></span><span class="val">25,8 %</span></div>
+  <div class="bar"><span class="lbl">Rutina y hábito diario</span><span class="track"><span class="fill" style="--v:20.8"></span></span><span class="val">20,8 %</span></div>
+  <div class="bar"><span class="lbl">Sencilla, fácil, limpia</span><span class="track"><span class="fill" style="--v:20.3"></span></span><span class="val">20,3 %</span></div>
+  <div class="bar"><span class="lbl">Bonita y cuidada</span><span class="track"><span class="fill" style="--v:17.3"></span></span><span class="val">17,3 %</span></div>
+  <div class="bar"><span class="lbl">Motiva sin culpa</span><span class="track"><span class="fill" style="--v:15.9"></span></span><span class="val">15,9 %</span></div>
+  <div class="bar"><span class="lbl">Recordatorios útiles</span><span class="track"><span class="fill" style="--v:10.3"></span></span><span class="val">10,3 %</span></div>
+  <div class="bar"><span class="lbl">Sonidos y voz</span><span class="track"><span class="fill" style="--v:8"></span></span><span class="val">8,0 %</span></div>
+  <div class="bar"><span class="lbl">Cuerpo: espalda, cuello, postura</span><span class="track"><span class="fill" style="--v:7.7"></span></span><span class="val">7,7 %</span></div>
+  <div class="bar"><span class="lbl">Calma</span><span class="track"><span class="fill" style="--v:6.8"></span></span><span class="val">6,8 %</span></div>
+  <div class="bar"><span class="lbl">Sin anuncios, precio justo</span><span class="track"><span class="fill" style="--v:4.8"></span></span><span class="val">4,8 %</span></div>
+  <div class="bar"><span class="lbl">El desarrollador contesta</span><span class="track"><span class="fill" style="--v:4.5"></span></span><span class="val">4,5 %</span></div>
+  <div class="bar"><span class="lbl">Pago único</span><span class="track"><span class="fill" style="--v:2.7"></span></span><span class="val">2,7 %</span></div>
+</div>
+<div class="scale"><span></span><span class="ticks"><span>0</span><span>10</span><span>20</span><span>30 %</span></span><span></span></div>
+<ul style="margin-top:14px">
+  <li><strong>Cat on Chair</strong> tiene 103 reseñas recientes y solo dos bajan de cuatro estrellas. Se repite: el dibujo parece de un juego indie acogedor, lo gratis basta, no te mete la versión de pago por los ojos, y no usa palabras que juzgan, como «abandonar». Hay quien paga solo para apoyar a los artistas. Y la IA importa: una reseña celebra no ver nada hecho con IA y otra apunta que el desarrollador la usó.</li>
+  <li><strong>Sin cuenta y sin internet.</strong> En HabitKit se elogia que no pida registrarse, que funcione sin conexión y que lo de pago sea una compra única. En Focus Friend, en castellano: sin anuncios, sin cuenta, sin robar datos.</li>
+  <li><strong>Pagar para apoyar.</strong> En Prana Breath, Focus To-Do y Focus Friend hay quien paga aunque lo gratis le baste, porque lo gratis es generoso y no hay anuncios.</li>
+  <li><strong>Pagaría una vez.</strong> En Bend, Plant Nanny y Waterllama: pagaría un pago único con gusto, pero no una suscripción.</li>
+  <li><strong>Para quien trabaja sentado.</strong> En Moova, Stand Up! y Pausa Activa se elogia lo que PACE ya hace: recordar levantarse, ejercicios sencillos, mejor postura.</li>
+</ul>
+
+<h3>Precio y quejas, app por app</h3>
+<p class="small">Qué parte de las reseñas de una o dos estrellas de cada app habla del precio o la suscripción. Solo las apps con 30 o más reseñas bajas.</p>
+<div class="bars" style="--max:60">
+  <div class="bar"><span class="lbl">Fabulous<small>solo suscripción · 690 bajas</small></span><span class="track"><span class="fill" style="--v:58"></span></span><span class="val">58 %</span></div>
+  <div class="bar"><span class="lbl">Bend<small>solo suscripción · 232</small></span><span class="track"><span class="fill" style="--v:49"></span></span><span class="val">49 %</span></div>
+  <div class="bar"><span class="lbl">Wakeout!<small>solo suscripción · 151</small></span><span class="track"><span class="fill" style="--v:48"></span></span><span class="val">48 %</span></div>
+  <div class="bar"><span class="lbl">Waterllama<small>solo suscripción · 33</small></span><span class="track"><span class="fill" style="--v:45"></span></span><span class="val">45 %</span></div>
+  <div class="bar"><span class="lbl">Plant Nanny<small>suscripción y monedas · 136</small></span><span class="track"><span class="fill" style="--v:37"></span></span><span class="val">37 %</span></div>
+  <div class="bar"><span class="lbl">HabitKit<small>suscripción o de por vida · 83</small></span><span class="track"><span class="fill" style="--v:34"></span></span><span class="val">34 %</span></div>
+  <div class="bar"><span class="lbl">(Not Boring) Habits<small>suscripción o de por vida · 51</small></span><span class="track"><span class="fill" style="--v:33"></span></span><span class="val">33 %</span></div>
+  <div class="bar"><span class="lbl">Moova<small>solo suscripción · 137</small></span><span class="track"><span class="fill" style="--v:32"></span></span><span class="val">32 %</span></div>
+  <div class="bar"><span class="lbl">Breathwrk<small>solo suscripción · 416</small></span><span class="track"><span class="fill" style="--v:29"></span></span><span class="val">29 %</span></div>
+  <div class="bar"><span class="lbl">Focus Friend<small>suscripción o de por vida · 41</small></span><span class="track"><span class="fill" style="--v:27"></span></span><span class="val">27 %</span></div>
+  <div class="bar"><span class="lbl">Forest<small>suscripción y monedas; antes, pago único · 525</small></span><span class="track"><span class="fill" style="--v:25"></span></span><span class="val">25 %</span></div>
+  <div class="bar"><span class="lbl">Finch<small>solo suscripción · 106</small></span><span class="track"><span class="fill" style="--v:21"></span></span><span class="val">21 %</span></div>
+  <div class="bar"><span class="lbl">Focus To-Do<small>de por vida o trimestral · 199</small></span><span class="track"><span class="fill" style="--v:20"></span></span><span class="val">20 %</span></div>
+  <div class="bar"><span class="lbl">Focus Keeper<small>suscripción o de por vida · 169</small></span><span class="track"><span class="fill" style="--v:20"></span></span><span class="val">20 %</span></div>
+  <div class="bar"><span class="lbl">Tide<small>solo suscripción · 176</small></span><span class="track"><span class="fill" style="--v:16"></span></span><span class="val">16 %</span></div>
+  <div class="bar"><span class="lbl">Prana Breath<small>sobre todo de por vida · 37</small></span><span class="track"><span class="fill" style="--v:14"></span></span><span class="val">14 %</span></div>
+  <div class="bar"><span class="lbl">Streaks<small>se paga al descargar · 99</small></span><span class="track"><span class="fill" style="--v:13"></span></span><span class="val">13 %</span></div>
+  <div class="bar"><span class="lbl">Flora<small>gratis y compras sueltas · 83</small></span><span class="track"><span class="fill" style="--v:7"></span></span><span class="val">7 %</span></div>
+  <div class="bar"><span class="lbl">Stand Up!<small>gratis y propinas · 33</small></span><span class="track"><span class="fill" style="--v:6"></span></span><span class="val">6 %</span></div>
+</div>
+<div class="scale"><span></span><span class="ticks"><span>0</span><span>20</span><span>40</span><span>60 %</span></span><span></span></div>
+<p style="margin-top:14px">Las que solo venden suscripción se llevan más quejas de precio; las que cobran una vez o son gratis, las que menos. Tide se sale de la regla porque sus quejas son sobre todo errores. HabitKit, porque lo gratis solo deja cuatro hábitos.</p>
+
+<h2 id="precios">Precios de los demás</h2>
+<p>Lo que enseña la App Store de EE. UU. (y la de España cuando lo da). La tienda lista todos los precios que una app ha probado, así que salen horquillas.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>App</th><th>Al mes</th><th>Al año</th><th>De por vida</th></tr></thead>
+<tbody>
+<tr><td><span class="name">PACE</span></td><td class="n price">2,99 €</td><td class="n">—</td><td class="n price">19,99 €</td></tr>
+<tr><td><span class="name">Cat on Chair</span></td><td class="n">2,99 $</td><td class="n">19,99 $ (14,99 € en España)</td><td class="n">29,99 $ (22,99 €)</td></tr>
+<tr><td><span class="name">Focus Friend</span></td><td class="n">3,99 $</td><td class="n">19,99 $ (22,99 €)</td><td class="n">39,99 $ (44,99 €)</td></tr>
+<tr><td><span class="name">HabitKit</span></td><td class="n">0,99–4,99 $</td><td class="n">5,99–24,99 $</td><td class="n">14,99–29,99 $ (17,99–34,99 €)</td></tr>
+<tr><td><span class="name">FocusKit</span></td><td class="n">0,99–1,99 $</td><td class="n">9,99–17,99 $</td><td class="n">17,99–39,99 $</td></tr>
+<tr><td><span class="name">Focus To-Do</span></td><td class="n">3,99 $ / 3 meses</td><td class="n">—</td><td class="n">11,99 $</td></tr>
+<tr><td><span class="name">(Not Boring) Habits</span></td><td class="n">7,99 $</td><td class="n">14,99–29,99 $</td><td class="n">59,99 $</td></tr>
+<tr><td><span class="name">Streaks</span></td><td class="n">—</td><td class="n">—</td><td class="n">5,99 $ al descargar</td></tr>
+<tr><td><span class="name">Forest</span></td><td class="n">5,99 $</td><td class="n">32,49–35,99 $</td><td class="n">ya no</td></tr>
+<tr><td><span class="name">Bend</span></td><td class="n">4,99–13,99 $</td><td class="n">19,99–39,99 $</td><td class="n">—</td></tr>
+<tr><td><span class="name">Finch</span></td><td class="n" colspan="2">de 5,99 a 69,99 $, según el plan</td><td class="n">—</td></tr>
+<tr><td><span class="name">Tide</span></td><td class="n">1,99–11,99 $</td><td class="n">15,99–59,99 $</td><td class="n">—</td></tr>
+<tr><td><span class="name">Plant Nanny</span></td><td class="n">3,99–7,99 $</td><td class="n">69,99 $</td><td class="n">—</td></tr>
+</tbody></table></div>
+<p>El de por vida de PACE queda por debajo de la mayoría de los que lo ofrecen, y el mensual es el de Cat on Chair. Las quejas de precio que leí van contra anuales de 40 a 80 $ y contra suscripciones que no dejan probar nada; alguna reseña de Cat on Chair ve caros sus 29,99 $. No cambiaría nada.</p>
+
+<h2 id="como">Cómo se hizo</h2>
+<ul>
+  <li><strong>YouTube:</strong> la lista de los 65 vídeos y sus descripciones, sacadas de las páginas públicas. Las transcripciones no salen ni desde el panel ni desde un script (YouTube pide iniciar sesión), así que el del ASO se leyó en una transcripción publicada por SozAI y el resto en sus capítulos y en resúmenes escritos.</li>
+  <li><strong>Reseñas:</strong> las de la App Store salen del canal RSS público de Apple (EE. UU., Reino Unido y España; las más útiles y las más recientes) y las de Google Play, de su página pública (EE. UU. y España; las más relevantes y las más nuevas). 3.820 son de España.</li>
+  <li><strong>Los porcentajes</strong> cuentan palabras en inglés y castellano («subscription», «suscripción», «cobro»…), así que son aproximados. Lo de cada tema se leyó a mano en las reseñas más votadas. Las reseñas «más útiles» exageran lo negativo: la nota media de esta muestra es más baja que la de la tienda.</li>
+  <li><strong>Precios:</strong> las compras dentro de la app que enseña la página de cada app en la App Store, a 15 de octubre de 2026.</li>
+  <li><strong>«Pausas activas» en Play:</strong> búsqueda en Google Play España, con las descargas y valoraciones de cada ficha.</li>
+</ul>
+
+<h2 id="fuentes">Fuentes</h2>
+<ul class="src">
+  <li><a href="https://www.youtube.com/@StarterStoryBuild/videos">Starter Story Build, los vídeos</a> · <a href="https://www.youtube.com/watch?v=I2GG0lyb_RI">el de ASO</a> · <a href="https://sozai.app/transcript/app-makes-50k-month-aso-playbook/">su transcripción (SozAI)</a> · <a href="https://www.youtube.com/watch?v=tZyPXPa7pC8">el del pago de por vida</a> · <a href="https://rosetta.to/u/starterstory/how-i-made-65k-in-3-days">resumen del caso SuperGrow</a></li>
+  <li><a href="https://www.starterstory.com/habit-kit-breakdown">HabitKit en Starter Story</a> · <a href="https://www.starterstory.com/businesses/habitkit/monetization">cómo cobra HabitKit</a> · <a href="https://www.indiehackers.com/post/tech/how-building-in-public-got-my-habit-tracking-mobile-app-to-15k-mo-DCOYyF9O14dBnuGkkaQR">entrevista en Indie Hackers</a></li>
+  <li><a href="https://onepage-research.sliplane.app/articles/youtube.com/yt-ST2ROU-0932ccd0">resumen de PushScroll</a> · <a href="https://playkit.beehiiv.com/p/inside-playkit-s-200-creator-army-and-how-to-replicate-it">Playkit</a></li>
+  <li>App Store: <a href="https://apps.apple.com/us/app/id6746562271">Cat on Chair</a> · <a href="https://apps.apple.com/us/app/id6742278016">Focus Friend</a> · <a href="https://apps.apple.com/us/app/id6443918070">HabitKit</a> · <a href="https://apps.apple.com/us/app/id6752217216">FocusKit</a> · <a href="https://apps.apple.com/us/app/id866450515">Forest</a> · <a href="https://apps.apple.com/us/app/id1513988468">Bend</a> · <a href="https://apps.apple.com/us/app/id1528595748">Finch</a></li>
+  <li>Google Play: <a href="https://play.google.com/store/apps/details?id=com.bowerydigital.bend">Bend</a> · <a href="https://play.google.com/store/apps/details?id=cc.forestapp">Forest</a> · <a href="https://play.google.com/store/apps/details?id=com.abdula.pranabreath">Prana Breath</a> · <a href="https://play.google.com/store/apps/details?id=com.movilixa.activepause">Pausa Activa</a> · <a href="https://play.google.com/store/search?q=pausas%20activas&amp;c=apps&amp;hl=es&amp;gl=es">búsqueda «pausas activas»</a></li>
+  <li>En el repo: <code>docs/proposals/cobrar-pace-completo.html</code> (sección 5, el canal principal), <code>docs/launch/google-play/ficha.md</code>, <code>app/i18n/strings/premium.js</code>, <code>app/onboarding/Onboarding.jsx</code>, <code>docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md</code>.</li>
+</ul>
+</main>

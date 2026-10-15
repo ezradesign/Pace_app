@@ -190,6 +190,12 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 - **Landing** en **`pacegrass.app/premium`** (Ez, 15 oct. 2026), página suelta junto a la app.
 - **Revisión legal**: Términos y Privacidad revisados por un profesional (y el contenido corporal).
 - **Ficha de Play** (y ASO); QA de compra, reinstalación y cambio de fecha.
+- **Lo que sale de las reseñas** (Ez, 15 oct. 2026, `DECISIONES_PRODUCTO.md`): el día de v1, la
+  semana de prueba y, además, las rutinas premium ya hechas se quedan abiertas; tres promesas en la
+  landing; aviso dos días antes de que acabe la prueba y cancelar en dos toques; «si no puedes
+  pagarlo, escríbeme»; la valoración de Play pedida una sola vez, tras la quinta pausa entera; la
+  bienvenida con los dos precios. La ficha (`docs/launch/google-play/ficha.md`) ya cuenta los dos
+  planes.
 
 ### Reglas del plan
 

@@ -61,7 +61,7 @@ HIDRÁTATE
 Un toque por vaso. Sin metas que agobien.
 
 LOGROS
-Más de ochenta sellos de libreta de campo, dibujados a mano. Para explorar, no para competir.
+Más de ochenta sellos de libreta de campo. Para explorar, no para competir.
 
 CALMA POR DISEÑO
 Colores tierra, tipografía cuidada y modo oscuro. Sin anuncios, sin rachas que castigan, sin notificaciones insistentes.
@@ -72,14 +72,18 @@ Sin cuenta y sin registro. Todo se guarda en tu móvil: no hay servidores de PAC
 PACE no es un producto sanitario ni sustituye el consejo de un profesional. Si tienes alguna condición médica, consulta antes de hacer los ejercicios de respiración intensa.
 ```
 
-Unos 1.760 caracteres de 4.000: sobra sitio por si quieres añadir algo.
+Unos 1.740 caracteres de 4.000: sobra sitio por si quieres añadir algo.
 
-**Para v1 (cuando haya compra):** añadir antes de «Calma por diseño» un párrafo así, con el
-precio que salga en Play:
+Del arte de PACE no se dice «dibujado a mano»: los dibujos salen de GPT Image (Ez, 15 oct. 2026,
+`DECISIONES_PRODUCTO.md`). De la app sí se puede decir que la hace una persona.
+
+**Para v1 (cuando haya compra):** añadir antes de «Calma por diseño» este párrafo, con los importes
+que fije Play en cada país. Cuenta los dos planes que eligió Ez el 15 oct. 2026 (2,99 € al mes con
+7 días gratis y 19,99 € de por vida):
 
 ```
 PACE COMPLETO
-La mayor parte de PACE es gratis. Con un único pago, sin suscripción, desbloqueas «A tu ritmo» para toda la semana, las rutinas premium, tus propias rutinas y las estadísticas de semana y año.
+Casi todo PACE es gratis, y lo seguirá siendo. PACE completo añade las rutinas más hondas, tus propias rutinas, una semana a tu medida con la carta del lunes y tu mes y tu año. Pruébalo 7 días gratis y sigue por 2,99 € al mes, o págalo una vez, 19,99 €, y es tuyo para siempre.
 ```
 
 ---
@@ -99,6 +103,10 @@ pantallas sin el título encima, por si las prefieres limpias.
 
 Las capturas son de la app tal como está hoy (v0.143.0), en un móvil de 360 px de ancho. Las tablets
 y el vídeo son opcionales: se pueden dejar vacíos.
+
+**Con la ficha publicada** (Ez, 15 oct. 2026): el orden de las capturas se prueba con un experimento
+de ficha (**Crecer > Experimentos de la ficha de Play Store**), la primera de hoy, la jornada con el
+horizonte, contra otra primera (por ejemplo, la pausa). Y cada reseña se contesta desde Play Console.
 
 ---
 
@@ -149,7 +157,7 @@ HYDRATE
 One tap per glass. No goals that weigh on you.
 
 ACHIEVEMENTS
-More than eighty field-notebook stamps, drawn by hand. For exploring, not for competing.
+More than eighty field-notebook stamps. For exploring, not for competing.
 
 CALM BY DESIGN
 Earthy colours, careful typography and dark mode. No ads, no streaks that punish you, no nagging notifications.
@@ -158,6 +166,13 @@ YOUR DATA IS YOURS
 No account and no sign-up. Everything is stored on your phone: PACE has no servers, no analytics and no tracking. You can export a copy whenever you want.
 
 PACE is not a medical device and does not replace the advice of a professional. If you have any medical condition, check with them before doing the intense breathing exercises.
+```
+
+**For v1**, the same paragraph in English, before «Calm by design»:
+
+```
+PACE COMPLETE
+Almost all of PACE is free, and it will stay that way. PACE Complete adds the deeper routines, your own routines, a week shaped to you with the Monday letter, and your month and year. Try it free for 7 days and continue for €2.99 a month, or pay once, €19.99, and it's yours for good.
 ```
 
 ### Países
