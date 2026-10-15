@@ -28,10 +28,12 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
     4. **El suspiro fisiológico** (doble inhalación) necesita una segunda voz para el segundo tramo de
        inhalar («un poco más» o parecido), en castellano y en inglés y con las dos voces: encargo de audio
        para Ez, como los de `archivos/encargos-14oct/`.
-  - **Cortadas por el límite de uso, a retomar con `node scripts/relevo-hilo.js <carpeta>`:**
-    Estadísticas «Hoy» y «Semana» (Ez eligió 1A, 2A, 3A y 4A; «Hoy» montado en
-    `claude/elastic-gould-a3278d`, 98beeda, junta con v0.169.0; falta la suite entera; su RELEVO.md) y
-    Starter Story (el canal hermano y las reseñas de la competencia; abierta por la del cobro).
+  - **v0.170.0: Estadísticas abre en «Hoy»** (Fase 4, 1A 2A 3A 4A de Ez), desde
+    `claude/elastic-gould-a3278d` (98beeda, LISTO con 677 en verde). Su carpeta ya no guarda nada.
+  - **Starter Story** (el canal hermano y las reseñas de la competencia; rama
+    `claude/zealous-engelbart-dad1fc`, abierta por la del cobro) se cortó por el límite y se le pidió
+    guardar. Su contexto pasa de 380 000 tokens: si se retoma, sesión nueva con
+    `node scripts/relevo-hilo.js <carpeta>`, no la vieja.
 - **15 oct., mediodía: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama.
   **v0.168.0 en `main`, con la CI en verde:** la home corrida y la página de las series. Las 14 caídas
   de su suite (645 en verde, con otras dos suites a la vez) pasan todas solas: las que corren un bloque

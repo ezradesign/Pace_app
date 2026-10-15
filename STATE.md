@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.169.0 · 15 de octubre de 2026.
+**Versión:** v0.170.0 · 15 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -106,6 +106,12 @@ invitación que dice qué trae y que llega con la versión 1. En la web, un **c�
 cerrado: es una licencia firmada que la app comprueba sin servidor (`app/state-licencia.js`). En
 Android no hay códigos propios: llegarán los de Play cuando haya Play Billing.
 
+Estadísticas abre en «Hoy» (v0.170.0, Fase 4; 1A 2A 3A 4A de Ez el 15 oct.): los cuatro totales de
+hoy y una tarjeta por parada del menú de «A tu ritmo» con lo que pasó; por libre, las pausas de hoy
+con su hora. «Semana» sigue gratis y como se eligió el 13 oct. Mes y Año son de PACE completo: sin
+él llevan candado y abren la invitación, pero hasta v1 están abiertos. «Qué te ayuda» espera al
+motor de la semana.
+
 Los Caminos están ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): sin «Ver caminos»,
 sin su pestaña de Estadísticas, sin «Cartógrafa» y sin las tres preguntas de la bienvenida. No se ha
 borrado nada, y un Camino que ya estuviera empezado se puede terminar.
@@ -148,7 +154,11 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
 6. **Las series de pausas con lógica y la capa 1 de «PACE que aprende»**, gratis: las eligió Ez el
    15 oct. (`docs/traspaso/archivos/series-15oct/`) y se pueden montar desde v0.169.0, que trae la
-   regla nueva de «A tu ritmo». Los números de la página se vuelven a medir sobre esa regla.
+   regla nueva de «A tu ritmo». Los números de la página se vuelven a medir sobre esa regla. La
+   misma sesión, la pausa corta como mucho cada 30 min de foco con el aro corto (Ez, 15 oct.).
+7. **Lo demás que vio Ez el 15 oct.** (relevo de LEEME): el «Ahora no» tapado en el cierre del
+   escritorio, la 2.ª ronda de «Gemelos subrepticios», que no va más lenta, y la voz del suspiro
+   fisiológico. La Fase 4 (Estadísticas «Hoy») está hecha en v0.170.0.
 
 ## Espera a Ez
 
