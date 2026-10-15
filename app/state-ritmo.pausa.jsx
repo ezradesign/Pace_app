@@ -94,6 +94,16 @@ function ritmoPausaHecha(routineId) {
   });
 }
 
+/* ¿El bloque que acaba de terminar va pegado al siguiente? Con el aro corto los bloques
+   se juntan hasta 30 min (ritmo.regla.js) y entonces no hay pausa que abrir: suena el
+   final, la ventana no sale y el aro deja listo el bloque siguiente (Ez, 15 oct.). */
+function ritmoSinPausa(s) {
+  var p = typeof ritmoPlan === 'function' ? ritmoPlan(s || getState()) : null;
+  if (!p || p.hechos < 1) return false;
+  var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
+  return !!it && it.tipo === 'foco';
+}
+
 /* --- el aro cuenta la pausa ------------------------------------------------ */
 
 /* Al acabar un bloque (main.jsx, tras ritmoBloqueTerminado). `fin` es la hora a la que
@@ -150,6 +160,6 @@ function ritmoPausaAcabada() {
 }
 
 Object.assign(window, {
-  ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada,
 });

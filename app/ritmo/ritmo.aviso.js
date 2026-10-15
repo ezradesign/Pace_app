@@ -47,6 +47,15 @@ function ritmoAviso(s, t, tn, lang) {
     };
   }
 
+  /* Con el aro corto, el bloque va pegado al siguiente: el aviso dice cuándo es la pausa. */
+  if (it.tipo === 'foco') {
+    var pausa = p.m.items.slice(p.m.items.indexOf(it)).find(function (x) { return x.tipo === 'pausa' || x.tipo === 'comida' || x.tipo === 'cierre'; });
+    return {
+      title: tn('notify.ritmo.seguido', { n: p.hechos, total: p.total }),
+      body: pausa ? tn('notify.ritmo.seguido.cuerpo', { hora: hora(pausa.desde) }) : '',
+    };
+  }
+
   var platos = it.platos || [];
   if (!platos.length) return null;
   var clave = it.larga ? 'notify.ritmo.larga' : (it.tipo === 'cierre' ? 'notify.ritmo.cierre' : 'notify.ritmo.titulo');
