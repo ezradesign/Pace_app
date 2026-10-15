@@ -1,0 +1,465 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lanzar PACE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Una columna de lectura, como las otras propuestas de PACE: papel crema, oliva para lo recomendado,
+   ocre para precios y para lo que va después de v1, terracota para lo que no. Las etapas del
+   lanzamiento van numeradas porque son un orden de verdad. */
+:root{
+  --paper:#F2EDE0;--paper-2:#EAE4D4;--paper-3:#DFD8C4;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#7A7363;
+  --line:#C9C0A8;--line-2:#B8AD8E;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.10);
+  --terra:#A85E43;--terra-soft:rgba(201,122,93,.13);
+  --premium:#8A5D24;--premium-soft:rgba(156,107,46,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;--line-2:#5f5544;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.14);
+  --premium:#D9B07A;--premium-soft:rgba(217,176,122,.12);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;--line-2:#5f5544;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.14);
+  --premium:#D9B07A;--premium-soft:rgba(217,176,122,.12);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:960px;margin:0 auto;padding-inline:16px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,46px)}
+h2{font-size:clamp(26px,4.4vw,32px);margin:56px 0 10px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:22px;margin:26px 0 8px}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+ul,ol{margin:0 0 12px;padding-left:20px;color:var(--ink-2)} li{margin:5px 0;max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+a{color:var(--olive)}
+a:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--paper-3);padding:1px 5px;border-radius:4px;word-break:break-word}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink-2);line-height:1.45;margin-top:14px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0}
+.nav a{font-size:13px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.nav a:hover{border-color:var(--ink-3)}
+.box{background:var(--paper-2);border-radius:14px;padding:18px 20px;margin:14px 0}
+.box.rec{background:var(--olive-soft);border:1px solid var(--olive)}
+.box>*:last-child{margin-bottom:0}
+.box h3{margin-top:0}
+.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.summary .box{margin:0}
+.summary .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.summary .v{font-family:var(--display);font-style:italic;font-size:21px;color:var(--ink);line-height:1.25;margin-bottom:6px}
+.summary p{font-size:14px}
+@media (max-width:680px){.summary{grid-template-columns:1fr}}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:700px}
+th,td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+td{color:var(--ink-2)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+td.idea{color:var(--ink);font-weight:500;width:18%}
+td.fit{white-space:nowrap;width:1%}
+.name{font-family:var(--display);font-style:italic;font-size:18px;color:var(--ink);display:block}
+.tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);border-radius:999px;padding:1px 8px;color:var(--ink-3);white-space:nowrap}
+.tag.ok{border-color:var(--olive);color:var(--olive)}
+.tag.ya{border-color:var(--olive);color:var(--olive);background:var(--olive-soft)}
+.tag.luego{border-color:var(--premium);color:var(--premium)}
+.tag.tu{border-color:var(--ink-2);color:var(--ink)}
+.tag.no{border-color:var(--terra);color:var(--terra)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 4px;font-size:13px;color:var(--ink-3);align-items:center}
+.small{font-size:13px;color:var(--ink-3)}
+.price{color:var(--premium);font-family:var(--display);font-style:italic}
+/* Las ideas de promoción: una ficha por idea con su veredicto arriba a la derecha. */
+.ideas{display:grid;gap:12px;margin:14px 0}
+.idea-card{background:var(--paper-2);border-radius:14px;padding:16px 20px;min-width:0}
+.idea-card.rec{background:var(--olive-soft);border:1px solid var(--olive)}
+.idea-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+.idea-head h3{margin:0;font-size:22px}
+.idea-card dl{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:6px 14px;margin:8px 0 0;font-size:14.5px}
+.idea-card dt{color:var(--ink-3);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-top:3px}
+.idea-card dd{margin:0;color:var(--ink-2);min-width:0}
+@media (max-width:560px){.idea-card dl{grid-template-columns:1fr;gap:2px}.idea-card dd{margin-bottom:8px}}
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.col{background:var(--paper-2);border-radius:14px;padding:18px;min-width:0}
+.col h3{margin:0 0 8px;font-size:23px}
+.col ul{font-size:14.5px;padding-left:18px}
+@media (max-width:760px){.cols2{grid-template-columns:1fr}}
+/* Etapas del lanzamiento: el número es el orden en el calendario de PACE. */
+.stages{list-style:none;padding:0;margin:16px 0;display:grid;gap:12px;counter-reset:etapa}
+.stages>li{max-width:none;margin:0;background:var(--paper-2);border-radius:14px;padding:16px 20px 16px 64px;position:relative;counter-increment:etapa}
+.stages>li::before{content:counter(etapa);position:absolute;left:20px;top:12px;font-family:var(--display);font-style:italic;font-size:34px;line-height:1;color:var(--olive)}
+.stages h3{margin:0 0 2px;font-size:22px}
+.stages .when{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.stages ul{font-size:14.5px;margin-bottom:0}
+.q{background:var(--paper-2);border-radius:14px;padding:18px 20px;margin:14px 0}
+.q h3{margin:0 0 6px}
+.q ol{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px}
+.q li{max-width:none;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.q li.rec{border-color:var(--olive);background:var(--olive-soft)}
+.q li b{font-weight:500;color:var(--ink)}
+.src li{font-size:13px;color:var(--ink-3)}
+.src a{color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<main>
+<div class="eyebrow">PACE · propuesta para Ez · 15 de octubre de 2026</div>
+<h1>Cómo dar a conocer PACE y lanzarlo</h1>
+<p class="lead">Lo que cuentan unos cuarenta casos de Starter Story sobre herramientas, precio, promoción y lanzamiento, puesto al lado de lo que PACE ya tiene y de lo que elegiste el 15 de octubre. Cada idea lleva su fuente, lo que costaría en PACE y una recomendación. Al final, cuatro preguntas.</p>
+<div class="nav">
+  <a href="#corto">En corto</a><a href="#herramientas">Herramientas</a><a href="#precio">Precio</a><a href="#promocion">Promoción</a><a href="#lanzamiento">Lanzamiento</a><a href="#decidir">Lo que hay que decidir</a><a href="#casos">Los casos</a><a href="#como">Cómo se hizo</a><a href="#fuentes">Fuentes</a>
+</div>
+
+<h2 id="corto">En corto</h2>
+<p>Lo que ya decidiste (Stripe en modo «vende por ti», 2,99 € al mes con 7 días gratis y 19,99 € de por vida, la landing en <code>/premium</code>, las tres promesas, la valoración una sola vez) sale reforzado. Lo nuevo es pequeño y casi todo gratis.</p>
+<div class="summary">
+  <div class="box">
+    <div class="k">Herramientas</div>
+    <div class="v">Lo que tienes basta; faltan tres cosas pequeñas</div>
+    <p>Un correo con tu dominio, una lista «Avísame» y, si quieres, contar las visitas de la página de venta sin cookies. Lo que usan las apps de suscripción para medir a cada persona (RevenueCat, Superwall, píxeles de anuncios) sobra en PACE.</p>
+  </div>
+  <div class="box">
+    <div class="k">Precio</div>
+    <div class="v">No cambio nada</div>
+    <p>Tus dos precios están en la franja de Hevy, HabitKit y Cat on Chair. Un dato para el futuro: tu «de por vida» vale 6,7 meses del mensual, la proporción más baja de todas, así que casi todos lo elegirán. Sin servidores que pagar, eso no es un problema.</p>
+  </div>
+  <div class="box">
+    <div class="k">Promoción</div>
+    <div class="v">La tienda primero, y un día fuerte para la web</div>
+    <p>Lo que más se repite en apps de una persona: la búsqueda en la tienda (HabitKit, Rootd, Hevy, las apps de postura de Pre) y un día de lanzamiento en Product Hunt, Hacker News o Reddit. En castellano, «pausas activas» casi no tiene competencia, tampoco en Latinoamérica.</p>
+  </div>
+  <div class="box rec">
+    <div class="k">Lanzamiento</div>
+    <div class="v">Primero la web, luego Android</div>
+    <p>La web puede abrir la venta en cuanto Stripe esté listo. Android sale cuando acabe la prueba cerrada de Play (12 testers durante 14 días seguidos). Son dos momentos en vez de uno, y la lista «Avísame» avisa en los dos.</p>
+  </div>
+</div>
+
+<h2 id="herramientas">1 · Herramientas</h2>
+<p>Qué usan los casos de Starter Story para cada cosa, al lado de lo que ya tiene PACE: React sin compilador, Cloudflare Pages, el código de por vida firmado sin servidor, Capacitor para Android y nada que siga a nadie.</p>
+<div class="legend">
+  <span><span class="tag ya">ya está</span> PACE ya lo tiene o lo decidiste</span>
+  <span><span class="tag ok">sí</span> recomiendo añadirlo</span>
+  <span><span class="tag tu">tú decides</span> está en las preguntas</span>
+  <span><span class="tag no">no</span> no encaja</span>
+</div>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Para qué</th><th>Lo que usan ellos</th><th>PACE hoy</th><th></th><th>Qué haría y cuánto cuesta</th></tr></thead>
+  <tbody>
+    <tr><td class="idea">Cobrar</td><td>Stripe (Habits Garden, Olvy, Indie Worldwide). Gumroad con una clave de licencia por compra, sin servidor propio (DisplayBuddy). Paddle (Snap Search). En móvil, RevenueCat y Superwall (PuffCount, las apps de Pre).</td><td>Stripe «vende por ti» y un código firmado con k2 en una función de Cloudflare (decidido). Play Billing en Android.</td><td class="fit"><span class="tag ya">ya está</span></td><td>Nada nuevo. DisplayBuddy vive de lo mismo que PACE: una licencia que la app comprueba sin servidor. RevenueCat sobra: pide identificar a cada persona y conectarse.</td></tr>
+    <tr><td class="idea">La web y la landing</td><td>Squarespace (ProgressBar), Webflow exportado a GitHub Pages (DisplayBuddy), Carrd (Indie Worldwide), WordPress (MoveWell, Focusmate).</td><td>Cloudflare Pages, gratis. La landing en <code>/premium</code> (decidido).</td><td class="fit"><span class="tag ya">ya está</span></td><td>Una idea para su maqueta, de Mumu: vídeos cortos de la app en marcha y frases reales de testers. Desde la landing nadie puede probar la app, y los vídeos se la enseñan.</td></tr>
+    <tr><td class="idea">De web a app</td><td>Capacitor (Habits Garden, de Marc Lou, que convierte su web en app de iPhone y Android), Flutter (HabitKit), React Native (Gravl, FocusTask).</td><td>Capacitor 8, Android y iOS preparados.</td><td class="fit"><span class="tag ya">ya está</span></td><td>El mismo camino que Habits Garden.</td></tr>
+    <tr><td class="idea">Correo de soporte</td><td>Gravl atiende con personas, no con bots. Rootd y Lazy Jar contestan cada reseña (una de 1 estrella pasó a 4). Mumu contestó con calma un reembolso y la persona acabó comprando dos licencias.</td><td><code>hola.ezradesign@gmail.com</code> en la privacidad. Contestar reseñas (decidido).</td><td class="fit"><span class="tag ok">sí</span></td><td><strong>hola@pacegrass.app</strong>, que llega a tu Gmail: Cloudflare reenvía el correo de tu dominio gratis. Va en la landing, la ficha de Play, Stripe y la privacidad. Cuesta unos 10 minutos tuyos en Cloudflare.</td></tr>
+    <tr><td class="idea">Lista de espera</td><td>Olvy recogió correos desde agosto de 2020 y le sirvieron mucho el día del lanzamiento. Hallow tenía su lista de reservas antes de salir. FocusTask escribió a 10 personas de su lista y una fue su primer cliente. Floga avisó a la suya y vendió unos 120.000 $ en 24 horas.</td><td>No hay.</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Un campo «Avísame cuando salga» en pacegrass.app, y nada más. Los correos los guarda un servicio europeo de listas con plan gratis (MailerLite o Brevo) o una función de Cloudflare. La privacidad lo cuenta. En Android, el registro previo de Google Play, si Play Console lo ofrece a tu cuenta antes de la producción (hay que mirarlo). Cuesta una sesión de Claude y tu alta en el servicio.</td></tr>
+    <tr><td class="idea">Saber qué funciona</td><td>Plausible (Habits Garden), PostHog (Pre), Amplitude, Mixpanel y Firebase (Hallow, Breathing App). Session sabe que el 2 % de quien instala acaba pagando; Pre, que el 8 %.</td><td>Nada dentro de la app, por promesa. Play Console cuenta instalaciones y Stripe, ventas.</td><td class="fit"><span class="tag tu">tú decides</span></td><td>Contar las visitas solo de <code>/premium</code> y de la landing, sin cookies, con la analítica que trae Cloudflare Pages (gratis). Sirve para saber si la gente llega de Reddit o de Product Hunt. Nunca dentro de la app. Una línea en la página y otra en la privacidad.</td></tr>
+    <tr><td class="idea">Automatizar</td><td>Zapier (Focusmate, al principio), Customer.io (FocusTask).</td><td>La función de Cloudflare que firma el código al pagar (decidida).</td><td class="fit"><span class="tag ya">ya está</span></td><td>Nada más.</td></tr>
+    <tr><td class="idea">Lo que sobra</td><td>RevenueCat, Superwall, los píxeles de Meta y TikTok, Mixpanel.</td><td>Ninguno.</td><td class="fit"><span class="tag no">no</span></td><td>Sirven para medir a cada persona y pagar anuncios con esa medida. PACE promete no hacerlo.</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="small">Lo que gasta Pre en herramientas para sus tres apps de bienestar: unos 300 $ al mes (Figma, Supabase, RevenueCat, Sentry, PostHog). PACE, con lo de arriba: 0 € al mes.</p>
+
+<h2 id="precio">2 · Precio, solo para comparar</h2>
+<p>No reabro nada. Esto es lo que cobran los casos parecidos, para que tengas el dato a mano.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>App</th><th>Qué es</th><th>Al mes</th><th>Al año</th><th>De por vida</th><th>De por vida ÷ mes</th></tr></thead>
+  <tbody>
+    <tr><td><span class="name">PACE</span></td><td>pausas activas y foco</td><td class="n price">2,99 €</td><td class="n">—</td><td class="n price">19,99 €</td><td class="n">6,7</td></tr>
+    <tr><td><span class="name">Cat on Chair</span></td><td>Pomodoro con un gato</td><td class="n">2,99 $</td><td class="n">19,99 $</td><td class="n">29,99 $</td><td class="n">10</td></tr>
+    <tr><td><span class="name">HabitKit</span></td><td>hábitos (2024)</td><td class="n">0,99 $</td><td class="n">6 $</td><td class="n">15 $</td><td class="n">15</td></tr>
+    <tr><td><span class="name">Hevy</span></td><td>registro del gimnasio</td><td class="n">3 $</td><td class="n">24 $</td><td class="n">75 $</td><td class="n">25</td></tr>
+    <tr><td><span class="name">Calm</span></td><td>meditación y sueño</td><td class="n">14,99 $</td><td class="n">69,99 $</td><td class="n">399,99 $</td><td class="n">27</td></tr>
+    <tr><td><span class="name">Session</span></td><td>Pomodoro y bloqueo, Mac</td><td class="n">5 $</td><td class="n">40 $</td><td class="n">—</td><td class="n">—</td></tr>
+    <tr><td><span class="name">Focusmate</span></td><td>coworking por vídeo</td><td class="n">9,99 $</td><td class="n">6,99 $/mes</td><td class="n">—</td><td class="n">—</td></tr>
+    <tr><td><span class="name">Insight Timer</span></td><td>meditación, casi todo gratis</td><td class="n">—</td><td class="n">60 $</td><td class="n">—</td><td class="n">—</td></tr>
+    <tr><td><span class="name">RiseApp</span></td><td>programa de hábitos</td><td class="n">—</td><td class="n">39,99–59,99 $</td><td class="n">—</td><td class="n">—</td></tr>
+    <tr><td><span class="name">DisplayBuddy</span></td><td>utilidad de Mac</td><td class="n">—</td><td class="n">—</td><td class="n">3,99 $</td><td class="n">—</td></tr>
+  </tbody>
+</table>
+</div>
+<ul>
+  <li><strong>Lo de por vida al lado de la suscripción funciona.</strong> Katie (unos 20 plugins pequeños de WordPress, 150.000 $ al mes) saca así un 15 % de lo que gana, sin que se coma la suscripción. A HabitKit le entra la mitad por ahí. Es lo que elegiste.</li>
+  <li><strong>Tu de por vida vale 6,7 meses del mensual.</strong> En los demás va de 10 a 27. Casi todos elegirán pagar una vez, y el mensual quedará como la puerta de la prueba. Como PACE no paga servidores por persona, eso no le cuesta nada. Si un día se revisa el precio, el dato está aquí.</li>
+  <li><strong>Devolver el dinero ayuda a comprar.</strong> ProgressBar añadió «si no te sirve, te devuelvo el dinero» y subió la conversión; casi nadie lo pidió. DisplayBuddy devuelve en 7 días sin preguntas. Link, de Stripe, ya devuelve hasta 60 días: falta decirlo en la landing, por ejemplo «Si no te convence, te devolvemos el dinero en 14 días». Va en la pregunta 4.</li>
+  <li><strong>Subir el precio enfada.</strong> Session intentó pasar de 4 a 9 $ al mes y se quedó en 5 $ por las quejas, sobre todo pensando en los estudiantes. Tu promesa «si sube, el tuyo no» cubre eso.</li>
+  <li><strong>Lo gratis tiene que tener un límite.</strong> El fundador de Indie Worldwide dice que su mayor error fue hacerla gratis. Habits Garden quitó su plan gratis y la gente empezó a valorarlo más. PACE ya tiene su reparto: no lo toco.</li>
+  <li><strong>Lo que no aplica:</strong> lotes de varias apps (Katie y Pre venden varios productos al mismo público; PACE es una sola), la oferta de por vida antes de terminar (Floga; ya descartaste las ofertas únicas) y vender a empresas (Rootd, Calm, Breathing App; fuera de v1).</li>
+</ul>
+
+<h2 id="promocion">3 · Promoción con poco dinero</h2>
+<p>De lo que más se repite en apps de una persona a lo que menos. Todo se publica con la voz de PACE: ninguna de estas ideas pide contar quién eres, porque no quisiste el párrafo de «quién lo hace».</p>
+<div class="legend">
+  <span><span class="tag ok">sí</span> recomendado</span>
+  <span><span class="tag ya">ya está</span> lo tienes o lo decidiste</span>
+  <span><span class="tag tu">tú decides</span> en las preguntas</span>
+  <span><span class="tag luego">después de v1</span> buena idea, más tarde</span>
+  <span><span class="tag no">no</span> no encaja</span>
+</div>
+
+<div class="ideas">
+  <div class="idea-card rec">
+    <div class="idea-head"><h3>La ficha de Google Play, también para Latinoamérica</h3><span class="tag ok">sí</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>Es el canal principal de casi todas las apps de una persona. HabitKit entró en el top 5 de «habit tracker» eligiendo bien sus palabras. Rootd (ataques de pánico, 2 millones de usuarios) eligió las de su nicho y contestó cada reseña. Las tres apps de Pre (una es de postura) viven solo de la búsqueda en la tienda. Journable cuenta que sus anuncios de Google salen de la propia ficha, así que la ficha es su mejor anuncio. Gravl creció traduciendo su app al español para Sudamérica.</dd>
+      <dt>Para PACE</dt><dd>La ficha ya está decidida: «pausas activas» en el nombre, un experimento con las capturas, la valoración una vez y contestar todas las reseñas. Lo nuevo: una ficha en «español de Latinoamérica» además de la de España. Allí «pausas activas» es una expresión de oficina muy usada, y PACE ya habla castellano.</dd>
+      <dt>Cuesta</dt><dd>Unos 30 minutos tuyos en Play Console. El texto lo preparo yo, a partir de <code>ficha.md</code>.</dd>
+      <dt>Ojo</dt><dd>La tienda tarda: HabitKit necesitó 6 meses para entrar en el top 10 de Reino Unido y Alemania.</dd>
+    </dl>
+  </div>
+
+  <div class="idea-card rec">
+    <div class="idea-head"><h3>Un día fuerte para la web, en inglés: Product Hunt y Hacker News</h3><span class="tag ok">sí</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>Product Hunt es una web donde cada día se presentan productos y la gente vota; Hacker News, el foro de noticias de quien programa. Session tuvo su primer suscriptor a los pocos minutos y al día siguiente le invitó Setapp. ProgressBar fue producto del día. Habits Garden recibió 12.000 visitas en unas horas desde Hacker News. Focusmate escribió a cada persona que le votó y sacó 10 ventas más. Lazy Jar pasó de Product Hunt a TechCrunch y Lifehacker. Journable sacó ahí sus dos primeros pagos, y con eso supo que había negocio.</dd>
+      <dt>Para PACE</dt><dd>La web en inglés ya existe. Hacker News aprecia justo lo que PACE es: sin servidor, sin cuentas, con la licencia comprobada sin conexión. Se presenta la web, que es donde se puede comprar.</dd>
+      <dt>Cuesta</dt><dd>Las capturas (ya las hay), un vídeo de 30 a 60 segundos grabando la pantalla y los textos, que preparo yo. Ese día, tú contestando comentarios.</dd>
+      <dt>Ojo</dt><dd>Solo con <code>/premium</code> y Stripe funcionando. Pallyy se presentó en Product Hunt y no pasó nada: su público no estaba ahí. El de PACE en inglés (programadores y gente de productividad) sí está.</dd>
+    </dl>
+  </div>
+
+  <div class="idea-card rec">
+    <div class="idea-head"><h3>Reddit, con algo útil y el enlace a mitad</h3><span class="tag ok">sí</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>App Alchemy llegó a 17.000 $ al mes sin seguidores: un titular claro, algo útil de verdad, el producto a mitad del texto, el mismo post en más de diez foros y dos o tres posts por semana. Gravl contó en un hilo cómo había hecho su app: 300.000 vistas y sus primeros miles de usuarios. Stagetimer buscó un foro pequeño de su nicho y puso un enlace gratis, sin precio, una sola vez. WritePhobia deja el enlace en hilos donde ya se habla del problema.</dd>
+      <dt>Para PACE</dt><dd>En inglés: r/productivity, r/pomodoro, r/WorkFromHome, r/posture. En castellano hay pocos foros y son pequeños (r/spain, r/askspain), y en Latinoamérica, r/argentina, r/mexico o r/colombia. Lo útil puede ser una rutina entera escrita, por ejemplo «seis estiramientos de un minuto para hacer en la mesa», con PACE al final. Los borradores de <code>docs/launch/reddit-drafts.md</code> hablan de la v0.18.0 y de pace.pages.dev: hay que rehacerlos.</dd>
+      <dt>Cuesta</dt><dd>Los textos los escribo yo. Tú publicas y contestas: unos 20 minutos por post.</dd>
+      <dt>Ojo</dt><dd>Cada foro tiene sus normas sobre promocionarse, y se leen antes. Habits Garden avisa de que ahí cuesta vender.</dd>
+    </dl>
+  </div>
+
+  <div class="idea-card rec">
+    <div class="idea-head"><h3>Prensa, blogs y creadores, con un código regalado</h3><span class="tag ok">sí</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>DisplayBuddy tenía entre sus testers a alguien de iMore; su reseña le dio los primeros 50 clientes. Las reseñas en blogs de productividad fueron la mayor fuente de ProgressBar (una de Taiwán le trajo una ola de compras). A Lazy Jar una nota llevó a otra. La app de hipnoparto de Tara Menzies creció cuando una influencer la recomendó sin que nadie se lo pidiera. Cat on Chair salió en listas de apps favoritas en Instagram.</dd>
+      <dt>Para PACE</dt><dd>En castellano: webs de apps y de Android, blogs de productividad y teletrabajo, fisioterapeutas que ya hablan de pausas en Instagram. Un correo corto con un código de por vida firmado con k1, que ya sabes hacer. Sin pagar a nadie y sin medir quién trae qué.</dd>
+      <dt>Cuesta</dt><dd>La lista de unos 20 contactos y el borrador los preparo yo; tú mandas los correos.</dd>
+      <dt>Ojo</dt><dd>DisplayBuddy escribió a mucha prensa y casi nadie contestó. Vale más una persona que ya usa PACE que veinte correos fríos.</dd>
+    </dl>
+  </div>
+
+  <div class="idea-card rec">
+    <div class="idea-head"><h3>Una historia al mes</h3><span class="tag ok">sí</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>Rootd salió el Día Mundial de la Salud Mental, con una nota de prensa, y cada enero planifica qué contará cada mes. Enero es el mejor mes de HabitKit, y Harold y Lazy Jar se lanzaron pensando en los propósitos de año nuevo. WritePhobia se preparó para el mes de escribir una novela.</dd>
+      <dt>Para PACE</dt><dd>Enero (propósitos), septiembre (vuelta a la oficina), el 6 de abril (Día Mundial de la Actividad Física) y el 28 de abril (Día Mundial de la Seguridad y la Salud en el Trabajo). Cada mes, algo nuevo que contar a la lista, en Reddit y a la prensa.</dd>
+      <dt>Cuesta</dt><dd>La lista de fechas y un borrador al mes, míos. Nada de código.</dd>
+    </dl>
+  </div>
+
+  <div class="idea-card">
+    <div class="idea-head"><h3>Vídeos cortos con las rutinas</h3><span class="tag tu">tú decides</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>RiseApp llegó a 20.000 $ al mes en cuatro meses solo con Reels. PuffCount pasó siete días mirando qué funcionaba en su nicho antes de publicar nada, y luego siguió un molde: algo que engancha en los primeros 3 segundos, el problema, la solución y qué hacer. Pre dice que, si nadie hace contenido de tu tema, lo hagas tú.</dd>
+      <dt>Para PACE</dt><dd>El contenido ya existe: cada rutina de Mueve y Estira es un vídeo de un minuto que se puede seguir, grabando la pantalla con la voz y el horizonte.</dd>
+      <dt>Cuesta</dt><dd>Es lo que más tiempo pide: 2 o 3 horas tuyas por semana, durante 6 semanas como mínimo. Los guiones los preparo yo.</dd>
+      <dt>Ojo</dt><dd>Sin constancia no funciona. Para PuffCount, publicar mucho pesa más que la suerte.</dd>
+    </dl>
+  </div>
+
+  <div class="idea-card">
+    <div class="idea-head"><h3>Páginas de rutinas que se encuentren en Google</h3><span class="tag luego">después de v1</span></div>
+    <dl>
+      <dt>De dónde sale</dt><dd>MoveWell, una app de movilidad para deportistas y para quien pasa el día en la mesa, hizo una base de datos de estiramientos para que Google la encontrara. A Spapp le llega la mayoría de clientes por los artículos de su web. Late publicó entre 10 y 15 artículos buenos la primera semana. Hallow empezó por la gente que ya buscaba cómo meditar dentro de su fe: el público más barato.</dd>
+      <dt>Para PACE</dt><dd>Las 51 rutinas, cada una como página: «Pausa activa de cuello en la oficina, 3 minutos», con los pasos y «Hazla ahora en PACE». Quien busca eso ya tiene el problema.</dd>
+      <dt>Cuesta</dt><dd>Una o dos sesiones de Claude para que el build genere las páginas, cada una con su aviso de salud.</dd>
+      <dt>Ojo</dt><dd>Es trabajo nuevo, y la regla del plan dice que nada entra en v1 sin sacar otra cosa. Mejor después de v1.</dd>
+    </dl>
+  </div>
+</div>
+
+<h3>Lo que ya está o no encaja</h3>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Idea</th><th>De dónde sale</th><th></th><th>Por qué</th></tr></thead>
+  <tbody>
+    <tr><td class="idea">Que lo que se comparte lleve el nombre</td><td>Stagetimer: un tercio de sus clientes llega de boca en boca porque su logo, con el dominio escrito, sale en todo lo que se comparte.</td><td class="fit"><span class="tag ya">ya está</span></td><td>Los eventos de «Al calendario» ya llevan la marca y pacegrass.app.</td></tr>
+    <tr><td class="idea">El público que ya tienes</td><td>Pre lanza cada app nueva a quien ya usa las otras, y le cuesta menos cada vez.</td><td class="fit"><span class="tag ya">ya está</span></td><td>Tus testers y, si la eliges, la lista «Avísame».</td></tr>
+    <tr><td class="idea">Contar en público cómo la haces</td><td>HabitKit, Mumu, Olvy, DisplayBuddy y FocusTask enseñan cada avance en X.</td><td class="fit"><span class="tag no">no</span></td><td>Pide tu voz y tu cara, y no quisiste el párrafo de «quién lo hace». Si un día te apetece, se retoma.</td></tr>
+    <tr><td class="idea">Anuncios de pago</td><td>Journable: en Android los anuncios cuestan unas cuatro veces menos que en iPhone, y empezó con 10 a 15 $ al día. Gravl, en Sudamérica por menos de 50 $ al día. PuffCount pagaba solo vídeos que ya habían funcionado gratis.</td><td class="fit"><span class="tag no">no</span></td><td>Lo descartaste: medir qué anuncio trae cada compra choca con «sin rastreo». Si un día se reabre, Android y Latinoamérica son lo barato.</td></tr>
+    <tr><td class="idea">Un muro de pago antes de probar</td><td>Gravl cobra antes de enseñar la app, y dice que pagan muchos.</td><td class="fit"><span class="tag no">no</span></td><td>Es lo que más castigan las reseñas que leímos, y lo gratis de PACE es su promesa.</td></tr>
+    <tr><td class="idea">Vender a empresas</td><td>Rootd, Calm y Breathing App venden a empresas como ayuda para sus equipos; Pause Box empezó así.</td><td class="fit"><span class="tag luego">después de v1</span></td><td>La versión para empresas está fuera de v1.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="cols2">
+  <div class="col">
+    <h3>En castellano</h3>
+    <ul>
+      <li>La ficha de Play de España y la de Latinoamérica.</li>
+      <li>Webs de apps, blogs de productividad y teletrabajo, fisioterapeutas: con un código.</li>
+      <li>Una historia al mes: enero, abril, septiembre.</li>
+      <li>Pocos foros en Reddit; más en Latinoamérica.</li>
+      <li>Después de v1, las páginas de rutinas.</li>
+    </ul>
+  </div>
+  <div class="col">
+    <h3>En inglés</h3>
+    <ul>
+      <li>La ficha de Play en inglés, para todos los países.</li>
+      <li>Product Hunt y Hacker News, una vez, el día de la web.</li>
+      <li>Reddit: r/productivity, r/pomodoro, r/WorkFromHome, r/posture.</li>
+      <li>Blogs de productividad, como los que movieron ProgressBar.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="lanzamiento">4 · El lanzamiento</h2>
+<p>Los casos que salieron bien siguen casi siempre el mismo orden: <strong>una lista antes de salir</strong> (Olvy, Hallow, FocusTask, Floga), <strong>unos pocos probando primero</strong> (Harold dejaba entrar por tandas y cambiaba algo entre una y otra), <strong>un día fuerte donde ya está su público</strong>, y <strong>después, cada novedad como un lanzamiento pequeño</strong> (Really Simple Store; Indie Worldwide recuerda que el mismo producto se puede lanzar muchas veces, a públicos distintos). Y paciencia: Stagetimer tardó 224 días en ganar su primer dólar.</p>
+<p>Aplicado al calendario de PACE, que no tiene fecha:</p>
+<ol class="stages">
+  <li>
+    <h3>Mientras se reúne la prueba cerrada</h3>
+    <div class="when">Ahora · Play pide 12 testers durante 14 días seguidos; tienes 5 o 6</div>
+    <ul>
+      <li>La lista «Avísame» en pacegrass.app, si la eliges.</li>
+      <li>Los testers que faltan: tu entorno, la lista y uno o dos grupos de teletrabajo u oficina, aportando algo antes de pedir (así empezó Focusmate en Facebook). Los mensajes están en <code>testers.md</code>.</li>
+      <li>Al acabar los 14 días, «¿qué echarías de menos?», como ya dice el plan.</li>
+    </ul>
+  </li>
+  <li>
+    <h3>La web abre la venta</h3>
+    <div class="when">En cuanto Stripe y <code>/premium</code> funcionen</div>
+    <ul>
+      <li>Quien ya usaba PACE recibe su semana de prueba y se queda lo ya hecho (decidido).</li>
+      <li>Un correo a la lista: PACE completo ya se puede comprar en la web.</li>
+      <li>Esa semana, Product Hunt y Hacker News en inglés, y un post útil en Reddit cada dos o tres días, en inglés y en castellano.</li>
+      <li>Después del primer día, los correos a prensa, blogs y creadores, con su código.</li>
+    </ul>
+  </li>
+  <li>
+    <h3>Android en Google Play</h3>
+    <div class="when">Al acabar la prueba cerrada y con Play Billing</div>
+    <ul>
+      <li>La ficha en España, en Latinoamérica y en inglés.</li>
+      <li>Otro correo a la lista: ya está en Google Play.</li>
+      <li>La valoración una vez, tras la quinta pausa entera, y todas las reseñas contestadas (decidido).</li>
+    </ul>
+  </li>
+  <li>
+    <h3>Las primeras semanas y meses</h3>
+    <div class="when">Después de los dos lanzamientos</div>
+    <ul>
+      <li>Una historia al mes. Si v1 llega antes de Navidad, enero es el mejor momento (HabitKit).</li>
+      <li>Vídeos cortos, si los eliges. Las páginas de rutinas, después de v1.</li>
+      <li>Tres números, sin seguir a nadie: instalaciones (Play Console), ventas (Stripe) y, si las cuentas, visitas a <code>/premium</code>.</li>
+      <li>Paciencia con la tienda: lo que cambies en la ficha tarda meses en notarse.</li>
+    </ul>
+  </li>
+</ol>
+<p class="small">Por qué la web primero: no depende de Google ni de los 14 días, Floga vendió fuera de las tiendas antes de tener la app terminada, y salen dos momentos para avisar en vez de uno. Lo contrario, las dos el mismo día, junta toda la atención en un día pero espera a Play. Es la pregunta 2.</p>
+
+<h2 id="decidir">Lo que hay que decidir</h2>
+<p>Las mismas cuatro preguntas que te hago en el chat. La recomendada lleva el fondo verde.</p>
+<div class="q">
+  <h3>1 · La lista «Avísame»</h3>
+  <ol>
+    <li class="rec"><b>Sí.</b> Un campo de correo en pacegrass.app para avisar el día de la web y el de Android, y el registro previo de Play si tu cuenta lo permite. La privacidad lo cuenta.</li>
+    <li><b>No.</b> Sin guardar correos: se avisa por Play, por la web y por los testers.</li>
+  </ol>
+</div>
+<div class="q">
+  <h3>2 · Cómo sale v1</h3>
+  <ol>
+    <li class="rec"><b>Primero la web, luego Android.</b> La web vende en cuanto Stripe esté listo; Android sale al acabar la prueba cerrada. Dos lanzamientos.</li>
+    <li><b>Las dos el mismo día.</b> Un solo lanzamiento, más grande, que espera a Play.</li>
+  </ol>
+</div>
+<div class="q">
+  <h3>3 · Por dónde empezar a promocionar (puedes elegir varias)</h3>
+  <ol>
+    <li class="rec"><b>La ficha de Play también para Latinoamérica.</b></li>
+    <li class="rec"><b>Product Hunt, Hacker News y Reddit, en inglés</b>, el día de la web.</li>
+    <li class="rec"><b>Prensa, blogs y creadores en castellano</b>, con un código regalado.</li>
+    <li><b>Vídeos cortos con las rutinas</b>, 2 o 3 horas tuyas por semana.</li>
+  </ol>
+  <p class="small" style="margin-top:10px">Una historia al mes no cuesta nada y va con cualquiera de ellas. Las páginas de rutinas quedan para después de v1.</p>
+</div>
+<div class="q">
+  <h3>4 · Qué añadimos a la web (puedes elegir varias)</h3>
+  <ol>
+    <li class="rec"><b>El correo hola@pacegrass.app</b>, que llega a tu Gmail.</li>
+    <li class="rec"><b>Decir en la landing que devuelves el dinero en 14 días</b>, sin preguntas.</li>
+    <li><b>Contar las visitas de la página de venta</b>, sin cookies y nunca dentro de la app.</li>
+  </ol>
+</div>
+
+<h2 id="casos">Los casos</h2>
+<p>Las cifras las da cada fundador en su entrevista, en la fecha de la entrevista (de 2019 a 2026). No las he comprobado.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Caso</th><th>Qué es</th><th>Cifras</th><th>Cómo creció</th><th>Herramientas</th></tr></thead>
+  <tbody>
+    <tr><td><span class="name">Session</span></td><td>Pomodoro y bloqueo de distracciones, Mac e iPhone</td><td class="n">100.000 $/año</td><td>Product Hunt; Setapp le invitó al día siguiente; Apple la destacó y las ventas se multiplicaron por diez</td><td>DigitalOcean, AWS</td></tr>
+    <tr><td><span class="name">HabitKit</span></td><td>hábitos, iPhone y Android</td><td class="n">15.000 $/mes</td><td>la búsqueda en la tienda; enseñar avances en X; enero</td><td>Flutter</td></tr>
+    <tr><td><span class="name">Habits Garden</span></td><td>hábitos, web y móvil</td><td class="n">600 $/mes</td><td>Hacker News (12.000 visitas), Product Hunt, Reddit; quitó el plan gratis</td><td>Capacitor, Stripe, Plausible, Mailgun</td></tr>
+    <tr><td><span class="name">Rootd</span></td><td>ataques de pánico</td><td class="n">83.000 $/mes</td><td>salió el Día Mundial de la Salud Mental; palabras de su nicho; contesta cada reseña; una historia al mes</td><td>Figma, Mailchimp</td></tr>
+    <tr><td><span class="name">Hevy</span></td><td>registro del gimnasio</td><td class="n">160.000 $/mes</td><td>amigos, la tienda y lo social; sin anuncios</td><td>—</td></tr>
+    <tr><td><span class="name">Insight Timer</span></td><td>meditación</td><td class="n">31 M usuarios</td><td>el primer temporizador de meditación (2009); boca a boca; nada en marketing</td><td>—</td></tr>
+    <tr><td><span class="name">Calm</span></td><td>meditación y sueño</td><td class="n">valorada en 2.000 M $</td><td>la web Do Nothing for 2 Minutes; alianzas con empresas</td><td>propias</td></tr>
+    <tr><td><span class="name">MoveWell</span></td><td>movilidad para deportistas y gente de oficina</td><td class="n">1.200–1.800 $/mes</td><td>su lista de correo y amigos con público; 84 % sigue al mes; estiramientos para Google</td><td>WordPress</td></tr>
+    <tr><td><span class="name">Stagetimer</span></td><td>temporizador para escenarios</td><td class="n">25.000 $/mes</td><td>un foro pequeño de su nicho; el dominio en el logo; 224 días hasta el primer dólar</td><td>Vue, Node</td></tr>
+    <tr><td><span class="name">Las apps de Pre</span></td><td>tres apps de bienestar, una de postura</td><td class="n">120.000 $/año</td><td>todo por la tienda; el 8 % paga; mismo público para las tres</td><td>Supabase, RevenueCat, PostHog</td></tr>
+    <tr><td><span class="name">Journable</span></td><td>contar calorías, sobre todo Android</td><td class="n">100.000 $/mes</td><td>Android primero; Product Hunt para comprobar que pagaban; anuncios de Google</td><td>—</td></tr>
+    <tr><td><span class="name">Gravl</span></td><td>entrenamiento de gimnasio</td><td class="n">400.000 $/mes</td><td>un hilo en Reddit (300.000 vistas); la app en español y anuncios en Sudamérica</td><td>React Native, Cursor</td></tr>
+    <tr><td><span class="name">App Alchemy</span></td><td>diseños de apps con IA</td><td class="n">17.000 $/mes</td><td>solo Reddit, sin seguidores: algo útil y el producto a mitad</td><td>Chakra UI, Ant Design</td></tr>
+    <tr><td><span class="name">PuffCount</span></td><td>dejar de vapear</td><td class="n">44.000 $/mes</td><td>TikTok con un molde fijo y mucho volumen; anuncios solo con lo ya probado</td><td>Superwall, RevenueCat</td></tr>
+    <tr><td><span class="name">RiseApp</span></td><td>programa de hábitos</td><td class="n">20.000 $/mes</td><td>solo Reels, en cuatro meses</td><td>Swift, Figma</td></tr>
+    <tr><td><span class="name">Floga</span></td><td>yoga</td><td class="n">≈120.000 $ en 24 h</td><td>lista de correo y venta de por vida fuera de las tiendas, antes de terminar la app; luego suscripción</td><td>—</td></tr>
+    <tr><td><span class="name">Los plugins de Katie</span></td><td>unos 20 plugins de WordPress</td><td class="n">150.000 $/mes</td><td>contenido para cada uso; lo de por vida es un 15 %</td><td>—</td></tr>
+    <tr><td><span class="name">Late</span></td><td>herramienta para programadores</td><td class="n">40.000 $/mes</td><td>un solo canal, Google; 10–15 artículos la primera semana</td><td>—</td></tr>
+    <tr><td><span class="name">ProgressBar</span></td><td>el progreso del día, en Windows</td><td class="n">—</td><td>producto del día en Product Hunt; blogs de productividad; devolución si no sirve</td><td>Squarespace, Stripe, PayPal</td></tr>
+    <tr><td><span class="name">DisplayBuddy</span></td><td>utilidad de Mac</td><td class="n">600 $/mes</td><td>la reseña de un tester de iMore; búsquedas en Google; sin anuncios</td><td>Webflow, GitHub Pages, Gumroad</td></tr>
+    <tr><td><span class="name">Focusmate</span></td><td>coworking por vídeo</td><td class="n">22.000 usuarios</td><td>grupos de Facebook aportando primero; Product Hunt y un correo a quien votó</td><td>Google Sheets, Zapier</td></tr>
+    <tr><td><span class="name">FocusTask</span></td><td>tareas</td><td class="n">10 clientes</td><td>un aviso pequeño dentro de su app de Pomodoro; 10 llamadas a su lista</td><td>React, Firebase, Vercel, Postmark</td></tr>
+    <tr><td><span class="name">Hallow</span></td><td>meditación y oración</td><td class="n">6.500 $/mes</td><td>landing y lista de reservas antes de salir; quien ya buscaba; sin anuncios</td><td>HubSpot, Mixpanel, Firebase</td></tr>
+    <tr><td><span class="name">Breathing App</span></td><td>respiración</td><td class="n">1 M descargas</td><td>un vídeo de lanzamiento, la comunidad del yoga y pódcasts</td><td>Amplitude, Figma</td></tr>
+    <tr><td><span class="name">Lazy Jar</span></td><td>te cobra si no haces ejercicio</td><td class="n">250 $/mes</td><td>de Product Hunt a TechCrunch y Lifehacker; año nuevo</td><td>—</td></tr>
+    <tr><td><span class="name">Olvy</span></td><td>notas de versión</td><td class="n">n.º 1 en Product Hunt</td><td>lista de espera desde meses antes; un grupo de primeros usuarios</td><td>Stripe, Netlify, Mailchimp</td></tr>
+    <tr><td><span class="name">Indie Worldwide</span></td><td>comunidad de fundadores</td><td class="n">n.º 1 en Product Hunt</td><td>varios lanzamientos a públicos distintos; su mayor error, hacerla gratis</td><td>Carrd, Stripe, Postmark</td></tr>
+    <tr><td><span class="name">Mumu</span></td><td>utilidad de Mac</td><td class="n">1.600 $ en total</td><td>landing con vídeos y frases de testers; contestar rápido</td><td>Vue, Swift</td></tr>
+    <tr><td><span class="name">Harold</span></td><td>hábitos por SMS</td><td class="n">58 $/mes</td><td>Product Hunt en enero; 300 en la lista; entrar por tandas</td><td>—</td></tr>
+    <tr><td><span class="name">Christian Hypnobirthing</span></td><td>relajación en el embarazo</td><td class="n">10.000 $/mes</td><td>boca a boca, Instagram y una influencer que llegó sola</td><td>Siberian CMS</td></tr>
+    <tr><td><span class="name">WritePhobia</span></td><td>te cobra si no escribes</td><td class="n">30 $/mes</td><td>los anuncios no funcionaron; enlaces en hilos de Reddit</td><td>Stripe</td></tr>
+    <tr><td><span class="name">Snap Search</span></td><td>buscador privado, Android</td><td class="n">100 $/mes</td><td>200 $ en anuncios de AppBrain y Google</td><td>Paddle, Firebase</td></tr>
+    <tr><td><span class="name">Spapp</span></td><td>app de Android</td><td class="n">25.000 $/mes</td><td>Google Play y artículos en su web (empezó en 2013)</td><td>Android Studio</td></tr>
+    <tr><td><span class="name">Pause Box</span></td><td>pausas, retiros y cajas</td><td class="n">1.000 $/mes</td><td>entrevistas en pódcasts; un boletín que no vende</td><td>WordPress, Mailchimp</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="como">Cómo se hizo</h2>
+<ul>
+  <li><strong>starterstory.com:</strong> su mapa del sitio tiene 19.887 direcciones, 3.303 de ellas entrevistas. Elegí por tema (temporizadores, Pomodoro, hábitos, meditación, respiración, estiramientos, Android, apps de Mac, pago de por vida, Product Hunt, Reddit) y las leí enteras, descargándolas sin navegador. De 41 descargadas, 29 sirven y salen arriba.</li>
+  <li><strong>YouTube, canal principal:</strong> las listas de los 120 vídeos más vistos y de los 90 más antiguos. Los más vistos casi nunca hablan de apps parecidas a PACE (Roblox, canales de YouTube, webs). Elegí 14 que tratan de apps, lanzamiento o promoción con poco dinero y no estaban entre los 30 ya revisados, y leí sus descripciones y capítulos. Las transcripciones no salen desde aquí; para ocho de ellos usé las fichas de betterlaunch.co, que resumen cada episodio con citas del fundador.</li>
+  <li><strong>No repetido:</strong> los 30 vídeos de los últimos tres meses, los 65 del canal hermano y las 17.532 reseñas de la competencia, que ya están en <code>cobrar-pace-completo.html</code> y <code>vender-pace-ideas.html</code>.</li>
+  <li><strong>Del repo:</strong> la prueba cerrada (12 testers, 14 días seguidos) sale de <code>docs/launch/google-play/testers.md</code>; el correo de contacto, de <code>privacy.html</code>; las 51 rutinas, del reparto de <code>ROADMAP.md</code>.</li>
+</ul>
+
+<h2 id="fuentes">Fuentes</h2>
+<ul class="src">
+  <li>Starter Story, entrevistas: <a href="https://www.starterstory.com/stories/i-built-a-timer-app-that-generates-66k-year-in-profit">Session</a> · <a href="https://www.starterstory.com/habit-kit-breakdown">HabitKit</a> · <a href="https://www.starterstory.com/stories/habits-garden">Habits Garden</a> · <a href="https://www.starterstory.com/stories/rootd">Rootd</a> · <a href="https://www.starterstory.com/hevy-breakdown">Hevy</a> · <a href="https://www.starterstory.com/insight-timer-breakdown">Insight Timer</a> · <a href="https://www.starterstory.com/calm-breakdown">Calm</a> · <a href="https://www.starterstory.com/stories/how-i-built-an-iphone-fitness-app-to-1-000-mrr">MoveWell</a> · <a href="https://www.starterstory.com/riseapp-breakdown">RiseApp</a></li>
+  <li><a href="https://www.starterstory.com/stories/i-built-a-productivity-taskbar-app-that-shows-your-day-and-year-progress">ProgressBar</a> · <a href="https://www.starterstory.com/stories/i-launched-a-mac-app-with-zero-advertising-800-customers-in-first-8-months">DisplayBuddy</a> · <a href="https://www.starterstory.com/focusmate-breakdown">Focusmate</a> · <a href="https://www.starterstory.com/stories/focustask">FocusTask</a> · <a href="https://www.starterstory.com/stories/how-we-started-the-first-ever-catholic-meditation-app">Hallow</a> · <a href="https://www.starterstory.com/stories/the-breathing-app-for-diabetes">Breathing App</a> · <a href="https://www.starterstory.com/stories/how-i-launched-an-app-that-charges-people-if-they-don-t-exercise">Lazy Jar</a> · <a href="https://www.starterstory.com/release-notes-tool-number-one-product-hunt">Olvy</a> · <a href="https://www.starterstory.com/stories/we-built-a-virtual-community-to-2k-members-1-on-product-hunt">Indie Worldwide</a></li>
+  <li><a href="https://www.starterstory.com/mac-emoji-picker">Mumu</a> · <a href="https://www.starterstory.com/stories/i-built-a-tool-that-helps-you-track-your-habits-long-term-with-100">Harold</a> · <a href="https://www.starterstory.com/stories/i-built-an-84k-year-app-that-helps-pregnant-moms-hypnobirth">Christian Hypnobirthing</a> · <a href="https://www.starterstory.com/stories/i-built-an-app-that-punishes-writers-if-they-don-t-write">WritePhobia</a> · <a href="https://www.starterstory.com/privacy-focused-app">Snap Search</a> · <a href="https://www.starterstory.com/stories/i-built-an-android-tracking-app-that-makes-300k-year-from-cyprus">Spapp</a> · <a href="https://www.starterstory.com/helping-people-to-take-a-break">Pause Box</a> · <a href="https://www.starterstory.com/stories/how-i-launched-and-monetized-a-really-simple-app">Really Simple Store</a> · <a href="https://www.starterstory.com/stories/i-learned-to-code-and-my-first-app-makes-2k-month">Pallyy</a></li>
+  <li>Vídeos del canal principal: <a href="https://www.youtube.com/watch?v=0pp4X58q_0s">Journable, Android</a> (<a href="https://www.betterlaunch.co/playbooks/episodes/steve-journalable">ficha</a>) · <a href="https://www.youtube.com/watch?v=2dfMUtHlQik">Gravl</a> (<a href="https://www.betterlaunch.co/playbooks/episodes/julian-gravl">ficha</a>) · <a href="https://www.youtube.com/watch?v=hKqLceTPLWM">PuffCount, el método</a> (<a href="https://www.betterlaunch.co/playbooks/episodes/steven-1m-mobile-playbook">ficha</a>) · <a href="https://www.youtube.com/watch?v=BaWUPamqWlA">App Alchemy, Reddit</a> (<a href="https://www.betterlaunch.co/playbooks/episodes/diego-appalchemy">ficha</a>) · <a href="https://www.youtube.com/watch?v=HBCwzfFbopE">Stagetimer</a> (<a href="https://www.betterlaunch.co/playbooks/episodes/lucas-countdown-25k">ficha</a>)</li>
+  <li><a href="https://www.youtube.com/watch?v=9sJ2R0rM3CA">Los plugins de Katie</a> (<a href="https://www.betterlaunch.co/playbooks/episodes/katie-tiny-apps">ficha</a>) · las apps de Pre (<a href="https://www.betterlaunch.co/playbooks/episodes/pre-wellness-apps">ficha</a>) · Late (<a href="https://www.betterlaunch.co/playbooks/episodes/mickey-40k-google">ficha</a>) · <a href="https://www.youtube.com/watch?v=DkmStHS8NP0">Floga, 120.000 $ en 24 horas</a> (<a href="https://www.indiehackers.com/post/from-physical-product-to-10k-mo-app-JLVZDxJ9RfjdYdvINqgp">su relato en Indie Hackers</a>)</li>
+  <li>Revisados por título y descripción, sin sacar ideas nuevas: <a href="https://www.youtube.com/watch?v=loXc0Tyi4R4">40.000 $/mes con una app de iPhone</a> · <a href="https://www.youtube.com/watch?v=5u9u8yzPEpA">10 M $ con tres apps</a> · <a href="https://www.youtube.com/watch?v=vLLBzUZr6-s">4,5 M $ sin marketing</a> · <a href="https://www.youtube.com/watch?v=ptT0tfzeu8I">Reddit, 1 M $</a> · <a href="https://www.youtube.com/watch?v=Adl5_lJfkEE">una app sin saber de marketing</a> · <a href="https://www.youtube.com/watch?v=4hMg_CZauJs">100.000 $ el día del lanzamiento</a> · <a href="https://www.youtube.com/watch?v=l4WEqPX52Cg">los primeros 100 usuarios</a> · <a href="https://www.youtube.com/watch?v=hYF4fQYlrso">un nicho pequeño</a> · <a href="https://www.youtube.com/@starterstory/videos">el canal</a></li>
+  <li>En el repo: <code>docs/proposals/cobrar-pace-completo.html</code>, <code>docs/proposals/vender-pace-ideas.html</code>, <code>MONETIZATION.md</code>, <code>ROADMAP.md</code> (Fase 6), <code>docs/launch/google-play/</code>, <code>docs/launch/reddit-drafts.md</code>, <code>privacy.html</code>.</li>
+</ul>
+</main>
