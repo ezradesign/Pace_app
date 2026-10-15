@@ -156,6 +156,9 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   el 9 oct., con los 15 enlaces del 12 oct. en `codigos-tester.csv`) de su PC en su disco duro, con la contraseña de Play aparte.
 - Mandar a cada tester su enlace de `codigos-tester.csv` y apuntar a quién da cuál: funcionan desde
   v0.157.0, en la web (en Android no hay códigos propios).
+- Para cobrar en la web (lo decidió el 15 oct., `DECISIONES_PRODUCTO.md`): preguntar a un gestor cómo
+  darse de alta, crear la cuenta de Stripe con verificación en dos pasos y pedir Managed Payments,
+  poner los dos pasos en Cloudflare y decidir el nombre, el NIF y el contacto del aviso legal.
 - Apagar las propuestas automáticas de Dependabot (GitHub › Settings › Code security), dejando las alertas: sus actualizaciones las aplica una sesión con su nombre.
 - Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
 - Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
