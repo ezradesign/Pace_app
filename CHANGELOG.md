@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.170.1 | 2026-10-15 | «Barbilla atrás» estrena el dibujo de Ez: la flecha empuja la barbilla hacia atrás, como pide el ejercicio (el anterior la llevaba al revés) |
 | v0.170.0 | 2026-10-15 | Estadísticas abre en «Hoy»: los totales de hoy y el menú del día parada a parada (hecha, saltada, ahora y lo que viene) o, por libre, tus pausas de hoy con su hora. Mes y Año llevan candado sin PACE completo (abiertos para todos hasta v1) |
 | v0.169.0 | 2026-10-15 | El calendario se mantiene solo: con «Mantenerlo al día solo» en «Al calendario», el día de «A tu ritmo» se corrige solo en el calendario mientras PACE está abierto y cada pausa avisa (Android ya; Google y Outlook en cuanto estén los ids). En «A tu ritmo», «Una hora» y «Dos horas» acaban a su hora con cualquier aro, también al recolocar (las reuniones cuentan dentro); la pausa larga pide 75 min de foco desde la anterior; el miércoles tiene una sola larga, adelantada; y el «AHORA» de una pausa se lee en oscuro. Arreglado: el service worker guardaba las respuestas de Google y Microsoft y las reuniones nuevas no llegaban |
 | v0.168.0 | 2026-10-15 | La home ya no se puede quedar corrida de lado al cerrar una pausa: el resplandor del sol le dejaba ancho de sobra que cualquier «llevar a la vista» desplazaba. En la app no cambia nada más; entra la página con la que Ez eligió las series de pausas con lógica |

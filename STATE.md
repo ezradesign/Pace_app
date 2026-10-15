@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.170.0 · 15 de octubre de 2026.
+**Versión:** v0.170.1 · 15 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -186,7 +186,7 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
     dibujo equivocado, «Rana» y «Pica en escritorio», 7 logros con el dibujo equivocado o repetido
     y 18 sin dibujo propio;
   - entraron en v0.165.0 las voces en inglés y cinco dibujos: «Primer día», «Cuarto creciente»,
-    «Solsticio invierno», «Hueco abdominal» y «Elevación de puntas».
+    «Solsticio invierno», «Hueco abdominal» y «Elevación de puntas»; en v0.170.1, «Barbilla atrás».
 - Oír la voz grave de Respira en pacegrass.app, en el PC y en el móvil, con música y sin ella: desde
   v0.167.0 entra y sale con un fundido (sesiones-10).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.

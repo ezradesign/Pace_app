@@ -34,7 +34,8 @@ cómo queda en la app antes de publicar nada.
 
 ## Por dónde empezar
 
-1. Barbilla atrás y Elevación de puntas: enseñan el movimiento contrario al que piden.
+1. ~~Barbilla atrás y Elevación de puntas: enseñan el movimiento contrario al que piden.~~ Hechos:
+   Elevación de puntas en v0.165.0 y Barbilla atrás en v0.170.1.
 2. Rana: la única tarjeta de la biblioteca sin dibujo.
 3. Hueco en silla, Hueco abdominal y 90/90.
 4. Los logros Primer día y Cuarto creciente, de los primeros que gana todo el mundo.
@@ -45,7 +46,7 @@ cómo queda en la app antes de publicar nada.
 
 ## 1. Ejercicios con el dibujo equivocado (8)
 
-### 1. Barbilla atrás · Alta
+### 1. Barbilla atrás · Alta · HECHO en v0.170.1 (15 oct.)
 
 La flecha está delante de la barbilla y apunta hacia delante, lejos del cuello: enseña el movimiento contrario al que pide.
 

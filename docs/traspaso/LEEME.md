@@ -135,8 +135,8 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   dibujo de la rutina sale muy pequeño: unos 90 px de alto en 1920×1080 con la escala de Windows al
   125 % (Brave, zoom 100 %), con mucho aire alrededor. Cambia lo que se ve: opciones pintadas sobre la
   app real y Ez elige.
-- **Los 8 dibujos de ejercicio que faltan** (Ez los hace en Genspark con referencias de
-  `archivos/glifos/referencias/`): barbilla-atras, hueco-en-silla, 90-90, palmas-al-suelo,
+- **Los 7 dibujos de ejercicio que faltan** (Ez los hace en Genspark con referencias de
+  `archivos/glifos/referencias/`; barbilla-atras entró en v0.170.1): hueco-en-silla, 90-90, palmas-al-suelo,
   apretar-gluteos, sentadilla-de-cuadriceps, rana y pica-en-escritorio. Al ingestarlos, si traen más
   rayado que el resto, `ACLARADO` en `scripts/ingest-glifos-ejercicio.js` (Ez quiere la intensidad de
   los demás).
