@@ -172,10 +172,16 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
   if (pasado && pasado.length) p.ultimoVaso = pasado[0].desde;
   /* «Dos horas» se cuenta desde aquí, no desde la recomposición (ritmo.regla.js) */
   p.inicio = pasado && pasado.length ? pasado[0].desde : null;
+  /* la cuenta de la larga (ritmo.regla.js, `pausaDe`): pausas y foco desde la última */
+  p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; p.largasManana = 0;
   (pasado || []).forEach(function (it) {
-    if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; }
-    if (it.tipo === 'pausa') { p.pausas++; p.claves++; }
-    if (it.tipo === 'comida') { p.comidaHecha = true; p.pausas = 0; }
+    if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; p.focoLarga += it.dur; }
+    if (it.tipo === 'pausa') { p.pausas++; p.claves++; p.pausasLarga++; }
+    if (it.tipo === 'pausa' && it.larga) {
+      p.largaEn = p.pausasLarga; p.pausasLarga = 0; p.focoLarga = 0;
+      if (!p.comidaHecha) p.largasManana++;
+    }
+    if (it.tipo === 'comida') { p.comidaHecha = true; p.pausas = 0; p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; }
     /* s195: el agua va por tiempo, y la cuenta sigue desde el último vaso hecho */
     if (it.agua) { p.vasos++; p.ultimoVaso = it.tipo === 'comida' ? it.desde + it.dur : it.desde; }
     (it.platos || []).forEach(function (pl) { p.usados.push(pl.id); });

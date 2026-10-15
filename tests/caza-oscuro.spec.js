@@ -109,3 +109,23 @@ test('oscuro · el «AHORA» de la línea del día se lee en oscuro', async ({ p
   await expect(ahora).toBeVisible();
   expect(await ahora.evaluate(contrasteDe), 'el «AHORA» por debajo de 4,5:1').toBeGreaterThanOrEqual(4.5);
 });
+
+/* Y el de una PAUSA (15 oct. 2026): va del color de su módulo y en oscuro se leía a 3,4 (Estira)
+   y 3,7 (Mueve). Ez eligió aclararlo como el del bloque. Con la pausa de Mueve abierta
+   (bloque 2 hecho) y la de Estira (bloque 1). Contra v0.167.0 cae. */
+test('oscuro · el «AHORA» de una pausa se lee en oscuro', async ({ page, context }) => {
+  const JORNADA = { fecha: '2026-10-13', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
+  for (const [hechos, hora] of [[1, '09:46'], [2, '10:36']]) {
+    const ctx = await context.browser().newContext({ locale: 'es-ES', timezoneId: 'Europe/Madrid', viewport: { width: 1280, height: 720 } });
+    await sembrar(ctx, Object.assign({ cycle: hechos, lastActiveDay: 'Tue Oct 13 2026', _historyMigrated: true,
+      ritmo: { horario: { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 }, dia: Object.assign({ pausa: hechos }, JORNADA) } }, OSCURO));
+    const p = await ctx.newPage();
+    await p.clock.install({ time: new Date('2026-10-13T' + hora + ':00+02:00') });
+    await irAlArtefacto(p);
+    if (await p.locator('[data-pace-modal-backdrop]').count()) await p.keyboard.press('Escape');
+    const ahora = p.locator('.pace-rt-nodo .pace-rt-ahora-tag').filter({ visible: true }).first();
+    await expect(ahora, 'GUARD: el «AHORA» va encima de la pausa ' + hechos).toBeVisible();
+    expect(await ahora.evaluate(contrasteDe), 'el «AHORA» de la pausa ' + hechos + ' por debajo de 4,5:1').toBeGreaterThanOrEqual(4.5);
+    await ctx.close();
+  }
+});
