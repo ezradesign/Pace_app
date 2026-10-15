@@ -196,6 +196,11 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
   pagarlo, escríbeme»; la valoración de Play pedida una sola vez, tras la quinta pausa entera; la
   bienvenida con los dos precios. La ficha (`docs/launch/google-play/ficha.md`) ya cuenta los dos
   planes.
+- **Cómo se lanza y se da a conocer** (Ez, 15 oct. 2026, `DECISIONES_PRODUCTO.md`): primero la web y
+  luego Android; una lista «Avísame» en pacegrass.app; la ficha de Play también en español de
+  Latinoamérica; Product Hunt, Hacker News y Reddit en inglés el día de la web; prensa y blogs en
+  castellano con un código; la devolución en 14 días dicha en la landing y las visitas de `/premium`
+  contadas sin cookies, nunca dentro de la app.
 
 ### Reglas del plan
 

@@ -21,6 +21,45 @@
 
 ---
 
+## Cómo se lanza y se da a conocer PACE (Ez, 15 oct. 2026)
+
+Elegido sobre `docs/proposals/lanzar-pace-ideas.html`
+(https://claude.ai/artifact/29sEts3yfHnJsKEYyfeN5M): unos cuarenta casos de Starter Story, 29
+entrevistas escritas de starterstory.com y 14 vídeos del canal principal (de los más vistos y los más
+antiguos, los que tratan de apps). Completa «Cómo se vende» y «Cómo se cobra» (abajo) sin cambiar nada
+de lo decidido allí: el precio se queda.
+
+1. **Primero la web, luego Android.** La web abre la venta de PACE completo en cuanto Stripe y
+   `/premium` funcionen; Android sale cuando acabe la prueba cerrada de Play (12 testers durante 14
+   días seguidos) y haya Play Billing. Son dos lanzamientos, cada uno con su aviso.
+2. **Una lista «Avísame» en pacegrass.app:** un campo de correo y nada más, para avisar el día de la
+   web y el de Android. Los correos los guarda un servicio europeo de listas con plan gratis o una
+   función de Cloudflare (lo propone la sesión que lo monte), y `privacy.html` lo cuenta. En Android,
+   además, el registro previo de Google Play, si Play Console lo ofrece a la cuenta antes de la
+   producción.
+3. **Promoción, en este orden:**
+   - la ficha de Google Play también en español de Latinoamérica, además de la de España y la inglesa;
+   - el día de la web, en inglés: Product Hunt, Hacker News y Reddit, con algo útil (por ejemplo una
+     rutina entera escrita) y PACE dentro, leyendo antes las normas de cada foro.
+     `docs/launch/reddit-drafts.md` está caducado (v0.18.0, pace.pages.dev) y se rehace;
+   - después del primer día, prensa, blogs de productividad y teletrabajo y creadores en castellano,
+     con un código de por vida firmado con k1, sin pagar a nadie ni medir quién trae qué.
+
+   Todo con la voz de PACE, sin contar quién lo hace. Una historia al mes (enero, el 6 y el 28 de
+   abril, septiembre) acompaña a todo y no pide código.
+4. **No se hacen ahora:** los vídeos cortos (Ez no los eligió), contar en público cómo se hace, los
+   anuncios de pago, el muro de pago antes de probar y la venta a empresas. Las páginas de rutinas para
+   Google, después de v1.
+5. **En la web:**
+   - el correo de contacto sigue siendo `hola.ezradesign@gmail.com` por el momento: no se crea
+     `hola@pacegrass.app`;
+   - la landing dice que, si PACE completo no convence, se devuelve el dinero en 14 días sin preguntas
+     (Link, de Stripe, lo permite; en Android la devolución se hace desde Play Console, a comprobar en
+     la Fase 6);
+   - se cuentan las visitas de `/premium` y de la landing con la analítica sin cookies de Cloudflare
+     Pages, para saber de dónde llega la gente. **Nunca dentro de la app:** la promesa «sin rastreo»
+     sigue entera, y `privacy.html` lo cuenta.
+
 ## Cómo se vende PACE completo: lo que sale de las reseñas (Ez, 15 oct. 2026)
 
 Elegido sobre `docs/proposals/vender-pace-ideas.html`

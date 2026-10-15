@@ -83,6 +83,19 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
     bienvenida con los dos precios. No quiso el párrafo de «quién lo hace».
   - `docs/launch/google-play/ficha.md` ya cuenta los dos planes y no dice «dibujados a mano» (los
     dibujos salen de GPT Image). Detalle en `DECISIONES_PRODUCTO.md`; lo construye la Fase 6.
+- **Cómo se lanza y se da a conocer PACE, decidido por Ez (15 oct., noche; sesión
+  `stack-promo-lanzamiento`, solo documentos, rama `claude/stack-promo-lanzamiento`).** Página:
+  `docs/proposals/lanzar-pace-ideas.html` (https://claude.ai/artifact/29sEts3yfHnJsKEYyfeN5M): 29
+  entrevistas escritas de starterstory.com y 14 vídeos del canal principal sobre herramientas, precio,
+  promoción y lanzamiento. El precio no se toca.
+  - Ez eligió: **primero la web y luego Android**; una **lista «Avísame»** en pacegrass.app (y el
+    registro previo de Play si la cuenta lo permite); la **ficha de Play también en español de
+    Latinoamérica**; **Product Hunt, Hacker News y Reddit en inglés** el día de la web; **prensa, blogs y
+    creadores en castellano con un código** de k1; en la landing, **la devolución en 14 días** y **las
+    visitas contadas sin cookies** (solo `/premium` y la landing, nunca la app). Sin vídeos cortos.
+  - El correo sigue siendo `hola.ezradesign@gmail.com` «por el momento»: no se crea `hola@pacegrass.app`.
+  - Lo construye la Fase 6, con `privacy.html` al día (la lista y las visitas). `reddit-drafts.md` está
+    caducado y se rehace. Detalle en `DECISIONES_PRODUCTO.md`.
 - **Regla de Ez (14 oct., noche): desde el 85 % de uso se guardan todos los hilos** (commit «wip», push
   y este relevo) y nada pasa del 95 %. Con cuatro sesiones a la vez, la cuenta pasó del 15 al 87 % en una
   hora y las cuatro se cortaron por el límite (se repuso a las 23:40). Para retomar una sesión cortada:
