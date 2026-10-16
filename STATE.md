@@ -156,9 +156,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    15 oct. (`docs/traspaso/archivos/series-15oct/`) y se pueden montar desde v0.169.0, que trae la
    regla nueva de «A tu ritmo». Los números de la página se vuelven a medir sobre esa regla. La
    misma sesión, la pausa corta como mucho cada 30 min de foco con el aro corto (Ez, 15 oct.).
+   La pausa corta está montada en `claude/series-montaje-7bf9e0`; la sesión sigue desde el 16 oct.
 7. **Lo demás que vio Ez el 15 oct.** (relevo de LEEME): el «Ahora no» tapado en el cierre del
-   escritorio, la 2.ª ronda de «Gemelos subrepticios», que no va más lenta, y la voz del suspiro
-   fisiológico. La Fase 4 (Estadísticas «Hoy») está hecha en v0.170.0.
+   escritorio tiene sesión desde el 16 oct. (`ahora-no-tapado`); la 2.ª ronda de «Gemelos
+   subrepticios», que no va más lenta, va después de las series, en una sesión que mire todas las
+   rutinas (Ez, 16 oct.); la voz del suspiro fisiológico espera las grabaciones de Ez. La Fase 4
+   (Estadísticas «Hoy») está hecha en v0.170.0.
 
 ## Espera a Ez
 
@@ -171,6 +174,8 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   poner los dos pasos en Cloudflare y decidir el nombre, el NIF y el contacto del aviso legal.
 - Apagar las propuestas automáticas de Dependabot (GitHub › Settings › Code security), dejando las alertas: sus actualizaciones las aplica una sesión con su nombre.
 - Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
+- Grabar la voz del segundo tramo del suspiro fisiológico: «Más» y «More» con las dos voces
+  (`docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`; «un poco más» no cabe en 1 s).
 - Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.
 - Crear la cuenta de Apple Developer a su nombre y la llave de la API de App Store Connect, con
   acceso Administrador, en `PACE-llave-apple` (`docs/launch/app-store/guia.html`, puntos 3 y 4).

@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 15 de octubre de 2026, v0.168.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.170.1.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,20 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **16 oct., mañana: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama;
+  `main` en v0.170.1 con la CI en verde. Esta cuenta empezó con el 5 h al 1 % y la semana al 40 %.
+  Dos sesiones abiertas (el máximo):
+  - `series-montaje` (`local_77ee5150-…`), retomada en su misma carpeta `series-montaje-7bf9e0`,
+    rama `claude/series-montaje-7bf9e0`, puerto 8795: primero las fotos de la pausa corta para Ez,
+    luego las series.
+  - `ahora-no-tapado` (`local_e9dddf4a-…`), carpeta nueva desde `main`, puerto 8797 (o 8793): el
+    «Ahora no» tapado en el cierre del escritorio (hallazgo 1). Fotos y opciones antes de montar.
+  - Ez eligió (16 oct.): **Gemelos** (hallazgo 2) después de las series, en una sesión que revise
+    todas las rutinas, porque toca sus mismos archivos. **El suspiro** (hallazgo 4): el encargo de
+    audio está en `archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`; «un poco más» no cabe en la
+    fase de 1 s, así que la voz dice «Más» / «More». Se monta cuando Ez traiga las grabaciones.
+  - Sin sesión: «Dos horas» con el aro a 25 acaba en un bloque de 55 min (ya pasaba en `main`; lo
+    encontró `series-montaje`).
 - **15 oct., tarde: v0.169.0 cerrada, con la CI en verde** tras arreglar `ritmo-pausa.spec.js:161` (la
   prueba veía la pausa un minuto tarde en una máquina lenta; 21bb146). **El cobro de PACE completo está en
   `main`** (rama `claude/practical-antonelli-3f03e9`, solo documentos, con el sí de Ez; detalle abajo).
