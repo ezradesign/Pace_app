@@ -8943,6 +8943,10 @@ Object.assign(window, {
 
 
 
+
+
+
+
 var RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
 
 
@@ -9035,6 +9039,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
 
     var corto = bloque * 2 <= JUNTOS;
+
+
+
+
+
+    function largaSinSitio(r, b) {return r <= 60 && r - b - LARGA < cola && r - b - PAUSA >= cola;}
     function pausaDe(extra) {
       var faltan = adelanta && manana && !largasManana ? 2 : 3 + Math.max(0, 3 - largaEn);
       return cuentaL + 1 >= faltan && focoL + extra >= FOCO_LARGA ? LARGA : PAUSA;
@@ -9081,6 +9091,8 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       var p0 = pausaDe(0);
       var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
       if (queda0 < minimo && p0 === LARGA && (forma.reloj || corto) && queda0 + LARGA - PAUSA >= minimo) {p0 = PAUSA;queda0 += LARGA - PAUSA;}
+
+      if (p0 === LARGA && largaSinSitio(queda0 + LARGA + seguidos, seguidos)) {p0 = PAUSA;queda0 += LARGA - PAUSA;}
       var o0 = sigOcupado();
       if ((queda0 >= minimo || comerAntes()) && !(falta && t + p0 > comeA) && !(o0 && t + p0 > o0.desde)) {
         enMitad++;seguidos = 0;
@@ -9095,11 +9107,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       var o = sigOcupado();
       var enMarcha = P0 && P0.primerBloque && n === primeros;
       if (o && o.desde <= t && !enMarcha) {reunirse(o);continue;}
+
+      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
       if (enMarcha) {
 
         dur = P0.primerBloque;
       } else {
-        var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
         if (rem < minimo) {
           if (comerAntes()) {comer();continue;}
           break;
@@ -9107,6 +9120,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
 
         if (forma.reloj && p === LARGA && rem - bloque - LARGA < minimo && rem - bloque - PAUSA >= minimo) p = PAUSA;
+        if (p === LARGA && largaSinSitio(rem, bloque)) p = PAUSA;
         dur = bloque;
         if (rem <= bloque) dur = rem;else
         if (rem - bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
@@ -9139,6 +9153,8 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
 
       if (queda < minimo && p === LARGA && (forma.reloj || corto) && queda + LARGA - PAUSA >= minimo) {p = PAUSA;queda += LARGA - PAUSA;}
+
+      if (p === LARGA && largaSinSitio(rem, dur)) {p = PAUSA;queda += LARGA - PAUSA;}
       if (queda < minimo && !comerAntes()) break;
       if (falta && t + p > comeA) {comer();continue;}
       o = sigOcupado();
