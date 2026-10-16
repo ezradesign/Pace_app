@@ -17,7 +17,7 @@
    `getSequence()` de las 20 rutinas: las palabras de `sulafat` duran **1,40 ·
    1,32 · 1,48 s** y **caben en 17 de 20**. Las tres que quedan fuera son las de
    bombeo —`Suspiro fisiológico`, `Bhastrika`, `Kapalabhati`—, con fases de 1 s
-   y 90 ciclos en 3 minutos: ahí una palabra hablada no tendría sentido aunque
+   y 60 respiraciones en 3 minutos: ahí una palabra hablada no tendría sentido aunque
    cupiera.
 
    ESTA CIFRA COSTÓ DOS EQUIVOCACIONES MÍAS, y las dos van escritas porque la

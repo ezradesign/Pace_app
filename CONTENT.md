@@ -72,6 +72,14 @@ visual** (el botón). No tocar los ids: están blindados por compat.
 > cifra «1 free + 6 premium» describía solo el subconjunto legacy, no el catálogo
 > real de 8 Mueve free / 6 premium; queda como decisión de producto aparte).
 >
+> **Revisión de los ejercicios (16 oct. 2026, elegida por Ez):** las seis legacy ya están en
+> el formato de hoy (repeticiones con ritmo, lo de un lado por lado, colocación y cuidado),
+> y ningún paso de Mueve ni Estira queda solo con `cue`. Espalda de oficina va de pie con
+> deslizamientos en pared (sin Superman); Columna · ondas y Caderas bajan al suelo una vez;
+> «ATG · Rodillas a prueba» se llama «ATG · Rodillas profundas»; 4·7·8 son cuatro ciclos;
+> Bhastrika y Kapalabhati van en tres rondas de 20 con 20 s suaves. Fuentes, veredictos y
+> lo que sirve al motor de la semana: `docs/traspaso/archivos/revision-ejercicios/`.
+>
 > **Sustitución s110:** en `move.atg.knees`, **Nordics → «Puente isquio a una
 > pierna»** (sustituto accesible; Nordics muy avanzado y con material de
 > anclaje no garantizado). Nordics sigue en el registro del constructor,
@@ -135,7 +143,7 @@ pranayama 5.
 | `breathe.coherent.55` | Coherente 5·5 | balance | 5 | — | **free** (inicial) |
 | `breathe.box.4` | Box 4·4·4·4 | equilibrio | 5 | — | **free** (inicial) |
 | `breathe.physiological` | Suspiro fisiológico | relajacion | 2 | — | free |
-| `breathe.478` | 4·7·8 | relajacion | 3 | — | free |
+| `breathe.478` | 4·7·8 | relajacion | 1 | — | free (4 ciclos) |
 | `breathe.box.6` | Box 6·6·6·6 | equilibrio | 7 | — | free (variante larga, no avanzada) |
 | `breathe.coherent.66` | Coherente 6·6 | balance | 10 | — | free (variante larga, no avanzada) |
 | `breathe.ujjayi` | Ujjayi | pranayama | 6 | — | free (oceánica accesible) |
@@ -190,13 +198,13 @@ con los ids `move.*` de Estira).
 | `extra.push.ladder` | Empuje · progresión | empuje | 3 | **premium** (F6 — pica + negativas) |
 | `extra.hang.bar` | Colgarse | empuje | 2 | **premium** (F6 — requiere barra) |
 | `extra.calves` | Gemelos subrepticios | sigilo | 1 | free (micro de entrada) |
-| `extra.grip.squeeze` | Grip + antebrazos | sigilo | 1 | free (micro de entrada) |
+| `extra.grip.squeeze` | Grip + antebrazos | sigilo | 2 | free (micro de entrada) |
 | `extra.glutes.stealth` | Glúteos invisibles | sigilo | 2 | free (F6 — micro discreto) |
 | `extra.core.stealth` | Core silencioso | sigilo | 2 | **premium** (hollow al límite) |
 | `extra.chair.squats` | Sentadillas de silla | piernas | 3 | free (F6 — el patrón más útil) |
 | **`extra.legs.standing`** | **Piernas de pie** | piernas | 2 | **free** (series, 15 oct. 2026 — de pie junto a la mesa: talones, puntas, sentadilla de cuádriceps) |
 | `extra.wall.sit` | Sentadilla en pared | piernas | 3 | **premium** (isométrico exigente) |
-| `extra.legs.single` | Piernas · a una | piernas | 4 | **premium** (F6 — unilateral avanzado) |
+| `extra.legs.single` | Piernas · a una | piernas | 5 | **premium** (F6 — unilateral avanzado) |
 | `extra.posture.set` | Postura reset | espalda | 2 | **free** (inicial) |
 | `extra.back.desk` | Espalda de oficina | espalda | 3 | free (F6 — tracción accesible) |
 | `extra.core.plank` | Core · plancha | espalda | 4 | **premium** (F6 — isométricos de suelo) |
@@ -244,7 +252,7 @@ ids `move.*`; troceados en s178 por la regla §1). Estado actual:
 | `move.hips.5` | Caderas | caderas | 6 | free |
 | `move.couch.stretch` | Couch stretch | caderas | 6 | **premium** (F5 — flexores profundos) |
 | `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
-| `move.atg.knees` | ATG · Rodillas a prueba | caderas | 4 | **premium** (ATG avanzado) |
+| `move.atg.knees` | ATG · Rodillas profundas | caderas | 4 | **premium** (ATG avanzado) |
 | **`move.hamstrings.standing`** | **Cadena posterior de pie** | caderas | 4 | **free** (s178 — sin suelo) |
 | `move.hamstrings` | Cadena posterior | caderas | 5 | **premium** (F5 — isquios profundos) |
 | `move.morning.flow` | Despertar matinal | flujos | 5 | free (F5 — ancla de hábito diario) |

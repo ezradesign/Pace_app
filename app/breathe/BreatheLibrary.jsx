@@ -46,7 +46,9 @@ const BREATHE_ROUTINES = {
     label: 'Relajación',
     aside: 'Baja el ruido mental',
     items: [
-      { id: 'breathe.478', tag: 'REL', code: 'Relajación', name: '4·7·8', desc: 'Exhalación larga. Pensada para soltar el día y preparar el descanso.', min: 3, pattern: 'pattern', cycle: [4,7,8,0] },
+      /* Cuatro ciclos (1:16): su autor pide 4 seguidos el primer mes, y en 3 min eran 9.
+         Con `min: 1` la sesión acaba al cerrar el cuarto, el primero que pasa del minuto. */
+      { id: 'breathe.478', tag: 'REL', code: 'Relajación', name: '4·7·8', desc: 'Exhalación larga, cuatro ciclos. Pensada para soltar el día y preparar el descanso.', min: 1, pattern: 'pattern', cycle: [4,7,8,0] },
       { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación + exhalación larga. Reset rápido.', min: 2, pattern: 'physiological' },
       { id: 'breathe.exhale.46', tag: 'REL', code: 'Relajación', name: 'Exhalación 4·6', desc: 'Exhala más largo de lo que inhalas. Freno suave.', min: 6, pattern: 'coherent', cycle: [4,0,6,0] },
       { id: 'breathe.yin', tag: 'REL', code: 'Relajación', name: 'Rítmica yin', desc: 'Ritmo suave con reposo tras exhalar. Quietud que se asienta.', min: 8, pattern: 'yin' },
@@ -60,9 +62,9 @@ const BREATHE_ROUTINES = {
       { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave. La mente se aquieta.', min: 5, pattern: 'bhramari' },
       /* `safety` como Kapalabhati: misma secuencia de 1 s y 1 s, 30 respiraciones
          por minuto, o sea hiperventilación. Lo vigila tests/respira-biblioteca. */
-      { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika', safety: true },
+      { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido, en tres rondas con descanso.', min: 3, pattern: 'bhastrika', safety: true },
       { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada, de la tradición del yoga. Pensada para asentar la atención.', min: 8, pattern: 'nadi', access: 'premium' },
-      { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
+      { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico, en tres rondas con descanso.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
       { id: 'breathe.kumbhaka', tag: 'PRA', code: 'Pranayama', name: 'Kumbhaka 1:4:2', desc: 'Inhala 4, sostén 16, exhala 8. Solo con experiencia.', min: 6, pattern: 'pattern', cycle: [4,16,8,0], safety: true, access: 'premium' },
     ]
   }

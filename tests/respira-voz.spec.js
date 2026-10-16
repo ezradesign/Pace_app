@@ -73,7 +73,7 @@ test('la voz se decide POR FASE: calla en 1 s y canta a partir de 2', async ({ p
     return { unSeg: en(1), dosSeg: en(2), seisSeg: en(6), sinFase: en(undefined) };
   });
   /* En bombeo (1 s) no canta NINGUNA: ahí la palabra se pisaría con la
-     siguiente, y son 90 ciclos en 3 minutos. */
+     siguiente, y son 60 respiraciones en 3 minutos. */
   expect(r.unSeg).toEqual([false, false, false]);
   /* A partir de 2 s caben las tres: es lo que lleva la voz a 17 de las 20. */
   expect(r.dosSeg).toEqual([true, true, true]);

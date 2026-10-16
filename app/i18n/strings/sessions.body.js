@@ -103,9 +103,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.rhythm.physiological':        'doble inhalación',
     'lib.rhythm.yin':                  'con reposo al final',
     'lib.rhythm.bhramari':             'con zumbido',
-    'lib.rhythm.bhastrika':            'fuelle rápido',
+    'lib.rhythm.bhastrika':            'fuelle rápido, 3 rondas',
     'lib.rhythm.nadi':                 'alterna',
-    'lib.rhythm.kapalabhati':          'exhalaciones cortas',
+    'lib.rhythm.kapalabhati':          'exhalaciones cortas, 3 rondas',
     'lib.rhythm.co2':                  'sostén en vacío',
 
     /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
@@ -228,9 +228,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.rhythm.physiological':        'double inhale',
     'lib.rhythm.yin':                  'with a rest at the end',
     'lib.rhythm.bhramari':             'with a hum',
-    'lib.rhythm.bhastrika':            'fast bellows',
+    'lib.rhythm.bhastrika':            'fast bellows, 3 rounds',
     'lib.rhythm.nadi':                 'alternate nostril',
-    'lib.rhythm.kapalabhati':          'short exhales',
+    'lib.rhythm.kapalabhati':          'short exhales, 3 rounds',
     'lib.rhythm.co2':                  'hold on empty',
 
     'preview.tag':                     'Before you start',
