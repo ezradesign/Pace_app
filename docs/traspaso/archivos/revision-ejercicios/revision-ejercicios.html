@@ -1,0 +1,356 @@
+<title>Revisión de los ejercicios</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como una ficha de PACE: decisiones arriba, detalle debajo, fuentes al final. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6E6757;
+  --line: #C9C0A8;
+  --focus: #3E5A3A; --move: #8A6B3F; --extra: #56667C; --breathe: #B4654A;
+  --warn-bg: #F3E2D6; --warn-line: #D9A58E;
+  --serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1C1A16; --paper-2: #25221D; --paper-3: #302C25;
+  --ink: #EDE6D6; --ink-2: #CFC6B3; --ink-3: #A39A86;
+  --line: #4A453B;
+  --focus: #9DB596; --move: #CFAE7C; --extra: #A3B3C9; --breathe: #E39A7E;
+  --warn-bg: #3A2820; --warn-line: #8A5442; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1C1A16; --paper-2: #25221D; --paper-3: #302C25;
+  --ink: #EDE6D6; --ink-2: #CFC6B3; --ink-3: #A39A86;
+  --line: #4A453B;
+  --focus: #9DB596; --move: #CFAE7C; --extra: #A3B3C9; --breathe: #E39A7E;
+  --warn-bg: #3A2820; --warn-line: #8A5442; color-scheme: dark }
+
+body { background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(34px, 6vw, 46px); line-height: 1.05; }
+h2 { font-size: 28px; line-height: 1.15; margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); }
+h3 { font-size: 21px; line-height: 1.2; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--focus); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.stack { display: grid; gap: 14px; }
+.lead { font-size: 18px; color: var(--ink-2); }
+.counts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 22px; font-variant-numeric: tabular-nums; }
+.counts div { display: flex; align-items: baseline; gap: 8px; }
+.counts b { font-family: var(--serif); font-size: 32px; font-weight: 500; }
+.counts span { color: var(--ink-2); font-size: 14px; }
+
+.mod { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.mod.m { color: var(--move); } .mod.e { color: var(--extra); } .mod.r { color: var(--breathe); } .mod.n { color: var(--focus); }
+
+.decision { display: grid; gap: 12px; padding: 20px 0 6px; }
+.decision + .decision { border-top: 1px dashed var(--line); }
+.opts { display: grid; gap: 8px; }
+.opt { display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+.opt.rec { border-color: var(--focus); background: var(--paper-2); }
+.opt .k { font-family: var(--serif); font-size: 20px; font-style: italic; line-height: 1.1; color: var(--ink-3); }
+.opt.rec .k { color: var(--focus); }
+.opt strong { font-weight: 600; }
+.opt p { color: var(--ink-2); font-size: 15px; }
+.rec-tag { display: inline-block; margin-left: 6px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--focus); font-weight: 600; }
+
+.change { display: grid; gap: 4px; padding: 12px 0; border-bottom: 1px solid var(--paper-3); }
+.change h4 { margin: 0; font-size: 16px; font-weight: 600; }
+.change p { color: var(--ink-2); font-size: 15px; }
+.was { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--line); }
+.now { color: var(--ink); }
+.why { font-size: 13px; color: var(--ink-3); }
+
+.warn { padding: 14px 16px; border: 1px solid var(--warn-line); background: var(--warn-bg); border-radius: 10px; font-size: 15px; color: var(--ink); }
+.warn b { font-weight: 600; }
+
+.new { display: grid; gap: 10px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2); }
+.new ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--ink-2); font-size: 15px; }
+.new .meta { font-size: 13px; color: var(--ink-3); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 4px; }
+.filters button { font: 500 13px var(--sans); color: var(--ink-2); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tablewrap { overflow-x: auto; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 620px; }
+th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding: 8px 8px 8px 0; border-bottom: 1px solid var(--line); }
+td { padding: 8px 8px 8px 0; border-bottom: 1px solid var(--paper-3); vertical-align: top; color: var(--ink-2); }
+td:first-child { color: var(--ink); }
+.v { display: inline-block; min-width: 72px; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.v.M { color: var(--ink-3); } .v.A { color: var(--move); } .v.C { color: var(--breathe); }
+.lock { font-size: 11px; color: var(--ink-3); margin-left: 4px; }
+
+.moments { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.moment { padding: 14px; border-top: 2px solid var(--focus); background: var(--paper-2); border-radius: 0 0 10px 10px; }
+.moment h4 { margin: 0 0 4px; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 19px; }
+.moment p { font-size: 14px; color: var(--ink-2); }
+
+ol.sources { padding-left: 22px; display: grid; gap: 8px; font-size: 14px; color: var(--ink-2); }
+ol.sources li { max-width: 70ch; }
+.foot { margin-top: 40px; font-size: 13px; color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="stack">
+    <div class="eyebrow">PACE · revisión de los ejercicios · 16 oct. 2026</div>
+    <h1>Lo que dice la evidencia de tus 53 rutinas</h1>
+    <p class="lead">He leído las guías de la OMS, el NHS, el CDC y el ACSM, y revisiones de estudios sobre pausas en el trabajo, cuello, sentarse mucho y respiración. Con eso he mirado cada rutina paso a paso. Casi todo está bien hecho: lo que propongo son retoques, dos técnicas de Respira por rondas y dos rutinas nuevas de pie.</p>
+    <div class="counts" aria-label="Resumen de veredictos">
+      <div><b>35</b><span>se quedan como están</span></div>
+      <div><b>16</b><span>con un ajuste</span></div>
+      <div><b>2</b><span>cambian</span></div>
+      <div><b>0</b><span>se quitan</span></div>
+      <div><b>+2</b><span>nuevas, de pie</span></div>
+    </div>
+  </header>
+
+  <div class="warn" style="margin-top:28px; background: var(--paper-2); border-color: var(--focus);">
+    <b>Lo que elegiste (16 oct.):</b> 1A, todo en Mueve y Estira · 2A, los tres cambios de Respira · 3C, ninguna rutina nueva por ahora · 4A, los dos textos. Al aplicarlo, «Apertura de costillas» y la extensión torácica de «Hombros» dicen lo que enseña su dibujo (a cuatro patas, y sentado sobre el respaldo); el cuidado de rodilla de la Paloma va también en el Estiramiento del sofá, y Grip + antebrazos pasa a 2 min.
+  </div>
+
+  <h2>Lo que decides</h2>
+  <p>Cuatro preguntas. Te las hago también en la conversación; aquí está el detalle de cada opción.</p>
+
+  <section class="decision" aria-labelledby="d1">
+    <div class="mod m">Mueve y Estira</div>
+    <h3 id="d1">1. Los 15 ajustes de Mueve y Estira</h3>
+    <p>Seis rutinas antiguas cuentan repeticiones dentro de un reloj y no avisan del cambio de lado; otras tienen un paso que no encaja (tumbarse en una rutina sin suelo) o un cuidado que falta. El detalle, en «Qué cambia».</p>
+    <div class="opts">
+      <div class="opt rec"><div class="k">A</div><div><strong>Todo</strong><span class="rec-tag">Recomendada</span><p>Formato de hoy para las seis antiguas, los retoques de seguridad, el nuevo orden de Columna · ondas y Caderas, y Espalda de oficina sin suelo.</p></div></div>
+      <div class="opt"><div class="k">B</div><div><strong>Solo formato y seguridad</strong><p>Las seis antiguas y los cuidados. Sin reordenar y con el Superman en el suelo.</p></div></div>
+      <div class="opt"><div class="k">C</div><div><strong>Nada por ahora</strong><p>Todo sigue como está.</p></div></div>
+    </div>
+  </section>
+
+  <section class="decision" aria-labelledby="d2">
+    <div class="mod r">Respira</div>
+    <h3 id="d2">2. Tres cambios en Respira</h3>
+    <p>El 4·7·8 dura 3 minutos (9 ciclos) y su autor pide 4 ciclos al empezar. Bhastrika y Kapalabhati van 3 minutos seguidos a 30 respiraciones por minuto, y se enseñan por rondas cortas con descanso.</p>
+    <div class="warn"><b>Aviso:</b> respirar rápido y fuerte puede marear o hacer perder el conocimiento. Bhastrika y Kapalabhati siguen con su ventana de seguridad: sentado o tumbado, nunca en el agua ni conduciendo, y no con embarazo, tensión alta, cardiopatía, epilepsia o hernia.</div>
+    <div class="opts">
+      <div class="opt rec"><div class="k">A</div><div><strong>Los tres</strong><span class="rec-tag">Recomendada</span><p>4·7·8 en 4 ciclos (algo más de 1 min). Bhastrika y Kapalabhati en 3 rondas de 20, con 20 s respirando suave entre ellas (siguen siendo 3 min). El aviso añade la hernia.</p></div></div>
+      <div class="opt"><div class="k">B</div><div><strong>Solo el 4·7·8 y el aviso</strong><p>Bhastrika y Kapalabhati siguen seguidas.</p></div></div>
+      <div class="opt"><div class="k">C</div><div><strong>Dejar Respira como está</strong><p>Las 20 técnicas, sin tocar.</p></div></div>
+    </div>
+  </section>
+
+  <section class="decision" aria-labelledby="d3">
+    <div class="mod n">Nuevas</div>
+    <h3 id="d3">3. Dos rutinas nuevas de pie</h3>
+    <p>Con el aro a 10 o 15, la tarde se queda sin rutinas de pie. Caminar es lo que más evidencia tiene para cortar el tiempo sentado, y fortalecer hombros es lo que más ayuda al cuello en la oficina. Gratis, para que entren en «A tu ritmo».</p>
+    <div class="opts">
+      <div class="opt rec"><div class="k">A</div><div><strong>Las dos</strong><span class="rec-tag">Recomendada</span><p>Paseo corto y Hombros fuertes. Con Espalda de oficina de pie, las rutinas de pie que puede servir «A tu ritmo» pasan de 5 a 8.</p></div></div>
+      <div class="opt"><div class="k">B</div><div><strong>Solo el Paseo corto</strong><p>La de más evidencia y sin material.</p></div></div>
+      <div class="opt"><div class="k">C</div><div><strong>Ninguna por ahora</strong><p>La tarde sigue con lo que hay.</p></div></div>
+    </div>
+    <p class="why">Necesitan tres dibujos nuevos (Caminar, Elevación lateral y Remo con apoyo). Hasta que lleguen, llevan el dibujo de línea genérico, como «Rotación torácica de pie».</p>
+  </section>
+
+  <section class="decision" aria-labelledby="d4">
+    <div class="mod e">Nombres</div>
+    <h3 id="d4">4. Dos textos que prometen de más</h3>
+    <p>«Antídoto exacto a 4 h sentado» promete una medida que nadie ha hecho. «ATG · Rodillas a prueba» suena a «a prueba de lesiones», y la base de Mueve y Estira prohíbe decir que una rutina previene lesiones.</p>
+    <div class="opts">
+      <div class="opt rec"><div class="k">A</div><div><strong>Cambiar los dos</strong><span class="rec-tag">Recomendada</span><p>Antídoto silla: «Lo contrario de estar sentado: pecho, caderas y cuello. Pasarás por el suelo.» ATG: «ATG · Rodillas profundas».</p></div></div>
+      <div class="opt"><div class="k">B</div><div><strong>Solo la descripción del Antídoto</strong><p>El nombre de ATG se queda.</p></div></div>
+      <div class="opt"><div class="k">C</div><div><strong>Dejarlos</strong><p>Sin cambios.</p></div></div>
+    </div>
+  </section>
+
+  <h2>Qué cambia, rutina por rutina</h2>
+  <p>Cada explicación nueva cabe en 95 letras y va en castellano y en inglés. Las duraciones siguen siendo verdad: lo comprueba la suite.</p>
+
+  <h3 style="margin-top:22px"><span class="mod m">Mueve</span></h3>
+  <div>
+    <div class="change"><h4>Fondos en silla</h4><p><span class="was">Baja solo hasta donde el hombro vaya cómodo.</span> <span class="now">Baja hasta que el codo haga un ángulo recto, no más. Con los pies cerca, es más fácil.</span></p><p class="why">Bajar de más carga la parte de delante del hombro.</p></div>
+    <div class="change"><h4>Empuje · progresión</h4><p class="now">10 flexiones inclinadas, 8 picas en escritorio y 5 negativas que bajan de verdad en 5 s: repeticiones con ritmo en vez de reloj, con colocación y cuidado. Unos 3 min, como ahora.</p></div>
+    <div class="change"><h4>Grip + antebrazos</h4><p><span class="was">Estiramiento de muñeca, 20 s para las dos.</span> <span class="now">20 s por mano, con su cambio.</span></p></div>
+    <div class="change"><h4>Core silencioso</h4><p class="now">Colocación nueva: silla sin ruedas o frenada, atrás del todo, espalda apoyada y manos en el asiento.</p></div>
+    <div class="change"><h4>Sentadilla en pared</h4><p class="now">El cuidado dice «respira sin aguantar el aire»: aguantarlo sube la tensión en el momento.</p></div>
+    <div class="change"><h4>Piernas · a una</h4><p class="now">Búlgara y zancada, 6 por pierna; sentadilla de cuádriceps, 10; talones a una pierna, 10 por pierna. Con cambio de lado y la silla contra la pared. Pasa de 4 a 5 min.</p></div>
+    <div class="change"><h4>Espalda de oficina</h4><p><span class="was">Superman, tumbado en el suelo.</span> <span class="now">8 deslizamientos en pared, lentos (ya tienen dibujo). Toda de pie, y entra en «A tu ritmo».</span></p></div>
+  </div>
+
+  <h3 style="margin-top:22px"><span class="mod e">Estira</span></h3>
+  <div>
+    <div class="change"><h4>Escritorio express</h4><p class="now">Cada paso con su cuidado; «Barbilla atrás» pasa a 5 repeticiones con retención. Sigue en 2 min. Es la que más ha servido «A tu ritmo».</p></div>
+    <div class="change"><h4>Hombros</h4><p><span class="was">Extensión sobre un rulo o una toalla (tumbado).</span> <span class="now">Frente a la pared, antebrazos arriba: lleva el pecho hacia la pared, despacio.</span></p></div>
+    <div class="change"><h4>Columna · ondas</h4><p class="now">Nuevo orden: gato-camello, puente torácico, rotación, onda espinal y rodar hacia abajo. Se baja al suelo una vez y se sube una vez.</p></div>
+    <div class="change"><h4>Caderas</h4><p class="now">De pie primero (las dos sentadillas) y luego el suelo. En la Paloma: «Si notas la rodilla de delante, acerca el pie a la cadera».</p></div>
+    <div class="change"><h4>Caderas · suelo</h4><p class="now">Colocación y cuidado en los cinco pasos; levantarse del suelo «sin manos si puedes, con una también vale». Rana sigue igual, esperando su dibujo.</p></div>
+    <div class="change"><h4>ATG</h4><p class="now">Zancada y puente a una pierna, por lado y con cambio; cuidado de rodilla. El nombre, en la decisión 4.</p></div>
+    <div class="change"><h4>Ancestral</h4><p><span class="was">Apertura de costillas: «Movimiento de gato/vaca».</span> <span class="now">Sentado o de rodillas, brazos arriba: inhala abriendo las costillas, exhala bajando.</span> Cuidado en todos los pasos.</p></div>
+    <div class="change"><h4>Antídoto silla</h4><p class="now">La descripción, en la decisión 4.</p></div>
+  </div>
+
+  <h3 style="margin-top:22px"><span class="mod r">Respira</span></h3>
+  <div>
+    <div class="change"><h4>4·7·8</h4><p><span class="was">3 min, 9 ciclos.</span> <span class="now">4 ciclos, algo más de 1 min.</span></p></div>
+    <div class="change"><h4>Bhastrika · Fuelle y Kapalabhati</h4><p><span class="was">3 min seguidos.</span> <span class="now">3 rondas de 20 con 20 s respirando suave entre ellas.</span></p></div>
+    <div class="change"><h4>El aviso de seguridad</h4><p><span class="was">Epilepsia, hipertensión o cardiopatía, ni embarazada.</span> <span class="now">Epilepsia, hipertensión, cardiopatía o una hernia, ni embarazada.</span></p></div>
+  </div>
+
+  <h2>Las dos rutinas nuevas</h2>
+  <div class="stack">
+    <div class="new">
+      <div class="mod m">Mueve · gratis · 3 min · de pie, sin material</div>
+      <h3>Paseo corto</h3>
+      <ol>
+        <li>Caminar, 1 min: levántate y camina a paso cómodo por el pasillo, la escalera o la calle.</li>
+        <li>Caminar, 1 min: un poco más vivo, que notes la respiración sin llegar a sudar. Si hay escaleras, súbelas.</li>
+        <li>Caminar, 45 s: baja el paso y vuelve despacio a tu sitio.</li>
+      </ol>
+      <p class="meta">Mejor tras comer. Si no puedes salir, vale dar vueltas por la habitación.</p>
+    </div>
+    <div class="new">
+      <div class="mod m">Mueve · gratis · 3 min · de pie, con la botella de agua o sin nada</div>
+      <h3>Hombros fuertes</h3>
+      <ol>
+        <li>Elevación lateral, 8 por brazo: sube el brazo hacia el lado hasta la altura del hombro en 2 s y baja en 2 s.</li>
+        <li>Remo con apoyo, 8 por brazo: una mano en la mesa, el tronco inclinado, lleva el codo atrás pegado al cuerpo.</li>
+        <li>Encogimiento de hombros, 8: sube, mantén 2 s y baja despacio.</li>
+      </ol>
+      <p class="meta">Sin botella también sirve. Hombros lejos de las orejas.</p>
+    </div>
+  </div>
+
+  <h2>Las 53, una a una</h2>
+  <p>Con la postura, la zona y el momento del día que mejor les va. Esto es lo que necesitan el motor de la semana y los días diseñados.</p>
+  <div class="filters" role="group" aria-label="Filtrar por módulo">
+    <button type="button" id="f-todas" data-f="" aria-pressed="true">Todas</button>
+    <button type="button" id="f-mueve" data-f="m" aria-pressed="false">Mueve</button>
+    <button type="button" id="f-estira" data-f="e" aria-pressed="false">Estira</button>
+    <button type="button" id="f-respira" data-f="r" aria-pressed="false">Respira</button>
+    <button type="button" id="f-cambios" data-f="AC" aria-pressed="false">Con cambios</button>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Rutina</th><th>Veredicto</th><th>Postura</th><th>Zona</th><th>Cuándo</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="why" style="margin-top:8px">El candado marca lo que será de PACE completo; hasta v1 está abierto.</p>
+
+  <h2>Para el motor de la semana</h2>
+  <p>Ninguna fuente fija la hora ideal de cada ejercicio, salvo caminar después de comer. Esto es lo orientativo:</p>
+  <div class="moments" style="margin-top:14px">
+    <div class="moment"><h4>Al empezar</h4><p>Movilidad suave y de pie: Espalda de pie, Piernas de pie, Flexiones de escritorio.</p></div>
+    <div class="moment"><h4>Tras comer</h4><p>Caminar en la primera media hora, o piernas de pie: Paseo corto, Piernas de pie, Sentadillas.</p></div>
+    <div class="moment"><h4>La tarde</h4><p>De pie, piernas y caderas, y fuerza corta: Caderas de pie, Cadena posterior de pie, Hombros fuertes.</p></div>
+    <div class="moment"><h4>Al cerrar</h4><p>Respira lento y sin retención: Coherente, Exhalación 4·6, Suspiro, Diafragmática. Nada que active.</p></div>
+  </div>
+
+  <h2>Fuentes</h2>
+  <ol class="sources">
+    <li>OMS 2020, actividad física y sedentarismo: cualquier movimiento cuenta, sin bloques mínimos. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7719906/">Bull et al., BJSM</a></li>
+    <li>CDC: 150 min de actividad y fuerza dos días por semana; moverse más y sentarse menos. <a href="https://www.cdc.gov/physical-activity-basics/guidelines/adults.html">CDC</a></li>
+    <li>NHS: por qué sentarse menos, con la cautela de que casi todo es observacional. <a href="https://www.nhs.uk/live-well/exercise/why-sitting-too-much-is-bad-for-us/">NHS</a></li>
+    <li>Pausas de pie o caminando cada 20-30 min: caminar baja más la glucosa. <a href="https://pubmed.ncbi.nlm.nih.gov/35147898/">Buffey et al. 2022, Sports Medicine</a></li>
+    <li>5 min de paseo cada 30 min, la única dosis que bajó la glucosa (11 personas). <a href="https://sedentarybehaviour.org/2023/05/31/breaking-up-prolonged-sitting-to-improve-cardiometabolic-risk-dose-response-analysis-of-a-randomized-crossover-trial">Duran et al. 2023, MSSE</a></li>
+    <li>Micropausas: más ánimo y menos cansancio, efecto pequeño. <a href="https://doaj.org/article/c6f37b6ba159469296b2cb968b65505f">Albulescu et al. 2022, PLOS ONE</a></li>
+    <li>Ejercicio y dolor de cuello en oficinistas: fortalecer, lo que más ayuda. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6093121/">Chen et al. 2018</a> · <a href="https://research.birmingham.ac.uk/en/publications/the-influence-of-exercise-on-pain-disability-and-quality-of-life-/">Jones et al. 2024</a></li>
+    <li>2 min al día con una goma: menos dolor de cuello y hombro, y de cabeza. <a href="https://www.sjweh.fi/article/3170">Andersen et al. 2011, SJWEH</a></li>
+    <li>Estirar no previene lesiones; la fuerza sí. <a href="https://hvlopen.brage.unit.no/hvlopen-xmlui/bitstream/handle/11250/2585394/lauersen.pdf?sequence=4">Lauersen et al. 2014, BJSM</a></li>
+    <li>Estirar en el trabajo: algo de alivio, estudios de calidad mixta. <a href="https://medicaljournals.se/jrm/content/abstract/10.2340/16501977-0204">da Costa y Vieira, J Rehabil Med</a></li>
+    <li>Retenciones de 10-30 s por estiramiento. <a href="https://www.acsm.org/blog-detail/acsm-certified-blog/2021/03/18/stretching-and-flexibility-guidelines-update">ACSM</a></li>
+    <li>Talones sentado: el sóleo trabaja horas sin cansarse. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9404652">Hamilton et al. 2022, iScience</a></li>
+    <li>La isometría, lo que más baja la tensión con el tiempo. <a href="https://mdedge.com/content/isometric-exercise-found-optimal-lowering-blood-pressure">Edwards et al. 2023, BJSM</a></li>
+    <li>Ejercicios para el túnel carpiano: evidencia muy baja. <a href="https://pubmed.ncbi.nlm.nih.gov/22696387/">Cochrane, Page et al. 2012</a></li>
+    <li>Fondos: riesgo para el hombro poco estudiado. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9603242/">Revisión 2022</a></li>
+    <li>1-2 min intensos en el día a día y mortalidad (observacional). <a href="https://www.ukbiobank.ac.uk/publications/association-of-wearable-device-measured-vigorous-intermittent-lifestyle-physical-activity-with-mortality/">Stamatakis et al. 2022, Nature Medicine</a></li>
+    <li>Respirar despacio sube la variabilidad cardiaca. <a href="https://staffprofiles.bournemouth.ac.uk/display/journal-article/368158">Laborde et al. 2022</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5575449">Steffen et al. 2017</a></li>
+    <li>La respiración guiada baja el estrés, efecto pequeño-moderado. <a href="https://sussex.figshare.com/articles/journal_contribution/Effect_of_breathwork_on_stress_and_mental_health_a_meta-analysis_of_randomised-controlled_trials/23494097/1">Fincham et al. 2023, Scientific Reports</a></li>
+    <li>5 min de suspiro fisiológico al día, mejor ánimo. <a href="https://pmc.ncbi.nlm.nih.gov/articles/9873947/">Balban et al. 2023, Cell Reports Medicine</a></li>
+    <li>Respirar despacio 3-5 min, sentado, de pie o tumbado (NHS). <a href="https://healthwell.eani.org.uk/healthtopic/mental-health/breathing-exercises-stress?type_1=2">NHS, copia de la guía</a></li>
+    <li>4·7·8: cuatro ciclos el primer mes. <a href="https://cdn.shopify.com/s/files/1/1354/7841/files/4-7-8_or_Relaxing_Breath_Exercise.pdf">Hoja de Andrew Weil</a></li>
+    <li>Hiperventilar y aguantar el aire: desmayo sin aviso. <a href="https://www.royallifesaving.com.au/stay-safe-active/risk-factors/hypoxic-blackout">Royal Life Saving</a> · Wim Hof, ocho ensayos pequeños y sesgados: <a href="https://warwick.ac.uk/news/pressreleases/does_the_wim/">Warwick 2024</a></li>
+    <li>Bhastrika y Kapalabhati por rondas, y cuándo no hacerlas (fuentes de práctica, no clínicas). <a href="https://myyogateacher.com/articles/bhastrika-pranayama">Bhastrika</a> · <a href="https://sequencewiz.org/2020/10/21/the-magic-powers-of-kapalbhati-are-they-real/">Kapalabhati</a></li>
+  </ol>
+  <p class="foot">Nada de esto es consejo médico: PACE es una pausa, no un tratamiento. Las fuentes se resumen, no se copian. El informe completo vive en la rama, en <code>docs/traspaso/archivos/revision-ejercicios/</code>.</p>
+</div>
+
+<script>
+const R = [
+  ['m','Flexiones de escritorio','M','De pie, mesa','Hombros, pecho','Al empezar · tarde'],
+  ['m','Fondos en silla','A','Silla sin ruedas','Brazos, hombros','Cuando sea'],
+  ['m','Empuje · progresión','A','De pie, mesa','Hombros, pecho','Tarde',1],
+  ['m','Colgarse','M','Barra','Hombros, espalda','En casa',1],
+  ['m','Gemelos subrepticios','M','Sentado','Piernas','Sentado, cuando sea'],
+  ['m','Grip + antebrazos','A','Sentado','Manos','Sentado, cuando sea'],
+  ['m','Glúteos invisibles','M','Sentado','Caderas','Sentado, cuando sea'],
+  ['m','Core silencioso','A','Sentado','Abdomen','Sentado, cuando sea',1],
+  ['m','Sentadillas de silla','M','De pie, silla sin ruedas','Piernas','Tras comer · tarde'],
+  ['m','Piernas de pie','M','De pie','Piernas','Al empezar · tras comer'],
+  ['m','Sentadilla en pared','A','De pie, pared','Piernas','Tarde',1],
+  ['m','Piernas · a una','A','De pie, silla','Piernas','En casa',1],
+  ['m','Postura reset','M','Sentado','Cuello, espalda alta','Sentado, cuando sea'],
+  ['m','Espalda de oficina','A','De pie (antes, suelo)','Espalda alta, hombros','Tarde'],
+  ['m','Core · plancha','M','Suelo','Abdomen','En casa',1],
+  ['e','Antídoto silla','A','Sentado y suelo','Pecho, caderas, cuello','En casa'],
+  ['e','Cuello','M','Sentado','Cuello','Sentado, cuando sea'],
+  ['e','Escritorio express','A','Sentado','Cuello, hombros, manos','Sentado, cuando sea'],
+  ['e','Muñecas y manos','M','Sentado','Manos','Sentado, cuando sea'],
+  ['e','Hombros','A','De pie, pared','Hombros','Al empezar · tarde'],
+  ['e','Hombros · círculos','M','Sentado o de pie','Hombros','Cuando sea'],
+  ['e','Columna en la silla','M','Sentado','Espalda, cuello','Sentado, cuando sea'],
+  ['e','Espalda de pie','M','De pie','Espalda','Al empezar · tarde'],
+  ['e','Columna · ondas','A','Suelo y de pie','Espalda','En casa',1],
+  ['e','Caderas de pie','M','De pie','Caderas','Tarde'],
+  ['e','Caderas','A','De pie y suelo','Caderas','En casa'],
+  ['e','Estiramiento del sofá','M','Suelo','Caderas, muslos','En casa',1],
+  ['e','Caderas · suelo','A','Suelo','Caderas','En casa',1],
+  ['e','ATG · Rodillas a prueba','A','De pie y suelo','Rodillas, piernas','En casa',1],
+  ['e','Cadena posterior de pie','M','De pie','Piernas, espalda baja','Tarde'],
+  ['e','Cadena posterior','M','De pie y suelo','Piernas','En casa',1],
+  ['e','Despertar matinal','M','Suelo, sentado, de pie','Cuerpo entero','Al empezar (en casa)'],
+  ['e','Ancestral','A','Suelo y barra','Cuerpo entero','En casa',1],
+  ['r','Rondas express','M','Sentado o tumbado','Activa','Nunca al cerrar'],
+  ['r','Respiración en rondas','M','Sentado o tumbado','Activa','Nunca al cerrar',1],
+  ['r','Rondas profundas','M','Sentado o tumbado','Activa','Nunca al cerrar',1],
+  ['r','Box 4·4·4·4','M','Sentado','Foco','Cuando sea'],
+  ['r','Box 6·6·6·6','M','Sentado','Foco','Cuando sea'],
+  ['r','Diafragmática','M','Sentado o tumbado','Calma','Al cerrar'],
+  ['r','Tolerancia CO₂','M','Sentado','Retención','Cuando sea',1],
+  ['r','Coherente 5·5','M','Sentado','Calma','Al cerrar'],
+  ['r','Coherente 6·6','M','Sentado','Calma','Al cerrar'],
+  ['r','Coherente 432','M','Sentado','Calma','Al cerrar',1],
+  ['r','4·7·8','A','Sentado o tumbado','Calma','Al cerrar'],
+  ['r','Suspiro fisiológico','M','Sentado o de pie','Calma','Cuando sea · al cerrar'],
+  ['r','Exhalación 4·6','M','Sentado','Calma','Al cerrar'],
+  ['r','Rítmica yin','M','Sentado','Calma','Al cerrar'],
+  ['r','Ujjayi','M','Sentado','Calma','Cuando sea'],
+  ['r','Bhramari · Abeja','M','Sentado','Calma','Al cerrar'],
+  ['r','Bhastrika · Fuelle','C','Sentado','Activa','Nunca al cerrar'],
+  ['r','Nadi Shodhana','M','Sentado','Calma','Al cerrar',1],
+  ['r','Kapalabhati · Kriya','C','Sentado','Activa','Nunca al cerrar',1],
+  ['r','Kumbhaka 1:4:2','M','Sentado','Retención','Cuando sea',1],
+];
+const NOMBRE = { M: 'Mantener', A: 'Ajustar', C: 'Cambiar' };
+const tbody = document.getElementById('rows');
+function pintar(f) {
+  tbody.textContent = '';
+  R.filter(function (r) { return !f || (f === 'AC' ? r[2] !== 'M' : r[0] === f); }).forEach(function (r) {
+    const tr = document.createElement('tr');
+    const c0 = document.createElement('td');
+    c0.textContent = r[1];
+    if (r[6]) { const l = document.createElement('span'); l.className = 'lock'; l.textContent = '· completo'; l.title = 'PACE completo'; c0.appendChild(l); }
+    const c1 = document.createElement('td');
+    const v = document.createElement('span'); v.className = 'v ' + r[2]; v.textContent = NOMBRE[r[2]]; c1.appendChild(v);
+    tr.appendChild(c0); tr.appendChild(c1);
+    [r[3], r[4], r[5]].forEach(function (t) { const td = document.createElement('td'); td.textContent = t; tr.appendChild(td); });
+    tbody.appendChild(tr);
+  });
+}
+document.querySelectorAll('.filters button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.filters button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    pintar(b.dataset.f);
+  });
+});
+pintar('');
+</script>

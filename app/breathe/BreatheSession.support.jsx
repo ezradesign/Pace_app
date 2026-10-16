@@ -73,6 +73,8 @@ const PHASE_KEYS = {
   'Inhala al vientre': 'breathe.phase.inhala.vientre',
   'Exhala zumbando':  'breathe.phase.exhala.zumbando',
   'Sostén en vacío':  'breathe.phase.sosten.vacio',
+  /* El descanso entre rondas de Bhastrika y Kapalabhati: sin señal ni voz, a tu aire. */
+  'Respira suave':    'breathe.phase.respira.suave',
 };
 
 window.PHASE_KEYS = PHASE_KEYS;
@@ -389,9 +391,14 @@ function useMusicaFondo(stage, paused, routine) {
     if (paused) m.pause();
     else if (m.isActive()) m.resume();
     else {
-      /* El ciclo decide si la música respira o se queda quieta (Rondas, Bhastrika). */
+      /* El ciclo decide si la música respira o se queda quieta (Rondas, Bhastrika).
+         Una secuencia por rondas dice lo que dura UNA respiración en `ciclo`: sumada
+         entera, la de Bhastrika daría 60 s y la música se abriría cada segundo. */
       let ciclo = null;
-      try { ciclo = window.getSequence(routine).reduce((a, f) => a + f.duration, 0); } catch (e) { ciclo = null; }
+      try {
+        const seq = window.getSequence(routine);
+        ciclo = typeof seq.ciclo === 'number' ? seq.ciclo : seq.reduce((a, f) => a + f.duration, 0);
+      } catch (e) { ciclo = null; }
       /* El id elige la receta de la técnica (`PACE_MUSICA_TECNICA`); sin
          receta, suena el drone de su familia por el `tag`. */
       m.start(routine.tag, routine.drone === true, ciclo, routine.id, stage === 'prep' ? PACE_RESPIRA_ENTRADA_S : undefined);

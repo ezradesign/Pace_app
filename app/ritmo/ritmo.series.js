@@ -44,6 +44,8 @@ var RITMO_SERIES_META = {
   'extra.posture.set': { z: ['espalda'], pie: false },
   'extra.core.stealth': { z: ['espalda'], pie: false },
   'extra.desk.pushups': { z: ['hombros'], pie: true },
+  /* Sin el Superman ya no pide suelo y entra en el pozo (revisión de los ejercicios). */
+  'extra.back.desk': { z: ['espalda', 'hombros'], pie: true },
   'extra.legs.standing': { z: ['piernas'], pie: true },
 };
 /* Lo hecho fuera de los pozos (una rutina de suelo, por libre) también mueve su zona: se

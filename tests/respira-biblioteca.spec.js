@@ -212,7 +212,11 @@ test('cancelar el aviso de seguridad deja la biblioteca abierta', async ({ page 
 test('toda técnica que respira a 12 o más por minuto lleva aviso de seguridad', () => {
   const { rutinas, secuencia } = catalogo();
   const rapidas = rutinas.filter(r => {
-    const ciclo = secuencia(r).reduce((s, f) => s + f.duration, 0);
+    /* Una secuencia por rondas (Bhastrika y Kapalabhati, desde la revisión de los
+       ejercicios) dice en `ciclo` lo que dura UNA respiración: sumada entera, con su
+       descanso, parecería lenta. */
+    const seq = secuencia(r);
+    const ciclo = typeof seq.ciclo === 'number' ? seq.ciclo : seq.reduce((s, f) => s + f.duration, 0);
     return ciclo > 0 && 60 / ciclo >= 12;
   });
   /* GUARD: las tres de rondas, Kapalabhati y Bhastrika. Si la secuencia no se

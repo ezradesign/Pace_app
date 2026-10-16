@@ -6,6 +6,10 @@
    círculo ES la guía de respiración: motion esencial, no decorativo.
 */
 
+/* Bhastrika y Kapalabhati: respiraciones por ronda y segundos suaves entre rondas. */
+var RESPIRA_BOMBEO_RONDA = 20;
+var RESPIRA_BOMBEO_DESCANSO = 20;
+
 function getSequence(routine) {
   if (routine.pattern === 'rounds') {
     return [
@@ -51,10 +55,17 @@ function getSequence(routine) {
     ];
   }
   if (routine.pattern === 'bhastrika' || routine.pattern === 'kapalabhati') {
-    return [
-      { label: 'Inhala', duration: 1, scale: 1.2 },
-      { label: 'Exhala', duration: 1, scale: 0.95 },
-    ];
+    /* POR RONDAS: 20 respiraciones rápidas y 20 s respirando suave. Así se enseñan, y
+       tres minutos seguidos a 30 por minuto marean (revisión de los ejercicios, Ez,
+       16 oct. 2026). Con `min: 3` son tres rondas justas. `ciclo` es lo que dura UNA
+       respiración: la música la lee para quedarse quieta con el bombeo, como antes. */
+    const ronda = [];
+    for (let i = 0; i < RESPIRA_BOMBEO_RONDA; i++) {
+      ronda.push({ label: 'Inhala', duration: 1, scale: 1.2 }, { label: 'Exhala', duration: 1, scale: 0.95 });
+    }
+    ronda.push({ label: 'Respira suave', duration: RESPIRA_BOMBEO_DESCANSO, scale: 1.05 });
+    ronda.ciclo = 2;
+    return ronda;
   }
   if (routine.pattern === 'nadi') {
     return [

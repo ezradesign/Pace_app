@@ -40,7 +40,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.rounds.express.desc':         'Short version: 2 rounds of 25 breaths.',
   'breathe.rounds.express.code':         'Energy',
   'breathe.bellows.name':                'Bhastrika · Bellows',
-  'breathe.bellows.desc':                'Fast energizing pranayama',
+  'breathe.bellows.desc':                'Fast energizing pranayama, in three rounds with a rest.',
   'breathe.bellows.code':                'Pranayama',
   'breathe.box.4.name':                  'Box 4·4·4·4',
   'breathe.box.4.desc':                  'Perfect square. Mental calm and sustained focus.',
@@ -55,7 +55,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.coherent.66.desc':            'Deeper version. 5 cycles per minute.',
   'breathe.coherent.66.code':            'Balance',
   'breathe.478.name':                    '4·7·8',
-  'breathe.478.desc':                    'Long exhale. Meant to let go of the day and ease into rest.',
+  'breathe.478.desc':                    'Long exhale, four cycles. Meant to let go of the day and ease into rest.',
   'breathe.478.code':                    'Relaxation',
   'breathe.physiological.name':          'Physiological Sigh',
   'breathe.physiological.desc':          'Double inhale + long exhale. Quick reset.',
@@ -67,7 +67,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.ujjayi.desc':                 'Oceanic breath. Meditative.',
   'breathe.ujjayi.code':                 'Pranayama',
   'breathe.kapalabhati.name':            'Kapalabhati · Kriya',
-  'breathe.kapalabhati.desc':            'Skull shining breath. Energizing.',
+  'breathe.kapalabhati.desc':            'Skull shining breath. Energizing, in three rounds with a rest.',
   'breathe.kapalabhati.code':            'Kriya',
 
   // ── Breathe — técnicas F4 (s90) ──────────────────────────────────

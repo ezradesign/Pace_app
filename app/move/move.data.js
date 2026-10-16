@@ -80,7 +80,9 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Al borde de una silla estable, sin ruedas. Manos junto a las caderas; desliza la cadera fuera.',
               action: 'Baja doblando los codos hacia atrás. Sube empujando con los brazos.',
-              care: 'Codos apuntando atrás, no hacia fuera. Baja solo hasta donde el hombro vaya cómodo.' } },
+              /* Bajar de más carga la parte de delante del hombro: el tope es el codo a 90°
+                 (revisión de los ejercicios, Ez, 16 oct. 2026). */
+              care: 'Baja hasta que el codo haga un ángulo recto, no más. Con los pies cerca, es más fácil.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Fondos en silla', mode: 'reps', reps: 10, dur: 40,
@@ -99,12 +101,30 @@ var MOVE_ROUTINES = {
       { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
         intensity: 'moderate', level: 'intermediate',
         position: ['standing'], equipment: ['stableDesk'], requiresFloor: false,
+        /* Fuerza por repeticiones (BASE §3-A): los tres pasos eran relojes que pedían «10
+           reps», «8 reps» y «baja en 5 s». Las negativas bajan en 5 s de verdad. */
         steps: [
-          { name: 'Flexiones inclinadas', mode: 'timed', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
-          { name: 'Pica en escritorio', mode: 'timed', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', mode: 'timed', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
+          { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Manos en el borde de la mesa, cuerpo recto en diagonal.',
+              action: 'Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja y vuelve.',
+              care: 'Baja hasta donde controles. Cuanto más alta la superficie, más fácil.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
+          { name: 'Pica en escritorio', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Manos en la mesa, acerca los pies y sube la cadera: el cuerpo, en V invertida.',
+              action: 'Dobla los codos y lleva la cabeza hacia la mesa, entre los brazos. Empuja y vuelve.',
+              care: 'Recorrido corto: la cabeza nunca toca la mesa. Con los pies más lejos, más fácil.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
+          { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 30,
+            tempo: { down: 5, hold: 0, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Negativas: baja en 5 segundos y sube normal.',
+              care: 'Si cuesta, apoya las manos en una superficie más alta.' } },
         ]},
       /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de barra
          → `timed`; los rests entre holds son SUAVES (sin restKind, patrón
@@ -156,9 +176,9 @@ var MOVE_ROUTINES = {
             instruction: {
               action: 'Más lentas ahora: baja en 3 s. Nota el gemelo en cada subida.' } },
         ]},
-      /* s118 (B2.3 OLA 1): migrado — dos series de reps (grip + extensión) y un
-         estiramiento de muñeca `timed` (ambas manos, no hay lado). */
-      { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
+      /* Dos series de reps (grip + extensión) y el estiramiento de muñeca POR MANO: en
+         20 s para las dos no daba tiempo a las dos posiciones de cada una. */
+      { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 2,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Abrir y cerrar el puño', mode: 'reps', reps: 20, dur: 20,
@@ -172,7 +192,7 @@ var MOVE_ROUTINES = {
             instruction: {
               action: 'Abre bien los dedos, estíralos y relaja.',
               care: 'Sin forzar las articulaciones.' } },
-          { name: 'Estiramiento de muñeca', mode: 'timed', dur: 20,
+          { name: 'Estiramiento de muñeca', mode: 'perSide', dur: 20, transition: { seconds: 5 },
             instruction: {
               action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
@@ -209,8 +229,10 @@ var MOVE_ROUTINES = {
       { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hueco abdominal en silla.', min: 2, access: 'premium',
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
+          /* Al levantar las dos piernas, una silla con ruedas se va: la colocación lo dice. */
           { name: 'Hueco en silla', mode: 'timed', dur: 30,
             instruction: {
+              setup: 'Silla sin ruedas o frenada. Atrás del todo, espalda apoyada, manos en el asiento.',
               action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
               care: 'Baja los pies para que sea más suave. Respira normal.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
@@ -301,7 +323,8 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Apoya la espalda en una pared y desliza hacia abajo hasta que las rodillas queden a 90°.',
               action: 'Espalda pegada a la pared, rodillas a 90°. Respira normal.',
-              care: 'Elige una altura que te deje respirar; cuanto menos bajes, más suave.' } },
+              /* Aguantar el aire en una isometría sube la tensión en el momento. */
+              care: 'Respira sin aguantar el aire. Cuanto menos bajes, más suave.' } },
           { name: 'Descanso', mode: 'rest', dur: 30,
             instruction: { action: 'Suave.' } },
           { name: 'Silla en la pared', mode: 'timed', dur: 60,
@@ -309,16 +332,37 @@ var MOVE_ROUTINES = {
               action: 'Segunda tanda. Vuelve a la posición y mantén.',
               care: 'Elige una altura que te deje respirar tranquilo.' } },
         ]},
-      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
+      /* A una pierna, cada lado con su reloj y su cambio: antes «8 por pierna» y «12 por
+         lado» cabían en un reloj sin cambio de lado. El runner no tiene repeticiones por
+         lado, así que las cuentas van como guía dentro del reloj de cada lado. */
+      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 5, access: 'premium',
         intensity: 'strong', level: 'advanced',
         position: ['standing'], equipment: ['stableChair'], requiresFloor: false,
         steps: [
-          { name: 'Sentadilla búlgara', mode: 'timed', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
-          { name: 'Zancada profunda', mode: 'timed', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
-          { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-          { name: 'Elevación de talones', mode: 'timed', dur: 40, cue: 'A una pierna, 12 por lado.' },
+          { name: 'Sentadilla búlgara', mode: 'perSide', dur: 40, transition: { seconds: 10 }, setup: { mode: 'ready', estimatedSeconds: 20 },
+            instruction: {
+              setup: 'Silla estable contra la pared, a tu espalda. Apoya en ella el empeine de una pierna.',
+              action: 'Baja en vertical sobre la pierna de delante y sube. Unas 6 por pierna.',
+              care: 'Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.' } },
+          { name: 'Descanso', mode: 'rest', dur: 20,
+            instruction: { action: 'Respira.' } },
+          { name: 'Zancada profunda', mode: 'perSide', dur: 35, transition: { seconds: 10 },
+            instruction: {
+              setup: 'De pie, da un paso largo adelante. Una mano en la mesa si la necesitas.',
+              action: 'Baja hasta que la rodilla de delante pase por encima del pie, y sube. Unas 6 por pierna.',
+              care: 'Si la rodilla se queja, baja menos. El talón de delante, siempre apoyado.' } },
+          { name: 'Descanso', mode: 'rest', dur: 20,
+            instruction: { action: 'Respira.' } },
+          { name: 'Sentadilla de cuádriceps', mode: 'reps', reps: 10, dur: 40,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Sujétate a la mesa con las dos manos.',
+              action: 'Lleva las rodillas adelante y sube los talones. Baja poco a poco y vuelve.',
+              care: 'Apoyado en todo momento. Baja solo hasta donde las rodillas vayan cómodas.' } },
+          { name: 'Elevación de talones', mode: 'perSide', dur: 30, transition: { seconds: 5 },
+            instruction: {
+              action: 'A una pierna: sube el talón lo más alto que puedas y baja despacio. Unas 10.',
+              care: 'Una mano en la mesa para el equilibrio. Sin rebotes.' } },
         ]},
     ]
   },
@@ -356,28 +400,32 @@ var MOVE_ROUTINES = {
          con 2 s de retención; posturalControl, audit B2.1 «cue ya trae reps y
          retención»); Band pull-apart y Apertura de pecho → `timed` (reutilizan el
          copy de OLA 2 —shoulder.circles/chair.antidote—, mismo glifo); Superman →
-         `reps` (10, dosis legacy) sobre SUELO con gate `ready` (cuenta la bajada al
+         `reps` (10) sobre SUELO; hoy ya no está (ver abajo). Antes contaba la bajada al
          suelo vía estimatedSeconds, §6). `name` intactos → glifos sin tocar.
-         Acceso free SIN cambios. */
-      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
-        position: ['seated', 'standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
+         Acceso free SIN cambios.
+         DE PIE Y SIN SUELO: una rutina «de oficina» no puede pedir tumbarse. El Superman
+         dejó su sitio a los deslizamientos en pared (ya tenían dibujo), así que entra en
+         los pozos de «A tu ritmo» como pausa de pie (revisión de los ejercicios, Ez,
+         16 oct. 2026). */
+      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda alta y los hombros, de pie junto a una pared.', min: 3,
+        position: ['standing'], equipment: ['wallOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Juntar omóplatos', mode: 'reps', reps: 12, dur: 40,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Siéntate erguido o ponte de pie, hombros sueltos.',
+              setup: 'De pie, pies al ancho de las caderas, hombros sueltos.',
               action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
               care: 'Hombros abajo, lejos de las orejas.' } },
           { name: 'Apertura con banda', mode: 'timed', dur: 40,
             instruction: {
               action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
               care: 'Hombros abajo, lejos de las orejas.' } },
-          { name: 'Superman', mode: 'reps', reps: 10, dur: 40, setup: { mode: 'ready', estimatedSeconds: 15 },
-            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+          { name: 'Deslizamientos en pared', mode: 'reps', reps: 8, dur: 48,
+            tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Túmbate boca abajo en el suelo, con los brazos estirados al frente.',
-              action: 'Eleva el pecho y los brazos del suelo, despacio. Baja con control.',
-              care: 'Movimiento pequeño. No fuerces la zona lumbar.' } },
+              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
+              action: 'Sube y baja los brazos pegados a la pared, como alas, despacio.',
+              care: 'Sube solo hasta donde no se despeguen. Sin pared, hazlo en el aire.' } },
           { name: 'Apertura de pecho', mode: 'timed', dur: 40,
             instruction: {
               action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',

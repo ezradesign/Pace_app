@@ -22,7 +22,8 @@ const EXTRA_ROUTINES = {
     aside: 'Antídoto al escritorio',
     items: [
       { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
-        desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello. Pasarás por el suelo.', min: 5,
+        /* Sin «exacto a 4 h»: nadie lo ha medido, y la base no deja prometer efectos. */
+        desc: 'Lo contrario de estar sentado: pecho, caderas y cuello. Pasarás por el suelo.', min: 5,
         position: ['seated', 'halfKneeling', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'gentle', level: 'accessible',
         steps: [
           /* s115 (B2.2b-1): contrato formal — `instruction` {setup,action,care}
@@ -95,13 +96,33 @@ const EXTRA_ROUTINES = {
         intensity: 'gentle', level: 'accessible',
         position: ['seated'], equipment: [], requiresFloor: false,
         desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
+        /* Cada gesto con su colocación o su cuidado, como el resto del catálogo. «Barbilla
+           atrás 5 veces» era un reloj de 20 s: son 5 repeticiones de 4 s, los mismos 20. */
         steps: [
-          { name: 'Encogimiento de hombros', mode: 'timed', dur: 20, cue: 'Hombros arriba, luego relaja.' },
-          { name: 'Círculos de muñeca', mode: 'timed', dur: 20, cue: '10 en cada sentido.' },
-          { name: 'Giro sentado', mode: 'timed', dur: 20, cue: 'Rota hacia el respaldo.' },
-          { name: 'Círculos de tobillo', mode: 'timed', dur: 20, cue: 'Bajo la mesa.' },
-          { name: 'Barbilla atrás', mode: 'timed', dur: 20, cue: 'Barbilla atrás 5 veces.' },
-          { name: 'Respiraciones profundas', mode: 'timed', dur: 20, cue: '3 inhalaciones completas.' },
+          { name: 'Encogimiento de hombros', mode: 'timed', dur: 20,
+            instruction: {
+              setup: 'Siéntate erguido, pies apoyados, brazos sueltos.',
+              action: 'Sube los hombros hacia las orejas y déjalos caer. Repite despacio.',
+              care: 'Suelta el aire al bajar. La mandíbula, floja.' } },
+          { name: 'Círculos de muñeca', mode: 'timed', dur: 20,
+            instruction: {
+              action: 'Gira las muñecas en círculos, unos 10 en cada sentido.',
+              care: 'Muñecas sueltas, sin apretar.' } },
+          { name: 'Giro sentado', mode: 'timed', dur: 20,
+            instruction: {
+              action: 'Gira el tronco hacia el respaldo, con una mano en él. Luego, al otro lado.',
+              care: 'Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.' } },
+          { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
+            instruction: {
+              action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
+              care: 'Círculos lentos y amplios.' } },
+          { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 20,
+            tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Desliza la barbilla recta hacia atrás, mantén y suelta. 5 veces.',
+              care: 'Recorrido pequeño. La cabeza va atrás, no abajo.' } },
+          { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+            instruction: { action: '3 inhalaciones completas para cerrar.' } },
         ]},
       /* s119 (B2.3 OLA 2): migración mecánica al contrato v1 (s115). Movilidad
          de muñecas → `timed` (exploratorio, BASE §3-B); Finger extension →
@@ -166,11 +187,13 @@ const EXTRA_ROUTINES = {
               setup: 'Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides.',
               action: 'Cuelga con los brazos estirados y suelta el peso de los hombros.',
               care: 'Tracción suave. Baja si notas molestia.' } },
+          /* Sobre el respaldo de una silla, como su dibujo: la de rulo pedía tumbarse en una
+             rutina sin suelo. El texto es el de «Columna en la silla». */
           { name: 'Extensión torácica', mode: 'timed', dur: 40,
             instruction: {
-              setup: 'Apoya la espalda alta sobre un foam roller o una toalla enrollada.',
-              action: 'Arquea abriendo el pecho al techo.',
-              care: 'El arco nace del pecho, no de la lumbar.' } },
+              setup: 'Siéntate atrás del todo, con la espalda alta apoyada en el respaldo.',
+              action: 'Arquea suave sobre el respaldo, abriendo el pecho al techo.',
+              care: 'El arco nace del pecho, no de la zona lumbar.' } },
         ]},
       /* s119 (B2.3 OLA 2): migración al contrato v1. Todo movilidad → `timed`
          (BASE §3-B). Sin material → sin gate. External rotation / Band pull-apart
@@ -281,21 +304,22 @@ const EXTRA_ROUTINES = {
               setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
               action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
               care: 'Movimiento lento, siguiendo la respiración.' } },
-          { name: 'Onda espinal', mode: 'timed', dur: 60,
-            instruction: {
-              setup: 'Ponte de pie, rodillas sueltas.',
-              action: 'Recorre una ola lenta desde la pelvis hasta la cabeza.',
-              care: 'Movimiento fluido, sin prisa.' } },
-          { name: 'Rotación torácica', mode: 'timed', dur: 45,
-            instruction: {
-              setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
-              action: 'Gira el tronco despacio a un lado y al otro.',
-              care: 'El giro nace del tronco, no del cuello.' } },
+          /* Suelo, sentado y de pie, en ese orden: antes se bajaba al suelo dos veces. */
           { name: 'Puente torácico', mode: 'timed', dur: 60,
             instruction: {
               setup: 'Siéntate en el suelo, manos apoyadas detrás.',
               action: 'Eleva la cadera y abre el pecho al techo. Baja despacio.',
               care: 'Sube solo hasta donde el pecho abra sin forzar.' } },
+          { name: 'Rotación torácica', mode: 'timed', dur: 45,
+            instruction: {
+              setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
+              action: 'Gira el tronco despacio a un lado y al otro.',
+              care: 'El giro nace del tronco, no del cuello.' } },
+          { name: 'Onda espinal', mode: 'timed', dur: 60,
+            instruction: {
+              setup: 'Ponte de pie, rodillas sueltas.',
+              action: 'Recorre una ola lenta desde la pelvis hasta la cabeza.',
+              care: 'Movimiento fluido, sin prisa.' } },
           { name: 'Rodar hacia abajo', mode: 'timed', dur: 60,
             instruction: {
               setup: 'Ponte de pie, pies al ancho de las caderas.',

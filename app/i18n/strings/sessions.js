@@ -106,6 +106,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'breathe.phase.exhala.dcha':       'Exhala dcha.',
     'breathe.phase.exhala.izq':        'Exhala izq.',
     'breathe.phase.respira':           'Respira',
+    'breathe.phase.respira.suave':     'Respira suave',
     'breathe.phase.inhala.vientre':    'Inhala al vientre',
     'breathe.phase.exhala.zumbando':   'Exhala zumbando',
     'breathe.phase.sosten.vacio':      'Sostén en vacío',
@@ -164,7 +165,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'breathe.safety.body.rule1.bold':  'sentado o tumbado',
     'breathe.safety.body.rule1.post':  ', nunca de pie',
     'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
-    'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
+    'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión, cardiopatía o una hernia, ni embarazada',
     'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
 
     // Constructor de rutinas (F7 · s93)
@@ -285,6 +286,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'breathe.phase.exhala.dcha':       'Exhale right',
     'breathe.phase.exhala.izq':        'Exhale left',
     'breathe.phase.respira':           'Breathe',
+    'breathe.phase.respira.suave':     'Breathe easy',
     'breathe.phase.inhala.vientre':    'Inhale into the belly',
     'breathe.phase.exhala.zumbando':   'Humming exhale',
     'breathe.phase.sosten.vacio':      'Hold empty',
@@ -340,7 +342,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'breathe.safety.body.rule1.bold':  'sitting or lying down',
     'breathe.safety.body.rule1.post':  ', never standing',
     'breathe.safety.body.rule2':       'Never in water, while driving or at height',
-    'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
+    'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension, heart disease or a hernia, or if pregnant',
     'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
 
     // Routine builder (F7 · s93)
