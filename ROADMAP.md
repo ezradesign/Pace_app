@@ -148,6 +148,12 @@ v0.128.0), **aprende de «¿te ayudó?»** y la **lectura C** de s194 (el sistem
 propone ajustes, con el `origin` de cada sesión que se registra desde v0.124.0). La lectura B
 (planificar la semana de antemano) sigue aparcada. El `.ics` sigue aparcado hasta usar el aviso.
 
+**Ez, 16 oct. 2026** (`DECISIONES_PRODUCTO.md`, «Lo que hace bueno a PACE antes de cobrar»): el
+motor de la semana se monta ya, sin esperar semanas de datos; entran los **días diseñados** (cada
+día con su intención y rutinas medidas) y el **calendario total en la web** con una función de
+Cloudflare solo para eso. La venta (Fase 6) va a la vez, en otra sesión. Las series y la capa 1 de
+«PACE que aprende» ya están (v0.171.0).
+
 ### FASE 4 · Stats «Hoy» y «Semana»
 
 **Se desaparca la antigua Fase 4.** «Hoy» enseña el menú del día (motivo por el que se aparcó en

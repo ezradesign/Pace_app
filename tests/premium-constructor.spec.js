@@ -1,6 +1,6 @@
 /* PACE · E2E · «TUS RUTINAS» ES DE PACE COMPLETO TAMBIÉN DESDE LA BARRA LATERAL (v0.161.0)
  * =========================================================================================
- * En el recorrido del 13 oct. salió que «Mis rutinas», en la barra lateral, abría el
+ * En el recorrido del 13 oct. salió que «Tus rutinas», en la barra lateral, abría el
  * CONSTRUCTOR a quien no tiene PACE completo: se podía crear una rutina que luego salía
  * cerrada en la biblioteca. Desde la biblioteca ya salía la invitación (v0.157.0); ahora
  * también desde la barra y desde cualquier `pace:open-custom-builder`.
@@ -15,7 +15,7 @@ const { sembrar, irAlArtefacto } = require('./helpers');
 const invitacion = (page) => page.locator('[data-pace-premium-hoja]');
 const constructor = (page) => page.getByRole('heading', { name: 'Nueva rutina' });
 
-test('sin PACE completo, «Mis rutinas» y el evento del constructor abren la invitación', async ({ page, context }) => {
+test('sin PACE completo, «Tus rutinas» y el evento del constructor abren la invitación', async ({ page, context }) => {
   await sembrar(context);
   await irAlArtefacto(page);
   await page.locator('aside[data-pace-sidebar]').getByRole('button', { name: /rutinas/i }).click();
@@ -29,7 +29,7 @@ test('sin PACE completo, «Mis rutinas» y el evento del constructor abren la in
   await expect(constructor(page)).toHaveCount(0);
 });
 
-test('con PACE completo, «Mis rutinas» abre el constructor', async ({ page, context }) => {
+test('con PACE completo, «Tus rutinas» abre el constructor', async ({ page, context }) => {
   await sembrar(context, { premiumUnlocked: true });
   await irAlArtefacto(page);
   await page.locator('aside[data-pace-sidebar]').getByRole('button', { name: /rutinas/i }).click();

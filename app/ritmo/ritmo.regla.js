@@ -53,6 +53,10 @@
         Respira + Estira
      2. la que va antes de la larga → Mueve
      3. las demás → Estira (lo mismo que propone la pausa desde s187)
+     · AL FINAL DEL DÍA, LA LARGA QUE NO CABE ES CORTA (Ez, 16 oct.): si por ella la cola
+       juntaría lo que queda en un solo bloque, y una corta deja detrás un bloque entero,
+       la pausa es corta. «Dos horas» con el aro a 25 es 25 · P · 25 · P · 25 · P · 25, y
+       no 25 · P · 25 · P · 55; la tarde de la jornada, igual.
      · CON EL ARO CORTO, LOS BLOQUES SE JUNTAN (Ez, 15 oct.): no hay pausa mientras el
        bloque siguiente no te haga pasar de 30 min de foco seguidos. Con el aro a 10, la
        pausa llega cada tres bloques; a 15, cada dos; de 20 en adelante, tras cada uno,
@@ -155,6 +159,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     /* Con el aro corto, la larga que ya no deja sitio al último bloque se sirve corta,
        también en la jornada: si no, el día acababa un cuarto de hora antes. */
     var corto = bloque * 2 <= JUNTOS;
+    /* LA LARGA SIN SITIO (Ez, 16 oct.): con `r` min por servir y un bloque de `b` delante, la
+       larga deja detrás menos de la cola y la cola lo juntaría todo en un bloque (si no pasa
+       de 60) sin ninguna pausa; con una corta, detrás cabe un bloque entero. Entonces la
+       pausa es corta, en cualquier opción. Una larga con sitio detrás, o que la cola parte
+       en dos bloques con ella en medio, se queda. */
+    function largaSinSitio(r, b) { return r <= 60 && r - b - LARGA < cola && r - b - PAUSA >= cola; }
     function pausaDe(extra) {
       var faltan = adelanta && manana && !largasManana ? 2 : 3 + Math.max(0, 3 - largaEn);
       return cuentaL + 1 >= faltan && focoL + extra >= FOCO_LARGA ? LARGA : PAUSA;
@@ -201,6 +211,8 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       var p0 = pausaDe(0);
       var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
       if (queda0 < minimo && p0 === LARGA && (forma.reloj || corto) && queda0 + LARGA - PAUSA >= minimo) { p0 = PAUSA; queda0 += LARGA - PAUSA; }
+      /* lo que había por servir al empezar el bloque que acaba: él, su pausa y lo de detrás */
+      if (p0 === LARGA && largaSinSitio(queda0 + LARGA + seguidos, seguidos)) { p0 = PAUSA; queda0 += LARGA - PAUSA; }
       var o0 = sigOcupado();
       if ((queda0 >= minimo || comerAntes()) && !(falta && t + p0 > comeA) && !(o0 && t + p0 > o0.desde)) {
         enMitad++; seguidos = 0;
@@ -215,11 +227,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       var o = sigOcupado();
       var enMarcha = P0 && P0.primerBloque && n === primeros;
       if (o && o.desde <= t && !enMarcha) { reunirse(o); continue; }
+      /* lo que queda por servir; también con el bloque en marcha, porque decide su pausa */
+      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
       if (enMarcha) {
         /* El bloque que acaba de empezar dura lo que marca el aro, pase lo que pase. */
         dur = P0.primerBloque;
       } else {
-        var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
         if (rem < minimo) {
           if (comerAntes()) { comer(); continue; }
           break;
@@ -227,6 +240,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
         /* al final de una opción con `reloj`, la larga que no dejaría sitio a otro bloque
            se cuenta ya como corta, para no juntar el final en un bloque largo por ella */
         if (forma.reloj && p === LARGA && rem - bloque - LARGA < minimo && rem - bloque - PAUSA >= minimo) p = PAUSA;
+        if (p === LARGA && largaSinSitio(rem, bloque)) p = PAUSA;
         dur = bloque;
         if (rem <= bloque) dur = rem;
         else if (rem - bloque - p < cola) dur = rem <= 60 ? rem : redondo5((rem - p) / 2);
@@ -259,6 +273,8 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       /* Al final de una opción con `reloj`, una larga que ya no deja sitio a otro bloque
          se sirve corta: si no, «Dos horas» con el aro a 10 acababa veinte minutos antes. */
       if (queda < minimo && p === LARGA && (forma.reloj || corto) && queda + LARGA - PAUSA >= minimo) { p = PAUSA; queda += LARGA - PAUSA; }
+      /* la misma cuenta que al medir el bloque: si no, la larga volvía detrás de él */
+      if (p === LARGA && largaSinSitio(rem, dur)) { p = PAUSA; queda += LARGA - PAUSA; }
       if (queda < minimo && !comerAntes()) break;
       if (falta && t + p > comeA) { comer(); continue; }
       o = sigOcupado();

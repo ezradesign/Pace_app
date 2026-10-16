@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.171.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.171.2.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,36 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **16 oct., 17:00 (relevo por uso, 91 %): v0.171.3 en `main`:** «Dos horas» con el aro a 25
+  (`claude/priceless-yonath-e0c735`, sí de Ez), con la suite entera en verde (698). Sesiones, las dos
+  paradas por el uso con su wip y su RELEVO.md:
+  - `venta-sin-stripe` (`local_93e3b5bd-…`), rama `claude/interesting-meninsky-062638`, wip ac50717:
+    Ez eligió las cuatro recomendadas («Avísame» en su Cloudflare, `/premium` B, bienvenida A, la
+    página ya y la lista después). Falta probar y cerrar.
+  - `revision-ejercicios` (`local_b87e4b5e-…`), rama `claude/wonderful-pare-55e168`, wip 20dd4f5: hecho
+    el inventario de Mueve y Estira; dijo que sigue sola al reponerse la ventana (17:30 UTC).
+  - «Rana»: Ez generará `rana.png`; la tarjeta espera sin sustituto (Ez, 16 oct.).
+- **16 oct., tarde: la dirección de Ez para antes de cobrar** (`DECISIONES_PRODUCTO.md`, «Lo que hace
+  bueno a PACE antes de cobrar»): los testers son amigos, así que se puede cambiar lo que haga falta.
+  La venta y el producto van a la vez, sin pasar de dos sesiones. Cola de sesiones:
+  - abierta: `venta-sin-stripe` (`local_93e3b5bd-…`, puerto 8796). `dos-horas-aro-25` está en
+    v0.171.3 (con el sí de Ez);
+  - la siguiente: **la revisión de todos los ejercicios** con la evidencia de hoy
+    (Mueve, Estira y Respira; Ez, 16 oct.; encargo en `archivos/encargos-16oct/REVISION_EJERCICIOS.md`);
+  - luego **el motor de la semana** (el de `archivos/motor-semana/`, sin esperar semanas de datos);
+  - después: **los días diseñados** (cada día con su intención y rutinas medidas, y las de pie para la
+    tarde; tocan lo mismo que el motor, no a la vez);
+  - **el calendario total en la web** con una función de Cloudflare, cuando Ez haga sus altas en
+    Google Cloud y Microsoft Entra.
+  Una sesión que acaba no puede abrir otra desde un aviso: la coordinadora deja la tarjeta y Ez la pulsa.
+- **16 oct., tarde: v0.171.1 y v0.171.2 en `main`; la auditoría, hecha.** La coordinadora la hizo en
+  esta sesión (desde Remote Control la app no deja abrir sesiones): `scripts/audit/recorrido-app.js`
+  (unas 250 pantallas) y `scripts/audit/censo-promesas.js` (33 rutinas). Página para Ez:
+  https://claude.ai/artifact/DJ6B89dpS6NwTor2uoqc17. Ez decidió: las rondas «más lentas» bajan en 3 s
+  y Piernas de pie en 2 s (v0.171.1); el gris de los rótulos a un punto intermedio, las cabeceras de
+  seguridad y «Tus rutinas» (v0.171.2); borrar las 14 carpetas terminadas (hecho); la tercera
+  pausa corta en «Dos horas» con el aro a 25, y seguir con la Fase 6 por lo que no espera a Stripe.
+  Esas dos últimas quedaron como tarjetas de sesión (`dos-horas-aro-25`, `venta-sin-stripe`).
 - **16 oct., mediodía: v0.171.0 en `main`**: las series con la pausa corta cada 30 min
   (`claude/series-montaje-7bf9e0`, 5caa51a) y el «Ahora no» del cierre (`claude/ahora-no-tapado-d2eacd`,
   fc50c4d, opción B de Ez, con su sí para juntarla). Ez vio las fotos de las dos. Las dos sesiones

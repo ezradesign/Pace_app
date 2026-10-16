@@ -109,7 +109,7 @@
 /* EL HORARIO se edita dentro de la frase: <select> nativo con aspecto de texto
    subrayado. El padding vertical agranda la zona de toque sin mover la línea. */
 .pace-rt-sel { appearance: none; -webkit-appearance: none; font: inherit; color: var(--ink); cursor: pointer;
-  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%238A8372' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%2377705F' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
   border: 0; border-bottom: 1px dotted var(--line-2); border-radius: 0; padding: 6px 11px 1px 1px; margin: -6px 1px 0;
   field-sizing: content; }
 .pace-rt-sel:hover { border-bottom-color: var(--ink-3); }

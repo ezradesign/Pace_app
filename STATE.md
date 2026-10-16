@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.171.1 · 16 de octubre de 2026.
+**Versión:** v0.171.3 · 16 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -100,7 +100,9 @@ llega tras 75 min de foco; el miércoles adelanta una sola (v0.169.0, Ez, 15 oct
 movido, nada de la misma parada de la última vez, y la frase de lo de hoy encima del nombre
 («Caderas: sin mover hoy»). Recuerda lo servido siete días y lo hecho hoy (`ritmo.servidos`,
 `ritmo.hechas`). Rutinas nuevas: Piernas de pie y Espalda de pie, y la mesa entra en los pozos. Con
-el aro a 10 o 15, la pausa corta llega como mucho cada 30 min de foco y el aro espera.
+el aro a 10 o 15, la pausa corta llega como mucho cada 30 min de foco y el aro espera. Si al final
+del día la larga no cabe, la pausa es corta: «Dos horas» con el aro a 25 son cuatro bloques de 25
+(v0.171.3; con el aro a 45 o 50 sigue 45 · P · 60 y 50 · P · 55, Ez lo deja así).
 
 «A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
 días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
@@ -143,7 +145,14 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
    `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
    en `SUBIDAS.md`.
-2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
+2. **Lo que hace bueno a PACE antes de cobrar** (Ez, 16 oct.; `DECISIONES_PRODUCTO.md`): a la vez que
+   la venta, y en este orden, cada uno en su sesión: **la revisión de todos los ejercicios** con la
+   evidencia de hoy (Mueve, Estira y Respira; `docs/traspaso/archivos/encargos-16oct/REVISION_EJERCICIOS.md`),
+   **el motor de la semana** (aprende desde la
+   primera semana de los testers), **los días diseñados** (cada día con su intención y rutinas
+   medidas) y **el calendario total en la web** con una función de Cloudflare (espera las altas de
+   Ez en Google y Microsoft).
+   Antes: **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
    cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
    «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
    cuatro cosas, dos cambios por semana, la carta en una ventana, también sin cambios, nada sin
@@ -164,9 +173,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 6. **Lo demás que vio Ez el 15 oct.**: el «Ahora no» tapado y las series están en v0.171.0; las
    rondas «más lentas» que no lo eran (Gemelos y Sentadillas), en v0.171.1. Falta la voz del suspiro
    fisiológico, que espera las grabaciones de Ez.
-7. **La auditoría del 16 oct.** (`docs/audits/auditoria-v0.171.0.md`): sin fallos graves; lo que pide
-   decisión de Ez va en una página (el gris de los textos pequeños, las cabeceras de seguridad, el
-   nombre «Premium» y por dónde empezar la Fase 6).
+7. **La auditoría del 16 oct.** (`docs/audits/auditoria-v0.171.0.md`, página para Ez en
+   https://claude.ai/artifact/DJ6B89dpS6NwTor2uoqc17): sin fallos graves. Ez decidió las seis
+   cosas: el gris, las cabeceras y «Tus rutinas» están en v0.171.2; las carpetas de trabajo
+   terminadas, borradas. Siguen en su sesión: **la Fase 6 sin Stripe** (`/premium`, «Avísame», la
+   bienvenida con los dos precios y el punto único de compra; primero opciones para Ez); **«Dos
+   horas» con el aro a 25**, en v0.171.3.
 
 ## Espera a Ez
 
@@ -214,8 +226,7 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   claves D-1, D-2 y D-3.
 - Los 21 dibujos pendientes (3 de ejercicio y 18 de logro) entran si llegan.
 - Con el aro a 10 o 15, la jornada se queda sin rutinas de pie por la tarde (hasta cuatro sentadas
-  seguidas): falta contenido de pie (el paseo corto quedó fuera por ahora). Y «Dos horas» con el
-  aro a 25 acaba en un bloque de 55 min (la tercera pausa sería larga y no cabe).
+  seguidas): falta contenido de pie (el paseo corto quedó fuera por ahora).
 
 El `STATE.md` anterior, con el mapa de archivos, el índice de decisiones y el backlog antiguo, está en
 `docs/archive/STATE_HASTA_S200.md`.

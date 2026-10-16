@@ -177,7 +177,7 @@ test.describe('en Android', () => {
     await comoAndroid(context);
     const errores = capturarErrores(page);
     await irAlArtefacto(page);
-    await expect(page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Mis rutinas' })).toBeVisible();
+    await expect(page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Tus rutinas' })).toBeVisible();
     await expect(pillDeApoyo(page), 'Google Play no deja enlazar a otro sistema de pago').toHaveCount(0);
 
     await page.waitForTimeout(1600);   // el aviso de la racha salta a los 1,2 s

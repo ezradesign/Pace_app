@@ -88,7 +88,7 @@ function medir(page) {
     const caja = document.querySelector('[data-pace-sidebar-escala]');
     if (!aside || !caja) return null;
     const hijos = [...caja.children];
-    const pie = hijos.find(e => (e.textContent || '').includes('Mis rutinas'));
+    const pie = hijos.find(e => (e.textContent || '').includes('Tus rutinas'));
     const tarjeta = hijos.find(e => e.hasAttribute('data-pace-sidebar-accion'));
     const semana = aside.querySelector('[data-pace-semana]');
 
