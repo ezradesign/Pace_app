@@ -41,6 +41,12 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.settings.enter':        'Introducir código',
     'premium.settings.code':         'Código',
     'premium.settings.tester':       'Tester n.º {n}',
+    'premium.onb.titulo':            'PACE es gratis.',
+    'premium.onb.lede':              'Si un día quieres más, PACE completo añade:',
+    'premium.onb.precios':           '{vida} una vez, o {mes} al mes con {dias} días gratis.',
+    'premium.onb.probar':            'Probar {dias} días gratis',
+    'premium.onb.vida':              'Prefiero pagarlo una vez, {vida}',
+    'premium.onb.aviso':             'Te avisamos dos días antes de que acabe la prueba.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -77,4 +83,10 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.settings.enter':        'Enter code',
     'premium.settings.code':         'Code',
     'premium.settings.tester':       'Tester no. {n}',
+    'premium.onb.titulo':            'PACE is free.',
+    'premium.onb.lede':              'If one day you want more, PACE Complete adds:',
+    'premium.onb.precios':           '{vida} once, or {mes} a month with {dias} days free.',
+    'premium.onb.probar':            'Try {dias} days free',
+    'premium.onb.vida':              'I would rather pay once, {vida}',
+    'premium.onb.aviso':             'We will remind you two days before the trial ends.',
 });

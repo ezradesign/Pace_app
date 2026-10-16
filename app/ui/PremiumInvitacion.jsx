@@ -159,4 +159,4 @@ const premiumInvitacionStyles = {
   error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 },
 };
 
-Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium });
+Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });

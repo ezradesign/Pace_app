@@ -28,6 +28,8 @@ http.createServer(function (req, res) {
   // Rutas bonitas de Cloudflare Pages (s102): /safety y /privacy sirven
   // sus .html para que el preview se comporte como producción.
   if (url === '/safety' || url === '/privacy') url += '.html';
+  // La página de PACE completo es una carpeta: Cloudflare sirve /premium/index.html en /premium/.
+  if (url === '/premium' || url === '/premium/') url = '/premium/index.html';
   var file = path.join(ROOT, url);
   // Block traversal outside ROOT.
   if (file.indexOf(ROOT) !== 0) { res.writeHead(403); return res.end('Forbidden'); }

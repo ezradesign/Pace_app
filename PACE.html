@@ -211,6 +211,9 @@
        comprobación sin servidor. Antes del guard, que pregunta por el código. -->
   <script type="text/babel" src="app/licencia.llaves.js"></script>
   <script type="text/babel" src="app/state-licencia.js"></script>
+  <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
+       que se enchufen. Solo el guard, que carga detrás, les habla. -->
+  <script type="text/babel" src="app/state-compra.js"></script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
        Antes de state-paths (getSuggestedPath lo consume) y del resto de
        consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
@@ -530,6 +533,7 @@
        main.jsx lo monta. -->
   <script type="text/babel" data-presets="env,react" src="app/onboarding/pickFirstPath.js"></script>
   <script type="text/babel" src="app/onboarding/OnboardingScreens.jsx"></script>
+  <script type="text/babel" src="app/onboarding/OnboardingCompleto.jsx"></script>
   <script type="text/babel" src="app/onboarding/Onboarding.jsx"></script>
   <!-- «A tu ritmo» (s192): el panel del día que ocupa el sitio de Actividades
        y del Camino sugerido. La hoja primero; RitmoHome, que los compone, al final. -->

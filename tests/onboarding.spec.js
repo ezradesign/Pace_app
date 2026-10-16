@@ -23,10 +23,13 @@ test('con estado limpio la app abre EN el onboarding, montado sobre la home', as
      «prefiero saltarlo» mientras los Caminos estén ocultos: caminos-ocultos.spec.js. */
   await expect(page.getByRole('button', { name: 'Comenzar' })).toBeVisible();
 
-  /* La placa de tres valores de s151, con el copy que NO promete absolutos. */
+  /* La placa de tres valores de s151. «Gratis · lo esencial, siempre» es de Ez (15 oct.,
+     DECISIONES_PRODUCTO.md, «Cómo se vende», punto 8): el «siempre» va acotado a lo
+     esencial, que es la primera de las tres promesas de /premium. */
   await expect(page.getByText('Todo local', { exact: true })).toBeVisible();
   await expect(page.getByText('Sin cuentas', { exact: true })).toBeVisible();
-  await expect(page.getByText('Núcleo gratuito', { exact: true })).toBeVisible();
+  await expect(page.getByText('Gratis', { exact: true })).toBeVisible();
+  await expect(page.getByText('lo esencial, siempre', { exact: true })).toBeVisible();
   /* En la web lo local vive en el navegador; en Android, en el móvil (android-nativo.spec.js). */
   await expect(page.getByText('en tu navegador', { exact: true })).toBeVisible();
 

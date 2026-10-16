@@ -334,6 +334,10 @@ self.addEventListener('fetch', (event) => {
      reuniones: el calendario creaba otra vez lo que ya estaba y las reuniones
      nuevas no llegaban. */
   if (new URL(event.request.url).origin !== self.location.origin) return;
+  /* LO DE /api/ TAMPOCO (16 oct. 2026): son respuestas vivas de las funciones de
+     Cloudflare (la lista «Avísame» de /premium). Guardada, la página seguiría viendo
+     la lista cerrada o abierta según el día en que se visitó por primera vez. */
+  if (new URL(event.request.url).pathname.indexOf('/api/') === 0) return;
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)

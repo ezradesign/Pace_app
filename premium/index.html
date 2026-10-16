@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PACE completo · PACE</title>
+<meta name="description" content="PACE es gratis: foco, respiración, movilidad y agua para quien trabaja sentado. PACE completo añade las rutinas más hondas, tus propias rutinas, una semana a tu medida y tu mes y tu año.">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- PACE · /premium — LA PÁGINA DE PACE COMPLETO
+     Una página suelta junto a la app, como la de privacidad: la app no se mueve de la raíz
+     (Ez, 15 oct. 2026). La opción B, «Escaparate», la eligió Ez el 16 oct.
+     (https://claude.ai/artifact/AvME9EqcMHXhywx43vEdKG): en el ordenador, la foto de la app al
+     lado del título y bandas en los dos cremas.
+
+     SIN COOKIES NI RASTREO: solo pide a su propio dominio (las fuentes, las fotos y
+     /api/avisame). Las visitas se cuentan con la analítica sin cookies de Cloudflare, puesta
+     A MANO solo aquí: la de todo el proyecto de Pages se metería también en la app. El
+     fragmento va en la línea marcada «WEB ANALYTICS» cuando Ez cree el sitio y pase su token.
+
+     LA LISTA «AVÍSAME» ESTÁ APAGADA hasta que la función diga que hay almacén
+     (GET /api/avisame -> {abierta: true}): mientras, en su sitio pone «La lista abre muy
+     pronto». Sin JavaScript, también. Ez la enciende al conectar el KV en Cloudflare.
+
+     HASTA QUE HAYA STRIPE, los botones de compra llevan a la lista. Los precios son los de la
+     tienda de la web (`PACE_TIENDA_WEB`, app/state-compra.js): si cambian, cambian en los dos
+     sitios. Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
+<style>
+  @font-face { font-family: 'EB Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/ebgaramond-400-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'EB Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/ebgaramond-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/intertight-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/intertight-500-normal.woff2') format('woff2'); }
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --premium: #9C6B2E;
+    --display: 'EB Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --premium: #C99A5B; }
+    /* El logo en oscuro es el mismo PNG invertido, como en la app (CowLogo.jsx). */
+    header img { filter: invert(1); }
+  }
+  * { box-sizing: border-box; }
+  /* `hidden` tiene que ganar a los `display` de abajo: la lista apagada no enseña el campo. */
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  a { color: var(--focus); }
+  .marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  header img { height: 60px; width: auto; display: block; }
+  .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 11px; cursor: pointer; }
+  .idioma b { color: var(--ink); font-weight: 500; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2, .serif { font-family: var(--display); font-style: italic; font-weight: 500; }
+  h1 { font-size: clamp(36px, 8vw, 52px); line-height: 1.06; margin: 0 0 16px; text-wrap: balance; }
+  h2 { font-size: clamp(28px, 6vw, 34px); line-height: 1.1; margin: 0 0 12px; text-wrap: balance; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  .lede { font-size: 17px; max-width: 34em; }
+  .boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 26px; border-radius: 999px; font: 500 14px/1 var(--ui); letter-spacing: .06em; text-decoration: none; cursor: pointer; border: 1px solid var(--cta); }
+  .boton.lleno { background: var(--cta); color: var(--paper); }
+  .boton.hueco { background: transparent; color: var(--cta); }
+  .boton:focus-visible, .idioma:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .foto { margin: 28px 0 8px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper-2); }
+  .foto img { display: block; width: 100%; height: auto; }
+  section { padding: 48px 16px 40px; margin: 0 -16px; }
+  section:nth-of-type(odd) { background: var(--paper-2); }
+  .dos > div + div { margin-top: 36px; }
+  .lista { list-style: none; padding: 0; margin: 0 0 8px; }
+  .lista li { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .lista li:last-child { border-bottom: 0; }
+  .lista .serif { font-size: 18px; color: var(--ink); }
+  .lista .d { font-size: 13.5px; color: var(--ink-3); text-align: right; }
+  .platos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 10px; max-width: 640px; }
+  .plato { border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 16px 16px; text-align: center; background: var(--paper); }
+  .plato.delante { border-color: var(--cta); }
+  .plato .importe { font-family: var(--display); font-style: italic; font-size: 38px; line-height: 1.1; color: var(--ink); margin: 4px 0 2px; }
+  .plato .sub { font-family: var(--display); font-style: italic; font-size: 16px; color: var(--ink-2); margin: 0 0 12px; }
+  .plato .boton { width: 100%; }
+  .nota { font-size: 13.5px; color: var(--ink-3); }
+  .promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .promesas li { font-family: var(--display); font-style: italic; font-size: 21px; color: var(--ink); padding-left: 22px; position: relative; }
+  .promesas li::before { content: ''; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--cta); }
+  .avisame { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px 16px; margin: 16px 0 0; max-width: 820px; }
+  .avisame h2 { font-size: 26px; margin: 0; }
+  .avisame form { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+  .avisame input[type=email] { flex: 1 1 220px; min-width: 0; min-height: 46px; padding: 0 16px; font: 16px var(--ui); color: var(--ink); background: var(--paper); border: 1px solid var(--line-2); border-radius: 999px; }
+  .avisame .boton { flex: 0 0 auto; }
+  .avisame .estado { font-family: var(--display); font-style: italic; font-size: 18px; color: var(--ink); margin: 8px 0; min-height: 1.4em; }
+  .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  details { border-bottom: 1px dashed var(--line); padding: 12px 0; }
+  details:last-of-type { border-bottom: 0; }
+  summary { cursor: pointer; font-family: var(--display); font-style: italic; font-size: 19px; color: var(--ink); }
+  details p { margin: 8px 0 4px; }
+  footer { margin: 40px 0 0; padding: 16px 0 40px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  footer a { color: var(--ink-3); }
+  @media (max-width: 520px) { .platos { grid-template-columns: 1fr; } }
+  @media (min-width: 900px) {
+    .portada { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; padding: 24px 0 40px; }
+    .portada .foto { margin: 0; }
+    .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .dos > div + div { margin-top: 0; }
+    section { padding: 56px 40px 48px; margin: 0 0 24px; border-radius: 18px; }
+  }
+</style>
+<!-- WEB ANALYTICS: aquí, y solo aquí, el fragmento de Cloudflare Web Analytics con el token de Ez. -->
+</head>
+<body>
+<!-- Los correos van entre marcas email_off, como en privacy.html: sin ellas, Cloudflare los
+     esconde tras un script suyo y quien lee sin JavaScript no los ve. -->
+<!--email_off-->
+<div class="marco">
+  <header>
+    <a href="/" aria-label="Abrir PACE" data-en-aria="Open PACE"><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+    <button class="idioma" type="button" data-idioma aria-label="Cambiar a inglés" data-en-aria="Switch to Spanish"><b data-es-b>ES</b> · <span data-en-b>EN</span></button>
+  </header>
+
+  <div class="portada">
+    <div>
+      <p class="kicker" data-en="PACE · Focus · Body">PACE · Foco · Cuerpo</p>
+      <h1 data-en="Active breaks for people who work sitting down.">Pausas activas para quien trabaja sentado.</h1>
+      <p class="lede" data-en="Focus, breathing, mobility and water, at your own pace. No account, no ads, no tracking: what is yours stays on your device.">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.</p>
+      <a class="boton lleno" href="/" data-en="Open PACE, it is free">Abrir PACE, es gratis</a>
+    </div>
+    <div class="foto">
+      <picture>
+        <source media="(max-width: 520px)" srcset="/premium/app-movil.webp">
+        <img src="/premium/app-escritorio.webp" alt="La pantalla de PACE: el aro del Foco y el día de «A tu ritmo»" data-en-alt="The PACE screen: the Focus ring and the «At your pace» day" width="1440" height="900">
+      </picture>
+    </div>
+  </div>
+
+  <section class="dos">
+    <div>
+      <h2 data-en="Free, and it will stay free">Gratis, y lo seguirá siendo</h2>
+      <ul class="lista">
+        <li><span class="serif" data-en="The whole Focus">El Foco entero</span><span class="d" data-en="Pomodoro, breaks and alert">Pomodoro, pausas y aviso</span></li>
+        <li><span class="serif" data-en="«At your pace», every day">«A tu ritmo», cada día</span><span class="d" data-en="your day with its breaks">tu día con sus pausas</span></li>
+        <li><span class="serif" data-en="32 routines">32 rutinas</span><span class="d" data-en="Breathe, Move, Stretch">Respira, Mueve, Estira</span></li>
+        <li><span class="serif" data-en="Hydrate">Hidrátate</span><span class="d" data-en="your glasses of the day">tus vasos del día</span></li>
+        <li><span class="serif" data-en="Achievements, today and the week">Logros, hoy y la semana</span><span class="d" data-en="stats">estadísticas</span></li>
+      </ul>
+    </div>
+    <div>
+      <h2 data-en="PACE Complete">PACE completo</h2>
+      <p data-en="For when you want more:">Para cuando quieras más:</p>
+      <ul class="lista">
+        <li><span class="serif" data-en="The deeper routines">Las rutinas más hondas</span><span class="d" data-en="Breathe, Move, Stretch">Respira, Mueve, Estira</span></li>
+        <li><span class="serif" data-en="Your own routines">Tus propias rutinas</span><span class="d" data-en="from the catalogue">con el catálogo</span></li>
+        <li><span class="serif" data-en="A week shaped to you">Una semana a tu medida</span><span class="d" data-en="the Monday letter">la carta del lunes</span></li>
+        <li><span class="serif" data-en="Your month and year">Tu mes y tu año</span><span class="d" data-en="stats">estadísticas</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="precio">
+    <h2 data-en="Two ways to have it">Dos maneras de tenerlo</h2>
+    <div class="platos">
+      <div class="plato delante">
+        <p class="kicker" data-en="Lifetime">De por vida</p>
+        <p class="importe" data-precio="vida" data-en="€19.99">19,99 €</p>
+        <p class="sub" data-en="one payment, for good">un pago, para siempre</p>
+        <a class="boton lleno" href="#avisame" data-en="Notify me">Avísame</a>
+      </div>
+      <div class="plato">
+        <p class="kicker" data-en="Monthly">Al mes</p>
+        <p class="importe" data-precio="mes" data-en="€2.99">2,99 €</p>
+        <p class="sub" data-en="with 7 days free">con 7 días gratis</p>
+        <a class="boton hueco" href="#avisame" data-en="Notify me">Avísame</a>
+      </div>
+    </div>
+    <p class="nota" data-en="VAT included. It arrives with version 1. What you buy on the web unlocks PACE on the web; in the Android app it is bought on Google Play.">IVA incluido. Llega con la versión 1. Lo que compras en la web abre PACE en la web; en la app de Android se compra en Google Play.</p>
+
+    <div class="avisame" id="avisame">
+      <h2 data-en="Let me know when it is out">Avísame cuando salga</h2>
+      <p class="estado" data-avisame-pronto data-en="The list opens very soon.">La lista abre muy pronto.</p>
+      <form data-avisame hidden>
+        <label class="trampa" aria-hidden="true">No escribas aquí <input type="text" name="web" tabindex="-1" autocomplete="off"></label>
+        <input id="avisame-correo" type="email" name="correo" required maxlength="254" autocomplete="email" placeholder="tu@correo.com" aria-label="Tu correo" data-en-aria="Your email" data-en-placeholder="you@email.com">
+        <button class="boton lleno" type="submit" data-en="Notify me">Avísame</button>
+      </form>
+      <p class="estado" role="status" aria-live="polite" data-avisame-estado hidden></p>
+      <p class="nota" data-en-html="We write to you twice: the day it can be bought on the web and the day it reaches Google Play. Then we delete your email. Nothing else. &lt;a href=&quot;/privacy#avisame&quot;&gt;Privacy&lt;/a&gt;.">Te escribimos dos veces: el día que se pueda comprar en la web y el día que llegue a Google Play. Después borramos tu correo. Nada más. <a href="/privacy#avisame">Privacidad</a>.</p>
+    </div>
+  </section>
+
+  <section class="dos">
+    <div>
+      <h2 data-en="Three things that will not change">Tres cosas que no van a cambiar</h2>
+      <ul class="promesas">
+        <li data-en="What is free today stays free.">Lo que hoy es gratis, sigue gratis.</li>
+        <li data-en="What you buy is not taken away.">Lo que compras no se quita.</li>
+        <li data-en="If the price goes up one day, yours does not.">Si un día sube el precio, el tuyo no.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 data-en="The trial, without surprises">La prueba, sin sorpresas</h2>
+      <p data-en="Two days before the 7 free days end, PACE reminds you. If you do not want to go on, you cancel it in two taps from Settings.">Dos días antes de que acaben los 7 días gratis, PACE te avisa. Si no quieres seguir, la cancelas en dos toques desde Ajustes.</p>
+      <p data-en="And if PACE Complete does not convince you, we refund your money within 14 days, no questions asked.">Y si PACE completo no te convence, te devolvemos el dinero en 14 días, sin preguntas.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-en="Questions">Preguntas</h2>
+    <details><summary data-en="Do I need an account?">¿Necesito una cuenta?</summary><p data-en="No. PACE has no accounts. When you buy, you get a code that unlocks PACE Complete in your browser.">No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</p></details>
+    <details><summary data-en="What if I change computer or browser?">¿Y si cambio de ordenador o de navegador?</summary><p data-en="Open your code's link in the new one, or carry it inside the «Your data» copy. If you lose it, you get it back with your email and the receipt number.">Abre el enlace de tu código en el nuevo, o llévalo dentro de la copia de «Tus datos». Si lo pierdes, lo recuperas con tu correo y el número del recibo.</p></details>
+    <details><summary data-en="Does it work on Android?">¿Sirve en Android?</summary><p data-en="What you buy on the web unlocks PACE on the web. In the Android app, PACE Complete is bought on Google Play.">Lo que compras en la web abre PACE en la web. En la app de Android, PACE completo se compra en Google Play.</p></details>
+    <details><summary data-en="What happens to my data?">¿Qué pasa con mis datos?</summary><p data-en="It stays on your device. Neither the purchase nor the code send your practice anywhere.">Se quedan en tu equipo. Ni la compra ni el código mandan tu práctica a ningún sitio.</p></details>
+    <details><summary data-en="Can I get a refund?">¿Puedo devolverlo?</summary><p data-en="Yes, within 14 days, no questions asked. Write to us and we refund it.">Sí, en los 14 días siguientes, sin preguntas. Escríbenos y lo devolvemos.</p></details>
+    <details><summary data-en="If you cannot afford it right now">Si ahora no puedes pagarlo</summary><p data-en-html="Write to me at &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; and I will send you a code.">Escríbeme a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> y te mando un código.</p></details>
+  </section>
+
+  <footer>
+    <a href="/" data-en="Open PACE">Abrir PACE</a>
+    <a href="/privacy" data-en="Privacy">Privacidad</a>
+    <a href="/safety" data-en="Safety">Seguridad</a>
+    <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>
+  </footer>
+</div>
+<!--/email_off-->
+<script>
+(function () {
+  /* EL IDIOMA: ?lang=en, el que se eligió aquí, el de la app en este navegador o el del
+     navegador. Sin JavaScript, castellano. */
+  function guardado(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+  function idiomaInicial() {
+    var m = location.search.match(/[?&]lang=(es|en)\b/);
+    if (m) return m[1];
+    var aqui = guardado('pace.premium.lang');
+    if (aqui === 'es' || aqui === 'en') return aqui;
+    try { var app = JSON.parse(guardado('pace.state.v2') || 'null'); if (app && (app.lang === 'es' || app.lang === 'en')) return app.lang; } catch (e) {}
+    return /^en\b/i.test(navigator.language || '') ? 'en' : 'es';
+  }
+  var ATRIBUTOS = [['data-en', 'textContent'], ['data-en-html', 'innerHTML'], ['data-en-aria', 'aria-label'],
+    ['data-en-alt', 'alt'], ['data-en-placeholder', 'placeholder']];
+  var es = { title: document.title, desc: document.querySelector('meta[name=description]').content };
+  var DESC_EN = 'PACE is free: focus, breathing, mobility and water for people who work sitting down. PACE Complete adds the deeper routines, your own routines, a week shaped to you and your month and year.';
+  var idioma = 'es';
+  function poner(lang) {
+    idioma = lang;
+    ATRIBUTOS.forEach(function (par) {
+      document.querySelectorAll('[' + par[0] + ']').forEach(function (el) {
+        var prop = par[1], clave = 'es_' + par[0].replace(/-/g, '_');
+        if (!(clave in el.dataset)) el.dataset[clave] = prop === 'textContent' ? el.textContent : prop === 'innerHTML' ? el.innerHTML : (el.getAttribute(prop) || '');
+        var valor = lang === 'en' ? el.getAttribute(par[0]) : el.dataset[clave];
+        if (prop === 'textContent') el.textContent = valor; else if (prop === 'innerHTML') el.innerHTML = valor; else el.setAttribute(prop, valor);
+      });
+    });
+    document.documentElement.lang = lang;
+    document.title = lang === 'en' ? 'PACE Complete · PACE' : es.title;
+    document.querySelector('meta[name=description]').content = lang === 'en' ? DESC_EN : es.desc;
+    document.querySelector('[data-es-b]').outerHTML = lang === 'en' ? '<span data-es-b>ES</span>' : '<b data-es-b>ES</b>';
+    document.querySelector('[data-en-b]').outerHTML = lang === 'en' ? '<b data-en-b>EN</b>' : '<span data-en-b>EN</span>';
+  }
+  poner(idiomaInicial());
+  document.querySelector('[data-idioma]').addEventListener('click', function () {
+    var otro = idioma === 'en' ? 'es' : 'en';
+    try { localStorage.setItem('pace.premium.lang', otro); } catch (e) {}
+    poner(otro);
+  });
+
+  /* «AVÍSAME»: el campo sale solo si la función tiene dónde guardar. */
+  var form = document.querySelector('[data-avisame]');
+  var pronto = document.querySelector('[data-avisame-pronto]');
+  var estado = document.querySelector('[data-avisame-estado]');
+  var TEXTOS = {
+    es: { ok: 'Apuntado. Te avisamos.', correo: 'Ese correo no parece completo.', error: 'No se ha podido guardar. Prueba más tarde o escríbenos.' },
+    en: { ok: 'You are on the list. We will let you know.', correo: 'That email does not look complete.', error: 'It could not be saved. Try again later or write to us.' },
+  };
+  function decir(clave) { estado.hidden = false; estado.textContent = TEXTOS[idioma][clave]; }
+  fetch('/api/avisame', { headers: { Accept: 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (d && d.abierta === true) { form.hidden = false; pronto.hidden = true; } })
+    .catch(function () {});
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var boton = form.querySelector('button');
+    boton.disabled = true;
+    fetch('/api/avisame', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ correo: form.correo.value, idioma: idioma, web: form.web.value }),
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (r.ok && d.ok) { decir('ok'); form.hidden = true; } else decir(d.motivo === 'correo' ? 'correo' : 'error');
+      });
+    }).catch(function () { decir('error'); }).then(function () { boton.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>
