@@ -226,6 +226,9 @@
        (horario, «por libre», el menú de hoy). El progreso sale de `cycle`. -->
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.regla.js"></script>
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.semana.js"></script>
+  <!-- Las series (Ez, 15 oct. 2026): qué rutina sirve cada parada, con la capa 1 de «PACE que
+       aprende». Pura, como la regla; ritmo.semana.js la llama si está cargada. -->
+  <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.series.js"></script>
   <!-- ritmo.aviso (s198 · v0.133.0): el aviso del sistema nombra la pausa que toca.
        Solo se llama al acabar un bloque (FocusTimer); no hay nada al evaluarse. -->
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.aviso.js"></script>
@@ -243,6 +246,8 @@
   <script type="text/babel" src="app/state-ritmo.support.jsx"></script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
   <script type="text/babel" src="app/state-ritmo.pausa.jsx"></script>
+  <!-- Lo que las series recuerdan: lo servido estos siete días y lo hecho hoy. -->
+  <script type="text/babel" src="app/state-ritmo.series.jsx"></script>
   <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
        uso. Memoria del usuario sobre su progreso, NO telemetria — no sale del
        dispositivo y no hay una sola llamada de red en los cuatro archivos.

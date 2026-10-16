@@ -84,7 +84,7 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
   return (
     <Modal open={open} onClose={onClose} tagLabel={tn('break.ritmo.tag', { n: plan.hechos, m: plan.total })}
       title={t('break.ritmo.title')} subtitle={tn('break.ritmo.sub', { h: pausa ? ritmoHora(pausa.desde) : '' })} maxWidth={720}>
-      <BreakPlato color={plato.color} glifo={plato.glifo} motivo={t('break.prop.' + prop.porque)} nombre={plato.nombre} ctx={plato.ctx}
+      <BreakPlato color={plato.color} glifo={plato.glifo} motivo={(!comida && pausa && typeof ritmoFrase === 'function' && ritmoFrase(pausa, t, tn)) || t('break.prop.' + prop.porque)} nombre={plato.nombre} ctx={plato.ctx}
         datos={{ 'data-pace-break-prop': '', 'data-pace-break-ritmo': '' }} />
       <div data-pace-break-acciones className="pace-break-acciones" style={{ marginTop: 16 }}>
         <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--c': plato.boton }} onClick={onPropuesta}>

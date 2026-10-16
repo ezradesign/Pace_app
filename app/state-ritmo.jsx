@@ -127,6 +127,10 @@ function ritmoDe(s) {
 /* LOS POZOS salen del CATÁLOGO VIVO: lo gratuito (o lo que tengas abierto) que
    cabe junto a la mesa — sin suelo, sin material obligatorio, sin aviso de
    seguridad ni retención. La maqueta los tenía escritos a mano (6 · 4 · 12).
+   LA MESA CUENTA (Ez, 15 oct. 2026): «junto a la mesa» es que hay una, así que lo
+   que pide una mesa estable entra si es de nivel accesible (Flexiones de escritorio,
+   y no «Empuje · progresión», que pide la pica). Y el cierre es
+   cualquier Respira lento de 5 min o menos: rota (ritmo.series.js).
    Rotan por día para que cada jornada empiece por otra rutina, y respetan el
    VETO de la pausa (s189) con su amnistía: si el veto vaciara un pozo, se ignora. */
 function ritmoPozos(s, iso) {
@@ -140,7 +144,8 @@ function ritmoPozos(s, iso) {
   };
   var cabe = function (r) {
     if (!r || r.safety || r.requiresFloor) return false;
-    if ((r.equipment || []).some(function (e) { return !/Optional$/.test(e); })) return false;
+    var mesa = function (e) { return e === 'stableDesk' && (r.level || 'accessible') === 'accessible'; };
+    if ((r.equipment || []).some(function (e) { return !mesa(e) && !/Optional$/.test(e); })) return false;
     if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
     return !window.canAccessRoutine || window.canAccessRoutine(r.id);
   };
@@ -159,7 +164,7 @@ function ritmoPozos(s, iso) {
     estira: prepara(lista(window.EXTRA_ROUTINES)),
     mueve: prepara(lista(window.MOVE_ROUTINES)),
     respira: prepara(respira.filter(function (r) { return r.min >= 4 && r.min <= 10; })),
-    cierre: prepara(respira.filter(function (r) { return r.min <= 3; })),
+    cierre: prepara(respira.filter(function (r) { return r.min <= 5; })),
   };
 }
 
@@ -223,8 +228,10 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
   /* s195c: LA SEMANA. El día se compone con el tema de la semana y el acento del día
      (ritmo.semana.js), que salen de la fecha; sin la semana cargada, la regla de siempre. */
   var hoy = ritmoHoy();
+  /* Las series (15 oct. 2026) eligen cada plato con lo que ya pasó: state-ritmo.series.jsx */
+  var mem = typeof ritmoMemoria === 'function' ? ritmoMemoria(s, hoy, R.dia, pasado) : null;
   var m = typeof semanaComponer === 'function'
-    ? semanaComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, semanaDe(hoy), previos)
+    ? semanaComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, semanaDe(hoy), previos, mem)
     : ritmoComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, previos);
   if (!m || !pasado || !pasado.length) return m;
   /* Lo hecho delante, y los totales del día entero. Si empezaste tarde, el hueco
@@ -357,7 +364,10 @@ function ritmoGuardar(cambio) {
     var r = Object.assign({ horario: null, libre: null, dia: null }, prev.ritmo || {});
     /* El día de ayer no se pisa sin resumirlo antes (state-ritmo.resumen.jsx). */
     if (typeof ritmoResumenAntesDePisar === 'function') r = ritmoResumenAntesDePisar(prev, r);
-    return Object.assign({}, prev, { ritmo: Object.assign(r, cambio(r)) });
+    r = Object.assign(r, cambio(r));
+    /* Lo que sirve hoy cada parada, para no repetirlo mañana en la misma (state-ritmo.series.jsx). */
+    if (typeof ritmoAnotarServidos === 'function') r = ritmoAnotarServidos(prev, r);
+    return Object.assign({}, prev, { ritmo: r });
   });
 }
 

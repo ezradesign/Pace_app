@@ -241,6 +241,37 @@ const EXTRA_ROUTINES = {
           { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
             instruction: { action: '3 inhalaciones completas para cerrar.' } },
         ]},
+      /* LA HERMANA DE PIE DE `move.spine.chair` (Ez, 15 oct. 2026: las series de «A tu
+         ritmo»). La pausa larga sirve una Estira de pie y Estira solo tenía de pie caderas y
+         piernas. El dibujo de `Rotación torácica` es sentado, así que aquí el paso lleva
+         nombre propio y cae al dibujo de reserva hasta que haya uno de pie. Unidades por
+         BASE §3-B, §3-C y §6; liberación rápida de §5 (sale en unos 3 min). */
+      { id: 'move.back.standing', tag: 'SPN', code: 'Espalda', name: 'Espalda de pie',
+        desc: 'Espalda y pecho sin sentarte ni bajar al suelo. Cuatro gestos junto a la mesa.', min: 3,
+        position: ['standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        steps: [
+          { name: 'Rodar hacia abajo', mode: 'timed', dur: 40,
+            instruction: {
+              setup: 'Ponte de pie, pies al ancho de las caderas.',
+              action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
+              care: 'Rodillas suaves. Sube despacio para no marearte.' } },
+          { name: 'Rotación torácica de pie', mode: 'perSide', dur: 20, transition: { seconds: 8 },
+            instruction: {
+              setup: 'De pie, pies al ancho de las caderas. Cruza las manos sobre el pecho.',
+              action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
+              care: 'La cadera mira al frente: el giro nace del tronco, no del cuello.' } },
+          { name: 'Apertura de pecho', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+          { name: 'Juntar omóplatos', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+            instruction: { action: '3 inhalaciones completas para cerrar.' } },
+        ]},
       { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
         desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
         position: ['floor', 'standing', 'seated'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
