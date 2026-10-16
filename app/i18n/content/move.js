@@ -79,7 +79,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.calves.s0.instruction.action':       'Raise your heels as high as you can. Lower with control.',
   'extra.calves.s0.instruction.care':         'Small, controlled movement. Hold the desk for support if you need to.',
   'extra.calves.s1.name':                     'Calf raises',
-  'extra.calves.s1.instruction.action':       'Slower now. Feel the calf on each lift.',
+  'extra.calves.s1.instruction.action':       'Slower now: lower in 3 s. Feel the calf on each lift.',
 
   // s120 (B2.3 OLA 3): claves EN migradas a `sN.instruction.{action,care}`;
   // `sN.cue` retiradas (los rests tenían cue vacío → «Let go.», patrón
@@ -192,7 +192,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.s1.name':               'Rest',
   'extra.chair.squats.s1.instruction.action': 'Breathe.',
   'extra.chair.squats.s2.name':               'Chair squat',
-  'extra.chair.squats.s2.instruction.action': 'Slower. Graze the chair and rise with control.',
+  'extra.chair.squats.s2.instruction.action': 'Slower: lower in 3 s. Graze the chair and rise with control.',
   'extra.chair.squats.s2.instruction.care':   'Only go down as far as your knees feel comfortable.',
   'extra.chair.squats.s3.name':               'Rest',
   'extra.chair.squats.s3.instruction.action': 'Breathe.',

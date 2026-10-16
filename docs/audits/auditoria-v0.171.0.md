@@ -124,3 +124,35 @@ Stripe, y las voces y los dibujos.
   castellano e inglés, claro y oscuro, la consola y lo básico de accesibilidad) y dé una lista.
 - Parte 4: la sesión de Gemelos, que mira todas las rutinas.
 - Luego, la página para Ez con todo, las opciones y una recomendación.
+
+## 4. Lo que prometen las rutinas (hecho, 16 oct.)
+
+`node scripts/audit/censo-promesas.js` lee las 33 rutinas de Mueve y Estira (157 pasos) y compara lo
+que dice cada paso, en castellano y en inglés, con su ritmo, sus repeticiones, sus segundos y sus
+lados. Salieron 11 hallazgos:
+
+- **«Más lentas» que no lo eran: Gemelos subrepticios (el de Ez) y Sentadillas de silla.** La 2.ª
+  ronda llevaba el mismo ritmo y menos repeticiones. Ez eligió (16 oct.) que lo sean: bajan en 3 s.
+  Gemelos pasa a 1 + 2 min (declara 2), Sentadillas sigue en 3.
+- **«Despacio» con una bajada de 1 s en Piernas de pie** (talones y puntas, la rutina nueva de las
+  series). Ez eligió bajar en 2 s.
+- Sin cambio: «10 reps» y «8 reps» en los pasos con reloj de «Escalera de empuje» y «Barbilla atrás 5
+  veces» en un paso de 20 s. Son pasos con reloj (la opción A del runner guiado) y el número es una
+  guía; caben en su tiempo.
+- `tests/rutinas-promesas.spec.js` cae si vuelve a pasar: roja contra `main` con los cuatro casos,
+  verde con el arreglo.
+
+## 3. La app real (primera pasada, 16 oct.)
+
+`scripts/audit/recorrido-app.js` abre el `index.html` compilado en 360×640, 360×800, 1280×800 y
+1536×710, en castellano e inglés y en claro y oscuro, llega a cada pantalla y mira errores, botones
+tapados (con `elementFromPoint`), scroll, texto cortado, castellano en inglés, botones sin nombre,
+toques pequeños, contraste y emojis. A mano: la bienvenida, una sesión de Respira y su cierre en el
+móvil (bien: «Sesión sin contar» con menos de medio minuto, como eligió Ez).
+
+Visto a mano, para Ez:
+- El sello de lo de pago dice «Premium» (`lib.premium`, `premium.seal`) y el cajón «Mis rutinas ·
+  PREMIUM», mientras que lo de pago se llama «PACE completo» desde v0.157.0 y la sección se llama
+  «Tus rutinas». No es un fallo: una pregunta de nombre.
+- Los botones de la sesión llevan el icono dentro del nombre: el lector de pantalla dice «▶|
+  Terminar». El icono debería ir oculto al lector.

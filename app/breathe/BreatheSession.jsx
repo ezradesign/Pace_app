@@ -355,11 +355,11 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
 
   const footer = (
     <React.Fragment>
-      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title={t('session.pause')}>
-        {paused ? t('session.resume') : t('session.pause')}
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title={paceSinIcono(t('session.pause'))}>
+        <PaceConIcono texto={paused ? t('session.resume') : t('session.pause')} />
       </button>
-      <button onClick={() => finish('early')} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title={t('session.finish')}>
-        {t('session.finish')}
+      <button onClick={() => finish('early')} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title={paceSinIcono(t('session.finish'))}>
+        <PaceConIcono texto={t('session.finish')} />
       </button>
     </React.Fragment>
   );

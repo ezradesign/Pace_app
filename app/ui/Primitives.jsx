@@ -244,7 +244,8 @@ function Button({ children, onClick, variant = 'primary', size = 'md', icon, dis
         e.currentTarget.style.background = style.background || (variants[variant] || {}).background || '';
       }}
     >
-      {icon && <span style={{ fontSize: 12 }}>{icon}</span>}
+      {/* El icono es dibujo: el lector de pantalla dice solo el texto («Terminar», no «▶| Terminar»). */}
+      {icon && <span aria-hidden="true" style={{ fontSize: 12 }}>{icon}</span>}
       {children}
     </button>
   );
@@ -366,4 +367,18 @@ if (!_paceModalResponsive) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic });
+/* Los textos de los controles traen su símbolo («❚❚ Pausar», «▶| Terminar»,
+   «Siguiente →»). Se dibuja igual, pero el lector de pantalla dice solo la
+   palabra: el símbolo va oculto y el `title` va sin él. */
+const PACE_ICONO_RE = /^([←→❚▶|]+)\s+(.*)$|^(.*?)\s+([←→❚▶|]+)$/;
+function paceSinIcono(texto) {
+  return String(texto || '').replace(/[←→❚▶|]/g, '').trim();
+}
+function PaceConIcono({ texto }) {
+  const m = String(texto || '').match(PACE_ICONO_RE);
+  if (!m) return texto || null;
+  if (m[1]) return <React.Fragment><span aria-hidden="true">{m[1]}</span> {m[2]}</React.Fragment>;
+  return <React.Fragment>{m[3]} <span aria-hidden="true">{m[4]}</span></React.Fragment>;
+}
+
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, paceSinIcono, PaceConIcono });

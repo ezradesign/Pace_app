@@ -254,13 +254,13 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   const footer = (
     <React.Fragment>
       <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
-        {t('move.prev')}
+        <PaceConIcono texto={t('move.prev')} />
       </button>
       <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn}>
-        {paused ? t('session.resume') : t('session.pause')}
+        <PaceConIcono texto={paused ? t('session.resume') : t('session.pause')} />
       </button>
       <button onClick={goNext} style={sessionShellStyles.ctrlBtn}>
-        {stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next')}
+        <PaceConIcono texto={stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next')} />
       </button>
     </React.Fragment>
   );

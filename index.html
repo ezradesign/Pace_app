@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.171.0</title>
+  <title>PACE · Foco · Cuerpo — v0.171.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4201,7 +4201,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.calves.s0.instruction.action': 'Raise your heels as high as you can. Lower with control.',
   'extra.calves.s0.instruction.care': 'Small, controlled movement. Hold the desk for support if you need to.',
   'extra.calves.s1.name': 'Calf raises',
-  'extra.calves.s1.instruction.action': 'Slower now. Feel the calf on each lift.',
+  'extra.calves.s1.instruction.action': 'Slower now: lower in 3 s. Feel the calf on each lift.',
 
 
 
@@ -4314,7 +4314,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.s1.name': 'Rest',
   'extra.chair.squats.s1.instruction.action': 'Breathe.',
   'extra.chair.squats.s2.name': 'Chair squat',
-  'extra.chair.squats.s2.instruction.action': 'Slower. Graze the chair and rise with control.',
+  'extra.chair.squats.s2.instruction.action': 'Slower: lower in 3 s. Graze the chair and rise with control.',
   'extra.chair.squats.s2.instruction.care': 'Only go down as far as your knees feel comfortable.',
   'extra.chair.squats.s3.name': 'Rest',
   'extra.chair.squats.s3.instruction.action': 'Breathe.',
@@ -6203,7 +6203,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.171.0';
+const PACE_VERSION = 'v0.171.1';
 
 
 
@@ -15493,7 +15493,8 @@ function Button(_ref4) {let { children, onClick, variant = 'primary', size = 'md
         e.currentTarget.style.background = style.background || (variants[variant] || {}).background || '';
       } },
 
-    icon && React.createElement("span", { style: { fontSize: 12 } }, icon),
+
+    icon && React.createElement("span", { "aria-hidden": "true", style: { fontSize: 12 } }, icon),
     children
     ));
 
@@ -15615,8 +15616,22 @@ if (!_paceModalResponsive) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic });
-;Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal });
+
+
+
+const PACE_ICONO_RE = /^([←→❚▶|]+)\s+(.*)$|^(.*?)\s+([←→❚▶|]+)$/;
+function paceSinIcono(texto) {
+  return String(texto || '').replace(/[←→❚▶|]/g, '').trim();
+}
+function PaceConIcono(_ref8) {let { texto } = _ref8;
+  const m = String(texto || '').match(PACE_ICONO_RE);
+  if (!m) return texto || null;
+  if (m[1]) return React.createElement(React.Fragment, null, React.createElement("span", { "aria-hidden": "true" }, m[1]), " ", m[2]);
+  return React.createElement(React.Fragment, null, m[3], " ", React.createElement("span", { "aria-hidden": "true" }, m[4]));
+}
+
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, paceSinIcono, PaceConIcono });
+;Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, paceSinIcono, PaceConIcono });
 })();
 </script>
   <script>
@@ -27445,11 +27460,11 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
   const footer =
   React.createElement(React.Fragment, null,
-  React.createElement("button", { onClick: () => setPaused((p) => !p), style: sessionShellStyles.ctrlBtn, title: t('session.pause') },
-  paused ? t('session.resume') : t('session.pause')
+  React.createElement("button", { onClick: () => setPaused((p) => !p), style: sessionShellStyles.ctrlBtn, title: paceSinIcono(t('session.pause')) },
+  React.createElement(PaceConIcono, { texto: paused ? t('session.resume') : t('session.pause') })
   ),
-  React.createElement("button", { onClick: () => finish('early'), style: { ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }, title: t('session.finish') },
-  t('session.finish')
+  React.createElement("button", { onClick: () => finish('early'), style: { ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }, title: paceSinIcono(t('session.finish')) },
+  React.createElement(PaceConIcono, { texto: t('session.finish') })
   )
   );
 
@@ -27721,7 +27736,7 @@ var MOVE_ROUTINES = {
     items: [
 
 
-    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
+    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 2,
       position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,
@@ -27730,10 +27745,12 @@ var MOVE_ROUTINES = {
           setup: 'Sentado o de pie, pies apoyados en el suelo al ancho de las caderas.',
           action: 'Sube los talones lo más alto que puedas. Baja con control.',
           care: 'Movimiento pequeño y controlado. Apóyate en la mesa si lo necesitas.' } },
-      { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
-        tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+
+
+      { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 60,
+        tempo: { down: 3, hold: 1, up: 1 }, completion: { mode: 'guided' },
         instruction: {
-          action: 'Más lentas ahora. Nota el gemelo en cada subida.' } }]
+          action: 'Más lentas ahora: baja en 3 s. Nota el gemelo en cada subida.' } }]
     },
 
 
@@ -27822,10 +27839,10 @@ var MOVE_ROUTINES = {
           care: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
-      { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 50,
+        tempo: { down: 3, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          action: 'Más lentas. Roza la silla y sube con control.',
+          action: 'Más lentas: baja en 3 s. Roza la silla y sube con control.',
           care: 'Baja solo hasta donde las rodillas vayan cómodas.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
@@ -27843,14 +27860,15 @@ var MOVE_ROUTINES = {
     { id: 'extra.legs.standing', tag: 'LEG', code: 'Piernas', name: 'Piernas de pie', desc: 'Gemelos, espinillas y muslos, de pie. Una mesa al lado, si la necesitas.', min: 2,
       position: ['standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 36,
-        tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+
+      { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 48,
+        tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
         instruction: {
           setup: 'De pie, pies al ancho de las caderas. Una mano en la mesa si la necesitas.',
           action: 'Sube los talones lo más alto que puedas, mantén un instante y baja con control.',
           care: 'Sin rebotes. Baja despacio hasta apoyar el talón.' } },
-      { name: 'Elevación de puntas', mode: 'reps', reps: 12, dur: 36,
-        tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+      { name: 'Elevación de puntas', mode: 'reps', reps: 12, dur: 48,
+        tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
         instruction: {
           setup: 'De espaldas a la pared, o con las manos en la mesa. Talones apoyados.',
           action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
@@ -28270,13 +28288,13 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
   const footer =
   React.createElement(React.Fragment, null,
   React.createElement("button", { onClick: goPrev, disabled: stepIdx === 0, style: sessionShellStyles.ctrlBtn },
-  t('move.prev')
+  React.createElement(PaceConIcono, { texto: t('move.prev') })
   ),
   React.createElement("button", { onClick: () => setPaused((p) => !p), style: sessionShellStyles.ctrlBtn },
-  paused ? t('session.resume') : t('session.pause')
+  React.createElement(PaceConIcono, { texto: paused ? t('session.resume') : t('session.pause') })
   ),
   React.createElement("button", { onClick: goNext, style: sessionShellStyles.ctrlBtn },
-  stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next')
+  React.createElement(PaceConIcono, { texto: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next') })
   )
   );
 
@@ -37254,7 +37272,7 @@ function PathFocusStep(_ref) {let { step, onExit } = _ref;
 
   const footer =
   React.createElement(React.Fragment, null,
-  React.createElement("button", { "data-pace-path-btn": true, onClick: toggle, style: pfBtn('var(--focus)', 'var(--focus-soft)') }, pauseLabel),
+  React.createElement("button", { "data-pace-path-btn": true, onClick: toggle, style: pfBtn('var(--focus)', 'var(--focus-soft)') }, React.createElement(PaceConIcono, { texto: pauseLabel })),
   React.createElement("button", { "data-pace-path-btn": true, onClick: reset, style: pfBtn('var(--breathe)', 'var(--breathe-soft)') }, t('focus.restart')),
   React.createElement("button", { "data-pace-path-btn": true, onClick: () => onExit('skip'), style: pfBtn('var(--ink-3)', 'var(--paper-3)') }, t('path.runner.skip'))
   );

@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.171.0 · 16 de octubre de 2026.
+**Versión:** v0.171.1 · 16 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -161,9 +161,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
    certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
-6. **Lo demás que vio Ez el 15 oct.**: el «Ahora no» tapado y las series están en v0.171.0. Falta
-   la 2.ª ronda de «Gemelos subrepticios», que no va más lenta, en una sesión que mire todas las
-   rutinas (Ez, 16 oct.), y la voz del suspiro fisiológico, que espera las grabaciones de Ez.
+6. **Lo demás que vio Ez el 15 oct.**: el «Ahora no» tapado y las series están en v0.171.0; las
+   rondas «más lentas» que no lo eran (Gemelos y Sentadillas), en v0.171.1. Falta la voz del suspiro
+   fisiológico, que espera las grabaciones de Ez.
+7. **La auditoría del 16 oct.** (`docs/audits/auditoria-v0.171.0.md`): sin fallos graves; lo que pide
+   decisión de Ez va en una página (el gris de los textos pequeños, las cabeceras de seguridad, el
+   nombre «Premium» y por dónde empezar la Fase 6).
 
 ## Espera a Ez
 

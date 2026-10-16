@@ -140,7 +140,7 @@ var MOVE_ROUTINES = {
     items: [
       /* s118 (B2.3 OLA 1): migrado — fuerza ligera de gemelo, 2 series de reps
          guiadas (cadencia rápida 2 s/rep). */
-      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
+      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 2,
         position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,
@@ -149,10 +149,12 @@ var MOVE_ROUTINES = {
               setup: 'Sentado o de pie, pies apoyados en el suelo al ancho de las caderas.',
               action: 'Sube los talones lo más alto que puedas. Baja con control.',
               care: 'Movimiento pequeño y controlado. Apóyate en la mesa si lo necesitas.' } },
-          { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
-            tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+          /* La 2.ª ronda promete «más lentas» y lo es: baja en 3 s (Ez, 16 oct.).
+             Con el ritmo de la 1.ª y menos veces, duraba menos y no era más lenta. */
+          { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 60,
+            tempo: { down: 3, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Más lentas ahora. Nota el gemelo en cada subida.' } },
+              action: 'Más lentas ahora: baja en 3 s. Nota el gemelo en cada subida.' } },
         ]},
       /* s118 (B2.3 OLA 1): migrado — dos series de reps (grip + extensión) y un
          estiramiento de muñeca `timed` (ambas manos, no hay lado). */
@@ -241,10 +243,10 @@ var MOVE_ROUTINES = {
               care: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
-          { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40,
-            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+          { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 50,
+            tempo: { down: 3, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Más lentas. Roza la silla y sube con control.',
+              action: 'Más lentas: baja en 3 s. Roza la silla y sube con control.',
               care: 'Baja solo hasta donde las rodillas vayan cómodas.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
@@ -262,14 +264,15 @@ var MOVE_ROUTINES = {
       { id: 'extra.legs.standing', tag: 'LEG', code: 'Piernas', name: 'Piernas de pie', desc: 'Gemelos, espinillas y muslos, de pie. Una mesa al lado, si la necesitas.', min: 2,
         position: ['standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 36,
-            tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+          /* Los textos piden bajar despacio: la bajada dura 2 s (Ez, 16 oct.). */
+          { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 48,
+            tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'De pie, pies al ancho de las caderas. Una mano en la mesa si la necesitas.',
               action: 'Sube los talones lo más alto que puedas, mantén un instante y baja con control.',
               care: 'Sin rebotes. Baja despacio hasta apoyar el talón.' } },
-          { name: 'Elevación de puntas', mode: 'reps', reps: 12, dur: 36,
-            tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+          { name: 'Elevación de puntas', mode: 'reps', reps: 12, dur: 48,
+            tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'De espaldas a la pared, o con las manos en la mesa. Talones apoyados.',
               action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
