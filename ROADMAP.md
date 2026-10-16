@@ -84,11 +84,11 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 
 ### El reparto gratis / pago (Ez, s200)
 
-| Gratis | De pago — 19,99 € una vez |
+| Gratis | De pago — 2,99 € al mes con 7 días gratis, o 19,99 € de por vida (Ez, 15 oct. 2026) |
 |---|---|
 | Pomodoro completo | «A tu ritmo» **a lo largo de la semana**: variación por día, aprende de «¿te ayudó?», lecturas A y C de s194 |
 | «A tu ritmo» **del día** | Las **19 rutinas premium** |
-| Las **32 rutinas gratuitas** | El **constructor** de rutinas propias |
+| Las **34 rutinas gratuitas** | El **constructor** de rutinas propias |
 | Hidrátate | Stats de **mes y año** y «qué te ayuda» |
 | Logros y Stats **«Hoy»** y **«Semana»** | |
 
@@ -172,7 +172,7 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 - **Fase 3.6** («A tu ritmo» del día) — lo que siga en la semana va a la Fase 3 de este plan.
 - **Fase 5** (Respira: voz y música) — lo entregado se queda; el catálogo y la separación Técnicas /
   Viajes quedan fuera.
-- **Los 22 dibujos pendientes** (3 de ejercicio y 19 de logro) **entran si llegan**; si no, la
+- **Los 21 dibujos pendientes** (3 de ejercicio y 18 de logro) **entran si llegan**; si no, la
   precedencia máscara → SVG → carácter ya cubre el hueco.
 
 ### FASE 6 · Venta

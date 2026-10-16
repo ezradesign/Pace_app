@@ -171,3 +171,14 @@ pantallas; `scripts/audit/recorrido-app.js`):
   enlaces «Seguridad» y «Privacidad» (15 px de alto) y la fila del agua en el cajón (21 px).
 - Falsos avisos que no cuentan: «Español» en el selector de idioma, y los contrastes de 1,2:1 que
   salían de fondos escritos como `color(srgb …)` (arreglado en el script).
+
+## Lo que se hizo con lo encontrado (16 oct.)
+
+- v0.171.1: las rondas «más lentas» y Piernas de pie; el lector no lee los símbolos.
+- v0.171.2: el gris de los rótulos a #77705F (Ez eligió el punto intermedio), las cabeceras de
+  seguridad (`_headers`, ya en pacegrass.app) y «Tus rutinas» en la barra lateral.
+- v0.171.3: «Dos horas» con el aro a 25 (sesión aparte).
+- v0.171.4: la zona de toque de Ajustes y la fecha corta; las cifras del ROADMAP al día.
+- Las 14 carpetas de trabajo terminadas, borradas (3,3 GB).
+- Sin hacer, por decisión de Ez: el sello sigue diciendo «Premium»; «Rana» espera a su dibujo; el
+  contraste de las familias de Logros («Maestría» 2,5, «Exploración» 2,8) queda para otra vez.

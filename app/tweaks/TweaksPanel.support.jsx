@@ -116,6 +116,8 @@ if (!_paceAjustesCss) {
     /* interruptor */
     .pace-aj-sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; transition: background-color 180ms; }
     .pace-aj-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); transition: left 180ms; }
+    /* La zona de toque crece sin que cambie el dibujo: 26 px de alto (WCAG 2.5.8 pide 24). */
+    .pace-aj-sw::before { content: ''; position: absolute; inset: -4px -2px; }
     .pace-aj-sw[aria-checked="true"] { background: var(--ink); }
     .pace-aj-sw[aria-checked="true"]::after { left: 16px; }
     [data-pace-aj-modulo] .pace-aj-sw[aria-checked="true"] { background: var(--pace-aj-m); }
@@ -131,7 +133,8 @@ if (!_paceAjustesCss) {
     .pace-aj-accion > span:last-child { color: var(--ink-3); display: inline-flex; align-items: center; }
     .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
     .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
-    .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+    .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; position: relative; }
+    .pace-aj-pie a::before { content: ''; position: absolute; inset: -5px -2px; }
   `;
   document.head.appendChild(s);
 }

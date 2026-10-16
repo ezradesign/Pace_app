@@ -27,7 +27,7 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
     v0.171.3 (con el sí de Ez);
   - la siguiente: **la revisión de todos los ejercicios** con la evidencia de hoy
     (Mueve, Estira y Respira; Ez, 16 oct.; encargo en `archivos/encargos-16oct/REVISION_EJERCICIOS.md`);
-  - luego **el motor de la semana** (el de `archivos/motor-semana/`, sin esperar semanas de datos);
+  - luego **el motor de la semana** (encargo en `archivos/encargos-16oct/MOTOR_SEMANA.md`);
   - después: **los días diseñados** (cada día con su intención y rutinas medidas, y las de pie para la
     tarde; tocan lo mismo que el motor, no a la vez);
   - **el calendario total en la web** con una función de Cloudflare, cuando Ez haga sus altas en

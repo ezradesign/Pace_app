@@ -55,7 +55,11 @@ function useT() {
 /* Una fecha corta en el idioma de la app. En inglés Chrome escribe «Sept» (en-GB)
    y Estadísticas «Sep»: se deja «Sep», como los otros once meses (Ez, 8 oct. 2026). */
 function paceFechaCorta(fecha, lang, opciones) {
-  const s = new Date(fecha).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', opciones);
+  /* Una clave «AAAA-MM-DD» se lee en hora local: `new Date('2026-10-16')` es la
+     medianoche UTC y en América se pintaría el 15 (CLAUDE.md, regla 10). */
+  const m = typeof fecha === 'string' && /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha);
+  const d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(fecha);
+  const s = d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', opciones);
   return lang === 'en' ? s.replace(/\bSept\b/g, 'Sep') : s;
 }
 
