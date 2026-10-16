@@ -93,3 +93,34 @@ una página con lo encontrado, las opciones y una recomendación.
   juntar: `caza-foco-estado` y `claude/tus-rutinas-arreglos` salen con 400 commits «de más» porque
   son de antes de reescribir la historia (sus mensajes están en `main` con otro número), y lo de
   `series-aprende` también está. Se pueden borrar las 15, con el sí de Ez.
+- **Documentos que ya no dicen lo mismo:** la tabla del reparto en `ROADMAP.md:87` dice «19,99 € una
+  vez», pero desde el 15 oct. son dos planes (2,99 € al mes con 7 días, o 19,99 € de por vida, como
+  ya dice la Fase 6 del mismo archivo); «32 rutinas gratuitas» y «19 premium» (`ROADMAP.md:90-91`)
+  no cuentan Piernas de pie ni Espalda de pie (hoy hay 53: 20 de Respira, 15 de Mueve y 18 de
+  Estira); y «22 dibujos pendientes» (`ROADMAP.md:169`) choca con los 21 de `STATE.md`, que ahora
+  son 22 con «Rotación torácica de pie». Arreglo de texto, sin decisión.
+- `privacy.html` sí cuenta el calendario (14 menciones).
+
+## 10. Ideas útiles (primera lista, por orden de lo que acercan a v1)
+
+| Idea | Qué cuesta | Por qué |
+|---|---|---|
+| Cabeceras de seguridad en la web (`_headers`) | poco, sin tocar la app | antes de cobrar, que la web no se pueda meter en un marco ni filtre de dónde vienes |
+| Empezar la Fase 6 por lo que no espera a Ez: `/premium`, la lista «Avísame», la bienvenida con los dos precios y el `PurchaseAdapter` vacío | una o dos sesiones | lo grande que falta para v1 no tiene código; Stripe y k2 se enchufan después |
+| Rutinas de pie para la tarde (el paseo corto que quedó fuera) | contenido + una prueba | con el aro a 10 o 15, la jornada llega a cuatro pausas sentadas seguidas |
+| Decidir el final de «Dos horas» con el aro a 25 (hoy, un bloque de 55 min) | una pregunta a Ez y poco código | 55 min sin pausa contradice la promesa de la app |
+| `paceFechaCorta` que no acepte cadenas sueltas | muy poco | que no aparezca el día anterior en Latinoamérica el día que alguien la llame mal |
+| Los dibujos de logros y las voces del otro idioma, bajo demanda | medio | menos descarga en la primera visita; antes, medir en un móvil lento |
+| Borrar las 15 carpetas de trabajo terminadas | nada, con el sí de Ez | ocupan disco y confunden al buscar |
+| Arreglar las cifras viejas de `ROADMAP.md` | muy poco | que el plan diga lo mismo que STATE |
+
+Lo que no es código y sigue esperando a Ez está en `STATE.md` («Espera a Ez»): probar el APK en un
+móvil, la prueba cerrada de Play, las altas de Google y Microsoft para el calendario, el gestor y
+Stripe, y las voces y los dibujos.
+
+## Lo que queda de la auditoría (al reponerse el uso)
+
+- Parte 3: una sesión que recorra la app real pantalla a pantalla, solo mirando (360 y 1280 px,
+  castellano e inglés, claro y oscuro, la consola y lo básico de accesibilidad) y dé una lista.
+- Parte 4: la sesión de Gemelos, que mira todas las rutinas.
+- Luego, la página para Ez con todo, las opciones y una recomendación.
