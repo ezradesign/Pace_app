@@ -23,7 +23,10 @@
    hay línea de atajos: Intro hace la pausa propuesta y Esc la salta, y no se enseñan.
 
    Solo se pinta cuando la propuesta viene del menú (`porque` = `ritmo.*`) y hay
-   plan con pausa abierta; si no, BreakMenu es el de siempre. */
+   plan con pausa abierta; si no, BreakMenu es el de siempre.
+
+   Encima del nombre va la frase de las series si la parada la tiene («Caderas: sin
+   mover hoy», Ez, 15 oct. 2026; `ritmoFrase`), y si no, la de siempre. */
 
 /* El color del plato y de su botón es el del MÓDULO de la rutina. */
 const BREAK_COLOR = { extra: 'var(--extra)', move: 'var(--move)', breathe: 'var(--breathe)', water: 'var(--hydrate)' };

@@ -102,16 +102,17 @@ test('el aro con plan es «aro» servido por el menú, y la propuesta de la paus
   expect(foco.payload.origin, 'el bloque se empezó en el aro').toBe('aro');
   expect(foco.payload.fromMenu, 'con plan, el bloque es del menú').toBe(true);
 
-  /* La pausa propone el plato del menú («Antídoto a la silla»). */
+  /* La pausa propone el plato del menú: desde las series (Ez, 15 oct. 2026), la primera
+     pausa es Mueve de pie, con la frase de lo de hoy. */
   const prop = page.locator('[data-pace-break-prop]');
-  await expect(prop).toContainText('Antídoto a la silla');
+  await expect(prop).toContainText('Piernas: sin mover hoy');
   await expect(prop, 'la propuesta no es la del menú').toHaveAttribute('data-pace-break-ritmo', '');
   /* s195: con menú, el modal es «Tu pausa» y el botón del plato es «Hacer la pausa» */
   await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await empezarDesdePreview(page);
   await terminarSesionCuerpo(page);
   const plato = await ultimaSesion(page, 2);
-  expect(plato.payload.module).toBe('stretch');
+  expect(plato.payload.module).toBe('move');
   expect(plato.payload.origin, 'se eligió en el menú de la pausa').toBe('pausa');
   expect(plato.payload.fromMenu, 'y era el plato que sirvió el menú').toBe(true);
   expect(errores).toEqual([]);

@@ -58,6 +58,8 @@
        pausa llega cada tres bloques; a 15, cada dos; de 20 en adelante, tras cada uno,
        así que el Pomodoro de 25 no cambia y nunca pasas de 30 min sin levantarte.
      · En un mismo día no se repite ninguna rutina.
+     · Los platos de aquí son los de reserva: con la semana cargada, LAS SERIES
+       (ritmo.series.js, Ez, 15 oct. 2026) vuelven a elegir cada uno con lo que ya pasó.
      · El AGUA: un vaso al comer y otro al cerrar; el resto de la meta se reparte
        entre las pausas, sin pasarse. */
 

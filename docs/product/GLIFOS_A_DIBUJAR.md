@@ -1,11 +1,11 @@
-# Glifos a dibujar · los 2 que faltan
+# Glifos a dibujar · los 3 que faltan
 
 > **Autocontenido a propósito**: no hace falta abrir ningún otro documento para
 > generar estas piezas. Sale del censo de **s173** — si el catálogo cambia, la
 > verdad la dice el generado
 > [`GLIFOS_EJERCICIOS_PENDIENTES.md`](GLIFOS_EJERCICIOS_PENDIENTES.md), no esto.
 >
-> **59 de 62 identidades ya tienen arte.** Aquí sólo está lo que queda, en orden
+> **59 de 63 identidades ya tienen arte** (63 desde «Rotación torácica de pie», 15 oct. 2026). Aquí sólo está lo que queda, en orden
 > de lo que más se nota.
 >
 > **Ojo, el censo decía 61 y son 62.** El generador sacaba los nombres con un patrón
@@ -23,6 +23,7 @@
 |---|---|---|---|
 | 1 | `pica-en-escritorio.png` | 1 paso | **glifo por defecto** |
 | 2 | `rana.png` | 1 paso | **glifo por defecto** |
+| 3 | `rotacion-toracica-de-pie.png` | 1 paso («Espalda de pie», 15 oct. 2026): la rotación de `rotacion-toracica` pero de pie, pies al ancho de las caderas y las manos cruzadas sobre el pecho | **glifo por defecto** |
 
 **`Descanso` ya no se dibuja** (Ez, 7 de octubre de 2026): el descanso entre series
 lleva la figura que respira de `Reset respiración`, por alias en

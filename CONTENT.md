@@ -176,9 +176,10 @@ Botón "Mueve". Inspirado en Strengthside (progresiones de empuje,
 unilateral, colgarse) + Jess Martin (fuerza discreta de oficina). Ejercicios
 cortos, discretos, sin equipo (salvo "Colgarse": barra o marco), aptos para
 la oficina. Datos en `app/move/move.data.js` (`MOVE_ROUTINES`, ids
-`extra.*`). Estado actual: **14 rutinas** (F6, s92, v0.37.0), biblioteca
-**agrupada en 4 grupos** como Respira/Estira (free primero dentro de cada
-grupo): empuje y tracción 4 · sigilo 4 · piernas 3 · espalda y core 3.
+`extra.*`). Estado actual: **15 rutinas** (14 en F6, s92; +1 con las series de
+«A tu ritmo», 15 oct. 2026), biblioteca **agrupada en 4 grupos** como
+Respira/Estira (free primero dentro de cada grupo): empuje y tracción 4 · sigilo 4 ·
+piernas 4 · espalda y core 3.
 Grupos i18n con prefijo `mueve.cat.*` (no `move.cat.*`, que colisionaría
 con los ids `move.*` de Estira).
 
@@ -193,6 +194,7 @@ con los ids `move.*` de Estira).
 | `extra.glutes.stealth` | Glúteos invisibles | sigilo | 2 | free (F6 — micro discreto) |
 | `extra.core.stealth` | Core silencioso | sigilo | 2 | **premium** (hollow al límite) |
 | `extra.chair.squats` | Sentadillas de silla | piernas | 3 | free (F6 — el patrón más útil) |
+| **`extra.legs.standing`** | **Piernas de pie** | piernas | 2 | **free** (series, 15 oct. 2026 — de pie junto a la mesa: talones, puntas, sentadilla de cuádriceps) |
 | `extra.wall.sit` | Sentadilla en pared | piernas | 3 | **premium** (isométrico exigente) |
 | `extra.legs.single` | Piernas · a una | piernas | 4 | **premium** (F6 — unilateral avanzado) |
 | `extra.posture.set` | Postura reset | espalda | 2 | **free** (inicial) |
@@ -213,9 +215,9 @@ Botón "Estira". Inspirado en Jess Martin (oficina) + Strengthside (ATG,
 caderas, hombros, columna, movilidad de suelo, flujos diarios). Datos en
 `app/extra/extra.data.js` + `app/extra/extra.data.piernas.js` (`EXTRA_ROUTINES`,
 ids `move.*`; troceados en s178 por la regla §1). Estado actual:
-**17 rutinas** (s178: 14 → 17), biblioteca **agrupada en 4 grupos** como
-Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 4
-· caderas y piernas 7 · flujos 2.
+**18 rutinas** (s178: 14 → 17; +1 con las series, 15 oct. 2026), biblioteca
+**agrupada en 4 grupos** como Respira (free primero dentro de cada grupo): oficina 4
+· hombros y columna 5 · caderas y piernas 7 · flujos 2.
 
 > **s178 · TRES RUTINAS COMPATIBLES CON OFICINA.** Salieron de un censo
 > (`scripts/audit/censo-suelo-s178.js`), no de una idea: **9 de las 14** rutinas
@@ -236,6 +238,7 @@ Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 4
 | `move.shoulders.5` | Hombros | hombros | 4 | free (reset accesible) |
 | `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
 | **`move.spine.chair`** | **Columna en la silla** | hombros | 4 | **free** (s178 — sin levantarse) |
+| **`move.back.standing`** | **Espalda de pie** | hombros | 3 | **free** (series, 15 oct. 2026 — de pie: rodar, rotar, abrir el pecho, juntar omóplatos; la rotación de pie no tiene dibujo propio todavía) |
 | `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
 | **`move.hips.standing`** | **Caderas de pie** | caderas | 4 | **free** (s178 — sin suelo) |
 | `move.hips.5` | Caderas | caderas | 6 | free |
@@ -324,21 +327,44 @@ media jornada ya se hace la comida»); antes cualquier opción que cruzara la ho
 dicen su tramo en el chip y en la loseta («De 9:00 a 13:00»), porque sus horas son tuyas; las dos cortas
 dicen hasta cuándo llegan. Fuera de su tramo, una jornada se apaga.
 
-**Las pausas**: cada tercera es **larga** (15 min, Respira + Estira), la anterior a la larga es
-**Mueve** y las demás **Estira**; el contador vuelve a empezar tras la comida. El cierre es una
-respiración corta. **Un vaso** al comer y otro al cerrar, y el resto de la meta de Hidrátate
-repartido entre las pausas. En un mismo día no se repite ninguna rutina.
+**Las pausas**: la **larga** llega tras unos 75 min de foco (15 min, Respira + Estira); el contador
+vuelve a empezar tras la comida. **Un vaso** al comer y otro al cerrar, y el resto de la meta de
+Hidrátate repartido entre las pausas. En un mismo día no se repite ninguna rutina.
+
+**Las series** (Ez, 15 oct. 2026, la forma 2 de `docs/traspaso/archivos/series-15oct/`; gratis) eligen
+qué sirve cada parada (`app/ritmo/ritmo.series.js`):
+
+- **La primera del día** y **la primera después de comer**: Mueve, de pie (si no hay, Estira de pie).
+- **Las cortas**: la cadencia de siempre (la de antes de la larga, Mueve; las demás, Estira). Si la
+  anterior fue sentada o la saltaste, esta, de pie. El jueves, la última antes de comer es Respira y
+  la de antes, de pie.
+- **La larga**: Respira y una Estira de pie. **El cierre**: rota entre los Respira lentos de 5 min o
+  menos (Suspiro fisiológico, Diafragmática, Coherente 5·5).
+- **La capa 1 de «PACE que aprende»**: se aparta lo ya hecho hoy (en el plan o por libre) y lo que
+  salió en esa misma parada la última vez; suma +3 la zona que hoy no se ha movido, −3 repetir la
+  zona de la parada anterior y −1 lo que la última vez salió en otra parada. Las zonas: cuello,
+  hombros, espalda, caderas, piernas y manos (`RITMO_SERIES_META`).
+- **La frase B** encima del nombre, en la pausa y en las filas de la línea: «Caderas: sin mover hoy»,
+  «Llevas 70 min sentado», «Después de comer, de pie», «Dos horas: sal de la silla» (con 1 h 45 o
+  más), «Para cerrar, despacio»; sin razón, la de siempre («Antídoto a la silla»).
+
+Medido en treinta laborables (`docs/traspaso/archivos/series-16oct/medir-series.js`): «Dos horas», la
+mitad de las pausas de pie (antes, una de cada ocho); la jornada, 58 %; nunca dos sentadas seguidas,
+nunca la misma primera pausa dos días seguidos; 9 rutinas distintas por semana en «Dos horas» y 18 en
+la jornada. Con el aro a 10 o 15 la jornada tiene once pausas y por la tarde no quedan rutinas de
+pie sin repetir: hasta cuatro sentadas seguidas.
 
 **Los pozos** son lo que cabe junto a la mesa: sin aviso de seguridad, sin suelo, sin material
-obligatorio (el opcional no cuenta) y sin retención; abiertos por acceso y sin lo que se vetó en
-la pausa (s189). Rotan por día. **Medidos en la app, en gratis**:
+obligatorio (el opcional no cuenta; **la mesa cuenta**, en lo de nivel accesible) y sin retención;
+abiertos por acceso y sin lo que se vetó en la pausa (s189). Rotan por día. **Medidos en la app, en
+gratis**:
 
 | Pozo | Rutinas |
 |---|---|
-| Estira (6) | Escritorio express · Muñecas y manos · Hombros · círculos · Caderas de pie · Cadena posterior de pie · Cuello |
-| Mueve (4) | Grip + antebrazos · Glúteos invisibles · Postura reset · Gemelos subrepticios |
-| Respira, pausa larga (5) | Exhalación 4·6 · Rítmica yin · Diafragmática · Coherente 5·5 · Coherente 6·6 (grupos Equilibrio, Balance y Relajación, 4–10 min) |
-| Respira, cierre (1) | Suspiro fisiológico (≤ 3 min) |
+| Estira (7) | Escritorio express · Muñecas y manos · Hombros · círculos · Caderas de pie · Cadena posterior de pie · Espalda de pie · Cuello |
+| Mueve (6) | Grip + antebrazos · Glúteos invisibles · Postura reset · Gemelos subrepticios · Flexiones de escritorio · Piernas de pie |
+| Respira, pausa larga (5) | Exhalación 4·6 · Diafragmática · Coherente 5·5 · Coherente 6·6 … (grupos Equilibrio, Balance y Relajación, 4–10 min, sin retención) |
+| Respira, cierre (3) | Suspiro fisiológico · Diafragmática · Coherente 5·5 (≤ 5 min) |
 
 > **Medido en la suite** (`tests/ritmo.spec.js`, cinco horarios x cuatro opciones): ningún día
 > repite rutina. La jornada de 9 a 17 pide 4 platos de Estira, 3 de Mueve, 1 de Respira y el cierre. Si un pozo
@@ -461,4 +487,6 @@ cada uno con los tags del catálogo que van primero en cada pozo:
 
 Y un acento por día: lunes **arrancar** (la primera pausa es de Mueve) · martes **sostener** (el día tal
 cual) · miércoles **la mitad** (la larga es la segunda pausa) · jueves **aire** (antes de comer, Respira) ·
-viernes **cerrar suave** (el cierre es el Respira más largo que quede **y quepa en sus 5'**: Diafragmática 5' donde la regla pone Suspiro 2') · fin de semana, ninguno. **Cada plato cabe en su parada** (v0.128.1: la pausa corta y el cierre duran 5', y sin ese filtro «aire» servía 10' en 5).
+viernes **cerrar suave** (el cierre es el Respira más largo que quede **y quepa en sus 5'**: Diafragmática 5' donde la regla pone Suspiro 2') · fin de semana, ninguno.
+**Desde las series (15 oct. 2026)** arrancar con Mueve y el cierre lento son de todos los días, y el tema
+solo desempata (es el orden de los pozos); siguen la mitad del miércoles y el aire del jueves. **Cada plato cabe en su parada** (v0.128.1: la pausa corta y el cierre duran 5', y sin ese filtro «aire» servía 10' en 5).

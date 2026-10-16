@@ -52,7 +52,7 @@ var RITMO_SERIES_ZONA_TAG = {
   SHLD: 'hombros', SPN: 'espalda', POST: 'espalda', BACK: 'espalda', CORE: 'espalda', HIP: 'caderas',
   GRND: 'caderas', LEG: 'piernas', ATG: 'piernas', WRST: 'manos', GRIP: 'manos', PUSH: 'hombros', HANG: 'hombros',
 };
-var RITMO_SERIES_LARGA = 90;   /* minutos desde la última larga (o el inicio, o la comida) para decir «Dos horas» */
+var RITMO_SERIES_LARGA = 105;  /* minutos desde la última larga (o el inicio, o la comida) para decir «Dos horas»: 1 h 45 o más */
 
 function ritmoSeriesZonas(id, tag) {
   var m = RITMO_SERIES_META[id];
@@ -87,7 +87,10 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   var estados = mem.estados || {}, ultima = mem.ultima || {}, dias = mem.dias || {}, hechas = mem.hechas || [];
   var usados = {}, movidas = {}, vez = 0;   /* usados: { id: la vez que salió hoy (1, 2, …) } */
   (previos && previos.usados || []).forEach(function (id) { usados[id] = usados[id] || ++vez; });
-  var previa = null, huboPausa = false, trasComer = false, ord = 0;
+  /* `previos` ya dice si hubo pausas o comida antes de recomponer; lo congelado lo repasa abajo */
+  var previa = null, ord = 0;
+  var huboPausa = !!(previos && (previos.pausas > 0 || previos.comidaHecha));
+  var trasComer = !!(previos && previos.comidaHecha && !previos.pausas);
   var inicio = mem.inicio != null ? mem.inicio : m.desde;
   var ultimaPie = inicio, desdeLarga = inicio;
   var otraVez = {};
