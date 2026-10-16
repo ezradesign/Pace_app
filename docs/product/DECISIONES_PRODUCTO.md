@@ -21,6 +21,29 @@
 
 ---
 
+## Lo que hace bueno a PACE antes de cobrar (Ez, 16 oct. 2026)
+
+Tras la auditoría del 16 oct. Ez fijó la dirección: «aún podemos cerrar el producto todo lo que
+queramos; los betatesters son amigos, así que no importaría». Mientras la prueba sea entre amigos,
+se puede cambiar lo que haga falta sin cuidar lo que ya usaban. Lo óptimo es que PACE aprenda de
+cada persona, ofrezca días con rutinas bien hechas y medidas, y se sincronice del todo con Google
+Calendar y Outlook. Elegido con AskUserQuestion:
+
+1. **La venta y el producto, a la vez**, cada uno en su sesión (sin pasar de dos sesiones).
+2. **Aprender: el motor de la semana, ya.** El que Ez aceptó en `docs/traspaso/archivos/motor-semana/`
+   (mira «¿te ayudó?», lo hecho y lo saltado, «Otra» y las horas a las que paras; cambia dos cosas por
+   semana y lo cuenta en la carta del lunes, también cuando no cambia nada; nada sin PACE completo).
+   Ya no espera a tener semanas de datos: empieza a aprender con la primera semana de los testers.
+3. **Días diseñados:** cada día de la semana con su intención y sus rutinas, todas revisadas con el
+   manual (`BASE_MUEVE_ESTIRA.md`) y medidas de verdad, y las rutinas de pie que faltan para la tarde.
+4. **El calendario, total también en la web, con un servidor pequeño solo para eso:** una función de
+   Cloudflare guarda el permiso cifrado y mantiene el día al día aunque PACE esté cerrado. Solo para
+   quien lo conecta. Cambia la promesa de «sin servidor» en ese punto y `privacy.html` lo cuenta; pide
+   la verificación de Google y las altas de Ez en Google Cloud y Microsoft Entra
+   (`docs/CALENDARIO_ALTAS.md`). En Android ya era total con el calendario del móvil.
+
+---
+
 ## Cómo se lanza y se da a conocer PACE (Ez, 15 oct. 2026)
 
 Elegido sobre `docs/proposals/lanzar-pace-ideas.html`

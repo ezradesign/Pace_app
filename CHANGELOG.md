@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.171.2 | 2026-10-16 | Los rótulos pequeños se leen mejor en el modo claro: su gris pasa de 3,2 a 4,2 a 1 sobre el crema (punto intermedio que eligió Ez viendo fotos). La web manda cabeceras de seguridad (nadie puede meter PACE en un marco). La barra lateral dice «Tus rutinas», como la sección |
 | v0.171.1 | 2026-10-16 | Las segundas rondas que dicen «más lentas» lo son (Gemelos subrepticios y Sentadillas de silla bajan en 3 s) y en Piernas de pie se baja en 2 s, como piden sus textos (Ez, 16 oct.). El lector de pantalla dice «Terminar» y «Pausar», sin leer el símbolo |
 | v0.171.0 | 2026-10-16 | «A tu ritmo» sirve las pausas en series con lógica (Ez, 15 oct.): de pie al empezar, tras comer y en la larga, nunca dos sentadas seguidas, la frase de lo de hoy encima del nombre («Caderas: sin mover hoy»), Piernas de pie, Espalda de pie y la mesa, y la primera capa de «PACE que aprende», gratis. Con el aro a 10 o 15, la pausa corta llega como mucho cada 30 min de foco y el aro espera. En el cierre de las sesiones, «Volver al inicio» ya no tapa «Ahora no»: va en la fila de las respuestas y, si no cabe todo, el dibujo encoge (opción B de Ez) |
 | v0.170.1 | 2026-10-15 | «Barbilla atrás» estrena el dibujo de Ez: la flecha empuja la barbilla hacia atrás, como pide el ejercicio (el anterior la llevaba al revés) |

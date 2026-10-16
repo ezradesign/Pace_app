@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.171.1</title>
+  <title>PACE · Foco · Cuerpo — v0.171.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -50,7 +50,9 @@
   --paper-3: #DFD8C4;
   --ink: #1F1C17;
   --ink-2: #4A453C;
-  --ink-3: #8A8372;
+  /* Rótulos y metadatos de 9 a 12 px. #8A8372 daba 3,2:1 sobre --paper y 3,0:1 en la
+     barra lateral; Ez eligió el 16 oct., viendo fotos, un punto intermedio: 4,2 y 3,9. */
+  --ink-3: #77705F;
   --line: #C9C0A8;
   --line-2: #B8AD8E;
 
@@ -1013,7 +1015,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   --paper-3: #DFD8C4;
   --ink: #1F1C17;
   --ink-2: #4A453C;
-  --ink-3: #8A8372;
+  --ink-3: #77705F;
   --line: #C9C0A8;
   --line-2: #B8AD8E;
   /* s104c: también los acentos de actividad — el relleno de las bolas y
@@ -6203,7 +6205,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.171.1';
+const PACE_VERSION = 'v0.171.2';
 
 
 
@@ -39092,7 +39094,7 @@ Object.assign(window, { Onboarding });
 /* EL HORARIO se edita dentro de la frase: <select> nativo con aspecto de texto
    subrayado. El padding vertical agranda la zona de toque sin mover la línea. */
 .pace-rt-sel { appearance: none; -webkit-appearance: none; font: inherit; color: var(--ink); cursor: pointer;
-  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%238A8372' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%2377705F' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
   border: 0; border-bottom: 1px dotted var(--line-2); border-radius: 0; padding: 6px 11px 1px 1px; margin: -6px 1px 0;
   field-sizing: content; }
 .pace-rt-sel:hover { border-bottom-color: var(--ink-3); }

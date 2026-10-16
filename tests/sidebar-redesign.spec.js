@@ -274,11 +274,11 @@ test('el último logro tiene su rótulo, nombra el más reciente y dice qué lo 
   await expect(page.locator('[data-pace-modal-backdrop]')).toHaveCount(1);
 });
 
-test('el pie son dos filas de texto: «Mis rutinas» y «Da de pastar a la vaca»', async ({ page, context }) => {
+test('el pie son dos filas de texto: «Tus rutinas» y «Da de pastar a la vaca»', async ({ page, context }) => {
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
   const pie = sb(page).locator('[data-pace-sidebar-pie]');
-  await expect(pie.getByRole('button', { name: /^Mis rutinas/ })).toHaveCount(1);
+  await expect(pie.getByRole('button', { name: /^Tus rutinas/ })).toHaveCount(1);
   const apoyo = pie.getByRole('button', { name: 'Da de pastar a la vaca' });
   await expect(apoyo).toHaveCount(1);
   await apoyo.click();

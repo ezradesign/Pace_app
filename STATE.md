@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.171.1 · 16 de octubre de 2026.
+**Versión:** v0.171.2 · 16 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -143,7 +143,14 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    (`PACE-X.Y.Z.aab`); el APK de prueba es otra app, «PACE prueba». Las subidas siguen la rutina de
    `docs/launch/google-play/guia.html` (viernes a la prueba interna, lunes a la cerrada) y se apuntan
    en `SUBIDAS.md`.
-2. **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
+2. **Lo que hace bueno a PACE antes de cobrar** (Ez, 16 oct.; `DECISIONES_PRODUCTO.md`): a la vez que
+   la venta, y en este orden, cada uno en su sesión: **la revisión de todos los ejercicios** con la
+   evidencia de hoy (Mueve, Estira y Respira; `docs/traspaso/archivos/encargos-16oct/REVISION_EJERCICIOS.md`),
+   **el motor de la semana** (aprende desde la
+   primera semana de los testers), **los días diseñados** (cada día con su intención y rutinas
+   medidas) y **el calendario total en la web** con una función de Cloudflare (espera las altas de
+   Ez en Google y Microsoft).
+   Antes: **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
    cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
    «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
    cuatro cosas, dos cambios por semana, la carta en una ventana, también sin cambios, nada sin
@@ -164,9 +171,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 6. **Lo demás que vio Ez el 15 oct.**: el «Ahora no» tapado y las series están en v0.171.0; las
    rondas «más lentas» que no lo eran (Gemelos y Sentadillas), en v0.171.1. Falta la voz del suspiro
    fisiológico, que espera las grabaciones de Ez.
-7. **La auditoría del 16 oct.** (`docs/audits/auditoria-v0.171.0.md`): sin fallos graves; lo que pide
-   decisión de Ez va en una página (el gris de los textos pequeños, las cabeceras de seguridad, el
-   nombre «Premium» y por dónde empezar la Fase 6).
+7. **La auditoría del 16 oct.** (`docs/audits/auditoria-v0.171.0.md`, página para Ez en
+   https://claude.ai/artifact/DJ6B89dpS6NwTor2uoqc17): sin fallos graves. Ez decidió las seis
+   cosas: el gris, las cabeceras y «Tus rutinas» están en v0.171.2; las carpetas de trabajo
+   terminadas, borradas. Siguen en su sesión: **la Fase 6 sin Stripe** (`/premium`, «Avísame», la
+   bienvenida con los dos precios y el punto único de compra; primero opciones para Ez) y **«Dos
+   horas» con el aro a 25** (si la larga no cabe, la tercera pausa es corta).
 
 ## Espera a Ez
 
