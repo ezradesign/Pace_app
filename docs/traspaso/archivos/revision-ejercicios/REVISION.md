@@ -4,6 +4,21 @@ Encargo: `docs/traspaso/archivos/encargos-16oct/REVISION_EJERCICIOS.md`. Alcance
 (Mueve 15, Estira 18, Respira 20). Inventario paso a paso: `inventario.md` (lo genera `inventario.js`).
 Nada de esto es consejo médico: PACE es una pausa, no un tratamiento (`docs/product/BASE_MUEVE_ESTIRA.md`).
 
+## 0. Lo que eligió Ez (16 oct., con la página https://claude.ai/artifact/V1EFgTeRstJAsbXhcD8Djs)
+
+1. Mueve y Estira: **todo** (los 15 ajustes). 2. Respira: **los tres** (4·7·8 en cuatro ciclos,
+Bhastrika y Kapalabhati por rondas, la hernia en el aviso). 3. Rutinas nuevas: **ninguna por ahora**
+(el Paseo corto y Hombros fuertes quedan descritos abajo para cuando se quieran). 4. **Los dos textos**:
+la descripción del Antídoto y «ATG · Rodillas profundas» (en inglés ya era «Knees over toes»).
+
+Al aplicarlo, cuatro cosas distintas de lo que decía la página, todas por coherencia:
+- «Apertura de costillas» (Ancestral) dice ahora lo que enseña su dibujo: a cuatro patas, respirando
+  hacia los lados de las costillas (la página proponía sentado con los brazos arriba).
+- La extensión torácica de «Hombros» va sentada sobre el respaldo, como su dibujo y como «Columna en la
+  silla» (la página proponía de pie frente a la pared). Sigue sin pedir suelo.
+- El cuidado de rodilla de la Paloma va también en «Estiramiento del sofá», que tiene la misma Paloma.
+- Grip + antebrazos pasa de 1 a 2 min: 20 s por mano no caben en el minuto.
+
 ## 1. Lo que dice la evidencia (resumido, con su fuente)
 
 1. **Moverse cuenta, aunque sea poco.** La OMS (2020) pide sentarse menos y cambiar tiempo sentado por
@@ -133,5 +148,53 @@ Momentos (orientativos; ninguna fuente fija la hora del día salvo caminar tras 
 - **El cierre**: Respira lento sin retención (Coherente, Exhalación 4·6, Suspiro, Diafragmática).
   Nada de lo que activa (Rondas, Bhastrika, Kapalabhati) al final del día.
 
-La tabla de zona y postura de cada rutina está en la página para Ez y en `ritmo.series.js`
-(`RITMO_SERIES_META`).
+Zona, postura y momento de cada rutina de cuerpo (P = PACE completo). Lo que ya puede servir «A tu
+ritmo» lleva su zona en `RITMO_SERIES_META` (`app/ritmo/ritmo.series.js`); Espalda de oficina entró
+ahí con esta revisión.
+
+| Rutina | Postura | Zona | Momento |
+|---|---|---|---|
+| Flexiones de escritorio | de pie, mesa | hombros, pecho | al empezar · tarde |
+| Fondos en silla | silla sin ruedas | brazos, hombros | cuando sea |
+| Empuje · progresión (P) | de pie, mesa | hombros, pecho | tarde |
+| Colgarse (P) | barra | hombros, espalda | en casa |
+| Gemelos subrepticios | sentado | piernas | sentado, cuando sea |
+| Grip + antebrazos | sentado | manos | sentado, cuando sea |
+| Glúteos invisibles | sentado | caderas | sentado, cuando sea |
+| Core silencioso (P) | sentado | abdomen | sentado, cuando sea |
+| Sentadillas de silla | de pie, silla sin ruedas | piernas | tras comer · tarde |
+| Piernas de pie | de pie | piernas | al empezar · tras comer |
+| Sentadilla en pared (P) | de pie, pared | piernas | tarde |
+| Piernas · a una (P) | de pie, silla | piernas | en casa |
+| Postura reset | sentado | cuello, espalda alta | sentado, cuando sea |
+| Espalda de oficina | de pie (pared opcional) | espalda alta, hombros | tarde |
+| Core · plancha (P) | suelo | abdomen | en casa |
+| Antídoto silla | sentado y suelo | pecho, caderas, cuello | en casa |
+| Cuello | sentado | cuello | sentado, cuando sea |
+| Escritorio express | sentado | cuello, hombros, manos | sentado, cuando sea |
+| Muñecas y manos | sentado | manos | sentado, cuando sea |
+| Hombros | de pie, pared | hombros | al empezar · tarde |
+| Hombros · círculos | sentado o de pie | hombros | cuando sea |
+| Columna en la silla | sentado | espalda, cuello | sentado, cuando sea |
+| Espalda de pie | de pie | espalda | al empezar · tarde |
+| Columna · ondas (P) | suelo y de pie | espalda | en casa |
+| Caderas de pie | de pie | caderas | tarde |
+| Caderas | de pie y suelo | caderas | en casa |
+| Estiramiento del sofá (P) | suelo | caderas, muslos | en casa |
+| Caderas · suelo (P) | suelo | caderas | en casa |
+| ATG · Rodillas profundas (P) | de pie y suelo | rodillas, piernas | en casa |
+| Cadena posterior de pie | de pie | piernas, espalda baja | tarde |
+| Cadena posterior (P) | de pie y suelo | piernas | en casa |
+| Despertar matinal | suelo, sentado, de pie | cuerpo entero | al empezar (en casa) |
+| Ancestral (P) | suelo y barra | cuerpo entero | en casa |
+
+Respira: lo que activa (Rondas, Bhastrika, Kapalabhati) nunca al cerrar; lo lento sin retención
+(Coherente 5·5 y 6·6, Exhalación 4·6, Suspiro, Diafragmática, Rítmica yin, Bhramari, 4·7·8) al cerrar.
+
+## 5. Las dos rutinas nuevas, por si se quieren (Ez: «ninguna por ahora»)
+
+- **Paseo corto** (Mueve, gratis, 3 min, de pie): Caminar 1 min a paso cómodo · 1 min más vivo, sin
+  sudar (escaleras si las hay) · 45 s volviendo despacio. Mejor tras comer. Dibujo nuevo: «Caminar».
+- **Hombros fuertes** (Mueve, gratis, 3 min, de pie, botella de agua o nada): Elevación lateral, 8 por
+  brazo (2 s arriba, 2 abajo) · Remo con apoyo, 8 por brazo · Encogimiento de hombros, 8 con 2 s arriba.
+  Dibujos nuevos: «Elevación lateral» y «Remo con apoyo».
