@@ -11,9 +11,8 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **16 oct., 17:00 (relevo por uso, 91 %): v0.171.3 juntada en la rama de la coordinadora (wip), sin
-  subir a `main`:** «Dos horas» con el aro a 25 (`claude/priceless-yonath-e0c735`, sí de Ez). Su suite
-  corría en local (`suite-1713.log` del scratchpad); al volver, repetirla y subir. Sesiones, las dos
+- **16 oct., 17:00 (relevo por uso, 91 %): v0.171.3 en `main`:** «Dos horas» con el aro a 25
+  (`claude/priceless-yonath-e0c735`, sí de Ez), con la suite entera en verde (698). Sesiones, las dos
   paradas por el uso con su wip y su RELEVO.md:
   - `venta-sin-stripe` (`local_93e3b5bd-…`), rama `claude/interesting-meninsky-062638`, wip ac50717:
     Ez eligió las cuatro recomendadas («Avísame» en su Cloudflare, `/premium` B, bienvenida A, la
