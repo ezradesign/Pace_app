@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PACE completo · PACE</title>
+<meta name="description" content="PACE es gratis: foco, respiración, movilidad y agua para quien trabaja sentado. PACE completo añade las rutinas más hondas, tus propias rutinas, una semana a tu medida y tu mes y tu año.">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- PACE · /premium — LA PÁGINA DE PACE COMPLETO (Fase 6, Ez, 15 oct. 2026)
+     Una página suelta junto a la app, como la de privacidad: la app no se mueve de la
+     raíz. Sin cookies ni rastreo; solo pide a su propio dominio (las fuentes, las
+     fotos y, al pulsar «Avísame», /api/avisame). -->
+<style>
+  @font-face { font-family: 'EB Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/ebgaramond-400-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'EB Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/ebgaramond-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/intertight-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/intertight-500-normal.woff2') format('woff2'); }
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --premium: #9C6B2E;
+    --display: 'EB Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --premium: #C99A5B; }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  a { color: var(--focus); }
+  .marco { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  header img { height: 60px; width: auto; display: block; }
+  .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2, .serif { font-family: var(--display); font-style: italic; font-weight: 500; }
+  h1 { font-size: clamp(36px, 8vw, 52px); line-height: 1.06; margin: 0 0 16px; }
+  h2 { font-size: clamp(28px, 6vw, 34px); line-height: 1.1; margin: 0 0 12px; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  .lede { font-size: 17px; max-width: 34em; }
+  .boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 26px; border-radius: 999px; font: 500 14px/1 var(--ui); letter-spacing: .06em; text-decoration: none; cursor: pointer; border: 1px solid var(--cta); }
+  .boton.lleno { background: var(--cta); color: var(--paper); }
+  .boton.hueco { background: transparent; color: var(--cta); }
+  .foto { margin: 28px 0 8px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper-2); }
+  .foto img { display: block; width: 100%; height: auto; }
+  section { padding: 40px 0 8px; border-top: 1px dashed var(--line); margin-top: 40px; }
+  .lista { list-style: none; padding: 0; margin: 0 0 8px; }
+  .lista li { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .lista li:last-child { border-bottom: 0; }
+  .dos > div + div { margin-top: 36px; }
+  .lista .serif { font-size: 18px; color: var(--ink); }
+  .lista .d { font-size: 13.5px; color: var(--ink-3); text-align: right; }
+  .platos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 10px; }
+  .plato { border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 16px 16px; text-align: center; background: var(--paper-2); }
+  .plato.delante { border-color: var(--cta); }
+  .plato .importe { font-family: var(--display); font-style: italic; font-size: 38px; line-height: 1.1; color: var(--ink); margin: 4px 0 2px; }
+  .plato .sub { font-family: var(--display); font-style: italic; font-size: 16px; color: var(--ink-2); margin: 0 0 12px; }
+  .plato .boton { width: 100%; }
+  .nota { font-size: 13.5px; color: var(--ink-3); }
+  .promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .promesas li { font-family: var(--display); font-style: italic; font-size: 21px; color: var(--ink); padding-left: 22px; position: relative; }
+  .promesas li::before { content: ''; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--cta); }
+  .avisame { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px 16px; margin: 16px 0 0; }
+  .avisame form { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  .avisame input[type=email] { flex: 1 1 220px; min-height: 46px; padding: 0 16px; font: 16px var(--ui); color: var(--ink); background: var(--paper); border: 1px solid var(--line-2); border-radius: 999px; }
+  .avisame .boton { flex: 0 0 auto; }
+  .avisame .estado { font-family: var(--display); font-style: italic; font-size: 18px; color: var(--ink); margin: 8px 0; min-height: 1.4em; }
+  .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  details { border-bottom: 1px dashed var(--line); padding: 12px 0; }
+  details:last-of-type { border-bottom: 0; }
+  summary { cursor: pointer; font-family: var(--display); font-style: italic; font-size: 19px; color: var(--ink); }
+  details p { margin: 8px 0 4px; }
+  footer { margin: 56px 0 0; padding: 16px 0 40px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  footer a { color: var(--ink-3); }
+  @media (max-width: 520px) { .platos { grid-template-columns: 1fr; } }
+
+  /* Variante B («escaparate»), solo para la maqueta: en escritorio la foto al lado y bandas. */
+  .v-b .marco { max-width: 1100px; }
+  .v-b section { border-top: 0; margin-top: 0; padding: 48px 16px 40px; margin-left: -16px; margin-right: -16px; }
+  .v-b section:nth-of-type(odd) { background: var(--paper-2); }
+  .v-b .plato { background: var(--paper); }
+  @media (min-width: 900px) {
+    .v-b .portada { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; padding: 24px 0 40px; }
+    .v-b .portada .foto { margin: 0; }
+    .v-b .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .v-b .dos > div + div { margin-top: 0; }
+    .v-b section { padding: 56px 40px 48px; margin-left: 0; margin-right: 0; border-radius: 18px; }
+    .v-b .platos { max-width: 640px; }
+  }
+</style>
+<script>
+  /* Solo para la maqueta: ?v=b enseña la variante B. */
+  if (/[?&]v=b\b/.test(location.search)) document.documentElement.className = 'v-b';
+</script>
+</head>
+<body>
+<div class="marco">
+  <header>
+    <a href="/" aria-label="Abrir PACE"><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+    <button class="idioma" type="button" disabled>ES · EN</button>
+  </header>
+
+  <div class="portada">
+    <div>
+      <p class="kicker">PACE · Foco · Cuerpo</p>
+      <h1>Pausas activas para quien trabaja sentado.</h1>
+      <p class="lede">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.</p>
+      <a class="boton lleno" href="/">Abrir PACE, es gratis</a>
+    </div>
+    <div class="foto">
+      <picture>
+        <source media="(max-width: 520px)" srcset="/premium/app-movil.webp">
+        <img src="/premium/app-escritorio.webp" alt="La pantalla de PACE: el aro del Foco y el día de «A tu ritmo»" width="1440" height="900">
+      </picture>
+    </div>
+  </div>
+
+  <section class="dos">
+    <div>
+      <h2>Gratis, y lo seguirá siendo</h2>
+      <ul class="lista">
+        <li><span class="serif">El Foco entero</span><span class="d">Pomodoro, pausas y aviso</span></li>
+        <li><span class="serif">«A tu ritmo», cada día</span><span class="d">tu día con sus pausas</span></li>
+        <li><span class="serif">32 rutinas</span><span class="d">Respira, Mueve, Estira</span></li>
+        <li><span class="serif">Hidrátate</span><span class="d">tus vasos del día</span></li>
+        <li><span class="serif">Logros, hoy y la semana</span><span class="d">estadísticas</span></li>
+      </ul>
+    </div>
+    <div>
+      <h2>PACE completo</h2>
+      <p>Para cuando quieras más:</p>
+      <ul class="lista">
+        <li><span class="serif">Las rutinas más hondas</span><span class="d">Respira, Mueve, Estira</span></li>
+        <li><span class="serif">Tus propias rutinas</span><span class="d">con el catálogo</span></li>
+        <li><span class="serif">Una semana a tu medida</span><span class="d">la carta del lunes</span></li>
+        <li><span class="serif">Tu mes y tu año</span><span class="d">estadísticas</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="precio">
+    <h2>Dos maneras de tenerlo</h2>
+    <div class="platos">
+      <div class="plato delante">
+        <p class="kicker">De por vida</p>
+        <p class="importe">19,99 €</p>
+        <p class="sub">un pago, para siempre</p>
+        <a class="boton lleno" href="#avisame">Avísame</a>
+      </div>
+      <div class="plato">
+        <p class="kicker">Al mes</p>
+        <p class="importe">2,99 €</p>
+        <p class="sub">con 7 días gratis</p>
+        <a class="boton hueco" href="#avisame">Avísame</a>
+      </div>
+    </div>
+    <p class="nota">IVA incluido. Llega con la versión 1. Lo que compras en la web abre PACE en la web; en la app de Android se compra en Google Play.</p>
+
+    <div class="avisame" id="avisame">
+      <h2 style="font-size:26px;margin:0">Avísame cuando salga</h2>
+      <form data-avisame>
+        <label class="trampa" aria-hidden="true">No escribas aquí <input type="text" name="web" tabindex="-1" autocomplete="off"></label>
+        <input type="email" name="correo" required autocomplete="email" placeholder="tu@correo.com" aria-label="Tu correo">
+        <button class="boton lleno" type="submit">Avísame</button>
+      </form>
+      <p class="estado" role="status" aria-live="polite"></p>
+      <p class="nota">Te escribimos dos veces: el día que se pueda comprar en la web y el día que llegue a Google Play. Después borramos tu correo. Nada más. <a href="/privacy">Privacidad</a>.</p>
+    </div>
+  </section>
+
+  <section class="dos">
+    <div>
+      <h2>Tres cosas que no van a cambiar</h2>
+      <ul class="promesas">
+        <li>Lo que hoy es gratis, sigue gratis.</li>
+        <li>Lo que compras no se quita.</li>
+        <li>Si un día sube el precio, el tuyo no.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>La prueba, sin sorpresas</h2>
+      <p>Dos días antes de que acaben los 7 días gratis, PACE te avisa. Si no quieres seguir, la cancelas en dos toques desde Ajustes.</p>
+      <p>Y si PACE completo no te convence, te devolvemos el dinero en 14 días, sin preguntas.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Preguntas</h2>
+    <details><summary>¿Necesito una cuenta?</summary><p>No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</p></details>
+    <details><summary>¿Y si cambio de ordenador o de navegador?</summary><p>Abre el enlace de tu código en el nuevo, o llévalo dentro de la copia de «Tus datos». Si lo pierdes, lo recuperas con tu correo y el número del recibo.</p></details>
+    <details><summary>¿Sirve en Android?</summary><p>Lo que compras en la web abre PACE en la web. En la app de Android, PACE completo se compra en Google Play.</p></details>
+    <details><summary>¿Qué pasa con mis datos?</summary><p>Se quedan en tu equipo. Ni la compra ni el código mandan tu práctica a ningún sitio.</p></details>
+    <details><summary>¿Puedo devolverlo?</summary><p>Sí, en los 14 días siguientes, sin preguntas. Escríbenos y lo devolvemos.</p></details>
+    <details><summary>Si ahora no puedes pagarlo</summary><p>Escríbeme a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> y te mando un código.</p></details>
+  </section>
+
+  <footer>
+    <a href="/">Abrir PACE</a>
+    <a href="/privacy">Privacidad</a>
+    <a href="/safety">Seguridad</a>
+    <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>
+  </footer>
+</div>
+</body>
+</html>

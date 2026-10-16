@@ -38,6 +38,7 @@ function Onboarding() {
   const [draft, setDraft] = useStateONB({ need: null, time: null, environment: null });
   const [freeText, setFreeText] = useStateONB('');
   const [picked, setPicked] = useStateONB(null);
+  const [conPick, setConPick] = useStateONB(false); // lo elegido en «Tu primer Camino», si detrás va PACE completo
 
   // Re-abrir a mano (dev / curiosidad) — mismo patrón que pace:open-support.
   useEffectONB(() => {
@@ -63,18 +64,20 @@ function Onboarding() {
      primer Camino. Contar pasos a pelo confundía la semana con la primera pregunta. */
   const pantallas = ['bienvenida', 'semana']
     .concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : [])
-    .concat(conCaminos ? ['primer'] : []);
+    .concat(conCaminos ? ['primer'] : [])
+    .concat(typeof paceTiendaAbierta === 'function' && paceTiendaAbierta() ? ['completo'] : []);
   const pantalla = pantallas[step];
   const isSemana = pantalla === 'semana';
   const isQuestion = !!pantalla && pantalla.charAt(0) === 'q';
   const qIndex = isQuestion ? Number(pantalla.slice(1)) : -1;
   const q = isQuestion ? questions[qIndex] : null;
   const isSummary = pantalla === 'primer';
+  const isCompleto = pantalla === 'completo';
   const ultima = step === pantallas.length - 1;
 
   const pickedPath = (isSummary && picked && typeof getPath === 'function') ? getPath(picked) : null;
   const sceneId = step === 0 ? 'path.dawn'
-    : isSemana ? null
+    : (isSemana || isCompleto) ? null
     : isQuestion ? q.sceneId
     : (picked || 'path.dawn');
 
@@ -138,7 +141,8 @@ function Onboarding() {
           )}
         </div>
         {isQuestion ? <OnbDots total={questions.length} active={qIndex} />
-          : isSemana ? <span className="pace-meta">{t('ritmo.nombre')}</span> : <span />}
+          : isSemana ? <span className="pace-meta">{t('ritmo.nombre')}</span>
+          : isCompleto ? <span className="pace-meta">{t('premium.name')}</span> : <span />}
         <div style={{ width: 86, display: 'flex', justifyContent: 'flex-end' }}>
           {step === 0 && (
             <button data-pace-toque
@@ -214,6 +218,11 @@ function Onboarding() {
           {isSemana && (
             <OnbSemanaPaso state={state} ultima={ultima}
               onSeguir={() => (ultima ? finish({ pick: false }) : next())} />
+          )}
+
+          {/* ---------- PACE COMPLETO, solo con la tienda abierta ---------- */}
+          {isCompleto && (
+            <OnbCompletoPaso onFin={(plan) => { finish({ pick: conPick }); if (plan && typeof paceComprar === 'function') paceComprar(plan); }} />
           )}
 
           {/* ---------- 1-3 · PREGUNTAS ---------- */}
@@ -293,10 +302,10 @@ function Onboarding() {
                     .join(' · ')}
                 </div>
               )}
-              <button data-pace-cta onClick={() => finish({ pick: true })} style={onboardingStyles.cta}>
+              <button data-pace-cta onClick={() => (ultima ? finish({ pick: true }) : (setConPick(true), next()))} style={onboardingStyles.cta}>
                 {t('onboarding.first.cta')}
               </button>
-              <button onClick={() => finish({ pick: false })} style={onboardingStyles.ghostBtn}>
+              <button onClick={() => (ultima ? finish({ pick: false }) : (setConPick(false), next()))} style={onboardingStyles.ghostBtn}>
                 {t('onboarding.first.explore')}
               </button>
             </React.Fragment>
@@ -461,4 +470,5 @@ const onboardingStyles = {
   },
 };
 
-Object.assign(window, { Onboarding });
+/* `onboardingStyles` sale a `window` para el último paso (OnboardingCompleto.jsx), que pinta con los mismos. */
+Object.assign(window, { Onboarding, onboardingStyles });

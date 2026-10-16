@@ -5,12 +5,13 @@
    Guard central de acceso a contenido (sesion 95 / v0.40.0).
 
    ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath /
-   hasPremiumEntitlement. Abren PACE completo dos cosas: el booleano
-   `premiumUnlocked` (state-core, sin ruta de compra todavía) y un CÓDIGO
-   firmado que vale (`paceLicenciaVigente`, state-licencia.js: el de los
-   testers, y mañana el de quien compre en la web). Cuando llegue Play Billing
-   entra aquí como una tercera fuente, y los consumidores (RoutineCard,
-   CustomRoutines, PathBreatheStep/PathBodyStep, getSuggestedPath) no se tocan.
+   hasPremiumEntitlement. Abren PACE completo tres cosas: el booleano
+   `premiumUnlocked` (state-core, sin ruta de compra), un CÓDIGO firmado que
+   vale (`paceLicenciaVigente`, state-licencia.js: el de los testers y el de
+   quien compre en la web) y lo que la tienda del canal sabe que ya tienes
+   (`tieneCompraVigente`: Play Billing, vacía hasta que llegue). Los
+   consumidores (RoutineCard, CustomRoutines, PathBreatheStep/PathBodyStep,
+   getSuggestedPath) no se tocan. La compra también pasa por aquí (abajo).
 
    Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
    el guard concede acceso a una rutina premium aunque premiumUnlocked sea
@@ -60,7 +61,7 @@ function canAccessRoutine(routineId, opts) {
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
   const s = getState && getState();
-  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
+  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
   return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
@@ -73,7 +74,7 @@ function canAccessPath(pathId) {
   if (!path) return true;
   if (path.access !== 'premium') return true;
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
 }
 
 /* hasPremiumEntitlement() -> boolean   (s149)
@@ -87,7 +88,7 @@ function canAccessPath(pathId) {
      llegar la licencia real SOLO cambia este archivo. */
 function hasPremiumEntitlement() {
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
 }
 
 /* puedeMantenerCalendario() -> boolean   (14 oct. 2026)
@@ -97,4 +98,48 @@ function puedeMantenerCalendario() {
   return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, PREMIUM_ABIERTO_HASTA_V1 });
+/* LA COMPRA PASA POR AQUÍ (Fase 6). La tienda del canal (state-compra.js: Stripe
+   en la web, Play en Android, ninguna en el iPhone) se pregunta solo desde estas
+   cuatro funciones, y lo que compra vuelve por las fuentes de arriba: el código
+   PACE1 de la web por `paceLicenciaCanjear` y lo de Play por `vigente()`.
+   La tienda está abierta si se puede comprar y esta persona aún no lo tiene. */
+function tiendaDelCanal() {
+  return (window.paceTiendaDelCanal && window.paceTiendaDelCanal()) || null;
+}
+
+function paceTiendaAbierta() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.listo()) && !hasPremiumEntitlement();
+}
+
+/* Los planes con su precio escrito en el idioma de la app, en el orden de la tienda. */
+function paceTiendaPlanes(lang) {
+  const tienda = tiendaDelCanal();
+  if (!tienda || !tienda.listo()) return [];
+  return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
+}
+
+function paceComprar(plan) {
+  const tienda = tiendaDelCanal();
+  if (!tienda || !tienda.listo()) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+  return tienda.comprar(plan).then((r) => {
+    if (r && r.ok && r.licencia && window.paceLicenciaCanjear) return window.paceLicenciaCanjear(r.licencia);
+    return r || { ok: false, motivo: 'error' };
+  }, () => ({ ok: false, motivo: 'error' }));
+}
+
+function paceGestionarCompra() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.gestionar());
+}
+
+/* La tercera fuente de PACE completo: lo que la tienda sabe que ya tienes (Play). */
+function tieneCompraVigente() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.vigente && tienda.vigente());
+}
+
+Object.assign(window, {
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, PREMIUM_ABIERTO_HASTA_V1,
+  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente,
+});
