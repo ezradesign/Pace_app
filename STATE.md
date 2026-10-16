@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.171.2 · 16 de octubre de 2026.
+**Versión:** v0.171.3 · 16 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -100,7 +100,9 @@ llega tras 75 min de foco; el miércoles adelanta una sola (v0.169.0, Ez, 15 oct
 movido, nada de la misma parada de la última vez, y la frase de lo de hoy encima del nombre
 («Caderas: sin mover hoy»). Recuerda lo servido siete días y lo hecho hoy (`ritmo.servidos`,
 `ritmo.hechas`). Rutinas nuevas: Piernas de pie y Espalda de pie, y la mesa entra en los pozos. Con
-el aro a 10 o 15, la pausa corta llega como mucho cada 30 min de foco y el aro espera.
+el aro a 10 o 15, la pausa corta llega como mucho cada 30 min de foco y el aro espera. Si al final
+del día la larga no cabe, la pausa es corta: «Dos horas» con el aro a 25 son cuatro bloques de 25
+(v0.171.3; con el aro a 45 o 50 sigue 45 · P · 60 y 50 · P · 55, Ez lo deja así).
 
 «A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
 días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
@@ -175,8 +177,8 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    https://claude.ai/artifact/DJ6B89dpS6NwTor2uoqc17): sin fallos graves. Ez decidió las seis
    cosas: el gris, las cabeceras y «Tus rutinas» están en v0.171.2; las carpetas de trabajo
    terminadas, borradas. Siguen en su sesión: **la Fase 6 sin Stripe** (`/premium`, «Avísame», la
-   bienvenida con los dos precios y el punto único de compra; primero opciones para Ez) y **«Dos
-   horas» con el aro a 25** (si la larga no cabe, la tercera pausa es corta).
+   bienvenida con los dos precios y el punto único de compra; primero opciones para Ez); **«Dos
+   horas» con el aro a 25**, en v0.171.3.
 
 ## Espera a Ez
 
@@ -224,8 +226,7 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   claves D-1, D-2 y D-3.
 - Los 21 dibujos pendientes (3 de ejercicio y 18 de logro) entran si llegan.
 - Con el aro a 10 o 15, la jornada se queda sin rutinas de pie por la tarde (hasta cuatro sentadas
-  seguidas): falta contenido de pie (el paseo corto quedó fuera por ahora). Y «Dos horas» con el
-  aro a 25 acaba en un bloque de 55 min (la tercera pausa sería larga y no cabe).
+  seguidas): falta contenido de pie (el paseo corto quedó fuera por ahora).
 
 El `STATE.md` anterior, con el mapa de archivos, el índice de decisiones y el backlog antiguo, está en
 `docs/archive/STATE_HASTA_S200.md`.

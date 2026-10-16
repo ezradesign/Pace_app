@@ -11,12 +11,22 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **16 oct., 17:00 (relevo por uso, 91 %): v0.171.3 juntada en la rama de la coordinadora (wip), sin
+  subir a `main`:** «Dos horas» con el aro a 25 (`claude/priceless-yonath-e0c735`, sí de Ez). Su suite
+  corría en local (`suite-1713.log` del scratchpad); al volver, repetirla y subir. Sesiones, las dos
+  paradas por el uso con su wip y su RELEVO.md:
+  - `venta-sin-stripe` (`local_93e3b5bd-…`), rama `claude/interesting-meninsky-062638`, wip ac50717:
+    Ez eligió las cuatro recomendadas («Avísame» en su Cloudflare, `/premium` B, bienvenida A, la
+    página ya y la lista después). Falta probar y cerrar.
+  - `revision-ejercicios` (`local_b87e4b5e-…`), rama `claude/wonderful-pare-55e168`, wip 20dd4f5: hecho
+    el inventario de Mueve y Estira; dijo que sigue sola al reponerse la ventana (17:30 UTC).
+  - «Rana»: Ez generará `rana.png`; la tarjeta espera sin sustituto (Ez, 16 oct.).
 - **16 oct., tarde: la dirección de Ez para antes de cobrar** (`DECISIONES_PRODUCTO.md`, «Lo que hace
   bueno a PACE antes de cobrar»): los testers son amigos, así que se puede cambiar lo que haga falta.
   La venta y el producto van a la vez, sin pasar de dos sesiones. Cola de sesiones:
-  - abiertas: `venta-sin-stripe` (`local_93e3b5bd-…`, puerto 8796) y `dos-horas-aro-25`
-    (`local_482fbada-…`, puerto 8798);
-  - cuando acabe `dos-horas-aro-25`: **la revisión de todos los ejercicios** con la evidencia de hoy
+  - abierta: `venta-sin-stripe` (`local_93e3b5bd-…`, puerto 8796). `dos-horas-aro-25` está en
+    v0.171.3 (con el sí de Ez);
+  - la siguiente: **la revisión de todos los ejercicios** con la evidencia de hoy
     (Mueve, Estira y Respira; Ez, 16 oct.; encargo en `archivos/encargos-16oct/REVISION_EJERCICIOS.md`);
   - luego **el motor de la semana** (el de `archivos/motor-semana/`, sin esperar semanas de datos);
   - después: **los días diseñados** (cada día con su intención y rutinas medidas, y las de pie para la
