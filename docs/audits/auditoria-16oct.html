@@ -1,0 +1,225 @@
+<title>Auditoría de PACE · 16 oct.</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Un cuaderno de campo de la app: la paleta y las letras de PACE, columna única de lectura. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6B6454;
+  --line: #C9C0A8; --focus: #3E5A3A; --breathe: #B0644A; --premium: #9C6B2E;
+  --ok: #3E5A3A; --aviso: #9C6B2E; --muestra-vieja: #8A8372; --muestra-nueva: #6B6454;
+  --serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #9DBB8F; --breathe: #D99477; --premium: #C99A5B; --ok: #9DBB8F; --aviso: #D9AE6E;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #9DBB8F; --breathe: #D99477; --premium: #C99A5B; --ok: #9DBB8F; --aviso: #D9AE6E;
+  color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); }
+.hoja { max-width: 46rem; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.1rem); }
+h2 { font-size: 1.85rem; }
+h3 { font-size: 1.35rem; }
+p { margin: 0; max-width: 65ch; }
+.rotulo { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.cabeza { display: grid; gap: 10px; }
+.cabeza p { color: var(--ink-2); }
+section { display: grid; gap: 16px; }
+.estado { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.estado div { background: var(--paper-2); padding: 14px 16px; display: grid; gap: 2px; }
+.estado b { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.estado span { font-size: .85rem; color: var(--ink-2); }
+ul.lista { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+ul.lista li { display: grid; grid-template-columns: 1.1rem 1fr; gap: 10px; align-items: baseline; }
+ul.lista li::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); transform: translateY(-2px); }
+ul.lista.hecho li::before { background: var(--ok); }
+.decision { border-top: 1px solid var(--line); padding-top: 18px; display: grid; gap: 12px; }
+.decision .num { font-family: var(--serif); font-style: italic; color: var(--breathe); font-size: 1.1rem; }
+.opciones { display: grid; gap: 8px; }
+.op { display: grid; grid-template-columns: 2rem 1fr; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--paper-2); }
+.op .letra { font-family: var(--serif); font-style: italic; font-size: 1.25rem; color: var(--ink-2); }
+.op.rec { outline: 1.5px solid var(--focus); }
+.op .tag { display: inline-block; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
+  color: var(--focus); margin-left: 6px; }
+.op p { font-size: .95rem; }
+.muestras { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 10px; }
+.muestra { border-radius: 10px; padding: 14px; display: grid; gap: 6px; border: 1px solid var(--line); }
+/* Las muestras enseñan los dos grises sobre los dos papeles de la app en claro, en cualquier tema. */
+.muestra.p1 { background: #F2EDE0; } .muestra.p2 { background: #EAE4D4; }
+.muestra .m-lab { font: 600 11px/1.3 'Inter Tight', system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.muestra .m-txt { font: 400 10.5px/1.3 'Inter Tight', system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.muestra .m-pie { font: 400 12px/1.3 'Inter Tight', system-ui, sans-serif; color: #4A453C; }
+.vieja { color: #8A8372; } .nueva { color: #6B6454; }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+.tabla { overflow-x: auto; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+td:first-child { white-space: nowrap; font-weight: 500; }
+.pill { display: inline-block; font-size: .72rem; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; }
+.pill.ok { color: var(--ok); border-color: var(--ok); }
+.pill.falta { color: var(--aviso); border-color: var(--aviso); }
+code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: .86em; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.pie { font-size: .85rem; color: var(--ink-2); border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 6px; }
+a { color: var(--focus); }
+a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+</style>
+
+<main class="hoja">
+  <header class="cabeza">
+    <span class="rotulo">Auditoría · v0.171.1 · 16 de octubre de 2026</span>
+    <h1>Cómo va PACE</h1>
+    <p>Lo he mirado todo: el código, lo que se guarda, la seguridad, lo que pesa la web, el repo, lo que prometen las 33 rutinas y la app real pantalla a pantalla, en cuatro tamaños, en castellano e inglés y en claro y oscuro. No hay fallos graves. Lo que pide una decisión tuya está abajo, con mi recomendación marcada.</p>
+  </header>
+
+  <section aria-labelledby="t-estado">
+    <h2 id="t-estado">El estado</h2>
+    <div class="estado">
+      <div><b>v0.171.1</b><span>en main</span></div>
+      <div><b>692</b><span>pruebas en verde</span></div>
+      <div><b>0</b><span>fallos graves</span></div>
+      <div><b>0</b><span>alertas de seguridad</span></div>
+      <div><b>53</b><span>rutinas: 20 · 15 · 18</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Arreglado hoy</h2>
+    <ul class="lista hecho">
+      <li><span><b>Las series y la pausa corta cada 30 min</b> con el aro corto, y el <b>«Ahora no»</b> que tapaba «Volver al inicio» (v0.171.0).</span></li>
+      <li><span><b>Las rondas «más lentas» ya lo son.</b> Gemelos subrepticios y Sentadillas de silla bajan en 3 s en la segunda ronda, y Piernas de pie baja en 2 s, como dicen sus textos. Gemelos pasa a durar 2 min.</span></li>
+      <li><span><b>El lector de pantalla dice «Terminar» y «Pausar»</b>, sin leer «▶|» ni «❚❚» delante.</span></li>
+      <li><span>Dos pruebas nuevas para que no vuelva a pasar, y dos herramientas para repetir esta revisión cuando quieras: el censo de lo que prometen las rutinas y el recorrido de la app.</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-decidir">
+    <h2 id="t-decidir">Para decidir</h2>
+
+    <div class="decision">
+      <span class="num">1 · Lo que se ve</span>
+      <h3>El gris de los textos pequeños se lee poco</h3>
+      <p>Los rótulos como «BIBLIOTECAS», «3 SERIES · 12·10·8 REPS», «HOY» o la versión del pie usan el gris claro de la paleta. Sobre el crema da 3,2 a 1, y sobre el papel de la barra lateral 3,0 a 1; para texto pequeño la norma pide 4,5 a 1. En oscuro ya está bien (7,4 a 1). Es un solo color y sale en casi todas las pantallas, así que el arreglo es un cambio en un sitio. Lo mismo, en menor medida, con algunos rótulos de color: «Premium», «Empezar» en las tarjetas y las familias «Maestría» y «Exploración» de Logros.</p>
+      <div class="muestras" aria-label="Muestras del gris actual y del propuesto">
+        <div class="muestra p2">
+          <span class="m-lab vieja">Bibliotecas</span>
+          <span class="m-txt vieja">3 series · 12·10·8 reps</span>
+          <span class="m-pie">Hoy, en la barra lateral · 3,0 a 1</span>
+        </div>
+        <div class="muestra p2">
+          <span class="m-lab nueva">Bibliotecas</span>
+          <span class="m-txt nueva">3 series · 12·10·8 reps</span>
+          <span class="m-pie">Propuesto, en la barra lateral · 4,6 a 1</span>
+        </div>
+      </div>
+      <div class="opciones">
+        <div class="op rec"><span class="letra">A</span><p>Oscurecer ese gris en el modo claro hasta 4,5 a 1, el mismo tono un poco más hondo.<span class="tag">Recomendada</span> Antes de subirlo, te enseño fotos de la app real a 360 y 1280 px.</p></div>
+        <div class="op"><span class="letra">B</span><p>Dejar el gris para lo que es adorno y pasar a la tinta media solo los textos de menos de 12 px.</p></div>
+        <div class="op"><span class="letra">C</span><p>Dejarlo como está.</p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="num">2 · La web</span>
+      <h3>La web no manda cabeceras de seguridad</h3>
+      <p>Cloudflare sirve pacegrass.app sin las cuatro líneas que impiden que otra web meta PACE dentro de la suya o que se filtre de dónde viene la gente. No tocan la app ni se ven.</p>
+      <div class="opciones">
+        <div class="op rec"><span class="letra">A</span><p>Ponerlas ya, con una prueba que lo vigile.<span class="tag">Recomendada</span></p></div>
+        <div class="op"><span class="letra">B</span><p>Ponerlas con la venta (Fase 6).</p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="num">3 · Los nombres</span>
+      <h3>«Premium», «PACE completo», «Mis rutinas» y «Tus rutinas»</h3>
+      <p>Lo de pago se llama PACE completo desde v0.157.0, pero el sello de las tarjetas dice «Premium». Y la barra lateral dice «Mis rutinas» mientras la sección se llama «Tus rutinas».</p>
+      <div class="opciones">
+        <div class="op rec"><span class="letra">A</span><p>Que la barra lateral diga «Tus rutinas» y el sello siga diciendo «Premium», que es corto y ya lo viste en la app.<span class="tag">Recomendada</span></p></div>
+        <div class="op"><span class="letra">B</span><p>Todo «PACE completo» y «Tus rutinas», también en el sello.</p></div>
+        <div class="op"><span class="letra">C</span><p>Dejarlo como está.</p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="num">4 · «A tu ritmo»</span>
+      <h3>«Dos horas» con el aro a 25 acaba con 55 min sin pausa</h3>
+      <p>Sirve 25, pausa, 25, pausa y un bloque final de 55: la tercera pausa sería la larga y no cabe, así que el final se junta. Ya pasaba antes de hoy.</p>
+      <div class="opciones">
+        <div class="op rec"><span class="letra">A</span><p>Si la larga no cabe, la tercera pausa es corta: 25 · P · 25 · P · 25 · P · 25, y el día acaba a su hora.<span class="tag">Recomendada</span></p></div>
+        <div class="op"><span class="letra">B</span><p>Dejarlo así.</p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="num">5 · Hacia v1</span>
+      <h3>Por dónde seguir</h3>
+      <p>Lo grande que falta para cobrar es la Fase 6, y no tiene código. Una parte no espera a Stripe ni a tus cuentas.</p>
+      <div class="opciones">
+        <div class="op rec"><span class="letra">A</span><p>Fase 6 por lo que no espera: la página <code>/premium</code>, la lista «Avísame», la bienvenida con los dos precios y el punto único de compra vacío, listo para Stripe y Play.<span class="tag">Recomendada</span></p></div>
+        <div class="op"><span class="letra">B</span><p>Más contenido de pie para la tarde (el paseo corto que quedó fuera): con el aro a 10 o 15 llegan cuatro pausas sentadas seguidas.</p></div>
+        <div class="op"><span class="letra">C</span><p>Esperar a que pruebes el APK en tu móvil y abrir la prueba cerrada de Play primero.</p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="num">6 · El disco</span>
+      <h3>Quince carpetas de trabajo terminadas ocupan 3,3 GB</h3>
+      <p>Ninguna guarda trabajo sin juntar: todo está en main. Las ramas se quedan en GitHub.</p>
+      <div class="opciones">
+        <div class="op rec"><span class="letra">A</span><p>Borrar las carpetas.<span class="tag">Recomendada</span></p></div>
+        <div class="op"><span class="letra">B</span><p>Dejarlas.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-v1">
+    <h2 id="t-v1">Lo que falta hasta v1</h2>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Fase</th><th>Estado</th><th>Qué falta</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Saneamiento</td><td><span class="pill ok">hecha</span></td><td>Nada.</td></tr>
+          <tr><td>2 · Android</td><td><span class="pill falta">te espera</span></td><td>Probar el APK en un móvil y abrir la prueba cerrada de Play (unos 12 testers durante 14 días; tienes 5 o 6).</td></tr>
+          <tr><td>3 · La semana</td><td><span class="pill">en marcha</span></td><td>Las series y lo que aprende de hoy, gratis, ya están. El motor de la semana y la carta del lunes esperan a tener semanas de datos.</td></tr>
+          <tr><td>4 · Estadísticas</td><td><span class="pill ok">hecha</span></td><td>«Qué te ayuda» llega con el motor de la semana.</td></tr>
+          <tr><td>5 · Cerrar</td><td><span class="pill ok">hecha</span></td><td>Los dibujos y las voces entran si llegan.</td></tr>
+          <tr><td>6 · Venta</td><td><span class="pill falta">sin empezar</span></td><td>Stripe, la firma automática de códigos, <code>/premium</code>, «Avísame», Play Billing, el aviso antes del cobro, la valoración de Play, <code>privacy.html</code> y la revisión legal.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-tuyo">
+    <h2 id="t-tuyo">Lo que espera a ti</h2>
+    <ul class="lista">
+      <li><span>Para cobrar: el gestor, la cuenta de Stripe con verificación en dos pasos, los dos pasos en Cloudflare y los datos del aviso legal.</span></li>
+      <li><span>Probar el APK en tu móvil y reunir testers para Play.</span></li>
+      <li><span>Dar de alta PACE en Google Cloud y en Microsoft Entra para el calendario.</span></li>
+      <li><span>Las voces del suspiro («Más» y «More») y los dibujos que faltan, con sus textos listos para pegar.</span></li>
+      <li><span>Volver a exportar el logo: en la imagen, «EVEN» se lee «FVFN».</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-bien">
+    <h2 id="t-bien">Lo que está bien</h2>
+    <ul class="lista hecho">
+      <li><span>El código cumple todas las reglas, y lo que se guarda está protegido: si el navegador no deja guardar, la app lo avisa, y nada crece sin control.</span></li>
+      <li><span>La app solo habla con tu calendario si lo conectas, y los pases del calendario se olvidan al cerrar la pestaña.</span></li>
+      <li><span>En unas 250 pantallas recorridas: ningún error, ningún botón tapado, ningún scroll de lado, y la home del móvil sin scroll en ningún momento.</span></li>
+      <li><span>La CI de main lleva 26 en verde de las últimas 30; la única caída ya está arreglada.</span></li>
+    </ul>
+    <p>Lo pequeño, para cuando se toque Ajustes: los interruptores miden 18 px de alto y los enlaces «Seguridad» y «Privacidad» 15, algo por debajo de lo que pide la norma para el dedo (24 px).</p>
+  </section>
+
+  <footer class="pie">
+    <span>El detalle, con archivos y líneas, está en <code>docs/audits/auditoria-v0.171.0.md</code>.</span>
+    <span>Para repetir la revisión: <code>node scripts/audit/censo-promesas.js</code> y <code>node scripts/audit/recorrido-app.js</code>.</span>
+  </footer>
+</main>

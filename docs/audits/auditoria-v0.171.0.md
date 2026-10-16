@@ -156,3 +156,18 @@ Visto a mano, para Ez:
   «Tus rutinas». No es un fallo: una pregunta de nombre.
 - Los botones de la sesión llevan el icono dentro del nombre: el lector de pantalla dice «▶|
   Terminar». El icono debería ir oculto al lector.
+
+Resultado del recorrido automático (16 oct., 4 tamaños × 2 idiomas × claro y oscuro, unas 250
+pantallas; `scripts/audit/recorrido-app.js`):
+- **Nada grave:** ningún error en la consola, ningún botón tapado ni cortado, ningún scroll de lado
+  y la home del móvil sin scroll en ningún momento.
+- **El gris `--ink-3` (#8A8372) en el modo claro** da 3,2:1 sobre `--paper` y 3,0:1 sobre `--paper-2`
+  (la barra lateral). Es el color de casi todos los rótulos de 9 a 11 px: «BIBLIOTECAS», «HOY», «3
+  SERIES · 12·10·8 REPS», los días de la semana, la versión del pie. WCAG AA pide 4,5:1. En oscuro da
+  7,4:1. #6B6454 daría 5,0 y 4,6. Cambio visual: decide Ez.
+- Rótulos en el color de un módulo por debajo de 4,5:1: «Premium» (3,6), «Empezar» en las tarjetas
+  (3,4 a 4,0), las familias «Maestría» (2,5) y «Exploración» (2,8) en Logros, a 22 px.
+- Toques pequeños en el móvil (WCAG 2.5.8 pide 24 px): los interruptores de Ajustes (32×18), los
+  enlaces «Seguridad» y «Privacidad» (15 px de alto) y la fila del agua en el cajón (21 px).
+- Falsos avisos que no cuentan: «Español» en el selector de idioma, y los contrastes de 1,2:1 que
+  salían de fondos escritos como `color(srgb …)` (arreglado en el script).
