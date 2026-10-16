@@ -32,7 +32,7 @@
 5. **Fondos en silla** [reps] 8 reps tempo 2/0/2
    - action: Últimas. Lentas y limpias, empuja desde el tríceps.
    - care: Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.
-### extra.push.ladder · Empuje · progresión (3 min · standing · stableDesk · moderate · intermediate)
+### extra.push.ladder · Empuje · progresión (3 min · standing · stableDesk · moderate · intermediate · PREMIUM)
 > Del escritorio a la pica. Empuje completo.
 1. **Flexiones inclinadas** [timed] 40 s
    - cue: 10 reps profundas, codos cerca del cuerpo.
@@ -44,7 +44,7 @@
    - cue: Respira.
 5. **Flexiones inclinadas** [timed] 45 s
    - cue: Negativas: baja en 5 segundos, sube normal.
-### extra.hang.bar · Colgarse (2 min · standing · bar · gentle · intermediate)
+### extra.hang.bar · Colgarse (2 min · standing · bar · gentle · intermediate · PREMIUM)
 > De una barra firme que soporte tu peso. Tracción suave para hombros y espalda.
 1. **Suspensión pasiva** [timed] 30 s ready
    - setup: Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros.
@@ -94,7 +94,7 @@
    - care: Mantén la respiración suelta durante el aguante.
 4. **Elevación de talones** [reps] 20 reps tempo 1/0/1
    - action: Cierra subiendo y bajando los talones, suave.
-### extra.core.stealth · Core silencioso (2 min · seated · - · moderate · accessible)
+### extra.core.stealth · Core silencioso (2 min · seated · - · moderate · accessible · PREMIUM)
 > Hueco abdominal en silla.
 1. **Hueco en silla** [timed] 30 s
    - action: Eleva las piernas y mantén, con la baja espalda apoyada.
@@ -142,7 +142,7 @@
    - care: Apoyado en todo momento. Baja solo hasta donde las rodillas vayan cómodas.
 4. **Respiraciones profundas** [rest] 20 s
    - action: 3 inhalaciones completas para cerrar.
-### extra.wall.sit · Sentadilla en pared (3 min · standing · wall · moderate · accessible)
+### extra.wall.sit · Sentadilla en pared (3 min · standing · wall · moderate · accessible · PREMIUM)
 > Isométrico de cuádriceps contra una pared.
 1. **Silla en la pared** [timed] 60 s ready
    - setup: Apoya la espalda en una pared y desliza hacia abajo hasta que las rodillas queden a 90°.
@@ -153,7 +153,7 @@
 3. **Silla en la pared** [timed] 60 s
    - action: Segunda tanda. Vuelve a la posición y mantén.
    - care: Elige una altura que te deje respirar tranquilo.
-### extra.legs.single · Piernas · a una (4 min · standing · stableChair · strong · advanced)
+### extra.legs.single · Piernas · a una (4 min · standing · stableChair · strong · advanced · PREMIUM)
 > Fuerza a una pierna. Equilibrio, control y una silla estable.
 1. **Sentadilla búlgara** [timed] 50 s
    - cue: Empeine sobre la silla, baja vertical. 8 por pierna.
@@ -199,7 +199,7 @@
 4. **Apertura de pecho** [timed] 40 s
    - action: Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.
    - care: Abre solo hasta donde el pecho estire sin molestar.
-### extra.core.plank · Core · plancha (4 min · floor · - · suelo · moderate · intermediate)
+### extra.core.plank · Core · plancha (4 min · floor · - · suelo · moderate · intermediate · PREMIUM)
 > Planchas y hueco abdominal, en el suelo. El centro que sostiene todo.
 1. **Plancha** [timed] 45 s ready
    - setup: Ponte boca abajo en el suelo y apoya los antebrazos bajo los hombros.
@@ -368,7 +368,7 @@
    - care: Hombros abajo, lejos de las orejas.
 5. **Respiraciones profundas** [rest] 20 s
    - action: 3 inhalaciones completas para cerrar.
-### move.spine.waves · Columna · ondas (5 min · floor/standing/seated · - · suelo · moderate · intermediate)
+### move.spine.waves · Columna · ondas (5 min · floor/standing/seated · - · suelo · moderate · intermediate · PREMIUM)
 > Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.
 1. **Gato-camello** [timed] 60 s ready
    - setup: Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.
@@ -428,7 +428,7 @@
    - setup: Túmbate boca arriba, pies apoyados cerca del glúteo.
    - action: Sube la cadera y aguanta. Levanta una rodilla, luego la otra.
    - care: Baja el ritmo si la lumbar se queja.
-### move.couch.stretch · Estiramiento del sofá (6 min · halfKneeling/floor/supine · wall/cushionOptional · suelo · strong · intermediate)
+### move.couch.stretch · Estiramiento del sofá (6 min · halfKneeling/floor/supine · wall/cushionOptional · suelo · strong · intermediate · PREMIUM)
 > Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.
 1. **Flexor de cadera** [perSide] 25 s (+10 s cambio) ready
    - setup: Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.
@@ -450,7 +450,7 @@
    - setup: Túmbate boca arriba, pies apoyados cerca del glúteo.
    - action: Sube la cadera y aguanta. Levanta una rodilla, luego la otra.
    - care: Baja el ritmo si la lumbar se queja.
-### move.hips.ground · Caderas · suelo (6 min · floor · - · suelo · moderate · intermediate)
+### move.hips.ground · Caderas · suelo (6 min · floor · - · suelo · moderate · intermediate · PREMIUM)
 > Flujo de suelo: rana, 90/90, transiciones. Caderas libres.
 1. **Rana** [timed] 70 s
    - cue: Rodillas anchas, empuja cadera atrás. Mece suave.
@@ -462,7 +462,7 @@
    - cue: Siéntate al suelo y levántate sin manos.
 5. **Sentadilla profunda** [timed] 70 s
    - cue: Talones abajo, relaja al fondo.
-### move.atg.knees · ATG · Rodillas a prueba (4 min · standing/floor · wall · suelo · strong · advanced)
+### move.atg.knees · ATG · Rodillas a prueba (4 min · standing/floor · wall · suelo · strong · advanced · PREMIUM)
 > Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.
 1. **Zancada profunda** [timed] 60 s
    - cue: Zancada profunda. Rodilla va por delante del pie.
@@ -493,7 +493,7 @@
    - care: Apoya las manos en las rodillas si lo necesitas. Sal despacio, sin tirones.
 5. **Respiraciones profundas** [rest] 20 s
    - action: 3 inhalaciones completas para cerrar.
-### move.hamstrings · Cadena posterior (5 min · standing/floor · - · suelo · moderate · intermediate)
+### move.hamstrings · Cadena posterior (5 min · standing/floor · - · suelo · moderate · intermediate · PREMIUM)
 > Isquios y cadena posterior. Piernas largas otra vez.
 1. **Marcha del elefante** [timed] 70 s
    - action: Camina con las manos por el suelo, piernas lo más estiradas posible.
@@ -532,7 +532,7 @@
    - care: Sin tirar con la mano. Solo el peso.
 6. **Reset respiración** [rest] 30 s
    - action: 3 inhalaciones profundas para cerrar.
-### move.ancestral · Ancestral (5 min · floor/standing · bar · suelo · moderate · intermediate)
+### move.ancestral · Ancestral (5 min · floor/standing · bar · suelo · moderate · intermediate · PREMIUM)
 > Gateo, suspensión y sentadilla profunda. Suelo y barra firme.
 1. **Sentadilla profunda sostenida** [timed] 60 s
    - cue: Talones abajo, relaja.

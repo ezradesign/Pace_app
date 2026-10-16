@@ -17,7 +17,7 @@ for (const [lib, grupos] of Object.entries(libs)) {
   for (const [g, grupo] of Object.entries(grupos)) {
     out.push(`## ${g} · ${grupo.label}`);
     for (const r of grupo.items) {
-      const meta = [r.min + ' min', (r.position || []).join('/'), (r.equipment || []).join('/') || '-', r.requiresFloor ? 'suelo' : '', r.intensity, r.level, r.premium ? 'PREMIUM' : ''].filter(Boolean).join(' · ');
+      const meta = [r.min + ' min', (r.position || []).join('/'), (r.equipment || []).join('/') || '-', r.requiresFloor ? 'suelo' : '', r.intensity, r.level, r.access === 'premium' ? 'PREMIUM' : ''].filter(Boolean).join(' · ');
       out.push(`### ${r.id} · ${r.name} (${meta})`);
       out.push(`> ${r.desc || ''}`);
       r.steps.forEach((s, i) => {
