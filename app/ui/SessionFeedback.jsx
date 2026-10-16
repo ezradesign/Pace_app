@@ -76,11 +76,11 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
                     onClick={() => answer('no')} style={sessionFeedbackStyles.chip}>
               {t('session.feedback.no')}
             </button>
+            <button type="button" data-pace-fb-ghost disabled={decided}
+                    onClick={() => answer('later')} style={sessionFeedbackStyles.ghost}>
+              {t('session.feedback.later')}
+            </button>
           </div>
-          <button type="button" data-pace-fb-ghost disabled={decided}
-                  onClick={() => answer('later')} style={sessionFeedbackStyles.ghost}>
-            {t('session.feedback.later')}
-          </button>
         </React.Fragment>
       )}
     </div>
@@ -102,8 +102,10 @@ const sessionFeedbackStyles = {
     fontSize: 17, color: 'var(--ink-2)',
     marginBottom: 14,
   },
+  /* «Ahora no» va en la fila de las respuestas, al final (Ez, 16 oct., opción B): debajo,
+     el bloque era 40 px más alto y en las ventanas bajas «Volver al inicio» lo tapaba. */
   chips: {
-    display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 10,
+    display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 10,
   },
   /* Las respuestas son píldoras en la serif itálica, como las de la pausa (la A de Ez,
      10 oct., docs/traspaso/archivos/cierre-y-linea-10oct/): con la letra de interfaz de
@@ -119,7 +121,7 @@ const sessionFeedbackStyles = {
   /* «Ahora no» es un enlace, como «Saltar esta pausa». */
   ghost: {
     ...displayItalic,
-    marginTop: 12, fontSize: 15, color: 'var(--ink-3)',
+    fontSize: 15, color: 'var(--ink-3)',
     background: 'none', border: 'none', padding: '4px 10px',
     textDecoration: 'underline', textUnderlineOffset: 3,
     transition: 'color 160ms ease',
@@ -163,14 +165,12 @@ if (!_paceSessionFeedbackCss) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }
       [data-pace-fb-question] { font-size: 15px !important; margin-bottom: 10px !important; }
       [data-pace-fb-chip] { padding: 0 18px !important; min-height: 38px !important; }
-      [data-pace-fb-ghost] { margin-top: 8px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-session-feedback] { margin-top: 0 !important; }
       [data-pace-fb-rule] { display: none !important; }
       [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 8px !important; }
       [data-pace-fb-chip] { padding: 0 16px !important; min-height: 34px !important; font-size: 15px !important; }
-      [data-pace-fb-ghost] { margin-top: 6px !important; }
     }
   `;
   document.head.appendChild(s);
