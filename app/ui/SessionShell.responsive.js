@@ -209,18 +209,6 @@
         font-size: 14px !important;
         margin-top: 12px !important;
       }
-      /* s116: en el DONE, ocultar el HERO decorativo (el check de ceremonia)
-         al llegar a este tier — reclama ~62px para que la fila de feedback
-         (pregunta + respuestas + «Ahora no») y el CTA final quepan sin que el
-         footer tape «Ahora no». Paso 2 del orden de compactación del corte
-         (tras reducir espacios). El prep conserva su hero (no lo tiene). */
-      [data-pace-session-done-hero] {
-        display: none !important;
-      }
-      [data-pace-session-done-hero] svg {
-        width: 22px !important;
-        height: 22px !important;
-      }
       [data-pace-session-done-title] {
         font-size: 24px !important;
         margin-bottom: 12px !important;
@@ -236,15 +224,34 @@
         font-size: 60px !important;
       }
     }
+    /* EL CIERRE OCUPA EL ALTO DEL CENTRO Y, SI NO CABE, EL DIBUJO ES LO ÚNICO QUE CEDE
+       (Ez, 16 oct., opción B, con «Ahora no» en la fila de las respuestas, que vive en
+       SessionFeedback.jsx). El centro hace scroll sin barra, así que lo que no cabía
+       quedaba cortado justo encima del pie y «Volver al inicio» parecía tapar «Ahora no»
+       (en la ventana de Ez, 1536x710; de 431 a 620 de alto en escritorio; con el nombre
+       de una rutina propia en dos líneas, casi en cualquier pantalla, y también las
+       respuestas). Ahora el cierre es una columna del alto del centro: arriba y abajo,
+       aire que solo crece (centra el bloque y se queda en 0 cuando falta sitio), y el
+       dibujo encoge lo que falte. Los márgenes de una columna flexible no se funden, así
+       que el de arriba de «¿Te ayudó?» (4 px, que antes se perdía dentro de los 36 de la
+       frase) se quita aquí. Lo vigila tests/cierre-sin-pisar.spec.js. */
+    [data-pace-session-center-body]:has(> [data-pace-session-done]) {
+      margin: 0 auto !important; height: 100% !important;
+    }
+    [data-pace-session-done] { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    [data-pace-session-done]::before,
+    [data-pace-session-done]::after { content: ''; flex: 1 1 0; }
+    [data-pace-session-done] > * { flex: none; }
+    [data-pace-session-done] > [data-pace-session-feedback] { margin-top: 0 !important; }
     /* El dibujo del cierre (sessionDoneGlifo) llena su caja, sin el borde ni el fondo
        del círculo de antes. En Mueve y Estira CRECE CON EL ALTO QUE SOBRA (Ez, 14 oct.,
-       opción B): a 72 px fijos se perdía en una pantalla grande. 120 px a 720 de alto,
-       216 desde 816, y en el móvil de 72 a 140. Medido sin scroll de 360x640 a
-       1920x1080; a 360x568 el cierre ya pedía scroll con 72 px y el mínimo del móvil lo
-       deja igual. Respira sigue a 72: Ez no lo ha visto. */
+       opción B): a 72 px fijos se perdía en una pantalla grande. Su tamaño de siempre es
+       el tope: 120 px a 720 de alto, 216 desde 816, y en el móvil de 72 a 140; Respira,
+       72. Por debajo de ese tope cede hasta 48 px cuando no cabe todo lo demás. */
     [data-pace-session-done-hero][data-pace-session-done-glifo] {
       --pace-cierre-glifo: 72px;
-      width: var(--pace-cierre-glifo) !important; height: var(--pace-cierre-glifo) !important;
+      flex: 0 1 var(--pace-cierre-glifo); min-height: 48px; aspect-ratio: 1 / 1;
+      width: auto !important; height: auto !important;
       background: none !important; border: 0 !important;
     }
     [data-pace-session-done-hero][data-pace-session-done-cuerpo] {
@@ -254,6 +261,13 @@
       [data-pace-session-done-hero][data-pace-session-done-cuerpo] {
         --pace-cierre-glifo: clamp(72px, calc(100 * var(--pace-vh, 1vh) - 500px), 140px);
       }
+    }
+    /* En una ventana de escritorio muy baja ni con el dibujo en 48 px caben la pregunta,
+       las respuestas, «Ahora no» y la salida: el dibujo, que es decorativo, se quita
+       (hasta el 16 oct. se quitaba desde 430 px, y de 431 a 510 «Volver al inicio»
+       tapaba lo de abajo también en Respira). */
+    @media (min-width: 641px) and (max-height: 490px) {
+      [data-pace-session-done-hero] { display: none !important; }
     }
     [data-pace-session-done-hero][data-pace-session-done-glifo] > *,
     [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
