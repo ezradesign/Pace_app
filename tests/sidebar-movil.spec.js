@@ -103,7 +103,7 @@ function pieVisibleTrasBajar(page) {
     aside.scrollTop = aside.scrollHeight;
     const caja = document.querySelector('[data-pace-sidebar-escala]');
     const pie = [].slice.call(caja.children)
-      .find(e => (e.textContent || '').indexOf('Mis rutinas') > -1);
+      .find(e => (e.textContent || '').indexOf('Tus rutinas') > -1);
     if (!pie) return { hayPie: false };
     const r = pie.getBoundingClientRect();
     return {

@@ -129,7 +129,7 @@ test.describe('en el iPhone', () => {
     await comoIphone(context);
     const errores = capturarErrores(page);
     await irAlArtefacto(page);
-    await expect(page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Mis rutinas' })).toBeVisible();
+    await expect(page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Tus rutinas' })).toBeVisible();
     await expect(page.locator('[data-pace-sidebar]').getByRole('button', { name: 'Da de pastar a la vaca' })).toHaveCount(0);
     await page.waitForTimeout(1600);   // el aviso de la racha salta a los 1,2 s
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:open-support')));

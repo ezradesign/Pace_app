@@ -298,7 +298,7 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
 }
 
 /* ============================================================
-   PIE — dos filas de texto (Ez, 8 oct. 2026): «Mis rutinas» con su sello premium,
+   PIE — dos filas de texto (Ez, 8 oct. 2026): «Tus rutinas» con su sello premium,
    porque la superficie entera lo es, y «Da de pastar a la vaca» en la itálica.
    Antes eran dos píldoras y lo que más llamaba la atención de la barra era algo
    cerrado. En la app de Android no hay apoyo (`paceApoyoVisible`).

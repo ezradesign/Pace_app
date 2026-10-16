@@ -2,7 +2,7 @@
    La barra es un CUADERNO (8 oct. 2026, elegido por Ez en cuatro vueltas de fotos):
    la semana en cápsulas · Hoy con palabras · la siguiente pausa con su rótulo (o, por
    libre, lo que puedes continuar, repetir o hacer ahora) · las tres bibliotecas · el
-   último logro. Pie con «Mis rutinas», el apoyo, la versión y el autor.
+   último logro. Pie con «Tus rutinas», el apoyo, la versión y el autor.
 
    Este archivo es el ORQUESTADOR: compone las secciones, no dibuja ninguna por
    dentro y no decide ninguna. Lo demás vive en sus hermanos, que cargan ANTES en
