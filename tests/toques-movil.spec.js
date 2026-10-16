@@ -73,6 +73,8 @@ test('ajustes, estadísticas y apoyo', async ({ page, context }) => {
   await exigir(page, '.pace-aj-sw', 28, 'el interruptor de sonido');
   await exigir(page, '.pace-aj-cerrar', 40, 'la × de Ajustes');
   await exigir(page, '.pace-aj-paso > button', 36, 'el «−» de los vasos');
+  /* 16 oct. 2026 (auditoría): «Seguridad» y «Privacidad» medían 15 px de alto. */
+  await exigir(page, '.pace-aj-pie a', 24, 'los enlaces del pie de Ajustes');
   await page.keyboard.press('Escape');
   await page.keyboard.press('s');
   await exigir(page, '[data-pace-stats-tabs] > button', 40, 'las pestañas de Estadísticas');

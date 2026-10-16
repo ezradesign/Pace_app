@@ -20,12 +20,13 @@
   s.textContent = `
     @media (max-width: 640px), (pointer: coarse) {
       [data-pace-toque], .pace-aj-pild, .pace-aj-cerrar, .pace-aj-paso > button, .pace-aj-sw,
-      .pace-lib-link, [data-pace-hoy-celda], [data-pace-semana-saltar], [data-pace-stats-tabs] > button {
+      .pace-lib-link, [data-pace-hoy-celda], [data-pace-semana-saltar], [data-pace-stats-tabs] > button,
+      .pace-aj-pie a {
         position: relative;
       }
       [data-pace-toque]::before, .pace-aj-pild::before, .pace-aj-cerrar::before, .pace-aj-paso > button::before,
       .pace-aj-sw::before, .pace-lib-link::before, [data-pace-hoy-celda]::before,
-      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before {
+      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before, .pace-aj-pie a::before {
         content: ''; position: absolute; inset: -9px 0;
       }
       /* Píldoras de Ajustes: 14 px entre filas, 7 cada una. */
@@ -40,6 +41,8 @@
       [data-pace-semana-saltar]::before { inset: -10px 0 -2px; }
       [data-pace-hoy-celda]::before { inset: -11px 0; }
       [data-pace-stats-tabs] > button::before { inset: -7px 0; }
+      /* «Seguridad» y «Privacidad», al pie de Ajustes: 15 px de alto y nada debajo. */
+      .pace-aj-pie a::before { inset: -6px -2px; }
     }
   `;
   document.head.appendChild(s);

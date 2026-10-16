@@ -167,8 +167,9 @@ pantallas; `scripts/audit/recorrido-app.js`):
   7,4:1. #6B6454 daría 5,0 y 4,6. Cambio visual: decide Ez.
 - Rótulos en el color de un módulo por debajo de 4,5:1: «Premium» (3,6), «Empezar» en las tarjetas
   (3,4 a 4,0), las familias «Maestría» (2,5) y «Exploración» (2,8) en Logros, a 22 px.
-- Toques pequeños en el móvil (WCAG 2.5.8 pide 24 px): los interruptores de Ajustes (32×18), los
-  enlaces «Seguridad» y «Privacidad» (15 px de alto) y la fila del agua en el cajón (21 px).
+- Toques pequeños en el móvil (WCAG 2.5.8 pide 24 px): los enlaces «Seguridad» y «Privacidad» (15 px
+  de alto). Los interruptores (32×18) y la fila del agua NO: el recorrido midió la caja, y
+  `app/ui/toques.css.jsx` ya les da 28 y 43 px de toque desde v0.161.0. Corregido en v0.171.4.
 - Falsos avisos que no cuentan: «Español» en el selector de idioma, y los contrastes de 1,2:1 que
   salían de fondos escritos como `color(srgb …)` (arreglado en el script).
 
@@ -178,7 +179,8 @@ pantallas; `scripts/audit/recorrido-app.js`):
 - v0.171.2: el gris de los rótulos a #77705F (Ez eligió el punto intermedio), las cabeceras de
   seguridad (`_headers`, ya en pacegrass.app) y «Tus rutinas» en la barra lateral.
 - v0.171.3: «Dos horas» con el aro a 25 (sesión aparte).
-- v0.171.4: la zona de toque de Ajustes y la fecha corta; las cifras del ROADMAP al día.
+- v0.171.4: la zona de toque de los enlaces del pie de Ajustes y la fecha corta; las cifras del
+  ROADMAP al día.
 - Las 14 carpetas de trabajo terminadas, borradas (3,3 GB).
 - Sin hacer, por decisión de Ez: el sello sigue diciendo «Premium»; «Rana» espera a su dibujo; el
   contraste de las familias de Logros («Maestría» 2,5, «Exploración» 2,8) queda para otra vez.
