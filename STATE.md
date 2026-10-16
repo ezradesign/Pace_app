@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.171.4 · 16 de octubre de 2026.
+**Versión:** v0.172.0 · 16 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -117,6 +117,17 @@ invitación que dice qué trae y que llega con la versión 1. En la web, un **c�
 cerrado: es una licencia firmada que la app comprueba sin servidor (`app/state-licencia.js`). En
 Android no hay códigos propios: llegarán los de Play cuando haya Play Billing.
 
+La venta empieza sin Stripe (v0.172.0, Ez, 16 oct.): pacegrass.app/premium es la página de PACE
+completo (opción B, `premium/index.html`), con la lista «Avísame», que se enciende al conectar el KV
+(`docs/launch/avisame.md`). Toda compra pasa por `state-entitlement.jsx`, con una tienda por canal
+(`app/state-compra.js`), hoy vacías; abrir la de la web es poner los dos enlaces de pago de Stripe
+en `PACE_TIENDA_WEB.enlaces`, y entonces la bienvenida acaba en PACE completo (opción A).
+
+Las 53 rutinas se revisaron con la evidencia de hoy (v0.172.0; OMS, CDC, NHS, ACSM;
+`docs/traspaso/archivos/revision-ejercicios/`, con la zona, la postura y el momento de cada una para
+el motor de la semana): 35 se quedan, 16 se ajustan, 2 cambian. Ez dejó para luego dos rutinas de pie
+nuevas (Paseo corto y Hombros fuertes, `REVISION.md` §5).
+
 Estadísticas abre en «Hoy» (v0.170.0, Fase 4; 1A 2A 3A 4A de Ez el 15 oct.): los cuatro totales de
 hoy y una tarjeta por parada del menú de «A tu ritmo» con lo que pasó; por libre, las pausas de hoy
 con su hora. «Semana» sigue gratis y como se eligió el 13 oct. Mes y Año son de PACE completo: sin
@@ -152,6 +163,9 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    primera semana de los testers), **los días diseñados** (cada día con su intención y rutinas
    medidas) y **el calendario total en la web** con una función de Cloudflare (espera las altas de
    Ez en Google y Microsoft).
+   La revisión de los ejercicios está hecha (v0.172.0). Fase 6, lo que sigue tras /premium: la página
+   de gracias y la firma con k2 en una función, el aviso dos días antes del fin de la prueba,
+   «Gestionar» en Ajustes, la invitación con los botones de compra y lo legal de /premium.
    Antes: **Fase 3**, mientras corre la prueba cerrada: lo de pago es que «A tu ritmo» te vaya conociendo y
    cada semana adapte los ejercicios a lo que prefieres (de «¿te ayudó?», lo hecho y lo saltado,
    «Otra» y las horas a las que paras), contado en la carta del lunes. Ez aceptó la página (`docs/traspaso/archivos/motor-semana/`):
@@ -190,7 +204,11 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
   darse de alta, crear la cuenta de Stripe con verificación en dos pasos y pedir Managed Payments,
   poner los dos pasos en Cloudflare y decidir el nombre, el NIF y el contacto del aviso legal.
 - Apagar las propuestas automáticas de Dependabot (GitHub › Settings › Code security), dejando las alertas: sus actualizaciones las aplica una sesión con su nombre.
-- Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN».
+- Volver a exportar el logo (`app/ui/pace-logo.png`): en la imagen, «EVEN» se lee «FVFN» (también en /premium).
+- «Avísame» y /premium: decir con qué nombre firma la privacidad la lista (el responsable); crear el
+  KV `pace-avisame` y conectarlo como `AVISAME` (`docs/launch/avisame.md`); crear el sitio de Web
+  Analytics y pasar su token para ponerlo solo en /premium (sin encender la analítica del proyecto de
+  Pages, que la mete en la app); mirar el registro previo de Play.
 - Grabar la voz del segundo tramo del suspiro fisiológico: «Más» y «More» con las dos voces
   (`docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`; «un poco más» no cabe en 1 s).
 - Pasar a su tester con iPhone la lista de qué mirar en Safari, sobre todo el sonido.

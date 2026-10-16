@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.171.2.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.172.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,13 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **16 oct., noche: v0.171.4 y v0.172.0.** v0.171.4: los enlaces del pie de Ajustes (en toques.css) y
+  la fecha corta en América. v0.172.0 junta, con el sí de Ez, la venta sin Stripe
+  (`claude/interesting-meninsky-062638`) y la revisión de los ejercicios (`claude/wonderful-pare-55e168`).
+  Lo siguiente: **el motor de la semana** (`archivos/encargos-16oct/MOTOR_SEMANA.md`; la revisión dejó
+  la zona, la postura y el momento de cada rutina en `archivos/revision-ejercicios/`), luego los días
+  diseñados y el calendario total. Ez tiene que conectar el KV de «Avísame» y decir el nombre de la
+  privacidad (`docs/launch/avisame.md`).
 - **16 oct., 17:00 (relevo por uso, 91 %): v0.171.3 en `main`:** «Dos horas» con el aro a 25
   (`claude/priceless-yonath-e0c735`, sí de Ez), con la suite entera en verde (698). Sesiones, las dos
   paradas por el uso con su wip y su RELEVO.md:
