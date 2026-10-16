@@ -92,7 +92,7 @@ una página con lo encontrado, las opciones y una recomendación.
 - Hay 15 carpetas en `.claude/worktrees/` y, con v0.171.0 en `main`, ninguna guarda trabajo sin
   juntar: `caza-foco-estado` y `claude/tus-rutinas-arreglos` salen con 400 commits «de más» porque
   son de antes de reescribir la historia (sus mensajes están en `main` con otro número), y lo de
-  `series-aprende` también está. Se pueden borrar las 15, con el sí de Ez.
+  `series-aprende` también está. Entre todas ocupan 3,3 GB. Se pueden borrar las 15, con el sí de Ez.
 - **Documentos que ya no dicen lo mismo:** la tabla del reparto en `ROADMAP.md:87` dice «19,99 € una
   vez», pero desde el 15 oct. son dos planes (2,99 € al mes con 7 días, o 19,99 € de por vida, como
   ya dice la Fase 6 del mismo archivo); «32 rutinas gratuitas» y «19 premium» (`ROADMAP.md:90-91`)

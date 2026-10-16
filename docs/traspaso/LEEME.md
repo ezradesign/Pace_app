@@ -14,8 +14,11 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
 - **16 oct., mediodía: v0.171.0 en `main`**: las series con la pausa corta cada 30 min
   (`claude/series-montaje-7bf9e0`, 5caa51a) y el «Ahora no» del cierre (`claude/ahora-no-tapado-d2eacd`,
   fc50c4d, opción B de Ez, con su sí para juntarla). Ez vio las fotos de las dos. Las dos sesiones
-  dieron LISTO y sus carpetas no guardan nada pendiente. Siguiente: la auditoría completa que pidió
-  Ez (estado, fallos, pendientes e ideas útiles), y Gemelos en su sesión.
+  dieron LISTO y sus carpetas no guardan nada pendiente. CI en verde (CI, Android e iOS).
+  **La auditoría completa que pidió Ez** va en `docs/audits/auditoria-v0.171.0.md`: 8 de 10 partes
+  en primera pasada, sin fallos graves. Quedan la parte 3 (una sesión que recorra la app real, solo
+  mirando) y la 4 (la sesión de Gemelos, que mira todas las rutinas); luego, una página para Ez.
+  Excepción de Ez solo para el 16 oct.: se pudo llegar al 100 % del límite de 5 horas.
 - **16 oct., mañana: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama;
   `main` en v0.170.1 con la CI en verde. Esta cuenta empezó con el 5 h al 1 % y la semana al 40 %.
   Dos sesiones abiertas (el máximo):
