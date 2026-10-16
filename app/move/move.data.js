@@ -254,6 +254,35 @@ var MOVE_ROUTINES = {
               action: 'Últimas, sin impulso. Aprieta arriba.',
               care: 'Para si pierdes el control de la bajada.' } },
         ]},
+      /* La pausa que te levanta (Ez, 15 oct. 2026: las series de «A tu ritmo»). Mueve no
+         tenía nada de pie que cupiera junto a la mesa, y la primera pausa del día y la de
+         después de comer piden levantarse. Los tres ejercicios ya tenían dibujo; el de
+         «Elevación de puntas» es de espaldas a la pared, y por eso la pared va en su setup.
+         Reps por BASE §3-A y la activación breve de §5 (1-3 ejercicios, una serie). */
+      { id: 'extra.legs.standing', tag: 'LEG', code: 'Piernas', name: 'Piernas de pie', desc: 'Gemelos, espinillas y muslos, de pie. Una mesa al lado, si la necesitas.', min: 2,
+        position: ['standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        steps: [
+          { name: 'Elevación de talones', mode: 'reps', reps: 12, dur: 36,
+            tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'De pie, pies al ancho de las caderas. Una mano en la mesa si la necesitas.',
+              action: 'Sube los talones lo más alto que puedas, mantén un instante y baja con control.',
+              care: 'Sin rebotes. Baja despacio hasta apoyar el talón.' } },
+          { name: 'Elevación de puntas', mode: 'reps', reps: 12, dur: 36,
+            tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'De espaldas a la pared, o con las manos en la mesa. Talones apoyados.',
+              action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
+              care: 'Movimiento pequeño. Notarás el trabajo delante de la espinilla.' } },
+          { name: 'Sentadilla de cuádriceps', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Sujétate a la mesa con las dos manos.',
+              action: 'Lleva las rodillas adelante y sube los talones. Baja poco a poco y vuelve.',
+              care: 'Apoyado en todo momento. Baja solo hasta donde las rodillas vayan cómodas.' } },
+          { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+            instruction: { action: '3 inhalaciones completas para cerrar.' } },
+        ]},
       /* s121 (B2.3 OLA 4): migrado al contrato v1 — CIERRE de la migración
          mecánica. Aguantes isométricos de cuádriceps → `timed` con **dosis legacy
          CONSERVADA** (60 s cada tanda; el care gradúa la ALTURA, NO la dosis). El

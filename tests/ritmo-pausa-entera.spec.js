@@ -14,8 +14,9 @@
  *    con «Luego, el bloque N de M» y «Empezar ya el bloque N»; a cero vuelve al bloque
  *    sin arrancarlo. La comida no se cuenta.
  *
- * El 14 oct. de 2026 (miércoles) la segunda pausa de la jornada es la larga del día de
- * Ez, «Exhalación 4·6 + Cuello»: lo comprueba un GUARD antes de nada.
+ * El 14 oct. de 2026 (miércoles) la segunda pausa de la jornada es la larga. Era la del
+ * día de Ez, «Exhalación 4·6 + Cuello»; desde las series (Ez, 15 oct.) la Estira de la
+ * larga es de pie, «Espalda de pie»: lo comprueba un GUARD antes de nada.
  * TRAMPAS: el bloque se acaba minuto a minuto y las sesiones segundo a segundo (s187,
  * eventos-origen.spec.js); cada pieza del panel existe dos veces: se toma la visible.
  */
@@ -28,7 +29,7 @@ const { leerContenedor, esperarInit } = require('./eventos.helpers');
 const HOY = '2026-10-14';
 const JORNADA = { fecha: HOY, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
 const PERFIL = { profile: { need: 'body', time: 'block', environment: 'home', completedAt: 1 } };
-const LARGA = ['breathe.exhale.46', 'move.neck.3'];
+const LARGA = ['breathe.exhale.46', 'move.back.standing'];
 const a = (hhmm) => new Date(HOY + 'T' + hhmm + ':00+02:00');
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 
@@ -86,14 +87,14 @@ async function sesionesCompletadas(page, n) {
 }
 
 /* ------------------------------------------------------------------ A · seguidos */
-test('la pausa larga nombra sus dos platos y los hace seguidos: Respira, «Seguir con Estira» y el cuello', async ({ page, context }) => {
+test('la pausa larga nombra sus dos platos y los hace seguidos: Respira, «Seguir con Estira» y la Estira de pie', async ({ page, context }) => {
   /* dos sesiones enteras (6 + 4 min de reloj) segundo a segundo: con dos navegadores
      a la vez no caben en los 60 s de siempre */
   test.setTimeout(180_000);
   const errores = capturarErrores(page);
   await hastaLaLarga(page, context);
   const ventana = overlaySuperior(page).locator('[data-pace-break-ritmo]');
-  await expect(ventana, 'la ventana nombra los dos platos').toContainText('Exhalación 4·6 + Cuello');
+  await expect(ventana, 'la ventana nombra los dos platos').toContainText('Exhalación 4·6 + Espalda de pie');
   await expect(ventana).toContainText('Respira y Estira');
   await expect(ventana.locator('.pace-lib-ctx b'), 'con los minutos de la parada, no los de Respira').toHaveText('15');
 
@@ -104,9 +105,9 @@ test('la pausa larga nombra sus dos platos y los hace seguidos: Respira, «Segui
   await expect(sesion(page), 'el cierre dice que la pausa sigue').toContainText('Pausa larga · 1 de 2');
   await sesion(page).getByRole('button', { name: 'Seguir con Estira', exact: true }).click();
 
-  /* directo al cuello: sin volver a la home y sin la ficha de antes de empezar */
+  /* directo a la Estira: sin volver a la home y sin la ficha de antes de empezar */
   await expect(sesion(page)).toHaveCount(1);
-  await expect(sesion(page)).toContainText('Cuello');
+  await expect(sesion(page)).toContainText('Espalda de pie');
   await expect(page.locator('[data-pace-modal-backdrop]')).toHaveCount(0);
   await hastaElCierre(page);
   await expect(sesion(page)).not.toContainText('Pausa larga');
@@ -116,20 +117,20 @@ test('la pausa larga nombra sus dos platos y los hace seguidos: Respira, «Segui
   const dia = await page.evaluate(() => getState().ritmo.dia);
   expect(dia.platos, 'los dos platos de la parada 2, hechos').toEqual({ 2: LARGA });
   expect(dia.estados).toEqual({ 2: 'hecha' });
-  /* el cuello sale por la misma puerta que Respira: la pausa, servida por el menú */
+  /* la Estira sale por la misma puerta que Respira: la pausa, servida por el menú */
   const ses = await sesionesCompletadas(page, 3);
   expect(ses.slice(1).map((e) => [e.payload.routineId, e.payload.origin, e.payload.fromMenu]))
     .toEqual([[LARGA[0], 'pausa', true], [LARGA[1], 'pausa', true]]);
   expect(errores).toEqual([]);
 });
 
-test('salir con la X tras Respira: la barra y la parada ofrecen el cuello, no Respira otra vez', async ({ page, context }) => {
+test('salir con la X tras Respira: la barra y la parada ofrecen la Estira, no Respira otra vez', async ({ page, context }) => {
   test.setTimeout(120_000);   /* Respira entera, segundo a segundo */
   /* la pausa larga ABIERTA (dos bloques hechos), a su hora */
   await abrir(page, context, { ritmo: { dia: Object.assign({}, JORNADA, { pausa: 2 }) }, cycle: 2,
     lastActiveDay: 'Wed Oct 14 2026', _historyMigrated: true }, a('10:31'));
   const parada = vis(page, '[data-pace-ritmo-linea] [data-pace-ritmo-parada].pace-rt-ahora');
-  await expect(parada, 'GUARD: la parada de ahora es la larga').toContainText('+ Cuello');
+  await expect(parada, 'GUARD: la parada de ahora es la larga').toContainText('+ Espalda de pie');
   await parada.click();
   await expect(sesion(page)).toContainText('Exhalación 4·6');
   await hastaElCierre(page);
@@ -137,10 +138,10 @@ test('salir con la X tras Respira: la barra y la parada ofrecen el cuello, no Re
   await sesion(page).getByRole('button', { name: '× Salir', exact: true }).click();
   await expect(sesion(page), 'la X vuelve a la home').toHaveCount(0);
 
-  await expect(vis(page, '[data-pace-sidebar]'), 'la barra ofrece ya el cuello').toContainText('Cuello');
+  await expect(vis(page, '[data-pace-sidebar]'), 'la barra ofrece ya la Estira').toContainText('Espalda de pie');
   await parada.click();
   const ficha = overlaySuperior(page);
-  await expect(ficha, 'la parada abre el cuello, no Respira otra vez').toContainText('Cuello');
+  await expect(ficha, 'la parada abre la Estira, no Respira otra vez').toContainText('Espalda de pie');
   await expect(sesion(page)).toHaveCount(0);
 });
 

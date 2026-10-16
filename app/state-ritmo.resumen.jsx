@@ -45,8 +45,9 @@ function ritmoMenuDe(s, dia, cambios) {
   var pasado = dia.pasado && dia.pasado.length ? dia.pasado : null;
   var previos = pasado ? ritmoPrevios(pasado, dia.primerBloque || null, !!dia.pausaPendiente, dia.bloque || null) : null;
   var pozos = ritmoPozos(s, dia.fecha);
+  var mem = typeof ritmoMemoria === 'function' ? ritmoMemoria(s, dia.fecha, dia, pasado) : null;
   var m = typeof semanaComponer === 'function'
-    ? semanaComponer(dia.opcion, h, pozos, cambios, agua, semanaDe(dia.fecha), previos)
+    ? semanaComponer(dia.opcion, h, pozos, cambios, agua, semanaDe(dia.fecha), previos, mem)
     : ritmoComponer(dia.opcion, h, pozos, cambios, agua, previos);
   if (!m) return null;
   var congelados = pasado ? ritmoHidratar(pasado).map(function (it) { return Object.assign({}, it, { congelado: true }); }) : [];

@@ -127,6 +127,10 @@ function ritmoDe(s) {
 /* LOS POZOS salen del CATÁLOGO VIVO: lo gratuito (o lo que tengas abierto) que
    cabe junto a la mesa — sin suelo, sin material obligatorio, sin aviso de
    seguridad ni retención. La maqueta los tenía escritos a mano (6 · 4 · 12).
+   LA MESA CUENTA (Ez, 15 oct. 2026): «junto a la mesa» es que hay una, así que lo
+   que pide una mesa estable entra si es de nivel accesible (Flexiones de escritorio,
+   y no «Empuje · progresión», que pide la pica). Y el cierre es
+   cualquier Respira lento de 5 min o menos: rota (ritmo.series.js).
    Rotan por día para que cada jornada empiece por otra rutina, y respetan el
    VETO de la pausa (s189) con su amnistía: si el veto vaciara un pozo, se ignora. */
 function ritmoPozos(s, iso) {
@@ -140,7 +144,8 @@ function ritmoPozos(s, iso) {
   };
   var cabe = function (r) {
     if (!r || r.safety || r.requiresFloor) return false;
-    if ((r.equipment || []).some(function (e) { return !/Optional$/.test(e); })) return false;
+    var mesa = function (e) { return e === 'stableDesk' && (r.level || 'accessible') === 'accessible'; };
+    if ((r.equipment || []).some(function (e) { return !mesa(e) && !/Optional$/.test(e); })) return false;
     if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
     return !window.canAccessRoutine || window.canAccessRoutine(r.id);
   };
@@ -159,7 +164,7 @@ function ritmoPozos(s, iso) {
     estira: prepara(lista(window.EXTRA_ROUTINES)),
     mueve: prepara(lista(window.MOVE_ROUTINES)),
     respira: prepara(respira.filter(function (r) { return r.min >= 4 && r.min <= 10; })),
-    cierre: prepara(respira.filter(function (r) { return r.min <= 3; })),
+    cierre: prepara(respira.filter(function (r) { return r.min <= 5; })),
   };
 }
 
@@ -173,15 +178,15 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
   /* «Dos horas» se cuenta desde aquí, no desde la recomposición (ritmo.regla.js) */
   p.inicio = pasado && pasado.length ? pasado[0].desde : null;
   /* la cuenta de la larga (ritmo.regla.js, `pausaDe`): pausas y foco desde la última */
-  p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; p.largasManana = 0;
+  p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; p.largasManana = 0; p.seguidos = 0;
   (pasado || []).forEach(function (it) {
-    if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; p.focoLarga += it.dur; }
-    if (it.tipo === 'pausa') { p.pausas++; p.claves++; p.pausasLarga++; }
+    if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; p.focoLarga += it.dur; p.seguidos += it.dur; }
+    if (it.tipo === 'pausa') { p.pausas++; p.claves++; p.pausasLarga++; p.seguidos = 0; }
     if (it.tipo === 'pausa' && it.larga) {
       p.largaEn = p.pausasLarga; p.pausasLarga = 0; p.focoLarga = 0;
       if (!p.comidaHecha) p.largasManana++;
     }
-    if (it.tipo === 'comida') { p.comidaHecha = true; p.pausas = 0; p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; }
+    if (it.tipo === 'comida') { p.seguidos = 0; p.comidaHecha = true; p.pausas = 0; p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; }
     /* s195: el agua va por tiempo, y la cuenta sigue desde el último vaso hecho */
     if (it.agua) { p.vasos++; p.ultimoVaso = it.tipo === 'comida' ? it.desde + it.dur : it.desde; }
     (it.platos || []).forEach(function (pl) { p.usados.push(pl.id); });
@@ -223,8 +228,10 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
   /* s195c: LA SEMANA. El día se compone con el tema de la semana y el acento del día
      (ritmo.semana.js), que salen de la fecha; sin la semana cargada, la regla de siempre. */
   var hoy = ritmoHoy();
+  /* Las series (15 oct. 2026) eligen cada plato con lo que ya pasó: state-ritmo.series.jsx */
+  var mem = typeof ritmoMemoria === 'function' ? ritmoMemoria(s, hoy, R.dia, pasado) : null;
   var m = typeof semanaComponer === 'function'
-    ? semanaComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, semanaDe(hoy), previos)
+    ? semanaComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, semanaDe(hoy), previos, mem)
     : ritmoComponer(opcion, h, ritmoPozos(s, hoy), cambios, agua, previos);
   if (!m || !pasado || !pasado.length) return m;
   /* Lo hecho delante, y los totales del día entero. Si empezaste tarde, el hueco
@@ -257,6 +264,7 @@ function ritmoPlan(s) {
   var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
   var actual = m.focos[hechos] || null;
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
+  if (pausa && pausa.tipo === 'foco') pausa = null;   /* bloques cortos juntos: no hay parada */
   /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre) */
   return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {} };
 }
@@ -356,7 +364,10 @@ function ritmoGuardar(cambio) {
     var r = Object.assign({ horario: null, libre: null, dia: null }, prev.ritmo || {});
     /* El día de ayer no se pisa sin resumirlo antes (state-ritmo.resumen.jsx). */
     if (typeof ritmoResumenAntesDePisar === 'function') r = ritmoResumenAntesDePisar(prev, r);
-    return Object.assign({}, prev, { ritmo: Object.assign(r, cambio(r)) });
+    r = Object.assign(r, cambio(r));
+    /* Lo que sirve hoy cada parada, para no repetirlo mañana en la misma (state-ritmo.series.jsx). */
+    if (typeof ritmoAnotarServidos === 'function') r = ritmoAnotarServidos(prev, r);
+    return Object.assign({}, prev, { ritmo: r });
   });
 }
 

@@ -194,6 +194,9 @@ function emitSessionCompleted(module, routineId, datos) {
      deja HECHA (de lo que sea: hiciste una pausa), y apunta su plato si es uno de
      los de la pausa. Sin pausa abierta, no hace nada. */
   if (typeof window.ritmoPausaHecha === 'function') { try { window.ritmoPausaHecha(routineId); } catch (e) {} }
+  /* Y las series de «A tu ritmo» la apuntan como hecha hoy, del plan o por libre: su zona
+     ya está movida y no se repite (state-ritmo.series.jsx). */
+  if (typeof window.ritmoAnotarHecha === 'function') { try { window.ritmoAnotarHecha(routineId); } catch (e) {} }
   return runId;
 }
 

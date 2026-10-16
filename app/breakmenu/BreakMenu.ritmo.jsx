@@ -23,7 +23,10 @@
    hay línea de atajos: Intro hace la pausa propuesta y Esc la salta, y no se enseñan.
 
    Solo se pinta cuando la propuesta viene del menú (`porque` = `ritmo.*`) y hay
-   plan con pausa abierta; si no, BreakMenu es el de siempre. */
+   plan con pausa abierta; si no, BreakMenu es el de siempre.
+
+   Encima del nombre va la frase de las series si la parada la tiene («Caderas: sin
+   mover hoy», Ez, 15 oct. 2026; `ritmoFrase`), y si no, la de siempre. */
 
 /* El color del plato y de su botón es el del MÓDULO de la rutina. */
 const BREAK_COLOR = { extra: 'var(--extra)', move: 'var(--move)', breathe: 'var(--breathe)', water: 'var(--hydrate)' };
@@ -84,7 +87,7 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
   return (
     <Modal open={open} onClose={onClose} tagLabel={tn('break.ritmo.tag', { n: plan.hechos, m: plan.total })}
       title={t('break.ritmo.title')} subtitle={tn('break.ritmo.sub', { h: pausa ? ritmoHora(pausa.desde) : '' })} maxWidth={720}>
-      <BreakPlato color={plato.color} glifo={plato.glifo} motivo={t('break.prop.' + prop.porque)} nombre={plato.nombre} ctx={plato.ctx}
+      <BreakPlato color={plato.color} glifo={plato.glifo} motivo={(!comida && pausa && typeof ritmoFrase === 'function' && ritmoFrase(pausa, t, tn)) || t('break.prop.' + prop.porque)} nombre={plato.nombre} ctx={plato.ctx}
         datos={{ 'data-pace-break-prop': '', 'data-pace-break-ritmo': '' }} />
       <div data-pace-break-acciones className="pace-break-acciones" style={{ marginTop: 16 }}>
         <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--c': plato.boton }} onClick={onPropuesta}>

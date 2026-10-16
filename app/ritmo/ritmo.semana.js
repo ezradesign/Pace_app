@@ -9,9 +9,10 @@
      × acento del día (lunes a viernes; el fin de semana, ninguno)
      × la regla del día de siempre (ritmoComponer, que no se toca)
 
-   El tema REORDENA los pozos (la región del tema va primero); el acento cambia
-   la FORMA del día: arrancar con Mueve, la larga antes, respirar antes de comer,
-   cerrar con un Respira más largo.
+   El tema REORDENA los pozos (la región del tema va primero), y desde las series
+   (15 oct. 2026) eso solo desempata; el acento cambia la FORMA del día: la larga antes
+   el miércoles y respirar antes de comer el jueves. Arrancar con Mueve (lunes) y el
+   cierre más largo (viernes) son ya de todos los días (ritmo.series.js).
 
    Y NADA DE ESTO SE ANUNCIA. Se propusieron tres sistemas de copy y tres formas
    mínimas (un chip, una línea, nada) y el usuario eligió «nada» («menos es más»):
@@ -59,11 +60,11 @@ var SEMANA_TEMAS = [
 
 /* LOS ACENTOS del día (1 = lunes … 7 = domingo). Cambian la forma, no los platos. */
 var SEMANA_ACENTOS = {
-  1: { id: 'arranque' },   /* la primera pausa activa el cuerpo (Mueve) */
+  1: { id: 'arranque' },   /* la primera pausa activa el cuerpo (Mueve): ya todos los días */
   2: { id: 'sostener' },   /* el día tal cual */
   3: { id: 'mitad' },      /* la primera larga llega antes: la segunda pausa, no la tercera */
   4: { id: 'aire' },       /* antes de comer se respira, no se estira */
-  5: { id: 'cierre' },     /* el cierre es el Respira más largo que quede y quepa (5') */
+  5: { id: 'cierre' },     /* el cierre rota entre los Respira lentos: ya todos los días */
   6: { id: 'libre' },
   7: { id: 'libre' },
 };
@@ -90,10 +91,14 @@ function semanaPozos(pozos, semana) {
   return { estira: semanaOrdenar(pozos.estira, t.estira, t.corta), mueve: semanaOrdenar(pozos.mueve, t.mueve, t.corta), respira: respira, cierre: pozos.cierre || [] };
 }
 
-/* El día con acento: la regla de siempre sobre los pozos del tema, y luego se
-   retocan los PLATOS de tres paradas como mucho. Las claves de «otra» siguen
-   siendo las de la pausa, así que pedir otra en una parada retocada rota igual. */
-function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos) {
+/* El día de la semana: la regla de siempre sobre los pozos del tema (los tramos, y «la
+   mitad» del miércoles), y después LAS SERIES (ritmo.series.js) eligen el plato de cada
+   parada. Desde el 15 oct. 2026 (Ez, las series con lógica) el tema solo desempata —es el
+   orden de los pozos—, el arranque con Mueve del lunes y el cierre largo del viernes son
+   de todos los días, y el jueves sigue respirando antes de comer. `memoria` es lo que el
+   estado sabe del pasado (state-ritmo.series.jsx); sin las series cargadas, los platos son
+   los de la regla. */
+function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos, memoria) {
   var P = semanaPozos(pozos, semana);
   var a = semana.acento ? semana.acento.id : 'libre';
   /* «La mitad» adelanta la primera larga, y solo donde la hay: en la media y en la
@@ -101,65 +106,8 @@ function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos) 
   var mitad = a === 'mitad' && (opcion === 'media' || opcion === 'jornada');
   var h = mitad ? Object.assign({}, horario, { adelantaLarga: true }) : horario;
   var m = ritmoComponer(opcion, h, P, cambios, meta, previos);
-  if (!m) return m;
-  cambios = cambios || {};
-  var usados = {};
-  if (previos) (previos.usados || []).forEach(function (id) { usados[id] = true; });
-  m.items.forEach(function (it) { (it.platos || []).forEach(function (p) { usados[p.id] = true; }); });
-  /* `cabe`: solo platos que quepan en la parada. La regla nunca lo mira porque no le
-     hace falta (Estira y Mueve caben en 5' y Respira solo iba a la larga); los acentos
-     son el primer Respira en pausa corta y en el cierre, que duran 5', y sin esto
-     servían Coherente 6·6 (10') en un hueco de 5 (medido en s195c, en la app). */
-  var toma = function (modulo, clave, cabe) {
-    var pozo = cabe == null ? P[modulo] : P[modulo].filter(function (r) { return (r.min || 0) <= cabe; });
-    var libres = pozo.filter(function (r) { return !usados[r.id]; });
-    if (!libres.length) libres = pozo;
-    if (!libres.length) return null;
-    var r = libres[(cambios[clave] || 0) % libres.length];
-    if (!r) return null;
-    usados[r.id] = true;
-    return { modulo: modulo, id: r.id, name: r.name, min: r.min, clave: clave, rutina: r };
-  };
-  var pausas = m.items.filter(function (it) { return it.tipo === 'pausa'; });
-  /* ARRANCAR: la primera pausa DEL DÍA es de Mueve. Si el día se recompuso con
-     pausas ya hechas, la primera de esta composición no es la del día: nada. */
-  if (a === 'arranque' && !(previos && previos.pausas > 0) && pausas[0] && !pausas[0].larga && pausas[0].platos[0] && pausas[0].platos[0].modulo !== 'mueve') {
-    var conMueve = pausas.find(function (p) { return !p.larga && p.platos[0] && p.platos[0].modulo === 'mueve'; });
-    delete usados[pausas[0].platos[0].id];
-    if (conMueve) {
-      var tmp = pausas[0].platos; pausas[0].platos = conMueve.platos; conMueve.platos = tmp;
-      conMueve.motivo = 'estira';
-    } else {
-      var plato = toma('mueve', pausas[0].platos[0].clave);
-      if (plato) pausas[0].platos = [plato];
-    }
-    pausas[0].motivo = 'mueve';
-  }
-  /* AIRE: la última pausa corta antes de comer es de Respira. */
-  if (a === 'aire') {
-    var comidaI = m.items.findIndex(function (it) { return it.tipo === 'comida'; });
-    for (var i = comidaI - 1; i >= 0; i--) {
-      var it = m.items[i];
-      if (it.tipo === 'pausa' && !it.larga && it.platos[0] && it.platos[0].modulo !== 'respira') {
-        var antes = it.platos[0];
-        delete usados[antes.id];
-        var r = toma('respira', antes.clave, it.dur);
-        if (r) { it.platos = [r]; it.motivo = 'respira'; } else usados[antes.id] = true;
-        break;
-      }
-    }
-  }
-  /* CERRAR SUAVE: el cierre es el Respira más largo que quede sin servir Y QUEPA en
-     el hueco del cierre (5'): 5' de Coherente donde la regla pone 2' de Suspiro. */
-  if (a === 'cierre' && m.items.length) {
-    var cierre = m.items[m.items.length - 1];
-    var largos = P.respira.filter(function (x) { return !usados[x.id] && (x.min || 0) <= cierre.dur; }).sort(function (x, y) { return (y.min || 0) - (x.min || 0); });
-    if (cierre && cierre.tipo === 'cierre' && largos[0]) {
-      cierre.platos = [{ modulo: 'respira', id: largos[0].id, name: largos[0].name, min: largos[0].min, clave: 'cierre', rutina: largos[0] }];
-      cierre.motivo = 'cierre';
-    }
-  }
-  return m;
+  if (!m || typeof ritmoServir !== 'function') return m;
+  return ritmoServir(m, P, cambios, previos, memoria, { aire: a === 'aire' });
 }
 
 Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, semanaPozos, semanaComponer });

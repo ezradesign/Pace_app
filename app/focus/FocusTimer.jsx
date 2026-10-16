@@ -68,7 +68,7 @@ function FocusTimer({ onFinish }) {
       try {
         onFinish && onFinish();
       } finally {
-        try { paceFocoPausaPendiente(bloque); } catch (e) {}
+        try { if (!(typeof ritmoSinPausa === 'function' && ritmoSinPausa(getState()))) paceFocoPausaPendiente(bloque); } catch (e) {}
         try { if (typeof ritmoPausaEmpieza === 'function') ritmoPausaEmpieza(finBloque); } catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;

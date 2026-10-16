@@ -6,14 +6,13 @@
  *
  * QUE DEFIENDE, en puro (ritmo.semana.js es pura, como la regla) y por la app:
  *  · la semana ISO sin new Date("YYYY-MM-DD") y el ciclo de seis temas;
- *  · el tema LIDERA: en la semana de la cadera, la primera de Estira es de cadera/pierna;
- *  · los acentos: lunes arranca con Mueve, miércoles la primera larga es la segunda pausa (y
- *    el día no tiene más largas que otro), jueves la
- *    última pausa antes de comer es de Respira, viernes el cierre es el Respira más largo QUE
- *    QUEPA; y el fin de semana no lleva acento (lo que sirve es la regla sobre los pozos del tema);
+ *  · desde las series (Ez, 15 oct. 2026) el tema solo desempata; arrancar con Mueve y el
+ *    cierre lento son de todos los días, el miércoles la primera larga es la segunda pausa (y
+ *    el día no tiene más largas que otro), el jueves la última pausa antes de comer es de
+ *    Respira, y el fin de semana no lleva acento (las series sobre los pozos del tema);
  *  · CADA PLATO CABE EN SU PARADA los cinco días: la pausa corta y el cierre duran 5' y los
  *    acentos son el primer Respira que entra ahí (la primera versión sirvió 10' en 5, medido);
- *  · los acentos respetan lo hecho: recolocando con pausas hechas, «arrancar» no toca nada;
+ *  · las series respetan lo hecho: recolocando con pausas hechas, no hay «primera del día»;
  *  · varía: dos lunes seguidos y el lunes y el martes de la misma semana no sirven lo mismo;
  *    y es determinista: la misma fecha, el mismo día;
  *  · la app compone por la semana (ritmoMenu → semanaComponer) y NO PINTA NINGUNA PALABRA
@@ -53,44 +52,44 @@ test('la semana ISO, sin new Date("YYYY-MM-DD"), y el ciclo de seis temas', asyn
   expect(r.deFecha.acento.id, 'el miércoles es «la mitad»').toBe('mitad');
 });
 
-test('el tema lidera y los cinco acentos hacen lo que dicen; el fin de semana, la regla sobre los pozos del tema', async ({ page, context }) => {
+/* DESDE LAS SERIES (Ez, 15 oct. 2026): el tema solo desempata (es el orden de los pozos), el
+   arranque con Mueve del lunes y el cierre largo del viernes son de todos los días, y el
+   miércoles y el jueves siguen con lo suyo. Antes esta prueba pedía que la primera Estira de
+   la semana de la cadera fuera de cadera: con las series la elige la zona sin mover hoy. */
+test('los acentos que quedan hacen lo que dicen y los de lunes y viernes son de todos los días; el fin de semana, las series sin acento', async ({ page, context }) => {
   await abrir(page, context);
   const r = await page.evaluate((H) => {
     const dia = (iso) => { const sem = semanaDe(iso); return { sem, m: semanaComponer('jornada', H, ritmoPozos(getState(), iso), {}, 8, sem, null) }; };
     const pausas = (m) => m.items.filter((it) => it.tipo === 'pausa');
-    const L = dia('2026-09-14'), X = dia('2026-09-16'), J = dia('2026-09-17'), V = dia('2026-09-18'), S = dia('2026-09-19');
-    /* el tema lidera TODOS los días de la semana (la rotación diaria de los pozos no puede
-       ponerlo por casualidad los cinco), y en la semana siguiente lidera el otro tema */
-    const primeraTag = (m) => pausas(m).find((p) => p.platos[0] && p.platos[0].modulo === 'estira').platos[0].rutina.tag;
-    const primeraEstira = [L, dia('2026-09-15'), X, J, V].map((d) => primeraTag(d.m));
-    const primeraEstira39 = ['2026-09-21', '2026-09-22', '2026-09-23'].map((iso) => primeraTag(dia(iso).m));
+    const semana = ['2026-09-14', '2026-09-15', '2026-09-16', '2026-09-17', '2026-09-18'].map(dia);
+    const X = semana[2], J = semana[3], S = dia('2026-09-19');
+    /* todos los días la primera pausa es de Mueve y de pie */
+    const primeras = semana.map((d) => { const p = pausas(d.m)[0].platos[0]; return p.modulo + (ritmoSeriesDePie(p.id) ? ' de pie' : ''); });
     const largasX = pausas(X.m).map((p, i) => (p.larga ? i + 1 : 0)).filter(Boolean);
     const comidaJ = J.m.items.findIndex((it) => it.tipo === 'comida');
     let antesDeComer = null; for (let i = comidaJ - 1; i >= 0; i--) if (J.m.items[i].tipo === 'pausa' && !J.m.items[i].larga) { antesDeComer = J.m.items[i].platos[0].modulo; break; }
-    const cierreV = V.m.items[V.m.items.length - 1];
-    const pozosV = ritmoPozos(getState(), '2026-09-18');
-    const cabenV = pozosV.respira.filter((x) => x.min <= cierreV.dur).map((x) => x.min);
-    const cierrePozo = Math.max.apply(null, pozosV.cierre.map((x) => x.min));
+    /* el cierre, todos los días, un Respira lento del pozo del cierre (5 min o menos) */
+    const cierres = semana.map((d) => { const c = d.m.items[d.m.items.length - 1]; return { min: c.platos[0].min, dur: c.dur }; });
+    const pozoCierre = ritmoPozos(getState(), '2026-09-14').cierre.map((x) => x.min);
     /* ningún plato más largo que su parada, los cinco días (el defecto de la primera versión) */
-    const noCaben = [L, dia('2026-09-15'), X, J, V].flatMap((d) => d.m.items.filter((it) => it.platos).flatMap((it) => it.platos.filter((p) => p.min > it.dur).map((p) => p.name + ' ' + p.min + "' en " + it.dur + "'")));
-    /* sábado: sin acento, el día es exactamente la regla sobre los pozos del tema */
-    const plano = ritmoComponer('jornada', H, semanaPozos(ritmoPozos(getState(), '2026-09-19'), S.sem), {}, 8, null);
+    const noCaben = semana.flatMap((d) => d.m.items.filter((it) => it.platos).flatMap((it) => it.platos.filter((p) => p.min > it.dur).map((p) => p.name + ' ' + p.min + "' en " + it.dur + "'")));
+    /* sábado: sin acento, el día es la regla sobre los pozos del tema con las series y nada más */
+    const P = semanaPozos(ritmoPozos(getState(), '2026-09-19'), S.sem);
+    const plano = ritmoServir(ritmoComponer('jornada', H, P, {}, 8, null), P, {}, null, null, { aire: false });
     const ids = (m) => m.items.flatMap((it) => (it.platos || []).map((p) => p.id));
-    return { primeraEstira, primeraEstira39, primeraL: pausas(L.m)[0].platos[0].modulo, largasX, antesDeComer, cierreMin: cierreV.platos[0].min, cierreDur: cierreV.dur, cabeMax: Math.max.apply(null, cabenV), cierrePozo, noCaben,
+    return { primeras, largasX, antesDeComer, cierres, pozoCierre, noCaben,
              sabado: S.sem.acento.id, sabadoIgual: JSON.stringify(ids(S.m)) === JSON.stringify(ids(plano)), diaSemana: S.sem.diaSemana };
   }, H);
-  for (const tag of r.primeraEstira) expect(['HIP', 'LEG', 'GRND'], 'semana de la cadera: la primera de Estira es de cadera o pierna, los cinco días').toContain(tag);
-  for (const tag of r.primeraEstira39) expect(['WRST', 'SIT'], 'semana de las manos: la primera de Estira es de muñecas o de silla').toContain(tag);
-  expect(r.primeraL, 'lunes: la primera pausa activa el cuerpo').toBe('mueve');
+  expect(r.primeras, 'la primera pausa activa el cuerpo, de pie, los cinco días').toEqual(Array(5).fill('mueve de pie'));
   expect(r.largasX[0], 'miércoles: la larga es la segunda pausa').toBe(2);
   expect(r.antesDeComer, 'jueves: antes de comer se respira').toBe('respira');
-  expect(r.cabeMax, 'GUARD: hay Respiras que caben en el cierre y son más largos que los del pozo del cierre').toBeGreaterThan(r.cierrePozo);
-  expect(r.cierreMin, 'viernes: el cierre es el Respira más largo que cabe en su hueco').toBe(r.cabeMax);
-  expect(r.cierreMin, 'y cabe').toBeLessThanOrEqual(r.cierreDur);
+  expect(r.pozoCierre.length, 'GUARD: el cierre tiene entre qué rotar').toBeGreaterThan(1);
+  expect(Math.max(...r.pozoCierre), 'el pozo del cierre: Respira de 5 min o menos').toBeLessThanOrEqual(5);
+  for (const c of r.cierres) expect(c.min, 'el cierre cabe en su hueco').toBeLessThanOrEqual(c.dur);
   expect(r.noCaben, 'cada plato cabe en su parada, los cinco días').toEqual([]);
   expect(r.diaSemana).toBe(6);
   expect(r.sabado, 'el sábado no lleva acento').toBe('libre');
-  expect(r.sabadoIgual, 'el sábado es la regla de siempre sobre los pozos del tema').toBe(true);
+  expect(r.sabadoIgual, 'el sábado son las series sobre los pozos del tema, sin acento').toBe(true);
 });
 
 /* El miércoles salía con tres largas (2.ª, 5.ª y la 2.ª de la tarde) porque se corría toda la
@@ -115,28 +114,29 @@ test('el miércoles adelanta la primera larga y no añade más: las mismas que e
   expect(r.dosHoras, '«Dos horas» no tiene larga ningún día').toEqual([]);
 });
 
-test('los acentos respetan lo hecho, la semana varía y es determinista', async ({ page, context }) => {
+test('las series respetan lo hecho, la semana varía y es determinista', async ({ page, context }) => {
   await abrir(page, context);
   const r = await page.evaluate((H) => {
     const sem = semanaDe('2026-09-14');
     const pozos = ritmoPozos(getState(), '2026-09-14');
-    /* recolocando a las 12:00 con TRES pausas hechas: la siguiente es la cuarta, corta y de Estira por
-       la regla (con dos hechas sería la larga, y con una la de Mueve: ahí «arrancar» no tendría nada
-       que pisar y el aserto sería vacío). «Arrancar» no puede tocarla. */
+    /* recolocando a las 12:00 con TRES pausas hechas: la siguiente es la cuarta, corta y de
+       Estira por la cadencia. No es «la primera del día», así que no tiene por qué ser de Mueve
+       ni de pie (con una sola hecha sería la de Mueve, y el aserto sería vacío). */
     const previos = { bloques: 3, pausas: 3, foco: 135, comidaHecha: false, usados: [], vasos: 0, ultimoVaso: null, claves: 3, primerBloque: 45, pausaPendiente: false, bloque: null };
     const recolocado = semanaComponer('jornada', Object.assign({}, H, { ahora: 720 }), pozos, {}, 8, sem, previos);
-    const sinAcento = ritmoComponer('jornada', Object.assign({}, H, { ahora: 720 }), semanaPozos(pozos, sem), {}, 8, previos);
     const primeraRecolocada = recolocado.items.find((it) => it.tipo === 'pausa');
     const ids = (m) => m.items.flatMap((it) => (it.platos || []).map((p) => p.id));
-    const primeros = (iso) => { const s = semanaDe(iso); return ids(semanaComponer('jornada', H, ritmoPozos(getState(), iso), {}, 8, s, null)); };
-    return { recolocadoIgual: JSON.stringify(ids(recolocado)) === JSON.stringify(ids(sinAcento)),
-             guardia: { larga: !!primeraRecolocada.larga, modulo: primeraRecolocada.platos[0].modulo },
-             l38: primeros('2026-09-14'), l39: primeros('2026-09-21'), m38: primeros('2026-09-15'), l38bis: primeros('2026-09-14') };
+    /* `servidos`: lo que la app guarda de cada día (state-ritmo.series.jsx); el martes lo lee */
+    const componer = (iso, servidos) => { const s = semanaDe(iso); return semanaComponer('jornada', H, ritmoPozos(getState(), iso), {}, 8, s, null, ritmoMemoria({ ritmo: { servidos: servidos || {} } }, iso, null, null)); };
+    const lunes = componer('2026-09-14');
+    const primeros = (iso, servidos) => ids(componer(iso, servidos));
+    return { recolocada: { larga: !!primeraRecolocada.larga, n: primeraRecolocada.n, modulo: primeraRecolocada.platos[0].modulo },
+             l38: ids(lunes), l39: primeros('2026-09-21'), m38: primeros('2026-09-15', { '2026-09-14': ritmoSeriesClaves(lunes.items) }), l38bis: primeros('2026-09-14') };
   }, H);
-  expect(r.guardia, 'GUARD: la primera pausa de la recomposición tiene que ser corta y de Estira, o «arrancar» no tendría nada que pisar').toEqual({ larga: false, modulo: 'estira' });
-  expect(r.recolocadoIgual, 'con pausas hechas, «arrancar» no toca la primera pausa de la recomposición').toBe(true);
+  expect(r.recolocada, 'con pausas hechas, la primera de la recomposición sigue la cadencia: corta y de Estira').toEqual({ larga: false, n: 4, modulo: 'estira' });
   expect(r.l38, 'dos lunes seguidos no sirven lo mismo').not.toEqual(r.l39);
-  expect(r.l38, 'el lunes y el martes de la misma semana no sirven lo mismo').not.toEqual(r.m38);
+  expect(r.l38, 'el martes, con lo que sirvió el lunes, no sirve lo mismo').not.toEqual(r.m38);
+  expect(r.m38[0], 'ni la misma primera pausa').not.toBe(r.l38[0]);
   expect(r.l38, 'la misma fecha sirve el mismo día').toEqual(r.l38bis);
 });
 

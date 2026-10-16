@@ -120,7 +120,8 @@ test('un evento por bloque con su pausa, solo lo que queda de hoy, y un .ics que
     };
   }, TEXTOS);
   expect(r.n).toBe(9);
-  expect(r.titulos[0]).toMatch(/^Foco 1 de 9 · luego Estira: .+/);
+  /* desde las series (Ez, 15 oct. 2026) la primera pausa del día es de Mueve, de pie */
+  expect(r.titulos[0]).toMatch(/^Foco 1 de 9 · luego Mueve: .+/);
   expect(r.titulos[1]).toMatch(/^Foco 2 de 9 · luego Mueve: .+/);
   expect(r.titulos[2]).toBe('Foco 3 de 9 · luego pausa larga');
   expect(r.titulos[8]).toBe('Foco 9 de 9 · luego cierre del día');
@@ -137,7 +138,7 @@ test('un evento por bloque con su pausa, solo lo que queda de hoy, y un .ics que
   expect(r.sinCR).toBe(false);
   expect(r.inicio).toBe('20260917T070000Z');
   expect(r.uid).toBe('pace-20260917-foco-1@pacegrass.app');
-  expect(r.resumen).toMatch(/^Foco 1 de 9 · luego Estira: /);
+  expect(r.resumen).toMatch(/^Foco 1 de 9 · luego Mueve: /);
   expect(r.tramosMs).toEqual([[0, 570], [720, 30]]);
 });
 
