@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.170.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 16 de octubre de 2026, v0.171.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,11 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **16 oct., mediodía: v0.171.0 en `main`**: las series con la pausa corta cada 30 min
+  (`claude/series-montaje-7bf9e0`, 5caa51a) y el «Ahora no» del cierre (`claude/ahora-no-tapado-d2eacd`,
+  fc50c4d, opción B de Ez, con su sí para juntarla). Ez vio las fotos de las dos. Las dos sesiones
+  dieron LISTO y sus carpetas no guardan nada pendiente. Siguiente: la auditoría completa que pidió
+  Ez (estado, fallos, pendientes e ideas útiles), y Gemelos en su sesión.
 - **16 oct., mañana: relevo de cuenta.** La coordinadora sigue en la misma carpeta y la misma rama;
   `main` en v0.170.1 con la CI en verde. Esta cuenta empezó con el 5 h al 1 % y la semana al 40 %.
   Dos sesiones abiertas (el máximo):

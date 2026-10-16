@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.170.1 · 15 de octubre de 2026.
+**Versión:** v0.171.0 · 16 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -66,7 +66,9 @@ volumen que mide `construir.js`.
 
 En v0.156.0, Respira entra en la cuenta atrás (la voz ya precargada y la música subiendo) y sale
 despacio, en 6 s; el cierre de las sesiones lleva el dibujo de la rutina y una salida tonal; y el sello
-del aro va solo con texto, entero y uno detrás de otro.
+del aro va solo con texto, entero y uno detrás de otro. Desde v0.171.0, «Ahora no» va en la fila de
+las respuestas del cierre y, si no cabe todo, el dibujo encoge (hasta 48 px; por debajo de 490 px de
+alto en escritorio se quita; opción B de Ez). Lo vigila `tests/cierre-sin-pisar.spec.js`.
 
 Desde v0.155.0 la pausa por libre no repite lo que propone (las otras tres puertas van en una
 línea), el cierre de las sesiones va en la serif itálica con píldoras y la línea del Pomodoro se funde
@@ -92,6 +94,13 @@ dos platos («Seguir con Estira») y el aro cuenta la pausa corta y la larga des
 nunca la comida (`app/state-ritmo.pausa.jsx`). «Una hora» y «Dos horas» duran su reloj, contado
 desde que empieza el día y con las reuniones dentro: con bloques cortos hay menos foco, y la larga
 llega tras 75 min de foco; el miércoles adelanta una sola (v0.169.0, Ez, 15 oct.).
+
+«A tu ritmo» elige cada pausa con lógica (v0.171.0, las series de Ez del 15 oct.;
+`app/ritmo/ritmo.series.js`): de pie al empezar, tras comer y en la larga, la zona que hoy no has
+movido, nada de la misma parada de la última vez, y la frase de lo de hoy encima del nombre
+(«Caderas: sin mover hoy»). Recuerda lo servido siete días y lo hecho hoy (`ritmo.servidos`,
+`ritmo.hechas`). Rutinas nuevas: Piernas de pie y Espalda de pie, y la mesa entra en los pozos. Con
+el aro a 10 o 15, la pausa corta llega como mucho cada 30 min de foco y el aro espera.
 
 «A tu ritmo» conoce tu semana (v0.148.0, la parte gratis de la Fase 3): la bienvenida pregunta qué
 días son jornada, media o libres, y desde entonces cada mañana el día llega ya contestado, con
@@ -152,16 +161,9 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 5. **iPhone**: preparado en v0.164.0. Para TestFlight, cuando Ez tenga la cuenta y la llave: el
    certificado (con openssl, sin Mac), los secretos, la firma y la subida en el workflow `iOS`, el
    apartado del iPhone en `privacy.html` (es pública: Ez la ve antes) y una URL de soporte.
-6. **Las series de pausas con lógica y la capa 1 de «PACE que aprende»**, gratis: las eligió Ez el
-   15 oct. (`docs/traspaso/archivos/series-15oct/`) y se pueden montar desde v0.169.0, que trae la
-   regla nueva de «A tu ritmo». Los números de la página se vuelven a medir sobre esa regla. La
-   misma sesión, la pausa corta como mucho cada 30 min de foco con el aro corto (Ez, 15 oct.).
-   La pausa corta está montada en `claude/series-montaje-7bf9e0`; la sesión sigue desde el 16 oct.
-7. **Lo demás que vio Ez el 15 oct.** (relevo de LEEME): el «Ahora no» tapado en el cierre del
-   escritorio tiene sesión desde el 16 oct. (`ahora-no-tapado`); la 2.ª ronda de «Gemelos
-   subrepticios», que no va más lenta, va después de las series, en una sesión que mire todas las
-   rutinas (Ez, 16 oct.); la voz del suspiro fisiológico espera las grabaciones de Ez. La Fase 4
-   (Estadísticas «Hoy») está hecha en v0.170.0.
+6. **Lo demás que vio Ez el 15 oct.**: el «Ahora no» tapado y las series están en v0.171.0. Falta
+   la 2.ª ronda de «Gemelos subrepticios», que no va más lenta, en una sesión que mire todas las
+   rutinas (Ez, 16 oct.), y la voz del suspiro fisiológico, que espera las grabaciones de Ez.
 
 ## Espera a Ez
 
@@ -192,6 +194,8 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
     y 18 sin dibujo propio;
   - entraron en v0.165.0 las voces en inglés y cinco dibujos: «Primer día», «Cuarto creciente»,
     «Solsticio invierno», «Hueco abdominal» y «Elevación de puntas»; en v0.170.1, «Barbilla atrás».
+  - falta «Rotación torácica de pie»: Espalda de pie la usa con el dibujo genérico
+    (`docs/product/GLIFOS_A_DIBUJAR.md`, n.º 3).
 - Oír la voz grave de Respira en pacegrass.app, en el PC y en el móvil, con música y sin ella: desde
   v0.167.0 entra y sale con un fundido (sesiones-10).
 - Oír los cuencos nuevos de Mueve y Estira en el portátil y en el móvil y decir si el volumen va bien.
@@ -206,6 +210,9 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
   claves D-1, D-2 y D-3.
 - Los 21 dibujos pendientes (3 de ejercicio y 18 de logro) entran si llegan.
+- Con el aro a 10 o 15, la jornada se queda sin rutinas de pie por la tarde (hasta cuatro sentadas
+  seguidas): falta contenido de pie (el paseo corto quedó fuera por ahora). Y «Dos horas» con el
+  aro a 25 acaba en un bloque de 55 min (la tercera pausa sería larga y no cabe).
 
 El `STATE.md` anterior, con el mapa de archivos, el índice de decisiones y el backlog antiguo, está en
 `docs/archive/STATE_HASTA_S200.md`.
