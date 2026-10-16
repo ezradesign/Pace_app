@@ -9,6 +9,10 @@
    semana?» como siempre. Los precios son los de la tienda, nunca de las
    traducciones.
 
+   Ez eligió la opción A el 16 oct. (https://claude.ai/artifact/AvME9EqcMHXhywx43vEdKG):
+   la lista de la invitación, los dos precios en una frase, los dos botones iguales
+   y «Prefiero pagarlo una vez» debajo. Sin escena: como «¿Cómo es tu semana?».
+
    `onFin(plan)`: null es «Ahora no»; 'mes' o 'vida', la compra. La bienvenida se
    cierra antes de comprar, porque la compra de la web sigue en la página de
    Stripe y al volver no debe salir otra vez. */
@@ -19,30 +23,6 @@ function OnbCompletoPaso({ onFin }) {
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
   const dias = (mes && mes.pruebaDias) || 7;
-  const variante = window.PACE_MAQUETA_COMPLETO === 'B' ? 'B' : 'A';
-
-  if (variante === 'B') {
-    return (
-      <React.Fragment>
-        <h2 style={onboardingStyles.title}>{t('premium.onb.titulo')}</h2>
-        <p style={onboardingStyles.lede}>{t('premium.onb.lede.largo')}</p>
-        <div style={onbCompletoStyles.platos}>
-          {[mes, vida].filter(Boolean).map((p) => (
-            <button key={p.plan} data-pace-toque data-pace-onb-plan={p.plan} onClick={() => onFin(p.plan)} style={onbCompletoStyles.plato}>
-              <span className="pace-meta">{t('premium.plan.' + p.plan)}</span>
-              <span style={onbCompletoStyles.importe}>{p.precio}</span>
-              <span style={onbCompletoStyles.platoSub}>{tn('premium.plan.' + p.plan + '.d', { dias })}</span>
-              <span style={{ ...onbCompletoStyles.platoCta, ...(p.plan === 'mes' ? null : onbCompletoStyles.platoCtaSuave) }}>
-                {tn(p.plan === 'mes' ? 'premium.onb.probar.corto' : 'premium.onb.comprar', { dias })}
-              </span>
-            </button>
-          ))}
-        </div>
-        <button data-pace-onb-ahora onClick={() => onFin(null)} style={{ ...onbCompletoStyles.gemelo, width: '100%' }}>{t('premium.later')}</button>
-        <p style={onbCompletoStyles.aviso}>{t('premium.onb.aviso')}</p>
-      </React.Fragment>
-    );
-  }
 
   return (
     <React.Fragment>
@@ -62,9 +42,11 @@ function OnbCompletoPaso({ onFin }) {
         </p>
       )}
       <div style={onbCompletoStyles.par}>
-        <button data-pace-cta data-pace-onb-probar onClick={() => onFin('mes')} style={{ ...onboardingStyles.cta, ...onbCompletoStyles.mitad }}>
-          {tn('premium.onb.probar', { dias })}
-        </button>
+        {mes && (
+          <button data-pace-cta data-pace-onb-probar onClick={() => onFin('mes')} style={{ ...onboardingStyles.cta, ...onbCompletoStyles.mitad }}>
+            {tn('premium.onb.probar', { dias })}
+          </button>
+        )}
         <button data-pace-onb-ahora onClick={() => onFin(null)} style={{ ...onbCompletoStyles.gemelo, ...onbCompletoStyles.mitad }}>
           {t('premium.later')}
         </button>
@@ -116,22 +98,6 @@ const onbCompletoStyles = {
     fontSize: 11.5, color: 'var(--ink-3)', margin: 0, lineHeight: 1.45,
     textShadow: '0 0 14px var(--paper), 0 0 6px var(--paper)',
   },
-  platos: { display: 'flex', gap: 10, width: '100%' },
-  plato: {
-    flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-    padding: '14px 10px 12px', cursor: 'pointer', color: 'var(--ink)',
-    background: 'rgba(242,237,224,0.82)',
-    border: '1px solid rgba(184,173,142,0.6)',
-    borderRadius: 'var(--r-md)',
-    backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)',
-  },
-  importe: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 30, fontWeight: 500, lineHeight: 1.1 },
-  platoSub: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-2)' },
-  platoCta: {
-    marginTop: 8, padding: '8px 14px', borderRadius: 'var(--r-pill)', width: '100%', boxSizing: 'border-box',
-    background: 'var(--focus-cta)', color: 'var(--paper)', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-ui)',
-  },
-  platoCtaSuave: { background: 'transparent', color: 'var(--focus-cta)', border: '1px solid var(--focus-cta)', padding: '7px 14px' },
 };
 
 Object.assign(window, { OnbCompletoPaso });

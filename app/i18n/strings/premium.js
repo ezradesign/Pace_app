@@ -43,17 +43,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.settings.tester':       'Tester n.º {n}',
     'premium.onb.titulo':            'PACE es gratis.',
     'premium.onb.lede':              'Si un día quieres más, PACE completo añade:',
-    'premium.onb.lede.largo':        'Si un día quieres más, PACE completo añade las rutinas más hondas, tus propias rutinas, una semana a tu medida y tu mes y tu año.',
     'premium.onb.precios':           '{vida} una vez, o {mes} al mes con {dias} días gratis.',
     'premium.onb.probar':            'Probar {dias} días gratis',
-    'premium.onb.probar.corto':      'Probar gratis',
-    'premium.onb.comprar':           'Comprar',
     'premium.onb.vida':              'Prefiero pagarlo una vez, {vida}',
     'premium.onb.aviso':             'Te avisamos dos días antes de que acabe la prueba.',
-    'premium.plan.mes':              'Al mes',
-    'premium.plan.mes.d':            '{dias} días gratis',
-    'premium.plan.vida':             'De por vida',
-    'premium.plan.vida.d':           'una vez',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -92,15 +85,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.settings.tester':       'Tester no. {n}',
     'premium.onb.titulo':            'PACE is free.',
     'premium.onb.lede':              'If one day you want more, PACE Complete adds:',
-    'premium.onb.lede.largo':        'If one day you want more, PACE Complete adds the deeper routines, your own routines, a week shaped to you and your month and year.',
     'premium.onb.precios':           '{vida} once, or {mes} a month with {dias} days free.',
     'premium.onb.probar':            'Try {dias} days free',
-    'premium.onb.probar.corto':      'Try free',
-    'premium.onb.comprar':           'Buy',
     'premium.onb.vida':              'I would rather pay once, {vida}',
     'premium.onb.aviso':             'We will remind you two days before the trial ends.',
-    'premium.plan.mes':              'Monthly',
-    'premium.plan.mes.d':            '{dias} days free',
-    'premium.plan.vida':             'Lifetime',
-    'premium.plan.vida.d':           'once',
 });

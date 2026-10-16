@@ -1721,8 +1721,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'welcome.value.local.sub.app': 'en tu móvil',
   'welcome.value.accounts.label': 'Sin cuentas',
   'welcome.value.accounts.sub': 'sin registro',
-  'welcome.value.free.label': 'Núcleo gratuito',
-  'welcome.value.free.sub': 'disponible',
+  'welcome.value.free.label': 'Gratis',
+  'welcome.value.free.sub': 'lo esencial, siempre',
   'welcome.intention.label': '¿Qué quieres cultivar hoy?',
   'welcome.intention.optional': 'opcional',
   'welcome.intention.placeholder': 'concentración, calma, movimiento…',
@@ -1891,8 +1891,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'welcome.value.local.sub.app': 'on your phone',
   'welcome.value.accounts.label': 'No accounts',
   'welcome.value.accounts.sub': 'no sign-up',
-  'welcome.value.free.label': 'Free core',
-  'welcome.value.free.sub': 'available',
+  'welcome.value.free.label': 'Free',
+  'welcome.value.free.sub': 'the essentials, always',
   'welcome.intention.label': 'What do you want to cultivate today?',
   'welcome.intention.optional': 'optional',
   'welcome.intention.placeholder': 'focus, calm, movement…',
@@ -3396,7 +3396,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.settings.until': 'Hasta el {fecha}',
   'premium.settings.enter': 'Introducir código',
   'premium.settings.code': 'Código',
-  'premium.settings.tester': 'Tester n.º {n}'
+  'premium.settings.tester': 'Tester n.º {n}',
+  'premium.onb.titulo': 'PACE es gratis.',
+  'premium.onb.lede': 'Si un día quieres más, PACE completo añade:',
+  'premium.onb.precios': '{vida} una vez, o {mes} al mes con {dias} días gratis.',
+  'premium.onb.probar': 'Probar {dias} días gratis',
+  'premium.onb.vida': 'Prefiero pagarlo una vez, {vida}',
+  'premium.onb.aviso': 'Te avisamos dos días antes de que acabe la prueba.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3432,7 +3438,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.settings.until': 'Until {fecha}',
   'premium.settings.enter': 'Enter code',
   'premium.settings.code': 'Code',
-  'premium.settings.tester': 'Tester no. {n}'
+  'premium.settings.tester': 'Tester no. {n}',
+  'premium.onb.titulo': 'PACE is free.',
+  'premium.onb.lede': 'If one day you want more, PACE Complete adds:',
+  'premium.onb.precios': '{vida} once, or {mes} a month with {dias} days free.',
+  'premium.onb.probar': 'Try {dias} days free',
+  'premium.onb.vida': 'I would rather pay once, {vida}',
+  'premium.onb.aviso': 'We will remind you two days before the trial ends.'
 });
 })();
 </script>
@@ -8081,6 +8093,139 @@ Object.assign(window, {
 ;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaRechazada, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
 })();
 </script>
+  <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
+       que se enchufen. Solo el guard, que carga detrás, les habla. -->
+  <script>
+;(function () {
+/* PACE · state-compra.js — LAS TIENDAS DE PACE COMPLETO, UNA POR CANAL
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+   ============================================================
+   PACE completo se compra en dos tiendas: en la web, Stripe en su modo «vende
+   por ti»; en Android, Google Play Billing (Ez, 15 oct. 2026). Cada tienda es un
+   ADAPTADOR con la misma forma, y fuera de `state-entitlement.jsx` nadie habla
+   con ellos: la app pregunta al guard (`paceTiendaAbierta`, `paceTiendaPlanes`,
+   `paceComprar`, `paceGestionarCompra`) y el guard elige la tienda del canal en
+   el que está. Así, enchufar una tienda no toca ni la bienvenida ni la
+   invitación.
+
+   HOY LAS DOS ESTÁN VACÍAS: `listo()` dice que no y nada enseña un botón de
+   compra. Para abrir la de la web basta con poner los dos enlaces de pago de
+   Stripe en `PACE_TIENDA_WEB.enlaces`; la de Play se rellena en
+   `paceTiendaPlay` cuando la app lleve el complemento de Play Billing.
+
+   LA FORMA DE UNA TIENDA:
+     listo()        -> true si en este canal ya se puede comprar.
+     planes()       -> [{ plan: 'vida'|'mes', importe, moneda, texto?, pruebaDias? }]
+                       La tienda manda sobre importe y moneda (ROADMAP, Fase 6):
+                       ningún precio vive en las traducciones. `texto` es el precio
+                       ya escrito por la tienda (Play lo da así) y gana al importe.
+     comprar(plan)  -> Promise<{ ok, motivo?, fuera?, licencia? }>
+                       `fuera`: la compra sigue en otra página (la de Stripe), y el
+                       código llega luego por el enlace de la página de gracias.
+                       `licencia`: un código PACE1 que el guard canjea al momento.
+     vigente()      -> true si la tienda dice que esta persona ya lo tiene (Play
+                       lo sabe; en la web lo dice el código, no la tienda).
+     gestionar()    -> abre donde se cancela la suscripción: la página de Stripe
+                       o las suscripciones de Google Play.
+
+   EN EL IPHONE NO HAY TIENDA hasta después de v1: su canal es 'ninguno'.
+
+   `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. Carga
+   después de state-licencia y antes de state-entitlement, y lee `paceEsNativo`
+   (nativo.js, que carga después) al llamarse, nunca al evaluarse. */
+
+
+
+
+var PACE_TIENDA_WEB = {
+  precios: {
+    vida: { importe: 19.99, moneda: 'EUR' },
+    mes: { importe: 2.99, moneda: 'EUR', pruebaDias: 7 }
+  },
+  enlaces: { vida: null, mes: null },
+  gestionar: null
+};
+
+var PACE_TIENDA_PLANES = ['vida', 'mes'];
+
+function paceTiendaWebLista() {
+  var e = PACE_TIENDA_WEB.enlaces || {};
+  return PACE_TIENDA_PLANES.every(function (p) {return typeof e[p] === 'string' && e[p].length > 0;});
+}
+
+var paceTiendaWeb = {
+  listo: paceTiendaWebLista,
+  planes: function () {
+    var pr = PACE_TIENDA_WEB.precios || {};
+    return PACE_TIENDA_PLANES.filter(function (p) {return !!pr[p];}).map(function (p) {
+      return Object.assign({ plan: p }, pr[p]);
+    });
+  },
+  comprar: function (plan) {
+    var enlace = (PACE_TIENDA_WEB.enlaces || {})[plan];
+    if (!enlace) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+    try {window.location.assign(enlace);} catch (e) {return Promise.resolve({ ok: false, motivo: 'error' });}
+    return Promise.resolve({ ok: true, fuera: true });
+  },
+  vigente: function () {return false;},
+  gestionar: function () {
+    if (!PACE_TIENDA_WEB.gestionar) return false;
+    try {window.open(PACE_TIENDA_WEB.gestionar, '_blank', 'noopener');} catch (e) {return false;}
+    return true;
+  }
+};
+
+
+var paceTiendaPlay = {
+  listo: function () {return false;},
+  planes: function () {return [];},
+  comprar: function () {return Promise.resolve({ ok: false, motivo: 'cerrada' });},
+  vigente: function () {return false;},
+  gestionar: function () {return false;}
+};
+
+var paceTiendaNinguna = {
+  listo: function () {return false;},
+  planes: function () {return [];},
+  comprar: function () {return Promise.resolve({ ok: false, motivo: 'cerrada' });},
+  vigente: function () {return false;},
+  gestionar: function () {return false;}
+};
+
+
+function paceTiendaCanal() {
+  var p = typeof pacePlataformaNativa === 'function' ? pacePlataformaNativa() : null;
+  if (p === 'android') return 'play';
+  if (p) return 'ninguno';
+  return 'web';
+}
+
+
+function paceTiendaDelCanal() {
+  var c = paceTiendaCanal();
+  if (c === 'web') return window.paceTiendaWeb || paceTiendaWeb;
+  if (c === 'play') return window.paceTiendaPlay || paceTiendaPlay;
+  return paceTiendaNinguna;
+}
+
+
+function paceTiendaPrecioTexto(plan, lang) {
+  if (!plan) return '';
+  if (plan.texto) return plan.texto;
+  try {
+    return new Intl.NumberFormat(lang === 'en' ? 'en-IE' : 'es-ES', { style: 'currency', currency: plan.moneda }).format(plan.importe);
+  } catch (e) {
+    return String(plan.importe) + ' ' + plan.moneda;
+  }
+}
+
+Object.assign(window, {
+  PACE_TIENDA_WEB, paceTiendaWeb, paceTiendaPlay, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto
+});
+;Object.assign(window, { PACE_TIENDA_WEB, PACE_TIENDA_PLANES, paceTiendaWebLista, paceTiendaWeb, paceTiendaPlay, paceTiendaNinguna, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto });
+})();
+</script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
        Antes de state-paths (getSuggestedPath lo consume) y del resto de
        consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
@@ -8093,12 +8238,13 @@ Object.assign(window, {
    Guard central de acceso a contenido (sesion 95 / v0.40.0).
 
    ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath /
-   hasPremiumEntitlement. Abren PACE completo dos cosas: el booleano
-   `premiumUnlocked` (state-core, sin ruta de compra todavía) y un CÓDIGO
-   firmado que vale (`paceLicenciaVigente`, state-licencia.js: el de los
-   testers, y mañana el de quien compre en la web). Cuando llegue Play Billing
-   entra aquí como una tercera fuente, y los consumidores (RoutineCard,
-   CustomRoutines, PathBreatheStep/PathBodyStep, getSuggestedPath) no se tocan.
+   hasPremiumEntitlement. Abren PACE completo tres cosas: el booleano
+   `premiumUnlocked` (state-core, sin ruta de compra), un CÓDIGO firmado que
+   vale (`paceLicenciaVigente`, state-licencia.js: el de los testers y el de
+   quien compre en la web) y lo que la tienda del canal sabe que ya tienes
+   (`tieneCompraVigente`: Play Billing, vacía hasta que llegue). Los
+   consumidores (RoutineCard, CustomRoutines, PathBreatheStep/PathBodyStep,
+   getSuggestedPath) no se tocan. La compra también pasa por aquí (abajo).
 
    Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
    el guard concede acceso a una rutina premium aunque premiumUnlocked sea
@@ -8148,7 +8294,7 @@ function canAccessRoutine(routineId, opts) {
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
   const s = getState && getState();
-  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
+  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
   return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
@@ -8161,7 +8307,7 @@ function canAccessPath(pathId) {
   if (!path) return true;
   if (path.access !== 'premium') return true;
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
 }
 
 
@@ -8175,7 +8321,7 @@ function canAccessPath(pathId) {
 
 function hasPremiumEntitlement() {
   const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium();
+  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
 }
 
 
@@ -8185,8 +8331,52 @@ function puedeMantenerCalendario() {
   return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, PREMIUM_ABIERTO_HASTA_V1 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario });
+
+
+
+
+
+function tiendaDelCanal() {
+  return window.paceTiendaDelCanal && window.paceTiendaDelCanal() || null;
+}
+
+function paceTiendaAbierta() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.listo()) && !hasPremiumEntitlement();
+}
+
+
+function paceTiendaPlanes(lang) {
+  const tienda = tiendaDelCanal();
+  if (!tienda || !tienda.listo()) return [];
+  return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
+}
+
+function paceComprar(plan) {
+  const tienda = tiendaDelCanal();
+  if (!tienda || !tienda.listo()) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+  return tienda.comprar(plan).then((r) => {
+    if (r && r.ok && r.licencia && window.paceLicenciaCanjear) return window.paceLicenciaCanjear(r.licencia);
+    return r || { ok: false, motivo: 'error' };
+  }, () => ({ ok: false, motivo: 'error' }));
+}
+
+function paceGestionarCompra() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.gestionar());
+}
+
+
+function tieneCompraVigente() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.vigente && tienda.vigente());
+}
+
+Object.assign(window, {
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, PREMIUM_ABIERTO_HASTA_V1,
+  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente
+});
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -19083,7 +19273,7 @@ const premiumInvitacionStyles = {
   error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 }
 };
 
-Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium });
+Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
 ;Object.assign(window, { PaceCandado, paceAbrirPremium, PremiumInvitacion });
 })();
 </script>
@@ -38547,6 +38737,114 @@ Object.assign(window, {
 
 
 
+function OnbCompletoPaso(_ref) {let { onFin } = _ref;
+  const { t, tn, lang } = useT();
+  const planes = paceTiendaPlanes(lang);
+  const mes = planes.find((p) => p.plan === 'mes') || null;
+  const vida = planes.find((p) => p.plan === 'vida') || null;
+  const dias = mes && mes.pruebaDias || 7;
+
+  return (
+    React.createElement(React.Fragment, null,
+    React.createElement("h2", { style: onboardingStyles.title }, t('premium.onb.titulo')),
+    React.createElement("p", { style: onboardingStyles.lede }, t('premium.onb.lede')),
+    React.createElement("ul", { style: onbCompletoStyles.lista },
+    PREMIUM_INCLUYE.map((k, ik) =>
+    React.createElement("li", { key: k, style: { ...onbCompletoStyles.item, ...(ik === PREMIUM_INCLUYE.length - 1 ? { borderBottom: 0 } : null) } },
+    React.createElement("span", null, t('premium.inc.' + k)),
+    React.createElement("span", { style: onbCompletoStyles.detalle }, t('premium.inc.' + k + '.d'))
+    )
+    )
+    ),
+    mes && vida &&
+    React.createElement("p", { "data-pace-onb-precios": true, style: onbCompletoStyles.precios },
+    tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })
+    ),
+
+    React.createElement("div", { style: onbCompletoStyles.par },
+    mes &&
+    React.createElement("button", { "data-pace-cta": true, "data-pace-onb-probar": true, onClick: () => onFin('mes'), style: { ...onboardingStyles.cta, ...onbCompletoStyles.mitad } },
+    tn('premium.onb.probar', { dias })
+    ),
+
+    React.createElement("button", { "data-pace-onb-ahora": true, onClick: () => onFin(null), style: { ...onbCompletoStyles.gemelo, ...onbCompletoStyles.mitad } },
+    t('premium.later')
+    )
+    ),
+    React.createElement("div", { style: onbCompletoStyles.pie },
+    React.createElement("p", { style: onbCompletoStyles.aviso }, t('premium.onb.aviso')),
+    vida &&
+    React.createElement("button", { "data-pace-onb-vida": true, onClick: () => onFin('vida'), style: onboardingStyles.ghostBtn },
+    tn('premium.onb.vida', { vida: vida.precio })
+    )
+
+    )
+    ));
+
+}
+
+const onbCompletoStyles = {
+  lista: {
+    listStyle: 'none', margin: 0, width: '100%', boxSizing: 'border-box',
+    padding: '4px 16px',
+    background: 'rgba(242,237,224,0.82)',
+    border: '1px solid rgba(184,173,142,0.5)',
+    borderRadius: 'var(--r-md)',
+    backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)',
+    textAlign: 'left'
+  },
+  item: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12,
+    padding: '8px 0', borderBottom: '1px dashed var(--line)',
+    fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink)'
+  },
+  detalle: { fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11.5, color: 'var(--ink-3)', textAlign: 'right' },
+  precios: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.35,
+    color: 'var(--ink)', margin: 0, maxWidth: 400,
+    textShadow: '0 0 16px var(--paper), 0 0 8px var(--paper)'
+  },
+
+  par: { display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%', justifyContent: 'center' },
+  mitad: { flex: '1 1 190px', marginTop: 0, padding: '13px 16px', boxSizing: 'border-box' },
+  gemelo: {
+    padding: '13px 16px', borderRadius: 'var(--r-pill)', boxSizing: 'border-box',
+    background: 'rgba(242,237,224,0.82)', border: '1px solid var(--focus-cta)',
+    color: 'var(--focus-cta)', cursor: 'pointer',
+    fontSize: 13, letterSpacing: '0.12em', fontFamily: 'var(--font-ui)'
+  },
+  pie: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 },
+  aviso: {
+    fontSize: 11.5, color: 'var(--ink-3)', margin: 0, lineHeight: 1.45,
+    textShadow: '0 0 14px var(--paper), 0 0 6px var(--paper)'
+  }
+};
+
+Object.assign(window, { OnbCompletoPaso });
+;Object.assign(window, { OnbCompletoPaso });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -38568,6 +38866,7 @@ function Onboarding() {
   const [draft, setDraft] = useStateONB({ need: null, time: null, environment: null });
   const [freeText, setFreeText] = useStateONB('');
   const [picked, setPicked] = useStateONB(null);
+  const [conPick, setConPick] = useStateONB(false);
 
 
   useEffectONB(() => {
@@ -38593,18 +38892,20 @@ function Onboarding() {
 
   const pantallas = ['bienvenida', 'semana'].
   concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : []).
-  concat(conCaminos ? ['primer'] : []);
+  concat(conCaminos ? ['primer'] : []).
+  concat(typeof paceTiendaAbierta === 'function' && paceTiendaAbierta() ? ['completo'] : []);
   const pantalla = pantallas[step];
   const isSemana = pantalla === 'semana';
   const isQuestion = !!pantalla && pantalla.charAt(0) === 'q';
   const qIndex = isQuestion ? Number(pantalla.slice(1)) : -1;
   const q = isQuestion ? questions[qIndex] : null;
   const isSummary = pantalla === 'primer';
+  const isCompleto = pantalla === 'completo';
   const ultima = step === pantallas.length - 1;
 
   const pickedPath = isSummary && picked && typeof getPath === 'function' ? getPath(picked) : null;
   const sceneId = step === 0 ? 'path.dawn' :
-  isSemana ? null :
+  isSemana || isCompleto ? null :
   isQuestion ? q.sceneId :
   picked || 'path.dawn';
 
@@ -38668,7 +38969,8 @@ function Onboarding() {
 
     ),
     isQuestion ? React.createElement(OnbDots, { total: questions.length, active: qIndex }) :
-    isSemana ? React.createElement("span", { className: "pace-meta" }, t('ritmo.nombre')) : React.createElement("span", null),
+    isSemana ? React.createElement("span", { className: "pace-meta" }, t('ritmo.nombre')) :
+    isCompleto ? React.createElement("span", { className: "pace-meta" }, t('premium.name')) : React.createElement("span", null),
     React.createElement("div", { style: { width: 86, display: 'flex', justifyContent: 'flex-end' } },
     step === 0 &&
     React.createElement("button", { "data-pace-toque": true,
@@ -38744,6 +39046,11 @@ function Onboarding() {
     isSemana &&
     React.createElement(OnbSemanaPaso, { state: state, ultima: ultima,
       onSeguir: () => ultima ? finish({ pick: false }) : next() }),
+
+
+
+    isCompleto &&
+    React.createElement(OnbCompletoPaso, { onFin: (plan) => {finish({ pick: conPick });if (plan && typeof paceComprar === 'function') paceComprar(plan);} }),
 
 
 
@@ -38823,10 +39130,10 @@ function Onboarding() {
     join(' · ')
     ),
 
-    React.createElement("button", { "data-pace-cta": true, onClick: () => finish({ pick: true }), style: onboardingStyles.cta },
+    React.createElement("button", { "data-pace-cta": true, onClick: () => ultima ? finish({ pick: true }) : (setConPick(true), next()), style: onboardingStyles.cta },
     t('onboarding.first.cta')
     ),
-    React.createElement("button", { onClick: () => finish({ pick: false }), style: onboardingStyles.ghostBtn },
+    React.createElement("button", { onClick: () => ultima ? finish({ pick: false }) : (setConPick(false), next()), style: onboardingStyles.ghostBtn },
     t('onboarding.first.explore')
     )
     )
@@ -38991,7 +39298,8 @@ const onboardingStyles = {
   }
 };
 
-Object.assign(window, { Onboarding });
+
+Object.assign(window, { Onboarding, onboardingStyles });
 ;Object.assign(window, { Onboarding, OnbSemanaPaso });
 })();
 </script>
