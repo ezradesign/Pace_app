@@ -105,6 +105,8 @@ function RitmoSemanaHoja({ onClose }) {
     <Modal open onClose={onClose} maxWidth={460} tagLabel={t('ritmo.nombre')} title={t('ritmo.st.titulo')} subtitle={t('ritmo.st.sub')}>
       <div data-pace-semana-hoja style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <RitmoSemanaEditor dias={b.dias} onDias={b.setDias} horario={b.horario} onHora={b.onHora} />
+        {/* Lo que el motor de la semana ha aprendido, con su «Olvidar» (RitmoCarta.jsx). */}
+        {typeof RitmoAprendido === 'function' && <RitmoAprendido state={state} />}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
           <button type="button" data-pace-semana-guardar onClick={() => guardar(b.dias)} style={ritmoSemanaStyles.guardar}>
             <span style={ritmoSemanaStyles.pildora}>{t('ritmo.st.guardar')}</span>

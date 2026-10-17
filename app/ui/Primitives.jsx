@@ -29,7 +29,7 @@ const displayItalic = {
   fontStyle: 'italic',
 };
 
-function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera }) {
+function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno }) {
   const { t } = useT();
   /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
      titulo para el lector de pantalla, el foco DENTRO al abrir, Tab que da la
@@ -85,7 +85,8 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           background: 'var(--paper)',
           borderRadius: 'var(--r-lg)',
           boxShadow: 'var(--sh-modal)',
-          padding: 'var(--s-6)',
+          /* `relleno`: la carta del lunes lleva el suyo, el de la maqueta que eligió Ez. */
+          padding: relleno || 'var(--s-6)',
           maxWidth, width: '100%',
           maxHeight: 'calc(85 * var(--pace-vh, 1vh))',
           overflowY: 'auto',

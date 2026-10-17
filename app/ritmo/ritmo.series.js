@@ -25,6 +25,11 @@
    — el cierre, después de comer, la larga de unas dos horas, los minutos sentado o la zona
    sin mover hoy. Sin razón, la de siempre (`it.motivo`).
 
+   LO APRENDIDO (el motor de la semana, ritmo.motor.js; con PACE completo), en
+   `mem.aprendido`: lo que descansa va al final de la lista, como lo apartado; en la pausa
+   que sueles saltar, lo de 2 minutos o menos; lo que te ayudó gana los empates; y con
+   «menos Mueve», la cadencia sirve Estira (la primera y la de después de comer, no).
+
    PURA como la regla: lo que sabe del pasado entra por `mem` (state-ritmo.series.jsx).
    `var` y `function`: el build solo re-expone esos nombres. */
 
@@ -87,6 +92,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   cambios = cambios || {};
   mem = mem || {};
   var estados = mem.estados || {}, ultima = mem.ultima || {}, dias = mem.dias || {}, hechas = mem.hechas || [];
+  var ap = mem.aprendido || {}, descansa = ap.descansa || {}, ayuda = ap.ayuda || {};
   var usados = {}, movidas = {}, vez = 0;   /* usados: { id: la vez que salió hoy (1, 2, …) } */
   (previos && previos.usados || []).forEach(function (id) { usados[id] = usados[id] || ++vez; });
   /* `previos` ya dice si hubo pausas o comida antes de recomponer; lo congelado lo repasa abajo */
@@ -137,6 +143,9 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     /* levantarse manda sobre «la misma parada la última vez»: nunca dos sentadas
        seguidas si hay algo de pie (medido: al revés, la jornada tenía dos seguidas) */
     var t0 = base;
+    var sinDescanso = t0.filter(function (r) { return !descansa[r.id]; });
+    if (sinDescanso.length) t0 = sinDescanso;
+    if (c.corta) { var cortos = t0.filter(function (r) { return (r.min || 0) <= c.corta; }); if (cortos.length) t0 = cortos; }
     if (c.levantar) { var pie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); }); if (pie.length) t0 = pie; }
     var sinAyer = t0.filter(function (r) { return !aqui[r.id]; });
     if (sinAyer.length) t0 = sinAyer;
@@ -147,11 +156,12 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (previa && z.some(function (x) { return previa.zonas.indexOf(x) !== -1; })) p -= 3;
       if (otraVez[r.id] && !aqui[r.id]) p -= 1;
       return { r: r, p: p, hace: dias[r.id] == null ? 99 : dias[r.id], hoy: usados[r.id] || 0, i: pozo.indexOf(r),
-               nueva: nueva[0] || null, aqui: !!aqui[r.id] };
+               nueva: nueva[0] || null, aqui: !!aqui[r.id], ayuda: ayuda[r.id] ? 1 : 0 };
     };
-    /* Empata la que hace más días que no sale; si ya salió todo hoy, la que salió antes. */
+    /* Empata la que te ayudó, luego la que hace más días que no sale; si ya salió todo hoy,
+       la que salió antes. */
     var orden = function (xs) {
-      return xs.map(puntuar).sort(function (a, b) { return (b.p - a.p) || (a.hoy - b.hoy) || (b.hace - a.hace) || (a.i - b.i); });
+      return xs.map(puntuar).sort(function (a, b) { return (b.p - a.p) || (a.hoy - b.hoy) || (b.ayuda - a.ayuda) || (b.hace - a.hace) || (a.i - b.i); });
     };
     return orden(t0).concat(orden(base.filter(function (r) { return t0.indexOf(r) === -1; })));
   }
@@ -202,13 +212,20 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       var claveC = 'p' + (++i);
       var primera = !huboPausa, tras = trasComer;
       var porPrevia = !!(previa && (!previa.pie || previa.saltada));
-      var modulo = it === aireIt ? 'respira' : (primera || tras) ? 'mueve' : (it.n % 3 === 2 ? 'mueve' : 'estira');
-      var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || tras || porPrevia || it === antesAire), cabe: modulo === 'respira' ? it.dur : null };
+      var cadencia = it.n % 3 === 2 && ap.menos !== 'mueve' ? 'mueve' : 'estira';
+      var modulo = it === aireIt ? 'respira' : (primera || tras) ? 'mueve' : cadencia;
+      var corta = null;
+      (ap.cortas || []).forEach(function (k) { if (Math.abs(k.hora - it.desde) <= k.margen) corta = k.min; });
+      var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || tras || porPrevia || it === antesAire),
+                cabe: modulo === 'respira' ? it.dur : null, corta: modulo === 'respira' ? null : corta };
       var x = elegir(modulo, c, claveC);
       /* Toca levantarse y este módulo solo tiene algo sentado, o lo de pie salió aquí la
-         última vez: el otro módulo, si tiene algo mejor. Un módulo vacío sirve el otro. */
-      var nota = function (z) { return !z ? 9 : (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.aqui ? 1 : 0); };
-      if (modulo !== 'respira' && (!x || (c.levantar && nota(x) > 0))) {
+         última vez, o la pausa es corta y aquí no hay nada tan corto: el otro módulo, si
+         tiene algo mejor. Un módulo vacío sirve el otro. */
+      var nota = function (z) {
+        return !z ? 9 : (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.aqui ? 1 : 0);
+      };
+      if (modulo !== 'respira' && (!x || ((c.levantar || c.corta) && nota(x) > 0))) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';
         var y = elegir(otro, c, claveC);
         if (nota(y) < nota(x)) { x = y; modulo = otro; }

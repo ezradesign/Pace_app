@@ -98,6 +98,13 @@ function puedeMantenerCalendario() {
   return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
+/* puedeAprender() -> boolean   (16 oct. 2026)
+     El motor de la semana de «A tu ritmo» y la carta del lunes son de PACE completo; las
+     series y su capa 1 siguen gratis. Hasta v1, abierto como las rutinas. */
+function puedeAprender() {
+  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
 /* LA COMPRA PASA POR AQUÍ (Fase 6). La tienda del canal (state-compra.js: Stripe
    en la web, Play en Android, ninguna en el iPhone) se pregunta solo desde estas
    cuatro funciones, y lo que compra vuelve por las fuentes de arriba: el código
@@ -140,6 +147,6 @@ function tieneCompraVigente() {
 }
 
 Object.assign(window, {
-  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, PREMIUM_ABIERTO_HASTA_V1,
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, PREMIUM_ABIERTO_HASTA_V1,
   paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente,
 });

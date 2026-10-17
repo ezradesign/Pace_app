@@ -155,6 +155,7 @@
   <script type="text/babel" src="app/i18n/strings/premium.js"></script>
   <script type="text/babel" src="app/i18n/strings/onboarding.js"></script>
   <script type="text/babel" src="app/i18n/strings/ritmo.js"></script>
+  <script type="text/babel" src="app/i18n/strings/carta.js"></script>
   <script type="text/babel" src="app/i18n/strings/calendario.js"></script>
   <script type="text/babel" src="app/i18n/content/breathe.js"></script>
   <script type="text/babel" src="app/i18n/content/move.js"></script>
@@ -232,6 +233,9 @@
   <!-- Las series (Ez, 15 oct. 2026): qué rutina sirve cada parada, con la capa 1 de «PACE que
        aprende». Pura, como la regla; ritmo.semana.js la llama si está cargada. -->
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.series.js"></script>
+  <!-- El motor de la semana (Ez, 16 oct. 2026): lo de pago de «A tu ritmo». Puro; lo que
+       aprende llega a las series por su memoria (state-ritmo.motor.jsx). -->
+  <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.motor.js"></script>
   <!-- ritmo.aviso (s198 · v0.133.0): el aviso del sistema nombra la pausa que toca.
        Solo se llama al acabar un bloque (FocusTimer); no hay nada al evaluarse. -->
   <script type="text/babel" data-presets="env,react" src="app/ritmo/ritmo.aviso.js"></script>
@@ -280,6 +284,8 @@
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
        la semana. Va detrás del emisor, que es quien escribe en el registro. -->
   <script type="text/babel" src="app/state-ritmo.resumen.jsx"></script>
+  <!-- El motor de la semana en el estado: la carta del lunes y lo aprendido. Detrás del resumen. -->
+  <script type="text/babel" src="app/state-ritmo.motor.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <!-- Dialogo (s198): pila de dialogos, foco dentro, trampa de Tab y foco
@@ -545,6 +551,7 @@
   <script type="text/babel" src="app/ritmo/RitmoCalendario.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoTarjeta.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoSemanaTipo.jsx"></script>
+  <script type="text/babel" src="app/ritmo/RitmoCarta.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoManana.jsx"></script>
   <script type="text/babel" src="app/ritmo/RitmoHome.jsx"></script>
 

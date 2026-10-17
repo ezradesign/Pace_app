@@ -38,6 +38,7 @@ var RITMO_RESUMEN_ALREDEDOR = 30;  /* minutos antes y después de una parada en 
 function ritmoMenuDe(s, dia, cambios) {
   var r = (s && s.ritmo) || {};
   var h0 = Object.assign(ritmoHorarioInicial(), r.horario || {});
+  if (typeof ritmoHorarioDelDia === 'function') h0 = ritmoHorarioDelDia(h0, dia.fecha);
   h0.media = ritmoMedia(h0);
   var ocupado = r.ocupado && r.ocupado.fecha === dia.fecha && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [];
   var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado });
