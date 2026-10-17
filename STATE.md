@@ -161,7 +161,7 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    evidencia de hoy (Mueve, Estira y Respira; `docs/traspaso/archivos/encargos-16oct/REVISION_EJERCICIOS.md`),
    **el motor de la semana** (aprende desde la
    primera semana de los testers), **los días diseñados** (cada día con su intención y rutinas
-   medidas) y **el calendario total en la web** con una función de Cloudflare (espera las altas de
+   medidas; los ejercicios nuevos, todos para una habitación o el escritorio, sin salir de casa, Ez 17 oct.) y **el calendario total en la web** con una función de Cloudflare (espera las altas de
    Ez en Google y Microsoft).
    La revisión de los ejercicios está hecha (v0.172.0). Fase 6, lo que sigue tras /premium: la página
    de gracias y la firma con k2 en una función, el aviso dos días antes del fin de la prueba,

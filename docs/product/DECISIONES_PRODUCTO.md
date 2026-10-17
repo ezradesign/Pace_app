@@ -41,6 +41,12 @@ Calendar y Outlook. Elegido con AskUserQuestion:
    quien lo conecta. Cambia la promesa de «sin servidor» en ese punto y `privacy.html` lo cuenta; pide
    la verificación de Google y las altas de Ez en Google Cloud y Microsoft Entra
    (`docs/CALENDARIO_ALTAS.md`). En Android ya era total con el calendario del móvil.
+5. **Todo se hace en una habitación o en el escritorio, sin salir de casa** (Ez, 17 oct. 2026). Los
+   ejercicios nuevos llegan con los días diseñados, no antes. El «Paseo corto» que propuso la revisión
+   (`docs/traspaso/archivos/revision-ejercicios/REVISION.md` §5, con escaleras) se rehace para dentro
+   de casa: marcha en el sitio o caminar por la habitación. «Hombros fuertes» (botella de agua o nada)
+   ya cumple. Hoy ninguna rutina pide salir: todo es con silla, mesa, pared o suelo, y «Colgarse»
+   pide una barra, que puede ser la de una puerta.
 
 ---
 
