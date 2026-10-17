@@ -409,6 +409,8 @@ function PaceApp() {
         <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />)}
       {/* «Tu semana», desde Ajustes: la hoja se abre con un evento (RitmoSemanaTipo.jsx). */}
       <PaceRed modo="parte" nombre={t('ritmo.st.ajustes')}><RitmoSemanaRaiz /></PaceRed>
+      {/* La carta del lunes: sola, cuando la home está libre (RitmoCarta.jsx). */}
+      <PaceRed modo="parte" nombre={t('ritmo.carta.aria')}><RitmoCartaRaiz /></PaceRed>
 
       {/* Onboarding de primera vez (s106) — full-screen sobre las láminas
           de Caminos; retorna null en cuanto firstSeen queda fijado. s198: si

@@ -44,11 +44,14 @@ function ritmoMemoria(s, fecha, dia, pasado) {
     var rut = typeof ritmoRutinaPorId === 'function' ? ritmoRutinaPorId(x.id) : null;
     return { id: x.id, t: x.t, z: ritmoSeriesZonas(x.id, rut && rut.tag) };
   });
+  /* Lo aprendido por el motor de la semana, solo con PACE completo (state-ritmo.motor.jsx). */
+  var aprende = typeof ritmoPuedeAprender === 'function' && ritmoPuedeAprender() && typeof ritmoMotorVigente === 'function';
   return {
     ultima: fechas.length ? serv[fechas[fechas.length - 1]] || {} : {},
     dias: dias, hechas: hechas,
     pasado: pasado || [], estados: (dia && dia.estados) || {},
     inicio: pasado && pasado.length ? pasado[0].desde : null,
+    aprendido: aprende ? ritmoMotorVigente(r.aprendido, fecha) : null,
   };
 }
 

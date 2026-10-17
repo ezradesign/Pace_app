@@ -222,12 +222,15 @@ function ritmoHidratar(pasado) {
    recomposición; `pasado` son los tramos congelados que van delante. */
 function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendiente, bloque) {
   var R = ritmoDe(s);
-  var h = Object.assign({}, R.horario, { ahora: desde != null ? desde : Math.max(R.horario.inicio, ritmoAhora()), ocupado: R.ocupado });
+  var hoy = ritmoHoy();
+  /* Las horas de este día de la semana, si la carta te las preguntó (state-ritmo.motor.jsx):
+     solo al componer el día; lo que se edita sigue siendo tu horario de siempre. */
+  var H = typeof ritmoHorarioDelDia === 'function' ? ritmoHorarioDelDia(R.horario, hoy) : R.horario;
+  var h = Object.assign({}, H, { ahora: desde != null ? desde : Math.max(H.inicio, ritmoAhora()), ocupado: R.ocupado });
   var agua = ((s || {}).water && s.water.goal) || 8;
   var previos = pasado ? ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) : null;
   /* s195c: LA SEMANA. El día se compone con el tema de la semana y el acento del día
      (ritmo.semana.js), que salen de la fecha; sin la semana cargada, la regla de siempre. */
-  var hoy = ritmoHoy();
   /* Las series (15 oct. 2026) eligen cada plato con lo que ya pasó: state-ritmo.series.jsx */
   var mem = typeof ritmoMemoria === 'function' ? ritmoMemoria(s, hoy, R.dia, pasado) : null;
   var m = typeof semanaComponer === 'function'

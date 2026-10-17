@@ -1,0 +1,136 @@
+{
+  "cambios-movil": {
+    "alto": 353,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "igual-movil": {
+    "alto": 266,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "sin-ayuda-movil": {
+    "alto": 281,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-A-junta-movil": {
+    "alto": 387,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-B-1-movil": {
+    "alto": 287,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-B-2-movil": {
+    "alto": 285,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "solo-pregunta-movil": {
+    "alto": 285,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "aprendido-lista-movil": {
+    "alto": 694,
+    "scroll": 27
+  },
+  "aprendido-linea-movil": {
+    "alto": 587,
+    "scroll": 0
+  },
+  "cambios-movil-640": {
+    "alto": 347,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "igual-movil-640": {
+    "alto": 260,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "sin-ayuda-movil-640": {
+    "alto": 275,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-A-junta-movil-640": {
+    "alto": 381,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-B-1-movil-640": {
+    "alto": 281,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-B-2-movil-640": {
+    "alto": 279,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "solo-pregunta-movil-640": {
+    "alto": 279,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "aprendido-lista-movil-640": {
+    "alto": 616,
+    "scroll": 105
+  },
+  "aprendido-linea-movil-640": {
+    "alto": 587,
+    "scroll": 0
+  },
+  "pregunta-A-junta-en-movil-640": {
+    "alto": 381,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "cambios-escritorio": {
+    "alto": 316,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "igual-escritorio": {
+    "alto": 252,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "sin-ayuda-escritorio": {
+    "alto": 267,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-A-junta-escritorio": {
+    "alto": 373,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-B-1-escritorio": {
+    "alto": 273,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "pregunta-B-2-escritorio": {
+    "alto": 271,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "solo-pregunta-escritorio": {
+    "alto": 271,
+    "scroll": 0,
+    "fuera": 0
+  },
+  "aprendido-lista-escritorio": {
+    "alto": 680,
+    "scroll": 12
+  },
+  "aprendido-linea-escritorio": {
+    "alto": 593,
+    "scroll": 0
+  }
+}
