@@ -50,7 +50,7 @@ function pasosDe(rel) {
   while ((m = PASOS.exec(txt))) out.push(m[1]);
   return out;
 }
-const pasosMueve = pasosDe('app/move/move.data.js');
+const pasosMueve = pasosDe('app/move/move.data.js').concat(pasosDe('app/move/move.data.casa.js'));
 const pasosEstira = pasosDe('app/extra/ExtraModule.jsx');
 
 const usos = new Map();   // visualId -> { nombres:Set, rutinas:Set, enRegistro:bool, grupo }

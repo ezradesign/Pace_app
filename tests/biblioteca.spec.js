@@ -45,6 +45,7 @@ function catalogoFuente() {
   const sb = sandbox.nuevoSandbox();
   const errs = [
     sandbox.cargar(ctx, sb, 'app/move/move.data.js', { __M: 'MOVE_ROUTINES' }),
+    sandbox.cargar(ctx, sb, 'app/move/move.data.casa.js'),
     /* s178 · el dato de Estira se troceó en DOS por la regla §1 (`ExtraModule.jsx` llegó a
        553 líneas al entrar las tres rutinas de oficina). Se cargan los dos y se pide el
        objeto del SEGUNDO, que es el que ya lleva los cuatro grupos. Pedirlo del primero
