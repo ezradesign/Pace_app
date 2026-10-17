@@ -14,7 +14,7 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
 - **17 oct.: v0.173.0, el motor de la semana** (`claude/quizzical-chatelet-7a011f`, con el sí de Ez; la
   carta B y lo aprendido en «Tu semana» B). Ez: los ejercicios nuevos llegan con los días diseñados y
   todo se hace en una habitación o el escritorio, sin salir de casa. Lo siguiente: **los días
-  diseñados**, luego el calendario total.
+  diseñados** (encargo en `archivos/encargos-17oct/DIAS_DISENADOS.md`), luego el calendario total.
 - **16 oct., noche: v0.171.4 y v0.172.0.** v0.171.4: los enlaces del pie de Ajustes (en toques.css) y
   la fecha corta en América. v0.172.0 junta, con el sí de Ez, la venta sin Stripe
   (`claude/interesting-meninsky-062638`) y la revisión de los ejercicios (`claude/wonderful-pare-55e168`).
