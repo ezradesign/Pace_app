@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.172.0 · 16 de octubre de 2026.
+**Versión:** v0.173.0 · 17 de octubre de 2026.
 
 ## Dónde estamos
 
@@ -117,6 +117,14 @@ invitación que dice qué trae y que llega con la versión 1. En la web, un **c�
 cerrado: es una licencia firmada que la app comprueba sin servidor (`app/state-licencia.js`). En
 Android no hay códigos propios: llegarán los de Play cuando haya Play Billing.
 
+«A tu ritmo» aprende de tu semana (v0.173.0, el motor de la semana; Ez, 16 y 17 oct.;
+`app/ritmo/ritmo.motor.js`): cada lunes, la primera vez que abres PACE tras una semana con tres días o
+más, una carta en una ventana dice lo que te ayudó, las pausas hechas y como mucho dos cambios con su
+porqué; si además pregunta por tus horas, la pregunta va después del cambio (B de Ez). Lo aprendido
+dura cuatro semanas, llega a las series por su memoria y en Ajustes › «Tu semana» una línea lo enseña
+y cada cosa se olvida (B de Ez). Solo con PACE completo, abierto hasta v1. «Qué te ayuda» en
+Estadísticas ya puede leer `ritmo.aprendido` (sigue sin hacer).
+
 La venta empieza sin Stripe (v0.172.0, Ez, 16 oct.): pacegrass.app/premium es la página de PACE
 completo (opción B, `premium/index.html`), con la lista «Avísame», que se enciende al conectar el KV
 (`docs/launch/avisame.md`). Toda compra pasa por `state-entitlement.jsx`, con una tienda por canal
@@ -159,7 +167,7 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 2. **Lo que hace bueno a PACE antes de cobrar** (Ez, 16 oct.; `DECISIONES_PRODUCTO.md`): a la vez que
    la venta, y en este orden, cada uno en su sesión: **la revisión de todos los ejercicios** con la
    evidencia de hoy (Mueve, Estira y Respira; `docs/traspaso/archivos/encargos-16oct/REVISION_EJERCICIOS.md`),
-   **el motor de la semana** (aprende desde la
+   **el motor de la semana** (hecho en v0.173.0; aprende desde la
    primera semana de los testers), **los días diseñados** (cada día con su intención y rutinas
    medidas; los ejercicios nuevos, todos para una habitación o el escritorio, sin salir de casa, Ez 17 oct.) y **el calendario total en la web** con una función de Cloudflare (espera las altas de
    Ez en Google y Microsoft).

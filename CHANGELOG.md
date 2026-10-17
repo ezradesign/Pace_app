@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.173.0 | 2026-10-17 | «A tu ritmo» aprende de tu semana (PACE completo, abierto hasta v1): cada lunes, una carta en una ventana con lo que te ayudó, las pausas hechas y como mucho dos cambios con su porqué (la rutina que cambias tres veces descansa un mes, la pausa que saltas pasa a 2 minutos, menos Mueve o la pregunta de tus horas); lo aprendido se ve y se olvida en «Tu semana» |
 | v0.172.0 | 2026-10-16 | La venta empieza sin Stripe: la página pacegrass.app/premium (opción B de Ez) en castellano e inglés, la lista «Avísame» lista para encender en Cloudflare, el último paso de la bienvenida con PACE completo (opción A, solo cuando se pueda comprar), «Gratis · lo esencial, siempre» y el punto único de compra. Y la revisión de los ejercicios con la evidencia de hoy: las seis rutinas antiguas al formato de hoy, retoques de seguridad, Espalda de oficina de pie, 4·7·8 en cuatro ciclos y Bhastrika y Kapalabhati por rondas (Ez, 16 oct.) |
 | v0.171.4 | 2026-10-16 | En el móvil, los enlaces «Seguridad» y «Privacidad» del pie de Ajustes se tocan mejor (de 15 a 27 px, el dibujo no cambia). Una fecha corta escrita como clave ya no sale un día antes en América |
 | v0.171.3 | 2026-10-16 | «A tu ritmo» ya no junta el final del día en un bloque largo por la pausa larga: si no cabe, la última pausa es corta. «Dos horas» con el aro a 25 es 25 · P · 25 · P · 25 · P · 25, y la tarde de la jornada con el aro a 20 o 25, igual (Ez, 16 oct.) |
