@@ -1,11 +1,13 @@
 PACE · Auditoría y diseño del sistema de producto
-Estado: GOBIERNA — nivel 1 (dirección integral de producto).
-Índice de autoridad documental: docs/product/AUDITORIA_DOCUMENTAL.md.
+Estado: HISTORIA desde el 18 de octubre de 2026 (sin tocar desde el 30 de julio). Qué documento manda
+hoy lo dice la tabla «Dónde vive cada cosa» de `CLAUDE.md`; las decisiones de producto viven en
+`docs/product/DECISIONES_PRODUCTO.md`, que gana si este archivo dice otra cosa.
+Índice de autoridad documental de entonces: docs/product/AUDITORIA_DOCUMENTAL.md (también historia).
 Fecha de creación: 2026-07-27.
 AVISO (s130): existe una copia anterior de este documento fuera del repositorio
 («AUDITORIA_SISTEMA_PACE_PRE_REPO_2026-07-27.md»). Es un snapshot PREVIO: le faltan el §37,
 el §32.6 y todas las anotaciones de sesión. Este archivo es su superconjunto y el único que
-gobierna. No hay ninguna decisión que exista solo en esa copia (verificado por diff en s130).
+gobernaba. No hay ninguna decisión que exista solo en esa copia (verificado por diff en s130).
 Referencia técnica inicial: v0.66.0 · main · commit 9a126257d69e5d50d0ac71f3400e81743a6f2a05.
 Estado técnico revisado: v0.67.0 · main · commit 43417f34727f1ff306cca20a5aa77cebb48cdbcb.
 Última actualización de decisiones: ronda M1–M4 (métricas, check-in, ritmo y arquitectura de Stats) — ver §37.
@@ -14,7 +16,7 @@ porque se había añadido sin repensarse; el usuario lo cerró decisión a decis
 Propósito: reunir las decisiones de producto, UX, gamificación, Caminos, Travesías, Respira, premium, logros y dirección visual para que no dependan del contexto de una conversación.
 Importante: este documento describe decisiones y propuestas. No implica que todas estén implementadas.
 
-Jerarquía de documentos (de la dirección a la ejecución):
+Jerarquía de documentos hasta octubre de 2026 (de la dirección a la ejecución; ya no vale):
 1. AUDITORIA_SISTEMA_PACE.md (este archivo): dirección integral y decisiones de producto.
 2. docs/product/DECISIONES_PRODUCTO.md: decisiones técnicas/productivas ya destiladas para ejecución.
 3. STATE.md: presente, siguiente sesión y backlog inmediato.

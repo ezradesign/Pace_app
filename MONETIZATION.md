@@ -1,8 +1,9 @@
 # PACE · Modelo de monetización
 
-> **GOBIERNA el detalle comercial y técnico de la licencia**, subordinado al §20 del
-> [audit](./docs/product/AUDITORIA_SISTEMA_PACE.md), que fija la dirección. Índice de autoridad:
-> [`docs/product/AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md).
+> **Manda en el detalle comercial y técnico de la licencia.** Las decisiones de producto viven en
+> [`docs/product/DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md), y qué documento
+> manda en cada cosa lo dice la tabla «Dónde vive cada cosa» de [`CLAUDE.md`](./CLAUDE.md).
+> `AUDITORIA_SISTEMA_PACE.md` y `AUDITORIA_DOCUMENTAL.md` son historia.
 
 ## CAMBIO DE EZ, 15 OCT. 2026: DOS PLANES (esto manda sobre el bloque de s134)
 
@@ -24,12 +25,14 @@ completo»).
 
 ## PRECIO Y ESTRUCTURA — CERRADO en s134 (en parte sustituido: ver el bloque de arriba)
 
-**Al lanzamiento hay UN solo plan: Lifetime 19,99 €.**
+**Al lanzamiento hay UN solo plan: Lifetime 19,99 €.** *(Ya no vale: desde el 15 oct. 2026 son dos
+planes, bloque de arriba.)*
 
 - **Formato de licencia con `expiresAt` OPCIONAL desde el día uno.** Si a los ~3 meses la
   monetización no funciona, añadir un pase temporal es **un cambio de datos, no de
   arquitectura**. Esa previsión es el seguro; no implica construir nada más ahora.
-- **Mensual DESCARTADO.** Sin cuentas y sin renovación automática —las dos cosas que el proyecto
+- **Mensual DESCARTADO** *(ya no vale: el mensual de 2,99 € de arriba se renueva solo con la
+  función, sin pegar un código cada mes)*. Sin cuentas y sin renovación automática —las dos cosas que el proyecto
   se niega a tener— un mensual obliga a **volver a comprar y pegar una clave nueva cada mes**:
   doce fricciones al año por 2,99 €. No es un plan de precios, es una fuga.
 - **Si algún día llega un pase anual, va a 9,99 €, no a 4,99 €.** A 4,99 € sale al 25 % del
@@ -56,13 +59,13 @@ decisión de arriba.
 
 # ⚠️ A PARTIR DE AQUÍ: HISTÓRICO — NO GOBIERNA (marcado en s149)
 
-> **Nada de lo que sigue describe lo que se va a vender.** Al lanzamiento hay **un solo plan,
-> Lifetime 19,99 €** (bloque de arriba, cerrado en s134). Este apartado se conserva **entero y sin
-> recortar** porque su ingeniería de licencia —clave firmada, `expiresAt` opcional, validación
-> offline sin backend— es la que se va a construir, y porque un pase temporal futuro sería «un
-> cambio de datos, no de arquitectura». Pero **las cuatro vías, los precios y la tabla de
-> convivencia son historia**: el Pase mensual está **descartado** y las Temporadas **no entran en
-> v1**.
+> **Nada de lo que sigue describe lo que se va a vender.** Al lanzamiento hay **dos planes: 2,99 € al
+> mes con 7 días gratis, o 19,99 € de por vida** (el primer bloque de arriba, Ez 15 oct. 2026). Este
+> apartado se conserva **entero y sin recortar** porque su ingeniería de licencia —clave firmada,
+> `expiresAt` opcional, validación offline— es la que se ha construido, y porque un pase temporal
+> futuro sería «un cambio de datos, no de arquitectura». Pero **las cuatro vías, los precios y la
+> tabla de convivencia son historia**: el Pase mensual de 3,99 € sin renovación está **descartado**
+> (el mensual de hoy es otro y se renueva solo) y las Temporadas **no entran en v1**.
 >
 > Se marca en s149 al triar la auditoría integral, que lo señaló como contradicción documental: el
 > archivo abría con la decisión correcta y a los treinta renglones vendía cuatro vías como si
@@ -85,6 +88,10 @@ decisión de arriba.
 
 ## 🎯 Filosofía
 
+> **Histórico (s21).** «No se alquila» ya no describe a PACE: desde el 15 oct. 2026 hay un mensual
+> de 2,99 € que se renueva solo, junto al de por vida. Lo que sigue en pie es la falta de presión: lo
+> gratis sigue gratis, la app avisa dos días antes de que acabe la prueba y se cancela en dos toques.
+
 PACE no es un SaaS. No se alquila. La suscripción mensual clásica
 (con renovación automática y validación contra servidor) choca con
 el tono artesanal del producto ("antídoto a la silla", "libreta de
@@ -103,11 +110,12 @@ un servicio del que depender.
 
 ## 💰 Modelo · 4 vías · **HISTÓRICO**
 
-> Al lanzamiento se vende **solo la vía 1**, a **19,99 €** (no «~20 €»). Las vías 2 y 3 están
-> retiradas; la 4 (donaciones BMC) sigue viva y es la única de este bloque que describe el
-> presente.
+> Al lanzamiento se venden **dos planes** (el primer bloque de arriba, 15 oct. 2026): la vía 1, a
+> **19,99 €** (no «~20 €»), y un mensual de 2,99 € con 7 días gratis que se renueva solo y que no
+> es la vía 2. Las vías 2 y 3 están retiradas; la 4 (donaciones BMC) sigue viva en la web hasta v1: ese día sale, como ya
+> pasa en Android (Ez, 18 oct. 2026).
 
-### 1. Pago único · **Lifetime** — **la única vigente**, a 19,99 €
+### 1. Pago único · **Lifetime** — **vigente**, a 19,99 €, junto al mensual de 2,99 €
 **~20 €** — compra una vez, desbloquea todo el contenido actual
 premium de por vida. Sin renovaciones, sin expiraciones.
 

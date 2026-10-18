@@ -17,6 +17,25 @@
 
 ---
 
+## La cuenta de todo lo que falta por dibujar (la única)
+
+A 18 oct. 2026, v0.173.0. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
+repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
+
+| Qué | Cuántos | Cuáles, y dónde están sus prompts |
+|---|---|---|
+| Ejercicios sin dibujo | **3** | La tabla de abajo. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
+| Ejercicios con el dibujo equivocado | **5** | Hueco en silla, 90/90, Palmas al suelo, Apretar glúteos y Sentadilla de cuádriceps (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1) |
+| Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3 |
+| Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3) |
+| **Total** | **30** | |
+
+Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
+invierno y Cuarto creciente (v0.165.0) y Barbilla atrás (v0.170.1). Los días diseñados, cuando
+lleguen, pueden pedir más: se suman aquí.
+
+---
+
 ## Lo que hay que dibujar, por orden
 
 | # | Archivo | ¿Dónde sale? | Hoy se ve como |

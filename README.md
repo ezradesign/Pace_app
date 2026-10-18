@@ -20,16 +20,16 @@ guiadas.
 | Módulo | Qué hace |
 |---|---|
 | **Foco** | Pomodoro configurable (15 / 25 / 35 / 45 min) con ciclos y pausas |
-| **Respira** | 20 técnicas de breathwork (coherencia, box, 4-7-8, Wim Hof-like, pranayama) |
-| **Mueve** | 14 rutinas de movilidad (caderas, hombros, ATG, ancestral, cuello, escritorio) |
-| **Estira** | 14 rutinas de calistenia discreta de oficina |
+| **Respira** | 20 técnicas de breathwork (coherencia, box, 4-7-8, Wim Hof-like, pranayama), 13 gratis |
+| **Mueve** | 15 rutinas de fuerza discreta de oficina (empuje y tracción, sigilo, piernas, espalda y core), 9 gratis |
+| **Estira** | 18 rutinas de movilidad (oficina, hombros y columna, caderas y piernas, flujos), 12 gratis |
 | **Hidrátate** | Tracker de vasos de agua |
-| **Caminos** | 7 recorridos guiados que encadenan pasos de foco, respiración, cuerpo e hidratación sobre una lámina ilustrada |
+| **Caminos** | 7 recorridos guiados sobre una lámina ilustrada, ocultos hasta después de v1 (no se ha borrado nada) |
 | **Logros** | 96 sellos coleccionables estilo libreta de campo |
-| **Ritmo** | Estadísticas por semana · mes · año (heatmap) · Caminos |
+| **Estadísticas** | Hoy · semana · mes · año (heatmap) |
 
-Además: **onboarding** de primera vez que propone tu primer Camino, **constructor de
-rutinas propias**, y **PWA** instalable que funciona sin conexión.
+Además: una **bienvenida** que pregunta cómo es tu semana, el **constructor de rutinas
+propias** y una **PWA** instalable que funciona sin conexión.
 
 ---
 
@@ -39,15 +39,15 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 |---|---|
 | A tu ritmo | La home pregunta «¿cuánto trabajas hoy?» y sirve la jornada: bloques de foco y pausas con nombre, según tu horario, y al acabar cada bloque el aviso del sistema te dice qué pausa toca. La carta sigue a un toque |
 | Módulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
-| Caminos | Sistema completo: biblioteca, runner por pasos, pantalla de cierre, stats y heatmap anual |
+| Caminos | Sistema completo (biblioteca, runner por pasos, cierre, stats y heatmap anual), oculto hasta después de v1 con `SHOW_CAMINOS` en `app/flags.js` |
 | Contenido de cuerpo | Contrato de pasos v1 (modo, lateralidad, dosis, requisitos) + preview «antes de empezar» |
-| Logros | 96 en catálogo · 88 con detector activo · 77 con arte propio |
+| Logros | 96 en catálogo · 88 con detector activo · 78 con arte propio |
 | i18n | ES/EN completo, catálogos troceados por dominio |
 | PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
-| Premium | Guard central de entitlement listo; la licencia real aún no existe |
+| PACE completo | Lo de pago pasa por un solo punto (`app/state-entitlement.jsx`); la licencia firmada existe desde v0.157.0 y hoy la llevan los códigos de los testers; la página `/premium` está publicada. Hasta v1, todo abierto |
 | Robustez | Un dato guardado roto se repara solo (y lo ilegible queda en una copia de rescate) · los diálogos y las sesiones gestionan el foco y el teclado · la pantalla no se apaga en una sesión guiada · si una parte falla, se cierra solo esa parte (con una pantalla de rescate como último recurso) |
-| Código | 154 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
-| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión · `npm run test:e2e` — 323 pruebas en un navegador real |
+| Código | 196 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
+| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión · `npm run test:e2e` — 733 pruebas en un navegador real (708 en Chromium y 25 en el motor de Safari) |
 
 ---
 
@@ -132,7 +132,7 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ solo para compilar.
     ├── breathe/     (visual, biblioteca, sesión guiada)
     ├── move/ · extra/   (Mueve y Estira + runner de pasos v1)
     ├── hydrate/ · breakmenu/ · achievements/ · stats/
-    ├── paths/       (Caminos: registro, runner, láminas, pasos)
+    ├── paths/       (Caminos, ocultos hasta después de v1: registro, runner, láminas, pasos)
     ├── custom/      (constructor de rutinas propias)
     ├── onboarding/ · support/ · tweaks/
     ├── glyphs/      (arte de ejercicios y de logros)
@@ -162,12 +162,14 @@ manual persiste y siempre gana después.
 
 ## 💛 Gratuito y Premium
 
-El **núcleo de PACE es gratuito** y seguirá estándolo: los cinco módulos, los ciclos
-de foco, los logros y las estadísticas.
+El **núcleo de PACE es gratuito** y seguirá estándolo: el Foco entero, «A tu ritmo» de
+cada día, 34 rutinas, Hidrátate, los logros y las estadísticas de hoy y de la semana.
 
-**Premium** ampliará rutinas, técnicas y Caminos mediante una **compra única** —
-sin suscripción y sin cuenta obligatoria. **v1.0 será la primera versión pagada**;
-hasta entonces el sistema de licencia no existe y todo lo construido es accesible.
+**PACE completo** añade las 19 rutinas más hondas, tus propias rutinas, una semana que
+aprende de ti y tu mes y tu año. Habrá dos planes, **2,99 € al mes con 7 días gratis o
+19,99 € de por vida**, sin crear una cuenta. **v1.0 será la primera versión de pago**;
+hasta entonces todo lo construido está abierto. La licencia ya existe (v0.157.0): un
+código firmado que la app comprueba por su cuenta y que hoy llevan los testers.
 
 ---
 
@@ -204,7 +206,7 @@ La Elastic License 2.0 cubre el **código fuente** del repositorio. La licencia
 compilado para habilitar contenido y funciones premium. Ver
 [`MONETIZATION.md`](./MONETIZATION.md) para el detalle del modelo — con la
 advertencia de que su parte histórica está marcada como tal: al lanzamiento hay
-**un solo plan**, no cuatro vías.
+**dos planes** (2,99 € al mes o 19,99 € de por vida), no cuatro vías.
 
 ### Otros usos
 

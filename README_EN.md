@@ -19,16 +19,16 @@ micro-breaks for breathing, mobility and hydration, chained into guided routines
 | Module | What it does |
 |---|---|
 | **Foco** (Focus) | Configurable Pomodoro (15 / 25 / 35 / 45 min) with cycles and breaks |
-| **Respira** (Breathe) | 20 breathwork techniques (coherence, box, 4-7-8, Wim Hof-like, pranayama) |
-| **Mueve** (Move) | 14 mobility routines (hips, shoulders, ATG, ancestral, neck, desk) |
-| **Estira** (Stretch) | 14 discreet office calisthenics routines |
+| **Respira** (Breathe) | 20 breathwork techniques (coherence, box, 4-7-8, Wim Hof-like, pranayama), 13 free |
+| **Mueve** (Move) | 15 discreet office strength routines (push and pull, stealth, legs, back and core), 9 free |
+| **Estira** (Stretch) | 18 mobility routines (office, shoulders and spine, hips and legs, flows), 12 free |
 | **Hidrátate** (Hydrate) | Water glass tracker |
-| **Caminos** (Paths) | 7 guided journeys chaining focus, breathing, body and hydration steps over an illustrated plate |
+| **Caminos** (Paths) | 7 guided journeys over an illustrated plate, hidden until after v1 (nothing has been deleted) |
 | **Logros** (Achievements) | 96 collectible field-notebook stamps |
-| **Ritmo** (Stats) | Week · month · year (heatmap) · Paths |
+| **Estadísticas** (Stats) | Today · week · month · year (heatmap) |
 
-Plus: a first-run **onboarding** that suggests your first Path, a **custom routine
-builder**, and an installable **PWA** that works offline.
+Plus: a **welcome** that asks what your week looks like, a **custom routine builder**,
+and an installable **PWA** that works offline.
 
 ---
 
@@ -38,15 +38,15 @@ builder**, and an installable **PWA** that works offline.
 |---|---|
 | At your pace | The home asks "how long are you working today?" and serves the whole day: focus blocks and named breaks, around your schedule, and when a block ends the system notification tells you which break is next. The full menu is one tap away |
 | Core modules | Focus · Breathe · Move · Stretch · Hydrate — stable |
-| Paths | Complete system: library, step runner, completion screen, stats and yearly heatmap |
+| Paths | Complete system (library, step runner, completion screen, stats and yearly heatmap), hidden until after v1 with `SHOW_CAMINOS` in `app/flags.js` |
 | Body content | Step contract v1 (mode, sidedness, dosage, requirements) + "before you start" preview |
-| Achievements | 96 in catalog · 88 with an active detector · 77 with dedicated artwork |
+| Achievements | 96 in catalog · 88 with an active detector · 78 with dedicated artwork |
 | i18n | Full ES/EN, catalogs split by domain |
 | PWA | `manifest.webmanifest` + service worker with precache; self-hosted fonts, zero external requests |
-| Premium | Central entitlement guard in place; the real license does not exist yet |
+| PACE Complete | Everything paid goes through a single point (`app/state-entitlement.jsx`); the signed license exists since v0.157.0 and today it ships in the testers' codes; the `/premium` page is live. Until v1, everything is open |
 | Robustness | A broken saved field repairs itself (anything unreadable is kept in a rescue copy) · dialogs and sessions manage focus and keyboard · the screen stays on during a guided session · if one part fails, only that part closes (with a recovery screen as a last resort) |
-| Code | 154 code files under `app/` (.js, .jsx, .css), none above 500 lines |
-| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence · `npm run test:e2e` — 323 tests in a real browser |
+| Code | 196 code files under `app/` (.js, .jsx, .css), none above 500 lines |
+| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence · `npm run test:e2e` — 733 tests in a real browser (708 in Chromium and 25 in Safari's engine) |
 
 ---
 
@@ -131,7 +131,7 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ for building only.
     ├── breathe/     (visual, library, guided session)
     ├── move/ · extra/   (Move and Stretch + step runner v1)
     ├── hydrate/ · breakmenu/ · achievements/ · stats/
-    ├── paths/       (Paths: registry, runner, plates, steps)
+    ├── paths/       (Paths, hidden until after v1: registry, runner, plates, steps)
     ├── custom/      (custom routine builder)
     ├── onboarding/ · support/ · tweaks/
     ├── glyphs/      (exercise and achievement artwork)
@@ -161,13 +161,15 @@ persists and always wins afterwards.
 
 ## 💛 Free and Premium
 
-The **core of PACE is free** and will stay that way: all five modules, focus cycles,
-achievements and stats.
+The **core of PACE is free** and will stay that way: the whole Focus, «A tu ritmo» (At
+your pace) every day, 34 routines, Hydrate, achievements and the stats for today and
+the week.
 
-**Premium** will extend routines, techniques and Paths through a **one-time
-purchase** — no subscription, no mandatory account. **v1.0 will be the first paid
-version**; until then the license system does not exist and everything built is
-accessible.
+**PACE Complete** adds the 19 deeper routines, your own routines, a week that learns
+from you and your month and year. There will be two plans, **€2.99 a month with a
+7-day free trial or €19.99 for life**, with no account to create. **v1.0 will be the
+first paid version**; until then everything built is open. The license already exists
+(v0.157.0): a signed code the app checks on its own, which the testers carry today.
 
 ---
 
@@ -202,8 +204,8 @@ The PACE **source code** is published under the [Elastic License 2.0](./LICENSE)
 Elastic License 2.0 covers the repository **source code**. The **Premium** license is
 a **separate** commercial license applied to the compiled product to unlock premium
 content and features. See [`MONETIZATION.md`](./MONETIZATION.md) for the model — with
-the caveat that its historical part is marked as such: at launch there is **a single
-plan**, not four routes.
+the caveat that its historical part is marked as such: at launch there are **two
+plans** (€2.99 a month or €19.99 for life), not four routes.
 
 ### Other uses
 

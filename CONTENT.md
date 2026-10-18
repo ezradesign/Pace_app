@@ -10,24 +10,21 @@
 > 14 rutinas por F6; s91: Estira a 14 por F5; s90: Respira a 20 por F4; s88:
 > columnas `access` fijadas por F3b), no el aspiracional.
 >
-> ⚠️ **DERIVA MEDIDA EN s183, sobre v0.114.0 — 77 versiones después.** La
-> `AUDITORIA_DOCUMENTAL.md` §3 sospechó esta deriva en **s130** y la dejó «a
-> verificar contra código»; han pasado 53 sesiones. **Verificada: existe.**
-> Las cifras vivas, evaluando el objeto y no leyendo el fuente
-> (`scripts/verify.integridad.js:427-439`, y el `verify` las cruza en cada
-> pasada):
+> **Cifras de hoy (v0.173.0, 18 oct. 2026)**, evaluando el objeto y no leyendo el fuente. Los totales
+> los cruza el `verify` en cada pasada (`chequeaContenido` en `scripts/verify.integridad.js`); el
+> reparto entre gratis y de pago se contó con el mismo objeto:
 >
-> | | documento | **medido s183** |
-> |---|---|---|
-> | Respira | 20 | **20** ✓ |
-> | Mueve (ids `extra.*`) | 14 | **14** ✓ |
-> | **Estira** (ids `move.*`) | 14 | **17** ✗ |
-> | Caminos | 7 | **7** ✓ |
+> | | rutinas | gratis | de pago |
+> |---|---|---|---|
+> | Respira | **20** | 13 | 7 |
+> | Mueve (ids `extra.*`) | **15** | 9 | 6 |
+> | Estira (ids `move.*`) | **18** | 12 | 6 |
+> | Caminos | **7** | | ocultos hasta después de v1 |
 >
-> Lo que dice este archivo de Estira más abajo es **historia cierta de F5**, no
-> el estado de hoy: faltan las 3 que entraron después. **Mientras no se rehaga
-> ficha a ficha, el número que manda es el del `verify`, no el de aquí.**
-> Evidencia: `docs/audits/audit-premisas-v0.114.0.md`.
+> Las fichas de abajo se han ido poniendo al día; los apartados de cada fase (F4, F5, F6) cuentan
+> lo que había al cerrarla. Si este archivo y el `verify` no dicen lo mismo, manda el `verify`.
+> La deriva que midió s183 sobre v0.114.0 (Estira 17 frente a 14) está en
+> `docs/audits/audit-premisas-v0.114.0.md`.
 
 ---
 
@@ -385,7 +382,7 @@ gratis**:
 Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):
 
 - **Respira → ~20 técnicas.** ✅ **Hecho en F4 (s90, v0.35.0):** 20 técnicas,
-  8 premium. Entraron diafragmática, exhalación 4·6, rítmica yin, coherente
+  8 premium (hoy 7: `breathe.rounds.express` pasó a gratis en B1.2). Entraron diafragmática, exhalación 4·6, rítmica yin, coherente
   432 (drone forzado), Bhramari, Kumbhaka 1:4:2, tolerancia CO₂ y rondas
   profundas 5×35 (precursora CTB, con modal de seguridad). La experiencia
   **CTB completa** (guion + pista + mockup inmersivo, 20-45 min) queda como

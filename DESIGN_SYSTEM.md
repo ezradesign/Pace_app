@@ -36,7 +36,7 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--paper-3` | `#DFD8C4` | Fondo de cards / modales |
 | `--ink` | `#1F1C17` | Texto principal |
 | `--ink-2` | `#4A453C` | Texto secundario |
-| `--ink-3` | `#8A8372` | Labels, meta, tags |
+| `--ink-3` | `#77705F` | Labels, meta, tags. Desde v0.171.2 (era `#8A8372`): 4,2 a 1 sobre el crema, el punto intermedio que eligió Ez |
 | `--line` | `#C9C0A8` | Bordes, divisores |
 | `--line-2` | `#B8AD8E` | Bordes activos |
 | `--focus` | `#3E5A3A` | Acento Foco |

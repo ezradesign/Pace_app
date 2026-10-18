@@ -616,13 +616,13 @@ primera versión de pago, en web y Android.
 
 ## Decisiones de Ez que siguen en pie
 
-- **v1 = web + Android, pago único 19,99 €.** Gratis: Pomodoro, «A tu ritmo» del día, 32 rutinas,
-  Hidrátate, logros, estadísticas de Hoy. De pago: «A tu ritmo» semanal, 19 rutinas premium, el
-  constructor de rutinas y las estadísticas de semana y año.
-- **Los pagos esperan a cerrar Android** (Fase 6 del `ROADMAP.md`). Ruta prevista: Google Play Billing
-  en Android y, en la web, Lemon Squeezy o Paddle con una clave firmada que se pega en Ajustes. Todo
-  abre un único interruptor, `app/state-entitlement.jsx`. Ez descartó la prueba de pago de 3 días a
-  3,99 €; cuando lleguen los pagos sopesará una prueba gratis de 7 días o una suscripción mensual.
+- **v1 = web + Android, dos planes** (Ez, 15 oct.): 2,99 € al mes con 7 días gratis, o 19,99 € de
+  por vida. Gratis: Pomodoro, «A tu ritmo» del día, 34 rutinas, Hidrátate, logros y las estadísticas
+  de Hoy y de la Semana. De pago (PACE completo): «A tu ritmo» semanal, 19 rutinas premium, el
+  constructor de rutinas y las estadísticas de mes y año.
+- **Cómo se cobra** (Ez, 15 oct.; `DECISIONES_PRODUCTO.md`): en la web, Stripe en modo «vende por ti»
+  y el código lo firma una función de Cloudflare con la llave k2; en Android, Play Billing. Todo abre
+  un único interruptor, `app/state-entitlement.jsx`. Ez descartó la prueba de pago de 3 días a 3,99 €.
 - **Hasta v1 las rutinas premium están abiertas para todos** (`PREMIUM_ABIERTO_HASTA_V1`), con su
   «Premium». El constructor sigue cerrado salvo con código.
 - **PACE completo y el código de por vida de los testers** (8 oct. 2026). Ez eligió la
