@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 17 de octubre de 2026, v0.173.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 18 de octubre de 2026, v0.173.0.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -11,6 +11,12 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **18 oct.: auditoría completa** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
+  https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs), sin tocar código. Esperan a Ez cuatro
+  decisiones (el calendario B del 8 oct. sigue solo en `calendario-reescrita`; qué sale de v1;
+  publicar solo `www/` en pacegrass.app; las donaciones), su sí a la pasada de texto y a borrar 23
+  ramas ya juntadas, y sus cuatro respuestas en «Los días diseñados» (rama
+  `claude/sad-ishizaka-293093`, wip 3ae2dc5). La semanal de esta cuenta, al 86 %: seguir en la otra.
 - **17 oct.: v0.173.0, el motor de la semana** (`claude/quizzical-chatelet-7a011f`, con el sí de Ez; la
   carta B y lo aprendido en «Tu semana» B). Ez: los ejercicios nuevos llegan con los días diseñados y
   todo se hace en una habitación o el escritorio, sin salir de casa. Lo siguiente: **los días

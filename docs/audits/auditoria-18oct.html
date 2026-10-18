@@ -1,0 +1,300 @@
+<title>Auditoría PACE v0.173</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como una carta de PACE: los colores y las letras son los de la app
+   (DESIGN_SYSTEM.md, con el gris de los rótulos de v0.171.2). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6B6454;
+  --line: #D6CDB6; --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --breathe: #A85F44; --breathe-soft: rgba(201, 122, 93, 0.14); --ok: #3E5A3A; --wait: #8A6A1F;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c9bea8; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.13);
+  --breathe: #E8A98F; --breathe-soft: rgba(232, 169, 143, 0.13); --ok: #98B58B; --wait: #D9B866;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c9bea8; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.13);
+  --breathe: #E8A98F; --breathe-soft: rgba(232, 169, 143, 0.13); --ok: #98B58B; --wait: #D9B866;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 860px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px;
+  display: flex; flex-direction: column; gap: 48px; }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 7vw, 54px); line-height: 1.02; }
+h2 { font-size: clamp(27px, 4.4vw, 32px); line-height: 1.1; }
+h3 { font-size: 22px; line-height: 1.15; }
+p { margin: 0; max-width: 66ch; color: var(--ink-2); }
+p b, li b, td b { color: var(--ink); font-weight: 600; }
+code { font-size: 0.86em; background: var(--paper-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 4px; overflow-wrap: anywhere; }
+a { color: var(--focus); }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+section { display: flex; flex-direction: column; gap: 16px; }
+header { display: flex; flex-direction: column; gap: 14px; }
+
+.resumen { display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; list-style: none; max-width: 70ch; }
+.resumen li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; color: var(--ink-2); }
+.resumen li::before { content: ''; width: 9px; height: 9px; border-radius: 50%; margin-top: 8px; background: var(--focus); justify-self: center; }
+.resumen li.alerta::before { background: var(--breathe); }
+
+/* Las seis fases del plan del 5 oct., en una fila que se dobla en el móvil */
+.fases { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 760px) { .fases { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fase { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.fase .n { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.fase .t { font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.1; color: var(--ink); }
+.fase .e { font-size: 13px; color: var(--ink-2); }
+.pill { display: inline-block; align-self: flex-start; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 999px; padding: 2px 9px; font-weight: 600; }
+.pill.hecho { background: var(--focus-soft); color: var(--ok); }
+.pill.medias { background: var(--breathe-soft); color: var(--breathe); }
+.pill.espera { border: 1px solid var(--line); color: var(--wait); }
+
+.critica { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+.critica > div { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.critica .num { font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1; color: var(--breathe); grid-row: span 2; }
+.critica .q { font-weight: 600; }
+.critica .d { color: var(--ink-2); font-size: 15px; }
+
+.decision { border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.decision .opciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 640px) { .decision .opciones { grid-template-columns: minmax(0, 1fr); } }
+.op { border-radius: 12px; padding: 12px 14px; background: var(--paper-2); display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.op.rec { background: var(--focus-soft); outline: 1px solid var(--focus); }
+.op .l { font-weight: 600; color: var(--ink); }
+.op .l small { font-weight: 600; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus); margin-left: 6px; }
+.op p { font-size: 15px; }
+
+.ancho { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 14.5px; min-width: 620px; width: 100%; }
+th, td { text-align: left; vertical-align: top; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--line); }
+thead th { font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+td { color: var(--ink-2); }
+td:first-child { color: var(--ink); white-space: nowrap; }
+.num-tab { font-variant-numeric: tabular-nums; }
+
+details { border-top: 1px solid var(--line); }
+details:last-of-type { border-bottom: 1px solid var(--line); }
+summary { cursor: pointer; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+summary::-webkit-details-marker { display: none; }
+summary .s { font-family: var(--serif); font-style: italic; font-size: 21px; color: var(--ink); }
+summary .c { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+summary .c::after { content: ' +'; }
+details[open] summary .c::after { content: ' –'; }
+details > .dentro { padding-bottom: 18px; display: flex; flex-direction: column; gap: 12px; }
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; max-width: 70ch; color: var(--ink-2); }
+
+.cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 640px) { .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.cifra { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cifra .v { font-family: var(--serif); font-style: italic; font-size: 34px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cifra .k { font-size: 13px; color: var(--ink-3); }
+
+.siguiente { background: var(--focus-soft); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.siguiente ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); max-width: 70ch; }
+.nota { font-size: 13.5px; color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main class="hoja">
+
+<header>
+  <span class="eyebrow">PACE · auditoría completa · 18 oct. 2026 · v0.173.0</span>
+  <h1>Cómo va PACE y qué falta para venderlo</h1>
+  <p>He revisado el código, el CI, las ramas y las sesiones, todos los documentos entre sí y con el código, y la web publicada con un perfil nuevo. Parto de la auditoría del 16 oct., que no encontró fallos graves y cuyo arreglo ya está en <code>main</code>. Esta mira sobre todo la dirección y las contradicciones.</p>
+</header>
+
+<section>
+  <h2>En cinco frases</h2>
+  <ul class="resumen">
+    <li><span><b>El código está sano.</b> <code>verify</code> en verde, el CI en verde en las 20 últimas, las reglas de <code>CLAUDE.md</code> se cumplen y la app publicada no da errores.</span></li>
+    <li><span><b>La dirección es clara y coherente con lo que elegiste:</b> «A tu ritmo» que aprende de tu semana, y preparar la venta. 60 versiones en 13 días.</span></li>
+    <li class="alerta"><span><b>Lo que pone fecha a v1 no es código y está parado:</b> la app no existe aún en Play Console (la prueba cerrada de 14 días no ha empezado), el APK no se ha probado en un móvil, y sin gestor ni Stripe la web no puede vender.</span></li>
+    <li class="alerta"><span><b>El alcance de v1 ha crecido sin sacar nada,</b> y eso rompe la regla del plan del 5 oct. Además, tu opción B del calendario (8 oct.) se quedó en una rama y nunca llegó a la app.</span></li>
+    <li><span><b>Hay unas veinte contradicciones de texto</b> entre documentos, dos de ellas públicas (el README dice «sin suscripción» y /premium dice «32 rutinas»). Se arreglan en una pasada, sin decidir nada.</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2>El plan del 5 oct., fase a fase</h2>
+  <div class="fases">
+    <div class="fase"><span class="n">Fase 1</span><span class="t">Saneamiento</span><span class="pill hecho">Hecha</span><span class="e">Eventos en IndexedDB, Mueve por marcas de tiempo.</span></div>
+    <div class="fase"><span class="n">Fase 2</span><span class="t">Android</span><span class="pill espera">Espera a Ez</span><span class="e">Hecha en código. Falta probarla en un móvil y abrir Play.</span></div>
+    <div class="fase"><span class="n">Fase 3</span><span class="t">A tu ritmo semanal</span><span class="pill medias">Casi</span><span class="e">Motor y carta en v0.173.0. Los días diseñados, en curso.</span></div>
+    <div class="fase"><span class="n">Fase 4</span><span class="t">Estadísticas</span><span class="pill hecho">Hecha</span><span class="e">«Hoy» y «Semana». «Qué te ayuda», sin hacer.</span></div>
+    <div class="fase"><span class="n">Fase 5</span><span class="t">Cerrar lo que hay</span><span class="pill hecho">Cerrada</span><span class="e">Los dibujos que faltan entran si llegan.</span></div>
+    <div class="fase"><span class="n">Fase 6</span><span class="t">Venta</span><span class="pill medias">Empezada</span><span class="e">/premium y «Avísame». Falta lo grande: cobrar.</span></div>
+  </div>
+  <p>Lo que queda de código para v1: los días diseñados, la función que firma con k2, la página de gracias y <code>/recuperar</code>, renovar el mensual, el aviso dos días antes del fin de la prueba, «Gestionar» en Ajustes, el paso a v1 (la semana de prueba y las rutinas premium ya hechas, abiertas para siempre), Play Billing, la valoración tras la quinta pausa y lo legal. Casi todo espera a que existan Stripe y la app en Play.</p>
+</section>
+
+<section>
+  <h2>Lo que fija la fecha de v1</h2>
+  <p>Son tareas tuyas. Mientras no se hagan, más código no acerca el lanzamiento.</p>
+  <div class="critica">
+    <div><span class="num">1</span><span class="q">Crear la app en Play Console y abrir la prueba cerrada</span><span class="d">El AAB firmado ya sale en cada push. Google pide unos 12 testers durante 14 días antes de publicar; si empieza esta semana, Android podría pedir producción hacia el 4 de noviembre. El 5 oct. se dijo «cuanto antes». A la vez, instalar el APK de prueba en tu móvil: nadie lo ha probado en un teléfono desde v0.137.0.</span></div>
+    <div><span class="num">2</span><span class="q">El gestor y la cuenta de Stripe</span><span class="d">Decidiste que la web vende primero. Sin cuenta de Stripe no se puede ni montar en modo de prueba la función que firma, ni la página de gracias.</span></div>
+    <div><span class="num">3</span><span class="q">Volver a exportar el logo</span><span class="d">«TOUCH GRASS. FVFN FROM YOUR DESK» sale en la primera pantalla de la bienvenida y en /premium. Lo vi hoy con un perfil nuevo.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Cuatro cosas para decidir</h2>
+
+  <div class="decision">
+    <span class="eyebrow">1 · Calendario</span>
+    <h3>Tu opción B del 8 oct. no llegó a la app</h3>
+    <p>Elegiste que los bloques fueran a un <b>calendario propio «PACE»</b>, con permisos pequeños en Google, para que tus compañeros no te vean ocupado de 9 a 17 y se pueda ocultar de un clic. Eso se quedó en la rama <code>calendario-reescrita</code>. Lo que hay en <code>main</code> escribe en tu <b>calendario principal y marca todo como ocupado</b>, con el permiso de Google que pide la verificación larga con vídeo. El calendario que se mantiene solo (v0.169.0) se montó encima, y <code>docs/CALENDARIO_ALTAS.md</code> te pide ese permiso grande. Conviene decidirlo antes de tus altas en Google.</p>
+    <div class="opciones">
+      <div class="op rec"><span class="l">Recuperar la B<small>Recomiendo</small></span><p>Una sesión la junta con lo de hoy (que se mantiene solo) y ajusta la guía de altas. Menos permiso, verificación más corta y nadie te ve bloqueado.</p></div>
+      <div class="op"><span class="l">Quedarse como está</span><p>Calendario principal y ocupado. Se borra la rama vieja y se anota que la B se descartó.</p></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <span class="eyebrow">2 · Alcance de v1</span>
+    <h3>Ha entrado trabajo sin que salga nada</h3>
+    <p>La regla del plan dice que nada entra en v1 sin sacar otra cosa. Desde el 5 oct. entraron el calendario que se mantiene solo, <b>el calendario total en la web con un servidor</b>, los días diseñados y el proyecto de iOS. El calendario total es lo más caro: guarda permisos de la gente en un servidor, pide la verificación de Google y tus altas, y obliga a cambiar «sin servidor» en la privacidad, la bienvenida, /premium y la ficha de Play.</p>
+    <div class="opciones">
+      <div class="op rec"><span class="l">Sacar de v1 el calendario total en la web<small>Recomiendo</small></span><p>En Android ya es total con el calendario del móvil. En la web sigue «Mantenerlo al día solo» mientras PACE está abierto. Vuelve después de v1.</p></div>
+      <div class="op"><span class="l">Dejarlo dentro</span><p>Entonces se dice qué sale a cambio, y se escribe en el ROADMAP.</p></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <span class="eyebrow">3 · La web</span>
+    <h3>pacegrass.app publica el repositorio entero</h3>
+    <p>Cloudflare sirve la raíz del repo, así que <code>pacegrass.app/STATE.md</code>, <code>/CLAUDE.md</code>, <code>/docs/traspaso/LEEME.md</code>, las decisiones de producto y las pruebas se abren en el dominio del producto, y se suben 103 MB de fotos de trabajo. No se filtra nada nuevo, porque el repo ya es público en GitHub, pero los buscadores pueden indexar notas internas junto a la página de venta.</p>
+    <div class="opciones">
+      <div class="op rec"><span class="l">Publicar solo la app<small>Recomiendo</small></span><p><code>www/</code> (que ya existe para Android) más <code>premium/</code> y <code>functions/</code>. Es un ajuste en Cloudflare y un paso en el build.</p></div>
+      <div class="op"><span class="l">Dejarlo así</span><p>No rompe nada hoy. Se anota como decisión.</p></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <span class="eyebrow">4 · Donaciones</span>
+    <h3>«Da de pastar a la vaca» cuando ya se venda</h3>
+    <p>En la web sigue el botón de donar. El día que PACE completo se pueda comprar, pedir una donación al lado de un precio puede confundir.</p>
+    <div class="opciones">
+      <div class="op rec"><span class="l">Quitarlo el día de v1 en la web<small>Recomiendo</small></span><p>Como ya pasa en Android. El logro secreto sale del catálogo igual que allí.</p></div>
+      <div class="op"><span class="l">Mantenerlo</span><p>Para quien no quiere suscribirse pero quiere apoyar.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Documentos que se contradicen</h2>
+  <p>Arreglo de texto, sin decidir nada. Con tu sí, una pasada los deja todos al día.</p>
+  <details open>
+    <summary><span class="s">Los que se ven desde fuera</span><span class="c">4</span></summary>
+    <div class="dentro ancho"><table>
+      <thead><tr><th>Dónde</th><th>Qué dice</th><th>Qué es verdad</th></tr></thead>
+      <tbody>
+        <tr><td><code>README.md</code> y el inglés</td><td>Premium como «compra única, sin suscripción»; «la licencia real aún no existe»</td><td>Dos planes desde el 15 oct.; la licencia existe desde v0.157.0</td></tr>
+        <tr><td><code>README.md</code></td><td>Mueve «14 de movilidad», Estira «14 de calistenia», Caminos como módulo y «propone tu primer Camino»</td><td>Al revés y con otras cifras: Mueve es fuerza (15), Estira movilidad (18). Caminos ocultos</td></tr>
+        <tr><td><code>premium/index.html</code></td><td>«32 rutinas» gratis</td><td>34: 13 de Respira, 9 de Mueve y 12 de Estira</td></tr>
+        <tr><td>Ficha de Play</td><td>«no hay servidores de PACE»</td><td>Una regla de s151 prohíbe prometerlo: v1 tendrá la función del mensual</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  <details>
+    <summary><span class="s">El plan y el dinero</span><span class="c">6</span></summary>
+    <div class="dentro ancho"><table>
+      <thead><tr><th>Dónde</th><th>Qué dice</th><th>Qué es verdad</th></tr></thead>
+      <tbody>
+        <tr><td><code>ROADMAP.md:313</code></td><td>«Nunca»: suscripción mensual con renovación automática</td><td>Elegiste 2,99 € al mes con 7 días</td></tr>
+        <tr><td><code>ROADMAP.md</code>, Fases 3, 4 y 6</td><td>Sin su estado</td><td>Fase 4 hecha, motor hecho, /premium hecho</td></tr>
+        <tr><td><code>ROADMAP.md:79, 232</code></td><td>Los Caminos «se quedan como están»; quitarlos de la home, pendiente</td><td>Ocultos hasta después de v1 desde v0.139.0</td></tr>
+        <tr><td><code>ROADMAP.md:149, 302</code></td><td>El <code>.ics</code>, aparcado</td><td>Hecho en v0.140.0</td></tr>
+        <tr><td><code>MONETIZATION.md:59, 88, 106</code></td><td>«Un solo plan»; «PACE no se alquila»</td><td>Dos planes (lo dice el bloque de arriba del mismo archivo)</td></tr>
+        <tr><td><code>ROADMAP.md:222</code></td><td>Sin backend de producto</td><td>El calendario total en la web lo es (decisión 2)</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  <details>
+    <summary><span class="s">Quién manda y el día a día</span><span class="c">9</span></summary>
+    <div class="dentro ancho"><table>
+      <thead><tr><th>Dónde</th><th>Qué dice</th><th>Qué es verdad</th></tr></thead>
+      <tbody>
+        <tr><td><code>AUDITORIA_SISTEMA_PACE.md</code></td><td>«Gobierna, nivel 1», y tres documentos dicen que gana en caso de conflicto</td><td>No se toca desde el 30 jul. y defiende el pago único. Manda la tabla de <code>CLAUDE.md</code>, que ni lo nombra</td></tr>
+        <tr><td><code>STATE.md:181</code></td><td>El motor y la carta «llegan cuando haya semanas de datos»</td><td>Están en v0.173.0</td></tr>
+        <tr><td><code>STATE.md:199</code></td><td>La Fase 6 sin Stripe «sigue en su sesión»</td><td>Hecha en v0.172.0</td></tr>
+        <tr><td><code>STATE.md:142</code></td><td>«Qué te ayuda» espera al motor</td><td>Ya puede hacerse</td></tr>
+        <tr><td><code>STATE.md</code></td><td>259 líneas</td><td>La regla es que quepa en una pantalla</td></tr>
+        <tr><td><code>LEEME.md</code></td><td>717 líneas de relevos</td><td>Se dijo que ya no se escriben diarios; basta el bloque de arriba</td></tr>
+        <tr><td><code>LEEME.md:400</code></td><td>«Ez tiene ya los ids del calendario» (12 oct.)</td><td>En el código siguen vacíos. ¿Los tienes?</td></tr>
+        <tr><td><code>CLAUDE.md:24</code></td><td>La suite no mira el móvil, los Caminos ni el premium</td><td>Sí los mira: 24 archivos de pruebas a 360 px, 28 con Caminos y 24 con lo de pago. Solo los píxeles no</td></tr>
+        <tr><td><code>DESIGN_SYSTEM.md:39</code></td><td>Gris de los rótulos #8A8372</td><td>#77705F desde v0.171.2</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  <details>
+    <summary><span class="s">Catálogo, dibujos y reglas viejas</span><span class="c">3</span></summary>
+    <div class="dentro ancho"><table>
+      <thead><tr><th>Dónde</th><th>Qué dice</th><th>Qué es verdad</th></tr></thead>
+      <tbody>
+        <tr><td><code>CONTENT.md</code></td><td>Estira 17, Respira con 8 de pago</td><td>Estira 18, Mueve 15, Respira 7 de pago</td></tr>
+        <tr><td>Dibujos (4 sitios)</td><td>21, 22, «3 + 18», «59 de 63»…</td><td>Cuatro cuentas distintas; una sola lista bastaría. Los días diseñados añaden dos</td></tr>
+        <tr><td><code>DECISIONES_TECNICAS:237</code></td><td>Eventos «solo diseño»; el «¿te ayudó?» «sin consumidor»</td><td>Eventos desde v0.88.0; el motor lo lee desde v0.173.0</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+</section>
+
+<section>
+  <h2>Código y calidad</h2>
+  <div class="cifras">
+    <div class="cifra"><span class="v">0</span><span class="k">problemas en <code>verify</code></span></div>
+    <div class="cifra"><span class="v">20/20</span><span class="k">CI en verde</span></div>
+    <div class="cifra"><span class="v">~730</span><span class="k">pruebas en un navegador</span></div>
+    <div class="cifra"><span class="v">0</span><span class="k">alertas de seguridad</span></div>
+  </div>
+  <ul class="lista">
+    <li><b>Siete archivos están en el tope de 500 líneas</b> o a punto: <code>state-core.jsx</code>, los dos <code>_responsive</code>, <code>home-geometry.js</code>, <code>TimerDial.jsx</code>, <code>state-ritmo.jsx</code> (492, y los días diseñados lo tocan) y <code>main.jsx</code>. El próximo cambio en ellos obliga a trocear.</li>
+    <li><b>Las pruebas del CI tardan 20 min 38 s y el tope es 25.</b> Crecen unas 20 pruebas por versión; en v0.151.0 ya pasó que GitHub las cortó por tiempo. Partirlas en dos trozos evita que caiga.</li>
+    <li>La app pesa 1,85 MB (533 KB comprimida) y la primera visita descarga 7,2 MB. Sigue abierta la idea de bajar los dibujos de logros y las voces del otro idioma cuando hagan falta.</li>
+    <li>Cabeceras de seguridad comprobadas en pacegrass.app, ninguna llave privada en el repo y los 654 commits firmados por ti.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>La app publicada, hoy</h2>
+  <ul class="lista">
+    <li>Bienvenida en dos pasos, home sin scroll a 360 y a 1280 px, sin errores en la consola, /premium bien en el móvil.</li>
+    <li>El logo con «FVFN» en la primera pantalla (arriba, punto 3).</li>
+    <li>A las 12:40 la home ofrece «Media jornada · de 12:40 a 13:00», veinte minutos. Es lo que decidiste (la media jornada es un horario), pero se lee raro. Lo apunto para cuando se toque la pregunta del día.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Orden y limpieza</h2>
+  <ul class="lista">
+    <li><b>23 ramas</b> cuyo contenido ya está en <code>main</code> (copias de antes de reescribir la historia y la de las series). Se pueden borrar. La del calendario se guarda hasta la decisión 1.</li>
+    <li><b>Unas 25 sesiones de PACE terminadas</b> siguen sin archivar en la barra lateral. La única viva es «Los días diseñados», que <a href="https://claude.ai/artifact/QDPnikTet4DfaMFjQFHazg">espera tus cuatro respuestas</a>.</li>
+    <li>35 borradores de release, cada uno con su AAB; basta con guardar los últimos.</li>
+    <li>El repo pesa 137 MB, 103 de ellos fotos de las páginas de decisión. Como las páginas ya viven como artefactos, las fotos nuevas pueden quedarse fuera de git.</li>
+  </ul>
+</section>
+
+<section class="siguiente">
+  <h2>Lo que haría ahora</h2>
+  <ol>
+    <li><b>Tú:</b> Play Console y la prueba cerrada, el gestor y Stripe, el logo. Y contestar los días diseñados en su sesión.</li>
+    <li><b>Tú:</b> las cuatro decisiones de arriba.</li>
+    <li><b>Una sesión:</b> la pasada de texto que arregla las contradicciones, y partir las pruebas del CI en dos.</li>
+    <li><b>Con tu sí:</b> borrar las 23 ramas y archivar las sesiones terminadas.</li>
+    <li>Después, según lo que decidas: recuperar el calendario B y publicar solo la app.</li>
+  </ol>
+  <p class="nota">Uso: esta cuenta va por el 86 % de la semana (se repone el lunes 20 a las 15:00). Lo que quede de la semana, mejor en la otra cuenta. El cuaderno con las rutas exactas está en <code>docs/audits/auditoria-v0.173.0.md</code>.</p>
+</section>
+
+</main>

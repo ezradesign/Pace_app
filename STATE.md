@@ -195,12 +195,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
 6. **Lo demás que vio Ez el 15 oct.**: el «Ahora no» tapado y las series están en v0.171.0; las
    rondas «más lentas» que no lo eran (Gemelos y Sentadillas), en v0.171.1. Falta la voz del suspiro
    fisiológico, que espera las grabaciones de Ez.
-7. **La auditoría del 16 oct.** (`docs/audits/auditoria-v0.171.0.md`, página para Ez en
-   https://claude.ai/artifact/DJ6B89dpS6NwTor2uoqc17): sin fallos graves. Ez decidió las seis
-   cosas: el gris, las cabeceras y «Tus rutinas» están en v0.171.2; las carpetas de trabajo
-   terminadas, borradas. Siguen en su sesión: **la Fase 6 sin Stripe** (`/premium`, «Avísame», la
-   bienvenida con los dos precios y el punto único de compra; primero opciones para Ez); **«Dos
-   horas» con el aro a 25**, en v0.171.3.
+7. **La auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
+   https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs): el código, sano; lo que fija la fecha de v1
+   es de Ez (Play Console, Stripe, el logo). Esperan su respuesta cuatro decisiones (el calendario
+   B del 8 oct., que no llegó a `main`; qué sale de v1; publicar solo la app en pacegrass.app; las
+   donaciones al vender), la pasada de texto que arregla unas veinte contradicciones entre
+   documentos y borrar 23 ramas ya juntadas. La del 16 oct. (`auditoria-v0.171.0.md`) está cerrada.
 
 ## Espera a Ez
 
