@@ -34,10 +34,21 @@ async function preparar(page) {
     await ctx.resume();
     window.__rampas = [];
     window.__plays = 0;
+    /* `paso` es lo que dura la rampa: desde el `setValueAtTime` que la precede en la
+       misma ganancia. No se mide contra `ctx.currentTime`: el reloj de audio avanza
+       solo, a bloques de ~2,9 ms, y en una máquina cargada se movió 4 bloques entre
+       la lectura de la app y la de la prueba (−6,6 ms en el CI del 18 oct.). */
     const Ganancia = Object.getPrototypeOf(ctx.createGain().gain);
     const lineal = Ganancia.linearRampToValueAtTime;
+    const fijar = Ganancia.setValueAtTime;
+    const ultimoFijado = new WeakMap();
+    Ganancia.setValueAtTime = function (valor, t) {
+      ultimoFijado.set(this, t);
+      return fijar.call(this, valor, t);
+    };
     Ganancia.linearRampToValueAtTime = function (valor, t) {
-      window.__rampas.push({ valor, dt: t - ctx.currentTime });
+      const desde = ultimoFijado.has(this) ? ultimoFijado.get(this) : ctx.currentTime;
+      window.__rampas.push({ valor, paso: t - desde, dt: t - ctx.currentTime });
       return lineal.call(this, valor, t);
     };
     const play = HTMLMediaElement.prototype.play;
@@ -68,8 +79,8 @@ test('con el audio en marcha, cada palabra entra y sale con un fundido de 5 ms y
     expect(x.plays, s + ': sonó por el <audio>, sin fundido').toBe(0);
     /* la primera rampa sube a 1 en 5 ms; la última baja a 0 al final de la palabra */
     expect(x.rampas[0].valor, s + ': no entra con fundido').toBe(1);
-    expect(x.rampas[0].dt).toBeGreaterThan(0.003);
-    expect(x.rampas[0].dt).toBeLessThan(0.008);
+    expect(x.rampas[0].paso, s + ': el fundido de entrada no dura 5 ms').toBeGreaterThan(0.003);
+    expect(x.rampas[0].paso, s + ': el fundido de entrada no dura 5 ms').toBeLessThan(0.008);
     const ultima = x.rampas[x.rampas.length - 1];
     expect(ultima.valor, s + ': no sale con fundido').toBe(0);
     expect(ultima.dt, s + ': el fundido de salida tiene que llegar al final del archivo').toBeGreaterThan(0.5);

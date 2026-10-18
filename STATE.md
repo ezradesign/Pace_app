@@ -33,7 +33,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
    publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. Por
    montar, cada uno en su sesión: «libre» en el calendario (pequeño) y publicar solo la app; el
-   detalle, en el relevo de `docs/traspaso/LEEME.md`. Falta su sí para borrar 23 ramas juntadas.
+   detalle, en el relevo de `docs/traspaso/LEEME.md`. Las ramas ya juntadas, borradas (copia en
+   `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto), y las sesiones terminadas,
+   archivadas.
 
 ## Espera a Ez
 

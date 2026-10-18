@@ -33,9 +33,13 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
      secreto (en los secretos de Cloudflare); guardar en D1, no en KV (KV gratis: 1.000 escrituras
      al día, y Microsoft cambia el permiso en cada uso); en «Pruebas», Google borra el permiso a los
      7 días; `docs/CALENDARIO_ALTAS.md` y `privacy.html` al día.
-  Quedan la tarjeta de la pasada de texto (`pasada-texto-18oct`, solo con el sí de Ez), borrar 23
-  ramas ya juntadas (con su sí) y las cuatro respuestas de Ez en «Los días diseñados» (rama
-  `claude/sad-ishizaka-293093`, wip 3ae2dc5).
+  Hechos con el sí de Ez: la pasada de texto y el e2e en dos trozos (a52fdab); 38 ramas locales y
+  18 remotas ya juntadas, borradas (las 21 que no lo estaban por número, copiadas en
+  `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto); 25 sesiones terminadas,
+  archivadas. Se guardan `calendario-reescrita` (la B del calendario), `origin/claude/play-rutina-subidas`
+  (un commit de permisos que no está en `main`) y la sesión «PACE: series y pausa corta», porque al
+  archivarla se archivaría con ella «Los días diseñados», que espera las cuatro respuestas de Ez
+  (rama `claude/sad-ishizaka-293093`, wip 3ae2dc5).
 - **17 oct.: v0.173.0, el motor de la semana** (`claude/quizzical-chatelet-7a011f`, con el sí de Ez; la
   carta B y lo aprendido en «Tu semana» B). Ez: los ejercicios nuevos llegan con los días diseñados y
   todo se hace en una habitación o el escritorio, sin salir de casa. Lo siguiente: **los días
