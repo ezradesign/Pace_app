@@ -1,8 +1,9 @@
 # Roadmap
 
-> **GOBIERNA el ORDEN de trabajo** (seccion «Camino a v1.0»). El que/por que de producto vive
-> en [`docs/product/AUDITORIA_SISTEMA_PACE.md`](./docs/product/AUDITORIA_SISTEMA_PACE.md).
-> Indice de autoridad: [`docs/product/AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md).
+> **Manda en el ORDEN de trabajo** (sección «Camino a v1.0»). Las decisiones de producto viven en
+> [`docs/product/DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md), y qué documento
+> manda en cada cosa lo dice la tabla «Dónde vive cada cosa» de [`CLAUDE.md`](./CLAUDE.md).
+> `AUDITORIA_SISTEMA_PACE.md` y `AUDITORIA_DOCUMENTAL.md` son historia.
 
 Visión a medio y largo plazo de PACE.
 Para el estado del día a día, ver [`STATE.md`](./STATE.md).
@@ -64,7 +65,7 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 > El anterior a ese, el de s93, en
 > [`docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`](./docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md).
 >
-> Reparto de autoridad: [`AUDITORIA_SISTEMA_PACE.md`](./docs/product/AUDITORIA_SISTEMA_PACE.md)
+> Reparto de autoridad: [`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md)
 > fija el **qué y el por qué** de producto · **este apartado fija el ORDEN** ·
 > [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. La base del giro es la
 > auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
@@ -77,9 +78,10 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
   tal como esté: el plazo de Google corre mientras se trabaja en lo demás.
 - **El producto ha girado al método guiado día a día («A tu ritmo»).** Por eso **Travesías (antigua
   Fase 7) y la reescritura de Caminos (antigua Fase 6) SALEN de v1.** Los 7 Caminos se quedan como
-  están.
-- **Quitar los Caminos de la home NO se hace ahora**: es un cambio visual y queda anotado para una
-  maqueta futura.
+  están y, desde v0.139.0, ocultos hasta después de v1 (`SHOW_CAMINOS` en `app/flags.js`): no se
+  borró nada y un Camino ya empezado se puede terminar.
+- **Quitar los Caminos de la home**: el 5 oct. quedó para una maqueta; se hizo al ocultarlos
+  (v0.139.0).
 - **Sin fecha**, pero con la regla nueva de abajo: el alcance ya no puede crecer.
 
 ### El reparto gratis / pago (Ez, s200)
@@ -146,7 +148,12 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
 Lo que hoy es la Fase 3.6 a lo largo de la semana: **variación por día** (lectura A, ya empezada en
 v0.128.0), **aprende de «¿te ayudó?»** y la **lectura C** de s194 (el sistema enseña qué cambió y
 propone ajustes, con el `origin` de cada sesión que se registra desde v0.124.0). La lectura B
-(planificar la semana de antemano) sigue aparcada. El `.ics` sigue aparcado hasta usar el aviso.
+(planificar la semana de antemano) sigue aparcada. El `.ics` está hecho: «Al calendario» (v0.140.0)
+lleva el día al calendario del móvil, a Google, a Outlook o a un archivo.
+
+**Estado (18 oct. 2026):** el motor de la semana y la carta del lunes, hechos en v0.173.0
+(`app/ritmo/ritmo.motor.js`); los días diseñados, en curso; el calendario total en la web, por
+hacer (espera las altas de Ez en Google y Microsoft).
 
 **Ez, 16 oct. 2026** (`DECISIONES_PRODUCTO.md`, «Lo que hace bueno a PACE antes de cobrar»): el
 motor de la semana se monta ya, sin esperar semanas de datos; entran los **días diseñados** (cada
@@ -161,6 +168,9 @@ s192) y es gratis; «Semana» también es gratis, y el mes, el año y «qué te 
 (8 oct. 2026). Punto de partida: las maquetas de s191
 (`docs/proposals/stats-*`) y [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md).
 
+**HECHA**: «Semana» como la eligió Ez el 13 oct. (v0.160.0) y «Hoy», con Mes y Año de PACE completo,
+en v0.170.0. «Qué te ayuda» sigue sin hacer; desde v0.173.0 ya puede leer `ritmo.aprendido`.
+
 ### FASE 5 · Cerrar con lo que hay
 
 Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir trabajo nuevo:
@@ -172,10 +182,17 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 - **Fase 3.6** («A tu ritmo» del día) — lo que siga en la semana va a la Fase 3 de este plan.
 - **Fase 5** (Respira: voz y música) — lo entregado se queda; el catálogo y la separación Técnicas /
   Viajes quedan fuera.
-- **Los 21 dibujos pendientes** (3 de ejercicio y 18 de logro) **entran si llegan**; si no, la
-  precedencia máscara → SVG → carácter ya cubre el hueco.
+- **Los dibujos pendientes entran si llegan** (la cuenta, solo en
+  [`GLIFOS_A_DIBUJAR.md`](./docs/product/GLIFOS_A_DIBUJAR.md)); si no, la precedencia máscara → SVG →
+  carácter ya cubre el hueco.
 
 ### FASE 6 · Venta
+
+**Estado (18 oct. 2026):** hechos en v0.172.0 la landing `/premium` con la lista «Avísame» y el punto
+único de compra con una tienda por canal (`app/state-compra.js`, hoy vacías). Falta, tras /premium:
+la página de gracias y la firma con k2 en una función, el aviso dos días antes del fin de la prueba,
+«Gestionar» en Ajustes, la invitación con los botones de compra, lo legal de /premium, Play Billing,
+la ficha y el QA de compra.
 
 - **Licencia web**: firmada offline ECDSA P-256 con `expiresAt` opcional + trial explícito.
   **La comprobación y los códigos de tester, HECHOS el 8 oct. 2026** (`app/state-licencia.js`,
@@ -224,19 +241,20 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 ### Fuera de v1 (explícito)
 
 **Travesías** (antigua Fase 7) · **reescritura de Caminos** (antigua Fase 6; los 7 actuales se quedan
-como están) · **Fase 8 Descubrimiento** (onboarding contextual, filtros, reorganización de
+como están, ocultos desde v0.139.0) · **Fase 8 Descubrimiento** (onboarding contextual, filtros, reorganización de
 bibliotecas) · **Viajes de respiración y CTB** (la voz sí está dentro desde s175) · **iOS** ·
 **extensión de Chrome** · **Vite/ESM** (Etapa B del build) · Path Builder público · Modo Retiro ·
 temporadas · versión para empresas · Wrapped.
 
-Pendiente de maqueta, sin fase: **quitar los Caminos de la home**.
+**Quitar los Caminos de la home**: hecho en v0.139.0, al ocultarlos hasta después de v1.
 
 ## 🌱 Medio plazo — tras el bloque
 
-### CTB · Respiración en Trance Consciente (premium)
+### CTB · Respiración en Trance Consciente (premium) · fuera de v1
 Sesiones largas (20-45 min): música ambiental sin voz, respiración
 guiada prolongada, retenciones conscientes, timer silencioso con hitos
-visuales. 4-6 sesiones en el lanzamiento Lifetime. Entregable mínimo
+visuales. 4-6 sesiones cuando llegue: ya no van en el lanzamiento, porque
+CTB salió de v1 en s200 («Fuera de v1», arriba). Entregable mínimo
 antes de código: guion de 1 sesión + pista musical + mockup inmersivo.
 (F4/s90 dejó la precursora `breathe.rounds.long` 5×35 en el catálogo;
 converge con el modo "Retiro".)
@@ -270,9 +288,10 @@ persistencia vía `chrome.storage`.
 > «Camino a v1.0» de este mismo archivo (seis fases desde s200). Se conserva por sus pre-requisitos, que
 > siguen siendo correctos.
 >
-> **Lo que quedó obsoleto**: el precio es **19,99 € Lifetime y UN SOLO PLAN** (s134) — el «~20 € +
-> Pase mensual 3,99 € + Temporadas ~5 €» de abajo describe el modelo de cuatro vías **descartado**,
-> hoy marcado como histórico en [`MONETIZATION.md`](./MONETIZATION.md).
+> **Lo que quedó obsoleto**: el precio de s134 era 19,99 € Lifetime y un solo plan, y desde el 15 oct.
+> 2026 son **dos planes: 2,99 € al mes con 7 días gratis o 19,99 € de por vida** (Fase 6, arriba). El
+> «~20 € + Pase mensual 3,99 € + Temporadas ~5 €» de abajo describe el modelo de cuatro vías
+> **descartado**, hoy marcado como histórico en [`MONETIZATION.md`](./MONETIZATION.md).
 
 Ver [`MONETIZATION.md`](./MONETIZATION.md). ~~Lifetime ~20 € + Pase mensual
 3,99 € + Temporadas ~5 €~~ + donaciones BMC. Validación de **clave firmada
@@ -299,7 +318,7 @@ Cercano a CTB — podrían converger en una sección "sesiones largas".
 ## 💭 Ideas sueltas (explorar / descartar)
 
 - Reloj de escritorio (Electron ligero).
-- Exportar `.ics` del plan del día (sin OAuth, alineado con "todo local").
+- ~~Exportar `.ics` del plan del día~~: hecho en v0.140.0, dentro de «Al calendario».
 - Plugin Notion / Obsidian ("espacio de respiración" entre bloques).
 
 ---
@@ -310,7 +329,9 @@ Cercano a CTB — podrían converger en una sección "sesiones largas".
 - Emojis en la UI.
 - Tracking / analytics sin opt-in explícito.
 - Publicidad o monetización intrusiva.
-- Suscripción mensual clásica con renovación automática (ver `MONETIZATION.md`).
+- Cobrar sin avisar o poner difícil cancelar: la app avisa dos días antes de que acabe la prueba y se
+  cancela en dos toques (Ez, 15 oct. 2026). La suscripción mensual salió de esta lista ese día, cuando
+  Ez eligió 2,99 € al mes con 7 días gratis junto a los 19,99 € de por vida (Fase 6).
 - Consejos médicos sin disclaimer en técnicas de riesgo.
 - Copia literal de listas de rutinas de terceros.
 - Biometría / wearables (decisión s21 — no encaja con el tono artesanal).

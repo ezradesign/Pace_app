@@ -21,8 +21,8 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
 2. Si hay versión nueva, `npm run bump -- X.Y.Z`: cambia a la vez los siete sitios de la versión.
 3. `node build-standalone.js` regenera `index.html`. También reescribe `PACE_standalone.html`, que es un
    export bajo demanda: déjalo como estaba con `git checkout -- PACE_standalone.html`.
-4. `npm run test:e2e`, después del build, para probar el `index.html` que se va a subir. No mira el
-   móvil, los Caminos, el premium ni los píxeles: eso se comprueba a mano, a 360 px y a 1280 px.
+4. `npm run test:e2e`, después del build, para probar el `index.html` que se va a subir. Mira el
+   móvil a 360 px, los Caminos y lo de pago; los píxeles no, y esos se miran a mano a 360 y a 1280 px.
 5. `STATE.md`: cambia lo que haya cambiado, y que siga cabiendo en una pantalla.
 6. `CHANGELOG.md`: una línea por versión nueva.
    Si el cambio cierra un hito, una decisión de Ez o algo que espera a Ez, ponlo al día en
@@ -30,7 +30,7 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
 7. Si nace una regla técnica que evita una regresión, una fila arriba del todo en
    `DECISIONES_TECNICAS_VIGENTES.md`.
 8. Commit sin línea `Co-Authored-By`, con el porqué en el mensaje, y push a `main`.
-9. Espera al CI (`gh run watch`). No está cerrado hasta que `verify` y `e2e` salen en verde.
+9. Espera al CI (`gh run watch`). No está cerrado hasta que `verify` y los dos trozos de `e2e` salen en verde.
 
 Ya no se escriben diarios de sesión, handoffs ni prompts: la historia es `git log`. Lo anterior está en
 `docs/sessions/` y `docs/archive/`, y no se toca. Lo que haya que vigilar se añade al `verify` o a la

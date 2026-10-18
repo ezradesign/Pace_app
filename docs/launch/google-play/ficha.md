@@ -67,7 +67,7 @@ CALMA POR DISEÑO
 Colores tierra, tipografía cuidada y modo oscuro. Sin anuncios, sin rachas que castigan, sin notificaciones insistentes.
 
 TUS DATOS SON TUYOS
-Sin cuenta y sin registro. Todo se guarda en tu móvil: no hay servidores de PACE, ni analítica, ni rastreo. Puedes exportar una copia cuando quieras.
+Sin cuenta y sin registro. Lo que haces en PACE se guarda en tu móvil, sin rastreo, y puedes exportar una copia cuando quieras.
 
 PACE no es un producto sanitario ni sustituye el consejo de un profesional. Si tienes alguna condición médica, consulta antes de hacer los ejercicios de respiración intensa.
 ```
@@ -163,7 +163,7 @@ CALM BY DESIGN
 Earthy colours, careful typography and dark mode. No ads, no streaks that punish you, no nagging notifications.
 
 YOUR DATA IS YOURS
-No account and no sign-up. Everything is stored on your phone: PACE has no servers, no analytics and no tracking. You can export a copy whenever you want.
+No account and no sign-up. What you do in PACE is stored on your phone, with no tracking, and you can export a copy whenever you want.
 
 PACE is not a medical device and does not replace the advice of a professional. If you have any medical condition, check with them before doing the intense breathing exercises.
 ```

@@ -176,7 +176,9 @@ powershell -File scripts/check-session.ps1
 1. `npm ci`
 2. `npx playwright install --with-deps chromium`
 3. **`npm run test:e2e`** — el checklist de cierre de `CLAUDE.md` ejecutado sobre
-   `index.html` en un navegador real (65 tests, ~80 s)
+   `index.html` en un navegador real. Desde el 18 oct. 2026 va en **dos trozos a la vez**,
+   `e2e (1/2)` y `e2e (2/2)`, con `--shard`: entera tardaba 20 min 38 s con un tope de 25.
+   Un trozo se reproduce en local con `npm run test:e2e -- --project=chromium --shard=1/2`
 
 **Por que dos jobs y no uno**: el `verify` son ~5 s sin dependencias y es el paso 2 del
 cierre, del que depende «si falla, no se sigue»; el `e2e` descarga un Chromium de ~115 MB.

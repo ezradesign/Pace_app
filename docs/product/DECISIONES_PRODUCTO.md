@@ -1,7 +1,7 @@
 # PACE · Decisiones de evolución de producto
 
-> **GOBIERNA — nivel 2 (ejecución destilada).** Índice de autoridad:
-> [`AUDITORIA_DOCUMENTAL.md`](./AUDITORIA_DOCUMENTAL.md).
+> **Manda en las decisiones de producto.** Qué documento manda en cada cosa lo dice la tabla
+> «Dónde vive cada cosa» de [`CLAUDE.md`](../../CLAUDE.md).
 >
 > **Canónico de la evolución post-v0.51.0.** Destilado de los documentos de
 > evolución ([`docs/archive/PACE_EVOLUTION_CONTEXT.md`](../archive/PACE_EVOLUTION_CONTEXT.md)
@@ -13,11 +13,9 @@
 > auditoría completa. Se actualiza al cerrar cada sesión del plan
 > (sustituir, no acumular — mismo contrato que STATE.md).
 >
-> **Jerarquía:** la dirección integral de producto vive en
-> [`AUDITORIA_SISTEMA_PACE.md`](./AUDITORIA_SISTEMA_PACE.md) (nivel 1, el «qué/por
-> qué»); este archivo destila el «cómo/cuándo» ejecutable (nivel 2); `STATE.md` fija
-> el presente + siguiente sesión (nivel 3). Si el audit y este archivo divergen en una
-> decisión de producto, gana el audit; en detalle de ejecución, gana este archivo.
+> **Jerarquía:** [`AUDITORIA_SISTEMA_PACE.md`](./AUDITORIA_SISTEMA_PACE.md) y
+> [`AUDITORIA_DOCUMENTAL.md`](./AUDITORIA_DOCUMENTAL.md) son historia: si dicen otra cosa,
+> gana este archivo. `STATE.md` fija el presente y lo siguiente.
 
 ---
 
