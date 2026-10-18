@@ -154,6 +154,11 @@ día con su intención y rutinas medidas) y el **calendario total en la web** co
 Cloudflare solo para eso. La venta (Fase 6) va a la vez, en otra sesión. Las series y la capa 1 de
 «PACE que aprende» ya están (v0.171.0).
 
+**Ez, 18 oct. 2026** (tras la auditoría): del calendario total entra en v1 solo **el llavero** (una
+función que guarda cifrado el permiso y da uno nuevo: con PACE abierto, el día se mantiene solo toda
+la jornada); **lo total con PACE cerrado sale de v1**. Lo de PACE va al calendario como **libre**.
+Detalle en `DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.».
+
 ### FASE 4 · Stats «Hoy» y «Semana»
 
 **Se desaparca la antigua Fase 4.** «Hoy» enseña el menú del día (motivo por el que se aparcó en
@@ -223,6 +228,7 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 
 ### Fuera de v1 (explícito)
 
+**El calendario total en la web con PACE cerrado** (Ez, 18 oct. 2026; el llavero sí entra) ·
 **Travesías** (antigua Fase 7) · **reescritura de Caminos** (antigua Fase 6; los 7 actuales se quedan
 como están) · **Fase 8 Descubrimiento** (onboarding contextual, filtros, reorganización de
 bibliotecas) · **Viajes de respiración y CTB** (la voz sí está dentro desde s175) · **iOS** ·

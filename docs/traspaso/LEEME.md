@@ -11,12 +11,31 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **18 oct.: auditoría completa** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
-  https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs), sin tocar código. Esperan a Ez cuatro
-  decisiones (el calendario B del 8 oct. sigue solo en `calendario-reescrita`; qué sale de v1;
-  publicar solo `www/` en pacegrass.app; las donaciones), su sí a la pasada de texto y a borrar 23
-  ramas ya juntadas, y sus cuatro respuestas en «Los días diseñados» (rama
-  `claude/sad-ishizaka-293093`, wip 3ae2dc5). La semanal de esta cuenta, al 86 %: seguir en la otra.
+- **18 oct.: auditoría completa y lo que decidió Ez** (`docs/audits/auditoria-v0.173.0.md`, página
+  https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs; el calendario, en
+  https://claude.ai/artifact/CBVzMw539HF895eM2HJmbw). Sin tocar código: esta cuenta se quedó al 92 %
+  de la semana (se repone el lunes 20 a las 15:00). **Sigue la otra cuenta** con estos encargos, uno
+  por sesión:
+  1. **«Libre» en el calendario** (pequeño, v0.173.1): `calendarioWebCuerpo` en
+     `app/ritmo/ritmo.calendario.web.js` lleva `transparency: 'transparent'` (Google) y
+     `showAs: 'free'` (Outlook) para crear Y cambiar (hoy `opaque`/`busy` solo al crear, líneas
+     337 y 342); `app/ui/android.js:255` `availability: 1` (el enum del complemento: 0 ocupado, 1
+     libre), y mirar si `modifyEvent` lo acepta; `app/ritmo/ritmo.calendario.js:125`
+     `TRANSP:TRANSPARENT`; las pruebas de `tests/ritmo-calendario.spec.js:277, 391, 395`, rojas
+     antes. PACE encuentra sus eventos por su marca, no por lo ocupado, así que no se pierden.
+  2. **Publicar solo la app**: un `scripts/web-dist.js` (como `android-www.js`) que haga `dist/` con
+     lo de `www/` más `sw.js`, `_headers`, `calendario.html` y `premium/`; `dist/` en `.gitignore`;
+     `verify` comprueba que todo lo que precarga `sw.js` está en `dist/`. Ez cambia en Cloudflare
+     Pages › Settings › Build el comando (`node scripts/web-dist.js`) y la salida (`dist`);
+     `functions/` se lee de la raíz. Comprobar luego que pacegrass.app/STATE.md ya no se sirve
+     (compara el tamaño: una ruta que no existe devuelve el index con 200).
+  3. **El llavero**, cuando Ez haga las altas: el cliente de Google pasa a «aplicación web» con
+     secreto (en los secretos de Cloudflare); guardar en D1, no en KV (KV gratis: 1.000 escrituras
+     al día, y Microsoft cambia el permiso en cada uso); en «Pruebas», Google borra el permiso a los
+     7 días; `docs/CALENDARIO_ALTAS.md` y `privacy.html` al día.
+  Quedan la tarjeta de la pasada de texto (`pasada-texto-18oct`, solo con el sí de Ez), borrar 23
+  ramas ya juntadas (con su sí) y las cuatro respuestas de Ez en «Los días diseñados» (rama
+  `claude/sad-ishizaka-293093`, wip 3ae2dc5).
 - **17 oct.: v0.173.0, el motor de la semana** (`claude/quizzical-chatelet-7a011f`, con el sí de Ez; la
   carta B y lo aprendido en «Tu semana» B). Ez: los ejercicios nuevos llegan con los días diseñados y
   todo se hace en una habitación o el escritorio, sin salir de casa. Lo siguiente: **los días

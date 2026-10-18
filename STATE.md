@@ -197,10 +197,12 @@ para los `*.safari.spec.js` y la home sin scroll, sin sonido (ese WebKit no trae
    fisiológico, que espera las grabaciones de Ez.
 7. **La auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
    https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs): el código, sano; lo que fija la fecha de v1
-   es de Ez (Play Console, Stripe, el logo). Esperan su respuesta cuatro decisiones (el calendario
-   B del 8 oct., que no llegó a `main`; qué sale de v1; publicar solo la app en pacegrass.app; las
-   donaciones al vender), la pasada de texto que arregla unas veinte contradicciones entre
-   documentos y borrar 23 ramas ya juntadas. La del 16 oct. (`auditoria-v0.171.0.md`) está cerrada.
+   es de Ez (Play Console, Stripe, el logo). Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la
+   auditoría del 18 oct.»): la vaca sale de la web el día de v1; pacegrass.app publica solo la app;
+   lo de PACE va al calendario como **libre**; del calendario total, **el llavero** en v1 y lo
+   total después. Por montar, cada uno en su sesión: «libre» en el calendario (pequeño), publicar
+   solo la app (y Ez cambia dos campos en Cloudflare) y, tras las altas de Ez, el llavero. Faltan su
+   sí a la pasada de texto que arregla unas veinte contradicciones y a borrar 23 ramas ya juntadas.
 
 ## Espera a Ez
 

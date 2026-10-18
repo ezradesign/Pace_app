@@ -1,0 +1,262 @@
+<title>El calendario de PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura con los colores y las letras de la app (DESIGN_SYSTEM.md). Las semanas de
+   ejemplo son agendas dibujadas con CSS: lo que ve Ez y lo que ve un compañero, lado a lado. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6B6454;
+  --line: #D6CDB6; --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --breathe: #A85F44; --breathe-soft: rgba(201, 122, 93, 0.16);
+  --reunion: #4E6A8C; --reunion-soft: rgba(78, 106, 140, 0.16); --ocupado: #8B8577;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c9bea8; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.13);
+  --breathe: #E8A98F; --breathe-soft: rgba(232, 169, 143, 0.16);
+  --reunion: #9DB4D2; --reunion-soft: rgba(157, 180, 210, 0.16); --ocupado: #8F8775; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c9bea8; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.13);
+  --breathe: #E8A98F; --breathe-soft: rgba(232, 169, 143, 0.16);
+  --reunion: #9DB4D2; --reunion-soft: rgba(157, 180, 210, 0.16); --ocupado: #8F8775; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px;
+  display: flex; flex-direction: column; gap: 48px; }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 7vw, 52px); line-height: 1.03; }
+h2 { font-size: clamp(27px, 4.4vw, 32px); line-height: 1.1; }
+h3 { font-size: 21px; line-height: 1.15; }
+p { margin: 0; max-width: 66ch; color: var(--ink-2); }
+p b, li b, td b { color: var(--ink); font-weight: 600; }
+code { font-size: 0.86em; background: var(--paper-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 4px; overflow-wrap: anywhere; }
+a { color: var(--focus); }
+a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+section, header { display: flex; flex-direction: column; gap: 16px; }
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; max-width: 70ch; color: var(--ink-2); }
+
+.hecho { border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 640px) { .hecho { grid-template-columns: minmax(0, 1fr); } }
+.hecho > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.hecho .t { font-weight: 600; }
+.hecho p { font-size: 15px; }
+
+/* Las tres agendas: una columna por forma, y dentro, la mañana vista por ti y por un compañero */
+.agendas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .agendas { grid-template-columns: minmax(0, 1fr); } }
+.agenda { border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.agenda.rec { outline: 2px solid var(--focus); outline-offset: -1px; }
+.agenda h3 { font-size: 20px; }
+.agenda .rec-tag { font-family: var(--sans); font-style: normal; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus); font-weight: 600; }
+.dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.col { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.col .quien { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 2px; }
+.ev { font-size: 12px; line-height: 1.25; border-radius: 6px; padding: 4px 6px; border-left: 3px solid transparent; overflow-wrap: anywhere; }
+.ev .h { font-variant-numeric: tabular-nums; color: var(--ink-3); margin-right: 4px; }
+.ev.foco { background: var(--focus-soft); border-left-color: var(--focus); color: var(--ink); }
+.ev.pausa { background: var(--breathe-soft); border-left-color: var(--breathe); color: var(--ink); }
+.ev.reu { background: var(--reunion-soft); border-left-color: var(--reunion); color: var(--ink); }
+.ev.ocup { background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(139, 133, 119, 0.22) 5px 7px); border-left-color: var(--ocupado); color: var(--ink-2); }
+.ev.libre { border: 1px dashed var(--line); border-left: 3px dashed var(--line); color: var(--ink-3); }
+.ev.aparte { background: transparent; border: 1px solid var(--breathe); border-left: 3px solid var(--breathe); color: var(--ink); }
+.agenda .pie { font-size: 14px; color: var(--ink-2); }
+
+.ancho { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 14.5px; min-width: 640px; width: 100%; }
+th, td { text-align: left; vertical-align: top; padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line); }
+thead th { font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+tbody th { font-weight: 600; color: var(--ink); padding-right: 16px; white-space: nowrap; }
+td { color: var(--ink-2); }
+tr.rec td, tr.rec th { background: var(--focus-soft); }
+.si { color: var(--focus); font-weight: 600; }
+.no { color: var(--breathe); font-weight: 600; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.niveles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .niveles { grid-template-columns: minmax(0, 1fr); } }
+.nivel { border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.nivel.rec { outline: 2px solid var(--focus); outline-offset: -1px; }
+.nivel .n { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.nivel h3 { font-size: 22px; }
+.nivel p { font-size: 15px; }
+.nivel .coste { font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1; color: var(--ink); }
+.nivel .coste small { font-family: var(--sans); font-style: normal; font-size: 13px; color: var(--ink-3); margin-left: 4px; }
+
+.pregunta { background: var(--focus-soft); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.pregunta ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); max-width: 70ch; }
+.fuentes { font-size: 13.5px; color: var(--ink-3); display: flex; flex-direction: column; gap: 4px; }
+.fuentes a { color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main class="hoja">
+
+<header>
+  <span class="eyebrow">PACE · «Al calendario» · 18 oct. 2026</span>
+  <h1>Tu calendario y PACE: la opción B y el calendario total</h1>
+  <p>Me pediste que te explicara mejor la opción B y que pensáramos cómo se haría el calendario total y cuánto costaría un servidor. Al mirarlo con calma han salido dos cosas que no sabía el día de la auditoría, y por eso cambio una recomendación.</p>
+</header>
+
+<section>
+  <h2>Lo que ya decidiste</h2>
+  <div class="hecho">
+    <div><span class="t">«Da de pastar a la vaca» se va el día de v1</span><p>Anotado. Hasta v1 se queda en la web; ese día sale, como ya pasa en Android, y su logro secreto con él.</p></div>
+    <div><span class="t">pacegrass.app publicará solo la app</span><p>Lo monta una sesión: una carpeta con la app, /premium y la página de vuelta del calendario. Después tú cambias dos campos en Cloudflare (el comando y la carpeta de salida). Te dejo los pasos exactos cuando esté.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>La opción B, con un ejemplo</h2>
+  <p>Un martes de jornada. Tienes una reunión a las 11:00. PACE te pone foco a las 9:00, una pausa a las 9:35 y otra a las 10:15. Así lo ves tú y así lo ve un compañero que abre tu agenda para buscarte un hueco:</p>
+
+  <div class="agendas">
+    <div class="agenda">
+      <h3>Hoy</h3>
+      <div class="dos">
+        <div class="col"><span class="quien">Tú</span>
+          <div class="ev foco"><span class="h">9:00</span>Foco</div>
+          <div class="ev pausa"><span class="h">9:35</span>Pausa · Cuello</div>
+          <div class="ev foco"><span class="h">9:40</span>Foco</div>
+          <div class="ev pausa"><span class="h">10:15</span>Pausa · Respira</div>
+          <div class="ev reu"><span class="h">11:00</span>Reunión</div>
+        </div>
+        <div class="col"><span class="quien">Tu compañero</span>
+          <div class="ev ocup"><span class="h">9:00</span>Ocupado</div>
+          <div class="ev ocup"><span class="h">9:35</span>Ocupado</div>
+          <div class="ev ocup"><span class="h">9:40</span>Ocupado</div>
+          <div class="ev ocup"><span class="h">10:15</span>Ocupado</div>
+          <div class="ev ocup"><span class="h">11:00</span>Ocupado</div>
+        </div>
+      </div>
+      <p class="pie">PACE escribe en tu calendario de siempre y marca todo como ocupado. Tu compañero no encuentra hueco en todo el día.</p>
+    </div>
+
+    <div class="agenda rec">
+      <h3>En tu calendario, como libre <span class="rec-tag">Recomiendo</span></h3>
+      <div class="dos">
+        <div class="col"><span class="quien">Tú</span>
+          <div class="ev foco"><span class="h">9:00</span>Foco</div>
+          <div class="ev pausa"><span class="h">9:35</span>Pausa · Cuello</div>
+          <div class="ev foco"><span class="h">9:40</span>Foco</div>
+          <div class="ev pausa"><span class="h">10:15</span>Pausa · Respira</div>
+          <div class="ev reu"><span class="h">11:00</span>Reunión</div>
+        </div>
+        <div class="col"><span class="quien">Tu compañero</span>
+          <div class="ev libre"><span class="h">9:00</span>libre</div>
+          <div class="ev libre"><span class="h">9:35</span>libre</div>
+          <div class="ev libre"><span class="h">9:40</span>libre</div>
+          <div class="ev libre"><span class="h">10:15</span>libre</div>
+          <div class="ev ocup"><span class="h">11:00</span>Ocupado</div>
+        </div>
+      </div>
+      <p class="pie">Lo mismo de hoy, pero lo de PACE va como «disponible». Tu compañero solo ve ocupada la reunión. Es una opción nueva, no estaba el 8 oct.</p>
+    </div>
+
+    <div class="agenda">
+      <h3>Calendario propio «PACE» (la B)</h3>
+      <div class="dos">
+        <div class="col"><span class="quien">Tú</span>
+          <div class="ev aparte"><span class="h">9:00</span>Foco · PACE</div>
+          <div class="ev aparte"><span class="h">9:35</span>Pausa · PACE</div>
+          <div class="ev aparte"><span class="h">9:40</span>Foco · PACE</div>
+          <div class="ev aparte"><span class="h">10:15</span>Pausa · PACE</div>
+          <div class="ev reu"><span class="h">11:00</span>Reunión</div>
+        </div>
+        <div class="col"><span class="quien">Tu compañero</span>
+          <div class="ev libre"><span class="h">9:00</span>libre</div>
+          <div class="ev libre"><span class="h">9:35</span>libre</div>
+          <div class="ev libre"><span class="h">9:40</span>libre</div>
+          <div class="ev libre"><span class="h">10:15</span>libre</div>
+          <div class="ev ocup"><span class="h">11:00</span>Ocupado</div>
+        </div>
+      </div>
+      <p class="pie">PACE crea un calendario aparte, como el de «Festivos» o «Cumpleaños», con su color. Se oculta o se borra entero de un clic.</p>
+    </div>
+  </div>
+
+  <div class="ancho"><table>
+    <thead><tr><th></th><th>Hoy</th><th>Tu calendario, como libre</th><th>Calendario propio «PACE»</th></tr></thead>
+    <tbody>
+      <tr><th>Tus compañeros te ven ocupado</th><td><span class="no">Todo el día</span></td><td><span class="si">No</span>, solo tus reuniones</td><td><span class="si">No</span>, solo tus reuniones</td></tr>
+      <tr><th>Ocultarlo de un clic</th><td>No</td><td>No</td><td><span class="si">Sí</span></td></tr>
+      <tr><th>El aviso de cada pausa salta</th><td><span class="si">Sí</span></td><td><span class="si">Sí</span></td><td><span class="no">En Google sí. En el nuevo Outlook, puede que no</span>: hay quien dice que solo avisa del calendario principal</td></tr>
+      <tr><th>Qué permiso pide a Google</th><td>Cambiar los eventos de tus calendarios</td><td>El mismo</td><td>Solo el calendario que crea y saber si estás libre u ocupado</td></tr>
+      <tr><th>La revisión de Google</th><td>La larga (con vídeo)</td><td>La misma</td><td>Quizá más corta: <b>Google no publica si ese permiso es sensible</b> y en su consola a veces ni aparece. Se sabría al darte de alta</td></tr>
+      <tr><th>Trabajo</th><td>Ninguno</td><td>Cambiar «ocupado» por «libre»: un cambio pequeño</td><td>Juntar la rama del 8 oct. con «Mantenerlo al día solo»: una sesión</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>Por qué cambio la recomendación.</b> El 8 oct. recomendé el calendario propio pensando en que tus compañeros no te vieran ocupado. Eso se consigue también con «libre» en tu calendario, sin arriesgar los avisos de las pausas, que elegiste el 14 oct. como lo principal del calendario que se mantiene solo. El calendario propio sigue guardado en su rama: si al darte de alta en Google su permiso resulta no sensible, se puede recuperar.</p>
+</section>
+
+<section>
+  <h2>El calendario total: qué es y qué cuesta</h2>
+  <p>Hoy, en la web, PACE corrige tu calendario solo mientras lo tienes abierto, y Google le da permiso durante una hora (Outlook, un día). Pasado ese rato, si el día cambia, sale «Poner al día». En Android ya es total, porque usa el calendario del móvil. Hacerlo total en la web pide un servidor, y hay dos tamaños:</p>
+
+  <div class="niveles">
+    <div class="nivel">
+      <span class="n">Hoy</span>
+      <h3>Sin servidor</h3>
+      <p>Se corrige solo mientras PACE está abierto y dura el permiso. Luego, «Poner al día» con un toque.</p>
+      <p><b>El servidor guarda:</b> nada.</p>
+      <span class="coste">0 €</span>
+    </div>
+    <div class="nivel rec">
+      <span class="n">Paso 1 · recomiendo para v1</span>
+      <h3>El llavero</h3>
+      <p>Una función pequeña guarda tu permiso cifrado y le da a PACE uno nuevo cada hora. Con PACE abierto en una pestaña, el día se mantiene solo toda la jornada y no vuelve a salir «Poner al día». Con PACE cerrado, lo escrito se queda y los avisos suenan igual.</p>
+      <p><b>El servidor guarda:</b> el permiso, cifrado. Ni tus reuniones ni tu día.</p>
+      <span class="coste">0 €<small>hasta varios miles de personas</small></span>
+    </div>
+    <div class="nivel">
+      <span class="n">Paso 2 · después de v1</span>
+      <h3>Total</h3>
+      <p>Además, con PACE cerrado, el servidor mira tu calendario cada pocos minutos y, si entra una reunión, recoloca las pausas. Para eso tiene que conocer tu horario y tu día, y hacer allí lo que hoy hace la app.</p>
+      <p><b>El servidor guarda:</b> el permiso, tu horario y tu día, y lee las horas de tus reuniones.</p>
+      <span class="coste">5 $<small>al mes, hasta unas 3.000 personas</small></span>
+    </div>
+  </div>
+
+  <div class="ancho"><table>
+    <thead><tr><th>Lo que cuesta de verdad</th><th>El llavero</th><th>Total</th></tr></thead>
+    <tbody>
+      <tr><th>Dinero (Cloudflare)</th><td class="num">0 €: unas 10 peticiones por persona y día; el plan gratis da 100.000 al día</td><td>Unas 100 consultas por persona y día. Con mil personas ya se llega al tope gratis; el plan de 5 $ al mes trae 10 millones al mes y luego 0,30 $ el millón</td></tr>
+      <tr><th>Dónde vive</th><td>En las funciones de pacegrass.app, donde ya está «Avísame»</td><td>Además, un «Worker» aparte con un reloj (las funciones de Pages no tienen reloj), en la misma cuenta y el mismo dominio</td></tr>
+      <tr><th>La revisión de Google</th><td colspan="2">La misma que hace falta hoy para pasar de 100 personas: privacidad, página de inicio, dominio verificado y un vídeo. Gratis, tarda semanas. Mientras la app está en pruebas, Google borra el permiso guardado a los 7 días</td></tr>
+      <tr><th>Microsoft</th><td colspan="2">En muchas empresas el empleado no puede conectar una app a su Outlook del trabajo sin que la apruebe el administrador. Con un «editor verificado» de Microsoft se abre en más empresas; pide darse de alta en su programa de socios</td></tr>
+      <tr><th>Seguridad</th><td>Una lista de permisos para escribir en calendarios ajenos: hay que cifrarla y borrar al desconectar</td><td>Lo mismo y, además, tus horarios y tus reuniones en un servidor</td></tr>
+      <tr><th>Privacidad y promesas</th><td>Una frase en la privacidad: tu permiso se guarda cifrado si conectas el calendario en la web</td><td>Cambia «lo tuyo se queda en tu equipo» en la bienvenida, /premium y la ficha</td></tr>
+      <tr><th>Trabajo</th><td>Una sesión</td><td>Dos o tres sesiones, y vigilarlo después</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>¿Y si Cloudflare no sirviera?</b> El dominio no es el límite: el servidor puede contestar en pacegrass.app aunque viva en otra parte. Un servidor pequeño propio (un VPS en Europa) ronda los 4 a 6 € al mes, pero entonces las actualizaciones, las copias y la seguridad son tuyas. Con lo que necesita PACE, Cloudflare basta y cuesta menos.</p>
+</section>
+
+<section class="pregunta">
+  <h2>Lo que te pregunto</h2>
+  <ol>
+    <li><b>Dónde escribe PACE el día:</b> en tu calendario como libre (recomiendo), en un calendario propio «PACE», o como hoy.</li>
+    <li><b>El calendario total:</b> el llavero dentro de v1 y lo total después (recomiendo), las dos cosas dentro de v1, o nada hasta después de v1.</li>
+  </ol>
+  <p>Las dos esperan a tus altas en Google y Microsoft: sin ellas la web solo ofrece el archivo para el calendario.</p>
+</section>
+
+<section class="fuentes">
+  <span class="eyebrow">Fuentes</span>
+  <a href="https://developers.cloudflare.com/workers/platform/pricing/">Precios de Cloudflare Workers, KV y D1 (consultado el 18 oct. 2026)</a>
+  <a href="https://developers.google.com/workspace/calendar/api/auth">Permisos de la API de Google Calendar</a>
+  <a href="https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification">Revisión de Google para permisos sensibles</a>
+  <a href="https://learn.microsoft.com/en-us/answers/questions/5537285/new-outlook-notifications-are-only-being-sent-from">Microsoft Q&amp;A: el nuevo Outlook solo avisa del calendario principal</a>
+  <a href="https://www.slipstick.com/outlook/reminders-wont-fire-from-all-folders/">Slipstick: avisos de Outlook fuera de la carpeta principal</a>
+</section>
+
+</main>

@@ -21,6 +21,36 @@
 
 ---
 
+## Tras la auditoría del 18 oct. 2026 (Ez)
+
+Sobre `docs/audits/auditoria-v0.173.0.md` (página https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs):
+
+1. **«Da de pastar a la vaca» sale de la web el día de v1**, como ya pasa en Android; su logro
+   secreto sale del catálogo igual que allí. Hasta v1 se queda. Pedir una donación junto a un precio
+   confunde.
+2. **pacegrass.app publica solo la app**: lo de `www/` (la app compilada, la privacidad, la
+   seguridad, el manifiesto, los iconos, las fuentes y los medios de `app/`) más `sw.js`, `_headers`,
+   `calendario.html` y `premium/`, con `functions/` desde la raíz. Los documentos, las pruebas y las
+   fotos de trabajo dejan de servirse en el dominio del producto (el repo sigue público en GitHub).
+   Lo monta una sesión; Ez cambia en Cloudflare Pages el comando de build y la carpeta de salida.
+3. **Lo de PACE va a tu calendario como libre** (elegido sobre
+   `docs/proposals/calendario-total-18oct.html`, https://claude.ai/artifact/CBVzMw539HF895eM2HJmbw):
+   en el calendario principal, como hoy, pero los bloques y las pausas como «disponible» (Google
+   `transparency: 'transparent'`, Outlook `showAs: 'free'`, Android `availability` libre y el `.ics`
+   con `TRANSP:TRANSPARENT`), para que los compañeros solo te vean ocupado en tus reuniones. Los
+   avisos de las pausas siguen saltando. Se descarta por ahora el calendario propio «PACE» (la B del
+   8 oct., rama `calendario-reescrita`): en el nuevo Outlook los avisos de un calendario secundario
+   pueden no saltar, y Google no publica si su permiso pequeño es sensible. Se puede recuperar si al
+   dar de alta PACE en Google ese permiso resulta no sensible.
+4. **El calendario total: el llavero entra en v1 y lo total, después.** El llavero es una función de
+   Cloudflare (junto a «Avísame») que guarda cifrado el permiso de larga duración de Google o de
+   Microsoft y le da a PACE uno nuevo cuando caduca: con PACE abierto, el día se mantiene solo toda
+   la jornada sin «Poner al día». No guarda reuniones ni el día; «Desconectar» lo borra; la
+   privacidad lo cuenta. Gratis en Cloudflare hasta varios miles de personas. Lo total (con PACE
+   cerrado, un Worker con reloj que relee las reuniones y recoloca el día) sale de v1: unos 5 $ al
+   mes con miles de personas, guarda el horario y el día en el servidor y cambia las promesas de
+   «sin servidor». Todo espera a las altas de Ez en Google y Microsoft.
+
 ## Lo que hace bueno a PACE antes de cobrar (Ez, 16 oct. 2026)
 
 Tras la auditoría del 16 oct. Ez fijó la dirección: «aún podemos cerrar el producto todo lo que
