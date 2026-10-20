@@ -89,7 +89,6 @@ Object.assign(window.PACE_STRINGS.es, {
     /* La frase de las series (Ez, 15 oct. 2026: la B, «lo de hoy»), encima del nombre */
     'ritmo.frase.zona':              '{zona}: sin mover hoy',
     'ritmo.frase.sentado':           'Llevas {n} min sentado',
-    'ritmo.frase.comida':            'Después de comer, de pie',
     'ritmo.frase.larga':             'Dos horas: sal de la silla',
     'ritmo.frase.cierre':            'Para cerrar, despacio',
     'ritmo.zona.cuello':             'Cuello',
@@ -224,7 +223,6 @@ Object.assign(window.PACE_STRINGS.en, {
        leave the chair» se partían (medido en la app, docs/traspaso/archivos/series-15oct/). */
     'ritmo.frase.zona':              '{zona}: unmoved today',
     'ritmo.frase.sentado':           '{n} min sitting so far',
-    'ritmo.frase.comida':            'After lunch, on your feet',
     'ritmo.frase.larga':             'Two hours: off the chair',
     'ritmo.frase.cierre':            'To close, slowly',
     'ritmo.zona.cuello':             'Neck',

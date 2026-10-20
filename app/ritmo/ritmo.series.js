@@ -1,34 +1,48 @@
-/* PACE · A tu ritmo · LAS SERIES (Ez, 15 oct. 2026)
-   ===============================================
-   Qué rutina sirve cada parada del día. En «Dos horas», junto a la mesa, casi todas las
-   pausas eran «Escritorio express» y una de cada ocho te levantaba de la silla. Ez eligió
-   mirando la app real (docs/traspaso/archivos/series-15oct/): la forma 2, «series con
-   lógica», con la frase B, y gratis.
+/* PACE · A tu ritmo · LAS SERIES (Ez, 15 oct. 2026; el cuerpo entero, 20 oct.)
+   ==========================================================================
+   Qué rutina sirve cada parada del día. Ez eligió mirando la app real las series con lógica
+   (docs/traspaso/archivos/series-15oct/) y, el 20 oct., que cada día mueva el cuerpo entero
+   «de manera equilibrada y diferente», con las rutinas enteras que ya hay
+   (docs/traspaso/archivos/dias-disenados/, medido con medir/medir-cuerpo.js).
 
    LA SECUENCIA (primero el módulo de cada parada):
-     · la primera pausa del día y la primera después de comer: Mueve, de pie;
+     · la primera pausa del día: Mueve, de pie; después de comer, una como cualquier otra
+       (Ez, 20 oct.: «B · Se quita»);
      · la larga: Respira y una Estira de pie;
      · las cortas, la cadencia de siempre (`it.n`: la de antes de la larga, Mueve; las
        demás, Estira); y si la anterior fue sentada o la saltaste, esta, de pie;
      · el jueves, la última corta antes de comer es Respira (el acento que se queda);
      · el cierre rota entre los Respira lentos de 5 min o menos.
-     Si el módulo no tiene nada de pie y toca levantarse, sirve el otro si lo tiene.
+     Si el módulo no tiene nada mejor para la parada (de pie, corto, sin cargar una zona,
+     sin dejar el cuerpo a medias), sirve el otro si lo tiene.
 
-   LA CAPA 1 DE «PACE QUE APRENDE» (la puntuación): primero se aparta, y solo si queda otra
-   cosa, lo ya hecho hoy (en el plan o fuera), lo que salió en esta parada la última vez y,
-   si toca levantarse, lo sentado. Luego suma: +3 si mueve una zona que hoy no se ha movido,
-   −3 si repite zona con la parada anterior, −1 si la última vez salió en otra parada. Empata
-   la que hace más días que no sale, y después el orden del pozo, que es el del tema de la
-   semana. «Otra» recorre esa lista en orden, también lo apartado.
+   EL CUERPO ENTERO (gratis): las seis zonas de RITMO_ZONAS, repartidas entre las pausas del
+   día. `ritmoSeriesCuenta` sabe cuánto pueden mover aún las paradas que quedan, en su orden
+   (la primera, Mueve de pie; la larga, Estira de pie) y sin dos sentadas seguidas; si van justas, solo vale lo que no
+   deja una zona fuera, aunque sea sentado. Si el cuerpo entero no cabe de ninguna forma
+   («Una hora», «Dos horas» con dos pausas), levantarse manda y después, lo que más mueve; lo
+   que el último día no movió pesa más que las seis juntas, así que va primero.
+
+   LA PUNTUACIÓN (la capa 1 de «PACE que aprende»): primero se aparta, y solo si queda otra
+   cosa, lo ya hecho hoy (en el plan o fuera) y, si toca levantarse, lo sentado. Luego suma
+   +3 si mueve una zona que hoy no se ha movido, −3 si repite zona con la parada anterior y
+   resta las veces que ya se ha movido hoy la más movida de sus zonas: el día, equilibrado.
+   Empata el orden del pozo, que es el del tema de la semana. «Otra» recorre esa lista en
+   orden, también lo apartado.
+
+   LO DIFERENTE (PACE completo, `mem.varia`): lo del último día se aparta (en esta parada y
+   en todas) sin cargar de más una zona, se planea el cuerpo entero con lo que no salió si
+   cabe, −1 si salió en otra parada y empata la que hace más días que no sale. Sin pagar,
+   ninguna de estas cuatro cosas: el cuerpo entero sí, la variedad no.
 
    LA FRASE B, encima del nombre (la pausa y la línea): la razón que más pesó, en `it.frase`
-   — el cierre, después de comer, la larga de unas dos horas, los minutos sentado o la zona
-   sin mover hoy. Sin razón, la de siempre (`it.motivo`).
+   — el cierre, la larga de unas dos horas, los minutos sentado o la zona sin mover hoy. Sin
+   razón, la de siempre (`it.motivo`).
 
    LO APRENDIDO (el motor de la semana, ritmo.motor.js; con PACE completo), en
    `mem.aprendido`: lo que descansa va al final de la lista, como lo apartado; en la pausa
-   que sueles saltar, lo de 2 minutos o menos; lo que te ayudó gana los empates; y con
-   «menos Mueve», la cadencia sirve Estira (la primera y la de después de comer, no).
+   que sueles saltar, lo de 2 minutos o menos; lo que te ayudó suma un punto; y con
+   «menos Mueve», la cadencia sirve Estira (la primera, no).
 
    PURA como la regla: lo que sabe del pasado entra por `mem` (state-ritmo.series.jsx).
    `var` y `function`: el build solo re-expone esos nombres. */
@@ -233,7 +247,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     var t0 = base;
     var sinDescanso = t0.filter(function (r) { return !descansa[r.id]; });
     if (sinDescanso.length) t0 = sinDescanso;
-    if (c.sentada) { var dePie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); }); if (dePie.length) t0 = dePie; }
+    if (c.sentada || c.firme) { var dePie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); }); if (dePie.length) t0 = dePie; }
     if (nuevo) entero(alcanzaNueva);
     if (cabe) entero(alcanza);
     if (c.corta) { var cortos = t0.filter(function (r) { return (r.min || 0) <= c.corta; }); if (cortos.length) t0 = cortos; }
@@ -251,6 +265,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       var z = ritmoSeriesZonas(r.id), p = 0;
       var nueva = z.filter(function (x) { return !movidas[x] && !fuera.z[x]; });
       if (nueva.length) p += 3;
+      if (ayuda[r.id]) p += 1;   /* lo que te ayudó vuelve antes (con PACE completo) */
       var carga = cargaDe(r);
       p -= carga;
       if (previa && z.some(function (x) { return previa.zonas.indexOf(x) !== -1; })) p -= 3;
@@ -288,8 +303,13 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     }
   }
   /* Las paradas que aún mueven el cuerpo: las pausas, menos la de respirar del jueves. */
-  var huecos = m.items.filter(function (it) { return it.tipo === 'pausa' && it !== aireIt; }).map(function (it) {
-    return it.larga ? P.estira || [] : todas;
+  /* La primera del día es Mueve de pie, y la Estira de la larga y la de antes de respirar del
+     jueves, de pie: así las cuenta también lo que queda por mover. */
+  var dePie = function (rs) { return rs.filter(function (r) { return ritmoSeriesDePie(r.id); }); };
+  var huecos = m.items.filter(function (it) { return it.tipo === 'pausa' && it !== aireIt; }).map(function (it, k) {
+    if (it.larga) return dePie(P.estira || []);
+    if (k === 0 && !huboPausa) return dePie(P.mueve || []);
+    return it === antesAire ? dePie(todas) : todas;
   });
   var cuenta = ritmoSeriesCuenta(huecos, pesos), hueco = 0;
   var fresca = varia ? ritmoSeriesCuenta(huecos.map(function (rs) { return rs.filter(function (r) { return !otraVez[r.id]; }); }), pesos) : null;
@@ -311,7 +331,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       var clave = 'p' + (++i);
       var xr = elegir('respira', { clave: key, desde: it.desde }, clave + 'a');
       if (xr) platos.push(plato('respira', xr, clave + 'a'));
-      var xe = elegir('estira', { clave: key, desde: it.desde, levantar: true, hueco: hueco++, sentada: sentada }, clave + 'b');
+      var xe = elegir('estira', { clave: key, desde: it.desde, levantar: true, firme: true, hueco: hueco++, sentada: sentada }, clave + 'b');
       if (xe) platos.push(plato('estira', xe, clave + 'b'));
       it.motivo = 'larga';
       if (it.desde - desdeLarga >= RITMO_SERIES_LARGA) frase = { k: 'larga' };
@@ -326,15 +346,16 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       (ap.cortas || []).forEach(function (k) { if (Math.abs(k.hora - it.desde) <= k.margen) corta = k.min; });
       var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || porPrevia || it === antesAire),
                 cabe: modulo === 'respira' ? it.dur : null, corta: modulo === 'respira' ? null : corta,
-                hueco: modulo === 'respira' ? null : hueco++, sentada: sentada };
+                hueco: modulo === 'respira' ? null : hueco++, sentada: sentada, firme: primera || it === antesAire };
       var x = elegir(modulo, c, claveC);
       /* Toca levantarse y este módulo solo tiene algo sentado, o lo de pie salió aquí la
          última vez, o la pausa es corta y aquí no hay nada tan corto: el otro módulo, si
          tiene algo mejor. Un módulo vacío sirve el otro. */
       var nota = function (z) {
-        return !z ? 9 : z.deja + z.carga / 2 + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
+        /* la primera es Mueve: solo cambia si el cuerpo entero no cabría */
+        return !z ? 9 : (primera ? (z.deja >= 8 ? 8 : 0) : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
       };
-      if (modulo !== 'respira' && (!x || ((c.levantar || c.corta || x.deja || x.hoy || x.carga > 1) && nota(x) > 0))) {
+      if (modulo !== 'respira' && (!x || ((c.levantar || c.corta || x.hoy || (primera ? x.deja >= 8 : x.deja || x.carga > 1)) && nota(x) > 0))) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';
         var y = elegir(otro, c, claveC);
         if (nota(y) < nota(x)) { x = y; modulo = otro; }

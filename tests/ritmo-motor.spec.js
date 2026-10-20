@@ -110,7 +110,7 @@ test('qué cambias con «Otra»: la rutina cambiada tres veces descansa; casi to
   const dos = await motor(page, { dias: semana(S1, (d, i) => { if (i < 2) otra(d, 745, ['move.neck.3']); }) });
   expect(dos.cambios, 'dos veces en la semana no son pruebas').toEqual([]);
   /* Mueve sale tres veces al día: diez de quince cambiadas, y ninguna rutina tres veces. La
-     cadencia son las de las 13:15 y las 16:20 (la primera y la de después de comer, no). */
+     cadencia son las de las 13:15 y las 16:20 (la primera, no). */
   const mueve = await motor(page, { dias: semana(S1, (d, i) => { otra(d, 585, ['extra.a' + i]); otra(d, 795, ['extra.b' + i]); }) });
   expect(mueve.cambios).toEqual([expect.objectContaining({ tipo: 'menos', modulo: 'mueve', mas: 'estira', veces: 10, de: 15, paradas: 10 })]);
   const pocas = await motor(page, { dias: semana(S1, (d, i) => { otra(d, 585, ['extra.a' + i]); if (i < 4) otra(d, 795, ['extra.b' + i]); }) });
