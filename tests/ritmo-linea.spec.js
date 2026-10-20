@@ -179,11 +179,12 @@ test.describe('las fuentes llegan tarde', () => {
        eso recolocaba por casualidad (la pasada de control contra HEAD salió VERDE con 900 ms).
        Con las fuentes detrás de ese re-render, solo la recolocación por fonts.ready cuenta. */
     await context.route('**/*.woff2', async (route) => { await new Promise((r) => setTimeout(r, 2500)); await route.continue(); });
-    /* Un día cuya carta trae «Diafragmática + Cadena posterior de pie», la etiqueta que decide
-       el tercer nivel. Era el lunes 14 de septiembre; con las series (15 oct. 2026) la Estira
-       de la larga es otra cada día, y esa etiqueta sale el miércoles 23. */
-    await sembrar(context, { ritmo: { dia: { fecha: '2026-09-23', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
-    await page.clock.install({ time: new Date('2026-09-23T09:00:00+02:00') });
+    /* Un día cuya carta trae una etiqueta larga en la larga, la que decide el tercer nivel. Era
+       «Diafragmática + Cadena posterior de pie» el lunes 14 de septiembre y, con las series
+       (15 oct. 2026), el miércoles 23; con el cuerpo entero y equilibrado (20 oct.) es
+       «Exhalación 4·6 + Cadena posterior de pie», el domingo 4 de octubre. */
+    await sembrar(context, { ritmo: { dia: { fecha: '2026-10-04', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
+    await page.clock.install({ time: new Date('2026-10-04T09:00:00+02:00') });
     await irAlArtefacto(page);
     await page.waitForTimeout(1800);   /* pasa el re-render de los 1,4 s con la fuente de reserva aún puesta */
     const conReserva = await page.evaluate(() => ({ fuentes: document.fonts.status, zona: document.querySelector('[data-pace-ritmo-estado="menu"].pace-rt-esc .pace-rt-zona').style.height }));

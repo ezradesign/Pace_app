@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.173.2</title>
+  <title>PACE · Foco · Cuerpo — v0.174.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2519,7 +2519,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.gear.cushionOptional': 'cojín opcional',
   'lib.gear.deskOptional': 'mesa opcional',
   'lib.gear.barOptional': 'barra opcional',
-  'lib.gear.bottleOptional': 'botella opcional',
 
 
 
@@ -2566,7 +2565,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'preview.eq.cushionOptional': 'Un cojín, si lo necesitas',
   'preview.eq.deskOptional': 'Una mesa, si la necesitas',
   'preview.eq.barOptional': 'Una barra, si la tienes',
-  'preview.eq.bottleOptional': 'Una botella de agua, si la tienes',
   'preview.eq.floor': 'Sitio para tumbarte en el suelo',
   'preview.pos.standing': 'De pie',
   'preview.pos.seated': 'Sentado',
@@ -2655,7 +2653,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.gear.cushionOptional': 'cushion optional',
   'lib.gear.deskOptional': 'desk optional',
   'lib.gear.barOptional': 'bar optional',
-  'lib.gear.bottleOptional': 'bottle optional',
   'lib.empty.floor.n': 'Every routine in {g} needs the floor.',
   'lib.empty.floor.1': 'The one in {g} needs the floor.',
   'lib.empty.any.n': 'Every routine in {g} falls outside this filter.',
@@ -2686,7 +2683,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.eq.cushionOptional': 'A cushion, if you need one',
   'preview.eq.deskOptional': 'A desk, if you need one',
   'preview.eq.barOptional': 'A bar, if you have one',
-  'preview.eq.bottleOptional': 'A water bottle, if you have one',
   'preview.eq.floor': 'Room to lie on the floor',
   'preview.pos.standing': 'Standing',
   'preview.pos.seated': 'Seated',
@@ -3664,15 +3660,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'ritmo.frase.zona': '{zona}: sin mover hoy',
   'ritmo.frase.sentado': 'Llevas {n} min sentado',
-  'ritmo.frase.comida': 'Después de comer, de pie',
   'ritmo.frase.larga': 'Dos horas: sal de la silla',
   'ritmo.frase.cierre': 'Para cerrar, despacio',
-  'ritmo.frase.tarde': 'La tarde, de pie',
-  'ritmo.frase.dia.arranque': 'Lunes: arrancar de pie',
-  'ritmo.frase.dia.sostener': 'Martes: hombros y cuello',
-  'ritmo.frase.dia.mitad': 'Miércoles: la espalda',
-  'ritmo.frase.dia.aire': 'Jueves: aire y manos',
-  'ritmo.frase.dia.cierre': 'Viernes: soltar caderas',
   'ritmo.zona.cuello': 'Cuello',
   'ritmo.zona.hombros': 'Hombros',
   'ritmo.zona.espalda': 'Espalda',
@@ -3805,15 +3794,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'ritmo.frase.zona': '{zona}: unmoved today',
   'ritmo.frase.sentado': '{n} min sitting so far',
-  'ritmo.frase.comida': 'After lunch, on your feet',
   'ritmo.frase.larga': 'Two hours: off the chair',
   'ritmo.frase.cierre': 'To close, slowly',
-  'ritmo.frase.tarde': 'Afternoon: on your feet',
-  'ritmo.frase.dia.arranque': 'Monday: start on your feet',
-  'ritmo.frase.dia.sostener': 'Tuesday: shoulders, neck',
-  'ritmo.frase.dia.mitad': 'Wednesday: your back',
-  'ritmo.frase.dia.aire': 'Thursday: air and hands',
-  'ritmo.frase.dia.cierre': 'Friday: loosen your hips',
   'ritmo.zona.cuello': 'Neck',
   'ritmo.zona.hombros': 'Shoulders',
   'ritmo.zona.espalda': 'Back',
@@ -4462,40 +4444,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.standing.s2.instruction.care': 'Supported the whole time. Only go as low as your knees are comfortable.',
   'extra.legs.standing.s3.name': 'Deep breaths',
   'extra.legs.standing.s3.instruction.action': '3 full breaths to finish.',
-
-
-  'extra.walk.short.name': 'Short Walk',
-  'extra.walk.short.desc': 'Three minutes walking around the room, or on the spot. Good after lunch.',
-  'extra.walk.short.code': 'Walk',
-  'extra.walk.short.s0.name': 'Walk',
-  'extra.walk.short.s0.instruction.setup': 'Stand up. Walk around the room or march on the spot, by the desk.',
-  'extra.walk.short.s0.instruction.action': 'Easy pace, loose arms. Breathe calmly.',
-  'extra.walk.short.s0.instruction.care': 'Short on space? March on the spot: it works just as well.',
-  'extra.walk.short.s1.name': 'Brisk pace',
-  'extra.walk.short.s1.instruction.action': 'Pick up the pace: knees a little higher, arms swinging along.',
-  'extra.walk.short.s1.instruction.care': 'You should still be able to talk. No need to sweat.',
-  'extra.walk.short.s2.name': 'Easy walk',
-  'extra.walk.short.s2.instruction.action': 'Ease off little by little, down to a calm pace.',
-  'extra.walk.short.s2.instruction.care': 'Loose shoulders. Let your breathing settle.',
-  'extra.walk.short.s3.name': 'Deep breaths',
-  'extra.walk.short.s3.instruction.action': '3 full breaths to finish.',
-
-  'extra.shoulders.strong.name': 'Strong Shoulders',
-  'extra.shoulders.strong.desc': 'Lateral raises and rows with a water bottle, or nothing. Standing, by the desk.',
-  'extra.shoulders.strong.code': 'Strength',
-  'extra.shoulders.strong.s0.name': 'Lateral raise',
-  'extra.shoulders.strong.s0.instruction.setup': 'Standing, the bottle in one hand, or nothing. Arm by your side.',
-  'extra.shoulders.strong.s0.instruction.action': 'Raise your arm out to the side to shoulder height and lower it with control. About 8.',
-  'extra.shoulders.strong.s0.instruction.care': 'Elbow slightly bent. Keep your shoulder away from your ear.',
-  'extra.shoulders.strong.s1.name': 'Supported row',
-  'extra.shoulders.strong.s1.instruction.setup': 'One hand on the desk, the bottle in the other. Long back, soft knees.',
-  'extra.shoulders.strong.s1.instruction.action': 'Draw your elbow back, close to your body, and lower it with control. About 8.',
-  'extra.shoulders.strong.s1.instruction.care': 'Your back stays still: only the arm moves.',
-  'extra.shoulders.strong.s2.name': 'Shoulder shrugs',
-  'extra.shoulders.strong.s2.instruction.action': 'Lift your shoulders toward your ears, hold 2 s and lower them all the way.',
-  'extra.shoulders.strong.s2.instruction.care': 'Long neck. Breathe without holding your breath.',
-  'extra.shoulders.strong.s3.name': 'Deep breaths',
-  'extra.shoulders.strong.s3.instruction.action': '3 full breaths to finish.',
 
   'extra.legs.single.name': 'Legs · Single',
   'extra.legs.single.desc': 'Single-leg strength. Balance, control, and a stable chair.',
@@ -6401,7 +6349,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.173.2';
+const PACE_VERSION = 'v0.174.0';
 
 
 
@@ -8525,6 +8473,13 @@ function puedeAprender() {
 
 
 
+function puedeVariar() {
+  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
+
+
+
 
 
 function tiendaDelCanal() {
@@ -8564,10 +8519,10 @@ function tieneCompraVigente() {
 }
 
 Object.assign(window, {
-  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, PREMIUM_ABIERTO_HASTA_V1,
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, PREMIUM_ABIERTO_HASTA_V1,
   paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeAprender, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -9727,14 +9682,12 @@ var SEMANA_TEMAS = [
 
 
 
-
-
 var SEMANA_ACENTOS = {
-  1: { id: 'arranque', zonas: ['piernas'] },
-  2: { id: 'sostener', zonas: ['hombros', 'cuello'] },
-  3: { id: 'mitad', zonas: ['espalda'] },
-  4: { id: 'aire', zonas: ['manos'] },
-  5: { id: 'cierre', zonas: ['caderas'], estira: true },
+  1: { id: 'arranque' },
+  2: { id: 'sostener' },
+  3: { id: 'mitad' },
+  4: { id: 'aire' },
+  5: { id: 'cierre' },
   6: { id: 'libre' },
   7: { id: 'libre' }
 };
@@ -9777,8 +9730,7 @@ function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos, 
   var h = mitad ? Object.assign({}, horario, { adelantaLarga: true }) : horario;
   var m = ritmoComponer(opcion, h, P, cambios, meta, previos);
   if (!m || typeof ritmoServir !== 'function') return m;
-  var dia = semana.acento && semana.acento.zonas ? semana.acento : null;
-  return ritmoServir(m, P, cambios, previos, memoria, { aire: a === 'aire', momentos: true, dia: dia, frase: !!dia });
+  return ritmoServir(m, P, cambios, previos, memoria, { aire: a === 'aire' });
 }
 
 Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, semanaPozos, semanaComponer });
@@ -9826,12 +9778,28 @@ Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, seman
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var RITMO_SERIES_META = {
   'move.neck.3': { z: ['cuello'], pie: false },
   'move.desk.quick': { z: ['cuello', 'manos', 'espalda'], pie: false },
   'move.wrists': { z: ['manos'], pie: false },
   'move.shoulder.circles': { z: ['hombros'], pie: false },
-  'move.hips.standing': { z: ['caderas'], pie: true },
+
+
+  'move.hips.standing': { z: ['caderas', 'piernas'], pie: true },
   'move.hamstrings.standing': { z: ['piernas'], pie: true },
   'move.back.standing': { z: ['espalda'], pie: true },
   'extra.calves': { z: ['piernas'], pie: false },
@@ -9845,11 +9813,11 @@ var RITMO_SERIES_META = {
   'extra.legs.standing': { z: ['piernas'], pie: true },
 
 
-  'extra.walk.short': { z: ['piernas'], pie: true, comida: true },
-  'extra.shoulders.strong': { z: ['hombros'], pie: true },
   'move.shoulders.5': { z: ['hombros'], pie: true },
   'extra.wall.sit': { z: ['piernas'], pie: true }
 };
+
+var RITMO_ZONAS = ['piernas', 'caderas', 'espalda', 'hombros', 'cuello', 'manos'];
 
 
 var RITMO_SERIES_ZONA_TAG = {
@@ -9864,7 +9832,49 @@ function ritmoSeriesZonas(id, tag) {
   return RITMO_SERIES_ZONA_TAG[tag] ? [RITMO_SERIES_ZONA_TAG[tag]] : [];
 }
 function ritmoSeriesDePie(id) {var m = RITMO_SERIES_META[id];return !!(m && m.pie);}
-function ritmoSeriesTrasComer(id) {var m = RITMO_SERIES_META[id];return !!(m && m.comida);}
+
+
+function ritmoSeriesBits(zonas) {
+  var b = 0;
+  (zonas || []).forEach(function (z) {var k = RITMO_ZONAS.indexOf(z);if (k !== -1) b |= 1 << k;});
+  return b;
+}
+
+
+
+
+
+
+function ritmoSeriesCuenta(huecos, pesos) {
+  pesos = pesos || {};
+  var peso = function (b) {
+    var n = 0;
+    RITMO_ZONAS.forEach(function (z, k) {if (b & 1 << k) n += pesos[z] || 1;});
+    return n;
+  };
+  var trozos = huecos.map(function (rutinas) {
+    var vistos = {},out = [];
+    rutinas.forEach(function (r) {
+      var t = { b: ritmoSeriesBits(ritmoSeriesZonas(r.id, r.tag)), sentada: !ritmoSeriesDePie(r.id) };
+      var clave = t.b * 2 + (t.sentada ? 1 : 0);
+      if (t.b && !vistos[clave]) {vistos[clave] = true;out.push(t);}
+    });
+    return out;
+  });
+  var memo = {};
+  function alcance(k, falta, sentada) {
+    if (k >= huecos.length || !falta) return 0;
+    var clave = k * 128 + falta * 2 + (sentada ? 1 : 0);
+    if (memo[clave] != null) return memo[clave];
+    var mejor = alcance(k + 1, falta, false);
+    trozos[k].forEach(function (t) {
+      var b = falta & t.b;
+      if (b && !(sentada && t.sentada)) mejor = Math.max(mejor, peso(b) + alcance(k + 1, falta & ~b, t.sentada));
+    });
+    return memo[clave] = mejor;
+  }
+  return { alcance: alcance, peso: peso };
+}
 
 
 
@@ -9884,6 +9894,7 @@ function ritmoSeriesClaves(items) {
 
 
 
+
 function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   if (!m || !m.items) return m;
   var P = pozos || {};
@@ -9891,31 +9902,35 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   mem = mem || {};
   var estados = mem.estados || {},ultima = mem.ultima || {},dias = mem.dias || {},hechas = mem.hechas || [];
   var ap = mem.aprendido || {},descansa = ap.descansa || {},ayuda = ap.ayuda || {};
-  var dia = opts && opts.dia || null,momentos = !!(opts && opts.momentos),tarde = false,fraseDia = false;
-  var quedaComida = m.items.some(function (it) {return it.tipo === 'comida';});
-  var usados = {},movidas = {},vez = 0;
+  var varia = !!mem.varia,todas = (P.estira || []).concat(P.mueve || []),todasBits = 0;
+  todas.forEach(function (r) {todasBits |= ritmoSeriesBits(ritmoSeriesZonas(r.id));});
+  var usados = {},movidas = {},veces = {},vez = 0;
   (previos && previos.usados || []).forEach(function (id) {usados[id] = usados[id] || ++vez;});
 
   var previa = null,ord = 0;
   var huboPausa = !!(previos && (previos.pausas > 0 || previos.comidaHecha));
-  var trasComer = !!(previos && previos.comidaHecha && !previos.pausas);
   var inicio = mem.inicio != null ? mem.inicio : m.desde;
   var ultimaPie = inicio,desdeLarga = inicio;
   var otraVez = {};
   Object.keys(ultima).forEach(function (k) {(ultima[k] || []).forEach(function (id) {otraVez[id] = true;});});
 
 
+  var ayerMovidas = {},pesos = {};
+  Object.keys(otraVez).forEach(function (id) {ritmoSeriesZonas(id).forEach(function (z) {ayerMovidas[z] = true;});});
+  if (Object.keys(otraVez).length) RITMO_ZONAS.forEach(function (z) {if (!ayerMovidas[z]) pesos[z] = 7;});
+
+
   function pasar(it, ids, saltada) {
     var zonas = [];
-    if (!saltada) ids.forEach(function (id) {ritmoSeriesZonas(id).forEach(function (z) {movidas[z] = true;zonas.push(z);});});
+    if (!saltada) ids.forEach(function (id) {ritmoSeriesZonas(id).forEach(function (z) {movidas[z] = true;veces[z] = (veces[z] || 0) + 1;zonas.push(z);});});
     var pie = !saltada && ids.some(ritmoSeriesDePie);
     if (pie) ultimaPie = it.desde + it.dur;
     if (it.larga) desdeLarga = it.desde + it.dur;
     ids.forEach(function (id) {usados[id] = usados[id] || ++vez;});
     previa = { zonas: zonas, pie: pie, saltada: saltada };
-    if (it.tipo === 'pausa') {huboPausa = true;trasComer = false;}
+    if (it.tipo === 'pausa') huboPausa = true;
   }
-  function comer(it) {trasComer = true;tarde = true;quedaComida = false;previa = null;ultimaPie = desdeLarga = it.desde + it.dur;}
+  function comer(it) {previa = null;ultimaPie = desdeLarga = it.desde + it.dur;}
   (mem.pasado || []).forEach(function (it) {
     if (it.tipo === 'comida') return comer(it);
     if (it.tipo !== 'pausa' && it.tipo !== 'cierre') return;
@@ -9938,34 +9953,74 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     var fuera = hechoAntes(c.desde);
     var libres = pool.filter(function (r) {return !usados[r.id] && !fuera.u[r.id];});
     var base = libres.length ? libres : pool;
+
     var aqui = {};
-    (ultima[c.clave] || []).forEach(function (id) {aqui[id] = true;});
+    if (varia) (ultima[c.clave] || []).forEach(function (id) {aqui[id] = true;});
+
+
+
+
+    var cuerpo = c.hueco != null,falta = 0;
+    RITMO_ZONAS.forEach(function (z, k) {if (!movidas[z] && !fuera.z[z]) falta |= 1 << k;});
+    var tope = cuerpo ? cuenta.alcance(c.hueco, falta, c.sentada) : 0;
+    var cabe = cuerpo && tope >= cuenta.peso(falta & todasBits);
+    var alcanza = function (r) {
+      var b = falta & ritmoSeriesBits(ritmoSeriesZonas(r.id));
+      return cuenta.peso(b) + cuenta.alcance(c.hueco + 1, falta & ~b, !ritmoSeriesDePie(r.id));
+    };
+
+
+    var nuevo = cabe && !!fresca && fresca.alcance(c.hueco, falta, c.sentada) >= tope;
+    var alcanzaNueva = function (r) {
+      if (otraVez[r.id]) return -1;
+      var b = falta & ritmoSeriesBits(ritmoSeriesZonas(r.id));
+      return fresca.peso(b) + fresca.alcance(c.hueco + 1, falta & ~b, !ritmoSeriesDePie(r.id));
+    };
+
+    var cargaDe = function (r) {
+      return Math.max.apply(null, ritmoSeriesZonas(r.id).map(function (x) {return (veces[x] || 0) + (fuera.z[x] ? 1 : 0);}).concat([0]));
+    };
+    var entero = function (cuanto) {
+      var mx = -1;
+      t0.forEach(function (r) {mx = Math.max(mx, cuanto(r));});
+      t0 = t0.filter(function (r) {return cuanto(r) >= mx;});
+    };
 
 
     var t0 = base;
     var sinDescanso = t0.filter(function (r) {return !descansa[r.id];});
     if (sinDescanso.length) t0 = sinDescanso;
+    if (c.sentada || c.firme) {var dePie = t0.filter(function (r) {return ritmoSeriesDePie(r.id);});if (dePie.length) t0 = dePie;}
+    if (nuevo) entero(alcanzaNueva);
+    if (cabe) entero(alcanza);
     if (c.corta) {var cortos = t0.filter(function (r) {return (r.min || 0) <= c.corta;});if (cortos.length) t0 = cortos;}
     if (c.levantar) {var pie = t0.filter(function (r) {return ritmoSeriesDePie(r.id);});if (pie.length) t0 = pie;}
-    var paseo = c.paseo ? t0.filter(function (r) {return ritmoSeriesTrasComer(r.id);}) : [];
-    if (c.reserva) {var sinPaseo = t0.filter(function (r) {return !ritmoSeriesTrasComer(r.id);});if (sinPaseo.length) t0 = sinPaseo;}
-    var sinAyer = t0.filter(function (r) {return !aqui[r.id];});
-    if (paseo.length) t0 = paseo;else
-    if (sinAyer.length) t0 = sinAyer;
+    if (cuerpo && !cabe) entero(alcanza);
+    if (varia) {
+      var sinAyer = t0.filter(function (r) {return !aqui[r.id];});
+      if (sinAyer.length) t0 = sinAyer;
+
+      var leve = Math.min.apply(null, t0.map(cargaDe));
+      var nada = t0.filter(function (r) {return !otraVez[r.id] && cargaDe(r) <= leve + 1;});
+      if (nada.length) t0 = nada;
+    }
     var puntuar = function (r) {
       var z = ritmoSeriesZonas(r.id),p = 0;
       var nueva = z.filter(function (x) {return !movidas[x] && !fuera.z[x];});
       if (nueva.length) p += 3;
+      if (ayuda[r.id]) p += 2;
+      var carga = cargaDe(r);
+      p -= carga;
       if (previa && z.some(function (x) {return previa.zonas.indexOf(x) !== -1;})) p -= 3;
-      if (otraVez[r.id] && !aqui[r.id]) p -= 1;
-      if (dia && z.some(function (x) {return dia.zonas.indexOf(x) !== -1;})) p += 4;
-      return { r: r, p: p, hace: dias[r.id] == null ? 99 : dias[r.id], hoy: usados[r.id] || 0, i: pozo.indexOf(r),
-        nueva: nueva[0] || null, aqui: !!aqui[r.id], ayuda: ayuda[r.id] ? 1 : 0 };
+      if (varia && otraVez[r.id] && !aqui[r.id]) p -= 1;
+      return { r: r, p: p, hace: varia && dias[r.id] != null ? dias[r.id] : 99, hoy: usados[r.id] || 0, i: pozo.indexOf(r),
+        nueva: nueva[0] || null, aqui: !!aqui[r.id], ayuda: ayuda[r.id] ? 1 : 0, carga: carga,
+        deja: !cuerpo ? 0 : !cabe ? alcanza(r) < tope ? 1 + (tope - alcanza(r)) / (tope + 1) : 0 : alcanza(r) < tope ? 8 : nuevo && alcanzaNueva(r) < tope ? 0.5 : 0 };
     };
 
 
     var orden = function (xs) {
-      return xs.map(puntuar).sort(function (a, b) {return b.p - a.p || a.hoy - b.hoy || b.ayuda - a.ayuda || b.hace - a.hace || a.i - b.i;});
+      return xs.map(puntuar).sort(function (a, b) {return a.deja - b.deja || b.p - a.p || a.hoy - b.hoy || b.ayuda - a.ayuda || b.hace - a.hace || a.i - b.i;});
     };
     return orden(t0).concat(orden(base.filter(function (r) {return t0.indexOf(r) === -1;})));
   }
@@ -9991,6 +10046,17 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     }
   }
 
+
+
+  var dePie = function (rs) {return rs.filter(function (r) {return ritmoSeriesDePie(r.id);});};
+  var huecos = m.items.filter(function (it) {return it.tipo === 'pausa' && it !== aireIt;}).map(function (it, k) {
+    if (it.larga) return dePie(P.estira || []);
+    if (k === 0 && !huboPausa) return dePie(P.mueve || []);
+    return it === antesAire ? dePie(todas) : todas;
+  });
+  var cuenta = ritmoSeriesCuenta(huecos, pesos),hueco = 0;
+  var fresca = varia ? ritmoSeriesCuenta(huecos.map(function (rs) {return rs.filter(function (r) {return !otraVez[r.id];});}), pesos) : null;
+
   var i = previos ? previos.claves || 0 : 0;
   m.items.forEach(function (it) {
     if (it.tipo === 'comida') return comer(it);
@@ -9998,6 +10064,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     ord++;
     var key = it.tipo === 'cierre' ? 'c' : String(ord);
     var platos = [],frase = null;
+    var sentada = !!(previa && (!previa.pie || previa.saltada));
     if (it.tipo === 'cierre') {
       var xc = elegir('cierre', { clave: key, desde: it.desde, cabe: it.dur }, 'cierre');
       if (xc) platos.push(plato('respira', xc, 'cierre'));
@@ -10007,30 +10074,31 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       var clave = 'p' + ++i;
       var xr = elegir('respira', { clave: key, desde: it.desde }, clave + 'a');
       if (xr) platos.push(plato('respira', xr, clave + 'a'));
-      var xe = elegir('estira', { clave: key, desde: it.desde, levantar: true }, clave + 'b');
+      var xe = elegir('estira', { clave: key, desde: it.desde, levantar: true, firme: true, hueco: hueco++, sentada: sentada }, clave + 'b');
       if (xe) platos.push(plato('estira', xe, clave + 'b'));
       it.motivo = 'larga';
       if (it.desde - desdeLarga >= RITMO_SERIES_LARGA) frase = { k: 'larga' };else
       if (xe && xe.nueva) frase = { k: 'zona', zona: xe.nueva };
     } else {
       var claveC = 'p' + ++i;
-      var primera = !huboPausa,tras = trasComer;
-      var porPrevia = !!(previa && (!previa.pie || previa.saltada));
-      var cadencia = it.n % 3 === 2 && ap.menos !== 'mueve' && !(dia && dia.estira) ? 'mueve' : 'estira';
-      var modulo = it === aireIt ? 'respira' : primera || tras ? 'mueve' : cadencia;
+      var primera = !huboPausa;
+      var porPrevia = sentada;
+      var cadencia = it.n % 3 === 2 && ap.menos !== 'mueve' ? 'mueve' : 'estira';
+      var modulo = it === aireIt ? 'respira' : primera ? 'mueve' : cadencia;
       var corta = null;
       (ap.cortas || []).forEach(function (k) {if (Math.abs(k.hora - it.desde) <= k.margen) corta = k.min;});
-      var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || tras || porPrevia || it === antesAire || momentos && tarde),
-        paseo: momentos && tras && modulo !== 'respira', reserva: momentos && quedaComida,
-        cabe: modulo === 'respira' ? it.dur : null, corta: modulo === 'respira' ? null : corta };
+      var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || porPrevia || it === antesAire),
+        cabe: modulo === 'respira' ? it.dur : null, corta: modulo === 'respira' ? null : corta,
+        hueco: modulo === 'respira' ? null : hueco++, sentada: sentada, firme: primera || it === antesAire };
       var x = elegir(modulo, c, claveC);
 
 
 
       var nota = function (z) {
-        return !z ? 9 : (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui && !(c.paseo && ritmoSeriesTrasComer(z.r.id)) ? 1 : 0);
+
+        return !z ? 9 : (primera ? z.deja >= 8 ? 8 : 0 : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
       };
-      if (modulo !== 'respira' && (!x || (c.levantar || c.corta) && nota(x) > 0)) {
+      if (modulo !== 'respira' && (!x || (c.levantar || c.corta || x.hoy || (primera ? x.deja >= 8 : x.deja || x.carga > 1)) && nota(x) > 0)) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';
         var y = elegir(otro, c, claveC);
         if (nota(y) < nota(x)) {x = y;modulo = otro;}
@@ -10038,24 +10106,18 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (x) platos.push(plato(modulo, x, claveC));
       it.motivo = platos[0] ? platos[0].modulo : 'estira';
       var pie = !!(x && ritmoSeriesDePie(x.r.id));
-      if (tras && pie) frase = { k: 'comida' };else
       if (porPrevia && pie && !primera) frase = { k: 'sentado', n: Math.round(it.desde - ultimaPie) };else
-      if (x && x.nueva) frase = { k: 'zona', zona: x.nueva };else
-      if (momentos && tarde && pie) frase = { k: 'tarde' };
+      if (x && x.nueva) frase = { k: 'zona', zona: x.nueva };
     }
     if (platos.length) it.platos = platos;
-
-    var delDia = dia && it.tipo === 'pausa' && (aireIt ? it === aireIt : platos.some(function (p) {
-      return p.modulo !== 'respira' && ritmoSeriesZonas(p.id).some(function (z) {return dia.zonas.indexOf(z) !== -1;});}));
-    if (delDia && !fraseDia && opts.frase) {frase = { k: 'dia', dia: dia.id };fraseDia = true;}
     it.frase = frase;
     pasar(it, (it.platos || []).map(function (p) {return p.id;}), false);
   });
   return m;
 }
 
-Object.assign(window, { RITMO_SERIES_META, RITMO_SERIES_ZONA_TAG, ritmoSeriesZonas, ritmoSeriesDePie, ritmoSeriesTrasComer, ritmoSeriesClaves, ritmoServir });
-;Object.assign(window, { RITMO_SERIES_META, RITMO_SERIES_ZONA_TAG, RITMO_SERIES_LARGA, ritmoSeriesZonas, ritmoSeriesDePie, ritmoSeriesTrasComer, ritmoSeriesClaves, ritmoServir });
+Object.assign(window, { RITMO_SERIES_META, RITMO_SERIES_ZONA_TAG, RITMO_ZONAS, ritmoSeriesZonas, ritmoSeriesDePie, ritmoSeriesBits, ritmoSeriesCuenta, ritmoSeriesClaves, ritmoServir });
+;Object.assign(window, { RITMO_SERIES_META, RITMO_ZONAS, RITMO_SERIES_ZONA_TAG, RITMO_SERIES_LARGA, ritmoSeriesZonas, ritmoSeriesDePie, ritmoSeriesBits, ritmoSeriesCuenta, ritmoSeriesClaves, ritmoServir });
 })();
 </script>
   <!-- El motor de la semana (Ez, 16 oct. 2026): lo de pago de «A tu ritmo». Puro; lo que
@@ -10276,16 +10338,13 @@ function ritmoMotor(e) {
   filter(function (c) {return !rechazado(c);});
 
   if (!a.menos && motorPruebas(mueve.o1, mueve.o2) && mueve.o * 3 >= mueve.m * 2) {
-    var comeHasta = horario.comida != null ? horario.comida + (horario.comidaDur || 60) : Infinity;
     var cadencia = 0;
     f1.forEach(function (f) {
-      var primera = true,trasComer = true;
+      var primera = true;
       porFecha[f].paradas.forEach(function (p) {
         if (p.tipo !== 'pausa') return;
-        var esPrimera = primera || trasComer && p.hora >= comeHasta;
+        if (!primera && p.platos.some(function (pl) {return pl.modulo === 'mueve';})) cadencia++;
         primera = false;
-        if (p.hora >= comeHasta) trasComer = false;
-        if (!esPrimera && p.platos.some(function (pl) {return pl.modulo === 'mueve';})) cadencia++;
       });
     });
     var menos = { tipo: 'menos', clase: 'rutinas', modulo: 'mueve', mas: 'estira', veces: mueve.o, de: mueve.m, paradas: cadencia };
@@ -12633,7 +12692,9 @@ function ritmoMemoria(s, fecha, dia, pasado) {
     dias: dias, hechas: hechas,
     pasado: pasado || [], estados: dia && dia.estados || {},
     inicio: pasado && pasado.length ? pasado[0].desde : null,
-    aprendido: aprende ? ritmoMotorVigente(r.aprendido, fecha) : null
+    aprendido: aprende ? ritmoMotorVigente(r.aprendido, fecha) : null,
+
+    varia: typeof window.puedeVariar === 'function' && window.puedeVariar()
   };
 }
 
@@ -12669,7 +12730,6 @@ function ritmoFrase(it, t, tn) {
   if (!f || !f.k) return null;
   if (f.k === 'zona') return f.zona ? tn('ritmo.frase.zona', { zona: t('ritmo.zona.' + f.zona) }) : null;
   if (f.k === 'sentado') return f.n > 0 ? tn('ritmo.frase.sentado', { n: f.n }) : null;
-  if (f.k === 'dia') return f.dia ? t('ritmo.frase.dia.' + f.dia) : null;
   return t('ritmo.frase.' + f.k);
 }
 
@@ -29115,85 +29175,6 @@ function getMoveRoutine(id) {
 window.getMoveRoutine = getMoveRoutine;
 window.MOVE_ROUTINES = MOVE_ROUTINES;
 ;Object.assign(window, { MOVE_ROUTINES, getMoveRoutine });
-})();
-</script>
-  <!-- Las dos de pie de los días diseñados (17 oct. 2026): añade a los grupos de
-       move.data.js, así que va justo detrás (lleva guard que aborta). -->
-  <script>
-;(function () {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if (!window.MOVE_ROUTINES || !window.MOVE_ROUTINES.piernas || !window.MOVE_ROUTINES.empuje) {
-  throw new Error('move.data.casa.js se ha evaluado ANTES que move.data.js: revisa el orden en PACE.html');
-}
-
-window.MOVE_ROUTINES.piernas.items.push(
-  { id: 'extra.walk.short', tag: 'LEG', code: 'Paseo', name: 'Paseo corto', desc: 'Tres minutos andando por la habitación, o en el sitio. Sienta bien después de comer.', min: 3,
-    position: ['standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
-    steps: [
-    { name: 'Caminar', mode: 'timed', dur: 60,
-      instruction: {
-        setup: 'Levántate. Camina por la habitación o marcha en el sitio, junto a la mesa.',
-        action: 'Paso cómodo y brazos sueltos. Respira tranquilo.',
-        care: 'Si hay poco sitio, marcha en el sitio: vale igual.' } },
-    { name: 'Paso vivo', mode: 'timed', dur: 60,
-      instruction: {
-        action: 'Aviva el paso: rodillas algo más altas y brazos que acompañan.',
-        care: 'Que puedas hablar sin ahogarte. Sin llegar a sudar.' } },
-    { name: 'Caminar suave', mode: 'timed', dur: 45,
-      instruction: {
-        action: 'Baja el ritmo poco a poco, hasta un paso tranquilo.',
-        care: 'Hombros sueltos. Deja que la respiración se calme.' } },
-    { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
-      instruction: { action: '3 inhalaciones completas para cerrar.' } }]
-  }
-);
-
-window.MOVE_ROUTINES.empuje.items.push(
-  { id: 'extra.shoulders.strong', tag: 'PUSH', code: 'Fuerza', name: 'Hombros fuertes', desc: 'Elevación lateral y remo con una botella de agua, o sin nada. De pie, junto a la mesa.', min: 3,
-    position: ['standing'], equipment: ['bottleOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
-    steps: [
-
-
-    { name: 'Elevación lateral', mode: 'perSide', dur: 30, transition: { seconds: 5 },
-      instruction: {
-        setup: 'De pie, la botella en una mano, o nada. El brazo junto al cuerpo.',
-        action: 'Sube el brazo de lado hasta la altura del hombro y bájalo con control. Unas 8.',
-        care: 'Codo apenas doblado. El hombro no sube hacia la oreja.' } },
-    { name: 'Remo con apoyo', mode: 'perSide', dur: 30, transition: { seconds: 5 },
-      instruction: {
-        setup: 'Una mano en la mesa y la botella en la otra. Espalda larga, rodillas sueltas.',
-        action: 'Lleva el codo atrás, pegado al cuerpo, y bájalo con control. Unas 8.',
-        care: 'La espalda se queda quieta: solo se mueve el brazo.' } },
-    { name: 'Encogimiento de hombros', mode: 'reps', reps: 8, dur: 32,
-      tempo: { up: 1, hold: 2, down: 1 }, completion: { mode: 'guided' },
-      instruction: {
-        action: 'Sube los hombros hacia las orejas, mantén 2 s y bájalos del todo.',
-        care: 'Cuello largo. Respira sin aguantar el aire.' } },
-    { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
-      instruction: { action: '3 inhalaciones completas para cerrar.' } }]
-  }
-);
 })();
 </script>
   <script>

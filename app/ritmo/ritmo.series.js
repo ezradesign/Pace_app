@@ -272,7 +272,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (varia && otraVez[r.id] && !aqui[r.id]) p -= 1;
       return { r: r, p: p, hace: varia && dias[r.id] != null ? dias[r.id] : 99, hoy: usados[r.id] || 0, i: pozo.indexOf(r),
                nueva: nueva[0] || null, aqui: !!aqui[r.id], ayuda: ayuda[r.id] ? 1 : 0, carga: carga,
-               deja: !cuerpo ? 0 : !cabe ? (tope - alcanza(r)) / (tope + 1) : alcanza(r) < tope ? 8 : nuevo && alcanzaNueva(r) < tope ? 0.5 : 0 };
+               deja: !cuerpo ? 0 : !cabe ? (alcanza(r) < tope ? 1 + (tope - alcanza(r)) / (tope + 1) : 0) : alcanza(r) < tope ? 8 : nuevo && alcanzaNueva(r) < tope ? 0.5 : 0 };
     };
     /* Empata la que te ayudó y, con PACE completo, la que hace más días que no sale; si ya
        salió todo hoy, la que salió antes. */
