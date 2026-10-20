@@ -42,3 +42,6 @@ dist/
 # ~/PACE-llave-licencias y la de Play en PACE-llave-play, las dos fuera de aquí.
 *.pem
 PACE-llave-*/
+
+# La medida de los días diseñados (4 MB): se rehace con medir-cuerpo.js
+docs/traspaso/archivos/dias-disenados/medir/cuerpo.json

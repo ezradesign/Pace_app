@@ -1,0 +1,269 @@
+<title>Cuerpo entero cada día</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como una carta de PACE; las tablas de la semana, anchas y con su
+   propio scroll en el móvil. Colores y letras, los de la app (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --breathe: #B4603F; --mark: rgba(62, 90, 58, 0.10);
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 920px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 44px; }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 7vw, 54px); line-height: 1.04; }
+h2 { font-size: 29px; line-height: 1.1; }
+h3 { font-size: 23px; line-height: 1.15; }
+p { margin: 0; max-width: 66ch; color: var(--ink-2); }
+p b, li b { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 66ch; color: var(--ink-2); }
+.ancho { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; vertical-align: top; padding: 7px 14px 7px 0; border-bottom: 1px solid var(--line); }
+thead th { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+tbody th { font-weight: 600; color: var(--ink); }
+table.semana { min-width: 760px; }
+table.semana td span { display: block; color: var(--ink-2); }
+table.semana td span + span { margin-top: 3px; }
+table.semana td.falta { color: var(--breathe); font-style: italic; }
+.rep { text-decoration: underline; text-decoration-color: var(--breathe); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.nueva::after, .pared::after { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--focus); margin-left: 6px; }
+.nueva::after { content: 'nueva'; }
+.pared::after { content: 'pared'; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 14px; color: var(--ink-3); }
+.leyenda span { color: var(--ink-2); }
+.dos { display: flex; flex-direction: column; gap: 28px; }
+.bloque { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.pie { font-size: 14px; color: var(--ink-3); max-width: 66ch; }
+table.casos { min-width: 620px; }
+table.casos td.si { color: var(--focus); font-weight: 600; }
+table.opciones { min-width: 760px; }
+table.opciones tr.rec th, table.opciones tr.rec td { background: var(--mark); }
+table.opciones tr.rec th { padding-left: 8px; }
+.cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 640px; }
+@media (max-width: 560px) { .cifras { grid-template-columns: minmax(0, 1fr); } }
+.cifra { background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+.cifra .n { font-family: var(--serif); font-style: italic; font-size: 34px; line-height: 1.05; color: var(--ink); }
+.cifra .t { font-size: 14px; color: var(--ink-3); }
+.rec-caja { background: var(--mark); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; max-width: 72ch; }
+.preguntas { display: flex; flex-direction: column; gap: 22px; }
+.pregunta { display: flex; flex-direction: column; gap: 8px; }
+.pregunta ol { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; max-width: 72ch; color: var(--ink-2); }
+.pregunta li b.letra { display: inline-block; min-width: 1.6em; color: var(--focus); }
+.reco { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--focus); margin-left: 6px; }
+code { font-size: 13px; overflow-wrap: anywhere; }
+</style>
+
+<main class="hoja">
+
+<header>
+  <span class="eyebrow">PACE · A tu ritmo · 20 de octubre de 2026</span>
+  <h1>Cada día, el cuerpo entero</h1>
+  <p>Esto es lo que entendí de tu respuesta, cómo quedaría una semana de verdad y lo que falta
+  que decidas. Todo lo calculé con la app y sus rutinas reales. Al final, dos preguntas.</p>
+</header>
+
+<section>
+  <h2>Lo que entendí</h2>
+  <ul class="lista">
+    <li><b>Cada día de trabajo se mueven las seis zonas</b>, repartidas entre sus pausas: piernas,
+      caderas, espalda, hombros, cuello y manos. Siempre que quepan. <b>Gratis.</b></li>
+    <li><b>Con PACE completo, además, las rutinas cambian de un día a otro</b>: si el lunes el cuello
+      se movió con «Escritorio express», el martes se mueve con otra.</li>
+    <li>El paseo, fuera: «Paseo corto» ya no está en la app.</li>
+    <li>En pantalla, nada nuevo: ni frase del día ni nada más que leer. La pausa sigue diciendo lo de
+      siempre, como «Caderas: sin mover hoy».</li>
+    <li>Nada especial después de comer (te pregunto un detalle abajo).</li>
+    <li>Todo en una habitación o junto a la mesa, sin salir de casa.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Una semana, zona por zona</h2>
+  <p>La semana del 19 al 23 de octubre, de 9:00 a 17:00 con comida a las 14:00 y el aro como viene
+  (bloques de 45 minutos): <b>7 pausas al día</b>. En cada casilla, las rutinas que mueven esa zona
+  ese día. Es con lo que te recomiendo añadir (la opción A, más abajo).</p>
+  <div class="leyenda">
+    <div><span class="rep">Subrayada</span>: la misma rutina que el día anterior en esa zona</div>
+    <div><span class="nueva">Hombros fuertes</span>: la única rutina nueva</div>
+    <div><span class="pared">Hombros</span>: entra porque la pared cuenta, como ya contaba la mesa</div>
+  </div>
+  <p class="pie">«Caderas de pie» sale en piernas y en caderas porque mueve las dos (lo explico abajo).
+  Las pausas de respirar no salen: no mueven ninguna zona.</p>
+
+  <div class="dos">
+    <div class="bloque">
+      <h3>Sin pagar</h3>
+      <div class="ancho">
+<table class="semana">
+<thead><tr><th scope="col">Zona</th><th scope="col">Lunes</th><th scope="col">Martes</th><th scope="col">Miércoles</th><th scope="col">Jueves</th><th scope="col">Viernes</th></tr></thead>
+<tbody>
+<tr><th scope="row">Piernas</th><td><span>Caderas de pie</span><span>Piernas de pie</span><span>Gemelos subrepticios</span></td><td><span class="rep">Piernas de pie</span><span class="rep">Caderas de pie</span></td><td><span class="rep">Piernas de pie</span></td><td><span class="rep">Piernas de pie</span><span>Caderas de pie</span></td><td><span class="rep">Piernas de pie</span><span class="rep">Caderas de pie</span></td></tr>
+<tr><th scope="row">Caderas</th><td><span>Caderas de pie</span></td><td><span class="rep">Caderas de pie</span></td><td><span>Glúteos invisibles</span></td><td><span>Caderas de pie</span></td><td><span class="rep">Caderas de pie</span></td></tr>
+<tr><th scope="row">Espalda</th><td><span>Postura reset</span><span>Escritorio express</span><span>Espalda de oficina</span></td><td><span class="rep">Postura reset</span><span class="rep">Espalda de oficina</span></td><td><span>Espalda de pie</span><span class="rep">Espalda de oficina</span></td><td><span>Postura reset</span><span class="rep">Espalda de oficina</span><span>Escritorio express</span></td><td><span class="rep">Postura reset</span><span class="rep">Espalda de oficina</span></td></tr>
+<tr><th scope="row">Hombros</th><td><span class="nueva">Hombros fuertes</span><span>Espalda de oficina</span></td><td><span class="pared">Hombros</span><span class="rep">Espalda de oficina</span></td><td><span class="rep pared">Hombros</span><span class="rep">Espalda de oficina</span></td><td><span class="rep pared">Hombros</span><span class="rep">Espalda de oficina</span></td><td><span class="rep pared">Hombros</span><span class="rep">Espalda de oficina</span></td></tr>
+<tr><th scope="row">Cuello</th><td><span>Escritorio express</span></td><td><span>Cuello</span></td><td><span class="rep">Cuello</span></td><td><span>Escritorio express</span></td><td><span>Cuello</span></td></tr>
+<tr><th scope="row">Manos</th><td><span>Escritorio express</span></td><td><span>Grip + antebrazos</span></td><td><span class="rep">Grip + antebrazos</span></td><td><span>Escritorio express</span></td><td><span>Grip + antebrazos</span></td></tr>
+</tbody>
+</table>
+      </div>
+      <p class="pie">El cuerpo entero los cinco días, pero se repite mucho: «Piernas de pie» y «Espalda de
+      oficina» salen todos los días.</p>
+    </div>
+
+    <div class="bloque">
+      <h3>Con PACE completo</h3>
+      <div class="ancho">
+<table class="semana">
+<thead><tr><th scope="col">Zona</th><th scope="col">Lunes</th><th scope="col">Martes</th><th scope="col">Miércoles</th><th scope="col">Jueves</th><th scope="col">Viernes</th></tr></thead>
+<tbody>
+<tr><th scope="row">Piernas</th><td><span>Piernas de pie</span><span class="pared">Sentadilla en pared</span></td><td><span>Gemelos subrepticios</span><span>Caderas de pie</span></td><td><span class="pared">Sentadilla en pared</span><span>Cadena posterior de pie</span></td><td><span>Piernas de pie</span><span>Caderas de pie</span></td><td><span>Cadena posterior de pie</span><span class="pared">Sentadilla en pared</span></td></tr>
+<tr><th scope="row">Caderas</th><td><span>Glúteos invisibles</span></td><td><span>Caderas de pie</span></td><td><span>Glúteos invisibles</span></td><td><span>Caderas de pie</span></td><td><span>Glúteos invisibles</span></td></tr>
+<tr><th scope="row">Espalda</th><td><span>Postura reset</span><span>Escritorio express</span><span>Espalda de oficina</span></td><td><span>Espalda de pie</span></td><td><span>Espalda de oficina</span><span>Escritorio express</span></td><td><span>Core silencioso</span></td><td><span>Postura reset</span><span>Escritorio express</span><span>Espalda de oficina</span></td></tr>
+<tr><th scope="row">Hombros</th><td><span class="pared">Hombros</span><span>Espalda de oficina</span></td><td><span>Flexiones de escritorio</span><span class="nueva">Hombros fuertes</span></td><td><span class="pared">Hombros</span><span>Espalda de oficina</span></td><td><span>Flexiones de escritorio</span></td><td><span class="nueva">Hombros fuertes</span><span>Espalda de oficina</span></td></tr>
+<tr><th scope="row">Cuello</th><td><span>Escritorio express</span></td><td><span>Cuello</span></td><td><span>Escritorio express</span></td><td><span>Cuello</span></td><td><span>Escritorio express</span></td></tr>
+<tr><th scope="row">Manos</th><td><span>Escritorio express</span></td><td><span>Grip + antebrazos</span></td><td><span>Muñecas y manos</span><span>Escritorio express</span></td><td><span>Grip + antebrazos</span></td><td><span>Escritorio express</span></td></tr>
+</tbody>
+</table>
+      </div>
+      <p class="pie">El cuerpo entero los cinco días, y ninguna zona repite rutina del día anterior.
+      Entran también las de pago que caben junto a la mesa («Sentadilla en pared», «Core silencioso»).</p>
+    </div>
+  </div>
+
+  <p>Para comparar: <b>hoy</b>, esa misma semana, el martes y el jueves no se mueve el cuello, y el
+  jueves tampoco las manos. Con el aro como viene, 11 de cada 20 días se queda alguna zona sin mover.</p>
+</section>
+
+<section>
+  <h2>Gratis y de pago</h2>
+  <p>Hoy ya hay algo de variedad gratis: cuando dos rutinas valen lo mismo para una pausa, sale la que
+  lleva más días sin salir. Con lo que elegiste, eso pasa a PACE completo, así que <b>sin pagar se
+  repetirá algo más que hoy</b>. De las 7 rutinas de un día, cuántas salieron también el día anterior:</p>
+  <div class="cifras">
+    <div class="cifra"><span class="n">2 o 3</span><span class="t">hoy, sin pagar</span></div>
+    <div class="cifra"><span class="n">4</span><span class="t">con lo nuevo, sin pagar</span></div>
+    <div class="cifra"><span class="n">Ninguna</span><span class="t">con lo nuevo y PACE completo</span></div>
+  </div>
+  <p>Hasta v1 todo está abierto, así que los testers no pierden nada hasta que se cobre.</p>
+</section>
+
+<section>
+  <h2>Cuando hay pocas pausas</h2>
+  <p>El cuerpo entero necesita <b>al menos 3 pausas</b>: una sentada para el cuello y las manos
+  («Escritorio express» mueve las dos y la espalda) y dos de pie para lo demás. Días con el cuerpo
+  entero, de 20 días de trabajo:</p>
+  <div class="ancho">
+    <table class="casos">
+      <thead><tr><th scope="col">Cómo trabajas</th><th scope="col">Pausas al día</th><th scope="col">Hoy</th><th scope="col">Con lo nuevo</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Jornada, el aro como viene (45 min)</th><td>7</td><td>9 de 20</td><td class="si">20 de 20</td></tr>
+        <tr><th scope="row">Jornada, aro a 25 o a 10</th><td>11 o 12</td><td>20 de 20</td><td class="si">20 de 20</td></tr>
+        <tr><th scope="row">Media jornada (4 horas), aro a 45</th><td>4</td><td>4 de 20</td><td class="si">20 de 20</td></tr>
+        <tr><th scope="row">Media jornada, aro a 25</th><td>6</td><td>4 de 20</td><td class="si">20 de 20</td></tr>
+        <tr><th scope="row">Media jornada, aro a 10</th><td>6</td><td>12 de 20</td><td class="si">20 de 20</td></tr>
+        <tr><th scope="row">«Dos horas», aro a 25 o a 10</th><td>3</td><td>0</td><td class="si">20 de 20</td></tr>
+        <tr><th scope="row">«Dos horas», el aro como viene (35 min)</th><td>2</td><td>0</td><td>0, pero en dos días seguidos, el cuerpo entero</td></tr>
+        <tr><th scope="row">«Una hora»</th><td>1</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Lo que propongo cuando no cabe:</p>
+  <ul class="lista">
+    <li><b>Levantarse manda.</b> La primera pausa te pone de pie igual, aunque así no quepan el cuello
+      y las manos.</li>
+    <li><b>Lo que no cupo hoy va primero mañana.</b> Así, con «Dos horas», en dos días seguidos se
+      mueve el cuerpo entero.</li>
+    <li>Con «Una hora» hay una sola pausa, de pie: un día caderas y piernas, el siguiente espalda y
+      hombros. El cuello y las manos no caben.</li>
+    <li>Si te saltas una pausa, las que quedan recogen lo que faltaba.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Lo que hace falta dentro de casa</h2>
+  <p>Probé cuatro cosas, solas y juntas:</p>
+  <ul class="lista">
+    <li><b>Hombros fuertes</b>: la rutina nueva de la otra vez, de pie junto a la mesa, con una botella
+      de agua o sin nada. Ya está escrita en los dos idiomas; le faltan dos dibujos (elevación lateral
+      y remo con apoyo), y mientras sale con el dibujo genérico.</li>
+    <li><b>La pared cuenta</b>, como ya contaba la mesa: en una habitación siempre hay una. Entran
+      «Hombros» (gratis) y «Sentadilla en pared» (PACE completo), que ya existen con sus dibujos.</li>
+    <li><b>«Caderas de pie» cuenta también como piernas</b>: lleva sentadilla profunda, sentadilla
+      lateral y zancada, que trabajan las piernas tanto como la cadera. No hay que escribir nada.</li>
+    <li><b>Una rutina nueva de piernas y caderas</b>: sentadilla con apoyo, zancada atrás y elevación
+      lateral de pierna. Habría que escribirla, revisarla con el manual de ejercicios y dibujar tres pasos.</li>
+  </ul>
+  <div class="ancho">
+    <table class="opciones">
+      <thead><tr>
+        <th scope="col">Qué se añade</th>
+        <th scope="col">Pausas sentadas seguidas, como mucho (jornada, aro a 25, sin pagar)</th>
+        <th scope="col">«Dos horas» con 3 pausas: cuerpo entero cada día</th>
+        <th scope="col">Con PACE completo, rutinas que repiten del día anterior (de 7)</th>
+        <th scope="col">Trabajo</th>
+      </tr></thead>
+      <tbody>
+        <tr><th scope="row">Hoy, para comparar</th><td>3</td><td>No, nunca</td><td>2 o 3</td><td>—</td></tr>
+        <tr><th scope="row">D · Nada nuevo</th><td>4</td><td>No; en dos días, sí</td><td>1 o 2</td><td>—</td></tr>
+        <tr><th scope="row">Solo Hombros fuertes</th><td>2</td><td>No; en dos días, sí</td><td>Casi ninguna</td><td>2 dibujos</td></tr>
+        <tr><th scope="row">Solo la pared</th><td>3</td><td>No; en dos días, sí</td><td>Ninguna</td><td>—</td></tr>
+        <tr><th scope="row">C · Hombros fuertes y la pared</th><td>1</td><td>No; en dos días, sí</td><td>Ninguna</td><td>2 dibujos</td></tr>
+        <tr class="rec"><th scope="row">A · Hombros fuertes, la pared y «Caderas de pie» como piernas</th><td>2, un día de cada 20</td><td>Sí</td><td>Ninguna</td><td>2 dibujos</td></tr>
+        <tr><th scope="row">B · Hombros fuertes, la pared y una rutina nueva de piernas</th><td>1</td><td>Sí</td><td>Ninguna</td><td>Escribirla y 5 dibujos</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rec-caja">
+    <p><b>Recomiendo A.</b> El cuerpo entero cabe en todos los casos en que puede caber, con PACE
+    completo ninguna rutina repite del día anterior y no hay que escribir rutinas nuevas: solo faltan
+    los dos dibujos de Hombros fuertes. La rutina nueva de piernas (B) se puede añadir después si
+    quieres más variedad; no hace falta para lo que pediste.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Lo que te pregunto</h2>
+  <div class="preguntas">
+    <div class="pregunta">
+      <h3>1. ¿Qué añadimos para que quepa todo dentro de casa?</h3>
+      <ol>
+        <li><b class="letra">A</b>Hombros fuertes, la pared y «Caderas de pie» también como piernas.<span class="reco">Recomendada</span></li>
+        <li><b class="letra">B</b>Hombros fuertes, la pared y una rutina nueva de piernas y caderas.</li>
+        <li><b class="letra">C</b>Solo Hombros fuertes y la pared: «Dos horas» mueve el cuerpo entero en dos días, no en uno.</li>
+        <li><b class="letra">D</b>Nada nuevo: con el aro a 25, hasta cuatro pausas sentadas seguidas.</li>
+      </ol>
+    </div>
+    <div class="pregunta">
+      <h3>2. Después de comer</h3>
+      <p>Desde el 15 de octubre, la primera pausa después de comer te pone de pie (es la que dice
+      «Después de comer, de pie»). Tu «sin lo de después de comer», ¿quita también eso?</p>
+      <ol>
+        <li><b class="letra">A</b>No: se queda como hoy, esa pausa de pie y nada más, sin paseo.<span class="reco">Recomendada</span></li>
+        <li><b class="letra">B</b>Sí: después de comer, una pausa como cualquier otra.</li>
+      </ol>
+      <p>Recomiendo A porque ya está así, no añade nada en pantalla y levantarse un rato después de
+      comer sienta bien. Con B, esa pausa puede tocar sentada.</p>
+    </div>
+  </div>
+  <p>Contéstame con las letras, por ejemplo «1A 2A». Con tu sí, lo monto.</p>
+</section>
+
+<p class="pie">Calculado con el código de la app y sus rutinas, sin PACE completo salvo donde se dice:
+veinte días de trabajo desde el lunes 19 de octubre, de 9:00 a 17:00 con comida a las 14:00. «Hoy» es la
+app de ahora (v0.173.2). El cálculo está en
+<code>docs/traspaso/archivos/dias-disenados/medir/medir-cuerpo.js</code>.</p>
+
+</main>

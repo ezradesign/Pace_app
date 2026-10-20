@@ -225,22 +225,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.standing.s3.instruction.action': '3 full breaths to finish.',
 
   /* Los días diseñados (17 oct. 2026): app/move/move.data.casa.js, dentro de casa. */
-  'extra.walk.short.name':                    'Short Walk',
-  'extra.walk.short.desc':                    'Three minutes walking around the room, or on the spot. Good after lunch.',
-  'extra.walk.short.code':                    'Walk',
-  'extra.walk.short.s0.name':                 'Walk',
-  'extra.walk.short.s0.instruction.setup':    'Stand up. Walk around the room or march on the spot, by the desk.',
-  'extra.walk.short.s0.instruction.action':   'Easy pace, loose arms. Breathe calmly.',
-  'extra.walk.short.s0.instruction.care':     'Short on space? March on the spot: it works just as well.',
-  'extra.walk.short.s1.name':                 'Brisk pace',
-  'extra.walk.short.s1.instruction.action':   'Pick up the pace: knees a little higher, arms swinging along.',
-  'extra.walk.short.s1.instruction.care':     'You should still be able to talk. No need to sweat.',
-  'extra.walk.short.s2.name':                 'Easy walk',
-  'extra.walk.short.s2.instruction.action':   'Ease off little by little, down to a calm pace.',
-  'extra.walk.short.s2.instruction.care':     'Loose shoulders. Let your breathing settle.',
-  'extra.walk.short.s3.name':                 'Deep breaths',
-  'extra.walk.short.s3.instruction.action':   '3 full breaths to finish.',
-
   'extra.shoulders.strong.name':              'Strong Shoulders',
   'extra.shoulders.strong.desc':              'Lateral raises and rows with a water bottle, or nothing. Standing, by the desk.',
   'extra.shoulders.strong.code':              'Strength',

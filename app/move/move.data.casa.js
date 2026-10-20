@@ -1,50 +1,24 @@
 /* PACE · app/move/move.data.casa.js — LAS RUTINAS DE **MUEVE** DE LOS DÍAS DISEÑADOS
    ==================================================================================
-   Dos rutinas de pie para la tarde, todo dentro de casa: en una habitación o junto a la
-   mesa, sin escaleras ni salir (Ez, 17 oct. 2026). Las propuso la revisión de los
-   ejercicios (docs/traspaso/archivos/revision-ejercicios/REVISION.md §5) y Ez las dejó
-   para los días diseñados. Van aparte porque `move.data.js` está cerca de las 500 líneas
-   (regla §1); los ids son `extra.*`, como todo Mueve (la tabla de ids cruzados de
-   CLAUDE.md).
+   Hombros fuertes, de pie y dentro de casa: en una habitación o junto a la mesa (Ez,
+   17 oct. 2026). La propuso la revisión de los ejercicios
+   (docs/traspaso/archivos/revision-ejercicios/REVISION.md §5) y Ez la dejó para los días
+   diseñados. Va aparte porque `move.data.js` está cerca de las 500 líneas (regla §1); el
+   id es `extra.*`, como todo Mueve (la tabla de ids cruzados de CLAUDE.md). El Paseo
+   corto, que iba con ella, salió el 20 oct.: «OLVIDA lo del paseo ya».
 
-   · Paseo corto: caminar suave rompe el rato sentado mejor que ponerse de pie, y tras
-     comer baja la glucosa (Buffey et al. 2022, Sports Med; Duran et al. 2023, MSSE). La
-     OMS (2020) cuenta cualquier actividad. «A tu ritmo» lo sirve después de comer
-     (`comida` en RITMO_SERIES_META).
    · Hombros fuertes: fuerza corta de hombro con una botella de agua o sin nada. La
      elevación lateral, 2 min al día, bajó el dolor de cuello y hombro en oficinistas
      (Andersen et al. 2011, SJWEH); la fuerza, dos días por semana (OMS, CDC).
 
-   Sin dibujo propio todavía: «Caminar», «Paso vivo», «Caminar suave», «Elevación lateral»
-   y «Remo con apoyo» salen con el genérico (docs/product/GLIFOS_A_DIBUJAR.md).
+   Sin dibujo propio todavía: «Elevación lateral» y «Remo con apoyo» salen con el genérico
+   (docs/product/GLIFOS_A_DIBUJAR.md).
 
    GUARD DE ORDEN: añade a los grupos de `move.data.js`; si se evalúa antes, aborta en
-   vez de dejar la biblioteca sin las dos rutinas sin que nadie lo vea. */
-if (!window.MOVE_ROUTINES || !window.MOVE_ROUTINES.piernas || !window.MOVE_ROUTINES.empuje) {
+   vez de dejar la biblioteca sin la rutina sin que nadie lo vea. */
+if (!window.MOVE_ROUTINES || !window.MOVE_ROUTINES.empuje) {
   throw new Error('move.data.casa.js se ha evaluado ANTES que move.data.js: revisa el orden en PACE.html');
 }
-
-window.MOVE_ROUTINES.piernas.items.push(
-  { id: 'extra.walk.short', tag: 'LEG', code: 'Paseo', name: 'Paseo corto', desc: 'Tres minutos andando por la habitación, o en el sitio. Sienta bien después de comer.', min: 3,
-    position: ['standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
-    steps: [
-      { name: 'Caminar', mode: 'timed', dur: 60,
-        instruction: {
-          setup: 'Levántate. Camina por la habitación o marcha en el sitio, junto a la mesa.',
-          action: 'Paso cómodo y brazos sueltos. Respira tranquilo.',
-          care: 'Si hay poco sitio, marcha en el sitio: vale igual.' } },
-      { name: 'Paso vivo', mode: 'timed', dur: 60,
-        instruction: {
-          action: 'Aviva el paso: rodillas algo más altas y brazos que acompañan.',
-          care: 'Que puedas hablar sin ahogarte. Sin llegar a sudar.' } },
-      { name: 'Caminar suave', mode: 'timed', dur: 45,
-        instruction: {
-          action: 'Baja el ritmo poco a poco, hasta un paso tranquilo.',
-          care: 'Hombros sueltos. Deja que la respiración se calme.' } },
-      { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
-        instruction: { action: '3 inhalaciones completas para cerrar.' } },
-    ]}
-);
 
 window.MOVE_ROUTINES.empuje.items.push(
   { id: 'extra.shoulders.strong', tag: 'PUSH', code: 'Fuerza', name: 'Hombros fuertes', desc: 'Elevación lateral y remo con una botella de agua, o sin nada. De pie, junto a la mesa.', min: 3,

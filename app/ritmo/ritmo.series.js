@@ -52,13 +52,14 @@ var RITMO_SERIES_META = {
   /* Sin el Superman ya no pide suelo y entra en el pozo (revisión de los ejercicios). */
   'extra.back.desk': { z: ['espalda', 'hombros'], pie: true },
   'extra.legs.standing': { z: ['piernas'], pie: true },
-  /* Los días diseñados (17 oct. 2026): el paseo va después de comer (`comida`) y la pared
-     cuenta como la mesa (ritmoPozos), así que entran Hombros y Sentadilla en pared. */
-  'extra.walk.short': { z: ['piernas'], pie: true, comida: true },
+  /* Dentro de casa (los días diseñados, 17 oct. 2026): Hombros fuertes, y lo que pide una
+     pared, que cuenta como la mesa (ritmoPozos). */
   'extra.shoulders.strong': { z: ['hombros'], pie: true },
   'move.shoulders.5': { z: ['hombros'], pie: true },
   'extra.wall.sit': { z: ['piernas'], pie: true },
 };
+/* Las seis zonas que un día mueve entero (Ez, 20 oct. 2026). */
+var RITMO_ZONAS = ['piernas', 'caderas', 'espalda', 'hombros', 'cuello', 'manos'];
 /* Lo hecho fuera de los pozos (una rutina de suelo, por libre) también mueve su zona: se
    lee de su etiqueta del catálogo. */
 var RITMO_SERIES_ZONA_TAG = {
@@ -73,7 +74,49 @@ function ritmoSeriesZonas(id, tag) {
   return RITMO_SERIES_ZONA_TAG[tag] ? [RITMO_SERIES_ZONA_TAG[tag]] : [];
 }
 function ritmoSeriesDePie(id) { var m = RITMO_SERIES_META[id]; return !!(m && m.pie); }
-function ritmoSeriesTrasComer(id) { var m = RITMO_SERIES_META[id]; return !!(m && m.comida); }
+
+/* Las zonas como seis bits, para contarlas deprisa. */
+function ritmoSeriesBits(zonas) {
+  var b = 0;
+  (zonas || []).forEach(function (z) { var k = RITMO_ZONAS.indexOf(z); if (k !== -1) b |= 1 << k; });
+  return b;
+}
+
+/* EL CUERPO ENTERO, contado. `huecos`: lo que puede servir cada parada que queda, en orden
+   (la larga, solo Estira). `alcance(k, falta, sentada)`: cuánto de `falta` (bits) pueden
+   mover todavía las paradas desde la k, sin dos sentadas seguidas (`sentada`: la de antes
+   lo fue); con `pesos` ({ zona: n }), la suma de sus pesos. Se recuerda lo calculado: son
+   como mucho una docena de paradas × 64 × 2 posturas, una vez por día servido. */
+function ritmoSeriesCuenta(huecos, pesos) {
+  pesos = pesos || {};
+  var peso = function (b) {
+    var n = 0;
+    RITMO_ZONAS.forEach(function (z, k) { if (b & (1 << k)) n += pesos[z] || 1; });
+    return n;
+  };
+  var trozos = huecos.map(function (rutinas) {
+    var vistos = {}, out = [];
+    rutinas.forEach(function (r) {
+      var t = { b: ritmoSeriesBits(ritmoSeriesZonas(r.id, r.tag)), sentada: !ritmoSeriesDePie(r.id) };
+      var clave = t.b * 2 + (t.sentada ? 1 : 0);
+      if (t.b && !vistos[clave]) { vistos[clave] = true; out.push(t); }
+    });
+    return out;
+  });
+  var memo = {};
+  function alcance(k, falta, sentada) {
+    if (k >= huecos.length || !falta) return 0;
+    var clave = k * 128 + falta * 2 + (sentada ? 1 : 0);
+    if (memo[clave] != null) return memo[clave];
+    var mejor = alcance(k + 1, falta, false);   /* una de pie que no mueve nada nuevo */
+    trozos[k].forEach(function (t) {
+      var b = falta & t.b;
+      if (b && !(sentada && t.sentada)) mejor = Math.max(mejor, peso(b) + alcance(k + 1, falta & ~b, t.sentada));
+    });
+    return (memo[clave] = mejor);
+  }
+  return { alcance: alcance, peso: peso };
+}
 
 /* La clave de cada parada para «la misma parada la última vez»: su ordinal en el día, y
    el cierre, «c». Devuelve { clave: [ids] } de un día ya servido. */
@@ -92,6 +135,7 @@ function ritmoSeriesClaves(items) {
    `mem` = { pasado: [tramos congelados], estados: { ordinal: 'hecha'|'saltada' },
    ultima: { clave: [ids] } (el último día servido), dias: { id: días desde que salió },
    hechas: [{ id, t, z }] (lo terminado hoy, a su minuto), inicio }; todo opcional.
+   `mem.varia`: con PACE completo, las rutinas cambian de un día a otro.
    `opts.aire`: el acento del jueves. */
 function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   if (!m || !m.items) return m;
@@ -100,8 +144,8 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   mem = mem || {};
   var estados = mem.estados || {}, ultima = mem.ultima || {}, dias = mem.dias || {}, hechas = mem.hechas || [];
   var ap = mem.aprendido || {}, descansa = ap.descansa || {}, ayuda = ap.ayuda || {};
-  var dia = opts && opts.dia || null, momentos = !!(opts && opts.momentos), tarde = false, fraseDia = false;
-  var quedaComida = m.items.some(function (it) { return it.tipo === 'comida'; });
+  var varia = !!mem.varia, todas = (P.estira || []).concat(P.mueve || []), todasBits = 0;
+  todas.forEach(function (r) { todasBits |= ritmoSeriesBits(ritmoSeriesZonas(r.id)); });
   var usados = {}, movidas = {}, vez = 0;   /* usados: { id: la vez que salió hoy (1, 2, …) } */
   (previos && previos.usados || []).forEach(function (id) { usados[id] = usados[id] || ++vez; });
   /* `previos` ya dice si hubo pausas o comida antes de recomponer; lo congelado lo repasa abajo */
@@ -112,6 +156,11 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   var ultimaPie = inicio, desdeLarga = inicio;
   var otraVez = {};
   Object.keys(ultima).forEach(function (k) { (ultima[k] || []).forEach(function (id) { otraVez[id] = true; }); });
+  /* Las zonas que el último día no movió (no cupieron) pesan más que las seis juntas: si
+     hoy tampoco cabe todo, van primero. */
+  var ayerMovidas = {}, pesos = {};
+  Object.keys(otraVez).forEach(function (id) { ritmoSeriesZonas(id).forEach(function (z) { ayerMovidas[z] = true; }); });
+  if (Object.keys(otraVez).length) RITMO_ZONAS.forEach(function (z) { if (!ayerMovidas[z]) pesos[z] = 7; });
 
   /* Lo ya pasado (congelado al recolocar) cuenta igual que lo servido: zonas, de pie, saltada. */
   function pasar(it, ids, saltada) {
@@ -124,7 +173,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     previa = { zonas: zonas, pie: pie, saltada: saltada };
     if (it.tipo === 'pausa') { huboPausa = true; trasComer = false; }
   }
-  function comer(it) { trasComer = true; tarde = true; quedaComida = false; previa = null; ultimaPie = desdeLarga = it.desde + it.dur; }
+  function comer(it) { trasComer = true; previa = null; ultimaPie = desdeLarga = it.desde + it.dur; }
   (mem.pasado || []).forEach(function (it) {
     if (it.tipo === 'comida') return comer(it);
     if (it.tipo !== 'pausa' && it.tipo !== 'cierre') return;
@@ -147,34 +196,65 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     var fuera = hechoAntes(c.desde);
     var libres = pool.filter(function (r) { return !usados[r.id] && !fuera.u[r.id]; });
     var base = libres.length ? libres : pool;
+    /* Lo que salió ayer solo se mira con PACE completo: es la variedad entre días. */
     var aqui = {};
-    (ultima[c.clave] || []).forEach(function (id) { aqui[id] = true; });
+    if (varia) (ultima[c.clave] || []).forEach(function (id) { aqui[id] = true; });
+    /* EL CUERPO ENTERO: cuánto de lo que aún no se ha movido hoy pueden mover las paradas
+       que quedan (`cuenta`), con cada candidata y sin ella. Con paradas de sobra, cualquiera
+       vale; si van justas, solo las que no dejan una zona fuera, aunque sea sentada. Si el
+       cuerpo entero no cabe de ninguna forma, levantarse manda y después, la que más mueve. */
+    var cuerpo = c.hueco != null, falta = 0;
+    RITMO_ZONAS.forEach(function (z, k) { if (!movidas[z] && !fuera.z[z]) falta |= 1 << k; });
+    var tope = cuerpo ? cuenta.alcance(c.hueco, falta, c.sentada) : 0;
+    var cabe = cuerpo && tope >= cuenta.peso(falta & todasBits);
+    var alcanza = function (r) {
+      var b = falta & ritmoSeriesBits(ritmoSeriesZonas(r.id));
+      return cuenta.peso(b) + cuenta.alcance(c.hueco + 1, falta & ~b, !ritmoSeriesDePie(r.id));
+    };
+    /* Con PACE completo, si el cuerpo entero aún cabe con lo que ayer no salió, se planea con
+       eso: así una zona no repite rutina de un día al siguiente. */
+    var nuevo = cabe && !!fresca && fresca.alcance(c.hueco, falta, c.sentada) >= tope;
+    var alcanzaNueva = function (r) {
+      if (otraVez[r.id]) return -1;
+      var b = falta & ritmoSeriesBits(ritmoSeriesZonas(r.id));
+      return fresca.peso(b) + fresca.alcance(c.hueco + 1, falta & ~b, !ritmoSeriesDePie(r.id));
+    };
+    var entero = function (cuanto) {
+      var mx = -1;
+      t0.forEach(function (r) { mx = Math.max(mx, cuanto(r)); });
+      t0 = t0.filter(function (r) { return cuanto(r) >= mx; });
+    };
     /* levantarse manda sobre «la misma parada la última vez»: nunca dos sentadas
        seguidas si hay algo de pie (medido: al revés, la jornada tenía dos seguidas) */
     var t0 = base;
     var sinDescanso = t0.filter(function (r) { return !descansa[r.id]; });
     if (sinDescanso.length) t0 = sinDescanso;
+    if (c.sentada) { var dePie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); }); if (dePie.length) t0 = dePie; }
+    if (nuevo) entero(alcanzaNueva);
+    if (cabe) entero(alcanza);
     if (c.corta) { var cortos = t0.filter(function (r) { return (r.min || 0) <= c.corta; }); if (cortos.length) t0 = cortos; }
     if (c.levantar) { var pie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); }); if (pie.length) t0 = pie; }
-    var paseo = c.paseo ? t0.filter(function (r) { return ritmoSeriesTrasComer(r.id); }) : [];
-    if (c.reserva) { var sinPaseo = t0.filter(function (r) { return !ritmoSeriesTrasComer(r.id); }); if (sinPaseo.length) t0 = sinPaseo; }
-    var sinAyer = t0.filter(function (r) { return !aqui[r.id]; });
-    if (paseo.length) t0 = paseo;
-    else if (sinAyer.length) t0 = sinAyer;
+    if (cuerpo && !cabe) entero(alcanza);
+    if (varia) {
+      var sinAyer = t0.filter(function (r) { return !aqui[r.id]; });
+      if (sinAyer.length) t0 = sinAyer;
+      var nada = t0.filter(function (r) { return !otraVez[r.id]; });
+      if (nada.length) t0 = nada;
+    }
     var puntuar = function (r) {
       var z = ritmoSeriesZonas(r.id), p = 0;
       var nueva = z.filter(function (x) { return !movidas[x] && !fuera.z[x]; });
       if (nueva.length) p += 3;
       if (previa && z.some(function (x) { return previa.zonas.indexOf(x) !== -1; })) p -= 3;
-      if (otraVez[r.id] && !aqui[r.id]) p -= 1;
-      if (dia && z.some(function (x) { return dia.zonas.indexOf(x) !== -1; })) p += 4;
-      return { r: r, p: p, hace: dias[r.id] == null ? 99 : dias[r.id], hoy: usados[r.id] || 0, i: pozo.indexOf(r),
-               nueva: nueva[0] || null, aqui: !!aqui[r.id], ayuda: ayuda[r.id] ? 1 : 0 };
+      if (varia && otraVez[r.id] && !aqui[r.id]) p -= 1;
+      return { r: r, p: p, hace: varia && dias[r.id] != null ? dias[r.id] : 99, hoy: usados[r.id] || 0, i: pozo.indexOf(r),
+               nueva: nueva[0] || null, aqui: !!aqui[r.id], ayuda: ayuda[r.id] ? 1 : 0,
+               deja: !cuerpo ? 0 : !cabe ? (tope - alcanza(r)) / (tope + 1) : alcanza(r) < tope ? 8 : nuevo && alcanzaNueva(r) < tope ? 0.5 : 0 };
     };
-    /* Empata la que te ayudó, luego la que hace más días que no sale; si ya salió todo hoy,
-       la que salió antes. */
+    /* Empata la que te ayudó y, con PACE completo, la que hace más días que no sale; si ya
+       salió todo hoy, la que salió antes. */
     var orden = function (xs) {
-      return xs.map(puntuar).sort(function (a, b) { return (b.p - a.p) || (a.hoy - b.hoy) || (b.ayuda - a.ayuda) || (b.hace - a.hace) || (a.i - b.i); });
+      return xs.map(puntuar).sort(function (a, b) { return (a.deja - b.deja) || (b.p - a.p) || (a.hoy - b.hoy) || (b.ayuda - a.ayuda) || (b.hace - a.hace) || (a.i - b.i); });
     };
     return orden(t0).concat(orden(base.filter(function (r) { return t0.indexOf(r) === -1; })));
   }
@@ -199,6 +279,12 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (!aireIt) { if (!x0.larga) aireIt = x0; } else { antesAire = x0; break; }
     }
   }
+  /* Las paradas que aún mueven el cuerpo: las pausas, menos la de respirar del jueves. */
+  var huecos = m.items.filter(function (it) { return it.tipo === 'pausa' && it !== aireIt; }).map(function (it) {
+    return it.larga ? P.estira || [] : todas;
+  });
+  var cuenta = ritmoSeriesCuenta(huecos, pesos), hueco = 0;
+  var fresca = varia ? ritmoSeriesCuenta(huecos.map(function (rs) { return rs.filter(function (r) { return !otraVez[r.id]; }); }), pesos) : null;
 
   var i = previos ? previos.claves || 0 : 0;   /* las claves de «Otra» siguen la numeración del día */
   m.items.forEach(function (it) {
@@ -207,6 +293,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     ord++;
     var key = it.tipo === 'cierre' ? 'c' : String(ord);
     var platos = [], frase = null;
+    var sentada = !!(previa && (!previa.pie || previa.saltada));
     if (it.tipo === 'cierre') {
       var xc = elegir('cierre', { clave: key, desde: it.desde, cabe: it.dur }, 'cierre');
       if (xc) platos.push(plato('respira', xc, 'cierre'));
@@ -216,7 +303,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       var clave = 'p' + (++i);
       var xr = elegir('respira', { clave: key, desde: it.desde }, clave + 'a');
       if (xr) platos.push(plato('respira', xr, clave + 'a'));
-      var xe = elegir('estira', { clave: key, desde: it.desde, levantar: true }, clave + 'b');
+      var xe = elegir('estira', { clave: key, desde: it.desde, levantar: true, hueco: hueco++, sentada: sentada }, clave + 'b');
       if (xe) platos.push(plato('estira', xe, clave + 'b'));
       it.motivo = 'larga';
       if (it.desde - desdeLarga >= RITMO_SERIES_LARGA) frase = { k: 'larga' };
@@ -224,22 +311,22 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     } else {
       var claveC = 'p' + (++i);
       var primera = !huboPausa, tras = trasComer;
-      var porPrevia = !!(previa && (!previa.pie || previa.saltada));
-      var cadencia = it.n % 3 === 2 && ap.menos !== 'mueve' && !(dia && dia.estira) ? 'mueve' : 'estira';
+      var porPrevia = sentada;
+      var cadencia = it.n % 3 === 2 && ap.menos !== 'mueve' ? 'mueve' : 'estira';
       var modulo = it === aireIt ? 'respira' : (primera || tras) ? 'mueve' : cadencia;
       var corta = null;
       (ap.cortas || []).forEach(function (k) { if (Math.abs(k.hora - it.desde) <= k.margen) corta = k.min; });
-      var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || tras || porPrevia || it === antesAire || (momentos && tarde)),
-                paseo: momentos && tras && modulo !== 'respira', reserva: momentos && quedaComida,
-                cabe: modulo === 'respira' ? it.dur : null, corta: modulo === 'respira' ? null : corta };
+      var c = { clave: key, desde: it.desde, levantar: modulo !== 'respira' && (primera || tras || porPrevia || it === antesAire),
+                cabe: modulo === 'respira' ? it.dur : null, corta: modulo === 'respira' ? null : corta,
+                hueco: modulo === 'respira' ? null : hueco++, sentada: sentada };
       var x = elegir(modulo, c, claveC);
       /* Toca levantarse y este módulo solo tiene algo sentado, o lo de pie salió aquí la
          última vez, o la pausa es corta y aquí no hay nada tan corto: el otro módulo, si
          tiene algo mejor. Un módulo vacío sirve el otro. */
       var nota = function (z) {
-        return !z ? 9 : (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui && !(c.paseo && ritmoSeriesTrasComer(z.r.id)) ? 1 : 0);
+        return !z ? 9 : z.deja + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
       };
-      if (modulo !== 'respira' && (!x || ((c.levantar || c.corta) && nota(x) > 0))) {
+      if (modulo !== 'respira' && (!x || ((c.levantar || c.corta || x.deja || x.hoy) && nota(x) > 0))) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';
         var y = elegir(otro, c, claveC);
         if (nota(y) < nota(x)) { x = y; modulo = otro; }
@@ -250,17 +337,12 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (tras && pie) frase = { k: 'comida' };
       else if (porPrevia && pie && !primera) frase = { k: 'sentado', n: Math.round(it.desde - ultimaPie) };
       else if (x && x.nueva) frase = { k: 'zona', zona: x.nueva };
-      else if (momentos && tarde && pie) frase = { k: 'tarde' };
     }
     if (platos.length) it.platos = platos;
-    /* la intención del día, en la primera parada que la sirve (o la de respirar del jueves) */
-    var delDia = dia && it.tipo === 'pausa' && (aireIt ? it === aireIt : platos.some(function (p) {
-      return p.modulo !== 'respira' && ritmoSeriesZonas(p.id).some(function (z) { return dia.zonas.indexOf(z) !== -1; }); }));
-    if (delDia && !fraseDia && opts.frase) { frase = { k: 'dia', dia: dia.id }; fraseDia = true; }
     it.frase = frase;
     pasar(it, (it.platos || []).map(function (p) { return p.id; }), false);
   });
   return m;
 }
 
-Object.assign(window, { RITMO_SERIES_META, RITMO_SERIES_ZONA_TAG, ritmoSeriesZonas, ritmoSeriesDePie, ritmoSeriesTrasComer, ritmoSeriesClaves, ritmoServir });
+Object.assign(window, { RITMO_SERIES_META, RITMO_SERIES_ZONA_TAG, RITMO_ZONAS, ritmoSeriesZonas, ritmoSeriesDePie, ritmoSeriesBits, ritmoSeriesCuenta, ritmoSeriesClaves, ritmoServir });
