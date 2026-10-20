@@ -36,7 +36,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
    publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. «Libre»
    en el calendario (v0.173.1) y publicar solo la app (v0.173.2, `dist/` con `scripts/web-dist.js`),
-   en `main` desde el 20 oct. con el sí de Ez; falta su cambio en Cloudflare (abajo). Las ramas ya juntadas, borradas (copia en
+   en `main` desde el 20 oct. con el sí de Ez, que ese día puso en Cloudflare Pages el comando
+   `node scripts/web-dist.js` y la salida `dist`. Las ramas ya juntadas, borradas (copia en
    `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto), y las sesiones terminadas,
    archivadas.
 
@@ -46,9 +47,6 @@ La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
 (`docs/traspaso/hoja-de-ruta-20oct.html`, https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). Ez se
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ya**: en Cloudflare Pages › Settings › Build, el comando `node scripts/web-dist.js` y la carpeta
-  de salida `dist` (v0.173.2 está en `main`; `docs/BUILD.md`, «La web publicada»). Después, comprobar
-  que pacegrass.app/STATE.md ya no da 4.931 bytes de markdown.
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6); el gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal;
   volver a exportar el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
@@ -67,6 +65,12 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.
 
 ## Deuda conocida, sin fecha
+
+- **Desde el 27 oct.**, comprobar por tamaño que pacegrass.app ya no sirve /STATE.md, /CLAUDE.md,
+  /docs/traspaso/LEEME.md, /docs/product/DECISIONES_PRODUCTO.md ni /package.json. Tras pasar a
+  `dist/` (20 oct.), Pages siguió dando la copia vieja de lo ya pedido (`s-maxage=604800`, una
+  semana): no la quitan ni un despliegue nuevo ni Purge Everything de la zona, que Ez hizo. Lo
+  demás ya da la app.
 
 - A 320×568 la home del móvil pide scroll (Ez lo acepta) · las escenas con scroll anteriores a
   v0.130.0.

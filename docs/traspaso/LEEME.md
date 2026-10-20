@@ -19,7 +19,8 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   jerga («no sé qué carajo es tarde de pie»); las preguntas, con AskUserQuestion, y repetirle lo
   entendido antes de montar.
   - Con su «júntalo», `claude/intelligent-cannon-40e082` entró en `main` sin choques (ce0e295):
-    «libre» y publicar solo la app. **Falta Ez** en Cloudflare (comando y salida, `STATE.md`).
+    «libre» y publicar solo la app. Ez cambió Cloudflare el mismo día, con los pasos explicados uno
+    a uno (Workers & Pages › paceweb › Settings › Build › Build configuration › Edit).
   - Días diseñados: Ez rechazó la intención por día y el paseo. Lo que eligió está en
     `DECISIONES_PRODUCTO.md`, arriba del todo. La sesión antigua ya no estaba viva; quedó una tarjeta
     para una sesión nueva (`dias-cuerpo-entero`) que retoma el wip 3ae2dc5 y le enseña una página
