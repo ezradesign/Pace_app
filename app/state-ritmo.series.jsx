@@ -87,6 +87,7 @@ function ritmoFrase(it, t, tn) {
   if (!f || !f.k) return null;
   if (f.k === 'zona') return f.zona ? tn('ritmo.frase.zona', { zona: t('ritmo.zona.' + f.zona) }) : null;
   if (f.k === 'sentado') return f.n > 0 ? tn('ritmo.frase.sentado', { n: f.n }) : null;
+  if (f.k === 'dia') return f.dia ? t('ritmo.frase.dia.' + f.dia) : null;
   return t('ritmo.frase.' + f.k);
 }
 

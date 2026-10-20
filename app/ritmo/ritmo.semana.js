@@ -58,13 +58,15 @@ var SEMANA_TEMAS = [
   { id: 'ligera', nombre: 'Semana ligera', estira: ['SIT', 'WRST'], mueve: ['STEALTH', 'GRIP'], respira: ['REL'], corta: true },
 ];
 
-/* LOS ACENTOS del día (1 = lunes … 7 = domingo). Cambian la forma, no los platos. */
+/* LOS ACENTOS del día (1 = lunes … 7 = domingo): la forma del día y, de lunes a viernes,
+   SU INTENCIÓN (los días diseñados, 17 oct. 2026): `zonas` es lo que el día inclina en las
+   series (ritmo.series.js) y `estira`, que las cortas sean de Estira. */
 var SEMANA_ACENTOS = {
-  1: { id: 'arranque' },   /* la primera pausa activa el cuerpo (Mueve): ya todos los días */
-  2: { id: 'sostener' },   /* el día tal cual */
-  3: { id: 'mitad' },      /* la primera larga llega antes: la segunda pausa, no la tercera */
-  4: { id: 'aire' },       /* antes de comer se respira, no se estira */
-  5: { id: 'cierre' },     /* el cierre rota entre los Respira lentos: ya todos los días */
+  1: { id: 'arranque', zonas: ['piernas'] },            /* arrancar de pie */
+  2: { id: 'sostener', zonas: ['hombros', 'cuello'] },
+  3: { id: 'mitad', zonas: ['espalda'] },               /* y la primera larga llega antes */
+  4: { id: 'aire', zonas: ['manos'] },                  /* y antes de comer se respira */
+  5: { id: 'cierre', zonas: ['caderas'], estira: true }, /* soltar: más Estira que Mueve */
   6: { id: 'libre' },
   7: { id: 'libre' },
 };
@@ -107,7 +109,8 @@ function semanaComponer(opcion, horario, pozos, cambios, meta, semana, previos, 
   var h = mitad ? Object.assign({}, horario, { adelantaLarga: true }) : horario;
   var m = ritmoComponer(opcion, h, P, cambios, meta, previos);
   if (!m || typeof ritmoServir !== 'function') return m;
-  return ritmoServir(m, P, cambios, previos, memoria, { aire: a === 'aire' });
+  var dia = semana.acento && semana.acento.zonas ? semana.acento : null;
+  return ritmoServir(m, P, cambios, previos, memoria, { aire: a === 'aire', momentos: true, dia: dia, frase: !!dia });
 }
 
 Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, semanaPozos, semanaComponer });

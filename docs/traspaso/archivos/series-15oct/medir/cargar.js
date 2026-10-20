@@ -24,6 +24,7 @@ function sandbox(opts) {
   const pares = [
     ['app/breathe/BreatheLibrary.jsx', { __B: 'BREATHE_ROUTINES' }],
     ['app/move/move.data.js', { __M: 'MOVE_ROUTINES' }],
+    ['app/move/move.data.casa.js'],
     ['app/extra/extra.data.js', { __E1: 'EXTRA_ROUTINES' }],
     ['app/extra/extra.data.piernas.js', { __E: 'window.EXTRA_ROUTINES' }],
     ['app/ui/library-rules.js'],
