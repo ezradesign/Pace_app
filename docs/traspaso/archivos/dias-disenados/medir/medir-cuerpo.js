@@ -70,10 +70,12 @@ function correr(cod, premium, varia, que, op, aro, nDias) {
     serv[d] = sb.ritmoSeriesClaves(m.items);
     const fs7 = Object.keys(serv).sort(); while (fs7.length > 7) delete serv[fs7.shift()];
     const fila = [];
+    let comio = false;
     m.items.forEach((it) => {
+      if (it.tipo === 'comida') comio = true;
       if (it.tipo !== 'pausa' && it.tipo !== 'cierre') return;
       const cuerpo = (it.platos || []).filter((p) => p.modulo !== 'respira');
-      fila.push({ hora: sb.ritmoHora(it.desde), tipo: it.tipo, larga: !!it.larga,
+      fila.push({ hora: sb.ritmoHora(it.desde), tipo: it.tipo, larga: !!it.larga, trasComida: comio,
         pie: cuerpo.some((p) => sb.ritmoSeriesDePie(p.id)), mueve: cuerpo.length > 0,
         zonas: [].concat(...cuerpo.map((p) => sb.ritmoSeriesZonas(p.id))),
         platos: (it.platos || []).map((p) => ({ id: p.id, name: p.name, modulo: p.modulo, z: sb.ritmoSeriesZonas(p.id) })) });
@@ -92,19 +94,25 @@ function porZona(dd) {
 
 function medir(dias) {
   const x = { dias: dias.length, entero: 0, faltan: {}, huecos: 0, pausas: 0, pie: 0, maxSentadas: 0, zonaCambia: 0, zonaPares: 0, repAyer: 0, rutinasDia: 0, distintas: [] };
-  let ayer = null, ayerZ = null, ayerMov = null; x.dos = 0;
+  let ayer = null, ayerZ = null, ayerMov = null; x.dos = 0; x.desequilibrio = 0; x.desMax = 0;
   dias.forEach((dd, i) => {
     const w = Math.floor(i / 5); x.distintas[w] = x.distintas[w] || new Set();
-    let racha = 0; const movidas = new Set(); const hoy = new Set();
+    let racha = 0, yaComio = false; const movidas = new Set(); const hoy = new Set();
     dd.fila.forEach((p) => {
       p.platos.forEach((pl) => { if (pl.modulo !== 'respira') { x.distintas[w].add(pl.name); hoy.add(pl.name); } });
       p.zonas.forEach((z) => movidas.add(z));
+      if (p.trasComida && !yaComio) { racha = 0; yaComio = true; }
       if (p.tipo === 'cierre' || !p.mueve) return;
       x.huecos++; x.pausas++;
       if (p.pie) { x.pie++; racha = 0; } else { racha++; x.maxSentadas = Math.max(x.maxSentadas, racha); }
     });
     const falta = ZONAS.filter((z) => !movidas.has(z));
     if (!falta.length) x.entero++;
+    /* EQUILIBRIO: cuántas pausas mueve cada zona; la diferencia entre la más movida y la menos */
+    const veces = {}; ZONAS.forEach((z) => { veces[z] = 0; });
+    dd.fila.forEach((p) => p.platos.forEach((pl) => { if (pl.modulo !== 'respira') (pl.z || []).forEach((z) => { if (z in veces) veces[z]++; }); }));
+    const dif = Math.max(...ZONAS.map((z) => veces[z])) - Math.min(...ZONAS.map((z) => veces[z]));
+    x.desequilibrio += dif; x.desMax = Math.max(x.desMax, dif);
     if (ayerMov && ZONAS.every((z) => movidas.has(z) || ayerMov.has(z))) x.dos++;
     falta.forEach((z) => { x.faltan[z] = (x.faltan[z] || 0) + 1; });
     const zz = porZona(dd);
@@ -114,7 +122,7 @@ function medir(dias) {
     ayer = hoy; ayerZ = zz; ayerMov = movidas;
   });
   const pct = (a, b) => (b ? Math.round(100 * a / b) : 0);
-  return { dias: x.dias, huecos: +(x.huecos / x.dias).toFixed(1), entero: pct(x.entero, x.dias), dosDias: pct(x.dos, x.dias - 1), faltan: x.faltan, pie: pct(x.pie, x.pausas),
+  return { dias: x.dias, huecos: +(x.huecos / x.dias).toFixed(1), entero: pct(x.entero, x.dias), dosDias: pct(x.dos, x.dias - 1), equilibrio: +(x.desequilibrio / x.dias).toFixed(1), equilibrioMax: x.desMax, faltan: x.faltan, pie: pct(x.pie, x.pausas),
     maxSentadas: x.maxSentadas, zonaCambia: pct(x.zonaCambia, x.zonaPares), repAyer: +(x.repAyer / (x.dias - 1)).toFixed(1),
     rutinasDia: +(x.rutinasDia / x.dias).toFixed(1), distintas: x.distintas.map((s) => s.size).join(',') };
 }
@@ -127,6 +135,7 @@ const CONJUNTOS = {
   nada: {}, hombros: { hombros: true }, pared: { pared: true }, 'hombros+pared': { hombros: true, pared: true },
   piernas: { piernas: true }, todo: { hombros: true, pared: true, piernas: true },
   'hombros+pared+caderas': { hombros: true, pared: true, caderas: true },
+  'pared+caderas': { pared: true, caderas: true },
 };
 const VARIANTES = [];
 if (MAIN) VARIANTES.push(['hoy', 'main', false, false, 'nada']);

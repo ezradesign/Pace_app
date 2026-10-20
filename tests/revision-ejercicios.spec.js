@@ -19,7 +19,7 @@ const RAIZ = path.join(__dirname, '..');
 function catalogo() {
   const ctx = { window: {}, console };
   vm.createContext(ctx);
-  for (const f of ['app/move/move.data.js', 'app/move/move.data.casa.js', 'app/extra/extra.data.js', 'app/extra/extra.data.piernas.js']) {
+  for (const f of ['app/move/move.data.js', 'app/extra/extra.data.js', 'app/extra/extra.data.piernas.js']) {
     vm.runInContext(fs.readFileSync(path.join(RAIZ, f), 'utf8'), ctx, { filename: f });
   }
   const en = {};

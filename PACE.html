@@ -431,9 +431,6 @@
   <!-- Datos de Mueve (s110 · B2.2): MOVE_ROUTINES + getMoveRoutine. ANTES de
        MoveModule (que referencia MOVE_ROUTINES como global via `var`). -->
   <script type="text/babel" data-presets="env,react" src="app/move/move.data.js"></script>
-  <!-- Las dos de pie de los días diseñados (17 oct. 2026): añade a los grupos de
-       move.data.js, así que va justo detrás (lleva guard que aborta). -->
-  <script type="text/babel" data-presets="env,react" src="app/move/move.data.casa.js"></script>
   <script type="text/babel" src="app/move/MoveModule.jsx"></script>
   <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
        MoveModule — comparte StepGlyph; el dispatcher de MoveSession lo elige

@@ -72,7 +72,7 @@ var CENSO = {
      tren superior. Es una rutina ANADIDA: no se retiro ninguna. */
   /* mueve 14 -> 15 y estira 17 -> 18 con las series de «A tu ritmo» (Ez, 15 oct. 2026): «Piernas
      de pie» (`extra.legs.standing`) y «Espalda de pie» (`move.back.standing`), las dos gratis. */
-  respira: 20, mueve: 17, estira: 18, caminos: 7,
+  respira: 20, mueve: 15, estira: 18, caminos: 7,
 
   /* service worker */
   precache: 236,                // +1 el 14 oct.: el dibujo de «Cuarto creciente». Antes, +6 el 14 oct.: las voces de Respira en inglés (las dos voces, tres palabras). Antes, +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
@@ -428,8 +428,6 @@ function chequeaContenido(ctx) {
      ninguno cruza, asi que se piden por EXPRESION al cargar cada archivo. */
   [['app/breathe/BreatheLibrary.jsx', { __B: 'BREATHE_ROUTINES' }],
    ['app/move/move.data.js',          { __M: 'MOVE_ROUTINES' }],
-   /* las dos de los días diseñados se añaden a los grupos de arriba: mismo objeto */
-   ['app/move/move.data.casa.js'],
    /* s178: el dato de Estira se troceo en DOS por la regla §1. Se cargan los dos y se
       pide el objeto del segundo, que es el que ya lleva los cuatro grupos: pedirlo del
       primero daria 8 rutinas de 17 y el censo lo llamaria «se ha perdido algo». */

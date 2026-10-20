@@ -68,7 +68,6 @@ function identidadesVisuales() {
      consume. `extra.data.piernas.js` AÑADE grupos con `Object.assign` y aborta
      si el primero no esta, asi que el orden de estas dos lineas importa. */
   cargar('app/move/move.data.js');
-  cargar('app/move/move.data.casa.js');
   cargar('app/extra/extra.data.js');
   cargar('app/extra/extra.data.piernas.js');
 
