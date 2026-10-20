@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.173.0 · 17 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.173.1 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -31,9 +31,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 4. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
    https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs): la pasada de texto y el e2e en dos trozos,
    hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
-   publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. Por
-   montar, cada uno en su sesión: «libre» en el calendario (pequeño) y publicar solo la app; el
-   detalle, en el relevo de `docs/traspaso/LEEME.md`. Las ramas ya juntadas, borradas (copia en
+   publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. «Libre»
+   en el calendario, hecho (v0.173.1); publicar solo la app, en curso; el detalle, en el relevo de
+   `docs/traspaso/LEEME.md`. Las ramas ya juntadas, borradas (copia en
    `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto), y las sesiones terminadas,
    archivadas.
 

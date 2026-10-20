@@ -17,6 +17,8 @@
  *  · GOOGLE: dentro de la hora se cambia con PATCH; pasada, el enlace dice «Poner
  *    al día» y ese clic vuelve a pedir permiso.
  *  · MICROSOFT: pasada la hora, se renueva sin ventana con el pase de un día.
+ *  · Que lo de PACE va como LIBRE también al CAMBIARLO (Ez, 18 oct. 2026): así
+ *    lo que se escribió ocupado antes pasa a libre en el primer cambio.
  *  · Sin PACE completo (después de v1), la casilla lleva candado y abre la invitación.
  *
  * NO CUBRE: un móvil, Google ni Microsoft de verdad (los ids los da Ez:
@@ -208,6 +210,8 @@ test.describe('en Android', () => {
     const callado = (await llamadas(page, 'modifyEvent')).pop();
     expect(callado.startDate).toBe(ms('09:45'));
     expect(callado.alerts).toEqual([]);
+    (await llamadas(page, 'modifyEvent')).concat(await llamadas(page, 'createEvent'))
+      .forEach((l) => expect(l.availability, 'libre (EventAvailability.FREE)').toBe(1));
 
     /* Por libre: se quita lo que no ha acabado. */
     await page.evaluate(() => { localStorage.removeItem('pace.timer.v1'); ritmoGuardar(() => ({ libre: ritmoHoy() })); });
@@ -347,6 +351,7 @@ test('con Google: dentro de la hora se cambia lo que está; pasada, «Poner al d
   await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toHaveText('Tu calendario ya está al día.', { timeout: 15_000 });
   expect(g.vistas.slice(hechos).filter((v) => v.metodo === 'VENTANA')).toHaveLength(1);
   expect(g.vistas.slice(hechos).filter((v) => v.metodo === 'PATCH').length).toBeGreaterThan(0);
+  g.vistas.filter((v) => v.metodo === 'POST' || v.metodo === 'PATCH').forEach((v) => expect(v.cuerpo.transparency, v.metodo).toBe('transparent'));
   expect(errores).toEqual([]);
 });
 
@@ -379,6 +384,7 @@ test('con Microsoft: pasada la hora, se renueva sin ventana y sigue cambiando lo
   expect(nuevas.filter((v) => v.metodo === 'VENTANA')).toHaveLength(0);
   expect(nuevas.filter((v) => v.metodo === 'TOKEN').map((v) => v.cuerpo)).toEqual([expect.stringContaining('grant_type=refresh_token')]);
   nuevas.filter((v) => v.metodo === 'PATCH').forEach((v) => expect(v.auth).toBe('Bearer pase-renovado'));
+  m.vistas.filter((v) => v.metodo === 'POST' || v.metodo === 'PATCH').forEach((v) => expect(v.cuerpo.showAs, v.metodo).toBe('free'));
   await expect(vis(page, '[data-pace-ritmo-calendario]')).toHaveText('Calendario al día');
   expect(errores).toEqual([]);
 });

@@ -250,9 +250,13 @@ function paceAndroidCalendarioAlarmas(ev) {
   return ev.aviso ? [0] : [];
 }
 
-/* Crea un evento ocupado. Devuelve su id, o null. */
+/* LIBRE (`EventAvailability.FREE`, 1; 0 es ocupado), al crear y al cambiar:
+   los compañeros solo te ven ocupado en tus reuniones (Ez, 18 oct. 2026). */
+var PACE_ANDROID_LIBRE = 1;
+
+/* Crea un evento libre. Devuelve su id, o null. */
 function paceAndroidCalendarioCrear(calendario, ev) {
-  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: 0, alerts: paceAndroidCalendarioAlarmas(ev) };
+  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: PACE_ANDROID_LIBRE, alerts: paceAndroidCalendarioAlarmas(ev) };
   if (calendario) o.calendarId = String(calendario);
   return paceAndroidLlamar('CapacitorCalendar', 'createEvent', o).then(function (r) { return r && r.id != null ? String(r.id) : null; });
 }
@@ -261,7 +265,7 @@ function paceAndroidCalendarioCrear(calendario, ev) {
    sobre uno que no existe, el complemento no falla y deja alarmas sueltas. */
 function paceAndroidCalendarioCambiar(id, ev) {
   return paceAndroidLlamar('CapacitorCalendar', 'modifyEvent', { id: String(id), title: ev.titulo, description: ev.texto,
-    startDate: ev.inicio, endDate: ev.fin, alerts: paceAndroidCalendarioAlarmas(ev) });
+    startDate: ev.inicio, endDate: ev.fin, availability: PACE_ANDROID_LIBRE, alerts: paceAndroidCalendarioAlarmas(ev) });
 }
 
 function paceAndroidCalendarioBorrar(id) {

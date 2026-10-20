@@ -311,35 +311,37 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
   });
 }
 
-/* Lo que comparten crear y cambiar: horas, título, texto y aviso al empezar.
-   Sin `solo` (los de «Añadir» de una vez) nunca hay aviso. */
+/* Lo que comparten crear y cambiar: horas, título, texto, aviso al empezar y
+   LIBRE, para que los compañeros solo te vean ocupado en tus reuniones (Ez,
+   18 oct. 2026). Va también al cambiar: lo que se escribió ocupado antes pasa a
+   libre en el primer cambio. Sin `solo` (los de «Añadir» de una vez) nunca hay
+   aviso. */
 function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(), b = new Date(ev.fin).toISOString();
   var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
-    return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b },
+    return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b }, transparency: 'transparent',
              reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
   var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
                  start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-                 isReminderOn: aviso };
+                 showAs: 'free', isReminderOn: aviso };
   if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
   return cuerpo;
 }
 
-/* Crea un evento de PACE: ocupado y marcado con su día y, si se mantiene solo,
-   con su clave. Resuelve con el id que le da el calendario. */
+/* Crea un evento de PACE, marcado con su día y, si se mantiene solo, con su
+   clave: PACE reconoce lo suyo por esa marca, nunca por lo ocupado. Resuelve
+   con el id que le da el calendario. */
 function calendarioWebCrear(prov, token, iso, ev, solo) {
   var cuerpo = calendarioWebCuerpo(prov, ev, solo);
   if (prov === 'google') {
     var privado = { pace: 'ritmo', paceDia: iso };
     if (solo) privado.paceClave = ev.clave;
-    cuerpo.transparency = 'opaque';
     cuerpo.extendedProperties = { private: privado };
     return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API, { method: 'POST', body: JSON.stringify(cuerpo) })
       .then(function (j) { return j && j.id ? String(j.id) : null; });
   }
-  cuerpo.showAs = 'busy';
   cuerpo.singleValueExtendedProperties = [{ id: CALENDARIO_MS_PROP, value: iso }].concat(solo ? [{ id: CALENDARIO_MS_CLAVE, value: ev.clave }] : []);
   return calendarioFetch(prov, token, CALENDARIO_GRAPH + 'events', { method: 'POST', body: JSON.stringify(cuerpo) })
     .then(function (j) { return j && j.id ? String(j.id) : null; });

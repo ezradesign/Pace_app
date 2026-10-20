@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 18 de octubre de 2026, v0.173.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.1.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -16,7 +16,9 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
   https://claude.ai/artifact/CBVzMw539HF895eM2HJmbw). Sin tocar código: esta cuenta se quedó al 92 %
   de la semana (se repone el lunes 20 a las 15:00). **Sigue la otra cuenta** con estos encargos, uno
   por sesión:
-  1. **«Libre» en el calendario** (pequeño, v0.173.1): `calendarioWebCuerpo` en
+  1. **«Libre» en el calendario: hecho el 20 oct.** (v0.173.1, rama `claude/intelligent-cannon-40e082`,
+     se junta con el sí de Ez). Libre al crear y al cambiar en los cuatro destinos (`modifyEvent`
+     también acepta `availability`), y la privacidad lo cuenta. Lo que se pidió: `calendarioWebCuerpo` en
      `app/ritmo/ritmo.calendario.web.js` lleva `transparency: 'transparent'` (Google) y
      `showAs: 'free'` (Outlook) para crear Y cambiar (hoy `opaque`/`busy` solo al crear, líneas
      337 y 342); `app/ui/android.js:255` `availability: 1` (el enum del complemento: 0 ocupado, 1

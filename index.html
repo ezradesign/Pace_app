@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.173.0</title>
+  <title>PACE · Foco · Cuerpo — v0.173.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6351,7 +6351,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.173.0';
+const PACE_VERSION = 'v0.173.1';
 
 
 
@@ -10528,7 +10528,7 @@ function calendarioIcs(eventos, iso, ahoraMs) {
     l.push('BEGIN:VEVENT', 'UID:pace-' + dia + '-' + e.clave + '@' + CALENDARIO_MARCA, 'DTSTAMP:' + sello,
     'DTSTART:' + calendarioSelloUtc(a), 'DTEND:' + calendarioSelloUtc(b),
     'SUMMARY:' + calendarioEscapa(e.titulo), 'DESCRIPTION:' + calendarioEscapa(e.texto),
-    'TRANSP:OPAQUE', 'END:VEVENT');
+    'TRANSP:TRANSPARENT', 'END:VEVENT');
   });
   l.push('END:VCALENDAR');
   return l.map(calendarioPliega).join('\r\n') + '\r\n';
@@ -10891,19 +10891,23 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
 
 
 
+
+
+
 function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(),b = new Date(ev.fin).toISOString();
   var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
-    return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b },
+    return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b }, transparency: 'transparent',
       reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
   var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
     start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-    isReminderOn: aviso };
+    showAs: 'free', isReminderOn: aviso };
   if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
   return cuerpo;
 }
+
 
 
 
@@ -10912,12 +10916,10 @@ function calendarioWebCrear(prov, token, iso, ev, solo) {
   if (prov === 'google') {
     var privado = { pace: 'ritmo', paceDia: iso };
     if (solo) privado.paceClave = ev.clave;
-    cuerpo.transparency = 'opaque';
     cuerpo.extendedProperties = { private: privado };
     return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API, { method: 'POST', body: JSON.stringify(cuerpo) }).
     then(function (j) {return j && j.id ? String(j.id) : null;});
   }
-  cuerpo.showAs = 'busy';
   cuerpo.singleValueExtendedProperties = [{ id: CALENDARIO_MS_PROP, value: iso }].concat(solo ? [{ id: CALENDARIO_MS_CLAVE, value: ev.clave }] : []);
   return calendarioFetch(prov, token, CALENDARIO_GRAPH + 'events', { method: 'POST', body: JSON.stringify(cuerpo) }).
   then(function (j) {return j && j.id ? String(j.id) : null;});
@@ -15706,8 +15708,12 @@ function paceAndroidCalendarioAlarmas(ev) {
 }
 
 
+
+var PACE_ANDROID_LIBRE = 1;
+
+
 function paceAndroidCalendarioCrear(calendario, ev) {
-  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: 0, alerts: paceAndroidCalendarioAlarmas(ev) };
+  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: PACE_ANDROID_LIBRE, alerts: paceAndroidCalendarioAlarmas(ev) };
   if (calendario) o.calendarId = String(calendario);
   return paceAndroidLlamar('CapacitorCalendar', 'createEvent', o).then(function (r) {return r && r.id != null ? String(r.id) : null;});
 }
@@ -15716,7 +15722,7 @@ function paceAndroidCalendarioCrear(calendario, ev) {
 
 function paceAndroidCalendarioCambiar(id, ev) {
   return paceAndroidLlamar('CapacitorCalendar', 'modifyEvent', { id: String(id), title: ev.titulo, description: ev.texto,
-    startDate: ev.inicio, endDate: ev.fin, alerts: paceAndroidCalendarioAlarmas(ev) });
+    startDate: ev.inicio, endDate: ev.fin, availability: PACE_ANDROID_LIBRE, alerts: paceAndroidCalendarioAlarmas(ev) });
 }
 
 function paceAndroidCalendarioBorrar(id) {
@@ -15764,7 +15770,7 @@ Object.assign(window, {
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
   paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar
 });
-;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceEnlaceWeb, paceAndroidEstado, paceAndroidArrancar });
+;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceEnlaceWeb, paceAndroidEstado, paceAndroidArrancar });
 })();
 </script>
   <!-- ios: lo mismo en el iPhone (avisos, pantalla encendida, copia de datos y

@@ -9,6 +9,8 @@
  *    comida manda en su hueco y «Una hora» sigue sirviendo sus 50 min;
  *  · los EVENTOS y el .ics: uno por bloque con su pausa dentro, solo lo que queda
  *    de hoy, en UTC, sin alarmas y con líneas de 75 octetos como mucho;
+ *  · que lo de PACE va como LIBRE en los cuatro (Ez, 18 oct. 2026): los
+ *    compañeros solo te ven ocupado en tus reuniones;
  *  · la WEB sin ids: solo «Otro calendario», que descarga el .ics;
  *  · ANDROID con un CapacitorCalendar espía: pide permiso, lee las reuniones,
  *    borra lo de PACE que queda de hoy (y nada más) y escribe el día ya
@@ -112,6 +114,7 @@ test('un evento por bloque con su pausa, solo lo que queda de hoy, y un .ics que
       vevents: (ics.match(/BEGIN:VEVENT/g) || []).length, alarmas: /VALARM/.test(ics),
       inicio: (desplegado.match(/DTSTART:(\S+)/) || [])[1], uid: (desplegado.match(/UID:(\S+)/) || [])[1],
       resumen: (desplegado.match(/SUMMARY:(.*)/) || [])[1],
+      transp: desplegado.match(/^TRANSP:.*$/gm) || [],
       tramosMs: calendarioTramos([
         { inicio: Date.parse('2026-09-17T12:00:00+02:00'), fin: Date.parse('2026-09-17T12:30:00+02:00') },
         { inicio: Date.parse('2026-09-16T22:00:00+02:00'), fin: Date.parse('2026-09-17T09:30:00+02:00') },
@@ -133,6 +136,7 @@ test('un evento por bloque con su pausa, solo lo que queda de hoy, y un .ics que
   expect(r.texto).toContain('Foco de 45 min.');
   expect(r.texto).toContain('pacegrass.app');
   expect(r.vevents).toBe(9);
+  expect(r.transp).toEqual(Array(9).fill('TRANSP:TRANSPARENT'));
   expect(r.alarmas).toBe(false);
   expect(r.largas).toBe(0);
   expect(r.sinCR).toBe(false);
@@ -274,7 +278,7 @@ test.describe('en Android', () => {
     const creados = (await llamadas(page, 'createEvent')).map((l) => l.opts);
     expect(creados.length).toBeGreaterThan(5);
     creados.forEach((c) => {
-      expect(c.availability).toBe(0);
+      expect(c.availability, 'libre (EventAvailability.FREE)').toBe(1);
       expect(c.alerts).toEqual([]);
       expect(c.description).toContain(MARCA);
       expect(c.startDate < ms('12:30') && c.endDate > ms('12:00')).toBe(false);
@@ -388,11 +392,11 @@ for (const prov of ['google', 'microsoft']) {
       expect(ini < ms('12:30') && fin > ms('12:00')).toBe(false);
       if (google) {
         expect(c.reminders).toEqual({ useDefault: false, overrides: [] });
-        expect(c.transparency).toBe('opaque');
+        expect(c.transparency).toBe('transparent');
         expect(c.extendedProperties.private).toEqual({ pace: 'ritmo', paceDia: FECHA });
       } else {
         expect(c.isReminderOn).toBe(false);
-        expect(c.showAs).toBe('busy');
+        expect(c.showAs).toBe('free');
         expect(c.singleValueExtendedProperties[0].value).toBe(FECHA);
       }
     });
