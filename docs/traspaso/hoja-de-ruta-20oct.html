@@ -88,7 +88,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.173 · actualizada el 20 de octubre a las 18:50</div>
+    <div class="eyebrow">PACE · versión 0.173 · actualizada el 20 de octubre a las 21:20</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web y en Android. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -123,15 +123,83 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">Contestar las preguntas de tu semana</span>
         <span class="c"><span class="quien">Tú.</span> Se mezclan las rutinas que ya hay para que cada día se trabaje todo el
           cuerpo, equilibrado, sin «Hombros fuertes» salvo que haga falta. Después de comer, nada especial.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho</span>
+        <span class="t">Ver tu semana y decir si se junta</span>
+        <span class="c"><span class="quien">Tú dijiste «júntalo».</span> La semana y los números, en
+          <a href="https://claude.ai/artifact/HjcDYcPgAm4fG13uMvKaVm">Días de cuerpo entero</a>.</span></li>
       <li class="paso marcha"><span class="estado">En marcha</span>
-        <span class="t">Montar los días</span>
-        <span class="c"><span class="quien">Yo, en otra sesión.</span> Cuando esté, te enseño tu semana en una página y solo lo
-          publico con tu sí. Mientras, puedes ir con el paso siguiente.</span></li>
+        <span class="t">Juntar los días y «Tus rutinas» y publicarlo</span>
+        <span class="c"><span class="quien">Yo.</span> Junto los dos cambios, paso otra vez todas las pruebas con los dos juntos y lo
+          publico (versión 0.174.0). Será la versión que subas a Play.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Play Console, paso a paso</h2>
+    <p>Es lo que más tarda: Google pide <b>12 testers durante 14 días</b> antes de publicar, y ese plazo empieza cuando la
+      prueba cerrada está aprobada. Tu cuenta, tu identidad y tu móvil ya están verificados (8 de octubre). Te acompaño en
+      cada paso; los textos para copiar están en <code>docs/launch/google-play/</code>.</p>
+    <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho</span>
+        <span class="t">Crear la app</span>
+        <span class="c"><span class="quien">Decidido con la competencia delante</span>
+          (<a href="https://claude.ai/artifact/6aZgHgZAyUbHzHZo3ePVy2">El nombre que mejor se encuentra</a>): inglés como idioma
+          principal, «PACE: Pomodoro, Break Reminder» y, en español, «PACE: pausas activas, Pomodoro». Se puede cambiar más
+          adelante. Va <b>Gratis</b> aunque tenga pagos: se descarga gratis y PACE completo se compra dentro.
+          <span class="quien">Luego tú, unos 5 minutos.</span>
+          <ol>
+            <li>Entra en <b>play.google.com/console</b> y pulsa <b>Crear aplicación</b> (Create app).</li>
+            <li>Idioma predeterminado: <b>English (United States)</b>. Nombre: <code>PACE: Pomodoro, Break Reminder</code> (el
+              español se añade después, en la ficha).</li>
+            <li><b>Aplicación</b> (no juego) y <b>Gratis</b>. Gratis puede llevar compras dentro, que es lo de v1; una app de pago
+              nunca puede volver a gratis.</li>
+            <li>Marca las dos declaraciones (las políticas y las leyes de exportación) y pulsa <b>Crear aplicación</b>.</li>
+            <li>Dime «hecho».</li>
+          </ol></span></li>
+      <li class="paso hecho"><span class="estado">Hecho</span>
+        <span class="t">Contenido de la app: los cuestionarios</span>
+        <span class="c"><span class="quien">Tú, unos 30 minutos.</span> En el <b>Panel</b> de la app, la lista «Configura tu
+          aplicación» los abre uno a uno (también en Supervisar y mejorar › Política y programas › Contenido de la
+          aplicación). Las respuestas:
+          <ol>
+            <li><b>Política de privacidad:</b> <code>https://pacegrass.app/privacy</code></li>
+            <li><b>Acceso a la aplicación:</b> <b>No</b>, ninguna parte restringida. Para que sea verdad del todo, «Tus rutinas»
+              se abre hasta v1 como lo demás (versión 0.173.3, en pruebas ahora; es la que subirás). En v1 pasa a «Sí».</li>
+            <li><b>Anuncios:</b> no contiene anuncios.</li>
+            <li><b>Clasificación de contenido:</b> tu correo · categoría «Todas las demás» · «No» a todo · sale PEGI 3.</li>
+            <li><b>Público objetivo:</b> solo «18 años o más» · ¿atrae a niños? No.</li>
+            <li><b>Seguridad de los datos:</b> ¿recoge o comparte datos? <b>No</b>. Todo se queda en el móvil.</li>
+            <li><b>Apps de salud:</b> Actividad y forma física · Nutrición y control del peso (por Hidrátate) · Gestión del
+              estrés y relajación. Nada de medicina; Health Connect, no.</li>
+            <li><b>ID de publicidad:</b> no lo usa. <b>Noticias, gobierno, finanzas:</b> no.</li>
+            <li>Dime «hecho», o pega una captura si alguna pregunta no cuadra.</li>
+          </ol></span></li>
       <li class="paso ahora"><span class="estado">Ahora</span>
-        <span class="t">Crear la app en Play Console</span>
-        <span class="c"><span class="quien">Tú.</span> Es lo que más tarda: Google pide 12 testers durante 14 días antes de
-          publicar, y ese plazo empieza cuando subes la app. La guía: <code>docs/launch/google-play/guia.html</code>, puntos
-          3.1 a 3.5.</span></li>
+        <span class="t">La ficha de la tienda</span>
+        <span class="c"><span class="quien">Tú, copiando y pegando; los textos, en el chat y en <code>ficha.md</code>.</span>
+          <ol>
+            <li><b>Categoría y contacto:</b> Aplicación · Salud y bienestar · hasta 5 etiquetas · correo
+              <code>hola.ezradesign@gmail.com</code> · web <code>https://pacegrass.app/</code> · teléfono vacío.</li>
+            <li><b>Ficha principal, en inglés</b> (es la principal): nombre, descripción breve y completa, icono, imagen
+              destacada y las seis capturas sin título.</li>
+            <li><b>Traducciones:</b> Español (España) y Español (Latinoamérica), con los textos en español y las capturas
+              con título.</li>
+            <li>Dime «hecho».</li>
+          </ol>
+          Los textos llevan las palabras que mejor posicionan, cada una una vez. Las capturas son de octubre: sirven para la
+          prueba; antes de publicar para todos te hago unas nuevas, también en inglés.</span></li>
+      <li class="paso luego"><span class="estado">Después</span>
+        <span class="t">La prueba interna, solo tú</span>
+        <span class="c"><span class="quien">Tú.</span> Subir <code>PACE-0.173.3.aab</code> o una posterior (te digo cuál cuando esté
+          en GitHub) e instalarla en tu móvil desde Play. Antes, guardar tus datos del PACE de prueba que tienes y desinstalarlo.</span></li>
+      <li class="paso luego"><span class="estado">Después</span>
+        <span class="t">La prueba cerrada</span>
+        <span class="c"><span class="quien">Tú.</span> La lista de testers, los países y enviarla a revisión. Google tarda unos
+          días en aprobarla.</span></li>
+      <li class="paso luego"><span class="estado">Después</span>
+        <span class="t">Invitar a 15 testers</span>
+        <span class="c"><span class="quien">Tú; los mensajes ya están escritos.</span> 12 como mínimo durante 14 días; 15 por si
+          alguien se cae. Tienes 5 o 6.</span></li>
     </ol>
   </section>
 
@@ -155,7 +223,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>El calendario como libre y la web sin tus documentos</b><span>Quedan copias viejas de cinco archivos hasta el 27.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Decidido, lo hago yo</span>
         <b>Los días: el cuerpo entero</b><span>Gratis el cuerpo entero cada día, equilibrado; de pago, que las rutinas cambien.
-          En marcha.</span></div></li>
+          Aprobado por ti; publicándose.</span></div></li>
+      <li><i class="pt yo"></i><div class="que"><span class="estado yo">Lo hago yo, antes de publicar para todos</span>
+        <b>Capturas nuevas para Play</b><span>Las de ahora son de octubre y en español; unas al día y otras en inglés.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Lo hago yo, sin esperarte</span>
         <b>«Qué te ayuda» en Estadísticas</b><span>Lo último de pago que falta en la app. Antes te enseño opciones.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">Espera tus altas en Google y Microsoft</span>
@@ -164,7 +234,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>Cobrar en la web</b><span>La página de gracias, el código que se firma solo, el aviso dos días antes de cobrar y
           «Gestionar» en Ajustes.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">Espera Play Console</span>
-        <b>Cobrar en Android y los 14 días de prueba</b><span>Empiezan cuando subas la app.</span></div></li>
+        <b>Cobrar en Android y los 14 días de prueba</b><span>Empiezan cuando subas la app. Antes de subir la versión que cobra,
+          en Play se cambian dos respuestas: «¿Alguna parte está restringida?» pasa a Sí (con cómo probarlo) y «compras
+          digitales», también a Sí.</span></div></li>
       <li><i class="pt meta"></i><div class="que"><span class="estado meta">La meta</span>
         <b>v1.0: PACE se puede comprar</b><span>En la web y en Android: 2,99 € al mes con 7 días gratis, o 19,99 € de por vida.</span></div></li>
     </ol>

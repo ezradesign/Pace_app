@@ -19,6 +19,23 @@
 
 ---
 
+## El nombre en Google Play (Ez, 20 oct. 2026)
+
+Sobre `docs/launch/google-play/nombre-en-play.html` (https://claude.ai/artifact/6aZgHgZAyUbHzHZo3ePVy2),
+hecha con las sugerencias de Google y las búsquedas de Play en España, México, Colombia y EE. UU.:
+
+- **Idioma principal de la ficha: inglés (EE. UU.)**; español de España y de Latinoamérica como traducciones.
+- **Español: «PACE: pausas activas, Pomodoro»** · «Pausas activas en el trabajo, a tu ritmo: respira, estira
+  y muévete en tu mesa.» «Pausas activas» se busca («app para pausas activas en el trabajo») y apenas tiene
+  competencia; «Pomodoro» trae a mucha gente aunque esté saturado.
+- **Inglés: «PACE: Pomodoro, Break Reminder»** · «Desk stretches and breathing breaks at your own pace. Focus,
+  then move a little.» A Ez le gustaba más «Desk Breaks», pero casi no se busca; «desk» va en el subtítulo.
+- El nombre se puede cambiar más adelante si no funciona (Google revisa cada cambio).
+- **«Tus rutinas» se abre hasta v1**, como el resto de PACE completo (v0.173.3). Play pregunta si alguna
+  parte está restringida y avisa de que todo tiene que poder revisarse; en Android no había código ni
+  compra que abriera el constructor. Ez lo eligió sabiendo que quien cree rutinas sin código las verá
+  cerradas en v1. Hasta v1 el cuestionario de acceso va en «No»; en v1 pasa a «Sí».
+
 ## Los días diseñados, redefinidos (Ez, 20 oct. 2026)
 
 Sobre la página `docs/traspaso/archivos/dias-disenados/dias.html`

@@ -1,0 +1,165 @@
+<title>PACE en Play</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como una carta de PACE: arriba la propuesta en una ficha de Play
+   dibujada con los textos reales; debajo, de dónde sale (las búsquedas y la competencia) y las
+   reglas de Google. Colores y letras, los de la app (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --breathe: #9E4F33; --mark: rgba(62, 90, 58, 0.10);
+  --white: #FBF9F4;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14);
+  --white: #2b261e; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14);
+  --white: #2b261e; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 44px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 8vw, 54px); line-height: 1.02; }
+h2 { font-size: 29px; line-height: 1.1; }
+h3 { margin: 0; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+p { margin: 0; max-width: 64ch; color: var(--ink-2); }
+b { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 14px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; max-width: 64ch; color: var(--ink-2); }
+
+/* Las fichas: cómo se verá PACE en el buscador de Play, una por idioma. */
+.fichas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 640px) { .fichas { grid-template-columns: minmax(0, 1fr); } }
+.ficha { background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 4px 14px; min-width: 0; }
+.ficha .ico { grid-row: span 4; width: 56px; height: 56px; border-radius: 14px; background: var(--focus); color: var(--paper); display: grid; place-items: center; font-family: var(--serif); font-style: italic; font-size: 26px; }
+.ficha .idi { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.ficha .nom { font-weight: 600; font-size: 17px; line-height: 1.25; color: var(--ink); overflow-wrap: anywhere; }
+.ficha .dev { font-size: 13px; color: var(--ink-3); }
+.ficha .sub { font-size: 14px; color: var(--ink-2); }
+.ficha .n { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-3); }
+
+.ancho { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 14px; min-width: 600px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 14px 7px 0; border-bottom: 1px solid var(--line); }
+thead th { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+tbody th { font-weight: 600; color: var(--ink); }
+td.bien { color: var(--focus); font-weight: 600; }
+.palabras { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+.palabras span { font-size: 14px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--ink-2); }
+.rec { background: var(--mark); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
+</style>
+<main class="hoja">
+  <header>
+    <div class="eyebrow">PACE · Google Play · 20 de octubre de 2026</div>
+    <h1>El nombre que mejor se encuentra</h1>
+    <p>Lo que busca la gente, quién sale hoy en Play con esas palabras y lo que permite Google. Arriba, la propuesta tal como
+      se vería; debajo, de dónde sale.</p>
+  </header>
+
+  <section>
+    <h2>La propuesta</h2>
+    <div class="fichas">
+      <div class="ficha"><div class="ico">P</div>
+        <span class="idi">Español · España y Latinoamérica</span>
+        <span class="nom">PACE: pausas activas, Pomodoro</span>
+        <span class="dev">ezradesign · Salud y bienestar</span>
+        <span class="sub">Pausas activas en el trabajo, a tu ritmo: respira, estira y muévete en tu mesa.</span></div>
+      <div class="ficha"><div class="ico">P</div>
+        <span class="idi">Inglés · idioma principal</span>
+        <span class="nom">PACE: Pomodoro, Break Reminder</span>
+        <span class="dev">ezradesign · Health &amp; Fitness</span>
+        <span class="sub">Desk stretches and breathing breaks at your own pace. Focus, then move a little.</span></div>
+    </div>
+    <p class="nota">Los dos nombres tienen 30 letras, el máximo. Los subtítulos (la «descripción breve» de Play) tienen 79 y 80
+      de 80. El nombre y el subtítulo son lo que más pesa para salir en las búsquedas; la filosofía de PACE va en el subtítulo:
+      «a tu ritmo» y «at your own pace», que juega con el nombre (<i>pace</i> es ritmo).</p>
+    <div class="rec">
+      <p><b>Idioma principal: inglés (Estados Unidos).</b> Cada idioma de la ficha se busca por separado. Quien no tiene
+        ficha en su idioma (Alemania, Francia, Italia…) ve la principal, y es mejor que la vea en inglés que en español. Se
+        añaden <b>español de España</b> y <b>español de Latinoamérica</b> con el nombre de arriba.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lo que busca la gente</h2>
+    <p>Las sugerencias de Google al escribir, que salen ordenadas por lo que más se busca:</p>
+    <ul class="lista">
+      <li><b>En España, México y Colombia</b>, al escribir «app pausas activas» sale: <i>app pausas activas gratis</i>,
+        <i>app para pausas activas en el trabajo</i>, <i>app para recordar pausas activas</i>. Es justo lo que hace PACE.</li>
+      <li><b>En México</b>, «pausas activas en el trabajo» va unido a la normativa laboral (STPS, IMSS, «¿son obligatorias?»):
+        las empresas lo buscan para su gente.</li>
+      <li><b>En España</b>, «pausas activas» se busca también mucho para niños en el aula. Por eso el subtítulo dice
+        <b>«en el trabajo»</b>: así nadie se equivoca y Play entiende para quién es.</li>
+      <li><b>En inglés</b>, «break reminder app» y «pomodoro app» tienen mucha búsqueda. «Desk break» casi no sale y «active
+        breaks» casi nadie lo dice: por eso cambio «Desk Breaks» por <b>«Break Reminder»</b>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Quién sale hoy en Play</h2>
+    <div class="ancho">
+      <table>
+        <thead><tr><th scope="col">Búsqueda</th><th scope="col">Lo que sale primero</th><th scope="col">Para PACE</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">pomodoro</th><td>Decenas de apps con «Pomodoro» en el nombre, casi todas con más de 4,5 estrellas
+            (Focus To-Do, Pomocat, Goodtime…).</td><td>Mucha gente, mucha competencia. Suma, pero no basta solo.</td></tr>
+          <tr><th scope="row">pausas activas</th><td>En España y México, una sola app dedicada («Pausas Activas», 207 opiniones). En
+            Colombia, unas siete, todas pequeñas (Pautívate, Pausactive, Reloj de Pausas Activas…).</td><td class="bien">La gran
+            oportunidad: se busca y nadie fuerte la ocupa.</td></tr>
+          <tr><th scope="row">break reminder</th><td>Apps pequeñas: «Work Break - Break Reminder» (676 opiniones), «Stretch Reminder
+            &amp; Breaks», «Desk Break: Break Reminder».</td><td class="bien">Se busca y la competencia es floja.</td></tr>
+          <tr><th scope="row">pomodoro + stretch</th><td>Solo una que junta las dos cosas: «Pomodoro &amp; Stretch: PomoGO», sin
+            opiniones visibles.</td><td>El hueco de PACE: foco y pausas guiadas juntos.</td></tr>
+          <tr><th scope="row">estiramientos oficina</th><td>Las grandes de estiramientos (Leap Fitness, Fitify, Bend).</td>
+            <td>No es nuestro terreno: no compite en el nombre.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lo que deja Google</h2>
+    <ul class="lista">
+      <li>Nombre de <b>30 letras como mucho</b>, sin emojis ni símbolos repetidos.</li>
+      <li>Mayúsculas solo si son la marca: <b>PACE</b> vale.</li>
+      <li>Nada de precios ni promesas en el nombre: «gratis», «la mejor», «nº 1» no se pueden poner, aunque la gente busque «app
+        pausas activas gratis». Eso lo cuenta la ficha.</li>
+      <li>Nada de repetir palabras para posicionar. Con el nombre y el subtítulo de arriba no se repite ninguna.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Lo que irá en la descripción larga</h2>
+    <p>Play también lee la descripción larga para las búsquedas. Estas palabras entran con naturalidad, cada una una o dos
+      veces, cuando hagamos la ficha:</p>
+    <h3>Español</h3>
+    <div class="palabras"><span>pausas activas en el trabajo</span><span>recordatorio de pausas</span><span>estiramientos en la
+      oficina</span><span>ejercicios en el escritorio</span><span>respiración</span><span>temporizador Pomodoro</span><span>foco</span>
+      <span>teletrabajo</span><span>levantarse de la silla</span><span>calendario</span></div>
+    <h3>Inglés</h3>
+    <div class="palabras"><span>break reminder</span><span>stretch reminder</span><span>desk stretches</span><span>breathing
+      exercises</span><span>pomodoro timer</span><span>focus timer</span><span>work from home</span><span>sitting too long</span>
+      <span>posture</span><span>calendar</span></div>
+  </section>
+
+  <section>
+    <h2>Lo que no sé</h2>
+    <ul class="lista">
+      <li>Es una foto del 20 de octubre: Play ordena un poco distinto según quién busca y cambia con el tiempo.</li>
+      <li>Google no publica cuánta gente busca cada palabra en Play. Lo de arriba sale de sus sugerencias, que van por
+        popularidad, no de cifras exactas.</li>
+      <li>Además de las palabras, pesan las estrellas, las opiniones y cuánta gente la instala y la sigue usando. Ahí ayudan
+        los testers y la valoración que pediremos tras la quinta pausa.</li>
+      <li>El nombre se puede cambiar cuando queramos (Google revisa cada cambio). Si en unas semanas no funciona, se prueba
+        otro.</li>
+    </ul>
+  </section>
+</main>

@@ -22,6 +22,14 @@ Ya cubre la app y el calendario (PACE lo lee y escribe en el móvil) y lleva el 
 **Todas las funciones están disponibles sin restricciones de acceso especiales.** PACE no tiene inicio
 de sesión.
 
+Hoy (formulario nuevo: «¿Alguna parte de tu aplicación está restringida?») la respuesta es **No**:
+sin cuenta, sin pagos en Android y PACE completo abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`). El
+constructor de «Tus rutinas» sale como «pronto» y no se puede abrir, pero no lo cierra una cuenta ni un
+pago: aún no está disponible. Contestado así por Ez el 20 oct.
+
+> **En v1 pasa a «Sí»**: con la compra dentro de la app, el formulario pide cómo puede probar Google lo
+> de pago (un código promocional de Play o una cuenta de pruebas de licencias). Se rehace con la Fase 6.
+
 ## 4. Clasificación de contenido
 
 1. Correo: el tuyo.
@@ -66,6 +74,8 @@ Es obligatorio para todas las apps, también en prueba cerrada.
 1. Marca, dentro de «Salud y bienestar»:
    - **Actividad y forma física** (Mueve y Estira)
    - **Gestión del estrés, relajación y agudeza mental** (Respira y el foco)
+   - **Nutrición y control del peso** (Hidrátate: lleva la cuenta del agua, y Google define la
+     categoría como registrar lo que tomas; añadido el 20 oct.)
 2. No marques nada de «Medicina» ni «Dispositivos médicos».
 3. Si pregunta por Health Connect: PACE **no** lo usa.
 

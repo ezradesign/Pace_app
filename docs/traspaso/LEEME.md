@@ -26,6 +26,11 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
     para una sesión nueva (`dias-cuerpo-entero`) que retoma el wip 3ae2dc5 y le enseña una página
     sin jerga antes de montar. La carpeta `.claude/worktrees/sad-ishizaka-293093` se borra cuando
     esa sesión haya traído el wip.
+  - Play Console, con Ez clic a clic (su página de pasos lo lleva): app creada como «PACE: Pomodoro,
+    Break Reminder», en inglés como idioma principal y Gratis, tras mirar la competencia
+    (`docs/launch/google-play/nombre-en-play.html`). Al rellenar «¿Alguna parte está restringida?»
+    salió que «Tus rutinas» no se podía abrir en Android: v0.173.3 lo abre hasta v1 (Ez). Siguen
+    los cuestionarios (`contenido-de-la-app.md`), la ficha y las pruebas interna y cerrada.
 - **18 oct.: auditoría completa y lo que decidió Ez** (`docs/audits/auditoria-v0.173.0.md`, página
   https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs; el calendario, en
   https://claude.ai/artifact/CBVzMw539HF895eM2HJmbw). Sin tocar código: esta cuenta se quedó al 92 %

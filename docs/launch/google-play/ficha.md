@@ -12,8 +12,8 @@ sigue abierta para los beta testers, pero la ficha ya no la usa.
 
 | Campo | Qué poner |
 |---|---|
-| Idioma predeterminado | Español (España) – es-ES |
-| Nombre de la app (máx. 30) | `PACE: pausas activas y foco` |
+| Idioma predeterminado | **Inglés (Estados Unidos) – en-US** (Ez, 20 oct.: quien no tiene ficha en su idioma ve la principal); el español va como traducción: es-ES y es-419 |
+| Nombre de la app (máx. 30) | `PACE: pausas activas, Pomodoro` (es-ES y es-419; Ez, 20 oct., sobre `nombre-en-play.html`) |
 | Tipo | Aplicación |
 | Gratis o de pago | Gratis (la compra de v1 irá dentro de la app; una app gratis no puede pasar a ser de pago, al revés sí) |
 | Categoría | Salud y bienestar |
@@ -27,6 +27,13 @@ sigue abierta para los beta testers, pero la ficha ya no la usa.
 ---
 
 ## Descripción breve (máx. 80)
+
+```
+Pausas activas en el trabajo, a tu ritmo: respira, estira y muévete en tu mesa.
+```
+
+La elegida el 20 oct. (79 letras): «pausas activas» es lo que se busca y casi nadie ocupa, y «en el trabajo»
+la separa de lo que se busca para niños en el aula. Las de abajo quedan como otras opciones.
 
 ```
 Pomodoro con pausas guiadas: respira, estira y muévete sin dejar tu mesa.
@@ -43,19 +50,19 @@ Foco y pausas activas para quien trabaja sentado. A tu ritmo.
 ## Descripción completa (máx. 4000)
 
 ```
-PACE es un antídoto a la silla. Si pasas el día sentado frente a una pantalla, te ayuda a trabajar con foco y a parar a tiempo: un poco de respiración, un poco de movilidad, un vaso de agua. Pausas cortas y guiadas que caben entre dos tareas.
+PACE es un recordatorio de pausas activas con temporizador Pomodoro, para quien trabaja sentado. Te ayuda a concentrarte y a parar a tiempo para una pausa corta y guiada: estirar en el escritorio, respirar, beber agua. Pausas que caben entre dos tareas.
 
 A TU RITMO
-Dime cuánto trabajas hoy y PACE reparte la jornada en bloques de foco y pausas con nombre, según tu horario y tu hora de comer. Al acabar cada bloque te sirve la pausa que toca. Si tienes reuniones, PACE las lee de tu calendario y las esquiva. Y si quieres, lleva el día entero a tu calendario.
+Dile a PACE cuánto trabajas hoy y reparte la jornada en bloques de foco y pausas con nombre, según tu horario y tu hora de comer. Al acabar cada bloque te sirve la pausa que toca, y a lo largo del día las pausas mueven el cuerpo entero: piernas, caderas, espalda, hombros, cuello y manos. Si tienes reuniones, PACE las lee de tu calendario y las esquiva, y también puede llevar el día entero a tu calendario.
 
 FOCO
-Un pomodoro tranquilo de 15, 25, 35 o 45 minutos, o el que elijas. Aviso al terminar aunque la app esté en segundo plano.
+Un Pomodoro tranquilo de 15, 25, 35 o 45 minutos, o el que elijas. Un aviso al terminar, aunque la app esté en segundo plano.
+
+PAUSAS ACTIVAS EN EL TRABAJO
+Más de treinta rutinas cortas de movilidad y fuerza discreta para cuello, hombros, caderas, espalda y piernas. Muchas se hacen sentado y sin material: ejercicios en el escritorio y estiramientos para la oficina, en casa o en el teletrabajo. Cada paso con su dibujo y su explicación. Para quien pasa muchas horas en la silla y quiere cuidar su postura.
 
 RESPIRA
-Veinte técnicas guiadas: coherencia cardíaca, respiración cuadrada, 4·7·8, suspiro fisiológico, pranayamas y respiración en rondas. Las técnicas intensas llevan siempre su aviso de seguridad.
-
-MUEVE Y ESTIRA
-Más de treinta rutinas cortas de movilidad y fuerza discreta: cuello, hombros, caderas, espalda, piernas. Muchas se hacen sentado y sin material, sin que nadie en la oficina se dé cuenta. Cada paso con su dibujo y su explicación.
+Veinte técnicas de respiración guiadas: coherencia cardíaca, respiración cuadrada, 4·7·8, suspiro fisiológico, pranayamas y respiración en rondas. Las técnicas intensas llevan siempre su aviso de seguridad.
 
 HIDRÁTATE
 Un toque por vaso. Sin metas que agobien.
@@ -67,12 +74,12 @@ CALMA POR DISEÑO
 Colores tierra, tipografía cuidada y modo oscuro. Sin anuncios, sin rachas que castigan, sin notificaciones insistentes.
 
 TUS DATOS SON TUYOS
-Sin cuenta y sin registro. Lo que haces en PACE se guarda en tu móvil, sin rastreo, y puedes exportar una copia cuando quieras.
+Sin cuenta y sin registro. Lo que haces en PACE se queda en tu móvil, sin rastreo, y puedes exportar una copia cuando quieras.
 
 PACE no es un producto sanitario ni sustituye el consejo de un profesional. Si tienes alguna condición médica, consulta antes de hacer los ejercicios de respiración intensa.
 ```
 
-Unos 1.740 caracteres de 4.000: sobra sitio por si quieres añadir algo.
+Unos 2.000 caracteres de 4.000. Rehecha el 20 oct. con las palabras que se buscan (`nombre-en-play.html`): pausas activas en el trabajo, recordatorio, estiramientos para la oficina, ejercicios en el escritorio, temporizador Pomodoro, teletrabajo, postura, calendario. Cada una una vez: Google castiga repetir. Y el cuerpo entero cada día (v0.174.0).
 
 Del arte de PACE no se dice «dibujado a mano»: los dibujos salen de GPT Image (Ez, 15 oct. 2026,
 `DECISIONES_PRODUCTO.md`). De la app sí se puede decir que la hace una persona.
@@ -120,6 +127,8 @@ Primera versión de prueba de PACE en Android. Gracias por probarla: cuéntame l
 
 ## La ficha en inglés (en-US)
 
+**Desde el 20 oct. el inglés es el idioma PRINCIPAL** (se elige al crear la app) y el español va como
+traducción (es-ES y es-419, con los textos de arriba); lo de abajo era el plan anterior.
 Ez decidió publicar en todo el mundo (8 de octubre de 2026), y la app ya va en inglés. En Play
 Console: **Ficha principal de la tienda → Gestionar traducciones → Añadir tus propias traducciones →
 Inglés (Estados Unidos) – en-US**, y se pegan estos textos. Sin traducción, fuera de España la gente
@@ -128,33 +137,33 @@ predeterminado si no hay otras (unas en inglés serían mejor, cuando se hagan).
 
 | Campo | Qué poner |
 |---|---|
-| Nombre de la app (máx. 30) | `PACE: active breaks & focus` |
+| Nombre de la app (máx. 30) | `PACE: Pomodoro, Break Reminder` (Ez, 20 oct.: «break reminder» se busca mucho y con poca competencia; «desk break» y «active breaks» casi no) |
 
 ### Descripción breve (máx. 80)
 
 ```
-Pomodoro with guided breaks: breathe, stretch and move without leaving your desk
+Desk stretches and breathing breaks at your own pace. Focus, then move a little.
 ```
 
 ### Descripción completa (máx. 4000)
 
 ```
-PACE is an antidote to the chair. If you spend the day sitting in front of a screen, it helps you work with focus and stop in time: a little breathing, a little mobility, a glass of water. Short, guided breaks that fit between two tasks.
+PACE is a break and stretch reminder with a pomodoro timer, for people who work sitting down. It helps you focus, then stop in time for a short guided break: stretch at your desk, breathe, drink some water. Breaks small enough to fit between two tasks.
 
 AT YOUR PACE
-Tell PACE how long you're working today and it splits the day into focus blocks and named breaks, around your schedule and your lunch. At the end of each block it serves the break that fits. If you have meetings, PACE reads them from your calendar and works around them. And if you like, it puts the whole day in your calendar.
+Tell PACE how long you're working today and it lays out your day in focus blocks and named breaks, around your hours and your lunch. At the end of each block it serves the break that fits, and across the day the breaks move your whole body: legs, hips, back, shoulders, neck and hands. If you have meetings, PACE reads them from your calendar and works around them, and it can put your whole day in your calendar too.
 
-FOCUS
-A calm pomodoro of 15, 25, 35 or 45 minutes, or whatever you choose. A reminder when it ends, even with the app in the background.
+FOCUS TIMER
+A calm pomodoro of 15, 25, 35 or 45 minutes, or whatever length you choose. A reminder when it ends, even with the app in the background.
 
-BREATHE
-Twenty guided techniques: coherent breathing, box breathing, 4·7·8, the physiological sigh, pranayamas and round breathing. Intense techniques always come with a safety notice.
+DESK STRETCHES AND MOVEMENT
+More than thirty short routines of mobility and quiet strength for neck, shoulders, hips, back and legs. Many can be done seated and with no equipment, right at your desk or at home. Every step has its drawing and a clear explanation. For anyone who sits too long, works from home or wants to look after their posture.
 
-MOVE AND STRETCH
-More than thirty short routines of mobility and quiet strength: neck, shoulders, hips, back, legs. Many can be done seated and with no equipment, without anyone in the office noticing. Every step with its drawing and its explanation.
+BREATHING EXERCISES
+Twenty guided techniques: coherent breathing, box breathing, 4·7·8, the physiological sigh, pranayamas and breathing in rounds. Intense techniques always come with a safety notice.
 
 HYDRATE
-One tap per glass. No goals that weigh on you.
+One tap per glass. No targets that weigh on you.
 
 ACHIEVEMENTS
 More than eighty field-notebook stamps. For exploring, not for competing.
@@ -162,10 +171,10 @@ More than eighty field-notebook stamps. For exploring, not for competing.
 CALM BY DESIGN
 Earthy colours, careful typography and dark mode. No ads, no streaks that punish you, no nagging notifications.
 
-YOUR DATA IS YOURS
-No account and no sign-up. What you do in PACE is stored on your phone, with no tracking, and you can export a copy whenever you want.
+YOUR DATA STAYS YOURS
+No account and no sign-up. What you do in PACE stays on your phone, with no tracking, and you can export a copy whenever you want.
 
-PACE is not a medical device and does not replace the advice of a professional. If you have any medical condition, check with them before doing the intense breathing exercises.
+PACE is not a medical device and does not replace professional advice. If you have a medical condition, check with a professional before doing the intense breathing exercises.
 ```
 
 **For v1**, the same paragraph in English, before «Calm by design»:
