@@ -102,13 +102,14 @@ Todos en esta carpeta y con las medidas que pide Play:
 | Campo de Play | Archivo |
 |---|---|
 | Icono de la app (512 × 512) | [icono-512.png](icono-512.png) |
-| Gráfico de funciones (1024 × 500) | [grafico-destacado-1024x500.png](grafico-destacado-1024x500.png) |
-| Capturas de pantalla del teléfono (1080 × 1920, de 2 a 8) | las seis de [capturas/](capturas/), en orden del 1 al 6 |
+| Gráfico de funciones (1024 × 500) | [grafico-destacado-1024x500.png](grafico-destacado-1024x500.png), el logo de Ez («Touch grass, even from your desk»), igual en todos los idiomas |
+| Capturas de pantalla del teléfono (1080 × 1920, de 2 a 8) | ficha en inglés: las seis de [capturas/en/](capturas/en/); fichas en español: [capturas/es/](capturas/es/), del 1 al 6 |
 
-En [capturas-sin-marco/](capturas-sin-marco/) están las mismas
-pantallas sin el título encima, por si las prefieres limpias.
+En [capturas-sin-marco/](capturas-sin-marco/) (`es/` y `en/`) están las mismas pantallas sin el título encima.
 
-Las capturas son de la app tal como está hoy (v0.143.0), en un móvil de 360 px de ancho. Las tablets
+Hechas el 20 oct. con v0.174.0 por `node scripts/play/capturas.js` (después del build): la app real en un
+móvil de 360 × 640 a 3×, con su título en la serif recta, sin cursiva (Ez). El gráfico destacado es el logo
+de Ez sobre papel (`grafico/logo-ez.jpg`, montado por `grafico/final.html` y `grafico/hacer.js`). Las tablets
 y el vídeo son opcionales: se pueden dejar vacíos.
 
 **Con la ficha publicada** (Ez, 15 oct. 2026): el orden de las capturas se prueba con un experimento

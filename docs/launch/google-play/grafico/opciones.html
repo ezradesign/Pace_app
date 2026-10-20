@@ -1,0 +1,80 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Gráfico destacado · opciones</title>
+<style>
+/* Las opciones del gráfico destacado de Play (1024 × 500), con las fuentes y la vaca del
+   proyecto. `hacer.js` fotografía cada .lienzo por su id. La vaca es icons/icon-512.png sobre
+   blanco: con `multiply` el blanco desaparece sobre el crema. */
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 500; font-style: normal; src: url('../../../../fonts/cormorantgaramond-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 500; font-style: italic; src: url('../../../../fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Inter Tight'; font-weight: 400; src: url('../../../../fonts/intertight-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter Tight'; font-weight: 500; src: url('../../../../fonts/intertight-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter Tight'; font-weight: 600; src: url('../../../../fonts/intertight-600-normal.woff2') format('woff2'); }
+:root { --paper: #F2EDE0; --ink: #1F1C17; --ink-3: #6F695B; --focus: #3E5A3A; --terra: #B5775A; }
+body { margin: 0; background: #ccc; display: flex; flex-direction: column; gap: 20px; padding: 20px; }
+.lienzo { width: 1024px; height: 500px; background: var(--paper); position: relative; overflow: hidden; font-family: 'Inter Tight', sans-serif; color: var(--ink); }
+.vaca { position: absolute; mix-blend-mode: multiply; }
+.eyebrow { font-size: 15px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.lista { font-size: 17px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--focus); font-weight: 500; }
+.raya { width: 64px; height: 2px; background: var(--terra); }
+
+/* A · Sans: el titular en Inter Tight, la letra de la interfaz. Se lee a cualquier tamaño. */
+#A .vaca { left: 70px; top: 50px; width: 400px; }
+#A .txt { position: absolute; left: 470px; top: 118px; display: flex; flex-direction: column; gap: 18px; }
+#A h1 { margin: 0; font-weight: 600; font-size: 58px; line-height: 1.04; letter-spacing: -0.02em; }
+
+/* B · Serif recta: la Cormorant de los títulos, sin cursiva. */
+#B .vaca { left: 70px; top: 50px; width: 400px; }
+#B .txt { position: absolute; left: 480px; top: 112px; display: flex; flex-direction: column; gap: 18px; }
+#B h1 { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 74px; line-height: 0.98; }
+
+/* C · El logo: la vaca es la «P» de «Pace.», como en el logo de Ez, y debajo una línea en sans. */
+#C .marca { position: absolute; left: 50%; top: 58px; transform: translateX(-50%); display: flex; align-items: flex-end; }
+#C .vaca { position: static; width: 300px; margin-right: -64px; }
+#C .ace { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 196px; line-height: 0.8; color: var(--terra); padding-bottom: 50px; }
+#C .bajo { position: absolute; left: 0; right: 0; bottom: 70px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+#C .bajo .t { font-size: 30px; font-weight: 500; letter-spacing: -0.01em; }
+
+/* D · El logo de Ez tal cual, sin más texto: la vaca como «P», «ace.» y su frase, con letra de
+   verdad (la imagen del logo dice «FVFN» donde pone «EVEN»). */
+#D .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%); display: flex; flex-direction: column; align-items: stretch; }
+#D .marca { display: flex; align-items: flex-end; }
+#D .vaca { position: static; width: 270px; margin-right: -58px; }
+#D .ace { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 188px; line-height: 0.8; color: var(--terra); padding-bottom: 44px; }
+#D .frase { margin-top: -6px; padding-left: 26px; font-size: 21px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); font-weight: 400; white-space: nowrap; }
+</style>
+
+<div class="lienzo" id="A">
+  <img class="vaca" src="../../../../icons/icon-512.png" alt="">
+  <div class="txt">
+    <div class="eyebrow">PACE</div>
+    <h1>Desk breaks,<br>at your own pace</h1>
+    <div class="raya"></div>
+    <div class="lista">Focus · Breathe · Move · Stretch</div>
+  </div>
+</div>
+
+<div class="lienzo" id="B">
+  <img class="vaca" src="../../../../icons/icon-512.png" alt="">
+  <div class="txt">
+    <div class="eyebrow">PACE</div>
+    <h1>Desk breaks,<br>at your own pace</h1>
+    <div class="raya"></div>
+    <div class="lista">Focus · Breathe · Move · Stretch</div>
+  </div>
+</div>
+
+<div class="lienzo" id="D">
+  <div class="logo">
+    <div class="marca"><img class="vaca" src="../../../../icons/icon-512.png" alt=""><span class="ace">ace.</span></div>
+    <div class="frase">Touch grass, even from your desk</div>
+  </div>
+</div>
+
+<div class="lienzo" id="C">
+  <div class="marca"><img class="vaca" src="../../../../icons/icon-512.png" alt=""><span class="ace">ace.</span></div>
+  <div class="bajo">
+    <div class="t">Desk breaks, at your own pace</div>
+    <div class="lista">Focus · Breathe · Move · Stretch</div>
+  </div>
+</div>
