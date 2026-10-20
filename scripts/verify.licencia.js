@@ -23,7 +23,7 @@ var path = require('path');
 var MARCA_PRIVADA = new RegExp('-----BEGIN (EC |RSA |ENCRYPTED )?' + 'PRIVATE KEY-----');
 /* .claude/worktrees: las copias de las sesiones en paralelo son otros checkouts
    (cada uno pasa su propio verify) y leerlas todas costaba ~40 s. */
-var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|test-results|playwright-report|build|\.gradle|\.claude[\\/]worktrees)([\\/]|$)/;
+var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|dist|test-results|playwright-report|build|\.gradle|\.claude[\\/]worktrees)([\\/]|$)/;
 var TEXTO = /\.(js|jsx|json|html|md|txt|css|yml|yaml|pem|key|env|xml|properties|gradle|csv)$/i;
 
 /* `base` es la raíz del recorrido: SALTAR se mira sobre la ruta RELATIVA a ella, porque

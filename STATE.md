@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.173.1 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.173.2 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -32,8 +32,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs): la pasada de texto y el e2e en dos trozos,
    hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
    publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. «Libre»
-   en el calendario, hecho (v0.173.1); publicar solo la app, en curso; el detalle, en el relevo de
-   `docs/traspaso/LEEME.md`. Las ramas ya juntadas, borradas (copia en
+   en el calendario (v0.173.1) y publicar solo la app (v0.173.2, `dist/` con `scripts/web-dist.js`),
+   hechos y por juntar; el detalle, en el relevo de `docs/traspaso/LEEME.md`. Las ramas ya juntadas, borradas (copia en
    `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto), y las sesiones terminadas,
    archivadas.
 
@@ -47,8 +47,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` conectado como `AVISAME` y el
   token de Web Analytics solo para /premium; mirar el registro previo de Play.
 - Las altas de PACE en Google Cloud y Microsoft Entra, con sus dos ids (`docs/CALENDARIO_ALTAS.md`; para el
-  llavero, el cliente de Google como «aplicación web» con su secreto). Cuando esté «publicar solo la
-  app», cambiar en Cloudflare Pages el comando de build y la carpeta de salida.
+  llavero, el cliente de Google como «aplicación web» con su secreto).
+- En cuanto v0.173.2 esté en `main`: en Cloudflare Pages › Settings › Build, el comando
+  `node scripts/web-dist.js` y la carpeta de salida `dist` (`docs/BUILD.md`, «La web publicada»).
 - Leer `privacy.html` (es pública) y probar en su Android el calendario que se mantiene solo.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).

@@ -50,6 +50,8 @@ var lienzo = require('./verify.lienzo.js');
 var licencia = require('./verify.licencia.js');
 /* Que todo el historial lo firme Ez: en GitHub solo sale él como contribuidor. */
 var autoria = require('./verify.autoria.js');
+/* Que pacegrass.app publique solo la app (dist/) y que lleve todo lo que precarga sw.js. */
+var web = require('./verify.web.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -99,7 +101,7 @@ var PLATAFORMA = new Set([
    y las copias de las sesiones en paralelo en .claude/worktrees: cada una es
    otro checkout entero y desde la carpeta principal verify las recorria todas,
    un `node --check` por archivo, hasta tardar mas de veinte minutos. */
-var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git|test-results|playwright-report|\.claude[\\/]worktrees)([\\/]|$)/;
+var EXCLUIDAS = /(^|[\\/])(node_modules|vendor|backups|\.git|test-results|playwright-report|dist|\.claude[\\/]worktrees)([\\/]|$)/;
 
 var fallos = [];
 var avisos = [];
@@ -415,7 +417,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -432,6 +434,7 @@ function main() {
   lienzo.tandaLienzo({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   licencia.tandaLicencia({ ROOT: ROOT, falla: falla, ok: ok, info: info, rel: rel });
   autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  web.tandaWeb({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

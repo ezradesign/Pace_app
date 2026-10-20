@@ -7,6 +7,13 @@
       "runtimeArgs": [".claude/static-server.js"],
       "port": 8765,
       "autoPort": true
+    },
+    {
+      "name": "pace-dist",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/static-server.js", "dist"],
+      "port": 8799,
+      "autoPort": true
     }
   ]
 }

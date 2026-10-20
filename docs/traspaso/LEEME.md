@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
@@ -25,7 +25,13 @@ carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de tra
      libre), y mirar si `modifyEvent` lo acepta; `app/ritmo/ritmo.calendario.js:125`
      `TRANSP:TRANSPARENT`; las pruebas de `tests/ritmo-calendario.spec.js:277, 391, 395`, rojas
      antes. PACE encuentra sus eventos por su marca, no por lo ocupado, así que no se pierden.
-  2. **Publicar solo la app**: un `scripts/web-dist.js` (como `android-www.js`) que haga `dist/` con
+  2. **Publicar solo la app: hecho el 20 oct.** (v0.173.2, misma rama, se junta con el sí de Ez).
+     `dist/` lleva 249 archivos (12,7 MB) y se probó en local con el service worker (236 entradas),
+     /premium y `calendario.html`. Falta que Ez, **después de juntarlo a `main`**, cambie en
+     Cloudflare el comando y la salida, y comprobar que `/STATE.md` deja de servirse: el 20 oct.
+     daba 4.931 bytes de markdown; luego tiene que dar el index (1.853.986 bytes) o un 404. Antes de
+     juntar, el comando nuevo no existe y el build de Cloudflare fallaría (lo publicado se queda
+     como está). Lo que se pidió: un `scripts/web-dist.js` (como `android-www.js`) que haga `dist/` con
      lo de `www/` más `sw.js`, `_headers`, `calendario.html` y `premium/`; `dist/` en `.gitignore`;
      `verify` comprueba que todo lo que precarga `sw.js` está en `dist/`. Ez cambia en Cloudflare
      Pages › Settings › Build el comando (`node scripts/web-dist.js`) y la salida (`dist`);

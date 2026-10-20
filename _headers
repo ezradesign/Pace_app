@@ -1,4 +1,5 @@
-# PACE · cabeceras de la web (Cloudflare Pages las lee de la raíz del repo)
+# PACE · cabeceras de la web (scripts/web-dist.js las copia a dist/, que es lo
+# que publica Cloudflare Pages y de donde las lee)
 # Ez, 16 oct. 2026: antes de cobrar, que ninguna web meta PACE en un marco y que
 # el navegador no adivine tipos. La pantalla encendida (wake-lock) se deja libre:
 # las sesiones guiadas la usan. Lo vigila tests/cabeceras.spec.js.

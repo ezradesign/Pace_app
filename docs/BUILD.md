@@ -162,6 +162,26 @@ powershell -File scripts/check-session.ps1
 
 ---
 
+## La web publicada (`dist/`)
+
+pacegrass.app publica `dist/`, no la raiz del repo (Ez, 18 oct. 2026): en el dominio del producto
+solo esta la app, sin los documentos, las pruebas ni las fotos de trabajo.
+
+- `npm run web:dist` (`scripts/web-dist.js`) crea `dist/` (no se versiona) con lo mismo que `www/`
+  mas lo que solo tiene la web: `sw.js`, `_headers`, `calendario.html` y `premium/`. La lista de
+  `www/` la pone `scripts/android-www.js`, asi que lo que se anada alli llega a los dos sitios.
+- `functions/` (la lista «Avisame») no entra: Cloudflare la lee de la raiz del repo.
+- En Cloudflare Pages › Settings › Build: comando `node scripts/web-dist.js`, salida `dist`.
+- `verify` monta `dist/` en una temporal y falla si falta algo de lo que precarga `sw.js` (con una
+  sola 404 el service worker no se instala), si se cuela algo que no es la app o si hay una pagina
+  en la raiz que no se publica ni esta apartada a proposito (`scripts/verify.web.js`).
+- Para probarla en local: `npm run web:dist` y el servidor `pace-dist` de `.claude/launch.json`
+  (`node .claude/static-server.js dist`), que sirve la app en `/` como pacegrass.app.
+- Comprobar lo publicado por el TAMAÑO, no por el codigo: una ruta que no existe devuelve el
+  `index.html` (unos 1,85 MB) con un 200.
+
+---
+
 ## Android (Capacitor)
 
 Desde v0.136.0 la misma web se empaqueta como app de Android con Capacitor 8.

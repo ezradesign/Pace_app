@@ -10,6 +10,9 @@
  * y los medios de `app/` (imagenes y audio que la app pide por ruta). Las
  * fuentes JS y CSS de `app/` no entran porque `index.html` ya las lleva dentro.
  *
+ * La web publica esto mismo y lo que solo tiene ella (`scripts/web-dist.js`),
+ * por eso la lista se exporta: lo que se anada aqui llega a los dos sitios.
+ *
  * Uso: `npm run android:www` (lo llama `npm run android:sync`).
  */
 'use strict';
@@ -24,12 +27,6 @@ const ARCHIVOS = ['index.html', 'privacy.html', 'safety.html', 'manifest.webmani
 const CARPETAS = ['icons', 'fonts'];
 const MEDIOS = /\.(webp|png|jpe?g|svg|mp3|m4a|ogg|wav)$/i;
 
-function copiar(rel) {
-  const dst = path.join(OUT, rel);
-  fs.mkdirSync(path.dirname(dst), { recursive: true });
-  fs.copyFileSync(path.join(ROOT, rel), dst);
-}
-
 function recorrer(rel, filtro, fuera) {
   for (const e of fs.readdirSync(path.join(ROOT, rel), { withFileTypes: true })) {
     const hijo = path.posix.join(rel, e.name);
@@ -39,16 +36,33 @@ function recorrer(rel, filtro, fuera) {
   return fuera;
 }
 
-fs.rmSync(OUT, { recursive: true, force: true });
-
-const lista = ARCHIVOS.slice();
-for (const d of CARPETAS) recorrer(d, null, lista);
-recorrer('app', MEDIOS, lista);
-
-let bytes = 0;
-for (const rel of lista) {
-  copiar(rel);
-  bytes += fs.statSync(path.join(OUT, rel)).size;
+/* Lo que va en `www/`, en rutas relativas a la raiz. */
+function listaWww() {
+  const lista = ARCHIVOS.slice();
+  for (const d of CARPETAS) recorrer(d, null, lista);
+  recorrer('app', MEDIOS, lista);
+  return lista;
 }
 
-console.log('www/: ' + lista.length + ' archivos, ' + (bytes / 1048576).toFixed(1) + ' MB');
+/* Vacia `out` y copia ahi la lista: { archivos, bytes }. Nunca sobre la raiz
+   ni una carpeta que la contenga, que el vaciado se llevaria el repo. */
+function copiarTodo(lista, out) {
+  const destino = path.resolve(out);
+  if ((path.resolve(ROOT) + path.sep).startsWith(destino + path.sep)) throw new Error('copiarTodo: ' + destino + ' contiene el repo');
+  fs.rmSync(destino, { recursive: true, force: true });
+  let bytes = 0;
+  for (const rel of lista) {
+    const dst = path.join(destino, rel);
+    fs.mkdirSync(path.dirname(dst), { recursive: true });
+    fs.copyFileSync(path.join(ROOT, rel), dst);
+    bytes += fs.statSync(dst).size;
+  }
+  return { archivos: lista.length, bytes };
+}
+
+if (require.main === module) {
+  const r = copiarTodo(listaWww(), OUT);
+  console.log('www/: ' + r.archivos + ' archivos, ' + (r.bytes / 1048576).toFixed(1) + ' MB');
+}
+
+module.exports = { listaWww, recorrer, copiarTodo };

@@ -6,7 +6,11 @@ var fs   = require('fs');
 var path = require('path');
 
 var PORT = parseInt(process.env.PORT || '8765', 10);
-var ROOT = process.cwd();
+/* Con una carpeta (`node .claude/static-server.js dist`) sirve esa: lo que
+   publica la web, para probarlo antes de que lo publique Cloudflare. */
+var ROOT = process.argv[2] ? path.resolve(process.argv[2]) : process.cwd();
+/* En dist/ no hay PACE.html: «/» es la app compilada, como en pacegrass.app. */
+var INICIO = fs.existsSync(path.join(ROOT, 'PACE.html')) ? '/PACE.html' : '/index.html';
 
 var MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -24,7 +28,7 @@ var MIME = {
 
 http.createServer(function (req, res) {
   var url = decodeURIComponent(req.url.split('?')[0]);
-  if (url === '/' || url === '') url = '/PACE.html';
+  if (url === '/' || url === '') url = INICIO;
   // Rutas bonitas de Cloudflare Pages (s102): /safety y /privacy sirven
   // sus .html para que el preview se comporte como producción.
   if (url === '/safety' || url === '/privacy') url += '.html';

@@ -8,6 +8,7 @@
     "test:e2e": "playwright test",
     "bump": "node scripts/version.js",
     "android:www": "node scripts/android-www.js",
+    "web:dist": "node scripts/web-dist.js",
     "android:sync": "node scripts/android-www.js && cap sync android",
     "ios:sync": "node scripts/android-www.js && cap sync ios",
     "ios:recursos": "node scripts/ios-recursos.js",

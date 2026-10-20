@@ -1,8 +1,9 @@
 /* PACE · las cabeceras de seguridad de la web (16 oct. 2026)
  * ==========================================================
  * La auditoría del 16 oct. vio que pacegrass.app solo mandaba Referrer-Policy.
- * Ez eligió ponerlas ya: `_headers` en la raíz, que Cloudflare Pages lee al
- * publicar. El servidor local no lo aplica, así que esta prueba lee el archivo:
+ * Ez eligió ponerlas ya: `_headers` en la raíz, que `scripts/web-dist.js` copia a
+ * `dist/` y Cloudflare Pages lee al publicar (que llegue a `dist/` lo mira
+ * `verify`). El servidor local no lo aplica, así que esta prueba lee el archivo:
  * que exista, que cubra todas las rutas y que no apague nada que la app usa.
  */
 'use strict';
