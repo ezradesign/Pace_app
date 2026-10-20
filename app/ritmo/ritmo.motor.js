@@ -212,16 +212,13 @@ function ritmoMotor(e) {
     .filter(function (c) { return !rechazado(c); });
   /* Menos Mueve: lo cambiado en Mueve no se junta en una rutina y es casi todo (2 de 3). */
   if (!a.menos && motorPruebas(mueve.o1, mueve.o2) && mueve.o * 3 >= mueve.m * 2) {
-    var comeHasta = horario.comida != null ? horario.comida + (horario.comidaDur || 60) : Infinity;
     var cadencia = 0;
     f1.forEach(function (f) {
-      var primera = true, trasComer = true;
+      var primera = true;
       porFecha[f].paradas.forEach(function (p) {
         if (p.tipo !== 'pausa') return;
-        var esPrimera = primera || (trasComer && p.hora >= comeHasta);
+        if (!primera && p.platos.some(function (pl) { return pl.modulo === 'mueve'; })) cadencia++;
         primera = false;
-        if (p.hora >= comeHasta) trasComer = false;
-        if (!esPrimera && p.platos.some(function (pl) { return pl.modulo === 'mueve'; })) cadencia++;
       });
     });
     var menos = { tipo: 'menos', clase: 'rutinas', modulo: 'mueve', mas: 'estira', veces: mueve.o, de: mueve.m, paradas: cadencia };

@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.174.0 | 2026-10-20 | «A tu ritmo»: cada día mueve el cuerpo entero (piernas, caderas, espalda, hombros, cuello y manos) y equilibrado, gratis; con PACE completo, además, las rutinas cambian de un día a otro. Con las rutinas de siempre: la pared cuenta como la mesa y «Caderas de pie» también como piernas. Después de comer, una pausa como cualquier otra (Ez, 20 oct.) |
 | v0.173.3 | 2026-10-20 | «Tus rutinas», el constructor de rutinas propias, también se abre hasta v1 como el resto de PACE completo: Google tiene que poder revisar toda la app en la prueba de Play, y en Android no había código ni compra con que abrirlo (Ez, 20 oct.) |
 | v0.173.2 | 2026-10-20 | pacegrass.app publica solo la app: la app, la privacidad, la seguridad, /premium y lo que necesitan; los documentos y las pruebas dejan de servirse en el dominio del producto (el repo sigue en GitHub). Hace falta cambiar en Cloudflare Pages el comando y la carpeta de salida (Ez, 18 oct.) |
 | v0.173.1 | 2026-10-20 | Lo que PACE pone en tu calendario (Google, Outlook, el móvil o el archivo) va como libre, también al cambiarlo: los compañeros solo te ven ocupado en tus reuniones, y los avisos de las pausas siguen saltando (Ez, 18 oct.). La privacidad lo cuenta |

@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.173.3 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.0 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -12,6 +12,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   después de v1.
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
+  Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
+  rutinas cambian de un día a otro (`puedeVariar`).
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -22,14 +24,13 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 0. **Play Console, con Ez paso a paso** (20 oct.; la página de pasos de Ez, abajo): app creada como
    «PACE: Pomodoro, Break Reminder», en inglés como idioma principal y Gratis (`nombre-en-play.html`).
    Van los cuestionarios; luego la ficha, la prueba interna y la cerrada. «Tus rutinas» se abrió
-   hasta v1 (v0.173.3) para que el acceso restringido sea «No» de verdad: se sube 0.173.3 o posterior.
+   hasta v1 (v0.173.3) para que el acceso restringido sea «No» de verdad: se sube 0.174.0 o posterior.
+   Gráfico destacado nuevo, el logo de Ez (`grafico/logo-ez.jpg`); las capturas se rehacen con 0.174.0.
 1. **Fase 2**: probar el APK en un móvil (icono, arranque de día y de noche, importar una copia, que lo
    guardado sobreviva a una actualización, el aviso de Foco). Subidas: `docs/launch/google-play/guia.html`.
-2. **Antes de cobrar** (Ez, 16 oct.), cada uno en su sesión: **los días diseñados**, redefinidos por
-   Ez el 20 oct. (`DECISIONES_PRODUCTO.md`, arriba del todo): cada día mueve el cuerpo entero (gratis) y
-   las rutinas cambian de un día a otro (PACE completo), sin paseo y sin nada nuevo en pantalla; lo
-   retoma una sesión nueva desde el prototipo de `claude/sad-ishizaka-293093`, con una página sin jerga
-   para Ez antes de montar. Y, del calendario total en la web, **el llavero** (Ez, 18 oct.; espera sus
+2. **Antes de cobrar** (Ez, 16 oct.), cada uno en su sesión: **los días diseñados**, en `main` con
+   v0.174.0 (Ez los aprobó mirando la semana, https://claude.ai/artifact/HjcDYcPgAm4fG13uMvKaVm, el
+   20 oct.). Y, del calendario total en la web, **el llavero** (Ez, 18 oct.; espera sus
    altas). La revisión de los ejercicios y el motor de la semana, hechos; lo total con PACE
    cerrado, después de v1.
 3. **Fase 6, tras /premium**: la página de gracias y la firma con k2, el aviso dos días antes del fin

@@ -44,8 +44,9 @@ function tieneLicenciaPremium() {
    cerrada las prueban todas. Siguen con su «Premium», que dice que seran de pago,
    pero sin «Pronto» y se pueden empezar. Las RUTINAS, el calendario que se
    mantiene solo (`puedeMantenerCalendario`, Ez, 14 oct.: en Android no hay
-   códigos y nadie podría probarlo), lo que aprende de tu semana (`puedeAprender`)
-   y el constructor de «Tus rutinas» (`puedeCrearRutinas`, Ez, 20 oct.). Abrirlo
+   códigos y nadie podría probarlo), lo que aprende de tu semana (`puedeAprender`),
+   que las rutinas cambien de un día a otro (`puedeVariar`) y el constructor de
+   «Tus rutinas» (`puedeCrearRutinas`; las dos, Ez, 20 oct.). Abrirlo
    no es tener PACE completo: `hasPremiumEntitlement` sigue en false sin código ni
    compra. Cuando llegue el cobro, a `false`. Se lee de `window` en cada llamada
    porque las pruebas lo apagan para medir el candado. */
@@ -116,6 +117,13 @@ function puedeAprender() {
   return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
+/* puedeVariar() -> boolean   (20 oct. 2026)
+     En «A tu ritmo», mover el cuerpo entero cada día es gratis; que las rutinas cambien de
+     un día a otro es de PACE completo (Ez, 20 oct.). Hasta v1, abierto como las rutinas. */
+function puedeVariar() {
+  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
 /* LA COMPRA PASA POR AQUÍ (Fase 6). La tienda del canal (state-compra.js: Stripe
    en la web, Play en Android, ninguna en el iPhone) se pregunta solo desde estas
    cuatro funciones, y lo que compra vuelve por las fuentes de arriba: el código
@@ -158,6 +166,6 @@ function tieneCompraVigente() {
 }
 
 Object.assign(window, {
-  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
   paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente,
 });

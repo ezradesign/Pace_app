@@ -64,6 +64,7 @@ Sobre la segunda página (https://claude.ai/artifact/6d7Fdqv2PanjYsnXB3EnTt), el
 8. **Después de comer, se quita** («B · Se quita»): la primera pausa tras comer deja de ser de pie
    por regla (la del 15 oct.), y su frase «Después de comer, de pie» se va con ella.
 
+Montado en v0.174.0; la semana resultante, para que Ez la apruebe: https://claude.ai/artifact/HjcDYcPgAm4fG13uMvKaVm.
 Lo monta la sesión `dias-cuerpo-entero` (rama `claude/nostalgic-dirac-127713`), que retomó el
 prototipo; Ez lo aprueba mirando la semana resultante antes de juntarlo.
 

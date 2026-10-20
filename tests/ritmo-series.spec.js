@@ -5,14 +5,22 @@
  * la forma 2, «series con lógica»; la frase B, «lo de hoy»; Piernas de pie, Espalda de pie y
  * la mesa en el catálogo, sin el paseo; y la capa 1 de «PACE que aprende», gratis.
  *
+ * El 20 oct. Ez pidió que cada día mueva el cuerpo entero «de manera equilibrada y
+ * diferente» con las rutinas que ya hay: el cuerpo entero, gratis; que cambien de un día a
+ * otro, de PACE completo; y nada especial después de comer
+ * (docs/traspaso/archivos/dias-disenados/).
+ *
  * LO QUE DEFIENDE:
- *  · el catálogo: las dos rutinas nuevas, gratis y de pie, y la mesa en el pozo de Mueve (lo
- *    de nivel accesible: «Empuje · progresión» no); todo lo que entra lleva zona y «de pie»;
- *  · la secuencia, en treinta laborables con la memoria de un día para otro: la primera pausa
- *    del día, Mueve de pie; la de después de comer y la Estira de la larga, de pie; nunca dos
- *    sentadas seguidas; nada repetido en el día; ni la misma primera ni el mismo cierre que la
- *    última vez; el cierre, un Respira lento de 5 min o menos; la mitad de las pausas o más,
- *    de pie (medido al montarlo: 50 % en «Dos horas» y 58 % en la jornada);
+ *  · el catálogo: las dos rutinas nuevas, gratis y de pie, y la mesa y la pared en los pozos
+ *    (lo de nivel accesible: «Empuje · progresión» no); todo lo que entra lleva zona y «de pie»;
+ *  · la secuencia, en treinta laborables con la memoria de un día para otro: las seis zonas
+ *    cada día en la jornada y, con «Dos horas» y dos pausas, en dos días seguidos; ninguna zona
+ *    con más de dos pausas que otra; la primera pausa del día, Mueve de pie; la Estira de la
+ *    larga, de pie; nunca dos sentadas seguidas (la comida corta la cuenta); nada repetido en
+ *    el día; ni la misma primera ni el mismo cierre que la última vez; el cierre, un Respira
+ *    lento de 5 min o menos; la mitad de las pausas o más, de pie;
+ *  · gratis frente a PACE completo: el cuerpo entero en los dos; sin pagar se repite lo del
+ *    día anterior, con PACE completo casi nada;
  *  · la capa 1: lo hecho fuera del plan no vuelve y su zona cuenta, pero solo para lo que va
  *    después; saltar una pausa levanta la siguiente con «Llevas N min sentado»;
  *  · en la app: la pausa y la línea dicen la frase, «Otra» da otra cosa, y lo servido se guarda
@@ -62,14 +70,15 @@ test('Piernas de pie, Espalda de pie y la mesa entran en los pozos, gratis; todo
   expect(Math.max(...r.cierre), 'Respira de 5 min o menos').toBeLessThanOrEqual(5);
 });
 
-test('treinta laborables: de pie al empezar, tras comer y en la larga, nunca dos sentadas, nada repetido y nada de la última vez', async ({ page, context }) => {
+test('treinta laborables: el cuerpo entero y equilibrado, de pie al empezar y en la larga, nunca dos sentadas, nada repetido y nada de la última vez', async ({ page, context }) => {
   await abrir(page, context);
   const r = await page.evaluate((H) => {
     const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     const dias = []; for (const d = new Date(2026, 9, 12); dias.length < 30; d.setDate(d.getDate() + 1)) if (d.getDay() >= 1 && d.getDay() <= 5) dias.push(iso(d));
-    const fallos = []; const out = {};
+    const fallos = []; const out = {}; let sentadaTrasComer = 0;
+    const zonasDe = (it) => (it.platos || []).filter((p) => p.modulo !== 'respira').flatMap((p) => ritmoSeriesZonas(p.id));
     for (const op of ['2h', 'jornada']) {
-      const serv = {}; let pausas = 0, dePie = 0, primeraAyer = null, cierreAyer = null;
+      const serv = {}; let pausas = 0, dePie = 0, primeraAyer = null, cierreAyer = null, zonasAyer = null;
       for (const d of dias) {
         const mem = ritmoMemoria({ ritmo: { servidos: serv } }, d, null, null);
         const m = semanaComponer(op, H, ritmoPozos(getState(), d), {}, 8, semanaDe(d), null, mem);
@@ -85,12 +94,27 @@ test('treinta laborables: de pie al empezar, tras comer y en la larga, nunca dos
         if (p0.modulo !== 'mueve' || !ritmoSeriesDePie(p0.id)) mal('la primera no es Mueve de pie: ' + p0.name);
         if (p0.id === primeraAyer) mal('la misma primera que la última vez: ' + p0.name);
         primeraAyer = p0.id;
+        /* después de comer, una pausa como cualquier otra (Ez, 20 oct.: «B · Se quita») */
         const iC = m.items.findIndex((it) => it.tipo === 'comida');
         const tras = iC >= 0 ? m.items.slice(iC).find((it) => it.tipo === 'pausa') : null;
-        if (tras && !pie(tras)) mal('después de comer, sentada: ' + tras.platos[0].name);
+        if (tras && !pie(tras)) sentadaTrasComer++;
+        if (paradas.some((it) => it.frase && it.frase.k === 'comida')) mal('la frase de después de comer');
         ps.filter((it) => it.larga).forEach((it) => { if (it.platos.map((p) => p.modulo).join() !== 'respira,estira' || !ritmoSeriesDePie(it.platos[1].id)) mal('la larga no es Respira y Estira de pie'); });
         let seguidas = 0;
-        ps.forEach((it) => { pausas++; if (pie(it)) { dePie++; seguidas = 0; } else if (++seguidas > 1) mal('dos sentadas seguidas a las ' + ritmoHora(it.desde)); });
+        m.items.forEach((it) => {
+          if (it.tipo === 'comida') seguidas = 0;
+          if (it.tipo !== 'pausa') return;
+          pausas++; if (pie(it)) { dePie++; seguidas = 0; } else if (++seguidas > 1) mal('dos sentadas seguidas a las ' + ritmoHora(it.desde));
+        });
+        /* el cuerpo entero: cada día en la jornada; con dos pausas («Dos horas»), en dos días */
+        const veces = {}; RITMO_ZONAS.forEach((z) => { veces[z] = 0; });
+        ps.forEach((it) => zonasDe(it).forEach((z) => { veces[z]++; }));
+        const sin = RITMO_ZONAS.filter((z) => !veces[z]);
+        if (op === 'jornada' && sin.length) mal('sin mover: ' + sin.join(', '));
+        if (op === '2h' && zonasAyer && sin.some((z) => zonasAyer.indexOf(z) === -1)) mal('ni ayer ni hoy: ' + sin.join(', '));
+        zonasAyer = RITMO_ZONAS.filter((z) => veces[z]);
+        const cuentas = RITMO_ZONAS.map((z) => veces[z]);
+        if (Math.max(...cuentas) - Math.min(...cuentas) > 2) mal('desequilibrado: ' + JSON.stringify(veces));
         const c = paradas[paradas.length - 1].platos[0];
         if (c.modulo !== 'respira' || c.min > 5) mal('el cierre no es un Respira lento: ' + c.name);
         /* el de la última vez solo si lo demás del pozo del cierre ya salió hoy: no repetir en el día manda */
@@ -102,11 +126,50 @@ test('treinta laborables: de pie al empezar, tras comer y en la larga, nunca dos
       }
       out[op] = Math.round(100 * dePie / pausas);
     }
-    return { fallos, pie: out };
+    return { fallos, pie: out, sentadaTrasComer };
   }, H);
   expect(r.fallos).toEqual([]);
+  expect(r.sentadaTrasComer, 'después de comer ya no se obliga a ponerse de pie').toBeGreaterThan(0);
   expect(r.pie['2h'], '«Dos horas»: la mitad de las pausas de pie, o más').toBeGreaterThanOrEqual(50);
   expect(r.pie.jornada, 'la jornada: más de la mitad de pie').toBeGreaterThanOrEqual(55);
+});
+
+test('gratis, el cuerpo entero; con PACE completo, además, las rutinas cambian de un día a otro', async ({ page, context }) => {
+  await abrir(page, context);
+  const r = await page.evaluate((H) => {
+    const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const dias = []; for (const d = new Date(2026, 9, 19); dias.length < 10; d.setDate(d.getDate() + 1)) if (d.getDay() >= 1 && d.getDay() <= 5) dias.push(iso(d));
+    const correr = (pago) => {
+      const abierto = window.PREMIUM_ABIERTO_HASTA_V1, acceso = window.canAccessRoutine;
+      if (!pago) {
+        window.PREMIUM_ABIERTO_HASTA_V1 = false;
+        window.canAccessRoutine = (id) => { const b = window.resolveBodyRoutine && window.resolveBodyRoutine(id); const br = window.getBreatheRoutine && window.getBreatheRoutine(id); return ((b && b.routine) || br || {}).access !== 'premium'; };
+      }
+      try {
+        const serv = {}; let enteros = 0, repiten = 0, varia = null, ayer = null;
+        for (const d of dias) {
+          const mem = ritmoMemoria({ ritmo: { servidos: serv } }, d, null, null);
+          varia = mem.varia;
+          const m = semanaComponer('jornada', H, ritmoPozos(getState(), d), {}, 8, semanaDe(d), null, mem);
+          serv[d] = ritmoSeriesClaves(m.items);
+          const ids = m.items.filter((it) => it.tipo === 'pausa').flatMap((it) => it.platos.filter((p) => p.modulo !== 'respira').map((p) => p.id));
+          const zonas = new Set(ids.flatMap((id) => ritmoSeriesZonas(id)));
+          if (RITMO_ZONAS.every((z) => zonas.has(z))) enteros++;
+          if (ayer) repiten += ids.filter((id) => ayer.indexOf(id) !== -1).length;
+          ayer = ids;
+        }
+        return { varia, enteros, repiten: repiten / (dias.length - 1) };
+      } finally { window.PREMIUM_ABIERTO_HASTA_V1 = abierto; window.canAccessRoutine = acceso; }
+    };
+    return { gratis: correr(false), pago: correr(true) };
+  }, H);
+  expect(r.gratis.varia, 'GUARD: sin PACE completo no hay variedad').toBe(false);
+  expect(r.pago.varia, 'GUARD: hasta v1, abierta').toBe(true);
+  expect(r.gratis.enteros, 'gratis: el cuerpo entero los diez días').toBe(10);
+  expect(r.pago.enteros, 'PACE completo: también').toBe(10);
+  /* medido al montarlo: 4,4 rutinas de 7 repiten del día anterior sin pagar, 0,2 pagando */
+  expect(r.pago.repiten, 'PACE completo: casi nada del día anterior').toBeLessThanOrEqual(1);
+  expect(r.gratis.repiten - r.pago.repiten, 'sin pagar se repite más').toBeGreaterThanOrEqual(2);
 });
 
 test('la capa 1: lo hecho fuera del plan cuenta solo para después, y saltar una pausa levanta la siguiente', async ({ page, context }) => {
@@ -152,22 +215,23 @@ test('en la app: la pausa dice la frase, «Otra» da otra cosa y lo servido se g
   }, new Date('2026-10-14T09:00:00+02:00'));
   const plan = await page.evaluate(() => { const p = ritmoPlan(getState()); const it = ritmoDetras(p.m, p.actual); return { id: it.platos[0].id, name: it.platos[0].name, frase: it.frase }; });
   expect(plan.id, 'no la misma primera que ayer').not.toBe('extra.legs.standing');
-  /* Espalda de oficina va de pie y entra en el pozo desde la revisión de los ejercicios
-     (Ez, 16 oct.): la espalda es la zona sin mover que gana. Antes, Flexiones de escritorio. */
-  expect(plan).toEqual({ id: 'extra.back.desk', name: 'Espalda de oficina', frase: { k: 'zona', zona: 'espalda' } });
+  /* Desde el 20 oct. la pared cuenta como la mesa, y Sentadilla en pared (PACE completo, abierto
+     hasta v1) entra en el pozo: otra rutina de piernas que ayer no salió. Antes, Espalda de
+     oficina; antes aún, Flexiones de escritorio. */
+  expect(plan).toEqual({ id: 'extra.wall.sit', name: 'Sentadilla en pared', frase: { k: 'zona', zona: 'piernas' } });
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
   for (let i = 0; i < 60 && !(await page.locator('[data-pace-break-shortcut]').count()); i++) {
     await page.clock.fastForward(60 * 1000);
     await page.waitForTimeout(60);
   }
   const plato = page.locator('[data-pace-break-ritmo]');
-  await expect(plato.locator('.pace-break-motivo')).toHaveText('Espalda: sin mover hoy');
-  await expect(plato).toContainText('Espalda de oficina');
+  await expect(plato.locator('.pace-break-motivo')).toHaveText('Piernas: sin mover hoy');
+  await expect(plato).toContainText('Sentadilla en pared');
   await page.keyboard.press('Escape');
   const s = await page.evaluate(() => ({ serv: getState().ritmo.servidos, otra: (ritmoOtra(['p1']), ritmoPlan(getState()).pausa.platos[0].id) }));
   expect(Object.keys(s.serv).sort(), 'lo servido, día a día').toEqual(['2026-10-13', '2026-10-14']);
-  expect(s.serv['2026-10-14']['1']).toEqual(['extra.back.desk']);
-  expect(s.otra, '«Otra» da otra cosa').not.toBe('extra.back.desk');
+  expect(s.serv['2026-10-14']['1']).toEqual(['extra.wall.sit']);
+  expect(s.otra, '«Otra» da otra cosa').not.toBe('extra.wall.sit');
   expect(errores).toEqual([]);
 });
 
@@ -206,7 +270,7 @@ test.describe('a 360 px', () => {
       const frases = (lang) => {
         const S = window.PACE_STRINGS[lang];
         const zonas = ['cuello', 'hombros', 'espalda', 'caderas', 'piernas', 'manos'].map((z) => S['ritmo.frase.zona'].replace('{zona}', S['ritmo.zona.' + z]));
-        return zonas.concat([S['ritmo.frase.sentado'].replace('{n}', '125'), S['ritmo.frase.comida'], S['ritmo.frase.larga'], S['ritmo.frase.cierre']]);
+        return zonas.concat([S['ritmo.frase.sentado'].replace('{n}', '125'), S['ritmo.frase.larga'], S['ritmo.frase.cierre']]);
       };
       const out = [];
       ['es', 'en'].forEach((l) => frases(l).forEach((f) => { el.textContent = f; if (Math.round(el.getBoundingClientRect().height / alto) > 1) out.push(l + ': ' + f); }));

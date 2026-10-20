@@ -52,6 +52,8 @@ function ritmoMemoria(s, fecha, dia, pasado) {
     pasado: pasado || [], estados: (dia && dia.estados) || {},
     inicio: pasado && pasado.length ? pasado[0].desde : null,
     aprendido: aprende ? ritmoMotorVigente(r.aprendido, fecha) : null,
+    /* que las rutinas cambien de un día a otro, con PACE completo (state-entitlement.jsx) */
+    varia: typeof window.puedeVariar === 'function' && window.puedeVariar(),
   };
 }
 

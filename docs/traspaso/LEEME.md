@@ -11,6 +11,13 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **20 oct.: los días diseñados, montados en v0.174.0** (rama `claude/nostalgic-dirac-127713`, sesión
+  `dias-cuerpo-entero`). Ez contestó a la segunda página: solo las rutinas que ya hay («Hombros
+  fuertes» fuera: medido sin ella no faltaba nada), «equilibrada y diferente», y lo de después de
+  comer, fuera. La pared cuenta como la mesa y «Caderas de pie» también como piernas. La semana
+  resultante, para que Ez la apruebe antes de juntar: https://claude.ai/artifact/HjcDYcPgAm4fG13uMvKaVm
+  (`docs/traspaso/archivos/dias-disenados/semana-final.html`). Lo que no sale mejor que hoy: con
+  PACE completo y el aro a 25 o a 10, el día queda algo menos equilibrado (2,8 frente a 2,0).
 - **20 oct.: v0.173.2 en `main` y los días diseñados, redefinidos.** Esta cuenta, repuesta (la semana
   vuelve a las 13:00 UTC de los lunes), coordinó desde la carpeta principal, en `main`. Ez dijo
   «estoy bastante perdido»: se le hizo la hoja de ruta
