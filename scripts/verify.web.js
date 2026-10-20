@@ -19,6 +19,7 @@
 
 'use strict';
 
+var cp = require('child_process');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
@@ -39,6 +40,16 @@ function filasPrecache(ROOT) {
   var filas = [], re = /'([^']+)'/g, x;
   while ((x = re.exec(limpio))) filas.push(x[1]);
   return filas;
+}
+
+/* Lo que git ignora no llega a Cloudflare, que monta la web desde el repo: las maquetas sueltas
+   de la raíz (`_maqueta-*.html`, `_revision-*.html`) solo viven en una copia de trabajo, y
+   contarlas hacía fallar el verify en el PC de Ez y no en la CI. Sin git a mano, no se aparta nada. */
+function ignoradasPorGit(ROOT, rutas) {
+  if (!rutas.length) return new Set();
+  var r = cp.spawnSync('git', ['check-ignore', '--stdin'], { cwd: ROOT, input: rutas.join('\n'), encoding: 'utf8' });
+  if (r.error || (r.status !== 0 && r.status !== 1)) return new Set();
+  return new Set(r.stdout.split(/\r?\n/).filter(Boolean));
 }
 
 /* Una ruta de la web al archivo que la sirve, como en Cloudflare: '/' es index.html,
@@ -80,6 +91,8 @@ function tandaWeb(ctx) {
       if (d.isDirectory() && !GENERADAS.test(d.name) && fs.existsSync(path.join(ctx.ROOT, d.name, 'index.html'))) return d.name + '/index.html';
       return null;
     }).filter(Boolean);
+    var ignoradas = ignoradasPorGit(ctx.ROOT, paginas);
+    paginas = paginas.filter(function (p) { return !ignoradas.has(p); });
     var sinDecidir = paginas.filter(function (p) { return !hay.has(p) && NO_SE_PUBLICA.indexOf(p) < 0; });
     if (sinDecidir.length) ctx.falla('web: página(s) en la raíz que no se publican ni están en NO_SE_PUBLICA: ' + sinDecidir.join(', ') +
       ' -- si es de la web, a WEB_ARCHIVOS o WEB_CARPETAS de scripts/web-dist.js');
