@@ -21,9 +21,12 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 1. **Fase 2**: probar el APK en un móvil (icono, arranque de día y de noche, importar una copia, que lo
    guardado sobreviva a una actualización, el aviso de Foco). Subidas: `docs/launch/google-play/guia.html`.
-2. **Antes de cobrar** (Ez, 16 oct.), cada uno en su sesión: **los días diseñados** (en curso; solo
-   para una habitación o el escritorio) y, del calendario total en la web, **el llavero** (Ez, 18 oct.;
-   espera sus altas). La revisión de los ejercicios y el motor de la semana, hechos; lo total con PACE
+2. **Antes de cobrar** (Ez, 16 oct.), cada uno en su sesión: **los días diseñados**, redefinidos por
+   Ez el 20 oct. (`DECISIONES_PRODUCTO.md`, arriba del todo): cada día mueve el cuerpo entero (gratis) y
+   las rutinas cambian de un día a otro (PACE completo), sin paseo y sin nada nuevo en pantalla; lo
+   retoma una sesión nueva desde el prototipo de `claude/sad-ishizaka-293093`, con una página sin jerga
+   para Ez antes de montar. Y, del calendario total en la web, **el llavero** (Ez, 18 oct.; espera sus
+   altas). La revisión de los ejercicios y el motor de la semana, hechos; lo total con PACE
    cerrado, después de v1.
 3. **Fase 6, tras /premium**: la página de gracias y la firma con k2, el aviso dos días antes del fin
    de la prueba, «Gestionar» en Ajustes, la invitación con los botones de compra y lo legal de /premium.
@@ -33,12 +36,19 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
    publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. «Libre»
    en el calendario (v0.173.1) y publicar solo la app (v0.173.2, `dist/` con `scripts/web-dist.js`),
-   hechos y por juntar; el detalle, en el relevo de `docs/traspaso/LEEME.md`. Las ramas ya juntadas, borradas (copia en
+   en `main` desde el 20 oct. con el sí de Ez; falta su cambio en Cloudflare (abajo). Las ramas ya juntadas, borradas (copia en
    `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto), y las sesiones terminadas,
    archivadas.
 
 ## Espera a Ez
 
+La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
+(`docs/traspaso/hoja-de-ruta-20oct.html`, https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). Ez se
+pierde con mucho abierto: a «¿qué toca?», una sola cosa.
+
+- **Ya**: en Cloudflare Pages › Settings › Build, el comando `node scripts/web-dist.js` y la carpeta
+  de salida `dist` (v0.173.2 está en `main`; `docs/BUILD.md`, «La web publicada»). Después, comprobar
+  que pacegrass.app/STATE.md ya no da 4.931 bytes de markdown.
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6); el gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal;
   volver a exportar el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
@@ -48,8 +58,6 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   token de Web Analytics solo para /premium; mirar el registro previo de Play.
 - Las altas de PACE en Google Cloud y Microsoft Entra, con sus dos ids (`docs/CALENDARIO_ALTAS.md`; para el
   llavero, el cliente de Google como «aplicación web» con su secreto).
-- En cuanto v0.173.2 esté en `main`: en Cloudflare Pages › Settings › Build, el comando
-  `node scripts/web-dist.js` y la carpeta de salida `dist` (`docs/BUILD.md`, «La web publicada»).
 - Leer `privacy.html` (es pública) y probar en su Android el calendario que se mantiene solo.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).

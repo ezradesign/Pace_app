@@ -11,6 +11,20 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **20 oct.: v0.173.2 en `main` y los días diseñados, redefinidos.** Esta cuenta, repuesta (la semana
+  vuelve a las 13:00 UTC de los lunes), coordinó desde la carpeta principal, en `main`. Ez dijo
+  «estoy bastante perdido»: se le hizo la hoja de ruta
+  (`docs/traspaso/hoja-de-ruta-20oct.html`, https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT), con
+  tres cosas para el día y su lista por orden. **Cómo guiarle:** a «¿qué toca?», una sola cosa; sin
+  jerga («no sé qué carajo es tarde de pie»); las preguntas, con AskUserQuestion, y repetirle lo
+  entendido antes de montar.
+  - Con su «júntalo», `claude/intelligent-cannon-40e082` entró en `main` sin choques (ce0e295):
+    «libre» y publicar solo la app. **Falta Ez** en Cloudflare (comando y salida, `STATE.md`).
+  - Días diseñados: Ez rechazó la intención por día y el paseo. Lo que eligió está en
+    `DECISIONES_PRODUCTO.md`, arriba del todo. La sesión antigua ya no estaba viva; quedó una tarjeta
+    para una sesión nueva (`dias-cuerpo-entero`) que retoma el wip 3ae2dc5 y le enseña una página
+    sin jerga antes de montar. La carpeta `.claude/worktrees/sad-ishizaka-293093` se borra cuando
+    esa sesión haya traído el wip.
 - **18 oct.: auditoría completa y lo que decidió Ez** (`docs/audits/auditoria-v0.173.0.md`, página
   https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs; el calendario, en
   https://claude.ai/artifact/CBVzMw539HF895eM2HJmbw). Sin tocar código: esta cuenta se quedó al 92 %

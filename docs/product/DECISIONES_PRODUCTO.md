@@ -19,6 +19,27 @@
 
 ---
 
+## Los días diseñados, redefinidos (Ez, 20 oct. 2026)
+
+Sobre la página `docs/traspaso/archivos/dias-disenados/dias.html`
+(https://claude.ai/artifact/2Vh1U7gi139648NnYPnQvL), contestado con AskUserQuestion. Sustituye al
+punto 3 de «Lo que hace bueno a PACE antes de cobrar» y a lo del «Paseo corto» del punto 5.
+
+1. **Cada día mueve el cuerpo entero**: «Cada día debe de mover el cuerpo COMPLETO». Entre todas las
+   pausas de un día laborable, las seis zonas (piernas, caderas, espalda, hombros, cuello, manos), como
+   garantía siempre que quepa. Se descartan las formas A, B y C de la página (una zona o un menú por
+   día).
+2. **Las rutinas cambian de un día a otro**: «van variando dependiendo del día».
+3. **Sin paseo**: «OLVIDA lo del paseo ya». «Paseo corto» sale; todo sigue dentro de casa.
+4. **Nada nuevo en pantalla** (la opción «2 · Nada»): sin frase de intención del día.
+5. **Nada especial después de comer**: no se fuerzan pausas de pie tras comer.
+6. **El reparto**: el cuerpo entero cada día, gratis; que las rutinas cambien de un día a otro, de
+   PACE completo. Hoy ya hay algo de variedad gratis (el desempate de las series por la rutina que más
+   días lleva sin salir), así que sin pagar se repetirá más que hoy; hasta v1 todo está abierto.
+
+Lo monta una sesión que retoma el prototipo de `claude/sad-ishizaka-293093`, con una página sin jerga
+para Ez antes de montar (la semana por zonas, gratis y de pago, y los casos con pocas pausas).
+
 ## Tras la auditoría del 18 oct. 2026 (Ez)
 
 Sobre `docs/audits/auditoria-v0.173.0.md` (página https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs):
@@ -64,6 +85,7 @@ Calendar y Outlook. Elegido con AskUserQuestion:
    Ya no espera a tener semanas de datos: empieza a aprender con la primera semana de los testers.
 3. **Días diseñados:** cada día de la semana con su intención y sus rutinas, todas revisadas con el
    manual (`BASE_MUEVE_ESTIRA.md`) y medidas de verdad, y las rutinas de pie que faltan para la tarde.
+   *Cambiado el 20 oct.: cada día, el cuerpo entero y rutinas que cambian entre días (arriba).*
 4. **El calendario, total también en la web, con un servidor pequeño solo para eso:** una función de
    Cloudflare guarda el permiso cifrado y mantiene el día al día aunque PACE esté cerrado. Solo para
    quien lo conecta. Cambia la promesa de «sin servidor» en ese punto y `privacy.html` lo cuenta; pide
@@ -72,7 +94,8 @@ Calendar y Outlook. Elegido con AskUserQuestion:
 5. **Todo se hace en una habitación o en el escritorio, sin salir de casa** (Ez, 17 oct. 2026). Los
    ejercicios nuevos llegan con los días diseñados, no antes. El «Paseo corto» que propuso la revisión
    (`docs/traspaso/archivos/revision-ejercicios/REVISION.md` §5, con escaleras) se rehace para dentro
-   de casa: marcha en el sitio o caminar por la habitación. «Hombros fuertes» (botella de agua o nada)
+   de casa: marcha en el sitio o caminar por la habitación (*el 20 oct. Ez lo quitó: sin paseo*).
+   «Hombros fuertes» (botella de agua o nada)
    ya cumple. Hoy ninguna rutina pide salir: todo es con silla, mesa, pared o suelo, y «Colgarse»
    pide una barra, que puede ser la de una puerta.
 
