@@ -45,12 +45,12 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const { t, tn } = useT();
   const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
                             // premiumUnlocked la seccion re-renderiza y el guard relee el store.
-  // s149: el acceso pasa por el guard central de entitlement (s95), como el
-  // resto de superficies premium. Equivalente EXACTO al antiguo
-  // `!!pace.premiumUnlocked`, con fallback defensivo por si el guard no
-  // estuviera cargado. Mismo patron que `RoutineCard` en BreatheLibrary.
-  const unlocked = window.hasPremiumEntitlement
-    ? window.hasPremiumEntitlement()
+  // El acceso pasa por el guard central de entitlement, como el resto de
+  // superficies premium; hasta v1 abre para todos (`puedeCrearRutinas`), con
+  // fallback defensivo por si el guard no estuviera cargado. Mismo patron que
+  // `RoutineCard` en BreatheLibrary.
+  const unlocked = window.puedeCrearRutinas
+    ? window.puedeCrearRutinas()
     : !!pace.premiumUnlocked;
   const routines = Array.isArray(pace.customRoutines) ? pace.customRoutines : [];
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };

@@ -42,11 +42,13 @@ function tieneLicenciaPremium() {
 /* HASTA v1, LAS RUTINAS PREMIUM ESTAN ABIERTAS PARA TODOS. Decision de Ez (6 oct.
    2026): el cobro llega despues de cerrar Android, y asi los testers de la prueba
    cerrada las prueban todas. Siguen con su «Premium», que dice que seran de pago,
-   pero sin «Pronto» y se pueden empezar. Las RUTINAS y el calendario que se
+   pero sin «Pronto» y se pueden empezar. Las RUTINAS, el calendario que se
    mantiene solo (`puedeMantenerCalendario`, Ez, 14 oct.: en Android no hay
-   códigos y nadie podría probarlo): el constructor de rutinas propias sigue
-   cerrado (`hasPremiumEntitlement`). Cuando llegue el cobro, a `false`. Se lee de
-   `window` en cada llamada porque las pruebas lo apagan para medir el candado. */
+   códigos y nadie podría probarlo), lo que aprende de tu semana (`puedeAprender`)
+   y el constructor de «Tus rutinas» (`puedeCrearRutinas`, Ez, 20 oct.). Abrirlo
+   no es tener PACE completo: `hasPremiumEntitlement` sigue en false sin código ni
+   compra. Cuando llegue el cobro, a `false`. Se lee de `window` en cada llamada
+   porque las pruebas lo apagan para medir el candado. */
 const PREMIUM_ABIERTO_HASTA_V1 = true;
 
 /* canAccessRoutine(routineId, { tasting }) -> boolean
@@ -95,6 +97,15 @@ function hasPremiumEntitlement() {
      «Mantenerlo al día solo» en «Al calendario» es de PACE completo; llevar el
      día y esquivar reuniones siguen gratis. Hasta v1, abierto como las rutinas. */
 function puedeMantenerCalendario() {
+  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
+/* puedeCrearRutinas() -> boolean   (20 oct. 2026)
+     El constructor de «Tus rutinas» es de PACE completo, pero hasta v1 se abre como
+     lo demás: Google tiene que poder revisar toda la app en la prueba de Play, y en
+     Android no hay código ni compra con que abrirlo. Quien cree rutinas sin código
+     las verá cerradas al llegar v1; Ez lo eligió sabiéndolo. */
+function puedeCrearRutinas() {
   return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
@@ -147,6 +158,6 @@ function tieneCompraVigente() {
 }
 
 Object.assign(window, {
-  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, PREMIUM_ABIERTO_HASTA_V1,
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
   paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente,
 });

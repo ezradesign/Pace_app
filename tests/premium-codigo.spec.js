@@ -151,7 +151,7 @@ test('el enlace del tester abre PACE completo, avisa y se borra de la barra', as
   await expect(aviso).toContainText('PACE completo es tuyo, para siempre.');
   expect(new URL(page.url()).hash).toBe('');
   expect(await page.evaluate(() => window.getState().licencia)).toBe(codigo);
-  /* También abre «Tus rutinas», que hasta v1 está cerrado para todos. */
+  /* Y es tener PACE completo: lo que abre «Tus rutinas» también después de v1. */
   expect(await page.evaluate(() => window.hasPremiumEntitlement())).toBe(true);
 });
 

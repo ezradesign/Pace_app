@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.173.2</title>
+  <title>PACE · Foco · Cuerpo — v0.173.3</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6351,7 +6351,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.173.2';
+const PACE_VERSION = 'v0.173.3';
 
 
 
@@ -8414,6 +8414,8 @@ function tieneLicenciaPremium() {
 
 
 
+
+
 const PREMIUM_ABIERTO_HASTA_V1 = true;
 
 
@@ -8468,6 +8470,15 @@ function puedeMantenerCalendario() {
 
 
 
+
+
+function puedeCrearRutinas() {
+  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
+
+
+
 function puedeAprender() {
   return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
@@ -8514,10 +8525,10 @@ function tieneCompraVigente() {
 }
 
 Object.assign(window, {
-  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, PREMIUM_ABIERTO_HASTA_V1,
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
   paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeAprender, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -31871,8 +31882,8 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
 
 
-  const unlocked = window.hasPremiumEntitlement ?
-  window.hasPremiumEntitlement() :
+  const unlocked = window.puedeCrearRutinas ?
+  window.puedeCrearRutinas() :
   !!pace.premiumUnlocked;
   const routines = Array.isArray(pace.customRoutines) ? pace.customRoutines : [];
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
@@ -44490,8 +44501,9 @@ function usePaceEventos(acciones) {
 
 
 
+
     const constructor = (id) => {
-      if (typeof hasPremiumEntitlement === 'function' && !hasPremiumEntitlement()) {
+      if (typeof puedeCrearRutinas === 'function' && !puedeCrearRutinas()) {
         const s = window.PACE_STRINGS || {};
         const l = getState().lang || 'es';
         const nombre = s[l] && s[l]['custom.section.title'] || s.en && s.en['custom.section.title'] || null;

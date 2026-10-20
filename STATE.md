@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.173.2 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.173.3 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -19,6 +19,10 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Lo siguiente
 
+0. **Play Console, con Ez paso a paso** (20 oct.; la página de pasos de Ez, abajo): app creada como
+   «PACE: Pomodoro, Break Reminder», en inglés como idioma principal y Gratis (`nombre-en-play.html`).
+   Van los cuestionarios; luego la ficha, la prueba interna y la cerrada. «Tus rutinas» se abrió
+   hasta v1 (v0.173.3) para que el acceso restringido sea «No» de verdad: se sube 0.173.3 o posterior.
 1. **Fase 2**: probar el APK en un móvil (icono, arranque de día y de noche, importar una copia, que lo
    guardado sobreviva a una actualización, el aviso de Foco). Subidas: `docs/launch/google-play/guia.html`.
 2. **Antes de cobrar** (Ez, 16 oct.), cada uno en su sesión: **los días diseñados**, redefinidos por

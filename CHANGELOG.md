@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.173.3 | 2026-10-20 | «Tus rutinas», el constructor de rutinas propias, también se abre hasta v1 como el resto de PACE completo: Google tiene que poder revisar toda la app en la prueba de Play, y en Android no había código ni compra con que abrirlo (Ez, 20 oct.) |
 | v0.173.2 | 2026-10-20 | pacegrass.app publica solo la app: la app, la privacidad, la seguridad, /premium y lo que necesitan; los documentos y las pruebas dejan de servirse en el dominio del producto (el repo sigue en GitHub). Hace falta cambiar en Cloudflare Pages el comando y la carpeta de salida (Ez, 18 oct.) |
 | v0.173.1 | 2026-10-20 | Lo que PACE pone en tu calendario (Google, Outlook, el móvil o el archivo) va como libre, también al cambiarlo: los compañeros solo te ven ocupado en tus reuniones, y los avisos de las pausas siguen saltando (Ez, 18 oct.). La privacidad lo cuenta |
 | v0.173.0 | 2026-10-17 | «A tu ritmo» aprende de tu semana (PACE completo, abierto hasta v1): cada lunes, una carta en una ventana con lo que te ayudó, las pausas hechas y como mucho dos cambios con su porqué (la rutina que cambias tres veces descansa un mes, la pausa que saltas pasa a 2 minutos, menos Mueve o la pregunta de tus horas); lo aprendido se ve y se olvida en «Tu semana» |

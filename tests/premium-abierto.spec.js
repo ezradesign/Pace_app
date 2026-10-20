@@ -3,10 +3,14 @@
  * Decision de Ez (6 oct. 2026): el cobro llega despues de cerrar Android, asi
  * que hasta v1 todas las rutinas premium se pueden usar y los testers de la
  * prueba cerrada las prueban. Se siguen viendo con su «Premium» (dice que seran
- * de pago), pero sin «Pronto». El constructor de rutinas propias sigue cerrado.
+ * de pago), pero sin «Pronto». Desde el 20 oct. 2026 tambien el constructor de
+ * «Tus rutinas» (Ez: Google tiene que poder revisar toda la app en Play, y en
+ * Android no hay codigo ni compra que lo abra). Abrir hasta v1 no es tener PACE
+ * completo: `hasPremiumEntitlement` sigue en false sin codigo ni compra.
  * El interruptor es `PREMIUM_ABIERTO_HASTA_V1` (app/state-entitlement.jsx).
  *
- * Contra la version anterior fallan las dos: la tarjeta salia bloqueada.
+ * Contra la version anterior fallan las dos: la tarjeta salia bloqueada, y
+ * contra v0.173.2 la segunda: el constructor seguia cerrado.
  */
 'use strict';
 
@@ -33,14 +37,16 @@ test('una rutina premium de Estira sale abierta, con su «Premium» y sin «Pron
   expect(errores).toEqual([]);
 });
 
-test('solo se abren las rutinas: el constructor de rutinas propias sigue cerrado', async ({ page }) => {
+test('hasta v1 se abren las rutinas y «Tus rutinas», sin que eso sea tener PACE completo', async ({ page }) => {
   await irAlArtefacto(page);
   const acceso = await page.evaluate(() => ({
     rutina: window.canAccessRoutine('move.spine.waves'),
-    constructor: window.hasPremiumEntitlement(),
+    constructor: typeof window.puedeCrearRutinas === 'function' && window.puedeCrearRutinas(),
+    completo: window.hasPremiumEntitlement(),
     comprado: window.getState().premiumUnlocked,
   }));
   expect(acceso.rutina, 'la rutina premium sigue cerrada').toBe(true);
-  expect(acceso.constructor, 'abrir las rutinas abrio tambien el constructor').toBe(false);
+  expect(acceso.constructor, '«Tus rutinas» sigue cerrado hasta v1').toBe(true);
+  expect(acceso.completo, 'abrir hasta v1 no es tener PACE completo: sin codigo ni compra, false').toBe(false);
   expect(acceso.comprado, 'abrir hasta v1 no es comprar: premiumUnlocked sigue false').toBe(false);
 });

@@ -32,11 +32,12 @@ function usePaceEventos(acciones) {
 
   useEffectEv(() => {
     const a = acciones;
-    /* «TUS RUTINAS» ES DE PACE COMPLETO: sin él, la invitación y no el constructor. La
-       barra lateral lo abría directo y se podía crear una rutina que luego salía cerrada.
-       El nombre se lee en el idioma de AHORA (este efecto vive desde el primer render). */
+    /* «TUS RUTINAS» ES DE PACE COMPLETO: sin él, la invitación y no el constructor (la
+       barra lateral lo abría directo). Hasta v1 se abre para todos, como lo demás
+       (`puedeCrearRutinas`). El nombre se lee en el idioma de AHORA (este efecto vive
+       desde el primer render). */
     const constructor = (id) => {
-      if (typeof hasPremiumEntitlement === 'function' && !hasPremiumEntitlement()) {
+      if (typeof puedeCrearRutinas === 'function' && !puedeCrearRutinas()) {
         const s = window.PACE_STRINGS || {};
         const l = getState().lang || 'es';
         const nombre = (s[l] && s[l]['custom.section.title']) || (s.en && s.en['custom.section.title']) || null;
