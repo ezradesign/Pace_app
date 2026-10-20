@@ -41,7 +41,7 @@
 
    LO APRENDIDO (el motor de la semana, ritmo.motor.js; con PACE completo), en
    `mem.aprendido`: lo que descansa va al final de la lista, como lo apartado; en la pausa
-   que sueles saltar, lo de 2 minutos o menos; lo que te ayudó suma un punto; y con
+   que sueles saltar, lo de 2 minutos o menos; lo que te ayudó suma dos puntos; y con
    «menos Mueve», la cadencia sirve Estira (la primera, no).
 
    PURA como la regla: lo que sabe del pasado entra por `mem` (state-ritmo.series.jsx).
@@ -265,7 +265,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       var z = ritmoSeriesZonas(r.id), p = 0;
       var nueva = z.filter(function (x) { return !movidas[x] && !fuera.z[x]; });
       if (nueva.length) p += 3;
-      if (ayuda[r.id]) p += 1;   /* lo que te ayudó vuelve antes (con PACE completo) */
+      if (ayuda[r.id]) p += 2;   /* lo que te ayudó vuelve antes: como si su zona se hubiera movido dos veces menos */
       var carga = cargaDe(r);
       p -= carga;
       if (previa && z.some(function (x) { return previa.zonas.indexOf(x) !== -1; })) p -= 3;

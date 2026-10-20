@@ -194,6 +194,7 @@ test('lo aprendido llega a «A tu ritmo» por la memoria de las series', async (
     const servir = new Function('return ' + fn)();
     const dias = ['2026-10-13', '2026-10-14', '2026-10-15'];
     const ids = (d) => d.flatMap((p) => p.platos.map((x) => x.id));
+    const hora = (d) => { const p = d.find((x) => x.platos.some((y) => y.id === 'move.wrists')); return p ? p.desde : 1440; };
     const cadencia = (d) => d.filter((p, i) => i > 0 && !p.larga && p.desde !== 945).filter((p) => p.platos.some((x) => x.modulo === 'mueve')).length;
     const base = dias.map((iso) => servir(iso, null));
     const neck = base[0].find((p) => p.platos.some((x) => x.id === 'move.neck.3'));
@@ -207,8 +208,9 @@ test('lo aprendido llega a «A tu ritmo» por la memoria de las series', async (
       mueveAntes: base.map(cadencia),
       mueveDespues: dias.map((iso) => cadencia(servir(iso, { menos: 'mueve' }))),
       primeraDespues: dias.map((iso) => servir(iso, { menos: 'mueve' })[0].platos[0].modulo),
-      ayudaAntes: base.map((d) => ids(d).filter((id) => id === 'move.wrists').length).reduce((a, b) => a + b, 0),
-      ayudaDespues: dias.map((iso) => ids(servir(iso, { ayuda: { 'move.wrists': true } })).filter((id) => id === 'move.wrists').length).reduce((a, b) => a + b, 0),
+      /* la hora a la que sale cada día (fuera del día, 24:00) */
+      ayudaAntes: base.map(hora).reduce((a, b) => a + b, 0),
+      ayudaDespues: dias.map((iso) => hora(servir(iso, { ayuda: { 'move.wrists': true } }))).reduce((a, b) => a + b, 0),
     };
   }, servir.toString());
   expect(r.neck, 'el día sin nada aprendido sirve Cuello').toBe(true);
@@ -219,7 +221,9 @@ test('lo aprendido llega a «A tu ritmo» por la memoria de las series', async (
   expect(r.mueveAntes.every((n) => n > 0)).toBe(true);
   expect(r.mueveDespues, 'la cadencia trae Estira').toEqual([0, 0, 0]);
   expect(r.primeraDespues, 'la primera del día sigue siendo Mueve, de pie').toEqual(['mueve', 'mueve', 'mueve']);
-  expect(r.ayudaDespues, 'lo que te ayudó vuelve antes').toBeGreaterThan(r.ayudaAntes);
+  /* lo que te ayudó vuelve antes en el día; el cuerpo entero va primero (el jueves, la única
+     pausa sentada para cuello y manos es «Escritorio express», que mueve las dos) */
+  expect(r.ayudaDespues, 'lo que te ayudó vuelve antes').toBeLessThan(r.ayudaAntes);
 });
 
 test('sin PACE completo no aprende: el día es el de la capa 1 y no hay carta', async ({ page, context }) => {

@@ -215,22 +215,23 @@ test('en la app: la pausa dice la frase, «Otra» da otra cosa y lo servido se g
   }, new Date('2026-10-14T09:00:00+02:00'));
   const plan = await page.evaluate(() => { const p = ritmoPlan(getState()); const it = ritmoDetras(p.m, p.actual); return { id: it.platos[0].id, name: it.platos[0].name, frase: it.frase }; });
   expect(plan.id, 'no la misma primera que ayer').not.toBe('extra.legs.standing');
-  /* Espalda de oficina va de pie y entra en el pozo desde la revisión de los ejercicios
-     (Ez, 16 oct.): la espalda es la zona sin mover que gana. Antes, Flexiones de escritorio. */
-  expect(plan).toEqual({ id: 'extra.back.desk', name: 'Espalda de oficina', frase: { k: 'zona', zona: 'espalda' } });
+  /* Desde el 20 oct. la pared cuenta como la mesa, y Sentadilla en pared (PACE completo, abierto
+     hasta v1) entra en el pozo: otra rutina de piernas que ayer no salió. Antes, Espalda de
+     oficina; antes aún, Flexiones de escritorio. */
+  expect(plan).toEqual({ id: 'extra.wall.sit', name: 'Sentadilla en pared', frase: { k: 'zona', zona: 'piernas' } });
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
   for (let i = 0; i < 60 && !(await page.locator('[data-pace-break-shortcut]').count()); i++) {
     await page.clock.fastForward(60 * 1000);
     await page.waitForTimeout(60);
   }
   const plato = page.locator('[data-pace-break-ritmo]');
-  await expect(plato.locator('.pace-break-motivo')).toHaveText('Espalda: sin mover hoy');
-  await expect(plato).toContainText('Espalda de oficina');
+  await expect(plato.locator('.pace-break-motivo')).toHaveText('Piernas: sin mover hoy');
+  await expect(plato).toContainText('Sentadilla en pared');
   await page.keyboard.press('Escape');
   const s = await page.evaluate(() => ({ serv: getState().ritmo.servidos, otra: (ritmoOtra(['p1']), ritmoPlan(getState()).pausa.platos[0].id) }));
   expect(Object.keys(s.serv).sort(), 'lo servido, día a día').toEqual(['2026-10-13', '2026-10-14']);
-  expect(s.serv['2026-10-14']['1']).toEqual(['extra.back.desk']);
-  expect(s.otra, '«Otra» da otra cosa').not.toBe('extra.back.desk');
+  expect(s.serv['2026-10-14']['1']).toEqual(['extra.wall.sit']);
+  expect(s.otra, '«Otra» da otra cosa').not.toBe('extra.wall.sit');
   expect(errores).toEqual([]);
 });
 
