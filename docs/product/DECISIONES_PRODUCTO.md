@@ -37,8 +37,18 @@ punto 3 de «Lo que hace bueno a PACE antes de cobrar» y a lo del «Paseo corto
    PACE completo. Hoy ya hay algo de variedad gratis (el desempate de las series por la rutina que más
    días lleva sin salir), así que sin pagar se repetirá más que hoy; hasta v1 todo está abierto.
 
-Lo monta una sesión que retoma el prototipo de `claude/sad-ishizaka-293093`, con una página sin jerga
-para Ez antes de montar (la semana por zonas, gratis y de pago, y los casos con pocas pausas).
+Sobre la segunda página (https://claude.ai/artifact/6d7Fdqv2PanjYsnXB3EnTt), el mismo día:
+
+7. **Con lo que ya tenemos**: «el objetivo es mezclar los ejercicios que ya tenemos (y/o hacer más)
+   para conseguir trabajar todo el cuerpo cada día de manera equilibrada y diferente». Cada pausa sigue
+   siendo una rutina entera (confirmado: no ejercicios sueltos). Que cuenten la pared y «Caderas de
+   pie» como piernas vale; «Hombros fuertes» no entra salvo que haga falta para un hueco real.
+   **Equilibrada**: ninguna zona se lleva muchas más pausas que otra en el día.
+8. **Después de comer, se quita** («B · Se quita»): la primera pausa tras comer deja de ser de pie
+   por regla (la del 15 oct.), y su frase «Después de comer, de pie» se va con ella.
+
+Lo monta la sesión `dias-cuerpo-entero` (rama `claude/nostalgic-dirac-127713`), que retomó el
+prototipo; Ez lo aprueba mirando la semana resultante antes de juntarlo.
 
 ## Tras la auditoría del 18 oct. 2026 (Ez)
 
