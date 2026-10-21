@@ -84,6 +84,22 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   v0.130.0.
 - En «A tu ritmo»: el cierre que nunca es «Ahora», la lectura C (espera a que `origin` tenga semanas
   de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie).
+- **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
+  coordinadora junta): «Tus rutinas» y el año (material, solo descanso, por lados, reanudar tras
+  editar, el año con poco foco) · **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
+  doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
+  programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
+  `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
+  límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto; S3, código portable, es
+  la decisión de Ez) · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
+  H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió).
+- **Al volver los Caminos** (después de v1; hoy `SHOW_CAMINOS = false`), tres casos de la auditoría
+  externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
+  rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
+  de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
+- La voz de Respira por `<audio>` (sin Web Audio): `paceVozIntenta` da por buena la señal antes de
+  que `play()` arranque, y si falla no suena ni el tono de respaldo (auditoría externa, 21 oct.; el
+  comentario de `Sound.voz.jsx` ya lo avisa).
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
   claves D-1, D-2 y D-3.
 
