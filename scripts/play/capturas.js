@@ -19,7 +19,10 @@ const http = require('http');
 const { chromium } = require('@playwright/test');
 
 const ROOT = path.join(__dirname, '..', '..');
-const PUERTO = Number(process.argv[2] || 8793);
+const PUERTO = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || 8793);
+/* `--ordenador`: las de Chromebook, la app de escritorio a 1280 × 720 por 1,5 (1920 × 1080, lo
+   que Play acepta en apaisado), sin título, en capturas-ordenador/<idioma>/. */
+const ORDENADOR = process.argv.includes('--ordenador');
 const BASE = 'http://localhost:' + PUERTO;
 const SALIDA = path.join(ROOT, 'docs', 'launch', 'google-play');
 const CLAVE = 'pace.state.v2';
@@ -158,10 +161,12 @@ function esperarServidor(intentos) {
     await esperarServidor(40);
     const navegador = await chromium.launch();
     for (const lang of ['es', 'en']) {
-      for (const dir of ['capturas', 'capturas-sin-marco']) fs.mkdirSync(path.join(SALIDA, dir, lang), { recursive: true });
+      const dirs = ORDENADOR ? ['capturas-ordenador'] : ['capturas', 'capturas-sin-marco'];
+      for (const dir of dirs) fs.mkdirSync(path.join(SALIDA, dir, lang), { recursive: true });
       for (const esc of ESCENAS) {
         const semilla = esc.semilla(lang);
-        const ctx = await navegador.newContext({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 3,
+        const ctx = await navegador.newContext({
+          viewport: ORDENADOR ? { width: 1280, height: 720 } : { width: 360, height: 640 }, deviceScaleFactor: ORDENADOR ? 1.5 : 3,
           locale: lang === 'en' ? 'en-US' : 'es-ES', timezoneId: 'Europe/Madrid',
           colorScheme: semilla.palette === 'oscuro' ? 'dark' : 'light', serviceWorkers: 'block' });
         await ctx.addInitScript(([k, v]) => { if (!localStorage.getItem(k)) localStorage.setItem(k, JSON.stringify(v)); }, [CLAVE, semilla]);
@@ -175,9 +180,10 @@ function esperarServidor(intentos) {
         if (esc.llegar) await esc.llegar(page);
         await page.evaluate(() => document.fonts.ready);
         const nombre = esc.n + '-' + esc.id + '.png';
-        const cruda = path.join(SALIDA, 'capturas-sin-marco', lang, nombre);
+        const cruda = path.join(SALIDA, dirs[dirs.length - 1], lang, nombre);
         await guardar(cruda, await page.screenshot());
         await ctx.close();
+        if (ORDENADOR) { console.log(lang, nombre, errores.length ? 'ERRORES: ' + errores.join(' | ') : 'ok'); continue; }
 
         const lienzo = await navegador.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
         /* Desde una página del mismo servidor: las fuentes de otro origen sin CORS no cargan

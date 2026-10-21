@@ -31,6 +31,9 @@ hecha con las sugerencias de Google y las búsquedas de Play en España, México
 - **Inglés: «PACE: Pomodoro, Break Reminder»** · «Desk stretches and breathing breaks at your own pace. Focus,
   then move a little.» A Ez le gustaba más «Desk Breaks», pero casi no se busca; «desk» va en el subtítulo.
 - El nombre se puede cambiar más adelante si no funciona (Google revisa cada cambio).
+- **Recursos de IA: sin etiquetar** (21 oct.). Ni el icono, ni el logo, ni las capturas parecen algo real
+  que engañe, que es lo que obliga a etiquetar la Ley de IA; la etiqueta saldría pública en la tienda.
+  Razones en `docs/launch/google-play/contenido-de-la-app.md` §7½.
 - **«Tus rutinas» se abre hasta v1**, como el resto de PACE completo (v0.173.3). Play pregunta si alguna
   parte está restringida y avisa de que todo tiene que poder revisarse; en Android no había código ni
   compra que abriera el constructor. Ez lo eligió sabiendo que quien cree rutinas sin código las verá

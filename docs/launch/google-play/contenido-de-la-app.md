@@ -79,6 +79,14 @@ Es obligatorio para todas las apps, también en prueba cerrada.
 2. No marques nada de «Medicina» ni «Dispositivos médicos».
 3. Si pregunta por Health Connect: PACE **no** lo usa.
 
+## 7½. Declaración de recursos de IA (en la ficha)
+
+**No etiquetar recursos** (Ez, 21 oct. 2026). Google pone una etiqueta pública de «generado por IA» en
+lo que se marca. La Ley de IA europea (art. 50) obliga sobre todo con lo que parece real y puede engañar
+(ultrafalsificaciones); el icono y el gráfico son un dibujo de línea y un logo hechos con GPT Image, y
+las capturas son pantallas reales de la app. La ficha no dice «dibujado a mano». Si cambia la norma o lo
+pide Google, se marca desde la biblioteca de recursos sin volver a subir nada.
+
 ## 8. El resto
 
 | Pregunta | Respuesta |

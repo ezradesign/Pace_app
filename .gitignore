@@ -45,3 +45,6 @@ PACE-llave-*/
 
 # La medida de los días diseñados (4 MB): se rehace con medir-cuerpo.js
 docs/traspaso/archivos/dias-disenados/medir/cuerpo.json
+
+# Los .aab que se bajan para subirlos a Play a mano: van firmados y no se versionan.
+subidas-play/

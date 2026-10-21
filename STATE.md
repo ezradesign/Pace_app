@@ -23,7 +23,10 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 0. **Play Console, con Ez paso a paso** (20 oct.; la página de pasos de Ez, abajo): app creada como
    «PACE: Pomodoro, Break Reminder», en inglés como idioma principal y Gratis (`nombre-en-play.html`).
-   Van los cuestionarios; luego la ficha, la prueba interna y la cerrada. «Tus rutinas» se abrió
+   **21 oct.: cuestionarios y ficha hechos (capturas nuevas, logo de Ez de gráfico, IA sin etiquetar) y
+   la prueba cerrada ENVIADA a revisión de Google** con 0.174.0, todos los países y Ez más dos testers.
+   Siguen la prueba interna en el móvil de Ez, los correos del resto de testers y, al aprobarla, el
+   enlace para invitarlos (`testers.md`). «Tus rutinas» se abrió
    hasta v1 (v0.173.3) para que el acceso restringido sea «No» de verdad: se sube 0.174.0 o posterior.
    Gráfico destacado nuevo, el logo de Ez (`grafico/logo-ez.jpg`); las capturas se rehacen con 0.174.0.
 1. **Fase 2**: probar el APK en un móvil (icono, arranque de día y de noche, importar una copia, que lo

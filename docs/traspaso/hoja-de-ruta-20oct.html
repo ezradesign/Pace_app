@@ -88,7 +88,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.173 · actualizada el 20 de octubre a las 23:00</div>
+    <div class="eyebrow">PACE · versión 0.173 · actualizada el 21 de octubre a las 2:00</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web y en Android. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -174,7 +174,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
             <li><b>ID de publicidad:</b> no lo usa. <b>Noticias, gobierno, finanzas:</b> no.</li>
             <li>Dime «hecho», o pega una captura si alguna pregunta no cuadra.</li>
           </ol></span></li>
-      <li class="paso ahora"><span class="estado">Ahora</span>
+      <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">La ficha de la tienda</span>
         <span class="c"><span class="quien">Tú, copiando y pegando; los textos, en el chat y en <code>ficha.md</code>.</span>
           <ol>
@@ -184,20 +184,42 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               destacada y las seis capturas sin título.</li>
             <li><b>Traducciones:</b> Español (España) y Español (Latinoamérica), con los textos en español y las capturas
               con título.</li>
+            <li>Las de tablet, vídeo y ordenador (Chromebook) se quedan vacías: son opcionales.</li>
             <li>Dime «hecho».</li>
           </ol>
           Los textos llevan las palabras que mejor posicionan, cada una una vez. <b>El gráfico destacado</b> es tu logo
           (<code>grafico-destacado-1024x500.png</code>). <b>Las capturas</b>, nuevas con la versión 0.174.0: en la ficha en
           inglés, las seis de <code>capturas/en</code>; en las dos en español, las de <code>capturas/es</code>.</span></li>
-      <li class="paso luego"><span class="estado">Después</span>
+      <li class="paso hecho"><span class="estado">Hecho · Google la está revisando</span>
+        <span class="t">La prueba cerrada: enviarla a revisión</span>
+        <span class="c"><span class="quien">Tú.</span> Va primero porque la revisión de Google tarda días y de ella cuelgan los 14.
+          El archivo, ya bajado: <code>subidas-play\PACE-0.174.0.aab</code>.
+          <ol>
+            <li><b>Países y regiones:</b> todos.</li>
+            <li><b>Testers:</b> lista «Testers PACE» con sus correos de Google (y el tuyo); comentarios a
+              <code>hola.ezradesign@gmail.com</code>. Se pueden añadir más después.</li>
+            <li><b>Nuevo lanzamiento:</b> acepta la firma de apps recomendada, sube el .aab (sale 174000), deja «0.174.0» y pega
+              las notas en los tres idiomas del chat.</li>
+            <li><b>Revisa:</b> amarillos, sí; rojos, me los pegas.</li>
+            <li><b>Resumen de la publicación › Enviar cambios a revisión.</b></li>
+          </ol></span></li>
+      <li class="paso ahora"><span class="estado">Ahora</span>
         <span class="t">La prueba interna, solo tú</span>
-        <span class="c"><span class="quien">Tú.</span> Subir <code>PACE-0.174.0.aab</code> (ya está en GitHub › Releases, en el
-          borrador «PACE 0.174.0») e instalarla en tu móvil desde Play. Antes, guardar tus datos del PACE de prueba que tienes y desinstalarlo.</span></li>
-      <li class="paso luego"><span class="estado">Después</span>
-        <span class="t">La prueba cerrada</span>
-        <span class="c"><span class="quien">Tú.</span> La lista de testers, los países y enviarla a revisión. Google tarda unos
-          días en aprobarla.</span></li>
-      <li class="paso luego"><span class="estado">Después</span>
+        <span class="c"><span class="quien">Tú, unos 15 minutos.</span> La misma 0.174.0 en tu móvil desde Play, mientras Google revisa
+          la cerrada. Es la primera vez que PACE se prueba en un Android de verdad.
+          <ol>
+            <li>En el PACE de prueba que tienes en el móvil: Ajustes › Tus datos › exportar la copia. Luego desinstálalo.</li>
+            <li>Play Console › Probar y publicar › Pruebas › <b>Prueba interna</b> › Testers: una lista con tu correo.</li>
+            <li><b>Crear nueva versión › Añadir desde la biblioteca</b> la 174000 (no hay que volver a subirla), las mismas notas,
+              Guardar y enviar desde el Resumen.</li>
+            <li>En Testers, copia el enlace «Unirse en la web», ábrelo en el móvil e instala PACE.</li>
+            <li>Importa tu copia y mira: el icono, que abre de día y de noche, un bloque de foco con su aviso, una pausa.</li>
+          </ol></span></li>
+      <li class="paso luego"><span class="estado">Mañana</span>
+        <span class="t">Los correos de tus testers</span>
+        <span class="c"><span class="quien">Tú.</span> Añadirlos a la lista «Testers PACE» de la prueba cerrada (el lápiz, y pegarlos
+          separados por comas). Los mensajes para pedírselo están en <code>docs/launch/google-play/testers.md</code>.</span></li>
+      <li class="paso luego"><span class="estado">Cuando Google la apruebe</span>
         <span class="t">Invitar a 15 testers</span>
         <span class="c"><span class="quien">Tú; los mensajes ya están escritos.</span> 12 como mínimo durante 14 días; 15 por si
           alguien se cae. Tienes 5 o 6.</span></li>
@@ -277,7 +299,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <ul class="lista">
         <li>Dar de alta PACE en <b>Google Cloud y Microsoft Entra</b> (<code>docs/CALENDARIO_ALTAS.md</code>). Con eso hago el llavero.</li>
         <li>Conectar <b>«Avísame»</b> en Cloudflare y decirme qué nombre firma su privacidad (<code>docs/launch/avisame.md</code>).</li>
-        <li>Volver a exportar <b>el logo</b>: «EVEN» se lee «FVFN», también en /premium.</li>
+        <li><b>El logo de la app en PNG con fondo transparente</b> (tu logo nuevo, sin el papel): dentro de la app aún se lee
+          «FVFN», en la barra lateral del escritorio, la bienvenida y /premium. Con él lo cambio y saco las capturas de
+          ordenador (Chromebook), que hasta entonces se dejan vacías.</li>
         <li>Copiar tus dos llaves, <code>PACE-llave-play</code> y <code>PACE-llave-licencias</code>, a un disco duro. Son las que
           firman PACE, y ahora solo están en tu PC.</li>
       </ul></div>
