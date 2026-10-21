@@ -118,15 +118,29 @@ function marco(lang, esc, img) {
 @font-face { font-family: 'Inter Tight'; font-weight: 500; src: url('${BASE}/fonts/intertight-500-normal.woff2') format('woff2'); }
 html, body { margin: 0; }
 .lienzo { width: 1080px; height: 1920px; background: #F2EDE0; position: relative; overflow: hidden; font-family: 'Inter Tight', sans-serif; color: #1F1C17; }
-.cab { position: absolute; left: 70px; right: 70px; top: 64px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+/* «PACE» arriba; el título y su línea, centrados en el hueco entre «PACE» y el borde de la
+   pantalla (Ez, 21 oct.), así no quedan pegados arriba con un vacío debajo. */
+.cab { position: absolute; left: 70px; right: 70px; top: 64px; height: 308px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.texto { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 14px; }
 .eyebrow { font-size: 26px; letter-spacing: 0.32em; color: #6F695B; font-weight: 500; }
 h1 { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 84px; line-height: 1.02; letter-spacing: -0.005em; text-wrap: balance; }
 p { margin: 0; font-size: 34px; line-height: 1.3; color: #4A453C; max-width: 900px; }
 .pantalla { position: absolute; left: 50%; top: 372px; transform: translateX(-50%); width: 840px; height: 1493px; border-radius: 46px;
   overflow: hidden; border: 3px solid #D6CDB6; box-shadow: 0 24px 60px rgba(31, 28, 23, 0.14); background: #F2EDE0; }
 .pantalla img { width: 100%; height: 100%; display: block; }
-</style><div class="lienzo"><div class="cab"><div class="eyebrow">PACE</div><h1>${esc.titulo[lang]}</h1><p>${esc.sub[lang]}</p></div>
+</style><div class="lienzo"><div class="cab"><div class="eyebrow">PACE</div><div class="texto"><h1>${esc.titulo[lang]}</h1><p>${esc.sub[lang]}</p></div></div>
 <div class="pantalla"><img src="${img}"></div></div>`;
+}
+
+/* En Windows, la vista previa del Explorador (o una subida a Play a medias) tiene la imagen
+   abierta y la escritura falla: se reintenta un rato en vez de parar. */
+async function guardar(ruta, png) {
+  for (let i = 0; ; i++) {
+    try { fs.writeFileSync(ruta, png); return; } catch (e) {
+      if (i >= 40) throw e;
+      await new Promise((r) => setTimeout(r, 500));
+    }
+  }
 }
 
 function esperarServidor(intentos) {
@@ -162,7 +176,7 @@ function esperarServidor(intentos) {
         await page.evaluate(() => document.fonts.ready);
         const nombre = esc.n + '-' + esc.id + '.png';
         const cruda = path.join(SALIDA, 'capturas-sin-marco', lang, nombre);
-        await page.screenshot({ path: cruda });
+        await guardar(cruda, await page.screenshot());
         await ctx.close();
 
         const lienzo = await navegador.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
@@ -172,7 +186,7 @@ function esperarServidor(intentos) {
         await lienzo.setContent(marco(lang, esc, BASE + '/docs/launch/google-play/capturas-sin-marco/' + lang + '/' + nombre));
         await lienzo.evaluate(() => document.fonts.ready);
         await lienzo.waitForLoadState('networkidle');
-        await lienzo.locator('.lienzo').screenshot({ path: path.join(SALIDA, 'capturas', lang, nombre) });
+        await guardar(path.join(SALIDA, 'capturas', lang, nombre), await lienzo.locator('.lienzo').screenshot());
         await lienzo.close();
         console.log(lang, nombre, errores.length ? 'ERRORES: ' + errores.join(' | ') : 'ok');
       }
