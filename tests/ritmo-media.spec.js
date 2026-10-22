@@ -22,7 +22,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, pulsarComienza } = require('./helpers');
 
 const HOY = '2026-09-22';
 const H = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
@@ -88,6 +88,7 @@ test('mover otra hora no congela la media jornada: mientras nadie la toque, sigu
 
 test('fuera de su tramo se apaga, como la entera tras la salida', async ({ page, context }) => {
   await abrir(page, context, { horario: Object.assign({}, H, { media: { inicio: 540, salida: 780 } }) }, HOY + 'T14:00:00+02:00');
+  await pulsarComienza(page);
   const chip = vis(page, '[data-pace-ritmo-opcion="media"]');
   await expect(chip).toBeDisabled();
   await expect(chip).toContainText('Tu jornada ya terminó');
@@ -110,6 +111,7 @@ test('la comida es solo de la jornada entera', async ({ page, context }) => {
 
 test('las dos jornadas dicen su tramo; una hora y dos horas, hasta cuándo', async ({ page, context }) => {
   await abrir(page, context, {});
+  await pulsarComienza(page);
   const txt = async (op) => (await vis(page, '[data-pace-ritmo-opcion="' + op + '"]').textContent()).trim();
   expect(await txt('media'), 'la media jornada, su tramo').toContain('De 9:00 a 13:00');
   expect(await txt('jornada'), 'la entera, el suyo').toContain('De 9:00 a 17:00');
@@ -126,6 +128,7 @@ test('las dos jornadas dicen su tramo; una hora y dos horas, hasta cuándo', asy
 
 test('«Ajustar el horario» lleva una segunda frase con las horas de la media jornada', async ({ page, context }) => {
   await abrir(page, context, {});
+  await pulsarComienza(page);
   const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
   const media = pregunta.locator('[data-pace-ritmo-frase-media]');
   await expect(media).toHaveCount(1);

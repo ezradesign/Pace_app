@@ -327,7 +327,8 @@ test.describe('en Android, el aviso a su hora', () => {
     await abrirAjustes(page);
     const pedir = page.getByRole('button', { name: /Que el aviso llegue a su hora/ });
     await expect(pedir).toBeVisible();
-    await expect(page.getByText(/Permite «Alarmas y recordatorios» para PACE/)).toBeVisible();
+    /* desde la 2A de Ez (22 oct. 2026), la nota es la línea pequeña de su fila */
+    await expect(pedir).toContainText('Android puede retrasarlo unos minutos');
     await pedir.click();
     await expect.poll(() => cuantas(page, 'LocalNotifications', 'changeExactNotificationSetting')).toBe(1);
     await expect(pedir, 'con el permiso dado sigue ofreciendolo').toHaveCount(0);

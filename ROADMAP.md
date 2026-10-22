@@ -73,7 +73,9 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 ### Marco de decisión (Ez, 5 de octubre de 2026 · s200)
 
 - **Pace se quiere vender pronto.** v1.0 sigue siendo la primera versión PAGADA: que se pueda
-  comprar, en la web y en Android.
+  comprar, en la web, en Android y, desde el 22 oct. de 2026, también en iPhone (TestFlight en cuanto
+  haya cuenta de Apple; la App Store el mismo día que Android; `DECISIONES_PRODUCTO.md`, «El iPhone
+  entra en v1»).
 - **Android entra en v1**, y la prueba cerrada de Play Console se abre **cuanto antes**, con la app
   tal como esté: el plazo de Google corre mientras se trabaja en lo demás.
 - **El producto ha girado al método guiado día a día («A tu ritmo»).** Por eso **Travesías (antigua
@@ -309,8 +311,8 @@ funcional, Términos + Privacidad redactados por abogado.
 
 > **Superado por la decisión de s137**: Android no es v2, es parte de v1, y su coste real está
 > asumido — el envoltorio de Capacitor es barato, pero **Play Billing obliga a un segundo camino de
-> entitlement** que choca con la licencia offline sin cuentas. Ver «Camino a v1.0». **iOS sí queda
-> fuera de v1.**
+> entitlement** que choca con la licencia offline sin cuentas. Ver «Camino a v1.0». ~~iOS sí queda
+> fuera de v1.~~ **Desde el 22 oct. de 2026, el iPhone también entra en v1** (Ez).
 
 Wrapping (Capacitor/Expo), layout móvil heredado del responsive, widget
 de inicio (próximo break + vasos).

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.174.5</title>
+  <title>PACE · Foco · Cuerpo — v0.174.6</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3202,6 +3202,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.sec.oir': 'Oír',
   'settings.sec.sesiones': 'Sesiones',
   'settings.sec.datos': 'Tus datos',
+  'settings.datos.abrir': 'Copias, borrar y código',
+  'settings.datos.volver': 'Volver a Ajustes',
 
 
   'settings.lang': 'Idioma',
@@ -3240,7 +3242,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
   'settings.notify.blocked.ios': 'Los avisos de PACE están desactivados en los ajustes del iPhone.',
   'settings.notify.exact': 'Que el aviso llegue a su hora',
-  'settings.notify.exact.note': 'Android puede retrasarlo unos minutos. Permite «Alarmas y recordatorios» para PACE.',
+  'settings.notify.exact.sub': 'Android puede retrasarlo unos minutos',
   'settings.circle': 'Círculo',
   'settings.circle.sub': 'Respira · {name}',
   'settings.circle.flor': 'Loto',
@@ -3290,6 +3292,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.sec.oir': 'Listen',
   'settings.sec.sesiones': 'Sessions',
   'settings.sec.datos': 'Your data',
+  'settings.datos.abrir': 'Copies, delete and code',
+  'settings.datos.volver': 'Back to settings',
 
 
   'settings.lang': 'Language',
@@ -3327,7 +3331,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
   'settings.notify.blocked.ios': 'PACE notifications are turned off in iPhone settings.',
   'settings.notify.exact': 'Get the alert on time',
-  'settings.notify.exact.note': 'Android may delay it by a few minutes. Allow “Alarms & reminders” for PACE.',
+  'settings.notify.exact.sub': 'Android may delay it a few minutes',
   'settings.circle': 'Circle',
   'settings.circle.sub': 'Breathe · {name}',
   'settings.circle.flor': 'Lotus',
@@ -6424,7 +6428,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.174.5';
+const PACE_VERSION = 'v0.174.6';
 
 
 
@@ -12189,6 +12193,7 @@ function ritmoDe(s) {
     ocupado: ritmoOcupadoDe(r, hoy),
     calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
     semanaTipo: tipo, diaSemana: dSem, habitual: habitual, distinto: distinto,
+    pregunta: !!hoy && r.pregunta === hoy,
     propuesta: !libre && !dia && !distinto && (habitual === 'jornada' || habitual === 'media') ? habitual : null
   };
 }
@@ -12669,6 +12674,17 @@ function ritmoComenzarHabitual() {
 function ritmoDistinto() {ritmoPreguntar();}
 
 
+
+
+
+
+
+function ritmoAbrirPregunta() {
+  if (ritmoDe(getState()).libre) {ritmoVolver();return;}
+  ritmoGuardar(function () {return { pregunta: ritmoHoy() };});
+}
+
+
 function ritmoNombreDia(diaSemana, t) {
   var lista = String(t('ritmo.dias')).split(',');
   return lista[(diaSemana || 1) - 1] || '';
@@ -12680,9 +12696,9 @@ function ritmoNombreDia(diaSemana, t) {
 
 Object.assign(window, {
   RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
-  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia
+  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia
 });
-;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia });
+;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia });
 })();
 </script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
@@ -17049,12 +17065,13 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
     @media (max-width: 640px), (pointer: coarse) {
       [data-pace-toque], .pace-aj-pild, .pace-aj-cerrar, .pace-aj-paso > button, .pace-aj-sw,
       .pace-lib-link, [data-pace-hoy-celda], [data-pace-semana-saltar], [data-pace-stats-tabs] > button,
-      .pace-aj-pie a {
+      .pace-aj-pie a, .pace-aj-sec-accion, .pace-aj-volver {
         position: relative;
       }
       [data-pace-toque]::before, .pace-aj-pild::before, .pace-aj-cerrar::before, .pace-aj-paso > button::before,
       .pace-aj-sw::before, .pace-lib-link::before, [data-pace-hoy-celda]::before,
-      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before, .pace-aj-pie a::before {
+      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before, .pace-aj-pie a::before,
+      .pace-aj-sec-accion::before, .pace-aj-volver::before {
         content: ''; position: absolute; inset: -9px 0;
       }
       /* Píldoras de Ajustes: 14 px entre filas, 7 cada una. */
@@ -17071,6 +17088,10 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
       [data-pace-stats-tabs] > button::before { inset: -7px 0; }
       /* «Seguridad» y «Privacidad», al pie de Ajustes: 15 px de alto y nada debajo. */
       .pace-aj-pie a::before { inset: -6px -2px; }
+      /* En el móvil, «Copias, borrar y código ›» (30 px de caja, 8 libres encima) y la «‹» que
+         vuelve de «Tus datos» (28 px). */
+      .pace-aj-sec-accion::before { inset: -5px -4px; }
+      .pace-aj-volver::before { inset: -6px; }
     }
   `;
   document.head.appendChild(s);
@@ -19378,7 +19399,7 @@ var PACE_VOZ_CLIPS = {
     bradford: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
       'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 }
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 }
     }
   },
   en: {
@@ -19424,6 +19445,13 @@ var PACE_VOZ_FUNDIDO = 0.005;
 
 
 
+
+
+var PACE_VOZ_COLA = 0.1;
+
+
+
+
 function paceVozDescodifica(slot, url) {
   try {
     var Fuera = window.OfflineAudioContext || window.webkitOfflineAudioContext;
@@ -19457,7 +19485,7 @@ function paceVozWebAudio(slot, desde) {
       slot.fuente.s.stop(t0 + f + 0.01);
     } catch (e) {}
   }
-  var resto = slot.buffer.duration - desde;
+  var resto = Math.min(slot.buffer.duration, slot.fin + PACE_VOZ_COLA) - desde;
   if (!(resto > 2 * f)) return false;
   var s = ctx.createBufferSource();
   var g = ctx.createGain();
@@ -19521,7 +19549,7 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null };
+    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null };
     juego[nombre] = slot;
     var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
     paceVozDescodifica(slot, url);
@@ -19536,6 +19564,7 @@ function paceVozInit(voz) {
         if (isFinite(a.duration) && a.duration > 0 &&
         Math.abs(a.duration - ficha.dur) > 0.25) {
           slot.ini = 0;
+          slot.fin = a.duration;
           slot.palabra = a.duration;
         }
         slot.listo = true;
@@ -19582,6 +19611,10 @@ function paceVozIntenta(nombre, faseSeg) {
     slot.audio.currentTime = desde;
     var p = slot.audio.play();
 
+    clearTimeout(slot.corte);
+    var a = slot.audio;
+    slot.corte = setTimeout(function () {try {a.pause();} catch (e) {}}, (slot.fin + PACE_VOZ_COLA - desde) * 1000);
+
 
 
 
@@ -19601,12 +19634,13 @@ Object.assign(window, {
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
   PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
   PACE_VOZ_FUNDIDO: PACE_VOZ_FUNDIDO,
+  PACE_VOZ_COLA: PACE_VOZ_COLA,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,
   paceVozIntenta: paceVozIntenta
 });
-;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, PACE_VOZ_FUNDIDO, paceVozDescodifica, paceVozWebAudio, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
+;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, PACE_VOZ_FUNDIDO, PACE_VOZ_COLA, paceVozDescodifica, paceVozWebAudio, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
 })();
 </script>
   <!-- La receta de cada técnica de Respira (datos que Sound.musica.jsx lee al empezar). -->
@@ -36855,6 +36889,9 @@ if (!_paceAjustesCss) {
     .pace-aj-sec-titulo { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 2px 0 6px; display: flex; justify-content: space-between; align-items: baseline; }
     .pace-aj-sec-accion { font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1; letter-spacing: 0; text-transform: none; color: var(--ink-2); background: none; border: 0; padding: 8px 0; margin: -8px 0; cursor: pointer; }
     .pace-aj-sec-accion:hover { color: var(--ink); }
+    .pace-aj-solo-movil { display: none; }
+    .pace-aj-volver { display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -4px 4px -4px -8px; font-family: var(--font-ui); font-style: normal; font-size: 20px; line-height: 1; color: var(--ink-3); background: none; border: 0; cursor: pointer; vertical-align: middle; }
+    .pace-aj-volver:hover { color: var(--ink); }
     .pace-aj-div { height: 1px; background: var(--line); margin: 10px 0; }
 
     /* la fila: nombre a la izquierda, control a la derecha. ENVUELVE si no cabe:
@@ -36904,12 +36941,22 @@ if (!_paceAjustesCss) {
     .pace-aj-accion:first-of-type { border-top: 0; }
     .pace-aj-accion[data-suave] { color: var(--ink-3); font-size: 14px; }
     .pace-aj-accion > span:last-child { color: var(--ink-3); display: inline-flex; align-items: center; }
+    .pace-aj-sub-accion { font-family: var(--font-display); font-style: italic; }
+    .pace-aj-accion:has(.pace-aj-sub-accion) { min-height: 40px; }
     .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
     .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
     .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
   `;
   document.head.appendChild(s);
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -36941,8 +36988,8 @@ if (!_paceTweaksResponsive) {
         right: 0 !important;
         bottom: 0 !important;
         width: auto !important;
-        max-height: 72vh !important;
-        max-height: 72dvh !important;
+        max-height: calc(100vh - 56px) !important;
+        max-height: calc(100dvh - 56px) !important;
         border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
         border-left: 0 !important;
         border-right: 0 !important;
@@ -36950,6 +36997,11 @@ if (!_paceTweaksResponsive) {
         padding: 16px 18px 24px !important;
         box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
       }
+      [data-pace-tweaks-panel] .pace-aj-solo-movil { display: inline-block; }
+      [data-pace-tweaks-panel] [data-pace-aj-plegada] > :not(.pace-aj-sec-titulo) { display: none; }
+      [data-pace-tweaks-panel] [data-pace-aj-plegada] .pace-aj-sec-titulo { margin-bottom: 0; }
+      [data-pace-tweaks-panel] .pace-aj-fila { min-height: 34px; padding: 2px 0; }
+      [data-pace-tweaks-panel] .pace-aj-div { margin: 8px 0; }
     }
   `;
   document.head.appendChild(s);
@@ -37002,13 +37054,16 @@ const AJUSTES_MODULO = {
 
 
 
-function AjustesSeccion(_ref) {let { titulo, ultima, accion, children } = _ref;
+
+
+function AjustesSeccion(_ref) {let { titulo, ultima, accion, plegadaMovil, children } = _ref;
   return (
     React.createElement(React.Fragment, null,
-    React.createElement("div", { className: "pace-aj-sec", "data-pace-aj-seccion": titulo },
+    React.createElement("div", { className: "pace-aj-sec", "data-pace-aj-seccion": titulo, "data-pace-aj-plegada": plegadaMovil ? '' : undefined },
     React.createElement("div", { className: "pace-aj-sec-titulo" },
     titulo,
-    accion ? React.createElement("button", { type: "button", className: "pace-aj-sec-accion", onClick: accion.onClick }, accion.texto, React.createElement("span", { "aria-hidden": "true" }, " \u203A")) : null
+    accion ? React.createElement("button", { type: "button", className: 'pace-aj-sec-accion' + (accion.soloMovil ? ' pace-aj-solo-movil' : ''),
+      onClick: accion.onClick }, accion.texto, React.createElement("span", { "aria-hidden": "true" }, " \u203A")) : null
     ),
     children
     ),
@@ -37075,13 +37130,16 @@ function AjustesPaso(_ref5) {let { valor, onMenos, onMas, ariaMenos, ariaMas } =
 }
 
 
-function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title } = _ref6;
+
+
+function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title, sub } = _ref6;
+  const texto = sub ? React.createElement("span", null, children, React.createElement("span", { className: "pace-aj-sub pace-aj-sub-accion" }, sub)) : React.createElement("span", null, children);
   if (!onClick) {
-    return React.createElement("div", { className: "pace-aj-accion", "data-suave": suave ? '' : undefined }, React.createElement("span", null, children), React.createElement("span", null, derecha));
+    return React.createElement("div", { className: "pace-aj-accion", "data-suave": suave ? '' : undefined }, texto, React.createElement("span", null, derecha));
   }
   return (
     React.createElement("button", { type: "button", className: "pace-aj-accion", "data-suave": suave ? '' : undefined, onClick: onClick, title: title },
-    React.createElement("span", null, children), React.createElement("span", { "aria-hidden": "true" }, derecha)
+    texto, React.createElement("span", { "aria-hidden": "true" }, derecha)
     ));
 
 }
@@ -37336,6 +37394,14 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   };
 
 
+
+
+
+
+  const [vistaDatos, setVistaDatos] = useStateTW(false);
+  useEffectTW(() => {if (!open) setVistaDatos(false);}, [open]);
+
+
   useEffectTW(() => {
     if (open) unlockAchievement('explore.tweaks');
   }, [open]);
@@ -37381,7 +37447,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const ponerGoal = (d) => set((s) => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
-    React.createElement("div", { "data-pace-tweaks-panel": true, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
+    React.createElement("div", { "data-pace-tweaks-panel": true, "data-pace-aj-vista": vistaDatos ? 'datos' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
         position: 'fixed',
         right: 24, bottom: 24,
         width: 320,
@@ -37396,10 +37462,17 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
         animation: 'pace-slide-up 280ms var(--ease)'
       } },
     React.createElement("div", { className: "pace-aj-cab" },
+    vistaDatos ?
+    React.createElement("div", { style: { display: 'flex', alignItems: 'center' } },
+    React.createElement("button", { type: "button", className: "pace-aj-volver", "data-pace-aj-volver": true, onClick: () => setVistaDatos(false),
+      "aria-label": t('settings.datos.volver') }, "\u2039"),
+    React.createElement("div", { className: "pace-aj-titulo", id: "pace-aj-titulo" }, t('settings.sec.datos'))
+    ) :
     React.createElement("div", { className: "pace-aj-titulo", id: "pace-aj-titulo" }, t('settings.title')),
     React.createElement("button", { type: "button", className: "pace-aj-cerrar", onClick: onClose, "aria-label": t('common.close') }, "\xD7")
     ),
 
+    vistaDatos ? React.createElement(TweaksDataSection, { onReset: borrarTodo, isWeb: isWeb }) : React.createElement(React.Fragment, null,
     React.createElement(AjustesSeccion, { titulo: t('settings.sec.ver') },
     React.createElement(AjustesFila, { id: "lang", nombre: t('settings.lang') },
     React.createElement(AjustesPildoras, { aria: t('settings.lang'), valor: langValor, onChange: ponerLang, opciones: [
@@ -37459,10 +37532,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     React.createElement("div", { className: "pace-aj-nota" }, t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')),
 
     exactaAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' &&
-    React.createElement(React.Fragment, null,
-    React.createElement(AjustesAccion, { suave: true, onClick: pedirExacta, derecha: "\u203A" }, t('settings.notify.exact')),
-    React.createElement("div", { className: "pace-aj-nota" }, t('settings.notify.exact.note'))
-    ),
+    React.createElement(AjustesAccion, { suave: true, onClick: pedirExacta, derecha: "\u203A", sub: t('settings.notify.exact.sub') }, t('settings.notify.exact')),
 
     React.createElement(AjustesFila, { id: "circle", nombre: t('settings.circle'), modulo: "breathe",
       sub: tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) }) },
@@ -37487,8 +37557,10 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     )
     ),
 
-    React.createElement(AjustesSeccion, { titulo: t('settings.sec.datos'), ultima: true },
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.datos'), ultima: true, plegadaMovil: true,
+      accion: { texto: t('settings.datos.abrir'), onClick: () => setVistaDatos(true), soloMovil: true } },
     React.createElement(TweaksDataSection, { onReset: borrarTodo, isWeb: isWeb })
+    )
     )
     ));
 
@@ -42625,6 +42697,11 @@ Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioH
 
 
 
+
+
+
+
+
 var RITMO_ESQUEMA = ['estira', 'mueve', ['respira', 'estira'], 'comida', 'estira', 'mueve', ['respira', 'estira'], 'estira', 'respira'];
 
 function RitmoEsquema() {
@@ -42648,6 +42725,9 @@ function RitmoTarjeta() {
   const [state] = usePace();
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
+  const H = ritmoHabitual(state);
+  const titulo = H ? tn('ritmo.manana.titulo', { dia: ritmoNombreDia(H.diaSemana, t) }) : t('ritmo.pregunta');
+  const nota = H ? t('ritmo.opcion.' + H.opcion) + ', ' + ritmoHora(H.m.desde) + '–' + ritmoHora(H.m.hasta) : t('ritmo.tarjeta.horas');
   const abrirCaminos = () => window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
   const conCaminos = window.SHOW_CAMINOS !== false;
   return (
@@ -42658,11 +42738,11 @@ function RitmoTarjeta() {
 
     React.createElement("div", { className: "pace-rt-tarjeta-cab" },
     React.createElement("div", null,
-    React.createElement("div", { className: "pace-rt-tarjeta-t" }, t('ritmo.pregunta')),
+    React.createElement("div", { className: "pace-rt-tarjeta-t", "data-pace-ritmo-tarjeta-titulo": true }, titulo),
     React.createElement("div", { className: "pace-rt-tarjeta-s" }, t('ritmo.sub'))
     ),
     React.createElement("div", { className: "pace-rt-tarjeta-enlaces" },
-    React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoVolver }, t('ritmo.tarjeta.ajustar')),
+    React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoAbrirPregunta }, t('ritmo.tarjeta.ajustar')),
     conCaminos &&
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
 
@@ -42688,12 +42768,12 @@ function RitmoTarjeta() {
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
     ),
 
-    React.createElement("div", { className: "pace-rt-tm-t" }, t('ritmo.pregunta')),
+    React.createElement("div", { className: "pace-rt-tm-t", "data-pace-ritmo-tarjeta-titulo": true }, titulo),
     React.createElement(RitmoEsquema, null),
     React.createElement("div", { className: "pace-rt-tm-pie" },
-    React.createElement("span", { className: "pace-rt-tm-nota" }, t('ritmo.tarjeta.horas')),
+    React.createElement("span", { className: "pace-rt-tm-nota" }, nota),
 
-    React.createElement("button", { type: "button", className: "pace-rt-tm-comienza", "data-pace-ritmo-comienza": true, onClick: ritmoVolver },
+    React.createElement("button", { type: "button", className: "pace-rt-tm-comienza", "data-pace-ritmo-comienza": true, onClick: ritmoAbrirPregunta },
     React.createElement("span", { className: "pace-rt-tm-pildora" },
     t('ritmo.tarjeta.comienza'),
     React.createElement("svg", { width: "16", height: "10", viewBox: "0 0 16 10", fill: "none", stroke: "currentColor", strokeWidth: "1.2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
@@ -43190,6 +43270,10 @@ Object.assign(window, { RitmoComienzaHabitual, RitmoMananaMovil });
 
 
 
+
+
+
+
 const { useState: useStateRH, useEffect: useEffectRH } = React;
 
 function RitmoVuelta() {
@@ -43215,6 +43299,7 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
   const [hoja, setHoja] = useStateRH(false);
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
+  const carta = R.libre || !plan && !R.distinto && !R.pregunta;
 
 
 
@@ -43223,7 +43308,7 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
   useEffectRH(() => {ritmoSincronizar();}, [firma, state.focusMode]);
   useEffectRH(() => {if (!plan) setHoja(false);}, [!!plan]);
 
-  if (R.libre) {
+  if (carta) {
 
 
     return (

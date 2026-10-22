@@ -88,5 +88,5 @@ Ez elige.
 | Una línea por versión | `CHANGELOG.md` |
 | Build, worktrees y bancos de medida | `docs/BUILD.md`, `docs/WORKFLOW.md`, `docs/BANCOS.md` |
 
-Versiones: v0.X es antes del lanzamiento; **v1.0 es la primera versión de pago**, en web y en Android.
-iOS llega después de v1.
+Versiones: v0.X es antes del lanzamiento; **v1.0 es la primera versión de pago**, en la web, en Android
+y en iPhone (Ez, 22 oct. 2026; antes, iOS iba después de v1).

@@ -16,7 +16,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, pulsarComienza } = require('./helpers');
 const { asentarGeometria } = require('./home.helpers');
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
@@ -134,6 +134,7 @@ test.describe('por la tarde, a 360×718', () => {
       ritmo: { horario: { inicio: 540, comida: 840, comidaDur: 60, salida: 1020, media: { inicio: 540, salida: 780 } } } });
     await page.clock.install({ time: new Date('2026-09-22T15:30:00+02:00') });
     await irAlArtefacto(page);
+    await pulsarComienza(page);
     const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
     const horas = pregunta.locator('[data-pace-ritmo-media-horas]');
     await expect(horas).toContainText('Media jornada');

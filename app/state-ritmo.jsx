@@ -120,6 +120,7 @@ function ritmoDe(s) {
     ocupado: ritmoOcupadoDe(r, hoy),   /* state-ritmo.support.jsx */
     calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
     semanaTipo: tipo, diaSemana: dSem, habitual: habitual, distinto: distinto,
+    pregunta: !!hoy && r.pregunta === hoy,   /* «Comienza» desde la tarjeta corta (ritmoAbrirPregunta) */
     propuesta: !libre && !dia && !distinto && (habitual === 'jornada' || habitual === 'media') ? habitual : null,
   };
 }

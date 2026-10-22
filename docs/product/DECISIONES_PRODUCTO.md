@@ -19,6 +19,29 @@
 
 ---
 
+## El iPhone entra en v1 (Ez, 22 oct. 2026)
+
+Ez tiene muchos testers con iPhone y eligió, entre tres opciones (TestFlight ya y la App Store después de v1,
+la recomendada; el iPhone dentro de v1; como estaba), **el iPhone dentro de v1**: TestFlight en cuanto haya
+cuenta, y la App Store el mismo día que Android, con la compra de Apple. Sustituye a «iOS llega después de
+v1» (s137 y `CLAUDE.md`). Asumido al elegir: más trabajo antes de v1 y una revisión más, así que v1 puede
+salir más tarde.
+
+- **Lo que pide a Ez, y fija la fecha de v1 junto a Play**: la cuenta de Apple Developer a su nombre (99 $ al
+  año; Apple tarda uno o dos días en aprobarla) y la llave de la API de App Store Connect
+  (`docs/launch/app-store/guia.html`, puntos 3 y 4); para vender, el acuerdo de apps de pago con banco y
+  W-8BEN, el programa para pequeñas empresas (15 %) y una dirección visible en la UE (vale un apartado de
+  correos).
+- **Lo que hace la coordinadora**: la firma y la subida a TestFlight desde GitHub (no hay Mac), el
+  apartado del iPhone en `privacy.html` (se le enseña antes) y el texto de «qué probar». Con la Fase 6, la
+  compra de Apple como tercera tienda (`app/state-compra.js`, hoy `'ninguno'` en el iPhone) por el mismo
+  interruptor, con «Restaurar compras» y códigos de oferta para los testers; la ficha, las capturas del
+  simulador y la revisión (que no parezca «solo una web», guía §9).
+- **Precios**: los mismos de v1 (2,99 € al mes con 7 días gratis, o 19,99 € de por vida). La guía del 14
+  oct. habla solo de la compra única: la mensual va como suscripción de Apple.
+- **Los testers de iPhone no cuentan para los 12 de Google Play**; mientras no haya TestFlight, prueban la
+  web en Safari con su código.
+
 ## Lo que Ez vio en su móvil (22 oct. 2026)
 
 Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en el código:
@@ -61,6 +84,12 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   de dos minutos y el glifo genérico del módulo (no el del ejercicio). Sin texto nuevo ni consulta a ChatGPT. Para
   qué, en palabras de Ez: «tener opción a hacerlos con más frecuencia en pomodoros cortos, o no». La invitación
   cambiará de nombre, porque ya no son siempre dos minutos. Antes de montarlo, maqueta.
+  **Pregunta 5: 5a A · 5b B, con un cambio** (Ez, 22 oct., ~22:15, sobre
+  https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d): la invitación dice «Un momento para moverte»; al pulsar
+  «Hacerla» sale una hoja abajo y de ahí se pasa a la pantalla de ejercicio de siempre (la de Mueve o Estira), con
+  ese ejercicio. Dentro del aro, no («en el timer no vale»). Sus palabras: «no vamos a hacer ejercicios nuevos, la
+  duración no importa, la cuestión es ofrecer una pausa si el usuario quiere». Los ejercicios, los 31 de
+  `docs/proposals/hacerla-reparto.md`.
 - **Una página para captar testers de Android** (idea de Ez, 22 oct. noche): `pacegrass.app/beta`, con un grupo
   de Google como lista de testers de Play. Ez eligió la **A** (como /premium, con las capturas de Google Play) y
   «PACE completo de por vida, en la web y en Android». **La letra de /beta y /premium, como la app**: títulos en

@@ -80,6 +80,9 @@ if (!_paceAjustesCss) {
     .pace-aj-sec-titulo { font-size: var(--size-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 2px 0 6px; display: flex; justify-content: space-between; align-items: baseline; }
     .pace-aj-sec-accion { font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1; letter-spacing: 0; text-transform: none; color: var(--ink-2); background: none; border: 0; padding: 8px 0; margin: -8px 0; cursor: pointer; }
     .pace-aj-sec-accion:hover { color: var(--ink); }
+    .pace-aj-solo-movil { display: none; }
+    .pace-aj-volver { display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -4px 4px -4px -8px; font-family: var(--font-ui); font-style: normal; font-size: 20px; line-height: 1; color: var(--ink-3); background: none; border: 0; cursor: pointer; vertical-align: middle; }
+    .pace-aj-volver:hover { color: var(--ink); }
     .pace-aj-div { height: 1px; background: var(--line); margin: 10px 0; }
 
     /* la fila: nombre a la izquierda, control a la derecha. ENVUELVE si no cabe:
@@ -129,6 +132,8 @@ if (!_paceAjustesCss) {
     .pace-aj-accion:first-of-type { border-top: 0; }
     .pace-aj-accion[data-suave] { color: var(--ink-3); font-size: 14px; }
     .pace-aj-accion > span:last-child { color: var(--ink-3); display: inline-flex; align-items: center; }
+    .pace-aj-sub-accion { font-family: var(--font-display); font-style: italic; }
+    .pace-aj-accion:has(.pace-aj-sub-accion) { min-height: 40px; }
     .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
     .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
     .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
@@ -154,6 +159,14 @@ if (!_paceAjustesCss) {
    Nota: TweaksPanel no tiene backdrop, pero eso también es
    coherente con que se use como "afinador" mientras la app sigue
    funcionando. Se conserva la filosofía.
+
+   SIN SCROLL EN EL MÓVIL (Ez, 2A del 22 oct. 2026). A 72 dvh pedía 218 px
+   de scroll en la web y 287 en Android a 360×730. Ahora «Tus datos» se
+   pliega a su línea de título (abre su propia hoja), las filas bajan a 34 px
+   y los divisores a 8 px, y la hoja puede subir hasta dejar 56 px de la home
+   arriba (la barra de los iconos): mide 553 px en la web y 574 en Android
+   (79 % de 730), y a 360×640 en Android le sobran 10 px. En el ordenador no
+   cambia nada.
    ============================================================ */
 const _paceTweaksResponsive = document.getElementById('pace-tweaks-responsive-css');
 if (!_paceTweaksResponsive) {
@@ -166,8 +179,8 @@ if (!_paceTweaksResponsive) {
         right: 0 !important;
         bottom: 0 !important;
         width: auto !important;
-        max-height: 72vh !important;
-        max-height: 72dvh !important;
+        max-height: calc(100vh - 56px) !important;
+        max-height: calc(100dvh - 56px) !important;
         border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
         border-left: 0 !important;
         border-right: 0 !important;
@@ -175,6 +188,11 @@ if (!_paceTweaksResponsive) {
         padding: 16px 18px 24px !important;
         box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
       }
+      [data-pace-tweaks-panel] .pace-aj-solo-movil { display: inline-block; }
+      [data-pace-tweaks-panel] [data-pace-aj-plegada] > :not(.pace-aj-sec-titulo) { display: none; }
+      [data-pace-tweaks-panel] [data-pace-aj-plegada] .pace-aj-sec-titulo { margin-bottom: 0; }
+      [data-pace-tweaks-panel] .pace-aj-fila { min-height: 34px; padding: 2px 0; }
+      [data-pace-tweaks-panel] .pace-aj-div { margin: 8px 0; }
     }
   `;
   document.head.appendChild(s);

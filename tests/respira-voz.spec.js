@@ -173,7 +173,7 @@ test('la voz elegida es la que se pide: el clip cambia de archivo', async ({ pag
   }
 });
 
-test('bradford es otra grabación: cabe en menos rutinas, y en las que se cae hay razón', async ({ page, context }) => {
+test('bradford es otra grabación, más corta: cabe en las mismas 17 rutinas que sulafat', async ({ page, context }) => {
   const rutinas = fasesPorRutina();
   await sembrarPisando(context, { voice: 'bradford' });
   await irAlArtefacto(page);
@@ -192,8 +192,9 @@ test('bradford es otra grabación: cabe en menos rutinas, y en las que se cae ha
   expect(veredicto.listo).toBe(true);
   const caben = veredicto.filas.filter(x => x.cabe).length;
   /* RELACIONAL contra el catálogo real, igual que el de sulafat. Medido
-     abriendo los archivos: su «exhala» dura 3,572 s de palabra —más del doble
-     que el de sulafat— y con margen pide fases de 3,72. */
+     abriendo los archivos: su palabra más larga es «mantén», 1,218 s; el
+     «exhala» dura 1,201 (hasta el 22 oct. se contaba hasta un chasquido del
+     final del archivo, 3,572 s, y se caía de las tres de rondas: 14 de 20). */
   expect(veredicto.filas.length).toBe(20);
   /* GUARD: si alguna rutina no aportara ninguna senal reconocida, «cabe» seria
      `true` por vacuidad (`every` sobre una lista vacia) y el recuento subiria
@@ -201,8 +202,8 @@ test('bradford es otra grabación: cabe en menos rutinas, y en las que se cae ha
   veredicto.filas.forEach(f => {
     expect(f.senales, f.id + ' no aporta ninguna senal reconocible').toBeGreaterThan(0);
   });
-  expect(caben, 'bradford debería caber en 14 de las 20').toBe(14);
-  /* Y CABE EN MENOS QUE SULAFAT, que es lo que de verdad hay que saber antes de
-     elegirla. Si alguien recorta el MP3 y las iguala, este aserto lo dice. */
-  expect(caben).toBeLessThan(17);
+  /* Las tres de bombeo, con fases de 1 s, siguen con el tono (PACE_VOZ_FASE_MIN). */
+  expect(caben, 'bradford debería caber en 17 de las 20').toBe(17);
+  const fuera = veredicto.filas.filter(x => !x.cabe).map(x => x.id).sort();
+  expect(fuera.some(id => /rounds/.test(id)), 'el «exhala» grave vuelve a no caber en rondas: ' + fuera.join(', ')).toBe(false);
 });

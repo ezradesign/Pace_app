@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.5 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.6 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -8,8 +8,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **Web** en https://pacegrass.app (y `paceweb.pages.dev`, sin redirigir), con `/premium` y su lista
   «Avísame», que se enciende al conectar el KV (`docs/launch/avisame.md`).
 - **Android** (Fase 2 de `ROADMAP.md`) hecho en código y sin probar en un móvil: cada push a `main`
-  compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0); la App Store,
-  después de v1.
+  compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0) y, desde el 22
+  oct., **dentro de v1** (Ez): TestFlight en cuanto haya cuenta de Apple, y la App Store el mismo día que
+  Android (`DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
   Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
@@ -18,7 +19,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   «Tus rutinas», el cierre de Mueve/Estira y Estadísticas (Ez eligió las cinco recomendadas sobre la
   maqueta `docs/proposals/rutinas-y-cifras-auditoria.html`, https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW).
   v0.174.5, cinco del móvil de Ez y de la auditoría del 22 oct. (M1, M3, M5, A8, A9): entre ellos, los
-  logros solo con la sesión entera, como decidió Ez.
+  logros solo con la sesión entera, como decidió Ez. v0.174.6, las 1A 2A 3A de Ez: la app abre siempre con
+  los módulos y «Comienza» abre la pregunta del día, los Ajustes del móvil sin scroll y la voz grave con su
+  «exhala» en Rondas.
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -81,8 +84,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
 - Los dibujos que faltan: la cuenta y los prompts, en `docs/product/GLIFOS_A_DIBUJAR.md`.
-- iPhone: la cuenta de Apple Developer y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4), y
-  pasar a su tester qué mirar en Safari, sobre todo el sonido.
+- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer y su llave
+  (`docs/launch/app-store/guia.html`, puntos 3 y 4), y pasar a sus testers qué mirar, sobre todo el sonido.
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.
 
 ## Deuda conocida, sin fecha
@@ -119,11 +122,12 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
-- **Del móvil de Ez** (22 oct., la prueba interna en su Android; M1, M3 y M5, en v0.174.5): M2 con el
-  aro corto, las guiadas como hoy y entre ellas «Dos minutos para moverte»: Ez eligió 4a A · 4b A (solo con el
-  día empezado) · 4c A (`DECISIONES_PRODUCTO.md`); se monta después de 1A 2A 3A y no se junta sin el texto
-  de los dos minutos · M4 la voz grave, M6 los Ajustes del móvil y M7 la home con los módulos: Ez eligió
-  1A 2A 3A, en montaje como v0.174.6 (sesión «Maqueta»).
+- **Del móvil de Ez** (22 oct., la prueba interna en su Android; M1, M3 y M5 en v0.174.5; M4, M6 y M7, sus
+  1A 2A 3A, en v0.174.6): queda M2 con el aro corto, las guiadas como hoy y entre ellas una invitación: Ez eligió
+  4a A · 4b A (solo con el día empezado) · 4c A (`DECISIONES_PRODUCTO.md`), y al pulsar «Hacerla», un
+  ejercicio de Mueve o Estira con el glifo del módulo. Falta la pregunta 5, el nombre de la invitación y dónde
+  se ve el ejercicio (https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d); la monta la sesión «Maqueta» como
+  v0.175.0. El aviso a mitad de un bloque largo (la segunda parte de ChatGPT), después de verlo.
 - **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
   escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
   calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;
