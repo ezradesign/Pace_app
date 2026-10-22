@@ -9,10 +9,12 @@
  *     Ahora la reunión se corta donde acaba el día de la opción, y el cierre no pasa.
  *     Lo único que puede pasar del final sigue siendo el bloque que ya corre en el aro,
  *     y su cierre (ritmo-reloj.spec.js).
- *  2. LA REUNIÓN EN LA HORA DE COMER, CON LA COMIDA YA EMPEZADA. Eligiendo la jornada a
- *     las 14:20 (comida a las 14:00), el día no sirve la comida, pero una reunión a las
- *     14:30 se recortaba como si la hubiera: desaparecía y el foco iba encima. Qué
- *     sirve el día a esa hora es una decisión de Ez que no está tomada; esto no la toca.
+ *  2. EMPEZAR EN PLENA COMIDA. Eligiendo la jornada a las 14:00 en punto o a las 14:20,
+ *     con la comida de 14:00 a 15:00, no había comida en todo el día (a las 13:55, sí).
+ *     Ez eligió el 22 oct. «lo que queda de comida» (la B de
+ *     docs/traspaso/archivos/plena-comida-21oct/tabla.md): a las 14:20, comida hasta las
+ *     15:00 y el foco desde entonces, como con una reunión empezada; quien ya comió apaga
+ *     «comes».
  *  3. «TENER EN CUENTA MIS REUNIONES DE HOY» DESMARCADA. Las horas leídas antes seguían
  *     contando: la línea y lo que se escribía en el calendario las esquivaban.
  *  4. LAS REUNIONES DE AYER, GUARDADAS COMO DE HOY. Una lectura pedida a las 23:59 que
@@ -89,21 +91,47 @@ test('el día acaba donde acaba su opción aunque una reunión siga: la tabla y 
 });
 
 /* ------------------------------------------------------------------ 2 · la comida */
-test('con la comida ya empezada, una reunión a esa hora sigue siendo una reunión', async ({ page, context }) => {
+test('en plena comida, la jornada sirve lo que queda de ella y el foco empieza al acabar (Ez, 22 oct.)', async ({ page, context }) => {
   await sembrar(context, { ritmo: { horario: HORARIO, libre: true } });
   await page.clock.install({ time: NUEVE });
   await irAlArtefacto(page);
   const r = await page.evaluate((H) => {
     const pozos = ritmoPozos(getState(), '2026-09-17');
-    const tipos = (ahora) => ritmoComponer('jornada', Object.assign({}, H, { ahora, ocupado: [[870, 20]] }), pozos, {}, 8)
-      .items.map((it) => it.tipo + '@' + ritmoHora(it.desde) + '+' + it.dur);
-    return { tarde: tipos(860), antes: tipos(800) };
+    const tipos = (ahora, extra, prev) => ritmoComponer('jornada', Object.assign({}, H, { ahora }, extra || {}), pozos, {}, 8, prev || null)
+      .items.slice(0, 3).map((it) => it.tipo + '@' + ritmoHora(it.desde) + '+' + it.dur).join(' ');
+    const P = (x) => Object.assign({ bloques: 5, pausas: 4, foco: 225, usados: [], vasos: 3, claves: 4 }, x);
+    return {
+      /* la tabla de Ez: comida de 14:00 a 15:00 */
+      '13:55': tipos(835), '14:00': tipos(840), '14:20': tipos(860), '15:30': tipos(930),
+      /* quien ya comió apaga «comes»: el foco empieza ya */
+      '14:20 no comes': tipos(860, { sinComida: true }),
+      /* una reunión dentro de la hora de comer la tapa la comida, como siempre; detrás, sale */
+      '14:20 reuniones 14:30 y 15:10': tipos(860, { ocupado: [[870, 20], [910, 20]] }),
+      /* sin comida, una reunión a esa hora es una reunión y el foco no la pisa */
+      '14:20 no comes, reunión 14:30': tipos(860, { sinComida: true, ocupado: [[870, 20]] }),
+      /* recolocando: la pausa que toca a las 14:30 es lo que queda de comida; un bloque de
+         25 empezado a las 14:10 la deja para cuando acabe; uno de 45 a las 14:20 se la come
+         entera, y detrás va su pausa */
+      'recolocado, pausa a las 14:30': tipos(870, null, P({ pausaPendiente: true })),
+      'recolocado, bloque de 25 a las 14:10': tipos(850, null, P({ primerBloque: 25, bloque: 25 })),
+      'recolocado, bloque de 45 a las 14:20': tipos(860, null, P({ primerBloque: 45 })),
+      /* y el bloque que cruza la hora de comer sigue comiendo entero al acabar (s194) */
+      'recolocado, bloque de 45 a las 13:40': tipos(820, null, P({ primerBloque: 45 })),
+    };
   }, HORARIO);
-  /* a las 14:20 el día ya no sirve la comida (lo que pasa a esa hora espera a Ez): la reunión sale y nada la pisa */
-  expect(r.tarde.slice(0, 3)).toEqual(['libre@14:20+10', 'ocupado@14:30+20', 'foco@14:50+45']);
-  /* a las 13:20 la comida va por delante y manda en su hueco, como siempre */
-  expect(r.antes.slice(0, 2)).toEqual(['foco@13:20+40', 'comida@14:00+60']);
-  expect(r.antes.some((x) => x.startsWith('ocupado'))).toBe(false);
+  expect(r).toEqual({
+    '13:55': 'libre@13:55+5 comida@14:00+60 foco@15:00+45',
+    '14:00': 'comida@14:00+60 foco@15:00+45 pausa@15:45+5',
+    '14:20': 'comida@14:20+40 foco@15:00+45 pausa@15:45+5',
+    '15:30': 'foco@15:30+45 pausa@16:15+5 foco@16:20+35',
+    '14:20 no comes': 'foco@14:20+45 pausa@15:05+5 foco@15:10+45',
+    '14:20 reuniones 14:30 y 15:10': 'comida@14:20+40 libre@15:00+10 ocupado@15:10+20',
+    '14:20 no comes, reunión 14:30': 'libre@14:20+10 ocupado@14:30+20 foco@14:50+45',
+    'recolocado, pausa a las 14:30': 'comida@14:30+30 foco@15:00+45 pausa@15:45+5',
+    'recolocado, bloque de 25 a las 14:10': 'foco@14:10+25 comida@14:35+25 foco@15:00+25',
+    'recolocado, bloque de 45 a las 14:20': 'foco@14:20+45 pausa@15:05+5 foco@15:10+45',
+    'recolocado, bloque de 45 a las 13:40': 'foco@13:40+45 comida@14:25+60 foco@15:25+45',
+  });
 });
 
 /* ------------------------------------------------------------------ Android, para 3 y 4 */

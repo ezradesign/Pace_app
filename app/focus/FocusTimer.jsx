@@ -80,7 +80,7 @@ function FocusTimer({ onFinish }) {
         } catch (e) {}
       }
     });
-  });
+  }, state.focusMode);   /* el modo, con la duración, es el reloj: pasar de Pausa a Foco de 5 lo reinicia */
 
   /* Persistencia del Pomodoro en recarga (s102, resuelve el fork s96).
      Clave pace.timer.v1 FUERA de pace.state.v2 (el timer sigue siendo

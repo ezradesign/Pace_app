@@ -13,8 +13,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
   Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
-  rutinas cambian de un día a otro (`puedeVariar`). v0.174.2 arregla cuatro casos de reuniones de la
-  auditoría del 21 oct. (`tests/ritmo-reuniones-bordes.spec.js`).
+  rutinas cambian de un día a otro (`puedeVariar`). v0.174.2 arregla seis casos de la auditoría del 21 oct.
+  (reuniones, la jornada en plena comida como eligió Ez, y el aro con las pausas).
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -56,9 +56,6 @@ La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
 (`docs/traspaso/hoja-de-ruta-20oct.html`, https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). Ez se
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Qué sirve «Jornada entera» si la eliges en plena comida** (a las 14:20 con la comida a las
-  14:00, hoy no hay comida en todo el día): tabla y opciones A, B y C en
-  `docs/traspaso/archivos/plena-comida-21oct/tabla.md`. No está montado.
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6); el gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal;
   volver a exportar el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).

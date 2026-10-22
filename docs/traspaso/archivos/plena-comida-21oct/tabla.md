@@ -1,6 +1,6 @@
 # Empezar «Jornada entera» en plena comida (caso 2 de la auditoría del 21 oct.)
 
-Sesión del planificador y el calendario (v0.174.2). **No está montado**: es para que Ez elija.
+**Decidido: Ez eligió la B, «lo que queda de comida», el 22 oct. de 2026. Montado en v0.174.2** (`DECISIONES_PRODUCTO.md`). Abajo, la pregunta tal como se le hizo.
 
 ## ¿Ya estaba decidido?
 
@@ -30,7 +30,7 @@ Dos cosas raras de hoy:
 **A · Como hoy.** Si la comida ya ha empezado, PACE la da por hecha y empiezas a trabajar ya.
 - 14:20 → foco 14:20–15:05 · pausa · foco 15:10–15:55 · pausa · foco 16:00–16:55 · cierre (145 min).
 
-**B · Lo que queda de comida (la recomendada).** La comida es tu hora, como una reunión: si llegas a
+**B · Lo que queda de comida (la recomendada, y la que eligió Ez).** La comida es tu hora, como una reunión: si llegas a
 mitad, PACE te sirve lo que queda y el foco empieza al acabar.
 - 14:00 → comida 14:00–15:00 · foco 15:00–15:45 · pausa · foco 15:50–16:20 · pausa · foco 16:25–16:55 · cierre (105 min).
 - 14:20 → **comida 14:20–15:00** · foco 15:00–15:45 · pausa · foco 15:50–16:20 · pausa · foco 16:25–16:55 · cierre (105 min).

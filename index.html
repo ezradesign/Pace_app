@@ -9297,6 +9297,11 @@ Object.assign(window, {
 
 
 
+
+
+
+
+
 var RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
 
 
@@ -9352,7 +9357,9 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
 
 
-  var comidaDelante = !(P0 && P0.comidaHecha) && comeA !== Infinity && desde < comeA;
+  var finComida = comeA + comidaDur;
+  var comidaDelante = !(P0 && P0.comidaHecha) && comeA !== Infinity && desde < finComida;
+  var comidaEnCurso = comidaDelante && desde >= comeA;
   var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, comidaDelante ? comeA : null, comidaDur);
 
 
@@ -9371,7 +9378,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     var primeros = n;
     var foco = forma.foco;
     var finTrabajo = fin - PAUSA;
-    var falta = !(P0 && P0.comidaHecha) && desde < comeA && comeA < finTrabajo;
+    var falta = comidaDelante && comeA < finTrabajo;
     var cola = Math.min(COLA, bloque - 5);
 
 
@@ -9411,12 +9418,18 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
 
     function comerAntes() {return falta && foco - hecho >= minimo && finTrabajo - comeA - comidaDur >= minimo;}
+
+    function comidaQueda() {return !falta ? 0 : comidaEnCurso ? Math.max(0, finComida - Math.max(t, comeA)) : comidaDur;}
     function comer() {
       if (t < comeA) items.push({ tipo: 'libre', desde: t, dur: comeA - t });
       t = Math.max(t, comeA);
-      items.push({ tipo: 'comida', desde: t, dur: comidaDur });
-      t += comidaDur;falta = false;enMitad = 0;manana = false;seguidos = 0;
+      var dur = comidaQueda();
+      falta = false;
+      if (dur <= 0) return false;
+      items.push({ tipo: 'comida', desde: t, dur: dur });
+      t += dur;enMitad = 0;manana = false;seguidos = 0;
       cuentaL = 0;focoL = 0;largaEn = 3;
+      return true;
     }
 
 
@@ -9446,7 +9459,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
     if (P0 && P0.pausaPendiente && !juntar(0)) {
       var p0 = pausaDe(0);
-      var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - comidaQueda() - ocupadoAntes(finTrabajo));
       if (queda0 < minimo && p0 === LARGA && (forma.reloj || corto) && queda0 + LARGA - PAUSA >= minimo) {p0 = PAUSA;queda0 += LARGA - PAUSA;}
 
       if (p0 === LARGA && largaSinSitio(queda0 + LARGA + seguidos, seguidos)) {p0 = PAUSA;queda0 += LARGA - PAUSA;}
@@ -9465,7 +9478,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       var enMarcha = P0 && P0.primerBloque && n === primeros;
       if (o && o.desde <= t && !enMarcha) {reunirse(o);continue;}
 
-      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      var rem = Math.min(foco - hecho, finTrabajo - t - comidaQueda() - ocupadoAntes(finTrabajo));
       if (enMarcha) {
 
         dur = P0.primerBloque;
@@ -9499,14 +9512,15 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       n++;
       items.push({ tipo: 'foco', desde: t, dur: dur, n: n });
       t += dur;hecho += dur;focoL += dur;seguidos += dur;
-      if (falta && t >= comeA) {comer();continue;}
+
+      if (falta && t >= comeA && comer()) continue;
 
       if (juntar(0)) {
-        if (Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo)) < minimo && !comerAntes()) break;
+        if (Math.min(foco - hecho, finTrabajo - t - comidaQueda() - ocupadoAntes(finTrabajo)) < minimo && !comerAntes()) break;
         continue;
       }
       p = pausaDe(0);
-      var queda = Math.min(foco - hecho, finTrabajo - t - p - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      var queda = Math.min(foco - hecho, finTrabajo - t - p - comidaQueda() - ocupadoAntes(finTrabajo));
 
 
       if (queda < minimo && p === LARGA && (forma.reloj || corto) && queda + LARGA - PAUSA >= minimo) {p = PAUSA;queda += LARGA - PAUSA;}
@@ -12271,7 +12285,7 @@ function ritmoElegir(opcion) {
 
 
 
-function ritmoPreguntar() {ritmoGuardar(function () {return { dia: null, distinto: ritmoHoy() };});}
+function ritmoPreguntar() {ritmoPausaCerrarConElDia();ritmoGuardar(function () {return { dia: null, distinto: ritmoHoy() };});}
 
 
 
@@ -12333,7 +12347,7 @@ function ritmoBloqueEmpezado(minutos) {
   if (!Object.keys(cambios).length) return;
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
-function ritmoPorLibre() {ritmoGuardar(function () {return { libre: ritmoHoy(), dia: null };});}
+function ritmoPorLibre() {ritmoPausaCerrarConElDia();ritmoGuardar(function () {return { libre: ritmoHoy(), dia: null };});}
 function ritmoVolver() {ritmoGuardar(function () {return { libre: null, distinto: ritmoHoy() };});}
 
 function ritmoOtra(claves) {
@@ -12663,11 +12677,21 @@ function ritmoPausaAcabada() {
   if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
 }
 
+
+
+
+
+function ritmoPausaCerrarConElDia() {
+  var s = getState();
+  var p = ritmoPausaCuenta(s);
+  if (p && s.focusMode === p.modo) ritmoPausaAcabada();
+}
+
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
-  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSinPausa, ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSinPausa, ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Lo que las series recuerdan: lo servido estos siete días y lo hecho hoy. -->
@@ -20878,12 +20902,15 @@ Object.assign(window, { TimerDial, interpolateRingColor });
 
 
 
+
+
+
 const {
   useState: useStateUC, useEffect: useEffectUC,
   useRef: useRefUC, useCallback: useCallbackUC
 } = React;
 
-function useCountdown(durationSec, onComplete) {
+function useCountdown(durationSec, onComplete, modo) {
   const [status, setStatus] = useStateUC('idle');
   const statusRef = useRefUC('idle');
   const endsAtRef = useRefUC(null);
@@ -20948,7 +20975,7 @@ function useCountdown(durationSec, onComplete) {
     remainingMsRef.current = durationSec * 1000;
     statusRef.current = 'idle';
     setStatus('idle');
-  }, [durationSec]);
+  }, [durationSec, modo]);
 
   const start = useCallbackUC(() => {
     if (statusRef.current === 'running' || statusRef.current === 'completed') return;
@@ -26599,7 +26626,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
         } catch (e) {}
       }
     });
-  });
+  }, state.focusMode);
 
 
 

@@ -11,10 +11,11 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
-- **22 oct.: v0.174.2, cuatro casos de reuniones de la auditoría externa del 21 oct.** (rama
-  `claude/happy-allen-d915c3`). Tres arreglados con su prueba, que falla contra v0.174.0
-  (`tests/ritmo-reuniones-bordes.spec.js`); el cuarto, qué sirve la jornada si la eliges en plena
-  comida, espera a Ez: `docs/traspaso/archivos/plena-comida-21oct/tabla.md` (recomendada, B).
+- **22 oct.: v0.174.2, seis casos de la auditoría externa del 21 oct.** (rama
+  `claude/happy-allen-d915c3`), cada uno con su prueba, que falla contra v0.174.0: las reuniones
+  en los bordes del día, la jornada en plena comida (Ez eligió la B, «lo que queda de comida»,
+  sobre `docs/traspaso/archivos/plena-comida-21oct/tabla.md`), la pausa que seguía como Foco al
+  cambiar de modo y «por libre» en plena pausa del día.
 - **20 oct.: los días diseñados, montados en v0.174.0** (rama `claude/nostalgic-dirac-127713`, sesión
   `dias-cuerpo-entero`). Ez contestó a la segunda página: solo las rutinas que ya hay («Hombros
   fuertes» fuera: medido sin ella no faltaba nada), «equilibrada y diferente», y lo de después de
