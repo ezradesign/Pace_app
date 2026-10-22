@@ -6,6 +6,8 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de 
 
 ## 22 oct., tarde: v0.174.3 y v0.174.4 en `main`; coordina la otra cuenta
 
+**Relevo por uso (22 oct., ~18:00, al 80-90 %):** lo que sigue y cómo retomar las dos sesiones abiertas está en `docs/traspaso/relevo-coordinadora-22oct.md`, «Al relevo» y «La cola, por orden».
+
 Relevo y sesiones abiertas: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
 

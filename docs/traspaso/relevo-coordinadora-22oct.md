@@ -32,6 +32,20 @@ Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en 
 `docs/traspaso/LEEME.md` de su rama. Para retomarlas desde la otra cuenta: `docs/WORKFLOW.md` §10
 (sesión nueva en la MISMA carpeta, con la misma rama y el mismo puerto; `start_session` con `cwd`).
 
+**Al relevo (80-90 % de uso, 22 oct. hacia las 18:00; esta cuenta se repone a las 21:10):**
+- Las dos sesiones siguen en marcha y saben que al 85 % hacen «wip» y push, y al 90 % dejan su punto en LEEME
+  de su rama. Mira su carpeta por si quedó algo sin commitear (`node scripts/relevo-hilo.js <carpeta>`).
+- A «Maqueta» se le pidió una **cuarta pregunta** en su página: la invitación de 2 min y «A mi ritmo ·
+  Después de cada bloque» (solo maqueta). Comprobar en su rama que llegó. Su página, cuando la publique, es
+  lo primero que se enseña a Ez; Ez contesta con letras y la sesión monta lo elegido.
+- A «Pausas, logros y créditos» se le dijo que, si algún arreglo cambia lo que se ve más allá del fallo,
+  mande capturas antes/después para Ez antes de montarlo (Ez: «todo esto quiero verlo en una maqueta antes
+  de implementarlo»).
+- CI de `main`: verde en la suite local con todo junto (790); el de GitHub de los últimos commits de docs,
+  sin mirar al relevo (`gh run list --branch main`).
+- Ez tiene pendiente: los correos de los testers, la rana (prompt de solo postura, en el chat) y la consulta
+  a ChatGPT de los 8 movimientos de 2 min (prompt dado).
+
 ## La cola, por orden
 
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
