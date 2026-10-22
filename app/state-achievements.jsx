@@ -264,21 +264,23 @@ function flushAchievementToast(modulo) {
   return true;
 }
 
-function updateStreak() {
+/* `conLogros === false` es una sesión terminada antes: el día cuenta en la racha, pero sus
+   logros no se miran. Los da la siguiente sesión entera, aunque sea ese mismo día, porque se
+   miran en cada sesión y no solo en la primera del día. */
+function updateStreak(conLogros) {
   const s = getState();
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
-  if (last === today) return;
-  /* s198 · «ayer» por CALENDARIO, no restando 24 h: el lunes siguiente al cambio
-     de hora de primavera, entre las 00:00 y la 01:00, `Date.now() - 86400000`
-     cae en el SÁBADO (el domingo dura 23 h) y la racha se reiniciaba. */
-  const ayer = new Date(); ayer.setDate(ayer.getDate() - 1);
-  const yesterday = ayer.toDateString();
-  let current = s.streak.current;
-  if (last === yesterday) current += 1;
-  else current = 1;
-  const longest = Math.max(s.streak.longest, current);
-  setState({ streak: { current, longest, lastActiveDate: today } });
+  if (last !== today) {
+    /* s198 · «ayer» por CALENDARIO, no restando 24 h: el lunes siguiente al cambio
+       de hora de primavera, entre las 00:00 y la 01:00, `Date.now() - 86400000`
+       cae en el SÁBADO (el domingo dura 23 h) y la racha se reiniciaba. */
+    const ayer = new Date(); ayer.setDate(ayer.getDate() - 1);
+    const dias = last === ayer.toDateString() ? s.streak.current + 1 : 1;
+    setState({ streak: { current: dias, longest: Math.max(s.streak.longest, dias), lastActiveDate: today } });
+  }
+  if (conLogros === false) return;
+  const current = getState().streak.current;
   /* s146: `first.day` ya no cuelga de aqui. Se daba con `current >= 1`, o sea
      en la PRIMERA sesion de la vida, cayendo junto a `first.breath` sin
      significar nada distinto. Ahora pide un dia de verdad (dos actividades) y
@@ -307,6 +309,12 @@ function conMinutosQueCuentan(evento, minutos) {
   return evento ? Object.assign({}, evento, { creditedMinutes: minutos }) : evento;
 }
 
+/* LOS LOGROS, SOLO CON LA SESIÓN ENTERA (Ez, 22 oct. 2026). `entera === false` es una sesión
+   que no llegó a su final («Terminar antes», «Finalizar», un paso de trabajo cortado): suma
+   sus minutos a la semana, hace el plan del día y cuenta en la racha, como siempre, pero no
+   gana logros, no adelanta sus cuentas (sesiones, rutinas, mañanas) ni saca el aviso de uno
+   ganado antes. Sin valor es entera: así acreditan las pruebas y la red de Mueve sin contrato. */
+
 /* s166 · `holdSec` es OPCIONAL y por diseño: solo las 3 rutinas de rondas
    tienen retencion, y `PathBreatheStep` llama a esto sin ese argumento. Sin
    dato, la semana no se toca -- que no es lo mismo que sumarle 0, porque asi
@@ -314,7 +322,7 @@ function conMinutosQueCuentan(evento, minutos) {
    verdad. NINGUN LOGRO lo consume, y es una de las tres condiciones de la
    decision: B1/s89 retiro la cifra de la retencion por ser un RECORD, no por
    ser un dato, asi que un total acumulado entra y un maximo no. */
-function completeBreathSession(routineId, durationMin, holdSec, evento) {
+function completeBreathSession(routineId, durationMin, holdSec, evento, entera) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -331,8 +339,19 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
     plan: { ...s.plan, respira: true },
     weeklyStats: Object.assign({ ...s.weeklyStats, breathMinutes: week },
       holdRedondeado > 0 ? { holdSeconds: hold } : {}),
-    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + (entera === false ? 0 : 1),
   });
+  if (entera === false) updateStreak(false);
+  else logrosDeRespira(routineId);
+  /* s172 · dual-write: el evento SIEMPRE detras de la escritura legacy, que es
+     la que manda (stats, logros, racha). `evento` lo arma el runner, que es
+     quien tiene los tiempos; sin el, no se emite nada y la app sigue igual.
+     Lleva los minutos que se acaban de sumar a la semana (`creditedMinutes`), que son los que
+     enseña la tarjeta de la sesión en «Hoy»: así suma lo mismo que el total. */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
+}
+
+function logrosDeRespira(routineId) {
   unlockAchievement('first.breath');
   if (getState().breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
   if (getState().breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
@@ -373,15 +392,9 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
   }
   updateStreak();
   flushAchievementToast('breathe');
-  /* s172 · dual-write: el evento SIEMPRE detras de la escritura legacy, que es
-     la que manda (stats, logros, racha). `evento` lo arma el runner, que es
-     quien tiene los tiempos; sin el, no se emite nada y la app sigue igual.
-     Lleva los minutos que se acaban de sumar a la semana (`creditedMinutes`), que son los que
-     enseña la tarjeta de la sesión en «Hoy»: así suma lo mismo que el total. */
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
-function completeMoveSession(routineId, durationMin, evento) {
+function completeMoveSession(routineId, durationMin, evento, entera) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -390,8 +403,14 @@ function completeMoveSession(routineId, durationMin, evento) {
   setState({
     plan: { ...s.plan, muevete: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + (entera === false ? 0 : 1),
   });
+  if (entera === false) updateStreak(false);
+  else logrosDeMueve(routineId);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
+}
+
+function logrosDeMueve(routineId) {
   unlockAchievement('first.extra');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   contarRutina(routineId);
@@ -403,10 +422,9 @@ function completeMoveSession(routineId, durationMin, evento) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
-function completeExtraSession(routineId, durationMin, evento) {
+function completeExtraSession(routineId, durationMin, evento, entera) {
   if (durationMin === undefined) durationMin = 0;
   ensureDayFresh();
   const s = getState();
@@ -417,6 +435,14 @@ function completeExtraSession(routineId, durationMin, evento) {
     plan: { ...s.plan, extra: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
+  if (entera === false) updateStreak(false);
+  else logrosDeEstira(routineId);
+  /* El enum del esquema llama `stretch` a lo que el codigo llama `extra`: el
+     nombre del modulo se traduce AQUI y no en el runner (§8). */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
+}
+
+function logrosDeEstira(routineId) {
   unlockAchievement('first.stretch');
   contarRutina(routineId);
   checkPlanAchievements();
@@ -445,9 +471,6 @@ function completeExtraSession(routineId, durationMin, evento) {
   }
   updateStreak();
   flushAchievementToast('extra');
-  /* El enum del esquema llama `stretch` a lo que el codigo llama `extra`: el
-     nombre del modulo se traduce AQUI y no en el runner (§8). */
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
 }
 
 Object.assign(window, {

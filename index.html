@@ -7872,21 +7872,23 @@ function flushAchievementToast(modulo) {
   return true;
 }
 
-function updateStreak() {
+
+
+
+function updateStreak(conLogros) {
   const s = getState();
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
-  if (last === today) return;
+  if (last !== today) {
 
 
 
-  const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
-  const yesterday = ayer.toDateString();
-  let current = s.streak.current;
-  if (last === yesterday) current += 1;else
-  current = 1;
-  const longest = Math.max(s.streak.longest, current);
-  setState({ streak: { current, longest, lastActiveDate: today } });
+    const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
+    const dias = last === ayer.toDateString() ? s.streak.current + 1 : 1;
+    setState({ streak: { current: dias, longest: Math.max(s.streak.longest, dias), lastActiveDate: today } });
+  }
+  if (conLogros === false) return;
+  const current = getState().streak.current;
 
 
 
@@ -7922,7 +7924,13 @@ function conMinutosQueCuentan(evento, minutos) {
 
 
 
-function completeBreathSession(routineId, durationMin, holdSec, evento) {
+
+
+
+
+
+
+function completeBreathSession(routineId, durationMin, holdSec, evento, entera) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -7939,8 +7947,19 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
     plan: { ...s.plan, respira: true },
     weeklyStats: Object.assign({ ...s.weeklyStats, breathMinutes: week },
     holdRedondeado > 0 ? { holdSeconds: hold } : {}),
-    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + (entera === false ? 0 : 1)
   });
+  if (entera === false) updateStreak(false);else
+  logrosDeRespira(routineId);
+
+
+
+
+
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
+}
+
+function logrosDeRespira(routineId) {
   unlockAchievement('first.breath');
   if (getState().breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
   if (getState().breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
@@ -7981,15 +8000,9 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
   }
   updateStreak();
   flushAchievementToast('breathe');
-
-
-
-
-
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
-function completeMoveSession(routineId, durationMin, evento) {
+function completeMoveSession(routineId, durationMin, evento, entera) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -7998,8 +8011,14 @@ function completeMoveSession(routineId, durationMin, evento) {
   setState({
     plan: { ...s.plan, muevete: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + (entera === false ? 0 : 1)
   });
+  if (entera === false) updateStreak(false);else
+  logrosDeMueve(routineId);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
+}
+
+function logrosDeMueve(routineId) {
   unlockAchievement('first.extra');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   contarRutina(routineId);
@@ -8011,10 +8030,9 @@ function completeMoveSession(routineId, durationMin, evento) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
-function completeExtraSession(routineId, durationMin, evento) {
+function completeExtraSession(routineId, durationMin, evento, entera) {
   if (durationMin === undefined) durationMin = 0;
   ensureDayFresh();
   const s = getState();
@@ -8025,6 +8043,14 @@ function completeExtraSession(routineId, durationMin, evento) {
     plan: { ...s.plan, extra: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week }
   });
+  if (entera === false) updateStreak(false);else
+  logrosDeEstira(routineId);
+
+
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
+}
+
+function logrosDeEstira(routineId) {
   unlockAchievement('first.stretch');
   contarRutina(routineId);
   checkPlanAchievements();
@@ -8053,9 +8079,6 @@ function completeExtraSession(routineId, durationMin, evento) {
   }
   updateStreak();
   flushAchievementToast('extra');
-
-
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
 }
 
 Object.assign(window, {
@@ -8069,7 +8092,7 @@ Object.assign(window, {
   checkStatsAchievements,
   checkAllPathsCompleted
 });
-;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, completeMoveSession, completeExtraSession });
+;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
 })();
 </script>
   <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
@@ -28744,8 +28767,9 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
 
+
     if (!sinContar) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
-    respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
+    respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath), motivo !== 'early');
     hechoRef.current = respiraHecho(routine, stage, round, breathCount);
     sinContarRef.current = sinContar;
     try {playSound('breathe.session.end');} catch (e) {}
@@ -31118,8 +31142,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
-    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);else
-    completeMoveSession(routine.id, realMin, ev);
+
+
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || hechosRef.current[n]);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);else
+    completeMoveSession(routine.id, realMin, ev, entera);
   };
 
   const startStep = (idx) => {
