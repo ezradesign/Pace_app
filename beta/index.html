@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba PACE en Android · PACE</title>
+<meta name="description" content="Prueba PACE en Android antes que nadie: pausas activas para quien trabaja sentado. Google pide 12 personas durante 14 días para publicarla. Como gracias, PACE completo de por vida.">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- PACE · /beta — LA PÁGINA PARA LOS TESTERS DE ANDROID
+     Google pide 12 testers durante 14 días en la prueba cerrada antes de publicar, y eso fija la
+     fecha de v1. Cada uno se apunta solo en dos pasos: se une al grupo de Google «PACE testers»,
+     que Ez añade como lista de testers en Play Console, y abre el enlace de la prueba. PACE no
+     guarda ningún correo y la página no lleva códigos: el regalo se manda uno a uno.
+
+     Es la opción 1A · 2A que eligió Ez el 22 oct. (https://claude.ai/artifact/8Vj5rGU6aE9Ewr9JfYFJXL),
+     con la letra y los botones de la app (A, https://claude.ai/artifact/KMBL3zRVKHADG5GR5uSKri),
+     igual que /premium: si cambia algo de los dos, cambia en las dos páginas.
+
+     LOS DOS ENLACES viven en el bloque «data-enlaces», y solo ahí. Mientras uno esté pendiente, su
+     paso dice que llega pronto en vez de enseñar un botón que no lleva a ningún sitio.
+
+     Las capturas son las de la ficha de Google Play (docs/launch/google-play/capturas), a 540 px en
+     WebP. Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
+<style>
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/cormorantgaramond-400-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/intertight-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/intertight-500-normal.woff2') format('woff2'); }
+  /* Los colores son los de app/tokens.css. Los de los módulos solo van en el punto junto a su nombre,
+     como en la app: ahí dicen de qué parte de PACE se habla. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D;
+    --breathe: #C97A5D; --move: #9A7B4F; --extra: #6B7A8F; --hydrate: #5F8A9B;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --breathe: #D99477; }
+    /* El logo en oscuro es el mismo PNG invertido, como en la app (CowLogo.jsx). */
+    header img { filter: invert(1); }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  a { color: var(--focus); }
+  .marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  header img { height: 60px; width: auto; display: block; }
+  .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 11px; cursor: pointer; }
+  .idioma b { color: var(--ink); font-weight: 500; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2, .serif { font-family: var(--display); font-style: italic; font-weight: 500; }
+  h1 { font-size: clamp(40px, 8.8vw, 58px); line-height: 1.04; letter-spacing: -.005em; margin: 0 0 16px; text-wrap: balance; }
+  h2 { font-size: clamp(31px, 6.6vw, 38px); line-height: 1.1; margin: 0 0 12px; text-wrap: balance; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  .lede { font-size: 17px; max-width: 34em; }
+  /* El botón de «Empezar» del Foco (FocusTimer.support.jsx): píldora, serif itálica, verde del CTA. */
+  .boton { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; font: italic 500 17px/1.2 var(--display); letter-spacing: .01em; text-decoration: none; cursor: pointer; border: 1px solid var(--cta); transition: background-color 180ms, color 180ms; }
+  .boton.lleno { background: var(--cta); color: var(--paper); box-shadow: 0 1px 2px rgba(31,28,23,.08); }
+  .boton.hueco { background: transparent; color: var(--cta); }
+  .boton:focus-visible, .idioma:focus-visible, summary:focus-visible, .tira:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .modulos { list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 2px 18px; }
+  .modulos li { display: inline-flex; align-items: center; gap: 8px; font: italic 400 19px/1.4 var(--display); color: var(--ink); }
+  .modulos li::before { content: ''; flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--punto); }
+  [data-mod=foco] { --punto: var(--focus); } [data-mod=respira] { --punto: var(--breathe); } [data-mod=mueve] { --punto: var(--move); }
+  [data-mod=estira] { --punto: var(--extra); } [data-mod=agua] { --punto: var(--hydrate); }
+  /* Las capturas: en el móvil, una tira que se desliza; en el ordenador, en fila junto al título. */
+  .tira { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 26px -16px 8px; padding: 0 16px 4px; scrollbar-width: none; }
+  .tira::-webkit-scrollbar { display: none; }
+  .tira img { flex: 0 0 68%; width: 68%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: var(--paper-2); scroll-snap-align: center; display: block; }
+  section { padding: 48px 16px 40px; margin: 0 -16px; }
+  section:nth-of-type(odd) { background: var(--paper-2); }
+  .dos > div + div { margin-top: 36px; }
+  .pasos { list-style: none; padding: 0; margin: 6px 0 0; counter-reset: paso; display: grid; gap: 24px; }
+  .pasos li { counter-increment: paso; display: grid; grid-template-columns: 36px 1fr; column-gap: 14px; align-items: start; }
+  .pasos li::before { content: counter(paso); grid-row: 1 / span 3; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--cta); display: grid; place-items: center; font: italic 500 21px/1 var(--display); color: var(--ink); }
+  .pasos .t { font: italic 500 23px/1.2 var(--display); color: var(--ink); margin: 3px 0 2px; }
+  .pasos .d { font-size: 15px; margin: 0; }
+  .pasos .boton, .pasos .pronto { justify-self: start; margin: 12px 0 0; }
+  .pronto { font: italic 400 18px/1.35 var(--display); color: var(--ink-3); }
+  .regalo { border: 1px solid var(--cta); border-radius: 14px; padding: 22px 18px 20px; background: var(--paper); }
+  .regalo h2 { font-size: 29px; }
+  .regalo .grande { font: italic 500 24px/1.25 var(--display); color: var(--ink); margin: 0 0 12px; }
+  .nota { font-size: 13.5px; color: var(--ink-3); }
+  .regalo .nota { margin: 0; }
+  details { border-bottom: 1px dashed var(--line); padding: 12px 0; }
+  details:last-of-type { border-bottom: 0; }
+  summary { cursor: pointer; font-family: var(--display); font-style: italic; font-weight: 500; font-size: 21px; color: var(--ink); }
+  details p { margin: 8px 0 4px; }
+  footer { margin: 40px 0 0; padding: 16px 0 40px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  footer a { color: var(--ink-3); }
+  @media (min-width: 900px) {
+    /* minmax(0, …): sin él, la columna de las capturas crece hasta su ancho real (3 × 540 px). */
+    .portada { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 48px; align-items: center; padding: 24px 0 40px; }
+    .tira { overflow: visible; margin: 0; padding: 0; gap: 14px; }
+    .tira img { flex: 1 1 0; width: auto; min-width: 0; }
+    .dos { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 48px; align-items: start; }
+    .dos > div + div { margin-top: 0; }
+    section { padding: 56px 40px 48px; margin: 0 0 24px; border-radius: 18px; }
+  }
+</style>
+</head>
+<body>
+<!-- Los correos van entre marcas email_off, como en /premium: sin ellas, Cloudflare los esconde
+     tras un script suyo y quien lee sin JavaScript no los ve. -->
+<!--email_off-->
+<div class="marco">
+  <header>
+    <a href="/" aria-label="Abrir PACE" data-en-aria="Open PACE"><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+    <button class="idioma" type="button" data-idioma aria-label="Cambiar a inglés" data-en-aria="Switch to Spanish"><b data-es-b>ES</b> · <span data-en-b>EN</span></button>
+  </header>
+
+  <div class="portada">
+    <div>
+      <p class="kicker" data-en="PACE · Android test">PACE · Prueba en Android</p>
+      <h1 data-en="Try PACE on Android before anyone else.">Prueba PACE en Android antes que nadie.</h1>
+      <p class="lede" data-en="Active breaks for people who work sitting down: focus, breathing, mobility and water, at your own pace.">Pausas activas para quien trabaja sentado: foco, respiración, movilidad y agua, a tu ritmo.</p>
+      <ul class="modulos">
+        <li data-mod="foco" data-en="Focus">Foco</li>
+        <li data-mod="respira" data-en="Breathe">Respira</li>
+        <li data-mod="mueve" data-en="Move">Mueve</li>
+        <li data-mod="estira" data-en="Stretch">Estira</li>
+        <li data-mod="agua" data-en="Hydrate">Hidrátate</li>
+      </ul>
+      <p data-en="To publish it, Google asks for 12 people to test it for 14 days. Will you give us a hand?">Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
+      <a class="boton lleno" href="#pasos" data-en="I want to try it">Quiero probarla</a>
+    </div>
+    <div class="tira" tabindex="0" role="group" aria-label="Capturas de PACE en Android" data-en-aria="Screenshots of PACE on Android">
+      <img src="/beta/jornada-es.webp" data-en-src="/beta/jornada-en.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" data-en-alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960">
+      <img src="/beta/respira-es.webp" data-en-src="/beta/respira-en.webp" alt="Respira: una técnica guiada, con voz" data-en-alt="Breathe: a guided technique, with voice" width="540" height="960" loading="lazy">
+      <img src="/beta/logros-es.webp" data-en-src="/beta/logros-en.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" data-en-alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy">
+    </div>
+  </div>
+
+  <section class="dos" id="pasos">
+    <div>
+      <h2 data-en="Three steps">Tres pasos</h2>
+      <ol class="pasos">
+        <li>
+          <p class="t" data-en="Join the «PACE testers» group">Únete al grupo «PACE testers»</p>
+          <p class="d" data-en="With your Google account, the one Play Store uses on your phone.">Con tu cuenta de Google, la de Play Store en tu móvil.</p>
+          <a class="boton lleno" data-enlace="grupo" href="#pasos" target="_blank" rel="noopener" hidden data-en="Join the group">Unirme al grupo</a>
+          <p class="pronto" data-pronto="grupo" data-en="The group opens very soon.">El grupo abre muy pronto.</p>
+        </li>
+        <li>
+          <p class="t" data-en="Open the test on Google Play">Abre la prueba en Google Play</p>
+          <p class="d" data-en="With the same account: accept the test and install PACE from Play. It can take a few minutes to show up.">Con la misma cuenta: acepta la prueba e instala PACE desde Play. Puede tardar unos minutos en aparecer.</p>
+          <a class="boton hueco" data-enlace="play" href="#pasos" target="_blank" rel="noopener" hidden data-en="Open Google Play">Abrir Google Play</a>
+          <p class="pronto" data-pronto="play" data-en="The link arrives once Google approves the test.">El enlace llega cuando Google apruebe la prueba.</p>
+        </li>
+        <li>
+          <p class="t" data-en="Keep it for 14 days">Tenla 14 días</p>
+          <p class="d" data-en="Open it whenever suits you and tell us what goes wrong.">Ábrela cuando te venga bien y cuéntanos qué falla.</p>
+        </li>
+      </ol>
+    </div>
+    <div>
+      <div class="regalo">
+        <h2 data-en="What you get">Lo que te llevas</h2>
+        <p class="grande" data-en="PACE Complete for life, on the web and on Android.">PACE completo de por vida, en la web y en Android.</p>
+        <p class="nota" data-en="Thank you for helping. On the web, with a code we send you; on Android, with a Google Play promo code when version 1 comes out.">Gracias por ayudar. En la web, con un código que te mandamos; en Android, con un código de regalo de Google Play cuando salga la versión 1.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-en="Questions">Preguntas</h2>
+    <details><summary data-en="Do I need an Android phone?">¿Necesito un Android?</summary><p data-en-html="Yes, with Google Play. On a computer, PACE already works at &lt;a href=&quot;/&quot;&gt;pacegrass.app&lt;/a&gt;; on iPhone it comes later: write to us and we will let you know.">Sí, con Google Play. En el ordenador, PACE ya funciona en <a href="/">pacegrass.app</a>; en iPhone llega más adelante: escríbenos y te avisamos.</p></details>
+    <details><summary data-en="How do I tell you what goes wrong?">¿Cómo os cuento qué falla?</summary><p data-en-html="Write to us at &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt;, or from the PACE page on Google Play: during the test, only we can see what you write there.">Escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>, o desde la ficha de PACE en Google Play: durante la prueba, lo que escribas ahí solo lo vemos nosotros.</p></details>
+    <details><summary data-en="What data does PACE see?">¿Qué datos ve PACE?</summary><p data-en="From the app, none: there is no account and what is yours stays on your phone. From the group, your Google email, used only to give you access and send you the gift.">De la app, ninguno: no hay cuenta y lo tuyo se queda en tu móvil. Del grupo, tu correo de Google, que solo sirve para darte acceso y mandarte el regalo.</p></details>
+    <details><summary data-en="And while the test lasts?">¿Y mientras dura la prueba?</summary><p data-en="All of PACE is open, the paid part too, until version 1.">Todo PACE está abierto, también lo de pago, hasta la versión 1.</p></details>
+    <details><summary data-en="What if I get tired of it?">¿Y si me canso?</summary><p data-en="Leave the group and uninstall it whenever you like.">Sales del grupo y la desinstalas cuando quieras.</p></details>
+  </section>
+
+  <footer>
+    <a href="/" data-en="Open PACE">Abrir PACE</a>
+    <a href="/privacy" data-en="Privacy">Privacidad</a>
+    <a href="/safety" data-en="Safety">Seguridad</a>
+    <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>
+  </footer>
+</div>
+<!--/email_off-->
+<!-- LOS ENLACES DE LOS DOS PASOS. «pendiente»: true mientras no funcione.
+     · grupo: el grupo de Google «PACE testers». Lo crea Ez, abierto para que cualquiera se una, y lo
+       añade como lista de testers de la prueba cerrada en Play Console, junto a «Testers PACE».
+     · play: el enlace para unirse a la prueba cerrada, con el id del paquete de Play (applicationId de
+       android/app/build.gradle). Funciona cuando Google apruebe la prueba. -->
+<script type="application/json" data-enlaces>
+{
+  "grupo": { "url": "", "pendiente": true },
+  "play": { "url": "https://play.google.com/apps/testing/com.ezradesign.pace", "pendiente": true }
+}
+</script>
+<script>
+(function () {
+  /* LOS ENLACES: el botón sale solo si su enlace ya funciona; si no, queda la frase de «pronto».
+     Sin JavaScript, las dos frases. */
+  var enlaces = {};
+  try { enlaces = JSON.parse(document.querySelector('[data-enlaces]').textContent); } catch (e) {}
+  ['grupo', 'play'].forEach(function (clave) {
+    var e = enlaces[clave];
+    if (!e || e.pendiente || !/^https:\/\//.test(e.url || '')) return;
+    var boton = document.querySelector('[data-enlace=' + clave + ']');
+    boton.href = e.url;
+    boton.hidden = false;
+    document.querySelector('[data-pronto=' + clave + ']').hidden = true;
+  });
+
+  /* EL IDIOMA: ?lang=en, el que se eligió aquí, el de la app en este navegador o el del
+     navegador. Sin JavaScript, castellano. */
+  function guardado(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+  function idiomaInicial() {
+    var m = location.search.match(/[?&]lang=(es|en)\b/);
+    if (m) return m[1];
+    var aqui = guardado('pace.beta.lang');
+    if (aqui === 'es' || aqui === 'en') return aqui;
+    try { var app = JSON.parse(guardado('pace.state.v2') || 'null'); if (app && (app.lang === 'es' || app.lang === 'en')) return app.lang; } catch (e) {}
+    return /^en\b/i.test(navigator.language || '') ? 'en' : 'es';
+  }
+  var ATRIBUTOS = [['data-en', 'textContent'], ['data-en-html', 'innerHTML'], ['data-en-aria', 'aria-label'],
+    ['data-en-alt', 'alt'], ['data-en-src', 'src']];
+  var es = { title: document.title, desc: document.querySelector('meta[name=description]').content };
+  var DESC_EN = 'Try PACE on Android before anyone else: active breaks for people who work sitting down. Google asks for 12 people for 14 days to publish it. As a thank-you, PACE Complete for life.';
+  var idioma = 'es';
+  function poner(lang) {
+    idioma = lang;
+    ATRIBUTOS.forEach(function (par) {
+      document.querySelectorAll('[' + par[0] + ']').forEach(function (el) {
+        var prop = par[1], clave = 'es_' + par[0].replace(/-/g, '_');
+        if (!(clave in el.dataset)) el.dataset[clave] = prop === 'textContent' ? el.textContent : prop === 'innerHTML' ? el.innerHTML : (el.getAttribute(prop) || '');
+        var valor = lang === 'en' ? el.getAttribute(par[0]) : el.dataset[clave];
+        if (prop === 'textContent') el.textContent = valor; else if (prop === 'innerHTML') el.innerHTML = valor; else el.setAttribute(prop, valor);
+      });
+    });
+    document.documentElement.lang = lang;
+    document.title = lang === 'en' ? 'Try PACE on Android · PACE' : es.title;
+    document.querySelector('meta[name=description]').content = lang === 'en' ? DESC_EN : es.desc;
+    document.querySelector('[data-es-b]').outerHTML = lang === 'en' ? '<span data-es-b>ES</span>' : '<b data-es-b>ES</b>';
+    document.querySelector('[data-en-b]').outerHTML = lang === 'en' ? '<b data-en-b>EN</b>' : '<span data-en-b>EN</span>';
+  }
+  poner(idiomaInicial());
+  document.querySelector('[data-idioma]').addEventListener('click', function () {
+    var otro = idioma === 'en' ? 'es' : 'en';
+    try { localStorage.setItem('pace.beta.lang', otro); } catch (e) {}
+    poner(otro);
+  });
+})();
+</script>
+</body>
+</html>

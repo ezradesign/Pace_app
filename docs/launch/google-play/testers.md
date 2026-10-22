@@ -45,6 +45,31 @@ móvil Android). Un iPhone no sirve.
 9. Manda ese enlace a los testers con la invitación de abajo.
 10. Desde ese día cuentan los 14. En **Panel** verás cuántos testers llevan apuntados.
 
+## La página pacegrass.app/beta: que se apunten solos
+
+En vez de pedir correos uno a uno, se comparte **pacegrass.app/beta** (`beta/index.html`): explica PACE con
+las capturas de Play y tiene dos pasos, unirse al grupo de Google «PACE testers» y abrir el enlace de la
+prueba. Quien entra en el grupo queda apuntado en Play, y PACE no guarda ningún correo. Lo que hace Ez,
+una vez:
+
+1. En [Google Groups](https://groups.google.com/), **Crear grupo**: nombre `PACE testers`. En los ajustes,
+   que cualquiera pueda unirse (si solo deja «pedir unirse», cada petición se acepta a mano), que **solo
+   los administradores vean a los miembros** (así nadie ve el correo de los demás) y que solo los
+   administradores publiquen.
+2. En Play Console, **Pruebas cerradas > Gestionar pista > Testers**: elegir «Grupos de Google» y escribir el
+   correo del grupo (`…@googlegroups.com`). **Guardar**. Play deja un solo método por prueba cerrada, la
+   lista de correos o el grupo ([ayuda de Play](https://support.google.com/googleplay/android-developer/answer/9845334?hl=es)):
+   el grupo sustituye a la lista `Testers PACE`, así que antes Ez y quienes estén en la lista se unen al
+   grupo. Mejor con la prueba cerrada ya aprobada, para no tocar el canal mientras Google lo revisa.
+3. Pasar a Claude la dirección del grupo (`https://groups.google.com/g/…`). Va en el bloque
+   `data-enlaces` de `beta/index.html`, que es el único sitio de los enlaces: `grupo.url` y
+   `"pendiente": false`. El de Play ya está puesto (`https://play.google.com/apps/testing/com.ezradesign.pace`)
+   y se enciende igual, con `"pendiente": false`, cuando Google apruebe la prueba cerrada.
+
+Mientras un enlace está pendiente, su paso dice que llega pronto. El regalo (PACE completo de por vida)
+no va en la página: el código de la web, de `codigos-tester.csv`, se manda a cada uno, y el de Android
+será un código promocional de Play al salir v1.
+
 ## Cuando pasen los 14 días
 
 En el **Panel** aparece **Solicitar acceso a producción**. Google hace unas preguntas sobre la prueba.

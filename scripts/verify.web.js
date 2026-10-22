@@ -9,7 +9,7 @@
  *   · todo lo que precarga `sw.js`: `cache.addAll` es atómico y con una sola 404 el
  *     service worker no se instala, y la app deja de abrir sin red;
  *   · lo que la web necesita: la app, el service worker, las cabeceras, la vuelta del
- *     permiso del calendario, /premium, la privacidad y la seguridad;
+ *     permiso del calendario, /premium, /beta, la privacidad y la seguridad;
  *   · que no se cuela nada que no sea la app (documentos, pruebas, scripts, funciones,
  *     PACE.html o el export);
  *   · que cada página de la raíz (un .html o una carpeta con index.html) se publica o
@@ -24,7 +24,7 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 
-var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html',
+var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html',
                   'privacy.html', 'safety.html', 'manifest.webmanifest'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
@@ -80,7 +80,7 @@ function tandaWeb(ctx) {
 
     var sinNecesario = NECESARIOS.filter(function (r) { return !hay.has(r); });
     if (sinNecesario.length) ctx.falla('web: falta en dist/ ' + sinNecesario.join(', '));
-    else ctx.ok('dist/ lleva la app, el service worker, las cabeceras, el calendario, /premium y lo legal');
+    else ctx.ok('dist/ lleva la app, el service worker, las cabeceras, el calendario, /premium, /beta y lo legal');
 
     var ajeno = Array.from(hay).filter(function (r) { return AJENO.test(r) || NO_SE_PUBLICA.indexOf(r) >= 0; });
     if (ajeno.length) ctx.falla('web: dist/ publica lo que no es la app: ' + ajeno.slice(0, 5).join(', '));
