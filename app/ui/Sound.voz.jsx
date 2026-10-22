@@ -89,17 +89,17 @@ var PACE_VOZ_MARGEN = 0.15;
    1,73 s en un archivo de bradford por tener el pico bajo. NO se pueden deducir
    de `audio.duration`: son propiedad del contenido, no del contenedor.
 
-   BRADFORD ES OTRA GRABACION, NO LA MISMA CON OTRA VOZ: sus palabras de inhala
-   y manten son mas CORTAS que las de sulafat (0,911 y 1,218 contra 1,404 y
-   1,320) pero su «exhala» dura **3,572 s**, mas del doble. Con el margen pide
-   fases de 3,72 s, asi que **cabe en 14 de las 20 rutinas** donde sulafat cabe
-   en 17: se cae de las tres de rondas. Como la decision es POR FASE, en esas
-   rutinas simplemente suena el sintetizador donde no entra. Reproducible:
-   `node scripts/audit/censo-respira-fases.js`.
+   BRADFORD ES OTRA GRABACION, NO LA MISMA CON OTRA VOZ: sus palabras son mas
+   CORTAS que las de sulafat (inhala 0,911, manten 1,218 y exhala 1,201 contra
+   1,404, 1,320 y 1,478). Reproducible: `node scripts/audit/censo-respira-fases.js`.
 
-   Y SU «EXHALA» LLEGA HASTA EL FINAL DEL ARCHIVO (fin 3,68 = duracion): no
-   tiene cola muda. Si algun dia se recorta el MP3, estos numeros cambian y hay
-   que volver a medirlos.
+   SU «EXHALA» ACABA A LOS 1,309 s, NO AL FINAL DEL ARCHIVO. Detras hay 2,3 s de
+   silencio y, en los ultimos ~15 ms del MP3, un chasquido a -21 dBFS. La medida
+   del ultimo punto sobre -50 dBFS tomo ese chasquido por el final de la palabra
+   (fin 3,68) y la voz no cabia en las fases de 2 s de las tres de rondas, donde
+   sonaba el tono. Con el fin bueno cabe; y como la voz calla en `fin` mas
+   `PACE_VOZ_COLA` (abajo), el chasquido ya no suena en ninguna rutina (Ez, 3A
+   del 22 oct. 2026, oyendolo en `docs/proposals/maqueta-inicio-22oct.html`).
 
    EN INGLES, LAS MISMAS DOS VOCES DICEN «Inhale / Hold / Exhale» (14 oct. 2026),
    medidas igual, a -50 dBFS. Las de bradford son las mas cortas de todas (0,74 ·
@@ -120,7 +120,7 @@ var PACE_VOZ_CLIPS = {
     bradford: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
       'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 },
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 },
     },
   },
   en: {
@@ -152,9 +152,9 @@ var PACE_VOZ_PREV = 0.04;
 
 /* LA VOZ SALE POR WEB AUDIO, CON UN FUNDIDO DE 5 ms AL ENTRAR Y AL SALIR. Las
    palabras de bradford en castellano empiezan en el primer milisegundo del
-   archivo («inhala» y «mantén», ini 0,001) y su «exhala» suena hasta el último
-   (fin = dur): un `<audio>` las arranca y las corta de golpe, y eso se oye como
-   un clic entre palabra y palabra (Ez, en «Exhalación 4·6», en el PC). Con el
+   archivo («inhala» y «mantén», ini 0,001): un `<audio>` las arranca y las corta
+   de golpe, y eso se oye como un clic entre palabra y palabra (Ez, en
+   «Exhalación 4·6», en el PC). Con el
    fundido no hay clic sea cual sea el archivo, y la voz va por el mismo Web
    Audio que la música, que es lo que se sospecha del entrecortado del móvil.
    5 ms no se oyen como fundido: no le quitan nada a la consonante.
@@ -162,6 +162,13 @@ var PACE_VOZ_PREV = 0.04;
    (`canplaythrough`) y suena él si el Web Audio no puede (sin contexto, o
    todavía suspendido antes del primer gesto). */
 var PACE_VOZ_FUNDIDO = 0.005;
+
+/* LA VOZ CALLA AL ACABAR LA PALABRA, NO AL ACABAR EL ARCHIVO: suena hasta `fin`
+   y 100 ms mas, y ahi sale con su fundido. Lo que queda detras de `fin` esta por
+   debajo de -50 dBFS, salvo el chasquido del final del «exhala» de bradford, que
+   sonaba unos 3,6 s despues de cada «exhala» en las rutinas lentas. Cambiar solo
+   la cifra de `fin` lo dejaba sonando encima de la fase siguiente. */
+var PACE_VOZ_COLA = 0.1;
 
 /* Se descodifica fuera de línea, como la música (Sound.musica.jsx): así no hace
    falta el contexto de audio de la app, que antes del primer gesto no puede
@@ -199,7 +206,7 @@ function paceVozWebAudio(slot, desde) {
       slot.fuente.s.stop(t0 + f + 0.01);
     } catch (e) {}
   }
-  var resto = slot.buffer.duration - desde;
+  var resto = Math.min(slot.buffer.duration, slot.fin + PACE_VOZ_COLA) - desde;
   if (!(resto > 2 * f)) return false;
   var s = ctx.createBufferSource();
   var g = ctx.createGain();
@@ -263,7 +270,7 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null };
+    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null };
     juego[nombre] = slot;
     var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
     paceVozDescodifica(slot, url);
@@ -278,6 +285,7 @@ function paceVozInit(voz) {
         if (isFinite(a.duration) && a.duration > 0 &&
             Math.abs(a.duration - ficha.dur) > 0.25) {
           slot.ini = 0;
+          slot.fin = a.duration;
           slot.palabra = a.duration;
         }
         slot.listo = true;
@@ -323,6 +331,10 @@ function paceVozIntenta(nombre, faseSeg) {
     if (paceVozWebAudio(slot, desde)) return true;
     slot.audio.currentTime = desde;
     var p = slot.audio.play();
+    /* el `<audio>` tampoco sigue detras de la palabra (ver PACE_VOZ_COLA) */
+    clearTimeout(slot.corte);
+    var a = slot.audio;
+    slot.corte = setTimeout(function () { try { a.pause(); } catch (e) {} }, (slot.fin + PACE_VOZ_COLA - desde) * 1000);
     /* `play()` devuelve promesa en los navegadores modernos. Se ignora su
        rechazo A PROPÓSITO: el caso real es la política de autoplay antes del
        primer gesto, y ahí perder una señal es preferible a un error en consola.
@@ -343,6 +355,7 @@ Object.assign(window, {
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
   PACE_VOZ_FASE_MIN: PACE_VOZ_FASE_MIN,
   PACE_VOZ_FUNDIDO: PACE_VOZ_FUNDIDO,
+  PACE_VOZ_COLA: PACE_VOZ_COLA,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,

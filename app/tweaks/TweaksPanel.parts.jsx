@@ -39,14 +39,17 @@ const AJUSTES_MODULO = {
 
 /* `accion` ({ texto, onClick }): un enlace en la MISMA línea que el título, a la derecha. No
    suma alto: el panel tiene que caber sin scroll a 1280×800 (ajustes.spec.js), y una fila más
-   para «Tu semana» lo pasaba de 27 px. */
-function AjustesSeccion({ titulo, ultima, accion, children }) {
+   para «Tu semana» lo pasaba de 27 px. `accion.soloMovil` lo pinta solo en el móvil, y
+   `plegadaMovil` deja allí la sección en su línea de título: es «Tus datos», que en el
+   móvil abre su propia hoja (TweaksPanel.jsx). */
+function AjustesSeccion({ titulo, ultima, accion, plegadaMovil, children }) {
   return (
     <React.Fragment>
-      <div className="pace-aj-sec" data-pace-aj-seccion={titulo}>
+      <div className="pace-aj-sec" data-pace-aj-seccion={titulo} data-pace-aj-plegada={plegadaMovil ? '' : undefined}>
         <div className="pace-aj-sec-titulo">
           {titulo}
-          {accion ? <button type="button" className="pace-aj-sec-accion" onClick={accion.onClick}>{accion.texto}<span aria-hidden="true"> ›</span></button> : null}
+          {accion ? <button type="button" className={'pace-aj-sec-accion' + (accion.soloMovil ? ' pace-aj-solo-movil' : '')}
+            onClick={accion.onClick}>{accion.texto}<span aria-hidden="true"> ›</span></button> : null}
         </div>
         {children}
       </div>
@@ -113,13 +116,16 @@ function AjustesPaso({ valor, onMenos, onMas, ariaMenos, ariaMas }) {
 }
 
 /* Una fila que hace algo. `derecha` es lo que va al final (icono o palabra). */
-function AjustesAccion({ children, derecha, suave, onClick, title }) {
+/* `sub`: la línea pequeña de debajo, como en las filas (la nota de Android de «Que el aviso
+   llegue a su hora» era una línea aparte de 10,5 px que no cabía en el móvil sin scroll). */
+function AjustesAccion({ children, derecha, suave, onClick, title, sub }) {
+  const texto = sub ? <span>{children}<span className="pace-aj-sub pace-aj-sub-accion">{sub}</span></span> : <span>{children}</span>;
   if (!onClick) {
-    return <div className="pace-aj-accion" data-suave={suave ? '' : undefined}><span>{children}</span><span>{derecha}</span></div>;
+    return <div className="pace-aj-accion" data-suave={suave ? '' : undefined}>{texto}<span>{derecha}</span></div>;
   }
   return (
     <button type="button" className="pace-aj-accion" data-suave={suave ? '' : undefined} onClick={onClick} title={title}>
-      <span>{children}</span><span aria-hidden="true">{derecha}</span>
+      {texto}<span aria-hidden="true">{derecha}</span>
     </button>
   );
 }

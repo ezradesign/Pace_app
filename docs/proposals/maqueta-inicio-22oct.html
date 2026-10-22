@@ -1,0 +1,332 @@
+<title>Pausas con bloques cortos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Los tokens de PACE (DESIGN_SYSTEM.md): papel, tinta, oliva de Foco, ocre de Mueve, terracota de Respira.
+   Una columna de lectura; las fotos del móvil en rejilla que se adapta al ancho; las tiras del día a escala. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #77705F;
+  --line: #C9C0A8; --focus: #3E5A3A; --focus-soft: rgba(62,90,58,0.10);
+  --move: #9B7A4C; --move-2: #7A5E36; --breathe: #A85E43; --breathe-soft: rgba(201,122,93,0.14);
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #36302a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122,154,109,0.14); --move: #C9A574; --move-2: #E0C08F;
+  --breathe: #E8A98F; --breathe-soft: rgba(217,148,119,0.16); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #36302a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122,154,109,0.14); --move: #C9A574; --move-2: #E0C08F;
+  --breathe: #E8A98F; --breathe-soft: rgba(217,148,119,0.16); color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--ui);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px }
+main { max-width: 1040px; margin: 0 auto; display: grid; gap: 56px }
+h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; line-height: 1.1; text-wrap: balance; margin: 0 }
+h1 { font-size: clamp(34px, 6vw, 48px) }
+h2 { font-size: clamp(28px, 4.5vw, 36px) }
+h3 { font-size: 22px }
+p { margin: 0; max-width: 68ch; color: var(--ink-2) }
+p b, li b, td b { color: var(--ink); font-weight: 600 }
+.meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500 }
+section { display: grid; gap: 20px }
+.cab { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 22px }
+.resumen { display: grid; gap: 12px; padding: 18px 20px; background: var(--paper-2); border-radius: 14px }
+.respuesta { font-family: var(--display); font-style: italic; font-size: 30px; color: var(--focus) }
+.elegidas { display: grid; gap: 0 }
+.elegida { display: grid; grid-template-columns: 54px 1fr; gap: 4px 14px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: baseline }
+.elegida .respuesta { font-size: 24px; grid-row: span 2 }
+.elegida b { font-weight: 600 }
+.elegida p { font-size: 15px }
+.fotos { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); align-items: start }
+.fotos.esc { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)) }
+figure { margin: 0; display: grid; gap: 8px; min-width: 0 }
+figure img { width: 100%; height: auto; display: block; border-radius: 14px; border: 1px solid var(--line) }
+.esc figure img { border-radius: 8px }
+figcaption { font-size: 13.5px; color: var(--ink-2); line-height: 1.4 }
+figcaption b { display: block; color: var(--ink); font-weight: 600 }
+.ejemplo { display: inline-block; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--breathe); border: 1px solid var(--breathe); border-radius: 999px; padding: 0 7px; margin-top: 4px }
+.opciones { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) }
+.op { display: grid; gap: 6px; align-content: start; padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; min-width: 0 }
+.op.rec { border-color: var(--focus); background: var(--focus-soft) }
+.op h3 { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap }
+.letra { font-family: var(--ui); font-style: normal; font-size: 13px; font-weight: 600; color: var(--paper); background: var(--ink); border-radius: 999px; padding: 2px 9px }
+.rec .letra { background: var(--focus) }
+.sello { font-family: var(--ui); font-style: normal; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--focus); font-weight: 600 }
+.op p { font-size: 15px }
+.tabla { overflow-x: auto }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top }
+th { font-weight: 600; color: var(--ink); font-size: 13px }
+td { color: var(--ink-2) }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap }
+tr.ref td { color: var(--ink-3); font-size: 13.5px }
+.alto { color: var(--breathe); font-weight: 600 }
+details { border-top: 1px solid var(--line); padding-top: 12px }
+summary { cursor: pointer; font-weight: 500; color: var(--ink); padding: 4px 0 }
+summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+details[open] > summary { margin-bottom: 14px }
+ul { margin: 0; padding-left: 20px; color: var(--ink-2); display: grid; gap: 6px; max-width: 68ch }
+a { color: var(--focus) }
+.pie { text-align: center; display: grid; gap: 8px; justify-items: center }
+details.antes > summary { font-family: var(--display); font-style: italic; font-size: 24px; padding: 8px 0 }
+details.antes[open] > summary { margin-bottom: 24px }
+/* Las tiras: dos horas de jornada a escala (flex = minutos), sin huecos para que la escala no mienta. */
+.tiras { display: grid; gap: 18px }
+.tiras-aro { display: grid; gap: 6px }
+.tira-fila { display: grid; grid-template-columns: 170px 1fr; gap: 12px; align-items: center }
+.tira-fila > span { font-size: 13.5px; color: var(--ink-2) }
+.tira { display: flex; height: 26px; border-radius: 4px; overflow: hidden; min-width: 0 }
+.tira i { font-style: normal; font-size: 10px; font-variant-numeric: tabular-nums; display: flex; align-items: center; justify-content: center; min-width: 0; overflow: hidden; box-shadow: inset -1px 0 var(--paper) }
+.tf { background: var(--paper-3); color: var(--ink-3) }
+.tp { background: var(--move); color: var(--paper) }
+.tl { background: var(--move-2); color: var(--paper) }
+.ti { background: var(--breathe) }
+.to { background: var(--ink-3) }
+.eje { display: grid; grid-template-columns: 170px 1fr; gap: 12px }
+.eje div { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums }
+.leyenda { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--ink-2) }
+.leyenda span { display: inline-flex; align-items: center; gap: 7px }
+.leyenda i { width: 14px; height: 14px; border-radius: 3px; display: inline-block }
+@media (max-width: 560px) {
+  .tira-fila, .eje { grid-template-columns: 1fr; gap: 4px }
+  .eje > span { display: none }
+}
+</style>
+
+<main>
+  <header style="display:grid;gap:14px">
+    <div class="meta">PACE · lo que viste en tu móvil · 22 oct.</div>
+    <h1>Pausas con bloques cortos</h1>
+    <p>La pregunta 4 ya la contestaste (4a A · 4b A · 4c A). Pediste cambiar lo que sale al pulsar «Hacerla»: un ejercicio de Mueve o Estira, con su título y el dibujo del módulo, dure lo que dure. Eso es la pregunta 5, con dos partes; se contesta con dos letras. Las fotos son de la app de verdad, a 360 px (tu móvil) y a 1280 px (el ordenador); lo que aún no existe está pintado encima.</p>
+    <div class="resumen">
+      <div class="meta">Lo que recomiendo</div>
+      <div class="respuesta">5a A · 5b A</div>
+      <p>5a: la invitación dice «Un momento para moverte». 5b: el ejercicio se ve dentro del aro, que cuenta lo que dura, sin cambiar de pantalla.</p>
+    </div>
+  </header>
+
+  <!-- ================= 5 · «Hacerla» con un ejercicio ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Pregunta 5 · la 4a, otra vez</div>
+      <h2>«Hacerla» con un ejercicio</h2>
+      <p>Al pulsar «Hacerla» sale <b>un ejercicio</b> de Mueve o de Estira de los que se hacen junto a la mesa, de pie o sentado, sin suelo ni material. Lleva su título, su instrucción de siempre y lo que dura, aunque no sean dos minutos, y el dibujo del módulo (el de Mueve o el de Estira, no el del ejercicio). Cambia en cada invitación y no repite el de la pausa de antes. Al acabar suena el final suave y el aro vuelve a «Empezar bloque 3»; «Seguir con el bloque 3» lo corta antes. No da logros.</p>
+      <p>En las fotos, dos ejemplos de verdad: «Elevación de talones» (Mueve, de «Gemelos subrepticios»: 25 veces, 30 s) y «Barbilla atrás» (Estira, de «Cuello»: 5 veces, 40 s).</p>
+    </div>
+
+    <h3>5a · El texto de la invitación</h3>
+    <p>Ya no son siempre dos minutos, así que «Dos minutos para moverte» deja de ser verdad.</p>
+    <div class="fotos">
+      <figure><img src="fotos/m-inv-A.jpg" alt="El aro con Un momento para moverte" loading="lazy"><figcaption><b>A · «Un momento para moverte»</b></figcaption></figure>
+      <figure><img src="fotos/m-inv-B.jpg" alt="El aro con Un ejercicio antes de seguir" loading="lazy"><figcaption><b>B · «Un ejercicio antes de seguir»</b></figcaption></figure>
+      <figure><img src="fotos/m-inv-C.jpg" alt="El aro con el nombre del ejercicio y lo que dura" loading="lazy"><figcaption><b>C · El ejercicio y lo que dura</b>«Elevación de talones · 30 s»</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> «Un momento para moverte» <span class="sello">Recomendada</span></h3>
+        <p>El mismo tono que la que elegiste, sin prometer un tiempo. Corta, cabe en una línea en los dos idiomas («A moment to move»).</p></div>
+      <div class="op"><h3><span class="letra">B</span> «Un ejercicio antes de seguir»</h3>
+        <p>Dice qué es, más seco. En inglés, «One exercise before you go on».</p></div>
+      <div class="op"><h3><span class="letra">C</span> El ejercicio y lo que dura</h3>
+        <p>Sabes qué toca antes de pulsar. Cabe en una línea incluso con el nombre más largo («Rotación torácica de pie · 20 s por lado»), pero se lee peor de un vistazo y cambia de largo cada vez.</p></div>
+    </div>
+
+    <h3>5b · Lo que se ve al pulsar «Hacerla»</h3>
+    <div class="fotos">
+      <figure><img src="fotos/m-hacer-mueve.jpg" alt="El aro contando el ejercicio de Mueve con su título e instrucción" loading="lazy"><figcaption><b>A · En el aro, uno de Mueve</b>Arriba «Mueve · 25 veces»; bajo la cifra, el dibujo de Mueve y el título; debajo, la instrucción.</figcaption></figure>
+      <figure><img src="fotos/m-hacer-estira.jpg" alt="El aro contando el ejercicio de Estira" loading="lazy"><figcaption><b>A · En el aro, uno de Estira</b>Con el dibujo de Estira.</figcaption></figure>
+      <figure><img src="fotos/m-hoja-mueve.jpg" alt="Una hoja abajo con el ejercicio" loading="lazy"><figcaption><b>B · En una hoja abajo</b>Como la de tu pausa, con el ejercicio en grande.</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Recomendada</span></h3>
+        <p>Sin cambiar de pantalla: el aro cuenta lo que dura el ejercicio y dice cuál es y cómo se hace. Se sigue viendo tu día debajo. La home no pide scroll (medido a 360×730 y 360×640, en español y en inglés, con el día preparado y sin él).</p></div>
+      <div class="op"><h3><span class="letra">B</span> En una hoja abajo</h3>
+        <p>Como la ventana de la pausa: el ejercicio en grande, con su instrucción, y el aro contando detrás. Se lee mejor, pero tapa la home mientras dura y es otra ventana más.</p></div>
+    </div>
+    <div class="fotos esc">
+      <figure><img src="fotos/e-hacer-mueve.jpg" alt="Ordenador: el ejercicio dentro del aro" loading="lazy"><figcaption><b>A en el ordenador</b>El mismo aro.</figcaption></figure>
+      <figure><img src="fotos/e-hoja-mueve.jpg" alt="Ordenador: el ejercicio en una hoja" loading="lazy"><figcaption><b>B en el ordenador</b></figcaption></figure>
+    </div>
+    <details><summary>Sin el día preparado, en inglés y en un móvil pequeño</summary>
+      <div class="fotos">
+        <figure><img src="fotos/m-hacer-estira-libre.jpg" alt="" loading="lazy"><figcaption><b>A sin el día preparado</b>La home con los módulos. Aquí el aro es más bajo y la instrucción va justa: al montarlo se ajusta su letra.</figcaption></figure>
+        <figure><img src="fotos/m-hacer-mueve-640-en.jpg" alt="" loading="lazy"><figcaption><b>A en inglés, a 360×640</b></figcaption></figure>
+        <figure><img src="fotos/m-inv-A-640-en.jpg" alt="" loading="lazy"><figcaption><b>5a A en inglés, a 360×640</b></figcaption></figure>
+      </div>
+    </details>
+    <p>Hay unos 48 ejercicios así en 20 rutinas de Mueve y Estira (21 y 27). Al montarlo se miran uno a uno: alguno pide pared o bajar al suelo dentro de una rutina que no lo pide entera, y esos se quedan fuera.</p>
+  </section>
+
+  <!-- ================= Lo ya elegido ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Ya contestadas el 22 oct.</div>
+      <h2>Lo que elegiste</h2>
+    </div>
+    <div class="elegidas">
+      <div class="elegida"><span class="respuesta">1A</span><b>La app abre siempre con los módulos</b><p>Respira, Estira, Mueve e Hidrátate a la vista con la tarjeta corta; «Comienza» abre la pregunta del día. Sin contestar ya no cuenta como «por libre».</p></div>
+      <div class="elegida"><span class="respuesta">2A</span><b>Los Ajustes del móvil, sin scroll</b><p>«Tus datos» pasa a su propia hoja y los Ajustes ocupan el 79 % de la pantalla.</p></div>
+      <div class="elegida"><span class="respuesta">3A</span><b>La voz grave dice «exhala» en Rondas</b><p>Se quita el chasquido del final del archivo; la palabra ya cabía.</p></div>
+      <div class="elegida"><span class="respuesta">4a A</span><b>La invitación sale en el aro</b><p>Con «Hacerla» y «Seguir». Su texto y lo que sale al pulsar «Hacerla», en la pregunta 5.</p></div>
+      <div class="elegida"><span class="respuesta">4b A</span><b>«A mi ritmo · Después de cada bloque», en la línea del aro</b><p>Solo con el día empezado, después de contestar «¿Cuánto trabajas hoy?». En la home con los módulos no sale.</p></div>
+      <div class="elegida"><span class="respuesta">4c A</span><b>Sin el día preparado, la misma regla</b><p>Vale lo último que elegiste; si nunca elegiste, «A mi ritmo».</p></div>
+    </div>
+    <p>1A, 2A y 3A ya están montadas (v0.174.6). Las fotos y el audio de esas tres siguen en la <a href="https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj">página anterior</a>; las de la pregunta 4, aquí abajo.</p>
+  </section>
+
+  <details class="antes">
+  <summary>La pregunta 4, ya contestada, con sus fotos</summary>
+  <div style="display:grid;gap:56px">
+  <!-- ================= 4 · cómo va hoy ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Pregunta 4</div>
+      <h2>Cómo va hoy con bloques cortos</h2>
+      <p>Con bloques de 5, 10 o 15 minutos, PACE ya junta los bloques hasta media hora (lo elegiste el 15 oct.). Con 10, la pausa con rutina llega cada tres bloques. Entre medias, al acabar un bloque el aro se para y espera a que empieces el siguiente.</p>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/m-hoy.jpg" alt="El aro al acabar el bloque 2 de 10 minutos, esperando el bloque 3" loading="lazy"><figcaption><b>Hoy, a las 9:20</b>Acaba el bloque 2 de 10 min: llevas 20 min seguidos. El aro espera el bloque 3.</figcaption></figure>
+      <figure><img src="fotos/m-pausa-30.jpg" alt="La ventana de la pausa a los 30 minutos" loading="lazy"><figcaption><b>A las 9:30, tu pausa con rutina</b>Al acabar el bloque 3 (30 min). Esto no cambia.</figcaption></figure>
+    </div>
+    <p>Lo que decidiste en principio: entre una pausa con rutina y la siguiente, una invitación ligera, <b>«Dos minutos para moverte»</b>, al acabar el bloque que llega a 15 o 20 minutos. Sin rutina, sin cambiar de pantalla y sin logros. Si en ese bloque toca la pausa con rutina, no hay invitación.</p>
+    <div class="tabla"><table>
+      <thead><tr><th>Bloques de</th><th>La invitación, al acabar</th><th>La pausa con rutina, al acabar</th></tr></thead>
+      <tbody>
+        <tr><td class="n">5 min</td><td>el bloque 3 (15 min seguidos)</td><td>el bloque 6 (30 min)</td></tr>
+        <tr><td class="n">10 min</td><td>el bloque 2 (20 min)</td><td>el bloque 3 (30 min)</td></tr>
+        <tr><td class="n">15 min</td><td>el bloque 1 (15 min)</td><td>el bloque 2 (30 min)</td></tr>
+      </tbody>
+    </table></div>
+    <p>Con 20 minutos o más ya hay pausa con rutina tras cada bloque, así que no hay invitación ni nada que elegir: el Pomodoro de 25 sigue igual.</p>
+  </section>
+
+  <!-- ================= 4a ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">4a</div>
+      <h2>Dónde sale la invitación</h2>
+      <p>En las fotos, el bloque 2 de 10 minutos acaba de terminar.</p>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/m-A.jpg" alt="La invitación dentro del aro con Hacerla y Seguir" loading="lazy"><figcaption><b>A · En el aro</b>«Hacerla» y, al lado, «Seguir», que empieza el bloque 3.</figcaption></figure>
+      <figure><img src="fotos/m-A-hacerla.jpg" alt="El aro contando dos minutos con una frase" loading="lazy"><figcaption><b>Al pulsar «Hacerla»</b>El aro cuenta dos minutos con una frase.<br><span class="ejemplo">Frase de ejemplo</span></figcaption></figure>
+      <figure><img src="fotos/m-B.jpg" alt="La invitación en la fila Ahora de la tarjeta del día" loading="lazy"><figcaption><b>B · En la lista del día</b>La fila «Ahora» con «Hacerla»; el aro dice «Seguir con el bloque 3».</figcaption></figure>
+    </div>
+
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Elegida</span></h3>
+        <p>Sale donde ya miras cuando acaba el bloque: bajo la hora, «Dos minutos para moverte»; el botón dice «Hacerla» y al lado está «Seguir». Usa la misma fila que «Continuar · Reiniciar bloque», así que la home no crece. Funciona igual sin día preparado, donde no hay lista.</p></div>
+      <div class="op"><h3><span class="letra">B</span> En la lista del día</h3>
+        <p>La fila «Ahora» de la tarjeta dice «Dos minutos para moverte» con «Hacerla», y el botón del aro pasa a «Seguir con el bloque 3». En el ordenador iría en la barra de la izquierda, donde dice la siguiente pausa. Queda más lejos de la vista y, sin día preparado, no tiene dónde ir.</p></div>
+    </div>
+
+    <h3>Lo que pasa al pulsar «Hacerla» (igual en A y en B)</h3>
+    <ul>
+      <li>El aro cuenta dos minutos con una frase. La de la foto es de ejemplo: el texto de verdad llegará de tu consulta.</li>
+      <li>Al acabar suena el final suave y el aro vuelve a «Empezar bloque 3». «Seguir con el bloque 3» lo corta antes.</li>
+      <li>No es una rutina ni da logros, y la pausa con rutina sigue a su hora. Puede salir varias veces en el día.</li>
+      <li>Si no pulsas nada, el aro espera, como hoy. Con PACE en segundo plano, el aviso del final del bloque también la nombra.</li>
+    </ul>
+
+    <h3>En el ordenador</h3>
+    <div class="fotos esc">
+      <figure><img src="fotos/e-A.jpg" alt="Ordenador: la invitación en el aro" loading="lazy"><figcaption><b>A</b>La misma fila dentro del aro.</figcaption></figure>
+      <figure><img src="fotos/e-A-hacerla.jpg" alt="Ordenador: los dos minutos en el aro" loading="lazy"><figcaption><b>Al pulsar «Hacerla»</b>Los dos minutos en el aro. <span class="ejemplo">Frase de ejemplo</span></figcaption></figure>
+      <figure><img src="fotos/e-B.jpg" alt="Ordenador: la invitación en la barra lateral" loading="lazy"><figcaption><b>B</b>En la barra de la izquierda, donde hoy dice la siguiente pausa.</figcaption></figure>
+    </div>
+    <p><b>Scroll medido en la home</b>, a 360×730 y 360×640, en español y en inglés: <b>0 px con A</b>. Con B, 0 px salvo 15 px en un móvil pequeño en español, porque «Dos minutos para moverte» ocupa dos líneas en la fila.</p>
+    <details><summary>A en inglés, en un móvil pequeño (360×640)</summary>
+      <div class="fotos">
+        <figure><img src="fotos/m-A-640-en.jpg" alt="" loading="lazy"><figcaption><b>A en inglés</b>«Two minutes to move · Do it · Keep going»</figcaption></figure>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 4b ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">4b</div>
+      <h2>Dónde eliges «¿Ejercicio después de cada bloque?»</h2>
+      <p>Al elegir un bloque corto decides entre <b>«A mi ritmo»</b>, que es lo de arriba y viene puesto, y <b>«Después de cada bloque»</b>: una pausa con rutina tras cada bloque, sin invitaciones, con rutinas que pueden repetirse en el día pero nunca dos seguidas. Las dos son gratis.</p>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/m-aro-eleccion-libre.jpg" alt="Dentro del aro, Ejercicio a mi ritmo con un desplegable" loading="lazy"><figcaption><b>A · En el aro</b>La home de la 1A con el aro a 10: «Ejercicio a mi ritmo ▾» donde hoy dice «Foco breve».</figcaption></figure>
+      <figure><img src="fotos/m-linea-libre.jpg" alt="Una línea bajo los minutos que empuja la tarjeta fuera de la pantalla" loading="lazy"><figcaption><b>B · Bajo los minutos</b>Se lee mejor, pero empuja la tarjeta de abajo: 23 px de scroll.</figcaption></figure>
+      <figure><img src="fotos/m-hoja.jpg" alt="Una hoja con la pregunta y las dos respuestas" loading="lazy"><figcaption><b>C · Una pregunta la primera vez</b>Luego se recuerda.</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Elegida, solo con el día empezado</span></h3>
+        <p>Con el aro a 5, 10 o 15 y parado, la línea pequeña bajo la hora dice «Ejercicio a mi ritmo», con el mismo desplegable que las horas del día; al tocarla eliges «a mi ritmo» o «después de cada bloque». No añade alto: la home no pide scroll en ningún caso (medido). Con 20 o más vuelve a decir el tipo de foco. Mientras corre el bloque no se cambia, y al acabar un bloque ese sitio es de la invitación.</p></div>
+      <div class="op"><h3><span class="letra">B</span> Bajo los minutos</h3>
+        <p>Una línea con las dos opciones como píldoras, igual que los minutos: «Ejercicio · A mi ritmo · Después de cada bloque». Se ve mejor, pero suma 26 px que la home no tiene: pide 23 px de scroll en tu móvil sin el día preparado y 26 en un móvil pequeño.</p></div>
+      <div class="op"><h3><span class="letra">C</span> Una pregunta la primera vez</h3>
+        <p>La primera vez que eliges un bloque corto sale esta hoja y luego se recuerda. Para cambiarlo habría que ir a Ajustes, que con la 2A quedan justos: una fila más volvería a pedir scroll en un móvil pequeño.</p></div>
+    </div>
+    <div class="fotos esc">
+      <figure><img src="fotos/e-aro-eleccion-libre.jpg" alt="Ordenador: Ejercicio a mi ritmo dentro del aro" loading="lazy"><figcaption><b>A en el ordenador</b>La misma línea dentro del aro.</figcaption></figure>
+      <figure><img src="fotos/m-aro-eleccion.jpg" alt="Móvil con el día preparado y la elección en el aro" loading="lazy"><figcaption><b>A con el día preparado</b>Igual, antes de empezar la jornada.</figcaption></figure>
+    </div>
+
+    <h3>Cómo queda el día</h3>
+    <p>La jornada de 9:00 a 17:00 con comida de 14:00 a 15:00, compuesta por el motor de PACE. Estas son sus dos primeras horas, con las invitaciones hechas:</p>
+    <div class="tiras">
+      <div class="tiras-aro"><div class="meta">Bloques de 5 min</div><div class="tira-fila"><span>A mi ritmo</span><div class="tira"><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="ti" style="flex:2"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="ti" style="flex:2"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="ti" style="flex:2"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tl" style="flex:14">15</i></div></div><div class="tira-fila"><span>Después de cada bloque</span><div class="tira"><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i><i class="tf" style="flex:5"></i><i class="tp" style="flex:5"></i></div></div></div>
+      <div class="tiras-aro"><div class="meta">Bloques de 10 min</div><div class="tira-fila"><span>A mi ritmo</span><div class="tira"><i class="tf" style="flex:10">10</i><i class="tf" style="flex:10">10</i><i class="ti" style="flex:2"></i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tf" style="flex:10">10</i><i class="ti" style="flex:2"></i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tf" style="flex:10">10</i><i class="ti" style="flex:2"></i><i class="tf" style="flex:10">10</i><i class="tl" style="flex:14">15</i></div></div><div class="tira-fila"><span>Después de cada bloque</span><div class="tira"><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:10">10</i><i class="tl" style="flex:5">15</i></div></div></div>
+      <div class="tiras-aro"><div class="meta">Bloques de 15 min</div><div class="tira-fila"><span>A mi ritmo</span><div class="tira"><i class="tf" style="flex:15">15</i><i class="ti" style="flex:2"></i><i class="tf" style="flex:15">15</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:15">15</i><i class="ti" style="flex:2"></i><i class="tf" style="flex:15">15</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:15">15</i><i class="ti" style="flex:2"></i><i class="tf" style="flex:15">15</i><i class="tl" style="flex:14">15</i></div></div><div class="tira-fila"><span>Después de cada bloque</span><div class="tira"><i class="tf" style="flex:15">15</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:15">15</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:15">15</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:15">15</i><i class="tp" style="flex:5">5</i><i class="tf" style="flex:15">15</i><i class="tl" style="flex:15">15</i><i class="tf" style="flex:10">10</i></div></div></div>
+      <div class="eje"><span></span><div><span>9:00</span><span>9:30</span><span>10:00</span><span>10:30</span><span>11:00</span></div></div>
+      <div class="leyenda">
+        <span><i class="tf"></i>Foco</span>
+        <span><i class="ti"></i>Dos minutos para moverte</span>
+        <span><i class="tp"></i>Pausa con rutina (5 min)</span>
+        <span><i class="tl"></i>Pausa larga (15 min)</span>
+      </div>
+    </div>
+    <div class="fotos esc">
+      <figure><img src="fotos/e-dia-ritmo.jpg" alt="El día entero con A mi ritmo y bloques de 10" loading="lazy"><figcaption><b>A mi ritmo, bloques de 10</b>El día entero, como hoy: 11 pausas con rutina.</figcaption></figure>
+      <figure><img src="fotos/e-dia-cada.jpg" alt="El día entero con Después de cada bloque y bloques de 10" loading="lazy"><figcaption><b>Después de cada bloque, bloques de 10</b>El mismo día con una pausa tras cada bloque: 25 pausas con rutina. Así lo pinta hoy la app: la línea se amontona y habría que ordenarla.</figcaption></figure>
+    </div>
+
+    <h3>Qué parte del tiempo es pausa</h3>
+    <div class="tabla"><table>
+      <thead><tr><th>Bloques de</th><th>A mi ritmo: pausa</th><th>A mi ritmo: foco</th><th>Después de cada bloque: pausa</th><th>Después de cada bloque: foco</th></tr></thead>
+      <tbody>
+        <tr><td class="n">5 min</td><td class="n">18 % · 22 % con las invitaciones</td><td class="n">5 h 40</td><td class="n"><span class="alto">51 %</span></td><td class="n">3 h 25</td></tr>
+        <tr><td class="n">10 min</td><td class="n">18 % · 22 % con las invitaciones</td><td class="n">5 h 40</td><td class="n">35 %</td><td class="n">4 h 30</td></tr>
+        <tr><td class="n">15 min</td><td class="n">18 % · 22 % con las invitaciones</td><td class="n">5 h 40</td><td class="n">28 %</td><td class="n">5 h</td></tr>
+        <tr class="ref"><td class="n">25 min, hoy</td><td class="n">22 %</td><td class="n">5 h 25</td><td colspan="2">sin elección: ya hay pausa tras cada bloque</td></tr>
+        <tr class="ref"><td class="n">45 min, hoy</td><td class="n">11 %</td><td class="n">6 h 10</td><td colspan="2">sin elección</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>«Pausa» es el tiempo que PACE guarda para ella: 5 minutos la corta y 15 la larga, aunque la rutina dure menos.</li>
+      <li>Con «A mi ritmo» salen 11 pausas con rutina y 11 invitaciones en la jornada. Hechas todas, la pausa es el 22 %, lo mismo que hoy con el Pomodoro de 25.</li>
+      <li>Con bloques de 5 y «Después de cada bloque», la mitad de la jornada es pausa: 40 pausas con rutina, y muchas rutinas se repiten. Con 10 son 25, y con 15, 19.</li>
+    </ul>
+  </section>
+
+  <!-- ================= 4c ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">4c</div>
+      <h2>Sin el día preparado</h2>
+      <p>Con la 1A la app abre con los módulos, y muchos días usarás Foco sin preparar el día (sin contestar o «por libre»). Hoy, así, la ventana de la pausa sale al acabar cada bloque, también con bloques de 5.</p>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> La misma elección <span class="sello">Elegida</span></h3>
+        <p>La elección de la 4b vale también aquí. Con «A mi ritmo», los bloques se juntan hasta media hora, entre medias sale la invitación y a la media hora, la ventana de la pausa. Con «Después de cada bloque», la ventana tras cada bloque, como hoy. Es tu regla del 15 oct., «al menos cada 30 minutos», también sin día.</p></div>
+      <div class="op"><h3><span class="letra">B</span> Como hoy</h3>
+        <p>Sin el día preparado, la ventana tras cada bloque y nada que elegir. La elección solo sale cuando PACE te ha preparado el día.</p></div>
+    </div>
+  </section>
+
+  </div>
+  </details>
+
+  <footer class="pie">
+    <div class="meta">Tu respuesta</div>
+    <div class="respuesta">5a _ · 5b _</div>
+    <p>Por ejemplo «5a A · 5b A». Las pausas se montan cuando elijas, después de juntar lo de logros y créditos. El aviso a mitad de un bloque largo (45 min o más) va después, como dijiste.</p>
+  </footer>
+</main>

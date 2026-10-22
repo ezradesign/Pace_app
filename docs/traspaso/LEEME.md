@@ -4,6 +4,25 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 22 oct., noche (hacia las 22:00): v0.174.6 en `main`; coordina la cuenta de 5iWBf…
+
+Relevo, sesión abierta y cola: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
+https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
+
+- **v0.174.6, juntada con el sí de Ez** (rama `claude/maqueta-inicio-3a2a59`, sesión «Maqueta», puerto 8803; 1A
+  2A 3A de https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj): sin contestar, la home abre con los módulos y la
+  tarjeta corta, y «Comienza» abre la pregunta (`ritmoAbrirPregunta`, `ritmo.pregunta` = hoy; ya no escribe
+  `libre`); con la semana guardada, la tarjeta dice tu día de siempre. Los Ajustes del móvil, sin scroll, con «Tus
+  datos» en su propia vista del panel. La voz calla en `fin` + 100 ms (`PACE_VOZ_COLA`): el «exhala» grave cabe en
+  Rondas y su chasquido ya no suena. Suite entera con todo junto: 819 en verde y 2 saltadas (17,7 min).
+- **Las pausas con bloques cortos** (4a A · 4b A, solo con el día empezado · 4c A) y la **pregunta 5**: al pulsar
+  «Hacerla», un ejercicio de Mueve o Estira con el glifo del módulo (maqueta en
+  `docs/proposals/maqueta-inicio-22oct.html`). Esperan las letras de Ez; las monta la sesión «Maqueta» como
+  v0.175.0 después de juntar `origin/main`.
+- Al repasar lo de ChatGPT entraron en la cola la voz por `<audio>` (auditoría del 21 oct.) y la segunda parte
+  de los bloques cortos (el aviso a mitad de un bloque largo). Dos consultas suyas, «qué pasa cuando sale una
+  versión nueva» y «volver a la app», no tienen respuesta apuntada: preguntado a Ez.
+
 ## 22 oct., noche: v0.174.5 en `main`; relevo por uso hacia las 21:00
 
 **Lo que sigue, la sesión abierta («Maqueta», puerto 8803) y cómo retomarla**: `docs/traspaso/relevo-coordinadora-22oct.md`,

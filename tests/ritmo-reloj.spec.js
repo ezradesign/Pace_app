@@ -27,7 +27,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, pulsarComienza } = require('./helpers');
 
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
 
@@ -114,6 +114,7 @@ test('«Dos horas» a las 17:51 con el aro a 5: el plan acaba a las 19:51 bloque
   await irAlArtefacto(page);
   /* al elegir, el día empieza en los 5 minutos de antes (17:50); al empezar el bloque, en
      su minuto exacto (17:51), y desde ahí se cuentan las dos horas */
+  await pulsarComienza(page);
   await page.locator('[data-pace-ritmo-opcion="2h"]').filter({ visible: true }).click();
   await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Hasta las 19:50');
   await page.getByRole('button', { name: 'Otro', exact: true }).click();

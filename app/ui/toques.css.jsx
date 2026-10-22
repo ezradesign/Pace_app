@@ -21,12 +21,13 @@
     @media (max-width: 640px), (pointer: coarse) {
       [data-pace-toque], .pace-aj-pild, .pace-aj-cerrar, .pace-aj-paso > button, .pace-aj-sw,
       .pace-lib-link, [data-pace-hoy-celda], [data-pace-semana-saltar], [data-pace-stats-tabs] > button,
-      .pace-aj-pie a {
+      .pace-aj-pie a, .pace-aj-sec-accion, .pace-aj-volver {
         position: relative;
       }
       [data-pace-toque]::before, .pace-aj-pild::before, .pace-aj-cerrar::before, .pace-aj-paso > button::before,
       .pace-aj-sw::before, .pace-lib-link::before, [data-pace-hoy-celda]::before,
-      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before, .pace-aj-pie a::before {
+      [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before, .pace-aj-pie a::before,
+      .pace-aj-sec-accion::before, .pace-aj-volver::before {
         content: ''; position: absolute; inset: -9px 0;
       }
       /* Píldoras de Ajustes: 14 px entre filas, 7 cada una. */
@@ -43,6 +44,10 @@
       [data-pace-stats-tabs] > button::before { inset: -7px 0; }
       /* «Seguridad» y «Privacidad», al pie de Ajustes: 15 px de alto y nada debajo. */
       .pace-aj-pie a::before { inset: -6px -2px; }
+      /* En el móvil, «Copias, borrar y código ›» (30 px de caja, 8 libres encima) y la «‹» que
+         vuelve de «Tus datos» (28 px). */
+      .pace-aj-sec-accion::before { inset: -5px -4px; }
+      .pace-aj-volver::before { inset: -6px; }
     }
   `;
   document.head.appendChild(s);

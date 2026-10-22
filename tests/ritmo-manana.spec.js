@@ -17,7 +17,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, pulsarComienza } = require('./helpers');
 
 const LV = ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'];
 const hora = (hhmm) => new Date('2026-10-08T' + hhmm + ':00+02:00');
@@ -42,6 +42,7 @@ async function movil(browser, semana, hhmm) {
 test('escritorio: el jueves llega como cada jueves, con tu opción marcada, y «Comienza» la sirve', async ({ page, context }) => {
   const errores = capturarErrores(page);
   await abrir(page, context, LV);
+  await pulsarComienza(page);
   const fila = vis(page, '[data-pace-ritmo-estado="habitual"]');
   await expect(fila).toHaveAttribute('data-pace-ritmo-habitual', 'jornada');
   await expect(vis(page, '.pace-rt-titulo').first()).toHaveText('Hoy, como cada jueves');
@@ -57,6 +58,7 @@ test('escritorio: el jueves llega como cada jueves, con tu opción marcada, y «
 test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la pregunta solo por hoy', async ({ browser }) => {
   const { context, page } = await movil(browser, LV);
   const errores = capturarErrores(page);
+  await pulsarComienza(page);
   const tarjeta = vis(page, '[data-pace-ritmo-estado="habitual"]');
   await expect(tarjeta).toContainText('Jornada entera');
   await expect(tarjeta).toContainText('como cada jueves');
@@ -69,9 +71,10 @@ test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la preg
   expect(r.distinto).toBe('2026-10-08');
   expect(r.semanaTipo).toEqual(LV);
 
-  /* Al día siguiente la semana vuelve a contestar: «distinto» caduca con la fecha. */
+  /* Al día siguiente la semana vuelve a contestar: «distinto» caduca con la fecha, y desde la
+     1A la home vuelve a la tarjeta corta, que dice el día de siempre. */
   await page.clock.fastForward(24 * 60 * 60 * 1000);
-  await expect(vis(page, '[data-pace-ritmo-estado="habitual"]')).toContainText('como cada viernes', { timeout: 3000 });
+  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, como cada viernes', { timeout: 3000 });
   expect(errores).toEqual([]);
   await context.close();
 });
@@ -79,6 +82,7 @@ test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la preg
 test('móvil: «Comienza» sirve la media jornada de un jueves de media', async ({ browser }) => {
   const media = ['jornada', 'jornada', 'jornada', 'media', 'jornada', 'libre', 'libre'];
   const { context, page } = await movil(browser, media);
+  await pulsarComienza(page);
   const tarjeta = vis(page, '[data-pace-ritmo-estado="habitual"]');
   await expect(tarjeta).toHaveAttribute('data-pace-ritmo-habitual', 'media');
   await expect(tarjeta).toContainText('Media jornada');
@@ -96,19 +100,22 @@ test('un día libre de tu semana es «Hoy voy por libre»', async ({ page, conte
 
 test('a las 20:00, sin jornada por delante, vuelve la pregunta de siempre', async ({ page, context }) => {
   await abrir(page, context, LV, '20:00');
+  await pulsarComienza(page);
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toBeVisible();
   await expect(page.locator('[data-pace-ritmo-estado="habitual"]')).toHaveCount(0);
 });
 
 test('CONTROL: sin semana guardada, la pregunta de siempre', async ({ page, context }) => {
   await abrir(page, context, undefined);
+  await pulsarComienza(page);
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toBeVisible();
   await expect(page.locator('[data-pace-ritmo-estado="habitual"]')).toHaveCount(0);
 });
 
 test('mirar no escribe: la tarjeta del día se deriva de la semana sin guardar nada', async ({ page, context }) => {
   await abrir(page, context, LV);
-  await expect(vis(page, '[data-pace-ritmo-estado="habitual"]')).toBeVisible();
+  /* desde la 1A, la tarjeta corta con el día de siempre */
+  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, como cada jueves');
   expect(await ritmo(page)).toEqual({ semanaTipo: LV });
 });
 

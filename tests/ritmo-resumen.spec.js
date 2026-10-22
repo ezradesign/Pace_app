@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO, pulsarComienza } = require('./helpers');
 const { leerContenedor, esperarInit } = require('./eventos.helpers');
 
 const LV = ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'];
@@ -43,6 +43,7 @@ test('el día de ayer se guarda resumido a la mañana siguiente, con lo hecho, l
   await irAlArtefacto(page);
 
   /* Ayer: «Comienza» sirve el jueves de siempre. */
+  await pulsarComienza(page);
   await page.locator('[data-pace-ritmo-habitual-comienza]').filter({ visible: true }).click();
   const servidas = await paradasServidas(page);
   expect(servidas.length, 'una jornada entera sirve varias paradas').toBeGreaterThan(4);
@@ -110,6 +111,7 @@ test('elegir el día de hoy antes del primer resumen no pierde el de ayer', asyn
   await page.clock.install({ time: AYER_MANANA });
   await irAlArtefacto(page);
   await esperarInit(page);
+  await pulsarComienza(page);
   await page.locator('[data-pace-ritmo-habitual-comienza]').filter({ visible: true }).click();
 
   await page.clock.setSystemTime(HOY_MANANA);

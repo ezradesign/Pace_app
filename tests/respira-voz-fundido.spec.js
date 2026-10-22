@@ -83,7 +83,7 @@ test('con el audio en marcha, cada palabra entra y sale con un fundido de 5 ms y
     expect(x.rampas[0].paso, s + ': el fundido de entrada no dura 5 ms').toBeLessThan(0.008);
     const ultima = x.rampas[x.rampas.length - 1];
     expect(ultima.valor, s + ': no sale con fundido').toBe(0);
-    expect(ultima.dt, s + ': el fundido de salida tiene que llegar al final del archivo').toBeGreaterThan(0.5);
+    expect(ultima.dt, s + ': el fundido de salida tiene que llegar al final de la palabra').toBeGreaterThan(0.5);
   }
 });
 

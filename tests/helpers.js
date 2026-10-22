@@ -168,7 +168,15 @@ async function esperarModalAsentado(page) {
   }, null, { timeout: 15000, polling: 60 });
 }
 
+/* DESDE LA 1A (Ez, 22 oct. 2026) LA HOME ABRE CON LOS MÓDULOS Y LA TARJETA CORTA: sin
+   contestar ya no se ve la pregunta entera. Las pruebas que la necesitan la abren como la
+   persona, con «Comienza» (móvil) o «Ajustar el horario» (escritorio). */
+async function pulsarComienza(page) {
+  await page.locator('[data-pace-ritmo-comienza], [data-pace-ritmo-ajustar]').filter({ visible: true }).first().click();
+}
+
 module.exports = {
+  pulsarComienza,
   esperarModalAsentado,
   CLAVE_ESTADO,
   RUTA_ARTEFACTO,

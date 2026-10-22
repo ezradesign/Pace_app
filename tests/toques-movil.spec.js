@@ -73,6 +73,10 @@ test('ajustes, estadísticas y apoyo', async ({ page, context }) => {
   await exigir(page, '.pace-aj-sw', 28, 'el interruptor de sonido');
   await exigir(page, '.pace-aj-cerrar', 40, 'la × de Ajustes');
   await exigir(page, '.pace-aj-paso > button', 36, 'el «−» de los vasos');
+  /* Desde la 2A de Ez (22 oct. 2026), en el móvil «Tus datos» y su pie van en su propia hoja. */
+  await exigir(page, '.pace-aj-sec-accion', 36, '«Copias, borrar y código ›»', 1);
+  await page.locator('.pace-aj-sec-accion').filter({ visible: true }).nth(1).click();
+  await exigir(page, '.pace-aj-volver', 36, 'la «‹» que vuelve de Tus datos');
   /* 16 oct. 2026 (auditoría): «Seguridad» y «Privacidad» medían 15 px de alto. */
   await exigir(page, '.pace-aj-pie a', 24, 'los enlaces del pie de Ajustes');
   await page.keyboard.press('Escape');
