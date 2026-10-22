@@ -1,8 +1,9 @@
 # Relevo de la coordinadora · 22 oct. 2026 (noche)
 
-Coordina desde las 19:30 del 22 oct. la sesión `local_40565a0f-bb09-49ec-af11-5f5f20bdc5bb`, en la cuenta
-de la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT (5 h al 1 % y la semana al 62 % al empezar). Antes,
-`local_f20bfd4a-d23a-4420-8608-915558f91136` en la otra cuenta (llegó al 93 %) y `local_7f8a7a6d-68cd-45e8-9548-a7425f60ae05`.
+Coordina desde las 21:35 del 22 oct. la sesión `local_4fd476ac-ed0f-4377-b209-2819ee49933d`, en la cuenta
+de la hoja https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (5 h al 1 % y la semana al 14 % al empezar; se repone
+a las 02:30). Antes, `local_40565a0f-bb09-49ec-af11-5f5f20bdc5bb` en la cuenta de EcLj6… (llegó al 91 %),
+`local_f20bfd4a-d23a-4420-8608-915558f91136` y `local_7f8a7a6d-68cd-45e8-9548-a7425f60ae05`.
 Este archivo es lo que necesita la siguiente para seguir, también desde la otra cuenta de Claude.
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
@@ -29,7 +30,7 @@ dentro; su sesión (`local_6078ef5d-…`), terminada: archivarla con el sí de E
 
 | Sesión | id | Carpeta y rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
-| Maqueta: inicio, Ajustes y la voz | `local_6ea49468-69c8-4211-8b1b-e1669f2cd9a7` (antes `local_6c95115f-…`) | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 | Monta 1A 2A 3A (al relevo, pasando su suite entera); luego la maqueta nueva de «Hacerla» (abajo) y, con el sí de Ez, las pausas como v0.175.0 |
+| Maqueta: inicio, Ajustes y la voz | `local_95664ff9-51ad-4ce0-95c9-7963e794bb52` (retomada a las 21:40; antes `local_6ea49468-…` y `local_6c95115f-…`) | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 | v0.174.6 lista (0707b36), esperando el sí de Ez para juntarla; la pregunta 5 («Hacerla»), sin contestar. Mientras, solo lectura: la lista del reparto de «Hacerla». No toca la rama hasta que v0.174.6 esté en main; luego junta `origin/main` y monta las pausas como v0.175.0 |
 
 Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque de arriba de
 `docs/traspaso/LEEME.md` de su rama. Para retomarlas desde la otra cuenta: `docs/WORKFLOW.md` §10
@@ -84,8 +85,11 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    v0.175.0 cuando acabe 1A 2A 3A (ya puede: v0.174.5 está en main), tras la maqueta nueva de «Hacerla» (un
    ejercicio de Mueve o Estira con el glifo del módulo; arriba, «Al relevo») y con el sí de Ez. Las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
    `ritmo.regla.js` (`ritmoComponer`), `state-ritmo.jsx` (`ritmoPrevios`), `ritmo.series.js`
-   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`.
-2. **Montar 1A 2A 3A de la maqueta** (M7, M6, M4) como v0.174.6, en la misma sesión de la maqueta: en marcha.
+   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. **La segunda parte de lo de ChatGPT**,
+   el aviso a mitad de un bloque largo (45 min o más), se mira con Ez después de que pruebe la primera en su
+   móvil (`DECISIONES_PRODUCTO.md`, «después de verlo»): sin maqueta todavía.
+2. **Montar 1A 2A 3A de la maqueta** (M7, M6, M4) como v0.174.6, en la misma sesión de la maqueta: **lista**
+   (0707b36), esperando el sí de Ez para juntarla con la suite entera.
 3. **Una página para captar testers de Android, `pacegrass.app/beta`** (idea de Ez, 22 oct. noche; va
    aquí porque los testers fijan la fecha de v1). En español e inglés: qué es PACE, qué se pide (instalar
    desde Play, tenerla 14 días, abrirla y contar qué falla) y PACE completo de por vida como gracias
@@ -119,13 +123,16 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    el suelo), marcando los que no casan; Ez decide cuáles se rehacen.
 7. **Más ejercicios de pie para las pausas cortas** (idea de Ez; falta contenido de pie con el aro a 10
    o 15), con maqueta. Ayuda a M2.
-8. **El puente del calendario de Android**, que se traga los errores (PACE ve un calendario vacío y
+8. **La voz de Respira por `<audio>`** (auditoría externa del 21 oct.; estaba en `STATE.md` y faltaba aquí):
+   `paceVozIntenta` da por buena la señal antes de que `play()` arranque y, si falla, no suena ni el tono de
+   respaldo. Pequeño. Toca `Sound.voz.jsx`, como la 3A: después de juntar v0.174.6.
+9. **El puente del calendario de Android**, que se traga los errores (PACE ve un calendario vacío y
    puede volver a crear lo que ya estaba), junto con S6.
-9. **Seguridad antes de cobrar** (S1, S2, S4, S5, S6), antes de la Fase 6.
-10. **Los avisos de Android** (A1-A4): Ez ya tiene la app en su móvil; preguntarle por los avisos.
-11. **La hora y la medianoche** (H1-H5), antes de marzo.
-12. **«Qué te ayuda» en Estadísticas**, lo último de pago, con maqueta.
-13. Con lo que Ez traiga: la Fase 6 del cobro. **Su lista, la auditoría de ChatGPT del 22 oct. noche,
+10. **Seguridad antes de cobrar** (S1, S2, S4, S5, S6), antes de la Fase 6.
+11. **Los avisos de Android** (A1-A4): Ez ya tiene la app en su móvil; preguntarle por los avisos.
+12. **La hora y la medianoche** (H1-H5), antes de marzo.
+13. **«Qué te ayuda» en Estadísticas**, lo último de pago, con maqueta.
+14. Con lo que Ez traiga: la Fase 6 del cobro. **Su lista, la auditoría de ChatGPT del 22 oct. noche,
     comprobada en lo que toca al código: `docs/audits/cobro-chatgpt-22oct.md`** (la tienda web y Play vacías, la
     función de desistimiento, el aviso de fin de prueba de 7 días que Stripe no cubre, el alta en Hacienda y RETA
     antes de vender, «de por vida» y la privacidad con pagos). (Cuenta de Stripe; antes de cobrar, comprobar restaurar la compra, cancelar, sin conexión y el paso desde la beta, y montar y comprobar lo prometido por escrito: las rutinas de pago usadas antes de v1 y la prueba que pide tarjeta. ChatGPT, 22 oct.: el reparto gratis/de pago ya decidido le parece bien; 19,99 € de por vida son 6,7 meses de 2,99 €, así que empuja a la compra de por vida), el llavero del calendario (altas en
@@ -133,7 +140,12 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
 **Para ChatGPT** (Ez tiene uso de sobra): ya le di los prompts de «qué pasa cuando sale una versión
 nueva», «volver a la app» y «los bloques del día guiado». Lo que traiga se comprueba en el código antes
-de creerlo y entra en esta cola.
+de creerlo y entra en esta cola. **Repaso del 22 oct., 21:45:** «los bloques del día guiado» volvió y está
+decidido (M2, punto 1); las auditorías del 21-22 oct. (datos, «A tu ritmo», calendario, «Tus rutinas»,
+pausas, privacidad, cobro) están todas hechas o en esta cola (la voz por `<audio>` y la segunda parte de M2
+faltaban: puntos 8 y 1). **Las otras dos, «qué pasa cuando sale una versión nueva» y «volver a la app», no
+tienen respuesta apuntada en ningún sitio: preguntado a Ez si ChatGPT contestó.** Los prompts no se guardaron;
+si hacen falta, se reescriben.
 
 **Para Ez, por orden**: los testers (y, con la página de arriba, el grupo de Google), el gestor para darse
 de alta y cobrar, la consulta de ChatGPT de lo legal para cobrar, los dibujos (la rana, en pausa), y cuando pueda: las altas de Google y Microsoft, Stripe, el gestor, el aviso legal, el
