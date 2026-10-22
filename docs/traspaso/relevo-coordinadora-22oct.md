@@ -43,6 +43,11 @@ empezada, apuntada en «A tu ritmo».
 - La comida: «B · lo que queda de comida» (`DECISIONES_PRODUCTO.md`), montada en v0.174.2.
 - Dos pestañas a la vez (caso 8 de datos): «A · aceptarlo» (`DECISIONES_PRODUCTO.md`).
 - C3: «Desconectar» deja de leer las reuniones también en Android, como la web (no puso pegas).
+- C2: «A · Cuatro casos» (al día / poniendo al día… / no se pudo con «Reintentar» y la hora del
+  próximo intento / falta permiso), sobre `docs/traspaso/archivos/calendario-estado-22oct/tabla.md` de
+  la rama del calendario. C1 y C3 ya están en esa rama (0b3d437, v0.174.3); C2 se monta ahí.
+- Para la cola, de la sesión del calendario: en Android el puente del calendario se traga los
+  errores, PACE ve un calendario vacío y puede volver a crear lo que ya estaba.
 - **Uso de la cuenta:** «cuando quede un 90 % de esta sesión migramos hacia otra cuenta de Claude sin
   perder absolutamente nada». Leído como 90 % usado.
 

@@ -115,7 +115,10 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   a poner lo quitado (`calendarioSoloDesconectar` va fuera de `_calSolo.cola` y del cerrojo), C2
   «Calendario al día» con cambios pendientes o tras un fallo de escritura (`calendarioSoloPorDetras`
   pide `!conAcceso`; `_calSolo.fallo` no sale en `calendarioSoloEstado`), C3 en Android «Desconectar»
-  sigue leyendo las reuniones al volver a la app: se iguala a la web, que deja de leer.
+  sigue leyendo las reuniones al volver a la app: se iguala a la web, que deja de leer. C1 y C3,
+  hechos en la rama; C2, Ez eligió «A · cuatro casos» (22 oct.). Aparte, para después: en Android el
+  puente del calendario se traga los errores y PACE ve un calendario vacío (puede volver a crear lo
+  que ya estaba).
 - **Al volver los Caminos** (después de v1; hoy `SHOW_CAMINOS = false`), tres casos de la auditoría
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
