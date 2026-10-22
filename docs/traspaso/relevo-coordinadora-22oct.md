@@ -38,7 +38,7 @@ Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pis
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
 1. **Los bloques cortos (M2): la invitación de 2 min** (Ez eligió la propuesta de ChatGPT «por partes»;
-   `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). Maqueta primero; las guiadas no cambian. Toca
+   `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). Maqueta primero; las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
    `ritmo.regla.js` (`ritmoComponer`), `state-ritmo.jsx` (`ritmoPrevios`), `ritmo.series.js`
    (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. Lo que se hace en esos 2 min, se
    puede consultar a ChatGPT (movimientos sin mirar la pantalla, con alternativa sentada).

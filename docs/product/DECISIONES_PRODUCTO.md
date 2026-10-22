@@ -34,6 +34,11 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   sin cambiar de pantalla, sin logros, y que puede repetirse en el día (no consume rutinas). Si toca una
   guiada, no hay invitación. El aviso a mitad de un bloque largo (45 min o más), después de verlo.
   Antes de montarlo, maqueta para Ez. Nunca se promete un beneficio de salud por hacerla.
+  **Y la persona elige** (Ez, el mismo día, también de ChatGPT): al escoger un bloque corto, «¿Ejercicio
+  después de cada bloque? A mi ritmo · Después de cada bloque». «A mi ritmo» (por defecto) es lo de
+  arriba; «Después de cada bloque», una pausa guiada tras cada bloque, sin invitaciones aparte, con
+  rutinas que pueden repetirse en el día pero nunca dos seguidas. Gratis: lo de pago da variedad, no el
+  permiso de elegir el ritmo. Va en la misma maqueta.
 - **Pendiente de maqueta:** que la home abra con los módulos y la tarjeta corta en vez de la pregunta
   entera (idea de Ez; hoy es así solo «por libre»), y los Ajustes del móvil más altos (hoy, el 72 %).
 - **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones
