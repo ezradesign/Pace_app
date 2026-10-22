@@ -85,8 +85,14 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - En «A tu ritmo»: el cierre que nunca es «Ahora», la lectura C (espera a que `origin` tenga semanas
   de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
-  coordinadora junta): «Tus rutinas» y el año (material, solo descanso, por lados, reanudar tras
-  editar, el año con poco foco) · **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
+  coordinadora junta): «Tus rutinas» y Estadísticas (material, solo descanso, por lados, reanudar tras
+  editar, el año con poco foco; E1 los minutos de «Hoy» frente al total de Cuerpo, E2 un día solo con
+  agua sin color ni borde en Mes, E3 los totales del Año ocultos en escritorio, E4 decimales con
+  punto en castellano) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
+  «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
+  «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
+  cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, va con la sesión de datos) ·
+  **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
   programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
