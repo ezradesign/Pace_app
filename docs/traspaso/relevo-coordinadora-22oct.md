@@ -11,10 +11,15 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 ## AL RELEVO (22 oct., ~22:50, esta cuenta al 92 %; la otra se repone a las 00:30)
 
 **Lo primero, en la carpeta principal (nunca `cd` en Bash; rutas absolutas y `git -C`):**
-1. **main local lleva 3 commits SIN SUBIR** encima de origin/main (d8030aa): 3473226 (docs), **f23cbf0 = merge de
-   v0.174.7** (/beta y /premium con la letra de la app; Ez dijo «júntalas» mirando
-   https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE) y 9d2644d (docs). `verify` pasa; **la suite entera con todo junto
-   quedó a medias** por el relevo: pasarla (`PACE_E2E_PORT=8811`) y, en verde, push. Mirar antes el CI de main.
+1. **v0.174.7 en main** (merge f23cbf0: /beta y /premium con la letra de la app; Ez dijo «júntalas» mirando
+   https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE). Suite entera con todo junto: 824 en verde, 2 saltadas y 1
+   caída por carga (`ritmo-linea.spec.js:176`, las fuentes que llegan tarde, con la Maqueta probando a la vez):
+   sola, 3 de 3 en verde. Subida al relevo: **mirar primero el CI de main** (`gh run list --branch main --workflow CI`).
+   **El CI de d8030aa (v0.174.6) salió rojo en e2e (1/2) por una prueba frágil**, no por el cambio:
+   `tests/aro-de-golpe.spec.js:52` (de v0.174.5) lee las transiciones del aro un segundo tarde en el CI y ve «1s»
+   en vez de «0s»; en local pasó en las dos suites enteras y v0.174.6 no toca `TimerDial.jsx`. Endurecerla
+   (congelar el reloj con `page.clock` o leer las transiciones en el mismo pintado del salto) antes de seguir
+   juntando; si el CI de v0.174.7 vuelve a caer solo por ella, es esto.
 2. **Encender los dos enlaces de /beta** (en `beta/index.html`, bloque `data-enlaces`): `grupo.url` =
    `https://groups.google.com/g/pace-tests` y `pendiente: false` en los dos (el de Play ya es
    `https://play.google.com/apps/testing/com.ezradesign.pace`, confirmado por Ez). Ajustar
