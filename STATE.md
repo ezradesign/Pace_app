@@ -127,6 +127,17 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
+- **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
+  escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
+  calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;
+  `/premium` y «Avísame» no van en el APK. P1 `contenido-de-la-app.md` y `privacy.html` dicen que el
+  calendario «no sale del móvil», y si esa cuenta sincroniza, sube a su nube · P2 «nunca el título ni
+  quién va» (`cal.reuniones.sub`) no es cierto: Google web pide el evento entero (mira los asistentes) y el
+  puente de Android devuelve título y texto (S6); prometer «solo guarda las horas» y pedir menos campos ·
+  P3 los eventos van como libres, no como privados, con el nombre de la pausa: decide Ez · P4
+  `privacy.html` dice que /premium cuenta visitas y el script aún no está (espera el token de Ez) · P5
+  «Avísame» guarda el correo sin caducidad (`functions/api/avisame.js`), antes de conectar la lista.
+  Después de juntar el calendario, que también toca `calendario.js`.
 - La voz de Respira por `<audio>` (sin Web Audio): `paceVozIntenta` da por buena la señal antes de
   que `play()` arranque, y si falla no suena ni el tono de respaldo (auditoría externa, 21 oct.; el
   comentario de `Sound.voz.jsx` ya lo avisa).
