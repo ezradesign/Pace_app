@@ -8,6 +8,32 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (22 oct., ~22:50, esta cuenta al 92 %; la otra se repone a las 00:30)
+
+**Lo primero, en la carpeta principal (nunca `cd` en Bash; rutas absolutas y `git -C`):**
+1. **main local lleva 3 commits SIN SUBIR** encima de origin/main (d8030aa): 3473226 (docs), **f23cbf0 = merge de
+   v0.174.7** (/beta y /premium con la letra de la app; Ez dijo «júntalas» mirando
+   https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE) y 9d2644d (docs). `verify` pasa; **la suite entera con todo junto
+   quedó a medias** por el relevo: pasarla (`PACE_E2E_PORT=8811`) y, en verde, push. Mirar antes el CI de main.
+2. **Encender los dos enlaces de /beta** (en `beta/index.html`, bloque `data-enlaces`): `grupo.url` =
+   `https://groups.google.com/g/pace-tests` y `pendiente: false` en los dos (el de Play ya es
+   `https://play.google.com/apps/testing/com.ezradesign.pace`, confirmado por Ez). Ajustar
+   `tests/beta-pagina.spec.js`: la prueba de 360 px hoy exige los dos pendientes; que mire cada enlace según el
+   bloque, y que la de los enlaces puestos pase a simular los dos pendientes (así se prueban los dos estados).
+3. **Hechos de Ez esta noche:** la prueba cerrada ESTÁ APROBADA (Prueba cerrada · Alpha, 0.174.0, disponible desde el
+   21 oct. 23:40). Grupo de Google creado: **pace-tests@googlegroups.com** («PACE testers»; pace-testers estaba
+   cogido). En Play eligió «Grupos de Google» con ese correo y lo envió a revisión: **LinkedIn y avisar a sus dos
+   testers, cuando el Resumen de la publicación ya no tenga nada en revisión**. Cuenta de Apple Developer pagada
+   con la cuenta de PACE (el recibo fue al otro correo de Ez, solo facturación): «Pending» hasta 48 h; no volver a
+   pagar. Botón de la invitación: **«Ver ejercicio»**, no «Hacerla»; las fotos de la hoja → pantalla de
+   ejercicio, aprobadas con sus dos recomendaciones (`DECISIONES_PRODUCTO.md`).
+4. **Sesiones:** «Maqueta» (`local_95664ff9-…`, carpeta `.claude/worktrees/maqueta-inicio-3a2a59`, rama
+   `claude/maqueta-inicio-3a2a59`, puerto 8803) montando v0.175.0; se le pidió wip, push y su punto en LEEME:
+   retomarla con `start_session` + `cwd` (WORKFLOW §10). «Página para testers» (`local_be95e077-…`), terminada y
+   juntada: archivarla con el sí de Ez.
+5. Página de pasos de esta cuenta, al día: https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (la otra cuenta publica
+   el mismo archivo en https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT).
+
 ## Quién soy y qué hago
 
 Coordino desde la carpeta principal (`main`). Las sesiones trabajan cada una en su rama y su worktree,
