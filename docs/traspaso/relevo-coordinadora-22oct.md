@@ -78,7 +78,13 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    primero. El enlace de Play funciona cuando Google apruebe la prueba cerrada. **Maqueta hecha: Ez eligió
    1A · 2A** (https://claude.ai/artifact/8Vj5rGU6aE9Ewr9JfYFJXL, `docs/proposals/beta-testers-22oct.html`): como
    /premium, con las capturas de Google Play en tira (Ez: «para que luzca más»), y «PACE completo de por vida,
-   en la web y en Android» (en Android, con códigos de regalo de Google Play al salir v1). Se puede montar.
+   en la web y en Android» (en Android, con códigos de regalo de Google Play al salir v1). **Pero antes, otra
+   vuelta de diseño** (Ez, justo después): «la letra en cursiva de los títulos grandes no me convence, las letras
+   de los botones son genéricas, todo tiene que tener mucho más estilo PACE». La maqueta calcó /premium, que usa
+   EB Garamond; la app usa Cormorant Garamond por defecto (`data-font="cormorant"`, `DESIGN_SYSTEM.md`) y sus
+   propios botones (`--focus-cta`). Nueva maqueta calcada de la APP (su letra, sus botones y sus piezas: la vaca,
+   el aro, el horizonte, los glifos), con dos o tres opciones y la recomendada primero. /premium comparte ese
+   estilo: preguntar a Ez si la vuelta vale también para /premium.
 4. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
 5. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.
