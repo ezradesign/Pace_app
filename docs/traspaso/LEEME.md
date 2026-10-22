@@ -6,7 +6,10 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de 
 
 ## 22 oct., noche: 1A 2A 3A montadas como v0.174.6 y la pregunta 4 para Ez (rama `claude/maqueta-inicio-3a2a59`, puerto 8803)
 
-**Montado en v0.174.6**, con sus pruebas en rojo contra v0.174.4 (sin juntar; lo junta la coordinadora con el sí de Ez):
+**Montado en v0.174.6** (commit 0707b36), con sus pruebas en rojo contra v0.174.4 (sin juntar; lo junta la
+coordinadora con el sí de Ez). Suite entera en el 8803: 790 en verde, 2 saltadas y 19 caídas por estas mismas
+decisiones (18 de «A tu ritmo» que esperaban la pregunta al abrir, ahora con `pulsarComienza`, y la nota de
+Android), puestas al día y repasadas en verde (97 y 63); `verify` pasa. La suite entera no se repitió después.
 - **1A**: sin contestar, la home abre con los módulos y la tarjeta corta; «Comienza» abre la pregunta
   (`ritmoAbrirPregunta`, `ritmo.pregunta` = hoy, que no toca `distinto`). Con la semana guardada la tarjeta
   dice «Hoy, como cada jueves · Jornada entera, 9:00–17:00». Sin contestar no escribe `libre`.
