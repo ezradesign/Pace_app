@@ -128,9 +128,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   que llegue de golpe) · M2 con el aro corto, las guiadas como hoy y entre ellas una invitación de 2 min para moverse (Ez, tras ChatGPT; maqueta antes) y M3 logros solo con la sesión entera,
   decididos por Ez (`DECISIONES_PRODUCTO.md`) · M4 la voz grave no dice «exhala» en las rondas (3,6 s
   en fases de 2 s): una prueba para oír · M5 «Ponle ritmo al día» en Estadísticas › Hoy llama a
-  `ritmoVolver` sin cerrar el panel y no se ve nada (`StatsHoy.jsx`) · M6 los Ajustes del móvil, al
-  72 % de alto y con scroll, y M7 la home que abre con los módulos y la tarjeta corta (idea de Ez):
-  maqueta. Una sesión en cuanto haya hueco, después de juntar «Tus rutinas» (toca Estadísticas).
+  `ritmoVolver` sin cerrar el panel y no se ve nada (`StatsHoy.jsx`) · M6 los Ajustes del móvil y
+  M7 la home con los módulos: Ez eligió 1A 2A 3A en la maqueta (`DECISIONES_PRODUCTO.md`), también M4. Una sesión en cuanto haya hueco, después de juntar «Tus rutinas» (toca Estadísticas).
 - **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
   escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
   calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;

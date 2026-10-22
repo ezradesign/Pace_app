@@ -33,6 +33,13 @@ Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en 
 (sesión nueva en la MISMA carpeta, con la misma rama y el mismo puerto; `start_session` con `cwd`).
 
 **Al relevo (80-90 % de uso, 22 oct. hacia las 18:00; esta cuenta se repone a las 21:10):**
+- **Al 91 %:** la sesión «Maqueta» publicó su página (https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj, de esta
+  cuenta) y **Ez eligió 1A 2A 3A** (`DECISIONES_PRODUCTO.md`). Se le mandó guardar el HTML en su carpeta
+  (`docs/proposals/maqueta-inicio-22oct.html`, con `maqueta-inicio-hallazgos.md`), hacer «wip» y push, y
+  montar 1A 2A 3A si el uso le deja. Comprobar en su rama qué llegó. La pregunta 4 (pausas con bloques
+  cortos) se añade republicando la página desde ese HTML en la otra cuenta.
+- La rana: Genspark sigue sin la postura (espinillas a los lados y tronco erguido); Ez tiene el texto para
+  corregirlo, o probar la vista de tres cuartos.
 - Las dos sesiones siguen en marcha y saben que al 85 % hacen «wip» y push, y al 90 % dejan su punto en LEEME
   de su rama. Mira su carpeta por si quedó algo sin commitear (`node scripts/relevo-hilo.js <carpeta>`).
 - A «Maqueta» se le pidió una **cuarta pregunta** en su página: la invitación de 2 min y «A mi ritmo ·

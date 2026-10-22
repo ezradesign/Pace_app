@@ -39,11 +39,14 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   arriba; «Después de cada bloque», una pausa guiada tras cada bloque, sin invitaciones aparte, con
   rutinas que pueden repetirse en el día pero nunca dos seguidas. Gratis: lo de pago da variedad, no el
   permiso de elegir el ritmo. Va en la misma maqueta.
-- **Pendiente de maqueta:** que la home abra con los módulos y la tarjeta corta en vez de la pregunta
-  entera (idea de Ez; hoy es así solo «por libre»), y los Ajustes del móvil más altos (hoy, el 72 %).
-- **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones
-  de 2 s de las tres rutinas de rondas, así que ahí suena el tono. Con la voz clara suenan las dos.
-
+- **Maqueta del 22 oct.** (https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj, de la sesión «Maqueta: inicio,
+  Ajustes y la voz»): Ez eligió **1A 2A 3A**. 1A: la home abre siempre con los módulos y la tarjeta corta
+  («Tú eliges las horas · Comienza» abre la pregunta); sin contestar ya no es «por libre» (que además quita
+  del calendario las pausas de hoy). Sin scroll en ningún caso. 2A: «Tus datos» pasa a su propia hoja y
+  los Ajustes del móvil ocupan el 79 %, sin scroll (hoy miden 743 px en la web y 812 en Android, con 525
+  de hueco). 3A: se quita el chasquido del final del «exhala» de la voz grave; la palabra dura 1,20 s y
+  así suena en las rondas sin acelerarla ni grabarla, y deja de sonar ese chasquido en las rutinas lentas.
+  La pregunta 4 de esa página (las pausas con bloques cortos) está pedida y falta.
 ## Lo que dice el calendario que se mantiene solo: cuatro casos (Ez, 22 oct. 2026)
 
 C2 de la auditoría externa del 22 oct. La hoja y el enlace decían «Calendario al día» también en
