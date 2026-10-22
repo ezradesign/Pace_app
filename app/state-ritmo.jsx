@@ -117,7 +117,7 @@ function ritmoDe(s) {
     horario: h,
     libre: libre,
     dia: dia,
-    ocupado: r.ocupado && r.ocupado.fecha === hoy && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [],
+    ocupado: ritmoOcupadoDe(r, hoy),   /* state-ritmo.support.jsx */
     calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
     semanaTipo: tipo, diaSemana: dSem, habitual: habitual, distinto: distinto,
     propuesta: !libre && !dia && !distinto && (habitual === 'jornada' || habitual === 'media') ? habitual : null,
@@ -388,7 +388,7 @@ function ritmoElegir(opcion) {
 
 /* «Cambiar» y «Hoy es distinto» llevan a la pregunta entera: con `distinto`, tu semana
    tipo deja de proponer el día hasta mañana. */
-function ritmoPreguntar() { ritmoGuardar(function () { return { dia: null, distinto: ritmoHoy() }; }); }
+function ritmoPreguntar() { ritmoPausaCerrarConElDia(); ritmoGuardar(function () { return { dia: null, distinto: ritmoHoy() }; }); }
 
 /* LA PAUSA (s193). Terminar un bloque la abre con el número de bloques hechos
    —`completePomodoro` ya subió `cycle` cuando main.jsx llama a esto—; empezar
@@ -450,7 +450,7 @@ function ritmoBloqueEmpezado(minutos) {
   if (!Object.keys(cambios).length) return;
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
-function ritmoPorLibre() { ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
+function ritmoPorLibre() { ritmoPausaCerrarConElDia(); ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
 function ritmoVolver() { ritmoGuardar(function () { return { libre: null, distinto: ritmoHoy() }; }); }
 
 function ritmoOtra(claves) {

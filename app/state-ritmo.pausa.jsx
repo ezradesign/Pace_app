@@ -159,7 +159,17 @@ function ritmoPausaAcabada() {
   if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
 }
 
+/* Antes de retirar el día («Hoy voy por libre», «Cambiar»): si el aro cuenta la pausa del
+   día, se cierra con él y el aro vuelve al foco. Si no, la pausa se quedaba sin su
+   `pausaHasta`, como elegida a mano (ritmoPausaHuerfana ya no la ve), y al acabar el aro
+   no volvía al foco. Una pausa elegida a mano en la barra sigue igual. */
+function ritmoPausaCerrarConElDia() {
+  var s = getState();
+  var p = ritmoPausaCuenta(s);
+  if (p && s.focusMode === p.modo) ritmoPausaAcabada();
+}
+
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
-  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada,
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia,
 });

@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.1 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.2 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -13,7 +13,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
   Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
-  rutinas cambian de un día a otro (`puedeVariar`).
+  rutinas cambian de un día a otro (`puedeVariar`). v0.174.2 arregla seis casos de la auditoría del 21 oct.
+  (reuniones, la jornada en plena comida como eligió Ez, y el aro con las pausas).
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -39,8 +40,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 3. **Fase 6, tras /premium**: la página de gracias y la firma con k2, el aviso dos días antes del fin
    de la prueba, «Gestionar» en Ajustes, la invitación con los botones de compra y lo legal de /premium.
    El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
-4. **Auditoría externa del 21 oct.**: los trece casos de datos, en `main` con v0.174.1 (22 oct., con
-   el sí de Ez). El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
+4. **Auditoría externa del 21 oct.**: los trece casos de datos (v0.174.1) y los seis de «A tu
+   ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
    a 100 ms, nunca), Ez lo acepta como riesgo (A, 22 oct.): lo mide `tests/pestanas-estado.spec.js`,
    estado-4. Un solo escritor en IndexedDB, si alguna vez hace falta, después de v1.
 5. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
@@ -87,7 +88,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - A 320×568 la home del móvil pide scroll (Ez lo acepta) · las escenas con scroll anteriores a
   v0.130.0.
 - En «A tu ritmo»: el cierre que nunca es «Ahora», la lectura C (espera a que `origin` tenga semanas
-  de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie).
+  de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie). La barra de
+  arriba pregunta antes de dejar un Foco empezado, pero no una pausa empezada (pide un texto nuevo).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
   coordinadora junta): «Tus rutinas» y Estadísticas (material, solo descanso, por lados, reanudar tras
   editar, el año con poco foco; E1 los minutos de «Hoy» frente al total de Cuerpo, E2 un día solo con
@@ -103,8 +105,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto; S3, código portable, es
   la decisión de Ez) · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
   H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió) ·
-  **el calendario que se mantiene solo** (22 oct.), para la sesión de «A tu ritmo» cuando se junte lo
-  suyo, porque toca sus archivos: C1 «Desconectar» a mitad de una escritura no la para y puede volver
+  **el calendario que se mantiene solo** (22 oct.), para la sesión de «A tu ritmo», ya juntada,
+  porque toca sus archivos: C1 «Desconectar» a mitad de una escritura no la para y puede volver
   a poner lo quitado (`calendarioSoloDesconectar` va fuera de `_calSolo.cola` y del cerrojo), C2
   «Calendario al día» con cambios pendientes o tras un fallo de escritura (`calendarioSoloPorDetras`
   pide `!conAcceso`; `_calSolo.fallo` no sale en `calendarioSoloEstado`), C3 en Android «Desconectar»

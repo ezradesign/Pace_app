@@ -11,6 +11,11 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **22 oct.: v0.174.2, seis casos de la auditoría externa del 21 oct.** (rama
+  `claude/happy-allen-d915c3`), cada uno con su prueba, que falla contra v0.174.0: las reuniones
+  en los bordes del día, la jornada en plena comida (Ez eligió la B, «lo que queda de comida»,
+  sobre `docs/traspaso/archivos/plena-comida-21oct/tabla.md`), la pausa que seguía como Foco al
+  cambiar de modo y «por libre» en plena pausa del día.
 - **22 oct.: los trece casos de datos de la auditoría externa, en `main` con v0.174.1** (rama
   `claude/elastic-hofstadter-20ccb0`, juntada con el sí de Ez). Cada arreglo tiene su prueba, que
   cae contra v0.174.0; sin cambios a la vista salvo tres avisos nuevos (copia a medias, «no se pudo

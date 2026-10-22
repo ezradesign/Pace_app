@@ -51,6 +51,16 @@ function ritmoHorarioCon(h, cambios, crudo) {
   return out;
 }
 
+/* Las reuniones de `fecha` con las que se compone el día (ritmoDe y el resumen). Con
+   «Tener en cuenta mis reuniones de hoy» desmarcada, ninguna, aunque queden horas leídas
+   antes: la casilla promete que no cuentan. Esas horas no se borran, y al volver a
+   marcarla cuentan. */
+function ritmoOcupadoDe(r, fecha) {
+  if (r && r.calendario && r.calendario.reuniones === false) return [];
+  var o = r && r.ocupado;
+  return o && o.fecha === fecha && Array.isArray(o.tramos) ? o.tramos : [];
+}
+
 /* Guardar la semana: `tipo` = siete días, o null («Cada semana es distinta»). `cambios`
    = solo las horas tocadas, que se escriben sobre el horario GUARDADO (no sobre el
    normalizado): así `horario: null` sigue queriendo decir «sin tocar» y la hora de comer
@@ -103,6 +113,6 @@ function ritmoNombreDia(diaSemana, t) {
    desde lo guardado: la tarjeta enseña el día de HOY sin que haga falta nada aquí. */
 
 Object.assign(window, {
-  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon,
+  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
   ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia,
 });

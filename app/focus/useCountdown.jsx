@@ -12,15 +12,18 @@
 
    Estados: 'idle' | 'running' | 'paused' | 'completed'.
    'completed' es TERMINAL: start()/toggle() son no-op hasta reset() o hasta
-   que cambie `durationSec` (cambio de modo/minutos en el home) -> resetea a
-   idle. Evita el re-credito latente del timer previo.
+   que cambie el reloj (`durationSec` o `modo`: cambio de modo/minutos en el
+   home) -> resetea a idle. Evita el re-credito latente del timer previo.
 
    Pausa: se congela `remaining`; al reanudar `endsAt = now + remaining`.
    Persistencia: NINGUNA (local al componente; recargar resetea el timer como
    antes -- decision s96: la no-deriva no requiere pace.state).
 
-   Firma: useCountdown(durationSec, onComplete)
+   Firma: useCountdown(durationSec, onComplete, modo)
      -> { remaining, running, status, start, pause, resume, toggle, reset }
+   `modo` (opcional) es parte de la IDENTIDAD del reloj, con la duración: el Foco de 5
+   y la pausa corta (5) son relojes distintos, y pasar de uno a otro también vuelve a
+   idle. Sin él, una pausa en marcha seguía corriendo como Foco y contaba como trabajo.
    `onComplete` se guarda en ref y se invoca UNA vez en running->completed
    (single-shot; reemplaza los guards justFinished/creditedRef).
 
@@ -34,7 +37,7 @@ const {
   useRef: useRefUC, useCallback: useCallbackUC,
 } = React;
 
-function useCountdown(durationSec, onComplete) {
+function useCountdown(durationSec, onComplete, modo) {
   const [status, setStatus] = useStateUC('idle');      // idle | running | paused | completed
   const statusRef = useRefUC('idle');                  // espejo sincrono para los handlers
   const endsAtRef = useRefUC(null);                    // ms epoch; valido solo en 'running'
@@ -92,14 +95,14 @@ function useCountdown(durationSec, onComplete) {
     };
   }, [status, complete]);
 
-  // Reset por cambio de duracion (home: cambio de modo/minutos) -> idle.
+  // Reset por cambio de reloj (home: cambio de modo o de minutos) -> idle.
   useEffectUC(() => {
     firedRef.current = false;
     endsAtRef.current = null;
     remainingMsRef.current = durationSec * 1000;
     statusRef.current = 'idle';
     setStatus('idle');
-  }, [durationSec]);
+  }, [durationSec, modo]);
 
   const start = useCallbackUC(() => {
     if (statusRef.current === 'running' || statusRef.current === 'completed') return;

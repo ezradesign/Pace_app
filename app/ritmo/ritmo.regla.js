@@ -23,6 +23,11 @@
      · La comida empieza a TU HORA EXACTA y dura lo que digas. El bloque que la
        cruzaría se acorta para acabar justo entonces; si le quedarían menos de
        15 min, ese hueco es margen libre.
+     · EN PLENA COMIDA (Ez, 22 oct. 2026, «lo que queda de comida»): si el día empieza
+       con tu hora de comer ya en marcha, se sirve lo que queda de ella y el foco empieza
+       al acabar, como con una reunión empezada: a las 14:20, con la comida de 14:00 a
+       15:00, comida de 14:20 a 15:00. Quien ya comió apaga «comes». Pasada su hora, no
+       hay comida; y si un bloque que ya corre se la come entera, tampoco.
      · LO OCUPADO (`horario.ocupado`, opcional): las reuniones de tu calendario,
        `[{ desde, dur }]` en minutos. Son obstáculos, como la comida: el bloque
        que llegaría tarde a una se acorta para que su pausa acabe justo al
@@ -119,7 +124,13 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var P0 = previos || null;
   /* Sin previos, el día espera a tu hora de inicio; recolocando, empieza AHORA. */
   var desde = P0 ? ahora : Math.max(inicio, ahora);
-  var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, (P0 && P0.comidaHecha) || comeA === Infinity ? null : comeA, comidaDur);
+  /* La comida que aún queda: delante, o EN CURSO si el día empieza dentro de su hora (ver
+     arriba). Las reuniones se recortan alrededor de ella solo si el día aún la sirve:
+     pasada su hora, una reunión a esas horas es una reunión, y el foco no la pisa. */
+  var finComida = comeA + comidaDur;
+  var comidaDelante = !(P0 && P0.comidaHecha) && comeA !== Infinity && desde < finComida;
+  var comidaEnCurso = comidaDelante && desde >= comeA;
+  var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, comidaDelante ? comeA : null, comidaDur);
   /* s195: si la persona puso el aro a otra duración (25 con un plan de 45), el
      resto del día va con ESA (`previos.bloque`): «si cambio la duración del
      pomodoro, ¿se ajustan las horas?» — sí, y también los bloques que vienen. */
@@ -137,7 +148,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     var primeros = n;                                  /* el bloque n+1 es el que acaba de empezar */
     var foco = forma.foco;
     var finTrabajo = fin - PAUSA;                      /* el cierre ocupa un hueco */
-    var falta = !(P0 && P0.comidaHecha) && desde < comeA && comeA < finTrabajo;   /* ¿queda comida delante? */
+    var falta = comidaDelante && comeA < finTrabajo;   /* ¿queda comida delante (o en curso)? */
     var cola = Math.min(COLA, bloque - 5);
     /* El bloque más corto que se sirve: 15 min, o lo que marque el aro si es menos (con
        el aro a 10, un último bloque de 10 es un bloque; si no, el día perdía el final). */
@@ -177,17 +188,26 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     /* Comer «por delante» solo manda si aún queda foco que servir DESPUÉS: si
        no, el día acaba aquí (en la maqueta, «Una hora» esperaba 245 min). */
     function comerAntes() { return falta && foco - hecho >= minimo && finTrabajo - comeA - comidaDur >= minimo; }
+    /* Los minutos de comida que aún hay por delante: entera, o lo que queda de su hora. */
+    function comidaQueda() { return !falta ? 0 : comidaEnCurso ? Math.max(0, finComida - Math.max(t, comeA)) : comidaDur; }
     function comer() {
       if (t < comeA) items.push({ tipo: 'libre', desde: t, dur: comeA - t });
       t = Math.max(t, comeA);   /* el bloque forzado puede haber cruzado la hora: se come al acabarlo */
-      items.push({ tipo: 'comida', desde: t, dur: comidaDur });
-      t += comidaDur; falta = false; enMitad = 0; manana = false; seguidos = 0;
+      var dur = comidaQueda();
+      falta = false;
+      if (dur <= 0) return false;   /* en plena comida, el bloque que ya corría pasó de su hora */
+      items.push({ tipo: 'comida', desde: t, dur: dur });
+      t += dur; enMitad = 0; manana = false; seguidos = 0;
       cuentaL = 0; focoL = 0; largaEn = 3;
+      return true;
     }
     /* Lo ocupado: la próxima reunión que aún no ha acabado, los minutos de
        reunión que quedan antes de `b` y el paso de ir a ella (con el margen libre
-       delante si lo hay). */
-    var reuniones = ocupado.filter(function (o) { return o.desde < finTrabajo; });
+       delante si lo hay). Cada reunión se corta donde acaba el día de la opción:
+       «Una hora» a las 9:00 con una reunión hasta las 12:30 acaba a las 10:00, no
+       detrás de la reunión. */
+    var reuniones = ocupado.filter(function (o) { return o.desde < finTrabajo; })
+      .map(function (o) { return { desde: o.desde, hasta: Math.min(o.hasta, finTrabajo) }; });
     function sigOcupado() {
       for (var k = 0; k < reuniones.length; k++) if (reuniones[k].hasta > t) return reuniones[k];
       return null;
@@ -209,7 +229,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
        comida es la pausa; el bucle la sirve). */
     if (P0 && P0.pausaPendiente && !juntar(0)) {
       var p0 = pausaDe(0);
-      var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      var queda0 = Math.min(foco - hecho, finTrabajo - t - p0 - comidaQueda() - ocupadoAntes(finTrabajo));
       if (queda0 < minimo && p0 === LARGA && (forma.reloj || corto) && queda0 + LARGA - PAUSA >= minimo) { p0 = PAUSA; queda0 += LARGA - PAUSA; }
       /* lo que había por servir al empezar el bloque que acaba: él, su pausa y lo de detrás */
       if (p0 === LARGA && largaSinSitio(queda0 + LARGA + seguidos, seguidos)) { p0 = PAUSA; queda0 += LARGA - PAUSA; }
@@ -228,7 +248,7 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       var enMarcha = P0 && P0.primerBloque && n === primeros;
       if (o && o.desde <= t && !enMarcha) { reunirse(o); continue; }
       /* lo que queda por servir; también con el bloque en marcha, porque decide su pausa */
-      var rem = Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      var rem = Math.min(foco - hecho, finTrabajo - t - comidaQueda() - ocupadoAntes(finTrabajo));
       if (enMarcha) {
         /* El bloque que acaba de empezar dura lo que marca el aro, pase lo que pase. */
         dur = P0.primerBloque;
@@ -262,14 +282,15 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
       n++;
       items.push({ tipo: 'foco', desde: t, dur: dur, n: n });
       t += dur; hecho += dur; focoL += dur; seguidos += dur;
-      if (falta && t >= comeA) { comer(); continue; }
+      /* sin comida que servir (se la comió el bloque), detrás va su pausa */
+      if (falta && t >= comeA && comer()) continue;
       /* Sin pausa detrás: el bloque siguiente va pegado, si aún cabe uno. */
       if (juntar(0)) {
-        if (Math.min(foco - hecho, finTrabajo - t - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo)) < minimo && !comerAntes()) break;
+        if (Math.min(foco - hecho, finTrabajo - t - comidaQueda() - ocupadoAntes(finTrabajo)) < minimo && !comerAntes()) break;
         continue;
       }
       p = pausaDe(0);
-      var queda = Math.min(foco - hecho, finTrabajo - t - p - (falta ? comidaDur : 0) - ocupadoAntes(finTrabajo));
+      var queda = Math.min(foco - hecho, finTrabajo - t - p - comidaQueda() - ocupadoAntes(finTrabajo));
       /* Al final de una opción con `reloj`, una larga que ya no deja sitio a otro bloque
          se sirve corta: si no, «Dos horas» con el aro a 10 acababa veinte minutos antes. */
       if (queda < minimo && p === LARGA && (forma.reloj || corto) && queda + LARGA - PAUSA >= minimo) { p = PAUSA; queda += LARGA - PAUSA; }

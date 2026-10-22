@@ -19,6 +19,23 @@
 
 ---
 
+## Dos pestañas a la vez: se acepta como riesgo (Ez, 22 oct. 2026)
+
+Caso 8 de la auditoría de datos del 21 oct. Con PACE abierto en dos ventanas, si las dos apuntan
+algo a menos de 10-20 ms la una de la otra, se pierde una de las dos escrituras (medido: a 0-10 ms
+sí, a 100 ms nunca). Una persona no llega a eso. Ez eligió **«A · Aceptarlo»**: queda medido en
+`tests/pestanas-estado.spec.js` (estado-4). Releer antes de guardar no lo cierra; un solo escritor
+en IndexedDB bajo Web Locks sí, pero cambia cómo se guarda todo PACE: si hace falta, después de v1.
+
+## Empezar la jornada en plena comida (Ez, 22 oct. 2026)
+
+Sobre la tabla con horas reales de `docs/traspaso/archivos/plena-comida-21oct/tabla.md`, a la
+pregunta de la coordinadora. Ez eligió **«B · Lo que queda de comida»**: la comida es tu hora,
+como una reunión. Con la comida de 14:00 a 15:00, si eliges «Jornada entera» a las 14:00 en punto
+o a las 14:20, PACE sirve la comida hasta las 15:00 y el foco empieza entonces. A las 13:55 todo
+sigue igual (la comida a las 14:00) y a las 15:30 ya no hay comida. Quien ya ha comido apaga
+«comes» en la frase y el foco empieza al momento. Montado en v0.174.2.
+
 ## El nombre en Google Play (Ez, 20 oct. 2026)
 
 Sobre `docs/launch/google-play/nombre-en-play.html` (https://claude.ai/artifact/6aZgHgZAyUbHzHZo3ePVy2),
