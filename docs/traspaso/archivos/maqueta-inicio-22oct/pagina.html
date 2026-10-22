@@ -1,0 +1,219 @@
+<title>Inicio, Ajustes y voz grave</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Los tokens de PACE (DESIGN_SYSTEM.md): papel, tinta, oliva de Foco, terracota de Respira.
+   Una columna de lectura; las fotos del móvil en rejilla que se adapta al ancho. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #77705F;
+  --line: #C9C0A8; --focus: #3E5A3A; --focus-soft: rgba(62,90,58,0.10);
+  --breathe: #A85E43; --breathe-soft: rgba(201,122,93,0.12);
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122,154,109,0.14); --breathe: #E8A98F; --breathe-soft: rgba(217,148,119,0.14); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122,154,109,0.14); --breathe: #E8A98F; --breathe-soft: rgba(217,148,119,0.14); color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--ui);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px }
+main { max-width: 1040px; margin: 0 auto; display: grid; gap: 56px }
+h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; line-height: 1.1; text-wrap: balance; margin: 0 }
+h1 { font-size: clamp(34px, 6vw, 48px) }
+h2 { font-size: clamp(28px, 4.5vw, 36px) }
+h3 { font-size: 22px }
+p { margin: 0; max-width: 68ch; color: var(--ink-2) }
+p b, li b { color: var(--ink); font-weight: 600 }
+.meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500 }
+section { display: grid; gap: 20px }
+.cab { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 22px }
+.resumen { display: grid; gap: 12px; padding: 18px 20px; background: var(--paper-2); border-radius: 14px }
+.respuesta { font-family: var(--display); font-style: italic; font-size: 30px; color: var(--focus) }
+.fotos { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); align-items: start }
+.fotos.esc { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)) }
+figure { margin: 0; display: grid; gap: 8px; min-width: 0 }
+figure img { width: 100%; height: auto; display: block; border-radius: 14px; border: 1px solid var(--line) }
+.esc figure img { border-radius: 8px }
+figcaption { font-size: 13.5px; color: var(--ink-2); line-height: 1.4 }
+figcaption b { display: block; color: var(--ink); font-weight: 600 }
+.opciones { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) }
+.op { display: grid; gap: 6px; align-content: start; padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; min-width: 0 }
+.op.rec { border-color: var(--focus); background: var(--focus-soft) }
+.op h3 { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap }
+.letra { font-family: var(--ui); font-style: normal; font-size: 13px; font-weight: 600; color: var(--paper); background: var(--ink); border-radius: 999px; padding: 2px 9px }
+.rec .letra { background: var(--focus) }
+.sello { font-family: var(--ui); font-style: normal; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--focus); font-weight: 600 }
+.op p { font-size: 15px }
+.tabla { overflow-x: auto }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top }
+th { font-weight: 600; color: var(--ink); font-size: 13px }
+td { color: var(--ink-2) }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap }
+.ok { color: var(--focus); font-weight: 600 }
+.no { color: var(--breathe); font-weight: 600 }
+details { border-top: 1px solid var(--line); padding-top: 12px }
+summary { cursor: pointer; font-weight: 500; color: var(--ink); padding: 4px 0 }
+summary:focus-visible, audio:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+details[open] > summary { margin-bottom: 14px }
+.audios { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)) }
+.audio { display: grid; gap: 8px; padding: 14px 16px; background: var(--paper-2); border-radius: 12px; min-width: 0 }
+.audio audio { width: 100% }
+.audio p { font-size: 14px }
+.hallazgo { padding: 16px 18px; border-left: 3px solid var(--breathe); background: var(--breathe-soft); border-radius: 0 12px 12px 0; display: grid; gap: 8px }
+ul { margin: 0; padding-left: 20px; color: var(--ink-2); display: grid; gap: 6px; max-width: 68ch }
+.pie { text-align: center; display: grid; gap: 8px; justify-items: center }
+</style>
+
+<main>
+  <header style="display:grid;gap:14px">
+    <div class="meta">PACE · lo que viste en tu móvil · 22 oct.</div>
+    <h1>Inicio, Ajustes y voz grave</h1>
+    <p>Tres cosas que pediste tras probar PACE en tu Android. Cada una tiene sus opciones con fotos de la app de verdad (a 360 px, tu móvil, y a 1280 px, el ordenador); lo que aún no existe está pintado encima. Contesta con tres letras.</p>
+    <div class="resumen">
+      <div class="meta">Lo que recomiendo</div>
+      <div class="respuesta">1A · 2A · 3A</div>
+      <p>1A: abrir siempre con Respira, Estira, Mueve e Hidrátate. 2A: Ajustes sin scroll, con «Tus datos» en su propia hoja. 3A: la voz grave dice «exhala» también en Rondas; hace falta quitar un chasquido del final del archivo, nada más.</p>
+    </div>
+  </header>
+
+  <!-- ================= 1 · M7 ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Pregunta 1</div>
+      <h2>Que la app abra con los módulos</h2>
+      <p>Hoy, mientras no contestas cuánto trabajas, la home enseña la pregunta entera y no se ven Respira, Estira, Mueve ni Hidrátate. Solo al pulsar «Hoy voy por libre» salen los módulos con la tarjeta corta. Tu idea: abrir siempre con los módulos y la tarjeta corta, y que «Comienza» abra la pregunta.</p>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/home-hoy-pregunta-730.jpg" alt="Home de hoy con la pregunta entera" loading="lazy"><figcaption><b>Hoy, sin tu semana guardada</b>La pregunta entera ocupa el sitio de los módulos.</figcaption></figure>
+      <figure><img src="fotos/home-hoy-semana-730.jpg" alt="Home de hoy con el día ya contestado" loading="lazy"><figcaption><b>Hoy, con tu semana guardada</b>«Jornada entera, como cada jueves». Tampoco se ven los módulos.</figcaption></figure>
+      <figure><img src="fotos/home-A-730.jpg" alt="Home con los módulos y la tarjeta corta" loading="lazy"><figcaption><b>A · Así abriría siempre</b>Los cuatro módulos y la tarjeta corta. «Comienza» abre la pregunta.</figcaption></figure>
+      <figure><img src="fotos/home-A-semana-730.jpg" alt="Tarjeta corta con tu día de siempre" loading="lazy"><figcaption><b>A · Con tu semana guardada</b>La tarjeta dice tu día de siempre; «Comienza» abre ese día para empezarlo.</figcaption></figure>
+    </div>
+
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> Siempre con los módulos <span class="sello">Recomendada</span></h3>
+        <p>Cada vez que abres PACE sin haber elegido el día, ves los módulos y la tarjeta corta. Para respirar un rato no tienes que contestar nada ni decir que vas por libre. La tarjeta sigue recordando que PACE puede prepararte la jornada.</p></div>
+      <div class="op"><h3><span class="letra">B</span> La pregunta entera, solo el primer día</h3>
+        <p>El primer día que usas PACE sale la pregunta entera, para que la conozcas. Desde el día siguiente, como en la A. Es una regla más que cambia sola, y quien acaba de instalar ya ha visto «¿Cómo es tu semana?» en la bienvenida.</p></div>
+      <div class="op"><h3><span class="letra">C</span> Como hoy</h3>
+        <p>La pregunta entera hasta que contestas o pulsas «Hoy voy por libre».</p></div>
+    </div>
+
+    <h3>«Sin contestar» y «Hoy voy por libre» no son lo mismo</h3>
+    <p>Con la A, las dos cosas se ven igual en la home, pero PACE las sigue tratando distinto. «Hoy voy por libre» se queda en la pregunta y en el día ya servido, y hace lo mismo que hoy.</p>
+    <div class="tabla"><table>
+      <thead><tr><th></th><th>No has contestado (A)</th><th>Pulsas «Hoy voy por libre»</th></tr></thead>
+      <tbody>
+        <tr><td>La home</td><td>Módulos y tarjeta corta</td><td>Lo mismo</td></tr>
+        <tr><td>Tu calendario</td><td>No se toca</td><td>PACE quita las pausas de hoy que ya había puesto</td></tr>
+        <tr><td>«Como cada jueves»</td><td>La tarjeta te sigue proponiendo tu día</td><td>Deja de proponerlo hasta mañana</td></tr>
+        <tr><td>Estadísticas › Hoy</td><td>«Por libre»</td><td>«Por libre»</td></tr>
+        <tr><td>Lo que PACE aprende de tu semana</td><td>Nada</td><td>Nada</td></tr>
+      </tbody>
+    </table></div>
+    <p>Estadísticas ya dice «Por libre» en los dos casos desde antes, y no guarda nada más: ningún día queda apuntado como «por libre» en la semana, el mes o el año. No hace falta tocarlo.</p>
+
+    <h3>En el ordenador</h3>
+    <div class="fotos esc">
+      <figure><img src="fotos/esc-hoy-pregunta.jpg" alt="Ordenador hoy, con la pregunta" loading="lazy"><figcaption><b>Hoy</b>La pregunta en lugar de los módulos.</figcaption></figure>
+      <figure><img src="fotos/esc-A.jpg" alt="Ordenador con los módulos y la tarjeta" loading="lazy"><figcaption><b>A</b>Los módulos y la tarjeta ancha, que ya trae las cuatro opciones: un toque y el día está servido.</figcaption></figure>
+    </div>
+    <p><b>Scroll medido en la home: 0 px</b> hoy y con la A (también con tu semana guardada), en español y en inglés, en cinco móviles (360×640, 375×667, 360×718, 360×730 y 412×844) y otra vez con la letra un poco más ancha: 40 medidas, ninguna pide scroll.</p>
+    <details><summary>Las mismas fotos a 360×640 (un Android pequeño)</summary>
+      <div class="fotos">
+        <figure><img src="fotos/home-hoy-pregunta-640.jpg" alt="" loading="lazy"><figcaption><b>Hoy</b></figcaption></figure>
+        <figure><img src="fotos/home-hoy-semana-640.jpg" alt="" loading="lazy"><figcaption><b>Hoy, con tu semana</b></figcaption></figure>
+        <figure><img src="fotos/home-A-640.jpg" alt="" loading="lazy"><figcaption><b>A</b></figcaption></figure>
+        <figure><img src="fotos/home-A-640-en.jpg" alt="" loading="lazy"><figcaption><b>A en inglés</b></figcaption></figure>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 2 · M6 ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Pregunta 2</div>
+      <h2>Los Ajustes del móvil, sin scroll</h2>
+      <p>Hoy la hoja ocupa el 72 % de la pantalla y lo de dentro no cabe: en tu Android mide 812 px y el hueco es de 525, así que pide 287 px de scroll (218 en la web, donde no sale la fila de «Alarmas y recordatorios»). Subir la hoja no basta: ni ocupando la pantalla entera cabría. Hay que juntar algo. Por temas mide así: Ver 98 px, Oír 136, Sesiones 181 y Tus datos 185.</p>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/aj-hoy-730.jpg" alt="Ajustes hoy" loading="lazy"><figcaption><b>Hoy</b>72 % de alto. «Tus datos» queda por debajo y hay que deslizar.</figcaption></figure>
+      <figure><img src="fotos/aj-A-730.jpg" alt="Ajustes con Tus datos aparte" loading="lazy"><figcaption><b>A · Tus datos en su hoja</b>79 % de alto, todo a la vista. Deja ver los minutos de arriba.</figcaption></figure>
+      <figure><img src="fotos/aj-A-datos-730.jpg" alt="La hoja de Tus datos" loading="lazy"><figcaption><b>A · Lo que abre «Copias, borrar y código ›»</b>Una hoja corta con lo de siempre, y la vuelta con «‹».</figcaption></figure>
+      <figure><img src="fotos/aj-B-730.jpg" alt="Ajustes todo junto y apretado" loading="lazy"><figcaption><b>B · Todo junto, más apretado</b>92 % de alto. Solo se ve la barra de arriba.</figcaption></figure>
+      <figure><img src="fotos/aj-C-730.jpg" alt="Ajustes por temas" loading="lazy"><figcaption><b>C · Por temas</b>49 % de alto. Cuatro pestañas, un tema cada vez.</figcaption></figure>
+    </div>
+
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> Tus datos en su propia hoja <span class="sello">Recomendada</span></h3>
+        <p>Exportar, importar, borrar y el código de PACE completo, que se usan poco, pasan a una hoja aparte que se abre desde la línea de «Tus datos», como «Tu semana ›». Las filas se juntan un poco y la nota de Android pasa a ser la línea pequeña de su fila. Todo lo demás se ve de una vez. Nace más arriba que hoy (79 % en tu Android) y nunca pide scroll, tampoco en un móvil pequeño.</p></div>
+      <div class="op"><h3><span class="letra">B</span> Todo junto, más apretado</h3>
+        <p>Nada se mueve de sitio: se quitan huecos entre filas y la hoja sube hasta casi arriba (92 %). Cabe en tu móvil, pero en uno pequeño (360×640) sigue pidiendo 22 px de scroll, 87 en Android, y se lee más apretado.</p></div>
+      <div class="op"><h3><span class="letra">C</span> Por temas</h3>
+        <p>Ver, Oír, Sesiones y Tus datos en cuatro pestañas. La hoja es más baja que hoy (49 %) y nunca pide scroll, pero cada cosa queda a un toque de pestaña y no ves todo junto.</p></div>
+    </div>
+
+    <div class="tabla"><table>
+      <thead><tr><th>Alto de la hoja · scroll</th><th>Tu móvil (360×730), Android</th><th>Tu móvil, web</th><th>Móvil pequeño (360×640), Android</th><th>Móvil pequeño, web</th></tr></thead>
+      <tbody>
+        <tr><td>Hoy</td><td class="n">72 % · <span class="no">287 px</span></td><td class="n">72 % · <span class="no">218 px</span></td><td class="n">72 % · <span class="no">352 px</span></td><td class="n">72 % · <span class="no">283 px</span></td></tr>
+        <tr><td>A · Tus datos aparte</td><td class="n">79 % · <span class="ok">0</span></td><td class="n">73 % · <span class="ok">0</span></td><td class="n">90 % · <span class="ok">0</span></td><td class="n">84 % · <span class="ok">0</span></td></tr>
+        <tr><td>B · Todo junto</td><td class="n">92 % · <span class="ok">0</span></td><td class="n">83 % · <span class="ok">0</span></td><td class="n">91 % · <span class="no">87 px</span></td><td class="n">91 % · <span class="no">22 px</span></td></tr>
+        <tr><td>C · Por temas</td><td class="n">49 % · <span class="ok">0</span></td><td class="n">39 % · <span class="ok">0</span></td><td class="n">56 % · <span class="ok">0</span></td><td class="n">45 % · <span class="ok">0</span></td></tr>
+      </tbody>
+    </table></div>
+    <p>«Android» es con la fila «Que el aviso llegue a su hora», que sale mientras no permites «Alarmas y recordatorios». Igual en español y en inglés. En el ordenador no cambia nada: el panel de siempre cabe entero (743 px en 879).</p>
+    <details><summary>A 360×640 y los otros temas de la C</summary>
+      <div class="fotos">
+        <figure><img src="fotos/aj-hoy-640.jpg" alt="" loading="lazy"><figcaption><b>Hoy a 640</b></figcaption></figure>
+        <figure><img src="fotos/aj-A-640.jpg" alt="" loading="lazy"><figcaption><b>A a 640</b></figcaption></figure>
+        <figure><img src="fotos/aj-B-640.jpg" alt="" loading="lazy"><figcaption><b>B a 640</b> (con scroll)</figcaption></figure>
+        <figure><img src="fotos/aj-C-640.jpg" alt="" loading="lazy"><figcaption><b>C a 640</b></figcaption></figure>
+        <figure><img src="fotos/aj-C-730-tema0.jpg" alt="" loading="lazy"><figcaption><b>C · Ver</b></figcaption></figure>
+        <figure><img src="fotos/aj-C-730-tema2.jpg" alt="" loading="lazy"><figcaption><b>C · Sesiones</b></figcaption></figure>
+        <figure><img src="fotos/aj-C-730-tema3.jpg" alt="" loading="lazy"><figcaption><b>C · Tus datos</b></figcaption></figure>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 3 · M4 ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Pregunta 3</div>
+      <h2>La voz grave en Rondas</h2>
+      <p>En Rondas express, Respiración en rondas y Rondas profundas cada fase dura 2 segundos. Con la voz grave, «inhala» suena y «exhala» no: en su lugar suena el soplido del tono, porque PACE creía que la palabra duraba 3,6 s.</p>
+    </div>
+    <div class="hallazgo">
+      <div class="meta">Lo que encontré al medirla</div>
+      <p><b>La palabra «exhala» de la voz grave dura 1,2 segundos, no 3,6.</b> Después hay 2,3 s de silencio y, en las últimas centésimas del archivo, un chasquido. La medida tomó ese chasquido por el final de la palabra. Sin él, «exhala» cabe de sobra en las fases de 2 s.</p>
+      <p>Ese chasquido suena hoy en las rutinas lentas, unos 3,6 s después de cada «exhala»: bajito pero claro en una sala en silencio. Lo puedes oír abajo, en Exhalación 4·6.</p>
+    </div>
+    <p>Los cuatro trozos salen del motor de sonido de PACE, con la voz grave, sin música de fondo y todos al mismo volumen. Mejor con auriculares.</p>
+    <div class="audios">
+      <div class="audio"><div class="meta">Rondas · hoy</div><audio controls preload="none" src="audio/rondas-hoy.wav"></audio><p>Cuatro respiraciones de 2 + 2 s: la voz dice «inhala» y al exhalar suena el soplido.</p></div>
+      <div class="audio"><div class="meta">Rondas · con la A</div><audio controls preload="none" src="audio/rondas-recortado.wav"></audio><p>La misma palabra de siempre, sin el chasquido: dice «inhala» y «exhala».</p></div>
+      <div class="audio"><div class="meta">Exhalación 4·6 · hoy</div><audio controls preload="none" src="audio/exh46-hoy.wav"></audio><p>Inhala 4 s, exhala 6 s. Escucha hacia el segundo 8: el chasquido.</p></div>
+      <div class="audio"><div class="meta">Exhalación 4·6 · con la A</div><audio controls preload="none" src="audio/exh46-recortado.wav"></audio><p>Igual, sin el chasquido.</p></div>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> Quitar el chasquido <span class="sello">Recomendada</span></h3>
+        <p>La voz grave dice «exhala» en las tres rutinas de Rondas, con la misma palabra que ya oyes en las demás, y el chasquido deja de sonar en todas. No hay que acelerarla ni grabar nada.</p></div>
+      <div class="op"><h3><span class="letra">B</span> Grabar un «exhala» nuevo</h3>
+        <p>Ya no hace falta por tiempo. Solo si quieres otra toma: una palabra tranquila de 1,85 s como mucho (sin contar silencios), sin respiración ni ruido antes o después, mono, con la misma herramienta y voz que la grave.</p></div>
+      <div class="op"><h3><span class="letra">C</span> Como hoy</h3>
+        <p>En Rondas, el soplido al exhalar; en las rutinas lentas, el chasquido sigue.</p></div>
+    </div>
+    <p>Acelerar la palabra, que era la otra idea, sobra: cabe tal cual.</p>
+  </section>
+
+  <footer class="pie">
+    <div class="meta">Tu respuesta</div>
+    <div class="respuesta">1 _ · 2 _ · 3 _</div>
+    <p>Por ejemplo «1A 2A 3A». Nada se monta hasta que elijas.</p>
+  </footer>
+</main>

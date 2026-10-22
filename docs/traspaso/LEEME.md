@@ -4,6 +4,19 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 22 oct., tarde: maqueta de M7, M6 y M4 para Ez (rama `claude/maqueta-inicio-3a2a59`, puerto 8803)
+
+Página publicada, esperando las letras de Ez: https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj
+(recomendado 1A 2A 3A). Guiones, página y hallazgos en `docs/traspaso/archivos/maqueta-inicio-22oct/`.
+Nada montado todavía. Lo que hay que saber:
+- **M4**: el «exhala» de bradford dura 1,20 s y no 3,57; el `fin: 3.68` de `PACE_VOZ_CLIPS` es un chasquido
+  en los últimos ~15 ms del archivo. Las letras cambiaron: A quitar el chasquido, B regrabar, C como hoy.
+- **M6**: 743 px de Ajustes en la web, 812 en Android; la A («Tus datos» aparte) no pide scroll a 730 ni a 640.
+- **M7**: la home no pide scroll con la A (40 medidas). Por libre vacía el calendario de hoy; sin contestar, no.
+- **Falta la pregunta 4** (la coordinadora, 22 oct.): las pausas con bloques cortos, (a) la invitación
+  «Dos minutos para moverte» con «Hacerla»/«Seguir» y (b) «¿Ejercicio después de cada bloque?», con
+  `DECISIONES_PRODUCTO.md` de `origin/main` (da2bc08). Se suma a la MISMA página (publicar con su `url`).
+
 ## 22 oct., tarde: v0.174.3 y v0.174.4 en `main`; coordina la otra cuenta
 
 Relevo y sesiones abiertas: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
