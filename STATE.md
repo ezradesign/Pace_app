@@ -98,7 +98,13 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto; S3, código portable, es
   la decisión de Ez) · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
-  H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió).
+  H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió) ·
+  **el calendario que se mantiene solo** (22 oct.), para la sesión de «A tu ritmo» cuando se junte lo
+  suyo, porque toca sus archivos: C1 «Desconectar» a mitad de una escritura no la para y puede volver
+  a poner lo quitado (`calendarioSoloDesconectar` va fuera de `_calSolo.cola` y del cerrojo), C2
+  «Calendario al día» con cambios pendientes o tras un fallo de escritura (`calendarioSoloPorDetras`
+  pide `!conAcceso`; `_calSolo.fallo` no sale en `calendarioSoloEstado`), C3 en Android «Desconectar»
+  sigue leyendo las reuniones al volver a la app: se iguala a la web, que deja de leer.
 - **Al volver los Caminos** (después de v1; hoy `SHOW_CAMINOS = false`), tres casos de la auditoría
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
