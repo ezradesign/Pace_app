@@ -17,8 +17,9 @@
    de las reuniones (con el candado de PACE completo si no hay derecho). Ya
    conectado, la hoja enseña solo ese destino, con cómo va y «Desconectar»; los
    otros dos se esconden para no escribir el día en dos calendarios y avisar dos
-   veces. Sin permiso vivo y con el día cambiado, «Poner al día». El enlace dice
-   «Calendario al día» o «Poner al día». El motor (ritmo.calendario.motor.js)
+   veces. Sin permiso vivo y con el día cambiado, «Poner al día»; tras un fallo
+   que no es de permiso, «Reintentar». El enlace dice uno de los cuatro casos de
+   `calendarioSoloCaso`. El motor (ritmo.calendario.motor.js)
    avisa con `pace:calendario-solo` cuando algo de eso cambia. */
 
 const { useState: useStateRC, useEffect: useEffectRC } = React;
@@ -42,14 +43,28 @@ function calendarioSoloPorDetras(solo) {
   return !!(solo && solo.pendiente && !solo.conAcceso);
 }
 
+/* LOS CUATRO CASOS (Ez, 22 oct. 2026, la A de docs/traspaso/archivos/calendario-estado-22oct/):
+   al día · poniendo al día (el minuto antes de escribir, o escribiendo) · no se pudo (la última
+   escritura falló y lo reintenta, con «Reintentar») · falta permiso («Poner al día»). Antes, los
+   dos del medio decían «Calendario al día». */
+function calendarioSoloCaso(solo) {
+  if (!solo) return null;
+  if (solo.trabajando) return 'poniendo';
+  if (calendarioSoloPorDetras(solo)) return 'permiso';
+  if (solo.pendiente) return solo.fallo ? 'fallo' : 'poniendo';
+  return 'aldia';
+}
+var CAL_ENLACE = { aldia: 'cal.enlace.aldia', poniendo: 'cal.enlace.poniendo', fallo: 'cal.enlace.fallo', permiso: 'cal.enlace.poner' };
+
 /* `antes`: lo que se hace antes de abrir la hoja (la de «Ver todo» se cierra, para no apilar dos). */
 function RitmoAlCalendario({ antes }) {
   const { t } = useT();
   const solo = useCalendarioSolo();
-  const texto = !solo ? t('cal.enlace') : calendarioSoloPorDetras(solo) ? t('cal.enlace.poner') : t('cal.enlace.aldia');
+  const caso = calendarioSoloCaso(solo);
+  const texto = !solo ? t('cal.enlace') : t(CAL_ENLACE[caso]);
   return (
     <button type="button" className="pace-rt-enlace pace-rt-fuerte" data-pace-ritmo-calendario
-      data-pace-cal-estado={!solo ? 'no' : calendarioSoloPorDetras(solo) ? 'poner' : 'aldia'}
+      data-pace-cal-estado={!solo ? 'no' : caso === 'permiso' ? 'poner' : caso}
       onClick={() => { if (antes) antes(); ritmoCalendarioAbrir(); }}>
       {texto}
     </button>
@@ -88,6 +103,7 @@ function ritmoCalendarioHoraMs(ms) {
 function ritmoCalendarioSoloSub(solo, t, tn) {
   if (solo.trabajando) return t('cal.solo.trabajando');
   if (calendarioSoloPorDetras(solo)) return solo.alDia ? tn('cal.solo.atrasado', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.atrasado.sin');
+  if (solo.pendiente) return solo.fallo && solo.reintento ? tn('cal.solo.fallo', { h: ritmoCalendarioHoraMs(solo.reintento) }) : t('cal.solo.trabajando');
   if (solo.destino === 'android' || !solo.hasta) return solo.alDia ? tn('cal.solo.ultimo', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.trabajando');
   const manana = new Date(solo.hasta).toDateString() !== new Date().toDateString();
   return tn(manana ? 'cal.solo.hasta.manana' : 'cal.solo.hasta', { h: ritmoCalendarioHoraMs(solo.hasta) });
@@ -126,7 +142,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     : tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
   if (solo) {
     const q = solo.quedan;
-    resumen = calendarioSoloPorDetras(solo)
+    resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo'
       ? (solo.alDia ? tn('cal.solo.resumen.pendiente', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.resumen.pendiente.sin'))
       : q.length ? tn('cal.solo.resumen', { a: ritmoHora(q[0].desde), b: ritmoHora(q[q.length - 1].hasta) }) : t('cal.solo.resumen.nada');
   }
@@ -198,9 +214,12 @@ function RitmoCalendarioHoja({ plan, onClose }) {
 
   const accion = (destino) => {
     if (solo && destino === solo.destino) {
-      return calendarioSoloPorDetras(solo)
-        ? <button type="button" className="pace-rt-cal-btn pace-rt-lleno" data-pace-cal-poner disabled={!!trabajo} onClick={ponerAlDia}>
-            {trabajo === 'poner' ? t('cal.trabajando') : t('cal.btn.poner')}
+      /* mientras «Reintentar» escribe, el motor está trabajando: el botón sigue en su sitio */
+      const reintentar = calendarioSoloCaso(solo) === 'fallo' || (trabajo === 'poner' && !calendarioSoloPorDetras(solo));
+      return calendarioSoloPorDetras(solo) || reintentar
+        ? <button type="button" className="pace-rt-cal-btn pace-rt-lleno" data-pace-cal-poner={reintentar ? undefined : ''}
+            data-pace-cal-reintentar={reintentar ? '' : undefined} disabled={!!trabajo} onClick={ponerAlDia}>
+            {trabajo === 'poner' ? t('cal.trabajando') : t(reintentar ? 'cal.btn.reintentar' : 'cal.btn.poner')}
           </button>
         : <button type="button" className="pace-rt-cal-btn" data-pace-cal-desconectar disabled={!!trabajo || preguntar}
             onClick={() => { setAviso(null); setPreguntar(true); }}>{t('cal.btn.desconectar')}</button>;
@@ -251,10 +270,10 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     );
   } else if (aviso) {
     nota = <div className={'pace-rt-cal-aviso' + (aviso.tipo === 'error' ? ' pace-rt-error' : '')} role="status" data-pace-cal-aviso={aviso.tipo}>{aviso.texto}</div>;
-  } else if (calendarioSoloPorDetras(solo)) {
+  } else if (calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo') {
     nota = (
       <div className="pace-rt-cal-aviso" role="status" data-pace-cal-aviso="nota">
-        {t('cal.solo.nota.' + solo.destino)}
+        {t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + solo.destino : 'cal.solo.nota.fallo')}
         <button type="button" className="pace-rt-enlace" data-pace-cal-desconectar onClick={() => setPreguntar(true)}>{t('cal.btn.desconectar')}</button>
       </div>
     );

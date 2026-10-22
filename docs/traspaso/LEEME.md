@@ -11,6 +11,13 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **22 oct.: v0.174.3, tres casos del calendario que se mantiene solo** (auditoría externa del 22
+  oct., rama `claude/happy-allen-d915c3`), con su prueba, que falla contra v0.174.2: «Desconectar»
+  corta la escritura en marcha y en Android deja de leer las reuniones. Lo que dice la hoja: Ez
+  eligió la A, «cuatro casos» (al día, poniendo al día, no se pudo con «Reintentar» y la hora del
+  próximo intento, y falta permiso), sobre `docs/traspaso/archivos/calendario-estado-22oct/tabla.md`;
+  montada en la misma versión. En cola, aparte: el puente del calendario de Android se traga los
+  errores.
 - **22 oct.: v0.174.2, seis casos de la auditoría externa del 21 oct.** (rama
   `claude/happy-allen-d915c3`), cada uno con su prueba, que falla contra v0.174.0: las reuniones
   en los bordes del día, la jornada en plena comida (Ez eligió la B, «lo que queda de comida»,

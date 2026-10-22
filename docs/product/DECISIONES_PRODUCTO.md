@@ -36,6 +36,17 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
 - **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones
   de 2 s de las tres rutinas de rondas, así que ahí suena el tono. Con la voz clara suenan las dos.
 
+## Lo que dice el calendario que se mantiene solo: cuatro casos (Ez, 22 oct. 2026)
+
+C2 de la auditoría externa del 22 oct. La hoja y el enlace decían «Calendario al día» también en
+el minuto antes de escribir un cambio y cuando escribir había fallado (sin red, o el calendario no
+contesta). Sobre la tabla de `docs/traspaso/archivos/calendario-estado-22oct/tabla.md`, Ez eligió
+**«A · Cuatro casos»**: «Calendario al día» cuando no hay nada por escribir; «Poniendo al día…» el
+minuto antes y mientras escribe; «No se pudo poner al día», con la hora del próximo intento
+(«lo intenta otra vez a las 10:36»), la nota «PACE lo vuelve a intentar cada 5 minutos» y el botón
+«Reintentar», que escribe al momento sin abrir ninguna ventana; y «Poner al día» cuando falta el
+permiso, como antes. Lo que dice la hoja es siempre verdad. Montado en v0.174.3.
+
 ## Dos pestañas a la vez: se acepta como riesgo (Ez, 22 oct. 2026)
 
 Caso 8 de la auditoría de datos del 21 oct. Con PACE abierto en dos ventanas, si las dos apuntan

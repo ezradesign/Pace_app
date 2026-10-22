@@ -89,6 +89,12 @@ Object.assign(window.PACE_STRINGS.es, {
     'cal.puesto':                    'Tu calendario ya está al día.',
     'cal.enlace.aldia':              'Calendario al día',
     'cal.enlace.poner':              'Poner al día',
+    /* C2 (Ez, 22 oct.): poniéndose al día y «no se pudo», además de al día y falta permiso */
+    'cal.enlace.poniendo':           'Poniendo al día…',
+    'cal.enlace.fallo':              'No se pudo poner al día',
+    'cal.solo.fallo':                'No se pudo · lo intenta otra vez a las {h}',
+    'cal.solo.nota.fallo':           'No se pudo hablar con tu calendario. PACE lo vuelve a intentar cada 5 minutos.',
+    'cal.btn.reintentar':            'Reintentar',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -173,4 +179,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'cal.puesto':                    'Your calendar is up to date.',
     'cal.enlace.aldia':              'Calendar up to date',
     'cal.enlace.poner':              'Bring up to date',
+    'cal.enlace.poniendo':           'Updating…',
+    'cal.enlace.fallo':              'Calendar not updated',
+    'cal.solo.fallo':                'Could not update · trying again at {h}',
+    'cal.solo.nota.fallo':           'Could not reach your calendar. PACE tries again every 5 minutes.',
+    'cal.btn.reintentar':            'Try again',
 });
