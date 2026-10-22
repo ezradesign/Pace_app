@@ -8,8 +8,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **Web** en https://pacegrass.app (y `paceweb.pages.dev`, sin redirigir), con `/premium` y su lista
   «Avísame», que se enciende al conectar el KV (`docs/launch/avisame.md`).
 - **Android** (Fase 2 de `ROADMAP.md`) hecho en código y sin probar en un móvil: cada push a `main`
-  compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0); la App Store,
-  después de v1.
+  compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0) y, desde el 22
+  oct., **dentro de v1** (Ez): TestFlight en cuanto haya cuenta de Apple, y la App Store el mismo día que
+  Android (`DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
   Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
@@ -83,8 +84,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
 - Los dibujos que faltan: la cuenta y los prompts, en `docs/product/GLIFOS_A_DIBUJAR.md`.
-- iPhone: la cuenta de Apple Developer y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4), y
-  pasar a su tester qué mirar en Safari, sobre todo el sonido.
+- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer y su llave
+  (`docs/launch/app-store/guia.html`, puntos 3 y 4), y pasar a sus testers qué mirar, sobre todo el sonido.
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.
 
 ## Deuda conocida, sin fecha

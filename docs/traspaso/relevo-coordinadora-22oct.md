@@ -18,19 +18,24 @@ entera con todo junto y push. Como mucho dos sesiones a la vez, con archivos y p
 
 ## Dónde está main
 
-**v0.174.5** juntada el 22 oct. hacia las 21:00 con el sí de Ez (commit 3dfe0fc): logros solo con la sesión
-entera (Ez: «entera» como se montó: saltar un descanso no corta, saltar un ejercicio sí, una Respira retomada
-que llega al final cuenta, Foco no cambia), Respira en dos pestañas, Intro en el menú de pausa, el aro al
-volver y «Ponle ritmo al día». Suite entera con todo junto: 800 en verde y 2 saltadas. El CI de GitHub de
-3dfe0fc estaba corriendo al relevo: **mirarlo primero** (`gh run list --branch main`); no subir nada a main
-mientras corre, porque un push nuevo cancela el anterior. La rama `claude/logros-creditos-6ea13b` ya está
-dentro; su sesión (`local_6078ef5d-…`), terminada: archivarla con el sí de Ez.
+**v0.174.6** juntada el 22 oct. hacia las 22:55 con el sí de Ez (commit 86e1958): la app abre con los módulos,
+los Ajustes del móvil sin scroll y la voz grave en Rondas (1A 2A 3A). Suite entera con todo junto: 819 en verde y
+2 saltadas. **Mirar primero el CI** (`gh run list --branch main --workflow CI`); no subir nada a main mientras
+corre, porque un push nuevo cancela el anterior. Antes, v0.174.5 (3dfe0fc, logros solo con la sesión entera); su
+rama `claude/logros-creditos-6ea13b` ya está dentro y su sesión (`local_6078ef5d-…`), terminada: archivarla con el
+sí de Ez. **Desde la carpeta principal, nunca `cd` en Bash**: rutas absolutas y `git -C` (un `cd` a un worktree
+movió el directorio de la sesión dos veces el 22 oct.).
 
 ## Sesiones en marcha
 
 | Sesión | id | Carpeta y rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
 | Maqueta: inicio, Ajustes y la voz | `local_95664ff9-51ad-4ce0-95c9-7963e794bb52` (retomada a las 21:40; antes `local_6ea49468-…` y `local_6c95115f-…`) | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 | v0.174.6 lista (0707b36), esperando el sí de Ez para juntarla; la pregunta 5 («Hacerla»), sin contestar. Mientras, solo lectura: la lista del reparto de «Hacerla». No toca la rama hasta que v0.174.6 esté en main; luego junta `origin/main` y monta las pausas como v0.175.0 |
+| Página para testers y letra de /premium | `local_be95e077-a320-47ba-9cd5-47f585894330` (22:25) | su worktree, rama `claude/beta-testers-…` | 8804 | v0.174.7 provisional | Punto 3 de la cola: `/beta` (1A · 2A) y la letra A en `/beta` y `/premium`. Solo `beta/`, `premium/index.html`, `scripts/web-dist.js` y sus pruebas; nada de `app/`. Sin navegadores hasta el aviso de v0.174.6 en main |
+
+Al juntar v0.174.6 (22 oct., ~22:20), el CI de main de 4a6fc34 ya había acabado: `verify` y los dos trozos de
+`e2e` en verde; `e2e-safari` se colgó 30 min en `npx playwright install-deps webkit` (apt de GitHub, no el código:
+en 3dfe0fc tardó 2 min) y GitHub lo dio por cancelado. Si se repite, ponerle un `timeout-minutes` corto a ese paso.
 
 Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque de arriba de
 `docs/traspaso/LEEME.md` de su rama. Para retomarlas desde la otra cuenta: `docs/WORKFLOW.md` §10
@@ -85,7 +90,11 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    v0.175.0 cuando acabe 1A 2A 3A (ya puede: v0.174.5 está en main), tras la maqueta nueva de «Hacerla» (un
    ejercicio de Mueve o Estira con el glifo del módulo; arriba, «Al relevo») y con el sí de Ez. Las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
    `ritmo.regla.js` (`ritmoComponer`), `state-ritmo.jsx` (`ritmoPrevios`), `ritmo.series.js`
-   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. **La segunda parte de lo de ChatGPT**,
+   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. **Pregunta 5 contestada (22 oct., ~22:15):
+   5a A · 5b B con un cambio**: «Un momento para moverte»; «Hacerla» abre una hoja abajo y de ahí la pantalla de
+   ejercicio de siempre con uno de los 31 de `docs/proposals/hacerla-reparto.md` (rama de la Maqueta); en el aro, no.
+   Pasado a la sesión: tras v0.174.6 en main, fotos de la hoja → runner → vuelta al aro para Ez (republica
+   https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d) y, mientras, monta 4a, 4b y 4c. **La segunda parte de lo de ChatGPT**,
    el aviso a mitad de un bloque largo (45 min o más), se mira con Ez después de que pruebe la primera en su
    móvil (`DECISIONES_PRODUCTO.md`, «después de verlo»): sin maqueta todavía.
 2. **Montar 1A 2A 3A de la maqueta** (M7, M6, M4) como v0.174.6, en la misma sesión de la maqueta: **lista**
@@ -110,7 +119,17 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    recomendada; B la misma letra sin cursiva). **Ez eligió A** («como la app, en cursiva») **y los colores clásicos
    de PACE, si procede, para darle un toque** (los de los módulos en `app/tokens.css`: el oliva del Foco, la
    terracota de Respira, el de Mueve, Estira y Agua). Se montan /beta y /premium a la vez; los colores, con un
-   antes/después rápido si cambian algo más que un detalle.
+   antes/después rápido si cambian algo más que un detalle. **Con `/beta` publicada, la publicación de LinkedIn**
+   (idea de Ez, 22 oct.): el texto, en `docs/launch/google-play/testers.md`, «LinkedIn, con la página /beta»;
+   la publica Ez, mejor con el grupo creado y la prueba cerrada aprobada.
+3b. **El iPhone entra en v1** (Ez, 22 oct., ~22:40; `DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
+   Espera la cuenta de Apple Developer de Ez y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4).
+   Con ellas, antes que lo que siga en esta cola: la firma y la subida a TestFlight desde GitHub
+   (`.github/workflows/ios.yml`, sin Mac), el apartado del iPhone en `privacy.html` (enseñárselo a Ez antes:
+   es pública) y el texto de «qué probar»; y una sección iPhone en `/beta` con el enlace público de
+   TestFlight, con maqueta antes. Con la Fase 6 (punto 14): la compra de Apple como tercera tienda, la mensual
+   como suscripción de Apple, «Restaurar compras», códigos de oferta para los testers, la ficha, las capturas
+   y la revisión. Los testers de iPhone no cuentan para los 12 de Play.
 4. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
 5. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.
@@ -147,7 +166,8 @@ faltaban: puntos 8 y 1). **Las otras dos, «qué pasa cuando sale una versión n
 tienen respuesta apuntada en ningún sitio: preguntado a Ez si ChatGPT contestó.** Los prompts no se guardaron;
 si hacen falta, se reescriben.
 
-**Para Ez, por orden**: los testers (y, con la página de arriba, el grupo de Google), el gestor para darse
+**Para Ez, por orden**: los testers (y, con la página de arriba, el grupo de Google), la cuenta de Apple
+Developer y su llave (el iPhone entra en v1), el gestor para darse
 de alta y cobrar, la consulta de ChatGPT de lo legal para cobrar, los dibujos (la rana, en pausa), y cuando pueda: las altas de Google y Microsoft, Stripe, el gestor, el aviso legal, el
 logo, copiar sus dos llaves a un disco y la voz «Más»/«More» del suspiro.
 

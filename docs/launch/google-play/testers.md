@@ -68,7 +68,41 @@ Para publicarla, Google me pide que la prueben 12 personas durante 14 días. Sol
 Si te animas, contéstame con el correo de tu cuenta de Google (el de Play Store) y te mando el enlace. Y si se lo pasas a alguien que pase el día delante del ordenador, mejor todavía. ¡Gracias!
 ```
 
-### LinkedIn (publicación)
+### LinkedIn, con la página /beta (la buena desde que `/beta` esté publicada)
+
+Ez lo propuso el 22 oct. Se publica cuando `pacegrass.app/beta` esté en línea, con el grupo de Google
+creado y, mejor, con la prueba cerrada ya aprobada por Google (si no, quien se apunte espera el enlace).
+Así nadie tiene que mandar su correo: se apuntan solos. Lo publica Ez desde su cuenta.
+
+```
+Llevo meses construyendo PACE, una app para quien pasa la jornada sentado frente a una pantalla: reparte el día en bloques de foco y te propone pausas cortas y guiadas (respirar, estirar, moverte, beber agua) que caben entre dos tareas.
+
+Sin cuentas, sin anuncios y con tus datos solo en tu móvil.
+
+Ya está lista para Android y, antes de publicarla, Google pide una prueba cerrada: al menos 12 personas durante 14 días. Busco a esas personas.
+
+Si tienes un Android, entra en pacegrass.app/beta: son dos pasos y un par de minutos. Solo te pido tenerla instalada esas dos semanas y contarme qué echas de menos. Como gracias, PACE completo de por vida.
+
+¿Tienes iPhone? También llega: escríbeme y te aviso en cuanto esté.
+
+#productividad #bienestar #pomodoro #pausasactivas #android
+```
+
+```
+I've spent months building PACE, an app for people who spend the workday sitting in front of a screen: it splits your day into focus blocks and suggests short, guided breaks (breathe, stretch, move, drink water) that fit between two tasks.
+
+No accounts, no ads, and your data stays on your phone.
+
+It's ready for Android, and before it goes public Google asks for a closed test: at least 12 people for 14 days. I'm looking for those people.
+
+If you have an Android phone, go to pacegrass.app/beta: two steps, a couple of minutes. All I ask is that you keep it installed for those two weeks and tell me what you'd miss. As a thank-you, PACE complete for life.
+
+On iPhone? It's coming too: message me and I'll let you know as soon as it's ready.
+
+#productivity #wellbeing #pomodoro #activebreaks #android
+```
+
+### LinkedIn (publicación, antes de /beta: pide el correo por privado)
 
 ```
 Llevo meses construyendo PACE, una app para quien pasa la jornada sentado frente a una pantalla: reparte el día en bloques de foco y te sirve pausas cortas y guiadas (respirar, estirar, moverte, beber agua) que caben entre dos tareas.
