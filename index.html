@@ -3695,6 +3695,16 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aro.bloque': 'Bloque {n} de {m}',
   'ritmo.aro.empezar': 'Empezar jornada',
   'ritmo.aro.siguiente': 'Empezar bloque {n}',
+
+  'bloques.invita': 'Un momento para moverte',
+  'bloques.hacerla': 'Hacerla',
+  'bloques.seguir': 'Seguir',
+  'bloques.ejercicio': 'Ejercicio',
+  'bloques.ritmo': 'a mi ritmo',
+  'bloques.cada': 'después de cada bloque',
+  'bloques.eleccion': '¿Ejercicio después de cada bloque?',
+  'bloques.hoja.sub': 'Un ejercicio junto a la mesa.',
+  'bloques.hoja.s': 's',
   'ritmo.sidebar': 'Siguiente pausa · {h}',
   'ritmo.sidebar.ahora': 'Tu pausa · {h}',
   'ritmo.aria.inicio': 'Hora a la que empiezas',
@@ -3829,6 +3839,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aro.bloque': 'Block {n} of {m}',
   'ritmo.aro.empezar': 'Start the day',
   'ritmo.aro.siguiente': 'Start block {n}',
+  'bloques.invita': 'A moment to move',
+  'bloques.hacerla': 'Do it',
+  'bloques.seguir': 'Keep going',
+  'bloques.ejercicio': 'Exercise',
+  'bloques.ritmo': 'at my pace',
+  'bloques.cada': 'after every block',
+  'bloques.eleccion': 'Exercise after every block?',
+  'bloques.hoja.sub': 'One exercise, right by your desk.',
+  'bloques.hoja.s': 's',
   'ritmo.sidebar': 'Next break · {h}',
   'ritmo.sidebar.ahora': 'Your break · {h}',
   'ritmo.aria.inicio': 'Start time',
@@ -9460,7 +9479,8 @@ var RITMO_FORMAS = {
 
 
 function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
-  var PAUSA = 5,LARGA = 15,MINIMO = 15,COLA = 30,FOCO_LARGA = 75,JUNTOS = 30;
+
+  var PAUSA = 5,LARGA = 15,MINIMO = 15,COLA = 30,FOCO_LARGA = 75,JUNTOS = horario && horario.cadaBloque ? 0 : 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
 
@@ -12300,7 +12320,7 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
 
 
   var H = typeof ritmoHorarioDelDia === 'function' ? ritmoHorarioDelDia(R.horario, hoy) : R.horario;
-  var h = Object.assign({}, H, { ahora: desde != null ? desde : Math.max(H.inicio, ritmoAhora()), ocupado: R.ocupado });
+  var h = Object.assign({}, H, { ahora: desde != null ? desde : Math.max(H.inicio, ritmoAhora()), ocupado: R.ocupado, cadaBloque: bloquesCadaUno(s) });
   var agua = (s || {}).water && s.water.goal || 8;
   var previos = pasado ? ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) : null;
 
@@ -12803,9 +12823,11 @@ function ritmoPausaHecha(routineId) {
 
 
 
+
 function ritmoSinPausa(s) {
   var p = typeof ritmoPlan === 'function' ? ritmoPlan(s || getState()) : null;
-  if (!p || p.hechos < 1) return false;
+  if (!p) return typeof bloquesSinDiaJunta === 'function' && bloquesSinDiaJunta(s || getState());
+  if (p.hechos < 1) return false;
   var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
   return !!it && it.tipo === 'foco';
 }
@@ -12880,6 +12902,101 @@ Object.assign(window, {
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia
 });
 ;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSinPausa, ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+})();
+</script>
+  <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var BLOQUES_JUNTOS = 30;
+var BLOQUES_INVITA = 15;
+
+
+function bloquesCortos(min) {
+  var m = Number(min) || 0;
+  return m > 0 && m * 2 <= BLOQUES_JUNTOS;
+}
+function bloquesCadaUno(s) {return !!s && s.ejercicioBloques === 'cada';}
+
+
+
+function bloquesJuntan(seguidos, bloque) {return seguidos + bloque <= BLOQUES_JUNTOS;}
+
+
+
+function bloquesInvita(antes, bloque, pausa) {
+  return !pausa && bloquesCortos(bloque) && antes < BLOQUES_INVITA && antes + bloque >= BLOQUES_INVITA;
+}
+
+
+
+function bloquesSeguidoAntes(m, tramo) {
+  var i = m.items.indexOf(tramo),suma = 0;
+  while (--i >= 0) {
+    var it = m.items[i];
+    if (it.tipo === 'pausa' || it.tipo === 'comida') break;
+    if (it.tipo === 'foco') suma += it.dur;
+  }
+  return suma;
+}
+
+
+
+function bloquesTerminado(minutos) {
+  var s = getState();
+  var cada = bloquesCadaUno(s);
+  var p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (p) {
+    if (p.hechos < 1 || cada) return false;
+    var ultimo = p.m.focos[p.hechos - 1];
+    var detras = ritmoDetras(p.m, ultimo);
+    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ultimo.dur, !(detras && detras.tipo === 'foco'));
+  }
+  var m = Number(minutos) || 0;
+  var hoy = ritmoHoy();
+  var c = s.bloquesSinDia;
+  var antes = c && c.fecha === hoy && !c.pausa && typeof c.seguidos === 'number' ? c.seguidos : 0;
+  var junta = !cada && bloquesCortos(m) && bloquesJuntan(antes + m, m);
+  setState({ bloquesSinDia: { fecha: hoy, seguidos: antes + m, pausa: !junta } });
+  return !cada && bloquesInvita(antes, m, !junta);
+}
+
+
+function bloquesSinDiaJunta(s) {
+  var c = (s || {}).bloquesSinDia;
+  return !!c && c.fecha === ritmoHoy() && c.pausa === false;
+}
+
+
+function bloquesElegir(valor) {
+  setState({ ejercicioBloques: valor === 'cada' ? 'cada' : 'ritmo' });
+  if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
+}
+
+Object.assign(window, {
+  BLOQUES_JUNTOS, BLOQUES_INVITA, bloquesCortos, bloquesCadaUno, bloquesJuntan, bloquesInvita,
+  bloquesSeguidoAntes, bloquesTerminado, bloquesSinDiaJunta, bloquesElegir
+});
+;Object.assign(window, { BLOQUES_JUNTOS, BLOQUES_INVITA, bloquesCortos, bloquesCadaUno, bloquesJuntan, bloquesInvita, bloquesSeguidoAntes, bloquesTerminado, bloquesSinDiaJunta, bloquesElegir });
 })();
 </script>
   <!-- Lo que las series recuerdan: lo servido estos siete días y lo hecho hoy. -->
@@ -15303,7 +15420,7 @@ function ritmoMenuDe(s, dia, cambios) {
   h0.media = ritmoMedia(h0);
 
   var ocupado = ritmoOcupadoDe(r, dia.fecha);
-  var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado });
+  var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado, cadaBloque: bloquesCadaUno(s) });
   var agua = (s || {}).water && s.water.goal || 8;
   var pasado = dia.pasado && dia.pasado.length ? dia.pasado : null;
   var previos = pasado ? ritmoPrevios(pasado, dia.primerBloque || null, !!dia.pausaPendiente, dia.bloque || null) : null;
@@ -26854,6 +26971,81 @@ Object.assign(window, { LibraryShell });
        de la preparación, que s175 quitó, y desde entonces sólo clonaba un nodo
        y gastaba 24 frames buscando dónde aterrizar. -->
 
+  <!-- El aro con bloques cortos (22 oct. 2026): la invitación y la elección. Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStateFB, useEffect: useEffectFB } = React;
+
+function useBloquesAro(_ref) {let { state, status, isAro, t, seguir } = _ref;
+  const [invita, setInvita] = useStateFB(false);
+  const [hoja, setHoja] = useStateFB(false);
+  const foco = state.focusMode === 'foco';
+  const completo = status === 'completed';
+
+
+  useEffectFB(() => {
+    if (status !== 'completed' || !foco) {setInvita(false);setHoja(false);}
+  }, [status, foco]);
+  const invitando = invita && completo && foco;
+
+
+  const parado = status === 'idle' || completo;
+  const plan = foco && isAro && parado && !invitando && bloquesCortos(state.focusMinutes) && typeof ritmoPlan === 'function' ?
+  ritmoPlan(state) : null;
+  const eleccion = !!(plan && plan.actual);
+
+  let subtitulo = null;
+  if (invitando) subtitulo = React.createElement("span", { "data-pace-invita": true }, t('bloques.invita'));else
+  if (eleccion) {
+    subtitulo =
+    React.createElement("span", { "data-pace-bloques": true },
+    t('bloques.ejercicio'), ' ',
+    React.createElement("select", { "data-pace-bloques-sel": true, className: "pace-rt-sel", "aria-label": t('bloques.eleccion'),
+      value: bloquesCadaUno(state) ? 'cada' : 'ritmo', onChange: (e) => bloquesElegir(e.target.value) },
+    React.createElement("option", { value: "ritmo" }, t('bloques.ritmo')),
+    React.createElement("option", { value: "cada" }, t('bloques.cada'))
+    )
+    );
+
+  }
+
+  return {
+    marcar: (v) => setInvita(!!v),
+    subtitulo,
+    cta: invitando ? { label: t('bloques.hacerla'), action: () => setHoja(true) } : null,
+    seguir: invitando ?
+    React.createElement("button", { type: "button", "data-pace-invita-seguir": true, onClick: seguir, style: focusStyles.resetTextBtn }, t('bloques.seguir')) :
+    null,
+    hoja: invitando && hoja && typeof RitmoHacerla === 'function' ?
+    ReactDOM.createPortal(React.createElement(RitmoHacerla, { onClose: () => setHoja(false), onSeguir: () => {setHoja(false);seguir();} }), document.body) :
+    null
+  };
+}
+
+Object.assign(window, { useBloquesAro });
+;Object.assign(window, { useBloquesAro });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -26926,6 +27118,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       try {
         onFinish && onFinish();
       } finally {
+
+        try {bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos));} catch (e) {}
         try {if (!(typeof ritmoSinPausa === 'function' && ritmoSinPausa(getState()))) paceFocoPausaPendiente(bloque);} catch (e) {}
         try {if (typeof ritmoPausaEmpieza === 'function') ritmoPausaEmpieza(finBloque);} catch (e) {}
         try {
@@ -27063,13 +27257,16 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   };
   const isCompleted = status === 'completed';
 
+  const bloques = useBloquesAro({ state, status, isAro: state.timerStyle === 'aro', t, seguir: () => handleStartAnotherCycle() });
 
 
 
 
 
 
-  const subtitle = enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
+
+  const subtitle = bloques.subtitulo ? bloques.subtitulo :
+  enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
   isFocoMode ?
   isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)) :
   state.focusMode === 'pausa' ? t('focus.subtitle.pause') :
@@ -27167,8 +27364,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     ctaLabel = t('focus.pause');
     ctaAction = handlePause;
   } else if (isCompleted) {
-    ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
-    ctaAction = handleStartAnotherCycle;
+    ctaLabel = bloques.cta ? bloques.cta.label : aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
+    ctaAction = bloques.cta ? bloques.cta.action : handleStartAnotherCycle;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
     ctaAction = handleNormalStart;
@@ -27210,6 +27407,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   ctaLabel
   ),
+  bloques.seguir,
 
 
 
@@ -27289,6 +27487,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     )
     ),
 
+    bloques.hoja,
 
     minPendiente != null && ReactDOM.createPortal(
       React.createElement(Modal, { open: true, onClose: () => setMinPendiente(null), maxWidth: 440, title: tn('focus.cambioMin.title', { n: minPendiente }) },

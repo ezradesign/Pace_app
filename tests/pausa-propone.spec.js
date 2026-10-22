@@ -112,6 +112,9 @@ test('la propuesta NO hace crecer el modal · 360x640', async ({ page, context, 
     const hoy = new Date().toDateString();
     const s = JSON.parse(localStorage.getItem('pace.state.v2') || '{}');
     s.focusMinutes = 15;
+    /* con «a mi ritmo» (lo de fábrica desde el 22 oct.) un bloque de 15 sin día invita y la
+       ventana espera a la media hora; con «después de cada bloque» sale tras cada uno */
+    s.ejercicioBloques = 'cada';
     s.lastActiveDay = hoy;
     s.plan = { muevete: true, respira: true, extra: true, hidratate: true };
     s.water = { goal: 8, today: 8, lastReset: hoy };
@@ -167,6 +170,7 @@ test('«Empezar» entra en ESA rutina, no en su biblioteca', async ({ page, cont
 test('sin motivo no hay propuesta, y eso es correcto', async ({ page, context }) => {
   await sembrarEstado(context, {
     focusMinutes: 15,
+    ejercicioBloques: 'cada',   /* la ventana tras el bloque de 15, sin esperar a la media hora (22 oct.) */
     plan: { muevete: true, respira: true, extra: true, hidratate: true },
     water: { goal: 8, today: 8, lastReset: new Date().toDateString() },
   });

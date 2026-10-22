@@ -68,6 +68,8 @@ function FocusTimer({ onFinish }) {
       try {
         onFinish && onFinish();
       } finally {
+        /* Con bloques cortos, antes de decidir la ventana: la invitación y la cuenta sin día (22 oct.). */
+        try { bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos)); } catch (e) {}
         try { if (!(typeof ritmoSinPausa === 'function' && ritmoSinPausa(getState()))) paceFocoPausaPendiente(bloque); } catch (e) {}
         try { if (typeof ritmoPausaEmpieza === 'function') ritmoPausaEmpieza(finBloque); } catch (e) {}
         try {
@@ -204,6 +206,8 @@ function FocusTimer({ onFinish }) {
     set({ focusMinutes: v });
   };
   const isCompleted = status === 'completed';
+  /* Las pausas con bloques cortos (FocusTimer.bloques.jsx): la invitación, su hoja y la elección del aro. */
+  const bloques = useBloquesAro({ state, status, isAro: state.timerStyle === 'aro', t, seguir: () => handleStartAnotherCycle() });
 
   /* Subtítulo del aro/barra/analógico (s124):
      - modo foco: DESCRIPTOR editorial por DURACIÓN (getFocusDescriptorKey);
@@ -211,7 +215,8 @@ function FocusTimer({ onFinish }) {
        descriptor en el MISMO slot (no añade altura estructural → no toca el
        atardecer de s123).
      - pausa/larga: conservan su copy propio (invariante: copys de pausa). */
-  const subtitle = enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de })
+  const subtitle = bloques.subtitulo ? bloques.subtitulo
+    : enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de })
     : isFocoMode
     ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
     : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
@@ -309,8 +314,8 @@ function FocusTimer({ onFinish }) {
     ctaLabel = t('focus.pause');
     ctaAction = handlePause;
   } else if (isCompleted) {
-    ctaLabel = aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
-    ctaAction = handleStartAnotherCycle;
+    ctaLabel = bloques.cta ? bloques.cta.label : aro ? aro.empezar : isFocoMode ? t('focus.startAnother') : startLabel;
+    ctaAction = bloques.cta ? bloques.cta.action : handleStartAnotherCycle;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
     ctaAction = handleNormalStart;
@@ -352,6 +357,7 @@ function FocusTimer({ onFinish }) {
       >
         {ctaLabel}
       </button>
+      {bloques.seguir}
       {/* Reset RE-JERARQUIZADO (s124): oculto en idle/running/completed; en
           paused es una acción TEXTUAL secundaria «Reiniciar bloque» (no botón
           circular). Va EN FILA junto al CTA para NO añadir altura al interior
@@ -431,6 +437,7 @@ function FocusTimer({ onFinish }) {
         />
       </div>
 
+      {bloques.hoja}
       {/* A document.body: dentro del aro, recortado al horizonte, el fondo se quedaba arriba. */}
       {minPendiente != null && ReactDOM.createPortal(
         <Modal open onClose={() => setMinPendiente(null)} maxWidth={440} title={tn('focus.cambioMin.title', { n: minPendiente })}>

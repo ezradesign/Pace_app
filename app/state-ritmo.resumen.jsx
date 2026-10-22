@@ -44,7 +44,7 @@ function ritmoMenuDe(s, dia, cambios) {
   h0.media = ritmoMedia(h0);
   /* las mismas reuniones con las que se compuso (ritmoOcupadoDe), o el día no es el servido */
   var ocupado = ritmoOcupadoDe(r, dia.fecha);
-  var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado });
+  var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado, cadaBloque: bloquesCadaUno(s) });
   var agua = ((s || {}).water && s.water.goal) || 8;
   var pasado = dia.pasado && dia.pasado.length ? dia.pasado : null;
   var previos = pasado ? ritmoPrevios(pasado, dia.primerBloque || null, !!dia.pausaPendiente, dia.bloque || null) : null;

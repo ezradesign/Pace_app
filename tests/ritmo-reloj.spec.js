@@ -134,13 +134,16 @@ test('«Dos horas» a las 17:51 con el aro a 5: el plan acaba a las 19:51 bloque
        hay ventana y el aro espera el bloque siguiente */
     const seguir = page.getByRole('button', { name: 'Seguir con el bloque ' + (k + 1), exact: true });
     const empezar = page.getByRole('button', { name: 'Empezar bloque ' + (k + 1), exact: true });
+    /* al llegar a 15 min seguidos el aro invita (22 oct.), y su «Seguir» empieza el bloque */
+    const invita = page.locator('[data-pace-invita-seguir]').filter({ visible: true });
     for (let i = 0; i < 20; i++) {
       await page.clock.fastForward(60 * 1000);
       await page.waitForTimeout(60);
-      if (await page.locator('[data-pace-break-shortcut]').count() || await empezar.count()) break;
+      if (await page.locator('[data-pace-break-shortcut]').count() || await empezar.count() || await invita.count()) break;
     }
     if (await seguir.count()) await seguir.click();
     else if (await empezar.count()) await empezar.first().click();
+    else if (await invita.count()) await invita.click();
     else break;
     await page.waitForTimeout(250);
   }
