@@ -55,13 +55,15 @@ function calendarioGuardarAjustes(cambio) {
   ritmoGuardar(function (r) { return { calendario: Object.assign({}, r.calendario || {}, cambio) }; });
 }
 
-/* Guarda las reuniones de hoy. Si no han cambiado no escribe: cada escritura
+/* Guarda las reuniones de `iso`, el día que se CONSULTÓ. Si al llegar la respuesta
+   ya es otro día, lo leído es de ayer y no se guarda (con la fecha de ahora, las
+   reuniones de ayer contarían hoy). Si no han cambiado no escribe: cada escritura
    repinta la app. Devuelve si cambiaron. */
-function calendarioGuardarOcupado(tramos, fuente) {
-  var hoy = ritmoHoy();
-  var antes = ritmoDe(getState());
-  if (JSON.stringify(antes.ocupado) === JSON.stringify(tramos) && (getState().ritmo || {}).ocupado) return false;
-  ritmoGuardar(function () { return { ocupado: { fecha: hoy, tramos: tramos, fuente: fuente } }; });
+function calendarioGuardarOcupado(tramos, fuente, iso) {
+  if (!iso || iso !== ritmoHoy()) return false;
+  var antes = (getState().ritmo || {}).ocupado;
+  if (antes && antes.fecha === iso && JSON.stringify(antes.tramos) === JSON.stringify(tramos)) return false;
+  ritmoGuardar(function () { return { ocupado: { fecha: iso, tramos: tramos, fuente: fuente } }; });
   return true;
 }
 
@@ -149,11 +151,14 @@ function calendarioLlevar(destino, opciones) {
     var lectura = o.reuniones
       ? calendarioLeer(destino, pase, iso).then(function (lista) {
           leidas = lista.length;
-          calendarioGuardarOcupado(calendarioTramos(lista, iso), destino);
+          calendarioGuardarOcupado(calendarioTramos(lista, iso), destino, iso);
         })
       : Promise.resolve();
     return lectura.then(function () {
       var ajustes = { destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso, mantener: solo };
+      /* La casilla de las reuniones manda ANTES de componer lo que se escribe: si no, con
+         ella desmarcada se escribía el día esquivando las reuniones de antes. */
+      calendarioGuardarAjustes({ reuniones: ajustes.reuniones });
       if (solo) {
         /* Desde aquí lo escribe el motor, en la forma con aviso y cambiando lo que ya está. */
         var deseados = calendarioDeseados(getState(), o);
@@ -212,7 +217,7 @@ function calendarioRefrescarReuniones(forzar) {
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
     return acceso.then(function (pase) { return calendarioLeer(c.destino, pase, iso); })
-      .then(function (lista) { return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino); })
+      .then(function (lista) { return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso); })
       .catch(function () { return false; })
       .then(function (r) { _calendarioRefresco.enCurso = false; return r; });
   } catch (e) { _calendarioRefresco.enCurso = false; return Promise.resolve(false); }

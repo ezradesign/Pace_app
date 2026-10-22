@@ -119,7 +119,11 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var P0 = previos || null;
   /* Sin previos, el día espera a tu hora de inicio; recolocando, empieza AHORA. */
   var desde = P0 ? ahora : Math.max(inicio, ahora);
-  var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, (P0 && P0.comidaHecha) || comeA === Infinity ? null : comeA, comidaDur);
+  /* Las reuniones se recortan alrededor de la comida solo si el día aún la sirve: si ya
+     empezó (`desde` >= `comeA`, ver `falta` en `componer`), una reunión a esas horas es
+     una reunión, y sin esto el foco se le ponía encima. */
+  var comidaDelante = !(P0 && P0.comidaHecha) && comeA !== Infinity && desde < comeA;
+  var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, comidaDelante ? comeA : null, comidaDur);
   /* s195: si la persona puso el aro a otra duración (25 con un plan de 45), el
      resto del día va con ESA (`previos.bloque`): «si cambio la duración del
      pomodoro, ¿se ajustan las horas?» — sí, y también los bloques que vienen. */
@@ -186,8 +190,11 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     }
     /* Lo ocupado: la próxima reunión que aún no ha acabado, los minutos de
        reunión que quedan antes de `b` y el paso de ir a ella (con el margen libre
-       delante si lo hay). */
-    var reuniones = ocupado.filter(function (o) { return o.desde < finTrabajo; });
+       delante si lo hay). Cada reunión se corta donde acaba el día de la opción:
+       «Una hora» a las 9:00 con una reunión hasta las 12:30 acaba a las 10:00, no
+       detrás de la reunión. */
+    var reuniones = ocupado.filter(function (o) { return o.desde < finTrabajo; })
+      .map(function (o) { return { desde: o.desde, hasta: Math.min(o.hasta, finTrabajo) }; });
     function sigOcupado() {
       for (var k = 0; k < reuniones.length; k++) if (reuniones[k].hasta > t) return reuniones[k];
       return null;

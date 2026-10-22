@@ -317,7 +317,9 @@ test('con Google: dentro de la hora se cambia lo que está; pasada, «Poner al d
   await page.evaluate(() => { CALENDARIO_IDS.google = 'id-de-prueba'; });
   await vis(page, '[data-pace-ritmo-calendario]').click();
   const hoja = page.locator('[data-pace-cal]');
-  /* Sin leer reuniones: aquí se ponen a mano, y releerlas cada 5 min las borraría. */
+  /* Sin leer reuniones, para que releerlas cada 5 min no mueva el día por su cuenta: aquí lo
+     cambia la comida. Con la casilla desmarcada, unas reuniones puestas a mano ya no cuentan
+     (tests/ritmo-reuniones-bordes.spec.js). */
   await hoja.locator('[data-pace-cal-reuniones]').uncheck();
   await hoja.locator('[data-pace-cal-destino="google"] button').click();
   await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
@@ -329,8 +331,8 @@ test('con Google: dentro de la hora se cambia lo que está; pasada, «Poner al d
   await page.getByRole('button', { name: 'Listo', exact: true }).click();
   await expect(vis(page, '[data-pace-ritmo-calendario]')).toHaveText('Calendario al día');
 
-  /* Dentro de la hora, una reunión nueva: PATCH a los mismos eventos, sin crear otros. */
-  await page.evaluate(() => calendarioGuardarOcupado([[720, 30]], 'google'));
+  /* Dentro de la hora, la comida más corta mueve la tarde: PATCH a los mismos eventos. */
+  await page.evaluate(() => ritmoHorario('comidaDur', 45));
   await page.clock.runFor(MINUTO);
   await expect.poll(() => g.vistas.filter((v) => v.metodo === 'PATCH').length).toBeGreaterThan(0);
   const quiero = await page.evaluate((TEXTOS) => calendarioDeseados(getState(), eval(TEXTOS)).eventos.length, TEXTOS);
@@ -340,7 +342,7 @@ test('con Google: dentro de la hora se cambia lo que está; pasada, «Poner al d
   /* Pasada la hora y con otro cambio: el enlace dice «Poner al día» y no se escribe nada. */
   await page.clock.runFor(60 * 60 * 1000);
   const hechos = g.vistas.length;
-  await page.evaluate(() => calendarioGuardarOcupado([[720, 30], [900, 30]], 'google'));
+  await page.evaluate(() => ritmoHorario('comidaDur', 30));
   await page.clock.runFor(MINUTO);
   await expect(vis(page, '[data-pace-ritmo-calendario]')).toHaveText('Poner al día');
   expect(g.vistas.slice(hechos).filter((v) => v.metodo !== 'GET')).toEqual([]);
@@ -362,7 +364,7 @@ test('con Microsoft: pasada la hora, se renueva sin ventana y sigue cambiando lo
   await page.evaluate(() => { CALENDARIO_IDS.microsoft = 'id-de-prueba'; });
   await vis(page, '[data-pace-ritmo-calendario]').click();
   const hoja = page.locator('[data-pace-cal]');
-  /* Sin leer reuniones: aquí se ponen a mano, y releerlas cada 5 min las borraría. */
+  /* Sin leer reuniones, como con Google: el día lo cambia la comida. */
   await hoja.locator('[data-pace-cal-reuniones]').uncheck();
   await hoja.locator('[data-pace-cal-destino="microsoft"] button').click();
   await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
@@ -377,7 +379,7 @@ test('con Microsoft: pasada la hora, se renueva sin ventana y sigue cambiando lo
 
   await page.clock.runFor(70 * 60 * 1000);
   const hechos = m.vistas.length;
-  await page.evaluate(() => calendarioGuardarOcupado([[720, 30]], 'microsoft'));
+  await page.evaluate(() => ritmoHorario('comidaDur', 45));
   await page.clock.runFor(MINUTO);
   await expect.poll(() => m.vistas.slice(hechos).filter((v) => v.metodo === 'PATCH').length).toBeGreaterThan(0);
   const nuevas = m.vistas.slice(hechos);

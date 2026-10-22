@@ -6,6 +6,7 @@ El changelog largo, hasta v0.135.0, está en
 
 | Versión | Fecha | Qué cambia |
 |---|---|---|
+| v0.174.2 | 2026-10-22 | «A tu ritmo» y el calendario, cuatro arreglos de la auditoría del 21 oct.: «Una hora» con una reunión larga acaba a su hora (acababa detrás de la reunión; igual las otras opciones), una reunión en la hora de comer ya no desaparece si la comida no se sirve, «Tener en cuenta mis reuniones de hoy» desmarcada hace que no cuenten, y una lectura que contesta pasada la medianoche no guarda las reuniones de ayer como de hoy. Lo que pasa si empiezas en plena comida espera a Ez |
 | v0.174.0 | 2026-10-20 | «A tu ritmo»: cada día mueve el cuerpo entero (piernas, caderas, espalda, hombros, cuello y manos) y equilibrado, gratis; con PACE completo, además, las rutinas cambian de un día a otro. Con las rutinas de siempre: la pared cuenta como la mesa y «Caderas de pie» también como piernas. Después de comer, una pausa como cualquier otra (Ez, 20 oct.) |
 | v0.173.3 | 2026-10-20 | «Tus rutinas», el constructor de rutinas propias, también se abre hasta v1 como el resto de PACE completo: Google tiene que poder revisar toda la app en la prueba de Play, y en Android no había código ni compra con que abrirlo (Ez, 20 oct.) |
 | v0.173.2 | 2026-10-20 | pacegrass.app publica solo la app: la app, la privacidad, la seguridad, /premium y lo que necesitan; los documentos y las pruebas dejan de servirse en el dominio del producto (el repo sigue en GitHub). Hace falta cambiar en Cloudflare Pages el comando y la carpeta de salida (Ez, 18 oct.) |

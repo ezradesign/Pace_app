@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.174.0</title>
+  <title>PACE · Foco · Cuerpo — v0.174.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6349,7 +6349,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.174.0';
+const PACE_VERSION = 'v0.174.2';
 
 
 
@@ -9349,7 +9349,11 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var P0 = previos || null;
 
   var desde = P0 ? ahora : Math.max(inicio, ahora);
-  var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, P0 && P0.comidaHecha || comeA === Infinity ? null : comeA, comidaDur);
+
+
+
+  var comidaDelante = !(P0 && P0.comidaHecha) && comeA !== Infinity && desde < comeA;
+  var ocupado = ritmoOcupadoLimpio(horario.ocupado, desde, comidaDelante ? comeA : null, comidaDur);
 
 
 
@@ -9417,7 +9421,10 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
 
 
 
-    var reuniones = ocupado.filter(function (o) {return o.desde < finTrabajo;});
+
+
+    var reuniones = ocupado.filter(function (o) {return o.desde < finTrabajo;}).
+    map(function (o) {return { desde: o.desde, hasta: Math.min(o.hasta, finTrabajo) };});
     function sigOcupado() {
       for (var k = 0; k < reuniones.length; k++) if (reuniones[k].hasta > t) return reuniones[k];
       return null;
@@ -11179,11 +11186,13 @@ function calendarioGuardarAjustes(cambio) {
 
 
 
-function calendarioGuardarOcupado(tramos, fuente) {
-  var hoy = ritmoHoy();
-  var antes = ritmoDe(getState());
-  if (JSON.stringify(antes.ocupado) === JSON.stringify(tramos) && (getState().ritmo || {}).ocupado) return false;
-  ritmoGuardar(function () {return { ocupado: { fecha: hoy, tramos: tramos, fuente: fuente } };});
+
+
+function calendarioGuardarOcupado(tramos, fuente, iso) {
+  if (!iso || iso !== ritmoHoy()) return false;
+  var antes = (getState().ritmo || {}).ocupado;
+  if (antes && antes.fecha === iso && JSON.stringify(antes.tramos) === JSON.stringify(tramos)) return false;
+  ritmoGuardar(function () {return { ocupado: { fecha: iso, tramos: tramos, fuente: fuente } };});
   return true;
 }
 
@@ -11271,11 +11280,14 @@ function calendarioLlevar(destino, opciones) {
     var lectura = o.reuniones ?
     calendarioLeer(destino, pase, iso).then(function (lista) {
       leidas = lista.length;
-      calendarioGuardarOcupado(calendarioTramos(lista, iso), destino);
+      calendarioGuardarOcupado(calendarioTramos(lista, iso), destino, iso);
     }) :
     Promise.resolve();
     return lectura.then(function () {
       var ajustes = { destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso, mantener: solo };
+
+
+      calendarioGuardarAjustes({ reuniones: ajustes.reuniones });
       if (solo) {
 
         var deseados = calendarioDeseados(getState(), o);
@@ -11334,7 +11346,7 @@ function calendarioRefrescarReuniones(forzar) {
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
     return acceso.then(function (pase) {return calendarioLeer(c.destino, pase, iso);}).
-    then(function (lista) {return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino);}).
+    then(function (lista) {return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso);}).
     catch(function () {return false;}).
     then(function (r) {_calendarioRefresco.enCurso = false;return r;});
   } catch (e) {_calendarioRefresco.enCurso = false;return Promise.resolve(false);}
@@ -11988,7 +12000,7 @@ function ritmoDe(s) {
     horario: h,
     libre: libre,
     dia: dia,
-    ocupado: r.ocupado && r.ocupado.fecha === hoy && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [],
+    ocupado: ritmoOcupadoDe(r, hoy),
     calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
     semanaTipo: tipo, diaSemana: dSem, habitual: habitual, distinto: distinto,
     propuesta: !libre && !dia && !distinto && (habitual === 'jornada' || habitual === 'media') ? habitual : null
@@ -12423,6 +12435,16 @@ function ritmoHorarioCon(h, cambios, crudo) {
 
 
 
+function ritmoOcupadoDe(r, fecha) {
+  if (r && r.calendario && r.calendario.reuniones === false) return [];
+  var o = r && r.ocupado;
+  return o && o.fecha === fecha && Array.isArray(o.tramos) ? o.tramos : [];
+}
+
+
+
+
+
 function ritmoGuardarSemana(tipo, cambios) {
   var tocadas = Object.keys(cambios || {});
   ritmoGuardar(function (r) {
@@ -12471,10 +12493,10 @@ function ritmoNombreDia(diaSemana, t) {
 
 
 Object.assign(window, {
-  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon,
+  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
   ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia
 });
-;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia });
+;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia });
 })();
 </script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
@@ -15018,7 +15040,8 @@ function ritmoMenuDe(s, dia, cambios) {
   var h0 = Object.assign(ritmoHorarioInicial(), r.horario || {});
   if (typeof ritmoHorarioDelDia === 'function') h0 = ritmoHorarioDelDia(h0, dia.fecha);
   h0.media = ritmoMedia(h0);
-  var ocupado = r.ocupado && r.ocupado.fecha === dia.fecha && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [];
+
+  var ocupado = ritmoOcupadoDe(r, dia.fecha);
   var h = Object.assign({}, h0, { ahora: dia.desde != null ? dia.desde : h0.inicio, ocupado: ocupado });
   var agua = (s || {}).water && s.water.goal || 8;
   var pasado = dia.pasado && dia.pasado.length ? dia.pasado : null;

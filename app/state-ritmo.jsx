@@ -117,7 +117,7 @@ function ritmoDe(s) {
     horario: h,
     libre: libre,
     dia: dia,
-    ocupado: r.ocupado && r.ocupado.fecha === hoy && Array.isArray(r.ocupado.tramos) ? r.ocupado.tramos : [],
+    ocupado: ritmoOcupadoDe(r, hoy),   /* state-ritmo.support.jsx */
     calendario: r.calendario && typeof r.calendario === 'object' ? r.calendario : {},
     semanaTipo: tipo, diaSemana: dSem, habitual: habitual, distinto: distinto,
     propuesta: !libre && !dia && !distinto && (habitual === 'jornada' || habitual === 'media') ? habitual : null,
