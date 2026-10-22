@@ -20654,14 +20654,6 @@ Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
 
 
 
-
-
-
-
-
-
-
-
 function interpolateRingColor(progress, mode) {
   if (mode === 'pausa') return 'var(--breathe)';
   if (mode === 'larga') return 'var(--focus)';
@@ -20826,7 +20818,7 @@ function useBarridoVisible(marcoRef, activo) {
 
 
 
-function TimerDialPunto(_ref2) {let { giro, angulo, color, nace } = _ref2;
+function TimerDialPunto(_ref2) {let { giro, angulo, color, nace, deGolpe } = _ref2;
   const naceRef = useRefTD(nace);
   const R = DIAL_R;
   return (
@@ -20836,10 +20828,10 @@ function TimerDialPunto(_ref2) {let { giro, angulo, color, nace } = _ref2;
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
     React.createElement("g", { transform: `rotate(${giro.toFixed(3)} 50 50)` },
     React.createElement("g", { transform: `rotate(${angulo.toFixed(3)} 50 50)`,
-      style: { transition: 'transform 1s linear' } },
+      style: { transition: deGolpe ? 'none' : 'transform 1s linear' } },
     React.createElement("circle", { "data-pace-dial-halo": true, cx: 50 + R, cy: "50", r: "1.7", fill: color, opacity: "0.22" }),
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "0.85", fill: color,
-      style: { transition: 'fill 1s linear' } })
+      style: { transition: deGolpe ? 'none' : 'fill 1s linear' } })
     )
     )
     )
@@ -20851,6 +20843,14 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
   const R = DIAL_R;
 
   const ringColor = interpolateRingColor(progress, mode);
+
+
+
+
+  const restante = Number(mins) * 60 + Number(secs);
+  const previoRef = useRefTD(restante);
+  const deGolpe = Math.abs(restante - previoRef.current) > 2;
+  useLayoutEffectTD(() => {previoRef.current = restante;});
 
 
 
@@ -20979,7 +20979,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
       strokeOpacity: "0.92",
       strokeLinecap: "round",
       strokeDasharray: trazo, strokeDashoffset: (barrido * (1 - progress)).toFixed(3),
-      style: { transition: 'stroke-dashoffset 1s linear, stroke 1s linear' } })
+      style: { transition: deGolpe ? 'none' : 'stroke-dashoffset 1s linear, stroke 1s linear' } })
     )
     )
     )
@@ -20999,7 +20999,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
 
 
     !ticks && (running || progress > 0) &&
-    React.createElement(TimerDialPunto, { giro: giroInicio, angulo: progress * barrido, color: ringColor, nace: progress === 0 }),
+    React.createElement(TimerDialPunto, { giro: giroInicio, angulo: progress * barrido, color: ringColor, nace: progress === 0, deGolpe: deGolpe }),
 
 
     React.createElement("div", { style: timerDialStyles.inner },
