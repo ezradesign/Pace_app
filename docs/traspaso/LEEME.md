@@ -12,7 +12,7 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
 - **Juntados con el sí de Ez**: el calendario que se mantiene solo (C1-C3, v0.174.3) y «Tus rutinas» con
   Estadísticas (once casos y las cinco A de su maqueta, v0.174.4; `session.completed` pasa a `v:2` con
   `creditedMinutes`). Con ellos, la frase que eligió Ez para la pared opcional de «Espalda de oficina»
-  («Una pared, si la necesitas»; en la tarjeta, «pared opcional»), que salía como clave.
+  («Una pared, si la necesitas»; en la tarjeta, «pared opcional»), que salía como clave. Suite entera con todo junto: 790 en verde, 2 saltadas.
 - **Ez probó la prueba interna en su Android** y decidió (`DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su
   móvil»): logros solo con la sesión entera. Con el aro corto, la pausa a los 15 min de foco, EN ESPERA:
   Ez lo consulta con ChatGPT. Lo demás (M1-M7), en `STATE.md`.
