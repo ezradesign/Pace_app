@@ -19,6 +19,21 @@
 
 ---
 
+## Lo que Ez vio en su móvil (22 oct. 2026)
+
+Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en el código:
+
+- **Logros, solo con la sesión entera** (lo eligió Ez). Hasta hoy contaba para los logros toda sesión
+  con 30 s o más de práctica (`PACE_MINIMO_CUENTA_S`), aunque se pulsara «Terminar antes». Ahora una
+  sesión terminada antes suma sus minutos a la semana, pero no gana logros.
+- **«¿Pausa ahora?» con el aro corto** (lo eligió Ez). La regla del 15 oct. («nunca más de 30») se
+  queda: con bloques de 5 o 15 min la pausa llega a los 30 min de foco. Al acabar un bloque sin pausa
+  detrás, junto a seguir sale un botón para hacer ya la pausa que toca. Sin pulsarlo, nada cambia.
+- **Pendiente de maqueta:** que la home abra con los módulos y la tarjeta corta en vez de la pregunta
+  entera (idea de Ez; hoy es así solo «por libre»), y los Ajustes del móvil más altos (hoy, el 72 %).
+- **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones
+  de 2 s de las tres rutinas de rondas, así que ahí suena el tono. Con la voz clara suenan las dos.
+
 ## Dos pestañas a la vez: se acepta como riesgo (Ez, 22 oct. 2026)
 
 Caso 8 de la auditoría de datos del 21 oct. Con PACE abierto en dos ventanas, si las dos apuntan
