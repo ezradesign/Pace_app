@@ -42,7 +42,16 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 - **Lo primero al retomar: v0.174.6 está lista en la rama `claude/maqueta-inicio-3a2a59` (commit 0707b36, subida):**
   la app abre con los módulos, los Ajustes del móvil sin scroll y la voz grave en Rondas (1A 2A 3A). Revisarla,
   contársela a Ez en palabras llanas y, con su sí, juntarla con la suite entera (unos 27 min). Al relevo, la
-  sesión ya hacía la maqueta de «Hacerla» (sin commitear; se le pidió «wip» y push al 87 %). Después, **la maqueta nueva de «Hacerla»**
+  sesión ya hacía la maqueta de «Hacerla» (sin commitear; se le pidió «wip» y push al 87 %).
+  Lo que dijo la sesión de v0.174.6, para contárselo a Ez: 1A, sin haber dicho cuánto trabajas se ven los cuatro
+  módulos con la tarjeta corta y «Comienza» abre la pregunta; con la semana guardada, la tarjeta dice «Hoy, como
+  cada jueves · Jornada entera, 9:00–17:00» y «Comienza» abre ese día; no contestar ya no es «por libre» ni quita
+  nada del calendario. 2A, los Ajustes del móvil caben sin scroll y «Tus datos» se abre aparte («Copias, borrar y
+  código ›», se vuelve con «‹»); en el ordenador, igual que antes. 3A, la voz grave dice «exhala» en Rondas y sin
+  chasquido. Pruebas: tres nuevas (caen 18 de 19 contra v0.174.4), la home sin scroll en 108 casos; su suite dio
+  19 caídas por estas mismas decisiones (18 de «A tu ritmo» que esperaban la pregunta al abrir y una de Android),
+  ya puestas al día y repasadas (97 y 63 en verde), pero **la suite entera no se volvió a pasar**: al juntar, la
+  suite entera con todo junto. Choca la versión en los siete sitios, CHANGELOG, STATE y LEEME (a la más alta). Después, **la maqueta nueva de «Hacerla»**
   (Ez, 22 oct. noche): al pulsar «Hacerla» sale UN ejercicio de los que ya hay en Mueve o Estira (de pie o
   sentado, sin suelo ni material), con su título, su instrucción, su duración propia aunque pase de 2 min y el
   glifo GENÉRICO del módulo, no el del ejercicio; sin consulta a ChatGPT. Ez: «la integración era para tener
