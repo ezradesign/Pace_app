@@ -44,8 +44,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
 4. **Auditoría externa del 21 oct.**: los trece casos de datos (v0.174.1) y los seis de «A tu
    ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. De la del 22 oct.,
-   tres del calendario que se mantiene solo, hechos en v0.174.3 (rama `claude/happy-allen-d915c3`; la
-   junta la coordinadora): «Desconectar» corta lo pedido y en Android deja de leer, y la hoja dice los
+   tres del calendario que se mantiene solo, en `main` con v0.174.3 (22 oct., con el
+   sí de Ez): «Desconectar» corta lo pedido y en Android deja de leer, y la hoja dice los
    cuatro casos que eligió Ez (A, `docs/traspaso/archivos/calendario-estado-22oct/tabla.md`). El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
    a 100 ms, nunca), Ez lo acepta como riesgo (A, 22 oct.): lo mide `tests/pestanas-estado.spec.js`,
    estado-4. Un solo escritor en IndexedDB, si alguna vez hace falta, después de v1.
@@ -97,9 +97,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie). La barra de
   arriba pregunta antes de dejar un Foco empezado, pero no una pausa empezada (pide un texto nuevo).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
-  coordinadora junta): «Tus rutinas» y Estadísticas, hecha en v0.174.4 (rama
-  `claude/beautiful-perlman-2b642c`, sin juntar; «Espalda de oficina» enseña «preview.eq.wallOptional»
-  en «Antes de empezar»: pide una frase que elige Ez) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
+  coordinadora junta): «Tus rutinas» y Estadísticas, en `main` con v0.174.4 (22 oct., con el sí de Ez y la
+  frase que eligió para la pared opcional) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
   cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; y dos del 22 oct.:
@@ -126,7 +125,7 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
 - **Del móvil de Ez** (22 oct., la prueba interna en su Android): M1 al volver a la app con un Foco en
   marcha el aro llega a su sitio a trompicones (`TimerDial.jsx` anima 1 s cada salto; con uno grande,
-  que llegue de golpe) · M2 «¿Pausa ahora?» con el aro corto (desde 10 min de foco seguidos) y M3 logros solo con la sesión entera,
+  que llegue de golpe) · M2 con el aro corto, la pausa en cuanto llevas 15 min de foco (sin «¿Pausa ahora?»; en espera: Ez lo consulta con ChatGPT) y M3 logros solo con la sesión entera,
   decididos por Ez (`DECISIONES_PRODUCTO.md`) · M4 la voz grave no dice «exhala» en las rondas (3,6 s
   en fases de 2 s): una prueba para oír · M5 «Ponle ritmo al día» en Estadísticas › Hoy llama a
   `ritmoVolver` sin cerrar el panel y no se ve nada (`StatsHoy.jsx`) · M6 los Ajustes del móvil, al

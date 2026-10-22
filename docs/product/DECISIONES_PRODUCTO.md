@@ -26,11 +26,12 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
 - **Logros, solo con la sesión entera** (lo eligió Ez). Hasta hoy contaba para los logros toda sesión
   con 30 s o más de práctica (`PACE_MINIMO_CUENTA_S`), aunque se pulsara «Terminar antes». Ahora una
   sesión terminada antes suma sus minutos a la semana, pero no gana logros.
-- **«¿Pausa ahora?» con el aro corto** (lo eligió Ez). La regla del 15 oct. («nunca más de 30») se
-  queda: con bloques de 5 o 15 min la pausa llega a los 30 min de foco. Al acabar un bloque sin pausa
-  detrás, junto a seguir sale un botón para hacer ya la pausa que toca, **a partir de 10 min de foco
-  seguidos** (Ez, el mismo día): con bloques de 10 o 15, tras cada bloque; con bloques de 5, a los 10,
-  15, 20 y 25. Sin pulsarlo, nada cambia.
+- **EN ESPERA (Ez lo consulta con ChatGPT antes de montarlo).** Con el aro corto, la pausa guiada llega en cuanto llevas 15 min de foco o más (Ez, el mismo
+  día, sobre una tabla de casos; sustituye a «nunca más de 30» del 15 oct.): con bloques de 5, a los
+  15; de 10, a los 20; de 15, tras cada uno; de 20 en adelante, como siempre. Se descarta el botón
+  «¿Pausa ahora?», que Ez había elegido antes ese día: con esta regla casi no saldría. Al montarlo hay
+  que medir que un día entero con bloques cortos (el doble de pausas, sin repetir rutina) no se queda
+  sin rutinas; si se queda, se le enseña a Ez antes.
 - **Pendiente de maqueta:** que la home abra con los módulos y la tarjeta corta en vez de la pregunta
   entera (idea de Ez; hoy es así solo «por libre»), y los Ajustes del móvil más altos (hoy, el 72 %).
 - **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones

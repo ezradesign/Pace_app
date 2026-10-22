@@ -4,27 +4,20 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
-## 22 oct.: «Tus rutinas» y Estadísticas, hecha (rama `claude/beautiful-perlman-2b642c`, sin juntar)
+## 22 oct., tarde: v0.174.3 y v0.174.4 en `main`; coordina la otra cuenta
 
-Carpeta `.claude/worktrees/beautiful-perlman-2b642c`, puerto de pruebas 8799 (`PACE_E2E_PORT=8799`),
-versión 0.174.4 (la 0.174.3 es la del calendario). Retomada desde la otra cuenta tras el relevo por
-uso. Nunca se sube a `main` desde aquí: la coordinadora la junta con el sí de Ez.
+Relevo y sesiones abiertas: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
+https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
 
-- **Ez eligió las cinco recomendadas (22 oct.), «1A 2A 3A 4A 5A»**, sobre la maqueta
-  https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW (copia en `docs/proposals/rutinas-y-cifras-auditoria.html`).
-  Apuntado en `DECISIONES_PRODUCTO.md`, arriba del todo.
-- **Hechos los once casos**, cada uno con su prueba en rojo contra v0.174.2: R1-R6, Y1, E1-E4
-  (`tests/tus-rutinas-auditoria.spec.js` y `tests/stats-auditoria.spec.js`). E1 (2A): la tarjeta de
-  una sesión en «Hoy» dice los minutos que se sumaron a la semana, los mismos que el total de Cuerpo.
-  Para eso `session.completed` pasa a `v:2` con `creditedMinutes` (EVENTOS_SCHEMA §8, rev. 9); las
-  sesiones guardadas antes siguen con su cifra de ejercicio.
-- **Pruebas**: `verify` pasa. La suite entera en el 8799: 784 pasan, 2 se saltan y 2 cayeron por tiempo
-  (`eventos-emisor` y `eventos-origen`) con la del calendario corriendo a la vez; a solas, con
-  `--workers=1`, pasan sus 13.
-- **Pendiente, fuera de la lista**: «Espalda de oficina» enseña «preview.eq.wallOptional» en «Antes
-  de empezar» (falta ese texto en `sessions.body.js`). Pide una frase nueva que elige Ez, p. ej. «Una
-  pared, si la tienes».
-
+- **Juntados con el sí de Ez**: el calendario que se mantiene solo (C1-C3, v0.174.3) y «Tus rutinas» con
+  Estadísticas (once casos y las cinco A de su maqueta, v0.174.4; `session.completed` pasa a `v:2` con
+  `creditedMinutes`). Con ellos, la frase que eligió Ez para la pared opcional de «Espalda de oficina»
+  («Una pared, si la necesitas»; en la tarjeta, «pared opcional»), que salía como clave.
+- **Ez probó la prueba interna en su Android** y decidió (`DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su
+  móvil»): logros solo con la sesión entera. Con el aro corto, la pausa a los 15 min de foco, EN ESPERA:
+  Ez lo consulta con ChatGPT. Lo demás (M1-M7), en `STATE.md`.
+- **La auditoría de privacidad de ChatGPT** (P1-P5), comprobada: nada sale a escondidas, cinco frases
+  prometen de más. La respuesta «No» de Play se mantiene. En cola.
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
 Manda sobre todo lo de abajo. Ez lo decidió: mientras se siga en esta cuenta, coordina la sesión que
