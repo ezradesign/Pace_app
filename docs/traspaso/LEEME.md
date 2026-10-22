@@ -6,9 +6,12 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de 
 
 ## 22 oct., tarde: maqueta de M7, M6 y M4 para Ez (rama `claude/maqueta-inicio-3a2a59`, puerto 8803)
 
-Página publicada, esperando las letras de Ez: https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj
-(recomendado 1A 2A 3A). Guiones, página y hallazgos en `docs/traspaso/archivos/maqueta-inicio-22oct/`.
-Nada montado todavía. Lo que hay que saber:
+**Ez eligió 1A 2A 3A** (22 oct.) sobre https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj: siempre con los
+módulos y la tarjeta corta; «Tus datos» en su propia hoja y Ajustes al 79 % sin scroll; quitar el chasquido
+del «exhala» grave. Página en `docs/proposals/maqueta-inicio-22oct.html` (las fotos y el audio, en la
+publicada) con `maqueta-inicio-hallazgos.md`; guiones en `docs/traspaso/archivos/maqueta-inicio-22oct/`.
+**Nada montado**: va como v0.174.6, con sus pruebas en rojo contra lo de ahora y sin scroll en la home.
+Lo que hay que saber:
 - **M4**: el «exhala» de bradford dura 1,20 s y no 3,57; el `fin: 3.68` de `PACE_VOZ_CLIPS` es un chasquido
   en los últimos ~15 ms del archivo. Las letras cambiaron: A quitar el chasquido, B regrabar, C como hoy.
 - **M6**: 743 px de Ajustes en la web, 812 en Android; la A («Tus datos» aparte) no pide scroll a 730 ni a 640.
