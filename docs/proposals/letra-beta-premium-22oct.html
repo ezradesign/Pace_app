@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letra de beta y premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=EB+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Antes y después de los títulos y los botones de /beta y /premium. «Antes» es lo de /premium hoy
+   (EB Garamond y botones de Inter Tight); «después» calca la app: Cormorant Garamond, que es la letra
+   por defecto de PACE (data-font="cormorant"), y el botón de «Empezar» del Foco (FocusTimer.support.jsx:
+   Cormorant itálica 16 px, 400, píldora). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+  --line: #C9C0A8; --line-2: #B8AD8E; --cta: #50624D; --breathe: #9E4F33;
+  --eb: 'EB Garamond', Georgia, serif; --corm: 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544; --cta: #8E9D88; --breathe: #E8A98F; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544; --cta: #8E9D88; --breathe: #E8A98F; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); line-height: 1.55; }
+.hoja { max-width: 1160px; margin: 0 auto; padding: 32px 16px 64px; display: flex; flex-direction: column; gap: 36px; }
+.cab h1 { font-family: var(--corm); font-style: italic; font-weight: 500; font-size: clamp(32px, 6vw, 44px); line-height: 1.05; margin: 8px 0 12px; }
+.cab p, .nota { color: var(--ink-2); margin: 0; max-width: 66ch; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+h2 { font-family: var(--corm); font-style: italic; font-weight: 500; font-size: 30px; margin: 0; }
+.fila { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); align-items: start; }
+.col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.rot { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.rot .l { font-family: var(--corm); font-style: italic; font-size: 30px; line-height: 1; }
+.rot .n { font-weight: 600; font-size: 15px; }
+.reco { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--breathe); border: 1px solid var(--breathe); border-radius: 999px; padding: 1px 8px; }
+.tel { border: 1px solid var(--line-2); border-radius: 24px; padding: 22px 18px 24px; background: var(--paper); max-width: 360px; }
+.kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+.tel h3 { margin: 0 0 12px; line-height: 1.04; text-wrap: balance; }
+.tel p { margin: 0 0 16px; color: var(--ink-2); font-size: 15.5px; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; }
+/* Antes: /premium hoy. */
+.antes h3 { font-family: var(--eb); font-style: italic; font-weight: 500; font-size: 36px; }
+.antes .b { display: inline-flex; align-items: center; min-height: 46px; padding: 0 24px; border-radius: 999px; font: 500 14px/1 var(--ui); letter-spacing: .06em; border: 1px solid var(--cta); }
+.antes .b.ll { background: var(--cta); color: var(--paper); } .antes .b.hu { color: var(--cta); }
+/* Después: la letra y el botón de la app. */
+.desp h3 { font-family: var(--corm); font-weight: 500; font-size: 40px; letter-spacing: -.005em; }
+.desp.it h3 { font-style: italic; }
+.desp .b { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; font-family: var(--corm); font-style: italic; font-size: 17px; font-weight: 500; letter-spacing: .01em; border: 1px solid var(--cta); }
+.desp .b.ll { background: var(--cta); color: var(--paper); } .desp .b.hu { color: var(--cta); }
+.desp .precio { font-family: var(--corm); font-style: italic; font-size: 44px; line-height: 1; color: var(--ink); margin: 6px 0 2px; }
+.antes .precio { font-family: var(--eb); font-style: italic; font-size: 38px; line-height: 1; color: var(--ink); margin: 6px 0 2px; }
+.respuesta { border: 1px solid var(--line-2); border-radius: 14px; padding: 14px 16px; background: var(--paper-2); font-family: var(--corm); font-style: italic; font-size: 24px; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="cab">
+    <div class="eyebrow">PACE · maqueta · 22 de octubre</div>
+    <h1>La letra y los botones de /beta y /premium</h1>
+    <p>La página para testers es la A. Aquí solo cambia la letra de los títulos y la de los botones, igual en las dos
+      páginas. «Antes» es lo de /premium hoy. Las dos de «después» son las de la app: su serif, Cormorant, y su botón de
+      «Empezar» del Foco. Contestas con una letra.</p>
+  </header>
+
+  <section class="col">
+    <h2>/beta, la portada en el móvil</h2>
+    <div class="fila">
+      <div class="col">
+        <div class="rot"><span class="n">Antes · lo de /premium hoy</span></div>
+        <div class="tel antes">
+          <p class="kicker">PACE · Prueba en Android</p>
+          <h3>Prueba PACE en Android antes que nadie.</h3>
+          <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
+          <div class="btns"><span class="b ll">Quiero probarla</span><span class="b hu">Abrir Google Play</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="rot"><span class="l">A</span><span class="n">Como la app, en cursiva</span><span class="reco">Recomendada</span></div>
+        <div class="tel desp it">
+          <p class="kicker">PACE · Prueba en Android</p>
+          <h3>Prueba PACE en Android antes que nadie.</h3>
+          <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
+          <div class="btns"><span class="b ll">Quiero probarla</span><span class="b hu">Abrir Google Play</span></div>
+        </div>
+        <p class="nota">Es la letra de todos los títulos de la app, más fina y con más contraste que la de hoy, y el botón
+          es el de «Empezar» del Foco. Quien llega desde la web ve lo mismo que luego en la app.</p>
+      </div>
+      <div class="col">
+        <div class="rot"><span class="l">B</span><span class="n">La misma letra, sin cursiva</span></div>
+        <div class="tel desp">
+          <p class="kicker">PACE · Prueba en Android</p>
+          <h3>Prueba PACE en Android antes que nadie.</h3>
+          <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
+          <div class="btns"><span class="b ll">Quiero probarla</span><span class="b hu">Abrir Google Play</span></div>
+        </div>
+        <p class="nota">Por si lo que no te convence es la cursiva en sí. Los botones siguen como en la app. Pero los títulos
+          de la app sí van en cursiva, así que la web y la app ya no se parecerían tanto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="col">
+    <h2>/premium, el precio</h2>
+    <div class="fila">
+      <div class="col">
+        <div class="rot"><span class="n">Antes</span></div>
+        <div class="tel antes">
+          <h3>Dos maneras de tenerlo</h3>
+          <p class="kicker">De por vida</p><p class="precio">19,99 €</p>
+          <p>un pago, para siempre</p>
+          <div class="btns"><span class="b ll">Avísame</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="rot"><span class="l">A</span><span class="n">Como la app, en cursiva</span></div>
+        <div class="tel desp it">
+          <h3>Dos maneras de tenerlo</h3>
+          <p class="kicker">De por vida</p><p class="precio">19,99 €</p>
+          <p>un pago, para siempre</p>
+          <div class="btns"><span class="b ll">Avísame</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="rot"><span class="l">B</span><span class="n">Sin cursiva</span></div>
+        <div class="tel desp">
+          <h3>Dos maneras de tenerlo</h3>
+          <p class="kicker">De por vida</p><p class="precio">19,99 €</p>
+          <p>un pago, para siempre</p>
+          <div class="btns"><span class="b ll">Avísame</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="eyebrow">Tu respuesta</div>
+    <div class="respuesta">A · B, o cuéntame qué no te convence</div>
+    <p class="nota">Lo elegido se monta en /beta y en /premium a la vez, en tu otra cuenta.</p>
+  </section>
+</main>
+</body>
+</html>
