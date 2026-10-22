@@ -28,6 +28,26 @@ const TX = {
     pregunta: 'Exercise after every block?', ejercicio: 'exercise' },
 };
 
+/* La 4a nueva (Ez, 22 oct.): «Hacerla» sirve UN ejercicio de Mueve o Estira que se hace junto a la
+   mesa, con su título, su instrucción de siempre, su duración y el dibujo GENÉRICO del módulo. */
+const EJ = {
+  mueve: { es: { modulo: 'mueve', mod: 'Mueve', titulo: 'Elevación de talones', veces: '25 veces', resta: '00:22',
+    accion: 'Sube los talones lo más alto que puedas. Baja con control.' },
+    en: { modulo: 'mueve', mod: 'Move', titulo: 'Calf raises', veces: '25 times', resta: '00:22',
+    accion: 'Raise your heels as high as you can. Lower with control.' } },
+  estira: { es: { modulo: 'estira', mod: 'Estira', titulo: 'Barbilla atrás', veces: '5 veces', resta: '00:31',
+    accion: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.' },
+    en: { modulo: 'estira', mod: 'Stretch', titulo: 'Chin tucks', veces: '5 times', resta: '00:31',
+    accion: 'Glide your chin straight back. The back of your neck lengthens. Hold and release.' } },
+};
+const INV = {
+  A: { es: 'Un momento para moverte', en: 'A moment to move' },
+  B: { es: 'Un ejercicio antes de seguir', en: 'One exercise before you go on' },
+  C: { es: 'Elevación de talones · 30 s', en: 'Calf raises · 30 s' },
+  /* el nombre más largo del reparto, para ver si la C cabe */
+  D: { es: 'Rotación torácica de pie · 20 s por lado', en: 'Standing thoracic rotation · 20 s per side' },
+};
+
 async function abrir(b, { vp, lang, movil, dia, cada }) {
   const ctx = await b.newContext({ viewport: vp, isMobile: !!movil, hasTouch: !!movil, deviceScaleFactor: movil ? 2 : 1,
     locale: 'es-ES', timezoneId: 'Europe/Madrid' });
@@ -140,6 +160,45 @@ const PINTA = {
       }
     }
   },
+  /* 4a nueva · A: al pulsar «Hacerla», el aro cuenta lo que dura el ejercicio. Arriba el módulo y
+     las veces; bajo la cifra, el dibujo del módulo y el título; donde va la raya, la instrucción. */
+  hacerEnAro(x) {
+    const e = x.ej;
+    const v = (s) => Array.from(document.querySelectorAll(s)).find((el) => el.getBoundingClientRect().width > 0);
+    v('[data-pace-dial-label]').textContent = e.mod + ' · ' + e.veces;
+    v('[data-pace-dial-number]').textContent = e.resta;
+    const sub = v('[data-pace-dial-subtitle]');
+    sub.textContent = '';
+    sub.style.cssText += ';color:var(--ink);font-size:17px;display:inline-flex;align-items:center;gap:7px;justify-content:center;margin-top:12px';
+    const g = document.createElement('span'); g.style.cssText = 'width:20px;height:20px;display:inline-grid';
+    ReactDOM.flushSync(() => ReactDOM.createRoot(g).render(React.createElement(window.RitmoGlifo, { modulo: e.modulo })));
+    sub.appendChild(g); sub.appendChild(document.createTextNode(e.titulo));
+    /* la raya de debajo deja sitio a la instrucción */
+    const raya = sub.nextElementSibling;
+    const ins = document.createElement('div');
+    ins.textContent = e.accion;
+    ins.style.cssText = 'font-size:12.5px;line-height:1.35;color:var(--ink-2);max-width:230px;margin:6px auto 0;text-align:center;text-wrap:balance';
+    if (raya && raya.getBoundingClientRect().height <= 3) raya.replaceWith(ins); else sub.after(ins);
+    const cta = v('[data-pace-cta]');
+    cta.textContent = x.seguirBloque;
+    cta.style.cssText += ';background:var(--paper);color:var(--ink);border:1px solid var(--line-2)';
+  },
+  /* 4a nueva · B: al pulsar «Hacerla», una hoja abajo, como la de la pausa, con la instrucción. */
+  hacerEnHoja(x) {
+    const e = x.ej;
+    const capa = document.createElement('div');
+    capa.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(40,34,24,0.28);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;padding:12px';
+    capa.innerHTML = '<div style="width:100%;max-width:440px;background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:22px 22px 20px;display:grid;gap:14px;box-shadow:0 18px 40px rgba(40,34,24,0.18)">'
+      + '<div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);font-weight:500"><span>' + x.inv + '</span><span>×</span></div>'
+      + '<div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-radius:18px;background:var(--paper-2)"><span data-gl style="width:30px;height:30px;display:inline-grid;flex:0 0 auto"></span>'
+      + '<div style="display:grid;gap:2px;min-width:0"><span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3)">' + e.mod + ' · ' + e.veces + '</span>'
+      + '<span style="font-family:var(--font-display);font-style:italic;font-size:23px;color:var(--ink)">' + e.titulo + '</span></div>'
+      + '<span style="margin-left:auto;font-family:var(--font-display);font-style:italic;font-size:26px;color:var(--ink)">' + e.resta + '</span></div>'
+      + '<div style="font-size:14px;line-height:1.5;color:var(--ink-2)">' + e.accion + '</div>'
+      + '<div style="text-align:center;font-family:var(--font-display);font-style:italic;font-size:17px;padding:12px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink)">' + x.seguirBloque + '</div></div>';
+    document.body.appendChild(capa);
+    ReactDOM.flushSync(() => ReactDOM.createRoot(capa.querySelector('[data-gl]')).render(React.createElement(window.RitmoGlifo, { modulo: e.modulo })));
+  },
   /* 4b · A: en el aro, en la línea pequeña bajo la hora (la que dice «Foco breve»), con el aro
      parado y a 5, 10 o 15: «Ejercicio a mi ritmo ▾», el mismo desplegable que las horas del día.
      No añade alto. */
@@ -195,6 +254,15 @@ const CASOS = [
   { id: 'B', dia: true, bloques: true, pinta: ['invitacionLista'] },
   { id: 'linea', dia: true, bloques: true, pinta: ['lineaMinutos'] },
   { id: 'aro-eleccion', dia: true, bloques: false, pinta: ['enElAro'] },
+  /* la 4a nueva: los tres textos de la invitación y lo que sale al pulsar «Hacerla» */
+  { id: 'inv-A', dia: true, bloques: true, inv: 'A', pinta: ['invitacionAro'] },
+  { id: 'inv-B', dia: true, bloques: true, inv: 'B', pinta: ['invitacionAro'] },
+  { id: 'inv-C', dia: true, bloques: true, inv: 'C', pinta: ['invitacionAro'] },
+  { id: 'inv-D', dia: true, bloques: true, inv: 'D', pinta: ['invitacionAro'] },
+  { id: 'hacer-mueve', dia: true, bloques: true, ej: 'mueve', pinta: ['hacerEnAro'] },
+  { id: 'hacer-estira', dia: true, bloques: true, ej: 'estira', pinta: ['hacerEnAro'] },
+  { id: 'hacer-estira-libre', dia: false, bloques: true, ej: 'estira', pinta: ['hacerEnAro'] },
+  { id: 'hoja-mueve', dia: true, bloques: true, ej: 'mueve', inv: 'A', pinta: ['hacerEnHoja'] },
   { id: 'aro-eleccion-libre', dia: false, bloques: false, pinta: ['enElAro'] },
   { id: 'linea-libre', dia: false, bloques: false, pinta: ['lineaMinutos'] },
   { id: 'hoja', dia: true, bloques: false, pinta: ['hojaPregunta'] },
@@ -220,10 +288,12 @@ const CASOS = [
         await page.clock.fastForward(1500);
         await page.waitForTimeout(300);
       }
-      for (const p of c.pinta) await page.evaluate(PINTA[p], TX[lang]);
+      const datos = Object.assign({}, TX[lang], c.ej ? { ej: EJ[c.ej][lang] } : {}, c.inv ? { inv: INV[c.inv][lang] } : {});
+      for (const p of c.pinta) await page.evaluate(PINTA[p], datos);
       await asentarGeometria(page);
       const m = { caso: c.id, lang, vp: vp.width + '×' + vp.height, scroll: await page.evaluate(SCROLL) };
       /* la fila del aro no se sale del aro: «Hacerla · Seguir» cabe a lo ancho */
+      m.lineasSub = await page.evaluate(() => { const e = Array.from(document.querySelectorAll('[data-pace-dial-subtitle]')).find((x) => x.getBoundingClientRect().width > 0); return e ? Math.round(e.getBoundingClientRect().height) : null; });
       m.filaAro = await page.evaluate(() => {
         const cta = Array.from(document.querySelectorAll('[data-pace-cta]')).find((e) => e.getBoundingClientRect().width > 0);
         const r = cta.parentElement.getBoundingClientRect();
@@ -233,7 +303,7 @@ const CASOS = [
       medidas.push(m);
       console.log(JSON.stringify(m));
       if ((lang === 'es' && vp !== ESC && vp.height === 730) || vp === ESC) await foto(page, (movil ? 'm-' : 'e-') + c.id);
-      if (lang === 'en' && vp.height === 640 && ['A', 'aro-eleccion', 'linea'].includes(c.id)) await foto(page, 'm-' + c.id + '-640-en');
+      if (lang === 'en' && vp.height === 640 && ['A', 'aro-eleccion', 'linea', 'inv-A', 'hacer-mueve', 'hacer-estira'].includes(c.id)) await foto(page, 'm-' + c.id + '-640-en');
       await ctx.close();
     }
     /* La pausa guiada que sigue llegando a los 30 min (el bloque 3), como hoy. */

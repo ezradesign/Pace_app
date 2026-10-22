@@ -25,6 +25,10 @@ elección guardada y, si nunca eligió, «A mi ritmo». Se monta como v0.175.0 D
 créditos» esté en `main` (toca `TimerDial.jsx` y el menú de pausa): juntar `origin/main` y montar. La frase
 de los dos minutos, provisional y en un solo sitio de datos hasta que Ez traiga la de ChatGPT; sin ella no se
 junta a `main`.
+- **Después Ez cambió «Hacerla»** (22 oct.): un ejercicio real de Mueve o Estira junto a la mesa, con su título,
+  su instrucción, su duración y el dibujo del MÓDULO. Va como **pregunta 5** en la misma página (versión 2):
+  5a el texto de la invitación (A «Un momento para moverte», recomendada) y 5b dónde se ve (A en el aro,
+  recomendada; B una hoja abajo). Sin scroll en los 40 casos medidos. Esperando las letras de Ez; sin montar.
 - **4a** dónde sale «Dos minutos para moverte»: A en el aro («Hacerla · Seguir»), B en la fila «Ahora».
 - **4b** dónde se elige «A mi ritmo · Después de cada bloque»: A dentro del aro, en la línea de «Foco breve»
   (0 px de scroll). La línea bajo los minutos del encargo suma 26 px y pide scroll (23 a 360×730 sin día,

@@ -71,6 +71,8 @@ details[open] > summary { margin-bottom: 14px }
 ul { margin: 0; padding-left: 20px; color: var(--ink-2); display: grid; gap: 6px; max-width: 68ch }
 a { color: var(--focus) }
 .pie { text-align: center; display: grid; gap: 8px; justify-items: center }
+details.antes > summary { font-family: var(--display); font-style: italic; font-size: 24px; padding: 8px 0 }
+details.antes[open] > summary { margin-bottom: 24px }
 /* Las tiras: dos horas de jornada a escala (flex = minutos), sin huecos para que la escala no mienta. */
 .tiras { display: grid; gap: 18px }
 .tiras-aro { display: grid; gap: 6px }
@@ -98,13 +100,64 @@ a { color: var(--focus) }
   <header style="display:grid;gap:14px">
     <div class="meta">PACE · lo que viste en tu móvil · 22 oct.</div>
     <h1>Pausas con bloques cortos</h1>
-    <p>Las tres primeras preguntas ya las contestaste y se están montando. Queda la cuarta: cómo se ven las pausas cuando eliges bloques de 5, 10 o 15 minutos. Tiene tres partes y se contesta con tres letras. Las fotos son de la app de verdad, a 360 px (tu móvil) y a 1280 px (el ordenador); lo que aún no existe está pintado encima.</p>
+    <p>La pregunta 4 ya la contestaste (4a A · 4b A · 4c A). Pediste cambiar lo que sale al pulsar «Hacerla»: un ejercicio de Mueve o Estira, con su título y el dibujo del módulo, dure lo que dure. Eso es la pregunta 5, con dos partes; se contesta con dos letras. Las fotos son de la app de verdad, a 360 px (tu móvil) y a 1280 px (el ordenador); lo que aún no existe está pintado encima.</p>
     <div class="resumen">
       <div class="meta">Lo que recomiendo</div>
-      <div class="respuesta">4a A · 4b A · 4c A</div>
-      <p>4a: la invitación sale en el aro. 4b: «A mi ritmo» o «Después de cada bloque» se elige dentro del aro, en la línea que hoy dice «Foco breve». 4c: esa elección vale también cuando no tienes el día preparado.</p>
+      <div class="respuesta">5a A · 5b A</div>
+      <p>5a: la invitación dice «Un momento para moverte». 5b: el ejercicio se ve dentro del aro, que cuenta lo que dura, sin cambiar de pantalla.</p>
     </div>
   </header>
+
+  <!-- ================= 5 · «Hacerla» con un ejercicio ================= -->
+  <section>
+    <div class="cab">
+      <div class="meta">Pregunta 5 · la 4a, otra vez</div>
+      <h2>«Hacerla» con un ejercicio</h2>
+      <p>Al pulsar «Hacerla» sale <b>un ejercicio</b> de Mueve o de Estira de los que se hacen junto a la mesa, de pie o sentado, sin suelo ni material. Lleva su título, su instrucción de siempre y lo que dura, aunque no sean dos minutos, y el dibujo del módulo (el de Mueve o el de Estira, no el del ejercicio). Cambia en cada invitación y no repite el de la pausa de antes. Al acabar suena el final suave y el aro vuelve a «Empezar bloque 3»; «Seguir con el bloque 3» lo corta antes. No da logros.</p>
+      <p>En las fotos, dos ejemplos de verdad: «Elevación de talones» (Mueve, de «Gemelos subrepticios»: 25 veces, 30 s) y «Barbilla atrás» (Estira, de «Cuello»: 5 veces, 40 s).</p>
+    </div>
+
+    <h3>5a · El texto de la invitación</h3>
+    <p>Ya no son siempre dos minutos, así que «Dos minutos para moverte» deja de ser verdad.</p>
+    <div class="fotos">
+      <figure><img src="fotos/m-inv-A.jpg" alt="El aro con Un momento para moverte" loading="lazy"><figcaption><b>A · «Un momento para moverte»</b></figcaption></figure>
+      <figure><img src="fotos/m-inv-B.jpg" alt="El aro con Un ejercicio antes de seguir" loading="lazy"><figcaption><b>B · «Un ejercicio antes de seguir»</b></figcaption></figure>
+      <figure><img src="fotos/m-inv-C.jpg" alt="El aro con el nombre del ejercicio y lo que dura" loading="lazy"><figcaption><b>C · El ejercicio y lo que dura</b>«Elevación de talones · 30 s»</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> «Un momento para moverte» <span class="sello">Recomendada</span></h3>
+        <p>El mismo tono que la que elegiste, sin prometer un tiempo. Corta, cabe en una línea en los dos idiomas («A moment to move»).</p></div>
+      <div class="op"><h3><span class="letra">B</span> «Un ejercicio antes de seguir»</h3>
+        <p>Dice qué es, más seco. En inglés, «One exercise before you go on».</p></div>
+      <div class="op"><h3><span class="letra">C</span> El ejercicio y lo que dura</h3>
+        <p>Sabes qué toca antes de pulsar. Cabe en una línea incluso con el nombre más largo («Rotación torácica de pie · 20 s por lado»), pero se lee peor de un vistazo y cambia de largo cada vez.</p></div>
+    </div>
+
+    <h3>5b · Lo que se ve al pulsar «Hacerla»</h3>
+    <div class="fotos">
+      <figure><img src="fotos/m-hacer-mueve.jpg" alt="El aro contando el ejercicio de Mueve con su título e instrucción" loading="lazy"><figcaption><b>A · En el aro, uno de Mueve</b>Arriba «Mueve · 25 veces»; bajo la cifra, el dibujo de Mueve y el título; debajo, la instrucción.</figcaption></figure>
+      <figure><img src="fotos/m-hacer-estira.jpg" alt="El aro contando el ejercicio de Estira" loading="lazy"><figcaption><b>A · En el aro, uno de Estira</b>Con el dibujo de Estira.</figcaption></figure>
+      <figure><img src="fotos/m-hoja-mueve.jpg" alt="Una hoja abajo con el ejercicio" loading="lazy"><figcaption><b>B · En una hoja abajo</b>Como la de tu pausa, con el ejercicio en grande.</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Recomendada</span></h3>
+        <p>Sin cambiar de pantalla: el aro cuenta lo que dura el ejercicio y dice cuál es y cómo se hace. Se sigue viendo tu día debajo. La home no pide scroll (medido a 360×730 y 360×640, en español y en inglés, con el día preparado y sin él).</p></div>
+      <div class="op"><h3><span class="letra">B</span> En una hoja abajo</h3>
+        <p>Como la ventana de la pausa: el ejercicio en grande, con su instrucción, y el aro contando detrás. Se lee mejor, pero tapa la home mientras dura y es otra ventana más.</p></div>
+    </div>
+    <div class="fotos esc">
+      <figure><img src="fotos/e-hacer-mueve.jpg" alt="Ordenador: el ejercicio dentro del aro" loading="lazy"><figcaption><b>A en el ordenador</b>El mismo aro.</figcaption></figure>
+      <figure><img src="fotos/e-hoja-mueve.jpg" alt="Ordenador: el ejercicio en una hoja" loading="lazy"><figcaption><b>B en el ordenador</b></figcaption></figure>
+    </div>
+    <details><summary>Sin el día preparado, en inglés y en un móvil pequeño</summary>
+      <div class="fotos">
+        <figure><img src="fotos/m-hacer-estira-libre.jpg" alt="" loading="lazy"><figcaption><b>A sin el día preparado</b>La home con los módulos. Aquí el aro es más bajo y la instrucción va justa: al montarlo se ajusta su letra.</figcaption></figure>
+        <figure><img src="fotos/m-hacer-mueve-640-en.jpg" alt="" loading="lazy"><figcaption><b>A en inglés, a 360×640</b></figcaption></figure>
+        <figure><img src="fotos/m-inv-A-640-en.jpg" alt="" loading="lazy"><figcaption><b>5a A en inglés, a 360×640</b></figcaption></figure>
+      </div>
+    </details>
+    <p>Hay unos 48 ejercicios así en 20 rutinas de Mueve y Estira (21 y 27). Al montarlo se miran uno a uno: alguno pide pared o bajar al suelo dentro de una rutina que no lo pide entera, y esos se quedan fuera.</p>
+  </section>
 
   <!-- ================= Lo ya elegido ================= -->
   <section>
@@ -116,10 +169,16 @@ a { color: var(--focus) }
       <div class="elegida"><span class="respuesta">1A</span><b>La app abre siempre con los módulos</b><p>Respira, Estira, Mueve e Hidrátate a la vista con la tarjeta corta; «Comienza» abre la pregunta del día. Sin contestar ya no cuenta como «por libre».</p></div>
       <div class="elegida"><span class="respuesta">2A</span><b>Los Ajustes del móvil, sin scroll</b><p>«Tus datos» pasa a su propia hoja y los Ajustes ocupan el 79 % de la pantalla.</p></div>
       <div class="elegida"><span class="respuesta">3A</span><b>La voz grave dice «exhala» en Rondas</b><p>Se quita el chasquido del final del archivo; la palabra ya cabía.</p></div>
+      <div class="elegida"><span class="respuesta">4a A</span><b>La invitación sale en el aro</b><p>Con «Hacerla» y «Seguir». Su texto y lo que sale al pulsar «Hacerla», en la pregunta 5.</p></div>
+      <div class="elegida"><span class="respuesta">4b A</span><b>«A mi ritmo · Después de cada bloque», en la línea del aro</b><p>Solo con el día empezado, después de contestar «¿Cuánto trabajas hoy?». En la home con los módulos no sale.</p></div>
+      <div class="elegida"><span class="respuesta">4c A</span><b>Sin el día preparado, la misma regla</b><p>Vale lo último que elegiste; si nunca elegiste, «A mi ritmo».</p></div>
     </div>
-    <p>Las fotos y el audio de esas tres siguen en la <a href="https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj">página anterior</a>.</p>
+    <p>1A, 2A y 3A ya están montadas (v0.174.6). Las fotos y el audio de esas tres siguen en la <a href="https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj">página anterior</a>; las de la pregunta 4, aquí abajo.</p>
   </section>
 
+  <details class="antes">
+  <summary>La pregunta 4, ya contestada, con sus fotos</summary>
+  <div style="display:grid;gap:56px">
   <!-- ================= 4 · cómo va hoy ================= -->
   <section>
     <div class="cab">
@@ -157,7 +216,7 @@ a { color: var(--focus) }
     </div>
 
     <div class="opciones">
-      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Recomendada</span></h3>
+      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Elegida</span></h3>
         <p>Sale donde ya miras cuando acaba el bloque: bajo la hora, «Dos minutos para moverte»; el botón dice «Hacerla» y al lado está «Seguir». Usa la misma fila que «Continuar · Reiniciar bloque», así que la home no crece. Funciona igual sin día preparado, donde no hay lista.</p></div>
       <div class="op"><h3><span class="letra">B</span> En la lista del día</h3>
         <p>La fila «Ahora» de la tarjeta dice «Dos minutos para moverte» con «Hacerla», y el botón del aro pasa a «Seguir con el bloque 3». En el ordenador iría en la barra de la izquierda, donde dice la siguiente pausa. Queda más lejos de la vista y, sin día preparado, no tiene dónde ir.</p></div>
@@ -198,7 +257,7 @@ a { color: var(--focus) }
       <figure><img src="fotos/m-hoja.jpg" alt="Una hoja con la pregunta y las dos respuestas" loading="lazy"><figcaption><b>C · Una pregunta la primera vez</b>Luego se recuerda.</figcaption></figure>
     </div>
     <div class="opciones">
-      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Recomendada</span></h3>
+      <div class="op rec"><h3><span class="letra">A</span> En el aro <span class="sello">Elegida, solo con el día empezado</span></h3>
         <p>Con el aro a 5, 10 o 15 y parado, la línea pequeña bajo la hora dice «Ejercicio a mi ritmo», con el mismo desplegable que las horas del día; al tocarla eliges «a mi ritmo» o «después de cada bloque». No añade alto: la home no pide scroll en ningún caso (medido). Con 20 o más vuelve a decir el tipo de foco. Mientras corre el bloque no se cambia, y al acabar un bloque ese sitio es de la invitación.</p></div>
       <div class="op"><h3><span class="letra">B</span> Bajo los minutos</h3>
         <p>Una línea con las dos opciones como píldoras, igual que los minutos: «Ejercicio · A mi ritmo · Después de cada bloque». Se ve mejor, pero suma 26 px que la home no tiene: pide 23 px de scroll en tu móvil sin el día preparado y 26 en un móvil pequeño.</p></div>
@@ -255,16 +314,19 @@ a { color: var(--focus) }
       <p>Con la 1A la app abre con los módulos, y muchos días usarás Foco sin preparar el día (sin contestar o «por libre»). Hoy, así, la ventana de la pausa sale al acabar cada bloque, también con bloques de 5.</p>
     </div>
     <div class="opciones">
-      <div class="op rec"><h3><span class="letra">A</span> La misma elección <span class="sello">Recomendada</span></h3>
+      <div class="op rec"><h3><span class="letra">A</span> La misma elección <span class="sello">Elegida</span></h3>
         <p>La elección de la 4b vale también aquí. Con «A mi ritmo», los bloques se juntan hasta media hora, entre medias sale la invitación y a la media hora, la ventana de la pausa. Con «Después de cada bloque», la ventana tras cada bloque, como hoy. Es tu regla del 15 oct., «al menos cada 30 minutos», también sin día.</p></div>
       <div class="op"><h3><span class="letra">B</span> Como hoy</h3>
         <p>Sin el día preparado, la ventana tras cada bloque y nada que elegir. La elección solo sale cuando PACE te ha preparado el día.</p></div>
     </div>
   </section>
 
+  </div>
+  </details>
+
   <footer class="pie">
     <div class="meta">Tu respuesta</div>
-    <div class="respuesta">4a _ · 4b _ · 4c _</div>
-    <p>Por ejemplo «4a A · 4b A · 4c A». No se monta nada de las pausas hasta que elijas. El aviso a mitad de un bloque largo (45 min o más) va después, como dijiste.</p>
+    <div class="respuesta">5a _ · 5b _</div>
+    <p>Por ejemplo «5a A · 5b A». Las pausas se montan cuando elijas, después de juntar lo de logros y créditos. El aviso a mitad de un bloque largo (45 min o más) va después, como dijiste.</p>
   </footer>
 </main>
