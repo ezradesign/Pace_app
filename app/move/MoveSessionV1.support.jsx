@@ -250,15 +250,19 @@ function v1DevCheckDuration(routine, restBetweenSets) {
    sets de reps) + reps GUIADAS reales (jamás el objetivo); en mixtas, pasos
    (ejercicios sin descansos) + reps; en movilidad, pasos. Sin calorías,
    récords ni comparaciones. `tiempo` llega ya formateado y `t` es el traductor
-   del llamador — así el helper se queda puro. */
-function v1DoneStats(routine, guided, tiempo, t) {
-  const ejercicios = routine.steps.filter(s => s.mode !== 'rest').length;
-  const conReps = routine.steps.filter(s => s.mode === 'reps').length;
+   del llamador — así el helper se queda puro.
+   El TIPO de rutina sale de sus pasos; las CIFRAS, de lo hecho (`hechos`, índices de los pasos
+   con trabajo): una serie saltada no cuenta. Sin `hechos`, todos. */
+function v1DoneStats(routine, guided, tiempo, t, hechos) {
+  const hecho = (i) => !hechos || !!hechos[i];
+  const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
+  const series = routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
+  const planReps = routine.steps.filter(s => s.mode === 'reps').length;
   const stats = [{ label: t('common.time'), value: tiempo }];
-  if (conReps > 0 && conReps === ejercicios) {
-    stats.push({ label: t('move.series'), value: String(conReps) });
+  if (planReps > 0 && planReps === routine.steps.filter(s => s.mode !== 'rest').length) {
+    stats.push({ label: t('move.series'), value: String(series) });
     stats.push({ label: t('move.repsCount'), value: String(guided) });
-  } else if (conReps > 0) {
+  } else if (planReps > 0) {
     stats.push({ label: t('move.steps'), value: String(ejercicios) });
     stats.push({ label: t('move.repsCount'), value: String(guided) });
   } else {

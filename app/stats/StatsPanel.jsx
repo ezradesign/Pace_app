@@ -32,12 +32,6 @@ function intensityOpacity(totalMin) {
   return 1.0;
 }
 
-function fmtTime(min, hourUnit) {
-  if (min <= 0) return '0';
-  if (min < 60) return `${min}min`;
-  return `${Math.round(min / 60 * 10) / 10}${hourUnit}`;
-}
-
 function monthLabel(year, month, lang) {
   /* Mayúscula solo en la primera letra: `capitalize` ponía «Octubre De 2026». */
   const s = new Date(year, month, 1).toLocaleDateString(
@@ -61,7 +55,6 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
   const [tooltip, setTooltip]     = useState(null);
   const tooltipRef                = useRef(null);
 
-  const hourUnit   = t('stats.month.hours.unit');
   const dayHeaders = t('stats.month.days.short').split(',');
 
   function prevMonth() {
@@ -80,11 +73,6 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
   const monthKey  = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}`;
   const monthData = history.months && history.months[monthKey] ? history.months[monthKey] : null;
 
-  const totalFocus   = monthData ? (monthData.focusMinutes  || 0) : 0;
-  const totalBreathe = monthData ? (monthData.breathMinutes || 0) : 0;
-  const totalMove    = monthData ? (monthData.moveMinutes   || 0) : 0;
-  const totalWater   = monthData ? (monthData.waterGlasses  || 0) : 0;
-
   const cells = [];
   for (let i = 0; i < startDow; i++) cells.push({ type: 'empty', key: `pre-${i}` });
   for (let d = 1; d <= days; d++) {
@@ -100,9 +88,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     const { focusMinutes, breathMinutes, moveMinutes, waterGlasses } = cell.entry;
     const label = dayLabel(viewYear, viewMonth, cell.d, lang);
     const parts = [];
-    if (focusMinutes > 0)  parts.push(`${focusMinutes} ${t('stats.month.tooltip.focus')}`);
-    if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
-    if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
+    if (focusMinutes > 0)  parts.push(`${statsNumero(focusMinutes, lang)} ${t('stats.month.tooltip.focus')}`);
+    if (breathMinutes > 0) parts.push(`${statsNumero(breathMinutes, lang)} ${t('stats.month.tooltip.breathe')}`);
+    if (moveMinutes > 0)   parts.push(`${statsNumero(moveMinutes, lang)} ${t('stats.month.tooltip.move')}`);
     if (waterGlasses > 0)  parts.push(`${waterGlasses} ${waterGlasses === 1 ? t('stats.unit.glasses.1') : t('stats.month.tooltip.water')}`);
     const rect = paceCaja(e.currentTarget);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, x: rect.left + rect.width / 2, y: rect.top });
@@ -115,9 +103,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     const { focusMinutes, breathMinutes, moveMinutes, waterGlasses } = cell.entry;
     const label = dayLabel(viewYear, viewMonth, cell.d, lang);
     const parts = [];
-    if (focusMinutes > 0)  parts.push(`${focusMinutes} ${t('stats.month.tooltip.focus')}`);
-    if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
-    if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
+    if (focusMinutes > 0)  parts.push(`${statsNumero(focusMinutes, lang)} ${t('stats.month.tooltip.focus')}`);
+    if (breathMinutes > 0) parts.push(`${statsNumero(breathMinutes, lang)} ${t('stats.month.tooltip.breathe')}`);
+    if (moveMinutes > 0)   parts.push(`${statsNumero(moveMinutes, lang)} ${t('stats.month.tooltip.move')}`);
     if (waterGlasses > 0)  parts.push(`${waterGlasses} ${waterGlasses === 1 ? t('stats.unit.glasses.1') : t('stats.month.tooltip.water')}`);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, key: cell.key, mobile: true });
   }
@@ -175,10 +163,15 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
       <div className="pace-heatmap-grid">
         {cells.map(cell => {
           if (cell.type === 'empty') return <div key={cell.key} className="pace-heatmap-empty" />;
-          const hasData  = !!cell.entry;
-          const totalMin = hasData ? (cell.entry.focusMinutes||0)+(cell.entry.breathMinutes||0)+(cell.entry.moveMinutes||0) : 0;
-          const opacity  = hasData ? intensityOpacity(totalMin) : 0;
-          const domColor = hasData ? dominantModule(cell.entry).color : 'var(--paper-3)';
+          /* UN DÍA SOLO CON AGUA TAMBIÉN TIENE ALGO (auditoría del 21 oct.): con 0 minutos su
+             relleno valía 0 y, por tener entrada, perdía también el borde de los vacíos, así que
+             no se veía nada. Ahora lleva el color del agua en el tono más suave. Lo que cuenta es
+             que haya algo, no que haya entrada: una entrada a ceros es un día vacío. */
+          const e = cell.entry || {};
+          const totalMin = (e.focusMinutes||0)+(e.breathMinutes||0)+(e.moveMinutes||0);
+          const hasData  = totalMin > 0 || (e.waterGlasses||0) > 0;
+          const opacity  = hasData ? intensityOpacity(Math.max(1, totalMin)) : 0;
+          const domColor = hasData ? dominantModule(e).color : 'var(--paper-3)';
           /* Un día sin nada es un hilo fino con su número, no una losa: con 31 losas beige
              el mes se leía como un muro y los días con ritmo no destacaban. Los que aún no
              han llegado, más tenues. Sobre un color intenso el número va en claro. */
@@ -202,18 +195,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         })}
       </div>
 
-      <div className="pace-heatmap-totals" style={{
-        display:'flex',gap:14,marginTop:10,flexWrap:'wrap',padding:'8px 10px',
-        background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:11,color:'var(--ink-2)',
-      }}>
-        <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit)}</span>
-        <span style={{ color:'var(--ink-3)' }}>·</span>
-        <span><strong style={{ color:'var(--breathe)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.breathe')}</strong>{' '}{fmtTime(totalBreathe,hourUnit)}</span>
-        <span style={{ color:'var(--ink-3)' }}>·</span>
-        <span><strong style={{ color:'var(--move)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.move')}</strong>{' '}{fmtTime(totalMove,hourUnit)}</span>
-        <span style={{ color:'var(--ink-3)' }}>·</span>
-        <span><strong style={{ color:'var(--hydrate)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{totalWater}</strong>{' '}{totalWater === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water')}</span>
-      </div>
+      <StatsLineaTotales entry={monthData} />
 
       {tooltip && !tooltip.mobile && (
         <div style={{

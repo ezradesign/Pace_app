@@ -19,6 +19,10 @@
    · Clave propia, `pace.cuerpo.v1`, fuera de `pace.state.v2` (el reparto de
      `pace.breathe.v1` y `pace.timer.v1`), y su latido entre pestañas en
      `pace.cuerpo.viva` (`useSesionViva`, SessionClock.jsx).
+   · LO QUE SE GUARDA ES DE ESTA VERSIÓN DE LA RUTINA: con el paso va la huella de los pasos
+     (`cuerpoHuella`). Si la rutina cambia —una propia reordenada o con otros tiempos—, el
+     número de paso ya es otro ejercicio y no se ofrece seguir (auditoría del 21 oct.). Van
+     también la marca de «terminar antes» y los pasos hechos, que el cierre necesita.
    · EL REGISTRO TIENE UNA SOLA DUEÑA: el efecto de `useCuerpoPersistencia`
      escribe mientras la sesión corre y borra al llegar a 'done'.
 
@@ -37,6 +41,16 @@ function cuerpoRutina(id) {
   return propia ? { routine: propia, source: 'move' } : null;
 }
 
+/* La huella de los pasos tal y como se corren (nombre, tiempo y modo), corta. Dos versiones de
+   una rutina con los mismos pasos dan la misma: cambiar solo el nombre no corta nada. */
+function cuerpoHuella(routine) {
+  const g = typeof moveRutinaGuiada === 'function' ? moveRutinaGuiada(routine) : routine;
+  const txt = ((g && g.steps) || []).map(s => [s.name, s.dur, s.mode || '', s.reps && (s.reps.target || s.reps)].join('|')).join('/');
+  let h = 5381;
+  for (let i = 0; i < txt.length; i++) h = ((h * 33) ^ txt.charCodeAt(i)) >>> 0;
+  return h.toString(36) + '.' + ((g && g.steps) || []).length;
+}
+
 /* leerCuerpoGuardada() -> el registro si sigue siendo ofrecible, o null. Total
    y silenciosa, como `leerRespiraGuardada`: cualquier cosa rara -> null. */
 function leerCuerpoGuardada(ahora) {
@@ -49,6 +63,8 @@ function leerCuerpoGuardada(ahora) {
     const c = cuerpoRutina(g.routineId);
     const pasos = c && Array.isArray(c.routine.steps) ? c.routine.steps.length : 0;
     if (!Number.isInteger(g.step) || g.step < 0 || g.step >= pasos) return null;
+    /* Sin huella, un registro de antes de guardarla: se ofrece, como hasta ahora. */
+    if (typeof g.huella === 'string' && g.huella !== cuerpoHuella(c.routine)) return null;
     if (window.canAccessRoutine && !window.canAccessRoutine(g.routineId)) return null;
     if (sesionVivaFuera(CUERPO_VIVA_KEY, t)) return null;   // sigue viva en otra pestaña
     /* Blindaje, como en Respira: más de tres veces lo que dura la rutina es un
@@ -71,14 +87,20 @@ function olvidarCuerpoGuardada() {
    registro de ESTA rutina, el comienzo de siempre: el runner no necesita ramas. */
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
+  if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => (Number.isFinite(x) && x > 0 ? x : 0);
+  const step = Math.min(Math.max(0, guardado.step | 0), routine.steps.length - 1);
+  /* Lo hecho: lo guardado o, en un registro de antes, los pasos de trabajo anteriores al suyo. */
+  const hechos = {};
+  (Array.isArray(guardado.hechos) ? guardado.hechos
+    : routine.steps.map((s, i) => i).filter(i => i < step && routine.steps[i].mode !== 'rest'))
+    .forEach(i => { if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) hechos[i] = true; });
   return {
-    step: Math.min(Math.max(0, guardado.step | 0), routine.steps.length - 1),
-    sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
+    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
-    reanudada: true,
+    reanudada: true, early: guardado.early === true, hechos,
   };
 }
 
@@ -106,10 +128,11 @@ function useCuerpoPersistencia(d) {
     if (!c || !c.routine || c.inPath || c.stage !== 'run') return;
     try {
       localStorage.setItem(CUERPO_KEY, JSON.stringify({
-        v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx,
+        v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx, huella: cuerpoHuella(c.routine),
         sesionMs: Math.round(c.relojSesion.segundos() * 1000),
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
         reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
+        early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
       }));
     } catch (e) {}
   };
@@ -129,5 +152,5 @@ function useCuerpoPersistencia(d) {
 }
 
 Object.assign(window, {
-  cuerpoRutina, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia,
+  cuerpoRutina, cuerpoHuella, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia,
 });

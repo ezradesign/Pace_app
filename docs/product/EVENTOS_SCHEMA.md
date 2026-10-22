@@ -52,6 +52,8 @@ Decisiones fijadas en s117 (AskUserQuestion, todas la recomendación):
 > **rev. 8 (5 de octubre de 2026, v0.136.0)**: **Android usa el adaptador web** (IndexedDB del
 > WebView), elegido de forma explícita por la API de Capacitor; el SQLite nativo de §19.3 queda
 > aplazado. Ver §19.3.
+> **rev. 9 (22 de octubre de 2026, v0.174.4)**: `session.completed` pasa a **`v:2`** y lleva
+> **`creditedMinutes`**, los minutos que se sumaron a la semana. Ver §8 y §30.
 
 ---
 
@@ -314,7 +316,19 @@ existente; un Camino tiene **un** `pathRunId`; un `pathRunId` agrupa **N** pasos
 
 ## 8. Payload por tipo
 
-**`session.completed`** (`v:1`)
+**`session.completed`** (`v:2`; lo guardado con `v:1` se conserva y se lee igual)
+
+> **`creditedMinutes`** (rev. 9, 22 oct. 2026, v0.174.4). Los minutos que la sesión **sumó a
+> la semana**, el mismo número que va a `weeklyStats`. No es `activeSeconds` en minutos: en
+> Mueve y Estira lo sumado lleva la colocación, los cambios de lado y los descansos, que §6.4
+> deja fuera del activo. Lo pone quien suma (`completeMoveSession`, `completeExtraSession`,
+> `completeBreathSession`, `completeFocusSession`), no el runner, para que sea ese número y no
+> otro parecido. Consumidor: Estadísticas › «Hoy» por libre, cuyas tarjetas tienen que sumar lo
+> mismo que el total de arriba (Ez, 2A del 22 oct.: con el activo, Cuello decía 2 min y el total
+> de Cuerpo, 3). **Admite `null`** (un llamante sin el dato). Un evento de `v:1` no lo trae: el
+> lector se queda con su cifra de ejercicio, `max(1, round(activeSeconds / 60))`, la que se
+> enseñaba al guardarlo (`sessionCreditedMinutes`, `app/events/events-payloads.js`). No se
+> reescriben los eventos viejos ni se les inventa el dato (§15).
 
 > **`routineId` cuando el módulo no tiene catálogo** (rev. 6): Foco emite **`focus`**,
 > una sola identidad para el módulo entero. La duración **no** entra en el id porque ya
@@ -349,7 +363,8 @@ existente; un Camino tiene **un** `pathRunId`; un `pathRunId` agrupa **N** pasos
   plannedSeconds:number|null, plannedSecondsSource:'preset'|'derived'|'declared'|null,
   variant:'v1'|'legacy'|null,
   origin:'aro'|'pausa'|'biblioteca'|'sidebar'|'parada'|'camino'|null,
-  fromMenu:boolean|null }
+  fromMenu:boolean|null,
+  creditedMinutes:number|null }          // v:2
 ```
 **`feedback.answered`** (`v:1`) — `runId` obligatorio (referencia a la sesión)
 ```
@@ -382,7 +397,9 @@ existente; un Camino tiene **un** `pathRunId`; un `pathRunId` agrupa **N** pasos
   `v1` marca un cambio *incompatible* de contenedor; los compatibles suben
   `schemaVersion`.
 - **Por evento (`v`):** payload evoluciona de forma aditiva subiendo su `v`; añadir un
-  `type` no toca el `v` de los demás.
+  `type` no toca el `v` de los demás. La `v` de cada tipo vive en `EVENT_VERSIONS`
+  (`app/events/events-model.js`); hoy `session.completed` va por la 2 y los demás por la 1.
+  Quien lee un tipo acepta todas sus `v` conocidas: lo guardado con la 1 no se reescribe.
 - **Desconocidos:** un `type`/`v` no comprendido **se conserva** y se omite en
   reducers; sigue sujeto a retención/presupuesto (§12); no se consolida (al podarlo
   se pierde su detalle); una versión antigua **no inventa agregados** para él.
@@ -942,3 +959,11 @@ delante y escritos aquí para que el código y el esquema digan lo mismo:
 **Fase 2 del plan (§25) queda CERRADA**: los cuatro emisores están puestos y probados
 en navegador. Lo siguiente del subsistema es la **retención por calendario** (§12), que
 sigue implementada y **sin programar**.
+
+**rev. 9** (22 oct. 2026, v0.174.4) — **`session.completed` sube a `v:2` con
+`creditedMinutes`** (§8). La auditoría externa del 21-22 oct. vio que en «Hoy» por libre la
+tarjeta de una sesión de Cuerpo contaba el ejercicio (`activeSeconds`) y el total, lo sumado a
+la semana: 2 min abajo y 3 arriba. Ez eligió que la tarjeta diga lo mismo que el total (2A). Es
+la primera vez que un payload sube su `v`, como pide §9: la rev. 7 añadió `origin` y `fromMenu`
+sin subirla. Lo guardado con `v:1` se lee con su cifra de ejercicio. Lo vigila
+`tests/stats-auditoria.spec.js` (E1).

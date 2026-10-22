@@ -35,7 +35,9 @@ function statsHoyParadas(plan) {
 }
 
 /* Las pausas de hoy por libre: las sesiones de Respira, Mueve y Estira que el registro
-   guardó con el día local de hoy. Sin almacén (`file://`), ninguna. */
+   guardó con el día local de hoy. Sin almacén (`file://`), ninguna. Sus minutos son los que
+   se sumaron a la semana (Ez, 2A del 22 oct.): las tarjetas suman lo mismo que el total de
+   arriba. Las guardadas antes de v0.174.4 no los traen y siguen con su cifra de ejercicio. */
 function statsHoySesiones() {
   let ev = [];
   try {
@@ -48,7 +50,7 @@ function statsHoySesiones() {
       const f = new Date(e.occurredAt);
       const rutina = (window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId)) || { id: e.payload.routineId, name: e.payload.routineId };
       return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
-               min: Math.max(1, Math.round((e.payload.activeSeconds || 0) / 60)) };
+               min: sessionCreditedMinutes(e) };
     })
     .sort((a, b) => a.desde - b.desde);
 }

@@ -122,6 +122,11 @@ function normalizeEventPayload(type, raw) {
       variant: eventEnum(p.variant, EVENT_VARIANTS),
       origin: eventEnum(p.origin, EVENT_ORIGINS),
       fromMenu: p.fromMenu === true ? true : (p.fromMenu === false ? false : null),
+      /* rev. 9 (`v:2`): los minutos que se sumaron a la semana. En Mueve y Estira llevan la
+         colocacion y los descansos, que `activeSeconds` deja fuera (§6.4), y por eso no se
+         derivan de el. Sin dato, null: no se inventa. */
+      creditedMinutes: p.creditedMinutes === null || p.creditedMinutes === undefined
+        ? null : eventCount(p.creditedMinutes),
     };
   }
 
@@ -162,10 +167,20 @@ function normalizeEventPayload(type, raw) {
   return null;
 }
 
+/* LOS MINUTOS QUE CUENTAN de una `session.completed`, leida del almacen. Con `v:2`, los que se
+   sumaron a la semana, asi que las tarjetas de «Hoy» suman lo mismo que su total. Una de `v:1` no
+   los trae y se queda con su cifra de ejercicio, la que se ensenaba al guardarla. */
+function sessionCreditedMinutes(e) {
+  const p = e && e.payload;
+  if (!p) return 0;
+  if (e.v >= 2 && typeof p.creditedMinutes === 'number' && isFinite(p.creditedMinutes)) return p.creditedMinutes;
+  return Math.max(1, Math.round((p.activeSeconds || 0) / 60));
+}
+
 Object.assign(window, {
   EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
   EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
   EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload,
   EVENT_RITMO_OPCIONES, EVENT_RITMO_HABITUAL, EVENT_RITMO_PARADAS, EVENT_RITMO_MODULOS,
-  EVENT_RITMO_ESTADOS, eventMinuto, eventRitmoParada,
+  EVENT_RITMO_ESTADOS, eventMinuto, eventRitmoParada, sessionCreditedMinutes,
 });

@@ -7,11 +7,21 @@ const { useState, useRef, useEffect } = React;
    YEAR VIEW — sesión 44
    ===================================================================== */
 
-/* Score compuesto: focusBlocks (25min=1, cap 3) + breathSessions + moveSessions + waterFrac. */
+/* PRESENCIA E INTENSIDAD, SEPARADAS (auditoría del 21 oct.). Que un día tenga color lo decide
+   la presencia: algo de foco, Respira, cuerpo o agua. Cuánto color, la intensidad. Antes la
+   presencia salía de la intensidad, que cuenta el foco en bloques de 25 min redondeados: un día
+   con 1-12 min de foco quedaba vacío, y un año así decía «Aún no hay actividad». */
+function yearPresente(entry) {
+  return isActiveDay(entry) || ((entry && entry.waterGlasses) || 0) > 0;
+}
+
+/* Intensidad: focusBlocks (25min=1, cap 3) + breathSessions + moveSessions + waterFrac. Por
+   debajo de medio bloque, el foco cuenta su fracción y no cero. */
 function computeDayScore(entry) {
   if (!entry) return 0;
   const { focusMinutes: fm, breathMinutes: bm, moveMinutes: mm, waterGlasses: wg } = entry;
-  return Math.min(Math.round((fm||0)/25),3) + ((bm||0)>0?1:0) + ((mm||0)>0?1:0) + Math.min((wg||0)/8,1);
+  const bloques = Math.min(Math.round((fm||0)/25),3) || (fm||0)/25;
+  return bloques + ((bm||0)>0?1:0) + ((mm||0)>0?1:0) + Math.min((wg||0)/8,1);
 }
 
 /* Nivel 0-4 según umbrales acordados. */
@@ -52,7 +62,7 @@ function getYearData(history, year, firstSeenTimestamp) {
     const isPreUse = firstSeenStr ? dateStr < firstSeenStr : false;
     const entry    = !isFuture && history.days && history.days[dateStr] ? history.days[dateStr] : null;
     const score    = entry ? computeDayScore(entry) : 0;
-    const level    = isFuture ? -1 : (isPreUse ? -2 : computeLevel(score));
+    const level    = isFuture ? -1 : (isPreUse ? -2 : (yearPresente(entry) ? Math.max(1, computeLevel(score)) : 0));
     const dow      = (d.getDay()+6)%7;
     const col      = Math.floor((n+jan1Dow)/7);
     result.push({ dateStr, score, level, entry, isPreUse, isFuture, dow, col, d });
@@ -139,7 +149,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
      leen como la fila única de siempre. Corta en la columna del 1 de julio. */
   const corte = Math.floor((Math.round((new Date(viewYear,6,1) - new Date(viewYear,0,1)) / 86400000) + jan1Dow) / 7);
   const columnas = (desde, hasta) => Array.from({ length: hasta - desde }, (_, i) => desde + i);
-  const hasAnyData = yearData.some(c => c.score > 0);
+  const hasAnyData = yearData.some(c => c.level > 0);
   const monthNames = t('stats.year.months.short').split(',');
   const dayRowLabels = t('stats.year.days.label').split(',');
 
@@ -147,18 +157,20 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   const cellMap = {};
   for (const cell of yearData) cellMap[`${cell.col}-${cell.dow}`] = cell;
 
+  /* La intensidad con un decimal y la coma de cada idioma; un día con algo nunca dice 0. */
+  const intensidad = (cell) => t('stats.year.tooltip.score').replace('{n}', statsNumero(Math.max(0.1, cell.score), lang, 1));
   function handleEnter(e, cell) {
-    if (cell.score <= 0) return;
+    if (cell.level <= 0) return;
     const rect = paceCaja(e.currentTarget);
-    const text = `${formatDateLiteral(cell.d,lang)} · ${t('stats.year.tooltip.score').replace('{n}', Math.round(cell.score*10)/10)}`;
+    const text = `${formatDateLiteral(cell.d,lang)} · ${intensidad(cell)}`;
     setTooltip({ text, x: rect.left+rect.width/2, y: rect.top, key: cell.dateStr });
   }
   function handleLeave() { setTooltip(null); }
   function handleTap(e, cell) {
-    if (cell.score <= 0) return;
+    if (cell.level <= 0) return;
     e.preventDefault();
     if (tooltip && tooltip.key === cell.dateStr) { setTooltip(null); return; }
-    const text = `${formatDateLiteral(cell.d,lang)} · ${t('stats.year.tooltip.score').replace('{n}', Math.round(cell.score*10)/10)}`;
+    const text = `${formatDateLiteral(cell.d,lang)} · ${intensidad(cell)}`;
     setTooltip({ text, key: cell.dateStr, mobile: true });
   }
   function handleClick(cell) {
@@ -278,7 +290,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
                       const lvl     = cell.level;
                       const ls      = yearLevelStyles[lvl] || yearLevelStyles[0];
-                      const hasData = cell.score > 0;
+                      const hasData = lvl > 0;
 
                       return (
                         <div key={row} data-pace-year-cell
@@ -324,6 +336,9 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
           {t('stats.year.empty').replace('{year}', viewYear)}
         </div>
       )}
+
+      {/* Los totales del año en el escritorio: la línea del mes (en el móvil, las tarjetas). */}
+      {hasAnyData && <StatsLineaTotales entry={history.years && history.years[viewYear]} />}
 
       {/* Footer de totales */}
       {hasAnyData && (

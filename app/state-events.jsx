@@ -159,7 +159,9 @@ function paceCaminoRunId() {
 
 /* session.completed — el emisor de los cuatro módulos. `datos` lo arma cada
    runner con lo que sólo él sabe (tiempos y plan); aquí se decide la
-   correlación y se recuerda el runId para el feedback. */
+   correlación y se recuerda el runId para el feedback. `creditedMinutes` no lo
+   pone el runner sino quien suma a la semana (`completeMoveSession` y las
+   demás), para que el evento diga el número que se sumó y no otro parecido. */
 function emitSessionCompleted(module, routineId, datos) {
   const d = datos || {};
   /* Sin tiempos no hay evento: `normalizeEventPayload` lo rechazaría igual,
@@ -189,6 +191,7 @@ function emitSessionCompleted(module, routineId, datos) {
       variant: d.variant || null,
       origin: origen ? origen.origin : null,
       fromMenu: origen ? origen.fromMenu : null,
+      creditedMinutes: typeof d.creditedMinutes === 'number' ? d.creditedMinutes : null,
     },
   });
   if (!evento) return null;

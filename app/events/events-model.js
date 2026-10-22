@@ -43,6 +43,12 @@ const EVENTS_BUDGET_BYTES = 500 * 1024;
    motor de la semana; lo arma state-ritmo.resumen.jsx cuando el dia ya paso. */
 const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed', 'ritmo.day.closed'];
 
+/* La `v` de cada tipo (§9): un payload que gana un campo sube la suya y no la de los demas.
+   `session.completed` va por la 2 (rev. 9): apunta `creditedMinutes`, los minutos que se sumaron
+   a la semana. Lo guardado con la 1 se conserva tal cual, y quien lo lee acepta las dos
+   (`sessionCreditedMinutes`, events-payloads.js). El tipo que no esta aqui va por la 1. */
+const EVENT_VERSIONS = { 'session.completed': 2 };
+
 /* Correlacion TIPADA (§7.1) — no hay un `runId` universal, y no se inventan
    `runId` ficticios para el tipo que no lo lleva.
      req  = obligatorio · opt = opcional · no = no aplicable (null) */
@@ -116,7 +122,7 @@ function makeEvent(opts) {
 
   return {
     id: id,
-    v: 1,
+    v: EVENT_VERSIONS[o.type] || 1,
     type: o.type,
     occurredAt: occurredAt,
     /* El dia civil se captura AL EMITIR; jamas se reconstruye despues desde
@@ -466,7 +472,7 @@ function backupHasEventsSection(payload) {
 
 Object.assign(window, {
   EVENTS_SCHEMA_VERSION, EVENTS_RETENTION_DAYS, EVENTS_BUDGET_BYTES,
-  EVENT_TYPES, EVENT_CORRELATION, EVENT_CONTEXTS,
+  EVENT_TYPES, EVENT_VERSIONS, EVENT_CORRELATION, EVENT_CONTEXTS,
   newEventId, isEventId, makeEvent, eventCorrelationOk,
   isValidEventEnvelope, compareEvents, isAfterPruneCursor,
   emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer,

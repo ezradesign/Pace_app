@@ -31,6 +31,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.stretchDone':             'Estiramiento completado',
     'session.notCounted':              'Sesión sin contar',
     'session.notCountedCopy':          'Con menos de medio minuto no se cuenta. Vuelve cuando quieras.',
+    'session.notCountedCopy.sinTrabajo': 'Sin ningún ejercicio hecho no se cuenta. Vuelve cuando quieras.',
     'session.hold':                    'Retén sin aire',
     'session.breatheAgain':            'Respirar de nuevo',
     'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
@@ -199,6 +200,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'custom.step.up':                  'Subir',
     'custom.step.down':                'Bajar',
     'custom.step.remove':              'Quitar',
+    'custom.step.perSide':             '{s} s por lado',
+    'custom.builder.needWork':         'Añade al menos un ejercicio: solo con descansos no hay rutina.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -216,6 +219,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.stretchDone':             'Stretch completed',
     'session.notCounted':              'Not counted',
     'session.notCountedCopy':          'Under half a minute doesn’t count. Come back whenever you like.',
+    'session.notCountedCopy.sinTrabajo': 'With no exercise done, it doesn’t count. Come back whenever you like.',
     'session.hold':                    'Hold your breath',
     'session.breatheAgain':            'Breathe again',
     'session.holdCue':                 'Press when you feel the need to breathe.',
@@ -376,4 +380,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'custom.step.up':                  'Move up',
     'custom.step.down':                'Move down',
     'custom.step.remove':              'Remove',
+    'custom.step.perSide':             '{s} s per side',
+    'custom.builder.needWork':         'Add at least one exercise: rests alone aren’t a routine.',
 });
