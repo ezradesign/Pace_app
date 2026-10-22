@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.4 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.5 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -17,6 +17,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   (reuniones, la jornada en plena comida como eligió Ez, y el aro con las pausas). v0.174.4, once de
   «Tus rutinas», el cierre de Mueve/Estira y Estadísticas (Ez eligió las cinco recomendadas sobre la
   maqueta `docs/proposals/rutinas-y-cifras-auditoria.html`, https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW).
+  v0.174.5, cinco del móvil de Ez y de la auditoría del 22 oct. (M1, M3, M5, A8, A9): entre ellos, los
+  logros solo con la sesión entera, como decidió Ez.
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -101,14 +103,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   frase que eligió para la pared opcional) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
-  cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; y dos del 22 oct.:
-  A8 Intro en el menú de pausa activa la propuesta y no el botón con el foco, porque el atajo global de
-  `BreakMenu.jsx` solo excluye INPUT y TEXTAREA y también vale con `BreakMenuRitmo` (tampoco mira las
-  teclas modificadoras ni la composición, y con la propuesta de agua suma un vaso); A9 con dos
-  pestañas en el aviso de seguridad de Respira, `onAccept` (`main.jsx`) usa `pendienteReanudar` sin
-  volver a mirar `leerRespiraGuardada()`, y las dos reanudan y acreditan los minutos de antes; el
-  latido de sesión viva no excluye a una segunda, así que la sesión reanudada se acredita una sola vez
-  por su id. ChatGPT confirmó A8 y A9 el 22 oct. y pide A9 primero, porque toca los datos) ·
+  cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; A8 y A9, en
+  v0.174.5) ·
   **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
   programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
@@ -123,14 +119,11 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
-- **Del móvil de Ez** (22 oct., la prueba interna en su Android): M1 al volver a la app con un Foco en
-  marcha el aro llega a su sitio a trompicones (`TimerDial.jsx` anima 1 s cada salto; con uno grande,
-  que llegue de golpe) · M2 con el aro corto, la pausa en cuanto llevas 15 min de foco (sin «¿Pausa ahora?»; en espera: Ez lo consulta con ChatGPT) y M3 logros solo con la sesión entera,
-  decididos por Ez (`DECISIONES_PRODUCTO.md`) · M4 la voz grave no dice «exhala» en las rondas (3,6 s
-  en fases de 2 s): una prueba para oír · M5 «Ponle ritmo al día» en Estadísticas › Hoy llama a
-  `ritmoVolver` sin cerrar el panel y no se ve nada (`StatsHoy.jsx`) · M6 los Ajustes del móvil, al
-  72 % de alto y con scroll, y M7 la home que abre con los módulos y la tarjeta corta (idea de Ez):
-  maqueta. Una sesión en cuanto haya hueco, después de juntar «Tus rutinas» (toca Estadísticas).
+- **Del móvil de Ez** (22 oct., la prueba interna en su Android; M1, M3 y M5, en v0.174.5): M2 con el
+  aro corto, la pausa en cuanto llevas 15 min de foco (sin «¿Pausa ahora?»; en espera: Ez lo consulta
+  con ChatGPT) · M4 la voz grave no dice «exhala» en las rondas (3,6 s en fases de 2 s): una prueba
+  para oír · M6 los Ajustes del móvil, al 72 % de alto y con scroll, y M7 la home que abre con los
+  módulos y la tarjeta corta (idea de Ez): maqueta.
 - **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
   escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
   calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;

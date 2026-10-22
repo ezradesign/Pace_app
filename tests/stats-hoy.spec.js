@@ -188,14 +188,26 @@ test('con PACE completo, Mes y Año se abren aunque ya no estén abiertos para t
 
 /* M5 (el móvil de Ez, 22 oct.): por libre, «Ponle ritmo al día» volvía al ritmo con Estadísticas
    delante, así que no se veía nada. Ahora cierra el panel y la pregunta del día queda a la vista.
-   Contra v0.174.4 cae. */
-test('por libre, «Ponle ritmo al día» cierra Estadísticas y deja a la vista la pregunta del día', async ({ page, context }) => {
-  await sembrar(context, BASE);
-  await page.clock.install({ time: JUEVES });
-  await irAlArtefacto(page);
-  await expect(page.locator('[data-pace-ritmo-panel]'), 'GUARD: por libre ya había pregunta').toHaveCount(0);
-  await page.getByRole('button', { name: 'Ver estadísticas' }).click();
-  await page.locator('[data-pace-hoy-volver]').click();
-  await expect(page.locator('[data-pace-hoy-view]'), 'Estadísticas sigue delante').toHaveCount(0);
-  await expect(page.locator('[data-pace-ritmo-panel]'), 'la pregunta del día no está a la vista').toBeVisible();
-});
+   «A la vista» se mide con elementFromPoint en el título de la pregunta: toBeVisible no mira si
+   algo la tapa, y con el código viejo la pregunta ya estaba en la home, debajo del panel.
+   Contra v0.174.4 caen las dos. */
+const POR_LIBRE = Object.assign({}, BASE, { ritmo: { libre: '2026-10-15' } });
+for (const [ancho, alto] of [[1280, 720], [360, 718]]) {
+  test(`por libre, «Ponle ritmo al día» cierra Estadísticas y deja delante la pregunta del día (${ancho} px)`, async ({ page, context }) => {
+    await page.setViewportSize({ width: ancho, height: alto });
+    await sembrar(context, POR_LIBRE);
+    await page.clock.install({ time: JUEVES });
+    await irAlArtefacto(page);
+    await expect(page.locator('[data-pace-ritmo-panel]'), 'GUARD: por libre ya había pregunta').toHaveCount(0);
+    await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+    await page.locator('[data-pace-hoy-volver]').click();
+    await expect(page.locator('[data-pace-hoy-view]'), 'Estadísticas sigue delante').toHaveCount(0);
+    const titulo = page.locator('[data-pace-ritmo-estado="pregunta"] .pace-rt-titulo').filter({ visible: true });
+    await expect(titulo, 'la home no enseña la pregunta del día').toHaveCount(1);
+    await expect.poll(() => titulo.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      const arriba = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return !!arriba && el.contains(arriba);
+    }), 'algo tapa la pregunta del día').toBe(true);
+  });
+}
