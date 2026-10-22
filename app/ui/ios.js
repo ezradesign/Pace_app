@@ -128,15 +128,22 @@ function paceIosAvisoRecolocar() {
 
 /* --- La copia de «Tus datos» ---------------------------------------------- */
 
-/* true si la ha mandado a la hoja de compartir; false si no es el iPhone. */
-function paceIosGuardarArchivo(nombre, texto) {
-  if (!paceIosPlugin('Filesystem') || !paceIosPlugin('Share')) return false;
-  paceIosLlamar('Filesystem', 'writeFile', { path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' })
+/* false si no es el iPhone. Si lo es, una promesa con lo que pasó, como en Android
+   (`paceAndroidGuardarArchivo`): 'compartida', 'cancelada' o 'fallo'; `alAbrir`, al abrirse la
+   hoja con el archivo ya escrito. `paceIosLlamar` se traga el rechazo, y con él la cancelación. */
+function paceIosGuardarArchivo(nombre, texto, alAbrir) {
+  var fs = paceIosPlugin('Filesystem'), hoja = paceIosPlugin('Share');
+  if (!fs || !hoja || typeof fs.writeFile !== 'function' || typeof hoja.share !== 'function') return false;
+  return Promise.resolve()
+    .then(function () { return fs.writeFile({ path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' }); })
     .then(function (r) {
-      if (!r || !r.uri) return null;
-      return paceIosLlamar('Share', 'share', { title: nombre, files: [r.uri] });
-    });
-  return true;
+      if (!r || !r.uri) return 'fallo';
+      try { if (typeof alAbrir === 'function') alAbrir(); } catch (e) {}
+      return Promise.resolve(hoja.share({ title: nombre, files: [r.uri] })).then(
+        function () { return 'compartida'; },
+        function (e) { return /cancel/i.test(String((e && e.message) || e)) ? 'cancelada' : 'fallo'; });
+    })
+    .catch(function () { return 'fallo'; });
 }
 
 /* --- El audio ------------------------------------------------------------- */

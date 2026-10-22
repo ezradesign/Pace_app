@@ -3261,6 +3261,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.msg.exported': 'Backup descargado.',
   'settings.msg.exported.app': 'Copia lista: elige dónde guardarla.',
   'settings.msg.export.err': 'No se pudo exportar.',
+  'settings.msg.export.cancel': 'Copia cancelada.',
   'settings.msg.imported': 'Importado — recargando…',
   'settings.msg.import.invalid': 'Archivo no reconocido.',
   'settings.msg.import.json.err': 'JSON inválido.',
@@ -3347,6 +3348,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.msg.exported': 'Backup downloaded.',
   'settings.msg.exported.app': 'Copy ready: choose where to save it.',
   'settings.msg.export.err': 'Could not export.',
+  'settings.msg.export.cancel': 'Copy cancelled.',
   'settings.msg.imported': 'Imported — reloading…',
   'settings.msg.import.invalid': 'File not recognized.',
   'settings.msg.import.json.err': 'Invalid JSON.',
@@ -6174,6 +6176,27 @@ function paceSanearEstado(parsed, defaults) {
     if (pt) reparar('paths', p);
   }
 
+
+
+
+
+
+  if (Array.isArray(e.customRoutines)) {
+    var texto = function (v) {return v === undefined || typeof v === 'string';};
+    var pasoUsable = function (p) {return paceEsObjetoPlano(p) && texto(p.name) && texto(p.cue);};
+    var usables = [],apartadas = [];
+    e.customRoutines.forEach(function (r) {
+      var pasos = paceEsObjetoPlano(r) && Array.isArray(r.steps) ? r.steps.filter(pasoUsable) : [];
+      if (!pasos.length || typeof r.id !== 'string' || !texto(r.name)) {apartadas.push(r);return;}
+      if (pasos.length !== r.steps.length) {apartadas.push(r);r = Object.assign({}, r, { steps: pasos });}
+      usables.push(r);
+    });
+    if (apartadas.length) {
+      reparar('customRoutines', usables);
+      e.customRoutinesApartadas = (Array.isArray(e.customRoutinesApartadas) ? e.customRoutinesApartadas : []).concat(apartadas);
+    }
+  }
+
   Object.keys(FORMAS_AJENAS).forEach(function (k) {
     if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
       e[k] = undefined;delete e[k];reparados.push(k);
@@ -7522,9 +7545,13 @@ function addWaterGlass(delta) {
     plan: { ...s.plan, hidratate: next > 0 ? true : s.plan.hidratate },
     weeklyStats: { ...s.weeklyStats, waterGlasses: week }
   });
+
+
+
+  const cambio = next - s.water.today;
+  if (cambio !== 0) bumpCount('agua.vasos', Math.max(cambio, -getCount('agua.vasos')));
   if (delta > 0) {
     unlockAchievement('first.sip');
-    bumpCount('agua.vasos', delta);
     checkPlanAchievements();
     checkSilentDayAchievement();
     if (getState().water.today >= getState().water.goal) {
@@ -13066,11 +13093,12 @@ function isEventId(value) {
 
 
 
+
 function makeEvent(opts) {
   const o = opts || {};
   if (EVENT_TYPES.indexOf(o.type) === -1) return null;
 
-  const id = newEventId();
+  const id = typeof o.id === 'string' && o.id ? o.id : newEventId();
   if (!id) return null;
 
   const occurredAt = typeof o.occurredAt === 'string' ? o.occurredAt : new Date().toISOString();
@@ -14771,10 +14799,13 @@ Object.assign(window, {
    §7.1 exige que `session.completed` y su `feedback.answered` compartan
    `runId`, y §7.2 dice que no hace falta persistirlo: el feedback sólo se
    contesta con el DONE montado. Así que el id se genera AQUÍ al emitir la
-   sesión y se recuerda en memoria (`paceUltimaSesion`) hasta que otra sesión
-   lo sustituya. El feedback correlaciona sólo si su `routineId` es el de esa
-   última sesión; si no coincide, NO se emite — antes que inventar una
-   correlación falsa, se pierde el evento (§7.1: no se crean runId ficticios).
+   sesión y se recuerda en memoria, la última de CADA rutina (`paceSesionDeRutina`),
+   hasta que otra sesión de esa rutina la sustituya. El feedback correlaciona con la
+   última sesión de SU rutina; si no la hay, NO se emite — antes que inventar una
+   correlación falsa, se pierde el evento (§7.1: no se crean runId ficticios). Con
+   una sola «última sesión» para todo, un Foco que acababa con el «¿Te ayudó?» de
+   una rutina abierto (Foco sigue montado debajo) le quitaba la respuesta
+   (auditoría del 21 oct.).
 
    Depende de: app/events/* (por window, en runtime) · state-core (getState) ·
    app/paths/registry.js (resolveBodyRoutine). Carga DESPUÉS de events-store.
@@ -14783,6 +14814,7 @@ Object.assign(window, {
 
 
 let paceUltimaSesion = null;
+const paceSesionDeRutina = Object.create(null);
 
 
 
@@ -14910,11 +14942,13 @@ function emitSessionCompleted(module, routineId, datos) {
     }
   });
   if (!evento) return null;
-  paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
+  paceUltimaSesion = paceSesionDeRutina[routineId] = { runId: runId, routineId: routineId, module: module };
 
 
   paceEmitirEvento(evento, function () {
     if (paceUltimaSesion && paceUltimaSesion.runId === runId) paceUltimaSesion = null;
+    const deRutina = paceSesionDeRutina[routineId];
+    if (deRutina && deRutina.runId === runId) delete paceSesionDeRutina[routineId];
   });
 
 
@@ -14931,8 +14965,8 @@ function emitSessionCompleted(module, routineId, datos) {
 
 function emitFeedbackAnswered(routineId, response) {
   if (response === 'later') return false;
-  const u = paceUltimaSesion;
-  if (!u || u.routineId !== routineId) return false;
+  const u = paceSesionDeRutina[routineId];
+  if (!u) return false;
   const evento = window.makeEvent && window.makeEvent({
     type: 'feedback.answered',
     context: 'standalone',
@@ -14985,8 +15019,11 @@ function emitRitmoDia(resumen, alConfirmar, alRechazar) {
   const fin = window.parseLocalDateKey(resumen.fecha);
   if (!fin || isNaN(fin.getTime())) return false;
   fin.setHours(23, 59, 0, 0);
+
+
   const evento = window.makeEvent && window.makeEvent({
     type: 'ritmo.day.closed',
+    id: typeof resumen.eventoId === 'string' ? resumen.eventoId : null,
     context: 'standalone',
     occurredAt: fin.toISOString(),
     payload: resumen
@@ -14999,7 +15036,10 @@ function emitRitmoDia(resumen, alConfirmar, alRechazar) {
 
 
 function paceUltimaSesionEmitida() {return paceUltimaSesion;}
-function paceOlvidarUltimaSesion() {paceUltimaSesion = null;}
+function paceOlvidarUltimaSesion() {
+  paceUltimaSesion = null;
+  Object.keys(paceSesionDeRutina).forEach(function (k) {delete paceSesionDeRutina[k];});
+}
 
 Object.assign(window, {
   paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId,
@@ -15015,6 +15055,8 @@ Object.assign(window, {
        la semana. Va detrás del emisor, que es quien escribe en el registro. -->
   <script>
 ;(function () {
+
+
 
 
 
@@ -15142,8 +15184,12 @@ function ritmoResumenAntesDePisar(s, r) {
   var resumen = null;
   try {resumen = ritmoResumenDe(s, dia);} catch (e) {resumen = null;}
   var cola = (Array.isArray(r.resumenes) ? r.resumenes : []).filter(function (x) {return x && x.fecha !== dia.fecha;});
-  if (resumen) cola = cola.concat([resumen]).slice(-RITMO_RESUMEN_COLA_MAX);
+  if (resumen) cola = cola.concat([Object.assign({ eventoId: ritmoResumenId() }, resumen)]).slice(-RITMO_RESUMEN_COLA_MAX);
   return Object.assign({}, r, { resumido: dia.fecha, resumenes: cola });
+}
+
+function ritmoResumenId() {
+  return typeof newEventId === 'function' ? newEventId() : null;
 }
 
 var ritmoResumenEnviando = false;
@@ -15163,6 +15209,20 @@ function ritmoResumirAhora() {
     var cola = Array.isArray(r.resumenes) ? r.resumenes : [];
     if (!cola.length || typeof paceEventsCanWrite !== 'function' || !paceEventsCanWrite()) return;
     var primero = cola[0];
+
+
+    if (primero && !primero.eventoId) {
+      var id = ritmoResumenId();
+      if (!id) return;
+      setState(function (prev) {
+        var pr = prev.ritmo || {};
+        var conId = (Array.isArray(pr.resumenes) ? pr.resumenes : []).map(function (x) {
+          return x && x.fecha === primero.fecha && !x.eventoId ? Object.assign({}, x, { eventoId: id }) : x;
+        });
+        return Object.assign({}, prev, { ritmo: Object.assign({}, pr, { resumenes: conId }) });
+      });
+      primero = Object.assign({}, primero, { eventoId: id });
+    }
     ritmoResumenEnviando = true;
     var enviado = emitRitmoDia(primero, function () {
       ritmoResumenEnviando = false;
@@ -15187,7 +15247,7 @@ Object.assign(window, {
   RITMO_RESUMEN_COLA_MAX, RITMO_RESUMEN_ALREDEDOR, ritmoMenuDe, ritmoDescartados, ritmoResumenDe,
   ritmoResumenAntesDePisar, ritmoResumirAhora
 });
-;Object.assign(window, { RITMO_RESUMEN_COLA_MAX, RITMO_RESUMEN_ALREDEDOR, ritmoMenuDe, ritmoDescartados, ritmoResumenDe, ritmoResumenAntesDePisar, ritmoResumenEnviando, ritmoResumirAhora });
+;Object.assign(window, { RITMO_RESUMEN_COLA_MAX, RITMO_RESUMEN_ALREDEDOR, ritmoMenuDe, ritmoDescartados, ritmoResumenDe, ritmoResumenAntesDePisar, ritmoResumenId, ritmoResumenEnviando, ritmoResumirAhora });
 })();
 </script>
   <!-- El motor de la semana en el estado: la carta del lunes y lo aprendido. Detrás del resumen. -->
@@ -15825,14 +15885,23 @@ function paceAndroidAvisoRecolocar() {
 
 
 
-function paceAndroidGuardarArchivo(nombre, texto) {
-  if (!paceAndroidPlugin('Filesystem') || !paceAndroidPlugin('Share')) return false;
-  paceAndroidLlamar('Filesystem', 'writeFile', { path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' }).
+
+
+
+
+function paceAndroidGuardarArchivo(nombre, texto, alAbrir) {
+  var fs = paceAndroidPlugin('Filesystem'),menu = paceAndroidPlugin('Share');
+  if (!fs || !menu || typeof fs.writeFile !== 'function' || typeof menu.share !== 'function') return false;
+  return Promise.resolve().
+  then(function () {return fs.writeFile({ path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' });}).
   then(function (r) {
-    if (!r || !r.uri) return null;
-    return paceAndroidLlamar('Share', 'share', { title: nombre, files: [r.uri] });
-  });
-  return true;
+    if (!r || !r.uri) return 'fallo';
+    try {if (typeof alAbrir === 'function') alAbrir();} catch (e) {}
+    return Promise.resolve(menu.share({ title: nombre, files: [r.uri] })).then(
+      function () {return 'compartida';},
+      function (e) {return /cancel/i.test(String(e && e.message || e)) ? 'cancelada' : 'fallo';});
+  }).
+  catch(function () {return 'fallo';});
 }
 
 
@@ -16092,14 +16161,21 @@ function paceIosAvisoRecolocar() {
 
 
 
-function paceIosGuardarArchivo(nombre, texto) {
-  if (!paceIosPlugin('Filesystem') || !paceIosPlugin('Share')) return false;
-  paceIosLlamar('Filesystem', 'writeFile', { path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' }).
+
+
+function paceIosGuardarArchivo(nombre, texto, alAbrir) {
+  var fs = paceIosPlugin('Filesystem'),hoja = paceIosPlugin('Share');
+  if (!fs || !hoja || typeof fs.writeFile !== 'function' || typeof hoja.share !== 'function') return false;
+  return Promise.resolve().
+  then(function () {return fs.writeFile({ path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' });}).
   then(function (r) {
-    if (!r || !r.uri) return null;
-    return paceIosLlamar('Share', 'share', { title: nombre, files: [r.uri] });
-  });
-  return true;
+    if (!r || !r.uri) return 'fallo';
+    try {if (typeof alAbrir === 'function') alAbrir();} catch (e) {}
+    return Promise.resolve(hoja.share({ title: nombre, files: [r.uri] })).then(
+      function () {return 'compartida';},
+      function (e) {return /cancel/i.test(String(e && e.message || e)) ? 'cancelada' : 'fallo';});
+  }).
+  catch(function () {return 'fallo';});
 }
 
 
@@ -16244,10 +16320,10 @@ function paceNativoFoco(endsAt, textos) {
 
 
 
-function paceNativoGuardarArchivo(nombre, texto) {
+function paceNativoGuardarArchivo(nombre, texto, alAbrir) {
   var p = pacePlataformaNativa();
-  if (p === 'android') return paceAndroidGuardarArchivo(nombre, texto);
-  if (p === 'ios') return paceIosGuardarArchivo(nombre, texto);
+  if (p === 'android') return paceAndroidGuardarArchivo(nombre, texto, alAbrir);
+  if (p === 'ios') return paceIosGuardarArchivo(nombre, texto, alAbrir);
   return false;
 }
 
@@ -32064,7 +32140,8 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
   const unlocked = window.puedeCrearRutinas ?
   window.puedeCrearRutinas() :
   !!pace.premiumUnlocked;
-  const routines = Array.isArray(pace.customRoutines) ? pace.customRoutines : [];
+
+  const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
 
@@ -32157,9 +32234,10 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
 function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accent = 'var(--move)' } = _ref2;
   const { t, tn } = useT();
-  const stepsLabel = routine.steps.length === 1 ?
+  const nPasos = Array.isArray(routine.steps) ? routine.steps.length : 0;
+  const stepsLabel = nPasos === 1 ?
   t('custom.steps.one') :
-  tn('custom.steps.many', { n: routine.steps.length });
+  tn('custom.steps.many', { n: nPasos });
   return (
     React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, onClick: onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
     !locked &&
@@ -35866,9 +35944,12 @@ const { useState: useStateTD, useRef: useRefTD } = React;
 
 
 
-function paceBajarJSON(payload, nombre) {
+
+
+function paceBajarJSON(payload, nombre, alAbrir) {
   const texto = JSON.stringify(payload, null, 2);
-  if (typeof paceNativoGuardarArchivo === 'function' && paceNativoGuardarArchivo(nombre, texto)) return;
+  const enApp = typeof paceNativoGuardarArchivo === 'function' ? paceNativoGuardarArchivo(nombre, texto, alAbrir) : false;
+  if (enApp) return enApp;
   const blob = new Blob([texto], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -35878,6 +35959,7 @@ function paceBajarJSON(payload, nombre) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  return 'descargada';
 }
 
 function paceEnlaceLegal(ruta) {
@@ -35890,7 +35972,7 @@ function paceDiaArchivo() {
 
 
 
-function paceDescargarCopia(enMemoria) {
+function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
     if (!enMemoria) {try {raw = localStorage.getItem('pace.state.v2') || '{}';} catch (e) {}}
@@ -35918,8 +36000,7 @@ function paceDescargarCopia(enMemoria) {
 
     const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (rescate) payload.rescate = rescate;
-    paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json');
-    return true;
+    return paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json', alAbrir);
   } catch (e) {return false;}
 }
 
@@ -35950,17 +36031,32 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null);
 
-  const exportJSON = () => {
-    if (paceDescargarCopia()) {
-      const enApp = typeof paceEsNativo === 'function' && paceEsNativo();
-      setMsg({ kind: 'ok', text: t(enApp ? 'settings.msg.exported.app' : 'settings.msg.exported') });
-      setTimeout(() => setMsg(null), 2200);
 
-      unlockAchievement('secret.backup');
-    } else {
-      setMsg({ kind: 'err', text: t('settings.msg.export.err') });
-      setTimeout(() => setMsg(null), 2600);
-    }
+
+  const avisoTimerRef = useRefTD(null);
+  const avisar = (kind, clave, ms) => {
+    setMsg({ kind, text: t(clave) });
+    clearTimeout(avisoTimerRef.current);
+    avisoTimerRef.current = setTimeout(() => setMsg(null), ms);
+  };
+
+
+
+
+
+  const exportJSON = () => {
+    const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
+    Promise.resolve(paceDescargarCopia(null, alAbrir)).then((como) => {
+      if (como === 'descargada' || como === 'compartida') {
+        if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
+
+        unlockAchievement('secret.backup');
+      } else if (como === 'cancelada') {
+        avisar('ok', 'settings.msg.export.cancel', 2600);
+      } else {
+        avisar('err', 'settings.msg.export.err', 2600);
+      }
+    });
   };
 
 
@@ -35971,10 +36067,7 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
-  const noBorro = () => {
-    setMsg({ kind: 'err', text: t('settings.msg.reset.err') });
-    setTimeout(() => setMsg(null), 3200);
-  };
+  const noBorro = () => avisar('err', 'settings.msg.reset.err', 3200);
 
   const importJSON = (file) => {
     if (!file) return;

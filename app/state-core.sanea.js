@@ -179,6 +179,27 @@ function paceSanearEstado(parsed, defaults) {
     if (pt) reparar('paths', p);
   }
 
+  /* Las rutinas propias: la lista y la tarjeta leen `r.id` y `r.steps.length` sin mirar, así que
+     una entrada `null` o sin pasos tumbaba «Tus rutinas» entera (auditoría del 21 oct.). Lo que
+     no se puede usar se APARTA tal cual en `customRoutinesApartadas`, que viaja en la copia: no
+     se borra nada. Un paso que no es un objeto sale de su rutina, y la rutina entera, como
+     estaba, va también a lo apartado. */
+  if (Array.isArray(e.customRoutines)) {
+    var texto = function (v) { return v === undefined || typeof v === 'string'; };
+    var pasoUsable = function (p) { return paceEsObjetoPlano(p) && texto(p.name) && texto(p.cue); };
+    var usables = [], apartadas = [];
+    e.customRoutines.forEach(function (r) {
+      var pasos = paceEsObjetoPlano(r) && Array.isArray(r.steps) ? r.steps.filter(pasoUsable) : [];
+      if (!pasos.length || typeof r.id !== 'string' || !texto(r.name)) { apartadas.push(r); return; }
+      if (pasos.length !== r.steps.length) { apartadas.push(r); r = Object.assign({}, r, { steps: pasos }); }
+      usables.push(r);
+    });
+    if (apartadas.length) {
+      reparar('customRoutines', usables);
+      e.customRoutinesApartadas = (Array.isArray(e.customRoutinesApartadas) ? e.customRoutinesApartadas : []).concat(apartadas);
+    }
+  }
+
   Object.keys(FORMAS_AJENAS).forEach(function (k) {
     if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
       e[k] = undefined; delete e[k]; reparados.push(k);

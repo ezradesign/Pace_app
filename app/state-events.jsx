@@ -49,10 +49,13 @@
    §7.1 exige que `session.completed` y su `feedback.answered` compartan
    `runId`, y §7.2 dice que no hace falta persistirlo: el feedback sólo se
    contesta con el DONE montado. Así que el id se genera AQUÍ al emitir la
-   sesión y se recuerda en memoria (`paceUltimaSesion`) hasta que otra sesión
-   lo sustituya. El feedback correlaciona sólo si su `routineId` es el de esa
-   última sesión; si no coincide, NO se emite — antes que inventar una
-   correlación falsa, se pierde el evento (§7.1: no se crean runId ficticios).
+   sesión y se recuerda en memoria, la última de CADA rutina (`paceSesionDeRutina`),
+   hasta que otra sesión de esa rutina la sustituya. El feedback correlaciona con la
+   última sesión de SU rutina; si no la hay, NO se emite — antes que inventar una
+   correlación falsa, se pierde el evento (§7.1: no se crean runId ficticios). Con
+   una sola «última sesión» para todo, un Foco que acababa con el «¿Te ayudó?» de
+   una rutina abierto (Foco sigue montado debajo) le quitaba la respuesta
+   (auditoría del 21 oct.).
 
    Depende de: app/events/* (por window, en runtime) · state-core (getState) ·
    app/paths/registry.js (resolveBodyRoutine). Carga DESPUÉS de events-store.
@@ -61,6 +64,7 @@
 /* Última sesión emitida, EN MEMORIA y nunca persistida (§7.2). Se limpia sola
    al recargar, que es justo lo que se quiere: un DONE no sobrevive a eso. */
 let paceUltimaSesion = null;
+const paceSesionDeRutina = Object.create(null);   /* routineId -> { runId, routineId, module } */
 
 /* LA PUERTA (s194). Se anota en el GESTO —abrir una biblioteca, elegir en la
    pausa, tocar la parada, pulsar el aro, la tarjeta de la barra lateral— y la
@@ -188,11 +192,13 @@ function emitSessionCompleted(module, routineId, datos) {
     },
   });
   if (!evento) return null;
-  paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
+  paceUltimaSesion = paceSesionDeRutina[routineId] = { runId: runId, routineId: routineId, module: module };
   /* Si el almacén la rechaza, se olvida ESTA sesión y no la que haya venido después: el rechazo
      puede llegar cuando ya se emitió otra, y su feedback se perdía. */
   paceEmitirEvento(evento, function () {
     if (paceUltimaSesion && paceUltimaSesion.runId === runId) paceUltimaSesion = null;
+    const deRutina = paceSesionDeRutina[routineId];
+    if (deRutina && deRutina.runId === runId) delete paceSesionDeRutina[routineId];
   });
   /* s195: una sesión terminada mientras la pausa de «A tu ritmo» está abierta la
      deja HECHA (de lo que sea: hiciste una pausa), y apunta su plato si es uno de
@@ -209,8 +215,8 @@ function emitSessionCompleted(module, routineId, datos) {
    existe. El módulo se toma de la sesión recordada, no se deduce del id. */
 function emitFeedbackAnswered(routineId, response) {
   if (response === 'later') return false;
-  const u = paceUltimaSesion;
-  if (!u || u.routineId !== routineId) return false;
+  const u = paceSesionDeRutina[routineId];
+  if (!u) return false;
   const evento = window.makeEvent && window.makeEvent({
     type: 'feedback.answered',
     context: 'standalone',
@@ -263,8 +269,11 @@ function emitRitmoDia(resumen, alConfirmar, alRechazar) {
   const fin = window.parseLocalDateKey(resumen.fecha);
   if (!fin || isNaN(fin.getTime())) return false;
   fin.setHours(23, 59, 0, 0);
+  /* Con el id que el resumen lleva en la cola: un reintento tras cerrar PACE justo después de
+     guardarlo es el MISMO evento, y el almacén no lo repite (state-ritmo.resumen.jsx). */
   const evento = window.makeEvent && window.makeEvent({
     type: 'ritmo.day.closed',
+    id: typeof resumen.eventoId === 'string' ? resumen.eventoId : null,
     context: 'standalone',
     occurredAt: fin.toISOString(),
     payload: resumen,
@@ -277,7 +286,10 @@ function emitRitmoDia(resumen, alConfirmar, alRechazar) {
    app — existe para que un test pueda comprobar la regla de §7.1 sin abrir el
    almacén. */
 function paceUltimaSesionEmitida() { return paceUltimaSesion; }
-function paceOlvidarUltimaSesion() { paceUltimaSesion = null; }
+function paceOlvidarUltimaSesion() {
+  paceUltimaSesion = null;
+  Object.keys(paceSesionDeRutina).forEach(function (k) { delete paceSesionDeRutina[k]; });
+}
 
 Object.assign(window, {
   paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId,

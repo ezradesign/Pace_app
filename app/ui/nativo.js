@@ -74,12 +74,12 @@ function paceNativoFoco(endsAt, textos) {
 
 /* --- La copia de «Tus datos» y los enlaces -------------------------------- */
 
-/* true si el archivo ha ido a la hoja de compartir del movil; false en la web,
-   donde toca la descarga de siempre. */
-function paceNativoGuardarArchivo(nombre, texto) {
+/* false en la web, donde toca la descarga de siempre. En el movil, una promesa con lo que pasó
+   con la hoja de compartir: 'compartida', 'cancelada' o 'fallo' (android.js e ios.js). */
+function paceNativoGuardarArchivo(nombre, texto, alAbrir) {
   var p = pacePlataformaNativa();
-  if (p === 'android') return paceAndroidGuardarArchivo(nombre, texto);
-  if (p === 'ios') return paceIosGuardarArchivo(nombre, texto);
+  if (p === 'android') return paceAndroidGuardarArchivo(nombre, texto, alAbrir);
+  if (p === 'ios') return paceIosGuardarArchivo(nombre, texto, alAbrir);
   return false;
 }
 

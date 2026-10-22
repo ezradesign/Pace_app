@@ -48,9 +48,13 @@ function addWaterGlass(delta) {
     plan: { ...s.plan, hidratate: next > 0 ? true : s.plan.hidratate },
     weeklyStats: { ...s.weeklyStats, waterGlasses: week },
   });
+  /* El total de toda la vida (el de los 200 vasos) recibe el cambio que de verdad hubo hoy,
+     también al quitar un vaso, y no baja de cero: solo subía, y +1, −1, +1 dejaba uno hoy y dos
+     en el total (auditoría del 21 oct.). Un logro ya ganado no se retira (s146). */
+  const cambio = next - s.water.today;
+  if (cambio !== 0) bumpCount('agua.vasos', Math.max(cambio, -getCount('agua.vasos')));
   if (delta > 0) {
     unlockAchievement('first.sip');
-    bumpCount('agua.vasos', delta);
     checkPlanAchievements();
     checkSilentDayAchievement();
     if (getState().water.today >= getState().water.goal) {

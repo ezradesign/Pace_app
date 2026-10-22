@@ -139,3 +139,33 @@ test('el resumen solo guarda horas, módulos e ids: lo demás se cae', async ({ 
   expect(Object.keys(limpio.paradas[0]).sort()).toEqual(['estado', 'hora', 'platos', 'reunion', 'tipo']);
   expect(Object.keys(limpio.paradas[0].platos[0]).sort()).toEqual(['antes', 'id', 'modulo', 'otras']);
 });
+
+/* Auditoría del 21 oct. 2026 (13): entre guardar el resumen en el registro y quitarlo de la cola hay
+   un rato. Si PACE se cerraba ahí, el reintento le ponía otro id y el registro lo guardaba DOS
+   veces, porque solo descarta un evento repetido por su id. Ahora el resumen lleva su id en la cola,
+   también uno que ya estaba en ella sin él. Cae contra v0.174.0. */
+test('un resumen guardado justo antes de cerrar PACE no queda dos veces en el registro', async ({ page, context }) => {
+  const fecha = '2026-10-20';
+  const resumen = { fecha, opcion: 'jornada', habitual: null, inicio: 540, salida: 1080, paradas: [] };
+  await sembrar(context, { ritmo: { libre: true, resumido: fecha, resumenes: [resumen] } });
+  /* En la primera carga el registro guarda el resumen, pero PACE «se cierra» antes de saberlo. */
+  await context.addInitScript(() => {
+    if (sessionStorage.getItem('pace.test.cerrado')) return;
+    sessionStorage.setItem('pace.test.cerrado', '1');
+    let real = null;
+    Object.defineProperty(window, 'paceEventsAppend', { configurable: true,
+      get: () => real && ((e) => real(e).then(() => new Promise(() => {}))),
+      set: (f) => { real = f; } });
+  });
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  await expect.poll(async () => (await resumenes(page)).length, { timeout: 20000 }).toBe(1);
+  expect((await estado(page)).ritmo.resumenes, 'la cola se vació sin saber si se guardó').toHaveLength(1);
+
+  /* Al volver, la cola se reenvía y se vacía. */
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  await expect.poll(async () => ((await estado(page)).ritmo.resumenes || []).length, { timeout: 20000 }).toBe(0);
+  const guardados = (await resumenes(page)).filter((e) => e.payload.fecha === fecha);
+  expect(guardados.length, 'el resumen quedó dos veces en el registro').toBe(1);
+});

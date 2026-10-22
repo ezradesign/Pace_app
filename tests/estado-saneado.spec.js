@@ -282,3 +282,32 @@ test('5 · las métricas de cada día se leen como números al arrancar y al imp
   comprobar(await leerMes(), 'al importar');
   expect(errores).toEqual([]);
 });
+
+/* AUDITORÍA DEL 21 OCT. · 11 · UNA RUTINA PROPIA DAÑADA. `customRoutines` solo se miraba como
+ * lista, y la tarjeta lee `routine.steps.length` (y la lista, `r.id`): una entrada `null` o sin
+ * pasos tumbaba «Tus rutinas» entera. Ahora el saneador aparta lo que no se puede usar, sin
+ * borrarlo (`customRoutinesApartadas`, que viaja en la copia), y la tarjeta no puede caerse.
+ * Cae contra v0.174.0. */
+test('11 · una rutina propia dañada no tumba «Tus rutinas»: se aparta sin borrarse, y la buena se ve y arranca', async ({ context, page }) => {
+  const paso = { name: 'Hombros', dur: 30, cue: '' };
+  const buena = { id: 'custom.1', name: 'Mi pausa buena', steps: [paso], min: 1, createdAt: 1, updatedAt: 1 };
+  const sinPasos = { id: 'custom.2', name: 'Sin pasos', min: 1 };
+  const conPasoRoto = { id: 'custom.3', name: 'Con un paso roto', steps: [null, paso], min: 1 };
+  await sembrar(context, { premiumUnlocked: true, customRoutines: [buena, null, sinPasos, conPasoRoto] });
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+
+  const s = await page.evaluate(() => ({ lista: getState().customRoutines, apartadas: getState().customRoutinesApartadas }));
+  expect((s.lista || []).map(r => r && r.id), 'lo que no se puede usar sigue en la lista').toEqual(['custom.1', 'custom.3']);
+  expect(s.lista[1].steps, 'el paso roto sigue en la rutina').toEqual([paso]);
+  expect(s.apartadas, 'lo apartado se guarda tal cual, no se borra').toEqual([null, sinPasos, conPasoRoto]);
+
+  await page.getByRole('button', { name: /^Mueve/ }).filter({ visible: true }).first().click();
+  const biblio = page.locator('[data-pace-modal-backdrop]').last();
+  await expect(biblio.getByText('Mi pausa buena'), '«Tus rutinas» se cayó').toBeVisible();
+  /* La tarjeta abre «Antes de empezar», y de ahí la sesión arranca. */
+  await biblio.getByText('Mi pausa buena').click();
+  await page.getByRole('button', { name: 'Empezar', exact: true }).filter({ visible: true }).first().click();
+  await page.locator('[data-pace-session-root]').first().waitFor({ state: 'visible' });
+  expect(errores).toEqual([]);
+});
