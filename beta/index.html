@@ -92,10 +92,11 @@
   footer { margin: 40px 0 0; padding: 16px 0 40px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 18px; }
   footer a { color: var(--ink-3); }
   @media (min-width: 900px) {
-    .portada { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; padding: 24px 0 40px; }
+    /* minmax(0, …): sin él, la columna de las capturas crece hasta su ancho real (3 × 540 px). */
+    .portada { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 48px; align-items: center; padding: 24px 0 40px; }
     .tira { overflow: visible; margin: 0; padding: 0; gap: 14px; }
     .tira img { flex: 1 1 0; width: auto; min-width: 0; }
-    .dos { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: start; }
+    .dos { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 48px; align-items: start; }
     .dos > div + div { margin-top: 0; }
     section { padding: 56px 40px 48px; margin: 0 0 24px; border-radius: 18px; }
   }
@@ -166,7 +167,7 @@
 
   <section>
     <h2 data-en="Questions">Preguntas</h2>
-    <details><summary data-en="Do I need an Android phone?">¿Necesito un Android?</summary><p data-en-html="Yes, with Google Play. On a computer, PACE already works at &lt;a href=&quot;/&quot;&gt;pacegrass.app&lt;/a&gt;.">Sí, con Google Play. En el ordenador, PACE ya funciona en <a href="/">pacegrass.app</a>.</p></details>
+    <details><summary data-en="Do I need an Android phone?">¿Necesito un Android?</summary><p data-en-html="Yes, with Google Play. On a computer, PACE already works at &lt;a href=&quot;/&quot;&gt;pacegrass.app&lt;/a&gt;; on iPhone it comes later: write to us and we will let you know.">Sí, con Google Play. En el ordenador, PACE ya funciona en <a href="/">pacegrass.app</a>; en iPhone llega más adelante: escríbenos y te avisamos.</p></details>
     <details><summary data-en="How do I tell you what goes wrong?">¿Cómo os cuento qué falla?</summary><p data-en-html="Write to us at &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt;, or from the PACE page on Google Play: during the test, only we can see what you write there.">Escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>, o desde la ficha de PACE en Google Play: durante la prueba, lo que escribas ahí solo lo vemos nosotros.</p></details>
     <details><summary data-en="What data does PACE see?">¿Qué datos ve PACE?</summary><p data-en="From the app, none: there is no account and what is yours stays on your phone. From the group, your Google email, used only to give you access and send you the gift.">De la app, ninguno: no hay cuenta y lo tuyo se queda en tu móvil. Del grupo, tu correo de Google, que solo sirve para darte acceso y mandarte el regalo.</p></details>
     <details><summary data-en="And while the test lasts?">¿Y mientras dura la prueba?</summary><p data-en="All of PACE is open, the paid part too, until version 1.">Todo PACE está abierto, también lo de pago, hasta la versión 1.</p></details>

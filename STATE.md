@@ -1,12 +1,13 @@
 # PACE · Estado
 
-**Versión:** v0.174.6 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.7 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
 
 - **Web** en https://pacegrass.app (y `paceweb.pages.dev`, sin redirigir), con `/premium` y su lista
-  «Avísame», que se enciende al conectar el KV (`docs/launch/avisame.md`).
+  «Avísame», que se enciende al conectar el KV (`docs/launch/avisame.md`), y desde v0.174.7 `/beta`
+  para que los testers de Android se apunten solos; las dos con la letra y los botones de la app.
 - **Android** (Fase 2 de `ROADMAP.md`) hecho en código y sin probar en un móvil: cada push a `main`
   compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0) y, desde el 22
   oct., **dentro de v1** (Ez): TestFlight en cuanto haya cuenta de Apple, y la App Store el mismo día que
@@ -72,8 +73,9 @@ y, desde el 22 oct. por la tarde, https://claude.ai/artifact/5iWBfHE7kD3dUVocdsk
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
-  (tiene 5 o 6); el gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal;
-  volver a exportar el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
+  (tiene 5 o 6; con `/beta`, crear el grupo «PACE testers» y añadirlo en Play: `testers.md`); el
+  gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar
+  el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
 - Copiar `PACE-llave-play` y `PACE-llave-licencias` a su disco duro y mandar a cada tester su enlace
   de `codigos-tester.csv` (funcionan en la web).
 - «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` conectado como `AVISAME` y el

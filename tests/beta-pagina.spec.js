@@ -18,10 +18,10 @@ const { capturarErrores } = require('./helpers');
 
 const RAIZ = path.join(__dirname, '..');
 const PAGINA = '/beta/';
-const HTML = fs.readFileSync(path.join(RAIZ, 'beta', 'index.html'), 'utf8');
 const BLOQUE = /(<script type="application\/json" data-enlaces>)([\s\S]*?)(<\/script>)/;
 
-function enlaces() { return JSON.parse(HTML.match(BLOQUE)[2]); }
+/* Se lee en cada prueba: sin la página, cae cada una por su lado y no la suite al cargar. */
+function enlaces() { return JSON.parse(fs.readFileSync(path.join(RAIZ, 'beta', 'index.html'), 'utf8').match(BLOQUE)[2]); }
 
 /* Los valores de un bloque de app/tokens.css, sin comentarios. */
 function tokensDe(selector) {
@@ -136,6 +136,8 @@ for (const ruta of ['/beta/', '/premium/']) {
     expect(leido.h1).toEqual(['"Cormorant Garamond"', 'italic']);
     expect(leido.boton).toEqual(['"Cormorant Garamond"', 'italic', rgb(CLARO['--focus-cta'])]);
     expect(fuentes.some((u) => /cormorantgaramond-500-italic/.test(u))).toBe(true);
+    /* En el ordenador tampoco hay scroll lateral: las capturas de /beta ensanchaban su columna. */
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1280);
     expect(fuentes.filter((u) => /ebgaramond/.test(u))).toEqual([]);
 
     for (const [esquema, app] of [['light', CLARO], ['dark', OSCURO]]) {
