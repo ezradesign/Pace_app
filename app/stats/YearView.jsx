@@ -337,6 +337,9 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
         </div>
       )}
 
+      {/* Los totales del año en el escritorio: la línea del mes (en el móvil, las tarjetas). */}
+      {hasAnyData && <StatsLineaTotales entry={history.years && history.years[viewYear]} />}
+
       {/* Footer de totales */}
       {hasAnyData && (
         <div style={{

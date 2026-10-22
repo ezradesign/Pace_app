@@ -89,6 +89,35 @@ function statsTotalesDe(entry, t) {
   return statsSeries(t).map(s => ({ key: s.key, label: s.label, color: s.color, valor: v[s.key], unidad: v[s.key] === 1 && s.unit1 ? s.unit1 : s.unit }));
 }
 
+function fmtTime(min, hourUnit, lang) {
+  if (min <= 0) return '0';
+  if (min < 60) return `${min}min`;
+  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
+}
+
+/* LA LÍNEA DE TOTALES DEL ESCRITORIO, en el Mes y en el Año: las cuatro cifras en una fila bajo
+   el dibujo. En el móvil no sale (allí van las cuatro tarjetas arriba). El Año la estrena tras la
+   auditoría del 21 oct.: en el escritorio escondía sus tarjetas y no ponía nada en su lugar. */
+function StatsLineaTotales({ entry }) {
+  const { t, lang } = useT();
+  const v = (k) => (entry && entry[k]) || 0;
+  const h = t('stats.month.hours.unit');
+  const rotulo = (color, texto) => <strong style={{ color, fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>{texto}</strong>;
+  const punto = <span style={{ color: 'var(--ink-3)' }}>·</span>;
+  const agua = v('waterGlasses');
+  return (
+    <div className="pace-heatmap-totals" style={{
+      display: 'flex', gap: 14, marginTop: 10, flexWrap: 'wrap', padding: '8px 10px',
+      background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', fontSize: 11, color: 'var(--ink-2)',
+    }}>
+      <span>{rotulo('var(--focus)', t('stats.month.total.focus'))}{' '}{fmtTime(v('focusMinutes'), h, lang)}</span>{punto}
+      <span>{rotulo('var(--breathe)', t('stats.month.total.breathe'))}{' '}{fmtTime(v('breathMinutes'), h, lang)}</span>{punto}
+      <span>{rotulo('var(--move)', t('stats.month.total.move'))}{' '}{fmtTime(v('moveMinutes'), h, lang)}</span>{punto}
+      <span>{rotulo('var(--hydrate)', statsNumero(agua, lang))}{' '}{agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water')}</span>
+    </div>
+  );
+}
+
 function WeekView({ state }) {
   const { t, tn } = useT();
   const w = state.weeklyStats;
@@ -206,4 +235,4 @@ function WeekBarRow({ label, data, color, unit, today }) {
   );
 }
 
-Object.assign(window, { statsNumero, StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });
+Object.assign(window, { statsNumero, fmtTime, StatsLineaTotales, StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });

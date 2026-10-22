@@ -47,6 +47,31 @@ test('Y1 · un día con 10 min de foco se ve en el Año, y el año no dice que n
   await expect(page.locator('[data-pace-year-view]')).toContainText('1 día con ritmo');
 });
 
+/* ------------------------------------------------------------------- E2 · un día solo con agua */
+/* Opción 3A de la maqueta del 22 oct.: el color del agua, en el tono más suave. */
+test('E2 · en el Mes, un día solo con agua lleva el color del agua', async ({ page, context }) => {
+  await abrir(page, context, { water: 8 });
+  await pestana(page, 'month');
+  const dia = page.locator('.pace-heatmap-cell').filter({ hasText: /^15$/ });
+  await expect(dia.locator('> div'), 'el día solo con agua sale sin relleno').toHaveCount(1);
+  const capa = await dia.locator('> div').evaluate((d) => ({ fondo: getComputedStyle(d).backgroundColor, op: Number(getComputedStyle(d).opacity) }));
+  const agua = await page.evaluate(() => { const p = document.createElement('i'); p.style.color = 'var(--hydrate)'; document.body.appendChild(p);
+    const c = getComputedStyle(p).color; p.remove(); return c; });
+  expect(capa.fondo, 'el relleno no es el del agua').toBe(agua);
+  expect(capa.op).toBeGreaterThan(0);
+});
+
+/* ------------------------------------------------------------------- E3 · el año en el escritorio */
+/* Opción 4A de la maqueta del 22 oct.: la línea de totales del Mes, debajo del año. */
+test('E3 · en el escritorio, el Año enseña sus totales', async ({ page, context }) => {
+  await abrir(page, context, { focus: 84, breath: 5, move: 3, water: 6 });
+  await pestana(page, 'year');
+  const linea = page.locator('[data-pace-year-view] .pace-heatmap-totals');
+  await expect(linea, 'el año no enseña sus totales en el escritorio').toBeVisible();
+  await expect(linea).toContainText('Foco 1,4h');
+  await expect(linea).toContainText('6 vasos');
+});
+
 /* ------------------------------------------------------------------- E4 · decimales y miles */
 test('E4 · en castellano, las horas del Mes llevan coma', async ({ page, context }) => {
   await abrir(page, context, { focus: 84 });

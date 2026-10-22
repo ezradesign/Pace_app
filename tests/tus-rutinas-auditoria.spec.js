@@ -89,6 +89,7 @@ test('R1 · con un paso que el registro no conoce, no afirma que no hace falta n
   const preview = await abrirPropia(page, 'De antes');
   await expect(preview.getByText('Qué necesitas')).toBeVisible();
   await expect(preview, 'sin datos de un paso, afirma que no hace falta nada').not.toContainText('Nada. Solo tú y donde estás.');
+  await expect(preview.locator('[data-pace-preview-sin-datos]')).toHaveText('De algún paso no sabemos qué pide: míralo antes.');
 });
 
 /* ------------------------------------------------------------------- R2 · solo descanso */
@@ -113,6 +114,8 @@ test('R2 · una rutina solo con «Descanso» no se guarda, ni nueva ni al editar
   if (await volver.count()) await volver.first().click();
   await page.getByPlaceholder('Mi rutina').fill('Solo aire');
   await expect(page.getByRole('button', { name: 'Guardar', exact: true }), 'se puede guardar sin ningún ejercicio').toBeDisabled();
+  await expect(page.locator('[data-pace-custom-sin-trabajo]'), 'no dice por qué no se puede guardar')
+    .toHaveText('Añade al menos un ejercicio: solo con descansos no hay rutina.');
 });
 
 test('R2 · una rutina de antes solo con «Descanso» no cuenta como Mueve', async ({ page, context }) => {
@@ -144,6 +147,19 @@ test('R3 · la plancha lateral de una rutina propia se guía por los dos lados',
   await expect(page.locator('[data-pace-v1-cue]').first(), 'el primer lado no se nombra').toContainText('Izquierda');
   await segundos(page, 31);
   expect(await fase(page), 'al acabar el primer lado no pide cambiar').toBe('change');
+});
+
+/* El tiempo es POR LADO (opción 1A de la maqueta del 22 oct.): el constructor lo dice y el total lo cuenta. */
+test('R3 · en el constructor, un paso por lados dice «por lado» y el total cuenta los dos', async ({ page, context }) => {
+  await sembrar(context, { premiumUnlocked: true,
+    customRoutines: [propia('custom.1', 'Costados', [['Plancha lateral', 60], ['Giro sentado', 60]])] });
+  await irAlArtefacto(page);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:open-custom-builder', { detail: { id: 'custom.1' } })));
+  const modal = overlaySuperior(page);
+  await expect(modal.getByText('60 s por lado'), 'el paso por lados no dice «por lado»').toHaveCount(1);
+  await expect(modal.getByText('60 s', { exact: true })).toHaveCount(1);
+  /* 60 + 60 + 10 de cambio + 60 = 190 s: ≈ 4 min, no 2. */
+  await expect(modal, 'el total no cuenta los dos lados').toContainText('≈ 4 min');
 });
 
 /* ------------------------------------------------------------------- R4 · seguir tras editar */

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.174.2</title>
+  <title>PACE · Foco · Cuerpo — v0.174.4</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6409,7 +6409,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.174.2';
+const PACE_VERSION = 'v0.174.4';
 
 
 
@@ -34583,7 +34583,36 @@ function statsTotalesDe(entry, t) {
   return statsSeries(t).map((s) => ({ key: s.key, label: s.label, color: s.color, valor: v[s.key], unidad: v[s.key] === 1 && s.unit1 ? s.unit1 : s.unit }));
 }
 
-function WeekView(_ref2) {let { state } = _ref2;
+function fmtTime(min, hourUnit, lang) {
+  if (min <= 0) return '0';
+  if (min < 60) return `${min}min`;
+  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
+}
+
+
+
+
+function StatsLineaTotales(_ref2) {let { entry } = _ref2;
+  const { t, lang } = useT();
+  const v = (k) => entry && entry[k] || 0;
+  const h = t('stats.month.hours.unit');
+  const rotulo = (color, texto) => React.createElement("strong", { style: { color, fontFamily: 'var(--font-display)', fontStyle: 'italic' } }, texto);
+  const punto = React.createElement("span", { style: { color: 'var(--ink-3)' } }, "\xB7");
+  const agua = v('waterGlasses');
+  return (
+    React.createElement("div", { className: "pace-heatmap-totals", style: {
+        display: 'flex', gap: 14, marginTop: 10, flexWrap: 'wrap', padding: '8px 10px',
+        background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', fontSize: 11, color: 'var(--ink-2)'
+      } },
+    React.createElement("span", null, rotulo('var(--focus)', t('stats.month.total.focus')), ' ', fmtTime(v('focusMinutes'), h, lang)), punto,
+    React.createElement("span", null, rotulo('var(--breathe)', t('stats.month.total.breathe')), ' ', fmtTime(v('breathMinutes'), h, lang)), punto,
+    React.createElement("span", null, rotulo('var(--move)', t('stats.month.total.move')), ' ', fmtTime(v('moveMinutes'), h, lang)), punto,
+    React.createElement("span", null, rotulo('var(--hydrate)', statsNumero(agua, lang)), ' ', agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water'))
+    ));
+
+}
+
+function WeekView(_ref3) {let { state } = _ref3;
   const { t, tn } = useT();
   const w = state.weeklyStats;
 
@@ -34655,7 +34684,7 @@ function WeekView(_ref2) {let { state } = _ref2;
 
 }
 
-function WeekBarRow(_ref3) {let { label, data, color, unit, today } = _ref3;
+function WeekBarRow(_ref4) {let { label, data, color, unit, today } = _ref4;
   const { lang } = useT();
   const max = Math.max(1, ...data);
   return (
@@ -34700,8 +34729,8 @@ function WeekBarRow(_ref3) {let { label, data, color, unit, today } = _ref3;
 
 }
 
-Object.assign(window, { statsNumero, StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });
-;Object.assign(window, { _extends, statsNumero, StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });
+Object.assign(window, { statsNumero, fmtTime, StatsLineaTotales, StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });
+;Object.assign(window, { _extends, statsNumero, StatsTotales, statsSeries, statsTotalesDe, fmtTime, StatsLineaTotales, WeekView, WeekBarRow });
 })();
 </script>
   <script>
@@ -35190,6 +35219,9 @@ function YearView(_ref) {let { history, lang, firstSeen, onNavigateToMonth } = _
     t('stats.year.empty').replace('{year}', viewYear)
     ),
 
+
+
+    hasAnyData && React.createElement(StatsLineaTotales, { entry: history.years && history.years[viewYear] }),
 
 
     hasAnyData &&
@@ -35758,12 +35790,6 @@ function intensityOpacity(totalMin) {
   return 1.0;
 }
 
-function fmtTime(min, hourUnit, lang) {
-  if (min <= 0) return '0';
-  if (min < 60) return `${min}min`;
-  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
-}
-
 function monthLabel(year, month, lang) {
 
   const s = new Date(year, month, 1).toLocaleDateString(
@@ -35787,7 +35813,6 @@ function MonthHeatmap(_ref) {let { history, lang, initialYear, initialMonth } = 
   const [tooltip, setTooltip] = useState(null);
   const tooltipRef = useRef(null);
 
-  const hourUnit = t('stats.month.hours.unit');
   const dayHeaders = t('stats.month.days.short').split(',');
 
   function prevMonth() {
@@ -35805,11 +35830,6 @@ function MonthHeatmap(_ref) {let { history, lang, initialYear, initialMonth } = 
   const startDow = dowMonday(viewYear, viewMonth, 1);
   const monthKey = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}`;
   const monthData = history.months && history.months[monthKey] ? history.months[monthKey] : null;
-
-  const totalFocus = monthData ? monthData.focusMinutes || 0 : 0;
-  const totalBreathe = monthData ? monthData.breathMinutes || 0 : 0;
-  const totalMove = monthData ? monthData.moveMinutes || 0 : 0;
-  const totalWater = monthData ? monthData.waterGlasses || 0 : 0;
 
   const cells = [];
   for (let i = 0; i < startDow; i++) cells.push({ type: 'empty', key: `pre-${i}` });
@@ -35901,10 +35921,15 @@ function MonthHeatmap(_ref) {let { history, lang, initialYear, initialMonth } = 
     React.createElement("div", { className: "pace-heatmap-grid" },
     cells.map((cell) => {
       if (cell.type === 'empty') return React.createElement("div", { key: cell.key, className: "pace-heatmap-empty" });
-      const hasData = !!cell.entry;
-      const totalMin = hasData ? (cell.entry.focusMinutes || 0) + (cell.entry.breathMinutes || 0) + (cell.entry.moveMinutes || 0) : 0;
-      const opacity = hasData ? intensityOpacity(totalMin) : 0;
-      const domColor = hasData ? dominantModule(cell.entry).color : 'var(--paper-3)';
+
+
+
+
+      const e = cell.entry || {};
+      const totalMin = (e.focusMinutes || 0) + (e.breathMinutes || 0) + (e.moveMinutes || 0);
+      const hasData = totalMin > 0 || (e.waterGlasses || 0) > 0;
+      const opacity = hasData ? intensityOpacity(Math.max(1, totalMin)) : 0;
+      const domColor = hasData ? dominantModule(e).color : 'var(--paper-3)';
 
 
 
@@ -35928,18 +35953,7 @@ function MonthHeatmap(_ref) {let { history, lang, initialYear, initialMonth } = 
     })
     ),
 
-    React.createElement("div", { className: "pace-heatmap-totals", style: {
-        display: 'flex', gap: 14, marginTop: 10, flexWrap: 'wrap', padding: '8px 10px',
-        background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', fontSize: 11, color: 'var(--ink-2)'
-      } },
-    React.createElement("span", null, React.createElement("strong", { style: { color: 'var(--focus)', fontFamily: 'var(--font-display)', fontStyle: 'italic' } }, t('stats.month.total.focus')), ' ', fmtTime(totalFocus, hourUnit, lang)),
-    React.createElement("span", { style: { color: 'var(--ink-3)' } }, "\xB7"),
-    React.createElement("span", null, React.createElement("strong", { style: { color: 'var(--breathe)', fontFamily: 'var(--font-display)', fontStyle: 'italic' } }, t('stats.month.total.breathe')), ' ', fmtTime(totalBreathe, hourUnit, lang)),
-    React.createElement("span", { style: { color: 'var(--ink-3)' } }, "\xB7"),
-    React.createElement("span", null, React.createElement("strong", { style: { color: 'var(--move)', fontFamily: 'var(--font-display)', fontStyle: 'italic' } }, t('stats.month.total.move')), ' ', fmtTime(totalMove, hourUnit, lang)),
-    React.createElement("span", { style: { color: 'var(--ink-3)' } }, "\xB7"),
-    React.createElement("span", null, React.createElement("strong", { style: { color: 'var(--hydrate)', fontFamily: 'var(--font-display)', fontStyle: 'italic' } }, totalWater), ' ', totalWater === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water'))
-    ),
+    React.createElement(StatsLineaTotales, { entry: monthData }),
 
     tooltip && !tooltip.mobile &&
     React.createElement("div", { style: {
@@ -36066,7 +36080,7 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
 }
 
 Object.assign(window, { StatsPanel });
-;Object.assign(window, { dominantModule, intensityOpacity, fmtTime, monthLabel, dayLabel, daysInMonth, dowMonday, MonthHeatmap, StatsPanel });
+;Object.assign(window, { dominantModule, intensityOpacity, monthLabel, dayLabel, daysInMonth, dowMonday, MonthHeatmap, StatsPanel });
 })();
 </script>
   <script>
