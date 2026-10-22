@@ -42,7 +42,13 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 - **Lo primero al retomar: v0.174.6 está lista en la rama `claude/maqueta-inicio-3a2a59` (commit 0707b36, subida):**
   la app abre con los módulos, los Ajustes del móvil sin scroll y la voz grave en Rondas (1A 2A 3A). Revisarla,
   contársela a Ez en palabras llanas y, con su sí, juntarla con la suite entera (unos 27 min). Al relevo, la
-  sesión ya hacía la maqueta de «Hacerla» (sin commitear; se le pidió «wip» y push al 87 %).
+  sesión hizo la maqueta de «Hacerla»: **pregunta 5 de https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA (versión 2,
+  commit fa75d9e, subida), sin contestar.** Recomienda 5a A («Un momento para moverte»; B «Un ejercicio antes de
+  seguir»; C el ejercicio y lo que dura) y 5b A (dentro del aro: «Mueve · 25 veces», la cifra que cuenta, el glifo
+  del módulo con el título y la instrucción; B una hoja abajo). Al montarlo: revisar uno a uno el reparto (unos 48
+  ejercicios de 20 rutinas; alguno pide pared o suelo dentro de una rutina que no lo pide) y, sin el día preparado,
+  la letra de la instrucción en el aro más bajo. La página es de la cuenta de EcLj6…; desde la otra, página nueva
+  desde `docs/proposals/maqueta-inicio-22oct.html` de su rama. La sesión paró al 91 % con la rama limpia.
   Lo que dijo la sesión de v0.174.6, para contárselo a Ez: 1A, sin haber dicho cuánto trabajas se ven los cuatro
   módulos con la tarjeta corta y «Comienza» abre la pregunta; con la semana guardada, la tarjeta dice «Hoy, como
   cada jueves · Jornada entera, 9:00–17:00» y «Comienza» abre ese día; no contestar ya no es «por libre» ni quita
