@@ -32,10 +32,10 @@ function intensityOpacity(totalMin) {
   return 1.0;
 }
 
-function fmtTime(min, hourUnit) {
+function fmtTime(min, hourUnit, lang) {
   if (min <= 0) return '0';
   if (min < 60) return `${min}min`;
-  return `${Math.round(min / 60 * 10) / 10}${hourUnit}`;
+  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
 }
 
 function monthLabel(year, month, lang) {
@@ -100,9 +100,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     const { focusMinutes, breathMinutes, moveMinutes, waterGlasses } = cell.entry;
     const label = dayLabel(viewYear, viewMonth, cell.d, lang);
     const parts = [];
-    if (focusMinutes > 0)  parts.push(`${focusMinutes} ${t('stats.month.tooltip.focus')}`);
-    if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
-    if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
+    if (focusMinutes > 0)  parts.push(`${statsNumero(focusMinutes, lang)} ${t('stats.month.tooltip.focus')}`);
+    if (breathMinutes > 0) parts.push(`${statsNumero(breathMinutes, lang)} ${t('stats.month.tooltip.breathe')}`);
+    if (moveMinutes > 0)   parts.push(`${statsNumero(moveMinutes, lang)} ${t('stats.month.tooltip.move')}`);
     if (waterGlasses > 0)  parts.push(`${waterGlasses} ${waterGlasses === 1 ? t('stats.unit.glasses.1') : t('stats.month.tooltip.water')}`);
     const rect = paceCaja(e.currentTarget);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, x: rect.left + rect.width / 2, y: rect.top });
@@ -115,9 +115,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     const { focusMinutes, breathMinutes, moveMinutes, waterGlasses } = cell.entry;
     const label = dayLabel(viewYear, viewMonth, cell.d, lang);
     const parts = [];
-    if (focusMinutes > 0)  parts.push(`${focusMinutes} ${t('stats.month.tooltip.focus')}`);
-    if (breathMinutes > 0) parts.push(`${breathMinutes} ${t('stats.month.tooltip.breathe')}`);
-    if (moveMinutes > 0)   parts.push(`${moveMinutes} ${t('stats.month.tooltip.move')}`);
+    if (focusMinutes > 0)  parts.push(`${statsNumero(focusMinutes, lang)} ${t('stats.month.tooltip.focus')}`);
+    if (breathMinutes > 0) parts.push(`${statsNumero(breathMinutes, lang)} ${t('stats.month.tooltip.breathe')}`);
+    if (moveMinutes > 0)   parts.push(`${statsNumero(moveMinutes, lang)} ${t('stats.month.tooltip.move')}`);
     if (waterGlasses > 0)  parts.push(`${waterGlasses} ${waterGlasses === 1 ? t('stats.unit.glasses.1') : t('stats.month.tooltip.water')}`);
     setTooltip({ text: `${label} · ${parts.join(', ')}`, key: cell.key, mobile: true });
   }
@@ -206,11 +206,11 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         display:'flex',gap:14,marginTop:10,flexWrap:'wrap',padding:'8px 10px',
         background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:11,color:'var(--ink-2)',
       }}>
-        <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit)}</span>
+        <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit,lang)}</span>
         <span style={{ color:'var(--ink-3)' }}>·</span>
-        <span><strong style={{ color:'var(--breathe)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.breathe')}</strong>{' '}{fmtTime(totalBreathe,hourUnit)}</span>
+        <span><strong style={{ color:'var(--breathe)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.breathe')}</strong>{' '}{fmtTime(totalBreathe,hourUnit,lang)}</span>
         <span style={{ color:'var(--ink-3)' }}>·</span>
-        <span><strong style={{ color:'var(--move)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.move')}</strong>{' '}{fmtTime(totalMove,hourUnit)}</span>
+        <span><strong style={{ color:'var(--move)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.move')}</strong>{' '}{fmtTime(totalMove,hourUnit,lang)}</span>
         <span style={{ color:'var(--ink-3)' }}>·</span>
         <span><strong style={{ color:'var(--hydrate)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{totalWater}</strong>{' '}{totalWater === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water')}</span>
       </div>

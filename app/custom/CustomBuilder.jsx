@@ -30,9 +30,12 @@ function CustomBuilder({ editId, onClose }) {
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
   const limits = window.CUSTOM_LIMITS;
 
-  const totalSec = steps.reduce((acc, s) => acc + s.dur, 0);
-  const totalMin = Math.max(1, Math.ceil(totalSec / 60));
-  const canSave = steps.length >= limits.minSteps && name.trim().length > 0;
+  /* Un paso por lados dura su tiempo en cada lado (`customSegundos`), y su tiempo lo dice. */
+  const totalMin = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+  const segundos = (s) => (ejercicioPorLados(s.name) ? tn('custom.step.perSide', { s: s.dur }) : `${s.dur} s`);
+  /* Solo con descansos no hay rutina: no se guarda, y se dice por qué. */
+  const sinTrabajo = steps.length > 0 && !customTieneTrabajo(steps);
+  const canSave = steps.length >= limits.minSteps && !sinTrabajo && name.trim().length > 0;
 
   const addStep = (ex) => {
     setSteps(prev => prev.length >= limits.maxSteps
@@ -93,7 +96,7 @@ function CustomBuilder({ editId, onClose }) {
                       <ExerciseGlyph id={ex.name} size={22} />
                     </span>
                     <span style={{ flex: 1, textAlign: 'left', fontSize: 13, lineHeight: 1.25 }}>{tEx(ex.name)}</span>
-                    <span style={{ fontSize: 11, color: 'var(--ink-3)', fontVariantNumeric: 'tabular-nums' }}>{ex.dur} s</span>
+                    <span style={{ fontSize: 11, color: 'var(--ink-3)', fontVariantNumeric: 'tabular-nums' }}>{segundos(ex)}</span>
                   </button>
                 ))}
               </div>
@@ -142,7 +145,7 @@ function CustomBuilder({ editId, onClose }) {
               <span style={customBuilderStyles.controles}>
               <span style={customBuilderStyles.durGroup}>
                 <button onClick={() => nudgeDur(idx, -limits.durStep)} disabled={s.dur <= limits.minDur} aria-label="−5 s" style={customBuilderStyles.iconBtn}>−</button>
-                <span style={customBuilderStyles.durValue}>{s.dur} s</span>
+                <span style={customBuilderStyles.durValue}>{segundos(s)}</span>
                 <button onClick={() => nudgeDur(idx, limits.durStep)} disabled={s.dur >= limits.maxDur} aria-label="+5 s" style={customBuilderStyles.iconBtn}>+</button>
               </span>
               <span style={{ display: 'inline-flex', gap: 2 }}>
@@ -156,6 +159,11 @@ function CustomBuilder({ editId, onClose }) {
         </div>
       )}
 
+      {sinTrabajo && (
+        <p data-pace-custom-sin-trabajo style={{ fontSize: 13, color: 'var(--ink-3)', margin: '0 0 12px', lineHeight: 1.5 }}>
+          {t('custom.builder.needWork')}
+        </p>
+      )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
         <button
           onClick={() => setView('picker')}

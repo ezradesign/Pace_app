@@ -319,9 +319,11 @@ function SessionDone({
 }) {
   const { t } = useT();
   /* SIN CONTAR (Ez, 14 oct.: menos de PACE_MINIMO_CUENTA_S): el cierre lo dice, sin cifras ni
-     «¿te ayudó?», y en un Camino el paso sigue como saltado, no como hecho. */
+     «¿te ayudó?», y en un Camino el paso sigue como saltado, no como hecho. 'sinTrabajo' es la
+     sesión de Mueve o Estira sin ningún segundo de ejercicio: su porqué es otro. */
   if (sinContar) {
-    doneMeta = t('session.notCounted'); doneCopy = t('session.notCountedCopy'); stats = []; feedback = null;
+    doneMeta = t('session.notCounted'); stats = []; feedback = null;
+    doneCopy = t(sinContar === 'sinTrabajo' ? 'session.notCountedCopy.sinTrabajo' : 'session.notCountedCopy');
     rootData = Object.assign({}, rootData, { 'data-pace-sin-contar': '1' });
     const salir = onExit; onExit = (r) => salir(r === 'done' ? 'skip' : r);
   }

@@ -39,11 +39,21 @@ const statsTotalesStyles = {
   unidad: { fontSize: 10, color: 'var(--ink-3)', marginTop: 2 },
 };
 
+/* LAS CIFRAS DE ESTADÍSTICAS, CON LA PUNTUACIÓN DE CADA IDIOMA: coma decimal en castellano y
+   punto en inglés, y los miles como los escribe cada uno. Una sola función para las tarjetas, las
+   barras, el mes y el año (auditoría del 21 oct.: «1.4h» y «intensidad 3.5» en castellano).
+   `dec` es el máximo de decimales, sin ceros de relleno. */
+function statsNumero(n, lang, dec) {
+  const v = Number(n) || 0;
+  try { return v.toLocaleString(lang === 'en' ? 'en-GB' : 'es-ES', { maximumFractionDigits: dec || 0 }); }
+  catch (e) { return String(v); }
+}
+
 /* items: [{ key, label, color, valor, unidad }]. `semana` mantiene `data-pace-week-cards`,
    que miran las pruebas de la semana. */
 function StatsTotales({ items, semana }) {
   const { lang } = useT();
-  const fmt = (n) => { try { return Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'es-ES'); } catch (e) { return String(n); } };
+  const fmt = (n) => statsNumero(n, lang);
   const extra = semana ? { 'data-pace-week-cards': '' } : {};
   return (
     <div data-pace-stats-totales {...extra} style={statsTotalesStyles.rejilla}>
@@ -152,6 +162,7 @@ function WeekView({ state }) {
 }
 
 function WeekBarRow({ label, data, color, unit, today }) {
+  const { lang } = useT();
   const max = Math.max(1, ...data);
   return (
     <div data-pace-week-bar-row>
@@ -184,7 +195,7 @@ function WeekBarRow({ label, data, color, unit, today }) {
                     fontSize: 10, color: isToday ? 'var(--ink-2)' : 'var(--ink-3)',
                     marginBottom: 3, lineHeight: 1,
                     fontVariantNumeric: 'tabular-nums',
-                  }}>{v}</span>
+                  }}>{statsNumero(v, lang)}</span>
                 )}
               </div>
             </div>
@@ -195,4 +206,4 @@ function WeekBarRow({ label, data, color, unit, today }) {
   );
 }
 
-Object.assign(window, { StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });
+Object.assign(window, { statsNumero, StatsTotales, statsSeries, statsTotalesDe, WeekView, WeekBarRow });

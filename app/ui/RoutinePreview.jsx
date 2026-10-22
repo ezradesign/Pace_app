@@ -40,13 +40,21 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
   const clavePaso = (idx) => (typeof v1Clave === 'function'
     ? v1Clave(routine, idx, 'name') : `${routine.id}.s${idx}.name`);
 
-  /* Requisitos. `requiresFloor` es un booleano aparte del material porque el
-     suelo no es material: es sitio. Se muestra como una necesidad más. */
-  const equipo = Array.isArray(routine.equipment) ? routine.equipment : [];
-  const necesita = equipo.map(e => t(`preview.eq.${e}`));
-  if (routine.requiresFloor) necesita.push(t('preview.eq.floor'));
+  /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
+     contrato v1, `min` para el resto. Nunca las dos. Una rutina propia no guarda `min` (salía
+     «undefined min»): se estima con la misma forma con la que la corre el runner. */
+  const guiada = (typeof moveRutinaGuiada === 'function') ? moveRutinaGuiada(routine) : routine;
 
-  const posiciones = (Array.isArray(routine.position) ? routine.position : [])
+  /* Requisitos. `requiresFloor` es un booleano aparte del material porque el
+     suelo no es material: es sitio. Se muestra como una necesidad más.
+     Se leen de la rutina PREPARADA: una propia los trae de sus pasos (registro de ejercicios).
+     Sin datos de algún paso, o sin datos de la rutina, no se dice «Nada»: no se sabe. */
+  const equipo = Array.isArray(guiada.equipment) ? guiada.equipment : [];
+  const necesita = equipo.map(e => t(`preview.eq.${e}`));
+  if (guiada.requiresFloor) necesita.push(t('preview.eq.floor'));
+  const sinDatos = !Array.isArray(guiada.equipment) || !!guiada.pideIncompleto;
+
+  const posiciones = (Array.isArray(guiada.position) ? guiada.position : [])
     .map(p => t(`preview.pos.${p}`));
 
   /* CUANTAS VECES LA HAS HECHO (s189) -- el primer consumidor de los agregados
@@ -68,10 +76,6 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
         : (t('preview.doneCount.many') || '').replace('{n}', String(veces)))
     : null;
 
-  /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
-     contrato v1, `min` para el resto. Nunca las dos. Una rutina propia no guarda `min` (salía
-     «undefined min»): se estima con la misma forma con la que la corre el runner. */
-  const guiada = (typeof moveRutinaGuiada === 'function') ? moveRutinaGuiada(routine) : routine;
   const isV1 = !!(guiada.steps && guiada.steps.some(s => s && s.mode));
   let durLabel = `${routine.min} min`;
   if (isV1 && typeof window.estimateDuration === 'function') {
@@ -135,12 +139,16 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
         )}
 
         <Seccion titulo={t('preview.need')}>
-          {necesita.length === 0 ? (
+          {necesita.length === 0 && !sinDatos ? (
             <div style={{ fontSize: 14, color: 'var(--ink-2)' }}>{t('preview.need.none')}</div>
-          ) : (
+          ) : necesita.length > 0 ? (
             <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-2)' }}>
               {necesita.map(n => <li key={n}>{n}</li>)}
             </ul>
+          ) : null}
+          {sinDatos && (
+            <div data-pace-preview-sin-datos style={{ fontSize: 14, color: 'var(--ink-3)', marginTop: necesita.length ? 4 : 0 }}>
+              {t('preview.need.unknown')}</div>
           )}
         </Seccion>
 

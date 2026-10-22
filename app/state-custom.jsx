@@ -11,8 +11,9 @@
      { id: 'custom.<Date.now()>', name, steps: [{ name, dur, cue }],
        min, createdAt, updatedAt }
    `steps` usa el mismo shape que las rutinas de catálogo — el runner
-   (MoveSession) no distingue. `min` se deriva al guardar (ceil de la
-   suma de dur). El prefijo `custom.` nunca colisiona con los ids
+   (MoveSession) no distingue. `min` se deriva al guardar (`customSegundos`:
+   un paso por lados cuenta sus dos lados). El `mode` no se guarda: lo pone
+   `moveRutinaGuiada` al abrirla, con el registro de ejercicios. El prefijo `custom.` nunca colisiona con los ids
    blindados `extra.*` / `move.*`, y al no estar en ningún mapa de
    logros (exploreMap, BREATH_ROUTINE_CATEGORIES) una sesión custom
    solo acredita lo genérico de completeMoveSession. */
@@ -39,6 +40,20 @@ function getCustomRoutine(id) {
   return getCustomRoutines().find(r => r.id === id) || null;
 }
 
+/* Una rutina necesita al menos un paso que no sea «Descanso»: solo con descansos se guardaba y,
+   hecha, contaba como Mueve sin ningún ejercicio (auditoría del 21 oct.). */
+function customTieneTrabajo(steps) {
+  return (Array.isArray(steps) ? steps : []).some(s => s && s.name && s.name !== 'Descanso');
+}
+
+/* Lo que dura de verdad: un paso por lados es su tiempo por cada lado más el cambio, como lo
+   estima el runner (`estimateDuration`). */
+function customSegundos(steps) {
+  const lados = (n) => typeof window.ejercicioPorLados === 'function' && window.ejercicioPorLados(n);
+  const cambio = window.V1_CHANGE_SECONDS || 10;
+  return (Array.isArray(steps) ? steps : []).reduce((acc, s) => acc + (lados(s.name) ? s.dur * 2 + cambio : s.dur), 0);
+}
+
 /* Normaliza el borrador del constructor a los límites. */
 function sanitizeCustomRoutine(draft) {
   const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
@@ -50,8 +65,7 @@ function sanitizeCustomRoutine(draft) {
         Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
       cue: String(s.cue || ''),
     }));
-  const totalSec = steps.reduce((acc, s) => acc + s.dur, 0);
-  const min = Math.max(1, Math.ceil(totalSec / 60));
+  const min = Math.max(1, Math.ceil(customSegundos(steps) / 60));
   return { name, steps, min };
 }
 
@@ -59,7 +73,7 @@ function sanitizeCustomRoutine(draft) {
 function addCustomRoutine(draft) {
   if (getCustomRoutines().length >= CUSTOM_LIMITS.maxRoutines) return null;
   const clean = sanitizeCustomRoutine(draft);
-  if (clean.steps.length < CUSTOM_LIMITS.minSteps) return null;
+  if (clean.steps.length < CUSTOM_LIMITS.minSteps || !customTieneTrabajo(clean.steps)) return null;
   const now = Date.now();
   const routine = { id: `custom.${now}`, ...clean, createdAt: now, updatedAt: now };
   setState(s => ({
@@ -72,7 +86,7 @@ function addCustomRoutine(draft) {
 /* Edita una rutina existente. Devuelve la rutina o null. */
 function updateCustomRoutine(id, draft) {
   const clean = sanitizeCustomRoutine(draft);
-  if (clean.steps.length < CUSTOM_LIMITS.minSteps) return null;
+  if (clean.steps.length < CUSTOM_LIMITS.minSteps || !customTieneTrabajo(clean.steps)) return null;
   if (!getCustomRoutine(id)) return null;
   let updated = null;
   setState(s => ({
@@ -94,7 +108,7 @@ function deleteCustomRoutine(id) {
 }
 
 Object.assign(window, {
-  CUSTOM_LIMITS,
+  CUSTOM_LIMITS, customTieneTrabajo, customSegundos,
   getCustomRoutines, getCustomRoutine,
   addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
 });

@@ -66,6 +66,12 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
   // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
   const repsGuidedRef = useRefV1(rein.reps);
+  /* «Terminar antes» (§6.3 del esquema de eventos: acortar trabajo planificado) se apunta al
+     cortar un paso y vale para TODA la sesión: antes solo contaba si se cortaba el último. */
+  const earlyRef = useRefV1(rein.early);
+  /* Los pasos de trabajo que se hicieron de verdad, para el cierre: una serie saltada no es
+     una serie (auditoría del 21 oct.: una hecha y dos saltadas decía «3 series»). */
+  const hechosRef = useRefV1(rein.hechos);
   const activeSecRef = useRefV1(0);   // congelado al completar, no al renderizar
   const step = routine.steps[stepIdx];
   /* Reloj de TIEMPO ACTIVO (s170) — lo que Respira tiene desde s98 y esta
@@ -78,27 +84,30 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
      el reloj de pared, una pausa de 20 minutos eran 20 minutos de Mueve. */
   const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
   const tiempoSecRef = useRefV1(0);    // el «Tiempo» del cierre, congelado al completar
-  const sinContarRef = useRefV1(false); // menos de PACE_MINIMO_CUENTA_S: no se acredita (sesiones-7)
+  /* No se acredita: con menos de PACE_MINIMO_CUENTA_S (sesiones-7), `true`; sin ningún segundo
+     de ejercicio (solo descansos o todo saltado), 'sinTrabajo', que el cierre explica aparte. */
+  const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
-    reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current });
+    reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
+    early: () => earlyRef.current, hechos: () => hechosRef.current });
 
-  const dispatchComplete = (early) => {
+  const dispatchComplete = () => {
     /* El «Tiempo» del cierre es el de la sesión sin pausas, el mismo que va a la
        semana (Ez, sesiones-8); con la pared, 20 min de pausa eran «21:35». */
     const sesionSec = relojSesion.segundos();
     const realMin = Math.max(1, Math.round(sesionSec / 60));
     tiempoSecRef.current = Math.round(sesionSec);
-    sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S;
     /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
        tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
        s166); el efecto lo cierra al pasar a 'done'. Y se congela en un ref
        porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo, como
        le pasaba al «Tiempo» del cierre: contestar «¿te ayudó?» lo movía. */
     activeSecRef.current = Math.round(relojActivo.segundos());
+    sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S || (activeSecRef.current < 1 && 'sinTrabajo');
     if (sinContarRef.current) return;   // saltar todos los pasos no es haberla hecho
     /* s172 · los datos del evento (dual-write) se arman en el support: el plan
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
-    const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, early, inPath);
+    const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
     if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);
     else completeMoveSession(routine.id, realMin, ev);
   };
@@ -114,8 +123,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); }
     else setPhase('work');
   };
-  const advanceStep = (early) => {
-    if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(early); setStage('done'); }
+  const advanceStep = () => {
+    if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(); setStage('done'); }
     else startStep(stepIdx + 1);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
@@ -133,8 +142,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   };
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
   const finishRepsEarly = () => {
-    repsGuidedRef.current += Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    advanceStep(true);   // s172: «Terminar antes» ES el `early` de §6.3
+    const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
+    repsGuidedRef.current += hechas;
+    if (hechas > 0) hechosRef.current[stepIdx] = true;
+    earlyRef.current = true;   // s172: «Terminar antes» ES el `early` de §6.3
+    advanceStep();
   };
 
   // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún); el de la rutina a medias, si la hay.
@@ -188,12 +200,14 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
         repsGuidedRef.current += v1RepTarget(step);
+        hechosRef.current[stepIdx] = true;
         advanceStep();
       } else if (elapsed % repSec === 0) {
         try { playSound('move.rep'); } catch (e) {}
       }
       return;
     }
+    if (step.mode !== 'rest') hechosRef.current[stepIdx] = true;   // un segundo de trabajo ya es hacerlo
     const effDur = v1StepDur(step);
     // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
     // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
@@ -281,7 +295,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     // Stats HONESTAS (s114) — el reparto por tipo de rutina vive en el support
     // desde s170 (regla §1); el criterio no cambió.
     const stats = v1DoneStats(routine, repsGuidedRef.current,
-                              `${mins}:${String(secs).padStart(2, '0')}`, t);
+                              `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current);
     const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (
       <SessionDone
@@ -353,6 +367,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     primary = isRest
       ? { label: t('session.skip'), onClick: advanceStep }
       : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
+          earlyRef.current = true;   // cortar un paso con reloj también acorta el trabajo (§6.3)
           if (step.mode === 'perSide' && side === 0) { enterChange(); } else advanceStep();
         } };
   }
