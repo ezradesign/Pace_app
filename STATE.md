@@ -91,8 +91,9 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie). La barra de
   arriba pregunta antes de dejar un Foco empezado, pero no una pausa empezada (pide un texto nuevo).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
-  coordinadora junta): «Tus rutinas» y Estadísticas (material, solo descanso, por lados, reanudar tras
-  editar, el año con poco foco; E1 los minutos de «Hoy» frente al total de Cuerpo, E2 un día solo con
+  coordinadora junta): «Tus rutinas» y Estadísticas, tarjeta propuesta el 22 oct. con PACE_E2E_PORT=8799
+  y v0.174.4 (material, solo descanso, por lados, reanudar tras editar, «terminar antes» que se pierde si
+  no es el último paso, el cierre que cuenta series previstas, el año con poco foco; E1 los minutos de «Hoy» frente al total de Cuerpo, E2 un día solo con
   agua sin color ni borde en Mes, E3 los totales del Año ocultos en escritorio, E4 decimales con
   punto en castellano) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
@@ -105,8 +106,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto; S3, código portable, es
   la decisión de Ez) · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
   H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió) ·
-  **el calendario que se mantiene solo** (22 oct.), para la sesión de «A tu ritmo», ya juntada,
-  porque toca sus archivos: C1 «Desconectar» a mitad de una escritura no la para y puede volver
+  **el calendario que se mantiene solo** (22 oct.), en marcha en la sesión de «A tu ritmo» (su rama
+  `claude/happy-allen-d915c3`, PACE_E2E_PORT=8797, v0.174.3): C1 «Desconectar» a mitad de una escritura no la para y puede volver
   a poner lo quitado (`calendarioSoloDesconectar` va fuera de `_calSolo.cola` y del cerrojo), C2
   «Calendario al día» con cambios pendientes o tras un fallo de escritura (`calendarioSoloPorDetras`
   pide `!conAcceso`; `_calSolo.fallo` no sale en `calendarioSoloEstado`), C3 en Android «Desconectar»
