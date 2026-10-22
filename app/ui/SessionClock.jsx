@@ -140,15 +140,22 @@ function sesionVivaFuera(clave, ahora) {
   } catch (e) { return null; }
 }
 
+/* Quedarse con el latido, solo si no late otra pestaña. Lo usa el latido mismo, para que una
+   segunda sesión no pise el de la primera, y Respira antes de montar una sesión retomada: con
+   el aviso de seguridad abierto en dos pestañas, las dos la retomaban (A9, 22 oct.). */
+function tomarSesionViva(clave, routineId) {
+  if (sesionVivaFuera(clave)) return false;
+  try {
+    localStorage.setItem(clave, JSON.stringify({
+      pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
+  } catch (e) {}
+  return true;
+}
+
 function useSesionViva(clave, routineId, viva) {
   useEffectSC(() => {
     if (!viva || !routineId) return undefined;
-    const latir = () => {
-      try {
-        localStorage.setItem(clave, JSON.stringify({
-          pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
-      } catch (e) {}
-    };
+    const latir = () => { tomarSesionViva(clave, routineId); };
     const soltar = () => {
       try {
         const v = JSON.parse(localStorage.getItem(clave) || 'null');
@@ -162,4 +169,4 @@ function useSesionViva(clave, routineId, viva) {
   }, [viva]);
 }
 
-Object.assign(window, { useActiveClock, PACE_HUECO_MS, PACE_MINIMO_CUENTA_S, sesionVivaFuera, useSesionViva });
+Object.assign(window, { useActiveClock, PACE_HUECO_MS, PACE_MINIMO_CUENTA_S, sesionVivaFuera, tomarSesionViva, useSesionViva });

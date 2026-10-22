@@ -129,7 +129,7 @@ function PaceApp() {
       setPendienteReanudar(reanudar || null);
     } else {
       setOpenLibrary(null);
-      setView({ type: 'breathe-session', routine, reanudar: reanudar || null });
+      setView({ type: 'breathe-session', routine, reanudar: tomarRespiraGuardada(reanudar) });
     }
   };
 
@@ -430,7 +430,8 @@ function PaceApp() {
           onAccept={(r) => {
             setSafetyRoutine(null);
             setOpenLibrary(null);
-            setView({ type: 'breathe-session', routine: r, reanudar: pendienteReanudar });
+            /* Lo pendiente se vuelve a leer al aceptar: otra pestaña pudo retomarlo (A9). */
+            setView({ type: 'breathe-session', routine: r, reanudar: tomarRespiraGuardada(pendienteReanudar) });
             setPendienteReanudar(null);
           }}
           onCancel={() => { setSafetyRoutine(null); setPendienteReanudar(null); }}

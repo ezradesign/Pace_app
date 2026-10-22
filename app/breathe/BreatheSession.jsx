@@ -230,8 +230,9 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
        cierra el segmento al pasar a 'done', que es donde toca. */
     /* s172 · el 4o argumento son los datos del evento (dual-write); `motivo`
        separa el plan agotado ('natural') de «Finalizar» ('early', §6.3), que suma
-       sus minutos pero no gana logros (el 5o, Ez). */
-    if (!sinContar) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
+       sus minutos pero no gana logros (el 5o, Ez). Retomada, una vez por su id (A9). */
+    const acredita = !sinContar && (!rein.reanudada || respiraAcreditarUnaVez(routine.id + '@' + rein.startedAt));
+    if (acredita) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
       respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath), motivo !== 'early');
     hechoRef.current = respiraHecho(routine, stage, round, breathCount);
     sinContarRef.current = sinContar;

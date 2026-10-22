@@ -165,6 +165,30 @@ const respiraVivaFuera = (ahora) => sesionVivaFuera(RESPIRA_VIVA_KEY, ahora);
 const useRespiraViva = (routine, stage) =>
   useSesionViva(RESPIRA_VIVA_KEY, routine && routine.id, stage !== 'done');
 
+/* RETOMAR EN DOS PESTAÑAS (A9, 22 oct.). Con el aviso de seguridad abierto en las dos, cada una
+   retomaba con el registro que leyó al abrirlo, y las dos acreditaban los minutos de antes. Al
+   empezar de verdad (al aceptar el aviso, o sin aviso) se VUELVE A LEER: si sigue a medias y es
+   la misma sesión, esta pestaña se queda con su latido ANTES de montarla, y para la otra ya no
+   está a medias. Si no, la sesión empieza de cero. */
+function tomarRespiraGuardada(pedida) {
+  const g = pedida ? leerRespiraGuardada() : null;
+  if (!g || g.routineId !== pedida.routineId || g.startedAt !== pedida.startedAt) return null;
+  return tomarSesionViva(RESPIRA_VIVA_KEY, g.routineId) ? g : null;
+}
+
+/* Y si aun así la retoman dos (una pestaña congelada en segundo plano deja de latir), la sesión
+   retomada se acredita UNA vez por su id: la rutina y su arranque original. */
+const RESPIRA_ACREDITADAS_KEY = 'pace.breathe.acreditadas';
+function respiraAcreditarUnaVez(id) {
+  try {
+    const lista = JSON.parse(localStorage.getItem(RESPIRA_ACREDITADAS_KEY) || '[]');
+    const previas = Array.isArray(lista) ? lista : [];
+    if (previas.indexOf(id) !== -1) return false;
+    localStorage.setItem(RESPIRA_ACREDITADAS_KEY, JSON.stringify(previas.concat(id).slice(-10)));
+  } catch (e) {}
+  return true;
+}
+
 /* respiraReanudacion(routine, guardado) -> los valores de arranque de la
    sesión. PURA. Sin registro utilizable devuelve el comienzo de siempre, así
    que `BreatheSession` no necesita ninguna rama: siempre arranca de aquí. */
@@ -411,4 +435,5 @@ Object.assign(window, {
   useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
   leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraVivaFuera, useRespiraViva,
+  tomarRespiraGuardada, respiraAcreditarUnaVez,
 });
