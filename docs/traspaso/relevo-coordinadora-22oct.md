@@ -86,7 +86,10 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    arreglaremos la tipografía de premium»). Antes de montarlo, un antes/después de los títulos y los botones de
    /beta y /premium, calcados de la app, para que Ez lo vea: **hecho**, https://claude.ai/artifact/KMBL3zRVKHADG5GR5uSKri
    (`docs/proposals/letra-beta-premium-22oct.html`; A Cormorant itálica y el botón de «Empezar» del Foco, la
-   recomendada; B la misma letra sin cursiva). Falta la respuesta de Ez; con ella se montan /beta y /premium.
+   recomendada; B la misma letra sin cursiva). **Ez eligió A** («como la app, en cursiva») **y los colores clásicos
+   de PACE, si procede, para darle un toque** (los de los módulos en `app/tokens.css`: el oliva del Foco, la
+   terracota de Respira, el de Mueve, Estira y Agua). Se montan /beta y /premium a la vez; los colores, con un
+   antes/después rápido si cambian algo más que un detalle.
 4. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
 5. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.

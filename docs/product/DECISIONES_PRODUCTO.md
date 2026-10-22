@@ -62,7 +62,10 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   qué, en palabras de Ez: «tener opción a hacerlos con más frecuencia en pomodoros cortos, o no». La invitación
   cambiará de nombre, porque ya no son siempre dos minutos. Antes de montarlo, maqueta.
 - **Una página para captar testers de Android** (idea de Ez, 22 oct. noche): `pacegrass.app/beta`, con un grupo
-  de Google como lista de testers de Play. En la cola, con maqueta.
+  de Google como lista de testers de Play. Ez eligió la **A** (como /premium, con las capturas de Google Play) y
+  «PACE completo de por vida, en la web y en Android». **La letra de /beta y /premium, como la app**: títulos en
+  Cormorant itálica y botones como el de «Empezar» del Foco, con los colores clásicos de PACE para darle un toque
+  (https://claude.ai/artifact/KMBL3zRVKHADG5GR5uSKri; Ez: «todo tiene que tener mucho más estilo PACE»).
 ## Lo que dice el calendario que se mantiene solo: cuatro casos (Ez, 22 oct. 2026)
 
 C2 de la auditoría externa del 22 oct. La hoja y el enlace decían «Calendario al día» también en
