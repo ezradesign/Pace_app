@@ -4033,7 +4033,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.hecho.solo': 'Hecho: desde ahora tu calendario se mantiene solo.',
   'cal.puesto': 'Tu calendario ya está al día.',
   'cal.enlace.aldia': 'Calendario al día',
-  'cal.enlace.poner': 'Poner al día'
+  'cal.enlace.poner': 'Poner al día',
+
+  'cal.enlace.poniendo': 'Poniendo al día…',
+  'cal.enlace.fallo': 'No se pudo poner al día',
+  'cal.solo.fallo': 'No se pudo · lo intenta otra vez a las {h}',
+  'cal.solo.nota.fallo': 'No se pudo hablar con tu calendario. PACE lo vuelve a intentar cada 5 minutos.',
+  'cal.btn.reintentar': 'Reintentar'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -4117,7 +4123,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.hecho.solo': 'Done: from now on your calendar keeps itself up to date.',
   'cal.puesto': 'Your calendar is up to date.',
   'cal.enlace.aldia': 'Calendar up to date',
-  'cal.enlace.poner': 'Bring up to date'
+  'cal.enlace.poner': 'Bring up to date',
+  'cal.enlace.poniendo': 'Updating…',
+  'cal.enlace.fallo': 'Calendar not updated',
+  'cal.solo.fallo': 'Could not update · trying again at {h}',
+  'cal.solo.nota.fallo': 'Could not reach your calendar. PACE tries again every 5 minutes.',
+  'cal.btn.reintentar': 'Try again'
 });
 })();
 </script>
@@ -11687,7 +11698,7 @@ Object.assign(window, {
 var CALENDARIO_ESCRITO_CLAVE = 'pace.calendario.escrito';
 var CALENDARIO_SOLO_ESPERA = 60 * 1000;
 var CALENDARIO_SOLO_REINTENTO = 5 * 60 * 1000;
-var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '', gen: 0 };
+var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '', gen: 0, reintento: 0 };
 
 
 
@@ -11888,7 +11899,7 @@ function calendarioSoloEstado() {
       destino: c.destino, pendiente: calendarioPendiente(deseados, mio, c.destino, ahora), conAcceso: calendarioSoloConAcceso(c.destino),
       trabajando: _calSolo.trabajando, alDia: mio && mio.fecha === ritmoHoy() ? mio.alDia || null : null,
 
-      fallo: !!_calSolo.fallo,
+      fallo: !!_calSolo.fallo, reintento: _calSolo.fallo ? _calSolo.reintento || 0 : 0,
       hasta: c.destino === 'android' ? 0 : calendarioPaseHasta(c.destino),
       quedan: deseados ? deseados.eventos.filter(function (e) {return e.fin > ahora;}) : []
     };
@@ -11898,7 +11909,7 @@ function calendarioSoloEstado() {
 
 function calendarioSoloAvisar() {
   var e = calendarioSoloEstado();
-  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta, e.fallo].join('|') : '';
+  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta, e.fallo, e.reintento].join('|') : '';
   if (huella === _calSolo.huella) return;
   _calSolo.huella = huella;
   try {window.dispatchEvent(new CustomEvent('pace:calendario-solo'));} catch (x) {}
@@ -11913,8 +11924,10 @@ function calendarioSoloRevisar() {
     var pendiente = calendarioPendiente(calendarioDeseados(s, calendarioTextos()), calendarioEscritoLeer(), c.destino, Date.now());
     if (!pendiente) calendarioSoloParar();else
     if (!_calSolo.espera && !_calSolo.trabajando) {
-      _calSolo.espera = setTimeout(function () {_calSolo.espera = null;calendarioSoloEscribir();},
-      _calSolo.fallo ? CALENDARIO_SOLO_REINTENTO : CALENDARIO_SOLO_ESPERA);
+      var espera = _calSolo.fallo ? CALENDARIO_SOLO_REINTENTO : CALENDARIO_SOLO_ESPERA;
+
+      _calSolo.reintento = Date.now() + espera;
+      _calSolo.espera = setTimeout(function () {_calSolo.espera = null;calendarioSoloEscribir();}, espera);
     }
     calendarioSoloAvisar();
   } catch (e) {}
@@ -41977,13 +41990,27 @@ function calendarioSoloPorDetras(solo) {
 }
 
 
+
+
+
+function calendarioSoloCaso(solo) {
+  if (!solo) return null;
+  if (solo.trabajando) return 'poniendo';
+  if (calendarioSoloPorDetras(solo)) return 'permiso';
+  if (solo.pendiente) return solo.fallo ? 'fallo' : 'poniendo';
+  return 'aldia';
+}
+var CAL_ENLACE = { aldia: 'cal.enlace.aldia', poniendo: 'cal.enlace.poniendo', fallo: 'cal.enlace.fallo', permiso: 'cal.enlace.poner' };
+
+
 function RitmoAlCalendario(_ref) {let { antes } = _ref;
   const { t } = useT();
   const solo = useCalendarioSolo();
-  const texto = !solo ? t('cal.enlace') : calendarioSoloPorDetras(solo) ? t('cal.enlace.poner') : t('cal.enlace.aldia');
+  const caso = calendarioSoloCaso(solo);
+  const texto = !solo ? t('cal.enlace') : t(CAL_ENLACE[caso]);
   return (
     React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ritmo-calendario": true,
-      "data-pace-cal-estado": !solo ? 'no' : calendarioSoloPorDetras(solo) ? 'poner' : 'aldia',
+      "data-pace-cal-estado": !solo ? 'no' : caso === 'permiso' ? 'poner' : caso,
       onClick: () => {if (antes) antes();ritmoCalendarioAbrir();} },
     texto
     ));
@@ -42022,6 +42049,7 @@ function ritmoCalendarioHoraMs(ms) {
 function ritmoCalendarioSoloSub(solo, t, tn) {
   if (solo.trabajando) return t('cal.solo.trabajando');
   if (calendarioSoloPorDetras(solo)) return solo.alDia ? tn('cal.solo.atrasado', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.atrasado.sin');
+  if (solo.pendiente) return solo.fallo && solo.reintento ? tn('cal.solo.fallo', { h: ritmoCalendarioHoraMs(solo.reintento) }) : t('cal.solo.trabajando');
   if (solo.destino === 'android' || !solo.hasta) return solo.alDia ? tn('cal.solo.ultimo', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.trabajando');
   const manana = new Date(solo.hasta).toDateString() !== new Date().toDateString();
   return tn(manana ? 'cal.solo.hasta.manana' : 'cal.solo.hasta', { h: ritmoCalendarioHoraMs(solo.hasta) });
@@ -42060,7 +42088,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
   if (solo) {
     const q = solo.quedan;
-    resumen = calendarioSoloPorDetras(solo) ?
+    resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo' ?
     solo.alDia ? tn('cal.solo.resumen.pendiente', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.resumen.pendiente.sin') :
     q.length ? tn('cal.solo.resumen', { a: ritmoHora(q[0].desde), b: ritmoHora(q[q.length - 1].hasta) }) : t('cal.solo.resumen.nada');
   }
@@ -42132,9 +42160,11 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
   const accion = (destino) => {
     if (solo && destino === solo.destino) {
-      return calendarioSoloPorDetras(solo) ?
-      React.createElement("button", { type: "button", className: "pace-rt-cal-btn pace-rt-lleno", "data-pace-cal-poner": true, disabled: !!trabajo, onClick: ponerAlDia },
-      trabajo === 'poner' ? t('cal.trabajando') : t('cal.btn.poner')
+      const reintentar = !calendarioSoloPorDetras(solo) && calendarioSoloCaso(solo) === 'fallo';
+      return calendarioSoloPorDetras(solo) || reintentar ?
+      React.createElement("button", { type: "button", className: "pace-rt-cal-btn pace-rt-lleno", "data-pace-cal-poner": reintentar ? undefined : '',
+        "data-pace-cal-reintentar": reintentar ? '' : undefined, disabled: !!trabajo, onClick: ponerAlDia },
+      trabajo === 'poner' ? t('cal.trabajando') : t(reintentar ? 'cal.btn.reintentar' : 'cal.btn.poner')
       ) :
       React.createElement("button", { type: "button", className: "pace-rt-cal-btn", "data-pace-cal-desconectar": true, disabled: !!trabajo || preguntar,
         onClick: () => {setAviso(null);setPreguntar(true);} }, t('cal.btn.desconectar'));
@@ -42185,10 +42215,10 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
   } else if (aviso) {
     nota = React.createElement("div", { className: 'pace-rt-cal-aviso' + (aviso.tipo === 'error' ? ' pace-rt-error' : ''), role: "status", "data-pace-cal-aviso": aviso.tipo }, aviso.texto);
-  } else if (calendarioSoloPorDetras(solo)) {
+  } else if (calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo') {
     nota =
     React.createElement("div", { className: "pace-rt-cal-aviso", role: "status", "data-pace-cal-aviso": "nota" },
-    t('cal.solo.nota.' + solo.destino),
+    t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + solo.destino : 'cal.solo.nota.fallo'),
     React.createElement("button", { type: "button", className: "pace-rt-enlace", "data-pace-cal-desconectar": true, onClick: () => setPreguntar(true) }, t('cal.btn.desconectar'))
     );
 
@@ -42217,7 +42247,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 }
 
 Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir });
-;Object.assign(window, { ritmoCalendarioAbrir, useCalendarioSolo, calendarioSoloPorDetras, RitmoAlCalendario, RitmoCalendarioRaiz, CAL_ERRORES, ritmoCalendarioHecho, ritmoCalendarioHoraMs, ritmoCalendarioSoloSub, RitmoCalendarioHoja });
+;Object.assign(window, { ritmoCalendarioAbrir, useCalendarioSolo, calendarioSoloPorDetras, calendarioSoloCaso, CAL_ENLACE, RitmoAlCalendario, RitmoCalendarioRaiz, CAL_ERRORES, ritmoCalendarioHecho, ritmoCalendarioHoraMs, ritmoCalendarioSoloSub, RitmoCalendarioHoja });
 })();
 </script>
   <script>

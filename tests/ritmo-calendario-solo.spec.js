@@ -394,10 +394,24 @@ test('con Microsoft: pasada la hora, se renueva sin ventana y sigue cambiando lo
   expect(errores).toEqual([]);
 });
 
-/* C2 (auditoría del 22 oct. 2026): tras un fallo de escritura que no es de permiso, el estado
-   no lo decía y la hoja seguía en «al día» mientras reintentaba cada 5 min. Ahora lo dice
-   (`fallo`); qué enseña la hoja con él espera a Ez. */
-test('C2 · un fallo de escritura que no es de permiso sale en el estado, y se va al salir bien', async ({ page, context }) => {
+/* C2 (auditoría del 22 oct. 2026; Ez eligió la A el mismo día): la hoja y el enlace decían «al
+   día» con el día cambiado y permiso (el minuto antes de escribir) y tras un fallo que no es de
+   permiso, mientras reintentaba cada 5 min. Ahora son cuatro casos: al día, poniendo al día, no
+   se pudo (con «Reintentar» y la hora del próximo intento) y falta permiso (como antes). El
+   enlace, el más largo («No se pudo poner al día»), se mide a 1280 y a 360 px. */
+const medirEnlace = (page) => page.evaluate(() => {
+  const el = [...document.querySelectorAll('[data-pace-ritmo-calendario]')].find((x) => x.offsetParent);
+  const b = el.getBoundingClientRect();
+  const cs = getComputedStyle(el);
+  const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.3;
+  const otros = [...el.closest('[data-pace-ritmo], [role="dialog"], body').querySelectorAll('button')]
+    .filter((x) => x !== el && x.offsetParent).map((x) => x.getBoundingClientRect());
+  return { texto: el.textContent, lineas: Math.round(b.height / lh),
+    dentro: b.left >= 0 && b.right <= document.documentElement.clientWidth,
+    pisa: otros.some((o) => o.left < b.right - 1 && b.left + 1 < o.right && o.top < b.bottom - 1 && b.top + 1 < o.bottom) };
+});
+test('C2 · los cuatro casos: poniendo al día, no se pudo con «Reintentar», y otra vez al día', async ({ page, context }) => {
+  const errores = capturarErrores(page);
   const g = await calendarioWebFalso(context, 'google');
   await abrir(page, context);
   await page.evaluate(() => { CALENDARIO_IDS.google = 'id-de-prueba'; });
@@ -407,15 +421,48 @@ test('C2 · un fallo de escritura que no es de permiso sale en el estado, y se v
   await hoja.locator('[data-pace-cal-destino="google"] button').click();
   await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
   await page.getByRole('button', { name: 'Listo', exact: true }).click();
+  const enlace = vis(page, '[data-pace-ritmo-calendario]');
+  await expect(enlace).toHaveText('Calendario al día');
   expect(await page.evaluate(() => calendarioSoloEstado().fallo)).toBe(false);
 
+  /* el día cambia: el minuto antes de escribir, «poniendo al día» */
   g.romper = true;
   await page.evaluate(() => ritmoHorario('comidaDur', 45));
+  await expect(enlace).toHaveText('Poniendo al día…');
+  /* la escritura falla (no por el permiso): «no se pudo», con la hora del próximo intento */
   await page.clock.runFor(MINUTO);
   await expect.poll(() => page.evaluate(() => calendarioSoloEstado().fallo)).toBe(true);
   const e = await page.evaluate(() => calendarioSoloEstado());
   expect([e.conAcceso, e.pendiente], 'con permiso y por detrás').toEqual([true, true]);
+  await expect(enlace).toHaveText('No se pudo poner al día');
+  await expect(enlace).toHaveAttribute('data-pace-cal-estado', 'fallo');
+  expect(await medirEnlace(page), 'el enlace a 1280 px').toMatchObject({ lineas: 1, dentro: true, pisa: false });
+  await enlace.click();
+  await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText(/^No se pudo · lo intenta otra vez a las \d+:\d\d$/);
+  await expect(hoja.locator('[data-pace-cal-aviso="nota"]')).toContainText('No se pudo hablar con tu calendario. PACE lo vuelve a intentar cada 5 minutos.');
+  await expect(hoja.locator('[data-pace-cal-resumen]')).toContainText('y tu calendario aún no lo sabe.');
+  /* «Reintentar» escribe ya, sin ventana */
   g.romper = false;
-  await page.clock.runFor(5 * MINUTO);
-  await expect.poll(() => page.evaluate(() => calendarioSoloEstado().fallo)).toBe(false);
+  const antes = g.vistas.length;
+  await hoja.locator('[data-pace-cal-reintentar]').click();
+  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toHaveText('Tu calendario ya está al día.', { timeout: 15_000 });
+  expect(g.vistas.slice(antes).filter((v) => v.metodo === 'VENTANA')).toHaveLength(0);
+  expect(await page.evaluate(() => calendarioSoloEstado().fallo)).toBe(false);
+  await page.getByRole('button', { name: 'Listo', exact: true }).click();
+  await expect(enlace).toHaveText('Calendario al día');
+
+  /* a 360 px el enlace va en la hoja de «Ver todo»: otra vez «no se pudo», y se mide allí */
+  g.romper = true;
+  await page.setViewportSize({ width: 360, height: 730 });
+  /* en el móvil la barra lateral va plegada, como siembran las pruebas de móvil */
+  await page.evaluate(() => setState((p) => Object.assign({}, p, { sidebarCollapsed: true })));
+  await page.evaluate(() => ritmoHorario('comidaDur', 30));
+  await page.clock.runFor(MINUTO);
+  await expect.poll(() => page.evaluate(() => calendarioSoloEstado().fallo)).toBe(true);
+  await vis(page, '[data-pace-ritmo-ver]').click();
+  await vis(page, '[data-pace-ritmo-lista]').waitFor();
+  await expect(vis(page, '[data-pace-ritmo-calendario]')).toHaveText('No se pudo poner al día');
+  expect(await medirEnlace(page), 'el enlace a 360 px').toMatchObject({ lineas: 1, dentro: true, pisa: false });
+  /* los 500 del Google de mentira salen en la consola: son la prueba */
+  expect(errores.filter((x) => !/status of 500/.test(x))).toEqual([]);
 });

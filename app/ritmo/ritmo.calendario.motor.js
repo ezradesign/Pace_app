@@ -37,7 +37,7 @@
 var CALENDARIO_ESCRITO_CLAVE = 'pace.calendario.escrito';
 var CALENDARIO_SOLO_ESPERA = 60 * 1000;
 var CALENDARIO_SOLO_REINTENTO = 5 * 60 * 1000;
-var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '', gen: 0 };
+var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '', gen: 0, reintento: 0 };
 
 /* LA GENERACIÓN de la conexión: «Desconectar» la cambia al momento, y una escritura
    pedida antes la mira antes de cada paso en el calendario y antes de guardar lo
@@ -238,7 +238,7 @@ function calendarioSoloEstado() {
       destino: c.destino, pendiente: calendarioPendiente(deseados, mio, c.destino, ahora), conAcceso: calendarioSoloConAcceso(c.destino),
       trabajando: _calSolo.trabajando, alDia: mio && mio.fecha === ritmoHoy() ? mio.alDia || null : null,
       /* la última escritura falló y no por el permiso (la red, el calendario): reintenta cada 5 min */
-      fallo: !!_calSolo.fallo,
+      fallo: !!_calSolo.fallo, reintento: _calSolo.fallo ? _calSolo.reintento || 0 : 0,
       hasta: c.destino === 'android' ? 0 : calendarioPaseHasta(c.destino),
       quedan: deseados ? deseados.eventos.filter(function (e) { return e.fin > ahora; }) : [],
     };
@@ -248,7 +248,7 @@ function calendarioSoloEstado() {
 /* Avisa a la hoja y al enlace, solo si lo que enseñan ha cambiado. */
 function calendarioSoloAvisar() {
   var e = calendarioSoloEstado();
-  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta, e.fallo].join('|') : '';
+  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta, e.fallo, e.reintento].join('|') : '';
   if (huella === _calSolo.huella) return;
   _calSolo.huella = huella;
   try { window.dispatchEvent(new CustomEvent('pace:calendario-solo')); } catch (x) {}
@@ -263,8 +263,10 @@ function calendarioSoloRevisar() {
     var pendiente = calendarioPendiente(calendarioDeseados(s, calendarioTextos()), calendarioEscritoLeer(), c.destino, Date.now());
     if (!pendiente) calendarioSoloParar();
     else if (!_calSolo.espera && !_calSolo.trabajando) {
-      _calSolo.espera = setTimeout(function () { _calSolo.espera = null; calendarioSoloEscribir(); },
-        _calSolo.fallo ? CALENDARIO_SOLO_REINTENTO : CALENDARIO_SOLO_ESPERA);
+      var espera = _calSolo.fallo ? CALENDARIO_SOLO_REINTENTO : CALENDARIO_SOLO_ESPERA;
+      /* la hora del próximo intento, que la hoja enseña tras un fallo («lo intenta otra vez a las…») */
+      _calSolo.reintento = Date.now() + espera;
+      _calSolo.espera = setTimeout(function () { _calSolo.espera = null; calendarioSoloEscribir(); }, espera);
     }
     calendarioSoloAvisar();
   } catch (e) {}
