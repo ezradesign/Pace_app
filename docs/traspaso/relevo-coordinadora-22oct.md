@@ -39,8 +39,10 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 - La otra cuenta tiene margen desde las 21:10. Retomar «Maqueta» en su MISMA carpeta, rama y puerto
   (`node scripts/relevo-hilo.js .claude/worktrees/maqueta-inicio-3a2a59`, leer su punto arriba de
   `docs/traspaso/LEEME.md` de su rama y `start_session` con `cwd` y `use_worktree: false`).
-- Lo que llevaba «Maqueta» al relevo: v0.174.6 (1A 2A 3A) montada y en su suite entera (solo cayó una de
-  Android, ya arreglada); faltaba cerrar con commit, push y aviso. Después, **la maqueta nueva de «Hacerla»**
+- **Lo primero al retomar: v0.174.6 está lista en la rama `claude/maqueta-inicio-3a2a59` (commit 0707b36, subida):**
+  la app abre con los módulos, los Ajustes del móvil sin scroll y la voz grave en Rondas (1A 2A 3A). Revisarla,
+  contársela a Ez en palabras llanas y, con su sí, juntarla con la suite entera (unos 27 min). Al relevo, la
+  sesión ya hacía la maqueta de «Hacerla» (sin commitear; se le pidió «wip» y push al 87 %). Después, **la maqueta nueva de «Hacerla»**
   (Ez, 22 oct. noche): al pulsar «Hacerla» sale UN ejercicio de los que ya hay en Mueve o Estira (de pie o
   sentado, sin suelo ni material), con su título, su instrucción, su duración propia aunque pase de 2 min y el
   glifo GENÉRICO del módulo, no el del ejercicio; sin consulta a ChatGPT. Ez: «la integración era para tener
