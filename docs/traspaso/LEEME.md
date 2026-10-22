@@ -4,6 +4,29 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 22 oct., relevo por uso: «Tus rutinas» y Estadísticas (rama `claude/beautiful-perlman-2b642c`)
+
+Carpeta `.claude/worktrees/beautiful-perlman-2b642c`, puerto de pruebas 8799 (`PACE_E2E_PORT=8799`),
+versión 0.174.4 ya puesta con `npm run bump` (la 0.174.3 es la del calendario). Se paró al 91 % de
+la ventana de 5 h de la cuenta; todo está commiteado y subido. Nunca se sube a `main` desde aquí.
+
+- **Hechos, cada uno con su prueba en rojo contra v0.174.2**: R1, R2, R3, R4, R5, R6, Y1, E2, E3 y E4
+  (`tests/tus-rutinas-auditoria.spec.js`, 10, y `tests/stats-auditoria.spec.js`, 6). En R5, lo de
+  «el clic llega como verdadero» no pasaba (`MandoV1` llama sin argumentos); lo real se arregló.
+- **Falta E1** (la tarjeta de «Hoy» por libre dice 2 min y el total de Cuerpo 3). Espera a Ez: A,
+  la tarjeta dice lo mismo que el total (pide un dato nuevo en `session.completed`, y
+  `EVENTOS_SCHEMA.md` §9 dice que ampliar un payload sube su `v`); B, solo el texto «2 min de ejercicio».
+- **Esperan a Ez, ya montadas con la recomendada**: 1A «30 s por lado», 3A día solo con agua en color
+  suave, 4A línea de totales bajo el Año, 5A los tres textos. Página:
+  https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW (copia en `docs/proposals/rutinas-y-cifras-auditoria.html`;
+  las fotos se rehacen con el guion `fotos.js` de la sesión, que no está en el repo). Si Ez elige
+  una B, cambiar el código y su prueba; en DECISIONES, quitar «pendiente de Ez» de sus filas.
+- **Sin pasar**: la suite entera (se paró en 125 de 786, sin fallos hasta ahí). Pasan las 16 nuevas
+  y las 64 vecinas del runner (caza-sesiones, runner-*, tus-rutinas, eventos-emisor, estado-saneado…);
+  `verify` pasa. Después: suite entera, commit sin `wip`, push y aviso a la coordinadora.
+- Visto de paso, fuera de la lista: «Espalda de oficina» enseña «preview.eq.wallOptional» en «Antes
+  de empezar» (falta ese texto en `sessions.body.js`; pide una frase nueva, p. ej. «Una pared, si la tienes»).
+
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
 Manda sobre todo lo de abajo. Ez lo decidió: mientras se siga en esta cuenta, coordina la sesión que
