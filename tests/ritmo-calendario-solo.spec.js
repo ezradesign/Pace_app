@@ -268,6 +268,7 @@ async function calendarioWebFalso(context, prov) {
   const google = prov === 'google';
   const vistas = [];
   const eventos = [];
+  const falso = { vistas, eventos, romper: false };
   let siguiente = 1;
   const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': '*' };
   await context.route('https://' + (google ? 'accounts.google.com' : 'login.microsoftonline.com') + '/**', (route) => {
@@ -292,6 +293,8 @@ async function calendarioWebFalso(context, prov) {
     let cuerpo = null;
     try { cuerpo = req.postDataJSON(); } catch (e) {}
     vistas.push({ metodo: req.method(), url: req.url(), cuerpo, auth: req.headers().authorization });
+    /* `romper`: el calendario no contesta bien (un 500, que PACE lee como un fallo de red) */
+    if (falso.romper) return route.fulfill({ status: 500, headers: cors, body: '' });
     const json = (o, status) => route.fulfill({ status: status || 200, contentType: 'application/json', headers: cors, body: JSON.stringify(o) });
     const id = decodeURIComponent(url.pathname.split('/').pop());
     if (req.method() === 'POST') { const e = Object.assign({ id: 'e' + siguiente++ }, cuerpo); eventos.push(e); return json({ id: e.id }); }
@@ -307,7 +310,7 @@ async function calendarioWebFalso(context, prov) {
       singleValueExtendedProperties: (e.singleValueExtendedProperties || []).filter((p) => /paceClave$/.test(p.id)),
     })) });
   });
-  return { vistas, eventos };
+  return falso;
 }
 
 test('con Google: dentro de la hora se cambia lo que está; pasada, «Poner al día» vuelve a pedir permiso', async ({ page, context }) => {
@@ -389,4 +392,30 @@ test('con Microsoft: pasada la hora, se renueva sin ventana y sigue cambiando lo
   m.vistas.filter((v) => v.metodo === 'POST' || v.metodo === 'PATCH').forEach((v) => expect(v.cuerpo.showAs, v.metodo).toBe('free'));
   await expect(vis(page, '[data-pace-ritmo-calendario]')).toHaveText('Calendario al día');
   expect(errores).toEqual([]);
+});
+
+/* C2 (auditoría del 22 oct. 2026): tras un fallo de escritura que no es de permiso, el estado
+   no lo decía y la hoja seguía en «al día» mientras reintentaba cada 5 min. Ahora lo dice
+   (`fallo`); qué enseña la hoja con él espera a Ez. */
+test('C2 · un fallo de escritura que no es de permiso sale en el estado, y se va al salir bien', async ({ page, context }) => {
+  const g = await calendarioWebFalso(context, 'google');
+  await abrir(page, context);
+  await page.evaluate(() => { CALENDARIO_IDS.google = 'id-de-prueba'; });
+  await vis(page, '[data-pace-ritmo-calendario]').click();
+  const hoja = page.locator('[data-pace-cal]');
+  await hoja.locator('[data-pace-cal-reuniones]').uncheck();
+  await hoja.locator('[data-pace-cal-destino="google"] button').click();
+  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
+  await page.getByRole('button', { name: 'Listo', exact: true }).click();
+  expect(await page.evaluate(() => calendarioSoloEstado().fallo)).toBe(false);
+
+  g.romper = true;
+  await page.evaluate(() => ritmoHorario('comidaDur', 45));
+  await page.clock.runFor(MINUTO);
+  await expect.poll(() => page.evaluate(() => calendarioSoloEstado().fallo)).toBe(true);
+  const e = await page.evaluate(() => calendarioSoloEstado());
+  expect([e.conAcceso, e.pendiente], 'con permiso y por detrás').toEqual([true, true]);
+  g.romper = false;
+  await page.clock.runFor(5 * MINUTO);
+  await expect.poll(() => page.evaluate(() => calendarioSoloEstado().fallo)).toBe(false);
 });

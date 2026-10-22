@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.2 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.3 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -41,7 +41,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    de la prueba, «Gestionar» en Ajustes, la invitación con los botones de compra y lo legal de /premium.
    El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
 4. **Auditoría externa del 21 oct.**: los trece casos de datos (v0.174.1) y los seis de «A tu
-   ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
+   ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. De la del 22 oct.,
+   tres del calendario que se mantiene solo (v0.174.3, rama `claude/happy-allen-d915c3`): qué dice la
+   hoja cuando falla o se está poniendo al día espera a Ez (`docs/traspaso/archivos/calendario-estado-22oct/tabla.md`). El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
    a 100 ms, nunca), Ez lo acepta como riesgo (A, 22 oct.): lo mide `tests/pestanas-estado.spec.js`,
    estado-4. Un solo escritor en IndexedDB, si alguna vez hace falta, después de v1.
 5. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en

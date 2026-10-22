@@ -37,7 +37,16 @@
 var CALENDARIO_ESCRITO_CLAVE = 'pace.calendario.escrito';
 var CALENDARIO_SOLO_ESPERA = 60 * 1000;
 var CALENDARIO_SOLO_REINTENTO = 5 * 60 * 1000;
-var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '' };
+var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '', gen: 0 };
+
+/* LA GENERACIÓN de la conexión: «Desconectar» la cambia al momento, y una escritura
+   pedida antes la mira antes de cada paso en el calendario y antes de guardar lo
+   escrito. Si no, una escritura que esperaba respuesta seguía al llegar: volvía a poner
+   lo que «Quitarlo» acababa de quitar y guardaba `pace.calendario.escrito` después de
+   que la desconexión lo vaciara. */
+function calendarioSoloSigue(gen) {
+  if (gen !== _calSolo.gen || !calendarioSoloActivo()) throw new Error('cortado');
+}
 
 /* Los textos sin el hook, en el idioma de la app (como useT). */
 function calendarioTextos() {
@@ -114,8 +123,9 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   });
 }
 
-/* Quitar, cambiar y crear, uno detrás de otro. Resuelve con { clave: id } de lo creado. */
-function calendarioAplicar(destino, pase, iso, cambios, calendarioId) {
+/* Quitar, cambiar y crear, uno detrás de otro. Resuelve con { clave: id } de lo creado.
+   `sigue` (opcional) se mira antes de cada paso y corta lo que queda. */
+function calendarioAplicar(destino, pase, iso, cambios, calendarioId, sigue) {
   var android = destino === 'android';
   var creados = {};
   var pasos = [];
@@ -131,21 +141,26 @@ function calendarioAplicar(destino, pase, iso, cambios, calendarioId) {
       return p.then(function (id) { if (id) creados[ev.clave] = id; });
     });
   });
-  return pasos.reduce(function (p, paso) { return p.then(paso); }, Promise.resolve()).then(function () { return creados; });
+  return pasos.reduce(function (p, paso) {
+    return p.then(function () { if (sigue) sigue(); return paso(); });
+  }, Promise.resolve()).then(function () { return creados; });
 }
 
 /* Pone el calendario al día con un acceso ya dado. Resuelve con los cambios, o
-   null si no hay día que llevar (eligiéndolo). */
-function calendarioSoloSincronizar(destino, pase, calendarioId) {
+   null si no hay día que llevar (eligiéndolo). `gen`: la generación con que se pidió. */
+function calendarioSoloSincronizar(destino, pase, calendarioId, gen) {
+  var sigue = function () { calendarioSoloSigue(gen); };
   var hoy = ritmoHoy();
   var deseados = calendarioDeseados(getState(), calendarioTextos());
   if (!deseados) return Promise.resolve(null);
   var antes = calendarioEscritoLeer();
   var escritos = calendarioEscritoDeHoy(destino);
+  sigue();
   return calendarioListarDePace(destino, pase, hoy, escritos).then(function (existentes) {
     var ahora = Date.now();
     var cambios = calendarioCambios(deseados.eventos, existentes, ahora);
-    return calendarioAplicar(destino, pase, hoy, cambios, calendarioId).then(function (creados) {
+    return calendarioAplicar(destino, pase, hoy, cambios, calendarioId, sigue).then(function (creados) {
+      sigue();
       var mismo = antes && antes.fecha === hoy && antes.destino === destino;
       calendarioEscritoGuardar({ fecha: hoy, destino: destino, alDia: !calendarioSinCambios(cambios) || !mismo ? ahora : antes.alDia,
                                  eventos: calendarioTrasCambios(existentes, cambios, creados) });
@@ -157,19 +172,23 @@ function calendarioSoloSincronizar(destino, pase, calendarioId) {
 /* Escribe en cola (nunca dos a la vez). `acceso`, la promesa del permiso pedido
    en un clic; sin ella, solo con el permiso que ya hay. Un clic recibe el error. */
 function calendarioSoloEscribir(acceso) {
+  /* La generación del momento en que se pide: si se desconecta mientras espera su turno, no empieza. */
+  var gen = _calSolo.gen;
   var trabajo = function () {
-    if (!calendarioSoloActivo()) return Promise.resolve(false);
+    if (gen !== _calSolo.gen || !calendarioSoloActivo()) return Promise.resolve(false);
     var c = calendarioSoloAjustes();
     _calSolo.trabajando = true;
     calendarioSoloAvisar();
     return (acceso || calendarioAccesoSinGesto(c.destino)).then(function (pase) {
       if (pase === false) { _calSolo.sinAcceso = true; return false; }
       _calSolo.sinAcceso = false;
-      return calendarioSoloSincronizar(c.destino, pase, c.calendarioId || null).then(function () { return true; });
+      return calendarioSoloSincronizar(c.destino, pase, c.calendarioId || null, gen).then(function () { return true; });
     }).then(function (r) {
       _calSolo.fallo = false;
       return r;
     }, function (e) {
+      /* cortada por «Desconectar»: ni es un fallo ni se le dice al clic */
+      if (e && e.message === 'cortado') return false;
       if (e && (e.message === 'pase' || e.message === 'permiso')) _calSolo.sinAcceso = true;
       else _calSolo.fallo = true;
       if (acceso) throw e;
@@ -184,6 +203,12 @@ function calendarioSoloEscribir(acceso) {
       throw e;
     });
   };
+  return calendarioSoloEnCola(trabajo);
+}
+
+/* La cola del motor y el cerrojo entre pestañas: nunca dos trabajos a la vez en el
+   calendario, tampoco una escritura y «Desconectar». */
+function calendarioSoloEnCola(trabajo) {
   var cerrojo = function () {
     try {
       if (navigator.locks && typeof navigator.locks.request === 'function') return navigator.locks.request('pace.calendario.solo', trabajo);
@@ -212,6 +237,8 @@ function calendarioSoloEstado() {
     return {
       destino: c.destino, pendiente: calendarioPendiente(deseados, mio, c.destino, ahora), conAcceso: calendarioSoloConAcceso(c.destino),
       trabajando: _calSolo.trabajando, alDia: mio && mio.fecha === ritmoHoy() ? mio.alDia || null : null,
+      /* la última escritura falló y no por el permiso (la red, el calendario): reintenta cada 5 min */
+      fallo: !!_calSolo.fallo,
       hasta: c.destino === 'android' ? 0 : calendarioPaseHasta(c.destino),
       quedan: deseados ? deseados.eventos.filter(function (e) { return e.fin > ahora; }) : [],
     };
@@ -221,7 +248,7 @@ function calendarioSoloEstado() {
 /* Avisa a la hoja y al enlace, solo si lo que enseñan ha cambiado. */
 function calendarioSoloAvisar() {
   var e = calendarioSoloEstado();
-  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta].join('|') : '';
+  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta, e.fallo].join('|') : '';
   if (huella === _calSolo.huella) return;
   _calSolo.huella = huella;
   try { window.dispatchEvent(new CustomEvent('pace:calendario-solo')); } catch (x) {}
@@ -252,13 +279,19 @@ function calendarioSoloPonerAlDia() {
 }
 
 /* «Desconectar»: PACE deja de tocar el calendario y olvida el pase. Con
-   `quitar`, antes quita lo de PACE de hoy que no ha acabado (dentro del clic).
-   Resuelve con { quitados } (null si se deja). */
+   `quitar`, antes quita lo de PACE de hoy que no ha acabado (el permiso, dentro del
+   clic; el quitar, por la cola, detrás de la escritura que hubiera en marcha). Lo que
+   ya estaba pedido se corta al momento (la generación), y PACE deja de leer las
+   reuniones también en Android: sin destino, `calendarioRefrescarReuniones` no lee, y
+   la lectura que esperaba respuesta no se guarda. Resuelve con { quitados } (null si
+   se deja). */
 function calendarioSoloDesconectar(quitar) {
   var destino = calendarioSoloAjustes().destino;
   calendarioSoloParar();
+  _calSolo.gen++;
+  if (typeof calendarioRefrescoCortar === 'function') calendarioRefrescoCortar();
   var fin = function (n) {
-    calendarioGuardarAjustes({ mantener: false });
+    calendarioGuardarAjustes({ mantener: false, destino: null });
     calendarioEscritoGuardar(null);
     if (destino === 'google' || destino === 'microsoft') calendarioPaseGuardar(destino, null);
     _calSolo.sinAcceso = false;
@@ -269,11 +302,14 @@ function calendarioSoloDesconectar(quitar) {
   if (!quitar) return Promise.resolve(fin(null));
   var acceso;
   try { acceso = calendarioAcceso(destino); } catch (e) { return Promise.reject(e); }
-  return acceso.then(function (pase) {
-    var hoy = ritmoHoy();
-    return calendarioListarDePace(destino, pase, hoy, calendarioEscritoDeHoy(destino)).then(function (existentes) {
-      var cambios = calendarioCambios([], existentes, Date.now());
-      return calendarioAplicar(destino, pase, hoy, cambios, null).then(function () { return fin(cambios.borrar.length); });
+  acceso.catch(function () {});   /* el error lo recibe el trabajo de la cola */
+  return calendarioSoloEnCola(function () {
+    return acceso.then(function (pase) {
+      var hoy = ritmoHoy();
+      return calendarioListarDePace(destino, pase, hoy, calendarioEscritoDeHoy(destino)).then(function (existentes) {
+        var cambios = calendarioCambios([], existentes, Date.now());
+        return calendarioAplicar(destino, pase, hoy, cambios, null).then(function () { return fin(cambios.borrar.length); });
+      });
     });
   });
 }

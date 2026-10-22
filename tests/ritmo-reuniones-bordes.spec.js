@@ -182,6 +182,10 @@ test.describe('en Android', () => {
       ocupado: { fecha: FECHA, tramos: [[720, 30]], fuente: 'android' }, calendario: { destino: 'android', reuniones: true } } });
     await page.clock.install({ time: NUEVE });
     await irAlArtefacto(page);
+    /* las lecturas del día entero (desde medianoche); borrar lo de PACE lista desde ahora. Al
+       abrir, PACE vuelve a leer las reuniones (a los 1,5 s): que pase antes de contar */
+    const lecturas = () => page.evaluate((desde) => window.__nativo.llamadas.filter((l) => l.metodo === 'listEventsInRange' && l.opts.from === desde).length, ms(FECHA, '00:00'));
+    await expect.poll(lecturas).toBeGreaterThan(0);
     expect(await ocupados(page)).toEqual(['12:00+30']);
 
     await vis(page, '[data-pace-ritmo-ver]').click();
@@ -190,8 +194,6 @@ test.describe('en Android', () => {
     const hoja = page.locator('[data-pace-cal]');
     await hoja.locator('[data-pace-cal-mantener]').uncheck();
     await hoja.locator('[data-pace-cal-reuniones]').uncheck();
-    /* las lecturas del día entero (desde medianoche); borrar lo de PACE lista desde ahora */
-    const lecturas = () => page.evaluate((desde) => window.__nativo.llamadas.filter((l) => l.metodo === 'listEventsInRange' && l.opts.from === desde).length, ms(FECHA, '00:00'));
     const leidas = await lecturas();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('bloques en tu calendario');

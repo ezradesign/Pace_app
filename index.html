@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.174.2</title>
+  <title>PACE · Foco · Cuerpo — v0.174.3</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6401,7 +6401,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.174.2';
+const PACE_VERSION = 'v0.174.3';
 
 
 
@@ -11221,7 +11221,8 @@ Object.assign(window, {
 
    AL VOLVER A LA APP, si el último destino fue uno conectado y el acceso sigue
    vivo (el permiso de Android, o el pase de la web), las reuniones se vuelven a
-   leer sin preguntar nada, como mucho cada 5 minutos. Sin «Mantenerlo al día
+   leer sin preguntar nada, como mucho cada 5 minutos. Tras «Desconectar» no hay
+   destino y no se lee, tampoco en Android, donde el permiso del sistema sigue. Sin «Mantenerlo al día
    solo», solo se lee: los eventos se reescriben cuando la persona pulsa otra vez.
    Con él, el paso 3 lo hace el motor (ritmo.calendario.motor.js), que cambia los
    eventos que ya están en vez de borrar y crear, y vuelve a hacerlo solo cada
@@ -11231,7 +11232,7 @@ Object.assign(window, {
    ============================================================ */
 
 var CALENDARIO_DESTINOS = ['android', 'google', 'microsoft', 'archivo'];
-var _calendarioRefresco = { ultimo: 0, enCurso: false };
+var _calendarioRefresco = { ultimo: 0, enCurso: false, gen: 0 };
 
 function calendarioDestinos() {
   var android = typeof paceAndroidCalendario === 'function' && paceAndroidCalendario();
@@ -11397,6 +11398,10 @@ function calendarioBajarIcs(texto, nombre) {
 }
 
 
+
+function calendarioRefrescoCortar() {_calendarioRefresco.gen++;}
+
+
 function calendarioRefrescarReuniones(forzar) {
   try {
     if (_calendarioRefresco.enCurso) return Promise.resolve(false);
@@ -11413,10 +11418,11 @@ function calendarioRefrescarReuniones(forzar) {
       if (!(calendarioPaseHasta(c.destino) > Date.now())) return Promise.resolve(false);
       acceso = calendarioPaseSinGesto(c.destino).then(function (p) {if (!p) throw new Error('pase');return p;});
     }
+    var gen = _calendarioRefresco.gen;
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
     return acceso.then(function (pase) {return calendarioLeer(c.destino, pase, iso);}).
-    then(function (lista) {return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso);}).
+    then(function (lista) {return gen === _calendarioRefresco.gen && calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso);}).
     catch(function () {return false;}).
     then(function (r) {_calendarioRefresco.enCurso = false;return r;});
   } catch (e) {_calendarioRefresco.enCurso = false;return Promise.resolve(false);}
@@ -11441,9 +11447,9 @@ try {calendarioArrancar();} catch (e) {}
 
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
-  calendarioGuardarOcupado, calendarioBajarIcs
+  calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar
 });
-;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescarReuniones, calendarioArrancar });
+;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
 })();
 </script>
   <!-- El calendario que se mantiene solo (14 oct. 2026): lo puro (qué tiene que haber y qué
@@ -11681,7 +11687,16 @@ Object.assign(window, {
 var CALENDARIO_ESCRITO_CLAVE = 'pace.calendario.escrito';
 var CALENDARIO_SOLO_ESPERA = 60 * 1000;
 var CALENDARIO_SOLO_REINTENTO = 5 * 60 * 1000;
-var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '' };
+var _calSolo = { espera: null, cola: Promise.resolve(), trabajando: false, fallo: false, sinAcceso: false, junta: false, huella: '', gen: 0 };
+
+
+
+
+
+
+function calendarioSoloSigue(gen) {
+  if (gen !== _calSolo.gen || !calendarioSoloActivo()) throw new Error('cortado');
+}
 
 
 function calendarioTextos() {
@@ -11759,7 +11774,8 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
 }
 
 
-function calendarioAplicar(destino, pase, iso, cambios, calendarioId) {
+
+function calendarioAplicar(destino, pase, iso, cambios, calendarioId, sigue) {
   var android = destino === 'android';
   var creados = {};
   var pasos = [];
@@ -11775,21 +11791,26 @@ function calendarioAplicar(destino, pase, iso, cambios, calendarioId) {
       return p.then(function (id) {if (id) creados[ev.clave] = id;});
     });
   });
-  return pasos.reduce(function (p, paso) {return p.then(paso);}, Promise.resolve()).then(function () {return creados;});
+  return pasos.reduce(function (p, paso) {
+    return p.then(function () {if (sigue) sigue();return paso();});
+  }, Promise.resolve()).then(function () {return creados;});
 }
 
 
 
-function calendarioSoloSincronizar(destino, pase, calendarioId) {
+function calendarioSoloSincronizar(destino, pase, calendarioId, gen) {
+  var sigue = function () {calendarioSoloSigue(gen);};
   var hoy = ritmoHoy();
   var deseados = calendarioDeseados(getState(), calendarioTextos());
   if (!deseados) return Promise.resolve(null);
   var antes = calendarioEscritoLeer();
   var escritos = calendarioEscritoDeHoy(destino);
+  sigue();
   return calendarioListarDePace(destino, pase, hoy, escritos).then(function (existentes) {
     var ahora = Date.now();
     var cambios = calendarioCambios(deseados.eventos, existentes, ahora);
-    return calendarioAplicar(destino, pase, hoy, cambios, calendarioId).then(function (creados) {
+    return calendarioAplicar(destino, pase, hoy, cambios, calendarioId, sigue).then(function (creados) {
+      sigue();
       var mismo = antes && antes.fecha === hoy && antes.destino === destino;
       calendarioEscritoGuardar({ fecha: hoy, destino: destino, alDia: !calendarioSinCambios(cambios) || !mismo ? ahora : antes.alDia,
         eventos: calendarioTrasCambios(existentes, cambios, creados) });
@@ -11801,19 +11822,23 @@ function calendarioSoloSincronizar(destino, pase, calendarioId) {
 
 
 function calendarioSoloEscribir(acceso) {
+
+  var gen = _calSolo.gen;
   var trabajo = function () {
-    if (!calendarioSoloActivo()) return Promise.resolve(false);
+    if (gen !== _calSolo.gen || !calendarioSoloActivo()) return Promise.resolve(false);
     var c = calendarioSoloAjustes();
     _calSolo.trabajando = true;
     calendarioSoloAvisar();
     return (acceso || calendarioAccesoSinGesto(c.destino)).then(function (pase) {
       if (pase === false) {_calSolo.sinAcceso = true;return false;}
       _calSolo.sinAcceso = false;
-      return calendarioSoloSincronizar(c.destino, pase, c.calendarioId || null).then(function () {return true;});
+      return calendarioSoloSincronizar(c.destino, pase, c.calendarioId || null, gen).then(function () {return true;});
     }).then(function (r) {
       _calSolo.fallo = false;
       return r;
     }, function (e) {
+
+      if (e && e.message === 'cortado') return false;
       if (e && (e.message === 'pase' || e.message === 'permiso')) _calSolo.sinAcceso = true;else
       _calSolo.fallo = true;
       if (acceso) throw e;
@@ -11828,6 +11853,12 @@ function calendarioSoloEscribir(acceso) {
       throw e;
     });
   };
+  return calendarioSoloEnCola(trabajo);
+}
+
+
+
+function calendarioSoloEnCola(trabajo) {
   var cerrojo = function () {
     try {
       if (navigator.locks && typeof navigator.locks.request === 'function') return navigator.locks.request('pace.calendario.solo', trabajo);
@@ -11856,6 +11887,8 @@ function calendarioSoloEstado() {
     return {
       destino: c.destino, pendiente: calendarioPendiente(deseados, mio, c.destino, ahora), conAcceso: calendarioSoloConAcceso(c.destino),
       trabajando: _calSolo.trabajando, alDia: mio && mio.fecha === ritmoHoy() ? mio.alDia || null : null,
+
+      fallo: !!_calSolo.fallo,
       hasta: c.destino === 'android' ? 0 : calendarioPaseHasta(c.destino),
       quedan: deseados ? deseados.eventos.filter(function (e) {return e.fin > ahora;}) : []
     };
@@ -11865,7 +11898,7 @@ function calendarioSoloEstado() {
 
 function calendarioSoloAvisar() {
   var e = calendarioSoloEstado();
-  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta].join('|') : '';
+  var huella = e ? [e.destino, e.pendiente, e.conAcceso, e.trabajando, e.alDia, e.hasta, e.fallo].join('|') : '';
   if (huella === _calSolo.huella) return;
   _calSolo.huella = huella;
   try {window.dispatchEvent(new CustomEvent('pace:calendario-solo'));} catch (x) {}
@@ -11898,11 +11931,17 @@ function calendarioSoloPonerAlDia() {
 
 
 
+
+
+
+
 function calendarioSoloDesconectar(quitar) {
   var destino = calendarioSoloAjustes().destino;
   calendarioSoloParar();
+  _calSolo.gen++;
+  if (typeof calendarioRefrescoCortar === 'function') calendarioRefrescoCortar();
   var fin = function (n) {
-    calendarioGuardarAjustes({ mantener: false });
+    calendarioGuardarAjustes({ mantener: false, destino: null });
     calendarioEscritoGuardar(null);
     if (destino === 'google' || destino === 'microsoft') calendarioPaseGuardar(destino, null);
     _calSolo.sinAcceso = false;
@@ -11913,11 +11952,14 @@ function calendarioSoloDesconectar(quitar) {
   if (!quitar) return Promise.resolve(fin(null));
   var acceso;
   try {acceso = calendarioAcceso(destino);} catch (e) {return Promise.reject(e);}
-  return acceso.then(function (pase) {
-    var hoy = ritmoHoy();
-    return calendarioListarDePace(destino, pase, hoy, calendarioEscritoDeHoy(destino)).then(function (existentes) {
-      var cambios = calendarioCambios([], existentes, Date.now());
-      return calendarioAplicar(destino, pase, hoy, cambios, null).then(function () {return fin(cambios.borrar.length);});
+  acceso.catch(function () {});
+  return calendarioSoloEnCola(function () {
+    return acceso.then(function (pase) {
+      var hoy = ritmoHoy();
+      return calendarioListarDePace(destino, pase, hoy, calendarioEscritoDeHoy(destino)).then(function (existentes) {
+        var cambios = calendarioCambios([], existentes, Date.now());
+        return calendarioAplicar(destino, pase, hoy, cambios, null).then(function () {return fin(cambios.borrar.length);});
+      });
     });
   });
 }
@@ -11946,7 +11988,7 @@ Object.assign(window, {
   CALENDARIO_ESCRITO_CLAVE, calendarioTextos, calendarioEscritoLeer, calendarioSoloActivo, calendarioSoloEstado, calendarioSoloRevisar,
   calendarioSoloEscribir, calendarioSoloSincronizar, calendarioSoloPonerAlDia, calendarioSoloDesconectar
 });
-;Object.assign(window, { CALENDARIO_ESCRITO_CLAVE, CALENDARIO_SOLO_ESPERA, CALENDARIO_SOLO_REINTENTO, _calSolo, calendarioTextos, calendarioEscritoLeer, calendarioEscritoGuardar, calendarioEscritoDeHoy, calendarioSoloAjustes, calendarioSoloActivo, calendarioAccesoSinGesto, calendarioSoloConAcceso, calendarioListarDePace, calendarioAplicar, calendarioSoloSincronizar, calendarioSoloEscribir, calendarioSoloParar, calendarioSoloEstado, calendarioSoloAvisar, calendarioSoloRevisar, calendarioSoloPonerAlDia, calendarioSoloDesconectar, calendarioSoloArrancar });
+;Object.assign(window, { CALENDARIO_ESCRITO_CLAVE, CALENDARIO_SOLO_ESPERA, CALENDARIO_SOLO_REINTENTO, _calSolo, calendarioSoloSigue, calendarioTextos, calendarioEscritoLeer, calendarioEscritoGuardar, calendarioEscritoDeHoy, calendarioSoloAjustes, calendarioSoloActivo, calendarioAccesoSinGesto, calendarioSoloConAcceso, calendarioListarDePace, calendarioAplicar, calendarioSoloSincronizar, calendarioSoloEscribir, calendarioSoloEnCola, calendarioSoloParar, calendarioSoloEstado, calendarioSoloAvisar, calendarioSoloRevisar, calendarioSoloPonerAlDia, calendarioSoloDesconectar, calendarioSoloArrancar });
 })();
 </script>
   <script>

@@ -22,7 +22,8 @@
 
    AL VOLVER A LA APP, si el último destino fue uno conectado y el acceso sigue
    vivo (el permiso de Android, o el pase de la web), las reuniones se vuelven a
-   leer sin preguntar nada, como mucho cada 5 minutos. Sin «Mantenerlo al día
+   leer sin preguntar nada, como mucho cada 5 minutos. Tras «Desconectar» no hay
+   destino y no se lee, tampoco en Android, donde el permiso del sistema sigue. Sin «Mantenerlo al día
    solo», solo se lee: los eventos se reescriben cuando la persona pulsa otra vez.
    Con él, el paso 3 lo hace el motor (ritmo.calendario.motor.js), que cambia los
    eventos que ya están en vez de borrar y crear, y vuelve a hacerlo solo cada
@@ -32,7 +33,7 @@
    ============================================================ */
 
 var CALENDARIO_DESTINOS = ['android', 'google', 'microsoft', 'archivo'];
-var _calendarioRefresco = { ultimo: 0, enCurso: false };
+var _calendarioRefresco = { ultimo: 0, enCurso: false, gen: 0 };
 
 function calendarioDestinos() {
   var android = typeof paceAndroidCalendario === 'function' && paceAndroidCalendario();
@@ -197,6 +198,10 @@ function calendarioBajarIcs(texto, nombre) {
   setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
 }
 
+/* «Desconectar» corta la lectura que espera respuesta (ritmo.calendario.motor.js): al
+   llegar, ya no se guarda. */
+function calendarioRefrescoCortar() { _calendarioRefresco.gen++; }
+
 /* Volver a leer las reuniones sin preguntar nada (ver arriba). */
 function calendarioRefrescarReuniones(forzar) {
   try {
@@ -214,10 +219,11 @@ function calendarioRefrescarReuniones(forzar) {
       if (!(calendarioPaseHasta(c.destino) > Date.now())) return Promise.resolve(false);
       acceso = calendarioPaseSinGesto(c.destino).then(function (p) { if (!p) throw new Error('pase'); return p; });
     }
+    var gen = _calendarioRefresco.gen;
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
     return acceso.then(function (pase) { return calendarioLeer(c.destino, pase, iso); })
-      .then(function (lista) { return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso); })
+      .then(function (lista) { return gen === _calendarioRefresco.gen && calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso); })
       .catch(function () { return false; })
       .then(function (r) { _calendarioRefresco.enCurso = false; return r; });
   } catch (e) { _calendarioRefresco.enCurso = false; return Promise.resolve(false); }
@@ -242,5 +248,5 @@ try { calendarioArrancar(); } catch (e) {}
 
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
-  calendarioGuardarOcupado, calendarioBajarIcs,
+  calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
 });
