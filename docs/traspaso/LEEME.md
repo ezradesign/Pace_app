@@ -4,6 +4,25 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 22 oct., noche (hacia las 23:40): las pausas con bloques cortos, a medias en la rama de la «Maqueta»
+
+Rama `claude/maqueta-inicio-3a2a59` (puerto 8803), subida en el wip 69d840c, que lleva `origin/main` dentro. Sin juntar.
+- **Ez eligió 5a A · 5b B, con un cambio**: «Un momento para moverte»; «Hacerla» abre una hoja abajo que NO cuenta
+  y lleva a la pantalla de ejercicio de siempre con ese ejercicio. Solo los 31 de `docs/proposals/hacerla-reparto.md`.
+- **Fotos para su sí** en https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d (versión 2, «“Hacerla”, así»; guion
+  `docs/traspaso/archivos/maqueta-inicio-22oct/fotos-hacerla.js`). Recomienda, incluido: el cierre sin «¿Te ayudó
+  esta pausa?» (un «No» apartaría la rutina entera) y que solo sumen los minutos (sin logros ni rutina hecha: si no,
+  la pausa de luego cambia). **Espera el «Sí» de Ez**; la coordinadora tiene el enlace.
+- **Montado en el wip, sin versión**: 4a (la invitación en el aro), 4b (`ejercicioBloques` 'ritmo' | 'cada' en la
+  línea del aro, solo con día; la regla pone `JUNTOS = 0`) y 4c (sin día, `bloquesSinDia`). Archivos:
+  `app/state-ritmo.bloques.jsx`, `app/focus/FocusTimer.bloques.jsx`. `tests/bloques-cortos.spec.js`: 7, en rojo
+  contra v0.174.6 y en verde; puestas al día pausa-propone, ritmo-reloj y sello-espera (16 en verde).
+- **Falta**: la hoja `RitmoHacerla` (la llama ya `useBloquesAro`; se monta con Modal y BreakPlato, como en las
+  fotos) con el ejercicio que toca (los 31, sin repetir el anterior) y, con el sí de Ez, «Empezar» a la pantalla de
+  ejercicio (rutina de un paso, claves de texto del paso de origen, sin `SessionFeedback`, solo minutos; «1 pasos»
+  sale en plural). Después: `npm run verify`, `npm run bump -- 0.175.0`, build, CHANGELOG, STATE, filas en las
+  decisiones técnicas. La suite entera, **solo con el permiso de la coordinadora** (otra sesión usa el 8804).
+
 ## 22 oct., noche (hacia las 22:00): v0.174.6 en `main`; coordina la cuenta de 5iWBf…
 
 Relevo, sesión abierta y cola: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
