@@ -41968,6 +41968,7 @@ Object.assign(window, { RitmoLista, RitmoHoja });
 
 
 
+
 const { useState: useStateRC, useEffect: useEffectRC } = React;
 
 function ritmoCalendarioAbrir() {
@@ -42160,7 +42161,8 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
   const accion = (destino) => {
     if (solo && destino === solo.destino) {
-      const reintentar = !calendarioSoloPorDetras(solo) && calendarioSoloCaso(solo) === 'fallo';
+
+      const reintentar = calendarioSoloCaso(solo) === 'fallo' || trabajo === 'poner' && !calendarioSoloPorDetras(solo);
       return calendarioSoloPorDetras(solo) || reintentar ?
       React.createElement("button", { type: "button", className: "pace-rt-cal-btn pace-rt-lleno", "data-pace-cal-poner": reintentar ? undefined : '',
         "data-pace-cal-reintentar": reintentar ? '' : undefined, disabled: !!trabajo, onClick: ponerAlDia },

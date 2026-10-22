@@ -1,7 +1,7 @@
 # Lo que dice el calendario que se mantiene solo (C2 de la auditoría del 22 oct.)
 
-**Sin montar: es para que Ez elija.** Lo que no se ve (que PACE sepa que la última escritura
-falló) ya está en v0.174.3.
+**Decidido: Ez eligió la A el 22 oct., montada en v0.174.3** (`DECISIONES_PRODUCTO.md`). Lo de
+abajo es la tabla tal como se le enseñó.
 
 ## Qué pasa hoy
 

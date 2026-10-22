@@ -17,8 +17,9 @@
    de las reuniones (con el candado de PACE completo si no hay derecho). Ya
    conectado, la hoja enseña solo ese destino, con cómo va y «Desconectar»; los
    otros dos se esconden para no escribir el día en dos calendarios y avisar dos
-   veces. Sin permiso vivo y con el día cambiado, «Poner al día». El enlace dice
-   «Calendario al día» o «Poner al día». El motor (ritmo.calendario.motor.js)
+   veces. Sin permiso vivo y con el día cambiado, «Poner al día»; tras un fallo
+   que no es de permiso, «Reintentar». El enlace dice uno de los cuatro casos de
+   `calendarioSoloCaso`. El motor (ritmo.calendario.motor.js)
    avisa con `pace:calendario-solo` cuando algo de eso cambia. */
 
 const { useState: useStateRC, useEffect: useEffectRC } = React;
@@ -213,7 +214,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
 
   const accion = (destino) => {
     if (solo && destino === solo.destino) {
-      const reintentar = !calendarioSoloPorDetras(solo) && calendarioSoloCaso(solo) === 'fallo';
+      /* mientras «Reintentar» escribe, el motor está trabajando: el botón sigue en su sitio */
+      const reintentar = calendarioSoloCaso(solo) === 'fallo' || (trabajo === 'poner' && !calendarioSoloPorDetras(solo));
       return calendarioSoloPorDetras(solo) || reintentar
         ? <button type="button" className="pace-rt-cal-btn pace-rt-lleno" data-pace-cal-poner={reintentar ? undefined : ''}
             data-pace-cal-reintentar={reintentar ? '' : undefined} disabled={!!trabajo} onClick={ponerAlDia}>

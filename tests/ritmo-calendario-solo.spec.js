@@ -293,7 +293,9 @@ async function calendarioWebFalso(context, prov) {
     let cuerpo = null;
     try { cuerpo = req.postDataJSON(); } catch (e) {}
     vistas.push({ metodo: req.method(), url: req.url(), cuerpo, auth: req.headers().authorization });
-    /* `romper`: el calendario no contesta bien (un 500, que PACE lee como un fallo de red) */
+    /* `romper`: el calendario no contesta bien (un 500, que PACE lee como un fallo de red);
+       `frenar`: una promesa que retiene la respuesta hasta que la prueba la suelta */
+    if (falso.frenar) await falso.frenar;
     if (falso.romper) return route.fulfill({ status: 500, headers: cors, body: '' });
     const json = (o, status) => route.fulfill({ status: status || 200, contentType: 'application/json', headers: cors, body: JSON.stringify(o) });
     const id = decodeURIComponent(url.pathname.split('/').pop());
@@ -441,10 +443,16 @@ test('C2 · los cuatro casos: poniendo al día, no se pudo con «Reintentar», y
   await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText(/^No se pudo · lo intenta otra vez a las \d+:\d\d$/);
   await expect(hoja.locator('[data-pace-cal-aviso="nota"]')).toContainText('No se pudo hablar con tu calendario. PACE lo vuelve a intentar cada 5 minutos.');
   await expect(hoja.locator('[data-pace-cal-resumen]')).toContainText('y tu calendario aún no lo sabe.');
-  /* «Reintentar» escribe ya, sin ventana */
+  /* «Reintentar» escribe ya, sin ventana; mientras escribe, el botón sigue en su sitio */
   g.romper = false;
+  let soltar;
+  g.frenar = new Promise((r) => { soltar = r; });
   const antes = g.vistas.length;
   await hoja.locator('[data-pace-cal-reintentar]').click();
+  await expect(hoja.locator('[data-pace-cal-reintentar]')).toHaveText('Un momento…');
+  await expect(hoja.locator('[data-pace-cal-destino="google"] [data-pace-cal-desconectar]')).toHaveCount(0);
+  g.frenar = null;
+  soltar();
   await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toHaveText('Tu calendario ya está al día.', { timeout: 15_000 });
   expect(g.vistas.slice(antes).filter((v) => v.metodo === 'VENTANA')).toHaveLength(0);
   expect(await page.evaluate(() => calendarioSoloEstado().fallo)).toBe(false);

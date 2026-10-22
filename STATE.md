@@ -42,8 +42,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
 4. **Auditoría externa del 21 oct.**: los trece casos de datos (v0.174.1) y los seis de «A tu
    ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. De la del 22 oct.,
-   tres del calendario que se mantiene solo (v0.174.3, rama `claude/happy-allen-d915c3`): qué dice la
-   hoja cuando falla o se está poniendo al día espera a Ez (`docs/traspaso/archivos/calendario-estado-22oct/tabla.md`). El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
+   tres del calendario que se mantiene solo, hechos en v0.174.3 (rama `claude/happy-allen-d915c3`; la
+   junta la coordinadora): «Desconectar» corta lo pedido y en Android deja de leer, y la hoja dice los
+   cuatro casos que eligió Ez (A, `docs/traspaso/archivos/calendario-estado-22oct/tabla.md`). El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
    a 100 ms, nunca), Ez lo acepta como riesgo (A, 22 oct.): lo mide `tests/pestanas-estado.spec.js`,
    estado-4. Un solo escritor en IndexedDB, si alguna vez hace falta, después de v1.
 5. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
@@ -107,12 +108,9 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto; S3, código portable, es
   la decisión de Ez) · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
   H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió) ·
-  **el calendario que se mantiene solo** (22 oct.), para la sesión de «A tu ritmo», ya juntada,
-  porque toca sus archivos: C1 «Desconectar» a mitad de una escritura no la para y puede volver
-  a poner lo quitado (`calendarioSoloDesconectar` va fuera de `_calSolo.cola` y del cerrojo), C2
-  «Calendario al día» con cambios pendientes o tras un fallo de escritura (`calendarioSoloPorDetras`
-  pide `!conAcceso`; `_calSolo.fallo` no sale en `calendarioSoloEstado`), C3 en Android «Desconectar»
-  sigue leyendo las reuniones al volver a la app: se iguala a la web, que deja de leer.
+  **el puente del calendario de Android** (de C2, 22 oct.): `paceAndroidLlamar` se traga los
+  errores, así que una lista que falla se lee como un calendario vacío, PACE puede volver a crear lo
+  que ya estaba y en Android nunca sale «No se pudo».
 - **Al volver los Caminos** (después de v1; hoy `SHOW_CAMINOS = false`), tres casos de la auditoría
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
