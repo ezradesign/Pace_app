@@ -1,21 +1,13 @@
-/* PACE - TimerDial (sesion 76 / v0.30.0)
+/* PACE - TimerDial
    Anillo circular compartido entre FocusTimer (Pomodoro home) y
-   PathFocusStep (Pomodoro dentro de un Camino). Extraido de
-   FocusTimer.TimerAro para eliminar la divergencia visual entre
-   ambos sitios (auditoria s75, captura 3).
+   PathFocusStep (Pomodoro dentro de un Camino), para que los dos se vean igual.
 
    Puramente presentacional. El padre controla running/setRunning y
    provee los controles via el slot `inner` (FocusTimer los inyecta
-   dentro del aro; PathFocusStep los deja fuera y pasa inner=null).
-
-   Pixel-equivalente al TimerAro previo:
-     viewBox 100 / radio 47.5 / strokeWidth base 0.35 / arco 0.7
-     strokeOpacity 0.7 / strokeLinecap round
-*/
+   dentro del aro; PathFocusStep los deja fuera y pasa inner=null). */
 
 /* interpolateRingColor - gradiente terracota -> ocre -> oliva en modo
-   foco. Estable en pausas (breathe) y larga (focus). Extraido de
-   FocusTimer en s76.
+   foco. Estable en pausas (breathe) y larga (focus).
 
    s161 · LEE TOKENS, ASI QUE NO PUEDE SUPONER QUE VALEN HEXADECIMAL.
    Aqui habia un `hexToRgb` que hacia `slice()` sobre dos digitos por canal, y
@@ -195,7 +187,7 @@ function useBarridoVisible(marcoRef, activo) {
    decide UNA vez, al montar: solo si el bloque esta empezando (progreso 0). Al
    recargar o al volver a la home a mitad de bloque el punto ya existia, asi que
    aparece en su sitio sin ceremonia; pausar y reanudar no lo desmontan. */
-function TimerDialPunto({ giro, angulo, color, nace }) {
+function TimerDialPunto({ giro, angulo, color, nace, deGolpe }) {
   const naceRef = useRefTD(nace);
   const R = DIAL_R;
   return (
@@ -205,10 +197,10 @@ function TimerDialPunto({ giro, angulo, color, nace }) {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
         <g transform={`rotate(${giro.toFixed(3)} 50 50)`}>
           <g transform={`rotate(${angulo.toFixed(3)} 50 50)`}
-             style={{ transition: 'transform 1s linear' }}>
+             style={{ transition: deGolpe ? 'none' : 'transform 1s linear' }}>
             <circle data-pace-dial-halo cx={50 + R} cy="50" r="1.7" fill={color} opacity="0.22" />
             <circle cx={50 + R} cy="50" r="0.85" fill={color}
-              style={{ transition: 'fill 1s linear' }} />
+              style={{ transition: deGolpe ? 'none' : 'fill 1s linear' }} />
           </g>
         </g>
       </svg>
@@ -220,6 +212,14 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
   const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
   const ringColor = interpolateRingColor(progress, mode);
+  /* UN SALTO GRANDE LLEGA DE GOLPE (M1, el móvil de Ez, 22 oct.). La transición de 1 s acompaña
+     al segundo que pasa; al volver a la app con un Foco en marcha el reloj salta muchos segundos
+     y, animado, el aro llegaba a su sitio a trompicones. Con más de 2 s de salto (volver, recargar,
+     reiniciar, cambiar de modo) el arco y el punto se pintan sin transición. */
+  const restante = Number(mins) * 60 + Number(secs);
+  const previoRef = useRefTD(restante);
+  const deGolpe = Math.abs(restante - previoRef.current) > 2;
+  useLayoutEffectTD(() => { previoRef.current = restante; });
 
   /* El recorte SOLO donde hay horizonte: la home (fitHeight) y solo en la
      variante de arco. Caminos no pasa fitHeight y ademas va por `ticks`, asi
@@ -348,7 +348,7 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
             strokeOpacity="0.92"
             strokeLinecap="round"
             strokeDasharray={trazo} strokeDashoffset={(barrido * (1 - progress)).toFixed(3)}
-            style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
+            style={{ transition: deGolpe ? 'none' : 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
           </g>
         </svg>
         </React.Fragment>
@@ -368,7 +368,7 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
           (`running`) y nace en el origen; `progress > 0` cubre pausado y hecho.
           El recorrido es el MISMO barrido que el arco (s184), no los 360. */}
       {!ticks && (running || progress > 0) && (
-        <TimerDialPunto giro={giroInicio} angulo={progress * barrido} color={ringColor} nace={progress === 0} />
+        <TimerDialPunto giro={giroInicio} angulo={progress * barrido} color={ringColor} nace={progress === 0} deGolpe={deGolpe} />
       )}
 
       <div style={timerDialStyles.inner}>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.174.4</title>
+  <title>PACE · Foco · Cuerpo — v0.174.5</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6424,7 +6424,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.174.4';
+const PACE_VERSION = 'v0.174.5';
 
 
 
@@ -7872,21 +7872,23 @@ function flushAchievementToast(modulo) {
   return true;
 }
 
-function updateStreak() {
+
+
+
+function updateStreak(conLogros) {
   const s = getState();
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
-  if (last === today) return;
+  if (last !== today) {
 
 
 
-  const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
-  const yesterday = ayer.toDateString();
-  let current = s.streak.current;
-  if (last === yesterday) current += 1;else
-  current = 1;
-  const longest = Math.max(s.streak.longest, current);
-  setState({ streak: { current, longest, lastActiveDate: today } });
+    const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
+    const dias = last === ayer.toDateString() ? s.streak.current + 1 : 1;
+    setState({ streak: { current: dias, longest: Math.max(s.streak.longest, dias), lastActiveDate: today } });
+  }
+  if (conLogros === false) return;
+  const current = getState().streak.current;
 
 
 
@@ -7922,7 +7924,13 @@ function conMinutosQueCuentan(evento, minutos) {
 
 
 
-function completeBreathSession(routineId, durationMin, holdSec, evento) {
+
+
+
+
+
+
+function completeBreathSession(routineId, durationMin, holdSec, evento, entera) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -7939,8 +7947,19 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
     plan: { ...s.plan, respira: true },
     weeklyStats: Object.assign({ ...s.weeklyStats, breathMinutes: week },
     holdRedondeado > 0 ? { holdSeconds: hold } : {}),
-    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + (entera === false ? 0 : 1)
   });
+  if (entera === false) updateStreak(false);else
+  logrosDeRespira(routineId);
+
+
+
+
+
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
+}
+
+function logrosDeRespira(routineId) {
   unlockAchievement('first.breath');
   if (getState().breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
   if (getState().breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
@@ -7981,15 +8000,9 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
   }
   updateStreak();
   flushAchievementToast('breathe');
-
-
-
-
-
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
-function completeMoveSession(routineId, durationMin, evento) {
+function completeMoveSession(routineId, durationMin, evento, entera) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -7998,8 +8011,14 @@ function completeMoveSession(routineId, durationMin, evento) {
   setState({
     plan: { ...s.plan, muevete: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + (entera === false ? 0 : 1)
   });
+  if (entera === false) updateStreak(false);else
+  logrosDeMueve(routineId);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
+}
+
+function logrosDeMueve(routineId) {
   unlockAchievement('first.extra');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   contarRutina(routineId);
@@ -8011,10 +8030,9 @@ function completeMoveSession(routineId, durationMin, evento) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
-function completeExtraSession(routineId, durationMin, evento) {
+function completeExtraSession(routineId, durationMin, evento, entera) {
   if (durationMin === undefined) durationMin = 0;
   ensureDayFresh();
   const s = getState();
@@ -8025,6 +8043,14 @@ function completeExtraSession(routineId, durationMin, evento) {
     plan: { ...s.plan, extra: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week }
   });
+  if (entera === false) updateStreak(false);else
+  logrosDeEstira(routineId);
+
+
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
+}
+
+function logrosDeEstira(routineId) {
   unlockAchievement('first.stretch');
   contarRutina(routineId);
   checkPlanAchievements();
@@ -8053,9 +8079,6 @@ function completeExtraSession(routineId, durationMin, evento) {
   }
   updateStreak();
   flushAchievementToast('extra');
-
-
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
 }
 
 Object.assign(window, {
@@ -8069,7 +8092,7 @@ Object.assign(window, {
   checkStatsAchievements,
   checkAllPathsCompleted
 });
-;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, completeMoveSession, completeExtraSession });
+;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
 })();
 </script>
   <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
@@ -17346,15 +17369,22 @@ function sesionVivaFuera(clave, ahora) {
   } catch (e) {return null;}
 }
 
+
+
+
+function tomarSesionViva(clave, routineId) {
+  if (sesionVivaFuera(clave)) return false;
+  try {
+    localStorage.setItem(clave, JSON.stringify({
+      pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
+  } catch (e) {}
+  return true;
+}
+
 function useSesionViva(clave, routineId, viva) {
   useEffectSC(() => {
     if (!viva || !routineId) return undefined;
-    const latir = () => {
-      try {
-        localStorage.setItem(clave, JSON.stringify({
-          pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
-      } catch (e) {}
-    };
+    const latir = () => {tomarSesionViva(clave, routineId);};
     const soltar = () => {
       try {
         const v = JSON.parse(localStorage.getItem(clave) || 'null');
@@ -17368,8 +17398,8 @@ function useSesionViva(clave, routineId, viva) {
   }, [viva]);
 }
 
-Object.assign(window, { useActiveClock, PACE_HUECO_MS, PACE_MINIMO_CUENTA_S, sesionVivaFuera, useSesionViva });
-;Object.assign(window, { useActiveClock, sesionVivaFuera, useSesionViva });
+Object.assign(window, { useActiveClock, PACE_HUECO_MS, PACE_MINIMO_CUENTA_S, sesionVivaFuera, tomarSesionViva, useSesionViva });
+;Object.assign(window, { useActiveClock, sesionVivaFuera, tomarSesionViva, useSesionViva });
 })();
 </script>
   <script>
@@ -20624,14 +20654,6 @@ Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
 
 
 
-
-
-
-
-
-
-
-
 function interpolateRingColor(progress, mode) {
   if (mode === 'pausa') return 'var(--breathe)';
   if (mode === 'larga') return 'var(--focus)';
@@ -20796,7 +20818,7 @@ function useBarridoVisible(marcoRef, activo) {
 
 
 
-function TimerDialPunto(_ref2) {let { giro, angulo, color, nace } = _ref2;
+function TimerDialPunto(_ref2) {let { giro, angulo, color, nace, deGolpe } = _ref2;
   const naceRef = useRefTD(nace);
   const R = DIAL_R;
   return (
@@ -20806,10 +20828,10 @@ function TimerDialPunto(_ref2) {let { giro, angulo, color, nace } = _ref2;
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
     React.createElement("g", { transform: `rotate(${giro.toFixed(3)} 50 50)` },
     React.createElement("g", { transform: `rotate(${angulo.toFixed(3)} 50 50)`,
-      style: { transition: 'transform 1s linear' } },
+      style: { transition: deGolpe ? 'none' : 'transform 1s linear' } },
     React.createElement("circle", { "data-pace-dial-halo": true, cx: 50 + R, cy: "50", r: "1.7", fill: color, opacity: "0.22" }),
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "0.85", fill: color,
-      style: { transition: 'fill 1s linear' } })
+      style: { transition: deGolpe ? 'none' : 'fill 1s linear' } })
     )
     )
     )
@@ -20821,6 +20843,14 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
   const R = DIAL_R;
 
   const ringColor = interpolateRingColor(progress, mode);
+
+
+
+
+  const restante = Number(mins) * 60 + Number(secs);
+  const previoRef = useRefTD(restante);
+  const deGolpe = Math.abs(restante - previoRef.current) > 2;
+  useLayoutEffectTD(() => {previoRef.current = restante;});
 
 
 
@@ -20949,7 +20979,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
       strokeOpacity: "0.92",
       strokeLinecap: "round",
       strokeDasharray: trazo, strokeDashoffset: (barrido * (1 - progress)).toFixed(3),
-      style: { transition: 'stroke-dashoffset 1s linear, stroke 1s linear' } })
+      style: { transition: deGolpe ? 'none' : 'stroke-dashoffset 1s linear, stroke 1s linear' } })
     )
     )
     )
@@ -20969,7 +20999,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
 
 
     !ticks && (running || progress > 0) &&
-    React.createElement(TimerDialPunto, { giro: giroInicio, angulo: progress * barrido, color: ringColor, nace: progress === 0 }),
+    React.createElement(TimerDialPunto, { giro: giroInicio, angulo: progress * barrido, color: ringColor, nace: progress === 0, deGolpe: deGolpe }),
 
 
     React.createElement("div", { style: timerDialStyles.inner },
@@ -28263,6 +28293,30 @@ useSesionViva(RESPIRA_VIVA_KEY, routine && routine.id, stage !== 'done');
 
 
 
+
+
+function tomarRespiraGuardada(pedida) {
+  const g = pedida ? leerRespiraGuardada() : null;
+  if (!g || g.routineId !== pedida.routineId || g.startedAt !== pedida.startedAt) return null;
+  return tomarSesionViva(RESPIRA_VIVA_KEY, g.routineId) ? g : null;
+}
+
+
+
+const RESPIRA_ACREDITADAS_KEY = 'pace.breathe.acreditadas';
+function respiraAcreditarUnaVez(id) {
+  try {
+    const lista = JSON.parse(localStorage.getItem(RESPIRA_ACREDITADAS_KEY) || '[]');
+    const previas = Array.isArray(lista) ? lista : [];
+    if (previas.indexOf(id) !== -1) return false;
+    localStorage.setItem(RESPIRA_ACREDITADAS_KEY, JSON.stringify(previas.concat(id).slice(-10)));
+  } catch (e) {}
+  return true;
+}
+
+
+
+
 function respiraReanudacion(routine, guardado) {
   const ahora = Date.now();
   const cero = { round: 1, breaths: 1, activeMs: 0, holdSec: 0, startedAt: ahora, reanudada: false };
@@ -28505,9 +28559,10 @@ function useMusicaFondo(stage, paused, routine) {
 Object.assign(window, {
   useMusicaFondo, respiraPrecargarVoz, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
   respiraHecho, respiraCifrasCierre,
-  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraVivaFuera, useRespiraViva
+  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraVivaFuera, useRespiraViva,
+  tomarRespiraGuardada, respiraAcreditarUnaVez
 });
-;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, tomarRespiraGuardada, respiraAcreditarUnaVez, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, respiraHecho, respiraCifrasCierre, playPhaseSound, PACE_RESPIRA_ENTRADA_S, PACE_RESPIRA_SALIDA_MS, respiraPrecargarVoz, useMusicaFondo });
 })();
 </script>
   <script>
@@ -28744,8 +28799,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
 
-    if (!sinContar) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
-    respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
+
+    const acredita = !sinContar && (!rein.reanudada || respiraAcreditarUnaVez(routine.id + '@' + rein.startedAt));
+    if (acredita) completeBreathSession(routine.id, activeMin, relojHold.segundos(),
+    respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath), motivo !== 'early');
     hechoRef.current = respiraHecho(routine, stage, round, breathCount);
     sinContarRef.current = sinContar;
     try {playSound('breathe.session.end');} catch (e) {}
@@ -31118,8 +31175,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
-    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);else
-    completeMoveSession(routine.id, realMin, ev);
+
+
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || hechosRef.current[n]);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);else
+    completeMoveSession(routine.id, realMin, ev, entera);
   };
 
   const startStep = (idx) => {
@@ -33669,14 +33729,18 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
-      const tag = e.target && e.target.tagName || '';
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      const k = e.key.toLowerCase();
+
+
+      if (e.repeat || e.isComposing || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      const objetivo = e.target;
+      if (objetivo && objetivo.closest && objetivo.closest('input,textarea,select,[contenteditable="true"]')) return;
+      const k = (e.key || '').toLowerCase();
       if (k === 'b') {e.preventDefault();handleChoose('breathe');} else
       if (k === 'e') {e.preventDefault();handleChoose('extra');} else
       if (k === 'm') {e.preventDefault();handleChoose('move');} else
       if (k === 'h') {e.preventDefault();handleChoose('water');} else
-      if (e.key === 'Enter' && propRef.current) {
+      if (e.key === 'Enter' && propRef.current && !sessionKeyOnControl(e)) {
+
 
 
         e.preventDefault();
@@ -34926,7 +34990,7 @@ function StatsHoyRejilla(_ref2) {let { n, children } = _ref2;
   return React.createElement("div", { className: clase, "data-pace-hoy-rejilla": n }, children);
 }
 
-function StatsHoy(_ref3) {let { state } = _ref3;
+function StatsHoy(_ref3) {let { state, onClose } = _ref3;
   const { t, lang } = useT();
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
@@ -34952,13 +35016,15 @@ function StatsHoy(_ref3) {let { state } = _ref3;
   }
 
 
+
   const sesiones = statsHoySesiones();
+  const volver = () => {ritmoVolver();if (onClose) onClose();};
   return (
     React.createElement("div", { "data-pace-hoy-view": "libre" },
     React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
     React.createElement("div", { className: "pace-sh-cab" },
     React.createElement(Meta, null, t('stats.hoy.libre')),
-    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: ritmoVolver }, t('ritmo.volver'))
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: volver }, t('ritmo.volver'))
     ),
     sesiones.length ?
     React.createElement(StatsHoyRejilla, { n: sesiones.length },
@@ -36165,7 +36231,7 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
 
 
     React.createElement("div", { "data-pace-stats-vistas": true },
-    tab === 'today' && React.createElement(StatsHoy, { state: state }),
+    tab === 'today' && React.createElement(StatsHoy, { state: state, onClose: onClose }),
     tab === 'week' && React.createElement(WeekView, { state: state }),
     tab === 'month' && React.createElement(MonthHeatmap, { history: history, lang: lang, initialYear: jumpYear, initialMonth: jumpMonth }),
     tab === 'year' && React.createElement(YearView, { history: history, lang: lang, firstSeen: state.firstSeen, onNavigateToMonth: handleNavigateToMonth }),
@@ -45430,7 +45496,7 @@ function PaceApp() {
       setPendienteReanudar(reanudar || null);
     } else {
       setOpenLibrary(null);
-      setView({ type: 'breathe-session', routine, reanudar: reanudar || null });
+      setView({ type: 'breathe-session', routine, reanudar: tomarRespiraGuardada(reanudar) });
     }
   };
 
@@ -45731,7 +45797,8 @@ function PaceApp() {
       onAccept: (r) => {
         setSafetyRoutine(null);
         setOpenLibrary(null);
-        setView({ type: 'breathe-session', routine: r, reanudar: pendienteReanudar });
+
+        setView({ type: 'breathe-session', routine: r, reanudar: tomarRespiraGuardada(pendienteReanudar) });
         setPendienteReanudar(null);
       },
       onCancel: () => {setSafetyRoutine(null);setPendienteReanudar(null);} }

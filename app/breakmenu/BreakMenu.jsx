@@ -84,16 +84,20 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
-      const tag = (e.target && e.target.tagName) || '';
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      const k = e.key.toLowerCase();
+      /* Ninguno con Ctrl, Cmd o Alt, a mitad de una composición (IME), si otro ya atendió la
+         tecla, al mantenerla pulsada o dentro de un campo de texto (A8, 22 oct.). */
+      if (e.repeat || e.isComposing || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      const objetivo = e.target;
+      if (objetivo && objetivo.closest && objetivo.closest('input,textarea,select,[contenteditable="true"]')) return;
+      const k = (e.key || '').toLowerCase();
       if (k === 'b') { e.preventDefault(); handleChoose('breathe'); }
       else if (k === 'e') { e.preventDefault(); handleChoose('extra'); }
       else if (k === 'm') { e.preventDefault(); handleChoose('move'); }
       else if (k === 'h') { e.preventDefault(); handleChoose('water'); }
-      else if (e.key === 'Enter' && propRef.current) {
+      else if (e.key === 'Enter' && propRef.current && !sessionKeyOnControl(e)) {
         /* La propuesta estrena atajo propio y NO roba ninguno: B · E · M · H
-           siguen mapeados por actividad desde s28. */
+           siguen mapeados por actividad desde s28. Intro sobre un botón con el foco es de ese
+           botón: con la propuesta del agua sumaba un vaso. */
         e.preventDefault();
         elegirPropuesta(propRef.current);
       }

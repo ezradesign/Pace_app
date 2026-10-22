@@ -11,6 +11,12 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de 
 Relevo y sesiones abiertas: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
 
+- **v0.174.5, sin juntar** (rama `claude/logros-creditos-6ea13b`, sesión «Pausas, logros y créditos»):
+  cinco arreglos, cada uno con su prueba, que cae contra v0.174.4. M3, los logros solo con la sesión
+  entera (la decisión de Ez); A9, una Respira a medias en dos pestañas se retoma en una y se acredita
+  una vez; A8, Intro y Espacio del menú de pausa son del botón con el foco; M1, el aro llega de golpe
+  al volver a la app; y M5, «Ponle ritmo al día» en Estadísticas cierra el panel. Sin cambios a la
+  vista más allá de los fallos. M2 sigue en espera de Ez.
 - **Juntados con el sí de Ez**: el calendario que se mantiene solo (C1-C3, v0.174.3) y «Tus rutinas» con
   Estadísticas (once casos y las cinco A de su maqueta, v0.174.4; `session.completed` pasa a `v:2` con
   `creditedMinutes`). Con ellos, la frase que eligió Ez para la pared opcional de «Espalda de oficina»

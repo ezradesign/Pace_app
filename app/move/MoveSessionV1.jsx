@@ -108,8 +108,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     /* s172 · los datos del evento (dual-write) se arman en el support: el plan
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
-    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);
-    else completeMoveSession(routine.id, realMin, ev);
+    /* Solo la sesión entera gana logros (Ez): sin nada cortado y con cada paso de trabajo hecho;
+       saltar un descanso no cuenta como cortar. */
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || hechosRef.current[n]);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);
+    else completeMoveSession(routine.id, realMin, ev, entera);
   };
 
   const startStep = (idx) => {

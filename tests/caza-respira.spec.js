@@ -33,10 +33,10 @@ test('respira-5 · el aviso de logro no tapa el cierre de la sesión: sale al vo
   const sesion = page.locator('[data-pace-session-root]');
   await sesion.getByRole('button', { name: 'Empezar ahora' }).click();
   await expect(page.locator('[data-pace-breathe-phase]')).toBeVisible();
-  /* Más de medio minuto: con menos, el cierre es «Sesión sin contar» (sesiones-7). */
-  for (let i = 0; i < 31; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
-  await sesion.getByRole('button', { name: /Terminar/ }).click();
-  await page.locator('[data-pace-session-stats]').waitFor();
+  /* Hasta su final, sin «Terminar»: desde v0.174.5 solo la sesión entera gana logros (Ez). */
+  const stats = page.locator('[data-pace-session-stats]');
+  for (let i = 0; i < 200 && !(await stats.count()); i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
+  await stats.waitFor();
   await page.clock.fastForward(500);
   expect(await page.evaluate(() => getState().achievements['first.breath'] != null || Object.keys(getState().achievements).length > 0),
     'GUARD: la sesión no ganó ningún logro y la prueba no mide nada').toBe(true);

@@ -94,7 +94,7 @@ function StatsHoyRejilla({ n, children }) {
   return <div className={clase} data-pace-hoy-rejilla={n}>{children}</div>;
 }
 
-function StatsHoy({ state }) {
+function StatsHoy({ state, onClose }) {
   const { t, lang } = useT();
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
@@ -119,14 +119,16 @@ function StatsHoy({ state }) {
     );
   }
 
-  /* Sin menú: por libre, o sin haber contestado hoy. */
+  /* Sin menú: por libre, o sin haber contestado hoy. «Ponle ritmo al día» cierra Estadísticas: la
+     pregunta del día sale en la home, y con el panel delante no se veía nada (M5, 22 oct.). */
   const sesiones = statsHoySesiones();
+  const volver = () => { ritmoVolver(); if (onClose) onClose(); };
   return (
     <div data-pace-hoy-view="libre">
       <StatsTotales items={statsHoyTotales(state, t)} />
       <div className="pace-sh-cab">
         <Meta>{t('stats.hoy.libre')}</Meta>
-        <button type="button" className="pace-rt-enlace pace-rt-fuerte" data-pace-hoy-volver onClick={ritmoVolver}>{t('ritmo.volver')}</button>
+        <button type="button" className="pace-rt-enlace pace-rt-fuerte" data-pace-hoy-volver onClick={volver}>{t('ritmo.volver')}</button>
       </div>
       {sesiones.length ? (
         <StatsHoyRejilla n={sesiones.length}>
