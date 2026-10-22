@@ -26,6 +26,16 @@ solas pasa 6 de 6). CI en verde.
 | «A tu ritmo» y el calendario | `local_79c9f06a-5eba-43f9-9fb6-a66a7794913d` | `.claude/worktrees/happy-allen-d915c3`, `claude/happy-allen-d915c3` | 8797 | v0.174.3 | C1-C3 del calendario que se mantiene solo (`STATE.md`, «Deuda conocida»). Los textos nuevos de C2 los enseña a Ez antes de montarlos |
 | «Tus rutinas» y Estadísticas | `local_cda57a98-31b6-47eb-b82b-1d91c4ee748f` | `.claude/worktrees/beautiful-perlman-2b642c`, `claude/beautiful-perlman-2b642c` | 8799 | v0.174.4 | R1-R6 (material, solo descanso, por lados, reanudar tras editar, terminar antes, series del cierre), Y1 y E1-E4. Lo que se ve, antes en maqueta para Ez |
 
+**Al relevo (95 % de uso, 22 oct. por la tarde):**
+- Calendario: C1 y C3 hechos (0b3d437); C2 con la A de Ez, montándose cuando se cortó la cuenta. Mira
+  su carpeta por si quedó algo sin commitear y el bloque de arriba de LEEME de su rama.
+- «Tus rutinas»: todo subido en 9aedae1 («wip», v0.174.4). Hechos R1-R6, Y1, E2, E3 y E4, cada uno
+  con su prueba; montadas ya las recomendadas 1A, 3A, 4A y 5A de su maqueta para Ez
+  (https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW, cinco elecciones A/B). **Lo primero: preguntar a
+  Ez esas cinco elecciones** (la sesión recomienda las cinco A; la 2A, E1, pide un campo nuevo en el
+  evento de sesión y sube su `v`, y solo se monta si Ez la elige). Le falta la suite entera (paró en
+  125 de 786 sin fallos), un commit sin «wip» y el aviso. Su punto, en LEEME de su rama.
+
 Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque de arriba de
 `docs/traspaso/LEEME.md` de su rama. Para retomarlas desde la otra cuenta: `docs/WORKFLOW.md` §10
 (sesión nueva en la MISMA carpeta, con la misma rama y el mismo puerto; `start_session` con `cwd`).
