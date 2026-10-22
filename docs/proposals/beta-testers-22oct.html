@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página para testers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Maqueta de pacegrass.app/beta para Ez. Las dos opciones calcan /premium (premium/index.html):
+   sus colores, sus letras, sus botones y su foto del móvil. Ez elige con letras. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+  --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --breathe: #9E4F33;
+  --display: 'EB Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --breathe: #E8A98F; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --breathe: #E8A98F; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3, .serif { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(34px, 7vw, 48px); line-height: 1.05; }
+h2 { font-size: 30px; line-height: 1.1; }
+p { margin: 0; color: var(--ink-2); max-width: 66ch; }
+b { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+section { display: flex; flex-direction: column; gap: 16px; }
+.opciones { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: start; }
+.opcion { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.letra { display: flex; align-items: baseline; gap: 10px; }
+.letra .l { font-family: var(--display); font-style: italic; font-size: 34px; line-height: 1; color: var(--ink); }
+.letra .n { font-weight: 600; }
+.reco { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--breathe); border: 1px solid var(--breathe); border-radius: 999px; padding: 1px 8px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.respuesta { border: 1px solid var(--line-2); border-radius: 14px; padding: 16px; background: var(--paper-2); font-family: var(--display); font-style: italic; font-size: 22px; color: var(--ink); }
+
+/* Un móvil de 360 px: lo de dentro es la página tal cual, con las reglas de /premium. */
+.movil { width: 360px; max-width: 100%; border: 1px solid var(--line-2); border-radius: 28px; overflow: hidden; background: var(--paper); box-shadow: 0 1px 0 var(--line); }
+.esc { width: 100%; border: 1px solid var(--line-2); border-radius: 14px; overflow: hidden; background: var(--paper); }
+.pg { color: var(--ink); }
+.pg .marco { padding: 0 16px; }
+.pg header { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+.pg header img { height: 44px; width: auto; display: block; }
+.pg .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 11px; }
+.pg .idioma b { color: var(--ink); font-weight: 500; }
+.pg .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+.pg h1 { font-size: 36px; line-height: 1.06; margin: 0 0 14px; }
+.pg h2 { font-size: 27px; margin: 0 0 10px; }
+.pg p { margin: 0 0 12px; font-size: 15.5px; }
+.pg .boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 22px; border-radius: 999px; font: 500 14px/1 var(--ui); letter-spacing: .06em; border: 1px solid var(--cta); text-decoration: none; }
+.pg .boton.lleno { background: var(--cta); color: var(--paper); }
+.pg .boton.hueco { color: var(--cta); }
+.pg .foto { margin: 18px 0 6px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper-2); }
+.pg .foto img { display: block; width: 100%; height: auto; }
+.pg section { padding: 32px 16px 28px; margin: 0 -16px; gap: 0; display: block; }
+.pg section:nth-of-type(odd) { background: var(--paper-2); }
+.pg ol.pasos { list-style: none; padding: 0; margin: 4px 0 0; counter-reset: p; display: grid; gap: 16px; }
+.pg ol.pasos li { counter-increment: p; display: grid; grid-template-columns: 34px 1fr; gap: 2px 12px; }
+.pg ol.pasos li::before { content: counter(p); grid-row: span 3; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--cta); display: grid; place-items: center; font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink); }
+.pg ol.pasos .t { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink); line-height: 1.2; }
+.pg ol.pasos .d { font-size: 14.5px; color: var(--ink-2); }
+.pg ol.pasos .boton { justify-self: start; margin-top: 6px; }
+.pg .regalo { border: 1px solid var(--cta); border-radius: 14px; padding: 16px; background: var(--paper); }
+.pg .regalo .serif { font-size: 22px; display: block; margin-bottom: 6px; }
+.pg details { border-bottom: 1px dashed var(--line); padding: 10px 0; }
+.pg summary { font-family: var(--display); font-style: italic; font-size: 18px; color: var(--ink); list-style: none; }
+.pg details p { margin: 6px 0 2px; font-size: 14.5px; }
+.pg footer { margin: 24px 0 0; padding: 14px 0 28px; border-top: 1px solid var(--line); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.pg .tarjeta { border: 1px solid var(--line-2); border-radius: 18px; padding: 22px 18px; background: var(--paper-2); margin: 10px 0 24px; }
+.pg .linea { display: flex; gap: 10px; align-items: baseline; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 15px; color: var(--ink-2); }
+.pg .linea:last-of-type { border-bottom: 0; }
+.pg .linea .num { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink); min-width: 18px; }
+.pg .botones { display: grid; gap: 10px; margin-top: 14px; }
+
+/* El ordenador: la misma opción A a 1280 px, reducida a la mitad para que quepa. */
+.escala { width: 100%; overflow: hidden; }
+.escala .lienzo { width: 1280px; transform-origin: top left; }
+.pg.ancha .marco { max-width: 1100px; margin: 0 auto; }
+.pg.ancha .portada { display: grid; grid-template-columns: .9fr 1.1fr; gap: 48px; align-items: center; padding: 16px 0 36px; }
+.pg.ancha .portada .foto { margin: 0; }
+.pg.ancha h1 { font-size: 52px; }
+.pg.ancha section { padding: 44px 40px 36px; margin: 0 0 20px; border-radius: 18px; }
+.pg.ancha .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.tabla { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <div class="eyebrow">PACE · maqueta · 22 de octubre</div>
+    <h1>Una página para que la gente se apunte a probar PACE en Android</h1>
+    <p>Iría en <b>pacegrass.app/beta</b>, con el mismo aspecto que /premium. Quien entra se apunta solo, en dos pasos:
+      se une a un grupo de Google y acepta la prueba en Google Play. Tú no copias ningún correo y PACE no guarda
+      ninguno. Hay dos preguntas; contestas con letras, por ejemplo «1A · 2A».</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">Pregunta 1</div>
+    <h2>Cómo es la página</h2>
+    <div class="opciones">
+      <div class="opcion">
+        <div class="letra"><span class="l">A</span><span class="n">Como /premium, con la foto y tres pasos</span><span class="reco">Recomendada</span></div>
+        <p class="nota">Explica qué es PACE con la misma foto del móvil que /premium, luego los tres pasos con su botón, lo que
+          te llevas y tres preguntas. Quien no conoce PACE entiende qué va a probar antes de apuntarse.</p>
+        <div class="movil"><div class="pg"><div class="marco">
+          <header><img src="vaca.webp" alt="PACE"><span class="idioma"><b>ES</b> · EN</span></header>
+          <p class="kicker">PACE · Prueba en Android</p>
+          <h1>Prueba PACE en Android antes que nadie.</h1>
+          <p>Pausas activas para quien trabaja sentado: foco, respiración, movilidad y agua, a tu ritmo.</p>
+          <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
+          <a class="boton lleno" href="#a-pasos">Quiero probarla</a>
+          <div class="foto"><img src="app-movil.webp" alt="PACE en el móvil"></div>
+          <section id="a-pasos">
+            <h2>Tres pasos</h2>
+            <ol class="pasos">
+              <li><span class="t">Únete al grupo de testers</span><span class="d">Con tu cuenta de Google, un clic.</span><a class="boton lleno" href="#a-pasos">Unirme al grupo</a></li>
+              <li><span class="t">Acepta la prueba en Google Play</span><span class="d">Con la misma cuenta. Tarda unos minutos en aparecer.</span><a class="boton hueco" href="#a-pasos">Abrir Google Play</a></li>
+              <li><span class="t">Úsala 14 días</span><span class="d">Ábrela cuando te venga bien y cuéntanos qué falla.</span></li>
+            </ol>
+          </section>
+          <section>
+            <div class="regalo"><span class="serif">Lo que te llevas</span>
+              <p style="margin:0">PACE completo, gracias por ayudar. <span style="color:var(--ink-3)">(El texto exacto, según la pregunta 2.)</span></p></div>
+          </section>
+          <section>
+            <h2>Preguntas</h2>
+            <details open><summary>¿Necesito un Android?</summary><p>Sí, con Google Play. En el ordenador, PACE ya funciona en pacegrass.app.</p></details>
+            <details><summary>¿Qué datos ve PACE?</summary><p>Ninguno: no hay cuenta y lo tuyo se queda en tu móvil. El grupo solo sirve para darte acceso.</p></details>
+            <details><summary>¿Y si me canso?</summary><p>Sales del grupo y la desinstalas cuando quieras.</p></details>
+          </section>
+          <footer><span>Abrir PACE</span><span>Privacidad</span><span>hola.ezradesign@gmail.com</span></footer>
+        </div></div></div>
+      </div>
+
+      <div class="opcion">
+        <div class="letra"><span class="l">B</span><span class="n">Una tarjeta corta</span></div>
+        <p class="nota">Sin foto ni secciones: una tarjeta con los tres pasos y sus dos botones. Cabe en una pantalla del móvil y
+          se lee en diez segundos, pero quien no conoce PACE no ve cómo es.</p>
+        <div class="movil"><div class="pg"><div class="marco">
+          <header><img src="vaca.webp" alt="PACE"><span class="idioma"><b>ES</b> · EN</span></header>
+          <p class="kicker">PACE · Prueba en Android</p>
+          <h1>Ayúdanos a publicar PACE en Android.</h1>
+          <p>Google pide que 12 personas la prueben 14 días antes de publicarla.</p>
+          <div class="tarjeta">
+            <div class="linea"><span class="num">1</span><span>Únete al grupo de testers con tu cuenta de Google.</span></div>
+            <div class="linea"><span class="num">2</span><span>Acepta la prueba en Google Play con la misma cuenta.</span></div>
+            <div class="linea"><span class="num">3</span><span>Úsala 14 días y cuéntanos qué falla.</span></div>
+            <div class="botones"><a class="boton lleno" href="#">Unirme al grupo</a><a class="boton hueco" href="#">Abrir Google Play</a></div>
+          </div>
+          <p><b>Lo que te llevas:</b> PACE completo, gracias por ayudar.</p>
+          <p style="font-size:14px;color:var(--ink-3)">Sin cuenta y sin datos: lo tuyo se queda en tu móvil.</p>
+          <footer><span>Abrir PACE</span><span>Privacidad</span><span>hola.ezradesign@gmail.com</span></footer>
+        </div></div></div>
+      </div>
+    </div>
+
+    <div class="letra" style="margin-top:8px"><span class="n">La A en el ordenador (1280 px, a la mitad)</span></div>
+    <div class="esc"><div class="escala" data-escala><div class="lienzo"><div class="pg ancha"><div class="marco">
+      <header><img src="vaca.webp" alt="PACE" style="height:60px"><span class="idioma"><b>ES</b> · EN</span></header>
+      <div class="portada">
+        <div>
+          <p class="kicker">PACE · Prueba en Android</p>
+          <h1>Prueba PACE en Android antes que nadie.</h1>
+          <p>Pausas activas para quien trabaja sentado: foco, respiración, movilidad y agua, a tu ritmo.</p>
+          <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
+          <a class="boton lleno" href="#">Quiero probarla</a>
+        </div>
+        <div class="foto"><img src="app-escritorio.webp" alt="PACE en el ordenador"></div>
+      </div>
+      <section class="dos">
+        <div><h2>Tres pasos</h2>
+          <ol class="pasos">
+            <li><span class="t">Únete al grupo de testers</span><span class="d">Con tu cuenta de Google, un clic.</span><a class="boton lleno" href="#">Unirme al grupo</a></li>
+            <li><span class="t">Acepta la prueba en Google Play</span><span class="d">Con la misma cuenta.</span><a class="boton hueco" href="#">Abrir Google Play</a></li>
+            <li><span class="t">Úsala 14 días</span><span class="d">Ábrela cuando te venga bien y cuéntanos qué falla.</span></li>
+          </ol></div>
+        <div><div class="regalo"><span class="serif">Lo que te llevas</span><p style="margin:0">PACE completo, gracias por ayudar.</p></div></div>
+      </section>
+    </div></div></div></div></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Pregunta 2</div>
+    <h2>Qué se lleva quien la prueba</h2>
+    <p>Lo que hay hoy: los códigos de <code>codigos-tester.csv</code> abren PACE completo para siempre, pero <b>solo en la web</b>.
+      En la app de Android, PACE completo se comprará en Google Play, y Google permite regalarlo con sus propios códigos
+      promocionales. Hasta v1, todo PACE está abierto para todos, así que esto cuenta a partir de v1.</p>
+    <div class="tabla"><table>
+      <tr><th></th><th>Qué dice la página</th><th>Qué hace falta</th></tr>
+      <tr><td><span class="serif" style="font-size:22px">A</span> <span class="reco">Recomendada</span></td>
+        <td>«PACE completo de por vida, en la web y en Android.»</td>
+        <td>En la web, el código que ya existe. En Android, un código de Google Play al salir v1 (yo lo preparo; tú lo creas en Play Console).</td></tr>
+      <tr><td><span class="serif" style="font-size:22px">B</span></td>
+        <td>«PACE completo de por vida en pacegrass.app.»</td>
+        <td>Nada nuevo. Pero quien prueba en Android pagaría allí.</td></tr>
+      <tr><td><span class="serif" style="font-size:22px">C</span></td>
+        <td>Nada a cambio: «gracias por ayudar».</td>
+        <td>Nada. Se apunta menos gente.</td></tr>
+    </table></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Lo que harías tú, unos 10 minutos</div>
+    <p>1. Crear en Google Groups el grupo «PACE testers», abierto para que cualquiera se una. 2. En Play Console, prueba cerrada ›
+      Testers, añadirlo junto a tu lista «Testers PACE». Te lo explico paso a paso cuando esté la página. El enlace de Google
+      Play funciona cuando Google apruebe la prueba cerrada; la página puede estar lista antes.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Tu respuesta</div>
+    <div class="respuesta">1 _ · 2 _</div>
+    <p class="nota">Por ejemplo «1A · 2A». Nada se monta hasta que elijas.</p>
+  </section>
+</main>
+<script>
+// Ajusta la vista del ordenador a lo que mida la columna.
+(function () {
+  function ajustar() { document.querySelectorAll('[data-escala]').forEach(function (c) {
+    var l = c.firstElementChild, k = c.clientWidth / 1280; l.style.transform = 'scale(' + k + ')';
+    c.style.height = (l.scrollHeight * k) + 'px'; }); }
+  window.addEventListener('resize', ajustar); window.addEventListener('load', ajustar); ajustar();
+})();
+</script>
+</body>
+</html>
