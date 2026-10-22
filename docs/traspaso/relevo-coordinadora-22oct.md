@@ -75,7 +75,10 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    (`codigos-tester.csv`). Dos pasos: unirse a un grupo de Google «PACE testers» y abrir el enlace de Play.
    El grupo, como lista de testers de la prueba cerrada en Play Console, junto a «Testers PACE»: así se
    apunta cada uno y PACE no guarda correos. Lo que hace Ez: crear el grupo y añadirlo en Play. Maqueta
-   primero. El enlace de Play funciona cuando Google apruebe la prueba cerrada.
+   primero. El enlace de Play funciona cuando Google apruebe la prueba cerrada. **Maqueta hecha: Ez eligió
+   1A · 2A** (https://claude.ai/artifact/8Vj5rGU6aE9Ewr9JfYFJXL, `docs/proposals/beta-testers-22oct.html`): como
+   /premium, con las capturas de Google Play en tira (Ez: «para que luzca más»), y «PACE completo de por vida,
+   en la web y en Android» (en Android, con códigos de regalo de Google Play al salir v1). Se puede montar.
 4. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
 5. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.
@@ -94,7 +97,10 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 10. **Los avisos de Android** (A1-A4): Ez ya tiene la app en su móvil; preguntarle por los avisos.
 11. **La hora y la medianoche** (H1-H5), antes de marzo.
 12. **«Qué te ayuda» en Estadísticas**, lo último de pago, con maqueta.
-13. Con lo que Ez traiga: la Fase 6 del cobro (cuenta de Stripe; antes de cobrar, comprobar restaurar la compra, cancelar, sin conexión y el paso desde la beta, y montar y comprobar lo prometido por escrito: las rutinas de pago usadas antes de v1 y la prueba que pide tarjeta. ChatGPT, 22 oct.: el reparto gratis/de pago ya decidido le parece bien; 19,99 € de por vida son 6,7 meses de 2,99 €, así que empuja a la compra de por vida), el llavero del calendario (altas en
+13. Con lo que Ez traiga: la Fase 6 del cobro. **Su lista, la auditoría de ChatGPT del 22 oct. noche,
+    comprobada en lo que toca al código: `docs/audits/cobro-chatgpt-22oct.md`** (la tienda web y Play vacías, la
+    función de desistimiento, el aviso de fin de prueba de 7 días que Stripe no cubre, el alta en Hacienda y RETA
+    antes de vender, «de por vida» y la privacidad con pagos). (Cuenta de Stripe; antes de cobrar, comprobar restaurar la compra, cancelar, sin conexión y el paso desde la beta, y montar y comprobar lo prometido por escrito: las rutinas de pago usadas antes de v1 y la prueba que pide tarjeta. ChatGPT, 22 oct.: el reparto gratis/de pago ya decidido le parece bien; 19,99 € de por vida son 6,7 meses de 2,99 €, así que empuja a la compra de por vida), el llavero del calendario (altas en
     Google Cloud y Microsoft) y el logo nuevo («EVEN» se lee «FVFN»).
 
 **Para ChatGPT** (Ez tiene uso de sobra): ya le di los prompts de «qué pasa cuando sale una versión

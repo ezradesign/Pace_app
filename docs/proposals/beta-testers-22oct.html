@@ -77,6 +77,13 @@ section { display: flex; flex-direction: column; gap: 16px; }
 .pg .linea .num { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink); min-width: 18px; }
 .pg .botones { display: grid; gap: 10px; margin-top: 14px; }
 
+/* Las capturas de Google Play (las mismas de la ficha), en una tira que se desliza en el móvil y
+   en fila en el ordenador: lucen más que una sola foto (Ez). */
+.pg .tira { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 18px -16px 0; padding: 0 16px 4px; }
+.pg .tira img { flex: 0 0 68%; width: 68%; height: auto; border-radius: 14px; border: 1px solid var(--line); scroll-snap-align: start; display: block; }
+.pg .tira.ancha { overflow: visible; margin: 0; padding: 0; gap: 14px; }
+.pg .tira.ancha img { flex: 1 1 0; width: auto; min-width: 0; }
+
 /* El ordenador: la misma opción A a 1280 px, reducida a la mitad para que quepa. */
 .escala { width: 100%; overflow: hidden; }
 .escala .lienzo { width: 1280px; transform-origin: top left; }
@@ -117,7 +124,8 @@ th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: va
           <p>Pausas activas para quien trabaja sentado: foco, respiración, movilidad y agua, a tu ritmo.</p>
           <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
           <a class="boton lleno" href="#a-pasos">Quiero probarla</a>
-          <div class="foto"><img src="app-movil.webp" alt="PACE en el móvil"></div>
+          <div class="tira"><img src="1-jornada.png" alt="Tu jornada en PACE"><img src="3-respira.png" alt="Respira"><img src="6-logros.png" alt="Logros"></div>
+          <p style="font-size:13px;color:var(--ink-3);margin-top:6px">Las capturas de Google Play; se desliza de lado.</p>
           <section id="a-pasos">
             <h2>Tres pasos</h2>
             <ol class="pasos">
@@ -173,7 +181,7 @@ th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: va
           <p>Para publicarla, Google pide que la prueben 12 personas durante 14 días. ¿Nos echas una mano?</p>
           <a class="boton lleno" href="#">Quiero probarla</a>
         </div>
-        <div class="foto"><img src="app-escritorio.webp" alt="PACE en el ordenador"></div>
+        <div class="tira ancha"><img src="1-jornada.png" alt="Tu jornada en PACE"><img src="3-respira.png" alt="Respira"><img src="6-logros.png" alt="Logros"></div>
       </div>
       <section class="dos">
         <div><h2>Tres pasos</h2>
@@ -216,8 +224,8 @@ th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: va
 
   <section>
     <div class="eyebrow">Tu respuesta</div>
-    <div class="respuesta">1 _ · 2 _</div>
-    <p class="nota">Por ejemplo «1A · 2A». Nada se monta hasta que elijas.</p>
+    <div class="respuesta">1A · 2A</div>
+    <p class="nota">Elegido por Ez el 22 de octubre por la noche, con las capturas de Google Play en lugar de una sola foto.</p>
   </section>
 </main>
 <script>
