@@ -11,6 +11,11 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **22 oct.: los trece casos de datos de la auditoría externa, en v0.174.1** (rama
+  `claude/elastic-hofstadter-20ccb0`; la junta la coordinadora con el sí de Ez). Cada arreglo tiene
+  su prueba, que cae contra v0.174.0; sin cambios a la vista salvo tres avisos nuevos (copia a
+  medias, «no se pudo borrar» y «Copia cancelada»). Queda para Ez el caso 8, dos pestañas que
+  apuntan algo a la vez (`STATE.md`, «Espera a Ez»): se reproduce a 0-10 ms y nunca a 100 ms.
 - **20 oct.: los días diseñados, montados en v0.174.0** (rama `claude/nostalgic-dirac-127713`, sesión
   `dias-cuerpo-entero`). Ez contestó a la segunda página: solo las rutinas que ya hay («Hombros
   fuertes» fuera: medido sin ella no faltaba nada), «equilibrada y diferente», y lo de después de

@@ -143,8 +143,8 @@ test('estado-4 · dos vasos en dos pestañas a 100 ms o más no se pierden (y po
   /* Medido el 21 oct. en v0.174.0 (5 intentos por separación): a 0, 1 y 2 ms se pierde uno de
      los dos vasos 5 de 5 veces; a 5 ms, 2 de 5; a 10 ms, 3 de 5; a 20, 50 y 100 ms, ninguno. Dos
      gestos de una persona en dos ventanas no caben en 20 ms; dos escrituras de la app sola, sí.
-     Qué hacer con eso lo decide Ez (DECISIONES_TECNICAS_VIGENTES.md, «dos escrituras casi a la
-     vez»). Solo se aserta la escala humana, para no depender de la carga de la máquina. */
+     Qué hacer con eso lo decide Ez (STATE.md, «Espera a Ez»). Solo se aserta la escala humana,
+     para no depender de la carga de la máquina. */
   console.log('[estado-4] vasos perdidos por separación:', JSON.stringify(medida));
   medida.filter(m => m.ms >= 100).forEach(m =>
     expect(m.perdidos, 'a ' + m.ms + ' ms entre dos vasos se perdió uno').toBe(0));

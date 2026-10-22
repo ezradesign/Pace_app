@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.0 · 20 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.1 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -39,7 +39,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 3. **Fase 6, tras /premium**: la página de gracias y la firma con k2, el aviso dos días antes del fin
    de la prueba, «Gestionar» en Ajustes, la invitación con los botones de compra y lo legal de /premium.
    El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
-4. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
+4. **Auditoría externa del 21 oct.**: los trece casos de datos, en v0.174.1 (rama
+   `claude/elastic-hofstadter-20ccb0`, la junta la coordinadora con el sí de Ez); el 8, arriba.
+5. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
    https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs): la pasada de texto y el e2e en dos trozos,
    hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
    publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. «Libre»
@@ -50,6 +52,11 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    archivadas.
 
 ## Espera a Ez
+
+- **Dos pestañas a la vez** (auditoría del 21 oct., caso 8): si dos ventanas de PACE apuntan algo
+  a menos de 10-20 ms la una de la otra, se pierde uno (medido: a 0 y 10 ms sí; a 100 ms, nunca).
+  Una persona no llega a eso; dos escrituras solas de la app, rara vez. Decidir si se acepta o se
+  monta la solución (`tests/pestanas-estado.spec.js`, estado-4; la propuesta, en el relevo).
 
 La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
 (`docs/traspaso/hoja-de-ruta-20oct.html`, https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). Ez se
