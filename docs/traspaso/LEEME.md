@@ -11,6 +11,12 @@ trabaja en `.claude/worktrees/caza-sesiones-a8e105` (rama `claude/caza-sesiones-
 Sube a `main` desde su carpeta (`git push origin HEAD:main` tras juntar `origin/main`), así que la
 carpeta principal puede ir por detrás de `origin/main`: `git pull` antes de trabajar en ella.
 
+- **22 oct.: v0.174.4, «Tus rutinas», el cierre de Mueve/Estira y Estadísticas** (rama
+  `claude/beautiful-perlman-2b642c`, sin juntar), once casos de la auditoría externa, cada uno con su
+  prueba en rojo contra v0.174.2 (`tests/tus-rutinas-auditoria.spec.js`, `tests/stats-auditoria.spec.js`).
+  Cinco elecciones para Ez en `docs/proposals/rutinas-y-cifras-auditoria.html`
+  (https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW); montadas las recomendadas salvo la 2 (la A
+  añade un dato al evento de sesión, y el esquema pide subir su `v`).
 - **22 oct.: v0.174.2, seis casos de la auditoría externa del 21 oct.** (rama
   `claude/happy-allen-d915c3`), cada uno con su prueba, que falla contra v0.174.0: las reuniones
   en los bordes del día, la jornada en plena comida (Ez eligió la B, «lo que queda de comida»,

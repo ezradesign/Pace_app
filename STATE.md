@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.2 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.4 · 22 de octubre de 2026 (rama `claude/beautiful-perlman-2b642c`; la 0.174.3 es la del calendario). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -14,7 +14,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
   Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
   rutinas cambian de un día a otro (`puedeVariar`). v0.174.2 arregla seis casos de la auditoría del 21 oct.
-  (reuniones, la jornada en plena comida como eligió Ez, y el aro con las pausas).
+  (reuniones, la jornada en plena comida como eligió Ez, y el aro con las pausas). v0.174.4, once de
+  «Tus rutinas», el cierre de Mueve/Estira y Estadísticas (cinco elecciones de Ez sobre la maqueta
+  `docs/proposals/rutinas-y-cifras-auditoria.html`, https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW).
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -91,11 +93,9 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   de datos) y la tarde sin rutinas de pie con el aro a 10 o 15 (falta contenido de pie). La barra de
   arriba pregunta antes de dejar un Foco empezado, pero no una pausa empezada (pide un texto nuevo).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
-  coordinadora junta): «Tus rutinas» y Estadísticas, tarjeta propuesta el 22 oct. con PACE_E2E_PORT=8799
-  y v0.174.4 (material, solo descanso, por lados, reanudar tras editar, «terminar antes» que se pierde si
-  no es el último paso, el cierre que cuenta series previstas, el año con poco foco; E1 los minutos de «Hoy» frente al total de Cuerpo, E2 un día solo con
-  agua sin color ni borde en Mes, E3 los totales del Año ocultos en escritorio, E4 decimales con
-  punto en castellano) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
+  coordinadora junta): «Tus rutinas» y Estadísticas, hecha en v0.174.4 (rama
+  `claude/beautiful-perlman-2b642c`; E1, la tarjeta de «Hoy» frente al total de Cuerpo, espera la
+  elección de Ez) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
   cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, va con la sesión de datos) ·
