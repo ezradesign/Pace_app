@@ -18,7 +18,7 @@ entera con todo junto y push. Como mucho dos sesiones a la vez, con archivos y p
 
 ## Dónde está main
 
-**v0.174.6** juntada el 22 oct. hacia las 22:55 con el sí de Ez (commit 86e1958): la app abre con los módulos,
+**v0.174.6** juntada el 22 oct. hacia las 22:10 con el sí de Ez (commit 86e1958): la app abre con los módulos,
 los Ajustes del móvil sin scroll y la voz grave en Rondas (1A 2A 3A). Suite entera con todo junto: 819 en verde y
 2 saltadas. **Mirar primero el CI** (`gh run list --branch main --workflow CI`); no subir nada a main mientras
 corre, porque un push nuevo cancela el anterior. Antes, v0.174.5 (3dfe0fc, logros solo con la sesión entera); su
@@ -122,7 +122,7 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    antes/después rápido si cambian algo más que un detalle. **Con `/beta` publicada, la publicación de LinkedIn**
    (idea de Ez, 22 oct.): el texto, en `docs/launch/google-play/testers.md`, «LinkedIn, con la página /beta»;
    la publica Ez, mejor con el grupo creado y la prueba cerrada aprobada. **Ez dijo «júntalas» a /beta y /premium
-   (22 oct., ~23:15)**, sobre https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE. **Ojo, Play deja un solo método de
+   (22 oct., ~22:20)**, sobre https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE. **Ojo, Play deja un solo método de
    testers en la prueba cerrada** (la ayuda de Google: lista de correos O grupo de Google): el grupo sustituye a la
    lista «Testers PACE», no va junto a ella; Ez y sus dos testers entran también por el grupo, y el cambio en Play,
    mejor con la prueba ya aprobada. Al juntar, corregir lo que diga «junto a tu lista» (`testers.md` de la rama).

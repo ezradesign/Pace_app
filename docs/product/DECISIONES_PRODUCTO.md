@@ -89,7 +89,10 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   «Hacerla» sale una hoja abajo y de ahí se pasa a la pantalla de ejercicio de siempre (la de Mueve o Estira), con
   ese ejercicio. Dentro del aro, no («en el timer no vale»). Sus palabras: «no vamos a hacer ejercicios nuevos, la
   duración no importa, la cuestión es ofrecer una pausa si el usuario quiere». Los ejercicios, los 31 de
-  `docs/proposals/hacerla-reparto.md`.
+  `docs/proposals/hacerla-reparto.md`. **Sobre las fotos de ese recorrido, Ez dijo «sí»** (22 oct., noche), con las dos
+  recomendaciones de la sesión: al acabar no se pregunta «¿Te ayudó?» (un «No» a un ejercicio apartaría la rutina
+  entera de donde sale) y sus minutos suman a la semana, sin logros ni contar como rutina hecha. **El botón no dice
+  «Hacerla»** («suena raro esa palabra en el botón»): dice **«Ver ejercicio»** («See exercise»), junto a «Seguir».
 - **Una página para captar testers de Android** (idea de Ez, 22 oct. noche): `pacegrass.app/beta`, con un grupo
   de Google como lista de testers de Play. Ez eligió la **A** (como /premium, con las capturas de Google Play) y
   «PACE completo de por vida, en la web y en Android». **La letra de /beta y /premium, como la app**: títulos en
