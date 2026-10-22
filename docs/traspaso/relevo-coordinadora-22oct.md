@@ -1,7 +1,8 @@
 # Relevo de la coordinadora · 22 oct. 2026 (tarde)
 
-Coordina desde la tarde del 22 oct. la sesión `local_f20bfd4a-d23a-4420-8608-915558f91136`, en la
-otra cuenta de Ez; antes, `local_7f8a7a6d-68cd-45e8-9548-a7425f60ae05` («Coordinadora PACE relevo»).
+Coordina desde las 19:30 del 22 oct. la sesión `local_40565a0f-bb09-49ec-af11-5f5f20bdc5bb`, en la cuenta
+de la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT (5 h al 1 % y la semana al 62 % al empezar). Antes,
+`local_f20bfd4a-d23a-4420-8608-915558f91136` en la otra cuenta (llegó al 93 %) y `local_7f8a7a6d-68cd-45e8-9548-a7425f60ae05`.
 Este archivo es lo que necesita la siguiente para seguir, también desde la otra cuenta de Claude.
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
@@ -25,12 +26,20 @@ frase de la pared opcional que eligió Ez. Suite entera con todo junto: 790 en v
 
 | Sesión | id | Carpeta y rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
-| Pausas, logros y créditos | `local_ff2ad2d7-6a89-415a-b24c-e28da1268958` | `.claude/worktrees/logros-creditos-6ea13b`, `claude/logros-creditos-6ea13b` | 8801 | v0.174.5 | M3 logros solo con la sesión entera, A9 Respira retomada en dos pestañas (acreditar una vez por id), A8 Intro en el menú de pausa, M1 el aro al volver, M5 «Ponle ritmo al día» en Estadísticas |
-| Maqueta: inicio, Ajustes y la voz | `local_6c95115f-1bf0-4406-9ec6-a7559ebfc6b4` | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 si monta | Una página para Ez: M7 abrir con los módulos, M6 Ajustes más altos, M4 la voz grave en Rondas (para oír). Monta solo lo que Ez elija |
+| Pausas, logros y créditos | `local_6078ef5d-836f-4398-8487-c2dbe44ea7e6` (antes `local_ff2ad2d7-…`) | `.claude/worktrees/logros-creditos-6ea13b`, `claude/logros-creditos-6ea13b` | 8801 | v0.174.5 | M3 logros solo con la sesión entera, A9 Respira retomada en dos pestañas (acreditar una vez por id), A8 Intro en el menú de pausa, M1 el aro al volver, M5 «Ponle ritmo al día» en Estadísticas |
+| Maqueta: inicio, Ajustes y la voz | `local_6ea49468-69c8-4211-8b1b-e1669f2cd9a7` (antes `local_6c95115f-…`) | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 si monta | Una página para Ez: M7 abrir con los módulos, M6 Ajustes más altos, M4 la voz grave en Rondas (para oír). Monta solo lo que Ez elija |
 
 Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque de arriba de
 `docs/traspaso/LEEME.md` de su rama. Para retomarlas desde la otra cuenta: `docs/WORKFLOW.md` §10
 (sesión nueva en la MISMA carpeta, con la misma rama y el mismo puerto; `start_session` con `cwd`).
+
+**Retomadas a las 19:30 del 22 oct. en esta cuenta** (mismas carpetas, ramas y puertos):
+- «Pausas, logros y créditos»: M3, A9, A8 y M1 ya en commits; M5 («Ponle ritmo al día») estaba sin commitear
+  y la rama nunca se había subido. Encargo: «wip» y push, terminar M5 y cerrar v0.174.5 con la suite en el 8801.
+- «Maqueta»: rama limpia en ba71467, nada montado y SIN la pregunta 4. Encargo: primero la pregunta 4 en una
+  página NUEVA de esta cuenta (el enlace RHBJDiTX… es de la otra) y mandar el enlace; después montar 1A 2A 3A
+  como v0.174.6. Nada de pausas hasta que Ez conteste la 4.
+- CI de main en 96845c5: CI, Android e iOS en verde.
 
 **Al relevo (80-90 % de uso, 22 oct. hacia las 18:00; esta cuenta se repone a las 21:10):**
 - **Al 91 %:** la sesión «Maqueta» publicó su página (https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj, de esta
