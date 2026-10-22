@@ -103,6 +103,16 @@ function paceDescargarRescate() {
   } catch (e) { return false; }
 }
 
+/* Lo pasajero que vuelve al recargar: el Foco en marcha o en pausa, y la Respira, el Mueve o el
+   Estira a medias. Al importar es de ANTES de la copia, así que no se reanuda con ella: un bloque
+   ya vencido se contaría en la historia que acaba de entrar (auditoría del 21 oct.). Cada clave
+   la borra su dueño. */
+function paceOlvidarPasajero() {
+  try { if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado(); } catch (e) {}
+  try { if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada(); } catch (e) {}
+  try { if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada(); } catch (e) {}
+}
+
 function TweaksDataSection({ onReset, isWeb }) {
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
@@ -126,6 +136,13 @@ function TweaksDataSection({ onReset, isWeb }) {
   const rescateFecha = rescate
     ? paceFechaCorta(rescate.savedAt, lang, { day: 'numeric', month: 'short' })
     : null;
+
+  /* El borrado (TweaksPanel.jsx) llama a esto si el navegador no dejó borrar: no se recarga y se
+     dice aquí, donde salen los demás avisos de «Tus datos». */
+  const noBorro = () => {
+    setMsg({ kind: 'err', text: t('settings.msg.reset.err') });
+    setTimeout(() => setMsg(null), 3200);
+  };
 
   const importJSON = (file) => {
     if (!file) return;
@@ -213,8 +230,21 @@ function TweaksDataSection({ onReset, isWeb }) {
             setTimeout(() => setMsg(null), 2600);
             return;
           }
+          /* El estado entró, pero `legacyWritten` no dice si entró el registro de sesiones: la
+             barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
+             arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde
+             guardarlo (`unavailable`). Si la copia traía registro y no entró, se dice con un
+             aviso que hay que cerrar, y después se recarga: lo que hay en memoria es lo de
+             antes, y el siguiente gesto lo guardaría encima de la copia (auditoría del 21 oct.). */
+          const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+          if (traiaRegistro && r.result !== 'committed') {
+            try { alert(t('settings.msg.import.partial')); } catch (e) {}
+            paceOlvidarPasajero();
+            location.reload();
+            return;
+          }
           setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-          setTimeout(() => location.reload(), 900);
+          setTimeout(() => { paceOlvidarPasajero(); location.reload(); }, 900);
         });
       } catch (e) {
         setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
@@ -251,7 +281,7 @@ function TweaksDataSection({ onReset, isWeb }) {
           <span data-pace-aj-rescate>{t('settings.data.rescate')} <span style={{ color: 'var(--ink-3)', fontSize: '.92em' }}>· {rescateFecha}</span></span>
         </AjustesAccion>
       )}
-      <AjustesAccion suave onClick={onReset} derecha="›">{t('settings.data.reset')}</AjustesAccion>
+      <AjustesAccion suave onClick={() => onReset(noBorro)} derecha="›">{t('settings.data.reset')}</AjustesAccion>
       <PremiumSection />
       {/* El pie: la promesa de privacidad -- es de marca, se queda-- y los
           enlaces /safety y /privacy (s102; paginas estaticas de s101), solo en

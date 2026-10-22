@@ -99,32 +99,55 @@ function paceSanearEstado(parsed, defaults) {
     }
   });
 
-  /* Lo de DENTRO, solo donde el arranque lo lee sin defensa. */
+  /* Lo de DENTRO, solo donde el arranque lo lee sin defensa. Una serie que FALTA
+     también se repone: `loadState` mezcla por arriba, así que un `weeklyStats: {}`
+     sustituía al de fábrica entero y el primer vaso de la semana reventaba en
+     `[...s.weeklyStats.waterGlasses]` (auditoría del 21 oct.). */
   if (paceEsObjetoPlano(e.weeklyStats)) {
     var ws = Object.assign({}, e.weeklyStats), tocada = false;
     PACE_SERIES_SEMANA.forEach(function (s) {
-      if (s in ws && !paceSerieValida(ws[s])) { ws[s] = [0, 0, 0, 0, 0, 0, 0]; tocada = true; }
+      if (!paceSerieValida(ws[s])) { ws[s] = [0, 0, 0, 0, 0, 0, 0]; tocada = true; }
     });
     if (tocada) reparar('weeklyStats', ws);
   }
 
+  /* Las métricas de cada entrada del histórico, como números: con un '30' de una
+     copia editada a mano, `acc.focusMinutes += d.focusMinutes || 0` CONCATENA y el
+     mes sale '03020'. Un número escrito como texto se lee; lo demás vale 0. Si algo
+     cambia, meses y años se rehacen desde los días (la migración de s69), porque los
+     que había pueden venir ya concatenados. */
+  var metricasNumero = function (entrada) {
+    var limpia = null;
+    PACE_SERIES_SEMANA.forEach(function (m) {
+      var v = entrada[m];
+      if (v === undefined || (typeof v === 'number' && isFinite(v))) return;
+      var n = (typeof v === 'string' && v.trim() !== '') ? Number(v) : NaN;
+      limpia = limpia || Object.assign({}, entrada);
+      limpia[m] = isFinite(n) ? n : 0;
+    });
+    return limpia;
+  };
+
   if (paceEsObjetoPlano(e.history)) {
-    var h = e.history, hn = {}, diasTocados = false, otraTocada = false;
+    var h = e.history, hn = {}, rehacer = false, otraTocada = false;
     ['days', 'months', 'years'].forEach(function (nivel) {
       var src = h[nivel];
-      if (!paceEsObjetoPlano(src)) { hn[nivel] = {}; if (src !== undefined) { otraTocada = true; if (nivel === 'days') diasTocados = true; } return; }
+      if (!paceEsObjetoPlano(src)) { hn[nivel] = {}; if (src !== undefined) { otraTocada = true; if (nivel === 'days') rehacer = true; } return; }
       var limpio = {};
       Object.keys(src).forEach(function (clave) {
-        if (paceEsObjetoPlano(src[clave])) limpio[clave] = src[clave];
-        else { otraTocada = true; if (nivel === 'days') diasTocados = true; }
+        if (!paceEsObjetoPlano(src[clave])) { otraTocada = true; if (nivel === 'days') rehacer = true; return; }
+        var numeros = metricasNumero(src[clave]);
+        limpio[clave] = numeros || src[clave];
+        if (numeros) { otraTocada = true; rehacer = true; }
       });
       hn[nivel] = limpio;
     });
     if (otraTocada) {
       reparar('history', Object.assign({}, h, hn));
-      /* Si se cayo algun DIA, meses y años ya no suman lo mismo: se re-agregan
-         con la migracion que ya existe (s69), que es idempotente. */
-      if (diasTocados) e._historyRecalculated_v0_28_8 = false;
+      /* Si se cayo algun DIA, o alguna metrica no era un numero, meses y años ya no
+         suman lo mismo: se re-agregan con la migracion que ya existe (s69), que es
+         idempotente. */
+      if (rehacer) e._historyRecalculated_v0_28_8 = false;
     }
   }
 

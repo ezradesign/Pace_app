@@ -3265,6 +3265,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.msg.import.invalid': 'Archivo no reconocido.',
   'settings.msg.import.json.err': 'JSON inválido.',
   'settings.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
+  'settings.msg.import.partial': 'Se importaron tus datos, pero no el registro de tus sesiones. Puedes volver a importar la copia.',
+  'settings.msg.reset.err': 'No se pudo borrar. Tus datos siguen intactos.',
   'settings.confirm.reset': '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
   'settings.confirm.import': '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.'
 });
@@ -3349,6 +3351,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.msg.import.invalid': 'File not recognized.',
   'settings.msg.import.json.err': 'Invalid JSON.',
   'settings.msg.import.storage.err': 'Could not save. Your data is untouched.',
+  'settings.msg.import.partial': 'Your data was imported, but not your session log. You can import the copy again.',
+  'settings.msg.reset.err': 'Could not delete. Your data is untouched.',
   'settings.confirm.reset': 'Delete all your PACE data? This action cannot be undone.',
   'settings.confirm.import': 'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.'
 });
@@ -5891,11 +5895,13 @@ function rolloverIfNeeded(state) {
     const prevMonday = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
     const todayMonday = getMondayOf(today).getTime();
     if (todayMonday !== prevMonday) {
+
       nextWeekly = {
         focusMinutes: [0, 0, 0, 0, 0, 0, 0],
         breathMinutes: [0, 0, 0, 0, 0, 0, 0],
         moveMinutes: [0, 0, 0, 0, 0, 0, 0],
-        waterGlasses: [0, 0, 0, 0, 0, 0, 0]
+        waterGlasses: [0, 0, 0, 0, 0, 0, 0],
+        holdSeconds: [0, 0, 0, 0, 0, 0, 0]
       };
     }
   }
@@ -6089,23 +6095,45 @@ function paceSanearEstado(parsed, defaults) {
   });
 
 
+
+
+
   if (paceEsObjetoPlano(e.weeklyStats)) {
     var ws = Object.assign({}, e.weeklyStats),tocada = false;
     PACE_SERIES_SEMANA.forEach(function (s) {
-      if (s in ws && !paceSerieValida(ws[s])) {ws[s] = [0, 0, 0, 0, 0, 0, 0];tocada = true;}
+      if (!paceSerieValida(ws[s])) {ws[s] = [0, 0, 0, 0, 0, 0, 0];tocada = true;}
     });
     if (tocada) reparar('weeklyStats', ws);
   }
 
+
+
+
+
+
+  var metricasNumero = function (entrada) {
+    var limpia = null;
+    PACE_SERIES_SEMANA.forEach(function (m) {
+      var v = entrada[m];
+      if (v === undefined || typeof v === 'number' && isFinite(v)) return;
+      var n = typeof v === 'string' && v.trim() !== '' ? Number(v) : NaN;
+      limpia = limpia || Object.assign({}, entrada);
+      limpia[m] = isFinite(n) ? n : 0;
+    });
+    return limpia;
+  };
+
   if (paceEsObjetoPlano(e.history)) {
-    var h = e.history,hn = {},diasTocados = false,otraTocada = false;
+    var h = e.history,hn = {},rehacer = false,otraTocada = false;
     ['days', 'months', 'years'].forEach(function (nivel) {
       var src = h[nivel];
-      if (!paceEsObjetoPlano(src)) {hn[nivel] = {};if (src !== undefined) {otraTocada = true;if (nivel === 'days') diasTocados = true;}return;}
+      if (!paceEsObjetoPlano(src)) {hn[nivel] = {};if (src !== undefined) {otraTocada = true;if (nivel === 'days') rehacer = true;}return;}
       var limpio = {};
       Object.keys(src).forEach(function (clave) {
-        if (paceEsObjetoPlano(src[clave])) limpio[clave] = src[clave];else
-        {otraTocada = true;if (nivel === 'days') diasTocados = true;}
+        if (!paceEsObjetoPlano(src[clave])) {otraTocada = true;if (nivel === 'days') rehacer = true;return;}
+        var numeros = metricasNumero(src[clave]);
+        limpio[clave] = numeros || src[clave];
+        if (numeros) {otraTocada = true;rehacer = true;}
       });
       hn[nivel] = limpio;
     });
@@ -6113,7 +6141,8 @@ function paceSanearEstado(parsed, defaults) {
       reparar('history', Object.assign({}, h, hn));
 
 
-      if (diasTocados) e._historyRecalculated_v0_28_8 = false;
+
+      if (rehacer) e._historyRecalculated_v0_28_8 = false;
     }
   }
 
@@ -14556,6 +14585,11 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection)
     return Promise.resolve(salida(ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, ok));
   }
 
+
+
+
+
+  let escrito = false;
   return eventsWebMark(op).
   then(function (marked) {
 
@@ -14589,6 +14623,7 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection)
 
 
 
+    escrito = true;
     const paso3 = restaurar ?
     eventsWebReplaceFromImport(restaurar) :
     eventsWebReset(nextLegacyState || null);
@@ -14597,7 +14632,7 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection)
     });
   }).
   catch(function () {
-    return salida(EVENTS_REJECTED, false);
+    return escrito ? salida(EVENTS_INTERRUPTED, true) : salida(EVENTS_REJECTED, false);
   });
 }
 
@@ -14876,7 +14911,11 @@ function emitSessionCompleted(module, routineId, datos) {
   });
   if (!evento) return null;
   paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
-  paceEmitirEvento(evento, function () {paceUltimaSesion = null;});
+
+
+  paceEmitirEvento(evento, function () {
+    if (paceUltimaSesion && paceUltimaSesion.runId === runId) paceUltimaSesion = null;
+  });
 
 
 
@@ -21173,6 +21212,12 @@ function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
 
 
 
+function olvidarFocoGuardado() {
+  try {localStorage.removeItem(PACE_TIMER_KEY);} catch (e) {}
+}
+
+
+
 
 
 
@@ -21367,9 +21412,9 @@ Object.assign(window, {
   curvaSuave, curvaCaida, focusStyles,
 
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
-  loadPersistedFocusTimer, persistFocusTimer
+  loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado
 });
-;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado });
+;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado });
 })();
 </script>
   <!-- Piezas de UI del Pomodoro (s124): MinutesPicker extraído. Declara sus
@@ -35890,6 +35935,16 @@ function paceDescargarRescate() {
   } catch (e) {return false;}
 }
 
+
+
+
+
+function paceOlvidarPasajero() {
+  try {if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado();} catch (e) {}
+  try {if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada();} catch (e) {}
+  try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
+}
+
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
@@ -35913,6 +35968,13 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
   const rescateFecha = rescate ?
   paceFechaCorta(rescate.savedAt, lang, { day: 'numeric', month: 'short' }) :
   null;
+
+
+
+  const noBorro = () => {
+    setMsg({ kind: 'err', text: t('settings.msg.reset.err') });
+    setTimeout(() => setMsg(null), 3200);
+  };
 
   const importJSON = (file) => {
     if (!file) return;
@@ -36000,8 +36062,21 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
             setTimeout(() => setMsg(null), 2600);
             return;
           }
+
+
+
+
+
+
+          const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+          if (traiaRegistro && r.result !== 'committed') {
+            try {alert(t('settings.msg.import.partial'));} catch (e) {}
+            paceOlvidarPasajero();
+            location.reload();
+            return;
+          }
           setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-          setTimeout(() => location.reload(), 900);
+          setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
         });
       } catch (e) {
         setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
@@ -36038,7 +36113,7 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("span", { "data-pace-aj-rescate": true }, t('settings.data.rescate'), " ", React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: '.92em' } }, "\xB7 ", rescateFecha))
     ),
 
-    React.createElement(AjustesAccion, { suave: true, onClick: onReset, derecha: "\u203A" }, t('settings.data.reset')),
+    React.createElement(AjustesAccion, { suave: true, onClick: () => onReset(noBorro), derecha: "\u203A" }, t('settings.data.reset')),
     React.createElement(PremiumSection, null),
 
 
@@ -36088,7 +36163,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceOlvidarPasajero, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>
@@ -36708,8 +36783,16 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
 
-  const borrarTodo = () => {
-    if (confirm(t('settings.confirm.reset'))) paceEventsWipeAll(() => location.reload());
+
+
+
+
+  const borrarTodo = (alFallar) => {
+    if (!confirm(t('settings.confirm.reset'))) return;
+    paceEventsWipeAll((r) => {
+      if (r && r.legacyWritten) location.reload();else
+      if (typeof alFallar === 'function') alFallar();
+    });
   };
 
 

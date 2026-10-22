@@ -189,7 +189,11 @@ function emitSessionCompleted(module, routineId, datos) {
   });
   if (!evento) return null;
   paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
-  paceEmitirEvento(evento, function () { paceUltimaSesion = null; });
+  /* Si el almacén la rechaza, se olvida ESTA sesión y no la que haya venido después: el rechazo
+     puede llegar cuando ya se emitió otra, y su feedback se perdía. */
+  paceEmitirEvento(evento, function () {
+    if (paceUltimaSesion && paceUltimaSesion.runId === runId) paceUltimaSesion = null;
+  });
   /* s195: una sesión terminada mientras la pausa de «A tu ritmo» está abierta la
      deja HECHA (de lo que sea: hiciste una pausa), y apunta su plato si es uno de
      los de la pausa. Sin pausa abierta, no hace nada. */

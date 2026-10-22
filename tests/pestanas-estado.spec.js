@@ -117,3 +117,35 @@ test('CONTROL · adoptar no escribe: tras un vaso en una pestaña, ninguna de la
   expect(await a.evaluate(() => window.__escrituras) - antesA, 'la pestaña que adopta escribió').toBe(0);
   expect(await b.evaluate(() => window.__escrituras), 'hubo ping-pong entre pestañas').toBe(trasB);
 });
+
+/* AUDITORÍA DEL 21 OCT. (8) · DOS ESCRITURAS CASI A LA VEZ. Adoptar llega con el evento `storage`,
+   que el navegador entrega a la otra pestaña un rato DESPUÉS de guardar: si en ese rato la otra
+   escribe, lo hace sobre su copia de antes y se pierde lo de la primera. Aquí se mide desde qué
+   separación entre dos vasos (uno en cada pestaña) no se pierde ninguno. */
+async function dosVasosSeparados(a, b, ms) {
+  await a.evaluate(() => setState({ water: Object.assign({}, getState().water, { today: 0 }) }));
+  await expect.poll(() => b.evaluate(() => getState().water.today)).toBe(0);
+  const t0 = Date.now() + 150;
+  const vaso = (t) => new Promise((r) => setTimeout(() => { addWaterGlass(1); r(); }, Math.max(0, t - Date.now())));
+  await Promise.all([a.evaluate(vaso, t0), b.evaluate(vaso, t0 + ms)]);
+  await a.waitForTimeout(250);
+  return (await guardado(a)).water.today;
+}
+
+test('estado-4 · dos vasos en dos pestañas a 100 ms o más no se pierden (y por debajo, se mide)', async ({ context }) => {
+  const { a, b } = await dosPestanas(context, { lastActiveDay: new Date().toDateString() });
+  const medida = [];
+  for (const ms of [0, 10, 100, 250]) {
+    const vasos = [];
+    for (let i = 0; i < 3; i++) vasos.push(await dosVasosSeparados(a, b, ms));
+    medida.push({ ms, perdidos: vasos.filter(v => v < 2).length, de: vasos.length });
+  }
+  /* Medido el 21 oct. en v0.174.0 (5 intentos por separación): a 0, 1 y 2 ms se pierde uno de
+     los dos vasos 5 de 5 veces; a 5 ms, 2 de 5; a 10 ms, 3 de 5; a 20, 50 y 100 ms, ninguno. Dos
+     gestos de una persona en dos ventanas no caben en 20 ms; dos escrituras de la app sola, sí.
+     Qué hacer con eso lo decide Ez (DECISIONES_TECNICAS_VIGENTES.md, «dos escrituras casi a la
+     vez»). Solo se aserta la escala humana, para no depender de la carga de la máquina. */
+  console.log('[estado-4] vasos perdidos por separación:', JSON.stringify(medida));
+  medida.filter(m => m.ms >= 100).forEach(m =>
+    expect(m.perdidos, 'a ' + m.ms + ' ms entre dos vasos se perdió uno').toBe(0));
+});

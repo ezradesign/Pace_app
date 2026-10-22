@@ -72,7 +72,7 @@ function tandaWeb(ctx) {
     var filas = filasPrecache(ctx.ROOT);
     if (!filas) ctx.falla('web: no se reconoce el array PRECACHE en sw.js -- no se ha mirado el precache');
     else {
-      var faltan = filas.filter(function (p) { return !hay.has(p === '/' ? 'index.html' : p.replace(/^\//, '')); });
+      var faltan = filas.filter(function (p) { return p === '/' ? !hay.has('index.html') : !archivoDeRuta(p, hay); });
       if (faltan.length) ctx.falla('web: ' + faltan.length + ' fila(s) de PRECACHE que no están en dist/ (' + faltan.slice(0, 5).join(', ') +
         ') -- con una sola 404 el service worker no se instala; añádelas en scripts/android-www.js o scripts/web-dist.js');
       else ctx.ok(filas.length + ' filas de PRECACHE, todas en dist/');

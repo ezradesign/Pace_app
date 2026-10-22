@@ -130,6 +130,10 @@ const PRECACHE = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
+  /* La privacidad y la seguridad, por su ruta (la que enlaza Ajustes): sin red, la navegacion
+     solo encuentra lo guardado con esa misma ruta (auditoria del 21 oct. de 2026). */
+  '/privacy',
+  '/safety',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-192-maskable.png',
@@ -349,7 +353,15 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() =>
-          caches.match(event.request).then((cached) => cached || caches.match('/'))
+          caches.match(event.request).then((cached) => {
+            if (cached) return cached;
+            /* El respaldo a la app, solo para las rutas de la app. Antes cualquier navegacion sin
+               red ni copia propia recibia la de la raiz: la privacidad, /premium o una ruta que no
+               existe se abrian como la app, con su direccion (auditoria del 21 oct. de 2026). */
+            const ruta = new URL(event.request.url).pathname;
+            if (ruta === '/' || ruta === '/index.html') return caches.match('/').then((app) => app || Response.error());
+            return Response.error();
+          })
         )
     );
     return;

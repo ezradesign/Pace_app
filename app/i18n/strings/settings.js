@@ -103,6 +103,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.msg.import.invalid':   'Archivo no reconocido.',
     'settings.msg.import.json.err':  'JSON inválido.',
     'settings.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
+    'settings.msg.import.partial':   'Se importaron tus datos, pero no el registro de tus sesiones. Puedes volver a importar la copia.',
+    'settings.msg.reset.err':        'No se pudo borrar. Tus datos siguen intactos.',
     'settings.confirm.reset':        '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
     'settings.confirm.import':       '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
 });
@@ -187,6 +189,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.msg.import.invalid':   'File not recognized.',
     'settings.msg.import.json.err':  'Invalid JSON.',
     'settings.msg.import.storage.err': 'Could not save. Your data is untouched.',
+    'settings.msg.import.partial':   'Your data was imported, but not your session log. You can import the copy again.',
+    'settings.msg.reset.err':        'Could not delete. Your data is untouched.',
     'settings.confirm.reset':        'Delete all your PACE data? This action cannot be undone.',
     'settings.confirm.import':       'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
 });

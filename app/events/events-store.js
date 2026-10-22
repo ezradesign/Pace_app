@@ -331,6 +331,11 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection)
     return Promise.resolve(salida(ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, ok));
   }
 
+  /* Lo que diga el `catch` de abajo depende de si el estado legacy YA se escribió: una
+     promesa del paso 3 que se rechaza llegaba ahí como «no se escribió nada», y entonces
+     Ajustes no recargaba tras un borrado que sí había pasado (lo que hay en memoria lo
+     devolvería con el siguiente gesto). */
+  let escrito = false;
   return eventsWebMark(op)
     .then(function (marked) {
       /* Si no se puede ni marcar, no hay red de recuperacion: se ABORTA sin
@@ -364,6 +369,7 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection)
          Si el proceso muere entre 2 y 3, la recuperacion del marcador reinicia
          (no reemplaza): se pierde el historial importado, no el del usuario, y
          el import se puede repetir. Es la caida segura de las dos. */
+      escrito = true;
       const paso3 = restaurar
         ? eventsWebReplaceFromImport(restaurar)
         : eventsWebReset(nextLegacyState || null);
@@ -372,7 +378,7 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection)
       });
     })
     .catch(function () {
-      return salida(EVENTS_REJECTED, false);
+      return escrito ? salida(EVENTS_INTERRUPTED, true) : salida(EVENTS_REJECTED, false);
     });
 }
 
