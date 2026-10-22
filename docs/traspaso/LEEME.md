@@ -4,14 +4,17 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
-## 22 oct., tarde: v0.174.3 y v0.174.4 en `main`; coordina la otra cuenta
+## 22 oct., noche: v0.174.5 en `main`; relevo por uso hacia las 21:00
 
-**Relevo por uso (22 oct., ~18:00, al 80-90 %):** lo que sigue y cómo retomar las dos sesiones abiertas está en `docs/traspaso/relevo-coordinadora-22oct.md`, «Al relevo» y «La cola, por orden».
+**Lo que sigue, la sesión abierta («Maqueta», puerto 8803) y cómo retomarla**: `docs/traspaso/relevo-coordinadora-22oct.md`,
+«Al relevo» y «La cola, por orden». Páginas de pasos: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT (la cuenta
+que coordinó esta noche) y https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (la otra).
 
-Relevo y sesiones abiertas: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:
-https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
+- **Ez eligió** las pausas con bloques cortos (4a A · 4b A solo con el día empezado · 4c A) y que «Hacerla» saque
+  un ejercicio de Mueve o Estira con el glifo del módulo (maqueta pendiente). Idea suya, en la cola: una página
+  `/beta` para captar testers con un grupo de Google.
 
-- **v0.174.5, sin juntar** (rama `claude/logros-creditos-6ea13b`, sesión «Pausas, logros y créditos»):
+- **v0.174.5, juntada con el sí de Ez** (rama `claude/logros-creditos-6ea13b`, sesión «Pausas, logros y créditos»):
   cinco arreglos, cada uno con su prueba, que cae contra v0.174.4. M3, los logros solo con la sesión
   entera (la decisión de Ez); A9, una Respira a medias en dos pestañas se retoma en una y se acredita
   una vez; A8, Intro y Espacio del menú de pausa son del botón con el foco; M1, el aro llega de golpe

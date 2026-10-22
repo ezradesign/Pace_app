@@ -56,6 +56,13 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   coordinadora, dicha a Ez): los bloques cortos se juntan hasta media hora, con la invitación entre medias y la
   ventana de la pausa a la media hora (su regla del 15 oct., «al menos cada 30 minutos»). Se monta después de juntar
   «Pausas, logros y créditos», que toca el aro.
+  **Al pulsar «Hacerla»** (Ez, la misma noche, cambia la 4a): sale UN ejercicio de los que ya hay en Mueve o Estira
+  que se hace junto a la mesa, sin suelo ni material, con su título, su instrucción, su duración propia aunque pase
+  de dos minutos y el glifo genérico del módulo (no el del ejercicio). Sin texto nuevo ni consulta a ChatGPT. Para
+  qué, en palabras de Ez: «tener opción a hacerlos con más frecuencia en pomodoros cortos, o no». La invitación
+  cambiará de nombre, porque ya no son siempre dos minutos. Antes de montarlo, maqueta.
+- **Una página para captar testers de Android** (idea de Ez, 22 oct. noche): `pacegrass.app/beta`, con un grupo
+  de Google como lista de testers de Play. En la cola, con maqueta.
 ## Lo que dice el calendario que se mantiene solo: cuatro casos (Ez, 22 oct. 2026)
 
 C2 de la auditoría externa del 22 oct. La hoja y el enlace decían «Calendario al día» también en

@@ -1,4 +1,4 @@
-# Relevo de la coordinadora · 22 oct. 2026 (tarde)
+# Relevo de la coordinadora · 22 oct. 2026 (noche)
 
 Coordina desde las 19:30 del 22 oct. la sesión `local_40565a0f-bb09-49ec-af11-5f5f20bdc5bb`, en la cuenta
 de la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT (5 h al 1 % y la semana al 62 % al empezar). Antes,
@@ -17,91 +17,92 @@ entera con todo junto y push. Como mucho dos sesiones a la vez, con archivos y p
 
 ## Dónde está main
 
-v0.174.4 juntada el 22 oct. por la tarde con el sí de Ez: el calendario que se mantiene solo (C1-C3,
-v0.174.3) y «Tus rutinas» con Estadísticas (once casos y las cinco A de su maqueta, v0.174.4), más la
-frase de la pared opcional que eligió Ez. Suite entera con todo junto: 790 en verde y 2 saltadas, sin fallos. Las ramas `claude/happy-allen-d915c3` y
-`claude/beautiful-perlman-2b642c` ya están dentro; sus sesiones, paradas (archivarlas, con el sí de Ez).
+**v0.174.5** juntada el 22 oct. hacia las 21:00 con el sí de Ez (commit 3dfe0fc): logros solo con la sesión
+entera (Ez: «entera» como se montó: saltar un descanso no corta, saltar un ejercicio sí, una Respira retomada
+que llega al final cuenta, Foco no cambia), Respira en dos pestañas, Intro en el menú de pausa, el aro al
+volver y «Ponle ritmo al día». Suite entera con todo junto: 800 en verde y 2 saltadas. El CI de GitHub de
+3dfe0fc estaba corriendo al relevo: **mirarlo primero** (`gh run list --branch main`); no subir nada a main
+mientras corre, porque un push nuevo cancela el anterior. La rama `claude/logros-creditos-6ea13b` ya está
+dentro; su sesión (`local_6078ef5d-…`), terminada: archivarla con el sí de Ez.
 
 ## Sesiones en marcha
 
 | Sesión | id | Carpeta y rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
-| Pausas, logros y créditos | `local_6078ef5d-836f-4398-8487-c2dbe44ea7e6` (antes `local_ff2ad2d7-…`) | `.claude/worktrees/logros-creditos-6ea13b`, `claude/logros-creditos-6ea13b` | 8801 | v0.174.5 | M3 logros solo con la sesión entera, A9 Respira retomada en dos pestañas (acreditar una vez por id), A8 Intro en el menú de pausa, M1 el aro al volver, M5 «Ponle ritmo al día» en Estadísticas |
-| Maqueta: inicio, Ajustes y la voz | `local_6ea49468-69c8-4211-8b1b-e1669f2cd9a7` (antes `local_6c95115f-…`) | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 si monta | Una página para Ez: M7 abrir con los módulos, M6 Ajustes más altos, M4 la voz grave en Rondas (para oír). Monta solo lo que Ez elija |
+| Maqueta: inicio, Ajustes y la voz | `local_6ea49468-69c8-4211-8b1b-e1669f2cd9a7` (antes `local_6c95115f-…`) | `.claude/worktrees/maqueta-inicio-3a2a59`, `claude/maqueta-inicio-3a2a59` | 8803 | v0.174.6 | Monta 1A 2A 3A (al relevo, pasando su suite entera); luego la maqueta nueva de «Hacerla» (abajo) y, con el sí de Ez, las pausas como v0.175.0 |
 
-Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque de arriba de
+Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque de arriba de
 `docs/traspaso/LEEME.md` de su rama. Para retomarlas desde la otra cuenta: `docs/WORKFLOW.md` §10
 (sesión nueva en la MISMA carpeta, con la misma rama y el mismo puerto; `start_session` con `cwd`).
 
-**Retomadas a las 19:30 del 22 oct. en esta cuenta** (mismas carpetas, ramas y puertos):
-- «Pausas, logros y créditos»: M3, A9, A8 y M1 ya en commits; M5 («Ponle ritmo al día») estaba sin commitear
-  y la rama nunca se había subido. Encargo: «wip» y push, terminar M5 y cerrar v0.174.5 con la suite en el 8801.
-- «Maqueta»: rama limpia en ba71467, nada montado y SIN la pregunta 4. Encargo: primero la pregunta 4 en una
-  página NUEVA de esta cuenta (el enlace RHBJDiTX… es de la otra) y mandar el enlace; después montar 1A 2A 3A
-  como v0.174.6. Nada de pausas hasta que Ez conteste la 4.
-- CI de main en 96845c5: CI, Android e iOS en verde.
-
-**Al relevo (80-90 % de uso, 22 oct. hacia las 18:00; esta cuenta se repone a las 21:10):**
-- **Al 91 %:** la sesión «Maqueta» publicó su página (https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj, de esta
-  cuenta) y **Ez eligió 1A 2A 3A** (`DECISIONES_PRODUCTO.md`). Se le mandó guardar el HTML en su carpeta
-  (`docs/proposals/maqueta-inicio-22oct.html`, con `maqueta-inicio-hallazgos.md`), hacer «wip» y push, y
-  montar 1A 2A 3A si el uso le deja. Comprobar en su rama qué llegó. La pregunta 4 (pausas con bloques
-  cortos) se añade republicando la página desde ese HTML en la otra cuenta.
-- La rana, 22 oct. por la noche: el dibujo nuevo de Ez tampoco vale (de tres cuartos, con las manos y no los
-  antebrazos, las rodillas sin abrir, la flecha hacia delante y color en los muslos). Se le dio un prompt corto.
-- La rana, antes: Genspark sigue sin la postura (espinillas a los lados y tronco erguido); Ez tiene el texto para
-  corregirlo, o probar la vista de tres cuartos.
-- Las dos sesiones siguen en marcha y saben que al 85 % hacen «wip» y push, y al 90 % dejan su punto en LEEME
-  de su rama. Mira su carpeta por si quedó algo sin commitear (`node scripts/relevo-hilo.js <carpeta>`).
-- A «Maqueta» se le pidió una **cuarta pregunta** en su página: la invitación de 2 min y «A mi ritmo ·
-  Después de cada bloque» (solo maqueta). Comprobar en su rama que llegó. Su página, cuando la publique, es
-  lo primero que se enseña a Ez; Ez contesta con letras y la sesión monta lo elegido.
-- A «Pausas, logros y créditos» se le dijo que, si algún arreglo cambia lo que se ve más allá del fallo,
-  mande capturas antes/después para Ez antes de montarlo (Ez: «todo esto quiero verlo en una maqueta antes
-  de implementarlo»).
-- CI de `main`: verde en la suite local con todo junto (790); el de GitHub de los últimos commits de docs,
-  sin mirar al relevo (`gh run list --branch main`).
-- Ez tiene pendiente: los correos de los testers, la rana (prompt de solo postura, en el chat) y la consulta
-  a ChatGPT de los 8 movimientos de 2 min (prompt dado).
+**Al relevo (22 oct., ~21:00, al 75-90 % de esta cuenta; se repone a las 00:30):**
+- La otra cuenta tiene margen desde las 21:10. Retomar «Maqueta» en su MISMA carpeta, rama y puerto
+  (`node scripts/relevo-hilo.js .claude/worktrees/maqueta-inicio-3a2a59`, leer su punto arriba de
+  `docs/traspaso/LEEME.md` de su rama y `start_session` con `cwd` y `use_worktree: false`).
+- Lo que llevaba «Maqueta» al relevo: v0.174.6 (1A 2A 3A) montada y en su suite entera (solo cayó una de
+  Android, ya arreglada); faltaba cerrar con commit, push y aviso. Después, **la maqueta nueva de «Hacerla»**
+  (Ez, 22 oct. noche): al pulsar «Hacerla» sale UN ejercicio de los que ya hay en Mueve o Estira (de pie o
+  sentado, sin suelo ni material), con su título, su instrucción, su duración propia aunque pase de 2 min y el
+  glifo GENÉRICO del módulo, no el del ejercicio; sin consulta a ChatGPT. Ez: «la integración era para tener
+  opción a hacerlos con más frecuencia en pomodoros cortos, o no». Propone dos o tres nombres para la
+  invitación, porque ya no son siempre dos minutos. Se republica en https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA
+  (esta cuenta: desde la otra, página nueva desde `docs/proposals/maqueta-inicio-22oct.html` de su rama).
+- Cuando avise de v0.174.6: revisar la rama, contárselo a Ez en palabras llanas y, con su sí, juntarla (los
+  choques de versión, a la más alta: main ya está en v0.174.5).
+- La hoja de ruta de esta cuenta está al día (https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT); la de la otra
+  (https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6) se pone al día publicando el mismo archivo con su `url`.
+- La rana: Ez la deja de momento. Las dos de hoy no valían (de lado, rodillas juntas, flecha hacia delante).
+  El estilo bueno es el prefijo «Classical anatomical plate…» de `PROMPTS_IMAGENES.md`; la rana se pinta de frente.
+- Ez busca testers y tiene dos prompts de ChatGPT: lo legal y lo que falta para cobrar (en el chat). Lo
+  que traiga, se comprueba en el código y entra en la cola.
 
 ## La cola, por orden
 
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
-1. **Los bloques cortos (M2): la invitación de 2 min** (Ez eligió la propuesta de ChatGPT «por partes»;
+1. **Los bloques cortos (M2): la invitación** (Ez eligió la propuesta de ChatGPT «por partes»;
    `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). **Maqueta hecha y elegida: 4a A · 4b A (solo con el
    día empezado) · 4c A** (https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA). La monta la sesión «Maqueta» como
-   v0.175.0 cuando acabe 1A 2A 3A y «Pausas, logros y créditos» esté en main (toca el aro); no se junta sin el
-   texto de los dos minutos que trae Ez de ChatGPT. Las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
+   v0.175.0 cuando acabe 1A 2A 3A (ya puede: v0.174.5 está en main), tras la maqueta nueva de «Hacerla» (un
+   ejercicio de Mueve o Estira con el glifo del módulo; arriba, «Al relevo») y con el sí de Ez. Las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
    `ritmo.regla.js` (`ritmoComponer`), `state-ritmo.jsx` (`ritmoPrevios`), `ritmo.series.js`
-   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. Lo que se hace en esos 2 min, se
-   puede consultar a ChatGPT (movimientos sin mirar la pantalla, con alternativa sentada).
+   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`.
 2. **Montar 1A 2A 3A de la maqueta** (M7, M6, M4) como v0.174.6, en la misma sesión de la maqueta: en marcha.
-3. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
+3. **Una página para captar testers de Android, `pacegrass.app/beta`** (idea de Ez, 22 oct. noche; va
+   aquí porque los testers fijan la fecha de v1). En español e inglés: qué es PACE, qué se pide (instalar
+   desde Play, tenerla 14 días, abrirla y contar qué falla) y PACE completo de por vida como gracias
+   (`codigos-tester.csv`). Dos pasos: unirse a un grupo de Google «PACE testers» y abrir el enlace de Play.
+   El grupo, como lista de testers de la prueba cerrada en Play Console, junto a «Testers PACE»: así se
+   apunta cada uno y PACE no guarda correos. Lo que hace Ez: crear el grupo y añadirlo en Play. Maqueta
+   primero. El enlace de Play funciona cuando Google apruebe la prueba cerrada.
+4. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
-4. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.
-5. **Los dibujos** que vaya entregando Ez en `dibujos-22oct/` (fuera de git): rana, pica en escritorio,
+5. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.
+6. **Los dibujos** que vaya entregando Ez en `dibujos-22oct/` (fuera de git): rana, pica en escritorio,
    rotación torácica de pie, los 5 ejercicios con el dibujo equivocado y los logros
    (`docs/product/GLIFOS_A_DIBUJAR.md`, 30 en total). Comprobar cada uno antes de meterlo: la rana de
-   Genspark salió dos veces mal (otra postura, fondo de cuadros pintado, pecho con detalles).
-6. **Más ejercicios de pie para las pausas cortas** (idea de Ez; falta contenido de pie con el aro a 10
+   Genspark salió dos veces mal (otra postura, fondo de cuadros pintado, pecho con detalles). Y **un repaso
+   de todos los dibujos** (Ez, 22 oct. noche: «Glúteos sentado, sus glifos son de pie»; «Apretar glúteos» ya
+   estaba entre los 5): una página con cada ejercicio, su dibujo y lo que dice su texto (sentado, de pie, en
+   el suelo), marcando los que no casan; Ez decide cuáles se rehacen.
+7. **Más ejercicios de pie para las pausas cortas** (idea de Ez; falta contenido de pie con el aro a 10
    o 15), con maqueta. Ayuda a M2.
-7. **El puente del calendario de Android**, que se traga los errores (PACE ve un calendario vacío y
+8. **El puente del calendario de Android**, que se traga los errores (PACE ve un calendario vacío y
    puede volver a crear lo que ya estaba), junto con S6.
-8. **Seguridad antes de cobrar** (S1, S2, S4, S5, S6), antes de la Fase 6.
-9. **Los avisos de Android** (A1-A4): Ez ya tiene la app en su móvil; preguntarle por los avisos.
-10. **La hora y la medianoche** (H1-H5), antes de marzo.
-11. **«Qué te ayuda» en Estadísticas**, lo último de pago, con maqueta.
-12. Con lo que Ez traiga: la Fase 6 del cobro (cuenta de Stripe; antes de cobrar, comprobar restaurar la compra, cancelar, sin conexión y el paso desde la beta, y montar y comprobar lo prometido por escrito: las rutinas de pago usadas antes de v1 y la prueba que pide tarjeta. ChatGPT, 22 oct.: el reparto gratis/de pago ya decidido le parece bien; 19,99 € de por vida son 6,7 meses de 2,99 €, así que empuja a la compra de por vida), el llavero del calendario (altas en
+9. **Seguridad antes de cobrar** (S1, S2, S4, S5, S6), antes de la Fase 6.
+10. **Los avisos de Android** (A1-A4): Ez ya tiene la app en su móvil; preguntarle por los avisos.
+11. **La hora y la medianoche** (H1-H5), antes de marzo.
+12. **«Qué te ayuda» en Estadísticas**, lo último de pago, con maqueta.
+13. Con lo que Ez traiga: la Fase 6 del cobro (cuenta de Stripe; antes de cobrar, comprobar restaurar la compra, cancelar, sin conexión y el paso desde la beta, y montar y comprobar lo prometido por escrito: las rutinas de pago usadas antes de v1 y la prueba que pide tarjeta. ChatGPT, 22 oct.: el reparto gratis/de pago ya decidido le parece bien; 19,99 € de por vida son 6,7 meses de 2,99 €, así que empuja a la compra de por vida), el llavero del calendario (altas en
     Google Cloud y Microsoft) y el logo nuevo («EVEN» se lee «FVFN»).
 
 **Para ChatGPT** (Ez tiene uso de sobra): ya le di los prompts de «qué pasa cuando sale una versión
 nueva», «volver a la app» y «los bloques del día guiado». Lo que traiga se comprueba en el código antes
 de creerlo y entra en esta cola.
 
-**Para Ez, por orden**: los correos de los testers en Play, la rana (y el resto de dibujos), la consulta
-de los bloques, y cuando pueda: las altas de Google y Microsoft, Stripe, el gestor, el aviso legal, el
+**Para Ez, por orden**: los testers (y, con la página de arriba, el grupo de Google), el gestor para darse
+de alta y cobrar, la consulta de ChatGPT de lo legal para cobrar, los dibujos (la rana, en pausa), y cuando pueda: las altas de Google y Microsoft, Stripe, el gestor, el aviso legal, el
 logo, copiar sus dos llaves a un disco y la voz «Más»/«More» del suspiro.
 
 ## Decisiones de Ez de hoy
@@ -110,8 +111,10 @@ logo, copiar sus dos llaves a un disco y la voz «Más»/«More» del suspiro.
 - Dos pestañas a la vez (caso 8 de datos): «A · aceptarlo».
 - Calendario: C3 sin pegas; C2 «A · Cuatro casos». En v0.174.3.
 - «Tus rutinas»: 1A 2A 3A 4A 5A. En v0.174.4. La pared opcional: «Una pared, si la necesitas».
-- Del móvil (`DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»): logros solo con la sesión entera;
-  los bloques cortos, en espera de su consulta.
+- Del móvil (`DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»): logros solo con la sesión entera,
+  y «entera» como se montó (v0.174.5). Las pausas con bloques cortos: 4a A · 4b A (solo con el día empezado)
+  · 4c A, y al pulsar «Hacerla», un ejercicio de Mueve o Estira con el glifo del módulo (maqueta pendiente).
+- La página para testers (`/beta`), en la cola, «en el orden que proceda».
 - Privacidad: la respuesta «No» de Play se mantiene (escribir en el calendario lo pide la persona;
   `/premium` no va en el APK); se corrigen las frases que prometen de más.
 - **Uso de la cuenta:** «cuando quede un 90 % de esta sesión migramos hacia otra cuenta de Claude sin
