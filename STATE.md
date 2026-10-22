@@ -125,7 +125,7 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
 - **Del móvil de Ez** (22 oct., la prueba interna en su Android): M1 al volver a la app con un Foco en
   marcha el aro llega a su sitio a trompicones (`TimerDial.jsx` anima 1 s cada salto; con uno grande,
-  que llegue de golpe) · M2 con el aro corto, la pausa en cuanto llevas 15 min de foco (sin «¿Pausa ahora?»; en espera: Ez lo consulta con ChatGPT) y M3 logros solo con la sesión entera,
+  que llegue de golpe) · M2 con el aro corto, las guiadas como hoy y entre ellas una invitación de 2 min para moverse (Ez, tras ChatGPT; maqueta antes) y M3 logros solo con la sesión entera,
   decididos por Ez (`DECISIONES_PRODUCTO.md`) · M4 la voz grave no dice «exhala» en las rondas (3,6 s
   en fases de 2 s): una prueba para oír · M5 «Ponle ritmo al día» en Estadísticas › Hoy llama a
   `ritmoVolver` sin cerrar el panel y no se ve nada (`StatsHoy.jsx`) · M6 los Ajustes del móvil, al

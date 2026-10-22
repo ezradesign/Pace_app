@@ -26,12 +26,14 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
 - **Logros, solo con la sesión entera** (lo eligió Ez). Hasta hoy contaba para los logros toda sesión
   con 30 s o más de práctica (`PACE_MINIMO_CUENTA_S`), aunque se pulsara «Terminar antes». Ahora una
   sesión terminada antes suma sus minutos a la semana, pero no gana logros.
-- **EN ESPERA (Ez lo consulta con ChatGPT antes de montarlo).** Con el aro corto, la pausa guiada llega en cuanto llevas 15 min de foco o más (Ez, el mismo
-  día, sobre una tabla de casos; sustituye a «nunca más de 30» del 15 oct.): con bloques de 5, a los
-  15; de 10, a los 20; de 15, tras cada uno; de 20 en adelante, como siempre. Se descarta el botón
-  «¿Pausa ahora?», que Ez había elegido antes ese día: con esta regla casi no saldría. Al montarlo hay
-  que medir que un día entero con bloques cortos (el doble de pausas, sin repetir rutina) no se queda
-  sin rutinas; si se queda, se le enseña a Ez antes.
+- **Bloques cortos: las guiadas como hoy y, entre ellas, una invitación de 2 min para moverse** (Ez, 22
+  oct., tras consultarlo con ChatGPT; descarta su regla de «la guiada a los 15 min» y el botón «¿Pausa
+  ahora?»). La evidencia no fija un intervalo para todo el mundo; romper el tiempo sentado no exige una
+  rutina entera. Por partes: primero, con bloques de 5, 10 o 15, al acabar el bloque que llega a 15-20
+  min de foco desde la última pausa, «Dos minutos para moverte», con «Hacerla» y «Seguir», sin rutina,
+  sin cambiar de pantalla, sin logros, y que puede repetirse en el día (no consume rutinas). Si toca una
+  guiada, no hay invitación. El aviso a mitad de un bloque largo (45 min o más), después de verlo.
+  Antes de montarlo, maqueta para Ez. Nunca se promete un beneficio de salud por hacerla.
 - **Pendiente de maqueta:** que la home abra con los módulos y la tarjeta corta en vez de la pregunta
   entera (idea de Ez; hoy es así solo «por libre»), y los Ajustes del móvil más altos (hoy, el 72 %).
 - **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones

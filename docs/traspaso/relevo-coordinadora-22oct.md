@@ -37,9 +37,11 @@ Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en 
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
-1. **Los bloques cortos (M2)**, cuando Ez traiga la respuesta de ChatGPT (le di el prompt): hoy, la
-   pausa a los 30 min de foco; Ez propuso «en cuanto llevas 15 min», en espera. Medir que un día
-   entero con bloques cortos no se queda sin rutinas distintas.
+1. **Los bloques cortos (M2): la invitación de 2 min** (Ez eligió la propuesta de ChatGPT «por partes»;
+   `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). Maqueta primero; las guiadas no cambian. Toca
+   `ritmo.regla.js` (`ritmoComponer`), `state-ritmo.jsx` (`ritmoPrevios`), `ritmo.series.js`
+   (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. Lo que se hace en esos 2 min, se
+   puede consultar a ChatGPT (movimientos sin mirar la pantalla, con alternativa sentada).
 2. **Montar lo que Ez elija de la maqueta** (M7, M6, M4), en la misma sesión de la maqueta.
 3. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
@@ -56,7 +58,7 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 9. **Los avisos de Android** (A1-A4): Ez ya tiene la app en su móvil; preguntarle por los avisos.
 10. **La hora y la medianoche** (H1-H5), antes de marzo.
 11. **«Qué te ayuda» en Estadísticas**, lo último de pago, con maqueta.
-12. Con lo que Ez traiga: la Fase 6 del cobro (cuenta de Stripe), el llavero del calendario (altas en
+12. Con lo que Ez traiga: la Fase 6 del cobro (cuenta de Stripe; antes de cobrar, comprobar restaurar la compra, cancelar, sin conexión y el paso desde la beta, y montar y comprobar lo prometido por escrito: las rutinas de pago usadas antes de v1 y la prueba que pide tarjeta. ChatGPT, 22 oct.: el reparto gratis/de pago ya decidido le parece bien; 19,99 € de por vida son 6,7 meses de 2,99 €, así que empuja a la compra de por vida), el llavero del calendario (altas en
     Google Cloud y Microsoft) y el logo nuevo («EVEN» se lee «FVFN»).
 
 **Para ChatGPT** (Ez tiene uso de sobra): ya le di los prompts de «qué pasa cuando sale una versión
