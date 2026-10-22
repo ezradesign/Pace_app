@@ -46,7 +46,16 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   los Ajustes del móvil ocupan el 79 %, sin scroll (hoy miden 743 px en la web y 812 en Android, con 525
   de hueco). 3A: se quita el chasquido del final del «exhala» de la voz grave; la palabra dura 1,20 s y
   así suena en las rondas sin acelerarla ni grabarla, y deja de sonar ese chasquido en las rutinas lentas.
-  La pregunta 4 de esa página (las pausas con bloques cortos) está pedida y falta.
+- **Las pausas con bloques cortos: 4a A · 4b A · 4c A** (Ez, 22 oct. por la noche, sobre
+  https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA). 4a: «Dos minutos para moverte» sale en el aro, bajo la hora,
+  con «Hacerla» y «Seguir»; «Hacerla» cuenta dos minutos en el aro con una frase (el texto, de la consulta de Ez a
+  ChatGPT; nunca se junta con uno de ejemplo). 4b: «A mi ritmo · Después de cada bloque» se elige dentro del aro, en
+  la línea que hoy dice «Foco breve», con el desplegable de las horas del día, **solo con el día empezado** (tras
+  «¿Cuánto trabajas hoy?»): en la home con los módulos y sin día no sale (Ez: «no tiene sentido»). 4c: sin día
+  preparado vale la misma regla, con la última elección guardada o, si nunca eligió, «A mi ritmo» (lectura de la
+  coordinadora, dicha a Ez): los bloques cortos se juntan hasta media hora, con la invitación entre medias y la
+  ventana de la pausa a la media hora (su regla del 15 oct., «al menos cada 30 minutos»). Se monta después de juntar
+  «Pausas, logros y créditos», que toca el aro.
 ## Lo que dice el calendario que se mantiene solo: cuatro casos (Ez, 22 oct. 2026)
 
 C2 de la auditoría externa del 22 oct. La hoja y el enlace decían «Calendario al día» también en

@@ -47,7 +47,9 @@ Las dos saben que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en 
   (`docs/proposals/maqueta-inicio-22oct.html`, con `maqueta-inicio-hallazgos.md`), hacer «wip» y push, y
   montar 1A 2A 3A si el uso le deja. Comprobar en su rama qué llegó. La pregunta 4 (pausas con bloques
   cortos) se añade republicando la página desde ese HTML en la otra cuenta.
-- La rana: Genspark sigue sin la postura (espinillas a los lados y tronco erguido); Ez tiene el texto para
+- La rana, 22 oct. por la noche: el dibujo nuevo de Ez tampoco vale (de tres cuartos, con las manos y no los
+  antebrazos, las rodillas sin abrir, la flecha hacia delante y color en los muslos). Se le dio un prompt corto.
+- La rana, antes: Genspark sigue sin la postura (espinillas a los lados y tronco erguido); Ez tiene el texto para
   corregirlo, o probar la vista de tres cuartos.
 - Las dos sesiones siguen en marcha y saben que al 85 % hacen «wip» y push, y al 90 % dejan su punto en LEEME
   de su rama. Mira su carpeta por si quedó algo sin commitear (`node scripts/relevo-hilo.js <carpeta>`).
@@ -68,11 +70,14 @@ Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pis
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
 1. **Los bloques cortos (M2): la invitación de 2 min** (Ez eligió la propuesta de ChatGPT «por partes»;
-   `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). Maqueta primero; las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
+   `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). **Maqueta hecha y elegida: 4a A · 4b A (solo con el
+   día empezado) · 4c A** (https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA). La monta la sesión «Maqueta» como
+   v0.175.0 cuando acabe 1A 2A 3A y «Pausas, logros y créditos» esté en main (toca el aro); no se junta sin el
+   texto de los dos minutos que trae Ez de ChatGPT. Las guiadas no cambian. Con la opción «A mi ritmo · Después de cada bloque» para bloques cortos (Ez, gratis; en ese modo las rutinas pueden repetirse, nunca dos seguidas). Toca
    `ritmo.regla.js` (`ritmoComponer`), `state-ritmo.jsx` (`ritmoPrevios`), `ritmo.series.js`
    (`ritmoServir`: la invitación no consume rutinas) y `FocusTimer.jsx`. Lo que se hace en esos 2 min, se
    puede consultar a ChatGPT (movimientos sin mirar la pantalla, con alternativa sentada).
-2. **Montar lo que Ez elija de la maqueta** (M7, M6, M4), en la misma sesión de la maqueta.
+2. **Montar 1A 2A 3A de la maqueta** (M7, M6, M4) como v0.174.6, en la misma sesión de la maqueta: en marcha.
 3. **Lo que prometemos sobre los datos** (P1-P5, auditoría de privacidad de ChatGPT, comprobada): antes
    de conectar «Avísame» y antes de v1.
 4. **La bienvenida y los Ajustes** (A1-A5, A7), después de M6, que también toca los Ajustes.
