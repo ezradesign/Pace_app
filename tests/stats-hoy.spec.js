@@ -185,3 +185,17 @@ test('con PACE completo, Mes y Año se abren aunque ya no estén abiertos para t
   await page.locator('[data-pace-stats-tab="month"]').click();
   await expect(page.locator('[data-pace-month-view]')).toBeVisible();
 });
+
+/* M5 (el móvil de Ez, 22 oct.): por libre, «Ponle ritmo al día» volvía al ritmo con Estadísticas
+   delante, así que no se veía nada. Ahora cierra el panel y la pregunta del día queda a la vista.
+   Contra v0.174.4 cae. */
+test('por libre, «Ponle ritmo al día» cierra Estadísticas y deja a la vista la pregunta del día', async ({ page, context }) => {
+  await sembrar(context, BASE);
+  await page.clock.install({ time: JUEVES });
+  await irAlArtefacto(page);
+  await expect(page.locator('[data-pace-ritmo-panel]'), 'GUARD: por libre ya había pregunta').toHaveCount(0);
+  await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+  await page.locator('[data-pace-hoy-volver]').click();
+  await expect(page.locator('[data-pace-hoy-view]'), 'Estadísticas sigue delante').toHaveCount(0);
+  await expect(page.locator('[data-pace-ritmo-panel]'), 'la pregunta del día no está a la vista').toBeVisible();
+});

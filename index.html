@@ -34990,7 +34990,7 @@ function StatsHoyRejilla(_ref2) {let { n, children } = _ref2;
   return React.createElement("div", { className: clase, "data-pace-hoy-rejilla": n }, children);
 }
 
-function StatsHoy(_ref3) {let { state } = _ref3;
+function StatsHoy(_ref3) {let { state, onClose } = _ref3;
   const { t, lang } = useT();
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
@@ -35016,13 +35016,15 @@ function StatsHoy(_ref3) {let { state } = _ref3;
   }
 
 
+
   const sesiones = statsHoySesiones();
+  const volver = () => {ritmoVolver();if (onClose) onClose();};
   return (
     React.createElement("div", { "data-pace-hoy-view": "libre" },
     React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
     React.createElement("div", { className: "pace-sh-cab" },
     React.createElement(Meta, null, t('stats.hoy.libre')),
-    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: ritmoVolver }, t('ritmo.volver'))
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: volver }, t('ritmo.volver'))
     ),
     sesiones.length ?
     React.createElement(StatsHoyRejilla, { n: sesiones.length },
@@ -36229,7 +36231,7 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
 
 
     React.createElement("div", { "data-pace-stats-vistas": true },
-    tab === 'today' && React.createElement(StatsHoy, { state: state }),
+    tab === 'today' && React.createElement(StatsHoy, { state: state, onClose: onClose }),
     tab === 'week' && React.createElement(WeekView, { state: state }),
     tab === 'month' && React.createElement(MonthHeatmap, { history: history, lang: lang, initialYear: jumpYear, initialMonth: jumpMonth }),
     tab === 'year' && React.createElement(YearView, { history: history, lang: lang, firstSeen: state.firstSeen, onNavigateToMonth: handleNavigateToMonth }),

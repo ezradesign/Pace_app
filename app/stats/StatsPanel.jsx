@@ -310,7 +310,7 @@ function StatsPanel({ open, onClose }) {
           pestanas, el suelo es la mas alta de las tres, que ya cabe en el telefono
           de Ez sin scroll; las otras dos dejan de saltar y no quedan medio vacias. */}
       <div data-pace-stats-vistas>
-        {tab==='today' && <StatsHoy state={state} />}
+        {tab==='today' && <StatsHoy state={state} onClose={onClose} />}
         {tab==='week'  && <WeekView state={state} />}
         {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
         {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
