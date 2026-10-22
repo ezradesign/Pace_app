@@ -28,9 +28,9 @@ test('la tabla de casos: la larga que no cabe al final se sirve corta, y lo dem�
   const r = await page.evaluate((H) => {
     const pozos = ritmoPozos(getState(), '2026-10-13');
     const forma = (items) => items.map((it) => it.tipo === 'foco' ? String(it.dur) : it.tipo === 'pausa' ? (it.larga ? 'L' : 'P') : it.tipo === 'comida' ? 'C' : it.tipo === 'cierre' ? 'fin' : '').filter(Boolean).join(' ');
-    const componer = (op, aro, ahora, previos) => ritmoComponer(op, Object.assign({}, H, { ahora: ahora || 540, media: { inicio: 540, salida: 780 } }), pozos, {}, 8,
+    const componer = (op, aro, ahora, previos, extra) => ritmoComponer(op, Object.assign({}, H, { ahora: ahora || 540, media: { inicio: 540, salida: 780 } }, extra), pozos, {}, 8,
       previos || (aro ? ritmoPrevios([], aro, false, aro) : null));
-    const dia = (op, aro, ahora) => { const m = componer(op, aro, ahora); return forma(m.items) + ' → ' + ritmoHora(m.hasta); };
+    const dia = (op, aro, ahora, extra) => { const m = componer(op, aro, ahora, null, extra); return forma(m.items) + ' → ' + ritmoHora(m.hasta); };
     /* la tarde de la jornada: lo que va detrás de la comida */
     const tarde = (aro) => { const m = componer('jornada', aro); return forma(m.items.slice(m.items.findIndex((it) => it.tipo === 'comida') + 1)); };
     const largas = (op, aro) => componer(op, aro).items.filter((it) => it.larga).length;
@@ -56,7 +56,7 @@ test('la tabla de casos: la larga que no cabe al final se sirve corta, y lo dem�
       dias: {
         '2h 25': dia('2h', 25), '2h plan': dia('2h', null), '2h 20': dia('2h', 20), '2h 30': dia('2h', 30),
         '2h 45': dia('2h', 45), '1h 25': dia('1h', 25),
-        'jornada 14:00 plan': dia('jornada', null, 840), 'media plan': dia('media', null),
+        'jornada 14:00 plan': dia('jornada', null, 840, { sinComida: true }), 'media plan': dia('media', null),
       },
       tardes: { 25: tarde(25), 20: tarde(20), plan: tarde(null) },
       largas: { 'jornada plan': largas('jornada', null), 'jornada 25': largas('jornada', 25), 'jornada 20': largas('jornada', 20), '2h 25': largas('2h', 25) },
@@ -79,7 +79,8 @@ test('la tabla de casos: la larga que no cabe al final se sirve corta, y lo dem�
     /* Ez, 16 oct.: aquí no hay tercera pausa y se deja así por ahora */
     '2h 45': '45 P 60 fin → 10:55',
     '1h 25': '25 P 25 fin → 10:00',
-    /* la larga con sitio detrás (30 min) se queda */
+    /* la larga con sitio detrás (30 min) se queda: tres horas de tarde sin comer (a las 14:00
+       en punto, con «comes», la jornada sirve la comida: Ez, 22 oct.) */
     'jornada 14:00 plan': '45 P 45 P 30 L 30 fin → 17:00',
     'media plan': '45 P 45 P 45 L 35 P 35 fin → 13:00',
   });
