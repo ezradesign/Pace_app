@@ -22,7 +22,12 @@
    lo observa el motor de geometría (home-geometry.js) y lo mueve la piel
    (`_responsive.pieles.js`), y `[data-pace-spc-card]` lleva el reflejo de la luz
    (s159: «la luz reaparece por debajo de la tarjeta»). Cambia el contenido, no el
-   sitio. Con un Camino en curso no se pinta (PathRunner manda), como antes. */
+   sitio. Con un Camino en curso no se pinta (PathRunner manda), como antes.
+
+   DESDE LA 1A (Ez, 22 oct. 2026) TAMBIÉN SIN CONTESTAR: la home abre siempre con los módulos
+   y esta tarjeta, y «Comienza» abre la pregunta (ritmoAbrirPregunta). Con tu semana guardada
+   dice tu día de siempre («Hoy, como cada jueves · Jornada entera, 9:00–17:00») y «Comienza»
+   abre ese día ya contestado, para empezarlo. */
 
 /* El esquema: una jornada tipo (las paradas de «Jornada entera» con la comida en
    medio), sin horas ni etiquetas. Es un dibujo, no un plan: no lee el estado. Un
@@ -50,6 +55,9 @@ function RitmoTarjeta() {
   const [state] = usePace();
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
+  const H = ritmoHabitual(state);
+  const titulo = H ? tn('ritmo.manana.titulo', { dia: ritmoNombreDia(H.diaSemana, t) }) : t('ritmo.pregunta');
+  const nota = H ? t('ritmo.opcion.' + H.opcion) + ', ' + ritmoHora(H.m.desde) + '–' + ritmoHora(H.m.hasta) : t('ritmo.tarjeta.horas');
   const abrirCaminos = () => window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
   const conCaminos = window.SHOW_CAMINOS !== false;
   return (
@@ -60,11 +68,11 @@ function RitmoTarjeta() {
               derecha. Un pie aparte costaba 34 px de aro a 1536×704 (medido). */}
           <div className="pace-rt-tarjeta-cab">
             <div>
-              <div className="pace-rt-tarjeta-t">{t('ritmo.pregunta')}</div>
+              <div className="pace-rt-tarjeta-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
               <div className="pace-rt-tarjeta-s">{t('ritmo.sub')}</div>
             </div>
             <div className="pace-rt-tarjeta-enlaces">
-              <button className="pace-rt-enlace" data-pace-ritmo-ajustar onClick={ritmoVolver}>{t('ritmo.tarjeta.ajustar')}</button>
+              <button className="pace-rt-enlace" data-pace-ritmo-ajustar onClick={ritmoAbrirPregunta}>{t('ritmo.tarjeta.ajustar')}</button>
               {conCaminos && (
                 <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
               )}
@@ -90,12 +98,12 @@ function RitmoTarjeta() {
               <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
             </div>
           )}
-          <div className="pace-rt-tm-t">{t('ritmo.pregunta')}</div>
+          <div className="pace-rt-tm-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
           <RitmoEsquema />
           <div className="pace-rt-tm-pie">
-            <span className="pace-rt-tm-nota">{t('ritmo.tarjeta.horas')}</span>
+            <span className="pace-rt-tm-nota">{nota}</span>
             {/* El botón mide 44 de alto para el dedo; la píldora que se ve, 34. */}
-            <button type="button" className="pace-rt-tm-comienza" data-pace-ritmo-comienza onClick={ritmoVolver}>
+            <button type="button" className="pace-rt-tm-comienza" data-pace-ritmo-comienza onClick={ritmoAbrirPregunta}>
               <span className="pace-rt-tm-pildora">
                 {t('ritmo.tarjeta.comienza')}
                 <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

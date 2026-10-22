@@ -22,7 +22,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, pulsarComienza } = require('./helpers');
 
 const VIE = 'Fri Sep 18 2026';
 const HOY = '2026-09-18';
@@ -183,6 +183,7 @@ for (const vp of [{ w: 1536, h: 704 }, { w: 1366, h: 657 }]) {
 /* ------------------------------------------------------------------ comer o no (s195c, 6C) */
 test('el interruptor de la comida: apagado, la frase se acorta, el día no sirve comida y el menú no la nombra', async ({ page, context }) => {
   await abrir(page, context, { ritmo: {} }, new Date('2026-09-18T09:00:00+02:00'));
+  await pulsarComienza(page);
   const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
   await expect(pregunta).toContainText('comes a las');
   const sw = vis(page, '[data-pace-ritmo-comes]');

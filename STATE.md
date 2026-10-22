@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.4 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.174.6 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -125,12 +125,11 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
 - **Del móvil de Ez** (22 oct., la prueba interna en su Android): M1 al volver a la app con un Foco en
   marcha el aro llega a su sitio a trompicones (`TimerDial.jsx` anima 1 s cada salto; con uno grande,
-  que llegue de golpe) · M2 con el aro corto, la pausa en cuanto llevas 15 min de foco (sin «¿Pausa ahora?»; en espera: Ez lo consulta con ChatGPT) y M3 logros solo con la sesión entera,
-  decididos por Ez (`DECISIONES_PRODUCTO.md`) · M4 la voz grave no dice «exhala» en las rondas (3,6 s
-  en fases de 2 s): una prueba para oír · M5 «Ponle ritmo al día» en Estadísticas › Hoy llama a
-  `ritmoVolver` sin cerrar el panel y no se ve nada (`StatsHoy.jsx`) · M6 los Ajustes del móvil, al
-  72 % de alto y con scroll, y M7 la home que abre con los módulos y la tarjeta corta (idea de Ez):
-  maqueta. Una sesión en cuanto haya hueco, después de juntar «Tus rutinas» (toca Estadísticas).
+  que llegue de golpe) · M2 los bloques cortos: la invitación «Dos minutos para moverte» y «A mi ritmo ·
+  Después de cada bloque», en la página de la pregunta 4 (https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA),
+  esperando las letras de Ez · M3 logros solo con la sesión entera, decidido por Ez
+  (`DECISIONES_PRODUCTO.md`) · M5 «Ponle ritmo al día» en Estadísticas › Hoy llama a `ritmoVolver` sin
+  cerrar el panel y no se ve nada (`StatsHoy.jsx`). M4, M6 y M7 (1A 2A 3A), montadas en v0.174.6.
 - **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
   escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
   calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;

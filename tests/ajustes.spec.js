@@ -117,15 +117,14 @@ test.describe('ajustes · el panel de s188', () => {
     expect(m.scrollea, `contenido ${m.contenido} en un hueco de ${m.hueco}`).toBe(false);
   });
 
-  test('en móvil la hoja se queda por debajo de 1,3 pantallas (antes 2,2)', async ({ page }) => {
+  test('en móvil la hoja cabe sin scroll (antes 2,2 pantallas; con 72 dvh, 1,22)', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await irAlArtefacto(page);
     await abrirAjustes(page);
     const m = await medidas(page);
-    /* Medido al implementar: 743 en 607 = 1,22. La hoja es de 72 dvh a
-       proposito (s27), asi que aqui SI scrollea; lo que se vigila es que no
-       vuelva a ser el panel de dos pantallas y pico. */
-    expect(m.contenido / m.hueco).toBeLessThan(1.3);
+    /* Desde la 2A de Ez (22 oct. 2026) «Tus datos» va en su propia hoja y la de Ajustes
+       ya no scrollea en el móvil. Los tamaños pequeños, en ajustes-movil.spec.js. */
+    expect(m.scrollea, `contenido ${m.contenido} en un hueco de ${m.hueco}`).toBe(false);
   });
 
   test('apagar el sonido atenúa sus dos filas y NO mueve el panel', async ({ page }) => {

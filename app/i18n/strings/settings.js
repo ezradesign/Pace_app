@@ -28,6 +28,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.sec.oir':              'Oír',
     'settings.sec.sesiones':         'Sesiones',
     'settings.sec.datos':            'Tus datos',
+    'settings.datos.abrir':          'Copias, borrar y código',
+    'settings.datos.volver':         'Volver a Ajustes',
 
     // Ver
     'settings.lang':                 'Idioma',
@@ -66,7 +68,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
     'settings.notify.blocked.ios':   'Los avisos de PACE están desactivados en los ajustes del iPhone.',
     'settings.notify.exact':         'Que el aviso llegue a su hora',
-    'settings.notify.exact.note':    'Android puede retrasarlo unos minutos. Permite «Alarmas y recordatorios» para PACE.',
+    'settings.notify.exact.sub':     'Android puede retrasarlo unos minutos',
     'settings.circle':               'Círculo',
     'settings.circle.sub':           'Respira · {name}',
     'settings.circle.flor':          'Loto',
@@ -116,6 +118,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.sec.oir':              'Listen',
     'settings.sec.sesiones':         'Sessions',
     'settings.sec.datos':            'Your data',
+    'settings.datos.abrir':          'Copies, delete and code',
+    'settings.datos.volver':         'Back to settings',
 
     // Look
     'settings.lang':                 'Language',
@@ -153,7 +157,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
     'settings.notify.blocked.ios':   'PACE notifications are turned off in iPhone settings.',
     'settings.notify.exact':         'Get the alert on time',
-    'settings.notify.exact.note':    'Android may delay it by a few minutes. Allow “Alarms & reminders” for PACE.',
+    'settings.notify.exact.sub':     'Android may delay it a few minutes',
     'settings.circle':               'Circle',
     'settings.circle.sub':           'Breathe · {name}',
     'settings.circle.flor':          'Lotus',

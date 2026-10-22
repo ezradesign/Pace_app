@@ -2,10 +2,14 @@
    ===============================================
    Va donde iban Actividades y el Camino sugerido (main.jsx), y decide:
 
-     · por libre  → Actividades + Camino, como siempre, y junto a «Ver caminos»
-                    el enlace para volver («¿Cuánto trabajas hoy? Ponle ritmo al
-                    día»);
-     · si no      → el panel de A tu ritmo.
+     · por libre, o SIN CONTESTAR (Ez, 1A del 22 oct. 2026)
+                  → Actividades y la tarjeta corta (RitmoTarjeta), cuyo «Comienza»
+                    abre la pregunta. Hasta entonces, sin contestar, la home enseñaba
+                    la pregunta entera en lugar de Respira, Estira, Mueve e Hidrátate,
+                    y para solo respirar había que declararse por libre. Sin contestar
+                    no es por libre: no toca el calendario (state-ritmo.support.jsx);
+                  → con la pregunta pedida («Comienza», «Cambiar») o un día elegido,
+                    el panel de A tu ritmo.
 
    EL PANEL HEREDA EL PAPEL DE HORIZONTE DE ACTIVIDADES: lleva
    `data-pace-activitybar`, así que el solapamiento con el aro, el recorte del arco
@@ -43,6 +47,7 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
   const [hoja, setHoja] = useStateRH(false);
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
+  const carta = R.libre || (!plan && !R.distinto && !R.pregunta);
 
   /* El aro mide lo que mide el bloque que toca: al elegir, al cambiar una hora y
      cada vez que un bloque termina (sube `cycle`). Con un bloque en marcha no se
@@ -51,9 +56,9 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
   useEffectRH(() => { ritmoSincronizar(); }, [firma, state.focusMode]);
   useEffectRH(() => { if (!plan) setHoja(false); }, [!!plan]);
 
-  if (R.libre) {
-    /* s195b: por libre, la tarjeta es la del ritmo (RitmoTarjeta), en el sitio y
-       con la cáscara de la del Camino sugerido; «Ver caminos» sigue en su pie. */
+  if (carta) {
+    /* s195b: por libre (y desde la 1A, sin contestar), la tarjeta es la del ritmo
+       (RitmoTarjeta), en el sitio y con la cáscara de la del Camino sugerido. */
     return (
       <React.Fragment>
         <ActivityBar key="act" onOpenLibrary={onOpenLibrary} onOpenHydrate={onOpenHydrate} />

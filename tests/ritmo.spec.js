@@ -41,7 +41,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, pulsarComienza } = require('./helpers');
 
 const NUEVE = new Date('2026-09-17T09:00:00+02:00');   /* 9:00 en Madrid (CEST) */
 const FECHA = '2026-09-17';
@@ -101,6 +101,7 @@ test('la regla: comida a su hora, día contiguo, sin colas cortas, sin repetir y
 test('la home pregunta cuánto trabajas, con el horario en la frase y la hora de fin de cada opción', async ({ page, context }) => {
   const errores = capturarErrores(page);
   await abrir(page, context);
+  await pulsarComienza(page);
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toHaveCount(1);
   await expect(page.locator('[data-pace-activitybar-grid]'), 'Actividades no debería estar').toHaveCount(0);
   /* Dentro del aro no va «A tu ritmo» (Ez): sin día elegido, el rótulo queda vacío. */
@@ -125,6 +126,7 @@ const banda = (page) => page.evaluate(() => {
 
 test('elegir la jornada entera: el aro, el rótulo, la barra lateral y la persistencia', async ({ page, context }) => {
   await abrir(page, context);
+  await pulsarComienza(page);
   const bandaAntes = await banda(page);
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Bloque 1 de 9');
@@ -393,6 +395,7 @@ test('tocar una parada sirve otra rutina del mismo módulo', async ({ page, cont
 
 test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «tarde»', async ({ page, context }) => {
   await abrir(page, context, {}, {}, new Date('2026-09-17T10:30:00+02:00'));
+  await pulsarComienza(page);
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
   await expect(panel).toContainText('hoy de 10:30 a 17:00');
@@ -403,6 +406,7 @@ test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «ta
 test('en inglés, la pregunta y la hora de salida', async ({ page, context }) => {
   await abrir(page, context, {}, { lang: 'en' });
   /* v0.146.0: el título corto, para que a 360×640 quepa con «I'll go freestyle today» (Ez). */
+  await pulsarComienza(page);
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('How many hours today?');
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   await expect(page.getByRole('button', { name: 'Start the day', exact: true })).toBeVisible();

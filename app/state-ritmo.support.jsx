@@ -102,6 +102,17 @@ function ritmoComenzarHabitual() {
 
 function ritmoDistinto() { ritmoPreguntar(); }
 
+/* «COMIENZA» ABRE LA PREGUNTA (Ez, 1A del 22 oct. 2026). Sin contestar, la home enseña los
+   módulos y la tarjeta corta (RitmoHome.jsx), como por libre pero SIN SERLO: no se quitan del
+   calendario las pausas de hoy ni se deja de proponer tu día de siempre. La tarjeta abre la
+   pregunta entera guardando `pregunta` = hoy, que no toca `distinto`: con tu semana
+   guardada, la pregunta llega con tu día de siempre ya contestado. Por libre, como antes:
+   vuelve con ritmoVolver. */
+function ritmoAbrirPregunta() {
+  if (ritmoDe(getState()).libre) { ritmoVolver(); return; }
+  ritmoGuardar(function () { return { pregunta: ritmoHoy() }; });
+}
+
 /* El nombre del día de hoy en minúsculas («martes»), del reloj de la app. */
 function ritmoNombreDia(diaSemana, t) {
   var lista = String(t('ritmo.dias')).split(',');
@@ -114,5 +125,5 @@ function ritmoNombreDia(diaSemana, t) {
 
 Object.assign(window, {
   RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
-  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoNombreDia,
+  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia,
 });

@@ -4,21 +4,35 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
-## 22 oct., tarde: maqueta de M7, M6 y M4 para Ez (rama `claude/maqueta-inicio-3a2a59`, puerto 8803)
+## 22 oct., noche: 1A 2A 3A montadas como v0.174.6 y la pregunta 4 para Ez (rama `claude/maqueta-inicio-3a2a59`, puerto 8803)
 
-**Ez eligió 1A 2A 3A** (22 oct.) sobre https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj: siempre con los
-módulos y la tarjeta corta; «Tus datos» en su propia hoja y Ajustes al 79 % sin scroll; quitar el chasquido
-del «exhala» grave. Página en `docs/proposals/maqueta-inicio-22oct.html` (las fotos y el audio, en la
-publicada) con `maqueta-inicio-hallazgos.md`; guiones en `docs/traspaso/archivos/maqueta-inicio-22oct/`.
-**Nada montado**: va como v0.174.6, con sus pruebas en rojo contra lo de ahora y sin scroll en la home.
-Lo que hay que saber:
-- **M4**: el «exhala» de bradford dura 1,20 s y no 3,57; el `fin: 3.68` de `PACE_VOZ_CLIPS` es un chasquido
-  en los últimos ~15 ms del archivo. Las letras cambiaron: A quitar el chasquido, B regrabar, C como hoy.
-- **M6**: 743 px de Ajustes en la web, 812 en Android; la A («Tus datos» aparte) no pide scroll a 730 ni a 640.
-- **M7**: la home no pide scroll con la A (40 medidas). Por libre vacía el calendario de hoy; sin contestar, no.
-- **Falta la pregunta 4** (la coordinadora, 22 oct.): las pausas con bloques cortos, (a) la invitación
-  «Dos minutos para moverte» con «Hacerla»/«Seguir» y (b) «¿Ejercicio después de cada bloque?», con
-  `DECISIONES_PRODUCTO.md` de `origin/main` (da2bc08). Se suma a la MISMA página (publicar con su `url`).
+**Montado en v0.174.6**, con sus pruebas en rojo contra v0.174.4 (sin juntar; lo junta la coordinadora con el sí de Ez):
+- **1A**: sin contestar, la home abre con los módulos y la tarjeta corta; «Comienza» abre la pregunta
+  (`ritmoAbrirPregunta`, `ritmo.pregunta` = hoy, que no toca `distinto`). Con la semana guardada la tarjeta
+  dice «Hoy, como cada jueves · Jornada entera, 9:00–17:00». Sin contestar no escribe `libre`.
+  `tests/inicio-modulos.spec.js`; sin scroll en 108 medidas.
+- **2A**: «Tus datos» en su propia vista del panel en el móvil; Ajustes al 79 % en Android a 360×730, sin
+  scroll a 640. `tests/ajustes-movil.spec.js`.
+- **3A**: el «exhala» grave acaba en 1,309 s y la voz calla en `fin` + 100 ms (`PACE_VOZ_COLA`).
+  `tests/voz-grave-exhala.spec.js`.
+
+**La pregunta 4, para Ez** (página nueva, de esta cuenta: https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA;
+la de 1-3 era https://claude.ai/artifact/RHBJDiTX5Rix3EXYfN8ugj). HTML en `docs/proposals/maqueta-inicio-22oct.html`,
+guiones `fotos-pausas.js` y `tiras-pausas.js` en `docs/traspaso/archivos/maqueta-inicio-22oct/` (las fotos,
+solo en la publicada). **Ez eligió 4a A · 4b A · 4c A** (22 oct.), con un matiz en la 4b: la elección del aro
+sale SOLO con el día empezado («en el otro menú con los módulos no tiene sentido»); sin día vale la última
+elección guardada y, si nunca eligió, «A mi ritmo». Se monta como v0.175.0 DESPUÉS de que «Pausas, logros y
+créditos» esté en `main` (toca `TimerDial.jsx` y el menú de pausa): juntar `origin/main` y montar. La frase
+de los dos minutos, provisional y en un solo sitio de datos hasta que Ez traiga la de ChatGPT; sin ella no se
+junta a `main`.
+- **4a** dónde sale «Dos minutos para moverte»: A en el aro («Hacerla · Seguir»), B en la fila «Ahora».
+- **4b** dónde se elige «A mi ritmo · Después de cada bloque»: A dentro del aro, en la línea de «Foco breve»
+  (0 px de scroll). La línea bajo los minutos del encargo suma 26 px y pide scroll (23 a 360×730 sin día,
+  26 a 640): queda como B. C, una pregunta la primera vez.
+- **4c** (nueva): sin día preparado, la misma elección (A) o como hoy, la ventana tras cada bloque (B).
+- Tabla del motor (jornada 9-17): A mi ritmo 18 % de pausa (22 % con las invitaciones, como el Pomodoro de
+  25); después de cada bloque 51 % con 5, 35 % con 10, 28 % con 15. Con 10, 25 pausas con rutina y la línea
+  del día del ordenador se amontona.
 
 ## 22 oct., tarde: v0.174.3 y v0.174.4 en `main`; coordina la otra cuenta
 

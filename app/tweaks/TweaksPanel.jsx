@@ -109,6 +109,14 @@ function TweaksPanel({ open, onClose }) {
     });
   };
 
+  /* «TUS DATOS» EN SU PROPIA HOJA, EN EL MÓVIL (Ez, 2A del 22 oct. 2026): el panel medía
+     743 px en la web y 812 en Android con 525 de hueco, y ni a pantalla entera cabía. La
+     sección queda en una línea con «Copias, borrar y código ›», que abre esta vista; el
+     resto entra sin scroll (TweaksPanel.support.jsx). En el ordenador no cambia nada: el
+     enlace no se pinta y la sección va entera. Cerrar el panel vuelve a la vista de todo. */
+  const [vistaDatos, setVistaDatos] = useStateTW(false);
+  useEffectTW(() => { if (!open) setVistaDatos(false); }, [open]);
+
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
   useEffectTW(() => {
     if (open) unlockAchievement('explore.tweaks');
@@ -155,7 +163,7 @@ function TweaksPanel({ open, onClose }) {
   const ponerGoal = (d) => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
-    <div data-pace-tweaks-panel role="dialog" aria-labelledby="pace-aj-titulo" style={{
+    <div data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
@@ -170,10 +178,17 @@ function TweaksPanel({ open, onClose }) {
       animation: 'pace-slide-up 280ms var(--ease)',
     }}>
       <div className="pace-aj-cab">
-        <div className="pace-aj-titulo" id="pace-aj-titulo">{t('settings.title')}</div>
+        {vistaDatos ? (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button type="button" className="pace-aj-volver" data-pace-aj-volver onClick={() => setVistaDatos(false)}
+              aria-label={t('settings.datos.volver')}>‹</button>
+            <div className="pace-aj-titulo" id="pace-aj-titulo">{t('settings.sec.datos')}</div>
+          </div>
+        ) : <div className="pace-aj-titulo" id="pace-aj-titulo">{t('settings.title')}</div>}
         <button type="button" className="pace-aj-cerrar" onClick={onClose} aria-label={t('common.close')}>×</button>
       </div>
 
+      {vistaDatos ? <TweaksDataSection onReset={borrarTodo} isWeb={isWeb} /> : (<React.Fragment>
       <AjustesSeccion titulo={t('settings.sec.ver')}>
         <AjustesFila id="lang" nombre={t('settings.lang')}>
           <AjustesPildoras aria={t('settings.lang')} valor={langValor} onChange={ponerLang} opciones={[
@@ -233,10 +248,7 @@ function TweaksPanel({ open, onClose }) {
           <div className="pace-aj-nota">{t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')}</div>
         )}
         {exactaAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' && (
-          <>
-            <AjustesAccion suave onClick={pedirExacta} derecha="›">{t('settings.notify.exact')}</AjustesAccion>
-            <div className="pace-aj-nota">{t('settings.notify.exact.note')}</div>
-          </>
+          <AjustesAccion suave onClick={pedirExacta} derecha="›" sub={t('settings.notify.exact.sub')}>{t('settings.notify.exact')}</AjustesAccion>
         )}
         <AjustesFila id="circle" nombre={t('settings.circle')} modulo="breathe"
                      sub={tn('settings.circle.sub', { name: t('settings.circle.' + circuloValor) })}>
@@ -261,9 +273,11 @@ function TweaksPanel({ open, onClose }) {
         </AjustesFila>
       </AjustesSeccion>
 
-      <AjustesSeccion titulo={t('settings.sec.datos')} ultima>
+      <AjustesSeccion titulo={t('settings.sec.datos')} ultima plegadaMovil
+        accion={{ texto: t('settings.datos.abrir'), onClick: () => setVistaDatos(true), soloMovil: true }}>
         <TweaksDataSection onReset={borrarTodo} isWeb={isWeb} />
       </AjustesSeccion>
+      </React.Fragment>)}
     </div>
   );
 }
