@@ -33,10 +33,13 @@ const { useState: useStateTD, useRef: useRefTD } = React;
    pudo; los mensajes los pone quien la llama.
    En las apps (Android y iPhone) el WebView no descarga: la copia sale por el
    menu de compartir (ui/nativo.js), desde el que se guarda en Drive, en Archivos
-   o en iCloud. */
-function paceBajarJSON(payload, nombre) {
+   o en iCloud.
+   Devuelve 'descargada' en la web, y en las apps la promesa de lo que pasó con el menú:
+   'compartida', 'cancelada' o 'fallo' (ui/nativo.js). `alAbrir`, al abrirse el menú. */
+function paceBajarJSON(payload, nombre, alAbrir) {
   const texto = JSON.stringify(payload, null, 2);
-  if (typeof paceNativoGuardarArchivo === 'function' && paceNativoGuardarArchivo(nombre, texto)) return;
+  const enApp = typeof paceNativoGuardarArchivo === 'function' ? paceNativoGuardarArchivo(nombre, texto, alAbrir) : false;
+  if (enApp) return enApp;
   const blob = new Blob([texto], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -46,6 +49,7 @@ function paceBajarJSON(payload, nombre) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  return 'descargada';
 }
 
 function paceEnlaceLegal(ruta) {
@@ -57,8 +61,8 @@ function paceDiaArchivo() {
 }
 
 /* `enMemoria`: el estado de la app, para cuando el navegador no deja guardar (AvisoNoGuarda) y lo
-   guardado es viejo o ni se puede leer. */
-function paceDescargarCopia(enMemoria) {
+   guardado es viejo o ni se puede leer. Devuelve lo de `paceBajarJSON`, o false si ni se armó. */
+function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
     if (!enMemoria) { try { raw = localStorage.getItem('pace.state.v2') || '{}'; } catch (e) {} }
@@ -86,8 +90,7 @@ function paceDescargarCopia(enMemoria) {
        que se pueda recuperar; el import la ignora. */
     const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (rescate) payload.rescate = rescate;
-    paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json');
-    return true;
+    return paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json', alAbrir);
   } catch (e) { return false; }
 }
 
@@ -103,22 +106,47 @@ function paceDescargarRescate() {
   } catch (e) { return false; }
 }
 
+/* Lo pasajero que vuelve al recargar: el Foco en marcha o en pausa, y la Respira, el Mueve o el
+   Estira a medias. Al importar es de ANTES de la copia, así que no se reanuda con ella: un bloque
+   ya vencido se contaría en la historia que acaba de entrar (auditoría del 21 oct.). Cada clave
+   la borra su dueño. */
+function paceOlvidarPasajero() {
+  try { if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado(); } catch (e) {}
+  try { if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada(); } catch (e) {}
+  try { if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada(); } catch (e) {}
+}
+
 function TweaksDataSection({ onReset, isWeb }) {
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
 
+  /* Un aviso no lo borra el temporizador de otro anterior: en las apps, el de la hoja abierta
+     y el de cómo acabó van seguidos. */
+  const avisoTimerRef = useRefTD(null);
+  const avisar = (kind, clave, ms) => {
+    setMsg({ kind, text: t(clave) });
+    clearTimeout(avisoTimerRef.current);
+    avisoTimerRef.current = setTimeout(() => setMsg(null), ms);
+  };
+
+  /* En las apps la copia sale por el menú de compartir y el resultado llega después: con el
+     menú abierto, «elige dónde guardarla»; si se cierra sin elegir, o el archivo no se pudo
+     escribir, no se da por hecha ni da su logro (auditoría del 21 oct.). Lo que haga después
+     la app elegida no se sabe, así que nunca se dice «guardada». */
   const exportJSON = () => {
-    if (paceDescargarCopia()) {
-      const enApp = typeof paceEsNativo === 'function' && paceEsNativo();
-      setMsg({ kind: 'ok', text: t(enApp ? 'settings.msg.exported.app' : 'settings.msg.exported') });
-      setTimeout(() => setMsg(null), 2200);
-      /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
-      unlockAchievement('secret.backup');
-    } else {
-      setMsg({ kind: 'err', text: t('settings.msg.export.err') });
-      setTimeout(() => setMsg(null), 2600);
-    }
+    const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
+    Promise.resolve(paceDescargarCopia(null, alAbrir)).then((como) => {
+      if (como === 'descargada' || como === 'compartida') {
+        if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
+        /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
+        unlockAchievement('secret.backup');
+      } else if (como === 'cancelada') {
+        avisar('ok', 'settings.msg.export.cancel', 2600);
+      } else {
+        avisar('err', 'settings.msg.export.err', 2600);
+      }
+    });
   };
 
   /* La fila del rescate (B2): la fecha, corta y en el idioma de la app. */
@@ -126,6 +154,10 @@ function TweaksDataSection({ onReset, isWeb }) {
   const rescateFecha = rescate
     ? paceFechaCorta(rescate.savedAt, lang, { day: 'numeric', month: 'short' })
     : null;
+
+  /* El borrado (TweaksPanel.jsx) llama a esto si el navegador no dejó borrar: no se recarga y se
+     dice aquí, donde salen los demás avisos de «Tus datos». */
+  const noBorro = () => avisar('err', 'settings.msg.reset.err', 3200);
 
   const importJSON = (file) => {
     if (!file) return;
@@ -213,8 +245,21 @@ function TweaksDataSection({ onReset, isWeb }) {
             setTimeout(() => setMsg(null), 2600);
             return;
           }
+          /* El estado entró, pero `legacyWritten` no dice si entró el registro de sesiones: la
+             barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
+             arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde
+             guardarlo (`unavailable`). Si la copia traía registro y no entró, se dice con un
+             aviso que hay que cerrar, y después se recarga: lo que hay en memoria es lo de
+             antes, y el siguiente gesto lo guardaría encima de la copia (auditoría del 21 oct.). */
+          const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+          if (traiaRegistro && r.result !== 'committed') {
+            try { alert(t('settings.msg.import.partial')); } catch (e) {}
+            paceOlvidarPasajero();
+            location.reload();
+            return;
+          }
           setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-          setTimeout(() => location.reload(), 900);
+          setTimeout(() => { paceOlvidarPasajero(); location.reload(); }, 900);
         });
       } catch (e) {
         setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
@@ -251,7 +296,7 @@ function TweaksDataSection({ onReset, isWeb }) {
           <span data-pace-aj-rescate>{t('settings.data.rescate')} <span style={{ color: 'var(--ink-3)', fontSize: '.92em' }}>· {rescateFecha}</span></span>
         </AjustesAccion>
       )}
-      <AjustesAccion suave onClick={onReset} derecha="›">{t('settings.data.reset')}</AjustesAccion>
+      <AjustesAccion suave onClick={() => onReset(noBorro)} derecha="›">{t('settings.data.reset')}</AjustesAccion>
       <PremiumSection />
       {/* El pie: la promesa de privacidad -- es de marca, se queda-- y los
           enlaces /safety y /privacy (s102; paginas estaticas de s101), solo en

@@ -131,11 +131,13 @@ function rolloverIfNeeded(state) {
     const prevMonday  = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
     const todayMonday = getMondayOf(today).getTime();
     if (todayMonday !== prevMonday) {
+      /* Las cinco series: una que falte la repondría el saneador en cada arranque. */
       nextWeekly = {
         focusMinutes:  [0,0,0,0,0,0,0],
         breathMinutes: [0,0,0,0,0,0,0],
         moveMinutes:   [0,0,0,0,0,0,0],
         waterGlasses:  [0,0,0,0,0,0,0],
+        holdSeconds:   [0,0,0,0,0,0,0],
       };
     }
   }

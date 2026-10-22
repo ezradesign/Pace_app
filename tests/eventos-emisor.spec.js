@@ -304,6 +304,52 @@ test('el feedback de otra rutina NO se cuelga de la ultima sesion', async ({ pag
   expect(errores).toEqual([]);
 });
 
+/* Auditoría del 21 oct. 2026, 7: el rechazo de la sesión A borraba «la última sesión» aunque ya
+   fuera B, y el feedback de B se perdía. Cae contra v0.174.0. */
+test('el rechazo de una sesion anterior no borra la ultima: su feedback sigue colgandose', async ({ page }) => {
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  const salida = await page.evaluate(async () => {
+    /* El almacén tarda en contestar a A y la rechaza; B entra a la primera. */
+    const original = window.paceEventsAppend;
+    let rechazarA = null, llamadas = 0;
+    window.paceEventsAppend = (e) => {
+      llamadas++;
+      if (llamadas === 1) return new Promise((r) => { rechazarA = () => r({ result: 'rejected', container: null }); });
+      return original(e);
+    };
+    const datos = { elapsedSeconds: 300, activeSeconds: 280, plannedSeconds: 300, plannedSecondsSource: 'declared' };
+    window.emitSessionCompleted('breathe', 'breathe.478', datos);
+    window.emitSessionCompleted('breathe', 'breathe.box', datos);
+    await new Promise(r => setTimeout(r, 150));
+    rechazarA();
+    await new Promise(r => setTimeout(r, 150));
+    window.paceEventsAppend = original;
+    return window.emitFeedbackAnswered('breathe.box', 'yes');
+  });
+  expect(salida, 'el rechazo de la sesion de antes se llevo la ultima: su feedback no se emite').toBe(true);
+});
+
+/* Auditoría del 21 oct. 2026, 12: «la última sesión» era una para todo. Un Foco que acababa con el
+   «¿Te ayudó?» de una rutina abierto (Foco sigue montado debajo) pasaba a ser la última, y la
+   respuesta se contaba pero su evento no salía. Cae contra v0.174.0. */
+test('un Foco que acaba durante el «¿Te ayudo?» de una rutina no le quita su respuesta', async ({ page }) => {
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  const r = await page.evaluate(async () => {
+    const rutina = window.emitSessionCompleted('breathe', 'breathe.478',
+      { elapsedSeconds: 300, activeSeconds: 280, plannedSeconds: 300, plannedSecondsSource: 'declared' });
+    window.emitSessionCompleted('focus', window.paceFocusRoutineId(),
+      { elapsedSeconds: 1500, activeSeconds: 1500, plannedSeconds: 1500, plannedSecondsSource: 'preset' });
+    await new Promise(res => setTimeout(res, 200));
+    window.recordRoutineFeedback('breathe.478', 'yes');
+    await new Promise(res => setTimeout(res, 300));
+    const c = JSON.parse((await window.eventsWebReadRaw()) || '{}');
+    return { rutina, runIds: (c.events || []).filter(e => e.type === 'feedback.answered').map(e => e.runId) };
+  });
+  expect(r.runIds, 'la respuesta de la rutina no salio: el Foco le quito su sesion').toEqual([r.rutina]);
+});
+
 test('una sesion de Respira emite su plan DECLARADO (§6.4)', async ({ page }) => {
   const errores = capturarErrores(page);
   await page.clock.install();

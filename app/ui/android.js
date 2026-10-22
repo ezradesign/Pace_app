@@ -182,16 +182,25 @@ function paceAndroidAvisoRecolocar() {
 
 /* --- La copia de «Tus datos» y los enlaces -------------------------------- */
 
-/* true si la ha mandado al menu de compartir de Android; false si no hay
-   Android y toca la descarga de la web. */
-function paceAndroidGuardarArchivo(nombre, texto) {
-  if (!paceAndroidPlugin('Filesystem') || !paceAndroidPlugin('Share')) return false;
-  paceAndroidLlamar('Filesystem', 'writeFile', { path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' })
+/* false si no hay Android y toca la descarga de la web. Si lo hay, una promesa con lo que
+   pasó: 'compartida' (se eligió dónde mandarla), 'cancelada' (se cerró el menú sin elegir) o
+   'fallo' (no se escribió el archivo o no se abrió el menú). `alAbrir` se llama con el archivo
+   ya escrito, al abrirse el menú. Antes devolvía true en cuanto había complementos y lo de
+   después se perdía: Ajustes daba la copia por hecha, con su logro, aunque no hubiera archivo
+   (auditoría del 21 oct.). `paceAndroidLlamar` no sirve aquí: se traga el rechazo. */
+function paceAndroidGuardarArchivo(nombre, texto, alAbrir) {
+  var fs = paceAndroidPlugin('Filesystem'), menu = paceAndroidPlugin('Share');
+  if (!fs || !menu || typeof fs.writeFile !== 'function' || typeof menu.share !== 'function') return false;
+  return Promise.resolve()
+    .then(function () { return fs.writeFile({ path: nombre, data: texto, directory: 'CACHE', encoding: 'utf8' }); })
     .then(function (r) {
-      if (!r || !r.uri) return null;
-      return paceAndroidLlamar('Share', 'share', { title: nombre, files: [r.uri] });
-    });
-  return true;
+      if (!r || !r.uri) return 'fallo';
+      try { if (typeof alAbrir === 'function') alAbrir(); } catch (e) {}
+      return Promise.resolve(menu.share({ title: nombre, files: [r.uri] })).then(
+        function () { return 'compartida'; },
+        function (e) { return /cancel/i.test(String((e && e.message) || e)) ? 'cancelada' : 'fallo'; });
+    })
+    .catch(function () { return 'fallo'; });
 }
 
 /* --- El calendario del movil ---------------------------------------------- */

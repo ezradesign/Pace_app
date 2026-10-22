@@ -204,3 +204,110 @@ test('«Borrar todos mis datos» borra TODAS las claves de PACE, no solo el esta
   /* GUARD: el borrado paso de verdad (si no, lo de arriba no prueba nada). */
   expect(claves.filter(k => k.indexOf('pace.') === 0 && k.indexOf('pace.events.') !== 0 && k !== CLAVE_ESTADO)).toEqual([]);
 });
+
+/* AUDITORÍA DEL 21 OCT. (ChatGPT, comprobada por la coordinadora) · 1 y 5.
+ * 1 · LA SEMANA INCOMPLETA. El saneador solo reparaba las series de la semana que EXISTÍAN, y
+ *     `loadState` mezcla por arriba: un `weeklyStats: {}` sustituía al de fábrica entero y el
+ *     primer vaso de la semana reventaba en `[...s.weeklyStats.waterGlasses]`. Con la semana en
+ *     curso (`lastActiveDay` de hoy), porque al cambiar de semana el relevo la rehace entera. La
+ *     barra lateral se traga el error, así que lo que se veía es un vaso que no cuenta.
+ * 5 · SUMAS QUE CONCATENAN. Las métricas de cada día no se miraban: con un `'30'` de una copia
+ *     editada a mano, el mes se re-agregaba como `0 + '30' + '20' = '03020'`.
+ * Calibradas en rojo contra el `index.html` de v0.174.0: las tres caen. */
+const unVasoSaneado = (page) => page.locator('[data-pace-sidebar]').getByRole('button', { name: /Añadir un vaso/ }).click();
+
+async function importarCopia(page, estado) {
+  page.on('dialog', d => d.accept());
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  const recarga = page.waitForEvent('load');
+  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+    name: 'pace-backup-20261021.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ app: 'PACE', version: 'v0.174.0', state: estado })),
+  });
+  await expect(page.locator('.pace-aj-msg')).toHaveText('Importado — recargando…');
+  await recarga;
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+}
+
+for (const via of ['al importar', 'al arrancar']) {
+  test(`1 · una semana sin sus series (\`weeklyStats: {}\`) se completa ${via}, y el vaso siguiente cuenta`, async ({ context, page }) => {
+    const estado = Object.assign({}, CON_HISTORIA, { lastActiveDay: new Date().toDateString(), weeklyStats: {} });
+    await sembrar(context, via === 'al arrancar' ? estado : undefined);
+    const errores = capturarErrores(page);
+    await irAlArtefacto(page);
+    if (via === 'al importar') await importarCopia(page, estado);
+
+    /* La barra lateral se traga el error del vaso (`try/catch`): lo que se ve es que no cuenta. */
+    await unVasoSaneado(page);
+    await page.waitForTimeout(300);
+    const g = await leerGuardado(page);
+    expect(g.water && g.water.today, 'el vaso no se apuntó: la semana se quedó sin su serie de agua').toBe(1);
+    expect(errores).toEqual([]);
+    ['focusMinutes', 'breathMinutes', 'moveMinutes', 'waterGlasses', 'holdSeconds'].forEach((serie) =>
+      expect(g.weeklyStats[serie], 'falta la serie ' + serie).toHaveLength(7));
+    expect(g.totalFocusMin, 'la historia sigue ahí').toBe(4321);
+  });
+}
+
+test('5 · las métricas de cada día se leen como números al arrancar y al importar: el mes suma, no concatena', async ({ context, page }) => {
+  /* Días con texto, y un mes que ya llegó concatenado de antes: el mes se rehace desde los días. */
+  const estado = Object.assign({}, CON_HISTORIA, {
+    history: {
+      days: {
+        '2026-10-01': { focusMinutes: '30', breathMinutes: 0, moveMinutes: '5', waterGlasses: 2, holdSeconds: 0 },
+        '2026-10-02': { focusMinutes: '20', breathMinutes: 'nada', moveMinutes: 0, waterGlasses: '3' },
+      },
+      months: { '2026-10': { focusMinutes: '03020', breathMinutes: 0, moveMinutes: '05', waterGlasses: 5, holdSeconds: 0 } },
+      years: { '2026': { focusMinutes: '03020', breathMinutes: 0, moveMinutes: '05', waterGlasses: 5, holdSeconds: 0 } },
+    },
+  });
+  await sembrar(context, estado);
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+  const leerMes = () => page.evaluate(() => {
+    const h = window.getState().history;
+    return { dia: h.days['2026-10-02'], mes: h.months['2026-10'], anio: h.years['2026'] };
+  });
+  const comprobar = (r, via) => {
+    expect(r.dia, via + ': el día guarda texto').toEqual({ focusMinutes: 20, breathMinutes: 0, moveMinutes: 0, waterGlasses: 3 });
+    expect(r.mes.focusMinutes, via + ': el mes concatena en vez de sumar').toBe(50);
+    expect(r.mes.moveMinutes).toBe(5);
+    expect(r.mes.waterGlasses).toBe(5);
+    expect(r.anio.focusMinutes, via + ': el año concatena en vez de sumar').toBe(50);
+  };
+  comprobar(await leerMes(), 'al arrancar');
+
+  /* La misma copia, importada: lo que se GUARDA ya va en números, antes de recargar. */
+  await importarCopia(page, estado);
+  comprobar(await leerMes(), 'al importar');
+  expect(errores).toEqual([]);
+});
+
+/* AUDITORÍA DEL 21 OCT. · 11 · UNA RUTINA PROPIA DAÑADA. `customRoutines` solo se miraba como
+ * lista, y la tarjeta lee `routine.steps.length` (y la lista, `r.id`): una entrada `null` o sin
+ * pasos tumbaba «Tus rutinas» entera. Ahora el saneador aparta lo que no se puede usar, sin
+ * borrarlo (`customRoutinesApartadas`, que viaja en la copia), y la tarjeta no puede caerse.
+ * Cae contra v0.174.0. */
+test('11 · una rutina propia dañada no tumba «Tus rutinas»: se aparta sin borrarse, y la buena se ve y arranca', async ({ context, page }) => {
+  const paso = { name: 'Hombros', dur: 30, cue: '' };
+  const buena = { id: 'custom.1', name: 'Mi pausa buena', steps: [paso], min: 1, createdAt: 1, updatedAt: 1 };
+  const sinPasos = { id: 'custom.2', name: 'Sin pasos', min: 1 };
+  const conPasoRoto = { id: 'custom.3', name: 'Con un paso roto', steps: [null, paso], min: 1 };
+  await sembrar(context, { premiumUnlocked: true, customRoutines: [buena, null, sinPasos, conPasoRoto] });
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+
+  const s = await page.evaluate(() => ({ lista: getState().customRoutines, apartadas: getState().customRoutinesApartadas }));
+  expect((s.lista || []).map(r => r && r.id), 'lo que no se puede usar sigue en la lista').toEqual(['custom.1', 'custom.3']);
+  expect(s.lista[1].steps, 'el paso roto sigue en la rutina').toEqual([paso]);
+  expect(s.apartadas, 'lo apartado se guarda tal cual, no se borra').toEqual([null, sinPasos, conPasoRoto]);
+
+  await page.getByRole('button', { name: /^Mueve/ }).filter({ visible: true }).first().click();
+  const biblio = page.locator('[data-pace-modal-backdrop]').last();
+  await expect(biblio.getByText('Mi pausa buena'), '«Tus rutinas» se cayó').toBeVisible();
+  /* La tarjeta abre «Antes de empezar», y de ahí la sesión arranca. */
+  await biblio.getByText('Mi pausa buena').click();
+  await page.getByRole('button', { name: 'Empezar', exact: true }).filter({ visible: true }).first().click();
+  await page.locator('[data-pace-session-root]').first().waitFor({ state: 'visible' });
+  expect(errores).toEqual([]);
+});

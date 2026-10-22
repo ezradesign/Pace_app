@@ -96,9 +96,17 @@ function TweaksPanel({ open, onClose }) {
   /* Reset — s155: `paceEventsWipeAll` borra los DOS almacenes por la barrera;
      sin eso `privacy.html` mentiría al prometer borrado total. Se DEFINE aquí y
      se pinta en TweaksData.jsx: `scripts/verify.eventos.js` comprueba que el
-     reset del panel pase por la barrera leyendo ESTE archivo. */
-  const borrarTodo = () => {
-    if (confirm(t('settings.confirm.reset'))) paceEventsWipeAll(() => location.reload());
+     reset del panel pase por la barrera leyendo ESTE archivo.
+     Se recarga solo si el estado se borró. Si el navegador no dejó, la barrera no tocó nada y
+     recargar lo enseñaba todo otra vez sin una palabra: lo dice `alFallar` (TweaksData.jsx).
+     Con el estado borrado y el registro a medias se recarga igual: lo que hay en memoria lo
+     devolvería con el siguiente gesto, y el marcador de la barrera termina al arrancar. */
+  const borrarTodo = (alFallar) => {
+    if (!confirm(t('settings.confirm.reset'))) return;
+    paceEventsWipeAll((r) => {
+      if (r && r.legacyWritten) location.reload();
+      else if (typeof alFallar === 'function') alFallar();
+    });
   };
 
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.

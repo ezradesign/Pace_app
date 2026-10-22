@@ -28,7 +28,9 @@
        página a la vista, como el cambio de día (state-core.dia.js).
    `ritmo.resumido` es la fecha del último día resumido: lo que impide resumir dos
    veces el mismo. La cola sale de uno en uno y cada resumen se quita solo cuando el
-   almacén confirma que lo guardó. Con la página oculta no se hace nada, para no
+   almacén confirma que lo guardó. Cada resumen lleva en la cola el id de su evento
+   (`eventoId`): si PACE se cierra entre guardarlo y quitarlo, el reintento es el mismo
+   evento y el almacén no lo repite (auditoría del 21 oct.). Con la página oculta no se hace nada, para no
    escribir encima de lo que hace otra pestaña (la misma regla del cambio de día). */
 
 var RITMO_RESUMEN_COLA_MAX = 14;   /* dos semanas sin abrir el registro: lo demás no cabe */
@@ -125,8 +127,12 @@ function ritmoResumenAntesDePisar(s, r) {
   var resumen = null;
   try { resumen = ritmoResumenDe(s, dia); } catch (e) { resumen = null; }
   var cola = (Array.isArray(r.resumenes) ? r.resumenes : []).filter(function (x) { return x && x.fecha !== dia.fecha; });
-  if (resumen) cola = cola.concat([resumen]).slice(-RITMO_RESUMEN_COLA_MAX);
+  if (resumen) cola = cola.concat([Object.assign({ eventoId: ritmoResumenId() }, resumen)]).slice(-RITMO_RESUMEN_COLA_MAX);
   return Object.assign({}, r, { resumido: dia.fecha, resumenes: cola });
+}
+
+function ritmoResumenId() {
+  return typeof newEventId === 'function' ? newEventId() : null;
 }
 
 var ritmoResumenEnviando = false;
@@ -146,6 +152,20 @@ function ritmoResumirAhora() {
     var cola = Array.isArray(r.resumenes) ? r.resumenes : [];
     if (!cola.length || typeof paceEventsCanWrite !== 'function' || !paceEventsCanWrite()) return;
     var primero = cola[0];
+    /* Un resumen que entró en la cola sin id (antes de llevarlo) lo recibe y se guarda ANTES de
+       enviarlo: si no, cada reintento sería otro evento. */
+    if (primero && !primero.eventoId) {
+      var id = ritmoResumenId();
+      if (!id) return;
+      setState(function (prev) {
+        var pr = prev.ritmo || {};
+        var conId = (Array.isArray(pr.resumenes) ? pr.resumenes : []).map(function (x) {
+          return x && x.fecha === primero.fecha && !x.eventoId ? Object.assign({}, x, { eventoId: id }) : x;
+        });
+        return Object.assign({}, prev, { ritmo: Object.assign({}, pr, { resumenes: conId }) });
+      });
+      primero = Object.assign({}, primero, { eventoId: id });
+    }
     ritmoResumenEnviando = true;
     var enviado = emitRitmoDia(primero, function () {
       ritmoResumenEnviando = false;

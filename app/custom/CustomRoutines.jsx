@@ -52,7 +52,8 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const unlocked = window.puedeCrearRutinas
     ? window.puedeCrearRutinas()
     : !!pace.premiumUnlocked;
-  const routines = Array.isArray(pace.customRoutines) ? pace.customRoutines : [];
+  /* El saneador ya aparta lo que no se puede usar; esto es por si llega algo sin pasar por él. */
+  const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
 
@@ -145,9 +146,10 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
    es parte del mecanismo de gating) con lápiz de edición añadido. */
 function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--move)' }) {
   const { t, tn } = useT();
-  const stepsLabel = routine.steps.length === 1
+  const nPasos = Array.isArray(routine.steps) ? routine.steps.length : 0;
+  const stepsLabel = nPasos === 1
     ? t('custom.steps.one')
-    : tn('custom.steps.many', { n: routine.steps.length });
+    : tn('custom.steps.many', { n: nPasos });
   return (
     <Card accent={locked ? 'var(--premium)' : accent} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {!locked && (

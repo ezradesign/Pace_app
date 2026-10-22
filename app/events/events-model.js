@@ -93,12 +93,13 @@ function isEventId(value) {
    el payload no cumplen el contrato: preferimos NO registrar a registrar algo
    que un consumidor futuro tendria que adivinar.
    `opts.occurredAt` existe para que las pruebas puedan fijar el instante; en
-   produccion se omite y se lee el reloj. */
+   produccion se omite y se lee el reloj. `opts.id`, para REINTENTAR un evento que
+   quiza ya se guardo (el resumen del dia): con el mismo id el almacen no lo repite. */
 function makeEvent(opts) {
   const o = opts || {};
   if (EVENT_TYPES.indexOf(o.type) === -1) return null;
 
-  const id = newEventId();
+  const id = typeof o.id === 'string' && o.id ? o.id : newEventId();
   if (!id) return null;
 
   const occurredAt = typeof o.occurredAt === 'string' ? o.occurredAt : new Date().toISOString();

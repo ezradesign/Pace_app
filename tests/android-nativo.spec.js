@@ -160,7 +160,30 @@ test.describe('en Android', () => {
     const [compartido] = await llamadas(page, 'Share', 'share');
     expect(compartido.opts.files).toEqual(['file:///data/user/0/com.ezradesign.pace/cache/' + escrito.opts.path]);
     expect(descargas, 'intento una descarga, que el WebView tira').toBe(0);
+    /* Elegido el destino, la copia sí cuenta para su logro. */
+    await expect.poll(() => page.evaluate(() => !!getState().achievements['secret.backup'])).toBe(true);
   });
+
+  /* Auditoría del 21 oct. (9): la copia se daba por hecha en cuanto había complementos. Si el
+     archivo no se escribía o se cerraba el menú sin elegir, Ajustes enseñaba el mensaje bueno y
+     daba el logro de la copia. Las dos caen contra v0.174.0. */
+  for (const caso of [
+    { nombre: 'el archivo no se escribe', plugin: 'Filesystem', metodo: 'writeFile', error: 'sin sitio', texto: 'No se pudo exportar.' },
+    { nombre: 'se cierra el menú sin elegir', plugin: 'Share', metodo: 'share', error: 'Share canceled', texto: 'Copia cancelada.' },
+  ]) {
+    test(`si ${caso.nombre}, la copia no se da por hecha ni da su logro`, async ({ page, context }) => {
+      await sembrar(context, { soundOn: false });
+      await comoAndroid(context);
+      await irAlArtefacto(page);
+      await page.evaluate(([p, m, e]) => { window.Capacitor.Plugins[p][m] = () => Promise.reject(new Error(e)); },
+        [caso.plugin, caso.metodo, caso.error]);
+      await abrirAjustes(page);
+      await page.getByRole('button', { name: 'Exportar una copia', exact: true }).click();
+      await expect(page.locator('.pace-aj-msg'), 'la copia se dio por hecha').toHaveText(caso.texto);
+      await page.waitForTimeout(300);
+      expect(await page.evaluate(() => !!getState().achievements['secret.backup']), 'dio el logro de una copia que no salió').toBe(false);
+    });
+  }
 
   test('los enlaces legales van a la web publicada y el pie dice donde viven los datos', async ({ page, context }) => {
     await sembrar(context, { soundOn: false });

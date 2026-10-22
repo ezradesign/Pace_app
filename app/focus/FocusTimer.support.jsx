@@ -153,6 +153,12 @@ function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   } catch (e) {}
 }
 
+/* Olvida el bloque guardado. Lo pide importar una copia (TweaksData.jsx): un bloque de antes de
+   importar, si ya había vencido, se contaría al recargar en la historia que acaba de entrar. */
+function olvidarFocoGuardado() {
+  try { localStorage.removeItem(PACE_TIMER_KEY); } catch (e) {}
+}
+
 
 /* ============================================================
    AÑADIDO EN s163 al trocear FocusTimer.jsx (686 -> 485 ln).
@@ -349,5 +355,5 @@ Object.assign(window, {
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
-  loadPersistedFocusTimer, persistFocusTimer,
+  loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado,
 });
