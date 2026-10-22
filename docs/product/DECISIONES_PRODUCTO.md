@@ -28,7 +28,9 @@ Ez instaló la prueba interna de Play y probó PACE en su Android. Comprobado en
   sesión terminada antes suma sus minutos a la semana, pero no gana logros.
 - **«¿Pausa ahora?» con el aro corto** (lo eligió Ez). La regla del 15 oct. («nunca más de 30») se
   queda: con bloques de 5 o 15 min la pausa llega a los 30 min de foco. Al acabar un bloque sin pausa
-  detrás, junto a seguir sale un botón para hacer ya la pausa que toca. Sin pulsarlo, nada cambia.
+  detrás, junto a seguir sale un botón para hacer ya la pausa que toca, **a partir de 10 min de foco
+  seguidos** (Ez, el mismo día): con bloques de 10 o 15, tras cada bloque; con bloques de 5, a los 10,
+  15, 20 y 25. Sin pulsarlo, nada cambia.
 - **Pendiente de maqueta:** que la home abra con los módulos y la tarjeta corta en vez de la pregunta
   entera (idea de Ez; hoy es así solo «por libre»), y los Ajustes del móvil más altos (hoy, el 72 %).
 - **Para oír antes de decidir:** con la voz grave, «exhala» dura 3,6 s y no cabe en las exhalaciones
