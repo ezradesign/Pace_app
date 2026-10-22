@@ -98,7 +98,11 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   punto en castellano) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
-  cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, va con la sesión de datos) ·
+  cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; y dos del 22 oct.:
+  A8 Intro en el menú de pausa activa la propuesta y no el botón con el foco, porque el atajo global de
+  `BreakMenu.jsx` solo excluye INPUT y TEXTAREA y también vale con `BreakMenuRitmo`; A9 con dos
+  pestañas en el aviso de seguridad de Respira, `onAccept` (`main.jsx`) usa `pendienteReanudar` sin
+  volver a mirar `leerRespiraGuardada()`, y las dos reanudan y acreditan los minutos de antes) ·
   **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
   programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
