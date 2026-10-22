@@ -57,7 +57,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 ## Espera a Ez
 
 La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
-(`docs/traspaso/hoja-de-ruta-20oct.html`, https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). Ez se
+(`docs/traspaso/hoja-de-ruta-20oct.html`, una por cuenta, porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT
+y, desde el 22 oct. por la tarde, https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6). Ez se
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
@@ -100,9 +101,12 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
   cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; y dos del 22 oct.:
   A8 Intro en el menú de pausa activa la propuesta y no el botón con el foco, porque el atajo global de
-  `BreakMenu.jsx` solo excluye INPUT y TEXTAREA y también vale con `BreakMenuRitmo`; A9 con dos
+  `BreakMenu.jsx` solo excluye INPUT y TEXTAREA y también vale con `BreakMenuRitmo` (tampoco mira las
+  teclas modificadoras ni la composición, y con la propuesta de agua suma un vaso); A9 con dos
   pestañas en el aviso de seguridad de Respira, `onAccept` (`main.jsx`) usa `pendienteReanudar` sin
-  volver a mirar `leerRespiraGuardada()`, y las dos reanudan y acreditan los minutos de antes) ·
+  volver a mirar `leerRespiraGuardada()`, y las dos reanudan y acreditan los minutos de antes; el
+  latido de sesión viva no excluye a una segunda, así que la sesión reanudada se acredita una sola vez
+  por su id. ChatGPT confirmó A8 y A9 el 22 oct. y pide A9 primero, porque toca los datos) ·
   **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
   programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1

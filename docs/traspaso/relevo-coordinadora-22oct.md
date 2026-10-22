@@ -23,8 +23,13 @@ solas pasa 6 de 6). CI en verde.
 
 | Sesión | id | Carpeta y rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
-| «A tu ritmo» y el calendario | `local_79c9f06a-5eba-43f9-9fb6-a66a7794913d` | `.claude/worktrees/happy-allen-d915c3`, `claude/happy-allen-d915c3` | 8797 | v0.174.3 | C1-C3 del calendario que se mantiene solo (`STATE.md`, «Deuda conocida»). Los textos nuevos de C2 los enseña a Ez antes de montarlos |
-| «Tus rutinas» y Estadísticas | `local_cda57a98-31b6-47eb-b82b-1d91c4ee748f` | `.claude/worktrees/beautiful-perlman-2b642c`, `claude/beautiful-perlman-2b642c` | 8799 | v0.174.4 | R1-R6 (material, solo descanso, por lados, reanudar tras editar, terminar antes, series del cierre), Y1 y E1-E4. Lo que se ve, antes en maqueta para Ez |
+| «A tu ritmo» y el calendario | `local_675119b8-dd92-49e9-9918-98b244ae1433` (antes `local_79c9f06a…`) | `.claude/worktrees/happy-allen-d915c3`, `claude/happy-allen-d915c3` | 8797 | v0.174.3 | C1-C3 del calendario que se mantiene solo (`STATE.md`, «Deuda conocida»). Los textos nuevos de C2 los enseña a Ez antes de montarlos |
+| «Tus rutinas» y Estadísticas | `local_dc765250-de13-4fbd-86f5-b06a7730c4ff` (antes `local_cda57a98…`) | `.claude/worktrees/beautiful-perlman-2b642c`, `claude/beautiful-perlman-2b642c` | 8799 | v0.174.4 | R1-R6 (material, solo descanso, por lados, reanudar tras editar, terminar antes, series del cierre), Y1 y E1-E4. Lo que se ve, antes en maqueta para Ez |
+
+**Retomadas el 22 oct. por la tarde** por la coordinadora de la otra cuenta, en las mismas carpetas,
+ramas y puertos (ids de arriba). Ez eligió en la maqueta de «Tus rutinas» **1A 2A 3A 4A 5A**, las
+cinco recomendadas: la sesión monta la 2A y cierra. La del calendario guarda la C2 que quedó sin
+commitear y cierra. La página de pasos de esta cuenta: https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6.
 
 **Al relevo (95 % de uso, 22 oct. por la tarde):**
 - Calendario: C1 y C3 hechos (0b3d437); C2 con la A de Ez, montándose cuando se cortó la cuenta. Mira
