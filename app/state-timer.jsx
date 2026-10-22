@@ -53,6 +53,7 @@ function completePomodoro(bloque) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('focus');
+  return focusMinsAtCompletion;   // lo sumado a la semana, para el evento de la sesión
 }
 
 /* completeFocusSession(context, opts) — punto de entrada unificado del fin de
@@ -68,11 +69,12 @@ function completePomodoro(bloque) {
    carga despues); el guard typeof lo protege por simetria con el resto. */
 function completeFocusSession(context, opts) {
   const mins = (opts && typeof opts.minutes === 'number') ? opts.minutes : 25;
+  let sumados = mins;
   if (context === 'path') {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    completePomodoro(opts && opts.bloque);
+    sumados = completePomodoro(opts && opts.bloque);
   }
   /* s172 · DUAL-WRITE: el evento va DESPUES de la escritura legacy y no puede
      alterarla (`emitSessionCompleted` se traga sus propios fallos). Foco solo
@@ -88,6 +90,7 @@ function completeFocusSession(context, opts) {
       plannedSeconds: mins * 60,
       plannedSecondsSource: 'preset',
       completionReason: 'natural',
+      creditedMinutes: sumados,
     });
   }
 }

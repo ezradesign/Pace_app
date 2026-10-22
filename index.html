@@ -7454,6 +7454,7 @@ function completePomodoro(bloque) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('focus');
+  return focusMinsAtCompletion;
 }
 
 
@@ -7469,11 +7470,12 @@ function completePomodoro(bloque) {
 
 function completeFocusSession(context, opts) {
   const mins = opts && typeof opts.minutes === 'number' ? opts.minutes : 25;
+  let sumados = mins;
   if (context === 'path') {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    completePomodoro(opts && opts.bloque);
+    sumados = completePomodoro(opts && opts.bloque);
   }
 
 
@@ -7488,7 +7490,8 @@ function completeFocusSession(context, opts) {
       activeSeconds: opts && opts.activeSeconds,
       plannedSeconds: mins * 60,
       plannedSecondsSource: 'preset',
-      completionReason: 'natural'
+      completionReason: 'natural',
+      creditedMinutes: sumados
     });
   }
 }
@@ -7893,6 +7896,12 @@ function updateStreak() {
 
 
 
+function conMinutosQueCuentan(evento, minutos) {
+  return evento ? Object.assign({}, evento, { creditedMinutes: minutos }) : evento;
+}
+
+
+
 
 
 
@@ -7960,7 +7969,9 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
 
 
 
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, evento);
+
+
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
 function completeMoveSession(routineId, durationMin, evento) {
@@ -7985,7 +7996,7 @@ function completeMoveSession(routineId, durationMin, evento) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, evento);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
 function completeExtraSession(routineId, durationMin, evento) {
@@ -8029,7 +8040,7 @@ function completeExtraSession(routineId, durationMin, evento) {
   flushAchievementToast('extra');
 
 
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, evento);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
 }
 
 Object.assign(window, {
@@ -8038,11 +8049,12 @@ Object.assign(window, {
   completeBreathSession,
   completeMoveSession,
   completeExtraSession,
+  conMinutosQueCuentan,
   updateStreak,
   checkStatsAchievements,
   checkAllPathsCompleted
 });
-;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, completeBreathSession, completeMoveSession, completeExtraSession });
+;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, completeMoveSession, completeExtraSession });
 })();
 </script>
   <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
@@ -13012,7 +13024,12 @@ function normalizeEventPayload(type, raw) {
       plannedSeconds: planned, plannedSecondsSource: source,
       variant: eventEnum(p.variant, EVENT_VARIANTS),
       origin: eventEnum(p.origin, EVENT_ORIGINS),
-      fromMenu: p.fromMenu === true ? true : p.fromMenu === false ? false : null
+      fromMenu: p.fromMenu === true ? true : p.fromMenu === false ? false : null,
+
+
+
+      creditedMinutes: p.creditedMinutes === null || p.creditedMinutes === undefined ?
+      null : eventCount(p.creditedMinutes)
     };
   }
 
@@ -13053,14 +13070,24 @@ function normalizeEventPayload(type, raw) {
   return null;
 }
 
+
+
+
+function sessionCreditedMinutes(e) {
+  const p = e && e.payload;
+  if (!p) return 0;
+  if (e.v >= 2 && typeof p.creditedMinutes === 'number' && isFinite(p.creditedMinutes)) return p.creditedMinutes;
+  return Math.max(1, Math.round((p.activeSeconds || 0) / 60));
+}
+
 Object.assign(window, {
   EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
   EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
   EVENT_ORIGINS, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload,
   EVENT_RITMO_OPCIONES, EVENT_RITMO_HABITUAL, EVENT_RITMO_PARADAS, EVENT_RITMO_MODULOS,
-  EVENT_RITMO_ESTADOS, eventMinuto, eventRitmoParada
+  EVENT_RITMO_ESTADOS, eventMinuto, eventRitmoParada, sessionCreditedMinutes
 });
-;Object.assign(window, { eventMinuto, eventRitmoParada, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload });
+;Object.assign(window, { eventMinuto, eventRitmoParada, eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload, sessionCreditedMinutes });
 })();
 </script>
   <script>
@@ -13109,6 +13136,12 @@ const EVENTS_BUDGET_BYTES = 500 * 1024;
 
 
 const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed', 'ritmo.day.closed'];
+
+
+
+
+
+const EVENT_VERSIONS = { 'session.completed': 2 };
 
 
 
@@ -13183,7 +13216,7 @@ function makeEvent(opts) {
 
   return {
     id: id,
-    v: 1,
+    v: EVENT_VERSIONS[o.type] || 1,
     type: o.type,
     occurredAt: occurredAt,
 
@@ -13533,7 +13566,7 @@ function backupHasEventsSection(payload) {
 
 Object.assign(window, {
   EVENTS_SCHEMA_VERSION, EVENTS_RETENTION_DAYS, EVENTS_BUDGET_BYTES,
-  EVENT_TYPES, EVENT_CORRELATION, EVENT_CONTEXTS,
+  EVENT_TYPES, EVENT_VERSIONS, EVENT_CORRELATION, EVENT_CONTEXTS,
   newEventId, isEventId, makeEvent, eventCorrelationOk,
   isValidEventEnvelope, compareEvents, isAfterPruneCursor,
   emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer,
@@ -14978,6 +15011,8 @@ function paceCaminoRunId() {
 
 
 
+
+
 function emitSessionCompleted(module, routineId, datos) {
   const d = datos || {};
 
@@ -15006,7 +15041,8 @@ function emitSessionCompleted(module, routineId, datos) {
       plannedSecondsSource: d.plannedSecondsSource || null,
       variant: d.variant || null,
       origin: origen ? origen.origin : null,
-      fromMenu: origen ? origen.fromMenu : null
+      fromMenu: origen ? origen.fromMenu : null,
+      creditedMinutes: typeof d.creditedMinutes === 'number' ? d.creditedMinutes : null
     }
   });
   if (!evento) return null;
@@ -34773,6 +34809,8 @@ function statsHoyParadas(plan) {
 
 
 
+
+
 function statsHoySesiones() {
   let ev = [];
   try {
@@ -34785,7 +34823,7 @@ function statsHoySesiones() {
     const f = new Date(e.occurredAt);
     const rutina = window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId) || { id: e.payload.routineId, name: e.payload.routineId };
     return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
-      min: Math.max(1, Math.round((e.payload.activeSeconds || 0) / 60)) };
+      min: sessionCreditedMinutes(e) };
   }).
   sort((a, b) => a.desde - b.desde);
 }

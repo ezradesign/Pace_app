@@ -3,6 +3,8 @@
  * Casos que la coordinadora comprobó en el código y que se vieron en rojo contra v0.174.2:
  *   Y1 · el Año medía el foco en bloques de 25 min redondeados: un día con 1-12 min de foco
  *        salía vacío, y un año así decía «Aún no hay actividad» con minutos en los totales.
+ *   E1 · «Hoy» por libre: el total de Cuerpo suma los minutos de la sesión entera (colocarse y
+ *        descansos dentro) y la tarjeta de la sesión, solo los de ejercicio: 3 arriba y 2 abajo.
  *   E4 · las cifras con decimales salían con punto en castellano («1.4h» en el Mes, el «intensidad
  *        3.5» del Año) y las de las barras de la semana, sin formatear («1500» en inglés).
  *
@@ -45,6 +47,56 @@ test('Y1 · un día con 10 min de foco se ve en el Año, y el año no dice que n
   await expect(page.locator('[data-pace-year-view]')).not.toContainText('Aún no hay actividad');
   await expect(celdasConColor(page), 'el día con 10 min de foco sale vacío').toHaveCount(1);
   await expect(page.locator('[data-pace-year-view]')).toContainText('1 día con ritmo');
+});
+
+/* ------------------------------------------------------------------- E1 · «Hoy» por libre */
+/* Opción 2A de la maqueta del 22 oct.: la tarjeta de la sesión dice lo mismo que el total.
+   Cuello, como en la foto de la maqueta: 125 s de ejercicio en una sesión que acredita 3 min con la
+   colocación y los descansos. Se cierra por la misma puerta que el runner (`completeExtraSession`),
+   y el evento que deja es el que lee la tarjeta. */
+async function abrirHoy(page) {
+  await page.getByRole('button', { name: /^(Ver estadísticas|View stats)$/ }).first().click();
+  await page.locator('[data-pace-hoy-view="libre"]').waitFor({ state: 'visible' });
+}
+const sesionesDeHoy = (page) => page.evaluate(() => (window.paceEventsSnapshot().events || [])
+  .filter((e) => e.type === 'session.completed').map((e) => ({ v: e.v, payload: e.payload })));
+
+test('E1 · por libre, la tarjeta de la sesión dice los mismos minutos que el total de Cuerpo', async ({ page, context }) => {
+  await sembrar(context, semilla({}));
+  await page.clock.install({ time: JUEVES });
+  await irAlArtefacto(page);
+  await page.waitForFunction(() => typeof window.completeExtraSession === 'function' && typeof window.paceEventsSnapshot === 'function');
+  await page.evaluate(() => window.completeExtraSession('move.neck.3', 3, { elapsedSeconds: 200, activeSeconds: 125,
+    plannedSeconds: 180, plannedSecondsSource: 'derived', variant: 'v1', completionReason: 'natural' }));
+  await expect.poll(async () => (await sesionesDeHoy(page)).length, 'GUARD: la sesión no llegó al registro').toBe(1);
+
+  await abrirHoy(page);
+  await expect(page.locator('[data-pace-stats-tarjeta="move"]')).toContainText('3');
+  const tarjeta = page.locator('[data-pace-hoy-view="libre"] [data-pace-hoy-parada]');
+  await expect(tarjeta).toHaveCount(1);
+  await expect(tarjeta, 'la tarjeta cuenta solo el ejercicio y no cuadra con el total').toContainText('· 3 min');
+
+  const [ev] = await sesionesDeHoy(page);
+  expect(ev.payload.creditedMinutes, 'el evento no apunta los minutos que cuentan').toBe(3);
+  expect(ev.v, 'ampliar el payload sube su `v` (EVENTOS_SCHEMA §9)').toBe(2);
+});
+
+test('E1 · una sesión de antes (v1, sin los minutos que cuentan) sigue con su cifra de ejercicio', async ({ page, context }) => {
+  await sembrar(context, semilla({ move: 3 }));
+  await page.clock.install({ time: JUEVES });
+  await irAlArtefacto(page);
+  await page.waitForFunction(() => typeof window.eventsWebAppend === 'function' && typeof window.makeEvent === 'function');
+  await page.evaluate(async () => {
+    const e = window.makeEvent({ type: 'session.completed', runId: 'run-antes', occurredAt: new Date('2026-10-15T10:40:00+02:00').toISOString(),
+      payload: { module: 'stretch', routineId: 'move.neck.3', completionReason: 'natural', elapsedSeconds: 200, activeSeconds: 125,
+        plannedSeconds: 180, plannedSecondsSource: 'derived', variant: 'v1' } });
+    /* Tal como lo guardaba v0.174.2: `v: 1` y sin el campo. */
+    const antes = Object.assign({}, e, { v: 1, payload: Object.assign({}, e.payload) });
+    delete antes.payload.creditedMinutes;
+    await window.eventsWebAppend(antes);
+  });
+  await abrirHoy(page);
+  await expect(page.locator('[data-pace-hoy-view="libre"] [data-pace-hoy-parada]')).toContainText('10:40 · 2 min');
 });
 
 /* ------------------------------------------------------------------- E2 · un día solo con agua */

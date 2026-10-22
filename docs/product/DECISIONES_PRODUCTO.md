@@ -19,6 +19,23 @@
 
 ---
 
+## Tus rutinas y las cifras de Estadísticas (Ez, 22 oct. 2026)
+
+Con la maqueta de la auditoría del 21-22 oct. delante (`docs/proposals/rutinas-y-cifras-auditoria.html`,
+https://claude.ai/artifact/XdRVMjxUYbQR4iNoLH84DW), Ez eligió las cinco recomendadas, «1A 2A 3A 4A 5A»:
+
+- **1A · Ejercicios por lados en tus rutinas: «30 s por lado».** 30 + 30 y el cambio de lado, como
+  en las rutinas de PACE; el total de la rutina ya lo cuenta.
+- **2A · «Hoy» por libre: la tarjeta de la sesión dice lo mismo que el total de Cuerpo.** Lo de
+  arriba es la suma de lo de abajo. Cada sesión apunta desde v0.174.4 los minutos que cuentan; las
+  de antes siguen con su cifra de ejercicio.
+- **3A · Mes: un día solo con agua lleva el color del agua**, en el tono más suave, como en el Año.
+- **4A · Año en el ordenador: la línea de totales del Mes, debajo del año.**
+- **5A · Los tres textos nuevos**: el paso que PACE no tiene apuntado en «Antes de empezar», la
+  rutina solo con descansos en el constructor y la sesión sin ningún ejercicio, que no cuenta.
+
+Montado en v0.174.4 (rama `claude/beautiful-perlman-2b642c`).
+
 ## Dos pestañas a la vez: se acepta como riesgo (Ez, 22 oct. 2026)
 
 Caso 8 de la auditoría de datos del 21 oct. Con PACE abierto en dos ventanas, si las dos apuntan

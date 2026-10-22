@@ -301,6 +301,12 @@ function updateStreak() {
    ACCIONES DE SESION
    ============================ */
 
+/* Los datos del evento con los minutos que se suman a la semana. Sin datos del runner, nada:
+   el evento no se emite, como antes. */
+function conMinutosQueCuentan(evento, minutos) {
+  return evento ? Object.assign({}, evento, { creditedMinutes: minutos }) : evento;
+}
+
 /* s166 · `holdSec` es OPCIONAL y por diseño: solo las 3 rutinas de rondas
    tienen retencion, y `PathBreatheStep` llama a esto sin ese argumento. Sin
    dato, la semana no se toca -- que no es lo mismo que sumarle 0, porque asi
@@ -369,8 +375,10 @@ function completeBreathSession(routineId, durationMin, holdSec, evento) {
   flushAchievementToast('breathe');
   /* s172 · dual-write: el evento SIEMPRE detras de la escritura legacy, que es
      la que manda (stats, logros, racha). `evento` lo arma el runner, que es
-     quien tiene los tiempos; sin el, no se emite nada y la app sigue igual. */
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, evento);
+     quien tiene los tiempos; sin el, no se emite nada y la app sigue igual.
+     Lleva los minutos que se acaban de sumar a la semana (`creditedMinutes`), que son los que
+     enseña la tarjeta de la sesión en «Hoy»: así suma lo mismo que el total. */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
 function completeMoveSession(routineId, durationMin, evento) {
@@ -395,7 +403,7 @@ function completeMoveSession(routineId, durationMin, evento) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, evento);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
 function completeExtraSession(routineId, durationMin, evento) {
@@ -439,7 +447,7 @@ function completeExtraSession(routineId, durationMin, evento) {
   flushAchievementToast('extra');
   /* El enum del esquema llama `stretch` a lo que el codigo llama `extra`: el
      nombre del modulo se traduce AQUI y no en el runner (§8). */
-  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, evento);
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
 }
 
 Object.assign(window, {
@@ -448,6 +456,7 @@ Object.assign(window, {
   completeBreathSession,
   completeMoveSession,
   completeExtraSession,
+  conMinutosQueCuentan,
   updateStreak,
   checkStatsAchievements,
   checkAllPathsCompleted,
