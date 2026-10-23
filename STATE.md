@@ -8,7 +8,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **Web** en https://pacegrass.app (y `paceweb.pages.dev`, sin redirigir), con `/premium` y su lista
   «Avísame», que se enciende al conectar el KV (`docs/launch/avisame.md`), y desde v0.174.7 `/beta`
   para que los testers de Android se apunten solos (sus dos enlaces, el grupo `pace-tests` y la prueba
-  de Play, encendidos el 23 oct.); las dos con la letra y los botones de la app.
+  de Play, encendidos el 23 oct.); las dos con la letra y los botones de la app. Desde el 23 oct. por la noche,
+  /premium enseña lo de pago en un mosaico de capturas de la app real (Ez eligió la B; las rehace
+  `scripts/play/capturas-premium.js`).
 - **Android** (Fase 2 de `ROADMAP.md`) hecho en código y sin probar en un móvil: cada push a `main`
   compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0) y, desde el 22
   oct., **dentro de v1** (Ez): TestFlight en cuanto haya cuenta de Apple, y la App Store el mismo día que
@@ -78,8 +80,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Mueve y Estira: Ez eligió 1A 2A 3A 4A** (23 oct., sobre
   https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE; `DECISIONES_PRODUCTO.md`). Lo monta la sesión `mueve-estira` en dos
-  versiones (0.175.2 los textos, 0.176.0 las capas); Ez dirá «júntalo» sobre sus fotos. Las capturas de /premium, en
-  la sesión `capturas-premium`, con maqueta. Detalle en el relevo, «23 oct., noche».
+  versiones (0.175.2 los textos, 0.176.0 las capas); Ez dirá «júntalo» sobre sus fotos. Detalle en el relevo, «23
+  oct., noche».
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6; el grupo y `/beta` ya están, falta difundirlos: `testers.md`); el
   gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar

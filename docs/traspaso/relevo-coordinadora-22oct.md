@@ -41,7 +41,14 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
 | Mueve y Estira: textos y tres capas | `local_0812deb0-b9e7-4f39-b952-98fef14eacff` (`mueve-estira`) | `…mueve-estira-capas` | 8805 | Parte 1: v0.175.2, los textos (1A), con fotos antes/después; avisa con el hash y sigue. Parte 2 en la misma rama: v0.176.0, capas, seis ejercicios y gratis/pago. Se junta la 1 sola (hasta su commit) con el sí de Ez |
 | Capturas de lo de pago para /premium | `local_28ad6083-ff54-4f52-9df4-a5619be68930` (`capturas-premium`) | `…premium-capturas` | 8806 | 5c: capturas (Tus rutinas, la carta, mes y año, una de Respira) y maqueta con 2-3 formas; espera a que Ez elija. Solo `premium/`, `scripts/play/`, `scripts/web-dist.js` y sus pruebas |
 
-5. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
+5. **/premium con las capturas, en main** (merge 3830f94, ~21:15): Ez eligió la B «mosaico, optimizando para móvil»
+   en la propia sesión (sobre https://claude.ai/artifact/EbyxaxDviP1kb5HvQHhQXR) y dijo «júntalo» viendo las fotos de lo
+   montado. Sin versión nueva (la app no cambia). Con todo junto: verify y las 20 pruebas de /premium, /beta, el
+   artefacto y las cabeceras en verde; la suite entera, la del CI. La sesión `capturas-premium` acabó: archivarla con el
+   sí de Ez (su `node_modules` es un enlace: quitarlo con `[System.IO.Directory]::Delete` antes de borrar el worktree).
+   Safari: el segundo intento de b6afcae seguía contra Azure porque el runner lee `/etc/apt/apt-mirrors.txt`; b403b65 lo
+   quita de ahí. Mirar el registro del CI: imprime la lista de espejos.
+6. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
    la cola.
 
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
