@@ -154,7 +154,7 @@ function esperarServidor(intentos) {
   });
 }
 
-(async () => {
+async function main() {
   const servidor = spawn(process.execPath, [path.join(ROOT, '.claude', 'static-server.js')],
     { cwd: ROOT, env: Object.assign({}, process.env, { PORT: String(PUERTO) }), stdio: 'ignore' });
   try {
@@ -201,4 +201,8 @@ function esperarServidor(intentos) {
   } finally {
     servidor.kill();
   }
-})().catch((e) => { console.error(e); process.exit(1); });
+}
+
+/* Las de /premium (capturas-premium.js) se hacen con estas mismas piezas. */
+module.exports = { ROOT, PUERTO, BASE, CLAVE, clic, sesion, marco, guardar, esperarServidor };
+if (require.main === module) main().catch((e) => { console.error(e); process.exit(1); });
