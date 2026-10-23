@@ -7,7 +7,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 - **Web** en https://pacegrass.app (y `paceweb.pages.dev`, sin redirigir), con `/premium` y su lista
   «Avísame», que se enciende al conectar el KV (`docs/launch/avisame.md`), y desde v0.174.7 `/beta`
-  para que los testers de Android se apunten solos; las dos con la letra y los botones de la app.
+  para que los testers de Android se apunten solos (sus dos enlaces, el grupo `pace-tests` y la prueba
+  de Play, encendidos el 23 oct.); las dos con la letra y los botones de la app.
 - **Android** (Fase 2 de `ROADMAP.md`) hecho en código y sin probar en un móvil: cada push a `main`
   compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0) y, desde el 22
   oct., **dentro de v1** (Ez): TestFlight en cuanto haya cuenta de Apple, y la App Store el mismo día que
@@ -33,9 +34,10 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 0. **Play Console, con Ez paso a paso** (20 oct.; la página de pasos de Ez, abajo): app creada como
    «PACE: Pomodoro, Break Reminder», en inglés como idioma principal y Gratis (`nombre-en-play.html`).
    **21 oct.: cuestionarios y ficha hechos (capturas nuevas, logo de Ez de gráfico, IA sin etiquetar) y
-   la prueba cerrada ENVIADA a revisión de Google** con 0.174.0, todos los países y Ez más dos testers.
-   Siguen la prueba interna en el móvil de Ez, los correos del resto de testers y, al aprobarla, el
-   enlace para invitarlos (`testers.md`). «Tus rutinas» se abrió
+   la prueba cerrada APROBADA** (21 oct., 23:40) con 0.174.0 y todos los países. El 22 oct. Ez puso de
+   testers el grupo `pace-tests@googlegroups.com` (sustituye a la lista) y lo envió a revisión: cuando
+   el Resumen de la publicación no tenga nada en revisión, LinkedIn y avisar a sus dos testers
+   (`testers.md`). «Tus rutinas» se abrió
    hasta v1 (v0.173.3) para que el acceso restringido sea «No» de verdad: se sube 0.174.0 o posterior.
    Gráfico destacado nuevo, el logo de Ez (`grafico/logo-ez.jpg`); las capturas se rehacen con 0.174.0.
 1. **Fase 2**: probar el APK en un móvil (icono, arranque de día y de noche, importar una copia, que lo
@@ -73,7 +75,7 @@ y, desde el 22 oct. por la tarde, https://claude.ai/artifact/5iWBfHE7kD3dUVocdsk
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
-  (tiene 5 o 6; con `/beta`, crear el grupo «PACE testers» y añadirlo en Play: `testers.md`); el
+  (tiene 5 o 6; el grupo y `/beta` ya están, falta difundirlos: `testers.md`); el
   gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar
   el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
 - Copiar `PACE-llave-play` y `PACE-llave-licencias` a su disco duro y mandar a cada tester su enlace
@@ -86,8 +88,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
 - Los dibujos que faltan: la cuenta y los prompts, en `docs/product/GLIFOS_A_DIBUJAR.md`.
-- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer y su llave
-  (`docs/launch/app-store/guia.html`, puntos 3 y 4), y pasar a sus testers qué mirar, sobre todo el sonido.
+- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer (pagada el 22 oct.,
+  «Pending» hasta 48 h; no volver a pagar) y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4), y pasar a sus testers qué mirar, sobre todo el sonido.
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.
 
 ## Deuda conocida, sin fecha

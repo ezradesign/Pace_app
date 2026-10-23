@@ -65,6 +65,8 @@ una vez:
    `data-enlaces` de `beta/index.html`, que es el único sitio de los enlaces: `grupo.url` y
    `"pendiente": false`. El de Play ya está puesto (`https://play.google.com/apps/testing/com.ezradesign.pace`)
    y se enciende igual, con `"pendiente": false`, cuando Google apruebe la prueba cerrada.
+   **Hecho el 23 oct.**: el grupo es `https://groups.google.com/g/pace-tests` (`pace-tests@googlegroups.com`;
+   `pace-testers` estaba cogido) y los dos enlaces están encendidos.
 
 Mientras un enlace está pendiente, su paso dice que llega pronto. El regalo (PACE completo de por vida)
 no va en la página: el código de la web, de `codigos-tester.csv`, se manda a cada uno, y el de Android

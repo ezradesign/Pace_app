@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 23 oct., mañana: v0.174.7 en `main`; coordina la cuenta de EcLj6…
+
+Relevo y cola: `docs/traspaso/relevo-coordinadora-22oct.md`, bloque «23 oct., mañana». Página de pasos de esta
+cuenta: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Los dos enlaces de `/beta` (el grupo `pace-tests` y la
+prueba de Play) están encendidos; la sesión «Maqueta» sigue con v0.175.0 en su carpeta, rama y puerto (8803).
+
 ## 22 oct., noche (hacia las 22:00): v0.174.6 en `main`; coordina la cuenta de 5iWBf…
 
 Relevo, sesión abierta y cola: `docs/traspaso/relevo-coordinadora-22oct.md`. Página de pasos de esta cuenta:

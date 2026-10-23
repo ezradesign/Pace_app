@@ -8,6 +8,21 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
+
+Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a las 14:00). Si la semana pasa del
+85 %, se prefiere la otra cuenta (`docs/WORKFLOW.md` §10). Lo hecho del bloque «AL RELEVO» de abajo:
+1. **El CI de 48ec001 salió verde entero.** La caída de d8030aa era `tests/aro-de-golpe.spec.js` leyendo tarde: un
+   segundo render con el mismo restante devuelve el 1 s. Ahora lee la transición en el mismo cambio que mueve el arco
+   (MutationObserver). Comprobado: sin `deGolpe` cae (1 s en el salto) y con él, 6 de 6.
+2. **`/beta`, los dos enlaces encendidos** (`https://groups.google.com/g/pace-tests` y la prueba de Play). La prueba
+   de 360 px mira cada paso según el bloque y la de pendientes los simula.
+3. **«Maqueta» retomada en su carpeta**: sesión `local_0d59f656-7920-4237-9b06-ec0c56ae1b85` («Maqueta: «Ver
+   ejercicio» y v0.175.0»), rama `claude/maqueta-inicio-3a2a59`, puerto 8803; encargo en `.claude/relevo/RELEVO.md`
+   de su carpeta. Acaba con fotos para Ez; se junta con su sí y la suite entera con todo junto.
+4. «Página para testers» (`local_be95e077-…`) y la coordinadora de anoche (`local_4fd476ac-…`) son de la cuenta de
+   5iWBf…: desde esta no se ven; se archivan desde allí.
+
 ## AL RELEVO (22 oct., ~22:50, esta cuenta al 92 %; la otra se repone a las 00:30)
 
 **Lo primero, en la carpeta principal (nunca `cd` en Bash; rutas absolutas y `git -C`):**
