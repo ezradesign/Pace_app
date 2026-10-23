@@ -4,7 +4,38 @@ La respuesta, tal cual: `mueve-estira-chatgpt-respuesta-23oct.md`. El inventario
 `mueve-estira-inventario-23oct.html` (https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp). Esto es una primera
 pasada de la coordinadora; lo siguiente es la página para que Ez elija, con maqueta de cada decisión.
 
-## Tras la segunda respuesta (manda sobre lo de abajo)
+## Tras la tercera respuesta, las 63 fichas (manda sobre todo lo de abajo)
+
+Es la más útil: trabaja sobre el texto real de cada ejercicio. Comprobado contra `inventario.json` (los textos de hoy):
+
+- **Errores de verdad en nuestros textos** (se pueden arreglar ya, en una versión pequeña y sin decisiones de Ez):
+  «Hueco abdominal» y «Hueco en silla» dicen «Baja los pies para que sea más suave»: con las piernas en el aire,
+  bajarlas sin apoyar alarga la palanca y lo hace MÁS difícil; lo fácil es doblar las rodillas o apoyar los pies.
+  «Suspensión pasiva · opcional» dice «repite las wall slides», en inglés dentro del castellano.
+- **Nombres que no dicen el movimiento**, confirmados: «Círculos de hombro» describe círculos de brazos estirados;
+  «Inclinación lateral» es de cuello también en «Columna en la silla», que la cuenta como columna; «Rotación
+  torácica» está sentado en las cuatro rutinas, también en «Columna · ondas» y «Despertar matinal», que son de
+  suelo; «Apertura de costillas + respiración» es respirar a cuatro patas; «Hueco en silla» es levantar las piernas
+  sentado. Antes de reutilizar un dibujo, mirar que enseña ESE movimiento.
+- **Modo y dosis que no casan**: «Rana» es un balanceo y va como 70 s quietos; «Rotación lenta», 25 s por lado para
+  un giro de ida y vuelta; «Círculos de muñeca», 10 por sentido en 20 s.
+- **Diez pausas de entrada** (4 Mueve + 6 Estira) hechas SOLO con ejercicios que ya existen, de 2 a 3 min.
+- **De 22 ejercicios nuevos, 5** (remo con banda, bisagra de cadera, inclinación de tronco, gemelo en pared,
+  desliza el talón) **más «remo con tu mano»** como alternativa sin banda. «Zancada corta» y «puente con los dos
+  pies» son variantes de lo que hay, no ejercicios nuevos. Son 6 dibujos, no 22.
+- **Estructura**: «suspendido» como posición, modo (repeticiones, sostenido, movimiento suave) aparte de la
+  duración, y juntar fichas duplicadas sin perder variantes. Cuatro, sin publicar hasta concretarlas: «Marcha del
+  elefante», «Onda espinal», «Puente torácico» y «Sentadilla de cuádriceps».
+
+Lo que hay que mirar nosotros: los dibujos (lo dice sin verlos), cómo encajan las diez pausas en el motor de «A tu
+ritmo» (los días de cuerpo entero de v0.174.0 componen con zonas) y el inglés de cada texto que cambie. Sigue
+abierto para Ez: gratis y de pago.
+
+Las decisiones de Ez se quedan en cuatro: (1) arreglar ya los textos con errores, nombres y dosis (versión pequeña,
+recomendada lo primero); (2) las tres capas con estas diez pausas de entrada; (3) los 6 ejercicios nuevos y sus
+dibujos; (4) el reparto gratis y de pago.
+
+## Tras la segunda respuesta
 
 Ez le señaló a ChatGPT que retiraba ejercicios ya hechos, y ChatGPT corrigió: **quitar una rutina repetida no
 obliga a retirar sus ejercicios**. Su propuesta corregida, al final de `mueve-estira-chatgpt-respuesta-23oct.md`:

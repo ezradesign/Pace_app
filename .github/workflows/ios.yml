@@ -26,8 +26,9 @@ on:
 permissions:
   contents: read
 
+# Por evento: un push a main no puede cancelar una subida a TestFlight lanzada a mano.
 concurrency:
-  group: ios-${{ github.ref }}
+  group: ios-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:

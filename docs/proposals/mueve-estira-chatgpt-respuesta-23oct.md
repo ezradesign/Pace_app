@@ -282,3 +282,247 @@ Mi propuesta corregida para PACE
 Conservar los ejercicios ya hechos que superen la revisión; simplificar las rutinas recomendadas; y reservar las variantes exigentes para elección expresa. No los borraría por no encajar en el recorrido inicial.
 
 Además, revisaría mi propuesta de 22 ejercicios nuevos antes de producir tantos dibujos: primero comprobaría qué huecos reales puede cubrir vuestro contenido actual. Reorganizar y mejorar lo que ya tenéis debe ir antes que ampliar por ampliar.
+
+---
+
+## Tercera respuesta (23 oct., a la segunda pregunta: las 63 fichas)
+
+## 1. Revisión de las 63 fichas
+
+**Con los textos reales cambia bastante el diagnóstico: varios de los “huecos” que señalé ya tienen una versión fácil dentro de vuestro catálogo.** Antes de añadir ejercicios, corregiría nombres, instrucciones y variantes.
+
+Las tres comprobaciones que sospechabais quedan así:
+
+- **Hueco en silla:** describe una **elevación sostenida de piernas sentado y con respaldo**, no un hueco abdominal ni una suspensión del cuerpo sobre las manos.
+- **Puente torácico:** describe un **puente invertido**, pero faltan la posición de pies y rodillas. Combina fuerza y movilidad; no es solo una extensión de la espalda alta.
+- **Sentadilla de cuádriceps:** parece una **sentadilla con talones elevados**, posiblemente una variante de *sissy squat*. Sin indicar qué hacen la cadera y el tronco, no puede identificarse con seguridad.
+
+### Criterios para leer la tabla
+
+- **Pausa:** apto para pausas recomendadas **en su versión de entrada corregida**. No significa que deba aparecer a todo el mundo.
+- **Libre:** elección expresa en el catálogo; algunos requieren aclaración antes de publicarlos.
+- **Progresión:** versión más exigente, con una preparación previa.
+- La capa es la **ubicación principal**, no una prohibición de aparecer en otra.
+- La dificultad corresponde a la versión descrita, no a todas sus posibles variantes.
+- «Qué exige» identifica las demandas principales, no todos los músculos implicados.
+- **El acceso gratis/pago queda separado:** no lo asigno a partir de la dificultad.
+
+Las clasificaciones y progresiones siguientes son propuestas de diseño y ejercicio general, no una escala clínica validada. Para la entrada tomo como referencia dosis pequeñas, apoyos estables y progresión gradual; por ejemplo, el NHS empieza varios ejercicios de fuerza con cinco repeticiones. [Fuente](https://www.nhs.uk/live-well/exercise/strength-exercises/)
+
+### Fichas 1–21
+
+| N.º · ejercicio | Módulo · capa · dificultad | Qué exige | Posición · material | Por dónde empezar | Cómo graduarlo | Corrección o aclaración del texto |
+|---|---|---|---|---|---|---|
+| **1 · 90/90** | Estira · Libre · **2** | Movilidad; apoyo en manos | Suelo · ninguno | Coloca las piernas hacia un lado, con manos detrás, sin cambiar todavía. | Primero mantener; después pocos cambios, ayudándote con las manos. | **Es dinámico:** cambia las rodillas de lado sin obligarlas a tocar el suelo ni mantener ángulos exactos de 90°. |
+| **2 · Abrir y cerrar el puño** | Estira · Pausa · **1** | Movilidad | Sentado · ninguno | Cerrar y abrir suavemente. | Aumenta algo el recorrido, no la fuerza ni la velocidad. | Sustituye «con fuerza» y «a buen ritmo» por **«cierra sin apretar al máximo y abre despacio»**. |
+| **3 · Apertura con banda** | Mueve · Libre · **2** | Fuerza | De pie · banda | Banda ligera y recorrido corto; sin banda, apertura libre como movimiento distinto. | Aumenta primero repeticiones y después resistencia. | Falta la colocación: **banda delante del pecho, brazos casi estirados; separa las manos sin llevarla hacia la cara**; abrir sin banda no equivale al trabajo resistido. |
+| **4 · Apertura de costillas + respiración** | Estira · Pausa · **1** | Apoyo en manos | Suelo · ninguno | Misma respiración sentado si no quieres apoyar las manos. | Cambia la posición, no fuerces más aire. | **El texto es respiración a cuatro apoyos, no apertura de brazos:** «deja que las costillas se ensanchen suavemente, sin intentar inmovilizar toda la espalda». |
+| **5 · Apertura de pecho** | Estira · Pausa · **1** | Movilidad | Sentado o de pie · ninguno | Codos menos abiertos y mirada al frente. | Abre un poco más sin mover la cintura. | Sustituye «mira al techo» por **«mantén el cuello cómodo y no tires de la cabeza con las manos»**. |
+| **6 · Apertura de pecho sentado** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Brazos junto al cuerpo, moviéndolos poco hacia atrás. | Aumenta suavemente el recorrido. | Aclara **«sin agarrarte al respaldo ni arquear la cintura»**; es una variante sentada, no otro patrón distinto. |
+| **7 · Apretar glúteos** | Mueve · Libre · **1** | Fuerza, de baja carga | Sentado · silla | Contracciones suaves de 2 s. | Algo más de tiempo; para mayor carga, pasa al puente con ambos pies. | Cambia «con fuerza» por **«aprieta de forma moderada»** y elimina «nadie tiene que notarlo» como criterio técnico. |
+| **8 · Barbilla atrás** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Recorrido pequeño, sin mantener. | Añade una pausa de 1–2 s. | Texto claro; concreta **«mantén 1–2 segundos y vuelve»**, sin intentar pegar la barbilla al cuello. |
+| **9 · Círculos de hombro** | Estira · Pausa · **1** | Movilidad | De pie · ninguno | Círculos pequeños con un brazo cada vez. | Aumenta el círculo solo mientras el tronco siga tranquilo. | **El texto describe círculos de brazos**, no encoger y rotar los hombros; renómbralo «Círculos de brazos». |
+| **10 · Círculos de muñeca** | Estira · Pausa · **1** | Movilidad | Sentado · ninguno | 3 círculos pequeños por sentido. | Hasta 5–6, sin acelerar. | Ajusta la dosis: **10 por sentido no tienen por qué caber en 20 s si se hacen despacio**. |
+| **11 · Círculos de tobillo** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Un pie cada vez, pocos centímetros elevado. | Aumenta ligeramente recorrido o repeticiones. | Cambia «amplios» por **«del tamaño que puedas hacer sin mover toda la pierna»**. |
+| **12 · Cuádriceps en pared** | Estira · Progresión · **3** | Movilidad; equilibrio | Suelo · pared | Flexor de cadera, con el pie trasero en el suelo. | Menos flexión de rodilla y tronco algo inclinado; después acércate gradualmente. | Especifica **rodilla trasera en el suelo y empeine en la pared**, y no presentes una silla como un apoyo intercambiable sin explicar su estabilidad. |
+| **13 · Cuello y trapecios** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Inclinación mínima y regreso al centro. | Pausas suaves de 10–15 s. | **Duplica la inclinación lateral:** sustituye «deja caer» por «inclina con control, sin tirar ni subir el hombro». |
+| **14 · Deslizamientos en pared** | Estira · Pausa · **1** | Movilidad | De pie · pared | Brazos más bajos y recorrido corto. | Sube algo más sin compensar con la cintura. | **No obligues a pegar brazos y manos:** permite separarlos si mantener el contacto exige forzar la postura. |
+| **15 · Elevación de puntas** | Mueve · Pausa · **1** | Fuerza; equilibrio con apoyo | De pie · pared o mesa | Pocos centímetros y ambos pies a la vez. | Más repeticiones; si usas pared, aleja un poco los pies sin perder control. | Concreta cómo apoyarte en la pared o mesa y añade **«no te balancees hacia atrás»**. |
+| **16 · Elevación de talones** | Mueve · Pausa · **1** | Fuerza; equilibrio con apoyo | De pie · silla o mesa; sentado: silla | Sentado o de pie con ambos pies y apoyo. | Más repeticiones; después más carga sobre una pierna manteniendo apoyo. | Separa las variantes **sentado, de pie y a una pierna**: no tienen la misma dificultad; cambia «lo más alto» por «hasta donde controles». |
+| **17 · Encogimiento de hombros** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Subir y bajar poco. | Algo más de recorrido, sin mantener tensión. | Sustituye **«déjalos caer» por «bájalos despacio»**. |
+| **18 · Escalenos** | Estira · Libre · **2** | Movilidad | Sentado · silla | Inclinación lateral sin anclar la mano ni mirar arriba. | Mantén una combinación muy pequeña de inclinación y giro. | El texto no identifica un músculo de forma fiable: **usa un nombre de movimiento y no pidas sentarte sobre la mano ni mirar arriba como requisito**. |
+| **19 · Estiramiento de muñeca** | Estira · Pausa · **1** | Movilidad | Sentado · ninguno | Sin ayuda de la otra mano. | Añade acompañamiento ligero, no más presión. | Define **brazo al frente, codo ligeramente flexible y qué dirección toma la palma en cada variante**. |
+| **20 · Extensión de dedos** | Estira · Pausa · **1** | Movilidad | Sentado · ninguno | Abrir y relajar los dedos suavemente. | Más recorrido cómodo, no más tensión. | Texto válido; aclara **«sin empujarlos hacia atrás con la otra mano»**. |
+| **21 · Extensión torácica** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Elevar el pecho sin apoyarte sobre el borde. | Extensión pequeña sobre un respaldo adecuado. | **No todos los respaldos sirven:** no uses un borde duro sobre cuello o cintura ni fuerces la cabeza hacia atrás. |
+
+### Fichas 22–42
+
+| N.º · ejercicio | Módulo · capa · dificultad | Qué exige | Posición · material | Por dónde empezar | Cómo graduarlo | Corrección o aclaración del texto |
+|---|---|---|---|---|---|---|
+| **22 · Flexiones inclinadas** | Mueve · Pausa · **2** | Fuerza; apoyo en manos | De pie · mesa; pared como variante | Flexiones en pared o mesa alta fija, 4–5 repeticiones. | Más repeticiones y después apoyo más bajo, sin perder control. | **No exijas llegar a 12:** elige una inclinación para completar la dosis corta; mesa fija, no plegable ni con ruedas. |
+| **23 · Flexor de cadera** | Estira · Pausa · **2** | Movilidad; equilibrio | Suelo · ninguno | Zancada corta arrodillada y apoyo de manos sobre el muslo delantero. | Pequeño avance de pelvis manteniendo el tronco cómodo. | Cambia **«empuja la pelvis» por «avanza unos centímetros sin arquear la cintura»**; si el apoyo de rodilla resulta incómodo, cambia de ejercicio. |
+| **24 · Fondos en silla** | Mueve · Progresión · **3** | Fuerza; apoyo en manos | De pie, con cadera fuera del asiento · silla | Flexiones inclinadas; no son idénticas, pero permiten empezar con empuje. | Pies cerca y bajada pequeña; después aumenta solo si controlas. | **El ángulo recto no es una garantía:** limita por control y comodidad del hombro, con silla inmovilizada contra pared. |
+| **25 · Gateo** | Mueve · Pausa · **2** | Fuerza; apoyo en manos | Suelo · ninguno | Cuatro apoyos, levantando una mano cada vez; después pasos cortos. | Más pasos o pausas; no levantar las rodillas por defecto. | El texto describe **gateo con rodillas apoyadas**, no gateo de oso; elimina el consejo automático de pasar a puños si las muñecas molestan. |
+| **26 · Gato-camello** | Estira · Pausa · **1** | Movilidad; apoyo en manos | Suelo · ninguno | Recorrido pequeño. | Amplía algo el movimiento sin buscar extremos. | Sustituye **«vértebra a vértebra» por «redondea y extiende suavemente la espalda»**: no hace falta controlar cada vértebra. |
+| **27 · Giro sentado** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Manos sobre el pecho, sin agarrar el respaldo. | Más recorrido cómodo, no más palanca. | Se solapa con rotación torácica: **la mano acompaña, no tira del respaldo para girar más**. |
+| **28 · Hueco abdominal** | Mueve · Progresión · **3** | Fuerza | Suelo · ninguno | Rodillas dobladas y brazos junto al cuerpo; esfuerzos de 5–8 s. | Estira y aleja las piernas gradualmente, manteniendo control. | **Error importante:** bajar las piernas estiradas sin apoyarlas suele hacerlo más difícil; para facilitarlo, dobla rodillas o apoya los pies. |
+| **29 · Hueco en silla** | Mueve · Libre · **2** | Fuerza | Sentado · silla | Elevar un pie unos centímetros, alternando y con espalda apoyada. | Ambos pies separados del suelo, primero con rodillas dobladas. | Renombra **«Piernas elevadas sentado»**; silla sin ruedas, no solo frenada, y distingue bajar los pies *hasta apoyarlos* de bajar piernas sin apoyo. |
+| **30 · Inclinación lateral** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Pequeña inclinación de cabeza. | Pausa breve sin aumentar presión. | **Es de cuello, también cuando aparece en «Columna en la silla»**; renombra «Inclinación de cuello» y no lo cuentes como movilidad lateral del tronco. |
+| **31 · Isquio a una pierna** | Estira · Pausa · **1** | Movilidad; equilibrio | De pie · ninguno; silla como apoyo | Talón delantero en el suelo, rodilla algo flexible y mano en silla. | Aumenta un poco la inclinación desde las caderas. | Aclara **«talón en el suelo, no sobre una silla»** y permite flexionar también la rodilla delantera. |
+| **32 · Juntar omóplatos** | Estira · Pausa · **1** | Movilidad | De pie · ninguno | Movimiento pequeño, sin apretar al máximo. | Pausa de 1–2 s; no convertirlo en una contracción máxima. | Texto básicamente válido; **no presentarlo como sustituto de una tracción con resistencia**. |
+| **33 · Marcha del elefante** | Mueve, provisional · Libre · **3** | Fuerza; movilidad; apoyo en manos | De pie → suelo · ninguno | Pliegue con manos en mesa; no reproduce el mismo esfuerzo. | Solo graduar tras definir recorrido y apoyos. | **El nombre y el texto no permiten identificarla:** «caminar con manos» puede ser un paseo hacia plancha o un estiramiento alterno; define inicio, final y qué hacen los pies antes de publicarla. |
+| **34 · Onda espinal** | Estira · Libre · **2** | Movilidad | De pie · ninguno | Gato-camello de recorrido pequeño, si aceptas suelo. | Aprender una secuencia corta sin buscar una ola grande. | **Demasiado ambiguo:** explica por separado qué hacen pelvis, tronco y cabeza; no debe interpretarse como un latigazo de cuello. |
+| **35 · Palmas al suelo** | Estira · Libre · **2** | Movilidad; apoyo en manos | De pie · mesa | Estiramiento de muñeca sin cargar peso. | Añade muy poca carga, sin aumentar recorrido y carga a la vez. | Renombra **«Palmas en mesa»** y define postura y desplazamiento: «peso atrás» no explica bien cómo cambia la carga sobre las muñecas. |
+| **36 · Paloma** | Estira · Progresión · **3** | Movilidad; apoyo en manos | Suelo · ninguno | Posición más alta, manos apoyadas y pie delantero cerca de la pelvis. | Menor o mayor inclinación, sin forzar la pierna delantera. | **No intentes arreglar una molestia de rodilla ajustando el pie:** sal de la posición; el cojín no puede ser una solución obligatoria oculta. |
+| **37 · Pica en escritorio** | Mueve · Progresión · **3** | Fuerza; movilidad; apoyo en manos | De pie · mesa | Flexiones inclinadas. | Cadera menos alta, bajada corta y pocas repeticiones. | Cambia **«pies más lejos = más fácil» por una variante definida**, porque también cambia la dirección del empuje; mesa inmóvil y cabeza sin contacto. |
+| **38 · Plancha** | Mueve · Progresión · **3** | Fuerza; apoyo en antebrazos | Suelo · ninguno | Rodillas apoyadas y esfuerzos de 8–10 s. | Más tiempo breve; después rodillas sin apoyo. | **La variante con rodillas necesita su propia colocación:** línea de hombros a rodillas, sin empujar la cadera hacia atrás. |
+| **39 · Plancha lateral** | Mueve · Progresión · **3** | Fuerza; equilibrio; apoyo en antebrazo | Suelo · ninguno | Ambas rodillas dobladas, apoyo en antebrazo y rodilla inferior. | Aumenta tiempo breve; después estira las piernas. | **«Baja la rodilla» es insuficiente:** explica la posición de ambas piernas y coloca el codo bajo el hombro. |
+| **40 · Pliegue adelante** | Estira · Libre · **2** | Movilidad; equilibrio | De pie · ninguno; mesa como apoyo | Manos en mesa y rodillas dobladas. | Menos apoyo o algo más de recorrido. | Permite **pies separados como las caderas** y manos en muslos o mesa; tocar abajo no es el objetivo. |
+| **41 · Puente con marcha** | Mueve · Progresión · **2** | Fuerza | Suelo · ninguno | **Mismo ejercicio sin marcha: ambos pies apoyados.** | Después despega un pie poco, alterna y aumenta repeticiones. | Sustituye **«baja el ritmo si la lumbar se queja» por «apoya ambos pies o termina si no mantienes la pelvis controlada o aparece molestia»**. |
+| **42 · Puente isquio a una pierna** | Mueve · Progresión · **3** | Fuerza | Suelo · ninguno | Puente con ambos pies. | Menos repeticiones a una pierna; después aumenta recorrido o repeticiones. | El nombre promete énfasis en isquios, pero falta distancia del talón: **renombra «Puente a una pierna» o define esa variante concreta**. |
+
+La corrección del hueco abdominal merece prioridad: alejar las piernas estiradas hacia el suelo aumenta la dificultad; doblar las rodillas es una forma de reducirla. [Fuente](https://www.verywellfit.com/how-to-do-a-hollow-body-hold-techniques-benefits-variations-5079591)
+
+### Fichas 43–63
+
+| N.º · ejercicio | Módulo · capa · dificultad | Qué exige | Posición · material | Por dónde empezar | Cómo graduarlo | Corrección o aclaración del texto |
+|---|---|---|---|---|---|---|
+| **43 · Puente torácico** | Mueve · Progresión · **3**, provisional | Fuerza; movilidad; apoyo en manos | Suelo · ninguno | Puente con ambos pies boca arriba; prepara piernas, **no** el mismo apoyo de hombros. | Tras aclararlo: rodillas dobladas, elevación pequeña y breve. | Renombra **«Puente invertido»** y define pies y rodillas: no sabemos si quieres una mesa invertida o una plancha invertida con piernas estiradas. |
+| **44 · Rana** | Estira · Libre · **2** | Movilidad; apoyo en antebrazos | Suelo · ninguno | Rodillas poco separadas, manos apoyadas y balanceo pequeño. | Amplía algo separación o recorrido, no ambos a la vez. | **La versión actual es dinámica:** no la programes como una postura inmóvil de 70 s ni obligues a bajar a antebrazos. |
+| **45 · Rezo invertido** | Estira · Libre · **2** | Movilidad | Sentado · ninguno | Flexión de muñeca sin ayuda. | Contacto ligero entre dorsos, sin empujar. | **No es el rezo invertido detrás de la espalda:** define orientación de dedos y movimiento, y elimina «cara interna», que puede no corresponder al gesto. |
+| **46 · Rodar hacia abajo** | Estira · Libre · **2** | Movilidad; equilibrio | De pie · ninguno | Bajada parcial con manos deslizándose por muslos. | Más recorrido solo mientras la subida siga controlada. | Cambia **«vértebra a vértebra» por «redondea gradualmente»** y permite parar antes de colgar el tronco. |
+| **47 · Rotación externa** | Estira · Pausa · **1** | Movilidad | Sentado o de pie · ninguno | Codos pegados al cuerpo y apertura pequeña. | Más recorrido cómodo; añadir banda sería **otra variante de fuerza**. | Texto válido; aclara **«sin resistencia»**, para no confundirla con un ejercicio de fuerza de hombros. |
+| **48 · Rotación lenta** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Pocos grados a cada lado. | Algo más de recorrido y pausa de 1–2 s. | **Es un movimiento, no 25 s mirando al extremo:** indica repeticiones y vuelve al centro entre ellas. |
+| **49 · Rotación torácica** | Estira · Pausa · **1** | Movilidad | Sentado · silla | Giro pequeño con pies apoyados. | Algo más de recorrido sin tirar con los brazos. | **El texto es sentado en todas las rutinas:** no reutilices una imagen a cuatro apoyos o de pie; «giro del tronco» es más fiel que aislar una región. |
+| **50 · Rotación torácica de pie** | Estira · Pausa · **1** | Movilidad; equilibrio leve | De pie · ninguno | La misma rotación sentado. | Pequeño aumento de giro sin retorcer rodillas. | Sustituye **«la cadera mira al frente» por «evita que todo el cuerpo gire junto, sin bloquear la pelvis a la fuerza»**. |
+| **51 · Sentadilla a silla** | Mueve · Pausa · **2** | Fuerza; equilibrio | De pie ↔ sentado · silla | **Siéntate del todo y levántate**, ayudándote con manos si hace falta. | Menos ayuda; después rozar el asiento sin descansar. | Para entrada, cambia **«hasta rozar» por «siéntate con control»**; rozar es una progresión. |
+| **52 · Sentadilla búlgara** | Mueve · Progresión · **3** | Fuerza; movilidad; equilibrio | De pie · silla; pared como apoyo | Zancada con ambos pies en el suelo y una mano apoyada. | Poco recorrido y pocas repeticiones; después aumenta uno de ellos. | **No mezcles 40 s con “unas 6”** sin aclarar el modo; define dónde va el pie delantero y conserva apoyo lateral. |
+| **53 · Sentadilla de cuádriceps** | Mueve · Progresión · **3**, provisional | Fuerza; movilidad; equilibrio | De pie · mesa | Sentadilla a silla con pies apoyados. | Tras definirla: recorrido corto y apoyo continuo. | **Ambigua:** especifica si la cadera baja entre los pies o el cuerpo se inclina atrás como en una *sissy squat*; no es un estiramiento. |
+| **54 · Sentadilla lateral** | Mueve · Libre · **2** | Fuerza; movilidad; equilibrio | De pie · ninguno; mesa como apoyo | Desplazamiento lateral corto con mano en mesa. | Más recorrido o menos ayuda, sin perseguir profundidad. | Es una **sentadilla lateral dinámica**, no solo movilidad: «hacia este lado» debe indicar lado de la rodilla que se dobla y dirección de esa rodilla. |
+| **55 · Sentadilla profunda** | Estira · Libre · **2** | Movilidad; equilibrio | De pie, en cuclillas · mesa como apoyo | Cuclillas menos profundas y apoyo firme. | Más profundidad si puedes entrar y salir con control. | No empujes rodillas con los codos; **elimina «pon algo bajo los talones» sin definir qué es y su estabilidad**: reduce profundidad como opción básica. |
+| **56 · Sentadilla profunda sostenida** | Estira · Libre · **2** | Movilidad; equilibrio | De pie, en cuclillas · mesa como apoyo | Igual que la anterior, durante pocos segundos. | Algo más de tiempo, sin relajarte hasta perder control. | **Duplica el patrón anterior:** conserva el modo sostenido como variante y cambia «relaja al fondo» por «mantén un apoyo cómodo y una salida controlada». |
+| **57 · Sentarse y levantarse del suelo** | Mueve · Libre · **2** | Fuerza; movilidad; equilibrio; apoyo en manos | Suelo ↔ de pie · ninguno; silla como apoyo | Bajar y subir con manos y apoyo estable. | Reduce ayuda solo si lo eliges; no hace falta quitar las manos. | Falta la secuencia: **explica cómo pasar por apoyo lateral o media rodilla**, y elimina la jerarquía implícita «sin manos si puedes». |
+| **58 · Silla en la pared** | Mueve · Pausa · **2** | Fuerza | De pie · pared | Flexión pequeña durante 10–15 s. | Más tiempo breve y después algo más de profundidad. | **No exijas 90° como colocación inicial:** empieza alto y describe cómo salir empujando con los pies. |
+| **59 · Suspensión activa** | Mueve · Progresión · **3** | Fuerza; agarre; apoyo en manos | **Suspendido** · barra | Agarre con pies apoyados y parte del peso descargado. | Más carga suspendida y después esfuerzos breves completos. | Falta colocación; **activa suavemente sin doblar codos ni forzar los hombros “atrás”**, manteniendo pies cerca del suelo. |
+| **60 · Suspensión pasiva** | Estira · Libre · **3** | Movilidad; fuerza de agarre; apoyo en manos | **Suspendido** · barra | Misma posición con ambos pies apoyados y poco peso colgando. | Retira parte del apoyo de pies, no empieces por 30 s completos. | **“Relajado” no significa soltar el agarre ni dejar caer el peso de golpe:** barra instalada para soportarlo y entrada y salida con pies, sin saltar. |
+| **61 · Suspensión pasiva · opcional** | Estira · Libre · **3** | Movilidad; fuerza de agarre; apoyo en manos | **Suspendido** · barra | Igual que la anterior, con pies apoyados. | Misma progresión, con esfuerzos cortos. | **Es el mismo ejercicio que 60:** conserva una ficha y la condición «opcional» en la rutina; traduce *wall slides* y aclara que no equivalen a colgarse. |
+| **62 · Zancada con apertura** | Estira · Libre · **3** | Movilidad; equilibrio; apoyo en manos | De pie, en zancada · mesa | Mano en mesa fija, giro pequeño y mirada al frente. | Baja el apoyo solo si llegas con control; no hace falta llegar al suelo. | **Aclarad qué mano apoya y qué brazo abre**; sustituye el libro por mesa estable y no obligues a seguir la mano con la mirada. |
+| **63 · Zancada profunda** | Mueve · Libre · **2** | Fuerza; movilidad; equilibrio | De pie · mesa como apoyo | Misma zancada con paso cómodo, recorrido corto y mano apoyada. | Aumenta recorrido o repeticiones, no profundidad obligatoria. | El texto describe **bajar y subir en zancada**, no un estiramiento: la rodilla puede avanzar, pero **pasar el pie no es el objetivo**. |
+
+### Cambios de estructura que haría antes de producir más contenido
+
+1. **Añadir «suspendido» como posición.** Colgarse de una barra no es estar de pie ni en el suelo. Para fondos usaría además una etiqueta de apoyo: «manos en silla».
+2. **Separar modo de ejecución y duración:** dinámico por repeticiones, sostenido por segundos y movimiento suave por tiempo. Hoy se mezclan.
+3. **Unificar fichas sin perder variantes:**
+   - Cuello y trapecios + inclinación lateral.
+   - Suspensión pasiva + suspensión pasiva opcional.
+   - Sentadilla profunda + variante sostenida.
+   - Giro sentado + rotación torácica sentada, salvo que defináis una diferencia real.
+4. **No publicar todavía las versiones ambiguas** de marcha del elefante, onda espinal, puente torácico y sentadilla de cuádriceps sin concretarlas y contrastar el dibujo.
+
+Esto no retira contenido: **conserva las variantes y evita contar duplicados como ejercicios distintos**.
+
+---
+
+## 2. Pausas recomendadas rehechas
+
+### Propondría 10 pausas de entrada: 4 de Mueve y 6 de Estira
+
+No intentaría meter los 63 ejercicios en las recomendaciones. El catálogo libre y las progresiones existen precisamente para conservar el resto sin complicar la entrada.
+
+**Estas pausas usan únicamente ejercicios actuales o variantes sencillas de los actuales. No requieren los 22 nuevos.**
+
+### Reglas comunes
+
+- **Primera vez:** puedes hacer una sola serie.
+- En Mueve, descansa normalmente **20–30 s entre series o ejercicios**; más si lo necesitas.
+- Repite despacio y sigue respirando. Termina la serie antes de perder el control.
+- En Estira, no rebotes ni busques una intensidad alta.
+- Los minutos son **presupuestos aproximados con preparación y descansos**, no tiempos obtenidos sumando solo las contracciones. Hay que comprobarlos en una prueba real de uso.
+- Si acabas antes, **no añadas repeticiones para rellenar el reloj**.
+- Las opciones de suelo y de apoyo en manos deben poder desactivarse.
+
+La silla debe ser estable, sin ruedas y no resbalar; también conviene empezar con pocas repeticiones y aumentar gradualmente. [Fuente](https://www.nhs.uk/live-well/exercise/strength-exercises/)
+
+### Mueve: cuatro pausas
+
+| Pausa | Propósito y posición | Dosis de entrada | Tiempo orientativo |
+|---|---|---|---|
+| **Levántate y sube** | Fuerza básica de piernas. De pie/sentado, silla. | **Sentadilla a silla:** 2 × 5, sentándote del todo.<br>**Elevación de talones:** 2 × 6, de pie con apoyo. | **3 min** |
+| **Empuje sencillo** | Empuje del tren superior. De pie, pared o mesa fija. | **Flexiones inclinadas:** 2 × 5; primera opción, pared si la mesa exige demasiado.<br>Descansa entre series. **No añado movilidad para fingir un segundo ejercicio de fuerza.** | **2 min** |
+| **Piernas sin pasos** | Trabajar piernas sin desplazarte. De pie, pared. | **Elevación de puntas:** 2 × 8.<br>**Silla en pared:** 2 × 15 s, posición alta, sin buscar 90°. | **3 min** |
+| **Fuerza en suelo** | Extensión de cadera y movimiento con apoyos. Suelo. | **Puente con marcha, sin marcha:** 2 × 6 con ambos pies apoyados.<br>**Gateo con rodillas apoyadas:** 1 × 4 pasos cortos hacia delante y regreso; puedes sustituirlos por levantar una mano cada vez, 3 por lado. | **3 min** |
+
+**Por qué solo cuatro de momento:** ya cubren levantarte, empujar, trabajar tobillos y piernas de forma sostenida, y empezar en el suelo. El hueco más claro que queda es **tirar con resistencia**, no otro circuito de sentadillas.
+
+No incluyo como pausa inicial la plancha completa, la lateral completa, fondos, búlgara, hueco o suspensiones. **Siguen disponibles en su capa**, con dosis breves y elección expresa.
+
+### Estira: seis pausas
+
+| Pausa | Propósito y posición | Dosis de entrada | Tiempo orientativo |
+|---|---|---|---|
+| **Cuello suave** | Mover el cuello sentado, sin tirar con las manos. | **Barbilla atrás:** 1 × 5, pausa de 1 s.<br>**Rotación lenta:** 1 × 3 por lado, pausa de 2 s.<br>**Inclinación de cuello:** 1 × 10–15 s por lado. | **2 min** |
+| **Brazos libres** | Mover hombros en varias direcciones. De pie, pared. | **Círculos de brazos:** 1 × 4 por sentido y brazo, pequeños al empezar.<br>**Deslizamientos en pared:** 1 × 6.<br>**Rotación externa sin resistencia:** 1 × 6. | **3 min** |
+| **Manos y muñecas** | Mover dedos y muñecas sin cargar peso sobre ellas. Sentado. | **Abrir y cerrar el puño:** 1 × 6, suave.<br>**Círculos de muñeca:** 1 × 4 por sentido.<br>**Estiramiento de muñeca:** 10 s por dirección y mano: **40 s en total**. | **2 min** |
+| **Tronco sentado** | Alternar extensión suave y giro del tronco desde la silla. | **Extensión torácica:** 1 × 5, sin colgarte del respaldo.<br>**Rotación torácica sentada:** 1 × 4 por lado.<br>**Apertura de pecho sentado:** 2 × 15 s. | **3 min** |
+| **Piernas en pausa** | Estirar suavemente detrás del muslo y mover tobillos. Silla y espacio delante. | **Isquio a una pierna:** 2 × 15 s por lado, de pie con apoyo.<br>**Círculos de tobillo:** sentado, 1 × 4 por sentido y lado. | **3 min** |
+| **Movilidad en suelo** | Mover la espalda y explorar la parte delantera de la cadera. Suelo. | **Gato-camello:** 1 × 6.<br>**Flexor de cadera:** 1 × 15–20 s por lado.<br>**Apertura de costillas + respiración:** 20–30 s a cuatro apoyos, sin forzar. | **3 min** |
+
+Los giros de cuello controlados y con regreso al centro, en lugar de mantener un extremo durante mucho tiempo, encajan con las instrucciones de movilidad básica del NHS. [Fuente](https://www.nhs.uk/live-well/exercise/flexibility-exercises/)
+
+### Selección en la app
+
+Estas diez pausas no deberían sortearse sin contexto:
+
+- **Sin suelo:** excluye las dos rutinas de suelo.
+- **Sin apoyo en manos:** excluye flexiones, gateo y cuatro apoyos.
+- **Solo sentado:** ofrece las pausas sentadas; no presentes como fuerza completa apretar glúteos o levantar talones sentado.
+- **Una zona ya trabajada:** evita repetirla inmediatamente.
+- **Rutina demasiado fácil:** ofrece su progresión de forma explícita, no la cambies automáticamente por una variante exigente.
+
+No hace falta que todas duren cinco o seis minutos. Para este recorrido de entrada, **dos o tres minutos bien explicados bastan como formato de producto**.
+
+---
+
+## 3. Los huecos de verdad: revisión de los 22 nuevos
+
+**Retiro mi propuesta de producir los 22.** Después de leer los textos, separaría:
+
+- **Prioritarios:** aportan un patrón o una opción que realmente falta.
+- **Útiles después:** amplían posibilidades, pero no bloquean el lanzamiento.
+- **No necesarios como ejercicio nuevo:** basta una variante de algo existente.
+
+El orden siguiente es de **prioridad para PACE**, no un ranking universal de qué ejercicio es mejor.
+
+| Orden | Ejercicio que propuse | Decisión revisada | Hueco que cubre o motivo para no añadirlo |
+|---|---|---|---|
+| **1** | **Remo con banda** | **Prioritario** | Falta una tracción horizontal con resistencia graduable. La apertura con banda no es el mismo movimiento y juntar omóplatos sin resistencia tampoco lo sustituye. Va en «con material». |
+| **2** | **Bisagra de cadera** | **Prioritario** | Falta un ejercicio de pie que enseñe a llevar la cadera atrás sin convertirlo en sentadilla o pliegue relajado. Empieza como aprendizaje del movimiento; **sin carga no lo vendería como fuerza intensa**. |
+| **3** | **Inclinación de tronco** | **Prioritario** | El supuesto movimiento lateral de columna es, en realidad, de cuello. Falta recorrer suavemente la inclinación lateral del tronco. |
+| **4** | **Gemelo en pared** | **Prioritario** | Tenéis fuerza de pantorrilla con elevaciones, pero no un estiramiento específico y sencillo de esa zona. |
+| **5** | **Desliza el talón** | **Prioritario** | Ofrece una entrada de control abdominal tumbado sin tener que elevar a la vez piernas y hombros como en el hueco. No es imprescindible para las diez pausas, pero sí un buen escalón. |
+| **6** | **Figura cuatro sentada** | **Útil después; subiría de prioridad si mucha gente evita el suelo** | Añade una opción de cadera sentado, sin pedir paloma o 90/90. No es accesible para todo el mundo: colocar el tobillo ya puede ser una limitación. |
+| **7** | **Pierna al lado** | **Útil después** | Añade trabajo lateral de cadera de pie, con apoyo y poca flexión de rodilla. La sentadilla lateral no ofrece exactamente esa entrada. |
+| **8** | **Extensión de rodilla sentada** | **Útil después; prioritaria si queréis fuerza sentada** | Falta una tarea sencilla de piernas sin levantarte. Sin resistencia añadida, su carga es limitada: debe presentarse como entrada suave. |
+| **9** | **Rodilla hacia pared** | **Útil después** | Añade movilidad de tobillo con talón apoyado y rodilla avanzando. Las zancadas contienen parte del gesto, pero no lo aíslan ni lo explican. |
+| **10** | **Brazo y pierna** | **Útil después** | Añade control con apoyos alternos sin desplazamiento. El gateo y sus preparaciones ya cubren parte de ese trabajo, por eso baja de prioridad. |
+| **11** | **Giro de antebrazo** | **Útil después** | Girar palmas arriba y abajo es distinto de hacer círculos de muñeca. Es una ampliación sencilla, no una necesidad de fuerza. |
+| **12** | **Remo con tu mano** | **Útil como alternativa sin banda** | Permite crear resistencia con la otra mano, aunque graduarla y entenderla es menos fácil que con banda. No garantiza el mismo estímulo que el remo con banda. |
+| **13** | **Aductores sentado** | **Útil después** | Añade una opción sentada para la parte interna del muslo; ya hay opciones de suelo y de pie. |
+| **14** | **Cuádriceps tumbado** | **Útil después** | Ofrece una alternativa menos compleja que cuádriceps en pared. Sigue exigiendo suelo y llegar al tobillo; no resuelve por sí solo la accesibilidad. |
+| **15** | **Curl con banda** | **Útil para ampliar «con material»** | Añade flexión de codo resistida. Es complementario; el remo ya incorpora parte de ese trabajo. |
+| **16** | **Curl con tu mano** | **Solo si añadís curl con banda o queréis resistencia sin objetos** | Aporta resistencia sin material, pero no hace falta producirlo antes de resolver tracción, cadera y movilidad básica. |
+| **17** | **Empuje de omóplatos** | **Opcional, no un hueco urgente** | Es distinto de juntar omóplatos de pie, pero podéis introducir primero el control de omóplatos dentro de las flexiones, sin crear otra rutina. |
+| **18** | **Tríceps con banda** | **Prescindible para v1** | Añade una variante resistida de brazos, pero ya hay empuje en flexiones y, en progresión, fondos. No soluciona una ausencia importante. |
+| **19** | **Rodilla contra mano** | **Prescindible para v1** | Puede dar una opción sentada, pero piernas elevadas sentado ya tiene una entrada alternando un pie. La resistencia con la mano añade complejidad antes que cobertura esencial. |
+| **20** | **W tumbado** | **Prescindible para v1** | No resuelve la falta de tracción y añade posición boca abajo. No lo mantendría solo para justificar una alternativa al trabajo con banda. |
+| **21** | **Zancada corta** | **No hace falta como ejercicio nuevo** | Es una **versión de entrada de vuestra zancada profunda**: recorrido corto, apoyo y sin perseguir profundidad. Necesita una variante bien explicada, no otro ejercicio independiente. |
+| **22** | **Puente de glúteos** | **No hace falta como ejercicio nuevo** | Es la **preparación del puente con marcha**: ambos pies apoyados, subir y bajar sin alternarlos. Debe quedar visible como variante básica. |
+
+### Qué encargaría realmente ahora
+
+**Cinco fichas nuevas prioritarias:**
+
+1. Remo con banda.
+2. Bisagra de cadera.
+3. Inclinación de tronco.
+4. Gemelo en pared.
+5. Desliza el talón.
+
+**Dos variantes que hay que hacer visibles, pero no contar como ejercicios nuevos:**
+
+- Zancada de recorrido corto y con apoyo.
+- Puente con ambos pies, sin marcha.
+
+**Y una revisión de dibujos antes de pedir ilustraciones nuevas.** Hay imágenes que quizá se puedan reutilizar; otras, aunque el ejercicio ya exista, necesitarán una variante para representar correctamente la entrada fácil.
+
+### Una condición pendiente con la banda
+
+La rutina de remo con banda necesita una alternativa sin ella. Podéis ofrecer **suspensión activa con pies apoyados** solo a quien tenga barra, pero no sirve como alternativa universal. Para quien no tenga ningún material extra:
+
+- **Remo con tu mano** es la opción nueva más coherente de las propuestas.
+- **Juntar omóplatos** puede servir para mantener una pausa de movimiento, **pero no debe anunciarse como un reemplazo equivalente de fuerza**.
+
+Por tanto, si queréis lanzar ya una rutina completa de banda con alternativa de fuerza sin objetos, el encargo sería **cinco ejercicios prioritarios más el remo con tu mano**.
+
+**Resumen:** conservaría el contenido, corregiría primero las fichas ambiguas y abriría las variantes fáciles. El catálogo actual permite montar las pausas iniciales sin ampliarlo; los nuevos deben cubrir huecos concretos, no compensar nombres o instrucciones que hoy ocultan lo que ya tenéis.

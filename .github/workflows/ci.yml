@@ -292,8 +292,18 @@ jobs:
 
       # Solo las librerias de WebKit, no las de Chromium (que eran las que
       # bajaban fuentes): se instalan en cada run, con cache y sin ella.
+      # El apt de GitHub se ha colgado aqui dos veces (22 y 23 oct.) hasta los 30
+      # min del job, sin que fallara nada del codigo: cada intento tiene 4 min y,
+      # si se cuelga, se repite una vez antes de dar el job por caido.
       - name: Librerias de WebKit
-        run: npx playwright install-deps webkit
+        timeout-minutes: 10
+        run: |
+          timeout 240 npx playwright install-deps webkit || {
+            echo "::warning::install-deps webkit no acabo en 4 min; segundo intento"
+            sudo pkill -f apt-get || true
+            sudo dpkg --configure -a || true
+            timeout 240 npx playwright install-deps webkit
+          }
 
       - name: npm run test:e2e (webkit)
         run: npm run test:e2e -- --project=webkit

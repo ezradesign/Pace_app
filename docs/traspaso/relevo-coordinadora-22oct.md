@@ -227,7 +227,15 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    workflow): archiva sin firmar y exporta firmando en la nube con la llave Administrador (sin certificado ni iPhone
    registrado), y sube. Sin probar: espera que Ez cree la llave «GitHub PACE», apunte su ID de equipo y cree la app
    en App Store Connect (nombre e idioma de Play: `PACE: Pomodoro, Break Reminder`, English U.S.; SKU `pace-ios`).
-   Luego Ez pone los secretos `PACE_ASC_KEY_ID`, `PACE_ASC_ISSUER_ID`, `PACE_ASC_KEY` (el .p8) y `PACE_APPLE_TEAM`
+   **Hecho por Ez (23 oct., tarde)**: el identificador `com.ezradesign.pace` registrado, su ID de equipo apuntado y
+   la app creada en App Store Connect (id de Apple 6826321825; su ficha de la versión 1.0 está vacía, se rellena con
+   v1). **Primera subida hecha (23 oct., 16:49 UTC)**: 0.175.0 (175000), firmada y subida por el trabajo `testflight`
+   («Upload succeeded»); Apple la procesa. **El apartado del iPhone en `privacy.html`, subido con el sí de Ez** (23
+   oct.): notificaciones, pantalla encendida, el calendario como archivo, iCloud y lo que TestFlight pasa a PACE.
+   Falta: el grupo de pruebas externas con «qué probar» (guía §7) y la revisión beta de Apple. **Ideas de Ez para
+   `/beta`** (23 oct.), con maqueta antes: la insignia de Google Play «para que sea más profesional», la parte del
+   iPhone con TestFlight (sin logo de Apple: solo deja sus insignias, y la de la App Store es para apps publicadas)
+   y los glifos de los módulos en vez de los puntos de color («¡sé más creativo!»). Ez puso los secretos `PACE_ASC_KEY_ID`, `PACE_ASC_ISSUER_ID`, `PACE_ASC_KEY` (el .p8) y `PACE_APPLE_TEAM`
    con `gh secret set` (órdenes con botón; ni la llave ni los códigos por el chat) y se lanza.
    Con ellas, antes que lo que siga en esta cola: la firma y la subida a TestFlight desde GitHub
    (`.github/workflows/ios.yml`, sin Mac), el apartado del iPhone en `privacy.html` (enseñárselo a Ez antes:
