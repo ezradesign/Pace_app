@@ -69,7 +69,15 @@
   /* Las dos plataformas: un rótulo con el móvil dibujado como los módulos. */
   .plataforma { display: flex; align-items: center; gap: 8px; margin: 26px 0 12px; font: 500 12px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
   .plataforma svg { width: 22px; height: 22px; color: var(--focus); }
-  h2 + .plataforma { margin-top: 8px; }
+  /* Android e iPhone, al mismo nivel: en columnas desde 760 px; en el móvil, uno debajo del otro. */
+  .plataformas { display: grid; gap: 0 48px; }
+  .plataformas .plataforma { margin-top: 8px; }
+  .plataformas > div + div .plataforma { margin-top: 30px; }
+  #pasos .regalo { margin-top: 40px; }
+  @media (min-width: 760px) {
+    .plataformas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .plataformas > div + div .plataforma { margin-top: 8px; }
+  }
   /* La insignia oficial de Google Play, tal cual (lleva su propio margen dentro de la imagen). */
   .insignia { display: inline-block; line-height: 0; border-radius: 10px; margin-left: -9px; }
   .insignia img { height: 62px; width: auto; display: block; }
@@ -155,9 +163,10 @@
     </div>
   </div>
 
-  <section class="dos" id="pasos">
+  <section id="pasos">
+    <h2 data-en="How to try it">Cómo probarla</h2>
+    <div class="plataformas">
     <div>
-      <h2 data-en="How to try it">Cómo probarla</h2>
       <p class="plataforma"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3.5" width="12" height="21" rx="2.6"/><path d="M12.5 6.2h3"/><path d="M12.8 21.6h2.4" opacity="0.55"/></svg><span data-en="On Android">En Android</span></p>
       <ol class="pasos">
         <li>
@@ -177,6 +186,8 @@
           <p class="d" data-en="Open it whenever suits you and tell us what goes wrong.">Ábrela cuando te venga bien y cuéntanos qué falla.</p>
         </li>
       </ol>
+      </div>
+    <div>
       <p class="plataforma"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3.5" width="12" height="21" rx="2.6"/><path d="M12.5 6.2h3"/><path d="M12.8 21.6h2.4" opacity="0.55"/></svg><span data-en="On iPhone">En iPhone</span></p>
       <ol class="pasos">
         <li>
@@ -196,12 +207,11 @@
         </li>
       </ol>
     </div>
-    <div>
-      <div class="regalo">
+    </div>
+    <div class="regalo">
         <h2 data-en="What you get">Lo que te llevas</h2>
         <p class="grande" data-en="PACE Complete for life, on the web, on Android and on iPhone.">PACE completo de por vida, en la web, en Android y en iPhone.</p>
         <p class="nota" data-en="Thank you for helping. On the web, with a code we send you; on Android and iPhone, with a Google Play or Apple gift code when version 1 comes out.">Gracias por ayudar. En la web, con un código que te mandamos; en Android y en iPhone, con un código de regalo de Google Play o de Apple cuando salga la versión 1.</p>
-      </div>
     </div>
   </section>
 
