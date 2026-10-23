@@ -7,8 +7,10 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de 
 ## 23 oct., mañana: v0.175.0, las pausas con bloques cortos, montada en la rama de la «Maqueta»
 
 Rama `claude/maqueta-inicio-3a2a59` (puerto 8803), con `origin/main` (v0.174.7) dentro. **Sin juntar**: antes,
-la coordinadora se la enseña a Ez con las fotos del recorrido de verdad (el enlace, en el mensaje a la coordinadora
-y en el commit de las fotos).
+la coordinadora se la enseña a Ez con las fotos del recorrido de verdad, https://claude.ai/artifact/Hh3tA7SCTqm2N7b84QzFpJ
+(guion `docs/traspaso/archivos/maqueta-inicio-22oct/fotos-ver-ejercicio.js`). La página le pregunta una cosa: con los
+primeros bloques se gana «Primer paso» y su aviso ocupa unos 3 s, en el aro, la línea de la invitación; no se ha
+cambiado y, si Ez prefiere que el sello espere, es un cambio aparte.
 - **Lo que eligió Ez**: 4a A · 4b A (solo con el día empezado) · 4c A · 5a A · 5b B, y su sí a las fotos de
   https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d con las dos recomendaciones (sin «¿Te ayudó?»; solo suman los
   minutos, sin logros ni rutina hecha) y el botón **«Ver ejercicio»** («See exercise») en vez de «Hacerla».

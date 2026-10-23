@@ -72,6 +72,15 @@ const SCROLL = () => {
       const { ctx, page } = await abrir(b, { vp, lang, vez });
       await asentarGeometria(page);
       const m = { caso: clave, lang, vp: vp.width + '×' + vp.height, scroll: await page.evaluate(SCROLL) };
+      /* El aviso de un sello recién ganado («Primer paso») ocupa unos 3 s la línea de la
+         invitación (Toast.jsx): se fotografía aparte y se espera a que se vaya. */
+      const SELLO = () => document.documentElement.hasAttribute('data-pace-sello-en-aro');
+      m.sello = await page.evaluate(SELLO);
+      if (m.sello) {
+        await foto(page, pre + 'inv-sello', ancho);
+        await page.waitForFunction((f) => !document.documentElement.hasAttribute('data-pace-sello-en-aro'), null, { timeout: 15000 });
+        await page.waitForTimeout(400);
+      }
       await foto(page, pre + 'inv', ancho);
       await page.locator('[data-pace-cta]').filter({ visible: true }).first().click();
       await page.locator('[data-pace-hacerla]').waitFor();
