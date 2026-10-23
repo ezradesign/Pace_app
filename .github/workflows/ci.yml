@@ -266,7 +266,7 @@ jobs:
     name: e2e-safari
     runs-on: ubuntu-latest
     needs: verify
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v4
@@ -293,16 +293,16 @@ jobs:
       # Solo las librerias de WebKit, no las de Chromium (que eran las que
       # bajaban fuentes): se instalan en cada run, con cache y sin ella.
       # El apt de GitHub se ha colgado aqui dos veces (22 y 23 oct.) hasta los 30
-      # min del job, sin que fallara nada del codigo: cada intento tiene 4 min y,
-      # si se cuelga, se repite una vez antes de dar el job por caido.
+      # min del job, sin que fallara nada del codigo. Y otro dia bajo 94 MB tan despacio
+      # que 4 min no bastaban (23 oct.): el primer intento tiene 12 min y el segundo, 10.
       - name: Librerias de WebKit
-        timeout-minutes: 10
+        timeout-minutes: 24
         run: |
-          timeout 240 npx playwright install-deps webkit || {
-            echo "::warning::install-deps webkit no acabo en 4 min; segundo intento"
+          timeout 720 npx playwright install-deps webkit || {
+            echo "::warning::install-deps webkit no acabo en 12 min; segundo intento"
             sudo pkill -f apt-get || true
             sudo dpkg --configure -a || true
-            timeout 240 npx playwright install-deps webkit
+            timeout 600 npx playwright install-deps webkit
           }
 
       - name: npm run test:e2e (webkit)
