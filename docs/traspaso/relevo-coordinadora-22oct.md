@@ -155,14 +155,19 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    saltar y siga contando, y en su propio grupo «con material», sin mezclarse con lo de escritorio o cuarto (silla y
    pared sí valen para todos); (d) rutinas con títulos distintos y casi los mismos ejercicios: cada una con sentido
    propio, aunque alguno se repita; (e) Mueve pide más fuerza: abdominales, sentadillas, flexiones y parecidos.
-   Ez ofrece auditorías de ChatGPT y dibujar los glifos nuevos. Sin renombrar ids (CLAUDE.md, «los ids van
+   Ez ofrece auditorías de ChatGPT y dibujar los glifos nuevos. **Ez eligió «inventario + ChatGPT»** (23 oct.):
+   inventario y texto para ChatGPT en https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp
+   (`docs/proposals/mueve-estira-inventario-23oct.html` y `…-chatgpt-23oct.md`; se rehacen con los dos scripts de
+   `docs/traspaso/archivos/mueve-estira-23oct/`). Espera la respuesta de ChatGPT que traiga Ez; se comprueba
+   ejercicio a ejercicio (técnica, seguridad, `base_mueve_estira`) y Ez elige en una página. Sin renombrar ids (CLAUDE.md, «los ids van
    cruzados»). Absorbe el «repaso de todos los dibujos» del punto 6 y el punto 7. Va antes que todo lo demás, en
    cuanto entre v0.175.0 (su reparto de «Ver ejercicio», de 31 ejercicios de Mueve y Estira, se rehace con esto).
 1c. **Del móvil de Ez, 23 oct.** (0.174.0 de Play; comprobado en el código), cada uno con maqueta salvo N2 y N3:
    **N2** Android: las franjas de arriba (batería) y abajo (Atrás) siguen el modo del móvil (`values-night`) y no la
    paleta de PACE: con PACE en oscuro y el móvil en claro, salen claras. Fallo; arreglarlo pintándolas con la paleta
    (y mirar el iPhone). · **N3** La paleta automática sigue solo el modo oscuro del móvil: la luz nocturna no es modo
-   oscuro (no se puede leer desde la app) y no hay cambio por la hora. Decide Ez si «Auto» también cambia por la hora.
+   oscuro (no se puede leer desde la app) y no hay cambio por la hora. **Ez eligió «como el móvil»** (23 oct.): no
+   se toca; programa el modo oscuro de su Android del atardecer al amanecer.
    · **N4** Con el móvil bloqueado, un aviso fijo con lo que lleva el Foco, el bloque y la pausa que viene (con los
    avisos de Android, punto 11; en iPhone sería otra cosa). · **N5** Un «Auto» en los ejercicios para que avancen
    solos, sin pulsar. · **N6** El número que late en las repeticiones (`pace-rep-pulse`): fijo, con un degradado de

@@ -19,6 +19,20 @@
 
 ---
 
+## Mueve y Estira de fondo, y la paleta automática (Ez, 23 oct. 2026)
+
+Tras probar 0.174.0 en su Android. **Mueve y Estira son los dos bloques centrales y tienen que ser originales y
+útiles**: Estira, solo estiramientos (casi yoga o pilates); Mueve, fuerza en un cuarto sin objetos (calistenia sin
+tecnicismos). Silla, mesa y pared valen para todos; banda, barra y demás son un extra, en rutinas aparte y
+saltables sin perder la cuenta. Cada rutina con un sentido propio, aunque algún ejercicio se repita. Los dibujos
+nuevos los hace Ez. **Cómo se revisa: inventario + ChatGPT** (A, la recomendada): el inventario y el texto para
+ChatGPT en `docs/proposals/mueve-estira-inventario-23oct.html` (https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp);
+lo que proponga ChatGPT se comprueba ejercicio a ejercicio y Ez elige en una página.
+
+**La paleta automática sigue el modo oscuro del móvil, como ahora** (A, la recomendada). Para que cambie de noche,
+Ez programa el modo oscuro de Android «del atardecer al amanecer»; la luz nocturna no la puede leer ninguna app. Las
+franjas de Android que no siguen la paleta (N2) son un fallo aparte y se arreglan.
+
 ## El iPhone entra en v1 (Ez, 22 oct. 2026)
 
 Ez tiene muchos testers con iPhone y eligió, entre tres opciones (TestFlight ya y la App Store después de v1,
