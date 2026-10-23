@@ -189,7 +189,7 @@ TestFlight ni App Store.</p>
 <div class="tbl"><table>
   <tr><th>Pieza</th><th>Quién la tiene</th><th>Para qué sirve</th></tr>
   <tr><td><strong>Llave de la API de App Store Connect</strong> (un archivo <code>.p8</code>)</td><td>Tú, en una carpeta <code>PACE-llave-apple</code>, y una copia en los secretos de GitHub</td><td>Deja a GitHub hablar con Apple en tu nombre: preparar la firma y subir cada versión a TestFlight.</td></tr>
-  <tr><td><strong>Certificado de distribución</strong></td><td>Igual: la carpeta y los secretos de GitHub</td><td>Es el sello que lleva cada versión. Normalmente se crea en un Mac; aquí lo creo yo en tu PC, sin Mac, y Apple lo firma.</td></tr>
+  <tr><td><strong>Certificado de distribución</strong></td><td>Apple, en la nube</td><td>Es el sello que lleva cada versión. Normalmente se crea en un Mac; con la llave de acceso Administrador, Xcode lo crea y lo guarda en Apple al subir cada versión (23 oct.): no hay archivo que guardar.</td></tr>
 </table></div>
 
 <h3>Lo que haces tú (unos diez minutos)</h3>
@@ -198,7 +198,8 @@ TestFlight ni App Store.</p>
   <li><strong>Generar una llave de equipo</strong>, con el nombre «GitHub PACE» y el acceso <strong>Administrador</strong> (hace falta para crear el certificado).</li>
   <li><strong>Descargar la llave</strong>: un archivo <code>AuthKey_XXXX.p8</code>. <strong>Solo se puede descargar una vez.</strong> Guárdalo en una carpeta nueva <code>PACE-llave-apple</code>, al lado de la de Play.</li>
   <li>Apunta en un papel, o en esa carpeta, los dos códigos que salen en la página: el <strong>ID de la llave</strong> y el <strong>ID del emisor</strong>.</li>
-  <li>Me dices «la llave de Apple está» y hago el resto: el certificado, los secretos de GitHub y la subida a TestFlight.</li>
+  <li>Apunta también tu <strong>ID de equipo</strong> (developer.apple.com → Cuenta → Detalles de la membresía).</li>
+  <li>Me dices «hecho» y te doy tres órdenes para guardar la llave en los secretos de GitHub, cada una con su botón; la subida a TestFlight la lanzo yo (Actions → iOS → Run workflow).</li>
 </ol>
 
 <div class="card warn">
@@ -206,7 +207,7 @@ TestFlight ni App Store.</p>
   <p>Lo mismo que con la llave de Play: una copia en el pendrive y otra fuera de casa, nunca por WhatsApp
   ni por correo y nunca en el repo. La diferencia buena es que en Apple <strong>perderla tiene arreglo
   inmediato</strong>: se revoca en la misma página y se crea otra, sin esperar a nadie. Las versiones ya
-  subidas no se enteran. El certificado caduca cada año; te aviso yo cuando toque renovarlo.</p>
+  subidas no se enteran. El certificado lo guarda Apple: si caduca, Xcode crea otro en la siguiente subida.</p>
 </div>
 
 <!-- ============================================================ -->

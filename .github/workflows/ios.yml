@@ -9,10 +9,9 @@
 # compila antes de llegar a `main`.
 #
 # La app del simulador queda como artefacto (`pace-ios-simulador`): solo se abre
-# en el simulador de un Mac, no en un iPhone. Para un iPhone hace falta firmarla,
-# y eso llegara con la cuenta de Apple Developer de Ez: la llave de la API de App
-# Store Connect ira a los secretos del repo, como la llave de Play, y un paso mas
-# subira cada version a TestFlight (docs/launch/app-store/guia.html).
+# en el simulador de un Mac, no en un iPhone. Para un iPhone hace falta firmarla:
+# el trabajo `testflight` la firma con la llave de la API de App Store Connect de
+# Ez y la sube a TestFlight (docs/launch/app-store/guia.html, puntos 4 y 7).
 #
 # La version sale de PACE_VERSION, como en Android: la que se ve (0.162.0) y el
 # numero de compilacion, mayor x 1 000 000 + menor x 1 000 + parche.
@@ -81,3 +80,93 @@ jobs:
           name: pace-ios-simulador
           path: ${{ runner.temp }}/PACE-simulador.zip
           if-no-files-found: error
+
+  # LA SUBIDA A TESTFLIGHT. Solo a mano (Actions -> iOS -> Run workflow): cada subida
+  # gasta un numero de compilacion y Apple la procesa, asi que no va en cada push.
+  # No hay Mac ni certificado guardado: la llave de la API (acceso Administrador)
+  # deja a Xcode crear en Apple la firma de distribucion al exportar. Se archiva sin
+  # firmar porque firmar el archivo pediria un perfil de desarrollo, y ese exige un
+  # iPhone registrado, que Ez no tiene. Los secretos (los pone Ez con `gh secret set`):
+  #   PACE_ASC_KEY_ID, PACE_ASC_ISSUER_ID: los dos codigos de la pagina de la llave
+  #   PACE_ASC_KEY: el contenido del AuthKey_XXXX.p8
+  #   PACE_APPLE_TEAM: el ID de equipo de developer.apple.com
+  # La app tiene que existir antes en App Store Connect (guia, punto 5.1).
+  testflight:
+    name: testflight
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      ASC_KEY_ID: ${{ secrets.PACE_ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.PACE_ASC_ISSUER_ID }}
+      ASC_KEY: ${{ secrets.PACE_ASC_KEY }}
+      APPLE_TEAM: ${{ secrets.PACE_APPLE_TEAM }}
+
+    steps:
+      - name: comprobar que estan los cuatro secretos
+        run: |
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY APPLE_TEAM; do
+            test -n "${!v}" || { echo "::error::Falta el secreto PACE_$v (docs/launch/app-store/guia.html, punto 4)"; exit 1; }
+          done
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: elegir Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -vi -e beta -e release_candidate | sort -V | tail -1)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - run: npm run ios:sync
+
+      # La llave vive solo en este Mac y mientras dura el trabajo (el ultimo paso la borra).
+      - name: la llave de la API, en un archivo
+        run: |
+          mkdir -p "$RUNNER_TEMP/asc"
+          printf '%s\n' "$ASC_KEY" > "$RUNNER_TEMP/asc/AuthKey_$ASC_KEY_ID.p8"
+
+      - name: archivar, sin firmar
+        working-directory: ios/App
+        run: |
+          VERSION=$(sed -n "s/.*PACE_VERSION = 'v\([0-9.]*\)'.*/\1/p" ../../app/state-core.jsx | head -1)
+          test -n "$VERSION"
+          IFS=. read -r MAYOR MENOR PARCHE <<< "$VERSION"
+          COMPILACION=$((MAYOR * 1000000 + MENOR * 1000 + PARCHE))
+          echo "Version $VERSION, compilacion $COMPILACION"
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/PACE.xcarchive" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM" \
+            MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$COMPILACION" \
+            CODE_SIGNING_ALLOWED=NO archive
+
+      - name: firmar y subir a TestFlight
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>$APPLE_TEAM</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+            <key>uploadSymbols</key><true/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/PACE.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/asc/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+
+      - name: borrar la llave
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/asc"

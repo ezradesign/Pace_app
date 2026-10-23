@@ -223,7 +223,12 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    mejor con la prueba ya aprobada. Al juntar, corregir lo que diga «junto a tu lista» (`testers.md` de la rama).
 3b. **El iPhone entra en v1** (Ez, 22 oct., ~22:40; `DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
    **La cuenta de Apple Developer de Ez está validada (23 oct.)**; espera su llave (`docs/launch/app-store/guia.html`,
-   punto 4).
+   punto 4). **23 oct., tarde**: el trabajo `testflight` de `.github/workflows/ios.yml` ya está (solo a mano, Run
+   workflow): archiva sin firmar y exporta firmando en la nube con la llave Administrador (sin certificado ni iPhone
+   registrado), y sube. Sin probar: espera que Ez cree la llave «GitHub PACE», apunte su ID de equipo y cree la app
+   en App Store Connect (nombre e idioma de Play: `PACE: Pomodoro, Break Reminder`, English U.S.; SKU `pace-ios`).
+   Luego Ez pone los secretos `PACE_ASC_KEY_ID`, `PACE_ASC_ISSUER_ID`, `PACE_ASC_KEY` (el .p8) y `PACE_APPLE_TEAM`
+   con `gh secret set` (órdenes con botón; ni la llave ni los códigos por el chat) y se lanza.
    Con ellas, antes que lo que siga en esta cola: la firma y la subida a TestFlight desde GitHub
    (`.github/workflows/ios.yml`, sin Mac), el apartado del iPhone en `privacy.html` (enseñárselo a Ez antes:
    es pública) y el texto de «qué probar»; y una sección iPhone en `/beta` con el enlace público de
