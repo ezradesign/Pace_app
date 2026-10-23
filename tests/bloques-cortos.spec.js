@@ -40,6 +40,12 @@ async function bloque(page, minutos) {
   await expect(visible(page, '[data-pace-cta]').first()).not.toHaveText('Pausar');
   await page.waitForTimeout(300);
   await page.waitForFunction(() => !document.documentElement.hasAttribute('data-pace-sello-en-aro'), null, { timeout: 10000 });
+  /* El aviso del logro se escalona y en el CI puede llegar DESPUÉS de esa espera, y tapar la frase
+     (CI de v0.175.0: «Ver ejercicio» en el botón y la frase sin verse). Con el botón de la
+     invitación, se espera a la frase; si no sale en 10 s, la cuenta de abajo lo dice. */
+  if ((await visible(page, '[data-pace-cta]').first().textContent()).trim() === 'Ver ejercicio') {
+    await visible(page, '[data-pace-invita]').first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+  }
   return {
     ventana: await visible(page, '[data-pace-break-shortcut]').count(),
     invita: await visible(page, '[data-pace-invita]').count(),
