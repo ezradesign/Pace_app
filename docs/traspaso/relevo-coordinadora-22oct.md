@@ -24,7 +24,10 @@ Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a l
    5iWBf…: desde esta no se ven; se archivan desde allí.
 5. **v0.175.0 juntada** con el «júntala» de Ez sobre https://claude.ai/artifact/Hh3tA7SCTqm2N7b84QzFpJ; el sello que
    tapa 3 s la invitación la primera vez, «déjalo así». Suite entera con todo junto: 836 en verde, 2 saltadas y 2
-   caídas por la decisión nueva (`ritmo-bloque-siguiente.spec.js`, puesta al día). La sesión «Maqueta»
+   caídas por la decisión nueva (`ritmo-bloque-siguiente.spec.js`, puesta al día). En el CI cayeron después dos pruebas
+   frágiles, arregladas y comprobadas provocándolas: `aro-de-golpe` (2f5d3c3, el salto por la cifra del reloj) y
+   `bloques-cortos` 4c (9c1dfd6, el aviso del sello llega tarde y tapa la frase). **CI de 9c1dfd6 en verde entero**
+   (hubo que relanzarlo: GitHub lo canceló al preparar Node). La sesión «Maqueta»
    (`local_0d59f656-…`) terminó: archivarla con el sí de Ez.
 6. **Mueve y Estira**: las dos respuestas de ChatGPT, guardadas; Ez tiene una segunda pregunta para pegarle (botón en
    https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp, texto en `docs/proposals/mueve-estira-chatgpt-2-23oct.md`):
