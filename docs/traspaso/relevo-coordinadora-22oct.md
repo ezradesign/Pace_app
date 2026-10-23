@@ -29,8 +29,20 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    encogimientos, solo si Ez los pide. **4** «Para empezar» entera gratis · B lo nuevo de pago. Lo que hoy es gratis
    sigue gratis (promesa de /premium). **Espera la línea de Ez**; con ella, la 1 va en una sesión pequeña y la 2 y la
    4 en otra (rehace también el reparto de «Ver ejercicio» y lo que propone «A tu ritmo»).
-3. Lo siguiente, por orden de Ez: las capturas de lo de pago para /premium (5c, con maqueta); cuando Apple apruebe
-   la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en la cola.
+3. **Ez eligió 1A 2A 3A 4A** (23 oct., ~20:15; apuntado en `DECISIONES_PRODUCTO.md`, «Mueve y Estira, cómo
+   quedan»). 1A y 2A tocan los mismos datos, así que van en UNA sesión, una versión detrás de otra.
+4. **El CI de 2ec16f8 cayó** en `bloques-cortos` 4c (aro a 15): el sello de «first.step» tapa la línea del aro y en
+   el CI llegaba entre ver la frase y contarla. Arreglado en d255367 sembrando ese logro (medido: sin sello en 15 s;
+   26 de 26 dos veces). Safari agotó otra vez sus 22 min bajando del espejo de Azure a ~40 KB/s: el segundo intento
+   pasa al espejo de Ubuntu (mismo commit). Mirar que el CI de lo subido salga verde.
+
+| Sesión | id | Rama | Puerto | Lleva |
+|---|---|---|---|---|
+| Mueve y Estira: textos y tres capas | `local_0812deb0-b9e7-4f39-b952-98fef14eacff` (`mueve-estira`) | `…mueve-estira-capas` | 8805 | Parte 1: v0.175.2, los textos (1A), con fotos antes/después; avisa con el hash y sigue. Parte 2 en la misma rama: v0.176.0, capas, seis ejercicios y gratis/pago. Se junta la 1 sola (hasta su commit) con el sí de Ez |
+| Capturas de lo de pago para /premium | `local_28ad6083-ff54-4f52-9df4-a5619be68930` (`capturas-premium`) | `…premium-capturas` | 8806 | 5c: capturas (Tus rutinas, la carta, mes y año, una de Respira) y maqueta con 2-3 formas; espera a que Ez elija. Solo `premium/`, `scripts/play/`, `scripts/web-dist.js` y sus pruebas |
+
+5. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
+   la cola.
 
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
 
