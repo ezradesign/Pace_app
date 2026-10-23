@@ -43,17 +43,27 @@ function instalarLectura(page) {
   });
 }
 const transiciones = (page) => page.evaluate(() => window.__aroTransiciones());
-/* Guarda las transiciones del cambio que mueve la cifra del reloj: con el reloj congelado, el
-   único que llega es el salto, y arco y cifra cambian en el mismo render. No basta con vigilar
-   el arco: también se mueve al volver a medirse (fuentes que llegan tarde, otro tamaño), y
-   entonces puede ser otro nodo. En el CI de v0.175.0 cayó por eso. */
+/* Guarda las transiciones del render en que la cifra del reloj SALTA más de 2 s: arco y cifra
+   cambian en el mismo render. No basta con vigilar el arco, que también se mueve al volver a
+   medirse (fuentes que llegan tarde, otro tamaño) y entonces puede ser otro nodo (CI de
+   v0.175.0). Y no basta con «la cifra cambió»: el reloj instalado de Playwright corre solo con
+   el tiempo real, y en el CI a veces pasaba un segundo normal antes del salto (CI de v0.175.0,
+   otra vez). El segundo que pasa se apunta y se sigue esperando. */
 function vigilarSalto(page) {
   return page.evaluate(() => {
-    const cifra = () => { const n = document.querySelector('[data-pace-dial-number]'); return n ? n.textContent : null; };
-    const antes = cifra();
+    const cifra = () => {
+      const n = document.querySelector('[data-pace-dial-number]');
+      const m = n && /(\d+):(\d{2})/.exec(n.textContent);
+      return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+    };
+    let previo = cifra();
     window.__aroSalto = null;
     const obs = new MutationObserver(() => {
-      if (cifra() === antes) return;
+      const ahora = cifra();
+      if (ahora === null || ahora === previo) return;
+      const salto = Math.abs(ahora - previo) > 2;
+      previo = ahora;
+      if (!salto) return;
       window.__aroSalto = window.__aroTransiciones();
       obs.disconnect();
     });

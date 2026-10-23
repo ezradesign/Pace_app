@@ -88,7 +88,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.175.0 · actualizada el 23 de octubre a las 11:45</div>
+    <div class="eyebrow">PACE · versión 0.175.1 · actualizada el 23 de octubre a las 19:40</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -237,18 +237,26 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           tal como están</a> ves cada rutina con lo que se repite y lo que viste, y abajo del todo el botón «Copiar el
           texto». Pégalo en ChatGPT y pásame la respuesta entera: compruebo cada ejercicio y te enseño una página para
           elegir. Si puedes, déjame también el dibujo de «Rodar hacia abajo» que sí casa.</span></li>
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo</span>
+      <li class="paso hecho"><span class="estado">Hecho · 23 de octubre</span>
         <span class="t">Pasar a ChatGPT la segunda pregunta</span>
         <span class="c"><span class="quien">Tú.</span> En <a href="https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp">Mueve y Estira, tal como
           están</a>, el botón «Copiar la segunda pregunta». Pégala en la misma conversación y tráeme su respuesta: la ficha
           de cada ejercicio, las pausas sencillas con lo que ya hay y cuáles de los 22 nuevos hacen falta de verdad.</span></li>
-      <li class="paso luego"><span class="estado">Después · la preparo yo</span>
+      <li class="paso hecho"><span class="estado">Hecho · 23 de octubre</span>
+        <span class="t">Arreglar los textos que decían otra cosa (0.175.1)</span>
+        <span class="c"><span class="quien">Yo, con lo que encontró ChatGPT.</span> «Hueco abdominal» y «Hueco en silla» pedían
+          «baja los pies» para hacerlo más suave, y lo hace más difícil; ahora dicen doblar las rodillas o levantar un pie cada
+          vez. Y «Suspensión pasiva» ya no dice «wall slides».</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo</span>
+        <span class="t">Seguir en tu otra cuenta de Claude</span>
+        <span class="c"><span class="quien">Tú.</span> Esta cuenta llega al 95 % de la semana. Abre la carpeta de PACE en la otra
+          y pega el texto de relevo que te di en el chat del 23 de octubre: allí te preparo la página de Mueve y Estira.</span></li>
+      <li class="paso luego"><span class="estado">Lo siguiente · la preparo yo</span>
         <span class="t">Elegir el Mueve y el Estira nuevos en una página</span>
-        <span class="c"><span class="quien">Tú eliges; yo lo comprobé primero.</span> Con su segunda respuesta, ChatGPT propone
-          tres capas: pausas sencillas, que son las que propone «A tu ritmo»; todos los ejercicios en una biblioteca para
-          elegir; y rutinas de más esfuerzo, solo para quien las busque. No se tira ningún ejercicio que ya tengamos si
-          pasa la revisión, y antes de dibujar nada nuevo se mira qué falta de verdad. Te pregunto siete cosas con lo que
-          recomiendo, viendo cómo queda en la app.</span></li>
+        <span class="c"><span class="quien">Tú eliges; yo lo comprobé primero.</span> Con las tres respuestas de ChatGPT: tres capas
+          (pausas sencillas, que son las que propone «A tu ritmo»; todos los ejercicios en una biblioteca para elegir; y
+          rutinas de más esfuerzo), diez pausas de entrada hechas con lo que ya hay, y 6 ejercicios nuevos que dibujar en vez
+          de 22. Son cuatro decisiones, viendo cómo queda en la app.</span></li>
       <li class="paso luego"><span class="estado">Cuando Play no tenga nada en revisión</span>
         <span class="t">Avisar a tus dos testers y publicar en LinkedIn</span>
         <span class="c"><span class="quien">Tú, cuando en Play Console el Resumen de la publicación ya no tenga nada en
@@ -370,7 +378,16 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
             <li>Hecho el 22 de octubre con la cuenta de PACE; el recibo va a tu otro correo, que es solo el de facturación.
               Mientras pone «Pending», no vuelvas a pagar.</li>
           </ol></span></li>
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 15 minutos</span>
+      <li class="paso hecho"><span class="estado">Hecho · 23 de octubre</span>
+        <span class="t">La primera versión del iPhone, en TestFlight y enviada a Apple</span>
+        <span class="c"><span class="quien">Tú y yo.</span> GitHub firmó la 0.175.0 y la subió sin Mac; tú creaste el grupo
+          externo «Testers iPhone», con el texto de qué probar en inglés y en español, y lo enviaste a revisión. Apple
+          la revisa en torno a un día y te avisa por correo. La política de privacidad ya tiene su apartado del iPhone.</span></li>
+      <li class="paso luego"><span class="estado">Cuando Apple la apruebe</span>
+        <span class="t">Invitar a tus testers de iPhone</span>
+        <span class="c"><span class="quien">Tú</span>, con sus correos o con el enlace público del grupo. Ese enlace lo pongo
+          también en /beta, con la maqueta que te enseñaré.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 23 de octubre</span>
         <span class="t">La llave de Apple, tu ID de equipo y crear la app</span>
         <span class="c"><span class="quien">Tú.</span> Los pasos, en el chat del 23 de octubre: la llave «GitHub PACE» con acceso
           Administrador en <code>PACE-llave-apple</code> (con su ID y el del emisor apuntados), tu ID de equipo de
@@ -378,13 +395,13 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           (<code>PACE: Pomodoro, Break Reminder</code>, English U.S.), el paquete <code>com.ezradesign.pace</code> y el SKU
           <code>pace-ios</code>. Ni la llave ni los códigos van por el chat. Mientras, preparo el paso de GitHub que firma
           y sube.</span></li>
-      <li class="paso luego"><span class="estado">Después · lo hago yo</span>
+      <li class="paso hecho"><span class="estado">Hecho · 23 de octubre</span>
         <span class="t">La llave de Apple para GitHub (como estaba en la guía)</span>
         <span class="c"><span class="quien">Tú, unos 10 minutos.</span> En App Store Connect › Usuarios y acceso › Integraciones ›
           API de App Store Connect: una llave de equipo «GitHub PACE» con acceso Administrador. Se descarga una sola vez: a
           una carpeta nueva <code>PACE-llave-apple</code>, junto a la de Play, con sus dos códigos (el ID de la llave y el del
           emisor). Luego yo hago la firma y la subida, sin Mac.</span></li>
-      <li class="paso luego"><span class="estado">Después</span>
+      <li class="paso hecho"><span class="estado">Hecho · enviado a Apple el 23 de octubre</span>
         <span class="t">TestFlight con tus testers de iPhone</span>
         <span class="c"><span class="quien">Yo lo preparo; tú creas el grupo en App Store Connect.</span> Cada tester instala
           TestFlight y abre el enlace; la primera versión pasa una revisión corta de Apple, de un día. Mientras tanto, pueden
@@ -451,12 +468,16 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">Hecho · en la web, 0.174.7</span>
         <b>Una página para captar testers</b><span>pacegrass.app/beta: qué es PACE, qué se pide y PACE completo de por vida
           como gracias. Se apuntan solos con tu grupo de Google, que ya está en Play; sus dos botones, encendidos.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">Lo primero tras la 0.175.0 · espera lo que diga ChatGPT</span>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">Lo siguiente · cuatro decisiones tuyas</span>
         <b>Mueve y Estira, de verdad distintos</b><span>Lo más importante que viste. Estira, solo estiramientos (casi yoga o
           pilates); Mueve, fuerza en un cuarto sin nada (abdominales, sentadillas, flexiones). Cada rutina con sentido propio,
           sin repetir casi los mismos ejercicios con otro título; lo que pide banda o barra, aparte y que se pueda saltar sin
           perder la cuenta; y los dibujos que no casan («Core silencioso», «Sentadilla de cuádriceps», «Rodar hacia abajo»,
-          «Gato-camello», «Puente torácico», «90/90», «Sentarse y levantarse del suelo»). Los dibujos nuevos, tuyos.</span></div></li>
+          «Gato-camello», «Puente torácico», «90/90», «Sentarse y levantarse del suelo»). Con lo que ya hay salen diez pausas
+          de entrada; faltan 6 ejercicios nuevos, y sus dibujos son tuyos. Los textos que decían otra cosa, ya arreglados.</span></div></li>
+      <li><i class="pt yo"></i><div class="que"><span class="estado yo">Después, con una página para elegir</span>
+        <b>Una /beta más vistosa</b><span>La insignia de Google Play, una parte para el iPhone con el enlace de TestFlight
+          cuando Apple la apruebe, y los dibujos de los módulos en vez de los puntos de color.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Después, con una página para elegir</span>
         <b>Lo que viste en el móvil el 23</b><span>Las franjas de arriba y abajo con el color de PACE en oscuro (un fallo: lo
           arreglo sin preguntar), un aviso con el móvil bloqueado,
@@ -492,7 +513,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>Cobrar en Android y los 14 días de prueba</b><span>Empiezan cuando subas la app. Antes de subir la versión que cobra,
           en Play se cambian dos respuestas: «¿Alguna parte está restringida?» pasa a Sí (con cómo probarlo) y «compras
           digitales», también a Sí.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">Cuenta validada; espera tu llave</span>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">En TestFlight; Apple revisa la prueba</span>
         <b>El iPhone: TestFlight y la App Store</b><span>Tus testers de iPhone, con TestFlight en cuanto haya cuenta; la
           compra de Apple, la ficha y la revisión, a la vez que lo de Android.</span></div></li>
       <li><i class="pt meta"></i><div class="que"><span class="estado meta">La meta</span>
@@ -527,7 +548,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <ul class="lista">
         <li><b>Play Console:</b> reunir a los 12 testers con pacegrass.app/beta (la app, la prueba y el grupo ya están). A cada
           uno, su enlace de PACE completo de <code>codigos-tester.csv</code>.</li>
-        <li><b>Apple:</b> la llave para GitHub, unos 10 minutos: tu cuenta ya está validada (arriba, «iPhone, paso a paso»).</li>
+        <li><b>Apple:</b> cuando Apple apruebe la prueba, invitar a tus testers de iPhone (arriba, «iPhone, paso a paso»).</li>
         <li><b>El gestor:</b> cómo darte de alta para cobrar.</li>
         <li><b>Stripe:</b> la cuenta a tu nombre, con verificación en dos pasos, y pedir «vende por ti» (Managed Payments).</li>
         <li><b>El aviso legal:</b> tu nombre, tu NIF y un contacto.</li>

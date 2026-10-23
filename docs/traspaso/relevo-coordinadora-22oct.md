@@ -232,7 +232,10 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    v1). **Primera subida hecha (23 oct., 16:49 UTC)**: 0.175.0 (175000), firmada y subida por el trabajo `testflight`
    («Upload succeeded»); Apple la procesa. **El apartado del iPhone en `privacy.html`, subido con el sí de Ez** (23
    oct.): notificaciones, pantalla encendida, el calendario como archivo, iCloud y lo que TestFlight pasa a PACE.
-   Falta: el grupo de pruebas externas con «qué probar» (guía §7) y la revisión beta de Apple. **Ideas de Ez para
+   **Ez creó el grupo externo «Testers iPhone»** (el «Testers PACE» le salió interno: Apple lo crea así desde el
+   enlace del recuadro; el externo, con el + de «Pruebas externas»), rellenó la información de las pruebas, puso «qué
+   probar» en inglés y en español y **lo envió a la revisión beta de Apple (23 oct., tarde)**. Falta: que Apple lo
+   apruebe, el enlace público en `/beta` (con la maqueta de abajo) y que Ez invite a sus testers. **Ideas de Ez para
    `/beta`** (23 oct.), con maqueta antes: la insignia de Google Play «para que sea más profesional», la parte del
    iPhone con TestFlight (sin logo de Apple: solo deja sus insignias, y la de la App Store es para apps publicadas)
    y los glifos de los módulos en vez de los puntos de color («¡sé más creativo!»). Ez puso los secretos `PACE_ASC_KEY_ID`, `PACE_ASC_ISSUER_ID`, `PACE_ASC_KEY` (el .p8) y `PACE_APPLE_TEAM`

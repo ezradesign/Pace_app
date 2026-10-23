@@ -184,7 +184,7 @@ const EXTRA_ROUTINES = {
               care: 'Movimiento pequeño y controlado.' } },
           { name: 'Suspensión pasiva · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
-              setup: 'Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides.',
+              setup: 'Agarra una barra firme que aguante tu peso. Sin barra, repite los deslizamientos en pared.',
               action: 'Cuelga con los brazos estirados y suelta el peso de los hombros.',
               care: 'Tracción suave. Baja si notas molestia.' } },
           /* Sobre el respaldo de una silla, como su dibujo: la de rulo pedía tumbarse en una

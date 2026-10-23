@@ -234,7 +234,7 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Silla sin ruedas o frenada. Atrás del todo, espalda apoyada, manos en el asiento.',
               action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
-              care: 'Baja los pies para que sea más suave. Respira normal.' } },
+              care: 'Para que sea más suave, levanta un pie cada vez, con las rodillas dobladas. Respira normal.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Suelta.' } },
           { name: 'Hueco en silla', mode: 'timed', dur: 30,
@@ -459,7 +459,7 @@ var MOVE_ROUTINES = {
           { name: 'Hueco abdominal', mode: 'timed', dur: 30,
             instruction: {
               action: 'Tumbado boca arriba: pega la lumbar al suelo y eleva piernas y hombros.',
-              care: 'Baja los pies para que sea más suave.' } },
+              care: 'Para que sea más suave, dobla las rodillas y deja los brazos junto al cuerpo.' } },
           { name: 'Plancha', mode: 'timed', dur: 30,
             instruction: {
               action: 'Última. Vuelve a la plancha, cuerpo en línea. Respira dentro de la tensión.',

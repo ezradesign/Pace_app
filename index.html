@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.175.0</title>
+  <title>PACE · Foco · Cuerpo — v0.175.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4371,7 +4371,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.core.stealth.s0.name': 'Seated hollow',
   'extra.core.stealth.s0.instruction.setup': 'Chair without wheels, or locked. Sit all the way back, back supported, hands on the seat.',
   'extra.core.stealth.s0.instruction.action': 'Raise your legs and hold, keeping your lower back supported.',
-  'extra.core.stealth.s0.instruction.care': 'Lower your feet to make it gentler. Breathe normally.',
+  'extra.core.stealth.s0.instruction.care': 'To make it gentler, lift one foot at a time, knees bent. Breathe normally.',
   'extra.core.stealth.s1.name': 'Rest',
   'extra.core.stealth.s1.instruction.action': 'Let go.',
   'extra.core.stealth.s2.name': 'Seated hollow',
@@ -4569,7 +4569,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.core.plank.s3.instruction.action': 'Breathe.',
   'extra.core.plank.s4.name': 'Hollow hold',
   'extra.core.plank.s4.instruction.action': 'Lying on your back: press your lower back down and lift your legs and shoulders.',
-  'extra.core.plank.s4.instruction.care': 'Lower your feet to make it gentler.',
+  'extra.core.plank.s4.instruction.care': 'To make it gentler, bend your knees and keep your arms by your sides.',
   'extra.core.plank.s5.name': 'Plank',
   'extra.core.plank.s5.instruction.action': 'Last one. Back to the plank, body in a line. Breathe inside the tension.',
   'extra.core.plank.s5.instruction.care': 'Rest your knees if the line breaks.'
@@ -6455,7 +6455,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.175.0';
+const PACE_VERSION = 'v0.175.1';
 
 
 
@@ -29724,7 +29724,7 @@ var MOVE_ROUTINES = {
         instruction: {
           setup: 'Silla sin ruedas o frenada. Atrás del todo, espalda apoyada, manos en el asiento.',
           action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
-          care: 'Baja los pies para que sea más suave. Respira normal.' } },
+          care: 'Para que sea más suave, levanta un pie cada vez, con las rodillas dobladas. Respira normal.' } },
       { name: 'Descanso', mode: 'rest', dur: 20,
         instruction: { action: 'Suelta.' } },
       { name: 'Hueco en silla', mode: 'timed', dur: 30,
@@ -29949,7 +29949,7 @@ var MOVE_ROUTINES = {
       { name: 'Hueco abdominal', mode: 'timed', dur: 30,
         instruction: {
           action: 'Tumbado boca arriba: pega la lumbar al suelo y eleva piernas y hombros.',
-          care: 'Baja los pies para que sea más suave.' } },
+          care: 'Para que sea más suave, dobla las rodillas y deja los brazos junto al cuerpo.' } },
       { name: 'Plancha', mode: 'timed', dur: 30,
         instruction: {
           action: 'Última. Vuelve a la plancha, cuerpo en línea. Respira dentro de la tensión.',
@@ -32123,7 +32123,7 @@ const EXTRA_ROUTINES = {
           care: 'Movimiento pequeño y controlado.' } },
       { name: 'Suspensión pasiva · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
         instruction: {
-          setup: 'Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides.',
+          setup: 'Agarra una barra firme que aguante tu peso. Sin barra, repite los deslizamientos en pared.',
           action: 'Cuelga con los brazos estirados y suelta el peso de los hombros.',
           care: 'Tracción suave. Baja si notas molestia.' } },
 
