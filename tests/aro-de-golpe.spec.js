@@ -7,6 +7,11 @@
  *
  * «Fuera» se hace con `clock.setSystemTime` y la página oculta: la hora avanza sin que corra
  * ningún temporizador, como una app en segundo plano; al volver, `visibilitychange` la corrige.
+ *
+ * La transición del salto se lee en el mismo cambio que mueve el arco, con un MutationObserver,
+ * y no después: `deGolpe` vale solo para el render del salto, y cualquier render siguiente con el
+ * mismo restante devuelve el 1 s. En el CI llegaba uno antes de la lectura y la prueba caía sin
+ * que el aro hubiera animado nada.
  */
 'use strict';
 
@@ -26,14 +31,33 @@ function visibilidad(page, estado) {
   }, estado);
 }
 /* Lo que dura la transición del arco y la del punto, ahora mismo. Los selectores valen también
-   para la versión de antes (el único trazo con desfase es el arco; el giro, el grupo de dentro). */
-const transiciones = (page) => page.evaluate(() => {
-  const dura = (sel) => {
-    const el = document.querySelector(sel);
-    return el ? getComputedStyle(el).transitionDuration.split(',')[0].trim() : null;
-  };
-  return { arco: dura('circle[stroke-dashoffset]'), punto: dura('[data-pace-dial-punto] svg > g > g') };
-});
+   para la versión de antes (el único trazo con desfase es el arco; el giro, el grupo de dentro).
+   Vive en la página para que el observador del salto la lea en su mismo cambio. */
+function instalarLectura(page) {
+  return page.evaluate(() => {
+    const dura = (sel) => {
+      const el = document.querySelector(sel);
+      return el ? getComputedStyle(el).transitionDuration.split(',')[0].trim() : null;
+    };
+    window.__aroTransiciones = () => ({ arco: dura('circle[stroke-dashoffset]'), punto: dura('[data-pace-dial-punto] svg > g > g') });
+  });
+}
+const transiciones = (page) => page.evaluate(() => window.__aroTransiciones());
+/* Guarda las transiciones del primer cambio del arco a partir de ahora: con el reloj congelado,
+   el único que llega es el salto. */
+function vigilarSalto(page) {
+  return page.evaluate(() => {
+    const arco = document.querySelector('circle[stroke-dashoffset]');
+    const inicial = arco.getAttribute('stroke-dashoffset');
+    window.__aroSalto = null;
+    const obs = new MutationObserver(() => {
+      if (arco.getAttribute('stroke-dashoffset') === inicial) return;
+      window.__aroSalto = window.__aroTransiciones();
+      obs.disconnect();
+    });
+    obs.observe(arco, { attributes: true, attributeFilter: ['stroke-dashoffset'] });
+  });
+}
 const numero = (page) => page.locator('[data-pace-dial-number]').innerText();
 
 test('al volver a la app con un Foco en marcha, el aro llega de golpe; segundo a segundo, anima', async ({ page }) => {
@@ -41,15 +65,18 @@ test('al volver a la app con un Foco en marcha, el aro llega de golpe; segundo a
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
   await segundos(page, 3);
+  await instalarLectura(page);
   expect(await transiciones(page), 'el segundo que pasa no anima').toEqual({ arco: '1s', punto: '1s' });
 
   const antes = await numero(page);
+  await vigilarSalto(page);
   await visibilidad(page, 'hidden');
   const ahora = await page.evaluate(() => Date.now());
   await page.clock.setSystemTime(ahora + 90 * 1000);
   await visibilidad(page, 'visible');
   await expect.poll(() => numero(page), 'GUARD: el reloj no saltó al volver').not.toBe(antes);
-  expect(await transiciones(page), 'el aro anima el salto de 90 s al volver').toEqual({ arco: '0s', punto: '0s' });
+  await expect.poll(() => page.evaluate(() => window.__aroSalto), 'GUARD: el arco no se movió al volver').not.toBeNull();
+  expect(await page.evaluate(() => window.__aroSalto), 'el aro anima el salto de 90 s al volver').toEqual({ arco: '0s', punto: '0s' });
 
   await segundos(page, 1);
   expect(await transiciones(page), 'tras llegar, el segundo que pasa ya no anima').toEqual({ arco: '1s', punto: '1s' });
