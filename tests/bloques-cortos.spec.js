@@ -19,8 +19,12 @@ const { asentarGeometria } = require('./home.helpers');
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
 const visible = (page, sel) => page.locator(sel).filter({ visible: true });
 
+/* Con «first.step» ya ganado no sale ningún sello. El del primer Foco tapa la línea del aro unos 3 s y en
+   el CI llegaba justo después de ver la frase y antes de contarla: con el aro a 15 coincide con la
+   invitación del bloque 1 (CI de 2ec16f8). Aquí no se mira ningún logro. */
 async function abrir(page, context, { dia, minutos, extra } = {}) {
-  await sembrar(context, Object.assign({ ritmo: { horario: HORARIO }, focusMinutes: minutos || 10 }, extra || {}));
+  await sembrar(context, Object.assign({ ritmo: { horario: HORARIO }, focusMinutes: minutos || 10,
+    achievements: { 'first.step': { unlockedAt: 1 } } }, extra || {}));
   await page.clock.install({ time: new Date('2026-10-22T09:00:00+02:00') });
   await irAlArtefacto(page);
   if (dia) {

@@ -295,13 +295,16 @@ jobs:
       # El apt de GitHub se ha colgado aqui dos veces (22 y 23 oct.) hasta los 30
       # min del job, sin que fallara nada del codigo. Y otro dia bajo 94 MB tan despacio
       # que 4 min no bastaban (23 oct.): el primer intento tiene 12 min y el segundo, 10.
+      # Lo lento es el espejo de Azure (a unos 40 KB/s el 23 oct., noche): el segundo intento
+      # cambia al espejo de Ubuntu, porque repetir contra el mismo no adelanta nada.
       - name: Librerias de WebKit
         timeout-minutes: 24
         run: |
           timeout 720 npx playwright install-deps webkit || {
-            echo "::warning::install-deps webkit no acabo en 12 min; segundo intento"
+            echo "::warning::install-deps webkit no acabo en 12 min; segundo intento con el espejo de Ubuntu"
             sudo pkill -f apt-get || true
             sudo dpkg --configure -a || true
+            sudo sed -i 's#http://azure.archive.ubuntu.com#http://archive.ubuntu.com#g' /etc/apt/sources.list.d/*.sources /etc/apt/sources.list 2>/dev/null || true
             timeout 600 npx playwright install-deps webkit
           }
 
