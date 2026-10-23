@@ -8,6 +8,30 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 23 oct., noche: coordina la cuenta de 5iWBf… (desde las 19:45)
+
+Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18:00). Ninguna sesión abierta.
+1. **Subidos los tres commits que la de EcLj6… dejó sin subir** (e65b9d0 Safari con más margen, b63eb7e /premium
+   refinada con el sí de Ez, 2ec16f8 la hoja), tras el CI de 907e78b en verde entero y `verify` en local. El CI de
+   v0.175.1 (65a56b2) había caído solo en «Librerías de WebKit», sin prueba roja: es lo que arregla e65b9d0.
+2. **Mueve y Estira: la página para elegir, publicada** (https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE,
+   `docs/proposals/mueve-estira-elegir-23oct.html`). Fotos de la app real (index.html de v0.175.1) con la propuesta
+   metida en el index antes de montar la app (`page.route`), así que los filtros y «Para ahora» cuentan con ella.
+   Guiones en `docs/traspaso/archivos/mueve-estira-23oct/` (`propuesta.js` con los datos de cada opción, `fotos.js`,
+   `pagina-elegir.js`). Cuatro decisiones, la A recomendada en todas: **1** nombres, cuentas y los ~40 avisos de
+   ChatGPT ya (versión pequeña) · B solo nombres y cuentas · C todo con la 2. **2** tres capas: «Para empezar» (10
+   pausas que rehacen las rutinas de hoy parecidas, con su id: Sentadillas de silla, Flexiones de escritorio, Piernas
+   de pie, Cuello, Hombros · círculos, Muñecas y manos, Columna en la silla, Cadena posterior de pie, Despertar
+   matinal, más «Fuerza en suelo» nueva), Sigilo, «Con material» («Espalda con banda» nueva y Colgarse) y «Para ir a
+   más»; Postura reset, Grip + antebrazos y Espalda de oficina pasan a Estira; ATG y Ancestral dejan de salir; los
+   cuatro ambiguos salen de sus rutinas · B solo añadir las diez encima. **3** seis ejercicios nuevos (remo con banda,
+   remo con tu mano, bisagra, desliza el talón, inclinación de tronco, gemelo en pared) · B cinco · C ninguno; los
+   encogimientos, solo si Ez los pide. **4** «Para empezar» entera gratis · B lo nuevo de pago. Lo que hoy es gratis
+   sigue gratis (promesa de /premium). **Espera la línea de Ez**; con ella, la 1 va en una sesión pequeña y la 2 y la
+   4 en otra (rehace también el reparto de «Ver ejercicio» y lo que propone «A tu ritmo»).
+3. Lo siguiente, por orden de Ez: las capturas de lo de pago para /premium (5c, con maqueta); cuando Apple apruebe
+   la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en la cola.
+
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
 
 Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a las 14:00). Si la semana pasa del
@@ -193,8 +217,8 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    `docs/proposals/mueve-estira-chatgpt-respuesta-23oct.md`; **su segunda respuesta lo corrige**: tres capas
    (pausas recomendadas, catálogo libre con filtros, rutinas de progresión) y no se borra ningún ejercicio que pase
    la revisión. Primera comprobación y las siete decisiones de Ez en
-   `docs/proposals/mueve-estira-comprobacion-23oct.md`. **Lo siguiente: la página para que Ez elija**, con maqueta
-   de una rutina nueva en la app. Sin renombrar ids (CLAUDE.md, «los ids van
+   `docs/proposals/mueve-estira-comprobacion-23oct.md`. **La página para que Ez elija, publicada el 23 oct. por la noche**
+   (https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE; arriba, «23 oct., noche»): espera su línea. Sin renombrar ids (CLAUDE.md, «los ids van
    cruzados»). Absorbe el «repaso de todos los dibujos» del punto 6 y el punto 7. Va antes que todo lo demás, en
    cuanto entre v0.175.0 (su reparto de «Ver ejercicio», de 31 ejercicios de Mueve y Estira, se rehace con esto).
 1c. **Del móvil de Ez, 23 oct.** (0.174.0 de Play; comprobado en el código), cada uno con maqueta salvo N2 y N3:

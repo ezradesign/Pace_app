@@ -76,6 +76,9 @@ La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
 y, desde el 22 oct. por la tarde, https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6). Ez se
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
+- **Ahora: Mueve y Estira**, cuatro decisiones con fotos de la app real (23 oct.,
+  https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE): los nombres y avisos, las tres capas, los seis ejercicios nuevos y
+  qué es gratis. Detalle en el relevo, «23 oct., noche».
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6; el grupo y `/beta` ya están, falta difundirlos: `testers.md`); el
   gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar

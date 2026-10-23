@@ -4,6 +4,15 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 23 oct., noche: v0.175.1 en `main`, con /premium refinada; coordina la cuenta de 5iWBf…
+
+Relevo y cola: `docs/traspaso/relevo-coordinadora-22oct.md`, bloque «23 oct., noche». Página de pasos de esta
+cuenta: https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. **Espera a Ez: la página de Mueve y Estira**
+(https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE, `docs/proposals/mueve-estira-elegir-23oct.html`), cuatro
+decisiones con fotos de la app real y la A recomendada en todas; contesta con una línea («1A 2A 3A 4A»). La
+primera versión del iPhone (0.175.0) está en TestFlight y el grupo externo «Testers iPhone», en la revisión beta de
+Apple.
+
 ## 23 oct., mañana: v0.175.0 en `main`; coordina la cuenta de EcLj6…
 
 Relevo y cola: `docs/traspaso/relevo-coordinadora-22oct.md`, bloque «23 oct., mañana». Página de pasos de esta
