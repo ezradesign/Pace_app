@@ -23,6 +23,8 @@
      (`cuerpoHuella`). Si la rutina cambia —una propia reordenada o con otros tiempos—, el
      número de paso ya es otro ejercicio y no se ofrece seguir (auditoría del 21 oct.). Van
      también la marca de «terminar antes» y los pasos hechos, que el cierre necesita.
+   · UN EJERCICIO SUELTO («Ver ejercicio») NO SE GUARDA NI BORRA: no es una rutina a medias, y
+     al terminar no puede llevarse por delante la que sí lo estaba.
    · EL REGISTRO TIENE UNA SOLA DUEÑA: el efecto de `useCuerpoPersistencia`
      escribe mientras la sesión corre y borra al llegar a 'done'.
 
@@ -123,9 +125,10 @@ function sesionAMedias() {
 function useCuerpoPersistencia(d) {
   const ref = React.useRef(d);
   ref.current = d;
+  const suelto = !!(d.routine && d.routine.hacerla);
   const escribir = () => {
     const c = ref.current;
-    if (!c || !c.routine || c.inPath || c.stage !== 'run') return;
+    if (!c || !c.routine || c.inPath || suelto || c.stage !== 'run') return;
     try {
       localStorage.setItem(CUERPO_KEY, JSON.stringify({
         v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx, huella: cuerpoHuella(c.routine),
@@ -137,7 +140,7 @@ function useCuerpoPersistencia(d) {
     } catch (e) {}
   };
   React.useEffect(() => {
-    if (d.stage === 'done') { olvidarCuerpoGuardada(); return; }
+    if (d.stage === 'done') { if (!suelto) olvidarCuerpoGuardada(); return; }
     escribir();
   }, [d.stage, d.stepIdx, d.paused]);
   React.useEffect(() => {
@@ -148,7 +151,7 @@ function useCuerpoPersistencia(d) {
       escribir();   // salir ES la interrupción que se quiere recuperar
     };
   }, []);
-  useSesionViva(CUERPO_VIVA_KEY, d.inPath ? null : d.routine && d.routine.id, d.stage !== 'done');
+  useSesionViva(CUERPO_VIVA_KEY, d.inPath || suelto ? null : d.routine && d.routine.id, d.stage !== 'done');
 }
 
 Object.assign(window, {

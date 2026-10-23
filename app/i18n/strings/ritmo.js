@@ -104,7 +104,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.aro.siguiente':           'Empezar bloque {n}',
     /* Las pausas con bloques cortos (Ez, 22 oct. 2026: 4a, 4b y 5a; state-ritmo.bloques.jsx) */
     'bloques.invita':                'Un momento para moverte',
-    'bloques.hacerla':               'Hacerla',
+    'bloques.hacerla':               'Ver ejercicio',
     'bloques.seguir':                'Seguir',
     'bloques.ejercicio':             'Ejercicio',
     'bloques.ritmo':                 'a mi ritmo',
@@ -247,7 +247,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.aro.empezar':             'Start the day',
     'ritmo.aro.siguiente':           'Start block {n}',
     'bloques.invita':                'A moment to move',
-    'bloques.hacerla':               'Do it',
+    'bloques.hacerla':               'See exercise',
     'bloques.seguir':                'Keep going',
     'bloques.ejercicio':             'Exercise',
     'bloques.ritmo':                 'at my pace',

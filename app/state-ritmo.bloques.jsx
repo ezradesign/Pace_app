@@ -3,7 +3,7 @@
    Con el aro a 5, 10 o 15 los bloques se juntan hasta media hora (ritmo.regla.js,
    `JUNTOS`) y la pausa con rutina llega a los 30 min de foco seguido. Entre medias, al
    acabar el bloque que llega a 15 min, el aro invita: «Un momento para moverte», con
-   «Hacerla» y «Seguir» (FocusTimer.bloques.jsx). Si detrás del bloque va la pausa, no.
+   «Ver ejercicio» y «Seguir» (FocusTimer.bloques.jsx). Si detrás del bloque va la pausa, no.
 
    LA PERSONA ELIGE (4b), en la línea del aro y solo con el día empezado: «a mi ritmo»
    (lo de arriba, y lo que vale sin haber elegido) o «después de cada bloque», una pausa
@@ -71,6 +71,20 @@ function bloquesTerminado(minutos) {
   return !cada && bloquesInvita(antes, m, !junta);
 }
 
+/* Los minutos de foco seguido con el bloque que acaba de terminar, para la frase de la hoja
+   de «Ver ejercicio» («Llevas 20 minutos sentado»). Con día, el plan; sin día, la cuenta. */
+function bloquesSeguidos() {
+  var s = getState();
+  var p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (p) {
+    if (p.hechos < 1) return 0;
+    var ultimo = p.m.focos[p.hechos - 1];
+    return bloquesSeguidoAntes(p.m, ultimo) + ultimo.dur;
+  }
+  var c = s.bloquesSinDia;
+  return c && c.fecha === ritmoHoy() && !c.pausa && typeof c.seguidos === 'number' ? c.seguidos : 0;
+}
+
 /* Sin día: ¿el bloque que acaba de terminar va pegado al siguiente? (ritmoSinPausa) */
 function bloquesSinDiaJunta(s) {
   var c = (s || {}).bloquesSinDia;
@@ -85,5 +99,5 @@ function bloquesElegir(valor) {
 
 Object.assign(window, {
   BLOQUES_JUNTOS, BLOQUES_INVITA, bloquesCortos, bloquesCadaUno, bloquesJuntan, bloquesInvita,
-  bloquesSeguidoAntes, bloquesTerminado, bloquesSinDiaJunta, bloquesElegir,
+  bloquesSeguidoAntes, bloquesTerminado, bloquesSeguidos, bloquesSinDiaJunta, bloquesElegir,
 });

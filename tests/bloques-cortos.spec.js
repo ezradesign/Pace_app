@@ -2,7 +2,7 @@
  * ====================================================================================
  * Con el aro a 5, 10 o 15 los bloques se juntan hasta media hora (ritmo-juntos.spec.js).
  * Entre medias, al acabar el bloque que llega a 15 min de foco seguido, el aro invita:
- * «Un momento para moverte», con «Hacerla» y «Seguir» (4a con el texto de 5a). Si detrás
+ * «Un momento para moverte», con «Ver ejercicio» y «Seguir» (4a con el texto de 5a). Si detrás
  * del bloque va la pausa con rutina, no hay invitación.
  * 4b: con el día empezado, la línea del aro elige «Ejercicio a mi ritmo» (lo de arriba,
  * por defecto) o «después de cada bloque» (una pausa con rutina tras cada bloque, sin
@@ -33,7 +33,13 @@ async function abrir(page, context, { dia, minutos, extra } = {}) {
 async function bloque(page, minutos) {
   await visible(page, '[data-pace-cta]').first().click();
   await page.clock.fastForward(minutos * 60 * 1000 + 2000);
+  /* Con la máquina cargada el aro tarda en pintar el final del bloque: se lee cuando deja de
+     decir «Pausar», o la invitación aún no está y el botón ya sí. Y sin un sello encima: el de
+     un logro recién ganado tapa unos 3 s la línea de bajo la hora (Toast.jsx), que es donde va
+     la invitación. */
+  await expect(visible(page, '[data-pace-cta]').first()).not.toHaveText('Pausar');
   await page.waitForTimeout(300);
+  await page.waitForFunction(() => !document.documentElement.hasAttribute('data-pace-sello-en-aro'), null, { timeout: 10000 });
   return {
     ventana: await visible(page, '[data-pace-break-shortcut]').count(),
     invita: await visible(page, '[data-pace-invita]').count(),
@@ -53,7 +59,7 @@ test('4a · con el día y el aro a 10, el aro invita al acabar el bloque 2 y no 
   expect(b1).toEqual({ ventana: 0, invita: 0, cta: 'Empezar bloque 2' });
 
   const b2 = await bloque(page, 10);
-  expect(b2).toEqual({ ventana: 0, invita: 1, cta: 'Hacerla' });
+  expect(b2).toEqual({ ventana: 0, invita: 1, cta: 'Ver ejercicio' });
   await expect(visible(page, '[data-pace-invita]')).toHaveText('Un momento para moverte');
   await expect(visible(page, '[data-pace-invita-seguir]')).toHaveText('Seguir');
 
@@ -73,7 +79,7 @@ test('4c · sin día, con el aro a 10 y «a mi ritmo», los bloques se juntan: i
   await abrir(page, context, {});
   expect(await page.evaluate(() => ritmoPlan(getState()))).toBeNull();
   expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 0, cta: 'Empezar otro ciclo' });
-  expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 1, cta: 'Hacerla' });
+  expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 1, cta: 'Ver ejercicio' });
   await visible(page, '[data-pace-invita-seguir]').click();
   await page.clock.fastForward(10 * 60 * 1000 + 2000);
   await page.waitForTimeout(300);
@@ -87,7 +93,7 @@ test('4c · sin día, con el aro a 10 y «a mi ritmo», los bloques se juntan: i
 
 test('4c · sin día con el aro a 15: invitación tras el 1 y la ventana tras el 2; con «después de cada bloque», la ventana tras cada bloque y sin invitación', async ({ page, context }) => {
   await abrir(page, context, { minutos: 15 });
-  expect(await bloque(page, 15)).toEqual({ ventana: 0, invita: 1, cta: 'Hacerla' });
+  expect(await bloque(page, 15)).toEqual({ ventana: 0, invita: 1, cta: 'Ver ejercicio' });
   await visible(page, '[data-pace-invita-seguir]').click();
   await page.clock.fastForward(15 * 60 * 1000 + 2000);
   await page.waitForTimeout(300);
@@ -199,7 +205,7 @@ test('sin scroll: la home con la invitación y con la elección del aro, a 360×
     await expect(visible(page, '[data-pace-invita]')).toHaveText(lang === 'es' ? 'Un momento para moverte' : 'A moment to move');
     await asentarGeometria(page);
     expect(await page.evaluate(SCROLL), lang + ' ' + height + ' con la invitación').toBe(0);
-    /* «Hacerla · Seguir» caben en la fila, dentro del aro */
+    /* «Ver ejercicio · Seguir» caben en la fila, dentro del aro */
     const fila = await page.evaluate(() => {
       const cta = Array.from(document.querySelectorAll('[data-pace-cta]')).find((e) => e.getBoundingClientRect().width > 0);
       const sg = Array.from(document.querySelectorAll('[data-pace-invita-seguir]')).find((e) => e.getBoundingClientRect().width > 0);
