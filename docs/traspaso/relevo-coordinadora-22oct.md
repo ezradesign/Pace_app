@@ -29,6 +29,13 @@ Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a l
    `bloques-cortos` 4c (9c1dfd6, el aviso del sello llega tarde y tapa la frase). **CI de 9c1dfd6 en verde entero**
    (hubo que relanzarlo: GitHub lo canceló al preparar Node). La sesión «Maqueta»
    (`local_0d59f656-…`) terminó: archivarla con el sí de Ez.
+5b. **`/beta` más vistosa, subida con el sí de Ez** (23 oct., noche; maqueta https://claude.ai/artifact/6DgzpjqCQXC6WoZddpVGRg):
+   los dibujos de los módulos, la insignia oficial de Google Play (`beta/google-play-es.png` y `-en.png`, de
+   play.google.com/badges, con permiso de Ez), la parte del iPhone con TestFlight, el logo grande, el regalo también en
+   iPhone (códigos de Apple con v1), preguntas del iPhone y el pie nuevo con «Contacto». **Cuando Apple apruebe la
+   prueba beta**: el enlace público del grupo «Testers iPhone» va en `data-enlaces` → `iphone.url`, con
+   `pendiente: false` (la prueba exige `https://testflight.apple.com/join/…`). Sin insignia de Apple: solo vale con la
+   app en la App Store.
 6. **Mueve y Estira**: las dos respuestas de ChatGPT, guardadas; Ez tiene una segunda pregunta para pegarle (botón en
    https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp, texto en `docs/proposals/mueve-estira-chatgpt-2-23oct.md`):
    la ficha de cada uno de los 63 ejercicios con su texto real, las pausas sencillas con lo que hay y cuáles de los 22

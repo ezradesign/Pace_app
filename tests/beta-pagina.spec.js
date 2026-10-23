@@ -19,14 +19,19 @@ const { capturarErrores } = require('./helpers');
 const RAIZ = path.join(__dirname, '..');
 const PAGINA = '/beta/';
 const BLOQUE = /(<script type="application\/json" data-enlaces>)([\s\S]*?)(<\/script>)/;
-const PRONTO = { grupo: 'El grupo abre muy pronto.', play: 'El enlace llega cuando Google apruebe la prueba.' };
+const PRONTO = {
+  grupo: 'El grupo abre muy pronto.',
+  play: 'El enlace llega cuando Google apruebe la prueba.',
+  iphone: 'El enlace llega cuando Apple apruebe la prueba.',
+};
+const CLAVES = Object.keys(PRONTO);
 
 /* Se lee en cada prueba: sin la página, cae cada una por su lado y no la suite al cargar. */
 function enlaces() { return JSON.parse(fs.readFileSync(path.join(RAIZ, 'beta', 'index.html'), 'utf8').match(BLOQUE)[2]); }
 
 /* Cada paso, como manda su enlace: el botón que abre aparte, o la frase de «pronto» y ningún botón. */
 async function pasosSegun(page, datos) {
-  for (const clave of ['grupo', 'play']) {
+  for (const clave of CLAVES) {
     const boton = page.locator('[data-enlace=' + clave + ']');
     const pronto = page.locator('[data-pronto=' + clave + ']');
     if (datos[clave].pendiente) {
@@ -74,7 +79,7 @@ test.describe('a 360 px', () => {
     await page.goto(PAGINA);
     await page.waitForLoadState('networkidle');
 
-    await expect(page.getByRole('heading', { name: 'Prueba PACE en Android antes que nadie.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Prueba PACE en Android o en iPhone antes que nadie.' })).toBeVisible();
     expect(fuera).toEqual([]);
     expect(api).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
@@ -91,26 +96,24 @@ test.describe('a 360 px', () => {
 
 test('/beta en inglés cambia los textos y las capturas, y el botón vuelve al castellano y lo recuerda', async ({ page }) => {
   await page.goto(PAGINA + '?lang=en');
-  await expect(page.getByRole('heading', { name: 'Try PACE on Android before anyone else.' })).toBeVisible();
-  await expect(page).toHaveTitle('Try PACE on Android · PACE');
+  await expect(page.getByRole('heading', { name: 'Try PACE on Android or iPhone before anyone else.' })).toBeVisible();
+  await expect(page).toHaveTitle('Try PACE on Android or iPhone · PACE');
   const capturas = page.locator('.tira img');
   await expect(capturas).toHaveCount(3);
   for (const src of await capturas.evaluateAll((l) => l.map((i) => i.getAttribute('src')))) expect(src).toMatch(/-en\.webp$/);
   await expect.poll(() => capturas.evaluateAll((l) => l.every((i) => i.complete && i.naturalWidth > 0))).toBe(true);
 
   await page.locator('[data-idioma]').click();
-  await expect(page.getByRole('heading', { name: 'Tres pasos' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cómo probarla' })).toBeVisible();
   for (const src of await capturas.evaluateAll((l) => l.map((i) => i.getAttribute('src')))) expect(src).toMatch(/-es\.webp$/);
   await page.goto(PAGINA);
-  await expect(page.getByRole('heading', { name: 'Tres pasos' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cómo probarla' })).toBeVisible();
 });
 
 test('con los enlaces pendientes en el bloque de datos, ningún paso enseña un botón que no lleva a ningún sitio', async ({ page }) => {
   const reales = enlaces();
-  const pendientes = {
-    grupo: Object.assign({}, reales.grupo, { pendiente: true }),
-    play: Object.assign({}, reales.play, { pendiente: true }),
-  };
+  const pendientes = {};
+  for (const clave of CLAVES) pendientes[clave] = Object.assign({}, reales[clave], { pendiente: true });
   await page.route((url) => url.pathname === PAGINA, async (route) => {
     const r = await route.fetch();
     const cuerpo = (await r.text()).replace(BLOQUE, (_, a, __, c) => a + JSON.stringify(pendientes) + c);
@@ -121,15 +124,18 @@ test('con los enlaces pendientes en el bloque de datos, ningún paso enseña un 
   await expect(page.getByRole('link', { name: 'Unirme al grupo' })).toHaveCount(0);
 });
 
-test('los dos enlaces están en el bloque de datos y el de Play lleva el id del paquete de Android', async () => {
+test('los enlaces están en el bloque de datos y el de Play lleva el id del paquete de Android', async () => {
   const datos = enlaces();
-  expect(Object.keys(datos).sort()).toEqual(['grupo', 'play']);
+  expect(Object.keys(datos).sort()).toEqual([...CLAVES].sort());
   /* La página no enciende un enlace que no sea https: puesto así, el paso diría «pronto» sin avisar. */
   for (const e of Object.values(datos)) {
     expect(typeof e.pendiente).toBe('boolean');
     if (!e.pendiente) expect(e.url).toMatch(/^https:\/\//);
   }
   if (!datos.grupo.pendiente) expect(datos.grupo.url).toMatch(/^https:\/\/groups\.google\.com\/g\/[\w-]+$/);
+  if (!datos.iphone.pendiente) expect(datos.iphone.url).toMatch(/^https:\/\/testflight\.apple\.com\/join\/[\w-]+$/);
+  /* La insignia de Google Play va dentro de /beta, en los dos idiomas (no se pide nada fuera). */
+  for (const l of ['es', 'en']) expect(fs.existsSync(path.join(RAIZ, 'beta', 'google-play-' + l + '.png')), 'insignia ' + l).toBe(true);
   const gradle = fs.readFileSync(path.join(RAIZ, 'android', 'app', 'build.gradle'), 'utf8').match(/applicationId\s+"([^"]+)"/)[1];
   const capacitor = JSON.parse(fs.readFileSync(path.join(RAIZ, 'capacitor.config.json'), 'utf8')).appId;
   expect(capacitor).toBe(gradle);
