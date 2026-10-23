@@ -88,7 +88,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.174.6 · actualizada el 22 de octubre a las 22:50</div>
+    <div class="eyebrow">PACE · versión 0.174.7 · actualizada el 23 de octubre a las 10:05</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -185,10 +185,23 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           el ordenador y en el móvil, en claro y en oscuro). Las dos con la letra de la app en cursiva y sus botones; en
           /premium no cambia ningún texto. Los botones del grupo y de Play salen solos cuando existan; hasta entonces, cada
           paso dice que llega pronto.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha</span>
+      <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Juntar /beta y /premium y publicarlas</span>
-        <span class="c"><span class="quien">Yo.</span> Juntadas sin choques; ahora pasan todas las pruebas con todo junto. Después,
-          pacegrass.app/beta queda en línea.</span></li>
+        <span class="c"><span class="quien">Yo.</span> Versión 0.174.7, con las 824 pruebas en verde con todo junto.
+          pacegrass.app/beta ya está en línea.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 23 de octubre</span>
+        <span class="t">Encender los dos botones de /beta</span>
+        <span class="c"><span class="quien">Yo.</span> «Unirme al grupo» lleva a tu grupo <code>pace-tests</code> y «Abrir Google
+          Play», a la prueba. Lo miré en el móvil. De paso arreglé una prueba del aro que a veces fallaba sin motivo en
+          GitHub.</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · la sesión «Maqueta»</span>
+        <span class="t">Terminar las pausas con bloques cortos (0.175.0)</span>
+        <span class="c"><span class="quien">Una sesión aparte.</span> El botón «Ver ejercicio», la hoja y el paso a la pantalla de
+          ejercicio, como aprobaste en las fotos. Al acabar saca fotos de cómo queda de verdad.</span></li>
+      <li class="paso luego"><span class="estado">Cuando acabe la sesión</span>
+        <span class="t">Mirar las fotos de la 0.175.0 y decir si se junta</span>
+        <span class="c"><span class="quien">Tú dices «júntalo»; yo la subo</span>, después de pasar todas las pruebas con todo
+          junto.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · pace-tests@googlegroups.com</span>
         <span class="t">Crear el grupo de Google «PACE testers»</span>
         <span class="c"><span class="quien">Tú, el 22 de octubre.</span> Es por donde se apuntarán los testers desde la página. Quedó como
@@ -204,12 +217,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               Testers, elige <b>Grupos de Google</b> con el correo del grupo y guarda. Play deja un solo método, la lista o el
               grupo, así que antes tus dos testers se unen al grupo (tú ya estás, como propietario).</li>
           </ol></span></li>
-      <li class="paso luego"><span class="estado">Cuando esté la página</span>
-        <span class="t">Publicar en LinkedIn para buscar testers</span>
-        <span class="c"><span class="quien">Tú, desde tu cuenta; el texto ya está escrito</span> en español y en inglés
-          (<code>docs/launch/google-play/testers.md</code>, «LinkedIn, con la página /beta»). Manda a la gente a
-          pacegrass.app/beta, así que nadie tiene que mandarte su correo. Mejor con el grupo creado y la prueba cerrada ya
-          aprobada por Google.</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo</span>
+        <span class="t">Avisar a tus dos testers y publicar en LinkedIn</span>
+        <span class="c"><span class="quien">Tú, cuando en Play Console el Resumen de la publicación ya no tenga nada en
+          revisión.</span> A tus dos testers, que entren en pacegrass.app/beta y se unan al grupo. El texto de LinkedIn ya está
+          escrito en español y en inglés (<code>docs/launch/google-play/testers.md</code>, «LinkedIn, con la página /beta»):
+          manda a la gente a pacegrass.app/beta, así que nadie tiene que mandarte su correo.</span></li>
       <li class="paso luego"><span class="estado">Cuando acabe cada sesión</span>
         <span class="t">Decir si se junta lo terminado</span>
         <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo.</span> Te cuento en palabras llanas qué cambia y
@@ -273,7 +286,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           Los textos llevan las palabras que mejor posicionan, cada una una vez. <b>El gráfico destacado</b> es tu logo
           (<code>grafico-destacado-1024x500.png</code>). <b>Las capturas</b>, nuevas con la versión 0.174.0: en la ficha en
           inglés, las seis de <code>capturas/en</code>; en las dos en español, las de <code>capturas/es</code>.</span></li>
-      <li class="paso hecho"><span class="estado">Hecho · Google la está revisando</span>
+      <li class="paso hecho"><span class="estado">Hecho · Google la aprobó el 21</span>
         <span class="t">La prueba cerrada: enviarla a revisión</span>
         <span class="c"><span class="quien">Tú.</span> Va primero porque la revisión de Google tarda días y de ella cuelgan los 14.
           El archivo, ya bajado: <code>subidas-play\PACE-0.174.0.aab</code>.
@@ -290,17 +303,17 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">La prueba interna: enviada</span>
         <span class="c"><span class="quien">Tú.</span> Lista «Solo yo» con tu correo y la 174000 desde la biblioteca, enviada. El enlace
           aún no encuentra la app: Google la está procesando (de un rato a uno o dos días).</span></li>
-      <li class="paso luego"><span class="estado">Cuando tengas sus correos</span>
+      <li class="paso hecho"><span class="estado">Ya no hace falta</span>
         <span class="t">Los correos de tus testers</span>
-        <span class="c"><span class="quien">Tú.</span> Añadirlos a la lista «Testers PACE» de la prueba cerrada (el lápiz, y pegarlos
-          separados por comas). Los mensajes para pedírselo están en <code>docs/launch/google-play/testers.md</code>.</span></li>
+        <span class="c"><span class="quien">Nadie.</span> En vez de la lista de correos, los testers se apuntan solos en el grupo
+          <code>pace-tests</code> desde pacegrass.app/beta.</span></li>
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">PACE en tu móvil desde Play</span>
         <span class="c"><span class="quien">Tú.</span> Lo instalaste y lo probaste el 22, y me pasaste seis apuntes. Los seis eran ciertos: están en la cola de abajo.</span></li>
-      <li class="paso luego"><span class="estado">Cuando Google la apruebe</span>
+      <li class="paso luego"><span class="estado">Cuando Play no tenga nada en revisión</span>
         <span class="t">Invitar a 15 testers</span>
         <span class="c"><span class="quien">Tú; los mensajes ya están escritos.</span> 12 como mínimo durante 14 días; 15 por si
-          alguien se cae. Tienes 5 o 6.</span></li>
+          alguien se cae. Tienes 5 o 6. A todos, el mismo enlace: pacegrass.app/beta.</span></li>
     </ol>
   </section>
 
@@ -395,9 +408,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>Las pausas con bloques cortos</b><span>Las guiadas como hoy y, entre ellas, «Un momento para moverte» en el aro.
           Con el día empezado, eliges en el aro «A mi ritmo» o «Después de cada bloque». «Ver ejercicio» abre una hoja y de
           ahí, la pantalla de ejercicio de siempre con un ejercicio de Mueve o Estira; sus minutos cuentan, sin logros.</span></div></li>
-      <li><i class="pt yo"></i><div class="que"><span class="estado yo">Lista; se publica esta noche, con /premium</span>
+      <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">Hecho · en la web, 0.174.7</span>
         <b>Una página para captar testers</b><span>pacegrass.app/beta: qué es PACE, qué se pide y PACE completo de por vida
-          como gracias. Se apuntan solos con un grupo de Google; tú creas el grupo y, cuando Google apruebe la prueba, lo pones en Play.</span></div></li>
+          como gracias. Se apuntan solos con tu grupo de Google, que ya está en Play; sus dos botones, encendidos.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Después</span>
         <b>Lo que prometemos sobre tus datos</b><span>Cinco frases que prometen de más (el calendario, «nunca el título»,
           los eventos privados, la analítica y el correo de «Avísame»). Lo que respondiste en Play sigue siendo correcto.</span></div></li>
@@ -426,7 +439,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">Espera tu cuenta de Stripe</span>
         <b>Cobrar en la web</b><span>La página de gracias, el código que se firma solo, el aviso dos días antes de cobrar y
           «Gestionar» en Ajustes.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">Google está revisando la prueba cerrada</span>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">Esperan a tus 12 testers</span>
         <b>Cobrar en Android y los 14 días de prueba</b><span>Empiezan cuando subas la app. Antes de subir la versión que cobra,
           en Play se cambian dos respuestas: «¿Alguna parte está restringida?» pasa a Sí (con cómo probarlo) y «compras
           digitales», también a Sí.</span></div></li>
@@ -463,9 +476,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Tu lista, por orden</h2>
     <div class="grupo"><h3>Para poner fecha a v1</h3>
       <ul class="lista">
-        <li><b>Play Console:</b> crear la app, subirla, probarla tú primero (la prueba interna) y reunir a los 12 testers. A cada
+        <li><b>Play Console:</b> reunir a los 12 testers con pacegrass.app/beta (la app, la prueba y el grupo ya están). A cada
           uno, su enlace de PACE completo de <code>codigos-tester.csv</code>.</li>
-        <li><b>Apple:</b> la cuenta de Apple Developer y su llave (arriba, «iPhone, paso a paso»).</li>
+        <li><b>Apple:</b> la llave, cuando Apple apruebe tu cuenta (arriba, «iPhone, paso a paso»).</li>
         <li><b>El gestor:</b> cómo darte de alta para cobrar.</li>
         <li><b>Stripe:</b> la cuenta a tu nombre, con verificación en dos pasos, y pedir «vende por ti» (Managed Payments).</li>
         <li><b>El aviso legal:</b> tu nombre, tu NIF y un contacto.</li>
