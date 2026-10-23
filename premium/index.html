@@ -26,6 +26,10 @@
      (GET /api/avisame -> {abierta: true}): mientras, en su sitio pone «La lista abre muy
      pronto». Sin JavaScript, también. Ez la enciende al conectar el KV en Cloudflare.
 
+     LAS CAPTURAS DE PACE COMPLETO van en mosaico (Ez, 23 oct., B de
+     https://claude.ai/artifact/EbyxaxDviP1kb5HvQHhQXR, «optimizando para móvil»). Salen de la app
+     con scripts/play/capturas-premium.js: si cambia lo que enseñan, se rehacen con él.
+
      HASTA QUE HAYA STRIPE, los botones de compra llevan a la lista. Los precios son los de la
      tienda de la web (`PACE_TIENDA_WEB`, app/state-compra.js): si cambian, cambian en los dos
      sitios. Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
@@ -118,6 +122,19 @@
   .pie-enlaces a { font: italic 400 18px/1.3 var(--display); color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
   .pie-enlaces a:hover, .pie-marca:hover { color: var(--focus); }
   .pie-marca:focus-visible, .pie-enlaces a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  /* Las capturas en mosaico: la carta del lunes grande; a su lado, tu mes y tu año; debajo, la
+     rutina propia y la de Respira. En el móvil, el mismo reparto en seis columnas: cabe en unos
+     700 px en vez de los 1300 de poner la carta a todo lo ancho. */
+  .mosaico { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-top: 22px; max-width: 440px; }
+  .mosaico img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); background: var(--paper-2); }
+  .mosaico .grande { grid-column: 1 / span 4; grid-row: 1 / span 2; border-radius: 14px; }
+  .mosaico .lado { grid-column: span 2; }
+  .mosaico .bajo { grid-column: span 3; }
+  @media (min-width: 600px) {
+    .mosaico { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; max-width: 880px; }
+    .mosaico .grande { grid-column: 1; }
+    .mosaico .lado, .mosaico .bajo { grid-column: auto; border-radius: 14px; }
+  }
   @media (max-width: 520px) { .platos { grid-template-columns: 1fr; } }
   @media (min-width: 900px) {
     header img { height: 132px; }
@@ -174,6 +191,17 @@
         <li><span class="serif" data-en="A week shaped to you">Una semana a tu medida</span><span class="d" data-en="the Monday letter">la carta del lunes</span></li>
         <li><span class="serif" data-en="Your month and year">Tu mes y tu año</span><span class="d" data-en="stats">estadísticas</span></li>
       </ul>
+    </div>
+  </section>
+
+  <section id="capturas">
+    <h2 data-en="A look at PACE Complete">Así se ve PACE completo</h2>
+    <div class="mosaico">
+      <img class="grande" src="/premium/carta-es.webp" data-en-src="/premium/carta-en.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" data-en-alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960">
+      <img class="lado" src="/premium/mes-es.webp" data-en-src="/premium/mes-en.webp" alt="Tu mes en Estadísticas: cada día que practicaste" data-en-alt="Your month in Stats: every day you practised" width="540" height="960" loading="lazy">
+      <img class="lado" src="/premium/ano-es.webp" data-en-src="/premium/ano-en.webp" alt="Tu año en Estadísticas: los meses y sus días" data-en-alt="Your year in Stats: the months and their days" width="540" height="960" loading="lazy">
+      <img class="bajo" src="/premium/rutina-propia-es.webp" data-en-src="/premium/rutina-propia-en.webp" alt="Una rutina propia en el constructor: sus ejercicios, el orden y el tiempo" data-en-alt="A routine of your own in the builder: its exercises, order and time" width="540" height="960" loading="lazy">
+      <img class="bajo" src="/premium/respira-honda-es.webp" data-en-src="/premium/respira-honda-en.webp" alt="Nadi Shodhana, una rutina honda de Respira, en marcha" data-en-alt="Nadi Shodhana, one of the deeper Breathe routines, under way" width="540" height="960" loading="lazy">
     </div>
   </section>
 
@@ -258,7 +286,7 @@
     return /^en\b/i.test(navigator.language || '') ? 'en' : 'es';
   }
   var ATRIBUTOS = [['data-en', 'textContent'], ['data-en-html', 'innerHTML'], ['data-en-aria', 'aria-label'],
-    ['data-en-alt', 'alt'], ['data-en-placeholder', 'placeholder']];
+    ['data-en-alt', 'alt'], ['data-en-placeholder', 'placeholder'], ['data-en-src', 'src']];
   var es = { title: document.title, desc: document.querySelector('meta[name=description]').content };
   var DESC_EN = 'PACE is free: focus, breathing, mobility and water for people who work sitting down. PACE Complete adds the deeper routines, your own routines, a week shaped to you and your month and year.';
   var idioma = 'es';

@@ -3,6 +3,8 @@
  * Lo que vigila:
  *   · que /premium no pide nada a otro dominio, no tiene scroll lateral a 360 px y va en
  *     castellano y en inglés (opción B de Ez, «Escaparate»);
+ *   · que las capturas de PACE completo cargan, van en mosaico también en el móvil sin pasar
+ *     de unos 700 px y cambian de idioma con la página;
  *   · que la lista está APAGADA mientras la función no tenga almacén (Ez la enciende al
  *     conectar el KV), y que encendida apunta el correo;
  *   · que los precios de la página son los de la tienda de la web de la app;
@@ -42,6 +44,62 @@ test.describe('a 360 px', () => {
     /* El 404 de la función apagada sale en la consola del navegador: es lo esperado. */
     expect(errores.filter((e) => !/404|Not Found/.test(e))).toEqual([]);
   });
+});
+
+/* LAS CAPTURAS DE PACE COMPLETO, en mosaico (Ez, 23 oct., B «optimizando para móvil»): la carta
+   del lunes grande; a su lado, tu mes y tu año; debajo, la rutina propia y la de Respira. */
+async function mosaico(page) {
+  await page.locator('#capturas').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => [...document.querySelectorAll('#capturas img')].every((i) => i.complete && i.naturalWidth > 0));
+  return page.evaluate(() => {
+    const caja = (el) => { const r = el.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; };
+    const imgs = {};
+    document.querySelectorAll('#capturas img').forEach((i) => {
+      imgs[i.getAttribute('src').split('/').pop().replace(/-(es|en)\.webp$/, '')] = Object.assign(caja(i), { src: i.getAttribute('src'), alt: i.alt });
+    });
+    return { mosaico: caja(document.querySelector('.mosaico')), imgs };
+  });
+}
+const solapan = (a, b) => a.x + a.w > b.x + 1 && b.x + b.w > a.x + 1 && a.y + a.h > b.y + 1 && b.y + b.h > a.y + 1;
+
+test.describe('las capturas a 360 px', () => {
+  test.use({ viewport: { width: 360, height: 740 } });
+
+  test('el mosaico cabe en unos 700 px, con la carta grande y nada montado', async ({ page }) => {
+    await page.goto(PAGINA);
+    const m = await mosaico(page);
+    expect(Object.keys(m.imgs).sort()).toEqual(['ano', 'carta', 'mes', 'respira-honda', 'rutina-propia']);
+    /* Con la carta a todo lo ancho medía unos 1300 px. */
+    expect(m.mosaico.h).toBeLessThanOrEqual(700);
+    const { carta, mes, ano, ...bajo } = m.imgs;
+    for (const otra of [mes, ano, ...Object.values(bajo)]) expect(carta.w).toBeGreaterThan(otra.w);
+    /* Tu mes y tu año, uno encima del otro al lado de la carta, de su alto. */
+    expect(Math.abs(mes.x - ano.x)).toBeLessThan(1);
+    expect(mes.x).toBeGreaterThan(carta.x + carta.w);
+    expect(Math.abs((ano.y + ano.h) - (carta.y + carta.h))).toBeLessThan(10);
+    /* Las otras dos, debajo y del mismo ancho. */
+    for (const b of Object.values(bajo)) expect(b.y).toBeGreaterThan(carta.y + carta.h);
+    expect(Math.abs(bajo['rutina-propia'].w - bajo['respira-honda'].w)).toBeLessThan(1);
+    const todas = Object.values(m.imgs);
+    for (let i = 0; i < todas.length; i++) for (let j = i + 1; j < todas.length; j++) expect(solapan(todas[i], todas[j])).toBe(false);
+    for (const i of todas) expect(i.x + i.w).toBeLessThanOrEqual(360 - 16 + 1);
+  });
+});
+
+test('en el ordenador, la carta ocupa las dos filas; en inglés, las capturas en inglés', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(PAGINA + '?lang=en');
+  const m = await mosaico(page);
+  for (const [id, i] of Object.entries(m.imgs)) expect(i.src).toBe('/premium/' + id + '-en.webp');
+  expect(m.imgs.carta.alt).toMatch(/^The Monday letter/);
+  const { carta, mes, ano } = m.imgs;
+  expect(Math.abs(mes.y - ano.y)).toBeLessThan(1);
+  expect(carta.h).toBeGreaterThan(mes.h * 1.8);
+  expect(carta.w).toBeGreaterThan(mes.w * 1.8);
+  /* De vuelta al castellano, las capturas también. */
+  await page.locator('[data-idioma]').click();
+  await expect(page.locator('#capturas img.grande')).toHaveAttribute('src', '/premium/carta-es.webp');
+  await expect(page.locator('#capturas img.grande')).toHaveAttribute('alt', /^La carta del lunes/);
 });
 
 test('con la lista encendida, el correo se apunta con el idioma de la página', async ({ page }) => {
