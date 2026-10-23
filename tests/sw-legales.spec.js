@@ -33,7 +33,7 @@ test('6 · sin red, /privacy y /safety abren su página, no la app', async ({ co
 
 test('6 · sin red, una ruta que no es de la app no se disfraza de app', async ({ context, page }) => {
   await sinRed(context, page);
-  for (const ruta of ['/premium/', '/no-existe']) {
+  for (const ruta of ['/premium/', '/beta/', '/no-existe']) {
     const r = await page.goto(ruta).catch(() => null);
     const html = r ? await r.text().catch(() => '') : '';
     expect(html, ruta + ' sin red sirvió la app').not.toContain('serviceWorker.register');

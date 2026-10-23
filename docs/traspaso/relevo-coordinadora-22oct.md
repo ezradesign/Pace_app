@@ -8,6 +8,37 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (22 oct., ~22:50, esta cuenta al 92 %; la otra se repone a las 00:30)
+
+**Lo primero, en la carpeta principal (nunca `cd` en Bash; rutas absolutas y `git -C`):**
+1. **v0.174.7 en main** (merge f23cbf0: /beta y /premium con la letra de la app; Ez dijo «júntalas» mirando
+   https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE). Suite entera con todo junto: 824 en verde, 2 saltadas y 1
+   caída por carga (`ritmo-linea.spec.js:176`, las fuentes que llegan tarde, con la Maqueta probando a la vez):
+   sola, 3 de 3 en verde. Subida al relevo: **mirar primero el CI de main** (`gh run list --branch main --workflow CI`).
+   **El CI de d8030aa (v0.174.6) salió rojo en e2e (1/2) por una prueba frágil**, no por el cambio:
+   `tests/aro-de-golpe.spec.js:52` (de v0.174.5) lee las transiciones del aro un segundo tarde en el CI y ve «1s»
+   en vez de «0s»; en local pasó en las dos suites enteras y v0.174.6 no toca `TimerDial.jsx`. Endurecerla
+   (congelar el reloj con `page.clock` o leer las transiciones en el mismo pintado del salto) antes de seguir
+   juntando; si el CI de v0.174.7 vuelve a caer solo por ella, es esto.
+2. **Encender los dos enlaces de /beta** (en `beta/index.html`, bloque `data-enlaces`): `grupo.url` =
+   `https://groups.google.com/g/pace-tests` y `pendiente: false` en los dos (el de Play ya es
+   `https://play.google.com/apps/testing/com.ezradesign.pace`, confirmado por Ez). Ajustar
+   `tests/beta-pagina.spec.js`: la prueba de 360 px hoy exige los dos pendientes; que mire cada enlace según el
+   bloque, y que la de los enlaces puestos pase a simular los dos pendientes (así se prueban los dos estados).
+3. **Hechos de Ez esta noche:** la prueba cerrada ESTÁ APROBADA (Prueba cerrada · Alpha, 0.174.0, disponible desde el
+   21 oct. 23:40). Grupo de Google creado: **pace-tests@googlegroups.com** («PACE testers»; pace-testers estaba
+   cogido). En Play eligió «Grupos de Google» con ese correo y lo envió a revisión: **LinkedIn y avisar a sus dos
+   testers, cuando el Resumen de la publicación ya no tenga nada en revisión**. Cuenta de Apple Developer pagada
+   con la cuenta de PACE (el recibo fue al otro correo de Ez, solo facturación): «Pending» hasta 48 h; no volver a
+   pagar. Botón de la invitación: **«Ver ejercicio»**, no «Hacerla»; las fotos de la hoja → pantalla de
+   ejercicio, aprobadas con sus dos recomendaciones (`DECISIONES_PRODUCTO.md`).
+4. **Sesiones:** «Maqueta» (`local_95664ff9-…`, carpeta `.claude/worktrees/maqueta-inicio-3a2a59`, rama
+   `claude/maqueta-inicio-3a2a59`, puerto 8803) montando v0.175.0; se le pidió wip, push y su punto en LEEME:
+   retomarla con `start_session` + `cwd` (WORKFLOW §10). «Página para testers» (`local_be95e077-…`), terminada y
+   juntada: archivarla con el sí de Ez.
+5. Página de pasos de esta cuenta, al día: https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (la otra cuenta publica
+   el mismo archivo en https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT).
+
 ## Quién soy y qué hago
 
 Coordino desde la carpeta principal (`main`). Las sesiones trabajan cada una en su rama y su worktree,
@@ -18,7 +49,7 @@ entera con todo junto y push. Como mucho dos sesiones a la vez, con archivos y p
 
 ## Dónde está main
 
-**v0.174.6** juntada el 22 oct. hacia las 22:55 con el sí de Ez (commit 86e1958): la app abre con los módulos,
+**v0.174.6** juntada el 22 oct. hacia las 22:10 con el sí de Ez (commit 86e1958): la app abre con los módulos,
 los Ajustes del móvil sin scroll y la voz grave en Rondas (1A 2A 3A). Suite entera con todo junto: 819 en verde y
 2 saltadas. **Mirar primero el CI** (`gh run list --branch main --workflow CI`); no subir nada a main mientras
 corre, porque un push nuevo cancela el anterior. Antes, v0.174.5 (3dfe0fc, logros solo con la sesión entera); su
@@ -121,7 +152,11 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    terracota de Respira, el de Mueve, Estira y Agua). Se montan /beta y /premium a la vez; los colores, con un
    antes/después rápido si cambian algo más que un detalle. **Con `/beta` publicada, la publicación de LinkedIn**
    (idea de Ez, 22 oct.): el texto, en `docs/launch/google-play/testers.md`, «LinkedIn, con la página /beta»;
-   la publica Ez, mejor con el grupo creado y la prueba cerrada aprobada.
+   la publica Ez, mejor con el grupo creado y la prueba cerrada aprobada. **Ez dijo «júntalas» a /beta y /premium
+   (22 oct., ~22:20)**, sobre https://claude.ai/artifact/DH7ZDJ9aSFqEzrpiD5zAyE. **Ojo, Play deja un solo método de
+   testers en la prueba cerrada** (la ayuda de Google: lista de correos O grupo de Google): el grupo sustituye a la
+   lista «Testers PACE», no va junto a ella; Ez y sus dos testers entran también por el grupo, y el cambio en Play,
+   mejor con la prueba ya aprobada. Al juntar, corregir lo que diga «junto a tu lista» (`testers.md` de la rama).
 3b. **El iPhone entra en v1** (Ez, 22 oct., ~22:40; `DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
    Espera la cuenta de Apple Developer de Ez y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4).
    Con ellas, antes que lo que siga en esta cola: la firma y la subida a TestFlight desde GitHub
