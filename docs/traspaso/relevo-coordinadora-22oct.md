@@ -36,6 +36,12 @@ Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a l
    prueba beta**: el enlace público del grupo «Testers iPhone» va en `data-enlaces` → `iphone.url`, con
    `pendiente: false` (la prueba exige `https://testflight.apple.com/join/…`). Sin insignia de Apple: solo vale con la
    app en la App Store.
+5c. **`/premium`, refinada como `/beta`** (Ez, 23 oct., noche: «ahora que tenemos la parte de beta refinada,
+   ¿refinamos premium?»; no cupo en la cuenta de EcLj6…, al 93 % de la semana). Con maqueta antes, proponer: el logo
+   grande, los dibujos de los módulos en vez de puntos, el pie nuevo con «Contacto», el «+» verde en las preguntas y
+   las cifras alineadas, como `/beta` (copiar sus reglas, que ya pasaron la revisión de Ez); y el iPhone donde hoy solo
+   dice Android o Google Play (los textos de «Avísame» y su aviso de privacidad nombran solo Google Play: con el
+   iPhone en v1, también la App Store). Lo que cambie de privacidad, enseñárselo a Ez antes.
 6. **Mueve y Estira**: las dos respuestas de ChatGPT, guardadas; Ez tiene una segunda pregunta para pegarle (botón en
    https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp, texto en `docs/proposals/mueve-estira-chatgpt-2-23oct.md`):
    la ficha de cada uno de los 63 ejercicios con su texto real, las pausas sencillas con lo que hay y cuáles de los 22
