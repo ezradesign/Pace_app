@@ -88,8 +88,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
 - Los dibujos que faltan: la cuenta y los prompts, en `docs/product/GLIFOS_A_DIBUJAR.md`.
-- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer (pagada el 22 oct.,
-  «Pending» hasta 48 h; no volver a pagar) y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4), y pasar a sus testers qué mirar, sobre todo el sonido.
+- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer, validada el 23 oct.;
+  falta su llave (`docs/launch/app-store/guia.html`, punto 4), y pasar a sus testers qué mirar, sobre todo el sonido.
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.
 
 ## Deuda conocida, sin fecha
@@ -132,6 +132,10 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   ejercicio de Mueve o Estira con el glifo del módulo. Falta la pregunta 5, el nombre de la invitación y dónde
   se ve el ejercicio (https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d); la monta la sesión «Maqueta» como
   v0.175.0. El aviso a mitad de un bloque largo (la segunda parte de ChatGPT), después de verlo.
+- **Del móvil de Ez, 23 oct.** (0.174.0): **Mueve y Estira de fondo**, lo primero tras v0.175.0 (dibujos que no
+  casan, estiramientos dentro de Mueve, banda y barra aparte y saltables, rutinas casi iguales, más fuerza en
+  Mueve), y N2-N9 (franjas de Android con la paleta, «Auto» por la hora, aviso con el móvil bloqueado…). Detalle
+  en la cola de `docs/traspaso/relevo-coordinadora-22oct.md`, puntos 1b y 1c.
 - **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
   escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
   calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;

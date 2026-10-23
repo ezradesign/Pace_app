@@ -143,6 +143,34 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d) y, mientras, monta 4a, 4b y 4c. **La segunda parte de lo de ChatGPT**,
    el aviso a mitad de un bloque largo (45 min o más), se mira con Ez después de que pruebe la primera en su
    móvil (`DECISIONES_PRODUCTO.md`, «después de verlo»): sin maqueta todavía.
+1b. **Mueve y Estira, revisión de fondo** (Ez, 23 oct., tras probar 0.174.0 en su móvil: «lo más vital y
+   prioritario… MUY IMPORTANTE, son dos bloques centrales y tienen que ser originales y útiles»). Comprobado en
+   el código: todo lo que nombra existe. Estira = estiramientos, casi yoga o pilates; Mueve = calistenia en un
+   cuarto, sin objetos ni tecnicismos. Casos: (a) dibujos que no casan: «Core silencioso» (`extra.core.stealth`),
+   «Sentadilla de cuádriceps» (parece un estiramiento de cuádriceps en el suelo: el dibujo vale para un estiramiento
+   nuevo), «Rodar hacia abajo» (Ez tiene uno que sí: pedírselo), «Gato-camello» (mejorable), «Puente torácico» (sale a
+   dos niveles, no en el suelo), «90/90» (se confunde con «Paloma»), «Sentarse y levantarse del suelo» (no lo
+   enseña; el dibujo vale para otro ejercicio); (b) estiramientos dentro de Mueve que ya están en Estira («Apertura
+   de pecho», «Juntar omóplatos»…); (c) lo que pide banda o barra («Apertura con banda», «Colgarse»…): que se pueda
+   saltar y siga contando, y en su propio grupo «con material», sin mezclarse con lo de escritorio o cuarto (silla y
+   pared sí valen para todos); (d) rutinas con títulos distintos y casi los mismos ejercicios: cada una con sentido
+   propio, aunque alguno se repita; (e) Mueve pide más fuerza: abdominales, sentadillas, flexiones y parecidos.
+   Ez ofrece auditorías de ChatGPT y dibujar los glifos nuevos. Sin renombrar ids (CLAUDE.md, «los ids van
+   cruzados»). Absorbe el «repaso de todos los dibujos» del punto 6 y el punto 7. Va antes que todo lo demás, en
+   cuanto entre v0.175.0 (su reparto de «Ver ejercicio», de 31 ejercicios de Mueve y Estira, se rehace con esto).
+1c. **Del móvil de Ez, 23 oct.** (0.174.0 de Play; comprobado en el código), cada uno con maqueta salvo N2 y N3:
+   **N2** Android: las franjas de arriba (batería) y abajo (Atrás) siguen el modo del móvil (`values-night`) y no la
+   paleta de PACE: con PACE en oscuro y el móvil en claro, salen claras. Fallo; arreglarlo pintándolas con la paleta
+   (y mirar el iPhone). · **N3** La paleta automática sigue solo el modo oscuro del móvil: la luz nocturna no es modo
+   oscuro (no se puede leer desde la app) y no hay cambio por la hora. Decide Ez si «Auto» también cambia por la hora.
+   · **N4** Con el móvil bloqueado, un aviso fijo con lo que lleva el Foco, el bloque y la pausa que viene (con los
+   avisos de Android, punto 11; en iPhone sería otra cosa). · **N5** Un «Auto» en los ejercicios para que avancen
+   solos, sin pulsar. · **N6** El número que late en las repeticiones (`pace-rep-pulse`): fijo, con un degradado de
+   naranja o rojo a verde según se acerca el final, solo en el número; probarlo. · **N7** «Hasta las HH:MM» debajo de
+   «Bloque 1 de X», y el número y «Empezar bloque» más abajo, en proporción (ojo: la home no tiene 26 px libres a
+   640). · **N8** Las barras de progreso (las de la barra lateral, a confirmar en la maqueta), con el degradado del
+   logo, de naranja a verde según se llenan. · **N9** La barra lateral cuesta volver a ponerla durante un Foco:
+   reproducirlo; si no sale, pedir a Ez una frase o una captura. N5-N8 en una sola maqueta.
 2. **Montar 1A 2A 3A de la maqueta** (M7, M6, M4) como v0.174.6, en la misma sesión de la maqueta: **lista**
    (0707b36), esperando el sí de Ez para juntarla con la suite entera.
 3. **Una página para captar testers de Android, `pacegrass.app/beta`** (idea de Ez, 22 oct. noche; va
@@ -173,7 +201,8 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    lista «Testers PACE», no va junto a ella; Ez y sus dos testers entran también por el grupo, y el cambio en Play,
    mejor con la prueba ya aprobada. Al juntar, corregir lo que diga «junto a tu lista» (`testers.md` de la rama).
 3b. **El iPhone entra en v1** (Ez, 22 oct., ~22:40; `DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
-   Espera la cuenta de Apple Developer de Ez y su llave (`docs/launch/app-store/guia.html`, puntos 3 y 4).
+   **La cuenta de Apple Developer de Ez está validada (23 oct.)**; espera su llave (`docs/launch/app-store/guia.html`,
+   punto 4).
    Con ellas, antes que lo que siga en esta cola: la firma y la subida a TestFlight desde GitHub
    (`.github/workflows/ios.yml`, sin Mac), el apartado del iPhone en `privacy.html` (enseñárselo a Ez antes:
    es pública) y el texto de «qué probar»; y una sección iPhone en `/beta` con el enlace público de
