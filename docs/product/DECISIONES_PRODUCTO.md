@@ -19,6 +19,35 @@
 
 ---
 
+## Mueve y Estira, cómo quedan: 1A 2A 3A 4A (Ez, 23 oct. 2026, noche)
+
+Sobre la página con fotos de la app real (https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE,
+`docs/proposals/mueve-estira-elegir-23oct.html`), tras las tres respuestas de ChatGPT y su comprobación
+(`mueve-estira-comprobacion-23oct.md`). Ez eligió las cuatro recomendadas:
+
+1. **Los textos, todos de una vez y ya**, en una versión pequeña: seis nombres que no dicen lo que enseñan
+   («Círculos de hombro» → «Círculos de brazos», «Inclinación lateral» → «Inclinación de cuello», «Hueco en silla» →
+   «Piernas elevadas sentado», «Puente isquio a una pierna» → «Puente a una pierna», «Palmas al suelo» → «Palmas en la
+   mesa», «Apertura de costillas + respiración» → «Respirar a cuatro apoyos»), tres cuentas que no casan (Rana,
+   balanceo y no 70 s quieta; Rotación lenta, 3 por lado; Círculos de muñeca, 4 por sentido) y los ~40 avisos de la
+   columna «Corrección» de la tercera respuesta, en español y en inglés. Sin cambiar qué rutinas hay ni ningún dibujo;
+   lo guardado con el nombre viejo sigue funcionando.
+2. **Tres capas.** «Para empezar», arriba: diez pausas de 2-3 min y dosis bajas, 4 en Mueve y 6 en Estira, hechas solo
+   con ejercicios que ya existen; rehacen las rutinas de hoy que se parecen y guardan su id (historial, logros y
+   «Continúa» las siguen reconociendo), más «Fuerza en suelo», nueva. Son las que propone «A tu ritmo». Debajo, el
+   resto ordenado: lo que es estirar pasa a Estira (Postura reset, Grip + antebrazos como «Manos y antebrazos» y
+   Espalda de oficina sin la banda), el puente pasa a Mueve, la banda y la barra van a «Con material» y se pueden
+   saltar sin perder la rutina, y lo exigente baja a «Para ir a más», que solo sale si se elige. ATG y Ancestral dejan
+   de salir en la lista; los cuatro ejercicios ambiguos (sentadilla de cuádriceps, puente torácico, onda espinal,
+   marcha del elefante) salen de sus rutinas hasta tener texto y dibujo claros. Ningún ejercicio se borra. Los nombres
+   nuevos de las rutinas son los de la página y se pueden cambiar.
+3. **Seis ejercicios nuevos**: remo con banda, remo con tu mano (la alternativa sin banda), bisagra de cadera,
+   desliza el talón, inclinación de tronco y gemelo en pared. Los dibuja Ez; mientras, el glifo del módulo. Los
+   abdominales quedan en plancha con rodillas, desliza el talón y, para ir a más, plancha lateral y hueco (Ez no pidió
+   encogimientos). Los siete dibujos que no casan se rehacen igualmente.
+4. **«Para empezar», entera gratis**, también «Fuerza en suelo». De pago: lo que ya lo es, «Espalda con banda» y la
+   variedad de un día a otro. Lo que hoy es gratis sigue gratis. La dificultad no pone el precio.
+
 ## Mueve y Estira de fondo, y la paleta automática (Ez, 23 oct. 2026)
 
 Tras probar 0.174.0 en su Android. **Mueve y Estira son los dos bloques centrales y tienen que ser originales y
