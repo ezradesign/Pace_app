@@ -22,6 +22,14 @@ Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a l
    de su carpeta. Acaba con fotos para Ez; se junta con su sí y la suite entera con todo junto.
 4. «Página para testers» (`local_be95e077-…`) y la coordinadora de anoche (`local_4fd476ac-…`) son de la cuenta de
    5iWBf…: desde esta no se ven; se archivan desde allí.
+5. **v0.175.0 juntada** con el «júntala» de Ez sobre https://claude.ai/artifact/Hh3tA7SCTqm2N7b84QzFpJ; el sello que
+   tapa 3 s la invitación la primera vez, «déjalo así». Suite entera con todo junto: 836 en verde, 2 saltadas y 2
+   caídas por la decisión nueva (`ritmo-bloque-siguiente.spec.js`, puesta al día). La sesión «Maqueta»
+   (`local_0d59f656-…`) terminó: archivarla con el sí de Ez.
+6. **Mueve y Estira**: las dos respuestas de ChatGPT, guardadas; Ez tiene una segunda pregunta para pegarle (botón en
+   https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp, texto en `docs/proposals/mueve-estira-chatgpt-2-23oct.md`):
+   la ficha de cada uno de los 63 ejercicios con su texto real, las pausas sencillas con lo que hay y cuáles de los 22
+   nuevos hacen falta. Con esa respuesta, la página de las siete decisiones (`mueve-estira-comprobacion-23oct.md`).
 
 ## AL RELEVO (22 oct., ~22:50, esta cuenta al 92 %; la otra se repone a las 00:30)
 
@@ -158,8 +166,13 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
    Ez ofrece auditorías de ChatGPT y dibujar los glifos nuevos. **Ez eligió «inventario + ChatGPT»** (23 oct.):
    inventario y texto para ChatGPT en https://claude.ai/artifact/AvZHxJKrvrHQUcJKB2NEqp
    (`docs/proposals/mueve-estira-inventario-23oct.html` y `…-chatgpt-23oct.md`; se rehacen con los dos scripts de
-   `docs/traspaso/archivos/mueve-estira-23oct/`). Espera la respuesta de ChatGPT que traiga Ez; se comprueba
-   ejercicio a ejercicio (técnica, seguridad, `base_mueve_estira`) y Ez elige en una página. Sin renombrar ids (CLAUDE.md, «los ids van
+   `docs/traspaso/archivos/mueve-estira-23oct/`). **ChatGPT contestó (23 oct.)**: 26 rutinas (12 Mueve + 14
+   Estira), dos ejercicios cada una, 13 gratis, 22 ejercicios nuevos, dosis de entrada bajas; tal cual en
+   `docs/proposals/mueve-estira-chatgpt-respuesta-23oct.md`; **su segunda respuesta lo corrige**: tres capas
+   (pausas recomendadas, catálogo libre con filtros, rutinas de progresión) y no se borra ningún ejercicio que pase
+   la revisión. Primera comprobación y las siete decisiones de Ez en
+   `docs/proposals/mueve-estira-comprobacion-23oct.md`. **Lo siguiente: la página para que Ez elija**, con maqueta
+   de una rutina nueva en la app. Sin renombrar ids (CLAUDE.md, «los ids van
    cruzados»). Absorbe el «repaso de todos los dibujos» del punto 6 y el punto 7. Va antes que todo lo demás, en
    cuanto entre v0.175.0 (su reparto de «Ver ejercicio», de 31 ejercicios de Mueve y Estira, se rehace con esto).
 1c. **Del móvil de Ez, 23 oct.** (0.174.0 de Play; comprobado en el código), cada uno con maqueta salvo N2 y N3:

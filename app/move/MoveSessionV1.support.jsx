@@ -336,12 +336,19 @@ function v1LadoGlifo(step, phase, side) {
    estaba clavado en 500 lineas y la contabilidad del evento necesitaba dos.
    Recibe el traductor con fallback (`tR`) en vez de cerrarse sobre el, porque
    quien conoce el idioma es el componente. */
+/* El principio de las claves de un paso. Un ejercicio suelto («Ver ejercicio») lleva las de
+   su paso en la rutina de donde sale (state-ritmo.hacerla.jsx). */
+function v1Prefijo(routine, idx) {
+  const o = routine.hacerla;
+  return o ? `${o.rutina}.s${o.paso}` : `${routine.id}.s${idx}`;
+}
+
 /* La clave de traducción de un campo del paso. Las rutinas propias no tienen claves por
    posición: su inglés sale del nombre canónico del ejercicio (content/custom.js). */
 function v1Clave(routine, idx, campo) {
   return routine.id.indexOf('custom.') === 0
     ? `custom.ex.${routine.steps[idx].name}.${campo}`
-    : `${routine.id}.s${idx}.${campo}`;
+    : `${v1Prefijo(routine, idx)}.${campo}`;
 }
 
 function v1Instr(tR, routine, idx, key) {
@@ -349,7 +356,7 @@ function v1Instr(tR, routine, idx, key) {
   /* Los pasos que venían del runner antiguo (y los de las rutinas propias) no traen
      `instruction`: su frase es `cue`, y en inglés se traduce con la clave `.cue` de siempre. */
   if (!st.instruction && key === 'action' && st.cue) return tR(v1Clave(routine, idx, 'cue'), st.cue);
-  return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
 }
 
 /* s172 · LOS DATOS DE `session.completed` DEL RUNNER V1 (§6.4). Vive aqui y no

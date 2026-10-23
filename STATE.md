@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.174.7 · 22 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.175.0 · 23 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -23,7 +23,9 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   v0.174.5, cinco del móvil de Ez y de la auditoría del 22 oct. (M1, M3, M5, A8, A9): entre ellos, los
   logros solo con la sesión entera, como decidió Ez. v0.174.6, las 1A 2A 3A de Ez: la app abre siempre con
   los módulos y «Comienza» abre la pregunta del día, los Ajustes del móvil sin scroll y la voz grave con su
-  «exhala» en Rondas.
+  «exhala» en Rondas. v0.175.0, las pausas con bloques cortos (Ez: 4a A · 4b A · 4c A · 5a A · 5b B): con el
+  aro a 5, 10 o 15, «Un momento para moverte» con «Ver ejercicio», que abre una hoja con uno de los 31
+  ejercicios revisados y lleva a la pantalla de ejercicio (solo suma minutos).
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
@@ -127,11 +129,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
   de debajo (Respira sigue y acredita); y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
 - **Del móvil de Ez** (22 oct., la prueba interna en su Android; M1, M3 y M5 en v0.174.5; M4, M6 y M7, sus
-  1A 2A 3A, en v0.174.6): queda M2 con el aro corto, las guiadas como hoy y entre ellas una invitación: Ez eligió
-  4a A · 4b A (solo con el día empezado) · 4c A (`DECISIONES_PRODUCTO.md`), y al pulsar «Hacerla», un
-  ejercicio de Mueve o Estira con el glifo del módulo. Falta la pregunta 5, el nombre de la invitación y dónde
-  se ve el ejercicio (https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d); la monta la sesión «Maqueta» como
-  v0.175.0. El aviso a mitad de un bloque largo (la segunda parte de ChatGPT), después de verlo.
+  1A 2A 3A, en v0.174.6; M2, las pausas con bloques cortos, en v0.175.0, juntada el 23 oct. con el sí de Ez):
+  queda el aviso a mitad de un bloque largo (la segunda parte de ChatGPT), después de verlo.
 - **Del móvil de Ez, 23 oct.** (0.174.0): **Mueve y Estira de fondo**, lo primero tras v0.175.0 (dibujos que no
   casan, estiramientos dentro de Mueve, banda y barra aparte y saltables, rutinas casi iguales, más fuerza en
   Mueve), y N2-N9 (franjas de Android con la paleta, «Auto» por la hora, aviso con el móvil bloqueado…). Detalle

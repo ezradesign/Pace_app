@@ -4,11 +4,33 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
-## 23 oct., mañana: v0.174.7 en `main`; coordina la cuenta de EcLj6…
+## 23 oct., mañana: v0.175.0 en `main`; coordina la cuenta de EcLj6…
 
 Relevo y cola: `docs/traspaso/relevo-coordinadora-22oct.md`, bloque «23 oct., mañana». Página de pasos de esta
 cuenta: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Los dos enlaces de `/beta` (el grupo `pace-tests` y la
-prueba de Play) están encendidos; la sesión «Maqueta» sigue con v0.175.0 en su carpeta, rama y puerto (8803).
+prueba de Play) están encendidos. La respuesta de ChatGPT sobre Mueve y Estira llegó y espera su comprobación
+(`docs/proposals/mueve-estira-chatgpt-respuesta-23oct.md`).
+
+**v0.175.0, las pausas con bloques cortos, juntada con el sí de Ez** («júntala», sobre las fotos del recorrido de
+verdad, https://claude.ai/artifact/Hh3tA7SCTqm2N7b84QzFpJ; guion
+`docs/traspaso/archivos/maqueta-inicio-22oct/fotos-ver-ejercicio.js`). El aviso del sello «Primer paso», que la
+primera vez tapa unos 3 s la línea de la invitación, se queda así (Ez: «déjalo así»). Rama
+`claude/maqueta-inicio-3a2a59`, sesión «Maqueta», puerto 8803.
+- **Lo que eligió Ez**: 4a A · 4b A (solo con el día empezado) · 4c A · 5a A · 5b B, y su sí a las fotos de
+  https://claude.ai/artifact/H7mBXKbcv1mR8pVSg61N5d con las dos recomendaciones (sin «¿Te ayudó?»; solo suman los
+  minutos, sin logros ni rutina hecha) y el botón **«Ver ejercicio»** («See exercise») en vez de «Hacerla».
+- **Montado**: la invitación, la elección del aro y la cuenta sin día (`app/state-ritmo.bloques.jsx`,
+  `app/focus/FocusTimer.bloques.jsx`); la hoja (`app/focus/RitmoHacerla.jsx`) con uno de los 31 de
+  `docs/proposals/hacerla-reparto.md`, uno por invitación y nunca el de la anterior (`app/state-ritmo.hacerla.jsx`,
+  `hacerlaVez`); «Empezar» a la pantalla de ejercicio con una rutina de un paso (`pace:hacerla`), que no guarda
+  para «Continúa» ni borra otra a medias, no pregunta y solo suma minutos; «1 paso» en singular. Dos filas nuevas
+  arriba en `DECISIONES_TECNICAS_VIGENTES.md`.
+- **Pruebas**: `tests/ver-ejercicio.spec.js` (6) y las tres de `tests/bloques-cortos.spec.js` que buscan el botón
+  caen contra la rama de antes (4cf8e82, con «Hacerla» y sin la hoja) y pasan; las de los archivos que tocan la pantalla de ejercicio, las pausas y la home sin
+  scroll, en verde con `PACE_E2E_PORT=8803`. **Suite entera con todo junto (17 min): 836 en verde, 2 saltadas y 2
+  caídas por la decisión nueva**: `tests/ritmo-bloque-siguiente.spec.js` esperaba «Empezar bloque 2» y «Empezar otro
+  ciclo» tras un bloque de 15, donde ahora el aro invita (4a y 4c); puesta al día sin tocar lo que vigila (el reloj
+  del bloque siguiente), 15 de 15 con `bloques-cortos` y `ver-ejercicio`.
 
 ## 22 oct., noche (hacia las 22:00): v0.174.6 en `main`; coordina la cuenta de 5iWBf…
 

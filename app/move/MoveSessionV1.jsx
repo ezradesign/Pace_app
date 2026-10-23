@@ -46,8 +46,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // `id.sN.instruction.<k>`, fallback al dato anidado. Reemplaza los campos
   // sueltos placeCue/cue/careCue de s114 (migración atómica; sin doble fuente).
   const tInstr = (idx, key) => v1Instr(tR, routine, idx, key);
-  /* El nombre de una rutina propia lo escribió quien la creó: no se traduce. */
-  const displayRoutine = lang === 'en' && routine.id.indexOf('custom.') !== 0
+  /* El nombre de una rutina propia lo escribió quien la creó: no se traduce. Un ejercicio
+     suelto («Ver ejercicio», state-ritmo.hacerla.jsx) se llama como su paso. */
+  const displayRoutine = routine.hacerla
+    ? { ...routine, name: tStep(0, 'name'), code: tR(`${routine.hacerla.rutina}.code`, routine.code) }
+    : lang === 'en' && routine.id.indexOf('custom.') !== 0
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
 
@@ -105,6 +108,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     activeSecRef.current = Math.round(relojActivo.segundos());
     sinContarRef.current = sesionSec < PACE_MINIMO_CUENTA_S || (activeSecRef.current < 1 && 'sinTrabajo');
     if (sinContarRef.current) return;   // saltar todos los pasos no es haberla hecho
+    /* Un ejercicio suelto solo suma sus minutos: ni logros ni rutina hecha (Ez, 22 oct.). */
+    if (routine.hacerla) { hacerlaSumarMinutos(realMin); return; }
     /* s172 · los datos del evento (dual-write) se arman en el support: el plan
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
@@ -309,7 +314,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         buttonStyle={{ background: accent, borderColor: accent }}
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
-        feedback={inPath ? undefined : <SessionFeedback routineId={routine.id} kind={kind} accent={accent} />}
+        feedback={inPath || routine.hacerla ? undefined : <SessionFeedback routineId={routine.id} kind={kind} accent={accent} />}
         sinContar={sinContarRef.current}
       />
     );

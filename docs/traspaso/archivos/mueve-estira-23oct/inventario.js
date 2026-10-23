@@ -42,6 +42,7 @@ for (const [modulo, cats] of Object.entries(modulos)) {
           nombre: s.name, modo: s.mode || 'legacy', reps: typeof s.reps === 'object' ? s.reps.target : s.reps,
           dur: s.dur, series: 1, dibujo: dibujo(s.name),
           texto: [ins.setup, ins.action || s.cue].filter(Boolean).join(' '),
+          colocacion: ins.setup || '', como: ins.action || s.cue || '', cuidado: ins.care || '',
         });
       }
       rutinas.push({

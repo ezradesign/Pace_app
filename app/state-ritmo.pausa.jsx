@@ -96,10 +96,12 @@ function ritmoPausaHecha(routineId) {
 
 /* ¿El bloque que acaba de terminar va pegado al siguiente? Con el aro corto los bloques
    se juntan hasta 30 min (ritmo.regla.js) y entonces no hay pausa que abrir: suena el
-   final, la ventana no sale y el aro deja listo el bloque siguiente (Ez, 15 oct.). */
+   final, la ventana no sale y el aro deja listo el bloque siguiente (Ez, 15 oct.). Sin
+   día, igual desde el 22 oct. (4c): lo apunta `bloquesTerminado` (state-ritmo.bloques.jsx). */
 function ritmoSinPausa(s) {
   var p = typeof ritmoPlan === 'function' ? ritmoPlan(s || getState()) : null;
-  if (!p || p.hechos < 1) return false;
+  if (!p) return typeof bloquesSinDiaJunta === 'function' && bloquesSinDiaJunta(s || getState());
+  if (p.hechos < 1) return false;
   var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
   return !!it && it.tipo === 'foco';
 }

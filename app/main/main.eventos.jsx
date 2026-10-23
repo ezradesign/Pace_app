@@ -16,6 +16,7 @@
      abrirStats() · abrirBiblioteca(kind) · abrirAgua() · empezarRespira(r, g)
        · previsualizar({ routine, kind }) · seguirCuerpo(r, kind, g)
                                                  pace:sidebar-action (s180)
+     seguirCuerpo(r, kind)  pace:hacerla          (el ejercicio de la invitación)
    s194: resume/repeat/suggest anotan la PUERTA de la sesión (paceOrigenSesion,
    state-events.jsx): 'sidebar', o 'parada' si el detalle trae `parada: true`.
 
@@ -106,6 +107,9 @@ function usePaceEventos(acciones) {
       }
     };
     const escuchas = {
+      /* «Ver ejercicio» (FocusTimer.bloques.jsx): un ejercicio suelto entra directo en la
+         pantalla de ejercicio, sin la ficha de antes de empezar, que ya fue su hoja. */
+      'pace:hacerla': (e) => { const d = e && e.detail; if (d && d.routine) a.seguirCuerpo(d.routine, d.kind); },
       'pace:cow-click': () => setCowClicks((c) => c + 1),
       'pace:open-custom-builder': (e) => constructor((e.detail && e.detail.id) || null),
       'pace:open-achievements': () => a.abrirLogros(),

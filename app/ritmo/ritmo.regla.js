@@ -98,7 +98,8 @@ var RITMO_FORMAS = {
    `pausasLarga`, `focoLarga`, `largaEn` y `largasManana`: la cuenta de la larga (ver
    `pausaDe`) tal como la dejó lo hecho. `seguidos`: el foco desde la última pausa. */
 function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
-  var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30, FOCO_LARGA = 75, JUNTOS = 30;
+  /* «Después de cada bloque» (Ez, 22 oct., 4b; state-ritmo.bloques.jsx): ningún bloque se junta. */
+  var PAUSA = 5, LARGA = 15, MINIMO = 15, COLA = 30, FOCO_LARGA = 75, JUNTOS = horario && horario.cadaBloque ? 0 : 30;
   var forma = RITMO_FORMAS[opcion];
   if (!forma || !horario) return null;
   /* s197: LA MEDIA JORNADA ES UN HORARIO PROPIO —una mañana o una tarde, de tu hora

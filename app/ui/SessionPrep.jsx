@@ -102,7 +102,8 @@ function sessionPrepCopy(routine, tn) {
   const donde = (pos.length && pos.every(p => PREP_SUELO.indexOf(p) !== -1)) ? 'floor'
     : (pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing')) ? pos[0]
     : 'any';
-  return tn('move.prepCopy.' + donde, { n: routine.steps.length });
+  const n = routine.steps.length;
+  return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
 }
 
 Object.assign(window, { SessionPrep, sessionPrepCopy });

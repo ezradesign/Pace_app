@@ -7,6 +7,9 @@
  * siendo la del bloque terminado).
  *
  * Contra v0.161.0 cae la primera: el reloj decía 00:00.
+ *
+ * Desde v0.175.0, tras un bloque de 15 el aro invita a moverse (Ez, 4a A y, sin día, 4c A): el
+ * botón dice «Ver ejercicio» y «Seguir» empieza el bloque siguiente. El reloj no cambia.
  */
 'use strict';
 
@@ -26,12 +29,13 @@ test('con el plan «Una hora», al terminar el bloque 1 el reloj dice los 15:00 
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /Una hora/ }).filter({ visible: true }).first().click();
   await bloqueDe15(page);
-  /* Desde el 14 oct. el aro cuenta antes la pausa de 5 minutos (Ez, 2A); al acabarla vuelve
-     al bloque 2, con su reloj. */
+  /* Hasta v0.175.0 el aro contaba aquí la pausa de 5 minutos (Ez, 2A, 14 oct.). Con bloques de
+     15 pegados hasta media hora ya no la hay, y esos minutos de reloj no cambian lo que se ve. */
   await page.clock.runFor(5 * 60 * 1000 + 2000);
   await expect(page.locator('[data-pace-dial-label]')).toHaveText(/Bloque 2 de 3/i);
   await expect(page.locator('[data-pace-dial-number]'), 'el reloj del bloque siguiente').toHaveText('15:00');
-  await expect(page.locator('[data-pace-cta]')).toHaveText(/Empezar bloque 2/);
+  await expect(page.locator('[data-pace-cta]')).toHaveText('Ver ejercicio');
+  await expect(page.locator('[data-pace-invita-seguir]').filter({ visible: true })).toHaveText('Seguir');
 });
 
 test('sin plan, al terminar el bloque el reloj se queda en 00:00', async ({ page, context }) => {
@@ -40,5 +44,5 @@ test('sin plan, al terminar el bloque el reloj se queda en 00:00', async ({ page
   await irAlArtefacto(page);
   await bloqueDe15(page);
   await expect(page.locator('[data-pace-dial-number]')).toHaveText('00:00');
-  await expect(page.locator('[data-pace-cta]')).toHaveText(/Empezar otro ciclo/);
+  await expect(page.locator('[data-pace-cta]')).toHaveText('Ver ejercicio');
 });

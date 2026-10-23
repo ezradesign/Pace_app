@@ -27,7 +27,9 @@ const sinAviso = async (page, porque) => {
 
 test('el primer Pomodoro: el sello no sale encima de la pausa, se gana igual y sale al cerrarla', async ({ page, context }) => {
   const errores = capturarErrores(page);
-  await sembrar(context, { focusMinutes: 15 });
+  /* «después de cada bloque»: sin día y con «a mi ritmo», el bloque de 15 invita y la ventana
+     de la pausa, que es lo que aquí se mira, espera a la media hora (22 oct.) */
+  await sembrar(context, { focusMinutes: 15, ejercicioBloques: 'cada' });
   /* A las 10 de hoy, y no a la hora que sea: el bloque adelanta el reloj 15 min y, si acaba
      entre las 14:00 y las 14:59, gana también «Pausa de mediodía» (secret.lunch), que pasa a
      ser el último sello. Así cayó la suite empezada a las 13:28. Hoy, porque `sembrar` siembra

@@ -58,7 +58,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 .copiar { align-self: flex-start; font: 500 italic 19px var(--serif); color: var(--paper); background: var(--focus); border: 0; border-radius: 999px; padding: 8px 22px; cursor: pointer; }
 .copiar:focus-visible { outline: 2px solid var(--breathe); outline-offset: 3px; }
 .texto { margin: 0; max-height: 420px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 ui-monospace, 'Cascadia Mono', Consolas, monospace; background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px; color: var(--ink-2); }
-#copiado { font-size: 14px; color: var(--focus); }
+.copiado { font-size: 14px; color: var(--focus); }
 </style>
 <main class="hoja">
   <header>
@@ -69,12 +69,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
   </header>
 
   <div class="paso">
-    <h3>Tu paso</h3>
+    <h3>Tu paso, ahora</h3>
     <ol>
-      <li>Copia el texto para ChatGPT (el botón está abajo del todo).</li>
-      <li>Pégalo en ChatGPT, mejor en un modelo que piense antes de contestar.</li>
-      <li>Pásame su respuesta entera. Compruebo cada ejercicio, su técnica y su seguridad, y te enseño una página para elegir.</li>
+      <li>En la misma conversación de ChatGPT, copia y pega <b>la segunda pregunta</b> (abajo del todo, con su botón).</li>
+      <li>Pásame su respuesta entera. Con ella te preparo la página para elegir el Mueve y el Estira nuevos.</li>
     </ol>
+    <p class="nota">La primera pregunta ya está contestada: está guardada, junto con la corrección que le pediste.</p>
     <p class="nota">Y cuando puedas, déjame el dibujo de «Rodar hacia abajo» que dices que sí casa en <code>Pace_app\dibujos-22oct</code>.</p>
   </div>
 
@@ -103,10 +103,91 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
   </section>
 
   <section>
-    <h2>El texto para ChatGPT</h2>
-    <p>Lleva lo que buscas en cada módulo, lo que viste, el catálogo entero y lo que le pedimos que devuelva.</p>
-    <button class="copiar" id="copiar" type="button">Copiar el texto</button>
-    <span id="copiado" role="status" aria-live="polite"></span>
+    <h2>La segunda pregunta para ChatGPT</h2>
+    <p>Para pegar en la misma conversación. Lleva el texto de hoy de cada uno de los 63 ejercicios y le pide su ficha,
+      las pausas sencillas hechas con lo que ya hay y cuáles de sus 22 ejercicios nuevos hacen falta de verdad.</p>
+    <button class="copiar" type="button" data-copiar="texto2">Copiar la segunda pregunta</button>
+    <span class="copiado" role="status" aria-live="polite"></span>
+    <pre class="texto" id="texto2">Gracias. Seguimos con tu propuesta corregida: tres capas (pausas recomendadas, catálogo libre y rutinas de progresión), dificultad y acceso como etiquetas separadas, y no se retira ningún ejercicio que supere la revisión. Ahora te paso el texto real de cada uno de nuestros 63 ejercicios, tal como lo lee la persona en la app (colocación, cómo hacerlo y cuidado). Te pido tres cosas:
+
+1. LA FICHA DE CADA EJERCICIO, en una tabla con una fila por ejercicio: módulo (Mueve o Estira), capa (pausa recomendada, catálogo libre o progresión), dificultad (1 suave, 2 media, 3 exigente), qué exige (fuerza, movilidad, equilibrio o apoyo en manos), posición (sentado, de pie o suelo), material (ninguno, silla, mesa, pared, banda o barra), por dónde empezar (una versión más fácil o un ejercicio previo, mejor si es de esta misma lista), cómo graduarlo, y si nuestro texto tiene un error de técnica o de seguridad, o es ambiguo, la corrección en una frase. Si el texto describe un movimiento distinto del que sugiere el nombre, dilo (sospechamos de «Hueco en silla», «Puente torácico» y «Sentadilla de cuádriceps»).
+2. LAS PAUSAS RECOMENDADAS, rehechas usando sobre todo estos ejercicios: cuántas, con qué ejercicios y con qué dosis de entrada.
+3. LOS HUECOS DE VERDAD: de los 22 ejercicios nuevos que propusiste, cuáles siguen haciendo falta después de esto y por qué, ordenados de más a menos necesario, con el hueco que cubre cada uno.
+
+Mismas reglas que antes: nada de consejos médicos; lenguaje llano, en español de España y tuteando; dosis prudentes para alguien que no entrena.
+
+NUESTROS EJERCICIOS, CON SU TEXTO DE HOY
+- 90/90 (hoy en Estira; rutinas: «Caderas», «Estiramiento del sofá», «Caderas · suelo») · dosis: 60 s / 70 s · Colocación: Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°. · Cómo: Gira despacio de un lado al otro. Tronco alto. · Cuidado: Apóyate en las manos por detrás para ir más cómodo.
+- Abrir y cerrar el puño (hoy en Mueve; rutinas: «Grip + antebrazos») · dosis: 20 rep. · Colocación: Brazos relajados, manos abiertas. · Cómo: Cierra el puño con fuerza y ábrelo del todo. Repite a buen ritmo. · Cuidado: Firme, pero sin llegar al calambre.
+- Apertura con banda (hoy en Mueve y Estira; rutinas: «Espalda de oficina», «Hombros», «Hombros · círculos») · dosis: 40 s / 50 s / 45 s · Cómo: Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos. · Cuidado: Hombros abajo, lejos de las orejas.
+- Apertura de costillas + respiración (hoy en Estira; rutinas: «Ancestral») · dosis: 45 s · Colocación: A cuatro patas, espalda larga y cuello suelto. · Cómo: Inhala llevando el aire a los lados de las costillas. Exhala despacio. · Cuidado: Sin forzar el aire. La espalda se queda quieta.
+- Apertura de pecho (hoy en Mueve y Estira; rutinas: «Espalda de oficina», «Antídoto silla», «Hombros · círculos», «Espalda de pie», «Despertar matinal») · dosis: 40 s / 50 s / 30 s / 45 s · Cómo: Manos tras la nuca. Abre los codos y mira al techo. Respira ancho. · Cuidado: Abre solo hasta donde el pecho estire sin molestar.
+- Apertura de pecho sentado (hoy en Mueve; rutinas: «Postura reset») · dosis: 30 s · Cómo: Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho. · Cuidado: Abre solo hasta donde el pecho estire sin molestar.
+- Apretar glúteos (hoy en Mueve; rutinas: «Glúteos invisibles») · dosis: 2 series · 20 rep. · Colocación: Sentado erguido, pies apoyados. · Cómo: Aprieta los glúteos con fuerza dos segundos y suelta. Repite. · Cuidado: Nadie tiene que notarlo. Respira con normalidad.
+- Barbilla atrás (hoy en Mueve y Estira; rutinas: «Postura reset», «Cuello», «Escritorio express», «Columna en la silla») · dosis: 8 rep. / 5 rep. · Colocación: Siéntate erguido, hombros sueltos, mirada al frente. · Cómo: Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta. · Cuidado: Recorrido pequeño, sin tensar. Llevas la cabeza atrás, no abajo.
+- Círculos de hombro (hoy en Estira; rutinas: «Hombros · círculos») · dosis: 60 s · Cómo: Círculos lentos y amplios con el brazo estirado, en los dos sentidos. · Cuidado: Amplios, pero sin tensar el cuello.
+- Círculos de muñeca (hoy en Estira; rutinas: «Escritorio express», «Muñecas y manos») · dosis: 20 s / 30 s · Cómo: Gira las muñecas en círculos, unos 10 en cada sentido. · Cuidado: Muñecas sueltas, sin apretar.
+- Círculos de tobillo (hoy en Estira; rutinas: «Escritorio express») · dosis: 20 s · Cómo: Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad. · Cuidado: Círculos lentos y amplios.
+- Cuádriceps en pared (hoy en Estira; rutinas: «Estiramiento del sofá») · dosis: 30 s por lado · Colocación: Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo. · Cómo: Sube el tronco despacio. Aprieta el glúteo de atrás. · Cuidado: Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.
+- Cuello y trapecios (hoy en Estira; rutinas: «Antídoto silla», «Despertar matinal») · dosis: 20 s por lado · Colocación: Siéntate erguido, hombros abajo. · Cómo: Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza. · Cuidado: Sin tirar con la mano. Solo el peso.
+- Deslizamientos en pared (hoy en Mueve y Estira; rutinas: «Espalda de oficina», «Hombros») · dosis: 8 rep. / 50 s · Colocación: De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella. · Cómo: Sube y baja los brazos pegados a la pared, como alas, despacio. · Cuidado: Sube solo hasta donde no se despeguen. Sin pared, hazlo en el aire.
+- Elevación de puntas (hoy en Mueve y Estira; rutinas: «Piernas de pie», «ATG · Rodillas profundas») · dosis: 12 rep. · Colocación: De espaldas a la pared, o con las manos en la mesa. Talones apoyados. · Cómo: Sube las puntas de los pies hacia las espinillas. Bájalas despacio. · Cuidado: Movimiento pequeño. Notarás el trabajo delante de la espinilla.
+- Elevación de talones (hoy en Mueve; rutinas: «Gemelos subrepticios», «Glúteos invisibles», «Piernas de pie», «Piernas · a una») · dosis: 2 series · 25 rep. / 20 rep. / 12 rep. / 30 s por lado · Colocación: Sentado o de pie, pies apoyados en el suelo al ancho de las caderas. · Cómo: Sube los talones lo más alto que puedas. Baja con control. · Cuidado: Movimiento pequeño y controlado. Apóyate en la mesa si lo necesitas.
+- Encogimiento de hombros (hoy en Estira; rutinas: «Escritorio express», «Hombros · círculos») · dosis: 20 s / 40 s · Colocación: Siéntate erguido, pies apoyados, brazos sueltos. · Cómo: Sube los hombros hacia las orejas y déjalos caer. Repite despacio. · Cuidado: Suelta el aire al bajar. La mandíbula, floja.
+- Escalenos (hoy en Estira; rutinas: «Cuello») · dosis: 20 s por lado · Colocación: Siéntate sobre una mano para anclar ese hombro. · Cómo: Inclina la cabeza al lado contrario y mira un poco arriba. · Cuidado: Muy suave. La zona del cuello es delicada.
+- Estiramiento de muñeca (hoy en Mueve y Estira; rutinas: «Grip + antebrazos», «Muñecas y manos») · dosis: 20 s por lado / 40 s · Cómo: Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano. · Cuidado: Presión ligera. Nunca hasta el dolor.
+- Extensión de dedos (hoy en Mueve y Estira; rutinas: «Grip + antebrazos», «Muñecas y manos») · dosis: 10 rep. · Cómo: Abre bien los dedos, estíralos y relaja. · Cuidado: Sin forzar las articulaciones.
+- Extensión torácica (hoy en Mueve y Estira; rutinas: «Postura reset», «Hombros», «Columna en la silla») · dosis: 30 s / 40 s / 35 s · Colocación: Siéntate atrás del todo, con la espalda alta apoyada en el respaldo. · Cómo: Apoya la espalda alta en el respaldo y arquea suave, abriendo el pecho al techo. · Cuidado: El arco nace del pecho, no de la zona lumbar.
+- Flexiones inclinadas (hoy en Mueve; rutinas: «Flexiones de escritorio», «Empuje · progresión») · dosis: 3 series · 12 rep. / 2 series · 10 rep. · Colocación: Manos en la mesa, algo más abiertas que los hombros. Pasos atrás, cuerpo recto en diagonal. · Cómo: Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve. · Cuidado: Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.
+- Flexor de cadera (hoy en Estira; rutinas: «Antídoto silla», «Estiramiento del sofá») · dosis: 25 s por lado · Colocación: Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta. · Cómo: Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás. · Cuidado: Recorrido corto. No fuerces la zona lumbar.
+- Fondos en silla (hoy en Mueve; rutinas: «Fondos en silla») · dosis: 3 series · 12 rep. · Colocación: Al borde de una silla estable, sin ruedas. Manos junto a las caderas; desliza la cadera fuera. · Cómo: Baja doblando los codos hacia atrás. Sube empujando con los brazos. · Cuidado: Baja hasta que el codo haga un ángulo recto, no más. Con los pies cerca, es más fácil.
+- Gateo (hoy en Estira; rutinas: «Ancestral») · dosis: 60 s · Colocación: A cuatro patas, manos bajo los hombros y rodillas bajo las caderas. · Cómo: Avanza mano y rodilla contrarias a la vez, despacio. Unos pasos y vuelve. · Cuidado: Espalda larga. Si las muñecas se quejan, apóyate en los puños.
+- Gato-camello (hoy en Estira; rutinas: «Columna · ondas», «Despertar matinal») · dosis: 60 s · Colocación: Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas. · Cómo: Arquea y redondea la espalda despacio, vértebra a vértebra. · Cuidado: Movimiento lento, siguiendo la respiración.
+- Giro sentado (hoy en Estira; rutinas: «Escritorio express») · dosis: 20 s · Cómo: Gira el tronco hacia el respaldo, con una mano en él. Luego, al otro lado. · Cuidado: Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.
+- Hueco abdominal (hoy en Mueve; rutinas: «Core · plancha») · dosis: 30 s · Cómo: Tumbado boca arriba: pega la lumbar al suelo y eleva piernas y hombros. · Cuidado: Baja los pies para que sea más suave.
+- Hueco en silla (hoy en Mueve; rutinas: «Core silencioso») · dosis: 3 series · 30 s · Colocación: Silla sin ruedas o frenada. Atrás del todo, espalda apoyada, manos en el asiento. · Cómo: Eleva las piernas y mantén, con la baja espalda apoyada. · Cuidado: Baja los pies para que sea más suave. Respira normal.
+- Inclinación lateral (hoy en Estira; rutinas: «Cuello», «Columna en la silla») · dosis: 25 s por lado / 30 s por lado · Colocación: Siéntate erguido, deja los hombros abajo. · Cómo: Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario. · Cuidado: No empujes con la mano. Deja caer el peso de la cabeza.
+- Isquio a una pierna (hoy en Estira; rutinas: «Cadena posterior de pie», «Cadena posterior») · dosis: 35 s por lado / 40 s por lado · Colocación: Apoya un talón adelante, con esa pierna estirada. · Cómo: Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo. · Cuidado: La rodilla de apoyo algo flexionada. Sin rebotes.
+- Juntar omóplatos (hoy en Mueve y Estira; rutinas: «Postura reset», «Espalda de oficina», «Espalda de pie») · dosis: 10 rep. / 12 rep. / 8 rep. · Colocación: De pie, pies al ancho de las caderas, hombros sueltos. · Cómo: Junta los omóplatos hacia el centro y mantén un instante. Suelta. · Cuidado: Hombros abajo, lejos de las orejas.
+- Marcha del elefante (hoy en Estira; rutinas: «ATG · Rodillas profundas», «Cadena posterior») · dosis: 45 s / 70 s · Cómo: Camina con las manos por el suelo, piernas lo más estiradas posible. · Cuidado: Dobla algo las rodillas si los isquios tiran.
+- Onda espinal (hoy en Estira; rutinas: «Columna · ondas») · dosis: 60 s · Colocación: Ponte de pie, rodillas sueltas. · Cómo: Recorre una ola lenta desde la pelvis hasta la cabeza. · Cuidado: Movimiento fluido, sin prisa.
+- Palmas al suelo (hoy en Estira; rutinas: «Muñecas y manos») · dosis: 40 s · Colocación: Apoya las palmas en la mesa, dedos apuntando hacia ti. · Cómo: Lleva el peso atrás despacio hasta notar el estirón en el antebrazo. · Cuidado: Suave. Reduce el peso si molesta.
+- Paloma (hoy en Estira; rutinas: «Caderas», «Estiramiento del sofá») · dosis: 30 s por lado · Colocación: Lleva una espinilla al frente, la otra pierna estirada atrás. · Cómo: Camina el peso hacia delante. Baja el pecho poco a poco. · Cuidado: Cojín bajo la cadera que queda en el aire. Si notas la rodilla, acerca el pie a la cadera.
+- Pica en escritorio (hoy en Mueve; rutinas: «Empuje · progresión») · dosis: 8 rep. · Colocación: Manos en la mesa, acerca los pies y sube la cadera: el cuerpo, en V invertida. · Cómo: Dobla los codos y lleva la cabeza hacia la mesa, entre los brazos. Empuja y vuelve. · Cuidado: Recorrido corto: la cabeza nunca toca la mesa. Con los pies más lejos, más fácil.
+- Plancha (hoy en Mueve; rutinas: «Core · plancha») · dosis: 2 series · 45 s · Colocación: Ponte boca abajo en el suelo y apoya los antebrazos bajo los hombros. · Cómo: Cuerpo en línea recta de la cabeza a los talones. Aprieta glúteos y abdomen. Respira. · Cuidado: Apoya las rodillas en el suelo para hacerla más suave.
+- Plancha lateral (hoy en Mueve; rutinas: «Core · plancha») · dosis: 30 s por lado · Cómo: Apóyate en un antebrazo, cuerpo de lado en línea. Sube la cadera y mantén. · Cuidado: Baja la rodilla de abajo al suelo si necesitas menos intensidad.
+- Pliegue adelante (hoy en Estira; rutinas: «Caderas de pie», «Cadena posterior de pie», «Cadena posterior») · dosis: 35 s / 45 s / 70 s · Cómo: Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves. · Cuidado: Apoya las manos en las rodillas si lo necesitas. Sal despacio, sin tirones.
+- Puente con marcha (hoy en Estira; rutinas: «Caderas», «Estiramiento del sofá», «Cadena posterior») · dosis: 60 s / 70 s · Colocación: Túmbate boca arriba, pies apoyados cerca del glúteo. · Cómo: Sube la cadera y aguanta. Levanta una rodilla, luego la otra. · Cuidado: Baja el ritmo si la lumbar se queja.
+- Puente isquio a una pierna (hoy en Estira; rutinas: «ATG · Rodillas profundas») · dosis: 20 s por lado · Colocación: Túmbate boca arriba, un pie apoyado y la otra pierna arriba. · Cómo: Sube y baja la cadera con control, empujando con el talón. · Cuidado: Si da un tirón detrás del muslo, apoya los dos pies.
+- Puente torácico (hoy en Estira; rutinas: «Columna · ondas») · dosis: 60 s · Colocación: Siéntate en el suelo, manos apoyadas detrás. · Cómo: Eleva la cadera y abre el pecho al techo. Baja despacio. · Cuidado: Sube solo hasta donde el pecho abra sin forzar.
+- Rana (hoy en Estira; rutinas: «Caderas · suelo») · dosis: 70 s · Colocación: A cuatro patas, abre las rodillas todo lo ancho que vaya cómodo. Antebrazos al suelo. · Cómo: Lleva la cadera atrás despacio y vuelve. Mece suave. · Cuidado: Cojín bajo las rodillas si molestan. Tensión en la ingle, nunca pinchazo.
+- Rezo invertido (hoy en Estira; rutinas: «Muñecas y manos») · dosis: 40 s · Cómo: Junta los dorsos de las manos frente al pecho y baja las muñecas despacio. · Cuidado: Estirón suave en la cara interna. Sin forzar.
+- Rodar hacia abajo (hoy en Estira; rutinas: «Espalda de pie», «Columna · ondas», «Cadena posterior de pie») · dosis: 40 s / 60 s / 50 s · Colocación: Ponte de pie, pies al ancho de las caderas. · Cómo: Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio. · Cuidado: Rodillas suaves. Sube despacio para no marearte.
+- Rotación externa (hoy en Estira; rutinas: «Hombros», «Hombros · círculos») · dosis: 50 s / 45 s · Cómo: Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve. · Cuidado: Movimiento pequeño y controlado.
+- Rotación lenta (hoy en Estira; rutinas: «Cuello») · dosis: 25 s por lado · Colocación: Erguido, barbilla paralela al suelo. · Cómo: Gira despacio a mirar sobre el hombro. Vuelve al centro. · Cuidado: Gira solo hasta donde el cuello vaya suelto.
+- Rotación torácica (hoy en Estira; rutinas: «Antídoto silla», «Columna en la silla», «Columna · ondas», «Despertar matinal») · dosis: 20 s por lado / 30 s por lado / 45 s · Colocación: Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho. · Cómo: Gira el tronco despacio hacia un lado. Vuelve al centro. · Cuidado: El giro nace del tronco, no del cuello.
+- Rotación torácica de pie (hoy en Estira; rutinas: «Espalda de pie») · dosis: 20 s por lado · Colocación: De pie, pies al ancho de las caderas. Cruza las manos sobre el pecho. · Cómo: Gira el tronco despacio hacia un lado. Vuelve al centro. · Cuidado: La cadera mira al frente: el giro nace del tronco, no del cuello.
+- Sentadilla a silla (hoy en Mueve; rutinas: «Sentadillas de silla») · dosis: 3 series · 12 rep. · Colocación: De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas. · Cómo: Baja hasta rozar la silla. Sube sin impulso, pecho arriba. · Cuidado: Apoya las manos en los muslos para ayudarte si lo necesitas.
+- Sentadilla búlgara (hoy en Mueve; rutinas: «Piernas · a una») · dosis: 40 s por lado · Colocación: Silla estable contra la pared, a tu espalda. Apoya en ella el empeine de una pierna. · Cómo: Baja en vertical sobre la pierna de delante y sube. Unas 6 por pierna. · Cuidado: Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.
+- Sentadilla de cuádriceps (hoy en Mueve y Estira; rutinas: «Piernas de pie», «Piernas · a una», «ATG · Rodillas profundas», «Cadena posterior de pie») · dosis: 8 rep. / 10 rep. / 30 s · Colocación: Sujétate a la mesa con las dos manos. · Cómo: Lleva las rodillas adelante y sube los talones. Baja poco a poco y vuelve. · Cuidado: Apoyado en todo momento. Baja solo hasta donde las rodillas vayan cómodas.
+- Sentadilla lateral (hoy en Estira; rutinas: «Caderas de pie», «Caderas», «Caderas · suelo») · dosis: 30 s por lado / 60 s · Cómo: Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio. · Cuidado: Talón apoyado. Baja solo hasta donde controles.
+- Sentadilla profunda (hoy en Estira; rutinas: «Caderas de pie», «Caderas», «Caderas · suelo», «Despertar matinal») · dosis: 50 s / 60 s / 70 s · Cómo: Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas. · Cuidado: Apóyate en la mesa si pierdes el equilibrio. Pon algo bajo los talones si no llegan.
+- Sentadilla profunda sostenida (hoy en Estira; rutinas: «Ancestral») · dosis: 60 s · Cómo: Baja a una sentadilla profunda, talones abajo, y relaja al fondo. · Cuidado: Algo bajo los talones si no llegan. Apóyate en algo si pierdes el equilibrio.
+- Sentarse y levantarse del suelo (hoy en Estira; rutinas: «Caderas · suelo», «Ancestral») · dosis: 80 s / 60 s · Cómo: Siéntate en el suelo con las piernas cruzadas y vuelve a levantarte. Repite despacio. · Cuidado: Sin manos si puedes; con una mano, también vale.
+- Silla en la pared (hoy en Mueve; rutinas: «Sentadilla en pared») · dosis: 2 series · 60 s · Colocación: Apoya la espalda en una pared y desliza hacia abajo hasta que las rodillas queden a 90°. · Cómo: Espalda pegada a la pared, rodillas a 90°. Respira normal. · Cuidado: Respira sin aguantar el aire. Cuanto menos bajes, más suave.
+- Suspensión activa (hoy en Mueve; rutinas: «Colgarse») · dosis: 30 s · Cómo: Cuelga llevando los hombros abajo y atrás. Codos rectos. · Cuidado: Tracción suave, sin encoger el cuello.
+- Suspensión pasiva (hoy en Mueve y Estira; rutinas: «Colgarse», «Ancestral») · dosis: 2 series · 30 s / 45 s · Colocación: Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros. · Cómo: Cuelga relajado, con los brazos estirados. Respira. · Cuidado: Baja si notas molestia. Apoya un poco los pies si lo necesitas.
+- Suspensión pasiva · opcional (hoy en Estira; rutinas: «Hombros») · dosis: 45 s · Colocación: Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides. · Cómo: Cuelga con los brazos estirados y suelta el peso de los hombros. · Cuidado: Tracción suave. Baja si notas molestia.
+- Zancada con apertura (hoy en Estira; rutinas: «Antídoto silla») · dosis: 30 s por lado · Colocación: Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo. · Cómo: Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada. · Cuidado: Apoya la mano en un libro si no llegas al suelo.
+- Zancada profunda (hoy en Mueve y Estira; rutinas: «Piernas · a una», «Caderas de pie», «ATG · Rodillas profundas») · dosis: 35 s por lado / 30 s por lado · Colocación: De pie, da un paso largo adelante. Una mano en la mesa si la necesitas. · Cómo: Baja hasta que la rodilla de delante pase por encima del pie, y sube. Unas 6 por pierna. · Cuidado: Si la rodilla se queja, baja menos. El talón de delante, siempre apoyado.
+</pre>
+  </section>
+
+  <section>
+    <h2>La primera pregunta, ya contestada</h2>
+    <p class="nota">Lleva lo que buscas en cada módulo, lo que viste, el catálogo entero y lo que le pedimos que devuelva.</p>
+    <button class="copiar" type="button" data-copiar="texto">Copiar la primera pregunta</button>
+    <span class="copiado" role="status" aria-live="polite"></span>
     <pre class="texto" id="texto">Eres especialista en ejercicio para gente que trabaja sentada (fisioterapia, fuerza y movilidad). Te paso el catálogo actual de PACE, una app de pausas activas para quien teletrabaja: entre bloques de trabajo propone pausas de 2 a 6 minutos. Tiene dos módulos de ejercicio:
 
 - MUEVE: fuerza en una habitación o junto a la mesa, estilo calistenia sencilla y sin tecnicismos (sentadillas, flexiones, abdominales, zancadas, puentes...). Sin objetos.
@@ -172,18 +253,19 @@ EJERCICIOS QUE YA EXISTEN (63)
 </main>
 <script>
 (function () {
-  var boton = document.getElementById('copiar');
-  var texto = document.getElementById('texto');
-  var aviso = document.getElementById('copiado');
-  function seleccionar() {
-    var r = document.createRange(); r.selectNodeContents(texto);
-    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    aviso.textContent = 'Seleccionado: cópialo con el menú o con Ctrl+C.';
-  }
-  boton.addEventListener('click', function () {
-    try {
-      navigator.clipboard.writeText(texto.textContent).then(function () { aviso.textContent = 'Copiado. Pégalo en ChatGPT.'; }, seleccionar);
-    } catch (e) { seleccionar(); }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copiar]'), function (boton) {
+    var texto = document.getElementById(boton.getAttribute('data-copiar'));
+    var aviso = boton.nextElementSibling;
+    function seleccionar() {
+      var r = document.createRange(); r.selectNodeContents(texto);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      aviso.textContent = 'Seleccionado: cópialo con el menú o con Ctrl+C.';
+    }
+    boton.addEventListener('click', function () {
+      try {
+        navigator.clipboard.writeText(texto.textContent).then(function () { aviso.textContent = 'Copiado. Pégalo en ChatGPT.'; }, seleccionar);
+      } catch (e) { seleccionar(); }
+    });
   });
 })();
 </script>

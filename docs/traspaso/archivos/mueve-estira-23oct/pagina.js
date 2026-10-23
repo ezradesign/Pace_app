@@ -95,6 +95,33 @@ ${nombres.join(' · ')}
 `;
 fs.writeFileSync(PROMPT, '# Mueve y Estira: el texto para ChatGPT (23 oct. 2026)\n\nLo genera el inventario de `mueve-estira-inventario-23oct.html`. Ez lo pega en ChatGPT y trae la respuesta entera; cada ejercicio que proponga se comprueba antes de creerlo.\n\n```text\n' + prompt + '```\n');
 
+/* La segunda pregunta: el texto real de cada ejercicio, tal como lo lee la persona en la app, para que
+   ChatGPT haga la ficha de cada uno sobre lo que hay y no sobre el nombre. La primera vez de cada
+   ejercicio en el catálogo trae su colocación; si no, se busca en otra rutina. */
+const fichas = new Map();
+for (const r of d.rutinas) for (const e of r.ejercicios) {
+  const f = fichas.get(e.nombre) || { nombre: e.nombre, modulos: new Set(), rutinas: [], dosis: [], colocacion: '', como: '', cuidado: '' };
+  f.modulos.add(r.modulo); f.rutinas.push('«' + r.titulo + '»'); f.dosis.push(dosis(e));
+  for (const k of ['colocacion', 'como', 'cuidado']) if (!f[k] && e[k]) f[k] = e[k];
+  fichas.set(e.nombre, f);
+}
+const lineaFicha = (f) => '- ' + f.nombre + ' (hoy en ' + [...f.modulos].join(' y ') + '; rutinas: ' + f.rutinas.join(', ') + ') · dosis: ' +
+  [...new Set(f.dosis)].join(' / ') + (f.colocacion ? ' · Colocación: ' + f.colocacion : '') + (f.como ? ' · Cómo: ' + f.como : '') +
+  (f.cuidado ? ' · Cuidado: ' + f.cuidado : '');
+const lista = [...fichas.values()].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+const prompt2 = `Gracias. Seguimos con tu propuesta corregida: tres capas (pausas recomendadas, catálogo libre y rutinas de progresión), dificultad y acceso como etiquetas separadas, y no se retira ningún ejercicio que supere la revisión. Ahora te paso el texto real de cada uno de nuestros ${lista.length} ejercicios, tal como lo lee la persona en la app (colocación, cómo hacerlo y cuidado). Te pido tres cosas:
+
+1. LA FICHA DE CADA EJERCICIO, en una tabla con una fila por ejercicio: módulo (Mueve o Estira), capa (pausa recomendada, catálogo libre o progresión), dificultad (1 suave, 2 media, 3 exigente), qué exige (fuerza, movilidad, equilibrio o apoyo en manos), posición (sentado, de pie o suelo), material (ninguno, silla, mesa, pared, banda o barra), por dónde empezar (una versión más fácil o un ejercicio previo, mejor si es de esta misma lista), cómo graduarlo, y si nuestro texto tiene un error de técnica o de seguridad, o es ambiguo, la corrección en una frase. Si el texto describe un movimiento distinto del que sugiere el nombre, dilo (sospechamos de «Hueco en silla», «Puente torácico» y «Sentadilla de cuádriceps»).
+2. LAS PAUSAS RECOMENDADAS, rehechas usando sobre todo estos ejercicios: cuántas, con qué ejercicios y con qué dosis de entrada.
+3. LOS HUECOS DE VERDAD: de los 22 ejercicios nuevos que propusiste, cuáles siguen haciendo falta después de esto y por qué, ordenados de más a menos necesario, con el hueco que cubre cada uno.
+
+Mismas reglas que antes: nada de consejos médicos; lenguaje llano, en español de España y tuteando; dosis prudentes para alguien que no entrena.
+
+NUESTROS EJERCICIOS, CON SU TEXTO DE HOY
+${lista.map(lineaFicha).join('\n')}
+`;
+fs.writeFileSync(PROMPT.replace(/chatgpt-23oct\.md$/, 'chatgpt-2-23oct.md'), '# Mueve y Estira: la segunda pregunta para ChatGPT (23 oct. 2026)\n\nTras su segunda respuesta (tres capas, no se retira nada que pase la revisión). Lleva el texto real de cada ejercicio para que haga su ficha, rehaga las pausas recomendadas con lo que hay y diga cuáles de sus 22 nuevos hacen falta de verdad.\n\n```text\n' + prompt2 + '```\n');
+
 const total = (m) => d.rutinas.filter((r) => r.modulo === m).length;
 const enLosDos = Object.entries(d.usos).filter(([n]) => modulosDe(n).size > 1).length;
 const parejas = d.parejas.map((p) => '<li><b>' + esc(p.a) + '</b> y <b>' + esc(p.b) + '</b> <span class="dosis">comparten ' + p.parte + ' %: ' + esc(p.comunes.join(', ')) + '</span></li>').join('');
@@ -159,7 +186,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 .copiar { align-self: flex-start; font: 500 italic 19px var(--serif); color: var(--paper); background: var(--focus); border: 0; border-radius: 999px; padding: 8px 22px; cursor: pointer; }
 .copiar:focus-visible { outline: 2px solid var(--breathe); outline-offset: 3px; }
 .texto { margin: 0; max-height: 420px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 ui-monospace, 'Cascadia Mono', Consolas, monospace; background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px; color: var(--ink-2); }
-#copiado { font-size: 14px; color: var(--focus); }
+.copiado { font-size: 14px; color: var(--focus); }
 </style>
 <main class="hoja">
   <header>
@@ -170,12 +197,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
   </header>
 
   <div class="paso">
-    <h3>Tu paso</h3>
+    <h3>Tu paso, ahora</h3>
     <ol>
-      <li>Copia el texto para ChatGPT (el botón está abajo del todo).</li>
-      <li>Pégalo en ChatGPT, mejor en un modelo que piense antes de contestar.</li>
-      <li>Pásame su respuesta entera. Compruebo cada ejercicio, su técnica y su seguridad, y te enseño una página para elegir.</li>
+      <li>En la misma conversación de ChatGPT, copia y pega <b>la segunda pregunta</b> (abajo del todo, con su botón).</li>
+      <li>Pásame su respuesta entera. Con ella te preparo la página para elegir el Mueve y el Estira nuevos.</li>
     </ol>
+    <p class="nota">La primera pregunta ya está contestada: está guardada, junto con la corrección que le pediste.</p>
     <p class="nota">Y cuando puedas, déjame el dibujo de «Rodar hacia abajo» que dices que sí casa en <code>Pace_app\\dibujos-22oct</code>.</p>
   </div>
 
@@ -204,27 +231,37 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
   </section>
 
   <section>
-    <h2>El texto para ChatGPT</h2>
-    <p>Lleva lo que buscas en cada módulo, lo que viste, el catálogo entero y lo que le pedimos que devuelva.</p>
-    <button class="copiar" id="copiar" type="button">Copiar el texto</button>
-    <span id="copiado" role="status" aria-live="polite"></span>
+    <h2>La segunda pregunta para ChatGPT</h2>
+    <p>Para pegar en la misma conversación. Lleva el texto de hoy de cada uno de los ${lista.length} ejercicios y le pide su ficha,
+      las pausas sencillas hechas con lo que ya hay y cuáles de sus 22 ejercicios nuevos hacen falta de verdad.</p>
+    <button class="copiar" type="button" data-copiar="texto2">Copiar la segunda pregunta</button>
+    <span class="copiado" role="status" aria-live="polite"></span>
+    <pre class="texto" id="texto2">${esc(prompt2)}</pre>
+  </section>
+
+  <section>
+    <h2>La primera pregunta, ya contestada</h2>
+    <p class="nota">Lleva lo que buscas en cada módulo, lo que viste, el catálogo entero y lo que le pedimos que devuelva.</p>
+    <button class="copiar" type="button" data-copiar="texto">Copiar la primera pregunta</button>
+    <span class="copiado" role="status" aria-live="polite"></span>
     <pre class="texto" id="texto">${esc(prompt)}</pre>
   </section>
 </main>
 <script>
 (function () {
-  var boton = document.getElementById('copiar');
-  var texto = document.getElementById('texto');
-  var aviso = document.getElementById('copiado');
-  function seleccionar() {
-    var r = document.createRange(); r.selectNodeContents(texto);
-    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    aviso.textContent = 'Seleccionado: cópialo con el menú o con Ctrl+C.';
-  }
-  boton.addEventListener('click', function () {
-    try {
-      navigator.clipboard.writeText(texto.textContent).then(function () { aviso.textContent = 'Copiado. Pégalo en ChatGPT.'; }, seleccionar);
-    } catch (e) { seleccionar(); }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copiar]'), function (boton) {
+    var texto = document.getElementById(boton.getAttribute('data-copiar'));
+    var aviso = boton.nextElementSibling;
+    function seleccionar() {
+      var r = document.createRange(); r.selectNodeContents(texto);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      aviso.textContent = 'Seleccionado: cópialo con el menú o con Ctrl+C.';
+    }
+    boton.addEventListener('click', function () {
+      try {
+        navigator.clipboard.writeText(texto.textContent).then(function () { aviso.textContent = 'Copiado. Pégalo en ChatGPT.'; }, seleccionar);
+      } catch (e) { seleccionar(); }
+    });
   });
 })();
 </script>
