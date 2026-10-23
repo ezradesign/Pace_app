@@ -43,19 +43,21 @@ function instalarLectura(page) {
   });
 }
 const transiciones = (page) => page.evaluate(() => window.__aroTransiciones());
-/* Guarda las transiciones del primer cambio del arco a partir de ahora: con el reloj congelado,
-   el único que llega es el salto. */
+/* Guarda las transiciones del cambio que mueve la cifra del reloj: con el reloj congelado, el
+   único que llega es el salto, y arco y cifra cambian en el mismo render. No basta con vigilar
+   el arco: también se mueve al volver a medirse (fuentes que llegan tarde, otro tamaño), y
+   entonces puede ser otro nodo. En el CI de v0.175.0 cayó por eso. */
 function vigilarSalto(page) {
   return page.evaluate(() => {
-    const arco = document.querySelector('circle[stroke-dashoffset]');
-    const inicial = arco.getAttribute('stroke-dashoffset');
+    const cifra = () => { const n = document.querySelector('[data-pace-dial-number]'); return n ? n.textContent : null; };
+    const antes = cifra();
     window.__aroSalto = null;
     const obs = new MutationObserver(() => {
-      if (arco.getAttribute('stroke-dashoffset') === inicial) return;
+      if (cifra() === antes) return;
       window.__aroSalto = window.__aroTransiciones();
       obs.disconnect();
     });
-    obs.observe(arco, { attributes: true, attributeFilter: ['stroke-dashoffset'] });
+    obs.observe(document.body, { attributes: true, characterData: true, childList: true, subtree: true });
   });
 }
 const numero = (page) => page.locator('[data-pace-dial-number]').innerText();
