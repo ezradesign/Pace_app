@@ -42,11 +42,11 @@ Object.assign(window.EXTRA_ROUTINES, {
         steps: [
           { name: 'Sentadilla profunda', mode: 'timed', dur: 50,
             instruction: {
-              action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
-              care: 'Apóyate en la mesa si pierdes el equilibrio. Pon algo bajo los talones si no llegan.' } },
+              action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo. Los codos, dentro, sin empujar.',
+              care: 'Apóyate en la mesa si pierdes el equilibrio. Si los talones se levantan, baja menos.' } },
           { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 8 },
             instruction: {
-              action: 'Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio.',
+              action: 'Pies muy anchos. Dobla esta rodilla hacia donde mira el pie; la otra, estirada. Sube despacio.',
               care: 'Talón apoyado. Baja solo hasta donde controles.' } },
           { name: 'Zancada profunda', mode: 'perSide', dur: 30, transition: { seconds: 8 },
             instruction: {
@@ -55,8 +55,8 @@ Object.assign(window.EXTRA_ROUTINES, {
               care: 'Tensión suave delante de la cadera de atrás, nunca pinchazo. Sujétate a la mesa si lo necesitas.' } },
           { name: 'Pliegue adelante', mode: 'timed', dur: 35,
             instruction: {
-              action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
-              care: 'Apoya las manos en las rodillas si lo necesitas. Sal despacio, sin tirones.' } },
+              action: 'Pies al ancho de las caderas, deja caer el tronco hacia abajo. Rodillas suaves.',
+              care: 'Manos en los muslos o en la mesa si lo necesitas: no hace falta tocar el suelo. Sal despacio.' } },
           { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
             instruction: { action: '3 inhalaciones completas para cerrar.' } },
         ]},
@@ -68,27 +68,27 @@ Object.assign(window.EXTRA_ROUTINES, {
         steps: [
           { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
-              action: 'Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio.',
+              action: 'Pies muy anchos. Dobla esta rodilla hacia donde mira el pie; la otra, estirada. Sube despacio.',
               care: 'Talón apoyado. Baja solo hasta donde controles.' } },
           { name: 'Sentadilla profunda', mode: 'timed', dur: 60,
             instruction: {
-              action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+              action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo. Los codos, dentro, sin empujar.',
               care: 'Apóyate en algo si pierdes el equilibrio.' } },
           { name: '90/90', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
-              setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
-              action: 'Gira despacio de un lado al otro. Tronco alto.',
+              setup: 'En el suelo, una pierna delante y otra al lado, las dos dobladas, sin buscar el ángulo exacto.',
+              action: 'Gira las rodillas de un lado al otro, despacio, sin obligarlas a tocar el suelo. Tronco alto.',
               care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
           { name: 'Paloma', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
               setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
               action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
-              care: 'Cojín bajo la cadera que queda en el aire. Si notas la rodilla, acerca el pie a la cadera.' } },
+              care: 'Un cojín bajo la cadera que queda en el aire, si lo necesitas. Si notas la rodilla, sal de la postura.' } },
           { name: 'Puente con marcha', mode: 'timed', dur: 60,
             instruction: {
               setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
               action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-              care: 'Baja el ritmo si la lumbar se queja.' } },
+              care: 'Si la pelvis se cae o la lumbar molesta, apoya los dos pies o termina.' } },
         ]},
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Estiramiento del sofá',
         desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
@@ -104,28 +104,28 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
               setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
-              action: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
-              care: 'Recorrido corto. Mantén el tronco erguido.' } },
+              action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
+              care: 'Tronco erguido. Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Cuádriceps en pared', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
-              setup: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
+              setup: 'Rodilla de atrás en el suelo, pegada a la pared, y su empeine apoyado en ella. Cojín debajo.',
               action: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
               care: 'Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.' } },
           { name: '90/90', mode: 'timed', dur: 60,
             instruction: {
-              setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
-              action: 'Gira despacio de un lado al otro. Tronco alto.',
+              setup: 'En el suelo, una pierna delante y otra al lado, las dos dobladas, sin buscar el ángulo exacto.',
+              action: 'Gira las rodillas de un lado al otro, despacio, sin obligarlas a tocar el suelo. Tronco alto.',
               care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
           { name: 'Paloma', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
               setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
               action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
-              care: 'Cojín bajo la cadera que queda en el aire. Si notas la rodilla, acerca el pie a la cadera.' } },
+              care: 'Un cojín bajo la cadera que queda en el aire, si lo necesitas. Si notas la rodilla, sal de la postura.' } },
           { name: 'Puente con marcha', mode: 'timed', dur: 60,
             instruction: {
               setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
               action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-              care: 'Baja el ritmo si la lumbar se queja.' } },
+              care: 'Si la pelvis se cae o la lumbar molesta, apoya los dos pies o termina.' } },
         ]},
       /* Cada paso con su colocación y su cuidado. Levantarse del suelo, sin manos solo si
          se puede. «Rana» sigue sin dibujo: lo está haciendo Ez. */
@@ -134,28 +134,30 @@ Object.assign(window.EXTRA_ROUTINES, {
         position: ['floor'], equipment: [], requiresFloor: true,
         desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
         steps: [
-          { name: 'Rana', mode: 'timed', dur: 70, setup: { mode: 'ready', estimatedSeconds: 15 },
+          /* Es un balanceo y no una postura quieta: va por veces, ocho, a 3 s la ida y 3 la vuelta. */
+          { name: 'Rana', mode: 'reps', reps: 8, dur: 48, setup: { mode: 'ready', estimatedSeconds: 15 },
+            tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'A cuatro patas, abre las rodillas todo lo ancho que vaya cómodo. Antebrazos al suelo.',
-              action: 'Lleva la cadera atrás despacio y vuelve. Mece suave.',
+              setup: 'A cuatro patas, rodillas un poco abiertas, hasta donde vaya cómodo. Manos o antebrazos abajo.',
+              action: 'Lleva la cadera atrás despacio y vuelve, como un balanceo suave. Unas 8 veces.',
               care: 'Cojín bajo las rodillas si molestan. Tensión en la ingle, nunca pinchazo.' } },
           { name: '90/90', mode: 'timed', dur: 70,
             instruction: {
-              setup: 'Sentado, una pierna delante y otra al lado, ambas a 90°.',
-              action: 'Rota de un lado al otro, despacio. Tronco alto.',
+              setup: 'En el suelo, una pierna delante y otra al lado, las dos dobladas, sin buscar el ángulo exacto.',
+              action: 'Gira las rodillas de un lado al otro, despacio, sin obligarlas a tocar el suelo. Tronco alto.',
               care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
           { name: 'Sentadilla lateral', mode: 'timed', dur: 60,
             instruction: {
-              action: 'Pies muy anchos. Baja el peso a un lado y luego al otro, alternando. Unas 5 por lado.',
+              action: 'Pies muy anchos. Dobla una rodilla hacia donde apunta su pie, y luego la otra. Unas 5 por lado.',
               care: 'Talón apoyado. Baja solo hasta donde controles.' } },
           { name: 'Sentarse y levantarse del suelo', mode: 'timed', dur: 80,
             instruction: {
-              action: 'Siéntate en el suelo con las piernas cruzadas y vuelve a levantarte. Repite despacio.',
-              care: 'Sin manos si puedes; con una mano, también vale.' } },
+              action: 'Baja al suelo por una rodilla y siéntate de lado. Sube por el mismo camino. Repite despacio.',
+              care: 'Usa las manos, y una silla al lado si la necesitas.' } },
           { name: 'Sentadilla profunda', mode: 'timed', dur: 70,
             instruction: {
-              action: 'Baja a una sentadilla profunda, talones abajo, y relaja al fondo.',
-              care: 'Algo bajo los talones si no llegan. Apóyate en algo si pierdes el equilibrio.' } },
+              action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo, y mantén.',
+              care: 'Mantén un apoyo cómodo y sal con control. Si los talones se levantan, baja menos.' } },
         ]},
       /* Lo que es de un lado va por lado, con su cambio, y la fuerza va por repeticiones.
          «Rodillas a prueba» sonaba a «a prueba de lesiones», que la base no deja decir
@@ -175,8 +177,8 @@ Object.assign(window.EXTRA_ROUTINES, {
             instruction: {
               setup: 'De espaldas a la pared, talones a un palmo de ella.',
               action: 'Apoya la espalda y sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
-              care: 'Movimiento pequeño. Notarás el trabajo delante de la espinilla.' } },
-          { name: 'Puente isquio a una pierna', mode: 'perSide', dur: 20, transition: { seconds: 10 }, setup: { mode: 'ready', estimatedSeconds: 15 },
+              care: 'Movimiento pequeño, sin balancearte hacia atrás. Notarás el trabajo delante de la espinilla.' } },
+          { name: 'Puente a una pierna', mode: 'perSide', dur: 20, transition: { seconds: 10 }, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Túmbate boca arriba, un pie apoyado y la otra pierna arriba.',
               action: 'Sube y baja la cadera con control, empujando con el talón.',
@@ -212,11 +214,11 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Rodar hacia abajo', mode: 'timed', dur: 50,
             instruction: {
               setup: 'Ponte de pie, pies al ancho de las caderas.',
-              action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
-              care: 'Rodillas suaves. Sube despacio para no marearte.' } },
+              action: 'Redondea la espalda poco a poco hacia abajo, hasta donde vaya cómodo. Sube igual, despacio.',
+              care: 'Rodillas suaves; puedes parar a medio camino. Sube despacio para no marearte.' } },
           { name: 'Isquio a una pierna', mode: 'perSide', dur: 35, transition: { seconds: 8 },
             instruction: {
-              setup: 'Apoya un talón adelante, con esa pierna estirada.',
+              setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
               action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
               care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
           { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 30,
@@ -226,8 +228,8 @@ Object.assign(window.EXTRA_ROUTINES, {
               care: 'Apoyado en todo momento. Baja solo hasta donde controles.' } },
           { name: 'Pliegue adelante', mode: 'timed', dur: 45,
             instruction: {
-              action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
-              care: 'Apoya las manos en las rodillas si lo necesitas. Sal despacio, sin tirones.' } },
+              action: 'Pies al ancho de las caderas, deja caer el tronco hacia abajo. Rodillas suaves.',
+              care: 'Manos en los muslos o en la mesa si lo necesitas: no hace falta tocar el suelo. Sal despacio.' } },
           { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
             instruction: { action: '3 inhalaciones completas para cerrar.' } },
         ]},
@@ -241,18 +243,18 @@ Object.assign(window.EXTRA_ROUTINES, {
               care: 'Dobla algo las rodillas si los isquios tiran.' } },
           { name: 'Pliegue adelante', mode: 'timed', dur: 70,
             instruction: {
-              action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
-              care: 'Apoya las manos en las rodillas si lo necesitas.' } },
+              action: 'Pies al ancho de las caderas, deja caer el tronco hacia abajo. Rodillas suaves.',
+              care: 'Manos en los muslos si lo necesitas: no hace falta tocar el suelo.' } },
           { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
             instruction: {
-              setup: 'Apoya un talón adelante, con esa pierna estirada.',
+              setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
               action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
               care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
           { name: 'Puente con marcha', mode: 'timed', dur: 70, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
               action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-              care: 'Baja el ritmo si la lumbar se queja.' } },
+              care: 'Si la pelvis se cae o la lumbar molesta, apoya los dos pies o termina.' } },
         ]},
     ]
   },
@@ -273,7 +275,7 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
-              action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
+              action: 'Redondea y extiende la espalda despacio, sin buscar los extremos.',
               care: 'Movimiento lento, siguiendo la respiración.' } },
           { name: 'Rotación torácica', mode: 'timed', dur: 45,
             instruction: {
@@ -282,17 +284,17 @@ Object.assign(window.EXTRA_ROUTINES, {
               care: 'El giro nace del tronco, no del cuello.' } },
           { name: 'Sentadilla profunda', mode: 'timed', dur: 60,
             instruction: {
-              action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+              action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo. Los codos, dentro, sin empujar.',
               care: 'Apóyate en algo si pierdes el equilibrio.' } },
           { name: 'Apertura de pecho', mode: 'timed', dur: 45,
             instruction: {
-              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
           { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
             instruction: {
               setup: 'Siéntate erguido, hombros abajo.',
-              action: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
-              care: 'Sin tirar con la mano. Solo el peso.' } },
+              action: 'Inclina la cabeza con control, la oreja hacia el hombro.',
+              care: 'Sin tirar con la mano ni subir el hombro.' } },
           { name: 'Reset respiración', mode: 'rest', dur: 30,
             instruction: { action: '3 inhalaciones profundas para cerrar.' } },
         ]},
@@ -306,27 +308,27 @@ Object.assign(window.EXTRA_ROUTINES, {
         steps: [
           { name: 'Sentadilla profunda sostenida', mode: 'timed', dur: 60,
             instruction: {
-              action: 'Baja a una sentadilla profunda, talones abajo, y relaja al fondo.',
-              care: 'Algo bajo los talones si no llegan. Apóyate en algo si pierdes el equilibrio.' } },
+              action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo, y mantén.',
+              care: 'Mantén un apoyo cómodo y sal con control. Si los talones se levantan, baja menos.' } },
           { name: 'Gateo', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'A cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
               action: 'Avanza mano y rodilla contrarias a la vez, despacio. Unos pasos y vuelve.',
-              care: 'Espalda larga. Si las muñecas se quejan, apóyate en los puños.' } },
+              care: 'Espalda larga y rodillas en el suelo. Si las muñecas molestan, para.' } },
           { name: 'Suspensión pasiva', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros.',
               action: 'Cuelga relajado, con los brazos estirados. Suelta el peso.',
-              care: 'Baja si notas molestia. Apoya un poco los pies si lo necesitas.' } },
+              care: 'Entra y sal apoyando los pies, sin saltar. Baja si notas molestia.' } },
           { name: 'Sentarse y levantarse del suelo', mode: 'timed', dur: 60,
             instruction: {
-              action: 'Siéntate en el suelo con las piernas cruzadas y vuelve a levantarte. Repite despacio.',
-              care: 'Sin manos si puedes; con una mano, también vale.' } },
-          { name: 'Apertura de costillas + respiración', mode: 'timed', dur: 45,
+              action: 'Baja al suelo por una rodilla y siéntate de lado. Sube por el mismo camino. Repite despacio.',
+              care: 'Usa las manos, y una silla al lado si la necesitas.' } },
+          { name: 'Respirar a cuatro apoyos', mode: 'timed', dur: 45,
             instruction: {
               setup: 'A cuatro patas, espalda larga y cuello suelto.',
               action: 'Inhala llevando el aire a los lados de las costillas. Exhala despacio.',
-              care: 'Sin forzar el aire. La espalda se queda quieta.' } },
+              care: 'Sin forzar el aire. Deja que las costillas se ensanchen, sin bloquear la espalda.' } },
         ]},
     ]
   },

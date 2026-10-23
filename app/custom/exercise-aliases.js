@@ -28,7 +28,7 @@ var VISUAL_ALIAS = {
   'Hang pasivo':                   'Suspensión pasiva',
   'Hang activo':                   'Suspensión activa',
   'Hollow hold':                   'Hueco abdominal',
-  'Seated hollow':                 'Hueco en silla',
+  'Seated hollow':                 'Piernas elevadas sentado',
   'Couch stretch':                 'Cuádriceps en pared',
   'Ankle circles':                 'Círculos de tobillo',
   'Wrist circles':                 'Círculos de muñeca',
@@ -55,7 +55,18 @@ var VISUAL_ALIAS = {
   'World\'s greatest stretch':     'Zancada con apertura',
   'Sissy squat':                   'Sentadilla de cuádriceps',
   'Squat profundo':                'Sentadilla profunda',
-  'Rib pull + respiración':        'Apertura de costillas + respiración',
+  'Rib pull + respiración':        'Respirar a cuatro apoyos',
+
+  /* Los nombres que no decían lo que enseñan (Ez, 23 oct. 2026: 1A). Mismo motivo que la ola
+     de arriba: «Tus rutinas» guarda el nombre viejo. El alias resuelve a un solo salto, así que
+     las dos entradas viejas que apuntaban a «Hueco en silla» y a «Apertura de costillas +
+     respiración» apuntan ya al nombre nuevo. */
+  'Círculos de hombro':            'Círculos de brazos',
+  'Inclinación lateral':           'Inclinación de cuello',
+  'Hueco en silla':                'Piernas elevadas sentado',
+  'Puente isquio a una pierna':    'Puente a una pierna',
+  'Palmas al suelo':               'Palmas en la mesa',
+  'Apertura de costillas + respiración': 'Respirar a cuatro apoyos',
 
   /* Estos cuatro tienen glifo PROPIO tapado por su alias: `ExerciseGlyph`
      resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`,

@@ -47,18 +47,20 @@ function MoveLibrary({ open, onClose, onStart, enPausa }) {
    (ventana sub-segundo de la carrera de scripts).
    Lo que no se guarda sale del registro de ejercicios (exercise-registry.js): si un paso se
    hace por lados (la plancha lateral) va `perSide`, con su tiempo por lado, y la rutina lleva
-   lo que piden sus pasos (`equipment`, `position`, `requiresFloor`) para «Antes de empezar». */
+   lo que piden sus pasos (`equipment`, `position`, `requiresFloor`) para «Antes de empezar».
+   Un paso guardado con un nombre de antes se lee con el de hoy (`ejercicioNombreDeHoy`). */
 const _moveRutinasGuiadas = new WeakMap();
 function moveRutinaGuiada(routine) {
   if (!routine || !Array.isArray(routine.steps) || routine.steps.every(s => s.mode)) return routine;
   if (!_moveRutinasGuiadas.has(routine)) {
     const lados = (n) => typeof ejercicioPorLados === 'function' && ejercicioPorLados(n);
+    const deHoy = (n) => (typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(n) : n);
     const pide = !Array.isArray(routine.equipment) && typeof rutinaPropiaPide === 'function'
       ? rutinaPropiaPide(routine.steps) : {};
     _moveRutinasGuiadas.set(routine, {
       ...routine, ...pide,
       steps: routine.steps.map(s => (s.mode ? s
-        : { ...s, mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' })),
+        : { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' })),
     });
   }
   return _moveRutinasGuiadas.get(routine);

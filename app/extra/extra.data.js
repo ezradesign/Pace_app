@@ -34,8 +34,8 @@ const EXTRA_ROUTINES = {
              colocación. El cierre respiratorio no se toca (sin restKind). */
           { name: 'Apertura de pecho', mode: 'timed', dur: 40,
             instruction: {
-              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
           { name: 'Rotación torácica', mode: 'perSide', dur: 20, transition: { seconds: 10 },
             instruction: {
               setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
@@ -44,18 +44,18 @@ const EXTRA_ROUTINES = {
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
               setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
-              action: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
-              care: 'Recorrido corto. No fuerces la zona lumbar.' } },
+              action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
+              care: 'Recorrido corto. Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Zancada con apertura', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
-              setup: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
-              action: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
-              care: 'Apoya la mano en un libro si no llegas al suelo.' } },
+              setup: 'Da un paso largo a una zancada. Apoya en el suelo la mano contraria a la pierna de delante.',
+              action: 'Abre el pecho y lleva al techo el brazo del lado de la pierna de delante.',
+              care: 'Si no llegas al suelo, apoya la mano en una mesa estable. Puedes mirar al frente.' } },
           { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
             instruction: {
               setup: 'Siéntate erguido, hombros abajo.',
-              action: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
-              care: 'Sin tirar con la mano. Solo el peso.' } },
+              action: 'Inclina la cabeza con control, la oreja hacia el hombro.',
+              care: 'Sin tirar con la mano ni subir el hombro.' } },
           /* CIERRE respiratorio — sin restKind a propósito (s113): NO es un
              descanso entre series y el ajuste de Tweaks (s114) no lo toca. */
           { name: 'Reset respiración', mode: 'rest', dur: 30,
@@ -76,20 +76,23 @@ const EXTRA_ROUTINES = {
               setup: 'Siéntate erguido, hombros sueltos. Mira al frente.',
               action: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
               care: 'Sin tensar. Un recorrido pequeño ya trabaja.' } },
-          { name: 'Inclinación lateral', mode: 'perSide', dur: 25, transition: { seconds: 10 },
+          { name: 'Inclinación de cuello', mode: 'perSide', dur: 25, transition: { seconds: 10 },
             instruction: {
               setup: 'Siéntate erguido, deja los hombros abajo.',
               action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
-              care: 'No empujes con la mano. Deja caer el peso de la cabeza.' } },
-          { name: 'Rotación lenta', mode: 'perSide', dur: 25, transition: { seconds: 10 },
+              care: 'Inclina con control, sin tirar con la mano ni subir el hombro.' } },
+          /* Es girar y volver, no 25 s mirando al lado (NHS, movilidad de cuello): tres a cada
+             lado, con dos segundos arriba. */
+          { name: 'Rotación lenta', mode: 'reps', reps: 6, dur: 36,
+            tempo: { down: 2, hold: 2, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Erguido, barbilla paralela al suelo.',
-              action: 'Gira despacio a mirar sobre el hombro. Vuelve al centro.',
+              action: 'Gira despacio a mirar sobre un hombro, espera dos segundos y vuelve. Tres a cada lado.',
               care: 'Gira solo hasta donde el cuello vaya suelto.' } },
           { name: 'Escalenos', mode: 'perSide', dur: 20, transition: { seconds: 10 },
             instruction: {
-              setup: 'Siéntate sobre una mano para anclar ese hombro.',
-              action: 'Inclina la cabeza al lado contrario y mira un poco arriba.',
+              setup: 'Siéntate erguido. Si quieres, una mano bajo el muslo de ese lado, para que no suba el hombro.',
+              action: 'Inclina la cabeza al lado contrario. Si va cómodo, gira un poco la cara hacia arriba.',
               care: 'Muy suave. La zona del cuello es delicada.' } },
         ]},
       { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
@@ -102,20 +105,23 @@ const EXTRA_ROUTINES = {
           { name: 'Encogimiento de hombros', mode: 'timed', dur: 20,
             instruction: {
               setup: 'Siéntate erguido, pies apoyados, brazos sueltos.',
-              action: 'Sube los hombros hacia las orejas y déjalos caer. Repite despacio.',
+              action: 'Sube los hombros hacia las orejas y bájalos despacio. Repite.',
               care: 'Suelta el aire al bajar. La mandíbula, floja.' } },
-          { name: 'Círculos de muñeca', mode: 'timed', dur: 20,
+          /* Diez por sentido no caben en 20 s si se hacen despacio: cuatro por sentido. */
+          { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Gira las muñecas en círculos, unos 10 en cada sentido.',
-              care: 'Muñecas sueltas, sin apretar.' } },
+              setup: 'Sentado, antebrazos cómodos.',
+              action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
+              care: 'Sin apretar los puños ni buscar el máximo.' } },
           { name: 'Giro sentado', mode: 'timed', dur: 20,
             instruction: {
-              action: 'Gira el tronco hacia el respaldo, con una mano en él. Luego, al otro lado.',
+              action: 'Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado.',
               care: 'Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.' } },
           { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
             instruction: {
               action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
-              care: 'Círculos lentos y amplios.' } },
+              care: 'Círculos lentos, del tamaño que puedas sin mover toda la pierna.' } },
           { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
             instruction: {
@@ -132,28 +138,31 @@ const EXTRA_ROUTINES = {
         desc: 'El antídoto al teclado. Muñecas sueltas en 3 minutos.', min: 3,
         position: ['seated', 'standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Círculos de muñeca', mode: 'timed', dur: 30,
+          { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Gira las muñecas en círculos amplios, en los dos sentidos.',
-              care: 'Muñecas sueltas, sin apretar.' } },
+              setup: 'Sentado, antebrazos cómodos.',
+              action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
+              care: 'Sin apretar los puños ni buscar el máximo.' } },
           { name: 'Estiramiento de muñeca', mode: 'timed', dur: 40,
             instruction: {
-              action: 'Muñeca en flexión y luego en extensión, ayudándote con la otra mano. Cambia de mano a mitad.',
+              setup: 'Brazo al frente, el codo sin bloquear.',
+              action: 'Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti. Cambia a mitad.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
-          { name: 'Palmas al suelo', mode: 'timed', dur: 40,
+          { name: 'Palmas en la mesa', mode: 'timed', dur: 40,
             instruction: {
-              setup: 'Apoya las palmas en la mesa, dedos apuntando hacia ti.',
-              action: 'Lleva el peso atrás despacio hasta notar el estirón en el antebrazo.',
-              care: 'Suave. Reduce el peso si molesta.' } },
+              setup: 'De pie frente a la mesa, palmas apoyadas y dedos hacia ti. Codos estirados, sin bloquear.',
+              action: 'Lleva la cadera un poco atrás, despacio, hasta notar un estirón suave en el antebrazo.',
+              care: 'Casi sin peso sobre las manos. Si molesta, sepárate un poco de la mesa.' } },
           { name: 'Rezo invertido', mode: 'timed', dur: 40,
             instruction: {
-              action: 'Junta los dorsos de las manos frente al pecho y baja las muñecas despacio.',
-              care: 'Estirón suave en la cara interna. Sin forzar.' } },
+              action: 'Junta los dorsos de las manos frente al pecho, con los dedos hacia abajo y un contacto ligero.',
+              care: 'Notarás un estirón suave encima de la muñeca. Sin empujar una mano contra la otra.' } },
           { name: 'Extensión de dedos', mode: 'reps', reps: 10, dur: 30,
             tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Abre bien los dedos, estíralos y relaja.',
-              care: 'Sin forzar las articulaciones.' } },
+              care: 'Sin empujarlos hacia atrás con la otra mano.' } },
         ]},
     ]
   },
@@ -172,16 +181,17 @@ const EXTRA_ROUTINES = {
           { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
-              action: 'Sube y baja los brazos pegados a la pared, como alas.',
-              care: 'Mantén la zona lumbar cerca de la pared.' } },
+              action: 'Sube y baja los brazos junto a la pared, como alas.',
+              care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. La zona lumbar, cerca de la pared.' } },
           { name: 'Apertura con banda', mode: 'timed', dur: 50,
             instruction: {
-              action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
-              care: 'Hombros abajo, lejos de las orejas.' } },
+              setup: 'De pie, la banda delante del pecho y los brazos casi estirados.',
+              action: 'Separa las manos juntando los omóplatos, sin subir la banda a la cara. Hombros abajo.',
+              care: 'Sin banda, ábrelos en el aire: mueve el hombro, pero no es el mismo trabajo.' } },
           { name: 'Rotación externa', mode: 'timed', dur: 50,
             instruction: {
               action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
-              care: 'Movimiento pequeño y controlado.' } },
+              care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } },
           { name: 'Suspensión pasiva · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Agarra una barra firme que aguante tu peso. Sin barra, repite los deslizamientos en pared.',
@@ -192,8 +202,8 @@ const EXTRA_ROUTINES = {
           { name: 'Extensión torácica', mode: 'timed', dur: 40,
             instruction: {
               setup: 'Siéntate atrás del todo, con la espalda alta apoyada en el respaldo.',
-              action: 'Arquea suave sobre el respaldo, abriendo el pecho al techo.',
-              care: 'El arco nace del pecho, no de la zona lumbar.' } },
+              action: 'Arquea suave sobre el respaldo, abriendo el pecho. La cabeza no va atrás.',
+              care: 'El arco nace del pecho. Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.' } },
         ]},
       /* s119 (B2.3 OLA 2): migración al contrato v1. Todo movilidad → `timed`
          (BASE §3-B). Sin material → sin gate. External rotation / Band pull-apart
@@ -203,10 +213,13 @@ const EXTRA_ROUTINES = {
         desc: 'Círculos amplios y controlados. Libera hombros de escritorio.', min: 4,
         position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Círculos de hombro', mode: 'timed', dur: 60,
+          /* Movilidad dinámica: va por vueltas y no por reloj (BASE §3-B). Cuatro hacia delante y
+             cuatro hacia atrás, como vio Ez en la foto de la decisión 1A (23 oct. 2026). */
+          { name: 'Círculos de brazos', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Círculos lentos y amplios con el brazo estirado, en los dos sentidos.',
-              care: 'Amplios, pero sin tensar el cuello.' } },
+              action: 'De pie, dibuja círculos lentos con el brazo estirado: cuatro hacia delante y cuatro atrás.',
+              care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
           { name: 'Encogimiento de hombros', mode: 'timed', dur: 40,
             instruction: {
               action: 'Sube los hombros, llévalos atrás y bájalos redondeando el círculo.',
@@ -214,15 +227,16 @@ const EXTRA_ROUTINES = {
           { name: 'Rotación externa', mode: 'timed', dur: 45,
             instruction: {
               action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
-              care: 'Movimiento pequeño y controlado.' } },
+              care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } },
           { name: 'Apertura con banda', mode: 'timed', dur: 45,
             instruction: {
-              action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
-              care: 'Hombros abajo, lejos de las orejas.' } },
+              setup: 'De pie, la banda delante del pecho y los brazos casi estirados.',
+              action: 'Separa las manos juntando los omóplatos, sin subir la banda a la cara. Hombros abajo.',
+              care: 'Sin banda, ábrelos en el aire: mueve el hombro, pero no es el mismo trabajo.' } },
           { name: 'Apertura de pecho', mode: 'timed', dur: 50,
             instruction: {
-              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
         ]},
       /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Toda movilidad de
          columna → `timed` (BASE §3-B/F). Gate `ready` en el 1er paso de suelo
@@ -244,22 +258,22 @@ const EXTRA_ROUTINES = {
           { name: 'Extensión torácica', mode: 'timed', dur: 35,
             instruction: {
               setup: 'Siéntate atrás del todo, con la espalda alta apoyada en el respaldo.',
-              action: 'Arquea suave sobre el respaldo, abriendo el pecho al techo.',
-              care: 'El arco nace del pecho, no de la zona lumbar.' } },
+              action: 'Arquea suave sobre el respaldo, abriendo el pecho. La cabeza no va atrás.',
+              care: 'El arco nace del pecho. Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.' } },
           { name: 'Rotación torácica', mode: 'perSide', dur: 30, transition: { seconds: 8 },
             instruction: {
               setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
               action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
               care: 'El giro nace del tronco, no del cuello.' } },
-          { name: 'Inclinación lateral', mode: 'perSide', dur: 30, transition: { seconds: 8 },
+          { name: 'Inclinación de cuello', mode: 'perSide', dur: 30, transition: { seconds: 8 },
             instruction: {
               setup: 'Siéntate erguido, deja los hombros abajo.',
               action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
-              care: 'No empujes con la mano. Deja caer el peso de la cabeza.' } },
+              care: 'Inclina con control, sin tirar con la mano ni subir el hombro.' } },
           { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 40,
             tempo: { down: 2, hold: 4, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Lleva la barbilla atrás en horizontal, como haciendo papada. Mantén y relaja.',
+              action: 'Lleva la barbilla atrás en horizontal, sin bajarla hacia el cuello. Mantén y relaja.',
               care: 'Movimiento pequeño. La cabeza no sube ni baja, sólo va atrás.' } },
           { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
             instruction: { action: '3 inhalaciones completas para cerrar.' } },
@@ -276,17 +290,17 @@ const EXTRA_ROUTINES = {
           { name: 'Rodar hacia abajo', mode: 'timed', dur: 40,
             instruction: {
               setup: 'Ponte de pie, pies al ancho de las caderas.',
-              action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
-              care: 'Rodillas suaves. Sube despacio para no marearte.' } },
+              action: 'Redondea la espalda poco a poco hacia abajo, hasta donde vaya cómodo. Sube igual, despacio.',
+              care: 'Rodillas suaves; puedes parar a medio camino. Sube despacio para no marearte.' } },
           { name: 'Rotación torácica de pie', mode: 'perSide', dur: 20, transition: { seconds: 8 },
             instruction: {
               setup: 'De pie, pies al ancho de las caderas. Cruza las manos sobre el pecho.',
               action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
-              care: 'La cadera mira al frente: el giro nace del tronco, no del cuello.' } },
+              care: 'Que no gire todo el cuerpo a la vez, sin bloquear la cadera a la fuerza. El giro nace del tronco.' } },
           { name: 'Apertura de pecho', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
           { name: 'Juntar omóplatos', mode: 'reps', reps: 8, dur: 32,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
             instruction: {
@@ -296,13 +310,13 @@ const EXTRA_ROUTINES = {
             instruction: { action: '3 inhalaciones completas para cerrar.' } },
         ]},
       { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
-        desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
+        desc: 'Ondas y puentes, con paso por el suelo. La columna, poco a poco.', min: 5, access: 'premium',
         position: ['floor', 'standing', 'seated'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
           { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
-              action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
+              action: 'Redondea y extiende la espalda despacio, sin buscar los extremos.',
               care: 'Movimiento lento, siguiendo la respiración.' } },
           /* Suelo, sentado y de pie, en ese orden: antes se bajaba al suelo dos veces. */
           { name: 'Puente torácico', mode: 'timed', dur: 60,
@@ -319,12 +333,12 @@ const EXTRA_ROUTINES = {
             instruction: {
               setup: 'Ponte de pie, rodillas sueltas.',
               action: 'Recorre una ola lenta desde la pelvis hasta la cabeza.',
-              care: 'Movimiento fluido, sin prisa.' } },
+              care: 'Pequeña y lenta. El cuello acompaña, sin latigazos.' } },
           { name: 'Rodar hacia abajo', mode: 'timed', dur: 60,
             instruction: {
               setup: 'Ponte de pie, pies al ancho de las caderas.',
-              action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
-              care: 'Rodillas suaves. Sube despacio para no marearte.' } },
+              action: 'Redondea la espalda poco a poco hacia abajo, hasta donde vaya cómodo. Sube igual, despacio.',
+              care: 'Rodillas suaves; puedes parar a medio camino. Sube despacio para no marearte.' } },
         ]},
     ]
   },

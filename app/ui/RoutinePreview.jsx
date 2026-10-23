@@ -38,7 +38,7 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
      sus pasos sale del nombre del ejercicio, no de la posición (v1Clave). */
   const propia = String(routine.id || '').indexOf('custom.') === 0;
   const clavePaso = (idx) => (typeof v1Clave === 'function'
-    ? v1Clave(routine, idx, 'name') : `${routine.id}.s${idx}.name`);
+    ? v1Clave(guiada, idx, 'name') : `${routine.id}.s${idx}.name`);
 
   /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
      contrato v1, `min` para el resto. Nunca las dos. Una rutina propia no guarda `min` (salía
@@ -94,7 +94,8 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
   /* OJO al índice: las claves EN son POSICIONALES sobre el array COMPLETO
      (`<id>.s4.name` cuenta los descansos), así que se conserva el índice
      original al filtrar o el inglés se desplaza. */
-  const sinDescansos = (routine.steps || [])
+  /* De la rutina PREPARADA: un paso propio guardado con un nombre de antes sale con el de hoy. */
+  const sinDescansos = (guiada.steps || [])
     .map((s, idx) => ({ s, idx }))
     .filter(({ s }) => s && s.mode !== 'rest' && s.name !== 'Descanso');
   /* Series del MISMO ejercicio se agrupan: «Fondos en silla» tres veces

@@ -2,6 +2,11 @@
 
 22 oct. 2026, rama `claude/maqueta-inicio-3a2a59`, sobre v0.174.6. Solo lectura: no cambia nada de la app.
 
+> **Desde v0.175.2** (Ez, 23 oct.: 1A) tres de los 31 se llaman de otra forma y los puestos no cambian:
+> «Palmas al suelo» es «Palmas en la mesa», «Círculos de hombro» es «Círculos de brazos» (8 veces, 4 y 4)
+> e «Inclinación lateral» es «Inclinación de cuello». También van por veces «Rotación lenta» (3 por lado) y
+> «Círculos de muñeca» (4 por sentido). Las tablas de abajo son las del 22 oct.
+
 **De dónde sale.** El mismo filtro «junto a la mesa» que ya usa A tu ritmo para sus pausas (`cabe` en
 `ritmoPozos`, `app/state-ritmo.jsx`): fuera la rutina que pide suelo (`requiresFloor`), la que lleva aviso
 de seguridad y la que pide material que no sea opcional; la mesa sí cuenta (Ez, 15 oct.), y la pared

@@ -196,7 +196,8 @@ test('R5 · cortar un paso con reloj que no es el último deja la sesión como �
   await empezar(page, await abrirPropia(page, 'Dos gestos'));
   await segundos(page, 3);
   await siguiente(page);   // corta el primero a los 3 s
-  await expect(nombrePaso(page)).toHaveText('Círculos de hombro');
+  /* Guardada con el nombre de antes, se corre con el de hoy (1A, v0.175.2). */
+  await expect(nombrePaso(page)).toHaveText('Círculos de brazos');
   await segundos(page, 5 + 41);   // el segundo, entero y solo
   await expect(sesion(page).locator('[data-pace-session-done]')).toHaveCount(1);
   const [ev] = await sesiones(page);
