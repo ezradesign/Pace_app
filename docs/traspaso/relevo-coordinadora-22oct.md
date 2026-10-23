@@ -36,8 +36,14 @@ Al empezar (~09:40): 5 h al 2 %, **la semana al 74 %** (se repone el 27 oct. a l
    prueba beta**: el enlace público del grupo «Testers iPhone» va en `data-enlaces` → `iphone.url`, con
    `pendiente: false` (la prueba exige `https://testflight.apple.com/join/…`). Sin insignia de Apple: solo vale con la
    app en la App Store.
-5c. **`/premium`, refinada como `/beta`** (Ez, 23 oct., noche: «ahora que tenemos la parte de beta refinada,
-   ¿refinamos premium?»; no cupo en la cuenta de EcLj6…, al 93 % de la semana). Con maqueta antes, proponer: el logo
+5c. **`/premium`, refinada como `/beta`**: hecha en la cuenta de EcLj6… con Ez subiendo el tope al 97 % (maqueta
+   https://claude.ai/artifact/XxaqNNuG9n1A9TXiggUWyC): logo grande, dibujos de los módulos, pie con «Contacto», «+» en
+   las preguntas, sin el rótulo «PACE · Foco · Cuerpo» y el iPhone junto a Android (también en «Avísame» y en
+   `privacy.html`: «a Google Play y a la App Store»). **Falta, de Ez (23 oct.): «capturas de las funciones premium y
+   hacerla más visual»**: no hay capturas de lo de pago (las de Play son jornada, pausa, Respira, Estira, Foco y
+   logros). Sacar «Tus rutinas», la carta del lunes, tu mes y tu año y una rutina honda, en es y en, a 540 px en
+   WebP como la tira de `/beta` (guion como `docs/launch/google-play/capturas.js`), y una tira o un mosaico en
+   /premium, con maqueta. Lo que se propuso al principio: el logo
    grande, los dibujos de los módulos en vez de puntos, el pie nuevo con «Contacto», el «+» verde en las preguntas y
    las cifras alineadas, como `/beta` (copiar sus reglas, que ya pasaron la revisión de Ez); y el iPhone donde hoy solo
    dice Android o Google Play (los textos de «Avísame» y su aviso de privacidad nombran solo Google Play: con el

@@ -46,7 +46,7 @@
     :root { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
       --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --premium: #C99A5B; --breathe: #D99477; }
     /* El logo en oscuro es el mismo PNG invertido, como en la app (CowLogo.jsx). */
-    header img { filter: invert(1); }
+    header img, footer img { filter: invert(1); }
   }
   * { box-sizing: border-box; }
   /* `hidden` tiene que ganar a los `display` de abajo: la lista apagada no enseña el campo. */
@@ -56,7 +56,8 @@
   a { color: var(--focus); }
   .marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
   header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
-  header img { height: 60px; width: auto; display: block; }
+  /* El logo, grande como en /beta (Ez, 23 oct.). */
+  header img { height: 96px; width: auto; display: block; }
   .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 11px; cursor: pointer; }
   .idioma b { color: var(--ink); font-weight: 500; }
   .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
@@ -80,8 +81,10 @@
   .lista li:last-child { border-bottom: 0; }
   .lista .serif { font-size: 20px; color: var(--ink); }
   .lista .d { font-size: 13.5px; color: var(--ink-3); text-align: right; }
-  .lista .d[data-modulos]::before { content: ''; display: inline-block; width: 27px; height: 7px; margin-right: 8px; vertical-align: .05em;
-    background: radial-gradient(circle at 3.5px 50%, var(--breathe) 3px, transparent 3.5px), radial-gradient(circle at 13.5px 50%, var(--move) 3px, transparent 3.5px), radial-gradient(circle at 23.5px 50%, var(--extra) 3px, transparent 3.5px); }
+  /* Respira, Mueve y Estira con su dibujo de la app (ActivityBar.jsx), en su color, como en /beta. */
+  .glifos { display: inline-flex; gap: 2px; margin-right: 8px; vertical-align: -0.32em; }
+  .glifos svg { width: 18px; height: 18px; }
+  .glifos .r { color: var(--breathe); } .glifos .m { color: var(--move); } .glifos .e { color: var(--extra); }
   .platos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 10px; max-width: 640px; }
   .plato { border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 16px 16px; text-align: center; background: var(--paper); }
   .plato.delante { border-color: var(--cta); }
@@ -101,12 +104,23 @@
   .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   details { border-bottom: 1px dashed var(--line); padding: 12px 0; }
   details:last-of-type { border-bottom: 0; }
-  summary { cursor: pointer; font-family: var(--display); font-style: italic; font-weight: 500; font-size: 21px; color: var(--ink); }
+  summary { cursor: pointer; font-family: var(--display); font-style: italic; font-weight: 500; font-size: 21px; color: var(--ink); list-style: none; display: flex; align-items: baseline; gap: 12px; }
+  /* Un «+» verde en vez del triángulo del navegador; abierta, «–». Como en /beta. */
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+'; flex: 0 0 14px; font: 400 21px/1 var(--ui); font-style: normal; color: var(--cta); }
+  details[open] > summary::before { content: '–'; }
   details p { margin: 8px 0 4px; }
-  footer { margin: 40px 0 0; padding: 16px 0 40px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 18px; }
-  footer a { color: var(--ink-3); }
+  /* El pie, como en /beta: la vaca pequeña con «Abrir PACE» y, al otro lado, los enlaces. */
+  footer { margin: 40px 0 0; padding: 22px 0 44px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; }
+  .pie-marca { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); font: italic 500 20px/1.2 var(--display); }
+  .pie-marca img { height: 46px; width: auto; display: block; }
+  .pie-enlaces { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  .pie-enlaces a { font: italic 400 18px/1.3 var(--display); color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+  .pie-enlaces a:hover, .pie-marca:hover { color: var(--focus); }
+  .pie-marca:focus-visible, .pie-enlaces a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
   @media (max-width: 520px) { .platos { grid-template-columns: 1fr; } }
   @media (min-width: 900px) {
+    header img { height: 132px; }
     .portada { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; padding: 24px 0 40px; }
     .portada .foto { margin: 0; }
     .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
@@ -128,7 +142,6 @@
 
   <div class="portada">
     <div>
-      <p class="kicker" data-en="PACE · Focus · Body">PACE · Foco · Cuerpo</p>
       <h1 data-en="Active breaks for people who work sitting down.">Pausas activas para quien trabaja sentado.</h1>
       <p class="lede" data-en="Focus, breathing, mobility and water, at your own pace. No account, no ads, no tracking: what is yours stays on your device.">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.</p>
       <a class="boton lleno" href="/" data-en="Open PACE, it is free">Abrir PACE, es gratis</a>
@@ -147,7 +160,7 @@
       <ul class="lista">
         <li><span class="serif" data-en="The whole Focus">El Foco entero</span><span class="d" data-en="Pomodoro, breaks and alert">Pomodoro, pausas y aviso</span></li>
         <li><span class="serif" data-en="«At your pace», every day">«A tu ritmo», cada día</span><span class="d" data-en="your day with its breaks">tu día con sus pausas</span></li>
-        <li><span class="serif" data-en="34 routines">34 rutinas</span><span class="d" data-modulos data-en="Breathe, Move, Stretch">Respira, Mueve, Estira</span></li>
+        <li><span class="serif" data-en="34 routines">34 rutinas</span><span class="d" data-modulos><span class="glifos"><svg class="r" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.5v9"/><path d="M14 10.5c-1.2 0-2.2-.4-3-1.2 M14 10.5c1.2 0 2.2-.4 3-1.2"/><path d="M11 10.2c-2.2.3-4.2 1.4-5.3 3.3-1.3 2.2-1.4 5-.6 7.6.5 1.6 1.6 2.7 3.1 2.8 1.4.1 2.4-.8 2.8-2.2.6-2.1.8-4.6.8-7.1 0-1.7-.1-3.2-.8-4.4z"/><path d="M17 10.2c2.2.3 4.2 1.4 5.3 3.3 1.3 2.2 1.4 5 .6 7.6-.5 1.6-1.6 2.7-3.1 2.8-1.4.1-2.4-.8-2.8-2.2-.6-2.1-.8-4.6-.8-7.1 0-1.7.1-3.2.8-4.4z"/></svg><svg class="m" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="2.2" height="8" rx="0.6"/><rect x="5.6" y="8" width="2.4" height="12" rx="0.6"/><path d="M8 14h12"/><rect x="20" y="8" width="2.4" height="12" rx="0.6"/><rect x="22.8" y="10" width="2.2" height="8" rx="0.6"/></svg><svg class="e" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21c3-8 7-12 10-12s7 4 10 12"/><circle cx="14" cy="7.5" r="1.6"/><path d="M4 22h20" opacity="0.35" stroke-dasharray="1.5 2.5"/></svg></span><span data-en="Breathe, Move, Stretch">Respira, Mueve, Estira</span></span></li>
         <li><span class="serif" data-en="Hydrate">Hidrátate</span><span class="d" data-en="your glasses of the day">tus vasos del día</span></li>
         <li><span class="serif" data-en="Achievements, today and the week">Logros, hoy y la semana</span><span class="d" data-en="stats">estadísticas</span></li>
       </ul>
@@ -156,7 +169,7 @@
       <h2 data-en="PACE Complete">PACE completo</h2>
       <p data-en="For when you want more:">Para cuando quieras más:</p>
       <ul class="lista">
-        <li><span class="serif" data-en="The deeper routines">Las rutinas más hondas</span><span class="d" data-modulos data-en="Breathe, Move, Stretch">Respira, Mueve, Estira</span></li>
+        <li><span class="serif" data-en="The deeper routines">Las rutinas más hondas</span><span class="d" data-modulos><span class="glifos"><svg class="r" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.5v9"/><path d="M14 10.5c-1.2 0-2.2-.4-3-1.2 M14 10.5c1.2 0 2.2-.4 3-1.2"/><path d="M11 10.2c-2.2.3-4.2 1.4-5.3 3.3-1.3 2.2-1.4 5-.6 7.6.5 1.6 1.6 2.7 3.1 2.8 1.4.1 2.4-.8 2.8-2.2.6-2.1.8-4.6.8-7.1 0-1.7-.1-3.2-.8-4.4z"/><path d="M17 10.2c2.2.3 4.2 1.4 5.3 3.3 1.3 2.2 1.4 5 .6 7.6-.5 1.6-1.6 2.7-3.1 2.8-1.4.1-2.4-.8-2.8-2.2-.6-2.1-.8-4.6-.8-7.1 0-1.7.1-3.2.8-4.4z"/></svg><svg class="m" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="2.2" height="8" rx="0.6"/><rect x="5.6" y="8" width="2.4" height="12" rx="0.6"/><path d="M8 14h12"/><rect x="20" y="8" width="2.4" height="12" rx="0.6"/><rect x="22.8" y="10" width="2.2" height="8" rx="0.6"/></svg><svg class="e" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21c3-8 7-12 10-12s7 4 10 12"/><circle cx="14" cy="7.5" r="1.6"/><path d="M4 22h20" opacity="0.35" stroke-dasharray="1.5 2.5"/></svg></span><span data-en="Breathe, Move, Stretch">Respira, Mueve, Estira</span></span></li>
         <li><span class="serif" data-en="Your own routines">Tus propias rutinas</span><span class="d" data-en="from the catalogue">con el catálogo</span></li>
         <li><span class="serif" data-en="A week shaped to you">Una semana a tu medida</span><span class="d" data-en="the Monday letter">la carta del lunes</span></li>
         <li><span class="serif" data-en="Your month and year">Tu mes y tu año</span><span class="d" data-en="stats">estadísticas</span></li>
@@ -180,7 +193,7 @@
         <a class="boton hueco" href="#avisame" data-en="Notify me">Avísame</a>
       </div>
     </div>
-    <p class="nota" data-en="VAT included. It arrives with version 1. What you buy on the web unlocks PACE on the web; in the Android app it is bought on Google Play.">IVA incluido. Llega con la versión 1. Lo que compras en la web abre PACE en la web; en la app de Android se compra en Google Play.</p>
+    <p class="nota" data-en="VAT included. It arrives with version 1. What you buy on the web unlocks PACE on the web; in the Android and iPhone apps it is bought on Google Play and the App Store.">IVA incluido. Llega con la versión 1. Lo que compras en la web abre PACE en la web; en las apps de Android y de iPhone se compra en Google Play y en la App Store.</p>
 
     <div class="avisame" id="avisame">
       <h2 data-en="Let me know when it is out">Avísame cuando salga</h2>
@@ -191,7 +204,7 @@
         <button class="boton lleno" type="submit" data-en="Notify me">Avísame</button>
       </form>
       <p class="estado" role="status" aria-live="polite" data-avisame-estado hidden></p>
-      <p class="nota" data-en-html="We write to you twice: the day it can be bought on the web and the day it reaches Google Play. Then we delete your email. Nothing else. &lt;a href=&quot;/privacy#avisame&quot;&gt;Privacy&lt;/a&gt;.">Te escribimos dos veces: el día que se pueda comprar en la web y el día que llegue a Google Play. Después borramos tu correo. Nada más. <a href="/privacy#avisame">Privacidad</a>.</p>
+      <p class="nota" data-en-html="We write to you twice: the day it can be bought on the web and the day it reaches Google Play and the App Store. Then we delete your email. Nothing else. &lt;a href=&quot;/privacy#avisame&quot;&gt;Privacy&lt;/a&gt;.">Te escribimos dos veces: el día que se pueda comprar en la web y el día que llegue a Google Play y a la App Store. Después borramos tu correo. Nada más. <a href="/privacy#avisame">Privacidad</a>.</p>
     </div>
   </section>
 
@@ -215,17 +228,19 @@
     <h2 data-en="Questions">Preguntas</h2>
     <details><summary data-en="Do I need an account?">¿Necesito una cuenta?</summary><p data-en="No. PACE has no accounts. When you buy, you get a code that unlocks PACE Complete in your browser.">No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</p></details>
     <details><summary data-en="What if I change computer or browser?">¿Y si cambio de ordenador o de navegador?</summary><p data-en="Open your code's link in the new one, or carry it inside the «Your data» copy. If you lose it, you get it back with your email and the receipt number.">Abre el enlace de tu código en el nuevo, o llévalo dentro de la copia de «Tus datos». Si lo pierdes, lo recuperas con tu correo y el número del recibo.</p></details>
-    <details><summary data-en="Does it work on Android?">¿Sirve en Android?</summary><p data-en="What you buy on the web unlocks PACE on the web. In the Android app, PACE Complete is bought on Google Play.">Lo que compras en la web abre PACE en la web. En la app de Android, PACE completo se compra en Google Play.</p></details>
+    <details><summary data-en="Does it work on Android and iPhone?">¿Sirve en Android y en iPhone?</summary><p data-en="What you buy on the web unlocks PACE on the web. In the Android and iPhone apps, PACE Complete is bought on Google Play and the App Store.">Lo que compras en la web abre PACE en la web. En las apps de Android y de iPhone, PACE completo se compra en Google Play y en la App Store.</p></details>
     <details><summary data-en="What happens to my data?">¿Qué pasa con mis datos?</summary><p data-en="It stays on your device. Neither the purchase nor the code send your practice anywhere.">Se quedan en tu equipo. Ni la compra ni el código mandan tu práctica a ningún sitio.</p></details>
     <details><summary data-en="Can I get a refund?">¿Puedo devolverlo?</summary><p data-en="Yes, within 14 days, no questions asked. Write to us and we refund it.">Sí, en los 14 días siguientes, sin preguntas. Escríbenos y lo devolvemos.</p></details>
     <details><summary data-en="If you cannot afford it right now">Si ahora no puedes pagarlo</summary><p data-en-html="Write to me at &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; and I will send you a code.">Escríbeme a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> y te mando un código.</p></details>
   </section>
 
   <footer>
-    <a href="/" data-en="Open PACE">Abrir PACE</a>
-    <a href="/privacy" data-en="Privacy">Privacidad</a>
-    <a href="/safety" data-en="Safety">Seguridad</a>
-    <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>
+    <a class="pie-marca" href="/"><img src="/premium/vaca.webp" alt="" width="91" height="60"><span data-en="Open PACE">Abrir PACE</span></a>
+    <nav class="pie-enlaces" aria-label="Más de PACE" data-en-aria="More from PACE">
+      <a href="/privacy" data-en="Privacy">Privacidad</a>
+      <a href="/safety" data-en="Safety">Seguridad</a>
+      <a href="mailto:hola.ezradesign@gmail.com" data-en="Contact">Contacto</a>
+    </nav>
   </footer>
 </div>
 <!--/email_off-->
