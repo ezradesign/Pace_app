@@ -172,7 +172,10 @@ test.describe('el resumen del día cambia de fila con el ancho del panel', () =>
 });
 
 test.describe('las fuentes llegan tarde', () => {
-  test.use({ viewport: { width: 1536, height: 704 } });
+  /* A 1366 (un portátil de siempre) y no a 1536: con los nombres de las capas (2A) la etiqueta más
+     larga de una pausa larga tiene 33 letras y a 1536 ya cabe sin subir de nivel con las dos fuentes,
+     así que el aserto no mediría nada (lo dice su GUARD). */
+  test.use({ viewport: { width: 1366, height: 704 } });
   test('las etiquetas se recolocan cuando llega la fuente de verdad', async ({ page, context }) => {
     /* Las fuentes, 2,5 s tarde: la primera colocación es con la de reserva. Y tan tarde a
        propósito: medido, en un contexto frío la home vuelve a renderizar hacia los 1,4 s y
@@ -182,9 +185,10 @@ test.describe('las fuentes llegan tarde', () => {
     /* Un día cuya carta trae una etiqueta larga en la larga, la que decide el tercer nivel. Era
        «Diafragmática + Cadena posterior de pie» el lunes 14 de septiembre y, con las series
        (15 oct. 2026), el miércoles 23; con el cuerpo entero y equilibrado (20 oct.) es
-       «Exhalación 4·6 + Cadena posterior de pie», el domingo 4 de octubre. */
-    await sembrar(context, { ritmo: { dia: { fecha: '2026-10-04', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
-    await page.clock.install({ time: new Date('2026-10-04T09:00:00+02:00') });
+       «Exhalación 4·6 + Cadena posterior de pie», el domingo 4 de octubre; con las capas (2A), «Exhalación
+       4·6 + Cadena posterior», el miércoles 21 de octubre. */
+    await sembrar(context, { ritmo: { dia: { fecha: '2026-10-21', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
+    await page.clock.install({ time: new Date('2026-10-21T09:00:00+02:00') });
     await irAlArtefacto(page);
     await page.waitForTimeout(1800);   /* pasa el re-render de los 1,4 s con la fuente de reserva aún puesta */
     const conReserva = await page.evaluate(() => ({ fuentes: document.fonts.status, zona: document.querySelector('[data-pace-ritmo-estado="menu"].pace-rt-esc .pace-rt-zona').style.height }));

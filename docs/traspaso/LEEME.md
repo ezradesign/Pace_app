@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 24 oct., mañana: la sesión mueve-estira, parada en el 93 % con la parte 2 casi lista
+
+Carpeta `.claude/worktrees/mueve-estira-capas-e9ab74`, rama `claude/mueve-estira-capas-e9ab74`, puerto 8805. La parte 1
+(1A, v0.175.2, commit 487a7c8) ya está en main. La parte 2 (2A 3A 4A, v0.176.0) está hecha en el último commit «wip»:
+capas, rutinas rehechas con su id, Fuerza en suelo y Espalda con banda, seis ejercicios nuevos, ATG y Ancestral en
+`EXTRA_ROUTINES_FUERA`, pasos opcionales, A tu ritmo por capas, reparto de Ver ejercicio (27), los logros con la A de
+Ez (24 oct.), inglés, registro, prompts de dibujo, CONTENT, decisiones técnicas y la versión 0.176.0 con su build;
+`verify` en verde y todo lo que falló en la suite, arreglado y pasado. **Falta**: la suite entera otra vez
+(`PACE_E2E_PORT=8805 npm run test:e2e`), las fotos (`node docs/traspaso/archivos/mueve-estira-24oct/fotos-2.js <carpeta> <salida>`)
+y su página publicada (como `pagina-1a.js`), el commit final con CHANGELOG (ya escrito) y STATE, push y avisar a la
+coordinadora con el enlace y el hash.
+
 ## 23 oct., noche: v0.175.1 en `main`, con /premium refinada; coordina la cuenta de 5iWBf…
 
 Relevo y cola: `docs/traspaso/relevo-coordinadora-22oct.md`, bloque «23 oct., noche». Página de pasos de esta

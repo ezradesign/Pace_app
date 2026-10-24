@@ -82,7 +82,7 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   const s0 = sesiones[0];
   const p = s0.payload;
   expect(p.module, 'el modulo sale del catalogo, no del prefijo del id').toBe('move');
-  expect(p.routineId).toBe('extra.desk.pushups');
+  expect(p.routineId).toBe('extra.chair.dips');
   expect(p.variant, 'esta rutina corre en el runner v1').toBe('v1');
   expect(p.completionReason, 'la sesion se agoto sola: es natural (§6.3)').toBe('natural');
   expect(p.plannedSecondsSource, 'el plan del v1 se DERIVA de estimateDuration (§6.4)').toBe('derived');
@@ -116,7 +116,7 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   const fb = deTipo(await leerContenedor(page), 'feedback.answered');
   expect(fb.length).toBe(1);
   expect(fb[0].runId, 'el feedback tiene que referenciar la sesion que lo produjo').toBe(s0.runId);
-  expect(fb[0].payload.routineId).toBe('extra.desk.pushups');
+  expect(fb[0].payload.routineId).toBe('extra.chair.dips');
   expect(fb[0].payload.module, 'el modulo del feedback lo hereda de su sesion').toBe('move');
   expect(fb[0].payload.response).toBe('yes');
 

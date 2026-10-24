@@ -56,9 +56,12 @@ var RITMO_SERIES_META = {
   'extra.desk.pushups': { z: ['hombros'], pie: true },
   /* Lo que pide una pared, que cuenta como la mesa (ritmoPozos): en una habitación siempre
      hay una (los días diseñados, 20 oct. 2026). */
-  'extra.legs.standing': { z: ['piernas'], pie: true },
+  /* La sentadilla alta contra la pared trabaja glúteo y muslo: cadera, como «Glúteos invisibles».
+     Sin ella, Mueve no tendría nada de pie para la cadera y la primera pausa pasaría a Estira. */
+  'extra.legs.standing': { z: ['piernas', 'caderas'], pie: true },
   'move.neck.3': { z: ['cuello'], pie: false },
-  'move.shoulder.circles': { z: ['hombros'], pie: true },
+  /* Los deslizamientos en pared mueven la espalda alta, como en «Espalda de oficina». */
+  'move.shoulder.circles': { z: ['hombros', 'espalda'], pie: true },
   'move.wrists': { z: ['manos'], pie: false },
   'move.spine.chair': { z: ['espalda'], pie: false },
   /* El isquio va llevando la cadera atrás: cuenta también como cadera, y sin él no habría

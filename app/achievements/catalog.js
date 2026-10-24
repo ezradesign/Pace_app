@@ -75,7 +75,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Tres sesiones sin levantarse', glyph: '⊡' },
   { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
   { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
-  { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todas las rutinas de Mueve', glyph: '⚔' },
+  { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todas las rutinas de Mueve sin barra', glyph: '⚔' },
 
   // Maestría (46-64) — s168: solo PROFUNDIDAD en una practica. Los siete de
   // hora del dia y carga de jornada se fueron a «la jornada».
@@ -273,6 +273,22 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
     const i = ACHIEVEMENT_CATALOG.findIndex(a => a.id === 'master.path.all7');
     if (i >= 0) ACHIEVEMENT_CATALOG.splice(i, 1);
   } catch (e) { /* sin quitarlo, el logro sigue a la vista */ }
+})();
+
+/* Y los cuatro de ATG y Ancestral desde que esas dos rutinas dejaron de salir en la lista (Ez, 24 oct.
+   2026: A): sin forma de hacerlas, serían cuatro logros imposibles en el denominador. Quien ya los
+   tiene los conserva y los sigue viendo. Sin estado (el `verify`), el catálogo entero. */
+(function () {
+  try {
+    if (typeof getState !== 'function') return;
+    const st = getState();
+    const tiene = (st && st.achievements) || {};
+    ['explore.atg', 'explore.ancestral', 'master.atg.20', 'master.ancestral.10'].forEach((id) => {
+      if (tiene[id]) return;
+      const i = ACHIEVEMENT_CATALOG.findIndex(a => a.id === id);
+      if (i >= 0) ACHIEVEMENT_CATALOG.splice(i, 1);
+    });
+  } catch (e) { /* sin quitarlos, siguen a la vista */ }
 })();
 
 /* §15.4 · DENOMINADOR ÚNICO (s146b). Medido antes de existir esto: la sidebar
