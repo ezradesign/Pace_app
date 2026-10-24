@@ -51,7 +51,12 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    parte 1 casi cerrada); retomada con un mensaje, que también le pide juntar `origin/main` antes de cerrar la parte 1.
    Safari: el segundo intento de b6afcae seguía contra Azure porque el runner lee `/etc/apt/apt-mirrors.txt`; b403b65 lo
    quita de ahí. Mirar el registro del CI: imprime la lista de espejos.
-6. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
+6. **24 oct.: v0.175.2 en main** (merge 8e3c789 de 487a7c8, con el «júntalo» de Ez sobre
+   https://claude.ai/artifact/GfpUt5usTb9DJtR3JRAC2c). Suite entera en Chromium con todo junto: 822 en verde. Ez eligió
+   **A para los logros de ATG y Ancestral** (https://claude.ai/artifact/CZmu2xWwyid26tEG6gn1Ei; `DECISIONES_PRODUCTO.md`),
+   pasado a la sesión con un aviso para «Fuerte en la oficina» (`explore.all.extra`, todas las rutinas de Mueve).
+   La sesión sigue con la parte 2 (0.176.0) en la misma rama: al juntarla, solo lo que va después de 487a7c8.
+7. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
    la cola.
 
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)

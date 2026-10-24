@@ -48,6 +48,11 @@ Sobre la página con fotos de la app real (https://claude.ai/artifact/9L6RZTPCYp
 4. **«Para empezar», entera gratis**, también «Fuerza en suelo». De pago: lo que ya lo es, «Espalda con banda» y la
    variedad de un día a otro. Lo que hoy es gratis sigue gratis. La dificultad no pone el precio.
 
+**Los logros de ATG y Ancestral** (Ez, 24 oct., A sobre https://claude.ai/artifact/CZmu2xWwyid26tEG6gn1Ei): al salir
+esas dos rutinas de la lista, quien ya tenga «ATG asentado», «Ancestral», «Rodillas de acero» o «Primitiva» los
+conserva y los ve; a quien no, dejan de salir en Logros. «Cuerpo de campo» pide las otras cuatro movilidades (Caderas,
+Hombros, Cuello, Escritorio).
+
 ## Mueve y Estira de fondo, y la paleta automática (Ez, 23 oct. 2026)
 
 Tras probar 0.174.0 en su Android. **Mueve y Estira son los dos bloques centrales y tienen que ser originales y

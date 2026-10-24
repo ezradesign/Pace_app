@@ -1,0 +1,82 @@
+<title>Logros de ATG y Ancestral</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<!-- PACE · Qué pasa con los logros de ATG y Ancestral al quitar esas dos rutinas de la lista (2A de Mueve y Estira).
+     Pregunta de la sesión «mueve-estira», 24 oct. 2026; comprobada en app/state-achievements*.jsx. -->
+<style>
+  /* Una pregunta corta: qué pasa, la tabla de casos y las tres opciones, la recomendada primero. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --cta: #50624D; --focus: #3E5A3A; --reco-bg: #E3E6D8; --logro: #A8823E;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --cta: #8E9D88; --focus: #A3BC96; --reco-bg: #2a3025; --logro: #D2AE6A; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --cta: #8E9D88; --focus: #A3BC96; --reco-bg: #2a3025; --logro: #D2AE6A; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 760px; margin: 0 auto; padding-block: 32px 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0 0 12px; }
+  h1 { font-size: clamp(34px, 7vw, 48px); line-height: 1.05; }
+  h2 { font-size: 27px; line-height: 1.15; margin-top: 30px; }
+  p { margin: 0 0 12px; color: var(--ink-2); max-width: 40em; }
+  b { color: var(--ink); font-weight: 600; }
+  ul.logros { list-style: none; padding: 0; margin: 12px 0 8px; display: grid; gap: 8px; }
+  ul.logros li { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 10px; align-items: baseline; color: var(--ink-2); }
+  ul.logros li::before { content: ''; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--logro); transform: translateY(1px); }
+  .t { font: italic 500 19px/1.3 var(--display); color: var(--ink); }
+  .tabla { overflow-x: auto; margin: 10px 0 6px; }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14.5px; }
+  th { text-align: left; font: 600 11px/1.3 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); padding: 8px 10px 6px 0; border-bottom: 1px solid var(--line-2); }
+  td { padding: 9px 10px 9px 0; border-bottom: 1px dashed var(--line); vertical-align: top; color: var(--ink-2); }
+  td:first-child { color: var(--ink); font-weight: 500; }
+  .opciones { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+  .opcion { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 14px 16px 6px; border: 1px solid var(--line); border-radius: 12px; }
+  .opcion.reco { border-color: var(--cta); background: var(--reco-bg); }
+  .letra { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--cta); display: grid; place-items: center; font: italic 500 20px/1 var(--display); color: var(--cta); }
+  .opcion.reco .letra { background: var(--cta); color: var(--paper); }
+  .otit { font: italic 500 20px/1.35 var(--display); color: var(--ink); margin: 2px 0 6px; }
+  .pill { font: 600 10.5px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--cta); border: 1px solid var(--cta); border-radius: 999px; padding: 4px 8px; display: inline-block; vertical-align: 3px; margin-left: 4px; font-style: normal; white-space: nowrap; }
+</style>
+
+<main class="marco">
+  <p class="kicker">PACE · Mueve y Estira · 24 de octubre</p>
+  <h1>Los logros de ATG y Ancestral</h1>
+  <p>Con la 2A, «ATG · Rodillas profundas» y «Ancestral» dejan de salir en la lista de Estira. Sus ejercicios siguen, y tu historial también. Pero hay cinco logros que solo se ganan haciendo esas dos rutinas, y sin ellas en la lista ya no se pueden ganar:</p>
+  <ul class="logros">
+    <li><span><span class="t">ATG asentado</span> · hacer ATG 3 veces</span></li>
+    <li><span><span class="t">Ancestral</span> · hacer Ancestral 3 veces</span></li>
+    <li><span><span class="t">Rodillas de acero</span> · hacer ATG 20 veces</span></li>
+    <li><span><span class="t">Primitiva</span> · hacer Ancestral 10 veces</span></li>
+    <li><span><span class="t">Cuerpo de campo</span> · explorar las seis de Estira: Caderas, Hombros, Cuello, Escritorio, ATG y Ancestral</span></li>
+  </ul>
+
+  <h2>Qué ve cada uno</h2>
+  <div class="tabla"><table>
+    <thead><tr><th>Caso</th><th>Con A</th><th>Con B</th><th>Con C</th></tr></thead>
+    <tbody>
+      <tr><td>Ya ganó alguno</td><td>Lo conserva y lo sigue viendo</td><td>Lo conserva</td><td>Lo conserva</td></tr>
+      <tr><td>No los tiene</td><td>Los cuatro de ATG y Ancestral no salen en Logros</td><td>Salen con candado, sin forma de ganarlos</td><td>Se pueden ganar como hoy</td></tr>
+      <tr><td>«Cuerpo de campo»</td><td>Pide las otras cuatro: Caderas, Hombros, Cuello y Escritorio</td><td>Imposible para quien no los tenga</td><td>Como hoy, las seis</td></tr>
+      <tr><td>ATG y Ancestral</td><td>Fuera de la lista</td><td>Fuera de la lista</td><td>En «Para ir a más»</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Lo que eliges</h2>
+  <ol class="opciones">
+    <li class="opcion reco"><span class="letra">A</span><div><p class="otit">Se quedan quien los tenga; para los demás, fuera <span class="pill">Recomendada</span></p>
+      <p>Nadie pierde nada ganado y nadie ve un logro que no puede conseguir. «Cuerpo de campo» se sigue pudiendo ganar, con las cuatro que quedan.</p></div></li>
+    <li class="opcion"><span class="letra">B</span><div><p class="otit">Con candado y sin forma de ganarlos</p>
+      <p>La colección no cambia, pero enseña cuatro logros, y «Cuerpo de campo», que nadie nuevo puede conseguir.</p></div></li>
+    <li class="opcion"><span class="letra">C</span><div><p class="otit">ATG y Ancestral se quedan, en «Para ir a más»</p>
+      <p>Los logros siguen igual, pero va contra lo que elegiste en la 2A: son las dos rutinas que mezclan cosas que no casan.</p></div></li>
+  </ol>
+  <p style="margin-top:16px">Basta con la letra.</p>
+</main>
