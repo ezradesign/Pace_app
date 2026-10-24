@@ -24,8 +24,8 @@ var HACERLA_REPARTO = [
   ['move.neck.3', 0],               // Barbilla atrás
   ['move.desk.quick', 0],           // Encogimiento de hombros
   ['extra.grip.squeeze', 0],        // Abrir y cerrar el puño
-  ['move.wrists', 2],               // Palmas al suelo
-  ['move.shoulder.circles', 0],     // Círculos de hombro
+  ['move.wrists', 2],               // Palmas en la mesa
+  ['move.shoulder.circles', 0],     // Círculos de brazos
   ['extra.glutes.stealth', 0],      // Apretar glúteos
   ['move.back.standing', 0],        // Rodar hacia abajo
   ['move.hips.standing', 0],        // Sentadilla profunda
@@ -33,7 +33,7 @@ var HACERLA_REPARTO = [
   ['move.hamstrings.standing', 1],  // Isquio a una pierna
   ['move.shoulders.5', 2],          // Rotación externa
   ['extra.back.desk', 0],           // Juntar omóplatos
-  ['move.neck.3', 1],               // Inclinación lateral
+  ['move.neck.3', 1],               // Inclinación de cuello
   ['move.desk.quick', 1],           // Círculos de muñeca
   ['extra.posture.set', 2],         // Extensión torácica
   ['move.wrists', 3],               // Rezo invertido

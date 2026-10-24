@@ -152,7 +152,7 @@ Object.assign(window.EXERCISE_GLYPHS, {
 
   /* 24b. Puente a una pierna: arco + pie apoyado + pierna elevada (s110,
      sustituto de Nordics en move.atg.knees; canónico s60, sin aprobar). */
-  'Puente isquio a una pierna': ({ size, className }) => (
+  'Puente a una pierna': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 30 Q22 12 38 30" />
       <path d="M14 27 V34" />
@@ -309,7 +309,7 @@ Object.assign(window.EXERCISE_GLYPHS, {
   ),
 
   /* 38. Gato/vaca: dos arcos opuestos + puntos de aire. */
-  'Apertura de costillas + respiración': ({ size, className }) => (
+  'Respirar a cuatro apoyos': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 16 Q22 6 36 16" />
       <path d="M8 28 Q22 38 36 28" />
@@ -319,7 +319,7 @@ Object.assign(window.EXERCISE_GLYPHS, {
   ),
 
   /* 39. Cabeza inclinada lateral + cuerpo curvado en arco. */
-  'Inclinación lateral': ({ size, className }) => (
+  'Inclinación de cuello': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="28" cy="10" r="3" />
       <path d="M22 36 Q30 22 28 13" />

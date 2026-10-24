@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.175.1 · 23 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.175.2 · 23 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -79,9 +79,9 @@ y, desde el 22 oct. por la tarde, https://claude.ai/artifact/5iWBfHE7kD3dUVocdsk
 pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Mueve y Estira: Ez eligió 1A 2A 3A 4A** (23 oct., sobre
-  https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE; `DECISIONES_PRODUCTO.md`). Lo monta la sesión `mueve-estira` en dos
-  versiones (0.175.2 los textos, 0.176.0 las capas); Ez dirá «júntalo» sobre sus fotos. Detalle en el relevo, «23
-  oct., noche».
+  https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE; `DECISIONES_PRODUCTO.md`). Lo monta la sesión `mueve-estira`
+  (rama `claude/mueve-estira-capas-e9ab74`) en dos versiones (0.175.2 los textos, 0.176.0 las capas); Ez dirá
+  «júntalo» sobre sus fotos. Detalle en el relevo, «23 oct., noche».
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6; el grupo y `/beta` ya están, falta difundirlos: `testers.md`); el
   gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar

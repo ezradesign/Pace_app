@@ -51,9 +51,9 @@ var MOVE_ROUTINES = {
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Manos en la mesa, algo más abiertas que los hombros. Pasos atrás, cuerpo recto en diagonal.',
+              setup: 'Manos en una mesa fija, algo más abiertas que los hombros. Pasos atrás, cuerpo en diagonal.',
               action: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
-              care: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' } },
+              care: 'Cuanto más de pie, más suave. Elige la altura que te deje hacerlas todas con buena técnica.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
@@ -78,11 +78,11 @@ var MOVE_ROUTINES = {
           { name: 'Fondos en silla', mode: 'reps', reps: 12, dur: 40,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Al borde de una silla estable, sin ruedas. Manos junto a las caderas; desliza la cadera fuera.',
+              setup: 'Al borde de una silla sin ruedas, contra la pared. Manos junto a la cadera; sácala del asiento.',
               action: 'Baja doblando los codos hacia atrás. Sube empujando con los brazos.',
               /* Bajar de más carga la parte de delante del hombro: el tope es el codo a 90°
                  (revisión de los ejercicios, Ez, 16 oct. 2026). */
-              care: 'Baja hasta que el codo haga un ángulo recto, no más. Con los pies cerca, es más fácil.' } },
+              care: 'Baja hasta donde el hombro vaya cómodo, nunca más del ángulo recto. Pies cerca, más fácil.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Fondos en silla', mode: 'reps', reps: 10, dur: 40,
@@ -107,7 +107,7 @@ var MOVE_ROUTINES = {
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Manos en el borde de la mesa, cuerpo recto en diagonal.',
+              setup: 'Manos en el borde de una mesa fija, cuerpo recto en diagonal.',
               action: 'Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja y vuelve.',
               care: 'Baja hasta donde controles. Cuanto más alta la superficie, más fácil.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
@@ -117,7 +117,7 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Manos en la mesa, acerca los pies y sube la cadera: el cuerpo, en V invertida.',
               action: 'Dobla los codos y lleva la cabeza hacia la mesa, entre los brazos. Empuja y vuelve.',
-              care: 'Recorrido corto: la cabeza nunca toca la mesa. Con los pies más lejos, más fácil.' } },
+              care: 'Recorrido corto: la cabeza nunca toca la mesa, y la mesa no se mueve. Si cuesta, vuelve a las flexiones inclinadas.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 30,
@@ -138,18 +138,18 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros.',
               action: 'Cuelga relajado, con los brazos estirados. Respira.',
-              care: 'Baja si notas molestia. Apoya un poco los pies si lo necesitas.' } },
+              care: 'Entra y sal apoyando los pies, sin saltar. Baja si notas molestia.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Sacude los brazos.' } },
           { name: 'Suspensión activa', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Cuelga llevando los hombros abajo y atrás. Codos rectos.',
-              care: 'Tracción suave, sin encoger el cuello.' } },
+              action: 'Cuelga y aleja un poco los hombros de las orejas, sin doblar los codos.',
+              care: 'Suave, sin forzar los hombros atrás. Los pies, cerca del suelo.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Sacude los brazos.' } },
           { name: 'Suspensión pasiva', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Suelta del todo. Deja que la espalda se abra.',
+              action: 'Hombros sueltos, sin soltar el agarre. Deja que la espalda se abra.',
               care: 'Respira hondo y afloja los hombros.' } },
         ]},
     ]
@@ -167,7 +167,7 @@ var MOVE_ROUTINES = {
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Sentado o de pie, pies apoyados en el suelo al ancho de las caderas.',
-              action: 'Sube los talones lo más alto que puedas. Baja con control.',
+              action: 'Sube los talones hasta donde controles. Baja con control.',
               care: 'Movimiento pequeño y controlado. Apóyate en la mesa si lo necesitas.' } },
           /* La 2.ª ronda promete «más lentas» y lo es: baja en 3 s (Ez, 16 oct.).
              Con el ritmo de la 1.ª y menos veces, duraba menos y no era más lenta. */
@@ -181,20 +181,21 @@ var MOVE_ROUTINES = {
       { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 2,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Abrir y cerrar el puño', mode: 'reps', reps: 20, dur: 20,
-            tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
+          { name: 'Abrir y cerrar el puño', mode: 'reps', reps: 12, dur: 36,
+            tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Brazos relajados, manos abiertas.',
-              action: 'Cierra el puño con fuerza y ábrelo del todo. Repite a buen ritmo.',
-              care: 'Firme, pero sin llegar al calambre.' } },
+              action: 'Cierra el puño sin apretar al máximo y ábrelo despacio, del todo.',
+              care: 'Suave: no es un ejercicio de fuerza.' } },
           { name: 'Extensión de dedos', mode: 'reps', reps: 10, dur: 20,
             tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Abre bien los dedos, estíralos y relaja.',
-              care: 'Sin forzar las articulaciones.' } },
+              care: 'Sin empujarlos hacia atrás con la otra mano.' } },
           { name: 'Estiramiento de muñeca', mode: 'perSide', dur: 20, transition: { seconds: 5 },
             instruction: {
-              action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano.',
+              setup: 'Brazo al frente, el codo sin bloquear.',
+              action: 'Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti, suave.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
         ]},
       /* s118 (B2.3 OLA 1): migrado — reps de apretón + descanso corto (NO
@@ -207,8 +208,8 @@ var MOVE_ROUTINES = {
             tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Sentado erguido, pies apoyados.',
-              action: 'Aprieta los glúteos con fuerza dos segundos y suelta. Repite.',
-              care: 'Nadie tiene que notarlo. Respira con normalidad.' } },
+              action: 'Aprieta los glúteos de forma moderada dos segundos y suelta. Repite.',
+              care: 'Sin contener el aire. Suelta del todo entre apretones.' } },
           { name: 'Descanso', mode: 'rest', dur: 15,
             instruction: { action: 'Suelta.' } },
           { name: 'Apretar glúteos', mode: 'timed', dur: 30,
@@ -226,24 +227,24 @@ var MOVE_ROUTINES = {
          gate `ready`. Los cue de los rests estaban VACÍOS: se reutiliza el
          literal del rest suave de glutes.stealth («Suelta.» / «Let go.»), sin
          redactar copy nuevo. Acceso premium SIN cambios. */
-      { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hueco abdominal en silla.', min: 2, access: 'premium',
+      { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Piernas elevadas, sentado.', min: 2, access: 'premium',
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
           /* Al levantar las dos piernas, una silla con ruedas se va: la colocación lo dice. */
-          { name: 'Hueco en silla', mode: 'timed', dur: 30,
+          { name: 'Piernas elevadas sentado', mode: 'timed', dur: 30,
             instruction: {
-              setup: 'Silla sin ruedas o frenada. Atrás del todo, espalda apoyada, manos en el asiento.',
+              setup: 'Silla sin ruedas. Atrás del todo, espalda apoyada, manos en el asiento.',
               action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
               care: 'Para que sea más suave, levanta un pie cada vez, con las rodillas dobladas. Respira normal.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Suelta.' } },
-          { name: 'Hueco en silla', mode: 'timed', dur: 30,
+          { name: 'Piernas elevadas sentado', mode: 'timed', dur: 30,
             instruction: {
               action: 'Mantén la posición. Respira normal.',
-              care: 'Si la lumbar se despega, baja un poco las piernas.' } },
+              care: 'Si la lumbar se despega, apoya los pies en el suelo y vuelve a subirlos.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Suelta.' } },
-          { name: 'Hueco en silla', mode: 'timed', dur: 30,
+          { name: 'Piernas elevadas sentado', mode: 'timed', dur: 30,
             instruction: {
               action: 'Última. Mantén mientras la lumbar siga apoyada.',
               care: 'Termina antes si pierdes el apoyo de la espalda.' } },
@@ -261,7 +262,7 @@ var MOVE_ROUTINES = {
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
-              action: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
+              action: 'Siéntate con control y levántate sin impulso, pecho arriba.',
               care: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
@@ -291,14 +292,14 @@ var MOVE_ROUTINES = {
             tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'De pie, pies al ancho de las caderas. Una mano en la mesa si la necesitas.',
-              action: 'Sube los talones lo más alto que puedas, mantén un instante y baja con control.',
+              action: 'Sube los talones hasta donde controles, mantén un instante y baja con control.',
               care: 'Sin rebotes. Baja despacio hasta apoyar el talón.' } },
           { name: 'Elevación de puntas', mode: 'reps', reps: 12, dur: 48,
             tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'De espaldas a la pared, o con las manos en la mesa. Talones apoyados.',
+              setup: 'Espalda en la pared y talones a un palmo; o de cara a la mesa, con las manos en ella.',
               action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
-              care: 'Movimiento pequeño. Notarás el trabajo delante de la espinilla.' } },
+              care: 'Movimiento pequeño, sin balancearte hacia atrás. Notarás el trabajo delante de la espinilla.' } },
           { name: 'Sentadilla de cuádriceps', mode: 'reps', reps: 8, dur: 32,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
@@ -321,10 +322,10 @@ var MOVE_ROUTINES = {
         steps: [
           { name: 'Silla en la pared', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
-              setup: 'Apoya la espalda en una pared y desliza hacia abajo hasta que las rodillas queden a 90°.',
-              action: 'Espalda pegada a la pared, rodillas a 90°. Respira normal.',
+              setup: 'Espalda en la pared, pies un paso por delante. Desliza un poco hacia abajo.',
+              action: 'Quédate a la altura que elijas, sin pasar de 90°. Respira sin aguantar el aire.',
               /* Aguantar el aire en una isometría sube la tensión en el momento. */
-              care: 'Respira sin aguantar el aire. Cuanto menos bajes, más suave.' } },
+              care: 'Empieza alto: cuanto menos bajes, más suave. Para salir, empuja con los pies y sube.' } },
           { name: 'Descanso', mode: 'rest', dur: 30,
             instruction: { action: 'Suave.' } },
           { name: 'Silla en la pared', mode: 'timed', dur: 60,
@@ -341,15 +342,15 @@ var MOVE_ROUTINES = {
         steps: [
           { name: 'Sentadilla búlgara', mode: 'perSide', dur: 40, transition: { seconds: 10 }, setup: { mode: 'ready', estimatedSeconds: 20 },
             instruction: {
-              setup: 'Silla estable contra la pared, a tu espalda. Apoya en ella el empeine de una pierna.',
-              action: 'Baja en vertical sobre la pierna de delante y sube. Unas 6 por pierna.',
+              setup: 'Silla estable contra la pared, detrás. Un empeine en ella; el otro pie, un paso largo delante.',
+              action: 'Baja en vertical sobre la pierna de delante y sube. Unas 6 por pierna, a tu ritmo.',
               care: 'Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Respira.' } },
           { name: 'Zancada profunda', mode: 'perSide', dur: 35, transition: { seconds: 10 },
             instruction: {
               setup: 'De pie, da un paso largo adelante. Una mano en la mesa si la necesitas.',
-              action: 'Baja hasta que la rodilla de delante pase por encima del pie, y sube. Unas 6 por pierna.',
+              action: 'Baja y sube en zancada. La rodilla puede pasar sobre el pie, sin buscarlo. Unas 6 por pierna.',
               care: 'Si la rodilla se queja, baja menos. El talón de delante, siempre apoyado.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Respira.' } },
@@ -361,7 +362,7 @@ var MOVE_ROUTINES = {
               care: 'Apoyado en todo momento. Baja solo hasta donde las rodillas vayan cómodas.' } },
           { name: 'Elevación de talones', mode: 'perSide', dur: 30, transition: { seconds: 5 },
             instruction: {
-              action: 'A una pierna: sube el talón lo más alto que puedas y baja despacio. Unas 10.',
+              action: 'A una pierna: sube el talón hasta donde controles y baja despacio. Unas 10.',
               care: 'Una mano en la mesa para el equilibrio. Sin rebotes.' } },
         ]},
     ]
@@ -388,12 +389,12 @@ var MOVE_ROUTINES = {
               care: 'Hombros abajo, lejos de las orejas.' } },
           { name: 'Extensión torácica', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Apoya la espalda alta en el respaldo y arquea suave, abriendo el pecho al techo.',
-              care: 'El arco nace del pecho, no de la zona lumbar.' } },
+              action: 'Apoya la espalda alta en el respaldo y arquea suave, abriendo el pecho. La cabeza no va atrás.',
+              care: 'El arco nace del pecho. Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.' } },
           { name: 'Apertura de pecho sentado', mode: 'timed', dur: 30,
             instruction: {
               action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
-              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+              care: 'Sin agarrarte al respaldo ni arquear la cintura. Abre solo hasta donde no moleste.' } },
         ]},
       /* s120 (B2.3 OLA 3): migrado al contrato v1. Scapular squeeze → `reps` con
          **dosis legacy CONSERVADA** (12 reps, «2 segundos cada una» → tempo 1-2-1
@@ -418,18 +419,19 @@ var MOVE_ROUTINES = {
               care: 'Hombros abajo, lejos de las orejas.' } },
           { name: 'Apertura con banda', mode: 'timed', dur: 40,
             instruction: {
-              action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
-              care: 'Hombros abajo, lejos de las orejas.' } },
+              setup: 'De pie, la banda delante del pecho y los brazos casi estirados.',
+              action: 'Separa las manos juntando los omóplatos, sin subir la banda a la cara. Hombros abajo.',
+              care: 'Sin banda, ábrelos en el aire: mueve el hombro, pero no es el mismo trabajo.' } },
           { name: 'Deslizamientos en pared', mode: 'reps', reps: 8, dur: 48,
             tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
-              action: 'Sube y baja los brazos pegados a la pared, como alas, despacio.',
-              care: 'Sube solo hasta donde no se despeguen. Sin pared, hazlo en el aire.' } },
+              action: 'Sube y baja los brazos junto a la pared, como alas, despacio.',
+              care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. Sin pared, hazlo en el aire.' } },
           { name: 'Apertura de pecho', mode: 'timed', dur: 40,
             instruction: {
-              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
         ]},
       /* s121 (B2.3 OLA 4): migrado al contrato v1 — CIERRE de la migración
          mecánica. Aguantes isométricos (Plancha, Hueco abdominal) → `timed` con care
@@ -447,13 +449,13 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Ponte boca abajo en el suelo y apoya los antebrazos bajo los hombros.',
               action: 'Cuerpo en línea recta de la cabeza a los talones. Aprieta glúteos y abdomen. Respira.',
-              care: 'Apoya las rodillas en el suelo para hacerla más suave.' } },
+              care: 'Más suave con las rodillas en el suelo: en línea de los hombros a las rodillas, sin echar la cadera atrás.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Respira.' } },
           { name: 'Plancha lateral', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
-              action: 'Apóyate en un antebrazo, cuerpo de lado en línea. Sube la cadera y mantén.',
-              care: 'Baja la rodilla de abajo al suelo si necesitas menos intensidad.' } },
+              action: 'De lado, codo bajo el hombro y piernas estiradas, una sobre otra. Sube la cadera y mantén.',
+              care: 'Más suave con las dos rodillas dobladas y la de abajo en el suelo.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Respira.' } },
           { name: 'Hueco abdominal', mode: 'timed', dur: 30,

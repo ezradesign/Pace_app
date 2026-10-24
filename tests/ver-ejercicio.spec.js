@@ -21,10 +21,10 @@ const visible = (page, sel) => page.locator(sel).filter({ visible: true });
    seguidos. Cada uno es la primera serie de su rutina. */
 const REPARTO = [
   'Elevación de talones', 'Barbilla atrás', 'Encogimiento de hombros',
-  'Abrir y cerrar el puño', 'Palmas al suelo', 'Círculos de hombro',
+  'Abrir y cerrar el puño', 'Palmas en la mesa', 'Círculos de brazos',
   'Apretar glúteos', 'Rodar hacia abajo', 'Sentadilla profunda',
   'Elevación de puntas', 'Isquio a una pierna', 'Rotación externa',
-  'Juntar omóplatos', 'Inclinación lateral', 'Círculos de muñeca',
+  'Juntar omóplatos', 'Inclinación de cuello', 'Círculos de muñeca',
   'Extensión torácica', 'Rezo invertido', 'Apertura de pecho',
   'Flexiones inclinadas', 'Rotación torácica de pie', 'Sentadilla lateral',
   'Extensión de dedos', 'Rotación lenta', 'Giro sentado',

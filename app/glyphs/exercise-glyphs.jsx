@@ -89,7 +89,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 6. Crescent / boat pose puro (línea única) (V5). */
-  'Hueco en silla': ({ size, className }) => (
+  'Piernas elevadas sentado': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 18 Q22 34 38 18" />
       <path d="M6 18 Q22 24 38 18" opacity="0.5" />

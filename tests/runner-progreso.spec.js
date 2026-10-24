@@ -62,8 +62,8 @@ test('la barra de progreso está a la misma altura en el ejercicio y en el coló
   await page.evaluate(() => {
     const t = [...document.querySelectorAll('[data-pace-lib-card] .pace-lib-hit')]
       .filter(e => e.getBoundingClientRect().width > 0)
-      .find(e => /rculos/.test(e.textContent || ''));
-    if (!t) throw new Error('no encuentro «Hombros · círculos»');
+      .find(e => /Caderas de pie/.test(e.textContent || ''));
+    if (!t) throw new Error('no encuentro «Caderas de pie»');
     t.click();
   });
   await page.waitForTimeout(900);

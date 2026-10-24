@@ -25,7 +25,10 @@ function CustomBuilder({ editId, onClose }) {
 
   const existing = editId ? getCustomRoutine(editId) : null;
   const [name, setName] = useStateCB(existing ? existing.name : '');
-  const [steps, setSteps] = useStateCB(existing ? existing.steps.map(s => ({ ...s })) : []);
+  /* Un paso guardado con un nombre de antes se edita con el de hoy, y así se guarda. */
+  const [steps, setSteps] = useStateCB(existing
+    ? existing.steps.map(s => ({ ...s, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(s.name) : s.name }))
+    : []);
   const [view, setView] = useStateCB('editor'); // 'editor' | 'picker'
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
   const limits = window.CUSTOM_LIMITS;
