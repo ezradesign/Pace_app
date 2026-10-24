@@ -114,8 +114,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
     /* Solo la sesión entera gana logros (Ez): sin nada cortado y con cada paso de trabajo hecho;
-       saltar un descanso no cuenta como cortar. */
-    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || hechosRef.current[n]);
+       saltar un descanso no cuenta como cortar, ni un paso `opcional` (la banda, Ez, 23 oct.: 2A). */
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n]);
     if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);
     else completeMoveSession(routine.id, realMin, ev, entera);
   };
@@ -349,6 +349,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     support = t('move.sideAutoHint');
     primary = { label: t('session.beginNow'), onClick: onSideReady };
+  } else if (step.opcional) {
+    // Un paso con material que no tienes se salta sin cortar la sesión (Ez, 23 oct.: 2A).
+    if (step.mode === 'reps') { repPulseSec = v1RepSeconds(step); bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repPulseSec) + 1)); bigLabel = tn('move.repsOf', { n: v1RepTarget(step) }); }
+    else { bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds'); }
+    primary = { label: t('move.skipOptional'), onClick: advanceStep };
   } else if (step.mode === 'reps') {
     // s113: reps guiadas — contador «n de N» con pulso de cadencia; avance
     // auto al objetivo; «Terminar antes» siempre visible (enmienda R2).

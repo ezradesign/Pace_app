@@ -19,20 +19,63 @@
 
 ## La cuenta de todo lo que falta por dibujar (la única)
 
-A 18 oct. 2026, v0.173.0. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
+A 23 oct. 2026, v0.176.0. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
 repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
 
 | Qué | Cuántos | Cuáles, y dónde están sus prompts |
 |---|---|---|
-| Ejercicios sin dibujo | **3** | La tabla de abajo. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
-| Ejercicios con el dibujo equivocado | **5** | Hueco en silla, 90/90, Palmas al suelo, Apretar glúteos y Sentadilla de cuádriceps (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1) |
+| Ejercicios sin dibujo | **9** | Los 3 de la tabla de abajo y los 6 nuevos de Mueve y Estira (3A), que mientras llevan el glifo de su módulo («La tanda de Mueve y Estira», abajo). `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
+| Ejercicios con el dibujo equivocado | **9** | Los 7 que marcó Ez el 23 oct. («La tanda de Mueve y Estira», abajo) y Palmas en la mesa y Apretar glúteos (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1) |
 | Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3 |
 | Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3) |
-| **Total** | **30** | |
+| **Total** | **40** | |
 
 Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
 invierno y Cuarto creciente (v0.165.0) y Barbilla atrás (v0.170.1). Los días diseñados, cuando
 lleguen, pueden pedir más: se suman aquí.
+
+---
+
+## La tanda de Mueve y Estira (Ez, 23 oct. 2026: 3A)
+
+Seis ejercicios nuevos y los siete dibujos que Ez marcó en su móvil porque no casan. En inglés,
+como los de `PROMPTS_IMAGENES.md`: cada pieza es **el preámbulo + su «Exercise plate»**, y conviene
+adjuntar 2 o 3 piezas existentes como referencia. El archivo se llama como el ejercicio (minúsculas,
+sin tildes, guiones): es lo que empareja la ingesta.
+
+**Preámbulo, delante de cada una:**
+
+```
+Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+```
+
+### Los seis nuevos (hoy, con el glifo de su módulo)
+
+| Archivo | Rutina | Exercise plate |
+|---|---|---|
+| `remo-con-banda.png` | Mueve · Espalda con banda | A standing band row, in profile facing right. Both feet stand on the middle of an elastic band drawn as one thin line; the two ends rise to the hands. Hips pushed slightly back, back long, knees soft. Both elbows are pulled back close to the ribs, hands at the lower ribs. A short dotted arrow with a small open chevron behind the elbow points BACKWARD. |
+| `remo-con-tu-mano.png` | Mueve · Espalda con banda | A hand-resisted row, standing in profile facing right. In front of the belly, the far hand holds the wrist of the near arm. The near elbow is drawn back along the side of the body while the holding hand resists. A short dotted arrow behind the near elbow points BACKWARD. No band, no object. |
+| `bisagra-de-cadera.png` | Mueve · Piernas · a una | A hip hinge, standing in profile facing right, hands on the hips. The hips are pushed far back, the trunk tilts forward about 45 degrees with a long straight back from the hips to the head, knees only slightly bent, shins nearly vertical. A short dotted arrow at the buttocks points BACKWARD. The back is never rounded. |
+| `desliza-el-talon.png` | Mueve · Fuerza en suelo | A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. A short dotted arrow along the floor beyond the sliding heel points AWAY from the body. |
+| `inclinacion-de-tronco.png` | Estira · Columna · ondas | A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure's right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. A short dotted arc beside the ribs shows the side bend. No twisting, no forward lean. |
+| `gemelo-en-pared.png` | Estira · Cadena posterior | A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall. |
+
+### Los siete que no casan (Ez, 23 oct.)
+
+| Archivo | Lo que dijo Ez | Exercise plate |
+|---|---|---|
+| `piernas-elevadas-sentado.png` | El de «Core silencioso» no casa | A seated leg raise on a chair, in profile facing right; the chair is only a few thin straight lines (seat, backrest, front legs). The figure sits all the way back, the back resting on the backrest, both hands holding the sides of the seat. Both knees are bent and lifted together so the feet hover a hand-breadth above the floor. |
+| `rodar-hacia-abajo.png` | No casa (Ez tiene uno que sí) | A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. A short dotted arc over the upper back shows the curl downward. |
+| `gato-camello.png` | Puede mejorar mucho | Cat-camel on all fours, in profile facing right: hands under the shoulders, knees under the hips. The back is rounded up in a smooth even arch, the head gently dropped. A short dotted two-headed arc above the middle of the back shows the movement up and down. One figure only. |
+| `90-90.png` | Se ve raro y se confunde con «Paloma» | Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon). |
+| `sentarse-y-levantarse-del-suelo.png` | No enseña eso | Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front, one hand reaching down to the floor beside the hip, ready to sit to the side. A short dotted arrow from the hip points DOWN and to the side. |
+| `sentadilla-de-cuadriceps.png` | Parece otro ejercicio | **Antes de dibujarla, Ez decide qué es**: ya no sale en ninguna rutina de la lista (2A). Propuesta: a supported heel-raised squat, in profile facing right, both hands holding the edge of a desk drawn as one horizontal line. Heels lifted, knees bent and travelling forward over the toes, trunk upright, hips low between the heels. |
+| `puente-toracico.png` | Sale a dos niveles, no en el suelo | **Antes de dibujarla, Ez decide qué es**: tampoco sale ya (2A). Propuesta: a reverse tabletop bridge on the floor, in profile facing right: hands on the floor behind the shoulders, fingers forward, knees bent with feet flat, hips lifted so the trunk and thighs make one level line, chest open. |
+
+**Al ingerirlas**: `piernas-elevadas-sentado` sustituye a `hueco-en-silla` (el ejercicio cambió de nombre
+en v0.175.2); hay que borrar el .webp viejo y su miniatura o el `verify` los marca como huérfanos. Las
+dos versiones de entrada nuevas, «Puente con los dos pies» y «Gateo con rodillas», usan el dibujo de
+«Puente con marcha» y «Gateo» (`VISUAL_ALIAS`) y no se piden.
 
 ---
 

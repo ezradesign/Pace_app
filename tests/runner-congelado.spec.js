@@ -137,7 +137,7 @@ test.describe('el runner no se mueve entre pantallas', () => {
     await irAlArtefacto(page);
     /* «Caderas de pie», toda por reloj: «Hombros · círculos», la de antes, empieza por veces
        desde v0.175.2 y ya no se recorre con «Siguiente».
-       Y NO «Flexiones de escritorio», que es la que
+       Y NO «Fondos en silla», que es la que
        fotografió el usuario: en las rutinas de REPS la pantalla de trabajo no
        tiene botón «Siguiente» -- son «Anterior · Pausar · Terminar antes»-- así
        que el bucle avanzaba un paso y el test habría salido verde habiendo
@@ -182,7 +182,7 @@ test.describe('el runner no se mueve entre pantallas', () => {
        colocarse y 2 al trabajar -- 24,8 px-- que es el caso que el arreglo
        tiene que aguantar. Un aserto que sólo pasa por rutinas fáciles no
        prueba el mecanismo, prueba la rutina. */
-    await abrirRutina(page, 'Mueve', 'Flexiones de escritorio');
+    await abrirRutina(page, 'Mueve', 'Fondos en silla');
     await congelarPulso(page);
 
     /* Esta rutina empieza por la pantalla de COLOCARSE, así que el orden de la
@@ -224,7 +224,7 @@ test.describe('el runner no se mueve entre pantallas', () => {
   test('el número queda a la misma distancia de la descripción que de la barra', async ({ page, context }) => {
     await sembrar(context);
     await irAlArtefacto(page);
-    await abrirRutina(page, 'Mueve', 'Flexiones de escritorio');
+    await abrirRutina(page, 'Mueve', 'Fondos en silla');
     await congelarPulso(page);
 
     /* Se mide contra los HUECOS de la descripción y de la línea de abajo (las pilas), no

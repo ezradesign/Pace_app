@@ -313,7 +313,7 @@ test('el descanso pinta su circulo, del mismo tamaño que el del trabajo', async
   await page.setViewportSize({ width: 390, height: 844 });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /^Mueve/ }).click();
-  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await page.getByRole('heading', { name: 'Fondos en silla' }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);

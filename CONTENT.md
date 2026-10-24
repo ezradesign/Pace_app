@@ -10,15 +10,16 @@
 > 14 rutinas por F6; s91: Estira a 14 por F5; s90: Respira a 20 por F4; s88:
 > columnas `access` fijadas por F3b), no el aspiracional.
 >
-> **Cifras de hoy (v0.173.0, 18 oct. 2026)**, evaluando el objeto y no leyendo el fuente. Los totales
+> **Cifras de hoy (v0.176.0, 23 oct. 2026)**, evaluando el objeto y no leyendo el fuente. Los totales
 > los cruza el `verify` en cada pasada (`chequeaContenido` en `scripts/verify.integridad.js`); el
 > reparto entre gratis y de pago se contó con el mismo objeto:
 >
 > | | rutinas | gratis | de pago |
 > |---|---|---|---|
 > | Respira | **20** | 13 | 7 |
-> | Mueve (ids `extra.*`) | **15** | 9 | 6 |
-> | Estira (ids `move.*`) | **18** | 12 | 6 |
+> | Mueve (ids `extra.*`) | **14** | 7 | 7 |
+> | Estira (ids `move.*`) | **19** | 15 | 4 |
+> | Fuera de la lista (ATG, Ancestral) | 2 | | de pago, sin borrar su id |
 > | Caminos | **7** | | ocultos hasta después de v1 |
 >
 > Las fichas de abajo se han ido poniendo al día; los apartados de cada fase (F4, F5, F6) cuentan
@@ -116,8 +117,10 @@ sueltos dentro de una rutina (sería un muro de pago a mitad de flujo).
 | Módulo | Inicial 1 | Inicial 2 |
 |---|---|---|
 | **Respira** | `breathe.coherent.55` · Coherente 5·5 | `breathe.box.4` · Box 4·4·4·4 |
-| **Mueve** | `extra.desk.pushups` · Flexiones de escritorio | `extra.posture.set` · Postura reset |
-| **Estira** | `move.chair.antidote` · Antídoto silla | `move.neck.3` · Cuello |
+| **Mueve** | `extra.desk.pushups` · Empuje sencillo | «Para empezar» entera (Ez, 23 oct. 2026: 4A) |
+| **Estira** | `move.chair.antidote` · Antídoto silla | `move.neck.3` · Cuello suave, y «Para empezar» entera |
+
+> Desde v0.176.0 «Postura reset» es de Estira y sigue gratis: lo que era gratis sigue gratis (4A).
 
 **Siempre gratis pase lo que pase:** Pomodoro (Foco), Hidrátate, y las
 2 iniciales de cada módulo. El core funciona y es útil por sí solo.
@@ -175,91 +178,78 @@ pranayama 5.
 
 ---
 
-## 🦴 Mueve · Fuerza / calistenia
+## 🦴 Mueve · Fuerza en un cuarto, sin objetos
 
-Botón "Mueve". Inspirado en Strengthside (progresiones de empuje,
-unilateral, colgarse) + Jess Martin (fuerza discreta de oficina). Ejercicios
-cortos, discretos, sin equipo (salvo "Colgarse": barra o marco), aptos para
-la oficina. Datos en `app/move/move.data.js` (`MOVE_ROUTINES`, ids
-`extra.*`). Estado actual: **15 rutinas** (14 en F6, s92; +1 con las series de
-«A tu ritmo», 15 oct. 2026), biblioteca **agrupada en 4 grupos** como
-Respira/Estira (free primero dentro de cada grupo): empuje y tracción 4 · sigilo 4 ·
-piernas 4 · espalda y core 3.
-Grupos i18n con prefijo `mueve.cat.*` (no `move.cat.*`, que colisionaría
-con los ids `move.*` de Estira).
+Botón «Mueve». Fuerza contra tu peso, una pared o tu mano: calistenia sin tecnicismos (Ez, 23 oct.
+2026). Datos en `app/move/move.data.js` (`MOVE_ROUTINES`, ids `extra.*`). **14 rutinas** en las
+tres capas que eligió Ez (2A): «Para empezar» arriba (pausas de 2-3 min, gratis enteras, `entrada`),
+«Sigilo», «Con material» (banda o barra; los pasos de banda se pueden saltar, `opcional`) y «Para ir a
+más». Las dos últimas van `aparte`: «A tu ritmo» nunca las propone. Grupos i18n con prefijo
+`mueve.cat.*`.
 
-| ID | Nombre | Grupo | min | `access` (real, F6) |
+| ID | Nombre | Grupo | min | `access` |
 |---|---|---|---|---|
-| `extra.desk.pushups` | Flexiones de escritorio | empuje | 3 (s113: 2→3, real guiado 3:00-3:25) | **free** (inicial) |
-| `extra.chair.dips` | Fondos en silla | empuje | 3 | free |
-| `extra.push.ladder` | Empuje · progresión | empuje | 3 | **premium** (F6 — pica + negativas) |
-| `extra.hang.bar` | Colgarse | empuje | 2 | **premium** (F6 — requiere barra) |
-| `extra.calves` | Gemelos subrepticios | sigilo | 1 | free (micro de entrada) |
-| `extra.grip.squeeze` | Grip + antebrazos | sigilo | 2 | free (micro de entrada) |
-| `extra.glutes.stealth` | Glúteos invisibles | sigilo | 2 | free (F6 — micro discreto) |
-| `extra.core.stealth` | Core silencioso | sigilo | 2 | **premium** (hollow al límite) |
-| `extra.chair.squats` | Sentadillas de silla | piernas | 3 | free (F6 — el patrón más útil) |
-| **`extra.legs.standing`** | **Piernas de pie** | piernas | 2 | **free** (series, 15 oct. 2026 — de pie junto a la mesa: talones, puntas, sentadilla de cuádriceps) |
-| `extra.wall.sit` | Sentadilla en pared | piernas | 3 | **premium** (isométrico exigente) |
-| `extra.legs.single` | Piernas · a una | piernas | 5 | **premium** (F6 — unilateral avanzado) |
-| `extra.posture.set` | Postura reset | espalda | 2 | **free** (inicial) |
-| `extra.back.desk` | Espalda de oficina | espalda | 3 | free (F6 — tracción accesible) |
-| `extra.core.plank` | Core · plancha | espalda | 4 | **premium** (F6 — isométricos de suelo) |
+| `extra.chair.squats` | Levántate y sube | Para empezar | 3 | free |
+| `extra.desk.pushups` | Empuje sencillo | Para empezar | 2 | free |
+| `extra.legs.standing` | Piernas sin pasos | Para empezar | 3 | free |
+| `extra.pausa.suelo` | Fuerza en suelo | Para empezar | 3 | free |
+| `extra.calves` | Gemelos subrepticios | Sigilo | 2 | free |
+| `extra.glutes.stealth` | Glúteos invisibles | Sigilo | 2 | free |
+| `extra.core.stealth` | Core silencioso | Sigilo | 2 | **premium** |
+| `extra.banda.espalda` | Espalda con banda | Con material | 4 | **premium** |
+| `extra.hang.bar` | Colgarse | Con material | 2 | **premium** |
+| `extra.push.ladder` | Empuje · progresión | Para ir a más | 3 | **premium** |
+| `extra.chair.dips` | Fondos en silla | Para ir a más | 3 | free |
+| `extra.wall.sit` | Sentadilla en pared | Para ir a más | 3 | **premium** |
+| `extra.legs.single` | Piernas · a una | Para ir a más | 6 | **premium** |
+| `extra.core.plank` | Core · plancha | Para ir a más | 4 | **premium** |
 
-> **Glifos (F6):** 9 pasos nuevos renderizan `DefaultGlyph` (tres arcos)
-> hasta que el usuario apruebe sus glifos — se suman a la cola D-4 de
-> `STATE.md` (ahora 35 pendientes): Sentadilla a silla, Apretar glúteos,
-> Superman, Pica en escritorio, Sentadilla búlgara, Plancha, Plancha
-> lateral, Hollow hold, Hang activo.
+> **De dónde sale cada una.** «Levántate y sube», «Empuje sencillo» y «Piernas sin pasos» rehacen
+> «Sentadillas de silla», «Flexiones de escritorio» y «Piernas de pie» con su id. Nuevas: «Fuerza en
+> suelo» y «Espalda con banda». Pasaron a Estira «Postura reset», «Grip + antebrazos» (ahora «Manos y
+> antebrazos») y «Espalda de oficina», que son estirar. Los ejercicios nuevos (3A) que aún llevan el
+> glifo del módulo: Remo con banda, Remo con tu mano, Bisagra de cadera y Desliza el talón
+> (`docs/product/GLIFOS_A_DIBUJAR.md`).
 
 ---
 
-## 🤸 Estira · Movilidad / estiramiento
+## 🤸 Estira · Estiramientos, casi yoga o pilates
 
-Botón "Estira". Inspirado en Jess Martin (oficina) + Strengthside (ATG,
-caderas, hombros, columna, movilidad de suelo, flujos diarios). Datos en
-`app/extra/extra.data.js` + `app/extra/extra.data.piernas.js` (`EXTRA_ROUTINES`,
-ids `move.*`; troceados en s178 por la regla §1). Estado actual:
-**18 rutinas** (s178: 14 → 17; +1 con las series, 15 oct. 2026), biblioteca
-**agrupada en 4 grupos** como Respira (free primero dentro de cada grupo): oficina 4
-· hombros y columna 5 · caderas y piernas 7 · flujos 2.
+Botón «Estira». Solo estiramientos y movilidad (Ez, 23 oct. 2026). Datos en `app/extra/extra.data.js`
++ `app/extra/extra.data.piernas.js` (`EXTRA_ROUTINES`, ids `move.*` y las tres `extra.*` que
+llegaron de Mueve). **19 rutinas**: «Para empezar» (seis, gratis enteras), «Oficina», «Hombros y
+columna», «Caderas y piernas» y «Para ir a más» (`aparte`). ATG y Ancestral ya no salen en la lista
+(`EXTRA_ROUTINES_FUERA`): su id se sigue encontrando para el historial, los logros y los Caminos.
 
-> **s178 · TRES RUTINAS COMPATIBLES CON OFICINA.** Salieron de un censo
-> (`scripts/audit/censo-suelo-s178.js`), no de una idea: **9 de las 14** rutinas
-> pedían suelo, **las cuatro de caderas** eran de suelo, y las cinco sin suelo eran
-> **todas de tren superior** — en la biblioteca cuyo subtítulo es «antídoto a la
-> silla». Las tres nuevas cubren caderas, cadena posterior y columna **sin bajar al
-> suelo**, y suben las compatibles con oficina de **5 a 8**. **No se retiró ninguna
-> rutina**: las nueve de suelo siguen intactas (decisión del usuario, s178).
-> Ningún ejercicio es nuevo: los doce ya tenían arte, y cada uno se verificó contra
-> su propio `setup` antes de componer.
-
-| ID | Nombre | Grupo | min | `access` (real, F5) |
+| ID | Nombre | Grupo | min | `access` |
 |---|---|---|---|---|
-| `move.chair.antidote` | Antídoto silla | oficina | 5 | **free** (inicial) |
-| `move.neck.3` | Cuello | oficina | 3 | **free** (inicial) |
-| `move.desk.quick` | Escritorio express | oficina | 2 | free (2 min sin levantarse) |
-| `move.wrists` | Muñecas y manos | oficina | 3 | free (F5 — antídoto al teclado) |
-| `move.shoulders.5` | Hombros | hombros | 4 | free (reset accesible) |
-| `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
-| **`move.spine.chair`** | **Columna en la silla** | hombros | 4 | **free** (s178 — sin levantarse) |
-| **`move.back.standing`** | **Espalda de pie** | hombros | 3 | **free** (series, 15 oct. 2026 — de pie: rodar, rotar, abrir el pecho, juntar omóplatos; la rotación de pie no tiene dibujo propio todavía) |
-| `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
-| **`move.hips.standing`** | **Caderas de pie** | caderas | 4 | **free** (s178 — sin suelo) |
-| `move.hips.5` | Caderas | caderas | 6 | free |
-| `move.couch.stretch` | Couch stretch | caderas | 6 | **premium** (F5 — flexores profundos) |
-| `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
-| `move.atg.knees` | ATG · Rodillas profundas | caderas | 4 | **premium** (ATG avanzado) |
-| **`move.hamstrings.standing`** | **Cadena posterior de pie** | caderas | 4 | **free** (s178 — sin suelo) |
-| `move.hamstrings` | Cadena posterior | caderas | 5 | **premium** (F5 — isquios profundos) |
-| `move.morning.flow` | Despertar matinal | flujos | 5 | free (F5 — ancla de hábito diario) |
-| `move.ancestral` | Ancestral | flujos | 5 | **premium** (suelo/crawl/hang) |
+| `move.neck.3` | Cuello suave | Para empezar | 2 | free |
+| `move.shoulder.circles` | Brazos libres | Para empezar | 2 | free |
+| `move.wrists` | Manos y muñecas | Para empezar | 2 | free |
+| `move.spine.chair` | Tronco sentado | Para empezar | 2 | free |
+| `move.hamstrings.standing` | Piernas en pausa | Para empezar | 3 | free |
+| `move.morning.flow` | Movilidad en suelo | Para empezar | 3 | free |
+| `move.desk.quick` | Escritorio express | Oficina | 2 | free |
+| `move.chair.antidote` | Antídoto silla | Oficina | 6 | free |
+| `extra.posture.set` | Postura reset | Oficina | 2 | free |
+| `extra.grip.squeeze` | Manos y antebrazos | Oficina | 3 | free |
+| `move.shoulders.5` | Hombros | Hombros y columna | 3 | free |
+| `extra.back.desk` | Espalda de oficina | Hombros y columna | 3 | free |
+| `move.back.standing` | Espalda de pie | Hombros y columna | 3 | free |
+| `move.spine.waves` | Columna · ondas | Hombros y columna | 5 | **premium** |
+| `move.hips.standing` | Caderas de pie | Caderas y piernas | 4 | free |
+| `move.hips.5` | Caderas | Caderas y piernas | 5 | free |
+| `move.hamstrings` | Cadena posterior | Caderas y piernas | 4 | **premium** |
+| `move.couch.stretch` | Estiramiento del sofá | Para ir a más | 6 | **premium** |
+| `move.hips.ground` | Caderas · suelo | Para ir a más | 6 | **premium** |
 
-> **Glifos (F5):** 11 pasos nuevos renderizan `DefaultGlyph` (tres arcos)
-> hasta que el usuario apruebe sus glifos — se suman a la cola D-4 de
-> `STATE.md` (ahora 26 pendientes): Gato-camello, Palmas al suelo, Rezo
-> invertido, Círculos de hombro, Couch stretch, Onda espinal, Puente
-> torácico, Rodar hacia abajo, Rana, Pliegue adelante, Isquio a una pierna.
+> **De dónde sale cada una.** «Cuello suave», «Brazos libres», «Manos y muñecas», «Tronco sentado»,
+> «Piernas en pausa» y «Movilidad en suelo» rehacen «Cuello», «Hombros · círculos», «Muñecas y
+> manos», «Columna en la silla», «Cadena posterior de pie» y «Despertar matinal» con su id. Ningún
+> ejercicio se borra: los escalenos van a «Antídoto silla» y las palmas en la mesa y el rezo
+> invertido a «Manos y antebrazos». Salen de sus rutinas, hasta tener texto y dibujo claros, la
+> sentadilla de cuádriceps, el puente torácico, la onda espinal y la marcha del elefante. Los
+> ejercicios nuevos (3A) con el glifo del módulo: Inclinación de tronco y Gemelo en pared.
 
 ---
 
@@ -361,13 +351,14 @@ pie sin repetir: hasta cuatro sentadas seguidas.
 
 **Los pozos** son lo que cabe junto a la mesa: sin aviso de seguridad, sin suelo, sin material
 obligatorio (el opcional no cuenta; **la mesa cuenta**, en lo de nivel accesible) y sin retención;
-abiertos por acceso y sin lo que se vetó en la pausa (s189). Rotan por día. **Medidos en la app, en
-gratis**:
+abiertos por acceso y sin lo que se vetó en la pausa (s189). Rotan por día. Desde v0.176.0 (Ez, 2A),
+sin pagar salen solo de «Para empezar»; con PACE completo, de todo menos «Con material» y «Para ir a
+más». **En gratis**:
 
 | Pozo | Rutinas |
 |---|---|
-| Estira (7) | Escritorio express · Muñecas y manos · Hombros · círculos · Caderas de pie · Cadena posterior de pie · Espalda de pie · Cuello |
-| Mueve (6) | Grip + antebrazos · Glúteos invisibles · Postura reset · Gemelos subrepticios · Flexiones de escritorio · Piernas de pie |
+| Estira (5) | Cuello suave · Brazos libres · Manos y muñecas · Tronco sentado · Piernas en pausa |
+| Mueve (2) | Empuje sencillo · Piernas sin pasos (Levántate y sube pide una silla sin ruedas y no entra, como antes) |
 | Respira, pausa larga (5) | Exhalación 4·6 · Diafragmática · Coherente 5·5 · Coherente 6·6 … (grupos Equilibrio, Balance y Relajación, 4–10 min, sin retención) |
 | Respira, cierre (3) | Suspiro fisiológico · Diafragmática · Coherente 5·5 (≤ 5 min) |
 

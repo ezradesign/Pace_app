@@ -174,6 +174,9 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
                     {veces > 1 && (
                       <span style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` ×${veces}`}</span>
                     )}
+                    {s.opcional && (
+                      <span data-pace-preview-opcional style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` · ${t('preview.opcional')}`}</span>
+                    )}
                   </span>
                 </div>
               ))}

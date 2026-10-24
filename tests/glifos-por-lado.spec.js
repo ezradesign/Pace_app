@@ -42,11 +42,10 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
   await page.clock.install();
   await irAlArtefacto(page);
 
-  /* «Cuello» (s174: se le quitó la coletilla «· 3 min», que repetía lo que la
-     tarjeta ya dice) empieza con un paso de reps y sigue con tres `perSide`, así
-     que se llega al primero con un solo «Terminar antes». */
+  /* «Cuello suave» empieza con dos pasos de reps (la barbilla y la rotación lenta) y acaba con
+     uno `perSide`, la inclinación de cuello: se llega a él con «Terminar antes». */
   await page.getByRole('button', { name: /^Estira/ }).click();
-  await page.getByRole('heading', { name: 'Cuello', exact: true }).click();
+  await page.getByRole('heading', { name: 'Cuello suave', exact: true }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);
@@ -64,12 +63,18 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
   await sesion.getByRole('button', { name: /Terminar antes/ }).click();
   await page.waitForTimeout(200);
 
-  /* Paso 1 — «Inclinación lateral», `perSide`. Primer lado: sin espejo. */
+  /* Paso 2 — «Inclinación de cuello», `perSide`. Primer lado: sin espejo. La rotación lenta de
+     en medio va por reps y tampoco se espeja: se corta igual. */
   let porLados = false;
-  for (let i = 0; i < 30 && !porLados; i++) {
+  for (let i = 0; i < 40 && !porLados; i++) {
     const n = await sesion.locator('[data-pace-v1-name]').innerText().catch(() => '');
     porLados = /inclinaci/i.test(n);
-    if (!porLados) await tic(1);
+    if (porLados) break;
+    if (await sesion.getByRole('button', { name: /Terminar antes/ }).count()) {
+      expect(await espejado(sesion), 'un paso de reps no debe espejarse').toBe(false);
+      await sesion.getByRole('button', { name: /Terminar antes/ }).click();
+      await page.waitForTimeout(200);
+    } else await tic(1);
   }
   expect(porLados, 'GUARD: no se llegó al paso por lados').toBe(true);
   /* Se espera al TRABAJO: durante la colocación el paso ya es perSide y el lado
@@ -80,7 +85,7 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
   }
   expect(await espejado(sesion), 'el primer lado es el dibujo tal cual, sin espejo').toBe(false);
 
-  /* Los 25 s del primer lado llevan a la TRANSICIÓN, que ya anuncia el lado que
+  /* Los 12 s del primer lado llevan a la TRANSICIÓN, que ya anuncia el lado que
      entra: ahí el dibujo tiene que haberse dado la vuelta YA. */
   let enCambio = false;
   for (let i = 0; i < 60 && !enCambio; i++) {

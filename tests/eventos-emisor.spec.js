@@ -50,12 +50,12 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   await irAlArtefacto(page);
   await esperarInit(page);
 
-  /* «Flexiones de escritorio» es la misma rutina que mide s170: 3 series
+  /* «Fondos en silla» es la misma rutina que mide s170: 3 series
      guiadas con dos descansos, numeros declarados en el catalogo. Y ademas es
      el caso que desmonta el prefijo — su id empieza por `extra.` y vive en
      MOVE_ROUTINES, o sea que el modulo del evento tiene que ser `move`. */
   await page.getByRole('button', { name: /^Mueve/ }).click();
-  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await page.getByRole('heading', { name: 'Fondos en silla' }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
 
   const sesion = page.locator('[data-pace-session-root]');
@@ -130,7 +130,7 @@ test('salir por «Salir» no emite nada (§6.3)', async ({ page }) => {
   await esperarInit(page);
 
   await page.getByRole('button', { name: /^Mueve/ }).click();
-  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await page.getByRole('heading', { name: 'Fondos en silla' }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);

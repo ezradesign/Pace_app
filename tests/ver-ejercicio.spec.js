@@ -2,7 +2,7 @@
  * ===========================================================================================
  * La invitación de los bloques cortos («Un momento para moverte») lleva «Ver ejercicio» (Ez:
  * «Hacerla» sonaba raro en el botón). Abre una hoja abajo, como «Tu pausa», con UN ejercicio de
- * los 31 de docs/proposals/hacerla-reparto.md: el dibujo de su módulo, su nombre y lo que dura.
+ * los 27 de docs/proposals/hacerla-reparto.md: el dibujo de su módulo, su nombre y lo que dura.
  * La hoja no cuenta: «Empezar» lleva a la pantalla de ejercicio de siempre con ese ejercicio
  * solo («Paso 1 de 1»), y al acabar o al salir se vuelve al aro con el bloque siguiente.
  * Lo que Ez aprobó con las fotos: sin «¿Te ayudó esta pausa?» y solo suman los minutos, sin
@@ -17,21 +17,18 @@ const { asentarGeometria } = require('./home.helpers');
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
 const visible = (page, sel) => page.locator(sel).filter({ visible: true });
 
-/* Los 31, en el orden en que salen: uno de Mueve y dos de Estira, sin dos de la misma rutina
-   seguidos. Cada uno es la primera serie de su rutina. */
+/* Los 27, en el orden en que salen (rehechos con las capas de Mueve y Estira, Ez, 23 oct.: 2A).
+   Cada uno es la primera serie de su rutina. Mueve deja tres, espaciados en los puestos 1, 10 y 19,
+   y nunca hay dos de la misma rutina seguidos. */
 const REPARTO = [
-  'Elevación de talones', 'Barbilla atrás', 'Encogimiento de hombros',
-  'Abrir y cerrar el puño', 'Palmas en la mesa', 'Círculos de brazos',
-  'Apretar glúteos', 'Rodar hacia abajo', 'Sentadilla profunda',
-  'Elevación de puntas', 'Isquio a una pierna', 'Rotación externa',
-  'Juntar omóplatos', 'Inclinación de cuello', 'Círculos de muñeca',
-  'Extensión torácica', 'Rezo invertido', 'Apertura de pecho',
-  'Flexiones inclinadas', 'Rotación torácica de pie', 'Sentadilla lateral',
-  'Extensión de dedos', 'Rotación lenta', 'Giro sentado',
-  'Sentadilla de cuádriceps', 'Zancada profunda', 'Escalenos',
-  'Apertura de pecho sentado', 'Círculos de tobillo', 'Pliegue adelante',
-  'Estiramiento de muñeca',
+  'Elevación de talones', 'Barbilla atrás', 'Abrir y cerrar el puño', 'Encogimiento de hombros',
+  'Círculos de brazos', 'Palmas en la mesa', 'Rodar hacia abajo', 'Sentadilla profunda', 'Rotación lenta',
+  'Flexiones inclinadas', 'Juntar omóplatos', 'Círculos de muñeca', 'Rotación externa', 'Giro sentado',
+  'Extensión torácica', 'Rezo invertido', 'Sentadilla lateral', 'Apertura de pecho',
+  'Apretar glúteos', 'Inclinación de cuello', 'Rotación torácica de pie', 'Estiramiento de muñeca',
+  'Zancada profunda', 'Círculos de tobillo', 'Apertura de pecho sentado', 'Extensión de dedos', 'Pliegue adelante',
 ];
+const N = REPARTO.length;
 
 async function abrir(page, context, extra) {
   await sembrar(context, Object.assign({ ritmo: { horario: HORARIO }, focusMinutes: 10 }, extra || {}));
@@ -106,7 +103,7 @@ test('la invitación dice «Ver ejercicio» y abre la hoja: el dibujo del módul
   expect(errores).toEqual([]);
 });
 
-test('el reparto: los 31 revisados, en su orden, uno de Mueve y dos de Estira, y nunca el mismo que la vez anterior', async ({ page, context }) => {
+test('el reparto: los 27 revisados, en su orden, Mueve espaciado, nunca dos de la misma rutina seguidos ni el mismo que la vez anterior', async ({ page, context }) => {
   await abrir(page, context);
   const r = await page.evaluate(() => {
     const out = [];
@@ -114,18 +111,18 @@ test('el reparto: los 31 revisados, en su orden, uno de Mueve y dos de Estira, y
       const e = hacerlaSiguiente();
       const rut = hacerlaRutina(e);
       out.push({ nombre: e.step.name, modulo: e.modulo, pasos: rut.steps.length, modo: rut.steps[0].mode,
-        suelo: !!rut.requiresFloor, aviso: !!rut.safety, libre: rut.access !== 'premium' });
+        suelo: !!rut.requiresFloor, aviso: !!rut.safety, libre: rut.access !== 'premium', rutina: e.rutina });
     }
     return out;
   });
-  expect(r.slice(0, 31).map((x) => x.nombre)).toEqual(REPARTO);
-  expect(r.slice(31, 62).map((x) => x.nombre)).toEqual(REPARTO);
-  r.forEach((x, i) => { if (i) expect(x.nombre, 'puesto ' + i).not.toBe(r[i - 1].nombre); });
-  expect(r.slice(0, 31).filter((x) => x.modulo === 'move').length).toBe(11);
-  expect(r.slice(0, 31).filter((x) => x.modulo === 'extra').length).toBe(20);
+  expect(r.slice(0, N).map((x) => x.nombre)).toEqual(REPARTO);
+  expect(r.slice(N, 2 * N).map((x) => x.nombre)).toEqual(REPARTO);
+  r.forEach((x, i) => { if (i) expect(x.rutina, 'puesto ' + i + ': dos de la misma rutina seguidos').not.toBe(r[i - 1].rutina); });
+  /* el módulo lo dice el catálogo: Postura reset y Manos y antebrazos (ids extra.*) son Estira */
+  expect(r.slice(0, N).map((x, i) => (x.modulo === 'move' ? i : -1)).filter((i) => i >= 0)).toEqual([0, 9, 18]);
   r.forEach((x) => expect(x, x.nombre).toMatchObject({ pasos: 1, suelo: false, aviso: false, libre: true }));
   /* la cuenta se guarda: tras recargar, sigue donde iba */
-  expect(await page.evaluate(() => getState().hacerlaVez)).toBe(64 % 31);
+  expect(await page.evaluate(() => getState().hacerlaVez)).toBe(64 % N);
 });
 
 test('«Empezar» lleva a la pantalla de ejercicio con ese ejercicio solo («Paso 1 de 1», «1 paso») y, al acabar, sin «¿Te ayudó?» y solo suman los minutos', async ({ page, context }) => {

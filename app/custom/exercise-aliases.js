@@ -68,6 +68,11 @@ var VISUAL_ALIAS = {
   'Palmas al suelo':               'Palmas en la mesa',
   'Apertura de costillas + respiración': 'Respirar a cuatro apoyos',
 
+  /* Las versiones de entrada de dos ejercicios (Ez, 23 oct. 2026: 2A) llevan el dibujo del
+     ejercicio del que salen hasta que Ez dibuje el suyo. */
+  'Puente con los dos pies':       'Puente con marcha',
+  'Gateo con rodillas':            'Gateo',
+
   /* Estos cuatro tienen glifo PROPIO tapado por su alias: `ExerciseGlyph`
      resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`,
      así que su dibujo no se pinta nunca. Al renombrarlos se habría activado

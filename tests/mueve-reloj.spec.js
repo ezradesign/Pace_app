@@ -33,13 +33,13 @@ async function segundos(page, n) {
   for (let i = 0; i < n; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(10); }
 }
 
-/* Abre «Flexiones de escritorio» y llega al TRABAJO de la primera serie (reps
+/* Abre «Fondos en silla» y llega al TRABAJO de la primera serie (reps
    guiadas a 4 s por rep: el numero grande es la rep en curso). */
 async function alTrabajo(page) {
   await page.clock.install();
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /^Mueve/ }).click();
-  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await page.getByRole('heading', { name: 'Fondos en silla' }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);

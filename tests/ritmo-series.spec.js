@@ -11,8 +11,9 @@
  * (docs/traspaso/archivos/dias-disenados/).
  *
  * LO QUE DEFIENDE:
- *  · el catálogo: las dos rutinas nuevas, gratis y de pie, y la mesa y la pared en los pozos
- *    (lo de nivel accesible: «Empuje · progresión» no); todo lo que entra lleva zona y «de pie»;
+ *  · el catálogo: gratis, los pozos salen de «Para empezar» y mueven el cuerpo entero; con PACE
+ *    completo, de todo menos «Con material» y «Para ir a más» (Ez, 23 oct.: 2A); todo lo que entra
+ *    lleva zona y «de pie»;
  *  · la secuencia, en treinta laborables con la memoria de un día para otro: las seis zonas
  *    cada día en la jornada y, con «Dos horas» y dos pausas, en dos días seguidos; ninguna zona
  *    con más de dos pausas que otra; la primera pausa del día, Mueve de pie; la Estira de la
@@ -41,34 +42,49 @@ async function abrir(page, context, extra, hora) {
   await irAlArtefacto(page);
 }
 
-test('Piernas de pie, Espalda de pie y la mesa entran en los pozos, gratis; todo lo que entra lleva zona', async ({ page, context }) => {
+/* LAS CAPAS (Ez, 23 oct. 2026: 2A 4A): sin pagar, «A tu ritmo» propone de «Para empezar»; con PACE
+   completo, también del resto, y nunca de «Con material» ni de «Para ir a más». */
+test('los pozos: gratis, «Para empezar»; con PACE completo, también el resto, nunca lo que va aparte; todo lo que entra lleva zona', async ({ page, context }) => {
   await abrir(page, context);
   const r = await page.evaluate(() => {
-    const ficha = (x) => x && { acceso: x.access || 'free', suelo: !!x.requiresFloor, pos: x.position };
-    const pozos = (cerrado) => {
-      const antes = window.canAccessRoutine;
-      if (cerrado) window.canAccessRoutine = (id) => { const b = window.resolveBodyRoutine && window.resolveBodyRoutine(id); const br = window.getBreatheRoutine && window.getBreatheRoutine(id); return ((b && b.routine) || br || {}).access !== 'premium'; };
-      try { return ritmoPozos(getState(), '2026-10-14'); } finally { window.canAccessRoutine = antes; }
+    const pozos = (pago) => {
+      const abierto = window.PREMIUM_ABIERTO_HASTA_V1, acceso = window.canAccessRoutine;
+      if (!pago) {
+        window.PREMIUM_ABIERTO_HASTA_V1 = false;
+        window.canAccessRoutine = (id) => { const b = window.resolveBodyRoutine && window.resolveBodyRoutine(id); const br = window.getBreatheRoutine && window.getBreatheRoutine(id); return ((b && b.routine) || br || {}).access !== 'premium'; };
+      }
+      try { return ritmoPozos(getState(), '2026-10-14'); } finally { window.PREMIUM_ABIERTO_HASTA_V1 = abierto; window.canAccessRoutine = acceso; }
     };
-    const abierto = pozos(false), gratis = pozos(true);
-    const sinMeta = [abierto, gratis].flatMap((p) => p.estira.concat(p.mueve)).filter((x) => !RITMO_SERIES_META[x.id]).map((x) => x.id);
+    const grupo = (id) => {
+      for (const cat of [window.MOVE_ROUTINES, window.EXTRA_ROUTINES]) for (const [k, g] of Object.entries(cat)) if (g.items.some((x) => x.id === id)) return g;
+      return {};
+    };
+    const gratis = pozos(false), pago = pozos(true);
+    const ids = (p) => p.estira.concat(p.mueve).map((x) => x.id);
     return {
-      piernas: ficha(getMoveRoutine('extra.legs.standing')), espalda: ficha(getExtraRoutine('move.back.standing')),
-      mueve: gratis.mueve.map((x) => x.id), estira: gratis.estira.map((x) => x.id), mueveAbierto: abierto.mueve.map((x) => x.id),
-      cierre: abierto.cierre.map((x) => x.min), sinMeta,
+      gratis: ids(gratis), pago: ids(pago),
+      gratisFuera: ids(gratis).filter((id) => !grupo(id).entrada),
+      pagoAparte: ids(pago).filter((id) => grupo(id).aparte),
+      sinMeta: ids(gratis).concat(ids(pago)).filter((id) => !RITMO_SERIES_META[id]),
+      zonasGratis: [...new Set(ids(gratis).flatMap((id) => ritmoSeriesZonas(id)))].sort(),
+      cierre: pago.cierre.map((x) => x.min),
       dePie: ['extra.legs.standing', 'move.back.standing', 'extra.desk.pushups'].map(ritmoSeriesDePie),
     };
   });
-  expect(r.piernas).toEqual({ acceso: 'free', suelo: false, pos: ['standing'] });
-  expect(r.espalda).toEqual({ acceso: 'free', suelo: false, pos: ['standing'] });
-  expect(r.mueve, 'sin PACE completo').toEqual(expect.arrayContaining(['extra.legs.standing', 'extra.desk.pushups']));
-  expect(r.estira).toContain('move.back.standing');
-  expect(r.mueveAbierto, 'la mesa entra si es de nivel accesible: la pica no').not.toContain('extra.push.ladder');
+  expect(r.gratisFuera, 'sin pagar, solo «Para empezar»').toEqual([]);
+  expect(r.gratis).toEqual(expect.arrayContaining(['extra.desk.pushups', 'extra.legs.standing', 'move.neck.3', 'move.wrists']));
+  expect(r.pagoAparte, 'nunca «Con material» ni «Para ir a más»').toEqual([]);
+  expect(r.pago, 'con PACE completo, también lo de Oficina, Sigilo, Hombros y Caderas')
+    .toEqual(expect.arrayContaining(['move.back.standing', 'extra.posture.set', 'extra.calves', 'move.hips.standing']));
+  expect(r.pago).not.toContain('extra.push.ladder');
+  expect(r.pago).not.toContain('extra.banda.espalda');
+  expect(r.zonasGratis, 'gratis, el cuerpo entero').toEqual([...RITMO_ZONAS_ORDEN].sort());
   expect(r.sinMeta, 'todo lo que puede servir una pausa dice su zona y si te levanta').toEqual([]);
   expect(r.dePie).toEqual([true, true, true]);
   expect(r.cierre.length, 'el cierre rota entre varios').toBeGreaterThan(1);
   expect(Math.max(...r.cierre), 'Respira de 5 min o menos').toBeLessThanOrEqual(5);
 });
+const RITMO_ZONAS_ORDEN = ['piernas', 'caderas', 'espalda', 'hombros', 'cuello', 'manos'];
 
 test('treinta laborables: el cuerpo entero y equilibrado, de pie al empezar y en la larga, nunca dos sentadas, nada repetido y nada de la última vez', async ({ page, context }) => {
   await abrir(page, context);
