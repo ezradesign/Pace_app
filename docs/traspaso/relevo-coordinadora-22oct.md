@@ -56,7 +56,11 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    **A para los logros de ATG y Ancestral** (https://claude.ai/artifact/CZmu2xWwyid26tEG6gn1Ei; `DECISIONES_PRODUCTO.md`),
    pasado a la sesión con un aviso para «Fuerte en la oficina» (`explore.all.extra`, todas las rutinas de Mueve).
    La sesión sigue con la parte 2 (0.176.0) en la misma rama: al juntarla, solo lo que va después de 487a7c8.
-7. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
+7. **24 oct., ~11:20: pausa por uso** (5 h al 95 %, se repone hacia las 15:00; semana al 53 %). La sesión
+   `mueve-estira` paró al 93 % con la parte 2 en wip bdd2192 (subido; su punto arriba de `docs/traspaso/LEEME.md` de
+   la rama): falta la suite entera, las fotos (`fotos-2.js` escrito), su página, el commit final y el aviso. Al
+   reponerse, retomarla con un mensaje. No juntar nada de la parte 2 hasta su aviso y el «júntalo» de Ez.
+8. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
    la cola.
 
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
