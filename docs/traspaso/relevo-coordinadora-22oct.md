@@ -44,8 +44,11 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
 5. **/premium con las capturas, en main** (merge 3830f94, ~21:15): Ez eligió la B «mosaico, optimizando para móvil»
    en la propia sesión (sobre https://claude.ai/artifact/EbyxaxDviP1kb5HvQHhQXR) y dijo «júntalo» viendo las fotos de lo
    montado. Sin versión nueva (la app no cambia). Con todo junto: verify y las 20 pruebas de /premium, /beta, el
-   artefacto y las cabeceras en verde; la suite entera, la del CI. La sesión `capturas-premium` acabó: archivarla con el
-   sí de Ez (su `node_modules` es un enlace: quitarlo con `[System.IO.Directory]::Delete` antes de borrar el worktree).
+   artefacto y las cabeceras en verde; la suite entera, la del CI. La sesión `capturas-premium`, archivada el 24 oct. con el
+   sí de Ez (antes se quitó su `node_modules`, que era un enlace, con `[System.IO.Directory]::Delete`). El CI de
+   884304c, verde entero, también Safari.
+   **24 oct., 10:05**: la sesión `mueve-estira` se paró anoche por el límite de uso con un wip subido (abbc9d9, la
+   parte 1 casi cerrada); retomada con un mensaje, que también le pide juntar `origin/main` antes de cerrar la parte 1.
    Safari: el segundo intento de b6afcae seguía contra Azure porque el runner lee `/etc/apt/apt-mirrors.txt`; b403b65 lo
    quita de ahí. Mirar el registro del CI: imprime la lista de espejos.
 6. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
