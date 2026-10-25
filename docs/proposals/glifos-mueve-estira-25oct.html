@@ -1,0 +1,192 @@
+<title>Dibujos de Mueve y Estira</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<!-- PACE · Los prompts de los dibujos de Mueve y Estira (3A de Ez), sacados de docs/product/GLIFOS_A_DIBUJAR.md
+     («La tanda de Mueve y Estira») de la rama de la sesión mueve-estira, 25 oct. 2026. Cada botón copia el
+     preámbulo + «Exercise plate», como en encargos-14oct/PROMPTS_IMAGENES.md. -->
+<style>
+  /* Una lista de encargos: cada tarjeta, su nombre, dónde va, el archivo y un botón que copia el prompt entero. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --cta: #50624D; --focus: #3E5A3A; --move: #9A7B4F; --extra: #6B7A8F;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --cta: #8E9D88; --focus: #A3BC96; --move: #C29F6E; --extra: #95A4BA; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --cta: #8E9D88; --focus: #A3BC96; --move: #C29F6E; --extra: #95A4BA; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 900px; margin: 0 auto; padding-block: 32px 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0 0 12px; }
+  h1 { font-size: clamp(34px, 7vw, 48px); line-height: 1.05; }
+  h2 { font-size: 27px; line-height: 1.15; margin-top: 34px; }
+  p { margin: 0 0 12px; color: var(--ink-2); max-width: 42em; }
+  b { color: var(--ink); font-weight: 600; }
+  code { font-family: var(--mono); font-size: .88em; background: var(--paper-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; overflow-wrap: anywhere; }
+  ol.como { margin: 0 0 8px; padding-left: 20px; color: var(--ink-2); display: grid; gap: 4px; max-width: 42em; }
+  .tarjetas { list-style: none; padding: 0; margin: 14px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .tarjeta { border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 12px; padding: 14px 14px 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .tarjeta.nueva { border-left-color: var(--move); }
+  .cab { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .n { font: italic 500 22px/1.1 var(--display); color: var(--cta); }
+  .t { font: italic 500 21px/1.2 var(--display); color: var(--ink); margin: 0; }
+  .donde { font-size: 13px; color: var(--ink-3); margin: 2px 0 0; }
+  .archivo { font-size: 14px; margin: 0; }
+  .nota { font-size: 13.5px; color: var(--ink-3); margin: 0; }
+  details { margin: 2px 0; }
+  summary { cursor: pointer; font-size: 13.5px; color: var(--ink-3); }
+  pre { white-space: pre-wrap; font: 12px/1.5 var(--mono); background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin: 8px 0 0; color: var(--ink-2); max-height: 220px; overflow: auto; }
+  .copiar { margin-top: auto; align-self: flex-start; font: italic 500 17px/1.2 var(--display); color: var(--paper); background: var(--cta); border: 0; border-radius: 999px; padding: 8px 18px; cursor: pointer; min-height: 40px; }
+  .copiar.hecho { background: var(--focus); }
+  .copiar:focus-visible, summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+</style>
+
+<main class="marco">
+  <p class="kicker">PACE · Mueve y Estira · 25 de octubre</p>
+  <h1>Los dibujos de Mueve y Estira</h1>
+  <p>Los seis ejercicios nuevos que elegiste (3A) y los dibujos que no casaban. En la app, mientras no esté el tuyo, sale el
+    dibujo del módulo. Empieza por los seis nuevos.</p>
+  <ol class="como">
+    <li>Un chat nuevo de GPT Image para cada dibujo, sin adjuntar nada. Pulsa «Copiar el prompt» y pégalo.</li>
+    <li>Si lo bloquea, repítelo una vez en otro chat nuevo. Si vuelve a bloquear, dímelo y te paso la versión con referencias.</li>
+    <li>PNG cuadrado y grande (2048 × 2048 o más), tinta negra sobre blanco y sin texto.</li>
+    <li>Guárdalo en <code>Pace_app\dibujos-22oct</code> con el nombre que dice cada tarjeta. Con ese nombre lo meto yo en la app.</li>
+  </ol>
+
+  <h2>Los seis nuevos</h2>
+  <ol class="tarjetas"><li class="tarjeta nueva">
+      <div class="cab"><span class="n">1</span><div><p class="t">Remo con banda</p>
+        <p class="donde">Mueve · Espalda con banda</p></div></div>
+      <p class="archivo">Guárdalo como <code>remo-con-banda.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-remo-con-banda">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A standing band row, in profile facing right. Both feet stand on the middle of an elastic band drawn as one thin line; the two ends rise to the hands. Hips pushed slightly back, back long, knees soft. Both elbows are pulled back close to the ribs, hands at the lower ribs. A short dotted arrow with a small open chevron behind the elbow points BACKWARD.</pre></details>
+      <button type="button" class="copiar" data-copia="p-remo-con-banda" id="b-remo-con-banda">Copiar el prompt</button>
+    </li><li class="tarjeta nueva">
+      <div class="cab"><span class="n">2</span><div><p class="t">Remo con tu mano</p>
+        <p class="donde">Mueve · Espalda con banda</p></div></div>
+      <p class="archivo">Guárdalo como <code>remo-con-tu-mano.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-remo-con-tu-mano">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A hand-resisted row, standing in profile facing right. In front of the belly, the far hand holds the wrist of the near arm. The near elbow is drawn back along the side of the body while the holding hand resists. A short dotted arrow behind the near elbow points BACKWARD. No band, no object.</pre></details>
+      <button type="button" class="copiar" data-copia="p-remo-con-tu-mano" id="b-remo-con-tu-mano">Copiar el prompt</button>
+    </li><li class="tarjeta nueva">
+      <div class="cab"><span class="n">3</span><div><p class="t">Bisagra de cadera</p>
+        <p class="donde">Mueve · Piernas · a una</p></div></div>
+      <p class="archivo">Guárdalo como <code>bisagra-de-cadera.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-bisagra-de-cadera">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A hip hinge, standing in profile facing right, hands on the hips. The hips are pushed far back, the trunk tilts forward about 45 degrees with a long straight back from the hips to the head, knees only slightly bent, shins nearly vertical. A short dotted arrow at the buttocks points BACKWARD. The back is never rounded.</pre></details>
+      <button type="button" class="copiar" data-copia="p-bisagra-de-cadera" id="b-bisagra-de-cadera">Copiar el prompt</button>
+    </li><li class="tarjeta nueva">
+      <div class="cab"><span class="n">4</span><div><p class="t">Desliza el talón</p>
+        <p class="donde">Mueve · Fuerza en suelo</p></div></div>
+      <p class="archivo">Guárdalo como <code>desliza-el-talon.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-desliza-el-talon">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. A short dotted arrow along the floor beyond the sliding heel points AWAY from the body.</pre></details>
+      <button type="button" class="copiar" data-copia="p-desliza-el-talon" id="b-desliza-el-talon">Copiar el prompt</button>
+    </li><li class="tarjeta nueva">
+      <div class="cab"><span class="n">5</span><div><p class="t">Inclinación de tronco</p>
+        <p class="donde">Estira · Columna · ondas</p></div></div>
+      <p class="archivo">Guárdalo como <code>inclinacion-de-tronco.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-inclinacion-de-tronco">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure's right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. A short dotted arc beside the ribs shows the side bend. No twisting, no forward lean.</pre></details>
+      <button type="button" class="copiar" data-copia="p-inclinacion-de-tronco" id="b-inclinacion-de-tronco">Copiar el prompt</button>
+    </li><li class="tarjeta nueva">
+      <div class="cab"><span class="n">6</span><div><p class="t">Gemelo en pared</p>
+        <p class="donde">Estira · Cadena posterior</p></div></div>
+      <p class="archivo">Guárdalo como <code>gemelo-en-pared.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-gemelo-en-pared">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall.</pre></details>
+      <button type="button" class="copiar" data-copia="p-gemelo-en-pared" id="b-gemelo-en-pared">Copiar el prompt</button>
+    </li></ol>
+
+  <h2>Los que no casaban</h2>
+  <ol class="tarjetas"><li class="tarjeta">
+      <div class="cab"><span class="n">7</span><div><p class="t">Piernas elevadas sentado</p>
+        <p class="donde">Lo que viste: El de «Core silencioso» no casa</p></div></div>
+      <p class="archivo">Guárdalo como <code>piernas-elevadas-sentado.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-piernas-elevadas-sentado">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A seated leg raise on a chair, in profile facing right; the chair is only a few thin straight lines (seat, backrest, front legs). The figure sits all the way back, the back resting on the backrest, both hands holding the sides of the seat. Both knees are bent and lifted together so the feet hover a hand-breadth above the floor.</pre></details>
+      <button type="button" class="copiar" data-copia="p-piernas-elevadas-sentado" id="b-piernas-elevadas-sentado">Copiar el prompt</button>
+    </li><li class="tarjeta">
+      <div class="cab"><span class="n">8</span><div><p class="t">Rodar hacia abajo</p>
+        <p class="donde">Lo que viste: No casa (Ez tiene uno que sí)</p></div></div>
+      <p class="archivo">Guárdalo como <code>rodar-hacia-abajo.png</code></p><p class="nota">Dijiste que tienes uno que sí casa: si es así, déjalo en la carpeta con este nombre y no hace falta dibujarlo.</p>
+      <details><summary>Ver el prompt</summary><pre id="p-rodar-hacia-abajo">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. A short dotted arc over the upper back shows the curl downward.</pre></details>
+      <button type="button" class="copiar" data-copia="p-rodar-hacia-abajo" id="b-rodar-hacia-abajo">Copiar el prompt</button>
+    </li><li class="tarjeta">
+      <div class="cab"><span class="n">9</span><div><p class="t">Gato-camello</p>
+        <p class="donde">Lo que viste: Puede mejorar mucho</p></div></div>
+      <p class="archivo">Guárdalo como <code>gato-camello.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-gato-camello">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: Cat-camel on all fours, in profile facing right: hands under the shoulders, knees under the hips. The back is rounded up in a smooth even arch, the head gently dropped. A short dotted two-headed arc above the middle of the back shows the movement up and down. One figure only.</pre></details>
+      <button type="button" class="copiar" data-copia="p-gato-camello" id="b-gato-camello">Copiar el prompt</button>
+    </li><li class="tarjeta">
+      <div class="cab"><span class="n">10</span><div><p class="t">90/90</p>
+        <p class="donde">Lo que viste: Se ve raro y se confunde con «Paloma»</p></div></div>
+      <p class="archivo">Guárdalo como <code>90-90.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-90-90">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon).</pre></details>
+      <button type="button" class="copiar" data-copia="p-90-90" id="b-90-90">Copiar el prompt</button>
+    </li><li class="tarjeta">
+      <div class="cab"><span class="n">11</span><div><p class="t">Sentarse y levantarse del suelo</p>
+        <p class="donde">Lo que viste: No enseña eso</p></div></div>
+      <p class="archivo">Guárdalo como <code>sentarse-y-levantarse-del-suelo.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-sentarse-y-levantarse-del-suelo">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front, one hand reaching down to the floor beside the hip, ready to sit to the side. A short dotted arrow from the hip points DOWN and to the side.</pre></details>
+      <button type="button" class="copiar" data-copia="p-sentarse-y-levantarse-del-suelo" id="b-sentarse-y-levantarse-del-suelo">Copiar el prompt</button>
+    </li></ol>
+
+  <h2>Para después: dos que ya no salen</h2>
+  <p>«Sentadilla de cuádriceps» y «Puente torácico» ya no salen en ninguna rutina, porque con la 2A no se sabía qué movimiento
+    eran. Si un día vuelven, antes decides qué son. Te dejo los prompts de la propuesta por si quieres adelantarlos, pero no hacen falta ahora.</p>
+  <ol class="tarjetas"><li class="tarjeta">
+      <div class="cab"><span class="n">12</span><div><p class="t">Sentadilla de cuádriceps</p>
+        <p class="donde">Lo que viste: Parece otro ejercicio</p></div></div>
+      <p class="archivo">Guárdalo como <code>sentadilla-de-cuadriceps.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-sentadilla-de-cuadriceps">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: a supported heel-raised squat, in profile facing right, both hands holding the edge of a desk drawn as one horizontal line. Heels lifted, knees bent and travelling forward over the toes, trunk upright, hips low between the heels.</pre></details>
+      <button type="button" class="copiar" data-copia="p-sentadilla-de-cuadriceps" id="b-sentadilla-de-cuadriceps">Copiar el prompt</button>
+    </li><li class="tarjeta">
+      <div class="cab"><span class="n">13</span><div><p class="t">Puente torácico</p>
+        <p class="donde">Lo que viste: Sale a dos niveles, no en el suelo</p></div></div>
+      <p class="archivo">Guárdalo como <code>puente-toracico.png</code></p>
+      <details><summary>Ver el prompt</summary><pre id="p-puente-toracico">Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background. Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.
+
+Exercise plate: a reverse tabletop bridge on the floor, in profile facing right: hands on the floor behind the shoulders, fingers forward, knees bent with feet flat, hips lifted so the trunk and thighs make one level line, chest open.</pre></details>
+      <button type="button" class="copiar" data-copia="p-puente-toracico" id="b-puente-toracico">Copiar el prompt</button>
+    </li></ol>
+</main>
+
+<script>
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.copiar'); if (!b) return;
+    var pre = document.getElementById(b.getAttribute('data-copia')); if (!pre) return;
+    var texto = pre.textContent;
+    var hecho = function () { b.textContent = 'Copiado'; b.classList.add('hecho'); setTimeout(function () { b.textContent = 'Copiar el prompt'; b.classList.remove('hecho'); }, 2000); };
+    var aMano = function () {
+      var d = pre.closest('details'); if (d) d.open = true;
+      var r = document.createRange(); r.selectNodeContents(pre); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      b.textContent = 'Seleccionado: cópialo'; };
+    try { navigator.clipboard.writeText(texto).then(hecho, aMano); } catch (err) { aMano(); }
+  });
+</script>
