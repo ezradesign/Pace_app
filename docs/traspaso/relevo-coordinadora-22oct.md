@@ -241,6 +241,38 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
+### El orden lógico hasta v1 (Ez, 25 oct.: «ordena el roadmap de la manera más lógica»)
+
+**Manda sobre la numeración de abajo**, que se queda como detalle de cada punto. Es el mismo orden que el camino de la
+hoja de Ez. El criterio: primero lo que ya está en marcha; luego lo que otro punto necesita, como la seguridad
+antes de cobrar o los precios antes de la bienvenida; lo que espera algo de Ez, cuando llegue; lo pequeño, en los
+huecos.
+1. **Mueve y Estira 0.176.0** (en marcha, `mueve-estira`), luego la revisión de ChatGPT de los textos nuevos (avisar a
+   Ez) y los dibujos de Ez (punto 6 de abajo).
+2. **N2 y la maqueta de N5-N8, y mirar N9** (en marcha, `franjas-maqueta`).
+3. **La seguridad de PACE completo** (S1, S2, S4, S5; punto 10).
+4. **Cobrar en la web sin Stripe** (punto 14, la parte web): gracias, k2, aviso de fin de prueba, «Gestionar», sin
+   conexión. Se enchufa Stripe cuando Ez tenga la cuenta («Stripe, paso a paso» en la hoja).
+5. **Lo que prometemos sobre los datos** (P1-P5, punto 4) junto con lo que cambia al cobrar, en `privacy.html`. Antes
+   de conectar «Avísame» y de vender.
+6. **Montar lo que Ez elija de N5-N8** (el runner es de `mueve-estira`: después de juntar 0.176.0) y arreglar N9.
+7. **Android a fondo**, con el móvil de Ez: los avisos A1-A4 (punto 11), N4 (aviso con el móvil bloqueado) y el puente
+   del calendario con S6 (punto 9).
+8. **La bienvenida y los Ajustes** (A1-A5, A7, punto 5) y, al final de la bienvenida, PACE completo con los dos
+   precios y «Ahora no» (detrás de 4, que pone los precios).
+9. **«Qué te ayuda» en Estadísticas** (punto 13), con maqueta.
+10. **La hora y la medianoche** (H1-H5, punto 12) antes de marzo, y la voz de Respira por `<audio>` (punto 8).
+11. **El llavero del calendario**, cuando Ez tenga las altas de Google y Microsoft.
+12. **Cobrar en Android (Play Billing)**, con los 12 testers y sus 14 días, y el regalo de los testers.
+13. **El iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión**, a la vez que 12. Antes, el
+   enlace público de TestFlight en `/beta` (5b, en cuanto Apple apruebe).
+14. **v1.0**: apagar `PREMIUM_ABIERTO_HASTA_V1` sin quitar nada a quien lo usaba, y QA de compra, restaurar y
+   cancelar en las tres tiendas.
+- **El punto 7 de abajo** (ejercicios de pie para las pausas cortas) queda dentro del 1: las diez pausas de entrada lo
+  cubren.
+- **Lo de Ez, en paralelo**: la cuenta de Stripe (desde el 25 oct.), el gestor y el alta, los testers, las altas de
+  Google y Microsoft, el logo, las llaves en un disco y los dibujos.
+
 1. **Los bloques cortos (M2): la invitación** (Ez eligió la propuesta de ChatGPT «por partes»;
    `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). **Maqueta hecha y elegida: 4a A · 4b A (solo con el
    día empezado) · 4c A** (https://claude.ai/artifact/LjDEPtgQssnNm16iZ8EJdA). La monta la sesión «Maqueta» como
