@@ -60,7 +60,33 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    `mueve-estira` paró al 93 % con la parte 2 en wip bdd2192 (subido; su punto arriba de `docs/traspaso/LEEME.md` de
    la rama): falta la suite entera, las fotos (`fotos-2.js` escrito), su página, el commit final y el aviso. Al
    reponerse, retomarla con un mensaje. No juntar nada de la parte 2 hasta su aviso y el «júntalo» de Ez.
-8. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
+8. **25 oct., ~10:00**: `mueve-estira` retomada para cerrar la parte 2. Ez preguntó si estaba arreglado todo lo
+   de sus dos listas del móvil: la del 22 (M1-M7), todo hecho (0.174.5, 0.174.6, 0.175.0); la del 23, Mueve y Estira en
+   marcha y N2-N9 pendientes. Con su sí, sesión **`franjas-maqueta`** (`local_30f25719-da75-47f8-bacc-9df789a93186`,
+   rama `…franjas-maqueta-n5-n8`, puerto 8806): N2 arreglado sin versión (la pone la coordinadora), N9 solo
+   investigar, maqueta de N5-N8 sin tocar la app (N5 y N6 viven en el runner, que es de `mueve-estira`). Ez tiene un
+   dibujo de «Rodar hacia abajo» que sí casa: pedírselo a `dibujos-22oct`.
+9. **En cuanto 0.176.0 esté en main: la revisión de ChatGPT de los textos nuevos** (Ez, 25 oct.: «sí, y avísame para
+   cuando tenga que mandarla»). Sacar con un script del catálogo ya junto las fichas de los seis ejercicios nuevos y las
+   diez pausas de «Para empezar» (colocación, cómo, cuidado y dosis, en español y en inglés), y darle a Ez una página
+   con el texto y un botón «Copiar», AVISÁNDOLE de que ya toca mandarla. Lo que conteste se comprueba en el código y
+   contra la base NHS/ACSM/OMS antes de creerlo, y entra en esta cola. Ninguna otra auditoría general por ahora: la
+   cola ya tiene trabajo auditado de sobra.
+10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
+   seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
+   - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
+     verificarla, S4 «Avísame» sin límites, S5 CSP y S6 los eventos de Android por texto. S3 (código portable) es de Ez.
+   - **Cobrar en la web sin Stripe** (Fase 6, `ROADMAP.md`; `docs/audits/cobro-chatgpt-22oct.md`, «3. Lo que tiene
+     que hacer la app»):
+     - el aviso dos días antes del fin de la prueba, desde la licencia;
+     - «Gestionar» en Ajustes: Play en Android; en la web, oculto hasta tener el enlace del portal;
+     - la página de gracias;
+     - la función de Cloudflare que firma con k2, probada con pagos inventados (k2 la genera Ez con un guion en su
+       PC y la pone como secreto; ni la llave ni los códigos por el chat);
+     - sin conexión: «sin red» frente a «caducada».
+   - Lo de Stripe (enlaces de pago, secreto del webhook, portal) queda como una pieza fina que se enchufa con la cuenta.
+     Se abre cuando `mueve-estira` acabe su trabajo, para no pasar de dos sesiones trabajando a la vez.
+11. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
    la cola.
 
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
