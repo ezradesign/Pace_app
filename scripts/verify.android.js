@@ -30,6 +30,8 @@ var COLORES = [
   ['values/pace_colores.xml', 'pace_icono_fondo', 'crema', 'paper'],
   ['values-night/pace_colores.xml', 'pace_fondo', 'oscuro', 'paper'],
   ['values/pace_colores.xml', 'pace_trazo_noche', 'oscuro', 'ink'],
+  ['values/pace_colores.xml', 'pace_papel_crema', 'crema', 'paper'],
+  ['values/pace_colores.xml', 'pace_papel_oscuro', 'oscuro', 'paper'],
 ];
 
 function leer(rel) {
@@ -85,7 +87,42 @@ function chequeaAndroid(ctx) {
     ctx.ok('android: los ' + COLORES.length + ' colores del icono, el arranque y las barras son los de app/tokens.css');
   }
   chequeaIconoAviso(ctx, css);
+  chequeaBarras(ctx);
   chequeaPlay(ctx);
+}
+
+/* Las franjas de arriba y de abajo siguen la paleta que se ve, no el modo del
+   movil. Es una cadena de cuatro eslabones y si se suelta uno vuelven a salir
+   del tema, sin que nada falle: la web le dice la paleta al complemento, el
+   complemento esta registrado, pinta con el papel de cada paleta (cuyos colores
+   mira COLORES, arriba) y repinta despues de que SystemBars lo pise. */
+function chequeaBarras(ctx) {
+  var JAVA = 'android/app/src/main/java/com/ezradesign/pace/';
+  var web = (leer('app/ui/android.js') || '').toString();
+  var actividad = (leer(JAVA + 'MainActivity.java') || '').toString();
+  var plugin = (leer(JAVA + 'PaceBarras.java') || '').toString();
+  var malas = [];
+  if (!/paceAndroidLlamar\('PaceBarras', 'pintar', \{ paleta: estado\.palette, auto: auto \}\)/.test(web) ||
+      !/subscribe\(function \(\) \{ paceAndroidBarras\(getState\(\)\); \}\)/.test(web)) {
+    malas.push('app/ui/android.js ya no le dice a PaceBarras la paleta que se ve cada vez que cambia');
+  }
+  if (!/registerPlugin\(PaceBarras\.class\);\s*super\.onCreate/.test(actividad)) {
+    malas.push('MainActivity ya no registra PaceBarras antes de montar el puente');
+  }
+  if (!/@CapacitorPlugin\(name = "PaceBarras"\)/.test(plugin) || !/public void pintar\(PluginCall call\)/.test(plugin)) {
+    malas.push('PaceBarras.java ya no es el complemento «PaceBarras» con su metodo pintar');
+  }
+  if (!/oscuro \? R\.color\.pace_papel_oscuro : R\.color\.pace_papel_crema/.test(plugin)) {
+    malas.push('PaceBarras ya no pinta con pace_papel_oscuro y pace_papel_crema');
+  }
+  if (!/handleOnConfigurationChanged[\s\S]*?executeOnMainThread\(this::aplicar\)/.test(plugin)) {
+    malas.push('PaceBarras ya no repinta tras girar el movil o cambiar su modo, y SystemBars vuelve a poner el tema');
+  }
+  if (malas.length) {
+    malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  } else {
+    ctx.ok('android: las franjas de arriba y de abajo siguen la paleta que se ve (la web la dice, PaceBarras la pinta y repinta)');
+  }
 }
 
 /* Lo que separa la app de Google Play de la de prueba y guarda cada AAB. Si se

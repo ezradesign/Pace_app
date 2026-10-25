@@ -45,6 +45,13 @@
    calendario que se mantiene solo. Pide los dos permisos (leer y escribir) la
    primera vez que se pulsa, nunca al arrancar.
 
+   LAS FRANJAS DE ARRIBA Y DE ABAJO (la hora y la bateria, y Atras) son de
+   Android: las pinta el tema, que sigue el modo del movil. El complemento
+   PaceBarras (MainActivity) las pinta con el papel de la paleta que se le
+   diga, y aqui se le dice la que se ve cada vez que cambia: en Ajustes, con
+   «Auto» al cambiar el movil, y al acabar el bloque que tenia ese cambio en
+   espera.
+
    LOS ENLACES LEGALES son rutas del servidor en la web (/privacy, /safety). En
    el APK no hay servidor y abrirlas recargaba la app: van a la web publicada,
    que Android abre en el navegador.
@@ -286,6 +293,23 @@ function paceEnlaceWeb(ruta) {
   return paceEsAndroid() ? PACE_WEB_PUBLICA + ruta : ruta;
 }
 
+/* --- Las franjas del sistema --------------------------------------------- */
+
+/* `palette` es la que se ve: con un bloque vivo, Auto deja el cambio en espera
+   sin tocarla. `auto` es para el arranque siguiente, que se pinta antes de que
+   hable la web: en Auto manda el modo del movil, que es lo que Auto elegira. */
+var _paceBarras = null;
+function paceAndroidBarras(estado) {
+  try {
+    if (!estado || (estado.palette !== 'crema' && estado.palette !== 'oscuro')) return;
+    var auto = !!estado.paletteAuto;
+    if (_paceBarras && _paceBarras.paleta === estado.palette && _paceBarras.auto === auto) return;
+    if (!paceAndroidPlugin('PaceBarras')) return;
+    _paceBarras = { paleta: estado.palette, auto: auto };
+    paceAndroidLlamar('PaceBarras', 'pintar', { paleta: estado.palette, auto: auto });
+  } catch (e) {}
+}
+
 /* Para las pruebas y para depurar. */
 function paceAndroidEstado() {
   return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, exacta: _paceAndroid.exacta, programado: _paceAndroid.programado,
@@ -312,6 +336,12 @@ function paceAndroidArrancar() {
   } catch (e) {}
   paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
   paceAndroidAvisoExactoMirar();
+  /* El estado ya esta cargado (state.jsx va antes que ui/): la paleta del
+     arranque se pinta ya, y las siguientes, al cambiar. */
+  try {
+    paceAndroidBarras(getState());
+    subscribe(function () { paceAndroidBarras(getState()); });
+  } catch (e) {}
 }
 
 try { paceAndroidArrancar(); } catch (e) {}
@@ -320,5 +350,5 @@ Object.assign(window, {
   paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
   paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
-  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar,
+  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidBarras,
 });
