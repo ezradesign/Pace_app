@@ -245,6 +245,19 @@ function libraryMotivoVacio(ocultas) {
   return suelo === ocultas.length ? 'floor' : 'any';
 }
 
+/* LO QUE SE PUEDE PROPONER SIN QUE SE PIDA (Ez, 23 oct. 2026: 2A): todo menos los grupos que
+   van `aparte` («Con material», «Para ir a más»), que solo salen si se eligen. Lo usan «Para
+   ahora», la tarjeta de la barra lateral y el menú de pausa. */
+function libraryProponibles(cat) {
+  var out = [];
+  Object.keys(cat || {}).forEach(function (g) {
+    var x = cat[g] || {};
+    if (x.aparte) return;
+    (x.items || []).forEach(function (r) { if (r) out.push(r); });
+  });
+  return out;
+}
+
 Object.assign(window, {
   LIB_FILTROS: LIB_FILTROS,
   LIB_FILTROS_RESPIRA: LIB_FILTROS_RESPIRA,
@@ -259,4 +272,5 @@ Object.assign(window, {
   libraryDiaOrdinal: libraryDiaOrdinal,
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio,
+  libraryProponibles: libraryProponibles,
 });

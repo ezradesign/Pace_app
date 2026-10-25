@@ -77,7 +77,7 @@ test('el lunes, la semana del registro llega a la carta; «Vale» la aplica y no
   await semanaEnElRegistro(page);
   const carta = page.locator('[data-pace-carta]');
   await expect(carta).toBeVisible();
-  await expect(page.locator('[data-pace-carta-ayudo]')).toHaveText('Cuello');
+  await expect(page.locator('[data-pace-carta-ayudo]')).toHaveText('Cuello suave');
   await expect(carta).toContainText('17 de 20 pausas hechas');
   await expect(carta).toContainText('del 12 al 16 oct');
   await expect(page.locator('[data-pace-carta-cambio="descansa"]')).toHaveText('Gemelos subrepticios, que cambiaste cuatro veces, descansa un mes.');

@@ -68,6 +68,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Calf raises.cue':                      'Up and down with control.',
   'custom.ex.Puente con marcha.name':               'Bridge with march',
   'custom.ex.Puente con marcha.cue':                'Deep glute activation.',
+  'custom.ex.Puente con los dos pies.name':         'Two-foot bridge',
+  'custom.ex.Puente con los dos pies.cue':          'Both feet down: lift and lower your pelvis.',
+  'custom.ex.Bisagra de cadera.name':               'Hip hinge',
+  'custom.ex.Bisagra de cadera.cue':                'Hips back, long back, and return.',
 
   // ── Core y espalda ───────────────────────────────────────────────
   'custom.ex.Plancha.name':                         'Plank',
@@ -96,6 +100,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Band pull-apart.cue':                  'Band in front of your chest: pull your hands apart, without lifting it.',
   'custom.ex.Apretar glúteos.name':                 'Glute squeeze',
   'custom.ex.Apretar glúteos.cue':                  'Moderate squeezes, 2 seconds each.',
+  'custom.ex.Desliza el talón.name':                'Heel slide',
+  'custom.ex.Desliza el talón.cue':                 'On your back: slide one heel and back, waist still.',
+  'custom.ex.Remo con banda.name':                  'Band row',
+  'custom.ex.Remo con banda.cue':                   'Stand on the band and pull, elbows toward your ribs.',
+  'custom.ex.Remo con tu mano.name':                'Hand-resisted row',
+  'custom.ex.Remo con tu mano.cue':                 'Your other hand resists as the elbow goes back.',
 
   // ── Cuello y hombros ─────────────────────────────────────────────
   'custom.ex.Barbilla atrás.name':                  'Chin tucks',
@@ -154,6 +164,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Seated twist.name':                    'Seated twist',
   'custom.ex.Giro sentado.cue':                     'Rotate toward the backrest, gentle.',
   'custom.ex.Seated twist.cue':                     'Rotate toward the backrest, gentle.',
+  'custom.ex.Inclinación de tronco.name':           'Trunk side bend',
+  'custom.ex.Inclinación de tronco.cue':            'Standing: bend your trunk to one side and back.',
   'custom.ex.Respirar a cuatro apoyos.name':        'Breathing on all fours',
   'custom.ex.Respirar a cuatro apoyos.cue':         'On all fours, breathe into the sides of your ribs.',
   'custom.ex.Apertura de costillas + respiración.name': 'Breathing on all fours',
@@ -196,6 +208,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Crawling.name':                        'Crawling',
   'custom.ex.Gateo.cue':                            'Opposite hand and knee, knees on the floor.',
   'custom.ex.Crawling.cue':                         'Opposite hand and knee, knees on the floor.',
+  'custom.ex.Gateo con rodillas.name':              'Knee crawl',
+  'custom.ex.Gateo con rodillas.cue':               'On all fours, short steps, knees down.',
   'custom.ex.Sentarse y levantarse del suelo.name': 'Ground sitting transitions',
   'custom.ex.Ground sitting transitions.name':      'Ground sitting transitions',
   'custom.ex.Sentarse y levantarse del suelo.cue':  'Down to the floor through one knee and back up, with hands.',
@@ -208,6 +222,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Pliegue adelante.cue':                 'Feet hip-width apart, hang the trunk. Soft knees.',
   'custom.ex.Isquio a una pierna.name':             'Single-leg hamstring',
   'custom.ex.Isquio a una pierna.cue':              'Heel planted ahead, hips back.',
+  'custom.ex.Gemelo en pared.name':                 'Wall calf stretch',
+  'custom.ex.Gemelo en pared.cue':                  'Hands on the wall, back heel on the floor.',
 
   // ── Muñecas, tobillos y pausas ───────────────────────────────────
   'custom.ex.Círculos de muñeca.name':              'Wrist circles',

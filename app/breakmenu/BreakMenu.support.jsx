@@ -75,6 +75,7 @@ function breakPozo(catalogo) {
   const out = [];
   try {
     Object.keys(catalogo || {}).forEach(function (g) {
+      if ((catalogo[g] || {}).aparte) return;   // «Con material» y «Para ir a más», solo si se eligen
       ((catalogo[g] || {}).items || []).forEach(function (r) {
         if (!r) return;
         if (window.canAccessRoutine && !window.canAccessRoutine(r.id)) return;

@@ -85,7 +85,9 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
      JS, que es justo lo que s166 quitó a propósito. */
   /* «Para ahora» NO PROPONE LO CERRADO: proponer algo que no se puede empezar es
      un muro sin avisar. Lo cerrado sigue en su grupo, con su candado. */
-  const abiertas = visibles.filter(r => !window.canAccessRoutine || window.canAccessRoutine(r.id));
+  /* Ni lo que va aparte («Con material», «Para ir a más»): solo sale si se elige. */
+  const proponibles = useMemoLib(() => new Set(libraryProponibles(groups)), [groups]);
+  const abiertas = visibles.filter(r => proponibles.has(r) && (!window.canAccessRoutine || window.canAccessRoutine(r.id)));
   const ahora = libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 

@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 25 oct.: Mueve y Estira en capas (v0.176.0), lista en su rama a la espera de Ez
+
+Rama `claude/mueve-estira-capas-e9ab74` (carpeta `.claude/worktrees/mueve-estira-capas-e9ab74`, puerto 8805). La parte 1
+(1A, v0.175.2) ya está en main; la parte 2 (2A 3A 4A y los logros con la A de Ez) está hecha, con `verify` y la suite
+entera en verde. Fotos para Ez: https://claude.ai/artifact/M32hjPa2qFUZDNfaURn8dQ. Se junta cuando Ez diga «júntalo».
+
 ## 23 oct., noche: v0.175.1 en `main`, con /premium refinada; coordina la cuenta de 5iWBf…
 
 Relevo y cola: `docs/traspaso/relevo-coordinadora-22oct.md`, bloque «23 oct., noche». Página de pasos de esta

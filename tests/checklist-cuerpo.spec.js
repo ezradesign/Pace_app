@@ -82,10 +82,10 @@ test('Mueve: la biblioteca abre, el Preview precede a la sesion y los pasos corr
   await irAlArtefacto(page);
 
   await page.getByRole('button', { name: /^Mueve/ }).click();
-  await expect(page.getByRole('heading', { name: 'Flexiones de escritorio' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Empuje sencillo' })).toBeVisible();
 
   /* PREVIEW §18.3 (s144): sale desde la BIBLIOTECA y solo desde ahi. */
-  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await page.getByRole('heading', { name: 'Empuje sencillo' }).click();
   const preview = overlaySuperior(page);
   await expect(preview.getByText('ANTES DE EMPEZAR')).toBeVisible();
   await expect(preview.getByText('QUÉ NECESITAS')).toBeVisible();

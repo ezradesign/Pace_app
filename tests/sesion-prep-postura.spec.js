@@ -2,7 +2,7 @@
  * ==============================================================================
  * La frase bajo la cuenta atrás decía «De pie. Sin prisa. N pasos.» en las 31
  * rutinas de los dos módulos, y 8 son de silla (su tarjeta dice «sentado»:
- * Columna en la silla, Glúteos invisibles, Cuello…) y 2 de suelo. Ahora nombra la
+ * Tronco sentado, Glúteos invisibles, Cuello suave…) y 2 de suelo. Ahora nombra la
  * postura solo cuando la rutina tiene una única; con varias no nombra ninguna,
  * porque `position` lista las que usa y no por cuál empieza.
  *
@@ -55,18 +55,18 @@ test('ninguna rutina nombra en su preparación una postura que no tiene', async 
   expect(malas.out).toEqual([]);
 });
 
-test('Estira · «Columna en la silla» se prepara en la silla, como dice su tarjeta', async ({ page }) => {
+test('Estira · «Tronco sentado» se prepara en la silla, como dice su tarjeta', async ({ page }) => {
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
-  const frase = await abrirPreparacion(page, 'Estira', 'Columna en la silla');
-  await expect(frase).toHaveText('En la silla. Sin prisa. 5 pasos.');
+  const frase = await abrirPreparacion(page, 'Estira', 'Tronco sentado');
+  await expect(frase).toHaveText('En la silla. Sin prisa. 4 pasos.');
   expect(errores).toEqual([]);
 });
 
-test('Mueve · «Sentadillas de silla», que es de pie, sigue diciendo «De pie»', async ({ page }) => {
+test('Mueve · «Levántate y sube», que es de pie, sigue diciendo «De pie»', async ({ page }) => {
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
-  const frase = await abrirPreparacion(page, 'Mueve', 'Sentadillas de silla');
-  await expect(frase).toHaveText('De pie. Sin prisa. 5 pasos.');
+  const frase = await abrirPreparacion(page, 'Mueve', 'Levántate y sube');
+  await expect(frase).toHaveText('De pie. Sin prisa. 7 pasos.');
   expect(errores).toEqual([]);
 });

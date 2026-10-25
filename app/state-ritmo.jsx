@@ -133,7 +133,8 @@ function ritmoDe(s) {
    y no «Empuje · progresión», que pide la pica). Y el cierre es
    cualquier Respira lento de 5 min o menos: rota (ritmo.series.js).
    Rotan por día para que cada jornada empiece por otra rutina, y respetan el
-   VETO de la pausa (s189) con su amnistía: si el veto vaciara un pozo, se ignora. */
+   VETO de la pausa (s189) con su amnistía: si el veto vaciara un pozo, se ignora. Las capas (Ez,
+   2A): sin pagar, «Para empezar» (`entrada`); con PACE completo, todo menos lo que va `aparte`. */
 function ritmoPozos(s, iso) {
   var lista = function (cat, grupos) {
     var out = [];
@@ -150,6 +151,10 @@ function ritmoPozos(s, iso) {
     if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
     return !window.canAccessRoutine || window.canAccessRoutine(r.id);
   };
+  var varia = typeof puedeVariar === 'function' && puedeVariar();
+  var cuerpo = function (cat) {
+    return lista(cat, Object.keys(cat || {}).filter(function (g) { return varia ? !cat[g].aparte : !!cat[g].entrada; }));
+  };
   var vetadas = typeof breakVetadas === 'function' ? breakVetadas((s || {}).routineFeedback) : {};
   var dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(iso) : 0;
   var prepara = function (rutinas) {
@@ -162,8 +167,8 @@ function ritmoPozos(s, iso) {
   };
   var respira = lista(window.BREATHE_ROUTINES, ['equilibrio', 'balance', 'relajacion']);
   return {
-    estira: prepara(lista(window.EXTRA_ROUTINES)),
-    mueve: prepara(lista(window.MOVE_ROUTINES)),
+    estira: prepara(cuerpo(window.EXTRA_ROUTINES)),
+    mueve: prepara(cuerpo(window.MOVE_ROUTINES)),
     respira: prepara(respira.filter(function (r) { return r.min >= 4 && r.min <= 10; })),
     cierre: prepara(respira.filter(function (r) { return r.min <= 5; })),
   };

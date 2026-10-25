@@ -64,7 +64,7 @@ for (const [ancho, alto] of [[1530, 702], [360, 640]]) {
     await page.setViewportSize({ width: ancho, height: alto });
     await sembrar(context);
     await irAlArtefacto(page);
-    await abrirRutina(page, 'Mueve', 'Flexiones de escritorio');
+    await abrirRutina(page, 'Mueve', 'Fondos en silla');
 
     /* Colocarse: el botón de la derecha es «Empezar ya». */
     await expect(mando(page).getByRole('button', { name: 'Empezar ya' })).toBeVisible();
@@ -188,7 +188,7 @@ for (const [ancho, alto, justo] of [[1530, 702, null], [1280, 560, null], [360, 
     await page.setViewportSize({ width: ancho, height: alto });
     await sembrar(context);
     await irAlArtefacto(page);
-    await abrirRutina(page, 'Mueve', 'Flexiones de escritorio');
+    await abrirRutina(page, 'Mueve', 'Fondos en silla');
     await page.waitForTimeout(1200);
     await expect(page.locator('[data-pace-v1-body]')).toBeVisible();
     if (justo) {

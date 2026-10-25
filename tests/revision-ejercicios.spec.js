@@ -78,10 +78,11 @@ test('Espalda de oficina entra de pie en «A tu ritmo»; 4·7·8 son cuatro cicl
   await irAlArtefacto(page);
   const r = await page.evaluate(() => {
     const antes = window.canAccessRoutine;
-    /* Solo lo gratis: tiene que entrar también cuando cierre PACE completo. */
+    /* Desde v0.176.0 es de Estira (es estirar, Ez, 2A) y está fuera de «Para empezar»: entra con
+       PACE completo, gratis como rutina. */
     window.canAccessRoutine = (id) => { const b = window.resolveBodyRoutine && window.resolveBodyRoutine(id); return ((b && b.routine) || {}).access !== 'premium'; };
-    let mueve;
-    try { mueve = ritmoPozos(getState(), '2026-10-14').mueve.map((x) => x.id); } finally { window.canAccessRoutine = antes; }
+    let estira;
+    try { estira = ritmoPozos(getState(), '2026-10-14').estira.map((x) => x.id); } finally { window.canAccessRoutine = antes; }
     const total = (seq) => seq.reduce((a, f) => a + f.duration, 0);
     const r478 = getBreatheRoutine('breathe.478');
     const bombeo = ['breathe.bellows', 'breathe.kapalabhati'].map((id) => {
@@ -100,14 +101,14 @@ test('Espalda de oficina entra de pie en «A tu ritmo»; 4·7·8 son cuatro cicl
       };
     });
     return {
-      mueve,
+      estira,
       pie: RITMO_SERIES_META['extra.back.desk'],
       ciclos478: Math.ceil((r478.min * 60) / total(getSequence(r478))),
       bombeo,
       hernia: [PACE_STRINGS.es['breathe.safety.body.rule3'], PACE_STRINGS.en['breathe.safety.body.rule3']],
     };
   });
-  expect(r.mueve, 'Espalda de oficina en el pozo gratis de Mueve').toContain('extra.back.desk');
+  expect(r.estira, 'Espalda de oficina en el pozo de Estira').toContain('extra.back.desk');
   expect(r.pie).toEqual({ z: ['espalda', 'hombros'], pie: true });
   /* Weil: cuatro seguidos el primer mes. */
   expect(r.ciclos478).toBe(4);

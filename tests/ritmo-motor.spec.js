@@ -198,13 +198,16 @@ test('lo aprendido llega a «A tu ritmo» por la memoria de las series', async (
     const cadencia = (d) => d.filter((p, i) => i > 0 && !p.larga && p.desde !== 945).filter((p) => p.platos.some((x) => x.modulo === 'mueve')).length;
     const base = dias.map((iso) => servir(iso, null));
     const neck = base[0].find((p) => p.platos.some((x) => x.id === 'move.neck.3'));
-    const corta = base[0].find((p) => p.desde === 945);
+    /* Una corta que hoy sirva algo de más de 2 minutos: desde las capas (2A) casi todo «Para
+       empezar» dura 2, así que la hora se busca y no se escribe. */
+    const corta = base[0].find((p, i) => i > 0 && !p.larga && p.platos[0] && p.platos[0].modulo !== 'respira' && p.platos[0].min > 2);
+    const en = corta ? corta.desde : 945;
     return {
       neck: !!neck,
       descansa: dias.map((iso) => ids(servir(iso, { descansa: { 'move.neck.3': true } })).includes('move.neck.3')),
-      cortaAntes: corta.platos[0].min,
-      cortaDespues: servir('2026-10-13', { cortas: [{ hora: 945, min: 2, margen: 15 }] }).find((p) => p.desde === 945).platos[0].min,
-      cortaLejos: servir('2026-10-13', { cortas: [{ hora: 900, min: 2, margen: 15 }] }).find((p) => p.desde === 945).platos[0].min,
+      cortaAntes: corta ? corta.platos[0].min : 0,
+      cortaDespues: servir('2026-10-13', { cortas: [{ hora: en, min: 2, margen: 15 }] }).find((p) => p.desde === en).platos[0].min,
+      cortaLejos: servir('2026-10-13', { cortas: [{ hora: en - 90, min: 2, margen: 15 }] }).find((p) => p.desde === en).platos[0].min,
       mueveAntes: base.map(cadencia),
       mueveDespues: dias.map((iso) => cadencia(servir(iso, { menos: 'mueve' }))),
       primeraDespues: dias.map((iso) => servir(iso, { menos: 'mueve' })[0].platos[0].modulo),
@@ -215,8 +218,8 @@ test('lo aprendido llega a «A tu ritmo» por la memoria de las series', async (
   }, servir.toString());
   expect(r.neck, 'el día sin nada aprendido sirve Cuello').toBe(true);
   expect(r.descansa, 'lo que descansa no sale').toEqual([false, false, false]);
-  expect(r.cortaAntes).toBeGreaterThan(2);
-  expect(r.cortaDespues, 'la pausa de las 15:45, de 2 minutos').toBeLessThanOrEqual(2);
+  expect(r.cortaAntes, 'GUARD: ninguna corta sirve más de 2 minutos; el aserto no mediría nada').toBeGreaterThan(2);
+  expect(r.cortaDespues, 'la pausa que sueles saltar, de 2 minutos').toBeLessThanOrEqual(2);
   expect(r.cortaLejos, 'a otra hora, la de siempre').toBe(r.cortaAntes);
   expect(r.mueveAntes.every((n) => n > 0)).toBe(true);
   expect(r.mueveDespues, 'la cadencia trae Estira').toEqual([0, 0, 0]);

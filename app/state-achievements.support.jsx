@@ -188,8 +188,9 @@ const EXPLORE_BREATHE = ['explore.box', 'explore.478', 'explore.coherent',
 /* Ojo con los nombres: los ids `move.*` son de ESTIRA y los `extra`/`mueve` se
    cruzaron historicamente (nota de s15 en state-achievements). Estas dos listas
    siguen la etiqueta que ve el usuario, no el prefijo del id. */
-const EXPLORE_CUERPO = ['explore.hips', 'explore.shoulders', 'explore.atg',
-  'explore.ancestral', 'explore.neck', 'explore.desk'];
+/* Sin ATG ni Ancestral, que ya no salen en la lista (Ez, 24 oct. 2026: A): «Cuerpo de campo» pide
+   los otros cuatro. Quien ya ganó aquellos los conserva. */
+const EXPLORE_CUERPO = ['explore.hips', 'explore.shoulders', 'explore.neck', 'explore.desk'];
 
 function checkExploreCompleto() {
   const a = getState().achievements || {};
@@ -203,9 +204,12 @@ function checkExploreCompleto() {
      `checkAllPathsCompleted`: si el catalogo aun no ha cargado, no se dispara. */
   const mueve = (typeof window !== 'undefined' && window.MOVE_ROUTINES) || null;
   if (!mueve) return;
+  /* Menos lo que pide barra («Colgarse»): sin ella el logro era imposible. «Espalda con banda» sí
+     cuenta, porque sus pasos de banda se saltan y la rutina queda entera (Ez, 24 oct. 2026). Lo ya
+     ganado no se pierde: el logro se guarda al ganarlo. */
   const ids = [];
   for (const grupo of Object.values(mueve)) {
-    for (const r of (grupo.items || [])) ids.push(r.id);
+    for (const r of (grupo.items || [])) if ((r.equipment || []).indexOf('bar') === -1) ids.push(r.id);
   }
   if (ids.length && ids.every(id => getCount('rutina.' + id) > 0)) {
     unlockAchievement('explore.all.extra');

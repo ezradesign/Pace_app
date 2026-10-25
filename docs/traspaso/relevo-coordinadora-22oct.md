@@ -60,7 +60,52 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    `mueve-estira` paró al 93 % con la parte 2 en wip bdd2192 (subido; su punto arriba de `docs/traspaso/LEEME.md` de
    la rama): falta la suite entera, las fotos (`fotos-2.js` escrito), su página, el commit final y el aviso. Al
    reponerse, retomarla con un mensaje. No juntar nada de la parte 2 hasta su aviso y el «júntalo» de Ez.
-8. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
+8. **25 oct., ~10:00**: `mueve-estira` retomada para cerrar la parte 2. Ez preguntó si estaba arreglado todo lo
+   de sus dos listas del móvil: la del 22 (M1-M7), todo hecho (0.174.5, 0.174.6, 0.175.0); la del 23, Mueve y Estira en
+   marcha y N2-N9 pendientes. Con su sí, sesión **`franjas-maqueta`** (`local_30f25719-da75-47f8-bacc-9df789a93186`,
+   rama `…franjas-maqueta-n5-n8`, puerto 8806): N2 arreglado sin versión (la pone la coordinadora), N9 solo
+   investigar, maqueta de N5-N8 sin tocar la app (N5 y N6 viven en el runner, que es de `mueve-estira`). Ez tiene un
+   dibujo de «Rodar hacia abajo» que sí casa: pedírselo a `dibujos-22oct`.
+9. **En cuanto 0.176.0 esté en main: la revisión de ChatGPT de los textos nuevos** (Ez, 25 oct.: «sí, y avísame para
+   cuando tenga que mandarla»). Sacar con un script del catálogo ya junto las fichas de los seis ejercicios nuevos y las
+   diez pausas de «Para empezar» (colocación, cómo, cuidado y dosis, en español y en inglés), y darle a Ez una página
+   con el texto y un botón «Copiar», AVISÁNDOLE de que ya toca mandarla. Lo que conteste se comprueba en el código y
+   contra la base NHS/ACSM/OMS antes de creerlo, y entra en esta cola. Ninguna otra auditoría general por ahora: la
+   cola ya tiene trabajo auditado de sobra.
+9b. **25 oct., ~11:30: v0.176.0 en main** (merge d07221b de c9be19f, con el «júntalo» de Ez sobre
+   https://claude.ai/artifact/M32hjPa2qFUZDNfaURn8dQ). Choque solo en STATE.md, juntado a mano. Suite entera en
+   Chromium: 825 en verde y 1 caída por la herramienta (`pestanas-estado`, «Resulting promise was garbage
+   collected»), que sola pasa 18 de 18. **Revisión de ChatGPT publicada y avisada a Ez**
+   (https://claude.ai/artifact/DuBukvPPSULtiMdtJ9nTn1, `docs/proposals/mueve-estira-revision-chatgpt-25oct.md`). Lo que
+   traiga se comprueba y entra en la cola. Los prompts de los dibujos, en https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM.
+   La sesión `mueve-estira` terminó: archivarla con el sí de Ez (quitar antes su `node_modules` si es un enlace).
+9c. **25 oct., ~11:40: uso al 87 % de las 5 h** (se repone hacia las 14:40; semana al 65 %). `franjas-maqueta`:
+   N2 hecho (7c7d357; verify, sus e2e y las compilaciones de Android e iPhone en verde), N9 no sale, la maqueta N5-N8
+   con las fotos hechas y la página a medias; wip d704826 en `claude/franjas-maqueta-n5-n8-7312c7`, sigue hasta el 95 % y
+   deja lo que falte en `docs/traspaso/archivos/franjas-maqueta-25oct/LEEME.md`. La sesión de seguridad y cobro web
+   NO se ha abierto todavía: se abre con el «sí» de Ez cuando haya uso.
+9d. **25 oct., ~11:50: Ez eligió en la maqueta N5-N8** (https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero), tal cual:
+   «1A + 2A (pero con el número bien centrado, a veces da toc ver que el 4 o el 7 o el que sea va más por debajo que el
+   resto) + 3C en cursiva pero todos los elementos incluido el botón tienen que bajar un 15 % más + 4B queda más fino así
+   que con degradado». Lo del número: las cifras de Cormorant son de estilo antiguo (el 4, el 7 y el 9 bajan de la línea);
+   con `font-variant-numeric: lining-nums` quedan alineadas, como en /beta. Al reponerse el uso (14:40): pasar
+   esto a la sesión `franjas-maqueta` para montarlo en su rama (el runner ya es libre: 0.176.0 está en main), y juntar N2:
+   **Ez dijo «sí, júntalo» a N2 (7c7d357) el 25 oct., ~11:55**, al tope de uso: juntarlo a las 14:40. La sesión de seguridad y cobro web, sin abrir. Uso al 95 %.
+10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
+   seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
+   - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
+     verificarla, S4 «Avísame» sin límites, S5 CSP y S6 los eventos de Android por texto. S3 (código portable) es de Ez.
+   - **Cobrar en la web sin Stripe** (Fase 6, `ROADMAP.md`; `docs/audits/cobro-chatgpt-22oct.md`, «3. Lo que tiene
+     que hacer la app»):
+     - el aviso dos días antes del fin de la prueba, desde la licencia;
+     - «Gestionar» en Ajustes: Play en Android; en la web, oculto hasta tener el enlace del portal;
+     - la página de gracias;
+     - la función de Cloudflare que firma con k2, probada con pagos inventados (k2 la genera Ez con un guion en su
+       PC y la pone como secreto; ni la llave ni los códigos por el chat);
+     - sin conexión: «sin red» frente a «caducada».
+   - Lo de Stripe (enlaces de pago, secreto del webhook, portal) queda como una pieza fina que se enchufa con la cuenta.
+     Se abre cuando `mueve-estira` acabe su trabajo, para no pasar de dos sesiones trabajando a la vez.
+11. Después, por orden de Ez: cuando Apple apruebe la prueba de TestFlight, su enlace en /beta (5b); y lo que siga en
    la cola.
 
 ## 23 oct., mañana: coordina la cuenta de EcLj6… (sesión `local_d53e9265-d16f-4c15-ba7b-83faa4b9fb37`)
@@ -214,6 +259,38 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
+
+### El orden lógico hasta v1 (Ez, 25 oct.: «ordena el roadmap de la manera más lógica»)
+
+**Manda sobre la numeración de abajo**, que se queda como detalle de cada punto. Es el mismo orden que el camino de la
+hoja de Ez. El criterio: primero lo que ya está en marcha; luego lo que otro punto necesita, como la seguridad
+antes de cobrar o los precios antes de la bienvenida; lo que espera algo de Ez, cuando llegue; lo pequeño, en los
+huecos.
+1. **Mueve y Estira 0.176.0** (en marcha, `mueve-estira`), luego la revisión de ChatGPT de los textos nuevos (avisar a
+   Ez) y los dibujos de Ez (punto 6 de abajo).
+2. **N2 y la maqueta de N5-N8, y mirar N9** (en marcha, `franjas-maqueta`).
+3. **La seguridad de PACE completo** (S1, S2, S4, S5; punto 10).
+4. **Cobrar en la web sin Stripe** (punto 14, la parte web): gracias, k2, aviso de fin de prueba, «Gestionar», sin
+   conexión. Se enchufa Stripe cuando Ez tenga la cuenta («Stripe, paso a paso» en la hoja).
+5. **Lo que prometemos sobre los datos** (P1-P5, punto 4) junto con lo que cambia al cobrar, en `privacy.html`. Antes
+   de conectar «Avísame» y de vender.
+6. **Montar lo que Ez elija de N5-N8** (el runner es de `mueve-estira`: después de juntar 0.176.0) y arreglar N9.
+7. **Android a fondo**, con el móvil de Ez: los avisos A1-A4 (punto 11), N4 (aviso con el móvil bloqueado) y el puente
+   del calendario con S6 (punto 9).
+8. **La bienvenida y los Ajustes** (A1-A5, A7, punto 5) y, al final de la bienvenida, PACE completo con los dos
+   precios y «Ahora no» (detrás de 4, que pone los precios).
+9. **«Qué te ayuda» en Estadísticas** (punto 13), con maqueta.
+10. **La hora y la medianoche** (H1-H5, punto 12) antes de marzo, y la voz de Respira por `<audio>` (punto 8).
+11. **El llavero del calendario**, cuando Ez tenga las altas de Google y Microsoft.
+12. **Cobrar en Android (Play Billing)**, con los 12 testers y sus 14 días, y el regalo de los testers.
+13. **El iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión**, a la vez que 12. Antes, el
+   enlace público de TestFlight en `/beta` (5b, en cuanto Apple apruebe).
+14. **v1.0**: apagar `PREMIUM_ABIERTO_HASTA_V1` sin quitar nada a quien lo usaba, y QA de compra, restaurar y
+   cancelar en las tres tiendas.
+- **El punto 7 de abajo** (ejercicios de pie para las pausas cortas) queda dentro del 1: las diez pausas de entrada lo
+  cubren.
+- **Lo de Ez, en paralelo**: la cuenta de Stripe (desde el 25 oct.), el gestor y el alta, los testers, las altas de
+  Google y Microsoft, el logo, las llaves en un disco y los dibujos.
 
 1. **Los bloques cortos (M2): la invitación** (Ez eligió la propuesta de ChatGPT «por partes»;
    `DECISIONES_PRODUCTO.md`, «Lo que Ez vio en su móvil»). **Maqueta hecha y elegida: 4a A · 4b A (solo con el

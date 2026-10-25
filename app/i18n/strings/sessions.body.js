@@ -85,6 +85,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.gear.deskOptional':           'mesa opcional',
     'lib.gear.wallOptional':           'pared opcional',
     'lib.gear.barOptional':            'barra opcional',
+    'lib.gear.band':                   'con banda',
     /* El grupo que se queda a cero al filtrar. Dos formas porque `tn` sustituye
        variables y NO conjuga: con «Las {n}» un grupo de una rutina diria «Las 1
        de flujos piden suelo». Hoy el grupo mas pequeno tiene 2, asi que la
@@ -133,6 +134,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'preview.eq.deskOptional':         'Una mesa, si la necesitas',
     'preview.eq.wallOptional':         'Una pared, si la necesitas',
     'preview.eq.barOptional':          'Una barra, si la tienes',
+    'preview.eq.band':                 'Una banda elástica, si la tienes',
+    'preview.opcional':                'se puede saltar',
     'preview.eq.floor':                'Sitio para tumbarte en el suelo',
     'preview.pos.standing':            'De pie',
     'preview.pos.seated':              'Sentado',
@@ -172,6 +175,7 @@ Object.assign(window.PACE_STRINGS.es, {
     // Runner guiado (s113): reps con cadencia + transición auto de lado
     'move.repsOf':                     'de {n} reps',
     'move.finishEarly':                'Terminar antes',
+    'move.skipOptional':               'Saltar este paso',
     'move.sideAutoHint':               'El lado siguiente empieza solo',
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
     'move.careLabel':                  'Cuídate',
@@ -226,6 +230,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.gear.deskOptional':           'desk optional',
     'lib.gear.wallOptional':           'wall optional',
     'lib.gear.barOptional':            'bar optional',
+    'lib.gear.band':                   'with a band',
     'lib.empty.floor.n':               'Every routine in {g} needs the floor.',
     'lib.empty.floor.1':               'The one in {g} needs the floor.',
     'lib.empty.any.n':                 'Every routine in {g} falls outside this filter.',
@@ -258,6 +263,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'preview.eq.deskOptional':         'A desk, if you need one',
     'preview.eq.wallOptional':         'A wall, if you need one',
     'preview.eq.barOptional':          'A bar, if you have one',
+    'preview.eq.band':                 'An elastic band, if you have one',
+    'preview.opcional':                'can be skipped',
     'preview.eq.floor':                'Room to lie on the floor',
     'preview.pos.standing':            'Standing',
     'preview.pos.seated':              'Seated',
@@ -297,6 +304,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // Guided runner (s113): cadenced reps + auto side transition
     'move.repsOf':                     'of {n} reps',
     'move.finishEarly':                'Finish early',
+    'move.skipOptional':               'Skip this step',
     'move.sideAutoHint':               'The next side starts on its own',
     // Editorial layer (s114): «Take care» label + final-screen stat labels
     'move.careLabel':                  'Take care',

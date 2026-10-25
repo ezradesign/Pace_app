@@ -2,6 +2,12 @@
 
 22 oct. 2026, rama `claude/maqueta-inicio-3a2a59`, sobre v0.174.6. Solo lectura: no cambia nada de la app.
 
+> **Desde v0.176.0** (Ez, 23 oct.: 2A) el reparto son **27**, rehechos con las capas en
+> `app/state-ritmo.hacerla.jsx`, con el mismo filtro y además sin pared ni silla. Salen cuatro: la
+> elevación de puntas (su texto pide pared), el isquio (pide silla), la sentadilla de cuádriceps y los
+> escalenos (ya no están en una rutina junto a la mesa). Lo que era estirar pasó a Estira, así que
+> Mueve deja tres (talones, flexiones y glúteos), espaciados.
+>
 > **Desde v0.175.2** (Ez, 23 oct.: 1A) tres de los 31 se llaman de otra forma y los puestos no cambian:
 > «Palmas al suelo» es «Palmas en la mesa», «Círculos de hombro» es «Círculos de brazos» (8 veces, 4 y 4)
 > e «Inclinación lateral» es «Inclinación de cuello». También van por veces «Rotación lenta» (3 por lado) y

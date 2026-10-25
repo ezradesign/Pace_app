@@ -131,10 +131,12 @@ test('una pausa larga en Mueve no suma sus minutos a la semana', async ({ page }
   expect(hoy((await leerEstado(page)).weeklyStats.moveMinutes), 'la pausa de 20 minutos contó como Mueve').toBe(1);
 });
 
+/* Estira con «Postura reset»: cuatro pasos y el primero de repeticiones con colocación, la forma que
+   tenía «Cuello» hasta v0.176.0 (ahora «Cuello suave», de tres pasos). */
 test('con la página oculta una hora (la sesión en pausa), Estira no suma esa hora', async ({ page }) => {
   await page.clock.install();
   await irAlArtefacto(page);
-  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await segundos(page, 5 + 40);
   await visibilidad(page, 'hidden');
   await dormir(page, 60 * 60 * 1000);
@@ -150,7 +152,7 @@ test('si la página se oculta en «Prepárate», Estira no se hace sola: arranca
   const errores = capturarErrores(page);
   await page.clock.install();
   await irAlArtefacto(page);
-  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await segundos(page, 1);
   await visibilidad(page, 'hidden');
   await segundos(page, 10 * 60);
@@ -169,7 +171,7 @@ test('si la página se oculta en «Prepárate», Estira no se hace sola: arranca
 test('con el equipo dormido, Estira se queda en pausa en el mismo paso y no lo cuenta', async ({ page }) => {
   await page.clock.install();
   await irAlArtefacto(page);
-  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   const reloj = sesion(page).locator('[data-pace-v1-timer]');
   for (let s = 0; s < 30 && !(await sesion(page).getByRole('button', { name: /Terminar antes/ }).count()); s++) await segundos(page, 1);
   await segundos(page, 3);
@@ -259,7 +261,7 @@ test('«Terminar» a los pocos segundos no cuenta, y el cierre dice «Sesión si
 test('saltar todos los pasos de Estira no cuenta ni hace el plan del día', async ({ page }) => {
   await page.clock.install();
   await irAlArtefacto(page);
-  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
   await hastaElCierre(page);
   await expect(sesion(page).locator('[data-pace-sin-contar]'), 'saltarlo todo dice «completado»').toHaveCount(1);
@@ -294,13 +296,13 @@ test('recargar a mitad de Estira deja «Continúa · Paso 2 de 4», y se sigue p
   const errores = capturarErrores(page);
   await page.clock.install();
   await irAlArtefacto(page);
-  await abrirCuerpo(page, 'Estira', 'move.neck.3');
+  await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await segundos(page, 5 + 60);
   await expect(sesion(page), 'GUARD: al minuto no se está en el paso 2').toContainText('Paso 2 de 4');
 
   await page.reload();
   await expect(tarjeta(page), 'tras recargar, la barra no ofrece seguir').toHaveAttribute('data-kind', 'resume');
-  await expect(tarjeta(page)).toContainText('Cuello');
+  await expect(tarjeta(page)).toContainText('Postura reset');
   await expect(tarjeta(page)).toContainText('Paso 2 de 4');
   expect(hoy((await leerEstado(page)).weeklyStats && (await leerEstado(page)).weeklyStats.moveMinutes)).toBe(0);
   expect(await sesiones(page), 'a medias ya contaba').toEqual([]);
@@ -340,7 +342,7 @@ test('«Salir» a mitad de Mueve también la deja para seguir, con lo hecho', as
 test('dos pestañas: la segunda no ofrece seguir una Estira que sigue viva en la primera', async ({ context }) => {
   const abrir = async () => { const p = await context.newPage(); await irAlArtefacto(p); return p; };
   const a = await abrir();
-  await abrirCuerpo(a, 'Estira', 'move.neck.3');
+  await abrirCuerpo(a, 'Estira', 'extra.posture.set');
   await a.waitForTimeout(5000 + 2500);
 
   const b = await abrir();
