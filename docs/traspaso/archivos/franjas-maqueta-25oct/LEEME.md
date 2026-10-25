@@ -52,3 +52,11 @@ N5: el runner ya avanza solo (comprobado con el reloj acelerado: «Flexiones de 
 al final sin tocar nada); la propuesta es un interruptor «Auto» encendido de fábrica que lo hace visible, con un aro
 en «›» que se llena hasta que pasa solo, y «A mano» para quien quiera su ritmo. N6: color del número por oklab de
 --breathe a --focus. N7: «Hasta las» bajo «Bloque 1 de X». N8: las siete cápsulas de la semana con el degradado.
+
+## Montado como v0.176.2 (1A 2A 3C 4B de Ez, 25 oct.)
+
+Fotos de antes y ahora: https://claude.ai/artifact/9RJYVucfQrGgJztT2dN3GG (guiones `montado.spec.js` y
+`pagina-montado.js`; «antes» es el index.html de main servido como /index-antes.html, que hay que borrar después
+porque verify lo caza). 3C: el 15 % entero no cabe a 360x640 (34 px de scroll) ni en la ventana de Ez sin
+encoger el aro, así que `--pace-dial-baja` baja hasta el 15 % donde cabe y el hueco bajo el aro se quitó.
+Suite entera en verde (862) antes de juntar 0.176.1.
