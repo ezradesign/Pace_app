@@ -79,8 +79,9 @@ function estadoTodoDesbloqueado(lang) {
     _historyMigrated: true,
     lastActiveDay: new Date().toDateString(),
     /* Con los Caminos ocultos, «Cartógrafa» solo sigue en el catálogo de quien ya
-       la tiene (catalog.js). Ganada desde el arranque, se siguen leyendo los 96. */
-    achievements: { 'master.path.all7': 1 },
+       la tiene (catalog.js), igual que los cuatro de ATG y Ancestral desde que esas rutinas dejaron
+       la lista (Ez, 24 oct.: A). Ganados desde el arranque, se siguen leyendo los 96. */
+    achievements: { 'master.path.all7': 1, 'explore.atg': 1, 'explore.ancestral': 1, 'master.atg.20': 1, 'master.ancestral.10': 1 },
   };
 }
 

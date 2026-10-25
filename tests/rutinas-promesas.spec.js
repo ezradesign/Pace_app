@@ -16,7 +16,7 @@ const { censo, PROHIBIDO } = require('../scripts/audit/censo-promesas.js');
 test('ningún paso de Mueve ni de Estira promete un ritmo que sus datos no dan', () => {
   const { rutinas, pasos, hallazgos } = censo();
   expect(rutinas, 'el censo lee las rutinas de Mueve y Estira').toBeGreaterThan(30);
-  expect(pasos).toBeGreaterThan(150);
+  expect(pasos, "GUARD: el censo lee los pasos (147 con las capas, Ez, 23 oct.: 2A)").toBeGreaterThan(130);
   const malos = hallazgos.filter(h => PROHIBIDO.includes(h.que))
     .map(h => h.id + ' · paso ' + h.paso + ': ' + h.que + ' (' + h.detalle + ')');
   expect(malos).toEqual([]);
