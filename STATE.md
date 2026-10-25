@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.176.0 · 25 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.177.0 · 25 de octubre de 2026 (en la rama `claude/seguridad-cobro-web-1fa8a6`, a juntar). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -125,8 +125,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
   programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
-  límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto; S3, código portable, es
-  la decisión de Ez) · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
+  límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto), **hechos en v0.177.0**
+  (en su rama, a juntar con el sí de Ez); S3, código portable, es la decisión de Ez · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
   H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió) ·
   **el puente del calendario de Android** (de C2, 22 oct.): `paceAndroidLlamar` se traga los
   errores, así que una lista que falla se lee como un calendario vacío, PACE puede volver a crear lo
