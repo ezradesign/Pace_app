@@ -5,8 +5,9 @@
 
      PACE1.<datos en base64url>.<firma en base64url>
 
-   Los datos son un JSON: `type` («lifetime»), `keyId`, `issuedAt` y, si es de un
-   tester, su número (`tester`). `expiresAt` es OPCIONAL desde el primer día
+   Los datos son un JSON: `type` («lifetime» o «monthly»), `keyId`, `issuedAt` y, si
+   es de un tester, su número (`tester`); si es de una venta (firmada con k2 por la
+   función de la web), su número de pedido o de suscripción (`order`). `expiresAt` es OPCIONAL desde el primer día
    (MONETIZATION.md): sin él, el código vale para siempre; con él, un pase
    temporal sería un cambio de datos y no de arquitectura. La firma cubre
    «PACE1.<datos>», así que la versión del formato también va firmada.
@@ -80,9 +81,12 @@ function paceLicenciaLlave(keyId) {
   return Object.prototype.hasOwnProperty.call(llaves, keyId) ? llaves[keyId] : null;
 }
 
+/* Se anula uno solo: `keyId:tester` (k1) o `keyId:order` (una venta). */
 function paceLicenciaAnulada(datos) {
   var lista = window.PACE_LICENCIAS_ANULADAS || [];
-  return datos.tester != null && lista.indexOf(datos.keyId + ':' + datos.tester) !== -1;
+  return [datos.tester, datos.order].some(function (n) {
+    return n != null && lista.indexOf(datos.keyId + ':' + n) !== -1;
+  });
 }
 
 /* `expiresAt`: una fecha «YYYY-MM-DD» (vale hasta el final de ese día, en la hora

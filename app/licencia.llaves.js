@@ -12,7 +12,8 @@
    una llave nueva convive con la anterior y los códigos ya dados siguen valiendo.
    Mientras esté vacío, ningún código abre nada.
 
-   ANULADOS: si un código se comparte donde no debe, su `keyId:tester` va aquí y
+   ANULADOS: si un código se comparte donde no debe, su `keyId:tester` (k1) o su
+   `keyId:order` (una venta, con k2: el número de pedido o de suscripción) va aquí y
    deja de abrir PACE completo en la versión siguiente, sin tocar a nadie más.
 
    `var` a propósito, como `library-rules.js`: un `const` no cruza la IIFE del

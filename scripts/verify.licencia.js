@@ -6,7 +6,8 @@
  * QUÉ VIGILA. Los códigos de PACE completo se firman con una llave privada que vive
  * en el PC de Ez, fuera del repositorio (scripts/licencias/). Si un día entrara aquí,
  * cualquiera que leyera el repo podría fabricar códigos. Por eso:
- *   · falla si algún archivo del árbol lleva una llave privada en PEM o se llama *.pem;
+ *   · falla si algún archivo del árbol lleva una llave privada en PEM o se llama *.pem, o
+ *     lleva una privada de curva elíptica en JWK (la de k2 para Cloudflare tiene esa forma);
  *   · falla si `app/licencia.llaves.js` no tiene la forma que leen la app y los scripts
  *     (cada llave, `kN: { x: '…', y: '…' }` con 43 caracteres base64url por coordenada);
  *   · falla si algún archivo de `app/` vuelve a leer `premiumUnlocked`: era un booleano del
@@ -24,6 +25,8 @@ var path = require('path');
 
 /* Partida en dos para que este archivo no se encuentre a sí mismo. */
 var MARCA_PRIVADA = new RegExp('-----BEGIN (EC |RSA |ENCRYPTED )?' + 'PRIVATE KEY-----');
+/* Una JWK con su parte privada (`d`, 43 caracteres), como la escribe crear-k2.js. */
+var JWK_PRIVADA = new RegExp('"k' + 'ty"\\s*:\\s*"EC"[^}]*"d"\\s*:\\s*"[A-Za-z0-9_-]{43}"');
 /* .claude/worktrees: las copias de las sesiones en paralelo son otros checkouts
    (cada uno pasa su propio verify) y leerlas todas costaba ~40 s. */
 var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|dist|test-results|playwright-report|build|\.gradle|\.claude[\\/]worktrees)([\\/]|$)/;
@@ -51,7 +54,8 @@ function tandaLicencia(ctx) {
     if (!TEXTO.test(p)) return;
     var st = fs.statSync(p);
     if (st.size > 2 * 1024 * 1024) return;
-    if (MARCA_PRIVADA.test(fs.readFileSync(p, 'utf8'))) malas.push(rel);
+    var texto = fs.readFileSync(p, 'utf8');
+    if (MARCA_PRIVADA.test(texto) || JWK_PRIVADA.test(texto)) malas.push(rel);
   });
   if (malas.length) ctx.falla('Llave privada dentro del repo: ' + malas.join(', ') + '. Tiene que vivir fuera (scripts/licencias/).');
   else ctx.ok('Ninguna llave privada en el árbol');

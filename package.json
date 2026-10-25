@@ -13,7 +13,8 @@
     "ios:sync": "node scripts/android-www.js && cap sync ios",
     "ios:recursos": "node scripts/ios-recursos.js",
     "licencia:llaves": "node scripts/licencias/crear-llaves.js",
-    "licencia:codigo": "node scripts/licencias/firmar.js"
+    "licencia:codigo": "node scripts/licencias/firmar.js",
+    "licencia:k2": "node scripts/licencias/crear-k2.js"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
