@@ -72,6 +72,13 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    con el texto y un botón «Copiar», AVISÁNDOLE de que ya toca mandarla. Lo que conteste se comprueba en el código y
    contra la base NHS/ACSM/OMS antes de creerlo, y entra en esta cola. Ninguna otra auditoría general por ahora: la
    cola ya tiene trabajo auditado de sobra.
+9b. **25 oct., ~11:30: v0.176.0 en main** (merge d07221b de c9be19f, con el «júntalo» de Ez sobre
+   https://claude.ai/artifact/M32hjPa2qFUZDNfaURn8dQ). Choque solo en STATE.md, juntado a mano. Suite entera en
+   Chromium: 825 en verde y 1 caída por la herramienta (`pestanas-estado`, «Resulting promise was garbage
+   collected»), que sola pasa 18 de 18. **Revisión de ChatGPT publicada y avisada a Ez**
+   (https://claude.ai/artifact/DuBukvPPSULtiMdtJ9nTn1, `docs/proposals/mueve-estira-revision-chatgpt-25oct.md`). Lo que
+   traiga se comprueba y entra en la cola. Los prompts de los dibujos, en https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM.
+   La sesión `mueve-estira` terminó: archivarla con el sí de Ez (quitar antes su `node_modules` si es un enlace).
 10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
    seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
    - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de

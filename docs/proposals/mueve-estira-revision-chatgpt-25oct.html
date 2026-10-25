@@ -1,0 +1,302 @@
+<title>Revisión de Mueve y Estira</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<!-- PACE · El texto para la revisión de ChatGPT de lo nuevo de Mueve y Estira (v0.176.0), sacado del catálogo con
+     docs/traspaso/archivos/mueve-estira-25oct/revision-chatgpt.js. -->
+<style>
+  /* Un solo encargo: qué hacer en tres pasos, el botón y el texto entero debajo para quien quiera leerlo. */
+  :root { --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858; --line: #C9C0A8;
+    --cta: #50624D; --focus: #3E5A3A; --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e;
+    --ink-3: #B2A995; --line: #4d4536; --cta: #8E9D88; --focus: #A3BC96; color-scheme: dark; } }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995; --line: #4d4536;
+    --cta: #8E9D88; --focus: #A3BC96; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 820px; margin: 0 auto; padding-block: 32px 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1 { font: italic 500 clamp(34px, 7vw, 46px)/1.05 var(--display); margin: 0 0 12px; text-wrap: balance; }
+  p, li { color: var(--ink-2); max-width: 42em; }
+  ol { padding-left: 20px; display: grid; gap: 4px; }
+  .copiar { font: italic 500 19px/1.2 var(--display); color: var(--paper); background: var(--cta); border: 0; border-radius: 999px; padding: 10px 24px; cursor: pointer; min-height: 44px; margin: 8px 0 18px; }
+  .copiar.hecho { background: var(--focus); }
+  .copiar:focus-visible, summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+  summary { cursor: pointer; color: var(--ink-3); }
+  pre { white-space: pre-wrap; font: 12.5px/1.55 var(--mono); background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px; color: var(--ink-2); overflow-x: auto; }
+</style>
+<main class="marco">
+  <p class="kicker">PACE · Mueve y Estira · 25 de octubre</p>
+  <h1>La revisión de lo nuevo, para ChatGPT</h1>
+  <p>Ya está en la app la 0.176.0. Esto es lo que ChatGPT no ha visto todavía con su texto definitivo: las diez pausas de
+    «Para empezar» y los seis ejercicios nuevos, en español y en inglés.</p>
+  <ol>
+    <li>Pulsa «Copiar el texto».</li>
+    <li>Pégalo en la misma conversación de ChatGPT de Mueve y Estira (o en una nueva: el texto se explica solo).</li>
+    <li>Tráeme su respuesta entera. La compruebo antes de cambiar nada.</li>
+  </ol>
+  <button type="button" class="copiar" id="copiar">Copiar el texto</button>
+  <details><summary>Ver el texto entero</summary><pre id="texto">Hola de nuevo. Con tu revisión de las 63 fichas rehicimos Mueve y Estira en PACE, la app de pausas activas para quien teletrabaja. Ya está en la app y te pido una última revisión de lo nuevo, ahora con su texto definitivo. Recuerda: es para personas que no entrenan y hacen 2-3 minutos entre bloques de trabajo, con silla, mesa y pared; banda solo en las rutinas «con material».
+
+Lo que te pido, de cada ejercicio de abajo:
+1. Técnica y seguridad: ¿la colocación, el gesto y el cuidado son correctos y suficientes para alguien que empieza? ¿Algo que pueda hacer daño o que esté mal dicho?
+2. Dosis: ¿es una entrada razonable (repeticiones, segundos, series) para una pausa de 2-3 minutos?
+3. El inglés: ¿dice lo mismo que el español y suena natural?
+4. Si el texto describe bien el gesto para que se entienda sin vídeo.
+
+Contesta en una tabla por ejercicio: «Bien» si no cambiarías nada; si cambiarías algo, la frase exacta nueva en español y en inglés, en una línea, y por qué. Solo lo que cambiarías de verdad, sin reescribir lo que está bien. Si citas una fuente, con su enlace.
+
+## Las diez pausas de «Para empezar» (gratis; son las que propone la app entre bloques)
+
+### Mueve · «Levántate y sube» (Stand and Rise) · 3 min
+- **Sentadilla a silla** (Chair squat) · 2 × 5 rep.
+   Colócate: De pie delante de la silla, pies al ancho de las caderas. Silla estable y sin ruedas.
+   Cómo: Siéntate del todo, con control, y levántate empujando el suelo.
+   Cuídate: Ayúdate con las manos si lo necesitas. La primera vez, una serie basta.
+   Setup: Stand in front of the chair, feet hip-width apart. A stable chair, no wheels.
+   How: Sit all the way down with control, and stand up pushing through the floor.
+   Take care: Use your hands if you need to. The first time, one set is enough.
+- **Elevación de talones** (Calf raises) · 2 × 6 rep.
+   Colócate: De pie, con una mano en la silla o en la mesa.
+   Cómo: Sube los talones hasta donde controles. Baja despacio.
+   Cuídate: Sin rebotes. Si te balanceas, apóyate más.
+   Setup: Standing, one hand on the chair or the desk.
+   How: Raise your heels as high as you control. Lower slowly.
+   Take care: No bouncing. If you sway, lean on it more.
+
+### Mueve · «Empuje sencillo» (Simple Push) · 2 min
+- **Flexiones inclinadas** (Incline push-ups) · 2 × 5 rep.
+   Colócate: Manos en una mesa fija o en la pared, algo más abiertas que los hombros. Cuerpo en diagonal.
+   Cómo: Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja y vuelve.
+   Cuídate: Si cuesta, en la pared. Mesa que no se mueva: ni con ruedas ni plegable.
+   Setup: Hands on a sturdy desk or the wall, a bit wider than your shoulders. Body on a diagonal.
+   How: Lower your chest toward the edge, elbows close to your body. Push and return.
+   Take care: If it is hard, use the wall. A desk that does not move: no wheels, not folding.
+
+### Mueve · «Piernas sin pasos» (Legs in Place) · 3 min
+- **Elevación de puntas** (Tibialis raise) · 2 × 8 rep.
+   Colócate: De espaldas a la pared, apoyado en ella, con los talones a un palmo.
+   Cómo: Sube las puntas de los pies hacia las espinillas. Bájalas despacio.
+   Cuídate: Movimiento pequeño, sin balancearte hacia atrás.
+   Setup: Back against the wall, leaning on it, heels a hand-width away.
+   How: Lift your toes toward your shins. Lower them slowly.
+   Take care: Small movement, no rocking back.
+- **Silla en la pared** (Wall sit) · 2 × 15 s
+   Colócate: Espalda en la pared, pies un paso por delante.
+   Cómo: Desliza un poco hacia abajo y quédate. Respira sin aguantar el aire.
+   Cuídate: Empieza alto: no hace falta llegar a 90°. Para salir, empuja con los pies y sube.
+   Setup: Back against the wall, feet a step forward.
+   How: Slide down a little and stay. Keep breathing; do not hold your breath.
+   Take care: Start high: no need to reach 90°. To come out, push through your feet and stand up.
+
+### Mueve · «Fuerza en suelo» (Floor Strength) · 3 min
+- **Puente con los dos pies** (Two-foot bridge) · 2 × 6 rep.
+   Colócate: Boca arriba, rodillas dobladas y los dos pies apoyados.
+   Cómo: Empuja con los pies, sube la pelvis y baja despacio.
+   Cuídate: Sube solo hasta donde no se arquee la cintura.
+   Setup: On your back, knees bent, both feet down.
+   How: Push through your feet, lift your pelvis and lower slowly.
+   Take care: Only lift as far as your lower back stays unarched.
+- **Desliza el talón** (Heel slide) · 6 rep.
+   Colócate: Boca arriba, rodillas dobladas, la zona lumbar apoyada sin apretar.
+   Cómo: Desliza un talón por el suelo hasta estirar la pierna, y vuelve. Tres con cada una.
+   Cuídate: La cintura no se despega del suelo. Si se despega, recorrido más corto.
+   Setup: On your back, knees bent, lower back resting, not pressed.
+   How: Slide one heel along the floor until the leg is straight, and back. Three with each.
+   Take care: Your waist stays on the floor. If it lifts, shorten the slide.
+- **Gateo con rodillas** (Knee crawl) · 4 rep.
+   Colócate: A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.
+   Cómo: Cuatro pasos cortos hacia delante, mano y rodilla contrarias, y vuelve.
+   Cuídate: Las rodillas siguen en el suelo. Si las muñecas molestan, para.
+   Setup: On all fours: hands under shoulders, knees under hips.
+   How: Four short steps forward, opposite hand and knee, and back.
+   Take care: Your knees stay on the floor. If your wrists hurt, stop.
+
+### Estira · «Cuello suave» (Gentle Neck) · 2 min
+- **Barbilla atrás** (Chin tucks) · 5 rep.
+   Colócate: Siéntate erguido, hombros sueltos. Mira al frente.
+   Cómo: Desliza la barbilla recta hacia atrás, mantén tres segundos y vuelve.
+   Cuídate: Recorrido pequeño. La cabeza va atrás, no abajo.
+   Setup: Sit tall, shoulders loose. Look straight ahead.
+   How: Glide your chin straight back, hold three seconds and return.
+   Take care: Small range. Your head goes back, not down.
+- **Rotación lenta** (Slow rotation) · 6 rep.
+   Colócate: Erguido, barbilla paralela al suelo.
+   Cómo: Gira despacio a mirar sobre un hombro, espera dos segundos y vuelve. Tres a cada lado.
+   Cuídate: Gira solo hasta donde el cuello vaya suelto.
+   Setup: Tall, chin parallel to the floor.
+   How: Turn slowly to look over one shoulder, wait two seconds and come back. Three to each side.
+   Take care: Only turn as far as your neck stays loose.
+- **Inclinación de cuello** (Neck tilt) · 12 s por lado
+   Colócate: Siéntate erguido, deja los hombros abajo.
+   Cómo: Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.
+   Cuídate: Inclina con control, sin tirar con la mano ni subir el hombro.
+   Setup: Sit tall, let your shoulders drop.
+   How: Bring your ear toward your shoulder, slowly. Feel the stretch on the other side.
+   Take care: Tilt with control, without pulling with your hand or lifting your shoulder.
+
+### Estira · «Brazos libres» (Free Arms) · 2 min
+- **Círculos de brazos** (Arm circles) · 8 rep.
+   Cómo: De pie, dibuja círculos lentos con el brazo estirado: cuatro hacia delante y cuatro atrás.
+   Cuídate: Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.
+   How: Standing, draw slow circles with your arm straight: four forward and four back.
+   Take care: Start small. Make the circle bigger only if your trunk stays still.
+- **Deslizamientos en pared** (Scapular wall slides) · 6 rep.
+   Colócate: De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.
+   Cómo: Sube y baja los brazos junto a la pared, como alas, despacio.
+   Cuídate: Si mantenerlos pegados te fuerza la postura, sepáralos un poco.
+   Setup: Back to the wall, feet a step in front. Arms out, resting against it.
+   How: Slide your arms up and down by the wall, like wings, slowly.
+   Take care: If keeping them on the wall strains your posture, move them off a little.
+- **Rotación externa** (External rotation) · 6 rep.
+   Cómo: Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.
+   Cuídate: Sin resistencia: es para mover el hombro. Pequeño y controlado.
+   How: Elbows tucked at 90°. Open your forearms outward and return.
+   Take care: No resistance: this is to move the shoulder. Small and controlled.
+
+### Estira · «Manos y muñecas» (Hands &amp; Wrists) · 2 min
+- **Abrir y cerrar el puño** (Squeeze fist) · 6 rep.
+   Colócate: Brazos relajados, manos abiertas.
+   Cómo: Cierra el puño sin apretar al máximo y ábrelo despacio, del todo.
+   Cuídate: Suave: no es un ejercicio de fuerza.
+   Setup: Arms relaxed, hands open.
+   How: Close your fist without squeezing as hard as you can, and open it slowly, all the way.
+   Take care: Gentle: this is not a strength exercise.
+- **Círculos de muñeca** (Wrist circles) · 8 rep.
+   Colócate: Sentado, antebrazos cómodos.
+   Cómo: Círculos pequeños con las manos, despacio: cuatro en cada sentido.
+   Cuídate: Sin apretar los puños ni buscar el máximo.
+   Setup: Seated, forearms comfortable.
+   How: Small, slow circles with your hands: four in each direction.
+   Take care: No clenched fists, no reaching for the maximum.
+- **Estiramiento de muñeca** (Wrist stretch) · 20 s por lado
+   Colócate: Brazo al frente, el codo sin bloquear.
+   Cómo: Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti, suave.
+   Cuídate: Presión ligera. Nunca hasta el dolor.
+   Setup: Arm out in front, elbow soft.
+   How: Palm down, then palm up: with your other hand, ease your fingers toward you, gently.
+   Take care: Light pressure. Never into pain.
+
+### Estira · «Tronco sentado» (Seated Trunk) · 2 min
+- **Extensión torácica** (Thoracic extension) · 5 rep.
+   Colócate: Siéntate atrás del todo, con la espalda alta apoyada en el respaldo.
+   Cómo: Eleva un poco el pecho sobre el respaldo y vuelve. La cabeza no va atrás.
+   Cuídate: Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.
+   Setup: Sit all the way back, upper back against the backrest.
+   How: Lift your chest a little over the backrest and return. Your head does not tip back.
+   Take care: If the backrest hits your neck or lower back, lift your chest without leaning on it.
+- **Rotación torácica** (Thoracic rotation) · 8 rep.
+   Colócate: Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.
+   Cómo: Gira el tronco despacio hacia un lado y vuelve. Cuatro a cada lado.
+   Cuídate: El giro nace del tronco, no del cuello. Sin tirar con los brazos.
+   Setup: Sit tall, feet down. Cross your hands over your chest.
+   How: Turn your trunk slowly to one side and back. Four to each side.
+   Take care: The turn comes from your trunk, not your neck. No pulling with your arms.
+- **Apertura de pecho sentado** (Chest opener) · 2 × 15 s
+   Cómo: Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.
+   Cuídate: Sin agarrarte al respaldo ni arquear la cintura.
+   How: Take your arms back, squeeze your shoulder blades, and open your chest. Breathe wide.
+   Take care: Without gripping the backrest or arching your lower back.
+
+### Estira · «Piernas en pausa» (Easy Legs) · 3 min
+- **Isquio a una pierna** (Single-leg hamstring) · 2 × 15 s por lado
+   Colócate: Una mano en la mesa. Un talón delante, en el suelo, rodilla estirada o un poco doblada.
+   Cómo: Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.
+   Cuídate: La rodilla de apoyo, algo flexionada. Sin rebotes.
+   Setup: One hand on the desk. One heel forward, on the floor, knee straight or slightly bent.
+   How: Send your hip back, torso long. Feel the stretch behind your thigh.
+   Take care: Standing knee slightly bent. No bouncing.
+- **Círculos de tobillo** (Ankle circles) · 16 rep.
+   Colócate: Siéntate y levanta un poco un pie.
+   Cómo: Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro.
+   Cuídate: Del tamaño que puedas sin mover toda la pierna.
+   Setup: Sit down and lift one foot a little.
+   How: Ankle circles: four each way with one foot, then with the other.
+   Take care: As big as you can without moving your whole leg.
+
+### Estira · «Movilidad en suelo» (Floor Mobility) · 3 min
+- **Gato-camello** (Cat-camel) · 6 rep.
+   Colócate: Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.
+   Cómo: Redondea y extiende la espalda despacio, sin buscar los extremos.
+   Cuídate: Movimiento lento, siguiendo la respiración.
+   Setup: Get on all fours, hands under shoulders and knees under hips.
+   How: Round and extend your back slowly, without chasing the end range.
+   Take care: Slow movement, following your breath.
+- **Flexor de cadera** (Hip flexor) · 15 s por lado
+   Colócate: Una rodilla en el suelo, la otra pierna delante. Cojín bajo la rodilla si molesta.
+   Cómo: Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.
+   Cuídate: Si la rodilla molesta aun con el cojín, salta este paso.
+   Setup: One knee on the floor, the other leg in front. Cushion the knee if needed.
+   How: Ease your pelvis forward a little, without arching. A gentle stretch at the back hip.
+   Take care: If your knee hurts even with the cushion, skip this step.
+- **Respirar a cuatro apoyos** (Breathing on all fours) · 25 s
+   Colócate: A cuatro patas, espalda larga y cuello suelto.
+   Cómo: Inhala llevando el aire a los lados de las costillas. Exhala despacio.
+   Cuídate: Sin forzar el aire. Deja que las costillas se ensanchen, sin bloquear la espalda.
+   Setup: On all fours, long back and loose neck.
+   How: Breathe in toward the sides of your ribs. Breathe out slowly.
+   Take care: Don't force the air. Let your ribs widen, without locking your back.
+
+## Los seis ejercicios nuevos
+
+- **Desliza el talón** (Heel slide) · en Mueve «Fuerza en suelo» · 6 rep.
+   Colócate: Boca arriba, rodillas dobladas, la zona lumbar apoyada sin apretar.
+   Cómo: Desliza un talón por el suelo hasta estirar la pierna, y vuelve. Tres con cada una.
+   Cuídate: La cintura no se despega del suelo. Si se despega, recorrido más corto.
+   Setup: On your back, knees bent, lower back resting, not pressed.
+   How: Slide one heel along the floor until the leg is straight, and back. Three with each.
+   Take care: Your waist stays on the floor. If it lifts, shorten the slide.
+
+- **Remo con banda** (Band row) · en Mueve «Espalda con banda» · 8 rep.
+   Colócate: Pisa el centro de la banda con los dos pies. Cadera atrás, espalda larga.
+   Cómo: Tira de los extremos llevando los codos hacia las costillas. Vuelve despacio.
+   Cuídate: Sin banda, salta este paso: el siguiente no la necesita.
+   Setup: Stand on the middle of the band with both feet. Hips back, long back.
+   How: Pull the ends, bringing your elbows toward your ribs. Return slowly.
+   Take care: No band? Skip this step: the next one needs none.
+
+- **Remo con tu mano** (Hand-resisted row) · en Mueve «Espalda con banda» · 25 s por lado
+   Colócate: De pie. Con una mano, agarra la muñeca de la otra delante de la tripa.
+   Cómo: Lleva ese codo hacia atrás mientras la otra mano frena. Unas cinco, sin prisa.
+   Cuídate: Frena sin apretar al máximo y respira. No es lo mismo que la banda, pero trabaja.
+   Setup: Standing. With one hand, hold the other wrist in front of your belly.
+   How: Draw that elbow back while the other hand resists. About five, unhurried.
+   Take care: Resist without squeezing hard, and breathe. Not the same as a band, but it works.
+
+- **Bisagra de cadera** (Hip hinge) · en Mueve «Piernas · a una» · 6 rep.
+   Colócate: De pie, pies al ancho de las caderas, manos en la cintura.
+   Cómo: Lleva la cadera atrás con la espalda larga y las rodillas algo dobladas, y vuelve.
+   Cuídate: El tronco baja porque la cadera va atrás, sin redondear la espalda. Sin peso.
+   Setup: Standing, feet hip-width apart, hands on your waist.
+   How: Send your hips back with a long back and soft knees, then return.
+   Take care: Your trunk tilts because your hips go back, without rounding. No weight.
+
+- **Inclinación de tronco** (Trunk side bend) · en Estira «Columna · ondas» · 6 rep.
+   Colócate: De pie, pies al ancho de las caderas, brazos sueltos.
+   Cómo: Inclina el tronco a un lado, la mano baja por el muslo, y vuelve. Tres a cada lado.
+   Cuídate: Sin girar ni echarte adelante. Solo hasta donde vaya cómodo.
+   Setup: Standing, feet hip-width apart, arms loose.
+   How: Bend your trunk to one side, hand sliding down your thigh, and back. Three each side.
+   Take care: No twisting or leaning forward. Only as far as feels comfortable.
+
+- **Gemelo en pared** (Wall calf stretch) · en Estira «Cadena posterior» · 25 s por lado
+   Colócate: De cara a la pared, manos en ella. Un pie atrás, con el talón en el suelo.
+   Cómo: Lleva la cadera hacia la pared con la pierna de atrás estirada. Estirón suave en el gemelo.
+   Cuídate: El talón de atrás sigue en el suelo. Sin rebotes.
+   Setup: Face the wall, hands on it. One foot back, heel on the floor.
+   How: Lean your hips toward the wall, back leg straight. A gentle stretch in the calf.
+   Take care: Your back heel stays down. No bouncing.
+</pre></details>
+</main>
+<script>
+  document.getElementById('copiar').addEventListener('click', function () {
+    var b = this, pre = document.getElementById('texto');
+    var hecho = function () { b.textContent = 'Copiado'; b.classList.add('hecho'); setTimeout(function () { b.textContent = 'Copiar el texto'; b.classList.remove('hecho'); }, 2000); };
+    var aMano = function () { pre.closest('details').open = true; var r = document.createRange(); r.selectNodeContents(pre);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Seleccionado: cópialo'; };
+    try { navigator.clipboard.writeText(pre.textContent).then(hecho, aMano); } catch (e) { aMano(); }
+  });
+</script>
