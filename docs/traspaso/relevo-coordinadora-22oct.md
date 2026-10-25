@@ -91,6 +91,13 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    con `font-variant-numeric: lining-nums` quedan alineadas, como en /beta. Al reponerse el uso (14:40): pasar
    esto a la sesión `franjas-maqueta` para montarlo en su rama (el runner ya es libre: 0.176.0 está en main), y juntar N2:
    **Ez dijo «sí, júntalo» a N2 (7c7d357) el 25 oct., ~11:55**, al tope de uso: juntarlo a las 14:40. La sesión de seguridad y cobro web, sin abrir. Uso al 95 %.
+9e. **25 oct., ~15:45 (uso repuesto): v0.176.1 en main** (merge dcd68a8 de 70709e5, N2 con el «júntalo» de Ez):
+   suite entera 830 en verde; choque solo en `DECISIONES_TECNICAS_VIGENTES.md`, se quedan todas las filas. La elección
+   de N5-N8 pasada a `franjas-maqueta`, que la monta como 0.176.2. La 4B es «la B tal cual», más elegante, no más
+   estrecha: era mala lectura mía, y la sesión lo vio. Abierta **`seguridad-cobro`**
+   (`local_4168f925-798b-4dbc-8bab-7defdb4e4bae`, rama `…seguridad-cobro-web`, puerto 8807): parte 1, S1 S2 S4 S5 S6 como
+   0.177.0, que se junta sola; parte 2, maqueta de gracias, aviso de fin de prueba y «Gestionar», y luego k2 y lo
+   demás sin Stripe. `mueve-estira` sigue sin archivar (falta el sí de Ez).
 10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
    seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
    - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
