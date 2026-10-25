@@ -98,6 +98,12 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    (`local_4168f925-798b-4dbc-8bab-7defdb4e4bae`, rama `…seguridad-cobro-web`, puerto 8807): parte 1, S1 S2 S4 S5 S6 como
    0.177.0, que se junta sola; parte 2, maqueta de gracias, aviso de fin de prueba y «Gestionar», y luego k2 y lo
    demás sin Stripe. `mueve-estira` sigue sin archivar (falta el sí de Ez).
+9f. **25 oct., ~16:15: Ez dijo «junta las dos»** (0.176.2 de `franjas-maqueta`, e85ec4c, sobre
+   https://claude.ai/artifact/9RJYVucfQrGgJztT2dN3GG; y la seguridad 0.177.0 de `seguridad-cobro`, 380ba88). **Sin juntar
+   todavía: uso al 94 %**, se hace a las ~20:00. Primero e85ec4c y luego 380ba88; los choques de versión, a la más alta
+   (0.177.0, con las dos líneas en el CHANGELOG); la suite entera con las dos dentro y push. Al intentarlo apareció que
+   el bump de 0.176.1 no había entrado en el commit de la unión: arreglado en 40b14f2. **Tras `npm run bump` en
+   mitad de una unión, `git add` de los siete sitios antes del commit.**
 10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
    seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
    - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
