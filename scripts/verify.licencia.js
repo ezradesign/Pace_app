@@ -8,7 +8,10 @@
  * cualquiera que leyera el repo podría fabricar códigos. Por eso:
  *   · falla si algún archivo del árbol lleva una llave privada en PEM o se llama *.pem;
  *   · falla si `app/licencia.llaves.js` no tiene la forma que leen la app y los scripts
- *     (cada llave, `kN: { x: '…', y: '…' }` con 43 caracteres base64url por coordenada).
+ *     (cada llave, `kN: { x: '…', y: '…' }` con 43 caracteres base64url por coordenada);
+ *   · falla si algún archivo de `app/` vuelve a leer `premiumUnlocked`: era un booleano del
+ *     estado que abría PACE completo sin compra, y cualquiera lo cambia desde el navegador.
+ *     Solo lo abren un código con la firma comprobada, la tienda y lo abierto hasta v1.
  *
  * NO CUBRE: secretos con otro formato (la llave de Play va en los secretos de GitHub y
  * su keystore de prueba, el de los APK de depuración, sí está en el repo a propósito).
@@ -52,6 +55,14 @@ function tandaLicencia(ctx) {
   });
   if (malas.length) ctx.falla('Llave privada dentro del repo: ' + malas.join(', ') + '. Tiene que vivir fuera (scripts/licencias/).');
   else ctx.ok('Ninguna llave privada en el árbol');
+
+  /* Partida en dos, como la marca de la llave, para no encontrarse a sí misma. */
+  var INTERRUPTOR = new RegExp('premium' + 'Unlocked');
+  var conInterruptor = recorrer(path.join(ctx.ROOT, 'app'), []).filter(function (p) {
+    return /.(js|jsx)$/.test(p) && INTERRUPTOR.test(fs.readFileSync(p, 'utf8'));
+  }).map(ctx.rel);
+  if (conInterruptor.length) ctx.falla('PACE completo sin compra: ' + conInterruptor.join(', ') + ' lee el booleano del estado. Solo lo abren el código con firma comprobada, la tienda y lo abierto hasta v1 (state-entitlement.jsx).');
+  else ctx.ok('Ningún booleano del estado abre PACE completo');
 
   var archivo = path.join(ctx.ROOT, 'app', 'licencia.llaves.js');
   var src = fs.readFileSync(archivo, 'utf8');

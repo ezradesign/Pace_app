@@ -5,21 +5,24 @@
    Guard central de acceso a contenido (sesion 95 / v0.40.0).
 
    ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath /
-   hasPremiumEntitlement. Abren PACE completo tres cosas: el booleano
-   `premiumUnlocked` (state-core, sin ruta de compra), un CÓDIGO firmado que
-   vale (`paceLicenciaVigente`, state-licencia.js: el de los testers y el de
-   quien compre en la web) y lo que la tienda del canal sabe que ya tienes
-   (`tieneCompraVigente`: Play Billing, vacía hasta que llegue). Los
+   hasPremiumEntitlement. Abren PACE completo dos cosas, y ninguna se fabrica
+   tocando el estado a mano: un CÓDIGO cuya firma se ha comprobado
+   (`paceLicenciaVigente`, state-licencia.js: el de los testers y el de quien
+   compre en la web) y lo que la tienda del canal sabe que ya tienes
+   (`tieneCompraVigente`: Play Billing, vacía hasta que llegue). Además, hasta
+   v1, lo abierto para todos (`PREMIUM_ABIERTO_HASTA_V1`). Un booleano guardado
+   en el estado no abre nada: cualquiera lo cambia desde las herramientas del
+   navegador, y `verify` falla si vuelve a aparecer en `app/`. Los
    consumidores (RoutineCard, CustomRoutines, PathBreatheStep/PathBodyStep,
    getSuggestedPath) no se tocan. La compra también pasa por aquí (abajo).
 
    Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
-   el guard concede acceso a una rutina premium aunque premiumUnlocked sea
-   false. Hoy: los 2 steps premium de path.weekend (nadi.shodhana + atg.knees,
-   decision s89 D-8a). Deja de ser una excepcion tacita del catalogo.
+   el guard concede acceso a una rutina premium sin PACE completo. Hoy: los 2
+   steps premium de path.weekend (nadi.shodhana + atg.knees, decision s89
+   D-8a). Deja de ser una excepcion tacita del catalogo.
 
    Depende (todo en window, resuelto en tiempo de LLAMADA, no de carga):
-     getState (state-core), getBreatheRoutine (BreatheLibrary),
+     paceLicenciaVigente (state-licencia), getBreatheRoutine (BreatheLibrary),
      resolveBodyRoutine + getPath (paths/registry).
 */
 
@@ -57,41 +60,33 @@ const PREMIUM_ABIERTO_HASTA_V1 = true;
                                     ids que no existen; StepError/lookup ya lo
                                     manejan, y ocultarlos escondería bugs)
      access !== 'premium' -> true
-     premium              -> premiumUnlocked || código || tasting || abierto hasta v1 */
+     premium              -> código || compra || tasting || abierto hasta v1 */
 function canAccessRoutine(routineId, opts) {
   const tasting = !!(opts && opts.tasting);
   const routine = resolveAnyRoutine(routineId);
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
-  const s = getState && getState();
-  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
-  return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
 /* canAccessPath(pathId) -> boolean
      path desconocido / access !== 'premium' -> true
-     premium -> premiumUnlocked || código
+     premium -> código || compra
    Hoy los 7 Caminos son access:'free' -> siempre true (sin cambio observable). */
 function canAccessPath(pathId) {
   const path = (window.getPath && window.getPath(pathId)) || null;
   if (!path) return true;
   if (path.access !== 'premium') return true;
-  const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
+  return hasPremiumEntitlement();
 }
 
 /* hasPremiumEntitlement() -> boolean   (s149)
      No todo lo premium es CONTENIDO. El constructor de rutinas propias es una
      SUPERFICIE entera de pago (s93): no hay `routineId` ni `pathId` que pasarle
-     a los dos guards de arriba, asi que `CustomRoutines.jsx` leia
-     `premiumUnlocked` directo — la unica lectura del booleano fuera de este
-     archivo que NO era un fallback defensivo, y justo la excepcion que el audit
-     integral señalaba por su nombre.
-     Con esta tercera funcion la promesa de la cabecera vuelve a cumplirse: al
-     llegar la licencia real SOLO cambia este archivo. */
+     a los dos guards de arriba. Con esta tercera funcion la promesa de la
+     cabecera se cumple: al llegar la licencia real SOLO cambia este archivo. */
 function hasPremiumEntitlement() {
-  const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
+  return tieneLicenciaPremium() || tieneCompraVigente();
 }
 
 /* puedeMantenerCalendario() -> boolean   (14 oct. 2026)

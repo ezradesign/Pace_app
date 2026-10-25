@@ -35,13 +35,13 @@
 
 function RoutineCard({ routine, color, onClick, variant = 'body' }) {
   const { t, tn, lang } = useT();
-  const [pace] = usePace(); // suscripción reactiva: al cambiar premiumUnlocked
-                            // la tarjeta re-renderiza y el guard relee el store.
+  const [pace] = usePace(); // suscripción reactiva: al canjear un código la
+                            // tarjeta re-renderiza y el guard relee el store.
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const isPremium = routine.access === 'premium';
   const isLocked = window.canAccessRoutine
     ? !window.canAccessRoutine(routine.id)
-    : (isPremium && !pace.premiumUnlocked);
+    : isPremium; // sin guard, cerrada: nada del estado abre PACE completo
 
   /* Duración DERIVADA para las rutinas del contrato v1 (s115): una sola
      promesa vía `estimateDuration`, con el preset de descanso actual. El resto

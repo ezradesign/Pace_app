@@ -54,7 +54,7 @@ test('el catálogo usa los seis nombres nuevos, cada uno con su dibujo de siempr
 test('una rutina propia guardada con los nombres de antes se ve con los de hoy, su dibujo y lo que pide', async ({ page, context }) => {
   const errores = capturarErrores(page);
   const viejos = ['Círculos de hombro', 'Inclinación lateral', 'Hueco en silla', 'Palmas al suelo', 'Apertura de costillas + respiración'];
-  await sembrar(context, { premiumUnlocked: true, customRoutines: [{ id: 'custom.1', name: 'De antes',
+  await sembrar(context, { customRoutines: [{ id: 'custom.1', name: 'De antes',
     steps: viejos.map((name) => ({ name, dur: 30, cue: 'Despacio.' })), min: 3,
     createdAt: 1760000000000, updatedAt: 1760000000000 }] });
   await irAlArtefacto(page);

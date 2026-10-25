@@ -293,7 +293,7 @@ test('11 · una rutina propia dañada no tumba «Tus rutinas»: se aparta sin bo
   const buena = { id: 'custom.1', name: 'Mi pausa buena', steps: [paso], min: 1, createdAt: 1, updatedAt: 1 };
   const sinPasos = { id: 'custom.2', name: 'Sin pasos', min: 1 };
   const conPasoRoto = { id: 'custom.3', name: 'Con un paso roto', steps: [null, paso], min: 1 };
-  await sembrar(context, { premiumUnlocked: true, customRoutines: [buena, null, sinPasos, conPasoRoto] });
+  await sembrar(context, { customRoutines: [buena, null, sinPasos, conPasoRoto] });
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
 

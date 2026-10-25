@@ -43,10 +43,8 @@ test('hasta v1 se abren las rutinas y «Tus rutinas», sin que eso sea tener PAC
     rutina: window.canAccessRoutine('move.spine.waves'),
     constructor: typeof window.puedeCrearRutinas === 'function' && window.puedeCrearRutinas(),
     completo: window.hasPremiumEntitlement(),
-    comprado: window.getState().premiumUnlocked,
   }));
   expect(acceso.rutina, 'la rutina premium sigue cerrada').toBe(true);
   expect(acceso.constructor, '«Tus rutinas» sigue cerrado hasta v1').toBe(true);
   expect(acceso.completo, 'abrir hasta v1 no es tener PACE completo: sin codigo ni compra, false').toBe(false);
-  expect(acceso.comprado, 'abrir hasta v1 no es comprar: premiumUnlocked sigue false').toBe(false);
 });

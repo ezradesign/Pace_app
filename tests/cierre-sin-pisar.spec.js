@@ -128,7 +128,6 @@ test('una rutina propia con el nombre en dos líneas · ningún botón del cierr
   const nombre = 'Mi rutina de media mañana en la oficina';
   await hastaElCierre(page, context, {
     extra: {
-      premiumUnlocked: true,
       customRoutines: [{
         id: 'custom.1760000000000', name: nombre,
         steps: [

@@ -141,7 +141,6 @@ test('una rutina propia corre en el runner guiado, con «Descanso» como descans
   /* Las rutinas propias son de quien ha comprado premium: hasta v1 se abren las del catálogo,
      no el constructor (premium-abierto.spec.js). */
   await sembrar(context, {
-    premiumUnlocked: true,
     customRoutines: [{
       id: 'custom.1760000000000', name: 'Mi pausa',
       steps: [
