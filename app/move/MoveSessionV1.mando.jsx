@@ -20,7 +20,13 @@ function v1SoltarFoco(e) {
   if (raiz) { try { raiz.focus({ preventScroll: true }); } catch (err) {} }
 }
 
-function MandoV1({ accent, paused, onPause, prev, next, textos }) {
+/* EL ARO DEL «›» (Ez, 1A del 25 oct.): con «Auto», se llena hasta que la pantalla pasa sola
+   (`anillo`, de 0 a 1). Sin «Auto», `espera` marca el botón cuando la cuenta ya acabó y lo que
+   sigue lo decide quien hace la rutina. */
+function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo }) {
+  const tono = acentoModulo || accent;
+  const vuelta = 2 * Math.PI * 27;
+  const lleno = Math.max(0, Math.min(1, anillo || 0));
   /* Los textos traen su flecha o su símbolo («← Anterior», «❚❚ Pausar»); el botón ya los dibuja. */
   const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
   const pulsa = (fn) => (e) => { v1SoltarFoco(e); if (fn) fn(); };
@@ -38,8 +44,16 @@ function MandoV1({ accent, paused, onPause, prev, next, textos }) {
           : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11M15 6.5v11" /></svg>}
         <span className="pace-v1-oculto">{etiqueta(paused ? textos.resume : textos.pause)}</span>
       </button>
-      <button type="button" className="pace-v1-redondo" data-pace-v1-btn="next" onClick={pulsa(next.onClick)} title={etiqueta(next.label)}>
+      <button type="button" className="pace-v1-redondo" data-pace-v1-btn="next" onClick={pulsa(next.onClick)} title={etiqueta(next.label)}
+        {...(espera ? { 'data-pace-v1-espera': '', style: { '--v1-tono': tono } } : {})}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6.5 15 12l-5.5 5.5" /></svg>
+        {anillo != null && (
+          <svg className="pace-v1-anillo" data-pace-v1-anillo={lleno.toFixed(3)} viewBox="0 0 58 58" aria-hidden="true">
+            <circle cx="29" cy="29" r="27" className="pace-v1-anillo-pista" />
+            <circle cx="29" cy="29" r="27" className="pace-v1-anillo-arco" transform="rotate(-90 29 29)"
+              style={{ stroke: tono, strokeDasharray: `${(vuelta * lleno).toFixed(1)} ${vuelta.toFixed(1)}`, opacity: lleno > 0 ? 1 : 0 }} />
+          </svg>
+        )}
         <span className="pace-v1-oculto">{etiqueta(next.label)}</span>
       </button>
     </div>

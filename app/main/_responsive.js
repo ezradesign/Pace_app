@@ -222,7 +222,7 @@
     [data-pace-timer-wrap],
     [data-pace-dial-fit] [data-pace-dial-label],
     [data-pace-dial-fit] [data-pace-dial-number],
-    [data-pace-dial-fit] [data-pace-dial-subtitle],
+    [data-pace-dial-fit] [data-pace-dial-subtitle], [data-pace-dial-fit] [data-pace-dial-hasta],
     [data-pace-dial-fit] [data-pace-dial-divider] {
       transition-property: none;
     }

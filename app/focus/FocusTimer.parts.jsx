@@ -180,10 +180,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
    Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
    para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
    ahora en TimerDial.jsx. */
-function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight, paused }) {
+function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, hasta, subtitle, inner, running, fitHeight, paused }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} running={running} fitHeight={fitHeight} paused={paused} />;
+  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} hasta={hasta} subtitle={subtitle} inner={inner} running={running} fitHeight={fitHeight} paused={paused} />;
 }
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {

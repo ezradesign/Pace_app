@@ -208,7 +208,7 @@ function TimerDialPunto({ giro, angulo, color, nace, deGolpe }) {
   );
 }
 
-function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused }) {
+function TimerDial({ mins, secs, progress, mode, modeLabel, hasta, subtitle, inner, running, ticks, fitHeight, paused }) {
   const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
   const ringColor = interpolateRingColor(progress, mode);
@@ -371,12 +371,14 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
         <TimerDialPunto giro={giroInicio} angulo={progress * barrido} color={ringColor} nace={progress === 0} deGolpe={deGolpe} />
       )}
 
-      <div style={timerDialStyles.inner}>
+      {/* Con «Hasta las» el bloque baja hasta un 15 % de su alto (Ez, 3C del 25 oct.): --pace-dial-baja, en ritmo.css. */}
+      <div style={hasta ? { ...timerDialStyles.inner, transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030 + var(--pace-dial-baja, 15%)))' } : timerDialStyles.inner}>
         {/* data-pace-dial-* (s126): hooks PRESENTACIONALES para el escalado
             proporcional del interior en Desktop (app/main/_responsive.js los
             usa SOLO bajo min-width:769px). No cambian estructura ni lógica y
             son inertes en mobile/tablet y en Caminos (marco clásico). */}
         {modeLabel ? <div data-pace-dial-label style={timerDialStyles.modeLabel}>{modeLabel}</div> : null}
+        {hasta ? <div data-pace-dial-hasta data-pace-ritmo-hasta>{hasta}</div> : null}
         <div data-pace-dial-number style={ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>

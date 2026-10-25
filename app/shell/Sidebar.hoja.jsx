@@ -186,15 +186,19 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
        a media tinta. El relleno de los días pasados es un oliva claro SÓLIDO: el de
        antes era el oliva transparente, y sobre el beige del tubo se volvía gris y
        parecía apagado (más en la paleta oscura). Hoy, en tinta entera.
+       EL COLOR DICE LO LLENA QUE ESTÁ (Ez, 4B del 25 oct.): un solo tono por cápsula, del
+       degradado del logo, del terracota de un día corto al oliva de uno lleno.
+       --pace-capsula-p lo pone SidebarWeek (alto ÷ 40). Los días pasados, más suaves.
        Sin «color-mix» (navegadores viejos) queda el oliva a media opacidad, que es
        como era. */
     [data-pace-sidebar] [data-pace-capsula] { box-shadow: inset 0 0 0 1px var(--line); }
     [data-pace-sidebar] [data-futuro="1"] [data-pace-capsula] { opacity: .55; }
     [data-pace-sidebar] [data-pace-capsula-relleno] { display: block; flex: none; border-radius: 3.5px; background: var(--focus); opacity: .55; }
-    @supports (background: color-mix(in oklab, red, blue)) {
-      [data-pace-sidebar] [data-pace-capsula-relleno] { opacity: 1; background: color-mix(in oklab, var(--focus) 58%, var(--paper-2)); }
-    }
     [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: var(--focus); opacity: 1; }
+    @supports (background: color-mix(in oklab, red, blue)) {
+      [data-pace-sidebar] [data-pace-capsula-relleno] { opacity: 1; background: color-mix(in oklab, color-mix(in oklab, var(--focus) var(--pace-capsula-p, 100%), var(--breathe)) 62%, var(--paper-2)); }
+      [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: color-mix(in oklab, var(--focus) var(--pace-capsula-p, 100%), var(--breathe)); }
+    }
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
        ancho util son 243. El padding y el margen negativo dan aire al fondo que
