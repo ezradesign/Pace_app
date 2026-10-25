@@ -79,6 +79,11 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    (https://claude.ai/artifact/DuBukvPPSULtiMdtJ9nTn1, `docs/proposals/mueve-estira-revision-chatgpt-25oct.md`). Lo que
    traiga se comprueba y entra en la cola. Los prompts de los dibujos, en https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM.
    La sesión `mueve-estira` terminó: archivarla con el sí de Ez (quitar antes su `node_modules` si es un enlace).
+9c. **25 oct., ~11:40: uso al 87 % de las 5 h** (se repone hacia las 14:40; semana al 65 %). `franjas-maqueta`:
+   N2 hecho (7c7d357; verify, sus e2e y las compilaciones de Android e iPhone en verde), N9 no sale, la maqueta N5-N8
+   con las fotos hechas y la página a medias; wip d704826 en `claude/franjas-maqueta-n5-n8-7312c7`, sigue hasta el 95 % y
+   deja lo que falte en `docs/traspaso/archivos/franjas-maqueta-25oct/LEEME.md`. La sesión de seguridad y cobro web
+   NO se ha abierto todavía: se abre con el «sí» de Ez cuando haya uso.
 10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
    seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
    - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
