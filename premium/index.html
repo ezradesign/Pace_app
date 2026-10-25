@@ -20,7 +20,9 @@
      SIN COOKIES NI RASTREO: solo pide a su propio dominio (las fuentes, las fotos y
      /api/avisame). Las visitas se cuentan con la analítica sin cookies de Cloudflare, puesta
      A MANO solo aquí: la de todo el proyecto de Pages se metería también en la app. El
-     fragmento va en la línea marcada «WEB ANALYTICS» cuando Ez cree el sitio y pase su token.
+     fragmento va en la línea marcada «WEB ANALYTICS» cuando Ez cree el sitio y pase su token,
+     y a la vez sus dos dominios entran en la CSP de `_headers` (si no, la CSP lo bloquea;
+     tests/cabeceras.spec.js falla mientras falte).
 
      LA LISTA «AVÍSAME» ESTÁ APAGADA hasta que la función diga que hay almacén
      (GET /api/avisame -> {abierta: true}): mientras, en su sitio pone «La lista abre muy

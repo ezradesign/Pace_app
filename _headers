@@ -3,9 +3,18 @@
 # Ez, 16 oct. 2026: antes de cobrar, que ninguna web meta PACE en un marco y que
 # el navegador no adivine tipos. La pantalla encendida (wake-lock) se deja libre:
 # las sesiones guiadas la usan. Lo vigila tests/cabeceras.spec.js.
+#
+# LA CSP (auditoría del 22 oct., S5): la web solo carga lo suyo. Scripts, estilos,
+# letras, sonidos e imágenes, de pacegrass.app; las únicas conexiones fuera, las
+# del calendario (Google y Microsoft), y ningún marco, plugin ni formulario a otra
+# web. Los scripts en línea siguen permitidos porque el build mete la app entera
+# en `index.html` (unos doscientos): con sus huellas no cabe en una cabecera.
+# Si /premium enciende la analítica de Cloudflare, sus dos dominios van aquí
+# antes (lo vigila tests/cabeceras.spec.js). En las apps de Android y del iPhone
+# no se aplica: estas cabeceras solo las manda Cloudflare.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
-  Content-Security-Policy: frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' https://www.googleapis.com https://graph.microsoft.com https://login.microsoftonline.com; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
