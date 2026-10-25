@@ -109,7 +109,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.explore.all.move.title':          'Field body',
   'ach.item.explore.all.move.desc':           'Every mobility routine',
   'ach.item.explore.all.extra.title':         'Strong at the desk',
-  'ach.item.explore.all.extra.desc':          'Every Move routine',
+  'ach.item.explore.all.extra.desc':          'Every Move routine without a bar',
 
   // ── Maestria ───────────────────────────────────
   'ach.item.master.pomodoro.12.title':        'Twelve deep',

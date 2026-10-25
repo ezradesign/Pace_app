@@ -1,18 +1,123 @@
-/* PACE · app/extra/extra.data.piernas.js (s178) — LAS RUTINAS DE **ESTIRA**, 2ª mitad.
+/* PACE · app/extra/extra.data.piernas.js — LAS RUTINAS DE **ESTIRA**, 2ª mitad.
    ====================================================================================
-   Los grupos `caderas` y `flujos`. Se separó de `extra.data.js` por la regla §1 (ver
-   la cabecera de aquel para el porqué del corte y para el aviso de los ids cruzados).
+   «Hombros y columna», «Caderas y piernas» y «Para ir a más» (ver la cabecera de `extra.data.js`
+   para las capas y el aviso de los ids cruzados), y las rutinas que ya no salen en la lista.
 
-   GUARD DE ORDEN: si este archivo se evalúa antes que `extra.data.js`, no hay objeto
-   al que añadir nada y la biblioteca se quedaría con media lista SIN QUE NADIE SE
-   ENTERE — el fallo por omisión que s169 dejó por escrito. Se aborta ruidosamente.
-   Es la regla de s148: si un archivo llama a algo al evaluarse, o quien se lo da carga
-   antes, o hay guard que aborte. */
+   GUARD DE ORDEN: si este archivo se evalúa antes que `extra.data.js`, no hay objeto al que
+   añadir nada y la biblioteca se quedaría con media lista sin que nadie se entere. Se aborta. */
 if (!window.EXTRA_ROUTINES) {
   throw new Error('extra.data.piernas.js se ha evaluado ANTES que extra.data.js: revisa el orden en PACE.html');
 }
 
 Object.assign(window.EXTRA_ROUTINES, {
+  hombros: {
+    label: 'Hombros y columna',
+    aside: 'Antídoto al teclado',
+    items: [
+      /* Los hombros junto a una pared: sin la banda, que va a «Con material», ni la barra (2A). */
+      { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros',
+        desc: 'Hombros a punto: la pared, el giro del hombro y la espalda alta.', min: 3,
+        position: ['standing', 'seated'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        steps: [
+          { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
+              action: 'Sube y baja los brazos junto a la pared, como alas.',
+              care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. La zona lumbar, cerca de la pared.' } },
+          { name: 'Rotación externa', mode: 'timed', dur: 50,
+            instruction: {
+              action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+              care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } },
+          { name: 'Extensión torácica', mode: 'timed', dur: 40,
+            instruction: {
+              setup: 'Siéntate atrás del todo, con la espalda alta apoyada en el respaldo.',
+              action: 'Arquea suave sobre el respaldo, abriendo el pecho. La cabeza no va atrás.',
+              care: 'El arco nace del pecho. Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.' } },
+        ]},
+      /* Espalda de oficina (antes en Mueve): es movilidad, así que vive en Estira, y sin la banda,
+         que va a «Con material» (2A). De pie y sin suelo: una rutina de oficina no pide tumbarse. */
+      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda alta y los hombros, de pie junto a una pared.', min: 3,
+        position: ['standing'], equipment: ['wallOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        steps: [
+          { name: 'Juntar omóplatos', mode: 'reps', reps: 12, dur: 40,
+            tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'De pie, pies al ancho de las caderas, hombros sueltos.',
+              action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Deslizamientos en pared', mode: 'reps', reps: 8, dur: 48,
+            tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
+              action: 'Sube y baja los brazos junto a la pared, como alas, despacio.',
+              care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. Sin pared, hazlo en el aire.' } },
+          { name: 'Apertura de pecho', mode: 'timed', dur: 40,
+            instruction: {
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
+        ]},
+      /* LA HERMANA DE PIE DE `move.spine.chair` (Ez, 15 oct. 2026: las series de «A tu
+         ritmo»). La pausa larga sirve una Estira de pie y Estira solo tenía de pie caderas y
+         piernas. El dibujo de `Rotación torácica` es sentado, así que aquí el paso lleva
+         nombre propio y cae al dibujo de reserva hasta que haya uno de pie. Unidades por
+         BASE §3-B, §3-C y §6; liberación rápida de §5 (sale en unos 3 min). */
+      { id: 'move.back.standing', tag: 'SPN', code: 'Espalda', name: 'Espalda de pie',
+        desc: 'Espalda y pecho sin sentarte ni bajar al suelo. Cuatro gestos junto a la mesa.', min: 3,
+        position: ['standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        steps: [
+          { name: 'Rodar hacia abajo', mode: 'timed', dur: 40,
+            instruction: {
+              setup: 'Ponte de pie, pies al ancho de las caderas.',
+              action: 'Redondea la espalda poco a poco hacia abajo, hasta donde vaya cómodo. Sube igual, despacio.',
+              care: 'Rodillas suaves; puedes parar a medio camino. Sube despacio para no marearte.' } },
+          { name: 'Rotación torácica de pie', mode: 'perSide', dur: 20, transition: { seconds: 8 },
+            instruction: {
+              setup: 'De pie, pies al ancho de las caderas. Cruza las manos sobre el pecho.',
+              action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
+              care: 'Que no gire todo el cuerpo a la vez, sin bloquear la cadera a la fuerza. El giro nace del tronco.' } },
+          { name: 'Apertura de pecho', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
+              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
+          { name: 'Juntar omóplatos', mode: 'reps', reps: 8, dur: 32,
+            tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+            instruction: { action: '3 inhalaciones completas para cerrar.' } },
+        ]},
+      /* Suelo, sentado y de pie, en ese orden. El puente torácico y la onda espinal salen hasta tener
+         texto y dibujo claros (2A); entra la inclinación de tronco (3A), el gesto lateral de la
+         columna que faltaba. */
+      { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
+        desc: 'Gato-camello, giro, inclinación y rodar hacia abajo. Pasa por el suelo.', min: 4, access: 'premium',
+        position: ['floor', 'seated', 'standing'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
+        steps: [
+          { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
+              action: 'Redondea y extiende la espalda despacio, sin buscar los extremos.',
+              care: 'Movimiento lento, siguiendo la respiración.' } },
+          { name: 'Rotación torácica', mode: 'timed', dur: 45,
+            instruction: {
+              setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
+              action: 'Gira el tronco despacio a un lado y al otro.',
+              care: 'El giro nace del tronco, no del cuello.' } },
+          { name: 'Inclinación de tronco', mode: 'reps', reps: 6, dur: 30,
+            tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'De pie, pies al ancho de las caderas, brazos sueltos.',
+              action: 'Inclina el tronco a un lado, la mano baja por el muslo, y vuelve. Tres a cada lado.',
+              care: 'Sin girar ni echarte adelante. Solo hasta donde vaya cómodo.' } },
+          { name: 'Rodar hacia abajo', mode: 'timed', dur: 60,
+            instruction: {
+              setup: 'Ponte de pie, pies al ancho de las caderas.',
+              action: 'Redondea la espalda poco a poco hacia abajo, hasta donde vaya cómodo. Sube igual, despacio.',
+              care: 'Rodillas suaves; puedes parar a medio camino. Sube despacio para no marearte.' } },
+        ]},
+    ]
+  },
   caderas: {
     label: 'Caderas y piernas',
     aside: 'Desbloquea la mitad inferior',
@@ -60,11 +165,10 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
             instruction: { action: '3 inhalaciones completas para cerrar.' } },
         ]},
+      /* De pie primero y luego el suelo. El puente con marcha pasa a Mueve, que es fuerza (2A). */
       { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas',
-        desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
+        desc: '4 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 5,
         position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
-        /* De pie primero y luego el suelo: antes se bajaba al suelo, se subía a la
-           sentadilla y se volvía a bajar. */
         steps: [
           { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
@@ -84,22 +188,40 @@ Object.assign(window.EXTRA_ROUTINES, {
               setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
               action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
               care: 'Un cojín bajo la cadera que queda en el aire, si lo necesitas. Si notas la rodilla, sal de la postura.' } },
-          { name: 'Puente con marcha', mode: 'timed', dur: 60,
-            instruction: {
-              setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
-              action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-              care: 'Si la pelvis se cae o la lumbar molesta, apoya los dos pies o termina.' } },
         ]},
+      /* Detrás de las piernas, de pie y de arriba abajo: el pliegue, el isquio y el gemelo en pared
+         (3A). La marcha del elefante sale hasta tener texto y dibujo claros y el puente pasa a Mueve
+         (2A); sin ellos ya no pide suelo. */
+      { id: 'move.hamstrings', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior',
+        desc: 'Detrás de las piernas, de pie: el pliegue, los isquios y el gemelo.', min: 4, access: 'premium',
+        position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        steps: [
+          { name: 'Pliegue adelante', mode: 'timed', dur: 60,
+            instruction: {
+              action: 'Pies al ancho de las caderas, deja caer el tronco hacia abajo. Rodillas suaves.',
+              care: 'Manos en los muslos si lo necesitas: no hace falta tocar el suelo.' } },
+          { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
+              action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+              care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
+          { name: 'Gemelo en pared', mode: 'perSide', dur: 25, transition: { seconds: 8 },
+            instruction: {
+              setup: 'De cara a la pared, manos en ella. Un pie atrás, con el talón en el suelo.',
+              action: 'Lleva la cadera hacia la pared con la pierna de atrás estirada. Estirón suave en el gemelo.',
+              care: 'El talón de atrás sigue en el suelo. Sin rebotes.' } },
+        ]},
+    ]
+  },
+  mas: {
+    label: 'Para ir a más',
+    aside: 'Más hondo, cuando lo eliges',
+    aparte: true,
+    items: [
+      /* Para ir a más: flexores profundos, cuádriceps y caderas. El puente con marcha pasa a Mueve (2A). */
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Estiramiento del sofá',
-        desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
-        position: ['halfKneeling', 'floor', 'supine'], equipment: ['wall', 'cushionOptional'], requiresFloor: true, intensity: 'strong', level: 'intermediate',
-        /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
-           pared/suelo. s115 (B2.2b-1): contrato formal — `instruction`
-           {setup,action,care}, `setup:{mode:'ready',estimatedSeconds}` (los dos
-           «setup» distintos: comportamiento vs copy), `transition.seconds` en
-           los perSide. dur en perSide = segundos POR LADO (activo = dur×2 + 1
-           transición). s118 (B2.3): `min` 5→6 — el dev-check calculaba 6–7 min y
-           5 quedaba fuera del rango mostrado (único piloto descuadrado, s115). */
+        desc: 'Flexores profundos contra la pared, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
+        position: ['halfKneeling', 'floor'], equipment: ['wall', 'cushionOptional'], requiresFloor: true, intensity: 'strong', level: 'intermediate',
         steps: [
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
@@ -121,11 +243,6 @@ Object.assign(window.EXTRA_ROUTINES, {
               setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
               action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
               care: 'Un cojín bajo la cadera que queda en el aire, si lo necesitas. Si notas la rodilla, sal de la postura.' } },
-          { name: 'Puente con marcha', mode: 'timed', dur: 60,
-            instruction: {
-              setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
-              action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-              care: 'Si la pelvis se cae o la lumbar molesta, apoya los dos pies o termina.' } },
         ]},
       /* Cada paso con su colocación y su cuidado. Levantarse del suelo, sin manos solo si
          se puede. «Rana» sigue sin dibujo: lo está haciendo Ez. */
@@ -159,6 +276,15 @@ Object.assign(window.EXTRA_ROUTINES, {
               action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo, y mantén.',
               care: 'Mantén un apoyo cómodo y sal con control. Si los talones se levantan, baja menos.' } },
         ]},
+    ]
+  },
+});
+
+/* LAS QUE YA NO SALEN EN LA LISTA (Ez, 23 oct. 2026: 2A): ATG y Ancestral. No se borran: su id
+   sigue en el historial, en los eventos, en los logros y en un Camino, así que `getExtraRoutine`
+   las sigue encontrando aquí. Nada de lo que recorre `EXTRA_ROUTINES` (la biblioteca, «A tu
+   ritmo», «Para ahora») las ve. */
+window.EXTRA_ROUTINES_FUERA = [
       /* Lo que es de un lado va por lado, con su cambio, y la fuerza va por repeticiones.
          «Rodillas a prueba» sonaba a «a prueba de lesiones», que la base no deja decir
          (Ez, 16 oct. 2026). */
@@ -194,110 +320,6 @@ Object.assign(window.EXTRA_ROUTINES, {
               action: 'Camina con las manos por el suelo, piernas lo más estiradas posible.',
               care: 'Dobla algo las rodillas si los isquios tiran.' } },
         ]},
-      /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Elephant walk y
-         Pliegue adelante → `timed`; Isquio a una pierna → `perSide` (fix del «40s
-         por lado» en dur:80 → dur POR LADO + transición, §3-C/§6); Puente con
-         marcha → `timed` sobre SUELO (reutiliza el copy de hips.5/couch) con gate
-         `ready` (entrada al suelo). `name` intactos → glifos sin tocar. `min` 5
-         dentro de rango. Acceso premium SIN cambios. */
-      /* s178 · LA HERMANA DE PIE DE `move.hamstrings`, por el mismo censo. Los tres
-         ejercicios ya tienen arte y su propio `setup` los declara de pie: `Rodar hacia
-         abajo` («ponte de pie»), `Isquio a una pierna` («apoya un talon adelante») y
-         `Pliegue adelante` («manos en las rodillas si lo necesitas»).
-         `Marcha del elefante` NO entra aunque tenga arte: «camina con las manos por el
-         suelo» no pide tumbarse, pero en una oficina no es discreto — y la discrecion es
-         el eje de esta biblioteca. Unidades por BASE §3-C y §6. */
-      { id: 'move.hamstrings.standing', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior de pie',
-        desc: 'Isquios y espalda baja sin tumbarse. Cuatro posiciones junto a la mesa.', min: 4,
-        position: ['standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
-        steps: [
-          { name: 'Rodar hacia abajo', mode: 'timed', dur: 50,
-            instruction: {
-              setup: 'Ponte de pie, pies al ancho de las caderas.',
-              action: 'Redondea la espalda poco a poco hacia abajo, hasta donde vaya cómodo. Sube igual, despacio.',
-              care: 'Rodillas suaves; puedes parar a medio camino. Sube despacio para no marearte.' } },
-          { name: 'Isquio a una pierna', mode: 'perSide', dur: 35, transition: { seconds: 8 },
-            instruction: {
-              setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
-              action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
-              care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
-          { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 30,
-            instruction: {
-              setup: 'Sujétate a la mesa con las dos manos.',
-              action: 'Lleva las rodillas adelante y sube los talones. Baja poco a poco.',
-              care: 'Apoyado en todo momento. Baja solo hasta donde controles.' } },
-          { name: 'Pliegue adelante', mode: 'timed', dur: 45,
-            instruction: {
-              action: 'Pies al ancho de las caderas, deja caer el tronco hacia abajo. Rodillas suaves.',
-              care: 'Manos en los muslos o en la mesa si lo necesitas: no hace falta tocar el suelo. Sal despacio.' } },
-          { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
-            instruction: { action: '3 inhalaciones completas para cerrar.' } },
-        ]},
-      { id: 'move.hamstrings', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior',
-        desc: 'Isquios y cadena posterior. Piernas largas otra vez.', min: 5, access: 'premium',
-        position: ['standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
-        steps: [
-          { name: 'Marcha del elefante', mode: 'timed', dur: 70,
-            instruction: {
-              action: 'Camina con las manos por el suelo, piernas lo más estiradas posible.',
-              care: 'Dobla algo las rodillas si los isquios tiran.' } },
-          { name: 'Pliegue adelante', mode: 'timed', dur: 70,
-            instruction: {
-              action: 'Pies al ancho de las caderas, deja caer el tronco hacia abajo. Rodillas suaves.',
-              care: 'Manos en los muslos si lo necesitas: no hace falta tocar el suelo.' } },
-          { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
-            instruction: {
-              setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
-              action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
-              care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
-          { name: 'Puente con marcha', mode: 'timed', dur: 70, setup: { mode: 'ready', estimatedSeconds: 15 },
-            instruction: {
-              setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
-              action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-              care: 'Si la pelvis se cae o la lumbar molesta, apoya los dos pies o termina.' } },
-        ]},
-    ]
-  },
-  flujos: {
-    label: 'Flujos',
-    aside: 'De pies a cabeza',
-    items: [
-      /* s119 (B2.3 OLA 2): migración al contrato v1. Flujo → mezcla `timed`
-         (movilidad) + `perSide` (Cuello y trapecios, bilateral) + `rest` de
-         cierre respiratorio (SIN restKind, s113 — no es descanso entre series).
-         Gate `ready` en el PRIMER paso de suelo (Gato-camello). Gato-camello,
-         Squat, Apertura de pecho, Cuello y trapecios y Reset respiración
-         comparten copy con spine.waves/chair.antidote (mismo glifo). */
-      { id: 'move.morning.flow', tag: 'FLOW', code: 'Mañana', name: 'Despertar matinal',
-        desc: 'Flujo suave de cuerpo entero para empezar el día. Empieza en el suelo.', min: 5,
-        position: ['floor', 'seated', 'standing'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
-        steps: [
-          { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
-            instruction: {
-              setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
-              action: 'Redondea y extiende la espalda despacio, sin buscar los extremos.',
-              care: 'Movimiento lento, siguiendo la respiración.' } },
-          { name: 'Rotación torácica', mode: 'timed', dur: 45,
-            instruction: {
-              setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
-              action: 'Gira el tronco despacio a un lado y al otro.',
-              care: 'El giro nace del tronco, no del cuello.' } },
-          { name: 'Sentadilla profunda', mode: 'timed', dur: 60,
-            instruction: {
-              action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo. Los codos, dentro, sin empujar.',
-              care: 'Apóyate en algo si pierdes el equilibrio.' } },
-          { name: 'Apertura de pecho', mode: 'timed', dur: 45,
-            instruction: {
-              action: 'Manos tras la nuca, sin tirar de la cabeza. Abre los codos y respira ancho.',
-              care: 'Cuello cómodo, mirada al frente. Abre solo hasta donde no moleste.' } },
-          { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
-            instruction: {
-              setup: 'Siéntate erguido, hombros abajo.',
-              action: 'Inclina la cabeza con control, la oreja hacia el hombro.',
-              care: 'Sin tirar con la mano ni subir el hombro.' } },
-          { name: 'Reset respiración', mode: 'rest', dur: 30,
-            instruction: { action: '3 inhalaciones profundas para cerrar.' } },
-        ]},
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
         intensity: 'moderate', level: 'intermediate',
         position: ['floor', 'standing'], equipment: ['bar'], requiresFloor: true,
@@ -330,6 +352,4 @@ Object.assign(window.EXTRA_ROUTINES, {
               action: 'Inhala llevando el aire a los lados de las costillas. Exhala despacio.',
               care: 'Sin forzar el aire. Deja que las costillas se ensanchen, sin bloquear la espalda.' } },
         ]},
-    ]
-  },
-});
+];

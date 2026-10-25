@@ -91,7 +91,7 @@ test('el runner abre con el lienzo y su mando cabe en la pantalla', async ({ bro
   const { context, page, errores } = await abrirEn(browser, 4636, 2127);
   await page.getByRole('button', { name: 'Mueve' }).first().click();
   await page.locator('.pace-lib').first().waitFor({ state: 'visible' });
-  await page.getByRole('heading', { name: 'Flexiones de escritorio', exact: true }).first().click();
+  await page.getByRole('heading', { name: 'Fondos en silla', exact: true }).first().click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   await page.getByRole('button', { name: 'Empezar ahora' }).click();
   await expect(page.locator('[data-pace-v1-mando]')).toBeVisible();

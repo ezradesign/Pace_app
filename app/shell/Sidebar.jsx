@@ -115,9 +115,7 @@ function Sidebar() {
       if (typeof libraryParaAhora !== 'function') return null;
       const todas = [];
       [window.MOVE_ROUTINES, window.EXTRA_ROUTINES].forEach(function (cat) {
-        Object.keys(cat || {}).forEach(function (g) {
-          ((cat[g] || {}).items || []).forEach(function (r) { todas.push(r); });
-        });
+        libraryProponibles(cat).forEach(function (r) { todas.push(r); });
       });
       const abiertas = todas.filter(function (r) {
         if (r.safety) return false;

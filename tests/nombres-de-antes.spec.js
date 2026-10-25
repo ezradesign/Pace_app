@@ -30,6 +30,8 @@ test('el catálogo usa los seis nombres nuevos, cada uno con su dibujo de siempr
     for (const cat of [window.MOVE_ROUTINES, window.EXTRA_ROUTINES]) {
       for (const g of Object.values(cat)) for (const rt of g.items) for (const s of rt.steps) nombres.add(s.name);
     }
+    /* y las que ya no salen en la lista (ATG lleva el puente a una pierna) */
+    for (const rt of window.EXTRA_ROUTINES_FUERA || []) for (const s of rt.steps) nombres.add(s.name);
     return Object.entries(R).map(([viejo, [nuevo]]) => ({
       viejo, nuevo,
       viejoEnCatalogo: nombres.has(viejo),
@@ -41,7 +43,7 @@ test('el catálogo usa los seis nombres nuevos, cada uno con su dibujo de siempr
   }, RENOMBRADOS);
   for (const e of r) {
     expect(e.viejoEnCatalogo, e.viejo + ' sigue en el catálogo').toBe(false);
-    /* «Puente a una pierna» vive en ATG, que sigue en el catálogo hasta la parte 2. */
+    /* «Puente a una pierna» vive en ATG, que ya no sale en la lista pero sigue existiendo. */
     expect(e.nuevoEnCatalogo, e.nuevo + ' no está en el catálogo').toBe(true);
     expect(e.dibujo, e.nuevo + ' se queda sin dibujo').toBeTruthy();
     expect(e.dibujoViejo, 'el nombre viejo ' + e.viejo + ' no lleva al mismo dibujo').toBe(e.dibujo);

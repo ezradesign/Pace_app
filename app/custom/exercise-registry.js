@@ -38,6 +38,8 @@ const EXERCISE_REGISTRY = {
       { name: 'Elevación de puntas', dur: 40, cue: 'Contra pared, levanta los pies.' },
       { name: 'Elevación de talones', dur: 30, cue: 'Sube y baja con control.' },
       { name: 'Puente con marcha', dur: 45, cue: 'Activación de glúteo profundo.' },
+      { name: 'Puente con los dos pies', dur: 30, cue: 'Los dos pies apoyados: sube y baja la pelvis.' },
+      { name: 'Bisagra de cadera', dur: 30, cue: 'Cadera atrás, espalda larga, y vuelve.' },
     ]
   },
   core: {
@@ -51,6 +53,9 @@ const EXERCISE_REGISTRY = {
       { name: 'Juntar omóplatos', dur: 30, cue: 'Junta omóplatos, 2 segundos cada vez.' },
       { name: 'Apertura con banda', dur: 40, cue: 'Banda delante del pecho: separa las manos, sin subirla.' },
       { name: 'Apretar glúteos', dur: 30, cue: 'Apretones moderados, 2 segundos cada uno.' },
+      { name: 'Desliza el talón', dur: 30, cue: 'Boca arriba: desliza un talón y vuelve, la cintura quieta.' },
+      { name: 'Remo con banda', dur: 40, cue: 'Pisa la banda y tira, codos hacia las costillas.' },
+      { name: 'Remo con tu mano', dur: 30, cue: 'La otra mano frena mientras el codo va atrás.' },
     ]
   },
   cuello: {
@@ -79,6 +84,7 @@ const EXERCISE_REGISTRY = {
       { name: 'Puente torácico', dur: 45, cue: 'Desde sentado, eleva cadera y abre el pecho al techo.' },
       { name: 'Rodar hacia abajo', dur: 45, cue: 'De pie, redondea hacia abajo poco a poco.' },
       { name: 'Giro sentado', dur: 30, cue: 'Rota hacia el respaldo, suave.' },
+      { name: 'Inclinación de tronco', dur: 30, cue: 'De pie: inclina el tronco a un lado y vuelve.' },
       { name: 'Respirar a cuatro apoyos', dur: 40, cue: 'A cuatro apoyos, el aire a los lados de las costillas.' },
     ]
   },
@@ -100,10 +106,12 @@ const EXERCISE_REGISTRY = {
       { name: 'Sentadilla profunda', dur: 50, cue: 'Talones abajo, codos dentro de las rodillas.' },
       { name: 'Sentadilla profunda sostenida', dur: 50, cue: 'Talones abajo; mantén y sal con control.' },
       { name: 'Gateo', dur: 45, cue: 'Mano y rodilla contrarias, rodillas en el suelo.' },
+      { name: 'Gateo con rodillas', dur: 30, cue: 'A cuatro apoyos, pasos cortos y rodillas abajo.' },
       { name: 'Sentarse y levantarse del suelo', dur: 60, cue: 'Al suelo por una rodilla y arriba igual, con manos.' },
       { name: 'Marcha del elefante', dur: 50, cue: 'Camina tocando el suelo, piernas estiradas.' },
       { name: 'Pliegue adelante', dur: 50, cue: 'Pies al ancho de caderas, cuelga el tronco. Rodillas suaves.' },
       { name: 'Isquio a una pierna', dur: 50, cue: 'Talón apoyado delante, cadera atrás.' },
+      { name: 'Gemelo en pared', dur: 40, cue: 'Manos en la pared, talón de atrás en el suelo.' },
     ]
   },
   manos: {
@@ -154,6 +162,14 @@ const EXERCISE_PIDE = {
   'Elevación de puntas':      { eq: ['deskOptional'], pos: ['standing'] },
   'Elevación de talones':     { pos: ['seated', 'standing'] },
   'Puente con marcha':        { pos: ['supine'], suelo: true },
+  'Puente con los dos pies':  { pos: ['supine'], suelo: true },
+  'Bisagra de cadera':        { pos: ['standing'] },
+  'Desliza el talón':         { pos: ['supine'], suelo: true },
+  'Remo con banda':           { eq: ['band'], pos: ['standing'] },
+  'Remo con tu mano':         { pos: ['standing'], lados: true },
+  'Inclinación de tronco':    { pos: ['standing'] },
+  'Gateo con rodillas':       { pos: ['floor'], suelo: true },
+  'Gemelo en pared':          { eq: ['wall'], pos: ['standing'], lados: true },
   'Plancha':                  { pos: ['floor'], suelo: true },
   'Plancha lateral':          { pos: ['floor'], suelo: true, lados: true },
   'Hueco abdominal':          { pos: ['supine'], suelo: true },

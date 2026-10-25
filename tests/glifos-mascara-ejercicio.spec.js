@@ -34,7 +34,7 @@ const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
-const RUTINA = 'Flexiones de escritorio';
+const RUTINA = 'Empuje sencillo';
 
 /* Abre biblioteca + preview SIN navegar. La navegacion se hace una sola vez. */
 async function abrirPreview(page) {

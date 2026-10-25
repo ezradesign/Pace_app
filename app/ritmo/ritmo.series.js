@@ -50,28 +50,37 @@
 /* Zona y si te levanta, por rutina: todo lo que puede entrar en los pozos de Estira y
    Mueve (lo vigila tests/ritmo-series.spec.js). Lo de Respira no tiene zona. */
 var RITMO_SERIES_META = {
+  /* «Para empezar» (Ez, 23 oct. 2026: 2A), lo que se propone sin pagar. Sentarse y levantarse
+     mueve la cadera tanto como las piernas; cuenta si se hace por libre. */
+  'extra.chair.squats': { z: ['piernas', 'caderas'], pie: true },
+  'extra.desk.pushups': { z: ['hombros'], pie: true },
+  /* Lo que pide una pared, que cuenta como la mesa (ritmoPozos): en una habitación siempre
+     hay una (los días diseñados, 20 oct. 2026). */
+  /* La sentadilla alta contra la pared trabaja glúteo y muslo: cadera, como «Glúteos invisibles».
+     Sin ella, Mueve no tendría nada de pie para la cadera y la primera pausa pasaría a Estira. */
+  'extra.legs.standing': { z: ['piernas', 'caderas'], pie: true },
   'move.neck.3': { z: ['cuello'], pie: false },
-  'move.desk.quick': { z: ['cuello', 'manos', 'espalda'], pie: false },
+  /* Los deslizamientos en pared mueven la espalda alta, como en «Espalda de oficina». */
+  'move.shoulder.circles': { z: ['hombros', 'espalda'], pie: true },
   'move.wrists': { z: ['manos'], pie: false },
-  'move.shoulder.circles': { z: ['hombros'], pie: false },
+  'move.spine.chair': { z: ['espalda'], pie: false },
+  /* El isquio va llevando la cadera atrás: cuenta también como cadera, y sin él no habría
+     caderas gratis (sentarse y levantarse pide una silla sin ruedas y no entra en los pozos). */
+  'move.hamstrings.standing': { z: ['piernas', 'caderas'], pie: true },
+  /* El resto, con PACE completo (sin «Con material» ni «Para ir a más»). */
+  'extra.calves': { z: ['piernas'], pie: false },
+  'extra.glutes.stealth': { z: ['caderas'], pie: false },
+  'extra.core.stealth': { z: ['espalda'], pie: false },
+  'move.desk.quick': { z: ['cuello', 'manos', 'espalda'], pie: false },
+  'extra.posture.set': { z: ['espalda'], pie: false },
+  'extra.grip.squeeze': { z: ['manos'], pie: false },
+  'move.shoulders.5': { z: ['hombros'], pie: true },
+  'extra.back.desk': { z: ['espalda', 'hombros'], pie: true },
+  'move.back.standing': { z: ['espalda'], pie: true },
   /* Sentadilla profunda, sentadilla lateral y zancada: mueve las piernas tanto como la
      cadera (Ez, 20 oct. 2026: «mezclar los ejercicios que ya tenemos»). */
   'move.hips.standing': { z: ['caderas', 'piernas'], pie: true },
-  'move.hamstrings.standing': { z: ['piernas'], pie: true },
-  'move.back.standing': { z: ['espalda'], pie: true },
-  'extra.calves': { z: ['piernas'], pie: false },
-  'extra.grip.squeeze': { z: ['manos'], pie: false },
-  'extra.glutes.stealth': { z: ['caderas'], pie: false },
-  'extra.posture.set': { z: ['espalda'], pie: false },
-  'extra.core.stealth': { z: ['espalda'], pie: false },
-  'extra.desk.pushups': { z: ['hombros'], pie: true },
-  /* Sin el Superman ya no pide suelo y entra en el pozo (revisión de los ejercicios). */
-  'extra.back.desk': { z: ['espalda', 'hombros'], pie: true },
-  'extra.legs.standing': { z: ['piernas'], pie: true },
-  /* Lo que pide una pared, que cuenta como la mesa (ritmoPozos): en una habitación siempre
-     hay una (los días diseñados, 20 oct. 2026). */
-  'move.shoulders.5': { z: ['hombros'], pie: true },
-  'extra.wall.sit': { z: ['piernas'], pie: true },
+  'move.hamstrings': { z: ['piernas'], pie: true },
 };
 /* Las seis zonas que un día mueve entero (Ez, 20 oct. 2026). */
 var RITMO_ZONAS = ['piernas', 'caderas', 'espalda', 'hombros', 'cuello', 'manos'];
@@ -80,6 +89,7 @@ var RITMO_ZONAS = ['piernas', 'caderas', 'espalda', 'hombros', 'cuello', 'manos'
 var RITMO_SERIES_ZONA_TAG = {
   SHLD: 'hombros', SPN: 'espalda', POST: 'espalda', BACK: 'espalda', CORE: 'espalda', HIP: 'caderas',
   GRND: 'caderas', LEG: 'piernas', ATG: 'piernas', WRST: 'manos', GRIP: 'manos', PUSH: 'hombros', HANG: 'hombros',
+  FLOW: 'espalda',
 };
 var RITMO_SERIES_LARGA = 105;  /* minutos desde la última larga (o el inicio, o la comida) para decir «Dos horas»: 1 h 45 o más */
 

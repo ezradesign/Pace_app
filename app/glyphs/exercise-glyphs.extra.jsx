@@ -404,3 +404,37 @@ Object.assign(window.EXERCISE_GLYPHS, {
   ),
 });
 
+/* LOS SEIS EJERCICIOS NUEVOS (Ez, 23 oct. 2026: 3A) llevan el glifo de su módulo hasta que llegue el
+   dibujo de Ez: la mancuerna de Mueve o la figura en arco de Estira, los de la barra de actividades,
+   a la escala de este mapa. Cuando entre su máscara, gana a esto sin tocar nada (ExerciseGlyph).
+   Sus prompts, en docs/product/GLIFOS_A_DIBUJAR.md. */
+const GlifoMueve = ({ size, className }) => (
+  <G size={size} className={className}>
+    <g transform="scale(1.5714)" strokeWidth="1.15">
+      <rect x="3" y="10" width="2.2" height="8" rx="0.6" />
+      <rect x="5.6" y="8" width="2.4" height="12" rx="0.6" />
+      <path d="M8 14h12" />
+      <rect x="20" y="8" width="2.4" height="12" rx="0.6" />
+      <rect x="22.8" y="10" width="2.2" height="8" rx="0.6" />
+    </g>
+  </G>
+);
+const GlifoEstira = ({ size, className }) => (
+  <G size={size} className={className}>
+    <g transform="scale(1.5714)" strokeWidth="1.15">
+      <path d="M4 21c3-8 7-12 10-12s7 4 10 12" />
+      <circle cx="14" cy="7.5" r="1.6" />
+      <path d="M4 22h20" opacity="0.35" strokeDasharray="1.5 2.5" />
+    </g>
+  </G>
+);
+Object.assign(window.EXERCISE_GLYPHS, {
+  'Remo con banda': GlifoMueve,
+  'Remo con tu mano': GlifoMueve,
+  'Bisagra de cadera': GlifoMueve,
+  'Desliza el talón': GlifoMueve,
+  'Inclinación de tronco': GlifoEstira,
+  'Gemelo en pared': GlifoEstira,
+});
+
+

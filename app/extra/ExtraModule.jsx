@@ -46,7 +46,9 @@ function getExtraRoutine(id) {
     const found = group.items.find(r => r.id === id);
     if (found) return found;
   }
-  return null;
+  /* Las que ya no salen en la lista (ATG, Ancestral) se siguen encontrando por su id: el
+     historial, los logros, los eventos y los Caminos las nombran. */
+  return (window.EXTRA_ROUTINES_FUERA || []).find(r => r.id === id) || null;
 }
 window.getExtraRoutine = getExtraRoutine;
 Object.assign(window, { ExtraLibrary });

@@ -18,7 +18,8 @@
  * acaba de terminar la sesion— siga abierto al leer el total, que es justo lo
  * que se pierde si alguien «arregla» el reloj cerrandolo a mano (s166).
  *
- * LA RUTINA ELEGIDA NO ES CASUAL. «Flexiones de escritorio» son 3 series
+ * LA RUTINA ELEGIDA NO ES CASUAL. «Fondos en silla» son 3 series (hasta v0.176.0 era «Flexiones de
+ * escritorio», que tenía la misma forma y ahora es «Empuje sencillo», de dos series cortas)
  * guiadas con DOS descansos entre medias, y sus numeros estan declarados en el
  * catalogo, no medidos aqui:
  *     trabajo   12+10+8 reps x 4 s de tempo = 48 + 40 + 32 =  120 s
@@ -58,7 +59,7 @@ test('el tiempo activo deja fuera descansos y pausas; el de pared los lleva dent
   await irAlArtefacto(page);
 
   await page.getByRole('button', { name: /^Mueve/ }).click();
-  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await page.getByRole('heading', { name: 'Fondos en silla' }).click();
   const preview = overlaySuperior(page);
   await preview.getByRole('button', { name: 'Empezar', exact: true }).click();
 

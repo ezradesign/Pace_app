@@ -4,12 +4,13 @@
    ejercicio de los que ya hay en Mueve o Estira (RitmoHacerla.jsx). La hoja no cuenta: su
    «Empezar» lleva a la pantalla de ejercicio de siempre con ese ejercicio solo.
 
-   LOS 31 (docs/proposals/hacerla-reparto.md): los que se hacen junto a la mesa, sin suelo ni
-   material, revisados uno a uno. Cada uno es la PRIMERA serie de su rutina (las demás dicen
-   «Últimas» o «Segunda tanda», y fuera de la rutina no se entienden) y va con el módulo donde
-   sale en más rutinas. El orden va uno de Mueve y dos de Estira, sin dos de la misma rutina
-   seguidos; cada invitación saca el siguiente (`hacerlaVez`), así que nunca repite el de la
-   anterior y los 31 salen antes de volver a empezar.
+   LOS 27 (docs/proposals/hacerla-reparto.md, rehecho con las capas de Mueve y Estira, Ez, 23 oct.
+   2026: 2A): los que se hacen junto a la mesa, gratis, sin suelo ni material, y sin pared, barra,
+   banda ni silla. Cada uno es la PRIMERA serie de su rutina (las demás dicen «Otra serie» y
+   fuera de la rutina no se entienden) y va con el módulo donde sale en más rutinas. Mueve es
+   fuerza y casi toda pide silla o pared, así que deja tres; van espaciados (puestos 1, 10 y 19)
+   y nunca hay dos de la misma rutina seguidos. Cada invitación saca el siguiente
+   (`hacerlaVez`), así que nunca repite el de la anterior y los 27 salen antes de volver a empezar.
 
    SOLO SUMA LOS MINUTOS (Ez, al aprobar las fotos): sin logros, sin «¿Te ayudó?» y sin contar
    como rutina hecha. Hecha, la apuntarían las series (ritmoAnotarHecha) y la pausa que viene
@@ -18,39 +19,36 @@
 
    `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. */
 
-/* [rutina, paso]: los ids van cruzados (CLAUDE.md), `extra.*` es Mueve y `move.*` Estira. */
+/* [rutina, paso]. El módulo lo dice el catálogo (resolveBodyRoutine), nunca el prefijo del id:
+   los ids van cruzados (CLAUDE.md) y Postura reset o Manos y antebrazos, `extra.*`, son Estira. */
 var HACERLA_REPARTO = [
-  ['extra.calves', 0],              // Elevación de talones
-  ['move.neck.3', 0],               // Barbilla atrás
-  ['move.desk.quick', 0],           // Encogimiento de hombros
-  ['extra.grip.squeeze', 0],        // Abrir y cerrar el puño
-  ['move.wrists', 2],               // Palmas en la mesa
-  ['move.shoulder.circles', 0],     // Círculos de brazos
-  ['extra.glutes.stealth', 0],      // Apretar glúteos
-  ['move.back.standing', 0],        // Rodar hacia abajo
-  ['move.hips.standing', 0],        // Sentadilla profunda
-  ['extra.legs.standing', 1],       // Elevación de puntas
-  ['move.hamstrings.standing', 1],  // Isquio a una pierna
-  ['move.shoulders.5', 2],          // Rotación externa
-  ['extra.back.desk', 0],           // Juntar omóplatos
-  ['move.neck.3', 1],               // Inclinación de cuello
-  ['move.desk.quick', 1],           // Círculos de muñeca
-  ['extra.posture.set', 2],         // Extensión torácica
-  ['move.wrists', 3],               // Rezo invertido
-  ['move.shoulder.circles', 4],     // Apertura de pecho
-  ['extra.desk.pushups', 0],        // Flexiones inclinadas
-  ['move.back.standing', 1],        // Rotación torácica de pie
-  ['move.hips.standing', 1],        // Sentadilla lateral
-  ['extra.grip.squeeze', 1],        // Extensión de dedos
-  ['move.neck.3', 2],               // Rotación lenta
-  ['move.desk.quick', 2],           // Giro sentado
-  ['extra.legs.standing', 2],       // Sentadilla de cuádriceps
-  ['move.hips.standing', 2],        // Zancada profunda
-  ['move.neck.3', 3],               // Escalenos
-  ['extra.posture.set', 3],         // Apertura de pecho sentado
-  ['move.desk.quick', 3],           // Círculos de tobillo
-  ['move.hips.standing', 3],        // Pliegue adelante
-  ['extra.grip.squeeze', 2],        // Estiramiento de muñeca
+  ['extra.calves', 0],                 // Elevación de talones
+  ['move.neck.3', 0],                  // Barbilla atrás
+  ['move.wrists', 0],                  // Abrir y cerrar el puño
+  ['move.desk.quick', 0],              // Encogimiento de hombros
+  ['move.shoulder.circles', 0],        // Círculos de brazos
+  ['extra.grip.squeeze', 3],           // Palmas en la mesa
+  ['move.back.standing', 0],           // Rodar hacia abajo
+  ['move.hips.standing', 0],           // Sentadilla profunda
+  ['move.neck.3', 1],                  // Rotación lenta
+  ['extra.desk.pushups', 0],           // Flexiones inclinadas
+  ['extra.posture.set', 1],            // Juntar omóplatos
+  ['move.wrists', 1],                  // Círculos de muñeca
+  ['move.shoulder.circles', 2],        // Rotación externa
+  ['move.desk.quick', 2],              // Giro sentado
+  ['extra.posture.set', 2],            // Extensión torácica
+  ['extra.grip.squeeze', 4],           // Rezo invertido
+  ['move.hips.standing', 1],           // Sentadilla lateral
+  ['extra.back.desk', 2],              // Apertura de pecho
+  ['extra.glutes.stealth', 0],         // Apretar glúteos
+  ['move.neck.3', 2],                  // Inclinación de cuello
+  ['move.back.standing', 1],           // Rotación torácica de pie
+  ['move.wrists', 2],                  // Estiramiento de muñeca
+  ['move.hips.standing', 2],           // Zancada profunda
+  ['move.desk.quick', 3],              // Círculos de tobillo
+  ['extra.posture.set', 3],            // Apertura de pecho sentado
+  ['extra.grip.squeeze', 1],           // Extensión de dedos
+  ['move.hips.standing', 3],           // Pliegue adelante
 ];
 
 /* El ejercicio del puesto `n` del reparto: { rutina, paso, modulo ('move' | 'extra'), step },
