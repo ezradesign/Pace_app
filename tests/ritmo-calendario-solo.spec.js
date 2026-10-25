@@ -165,6 +165,21 @@ async function hojaMovil(page) {
 test.describe('en Android', () => {
   test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
 
+  /* S6: un evento con la marca de PACE que este móvil no puso no es de PACE. El motor lo
+     daba por suyo sin clave, y lo quitaba. Contra v0.176.0 cae. */
+  test('S6 · al mantenerse solo, no quita lo que lleva la marca de PACE y no puso este móvil', async ({ page, context }) => {
+    const ajeno = { id: 'x1', title: 'Foco 2 de 9', startDate: ms('09:45'), endDate: ms('10:40'), isAllDay: false, availability: 1,
+      status: 'confirmed', description: 'Foco de 45 min.\n\nPACE · A tu ritmo · pacegrass.app' };
+    await comoAndroid(context, [ajeno]);
+    await abrir(page, context, { sidebarCollapsed: true });
+    const hoja = await hojaMovil(page);
+    await hoja.locator('[data-pace-cal-destino="android"] button').click();
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hecho: desde ahora tu calendario se mantiene solo.');
+    expect(await llamadas(page, 'deleteEvent'), 'quita un evento que no puso').toEqual([]);
+    expect((await llamadas(page, 'modifyEvent')).map((o) => o.id), 'cambia un evento que no puso').not.toContain('x1');
+    expect(await page.evaluate(() => window.__nativo.eventos.find((e) => e.id === 'x1').description)).toContain('pacegrass.app');
+  });
+
   test('conectar, una reunión que recoloca, el Foco en marcha y por libre: siempre los mismos eventos, cambiados', async ({ page, context }) => {
     const errores = capturarErrores(page);
     await comoAndroid(context);

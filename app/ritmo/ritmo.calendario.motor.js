@@ -117,7 +117,7 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   Object.keys(escritos || {}).forEach(function (k) { if (escritos[k] && escritos[k].id) claveDe[escritos[k].id] = k; });
   var d = calendarioDiaMs(iso);
   return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
-    return lista.filter(function (e) { return calendarioEsDePace(e.texto); }).map(function (e) {
+    return lista.filter(calendarioAndroidEsDePace).map(function (e) {
       return { id: e.id, clave: claveDe[e.id] || null, inicio: e.inicio, fin: e.fin, titulo: e.titulo, texto: e.texto, aviso: e.aviso };
     });
   });
@@ -130,14 +130,17 @@ function calendarioAplicar(destino, pase, iso, cambios, calendarioId, sigue) {
   var creados = {};
   var pasos = [];
   cambios.borrar.forEach(function (id) {
-    pasos.push(function () { return android ? paceAndroidCalendarioBorrar(id) : calendarioWebQuitar(destino, pase, id); });
+    pasos.push(function () { return android ? calendarioAndroidBorrar(id) : calendarioWebQuitar(destino, pase, id); });
   });
   cambios.cambiar.forEach(function (c) {
-    pasos.push(function () { return android ? paceAndroidCalendarioCambiar(c.id, c.ev) : calendarioWebCambiar(destino, pase, c.id, c.ev); });
+    pasos.push(function () {
+      if (!android) return calendarioWebCambiar(destino, pase, c.id, c.ev);
+      return paceAndroidCalendarioCambiar(c.id, c.ev).then(function (r) { calendarioAndroidApuntar(c.id, c.ev); return r; });
+    });
   });
   cambios.crear.forEach(function (ev) {
     pasos.push(function () {
-      var p = android ? paceAndroidCalendarioCrear(calendarioId, ev) : calendarioWebCrear(destino, pase, iso, ev, true);
+      var p = android ? calendarioAndroidCrear(calendarioId, ev) : calendarioWebCrear(destino, pase, iso, ev, true);
       return p.then(function (id) { if (id) creados[ev.clave] = id; });
     });
   });

@@ -35,6 +35,69 @@
 var CALENDARIO_DESTINOS = ['android', 'google', 'microsoft', 'archivo'];
 var _calendarioRefresco = { ultimo: 0, enCurso: false, gen: 0 };
 
+/* LO QUE PACE PUSO EN EL CALENDARIO DEL MÓVIL se reconoce por el id que dio Android al
+   crearlo, apuntado aquí (`pace.calendario.android`: { id: { fin } }). Nunca por el texto:
+   cualquiera puede escribir la marca en una invitación, y entonces PACE la borraba y
+   dejaba de contarla como reunión (auditoría del 22 oct., S6). Vive fuera de
+   `pace.state.v2` porque los ids son de este calendario: en la copia de «Tus datos»
+   llegarían a otro móvil y nombrarían eventos de otra persona. Lo que PACE puso desde
+   otro sitio (la web, en Google) y llega sincronizado no es de este móvil: no lo toca,
+   y como va libre, tampoco cuenta como reunión. Cada id se olvida dos semanas después
+   de que acabe su evento. La primera vez se apunta lo que el motor ya había escrito hoy
+   (`pace.calendario.escrito`), que también eran ids de este móvil. */
+var CALENDARIO_ANDROID_CLAVE = 'pace.calendario.android';
+var CALENDARIO_ANDROID_OLVIDO = 14 * 24 * 3600 * 1000;
+
+function calendarioAndroidPropios() {
+  var o = null;
+  try { o = JSON.parse(localStorage.getItem(CALENDARIO_ANDROID_CLAVE) || 'null'); } catch (e) { o = null; }
+  if (o && typeof o === 'object' && !Array.isArray(o)) return o;
+  var propios = {};
+  try {
+    var escrito = JSON.parse(localStorage.getItem('pace.calendario.escrito') || 'null');
+    if (escrito && escrito.destino === 'android' && escrito.eventos && typeof escrito.eventos === 'object') {
+      Object.keys(escrito.eventos).forEach(function (k) {
+        var e = escrito.eventos[k];
+        if (e && e.id) propios[String(e.id)] = { fin: isFinite(e.fin) ? e.fin : Date.now() };
+      });
+    }
+  } catch (e) {}
+  return propios;
+}
+
+function calendarioAndroidGuardar(propios) {
+  var limite = Date.now() - CALENDARIO_ANDROID_OLVIDO;
+  Object.keys(propios).forEach(function (id) { if (!propios[id] || !(propios[id].fin > limite)) delete propios[id]; });
+  try { localStorage.setItem(CALENDARIO_ANDROID_CLAVE, JSON.stringify(propios)); } catch (e) {}
+}
+
+function calendarioAndroidApuntar(id, ev) {
+  if (id == null || !ev) return;
+  var propios = calendarioAndroidPropios();
+  propios[String(id)] = { fin: ev.fin };
+  calendarioAndroidGuardar(propios);
+}
+
+function calendarioAndroidOlvidar(id) {
+  var propios = calendarioAndroidPropios();
+  delete propios[String(id)];
+  calendarioAndroidGuardar(propios);
+}
+
+/* ¿Lo puso PACE desde este móvil? Un evento de paceAndroidCalendarioEventos. */
+function calendarioAndroidEsDePace(e) {
+  return !!(e && e.id != null && Object.prototype.hasOwnProperty.call(calendarioAndroidPropios(), String(e.id)));
+}
+
+/* Crear y borrar en el calendario del móvil, apuntándolo. */
+function calendarioAndroidCrear(calendarioId, ev) {
+  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) { calendarioAndroidApuntar(id, ev); return id; });
+}
+
+function calendarioAndroidBorrar(id) {
+  return paceAndroidCalendarioBorrar(id).then(function (r) { calendarioAndroidOlvidar(id); return r; });
+}
+
 function calendarioDestinos() {
   var android = typeof paceAndroidCalendario === 'function' && paceAndroidCalendario();
   return CALENDARIO_DESTINOS.filter(function (d) {
@@ -87,7 +150,7 @@ function calendarioLeer(destino, pase, iso) {
   var d = calendarioDiaMs(iso);
   if (destino === 'android') {
     return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
-      return lista.filter(function (e) { return !e.todoElDia && !e.libre && !e.cancelado && !calendarioEsDePace(e.texto); });
+      return lista.filter(function (e) { return !e.todoElDia && !e.libre && !e.cancelado && !calendarioAndroidEsDePace(e); });
     });
   }
   return calendarioWebReuniones(destino, pase, d[0], d[1]);
@@ -97,11 +160,11 @@ function calendarioLeer(destino, pase, iso) {
 function calendarioEscribirAndroid(eventos, iso, ahoraMs, calendarioId) {
   var d = calendarioDiaMs(iso);
   return paceAndroidCalendarioEventos(Math.max(d[0], ahoraMs), d[1]).then(function (lista) {
-    var viejos = lista.filter(function (e) { return calendarioEsDePace(e.texto) && e.fin > ahoraMs; });
-    return viejos.reduce(function (p, e) { return p.then(function () { return paceAndroidCalendarioBorrar(e.id); }); }, Promise.resolve());
+    var viejos = lista.filter(function (e) { return calendarioAndroidEsDePace(e) && e.fin > ahoraMs; });
+    return viejos.reduce(function (p, e) { return p.then(function () { return calendarioAndroidBorrar(e.id); }); }, Promise.resolve());
   }).then(function () {
     return eventos.reduce(function (p, ev) {
-      return p.then(function () { return paceAndroidCalendarioCrear(calendarioId, ev); });
+      return p.then(function () { return calendarioAndroidCrear(calendarioId, ev); });
     }, Promise.resolve());
   });
 }
@@ -249,4 +312,5 @@ try { calendarioArrancar(); } catch (e) {}
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
+  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidBorrar,
 });

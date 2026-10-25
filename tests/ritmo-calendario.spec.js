@@ -246,20 +246,20 @@ async function comoAndroid(context, opciones) {
 const llamadas = (page, metodo) => page.evaluate((m) => window.__nativo.llamadas.filter((l) => l.metodo === m), metodo);
 
 const MARCA = 'PACE · A tu ritmo · pacegrass.app';
-/* p1 lo puso PACE cuando vivía en paceweb.pages.dev: sigue siendo suyo, así que
-   se borra al volver a pulsar y no cuenta como reunión. */
+/* p1 lo puso PACE desde otro sitio (la web, en Google) y llega sincronizado. No es de
+   este móvil: no se toca, y como va libre, tampoco cuenta como reunión (S6). */
 const MARCA_VIEJA = 'PACE · A tu ritmo · paceweb.pages.dev';
 const EVENTOS_MOVIL = [
   { id: 'r1', title: 'Equipo', startDate: ms('12:00'), endDate: ms('12:30'), isAllDay: false, availability: 0, status: 'confirmed', description: '' },
   { id: 'r2', title: 'Santo', startDate: ms('00:00'), endDate: ms('23:59'), isAllDay: true, availability: 0, status: 'confirmed', description: '' },
   { id: 'r3', title: 'Libre', startDate: ms('15:00'), endDate: ms('16:00'), isAllDay: false, availability: 1, status: 'confirmed', description: '' },
-  { id: 'p1', title: 'Foco 4 de 9', startDate: ms('11:40'), endDate: ms('12:30'), isAllDay: false, availability: 0, status: 'confirmed', description: 'Foco de 45 min.\n\n' + MARCA_VIEJA },
+  { id: 'p1', title: 'Foco 4 de 9', startDate: ms('11:40'), endDate: ms('12:30'), isAllDay: false, availability: 1, status: 'confirmed', description: 'Foco de 45 min.\n\n' + MARCA_VIEJA },
 ];
 
 test.describe('en Android', () => {
   test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
 
-  test('lee las reuniones, borra lo de PACE que queda de hoy y escribe el día recompuesto', async ({ page, context }) => {
+  test('lee las reuniones, borra lo que este móvil puso hoy y escribe el día recompuesto', async ({ page, context }) => {
     const errores = capturarErrores(page);
     await comoAndroid(context, { eventos: EVENTOS_MOVIL });
     await abrir(page, context, { sidebarCollapsed: true });
@@ -273,8 +273,7 @@ test.describe('en Android', () => {
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.');
 
     expect(await llamadas(page, 'requestFullCalendarAccess')).toHaveLength(1);
-    const borrados = (await llamadas(page, 'deleteEvent')).map((l) => l.opts.id);
-    expect(borrados).toEqual(['p1']);
+    expect((await llamadas(page, 'deleteEvent')).map((l) => l.opts.id), 'borra lo que no puso este móvil').toEqual([]);
     const creados = (await llamadas(page, 'createEvent')).map((l) => l.opts);
     expect(creados.length).toBeGreaterThan(5);
     creados.forEach((c) => {
@@ -294,13 +293,33 @@ test.describe('en Android', () => {
     await vis(page, '[data-pace-ritmo-ver]').click();
     await expect(page.locator('[data-pace-ritmo-lista] [data-pace-ritmo-fila="ocupado"]')).toHaveText(/12:00\s*Ocupado · 30 min/);
     /* Volver a pulsar no duplica: borra los suyos que quedan y vuelve a escribir. */
+    const ids = await page.evaluate(() => window.__nativo.eventos.filter((e) => (e.description || '').includes('pacegrass.app')).map((e) => e.id));
     await page.getByRole('button', { name: 'Listo', exact: true }).click();
     await abrirCalendarioMovil(page);
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toBeVisible();
     const dePace = await page.evaluate(() => window.__nativo.eventos.filter((e) => (e.description || '').includes('pacegrass.app')).length);
     expect(dePace).toBe(creados.length);
+    expect((await llamadas(page, 'deleteEvent')).map((l) => l.opts.id).sort()).toEqual(ids.slice().sort());
+    expect(await page.evaluate(() => window.__nativo.eventos.some((e) => e.id === 'p1')), 'p1 no es de este móvil').toBe(true);
     expect(errores).toEqual([]);
+  });
+
+  /* S6 (auditoría del 22 oct.): lo de PACE se reconocía por la marca del texto, así que
+     una invitación que la llevara (copiada de un evento de PACE, o escrita a propósito)
+     se borraba y dejaba de contar como reunión. Contra v0.176.0 cae. */
+  test('S6 · una reunión con la marca de PACE en el texto no se borra y cuenta como reunión', async ({ page, context }) => {
+    const invitacion = { id: 'r9', title: 'Revisión', startDate: ms('12:00'), endDate: ms('12:30'), isAllDay: false, availability: 0,
+      status: 'confirmed', description: 'Pausa a las 12:30.\n\n' + MARCA };
+    await comoAndroid(context, { eventos: [invitacion] });
+    await abrir(page, context, { sidebarCollapsed: true });
+    await abrirCalendarioMovil(page);
+    const hoja = page.locator('[data-pace-cal]');
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
+    await hoja.locator('[data-pace-cal-destino="android"] button').click();
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hoy tienes 1 reunión y el día la rodea.');
+    expect((await llamadas(page, 'deleteEvent')).map((l) => l.opts.id)).toEqual([]);
+    expect(await page.evaluate(() => window.__nativo.eventos.some((e) => e.id === 'r9'))).toBe(true);
   });
 
   test('sin permiso no escribe nada y lo dice', async ({ page, context }) => {
