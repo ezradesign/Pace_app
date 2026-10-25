@@ -11,7 +11,8 @@
 
     <!-- La app ya abierta. El fondo de la ventana es el de PACE: se ve un instante
          antes de que la web pinte, y Capacitor (SystemBars) rellena con él la
-         franja de las barras de arriba y de abajo. -->
+         franja de las barras de arriba y de abajo hasta que la web dice que
+         paleta se ve (PaceBarras.java). -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

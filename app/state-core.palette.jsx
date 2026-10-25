@@ -87,6 +87,10 @@ function _marcarCruce() {
   }, ms + 80);
 }
 
+/* El `--paper` de cada paleta, para lo que se pinta fuera de la web. Copia de
+   app/tokens.css, y `verify` (verify.ios.js) falla si se separan. */
+const PACE_PAPEL = { crema: '#F2EDE0', oscuro: '#1d1a14' };
+
 let _paletaAplicada = null;
 function applyTheme(estado) {
   const root = document.documentElement;
@@ -99,10 +103,14 @@ function applyTheme(estado) {
   _paletaAplicada = estado.palette;
   root.setAttribute('data-palette', estado.palette);
   root.setAttribute('data-font', estado.font);
-  /* La barra del navegador y de la PWA toma el papel de la paleta. */
+  /* La barra del navegador y de la PWA toma el papel de la paleta, y en el
+     iPhone tambien las franjas de arriba y de abajo, que lo leen de aqui
+     (PaceViewController.swift). Son dos metas: hasta este momento eligen por el
+     modo del sistema, para que el arranque no destelle en claro con el sistema
+     en oscuro; desde aqui las dos dicen la paleta que se ve. */
   try {
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', estado.palette === 'oscuro' ? '#1d1a14' : '#F2EDE0');
+    const papel = PACE_PAPEL[estado.palette] || PACE_PAPEL.crema;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => meta.setAttribute('content', papel));
   } catch (e) {}
   _marcarPaletaLista();
 }

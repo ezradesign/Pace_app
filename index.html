@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1d1a14" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#F2EDE0">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6410,6 +6411,10 @@ function _marcarCruce() {
   }, ms + 80);
 }
 
+
+
+const PACE_PAPEL = { crema: '#F2EDE0', oscuro: '#1d1a14' };
+
 let _paletaAplicada = null;
 function applyTheme(estado) {
   const root = document.documentElement;
@@ -6423,9 +6428,13 @@ function applyTheme(estado) {
   root.setAttribute('data-palette', estado.palette);
   root.setAttribute('data-font', estado.font);
 
+
+
+
+
   try {
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', estado.palette === 'oscuro' ? '#1d1a14' : '#F2EDE0');
+    const papel = PACE_PAPEL[estado.palette] || PACE_PAPEL.crema;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => meta.setAttribute('content', papel));
   } catch (e) {}
   _marcarPaletaLista();
 }
@@ -16217,6 +16226,13 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    calendario que se mantiene solo. Pide los dos permisos (leer y escribir) la
    primera vez que se pulsa, nunca al arrancar.
 
+   LAS FRANJAS DE ARRIBA Y DE ABAJO (la hora y la bateria, y Atras) son de
+   Android: las pinta el tema, que sigue el modo del movil. El complemento
+   PaceBarras (MainActivity) las pinta con el papel de la paleta que se le
+   diga, y aqui se le dice la que se ve cada vez que cambia: en Ajustes, con
+   «Auto» al cambiar el movil, y al acabar el bloque que tenia ese cambio en
+   espera.
+
    LOS ENLACES LEGALES son rutas del servidor en la web (/privacy, /safety). En
    el APK no hay servidor y abrirlas recargaba la app: van a la web publicada,
    que Android abre en el navegador.
@@ -16459,6 +16475,23 @@ function paceEnlaceWeb(ruta) {
 }
 
 
+
+
+
+
+var _paceBarras = null;
+function paceAndroidBarras(estado) {
+  try {
+    if (!estado || estado.palette !== 'crema' && estado.palette !== 'oscuro') return;
+    var auto = !!estado.paletteAuto;
+    if (_paceBarras && _paceBarras.paleta === estado.palette && _paceBarras.auto === auto) return;
+    if (!paceAndroidPlugin('PaceBarras')) return;
+    _paceBarras = { paleta: estado.palette, auto: auto };
+    paceAndroidLlamar('PaceBarras', 'pintar', { paleta: estado.palette, auto: auto });
+  } catch (e) {}
+}
+
+
 function paceAndroidEstado() {
   return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, exacta: _paceAndroid.exacta, programado: _paceAndroid.programado,
     foco: _paceAndroid.foco ? _paceAndroid.foco.endsAt : null, atras: _paceAndroid.atras };
@@ -16484,6 +16517,12 @@ function paceAndroidArrancar() {
   } catch (e) {}
   paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
   paceAndroidAvisoExactoMirar();
+
+
+  try {
+    paceAndroidBarras(getState());
+    subscribe(function () {paceAndroidBarras(getState());});
+  } catch (e) {}
 }
 
 try {paceAndroidArrancar();} catch (e) {}
@@ -16492,9 +16531,9 @@ Object.assign(window, {
   paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
   paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
-  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar
+  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidBarras
 });
-;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceEnlaceWeb, paceAndroidEstado, paceAndroidArrancar });
+;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceEnlaceWeb, _paceBarras, paceAndroidBarras, paceAndroidEstado, paceAndroidArrancar });
 })();
 </script>
   <!-- ios: lo mismo en el iPhone (avisos, pantalla encendida, copia de datos y
