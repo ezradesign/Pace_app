@@ -26,10 +26,10 @@ const foto = (page, nombre, clip) => page.screenshot({ path: OUT + nombre + '.pn
 
 /* ---------- el runner (N5, N6) ---------- */
 async function alRunner(page, lang) {
-  await page.getByRole('button', { name: lang === 'en' ? 'Move' : 'Mueve', exact: true }).first().click();
+  await page.getByRole('button', { name: new RegExp('^' + (lang === 'en' ? 'Move' : 'Mueve')) }).first().click();
   await page.locator('.pace-lib').locator('visible=true').first().waitFor();
   await page.waitForTimeout(600);
-  await page.locator('[data-pace-lib-card="extra.desk.pushups"] .pace-lib-hit').locator('visible=true').first().click();
+  await page.evaluate(() => [...document.querySelectorAll('[data-pace-lib-card="extra.desk.pushups"] .pace-lib-hit')].find(e => e.getBoundingClientRect().width > 0).click());
   await page.waitForTimeout(900);
   await page.evaluate(() => {
     const ms = [...document.querySelectorAll('[data-pace-modal-card]')].filter(e => e.getBoundingClientRect().width > 0);
@@ -56,7 +56,7 @@ const CSS_N5 = `
   .mq-auto[aria-pressed="true"] { border-color: color-mix(in oklab, var(--move) 55%, var(--line)); color:var(--ink); }
   .mq-auto[aria-pressed="true"] .mq-pista { background:var(--move); }
   .mq-auto[aria-pressed="true"] .mq-pista::after { left:12px; }
-  .mq-aro { position:absolute; inset:-5px; pointer-events:none; }
+  .mq-aro { position:absolute; top:-6px; left:-6px; width:calc(100% + 12px) !important; height:calc(100% + 12px) !important; max-width:none !important; pointer-events:none; }
   .mq-aro circle { fill:none; stroke-width:2; }
   .mq-mano [data-pace-v1-btn="next"] { border-color: var(--move) !important; color: var(--move) !important; background: color-mix(in oklab, var(--move) 14%, transparent) !important; }
 `;

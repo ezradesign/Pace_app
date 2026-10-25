@@ -40,7 +40,11 @@ Qué pedirle a Ez: un vídeo corto de la pantalla (Android lo graba desde los aj
 tocando las tres rayas, y una frase: en qué aparato fue (el PC o el móvil) y qué pasa: no responde, tarda, se
 cierra sola o no la encuentra.
 
-## La maqueta N5-N8 (a medias si este archivo no dice lo contrario)
+## La maqueta N5-N8, publicada: https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero
+
+Espera la línea de Ez (recomendado 1A 2A 3A 4A). N7 medido: ninguna opción pide scroll a 360×640, 360×730 ni
+1280×879, en es y en, también con la letra 0,3 px más ancha; la B (en la misma línea) se sale del aro a 360×640.
+La página se rehace con pagina.js (lee las fotos de fm/, que deja maqueta.spec.js).
 
 Guiones de fotos (Playwright): `maqueta.spec.js` con `probe.config.js` (rutas absolutas a la carpeta temporal de la
 sesión: cámbialas). Correr con `PACE_E2E_PORT=8806 npx playwright test --config probe.config.js maqueta.spec`.
