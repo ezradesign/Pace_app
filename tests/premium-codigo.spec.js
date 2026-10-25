@@ -127,7 +127,7 @@ test('el enlace del tester abre PACE completo, avisa y se borra de la barra', as
 });
 
 test('lo que no es un código bueno no abre nada, y se dice por qué', async ({ page, context }) => {
-  await conLlaveDePrueba(context, ['kt:9']);
+  await conLlaveDePrueba(context, ['kt:9', 'kt:cs_test_9']);
   await irAlArtefacto(page);
   await cerrarPremium(page);
   await page.evaluate(() => window.paceAbrirPremium({ modo: 'codigo' }));
@@ -143,6 +143,7 @@ test('lo que no es un código bueno no abre nada, y se dice por qué', async ({ 
     [firmar({ tester: 1 }, otra.privateKey), 'firma'],        // firmado con otra llave
     [firmar({ tester: 1, keyId: 'k9' }), 'firma'],            // una llave que la app no tiene
     [firmar({ tester: 9 }), 'anulada'],
+    [firmar({ order: 'cs_test_9' }), 'anulada'],                // una venta anulada por su pedido
     [firmar({ tester: 4, expiresAt: '2020-01-01' }), 'caducada'],
   ];
   for (const [texto, motivo] of casos) {

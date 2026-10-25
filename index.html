@@ -8197,6 +8197,7 @@ Object.assign(window, {
 
 
 
+
 var PACE_LLAVES_LICENCIA = {
   k1: { x: 'u9eKWp7Q7i59EXpuij5ojJhDyUm1peiOEaf3YmZx_0k', y: 'coPL3XqK9zPq4m0RUOnjz2el12P4ZJrrzUqEO8lwZcY' }
 };
@@ -8210,6 +8211,7 @@ Object.assign(window, { PACE_LLAVES_LICENCIA: PACE_LLAVES_LICENCIA, PACE_LICENCI
 </script>
   <script>
 ;(function () {
+
 
 
 
@@ -8292,9 +8294,12 @@ function paceLicenciaLlave(keyId) {
   return Object.prototype.hasOwnProperty.call(llaves, keyId) ? llaves[keyId] : null;
 }
 
+
 function paceLicenciaAnulada(datos) {
   var lista = window.PACE_LICENCIAS_ANULADAS || [];
-  return datos.tester != null && lista.indexOf(datos.keyId + ':' + datos.tester) !== -1;
+  return [datos.tester, datos.order].some(function (n) {
+    return n != null && lista.indexOf(datos.keyId + ':' + n) !== -1;
+  });
 }
 
 
