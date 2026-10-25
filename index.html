@@ -8242,8 +8242,14 @@ Object.assign(window, { PACE_LLAVES_LICENCIA: PACE_LLAVES_LICENCIA, PACE_LICENCI
 
 
 
+
+
+
 var PACE_LICENCIA_PREFIJO = 'PACE1';
-var _paceLicenciaRechazada = null;
+
+
+
+var _paceLicenciaFirma = { codigo: null, estado: null };
 
 function paceB64urlBytes(s) {
   var b = String(s).replace(/-/g, '+').replace(/_/g, '/');
@@ -8342,7 +8348,7 @@ function paceLicenciaCanjear(texto) {
   if (!paceLicenciaPermitida()) return Promise.resolve({ ok: false, motivo: 'tienda' });
   return paceLicenciaComprobar(texto).then(function (r) {
     if (r.ok) {
-      _paceLicenciaRechazada = null;
+      _paceLicenciaFirma = { codigo: r.codigo, estado: 'buena' };
       setState({ licencia: r.codigo });
     }
     return r;
@@ -8351,13 +8357,29 @@ function paceLicenciaCanjear(texto) {
 
 
 
+
+function paceLicenciaComprobarGuardado(c) {
+  if (_paceLicenciaFirma.codigo === c) return;
+  _paceLicenciaFirma = { codigo: c, estado: 'comprobando' };
+  paceLicenciaComprobar(c).then(function (r) {
+    if (_paceLicenciaFirma.codigo !== c) return;
+    _paceLicenciaFirma = { codigo: c, estado: r.ok ? 'buena' : r.motivo === 'navegador' ? 'sin comprobar' : 'mala' };
+    if (r.ok) setState(function (x) {return Object.assign({}, x);});
+  });
+}
+
+
+
+
 function paceLicenciaVigente() {
   if (!paceLicenciaPermitida()) return null;
   var s = typeof getState === 'function' ? getState() : null;
   var c = s && typeof s.licencia === 'string' ? s.licencia : null;
-  if (!c || c === _paceLicenciaRechazada) return null;
+  if (!c) return null;
   var leida = paceLicenciaLeer(c);
-  return paceLicenciaMotivo(leida) ? null : leida.datos;
+  if (paceLicenciaMotivo(leida)) return null;
+  if (_paceLicenciaFirma.codigo !== c) paceLicenciaComprobarGuardado(c);
+  return _paceLicenciaFirma.estado === 'buena' ? leida.datos : null;
 }
 
 
@@ -8373,19 +8395,10 @@ function paceLicenciaDelEnlace() {
   });
 }
 
+
+
 function paceLicenciaArranque() {
-  var s = typeof getState === 'function' ? getState() : null;
-  var guardado = s && typeof s.licencia === 'string' ? s.licencia : null;
-  if (guardado && paceLicenciaPermitida()) {
-    paceLicenciaComprobar(guardado).then(function (r) {
-
-
-      if (!r.ok && r.motivo === 'firma') {
-        _paceLicenciaRechazada = guardado;
-        setState(function (x) {return Object.assign({}, x);});
-      }
-    });
-  }
+  paceLicenciaVigente();
   paceLicenciaDelEnlace();
 }
 
@@ -8414,7 +8427,7 @@ Object.assign(window, {
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaRechazada, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
 })();
 </script>
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta

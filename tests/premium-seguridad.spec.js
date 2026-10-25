@@ -16,6 +16,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
+const { otra, firmar, conLlaveDePrueba } = require('./licencia.helpers');
 
 test.use({ serviceWorkers: 'block' });
 
@@ -47,4 +48,51 @@ test('S1 · tocar el estado a mano no abre PACE completo', async ({ page, contex
   /* Tampoco si se cambia con la app en marcha. */
   await page.evaluate(() => window.setState({ premiumUnlocked: true }));
   expect(await lo_que_abre(page), 'el estado cambiado en marcha abre PACE completo').toEqual(NADA);
+});
+
+/* La comprobación de la firma, frenada: nunca termina. */
+async function firmaQueNoAcaba(context) {
+  await context.addInitScript(() => { SubtleCrypto.prototype.verify = () => new Promise(() => {}); });
+}
+
+/* Contra v0.176.0 cae: mientras se comprobaba, el código ya contaba. */
+test('S2 · un código guardado no cuenta mientras se comprueba su firma', async ({ page, context }) => {
+  await conLlaveDePrueba(context);
+  await firmaQueNoAcaba(context);
+  await sembrar(context, { licencia: firmar({ tester: 11 }) });
+  await irAlArtefacto(page);
+  await cerrarPremium(page);
+  await page.waitForTimeout(300);
+  expect(await lo_que_abre(page), 'el código cuenta sin haber comprobado la firma').toEqual(NADA);
+});
+
+/* Contra v0.176.0 cae: «sin WebCrypto no se aparta nada» dejaba abierto un código falso para siempre. */
+test('S2 · si el navegador no puede comprobar la firma, un código falso no cuenta y no se borra', async ({ page, context }) => {
+  await conLlaveDePrueba(context);
+  await context.addInitScript(() => { SubtleCrypto.prototype.verify = () => Promise.reject(new Error('sin WebCrypto')); });
+  const falso = firmar({ tester: 12 }, otra.privateKey);
+  await sembrar(context, { licencia: falso });
+  await irAlArtefacto(page);
+  await cerrarPremium(page);
+  await page.waitForTimeout(300);
+  expect(await lo_que_abre(page), 'un código sin comprobar abre PACE completo').toEqual(NADA);
+  expect(await page.evaluate(() => window.getState().licencia), 'lo guardado no se toca').toBe(falso);
+});
+
+/* Contra v0.176.0 cae: lo que llegaba al estado en marcha (una copia de «Tus datos») contaba sin
+   comprobarse hasta la siguiente vez que se abriera la app. */
+test('S2 · un código que llega con la app en marcha cuenta solo cuando su firma vale', async ({ page, context }) => {
+  await conLlaveDePrueba(context);
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await cerrarPremium(page);
+
+  await page.evaluate((c) => window.setState({ licencia: c }), firmar({ tester: 13 }, otra.privateKey));
+  expect(await lo_que_abre(page), 'el código falso cuenta al llegar').toEqual(NADA);
+  await page.waitForTimeout(300);
+  expect(await lo_que_abre(page), 'el código falso cuenta después de comprobarlo').toEqual(NADA);
+
+  await page.evaluate((c) => window.setState({ licencia: c }), firmar({ tester: 14 }));
+  await expect.poll(() => page.evaluate(() => window.hasPremiumEntitlement()), 'el código bueno no llega a contar').toBe(true);
+  expect(await page.evaluate(() => window.canAccessRoutine('extra.hang.bar'))).toBe(true);
 });

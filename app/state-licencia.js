@@ -21,17 +21,23 @@
    trajera una copia de la web; los testers reciben un código promocional de la
    tienda cuando la app lleve su compra integrada.
 
-   LO QUE NO HACE: no protege de quien edite el almacenamiento del navegador (eso
-   abre cualquier web). La firma impide FABRICAR códigos, que es lo que importa.
-   Y nunca borra un código guardado: si la comprobación de arranque dice que la
-   firma no vale, se ignora en memoria y lo guardado se queda como estaba.
+   UN CÓDIGO NO CUENTA HASTA QUE SU FIRMA SE COMPRUEBA en esta página. Llegue
+   como llegue al estado (canjeado, guardado de otra vez, en una copia de «Tus
+   datos» o escrito a mano), el guard lo ignora mientras WebCrypto lo comprueba
+   (es asíncrono: unos milisegundos al abrir) y para siempre si no puede
+   comprobarse. La firma impide FABRICAR códigos; esto impide que uno fabricado
+   cuente mientras nadie mira. Y nunca borra un código guardado: si la firma no
+   vale, se ignora en memoria y lo guardado se queda como estaba.
 
    `var`/`function` a propósito, como `library-rules.js`: un `const` no cruza la
    IIFE del artefacto. Carga después de state-core (usa getState, setState y
    showToast al llamarse, no al evaluarse) y antes de state-entitlement. */
 
 var PACE_LICENCIA_PREFIJO = 'PACE1';
-var _paceLicenciaRechazada = null; // el código cuya firma rechazó la comprobación de arranque
+/* Lo que se sabe de la firma del código guardado, solo en memoria: `estado` es
+   «comprobando», «buena», «mala» o «sin comprobar» (sin WebCrypto). Si el código
+   del estado cambia, se vuelve a empezar. */
+var _paceLicenciaFirma = { codigo: null, estado: null };
 
 function paceB64urlBytes(s) {
   var b = String(s).replace(/-/g, '+').replace(/_/g, '/');
@@ -130,22 +136,38 @@ function paceLicenciaCanjear(texto) {
   if (!paceLicenciaPermitida()) return Promise.resolve({ ok: false, motivo: 'tienda' });
   return paceLicenciaComprobar(texto).then(function (r) {
     if (r.ok) {
-      _paceLicenciaRechazada = null;
+      _paceLicenciaFirma = { codigo: r.codigo, estado: 'buena' };
       setState({ licencia: r.codigo });
     }
     return r;
   });
 }
 
-/* LA QUE LEE EL GUARD, síncrona: los datos del código guardado si vale, o null.
-   La firma se comprobó al canjearlo y se vuelve a comprobar al arrancar. */
+/* Empieza a comprobar la firma del código guardado, una vez por código. Cuando
+   vale, la app se vuelve a pintar con PACE completo; lo demás no cambia nada que
+   se vea, porque mientras tanto ya contaba como cerrado. */
+function paceLicenciaComprobarGuardado(c) {
+  if (_paceLicenciaFirma.codigo === c) return;
+  _paceLicenciaFirma = { codigo: c, estado: 'comprobando' };
+  paceLicenciaComprobar(c).then(function (r) {
+    if (_paceLicenciaFirma.codigo !== c) return; // llegó otro código mientras tanto
+    _paceLicenciaFirma = { codigo: c, estado: r.ok ? 'buena' : r.motivo === 'navegador' ? 'sin comprobar' : 'mala' };
+    if (r.ok) setState(function (x) { return Object.assign({}, x); });
+  });
+}
+
+/* LA QUE LEE EL GUARD, síncrona: los datos del código guardado si su firma ya se
+   comprobó en esta página y nada lo impide (anulado, caducado), o null. Si es un
+   código que aún no se ha comprobado, empieza a comprobarlo y, mientras, null. */
 function paceLicenciaVigente() {
   if (!paceLicenciaPermitida()) return null;
   var s = typeof getState === 'function' ? getState() : null;
   var c = s && typeof s.licencia === 'string' ? s.licencia : null;
-  if (!c || c === _paceLicenciaRechazada) return null;
+  if (!c) return null;
   var leida = paceLicenciaLeer(c);
-  return paceLicenciaMotivo(leida) ? null : leida.datos;
+  if (paceLicenciaMotivo(leida)) return null;
+  if (_paceLicenciaFirma.codigo !== c) paceLicenciaComprobarGuardado(c);
+  return _paceLicenciaFirma.estado === 'buena' ? leida.datos : null;
 }
 
 /* El enlace del tester. Se quita de la barra en cuanto se lee: así recargar no lo
@@ -161,19 +183,10 @@ function paceLicenciaDelEnlace() {
   });
 }
 
+/* Al abrir, la firma del código guardado se comprueba cuanto antes, sin esperar a
+   que algo pregunte por PACE completo. */
 function paceLicenciaArranque() {
-  var s = typeof getState === 'function' ? getState() : null;
-  var guardado = s && typeof s.licencia === 'string' ? s.licencia : null;
-  if (guardado && paceLicenciaPermitida()) {
-    paceLicenciaComprobar(guardado).then(function (r) {
-      /* Solo una firma que NO vale lo aparta. «navegador» (sin WebCrypto) no dice
-         nada del código y no puede cerrar lo que la persona ya tenía. */
-      if (!r.ok && r.motivo === 'firma') {
-        _paceLicenciaRechazada = guardado;
-        setState(function (x) { return Object.assign({}, x); });
-      }
-    });
-  }
+  paceLicenciaVigente();
   paceLicenciaDelEnlace();
 }
 
