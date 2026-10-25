@@ -69,11 +69,8 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
 
   return (
     <div key="ritmo" data-pace-activitybar data-pace-ritmo style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
-      {/* Dentro del aro solo va la hora de salida: «A tu ritmo» encima no aportaba y se mezclaba
-          con el arranque del arco (Ez). El rótulo conserva su alto para que el panel no se mueva. */}
-      <div className="pace-rt-rotulo">
-        {plan && plan.actual ? <div className="pace-rt-hasta" data-pace-ritmo-hasta>{tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })}</div> : null}
-      </div>
+      {/* La hora de salida va dentro del aro, bajo «Bloque 1 de 9» (Ez, 3C del 25 oct.), y el
+          hueco que tenía aquí se devuelve a la home: es lo que deja bajar el aro sin scroll. */}
       <div data-pace-ritmo-panel>
         {!plan ? <RitmoPregunta state={state} />
           : plan.terminado ? <RitmoHecho plan={plan} />

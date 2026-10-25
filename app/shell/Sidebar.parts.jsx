@@ -221,7 +221,7 @@ function SidebarWeek({ semana, onOpen }) {
           return (
             <span key={i} data-pace-semana-dia={i} data-hoy={d.isToday ? '1' : '0'} data-futuro={i > semana.todayIndex ? '1' : '0'} style={sidebarStyles.semDia}>
               <span data-pace-capsula style={sidebarStyles.capsula}>
-                {alto ? <span data-pace-capsula-relleno style={{ height: alto }} /> : null}
+                {alto ? <span data-pace-capsula-relleno style={{ height: alto, '--pace-capsula-p': Math.round(alto / 40 * 100) + '%' }} /> : null}
               </span>
               <span style={{ ...sidebarStyles.semLetra, ...(d.isToday ? sidebarStyles.semLetraHoy : null) }}>{letras[i]}</span>
             </span>

@@ -33,12 +33,12 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
     }
     const care = st.mode !== 'rest' ? tInstr(i, 'care') : null;
     if (care) pon(colas, { care });
-    if (st.mode === 'perSide') {
-      pon(colas, { strong: tn('session.sideFirst', { side: t('session.sideLeft') }), support: t('move.placeHint') });
-      pon(colas, { strong: tn('session.sideNext', { side: t('session.sideRight') }), support: t('move.sideAutoHint') });
-    } else {
-      pon(colas, { support: t('move.placeHint') });
-    }
+    /* Las dos frases de colocarse, con «Auto» y sin él: cambiarlo no mueve nada. */
+    ['move.placeHint', 'move.placeHintMano'].forEach((clave) => {
+      if (st.mode === 'perSide') pon(colas, { strong: tn('session.sideFirst', { side: t('session.sideLeft') }), support: t(clave) });
+      else pon(colas, { support: t(clave) });
+    });
+    if (st.mode === 'perSide') pon(colas, { strong: tn('session.sideNext', { side: t('session.sideRight') }), support: t('move.sideAutoHint') });
     if (st.mode === 'rest' && routine.steps[i + 1]) {
       const luego = tn('move.restNext', { name: tStep(i + 1, 'name') });
       pon(colas, { strong: luego });
@@ -171,9 +171,11 @@ function CuerpoV1(p) {
         <div className="pace-v1-numgrupo">
           {p.gateNumber
             ? <div data-pace-v1-num data-pace-v1-num-gate style={{ color: 'var(--ink-2)' }}>{p.bigNumber}</div>
+            /* Quieto (Ez, 2A del 25 oct.): en las reps guiadas va del terracota de la primera
+               al oliva de la última, los dos colores del logo. Sin color-mix queda en tinta. */
             : <div data-pace-move-timer data-pace-v1-timer data-pace-v1-num style={{
-                color: 'var(--ink)',
-                ...(p.repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${p.repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: p.paused ? 'paused' : 'running' } : {}),
+                color: p.repsProgreso == null ? 'var(--ink)'
+                  : `color-mix(in oklab, var(--focus) ${Math.round(p.repsProgreso * 100)}%, var(--breathe))`,
               }}>{p.bigNumber}</div>}
           <div className="pace-v1-numfila">
             <span data-pace-v1-numlabel>{p.bigLabel}</span>
@@ -208,8 +210,15 @@ function CuerpoV1(p) {
             </div>
           ))}
         </div>
+        {/* «Auto» (Ez, 1A del 25 oct.): junto a lo que viene, al alcance del pulgar. */}
         <div className="pace-v1-siguiente">
-          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')}
+          <span data-pace-v1-siguiente>{p.siguienteTexto
+            || (routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep'))}</span>
+          <button type="button" className="pace-v1-auto" data-pace-v1-auto aria-pressed={p.auto ? 'true' : 'false'}
+            title={t('move.auto.title')} style={{ '--v1-auto': accent }}
+            onClick={(e) => { v1SoltarFoco(e); p.onAuto(); }}>
+            <span className="pace-v1-auto-pista" aria-hidden="true" />{t('move.auto')}
+          </button>
         </div>
       </div>
     </div>

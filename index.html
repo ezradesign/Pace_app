@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.176.0</title>
+  <title>PACE · Foco · Cuerpo — v0.176.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2620,6 +2620,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.skipOptional': 'Saltar este paso',
   'move.sideAutoHint': 'El lado siguiente empieza solo',
 
+  'move.auto': 'Auto',
+  'move.auto.title': 'Avanzar solo',
+  'move.repsPace': 'reps · a tu ritmo',
+  'move.tapDone': 'Pulsa › al acabar',
+  'move.tapGo': 'Pulsa › para seguir',
+  'move.placeHintMano': 'Colócate sin prisa · empiezas con ›',
+
   'move.careLabel': 'Cuídate',
   'move.series': 'Series',
   'move.repsCount': 'Reps',
@@ -2748,6 +2755,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.finishEarly': 'Finish early',
   'move.skipOptional': 'Skip this step',
   'move.sideAutoHint': 'The next side starts on its own',
+
+  'move.auto': 'Auto',
+  'move.auto.title': 'Move on by itself',
+  'move.repsPace': 'reps · at your pace',
+  'move.tapDone': 'Tap › when you are done',
+  'move.tapGo': 'Tap › to go on',
+  'move.placeHintMano': 'Get set, no rush · start with ›',
 
   'move.careLabel': 'Take care',
   'move.series': 'Sets',
@@ -6512,7 +6526,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.176.0';
+const PACE_VERSION = 'v0.176.2';
 
 
 
@@ -6569,10 +6583,9 @@ const defaultState = {
 
 
 
-
-
-
   restBetweenSets: 30,
+
+  cuerpoAuto: true,
 
 
 
@@ -12479,6 +12492,7 @@ function ritmoAro(s, t, tn) {
   var k = p.hechos + 1;
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
+    hasta: tn('ritmo.hasta', { h: ritmoHora(p.m.hasta) }),
     empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k })
   };
 }
@@ -21229,7 +21243,7 @@ function TimerDialPunto(_ref2) {let { giro, angulo, color, nace, deGolpe } = _re
 
 }
 
-function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused } = _ref3;
+function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, subtitle, inner, running, ticks, fitHeight, paused } = _ref3;
   const R = DIAL_R;
 
   const ringColor = interpolateRingColor(progress, mode);
@@ -21392,12 +21406,14 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, subtitle
     React.createElement(TimerDialPunto, { giro: giroInicio, angulo: progress * barrido, color: ringColor, nace: progress === 0, deGolpe: deGolpe }),
 
 
-    React.createElement("div", { style: timerDialStyles.inner },
+
+    React.createElement("div", { style: hasta ? { ...timerDialStyles.inner, transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030 + var(--pace-dial-baja, 15%)))' } : timerDialStyles.inner },
 
 
 
 
     modeLabel ? React.createElement("div", { "data-pace-dial-label": true, style: timerDialStyles.modeLabel }, modeLabel) : null,
+    hasta ? React.createElement("div", { "data-pace-dial-hasta": true, "data-pace-ritmo-hasta": true }, hasta) : null,
     React.createElement("div", { "data-pace-dial-number": true, style: ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge },
     String(mins).padStart(2, '0'), ":", String(secs).padStart(2, '0')
     ),
@@ -22268,10 +22284,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 
 
 
-function TimerVisualization(_ref2) {let { style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight, paused } = _ref2;
+function TimerVisualization(_ref2) {let { style, mins, secs, progress, mode, modeLabel, hasta, subtitle, inner, running, fitHeight, paused } = _ref2;
   if (style === 'barra') return React.createElement(TimerBar, { mins: mins, secs: secs, progress: progress, modeLabel: modeLabel, subtitle: subtitle });
   if (style === 'analogico') return React.createElement(TimerAnalog, { mins: mins, secs: secs, progress: progress, modeLabel: modeLabel, subtitle: subtitle });
-  return React.createElement(TimerDial, { mins: mins, secs: secs, progress: progress, mode: mode, modeLabel: modeLabel, subtitle: subtitle, inner: inner, running: running, fitHeight: fitHeight, paused: paused });
+  return React.createElement(TimerDial, { mins: mins, secs: secs, progress: progress, mode: mode, modeLabel: modeLabel, hasta: hasta, subtitle: subtitle, inner: inner, running: running, fitHeight: fitHeight, paused: paused });
 }
 
 function TimerBar(_ref3) {let { mins, secs, progress, modeLabel, subtitle } = _ref3;
@@ -23364,15 +23380,19 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
        a media tinta. El relleno de los días pasados es un oliva claro SÓLIDO: el de
        antes era el oliva transparente, y sobre el beige del tubo se volvía gris y
        parecía apagado (más en la paleta oscura). Hoy, en tinta entera.
+       EL COLOR DICE LO LLENA QUE ESTÁ (Ez, 4B del 25 oct.): un solo tono por cápsula, del
+       degradado del logo, del terracota de un día corto al oliva de uno lleno.
+       --pace-capsula-p lo pone SidebarWeek (alto ÷ 40). Los días pasados, más suaves.
        Sin «color-mix» (navegadores viejos) queda el oliva a media opacidad, que es
        como era. */
     [data-pace-sidebar] [data-pace-capsula] { box-shadow: inset 0 0 0 1px var(--line); }
     [data-pace-sidebar] [data-futuro="1"] [data-pace-capsula] { opacity: .55; }
     [data-pace-sidebar] [data-pace-capsula-relleno] { display: block; flex: none; border-radius: 3.5px; background: var(--focus); opacity: .55; }
-    @supports (background: color-mix(in oklab, red, blue)) {
-      [data-pace-sidebar] [data-pace-capsula-relleno] { opacity: 1; background: color-mix(in oklab, var(--focus) 58%, var(--paper-2)); }
-    }
     [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: var(--focus); opacity: 1; }
+    @supports (background: color-mix(in oklab, red, blue)) {
+      [data-pace-sidebar] [data-pace-capsula-relleno] { opacity: 1; background: color-mix(in oklab, color-mix(in oklab, var(--focus) var(--pace-capsula-p, 100%), var(--breathe)) 62%, var(--paper-2)); }
+      [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: color-mix(in oklab, var(--focus) var(--pace-capsula-p, 100%), var(--breathe)); }
+    }
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
        ancho util son 243. El padding y el margen negativo dan aire al fondo que
@@ -24497,7 +24517,7 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
       return (
         React.createElement("span", { key: i, "data-pace-semana-dia": i, "data-hoy": d.isToday ? '1' : '0', "data-futuro": i > semana.todayIndex ? '1' : '0', style: sidebarStyles.semDia },
         React.createElement("span", { "data-pace-capsula": true, style: sidebarStyles.capsula },
-        alto ? React.createElement("span", { "data-pace-capsula-relleno": true, style: { height: alto } }) : null
+        alto ? React.createElement("span", { "data-pace-capsula-relleno": true, style: { height: alto, '--pace-capsula-p': Math.round(alto / 40 * 100) + '%' } }) : null
         ),
         React.createElement("span", { style: { ...sidebarStyles.semLetra, ...(d.isToday ? sidebarStyles.semLetraHoy : null) } }, letras[i])
         ));
@@ -27845,6 +27865,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       progress: progress,
       mode: state.focusMode,
       modeLabel: modeLabel,
+      hasta: aro ? aro.hasta : null,
       subtitle: subtitle,
       inner: isAro ? innerForAro : null,
       running: running,
@@ -30564,12 +30585,6 @@ if (!_paceMoveV1Css) {
   const s = document.createElement('style');
   s.id = 'pace-move-v1-css';
   s.textContent = `
-    @keyframes pace-rep-pulse {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(0.86); }
-      100% { transform: scale(1); }
-    }
-
     /* El centro de la sesión es una columna que ocupa todo el alto: arriba el cuerpo, que se
        estira, y debajo la barra de pasos, siempre a la misma distancia del mando. Las medidas
        van en la raíz, que es madre de los dos. */
@@ -30655,7 +30670,9 @@ if (!_paceMoveV1Css) {
     .pace-v1 [data-pace-v1-num] {
       font-family: var(--font-display); font-style: italic; font-weight: 400;
       font-size: var(--v1-num) !important; line-height: 0.95 !important;
-      font-variant-numeric: tabular-nums;
+      /* Cifras de caja alta (Ez, 25 oct.): las de estilo antiguo de Cormorant bajan el 4, el 7
+         y el 9 de la línea y el número parecía descentrado de una rep a otra. */
+      font-variant-numeric: lining-nums tabular-nums;
     }
     .pace-v1-numfila { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 24px; }
     [data-pace-v1-numlabel] { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
@@ -30669,8 +30686,38 @@ if (!_paceMoveV1Css) {
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
     .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
     .pace-v1-siguiente {
+      display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 12px;
       text-align: center; margin-top: 8px; font-size: 10px; line-height: 1.45;
       letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+    }
+
+    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. */
+    .pace-v1-auto {
+      display: inline-flex; align-items: center; gap: 7px; height: 24px; padding: 0 9px 0 5px;
+      border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink-2);
+      font: 600 10px/1 var(--font-ui); letter-spacing: 0.14em; text-transform: uppercase;
+      white-space: nowrap; cursor: pointer;
+    }
+    .pace-v1-auto:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .pace-v1-auto-pista { position: relative; flex: none; width: 24px; height: 14px; border-radius: 999px; background: var(--line); }
+    .pace-v1-auto-pista::after {
+      content: ''; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--paper); transition: left 160ms var(--ease);
+    }
+    .pace-v1-auto[aria-pressed="true"] { border-color: color-mix(in oklab, var(--v1-auto) 55%, var(--line)); color: var(--ink); }
+    .pace-v1-auto[aria-pressed="true"] .pace-v1-auto-pista { background: var(--v1-auto); }
+    .pace-v1-auto[aria-pressed="true"] .pace-v1-auto-pista::after { left: 12px; }
+
+    /* El aro del «›» con Auto, y el «›» que espera sin Auto. */
+    .pace-v1-redondo svg.pace-v1-anillo {
+      position: absolute; top: -6px; left: -6px; width: calc(100% + 12px); height: calc(100% + 12px);
+      pointer-events: none; stroke-width: 2; fill: none;
+    }
+    .pace-v1-anillo-pista { stroke: var(--line); }
+    .pace-v1-anillo-arco { stroke-linecap: round; transition: stroke-dasharray 1s linear; }
+    .pace-v1-redondo[data-pace-v1-espera] {
+      border-color: var(--v1-tono); color: var(--v1-tono);
+      background: color-mix(in oklab, var(--v1-tono) 14%, var(--paper-2));
     }
 
     /* El mando de tres. */
@@ -30713,6 +30760,7 @@ if (!_paceMoveV1Css) {
     @media (prefers-reduced-motion: reduce) {
       .pace-v1-aro-arco { transition: none; }
       .pace-v1-redondo { transition: none; }
+      .pace-v1-anillo-arco, .pace-v1-auto-pista::after { transition: none; }
     }
   `;
   document.head.appendChild(s);
@@ -30973,9 +31021,6 @@ function v1DevCheckDuration(routine, restBetweenSets) {
 
 
 
-
-
-
 function v1DoneStats(routine, guided, tiempo, t, hechos) {
   const hecho = (i) => !hechos || !!hechos[i];
   const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
@@ -31199,7 +31244,7 @@ Object.assign(window, {
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
   <script>
 ;(function () {
-
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
 
 
 
@@ -31221,7 +31266,13 @@ function v1SoltarFoco(e) {
   if (raiz) {try {raiz.focus({ preventScroll: true });} catch (err) {}}
 }
 
-function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos } = _ref;
+
+
+
+function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo } = _ref;
+  const tono = acentoModulo || accent;
+  const vuelta = 2 * Math.PI * 27;
+  const lleno = Math.max(0, Math.min(1, anillo || 0));
 
   const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
   const pulsa = (fn) => (e) => {v1SoltarFoco(e);if (fn) fn();};
@@ -31239,8 +31290,16 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos } = _r
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11M15 6.5v11" })),
     React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(paused ? textos.resume : textos.pause))
     ),
-    React.createElement("button", { type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "next", onClick: pulsa(next.onClick), title: etiqueta(next.label) },
+    React.createElement("button", _extends({ type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "next", onClick: pulsa(next.onClick), title: etiqueta(next.label) },
+    espera ? { 'data-pace-v1-espera': '', style: { '--v1-tono': tono } } : {}),
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9.5 6.5 15 12l-5.5 5.5" })),
+    anillo != null &&
+    React.createElement("svg", { className: "pace-v1-anillo", "data-pace-v1-anillo": lleno.toFixed(3), viewBox: "0 0 58 58", "aria-hidden": "true" },
+    React.createElement("circle", { cx: "29", cy: "29", r: "27", className: "pace-v1-anillo-pista" }),
+    React.createElement("circle", { cx: "29", cy: "29", r: "27", className: "pace-v1-anillo-arco", transform: "rotate(-90 29 29)",
+      style: { stroke: tono, strokeDasharray: `${(vuelta * lleno).toFixed(1)} ${vuelta.toFixed(1)}`, opacity: lleno > 0 ? 1 : 0 } })
+    ),
+
     React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(next.label))
     )
     ));
@@ -31248,7 +31307,7 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos } = _r
 }
 
 Object.assign(window, { MandoV1, v1SoltarFoco });
-;Object.assign(window, { v1SoltarFoco, MandoV1 });
+;Object.assign(window, { _extends, v1SoltarFoco, MandoV1 });
 })();
 </script>
   <script>
@@ -31288,12 +31347,12 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
     }
     const care = st.mode !== 'rest' ? tInstr(i, 'care') : null;
     if (care) pon(colas, { care });
-    if (st.mode === 'perSide') {
-      pon(colas, { strong: tn('session.sideFirst', { side: t('session.sideLeft') }), support: t('move.placeHint') });
-      pon(colas, { strong: tn('session.sideNext', { side: t('session.sideRight') }), support: t('move.sideAutoHint') });
-    } else {
-      pon(colas, { support: t('move.placeHint') });
-    }
+
+    ['move.placeHint', 'move.placeHintMano'].forEach((clave) => {
+      if (st.mode === 'perSide') pon(colas, { strong: tn('session.sideFirst', { side: t('session.sideLeft') }), support: t(clave) });else
+      pon(colas, { support: t(clave) });
+    });
+    if (st.mode === 'perSide') pon(colas, { strong: tn('session.sideNext', { side: t('session.sideRight') }), support: t('move.sideAutoHint') });
     if (st.mode === 'rest' && routine.steps[i + 1]) {
       const luego = tn('move.restNext', { name: tStep(i + 1, 'name') });
       pon(colas, { strong: luego });
@@ -31426,9 +31485,11 @@ function CuerpoV1(p) {
     React.createElement("div", { className: "pace-v1-numgrupo" },
     p.gateNumber ?
     React.createElement("div", { "data-pace-v1-num": true, "data-pace-v1-num-gate": true, style: { color: 'var(--ink-2)' } }, p.bigNumber) :
+
+
     React.createElement("div", { "data-pace-move-timer": true, "data-pace-v1-timer": true, "data-pace-v1-num": true, style: {
-        color: 'var(--ink)',
-        ...(p.repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${p.repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: p.paused ? 'paused' : 'running' } : {})
+        color: p.repsProgreso == null ? 'var(--ink)' :
+        `color-mix(in oklab, var(--focus) ${Math.round(p.repsProgreso * 100)}%, var(--breathe))`
       } }, p.bigNumber),
     React.createElement("div", { className: "pace-v1-numfila" },
     React.createElement("span", { "data-pace-v1-numlabel": true }, p.bigLabel),
@@ -31463,8 +31524,15 @@ function CuerpoV1(p) {
     )
     )
     ),
+
     React.createElement("div", { className: "pace-v1-siguiente" },
-    routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')
+    React.createElement("span", { "data-pace-v1-siguiente": true }, p.siguienteTexto || (
+    routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep'))),
+    React.createElement("button", { type: "button", className: "pace-v1-auto", "data-pace-v1-auto": true, "aria-pressed": p.auto ? 'true' : 'false',
+      title: t('move.auto.title'), style: { '--v1-auto': accent },
+      onClick: (e) => {v1SoltarFoco(e);p.onAuto();} },
+    React.createElement("span", { className: "pace-v1-auto-pista", "aria-hidden": "true" }), t('move.auto')
+    )
     )
     )
     ));
@@ -31675,6 +31743,7 @@ Object.assign(window, {
 
 
 
+
 const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
 
 function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, reanudar } = _ref;
@@ -31724,6 +31793,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
 
+  const [pace, setPace] = usePace();
+  const auto = pace.cuerpoAuto !== false;
+  const totalesRef = useRefV1({ place: 1, change: 1 });
+  const esperaRef = useRefV1('');
+
+
+
 
   const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
 
@@ -31765,14 +31841,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   };
 
   const startStep = (idx) => {
-    setStepIdx(idx);setElapsed(0);setSide(0);
+    setStepIdx(idx);setElapsed(0);setSide(0);esperaRef.current = '';
 
 
 
 
 
     const su = v1StepSetup(routine, idx);
-    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);} else
+    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);totalesRef.current.place = su.estimatedSeconds;} else
     setPhase('work');
   };
   const advanceStep = () => {
@@ -31780,15 +31856,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     startStep(stepIdx + 1);
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
-  const addPlaceTime = () => setPlaceLeft((c) => c + V1_MAS_TIEMPO);
-  const addChangeTime = () => setChangeLeft((c) => c + V1_MAS_TIEMPO);
+  const addPlaceTime = () => {totalesRef.current.place = Math.max(totalesRef.current.place, placeLeft) + V1_MAS_TIEMPO;setPlaceLeft((c) => c + V1_MAS_TIEMPO);};
+  const addChangeTime = () => {totalesRef.current.change = Math.max(totalesRef.current.change, changeLeft) + V1_MAS_TIEMPO;setChangeLeft((c) => c + V1_MAS_TIEMPO);};
   const onSideReady = () => {setSide(1);setPhase('work');setElapsed(0);};
 
 
   const enterChange = () => {
 
 
-    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));
+    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));totalesRef.current.change = v1TransitionSeconds(step);
 
     try {playSound('move.side');} catch (e) {}
   };
@@ -31798,6 +31874,12 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     repsGuidedRef.current += hechas;
     if (hechas > 0) hechosRef.current[stepIdx] = true;
     earlyRef.current = true;
+    advanceStep();
+  };
+
+  const terminarReps = () => {
+    repsGuidedRef.current += v1RepTarget(step);
+    hechosRef.current[stepIdx] = true;
     advanceStep();
   };
 
@@ -31830,9 +31912,12 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useSesionAlOcultar(stage === 'run', () => setPaused(true));
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (placeLeft <= 0) {beginWork();return;}
-    if (placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
+    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [placeLeft]);
+
+  useEffectV1(() => {
+    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto) beginWork();
+  }, [placeLeft, auto]);
 
 
 
@@ -31845,6 +31930,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
     if (step.mode === 'reps') {
+      if (!auto) return;
       const repSec = v1RepSeconds(step);
 
 
@@ -31865,10 +31951,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
     if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
     if (elapsed >= effDur) {
+      if (!auto) {
+
+        const clave = stepIdx + ':' + side;
+        if (esperaRef.current !== clave) {esperaRef.current = clave;try {playSound('move.go');} catch (e) {}}
+        return;
+      }
       if (step.mode === 'perSide' && side === 0) enterChange();else
       advanceStep();
     }
-  }, [elapsed]);
+  }, [elapsed, auto]);
 
 
 
@@ -31876,9 +31968,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, (n) => setChangeLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change') return;
-    if (changeLeft <= 0) {onSideReady();return;}
-    if (changeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
+    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [changeLeft]);
+  useEffectV1(() => {
+    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto) onSideReady();
+  }, [changeLeft, auto]);
 
 
 
@@ -31978,12 +32072,19 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;
-  let repPulseSec = 0;
+
+
+  let repsProgreso = null;
+  const repsDe = (s) => {
+    const n = Math.min(v1RepTarget(s), Math.floor(elapsed / v1RepSeconds(s)) + 1);
+    repsProgreso = v1RepTarget(s) > 1 ? (n - 1) / (v1RepTarget(s) - 1) : 1;
+    return String(n);
+  };
   if (phase === 'place') {
     kicker = t('session.place');
     bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');gateNumber = true;
     if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
-    support = t('move.placeHint');
+    support = t(auto ? 'move.placeHint' : 'move.placeHintMano');
     primary = { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
 
@@ -31995,18 +32096,19 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     primary = { label: t('session.beginNow'), onClick: onSideReady };
   } else if (step.opcional) {
 
-    if (step.mode === 'reps') {repPulseSec = v1RepSeconds(step);bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repPulseSec) + 1));bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });} else
+    if (step.mode === 'reps' && auto) {bigNumber = repsDe(step);bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });} else
+    if (step.mode === 'reps') {bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');} else
     {bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');}
     primary = { label: t('move.skipOptional'), onClick: advanceStep };
+  } else if (step.mode === 'reps' && !auto) {
+
+    bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');
+    primary = { label: t('move.next'), onClick: terminarReps };
   } else if (step.mode === 'reps') {
 
 
-    const repSec = v1RepSeconds(step);
-    repPulseSec = repSec;
-    bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
+    bigNumber = repsDe(step);
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-
-
     primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
   } else {
 
@@ -32024,10 +32126,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     primary = isRest ?
     { label: t('session.skip'), onClick: advanceStep } :
     { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
-        earlyRef.current = true;
-        if (step.mode === 'perSide' && side === 0) {enterChange();} else advanceStep();
+
+        if (auto || remaining > 0) earlyRef.current = true;
+
+        if (step.mode === 'perSide' && side === 0) {if (auto) enterChange();else onSideReady();} else advanceStep();
       } };
   }
+
+  const espera = !auto && (phase === 'place' ? placeLeft <= 0 : phase === 'change' ? changeLeft <= 0 :
+  step.mode === 'reps' || remaining <= 0);
+  const siguienteTexto = !espera ? null : t(phase === 'work' && step.mode === 'reps' ? 'move.tapDone' : 'move.tapGo');
 
 
 
@@ -32049,11 +32157,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   step.mode === 'reps' ? Math.min(1, elapsed / (v1RepTarget(step) * v1RepSeconds(step))) :
   v1StepDur(step) ? elapsed / v1StepDur(step) : 0;
 
+  const anillo = !auto ? null :
+  phase === 'place' ? 1 - placeLeft / Math.max(1, totalesRef.current.place) :
+  phase === 'change' ? 1 - changeLeft / Math.max(1, totalesRef.current.change) :
+  fraccion;
+
   return (
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
       headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
-      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused, onPause: () => setPaused((x) => !x),
+      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused, onPause: () => setPaused((x) => !x), anillo: anillo, espera: espera, acentoModulo: accent,
         prev: { onClick: () => {if (stepIdx > 0) {setPaused(false);startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
         next: { label: primary.label, onClick: () => {setPaused(false);primary.onClick();} },
         textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') } }),
@@ -32063,8 +32176,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       accent: accent, stepAccent: stepAccent, stepAccentSoft: stepAccentSoft, lang: lang,
       t: t, tn: tn, tStep: tStep, tInstr: tInstr,
       kicker: kicker, cueText: cueText, sideLead: sideLead, careText: careText,
-      bigNumber: bigNumber, bigLabel: bigLabel, gateNumber: gateNumber, repPulseSec: repPulseSec,
+      bigNumber: bigNumber, bigLabel: bigLabel, gateNumber: gateNumber, repsProgreso: repsProgreso,
       support: support, supportStrong: supportStrong, fraccion: fraccion,
+      auto: auto, onAuto: () => setPace({ cuerpoAuto: !auto }), siguienteTexto: siguienteTexto,
       onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null })
     ));
 
@@ -41688,11 +41802,16 @@ Object.assign(window, { Onboarding, onboardingStyles });
 }
 [data-pace-ritmo] :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
-/* EL RÓTULO del corte del aro: solo «Hasta las …», abajo del todo y donde estaba cuando
-   llevaba «A tu ritmo» encima. Mide lo que medía el nombre (11 px × 1,45), así que el panel
-   no se mueve, haya hora o no. */
-.pace-rt-rotulo { height: 15.95px; margin-bottom: 10px; display: flex; align-items: flex-end; justify-content: center; }
-.pace-rt-hasta { font-size: 10px; line-height: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+/* «Hasta las …» dentro del aro, bajo «Bloque 1 de 9», en la cursiva del subtítulo pero un
+   punto mayor (TimerDial.jsx; en escritorio crece con el aro en _responsive.pieles.esc.js). */
+[data-pace-dial-hasta] { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 16px;
+  line-height: 1.25; color: var(--ink-2); margin: -4px 0 14px; }
+/* CON «HASTA LAS», TODO EL INTERIOR DEL ARO BAJA (Ez, 3C: «un 15 % más»). Bajar el botón lo aleja
+   del centro, y el aro tiene que crecer para que quepa: a 360×640 no hay alto para eso, y con un
+   15 % salían 34 px de scroll. Así que baja el 15 % de su alto donde cabe y menos en las pantallas
+   bajas: un 5 % a 640 de alto. En escritorio, con la pendiente menor (_responsive.pieles.esc.js),
+   para que en la ventana de Ez (1536×714) el aro no encoja. Medido en los dos idiomas. */
+:root { --pace-dial-baja: clamp(5%, (100 * var(--pace-vh, 1vh) - 640px) * 0.48, 15%); }
 
 .pace-rt-panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
   box-shadow: var(--sh-soft); padding: 16px 22px 14px; text-align: left; }
@@ -43929,9 +44048,6 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
     React.createElement("div", { key: "ritmo", "data-pace-activitybar": true, "data-pace-ritmo": true, style: { padding: '6px 40px 20px', flexShrink: 0 } },
 
 
-    React.createElement("div", { className: "pace-rt-rotulo" },
-    plan && plan.actual ? React.createElement("div", { className: "pace-rt-hasta", "data-pace-ritmo-hasta": true }, tn('ritmo.hasta', { h: ritmoHora(plan.m.hasta) })) : null
-    ),
     React.createElement("div", { "data-pace-ritmo-panel": true },
     !plan ? React.createElement(RitmoPregunta, { state: state }) :
     plan.terminado ? React.createElement(RitmoHecho, { plan: plan }) :
@@ -44706,7 +44822,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
     [data-pace-timer-wrap],
     [data-pace-dial-fit] [data-pace-dial-label],
     [data-pace-dial-fit] [data-pace-dial-number],
-    [data-pace-dial-fit] [data-pace-dial-subtitle],
+    [data-pace-dial-fit] [data-pace-dial-subtitle], [data-pace-dial-fit] [data-pace-dial-hasta],
     [data-pace-dial-fit] [data-pace-dial-divider] {
       transition-property: none;
     }
@@ -45436,6 +45552,13 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
            se queda donde estaba, el numero sube de verdad, **y el alto del
            bloque no cambia** -- que importa porque el marco lo centra. */
         margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.101), 56px) !important;
+      }
+      :root { --pace-dial-baja: clamp(5%, (100 * var(--pace-vh, 1vh) - 640px) * 0.38, 15%); }
+      /* «Hasta las» (3C): un 14 % mayor que el subtítulo, como en el móvil (16 contra 14). */
+      [data-pace-dial-fit] [data-pace-dial-hasta] {
+        font-size: clamp(13px, calc(var(--pace-timer-d, 360px) * 0.041), 22px) !important;
+        margin-top: calc(var(--pace-timer-d, 360px) * -0.011) !important;
+        margin-bottom: clamp(8px, calc(var(--pace-timer-d, 360px) * 0.039), 20px) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-divider] {
         width: clamp(80px, calc(var(--pace-timer-d, 360px) * 0.28), 150px) !important;

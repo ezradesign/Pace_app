@@ -37,11 +37,16 @@
 }
 [data-pace-ritmo] :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
-/* EL RÓTULO del corte del aro: solo «Hasta las …», abajo del todo y donde estaba cuando
-   llevaba «A tu ritmo» encima. Mide lo que medía el nombre (11 px × 1,45), así que el panel
-   no se mueve, haya hora o no. */
-.pace-rt-rotulo { height: 15.95px; margin-bottom: 10px; display: flex; align-items: flex-end; justify-content: center; }
-.pace-rt-hasta { font-size: 10px; line-height: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+/* «Hasta las …» dentro del aro, bajo «Bloque 1 de 9», en la cursiva del subtítulo pero un
+   punto mayor (TimerDial.jsx; en escritorio crece con el aro en _responsive.pieles.esc.js). */
+[data-pace-dial-hasta] { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 16px;
+  line-height: 1.25; color: var(--ink-2); margin: -4px 0 14px; }
+/* CON «HASTA LAS», TODO EL INTERIOR DEL ARO BAJA (Ez, 3C: «un 15 % más»). Bajar el botón lo aleja
+   del centro, y el aro tiene que crecer para que quepa: a 360×640 no hay alto para eso, y con un
+   15 % salían 34 px de scroll. Así que baja el 15 % de su alto donde cabe y menos en las pantallas
+   bajas: un 5 % a 640 de alto. En escritorio, con la pendiente menor (_responsive.pieles.esc.js),
+   para que en la ventana de Ez (1536×714) el aro no encoja. Medido en los dos idiomas. */
+:root { --pace-dial-baja: clamp(5%, (100 * var(--pace-vh, 1vh) - 640px) * 0.48, 15%); }
 
 .pace-rt-panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
   box-shadow: var(--sh-soft); padding: 16px 22px 14px; text-align: left; }

@@ -177,6 +177,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.finishEarly':                'Terminar antes',
     'move.skipOptional':               'Saltar este paso',
     'move.sideAutoHint':               'El lado siguiente empieza solo',
+    // «Auto» (Ez, 1A del 25 oct. 2026): apagado, cada paso espera a «›»
+    'move.auto':                       'Auto',
+    'move.auto.title':                 'Avanzar solo',
+    'move.repsPace':                   'reps · a tu ritmo',
+    'move.tapDone':                    'Pulsa › al acabar',
+    'move.tapGo':                      'Pulsa › para seguir',
+    'move.placeHintMano':              'Colócate sin prisa · empiezas con ›',
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
     'move.careLabel':                  'Cuídate',
     'move.series':                     'Series',
@@ -306,6 +313,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.finishEarly':                'Finish early',
     'move.skipOptional':               'Skip this step',
     'move.sideAutoHint':               'The next side starts on its own',
+    // «Auto» (Ez, 1A, 25 Oct 2026): off, each step waits for «›»
+    'move.auto':                       'Auto',
+    'move.auto.title':                 'Move on by itself',
+    'move.repsPace':                   'reps · at your pace',
+    'move.tapDone':                    'Tap › when you are done',
+    'move.tapGo':                      'Tap › to go on',
+    'move.placeHintMano':              'Get set, no rush · start with ›',
     // Editorial layer (s114): «Take care» label + final-screen stat labels
     'move.careLabel':                  'Take care',
     'move.series':                     'Sets',

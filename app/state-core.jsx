@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.176.0';
+const PACE_VERSION = 'v0.176.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -73,12 +73,11 @@ const defaultState = {
   // asi que un valor viejo o corrupto en localStorage no deja a nadie sin voz.
   voice: 'sulafat',
 
-  // Descanso entre series de fuerza (s114). SOLO afecta a los rests con
-  // restKind:'betweenSets' del runner v1 (desk.pushups / chair.squats); los
-  // cierres respiratorios (sin restKind) NO se tocan. Presets de Ajustes:
-  // Breve 20 / Tranquilo 30 (recomendado, default) / Amplio 45. Instalaciones
-  // previas heredan 30 vía el merge de loadState (sin migración).
+  // Descanso entre series de fuerza (s114): solo los rests con restKind:'betweenSets'.
+  // Presets de Ajustes 20 / 30 (default) / 45; las instalaciones previas heredan 30 por el merge.
   restBetweenSets: 30,
+  // «Auto» de Mueve y Estira (Ez, 1A del 25 oct.): apagado, cada paso espera a «›».
+  cuerpoAuto: true,
 
   // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
   // B1.2 (s108): ON por defecto (opt-out en Ajustes). El permiso del navegador

@@ -51,12 +51,9 @@ const PIEZAS = [
   ['la barra', '[data-pace-v1-progress]'],
 ];
 
-/* EL PULSO SE CONGELA PARA MEDIR. En las reps guiadas el número lleva
-   `pace-rep-pulse`, que anima `scale` (s113), y `getBoundingClientRect()`
-   devuelve la caja YA TRANSFORMADA: midiendo en vivo, la misma cifra de 76 px
-   daba 72,2 en una pantalla y 65,0 en la otra, y eso se lee como un salto de
-   layout que no existe. Lo que este test defiende es la COLOCACIÓN; que el
-   número lata es otra cosa y es deliberada. */
+/* EL PULSO SE CONGELABA PARA MEDIR. Hasta el 25 oct. el número de las reps guiadas latía
+   (`scale`) y `getBoundingClientRect()` devolvía la caja YA TRANSFORMADA. Desde la 2A de Ez
+   el número está quieto; la regla se queda por si alguien vuelve a animarlo. */
 async function congelarPulso(page) {
   await page.addStyleTag({ content: '[data-pace-v1-timer]{animation:none !important}' });
 }

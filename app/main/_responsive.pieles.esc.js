@@ -94,6 +94,13 @@
            bloque no cambia** -- que importa porque el marco lo centra. */
         margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.101), 56px) !important;
       }
+      :root { --pace-dial-baja: clamp(5%, (100 * var(--pace-vh, 1vh) - 640px) * 0.38, 15%); }
+      /* «Hasta las» (3C): un 14 % mayor que el subtítulo, como en el móvil (16 contra 14). */
+      [data-pace-dial-fit] [data-pace-dial-hasta] {
+        font-size: clamp(13px, calc(var(--pace-timer-d, 360px) * 0.041), 22px) !important;
+        margin-top: calc(var(--pace-timer-d, 360px) * -0.011) !important;
+        margin-bottom: clamp(8px, calc(var(--pace-timer-d, 360px) * 0.039), 20px) !important;
+      }
       [data-pace-dial-fit] [data-pace-dial-divider] {
         width: clamp(80px, calc(var(--pace-timer-d, 360px) * 0.28), 150px) !important;
         margin-top: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.03), 16px) !important;

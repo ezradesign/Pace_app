@@ -232,11 +232,8 @@ function v1DevCheckDuration(routine, restBetweenSets) {
 }
 
 /* CSS del runner v1 (s113):
-   - pace-rep-pulse: pulso de cadencia de las reps guiadas (mitad «bajar» +
-     mitad «subir», ease-in-out; la duración real la fija el runner inline
-     con repSeconds). NO cuelga de data-pace-essential a propósito: el kill
-     global de prefers-reduced-motion (tokens.css) lo congela y queda el
-     contador sin animación — el fallback que pide el corte.
+   - El número de las reps guiadas ya no late (Ez, 2A del 25 oct.): la
+     cadencia se oye en la madera y se ve en el color (CuerpoV1).
    - Compactación por ALTURA, solo ≥641 px de ancho (el responsive móvil por
      anchura de s27/SessionShell sigue gobernando el retrato estrecho, ya
      verificado en 360×640). Orden de reducción: espacios → glifo →
