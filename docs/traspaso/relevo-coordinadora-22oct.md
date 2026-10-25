@@ -89,8 +89,8 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    resto) + 3C en cursiva pero todos los elementos incluido el botón tienen que bajar un 15 % más + 4B queda más fino así
    que con degradado». Lo del número: las cifras de Cormorant son de estilo antiguo (el 4, el 7 y el 9 bajan de la línea);
    con `font-variant-numeric: lining-nums` quedan alineadas, como en /beta. Al reponerse el uso (14:40): pasar
-   esto a la sesión `franjas-maqueta` para montarlo en su rama (el runner ya es libre: 0.176.0 está en main), y pedir a
-   Ez el «júntalo» de N2 (7c7d357, aún no lo ha dicho). La sesión de seguridad y cobro web, sin abrir. Uso al 95 %.
+   esto a la sesión `franjas-maqueta` para montarlo en su rama (el runner ya es libre: 0.176.0 está en main), y juntar N2:
+   **Ez dijo «sí, júntalo» a N2 (7c7d357) el 25 oct., ~11:55**, al tope de uso: juntarlo a las 14:40. La sesión de seguridad y cobro web, sin abrir. Uso al 95 %.
 10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
    seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
    - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
