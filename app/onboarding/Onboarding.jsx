@@ -117,7 +117,9 @@ function Onboarding() {
     setOpen(false);
   };
 
-  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+  /* Elegir idioma aquí es elegirlo a mano, como en Ajustes: apaga «Auto». Si no, cada arranque
+     vuelve a preguntar al sistema (loadState) y lo elegido en la bienvenida se pierde. */
+  const toggleLang = () => set({ langAuto: false, lang: state.lang === 'es' ? 'en' : 'es' });
 
   return (
     <div
