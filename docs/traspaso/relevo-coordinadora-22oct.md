@@ -104,6 +104,12 @@ Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18
    (0.177.0, con las dos líneas en el CHANGELOG); la suite entera con las dos dentro y push. Al intentarlo apareció que
    el bump de 0.176.1 no había entrado en el commit de la unión: arreglado en 40b14f2. **Tras `npm run bump` en
    mitad de una unión, `git add` de los siete sitios antes del commit.**
+9g. **26 oct., ~15:50: 0.178.0 en main** (cobro web, merge d6dc3fd; suite 876 en verde). Semana al 93 % (se repone
+   a las 18:00). Ez: «sigue hasta acabar la sesión y cuando se reinicie ya continúas aquí». **Al reponerse, aquí
+   mismo**: abrir la sesión de **lo que prometemos sobre los datos** (P1-P5, punto 4; más /api/renovar, que solo usa la
+   mensual cerca del fin de su código, y la huella de IP de una hora de «Avísame»), con antes y después de
+   `privacy.html` para Ez antes de tocarlo. La sesión `seguridad-cobro` terminó: archivarla cuando Ez lo diga (lo
+   preguntado, sin respuesta clara).
 10. **Lo siguiente en cuanto acabe `mueve-estira`** (Ez, 25 oct.: «justo detrás de Mueve y Estira: primero la
    seguridad y luego lo de cobrar en la web que no necesita Stripe»). Una sesión, en este orden:
    - **Seguridad** (punto 10 de la cola de abajo): S1 `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de
