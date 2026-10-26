@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.177.0 · 25 de octubre de 2026 (en la rama `claude/seguridad-cobro-web-1fa8a6`, a juntar). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.177.0 · 26 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -140,8 +140,10 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   queda el aviso a mitad de un bloque largo (la segunda parte de ChatGPT), después de verlo.
 - **Del móvil de Ez, 23 oct.** (0.174.0): **Mueve y Estira de fondo**, lo primero tras v0.175.0 (dibujos que no
   casan, estiramientos dentro de Mueve, banda y barra aparte y saltables, rutinas casi iguales, más fuerza en
-  Mueve), y N2-N9 (franjas de Android con la paleta, «Auto» por la hora, aviso con el móvil bloqueado…). Detalle
-  en la cola de `docs/traspaso/relevo-coordinadora-22oct.md`, puntos 1b y 1c.
+  Mueve), en v0.176.0; N2 (las franjas del móvil con la paleta) en v0.176.1; N5-N8 (1A 2A 3C 4B de Ez sobre la
+  maqueta https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero) en v0.176.2. Quedan N4 (aviso con el móvil bloqueado)
+  y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). Detalle en la cola de
+  `docs/traspaso/relevo-coordinadora-22oct.md`, punto 1c.
 - **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
   escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
   calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;

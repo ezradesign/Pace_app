@@ -104,8 +104,8 @@ test('la home pregunta cuánto trabajas, con el horario en la frase y la hora de
   await pulsarComienza(page);
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toHaveCount(1);
   await expect(page.locator('[data-pace-activitybar-grid]'), 'Actividades no debería estar').toHaveCount(0);
-  /* Dentro del aro no va «A tu ritmo» (Ez): sin día elegido, el rótulo queda vacío. */
-  await expect(page.locator('.pace-rt-rotulo').first()).toHaveText('');
+  /* Dentro del aro no va «A tu ritmo» (Ez) y, sin día elegido, tampoco «Hasta las» (3C). */
+  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveCount(0);
   const chips = vis(page, '[data-pace-ritmo-opcion]');
   await expect(chips).toHaveCount(4);
   await expect(vis(page, '[data-pace-ritmo-opcion="1h"]')).toContainText('Hasta las 10:00');
@@ -134,10 +134,9 @@ test('elegir la jornada entera: el aro, el rótulo, la barra lateral y la persis
   await expect(page.getByRole('button', { name: 'Empezar jornada', exact: true })).toBeVisible();
   const hasta = page.locator('[data-pace-ritmo-hasta]');
   await expect(hasta).toHaveText('Hasta las 17:00');
-  /* Solo la hora: «A tu ritmo» ya no se pinta dentro del aro (Ez). */
-  await expect(page.locator('.pace-rt-rotulo').first()).toHaveText('Hasta las 17:00');
-  /* …y el rótulo SUBE lo que mide la línea nueva: el panel no se mueve dentro de
-     su bloque (ronda 4). Sin la compensación, bajaría 15 px. */
+  /* «Hasta las» va dentro del aro, bajo «Bloque 1 de 9», en cursiva (Ez, 3C del 25 oct.)… */
+  await expect(page.locator('[data-pace-dial-label] + [data-pace-dial-hasta]')).toHaveText('Hasta las 17:00');
+  /* …y el panel no se mueve dentro de su bloque al aparecer (ronda 4). */
   expect(await banda(page), 'el panel se movió al aparecer «Hasta las»').toBe(bandaAntes);
   await expect(page.locator('[data-pace-sidebar-accion]')).toContainText(/Siguiente pausa\s*A las 9:45, /);
   const guardado = await page.evaluate(() => getState().ritmo.dia);
@@ -468,14 +467,18 @@ for (const vp of [{ w: 1280, h: 879 }, { w: 1536, h: 714 }, { w: 412, h: 844 }, 
         const raiz = getComputedStyle(document.documentElement);
         return { scroll: body.scrollHeight - body.clientHeight, solapes, etiquetas: r.length,
                  corte: parseFloat(raiz.getPropertyValue('--pace-dial-corte')),
-                 solape: parseFloat(raiz.getPropertyValue('--pace-activities-overlap')) };
+                 solape: parseFloat(raiz.getPropertyValue('--pace-activities-overlap')),
+                 D: parseFloat(raiz.getPropertyValue('--pace-timer-d')),
+                 lineaCorte: document.querySelector('[data-pace-dial-fit]').getBoundingClientRect().bottom - parseFloat(raiz.getPropertyValue('--pace-dial-corte')),
+                 panelArriba: Array.from(document.querySelectorAll('[data-pace-ritmo-panel]')).map((e) => e.getBoundingClientRect()).find((x) => x.width > 0).top };
       });
       expect(m.scroll, 'la home pide scroll').toBeLessThanOrEqual(1);
       expect(m.solapes, 'etiquetas que se pisan').toBe(0);
       if (vp.w >= 769) expect(m.etiquetas, 'la línea no pinta sus paradas').toBe(9);
-      /* El aro se corta en el canto del PANEL (s184), no en el del horizonte: el motor
-         tiene que haberle restado la banda del rótulo (home-geometry.js mide el panel). */
-      expect(m.corte, 'el corte del aro no baja hasta el canto del panel').toBeLessThan(m.solape);
+      /* El aro se corta en el canto del PANEL (s184), no en el del horizonte, con el aire
+         del halo (3 % de D) por encima. Desde la 3C ya no hay rótulo entre los dos y el
+         corte casi coincide con el solape, así que se mide la línea y no la resta. */
+      if (m.corte > 4) expect(Math.abs(m.lineaCorte - (m.panelArriba - Math.round(0.03 * m.D))), 'el aro no se corta en el canto del panel').toBeLessThanOrEqual(1);
     });
   });
 }

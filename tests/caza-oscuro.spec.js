@@ -56,10 +56,12 @@ test('oscuro-2 · el número del filtro activo se lee en oscuro', async ({ page,
 test('oscuro-3 · la barra del navegador toma el papel de la paleta', async ({ page, context }) => {
   await sembrar(context, OSCURO);
   await irAlArtefacto(page);
+  /* Son dos (barras-sistema.spec.js, barras-3): las dos dicen la paleta. */
   const meta = page.locator('meta[name="theme-color"]');
-  await expect(meta).toHaveAttribute('content', '#1d1a14');
+  await expect(meta).toHaveCount(2);
+  for (const una of await meta.all()) await expect(una).toHaveAttribute('content', '#1d1a14');
   await page.evaluate(() => setState({ palette: 'crema' }));
-  await expect(meta).toHaveAttribute('content', '#F2EDE0');
+  for (const una of await meta.all()) await expect(una).toHaveAttribute('content', '#F2EDE0');
 });
 
 /* oscuro-5 */

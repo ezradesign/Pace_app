@@ -82,7 +82,41 @@ function chequeaIos(ctx) {
   } else {
     ctx.ok('ios: el icono, la vaca del arranque y el papel salen de icons/icon-512.png y de app/tokens.css de hoy');
   }
+  chequeaFranjas(ctx, crema, oscura);
   chequeaTienda(ctx, icono.archivo);
+}
+
+/* Las franjas de arriba y de abajo siguen la paleta que se ve, no el modo del
+   iPhone: PaceViewController lee el `theme-color` de la web, que pone
+   `applyTheme`. Si se suelta un eslabon vuelven a salir de PaceFondo y nada
+   falla. En Android pasa lo mismo por otro camino (verify.android.js). */
+function chequeaFranjas(ctx, crema, oscura) {
+  var malas = [];
+  var html = texto('PACE.html');
+  var metaOscura = /<meta name="theme-color" content="(#[0-9a-fA-F]{6})" media="\(prefers-color-scheme: dark\)">/.exec(html);
+  var metaCrema = /<meta name="theme-color" content="(#[0-9a-fA-F]{6})">/.exec(html);
+  if (!metaOscura || !metaCrema || metaOscura.index > metaCrema.index ||
+      metaOscura[1].toUpperCase() !== oscura.paper || metaCrema[1].toUpperCase() !== crema.paper) {
+    malas.push('PACE.html ya no lleva el theme-color oscuro (con su media, delante) y el crema con el --paper de cada paleta: ' +
+               'el arranque destellaria en claro con el iPhone en oscuro');
+  }
+  var paleta = texto('app/state-core.palette.jsx');
+  var papel = /const PACE_PAPEL = \{ crema: '(#[0-9a-fA-F]{6})', oscuro: '(#[0-9a-fA-F]{6})' \};/.exec(paleta);
+  if (!papel || papel[1].toUpperCase() !== crema.paper || papel[2].toUpperCase() !== oscura.paper) {
+    malas.push('PACE_PAPEL (app/state-core.palette.jsx) ya no es el --paper de app/tokens.css');
+  }
+  if (!/querySelectorAll\('meta\[name="theme-color"\]'\)/.test(paleta)) {
+    malas.push('applyTheme ya no pone la paleta en TODAS las metas theme-color');
+  }
+  var vista = texto(APP + 'PaceViewController.swift');
+  if (!/observe\(\\\.themeColor/.test(vista) || !/return estiloBarra/.test(vista)) {
+    malas.push('PaceViewController ya no pinta las franjas y la hora con el theme-color de la web');
+  }
+  if (malas.length) {
+    malas.forEach(function (m) { ctx.falla('ios: ' + m); });
+  } else {
+    ctx.ok('ios: las franjas y la hora siguen el theme-color de la web, que es el --paper de la paleta que se ve');
+  }
 }
 
 /* Lo que la App Store mira y aqui no fallaria nunca. */

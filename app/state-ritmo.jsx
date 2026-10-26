@@ -307,6 +307,7 @@ function ritmoAro(s, t, tn) {
   var k = p.hechos + 1;
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
+    hasta: tn('ritmo.hasta', { h: ritmoHora(p.m.hasta) }),   // bajo el rótulo, en cursiva (Ez, 3C del 25 oct.)
     empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k }),
   };
 }

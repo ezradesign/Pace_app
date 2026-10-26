@@ -429,6 +429,7 @@ function FocusTimer({ onFinish }) {
           progress={progress}
           mode={state.focusMode}
           modeLabel={modeLabel}
+          hasta={aro ? aro.hasta : null}
           subtitle={subtitle}
           inner={isAro ? innerForAro : null}
           running={running}

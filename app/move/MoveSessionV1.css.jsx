@@ -19,12 +19,6 @@ if (!_paceMoveV1Css) {
   const s = document.createElement('style');
   s.id = 'pace-move-v1-css';
   s.textContent = `
-    @keyframes pace-rep-pulse {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(0.86); }
-      100% { transform: scale(1); }
-    }
-
     /* El centro de la sesión es una columna que ocupa todo el alto: arriba el cuerpo, que se
        estira, y debajo la barra de pasos, siempre a la misma distancia del mando. Las medidas
        van en la raíz, que es madre de los dos. */
@@ -110,7 +104,9 @@ if (!_paceMoveV1Css) {
     .pace-v1 [data-pace-v1-num] {
       font-family: var(--font-display); font-style: italic; font-weight: 400;
       font-size: var(--v1-num) !important; line-height: 0.95 !important;
-      font-variant-numeric: tabular-nums;
+      /* Cifras de caja alta (Ez, 25 oct.): las de estilo antiguo de Cormorant bajan el 4, el 7
+         y el 9 de la línea y el número parecía descentrado de una rep a otra. */
+      font-variant-numeric: lining-nums tabular-nums;
     }
     .pace-v1-numfila { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 24px; }
     [data-pace-v1-numlabel] { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
@@ -124,8 +120,38 @@ if (!_paceMoveV1Css) {
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
     .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
     .pace-v1-siguiente {
+      display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 12px;
       text-align: center; margin-top: 8px; font-size: 10px; line-height: 1.45;
       letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+    }
+
+    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. */
+    .pace-v1-auto {
+      display: inline-flex; align-items: center; gap: 7px; height: 24px; padding: 0 9px 0 5px;
+      border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink-2);
+      font: 600 10px/1 var(--font-ui); letter-spacing: 0.14em; text-transform: uppercase;
+      white-space: nowrap; cursor: pointer;
+    }
+    .pace-v1-auto:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .pace-v1-auto-pista { position: relative; flex: none; width: 24px; height: 14px; border-radius: 999px; background: var(--line); }
+    .pace-v1-auto-pista::after {
+      content: ''; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--paper); transition: left 160ms var(--ease);
+    }
+    .pace-v1-auto[aria-pressed="true"] { border-color: color-mix(in oklab, var(--v1-auto) 55%, var(--line)); color: var(--ink); }
+    .pace-v1-auto[aria-pressed="true"] .pace-v1-auto-pista { background: var(--v1-auto); }
+    .pace-v1-auto[aria-pressed="true"] .pace-v1-auto-pista::after { left: 12px; }
+
+    /* El aro del «›» con Auto, y el «›» que espera sin Auto. */
+    .pace-v1-redondo svg.pace-v1-anillo {
+      position: absolute; top: -6px; left: -6px; width: calc(100% + 12px); height: calc(100% + 12px);
+      pointer-events: none; stroke-width: 2; fill: none;
+    }
+    .pace-v1-anillo-pista { stroke: var(--line); }
+    .pace-v1-anillo-arco { stroke-linecap: round; transition: stroke-dasharray 1s linear; }
+    .pace-v1-redondo[data-pace-v1-espera] {
+      border-color: var(--v1-tono); color: var(--v1-tono);
+      background: color-mix(in oklab, var(--v1-tono) 14%, var(--paper-2));
     }
 
     /* El mando de tres. */
@@ -168,6 +194,7 @@ if (!_paceMoveV1Css) {
     @media (prefers-reduced-motion: reduce) {
       .pace-v1-aro-arco { transition: none; }
       .pace-v1-redondo { transition: none; }
+      .pace-v1-anillo-arco, .pace-v1-auto-pista::after { transition: none; }
     }
   `;
   document.head.appendChild(s);
