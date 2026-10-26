@@ -6,7 +6,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
+const { sembrar, irAlArtefacto, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
 
 const leerEstado = (page) => page.evaluate((clave) => JSON.parse(localStorage.getItem(clave) || '{}'), CLAVE_ESTADO);
 
@@ -48,4 +48,38 @@ test('A3 · volver atrás desde «¿Cómo es tu semana?» no borra lo que ya se 
   const st = await leerEstado(page);
   expect(st.ritmo.semanaTipo[2]).toBe('media');
   expect(st.ritmo.horario).toEqual({ inicio: 480 });
+});
+
+test('A4 · con el sonido apagado, lo que cuelga de él tampoco se cambia con el teclado', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, voiceOn: false, ambientOn: false, musicOn: false });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  const sonido = page.locator('[data-pace-aj-fila="sound"] .pace-aj-sw');
+  await expect(sonido).toHaveAttribute('aria-checked', 'false');
+
+  /* Tab desde el interruptor: el foco se salta las dos filas atenuadas. */
+  await sonido.focus();
+  await page.keyboard.press('Tab');
+  const enAtenuada = () => page.evaluate(() => !!(document.activeElement && document.activeElement.closest('[data-atenuada]')));
+  expect(await enAtenuada(), 'Tab entró en una fila atenuada').toBe(false);
+
+  /* Y una píldora atenuada no coge el foco, así que Enter y Espacio no la cambian. Se suelta
+     el foco antes: si no, la tecla le llegaría a lo que lo tuviera (la «Tu semana» de al lado). */
+  const soltar = () => page.evaluate(() => document.activeElement && document.activeElement.blur());
+  await soltar();
+  await page.locator('[data-pace-aj-fila="signal"] .pace-aj-pild').nth(1).focus();
+  expect(await enAtenuada(), 'una píldora atenuada cogió el foco').toBe(false);
+  await page.keyboard.press('Enter');
+  await soltar();
+  await page.locator('[data-pace-aj-fila="bg"] .pace-aj-pild').nth(1).focus();
+  await page.keyboard.press('Space');
+  const st = await leerEstado(page);
+  expect(st.voiceOn, 'Enter cambió «Marca la fase» con el sonido apagado').toBe(false);
+  expect(st.ambientOn, 'Espacio cambió «Suena detrás» con el sonido apagado').toBe(false);
+
+  /* Control: con el sonido encendido, las mismas píldoras sí responden. */
+  await sonido.click();
+  await page.locator('[data-pace-aj-fila="signal"] .pace-aj-pild').nth(1).focus();
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await leerEstado(page)).voiceOn).toBe(true);
 });

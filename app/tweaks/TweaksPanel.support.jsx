@@ -103,6 +103,7 @@ if (!_paceAjustesCss) {
     .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
     .pace-aj-pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); font-weight: 500; }
     .pace-aj-pild:disabled { opacity: .4; cursor: default; }
+    .pace-aj-fila[data-atenuada] .pace-aj-pild:disabled { opacity: 1; }
     [data-pace-aj-modulo] .pace-aj-pild[aria-pressed="true"] { background: var(--pace-aj-ms); background: color-mix(in srgb, var(--pace-aj-m) 22%, var(--paper)); color: var(--ink); }
     .pace-aj-pild svg { width: 15px; height: 15px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
     .pace-aj-pild[data-picto] { padding: 4px 9px; }

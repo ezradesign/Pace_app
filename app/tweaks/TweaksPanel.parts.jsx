@@ -80,13 +80,16 @@ function AjustesFila({ id, nombre, sub, modulo, atenuada, children }) {
 }
 
 /* opciones: [{ v, name, picto, aria }]. Con `picto` y sin `name` la pildora es
-   solo dibujo y el nombre va en `aria` (y en el title, para el raton). */
-function AjustesPildoras({ opciones, valor, onChange, aria }) {
+   solo dibujo y el nombre va en `aria` (y en el title, para el raton).
+   `apagado`: el control de una fila `atenuada`. La fila quita el puntero, pero el
+   teclado llegaba igual (Tab y Enter cambiaban la voz con el sonido apagado): por
+   eso las pildoras se desactivan de verdad. */
+function AjustesPildoras({ opciones, valor, onChange, aria, apagado }) {
   return (
     <div className="pace-aj-pista" role="group" aria-label={aria}>
       {opciones.map(o => (
         <button key={String(o.v)} type="button" className="pace-aj-pild"
-                aria-pressed={o.v === valor} disabled={!!o.off}
+                aria-pressed={o.v === valor} disabled={!!o.off || !!apagado}
                 aria-label={o.name ? undefined : o.aria}
                 title={o.name ? undefined : o.aria}
                 data-picto={o.picto && !o.name ? '' : undefined}
