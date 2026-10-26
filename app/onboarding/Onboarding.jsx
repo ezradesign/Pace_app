@@ -49,9 +49,17 @@ function Onboarding() {
 
   /* s198 · la trampa de foco que la Fase 8.5 llevaba anotada desde s183
      (ui/Dialogo.jsx). SIN Escape, a proposito: ver «Sin Escape ni
-     backdrop-click» en la cabecera. */
+     backdrop-click» en la cabecera. El Atrás de Android sí llega (ui/android.js lo marca
+     `paceAtras`): vuelve un paso, como «← Atrás», y en la primera pantalla manda la app al
+     fondo, como en la home. */
   const raizRef = useRefONB(null);
-  usePaceDialogo(raizRef, open);
+  usePaceDialogo(raizRef, open, {
+    onEscape: (e) => {
+      if (!e.paceAtras) return;
+      if (step > 0) setStep(s => Math.max(s - 1, 0));
+      else e.paceAlFondo = true;
+    },
+  });
 
   if (!open) return null;
 

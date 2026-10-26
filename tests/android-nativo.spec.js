@@ -121,6 +121,27 @@ test.describe('en Android', () => {
     expect(errores).toEqual([]);
   });
 
+  /* A2 (auditoría externa, 21-22 oct.): la bienvenida no se cierra con Escape, y el Atrás
+     viajaba como un Escape cualquiera, así que no hacía nada. */
+  test('A2 · en la bienvenida, atrás vuelve un paso y, en la primera pantalla, manda la app al fondo', async ({ page, context }) => {
+    await comoAndroid(context);
+    const errores = capturarErrores(page);
+    await page.goto(RUTA_ARTEFACTO);
+    const semana = page.getByRole('heading', { name: '¿Cómo es tu semana?' });
+    await page.getByRole('button', { name: 'Comenzar' }).click();
+    await expect(semana).toBeVisible();
+
+    await atras(page);
+    await expect(semana, 'atrás no volvió a la primera pantalla').toHaveCount(0);
+    await expect(page.getByTitle('Cambiar a English')).toBeVisible();
+    expect(await cuantas(page, 'App', 'minimizeApp'), 'desde la semana, atrás mandó la app al fondo').toBe(0);
+
+    await atras(page);
+    expect(await cuantas(page, 'App', 'minimizeApp'), 'en la primera pantalla, atrás no hizo nada').toBe(1);
+    await expect(page.getByTitle('Cambiar a English'), 'atrás cerró la bienvenida').toBeVisible();
+    expect(errores).toEqual([]);
+  });
+
   test('una sesion guiada mantiene la pantalla con KeepAwake, la suelta al salir, y atras sale de la sesion', async ({ page, context }) => {
     await sembrar(context, { soundOn: false });
     await comoAndroid(context);

@@ -103,7 +103,12 @@ function paceAndroidAtras() {
          los manejadores de React del dialogo y luego por los de document. */
       var activo = document.activeElement;
       var destino = (activo && activo !== document.body && document.documentElement.contains(activo)) ? activo : document;
-      destino.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
+      var tecla = new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true });
+      /* Marcado como Atrás: la bienvenida no se cierra con Escape (se perdería para siempre),
+         pero con Atrás vuelve un paso y, en su primera pantalla, pide irse al fondo. */
+      tecla.paceAtras = true;
+      destino.dispatchEvent(tecla);
+      if (tecla.paceAlFondo) { paceAndroidLlamar('App', 'minimizeApp'); return 'fondo'; }
       return 'escape';
     }
     paceAndroidLlamar('App', 'minimizeApp');
