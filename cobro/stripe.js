@@ -65,8 +65,12 @@ export function stripeLeerPago(evento, ahora) {
     if (o.mode === 'payment' && o.payment_status === 'paid' && typeof o.id === 'string') {
       return { plan: 'lifetime', order: o.id, sesion: o.id };
     }
-    if (o.mode === 'subscription' && typeof o.subscription === 'string'
-        && (o.payment_status === 'paid' || o.payment_status === 'no_payment_required')) {
+    /* Con la prueba, Stripe no cobra al alta (`no_payment_required`): el código dice cuándo acaba. */
+    if (o.mode === 'subscription' && typeof o.subscription === 'string' && o.payment_status === 'no_payment_required') {
+      return { plan: 'monthly', order: o.subscription, sesion: o.id, trialEnd: ahora + STRIPE_PRUEBA_MS,
+        expiresAt: ahora + STRIPE_PRUEBA_MS + STRIPE_MARGEN_MS };
+    }
+    if (o.mode === 'subscription' && typeof o.subscription === 'string' && o.payment_status === 'paid') {
       return { plan: 'monthly', order: o.subscription, sesion: o.id, expiresAt: ahora + STRIPE_PRUEBA_MS + STRIPE_MARGEN_MS };
     }
     return null;

@@ -96,6 +96,8 @@ test.describe('el cobro en la web', () => {
     expect(alta.vale).toBe(true);
     expect(alta.datos.type).toBe('monthly');
     expect(alta.datos.order).toBe('sub_1AbCdEf');
+    /* La prueba acaba a los 7 días: con eso avisa la app dos días antes. */
+    expect((alta.datos.trialEnd - antes) / (24 * 3600 * 1000)).toBeCloseTo(7, 2);
     const dias = (alta.datos.expiresAt - antes) / (24 * 3600 * 1000);
     expect(dias).toBeGreaterThan(9.99);
     expect(dias).toBeLessThan(10.01);

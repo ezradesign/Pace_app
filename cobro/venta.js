@@ -12,7 +12,9 @@
    Los datos llevan `order`, el número de pedido (la compra de por vida) o de suscripción
    (la mensual), para poder anular solo ese código (`k2:<order>` en
    PACE_LICENCIAS_ANULADAS). El mensual lleva además `expiresAt` (milisegundos): el
-   periodo pagado y unos días de margen; la app pide uno nuevo al acercarse el final.
+   periodo pagado y unos días de margen; la app pide uno nuevo al acercarse el final. El
+   del alta con prueba lleva `trialEnd` (milisegundos): con él la app avisa dos días antes
+   de que acabe la prueba, sin preguntar a nadie.
 
    Aquí no hay nada de Stripe: si un día cobra otro (Paddle), cambia el que lee el pago,
    no esto. Módulo de Cloudflare (`export`), con WebCrypto, que también tiene Node. */
@@ -44,6 +46,7 @@ export async function firmarVenta(venta, privada, ahora) {
   if (venta.plan === 'monthly') {
     if (!(venta.expiresAt > ahora)) throw new Error('caduca');
     datos.expiresAt = Math.round(venta.expiresAt);
+    if (venta.trialEnd > ahora) datos.trialEnd = Math.round(venta.trialEnd);
   }
   const firmado = 'PACE1.' + b64url(new TextEncoder().encode(JSON.stringify(datos)));
   const llave = await ventaLlave(privada);
