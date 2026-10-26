@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.176.2</title>
+  <title>PACE · Foco · Cuerpo — v0.177.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6526,7 +6526,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.176.2';
+const PACE_VERSION = 'v0.177.0';
 
 
 
@@ -6608,11 +6608,6 @@ const defaultState = {
 
 
 
-
-
-
-
-  premiumUnlocked: false,
 
 
   licencia: null,
@@ -8269,8 +8264,14 @@ Object.assign(window, { PACE_LLAVES_LICENCIA: PACE_LLAVES_LICENCIA, PACE_LICENCI
 
 
 
+
+
+
 var PACE_LICENCIA_PREFIJO = 'PACE1';
-var _paceLicenciaRechazada = null;
+
+
+
+var _paceLicenciaFirma = { codigo: null, estado: null };
 
 function paceB64urlBytes(s) {
   var b = String(s).replace(/-/g, '+').replace(/_/g, '/');
@@ -8369,7 +8370,7 @@ function paceLicenciaCanjear(texto) {
   if (!paceLicenciaPermitida()) return Promise.resolve({ ok: false, motivo: 'tienda' });
   return paceLicenciaComprobar(texto).then(function (r) {
     if (r.ok) {
-      _paceLicenciaRechazada = null;
+      _paceLicenciaFirma = { codigo: r.codigo, estado: 'buena' };
       setState({ licencia: r.codigo });
     }
     return r;
@@ -8378,13 +8379,29 @@ function paceLicenciaCanjear(texto) {
 
 
 
+
+function paceLicenciaComprobarGuardado(c) {
+  if (_paceLicenciaFirma.codigo === c) return;
+  _paceLicenciaFirma = { codigo: c, estado: 'comprobando' };
+  paceLicenciaComprobar(c).then(function (r) {
+    if (_paceLicenciaFirma.codigo !== c) return;
+    _paceLicenciaFirma = { codigo: c, estado: r.ok ? 'buena' : r.motivo === 'navegador' ? 'sin comprobar' : 'mala' };
+    if (r.ok) setState(function (x) {return Object.assign({}, x);});
+  });
+}
+
+
+
+
 function paceLicenciaVigente() {
   if (!paceLicenciaPermitida()) return null;
   var s = typeof getState === 'function' ? getState() : null;
   var c = s && typeof s.licencia === 'string' ? s.licencia : null;
-  if (!c || c === _paceLicenciaRechazada) return null;
+  if (!c) return null;
   var leida = paceLicenciaLeer(c);
-  return paceLicenciaMotivo(leida) ? null : leida.datos;
+  if (paceLicenciaMotivo(leida)) return null;
+  if (_paceLicenciaFirma.codigo !== c) paceLicenciaComprobarGuardado(c);
+  return _paceLicenciaFirma.estado === 'buena' ? leida.datos : null;
 }
 
 
@@ -8400,19 +8417,10 @@ function paceLicenciaDelEnlace() {
   });
 }
 
+
+
 function paceLicenciaArranque() {
-  var s = typeof getState === 'function' ? getState() : null;
-  var guardado = s && typeof s.licencia === 'string' ? s.licencia : null;
-  if (guardado && paceLicenciaPermitida()) {
-    paceLicenciaComprobar(guardado).then(function (r) {
-
-
-      if (!r.ok && r.motivo === 'firma') {
-        _paceLicenciaRechazada = guardado;
-        setState(function (x) {return Object.assign({}, x);});
-      }
-    });
-  }
+  paceLicenciaVigente();
   paceLicenciaDelEnlace();
 }
 
@@ -8441,7 +8449,7 @@ Object.assign(window, {
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaRechazada, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
 })();
 </script>
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
@@ -8589,21 +8597,24 @@ Object.assign(window, {
    Guard central de acceso a contenido (sesion 95 / v0.40.0).
 
    ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath /
-   hasPremiumEntitlement. Abren PACE completo tres cosas: el booleano
-   `premiumUnlocked` (state-core, sin ruta de compra), un CÓDIGO firmado que
-   vale (`paceLicenciaVigente`, state-licencia.js: el de los testers y el de
-   quien compre en la web) y lo que la tienda del canal sabe que ya tienes
-   (`tieneCompraVigente`: Play Billing, vacía hasta que llegue). Los
+   hasPremiumEntitlement. Abren PACE completo dos cosas, y ninguna se fabrica
+   tocando el estado a mano: un CÓDIGO cuya firma se ha comprobado
+   (`paceLicenciaVigente`, state-licencia.js: el de los testers y el de quien
+   compre en la web) y lo que la tienda del canal sabe que ya tienes
+   (`tieneCompraVigente`: Play Billing, vacía hasta que llegue). Además, hasta
+   v1, lo abierto para todos (`PREMIUM_ABIERTO_HASTA_V1`). Un booleano guardado
+   en el estado no abre nada: cualquiera lo cambia desde las herramientas del
+   navegador, y `verify` falla si vuelve a aparecer en `app/`. Los
    consumidores (RoutineCard, CustomRoutines, PathBreatheStep/PathBodyStep,
    getSuggestedPath) no se tocan. La compra también pasa por aquí (abajo).
 
    Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
-   el guard concede acceso a una rutina premium aunque premiumUnlocked sea
-   false. Hoy: los 2 steps premium de path.weekend (nadi.shodhana + atg.knees,
-   decision s89 D-8a). Deja de ser una excepcion tacita del catalogo.
+   el guard concede acceso a una rutina premium sin PACE completo. Hoy: los 2
+   steps premium de path.weekend (nadi.shodhana + atg.knees, decision s89
+   D-8a). Deja de ser una excepcion tacita del catalogo.
 
    Depende (todo en window, resuelto en tiempo de LLAMADA, no de carga):
-     getState (state-core), getBreatheRoutine (BreatheLibrary),
+     paceLicenciaVigente (state-licencia), getBreatheRoutine (BreatheLibrary),
      resolveBodyRoutine + getPath (paths/registry).
 */
 
@@ -8647,9 +8658,7 @@ function canAccessRoutine(routineId, opts) {
   const routine = resolveAnyRoutine(routineId);
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
-  const s = getState && getState();
-  const unlocked = !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
-  return unlocked || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 }
 
 
@@ -8660,8 +8669,7 @@ function canAccessPath(pathId) {
   const path = window.getPath && window.getPath(pathId) || null;
   if (!path) return true;
   if (path.access !== 'premium') return true;
-  const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
+  return hasPremiumEntitlement();
 }
 
 
@@ -8669,13 +8677,8 @@ function canAccessPath(pathId) {
 
 
 
-
-
-
-
 function hasPremiumEntitlement() {
-  const s = getState && getState();
-  return !!(s && s.premiumUnlocked) || tieneLicenciaPremium() || tieneCompraVigente();
+  return tieneLicenciaPremium() || tieneCompraVigente();
 }
 
 
@@ -10833,9 +10836,10 @@ Object.assign(window, { ritmoAviso });
 
    SOLO LO QUE QUEDA: un evento que ya acabó a la hora `ahora` no se lleva. Al
    volver a pulsar, los destinos borran los eventos de PACE de hoy que aún no
-   han acabado y ponen estos: nunca se duplica y nunca se toca uno tuyo. La
-   MARCA en la descripción es cómo se reconocen en el calendario del móvil, que
-   no guarda campos propios.
+   han acabado y ponen estos: nunca se duplica y nunca se toca uno tuyo. En el
+   calendario del móvil, que no guarda campos propios, se reconocen por el id
+   que apuntó este móvil al crearlos (ritmo.calendario.destinos.js), nunca por
+   el texto; en Google y Microsoft, por su propiedad privada.
 
    SIN ALARMAS: avisa PACE, como siempre, para que no suenen dos cosas.
 
@@ -10845,9 +10849,7 @@ Object.assign(window, { ritmoAviso });
 
 
 
-
 var CALENDARIO_MARCA = 'pacegrass.app';
-var CALENDARIO_MARCAS_VIEJAS = ['paceweb.pages.dev'];
 var CALENDARIO_PIE = 'PACE · A tu ritmo · ' + CALENDARIO_MARCA;
 
 
@@ -10967,19 +10969,10 @@ function calendarioTramos(lista, iso) {
   return fuera;
 }
 
-
-
-
-function calendarioEsDePace(texto) {
-  var s = String(texto || '');
-  if (s.indexOf('PACE') === -1) return false;
-  return [CALENDARIO_MARCA].concat(CALENDARIO_MARCAS_VIEJAS).some(function (m) {return s.indexOf(m) !== -1;});
-}
-
 Object.assign(window, {
-  CALENDARIO_MARCA, calendarioInstante, calendarioEventos, calendarioIcs, calendarioPliega, calendarioTramos, calendarioEsDePace
+  CALENDARIO_MARCA, calendarioInstante, calendarioEventos, calendarioIcs, calendarioPliega, calendarioTramos
 });
-;Object.assign(window, { CALENDARIO_MARCA, CALENDARIO_MARCAS_VIEJAS, CALENDARIO_PIE, calendarioInstante, calendarioPausaCorta, calendarioEventos, calendarioSelloUtc, calendarioEscapa, calendarioPliega, calendarioIcs, calendarioTramos, calendarioEsDePace });
+;Object.assign(window, { CALENDARIO_MARCA, CALENDARIO_PIE, calendarioInstante, calendarioPausaCorta, calendarioEventos, calendarioSelloUtc, calendarioEscapa, calendarioPliega, calendarioIcs, calendarioTramos });
 })();
 </script>
   <script>
@@ -11422,6 +11415,69 @@ Object.assign(window, {
 var CALENDARIO_DESTINOS = ['android', 'google', 'microsoft', 'archivo'];
 var _calendarioRefresco = { ultimo: 0, enCurso: false, gen: 0 };
 
+
+
+
+
+
+
+
+
+
+
+var CALENDARIO_ANDROID_CLAVE = 'pace.calendario.android';
+var CALENDARIO_ANDROID_OLVIDO = 14 * 24 * 3600 * 1000;
+
+function calendarioAndroidPropios() {
+  var o = null;
+  try {o = JSON.parse(localStorage.getItem(CALENDARIO_ANDROID_CLAVE) || 'null');} catch (e) {o = null;}
+  if (o && typeof o === 'object' && !Array.isArray(o)) return o;
+  var propios = {};
+  try {
+    var escrito = JSON.parse(localStorage.getItem('pace.calendario.escrito') || 'null');
+    if (escrito && escrito.destino === 'android' && escrito.eventos && typeof escrito.eventos === 'object') {
+      Object.keys(escrito.eventos).forEach(function (k) {
+        var e = escrito.eventos[k];
+        if (e && e.id) propios[String(e.id)] = { fin: isFinite(e.fin) ? e.fin : Date.now() };
+      });
+    }
+  } catch (e) {}
+  return propios;
+}
+
+function calendarioAndroidGuardar(propios) {
+  var limite = Date.now() - CALENDARIO_ANDROID_OLVIDO;
+  Object.keys(propios).forEach(function (id) {if (!propios[id] || !(propios[id].fin > limite)) delete propios[id];});
+  try {localStorage.setItem(CALENDARIO_ANDROID_CLAVE, JSON.stringify(propios));} catch (e) {}
+}
+
+function calendarioAndroidApuntar(id, ev) {
+  if (id == null || !ev) return;
+  var propios = calendarioAndroidPropios();
+  propios[String(id)] = { fin: ev.fin };
+  calendarioAndroidGuardar(propios);
+}
+
+function calendarioAndroidOlvidar(id) {
+  var propios = calendarioAndroidPropios();
+  delete propios[String(id)];
+  calendarioAndroidGuardar(propios);
+}
+
+
+function calendarioAndroidEsDePace(e) {
+  return !!(e && e.id != null && Object.prototype.hasOwnProperty.call(calendarioAndroidPropios(), String(e.id)));
+}
+
+
+function calendarioAndroidCrear(calendarioId, ev) {
+  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {calendarioAndroidApuntar(id, ev);return id;});
+}
+
+function calendarioAndroidBorrar(id) {
+  return paceAndroidCalendarioBorrar(id).then(function (r) {calendarioAndroidOlvidar(id);return r;});
+}
+
 function calendarioDestinos() {
   var android = typeof paceAndroidCalendario === 'function' && paceAndroidCalendario();
   return CALENDARIO_DESTINOS.filter(function (d) {
@@ -11474,7 +11530,7 @@ function calendarioLeer(destino, pase, iso) {
   var d = calendarioDiaMs(iso);
   if (destino === 'android') {
     return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
-      return lista.filter(function (e) {return !e.todoElDia && !e.libre && !e.cancelado && !calendarioEsDePace(e.texto);});
+      return lista.filter(function (e) {return !e.todoElDia && !e.libre && !e.cancelado && !calendarioAndroidEsDePace(e);});
     });
   }
   return calendarioWebReuniones(destino, pase, d[0], d[1]);
@@ -11484,11 +11540,11 @@ function calendarioLeer(destino, pase, iso) {
 function calendarioEscribirAndroid(eventos, iso, ahoraMs, calendarioId) {
   var d = calendarioDiaMs(iso);
   return paceAndroidCalendarioEventos(Math.max(d[0], ahoraMs), d[1]).then(function (lista) {
-    var viejos = lista.filter(function (e) {return calendarioEsDePace(e.texto) && e.fin > ahoraMs;});
-    return viejos.reduce(function (p, e) {return p.then(function () {return paceAndroidCalendarioBorrar(e.id);});}, Promise.resolve());
+    var viejos = lista.filter(function (e) {return calendarioAndroidEsDePace(e) && e.fin > ahoraMs;});
+    return viejos.reduce(function (p, e) {return p.then(function () {return calendarioAndroidBorrar(e.id);});}, Promise.resolve());
   }).then(function () {
     return eventos.reduce(function (p, ev) {
-      return p.then(function () {return paceAndroidCalendarioCrear(calendarioId, ev);});
+      return p.then(function () {return calendarioAndroidCrear(calendarioId, ev);});
     }, Promise.resolve());
   });
 }
@@ -11635,9 +11691,10 @@ try {calendarioArrancar();} catch (e) {}
 
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
-  calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar
+  calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
+  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidBorrar
 });
-;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
+;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, calendarioAndroidCrear, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
 })();
 </script>
   <!-- El calendario que se mantiene solo (14 oct. 2026): lo puro (qué tiene que haber y qué
@@ -11955,7 +12012,7 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   Object.keys(escritos || {}).forEach(function (k) {if (escritos[k] && escritos[k].id) claveDe[escritos[k].id] = k;});
   var d = calendarioDiaMs(iso);
   return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
-    return lista.filter(function (e) {return calendarioEsDePace(e.texto);}).map(function (e) {
+    return lista.filter(calendarioAndroidEsDePace).map(function (e) {
       return { id: e.id, clave: claveDe[e.id] || null, inicio: e.inicio, fin: e.fin, titulo: e.titulo, texto: e.texto, aviso: e.aviso };
     });
   });
@@ -11968,14 +12025,17 @@ function calendarioAplicar(destino, pase, iso, cambios, calendarioId, sigue) {
   var creados = {};
   var pasos = [];
   cambios.borrar.forEach(function (id) {
-    pasos.push(function () {return android ? paceAndroidCalendarioBorrar(id) : calendarioWebQuitar(destino, pase, id);});
+    pasos.push(function () {return android ? calendarioAndroidBorrar(id) : calendarioWebQuitar(destino, pase, id);});
   });
   cambios.cambiar.forEach(function (c) {
-    pasos.push(function () {return android ? paceAndroidCalendarioCambiar(c.id, c.ev) : calendarioWebCambiar(destino, pase, c.id, c.ev);});
+    pasos.push(function () {
+      if (!android) return calendarioWebCambiar(destino, pase, c.id, c.ev);
+      return paceAndroidCalendarioCambiar(c.id, c.ev).then(function (r) {calendarioAndroidApuntar(c.id, c.ev);return r;});
+    });
   });
   cambios.crear.forEach(function (ev) {
     pasos.push(function () {
-      var p = android ? paceAndroidCalendarioCrear(calendarioId, ev) : calendarioWebCrear(destino, pase, iso, ev, true);
+      var p = android ? calendarioAndroidCrear(calendarioId, ev) : calendarioWebCrear(destino, pase, iso, ev, true);
       return p.then(function (id) {if (id) creados[ev.clave] = id;});
     });
   });
@@ -26881,7 +26941,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
   const isPremium = routine.access === 'premium';
   const isLocked = window.canAccessRoutine ?
   !window.canAccessRoutine(routine.id) :
-  isPremium && !pace.premiumUnlocked;
+  isPremium;
 
 
 
@@ -33261,9 +33321,7 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
 
 
-  const unlocked = window.puedeCrearRutinas ?
-  window.puedeCrearRutinas() :
-  !!pace.premiumUnlocked;
+  const unlocked = !!(window.puedeCrearRutinas && window.puedeCrearRutinas());
 
   const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };

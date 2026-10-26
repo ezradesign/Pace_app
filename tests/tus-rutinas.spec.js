@@ -20,7 +20,7 @@ const solape = (a, b) => !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y +
 
 test('en el móvil se crea una rutina sin que nada se pise, y al guardar se ve', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 640 });
-  await sembrar(context, { premiumUnlocked: true });
+  await sembrar(context);
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /^Mueve/ }).filter({ visible: true }).first().click();
   const biblio = page.locator('[data-pace-modal-backdrop]').last();

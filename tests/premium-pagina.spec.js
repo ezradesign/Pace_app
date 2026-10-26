@@ -160,13 +160,25 @@ test.describe('la función /api/avisame', () => {
 
   function almacen() {
     const datos = new Map();
-    return { datos, put: async (k, v) => { datos.set(k, v); } };
+    let escrituras = 0;
+    return { datos, get escrituras() { return escrituras; },
+      get: async (k) => (datos.has(k) ? datos.get(k) : null),
+      put: async (k, v) => { escrituras++; datos.set(k, v); } };
   }
-  function post(cuerpo, origen) {
+  /* La caché de Cloudflare (caches.default), de mentira: en Node no existe. */
+  function cacheDeMentira() {
+    const datos = new Map();
+    return { datos,
+      match: async (req) => (datos.has(req.url) ? new Response(datos.get(req.url)) : undefined),
+      put: async (req, res) => { datos.set(req.url, await res.text()); } };
+  }
+  function post(cuerpo, origen, ip) {
     const headers = { 'Content-Type': 'application/json' };
     if (origen) headers.Origin = origen;
-    return new Request('https://pacegrass.app/api/avisame', { method: 'POST', headers, body: JSON.stringify(cuerpo) });
+    if (ip) headers['CF-Connecting-IP'] = ip;
+    return new Request('https://pacegrass.app/api/avisame', { method: 'POST', headers, body: typeof cuerpo === 'string' ? cuerpo : JSON.stringify(cuerpo) });
   }
+  test.afterEach(() => { delete globalThis.caches; });
 
   test('sin almacén está cerrada; con él, abierta', async () => {
     const sin = await fn.onRequestGet({ env: {} });
@@ -198,6 +210,45 @@ test.describe('la función /api/avisame', () => {
     expect(await robot.json()).toEqual({ ok: true });
     const otra = await fn.onRequestPost({ request: post({ correo: 'a@b.es' }, 'https://otra.web'), env: { AVISAME: kv } });
     expect(otra.status).toBe(403);
+    expect(kv.datos.size).toBe(0);
+  });
+
+  /* S4 (auditoría del 22 oct.): sin límites, un robot podía llenar la lista y gastar las
+     escrituras del almacén. Contra v0.176.0 caen las tres. */
+  test('S4 · el mismo correo otra vez no se vuelve a escribir', async () => {
+    const kv = almacen();
+    await fn.onRequestPost({ request: post({ correo: 'a@b.es', idioma: 'es' }), env: { AVISAME: kv } });
+    const antes = kv.datos.get('a@b.es');
+    const otra = await fn.onRequestPost({ request: post({ correo: 'A@B.es', idioma: 'en' }), env: { AVISAME: kv } });
+    expect(await otra.json()).toEqual({ ok: true });
+    expect(kv.escrituras, 'el correo repetido se escribe otra vez').toBe(1);
+    expect(kv.datos.get('a@b.es'), 'el repetido pisa la fecha y el idioma').toBe(antes);
+  });
+
+  test('S4 · desde una misma conexión, a la sexta en una hora se para, y la IP no se guarda', async () => {
+    const cache = cacheDeMentira();
+    globalThis.caches = { default: cache };
+    const kv = almacen();
+    const estados = [];
+    for (let i = 1; i <= 7; i++) {
+      const r = await fn.onRequestPost({ request: post({ correo: 'robot' + i + '@spam.com' }, null, '203.0.113.7'), env: { AVISAME: kv } });
+      estados.push(r.status);
+    }
+    expect(estados, 'no hay límite por conexión').toEqual([200, 200, 200, 200, 200, 429, 429]);
+    expect(kv.datos.size).toBe(5);
+    /* Otra conexión sigue pudiendo apuntarse. */
+    const otra = await fn.onRequestPost({ request: post({ correo: 'persona@ejemplo.com' }, null, '198.51.100.2'), env: { AVISAME: kv } });
+    expect(otra.status).toBe(200);
+    /* Ni en el almacén ni en la caché queda la IP. */
+    const todo = JSON.stringify([...kv.datos]) + JSON.stringify([...cache.datos]);
+    expect(todo).not.toContain('203.0.113.7');
+    expect(todo).not.toContain('198.51.100.2');
+  });
+
+  test('S4 · un cuerpo enorme no se lee', async () => {
+    const kv = almacen();
+    const r = await fn.onRequestPost({ request: post(JSON.stringify({ correo: 'a@b.es', relleno: 'x'.repeat(5000) })), env: { AVISAME: kv } });
+    expect(r.status).toBe(413);
     expect(kv.datos.size).toBe(0);
   });
 });

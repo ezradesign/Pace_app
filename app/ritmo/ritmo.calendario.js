@@ -19,21 +19,20 @@
 
    SOLO LO QUE QUEDA: un evento que ya acabó a la hora `ahora` no se lleva. Al
    volver a pulsar, los destinos borran los eventos de PACE de hoy que aún no
-   han acabado y ponen estos: nunca se duplica y nunca se toca uno tuyo. La
-   MARCA en la descripción es cómo se reconocen en el calendario del móvil, que
-   no guarda campos propios.
+   han acabado y ponen estos: nunca se duplica y nunca se toca uno tuyo. En el
+   calendario del móvil, que no guarda campos propios, se reconocen por el id
+   que apuntó este móvil al crearlos (ritmo.calendario.destinos.js), nunca por
+   el texto; en Google y Microsoft, por su propiedad privada.
 
    SIN ALARMAS: avisa PACE, como siempre, para que no suenen dos cosas.
 
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
-/* LA MARCA es el dominio de PACE. Los eventos que puso cuando vivía en
-   paceweb.pages.dev llevan la de entonces y siguen siendo suyos: sin
-   reconocerla, volver a pulsar los dejaría duplicados y contarían como
-   reuniones. */
+/* LA MARCA es el dominio de PACE, al pie de cada evento: es para quien lo lee.
+   La app no la usa para reconocer lo suyo, porque cualquiera puede escribirla
+   en una invitación. */
 var CALENDARIO_MARCA = 'pacegrass.app';
-var CALENDARIO_MARCAS_VIEJAS = ['paceweb.pages.dev'];
 var CALENDARIO_PIE = 'PACE · A tu ritmo · ' + CALENDARIO_MARCA;
 
 /* La medianoche local de `iso` más `min` minutos. Con el constructor de partes
@@ -153,15 +152,6 @@ function calendarioTramos(lista, iso) {
   return fuera;
 }
 
-/* ¿Este evento lo puso PACE? Por la marca de la descripción, la de ahora o una
-   vieja (Android), o por la propiedad privada que guardan Google y Microsoft
-   (la miran sus destinos). */
-function calendarioEsDePace(texto) {
-  var s = String(texto || '');
-  if (s.indexOf('PACE') === -1) return false;
-  return [CALENDARIO_MARCA].concat(CALENDARIO_MARCAS_VIEJAS).some(function (m) { return s.indexOf(m) !== -1; });
-}
-
 Object.assign(window, {
-  CALENDARIO_MARCA, calendarioInstante, calendarioEventos, calendarioIcs, calendarioPliega, calendarioTramos, calendarioEsDePace,
+  CALENDARIO_MARCA, calendarioInstante, calendarioEventos, calendarioIcs, calendarioPliega, calendarioTramos,
 });

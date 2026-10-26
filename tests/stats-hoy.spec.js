@@ -25,6 +25,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, esperarModalAsentado } = require('./helpers');
+const { firmar, conLlaveDePrueba } = require('./licencia.helpers');
 
 /* Jueves 15 de octubre a las 13:16 en Madrid (la hora con offset: el runner del CI está en UTC
    pero el navegador va en Europe/Madrid). Jornada entera de 9:00 a 17:00: cinco bloques hechos
@@ -175,15 +176,22 @@ test('sin PACE completo, Mes y Año llevan candado y abren la invitación sin ca
   await expect(page.locator('[data-pace-month-view]')).toHaveCount(0);
 });
 
-test('con PACE completo, Mes y Año se abren aunque ya no estén abiertos para todos', async ({ page, context }) => {
-  await sembrar(context, Object.assign({}, MENU, { premiumUnlocked: true }));
-  await page.clock.install({ time: JUEVES });
-  await irAlArtefacto(page);
-  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
-  await page.getByRole('button', { name: 'Ver estadísticas' }).click();
-  await expect(page.locator('[data-pace-stats-cerrada]')).toHaveCount(0);
-  await page.locator('[data-pace-stats-tab="month"]').click();
-  await expect(page.locator('[data-pace-month-view]')).toBeVisible();
+/* PACE completo es un código de verdad: la llave de prueba entra por el index.html servido,
+   y el service worker se aparta para que no lo sirva sin pasar por la ruta. */
+test.describe('con un código', () => {
+  test.use({ serviceWorkers: 'block' });
+  test('con PACE completo, Mes y Año se abren aunque ya no estén abiertos para todos', async ({ page, context }) => {
+    await conLlaveDePrueba(context);
+    await sembrar(context, Object.assign({}, MENU, { licencia: firmar({ tester: 1 }) }));
+    await page.clock.install({ time: JUEVES });
+    await irAlArtefacto(page);
+    await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+    await expect.poll(() => page.evaluate(() => window.hasPremiumEntitlement())).toBe(true);
+    await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+    await expect(page.locator('[data-pace-stats-cerrada]')).toHaveCount(0);
+    await page.locator('[data-pace-stats-tab="month"]').click();
+    await expect(page.locator('[data-pace-month-view]')).toBeVisible();
+  });
 });
 
 /* M5 (el móvil de Ez, 22 oct.): por libre, «Ponle ritmo al día» volvía al ritmo con Estadísticas

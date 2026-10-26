@@ -12,7 +12,7 @@
      - picker: registro de ejercicios agrupado (EXERCISE_REGISTRY); un
        toque añade el paso con su dur por defecto.
 
-   Solo se llega aquí con premiumUnlocked=true (la sección de la
+   Solo se llega aquí con `puedeCrearRutinas()` (la sección de la
    biblioteca no ofrece nada clicable en estado bloqueado). Los steppers
    usan la forma funcional de setState local (decisión s89). */
 

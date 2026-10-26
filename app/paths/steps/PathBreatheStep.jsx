@@ -10,7 +10,7 @@ function PathBreatheStep({ step, onExit }) {
   if (!routine) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
 
   // Guard central de acceso (s95). Con degustacion (step.tasting) una rutina
-  // premium se lanza aunque premiumUnlocked sea false; sin ella, PathStepLocked
+  // premium se lanza sin PACE completo; sin ella, PathStepLocked
   // salta el step en silencio. En s95 nunca se alcanza (weekend es tasting).
   if (window.canAccessRoutine && !window.canAccessRoutine(step.routineId, { tasting: step.tasting })) {
     return <PathStepLocked onSkip={() => onExit('skip')} />;

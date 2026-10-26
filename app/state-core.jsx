@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.176.2';
+const PACE_VERSION = 'v0.177.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -97,16 +97,11 @@ const defaultState = {
      existente y borraría su elección. El true va solo en la rama sin `raw`. */
   langAuto: false,
 
-  // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del
-  // contenido premium. Sin ruta de compra real hasta v1.0: permanece false, y
-  // hasta entonces las rutinas premium las abre PREMIUM_ABIERTO_HASTA_V1
-  // (state-entitlement.jsx); con ella a false salen bloqueadas (sello + 'Pronto').
-  // El cableado en RoutineCard ya lee este flag: ponerlo a true abre todas las
-  // premium sin tocar UI. La validación de licencia real (claves firmadas,
-  // expiresAt, tipos) queda para una fase posterior post-v1.0.
-  premiumUnlocked: false,
   // El código de PACE completo tal como se canjeó (state-licencia.js). Va en el
-  // estado para que viaje con la copia de «Tus datos».
+  // estado para que viaje con la copia de «Tus datos». No hay ningún interruptor
+  // de PACE completo en el estado: lo abre este código cuando su firma se ha
+  // comprobado, o la tienda del canal (state-entitlement.jsx). Un booleano aquí
+  // lo abría cualquiera desde las herramientas del navegador.
   licencia: null,
 
   // Foco

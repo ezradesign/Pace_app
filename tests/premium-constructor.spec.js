@@ -16,6 +16,10 @@
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
+const { firmar, conLlaveDePrueba } = require('./licencia.helpers');
+
+/* La tercera usa un código de verdad, con la llave de prueba metida en el index.html servido. */
+test.use({ serviceWorkers: 'block' });
 
 const invitacion = (page) => page.locator('[data-pace-premium-hoja]');
 const constructor = (page) => page.getByRole('heading', { name: 'Nueva rutina' });
@@ -44,9 +48,12 @@ test('hasta v1, sin PACE completo, «Tus rutinas» abre el constructor', async (
   expect(await page.evaluate(() => window.hasPremiumEntitlement()), 'abrirlo no es tener PACE completo').toBe(false);
 });
 
-test('con PACE completo, «Tus rutinas» abre el constructor', async ({ page, context }) => {
-  await sembrar(context, { premiumUnlocked: true });
+test('con PACE completo, «Tus rutinas» abre el constructor también después de v1', async ({ page, context }) => {
+  await conLlaveDePrueba(context);
+  await sembrar(context, { licencia: firmar({ tester: 2 }) });
   await irAlArtefacto(page);
+  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+  await expect.poll(() => page.evaluate(() => window.hasPremiumEntitlement())).toBe(true);
   await page.locator('aside[data-pace-sidebar]').getByRole('button', { name: /rutinas/i }).click();
   await expect(constructor(page)).toBeVisible();
   await expect(invitacion(page)).toHaveCount(0);

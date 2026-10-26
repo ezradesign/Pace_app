@@ -70,8 +70,7 @@ const cifrasDelCierre = (page) => page.evaluate(() => Object.fromEntries(
 
 /* ------------------------------------------------------------------- R1 · lo que pide */
 test('R1 · Fondos en silla y Superman: «Antes de empezar» pide la silla y el suelo', async ({ page, context }) => {
-  await sembrar(context, { premiumUnlocked: true,
-    customRoutines: [propia('custom.1', 'Brazos y espalda', [['Fondos en silla', 40], ['Superman', 40]])] });
+  await sembrar(context, { customRoutines: [propia('custom.1', 'Brazos y espalda', [['Fondos en silla', 40], ['Superman', 40]])] });
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
   const preview = await abrirPropia(page, 'Brazos y espalda');
@@ -83,8 +82,7 @@ test('R1 · Fondos en silla y Superman: «Antes de empezar» pide la silla y el 
 });
 
 test('R1 · con un paso que el registro no conoce, no afirma que no hace falta nada', async ({ page, context }) => {
-  await sembrar(context, { premiumUnlocked: true,
-    customRoutines: [propia('custom.1', 'De antes', [['Un ejercicio que ya no existe', 30], ['Giro sentado', 30]])] });
+  await sembrar(context, { customRoutines: [propia('custom.1', 'De antes', [['Un ejercicio que ya no existe', 30], ['Giro sentado', 30]])] });
   await irAlArtefacto(page);
   const preview = await abrirPropia(page, 'De antes');
   await expect(preview.getByText('Qué necesitas')).toBeVisible();
@@ -94,8 +92,7 @@ test('R1 · con un paso que el registro no conoce, no afirma que no hace falta n
 
 /* ------------------------------------------------------------------- R2 · solo descanso */
 test('R2 · una rutina solo con «Descanso» no se guarda, ni nueva ni al editarla', async ({ page, context }) => {
-  await sembrar(context, { premiumUnlocked: true,
-    customRoutines: [propia('custom.1', 'Con trabajo', [['Giro sentado', 30]])] });
+  await sembrar(context, { customRoutines: [propia('custom.1', 'Con trabajo', [['Giro sentado', 30]])] });
   await irAlArtefacto(page);
   const r = await page.evaluate(() => {
     const soloAire = { name: 'Solo aire', steps: [{ name: 'Descanso', dur: 60, cue: '' }] };
@@ -119,8 +116,7 @@ test('R2 · una rutina solo con «Descanso» no se guarda, ni nueva ni al editar
 });
 
 test('R2 · una rutina de antes solo con «Descanso» no cuenta como Mueve', async ({ page, context }) => {
-  await sembrar(context, Object.assign({ premiumUnlocked: true,
-    customRoutines: [propia('custom.1', 'Solo aire', [['Descanso', 60]])] }, MARCAS));
+  await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Solo aire', [['Descanso', 60]])] }, MARCAS));
   await page.clock.install();
   await irAlArtefacto(page);
   await empezar(page, await abrirPropia(page, 'Solo aire'));
@@ -136,8 +132,7 @@ test('R2 · una rutina de antes solo con «Descanso» no cuenta como Mueve', asy
 
 /* ------------------------------------------------------------------- R3 · por lados */
 test('R3 · la plancha lateral de una rutina propia se guía por los dos lados', async ({ page, context }) => {
-  await sembrar(context, Object.assign({ premiumUnlocked: true,
-    customRoutines: [propia('custom.1', 'Costados', [['Plancha lateral', 30], ['Giro sentado', 30]])] }, MARCAS));
+  await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Costados', [['Plancha lateral', 30], ['Giro sentado', 30]])] }, MARCAS));
   await page.clock.install();
   await irAlArtefacto(page);
   expect(await page.evaluate(() => moveRutinaGuiada(getCustomRoutine('custom.1')).steps.map(s => s.mode)),
@@ -151,8 +146,7 @@ test('R3 · la plancha lateral de una rutina propia se guía por los dos lados',
 
 /* El tiempo es POR LADO (opción 1A de la maqueta del 22 oct.): el constructor lo dice y el total lo cuenta. */
 test('R3 · en el constructor, un paso por lados dice «por lado» y el total cuenta los dos', async ({ page, context }) => {
-  await sembrar(context, { premiumUnlocked: true,
-    customRoutines: [propia('custom.1', 'Costados', [['Plancha lateral', 60], ['Giro sentado', 60]])] });
+  await sembrar(context, { customRoutines: [propia('custom.1', 'Costados', [['Plancha lateral', 60], ['Giro sentado', 60]])] });
   await irAlArtefacto(page);
   await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:open-custom-builder', { detail: { id: 'custom.1' } })));
   const modal = overlaySuperior(page);
@@ -164,7 +158,7 @@ test('R3 · en el constructor, un paso por lados dice «por lado» y el total cu
 
 /* ------------------------------------------------------------------- R4 · seguir tras editar */
 test('R4 · tras reordenar la rutina, «Continúa» no sigue por otro ejercicio', async ({ page, context }) => {
-  await sembrar(context, Object.assign({ premiumUnlocked: true, customRoutines: [propia('custom.1', 'Tres gestos',
+  await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Tres gestos',
     [['Encogimiento de hombros', 30], ['Giro sentado', 30], ['Círculos de hombro', 30]])] }, MARCAS));
   await page.clock.install();
   await irAlArtefacto(page);
@@ -189,7 +183,7 @@ test('R4 · tras reordenar la rutina, «Continúa» no sigue por otro ejercicio'
 
 /* ------------------------------------------------------------------- R5 · terminar antes */
 test('R5 · cortar un paso con reloj que no es el último deja la sesión como «terminada antes»', async ({ page, context }) => {
-  await sembrar(context, Object.assign({ premiumUnlocked: true, customRoutines: [propia('custom.1', 'Dos gestos',
+  await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Dos gestos',
     [['Encogimiento de hombros', 40], ['Círculos de hombro', 40]])] }, MARCAS));
   await page.clock.install();
   await irAlArtefacto(page);

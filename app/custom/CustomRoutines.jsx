@@ -43,15 +43,13 @@ const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
 
 function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const { t, tn } = useT();
-  const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
-                            // premiumUnlocked la seccion re-renderiza y el guard relee el store.
+  const [pace] = usePace(); // mantiene la suscripcion reactiva: al canjear un
+                            // código la seccion re-renderiza y el guard relee el store.
   // El acceso pasa por el guard central de entitlement, como el resto de
-  // superficies premium; hasta v1 abre para todos (`puedeCrearRutinas`), con
-  // fallback defensivo por si el guard no estuviera cargado. Mismo patron que
+  // superficies premium; hasta v1 abre para todos (`puedeCrearRutinas`). Sin
+  // guard, cerrada: nada del estado abre PACE completo. Mismo patron que
   // `RoutineCard` en BreatheLibrary.
-  const unlocked = window.puedeCrearRutinas
-    ? window.puedeCrearRutinas()
-    : !!pace.premiumUnlocked;
+  const unlocked = !!(window.puedeCrearRutinas && window.puedeCrearRutinas());
   /* El saneador ya aparta lo que no se puede usar; esto es por si llega algo sin pasar por él. */
   const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
