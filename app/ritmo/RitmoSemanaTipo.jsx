@@ -68,10 +68,13 @@ function RitmoSemanaEditor({ dias, onDias, horario, onHora }) {
 }
 
 /* El borrador que comparten la bienvenida y la hoja: los días y las horas tocadas. */
-function useRitmoSemanaBorrador(state) {
+/* `inicial` ({ dias, horas }) es un borrador que ya se estaba escribiendo: la bienvenida lo
+   guarda al ir «← Atrás», porque el paso se desmonta y, sin él, volver lo borraba. */
+function useRitmoSemanaBorrador(state, inicial) {
   const R = ritmoDe(state);
-  const [dias, setDias] = useStateRST(() => (R.semanaTipo ? R.semanaTipo.map((d) => d || 'libre') : RITMO_SEMANA_DEFECTO.slice()));
-  const [horas, setHoras] = useStateRST({});
+  const [dias, setDias] = useStateRST(() => (inicial ? inicial.dias.slice()
+    : R.semanaTipo ? R.semanaTipo.map((d) => d || 'libre') : RITMO_SEMANA_DEFECTO.slice()));
+  const [horas, setHoras] = useStateRST(() => (inicial ? { ...inicial.horas } : {}));
   const crudo = state && state.ritmo ? state.ritmo.horario : null;
   return {
     dias, setDias, horas,

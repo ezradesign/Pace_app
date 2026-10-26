@@ -39,6 +39,7 @@ function Onboarding() {
   const [freeText, setFreeText] = useStateONB('');
   const [picked, setPicked] = useStateONB(null);
   const [conPick, setConPick] = useStateONB(false); // lo elegido en «Tu primer Camino», si detrás va PACE completo
+  const [semanaBorrador, setSemanaBorrador] = useStateONB(null); // «¿Cómo es tu semana?» a medias, que sobrevive a «← Atrás»
 
   // Re-abrir a mano (dev / curiosidad) — mismo patrón que pace:open-support.
   useEffectONB(() => {
@@ -227,6 +228,7 @@ function Onboarding() {
           {/* ---------- ¿CÓMO ES TU SEMANA? ---------- */}
           {isSemana && (
             <OnbSemanaPaso state={state} ultima={ultima}
+              borrador={semanaBorrador} onBorrador={setSemanaBorrador}
               onSeguir={() => (ultima ? finish({ pick: false }) : next())} />
           )}
 
@@ -328,12 +330,15 @@ function Onboarding() {
 }
 
 /* «¿Cómo es tu semana?» (maqueta R2-bienvenida, elegida por Ez el 7 de octubre de 2026).
-   Su propio componente para que el borrador (días y horas) viva solo mientras se ve: la
-   bienvenida no lee «A tu ritmo» hasta llegar aquí, ni escribe nada hasta «Comenzar» o
-   «Cada semana es distinta», que guardan y siguen. Cinco hijos para el reveal. */
-function OnbSemanaPaso({ state, ultima, onSeguir }) {
+   Su propio componente para que la bienvenida no lea «A tu ritmo» hasta llegar aquí, ni
+   escriba nada hasta «Comenzar» o «Cada semana es distinta», que guardan y siguen. El
+   borrador (días y horas) se queda en la bienvenida para que «← Atrás» no lo borre, pero
+   no se guarda. Cinco hijos para el reveal. */
+function OnbSemanaPaso({ state, ultima, onSeguir, borrador, onBorrador }) {
   const { t } = useT();
-  const b = useRitmoSemanaBorrador(state);
+  const b = useRitmoSemanaBorrador(state, borrador);
+  /* El borrador sube a la bienvenida en cada cambio: «← Atrás» desmonta este paso. */
+  useEffectONB(() => { onBorrador({ dias: b.dias, horas: b.horas }); }, [b.dias, b.horas]);
   const guardar = (tipo) => { ritmoGuardarSemana(tipo, b.horas); onSeguir(); };
   return (
     <React.Fragment>
