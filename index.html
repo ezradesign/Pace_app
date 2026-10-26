@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.177.0</title>
+  <title>PACE · Foco · Cuerpo — v0.178.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3452,6 +3452,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.settings.enter': 'Introducir código',
   'premium.settings.code': 'Código',
   'premium.settings.tester': 'Tester n.º {n}',
+  'premium.settings.manage': 'Gestionar la suscripción',
+  'premium.settings.manage.play': 'Google Play',
+  'premium.settings.manage.web': 'Stripe',
+  'premium.settings.sinred': 'Sin conexión para renovar',
+  'premium.settings.terminada': 'Terminó el {fecha}',
+  'premium.settings.caducada': 'Caducó el {fecha}',
+  'premium.ok.title.monthly': 'PACE completo ya es tuyo.',
+  'premium.trial.title': 'Tu prueba acaba el {dia}',
+  'premium.trial.body': 'El {fecha} se cobra el primer mes: {precio}. Si quieres seguir, no hagas nada.',
+  'premium.trial.cancel': 'Si no, cancélala ahora, en dos toques. PACE completo sigue abierto hasta el {dia}.',
+  'premium.trial.keep': 'Seguir con la prueba',
   'premium.onb.titulo': 'PACE es gratis.',
   'premium.onb.lede': 'Si un día quieres más, PACE completo añade:',
   'premium.onb.precios': '{vida} una vez, o {mes} al mes con {dias} días gratis.',
@@ -3494,6 +3505,17 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.settings.enter': 'Enter code',
   'premium.settings.code': 'Code',
   'premium.settings.tester': 'Tester no. {n}',
+  'premium.settings.manage': 'Manage subscription',
+  'premium.settings.manage.play': 'Google Play',
+  'premium.settings.manage.web': 'Stripe',
+  'premium.settings.sinred': 'No connection to renew',
+  'premium.settings.terminada': 'Ended on {fecha}',
+  'premium.settings.caducada': 'Expired on {fecha}',
+  'premium.ok.title.monthly': 'PACE Complete is yours.',
+  'premium.trial.title': 'Your trial ends on {dia}',
+  'premium.trial.body': 'On {fecha} the first month is charged: {precio}. To keep going, do nothing.',
+  'premium.trial.cancel': 'If not, cancel it now, in two taps. PACE Complete stays open until {dia}.',
+  'premium.trial.keep': 'Keep the trial',
   'premium.onb.titulo': 'PACE is free.',
   'premium.onb.lede': 'If one day you want more, PACE Complete adds:',
   'premium.onb.precios': '{vida} once, or {mes} a month with {dias} days free.',
@@ -6526,7 +6548,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.177.0';
+const PACE_VERSION = 'v0.178.0';
 
 
 
@@ -6611,6 +6633,8 @@ const defaultState = {
 
 
   licencia: null,
+
+  premiumAvisoPrueba: null,
 
 
   focusMode: 'foco',
@@ -8219,6 +8243,7 @@ Object.assign(window, {
 
 
 
+
 var PACE_LLAVES_LICENCIA = {
   k1: { x: 'u9eKWp7Q7i59EXpuij5ojJhDyUm1peiOEaf3YmZx_0k', y: 'coPL3XqK9zPq4m0RUOnjz2el12P4ZJrrzUqEO8lwZcY' }
 };
@@ -8232,6 +8257,7 @@ Object.assign(window, { PACE_LLAVES_LICENCIA: PACE_LLAVES_LICENCIA, PACE_LICENCI
 </script>
   <script>
 ;(function () {
+
 
 
 
@@ -8314,9 +8340,12 @@ function paceLicenciaLlave(keyId) {
   return Object.prototype.hasOwnProperty.call(llaves, keyId) ? llaves[keyId] : null;
 }
 
+
 function paceLicenciaAnulada(datos) {
   var lista = window.PACE_LICENCIAS_ANULADAS || [];
-  return datos.tester != null && lista.indexOf(datos.keyId + ':' + datos.tester) !== -1;
+  return [datos.tester, datos.order].some(function (n) {
+    return n != null && lista.indexOf(datos.keyId + ':' + n) !== -1;
+  });
 }
 
 
@@ -8413,7 +8442,10 @@ function paceLicenciaDelEnlace() {
   try {history.replaceState(null, '', window.location.pathname + window.location.search);} catch (e) {}
   if (!paceLicenciaPermitida()) return;
   paceLicenciaCanjear(h).then(function (r) {
-    try {showToast({ type: 'licencia', ok: r.ok, motivo: r.motivo, tester: !!(r.ok && r.datos.tester != null) });} catch (e) {}
+    try {
+      showToast({ type: 'licencia', ok: r.ok, motivo: r.motivo, tester: !!(r.ok && r.datos.tester != null),
+        mensual: !!(r.ok && paceLicenciaEsMensual(r.datos)) });
+    } catch (e) {}
   });
 }
 
@@ -8422,6 +8454,7 @@ function paceLicenciaDelEnlace() {
 function paceLicenciaArranque() {
   paceLicenciaVigente();
   paceLicenciaDelEnlace();
+  paceLicenciaRenovar(true);
 }
 
 
@@ -8438,8 +8471,76 @@ function paceLicenciaCuandoSepa() {
   paceLicenciaArranque();
 }
 
+
+
+
+
+
+
+
+
+
+
+var PACE_RENOVAR_ANTES = 3.5 * 24 * 3600 * 1000;
+var PACE_RENOVAR_CADA = 6 * 3600 * 1000;
+var _paceRenovar = { ultimo: 0, motivo: null, enCurso: null };
+
+function paceLicenciaGuardada() {
+  var s = typeof getState === 'function' ? getState() : null;
+  var c = s && typeof s.licencia === 'string' ? s.licencia : null;
+  var leida = c ? paceLicenciaLeer(c) : null;
+  return leida ? { codigo: c, datos: leida.datos } : null;
+}
+
+function paceLicenciaEsMensual(datos) {
+  return !!datos && datos.type === 'monthly' && typeof datos.order === 'string' && typeof datos.expiresAt === 'number';
+}
+
+
+function paceLicenciaRenovar(forzar) {
+  if (!paceLicenciaPermitida() || typeof fetch !== 'function') return Promise.resolve(null);
+  var g = paceLicenciaGuardada();
+  if (!g || !paceLicenciaEsMensual(g.datos) || g.datos.expiresAt - Date.now() > PACE_RENOVAR_ANTES) return Promise.resolve(null);
+  if (_paceRenovar.enCurso) return _paceRenovar.enCurso;
+  if (!forzar && Date.now() - _paceRenovar.ultimo < PACE_RENOVAR_CADA) return Promise.resolve(null);
+  _paceRenovar.ultimo = Date.now();
+  var fin = function (motivo) {
+    _paceRenovar.motivo = motivo === 'terminada' || motivo === 'sin-red' ? motivo : null;
+    _paceRenovar.enCurso = null;
+    try {setState(function (x) {return Object.assign({}, x);});} catch (e) {}
+    return motivo;
+  };
+  _paceRenovar.enCurso = fetch('/api/renovar', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: g.codigo })
+  }).then(function (r) {
+    if (r.status === 410) return fin('terminada');
+    if (!r.ok) return fin('sin-red');
+    return r.json().then(function (d) {
+      var nuevo = d && d.codigo ? paceLicenciaLeer(d.codigo) : null;
+      if (!nuevo || !paceLicenciaEsMensual(nuevo.datos) || nuevo.datos.order !== g.datos.order) return fin('sin-red');
+      if (!(nuevo.datos.expiresAt > g.datos.expiresAt)) return fin('igual');
+      return paceLicenciaCanjear(d.codigo).then(function (x) {return fin(x && x.ok ? 'renovada' : 'sin-red');});
+    });
+  }).catch(function () {return fin('sin-red');});
+  return _paceRenovar.enCurso;
+}
+
+
+
+function paceLicenciaEstado() {
+  var datos = paceLicenciaVigente();
+  if (datos) return { estado: 'vigente', motivo: null, datos: datos };
+  var g = paceLicenciaPermitida() ? paceLicenciaGuardada() : null;
+  if (g && paceLicenciaCaducada(g.datos, Date.now())) {
+    return { estado: 'caducado', motivo: paceLicenciaEsMensual(g.datos) ? _paceRenovar.motivo || 'sin-red' : null, datos: g.datos };
+  }
+  return { estado: 'ninguno', motivo: null, datos: null };
+}
+
 setTimeout(paceLicenciaCuandoSepa, 0);
 try {window.addEventListener('hashchange', paceLicenciaDelEnlace);} catch (e) {}
+try {window.addEventListener('online', function () {paceLicenciaRenovar(true);});} catch (e) {}
+try {setInterval(function () {paceLicenciaRenovar(false);}, 3600 * 1000);} catch (e) {}
 
 Object.assign(window, {
   paceLicenciaLeer: paceLicenciaLeer,
@@ -8447,9 +8548,12 @@ Object.assign(window, {
   paceLicenciaComprobar: paceLicenciaComprobar,
   paceLicenciaCanjear: paceLicenciaCanjear,
   paceLicenciaVigente: paceLicenciaVigente,
-  paceLicenciaPermitida: paceLicenciaPermitida
+  paceLicenciaPermitida: paceLicenciaPermitida,
+  paceLicenciaRenovar: paceLicenciaRenovar,
+  paceLicenciaEstado: paceLicenciaEstado,
+  paceLicenciaEsMensual: paceLicenciaEsMensual
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa, PACE_RENOVAR_ANTES, PACE_RENOVAR_CADA, _paceRenovar, paceLicenciaGuardada, paceLicenciaEsMensual, paceLicenciaRenovar, paceLicenciaEstado });
 })();
 </script>
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
@@ -8528,6 +8632,8 @@ var paceTiendaWeb = {
     return Promise.resolve({ ok: true, fuera: true });
   },
   vigente: function () {return false;},
+
+  puedeGestionar: function () {return typeof PACE_TIENDA_WEB.gestionar === 'string' && PACE_TIENDA_WEB.gestionar.length > 0;},
   gestionar: function () {
     if (!PACE_TIENDA_WEB.gestionar) return false;
     try {window.open(PACE_TIENDA_WEB.gestionar, '_blank', 'noopener');} catch (e) {return false;}
@@ -8541,6 +8647,8 @@ var paceTiendaPlay = {
   planes: function () {return [];},
   comprar: function () {return Promise.resolve({ ok: false, motivo: 'cerrada' });},
   vigente: function () {return false;},
+
+  puedeGestionar: function () {return false;},
   gestionar: function () {return false;}
 };
 
@@ -8549,6 +8657,7 @@ var paceTiendaNinguna = {
   planes: function () {return [];},
   comprar: function () {return Promise.resolve({ ok: false, motivo: 'cerrada' });},
   vigente: function () {return false;},
+  puedeGestionar: function () {return false;},
   gestionar: function () {return false;}
 };
 
@@ -8741,6 +8850,12 @@ function paceComprar(plan) {
   }, () => ({ ok: false, motivo: 'error' }));
 }
 
+
+function paceTiendaPuedeGestionar() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.puedeGestionar && tienda.puedeGestionar());
+}
+
 function paceGestionarCompra() {
   const tienda = tiendaDelCanal();
   return !!(tienda && tienda.gestionar());
@@ -8754,9 +8869,9 @@ function tieneCompraVigente() {
 
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
-  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente
+  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -20686,7 +20801,7 @@ function ToastHost() {
       if (toast.type === 'licencia') {
         colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
           eyebrow: t('premium.settings.code'),
-          title: t(toast.ok ? 'premium.ok.title' : 'premium.err.title'),
+          title: t(toast.ok ? toast.mensual ? 'premium.ok.title.monthly' : 'premium.ok.title' : 'premium.err.title'),
           desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other') :
           t('premium.err.' + (toast.motivo || 'formato')) });
         siguienteRef.current();
@@ -20791,6 +20906,25 @@ Object.assign(window, { ToastHost });
 
 
 
+
+
+
+
+
+
+const PREMIUM_AVISO_ANTES = 2 * 24 * 3600 * 1000;
+
+function premiumPruebaPorAvisar() {
+  const d = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
+  if (!d || d.type !== 'monthly' || typeof d.trialEnd !== 'number' || typeof d.order !== 'string') return null;
+  const ahora = Date.now();
+  if (ahora < d.trialEnd - PREMIUM_AVISO_ANTES || ahora >= d.trialEnd) return null;
+  const s = typeof getState === 'function' ? getState() : null;
+  if (!s || s.premiumAvisoPrueba === d.order) return null;
+  if (document.querySelector('[data-pace-session-root]')) return null;
+  return d;
+}
+
 const { useState: useStatePI, useEffect: useEffectPI, useRef: useRefPI } = React;
 
 
@@ -20818,7 +20952,25 @@ function PremiumInvitacion() {
   const [error, setError] = useStatePI(null);
   const [comprobando, setComprobando] = useStatePI(false);
   const [tester, setTester] = useStatePI(false);
+  const [mensual, setMensual] = useStatePI(false);
   const campoRef = useRefPI(null);
+  const abiertaRef = useRefPI(null);
+  abiertaRef.current = abierta;
+
+
+  useEffectPI(() => {
+    const mirar = () => {
+      if (abiertaRef.current) return;
+      const d = premiumPruebaPorAvisar();
+      if (!d) return;
+      setState({ premiumAvisoPrueba: d.order });
+      setAbierta({ nombre: null, prueba: d });
+      setModo('prueba');
+    };
+    const primero = setTimeout(mirar, 1500);
+    const cada = setInterval(mirar, 60 * 1000);
+    return () => {clearTimeout(primero);clearInterval(cada);};
+  }, []);
 
   useEffectPI(() => {
     const abrir = (e) => {
@@ -20847,12 +20999,18 @@ function PremiumInvitacion() {
     setComprobando(true);setError(null);
     window.paceLicenciaCanjear(texto).then((r) => {
       setComprobando(false);
-      if (r.ok) {setTester(r.datos && r.datos.tester != null);setModo('ok');} else
+      if (r.ok) {
+        setTester(r.datos && r.datos.tester != null);
+        setMensual(!!(window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(r.datos)));
+        setModo('ok');
+      } else
       setError(r.motivo || 'formato');
     });
   };
 
-  const titulo = modo === 'ok' ? t('premium.ok.title') : abierta.nombre || t('premium.name');
+  if (modo === 'prueba') return React.createElement(PremiumAvisoPrueba, { datos: abierta.prueba, cerrar: cerrar });
+
+  const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : abierta.nombre || t('premium.name');
 
   return (
     React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
@@ -20931,8 +21089,37 @@ const premiumInvitacionStyles = {
   error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 }
 };
 
-Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
-;Object.assign(window, { PaceCandado, paceAbrirPremium, PremiumInvitacion });
+
+function PremiumAvisoPrueba(_ref2) {let { datos, cerrar } = _ref2;
+  const { t, tn, lang } = useT();
+  const loc = lang === 'en' ? 'en-GB' : 'es-ES';
+  const fin = new Date(datos.trialEnd);
+  const dia = fin.toLocaleDateString(loc, { weekday: 'long' });
+  const fecha = fin.toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' });
+  const mes = window.PACE_TIENDA_WEB && window.PACE_TIENDA_WEB.precios && window.PACE_TIENDA_WEB.precios.mes;
+  const precio = mes && window.paceTiendaPrecioTexto ? window.paceTiendaPrecioTexto(mes, lang) : '';
+  const puede = !!(window.paceTiendaPuedeGestionar && window.paceTiendaPuedeGestionar());
+  const titulo = tn('premium.trial.title', { dia });
+  return (
+    React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
+    React.createElement("div", { "data-pace-premium-hoja": "prueba" },
+    React.createElement(PremiumSeal, null),
+    React.createElement("h2", { style: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' } }, titulo),
+    React.createElement("p", { style: premiumInvitacionStyles.sub }, tn('premium.trial.body', { fecha, precio })),
+    puede && React.createElement("p", { style: premiumInvitacionStyles.v1 }, tn('premium.trial.cancel', { dia })),
+    puede &&
+    React.createElement(Button, { variant: "secondary", onClick: () => {window.paceGestionarCompra();cerrar();}, style: premiumInvitacionStyles.ancho },
+    t('premium.settings.manage')
+    ),
+
+    React.createElement("button", { type: "button", "data-pace-premium-seguir": true, onClick: cerrar, style: premiumInvitacionStyles.enlace }, t('premium.trial.keep'))
+    )
+    ));
+
+}
+
+Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
+;Object.assign(window, { premiumPruebaPorAvisar, PaceCandado, paceAbrirPremium, PremiumInvitacion, PremiumAvisoPrueba });
 })();
 </script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
@@ -37535,28 +37722,59 @@ Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarResc
 
 
 
+
+function premiumFechaTexto(datos, lang) {
+  const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt) :
+  typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function' ? parseLocalDateKey(datos.expiresAt) : null;
+  return fin ? fin.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : null;
+}
+
+
+
+
+
 function PremiumSection() {
   const { t, tn, lang } = useT();
   usePace();
-  const datos = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
+  const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno', motivo: null, datos: null };
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
+  const mensual = !!(est.datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(est.datos));
+  const canal = window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
+  const gestionar = mensual && window.paceTiendaPuedeGestionar && window.paceTiendaPuedeGestionar() ?
+  React.createElement(AjustesAccion, { suave: true, onClick: () => window.paceGestionarCompra(), derecha: t('premium.settings.manage.' + (canal === 'play' ? 'play' : 'web')) + ' ›' },
+  t('premium.settings.manage')
+  ) :
+  null;
 
-  if (datos) {
-    let estado = t('premium.settings.forever');
-    if (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') {
-      const f = parseLocalDateKey(datos.expiresAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-      estado = tn('premium.settings.until', { fecha: f });
-    }
+  if (est.estado === 'vigente') {
+    const datos = est.datos;
+    const f = premiumFechaTexto(datos, lang);
+    const estado = f ? tn('premium.settings.until', { fecha: f }) : t('premium.settings.forever');
     return (
       React.createElement(React.Fragment, null,
       React.createElement(AjustesAccion, { derecha: React.createElement("span", { "data-pace-licencia-estado": true, style: { color: 'var(--focus)' } }, estado) },
       t('premium.name')
       ),
+      gestionar,
       datos.tester != null &&
       React.createElement(AjustesAccion, { suave: true, derecha: tn('premium.settings.tester', { n: datos.tester }) },
       t('premium.settings.code')
       )
 
+      ));
+
+  }
+  if (est.estado === 'caducado' && permitida) {
+    const f = premiumFechaTexto(est.datos, lang) || '';
+    const texto = est.motivo === 'sin-red' ? t('premium.settings.sinred') :
+    est.motivo === 'terminada' ? tn('premium.settings.terminada', { fecha: f }) : tn('premium.settings.caducada', { fecha: f });
+    return (
+      React.createElement(React.Fragment, null,
+      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }),
+        derecha: React.createElement("span", { "data-pace-licencia-estado": true, "data-pace-licencia-caducada": est.motivo || 'fecha' }, texto) },
+      t('premium.name')
+      ),
+      gestionar
       ));
 
   }
@@ -37575,7 +37793,7 @@ function PremiumSection() {
 }
 
 Object.assign(window, { PremiumSection });
-;Object.assign(window, { PremiumSection });
+;Object.assign(window, { premiumFechaTexto, PremiumSection });
 })();
 </script>
   <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la

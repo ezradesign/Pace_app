@@ -136,7 +136,7 @@ function ToastHost() {
       if (toast.type === 'licencia') {
         colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
           eyebrow: t('premium.settings.code'),
-          title: t(toast.ok ? 'premium.ok.title' : 'premium.err.title'),
+          title: t(toast.ok ? (toast.mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : 'premium.err.title'),
           desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other')
             : t('premium.err.' + (toast.motivo || 'formato')) });
         siguienteRef.current();
