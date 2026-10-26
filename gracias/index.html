@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Gracias · PACE</title>
+<meta name="description" content="Tu código de PACE completo.">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- PACE · pacegrass.app/gracias — LA PÁGINA DE QUIEN ACABA DE PAGAR (Ez, 1A del 26 oct. 2026,
+     https://claude.ai/artifact/RE7fBBgo79RhA34a5igCoV)
+
+     Stripe devuelve aquí con `?sesion={CHECKOUT_SESSION_ID}`. La página pregunta a /api/codigo
+     por el código que firmó /api/stripe al recibir el pago (functions/api/), cada dos segundos
+     durante un minuto: el aviso del pago puede llegar un poco después que la persona.
+
+     LO IMPORTANTE ES QUE NO PIERDA SU CÓDIGO: no hay cuentas, y el código es lo que abre PACE
+     completo en otro navegador. «Abrir PACE con tu código» lo deja puesto en este (el enlace
+     /#codigo=…, que la app lee y quita de la barra); debajo, tres formas de guardarlo, y
+     «Mandármelo» abre el correo de la persona con el código dentro, sin pasar por nosotros.
+
+     Con la letra, los colores y el cambio de idioma de /premium. No entra en la app ni en el
+     APK (scripts/web-dist.js la publica solo en la web) y no cuenta visitas. -->
+<style>
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/intertight-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/intertight-500-normal.woff2') format('woff2'); }
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; }
+    header img { filter: invert(1); }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  a { color: var(--focus); }
+  .marco { max-width: 600px; margin: 0 auto; padding: 0 16px 48px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  header img { height: 96px; width: auto; display: block; }
+  .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+  .idioma b { color: var(--ink); font-weight: 500; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1 { font: italic 500 40px/1.1 var(--display); margin: 0 0 10px; text-wrap: balance; }
+  h2 { font: italic 500 22px/1.2 var(--display); margin: 0 0 6px; }
+  .lede { color: var(--ink-2); margin: 0 0 20px; }
+  .boton { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; font: italic 500 17px/1.2 var(--display); letter-spacing: .01em; text-decoration: none; cursor: pointer; border: 1px solid var(--cta); transition: background-color 180ms, color 180ms; }
+  .boton.lleno { background: var(--cta); color: var(--paper); width: 100%; }
+  .boton.hueco { background: transparent; color: var(--cta); }
+  .boton:focus-visible, .idioma:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .cod { margin: 18px 0 8px; padding: 14px 16px; border: 1px dashed var(--line-2); border-radius: 12px; background: var(--paper-2);
+    font: 500 13px/1.5 ui-monospace, Consolas, monospace; color: var(--ink); word-break: break-all; user-select: all; }
+  .acc { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+  .acc .boton { flex: 1 1 auto; min-height: 40px; padding: 6px 14px; font-size: 16px; }
+  .nota { font-size: 13.5px; color: var(--ink-3); margin: 0; }
+  .caja { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 18px; }
+  .estado { font: italic 500 20px/1.4 var(--display); color: var(--ink); margin: 8px 0; }
+</style>
+</head>
+<body>
+<!--email_off-->
+<div class="marco">
+  <header>
+    <a href="/" aria-label="Abrir PACE" data-en-aria="Open PACE"><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+    <button class="idioma" type="button" data-idioma aria-label="Cambiar a inglés" data-en-aria="Switch to Spanish"><b data-es-b>ES</b> · <span data-en-b>EN</span></button>
+  </header>
+
+  <p class="kicker" data-en="PACE Complete">PACE completo</p>
+
+  <div data-gracias-espera>
+    <h1 data-en="Thank you.">Gracias.</h1>
+    <p class="estado" role="status" data-en="Preparing your code…">Estamos preparando tu código…</p>
+  </div>
+
+  <div data-gracias-falta hidden>
+    <h1 data-en="We cannot find your purchase yet.">Aún no encontramos tu compra.</h1>
+    <p class="lede" data-en-html="If you have paid, write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; with the receipt number from Stripe and we will send you your code.">Si has pagado, escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> con el número del recibo de Stripe y te mandamos tu código.</p>
+  </div>
+
+  <div data-gracias-listo hidden>
+    <h1 data-en="Thank you. It is yours.">Gracias. Ya es tuyo.</h1>
+    <p class="lede" data-gracias-lede data-en="Open it here and PACE Complete stays on in this browser.">Ábrelo aquí y PACE completo queda puesto en este navegador.</p>
+    <a class="boton lleno" href="/" data-gracias-abrir data-en="Open PACE with your code">Abrir PACE con tu código</a>
+    <div class="cod" data-gracias-codigo></div>
+    <div class="acc">
+      <button class="boton hueco" type="button" data-gracias-copiar data-en="Copy">Copiar</button>
+      <button class="boton hueco" type="button" data-gracias-bajar data-en="Download">Descargar</button>
+      <a class="boton hueco" href="mailto:" data-gracias-correo data-en="Send it to me">Mandármelo</a>
+    </div>
+    <p class="nota" role="status" data-gracias-hecho hidden></p>
+    <p class="nota" data-en="Keep it: it opens PACE Complete in another browser or on another computer. «Send it to me» opens your own email with the code inside; it does not go through us.">Guárdalo: con él se abre en otro navegador o en otro ordenador. «Mandármelo» abre tu correo con el código dentro; no pasa por nosotros.</p>
+    <div class="caja">
+      <h2 data-en="If you lose it">Si lo pierdes</h2>
+      <p class="nota" data-en-html="Write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; with your email and the receipt number from Stripe.">Escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> con tu correo y el número del recibo de Stripe.</p>
+    </div>
+    <div class="caja" data-gracias-prueba hidden>
+      <h2 data-en="The trial">La prueba</h2>
+      <p class="nota" data-gracias-prueba-texto></p>
+    </div>
+  </div>
+</div>
+<!--/email_off-->
+<script>
+(function () {
+  function guardado(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+  function idiomaInicial() {
+    var m = location.search.match(/[?&]lang=(es|en)\b/);
+    if (m) return m[1];
+    var aqui = guardado('pace.premium.lang');
+    if (aqui === 'es' || aqui === 'en') return aqui;
+    try { var app = JSON.parse(guardado('pace.state.v2') || 'null'); if (app && (app.lang === 'es' || app.lang === 'en')) return app.lang; } catch (e) {}
+    return /^en\b/i.test(navigator.language || '') ? 'en' : 'es';
+  }
+  var ATRIBUTOS = [['data-en', 'textContent'], ['data-en-html', 'innerHTML'], ['data-en-aria', 'aria-label']];
+  var idioma = 'es', codigo = null, datos = null;
+  var $ = function (s) { return document.querySelector(s); };
+  function poner(lang) {
+    idioma = lang;
+    ATRIBUTOS.forEach(function (par) {
+      document.querySelectorAll('[' + par[0] + ']').forEach(function (el) {
+        var prop = par[1], clave = 'es_' + par[0].replace(/-/g, '_');
+        if (!(clave in el.dataset)) el.dataset[clave] = prop === 'textContent' ? el.textContent : prop === 'innerHTML' ? el.innerHTML : (el.getAttribute(prop) || '');
+        var valor = lang === 'en' ? el.getAttribute(par[0]) : el.dataset[clave];
+        if (prop === 'textContent') el.textContent = valor; else if (prop === 'innerHTML') el.innerHTML = valor; else el.setAttribute(prop, valor);
+      });
+    });
+    document.documentElement.lang = lang;
+    document.title = lang === 'en' ? 'Thank you · PACE' : 'Gracias · PACE';
+    $('[data-es-b]').outerHTML = lang === 'en' ? '<span data-es-b>ES</span>' : '<b data-es-b>ES</b>';
+    $('[data-en-b]').outerHTML = lang === 'en' ? '<b data-en-b>EN</b>' : '<span data-en-b>EN</span>';
+    if (codigo) mostrar();
+  }
+  poner(idiomaInicial());
+  $('[data-idioma]').addEventListener('click', function () {
+    var otro = idioma === 'en' ? 'es' : 'en';
+    try { localStorage.setItem('pace.premium.lang', otro); } catch (e) {}
+    poner(otro);
+  });
+
+  function leer(c) {
+    try { return JSON.parse(atob(c.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch (e) { return null; }
+  }
+  var TX = {
+    es: { copiado: 'Copiado.', bajado: 'Descargado.', asunto: 'Mi código de PACE completo',
+      cuerpo: 'Abre PACE completo con este enlace:\n{enlace}\n\nO pega el código en PACE, en Ajustes › PACE completo:\n{codigo}',
+      archivo: 'PACE completo\n\nEnlace: {enlace}\n\nCódigo: {codigo}\n', prueba: 'Acaba el {fecha}. Te avisamos en PACE dos días antes, y se cancela en dos toques desde Ajustes.' },
+    en: { copiado: 'Copied.', bajado: 'Downloaded.', asunto: 'My PACE Complete code',
+      cuerpo: 'Open PACE Complete with this link:\n{enlace}\n\nOr paste the code in PACE, in Settings › PACE Complete:\n{codigo}',
+      archivo: 'PACE Complete\n\nLink: {enlace}\n\nCode: {codigo}\n', prueba: 'It ends on {fecha}. PACE reminds you two days before, and you can cancel in two taps from Settings.' },
+  };
+  function tx(k, v) { return TX[idioma][k].replace(/\{(\w+)\}/g, function (m, n) { return (v || {})[n] || ''; }); }
+  function enlace() { return location.origin + '/#codigo=' + encodeURIComponent(codigo); }
+  function decir(t) { var h = $('[data-gracias-hecho]'); h.hidden = false; h.textContent = t; }
+
+  function mostrar() {
+    $('[data-gracias-espera]').hidden = true;
+    $('[data-gracias-listo]').hidden = false;
+    $('[data-gracias-codigo]').textContent = codigo;
+    $('[data-gracias-abrir]').href = '/#codigo=' + encodeURIComponent(codigo);
+    $('[data-gracias-correo]').href = 'mailto:?subject=' + encodeURIComponent(tx('asunto')) + '&body=' + encodeURIComponent(tx('cuerpo', { enlace: enlace(), codigo: codigo }));
+    if (datos && typeof datos.trialEnd === 'number') {
+      var f = new Date(datos.trialEnd).toLocaleDateString(idioma === 'en' ? 'en-GB' : 'es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+      $('[data-gracias-prueba]').hidden = false;
+      $('[data-gracias-prueba-texto]').textContent = tx('prueba', { fecha: f });
+    }
+  }
+
+  $('[data-gracias-copiar]').addEventListener('click', function () {
+    var hecho = function () { decir(tx('copiado')); };
+    try { navigator.clipboard.writeText(codigo).then(hecho, function () { seleccionar(); }); } catch (e) { seleccionar(); }
+  });
+  function seleccionar() {
+    var r = document.createRange(); r.selectNodeContents($('[data-gracias-codigo]'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  $('[data-gracias-bajar]').addEventListener('click', function () {
+    var b = new Blob([tx('archivo', { enlace: enlace(), codigo: codigo })], { type: 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = idioma === 'en' ? 'PACE-code.txt' : 'PACE-codigo.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    decir(tx('bajado'));
+  });
+
+  var sesion = (location.search.match(/[?&]sesion=([^&#]+)/) || [])[1] || '';
+  var intentos = 0;
+  function faltar() { $('[data-gracias-espera]').hidden = true; $('[data-gracias-falta]').hidden = false; }
+  function preguntar() {
+    if (!sesion) return faltar();
+    fetch('/api/codigo?sesion=' + encodeURIComponent(sesion), { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { r: r, d: d }; }); })
+      .then(function (x) {
+        if (x.r.ok && x.d && x.d.codigo) { codigo = x.d.codigo; datos = leer(codigo); return mostrar(); }
+        if (x.r.status === 404 && ++intentos < 30) return setTimeout(preguntar, 2000);
+        faltar();
+      }, function () { if (++intentos < 30) setTimeout(preguntar, 2000); else faltar(); });
+  }
+  preguntar();
+})();
+</script>
+</body>
+</html>

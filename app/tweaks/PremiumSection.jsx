@@ -13,31 +13,59 @@
    · en Android: «PACE completo · pronto». Allí no se canjean códigos propios
      (state-licencia.js); llegará la compra de Google Play. */
 
+/* La fecha del código: el de los testers lleva el día («YYYY-MM-DD»); el de la mensual, milisegundos. */
+function premiumFechaTexto(datos, lang) {
+  const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt)
+    : (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') ? parseLocalDateKey(datos.expiresAt) : null;
+  return fin ? fin.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : null;
+}
+
+/* LA MENSUAL (Ez, 3A del 26 oct. 2026): «Gestionar la suscripción» va en su propia fila,
+   debajo de «PACE completo · Hasta el …», y solo si la tienda tiene dónde (en la web, el
+   portal de Stripe; en Android, las suscripciones de Google Play). Si el código caducó,
+   la fila lo dice con su motivo: sin conexión para renovar, o la suscripción terminó. */
 function PremiumSection() {
   const { t, tn, lang } = useT();
-  usePace(); // al canjear el código, la fila cambia sin cerrar Ajustes
-  const datos = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
+  usePace(); // al canjear o renovar el código, la fila cambia sin cerrar Ajustes
+  const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno', motivo: null, datos: null };
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
+  const mensual = !!(est.datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(est.datos));
+  const canal = window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
+  const gestionar = mensual && window.paceTiendaPuedeGestionar && window.paceTiendaPuedeGestionar() ? (
+    <AjustesAccion suave onClick={() => window.paceGestionarCompra()} derecha={t('premium.settings.manage.' + (canal === 'play' ? 'play' : 'web')) + ' ›'}>
+      {t('premium.settings.manage')}
+    </AjustesAccion>
+  ) : null;
 
-  if (datos) {
-    let estado = t('premium.settings.forever');
-    /* El de los testers lleva el día («YYYY-MM-DD»); el de la mensual, milisegundos. */
-    const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt)
-      : (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') ? parseLocalDateKey(datos.expiresAt) : null;
-    if (fin) {
-      const f = fin.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-      estado = tn('premium.settings.until', { fecha: f });
-    }
+  if (est.estado === 'vigente') {
+    const datos = est.datos;
+    const f = premiumFechaTexto(datos, lang);
+    const estado = f ? tn('premium.settings.until', { fecha: f }) : t('premium.settings.forever');
     return (
       <React.Fragment>
         <AjustesAccion derecha={<span data-pace-licencia-estado style={{ color: 'var(--focus)' }}>{estado}</span>}>
           {t('premium.name')}
         </AjustesAccion>
+        {gestionar}
         {datos.tester != null && (
           <AjustesAccion suave derecha={tn('premium.settings.tester', { n: datos.tester })}>
             {t('premium.settings.code')}
           </AjustesAccion>
         )}
+      </React.Fragment>
+    );
+  }
+  if (est.estado === 'caducado' && permitida) {
+    const f = premiumFechaTexto(est.datos, lang) || '';
+    const texto = est.motivo === 'sin-red' ? t('premium.settings.sinred')
+      : est.motivo === 'terminada' ? tn('premium.settings.terminada', { fecha: f }) : tn('premium.settings.caducada', { fecha: f });
+    return (
+      <React.Fragment>
+        <AjustesAccion suave onClick={() => paceAbrirPremium({ modo: 'codigo' })}
+          derecha={<span data-pace-licencia-estado data-pace-licencia-caducada={est.motivo || 'fecha'}>{texto}</span>}>
+          {t('premium.name')}
+        </AjustesAccion>
+        {gestionar}
       </React.Fragment>
     );
   }

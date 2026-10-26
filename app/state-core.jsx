@@ -103,6 +103,8 @@ const defaultState = {
   // comprobado, o la tienda del canal (state-entitlement.jsx). Un booleano aquí
   // lo abría cualquiera desde las herramientas del navegador.
   licencia: null,
+  // La suscripción (`order`) cuyo aviso del fin de la prueba ya salió (PremiumInvitacion.jsx).
+  premiumAvisoPrueba: null,
 
   // Foco
   focusMode: 'foco',

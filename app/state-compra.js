@@ -70,6 +70,8 @@ var paceTiendaWeb = {
     return Promise.resolve({ ok: true, fuera: true });
   },
   vigente: function () { return false; },
+  /* El portal de Stripe: hasta que Ez tenga su enlace, «Gestionar» no sale en la web. */
+  puedeGestionar: function () { return typeof PACE_TIENDA_WEB.gestionar === 'string' && PACE_TIENDA_WEB.gestionar.length > 0; },
   gestionar: function () {
     if (!PACE_TIENDA_WEB.gestionar) return false;
     try { window.open(PACE_TIENDA_WEB.gestionar, '_blank', 'noopener'); } catch (e) { return false; }
@@ -83,6 +85,8 @@ var paceTiendaPlay = {
   planes: function () { return []; },
   comprar: function () { return Promise.resolve({ ok: false, motivo: 'cerrada' }); },
   vigente: function () { return false; },
+  /* Con Play Billing: las suscripciones de Google Play, si hay una. */
+  puedeGestionar: function () { return false; },
   gestionar: function () { return false; },
 };
 
@@ -91,6 +95,7 @@ var paceTiendaNinguna = {
   planes: function () { return []; },
   comprar: function () { return Promise.resolve({ ok: false, motivo: 'cerrada' }); },
   vigente: function () { return false; },
+  puedeGestionar: function () { return false; },
   gestionar: function () { return false; },
 };
 

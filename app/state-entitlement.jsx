@@ -149,6 +149,12 @@ function paceComprar(plan) {
   }, () => ({ ok: false, motivo: 'error' }));
 }
 
+/* ¿Hay dónde gestionar la suscripción? (Ajustes y el aviso del fin de la prueba). */
+function paceTiendaPuedeGestionar() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.puedeGestionar && tienda.puedeGestionar());
+}
+
 function paceGestionarCompra() {
   const tienda = tiendaDelCanal();
   return !!(tienda && tienda.gestionar());
@@ -162,5 +168,5 @@ function tieneCompraVigente() {
 
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
-  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, tieneCompraVigente,
+  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
 });

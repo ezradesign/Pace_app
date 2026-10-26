@@ -17,7 +17,26 @@
    códigos propios (state-licencia.js). Allí la hoja solo informa.
 
    El candado de las tarjetas (`PaceCandado`) vive aquí porque es la misma
-   promesa: lo que lo lleva, al tocarlo, abre esta hoja. */
+   promesa: lo que lo lleva, al tocarlo, abre esta hoja.
+
+   EL AVISO DEL FIN DE LA PRUEBA (Ez, 2A del 26 oct. 2026) es la única vez que esta
+   hoja se abre sola, porque lo prometido en /premium es avisar antes de cobrar: dos
+   días antes de `trialEnd` (el código del alta de la mensual), una vez por
+   suscripción (`premiumAvisoPrueba`), al abrir PACE y nunca con una sesión delante.
+   Sin lista de ventajas: no intenta retener. «Gestionar la suscripción» sale solo
+   si la tienda tiene dónde (en la web, el portal de Stripe). */
+const PREMIUM_AVISO_ANTES = 2 * 24 * 3600 * 1000;
+
+function premiumPruebaPorAvisar() {
+  const d = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
+  if (!d || d.type !== 'monthly' || typeof d.trialEnd !== 'number' || typeof d.order !== 'string') return null;
+  const ahora = Date.now();
+  if (ahora < d.trialEnd - PREMIUM_AVISO_ANTES || ahora >= d.trialEnd) return null;
+  const s = typeof getState === 'function' ? getState() : null;
+  if (!s || s.premiumAvisoPrueba === d.order) return null;
+  if (document.querySelector('[data-pace-session-root]')) return null;
+  return d;
+}
 
 const { useState: useStatePI, useEffect: useEffectPI, useRef: useRefPI } = React;
 
@@ -41,12 +60,30 @@ const PREMIUM_INCLUYE = ['routines', 'custom', 'letter', 'stats'];
 function PremiumInvitacion() {
   const { t } = useT();
   const [abierta, setAbierta] = useStatePI(null); // null | { nombre, modo }
-  const [modo, setModo] = useStatePI('invita');   // invita · codigo · ok
+  const [modo, setModo] = useStatePI('invita');   // invita · codigo · ok · prueba
   const [texto, setTexto] = useStatePI('');
   const [error, setError] = useStatePI(null);
   const [comprobando, setComprobando] = useStatePI(false);
   const [tester, setTester] = useStatePI(false);
+  const [mensual, setMensual] = useStatePI(false);
   const campoRef = useRefPI(null);
+  const abiertaRef = useRefPI(null);
+  abiertaRef.current = abierta;
+
+  /* Al abrir PACE (tras comprobar la firma del código) y cada minuto: ¿toca el aviso? */
+  useEffectPI(() => {
+    const mirar = () => {
+      if (abiertaRef.current) return;
+      const d = premiumPruebaPorAvisar();
+      if (!d) return;
+      setState({ premiumAvisoPrueba: d.order });
+      setAbierta({ nombre: null, prueba: d });
+      setModo('prueba');
+    };
+    const primero = setTimeout(mirar, 1500);
+    const cada = setInterval(mirar, 60 * 1000);
+    return () => { clearTimeout(primero); clearInterval(cada); };
+  }, []);
 
   useEffectPI(() => {
     const abrir = (e) => {
@@ -75,12 +112,18 @@ function PremiumInvitacion() {
     setComprobando(true); setError(null);
     window.paceLicenciaCanjear(texto).then((r) => {
       setComprobando(false);
-      if (r.ok) { setTester(r.datos && r.datos.tester != null); setModo('ok'); }
+      if (r.ok) {
+        setTester(r.datos && r.datos.tester != null);
+        setMensual(!!(window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(r.datos)));
+        setModo('ok');
+      }
       else setError(r.motivo || 'formato');
     });
   };
 
-  const titulo = modo === 'ok' ? t('premium.ok.title') : (abierta.nombre || t('premium.name'));
+  if (modo === 'prueba') return <PremiumAvisoPrueba datos={abierta.prueba} cerrar={cerrar} />;
+
+  const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : (abierta.nombre || t('premium.name'));
 
   return (
     <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
@@ -159,4 +202,33 @@ const premiumInvitacionStyles = {
   error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 },
 };
 
-Object.assign(window, { PremiumInvitacion, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
+/* La hoja del aviso: el día, lo que se cobra y cómo cancelar. */
+function PremiumAvisoPrueba({ datos, cerrar }) {
+  const { t, tn, lang } = useT();
+  const loc = lang === 'en' ? 'en-GB' : 'es-ES';
+  const fin = new Date(datos.trialEnd);
+  const dia = fin.toLocaleDateString(loc, { weekday: 'long' });
+  const fecha = fin.toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' });
+  const mes = window.PACE_TIENDA_WEB && window.PACE_TIENDA_WEB.precios && window.PACE_TIENDA_WEB.precios.mes;
+  const precio = mes && window.paceTiendaPrecioTexto ? window.paceTiendaPrecioTexto(mes, lang) : '';
+  const puede = !!(window.paceTiendaPuedeGestionar && window.paceTiendaPuedeGestionar());
+  const titulo = tn('premium.trial.title', { dia });
+  return (
+    <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
+      <div data-pace-premium-hoja="prueba">
+        <PremiumSeal />
+        <h2 style={{ ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' }}>{titulo}</h2>
+        <p style={premiumInvitacionStyles.sub}>{tn('premium.trial.body', { fecha, precio })}</p>
+        {puede && <p style={premiumInvitacionStyles.v1}>{tn('premium.trial.cancel', { dia })}</p>}
+        {puede && (
+          <Button variant="secondary" onClick={() => { window.paceGestionarCompra(); cerrar(); }} style={premiumInvitacionStyles.ancho}>
+            {t('premium.settings.manage')}
+          </Button>
+        )}
+        <button type="button" data-pace-premium-seguir onClick={cerrar} style={premiumInvitacionStyles.enlace}>{t('premium.trial.keep')}</button>
+      </div>
+    </Modal>
+  );
+}
+
+Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });

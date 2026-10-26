@@ -26,7 +26,7 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist');
 
 const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html'];
-const WEB_CARPETAS = ['premium', 'beta'];
+const WEB_CARPETAS = ['premium', 'beta', 'gracias'];
 
 /* Lo que va en `dist/`, en rutas relativas a la raiz. */
 function listaWeb() {

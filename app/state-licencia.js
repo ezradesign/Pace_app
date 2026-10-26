@@ -183,7 +183,10 @@ function paceLicenciaDelEnlace() {
   try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {}
   if (!paceLicenciaPermitida()) return;
   paceLicenciaCanjear(h).then(function (r) {
-    try { showToast({ type: 'licencia', ok: r.ok, motivo: r.motivo, tester: !!(r.ok && r.datos.tester != null) }); } catch (e) {}
+    try {
+      showToast({ type: 'licencia', ok: r.ok, motivo: r.motivo, tester: !!(r.ok && r.datos.tester != null),
+        mensual: !!(r.ok && paceLicenciaEsMensual(r.datos)) });
+    } catch (e) {}
   });
 }
 
@@ -289,4 +292,5 @@ Object.assign(window, {
   paceLicenciaPermitida: paceLicenciaPermitida,
   paceLicenciaRenovar: paceLicenciaRenovar,
   paceLicenciaEstado: paceLicenciaEstado,
+  paceLicenciaEsMensual: paceLicenciaEsMensual,
 });
