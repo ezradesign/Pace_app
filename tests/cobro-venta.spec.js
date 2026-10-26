@@ -22,7 +22,8 @@ const SECRETO = 'whsec_prueba_' + crypto.randomBytes(16).toString('hex');
 
 function almacen() {
   const datos = new Map();
-  return { datos, get: async (k) => (datos.has(k) ? datos.get(k) : null), put: async (k, v, o) => { datos.set(k, v); datos.set('ttl:' + k, o && o.expirationTtl); } };
+  return { datos, get: async (k) => (datos.has(k) ? datos.get(k) : null), put: async (k, v, o) => { datos.set(k, v); datos.set('ttl:' + k, o && o.expirationTtl); },
+    delete: async (k) => { datos.delete(k); datos.delete('ttl:' + k); } };
 }
 
 function firmaStripe(cuerpo, t, secreto) {
@@ -52,10 +53,11 @@ const ALTA = { id: 'evt_2', type: 'checkout.session.completed',
   data: { object: { id: 'cs_test_z9Y8x7W6v5U4t3S2', mode: 'subscription', payment_status: 'no_payment_required', subscription: 'sub_1AbCdEf' } } };
 
 test.describe('el cobro en la web', () => {
-  let stripe, codigo;
+  let stripe, codigo, renovar;
   test.beforeAll(async () => {
     stripe = await importar('functions/api/stripe.js');
     codigo = await importar('functions/api/codigo.js');
+    renovar = await importar('functions/api/renovar.js');
   });
 
   test('sin las tres piezas de Ez está apagada', async () => {
@@ -139,5 +141,25 @@ test.describe('el cobro en la web', () => {
     expect(await espera.json()).toEqual({ ok: false, pendiente: true });
     const mala = await codigo.onRequestGet({ request: new Request('https://pacegrass.app/api/codigo?sesion=suscripcion:sub_1'), env: { VENTAS: kv } });
     expect(mala.status, 'se pide otra cosa del almacén').toBe(400);
+  });
+
+  test('la renovación: con el código de antes da el último de esa mensual; terminada, ya no', async () => {
+    const kv = almacen();
+    const pide = (c) => renovar.onRequestPost({ request: new Request('https://pacegrass.app/api/renovar', { method: 'POST', body: JSON.stringify({ codigo: c }) }), env: env(kv) });
+    await stripe.onRequestPost({ request: aviso(ALTA), env: env(kv) });
+    const alta = kv.datos.get('sesion:cs_test_z9Y8x7W6v5U4t3S2');
+    const r = await pide(alta);
+    expect(r.status).toBe(200);
+    expect(await r.json()).toEqual({ ok: true, codigo: kv.datos.get('suscripcion:sub_1AbCdEf') });
+    /* Un código de por vida, uno falso o uno que no firmó k2 no renuevan nada. */
+    await stripe.onRequestPost({ request: aviso(COMPRA), env: env(kv) });
+    expect((await pide(kv.datos.get('sesion:cs_test_a1B2c3D4e5F6g7H8'))).status, 'el de por vida').toBe(400);
+    const [pre, datos] = alta.split('.');
+    expect((await pide(pre + '.' + datos + '.' + Buffer.alloc(64).toString('base64url'))).status, 'firma falsa').toBe(400);
+    /* Stripe avisa de que la suscripción terminó: desde ahí, 410. */
+    await stripe.onRequestPost({ request: aviso({ id: 'evt_5', type: 'customer.subscription.deleted', data: { object: { id: 'sub_1AbCdEf' } } }), env: env(kv) });
+    const fin = await pide(alta);
+    expect(fin.status).toBe(410);
+    expect(await fin.json()).toEqual({ ok: false, terminada: true });
   });
 });

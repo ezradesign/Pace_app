@@ -82,3 +82,11 @@ export function stripeLeerPago(evento, ahora) {
   }
   return null;
 }
+
+/* evento -> el id de la suscripción que ha terminado (cancelada al acabar su periodo, o sin
+   pagar), o null. Desde entonces /api/renovar ya no da códigos nuevos para ella. */
+export function stripeLeerFin(evento) {
+  const o = evento && evento.data && evento.data.object;
+  if (!o || evento.type !== 'customer.subscription.deleted' || typeof o.id !== 'string') return null;
+  return o.id;
+}

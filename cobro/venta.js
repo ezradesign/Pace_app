@@ -50,3 +50,25 @@ export async function firmarVenta(venta, privada, ahora) {
   const firma = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, llave, new TextEncoder().encode(firmado));
   return firmado + '.' + b64url(firma);
 }
+
+function deB64url(s) {
+  const bin = atob(String(s).replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((String(s).length + 3) % 4));
+  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+}
+
+/* ¿Este código lo firmó k2? Con la mitad pública de la privada (x, y). -> sus datos o null.
+   Lo usa la renovación del mensual: traer el código de antes es haber pagado esa suscripción. */
+export async function comprobarVenta(codigo, privada) {
+  try {
+    const partes = String(codigo || '').split('.');
+    if (partes.length !== 3 || partes[0] !== 'PACE1') return null;
+    const jwk = typeof privada === 'string' ? JSON.parse(privada) : privada;
+    const llave = await crypto.subtle.importKey('jwk', { kty: 'EC', crv: 'P-256', x: jwk.x, y: jwk.y },
+      { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+    const vale = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, llave, deB64url(partes[2]),
+      new TextEncoder().encode(partes[0] + '.' + partes[1]));
+    if (!vale) return null;
+    const datos = JSON.parse(new TextDecoder().decode(deB64url(partes[1])));
+    return datos && datos.keyId === VENTA_KEY_ID ? datos : null;
+  } catch (e) { return null; }
+}

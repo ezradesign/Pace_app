@@ -8,6 +8,9 @@
      sesion:<id de la compra>       el código, para la página de gracias (90 días)
      suscripcion:<id de la mensual> el último código de esa mensual, para renovarlo
 
+   Cuando una mensual termina (customer.subscription.deleted), se borra su `suscripcion:`, y
+   /api/renovar contesta desde entonces que ya no hay código nuevo.
+
    Solo eso: ni el correo ni el nombre. Lo demás de Stripe no se toca (contesta 200 para
    que no lo vuelva a mandar).
 
@@ -16,7 +19,7 @@
    `PACE_K2_PRIVADA` (lo crea `npm run licencia:k2`) y el almacén KV `VENTAS`. La app no
    la usa. Cloudflare la sirve como módulo: el `export` es su formato. */
 
-import { stripeAvisoValido, stripeLeerPago } from '../../cobro/stripe.js';
+import { stripeAvisoValido, stripeLeerPago, stripeLeerFin } from '../../cobro/stripe.js';
 import { firmarVenta } from '../../cobro/venta.js';
 
 const CUERPO_MAX = 256 * 1024;
@@ -39,6 +42,11 @@ export async function onRequestPost({ request, env }) {
   if (!vale) return respuesta({ ok: false, motivo: 'firma' }, 400);
   let evento;
   try { evento = JSON.parse(cuerpo); } catch (e) { return respuesta({ ok: false, motivo: 'formato' }, 400); }
+  const fin = stripeLeerFin(evento);
+  if (fin) {
+    await env.VENTAS.delete('suscripcion:' + fin);
+    return respuesta({ ok: true, codigo: false });
+  }
   const pago = stripeLeerPago(evento, ahora);
   if (!pago) return respuesta({ ok: true, codigo: false });
   const codigo = await firmarVenta(pago, env.PACE_K2_PRIVADA, ahora);

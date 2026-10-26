@@ -21,8 +21,11 @@ function PremiumSection() {
 
   if (datos) {
     let estado = t('premium.settings.forever');
-    if (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') {
-      const f = parseLocalDateKey(datos.expiresAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    /* El de los testers lleva el día («YYYY-MM-DD»); el de la mensual, milisegundos. */
+    const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt)
+      : (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') ? parseLocalDateKey(datos.expiresAt) : null;
+    if (fin) {
+      const f = fin.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
       estado = tn('premium.settings.until', { fecha: f });
     }
     return (

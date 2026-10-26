@@ -192,6 +192,7 @@ function paceLicenciaDelEnlace() {
 function paceLicenciaArranque() {
   paceLicenciaVigente();
   paceLicenciaDelEnlace();
+  paceLicenciaRenovar(true);
 }
 
 /* No arranca hasta que esté ui/nativo.js, que carga después: la app es una lista
@@ -208,8 +209,76 @@ function paceLicenciaCuandoSepa() {
   paceLicenciaArranque();
 }
 
+/* LA MENSUAL SE RENUEVA SOLA, Y SIN RED SIGUE (Fase 6). El código de la mensual
+   (`type: 'monthly'`, con su `order` y su `expiresAt` en milisegundos) vale el
+   periodo pagado y tres días más. Desde tres días y medio antes de que caduque, la
+   web pide el nuevo a /api/renovar (functions/api/renovar.js) al abrir, al volver
+   la conexión y cada hora, como mucho cada seis horas: es la única conexión de la
+   app, solo para quien paga al mes. Sin red, lo ya comprobado sigue valiendo hasta
+   su fecha: la firma se comprueba sin servidor. Lo que se aprende de cada intento
+   (`_paceRenovar.motivo`) es lo que separa «sin red» de «terminada» cuando caduca:
+     sin-red    no se pudo preguntar (sin conexión, o la web no contestó);
+     terminada  la web dice que esa suscripción ya no sigue (410). */
+var PACE_RENOVAR_ANTES = 3.5 * 24 * 3600 * 1000;
+var PACE_RENOVAR_CADA = 6 * 3600 * 1000;
+var _paceRenovar = { ultimo: 0, motivo: null, enCurso: null };
+
+function paceLicenciaGuardada() {
+  var s = typeof getState === 'function' ? getState() : null;
+  var c = s && typeof s.licencia === 'string' ? s.licencia : null;
+  var leida = c ? paceLicenciaLeer(c) : null;
+  return leida ? { codigo: c, datos: leida.datos } : null;
+}
+
+function paceLicenciaEsMensual(datos) {
+  return !!datos && datos.type === 'monthly' && typeof datos.order === 'string' && typeof datos.expiresAt === 'number';
+}
+
+/* -> Promise<'renovada' | 'igual' | 'terminada' | 'sin-red' | null> (null: no tocaba). */
+function paceLicenciaRenovar(forzar) {
+  if (!paceLicenciaPermitida() || typeof fetch !== 'function') return Promise.resolve(null);
+  var g = paceLicenciaGuardada();
+  if (!g || !paceLicenciaEsMensual(g.datos) || g.datos.expiresAt - Date.now() > PACE_RENOVAR_ANTES) return Promise.resolve(null);
+  if (_paceRenovar.enCurso) return _paceRenovar.enCurso;
+  if (!forzar && Date.now() - _paceRenovar.ultimo < PACE_RENOVAR_CADA) return Promise.resolve(null);
+  _paceRenovar.ultimo = Date.now();
+  var fin = function (motivo) {
+    _paceRenovar.motivo = motivo === 'terminada' || motivo === 'sin-red' ? motivo : null;
+    _paceRenovar.enCurso = null;
+    try { setState(function (x) { return Object.assign({}, x); }); } catch (e) {}
+    return motivo;
+  };
+  _paceRenovar.enCurso = fetch('/api/renovar', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: g.codigo }),
+  }).then(function (r) {
+    if (r.status === 410) return fin('terminada');
+    if (!r.ok) return fin('sin-red');
+    return r.json().then(function (d) {
+      var nuevo = d && d.codigo ? paceLicenciaLeer(d.codigo) : null;
+      if (!nuevo || !paceLicenciaEsMensual(nuevo.datos) || nuevo.datos.order !== g.datos.order) return fin('sin-red');
+      if (!(nuevo.datos.expiresAt > g.datos.expiresAt)) return fin('igual');
+      return paceLicenciaCanjear(d.codigo).then(function (x) { return fin(x && x.ok ? 'renovada' : 'sin-red'); });
+    });
+  }).catch(function () { return fin('sin-red'); });
+  return _paceRenovar.enCurso;
+}
+
+/* Cómo está PACE completo por el código, para decirlo (Ajustes):
+   { estado: 'ninguno' | 'vigente' | 'caducado', motivo: null | 'sin-red' | 'terminada', datos } */
+function paceLicenciaEstado() {
+  var datos = paceLicenciaVigente();
+  if (datos) return { estado: 'vigente', motivo: null, datos: datos };
+  var g = paceLicenciaPermitida() ? paceLicenciaGuardada() : null;
+  if (g && paceLicenciaCaducada(g.datos, Date.now())) {
+    return { estado: 'caducado', motivo: paceLicenciaEsMensual(g.datos) ? (_paceRenovar.motivo || 'sin-red') : null, datos: g.datos };
+  }
+  return { estado: 'ninguno', motivo: null, datos: null };
+}
+
 setTimeout(paceLicenciaCuandoSepa, 0);
 try { window.addEventListener('hashchange', paceLicenciaDelEnlace); } catch (e) {}
+try { window.addEventListener('online', function () { paceLicenciaRenovar(true); }); } catch (e) {}
+try { setInterval(function () { paceLicenciaRenovar(false); }, 3600 * 1000); } catch (e) {}
 
 Object.assign(window, {
   paceLicenciaLeer: paceLicenciaLeer,
@@ -218,4 +287,6 @@ Object.assign(window, {
   paceLicenciaCanjear: paceLicenciaCanjear,
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida,
+  paceLicenciaRenovar: paceLicenciaRenovar,
+  paceLicenciaEstado: paceLicenciaEstado,
 });

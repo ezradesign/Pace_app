@@ -8405,6 +8405,7 @@ function paceLicenciaDelEnlace() {
 function paceLicenciaArranque() {
   paceLicenciaVigente();
   paceLicenciaDelEnlace();
+  paceLicenciaRenovar(true);
 }
 
 
@@ -8421,8 +8422,76 @@ function paceLicenciaCuandoSepa() {
   paceLicenciaArranque();
 }
 
+
+
+
+
+
+
+
+
+
+
+var PACE_RENOVAR_ANTES = 3.5 * 24 * 3600 * 1000;
+var PACE_RENOVAR_CADA = 6 * 3600 * 1000;
+var _paceRenovar = { ultimo: 0, motivo: null, enCurso: null };
+
+function paceLicenciaGuardada() {
+  var s = typeof getState === 'function' ? getState() : null;
+  var c = s && typeof s.licencia === 'string' ? s.licencia : null;
+  var leida = c ? paceLicenciaLeer(c) : null;
+  return leida ? { codigo: c, datos: leida.datos } : null;
+}
+
+function paceLicenciaEsMensual(datos) {
+  return !!datos && datos.type === 'monthly' && typeof datos.order === 'string' && typeof datos.expiresAt === 'number';
+}
+
+
+function paceLicenciaRenovar(forzar) {
+  if (!paceLicenciaPermitida() || typeof fetch !== 'function') return Promise.resolve(null);
+  var g = paceLicenciaGuardada();
+  if (!g || !paceLicenciaEsMensual(g.datos) || g.datos.expiresAt - Date.now() > PACE_RENOVAR_ANTES) return Promise.resolve(null);
+  if (_paceRenovar.enCurso) return _paceRenovar.enCurso;
+  if (!forzar && Date.now() - _paceRenovar.ultimo < PACE_RENOVAR_CADA) return Promise.resolve(null);
+  _paceRenovar.ultimo = Date.now();
+  var fin = function (motivo) {
+    _paceRenovar.motivo = motivo === 'terminada' || motivo === 'sin-red' ? motivo : null;
+    _paceRenovar.enCurso = null;
+    try {setState(function (x) {return Object.assign({}, x);});} catch (e) {}
+    return motivo;
+  };
+  _paceRenovar.enCurso = fetch('/api/renovar', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: g.codigo })
+  }).then(function (r) {
+    if (r.status === 410) return fin('terminada');
+    if (!r.ok) return fin('sin-red');
+    return r.json().then(function (d) {
+      var nuevo = d && d.codigo ? paceLicenciaLeer(d.codigo) : null;
+      if (!nuevo || !paceLicenciaEsMensual(nuevo.datos) || nuevo.datos.order !== g.datos.order) return fin('sin-red');
+      if (!(nuevo.datos.expiresAt > g.datos.expiresAt)) return fin('igual');
+      return paceLicenciaCanjear(d.codigo).then(function (x) {return fin(x && x.ok ? 'renovada' : 'sin-red');});
+    });
+  }).catch(function () {return fin('sin-red');});
+  return _paceRenovar.enCurso;
+}
+
+
+
+function paceLicenciaEstado() {
+  var datos = paceLicenciaVigente();
+  if (datos) return { estado: 'vigente', motivo: null, datos: datos };
+  var g = paceLicenciaPermitida() ? paceLicenciaGuardada() : null;
+  if (g && paceLicenciaCaducada(g.datos, Date.now())) {
+    return { estado: 'caducado', motivo: paceLicenciaEsMensual(g.datos) ? _paceRenovar.motivo || 'sin-red' : null, datos: g.datos };
+  }
+  return { estado: 'ninguno', motivo: null, datos: null };
+}
+
 setTimeout(paceLicenciaCuandoSepa, 0);
 try {window.addEventListener('hashchange', paceLicenciaDelEnlace);} catch (e) {}
+try {window.addEventListener('online', function () {paceLicenciaRenovar(true);});} catch (e) {}
+try {setInterval(function () {paceLicenciaRenovar(false);}, 3600 * 1000);} catch (e) {}
 
 Object.assign(window, {
   paceLicenciaLeer: paceLicenciaLeer,
@@ -8430,9 +8499,11 @@ Object.assign(window, {
   paceLicenciaComprobar: paceLicenciaComprobar,
   paceLicenciaCanjear: paceLicenciaCanjear,
   paceLicenciaVigente: paceLicenciaVigente,
-  paceLicenciaPermitida: paceLicenciaPermitida
+  paceLicenciaPermitida: paceLicenciaPermitida,
+  paceLicenciaRenovar: paceLicenciaRenovar,
+  paceLicenciaEstado: paceLicenciaEstado
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa, PACE_RENOVAR_ANTES, PACE_RENOVAR_CADA, _paceRenovar, paceLicenciaGuardada, paceLicenciaEsMensual, paceLicenciaRenovar, paceLicenciaEstado });
 })();
 </script>
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
@@ -37395,8 +37466,11 @@ function PremiumSection() {
 
   if (datos) {
     let estado = t('premium.settings.forever');
-    if (typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function') {
-      const f = parseLocalDateKey(datos.expiresAt).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt) :
+    typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function' ? parseLocalDateKey(datos.expiresAt) : null;
+    if (fin) {
+      const f = fin.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
       estado = tn('premium.settings.until', { fecha: f });
     }
     return (
