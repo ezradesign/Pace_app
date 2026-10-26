@@ -260,12 +260,20 @@ function calendarioMsInstante(x) {
   return Date.parse(/Z$|[+-]\d\d:\d\d$/.test(s) ? s : s.replace(/(\.\d{3})\d*$/, '$1') + 'Z');
 }
 
+/* De las reuniones, Google da solo lo que decide si ocupan: las horas, si se
+   cancelaron o van como libres, si son de PACE y si las rechazaste (de cada
+   invitado, solo si eres tú y tu respuesta). Sin `fields` daba el evento entero,
+   con el título, el lugar y quién va; Outlook ya lo pedía así con `$select`. */
+var CALENDARIO_GOOGLE_REUNIONES = 'items(start,end,status,transparency,extendedProperties/private,attendees(self,responseStatus))';
+
 /* Las reuniones entre dos instantes, sin los eventos de PACE, sin los de todo el
    día, sin los que marcas como libres y sin los que rechazaste: [{ inicio, fin }]. */
 function calendarioWebReuniones(prov, token, desde, hasta) {
   var a = new Date(desde).toISOString(), b = new Date(hasta).toISOString();
   if (prov === 'google') {
-    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({ timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250' }))
+    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({
+      timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250', fields: CALENDARIO_GOOGLE_REUNIONES,
+    }))
       .then(function (j) {
         return ((j && j.items) || []).filter(function (e) {
           if (!e.start || !e.start.dateTime || e.status === 'cancelled' || e.transparency === 'transparent') return false;

@@ -11356,10 +11356,18 @@ function calendarioMsInstante(x) {
 
 
 
+
+
+var CALENDARIO_GOOGLE_REUNIONES = 'items(start,end,status,transparency,extendedProperties/private,attendees(self,responseStatus))';
+
+
+
 function calendarioWebReuniones(prov, token, desde, hasta) {
   var a = new Date(desde).toISOString(),b = new Date(hasta).toISOString();
   if (prov === 'google') {
-    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({ timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250' })).
+    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({
+      timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250', fields: CALENDARIO_GOOGLE_REUNIONES
+    })).
     then(function (j) {
       return (j && j.items || []).filter(function (e) {
         if (!e.start || !e.start.dateTime || e.status === 'cancelled' || e.transparency === 'transparent') return false;
@@ -11488,7 +11496,7 @@ Object.assign(window, {
   calendarioPaseHasta, calendarioPaseSinGesto, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCrear, calendarioWebCambiar,
   calendarioWebQuitar, calendarioWebListar, calendarioMsInstante
 });
-;Object.assign(window, { CALENDARIO_IDS, CALENDARIO_VUELTA_CLAVE, CALENDARIO_PASE_CLAVE, CALENDARIO_MS_PROP, CALENDARIO_MS_CLAVE, CALENDARIO_MS_SCOPE, CALENDARIO_MS_TOKEN, CALENDARIO_PROVEEDORES, calendarioQuery, calendarioVuelta, calendarioWebDisponible, calendarioPaseLeer, calendarioPaseGuardado, calendarioPaseGuardar, calendarioPaseHasta, calendarioPaseSinGesto, calendarioAleatorio, calendarioBase64Url, calendarioPedirPase, calendarioEsperarVuelta, calendarioFetch, CALENDARIO_GOOGLE_API, CALENDARIO_GRAPH, calendarioMsInstante, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCuerpo, calendarioWebCrear, calendarioWebUrlEvento, calendarioWebCambiar, calendarioWebQuitar, calendarioWebListar });
+;Object.assign(window, { CALENDARIO_IDS, CALENDARIO_VUELTA_CLAVE, CALENDARIO_PASE_CLAVE, CALENDARIO_MS_PROP, CALENDARIO_MS_CLAVE, CALENDARIO_MS_SCOPE, CALENDARIO_MS_TOKEN, CALENDARIO_PROVEEDORES, calendarioQuery, calendarioVuelta, calendarioWebDisponible, calendarioPaseLeer, calendarioPaseGuardado, calendarioPaseGuardar, calendarioPaseHasta, calendarioPaseSinGesto, calendarioAleatorio, calendarioBase64Url, calendarioPedirPase, calendarioEsperarVuelta, calendarioFetch, CALENDARIO_GOOGLE_API, CALENDARIO_GRAPH, calendarioMsInstante, CALENDARIO_GOOGLE_REUNIONES, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCuerpo, calendarioWebCrear, calendarioWebUrlEvento, calendarioWebCambiar, calendarioWebQuitar, calendarioWebListar });
 })();
 </script>
   <script>
@@ -12126,7 +12134,7 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   var claveDe = {};
   Object.keys(escritos || {}).forEach(function (k) {if (escritos[k] && escritos[k].id) claveDe[escritos[k].id] = k;});
   var d = calendarioDiaMs(iso);
-  return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
+  return paceAndroidCalendarioEventos(d[0], d[1], calendarioAndroidEsDePace).then(function (lista) {
     return lista.filter(calendarioAndroidEsDePace).map(function (e) {
       return { id: e.id, clave: claveDe[e.id] || null, inicio: e.inicio, fin: e.fin, titulo: e.titulo, texto: e.texto, aviso: e.aviso };
     });
@@ -16666,12 +16674,19 @@ function paceAndroidCalendarios() {
 
 
 
-function paceAndroidCalendarioEventos(desde, hasta) {
+
+
+
+
+function paceAndroidCalendarioEventos(desde, hasta, propio) {
   return paceAndroidLlamar('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
     return (r && r.result || []).map(function (e) {
-      return { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
-        todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled', titulo: e.title || '',
-        texto: e.description || '', aviso: (e.alerts || []).length > 0 };
+      var ev = { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
+        todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled' };
+      if (typeof propio === 'function' && propio(ev)) {
+        ev.titulo = e.title || '';ev.texto = e.description || '';ev.aviso = (e.alerts || []).length > 0;
+      }
+      return ev;
     });
   });
 }
