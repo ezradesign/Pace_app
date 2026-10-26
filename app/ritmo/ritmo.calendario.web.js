@@ -319,21 +319,22 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
   });
 }
 
-/* Lo que comparten crear y cambiar: horas, título, texto, aviso al empezar y
+/* Lo que comparten crear y cambiar: horas, título, texto, aviso al empezar,
    LIBRE, para que los compañeros solo te vean ocupado en tus reuniones (Ez,
-   18 oct. 2026). Va también al cambiar: lo que se escribió ocupado antes pasa a
-   libre en el primer cambio. Sin `solo` (los de «Añadir» de una vez) nunca hay
-   aviso. */
+   18 oct. 2026), y PRIVADO, para que quien solo puede ver tu calendario no lea
+   qué pausa haces (Ez, 1A del 26 oct.). Va también al cambiar: lo que se
+   escribió antes pasa a libre y privado en el primer cambio. Sin `solo` (los de
+   «Añadir» de una vez) nunca hay aviso. */
 function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(), b = new Date(ev.fin).toISOString();
   var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
     return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b }, transparency: 'transparent',
-             reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
+             visibility: 'private', reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
   var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
                  start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-                 showAs: 'free', isReminderOn: aviso };
+                 showAs: 'free', sensitivity: 'private', isReminderOn: aviso };
   if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
   return cuerpo;
 }

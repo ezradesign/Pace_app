@@ -58,9 +58,11 @@ mucho más estrictas.
 Por qué es verdad:
 
 - Todo se guarda en el móvil. PACE no tiene servidores ni analítica.
-- El calendario: PACE lee las horas de tus reuniones de hoy y escribe tus bloques de foco, pero todo
-  pasa dentro del móvil y no sale de él. Google no cuenta como «recogida» lo que se procesa solo en el
-  dispositivo y nunca se envía fuera.
+- El calendario: PACE lee las horas de tus reuniones de hoy y escribe tus bloques en el calendario del
+  móvil que elijas. PACE no envía nada fuera del móvil: si ese calendario se sincroniza con una cuenta,
+  lo sube el móvil, como cualquier evento tuyo. Google no cuenta como «recogida» lo que la app procesa
+  en el dispositivo sin enviarlo fuera, y pasar el día a otra app porque lo pide la persona no cuenta
+  como «compartir». (Ez, 26 oct., sobre https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY.)
 - La copia de «Tus datos» sale por el menú de compartir solo cuando tú la pides, y va adonde tú
   elijas. Eso tampoco cuenta como compartir.
 

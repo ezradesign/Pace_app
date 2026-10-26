@@ -4071,7 +4071,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.btn.descargar': 'Descargar',
   'cal.btn.compartir': 'Compartir',
   'cal.reuniones': 'Tener en cuenta mis reuniones de hoy',
-  'cal.reuniones.sub': 'PACE solo lee a qué horas estás ocupado, nunca el título ni quién va.',
+  'cal.reuniones.sub': 'PACE solo guarda a qué horas estás ocupado.',
   'cal.trabajando': 'Un momento…',
   'cal.hecho': 'Hecho: {n} bloques en tu calendario.',
   'cal.hecho.uno': 'Hecho: 1 bloque en tu calendario.',
@@ -4163,7 +4163,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.btn.descargar': 'Download',
   'cal.btn.compartir': 'Share',
   'cal.reuniones': 'Work around my meetings today',
-  'cal.reuniones.sub': 'PACE only reads when you are busy, never the title or who is going.',
+  'cal.reuniones.sub': 'PACE only keeps the times you are busy.',
   'cal.trabajando': 'One moment…',
   'cal.hecho': 'Done: {n} blocks in your calendar.',
   'cal.hecho.uno': 'Done: 1 block in your calendar.',
@@ -11053,7 +11053,7 @@ function calendarioIcs(eventos, iso, ahoraMs) {
     l.push('BEGIN:VEVENT', 'UID:pace-' + dia + '-' + e.clave + '@' + CALENDARIO_MARCA, 'DTSTAMP:' + sello,
     'DTSTART:' + calendarioSelloUtc(a), 'DTEND:' + calendarioSelloUtc(b),
     'SUMMARY:' + calendarioEscapa(e.titulo), 'DESCRIPTION:' + calendarioEscapa(e.texto),
-    'TRANSP:TRANSPARENT', 'END:VEVENT');
+    'TRANSP:TRANSPARENT', 'CLASS:PRIVATE', 'END:VEVENT');
   });
   l.push('END:VCALENDAR');
   return l.map(calendarioPliega).join('\r\n') + '\r\n';
@@ -11418,16 +11418,17 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
 
 
 
+
 function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(),b = new Date(ev.fin).toISOString();
   var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
     return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b }, transparency: 'transparent',
-      reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
+      visibility: 'private', reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
   var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
     start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-    showAs: 'free', isReminderOn: aviso };
+    showAs: 'free', sensitivity: 'private', isReminderOn: aviso };
   if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
   return cuerpo;
 }

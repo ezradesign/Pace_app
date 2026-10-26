@@ -7,10 +7,13 @@
  *    Google se lo pide con `fields` (sin él daba el título, el lugar y quién va);
  *    Outlook ya lo pedía con `$select`; y el puente de Android no deja salir el
  *    título ni el texto de lo que no puso PACE desde ese móvil.
- *  · P5, «Avísame»: cada correo se borra solo al año de apuntarse.
+ *  · P3, lo que PACE escribe en Google, en Outlook y en el archivo va libre y privado;
+ *  · P5, «Avísame»: cada correo se borra solo al año de apuntarse;
+ *  · y que privacy.html no diga que /premium cuenta visitas mientras no las cuente
+ *    (eso lo mira `verify`, en scripts/verify.privacidad.js).
  *
- * Contra v0.178.0 caen la de Google, la de Android y la de «Avísame»; la de Outlook
- * ya pasaba y se queda de guarda.
+ * Contra v0.178.0 caen la de Google, la de Android, la de P3 y la de «Avísame»; la de
+ * Outlook ya pasaba y se queda de guarda.
  *
  * NO CUBRE: que Google haga caso a `fields` de verdad (eso, con el alta de Ez:
  * docs/CALENDARIO_ALTAS.md), ni lo que el complemento de Android lee dentro del
@@ -115,6 +118,37 @@ test.describe('P2 · de una reunión, solo las horas', () => {
     expect(conPropio.find((e) => e.id === 'p1')).toMatchObject({ titulo: 'Foco 1 de 9', texto: 'Foco de 45 min.', aviso: true });
     expect(errores).toEqual([]);
   });
+});
+
+/* P3 (Ez, 1A del 26 oct.): libre ya lo eran; privado, para que quien solo puede ver tu
+   calendario no lea qué pausa haces. En el calendario del móvil aún no: el complemento
+   no sabe marcarlo, y privacy.html lo dice. */
+test('P3 · lo que PACE escribe va libre y privado en Google, en Outlook y en el archivo', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await abrir(page, context);
+  const r = await page.evaluate(async (FECHA) => {
+    const cuerpos = [];
+    const original = window.fetch;
+    window.fetch = (url, o) => {
+      if (o && o.body) cuerpos.push({ metodo: o.method, cuerpo: JSON.parse(o.body) });
+      return Promise.resolve(new Response(JSON.stringify({ id: 'nuevo' }), { status: 200 }));
+    };
+    const ev = { clave: 'b1', inicio: Date.parse(FECHA + 'T09:00:00+02:00'), fin: Date.parse(FECHA + 'T09:45:00+02:00'),
+      titulo: 'Foco 1 de 9 · luego Respira', texto: 'Foco de 45 min.', aviso: true };
+    try {
+      for (const prov of ['google', 'microsoft']) {
+        await calendarioWebCrear(prov, 'pase', FECHA, ev, false);
+        await calendarioWebCambiar(prov, 'pase', 'id-1', ev);
+      }
+    } finally { window.fetch = original; }
+    const ics = calendarioIcs([{ clave: 'b1', desde: 540, hasta: 585, titulo: ev.titulo, texto: ev.texto }], FECHA, Date.now());
+    return { cuerpos, clases: ics.match(/^CLASS:.*$/gm) || [], vevents: (ics.match(/BEGIN:VEVENT/g) || []).length };
+  }, FECHA);
+  expect(r.cuerpos.map((c) => c.metodo)).toEqual(['POST', 'PATCH', 'POST', 'PATCH']);
+  r.cuerpos.slice(0, 2).forEach((c) => expect(c.cuerpo).toMatchObject({ transparency: 'transparent', visibility: 'private' }));
+  r.cuerpos.slice(2).forEach((c) => expect(c.cuerpo).toMatchObject({ showAs: 'free', sensitivity: 'private' }));
+  expect(r.clases, 'cada evento del archivo, privado').toEqual(Array(r.vevents).fill('CLASS:PRIVATE'));
+  expect(errores).toEqual([]);
 });
 
 test.describe('P5 · «Avísame» no guarda para siempre', () => {
