@@ -60,15 +60,23 @@ function AjustesSeccion({ titulo, ultima, accion, plegadaMovil, children }) {
 
 /* La fila. `sub` es la linea pequena de debajo del nombre (el modulo, y en el
    circulo tambien el estilo elegido). `atenuada` la deja visible pero inerte:
-   es lo que hace el bloque de sonido con el maestro apagado. */
-function AjustesFila({ id, nombre, sub, modulo, atenuada, children }) {
+   es lo que hace el bloque de sonido con el maestro apagado.
+   `alTocar`: la fila de un interruptor se toca ENTERA, como en los ajustes del
+   movil. El interruptor solo mide 32x18 (28 de toque con el dedo, toques.css.jsx);
+   la fila, todo el ancho y 34 px o mas. El teclado sigue en el interruptor, que es
+   el boton: aqui solo llegan el raton y el dedo, y un toque que cae en un boton
+   es de ese boton. */
+function AjustesFila({ id, nombre, sub, modulo, atenuada, alTocar, children }) {
   const tono = modulo ? AJUSTES_MODULO[modulo] : null;
   const style = tono ? { '--pace-aj-m': tono.m, '--pace-aj-ms': tono.ms } : undefined;
+  const onClick = alTocar ? (e) => { if (!(e.target.closest && e.target.closest('button'))) alTocar(); } : undefined;
   return (
     <div className="pace-aj-fila" data-pace-aj-fila={id}
          data-pace-aj-modulo={tono ? modulo : undefined}
          data-atenuada={atenuada ? '' : undefined}
+         data-pace-aj-tocable={alTocar ? '' : undefined}
          aria-disabled={atenuada ? 'true' : undefined}
+         onClick={onClick}
          style={style}>
       <div className="pace-aj-nombre">
         {nombre}

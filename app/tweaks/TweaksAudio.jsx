@@ -67,7 +67,7 @@ function TweaksAudioBlock({ state, set }) {
 
   return (
     <React.Fragment>
-      <AjustesFila id="sound" nombre={t('settings.sound')}>
+      <AjustesFila id="sound" nombre={t('settings.sound')} alTocar={() => set({ soundOn: !state.soundOn })}>
         <AjustesInterruptor on={!!state.soundOn} onChange={(v) => set({ soundOn: v })} aria={t('settings.sound')} />
       </AjustesFila>
       {/* Las dos voces hablan castellano e inglés (Sound.voz.jsx): la palabra sale

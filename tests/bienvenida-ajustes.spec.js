@@ -120,3 +120,27 @@ test('A5 · en los Ajustes del móvil, entrar y salir de «Tus datos» no pierde
   await expect(abrirDatos).toBeVisible();
   expect(await quienTieneElFoco(page), 'al volver de «Tus datos» el foco cayó fuera').toMatch(/^button:Copias/);
 });
+test('A7 · en el móvil, la fila entera cambia el interruptor, no solo sus 32×18', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false });
+  await page.setViewportSize({ width: 360, height: 740 });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  const fila = page.locator('[data-pace-aj-fila="sound"]');
+  const sw = fila.locator('.pace-aj-sw');
+  const caja = await fila.boundingBox();
+  expect(caja.height, 'la fila del interruptor es más baja que un dedo').toBeGreaterThanOrEqual(34);
+
+  await fila.locator('.pace-aj-nombre').click();
+  await expect(sw, 'tocar «Sonido» no cambió el interruptor').toHaveAttribute('aria-checked', 'true');
+
+  /* El hueco entre el nombre y el interruptor, a media altura: abajo del todo llega la zona de
+     toque de las píldoras de la fila siguiente (toques.css.jsx), y ese toque es suyo. */
+  const cajaSw = await sw.boundingBox();
+  await page.mouse.click(cajaSw.x - 40, caja.y + caja.height / 2);
+  await expect(sw, 'tocar el hueco de la fila no cambió el interruptor').toHaveAttribute('aria-checked', 'false');
+
+  /* El propio interruptor cambia una vez, no dos (la fila no repite su toque). */
+  await sw.click();
+  await expect(sw).toHaveAttribute('aria-checked', 'true');
+  expect((await leerEstado(page)).soundOn).toBe(true);
+});

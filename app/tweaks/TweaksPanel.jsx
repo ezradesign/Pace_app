@@ -250,12 +250,16 @@ function TweaksPanel({ open, onClose }) {
       <AjustesSeccion titulo={t('settings.sec.sesiones')} accion={{ texto: t('ritmo.st.ajustes'), onClick: ritmoSemanaAbrir }}>
         {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
             disponible; el permiso se pide al activar (enableNotify). */}
-        {canNotify && (
-          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub')} modulo="focus">
-            <AjustesInterruptor on={!!state.notifyFocusEnd && permisoAviso() !== 'denied'} aria={t('settings.notify')}
-              onChange={(v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); }} />
-          </AjustesFila>
-        )}
+        {canNotify && (() => {
+          const avisoOn = !!state.notifyFocusEnd && permisoAviso() !== 'denied';
+          const ponerAviso = (v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); };
+          return (
+            <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub')} modulo="focus"
+              alTocar={() => ponerAviso(!avisoOn)}>
+              <AjustesInterruptor on={avisoOn} aria={t('settings.notify')} onChange={ponerAviso} />
+            </AjustesFila>
+          );
+        })()}
         {canNotify && permisoAviso() === 'denied' && (
           <div className="pace-aj-nota">{t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')}</div>
         )}

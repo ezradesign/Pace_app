@@ -93,6 +93,7 @@ if (!_paceAjustesCss) {
     .pace-aj-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; min-height: 38px; padding: 3px 0; transition: opacity 180ms; }
     .pace-aj-fila > :last-child { margin-left: auto; }
     .pace-aj-fila[data-atenuada] { opacity: .38; pointer-events: none; }
+    .pace-aj-fila[data-pace-aj-tocable] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
