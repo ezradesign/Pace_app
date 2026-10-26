@@ -51,8 +51,11 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    20 oct.). Y, del calendario total en la web, **el llavero** (Ez, 18 oct.; espera sus
    altas). La revisión de los ejercicios y el motor de la semana, hechos; lo total con PACE
    cerrado, después de v1.
-3. **Fase 6, tras /premium**: la página de gracias y la firma con k2, el aviso dos días antes del fin
-   de la prueba, «Gestionar» en Ajustes, la invitación con los botones de compra y lo legal de /premium.
+3. **Fase 6, tras /premium**: **cobrar en la web sin Stripe, hecho en la rama `claude/seguridad-cobro-web-1fa8a6`**
+   (26 oct., a juntar): la firma con k2 en una función, la página de gracias (1A de Ez), el aviso dos días antes del
+   fin de la prueba (2A), «Gestionar» en Ajustes (3A), la renovación de la mensual y «sin red» frente a «terminada».
+   Apagado hasta que Ez tenga Stripe y siga `docs/launch/cobro-web.md` (k2, Cloudflare y los enlaces). Falta la
+   invitación con los botones de compra y lo legal de /premium.
    El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
 4. **Auditoría externa del 21 oct.**: los trece casos de datos (v0.174.1) y los seis de «A tu
    ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. De la del 22 oct.,
