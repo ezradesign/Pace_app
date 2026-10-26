@@ -17,8 +17,16 @@ Rama `claude/privacidad-p1-p5-a973d0` (worktree `beautiful-perlman-2b642c`). Sin
 
 ## Ahora
 
-La página de antes y después para Ez (privacy.html, la app y `contenido-de-la-app.md`), con las
-opciones de P3. Nada público cambia hasta su respuesta.
+Página de antes y después publicada y enviada a la coordinadora, **esperando la respuesta de Ez**:
+https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY (fuente: `docs/proposals/privacidad-antes-despues-26oct.html`).
+Tres preguntas, recomendada 1A 2A 3A: 1 las pausas privadas en el calendario (A privadas y libres en Google,
+Outlook y el archivo; en Android, con una pieza nativa aparte que Ez prueba antes · B como hoy, y decirlo);
+2 contar la compra en la web ya, con «Aún no se puede comprar» (A) o al encender Stripe (B); 3 «Avísame», un año
+(A, ya en el código) o seis meses (B). Las frases exactas, en la página.
+
+Al montar: privacy.html con las frases de la página, `cal.reuniones.sub` en los dos idiomas, la frase de
+`contenido-de-la-app.md`, y un aviso en `verify` que falle si `premium/index.html` lleva la analítica y
+privacy.html dice que no la hay (o al revés). Luego verify, la suite en el 8806, 0.179.0 provisional.
 
 ## Lo que se sabe para montar
 
