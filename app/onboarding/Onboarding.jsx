@@ -62,6 +62,23 @@ function Onboarding() {
     },
   });
 
+  /* Al cambiar de paso la columna se vuelve a montar (key={step}) y el botón pulsado se va
+     con ella: el foco caía en <body> y el lector de pantalla volvía al principio de la
+     página. Se lleva al título del paso nuevo, que es lo que hay que leer. Si el foco sigue
+     en algo vivo (el «← Atrás» de arriba entre dos preguntas), se queda donde está. */
+  const pasoPrevioRef = useRefONB(step);
+  useEffectONB(() => {
+    if (pasoPrevioRef.current === step) return;
+    pasoPrevioRef.current = step;
+    const raiz = raizRef.current;
+    if (!raiz) return;
+    const activo = document.activeElement;
+    if (activo && activo !== document.body && activo !== raiz && raiz.contains(activo)) return;
+    const titulo = raiz.querySelector('[data-pace-reveal] h1, [data-pace-reveal] h2');
+    if (titulo) titulo.setAttribute('tabindex', '-1');
+    try { (titulo || raiz).focus({ preventScroll: true }); } catch (e) {}
+  }, [step]);
+
   if (!open) return null;
 
   const conCaminos = window.SHOW_CAMINOS !== false;
@@ -387,6 +404,9 @@ const onboardingStyles = {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
     fontSize: 'clamp(28px, 5.4vw, 38px)', fontWeight: 500,
     lineHeight: 1.12, margin: 0, color: 'var(--ink)',
+    /* Sin aro: el foco que recibe al cambiar de paso lo pone la app, no la persona (la regla
+       de los contenedores de s198, DESIGN_SYSTEM.md). */
+    outline: 'none',
     /* Halo de papel sobre el arte (mismo recurso que el runner s104). */
     textShadow: '0 0 22px var(--paper), 0 0 10px var(--paper)',
   },
@@ -436,7 +456,7 @@ const onboardingStyles = {
   pathName: {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
     fontSize: 'clamp(38px, 7vw, 54px)', fontWeight: 500,
-    lineHeight: 1.08, margin: 0, color: 'var(--ink)',
+    lineHeight: 1.08, margin: 0, color: 'var(--ink)', outline: 'none',
     textShadow: '0 0 24px var(--paper), 0 0 10px var(--paper)',
   },
   tagline: {

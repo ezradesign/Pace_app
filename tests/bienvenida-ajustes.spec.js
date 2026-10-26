@@ -83,3 +83,40 @@ test('A4 · con el sonido apagado, lo que cuelga de él tampoco se cambia con el
   await page.keyboard.press('Enter');
   await expect.poll(async () => (await leerEstado(page)).voiceOn).toBe(true);
 });
+/* Lo que tiene el foco, en una línea que se lee en el fallo. */
+const quienTieneElFoco = (page) => page.evaluate(() => {
+  const a = document.activeElement;
+  if (!a || a === document.body) return 'body';
+  return a.tagName.toLowerCase() + ':' + (a.getAttribute('data-pace-aj-volver') != null ? 'volver' : (a.innerText || a.getAttribute('aria-label') || '').trim().slice(0, 40));
+});
+
+test('A5 · en la bienvenida, el foco pasa al título del paso nuevo y no se pierde', async ({ page }) => {
+  await page.goto(RUTA_ARTEFACTO);
+  const comenzar = page.getByRole('button', { name: 'Comenzar' });
+  await comenzar.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: '¿Cómo es tu semana?' })).toBeVisible();
+  expect(await quienTieneElFoco(page), 'al pasar a la semana el foco cayó fuera').toBe('h2:¿Cómo es tu semana?');
+
+  /* «← Atrás» desaparece al volver a la primera pantalla: el foco va a su título. */
+  await page.getByRole('button', { name: /Atrás/ }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByTitle('Cambiar a English')).toBeVisible();
+  expect(await quienTieneElFoco(page), 'al volver atrás el foco cayó fuera').toMatch(/^h1:/);
+});
+
+test('A5 · en los Ajustes del móvil, entrar y salir de «Tus datos» no pierde el foco', async ({ page, context }) => {
+  await sembrar(context);
+  await page.setViewportSize({ width: 360, height: 740 });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  const abrirDatos = page.locator('[data-pace-tweaks-panel] [data-pace-aj-plegada] .pace-aj-sec-accion');
+  await abrirDatos.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-pace-aj-volver]')).toBeVisible();
+  expect(await quienTieneElFoco(page), 'al abrir «Tus datos» el foco cayó fuera').toBe('button:volver');
+
+  await page.keyboard.press('Enter');
+  await expect(abrirDatos).toBeVisible();
+  expect(await quienTieneElFoco(page), 'al volver de «Tus datos» el foco cayó fuera').toMatch(/^button:Copias/);
+});

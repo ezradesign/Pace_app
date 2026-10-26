@@ -41,7 +41,7 @@
        <TweakSecretsWatcher /> (app/tweaks/TweakSecretsWatcher.jsx, s41).
    ============================================================ */
 
-const { useEffect: useEffectTW, useState: useStateTW } = React;
+const { useEffect: useEffectTW, useState: useStateTW, useRef: useRefTW } = React;
 
 /* `tweaksStyles` y las piezas `Ajustes*` llegan por `window` desde
    TweaksPanel.support.jsx y TweaksPanel.parts.jsx, que CARGAN ANTES: un `const`
@@ -116,6 +116,18 @@ function TweaksPanel({ open, onClose }) {
      enlace no se pinta y la sección va entera. Cerrar el panel vuelve a la vista de todo. */
   const [vistaDatos, setVistaDatos] = useStateTW(false);
   useEffectTW(() => { if (!open) setVistaDatos(false); }, [open]);
+  /* Al entrar y salir de esa vista el botón pulsado desaparece y el foco caía en <body>: se
+     lleva a la «‹» que vuelve, o de vuelta a «Copias, borrar y código ›». */
+  const panelRef = useRefTW(null);
+  const vistaPreviaRef = useRefTW(vistaDatos);
+  useEffectTW(() => {
+    if (vistaPreviaRef.current === vistaDatos) return;
+    vistaPreviaRef.current = vistaDatos;
+    const p = panelRef.current;
+    if (!p || (document.activeElement && document.activeElement !== document.body && p.contains(document.activeElement))) return;
+    const destino = p.querySelector(vistaDatos ? '[data-pace-aj-volver]' : '[data-pace-aj-plegada] .pace-aj-sec-accion');
+    if (destino) { try { destino.focus({ preventScroll: true }); } catch (e) {} }
+  }, [vistaDatos]);
 
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
   useEffectTW(() => {
@@ -163,7 +175,7 @@ function TweaksPanel({ open, onClose }) {
   const ponerGoal = (d) => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
-    <div data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" style={{
+    <div ref={panelRef} data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
