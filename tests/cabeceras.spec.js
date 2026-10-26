@@ -132,7 +132,7 @@ test.describe('S5 · con la CSP puesta', () => {
     await expect.poll(() => bloqueado(page).then(b => b.length)).toBe(2);
   });
 
-  for (const pagina of ['/premium/index.html', '/beta/index.html', '/calendario.html', '/privacy.html', '/safety.html']) {
+  for (const pagina of ['/premium/index.html', '/beta/index.html', '/gracias/index.html', '/calendario.html', '/privacy.html', '/safety.html']) {
     test('la página ' + pagina + ' se ve sin que la CSP bloquee nada', async ({ page, context }) => {
       await conCsp(context);
       await page.goto(pagina);
