@@ -260,12 +260,20 @@ function calendarioMsInstante(x) {
   return Date.parse(/Z$|[+-]\d\d:\d\d$/.test(s) ? s : s.replace(/(\.\d{3})\d*$/, '$1') + 'Z');
 }
 
+/* De las reuniones, Google da solo lo que decide si ocupan: las horas, si se
+   cancelaron o van como libres, si son de PACE y si las rechazaste (de cada
+   invitado, solo si eres tú y tu respuesta). Sin `fields` daba el evento entero,
+   con el título, el lugar y quién va; Outlook ya lo pedía así con `$select`. */
+var CALENDARIO_GOOGLE_REUNIONES = 'items(start,end,status,transparency,extendedProperties/private,attendees(self,responseStatus))';
+
 /* Las reuniones entre dos instantes, sin los eventos de PACE, sin los de todo el
    día, sin los que marcas como libres y sin los que rechazaste: [{ inicio, fin }]. */
 function calendarioWebReuniones(prov, token, desde, hasta) {
   var a = new Date(desde).toISOString(), b = new Date(hasta).toISOString();
   if (prov === 'google') {
-    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({ timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250' }))
+    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({
+      timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250', fields: CALENDARIO_GOOGLE_REUNIONES,
+    }))
       .then(function (j) {
         return ((j && j.items) || []).filter(function (e) {
           if (!e.start || !e.start.dateTime || e.status === 'cancelled' || e.transparency === 'transparent') return false;
@@ -311,21 +319,22 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
   });
 }
 
-/* Lo que comparten crear y cambiar: horas, título, texto, aviso al empezar y
+/* Lo que comparten crear y cambiar: horas, título, texto, aviso al empezar,
    LIBRE, para que los compañeros solo te vean ocupado en tus reuniones (Ez,
-   18 oct. 2026). Va también al cambiar: lo que se escribió ocupado antes pasa a
-   libre en el primer cambio. Sin `solo` (los de «Añadir» de una vez) nunca hay
-   aviso. */
+   18 oct. 2026), y PRIVADO, para que quien solo puede ver tu calendario no lea
+   qué pausa haces (Ez, 1A del 26 oct.). Va también al cambiar: lo que se
+   escribió antes pasa a libre y privado en el primer cambio. Sin `solo` (los de
+   «Añadir» de una vez) nunca hay aviso. */
 function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(), b = new Date(ev.fin).toISOString();
   var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
     return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b }, transparency: 'transparent',
-             reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
+             visibility: 'private', reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
   var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
                  start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-                 showAs: 'free', isReminderOn: aviso };
+                 showAs: 'free', sensitivity: 'private', isReminderOn: aviso };
   if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
   return cuerpo;
 }

@@ -1,0 +1,349 @@
+<title>Lo que prometemos sobre los datos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Una sola columna de lectura; cada frase, su antes y su después lado a lado (apilados en el móvil). */
+  :root {
+    --papel: #F2EDE0; --papel-2: #EAE4D4; --tinta: #1F1C17; --tinta-2: #4A453C; --tinta-3: #7A7363;
+    --linea: #C9C0A8; --oliva: #3E5A3A; --terracota: #A85A3E; --ins: #DCE5CF; --del: #F0DCD2;
+    --serif: Georgia, 'Times New Roman', serif; --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --papel: #1d1a14; --papel-2: #26211a; --tinta: #EDE5D3; --tinta-2: #c9bea8; --tinta-3: #A89F8B;
+    --linea: #4d4536; --oliva: #8FB07F; --terracota: #E0987B; --ins: #2F3B27; --del: #45291F; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --papel: #1d1a14; --papel-2: #26211a; --tinta: #EDE5D3; --tinta-2: #c9bea8; --tinta-3: #A89F8B;
+    --linea: #4d4536; --oliva: #8FB07F; --terracota: #E0987B; --ins: #2F3B27; --del: #45291F; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { background: var(--papel); color: var(--tinta); font: 15px/1.6 var(--sans);
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  main { max-width: 860px; margin: 0 auto; padding-block: 40px 72px; display: grid; gap: 28px; }
+  h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; line-height: 1.15; margin: 0; text-wrap: balance; }
+  h1 { font-size: 36px; } h2 { font-size: 25px; } h3 { font-size: 18px; }
+  p { margin: 0; color: var(--tinta-2); max-width: 66ch; }
+  .kicker { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); }
+  section { display: grid; gap: 14px; }
+  .hecho { border: 1px solid var(--linea); border-radius: 6px; padding: 14px 16px; display: grid; gap: 8px; background: var(--papel-2); }
+  .hecho ul { margin: 0; padding-left: 18px; color: var(--tinta-2); display: grid; gap: 4px; }
+  .frase { border-top: 1px solid var(--linea); padding-top: 14px; display: grid; gap: 10px; }
+  .frase .donde { font-size: 12px; color: var(--tinta-3); }
+  .frase .donde b { color: var(--terracota); font-weight: 600; letter-spacing: .04em; }
+  .par { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .par > div { min-width: 0; display: grid; gap: 4px; align-content: start; }
+  .par .et { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-3); }
+  .par .txt { color: var(--tinta); }
+  .antes .txt { color: var(--tinta-2); }
+  del { background: var(--del); text-decoration: line-through; text-decoration-color: var(--terracota); }
+  ins { background: var(--ins); text-decoration: none; }
+  .porque { font-size: 13.5px; color: var(--tinta-3); }
+  details.en { font-size: 13.5px; }
+  details.en summary { cursor: pointer; color: var(--oliva); width: max-content; }
+  details.en summary:focus-visible { outline: 2px solid var(--oliva); outline-offset: 2px; }
+  details.en .par { margin-top: 8px; }
+  .queda { margin: 0; padding-left: 18px; color: var(--tinta-2); display: grid; gap: 6px; }
+  .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .op { border: 1px solid var(--linea); border-radius: 6px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .op.rec { border-color: var(--oliva); border-width: 2px; }
+  .op .nombre { font-family: var(--serif); font-style: italic; font-size: 18px; }
+  .op .chip { font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--oliva); }
+  .dia { border: 1px solid var(--linea); border-radius: 4px; background: var(--papel-2); padding: 8px; display: grid; gap: 4px; font-size: 12.5px; }
+  .dia .cab { font-size: 11px; color: var(--tinta-3); }
+  .ev { border-left: 3px solid var(--tinta-3); padding: 3px 8px; background: var(--papel); font-variant-numeric: tabular-nums; }
+  .ev.pace { border-left-color: var(--oliva); border-left-style: dashed; }
+  .ev .h { color: var(--tinta-3); margin-right: 6px; }
+  .preguntas { border: 2px solid var(--tinta); border-radius: 6px; padding: 18px; display: grid; gap: 14px; }
+  .preguntas ol { margin: 0; padding-left: 20px; display: grid; gap: 12px; }
+  .preguntas li p { color: var(--tinta); }
+  .preguntas .ab { color: var(--tinta-2); font-size: 14px; }
+  .respuesta { font-family: var(--serif); font-style: italic; font-size: 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  .tabla { overflow-x: auto; }
+  th, td { text-align: left; padding: 8px 10px; border-top: 1px solid var(--linea); vertical-align: top; }
+  th { font-weight: 600; color: var(--tinta); }
+  td { color: var(--tinta-2); }
+  @media (max-width: 640px) { .par, .opciones { grid-template-columns: 1fr; } h1 { font-size: 30px; } }
+</style>
+
+<main>
+  <header style="display:grid;gap:10px">
+    <div class="kicker">PACE · privacidad · 26 oct. 2026</div>
+    <h1>Lo que prometemos sobre los datos</h1>
+    <p>Nada se envía a escondidas, pero había frases que prometían más de lo que pasa (la revisión de ChatGPT del 22 oct.,
+      comprobada en el código). Aquí está cada frase como está hoy y cómo quedaría, con lo nuevo de la compra en la web y
+      de «Avísame». Lo tachado se va; lo verde entra. Nada de esto se publica hasta que digas.</p>
+  </header>
+
+  <div class="hecho">
+    <h3>Ya arreglado por dentro (no se ve)</h3>
+    <ul>
+      <li><b>Las reuniones:</b> a Google ya solo le pide las horas, si es libre y si vas (antes le pedía el evento entero, con el
+        título y quién va). En Android, de lo que no puso PACE, la app solo se queda con las horas.</li>
+      <li><b>«Avísame»:</b> cada correo se borra solo al año de apuntarse.</li>
+      <li>Las dos cosas tienen su prueba, que falla si se deshace el arreglo.</li>
+    </ul>
+  </div>
+
+  <!-- ===================== privacy.html ===================== -->
+  <section>
+    <div class="kicker">1 · La página pública de privacidad (pacegrass.app/privacy)</div>
+    <h2>privacy.html</h2>
+
+    <div class="frase">
+      <div class="donde"><b>ARRIBA DEL TODO</b> · tus datos viven en tu dispositivo</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">…o, si usas la app de Android o la del iPhone, en el de la app. <del>No sale de ahí.</del></span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">…o, si usas la app de Android o la del iPhone, en el de la app. <ins>PACE no lo envía a ningún sitio.</ins></span></div>
+      </div>
+      <p class="porque">Lo que llevas al calendario y la copia de seguridad del móvil sí salen, por ti o por el móvil. PACE no lo manda.</p>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">…in the app's own storage. <del>It never leaves it.</del></span></div>
+        <div class="despues"><span class="et">After</span><span class="txt">…in the app's own storage. <ins>PACE never sends it anywhere.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>LO QUE NO HACEMOS</b> · sin cuentas</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt"><b>Sin cuentas.</b> No hay registro, ni email, ni contraseña.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt"><b>Sin cuentas.</b> <ins>Para usar PACE</ins> no hay registro, ni <ins>correo</ins>, ni contraseña.</span></div>
+      </div>
+      <p class="porque">«Avísame» y la compra en la web sí piden un correo. Para usar la app, nada.</p>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt"><b>No accounts.</b> No sign-up, no email, no password.</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt"><b>No accounts.</b> <ins>Using PACE needs</ins> no sign-up, no email and no password.</span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>LO QUE NO HACEMOS</b> · tus datos</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt"><b><del>Tus datos no salen de tu dispositivo.</del></b> Tu práctica se guarda en tu navegador o en tu móvil; PACE no la recibe ni la almacena en ningún sitio.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt"><b><ins>PACE no recibe tu práctica.</ins></b> Se guarda en tu navegador o en tu móvil<ins>, y solo sale de ahí si tú la llevas a otro sitio: a tu calendario, a una copia o a la copia de seguridad del móvil.</ins></span></div>
+      </div>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt"><b><del>Your data stays on your device.</del></b> Your practice is stored in your browser or on your phone; PACE never receives it or stores it anywhere.</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt"><b><ins>PACE never receives your practice.</ins></b> It is stored in your browser or on your phone<ins>, and only leaves it if you take it somewhere: to your calendar, to a copy or to your phone's backup.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>TU CALENDARIO</b> · el del móvil sube a su cuenta (P1)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">Con «Al calendario», PACE añade tu día de «A tu ritmo» a tu calendario: el del móvil (con el permiso de Android), Google Calendar u Outlook…, o un archivo que guardas tú.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">(Igual, y sigue:) <ins>En el del móvil, PACE escribe en el calendario que elijas; si es de una cuenta que se sincroniza (de Google, de Microsoft…), el móvil lo sube a esa cuenta, como cualquier evento tuyo.</ins></span></div>
+      </div>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">With «To my calendar», PACE adds your «At your pace» day to your calendar: your phone's…, Google Calendar or Outlook…, or a file you keep.</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt">(Same, then:) <ins>On your phone, PACE writes to the calendar you choose; if it belongs to an account that syncs (Google, Microsoft…), the phone uploads it to that account, like any event of yours.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>TU CALENDARIO</b> · libre (P3: depende de la pregunta 1, abajo)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">Lo añade como libre: quien vea tu calendario te ve ocupado en tus reuniones, no en tus pausas.</span></div>
+        <div class="despues"><span class="et">Después, con 1A</span><span class="txt">Lo añade como libre <ins>y privado</ins>: quien vea tu calendario te ve ocupado en tus reuniones, no en tus pausas, <ins>y quien solo pueda verlo no lee qué pausa es. En el calendario del móvil, por ahora, cada pausa va con su nombre.</ins></span></div>
+      </div>
+      <div class="par">
+        <div></div>
+        <div class="despues"><span class="et">Después, con 1B</span><span class="txt">Lo añade como libre: quien vea tu calendario te ve ocupado en tus reuniones, no en tus pausas. <ins>Cada pausa va con su nombre, así que quien pueda ver los detalles de tu calendario lee qué pausa es.</ins></span></div>
+      </div>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="despues"><span class="et">After, 1A</span><span class="txt">It adds it as free <ins>and private</ins>: anyone who sees your calendar sees you busy in your meetings, not in your breaks, <ins>and anyone who can only view it cannot read which break it is. In your phone's calendar, for now, each break keeps its name.</ins></span></div>
+        <div class="despues"><span class="et">After, 1B</span><span class="txt">It adds it as free: anyone who sees your calendar sees you busy in your meetings, not in your breaks. <ins>Each break keeps its name, so anyone who can see your calendar's details reads which break it is.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>TU CALENDARIO</b> · las reuniones (P2)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">Si marcas «Tener en cuenta mis reuniones», PACE <del>lee</del> a qué horas estás ocupado hoy y coloca el día alrededor. Solo guarda esas horas, en tu dispositivo<del>; nunca el título, el lugar ni quién va.</del></span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">Si marcas «Tener en cuenta mis reuniones <ins>de hoy</ins>», PACE <ins>mira</ins> a qué horas estás ocupado hoy y coloca el día alrededor. Solo guarda esas horas, en tu dispositivo. <ins>A Google y a Outlook les pide solo las horas y si vas; el calendario del móvil le da cada evento entero, y PACE se queda solo con las horas.</ins></span></div>
+      </div>
+      <p class="porque">Antes Google le daba el evento entero. Ya no (arreglado por dentro). En Android no se puede pedir menos: el móvil da el evento entero a la app, y la app tira todo menos las horas.</p>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">If you tick «Work around my meetings», PACE <del>reads</del> when you are busy today and plans the day around it. It only keeps those times, on your device<del>; never the title, the place or who is going.</del></span></div>
+        <div class="despues"><span class="et">After</span><span class="txt">If you tick «Work around my meetings <ins>today</ins>», PACE <ins>looks at</ins> when you are busy today and plans the day around it. It only keeps those times, on your device. <ins>From Google and Outlook it asks only for the times and whether you are going; your phone's calendar hands it each whole event, and PACE keeps only the times.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>TU CALENDARIO</b> · sin servidor</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">…nada de tu calendario pasa por un servidor de PACE<del>, porque no lo hay</del>.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">…nada de tu calendario pasa por un servidor de PACE.</span></div>
+      </div>
+      <p class="porque">La web ya tiene unas funciones pequeñas (para «Avísame» y para la compra). El calendario sigue sin pasar por ellas.</p>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">…nothing from your calendar goes through a PACE server<del>, because there is none</del>.</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt">…nothing from your calendar goes through a PACE server.</span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>/PREMIUM Y «AVÍSAME»</b> · las visitas (P4)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt"><del>La página pacegrass.app/premium cuenta sus visitas, y de qué web llegan, con la analítica de Cloudflare, que no usa cookies ni te sigue de una web a otra. Solo esa página: la app no lleva ninguna.</del></span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt"><ins>Hoy ninguna página de PACE cuenta sus visitas: ni pacegrass.app/premium ni la app llevan analítica. Si un día /premium las cuenta, lo dirá aquí.</ins></span></div>
+      </div>
+      <p class="porque">La analítica espera tu token y aún no está. El día que la pongas, la comprobación de siempre (verify) fallará hasta que esta frase vuelva a decirlo.</p>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt"><del>The page pacegrass.app/premium counts its visits, and which website they come from, with Cloudflare's analytics… Only that page: the app has none.</del></span></div>
+        <div class="despues"><span class="et">After</span><span class="txt"><ins>Today no PACE page counts its visits: neither pacegrass.app/premium nor the app carries analytics. If /premium ever counts them, this page will say so.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>/PREMIUM Y «AVÍSAME»</b> · cuánto dura el correo (P5, pregunta 3)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">…Después del segundo aviso la lista se borra entera.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">…Después del segundo aviso la lista se borra entera<ins>, y cada correo se borra solo al año de apuntarte, aunque no hayan llegado los dos avisos.</ins></span></div>
+      </div>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">…After the second notice the whole list is deleted.</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt">…After the second notice the whole list is deleted<ins>, and each email deletes itself a year after you sign up, even if both notices have not been sent.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>/PREMIUM Y «AVÍSAME»</b> · el límite contra robots (nuevo)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">(No lo dice.)</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt"><ins>Para frenar a los robots, la lista cuenta cuántas veces se apunta alguien desde una misma conexión: cinco por hora como mucho. Para eso guarda un código hecho con tu IP, no la IP, durante una hora en la caché de Cloudflare, y luego se borra solo.</ins></span></div>
+      </div>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">(Not mentioned.)</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt"><ins>To stop bots, the list counts how many times someone signs up from the same connection: five per hour at most. For that it keeps a code made from your IP, not the IP itself, for one hour in Cloudflare's cache, and then it deletes itself.</ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>SECCIÓN NUEVA</b> · si compras PACE completo en la web (pregunta 2)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">(No hay sección.)</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt"><ins>
+          <b>Aún no se puede comprar en la web. Cuando se pueda, será así:</b><br>
+          · Pagas en Stripe, que es quien te vende PACE completo en la web: te pide el correo y la forma de pago, te manda el recibo, cobra los impuestos y lleva las devoluciones, con su propia política de privacidad. Si nos escribes por una compra, la buscamos en Stripe.<br>
+          · Stripe avisa a la web de PACE de cada pago. De ese aviso, la web guarda solo el número del pedido y el código que te da, ni tu correo ni tu nombre: el de la página de gracias, 90 días; el de una suscripción mensual, mientras siga, y se borra cuando termina.<br>
+          · Tu código abre PACE completo y se guarda en tu navegador, como lo demás. Para comprobarlo, PACE no se conecta a nada.<br>
+          · Si pagas al mes, cuando se acerca el final de cada mes pagado la app pide a la web de PACE tu código nuevo (como mucho una vez cada seis horas, hasta que llega). Manda solo el código que tienes, nada de tu práctica. Es la única vez que la app habla con un servidor de PACE.
+        </ins></span></div>
+      </div>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">(No section.)</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt"><ins>
+          <b>PACE Complete cannot be bought on the web yet. When it can, it will work like this:</b><br>
+          · You pay on Stripe, which is the seller of PACE Complete on the web: it asks for your email and payment method, sends you the receipt, charges the taxes and handles refunds, under its own privacy policy. If you write to us about a purchase, we look it up in Stripe.<br>
+          · Stripe tells the PACE website about each payment. From that notice, the website keeps only the order number and the code it gives you, not your email or your name: the thank-you page code for 90 days; a monthly subscription's, while it lasts, deleted when it ends.<br>
+          · Your code unlocks PACE Complete and is stored in your browser, like everything else. To check it, PACE connects to nothing.<br>
+          · If you pay monthly, as each paid month nears its end the app asks the PACE website for your new code (at most once every six hours, until it arrives). It sends only the code you have, nothing about your practice. It is the only time the app talks to a PACE server.
+        </ins></span></div>
+      </div></details>
+    </div>
+
+    <div class="frase">
+      <div class="donde"><b>LA FECHA</b> · arriba, en los dos idiomas</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">Última actualización: 23 de octubre de 2026</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">Última actualización: <ins>el día que se publique</ins></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== app ===================== -->
+  <section>
+    <div class="kicker">2 · Dentro de la app</div>
+    <h2>La hoja «Al calendario»</h2>
+    <div class="frase">
+      <div class="donde"><b>DEBAJO DE «TENER EN CUENTA MIS REUNIONES DE HOY»</b> (P2)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">PACE solo <del>lee</del> a qué horas estás ocupado<del>, nunca el título ni quién va</del>.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">PACE solo <ins>guarda</ins> a qué horas estás ocupado.</span></div>
+      </div>
+      <p class="porque">Es más corta: cabe igual en el móvil.</p>
+      <details class="en"><summary>En inglés</summary><div class="par">
+        <div class="antes"><span class="et">Before</span><span class="txt">PACE only <del>reads when you are busy, never the title or who is going</del>.</span></div>
+        <div class="despues"><span class="et">After</span><span class="txt">PACE only <ins>keeps the times you are busy</ins>.</span></div>
+      </div></details>
+    </div>
+    <h3>Lo que miré y se queda como está</h3>
+    <ul class="queda">
+      <li>«Todo vive en tu navegador» / «en tu móvil» (pie de Ajustes) y «Todo local · en tu navegador» (bienvenida): hablan de tu práctica, que sigue ahí.</li>
+      <li>«Tus datos no salen de aquí. No te sigue nadie.» (la hoja de la vaca): lo que llevas al calendario lo llevas tú, y esa hoja sale de la web el día de v1.</li>
+      <li>«Mantenerlo al día solo · …y cada pausa te avisa»: dice lo que hace.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== Play ===================== -->
+  <section>
+    <div class="kicker">3 · Para Play (documento interno, no se publica)</div>
+    <h2>contenido-de-la-app.md</h2>
+    <div class="frase">
+      <div class="donde"><b>SEGURIDAD DE LOS DATOS</b> · por qué la respuesta es «No» (P1)</div>
+      <div class="par">
+        <div class="antes"><span class="et">Antes</span><span class="txt">El calendario: PACE lee las horas de tus reuniones de hoy y escribe tus bloques de foco, <del>pero todo pasa dentro del móvil y no sale de él</del>. Google no cuenta como «recogida» lo que se procesa solo en el dispositivo y nunca se envía fuera.</span></div>
+        <div class="despues"><span class="et">Después</span><span class="txt">El calendario: PACE lee las horas de tus reuniones de hoy y escribe tus bloques <ins>en el calendario del móvil que elijas. PACE no envía nada fuera del móvil: si ese calendario se sincroniza con una cuenta, lo sube el móvil, como cualquier evento tuyo.</ins> Google no cuenta como «recogida» lo que <ins>la app procesa en el dispositivo sin enviarlo fuera, y pasar el día a otra app porque lo pide la persona no cuenta como «compartir»</ins>.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== P3 ===================== -->
+  <section>
+    <div class="kicker">4 · La decisión que es tuya</div>
+    <h2>¿Las pausas, privadas en el calendario?</h2>
+    <p>Hoy cada bloque va al calendario como libre (tú lo elegiste el 18 oct.) y con su nombre. Quien comparte tu calendario
+      contigo no te ve ocupado, pero si puede ver los detalles, lee qué pausa haces. Así lo vería un compañero:</p>
+    <div class="opciones">
+      <div class="op rec">
+        <span class="chip">Recomendada</span>
+        <span class="nombre">A · Privadas y libres</span>
+        <div class="dia" aria-label="Lo que ve un compañero con la A">
+          <span class="cab">Lo que ve un compañero</span>
+          <span class="ev"><span class="h">10:00</span>Reunión de equipo</span>
+          <span class="ev pace"><span class="h">10:45</span>Privado</span>
+          <span class="ev pace"><span class="h">11:40</span>Privado</span>
+        </div>
+        <p>En Google, en Outlook y en el archivo, ya. En el calendario del móvil hace falta una pieza nueva (el complemento que
+          usamos no sabe marcar «privado»): la hago aparte y la pruebas en tu Android antes de juntarla. Hasta entonces, la
+          página dice que en el móvil van con su nombre. Tú sigues viendo el nombre de cada pausa.</p>
+      </div>
+      <div class="op">
+        <span class="nombre">B · Como hoy, y decirlo</span>
+        <div class="dia" aria-label="Lo que ve un compañero con la B">
+          <span class="cab">Lo que ve un compañero</span>
+          <span class="ev"><span class="h">10:00</span>Reunión de equipo</span>
+          <span class="ev pace"><span class="h">10:45</span>Foco 2 de 9 · luego Respira</span>
+          <span class="ev pace"><span class="h">11:40</span>Foco 3 de 9 · luego Estira</span>
+        </div>
+        <p>Nada cambia en el calendario. La página dice que cada pausa va con su nombre y que quien vea los detalles lo lee.</p>
+      </div>
+    </div>
+    <p class="porque">El «Privado» del dibujo es aproximado: cada calendario lo enseña a su manera, y quien puede editar tu calendario sigue viendo el nombre.</p>
+  </section>
+
+  <!-- ===================== Play y Apple ===================== -->
+  <section>
+    <div class="kicker">5 · Los formularios de las tiendas</div>
+    <h2>Play y App Store: no cambia ninguna respuesta</h2>
+    <div class="tabla"><table>
+      <tr><th>Formulario</th><th>Hoy</th><th>¿Cambia?</th></tr>
+      <tr><td>Play · Seguridad de los datos</td><td>«No se recogen datos» y «No se comparten»</td><td>No. La app de Android no habla con ningún servidor (la renovación de la mensual es solo de la web) y lo del calendario no sale del móvil por PACE. /premium y «Avísame» no van en la app.</td></tr>
+      <tr><td>App Store Connect · Privacidad de la app</td><td>«Datos no recopilados»</td><td>No. La app del iPhone no pide el calendario ni se conecta a nada; lo de TestFlight lo recoge Apple.</td></tr>
+      <tr><td>Las dos, en v1</td><td>—</td><td>Se rehacen al poner la compra dentro de las apps (Play Billing y la de Apple): es lo que ya dice el plan.</td></tr>
+    </table></div>
+  </section>
+
+  <!-- ===================== preguntas ===================== -->
+  <section class="preguntas">
+    <h2>Tres preguntas</h2>
+    <ol>
+      <li><p>Las pausas en el calendario.</p>
+        <p class="ab"><b>A</b> (recomendada): privadas y libres; en el móvil, cuando pruebes la pieza nueva. · <b>B</b>: como hoy, y decirlo.</p></li>
+      <li><p>Contar la compra en la web en privacy.html.</p>
+        <p class="ab"><b>A</b> (recomendada): ya, empezando por «Aún no se puede comprar en la web». · <b>B</b>: el día que se encienda Stripe.</p></li>
+      <li><p>Cuánto se queda un correo de «Avísame» como mucho.</p>
+        <p class="ab"><b>A</b> (recomendada): un año (ya está así). · <b>B</b>: seis meses.</p></li>
+    </ol>
+    <p>Lo demás va como está arriba. Si alguna frase no te suena, dímelo con su sitio.</p>
+    <p class="respuesta">«1A 2A 3A»</p>
+  </section>
+</main>

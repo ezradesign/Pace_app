@@ -63,22 +63,22 @@
   <section lang="es">
     <div class="kicker">PACE · Foco · Cuerpo</div>
     <h1>Privacidad</h1>
-    <p class="fecha">Última actualización: 23 de octubre de 2026</p>
+    <p class="fecha">Última actualización: 26 de octubre de 2026</p>
 
     <p><strong>Tus datos viven en tu dispositivo.</strong> PACE es una
     aplicación local-first: todo lo que registras (minutos de foco,
     sesiones, vasos de agua, logros, ajustes) se guarda en tu dispositivo: en
     el almacenamiento local de tu navegador o, si usas la app de Android o la
-    del iPhone, en el de la app. No sale de ahí.</p>
+    del iPhone, en el de la app. PACE no lo envía a ningún sitio.</p>
 
     <h2>Lo que NO hacemos</h2>
     <ul>
-      <li><strong>Sin cuentas.</strong> No hay registro, ni email, ni contraseña.</li>
+      <li><strong>Sin cuentas.</strong> Para usar PACE no hay registro, ni correo, ni contraseña.</li>
       <li><strong>Sin analítica ni rastreo en la app.</strong> No usamos cookies de
       seguimiento, píxeles ni herramientas de medición de terceros.</li>
-      <li><strong>Tus datos no salen de tu dispositivo.</strong> Tu práctica se
-      guarda en tu navegador o en tu móvil; PACE no la recibe ni la almacena
-      en ningún sitio.</li>
+      <li><strong>PACE no recibe tu práctica.</strong> Se guarda en tu navegador
+      o en tu móvil, y solo sale de ahí si tú la llevas a otro sitio: a tu
+      calendario, a una copia o a la copia de seguridad del móvil.</li>
       <li><strong>Sin venta de datos.</strong> No hay datos que vender.</li>
     </ul>
 
@@ -100,18 +100,25 @@
       <li>Con <strong>«Al calendario»</strong>, PACE añade tu día de «A tu ritmo»
       a tu calendario: el del móvil (con el permiso de Android), Google
       Calendar u Outlook (con el permiso que das en Google o en Microsoft), o
-      un archivo que guardas tú. Lo añade como libre: quien vea tu calendario
-      te ve ocupado en tus reuniones, no en tus pausas.</li>
-      <li>Si marcas <strong>«Tener en cuenta mis reuniones»</strong>, PACE lee
-      a qué horas estás ocupado hoy y coloca el día alrededor. Solo guarda esas
-      horas, en tu dispositivo; nunca el título, el lugar ni quién va.</li>
+      un archivo que guardas tú. En el del móvil, PACE escribe en el calendario
+      que elijas; si es de una cuenta que se sincroniza (de Google, de
+      Microsoft…), el móvil lo sube a esa cuenta, como cualquier evento tuyo.</li>
+      <li>Lo añade como <strong>libre y privado</strong>: quien vea tu calendario
+      te ve ocupado en tus reuniones, no en tus pausas, y quien solo pueda verlo
+      no lee qué pausa es. En el calendario del móvil, por ahora, cada pausa va
+      con su nombre.</li>
+      <li>Si marcas <strong>«Tener en cuenta mis reuniones de hoy»</strong>, PACE
+      mira a qué horas estás ocupado hoy y coloca el día alrededor. Solo guarda
+      esas horas, en tu dispositivo. A Google y a Outlook les pide solo las horas
+      y si vas; el calendario del móvil le da cada evento entero, y PACE se queda
+      solo con las horas.</li>
       <li>Si dejas marcado <strong>«Mantenerlo al día solo»</strong>, PACE
       vuelve a escribir tu día en el calendario cada vez que cambia, mientras
       PACE está abierto, y cada pausa lleva un aviso del calendario. Al
       desconectar, deja de hacerlo.</li>
       <li>PACE habla <strong>directamente</strong> con Google o con Microsoft
       desde tu navegador o tu móvil: nada de tu calendario pasa por un
-      servidor de PACE, porque no lo hay. El permiso de Google dura una hora y
+      servidor de PACE. El permiso de Google dura una hora y
       el de Microsoft, como mucho un día; los dos se olvidan al cerrar la
       pestaña y los puedes retirar cuando quieras desde tu cuenta.</li>
       <li>PACE solo borra o cambia los eventos que creó él.</li>
@@ -179,18 +186,44 @@
          conectar el almacén de la lista en Cloudflare, Ez pone aquí con qué nombre la
          guarda (el del aviso legal). Hasta entonces la lista no recoge nada. -->
     <ul>
-      <li>La página <strong>pacegrass.app/premium</strong> cuenta sus visitas, y
-      de qué web llegan, con la analítica de Cloudflare, que no usa cookies ni te
-      sigue de una web a otra. Solo esa página: la app no lleva ninguna.</li>
+      <li>Hoy ninguna página de PACE cuenta sus visitas: ni
+      <strong>pacegrass.app/premium</strong> ni la app llevan analítica. Si un día
+      /premium las cuenta, lo dirá aquí.</li>
       <li>Si dejas tu correo en <strong>«Avísame»</strong>, guardamos el correo, el
       día y el idioma en Cloudflare, el mismo proveedor que sirve la web. Es solo
       para escribirte dos veces: cuando se pueda comprar PACE completo en la web y
       cuando PACE llegue a Google Play y a la App Store. Después del segundo aviso la lista se
-      borra entera.</li>
+      borra entera, y cada correo se borra solo al año de apuntarte, aunque no
+      hayan llegado los dos avisos.</li>
+      <li>Para frenar a los robots, la lista cuenta cuántas veces se apunta alguien
+      desde una misma conexión: cinco por hora como mucho. Para eso guarda un código
+      hecho con tu IP, no la IP, durante una hora en la caché de Cloudflare, y luego
+      se borra solo.</li>
       <li>No se usa para nada más ni se da a nadie. Si quieres salir antes, escribe a
       <!--email_off--><a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a><!--/email_off--> y lo borramos.</li>
       <li>Apuntarte no tiene nada que ver con la app: tu práctica sigue en tu
       dispositivo y PACE no la junta con tu correo.</li>
+    </ul>
+
+    <h2 id="compra">Si compras PACE completo en la web</h2>
+    <!-- Mientras Stripe esté apagado (docs/launch/cobro-web.md), la sección empieza por
+         «Aún no se puede comprar»: esa línea se quita el día que se encienda. -->
+    <p><strong>Aún no se puede comprar en la web.</strong> Cuando se pueda, será así:</p>
+    <ul>
+      <li>Pagas en <strong>Stripe</strong>, que es quien te vende PACE completo en la
+      web: te pide el correo y la forma de pago, te manda el recibo, cobra los
+      impuestos y lleva las devoluciones, con su propia política de privacidad. Si
+      nos escribes por una compra, la buscamos en Stripe.</li>
+      <li>Stripe avisa a la web de PACE de cada pago. De ese aviso, la web guarda solo
+      el número del pedido y el código que te da, ni tu correo ni tu nombre: el de la
+      página de gracias, 90 días; el de una suscripción mensual, mientras siga, y se
+      borra cuando termina.</li>
+      <li>Tu código abre PACE completo y se guarda en tu navegador, como lo demás. Para
+      comprobarlo, PACE no se conecta a nada.</li>
+      <li>Si pagas al mes, cuando se acerca el final de cada mes pagado la app pide a
+      la web de PACE tu código nuevo (como mucho una vez cada seis horas, hasta que
+      llega). Manda solo el código que tienes, nada de tu práctica. Es la única vez
+      que la app habla con un servidor de PACE.</li>
     </ul>
 
     <h2>Lo técnico, con honestidad</h2>
@@ -219,22 +252,22 @@
   <section lang="en">
     <div class="kicker">English</div>
     <h1>Privacy</h1>
-    <p class="fecha">Last updated: October 23, 2026</p>
+    <p class="fecha">Last updated: October 26, 2026</p>
 
     <p><strong>Your data lives on your device.</strong> PACE is a local-first
     app: everything you log (focus minutes, sessions, water glasses,
     achievements, settings) is stored on your device: in your browser's local
-    storage or, if you use the Android or iPhone app, in the app's own storage. It never
-    leaves it.</p>
+    storage or, if you use the Android or iPhone app, in the app's own storage. PACE
+    never sends it anywhere.</p>
 
     <h2>What we do NOT do</h2>
     <ul>
-      <li><strong>No accounts.</strong> No sign-up, no email, no password.</li>
+      <li><strong>No accounts.</strong> Using PACE needs no sign-up, no email and no password.</li>
       <li><strong>No analytics or tracking in the app.</strong> No tracking cookies,
       pixels or third-party measurement tools.</li>
-      <li><strong>Your data stays on your device.</strong> Your practice is
-      stored in your browser or on your phone; PACE never receives it or
-      stores it anywhere.</li>
+      <li><strong>PACE never receives your practice.</strong> It is stored in
+      your browser or on your phone, and only leaves it if you take it
+      somewhere: to your calendar, to a copy or to your phone's backup.</li>
       <li><strong>No data selling.</strong> There is no data to sell.</li>
     </ul>
 
@@ -256,18 +289,26 @@
       <li>With <strong>«To my calendar»</strong>, PACE adds your «At your
       pace» day to your calendar: your phone's (with Android's permission),
       Google Calendar or Outlook (with the permission you grant in Google or
-      Microsoft), or a file you keep. It adds it as free: anyone who sees your
-      calendar sees you busy in your meetings, not in your breaks.</li>
-      <li>If you tick <strong>«Work around my meetings»</strong>, PACE reads
-      when you are busy today and plans the day around it. It only keeps those
-      times, on your device; never the title, the place or who is going.</li>
+      Microsoft), or a file you keep. On your phone, PACE writes to the
+      calendar you choose; if it belongs to an account that syncs (Google,
+      Microsoft…), the phone uploads it to that account, like any event of
+      yours.</li>
+      <li>It adds it as <strong>free and private</strong>: anyone who sees your
+      calendar sees you busy in your meetings, not in your breaks, and anyone who
+      can only view it cannot read which break it is. In your phone's calendar,
+      for now, each break keeps its name.</li>
+      <li>If you tick <strong>«Work around my meetings today»</strong>, PACE
+      looks at when you are busy today and plans the day around it. It only
+      keeps those times, on your device. From Google and Outlook it asks only for
+      the times and whether you are going; your phone's calendar hands it each
+      whole event, and PACE keeps only the times.</li>
       <li>If you leave <strong>«Keep it up to date»</strong> ticked, PACE
       writes your day to your calendar again every time it changes, while PACE
       is open, and each break gets a calendar reminder. When you disconnect,
       it stops.</li>
       <li>PACE talks <strong>directly</strong> to Google or Microsoft from your
-      browser or phone: nothing from your calendar goes through a PACE server,
-      because there is none. The Google permission lasts one hour and the
+      browser or phone: nothing from your calendar goes through a PACE server.
+      The Google permission lasts one hour and the
       Microsoft one, at most one day; both are forgotten when you close the
       tab, and you can revoke them from your account at any time.</li>
       <li>PACE only deletes or changes the events it created.</li>
@@ -330,19 +371,43 @@
 
     <h2 id="avisame-en">The PACE Complete page and the «Notify me» list</h2>
     <ul>
-      <li>The page <strong>pacegrass.app/premium</strong> counts its visits, and
-      which website they come from, with Cloudflare's analytics, which uses no
-      cookies and does not follow you from one website to another. Only that
-      page: the app has none.</li>
+      <li>Today no PACE page counts its visits: neither
+      <strong>pacegrass.app/premium</strong> nor the app carries analytics. If
+      /premium ever counts them, this page will say so.</li>
       <li>If you leave your email in <strong>«Notify me»</strong>, we store the
       email, the date and the language on Cloudflare, the same provider that
       serves the website. It is only to write to you twice: when PACE Complete can
       be bought on the web and when PACE reaches Google Play and the App Store. After the second
-      notice the whole list is deleted.</li>
+      notice the whole list is deleted, and each email deletes itself a year
+      after you sign up, even if both notices have not been sent.</li>
+      <li>To stop bots, the list counts how many times someone signs up from the
+      same connection: five per hour at most. For that it keeps a code made from
+      your IP, not the IP itself, for one hour in Cloudflare's cache, and then it
+      deletes itself.</li>
       <li>It is used for nothing else and given to no one. If you want to leave
       earlier, write to <!--email_off--><a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a><!--/email_off--> and we delete it.</li>
       <li>Signing up has nothing to do with the app: your practice stays on your
       device and PACE never links it to your email.</li>
+    </ul>
+
+    <h2 id="compra-en">If you buy PACE Complete on the web</h2>
+    <p><strong>PACE Complete cannot be bought on the web yet.</strong> When it can,
+    it will work like this:</p>
+    <ul>
+      <li>You pay on <strong>Stripe</strong>, which is the seller of PACE Complete on
+      the web: it asks for your email and payment method, sends you the receipt,
+      charges the taxes and handles refunds, under its own privacy policy. If you
+      write to us about a purchase, we look it up in Stripe.</li>
+      <li>Stripe tells the PACE website about each payment. From that notice, the
+      website keeps only the order number and the code it gives you, not your email
+      or your name: the thank-you page code for 90 days; a monthly subscription's,
+      while it lasts, deleted when it ends.</li>
+      <li>Your code unlocks PACE Complete and is stored in your browser, like
+      everything else. To check it, PACE connects to nothing.</li>
+      <li>If you pay monthly, as each paid month nears its end the app asks the PACE
+      website for your new code (at most once every six hours, until it arrives). It
+      sends only the code you have, nothing about your practice. It is the only time
+      the app talks to a PACE server.</li>
     </ul>
 
     <h2>The technical part, honestly</h2>

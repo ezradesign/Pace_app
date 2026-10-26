@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.178.0</title>
+  <title>PACE · Foco · Cuerpo — v0.179.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4071,7 +4071,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.btn.descargar': 'Descargar',
   'cal.btn.compartir': 'Compartir',
   'cal.reuniones': 'Tener en cuenta mis reuniones de hoy',
-  'cal.reuniones.sub': 'PACE solo lee a qué horas estás ocupado, nunca el título ni quién va.',
+  'cal.reuniones.sub': 'PACE solo guarda a qué horas estás ocupado.',
   'cal.trabajando': 'Un momento…',
   'cal.hecho': 'Hecho: {n} bloques en tu calendario.',
   'cal.hecho.uno': 'Hecho: 1 bloque en tu calendario.',
@@ -4163,7 +4163,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.btn.descargar': 'Download',
   'cal.btn.compartir': 'Share',
   'cal.reuniones': 'Work around my meetings today',
-  'cal.reuniones.sub': 'PACE only reads when you are busy, never the title or who is going.',
+  'cal.reuniones.sub': 'PACE only keeps the times you are busy.',
   'cal.trabajando': 'One moment…',
   'cal.hecho': 'Done: {n} blocks in your calendar.',
   'cal.hecho.uno': 'Done: 1 block in your calendar.',
@@ -6548,7 +6548,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.178.0';
+const PACE_VERSION = 'v0.179.0';
 
 
 
@@ -11053,7 +11053,7 @@ function calendarioIcs(eventos, iso, ahoraMs) {
     l.push('BEGIN:VEVENT', 'UID:pace-' + dia + '-' + e.clave + '@' + CALENDARIO_MARCA, 'DTSTAMP:' + sello,
     'DTSTART:' + calendarioSelloUtc(a), 'DTEND:' + calendarioSelloUtc(b),
     'SUMMARY:' + calendarioEscapa(e.titulo), 'DESCRIPTION:' + calendarioEscapa(e.texto),
-    'TRANSP:TRANSPARENT', 'END:VEVENT');
+    'TRANSP:TRANSPARENT', 'CLASS:PRIVATE', 'END:VEVENT');
   });
   l.push('END:VCALENDAR');
   return l.map(calendarioPliega).join('\r\n') + '\r\n';
@@ -11356,10 +11356,18 @@ function calendarioMsInstante(x) {
 
 
 
+
+
+var CALENDARIO_GOOGLE_REUNIONES = 'items(start,end,status,transparency,extendedProperties/private,attendees(self,responseStatus))';
+
+
+
 function calendarioWebReuniones(prov, token, desde, hasta) {
   var a = new Date(desde).toISOString(),b = new Date(hasta).toISOString();
   if (prov === 'google') {
-    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({ timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250' })).
+    return calendarioFetch(prov, token, CALENDARIO_GOOGLE_API + '?' + calendarioQuery({
+      timeMin: a, timeMax: b, singleEvents: 'true', maxResults: '250', fields: CALENDARIO_GOOGLE_REUNIONES
+    })).
     then(function (j) {
       return (j && j.items || []).filter(function (e) {
         if (!e.start || !e.start.dateTime || e.status === 'cancelled' || e.transparency === 'transparent') return false;
@@ -11410,16 +11418,17 @@ function calendarioWebBorrar(prov, token, iso, ahoraMs) {
 
 
 
+
 function calendarioWebCuerpo(prov, ev, solo) {
   var a = new Date(ev.inicio).toISOString(),b = new Date(ev.fin).toISOString();
   var aviso = !!(solo && ev.aviso);
   if (prov === 'google') {
     return { summary: ev.titulo, description: ev.texto, start: { dateTime: a }, end: { dateTime: b }, transparency: 'transparent',
-      reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
+      visibility: 'private', reminders: { useDefault: false, overrides: aviso ? [{ method: 'popup', minutes: 0 }] : [] } };
   }
   var cuerpo = { subject: ev.titulo, body: { contentType: 'text', content: ev.texto },
     start: { dateTime: a.replace(/Z$/, ''), timeZone: 'UTC' }, end: { dateTime: b.replace(/Z$/, ''), timeZone: 'UTC' },
-    showAs: 'free', isReminderOn: aviso };
+    showAs: 'free', sensitivity: 'private', isReminderOn: aviso };
   if (aviso) cuerpo.reminderMinutesBeforeStart = 0;
   return cuerpo;
 }
@@ -11488,7 +11497,7 @@ Object.assign(window, {
   calendarioPaseHasta, calendarioPaseSinGesto, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCrear, calendarioWebCambiar,
   calendarioWebQuitar, calendarioWebListar, calendarioMsInstante
 });
-;Object.assign(window, { CALENDARIO_IDS, CALENDARIO_VUELTA_CLAVE, CALENDARIO_PASE_CLAVE, CALENDARIO_MS_PROP, CALENDARIO_MS_CLAVE, CALENDARIO_MS_SCOPE, CALENDARIO_MS_TOKEN, CALENDARIO_PROVEEDORES, calendarioQuery, calendarioVuelta, calendarioWebDisponible, calendarioPaseLeer, calendarioPaseGuardado, calendarioPaseGuardar, calendarioPaseHasta, calendarioPaseSinGesto, calendarioAleatorio, calendarioBase64Url, calendarioPedirPase, calendarioEsperarVuelta, calendarioFetch, CALENDARIO_GOOGLE_API, CALENDARIO_GRAPH, calendarioMsInstante, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCuerpo, calendarioWebCrear, calendarioWebUrlEvento, calendarioWebCambiar, calendarioWebQuitar, calendarioWebListar });
+;Object.assign(window, { CALENDARIO_IDS, CALENDARIO_VUELTA_CLAVE, CALENDARIO_PASE_CLAVE, CALENDARIO_MS_PROP, CALENDARIO_MS_CLAVE, CALENDARIO_MS_SCOPE, CALENDARIO_MS_TOKEN, CALENDARIO_PROVEEDORES, calendarioQuery, calendarioVuelta, calendarioWebDisponible, calendarioPaseLeer, calendarioPaseGuardado, calendarioPaseGuardar, calendarioPaseHasta, calendarioPaseSinGesto, calendarioAleatorio, calendarioBase64Url, calendarioPedirPase, calendarioEsperarVuelta, calendarioFetch, CALENDARIO_GOOGLE_API, CALENDARIO_GRAPH, calendarioMsInstante, CALENDARIO_GOOGLE_REUNIONES, calendarioWebReuniones, calendarioWebBorrar, calendarioWebCuerpo, calendarioWebCrear, calendarioWebUrlEvento, calendarioWebCambiar, calendarioWebQuitar, calendarioWebListar });
 })();
 </script>
   <script>
@@ -12126,7 +12135,7 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   var claveDe = {};
   Object.keys(escritos || {}).forEach(function (k) {if (escritos[k] && escritos[k].id) claveDe[escritos[k].id] = k;});
   var d = calendarioDiaMs(iso);
-  return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
+  return paceAndroidCalendarioEventos(d[0], d[1], calendarioAndroidEsDePace).then(function (lista) {
     return lista.filter(calendarioAndroidEsDePace).map(function (e) {
       return { id: e.id, clave: claveDe[e.id] || null, inicio: e.inicio, fin: e.fin, titulo: e.titulo, texto: e.texto, aviso: e.aviso };
     });
@@ -16666,12 +16675,19 @@ function paceAndroidCalendarios() {
 
 
 
-function paceAndroidCalendarioEventos(desde, hasta) {
+
+
+
+
+function paceAndroidCalendarioEventos(desde, hasta, propio) {
   return paceAndroidLlamar('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
     return (r && r.result || []).map(function (e) {
-      return { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
-        todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled', titulo: e.title || '',
-        texto: e.description || '', aviso: (e.alerts || []).length > 0 };
+      var ev = { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
+        todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled' };
+      if (typeof propio === 'function' && propio(ev)) {
+        ev.titulo = e.title || '';ev.texto = e.description || '';ev.aviso = (e.alerts || []).length > 0;
+      }
+      return ev;
     });
   });
 }
