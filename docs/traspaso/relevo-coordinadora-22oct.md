@@ -279,15 +279,18 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 hoja de Ez. El criterio: primero lo que ya está en marcha; luego lo que otro punto necesita, como la seguridad
 antes de cobrar o los precios antes de la bienvenida; lo que espera algo de Ez, cuando llegue; lo pequeño, en los
 huecos.
-1. **Mueve y Estira 0.176.0** (en marcha, `mueve-estira`), luego la revisión de ChatGPT de los textos nuevos (avisar a
-   Ez) y los dibujos de Ez (punto 6 de abajo).
-2. **N2 y la maqueta de N5-N8, y mirar N9** (en marcha, `franjas-maqueta`).
-3. **La seguridad de PACE completo** (S1, S2, S4, S5; punto 10).
-4. **Cobrar en la web sin Stripe** (punto 14, la parte web): gracias, k2, aviso de fin de prueba, «Gestionar», sin
-   conexión. Se enchufa Stripe cuando Ez tenga la cuenta («Stripe, paso a paso» en la hoja).
-5. **Lo que prometemos sobre los datos** (P1-P5, punto 4) junto con lo que cambia al cobrar, en `privacy.html`. Antes
-   de conectar «Avísame» y de vender.
-6. **Montar lo que Ez elija de N5-N8** (el runner es de `mueve-estira`: después de juntar 0.176.0) y arreglar N9.
+1. ~~Mueve y Estira~~ **HECHO** (0.175.2 y 0.176.0, 24-25 oct.). Quedan la revisión de ChatGPT de los textos nuevos
+   (publicada, Ez la manda: https://claude.ai/artifact/DuBukvPPSULtiMdtJ9nTn1) y los dibujos de Ez (prompts en
+   https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM).
+2. ~~N2 y la maqueta de N5-N8~~ **HECHO** (0.176.1 y 0.176.2, 25-26 oct.). N9 no se reproduce: espera un vídeo de Ez.
+3. ~~La seguridad de PACE completo~~ **HECHO** (0.177.0, 26 oct.; S1, S2, S4, S5, S6).
+4. **Cobrar en la web sin Stripe**, EN MARCHA en `seguridad-cobro` con el 1A 2A 3A de Ez: gracias, k2, aviso de fin de
+   prueba como hoja, «Gestionar» en su fila, sin conexión y la renovación de la mensual. Se enchufa Stripe cuando Ez
+   tenga la cuenta («Stripe, paso a paso» en la hoja).
+5. **Lo siguiente: lo que prometemos sobre los datos** (P1-P5, punto 4) junto con lo que cambia al cobrar y la huella de
+   IP de una hora que guarda «Avísame» para su límite (S4), en `privacy.html`. Antes de conectar «Avísame» y de vender;
+   enseñárselo a Ez antes.
+6. ~~Montar lo que Ez elija de N5-N8~~ **HECHO** con la 2 (0.176.2).
 7. **Android a fondo**, con el móvil de Ez: los avisos A1-A4 (punto 11), N4 (aviso con el móvil bloqueado) y el puente
    del calendario con S6 (punto 9).
 8. **La bienvenida y los Ajustes** (A1-A5, A7, punto 5) y, al final de la bienvenida, PACE completo con los dos

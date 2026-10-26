@@ -71,11 +71,12 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 > auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
 
 **Orden vigente desde el 25 oct. 2026 (Ez: «ordena el roadmap de la manera más lógica»).** Es la lista «El orden
-lógico hasta v1» de `docs/traspaso/relevo-coordinadora-22oct.md`, la misma del camino de la hoja de Ez. Primero lo que
-está en marcha (Mueve y Estira; las franjas de Android y su maqueta). Después, la seguridad de PACE completo, cobrar en
-la web sin esperar a Stripe y lo que prometemos sobre los datos. Siguen lo que Ez elija de la maqueta, Android a fondo,
-la bienvenida con los precios, «Qué te ayuda», la hora y la medianoche y el llavero. Al final, cobrar en Android y en
-iPhone, y v1. Las fases de abajo quedan como detalle de cada pieza.
+lógico hasta v1» de `docs/traspaso/relevo-coordinadora-22oct.md`, la misma del camino de la hoja de Ez. **Hecho a 26
+oct.**: Mueve y Estira (0.175.2, 0.176.0), las franjas de Android y los cuatro cambios de la maqueta (0.176.1, 0.176.2)
+y la seguridad de PACE completo (0.177.0). **En marcha**: cobrar en la web sin esperar a Stripe. **Lo siguiente**: lo
+que prometemos sobre los datos. Siguen Android a fondo, la bienvenida con los precios, «Qué te ayuda», la hora y la
+medianoche y el llavero. Al final, cobrar en Android y en iPhone, y v1. Las fases de abajo quedan como detalle de cada
+pieza.
 
 ### Marco de decisión (Ez, 5 de octubre de 2026 · s200)
 
