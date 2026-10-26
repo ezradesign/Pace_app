@@ -4,6 +4,15 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 26 oct.: lo que prometemos sobre los datos (v0.179.0), en su rama, con el 1A 2A 3A de Ez
+
+Rama `claude/privacidad-p1-p5-a973d0` (puerto 8806). Ez eligió la recomendada sobre
+https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY («Me vale la privacidad»): 1A las pausas, libres y privadas en Google,
+Outlook y el archivo (en el calendario del móvil, cuando Ez pruebe una pieza nativa que falta); 2A la compra en la web
+contada ya en `privacy.html`, empezando por «Aún no se puede comprar en la web» (esa línea se quita al encender Stripe);
+3A los correos de «Avísame», un año. De una reunión, PACE solo pide y guarda las horas. Play y App Store Connect no
+cambian ninguna respuesta. El detalle: `docs/traspaso/archivos/privacidad-26oct/LEEME.md`.
+
 ## 25 oct.: Mueve y Estira en capas (v0.176.0), lista en su rama a la espera de Ez
 
 Rama `claude/mueve-estira-capas-e9ab74` (carpeta `.claude/worktrees/mueve-estira-capas-e9ab74`, puerto 8805). La parte 1
@@ -90,7 +99,7 @@ que coordinó esta noche) y https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (l
   móvil»): logros solo con la sesión entera. Con el aro corto, la pausa a los 15 min de foco, EN ESPERA:
   Ez lo consulta con ChatGPT. Lo demás (M1-M7), en `STATE.md`.
 - **La auditoría de privacidad de ChatGPT** (P1-P5), comprobada: nada sale a escondidas, cinco frases
-  prometen de más. La respuesta «No» de Play se mantiene. En cola.
+  prometen de más. La respuesta «No» de Play se mantiene. Hecha en v0.179.0 (26 oct., arriba).
 ## 14 oct. 2026, tarde: la coordinadora es la sesión de `caza-sesiones`, en esta cuenta
 
 Manda sobre todo lo de abajo. Ez lo decidió: mientras se siga en esta cuenta, coordina la sesión que

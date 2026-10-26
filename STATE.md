@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.178.0 · 26 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.179.0 · 26 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -93,7 +93,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Copiar `PACE-llave-play` y `PACE-llave-licencias` a su disco duro y mandar a cada tester su enlace
   de `codigos-tester.csv` (funcionan en la web).
 - «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` conectado como `AVISAME` y el
-  token de Web Analytics solo para /premium; mirar el registro previo de Play.
+  token de Web Analytics solo para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el
+  registro previo de Play.
 - Las altas de PACE en Google Cloud y Microsoft Entra, con sus dos ids (`docs/CALENDARIO_ALTAS.md`; para el
   llavero, el cliente de Google como «aplicación web» con su secreto).
 - Leer `privacy.html` (es pública) y probar en su Android el calendario que se mantiene solo.
@@ -147,17 +148,12 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   maqueta https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero) en v0.176.2. Quedan N4 (aviso con el móvil bloqueado)
   y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). Detalle en la cola de
   `docs/traspaso/relevo-coordinadora-22oct.md`, punto 1c.
-- **Lo que prometemos sobre los datos** (ChatGPT, 22 oct., comprobado en el código; nada se envía a
-  escondidas, pero hay frases que prometen de más). La respuesta «No» de Play se mantiene: escribir en el
-  calendario del móvil es pasarlo a otra app, que Play llama compartir y exime cuando lo pide la persona;
-  `/premium` y «Avísame» no van en el APK. P1 `contenido-de-la-app.md` y `privacy.html` dicen que el
-  calendario «no sale del móvil», y si esa cuenta sincroniza, sube a su nube · P2 «nunca el título ni
-  quién va» (`cal.reuniones.sub`) no es cierto: Google web pide el evento entero (mira los asistentes) y el
-  puente de Android devuelve título y texto (S6); prometer «solo guarda las horas» y pedir menos campos ·
-  P3 los eventos van como libres, no como privados, con el nombre de la pausa: decide Ez · P4
-  `privacy.html` dice que /premium cuenta visitas y el script aún no está (espera el token de Ez) · P5
-  «Avísame» guarda el correo sin caducidad (`functions/api/avisame.js`), antes de conectar la lista.
-  Después de juntar el calendario, que también toca `calendario.js`.
+- **Lo que prometemos sobre los datos** (P1-P5, ChatGPT, 22 oct.): **hecho en v0.179.0** (26 oct., rama
+  `claude/privacidad-p1-p5-a973d0`, a juntar) con el 1A 2A 3A de Ez sobre
+  https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY. Queda la 1A en el calendario del móvil: marcar privado lo
+  que PACE escribe ahí pide una pieza nativa propia (el complemento no tiene `ACCESS_LEVEL`) que Ez prueba en su
+  Android; hasta entonces `privacy.html` dice que ahí cada pausa va con su nombre. Play y App Store no cambian
+  ninguna respuesta hasta la compra dentro de las apps.
 - La voz de Respira por `<audio>` (sin Web Audio): `paceVozIntenta` da por buena la señal antes de
   que `play()` arranque, y si falla no suena ni el tono de respaldo (auditoría externa, 21 oct.; el
   comentario de `Sound.voz.jsx` ya lo avisa).
