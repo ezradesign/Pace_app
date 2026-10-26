@@ -19,6 +19,13 @@
 
 ---
 
+## Cobrar en la web: 1A 2A 3A (Ez, 26 oct. 2026)
+
+Sobre la maqueta https://claude.ai/artifact/RE7fBBgo79RhA34a5igCoV. **1A**: la página de gracias con «Abrir PACE con tu
+código» de un toque, y el código con Copiar, Descargar y Mandármelo. **2A**: el aviso dos días antes de que acabe la
+prueba es una hoja al abrir PACE, sin lista de ventajas, con «Gestionar la suscripción» y «Seguir con la prueba».
+**3A**: «Gestionar» en su propia fila, debajo de «PACE completo · Hasta el…». Lo monta la sesión `seguridad-cobro`.
+
 ## Mueve y Estira, cómo quedan: 1A 2A 3A 4A (Ez, 23 oct. 2026, noche)
 
 Sobre la página con fotos de la app real (https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE,
