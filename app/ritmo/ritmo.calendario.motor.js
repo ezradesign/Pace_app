@@ -116,7 +116,7 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   var claveDe = {};
   Object.keys(escritos || {}).forEach(function (k) { if (escritos[k] && escritos[k].id) claveDe[escritos[k].id] = k; });
   var d = calendarioDiaMs(iso);
-  return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
+  return paceAndroidCalendarioEventos(d[0], d[1], calendarioAndroidEsDePace).then(function (lista) {
     return lista.filter(calendarioAndroidEsDePace).map(function (e) {
       return { id: e.id, clave: claveDe[e.id] || null, inicio: e.inicio, fin: e.fin, titulo: e.titulo, texto: e.texto, aviso: e.aviso };
     });

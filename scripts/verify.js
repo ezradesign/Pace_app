@@ -52,6 +52,8 @@ var licencia = require('./verify.licencia.js');
 var autoria = require('./verify.autoria.js');
 /* Que pacegrass.app publique solo la app (dist/) y que lleve todo lo que precarga sw.js. */
 var web = require('./verify.web.js');
+/* Que lo que privacy.html dice de /premium y de «Avísame» sea lo que pasa. */
+var privacidad = require('./verify.privacidad.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -417,7 +419,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -435,6 +437,7 @@ function main() {
   licencia.tandaLicencia({ ROOT: ROOT, falla: falla, ok: ok, info: info, rel: rel });
   autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   web.tandaWeb({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  privacidad.tandaPrivacidad({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

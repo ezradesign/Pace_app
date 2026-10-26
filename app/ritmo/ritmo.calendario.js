@@ -121,7 +121,7 @@ function calendarioIcs(eventos, iso, ahoraMs) {
     l.push('BEGIN:VEVENT', 'UID:pace-' + dia + '-' + e.clave + '@' + CALENDARIO_MARCA, 'DTSTAMP:' + sello,
       'DTSTART:' + calendarioSelloUtc(a), 'DTEND:' + calendarioSelloUtc(b),
       'SUMMARY:' + calendarioEscapa(e.titulo), 'DESCRIPTION:' + calendarioEscapa(e.texto),
-      'TRANSP:TRANSPARENT', 'END:VEVENT');
+      'TRANSP:TRANSPARENT', 'CLASS:PRIVATE', 'END:VEVENT');
   });
   l.push('END:VCALENDAR');
   return l.map(calendarioPliega).join('\r\n') + '\r\n';

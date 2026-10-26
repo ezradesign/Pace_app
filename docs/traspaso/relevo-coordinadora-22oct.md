@@ -293,7 +293,7 @@ huecos.
 4. ~~Cobrar en la web sin Stripe~~ **HECHO** (0.178.0, 26 oct., merge d6dc3fd; suite 876 en verde) con el 1A 2A 3A de Ez: gracias, k2, aviso de fin de
    prueba como hoja, «Gestionar» en su fila, sin conexión y la renovación de la mensual. Se enchufa Stripe cuando Ez
    tenga la cuenta («Stripe, paso a paso» en la hoja).
-5. **Lo siguiente: lo que prometemos sobre los datos** (P1-P5, punto 4) junto con lo que cambia al cobrar y la huella de
+5. ~~Lo que prometemos sobre los datos~~ **HECHO** (0.179.0, 26 oct., merge 23086f7; suite 881 en verde; 1A 2A 3A de Ez; lo privado en el calendario del móvil, con la pieza nativa de «Android a fondo») (P1-P5, punto 4) junto con lo que cambia al cobrar y la huella de
    IP de una hora que guarda «Avísame» para su límite (S4), en `privacy.html`. Antes de conectar «Avísame» y de vender;
    enseñárselo a Ez antes.
 6. ~~Montar lo que Ez elija de N5-N8~~ **HECHO** con la 2 (0.176.2).

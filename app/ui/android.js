@@ -252,13 +252,20 @@ function paceAndroidCalendarios() {
 }
 
 /* Los eventos entre dos instantes (ms):
-   [{ id, calendario, inicio, fin, todoElDia, libre, cancelado, titulo, texto, aviso }]. */
-function paceAndroidCalendarioEventos(desde, hasta) {
+   [{ id, calendario, inicio, fin, todoElDia, libre, cancelado }]. El complemento los
+   da enteros; de aquí solo salen las horas y lo que decide si ocupan. El título, el
+   texto y el aviso, solo de los que `propio(e)` reconoce como de PACE, que el
+   calendario que se mantiene solo compara con lo que escribiría: de una reunión,
+   PACE no se queda ni con el título ni con quién va. */
+function paceAndroidCalendarioEventos(desde, hasta, propio) {
   return paceAndroidLlamar('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
     return ((r && r.result) || []).map(function (e) {
-      return { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
-               todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled', titulo: e.title || '',
-               texto: e.description || '', aviso: (e.alerts || []).length > 0 };
+      var ev = { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
+                 todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled' };
+      if (typeof propio === 'function' && propio(ev)) {
+        ev.titulo = e.title || ''; ev.texto = e.description || ''; ev.aviso = (e.alerts || []).length > 0;
+      }
+      return ev;
     });
   });
 }

@@ -25,13 +25,18 @@
      la hora, así que la IP no se guarda en ningún sitio. Si la caché falla, la lista
      sigue abierta: el límite es para robots, no puede cerrar la puerta a nadie.
 
-   Lo que se guarda y para qué lo cuenta `privacy.html` (#avisame). Cloudflare la sirve
-   como módulo: el `export` es su formato, no el de la app. */
+   CADA CORREO SE BORRA SOLO AL AÑO de apuntarse (`expirationTtl` del almacén), aunque
+   no hayan llegado los dos avisos: sin fecha, un correo de una lista olvidada se
+   quedaba para siempre. El repetido no lo alarga, porque no se vuelve a escribir.
+
+   Lo que se guarda, para qué y cuánto dura lo cuenta `privacy.html` (#avisame).
+   Cloudflare la sirve como módulo: el `export` es su formato, no el de la app. */
 
 const CORREO = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
 
 const CUERPO_MAX = 2048;
 const INTENTOS_POR_HORA = 5;
+const AVISAME_CADUCA_S = 365 * 24 * 60 * 60;
 
 function respuesta(datos, estado) {
   return new Response(JSON.stringify(datos), {
@@ -83,6 +88,6 @@ export async function onRequestPost({ request, env }) {
   if (correo.length > 254 || !CORREO.test(correo)) return respuesta({ ok: false, motivo: 'correo' }, 400);
   if (await env.AVISAME.get(correo)) return respuesta({ ok: true });
   const idioma = datos.idioma === 'en' ? 'en' : 'es';
-  await env.AVISAME.put(correo, JSON.stringify({ fecha: new Date().toISOString().slice(0, 10), idioma }));
+  await env.AVISAME.put(correo, JSON.stringify({ fecha: new Date().toISOString().slice(0, 10), idioma }), { expirationTtl: AVISAME_CADUCA_S });
   return respuesta({ ok: true });
 }
