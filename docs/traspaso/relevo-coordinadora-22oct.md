@@ -284,7 +284,7 @@ huecos.
    https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM).
 2. ~~N2 y la maqueta de N5-N8~~ **HECHO** (0.176.1 y 0.176.2, 25-26 oct.). N9 no se reproduce: espera un vídeo de Ez.
 3. ~~La seguridad de PACE completo~~ **HECHO** (0.177.0, 26 oct.; S1, S2, S4, S5, S6).
-4. **Cobrar en la web sin Stripe**, EN MARCHA en `seguridad-cobro` con el 1A 2A 3A de Ez: gracias, k2, aviso de fin de
+4. ~~Cobrar en la web sin Stripe~~ **HECHO** (0.178.0, 26 oct., merge d6dc3fd; suite 876 en verde) con el 1A 2A 3A de Ez: gracias, k2, aviso de fin de
    prueba como hoja, «Gestionar» en su fila, sin conexión y la renovación de la mensual. Se enchufa Stripe cuando Ez
    tenga la cuenta («Stripe, paso a paso» en la hoja).
 5. **Lo siguiente: lo que prometemos sobre los datos** (P1-P5, punto 4) junto con lo que cambia al cobrar y la huella de
