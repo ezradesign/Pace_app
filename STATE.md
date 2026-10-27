@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.180.0 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.181.0 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -52,8 +52,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
    20 oct.). Y, del calendario total en la web, **el llavero** (Ez, 18 oct.; espera sus
    altas). La revisión de los ejercicios y el motor de la semana, hechos; lo total con PACE
    cerrado, después de v1.
-3. **Fase 6, tras /premium**: **cobrar en la web sin Stripe, hecho en la rama `claude/seguridad-cobro-web-1fa8a6`**
-   (26 oct., a juntar): la firma con k2 en una función, la página de gracias (1A de Ez), el aviso dos días antes del
+3. **Fase 6, tras /premium**: **cobrar en la web sin Stripe, en `main` con v0.178.0**
+   (26 oct.): la firma con k2 en una función, la página de gracias (1A de Ez), el aviso dos días antes del
    fin de la prueba (2A), «Gestionar» en Ajustes (3A), la renovación de la mensual y «sin red» frente a «terminada».
    Apagado hasta que Ez tenga Stripe y siga `docs/launch/cobro-web.md` (k2, Cloudflare y los enlaces). Falta la
    invitación con los botones de compra y lo legal de /premium.
@@ -121,8 +121,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   arriba pregunta antes de dejar un Foco empezado, pero no una pausa empezada (pide un texto nuevo).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
   coordinadora junta): «Tus rutinas» y Estadísticas, en `main` con v0.174.4 (22 oct., con el sí de Ez y la
-  frase que eligió para la pared opcional) · **bienvenida y Ajustes, hechos en v0.180.0** (en su rama, a juntar con
-  el sí de Ez; con la 1C 2A 3A que eligió) (A1 el idioma elegido en la bienvenida no quita
+  frase que eligió para la pared opcional) · **bienvenida y Ajustes, en `main` con v0.180.0** (27 oct., con la 1C 2A 3A
+  que eligió Ez y su sí sobre las fotos) (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
   cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; A8 y A9, en
@@ -131,9 +131,10 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
   programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
-  límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto), **hechos en v0.177.0**
-  (en su rama, a juntar con el sí de Ez); S3, código portable, es la decisión de Ez · **la hora y la medianoche** antes de marzo (H1-H3 la hora repetida del 25 oct.,
-  H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió) ·
+  límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto), **en `main` con v0.177.0**
+  (con el sí de Ez); S3, código portable, es la decisión de Ez · **la hora y la medianoche** (H1-H3 la hora repetida del 25 oct.,
+  H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió),
+  **en `main` con v0.181.0** y la voz de Respira (27 oct., con el sí de Ez; `tests/hora-y-medianoche.spec.js`) ·
   **el puente del calendario de Android** (de C2, 22 oct.): `paceAndroidLlamar` se traga los
   errores, así que una lista que falla se lee como un calendario vacío, PACE puede volver a crear lo
   que ya estaba y en Android nunca sale «No se pudo».
@@ -150,15 +151,12 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   maqueta https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero) en v0.176.2. Quedan N4 (aviso con el móvil bloqueado)
   y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). Detalle en la cola de
   `docs/traspaso/relevo-coordinadora-22oct.md`, punto 1c.
-- **Lo que prometemos sobre los datos** (P1-P5, ChatGPT, 22 oct.): **hecho en v0.179.0** (26 oct., rama
-  `claude/privacidad-p1-p5-a973d0`, a juntar) con el 1A 2A 3A de Ez sobre
+- **Lo que prometemos sobre los datos** (P1-P5, ChatGPT, 22 oct.): **en `main` con v0.179.0** (26 oct.)
+  con el 1A 2A 3A de Ez sobre
   https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY. Queda la 1A en el calendario del móvil: marcar privado lo
   que PACE escribe ahí pide una pieza nativa propia (el complemento no tiene `ACCESS_LEVEL`) que Ez prueba en su
   Android; hasta entonces `privacy.html` dice que ahí cada pausa va con su nombre. Play y App Store no cambian
   ninguna respuesta hasta la compra dentro de las apps.
-- La voz de Respira por `<audio>` (sin Web Audio): `paceVozIntenta` da por buena la señal antes de
-  que `play()` arranque, y si falla no suena ni el tono de respaldo (auditoría externa, 21 oct.; el
-  comentario de `Sound.voz.jsx` ya lo avisa).
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
   claves D-1, D-2 y D-3.
 

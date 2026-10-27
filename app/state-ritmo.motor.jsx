@@ -64,7 +64,11 @@ function ritmoMotorEntrada(s, hoy) {
     if (x.type === 'session.completed' && x.payload.module === 'focus') {
       var hasta = ritmoMotorMinuto(x.occurredAt);
       if (hasta == null) return;
-      focos.push({ fecha: x.localDay, desde: Math.max(0, hasta - Math.round((x.payload.elapsedSeconds || 0) / 60)), hasta: hasta });
+      /* La hora de empezar sale del instante en que empezó y no de restar minutos a la de
+         acabar: con un cambio de hora en medio, la resta caía una hora lejos. Si empezó el
+         día anterior, desde la medianoche. */
+      var fin = new Date(x.occurredAt), ini = new Date(fin.getTime() - (x.payload.elapsedSeconds || 0) * 1000);
+      focos.push({ fecha: x.localDay, desde: ini.toDateString() === fin.toDateString() ? ritmoMotorMinuto(ini) : 0, hasta: hasta });
     }
   });
   /* El día que aún no se ha resumido, y la cola que no ha llegado al registro. */

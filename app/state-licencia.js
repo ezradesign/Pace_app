@@ -90,13 +90,19 @@ function paceLicenciaAnulada(datos) {
 }
 
 /* `expiresAt`: una fecha «YYYY-MM-DD» (vale hasta el final de ese día, en la hora
-   de quien lo usa) o milisegundos. Sin él, para siempre. */
+   de quien lo usa) o milisegundos. Sin él, para siempre. El final del día es la
+   medianoche del siguiente por calendario y no 24 h después: el día del cambio de
+   hora dura 25 h (el código caducaba a las 23:00) o 23 (valía hasta la 1:00). */
 function paceLicenciaCaducada(datos, ahora) {
   var e = datos.expiresAt;
   if (e == null) return false;
-  var fin = typeof e === 'number' ? e
-    : (typeof e === 'string' && typeof parseLocalDateKey === 'function')
-      ? parseLocalDateKey(e).getTime() + 24 * 3600 * 1000 : NaN;
+  var fin = NaN;
+  if (typeof e === 'number') fin = e;
+  else if (typeof e === 'string' && typeof parseLocalDateKey === 'function') {
+    var d = parseLocalDateKey(e);
+    d.setDate(d.getDate() + 1);
+    fin = d.getTime();
+  }
   return !(fin > ahora);
 }
 

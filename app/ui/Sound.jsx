@@ -330,15 +330,20 @@ function playSound(name) {
        standalone), navegador sin `Audio`— se sigue al sintetizador de siempre,
        que es lo que sonaba antes de esta sesión.
        Se lee de `window` en la llamada, no al definir, para no atarse al orden
-       de carga: el artefacto son 109 scripts en tareas separadas (s162). */
+       de carga: el artefacto son 109 scripts en tareas separadas (s162).
+       El tono va también como respaldo: si la voz dijo que sí por el `<audio>` y
+       su `play()` falla después, suena él (Sound.voz.jsx). */
+    var sintetiza = function () {
+      var ctx = getCtx();
+      if (!ctx) return;
+      ensureRunning(ctx);
+      var recipe = SOUND_RECIPES[name];
+      if (!recipe) return;
+      recipe.apply(null, [ctx, ctx.currentTime].concat(args));
+    };
     if (typeof window.paceVozIntenta === 'function' &&
-        window.paceVozIntenta(name, args[0])) return;
-    var ctx = getCtx();
-    if (!ctx) return;
-    ensureRunning(ctx);
-    var recipe = SOUND_RECIPES[name];
-    if (!recipe) return;
-    recipe.apply(null, [ctx, ctx.currentTime].concat(args));
+        window.paceVozIntenta(name, args[0], function () { try { sintetiza(); } catch (e) {} })) return;
+    sintetiza();
   } catch (e) {
     /* Silencio total: el sonido nunca debe romper la app. */
   }
