@@ -110,12 +110,6 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
 ## Deuda conocida, sin fecha
 
-- **Desde el 27 oct.**, comprobar por tamaño que pacegrass.app ya no sirve /STATE.md, /CLAUDE.md,
-  /docs/traspaso/LEEME.md, /docs/product/DECISIONES_PRODUCTO.md ni /package.json. Tras pasar a
-  `dist/` (20 oct.), Pages siguió dando la copia vieja de lo ya pedido (`s-maxage=604800`, una
-  semana): no la quitan ni un despliegue nuevo ni Purge Everything de la zona, que Ez hizo. Lo
-  demás ya da la app.
-
 - A 320×568 la home del móvil pide scroll (Ez lo acepta) · las escenas con scroll anteriores a
   v0.130.0.
 - En «A tu ritmo»: el cierre que nunca es «Ahora», la lectura C (espera a que `origin` tenga semanas
