@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos } = require('./helpers');
 const { CLAVE_EVENTOS, leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -102,6 +102,7 @@ test('si falla la escritura del estado, el import ABORTA sin tocar los eventos',
      prueba falla por una razon que no es la que cree. */
   await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
+  await abrirTusDatos(page);
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-rota.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 

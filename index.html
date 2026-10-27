@@ -3233,7 +3233,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.sec.oir': 'Oír',
   'settings.sec.sesiones': 'Sesiones',
   'settings.sec.datos': 'Tus datos',
-  'settings.datos.abrir': 'Copias, borrar y código',
+  'settings.datos.abrir': 'Copias, borrar y PACE completo',
+  'settings.visita': 'Visita guiada',
   'settings.datos.volver': 'Volver a Ajustes',
 
 
@@ -3291,9 +3292,9 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'settings.data.export': 'Exportar una copia',
-  'settings.data.export.title': 'Descarga un JSON con tu estado actual',
+  'settings.data.export.title': 'Descarga una copia de tus datos',
   'settings.data.import': 'Importar una copia',
-  'settings.data.import.title': 'Sobreescribe tus datos con un backup',
+  'settings.data.import.title': 'Cambia tus datos por los de una copia',
   'settings.data.reset': 'Borrar todos mis datos',
   'settings.data.rescate': 'Descargar la copia de rescate',
   'settings.data.rescate.title': 'Lo que no se pudo leer al arrancar, tal cual estaba',
@@ -3303,18 +3304,25 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.foot.app': 'Todo vive en tu móvil.',
   'settings.legal.safety': 'Seguridad',
   'settings.legal.privacy': 'Privacidad',
-  'settings.msg.exported': 'Backup descargado.',
+  'settings.msg.exported': 'Copia descargada.',
   'settings.msg.exported.app': 'Copia lista: elige dónde guardarla.',
   'settings.msg.export.err': 'No se pudo exportar.',
   'settings.msg.export.cancel': 'Copia cancelada.',
   'settings.msg.imported': 'Importado — recargando…',
-  'settings.msg.import.invalid': 'Archivo no reconocido.',
-  'settings.msg.import.json.err': 'JSON inválido.',
+  'settings.msg.import.invalid': 'Ese archivo no es una copia de PACE.',
+  'settings.msg.import.json.err': 'Ese archivo no se puede leer.',
   'settings.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
   'settings.msg.import.partial': 'Se importaron tus datos, pero no el registro de tus sesiones. Puedes volver a importar la copia.',
   'settings.msg.reset.err': 'No se pudo borrar. Tus datos siguen intactos.',
-  'settings.confirm.reset': '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
-  'settings.confirm.import': '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.'
+  'settings.aviso.no': 'Cancelar',
+  'settings.reset.titulo': '¿Borrar todos tus datos?',
+  'settings.reset.cuerpo': 'Se borra todo lo que PACE guarda en este navegador: tus días, tus rutinas y tus logros. No se puede deshacer. Si quieres, exporta antes una copia.',
+  'settings.reset.cuerpo.app': 'Se borra todo lo que PACE guarda en este móvil: tus días, tus rutinas y tus logros. No se puede deshacer. Si quieres, exporta antes una copia.',
+  'settings.reset.si': 'Borrar todo',
+  'settings.import.titulo': '¿Cambiar tus datos por los de la copia?',
+  'settings.import.cuerpo': 'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye, y no se puede deshacer.',
+  'settings.import.si': 'Importar',
+  'settings.import.parcial.titulo': 'Falta el registro de tus sesiones'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3323,7 +3331,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.sec.oir': 'Listen',
   'settings.sec.sesiones': 'Sessions',
   'settings.sec.datos': 'Your data',
-  'settings.datos.abrir': 'Copies, delete and code',
+  'settings.datos.abrir': 'Copies, delete and PACE Complete',
+  'settings.visita': 'Guided tour',
   'settings.datos.volver': 'Back to settings',
 
 
@@ -3380,9 +3389,9 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'settings.data.export': 'Export a copy',
-  'settings.data.export.title': 'Download a JSON with your current state',
+  'settings.data.export.title': 'Download a copy of your data',
   'settings.data.import': 'Import a copy',
-  'settings.data.import.title': 'Overwrite your data with a backup',
+  'settings.data.import.title': 'Replace your data with a copy',
   'settings.data.reset': 'Delete all my data',
   'settings.data.rescate': 'Download the rescue copy',
   'settings.data.rescate.title': 'What could not be read at startup, exactly as it was',
@@ -3392,18 +3401,25 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.foot.app': 'Everything lives on your phone.',
   'settings.legal.safety': 'Safety',
   'settings.legal.privacy': 'Privacy',
-  'settings.msg.exported': 'Backup downloaded.',
+  'settings.msg.exported': 'Copy downloaded.',
   'settings.msg.exported.app': 'Copy ready: choose where to save it.',
   'settings.msg.export.err': 'Could not export.',
   'settings.msg.export.cancel': 'Copy cancelled.',
   'settings.msg.imported': 'Imported — reloading…',
-  'settings.msg.import.invalid': 'File not recognized.',
-  'settings.msg.import.json.err': 'Invalid JSON.',
+  'settings.msg.import.invalid': 'That file is not a PACE copy.',
+  'settings.msg.import.json.err': 'That file cannot be read.',
   'settings.msg.import.storage.err': 'Could not save. Your data is untouched.',
   'settings.msg.import.partial': 'Your data was imported, but not your session log. You can import the copy again.',
   'settings.msg.reset.err': 'Could not delete. Your data is untouched.',
-  'settings.confirm.reset': 'Delete all your PACE data? This action cannot be undone.',
-  'settings.confirm.import': 'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.'
+  'settings.aviso.no': 'Cancel',
+  'settings.reset.titulo': 'Delete all your data?',
+  'settings.reset.cuerpo': 'Everything PACE keeps in this browser is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
+  'settings.reset.cuerpo.app': 'Everything PACE keeps on this phone is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
+  'settings.reset.si': 'Delete everything',
+  'settings.import.titulo': 'Replace your data with the copy?',
+  'settings.import.cuerpo': 'The copy has {logros} achievements and {foco} min of focus. What PACE has now is replaced, and it cannot be undone.',
+  'settings.import.si': 'Import',
+  'settings.import.parcial.titulo': 'Your session log is missing'
 });
 })();
 </script>
@@ -3468,7 +3484,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.onb.precios': '{vida} una vez, o {mes} al mes con {dias} días gratis.',
   'premium.onb.probar': 'Probar {dias} días gratis',
   'premium.onb.vida': 'Prefiero pagarlo una vez, {vida}',
-  'premium.onb.aviso': 'Te avisamos dos días antes de que acabe la prueba.'
+  'premium.onb.aviso': 'Te avisamos dos días antes de que acabe la prueba.',
+  'premium.onb.abierto.lede': 'Y hasta v1, PACE completo también está abierto para todos:',
+  'premium.onb.abierto.precios': 'Después, {mes} al mes con {dias} días gratis, o {vida} una vez.',
+  'premium.onb.abierto.aviso': 'Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3521,7 +3540,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.onb.precios': '{vida} once, or {mes} a month with {dias} days free.',
   'premium.onb.probar': 'Try {dias} days free',
   'premium.onb.vida': 'I would rather pay once, {vida}',
-  'premium.onb.aviso': 'We will remind you two days before the trial ends.'
+  'premium.onb.aviso': 'We will remind you two days before the trial ends.',
+  'premium.onb.abierto.lede': 'And until v1, PACE Complete is open to everyone too:',
+  'premium.onb.abierto.precios': 'Then, {mes} a month with {dias} days free, or {vida} once.',
+  'premium.onb.abierto.aviso': 'When v1 arrives you get your trial week, and the routines you have already done stay yours.'
 });
 })();
 </script>
@@ -3585,7 +3607,22 @@ Object.assign(window.PACE_STRINGS.es, {
   'onboarding.first.kicker': 'Tu primer Camino',
   'onboarding.first.lede': 'Pequeñas rutas guiadas que combinan foco, respiración y movimiento. Esta encaja contigo:',
   'onboarding.first.cta': 'Ver mi Camino',
-  'onboarding.first.explore': 'prefiero explorar por mi cuenta'
+  'onboarding.first.explore': 'prefiero explorar por mi cuenta',
+
+
+  'visita.paso': '{n} de {total}',
+  'visita.saltar': 'Saltar la visita',
+  'visita.siguiente': 'Siguiente',
+  'visita.fin': 'Entendido',
+  'visita.aro.titulo': 'El aro',
+  'visita.aro.texto': 'Elige los minutos arriba y toca «{boton}»: el aro se llena mientras trabajas.',
+  'visita.aro.pausa': 'Al acabar, PACE te propone una pausa corta: moverte, estirar o respirar.',
+  'visita.act.titulo': 'Actividades',
+  'visita.act.texto': 'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
+  'visita.dia.titulo': 'Tu día',
+  'visita.dia.texto': 'Cada mañana, «A tu ritmo» te prepara el día según tu semana: cuándo parar y qué hacer en cada pausa.',
+  'visita.ajustes.titulo': 'Ajustes',
+  'visita.ajustes.texto': 'El idioma, la paleta, el sonido y tus datos. Desde aquí puedes repetir esta visita.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3638,7 +3675,22 @@ Object.assign(window.PACE_STRINGS.en, {
   'onboarding.first.kicker': 'Your first Path',
   'onboarding.first.lede': 'Short guided routes that blend focus, breathing and movement. This one fits you:',
   'onboarding.first.cta': 'See my Path',
-  'onboarding.first.explore': 'I’d rather explore on my own'
+  'onboarding.first.explore': 'I’d rather explore on my own',
+
+
+  'visita.paso': '{n} of {total}',
+  'visita.saltar': 'Skip the tour',
+  'visita.siguiente': 'Next',
+  'visita.fin': 'Got it',
+  'visita.aro.titulo': 'The ring',
+  'visita.aro.texto': 'Choose the minutes above and tap “{boton}”: the ring fills as you work.',
+  'visita.aro.pausa': 'When it ends, PACE suggests a short break: moving, stretching or breathing.',
+  'visita.act.titulo': 'Activities',
+  'visita.act.texto': 'Breathe, Stretch and Move, with short routines, and Hydrate, for your glasses of water. Whenever you like.',
+  'visita.dia.titulo': 'Your day',
+  'visita.dia.texto': 'Each morning, “At your pace” plans your day from your week: when to stop and what to do in each break.',
+  'visita.ajustes.titulo': 'Settings',
+  'visita.ajustes.texto': 'Language, palette, sound and your data. You can replay this tour from here.'
 });
 })();
 </script>
@@ -5526,7 +5578,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.secret.supporter.title': 'You tend the pasture',
   'ach.item.secret.supporter.desc': 'You supported the project',
   'ach.item.explore.tweaks.title': 'Curiosity',
-  'ach.item.explore.tweaks.desc': 'Open the Tweaks panel',
+  'ach.item.explore.tweaks.desc': 'Open Settings',
 
 
   'ach.item.season.spring.title': 'Spring',
@@ -8841,6 +8893,25 @@ function paceTiendaPlanes(lang) {
   return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
 }
 
+
+
+
+
+function paceTiendaPrecios(lang) {
+  const tienda = tiendaDelCanal();
+  if (!tienda) return [];
+  return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
+}
+
+
+
+
+function paceBienvenidaCompleto() {
+  if (paceTiendaAbierta()) return 'compra';
+  if (window.PREMIUM_ABIERTO_HASTA_V1 === true && !hasPremiumEntitlement()) return 'abierto';
+  return null;
+}
+
 function paceComprar(plan) {
   const tienda = tiendaDelCanal();
   if (!tienda || !tienda.listo()) return Promise.resolve({ ok: false, motivo: 'cerrada' });
@@ -8869,9 +8940,9 @@ function tieneCompraVigente() {
 
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
-  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente
+  paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -16530,7 +16601,12 @@ function paceAndroidAtras() {
 
       var activo = document.activeElement;
       var destino = activo && activo !== document.body && document.documentElement.contains(activo) ? activo : document;
-      destino.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
+      var tecla = new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true });
+
+
+      tecla.paceAtras = true;
+      destino.dispatchEvent(tecla);
+      if (tecla.paceAlFondo) {paceAndroidLlamar('App', 'minimizeApp');return 'fondo';}
       return 'escape';
     }
     paceAndroidLlamar('App', 'minimizeApp');
@@ -17638,7 +17714,9 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
       .pace-aj-pild::before { inset: -7px 0; }
       /* Interruptor: 11 px libres encima en la fila más justa. */
       .pace-aj-sw::before { inset: -5px -8px; }
-      .pace-aj-cerrar::before { inset: -9px; }
+      /* La × de Ajustes crece hacia arriba (16 px libres hasta el borde del panel) y poco hacia
+         abajo: justo debajo está «Visita guiada ›», en la línea de «Ver». */
+      .pace-aj-cerrar::before { inset: -12px -9px -4px; }
       .pace-aj-paso > button::before { inset: -7px -4px; }
       /* «Tus rutinas»: 8 px encima y 12 debajo hasta los filtros. */
       .pace-lib-link::before { inset: -4px -6px -6px; }
@@ -35253,7 +35331,8 @@ const ACHIEVEMENT_CATALOG = [
 
 
 
-{ id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙', secret: true },
+
+{ id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Ajustes', glyph: '⚙', secret: true },
 
 
 { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },
@@ -37492,6 +37571,8 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null);
+  const [pidiendoImportar, setPidiendoImportar] = useStateTD(null);
+  const [avisoParcial, setAvisoParcial] = useStateTD(false);
 
 
 
@@ -37571,67 +37652,11 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
         const incoming = paceSanearEstado(bruto, defaultState).estado;
 
 
-        const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
-        const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(tn('settings.confirm.import', { logros: nLogros, foco: nFoco }));
-        if (!ok) return;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        const eventsSection = payload.events;
-
-        const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-
-
-
-
-
-
-        paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
-          if (!r || !r.legacyWritten) {
-            setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
-            setTimeout(() => setMsg(null), 2600);
-            return;
-          }
-
-
-
-
-
-
-          const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
-          if (traiaRegistro && r.result !== 'committed') {
-            try {alert(t('settings.msg.import.partial'));} catch (e) {}
-            paceOlvidarPasajero();
-            location.reload();
-            return;
-          }
-          setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-          setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
+        setPidiendoImportar({
+          incoming, eventsSection: payload.events,
+          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
+          foco: incoming.totalFocusMin || 0
         });
       } catch (e) {
         setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
@@ -37639,6 +37664,63 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
       }
     };
     reader.readAsText(file);
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const importarDeVerdad = () => {
+    const pendiente = pidiendoImportar;
+    setPidiendoImportar(null);
+    if (!pendiente) return;
+    const { incoming, eventsSection } = pendiente;
+    const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+
+
+
+
+
+
+    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
+      if (!r || !r.legacyWritten) {
+        setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
+        setTimeout(() => setMsg(null), 2600);
+        return;
+      }
+
+
+
+
+
+
+      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+      if (traiaRegistro && r.result !== 'committed') {setAvisoParcial(true);return;}
+      setMsg({ kind: 'ok', text: t('settings.msg.imported') });
+      setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
+    });
   };
 
   return (
@@ -37685,6 +37767,14 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("a", { href: paceEnlaceLegal('/privacy'), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
     )
 
+    ),
+    React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
+      onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
+    pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null
+    ),
+    React.createElement(AjustesAviso, { abierto: avisoParcial, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
+      onNo: () => {paceOlvidarPasajero();location.reload();} },
+    t('settings.msg.import.partial')
     )
     ));
 
@@ -37914,6 +38004,7 @@ if (!_paceAjustesCss) {
     .pace-aj-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; min-height: 38px; padding: 3px 0; transition: opacity 180ms; }
     .pace-aj-fila > :last-child { margin-left: auto; }
     .pace-aj-fila[data-atenuada] { opacity: .38; pointer-events: none; }
+    .pace-aj-fila[data-pace-aj-tocable] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
@@ -37924,6 +38015,7 @@ if (!_paceAjustesCss) {
     .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
     .pace-aj-pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); font-weight: 500; }
     .pace-aj-pild:disabled { opacity: .4; cursor: default; }
+    .pace-aj-fila[data-atenuada] .pace-aj-pild:disabled { opacity: 1; }
     [data-pace-aj-modulo] .pace-aj-pild[aria-pressed="true"] { background: var(--pace-aj-ms); background: color-mix(in srgb, var(--pace-aj-m) 22%, var(--paper)); color: var(--ink); }
     .pace-aj-pild svg { width: 15px; height: 15px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
     .pace-aj-pild[data-picto] { padding: 4px 9px; }
@@ -37937,11 +38029,12 @@ if (!_paceAjustesCss) {
     .pace-aj-muestra-auto { background: linear-gradient(90deg, #F2EDE0 50%, #1d1a14 50%); }
     [data-palette="oscuro"] .pace-aj-muestra-oscuro { border-color: var(--ink-3); }
 
-    /* interruptor */
-    .pace-aj-sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; transition: background-color 180ms; }
-    .pace-aj-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); transition: left 180ms; }
+    /* interruptor: 40 x 24, la altura de las pildoras de al lado (Ez, 3A del 27 oct.; era
+       32 x 18, mas pequeno que todo lo demas de la fila) */
+    .pace-aj-sw { width: 40px; height: 24px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; transition: background-color 180ms; }
+    .pace-aj-sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); transition: left 180ms; }
     .pace-aj-sw[aria-checked="true"] { background: var(--ink); }
-    .pace-aj-sw[aria-checked="true"]::after { left: 16px; }
+    .pace-aj-sw[aria-checked="true"]::after { left: 19px; }
     [data-pace-aj-modulo] .pace-aj-sw[aria-checked="true"] { background: var(--pace-aj-m); }
 
     /* escalon (menos · cifra · mas); la cifra en EB Garamond, como las de identidad */
@@ -37961,6 +38054,12 @@ if (!_paceAjustesCss) {
   `;
   document.head.appendChild(s);
 }
+
+
+
+
+
+
 
 
 
@@ -38015,6 +38114,9 @@ if (!_paceTweaksResponsive) {
       [data-pace-tweaks-panel] .pace-aj-fila { min-height: 34px; padding: 2px 0; }
       [data-pace-tweaks-panel] .pace-aj-div { margin: 8px 0; }
     }
+    [data-pace-tweaks-panel][data-pace-aj-bajo] .pace-aj-solo-movil { display: inline-block; }
+    [data-pace-tweaks-panel][data-pace-aj-bajo] [data-pace-aj-plegada] > :not(.pace-aj-sec-titulo) { display: none; }
+    [data-pace-tweaks-panel][data-pace-aj-bajo] [data-pace-aj-plegada] .pace-aj-sec-titulo { margin-bottom: 0; }
   `;
   document.head.appendChild(s);
 }
@@ -38041,6 +38143,7 @@ Object.assign(window, { tweaksStyles, TWEAKS_PILL_TRANSITION });
      AjustesInterruptor  un si/no: `role=switch`
      AjustesPaso      menos · cifra · mas
      AjustesAccion    una fila que hace algo (exportar, importar, borrar)
+     AjustesAviso     la pregunta antes de borrar o importar, con el Modal de PACE
 
    EL COLOR DE MODULO ENTRA POR LA FILA, no por el control: `AjustesFila` recibe
    `modulo` ('focus' | 'breathe' | 'move' | 'hydrate'), pone `data-pace-aj-modulo`
@@ -38087,14 +38190,22 @@ function AjustesSeccion(_ref) {let { titulo, ultima, accion, plegadaMovil, child
 
 
 
-function AjustesFila(_ref2) {let { id, nombre, sub, modulo, atenuada, children } = _ref2;
+
+
+
+
+
+function AjustesFila(_ref2) {let { id, nombre, sub, modulo, atenuada, alTocar, children } = _ref2;
   const tono = modulo ? AJUSTES_MODULO[modulo] : null;
   const style = tono ? { '--pace-aj-m': tono.m, '--pace-aj-ms': tono.ms } : undefined;
+  const onClick = alTocar ? (e) => {if (!(e.target.closest && e.target.closest('button'))) alTocar();} : undefined;
   return (
     React.createElement("div", { className: "pace-aj-fila", "data-pace-aj-fila": id,
       "data-pace-aj-modulo": tono ? modulo : undefined,
       "data-atenuada": atenuada ? '' : undefined,
+      "data-pace-aj-tocable": alTocar ? '' : undefined,
       "aria-disabled": atenuada ? 'true' : undefined,
+      onClick: onClick,
       style: style },
     React.createElement("div", { className: "pace-aj-nombre" },
     nombre,
@@ -38107,12 +38218,15 @@ function AjustesFila(_ref2) {let { id, nombre, sub, modulo, atenuada, children }
 
 
 
-function AjustesPildoras(_ref3) {let { opciones, valor, onChange, aria } = _ref3;
+
+
+
+function AjustesPildoras(_ref3) {let { opciones, valor, onChange, aria, apagado } = _ref3;
   return (
     React.createElement("div", { className: "pace-aj-pista", role: "group", "aria-label": aria },
     opciones.map((o) =>
     React.createElement("button", { key: String(o.v), type: "button", className: "pace-aj-pild",
-      "aria-pressed": o.v === valor, disabled: !!o.off,
+      "aria-pressed": o.v === valor, disabled: !!o.off || !!apagado,
       "aria-label": o.name ? undefined : o.aria,
       title: o.name ? undefined : o.aria,
       "data-picto": o.picto && !o.name ? '' : undefined,
@@ -38156,13 +38270,33 @@ function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title, s
 
 }
 
-function MuestraPaleta(_ref7) {let { cual } = _ref7;
+
+
+
+
+
+function AjustesAviso(_ref7) {let { abierto, titulo, children, si, onSi, onNo } = _ref7;
+  const { t } = useT();
+  if (!abierto) return null;
+  return ReactDOM.createPortal(
+    React.createElement(Modal, { open: true, onClose: onNo, maxWidth: 440, title: titulo },
+    React.createElement("div", { "data-pace-aj-aviso": true },
+    React.createElement("p", { style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } }, children),
+    React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
+    onSi ? React.createElement(Button, { variant: "secondary", onClick: onNo }, t('settings.aviso.no')) : null,
+    React.createElement(Button, { variant: onSi ? 'terracota' : 'primary', onClick: onSi || onNo }, si)
+    )
+    )
+    ), document.body);
+}
+
+function MuestraPaleta(_ref8) {let { cual } = _ref8;
   return React.createElement("i", { className: 'pace-aj-muestra pace-aj-muestra-' + cual, "aria-hidden": "true" });
 }
 
 
 
-function PictoCirculo(_ref8) {let { estilo } = _ref8;
+function PictoCirculo(_ref9) {let { estilo } = _ref9;
   const p = { viewBox: '0 0 16 16', 'aria-hidden': 'true', focusable: 'false' };
   if (estilo === 'flor') return (
     React.createElement("svg", p, React.createElement("path", { d: "M8 3.2C6.6 5.8 6.6 9.2 8 12.3 9.4 9.2 9.4 5.8 8 3.2Z" }), React.createElement("path", { d: "M8 12.3C5.2 11.6 3.3 9.4 3 6.4 5.4 6.9 7 8.9 8 12.3Z" }), React.createElement("path", { d: "M8 12.3C10.8 11.6 12.7 9.4 13 6.4 10.6 6.9 9 8.9 8 12.3Z" }), React.createElement("path", { d: "M4 13.2Q8 14.6 12 13.2" })));
@@ -38184,9 +38318,9 @@ function PictoCirculo(_ref8) {let { estilo } = _ref8;
 
 Object.assign(window, {
   AJUSTES_MODULO, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor,
-  AjustesPaso, AjustesAccion, MuestraPaleta, PictoCirculo
+  AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo
 });
-;Object.assign(window, { AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, MuestraPaleta, PictoCirculo });
+;Object.assign(window, { AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo });
 })();
 </script>
   <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que
@@ -38262,20 +38396,20 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
 
   return (
     React.createElement(React.Fragment, null,
-    React.createElement(AjustesFila, { id: "sound", nombre: t('settings.sound') },
+    React.createElement(AjustesFila, { id: "sound", nombre: t('settings.sound'), alTocar: () => set({ soundOn: !state.soundOn }) },
     React.createElement(AjustesInterruptor, { on: !!state.soundOn, onChange: (v) => set({ soundOn: v }), aria: t('settings.sound') })
     ),
 
 
     React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), atenuada: apagado },
-    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: senal, onChange: ponerSenal, opciones: [
+    React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: senal, onChange: ponerSenal, apagado: apagado, opciones: [
       { v: 'tono', name: t('settings.signal.tone') },
       { v: 'sulafat', name: t('settings.signal.clear') },
       { v: 'bradford', name: t('settings.signal.deep') }] }
     )
     ),
     React.createElement(AjustesFila, { id: "bg", nombre: t('settings.bg'), atenuada: apagado },
-    React.createElement(AjustesPildoras, { aria: t('settings.bg'), valor: fondo, onChange: ponerFondo, opciones: [
+    React.createElement(AjustesPildoras, { aria: t('settings.bg'), valor: fondo, onChange: ponerFondo, apagado: apagado, opciones: [
       { v: 'nada', name: t('settings.bg.none') },
       { v: 'amb', name: t('settings.bg.ambient') },
 
@@ -38337,7 +38471,7 @@ Object.assign(window, { TweaksAudioBlock });
 
 
 
-const { useEffect: useEffectTW, useState: useStateTW } = React;
+const { useEffect: useEffectTW, useState: useStateTW, useRef: useRefTW } = React;
 
 
 
@@ -38397,8 +38531,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
 
-  const borrarTodo = (alFallar) => {
-    if (!confirm(t('settings.confirm.reset'))) return;
+
+
+  const [pidiendoBorrar, setPidiendoBorrar] = useStateTW(null);
+  const borrarTodo = (alFallar) => setPidiendoBorrar({ alFallar });
+  const borrarDeVerdad = () => {
+    const alFallar = pidiendoBorrar && pidiendoBorrar.alFallar;
+    setPidiendoBorrar(null);
     paceEventsWipeAll((r) => {
       if (r && r.legacyWritten) location.reload();else
       if (typeof alFallar === 'function') alFallar();
@@ -38410,8 +38549,32 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
 
+
+
   const [vistaDatos, setVistaDatos] = useStateTW(false);
-  useEffectTW(() => {if (!open) setVistaDatos(false);}, [open]);
+  useEffectTW(() => {if (!open) {setVistaDatos(false);setPidiendoBorrar(null);}}, [open]);
+
+
+  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < 860);
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const mirar = () => setBajo(paceLienzoAlto() < 860);
+    mirar();
+    window.addEventListener('resize', mirar);
+    return () => window.removeEventListener('resize', mirar);
+  }, [open]);
+
+
+  const panelRef = useRefTW(null);
+  const vistaPreviaRef = useRefTW(vistaDatos);
+  useEffectTW(() => {
+    if (vistaPreviaRef.current === vistaDatos) return;
+    vistaPreviaRef.current = vistaDatos;
+    const p = panelRef.current;
+    if (!p || document.activeElement && document.activeElement !== document.body && p.contains(document.activeElement)) return;
+    const destino = p.querySelector(vistaDatos ? '[data-pace-aj-volver]' : '[data-pace-aj-plegada] .pace-aj-sec-accion');
+    if (destino) {try {destino.focus({ preventScroll: true });} catch (e) {}}
+  }, [vistaDatos]);
 
 
   useEffectTW(() => {
@@ -38459,7 +38622,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const ponerGoal = (d) => set((s) => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
-    React.createElement("div", { "data-pace-tweaks-panel": true, "data-pace-aj-vista": vistaDatos ? 'datos' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
+    React.createElement("div", { ref: panelRef, "data-pace-tweaks-panel": true, "data-pace-aj-vista": vistaDatos ? 'datos' : undefined,
+      "data-pace-aj-bajo": bajo ? '' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
         position: 'fixed',
         right: 24, bottom: 24,
         width: 320,
@@ -38485,7 +38649,12 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     ),
 
     vistaDatos ? React.createElement(TweaksDataSection, { onReset: borrarTodo, isWeb: isWeb }) : React.createElement(React.Fragment, null,
-    React.createElement(AjustesSeccion, { titulo: t('settings.sec.ver') },
+
+
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.ver'), accion: { texto: t('settings.visita'), onClick: () => {
+          onClose && onClose();
+          window.dispatchEvent(new CustomEvent('pace:open-visita'));
+        } } },
     React.createElement(AjustesFila, { id: "lang", nombre: t('settings.lang') },
     React.createElement(AjustesPildoras, { aria: t('settings.lang'), valor: langValor, onChange: ponerLang, opciones: [
       { v: 'auto', name: t('settings.lang.auto') },
@@ -38534,12 +38703,16 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     React.createElement(AjustesSeccion, { titulo: t('settings.sec.sesiones'), accion: { texto: t('ritmo.st.ajustes'), onClick: ritmoSemanaAbrir } },
 
 
-    canNotify &&
-    React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub'), modulo: "focus" },
-    React.createElement(AjustesInterruptor, { on: !!state.notifyFocusEnd && permisoAviso() !== 'denied', aria: t('settings.notify'),
-      onChange: (v) => {v ? enableNotify() : set({ notifyFocusEnd: false });} })
-    ),
+    canNotify && (() => {
+      const avisoOn = !!state.notifyFocusEnd && permisoAviso() !== 'denied';
+      const ponerAviso = (v) => {v ? enableNotify() : set({ notifyFocusEnd: false });};
+      return (
+        React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub'), modulo: "focus",
+          alTocar: () => ponerAviso(!avisoOn) },
+        React.createElement(AjustesInterruptor, { on: avisoOn, aria: t('settings.notify'), onChange: ponerAviso })
+        ));
 
+    })(),
     canNotify && permisoAviso() === 'denied' &&
     React.createElement("div", { className: "pace-aj-nota" }, t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')),
 
@@ -38573,6 +38746,11 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
       accion: { texto: t('settings.datos.abrir'), onClick: () => setVistaDatos(true), soloMovil: true } },
     React.createElement(TweaksDataSection, { onReset: borrarTodo, isWeb: isWeb })
     )
+    ),
+
+    React.createElement(AjustesAviso, { abierto: !!pidiendoBorrar, titulo: t('settings.reset.titulo'), si: t('settings.reset.si'),
+      onSi: borrarDeVerdad, onNo: () => setPidiendoBorrar(null) },
+    t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.reset.cuerpo.app' : 'settings.reset.cuerpo')
     )
     ));
 
@@ -41266,7 +41444,7 @@ Object.assign(window, { pickFirstPath });
 
 
 
-const { useState: useStateONBS } = React;
+const { useState: useStateONBS, useEffect: useEffectONBS } = React;
 
 
 
@@ -41458,10 +41636,38 @@ function OnbLogo() {
 
 }
 
+
+
+
+
+
+
+
+function OnbSemanaPaso(_ref4) {let { state, ultima, onSeguir, borrador, onBorrador } = _ref4;
+  const { t } = useT();
+  const b = useRitmoSemanaBorrador(state, borrador);
+
+  useEffectONBS(() => {onBorrador({ dias: b.dias, horas: b.horas });}, [b.dias, b.horas]);
+  const guardar = (tipo) => {ritmoGuardarSemana(tipo, b.horas);onSeguir();};
+  return (
+    React.createElement(React.Fragment, null,
+    React.createElement("h2", { style: onboardingStyles.title }, t('ritmo.st.titulo')),
+    React.createElement("p", { style: onboardingStyles.lede }, t('ritmo.st.sub')),
+    React.createElement(RitmoSemanaEditor, { dias: b.dias, onDias: b.setDias, horario: b.horario, onHora: b.onHora }),
+    React.createElement("button", { "data-pace-cta": true, "data-pace-semana-guardar": true, onClick: () => guardar(b.dias), style: onboardingStyles.cta },
+    t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')
+    ),
+    React.createElement("button", { "data-pace-semana-saltar": true, onClick: () => guardar(null), style: onboardingStyles.ghostBtn },
+    t('ritmo.st.saltar')
+    )
+    ));
+
+}
+
 Object.assign(window, {
-  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo
+  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso
 });
-;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo });
+;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso });
 })();
 </script>
   <script>
@@ -41485,9 +41691,14 @@ Object.assign(window, {
 
 
 
-function OnbCompletoPaso(_ref) {let { onFin } = _ref;
+
+
+
+
+function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
   const { t, tn, lang } = useT();
-  const planes = paceTiendaPlanes(lang);
+  const abierto = modo === 'abierto';
+  const planes = abierto ? paceTiendaPrecios(lang) : paceTiendaPlanes(lang);
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
   const dias = mes && mes.pruebaDias || 7;
@@ -41495,7 +41706,7 @@ function OnbCompletoPaso(_ref) {let { onFin } = _ref;
   return (
     React.createElement(React.Fragment, null,
     React.createElement("h2", { style: onboardingStyles.title }, t('premium.onb.titulo')),
-    React.createElement("p", { style: onboardingStyles.lede }, t('premium.onb.lede')),
+    React.createElement("p", { style: onboardingStyles.lede }, t(abierto ? 'premium.onb.abierto.lede' : 'premium.onb.lede')),
     React.createElement("ul", { style: onbCompletoStyles.lista },
     PREMIUM_INCLUYE.map((k, ik) =>
     React.createElement("li", { key: k, style: { ...onbCompletoStyles.item, ...(ik === PREMIUM_INCLUYE.length - 1 ? { borderBottom: 0 } : null) } },
@@ -41506,9 +41717,18 @@ function OnbCompletoPaso(_ref) {let { onFin } = _ref;
     ),
     mes && vida &&
     React.createElement("p", { "data-pace-onb-precios": true, style: onbCompletoStyles.precios },
-    tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })
+    tn(abierto ? 'premium.onb.abierto.precios' : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })
     ),
 
+    abierto ?
+    React.createElement(React.Fragment, null,
+    React.createElement("button", { "data-pace-cta": true, "data-pace-onb-comenzar": true, onClick: () => onFin(null), style: onboardingStyles.cta },
+    t('onboarding.welcome.cta')
+    ),
+    React.createElement("p", { "data-pace-onb-v1": true, style: { ...onbCompletoStyles.aviso, maxWidth: 340 } }, t('premium.onb.abierto.aviso'))
+    ) :
+
+    React.createElement(React.Fragment, null,
     React.createElement("div", { style: onbCompletoStyles.par },
     mes &&
     React.createElement("button", { "data-pace-cta": true, "data-pace-onb-probar": true, onClick: () => onFin('mes'), style: { ...onboardingStyles.cta, ...onbCompletoStyles.mitad } },
@@ -41527,6 +41747,8 @@ function OnbCompletoPaso(_ref) {let { onFin } = _ref;
     )
 
     )
+    )
+
     ));
 
 }
@@ -41615,6 +41837,7 @@ function Onboarding() {
   const [freeText, setFreeText] = useStateONB('');
   const [picked, setPicked] = useStateONB(null);
   const [conPick, setConPick] = useStateONB(false);
+  const [semanaBorrador, setSemanaBorrador] = useStateONB(null);
 
 
   useEffectONB(() => {
@@ -41626,8 +41849,33 @@ function Onboarding() {
 
 
 
+
+
   const raizRef = useRefONB(null);
-  usePaceDialogo(raizRef, open);
+  usePaceDialogo(raizRef, open, {
+    onEscape: (e) => {
+      if (!e.paceAtras) return;
+      if (step > 0) setStep((s) => Math.max(s - 1, 0));else
+      e.paceAlFondo = true;
+    }
+  });
+
+
+
+
+
+  const pasoPrevioRef = useRefONB(step);
+  useEffectONB(() => {
+    if (pasoPrevioRef.current === step) return;
+    pasoPrevioRef.current = step;
+    const raiz = raizRef.current;
+    if (!raiz) return;
+    const activo = document.activeElement;
+    if (activo && activo !== document.body && activo !== raiz && raiz.contains(activo)) return;
+    const titulo = raiz.querySelector('[data-pace-reveal] h1, [data-pace-reveal] h2');
+    if (titulo) titulo.setAttribute('tabindex', '-1');
+    try {(titulo || raiz).focus({ preventScroll: true });} catch (e) {}
+  }, [step]);
 
   if (!open) return null;
 
@@ -41638,10 +41886,12 @@ function Onboarding() {
 
 
 
+
+  const modoCompleto = typeof paceBienvenidaCompleto === 'function' ? paceBienvenidaCompleto() : null;
   const pantallas = ['bienvenida', 'semana'].
   concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : []).
   concat(conCaminos ? ['primer'] : []).
-  concat(typeof paceTiendaAbierta === 'function' && paceTiendaAbierta() ? ['completo'] : []);
+  concat(modoCompleto ? ['completo'] : []);
   const pantalla = pantallas[step];
   const isSemana = pantalla === 'semana';
   const isQuestion = !!pantalla && pantalla.charAt(0) === 'q';
@@ -41691,9 +41941,14 @@ function Onboarding() {
       setLastViewedPath(picked);
     }
     setOpen(false);
+
+
+    if (!(opts && opts.comprando)) window.dispatchEvent(new CustomEvent('pace:open-visita'));
   };
 
-  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+
+
+  const toggleLang = () => set({ langAuto: false, lang: state.lang === 'es' ? 'en' : 'es' });
 
   return (
     React.createElement("div", {
@@ -41793,12 +42048,17 @@ function Onboarding() {
 
     isSemana &&
     React.createElement(OnbSemanaPaso, { state: state, ultima: ultima,
+      borrador: semanaBorrador, onBorrador: setSemanaBorrador,
       onSeguir: () => ultima ? finish({ pick: false }) : next() }),
 
 
 
     isCompleto &&
-    React.createElement(OnbCompletoPaso, { onFin: (plan) => {finish({ pick: conPick });if (plan && typeof paceComprar === 'function') paceComprar(plan);} }),
+    React.createElement(OnbCompletoPaso, { modo: modoCompleto, onFin: (plan) => {
+        const comprando = !!plan && typeof paceComprar === 'function';
+        finish({ pick: conPick, comprando });
+        if (comprando) paceComprar(plan);
+      } }),
 
 
 
@@ -41894,29 +42154,6 @@ function Onboarding() {
 }
 
 
-
-
-
-function OnbSemanaPaso(_ref) {let { state, ultima, onSeguir } = _ref;
-  const { t } = useT();
-  const b = useRitmoSemanaBorrador(state);
-  const guardar = (tipo) => {ritmoGuardarSemana(tipo, b.horas);onSeguir();};
-  return (
-    React.createElement(React.Fragment, null,
-    React.createElement("h2", { style: onboardingStyles.title }, t('ritmo.st.titulo')),
-    React.createElement("p", { style: onboardingStyles.lede }, t('ritmo.st.sub')),
-    React.createElement(RitmoSemanaEditor, { dias: b.dias, onDias: b.setDias, horario: b.horario, onHora: b.onHora }),
-    React.createElement("button", { "data-pace-cta": true, "data-pace-semana-guardar": true, onClick: () => guardar(b.dias), style: onboardingStyles.cta },
-    t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')
-    ),
-    React.createElement("button", { "data-pace-semana-saltar": true, onClick: () => guardar(null), style: onboardingStyles.ghostBtn },
-    t('ritmo.st.saltar')
-    )
-    ));
-
-}
-
-
 const onboardingStyles = {
   root: {
     position: 'fixed', inset: 0, zIndex: 120,
@@ -41948,6 +42185,9 @@ const onboardingStyles = {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
     fontSize: 'clamp(28px, 5.4vw, 38px)', fontWeight: 500,
     lineHeight: 1.12, margin: 0, color: 'var(--ink)',
+
+
+    outline: 'none',
 
     textShadow: '0 0 22px var(--paper), 0 0 10px var(--paper)'
   },
@@ -41997,7 +42237,7 @@ const onboardingStyles = {
   pathName: {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
     fontSize: 'clamp(38px, 7vw, 54px)', fontWeight: 500,
-    lineHeight: 1.08, margin: 0, color: 'var(--ink)',
+    lineHeight: 1.08, margin: 0, color: 'var(--ink)', outline: 'none',
     textShadow: '0 0 24px var(--paper), 0 0 10px var(--paper)'
   },
   tagline: {
@@ -42048,7 +42288,216 @@ const onboardingStyles = {
 
 
 Object.assign(window, { Onboarding, onboardingStyles });
-;Object.assign(window, { Onboarding, OnbSemanaPaso });
+;Object.assign(window, { Onboarding });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStateVIS, useEffect: useEffectVIS, useLayoutEffect: useLayoutEffectVIS, useRef: useRefVIS } = React;
+
+const PACE_VISITA_PARADAS = [
+{ id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
+{ id: 'act', sel: '[data-pace-activitybar-grid]' },
+{ id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
+{ id: 'ajustes', sel: '[data-pace-topbar-ajustes]', redonda: true }];
+
+
+
+
+
+function paceVisitaElemento(sel) {
+  const candidatos = document.querySelectorAll(sel);
+  for (let ic = 0; ic < candidatos.length; ic++) {
+    const r = paceCaja(candidatos[ic]);
+    if (r.width > 0 && r.height > 0) return candidatos[ic];
+  }
+  return null;
+}
+
+
+function paceVisitaHueco(parada) {
+  const el = parada && paceVisitaElemento(parada.sel);
+  if (!el) return null;
+  const r = paceCaja(el);
+  if (parada.redonda) {
+    const d = Math.max(r.width, r.height) + 12;
+    return { left: r.left + r.width / 2 - d / 2, top: r.top + r.height / 2 - d / 2, width: d, height: d, radio: d / 2 };
+  }
+  return { left: r.left - 6, top: r.top - 6, width: r.width + 12, height: r.height + 12, radio: 16 };
+}
+
+
+
+function paceVisitaSitio(h, ancho, alto, vw, vh) {
+  const M = 16,G = 14;
+  const encaja = (top) => Math.max(M, Math.min(vh - M - alto, top));
+  const centroX = h ? h.left + h.width / 2 : vw / 2;
+  const left = Math.max(M, Math.min(vw - M - ancho, centroX - ancho / 2));
+  if (!h) return { left, top: encaja((vh - alto) / 2) };
+  if (h.top + h.height + G + alto <= vh - M) return { left, top: h.top + h.height + G };
+  if (h.top - G - alto >= M) return { left, top: h.top - G - alto };
+  const medio = h.top + h.height / 2 - alto / 2;
+  if (h.left + h.width + G + ancho <= vw - M) return { left: h.left + h.width + G, top: encaja(medio) };
+  if (h.left - G - ancho >= M) return { left: h.left - G - ancho, top: encaja(medio) };
+  return { left, top: vh - M - alto };
+}
+
+function OnbVisita() {
+  const { t, tn } = useT();
+  const [abierta, setAbierta] = useStateVIS(false);
+  const [paradas, setParadas] = useStateVIS([]);
+  const [paso, setPaso] = useStateVIS(0);
+  const [hueco, setHueco] = useStateVIS(null);
+  const [sitio, setSitio] = useStateVIS(null);
+  const raizRef = useRefVIS(null);
+  const tarjetaRef = useRefVIS(null);
+
+  useEffectVIS(() => {
+    let espera = null;
+    const abrir = () => {
+      clearTimeout(espera);
+
+      espera = setTimeout(() => {
+        const visibles = PACE_VISITA_PARADAS.filter((p) => paceVisitaElemento(p.sel));
+        if (!visibles.length) return;
+        setParadas(visibles);
+        setPaso(0);
+        setSitio(null);
+        setAbierta(true);
+      }, 350);
+    };
+    window.addEventListener('pace:open-visita', abrir);
+    return () => {clearTimeout(espera);window.removeEventListener('pace:open-visita', abrir);};
+  }, []);
+
+  const cerrar = () => setAbierta(false);
+  usePaceDialogo(raizRef, abierta, { onEscape: cerrar });
+
+  const parada = abierta ? paradas[paso] : null;
+  const medir = () => {
+    const h = paceVisitaHueco(parada);
+    setHueco(h);
+    const tj = tarjetaRef.current;
+    if (tj) setSitio(paceVisitaSitio(h, tj.offsetWidth, tj.offsetHeight, paceLienzoAncho(), paceLienzoAlto()));
+  };
+
+  useLayoutEffectVIS(() => {if (abierta) medir();}, [abierta, paso]);
+  useEffectVIS(() => {
+    if (!abierta) return undefined;
+    window.addEventListener('resize', medir);
+    return () => window.removeEventListener('resize', medir);
+  }, [abierta, paso]);
+
+  if (!abierta || !parada) return null;
+
+  const ultima = paso === paradas.length - 1;
+  const seguir = () => ultima ? cerrar() : setPaso((p) => p + 1);
+  const ancho = Math.min(320, paceLienzoAncho() - 32);
+
+  return (
+    React.createElement("div", { ref: raizRef, "data-pace-visita": parada.id, role: "dialog", "aria-modal": "true",
+      "aria-labelledby": "pace-visita-titulo", "aria-describedby": "pace-visita-texto", tabIndex: -1,
+      style: { ...onbVisitaStyles.raiz, background: hueco ? 'transparent' : 'var(--pace-visita-velo)' } },
+    hueco &&
+    React.createElement("div", { className: "pace-visita-hueco", "data-pace-visita-hueco": true, "aria-hidden": "true", style: {
+        left: hueco.left, top: hueco.top, width: hueco.width, height: hueco.height, borderRadius: hueco.radio
+      } }),
+
+    React.createElement("div", { ref: tarjetaRef, "data-pace-visita-tarjeta": true, style: {
+        ...onbVisitaStyles.tarjeta, width: ancho,
+        left: sitio ? sitio.left : 16, top: sitio ? sitio.top : 16, visibility: sitio ? 'visible' : 'hidden'
+      } },
+    React.createElement("div", { "aria-live": "polite" },
+    React.createElement("div", { className: "pace-meta" }, tn('visita.paso', { n: paso + 1, total: paradas.length })),
+    React.createElement("h2", { id: "pace-visita-titulo", style: onbVisitaStyles.titulo }, t('visita.' + parada.id + '.titulo')),
+    React.createElement("p", { id: "pace-visita-texto", style: onbVisitaStyles.texto },
+    parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + parada.id + '.texto'),
+
+    parada.id === 'aro' ? ' ' + t('visita.aro.pausa') : null
+    )
+    ),
+    React.createElement("div", { style: onbVisitaStyles.botones },
+    React.createElement("button", { type: "button", "data-pace-visita-saltar": true, onClick: cerrar, style: onbVisitaStyles.saltar },
+    t('visita.saltar')
+    ),
+    React.createElement("button", { type: "button", "data-pace-visita-siguiente": true, onClick: seguir, style: onbVisitaStyles.siguiente },
+    t(ultima ? 'visita.fin' : 'visita.siguiente')
+    )
+    )
+    )
+    ));
+
+}
+
+const onbVisitaStyles = {
+
+  raiz: { position: 'fixed', inset: 0, zIndex: 96, outline: 'none', animation: 'pace-fade-in 240ms ease' },
+  tarjeta: {
+    position: 'fixed', boxSizing: 'border-box', padding: '14px 16px 8px',
+    background: 'var(--paper)', border: '1px solid var(--line-2)', borderRadius: 'var(--r-md)',
+    boxShadow: 'var(--sh-modal)', textAlign: 'left',
+    transition: 'left 320ms var(--ease), top 320ms var(--ease)'
+  },
+  titulo: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 21, fontWeight: 500,
+    lineHeight: 1.15, color: 'var(--ink)', margin: '4px 0 0'
+  },
+  texto: { fontSize: 13, lineHeight: 1.45, color: 'var(--ink-2)', margin: '4px 0 0' },
+  botones: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginTop: 8 },
+
+  saltar: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)',
+    background: 'none', border: 0, padding: '0', minHeight: 40, cursor: 'pointer'
+  },
+  siguiente: {
+    fontFamily: 'var(--font-ui)', fontSize: 12, letterSpacing: '0.12em', color: 'var(--paper)',
+    background: 'var(--focus-cta)', border: 0, borderRadius: 'var(--r-pill)', padding: '0 20px',
+    minHeight: 40, cursor: 'pointer'
+  }
+};
+
+
+
+
+if (!document.getElementById('pace-visita-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-visita-css';
+  s.textContent = `
+    :root { --pace-visita-velo: rgba(31, 28, 23, 0.52); }
+    :root[data-palette="oscuro"] { --pace-visita-velo: rgba(0, 0, 0, 0.66); }
+    .pace-visita-hueco { position: fixed; pointer-events: none;
+      box-shadow: 0 0 0 200vmax var(--pace-visita-velo), inset 0 0 0 1.5px var(--ink-3);
+      transition: left 320ms var(--ease), top 320ms var(--ease), width 320ms var(--ease), height 320ms var(--ease), border-radius 320ms var(--ease); }
+  `;
+  document.head.appendChild(s);
+}
+
+Object.assign(window, { OnbVisita, paceVisitaSitio });
+;Object.assign(window, { paceVisitaElemento, paceVisitaHueco, paceVisitaSitio, OnbVisita });
 })();
 </script>
   <!-- «A tu ritmo» (s192): el panel del día que ocupa el sitio de Actividades
@@ -43881,10 +44330,13 @@ function RitmoSemanaEditor(_ref2) {let { dias, onDias, horario, onHora } = _ref2
 }
 
 
-function useRitmoSemanaBorrador(state) {
+
+
+function useRitmoSemanaBorrador(state, inicial) {
   const R = ritmoDe(state);
-  const [dias, setDias] = useStateRST(() => R.semanaTipo ? R.semanaTipo.map((d) => d || 'libre') : RITMO_SEMANA_DEFECTO.slice());
-  const [horas, setHoras] = useStateRST({});
+  const [dias, setDias] = useStateRST(() => inicial ? inicial.dias.slice() :
+  R.semanaTipo ? R.semanaTipo.map((d) => d || 'libre') : RITMO_SEMANA_DEFECTO.slice());
+  const [horas, setHoras] = useStateRST(() => inicial ? { ...inicial.horas } : {});
   const crudo = state && state.ritmo ? state.ritmo.horario : null;
   return {
     dias, setDias, horas,
@@ -46043,7 +46495,7 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
     React.createElement("circle", { cx: "12", cy: "9", r: "6" }), React.createElement("path", { d: "M8 14l-1 7 5-3 5 3-1-7" })
     )
     ),
-    React.createElement("button", { "data-pace-topbar-icon": true, onClick: onOpenTweaks, style: topBarStyles.iconBtn, title: t('topbar.tweaks.title'), "aria-label": t('topbar.tweaks.aria') },
+    React.createElement("button", { "data-pace-topbar-icon": true, "data-pace-topbar-ajustes": true, onClick: onOpenTweaks, style: topBarStyles.iconBtn, title: t('topbar.tweaks.title'), "aria-label": t('topbar.tweaks.aria') },
     React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" },
     React.createElement("circle", { cx: "12", cy: "12", r: "3" }),
     React.createElement("path", { d: "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" })
@@ -46894,6 +47346,8 @@ function PaceApp() {
 
 
     red(null, true, () => {if (getState().firstSeen == null) set({ firstSeen: Date.now() });}, React.createElement(Onboarding, null)),
+
+    red(null, true, null, React.createElement(OnbVisita, null)),
 
 
 
