@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 27 oct.: Android a fondo (v0.182.0), en su rama, a la espera de Ez
+
+Rama `claude/android-a-fondo-6edf2e` (puerto 8805), el punto 7 del orden hasta v1. Los avisos de Android A1-A4 (el
+texto de la auditoría no se guardó: los cuatro casos se sacaron del código y del complemento), el puente del
+calendario que leía «vacío» cuando Android fallaba (C2/S6) y la 1A de Ez del 26 oct.: lo de PACE en el calendario del
+móvil va privado, con una pieza propia (`PaceCalendario.java`). **N4, el aviso fijo con el móvil bloqueado, espera a
+que Ez elija** sobre https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL (recomendada la A: la cuenta que corre sola,
+sin botones, que pide otra pieza propia). El APK de la rama se compila a mano: Actions › Android › Run workflow, con
+la rama `claude/android-a-fondo-6edf2e`; sale «PACE prueba», que se instala al lado de la de Play. El iPhone tiene los
+mismos cuatro casos de avisos sin tocar (`app/ui/ios.js`). Se junta cuando Ez diga «júntalo». Lo técnico: la fila de
+v0.182.0 en `DECISIONES_TECNICAS_VIGENTES.md`.
+
 ## 27 oct.: la revisión de ChatGPT de Mueve y Estira (v0.181.1), en su rama, a la espera de Ez
 
 Rama `claude/magical-robinson-ced87d` (puerto 8808: el 8805 lo retiene un servidor huérfano de la mañana que sirve otra carpeta). Monta lo que

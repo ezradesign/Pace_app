@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.181.1 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.182.0 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -126,15 +126,15 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   v0.174.5) ·
   **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
-  programó, A4 permiso de notificaciones sin refrescar) · **seguridad antes de cobrar** (S1
+  programó, A4 permiso de notificaciones sin refrescar), **con v0.182.0 en su rama**
+  (`claude/android-a-fondo-6edf2e`, a la espera de Ez; `tests/android-avisos.spec.js`) · **seguridad antes de cobrar** (S1
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto), **en `main` con v0.177.0**
   (con el sí de Ez); S3, código portable, es la decisión de Ez · **la hora y la medianoche** (H1-H3 la hora repetida del 25 oct.,
   H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió),
   **en `main` con v0.181.0** y la voz de Respira (27 oct., con el sí de Ez; `tests/hora-y-medianoche.spec.js`) ·
-  **el puente del calendario de Android** (de C2, 22 oct.): `paceAndroidLlamar` se traga los
-  errores, así que una lista que falla se lee como un calendario vacío, PACE puede volver a crear lo
-  que ya estaba y en Android nunca sale «No se pudo».
+  **el puente del calendario de Android** (de C2, 22 oct.: una lista que fallaba se leía como un
+  calendario vacío), **con v0.182.0 en la misma rama** (`tests/android-calendario.spec.js`).
 - **Al volver los Caminos** (después de v1; hoy `SHOW_CAMINOS = false`), tres casos de la auditoría
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
@@ -146,13 +146,14 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   casan, estiramientos dentro de Mueve, banda y barra aparte y saltables, rutinas casi iguales, más fuerza en
   Mueve), en v0.176.0; N2 (las franjas del móvil con la paleta) en v0.176.1; N5-N8 (1A 2A 3C 4B de Ez sobre la
   maqueta https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero) en v0.176.2. Quedan N4 (aviso con el móvil bloqueado)
-  y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). Detalle en la cola de
+  y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). N4 espera a que Ez elija la forma
+  sobre https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL (recomendada la A, la cuenta que corre sola). Detalle en la cola de
   `docs/traspaso/relevo-coordinadora-22oct.md`, punto 1c.
 - **Lo que prometemos sobre los datos** (P1-P5, ChatGPT, 22 oct.): **en `main` con v0.179.0** (26 oct.)
   con el 1A 2A 3A de Ez sobre
-  https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY. Queda la 1A en el calendario del móvil: marcar privado lo
-  que PACE escribe ahí pide una pieza nativa propia (el complemento no tiene `ACCESS_LEVEL`) que Ez prueba en su
-  Android; hasta entonces `privacy.html` dice que ahí cada pausa va con su nombre. Play y App Store no cambian
+  https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY. La 1A en el calendario del móvil, con v0.182.0 en su rama: una
+  pieza nativa propia (`PaceCalendario`, porque el complemento no tiene `ACCESS_LEVEL`) lo marca privado; falta que
+  Ez lo pruebe en su Android. Play y App Store no cambian
   ninguna respuesta hasta la compra dentro de las apps.
 - Tests del estado más allá del saneador · i18n con plurales y pseudolocalización · las deudas de
   claves D-1, D-2 y D-3.
