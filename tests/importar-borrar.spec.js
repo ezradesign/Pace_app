@@ -21,7 +21,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, CLAVE_ESTADO } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, CLAVE_ESTADO, abrirTusDatos } = require('./helpers');
 const { leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 const PARCIAL = 'Se importaron tus datos, pero no el registro de tus sesiones. Puedes volver a importar la copia.';
@@ -29,11 +29,10 @@ const NO_BORRA = 'No se pudo borrar. Tus datos siguen intactos.';
 
 const guardado = (page) => page.evaluate((clave) => JSON.parse(localStorage.getItem(clave) || 'null'), CLAVE_ESTADO);
 
-/* Acepta los diálogos y apunta su texto: el `confirm` de antes y, si lo hay, el aviso. */
+/* Acepta los avisos de PACE y apunta su texto: la pregunta de antes y, si lo hay, el aviso
+   (antes eran el `confirm` y el `alert` del navegador; Ez, 3A del 27 oct.). */
 function apuntarDialogos(page) {
-  const textos = [];
-  page.on('dialog', (d) => { textos.push(d.message()); d.accept(); });
-  return textos;
+  return aceptarAvisosPace(page);
 }
 
 /* Cuenta las recargas de la página desde ahora. */
@@ -45,6 +44,7 @@ function contarRecargas(page) {
 
 async function entregarCopia(page, copia) {
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
     name: 'pace-backup-20261021.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(copia)),
@@ -63,7 +63,7 @@ test('2 · si el registro de sesiones no entra, la copia no se anuncia como comp
   await page.evaluate(() => {
     window.eventsWebReplaceFromImport = () => Promise.resolve({ result: 'rejected', container: null });
   });
-  const dialogos = apuntarDialogos(page);
+  const dialogos = await apuntarDialogos(page);
   const recarga = page.waitForEvent('load');
   await entregarCopia(page, { app: 'PACE', version: 'v0.174.0', state: ESTADO_COPIA, events: seccion });
   await recarga;
@@ -71,6 +71,7 @@ test('2 · si el registro de sesiones no entra, la copia no se anuncia como comp
 
   expect(dialogos.length, 'la copia se anunció como completa: no hubo aviso de lo que no entró').toBe(2);
   expect(dialogos[1]).toBe(PARCIAL);
+  expect(dialogos.navegador, 'preguntó con la ventana del navegador').toEqual([]);
   /* Lo que dice el aviso es verdad: el estado entró y el registro no, ni el de la copia ni
      una mezcla con el de antes (al arrancar, el marcador lo deja vacío). */
   expect((await guardado(page)).totalFocusMin).toBe(42);
@@ -85,7 +86,7 @@ test('2 · sin almacén para el registro, una copia que lo trae avisa y una que 
   await sembrar(context);
   await irAlArtefacto(page);
   const errores = capturarErrores(page);
-  const dialogos = apuntarDialogos(page);
+  const dialogos = await apuntarDialogos(page);
   const seccion = {
     schemaVersion: 1, exportedAt: new Date().toISOString(), activatedAt: new Date(Date.now() - 86400000).toISOString(),
     baseline: null, pruneCursor: null, retentionDays: 365, events: [],
@@ -127,9 +128,10 @@ test('3 · si el navegador no deja borrar, «Borrar todos mis datos» lo dice y 
       return orig.call(this, k);
     };
   }, CLAVE_ESTADO);
-  apuntarDialogos(page);
+  await apuntarDialogos(page);
   const recargas = contarRecargas(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   await page.getByRole('button', { name: 'Borrar todos mis datos' }).click();
 
   await expect(page.locator('.pace-aj-msg'), 'no dijo que no había podido borrar').toHaveText(NO_BORRA);
@@ -152,8 +154,9 @@ test('CONTROL · si lo que falla es el registro y no el estado, lo borrado no vu
   await sembrarEventos(page, 2);
   /* El estado se borra; vaciar el registro FALLA a medio camino (la promesa se rechaza). */
   await page.evaluate(() => { window.eventsWebReset = () => Promise.reject(new Error('el almacén no responde')); });
-  apuntarDialogos(page);
+  await apuntarDialogos(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
   await page.getByRole('button', { name: 'Borrar todos mis datos' }).click();
   /* Tiene que recargar: lo que hay en memoria es lo borrado, y el siguiente gesto lo devolvería. */
@@ -178,7 +181,7 @@ test('4 · importar descarta lo pasajero: un Foco de antes no se cuenta en la co
       activeMs: 30000, round: 1, breaths: 3, startedAt: ahora - 120000 }));
     localStorage.setItem('pace.cuerpo.v1', JSON.stringify({ v: 1, routineId: 'move.neck.3', savedAt: ahora - 60000 }));
   });
-  apuntarDialogos(page);
+  await apuntarDialogos(page);
   const recarga = page.waitForEvent('load');
   await entregarCopia(page, { app: 'PACE', version: 'v0.174.0',
     state: Object.assign({}, ESTADO_COPIA, { focusMode: 'foco', focusMinutes: 25, lastActiveDay: hoy }) });

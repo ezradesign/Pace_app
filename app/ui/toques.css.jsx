@@ -34,7 +34,9 @@
       .pace-aj-pild::before { inset: -7px 0; }
       /* Interruptor: 11 px libres encima en la fila más justa. */
       .pace-aj-sw::before { inset: -5px -8px; }
-      .pace-aj-cerrar::before { inset: -9px; }
+      /* La × de Ajustes crece hacia arriba (16 px libres hasta el borde del panel) y poco hacia
+         abajo: justo debajo está «Visita guiada ›», en la línea de «Ver». */
+      .pace-aj-cerrar::before { inset: -12px -9px -4px; }
       .pace-aj-paso > button::before { inset: -7px -4px; }
       /* «Tus rutinas»: 8 px encima y 12 debajo hasta los filtros. */
       .pace-lib-link::before { inset: -4px -6px -6px; }

@@ -175,7 +175,64 @@ async function pulsarComienza(page) {
   await page.locator('[data-pace-ritmo-comienza], [data-pace-ritmo-ajustar]').filter({ visible: true }).first().click();
 }
 
+/* BORRAR E IMPORTAR PREGUNTAN CON UN AVISO DE PACE (Ez, 3A del 27 oct. 2026), no con el
+   `confirm()` del navegador: `AjustesAviso` (TweaksPanel.parts.jsx). Esto los acepta solos,
+   como antes `page.on('dialog', d => d.accept())`, también tras recargar, y apunta el texto de
+   cada uno. Si saliera una ventana del navegador, queda en `textos.navegador` y se cierra. */
+async function aceptarAvisosPace(page) {
+  if (page.__paceAvisos) return page.__paceAvisos; // una sola vez por página
+  const textos = [];
+  textos.navegador = [];
+  page.__paceAvisos = textos;
+  page.on('dialog', (d) => { textos.navegador.push(d.message()); d.dismiss().catch(() => {}); });
+  await page.exposeFunction('__paceAvisoVisto', (t) => { textos.push(t); });
+  const vigilar = () => {
+    if (window.__paceAvisosVigilados) return;
+    window.__paceAvisosVigilados = true;
+    const mirar = () => {
+      document.querySelectorAll('[data-pace-aj-aviso]:not([data-visto])').forEach((a) => {
+        a.setAttribute('data-visto', '');
+        window.__paceAvisoVisto((a.querySelector('p') || a).textContent);
+        const botones = a.querySelectorAll('button');
+        setTimeout(() => botones[botones.length - 1].click(), 0);
+      });
+    };
+    /* `document` y no `documentElement`: tras recargar, el init script corre antes de que exista. */
+    new MutationObserver(mirar).observe(document, { childList: true, subtree: true });
+  };
+  await page.addInitScript(vigilar);
+  await page.evaluate(vigilar).catch(() => {});
+  return textos;
+}
+
+/* DESPUÉS DE «¿CÓMO ES TU SEMANA?» van PACE completo, abierto hasta v1, y la visita guiada por
+   la home (Ez, 2A y 1C del 27 oct. 2026). Las pruebas que no son de ellas pasan por las dos
+   como quien tiene prisa: «Comenzar» y «Saltar la visita». Las suyas: compra-tienda.spec.js y
+   bienvenida-visita.spec.js. */
+async function acabarBienvenida(page) {
+  await page.locator('[data-pace-onb-comenzar]').click();
+  await page.locator('[data-pace-visita-saltar]').click();
+  await page.locator('[data-pace-visita]').waitFor({ state: 'detached' });
+}
+
+/* EN UNA PANTALLA BAJA, «TUS DATOS» VA PLEGADA: en el móvil (Ez, 2A del 22 oct.) y en el
+   ordenador por debajo de 860 px de alto (3A del 27 oct.), y la suite corre a 1280 × 720. Sus
+   filas (exportar, importar, borrar, PACE completo, el pie) se ven tras «Copias, borrar y PACE
+   completo ›», como las ve la persona. Con Ajustes abierto, abre esa vista si hace falta. */
+async function abrirTusDatos(page) {
+  const panel = page.locator('[data-pace-tweaks-panel]');
+  await panel.waitFor({ state: 'visible' });
+  const plegada = panel.locator('[data-pace-aj-plegada] .pace-aj-sec-accion');
+  if (await plegada.isVisible()) {
+    await plegada.click();
+    await page.locator('[data-pace-tweaks-panel][data-pace-aj-vista="datos"]').waitFor();
+  }
+}
+
 module.exports = {
+  abrirTusDatos,
+  acabarBienvenida,
+  aceptarAvisosPace,
   pulsarComienza,
   esperarModalAsentado,
   CLAVE_ESTADO,

@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace } = require('./helpers');
 const { CLAVE_EVENTOS, leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -98,9 +98,9 @@ test('si falla la escritura del estado, el import ABORTA sin tocar los eventos',
     state: { firstSeen: 1, lang: 'es', totalFocusMin: 999 },
   });
 
-  /* Sin esto Playwright DESCARTA el confirm por defecto, el import devuelve
-     antes de empezar y la prueba falla por una razon que no es la que cree. */
-  page.on('dialog', d => d.accept());
+  /* Sin esto nadie dice que sí al aviso de PACE que pregunta antes de importar, y la
+     prueba falla por una razon que no es la que cree. */
+  await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-rota.json', mimeType: 'application/json', buffer: Buffer.from(backup) });

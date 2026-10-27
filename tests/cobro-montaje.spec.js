@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirTusDatos } = require('./helpers');
 const { firmar, conLlaveDePrueba } = require('./licencia.helpers');
 
 test.use({ serviceWorkers: 'block' });
@@ -29,8 +29,7 @@ async function abrir(page, context, codigo, renovar) {
 
 async function ajustesDatos(page) {
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
-  const datos = page.getByRole('button', { name: 'Copias, borrar y código' });
-  if (await datos.isVisible().catch(() => false)) await datos.click();
+  await abrirTusDatos(page);
 }
 
 test.describe('3A · «Gestionar» en Ajustes', () => {

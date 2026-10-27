@@ -19,7 +19,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, CLAVE_ESTADO } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, CLAVE_ESTADO, abrirTusDatos } = require('./helpers');
 
 /* El estado de alguien con historia, y UN campo roto. */
 const CON_HISTORIA = {
@@ -120,6 +120,7 @@ test('si aun asi no se puede leer, la cadena cruda queda en el rescate y viaja e
   await page.reload();
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const [descarga] = await Promise.all([
     page.waitForEvent('download'),
     page.getByRole('button', { name: 'Exportar una copia', exact: true }).click(),
@@ -131,8 +132,9 @@ test('si aun asi no se puede leer, la cadena cruda queda en el rescate y viaja e
 test('un backup con campos rotos se importa SANEADO: tras recargar, la persona sigue siendo ella', async ({ context, page }) => {
   await sembrar(context);
   await irAlArtefacto(page);
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
   await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
     name: 'pace-backup-20260901.json', mimeType: 'application/json',
@@ -168,8 +170,9 @@ test('la copia de rescate que descarga PACE se puede importar (caza del 10 oct.,
      «Archivo no reconocido.». */
   await sembrar(context);
   await irAlArtefacto(page);
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
   await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
     name: 'pace-rescate-20261010.json', mimeType: 'application/json',
@@ -191,8 +194,9 @@ test('«Borrar todos mis datos» borra TODAS las claves de PACE, no solo el esta
     localStorage.setItem('pace.darkDays.v1', '["2026-09-01"]');
     localStorage.setItem('pace.state.v2.rescate', '{"v":1,"raw":"x"}');
   });
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
   await page.getByRole('button', { name: 'Borrar todos mis datos' }).click();
   await recarga;
@@ -217,8 +221,9 @@ test('«Borrar todos mis datos» borra TODAS las claves de PACE, no solo el esta
 const unVasoSaneado = (page) => page.locator('[data-pace-sidebar]').getByRole('button', { name: /Añadir un vaso/ }).click();
 
 async function importarCopia(page, estado) {
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
   await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
     name: 'pace-backup-20261021.json', mimeType: 'application/json',

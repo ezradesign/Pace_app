@@ -3,13 +3,14 @@
    LOS AJUSTES DEL MÓVIL, SIN SCROLL (Ez, 2A del 22 oct. 2026, sobre
    docs/proposals/maqueta-inicio-22oct.html). A 72 dvh pedían 218 px de scroll en la web y
    287 en Android a 360×730: ni a pantalla entera cabían. «Tus datos» pasa a su propia hoja
-   («Copias, borrar y código ›»), las filas se juntan y la hoja puede subir hasta dejar
-   56 px de la home arriba (a 360×730 en Android ocupa el 79 %). En el ordenador no cambia nada.
+   («Copias, borrar y PACE completo ›»), las filas se juntan y la hoja puede subir hasta dejar
+   56 px de la home arriba (a 360×730 en Android ocupa el 79 %). En el ordenador, desde la 3A del
+   27 oct., se pliega igual por debajo de 860 px de alto (ajustes-avisos.spec.js).
 
    QUÉ DEFIENDE: cero scroll a 360×730 y 360×640, en la web y en Android (con la fila de
    «Alarmas y recordatorios», que es la más alta), en español y en inglés; que se vea un
    trozo de la home arriba; que la hoja de «Tus datos» lo tenga todo y se vuelva con «‹»;
-   y que en el ordenador la sección siga entera. Contra v0.174.4 cae: había scroll y no
+   y que en un ordenador alto la sección siga entera. Contra v0.174.4 cae: había scroll y no
    había hoja.
 */
 'use strict';
@@ -19,8 +20,8 @@ const { sembrar, irAlArtefacto } = require('./helpers');
 
 const PANEL = '[data-pace-tweaks-panel]';
 const TX = {
-  es: { abrir: 'Abrir ajustes', datos: 'Copias, borrar y código', seccion: 'Tus datos', exportar: /Exportar/ },
-  en: { abrir: 'Open settings', datos: 'Copies, delete and code', seccion: 'Your data', exportar: /Export/ },
+  es: { abrir: 'Abrir ajustes', datos: 'Copias, borrar y PACE completo', seccion: 'Tus datos', exportar: /Exportar/ },
+  en: { abrir: 'Open settings', datos: 'Copies, delete and PACE Complete', seccion: 'Your data', exportar: /Export/ },
 };
 
 /* Lo que añade Android cuando falta «Alarmas y recordatorios»: una fila con su línea pequeña. */
@@ -69,7 +70,7 @@ for (const lang of ['es', 'en']) for (const alto of [730, 640]) for (const andro
   });
 }
 
-test('móvil: «Copias, borrar y código» abre la hoja de Tus datos, «‹» vuelve y cerrar la deja como estaba', async ({ page, context }) => {
+test('móvil: «Copias, borrar y PACE completo» abre la hoja de Tus datos, «‹» vuelve y cerrar la deja como estaba', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 730 });
   await sembrar(context);
   await irAlArtefacto(page);
@@ -97,8 +98,10 @@ test('móvil: «Copias, borrar y código» abre la hoja de Tus datos, «‹» vu
   await expect(page.locator(PANEL + ' #pace-aj-titulo')).toHaveText('Ajustes');
 });
 
-test('ordenador: nada cambia, Tus datos va entera y sin enlace', async ({ page, context }) => {
-  await page.setViewportSize({ width: 1280, height: 800 });
+/* En el ordenador se pliega igual por debajo de 860 px de alto (Ez, 3A del 27 oct.;
+   ajustes-avisos.spec.js); en una pantalla alta, la sección va entera. */
+test('ordenador alto: Tus datos va entera y sin enlace', async ({ page, context }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await sembrar(context);
   await irAlArtefacto(page);
   await abrir(page, 'es');

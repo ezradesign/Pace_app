@@ -173,14 +173,15 @@ const onbVisitaStyles = {
   },
   texto: { fontSize: 13, lineHeight: 1.45, color: 'var(--ink-2)', margin: '4px 0 0' },
   botones: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginTop: 8 },
+  /* Los dos con 40 px de alto: se tocan con el dedo (tests/toques-movil.spec.js). */
   saltar: {
     fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)',
-    background: 'none', border: 0, padding: '10px 0', cursor: 'pointer',
+    background: 'none', border: 0, padding: '0', minHeight: 40, cursor: 'pointer',
   },
   siguiente: {
     fontFamily: 'var(--font-ui)', fontSize: 12, letterSpacing: '0.12em', color: 'var(--paper)',
-    background: 'var(--focus-cta)', border: 0, borderRadius: 'var(--r-pill)', padding: '10px 20px',
-    cursor: 'pointer',
+    background: 'var(--focus-cta)', border: 0, borderRadius: 'var(--r-pill)', padding: '0 20px',
+    minHeight: 40, cursor: 'pointer',
   },
 };
 
