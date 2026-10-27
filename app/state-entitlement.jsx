@@ -140,6 +140,25 @@ function paceTiendaPlanes(lang) {
   return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
 }
 
+/* Los planes con su precio aunque aún no se pueda comprar: mientras PACE completo está abierto
+   hasta v1, la bienvenida dice lo que costará después. Solo los sabe la tienda que los tiene
+   escritos (la web); Play los da cuando llegue Billing, así que en Android y en el iPhone sale
+   vacío y la bienvenida no dice ningún importe. */
+function paceTiendaPrecios(lang) {
+  const tienda = tiendaDelCanal();
+  if (!tienda) return [];
+  return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
+}
+
+/* La pantalla de PACE completo que cierra la bienvenida: 'compra' con la tienda abierta (la del
+   16 oct.); 'abierto' mientras todo está abierto hasta v1 y esta persona no lo tiene (Ez, 2A del
+   27 oct.); null si no toca ninguna. */
+function paceBienvenidaCompleto() {
+  if (paceTiendaAbierta()) return 'compra';
+  if (window.PREMIUM_ABIERTO_HASTA_V1 === true && !hasPremiumEntitlement()) return 'abierto';
+  return null;
+}
+
 function paceComprar(plan) {
   const tienda = tiendaDelCanal();
   if (!tienda || !tienda.listo()) return Promise.resolve({ ok: false, motivo: 'cerrada' });
@@ -168,5 +187,5 @@ function tieneCompraVigente() {
 
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
-  paceTiendaAbierta, paceTiendaPlanes, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
 });

@@ -15,6 +15,7 @@
      AjustesInterruptor  un si/no: `role=switch`
      AjustesPaso      menos · cifra · mas
      AjustesAccion    una fila que hace algo (exportar, importar, borrar)
+     AjustesAviso     la pregunta antes de borrar o importar, con el Modal de PACE
 
    EL COLOR DE MODULO ENTRA POR LA FILA, no por el control: `AjustesFila` recibe
    `modulo` ('focus' | 'breathe' | 'move' | 'hydrate'), pone `data-pace-aj-modulo`
@@ -141,6 +142,26 @@ function AjustesAccion({ children, derecha, suave, onClick, title, sub }) {
   );
 }
 
+/* UN AVISO DE PACE para lo que no se deshace (borrar todo, importar una copia) y para lo que
+   hay que leer antes de recargar, en lugar de la ventanita del navegador («pacegrass.app
+   dice…»; Ez, 3A del 27 oct.). El de la pregunta de cambiar de modo (TopBar.jsx), con el botón
+   que hace en terracota. Sin `onSi` es un aviso de un solo botón. Va por portal al <body>: el
+   panel anima con transform y un `fixed` de dentro quedaría atrapado en él. */
+function AjustesAviso({ abierto, titulo, children, si, onSi, onNo }) {
+  const { t } = useT();
+  if (!abierto) return null;
+  return ReactDOM.createPortal(
+    <Modal open onClose={onNo} maxWidth={440} title={titulo}>
+      <div data-pace-aj-aviso>
+        <p style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{children}</p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+          {onSi ? <Button variant="secondary" onClick={onNo}>{t('settings.aviso.no')}</Button> : null}
+          <Button variant={onSi ? 'terracota' : 'primary'} onClick={onSi || onNo}>{si}</Button>
+        </div>
+      </div>
+    </Modal>, document.body);
+}
+
 function MuestraPaleta({ cual }) {
   return <i className={'pace-aj-muestra pace-aj-muestra-' + cual} aria-hidden="true" />;
 }
@@ -169,5 +190,5 @@ function PictoCirculo({ estilo }) {
 
 Object.assign(window, {
   AJUSTES_MODULO, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor,
-  AjustesPaso, AjustesAccion, MuestraPaleta, PictoCirculo,
+  AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo,
 });

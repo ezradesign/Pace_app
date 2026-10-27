@@ -86,12 +86,14 @@ function Onboarding() {
   const enApp = typeof paceEsNativo === 'function' && paceEsNativo();
   const questions = window.ONBOARDING_QUESTIONS || [];
   /* LAS PANTALLAS, en una lista: la bienvenida, «¿Cómo es tu semana?» (siempre, porque
-     es de «A tu ritmo» y no de los Caminos) y, con los Caminos, sus tres preguntas y el
-     primer Camino. Contar pasos a pelo confundía la semana con la primera pregunta. */
+     es de «A tu ritmo» y no de los Caminos), con los Caminos sus tres preguntas y el
+     primer Camino, y PACE completo al final si toca (OnboardingCompleto.jsx). Contar
+     pasos a pelo confundía la semana con la primera pregunta. */
+  const modoCompleto = typeof paceBienvenidaCompleto === 'function' ? paceBienvenidaCompleto() : null;
   const pantallas = ['bienvenida', 'semana']
     .concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : [])
     .concat(conCaminos ? ['primer'] : [])
-    .concat(typeof paceTiendaAbierta === 'function' && paceTiendaAbierta() ? ['completo'] : []);
+    .concat(modoCompleto ? ['completo'] : []);
   const pantalla = pantallas[step];
   const isSemana = pantalla === 'semana';
   const isQuestion = !!pantalla && pantalla.charAt(0) === 'q';
@@ -141,6 +143,9 @@ function Onboarding() {
       setLastViewedPath(picked);
     }
     setOpen(false);
+    /* Detrás, la visita guiada por la home (OnboardingVisita.jsx, Ez, 1C del 27 oct.), salvo
+       si se va a comprar: la compra de la web sigue en la página de Stripe. */
+    if (!(opts && opts.comprando)) window.dispatchEvent(new CustomEvent('pace:open-visita'));
   };
 
   /* Elegir idioma aquí es elegirlo a mano, como en Ajustes: apaga «Auto». Si no, cada arranque
@@ -249,9 +254,13 @@ function Onboarding() {
               onSeguir={() => (ultima ? finish({ pick: false }) : next())} />
           )}
 
-          {/* ---------- PACE COMPLETO, solo con la tienda abierta ---------- */}
+          {/* ---------- PACE COMPLETO: para comprar, o abierto hasta v1 ---------- */}
           {isCompleto && (
-            <OnbCompletoPaso onFin={(plan) => { finish({ pick: conPick }); if (plan && typeof paceComprar === 'function') paceComprar(plan); }} />
+            <OnbCompletoPaso modo={modoCompleto} onFin={(plan) => {
+              const comprando = !!plan && typeof paceComprar === 'function';
+              finish({ pick: conPick, comprando });
+              if (comprando) paceComprar(plan);
+            }} />
           )}
 
           {/* ---------- 1-3 · PREGUNTAS ---------- */}

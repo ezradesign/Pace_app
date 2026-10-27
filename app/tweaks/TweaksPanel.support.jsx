@@ -118,11 +118,12 @@ if (!_paceAjustesCss) {
     .pace-aj-muestra-auto { background: linear-gradient(90deg, #F2EDE0 50%, #1d1a14 50%); }
     [data-palette="oscuro"] .pace-aj-muestra-oscuro { border-color: var(--ink-3); }
 
-    /* interruptor */
-    .pace-aj-sw { width: 32px; height: 18px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; transition: background-color 180ms; }
-    .pace-aj-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); transition: left 180ms; }
+    /* interruptor: 40 x 24, la altura de las pildoras de al lado (Ez, 3A del 27 oct.; era
+       32 x 18, mas pequeno que todo lo demas de la fila) */
+    .pace-aj-sw { width: 40px; height: 24px; border-radius: 999px; background: var(--line-2); position: relative; flex: 0 0 auto; transition: background-color 180ms; }
+    .pace-aj-sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); transition: left 180ms; }
     .pace-aj-sw[aria-checked="true"] { background: var(--ink); }
-    .pace-aj-sw[aria-checked="true"]::after { left: 16px; }
+    .pace-aj-sw[aria-checked="true"]::after { left: 19px; }
     [data-pace-aj-modulo] .pace-aj-sw[aria-checked="true"] { background: var(--pace-aj-m); }
 
     /* escalon (menos · cifra · mas); la cifra en EB Garamond, como las de identidad */
@@ -167,8 +168,14 @@ if (!_paceAjustesCss) {
    pliega a su línea de título (abre su propia hoja), las filas bajan a 34 px
    y los divisores a 8 px, y la hoja puede subir hasta dejar 56 px de la home
    arriba (la barra de los iconos): mide 553 px en la web y 574 en Android
-   (79 % de 730), y a 360×640 en Android le sobran 10 px. En el ordenador no
-   cambia nada.
+   (79 % de 730), y a 360×640 en Android le sobran 10 px.
+
+   Y EN LAS PANTALLAS BAJAS DEL ORDENADOR, «TUS DATOS» SE PLIEGA IGUAL (Ez, 3A del
+   27 oct.): el panel entero pedía 83 px de scroll en una ventana de 1536×710, 123 en
+   inglés, y 33 en inglés a 1280×800. Por debajo de 860 px de alto la sección queda en
+   su línea («Copias, borrar y PACE completo ›») y el resto cabe; el panel, las filas y
+   los divisores siguen como en el ordenador. Por encima, la sección va entera. Lo marca
+   `data-pace-aj-bajo` (TweaksPanel.jsx), que mide el alto del lienzo y no la ventana.
    ============================================================ */
 const _paceTweaksResponsive = document.getElementById('pace-tweaks-responsive-css');
 if (!_paceTweaksResponsive) {
@@ -196,6 +203,9 @@ if (!_paceTweaksResponsive) {
       [data-pace-tweaks-panel] .pace-aj-fila { min-height: 34px; padding: 2px 0; }
       [data-pace-tweaks-panel] .pace-aj-div { margin: 8px 0; }
     }
+    [data-pace-tweaks-panel][data-pace-aj-bajo] .pace-aj-solo-movil { display: inline-block; }
+    [data-pace-tweaks-panel][data-pace-aj-bajo] [data-pace-aj-plegada] > :not(.pace-aj-sec-titulo) { display: none; }
+    [data-pace-tweaks-panel][data-pace-aj-bajo] [data-pace-aj-plegada] .pace-aj-sec-titulo { margin-bottom: 0; }
   `;
   document.head.appendChild(s);
 }
