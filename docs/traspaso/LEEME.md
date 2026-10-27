@@ -2,9 +2,18 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 27 de octubre de 2026, v0.181.1.
 
-## 27 oct.: la revisión de ChatGPT de Mueve y Estira (v0.181.1), en su rama, a la espera de Ez
+## 27 oct., noche: v0.181.1 en `main`; «Qué te ayuda» (0.183.0) y Android a fondo (0.182.0), en su rama, a la espera de Ez
+
+`main` tiene la bienvenida (0.180.0), la hora y la medianoche (0.181.0) y los textos de Mueve y Estira (0.181.1), y
+el CI está en verde entero. Dos ramas están terminadas y subidas, y se juntan solo con el «júntalo» de Ez:
+`claude/que-te-ayuda-maqueta-6c3534`, que va primero (la pestaña «Qué te ayuda» de Estadísticas con el 1A 2A 3A de
+Ez), y `claude/android-a-fondo-6edf2e` (los avisos y el calendario de Android, con N4: A · N4b: A; espera a que Ez la
+pruebe en su móvil). Cómo juntarlas y lo que choca: el bloque «AL RELEVO (27 oct., ~23:10…)» de
+`docs/traspaso/relevo-coordinadora-22oct.md`, que manda sobre lo de abajo.
+
+## 27 oct.: la revisión de ChatGPT de Mueve y Estira (v0.181.1), en `main` con el «júntalo» de Ez
 
 Rama `claude/magical-robinson-ced87d` (puerto 8808: el 8805 lo retiene un servidor huérfano de la mañana que sirve otra carpeta). Monta lo que
 aporta la respuesta de ChatGPT, comprobada contra el código en
@@ -922,10 +931,7 @@ la llave y la lista de testers para los códigos, y la propuesta de textos de lo
 
 ## Frase de arranque para la otra cuenta
 
-> Retoma el proyecto PACE (repo ezradesign/Pace_app, en esta carpeta) como sesión COORDINADORA. Háblame
-> en español, en frases completas y sin jerga. Lee CLAUDE.md, STATE.md y docs/traspaso/LEEME.md, sobre
-> todo «12 oct. 2026, noche», que manda sobre lo anterior; solo tú subes a main (docs/WORKFLOW.md §9) y
-> usas PACE_E2E_PORT=8775. Comprueba que la CI de v0.157.0 salió en verde (gh run list --branch main) y,
-> si no, arréglala antes que nada. Luego retoma la caza en Foco desde el TRASPASO de
-> origin/claude/caza-foco-estado-d6bd17 (una sesión en paralelo como mucho), pregúntame lo de las dos
-> pestañas con AskUserQuestion y dime en pocas líneas dónde estamos, qué espera mi respuesta y qué harías ahora.
+> Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (27 oct., ~23:10…)» de
+> docs/traspaso/relevo-coordinadora-22oct.md, y sigue desde ahí: «Qué te ayuda» (0.183.0) y Android a fondo
+> (0.182.0) están terminadas en su rama. Nunca juntes nada en main sin mi sí. Republica mi hoja de pasos de esta
+> cuenta desde docs/traspaso/hoja-de-ruta-20oct.html y dime en pocas líneas dónde estamos y qué espera mi respuesta.

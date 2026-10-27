@@ -8,6 +8,48 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (27 oct., ~23:10 en España; cuenta de EcLj6… con las 5 h al 91 % y la semana al 24 %; se repone a la 01:10)
+
+**Si llegas de la otra cuenta, empieza aquí.** `main` está en **0.181.1** (6185951), con el CI entero en verde (CI,
+Android e iOS). Nada a medias en `main`. Las dos ramas de abajo están terminadas, limpias y subidas a GitHub, y
+esperan a Ez. **Ninguna se junta sin su «júntalo»**.
+1. **«Qué te ayuda» (0.183.0)**: rama `claude/que-te-ayuda-maqueta-6c3534` en 5244961, worktree
+   `.claude/worktrees/que-te-ayuda-maqueta-6c3534`, 966 en verde. Ez estaba mirando las fotos al relevar:
+   https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5. Es de esta cuenta, así que desde la otra sale 404; Ez la ve aquí
+   o te dice lo que vio. Va primero.
+   - Al juntar, cambia en /premium «Tu mes y tu año» para que nombre «Qué te ayuda».
+   - Su `node_modules` es un ENLACE al del repo. Quítalo con `cmd /c rmdir node_modules` (nunca con un borrado
+     recursivo) antes de quitar el worktree.
+2. **Android a fondo (0.182.0)**: rama `claude/android-a-fondo-6edf2e` en fc7e666, worktree
+   `.claude/worktrees/android-a-fondo-6edf2e`, 974 en verde. Espera a que Ez lo pruebe en su móvil.
+   - El APK «PACE prueba» es `pace-android-debug`, en https://github.com/ezradesign/Pace_app/actions/runs/40580116946.
+   - Los seis puntos ya se los di a Ez: aviso con el móvil bloqueado; al final, un solo sonido; lo mismo cerrando
+     PACE; pausar y que no llegue aviso; activar avisos con Ajustes abierto; la pausa como «Privado» en Google Calendar.
+   - Si entra después de la 0.183.0, la unión se queda en 0.183.0 y la sube a **0.184.0 en un commit aparte**,
+     con su línea en CHANGELOG.
+3. **Al juntar las dos** chocan los siete sitios de la versión, STATE, CHANGELOG, LEEME, DECISIONES y el censo de
+   claves de `verify` (1041 en la de «Qué te ayuda»). Después: `verify`, build, la suite entera en un puerto libre,
+   push y `gh run watch`. Usa el resolvedor de siempre: lo de la rama arriba y lo de `main` debajo.
+4. **Las sesiones de esta cuenta no se ven desde la otra**, y no hacen falta para juntar: las ramas están en este
+   PC y en GitHub. Si hay que tocar algo en una rama, `start_session` con `cwd` en su worktree, diciéndole qué falta y
+   que lea su `git log`.
+   - Las tres sesiones de esta cuenta, para archivar con el sí de Ez y solo desde aquí: `que-te-ayuda`
+     (`local_a9b8f784-…`), `android-a-fondo` (`local_d565db9c-…`) y `mueve-y-estira-los-texto` (`local_f17856c9-…`, ya
+     en `main`; su worktree `magical-robinson-ced87d` se puede quitar).
+5. **La hoja de Ez en la otra cuenta** (https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6) va vieja. Al llegar,
+   republícala tal cual desde `docs/traspaso/hoja-de-ruta-20oct.html`, que es la buena (la de aquí, EcLj6…, va en la
+   versión 61).
+6. **Espera el sí de Ez**: bajar el AAB a `subidas-play\` para la prueba cerrada antes de invitar testers. Mejor el de
+   la versión que quede tras juntar las dos.
+7. **Para después**, ya en la cola:
+   - en el iPhone, los mismos cuatro fallos de los avisos (`app/ui/ios.js`);
+   - el aviso de fin en Android, que no nombra la pausa de «A tu ritmo»;
+   - los botones de verdad del aviso (la C de N4);
+   - `generar-pendientes.js`, que cae al arrancar;
+   - las seis fichas con la colocación que no se ve (lo decide Ez);
+   - los 16 dibujos de la página https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT (de esta cuenta; el porqué y la
+     cuenta de 38, en `docs/product/GLIFOS_A_DIBUJAR.md`).
+
 ## 27 oct., tarde: 0.180.0 y 0.181.0 en main (coordina la cuenta de EcLj6…, desde las 10:20)
 
 1. **Retomadas desde esta cuenta.** Las suites que dejó la otra cuenta seguían como procesos `node` sin navegador
@@ -39,8 +81,23 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    dibujan Sentadilla de cuádriceps ni Puente torácico (Ez, 27 oct.). Ninguno está aún: ni en la app, ni en sus carpetas
    «Glifos de ejercicios…» junto al proyecto, ni en `dibujos-22oct`. **Pendiente mío**: `node scripts/glifos/generar-pendientes.js`
    cae al arrancar (`ERR_INVALID_ARG_TYPE`), así que `GLIFOS_EJERCICIOS_PENDIENTES.md` es de antes de los seis nuevos.
-7. **Esperan el sí de Ez**: bajar el AAB de 0.181.1 a `subidas-play\` para subirlo a la prueba cerrada antes de invitar
-   testers, y abrir Android a fondo (punto 7), sola o con la maqueta de «Qué te ayuda» (punto 9).
+7. **Abiertas a la vez con el sí de Ez** (27 oct., tarde), cada una en su worktree:
+   | Sesión | id | Puerto | Lleva |
+   |---|---|---|---|
+   | Android a fondo | `local_d565db9c-8b1e-43b5-a7be-6d72695956b3` (`android-a-fondo`) | 8805 | 0.182.0: A1-A4, el puente del calendario (C2/S6), lo privado en el calendario del móvil con su pieza nativa, y N4 con maqueta antes |
+   | «Qué te ayuda» | `local_a9b8f784-d298-4701-a4ca-1e1e1e08ab63` (`que-te-ayuda`, rama `claude/que-te-ayuda-maqueta-6c3534`) | 8806 | Maqueta https://claude.ai/artifact/6e5BmLDHsLmYPqmVtX26eD (b820213); **Ez eligió 1A 2A 3A** (tres ideas, «Todavía es pronto», pestaña propia con candado); la monta como 0.183.0. Su `node_modules` es un ENLACE al del repo: quitarlo como enlace antes de archivar |
+
+   **Las dos, terminadas en su rama y sin juntar** (27 oct., noche): «Qué te ayuda» 0.183.0 en 5244961 (966 en verde;
+   fotos https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5; /premium sigue diciendo «Tu mes y tu año», cambiarlo al
+   juntar) y Android a fondo 0.182.0 en fc7e666 en `claude/android-a-fondo-6edf2e` (974 en verde; APK «PACE prueba» en
+   https://github.com/ezradesign/Pace_app/actions/runs/40580116946, `pace-android-debug`; Ez lo prueba con seis puntos).
+   Al juntar las dos chocan la versión, STATE, CHANGELOG y el censo de claves de `verify` (1041 en la de «Qué te ayuda»).
+   **Para después, de Android a fondo**: el iPhone tiene los mismos cuatro fallos de avisos (`app/ui/ios.js`, sin
+   tocar) y el aviso de fin en Android dice siempre «Foco completado» sin nombrar la pausa de «A tu ritmo».
+   Android a fondo: Ez eligió **N4: A · N4b: A** sobre https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL («Vale la A
+   ahora»; le gustaba la C «si los botones funcionan», pero su «Pausar» abría PACE: los botones de verdad, más adelante
+   sobre la misma pieza nativa).
+   Espera el sí de Ez: bajar el AAB de 0.181.1 a `subidas-play\` para la prueba cerrada antes de invitar testers.
 
 ## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
 
