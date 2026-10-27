@@ -67,7 +67,7 @@ const EXERCISE_REGISTRY = {
       { name: 'Rotación lenta', dur: 40, cue: 'Mira sobre el hombro, sin forzar.' },
       { name: 'Escalenos', dur: 40, cue: 'Inclina la cabeza al lado contrario, muy suave.' },
       { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
-      { name: 'Círculos de brazos', dur: 45, cue: 'Círculos lentos, brazo estirado. Empieza pequeño.' },
+      { name: 'Círculos de brazos', dur: 45, cue: 'Círculos lentos con un brazo y luego con el otro. Empieza pequeño.' },
       { name: 'Deslizamientos en pared', dur: 45, cue: 'Espalda en pared, sube los brazos.' },
       { name: 'Rotación externa', dur: 40, cue: 'Codo a 90°, rota hacia fuera.' },
       { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca sin tirar, abre los codos.' },

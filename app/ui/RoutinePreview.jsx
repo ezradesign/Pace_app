@@ -184,6 +184,12 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
           </Seccion>
         )}
 
+        {/* El aviso común, pegado al botón: es lo último que se lee antes de empezar. En tinta
+            secundaria y sin cabecera, para que acompañe sin asustar. */}
+        <p data-pace-preview-aviso style={{ fontSize: 13.5, color: 'var(--ink-2)', lineHeight: 1.5, margin: '0 0 12px' }}>
+          {t('preview.aviso')}
+        </p>
+
         <button onClick={onStart} data-pace-cta style={{
           width: '100%', marginTop: 6, padding: '13px 20px',
           background: accent, color: 'var(--paper)', border: 'none',

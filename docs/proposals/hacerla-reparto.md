@@ -9,7 +9,8 @@
 > Mueve deja tres (talones, flexiones y glúteos), espaciados.
 >
 > **Desde v0.175.2** (Ez, 23 oct.: 1A) tres de los 31 se llaman de otra forma y los puestos no cambian:
-> «Palmas al suelo» es «Palmas en la mesa», «Círculos de hombro» es «Círculos de brazos» (8 veces, 4 y 4)
+> «Palmas al suelo» es «Palmas en la mesa», «Círculos de hombro» es «Círculos de brazos» (8 veces, 4 y 4;
+> desde v0.181.1, 16: ocho con cada brazo, como en su dibujo)
 > e «Inclinación lateral» es «Inclinación de cuello». También van por veces «Rotación lenta» (3 por lado) y
 > «Círculos de muñeca» (4 por sentido). Las tablas de abajo son las del 22 oct.
 

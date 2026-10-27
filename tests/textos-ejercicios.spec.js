@@ -54,12 +54,56 @@ test('los avisos de la revisión de las 63 fichas no vuelven, ni en castellano n
   }
 });
 
-test('Rana, Rotación lenta, Círculos de muñeca y Círculos de brazos van por veces, no por reloj', () => {
+/* Los círculos de brazos van con un brazo, como en su dibujo, y son ocho con cada uno (16): con
+   8 en total y sin cambiar de brazo, el segundo no se movía (revisión del 27 oct., v0.181.1). El
+   gateo cuenta los cuatro pasos de ida y los cuatro de vuelta, en los mismos 24 s. */
+test('Rana, Rotación lenta, Círculos de muñeca, Círculos de brazos y el gateo van por veces, no por reloj', () => {
   const todo = DATOS.map(leer).join('\n');
   const pasos = (nombre) => [...todo.matchAll(new RegExp("\\{ name: '" + nombre + "', mode: '(\\w+)', reps: (\\d+)", 'g'))].map((m) => [m[1], +m[2]]);
   const cuenta = (nombre) => (todo.match(new RegExp("\\{ name: '" + nombre + "'", 'g')) || []).length;
-  for (const [nombre, veces] of [['Rana', 8], ['Rotación lenta', 6], ['Círculos de muñeca', 8], ['Círculos de brazos', 8]]) {
+  for (const [nombre, veces] of [['Rana', 8], ['Rotación lenta', 6], ['Círculos de muñeca', 8], ['Círculos de brazos', 16], ['Gateo con rodillas', 8]]) {
     expect(cuenta(nombre), nombre + ' no está').toBeGreaterThan(0);
     expect(pasos(nombre), nombre).toEqual(Array(cuenta(nombre)).fill(['reps', veces]));
   }
+});
+
+/* LA REVISIÓN DE LOS TEXTOS NUEVOS (ChatGPT, 26 oct.; comprobada contra el código el 27 oct.,
+   docs/proposals/mueve-estira-chatgpt-revision-respuesta-27oct.md). Las cinco fichas con un fallo
+   de verdad y el inglés que se leía al revés no vuelven. Contra v0.181.0 caen todas. */
+const NUNCA = /(?!)/;
+const NO_VUELVEN_27 = [
+  [/hasta estirar la pierna/i, /until the leg is straight/i],  // Desliza el talón: no hace falta estirarla
+  [/cintura no se despega/i, /waist stays on the floor/i],     // Desliza el talón: sin aplastar la zona lumbar
+  [/brazos en cruz/i, /Arms out, resting/i],                    // Deslizamientos en pared: en W, como el dibujo
+  [/pero trabaja/i, /but it works/i],                           // Remo con tu mano
+  [/palma abajo y luego palma arriba/i, /palm down, then palm up/i], // Estiramiento de muñeca: cuánto cada una
+  [NUNCA, /at the back hip/i],                                  // Flexor de cadera: es delante de la cadera
+  [NUNCA, /as big as you can/i],                                // Círculos de tobillo: cómodos, sin forzar
+  [NUNCA, /hands on your waist/i],                              // Bisagra de cadera: on your hips
+  [NUNCA, /hand-width/i],                                       // Elevación de puntas: un palmo son ~20 cm
+];
+
+test('los fallos de la revisión del 27 oct. no vuelven, ni en castellano ni en inglés', () => {
+  for (const [es, en] of NO_VUELVEN_27) {
+    for (const f of DATOS) expect(textos(f).filter((t) => es.test(t)), f + ' · ' + es).toEqual([]);
+    for (const f of INGLES) expect(valoresEn(f).filter((t) => en.test(t)), f + ' · ' + en).toEqual([]);
+  }
+});
+
+test('las cinco fichas corregidas dicen lo que faltaba', () => {
+  const todo = DATOS.map(leer).join('\n');
+  const paso = (nombre) => [...todo.matchAll(new RegExp("\\{ name: '" + nombre + "'[^]*?care: '([^']*)' \\} \\}", 'g'))].map((m) => m[0]);
+  /* Estiramiento de muñeca: las dos posturas y cuánto cada una, en las dos rutinas que lo llevan. */
+  const muneca = paso('Estiramiento de muñeca');
+  expect(muneca.length).toBe(2);
+  for (const p of muneca) expect(p).toMatch(/Diez segundos palma abajo y diez palma arriba/);
+  /* Círculos de brazos: el otro brazo. */
+  for (const p of paso('Círculos de brazos')) expect(p).toMatch(/Luego, el otro/);
+  /* Remo con banda: banda larga, y cómo no hacerse daño con ella. */
+  for (const p of paso('Remo con banda')) expect(p).toMatch(/banda larga[^]*no la sueltes tensa/);
+  /* Gateo: los cuatro de vuelta. Desliza el talón: la pelvis quieta manda sobre el recorrido. */
+  for (const p of paso('Gateo con rodillas')) expect(p).toMatch(/cuatro atrás/);
+  for (const p of paso('Desliza el talón')) expect(p).toMatch(/sin mover la pelvis/);
+  const en = leer('app/i18n/content/extra.js') + leer('app/i18n/content/move.js');
+  expect(en.match(/Ten seconds palm down and ten palm up/g) || []).toHaveLength(2);
 });

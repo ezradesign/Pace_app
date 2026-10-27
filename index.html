@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.181.0</title>
+  <title>PACE · Foco · Cuerpo — v0.181.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2565,6 +2565,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'preview.start': 'Empezar',
 
 
+  'preview.aviso': 'Respira con normalidad y, si notas dolor o mareo, para.',
+
+
 
   'preview.doneCount.one': 'Lo has hecho una vez',
   'preview.doneCount.many': 'Lo has hecho {n} veces',
@@ -2702,6 +2705,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.position': 'Position',
   'preview.steps': 'The steps',
   'preview.start': 'Start',
+  'preview.aviso': 'Breathe normally, and stop if you feel pain or dizziness.',
   'preview.doneCount.one': 'You have done this once',
   'preview.doneCount.many': 'You have done this {n} times',
   'preview.eq.stableDesk': 'A stable desk',
@@ -4400,9 +4404,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.desk.pushups.desc': 'Push-ups against the desk or the wall. Two short sets.',
   'extra.desk.pushups.code': 'Strength',
   'extra.desk.pushups.s0.name': 'Incline push-ups',
-  'extra.desk.pushups.s0.instruction.setup': 'Hands on a sturdy desk or the wall, a bit wider than your shoulders. Body on a diagonal.',
-  'extra.desk.pushups.s0.instruction.action': 'Lower your chest toward the edge, elbows close to your body. Push and return.',
-  'extra.desk.pushups.s0.instruction.care': 'If it is hard, use the wall. A desk that does not move: no wheels, not folding.',
+  'extra.desk.pushups.s0.instruction.setup': 'Hands on a sturdy desk or the wall, a bit wider than shoulders. Feet back, body in one line.',
+  'extra.desk.pushups.s0.instruction.action': 'Lower your chest toward the desk or wall, elbows in. Push back without letting your hips sag.',
+  'extra.desk.pushups.s0.instruction.care': 'Too hard? Use the wall, hands at chest height. The desk must not move: no wheels, nothing folding.',
   'extra.desk.pushups.s1.name': 'Rest',
   'extra.desk.pushups.s1.instruction.action': 'Breathe.',
   'extra.desk.pushups.s2.name': 'Incline push-ups',
@@ -4478,7 +4482,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.name': 'Hands & Forearms',
   'extra.grip.squeeze.desc': 'Open, stretch and rest your palms on the desk.',
   'extra.grip.squeeze.code': 'Forearms',
-  'extra.grip.squeeze.s0.name': 'Squeeze fist',
+  'extra.grip.squeeze.s0.name': 'Open and close your hands',
   'extra.grip.squeeze.s0.instruction.setup': 'Arms relaxed, hands open.',
   'extra.grip.squeeze.s0.instruction.action': 'Close your fist without squeezing as hard as you can, and open it slowly, all the way.',
   'extra.grip.squeeze.s0.instruction.care': 'Gentle: this is not a strength exercise.',
@@ -4487,7 +4491,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.s1.instruction.care': 'Don\'t push them back with your other hand.',
   'extra.grip.squeeze.s2.name': 'Wrist stretch',
   'extra.grip.squeeze.s2.instruction.setup': 'Arm out in front, elbow soft.',
-  'extra.grip.squeeze.s2.instruction.action': 'Palm down, then palm up: with your other hand, ease your fingers toward you, gently.',
+  'extra.grip.squeeze.s2.instruction.action': 'Ten seconds palm down and ten palm up, easing your fingers toward you with your other hand.',
   'extra.grip.squeeze.s2.instruction.care': 'Light pressure. Never into pain.',
   'extra.grip.squeeze.s3.name': 'Palms on the desk',
   'extra.grip.squeeze.s3.instruction.setup': 'Stand facing the desk, palms flat, fingers pointing toward you. Elbows straight but not locked.',
@@ -4511,8 +4515,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.posture.set.s2.instruction.action': 'Upper back on the chair, arch gently and open your chest. Your head does not tip back.',
   'extra.posture.set.s2.instruction.care': 'The arch comes from the chest. If the backrest hits your neck or lower back, lift your chest without leaning on it.',
   'extra.posture.set.s3.name': 'Chest opener',
-  'extra.posture.set.s3.instruction.action': 'Take your arms back, squeeze your shoulder blades, and open your chest. Breathe wide.',
-  'extra.posture.set.s3.instruction.care': 'Without gripping the backrest or arching your lower back. Only open as far as feels fine.',
+  'extra.posture.set.s3.instruction.action': 'Seated, arms back: gently bring your shoulder blades together, open your chest. Breathe deeply.',
+  'extra.posture.set.s3.instruction.care': 'Don\'t grip the backrest or arch your lower back. Only open as far as feels fine.',
 
 
   'extra.push.ladder.name': 'Push · Progression',
@@ -4574,7 +4578,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.code': 'Legs',
   'extra.chair.squats.s0.name': 'Chair squat',
   'extra.chair.squats.s0.instruction.setup': 'Stand in front of the chair, feet hip-width apart. A stable chair, no wheels.',
-  'extra.chair.squats.s0.instruction.action': 'Sit all the way down with control, and stand up pushing through the floor.',
+  'extra.chair.squats.s0.instruction.action': 'Sit all the way down with control. Lean forward a little and stand, pushing through your feet.',
   'extra.chair.squats.s0.instruction.care': 'Use your hands if you need to. The first time, one set is enough.',
   'extra.chair.squats.s1.name': 'Rest',
   'extra.chair.squats.s1.instruction.action': 'Breathe.',
@@ -4585,8 +4589,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.s3.instruction.action': 'Breathe.',
   'extra.chair.squats.s4.name': 'Calf raises',
   'extra.chair.squats.s4.instruction.setup': 'Standing, one hand on the chair or the desk.',
-  'extra.chair.squats.s4.instruction.action': 'Raise your heels as high as you control. Lower slowly.',
-  'extra.chair.squats.s4.instruction.care': 'No bouncing. If you sway, lean on it more.',
+  'extra.chair.squats.s4.instruction.action': 'Raise your heels, staying in control. Lower slowly.',
+  'extra.chair.squats.s4.instruction.care': 'No bouncing. If you feel unsteady, hold on with both hands.',
   'extra.chair.squats.s5.name': 'Rest',
   'extra.chair.squats.s5.instruction.action': 'Breathe.',
   'extra.chair.squats.s6.name': 'Calf raises',
@@ -4597,7 +4601,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.standing.desc': 'Toes up, then sit on air against the wall.',
   'extra.legs.standing.code': 'Legs',
   'extra.legs.standing.s0.name': 'Tibialis raise',
-  'extra.legs.standing.s0.instruction.setup': 'Back against the wall, leaning on it, heels a hand-width away.',
+  'extra.legs.standing.s0.instruction.setup': 'Back and glutes against the wall, feet hip-width apart, heels about a hand span from it.',
   'extra.legs.standing.s0.instruction.action': 'Lift your toes toward your shins. Lower them slowly.',
   'extra.legs.standing.s0.instruction.care': 'Small movement, no rocking back.',
   'extra.legs.standing.s1.name': 'Rest',
@@ -4621,7 +4625,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.single.desc': 'Single-leg strength. Balance, control, and a stable chair.',
   'extra.legs.single.code': 'Unilateral',
   'extra.legs.single.s0.name': 'Hip hinge',
-  'extra.legs.single.s0.instruction.setup': 'Standing, feet hip-width apart, hands on your waist.',
+  'extra.legs.single.s0.instruction.setup': 'Standing, feet hip-width apart, hands on your hips.',
   'extra.legs.single.s0.instruction.action': 'Send your hips back with a long back and soft knees, then return.',
   'extra.legs.single.s0.instruction.care': 'Your trunk tilts because your hips go back, without rounding. No weight.',
   'extra.legs.single.s1.name': 'Rest',
@@ -4654,9 +4658,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.back.desk.s0.instruction.action': 'Draw your shoulder blades toward the center and hold a moment. Release.',
   'extra.back.desk.s0.instruction.care': 'Shoulders down, away from your ears.',
   'extra.back.desk.s1.name': 'Scapular wall slides',
-  'extra.back.desk.s1.instruction.setup': 'Back to the wall, feet a step in front. Arms out, resting against it.',
-  'extra.back.desk.s1.instruction.action': 'Slide your arms up and down by the wall, like wings, slowly.',
-  'extra.back.desk.s1.instruction.care': 'If keeping them on the wall strains your posture, move them off a little. No wall? Do it in the air.',
+  'extra.back.desk.s1.instruction.setup': 'Back to the wall, feet a step forward. Arms in a W: elbows bent, hands up.',
+  'extra.back.desk.s1.instruction.action': 'Slide your arms up the wall and lower them slowly, without arching your lower back.',
+  'extra.back.desk.s1.instruction.care': 'If keeping your arms on the wall strains your posture, let them come off a little. No wall? Do it in the air.',
   'extra.back.desk.s2.name': 'Chest opening',
   'extra.back.desk.s2.instruction.action': 'Hands behind your head, without pulling on it. Open your elbows and breathe wide.',
   'extra.back.desk.s2.instruction.care': 'Neck comfortable, eyes forward. Only open as far as feels fine.',
@@ -4693,21 +4697,21 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.pausa.suelo.desc': 'Two-foot bridge, heel slides and a short crawl. On the floor.',
   'extra.pausa.suelo.code': 'Floor',
   'extra.pausa.suelo.s0.name': 'Two-foot bridge',
-  'extra.pausa.suelo.s0.instruction.setup': 'On your back, knees bent, both feet down.',
+  'extra.pausa.suelo.s0.instruction.setup': 'On your back, knees bent, feet flat and hip-width apart, close to your glutes.',
   'extra.pausa.suelo.s0.instruction.action': 'Push through your feet, lift your pelvis and lower slowly.',
-  'extra.pausa.suelo.s0.instruction.care': 'Only lift as far as your lower back stays unarched.',
+  'extra.pausa.suelo.s0.instruction.care': 'Only lift as far as you can without arching your lower back more.',
   'extra.pausa.suelo.s1.name': 'Rest',
   'extra.pausa.suelo.s1.instruction.action': 'Breathe.',
   'extra.pausa.suelo.s2.name': 'Two-foot bridge',
   'extra.pausa.suelo.s2.instruction.action': 'Second set: up and down, slowly.',
   'extra.pausa.suelo.s2.instruction.care': 'If your lower back hurts, lift less or stop.',
   'extra.pausa.suelo.s3.name': 'Heel slide',
-  'extra.pausa.suelo.s3.instruction.setup': 'On your back, knees bent, lower back resting, not pressed.',
-  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor until the leg is straight, and back. Three with each.',
-  'extra.pausa.suelo.s3.instruction.care': 'Your waist stays on the floor. If it lifts, shorten the slide.',
+  'extra.pausa.suelo.s3.instruction.setup': 'On your back, knees bent, without pressing your lower back into the floor.',
+  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back. Three with each leg.',
+  'extra.pausa.suelo.s3.instruction.care': 'No need to straighten your leg fully. If your back starts to arch more, shorten the slide.',
   'extra.pausa.suelo.s4.name': 'Knee crawl',
   'extra.pausa.suelo.s4.instruction.setup': 'On all fours: hands under shoulders, knees under hips.',
-  'extra.pausa.suelo.s4.instruction.action': 'Four short steps forward, opposite hand and knee, and back.',
+  'extra.pausa.suelo.s4.instruction.action': 'Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.',
   'extra.pausa.suelo.s4.instruction.care': 'Your knees stay on the floor. If your wrists hurt, stop.',
 
   'extra.banda.espalda.name': 'Back with a Band',
@@ -4720,15 +4724,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.banda.espalda.s1.name': 'Rest',
   'extra.banda.espalda.s1.instruction.action': 'Breathe.',
   'extra.banda.espalda.s2.name': 'Band row',
-  'extra.banda.espalda.s2.instruction.setup': 'Stand on the middle of the band with both feet. Hips back, long back.',
-  'extra.banda.espalda.s2.instruction.action': 'Pull the ends, bringing your elbows toward your ribs. Return slowly.',
-  'extra.banda.espalda.s2.instruction.care': 'No band? Skip this step: the next one needs none.',
+  'extra.banda.espalda.s2.instruction.setup': 'Stand on the middle of a long band with both feet. Knees slightly bent, hips back.',
+  'extra.banda.espalda.s2.instruction.action': 'Long back, straight arms: draw your elbows back toward your ribs. Return slowly.',
+  'extra.banda.espalda.s2.instruction.care': 'A light, undamaged band, firmly underfoot; don\'t let go while it\'s taut. No band? Skip this step.',
   'extra.banda.espalda.s3.name': 'Rest',
   'extra.banda.espalda.s3.instruction.action': 'Breathe.',
   'extra.banda.espalda.s4.name': 'Hand-resisted row',
-  'extra.banda.espalda.s4.instruction.setup': 'Standing. With one hand, hold the other wrist in front of your belly.',
-  'extra.banda.espalda.s4.instruction.action': 'Draw that elbow back while the other hand resists. About five, unhurried.',
-  'extra.banda.espalda.s4.instruction.care': 'Resist without squeezing hard, and breathe. Not the same as a band, but it works.'
+  'extra.banda.espalda.s4.instruction.setup': 'Standing. With one hand, loosely hold your other wrist in front of your belly.',
+  'extra.banda.espalda.s4.instruction.action': 'Draw that elbow back while your other hand gently resists, then return slowly. About five.',
+  'extra.banda.espalda.s4.instruction.care': 'Don\'t squeeze hard. Keep breathing normally.'
 });
 })();
 </script>
@@ -4765,8 +4769,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.s1.instruction.action': 'Rotate your trunk slowly to one side. Return to center.',
   'move.chair.antidote.s1.instruction.care': 'The turn comes from the trunk, not the neck.',
   'move.chair.antidote.s2.name': 'Hip flexor',
-  'move.chair.antidote.s2.instruction.setup': 'One knee on the floor, the other leg in front at an angle. Cushion the knee if needed.',
-  'move.chair.antidote.s2.instruction.action': 'Ease your pelvis forward a little, without arching. A gentle stretch at the back hip.',
+  'move.chair.antidote.s2.instruction.setup': 'One knee on the floor, on a cushion if needed. Front foot flat, knee over the ankle.',
+  'move.chair.antidote.s2.instruction.action': 'Ease your pelvis forward a little, no arching. A gentle stretch in front of the kneeling hip.',
   'move.chair.antidote.s2.instruction.care': 'Short range. If your knee hurts even with the cushion, skip this step.',
   'move.chair.antidote.s3.name': 'World\'s greatest stretch',
   'move.chair.antidote.s3.instruction.setup': 'Take a long step into a lunge. Put the hand opposite your front leg on the floor.',
@@ -4828,11 +4832,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.shoulders.5.desc': 'Shoulder reset: the wall, a shoulder turn and the upper back.',
   'move.shoulders.5.code': 'Shoulders',
   'move.shoulders.5.s0.name': 'Scapular wall slides',
-  'move.shoulders.5.s0.instruction.setup': 'Stand with your back to the wall, arms out against it.',
-  'move.shoulders.5.s0.instruction.action': 'Slide your arms up and down by the wall, like wings.',
-  'move.shoulders.5.s0.instruction.care': 'If keeping them on the wall strains your posture, move them off a little. Lower back close to the wall.',
+  'move.shoulders.5.s0.instruction.setup': 'Back to the wall, feet a step forward. Arms in a W: elbows bent, hands up.',
+  'move.shoulders.5.s0.instruction.action': 'Slide your arms up the wall and lower them slowly, without arching your lower back.',
+  'move.shoulders.5.s0.instruction.care': 'If keeping your arms on the wall strains your posture, let them come off a little. Lower back close to the wall.',
   'move.shoulders.5.s1.name': 'External rotation',
-  'move.shoulders.5.s1.instruction.action': 'Elbows tucked at 90°. Open your forearms outward and return.',
+  'move.shoulders.5.s1.instruction.action': 'Arms by your sides, elbows at 90°, palms up. Move your hands out to the sides and back.',
   'move.shoulders.5.s1.instruction.care': 'No resistance: this is to move the shoulder. Small and controlled.',
   'move.shoulders.5.s2.name': 'Thoracic extension',
   'move.shoulders.5.s2.instruction.setup': 'Sit all the way back, upper back against the backrest.',
@@ -4847,7 +4851,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.atg.knees.s0.instruction.action': 'Bring your front knee over your toes, slowly, and come back.',
   'move.atg.knees.s0.instruction.care': 'Front heel down. If your knee complains, go less deep.',
   'move.atg.knees.s1.name': 'Tibialis raise',
-  'move.atg.knees.s1.instruction.setup': 'Back against the wall, heels a hand-width from it.',
+  'move.atg.knees.s1.instruction.setup': 'Back against the wall, heels about a hand span from it.',
   'move.atg.knees.s1.instruction.action': 'Lean back and lift your toes toward your shins. Lower them slowly.',
   'move.atg.knees.s1.instruction.care': 'Small movement, no rocking back. You\'ll feel it at the front of your shin.',
   'move.atg.knees.s2.name': 'Single-leg bridge',
@@ -4892,12 +4896,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.neck.3.s0.instruction.action': 'Glide your chin straight back, hold three seconds and return.',
   'move.neck.3.s0.instruction.care': 'Small range. Your head goes back, not down.',
   'move.neck.3.s1.name': 'Slow rotation',
-  'move.neck.3.s1.instruction.setup': 'Tall, chin parallel to the floor.',
+  'move.neck.3.s1.instruction.setup': 'Sit tall, with your chin level.',
   'move.neck.3.s1.instruction.action': 'Turn slowly to look over one shoulder, wait two seconds and come back. Three to each side.',
-  'move.neck.3.s1.instruction.care': 'Only turn as far as your neck stays loose.',
+  'move.neck.3.s1.instruction.care': 'Only turn as far as feels comfortable, without forcing it.',
   'move.neck.3.s2.name': 'Neck tilt',
   'move.neck.3.s2.instruction.setup': 'Sit tall, let your shoulders drop.',
-  'move.neck.3.s2.instruction.action': 'Bring your ear toward your shoulder, slowly. Feel the stretch on the other side.',
+  'move.neck.3.s2.instruction.action': 'Ease your ear toward your shoulder, not trying to touch it. Gentle stretch on the other side.',
   'move.neck.3.s2.instruction.care': 'Tilt with control, without pulling with your hand or lifting your shoulder.',
 
   'move.desk.quick.name': 'Desk Express',
@@ -4910,13 +4914,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.desk.quick.s1.name': 'Wrist circles',
   'move.desk.quick.s1.instruction.setup': 'Seated, forearms comfortable.',
   'move.desk.quick.s1.instruction.action': 'Small, slow circles with your hands: four in each direction.',
-  'move.desk.quick.s1.instruction.care': 'No clenched fists, no reaching for the maximum.',
+  'move.desk.quick.s1.instruction.care': 'Keep your hands relaxed and don\'t force the range.',
   'move.desk.quick.s2.name': 'Seated twist',
   'move.desk.quick.s2.instruction.action': 'Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side.',
   'move.desk.quick.s2.instruction.care': 'Only turn as far as feels loose. The turn comes from the trunk, not the neck.',
   'move.desk.quick.s3.name': 'Ankle circles',
   'move.desk.quick.s3.instruction.action': 'Under the desk, lift one foot and draw circles with your ankle. Switch halfway.',
-  'move.desk.quick.s3.instruction.care': 'Slow circles, as big as you can without moving your whole leg.',
+  'move.desk.quick.s3.instruction.care': 'Slow, comfortable circles, without forcing or moving your whole leg.',
   'move.desk.quick.s4.name': 'Chin tucks',
   'move.desk.quick.s4.instruction.action': 'Slide your chin straight back, hold and release. 5 times.',
   'move.desk.quick.s4.instruction.care': 'Small range. Your head goes back, not down.',
@@ -4927,31 +4931,32 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.wrists.name': 'Hands & Wrists',
   'move.wrists.desc': 'A fist, circles and a gentle stretch.',
   'move.wrists.code': 'Wrists',
-  'move.wrists.s0.name': 'Squeeze fist',
+  'move.wrists.s0.name': 'Open and close your hands',
   'move.wrists.s0.instruction.setup': 'Arms relaxed, hands open.',
   'move.wrists.s0.instruction.action': 'Close your fist without squeezing as hard as you can, and open it slowly, all the way.',
   'move.wrists.s0.instruction.care': 'Gentle: this is not a strength exercise.',
   'move.wrists.s1.name': 'Wrist circles',
   'move.wrists.s1.instruction.setup': 'Seated, forearms comfortable.',
   'move.wrists.s1.instruction.action': 'Small, slow circles with your hands: four in each direction.',
-  'move.wrists.s1.instruction.care': 'No clenched fists, no reaching for the maximum.',
+  'move.wrists.s1.instruction.care': 'Keep your hands relaxed and don\'t force the range.',
   'move.wrists.s2.name': 'Wrist stretch',
   'move.wrists.s2.instruction.setup': 'Arm out in front, elbow soft.',
-  'move.wrists.s2.instruction.action': 'Palm down, then palm up: with your other hand, ease your fingers toward you, gently.',
+  'move.wrists.s2.instruction.action': 'Ten seconds palm down and ten palm up, easing your fingers toward you with your other hand.',
   'move.wrists.s2.instruction.care': 'Light pressure. Never into pain.',
 
   'move.shoulder.circles.name': 'Free Arms',
   'move.shoulder.circles.desc': 'Circles, the wall and a shoulder turn.',
   'move.shoulder.circles.code': 'Shoulders',
   'move.shoulder.circles.s0.name': 'Arm circles',
-  'move.shoulder.circles.s0.instruction.action': 'Standing, draw slow circles with your arm straight: four forward and four back.',
+  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back. Then the other arm.',
   'move.shoulder.circles.s0.instruction.care': 'Start small. Make the circle bigger only if your trunk stays still.',
   'move.shoulder.circles.s1.name': 'Scapular wall slides',
-  'move.shoulder.circles.s1.instruction.setup': 'Back to the wall, feet a step in front. Arms out, resting against it.',
-  'move.shoulder.circles.s1.instruction.action': 'Slide your arms up and down by the wall, like wings, slowly.',
-  'move.shoulder.circles.s1.instruction.care': 'If keeping them on the wall strains your posture, move them off a little.',
+  'move.shoulder.circles.s1.instruction.setup': 'Back to the wall, feet a step forward. Arms in a W: elbows bent, hands up.',
+  'move.shoulder.circles.s1.instruction.action': 'Slide your arms up the wall and lower them slowly, without arching your lower back.',
+  'move.shoulder.circles.s1.instruction.care': 'If keeping your arms on the wall strains your posture, let them come off a little.',
   'move.shoulder.circles.s2.name': 'External rotation',
-  'move.shoulder.circles.s2.instruction.action': 'Elbows tucked at 90°. Open your forearms outward and return.',
+  'move.shoulder.circles.s2.instruction.setup': 'Standing, arms by your sides, elbows bent to 90°, palms up.',
+  'move.shoulder.circles.s2.instruction.action': 'Move your hands out to the sides, keeping your elbows in, and back.',
   'move.shoulder.circles.s2.instruction.care': 'No resistance: this is to move the shoulder. Small and controlled.',
 
 
@@ -4962,7 +4967,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.spine.waves.code': 'Spine',
   'move.spine.waves.s0.name': 'Cat-camel',
   'move.spine.waves.s0.instruction.setup': 'Get on all fours, hands under shoulders and knees under hips.',
-  'move.spine.waves.s0.instruction.action': 'Round and extend your back slowly, without chasing the end range.',
+  'move.spine.waves.s0.instruction.action': 'Slowly round your back, then gently arch it. Don\'t force either end.',
   'move.spine.waves.s0.instruction.care': 'Slow movement, following your breath.',
   'move.spine.waves.s1.name': 'Thoracic rotation',
   'move.spine.waves.s1.instruction.setup': 'Sit tall, hands crossed over your chest.',
@@ -4986,10 +4991,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.spine.chair.s1.name': 'Thoracic rotation',
   'move.spine.chair.s1.instruction.setup': 'Sit tall, feet down. Cross your hands over your chest.',
   'move.spine.chair.s1.instruction.action': 'Turn your trunk slowly to one side and back. Four to each side.',
-  'move.spine.chair.s1.instruction.care': 'The turn comes from your trunk, not your neck. No pulling with your arms.',
+  'move.spine.chair.s1.instruction.care': 'Keep your pelvis facing forward; your head follows the turn without straining your neck.',
   'move.spine.chair.s2.name': 'Chest opener',
-  'move.spine.chair.s2.instruction.action': 'Take your arms back, squeeze your shoulder blades, and open your chest. Breathe wide.',
-  'move.spine.chair.s2.instruction.care': 'Without gripping the backrest or arching your lower back.',
+  'move.spine.chair.s2.instruction.action': 'Seated, arms back: gently bring your shoulder blades together, open your chest. Breathe deeply.',
+  'move.spine.chair.s2.instruction.care': 'Don\'t grip the backrest or arch your lower back.',
   'move.spine.chair.s3.name': 'Chest opener',
   'move.spine.chair.s3.instruction.action': 'Once more, a little further if it feels fine.',
   'move.spine.chair.s3.instruction.care': 'Only open as far as feels fine.',
@@ -5019,8 +5024,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.couch.stretch.desc': 'Deep hip flexors against the wall, knee on the floor. The couch stretch.',
   'move.couch.stretch.code': 'Hips',
   'move.couch.stretch.s0.name': 'Hip flexor',
-  'move.couch.stretch.s0.instruction.setup': 'One knee on the floor, the other leg in front at an angle. Cushion the knee if needed.',
-  'move.couch.stretch.s0.instruction.action': 'Ease your pelvis forward a little, without arching. A gentle stretch at the back hip.',
+  'move.couch.stretch.s0.instruction.setup': 'One knee on the floor, on a cushion if needed. Front foot flat, knee over the ankle.',
+  'move.couch.stretch.s0.instruction.action': 'Ease your pelvis forward a little, no arching. A gentle stretch in front of the kneeling hip.',
   'move.couch.stretch.s0.instruction.care': 'Trunk upright. If your knee hurts even with the cushion, skip this step.',
   'move.couch.stretch.s1.name': 'Couch stretch',
   'move.couch.stretch.s1.instruction.setup': 'Back knee on the floor, right by the wall, its instep resting on it. A cushion underneath.',
@@ -5064,15 +5069,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hamstrings.standing.code': 'Hamstrings',
   'move.hamstrings.standing.s0.name': 'Single-leg hamstring',
   'move.hamstrings.standing.s0.instruction.setup': 'One hand on the desk. One heel forward, on the floor, knee straight or slightly bent.',
-  'move.hamstrings.standing.s0.instruction.action': 'Send your hip back, torso long. Feel the stretch behind your thigh.',
-  'move.hamstrings.standing.s0.instruction.care': 'Standing knee slightly bent. No bouncing.',
+  'move.hamstrings.standing.s0.instruction.action': 'Hips back, lean forward without rounding your back. Feel it behind the front thigh.',
+  'move.hamstrings.standing.s0.instruction.care': 'Keep your standing knee slightly bent. No bouncing.',
   'move.hamstrings.standing.s1.name': 'Single-leg hamstring',
   'move.hamstrings.standing.s1.instruction.action': 'Once more, a little further if it feels fine.',
   'move.hamstrings.standing.s1.instruction.care': 'No bouncing. Come out slowly.',
   'move.hamstrings.standing.s2.name': 'Ankle circles',
   'move.hamstrings.standing.s2.instruction.setup': 'Sit down and lift one foot a little.',
   'move.hamstrings.standing.s2.instruction.action': 'Ankle circles: four each way with one foot, then with the other.',
-  'move.hamstrings.standing.s2.instruction.care': 'As big as you can without moving your whole leg.',
+  'move.hamstrings.standing.s2.instruction.care': 'Comfortable circles, without forcing or moving your whole leg.',
   'move.hamstrings.name': 'Posterior Chain',
   'move.hamstrings.desc': 'The back of the legs, standing: the fold, the hamstrings and the calf.',
   'move.hamstrings.code': 'Hamstrings',
@@ -5081,12 +5086,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hamstrings.s0.instruction.care': 'Hands on your thighs if you need to: you don\'t need to touch the floor.',
   'move.hamstrings.s1.name': 'Single-leg hamstring',
   'move.hamstrings.s1.instruction.setup': 'Plant one heel ahead, on the floor, that knee straight or slightly bent.',
-  'move.hamstrings.s1.instruction.action': 'Take your hips back, trunk long. Feel the stretch behind your thigh.',
+  'move.hamstrings.s1.instruction.action': 'Hips back, lean forward without rounding your back. Feel it behind the front thigh.',
   'move.hamstrings.s1.instruction.care': 'Keep the supporting knee slightly bent. No bouncing.',
   'move.hamstrings.s2.name': 'Wall calf stretch',
-  'move.hamstrings.s2.instruction.setup': 'Face the wall, hands on it. One foot back, heel on the floor.',
-  'move.hamstrings.s2.instruction.action': 'Lean your hips toward the wall, back leg straight. A gentle stretch in the calf.',
-  'move.hamstrings.s2.instruction.care': 'Your back heel stays down. No bouncing.',
+  'move.hamstrings.s2.instruction.setup': 'Face the wall, hands on it. One foot back, toes pointing forward, heel down.',
+  'move.hamstrings.s2.instruction.action': 'Bend your front knee and bring your hips toward the wall, back leg straight.',
+  'move.hamstrings.s2.instruction.care': 'A gentle stretch in the back calf. Keep that heel down. No bouncing.',
 
 
 
@@ -5097,11 +5102,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.morning.flow.code': 'Floor',
   'move.morning.flow.s0.name': 'Cat-camel',
   'move.morning.flow.s0.instruction.setup': 'Get on all fours, hands under shoulders and knees under hips.',
-  'move.morning.flow.s0.instruction.action': 'Round and extend your back slowly, without chasing the end range.',
+  'move.morning.flow.s0.instruction.action': 'Slowly round your back, then gently arch it. Don\'t force either end.',
   'move.morning.flow.s0.instruction.care': 'Slow movement, following your breath.',
   'move.morning.flow.s1.name': 'Hip flexor',
-  'move.morning.flow.s1.instruction.setup': 'One knee on the floor, the other leg in front. Cushion the knee if needed.',
-  'move.morning.flow.s1.instruction.action': 'Ease your pelvis forward a little, without arching. A gentle stretch at the back hip.',
+  'move.morning.flow.s1.instruction.setup': 'One knee on the floor, on a cushion if needed. Front foot flat, knee over the ankle.',
+  'move.morning.flow.s1.instruction.action': 'Ease your pelvis forward a little, no arching. A gentle stretch in front of the kneeling hip.',
   'move.morning.flow.s1.instruction.care': 'If your knee hurts even with the cushion, skip this step.',
   'move.morning.flow.s2.name': 'Breathing on all fours',
   'move.morning.flow.s2.instruction.setup': 'On all fours, long back and loose neck.',
@@ -5241,9 +5246,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Encogimiento de hombros.cue': 'Shoulders up, then relax.',
   'custom.ex.Shrug + round.cue': 'Shoulders up, then relax.',
   'custom.ex.Círculos de brazos.name': 'Arm circles',
-  'custom.ex.Círculos de brazos.cue': 'Slow circles, straight arm. Start small.',
+  'custom.ex.Círculos de brazos.cue': 'Slow circles with one arm, then the other. Start small.',
   'custom.ex.Círculos de hombro.name': 'Arm circles',
-  'custom.ex.Círculos de hombro.cue': 'Slow circles, straight arm. Start small.',
+  'custom.ex.Círculos de hombro.cue': 'Slow circles with one arm, then the other. Start small.',
   'custom.ex.Deslizamientos en pared.name': 'Scapular wall slides',
   'custom.ex.Scapular wall slides.name': 'Scapular wall slides',
   'custom.ex.Deslizamientos en pared.cue': 'Back against wall, raise arms.',
@@ -5354,8 +5359,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Palmas al suelo.cue': 'Palms on the desk, fingers toward you.',
   'custom.ex.Rezo invertido.name': 'Reverse prayer',
   'custom.ex.Rezo invertido.cue': 'Backs of hands together at chest height.',
-  'custom.ex.Abrir y cerrar el puño.name': 'Squeeze fist',
-  'custom.ex.Squeeze fist.name': 'Squeeze fist',
+  'custom.ex.Abrir y cerrar el puño.name': 'Open and close your hands',
+  'custom.ex.Squeeze fist.name': 'Open and close your hands',
   'custom.ex.Abrir y cerrar el puño.cue': 'Close without squeezing hard, open slowly.',
   'custom.ex.Squeeze fist.cue': 'Close without squeezing hard, open slowly.',
   'custom.ex.Extensión de dedos.name': 'Finger extension',
@@ -6600,7 +6605,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.181.0';
+const PACE_VERSION = 'v0.181.1';
 
 
 
@@ -26581,6 +26586,12 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
     ),
 
 
+
+
+    React.createElement("p", { "data-pace-preview-aviso": true, style: { fontSize: 13.5, color: 'var(--ink-2)', lineHeight: 1.5, margin: '0 0 12px' } },
+    t('preview.aviso')
+    ),
+
     React.createElement("button", { onClick: onStart, "data-pace-cta": true, style: {
         width: '100%', marginTop: 6, padding: '13px 20px',
         background: accent, color: 'var(--paper)', border: 'none',
@@ -30145,7 +30156,7 @@ var MOVE_ROUTINES = {
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
           setup: 'De pie delante de la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
-          action: 'Siéntate del todo, con control, y levántate empujando el suelo.',
+          action: 'Siéntate del todo, con control. Echa el tronco un poco adelante y levántate empujando el suelo.',
           care: 'Ayúdate con las manos si lo necesitas. La primera vez, una serie basta.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
@@ -30161,7 +30172,7 @@ var MOVE_ROUTINES = {
         instruction: {
           setup: 'De pie, con una mano en la silla o en la mesa.',
           action: 'Sube los talones hasta donde controles. Baja despacio.',
-          care: 'Sin rebotes. Si te balanceas, apóyate más.' } },
+          care: 'Sin rebotes. Si te balanceas, apóyate con las dos manos.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
       { name: 'Elevación de talones', mode: 'reps', reps: 6, dur: 24,
@@ -30178,9 +30189,9 @@ var MOVE_ROUTINES = {
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 20,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'Manos en una mesa fija o en la pared, algo más abiertas que los hombros. Cuerpo en diagonal.',
-          action: 'Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja y vuelve.',
-          care: 'Si cuesta, en la pared. Mesa que no se mueva: ni con ruedas ni plegable.' } },
+          setup: 'Manos en mesa fija o pared, algo más abiertas que los hombros. Pies atrás y el cuerpo en línea.',
+          action: 'Baja el pecho hacia la mesa o la pared, codos cerca del cuerpo. Empuja sin hundir la cintura.',
+          care: 'Si cuesta, en la pared, manos a la altura del pecho. Mesa fija: ni con ruedas ni plegable.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 20,
@@ -30197,7 +30208,7 @@ var MOVE_ROUTINES = {
       { name: 'Elevación de puntas', mode: 'reps', reps: 8, dur: 32,
         tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'De espaldas a la pared, apoyado en ella, con los talones a un palmo.',
+          setup: 'Espalda y glúteos en la pared, pies al ancho de las caderas, talones a un palmo de ella.',
           action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
           care: 'Movimiento pequeño, sin balancearte hacia atrás.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
@@ -30229,9 +30240,9 @@ var MOVE_ROUTINES = {
       { name: 'Puente con los dos pies', mode: 'reps', reps: 6, dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
         tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'Boca arriba, rodillas dobladas y los dos pies apoyados.',
+          setup: 'Boca arriba, rodillas dobladas, pies apoyados al ancho de las caderas y cerca de los glúteos.',
           action: 'Empuja con los pies, sube la pelvis y baja despacio.',
-          care: 'Sube solo hasta donde no se arquee la cintura.' } },
+          care: 'Sube solo hasta donde la zona lumbar no se arquee más.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
       { name: 'Puente con los dos pies', mode: 'reps', reps: 6, dur: 30,
@@ -30239,17 +30250,21 @@ var MOVE_ROUTINES = {
         instruction: {
           action: 'Segunda serie: sube y baja despacio.',
           care: 'Si la lumbar molesta, sube menos o termina.' } },
+
+
       { name: 'Desliza el talón', mode: 'reps', reps: 6, dur: 24,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'Boca arriba, rodillas dobladas, la zona lumbar apoyada sin apretar.',
-          action: 'Desliza un talón por el suelo hasta estirar la pierna, y vuelve. Tres con cada una.',
-          care: 'La cintura no se despega del suelo. Si se despega, recorrido más corto.' } },
-      { name: 'Gateo con rodillas', mode: 'reps', reps: 4, dur: 24,
-        tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
+          setup: 'Boca arriba, rodillas dobladas, sin aplastar la zona lumbar contra el suelo.',
+          action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna.',
+          care: 'No hace falta estirar la pierna del todo. Si la espalda se arquea más, acorta el recorrido.' } },
+
+
+      { name: 'Gateo con rodillas', mode: 'reps', reps: 8, dur: 24,
+        tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
           setup: 'A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.',
-          action: 'Cuatro pasos cortos hacia delante, mano y rodilla contrarias, y vuelve.',
+          action: 'Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás.',
           care: 'Las rodillas siguen en el suelo. Si las muñecas molestan, para.' } }]
     }]
 
@@ -30348,19 +30363,21 @@ var MOVE_ROUTINES = {
           care: 'Sin banda, salta este paso: la rutina cuenta igual.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
-      { name: 'Remo con banda', mode: 'reps', reps: 8, dur: 40, opcional: true,
+
+
+      { name: 'Remo con banda', mode: 'reps', reps: 8, dur: 40, opcional: true, setup: { mode: 'ready', estimatedSeconds: 15 },
         tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'Pisa el centro de la banda con los dos pies. Cadera atrás, espalda larga.',
-          action: 'Tira de los extremos llevando los codos hacia las costillas. Vuelve despacio.',
-          care: 'Sin banda, salta este paso: el siguiente no la necesita.' } },
+          setup: 'Pisa el centro de una banda larga con los dos pies. Rodillas algo dobladas, cadera atrás.',
+          action: 'Espalda larga y brazos estirados: lleva los codos hacia las costillas. Vuelve despacio.',
+          care: 'Banda suave, sin cortes y bien pisada; no la sueltes tensa. Sin banda, salta este paso.' } },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
         instruction: { action: 'Respira.' } },
       { name: 'Remo con tu mano', mode: 'perSide', dur: 25, transition: { seconds: 5 },
         instruction: {
-          setup: 'De pie. Con una mano, agarra la muñeca de la otra delante de la tripa.',
-          action: 'Lleva ese codo hacia atrás mientras la otra mano frena. Unas cinco, sin prisa.',
-          care: 'Frena sin apretar al máximo y respira. No es lo mismo que la banda, pero trabaja.' } }]
+          setup: 'De pie. Con una mano, sujeta sin apretar la muñeca de la otra, delante de la tripa.',
+          action: 'Lleva ese codo atrás mientras la otra mano frena suave, y vuelve despacio. Unas cinco.',
+          care: 'Sin apretar al máximo. Respira con normalidad.' } }]
     },
 
 
@@ -32671,32 +32688,39 @@ const EXTRA_ROUTINES = {
       { name: 'Inclinación de cuello', mode: 'perSide', dur: 12, transition: { seconds: 8 },
         instruction: {
           setup: 'Siéntate erguido, deja los hombros abajo.',
-          action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
+          action: 'Lleva la oreja hacia el hombro, despacio, sin intentar tocarlo. Tensión suave al otro lado.',
           care: 'Inclina con control, sin tirar con la mano ni subir el hombro.' } }]
     },
+
+
+
 
 
     { id: 'move.shoulder.circles', tag: 'SHLD', code: 'Hombros', name: 'Brazos libres',
       desc: 'Círculos, la pared y el giro del hombro.', min: 2,
       position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Círculos de brazos', mode: 'reps', reps: 8, dur: 32,
+      { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          action: 'De pie, dibuja círculos lentos con el brazo estirado: cuatro hacia delante y cuatro atrás.',
+          action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
           care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
       { name: 'Deslizamientos en pared', mode: 'reps', reps: 6, dur: 36,
         tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
-          action: 'Sube y baja los brazos junto a la pared, como alas, despacio.',
+          setup: 'De espaldas a la pared, pies un paso por delante. Brazos en W: codos doblados, manos arriba.',
+          action: 'Desliza los brazos hacia arriba por la pared y bájalos despacio, sin arquear la cintura.',
           care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco.' } },
       { name: 'Rotación externa', mode: 'reps', reps: 6, dur: 24,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
         instruction: {
-          action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+          setup: 'De pie, brazos junto al cuerpo, codos doblados a 90° y palmas arriba.',
+          action: 'Lleva las manos hacia fuera sin despegar los codos del cuerpo, y vuelve.',
           care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } }]
     },
+
+
+
 
 
     { id: 'move.wrists', tag: 'WRST', code: 'Muñecas', name: 'Manos y muñecas',
@@ -32718,7 +32742,7 @@ const EXTRA_ROUTINES = {
       { name: 'Estiramiento de muñeca', mode: 'perSide', dur: 20, transition: { seconds: 5 },
         instruction: {
           setup: 'Brazo al frente, el codo sin bloquear.',
-          action: 'Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti, suave.',
+          action: 'Diez segundos palma abajo y diez palma arriba, llevando los dedos hacia ti con la otra mano.',
           care: 'Presión ligera. Nunca hasta el dolor.' } }]
     },
 
@@ -32738,10 +32762,10 @@ const EXTRA_ROUTINES = {
         instruction: {
           setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
           action: 'Gira el tronco despacio hacia un lado y vuelve. Cuatro a cada lado.',
-          care: 'El giro nace del tronco, no del cuello. Sin tirar con los brazos.' } },
+          care: 'La pelvis mira al frente y la cabeza acompaña el giro, sin forzar el cuello.' } },
       { name: 'Apertura de pecho sentado', mode: 'timed', dur: 15,
         instruction: {
-          action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
+          action: 'Sentado, lleva los brazos atrás, acerca suave los omóplatos y abre el pecho. Respira ancho.',
           care: 'Sin agarrarte al respaldo ni arquear la cintura.' } },
       { name: 'Apertura de pecho sentado', mode: 'timed', dur: 15,
         instruction: {
@@ -32757,7 +32781,7 @@ const EXTRA_ROUTINES = {
       { name: 'Isquio a una pierna', mode: 'perSide', dur: 15, transition: { seconds: 8 },
         instruction: {
           setup: 'Una mano en la mesa. Un talón delante, en el suelo, rodilla estirada o un poco doblada.',
-          action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+          action: 'Cadera atrás y tronco adelante, sin redondear la espalda. Tensión detrás del muslo de delante.',
           care: 'La rodilla de apoyo, algo flexionada. Sin rebotes.' } },
       { name: 'Isquio a una pierna', mode: 'perSide', dur: 15, transition: { seconds: 8 },
         instruction: {
@@ -32768,7 +32792,7 @@ const EXTRA_ROUTINES = {
         instruction: {
           setup: 'Siéntate y levanta un poco un pie.',
           action: 'Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro.',
-          care: 'Del tamaño que puedas sin mover toda la pierna.' } }]
+          care: 'Círculos cómodos, sin forzar ni mover toda la pierna.' } }]
     },
 
 
@@ -32784,7 +32808,7 @@ const EXTRA_ROUTINES = {
           care: 'Movimiento lento, siguiendo la respiración.' } },
       { name: 'Flexor de cadera', mode: 'perSide', dur: 15, transition: { seconds: 10 },
         instruction: {
-          setup: 'Una rodilla en el suelo, la otra pierna delante. Cojín bajo la rodilla si molesta.',
+          setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
           action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
           care: 'Si la rodilla molesta aun con el cojín, salta este paso.' } },
       { name: 'Respirar a cuatro apoyos', mode: 'timed', dur: 25,
@@ -32825,7 +32849,7 @@ const EXTRA_ROUTINES = {
       { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
         instruction: {
           action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
-          care: 'Círculos lentos, del tamaño que puedas sin mover toda la pierna.' } },
+          care: 'Círculos lentos y cómodos, sin forzar ni mover toda la pierna.' } },
       { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 20,
         tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
         instruction: {
@@ -32852,7 +32876,7 @@ const EXTRA_ROUTINES = {
           care: 'El giro nace del tronco, no del cuello.' } },
       { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
         instruction: {
-          setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
+          setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
           action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
           care: 'Recorrido corto. Si la rodilla molesta aun con el cojín, salta este paso.' } },
       { name: 'Zancada con apertura', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
@@ -32895,7 +32919,7 @@ const EXTRA_ROUTINES = {
           care: 'El arco nace del pecho. Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.' } },
       { name: 'Apertura de pecho sentado', mode: 'timed', dur: 30,
         instruction: {
-          action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
+          action: 'Sentado, lleva los brazos atrás, acerca suave los omóplatos y abre el pecho. Respira ancho.',
           care: 'Sin agarrarte al respaldo ni arquear la cintura. Abre solo hasta donde no moleste.' } }]
     },
 
@@ -32918,7 +32942,7 @@ const EXTRA_ROUTINES = {
       { name: 'Estiramiento de muñeca', mode: 'perSide', dur: 20, transition: { seconds: 5 },
         instruction: {
           setup: 'Brazo al frente, el codo sin bloquear.',
-          action: 'Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti, suave.',
+          action: 'Diez segundos palma abajo y diez palma arriba, llevando los dedos hacia ti con la otra mano.',
           care: 'Presión ligera. Nunca hasta el dolor.' } },
       { name: 'Palmas en la mesa', mode: 'timed', dur: 30,
         instruction: {
@@ -32965,12 +32989,12 @@ Object.assign(window.EXTRA_ROUTINES, {
       steps: [
       { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
         instruction: {
-          setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
-          action: 'Sube y baja los brazos junto a la pared, como alas.',
+          setup: 'De espaldas a la pared, pies un paso por delante. Brazos en W: codos doblados, manos arriba.',
+          action: 'Desliza los brazos hacia arriba por la pared y bájalos despacio, sin arquear la cintura.',
           care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. La zona lumbar, cerca de la pared.' } },
       { name: 'Rotación externa', mode: 'timed', dur: 50,
         instruction: {
-          action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+          action: 'Brazos junto al cuerpo, codos a 90° y palmas arriba. Lleva las manos hacia fuera y vuelve.',
           care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } },
       { name: 'Extensión torácica', mode: 'timed', dur: 40,
         instruction: {
@@ -32992,8 +33016,8 @@ Object.assign(window.EXTRA_ROUTINES, {
       { name: 'Deslizamientos en pared', mode: 'reps', reps: 8, dur: 48,
         tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
         instruction: {
-          setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
-          action: 'Sube y baja los brazos junto a la pared, como alas, despacio.',
+          setup: 'De espaldas a la pared, pies un paso por delante. Brazos en W: codos doblados, manos arriba.',
+          action: 'Desliza los brazos hacia arriba por la pared y bájalos despacio, sin arquear la cintura.',
           care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. Sin pared, hazlo en el aire.' } },
       { name: 'Apertura de pecho', mode: 'timed', dur: 40,
         instruction: {
@@ -33147,13 +33171,13 @@ Object.assign(window.EXTRA_ROUTINES, {
       { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
         instruction: {
           setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
-          action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+          action: 'Cadera atrás y tronco adelante, sin redondear la espalda. Tensión detrás del muslo de delante.',
           care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
       { name: 'Gemelo en pared', mode: 'perSide', dur: 25, transition: { seconds: 8 },
         instruction: {
-          setup: 'De cara a la pared, manos en ella. Un pie atrás, con el talón en el suelo.',
-          action: 'Lleva la cadera hacia la pared con la pierna de atrás estirada. Estirón suave en el gemelo.',
-          care: 'El talón de atrás sigue en el suelo. Sin rebotes.' } }]
+          setup: 'De cara a la pared, manos en ella. Un pie atrás, dedos hacia delante y talón en el suelo.',
+          action: 'Dobla la rodilla de delante y lleva la cadera hacia la pared, con la pierna de atrás estirada.',
+          care: 'Estirón suave en el gemelo de atrás. Su talón sigue en el suelo. Sin rebotes.' } }]
     }]
 
   },
@@ -33169,7 +33193,7 @@ Object.assign(window.EXTRA_ROUTINES, {
       steps: [
       { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
         instruction: {
-          setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
+          setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
           action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
           care: 'Tronco erguido. Si la rodilla molesta aun con el cojín, salta este paso.' } },
       { name: 'Cuádriceps en pared', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
@@ -33431,7 +33455,7 @@ const EXERCISE_REGISTRY = {
     { name: 'Rotación lenta', dur: 40, cue: 'Mira sobre el hombro, sin forzar.' },
     { name: 'Escalenos', dur: 40, cue: 'Inclina la cabeza al lado contrario, muy suave.' },
     { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
-    { name: 'Círculos de brazos', dur: 45, cue: 'Círculos lentos, brazo estirado. Empieza pequeño.' },
+    { name: 'Círculos de brazos', dur: 45, cue: 'Círculos lentos con un brazo y luego con el otro. Empieza pequeño.' },
     { name: 'Deslizamientos en pared', dur: 45, cue: 'Espalda en pared, sube los brazos.' },
     { name: 'Rotación externa', dur: 40, cue: 'Codo a 90°, rota hacia fuera.' },
     { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca sin tirar, abre los codos.' },
