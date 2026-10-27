@@ -21,12 +21,12 @@ Object.assign(window.EXTRA_ROUTINES, {
         steps: [
           { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
-              setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
-              action: 'Sube y baja los brazos junto a la pared, como alas.',
+              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en W: codos doblados, manos arriba.',
+              action: 'Desliza los brazos hacia arriba por la pared y bájalos despacio, sin arquear la cintura.',
               care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. La zona lumbar, cerca de la pared.' } },
           { name: 'Rotación externa', mode: 'timed', dur: 50,
             instruction: {
-              action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+              action: 'Brazos junto al cuerpo, codos a 90° y palmas arriba. Lleva las manos hacia fuera y vuelve.',
               care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } },
           { name: 'Extensión torácica', mode: 'timed', dur: 40,
             instruction: {
@@ -48,8 +48,8 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Deslizamientos en pared', mode: 'reps', reps: 8, dur: 48,
             tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
-              action: 'Sube y baja los brazos junto a la pared, como alas, despacio.',
+              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en W: codos doblados, manos arriba.',
+              action: 'Desliza los brazos hacia arriba por la pared y bájalos despacio, sin arquear la cintura.',
               care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco. Sin pared, hazlo en el aire.' } },
           { name: 'Apertura de pecho', mode: 'timed', dur: 40,
             instruction: {
@@ -203,13 +203,13 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
             instruction: {
               setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
-              action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+              action: 'Cadera atrás y tronco adelante, sin redondear la espalda. Tensión detrás del muslo de delante.',
               care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
           { name: 'Gemelo en pared', mode: 'perSide', dur: 25, transition: { seconds: 8 },
             instruction: {
-              setup: 'De cara a la pared, manos en ella. Un pie atrás, con el talón en el suelo.',
-              action: 'Lleva la cadera hacia la pared con la pierna de atrás estirada. Estirón suave en el gemelo.',
-              care: 'El talón de atrás sigue en el suelo. Sin rebotes.' } },
+              setup: 'De cara a la pared, manos en ella. Un pie atrás, dedos hacia delante y talón en el suelo.',
+              action: 'Dobla la rodilla de delante y lleva la cadera hacia la pared, con la pierna de atrás estirada.',
+              care: 'Estirón suave en el gemelo de atrás. Su talón sigue en el suelo. Sin rebotes.' } },
         ]},
     ]
   },
@@ -225,7 +225,7 @@ Object.assign(window.EXTRA_ROUTINES, {
         steps: [
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
-              setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
+              setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
               action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
               care: 'Tronco erguido. Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Cuádriceps en pared', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },

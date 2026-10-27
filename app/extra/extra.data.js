@@ -44,34 +44,41 @@ const EXTRA_ROUTINES = {
           { name: 'Inclinación de cuello', mode: 'perSide', dur: 12, transition: { seconds: 8 },
             instruction: {
               setup: 'Siéntate erguido, deja los hombros abajo.',
-              action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
+              action: 'Lleva la oreja hacia el hombro, despacio, sin intentar tocarlo. Tensión suave al otro lado.',
               care: 'Inclina con control, sin tirar con la mano ni subir el hombro.' } },
         ]},
       /* Para empezar (2A): mover los hombros en tres direcciones, de pie junto a una pared. Rehace
-         «Hombros · círculos» con su id. */
+         «Hombros · círculos» con su id. Los círculos van con un brazo, como en su dibujo: ocho con
+         cada uno, cuatro y cuatro, la cuenta de la pauta (1 × 4 por sentido y brazo). Con 8 en
+         total, el segundo brazo no llegaba a moverse. Y los deslizamientos, con los brazos en W,
+         como en el suyo. */
       { id: 'move.shoulder.circles', tag: 'SHLD', code: 'Hombros', name: 'Brazos libres',
         desc: 'Círculos, la pared y el giro del hombro.', min: 2,
         position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Círculos de brazos', mode: 'reps', reps: 8, dur: 32,
+          { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'De pie, dibuja círculos lentos con el brazo estirado: cuatro hacia delante y cuatro atrás.',
+              action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
               care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
           { name: 'Deslizamientos en pared', mode: 'reps', reps: 6, dur: 36,
             tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en cruz apoyados en ella.',
-              action: 'Sube y baja los brazos junto a la pared, como alas, despacio.',
+              setup: 'De espaldas a la pared, pies un paso por delante. Brazos en W: codos doblados, manos arriba.',
+              action: 'Desliza los brazos hacia arriba por la pared y bájalos despacio, sin arquear la cintura.',
               care: 'Si mantenerlos pegados te fuerza la postura, sepáralos un poco.' } },
           { name: 'Rotación externa', mode: 'reps', reps: 6, dur: 24,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+              setup: 'De pie, brazos junto al cuerpo, codos doblados a 90° y palmas arriba.',
+              action: 'Lleva las manos hacia fuera sin despegar los codos del cuerpo, y vuelve.',
               care: 'Sin resistencia: es para mover el hombro. Pequeño y controlado.' } },
         ]},
       /* Para empezar (2A): dedos y muñecas sin cargar peso sobre ellas. Rehace «Muñecas y manos»
-         con su id; las palmas en la mesa y el rezo invertido pasan a «Manos y antebrazos». */
+         con su id; las palmas en la mesa y el rezo invertido pasan a «Manos y antebrazos».
+         El estiramiento de muñeca son dos posturas, como en su dibujo (flexión y extensión): diez
+         segundos cada una por mano, los mismos 20 s por lado. Lo dice la acción y no la colocación,
+         porque en «Ver ejercicio» un paso con reloj empieza sin colocación. */
       { id: 'move.wrists', tag: 'WRST', code: 'Muñecas', name: 'Manos y muñecas',
         desc: 'Puño, círculos y un estiramiento suave.', min: 2,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
@@ -91,7 +98,7 @@ const EXTRA_ROUTINES = {
           { name: 'Estiramiento de muñeca', mode: 'perSide', dur: 20, transition: { seconds: 5 },
             instruction: {
               setup: 'Brazo al frente, el codo sin bloquear.',
-              action: 'Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti, suave.',
+              action: 'Diez segundos palma abajo y diez palma arriba, llevando los dedos hacia ti con la otra mano.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
         ]},
       /* Para empezar (2A): extensión suave y giro del tronco desde la silla. Rehace «Columna en la
@@ -111,10 +118,10 @@ const EXTRA_ROUTINES = {
             instruction: {
               setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
               action: 'Gira el tronco despacio hacia un lado y vuelve. Cuatro a cada lado.',
-              care: 'El giro nace del tronco, no del cuello. Sin tirar con los brazos.' } },
+              care: 'La pelvis mira al frente y la cabeza acompaña el giro, sin forzar el cuello.' } },
           { name: 'Apertura de pecho sentado', mode: 'timed', dur: 15,
             instruction: {
-              action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
+              action: 'Sentado, lleva los brazos atrás, acerca suave los omóplatos y abre el pecho. Respira ancho.',
               care: 'Sin agarrarte al respaldo ni arquear la cintura.' } },
           { name: 'Apertura de pecho sentado', mode: 'timed', dur: 15,
             instruction: {
@@ -130,7 +137,7 @@ const EXTRA_ROUTINES = {
           { name: 'Isquio a una pierna', mode: 'perSide', dur: 15, transition: { seconds: 8 },
             instruction: {
               setup: 'Una mano en la mesa. Un talón delante, en el suelo, rodilla estirada o un poco doblada.',
-              action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+              action: 'Cadera atrás y tronco adelante, sin redondear la espalda. Tensión detrás del muslo de delante.',
               care: 'La rodilla de apoyo, algo flexionada. Sin rebotes.' } },
           { name: 'Isquio a una pierna', mode: 'perSide', dur: 15, transition: { seconds: 8 },
             instruction: {
@@ -141,7 +148,7 @@ const EXTRA_ROUTINES = {
             instruction: {
               setup: 'Siéntate y levanta un poco un pie.',
               action: 'Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro.',
-              care: 'Del tamaño que puedas sin mover toda la pierna.' } },
+              care: 'Círculos cómodos, sin forzar ni mover toda la pierna.' } },
         ]},
       /* Para empezar (2A), en el suelo: la espalda, la parte de delante de la cadera y respirar a
          cuatro apoyos. Rehace «Despertar matinal» con su id. */
@@ -157,7 +164,7 @@ const EXTRA_ROUTINES = {
               care: 'Movimiento lento, siguiendo la respiración.' } },
           { name: 'Flexor de cadera', mode: 'perSide', dur: 15, transition: { seconds: 10 },
             instruction: {
-              setup: 'Una rodilla en el suelo, la otra pierna delante. Cojín bajo la rodilla si molesta.',
+              setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
               action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
               care: 'Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Respirar a cuatro apoyos', mode: 'timed', dur: 25,
@@ -198,7 +205,7 @@ const EXTRA_ROUTINES = {
           { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
             instruction: {
               action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
-              care: 'Círculos lentos, del tamaño que puedas sin mover toda la pierna.' } },
+              care: 'Círculos lentos y cómodos, sin forzar ni mover toda la pierna.' } },
           { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
             instruction: {
@@ -225,7 +232,7 @@ const EXTRA_ROUTINES = {
               care: 'El giro nace del tronco, no del cuello.' } },
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
-              setup: 'Una rodilla en el suelo, la otra pierna delante en ángulo. Cojín bajo la rodilla si molesta.',
+              setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
               action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
               care: 'Recorrido corto. Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Zancada con apertura', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
@@ -268,7 +275,7 @@ const EXTRA_ROUTINES = {
               care: 'El arco nace del pecho. Si el respaldo te cae en el cuello o la cintura, eleva el pecho sin apoyarte.' } },
           { name: 'Apertura de pecho sentado', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
+              action: 'Sentado, lleva los brazos atrás, acerca suave los omóplatos y abre el pecho. Respira ancho.',
               care: 'Sin agarrarte al respaldo ni arquear la cintura. Abre solo hasta donde no moleste.' } },
         ]},
       /* Manos y antebrazos (antes «Grip + antebrazos», en Mueve): es estirar, así que vive en Estira
@@ -291,7 +298,7 @@ const EXTRA_ROUTINES = {
           { name: 'Estiramiento de muñeca', mode: 'perSide', dur: 20, transition: { seconds: 5 },
             instruction: {
               setup: 'Brazo al frente, el codo sin bloquear.',
-              action: 'Palma abajo y luego palma arriba: con la otra mano, lleva los dedos hacia ti, suave.',
+              action: 'Diez segundos palma abajo y diez palma arriba, llevando los dedos hacia ti con la otra mano.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
           { name: 'Palmas en la mesa', mode: 'timed', dur: 30,
             instruction: {

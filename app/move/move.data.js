@@ -33,7 +33,7 @@ var MOVE_ROUTINES = {
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'De pie delante de la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
-              action: 'Siéntate del todo, con control, y levántate empujando el suelo.',
+              action: 'Siéntate del todo, con control. Echa el tronco un poco adelante y levántate empujando el suelo.',
               care: 'Ayúdate con las manos si lo necesitas. La primera vez, una serie basta.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
@@ -49,7 +49,7 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'De pie, con una mano en la silla o en la mesa.',
               action: 'Sube los talones hasta donde controles. Baja despacio.',
-              care: 'Sin rebotes. Si te balanceas, apóyate más.' } },
+              care: 'Sin rebotes. Si te balanceas, apóyate con las dos manos.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Elevación de talones', mode: 'reps', reps: 6, dur: 24,
@@ -66,9 +66,9 @@ var MOVE_ROUTINES = {
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Manos en una mesa fija o en la pared, algo más abiertas que los hombros. Cuerpo en diagonal.',
-              action: 'Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja y vuelve.',
-              care: 'Si cuesta, en la pared. Mesa que no se mueva: ni con ruedas ni plegable.' } },
+              setup: 'Manos en mesa fija o pared, algo más abiertas que los hombros. Pies atrás y el cuerpo en línea.',
+              action: 'Baja el pecho hacia la mesa o la pared, codos cerca del cuerpo. Empuja sin hundir la cintura.',
+              care: 'Si cuesta, en la pared, manos a la altura del pecho. Mesa fija: ni con ruedas ni plegable.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 20,
@@ -85,7 +85,7 @@ var MOVE_ROUTINES = {
           { name: 'Elevación de puntas', mode: 'reps', reps: 8, dur: 32,
             tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'De espaldas a la pared, apoyado en ella, con los talones a un palmo.',
+              setup: 'Espalda y glúteos en la pared, pies al ancho de las caderas, talones a un palmo de ella.',
               action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
               care: 'Movimiento pequeño, sin balancearte hacia atrás.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
@@ -117,9 +117,9 @@ var MOVE_ROUTINES = {
           { name: 'Puente con los dos pies', mode: 'reps', reps: 6, dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
             tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Boca arriba, rodillas dobladas y los dos pies apoyados.',
+              setup: 'Boca arriba, rodillas dobladas, pies apoyados al ancho de las caderas y cerca de los glúteos.',
               action: 'Empuja con los pies, sube la pelvis y baja despacio.',
-              care: 'Sube solo hasta donde no se arquee la cintura.' } },
+              care: 'Sube solo hasta donde la zona lumbar no se arquee más.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Puente con los dos pies', mode: 'reps', reps: 6, dur: 30,
@@ -127,17 +127,21 @@ var MOVE_ROUTINES = {
             instruction: {
               action: 'Segunda serie: sube y baja despacio.',
               care: 'Si la lumbar molesta, sube menos o termina.' } },
+          /* La zona lumbar guarda su curva: aplastarla contra el suelo o estirar la pierna a toda
+             costa son justo lo que no se pide. El recorrido lo pone la pelvis quieta. */
           { name: 'Desliza el talón', mode: 'reps', reps: 6, dur: 24,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Boca arriba, rodillas dobladas, la zona lumbar apoyada sin apretar.',
-              action: 'Desliza un talón por el suelo hasta estirar la pierna, y vuelve. Tres con cada una.',
-              care: 'La cintura no se despega del suelo. Si se despega, recorrido más corto.' } },
-          { name: 'Gateo con rodillas', mode: 'reps', reps: 4, dur: 24,
-            tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
+              setup: 'Boca arriba, rodillas dobladas, sin aplastar la zona lumbar contra el suelo.',
+              action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna.',
+              care: 'No hace falta estirar la pierna del todo. Si la espalda se arquea más, acorta el recorrido.' } },
+          /* Cuatro pasos de ida y cuatro de vuelta: la cuenta dice los ocho, en los mismos 24 s.
+             Con «4» la cuenta acababa a mitad de camino. */
+          { name: 'Gateo con rodillas', mode: 'reps', reps: 8, dur: 24,
+            tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.',
-              action: 'Cuatro pasos cortos hacia delante, mano y rodilla contrarias, y vuelve.',
+              action: 'Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás.',
               care: 'Las rodillas siguen en el suelo. Si las muñecas molestan, para.' } },
         ]},
     ]
@@ -236,19 +240,21 @@ var MOVE_ROUTINES = {
               care: 'Sin banda, salta este paso: la rutina cuenta igual.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
-          { name: 'Remo con banda', mode: 'reps', reps: 8, dur: 40, opcional: true,
+          /* Con colocación propia (`ready`): viene tras un descanso, y sin ella el runner no
+             enseñaba dónde van los pies ni qué banda, que es lo que evita que se suelte. */
+          { name: 'Remo con banda', mode: 'reps', reps: 8, dur: 40, opcional: true, setup: { mode: 'ready', estimatedSeconds: 15 },
             tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Pisa el centro de la banda con los dos pies. Cadera atrás, espalda larga.',
-              action: 'Tira de los extremos llevando los codos hacia las costillas. Vuelve despacio.',
-              care: 'Sin banda, salta este paso: el siguiente no la necesita.' } },
+              setup: 'Pisa el centro de una banda larga con los dos pies. Rodillas algo dobladas, cadera atrás.',
+              action: 'Espalda larga y brazos estirados: lleva los codos hacia las costillas. Vuelve despacio.',
+              care: 'Banda suave, sin cortes y bien pisada; no la sueltes tensa. Sin banda, salta este paso.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Remo con tu mano', mode: 'perSide', dur: 25, transition: { seconds: 5 },
             instruction: {
-              setup: 'De pie. Con una mano, agarra la muñeca de la otra delante de la tripa.',
-              action: 'Lleva ese codo hacia atrás mientras la otra mano frena. Unas cinco, sin prisa.',
-              care: 'Frena sin apretar al máximo y respira. No es lo mismo que la banda, pero trabaja.' } },
+              setup: 'De pie. Con una mano, sujeta sin apretar la muñeca de la otra, delante de la tripa.',
+              action: 'Lleva ese codo atrás mientras la otra mano frena suave, y vuelve despacio. Unas cinco.',
+              care: 'Sin apretar al máximo. Respira con normalidad.' } },
         ]},
       /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de barra
          → `timed`; los rests entre holds son SUAVES (sin restKind, patrón

@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 27 oct.: la revisión de ChatGPT de Mueve y Estira (v0.181.1), en su rama, a la espera de Ez
+
+Rama `claude/magical-robinson-ced87d` (puerto 8808: el 8805 lo retiene un servidor huérfano de la mañana que sirve otra carpeta). Monta lo que
+aporta la respuesta de ChatGPT, comprobada contra el código en
+`docs/proposals/mueve-estira-chatgpt-revision-respuesta-27oct.md`: las cinco fichas con un fallo de verdad (desliza el
+talón, gateo, círculos de brazos, muñeca y remo con banda), las colocaciones que faltaban, el inglés que sonaba
+traducido y el aviso común de parar con dolor o mareo en «Antes de empezar». Manda el dibujo: los círculos enseñan un
+brazo (ocho con cada uno) y los deslizamientos, los brazos en W. Las frases van reescritas cortas, nunca las de
+ChatGPT. Ninguna dosis sube; el descanso entre series y las pausas de suelo ya estaban. Fotos de antes y después para
+Ez: https://claude.ai/artifact/9Y61HfjdAKzQGKJFGNKUPq. Se junta cuando Ez diga «júntalo». Lo técnico: la fila de v0.181.1 en
+`DECISIONES_TECNICAS_VIGENTES.md`.
+
 ## 27 oct.: la hora y la medianoche y la voz de Respira (v0.181.0), en `main` con el sí de Ez
 
 Juntada el 27 oct. detrás de la 0.180.0 («junta la bienvenida y después la hora»). Venía de la rama
