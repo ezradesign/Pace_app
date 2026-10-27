@@ -4,6 +4,15 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 27 oct.: la hora y la medianoche y la voz de Respira (v0.181.0), en su rama
+
+Rama `claude/gracious-pascal-ea1249` (puerto 8806), el punto 10 del orden hasta v1. Nada que se vea. El texto de la
+auditoría de H1-H3 no se guardó en ningún sitio (solo «la hora repetida del 25 oct.»): se sacaron del código los tres
+sitios que fallan con el reloj falso, y cada caso se prueba con el cambio de octubre y con el de marzo. **H5 lo decidió
+Ez (27 oct., por la coordinadora): se mantiene su A del 12 oct.** Un Foco cuenta si PACE se entera de su final el mismo
+día y nunca se apunta al siguiente; preguntar «¿Lo completaste?» al volver queda para más adelante, con maqueta.
+Detalle y reglas: la fila de v0.181.0 en `DECISIONES_TECNICAS_VIGENTES.md`.
+
 ## 26 oct.: lo que prometemos sobre los datos (v0.179.0), en su rama, con el 1A 2A 3A de Ez
 
 Rama `claude/privacidad-p1-p5-a973d0` (puerto 8806). Ez eligió la recomendada sobre

@@ -38,7 +38,9 @@
    ya sería tarde para caer al sintetizador — se habría perdido la señal. Por eso
    cada clip se precarga al arrancar y sólo entra en juego cuando el navegador
    dice `canplaythrough`. Así la pregunta «¿puedo cantar esta fase?» se contesta
-   de forma SÍNCRONA y sin adivinar.
+   de forma SÍNCRONA y sin adivinar. Y si aun así el `<audio>` de reserva no
+   arranca (su `play()` se rechaza), `playSound` deja el tono de la fase como
+   respaldo y suena él: la fase nunca se queda muda.
 
    Consecuencia buscada: **en `PACE_standalone.html` no hay voz**. Los clips
    nunca quedan listos allí, así que suena el motor sintetizado — que es lo que
@@ -316,9 +318,16 @@ function paceVozCabe(nombre, faseSeg) {
   return (slot.palabra + PACE_VOZ_MARGEN) <= faseSeg;
 }
 
-/* Intenta cantar la señal. Devuelve `true` SÓLO si de verdad ha arrancado la
-   locución; `playSound` usa esa respuesta para decidir si además sintetiza. */
-function paceVozIntenta(nombre, faseSeg) {
+/* Medio segundo: lo que puede tardar en llegar un `play()` que falla de verdad (el
+   permiso, el formato), que suele ser al instante. Uno que llega más tarde es el de
+   cortar la palabra (`slot.corte`) y entonces la fase ya va por otro sitio. */
+var PACE_VOZ_RESPALDO_MS = 500;
+
+/* Intenta cantar la señal. Devuelve `true` si la locución ha arrancado o va a
+   arrancar; `playSound` usa esa respuesta para decidir si además sintetiza. Por el
+   `<audio>`, `play()` es asíncrono y el «sí» se da antes de saber: si luego falla,
+   suena `alFallar`, el tono de la fase. */
+function paceVozIntenta(nombre, faseSeg, alFallar) {
   if (!paceVozCabe(nombre, faseSeg)) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   try {
@@ -330,16 +339,23 @@ function paceVozIntenta(nombre, faseSeg) {
     var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
     if (paceVozWebAudio(slot, desde)) return true;
     slot.audio.currentTime = desde;
+    var pedida = Date.now();
     var p = slot.audio.play();
     /* el `<audio>` tampoco sigue detras de la palabra (ver PACE_VOZ_COLA) */
     clearTimeout(slot.corte);
     var a = slot.audio;
-    slot.corte = setTimeout(function () { try { a.pause(); } catch (e) {} }, (slot.fin + PACE_VOZ_COLA - desde) * 1000);
-    /* `play()` devuelve promesa en los navegadores modernos. Se ignora su
-       rechazo A PROPÓSITO: el caso real es la política de autoplay antes del
-       primer gesto, y ahí perder una señal es preferible a un error en consola.
-       No se puede caer al sintetizador desde aquí: ya hemos dicho que sí. */
-    if (p && typeof p.catch === 'function') p.catch(function () {});
+    var corte = slot.corte = setTimeout(function () { try { a.pause(); } catch (e) {} }, (slot.fin + PACE_VOZ_COLA - desde) * 1000);
+    /* `play()` devuelve promesa en los navegadores modernos, y su rechazo (la
+       política de autoplay, un formato que no lee) llega cuando ya hemos dicho que
+       sí: entonces suena el tono, sin error en consola. A destiempo, nada. */
+    if (p && typeof p.catch === 'function') {
+      p.catch(function () {
+        if (slot.corte === corte) clearTimeout(corte);
+        if (typeof alFallar === 'function' && Date.now() - pedida <= PACE_VOZ_RESPALDO_MS) {
+          try { alFallar(); } catch (e) {}
+        }
+      });
+    }
     return true;
   } catch (e) {
     return false;

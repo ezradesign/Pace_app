@@ -50,9 +50,11 @@ function statsHoySesiones() {
       const f = new Date(e.occurredAt);
       const rutina = (window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId)) || { id: e.payload.routineId, name: e.payload.routineId };
       return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
-               min: sessionCreditedMinutes(e) };
+               min: sessionCreditedMinutes(e), cuando: f.getTime() };
     })
-    .sort((a, b) => a.desde - b.desde);
+    /* Por el instante y no por la hora de reloj: el día que se atrasa la hora, de 2:00 a
+       3:00 pasa dos veces y lo de la segunda vuelta salía antes que lo de la primera. */
+    .sort((a, b) => a.cuando - b.cuando);
 }
 
 /* Los cuatro totales de hoy. El agua, contra la meta de Ajustes: «5 de 8 vasos». */

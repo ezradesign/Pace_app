@@ -51,6 +51,15 @@ function FocusTimer({ onFinish }) {
     /* La hora a la que acabó el bloque, para contar su pausa desde ahí: el final del motor
        o, si terminó con PACE cerrado, el que se guardó (el inicio se derivó de él). */
     const finBloque = endsAt || (inicio ? inicio + durationSec * 1000 : Date.now());
+    /* Un bloque que acabó otro día y del que PACE se entera hoy (el equipo dormido a
+       medianoche con la página abierta) no cuenta, y menos en el día de hoy: no se dan por
+       hechas sesiones viejas sin confirmar. Es la A de Ez del 12 oct. («si terminó ayer no
+       cuenta»), la misma que aplica al volver con PACE cerrado (`loadPersistedFocusTimer`);
+       se mantuvo el 27 oct. Sin campana, pausa ni aviso, y el aro vuelve a empezar. */
+    if (new Date(finBloque).toDateString() !== new Date().toDateString()) {
+      reset();
+      return;
+    }
     paceFocoContar(bloque, () => {
       try { playSound('pomodoro.end'); } catch (e) {}
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
@@ -66,7 +75,7 @@ function FocusTimer({ onFinish }) {
          y `onFinish` (ritmoBloqueTerminado) ha recolocado el día si llegaste
          tarde. El `finally` conserva lo de antes: aunque `onFinish` fallara, avisa. */
       try {
-        onFinish && onFinish();
+        onFinish && onFinish(inicio);
       } finally {
         /* Con bloques cortos, antes de decidir la ventana: la invitación y la cuenta sin día (22 oct.). */
         try { bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos)); } catch (e) {}

@@ -397,66 +397,7 @@ function ritmoElegir(opcion) {
    tipo deja de proponer el día hasta mañana. */
 function ritmoPreguntar() { ritmoPausaCerrarConElDia(); ritmoGuardar(function () { return { dia: null, distinto: ritmoHoy() }; }); }
 
-/* LA PAUSA (s193). Terminar un bloque la abre con el número de bloques hechos
-   —`completePomodoro` ya subió `cycle` cuando main.jsx llama a esto—; empezar
-   el siguiente la cierra. Sin menú no hay nada que abrir. */
-function ritmoBloqueTerminado() {
-  var p = ritmoPlan(getState());
-  if (!p || p.hechos < 1) return;
-  var cambios = { pausa: p.hechos };
-  /* s195: RECOLOCAR TAMBIÉN AL TERMINAR (decisión del usuario: «la línea dice la
-     verdad» vale también para la pausa abierta, que ya no puede estar en el
-     futuro). Si el bloque acaba a una hora que no es la del plan —acortaste el
-     pomodoro, lo pausaste—, lo hecho se congela hasta ese bloque, que dura lo que
-     duró, y el resto se recompone desde ahora con la pausa la primera. */
-  var ultimo = p.m.focos[p.hechos - 1];
-  var t = ritmoAhoraExacto();
-  if (ultimo && t !== ultimo.desde + ultimo.dur) {
-    var pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(ultimo) + 1));
-    var f = pasado[pasado.length - 1];
-    if (t > f.desde) f.dur = t - f.desde;
-    cambios.pasado = pasado; cambios.desde = t; cambios.primerBloque = null; cambios.pausaPendiente = true;
-  }
-  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
-}
-/* La pausa hecha, lo hecho de cada plato y la cuenta del aro: state-ritmo.pausa.jsx. */
-/* Empezar un bloque cierra la pausa y, si la hora no es la del plan, RECOLOCA:
-   lo anterior al bloque se congela como historia y el resto se recompone desde
-   ahora, con la duración con la que el aro arranca (`minutos`). Llegar antes es
-   el mismo caso con la hora por delante. */
-function ritmoBloqueEmpezado(minutos) {
-  var s = getState();
-  var R = ritmoDe(s);
-  if (!R.dia) return;
-  var cambios = {};
-  var p = ritmoPlan(s);
-  if (R.dia.pausa != null) {
-    cambios.pausa = null;
-    cambios.pausaHasta = null;   /* el aro deja de contar la pausa (state-ritmo.pausa.jsx) */
-    /* s195: empezar el bloque sin haber hecho la pausa abierta la deja SALTADA */
-    if (p && p.pausa) {
-      var n = ritmoOrdinal(p.m, p.pausa);
-      if (n != null && (R.dia.estados || {})[n] !== 'hecha') {
-        cambios.estados = Object.assign({}, R.dia.estados || {}); cambios.estados[n] = 'saltada';
-      }
-    }
-  }
-  if (R.dia.pausaPendiente) cambios.pausaPendiente = false;
-  var t = ritmoAhoraExacto();
-  var mins = Number(minutos) || 0;
-  /* s195: si el aro no marca lo que el plan (pusiste 25 con un plan de 45), también
-     se recoloca, y esa duración manda en los bloques que vienen (`dia.bloque`). */
-  var otraDuracion = !!(p && p.actual && mins && mins !== p.actual.dur);
-  if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
-    cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
-    cambios.desde = t;
-    cambios.primerBloque = mins || p.actual.dur;
-    cambios.pausaPendiente = false;
-    if (otraDuracion) cambios.bloque = mins;
-  }
-  if (!Object.keys(cambios).length) return;
-  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
-}
+/* Terminar y empezar un bloque (la pausa y recolocar el día): state-ritmo.recolocar.jsx. */
 function ritmoPorLibre() { ritmoPausaCerrarConElDia(); ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
 function ritmoVolver() { ritmoGuardar(function () { return { libre: null, distinto: ritmoHoy() }; }); }
 
@@ -495,5 +436,5 @@ Object.assign(window, {
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
-  ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoOrdinal,
+  ritmoOrdinal,
 });
