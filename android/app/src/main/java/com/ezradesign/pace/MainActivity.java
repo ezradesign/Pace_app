@@ -9,6 +9,7 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Los complementos propios de la app se registran antes de que Capacitor monte el puente.
         registerPlugin(PaceCalendario.class);
+        registerPlugin(PaceAvisoFijo.class);
         registerPlugin(PaceBarras.class);
         super.onCreate(savedInstanceState);
     }

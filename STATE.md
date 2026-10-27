@@ -126,7 +126,7 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   v0.174.5) ·
   **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
-  programó, A4 permiso de notificaciones sin refrescar), **con v0.182.0 en su rama**
+  programó, A4 permiso de notificaciones sin refrescar) y N4, el aviso fijo con el móvil bloqueado, **con v0.182.0 en su rama**
   (`claude/android-a-fondo-6edf2e`, a la espera de Ez; `tests/android-avisos.spec.js`) · **seguridad antes de cobrar** (S1
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto), **en `main` con v0.177.0**
@@ -146,8 +146,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   casan, estiramientos dentro de Mueve, banda y barra aparte y saltables, rutinas casi iguales, más fuerza en
   Mueve), en v0.176.0; N2 (las franjas del móvil con la paleta) en v0.176.1; N5-N8 (1A 2A 3C 4B de Ez sobre la
   maqueta https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero) en v0.176.2. Quedan N4 (aviso con el móvil bloqueado)
-  y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). N4 espera a que Ez elija la forma
-  sobre https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL (recomendada la A, la cuenta que corre sola). Detalle en la cola de
+  y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). N4, con la A de Ez del 27 oct. (la cuenta que corre sola,
+  sin botones), con v0.182.0 en `claude/android-a-fondo-6edf2e`; falta verlo en su Android. Detalle en la cola de
   `docs/traspaso/relevo-coordinadora-22oct.md`, punto 1c.
 - **Lo que prometemos sobre los datos** (P1-P5, ChatGPT, 22 oct.): **en `main` con v0.179.0** (26 oct.)
   con el 1A 2A 3A de Ez sobre

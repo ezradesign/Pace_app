@@ -8,6 +8,8 @@
  *       volvía a intentar al pausar o al reiniciar.
  *   A3  PACE daba el aviso por puesto antes de que Android contestara, y si fallaba no lo decía.
  *   A4  al volver de los ajustes de Android con los avisos cambiados, Ajustes seguía igual.
+ * Y N4 (Ez, la A del 27 oct.): el aviso fijo con el móvil bloqueado, que no existía. PaceAvisoFijo
+ * falso apunta lo que se le pide poner (`fijo`) y cuándo se quita.
  *
  * El LocalNotifications falso lleva la cuenta de lo que Android tiene puesto (`puestos`), como
  * el de verdad: `schedule` lo pone cuando contesta y `cancel` lo quita cuando contesta. Se le
@@ -33,11 +35,15 @@ async function comoAndroid(context, opciones) {
   const o = Object.assign({ permiso: 'granted', exacta: 'granted' }, opciones || {});
   await context.addInitScript((o) => {
     const nativo = window.__nativo = { llamadas: [], oyentes: {}, puestos: {}, campanas: [],
-      permiso: o.permiso, exacta: o.exacta, retener: false, retenidas: [], fallaProgramar: null, fallaQuitar: 0 };
+      permiso: o.permiso, exacta: o.exacta, retener: false, retenerPermiso: false, fijo: null, retenidas: [], fallaProgramar: null, fallaQuitar: 0 };
     const apunta = (metodo, opts) => nativo.llamadas.push({ metodo, opts: opts === undefined ? null : JSON.parse(JSON.stringify(opts)) });
     const LocalNotifications = {
       checkPermissions: (op) => { apunta('checkPermissions', op); return Promise.resolve({ display: nativo.permiso }); },
-      requestPermissions: (op) => { apunta('requestPermissions', op); return Promise.resolve({ display: nativo.permiso }); },
+      requestPermissions: (op) => {
+        apunta('requestPermissions', op);
+        if (!nativo.retenerPermiso) return Promise.resolve({ display: nativo.permiso });
+        return new Promise((ok) => nativo.retenidas.push(() => ok({ display: nativo.permiso })));
+      },
       checkExactNotificationSetting: (op) => { apunta('checkExactNotificationSetting', op); return Promise.resolve({ exact_alarm: nativo.exacta }); },
       changeExactNotificationSetting: (op) => { apunta('changeExactNotificationSetting', op); return Promise.resolve({ exact_alarm: nativo.exacta }); },
       schedule: (op) => {
@@ -64,6 +70,10 @@ async function comoAndroid(context, opciones) {
           minimizeApp: () => Promise.resolve(),
         },
         LocalNotifications,
+        PaceAvisoFijo: {
+          poner: (op) => { apunta('poner', op); nativo.fijo = op; return Promise.resolve(); },
+          quitar: (op) => { apunta('quitar', op); nativo.fijo = null; return Promise.resolve(); },
+        },
       },
     };
     nativo.emitir = (evento, datos) => (nativo.oyentes[evento] || []).forEach((cb) => cb(datos));
@@ -187,6 +197,21 @@ test.describe('A2 · el aviso se quita antes de que llegue', () => {
   }
 });
 
+test.describe('el permiso que llega tarde', () => {
+  /* Sin el permiso no se programa (antes, `schedule` lo habría pedido con la app en el fondo); pero
+     si la respuesta llega con la app ya en el fondo, el aviso se pone entonces. */
+  test('si Android contesta al permiso con la app ya en el fondo, el aviso se pone entonces', async ({ page, context }) => {
+    await abrir(page, context, { permiso: 'prompt' });
+    await page.evaluate(() => { window.__nativo.retenerPermiso = true; window.__nativo.permiso = 'granted'; });
+    await empezarFoco(page);
+    await esperarEnPagina(page, () => window.__nativo.retenidas.length === 1);
+    await alFondo(page);
+    expect(await cuantas(page, 'schedule'), 'programó sin saber si hay permiso').toBe(0);
+    await page.evaluate(() => window.__nativo.soltar());
+    await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+  });
+});
+
 test.describe('A3 · puesto solo cuando Android lo confirma', () => {
   test('mientras Android no contesta, no se da por puesto; cuando contesta, sí', async ({ page, context }) => {
     await abrir(page, context);
@@ -242,5 +267,81 @@ test.describe('A4 · el permiso se vuelve a mirar al volver', () => {
     await alVolver(page);
     await expect(nota, 'al volver con los avisos apagados, no lo dijo').toBeVisible();
     await expect(fila.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
+  });
+});
+
+/* N4 · el aviso fijo con el móvil bloqueado (Ez, N4 A · N4b A del 27 oct.): la cuenta atrás la
+   pone Android hasta `hasta`; aquí se mira qué dice, cuándo sale y cuándo se va. */
+const finDelBloque = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
+const horaDe = (ms) => { const d = new Date(ms); return d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); };
+
+test.describe('N4 · el aviso fijo con el móvil bloqueado', () => {
+  test('sin «A tu ritmo»: al irse al fondo dice «Foco · 25 min» y hasta cuándo, y se va al volver', async ({ page, context }) => {
+    await abrir(page, context);
+    await empezarFoco(page);
+    expect(await cuantas(page, 'poner'), 'con PACE delante ya se ve el aro').toBe(0);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.fijo);
+    const fin = await finDelBloque(page);
+    expect(await nativo(page, 'fijo')).toEqual({ titulo: 'Foco · 25 min', texto: 'Hasta las ' + horaDe(fin) + '.', hasta: fin });
+    await alVolver(page);
+    await esperarEnPagina(page, () => window.__nativo.fijo === null);
+    /* En pausa no hay nada que contar. */
+    await cta(page).click();
+    await alFondo(page);
+    await page.waitForTimeout(300);
+    expect(await cuantas(page, 'poner'), 'salió con el Foco en pausa').toBe(1);
+  });
+
+  test('con «A tu ritmo»: el bloque, la hora a la que acaba y la pausa que viene', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false, ritmo: { dia: { fecha: '2026-09-17', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } });
+    await comoAndroid(context);
+    await context.clock.install({ time: new Date('2026-09-17T09:00:00+02:00') });
+    await irAlArtefacto(page);
+    await cta(page).click();
+    await expect(cta(page)).toHaveText('Pausar');
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.fijo);
+    const fin = await finDelBloque(page);
+    const fijo = await nativo(page, 'fijo');
+    expect(fijo.titulo).toBe('Foco · bloque 1 de 9');
+    expect(fijo.texto).toMatch(new RegExp('^Hasta las ' + horaDe(fin) + '\\. Luego, tu pausa: .+ · \\d+ min$'));
+    expect(fijo.hasta).toBe(fin);
+  });
+
+  test('va con «Aviso al terminar»: apagado, no sale', async ({ page, context }) => {
+    await abrir(page, context, {}, { notifyFocusEnd: false });
+    await empezarFoco(page);
+    await alFondo(page);
+    await page.waitForTimeout(300);
+    expect(await cuantas(page, 'poner')).toBe(0);
+  });
+
+  test('sin permiso de avisos, no sale', async ({ page, context }) => {
+    await abrir(page, context, { permiso: 'denied' });
+    await empezarFoco(page);
+    await alFondo(page);
+    await page.waitForTimeout(300);
+    expect(await cuantas(page, 'poner')).toBe(0);
+  });
+
+  test('al acabar el bloque se quita, y el aviso de fin se queda', async ({ page, context }) => {
+    await abrir(page, context);
+    await empezarFoco(page);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.fijo && !!window.__nativo.puestos[1]);
+    await acabarBloque(context);
+    await esperarEnPagina(page, () => window.__nativo.fijo === null);
+    expect(await nativo(page, 'puestos'), 'al quitar el fijo se quitó también el de fin').toHaveProperty('1');
+  });
+
+  test('si Android cerró PACE con el aviso fijo puesto, al abrirla se quita', async ({ page, context }) => {
+    await abrir(page, context);
+    await empezarFoco(page);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.fijo);
+    await page.reload();
+    await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+    await esperarEnPagina(page, () => window.__nativo.llamadas.some((l) => l.metodo === 'quitar'));
   });
 });

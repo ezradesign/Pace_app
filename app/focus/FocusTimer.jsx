@@ -151,7 +151,8 @@ function FocusTimer({ onFinish }) {
   useEffectFT(() => {
     if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
-    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
+      fijo: () => (typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null) });   // N4: se lee al irse al fondo
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado. */

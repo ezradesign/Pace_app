@@ -3786,6 +3786,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'notify.ritmo.seguido.cuerpo': 'Sigue cuando quieras: la pausa, a las {hora}.',
   'notify.ritmo.comida': 'Hora de comer',
   'notify.ritmo.comida.cuerpo': 'Hasta las {hora}. Luego, el bloque {n}.',
+
+
+  'notify.fijo.titulo': 'Foco · bloque {n} de {total}',
+  'notify.fijo.titulo.manual': 'Foco · {min} min',
+  'notify.fijo.hasta': 'Hasta las {hora}.',
+  'notify.fijo.pausa': 'Luego, tu pausa: {plato} · {min} min',
+  'notify.fijo.larga': 'Luego, tu pausa larga: {plato} · {min} min',
+  'notify.fijo.cierre': 'Luego, para cerrar: {plato} · {min} min',
+  'notify.fijo.comida': 'Luego, a comer.',
+  'notify.fijo.bloque': 'Luego, el bloque {n}.',
+  'notify.fijo.ultimo': 'Con este cierras el día.',
   'ritmo.motivo.estira': 'Antídoto a la silla',
   'ritmo.motivo.mueve': 'Cuerpo activo',
   'ritmo.motivo.cierre': 'Para cerrar la jornada',
@@ -3929,6 +3940,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'notify.ritmo.seguido.cuerpo': 'Carry on when you like: your break is at {hora}.',
   'notify.ritmo.comida': 'Time for lunch',
   'notify.ritmo.comida.cuerpo': 'Until {hora}. Then block {n}.',
+  'notify.fijo.titulo': 'Focus · block {n} of {total}',
+  'notify.fijo.titulo.manual': 'Focus · {min} min',
+  'notify.fijo.hasta': 'Until {hora}.',
+  'notify.fijo.pausa': 'Then your break: {plato} · {min} min',
+  'notify.fijo.larga': 'Then your long break: {plato} · {min} min',
+  'notify.fijo.cierre': 'Then, to close the day: {plato} · {min} min',
+  'notify.fijo.comida': 'Then, lunch.',
+  'notify.fijo.bloque': 'Then block {n}.',
+  'notify.fijo.ultimo': 'This one closes your day.',
   'ritmo.motivo.estira': 'Antidote to the chair',
   'ritmo.motivo.mueve': 'Active body',
   'ritmo.motivo.cierre': 'To close the day',
@@ -11005,8 +11025,38 @@ function ritmoAviso(s, t, tn, lang) {
   };
 }
 
-Object.assign(window, { ritmoAviso });
-;Object.assign(window, { ritmoAviso });
+
+
+
+
+
+
+
+
+function ritmoAvisoFijo(s, t, tn, lang, endsAt) {
+  var d = new Date(endsAt);
+  var hasta = tn('notify.fijo.hasta', { hora: ritmoHora(d.getHours() * 60 + d.getMinutes()) });
+  var p = typeof ritmoAro === 'function' && ritmoAro(s, t, tn) && typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (!p || !p.actual) return { titulo: tn('notify.fijo.titulo.manual', { min: s && s.focusMinutes || 25 }), texto: hasta };
+  var titulo = tn('notify.fijo.titulo', { n: p.hechos + 1, total: p.total });
+  var it = typeof ritmoDetras === 'function' ? ritmoDetras(p.m, p.actual) : null;
+  var nombre = function (pl) {
+    return typeof ritmoNombre === 'function' ? ritmoNombre(pl.rutina || pl, t, lang) : pl.name || pl.id || '';
+  };
+  var luego;
+  if (!it) luego = t('notify.fijo.ultimo');else
+  if (it.tipo === 'comida') luego = t('notify.fijo.comida');else
+  if (it.tipo === 'foco') luego = tn('notify.fijo.bloque', { n: p.hechos + 2 });else
+  {
+    var platos = it.platos || [];
+    var clave = it.larga ? 'notify.fijo.larga' : it.tipo === 'cierre' ? 'notify.fijo.cierre' : 'notify.fijo.pausa';
+    luego = platos.length ? tn(clave, { plato: platos.map(nombre).join(' + '), min: it.larga ? it.dur : platos[0].min }) : '';
+  }
+  return { titulo: titulo, texto: luego ? hasta + ' ' + luego : hasta };
+}
+
+Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
+;Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
 })();
 </script>
   <!-- El dia en el calendario: lo puro (eventos, .ics, reuniones como tramos), Google y
@@ -16785,6 +16835,13 @@ Object.assign(window, {
    vez (puede venir de los ajustes de Android) y se avisa con el evento
    `pace:avisos-android` para que Ajustes se pinte con lo nuevo.
 
+   EL AVISO FIJO CON EL MOVIL BLOQUEADO (Ez, N4 A del 27 oct. 2026): mientras un Foco corre con
+   la app en el fondo, Android enseña lo que queda, que cuenta solo, con el bloque y lo que viene
+   detras (`ritmoAvisoFijo`). Lo pinta una pieza propia, PaceAvisoFijo, porque el complemento no
+   sabe poner una cuenta atras. Va con «Aviso al terminar» y el mismo permiso, en la misma fila:
+   sale al irse al fondo, se va al volver, al pausar o al reiniciar, y al acabar lo quita Android
+   solo. No suena nunca: el que suena es el de fin. Sin botones; la pieza esta lista para ellos.
+
    A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
    recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
    retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
@@ -16818,6 +16875,9 @@ var _paceAvisoAndroidLeido = paceAndroidAvisoLeer();
 var _paceAvisoAndroid = {
   fondo: false, permiso: 'default', exacta: 'default', foco: null,
   puesto: _paceAvisoAndroidLeido.puesto, quizas: _paceAvisoAndroidLeido.quizas,
+
+
+  fijo: null, fijoQuizas: true,
   fallo: null, cola: Promise.resolve()
 };
 
@@ -16840,7 +16900,9 @@ function paceAndroidGuardarPermiso(r) {
   var antes = _paceAvisoAndroid.permiso;
   if (d === 'granted' || d === 'denied') _paceAvisoAndroid.permiso = d;else
   if (d) _paceAvisoAndroid.permiso = 'default';
-  if (_paceAvisoAndroid.permiso !== antes) paceAndroidAvisoContar();
+
+
+  if (_paceAvisoAndroid.permiso !== antes) {paceAndroidAvisoContar();paceAndroidAvisoRecolocar();}
   return _paceAvisoAndroid.permiso;
 }
 
@@ -16885,7 +16947,8 @@ function paceAndroidAvisoFallo() {
 
 function paceAndroidFoco(endsAt, textos) {
   _paceAvisoAndroid.foco = endsAt ?
-  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '' } :
+  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '',
+    fijo: textos && typeof textos.fijo === 'function' ? textos.fijo : null } :
   null;
   paceAndroidAvisoRecolocar();
 }
@@ -16910,9 +16973,16 @@ function paceAndroidAvisoRecolocar() {
 }
 
 
+
 function paceAndroidAvisoAjustar() {
-  var a = _paceAvisoAndroid,f = a.foco,ahora = Date.now();
-  var quiere = a.fondo && f && f.endsAt > ahora && a.permiso === 'granted' ? f : null;
+  var a = _paceAvisoAndroid,f = a.foco;
+  var quiere = a.fondo && f && f.endsAt > Date.now() && a.permiso === 'granted' ? f : null;
+  return Promise.resolve().then(function () {return paceAndroidAvisoAjustarFin(quiere);}).catch(function () {}).
+  then(function () {return paceAndroidAvisoAjustarFijo(quiere);});
+}
+
+function paceAndroidAvisoAjustarFin(quiere) {
+  var a = _paceAvisoAndroid,ahora = Date.now();
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
     return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
@@ -16944,6 +17014,26 @@ function paceAndroidAvisoAjustar() {
 }
 
 
+function paceAndroidAvisoAjustarFijo(quiere) {
+  var a = _paceAvisoAndroid;
+  if (!paceAndroidPlugin('PaceAvisoFijo')) return null;
+  var textos = null;
+  try {textos = quiere && quiere.fijo ? quiere.fijo() : null;} catch (e) {}
+  if (quiere && textos) {
+    if (a.fijo === quiere.endsAt) return null;
+    return paceAndroidPedir('PaceAvisoFijo', 'poner', { titulo: textos.titulo, texto: textos.texto, hasta: quiere.endsAt }).then(function () {
+      a.fijo = quiere.endsAt;
+      a.fijoQuizas = false;
+    });
+  }
+  if (a.fijo === null && !a.fijoQuizas) return null;
+  return paceAndroidPedir('PaceAvisoFijo', 'quitar').then(function () {
+    a.fijo = null;
+    a.fijoQuizas = false;
+  });
+}
+
+
 
 
 function paceAndroidCampana(fin, sonar) {
@@ -16958,7 +17048,7 @@ function paceAndroidCampana(fin, sonar) {
 function paceAndroidEstado() {
   var a = _paceAvisoAndroid;
   return { fondo: a.fondo, permiso: a.permiso, exacta: a.exacta, programado: a.puesto !== null, puesto: a.puesto,
-    fallo: a.fallo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0 };
+    fallo: a.fallo, fijo: a.fijo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0 };
 }
 
 function paceAndroidAvisosArrancar() {
@@ -16984,7 +17074,7 @@ Object.assign(window, {
   paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco,
   paceAndroidCampana, paceAndroidEstado
 });
-;Object.assign(window, { PACE_AVISO_FOCO_ID, PACE_AVISO_CLAVE, paceAndroidAvisoLeer, paceAndroidAvisoGuardar, _paceAvisoAndroidLeido, _paceAvisoAndroid, paceAndroidAvisos, paceAndroidAvisoContar, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoPermisoMirar, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoEnFila, paceAndroidAvisoRecolocar, paceAndroidAvisoAjustar, paceAndroidCampana, paceAndroidEstado, paceAndroidAvisosArrancar });
+;Object.assign(window, { PACE_AVISO_FOCO_ID, PACE_AVISO_CLAVE, paceAndroidAvisoLeer, paceAndroidAvisoGuardar, _paceAvisoAndroidLeido, _paceAvisoAndroid, paceAndroidAvisos, paceAndroidAvisoContar, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoPermisoMirar, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoEnFila, paceAndroidAvisoRecolocar, paceAndroidAvisoAjustar, paceAndroidAvisoAjustarFin, paceAndroidAvisoAjustarFijo, paceAndroidCampana, paceAndroidEstado, paceAndroidAvisosArrancar });
 })();
 </script>
   <script>
@@ -28230,7 +28320,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   useEffectFT(() => {
     if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
-    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
+      fijo: () => typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null });
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
 

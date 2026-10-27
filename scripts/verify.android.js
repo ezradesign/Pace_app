@@ -32,6 +32,7 @@ var COLORES = [
   ['values/pace_colores.xml', 'pace_trazo_noche', 'oscuro', 'ink'],
   ['values/pace_colores.xml', 'pace_papel_crema', 'crema', 'paper'],
   ['values/pace_colores.xml', 'pace_papel_oscuro', 'oscuro', 'paper'],
+  ['values/pace_colores.xml', 'pace_aviso', 'crema', 'focus'],
 ];
 
 function leer(rel) {
@@ -88,6 +89,7 @@ function chequeaAndroid(ctx) {
   }
   chequeaIconoAviso(ctx, css);
   chequeaBarras(ctx);
+  chequeaAvisoFijo(ctx);
   chequeaPlay(ctx);
 }
 
@@ -129,6 +131,26 @@ function chequeaBarras(ctx) {
    pierde, el APK de prueba vuelve a chocar con la app de Play (instalar una
    obliga a desinstalar la otra, y eso borra los datos) o el archivo que se subio
    a Play deja de encontrarse, o queda a la vista en un repo publico. */
+/* El aviso fijo con el movil bloqueado (Ez, N4 A del 27 oct.): la cuenta atras la pinta Android y
+   se va sola al final; sin sonido, visible bloqueado, sin botones; registrado, y la web lo pide. */
+function chequeaAvisoFijo(ctx) {
+  var JAVA = 'android/app/src/main/java/com/ezradesign/pace/';
+  var pieza = (leer(JAVA + 'PaceAvisoFijo.java') || '').toString();
+  var actividad = (leer(JAVA + 'MainActivity.java') || '').toString();
+  var web = (leer('app/ui/android.avisos.js') || '').toString();
+  var malas = [];
+  if (!/@CapacitorPlugin\(name = "PaceAvisoFijo"\)/.test(pieza)) malas.push('PaceAvisoFijo.java ya no es el complemento «PaceAvisoFijo»');
+  if (!/setUsesChronometer\(true\)/.test(pieza) || !/setChronometerCountDown\(true\)/.test(pieza) || !/setWhen\(hasta\)/.test(pieza)) malas.push('el aviso fijo ya no lleva la cuenta atras de Android hasta el final del bloque');
+  if (!/setTimeoutAfter\(hasta - ahora\)/.test(pieza)) malas.push('el aviso fijo ya no se va solo al acabar el bloque');
+  if (!/setSound\(null, null\)/.test(pieza) || !/enableVibration\(false\)/.test(pieza)) malas.push('el canal del aviso fijo ya no es mudo');
+  if (/IMPORTANCE_(LOW|MIN)/.test(pieza)) malas.push('el canal del aviso fijo es de importancia baja, y Android lo esconde con el movil bloqueado');
+  if (/\.addAction\(/.test(pieza)) malas.push('el aviso fijo lleva botones, y Ez eligio la A, sin botones (DECISIONES_PRODUCTO.md, 27 oct.)');
+  if (!/registerPlugin\(PaceAvisoFijo\.class\)/.test(actividad)) malas.push('MainActivity ya no registra PaceAvisoFijo');
+  if (!/paceAndroidPedir\('PaceAvisoFijo', 'poner'/.test(web) || !/paceAndroidPedir\('PaceAvisoFijo', 'quitar'/.test(web)) malas.push('app/ui/android.avisos.js ya no pone y quita el aviso fijo');
+  if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  else ctx.ok('android: el aviso fijo con el movil bloqueado cuenta solo, se va al final, no suena y no lleva botones');
+}
+
 function chequeaPlay(ctx) {
   var gradle = (leer('android/app/build.gradle') || '').toString();
   var nombres = (leer('android/app/src/debug/res/values/strings.xml') || '').toString();

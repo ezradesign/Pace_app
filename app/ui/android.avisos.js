@@ -35,6 +35,13 @@
    vez (puede venir de los ajustes de Android) y se avisa con el evento
    `pace:avisos-android` para que Ajustes se pinte con lo nuevo.
 
+   EL AVISO FIJO CON EL MOVIL BLOQUEADO (Ez, N4 A del 27 oct. 2026): mientras un Foco corre con
+   la app en el fondo, Android enseña lo que queda, que cuenta solo, con el bloque y lo que viene
+   detras (`ritmoAvisoFijo`). Lo pinta una pieza propia, PaceAvisoFijo, porque el complemento no
+   sabe poner una cuenta atras. Va con «Aviso al terminar» y el mismo permiso, en la misma fila:
+   sale al irse al fondo, se va al volver, al pausar o al reiniciar, y al acabar lo quita Android
+   solo. No suena nunca: el que suena es el de fin. Sin botones; la pieza esta lista para ellos.
+
    A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
    recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
    retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
@@ -68,6 +75,9 @@ var _paceAvisoAndroidLeido = paceAndroidAvisoLeer();
 var _paceAvisoAndroid = {
   fondo: false, permiso: 'default', exacta: 'default', foco: null,
   puesto: _paceAvisoAndroidLeido.puesto, quizas: _paceAvisoAndroidLeido.quizas,
+  /* el aviso fijo que Android enseña (el final de su bloque), o null; al arrancar no se sabe si
+     el proceso anterior dejó uno, y lo primero que se recoloca con la app delante lo quita */
+  fijo: null, fijoQuizas: true,
   fallo: null, cola: Promise.resolve(),
 };
 
@@ -90,7 +100,9 @@ function paceAndroidGuardarPermiso(r) {
   var antes = _paceAvisoAndroid.permiso;
   if (d === 'granted' || d === 'denied') _paceAvisoAndroid.permiso = d;
   else if (d) _paceAvisoAndroid.permiso = 'default';
-  if (_paceAvisoAndroid.permiso !== antes) paceAndroidAvisoContar();
+  /* Con el permiso nuevo cambia lo que debería haber: el que llega con la app ya en el fondo
+     (la primera respuesta al arrancar) también pone el aviso. */
+  if (_paceAvisoAndroid.permiso !== antes) { paceAndroidAvisoContar(); paceAndroidAvisoRecolocar(); }
   return _paceAvisoAndroid.permiso;
 }
 
@@ -135,7 +147,8 @@ function paceAndroidAvisoFallo() {
    textos avisar, o null si no hay bloque o el aviso esta apagado. */
 function paceAndroidFoco(endsAt, textos) {
   _paceAvisoAndroid.foco = endsAt
-    ? { endsAt: endsAt, title: (textos && textos.title) || 'PACE', body: (textos && textos.body) || '' }
+    ? { endsAt: endsAt, title: (textos && textos.title) || 'PACE', body: (textos && textos.body) || '',
+        fijo: textos && typeof textos.fijo === 'function' ? textos.fijo : null }
     : null;
   paceAndroidAvisoRecolocar();
 }
@@ -159,10 +172,17 @@ function paceAndroidAvisoRecolocar() {
   return paceAndroidAvisoEnFila(paceAndroidAvisoAjustar);
 }
 
-/* Lo que deberia haber, frente a lo que Android confirmo. */
+/* Lo que deberia haber, frente a lo que Android confirmo: el aviso de fin y el fijo. Que falle
+   uno no quita el otro. */
 function paceAndroidAvisoAjustar() {
-  var a = _paceAvisoAndroid, f = a.foco, ahora = Date.now();
-  var quiere = a.fondo && f && f.endsAt > ahora && a.permiso === 'granted' ? f : null;
+  var a = _paceAvisoAndroid, f = a.foco;
+  var quiere = a.fondo && f && f.endsAt > Date.now() && a.permiso === 'granted' ? f : null;
+  return Promise.resolve().then(function () { return paceAndroidAvisoAjustarFin(quiere); }).catch(function () {})
+    .then(function () { return paceAndroidAvisoAjustarFijo(quiere); });
+}
+
+function paceAndroidAvisoAjustarFin(quiere) {
+  var a = _paceAvisoAndroid, ahora = Date.now();
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
     return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
@@ -193,6 +213,26 @@ function paceAndroidAvisoAjustar() {
   });
 }
 
+/* El aviso fijo. Sin la pieza (la web, las pruebas viejas) no hay nada que hacer. */
+function paceAndroidAvisoAjustarFijo(quiere) {
+  var a = _paceAvisoAndroid;
+  if (!paceAndroidPlugin('PaceAvisoFijo')) return null;
+  var textos = null;
+  try { textos = quiere && quiere.fijo ? quiere.fijo() : null; } catch (e) {}
+  if (quiere && textos) {
+    if (a.fijo === quiere.endsAt) return null;
+    return paceAndroidPedir('PaceAvisoFijo', 'poner', { titulo: textos.titulo, texto: textos.texto, hasta: quiere.endsAt }).then(function () {
+      a.fijo = quiere.endsAt;
+      a.fijoQuizas = false;
+    });
+  }
+  if (a.fijo === null && !a.fijoQuizas) return null;
+  return paceAndroidPedir('PaceAvisoFijo', 'quitar').then(function () {
+    a.fijo = null;
+    a.fijoQuizas = false;
+  });
+}
+
 /* FocusTimer pregunta aqui antes de tocar la campana de un bloque que acababa en `fin`:
    `sonar` se llama si la campana es de PACE, y no si es de Android, que tenia el aviso de ese
    bloque. Va en la fila, detras de lo que se recoloco al volver. */
@@ -208,7 +248,7 @@ function paceAndroidCampana(fin, sonar) {
 function paceAndroidEstado() {
   var a = _paceAvisoAndroid;
   return { fondo: a.fondo, permiso: a.permiso, exacta: a.exacta, programado: a.puesto !== null, puesto: a.puesto,
-           fallo: a.fallo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0 };
+           fallo: a.fallo, fijo: a.fijo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0 };
 }
 
 function paceAndroidAvisosArrancar() {
