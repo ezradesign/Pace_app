@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos } = require('./helpers');
 const { CLAVE_EVENTOS, leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -139,8 +139,9 @@ test('«Borrar todos mis datos» de Ajustes borra los DOS almacenes', async ({ p
 
   const antes = await leerContenedor(page);
 
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
+  await abrirTusDatos(page);
   /* El reset recarga la pagina al acabar de borrar. Sin esperar a esa carga, la
      espera de abajo podia darse por buena en la pagina vieja, ya borrada, y la
      recarga se llevaba por delante el `evaluate` siguiente. */
@@ -186,8 +187,9 @@ test('importar un backup ANTIGUO reinicia el contenedor en vez de mezclarlo', as
              routineFeedback: { 'move.neck': { yes: 3, some: 1, no: 0 } } },
   });
 
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
+  await abrirTusDatos(page);
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-20260101.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 

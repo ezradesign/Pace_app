@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, abrirTusDatos, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
 
 /* Un Capacitor de Android falso con los cinco complementos. `permiso` es lo que
    contesta LocalNotifications al arrancar ('granted', 'denied' o 'prompt') y
@@ -121,6 +121,46 @@ test.describe('en Android', () => {
     expect(errores).toEqual([]);
   });
 
+  /* A2 (auditoría externa, 21-22 oct.): la bienvenida no se cierra con Escape, y el Atrás
+     viajaba como un Escape cualquiera, así que no hacía nada. */
+  test('A2 · en la bienvenida, atrás vuelve un paso y, en la primera pantalla, manda la app al fondo', async ({ page, context }) => {
+    await comoAndroid(context);
+    const errores = capturarErrores(page);
+    await page.goto(RUTA_ARTEFACTO);
+    const semana = page.getByRole('heading', { name: '¿Cómo es tu semana?' });
+    await page.getByRole('button', { name: 'Comenzar' }).click();
+    await expect(semana).toBeVisible();
+
+    await atras(page);
+    await expect(semana, 'atrás no volvió a la primera pantalla').toHaveCount(0);
+    await expect(page.getByTitle('Cambiar a English')).toBeVisible();
+    expect(await cuantas(page, 'App', 'minimizeApp'), 'desde la semana, atrás mandó la app al fondo').toBe(0);
+
+    await atras(page);
+    expect(await cuantas(page, 'App', 'minimizeApp'), 'en la primera pantalla, atrás no hizo nada').toBe(1);
+    await expect(page.getByTitle('Cambiar a English'), 'atrás cerró la bienvenida').toBeVisible();
+    expect(errores).toEqual([]);
+  });
+
+  test('la bienvenida acaba en PACE completo abierto hasta v1, sin importes (Play aún no los da), y atrás cierra la visita', async ({ page, context }) => {
+    await comoAndroid(context);
+    const errores = capturarErrores(page);
+    await page.goto(RUTA_ARTEFACTO);
+    await page.getByRole('button', { name: 'Comenzar' }).click();
+    await page.locator('[data-pace-semana-guardar]').click();
+    await expect(page.locator('[data-pace-onb-comenzar]')).toBeVisible();
+    await expect(page.locator('[data-pace-onb-v1]')).toBeVisible();
+    await expect(page.locator('[data-pace-onb-precios]'), 'dijo un importe que Play no ha dado').toHaveCount(0);
+    await page.locator('[data-pace-onb-comenzar]').click();
+
+    const visita = page.locator('[role=dialog][data-pace-visita]');
+    await visita.waitFor({ state: 'visible' });
+    await atras(page);
+    await expect(visita, 'atrás no cerró la visita').toHaveCount(0);
+    expect(await cuantas(page, 'App', 'minimizeApp'), 'atrás mandó la app al fondo con la visita abierta').toBe(0);
+    expect(errores).toEqual([]);
+  });
+
   test('una sesion guiada mantiene la pantalla con KeepAwake, la suelta al salir, y atras sale de la sesion', async ({ page, context }) => {
     await sembrar(context, { soundOn: false });
     await comoAndroid(context);
@@ -145,6 +185,7 @@ test.describe('en Android', () => {
     page.on('download', () => { descargas++; });
 
     await abrirAjustes(page);
+    await abrirTusDatos(page);
     await page.getByRole('button', { name: 'Exportar una copia', exact: true }).click();
     await expect(page.getByText('Copia lista: elige dónde guardarla.')).toBeVisible();
     await expect.poll(() => cuantas(page, 'Share', 'share')).toBe(1);
@@ -178,6 +219,7 @@ test.describe('en Android', () => {
       await page.evaluate(([p, m, e]) => { window.Capacitor.Plugins[p][m] = () => Promise.reject(new Error(e)); },
         [caso.plugin, caso.metodo, caso.error]);
       await abrirAjustes(page);
+      await abrirTusDatos(page);
       await page.getByRole('button', { name: 'Exportar una copia', exact: true }).click();
       await expect(page.locator('.pace-aj-msg'), 'la copia se dio por hecha').toHaveText(caso.texto);
       await page.waitForTimeout(300);
@@ -190,6 +232,7 @@ test.describe('en Android', () => {
     await comoAndroid(context);
     await irAlArtefacto(page);
     await abrirAjustes(page);
+    await abrirTusDatos(page);
     await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
     await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety');
     await expect(page.getByText('Todo vive en tu móvil.')).toBeVisible();
@@ -351,15 +394,16 @@ test.describe('en la web (control)', () => {
     await irAlArtefacto(page);
     expect(await page.evaluate(() => paceEsAndroid())).toBe(false);
     await abrirAjustes(page);
+    await expect(page.locator('[data-pace-aj-fila="notify"]')).toContainText('Foco · si la pestaña está detrás');
+    await abrirTusDatos(page);
     await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', '/privacy');
     await expect(page.getByText('Todo vive en tu navegador.')).toBeVisible();
-    await expect(page.locator('[data-pace-aj-fila="notify"]')).toContainText('Foco · si la pestaña está detrás');
     const [descarga] = await Promise.all([
       page.waitForEvent('download'),
       page.getByRole('button', { name: 'Exportar una copia', exact: true }).click(),
     ]);
     expect(descarga.suggestedFilename()).toMatch(/^pace-backup-\d{8}\.json$/);
-    await expect(page.getByText('Backup descargado.')).toBeVisible();
+    await expect(page.getByText('Copia descargada.')).toBeVisible();
   });
 
   test('el apoyo sigue: la pill del pie, y con 7 dias de racha el modal se abre solo', async ({ page, context }) => {

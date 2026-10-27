@@ -12,7 +12,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, CLAVE_ESTADO, SEMILLA } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, CLAVE_ESTADO, SEMILLA, abrirTusDatos } = require('./helpers');
 
 const guardado = (page) => page.evaluate((clave) => JSON.parse(localStorage.getItem(clave) || 'null'), CLAVE_ESTADO);
 const unVaso = (page) => page.locator('[data-pace-sidebar]').getByRole('button', { name: /Añadir un vaso/ }).click();
@@ -55,8 +55,9 @@ test('estado-2 · «Borrar todos mis datos» en una pestaña no lo resucita la o
   await irAlArtefacto(a);
   const b = await context.newPage();
   await irAlArtefacto(b);
-  b.on('dialog', d => d.accept());
+  await aceptarAvisosPace(b);
   await b.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(b);
   const recarga = b.waitForEvent('load');
   await b.getByRole('button', { name: 'Borrar todos mis datos' }).click();
   await recarga;
@@ -72,8 +73,9 @@ test('estado-2 · «Borrar todos mis datos» en una pestaña no lo resucita la o
 
 test('estado-3 · una copia importada en una pestaña no la pisa la otra', async ({ context }) => {
   const { a, b } = await dosPestanas(context);
-  b.on('dialog', d => d.accept());
+  await aceptarAvisosPace(b);
   await b.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(b);
   const recarga = b.waitForEvent('load');
   await b.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
     name: 'pace-backup-20261001.json', mimeType: 'application/json',

@@ -16,7 +16,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, abrirTusDatos, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
 const { esperarInit, leerContenedor, sembrarEventos } = require('./eventos.helpers');
 
 /* Un Capacitor de iOS falso con los cinco complementos que lleva la app.
@@ -103,6 +103,7 @@ test.describe('en el iPhone', () => {
     await comoIphone(context);
     await irAlArtefacto(page);
     await abrirAjustes(page);
+    await abrirTusDatos(page);
     await expect(page.getByText('Todo vive en tu móvil.')).toBeVisible();
     /* La App Store pide que la política de privacidad se abra desde la app. */
     await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
@@ -162,6 +163,7 @@ test.describe('en el iPhone', () => {
     let descargas = 0;
     page.on('download', () => { descargas++; });
     await abrirAjustes(page);
+    await abrirTusDatos(page);
     await page.getByRole('button', { name: 'Exportar una copia', exact: true }).click();
     await expect(page.getByText('Copia lista: elige dónde guardarla.')).toBeVisible();
     await expect.poll(() => cuantas(page, 'Share', 'share')).toBe(1);
@@ -190,6 +192,7 @@ test.describe('en el iPhone', () => {
       await page.evaluate(([p, m, e]) => { window.Capacitor.Plugins[p][m] = () => Promise.reject(new Error(e)); },
         [caso.plugin, caso.metodo, caso.error]);
       await abrirAjustes(page);
+      await abrirTusDatos(page);
       await page.getByRole('button', { name: 'Exportar una copia', exact: true }).click();
       await expect(page.locator('.pace-aj-msg'), 'la copia se dio por hecha').toHaveText(caso.texto);
       await page.waitForTimeout(300);

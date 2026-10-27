@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, sembrarPisando, irAlArtefacto, overlaySuperior, capturarErrores } = require('./helpers');
+const { sembrar, sembrarPisando, irAlArtefacto, overlaySuperior, capturarErrores, abrirTusDatos } = require('./helpers');
 const { otra, b64url, firmar, conLlaveDePrueba } = require('./licencia.helpers');
 
 test.use({ serviceWorkers: 'block' });
@@ -108,6 +108,7 @@ test('un código bueno, pegado en la invitación, abre PACE completo para siempr
 
   /* En Ajustes: «PACE completo · Para siempre» y el número del tester. */
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   await expect(page.locator('[data-pace-licencia-estado]')).toHaveText('Para siempre');
   await expect(page.getByText('Tester n.º 7')).toBeVisible();
   expect(errores).toEqual([]);

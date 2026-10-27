@@ -144,12 +144,13 @@ const ACHIEVEMENT_CATALOG = [
      más cálida (el resto de secretos son '?'). */
   { id: 'secret.supporter', cat: 'secretos', title: 'Sostienes el pasto', desc: 'Apoyaste el proyecto', glyph: '✦', secret: true },
   /* s167 — VENIA DE `exploracion`, y desentonaba: los otros 18 de aquella
-     familia son «Tres sesiones de X» y este es «Abre los Tweaks», una accion de
+     familia son «Tres sesiones de X» y este es «Abre los Ajustes», una accion de
      app. Sus hermanos de verdad son `secret.backup` y `secret.safety.read`.
-     Pasa a SECRETO porque encontrar los Tweaks es, literalmente, un
-     descubrimiento -- que es la mecanica de esta familia.
+     Pasa a SECRETO porque encontrar los Ajustes es, literalmente, un
+     descubrimiento -- que es la mecanica de esta familia. El panel se llama
+     Ajustes, y el logro lo dice (Ez, 3A del 27 oct.: decia «los Tweaks»).
      EL ID NO SE TOCA: renombrarlo borraria el logro a quien ya lo tuviera. */
-  { id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙', secret: true },
+  { id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Ajustes', glyph: '⚙', secret: true },
 
   // Estacionales (87-96)
   { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },

@@ -67,20 +67,20 @@ function TweaksAudioBlock({ state, set }) {
 
   return (
     <React.Fragment>
-      <AjustesFila id="sound" nombre={t('settings.sound')}>
+      <AjustesFila id="sound" nombre={t('settings.sound')} alTocar={() => set({ soundOn: !state.soundOn })}>
         <AjustesInterruptor on={!!state.soundOn} onChange={(v) => set({ soundOn: v })} aria={t('settings.sound')} />
       </AjustesFila>
       {/* Las dos voces hablan castellano e inglés (Sound.voz.jsx): la palabra sale
           en el idioma de la app, así que la fila es la misma en los dos. */}
       <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}>
-        <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} opciones={[
+        <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} apagado={apagado} opciones={[
           { v: 'tono', name: t('settings.signal.tone') },
           { v: 'sulafat', name: t('settings.signal.clear') },
           { v: 'bradford', name: t('settings.signal.deep') },
         ]} />
       </AjustesFila>
       <AjustesFila id="bg" nombre={t('settings.bg')} atenuada={apagado}>
-        <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} opciones={[
+        <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} apagado={apagado} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
           { v: 'amb', name: t('settings.bg.ambient') },
           /* «Musica» suena en todas las tecnicas de Respira (un drone propio por

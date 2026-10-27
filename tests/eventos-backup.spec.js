@@ -30,15 +30,16 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos } = require('./helpers');
 const { CLAVE_EVENTOS, leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
 /* Abre Ajustes y entrega un archivo al input de import. */
 async function importar(page, objeto) {
-  page.on('dialog', d => d.accept());
+  await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
+  await abrirTusDatos(page);
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({
       name: 'pace-backup-20260101.json',
@@ -56,6 +57,8 @@ test('el backup que se DESCARGA lleva la seccion de eventos, con sus campos', as
   await sembrarEventos(page, 3);
 
   await page.locator('button[aria-label="Abrir ajustes"]').click();
+
+  await abrirTusDatos(page);
   /* Se lee el ARCHIVO, no el objeto: es lo que el usuario se lleva. */
   const [descarga] = await Promise.all([
     page.waitForEvent('download'),

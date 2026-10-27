@@ -4,6 +4,16 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 20 de octubre de 2026, v0.173.2.
 
+## 27 oct.: la bienvenida y los Ajustes (v0.180.0), en su rama, con el 1C 2A 3A de Ez
+
+Rama `claude/bienvenida-ajustes-6e6e31` (puerto 8805). Ez eligió sobre https://claude.ai/artifact/6p1BHbVqSrgtwnJgrXWLka
+1C, la visita guiada por la home («creo que es la que más explica para nuevos usuarios aunque a lo mejor puede añadir o
+complementar explicaciones que se encuentran en la B»): de la B solo entra, en la parada del aro, «Al acabar, PACE te
+propone una pausa corta…», porque a 360 px no cabe más sin scroll. 2A, PACE completo al final de la bienvenida, abierto
+hasta v1, con un solo «Comenzar». 3A, los Ajustes: «Tus datos» plegada por debajo de 860 px de alto, el interruptor de
+40 × 24, sin JSON ni backup y con avisos de PACE en vez de los del navegador. Con A1-A5 y A7 de la auditoría. Se junta
+cuando Ez diga «júntalo»; la 0.181.0 (la hora) va detrás y solo choca en la versión y el CHANGELOG.
+
 ## 26 oct.: lo que prometemos sobre los datos (v0.179.0), en su rama, con el 1A 2A 3A de Ez
 
 Rama `claude/privacidad-p1-p5-a973d0` (puerto 8806). Ez eligió la recomendada sobre

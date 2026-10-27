@@ -58,6 +58,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.onb.probar':            'Probar {dias} días gratis',
     'premium.onb.vida':              'Prefiero pagarlo una vez, {vida}',
     'premium.onb.aviso':             'Te avisamos dos días antes de que acabe la prueba.',
+    'premium.onb.abierto.lede':      'Y hasta v1, PACE completo también está abierto para todos:',
+    'premium.onb.abierto.precios':   'Después, {mes} al mes con {dias} días gratis, o {vida} una vez.',
+    'premium.onb.abierto.aviso':     'Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -111,4 +114,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.onb.probar':            'Try {dias} days free',
     'premium.onb.vida':              'I would rather pay once, {vida}',
     'premium.onb.aviso':             'We will remind you two days before the trial ends.',
+    'premium.onb.abierto.lede':      'And until v1, PACE Complete is open to everyone too:',
+    'premium.onb.abierto.precios':   'Then, {mes} a month with {dias} days free, or {vida} once.',
+    'premium.onb.abierto.aviso':     'When v1 arrives you get your trial week, and the routines you have already done stay yours.',
 });

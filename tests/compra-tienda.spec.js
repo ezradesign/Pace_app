@@ -2,8 +2,9 @@
  * ==========================================
  * Toda compra pasa por `app/state-entitlement.jsx` (paceTiendaAbierta, paceTiendaPlanes,
  * paceComprar), con una tienda por canal (`app/state-compra.js`). Hoy las dos están
- * vacías: la bienvenida acaba en «¿Cómo es tu semana?» y nada enseña un botón de compra.
- * Con la tienda abierta, la bienvenida enseña PACE completo una vez, al final, con los
+ * vacías y nada enseña un botón de compra: mientras PACE completo está abierto hasta v1, la
+ * bienvenida acaba en su pantalla con lo que costará después y un solo botón (Ez, 2A del
+ * 27 oct.; `paceBienvenidaCompleto`). Con la tienda abierta, la bienvenida enseña PACE completo una vez, al final, con los
  * dos precios de la tienda y «Ahora no» igual de grande que «Probar 7 días gratis»
  * (opción A de Ez, https://claude.ai/artifact/AvME9EqcMHXhywx43vEdKG).
  *
@@ -27,7 +28,7 @@ async function hastaLaSemana(page) {
   await page.locator('[role=dialog] [data-pace-cta]').waitFor({ state: 'visible' });
 }
 
-test('con la tienda cerrada no hay nada que comprar y la bienvenida acaba en la semana', async ({ page }) => {
+test('con la tienda cerrada no hay nada que comprar: la bienvenida acaba en PACE completo abierto hasta v1', async ({ page }) => {
   const errores = capturarErrores(page);
   await hastaLaSemana(page);
 
@@ -36,16 +37,50 @@ test('con la tienda cerrada no hay nada que comprar y la bienvenida acaba en la 
     abierta: window.paceTiendaAbierta(),
     planes: window.paceTiendaPlanes('es'),
     compra: await window.paceComprar('vida'),
+    bienvenida: window.paceBienvenidaCompleto(),
   }));
-  expect(tienda).toEqual({ canal: 'web', abierta: false, planes: [], compra: { ok: false, motivo: 'cerrada' } });
+  expect(tienda).toEqual({ canal: 'web', abierta: false, planes: [], compra: { ok: false, motivo: 'cerrada' }, bienvenida: 'abierto' });
 
   await page.locator('[role=dialog] [data-pace-cta]').click();
-  /* La semana es la última: su botón dice «Comenzar» y cierra la bienvenida. */
+  /* La semana ya no es la última (Ez, 2A del 27 oct.): detrás va PACE completo. */
+  await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Continuar');
+  await page.locator('[data-pace-semana-guardar]').click();
+
+  /* Lo que es verdad hoy: abierto para todos, lo que costará y lo que se queda al llegar v1. */
+  await expect(page.getByRole('heading', { name: 'PACE es gratis.' })).toBeVisible();
+  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toContainText('Y hasta v1, PACE completo también está abierto para todos:');
+  await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Después, 2,99 € al mes con 7 días gratis, o 19,99 € una vez.');
+  await expect(page.locator('[data-pace-onb-v1]')).toHaveText('Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.');
+  /* Un solo botón: no hay nada que comprar. */
+  await expect(page.locator('[data-pace-onb-comenzar]')).toHaveText('Comenzar');
+  await expect(page.locator('[data-pace-onb-probar], [data-pace-onb-ahora], [data-pace-onb-vida]')).toHaveCount(0);
+
+  await page.locator('[data-pace-onb-comenzar]').click();
+  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toHaveCount(0);
+  const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
+  expect(typeof visto).toBe('number');
+  /* Y detrás, la visita guiada por la home (bienvenida-visita.spec.js). */
+  await expect(page.locator('[data-pace-visita]')).toBeVisible();
+  expect(errores).toEqual([]);
+});
+
+test('sin precios en la tienda del canal no se dice ningún importe, y sin «abierto hasta v1» la bienvenida acaba en la semana', async ({ page }) => {
+  await hastaLaSemana(page);
+  /* Como en Android antes de Play Billing: la tienda aún no tiene sus precios. */
+  await page.evaluate(() => { window.PACE_TIENDA_WEB.precios = {}; });
+  await page.locator('[role=dialog] [data-pace-cta]').click();
+  await page.locator('[data-pace-semana-guardar]').click();
+  await expect(page.locator('[data-pace-onb-comenzar]')).toBeVisible();
+  await expect(page.locator('[data-pace-onb-precios]')).toHaveCount(0);
+  await expect(page.locator('[data-pace-onb-v1]')).toBeVisible();
+
+  /* El día que se cierre lo abierto hasta v1 sin tienda en el canal, no queda nada que enseñar. */
+  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+  await page.locator('[data-pace-toque]').filter({ hasText: 'Atrás' }).click();
   await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Comenzar');
   await page.locator('[data-pace-semana-guardar]').click();
   await expect(page.locator('[role=dialog][data-pace-scene-card]')).toHaveCount(0);
-  await expect(page.locator('[data-pace-onb-probar]')).toHaveCount(0);
-  expect(errores).toEqual([]);
+  await expect(page.locator('[data-pace-onb-comenzar]')).toHaveCount(0);
 });
 
 test('con la tienda abierta, el último paso enseña los dos precios y «Ahora no» cierra para siempre', async ({ page }) => {
@@ -73,6 +108,8 @@ test('con la tienda abierta, el último paso enseña los dos precios y «Ahora n
 
   await ahora.click();
   await expect(page.locator('[role=dialog][data-pace-scene-card]')).toHaveCount(0);
+  /* «Ahora no» no compra: detrás va la visita guiada. */
+  await expect(page.locator('[data-pace-visita]')).toBeVisible();
   const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
   expect(typeof visto).toBe('number');
 
@@ -108,6 +145,9 @@ test('«Probar 7 días gratis» cierra la bienvenida y lleva a la página de pag
   await page.locator('[data-pace-onb-probar]').click();
 
   await expect.poll(() => page.evaluate(() => location.hash)).toBe('#tienda-mes');
+  /* La compra sigue en la página de Stripe: no se abre la visita encima. */
+  await page.waitForTimeout(700);
+  await expect(page.locator('[data-pace-visita]')).toHaveCount(0);
   const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
   expect(typeof visto).toBe('number');
 });

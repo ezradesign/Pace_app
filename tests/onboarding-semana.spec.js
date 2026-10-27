@@ -6,7 +6,8 @@
  * su propio archivo.
  *
  * Lo que se vigila:
- *   · la bienvenida no escribe nada hasta «Comenzar» o «Cada semana es distinta»;
+ *   · la bienvenida no escribe nada hasta «Continuar» o «Cada semana es distinta» (detrás
+ *     van PACE completo y la visita: compra-tienda.spec.js y bienvenida-visita.spec.js);
  *   · tocar un día pasa de jornada a media y a libre;
  *   · las horas tocadas se guardan sobre el horario de siempre (`ritmo.horario`);
  *   · «Cada semana es distinta» guarda null: la app sigue como estaba;
@@ -15,7 +16,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, RUTA_ARTEFACTO } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, acabarBienvenida, RUTA_ARTEFACTO } = require('./helpers');
 
 const BIENVENIDA = '[data-pace-scene-card][role="dialog"]';
 const EDITOR = '[data-pace-semana-editor]';
@@ -49,7 +50,7 @@ test('la bienvenida pregunta la semana: de lunes a viernes jornada, el fin de se
   expect(errores).toEqual([]);
 });
 
-test('«Comenzar» guarda la semana tocada y las horas, y cierra la bienvenida para siempre', async ({ page }) => {
+test('«Continuar» guarda la semana tocada y las horas, y cierra la bienvenida para siempre', async ({ page }) => {
   const errores = capturarErrores(page);
   await llegarALaSemana(page);
 
@@ -62,6 +63,7 @@ test('«Comenzar» guarda la semana tocada y las horas, y cierra la bienvenida p
   await page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]').selectOption('480');
 
   await page.locator('[data-pace-semana-guardar]').click();
+  await acabarBienvenida(page);
   await expect(page.locator(BIENVENIDA)).toHaveCount(0);
 
   const s = await leer(page);
@@ -81,6 +83,7 @@ test('«Cada semana es distinta» guarda que no hay semana y la app sigue como e
   const errores = capturarErrores(page);
   await llegarALaSemana(page);
   await page.locator('[data-pace-semana-saltar]').click();
+  await acabarBienvenida(page);
   await expect(page.locator(BIENVENIDA)).toHaveCount(0);
 
   const s = await leer(page);

@@ -39,6 +39,7 @@ function Onboarding() {
   const [freeText, setFreeText] = useStateONB('');
   const [picked, setPicked] = useStateONB(null);
   const [conPick, setConPick] = useStateONB(false); // lo elegido en «Tu primer Camino», si detrás va PACE completo
+  const [semanaBorrador, setSemanaBorrador] = useStateONB(null); // «¿Cómo es tu semana?» a medias, que sobrevive a «← Atrás»
 
   // Re-abrir a mano (dev / curiosidad) — mismo patrón que pace:open-support.
   useEffectONB(() => {
@@ -49,9 +50,34 @@ function Onboarding() {
 
   /* s198 · la trampa de foco que la Fase 8.5 llevaba anotada desde s183
      (ui/Dialogo.jsx). SIN Escape, a proposito: ver «Sin Escape ni
-     backdrop-click» en la cabecera. */
+     backdrop-click» en la cabecera. El Atrás de Android sí llega (ui/android.js lo marca
+     `paceAtras`): vuelve un paso, como «← Atrás», y en la primera pantalla manda la app al
+     fondo, como en la home. */
   const raizRef = useRefONB(null);
-  usePaceDialogo(raizRef, open);
+  usePaceDialogo(raizRef, open, {
+    onEscape: (e) => {
+      if (!e.paceAtras) return;
+      if (step > 0) setStep(s => Math.max(s - 1, 0));
+      else e.paceAlFondo = true;
+    },
+  });
+
+  /* Al cambiar de paso la columna se vuelve a montar (key={step}) y el botón pulsado se va
+     con ella: el foco caía en <body> y el lector de pantalla volvía al principio de la
+     página. Se lleva al título del paso nuevo, que es lo que hay que leer. Si el foco sigue
+     en algo vivo (el «← Atrás» de arriba entre dos preguntas), se queda donde está. */
+  const pasoPrevioRef = useRefONB(step);
+  useEffectONB(() => {
+    if (pasoPrevioRef.current === step) return;
+    pasoPrevioRef.current = step;
+    const raiz = raizRef.current;
+    if (!raiz) return;
+    const activo = document.activeElement;
+    if (activo && activo !== document.body && activo !== raiz && raiz.contains(activo)) return;
+    const titulo = raiz.querySelector('[data-pace-reveal] h1, [data-pace-reveal] h2');
+    if (titulo) titulo.setAttribute('tabindex', '-1');
+    try { (titulo || raiz).focus({ preventScroll: true }); } catch (e) {}
+  }, [step]);
 
   if (!open) return null;
 
@@ -60,12 +86,14 @@ function Onboarding() {
   const enApp = typeof paceEsNativo === 'function' && paceEsNativo();
   const questions = window.ONBOARDING_QUESTIONS || [];
   /* LAS PANTALLAS, en una lista: la bienvenida, «¿Cómo es tu semana?» (siempre, porque
-     es de «A tu ritmo» y no de los Caminos) y, con los Caminos, sus tres preguntas y el
-     primer Camino. Contar pasos a pelo confundía la semana con la primera pregunta. */
+     es de «A tu ritmo» y no de los Caminos), con los Caminos sus tres preguntas y el
+     primer Camino, y PACE completo al final si toca (OnboardingCompleto.jsx). Contar
+     pasos a pelo confundía la semana con la primera pregunta. */
+  const modoCompleto = typeof paceBienvenidaCompleto === 'function' ? paceBienvenidaCompleto() : null;
   const pantallas = ['bienvenida', 'semana']
     .concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : [])
     .concat(conCaminos ? ['primer'] : [])
-    .concat(typeof paceTiendaAbierta === 'function' && paceTiendaAbierta() ? ['completo'] : []);
+    .concat(modoCompleto ? ['completo'] : []);
   const pantalla = pantallas[step];
   const isSemana = pantalla === 'semana';
   const isQuestion = !!pantalla && pantalla.charAt(0) === 'q';
@@ -115,9 +143,14 @@ function Onboarding() {
       setLastViewedPath(picked);
     }
     setOpen(false);
+    /* Detrás, la visita guiada por la home (OnboardingVisita.jsx, Ez, 1C del 27 oct.), salvo
+       si se va a comprar: la compra de la web sigue en la página de Stripe. */
+    if (!(opts && opts.comprando)) window.dispatchEvent(new CustomEvent('pace:open-visita'));
   };
 
-  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+  /* Elegir idioma aquí es elegirlo a mano, como en Ajustes: apaga «Auto». Si no, cada arranque
+     vuelve a preguntar al sistema (loadState) y lo elegido en la bienvenida se pierde. */
+  const toggleLang = () => set({ langAuto: false, lang: state.lang === 'es' ? 'en' : 'es' });
 
   return (
     <div
@@ -217,12 +250,17 @@ function Onboarding() {
           {/* ---------- ¿CÓMO ES TU SEMANA? ---------- */}
           {isSemana && (
             <OnbSemanaPaso state={state} ultima={ultima}
+              borrador={semanaBorrador} onBorrador={setSemanaBorrador}
               onSeguir={() => (ultima ? finish({ pick: false }) : next())} />
           )}
 
-          {/* ---------- PACE COMPLETO, solo con la tienda abierta ---------- */}
+          {/* ---------- PACE COMPLETO: para comprar, o abierto hasta v1 ---------- */}
           {isCompleto && (
-            <OnbCompletoPaso onFin={(plan) => { finish({ pick: conPick }); if (plan && typeof paceComprar === 'function') paceComprar(plan); }} />
+            <OnbCompletoPaso modo={modoCompleto} onFin={(plan) => {
+              const comprando = !!plan && typeof paceComprar === 'function';
+              finish({ pick: conPick, comprando });
+              if (comprando) paceComprar(plan);
+            }} />
           )}
 
           {/* ---------- 1-3 · PREGUNTAS ---------- */}
@@ -317,29 +355,6 @@ function Onboarding() {
   );
 }
 
-/* «¿Cómo es tu semana?» (maqueta R2-bienvenida, elegida por Ez el 7 de octubre de 2026).
-   Su propio componente para que el borrador (días y horas) viva solo mientras se ve: la
-   bienvenida no lee «A tu ritmo» hasta llegar aquí, ni escribe nada hasta «Comenzar» o
-   «Cada semana es distinta», que guardan y siguen. Cinco hijos para el reveal. */
-function OnbSemanaPaso({ state, ultima, onSeguir }) {
-  const { t } = useT();
-  const b = useRitmoSemanaBorrador(state);
-  const guardar = (tipo) => { ritmoGuardarSemana(tipo, b.horas); onSeguir(); };
-  return (
-    <React.Fragment>
-      <h2 style={onboardingStyles.title}>{t('ritmo.st.titulo')}</h2>
-      <p style={onboardingStyles.lede}>{t('ritmo.st.sub')}</p>
-      <RitmoSemanaEditor dias={b.dias} onDias={b.setDias} horario={b.horario} onHora={b.onHora} />
-      <button data-pace-cta data-pace-semana-guardar onClick={() => guardar(b.dias)} style={onboardingStyles.cta}>
-        {t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')}
-      </button>
-      <button data-pace-semana-saltar onClick={() => guardar(null)} style={onboardingStyles.ghostBtn}>
-        {t('ritmo.st.saltar')}
-      </button>
-    </React.Fragment>
-  );
-}
-
 /* Estilos — nombre único según regla CLAUDE.md. */
 const onboardingStyles = {
   root: {
@@ -372,6 +387,9 @@ const onboardingStyles = {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
     fontSize: 'clamp(28px, 5.4vw, 38px)', fontWeight: 500,
     lineHeight: 1.12, margin: 0, color: 'var(--ink)',
+    /* Sin aro: el foco que recibe al cambiar de paso lo pone la app, no la persona (la regla
+       de los contenedores de s198, DESIGN_SYSTEM.md). */
+    outline: 'none',
     /* Halo de papel sobre el arte (mismo recurso que el runner s104). */
     textShadow: '0 0 22px var(--paper), 0 0 10px var(--paper)',
   },
@@ -421,7 +439,7 @@ const onboardingStyles = {
   pathName: {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
     fontSize: 'clamp(38px, 7vw, 54px)', fontWeight: 500,
-    lineHeight: 1.08, margin: 0, color: 'var(--ink)',
+    lineHeight: 1.08, margin: 0, color: 'var(--ink)', outline: 'none',
     textShadow: '0 0 24px var(--paper), 0 0 10px var(--paper)',
   },
   tagline: {

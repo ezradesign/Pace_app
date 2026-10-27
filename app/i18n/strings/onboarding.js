@@ -57,6 +57,21 @@ Object.assign(window.PACE_STRINGS.es, {
     'onboarding.first.lede':           'Pequeñas rutas guiadas que combinan foco, respiración y movimiento. Esta encaja contigo:',
     'onboarding.first.cta':            'Ver mi Camino',
     'onboarding.first.explore':        'prefiero explorar por mi cuenta',
+
+    // La visita guiada por la home (OnboardingVisita.jsx)
+    'visita.paso':                     '{n} de {total}',
+    'visita.saltar':                   'Saltar la visita',
+    'visita.siguiente':                'Siguiente',
+    'visita.fin':                      'Entendido',
+    'visita.aro.titulo':               'El aro',
+    'visita.aro.texto':                'Elige los minutos arriba y toca «{boton}»: el aro se llena mientras trabajas.',
+    'visita.aro.pausa':                'Al acabar, PACE te propone una pausa corta: moverte, estirar o respirar.',
+    'visita.act.titulo':               'Actividades',
+    'visita.act.texto':                'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
+    'visita.dia.titulo':               'Tu día',
+    'visita.dia.texto':                'Cada mañana, «A tu ritmo» te prepara el día según tu semana: cuándo parar y qué hacer en cada pausa.',
+    'visita.ajustes.titulo':           'Ajustes',
+    'visita.ajustes.texto':            'El idioma, la paleta, el sonido y tus datos. Desde aquí puedes repetir esta visita.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -110,4 +125,19 @@ Object.assign(window.PACE_STRINGS.en, {
     'onboarding.first.lede':           'Short guided routes that blend focus, breathing and movement. This one fits you:',
     'onboarding.first.cta':            'See my Path',
     'onboarding.first.explore':        'I’d rather explore on my own',
+
+    // The guided tour of the home (OnboardingVisita.jsx)
+    'visita.paso':                     '{n} of {total}',
+    'visita.saltar':                   'Skip the tour',
+    'visita.siguiente':                'Next',
+    'visita.fin':                      'Got it',
+    'visita.aro.titulo':               'The ring',
+    'visita.aro.texto':                'Choose the minutes above and tap “{boton}”: the ring fills as you work.',
+    'visita.aro.pausa':                'When it ends, PACE suggests a short break: moving, stretching or breathing.',
+    'visita.act.titulo':               'Activities',
+    'visita.act.texto':                'Breathe, Stretch and Move, with short routines, and Hydrate, for your glasses of water. Whenever you like.',
+    'visita.dia.titulo':               'Your day',
+    'visita.dia.texto':                'Each morning, “At your pace” plans your day from your week: when to stop and what to do in each break.',
+    'visita.ajustes.titulo':           'Settings',
+    'visita.ajustes.texto':            'Language, palette, sound and your data. You can replay this tour from here.',
 });

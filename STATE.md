@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.179.0 · 26 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.180.0 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -30,7 +30,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   ejercicios revisados y lleva a la pantalla de ejercicio (solo suma minutos).
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
-  por vida firmado lo abre todo. «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
+  por vida firmado lo abre todo. Desde v0.180.0 la bienvenida acaba en PACE completo, abierto, y en una visita
+  guiada por la home (Ez, 1C 2A 3A del 27 oct.). «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
   `ritmo.aprendido`. Los Caminos, ocultos hasta después de v1 (`SHOW_CAMINOS`).
 
 ## Lo siguiente
@@ -120,7 +121,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
   arriba pregunta antes de dejar un Foco empezado, pero no una pausa empezada (pide un texto nuevo).
 - **De la auditoría externa del 21-22 oct. (ChatGPT), en cola por sesiones** (máximo dos a la vez; la
   coordinadora junta): «Tus rutinas» y Estadísticas, en `main` con v0.174.4 (22 oct., con el sí de Ez y la
-  frase que eligió para la pared opcional) · **bienvenida y Ajustes** (A1 el idioma elegido en la bienvenida no quita
+  frase que eligió para la pared opcional) · **bienvenida y Ajustes, hechos en v0.180.0** (en su rama, a juntar con
+  el sí de Ez; con la 1C 2A 3A que eligió) (A1 el idioma elegido en la bienvenida no quita
   «Auto», A2 el Atrás de Android no hace nada en la bienvenida, A3 volver atrás borra el borrador de
   «Tu semana», A4 ajustes de audio atenuados que se cambian con teclado, A5 el foco se pierde al
   cambiar de paso, A7 interruptores de 18 px; A6, la copia de Android, ya en v0.174.1; A8 y A9, en

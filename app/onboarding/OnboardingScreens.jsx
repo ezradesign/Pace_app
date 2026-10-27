@@ -11,7 +11,7 @@
    el orquestador pone data-pace-scene-card en la raíz y el velo usa
    crema FIJA en rgba (como csPlateStyle). */
 
-const { useState: useStateONBS } = React;
+const { useState: useStateONBS, useEffect: useEffectONBS } = React;
 
 /* Definición de las 3 preguntas del perfil. `field` = key en profile;
    `sceneId` = lámina de fondo; los acentos de NECESIDAD llevan el color
@@ -203,6 +203,34 @@ function OnbLogo() {
   );
 }
 
+/* «¿Cómo es tu semana?» (maqueta R2-bienvenida, elegida por Ez el 7 de octubre de 2026).
+   Su propio componente para que la bienvenida no lea «A tu ritmo» hasta llegar aquí, ni
+   escriba nada hasta «Comenzar» o «Cada semana es distinta», que guardan y siguen. El
+   borrador (días y horas) se queda en la bienvenida para que «← Atrás» no lo borre, pero
+   no se guarda. Cinco hijos para el reveal.
+   Vive aquí y no en Onboarding.jsx por las 500 líneas; pinta con `onboardingStyles`, que llega
+   por `window` al pintar. */
+function OnbSemanaPaso({ state, ultima, onSeguir, borrador, onBorrador }) {
+  const { t } = useT();
+  const b = useRitmoSemanaBorrador(state, borrador);
+  /* El borrador sube a la bienvenida en cada cambio: «← Atrás» desmonta este paso. */
+  useEffectONBS(() => { onBorrador({ dias: b.dias, horas: b.horas }); }, [b.dias, b.horas]);
+  const guardar = (tipo) => { ritmoGuardarSemana(tipo, b.horas); onSeguir(); };
+  return (
+    <React.Fragment>
+      <h2 style={onboardingStyles.title}>{t('ritmo.st.titulo')}</h2>
+      <p style={onboardingStyles.lede}>{t('ritmo.st.sub')}</p>
+      <RitmoSemanaEditor dias={b.dias} onDias={b.setDias} horario={b.horario} onHora={b.onHora} />
+      <button data-pace-cta data-pace-semana-guardar onClick={() => guardar(b.dias)} style={onboardingStyles.cta}>
+        {t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')}
+      </button>
+      <button data-pace-semana-saltar onClick={() => guardar(null)} style={onboardingStyles.ghostBtn}>
+        {t('ritmo.st.saltar')}
+      </button>
+    </React.Fragment>
+  );
+}
+
 Object.assign(window, {
-  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo,
+  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso,
 });

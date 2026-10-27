@@ -120,6 +120,8 @@ function TweaksDataSection({ onReset, isWeb }) {
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
+  const [pidiendoImportar, setPidiendoImportar] = useStateTD(null); // lo que trae la copia, mientras se pregunta
+  const [avisoParcial, setAvisoParcial] = useStateTD(false);       // la copia entró sin su registro
 
   /* Un aviso no lo borra el temporizador de otro anterior: en las apps, el de la hoja abierta
      y el de cómo acabó van seguidos. */
@@ -198,68 +200,12 @@ function TweaksDataSection({ onReset, isWeb }) {
         }
         const incoming = paceSanearEstado(bruto, defaultState).estado;
 
-        // Contador rápido para el aviso de confirmación.
-        const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
-        const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(tn('settings.confirm.import', { logros: nLogros, foco: nFoco }));
-        if (!ok) return;
-
-        /* Escribimos y recargamos para estado limpio.
-           s155 — el estado legacy y `pace.events.v1` son DOS almacenes y entre
-           ellos NO hay atomicidad, asi que la escritura pasa por la barrera:
-           marcador -> estado legacy (la verdad canonica va primero) ->
-           contenedor de eventos REINICIADO con `activatedAt` nuevo y el
-           baseline recapturado del estado que acaba de entrar.
-           Que pasa con el contenedor depende de SI EL BACKUP TRAE EVENTOS, y
-           s169 cambio esto: antes ningun backup los traia y el contenedor se
-           reiniciaba siempre.
-             · CON seccion  -> se REEMPLAZA por completo con la del backup
-               (§17: sin merge, sin deduplicar, idempotente).
-             · SIN seccion  -> se REINICIA con `activatedAt` nuevo y el
-               baseline recapturado del estado que entra. Dejar el contenedor
-               de antes junto a un estado importado seria exactamente la MEZCLA
-               de historial anterior con estado nuevo que hay que evitar — el
-               baseline se habria capturado de unos contadores que ya no son
-               los de este estado.
-           Y si la seccion viene CORRUPTA, la barrera aborta el import ENTERO
-           sin escribir el estado legacy: un backup a medias no es un backup.
-           La recarga de 900 ms no es la garantia: si el proceso muriera antes
-           de que la barrera termine, el MARCADOR sobrevive y la siguiente
-           inicializacion completa el reinicio (§22), que es idempotente. */
-        /* La seccion de eventos, si el backup la trae. Los backups anteriores
-           a s169 no la llevan y `undefined` mantiene el camino de siempre:
-           reiniciar el contenedor. NO se valida aqui -- lo hace la barrera,
-           que es quien puede garantizar el «antes de tocar nada» de §17. */
-        const eventsSection = payload.events;
-
-        const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-        /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
-           hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
-           por almacenamiento bloqueado, el estado nuevo no se guardaba, el
-           contenedor de eventos se reiniciaba igual, la UI decia «importado» y
-           la pagina recargaba. Cuatro mentiras seguidas sobre una promesa de
-           integridad. */
-        paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
-          if (!r || !r.legacyWritten) {
-            setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
-            setTimeout(() => setMsg(null), 2600);
-            return;
-          }
-          /* El estado entró, pero `legacyWritten` no dice si entró el registro de sesiones: la
-             barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
-             arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde
-             guardarlo (`unavailable`). Si la copia traía registro y no entró, se dice con un
-             aviso que hay que cerrar, y después se recarga: lo que hay en memoria es lo de
-             antes, y el siguiente gesto lo guardaría encima de la copia (auditoría del 21 oct.). */
-          const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
-          if (traiaRegistro && r.result !== 'committed') {
-            try { alert(t('settings.msg.import.partial')); } catch (e) {}
-            paceOlvidarPasajero();
-            location.reload();
-            return;
-          }
-          setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-          setTimeout(() => { paceOlvidarPasajero(); location.reload(); }, 900);
+        /* Lo que trae, para el aviso que pregunta antes de escribir (un aviso de PACE, no la
+           ventanita del navegador: Ez, 3A del 27 oct.). Se escribe al decir que sí. */
+        setPidiendoImportar({
+          incoming, eventsSection: payload.events,
+          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
+          foco: incoming.totalFocusMin || 0,
         });
       } catch (e) {
         setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
@@ -267,6 +213,63 @@ function TweaksDataSection({ onReset, isWeb }) {
       }
     };
     reader.readAsText(file);
+  };
+
+  /* Al decir que sí: se escribe y se recarga para empezar de un estado limpio.
+     s155 — el estado legacy y `pace.events.v1` son DOS almacenes y entre
+     ellos NO hay atomicidad, asi que la escritura pasa por la barrera:
+     marcador -> estado legacy (la verdad canonica va primero) ->
+     contenedor de eventos REINICIADO con `activatedAt` nuevo y el
+     baseline recapturado del estado que acaba de entrar.
+     Que pasa con el contenedor depende de SI EL BACKUP TRAE EVENTOS, y
+     s169 cambio esto: antes ningun backup los traia y el contenedor se
+     reiniciaba siempre.
+       · CON seccion  -> se REEMPLAZA por completo con la del backup
+         (§17: sin merge, sin deduplicar, idempotente).
+       · SIN seccion  -> se REINICIA con `activatedAt` nuevo y el
+         baseline recapturado del estado que entra. Dejar el contenedor
+         de antes junto a un estado importado seria exactamente la MEZCLA
+         de historial anterior con estado nuevo que hay que evitar — el
+         baseline se habria capturado de unos contadores que ya no son
+         los de este estado.
+     Y si la seccion viene CORRUPTA, la barrera aborta el import ENTERO
+     sin escribir el estado legacy: un backup a medias no es un backup.
+     La recarga de 900 ms no es la garantia: si el proceso muriera antes
+     de que la barrera termine, el MARCADOR sobrevive y la siguiente
+     inicializacion completa el reinicio (§22), que es idempotente.
+     La seccion de eventos, si el backup la trae: los backups anteriores
+     a s169 no la llevan y `undefined` mantiene el camino de siempre,
+     reiniciar el contenedor. NO se valida aqui -- lo hace la barrera,
+     que es quien puede garantizar el «antes de tocar nada» de §17. */
+  const importarDeVerdad = () => {
+    const pendiente = pidiendoImportar;
+    setPidiendoImportar(null);
+    if (!pendiente) return;
+    const { incoming, eventsSection } = pendiente;
+    const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+    /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
+       hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
+       por almacenamiento bloqueado, el estado nuevo no se guardaba, el
+       contenedor de eventos se reiniciaba igual, la UI decia «importado» y
+       la pagina recargaba. Cuatro mentiras seguidas sobre una promesa de
+       integridad. */
+    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
+      if (!r || !r.legacyWritten) {
+        setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
+        setTimeout(() => setMsg(null), 2600);
+        return;
+      }
+      /* El estado entró, pero `legacyWritten` no dice si entró el registro de sesiones: la
+         barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
+         arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde
+         guardarlo (`unavailable`). Si la copia traía registro y no entró, se dice con un
+         aviso que hay que cerrar, y al cerrarlo se recarga: lo que hay en memoria es lo de
+         antes, y el siguiente gesto lo guardaría encima de la copia (auditoría del 21 oct.). */
+      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+      if (traiaRegistro && r.result !== 'committed') { setAvisoParcial(true); return; }
+      setMsg({ kind: 'ok', text: t('settings.msg.imported') });
+      setTimeout(() => { paceOlvidarPasajero(); location.reload(); }, 900);
+    });
   };
 
   return (
@@ -314,6 +317,14 @@ function TweaksDataSection({ onReset, isWeb }) {
           </span>
         )}
       </div>
+      <AjustesAviso abierto={!!pidiendoImportar} titulo={t('settings.import.titulo')} si={t('settings.import.si')}
+        onSi={importarDeVerdad} onNo={() => setPidiendoImportar(null)}>
+        {pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null}
+      </AjustesAviso>
+      <AjustesAviso abierto={avisoParcial} titulo={t('settings.import.parcial.titulo')} si={t('guardar.entendido')}
+        onNo={() => { paceOlvidarPasajero(); location.reload(); }}>
+        {t('settings.msg.import.partial')}
+      </AjustesAviso>
     </React.Fragment>
   );
 }

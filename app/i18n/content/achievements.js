@@ -197,7 +197,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.secret.supporter.title':          'You tend the pasture',
   'ach.item.secret.supporter.desc':           'You supported the project',
   'ach.item.explore.tweaks.title':            'Curiosity',
-  'ach.item.explore.tweaks.desc':             'Open the Tweaks panel',
+  'ach.item.explore.tweaks.desc':             'Open Settings',
 
   // ── Estacionales ───────────────────────────────
   'ach.item.season.spring.title':             'Spring',

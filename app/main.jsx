@@ -417,6 +417,8 @@ function PaceApp() {
           la bienvenida se rompe, «Cerrar» la da por vista (si no, volveria a
           abrirse y a romperse). */}
       {red(null, true, () => { if (getState().firstSeen == null) set({ firstSeen: Date.now() }); }, <Onboarding />)}
+      {/* La visita guiada por la home, al cerrar la bienvenida o desde Ajustes (OnboardingVisita.jsx). */}
+      {red(null, true, null, <OnbVisita />)}
 
       {/* Observador de tweak-secrets — monta siempre, retorna null.
           Desbloquea secret.aged / dark.mode / mono / seal / illustrated

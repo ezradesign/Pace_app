@@ -41,7 +41,7 @@
        <TweakSecretsWatcher /> (app/tweaks/TweakSecretsWatcher.jsx, s41).
    ============================================================ */
 
-const { useEffect: useEffectTW, useState: useStateTW } = React;
+const { useEffect: useEffectTW, useState: useStateTW, useRef: useRefTW } = React;
 
 /* `tweaksStyles` y las piezas `Ajustes*` llegan por `window` desde
    TweaksPanel.support.jsx y TweaksPanel.parts.jsx, que CARGAN ANTES: un `const`
@@ -100,22 +100,51 @@ function TweaksPanel({ open, onClose }) {
      Se recarga solo si el estado se borró. Si el navegador no dejó, la barrera no tocó nada y
      recargar lo enseñaba todo otra vez sin una palabra: lo dice `alFallar` (TweaksData.jsx).
      Con el estado borrado y el registro a medias se recarga igual: lo que hay en memoria lo
-     devolvería con el siguiente gesto, y el marcador de la barrera termina al arrancar. */
-  const borrarTodo = (alFallar) => {
-    if (!confirm(t('settings.confirm.reset'))) return;
+     devolvería con el siguiente gesto, y el marcador de la barrera termina al arrancar.
+     Antes pregunta con un aviso de PACE (`AjustesAviso`), que recuerda exportar una copia;
+     `pidiendoBorrar` guarda a quién avisar si el navegador no deja. */
+  const [pidiendoBorrar, setPidiendoBorrar] = useStateTW(null);
+  const borrarTodo = (alFallar) => setPidiendoBorrar({ alFallar });
+  const borrarDeVerdad = () => {
+    const alFallar = pidiendoBorrar && pidiendoBorrar.alFallar;
+    setPidiendoBorrar(null);
     paceEventsWipeAll((r) => {
       if (r && r.legacyWritten) location.reload();
       else if (typeof alFallar === 'function') alFallar();
     });
   };
 
-  /* «TUS DATOS» EN SU PROPIA HOJA, EN EL MÓVIL (Ez, 2A del 22 oct. 2026): el panel medía
-     743 px en la web y 812 en Android con 525 de hueco, y ni a pantalla entera cabía. La
-     sección queda en una línea con «Copias, borrar y código ›», que abre esta vista; el
-     resto entra sin scroll (TweaksPanel.support.jsx). En el ordenador no cambia nada: el
-     enlace no se pinta y la sección va entera. Cerrar el panel vuelve a la vista de todo. */
+  /* «TUS DATOS» EN SU PROPIA HOJA (Ez, 2A del 22 oct. 2026, en el móvil; 3A del 27 oct., en
+     las pantallas bajas del ordenador): el panel medía 743 px en la web y 812 en Android con
+     525 de hueco, y en el ordenador pedía 83 px de scroll en una ventana de 1536 × 710 (123
+     en inglés). La sección queda en una línea con «Copias, borrar y PACE completo ›», que
+     abre esta vista; el resto entra sin scroll (TweaksPanel.support.jsx). En una pantalla
+     alta del ordenador la sección va entera y el enlace no se pinta. Cerrar el panel vuelve
+     a la vista de todo. */
   const [vistaDatos, setVistaDatos] = useStateTW(false);
-  useEffectTW(() => { if (!open) setVistaDatos(false); }, [open]);
+  useEffectTW(() => { if (!open) { setVistaDatos(false); setPidiendoBorrar(null); } }, [open]);
+  /* «Pantalla baja» es el alto que ve la app, el del lienzo (main/_lienzo.js): una media query
+     miraría la ventana real, que con la app crecida en una pantalla grande es más alta que ella. */
+  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < 860);
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const mirar = () => setBajo(paceLienzoAlto() < 860);
+    mirar();
+    window.addEventListener('resize', mirar);
+    return () => window.removeEventListener('resize', mirar);
+  }, [open]);
+  /* Al entrar y salir de esa vista el botón pulsado desaparece y el foco caía en <body>: se
+     lleva a la «‹» que vuelve, o de vuelta a «Copias, borrar y PACE completo ›». */
+  const panelRef = useRefTW(null);
+  const vistaPreviaRef = useRefTW(vistaDatos);
+  useEffectTW(() => {
+    if (vistaPreviaRef.current === vistaDatos) return;
+    vistaPreviaRef.current = vistaDatos;
+    const p = panelRef.current;
+    if (!p || (document.activeElement && document.activeElement !== document.body && p.contains(document.activeElement))) return;
+    const destino = p.querySelector(vistaDatos ? '[data-pace-aj-volver]' : '[data-pace-aj-plegada] .pace-aj-sec-accion');
+    if (destino) { try { destino.focus({ preventScroll: true }); } catch (e) {} }
+  }, [vistaDatos]);
 
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
   useEffectTW(() => {
@@ -163,7 +192,8 @@ function TweaksPanel({ open, onClose }) {
   const ponerGoal = (d) => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
   return (
-    <div data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" style={{
+    <div ref={panelRef} data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined}
+      data-pace-aj-bajo={bajo ? '' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
@@ -189,7 +219,12 @@ function TweaksPanel({ open, onClose }) {
       </div>
 
       {vistaDatos ? <TweaksDataSection onReset={borrarTodo} isWeb={isWeb} /> : (<React.Fragment>
-      <AjustesSeccion titulo={t('settings.sec.ver')}>
+      {/* La visita guiada por la home (OnboardingVisita.jsx), para repetirla: en la línea del
+          título, como «Tu semana ›», porque una fila más pediría scroll. */}
+      <AjustesSeccion titulo={t('settings.sec.ver')} accion={{ texto: t('settings.visita'), onClick: () => {
+        onClose && onClose();
+        window.dispatchEvent(new CustomEvent('pace:open-visita'));
+      } }}>
         <AjustesFila id="lang" nombre={t('settings.lang')}>
           <AjustesPildoras aria={t('settings.lang')} valor={langValor} onChange={ponerLang} opciones={[
             { v: 'auto', name: t('settings.lang.auto') },
@@ -238,12 +273,16 @@ function TweaksPanel({ open, onClose }) {
       <AjustesSeccion titulo={t('settings.sec.sesiones')} accion={{ texto: t('ritmo.st.ajustes'), onClick: ritmoSemanaAbrir }}>
         {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
             disponible; el permiso se pide al activar (enableNotify). */}
-        {canNotify && (
-          <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub')} modulo="focus">
-            <AjustesInterruptor on={!!state.notifyFocusEnd && permisoAviso() !== 'denied'} aria={t('settings.notify')}
-              onChange={(v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); }} />
-          </AjustesFila>
-        )}
+        {canNotify && (() => {
+          const avisoOn = !!state.notifyFocusEnd && permisoAviso() !== 'denied';
+          const ponerAviso = (v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); };
+          return (
+            <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub')} modulo="focus"
+              alTocar={() => ponerAviso(!avisoOn)}>
+              <AjustesInterruptor on={avisoOn} aria={t('settings.notify')} onChange={ponerAviso} />
+            </AjustesFila>
+          );
+        })()}
         {canNotify && permisoAviso() === 'denied' && (
           <div className="pace-aj-nota">{t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')}</div>
         )}
@@ -278,6 +317,11 @@ function TweaksPanel({ open, onClose }) {
         <TweaksDataSection onReset={borrarTodo} isWeb={isWeb} />
       </AjustesSeccion>
       </React.Fragment>)}
+
+      <AjustesAviso abierto={!!pidiendoBorrar} titulo={t('settings.reset.titulo')} si={t('settings.reset.si')}
+        onSi={borrarDeVerdad} onNo={() => setPidiendoBorrar(null)}>
+        {t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.reset.cuerpo.app' : 'settings.reset.cuerpo')}
+      </AjustesAviso>
     </div>
   );
 }

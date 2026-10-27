@@ -15,6 +15,7 @@
      AjustesInterruptor  un si/no: `role=switch`
      AjustesPaso      menos · cifra · mas
      AjustesAccion    una fila que hace algo (exportar, importar, borrar)
+     AjustesAviso     la pregunta antes de borrar o importar, con el Modal de PACE
 
    EL COLOR DE MODULO ENTRA POR LA FILA, no por el control: `AjustesFila` recibe
    `modulo` ('focus' | 'breathe' | 'move' | 'hydrate'), pone `data-pace-aj-modulo`
@@ -60,15 +61,23 @@ function AjustesSeccion({ titulo, ultima, accion, plegadaMovil, children }) {
 
 /* La fila. `sub` es la linea pequena de debajo del nombre (el modulo, y en el
    circulo tambien el estilo elegido). `atenuada` la deja visible pero inerte:
-   es lo que hace el bloque de sonido con el maestro apagado. */
-function AjustesFila({ id, nombre, sub, modulo, atenuada, children }) {
+   es lo que hace el bloque de sonido con el maestro apagado.
+   `alTocar`: la fila de un interruptor se toca ENTERA, como en los ajustes del
+   movil. El interruptor solo mide 32x18 (28 de toque con el dedo, toques.css.jsx);
+   la fila, todo el ancho y 34 px o mas. El teclado sigue en el interruptor, que es
+   el boton: aqui solo llegan el raton y el dedo, y un toque que cae en un boton
+   es de ese boton. */
+function AjustesFila({ id, nombre, sub, modulo, atenuada, alTocar, children }) {
   const tono = modulo ? AJUSTES_MODULO[modulo] : null;
   const style = tono ? { '--pace-aj-m': tono.m, '--pace-aj-ms': tono.ms } : undefined;
+  const onClick = alTocar ? (e) => { if (!(e.target.closest && e.target.closest('button'))) alTocar(); } : undefined;
   return (
     <div className="pace-aj-fila" data-pace-aj-fila={id}
          data-pace-aj-modulo={tono ? modulo : undefined}
          data-atenuada={atenuada ? '' : undefined}
+         data-pace-aj-tocable={alTocar ? '' : undefined}
          aria-disabled={atenuada ? 'true' : undefined}
+         onClick={onClick}
          style={style}>
       <div className="pace-aj-nombre">
         {nombre}
@@ -80,13 +89,16 @@ function AjustesFila({ id, nombre, sub, modulo, atenuada, children }) {
 }
 
 /* opciones: [{ v, name, picto, aria }]. Con `picto` y sin `name` la pildora es
-   solo dibujo y el nombre va en `aria` (y en el title, para el raton). */
-function AjustesPildoras({ opciones, valor, onChange, aria }) {
+   solo dibujo y el nombre va en `aria` (y en el title, para el raton).
+   `apagado`: el control de una fila `atenuada`. La fila quita el puntero, pero el
+   teclado llegaba igual (Tab y Enter cambiaban la voz con el sonido apagado): por
+   eso las pildoras se desactivan de verdad. */
+function AjustesPildoras({ opciones, valor, onChange, aria, apagado }) {
   return (
     <div className="pace-aj-pista" role="group" aria-label={aria}>
       {opciones.map(o => (
         <button key={String(o.v)} type="button" className="pace-aj-pild"
-                aria-pressed={o.v === valor} disabled={!!o.off}
+                aria-pressed={o.v === valor} disabled={!!o.off || !!apagado}
                 aria-label={o.name ? undefined : o.aria}
                 title={o.name ? undefined : o.aria}
                 data-picto={o.picto && !o.name ? '' : undefined}
@@ -130,6 +142,26 @@ function AjustesAccion({ children, derecha, suave, onClick, title, sub }) {
   );
 }
 
+/* UN AVISO DE PACE para lo que no se deshace (borrar todo, importar una copia) y para lo que
+   hay que leer antes de recargar, en lugar de la ventanita del navegador («pacegrass.app
+   dice…»; Ez, 3A del 27 oct.). El de la pregunta de cambiar de modo (TopBar.jsx), con el botón
+   que hace en terracota. Sin `onSi` es un aviso de un solo botón. Va por portal al <body>: el
+   panel anima con transform y un `fixed` de dentro quedaría atrapado en él. */
+function AjustesAviso({ abierto, titulo, children, si, onSi, onNo }) {
+  const { t } = useT();
+  if (!abierto) return null;
+  return ReactDOM.createPortal(
+    <Modal open onClose={onNo} maxWidth={440} title={titulo}>
+      <div data-pace-aj-aviso>
+        <p style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{children}</p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+          {onSi ? <Button variant="secondary" onClick={onNo}>{t('settings.aviso.no')}</Button> : null}
+          <Button variant={onSi ? 'terracota' : 'primary'} onClick={onSi || onNo}>{si}</Button>
+        </div>
+      </div>
+    </Modal>, document.body);
+}
+
 function MuestraPaleta({ cual }) {
   return <i className={'pace-aj-muestra pace-aj-muestra-' + cual} aria-hidden="true" />;
 }
@@ -158,5 +190,5 @@ function PictoCirculo({ estilo }) {
 
 Object.assign(window, {
   AJUSTES_MODULO, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor,
-  AjustesPaso, AjustesAccion, MuestraPaleta, PictoCirculo,
+  AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo,
 });

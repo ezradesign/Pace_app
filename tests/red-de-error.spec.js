@@ -15,7 +15,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirTusDatos } = require('./helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context, { soundOn: false }); });
 
@@ -100,12 +100,14 @@ test('si cae la app entera, la pantalla global: volver a empezar la recupera, y 
 test('la fila de la copia de rescate solo existe si hay rescate, y lo descarga tal cual', async ({ page }) => {
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   await expect(page.locator('[data-pace-aj-rescate]'), 'sin rescate no hay fila').toHaveCount(0);
   await page.keyboard.press('Escape');
 
   await page.evaluate(() => localStorage.setItem('pace.state.v2.rescate',
     JSON.stringify({ v: 1, savedAt: new Date(2026, 9, 4, 9, 0).getTime(), motivo: 'prueba', raw: '{"roto":' })));
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
   const fila = page.locator('[data-pace-aj-rescate]');
   await expect(fila, 'hay rescate y no hay fila en «Tus datos»').toBeVisible();
   await expect(fila).toContainText('Descargar la copia de rescate');
