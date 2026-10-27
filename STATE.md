@@ -103,7 +103,8 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - Leer `privacy.html` (es pública) y probar en su Android el calendario que se mantiene solo.
 - Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
   cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
-- Los dibujos que faltan: la cuenta y los prompts, en `docs/product/GLIFOS_A_DIBUJAR.md`.
+- Los dibujos que faltan: la cuenta, en `docs/product/GLIFOS_A_DIBUJAR.md` (38); los 16 de ejercicios, por orden y con
+  «Copiar», en https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT, a `Pace_app\dibujos-22oct` (vacía el 27 oct.).
 - iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer, validada el 23 oct.;
   falta su llave (`docs/launch/app-store/guia.html`, punto 4), y pasar a sus testers qué mirar, sobre todo el sonido.
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.

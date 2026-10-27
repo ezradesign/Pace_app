@@ -19,16 +19,21 @@
 
 ## La cuenta de todo lo que falta por dibujar (la única)
 
-A 23 oct. 2026, v0.176.0. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
+A 27 oct. 2026, v0.181.1. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
 repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
+
+**Los 16 de ejercicios, con su prompt entero y su nombre de archivo para copiar, en una página para Ez**:
+https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT (`docs/traspaso/dibujos-ejercicios.html`). Van a
+`Pace_app\dibujos-22oct`. «Palmas en la mesa» se guarda como `palmas-en-la-mesa.png` (la ingesta empareja por
+el nombre de hoy, no por el `palmas-al-suelo.webp` que tiene ahora; al entrar, el .webp viejo y su miniatura sobran).
 
 | Qué | Cuántos | Cuáles, y dónde están sus prompts |
 |---|---|---|
 | Ejercicios sin dibujo | **9** | Los 3 de la tabla de abajo y los 6 nuevos de Mueve y Estira (3A), que mientras llevan el glifo de su módulo («La tanda de Mueve y Estira», abajo). `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
-| Ejercicios con el dibujo equivocado | **9** | Los 7 que marcó Ez el 23 oct. («La tanda de Mueve y Estira», abajo) y Palmas en la mesa y Apretar glúteos (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1) |
+| Ejercicios con el dibujo equivocado | **7** | 5 de los 7 que marcó Ez el 23 oct. («La tanda de Mueve y Estira», abajo) y Palmas en la mesa y Apretar glúteos (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1). Sentadilla de cuádriceps y Puente torácico no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
 | Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3 |
 | Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3) |
-| **Total** | **40** | |
+| **Total** | **38** | |
 
 Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
 invierno y Cuarto creciente (v0.165.0) y Barbilla atrás (v0.170.1). Los días diseñados, cuando
@@ -69,8 +74,8 @@ Classical anatomical plate in the style of a 19th-century medical textbook coppe
 | `gato-camello.png` | Puede mejorar mucho | Cat-camel on all fours, in profile facing right: hands under the shoulders, knees under the hips. The back is rounded up in a smooth even arch, the head gently dropped. A short dotted two-headed arc above the middle of the back shows the movement up and down. One figure only. |
 | `90-90.png` | Se ve raro y se confunde con «Paloma» | Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon). |
 | `sentarse-y-levantarse-del-suelo.png` | No enseña eso | Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front, one hand reaching down to the floor beside the hip, ready to sit to the side. A short dotted arrow from the hip points DOWN and to the side. |
-| `sentadilla-de-cuadriceps.png` | Parece otro ejercicio | **Antes de dibujarla, Ez decide qué es**: ya no sale en ninguna rutina de la lista (2A). Propuesta: a supported heel-raised squat, in profile facing right, both hands holding the edge of a desk drawn as one horizontal line. Heels lifted, knees bent and travelling forward over the toes, trunk upright, hips low between the heels. |
-| `puente-toracico.png` | Sale a dos niveles, no en el suelo | **Antes de dibujarla, Ez decide qué es**: tampoco sale ya (2A). Propuesta: a reverse tabletop bridge on the floor, in profile facing right: hands on the floor behind the shoulders, fingers forward, knees bent with feet flat, hips lifted so the trunk and thighs make one level line, chest open. |
+| `sentadilla-de-cuadriceps.png` | Parece otro ejercicio | **No se dibuja (Ez, 27 oct.)**: ya no sale en ninguna rutina de la lista (2A). Propuesta: a supported heel-raised squat, in profile facing right, both hands holding the edge of a desk drawn as one horizontal line. Heels lifted, knees bent and travelling forward over the toes, trunk upright, hips low between the heels. |
+| `puente-toracico.png` | Sale a dos niveles, no en el suelo | **No se dibuja (Ez, 27 oct.)**: tampoco sale ya (2A). Propuesta: a reverse tabletop bridge on the floor, in profile facing right: hands on the floor behind the shoulders, fingers forward, knees bent with feet flat, hips lifted so the trunk and thighs make one level line, chest open. |
 
 **Al ingerirlas**: `piernas-elevadas-sentado` sustituye a `hueco-en-silla` (el ejercicio cambió de nombre
 en v0.175.2); hay que borrar el .webp viejo y su miniatura o el `verify` los marca como huérfanos. Las

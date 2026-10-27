@@ -1,0 +1,240 @@
+<title>Dibujos de ejercicios</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna, como la hoja de pasos de Ez: arriba cómo se hace, debajo los 16 dibujos en el
+   orden en que se notan, cada uno con su nombre de archivo y su prompt listos para copiar.
+   Colores y letras, los de la app (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --breathe: #9E4F33; --mark: rgba(62, 90, 58, 0.10);
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 40px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 8vw, 52px); line-height: 1.02; }
+h2 { font-size: 28px; line-height: 1.1; }
+p { margin: 0; max-width: 64ch; color: var(--ink-2); }
+b { color: var(--ink); font-weight: 600; }
+code { font-family: var(--mono); font-size: 0.86em; background: var(--paper-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; overflow-wrap: anywhere; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 14px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.como { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); max-width: 64ch; }
+.avance { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--focus); font-weight: 600; }
+
+/* Cada dibujo: el número es el orden en que conviene hacerlos. «Lo tengo» lo atenúa en la
+   lista de quien lo marca (solo en su navegador). */
+.lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.dib { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 14px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+.dib .n { grid-row: span 4; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--breathe); color: var(--breathe); font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1; font-variant-numeric: tabular-nums; }
+.dib.tengo { background: var(--mark); border-color: transparent; }
+.dib.tengo .n { background: var(--focus); border-color: var(--focus); color: var(--paper); font-family: var(--sans); font-style: normal; font-size: 15px; }
+.dib .t { font-weight: 600; font-size: 17px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.dib .mod { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.dib .que { font-size: 15px; color: var(--ink-2); max-width: 60ch; }
+.dib .aviso { color: var(--breathe); }
+.fila { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 4px; }
+.archivo { font-family: var(--mono); font-size: 13px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; overflow-wrap: anywhere; min-width: 0; }
+button { font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 999px; padding: 6px 14px; border: 1px solid var(--focus); background: transparent; color: var(--focus); }
+button.prompt { background: var(--focus); color: var(--paper); }
+button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--breathe); outline-offset: 2px; }
+button.copiado { border-color: var(--breathe); color: var(--breathe); background: transparent; }
+.tengo-l { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); cursor: pointer; margin-left: auto; }
+.tengo-l input { width: 18px; height: 18px; accent-color: var(--focus); }
+details { font-size: 14px; color: var(--ink-3); }
+details summary { cursor: pointer; width: fit-content; }
+details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-wrap: anywhere; }
+.fuera { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; border-top: 1px solid var(--line); }
+@media (prefers-reduced-motion: no-preference) { .dib { transition: background-color .2s ease, border-color .2s ease; } }
+</style>
+<main class="hoja">
+  <header>
+    <div class="eyebrow">PACE · 16 dibujos de ejercicios · 27 de octubre</div>
+    <h1>Dibujos de ejercicios</h1>
+    <p>Los 16 ejercicios que hoy salen sin dibujo propio o con uno que no casa, en el orden en que más se notan. Mientras
+      no estén, la app enseña el dibujo del módulo, así que nada se rompe. Con los 9 primeros, quien abra un ejercicio
+      ya ve el suyo.</p>
+  </header>
+
+  <section>
+    <h2>Cómo se hace</h2>
+    <ol class="como">
+      <li>Un chat nuevo en <b>GPT Image</b> para cada dibujo. Pulsa «Copiar el prompt» y pégalo tal cual: lleva delante el
+        estilo de los dibujos que ya hay.</li>
+      <li>Si te deja adjuntar imágenes, añade dos o tres de referencia de
+        <code>Pace_app\docs\traspaso\archivos\glifos\referencias</code>: las mejores son <code>sentadilla-profunda.png</code>,
+        <code>flexiones-inclinadas.png</code> y <code>rotacion-lenta.png</code>.</li>
+      <li>Si lo bloquea, repítelo una vez en otro chat nuevo: el filtro no siempre salta.</li>
+      <li>Guarda el PNG en <code>Pace_app\dibujos-22oct</code> (la carpeta ya está creada) con el nombre exacto que da «Copiar
+        el nombre». Es lo que lo empareja con su ejercicio: con otro nombre no entra.</li>
+      <li>Cuando tengas unos cuantos, dime <b>«dibujos en la carpeta»</b>. Los meto en la app, te enseño cómo quedan y solo
+        se publican con tu sí.</li>
+    </ol>
+    <p class="nota">Marca «Lo tengo» según los vayas guardando: se queda apuntado en este navegador. <span class="avance" id="avance">0 de 16</span></p>
+  </section>
+
+  <section>
+    <h2>Sin dibujo propio</h2>
+    <p class="nota">Hoy salen con el dibujo de su módulo.</p>
+    <ol class="lista" id="sin"></ol>
+  </section>
+
+  <section>
+    <h2>Con un dibujo que no casa</h2>
+    <p class="nota">Los marcaste en tu móvil el 23 de octubre.</p>
+    <ol class="lista" id="nocasa"></ol>
+  </section>
+
+  <section>
+    <h2>Con el dibujo equivocado</h2>
+    <p class="nota">De la revisión del 14 de octubre.</p>
+    <ol class="lista" id="mal"></ol>
+  </section>
+
+  <section class="fuera">
+    <p><b>No se dibujan:</b> «Sentadilla de cuádriceps» y «Puente torácico». Lo decidiste el 27 de octubre: desde que
+      rehicimos Mueve y Estira ya no salen en ninguna rutina.</p>
+    <p class="nota">Los 22 de los logros van aparte, cuando acabes estos.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  var ESTILO = 'Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background.';
+  var CIERRE = 'Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.';
+  var MANOS = ESTILO.replace('One single full-length figure drawn as a smooth sculpted academy study', 'A close study of the forearms and hands of the same smooth sculpted academy figure');
+
+  /* El orden es el de la cola (GLIFOS_A_DIBUJAR.md, 27 oct.): primero lo que sale sin dibujo,
+     con «Rana» delante por ser la única tarjeta de la biblioteca sin él. */
+  var DIBUJOS = [
+    { g: 'sin', nombre: 'Rana', mod: 'Estira', archivo: 'rana.png',
+      que: 'A cuatro apoyos y de frente, con las rodillas muy abiertas y la cadera hacia atrás; una flecha de puntos marca el balanceo. Es la única tarjeta de la biblioteca sin dibujo.',
+      plato: 'the hip-mobility floor stretch from yoga (mandukasana), seen strictly from the front, the face toward the viewer. The figure kneels with both palms flat on the floor under the shoulders and the arms straight; the knees are placed far out to each side, the lower legs point back, and the weight settles back toward the heels. A short thin dotted arrow with a small open chevron tip sits beside the figure at hip height, pointing front-to-back in slight perspective, to show a gentle rocking.' },
+    { g: 'sin', nombre: 'Remo con banda', mod: 'Mueve · Espalda con banda', archivo: 'remo-con-banda.png',
+      que: 'De pie y de perfil, pisando el centro de la banda; los codos tiran hacia atrás pegados a las costillas.',
+      plato: 'A standing band row, in profile facing right. Both feet stand on the middle of an elastic band drawn as one thin line; the two ends rise to the hands. Hips pushed slightly back, back long, knees soft. Both elbows are pulled back close to the ribs, hands at the lower ribs. A short dotted arrow with a small open chevron behind the elbow points BACKWARD.' },
+    { g: 'sin', nombre: 'Remo con tu mano', mod: 'Mueve · Espalda con banda', archivo: 'remo-con-tu-mano.png',
+      que: 'Igual, pero sin banda: una mano sujeta la muñeca de la otra y frena el codo que va hacia atrás.',
+      plato: 'A hand-resisted row, standing in profile facing right. In front of the belly, the far hand holds the wrist of the near arm. The near elbow is drawn back along the side of the body while the holding hand resists. A short dotted arrow behind the near elbow points BACKWARD. No band, no object.' },
+    { g: 'sin', nombre: 'Bisagra de cadera', mod: 'Mueve · Piernas', archivo: 'bisagra-de-cadera.png',
+      que: 'De pie, con las manos en la cadera: la cadera va atrás y el tronco se inclina con la espalda recta.',
+      plato: 'A hip hinge, standing in profile facing right, hands on the hips. The hips are pushed far back, the trunk tilts forward about 45 degrees with a long straight back from the hips to the head, knees only slightly bent, shins nearly vertical. A short dotted arrow at the buttocks points BACKWARD. The back is never rounded.' },
+    { g: 'sin', nombre: 'Desliza el talón', mod: 'Mueve · Fuerza en suelo', archivo: 'desliza-el-talon.png',
+      que: 'Boca arriba: una rodilla doblada y la otra pierna se desliza por el suelo hasta quedar casi estirada.',
+      plato: 'A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. A short dotted arrow along the floor beyond the sliding heel points AWAY from the body.' },
+    { g: 'sin', nombre: 'Inclinación de tronco', mod: 'Estira · Columna', archivo: 'inclinacion-de-tronco.png',
+      que: 'De pie y de frente: el tronco se inclina a un lado y la mano baja por el muslo, sin girar.',
+      plato: 'A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure\'s right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. A short dotted arc beside the ribs shows the side bend. No twisting, no forward lean.' },
+    { g: 'sin', nombre: 'Gemelo en pared', mod: 'Estira · Cadena posterior', archivo: 'gemelo-en-pared.png',
+      que: 'De perfil frente a la pared, con las manos en ella: la pierna de atrás estirada y su talón en el suelo.',
+      plato: 'A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall.' },
+    { g: 'sin', nombre: 'Pica en escritorio', mod: 'Mueve', archivo: 'pica-en-escritorio.png',
+      que: '«V» invertida con las manos en el borde de la mesa. La mesa es obligatoria: sin ella se confunde con «Marcha del elefante».',
+      plato: 'a pike push-up with the hands on a desk, in profile facing right. The palms rest on the edge of a desk, drawn only as one thin straight horizontal line at waist height that extends a little beyond the hands; the hands are on that line, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps away from the desk line, so the figure forms a clear upside-down V between the floor and the desk edge.',
+      cierre: 'Square format, whole figure and desk line inside the frame, generous white margins, one figure only, no text, no border.' },
+    { g: 'sin', nombre: 'Rotación torácica de pie', mod: 'Estira · Espalda de pie', archivo: 'rotacion-toracica-de-pie.png',
+      que: 'De pie y de frente, con los brazos cruzados sobre el pecho: el pecho gira hacia un lado y la cadera se queda quieta.',
+      plato: 'A standing thoracic rotation, seen from the FRONT. Feet hip-width apart, knees soft, the hips square to the front and still. Both arms are crossed over the chest, each hand resting on the opposite shoulder. The chest and shoulders are turned toward the figure\'s right while the pelvis stays facing forward. A short dotted curved arrow at chest height shows the turn. No bending forward, no twist at the hips.' },
+
+    { g: 'nocasa', nombre: 'Piernas elevadas sentado', mod: 'Mueve · Core silencioso', archivo: 'piernas-elevadas-sentado.png',
+      que: 'Sentado al fondo de la silla y agarrado al asiento, con las dos rodillas arriba y los pies sin tocar el suelo.',
+      plato: 'A seated leg raise on a chair, in profile facing right; the chair is only a few thin straight lines (seat, backrest, front legs). The figure sits all the way back, the back resting on the backrest, both hands holding the sides of the seat. Both knees are bent and lifted together so the feet hover a hand-breadth above the floor.' },
+    { g: 'nocasa', nombre: 'Gato-camello', mod: 'Estira', archivo: 'gato-camello.png',
+      que: 'A cuatro apoyos, con la espalda redondeada en un arco suave; una flecha doble arriba y abajo.',
+      plato: 'Cat-camel on all fours, in profile facing right: hands under the shoulders, knees under the hips. The back is rounded up in a smooth even arch, the head gently dropped. A short dotted two-headed arc above the middle of the back shows the movement up and down. One figure only.' },
+    { g: 'nocasa', nombre: '90/90', mod: 'Estira · Caderas', archivo: '90-90.png',
+      que: 'Sentado en el suelo con el tronco alto y las dos piernas dobladas en ángulo, una delante y otra al lado. Que no se confunda con «Paloma».',
+      plato: 'Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon).' },
+    { g: 'nocasa', nombre: 'Sentarse y levantarse del suelo', mod: 'Estira', archivo: 'sentarse-y-levantarse-del-suelo.png',
+      que: 'A medio camino: una rodilla en el suelo, el otro pie delante y una mano bajando al suelo junto a la cadera.',
+      plato: 'Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front, one hand reaching down to the floor beside the hip, ready to sit to the side. A short dotted arrow from the hip points DOWN and to the side.' },
+    { g: 'nocasa', nombre: 'Rodar hacia abajo', mod: 'Estira', archivo: 'rodar-hacia-abajo.png',
+      que: 'De pie, la columna se enrolla hacia delante desde la cabeza, con los brazos colgando.',
+      aviso: 'Si ya tienes el tuyo, el que sí casa, guárdalo con este nombre y sáltate el prompt.',
+      plato: 'A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. A short dotted arc over the upper back shows the curl downward.' },
+
+    { g: 'mal', nombre: 'Palmas en la mesa', mod: 'Estira · Muñecas', archivo: 'palmas-en-la-mesa.png', estilo: MANOS,
+      que: 'Las dos palmas sobre la mesa, separadas y con los dedos hacia el cuerpo; las muñecas se doblan. Hoy son dos manos juntas que se confunden con «Rezo invertido».',
+      aviso: 'Antes se llamaba «Palmas al suelo»: guárdalo con el nombre nuevo.',
+      plato: 'a forearm stretch at a desk, seen from the front at desk height. Both palms rest flat on a desk surface, drawn as one thin straight horizontal line; the fingers point back toward the viewer (toward the body) and the wrists point away; the forearms lean back gently so the wrists bend. The two hands are apart, side by side, never pressed together.' },
+    { g: 'mal', nombre: 'Apretar glúteos', mod: 'Mueve', archivo: 'apretar-gluteos.png',
+      que: 'Sentado erguido en la silla con los pies en el suelo; dos flechas cortas marcan el apretón. Hoy está de pie, y la rutina se hace sentada.',
+      plato: 'a seated glute squeeze, in profile facing right. The figure sits upright on a chair drawn only as a few thin straight lines (seat, backrest and legs), feet flat on the floor, hands resting on the thighs, back long. Two short thin arrows with open chevron tips point inward at the buttocks, on the seat, to mark the squeeze.' }
+  ];
+
+  var CLAVE = 'pace.dibujos.tengo';
+  var tengo = {};
+  try { tengo = JSON.parse(localStorage.getItem(CLAVE) || '{}') || {}; } catch (e) { tengo = {}; }
+  function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(tengo)); } catch (e) {} }
+
+  function promptDe(d) {
+    return (d.estilo || ESTILO) + ' Exercise plate: ' + d.plato + ' ' + (d.cierre || CIERRE);
+  }
+
+  /* Copiar: el portapapeles solo dentro del clic; si lo niega, se selecciona el texto para
+     copiarlo a mano. */
+  function copiar(boton, texto, previo, seleccionable) {
+    var hecho = function () {
+      boton.textContent = 'Copiado';
+      boton.classList.add('copiado');
+      setTimeout(function () { boton.textContent = previo; boton.classList.remove('copiado'); }, 1600);
+    };
+    var aMano = function () {
+      if (seleccionable) {
+        if (seleccionable.tagName === 'PRE') seleccionable.parentNode.open = true;
+        var r = document.createRange(); r.selectNodeContents(seleccionable);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      }
+      boton.textContent = 'Selecciónalo y copia';
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texto).then(hecho, aMano);
+      else aMano();
+    } catch (e) { aMano(); }
+  }
+
+  function avance() {
+    var n = DIBUJOS.filter(function (d) { return tengo[d.archivo]; }).length;
+    document.getElementById('avance').textContent = n + ' de ' + DIBUJOS.length;
+  }
+
+  DIBUJOS.forEach(function (d, i) {
+    var li = document.createElement('li');
+    li.className = 'dib' + (tengo[d.archivo] ? ' tengo' : '');
+    var id = 'tengo-' + d.archivo.replace(/\W/g, '-');
+    li.innerHTML =
+      '<span class="n" aria-hidden="true">' + (tengo[d.archivo] ? '✓' : (i + 1)) + '</span>' +
+      '<span class="t">' + d.nombre + ' <span class="mod">' + d.mod + '</span></span>' +
+      '<span class="que">' + d.que + (d.aviso ? ' <span class="aviso">' + d.aviso + '</span>' : '') + '</span>' +
+      '<span class="fila"><button type="button" class="prompt">Copiar el prompt</button>' +
+      '<span class="archivo">' + d.archivo + '</span><button type="button" class="nombre">Copiar el nombre</button>' +
+      '<label class="tengo-l" for="' + id + '"><input type="checkbox" id="' + id + '"' + (tengo[d.archivo] ? ' checked' : '') + '> Lo tengo</label></span>' +
+      '<details><summary>Ver el prompt</summary><pre></pre></details>';
+    var pre = li.querySelector('pre');
+    pre.textContent = promptDe(d);
+    li.querySelector('.prompt').addEventListener('click', function (ev) { copiar(ev.currentTarget, promptDe(d), 'Copiar el prompt', pre); });
+    li.querySelector('.nombre').addEventListener('click', function (ev) { copiar(ev.currentTarget, d.archivo, 'Copiar el nombre', li.querySelector('.archivo')); });
+    li.querySelector('input').addEventListener('change', function (ev) {
+      if (ev.currentTarget.checked) tengo[d.archivo] = true; else delete tengo[d.archivo];
+      guardar();
+      li.classList.toggle('tengo', !!tengo[d.archivo]);
+      li.querySelector('.n').textContent = tengo[d.archivo] ? '✓' : String(i + 1);
+      avance();
+    });
+    document.getElementById(d.g).appendChild(li);
+  });
+  avance();
+})();
+</script>

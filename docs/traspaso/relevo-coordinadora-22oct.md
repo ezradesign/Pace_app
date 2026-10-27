@@ -29,6 +29,18 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    la carpeta del proyecto. Sus dos worktrees (`mueve-estira-capas-e9ab74` y `premium-capturas-c316bb`), quitados
    cuando se pararon los seis procesos `node` huérfanos de las 9:39 y las 9:46 (el modo automático no dejó pararlos
    antes de que Ez lo pidiera). El 8805 y el 8806, libres otra vez.
+5. **El CI de 3bde26f cayó en `eventos-backup`, y no era la app** (Ez: «analicemos esto»). `page.waitForFunction(async …)`
+   no espera en Playwright 1.62.1 (vuelve en ~20 ms con `false`): once esperas así en siete archivos. Provocado con la
+   lectura de la copia 300 ms más lenta (5 de 5 rojas) y con una espera de verdad (5 de 5 verdes). Arreglado sin versión
+   con `esperarEnPagina` (tests/helpers.js) y vigilado por `scripts/verify.pruebas.js` (fila arriba de DECISIONES); la
+   suite entera, 953 en verde. Lo que hoy parecía «carga» en `sw-aviso`, `eventos-origen` y `ritmo-pausa-entera` pudo ser
+   esto: si vuelven a caer, ya no hay esa excusa.
+6. **Los dibujos**: página con los 16 de ejercicios para Ez (https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT); no se
+   dibujan Sentadilla de cuádriceps ni Puente torácico (Ez, 27 oct.). Ninguno está aún: ni en la app, ni en sus carpetas
+   «Glifos de ejercicios…» junto al proyecto, ni en `dibujos-22oct`. **Pendiente mío**: `node scripts/glifos/generar-pendientes.js`
+   cae al arrancar (`ERR_INVALID_ARG_TYPE`), así que `GLIFOS_EJERCICIOS_PENDIENTES.md` es de antes de los seis nuevos.
+7. **Esperan el sí de Ez**: bajar el AAB de 0.181.1 a `subidas-play\` para subirlo a la prueba cerrada antes de invitar
+   testers, y abrir Android a fondo (punto 7), sola o con la maqueta de «Qué te ayuda» (punto 9).
 
 ## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
 
