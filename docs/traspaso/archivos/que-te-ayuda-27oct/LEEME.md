@@ -32,7 +32,7 @@ Ez eligió **1A 2A 3A** («A tres ideas + 2A + 3a»). Montado en esta rama: el c
 la vista en `app/stats/StatsAyuda.jsx`, la pestaña en `StatsPanel.jsx` y sus estilos en `StatsPanel.css.jsx`; lo
 vigila `tests/stats-ayuda.spec.js`. Fotos para el sí de Ez con `fotos-montaje.js` (la app tal cual, con seis
 semanas de ejemplo sembradas por el registro) y `pagina-montaje.js`, que deja
-`docs/proposals/que-te-ayuda-montaje-27oct.html`.
+`docs/proposals/que-te-ayuda-montaje-27oct.html` (https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5).
 
 **Antes de archivar la sesión**: en este worktree, `node_modules` es un ENLACE (junction) a los `node_modules` del
 repo principal, para que `verify` y la suite encuentren lo suyo. Se quita como enlace, sin tocar lo de dentro, que
