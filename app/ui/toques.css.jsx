@@ -34,9 +34,9 @@
       .pace-aj-pild::before { inset: -7px 0; }
       /* Interruptor: 11 px libres encima en la fila más justa. */
       .pace-aj-sw::before { inset: -5px -8px; }
-      /* La × de Ajustes crece hacia arriba (16 px libres hasta el borde del panel) y poco hacia
-         abajo: justo debajo está «Visita guiada ›», en la línea de «Ver». */
-      .pace-aj-cerrar::before { inset: -12px -9px -4px; }
+      /* La × de Ajustes crece hacia arriba (17 px libres hasta el borde del panel) y nada hacia
+         abajo: a 6 px está «Visita guiada ›», en la línea de «Ver», que se queda ese hueco. */
+      .pace-aj-cerrar::before { inset: -15px -9px 0; }
       .pace-aj-paso > button::before { inset: -7px -4px; }
       /* «Tus rutinas»: 8 px encima y 12 debajo hasta los filtros. */
       .pace-lib-link::before { inset: -4px -6px -6px; }
@@ -46,10 +46,14 @@
       [data-pace-stats-tabs] > button::before { inset: -7px 0; }
       /* «Seguridad» y «Privacidad», al pie de Ajustes: 15 px de alto y nada debajo. */
       .pace-aj-pie a::before { inset: -6px -2px; }
-      /* En el móvil, «Copias, borrar y código ›» (30 px de caja, 8 libres encima) y la «‹» que
-         vuelve de «Tus datos» (28 px). */
+      /* En el móvil, «Copias, borrar y PACE completo ›» (30 px de caja, 8 libres encima) y la «‹»
+         que vuelve de «Tus datos» (28 px). */
       .pace-aj-sec-accion::before { inset: -5px -4px; }
       .pace-aj-volver::before { inset: -6px; }
+      /* «Visita guiada ›», en la primera sección, sube los 6 px libres hasta la ×. Debajo, a 4 px,
+         las píldoras del idioma suben sus 7 de siempre y se quedan el borde de su caja: entre la
+         × y esas píldoras hay 40 px, y lo que se le diera de más a una se le quitaría a la otra. */
+      .pace-aj-cab + .pace-aj-sec .pace-aj-sec-accion::before { top: -6px; }
     }
   `;
   document.head.appendChild(s);
