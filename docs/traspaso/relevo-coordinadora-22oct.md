@@ -23,6 +23,15 @@ commit «wip» y push de su rama, y la coordinadora deja este bloque y la hoja a
    la abre Ez). Va antes que «Android a fondo» (punto 7) porque este toca `app/ui/android.js` y los Ajustes, lo mismo
    que la bienvenida: Android a fondo, en cuanto la 0.180.0 esté en `main`, con el móvil de Ez.
 3. Sin archivar todavía, ya juntadas: `seguridad-cobro` (`local_4168f925-…`) y `privacidad` (`local_7ca2e612-…`).
+4. **La revisión de ChatGPT de los textos nuevos de Mueve y Estira volvió** (Ez, 27 oct.), comprobada contra el código
+   en `docs/proposals/mueve-estira-chatgpt-revision-respuesta-27oct.md`. No sube ninguna dosis.
+   - Aporta cinco fichas con un fallo de verdad: muñeca, desliza el talón, gateo, círculos de brazos y remo con
+     banda. Además, colocaciones que faltaban y el inglés que suena traducido.
+   - Falta en PACE el aviso común de parar con dolor o mareo, en «Antes de empezar».
+   - El descanso entre series y no proponer solas las pausas de suelo ya estaban.
+   - **Se monta en una sesión pequeña en cuanto acabe una de las dos de ahora** (como 0.181.1 o la que toque), con
+     fotos antes/después para Ez. Toca `app/move/move.data.js`, `app/extra/extra.data*.js`,
+     `app/i18n/content/*` y `sessions.body.js`. Las frases de ChatGPT, cortas y con el tono de PACE.
 
 | Sesión | id | Rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
@@ -306,8 +315,8 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 hoja de Ez. El criterio: primero lo que ya está en marcha; luego lo que otro punto necesita, como la seguridad
 antes de cobrar o los precios antes de la bienvenida; lo que espera algo de Ez, cuando llegue; lo pequeño, en los
 huecos.
-1. ~~Mueve y Estira~~ **HECHO** (0.175.2 y 0.176.0, 24-25 oct.). Quedan la revisión de ChatGPT de los textos nuevos
-   (publicada, Ez la manda: https://claude.ai/artifact/DuBukvPPSULtiMdtJ9nTn1) y los dibujos de Ez (prompts en
+1. ~~Mueve y Estira~~ **HECHO** (0.175.2 y 0.176.0, 24-25 oct.). Quedan los retoques de la revisión de ChatGPT de
+   los textos nuevos (volvió el 27 oct., comprobada: arriba, «27 oct.», punto 4) y los dibujos de Ez (prompts en
    https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM).
 2. ~~N2 y la maqueta de N5-N8~~ **HECHO** (0.176.1 y 0.176.2, 25-26 oct.). N9 no se reproduce: espera un vídeo de Ez.
 3. ~~La seguridad de PACE completo~~ **HECHO** (0.177.0, 26 oct.; S1, S2, S4, S5, S6).
