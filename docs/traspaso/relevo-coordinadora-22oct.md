@@ -8,6 +8,27 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
+
+**Si llegas de la otra cuenta, empieza aquí.** `main` está en 0.179.0 con el CI en verde entero. Del 24 al 26 oct.
+entraron 0.175.2, 0.176.0, 0.176.1, 0.176.2, 0.177.0, 0.178.0 y 0.179.0 (el detalle, en «El orden lógico hasta v1»,
+puntos 1-6). **Regla de uso de Ez (27 oct.)**: al 85 % de uso, todo listo para cambiar de cuenta: cada sesión hace
+commit «wip» y push de su rama, y la coordinadora deja este bloque y la hoja al día y sube los documentos.
+1. **La bienvenida y los Ajustes (punto 8)**: Ez eligió **1C 2A 3A** sobre https://claude.ai/artifact/6p1BHbVqSrgtwnJgrXWLka,
+   con esta nota: «1C (creo que es la que más explica para nuevos usuarios aunque a lo mejor puede añadir o
+   complementar explicaciones que se encuentran en la B)». Pasado a la sesión, que lo monta como 0.180.0: la C de
+   base, lo que falte de la B solo si cabe sin scroll a 360 px y señalado en las fotos. A1-A5 y A7 ya están arreglados
+   en su rama, con 0.179.0 dentro. Al acabar: fotos para Ez y, con su «júntalo», unión con la suite entera.
+2. **La hora y la medianoche y la voz de Respira (punto 10)**: propuesta como segunda sesión (tarjeta `task_ae9c2c5d`,
+   la abre Ez). Va antes que «Android a fondo» (punto 7) porque este toca `app/ui/android.js` y los Ajustes, lo mismo
+   que la bienvenida: Android a fondo, en cuanto la 0.180.0 esté en `main`, con el móvil de Ez.
+3. Sin archivar todavía, ya juntadas: `seguridad-cobro` (`local_4168f925-…`) y `privacidad` (`local_7ca2e612-…`).
+
+| Sesión | id | Rama | Puerto | Versión | Lleva |
+|---|---|---|---|---|---|
+| La bienvenida, un onboarding y los Ajustes | `local_26a8e10e-3544-474b-80d8-94f446d81999` (`bienvenida-ajustes`) | `claude/bienvenida-ajustes-6e6e31` (worktree `mueve-estira-capas-e9ab74`) | 8805 | 0.180.0 | Parte 3 con 1C 2A 3A; toca `app/onboarding/*`, `app/tweaks/*`, `RitmoSemanaTipo.jsx`, `app/ui/android.js` |
+| La hora y la medianoche, y la voz de Respira | tarjeta `task_ae9c2c5d`, sin abrir | la suya | 8806 | 0.181.0 | H1-H5 con prueba que falla antes, y la voz por `<audio>`; nada de los archivos de la otra |
+
 ## 23 oct., noche: coordina la cuenta de 5iWBf… (desde las 19:45)
 
 Al empezar: 5 h al 1 %, **la semana al 27 %** (se repone el 26 oct. hacia las 18:00). Ninguna sesión abierta.
@@ -300,9 +321,11 @@ huecos.
 7. **Android a fondo**, con el móvil de Ez: los avisos A1-A4 (punto 11), N4 (aviso con el móvil bloqueado) y el puente
    del calendario con S6 (punto 9).
 8. **La bienvenida y los Ajustes** (A1-A5, A7, punto 5) y, al final de la bienvenida, PACE completo con los dos
-   precios y «Ahora no» (detrás de 4, que pone los precios).
+   precios y «Ahora no» (detrás de 4, que pone los precios). **En marcha**: A1-A7 arreglados en su rama; Ez eligió
+   1C 2A 3A (27 oct.) y la sesión lo monta como 0.180.0. Se adelanta al 7, que pisa sus archivos.
 9. **«Qué te ayuda» en Estadísticas** (punto 13), con maqueta.
 10. **La hora y la medianoche** (H1-H5, punto 12) antes de marzo, y la voz de Respira por `<audio>` (punto 8).
+   Propuesta el 27 oct. como segunda sesión, a la vez que el 8 (no comparten archivos): 0.181.0, puerto 8806.
 11. **El llavero del calendario**, cuando Ez tenga las altas de Google y Microsoft.
 12. **Cobrar en Android (Play Billing)**, con los 12 testers y sus 14 días, y el regalo de los testers.
 13. **El iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión**, a la vez que 12. Antes, el
