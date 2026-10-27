@@ -61,7 +61,9 @@ function FocusTimer({ onFinish }) {
       return;
     }
     paceFocoContar(bloque, () => {
-      try { playSound('pomodoro.end'); } catch (e) {}
+      /* En Android, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
+      const campana = () => { try { playSound('pomodoro.end'); } catch (e) {} };
+      if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       completeFocusSession('home', { minutes: minutos, bloque,

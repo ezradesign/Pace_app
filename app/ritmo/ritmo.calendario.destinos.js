@@ -89,9 +89,22 @@ function calendarioAndroidEsDePace(e) {
   return !!(e && e.id != null && Object.prototype.hasOwnProperty.call(calendarioAndroidPropios(), String(e.id)));
 }
 
-/* Crear y borrar en el calendario del móvil, apuntándolo. */
+/* Crear y borrar en el calendario del móvil, apuntándolo. Lo creado se marca privado DESPUÉS
+   de apuntarlo: si eso falla, PACE lo reconoce como suyo y lo arregla en la vuelta siguiente. */
 function calendarioAndroidCrear(calendarioId, ev) {
-  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) { calendarioAndroidApuntar(id, ev); return id; });
+  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {
+    calendarioAndroidApuntar(id, ev);
+    return paceAndroidCalendarioPrivado(id).then(function () { return id; });
+  });
+}
+
+/* Cambiar uno de PACE, apuntándolo y marcándolo privado: lo que se escribió sin marcar pasa a
+   privado en su primer cambio, como en Google y en Outlook. */
+function calendarioAndroidCambiar(id, ev) {
+  return paceAndroidCalendarioCambiar(id, ev).then(function (r) {
+    calendarioAndroidApuntar(id, ev);
+    return paceAndroidCalendarioPrivado(id).then(function () { return r; });
+  });
 }
 
 function calendarioAndroidBorrar(id) {
@@ -312,5 +325,5 @@ try { calendarioArrancar(); } catch (e) {}
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
-  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidBorrar,
+  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar,
 });
