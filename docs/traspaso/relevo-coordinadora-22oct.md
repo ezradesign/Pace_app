@@ -32,6 +32,11 @@ commit «wip» y push de su rama, y la coordinadora deja este bloque y la hoja a
    - **Se monta en una sesión pequeña en cuanto acabe una de las dos de ahora** (como 0.181.1 o la que toque), con
      fotos antes/después para Ez. Toca `app/move/move.data.js`, `app/extra/extra.data*.js`,
      `app/i18n/content/*` y `sessions.body.js`. Las frases de ChatGPT, cortas y con el tono de PACE.
+5. **H5, el Foco que acaba antes de medianoche con PACE cerrado o el portátil dormido**: Ez se queda con la 2, la A
+   del 12 oct. (27 oct., con la opinión de ChatGPT). Vuelves el mismo día: cuenta. Vuelves al día siguiente: no
+   cuenta. Nunca se apunta al día siguiente. Pasado a la sesión de la hora. **Idea para después, con maqueta**:
+   preguntar al volver «Este Foco terminó mientras no estabas. ¿Lo completaste?» y, si dices que sí, apuntarlo el día
+   en que acabó.
 
 | Sesión | id | Rama | Puerto | Versión | Lleva |
 |---|---|---|---|---|---|
