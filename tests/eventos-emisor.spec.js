@@ -28,7 +28,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior, esperarEnPagina } = require('./helpers');
 const { leerContenedor, esperarInit } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -70,7 +70,7 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   expect(termino, 'GUARD: la sesion no llego al cierre, no hay evento que mirar').toBe(true);
 
   /* El append es asincrono (§10): se espera al evento, no a un timeout. */
-  await page.waitForFunction(async () => {
+  await esperarEnPagina(page, async () => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
@@ -107,7 +107,7 @@ test('una sesion de cuerpo emite session.completed, y el feedback comparte su ru
   expect(await chips.count(), 'GUARD: el cierre no ofrecio feedback, no hay nada que correlacionar')
     .toBeGreaterThan(0);
   await chips.first().click();
-  await page.waitForFunction(async () => {
+  await esperarEnPagina(page, async () => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).some(e => e.type === 'feedback.answered');
@@ -375,7 +375,7 @@ test('una sesion de Respira emite su plan DECLARADO (§6.4)', async ({ page }) =
   }
   expect(termino, 'GUARD: la sesion de Respira no llego al cierre').toBe(true);
 
-  await page.waitForFunction(async () => {
+  await esperarEnPagina(page, async () => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;
@@ -442,7 +442,7 @@ test('«Finalizar» a mitad es el `early` de §6.3, y agotar el plan es `natural
     .toBeGreaterThan(0);
   await finalizar.click();
 
-  await page.waitForFunction(async () => {
+  await esperarEnPagina(page, async () => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).length > 0;

@@ -23,7 +23,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, esperarEnPagina } = require('./helpers');
 const { leerContenedor, esperarInit } = require('./eventos.helpers');
 
 const HOY = '2026-10-14';
@@ -78,7 +78,7 @@ async function hastaLaLarga(page, context) {
 }
 
 async function sesionesCompletadas(page, n) {
-  await page.waitForFunction(async (k) => {
+  await esperarEnPagina(page, async (k) => {
     if (typeof window.eventsWebReadRaw !== 'function') return false;
     const raw = await window.eventsWebReadRaw();
     return !!raw && (JSON.parse(raw).events || []).filter((e) => e.type === 'session.completed').length >= k;

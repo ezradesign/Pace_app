@@ -52,6 +52,8 @@ var licencia = require('./verify.licencia.js');
 var autoria = require('./verify.autoria.js');
 /* Que lo que pregunta la app lo pregunte PACE: ni confirm() ni alert() (3A del 27 oct.). */
 var dialogos = require('./verify.avisos.js');
+/* Que las esperas de las pruebas esperen: ni un waitForFunction(async …) (27 oct.). */
+var pruebas = require('./verify.pruebas.js');
 /* Que pacegrass.app publique solo la app (dist/) y que lleve todo lo que precarga sw.js. */
 var web = require('./verify.web.js');
 /* Que lo que privacy.html dice de /premium y de «Avísame» sea lo que pasa. */
@@ -438,6 +440,7 @@ function main() {
   lienzo.tandaLienzo({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   licencia.tandaLicencia({ ROOT: ROOT, falla: falla, ok: ok, info: info, rel: rel });
   dialogos.tandaAvisos({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  pruebas.tandaPruebas({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   web.tandaWeb({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   privacidad.tandaPrivacidad({ ROOT: ROOT, falla: falla, ok: ok, info: info });

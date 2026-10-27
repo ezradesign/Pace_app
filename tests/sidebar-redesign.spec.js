@@ -19,7 +19,7 @@
    `docs/traspaso/archivos/sidebar-8oct/` (montada.js las repite).
 */
 const { test, expect } = require('@playwright/test');
-const { sembrar, sembrarPisando, irAlArtefacto, capturarErrores } = require('./helpers');
+const { sembrar, sembrarPisando, irAlArtefacto, capturarErrores, esperarEnPagina } = require('./helpers');
 
 /* `lastActiveDay` y las guardas de migración NO SON OPCIONALES cuando se siembra
    `weeklyStats` o `water`: sin ellos `loadState` archiva la semana o la recalcula
@@ -68,7 +68,7 @@ async function sembrarSesion(page, routineId, modulo) {
                  plannedSeconds: 300, plannedSecondsSource: 'declared', variant: null },
     }));
   }, [routineId, modulo]);
-  await page.waitForFunction(
+  await esperarEnPagina(page,
     async () => (JSON.parse((await window.eventsWebReadRaw()) || '{}').events || []).length > 0,
     null, { timeout: 5000 });
 }

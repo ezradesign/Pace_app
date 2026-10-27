@@ -14,7 +14,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos, esperarEnPagina } = require('./helpers');
 const { CLAVE_EVENTOS, leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -150,7 +150,7 @@ test('«Borrar todos mis datos» de Ajustes borra los DOS almacenes', async ({ p
     page.getByRole('button', { name: 'Borrar todos mis datos', exact: true }).click(),
   ]);
 
-  await page.waitForFunction(async previo => {
+  await esperarEnPagina(page, async previo => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;
@@ -193,7 +193,7 @@ test('importar un backup ANTIGUO reinicia el contenedor en vez de mezclarlo', as
   await page.locator('input[type="file"][accept="application/json,.json"]')
     .setInputFiles({ name: 'pace-backup-20260101.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 
-  await page.waitForFunction(async previo => {
+  await esperarEnPagina(page, async previo => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;

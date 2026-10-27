@@ -229,8 +229,37 @@ async function abrirTusDatos(page) {
   }
 }
 
+/* UNA CONDICIÓN ASÍNCRONA SE ESPERA AQUÍ, NUNCA CON `page.waitForFunction(async …)`. Playwright
+   no espera a la promesa: la toma por un valor verdadero y vuelve en el primer sondeo, a los
+   ~20 ms, aunque la condición sea falsa (medido con 1.62.1). Once esperas así no esperaban nada,
+   y la prueba solo pasaba si la app ganaba la carrera: en el CI de 3bde26f, `eventos-backup`
+   leyó el contenedor antes de que entrara la copia. Esto evalúa la condición en la página cada
+   50 ms hasta que dé verdadero o se acabe el tiempo, con la misma firma que `waitForFunction`.
+   Aguanta una recarga a mitad (importar y borrar recargan); cualquier otro error se propaga.
+   Lo vigila `verify` (`scripts/verify.pruebas.js`). */
+async function esperarEnPagina(page, condicion, arg, opciones) {
+  const tope = (opciones && opciones.timeout) || 5000;
+  const desde = Date.now();
+  let recargando = null;
+  for (;;) {
+    try {
+      if (await page.evaluate(condicion, arg)) return;
+      recargando = null;
+    } catch (e) {
+      if (!/Execution context was destroyed|because of a navigation/.test(e.message)) throw e;
+      recargando = e;
+    }
+    if (Date.now() - desde > tope) {
+      throw new Error('esperarEnPagina: la condición no se cumplió en ' + tope + ' ms' +
+        (recargando ? ' (la página estaba recargando)' : ''));
+    }
+    await page.waitForTimeout(50);
+  }
+}
+
 module.exports = {
   abrirTusDatos,
+  esperarEnPagina,
   acabarBienvenida,
   aceptarAvisosPace,
   pulsarComienza,

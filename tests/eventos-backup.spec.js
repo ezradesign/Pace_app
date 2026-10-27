@@ -30,7 +30,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, aceptarAvisosPace, abrirTusDatos, esperarEnPagina } = require('./helpers');
 const { CLAVE_EVENTOS, leerContenedor, esperarInit, sembrarEventos } = require('./eventos.helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -111,7 +111,7 @@ test('un backup CON seccion devuelve ese historial, no lo reinicia', async ({ pa
      un timeout mudo en vez de como el aserto que explica que paso -- medido en
      la calibracion de s169, donde reiniciar en vez de reemplazar daba
      «Timeout 15000ms exceeded» y ni una palabra mas. */
-  await page.waitForFunction(async () => {
+  await esperarEnPagina(page, async () => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     if (!raw) return false;

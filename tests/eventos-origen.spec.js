@@ -25,7 +25,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, esperarEnPagina } = require('./helpers');
 const { leerContenedor, esperarInit } = require('./eventos.helpers');
 
 const NUEVE = new Date('2026-09-17T09:00:00+02:00');
@@ -67,7 +67,7 @@ async function terminarBloque(page) {
 
 /* Espera a que haya N sesiones y devuelve la última. */
 async function ultimaSesion(page, n) {
-  await page.waitForFunction(async (k) => {
+  await esperarEnPagina(page, async (k) => {
     if (typeof window.eventsWebReadRaw !== 'function') return false; // s200: la pagina aun esta cargando
     const raw = (await window.eventsWebReadRaw());
     return !!raw && (JSON.parse(raw).events || []).filter((e) => e.type === 'session.completed').length >= k;

@@ -22,13 +22,13 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, esperarEnPagina } = require('./helpers');
 
 /* Espera a que el worker de la primera visita esté activado y controle la
    página. Lo que tuviera que anunciarse ya se habría anunciado: en WebKit el
    anuncio falso llegaba ANTES del `controllerchange`. */
 async function workerAsentado(page) {
-  await page.waitForFunction(async () => {
+  await esperarEnPagina(page, async () => {
     if (!navigator.serviceWorker.controller) return false;
     const reg = await navigator.serviceWorker.getRegistration();
     return !!(reg && reg.active && reg.active.state === 'activated' && !reg.installing);
