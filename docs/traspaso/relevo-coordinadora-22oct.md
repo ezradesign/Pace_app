@@ -8,6 +8,20 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 27 oct., tarde: 0.180.0 y 0.181.0 en main (coordina la cuenta de EcLj6…, desde las 10:20)
+
+1. **Retomadas desde esta cuenta.** Las suites que dejó la otra cuenta seguían como procesos `node` sin navegador
+   (huérfanas: nunca acaban). La bienvenida, en una sesión nueva en su worktree (`local_abf2e28b-…`,
+   `bienvenida-0180`), cerró la 0.180.0 (75ec512): 930 en verde y las fotos
+   https://claude.ai/artifact/RGuZouekZoBxCLdedtpmbH. La hora, comprobada aquí: 918 en verde y cinco rojas por correr
+   a la vez que la de la bienvenida, que pasan solas. «Hacer la pausa» y la pausa larga caían igual en `main`.
+2. **Ez: «junta la bienvenida y después la hora»** (tras mirar las fotos). Merges d7863fe y 749423f. Choques solo en
+   la versión, CHANGELOG, DECISIONES, STATE y LEEME. Con todo junto, `verify` en verde y la suite entera en el 8807:
+   949 en verde, 2 saltadas (las de Web Audio en WebKit) y ninguna roja, en 23,5 min.
+3. **Lo siguiente de la cola**: la sesión pequeña de los textos de Mueve y Estira con la revisión de ChatGPT (punto 4
+   del bloque de abajo) y, con la 0.180.0 ya en `main`, **Android a fondo** (punto 7), con el móvil de Ez. Las ramas
+   `bienvenida-ajustes` y `gracious-pascal`, juntadas: se pueden archivar sus sesiones y borrar sus ramas con el sí de Ez.
+
 ## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
 
 **AL RELEVO (27 oct., 10:10 en España, esta cuenta con las 5 h al 91 % y la semana al 25 %; se repone a las 14:00).**
