@@ -25,3 +25,16 @@ node docs/traspaso/archivos/que-te-ayuda-27oct/pagina.js <carpeta-de-fotos> docs
 
 Las fotos no se suben. Si el `index.html` cambia, la propuesta sigue entrando mientras exista el ancla del
 montaje (`fotos.js` falla si no la encuentra) y los nombres que usa sigan en `window`.
+
+## El montaje (v0.183.0)
+
+Ez eligió **1A 2A 3A** («A tres ideas + 2A + 3a»). Montado en esta rama: el cálculo en `app/stats/stats-ayuda.js`,
+la vista en `app/stats/StatsAyuda.jsx`, la pestaña en `StatsPanel.jsx` y sus estilos en `StatsPanel.css.jsx`; lo
+vigila `tests/stats-ayuda.spec.js`. Fotos para el sí de Ez con `fotos-montaje.js` (la app tal cual, con seis
+semanas de ejemplo sembradas por el registro) y `pagina-montaje.js`, que deja
+`docs/proposals/que-te-ayuda-montaje-27oct.html`.
+
+**Antes de archivar la sesión**: en este worktree, `node_modules` es un ENLACE (junction) a los `node_modules` del
+repo principal, para que `verify` y la suite encuentren lo suyo. Se quita como enlace, sin tocar lo de dentro, que
+es lo del repo principal: `cmd /c rmdir node_modules` desde la raíz del worktree (nunca `rm -rf` ni borrar su
+contenido).

@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.181.1 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.183.0 · 27 de octubre de 2026 (en su rama; Android a fondo va como 0.182.0). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -31,8 +31,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. Desde v0.180.0 la bienvenida acaba en PACE completo, abierto, y en una visita
-  guiada por la home (Ez, 1C 2A 3A del 27 oct.). «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
-  `ritmo.aprendido`. Los Caminos, ocultos hasta después de v1 (`SHOW_CAMINOS`).
+  guiada por la home (Ez, 1C 2A 3A del 27 oct.). «Qué te ayuda» (Estadísticas), lo último de pago, en v0.183.0
+  (Ez, 1A 2A 3A del 27 oct.): tres ideas con umbral, «Todavía es pronto» antes y su pestaña con candado. Los Caminos, ocultos hasta después de v1 (`SHOW_CAMINOS`).
 
 ## Lo siguiente
 

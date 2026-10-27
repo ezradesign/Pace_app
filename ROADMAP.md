@@ -185,7 +185,7 @@ s192) y es gratis; «Semana» también es gratis, y el mes, el año y «qué te 
 (`docs/proposals/stats-*`) y [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md).
 
 **HECHA**: «Semana» como la eligió Ez el 13 oct. (v0.160.0) y «Hoy», con Mes y Año de PACE completo,
-en v0.170.0. «Qué te ayuda» sigue sin hacer; desde v0.173.0 ya puede leer `ritmo.aprendido`.
+en v0.170.0. «Qué te ayuda», en v0.183.0 (Ez, 1A 2A 3A del 27 oct.).
 
 ### FASE 5 · Cerrar con lo que hay
 
