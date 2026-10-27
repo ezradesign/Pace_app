@@ -85,9 +85,10 @@ pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 - **Mueve y Estira: Ez eligió 1A 2A 3A 4A** (23 oct., sobre
   https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE; `DECISIONES_PRODUCTO.md`). **En `main`**: los textos como v0.175.2
   (24 oct.) y las tres capas, los seis ejercicios nuevos y lo gratis como v0.176.0 (25 oct.), los dos con el sí de Ez
-  sobre sus fotos; los logros de ATG y Ancestral, con su A. **La revisión de ChatGPT de los textos nuevos**, montada
-  como v0.181.1 en `claude/magical-robinson-ced87d` (27 oct.; puerto 8808): espera el sí de Ez sobre sus fotos,
-  https://claude.ai/artifact/9Y61HfjdAKzQGKJFGNKUPq. Faltan los dibujos de Ez. Detalle en el relevo, «23 oct., noche».
+  sobre sus fotos; los logros de ATG y Ancestral, con su A. **La revisión de ChatGPT de los textos nuevos**, en `main`
+  con v0.181.1 (27 oct., con el sí de Ez sobre https://claude.ai/artifact/9Y61HfjdAKzQGKJFGNKUPq). Quedan seis fichas
+  con la colocación escrita que no se ve nunca (un ejercicio tras un descanso no la enseña; fila de
+  `DECISIONES_TECNICAS_VIGENTES.md`): otra tanda, si Ez quiere. Faltan los dibujos de Ez. Detalle en el relevo, «23 oct., noche».
 - **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
   (tiene 5 o 6; el grupo y `/beta` ya están, falta difundirlos: `testers.md`); el
   gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar

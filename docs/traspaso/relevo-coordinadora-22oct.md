@@ -20,7 +20,10 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    949 en verde, 2 saltadas (las de Web Audio en WebKit) y ninguna roja, en 23,5 min.
 3. **Lo siguiente de la cola**: la sesión pequeña de los textos de Mueve y Estira con la revisión de ChatGPT (punto 4
    del bloque de abajo) y, con la 0.180.0 ya en `main`, **Android a fondo** (punto 7), con el móvil de Ez. Los textos,
-   en marcha en la sesión `local_f17856c9-…` (worktree `magical-robinson-ced87d`, **puerto 8808**, como 0.181.1).
+   **en `main` con 0.181.1** (merge 01d4705, con el «júntalo» de Ez sobre
+   https://claude.ai/artifact/9Y61HfjdAKzQGKJFGNKUPq), de la sesión `local_f17856c9-…` (worktree `magical-robinson-ced87d`,
+   puerto 8808). Sin choques; el `index.html` junto, igual byte a byte que el de la rama (953 en verde). Hallazgo suyo:
+   seis fichas tienen la colocación escrita y no se ve nunca (tras un descanso no sale); otra tanda si Ez quiere.
 4. **Limpieza, con el sí de Ez**: la sesión `bienvenida-0180`, archivada. Las ramas `claude/bienvenida-ajustes-6e6e31`
    y `claude/gracious-pascal-ea1249`, borradas aquí y en GitHub, con copia en `PACE-ramas-borradas-27oct.bundle`, junto a
    la carpeta del proyecto. Sus dos worktrees (`mueve-estira-capas-e9ab74` y `premium-capturas-c316bb`), quitados
