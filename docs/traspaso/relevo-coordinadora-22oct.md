@@ -23,10 +23,9 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    en marcha en la sesión `local_f17856c9-…` (worktree `magical-robinson-ced87d`, **puerto 8808**, como 0.181.1).
 4. **Limpieza, con el sí de Ez**: la sesión `bienvenida-0180`, archivada. Las ramas `claude/bienvenida-ajustes-6e6e31`
    y `claude/gracious-pascal-ea1249`, borradas aquí y en GitHub, con copia en `PACE-ramas-borradas-27oct.bundle`, junto a
-   la carpeta del proyecto. **Falta** quitar sus dos worktrees (`mueve-estira-capas-e9ab74` y `premium-capturas-c316bb`,
-   ya sin rama), que siguen abiertos por seis procesos `node` huérfanos de las 9:39 y las 9:46 (dos static-server, en
-   el 8805 y el 8806). El modo automático no deja pararlos: lo hace Ez, o un reinicio. Después,
-   `git worktree remove --force` de los dos. Hasta entonces, ninguna sesión usa el 8805 ni el 8806.
+   la carpeta del proyecto. Sus dos worktrees (`mueve-estira-capas-e9ab74` y `premium-capturas-c316bb`), quitados
+   cuando se pararon los seis procesos `node` huérfanos de las 9:39 y las 9:46 (el modo automático no dejó pararlos
+   antes de que Ez lo pidiera). El 8805 y el 8806, libres otra vez.
 
 ## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
 
