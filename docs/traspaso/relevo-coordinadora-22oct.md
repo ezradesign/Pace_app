@@ -19,8 +19,14 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    la versión, CHANGELOG, DECISIONES, STATE y LEEME. Con todo junto, `verify` en verde y la suite entera en el 8807:
    949 en verde, 2 saltadas (las de Web Audio en WebKit) y ninguna roja, en 23,5 min.
 3. **Lo siguiente de la cola**: la sesión pequeña de los textos de Mueve y Estira con la revisión de ChatGPT (punto 4
-   del bloque de abajo) y, con la 0.180.0 ya en `main`, **Android a fondo** (punto 7), con el móvil de Ez. Las ramas
-   `bienvenida-ajustes` y `gracious-pascal`, juntadas: se pueden archivar sus sesiones y borrar sus ramas con el sí de Ez.
+   del bloque de abajo) y, con la 0.180.0 ya en `main`, **Android a fondo** (punto 7), con el móvil de Ez. Los textos,
+   en marcha en la sesión `local_f17856c9-…` (worktree `magical-robinson-ced87d`, **puerto 8808**, como 0.181.1).
+4. **Limpieza, con el sí de Ez**: la sesión `bienvenida-0180`, archivada. Las ramas `claude/bienvenida-ajustes-6e6e31`
+   y `claude/gracious-pascal-ea1249`, borradas aquí y en GitHub, con copia en `PACE-ramas-borradas-27oct.bundle`, junto a
+   la carpeta del proyecto. **Falta** quitar sus dos worktrees (`mueve-estira-capas-e9ab74` y `premium-capturas-c316bb`,
+   ya sin rama), que siguen abiertos por seis procesos `node` huérfanos de las 9:39 y las 9:46 (dos static-server, en
+   el 8805 y el 8806). El modo automático no deja pararlos: lo hace Ez, o un reinicio. Después,
+   `git worktree remove --force` de los dos. Hasta entonces, ninguna sesión usa el 8805 ni el 8806.
 
 ## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
 
