@@ -10,6 +10,25 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 
 ## 27 oct., mañana: el relevo, listo (coordina `local_2f317ec7-3cae-4cf2-95a0-d66cc703d4d2`, cuenta de 5iWBf…)
 
+**AL RELEVO (27 oct., 10:10 en España, esta cuenta con las 5 h al 91 % y la semana al 25 %; se repone a las 14:00).**
+Nada a medias en `main`: ninguna rama se ha juntado, y los documentos están subidos.
+- **La bienvenida (0.180.0)**: paró al 88 % con un «wip», 05438b6, subido a `claude/bienvenida-ajustes-6e6e31`, en el
+  worktree `.claude/worktrees/mueve-estira-capas-e9ab74`, puerto 8805.
+  - Hecho: 1C (visita de cuatro paradas; de la B solo entra «Al acabar, PACE te propone una pausa corta…» en la
+    parada del aro), 2A (PACE completo «abierto hasta v1» al final, con los precios de la tienda del canal y un solo
+    «Comenzar»; en Android e iPhone, sin importe) y 3A («Tus datos» plegado por debajo de 860 px de alto, «Copias,
+    borrar y PACE completo», interruptor de 40×24, textos sin JSON ni «backup», y avisos de PACE en vez de los del
+    navegador, vigilados por `verify`).
+  - Falta: una línea en `tests/eventos-barrera.spec.js`, relanzar sus pruebas (quedaban 6 rojas, arregladas en el
+    wip sin confirmar), la fila de DECISIONES, el bump a 0.180.0 con CHANGELOG, STATE y LEEME, la suite entera en el
+    8805 y la página de fotos para Ez.
+- **La hora y la medianoche (0.181.0)**: commit edae192 subido a `claude/gracious-pascal-ea1249`, con H5 según la A,
+  y `verify` en verde. Al relevar, su suite entera seguía corriendo en el 8806, así que no se da por buena sin mirarla.
+  Se junta con el sí de Ez, después de la 0.180.0 o antes si esta tarda; los choques, solo en los sitios de la versión
+  y en el CHANGELOG.
+- **Desde la otra cuenta** no se ven estas sesiones. Para seguir cada una, `start_session` con `cwd` en su worktree,
+  diciéndole qué falta y que lea su `git log`.
+
 **Si llegas de la otra cuenta, empieza aquí.** `main` está en 0.179.0 con el CI en verde entero. Del 24 al 26 oct.
 entraron 0.175.2, 0.176.0, 0.176.1, 0.176.2, 0.177.0, 0.178.0 y 0.179.0 (el detalle, en «El orden lógico hasta v1»,
 puntos 1-6). **Regla de uso de Ez (27 oct.)**: al 85 % de uso, todo listo para cambiar de cuenta: cada sesión hace
