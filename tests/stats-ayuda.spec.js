@@ -157,7 +157,7 @@ test.describe('los umbrales, por los dos lados', () => {
     const once = focos(11, 5);
     const r = await calcular(page, once.concat(focos(1, 1, { early: true, h: 18 })));
     expect(r.hora, '11 terminados y 1 cortado no son 12').toBeNull();
-    expect(r.tras).toBeNull();
+    expect(r.tras.b, '«después del Foco» cuenta 11, sin el cortado').toBe(11);
     expect((await calcular(page, once.concat(focos(1, 1, { h: 18 })))).hora, 'GUARD: con el duodécimo terminado sí').not.toBeNull();
   });
 
@@ -225,21 +225,25 @@ test('sin datos, «Todavía es pronto» y ni una cifra; con una sola idea, esa y
   await expect(page.locator('[data-pace-ayuda-resto]')).toHaveText('Lo demás saldrá cuando haya bastante para decirlo.');
 });
 
-test('sin PACE completo, «Qué te ayuda» lleva candado y abre la invitación sin cambiar de pestaña', async ({ page, context }) => {
-  await cargar(page, context);
-  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
-  await page.getByRole('button', { name: 'Ver estadísticas' }).click();
-  const tab = page.locator('[data-pace-stats-tab="ayuda"]');
-  await expect(tab).toHaveAttribute('data-pace-stats-cerrada', '');
-  await expect(tab.locator('[data-pace-candado]')).toHaveCount(1);
-  await tab.click();
-  const hoja = page.locator('[data-pace-premium-hoja]');
-  await expect(hoja, 'tocar «Qué te ayuda» no abre la invitación').toBeVisible();
-  await expect(hoja).toContainText('Qué te ayuda');
-  await expect(hoja).toContainText('Tu mes, tu año y qué te ayuda');
-  await expect(page.locator('[data-pace-hoy-view]'), 'tocar «Qué te ayuda» cambió de pestaña').toHaveCount(1);
-  await expect(page.locator('[data-pace-ayuda-view]')).toHaveCount(0);
-});
+for (const [ancho, alto] of [[1280, 720], [360, 718]]) {
+  test(`sin PACE completo, «Qué te ayuda» lleva candado y abre la invitación sin cambiar de pestaña (${ancho} px)`, async ({ page, context }) => {
+    await cargar(page, context, null, { width: ancho, height: alto });
+    await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+    await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+    const tab = page.locator('[data-pace-stats-tab="ayuda"]');
+    await expect(tab).toHaveAttribute('data-pace-stats-cerrada', '');
+    await expect(tab.locator('[data-pace-candado]')).toHaveCount(1);
+    await esperarModalAsentado(page);
+    expect((await medir(page)).fuera, 'con los tres candados, una pestaña se sale de la barra').toBe(false);
+    await tab.click();
+    const hoja = page.locator('[data-pace-premium-hoja]');
+    await expect(hoja, 'tocar «Qué te ayuda» no abre la invitación').toBeVisible();
+    await expect(hoja).toContainText('Qué te ayuda');
+    await expect(hoja).toContainText('Tu mes, tu año y qué te ayuda');
+    await expect(page.locator('[data-pace-hoy-view]'), 'tocar «Qué te ayuda» cambió de pestaña').toHaveCount(1);
+    await expect(page.locator('[data-pace-ayuda-view]')).toHaveCount(0);
+  });
+}
 
 /* Lo que mide la ventana y si pide scroll, en la pestaña que esté abierta. */
 const medir = (page) => page.evaluate(() => {

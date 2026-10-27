@@ -1,6 +1,7 @@
 /* PACE · Panel de estadísticas — sesión 43/44
-   Pestañas Hoy | Semana | Mes | Año. Hoy está en StatsHoy.jsx, la semana en StatsSemana.jsx y
-   el año en YearView.jsx; aquí quedan el mes y el panel.
+   Pestañas Hoy | Semana | Mes | Año | Qué te ayuda. Hoy está en StatsHoy.jsx, la semana en
+   StatsSemana.jsx, el año en YearView.jsx y «Qué te ayuda» en StatsAyuda.jsx; aquí quedan el mes
+   y el panel.
 */
 
 const { useState, useRef, useEffect } = React;
@@ -227,8 +228,10 @@ const statsPanelTabStyles = {
     display: 'flex', gap: 2, flex: '1 1 100%', marginTop: 'var(--s-5)',
     background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', padding: 3,
   },
+  /* CADA PESTAÑA TOMA EL ANCHO DE SU NOMBRE (v0.183.0): con «Qué te ayuda» son cinco, y cinco
+     iguales cortaban la última a 360 px; sin PACE completo tres llevan además el candado. */
   tab: (active) => ({
-    flex: 1, padding: '7px 0', border: 'none', borderRadius: 'var(--r-sm)',
+    flex: '1 1 auto', padding: '7px 4px', border: 'none', borderRadius: 'var(--r-sm)', whiteSpace: 'nowrap',
     cursor: 'pointer', fontSize: 12, fontWeight: active ? 600 : 400, letterSpacing: 0.5,
     background: active ? 'var(--paper)' : 'transparent',
     color: active ? 'var(--ink)' : 'var(--ink-3)',
@@ -247,11 +250,11 @@ function StatsPanel({ open, onClose }) {
   const { t } = useT();
   /* Se abre en «Hoy» (§37.4; Ez, 15 oct. 2026): lo primero es tu día. */
   const [tab, setTab]           = useState('today');
-  /* MES Y AÑO SON DE PACE COMPLETO (Ez, 8 oct.); hasta v1, abiertos para todos
-     (PREMIUM_ABIERTO_HASTA_V1). Cerrados llevan el candado de línea fina en su pestaña y, al
+  /* MES, AÑO Y «QUÉ TE AYUDA» SON DE PACE COMPLETO (Ez, 8 oct.; el tercero, 3A del 27 oct.); hasta
+     v1, abiertos para todos (PREMIUM_ABIERTO_HASTA_V1). Cerrados llevan el candado de línea fina en su pestaña y, al
      tocarla, se abre la invitación de siempre sin cambiar de pestaña (Ez, 15 oct., opción A):
      tus datos no se tapan, y la copia de «Tus datos» los sigue llevando todos. */
-  const cerrada = (key) => (key === 'month' || key === 'year')
+  const cerrada = (key) => (key === 'month' || key === 'year' || key === 'ayuda')
     && !(window.PREMIUM_ABIERTO_HASTA_V1 || (window.hasPremiumEntitlement && window.hasPremiumEntitlement()));
   const [jumpYear, setJumpYear] = useState(null);
   const [jumpMonth, setJumpMonth] = useState(null);
@@ -277,6 +280,7 @@ function StatsPanel({ open, onClose }) {
         { key:'week',  label:t('stats.tab.week')  },
         { key:'month', label:t('stats.tab.month') },
         { key:'year',  label:t('stats.tab.year')  },
+        { key:'ayuda', label:t('stats.tab.ayuda') },
         { key:'paths', label:t('stats.tab.paths') },
       /* Sin Caminos (SHOW_CAMINOS, app/flags.js) su pestaña no se ofrece. */
       ].filter(({ key }) => key !== 'paths' || window.SHOW_CAMINOS !== false).map(({ key, label }) => (
@@ -314,6 +318,7 @@ function StatsPanel({ open, onClose }) {
         {tab==='week'  && <WeekView state={state} />}
         {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
         {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
+        {tab==='ayuda' && <StatsAyuda state={state} />}
         {tab==='paths' && <PathStats />}
       </div>
 
