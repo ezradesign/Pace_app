@@ -116,6 +116,20 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
      rutina en pausa, el cuerpo sigue diciendo la instrucción (`CuerpoV1` recibe `paused` y no lo usa); al volver no hay
      colocación. Todo es de pantalla: maqueta antes. Recomendado: B, C, U1 y U2 antes de la versión de prueba; P y lo
      de producto, en una actualización durante los 14 días, para no retrasar la cuenta.
+   - **Sexta revisión (~21:15), «cuando el día no sale como estaba previsto»: Q1-Q7, ciertas en el código.** **Q1** «Saltar
+     esta pausa» (`break.skip`) solo cierra el menú (`onClose`) y la pausa sigue pendiente: es un «Ahora no», y conviene
+     decir «Tu pausa sigue disponible». **Q2** en la línea del día, tocar una pausa futura la CAMBIA (`ritmoOtra`,
+     `RitmoLinea.jsx`); solo lo dice el `title` («toca para cambiarla»), que en el móvil no se ve: ver antes de cambiar, o
+     «Rutina cambiada · Deshacer». **Q3** los motivos de la pausa afirman lo que PACE no sabe: «Llevas {n} minutos
+     sentado», «Aún no has bebido hoy», «Hoy aún no has movido el cuerpo» (`breakmenu.js`): mejor «Has terminado un Foco de
+     {n} minutos», «Hoy no has apuntado agua». **Q4** un solo «No» en «¿Te ayudó?» veta la rutina para siempre en la pausa
+     (`breakVetadas`, la regla de s189 en DECISIONES): sin caducidad ni aviso; o se explica y se deshace, o caduca.
+     **Q5** una pausa hecha por tu cuenta no cuenta en ningún sitio: como poco, que Estadísticas diga «en PACE». **Q6** los
+     cierres dicen cómo te sientes: «El cuerpo vuelve a sentirse tuyo» y «Tu cuerpo ha encontrado su ritmo»
+     (`sessions.js`), contra la regla del copy sin absolutos (s151). **Q7** que los dispositivos no se juntan ya lo dicen
+     el pie de Ajustes («Todo vive en tu navegador») y el aviso de importar («se sustituye»); falta decirlo donde se
+     decide, al importar. Q1, Q3, Q6 y Q7, y P1-P3, son solo textos: van juntos en UNA página de antes y después para Ez,
+     rápidos de montar y que pueden ir en la versión de prueba sin retrasarla.
 7. **Sesiones**: la del cobro (A1-A7) la arrancó Ez a las ~20:50 (`local_3bee2030-7cba-497a-bf13-c538163aca93`, puerto
    8807). Propuesta, sin arrancar: UNA sesión para B1-B4, C1-C6, U1 y U2 (tocan `app/move/`, `app/custom/`, `app/extra/` y
    `app/main.jsx`; puerto 8808), con maqueta para lo que se vea; y después, una maqueta de U3-U5 y de /premium. Uso a las

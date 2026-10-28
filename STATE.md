@@ -34,8 +34,9 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    material que no se dice y la tarjeta que no se empieza con el teclado. Antes de la versión de prueba definitiva, en
    una sola sesión. Lo de producto (la carta del lunes que se pueda dejar para luego, que la prueba de 7 días llegue a
    enseñarla, la frase del móvil y /premium con la variedad y el calendario) y lo de quien empieza (P1-P8: mirar un
-   ejercicio antes de empezar, la flecha que dice qué hace, la pausa que se ve, «con una serie basta»), en una maqueta
-   para Ez; recomendado en una actualización durante los 14 días de los testers.
+   ejercicio antes de empezar, la flecha que dice qué hace, la pausa que se ve, «con una serie basta») y cuando el día se
+   tuerce (Q1-Q7), en una maqueta para Ez; recomendado en una actualización durante los 14 días de los testers. Lo que es
+   solo texto (Q1, Q3, Q6, Q7 y P1-P3), en una página de antes y después, puede ir en la versión de prueba.
 3. **La versión de prueba definitiva, a Play y a TestFlight a la vez** (Ez, 28 oct.): esperan los 16 dibujos de
    ejercicios y el logo. El AAB lo baja la coordinadora con el sí de Ez y lo sube Ez; TestFlight, a mano y con su sí
    (`docs/launch/google-play/guia.html`).
