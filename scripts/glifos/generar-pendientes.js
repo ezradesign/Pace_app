@@ -5,9 +5,14 @@
      3. el encargo                                     (que debe mostrar cada uno)
    Un listado copiado del encargo mentiria en cuanto el catalogo se moviera —
    que es exactamente lo que le paso al encargo de logros y cazo s169. */
-const fs = require('fs'), path = require('path'), cp = require('child_process');
-const ROOT = 'C:/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app';
-const SP = process.argv[2];
+const fs = require('fs'), os = require('os'), path = require('path'), cp = require('child_process');
+/* El repo en el que vive este script, también desde un worktree: con la ruta del checkout
+   principal escrita a mano se leía y se escribía en otra copia. */
+const ROOT = path.resolve(__dirname, '..', '..');
+/* La carpeta de trabajo, si se da; si no, una temporal que se borra al acabar. Era
+   obligatoria y sin ella el script caía al arrancar (`path.join` con `undefined`). */
+const SP = process.argv[2] || fs.mkdtempSync(path.join(os.tmpdir(), 'pace-glifos-'));
+const SP_TEMPORAL = !process.argv[2];
 
 /* (1) identidades vivas: se las pedimos al propio script de ingesta en seco,
    que es quien ya sabe resolverlas (registro + pasos de las rutinas).
@@ -20,6 +25,7 @@ const vacia = path.join(SP, '_vacia');
 fs.rmSync(vacia, { recursive: true, force: true }); fs.mkdirSync(vacia, { recursive: true });
 const seco = cp.execSync('node scripts/ingest-glifos-ejercicio.js --seco --origen "' + vacia + '"',
   { cwd: ROOT, encoding: 'utf8' });
+fs.rmSync(SP_TEMPORAL ? SP : vacia, { recursive: true, force: true });
 const bloque = seco.split('identidades sin dibujo:')[1] || '';
 /* `.slice(1)`: la primera linea tras los dos puntos es el CONTADOR, no un
    ejercicio. Sin esto se colaba «59» en la lista y salian 62 identidades. */
@@ -47,6 +53,11 @@ const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase
 
 const todas = sinDibujo;                       // la carpeta vacia => censo completo
 const pendientes = todas.filter(id => !conMascara.includes(id));
+/* Arte que la app ya no pide: una rutina que salio de la lista (`EXTRA_ROUTINES_FUERA`, Ez 2A
+   del 23 oct.) sigue abriendose por su id, asi que su mascara se queda. Se cuenta aparte: antes
+   entraba en «con arte» y el censo no cuadraba (59 + 10 contra 68). */
+const hechas = todas.filter(id => conMascara.includes(id));
+const sobrantes = conMascara.filter(id => !todas.includes(id));
 const porGrupo = new Map();
 for (const id of todas) {
   const i = info.get(id) || { grupo: 'Sin grupo en el encargo', hoy: '?', que: '—' };
@@ -71,8 +82,9 @@ L.push('');
 L.push('| | |');
 L.push('|---|---|');
 L.push('| **Identidades que la app necesita** | **' + todas.length + '** |');
-L.push('| **Con arte propio ya ingestado** | **' + conMascara.length + '** |');
+L.push('| **Con arte propio ya ingestado** | **' + hechas.length + '** |');
 L.push('| **Pendientes** | **' + pendientes.length + '** |');
+if (sobrantes.length) L.push('| Con arte que la app ya no pide (su rutina salió de la lista) | ' + sobrantes.join(', ') + ' |');
 L.push('');
 L.push('«Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se');
 L.push('sigue pintando mientras no llegue el arte nuevo; `falta` = hoy no hay nada y');
@@ -145,8 +157,9 @@ L.push('Tras ingestar: `node build-standalone.js` · `npm run verify` · `npm ru
 L.push('y **subir a mano** el censo `precache` de `scripts/verify.integridad.js`.');
 L.push('');
 fs.writeFileSync(path.join(ROOT, 'docs/product/GLIFOS_EJERCICIOS_PENDIENTES.md'), L.join('\n'));
-console.log('identidades ' + todas.length + ' · con arte ' + conMascara.length + ' · pendientes ' + pendientes.length);
-if (todas.length !== conMascara.length + pendientes.length) { console.error('CENSO INCOHERENTE'); process.exit(1); }
+console.log('identidades ' + todas.length + ' · con arte ' + hechas.length + ' · pendientes ' + pendientes.length +
+  (sobrantes.length ? ' · arte que ya no se pide: ' + sobrantes.join(', ') : ''));
+if (!todas.length || todas.length !== hechas.length + pendientes.length) { console.error('CENSO INCOHERENTE'); process.exit(1); }
 console.log('grupos: ' + grupos.join(' | '));
 const huerfanas = todas.filter(id => !info.has(id));
 console.log('SIN FILA EN EL ENCARGO (' + huerfanas.length + '): ' + (huerfanas.join(', ') || 'ninguna'));

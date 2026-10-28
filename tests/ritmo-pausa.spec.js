@@ -15,13 +15,13 @@
  *    la pausa abierta) o se SALTÓ (empezaste el bloque sin hacerla).
  *
  * TRAMPAS: `Button` no reenvía data-*: los botones del modal se buscan por su nombre. El
- * bloque se acaba minuto a minuto (un fastForward grande no abre la pausa, s187). La
+ * bloque se acaba justo a su hora y se espera a la ventana (`terminarBloque`, helpers.js). La
  * sesión de cuerpo se acaba segundo a segundo (eventos-origen.spec.js).
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, terminarBloque } = require('./helpers');
 
 const NUEVE = new Date('2026-09-18T09:00:00+02:00');
 const JORNADA = { fecha: '2026-09-18', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
@@ -34,14 +34,6 @@ async function abrir(page, context, extra, hora) {
   await page.waitForTimeout(400);
 }
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
-async function terminarBloque(page) {
-  for (let i = 0; i < 60; i++) {
-    await page.clock.fastForward(60 * 1000);
-    await page.waitForTimeout(60);
-    if (await page.locator('[data-pace-break-shortcut]').count()) return;
-  }
-  throw new Error('GUARD: el bloque no terminó');
-}
 async function segundos(page, n) {
   for (let i = 0; i < n; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(10); }
 }
@@ -188,8 +180,8 @@ test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba
   await expect(page.locator('[data-pace-modal-backdrop]')).toContainText('9:28 · Lo que toca ahora.');
   await expect(page.locator('[data-pace-sidebar]')).toContainText(/Tu pausa\s*Ahora, /);
   /* y al empezar el bloque 2 a las 9:34, se recoloca otra vez (la pieza de s194). Hasta las 9:34
-     justas y no «6 min más»: `terminarBloque` avanza de minuto en minuto y en una máquina lenta ve
-     la pausa un minuto tarde (en la CI de v0.169.0 el bloque 2 empezó a las 9:35). */
+     justas y no «6 min más»: lo que tarde en salir la ventana no puede mover la hora del bloque 2
+     (en la CI de v0.169.0, cuando se avanzaba de minuto en minuto, empezó a las 9:35). */
   await page.keyboard.press('Escape');
   await page.clock.fastForward(await page.evaluate(() => { const t = new Date(); t.setHours(9, 34, 0, 0); return t.getTime() - Date.now(); }));
   await page.waitForTimeout(200);

@@ -33,7 +33,10 @@
    EL PERMISO. Solo se programa con el permiso dado: sin el, el complemento lo
    pediria en el acto, con la app ya en el fondo. Al volver a la app se mira otra
    vez (puede venir de los ajustes de Android) y se avisa con el evento
-   `pace:avisos-android` para que Ajustes se pinte con lo nuevo.
+   `pace:avisos-nativo`, el mismo del iPhone, para que Ajustes se pinte con lo nuevo.
+
+   LO QUE DICE: con «A tu ritmo», la pausa que viene detras del bloque, como el aviso de la web
+   al acabar (`paceNativoTextosFin`, nativo.js); se lee al programarlo, como el aviso fijo.
 
    EL AVISO FIJO CON EL MOVIL BLOQUEADO (Ez, N4 A del 27 oct. 2026): mientras un Foco corre con
    la app en el fondo, Android enseña lo que queda, que cuenta solo, con el bloque y lo que viene
@@ -85,9 +88,9 @@ function paceAndroidAvisos() {
   return !!paceAndroidPlugin('LocalNotifications');
 }
 
-/* Ajustes escucha `pace:avisos-android` para pintarse con el permiso nuevo. */
+/* Ajustes escucha `pace:avisos-nativo` para pintarse con el permiso nuevo. */
 function paceAndroidAvisoContar() {
-  try { window.dispatchEvent(new CustomEvent('pace:avisos-android')); } catch (e) {}
+  try { window.dispatchEvent(new CustomEvent('pace:avisos-nativo')); } catch (e) {}
 }
 
 /* 'granted' | 'denied' | 'default', lo mismo que Notification.permission. */
@@ -148,6 +151,7 @@ function paceAndroidAvisoFallo() {
 function paceAndroidFoco(endsAt, textos) {
   _paceAvisoAndroid.foco = endsAt
     ? { endsAt: endsAt, title: (textos && textos.title) || 'PACE', body: (textos && textos.body) || '',
+        fin: textos && typeof textos.fin === 'function' ? textos.fin : null,
         fijo: textos && typeof textos.fijo === 'function' ? textos.fijo : null }
     : null;
   paceAndroidAvisoRecolocar();
@@ -185,8 +189,9 @@ function paceAndroidAvisoAjustarFin(quiere) {
   var a = _paceAvisoAndroid, ahora = Date.now();
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
+    var textos = paceNativoTextosFin(quiere);
     return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
-      id: PACE_AVISO_FOCO_ID, title: quiere.title, body: quiere.body,
+      id: PACE_AVISO_FOCO_ID, title: textos.title, body: textos.body,
       /* el formato exacto que lee el complemento: ISO en UTC con milisegundos */
       schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
       isExactNotification: a.exacta === 'granted',

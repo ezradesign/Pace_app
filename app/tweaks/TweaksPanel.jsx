@@ -74,15 +74,15 @@ function TweaksPanel({ open, onClose }) {
     if (open && exactaAndroid) paceAndroidAvisoExactoMirar().then(setExacta);
   }, [open, exactaAndroid]);
   const pedirExacta = () => { paceAndroidAvisoExactoPedir().then(setExacta); };
-  /* El permiso que se vuelve a mirar al volver de los ajustes de Android, o un aviso que el
+  /* El permiso que se vuelve a mirar al volver de los ajustes del móvil, o un aviso que el
      sistema no dejó poner, cambian sin que cambie el estado de PACE: el sistema lo cuenta con
-     `pace:avisos-android` (android.avisos.js) y el panel abierto se pinta otra vez. */
+     `pace:avisos-nativo` (android.avisos.js, ios.js) y el panel abierto se pinta otra vez. */
   const [, setAvisosVez] = useStateTW(0);
   useEffectTW(() => {
     if (!open || !avisoNativo) return undefined;
     const alCambiar = () => { setAvisosVez((n) => n + 1); if (exactaAndroid) setExacta(paceAndroidAvisoExacto()); };
-    window.addEventListener('pace:avisos-android', alCambiar);
-    return () => window.removeEventListener('pace:avisos-android', alCambiar);
+    window.addEventListener('pace:avisos-nativo', alCambiar);
+    return () => window.removeEventListener('pace:avisos-nativo', alCambiar);
   }, [open, avisoNativo, exactaAndroid]);
   const falloAviso = avisoNativo && typeof paceNativoAvisoFallo === 'function' ? paceNativoAvisoFallo() : null;
 
@@ -298,7 +298,7 @@ function TweaksPanel({ open, onClose }) {
           <div className="pace-aj-nota">{t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')}</div>
         )}
         {falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' && (
-          <div className="pace-aj-nota" data-pace-aj-aviso-fallo>{t('settings.notify.fallo')}</div>
+          <div className="pace-aj-nota" data-pace-aj-aviso-fallo>{t('settings.notify.fallo.' + plataforma)}</div>
         )}
         {exactaAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' && (
           <AjustesAccion suave onClick={pedirExacta} derecha="›" sub={t('settings.notify.exact.sub')}>{t('settings.notify.exact')}</AjustesAccion>

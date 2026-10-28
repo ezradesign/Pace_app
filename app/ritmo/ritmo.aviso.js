@@ -25,16 +25,33 @@
    «1 MIN · MUEVE» en la linea); la de la larga, la de la parada. La comida dice
    hasta cuando; el ultimo bloque, que el dia se cierra.
 
+   EN ANDROID Y EN EL IPHONE el aviso lo programa el sistema al irse PACE al
+   fondo, ANTES de que el bloque acabe: `ritmoAvisoFin` dice lo mismo para el
+   bloque que corre (`focos[hechos]`), que es el que va a acabar. Si el bloque
+   acaba a su hora, el plan no se recoloca al cerrarlo y los dos avisos dicen lo
+   mismo; si se pausa, al volver se quita y al irse otra vez se lee de nuevo.
+
    `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
 function ritmoAviso(s, t, tn, lang) {
   if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
   var p = ritmoPlan(s);
-  if (!p || p.hechos < 1) return null;
-  var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
+  return p && p.hechos >= 1 ? ritmoAvisoTras(p, p.hechos, t, tn, lang) : null;
+}
+
+/* El de las apps, con el bloque aún sin cerrar. Sin «A tu ritmo», null: el de siempre. */
+function ritmoAvisoFin(s, t, tn, lang) {
+  if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
+  var p = ritmoPlan(s);
+  return p && p.actual ? ritmoAvisoTras(p, p.hechos + 1, t, tn, lang) : null;
+}
+
+/* Lo que dice el aviso cuando acaba el bloque `n` del plan (el primero es el 1). */
+function ritmoAvisoTras(p, n, t, tn, lang) {
+  var it = ritmoDetras(p.m, p.m.focos[n - 1]);
   if (!it) return null;
-  var sig = p.m.focos[p.hechos] || null;
+  var sig = p.m.focos[n] || null;
   var hora = function (min) { return typeof ritmoHora === 'function' ? ritmoHora(min) : String(min); };
   var nombre = function (pl) {
     return typeof ritmoNombre === 'function' ? ritmoNombre(pl.rutina || pl, t, lang) : (pl.name || pl.id || '');
@@ -43,7 +60,7 @@ function ritmoAviso(s, t, tn, lang) {
   if (it.tipo === 'comida') {
     return {
       title: t('notify.ritmo.comida'),
-      body: sig ? tn('notify.ritmo.comida.cuerpo', { hora: hora(sig.desde), n: p.hechos + 1 }) : '',
+      body: sig ? tn('notify.ritmo.comida.cuerpo', { hora: hora(sig.desde), n: n + 1 }) : '',
     };
   }
 
@@ -51,7 +68,7 @@ function ritmoAviso(s, t, tn, lang) {
   if (it.tipo === 'foco') {
     var pausa = p.m.items.slice(p.m.items.indexOf(it)).find(function (x) { return x.tipo === 'pausa' || x.tipo === 'comida' || x.tipo === 'cierre'; });
     return {
-      title: tn('notify.ritmo.seguido', { n: p.hechos, total: p.total }),
+      title: tn('notify.ritmo.seguido', { n: n, total: p.total }),
       body: pausa ? tn('notify.ritmo.seguido.cuerpo', { hora: hora(pausa.desde) }) : '',
     };
   }
@@ -62,8 +79,8 @@ function ritmoAviso(s, t, tn, lang) {
   return {
     title: tn(clave, { plato: platos.map(nombre).join(' + '), min: it.larga ? it.dur : platos[0].min }),
     body: sig
-      ? tn('notify.ritmo.cuerpo', { n: p.hechos, total: p.total, hora: hora(sig.desde) })
-      : tn('notify.ritmo.ultimo', { n: p.hechos, total: p.total }),
+      ? tn('notify.ritmo.cuerpo', { n: n, total: p.total, hora: hora(sig.desde) })
+      : tn('notify.ritmo.ultimo', { n: n, total: p.total }),
   };
 }
 
@@ -97,4 +114,4 @@ function ritmoAvisoFijo(s, t, tn, lang, endsAt) {
   return { titulo: titulo, texto: luego ? hasta + ' ' + luego : hasta };
 }
 
-Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
+Object.assign(window, { ritmoAviso, ritmoAvisoFin, ritmoAvisoFijo });

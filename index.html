@@ -3342,7 +3342,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.notify.blocked.ios': 'Los avisos de PACE están desactivados en los ajustes del iPhone.',
   'settings.notify.exact': 'Que el aviso llegue a su hora',
   'settings.notify.exact.sub': 'Android puede retrasarlo unos minutos',
-  'settings.notify.fallo': 'Android no dejó poner el último aviso de fin de Foco.',
+  'settings.notify.fallo.android': 'Android no dejó poner el último aviso de fin de Foco.',
+  'settings.notify.fallo.ios': 'El iPhone no dejó poner el último aviso de fin de Foco.',
   'settings.circle': 'Círculo',
   'settings.circle.sub': 'Respira · {name}',
   'settings.circle.flor': 'Loto',
@@ -3440,7 +3441,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.notify.blocked.ios': 'PACE notifications are turned off in iPhone settings.',
   'settings.notify.exact': 'Get the alert on time',
   'settings.notify.exact.sub': 'Android may delay it a few minutes',
-  'settings.notify.fallo': 'Android did not let PACE set the last end-of-focus alert.',
+  'settings.notify.fallo.android': 'Android did not let PACE set the last end-of-focus alert.',
+  'settings.notify.fallo.ios': 'iPhone did not let PACE set the last end-of-focus alert.',
   'settings.circle': 'Circle',
   'settings.circle.sub': 'Breathe · {name}',
   'settings.circle.flor': 'Lotus',
@@ -11084,16 +11086,33 @@ Object.assign(window, {
    «1 MIN · MUEVE» en la linea); la de la larga, la de la parada. La comida dice
    hasta cuando; el ultimo bloque, que el dia se cierra.
 
+   EN ANDROID Y EN EL IPHONE el aviso lo programa el sistema al irse PACE al
+   fondo, ANTES de que el bloque acabe: `ritmoAvisoFin` dice lo mismo para el
+   bloque que corre (`focos[hechos]`), que es el que va a acabar. Si el bloque
+   acaba a su hora, el plan no se recoloca al cerrarlo y los dos avisos dicen lo
+   mismo; si se pausa, al volver se quita y al irse otra vez se lee de nuevo.
+
    `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
 function ritmoAviso(s, t, tn, lang) {
   if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
   var p = ritmoPlan(s);
-  if (!p || p.hechos < 1) return null;
-  var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
+  return p && p.hechos >= 1 ? ritmoAvisoTras(p, p.hechos, t, tn, lang) : null;
+}
+
+
+function ritmoAvisoFin(s, t, tn, lang) {
+  if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
+  var p = ritmoPlan(s);
+  return p && p.actual ? ritmoAvisoTras(p, p.hechos + 1, t, tn, lang) : null;
+}
+
+
+function ritmoAvisoTras(p, n, t, tn, lang) {
+  var it = ritmoDetras(p.m, p.m.focos[n - 1]);
   if (!it) return null;
-  var sig = p.m.focos[p.hechos] || null;
+  var sig = p.m.focos[n] || null;
   var hora = function (min) {return typeof ritmoHora === 'function' ? ritmoHora(min) : String(min);};
   var nombre = function (pl) {
     return typeof ritmoNombre === 'function' ? ritmoNombre(pl.rutina || pl, t, lang) : pl.name || pl.id || '';
@@ -11102,7 +11121,7 @@ function ritmoAviso(s, t, tn, lang) {
   if (it.tipo === 'comida') {
     return {
       title: t('notify.ritmo.comida'),
-      body: sig ? tn('notify.ritmo.comida.cuerpo', { hora: hora(sig.desde), n: p.hechos + 1 }) : ''
+      body: sig ? tn('notify.ritmo.comida.cuerpo', { hora: hora(sig.desde), n: n + 1 }) : ''
     };
   }
 
@@ -11110,7 +11129,7 @@ function ritmoAviso(s, t, tn, lang) {
   if (it.tipo === 'foco') {
     var pausa = p.m.items.slice(p.m.items.indexOf(it)).find(function (x) {return x.tipo === 'pausa' || x.tipo === 'comida' || x.tipo === 'cierre';});
     return {
-      title: tn('notify.ritmo.seguido', { n: p.hechos, total: p.total }),
+      title: tn('notify.ritmo.seguido', { n: n, total: p.total }),
       body: pausa ? tn('notify.ritmo.seguido.cuerpo', { hora: hora(pausa.desde) }) : ''
     };
   }
@@ -11121,8 +11140,8 @@ function ritmoAviso(s, t, tn, lang) {
   return {
     title: tn(clave, { plato: platos.map(nombre).join(' + '), min: it.larga ? it.dur : platos[0].min }),
     body: sig ?
-    tn('notify.ritmo.cuerpo', { n: p.hechos, total: p.total, hora: hora(sig.desde) }) :
-    tn('notify.ritmo.ultimo', { n: p.hechos, total: p.total })
+    tn('notify.ritmo.cuerpo', { n: n, total: p.total, hora: hora(sig.desde) }) :
+    tn('notify.ritmo.ultimo', { n: n, total: p.total })
   };
 }
 
@@ -11156,8 +11175,8 @@ function ritmoAvisoFijo(s, t, tn, lang, endsAt) {
   return { titulo: titulo, texto: luego ? hasta + ' ' + luego : hasta };
 }
 
-Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
-;Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
+Object.assign(window, { ritmoAviso, ritmoAvisoFin, ritmoAvisoFijo });
+;Object.assign(window, { ritmoAviso, ritmoAvisoFin, ritmoAvisoTras, ritmoAvisoFijo });
 })();
 </script>
   <!-- El dia en el calendario: lo puro (eventos, .ics, reuniones como tramos), Google y
@@ -17112,7 +17131,10 @@ Object.assign(window, {
    EL PERMISO. Solo se programa con el permiso dado: sin el, el complemento lo
    pediria en el acto, con la app ya en el fondo. Al volver a la app se mira otra
    vez (puede venir de los ajustes de Android) y se avisa con el evento
-   `pace:avisos-android` para que Ajustes se pinte con lo nuevo.
+   `pace:avisos-nativo`, el mismo del iPhone, para que Ajustes se pinte con lo nuevo.
+
+   LO QUE DICE: con «A tu ritmo», la pausa que viene detras del bloque, como el aviso de la web
+   al acabar (`paceNativoTextosFin`, nativo.js); se lee al programarlo, como el aviso fijo.
 
    EL AVISO FIJO CON EL MOVIL BLOQUEADO (Ez, N4 A del 27 oct. 2026): mientras un Foco corre con
    la app en el fondo, Android enseña lo que queda, que cuenta solo, con el bloque y lo que viene
@@ -17166,7 +17188,7 @@ function paceAndroidAvisos() {
 
 
 function paceAndroidAvisoContar() {
-  try {window.dispatchEvent(new CustomEvent('pace:avisos-android'));} catch (e) {}
+  try {window.dispatchEvent(new CustomEvent('pace:avisos-nativo'));} catch (e) {}
 }
 
 
@@ -17227,6 +17249,7 @@ function paceAndroidAvisoFallo() {
 function paceAndroidFoco(endsAt, textos) {
   _paceAvisoAndroid.foco = endsAt ?
   { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '',
+    fin: textos && typeof textos.fin === 'function' ? textos.fin : null,
     fijo: textos && typeof textos.fijo === 'function' ? textos.fijo : null } :
   null;
   paceAndroidAvisoRecolocar();
@@ -17264,8 +17287,9 @@ function paceAndroidAvisoAjustarFin(quiere) {
   var a = _paceAvisoAndroid,ahora = Date.now();
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
+    var textos = paceNativoTextosFin(quiere);
     return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
-        id: PACE_AVISO_FOCO_ID, title: quiere.title, body: quiere.body,
+        id: PACE_AVISO_FOCO_ID, title: textos.title, body: textos.body,
 
         schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
         isExactNotification: a.exacta === 'granted'
@@ -17514,8 +17538,28 @@ Object.assign(window, {
    EL AVISO DE FIN DE FOCO: iOS congela el JS de la app al poco de irse al
    fondo, asi que el aviso lo programa el sistema para la hora del final, y SOLO
    mientras la app esta en el fondo: al volver se cancela, porque delante ya lo
-   cuenta la propia app y sonarian los dos. Es la regla de Android sin las
-   «alarmas exactas», que iOS no tiene: entrega el aviso a su hora sin pedir mas.
+   cuenta la propia app y sonarian los dos. Es la regla de Android
+   (android.avisos.js) sin las «alarmas exactas», que iOS no tiene: entrega el
+   aviso a su hora sin pedir mas. Y con sus mismas cuatro piezas:
+
+   - EN FILA. Programar y quitar tardan, y la respuesta de programar puede llegar
+     despues de que se pida quitarlo. Todo va en fila (`_paceIos.cola`) y cada
+     paso compara lo que deberia haber con lo que iOS CONFIRMO (`puesto`, el
+     final del bloque cuyo aviso tiene); uno que no se pudo quitar se vuelve a
+     quitar al pausar o al reiniciar.
+   - PUESTO SOLO CUANDO iOS CONTESTA. Si `schedule` falla no hay aviso: `fallo`
+     lo dice (Ajustes lo cuenta) y la campana la pone PACE. `puesto` se guarda en
+     `pace.ios.aviso`, porque iOS puede cerrar PACE en el fondo con el aviso
+     puesto y el proceso siguiente tiene que saberlo.
+   - UNA SOLA CAMPANA. Si iOS tenia el aviso de un bloque, la campana de ese
+     bloque es suya y PACE no toca la suya (`paceIosCampana`): ni al volver, ni al
+     abrir PACE despues de que iOS la cerrara. Un aviso cuya hora ya paso no se
+     quita: ya sono. Si no lo tenia (sin permiso o fallido), suena PACE.
+   - EL PERMISO. Solo se programa con el permiso dado: sin el, iOS guarda el
+     aviso sin enseñarlo y la campana de PACE callaria por el. Al volver se mira
+     otra vez (puede venir de los Ajustes del iPhone) y `pace:avisos-nativo`
+     repinta Ajustes. La pregunta de iOS deja la app inactiva, y PACE se cree en
+     el fondo mientras se contesta: el si que llega entonces pone el aviso.
 
    LA FECHA DEL AVISO VA COMO `Date`, NO COMO TEXTO: el puente de iOS pasa el
    objeto tal cual y el complemento solo entiende una fecha (`as? NSDate`). Con
@@ -17541,11 +17585,27 @@ Object.assign(window, {
    ============================================================ */
 
 var PACE_IOS_AVISO_FOCO_ID = 1;
+var PACE_IOS_AVISO_CLAVE = 'pace.ios.aviso';
 
 
 
+function paceIosAvisoLeer() {
+  try {
+    var crudo = localStorage.getItem(PACE_IOS_AVISO_CLAVE);
+    if (crudo === null) return { puesto: null, quizas: true };
+    var v = JSON.parse(crudo);
+    return { puesto: v && typeof v.puesto === 'number' ? v.puesto : null, quizas: false };
+  } catch (e) {return { puesto: null, quizas: true };}
+}
 
-var _paceIos = { fondo: false, permiso: 'default', foco: null, programado: true, audio: false, despertares: 0 };
+function paceIosAvisoGuardar() {
+  try {localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto }));} catch (e) {}
+}
+
+var _paceIosLeido = paceIosAvisoLeer();
+var _paceIos = { fondo: false, permiso: 'default', foco: null,
+  puesto: _paceIosLeido.puesto, quizas: _paceIosLeido.quizas, fallo: null, cola: Promise.resolve(),
+  audio: false, despertares: 0 };
 
 function paceEsIos() {
   try {
@@ -17563,12 +17623,19 @@ function paceIosPlugin(nombre) {
 }
 
 
+
 function paceIosLlamar(nombre, metodo, opciones) {
+  return paceIosPedir(nombre, metodo, opciones).catch(function () {return null;});
+}
+
+
+
+function paceIosPedir(nombre, metodo, opciones) {
   try {
     var p = paceIosPlugin(nombre);
     if (!p || typeof p[metodo] !== 'function') return Promise.resolve(null);
-    return Promise.resolve(p[metodo](opciones)).catch(function () {return null;});
-  } catch (e) {return Promise.resolve(null);}
+    return Promise.resolve(p[metodo](opciones));
+  } catch (e) {return Promise.reject(e);}
 }
 
 
@@ -17578,14 +17645,24 @@ function paceIosAvisos() {
 }
 
 
+
+function paceIosAvisoContar() {
+  try {window.dispatchEvent(new CustomEvent('pace:avisos-nativo'));} catch (e) {}
+}
+
+
 function paceIosAvisoPermiso() {
   return _paceIos.permiso;
 }
 
 function paceIosGuardarPermiso(r) {
   var d = r && r.display;
+  var antes = _paceIos.permiso;
   if (d === 'granted' || d === 'denied') _paceIos.permiso = d;else
   if (d) _paceIos.permiso = 'default';
+
+
+  if (_paceIos.permiso !== antes) {paceIosAvisoContar();paceIosAvisoRecolocar();}
   return _paceIos.permiso;
 }
 
@@ -17594,11 +17671,22 @@ function paceIosAvisoPedir() {
   return paceIosLlamar('LocalNotifications', 'requestPermissions').then(paceIosGuardarPermiso);
 }
 
+function paceIosAvisoPermisoMirar() {
+  return paceIosLlamar('LocalNotifications', 'checkPermissions').then(paceIosGuardarPermiso);
+}
+
+
+function paceIosAvisoFallo() {
+  return _paceIos.fallo;
+}
+
+
 
 
 function paceIosFoco(endsAt, textos) {
   _paceIos.foco = endsAt ?
-  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '' } :
+  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '',
+    fin: textos && typeof textos.fin === 'function' ? textos.fin : null } :
   null;
   paceIosAvisoRecolocar();
 }
@@ -17606,22 +17694,60 @@ function paceIosFoco(endsAt, textos) {
 function paceIosFondo(fondo) {
   if (_paceIos.fondo === !!fondo) return;
   _paceIos.fondo = !!fondo;
+
+  if (!fondo) paceIosAvisoPermisoMirar();
   paceIosAvisoRecolocar();
 }
 
+
+function paceIosAvisoEnFila(paso) {
+  _paceIos.cola = _paceIos.cola.then(paso).catch(function () {});
+  return _paceIos.cola;
+}
+
 function paceIosAvisoRecolocar() {
-  var f = _paceIos.foco;
-  if (_paceIos.fondo && f && f.endsAt > Date.now()) {
-    _paceIos.programado = true;
-    paceIosLlamar('LocalNotifications', 'schedule', { notifications: [{
-        id: PACE_IOS_AVISO_FOCO_ID, title: f.title, body: f.body,
-        schedule: { at: new Date(f.endsAt) }
-      }] });
-    return;
+  return paceIosAvisoEnFila(paceIosAvisoAjustar);
+}
+
+
+function paceIosAvisoAjustar() {
+  var a = _paceIos,f = a.foco,ahora = Date.now();
+  var quiere = a.fondo && f && f.endsAt > ahora && a.permiso === 'granted' && paceIosAvisos() ? f : null;
+  if (quiere) {
+    if (a.puesto === quiere.endsAt) return null;
+    var textos = paceNativoTextosFin(quiere);
+    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [{
+        id: PACE_IOS_AVISO_FOCO_ID, title: textos.title, body: textos.body,
+        schedule: { at: new Date(quiere.endsAt) }
+      }] }).then(function () {
+      a.puesto = quiere.endsAt;
+      a.quizas = false;
+      a.fallo = null;
+      paceIosAvisoGuardar();
+      paceIosAvisoContar();
+    }, function (e) {
+      a.fallo = String(e && e.message || e || 'error');
+      paceIosAvisoContar();
+    });
   }
-  if (!_paceIos.programado) return;
-  _paceIos.programado = false;
-  paceIosLlamar('LocalNotifications', 'cancel', { notifications: [{ id: PACE_IOS_AVISO_FOCO_ID }] });
+
+
+  if (!a.quizas && (a.puesto === null || a.puesto <= ahora)) return null;
+  return paceIosPedir('LocalNotifications', 'cancel', { notifications: [{ id: PACE_IOS_AVISO_FOCO_ID }] }).then(function () {
+    a.puesto = null;
+    a.quizas = false;
+    paceIosAvisoGuardar();
+  });
+}
+
+
+
+
+function paceIosCampana(fin, sonar) {
+  return paceIosAvisoEnFila(function () {
+    if (fin && _paceIos.puesto === fin) return;
+    try {sonar();} catch (e) {}
+  });
 }
 
 
@@ -17670,8 +17796,9 @@ function paceIosAudioDespertar() {
 
 
 function paceIosEstado() {
-  return { fondo: _paceIos.fondo, permiso: _paceIos.permiso, programado: _paceIos.programado,
-    foco: _paceIos.foco ? _paceIos.foco.endsAt : null, audio: _paceIos.audio, despertares: _paceIos.despertares };
+  var a = _paceIos;
+  return { fondo: a.fondo, permiso: a.permiso, programado: a.puesto !== null, puesto: a.puesto, fallo: a.fallo,
+    foco: a.foco ? a.foco.endsAt : null, audio: a.audio, despertares: a.despertares };
 }
 
 function paceIosArrancar() {
@@ -17694,16 +17821,16 @@ function paceIosArrancar() {
       document.addEventListener(tipo, paceIosAudioDespertar, { capture: true, passive: true });
     });
   } catch (e) {}
-  paceIosLlamar('LocalNotifications', 'checkPermissions').then(paceIosGuardarPermiso);
+  paceIosAvisoPermisoMirar();
 }
 
 try {paceIosArrancar();} catch (e) {}
 
 Object.assign(window, {
-  paceEsIos, paceIosPlugin, paceIosAvisos, paceIosAvisoPermiso, paceIosAvisoPedir, paceIosFoco,
-  paceIosGuardarArchivo, paceIosEstado
+  paceEsIos, paceIosPlugin, paceIosAvisos, paceIosAvisoPermiso, paceIosAvisoPedir, paceIosAvisoFallo, paceIosFoco,
+  paceIosCampana, paceIosGuardarArchivo, paceIosEstado
 });
-;Object.assign(window, { PACE_IOS_AVISO_FOCO_ID, _paceIos, paceEsIos, paceIosPlugin, paceIosLlamar, paceIosAvisos, paceIosAvisoPermiso, paceIosGuardarPermiso, paceIosAvisoPedir, paceIosFoco, paceIosFondo, paceIosAvisoRecolocar, paceIosGuardarArchivo, paceIosAudioDespertar, paceIosEstado, paceIosArrancar });
+;Object.assign(window, { PACE_IOS_AVISO_FOCO_ID, PACE_IOS_AVISO_CLAVE, paceIosAvisoLeer, paceIosAvisoGuardar, _paceIosLeido, _paceIos, paceEsIos, paceIosPlugin, paceIosLlamar, paceIosPedir, paceIosAvisos, paceIosAvisoContar, paceIosAvisoPermiso, paceIosGuardarPermiso, paceIosAvisoPedir, paceIosAvisoPermisoMirar, paceIosAvisoFallo, paceIosFoco, paceIosFondo, paceIosAvisoEnFila, paceIosAvisoRecolocar, paceIosAvisoAjustar, paceIosCampana, paceIosGuardarArchivo, paceIosAudioDespertar, paceIosEstado, paceIosArrancar });
 })();
 </script>
   <script>
@@ -17785,14 +17912,29 @@ function paceNativoFoco(endsAt, textos) {
 
 
 
+function paceNativoTextosFin(foco) {
+  var r = null;
+  try {r = foco && typeof foco.fin === 'function' ? foco.fin() : null;} catch (e) {}
+  if (r && r.title) return { title: r.title, body: r.body || '' };
+  return { title: foco && foco.title || 'PACE', body: foco && foco.body || '' };
+}
+
+
+
+
 function paceNativoCampana(fin, sonar) {
-  if (pacePlataformaNativa() === 'android') {paceAndroidCampana(fin, sonar);return;}
+  var p = pacePlataformaNativa();
+  if (p === 'android') {paceAndroidCampana(fin, sonar);return;}
+  if (p === 'ios') {paceIosCampana(fin, sonar);return;}
   try {sonar();} catch (e) {}
 }
 
 
 function paceNativoAvisoFallo() {
-  return pacePlataformaNativa() === 'android' ? paceAndroidAvisoFallo() : null;
+  var p = pacePlataformaNativa();
+  if (p === 'android') return paceAndroidAvisoFallo();
+  if (p === 'ios') return paceIosAvisoFallo();
+  return null;
 }
 
 
@@ -17814,9 +17956,9 @@ function paceNativoEnlace(ruta) {
 
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
 });
-;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
+;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
 })();
 </script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
@@ -22872,7 +23014,12 @@ function useCountdown(durationSec, onComplete, modo) {
 
   useEffectUC(() => {
     if (status !== 'running') return;
+
+
+
+
     const check = () => {
+      if (statusRef.current !== 'running' || endsAtRef.current == null) return;
       if (Date.now() >= endsAtRef.current) complete();else
       forceTick((n) => n + 1);
     };
@@ -28837,10 +28984,12 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
+
   useEffectFT(() => {
     if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
     paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
+      fin: () => typeof ritmoAvisoFin === 'function' ? ritmoAvisoFin(getState(), t, tn, lang) : null,
       fijo: () => typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null });
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
@@ -39863,8 +40012,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   useEffectTW(() => {
     if (!open || !avisoNativo) return undefined;
     const alCambiar = () => {setAvisosVez((n) => n + 1);if (exactaAndroid) setExacta(paceAndroidAvisoExacto());};
-    window.addEventListener('pace:avisos-android', alCambiar);
-    return () => window.removeEventListener('pace:avisos-android', alCambiar);
+    window.addEventListener('pace:avisos-nativo', alCambiar);
+    return () => window.removeEventListener('pace:avisos-nativo', alCambiar);
   }, [open, avisoNativo, exactaAndroid]);
   const falloAviso = avisoNativo && typeof paceNativoAvisoFallo === 'function' ? paceNativoAvisoFallo() : null;
 
@@ -40080,7 +40229,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     React.createElement("div", { className: "pace-aj-nota" }, t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')),
 
     falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' &&
-    React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-fallo": true }, t('settings.notify.fallo')),
+    React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-fallo": true }, t('settings.notify.fallo.' + plataforma)),
 
     exactaAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' &&
     React.createElement(AjustesAccion, { suave: true, onClick: pedirExacta, derecha: "\u203A", sub: t('settings.notify.exact.sub') }, t('settings.notify.exact')),

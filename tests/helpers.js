@@ -257,6 +257,22 @@ async function esperarEnPagina(page, condicion, arg, opciones) {
   }
 }
 
+/* EL BLOQUE DE FOCO, JUSTO HASTA SU FINAL Y SU VENTANA. El reloj salta al final que guardó el motor
+   (`pace.timer.v1`) y se espera, con el reloj de verdad, a que salga la ventana de la pausa. Antes cada
+   prueba avanzaba de minuto en minuto mientras no la veía, y con el PC cargado la ventana tardaba más que
+   la espera de cada vuelta: el reloj seguía y se comía la pausa del día (74 s de 300 con la CPU frenada
+   8 veces, el 28 oct.), y lo que queda de ella o la hora del bloque siguiente salían movidos. Tampoco vale
+   saltar mucho más allá del final: la pausa ya habría pasado (s187). */
+async function terminarBloque(page) {
+  const fin = await page.evaluate(() => {
+    try { return JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt || null; } catch (e) { return null; }
+  });
+  if (!fin) throw new Error('GUARD: no hay un bloque de foco en marcha');
+  await page.clock.fastForward(Math.max(0, fin - await page.evaluate(() => Date.now())) + 1000);
+  await page.locator('[data-pace-break-shortcut]').first().waitFor({ state: 'attached', timeout: 15000 })
+    .catch(() => { throw new Error('GUARD: el bloque no terminó'); });
+}
+
 /* El reloj de la página, a las 12:00 de hoy. Una prueba que adelanta el reloj (una hora oculta, media hora
    dormida) desde la hora de verdad cruza la medianoche si corre de noche: la app apunta la sesión al día
    siguiente y `hoy()`, que mira el día de Node, lee el de antes. A mediodía, ni lo uno ni lo otro. */
@@ -266,6 +282,7 @@ module.exports = {
   MEDIODIA,
   abrirTusDatos,
   esperarEnPagina,
+  terminarBloque,
   acabarBienvenida,
   aceptarAvisosPace,
   pulsarComienza,

@@ -17,13 +17,14 @@
  * El 14 oct. de 2026 (miércoles) la segunda pausa de la jornada es la larga. Era la del
  * día de Ez, «Exhalación 4·6 + Cuello»; desde las series (Ez, 15 oct.) la Estira de la
  * larga es de pie, «Espalda de pie»: lo comprueba un GUARD antes de nada.
- * TRAMPAS: el bloque se acaba minuto a minuto y las sesiones segundo a segundo (s187,
- * eventos-origen.spec.js); cada pieza del panel existe dos veces: se toma la visible.
+ * TRAMPAS: el bloque se acaba justo a su hora y se espera a la ventana (`terminarBloque`,
+ * helpers.js), y las sesiones segundo a segundo (eventos-origen.spec.js); cada pieza del
+ * panel existe dos veces: se toma la visible.
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, esperarEnPagina } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, esperarEnPagina, terminarBloque } = require('./helpers');
 const { leerContenedor, esperarInit } = require('./eventos.helpers');
 
 const HOY = '2026-10-14';
@@ -45,14 +46,6 @@ async function segundos(page, n) {
 }
 async function minutos(page, n) {
   for (let i = 0; i < n; i++) { await page.clock.fastForward(60 * 1000); await page.waitForTimeout(40); }
-}
-async function terminarBloque(page) {
-  for (let i = 0; i < 60; i++) {
-    await page.clock.fastForward(60 * 1000);
-    await page.waitForTimeout(60);
-    if (await page.locator('[data-pace-break-shortcut]').count()) return;
-  }
-  throw new Error('GUARD: el bloque no terminó');
 }
 async function hastaElCierre(page) {
   const done = page.locator('[data-pace-session-done]');

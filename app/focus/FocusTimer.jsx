@@ -61,7 +61,7 @@ function FocusTimer({ onFinish }) {
       return;
     }
     paceFocoContar(bloque, () => {
-      /* En Android, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
+      /* En Android y en el iPhone, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
       const campana = () => { try { playSound('pomodoro.end'); } catch (e) {} };
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
@@ -147,11 +147,13 @@ function FocusTimer({ onFinish }) {
 
   /* En las apps (Android y iPhone) el aviso de fin de Foco lo programa el sistema
      (ui/nativo.js), porque con la app en el fondo esta cuenta no corre. Aqui solo
-     se le dice cuando acaba el bloque en marcha, o que no hay ninguno. */
+     se le dice cuando acaba el bloque en marcha, o que no hay ninguno. Con «A tu
+     ritmo», `fin` nombra la pausa que viene, como el de la web (ritmo/ritmo.aviso.js). */
   useEffectFT(() => {
     if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
     paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
+      fin: () => (typeof ritmoAvisoFin === 'function' ? ritmoAvisoFin(getState(), t, tn, lang) : null),
       fijo: () => (typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null) });   // N4: se lee al irse al fondo
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
