@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 17:20 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 17:45 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -124,7 +124,21 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, con calma</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 5 minutos</span>
+        <span class="t">Elegir en la maqueta de lo que falta para vender</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9MnNL8b5BYWcX9Fsa7vnAa">la maqueta</a>, con
+          fotos de la app). Lo de dentro ya está hecho y con sus pruebas en verde; falta lo que se ve. Cuatro preguntas, y
+          recomiendo <b>1A 2A 3A 4A</b>:
+          <ol>
+            <li><b>El aviso del día de v1</b> a quien ya usaba PACE: A, una hoja; B, solo un aviso abajo; C, la hoja y otra
+              antes de que acabe la semana de prueba.</li>
+            <li><b>Recuperar el código de una compra</b>: A, una página y «¿Lo has perdido?» dentro de PACE; B, solo la página;
+              C, solo dentro de PACE.</li>
+            <li><b>Los botones de compra</b> en la invitación: A, como en la bienvenida; B, los dos planes lado a lado.</li>
+            <li><b>La ventana de valorar PACE</b>, también en el iPhone: A, sí; B, solo en Android.</li>
+          </ol>
+          Contesta con una línea, por ejemplo «1A 2A 3A 4A».</span></li>
+      <li class="paso luego"><span class="estado">En curso · lo tuyo, con calma</span>
         <span class="t">Stripe, para cobrar en la web</span>
         <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Primero la cuenta y pedir «vende por ti»;
           luego, en tu PC, la llave que firma las ventas; después Cloudflare y Stripe en modo de prueba, y una compra de
@@ -132,9 +146,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           gestor.</span></li>
       <li class="paso marcha"><span class="estado">En marcha · una sesión aparte, desde el 28 de octubre</span>
         <span class="t">Lo que falta para vender</span>
-        <span class="c"><span class="quien">Una sesión.</span> Pedir la valoración en Play una vez, al acabar la quinta pausa entera; que
-          nadie pierda nada el día de v1; recuperar el código de una compra; y los botones de compra en la invitación. Antes de
-          tocar lo que se ve, te enseña una maqueta para que elijas con letras.</span></li>
+        <span class="c"><span class="quien">Una sesión.</span> Lo de dentro, hecho y en verde: la valoración en Play una vez, al acabar
+          la quinta pausa entera; que nadie pierda nada el día de v1; y la búsqueda para recuperar el código de una compra.
+          Lo que se ve espera tu elección en la maqueta (arriba, el «Ahora»).</span></li>
       <li class="paso marcha"><span class="estado">En marcha · otra sesión, a la vez</span>
         <span class="t">Los avisos del iPhone y dos arreglos pequeños</span>
         <span class="c"><span class="quien">Una sesión.</span> Los cuatro fallos de avisos que Android ya no tiene, un aviso de fin que
@@ -675,6 +689,13 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           URL <code>https://pacegrass.app/api/stripe</code> y los eventos <code>checkout.session.completed</code>,
           <code>invoice.paid</code> y <code>customer.subscription.deleted</code>. Stripe te enseña un secreto que empieza por
           <code>whsec_</code>: pégalo en Cloudflare como otro secreto, <code>STRIPE_AVISO_SECRETO</code>.</span></li>
+      <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
+        <span class="t">La llave que solo lee, para recuperar códigos</span>
+        <span class="c"><span class="quien">Tú.</span> La usa la página para recuperar el código de una compra, que llega con lo que falta
+          para vender. En Stripe › <b>Desarrolladores › Claves de API › Crear clave restringida</b>: nombre «PACE recuperar» y
+          solo <b>Lectura</b> en Checkout Sessions, Cargos, PaymentIntents y Facturas; todo lo demás, «Ninguno». Empieza por
+          <code>rk_</code>: pégala en Cloudflare como otro secreto, <code>STRIPE_LECTURA</code>. Y en Configuración › Facturación ›
+          Facturas, deja la numeración <b>por cliente</b>, la que viene.</span></li>
       <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
         <span class="t">Los dos enlaces de pago y el portal</span>
         <span class="c"><span class="quien">Tú.</span> Un enlace de pago de <b>19,99 €, una vez</b>, y otro de <b>2,99 € al mes con 7
