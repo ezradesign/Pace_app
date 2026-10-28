@@ -19,6 +19,27 @@
 
 ---
 
+## «Qué te ayuda»: 1A 2A 3A (Ez, 27 oct. 2026)
+
+Lo último de pago de Estadísticas (§31.4 y §37.4 de `STATS_DESTINO_PROPUESTA.md`). Sobre la maqueta
+https://claude.ai/artifact/6e5BmLDHsLmYPqmVtX26eD (`docs/proposals/que-te-ayuda-27oct.html`), Ez eligió las tres
+recomendadas, con sus palabras: «A tres ideas + 2A + 3a».
+
+- **1A · Tres ideas.** Lo que te sienta bien (las rutinas a las que contestaste «Sí» o «Un poco» en «¿Te ayudó esta
+  pausa?»), tu hora de Foco (cuándo empiezan los Focos que terminas, y de cuántos minutos) y después del Foco (cuántos
+  tuvieron una pausa en los 15 minutos siguientes). Cada una sale sola cuando llega a su umbral. Cuenta veces, «5 de
+  6», nunca porcentajes, notas ni rachas. Al pie: «No es un consejo médico». Los Focos a medias no se apuntan, así que
+  no se dice con qué duración «te cunde» el Foco; solo cuándo lo terminas.
+- **2A · Callado antes.** «Todavía es pronto» y una frase, sin contadores ni barras. Con una o dos ideas fuera, las
+  que faltan no se nombran: «Lo demás saldrá cuando haya bastante para decirlo».
+- **3A · Una pestaña más.** «Hoy · Semana · Mes · Año · Qué te ayuda». Es de PACE completo: sin él, candado como Mes
+  y Año y la invitación sin cambiar de pestaña, que pasa a decir «Tu mes, tu año y qué te ayuda». Hasta v1 está abierta
+  para todos (`PREMIUM_ABIERTO_HASTA_V1`).
+
+Montado en v0.183.0 (rama `claude/que-te-ayuda-maqueta-6c3534`). Quedan fuera, dicho en la maqueta: el agua (no hay
+registro por vaso), la retención de Respira (invita a perseguirla) y la duración de Foco que mejor te va (haría falta
+apuntar los Focos que se dejan a medias).
+
 ## Cobrar en la web: 1A 2A 3A (Ez, 26 oct. 2026)
 
 Sobre la maqueta https://claude.ai/artifact/RE7fBBgo79RhA34a5igCoV. **1A**: la página de gracias con «Abrir PACE con tu

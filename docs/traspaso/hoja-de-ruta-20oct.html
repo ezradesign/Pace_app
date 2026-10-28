@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.181.1 · actualizada el 28 de octubre a las 10:40 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.183.0 · actualizada el 28 de octubre a las 11:40 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,8 +106,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> Las 955 pruebas en verde, ningún fallo de seguridad conocido y la web en
-        la 0.181.1. Hay dos piezas más terminadas que esperan tu sí: «Qué te ayuda» y Android a fondo.</li>
+      <li><b>La app está casi entera y sana.</b> Las 966 pruebas en verde, ningún fallo de seguridad conocido y la web en
+        la 0.183.0, ya con «Qué te ayuda». Android a fondo, terminado, espera que lo pruebes en tu móvil.</li>
       <li><b>La fecha de v1 ya no la pone el código.</b> La ponen los 12 testers de Android, que tienen que tener PACE 14 días
         seguidos (esa cuenta aún no ha empezado), y tu alta para cobrar, que piden Google, Apple y Stripe.</li>
       <li><b>Un ejemplo de fecha:</b> si hay 12 testers dentro el 4 de noviembre, los 14 días acaban el 18, y v1 podría salir a
@@ -123,12 +123,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 5 minutos</span>
-        <span class="t">Mirar las fotos de «Qué te ayuda» (0.183.0) y decir si se junta</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5">las fotos</a>, que se abren con tu otra cuenta de Claude). Lo que
-          elegiste, 1A 2A 3A: las tres ideas, «Todavía es pronto» mientras no haya bastante y su pestaña en Estadísticas. Las 966
-          pruebas, en verde. Dime «júntalo» o qué cambiar.</span></li>
-      <li class="paso luego"><span class="estado">Después · lo tuyo, un minuto</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, un minuto</span>
         <span class="t">Decir si se junta el arreglo de las pruebas que fallaban de noche</span>
         <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo.</span> No cambia nada de la app. Seis pruebas
           fallaban si GitHub las pasaba entre las 23:00 y las 24:00, porque adelantaban el reloj más allá de la medianoche:
@@ -143,7 +138,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">Darme el sí para bajar la versión nueva para Play</span>
         <span class="c"><span class="quien">Tú dices «sí»; yo la bajo y tú la subes.</span> La prueba cerrada de Play tiene la
           0.174.0, de hace una semana: sin el Mueve y el Estira nuevos, sin la bienvenida y sin la privacidad. Con las dos
-          piezas de arriba juntas, bajo el archivo a <code>subidas-play\</code> y te digo cómo subirlo. Así tus testers prueban
+          piezas juntas («Qué te ayuda» ya lo está), bajo el archivo a <code>subidas-play\</code> y te digo cómo subirlo. Así tus testers prueban
           la buena desde el primer día.</span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
         <span class="t">Buscar testers: avisar a los tuyos y publicar en LinkedIn</span>
@@ -168,7 +163,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 58 pasos</summary>
+      <summary>Lo hecho hasta hoy · 60 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -452,6 +447,15 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">Mirar a fondo cómo va todo</span>
         <span class="c"><span class="quien">Yo.</span> El código, las pruebas, GitHub, la web, la seguridad y lo que decidiste para
           v1 frente a lo que hay hecho. Lo que salió, arriba en «Cómo vamos»; el orden nuevo, en el camino de abajo.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo»</span>
+        <span class="t">Mirar las fotos de «Qué te ayuda» (0.183.0) y decir si se junta</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5">las fotos</a>, que se abren con tu otra cuenta de Claude). Lo que
+          elegiste, 1A 2A 3A: las tres ideas, «Todavía es pronto» mientras no haya bastante y su pestaña en Estadísticas. Las 966
+          pruebas, en verde.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 28 de octubre · en la app, 0.183.0</span>
+        <span class="t">Juntar «Qué te ayuda» y publicarla</span>
+        <span class="c"><span class="quien">Yo.</span> Sin ningún choque y con las 966 pruebas en verde con todo junto. En
+          /premium, la lista de PACE completo ya dice «Tu mes, tu año y qué te ayuda», como la app.</span></li>
       </ol>
     </details>
   </section>
@@ -708,14 +712,14 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>Android a fondo</b><span>Los avisos (que no suene dos veces, que no se cancele antes de llegar y que PACE sepa si lo programó), la cuenta que corre sola con el móvil bloqueado, lo privado en tu calendario del móvil y el calendario de Android, que ya dice «No se pudo» cuando falla.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">8 · Hecho (0.180.0, 27 oct.)</span>
         <b>La bienvenida y los Ajustes</b><span>Que el idioma elegido al empezar se quede, que el Atrás del móvil funcione, que volver no borre «Tu semana» y que los ajustes apagados no se cambien con el teclado. Y lo que elegiste (1C 2A 3A): una visita que explica PACE a quien llega, PACE completo al final y los Ajustes.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">9 · Hecho en su rama (0.183.0); espera tu «júntalo»</span>
+      <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">9 · Hecho (0.183.0, 28 oct.)</span>
         <b>«Qué te ayuda» en Estadísticas</b><span>Lo último de pago dentro de la app, como elegiste (1A 2A 3A): tres ideas, «Todavía es pronto» mientras no haya bastante y su pestaña con candado.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">10 · Hecho (0.181.0, 27 oct.)</span>
         <b>La hora y la medianoche, y la voz de Respira</b><span>Lo que se descuadra en la hora que se repite al cambiar el horario, un bloque que acaba justo antes de medianoche, y la voz de Respira, que si falla no deja sonar ni el tono de respaldo.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Cuando quieras · te lo enseño antes</span>
         <b>Seis ejercicios que no enseñan cómo colocarse</b><span>Si un ejercicio llega justo después de un descanso, la pantalla no dice dónde van los pies o las manos, aunque esté escrito. Al «Remo con banda» ya se lo arreglé; quedan seis. No frena v1.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera tu sí para la versión nueva</span>
-        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Con 7 y 9 juntas, subimos la nueva a las dos antes de invitar a nadie.</span></div></li>
+        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Con 7 junta (la 9 ya lo está), subimos la nueva a las dos antes de invitar a nadie.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">12 · Lo hago yo, mientras corren los 14 días</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">13 · Espera tus altas en Google y Microsoft</span>
@@ -759,7 +763,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>Tus tres «júntalo» y el sí para la versión nueva</b> (arriba, en «Paso a paso»): con eso, la prueba cerrada tiene
+        <li><b>Tus dos «júntalo» y el sí para la versión nueva</b> (arriba, en «Paso a paso»): con eso, la prueba cerrada tiene
           la versión buena antes de invitar a nadie.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de

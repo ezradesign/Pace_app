@@ -79,7 +79,7 @@ cada pieza.
 |---|---|---|
 | 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
 | 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho en su rama** (0.182.0). Espera que Ez lo pruebe en su Android y diga «júntalo» |
-| 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho en su rama** (0.183.0). Espera el «júntalo» de Ez sobre sus fotos |
+| 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho**, en `main` (0.183.0, 28 oct., con el «júntalo» de Ez sobre sus fotos) |
 | 11 | La prueba cerrada de Play con la versión que quede tras juntar 7 y 9 (hoy tiene la 0.174.0), y TestFlight con la misma (hoy, la 0.175.0) | Espera el sí de Ez para bajar el AAB, que sube Ez |
 | 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Por hacer** (código). Lo encontró la auditoría del 28 oct. |
 | 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas |
@@ -204,7 +204,7 @@ s192) y es gratis; «Semana» también es gratis, y el mes, el año y «qué te 
 (`docs/proposals/stats-*`) y [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md).
 
 **HECHA**: «Semana» como la eligió Ez el 13 oct. (v0.160.0) y «Hoy», con Mes y Año de PACE completo,
-en v0.170.0. «Qué te ayuda» sigue sin hacer; desde v0.173.0 ya puede leer `ritmo.aprendido`.
+en v0.170.0. «Qué te ayuda», en v0.183.0 (Ez, 1A 2A 3A del 27 oct.).
 
 ### FASE 5 · Cerrar con lo que hay
 

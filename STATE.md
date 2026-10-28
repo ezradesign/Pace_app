@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.181.1 · 27 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.183.0 · 28 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -31,8 +31,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 - **PACE completo**, abierto hasta v1 (`PREMIUM_ABIERTO_HASTA_V1`): toda compra pasa por
   `app/state-entitlement.jsx`, con tiendas aún vacías (`app/state-compra.js`); en la web, un código de
   por vida firmado lo abre todo. Desde v0.180.0 la bienvenida acaba en PACE completo, abierto, y en una visita
-  guiada por la home (Ez, 1C 2A 3A del 27 oct.). «Qué te ayuda» (Estadísticas) sigue sin hacer y ya puede leer
-  `ritmo.aprendido`. Los Caminos, ocultos hasta después de v1 (`SHOW_CAMINOS`).
+  guiada por la home (Ez, 1C 2A 3A del 27 oct.). «Qué te ayuda» (Estadísticas), lo último de pago, en v0.183.0
+  (Ez, 1A 2A 3A del 27 oct.): tres ideas con umbral, «Todavía es pronto» antes y su pestaña con candado. Los Caminos, ocultos hasta después de v1 (`SHOW_CAMINOS`).
 
 ## Lo siguiente
 
@@ -41,10 +41,10 @@ porqué, en la auditoría del 28 oct. (`docs/audits/auditoria-v0.181.1.md`). **L
 código**: la fijan los 12 testers de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar,
 que piden Play, Apple y Stripe. Lo inmediato:
 
-1. **Juntar, cada una con el «júntalo» de Ez**: «Qué te ayuda» 0.183.0 (`claude/que-te-ayuda-maqueta-6c3534`, sobre
-   sus fotos), Android a fondo 0.182.0 (`claude/android-a-fondo-6edf2e`, después de que Ez la pruebe en su Android) y
-   el arreglo de las pruebas que caían de noche (`claude/pruebas-medianoche`, sin versión). El orden y lo que choca,
-   en el relevo (`docs/traspaso/relevo-coordinadora-22oct.md`, el bloque del 28 oct.).
+1. **Juntar, cada una con el «júntalo» de Ez**: Android a fondo (`claude/android-a-fondo-6edf2e`, después de que Ez la
+   pruebe en su Android; hecha como 0.182.0, entra como 0.184.0 en un commit aparte de la unión) y el arreglo de las
+   pruebas que caían de noche (`claude/pruebas-medianoche`, sin versión). «Qué te ayuda» (0.183.0), en `main` desde el
+   28 oct. El orden y lo que choca, en el relevo (`docs/traspaso/relevo-coordinadora-22oct.md`, el bloque del 28 oct.).
 2. **Subir la versión juntada a la prueba cerrada de Play y a TestFlight**, que hoy tienen la 0.174.0 y la 0.175.0,
    antes de invitar a nadie. Subidas: `docs/launch/google-play/guia.html`.
 3. **El código que falta para vender** (punto 12 del ROADMAP): la valoración de Play tras la quinta pausa entera, el
@@ -69,10 +69,10 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT y
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora, tres «júntalo» y un sí**: mirar las fotos de «Qué te ayuda» (https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5,
-  de la cuenta de EcLj6…); probar Android a fondo en su Android con el APK «PACE prueba» y sus seis puntos (en
-  https://github.com/ezradesign/Pace_app/actions/runs/40580116946, `pace-android-debug`); decir si se junta el arreglo
-  de las pruebas de medianoche; y dar el sí para bajar a `subidas-play\` el AAB de la versión juntada.
+- **Ahora, dos «júntalo» y un sí**: decir si se junta el arreglo de las pruebas de medianoche; probar Android a fondo
+  en su Android con el APK «PACE prueba» y sus seis puntos (en
+  https://github.com/ezradesign/Pace_app/actions/runs/40580116946, `pace-android-debug`); y dar el sí para bajar a
+  `subidas-play\` el AAB de la versión juntada. «Qué te ayuda» ya está en `main` (0.183.0, su «júntalo» del 28 oct.).
 - **Lo que fija la fecha de v1**: con esa versión en la prueba cerrada, reunir unos 15 testers (tiene 5 o 6; `/beta`
   y el grupo están listos, falta difundirlos: `testers.md`); el gestor y el alta para cobrar; la cuenta de Stripe con
   Managed Payments (confirmar que la ofrecen en España; si no, Paddle) y los datos del aviso legal; volver a exportar el

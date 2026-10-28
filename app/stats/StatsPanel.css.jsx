@@ -70,7 +70,9 @@
          (la más alta de las tres pestañas). Con las pestañas al lado del título, cabe
          sin scroll en una ventana de 640 px de alto. */
       [data-pace-stats-vistas] { min-height: 368px; padding-top: 6px; }
-      [data-pace-stats-tabs] { flex: 0 0 360px !important; margin: 0 44px 0 0 !important; }
+      /* Con «Qué te ayuda» (v0.183.0) son cinco y, sin PACE completo, tres llevan candado: la barra
+         crece con sus nombres desde los 360 px de siempre en vez de cortarlos. */
+      [data-pace-stats-tabs] { flex: 0 0 auto !important; min-width: 360px; margin: 0 44px 0 0 !important; }
       [data-pace-stats-totales] { grid-template-columns: repeat(4, 1fr) !important; gap: 10px !important; margin-bottom: 14px !important; }
       [data-pace-month-view] [data-pace-stats-totales], [data-pace-year-view] [data-pace-stats-totales] { display: none !important; }
       .pace-heatmap-totals { display: flex !important; }
@@ -187,6 +189,57 @@
       .pace-sh-mucho .pace-sh-t { padding: 8px 10px; }
       .pace-sh-mucho .pace-sh-n { display: block; white-space: nowrap; min-height: 0; }
       .pace-sh-muchisimo { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    }
+
+    /* ══ «QUÉ TE AYUDA» (v0.183.0; Ez, 1A 2A 3A del 27 oct.) ═══════════════════
+       Cada idea, una tarjeta como las de los totales (paper-2, r-md y la franja de su módulo
+       dentro, recortada por la esquina). EN EL MÓVIL VA APRETADA A PROPÓSITO: las tres tarjetas,
+       la cabecera y el pie caben en los 472 px del suelo de las otras pestañas, así que ni pide
+       scroll ni salta al cambiar (lo mide tests/stats-ayuda.spec.js, en los dos idiomas). En el
+       ordenador, las tres en fila. «Todavía es pronto», centrado y sin cifras. */
+    .pace-ay-cab { margin: 0 2px 6px; }
+    .pace-ay-rejilla { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .pace-ay-t { position: relative; overflow: hidden; background: var(--paper-2); border-radius: var(--r-md);
+      padding: 8px 12px 7px; min-width: 0; }
+    .pace-ay-franja { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
+    .pace-ay-frase { font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.2; color: var(--ink); margin: 2px 0 1px; }
+    .pace-ay-nota { font-size: 11px; line-height: 1.35; color: var(--ink-2); margin-top: 2px; }
+    .pace-ay-fuente { font-size: 10px; color: var(--ink-3); margin-top: 3px; letter-spacing: 0.01em; }
+    .pace-ay-filas { display: grid; margin-top: 2px; }
+    .pace-ay-fila { display: flex; align-items: center; gap: 8px; min-height: 22px; border-bottom: 1px solid var(--paper-3); }
+    .pace-ay-fila:last-child { border-bottom: 0; }
+    .pace-ay-aro { flex: none; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+      background: color-mix(in srgb, var(--c) 22%, var(--paper)); border: 1.5px solid var(--c); }
+    .pace-ay-aro .pace-rt-g { width: 11px; height: 11px; }
+    .pace-ay-n { flex: 1; min-width: 0; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pace-ay-c { flex: none; font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+    .pace-ay-horas { display: flex; align-items: flex-end; gap: 3px; height: 22px; margin: 5px 0 1px; }
+    .pace-ay-horas i { flex: 1; background: var(--focus); border-radius: 2px 2px 1px 1px; min-height: 2px; opacity: 0.85; }
+    .pace-ay-horas i.pace-ay-cero { height: 2px; background: var(--line); opacity: 0.5; }
+    .pace-ay-eje { display: flex; gap: 3px; font-size: 9px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+    .pace-ay-eje span { flex: 1; text-align: center; white-space: nowrap; }
+    .pace-ay-pie { font-size: 10.5px; color: var(--ink-3); margin: 8px 2px 0; line-height: 1.4; }
+    .pace-ay-pie + .pace-ay-pie { margin-top: 2px; }
+    .pace-ay-pronto { padding: 24px 6px 10px; max-width: 30em; }
+    .pace-ay-pronto .pace-ay-frase { font-size: 22px; margin-bottom: 8px; }
+    .pace-ay-pronto p { font-size: 13px; color: var(--ink-2); line-height: 1.55; margin: 0; }
+    @media ${PACE_CORTE_ESC} {
+      .pace-ay-cab { margin-bottom: 12px; }
+      .pace-ay-rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .pace-ay-t { padding: 13px 15px 12px; }
+      .pace-ay-frase { font-size: 20px; margin: 6px 0 4px; }
+      .pace-ay-nota { font-size: 12px; margin-top: 4px; }
+      .pace-ay-fuente { font-size: 10.5px; margin-top: 8px; }
+      .pace-ay-fila { min-height: 30px; }
+      .pace-ay-aro { width: 20px; height: 20px; }
+      .pace-ay-aro .pace-rt-g { width: 12px; height: 12px; }
+      .pace-ay-n { font-size: 16px; }
+      .pace-ay-horas { height: 54px; margin-top: 10px; }
+      .pace-ay-pie { margin-top: 12px; }
+      .pace-ay-pronto { padding: 54px 6px 10px; margin: 0 auto; text-align: center; }
+      .pace-ay-pronto .pace-ay-frase { font-size: 28px; }
+      .pace-ay-pronto p { font-size: 14px; }
     }
   `;
   document.head.appendChild(s);

@@ -13,9 +13,12 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 **Si llegas de la otra cuenta, empieza aquí.** `main` sigue en 0.181.1, con estos documentos encima: la auditoría, el
 ROADMAP, STATE, este relevo, el LEEME y la hoja. Nada a medias en `main`. Esperan a Ez tres ramas, y **ninguna se junta
 sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin mi sí»).
-1. **«Qué te ayuda» (0.183.0) y Android a fondo (0.182.0)**: como dice el bloque de abajo, «AL RELEVO (27 oct.,
-   ~23:10…)», que sigue valiendo entero: el orden, lo que choca, el `node_modules` enlazado y la 0.184.0 en un commit
-   aparte.
+1. **«Qué te ayuda» (0.183.0), en `main` desde el 28 oct. a mediodía** con el «júntalo» de Ez: sin ningún choque (en `main`
+   solo había documentos), el `index.html` igual byte a byte al de la rama, y /premium ya dice «Tu mes, tu año y qué
+   te ayuda». Su worktree (con el `node_modules` enlazado: `cmd /c rmdir node_modules` antes de quitarlo) y su sesión de
+   EcLj6… (`local_a9b8f784-…`), para quitar y archivar con el sí de Ez. **Android a fondo (0.182.0)**, como dice el
+   bloque de abajo, «AL RELEVO (27 oct., ~23:10…)»: la unión se queda en 0.183.0 y sube a **0.184.0 en un commit
+   aparte**, con su línea en CHANGELOG.
 2. **`claude/pruebas-medianoche`** (bef9a7d, sin versión): el reloj de la página a `MEDIODIA` en seis archivos de
    pruebas, y una regla nueva en `scripts/verify.pruebas.js`. El CI de cee0095 cayó en `caza-sesiones` («la hora
    oculta», 1 esperado y 0 recibido) porque corrió a las 23:07: lo que esas pruebas adelantan cruzaba la medianoche, y
@@ -477,8 +480,7 @@ huecos.
    con la A de Ez, el puente del calendario con S6 y lo privado en el calendario del móvil. Espera que Ez lo pruebe en su
    Android y diga «júntalo».
 8. ~~La bienvenida y los Ajustes~~ **HECHO** (0.180.0, 27 oct., con el 1C 2A 3A de Ez).
-9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO en su rama** (0.183.0, `claude/que-te-ayuda-maqueta-6c3534`, con el 1A 2A
-   3A de Ez). Espera su «júntalo» sobre las fotos.
+9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO** (0.183.0, en `main` el 28 oct., con el 1A 2A 3A de Ez y su «júntalo»).
 10. ~~La hora y la medianoche, y la voz de Respira~~ **HECHO** (0.181.0, 27 oct.).
 11. **La prueba cerrada de Play y TestFlight con la versión que quede tras juntar 7 y 9** (hoy tienen la 0.174.0 y la
    0.175.0), antes de invitar testers. Espera el sí de Ez para bajar el AAB, que sube Ez.

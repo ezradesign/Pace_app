@@ -2,7 +2,16 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.181.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.183.0.
+
+## 28 oct.: «Qué te ayuda» (v0.183.0), en `main` con el «júntalo» de Ez
+
+La pestaña «Qué te ayuda» de Estadísticas, con el 1A 2A 3A de Ez (tres ideas con umbral, «Todavía es pronto» antes y
+su candado sin PACE completo), juntada el 28 oct. desde `claude/que-te-ayuda-maqueta-6c3534` sin ningún choque: en
+`main` solo había documentos. El `index.html` juntado es igual byte a byte al de la rama. En la unión, /premium pasa a
+decir «Tu mes, tu año y qué te ayuda», como la invitación de la app. Lo técnico, en la fila de v0.183.0 de
+`DECISIONES_TECNICAS_VIGENTES.md`. Siguen esperando a Ez Android a fondo (entra como 0.184.0) y
+`claude/pruebas-medianoche`.
 
 ## 28 oct., mañana: la auditoría de v0.181.1, y el arreglo de las pruebas que caían de noche, a la espera de Ez
 
