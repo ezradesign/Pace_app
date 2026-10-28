@@ -8217,6 +8217,7 @@ function completeBreathSession(routineId, durationMin, holdSec, evento, entera) 
   });
   if (entera === false) updateStreak(false);else
   logrosDeRespira(routineId);
+  if (typeof paceValoracionPausa === 'function') paceValoracionPausa(entera);
 
 
 
@@ -8281,6 +8282,7 @@ function completeMoveSession(routineId, durationMin, evento, entera) {
   });
   if (entera === false) updateStreak(false);else
   logrosDeMueve(routineId);
+  if (typeof paceValoracionPausa === 'function') paceValoracionPausa(entera);
   if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
@@ -8311,6 +8313,7 @@ function completeExtraSession(routineId, durationMin, evento, entera) {
   });
   if (entera === false) updateStreak(false);else
   logrosDeEstira(routineId);
+  if (typeof paceValoracionPausa === 'function') paceValoracionPausa(entera);
 
 
   if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
@@ -17601,6 +17604,102 @@ Object.assign(window, {
   paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
 });
 ;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
+})();
+</script>
+  <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
+       entera (Ez, 15 oct.). La llaman las complete*Session; habla con la tienda por nativo. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   valoracion.js — LA VENTANA PARA VALORAR PACE EN LA TIENDA, UNA SOLA VEZ
+   ============================================================
+   Ez, 15 oct. 2026 («Cómo se vende PACE completo», punto 6): la valoración se pide una
+   sola vez, con la ventana de la tienda (en Android, la In-App Review de Google Play), al
+   terminar la quinta pausa entera. Google no dice si la persona valoró o la cerró, así
+   que no se vuelve a lanzar nunca. Nunca en la bienvenida ni en la web.
+
+   LA CUENTA. Una pausa entera es una Respira, un Mueve o un Estira que llegó a su final:
+   la misma que da logros (`entera`, state-achievements.jsx). La que se termina antes o
+   salta un ejercicio no cuenta, y «Un momento para moverte» tampoco (no es una pausa).
+   Se cuenta desde la versión que trae esto y solo donde hay ventana que abrir: en la web
+   el estado no apunta nada.
+
+   EL MOMENTO. Con la quinta, la ventana espera a que no haya nada delante: ni la pantalla
+   final de la pausa (con su «¿Te ayudó?»), ni otro diálogo, ni el aviso de un sello, ni
+   PACE en el fondo. Si PACE se cierra antes, sale al terminar la siguiente pausa entera.
+
+   UNA SOLA VEZ: `valoracion.pedida` se apunta ANTES de llamar a la tienda, porque la tienda
+   no contesta si salió (PaceValoracion.java).
+
+   `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+var PACE_VALORACION_PAUSAS = 5;
+
+var PACE_VALORACION_PLATAFORMAS = ['android'];
+
+var PACE_VALORACION_ESPERA_MS = 10 * 60 * 1000;
+var _paceValoracion = { espera: null };
+
+function paceValoracionPlugin() {
+  try {
+    if (PACE_VALORACION_PLATAFORMAS.indexOf(pacePlataformaNativa()) === -1) return null;
+    var p = paceNativoPlugin('PaceValoracion');
+    return p && typeof p.pedir === 'function' ? p : null;
+  } catch (e) {return null;}
+}
+
+function paceValoracionEstado() {
+  var s = typeof getState === 'function' ? getState() : null;
+  var v = s && s.valoracion;
+  return v && typeof v === 'object' && !Array.isArray(v) ? v : { pausas: 0, pedida: null };
+}
+
+
+function paceValoracionPausa(entera) {
+  try {
+    if (entera === false || !paceValoracionPlugin()) return;
+    var v = paceValoracionEstado();
+    if (v.pedida) return;
+    var n = (Number(v.pausas) || 0) + 1;
+    setState({ valoracion: { pausas: n, pedida: null } });
+    if (n >= PACE_VALORACION_PAUSAS) paceValoracionEsperar();
+  } catch (e) {}
+}
+
+
+function paceValoracionDelante() {
+  if (document.hidden) return true;
+  return !!document.querySelector('[data-pace-session-root], [role="dialog"], [data-pace-toast]');
+}
+
+function paceValoracionEsperar() {
+  if (_paceValoracion.espera) return;
+  var desde = Date.now();
+  _paceValoracion.espera = setInterval(function () {
+    if (paceValoracionDelante() && Date.now() - desde < PACE_VALORACION_ESPERA_MS) return;
+    clearInterval(_paceValoracion.espera);
+    _paceValoracion.espera = null;
+    if (!paceValoracionDelante()) paceValoracionPedir();
+  }, 500);
+}
+
+function paceValoracionPedir() {
+  try {
+    var v = paceValoracionEstado();
+    if (v.pedida || (Number(v.pausas) || 0) < PACE_VALORACION_PAUSAS) return;
+    var p = paceValoracionPlugin();
+    if (!p) return;
+    setState({ valoracion: { pausas: v.pausas, pedida: Date.now() } });
+    Promise.resolve(p.pedir()).catch(function () {});
+  } catch (e) {}
+}
+
+Object.assign(window, { paceValoracionPausa, paceValoracionPedir, PACE_VALORACION_PAUSAS, PACE_VALORACION_PLATAFORMAS });
+;Object.assign(window, { PACE_VALORACION_PAUSAS, PACE_VALORACION_PLATAFORMAS, PACE_VALORACION_ESPERA_MS, _paceValoracion, paceValoracionPlugin, paceValoracionEstado, paceValoracionPausa, paceValoracionDelante, paceValoracionEsperar, paceValoracionPedir });
 })();
 </script>
   <!-- pantalla (s198): Screen Wake Lock mientras hay una sesion guiada montada.
