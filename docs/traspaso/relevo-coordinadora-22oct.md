@@ -41,6 +41,12 @@ sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin mi sí»).
 6. **Para limpiar, con el sí de Ez**: 16 ramas locales y 16 en GitHub ya juntadas, y 7 worktrees de ramas juntadas
    (`beta-testers`, `caza-sesiones`, `logros-creditos`, `magical-robinson`, `maqueta-inicio`, `beautiful-perlman` y
    `happy-allen`), con copia en un bundle, como el 27 oct. `calendario-reescrita` y `play-rutina-subidas` se guardan.
+7. **Cloudflare Pages falló al publicar 4dfd4db y c42ab77** («Build failed», a los 19 y a los 7 min, cuando los buenos
+   tardan unos 35 s). No es el código: entre cee0095, que publicó bien, y 4dfd4db no cambió nada de lo que se publica,
+   y `node scripts/web-dist.js` funciona aquí (269 archivos, 13,2 MB). Ese día Cloudflare tenía abiertas incidencias
+   de red en Ashburn y de Durable Objects. La web siguió en 0.181.1 con `main` en 0.183.0. Se reintenta con el
+   siguiente push a `main` o con «Retry deployment» en el panel de Pages (proyecto `paceweb`, de Ez). Antes de dar
+   una versión por publicada, mirar `sw.js` en pacegrass.app y el check «Cloudflare Pages» del commit.
 
 ## AL RELEVO (27 oct., ~23:10 en España; cuenta de EcLj6… con las 5 h al 91 % y la semana al 24 %; se repone a la 01:10)
 
