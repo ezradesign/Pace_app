@@ -30,7 +30,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
@@ -39,7 +39,7 @@ async function segundos(page, n) {
 }
 
 async function abrirRondas(page) {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /^Respira/ }).click();
   await page.getByRole('heading', { name: 'Rondas express', exact: true }).click();

@@ -15,7 +15,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { MEDIODIA, sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 const EN = { lang: 'en' };
 
@@ -60,7 +60,7 @@ test('ingles-2 · en inglés la voz habla inglés, nunca castellano', async ({ p
 /* ingles-3 */
 test('ingles-3 · arriba dice Break y Long break, y con un Foco empezado pregunta antes de cambiar', async ({ page, context }) => {
   await sembrar(context, EN);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   const tabs = page.locator('[data-pace-tabs] button');
   await expect(tabs).toHaveText(['Focus', 'Break', 'Long break']);
@@ -211,7 +211,7 @@ async function hastaLaPausa(page, context, estado) {
   }, estado);
   /* Sin hora fija: el guion de arriba corre antes que el reloj falso y fecha
      `lastActiveDay` con el día de verdad. */
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Start focus', exact: true }).click();
   await page.waitForTimeout(250);
@@ -269,7 +269,7 @@ test('ingles-14 · el sello se llama «stamp» en todas partes', async ({ page, 
 /* ingles-15 */
 test('ingles-15 · el cierre pregunta «Did this break help?»', async ({ page, context }) => {
   await sembrar(context, EN);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirBiblioteca(page, 'Breathe');
   await page.getByRole('heading', { name: 'Physiological Sigh', exact: true }).first().click();

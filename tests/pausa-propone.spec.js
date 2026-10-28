@@ -22,7 +22,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { irAlArtefacto } = require('./helpers');
+const { MEDIODIA, irAlArtefacto } = require('./helpers');
 
 /* Siembra un estado ANTES de cargar: el menu lee `focusMinutes`, `cycle`, el
    plan y el agua, y todos vienen de `pace.state.v2`. */
@@ -47,7 +47,7 @@ const sembrarEstado = (context, extra) => context.addInitScript((e) => {
    «Start focus» con la app en ingles, asi que un nombre fijo en castellano no
    lo encuentra y el test moria antes de llegar a la pausa. */
 async function hastaLaPausa(page, minutos, cta, desde) {
-  await page.clock.install(desde ? { time: desde } : undefined);
+  await page.clock.install({ time: desde || MEDIODIA });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: cta || 'Empezar foco', exact: true }).click();
   await page.waitForTimeout(250);
@@ -105,7 +105,7 @@ test('la propuesta NO hace crecer el modal · 360x640', async ({ page, context, 
     colorScheme: usa.colorScheme, viewport: { width: 360, height: 640 } });
   await sembrarEstado(context2, {});
   const page2 = await context2.newPage();
-  await page2.clock.install();
+  await page2.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page2);
   await page2.setViewportSize({ width: 360, height: 640 });
   await page2.evaluate(() => {

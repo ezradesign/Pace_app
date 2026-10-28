@@ -9,7 +9,8 @@
  * `page.clock.setSystemTime`, que mueve la hora sin disparar ningún
  * temporizador; después, `runFor` deja correr la página otra vez.
  *
- * TRAMPAS: `clock.install()` va antes de `goto` · `fastForward` dispara cada
+ * TRAMPAS: `clock.install()` va antes de `goto`, y a `MEDIODIA` (tests/helpers.js) para que
+ * dormir una hora no cruce la medianoche · `fastForward` dispara cada
  * temporizador una sola vez, así que se avanza con `runFor` de segundo en
  * segundo · la semilla lleva las marcas de las migraciones de s69: sin ellas,
  * el primer guardado escribe la marca en falso y la siguiente lectura corre la
@@ -18,7 +19,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 const MARCAS = { _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true };
 
@@ -40,7 +41,7 @@ function visibilidad(page, estado) {
 }
 const sesion = (page) => page.locator('[data-pace-session-root]');
 const leerEstado = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2') || '{}'));
-const hoy = (lista) => (lista || [])[(new Date().getDay() + 6) % 7] || 0;
+const hoy = (lista) => (lista || [])[(MEDIODIA.getDay() + 6) % 7] || 0;
 async function sesiones(page) {
   await page.waitForFunction(() => typeof window.eventsWebReadRaw === 'function');
   return page.evaluate(async () => {
@@ -82,7 +83,7 @@ const tiempoDelCierre = async (page) => {
 /* ---------------------------------------------------------------- sesiones-1 */
 test('Respira no cuenta como practicado el rato con el equipo dormido', async ({ page }) => {
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirRespira(page, 'Box 4·4·4·4');
   await segundos(page, 3 + 30);
@@ -100,7 +101,7 @@ test('Respira no cuenta como practicado el rato con el equipo dormido', async ({
 });
 
 test('Respira: la retención tampoco cuenta el rato dormido', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirRespira(page, 'Rondas express');
   const hold = page.locator('[data-pace-breathe-round-label]');
@@ -120,7 +121,7 @@ test('una pausa larga en Mueve no suma sus minutos a la semana', async ({ page }
   /* Veinte minutos de reloj virtual con la sesión montada son ~50 s reales a solas: con la
      suite entera el minuto de serie se queda corto. */
   test.setTimeout(120_000);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
   await segundos(page, 5 + 40);   // más de medio minuto, o no cuenta (sesiones-7)
@@ -134,7 +135,7 @@ test('una pausa larga en Mueve no suma sus minutos a la semana', async ({ page }
 /* Estira con «Postura reset»: cuatro pasos y el primero de repeticiones con colocación, la forma que
    tenía «Cuello» hasta v0.176.0 (ahora «Cuello suave», de tres pasos). */
 test('con la página oculta una hora (la sesión en pausa), Estira no suma esa hora', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await segundos(page, 5 + 40);
@@ -150,7 +151,7 @@ test('con la página oculta una hora (la sesión en pausa), Estira no suma esa h
 /* ---------------------------------------------------------------- sesiones-3 */
 test('si la página se oculta en «Prepárate», Estira no se hace sola: arranca en pausa', async ({ page }) => {
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await segundos(page, 1);
@@ -169,7 +170,7 @@ test('si la página se oculta en «Prepárate», Estira no se hace sola: arranca
 
 /* ---------------------------------------------------------------- sesiones-4 */
 test('con el equipo dormido, Estira se queda en pausa en el mismo paso y no lo cuenta', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   const reloj = sesion(page).locator('[data-pace-v1-timer]');
@@ -194,7 +195,7 @@ test('con el equipo dormido, Estira se queda en pausa en el mismo paso y no lo c
 
 /* ---------------------------------------------------------------- sesiones-5 */
 test('el tiempo del cierre de Mueve no sigue corriendo al contestar «¿te ayudó?»', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
   await segundos(page, 5 + 40);
@@ -227,7 +228,7 @@ test('dos pestañas: la segunda no ofrece seguir una Respira que sigue viva en l
 /* ------------------------------------------------- sesiones-7 (Ez eligió A) */
 test('«Terminar» a los pocos segundos no cuenta, y el cierre dice «Sesión sin contar»', async ({ page }) => {
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   /* Tres veces seguidas: antes daban tres logros (Primer aliento, explorar Box, Lluvia). */
   for (let i = 0; i < 3; i++) {
@@ -259,7 +260,7 @@ test('«Terminar» a los pocos segundos no cuenta, y el cierre dice «Sesión si
 });
 
 test('saltar todos los pasos de Estira no cuenta ni hace el plan del día', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
@@ -274,7 +275,7 @@ test('saltar todos los pasos de Estira no cuenta ni hace el plan del día', asyn
 /* ------------------------------------------------- sesiones-8 (Ez eligió A) */
 test('el «Tiempo» del cierre de Mueve deja fuera las pausas, como la semana', async ({ page }) => {
   test.setTimeout(120_000);   // la pausa de 20 minutos, como en sesiones-2
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
   await segundos(page, 5 + 40);
@@ -294,7 +295,7 @@ const tarjeta = (p) => p.locator('[data-pace-sidebar-accion]');
 
 test('recargar a mitad de Estira deja «Continúa · Paso 2 de 4», y se sigue por ese paso con lo hecho', async ({ page }) => {
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   await segundos(page, 5 + 60);
@@ -324,7 +325,7 @@ test('recargar a mitad de Estira deja «Continúa · Paso 2 de 4», y se sigue p
 });
 
 test('«Salir» a mitad de Mueve también la deja para seguir, con lo hecho', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
   await segundos(page, 5 + 40);
