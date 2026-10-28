@@ -41,7 +41,8 @@
    ============================================================ */
 
 var PACE_PASO_V1_DIAS = 7;
-var _pacePasoV1 = { calculando: false };
+/* `promesa`: la del cálculo en marcha, para quien llegue mientras se hace (la hoja del aviso). */
+var _pacePasoV1 = { calculando: false, promesa: null };
 
 /* El registro de `pasoV1`, o null si no hay (o no tiene forma). */
 function pacePasoV1Leer() {
@@ -104,14 +105,15 @@ function pacePasoV1Catalogo() {
 /* EL PASO, al arrancar. Devuelve una promesa (las pruebas la esperan) con el registro. */
 function pacePasoV1() {
   try {
-    if (window.PREMIUM_ABIERTO_HASTA_V1 === true || pacePasoV1Leer() || _pacePasoV1.calculando) return Promise.resolve(pacePasoV1Leer());
+    if (_pacePasoV1.calculando && _pacePasoV1.promesa) return _pacePasoV1.promesa;
+    if (window.PREMIUM_ABIERTO_HASTA_V1 === true || pacePasoV1Leer()) return Promise.resolve(pacePasoV1Leer());
     var at = Date.now();
     if (!pacePasoV1UsabaPace(getState())) {
       setState({ pasoV1: { at: at, previo: false } });
       return Promise.resolve(pacePasoV1Leer());
     }
     _pacePasoV1.calculando = true;
-    return Promise.all([pacePasoV1Sesiones(), pacePasoV1Catalogo()]).then(function (x) {
+    _pacePasoV1.promesa = Promise.all([pacePasoV1Sesiones(), pacePasoV1Catalogo()]).then(function (x) {
       _pacePasoV1.calculando = false;
       if (x[1] && !pacePasoV1Leer()) {
         setState({ pasoV1: { at: at, previo: true, hasta: at + PACE_PASO_V1_DIAS * 86400000,
@@ -119,6 +121,7 @@ function pacePasoV1() {
       }
       return pacePasoV1Leer();
     }, function () { _pacePasoV1.calculando = false; return null; });
+    return _pacePasoV1.promesa;
   } catch (e) {
     _pacePasoV1.calculando = false;
     return Promise.resolve(null);
@@ -130,6 +133,12 @@ function pacePruebaV1Vigente() {
   if (_pacePasoV1.calculando) return true;
   var r = pacePasoV1Leer();
   return !!(r && r.previo && typeof r.hasta === 'number' && Date.now() < r.hasta);
+}
+
+/* Cuándo acaba la semana de prueba (ms), solo mientras dura; si no, null. Lo cuenta Ajustes. */
+function pacePruebaV1Hasta() {
+  var r = pacePasoV1Leer();
+  return r && r.previo && typeof r.hasta === 'number' && Date.now() < r.hasta ? r.hasta : null;
 }
 
 /* ¿Es esta una de las rutinas de pago que se le quedan? */
@@ -156,6 +165,6 @@ function pacePasoV1Avisado() {
 try { pacePasoV1(); } catch (e) {}
 
 Object.assign(window, {
-  PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePasoV1Conserva,
+  PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
   pacePasoV1PorAvisar, pacePasoV1Avisado,
 });

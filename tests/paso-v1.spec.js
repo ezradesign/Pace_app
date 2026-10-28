@@ -17,16 +17,21 @@
  *    las gratis. Pasada la semana, solo esas.
  *  · Se fija una sola vez: lo que se hace después no entra, y recargar no la vuelve a calcular.
  *  · Quien instala ya en v1 no recibe semana ni lista.
+ *  · La hoja del día de v1 (Ez, 1A del 28 oct.): una vez al abrir PACE y sin una sesión delante,
+ *    con los siete días y su fecha, las que se quedan con su módulo, «Lo gratis sigue gratis» y
+ *    solo «Entendido»; con muchas, cinco y «Y n más». Y en Ajustes, «Prueba hasta el …» mientras
+ *    dura la semana.
  * Contra v0.184.0 caen todas menos la primera (el control): no hay `pasoV1`.
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, esperarEnPagina, MEDIODIA } = require('./helpers');
+const { sembrar, irAlArtefacto, esperarEnPagina, abrirTusDatos, MEDIODIA } = require('./helpers');
 
 test.use({ serviceWorkers: 'block' });
 
 const DIA = 24 * 3600 * 1000;
+const HOJA = '[data-pace-premium-hoja="pasov1"]';
 
 /* Desde que la prueba pone `prueba.v1`, cada arranque es de v1. */
 async function comoEnV1(context) {
@@ -125,7 +130,9 @@ test.describe('el paso a v1', () => {
     await page.reload();
     await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
     await page.waitForTimeout(800);
-    expect(await page.evaluate(() => window.getState().pasoV1)).toEqual(antes);
+    /* Lo único que cambia es `avisado`, que apunta la hoja del día de v1 al salir. */
+    const sin = (r) => Object.assign({}, r, { avisado: null });
+    expect(sin(await page.evaluate(() => window.getState().pasoV1))).toEqual(sin(antes));
   });
 
   test('quien instala ya en v1 no recibe semana ni lista', async ({ page, context }) => {
@@ -146,8 +153,135 @@ test.describe('el paso a v1', () => {
     await sembrar(context, USABA);
     await irAlArtefacto(page);
     await pasarAV1(page);
-    expect(await page.evaluate(() => !!window.pacePasoV1PorAvisar())).toBe(true);
-    await page.evaluate(() => { window.hasPremiumEntitlement = () => true; });
-    expect(await page.evaluate(() => window.pacePasoV1PorAvisar())).toBeNull();
+    /* En una sola vuelta: la hoja puede haber salido ya y haberlo apuntado. */
+    const r = await page.evaluate(() => {
+      const p = window.getState().pasoV1;
+      window.setState({ pasoV1: Object.assign({}, p, { avisado: false }) });
+      const sin = !!window.pacePasoV1PorAvisar();
+      window.hasPremiumEntitlement = () => true;
+      return { sin, con: window.pacePasoV1PorAvisar() };
+    });
+    expect(r).toEqual({ sin: true, con: null });
+  });
+});
+
+test.describe('la hoja del día de v1 (1A)', () => {
+  test('sale una vez al abrir PACE: los siete días, las que se quedan con su módulo y solo «Entendido»; Ajustes dice hasta cuándo', async ({ page, context }) => {
+    await page.clock.install({ time: MEDIODIA });
+    await comoEnV1(context);
+    await sembrar(context, USABA);
+    await irAlArtefacto(page);
+    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', true]]);
+    await pasarAV1(page);
+
+    const hoja = page.locator(HOJA);
+    await expect(hoja).toBeVisible({ timeout: 8000 });
+    const r = await page.evaluate(() => window.getState().pasoV1);
+    expect(r.avisado, 'se apunta al abrirla: no vuelve a salir').toBe(true);
+    const fechas = await page.evaluate((h) => ({
+      larga: new Date(h).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }),
+      corta: new Date(h).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }),
+    }), r.hasta);
+    await expect(hoja.getByRole('heading')).toHaveText('Siete días de PACE completo');
+    await expect(hoja).toContainText('Como ya usabas PACE, lo tienes entero hasta el ' + fechas.larga + ', sin tarjeta y sin pagar nada.');
+    await expect(hoja).toContainText('Y estas se quedan tuyas para siempre, porque ya las hiciste:');
+    /* Por módulo: Respira, Mueve y Estira. Los ids de Mueve son `extra.*` y los de Estira, `move.*`. */
+    const filas = hoja.locator('[data-pace-pasov1-rutina]');
+    expect(await filas.evaluateAll((li) => li.map((x) => [x.getAttribute('data-pace-pasov1-rutina'), x.lastElementChild.textContent])))
+      .toEqual([['breathe.rounds.full', 'Respira'], ['extra.hang.bar', 'Mueve'], ['move.couch.stretch', 'Estira']]);
+    await expect(filas.nth(1)).toContainText('Colgarse');
+    await expect(hoja).toContainText('Lo gratis sigue gratis.');
+    /* No vende nada: un solo botón y ningún enlace. */
+    await expect(hoja.getByRole('button')).toHaveText(['Entendido']);
+    await expect(hoja.locator('a')).toHaveCount(0);
+    await hoja.getByRole('button', { name: 'Entendido' }).click();
+    await expect(hoja).toHaveCount(0);
+
+    /* Ajustes › Tus datos, mientras dura la semana. */
+    await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+    await abrirTusDatos(page);
+    await expect(page.locator('[data-pace-licencia-prueba]')).toHaveText('Prueba hasta el ' + fechas.corta);
+
+    /* Una sola vez: al volver a abrir PACE, nada. */
+    await page.reload();
+    await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+    await page.waitForTimeout(2500);
+    await expect(hoja).toHaveCount(0);
+
+    /* Pasada la semana, la fila vuelve a la de siempre. */
+    await page.clock.fastForward(7 * DIA + 60000);
+    await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+    await abrirTusDatos(page);
+    await expect(page.locator('[data-pace-licencia-prueba]')).toHaveCount(0);
+    await expect(page.locator('[data-pace-tweaks-panel]')).toContainText('Introducir código');
+  });
+
+  test('con una sesión delante no sale: espera a que se cierre', async ({ page, context }) => {
+    await page.clock.install({ time: MEDIODIA });
+    await comoEnV1(context);
+    /* La pantalla de una sesión, desde el arranque del día de v1. */
+    await context.addInitScript(() => {
+      if (localStorage.getItem('prueba.sesion') !== '1') return;
+      document.addEventListener('DOMContentLoaded', () => {
+        const s = document.createElement('div');
+        s.setAttribute('data-pace-session-root', '');
+        s.setAttribute('data-pace-prueba-sesion', '');
+        document.body.appendChild(s);
+      });
+    });
+    await sembrar(context, USABA);
+    await irAlArtefacto(page);
+    await page.evaluate(() => localStorage.setItem('prueba.sesion', '1'));
+    await pasarAV1(page);
+    await page.waitForTimeout(3000);
+    await expect(page.locator(HOJA)).toHaveCount(0);
+    expect((await page.evaluate(() => window.getState().pasoV1)).avisado).toBe(false);
+
+    await page.evaluate(() => document.querySelector('[data-pace-prueba-sesion]').remove());
+    await page.clock.fastForward(61000);
+    await expect(page.locator(HOJA)).toBeVisible();
+  });
+
+  test('en inglés, y con muchas: cinco y «And n more»', async ({ page, context }) => {
+    const MUEVE = ['extra.core.stealth', 'extra.banda.espalda', 'extra.hang.bar', 'extra.push.ladder', 'extra.wall.sit', 'extra.legs.single', 'extra.core.plank'];
+    const cuentas = {};
+    MUEVE.forEach((id) => { cuentas['rutina.' + id] = 1; });
+    await comoEnV1(context);
+    await sembrar(context, Object.assign({}, USABA, { lang: 'en', routineCounts: cuentas }));
+    await irAlArtefacto(page);
+    await pasarAV1(page);
+    expect((await page.evaluate(() => window.getState().pasoV1)).rutinas.length, 'las siete son de pago').toBe(7);
+
+    const hoja = page.locator(HOJA);
+    await expect(hoja).toBeVisible({ timeout: 8000 });
+    await expect(hoja.getByRole('heading')).toHaveText('Seven days of PACE Complete');
+    await expect(hoja).toContainText('Since you were already using PACE, you have all of it until ');
+    await expect(hoja.locator('[data-pace-pasov1-rutina]')).toHaveCount(5);
+    await expect(hoja.locator('[data-pace-pasov1-rutina]').first()).toContainText('Move');
+    await expect(hoja.locator('[data-pace-pasov1-mas]')).toHaveText('And 2 more, yours too.');
+    await expect(hoja).toContainText('What is free stays free.');
+    await expect(hoja.getByRole('button')).toHaveText(['Got it']);
+  });
+});
+
+test.describe('la hoja del día de v1 en un móvil', () => {
+  test.use({ viewport: { width: 360, height: 740 } });
+
+  test('a 360 px cabe entera, sin scroll dentro', async ({ page, context }) => {
+    await comoEnV1(context);
+    await sembrar(context, Object.assign({}, USABA, { sidebarCollapsed: true }));
+    await irAlArtefacto(page);
+    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', true]]);
+    await pasarAV1(page);
+    await expect(page.locator(HOJA)).toBeVisible({ timeout: 8000 });
+    await page.waitForTimeout(400);
+    const m = await page.locator('[data-pace-modal-card]').evaluate((c) => {
+      const r = c.getBoundingClientRect();
+      return { arriba: r.top, abajo: r.bottom, dentro: c.scrollHeight - c.clientHeight, ancho: document.documentElement.scrollWidth };
+    });
+    expect(m.arriba).toBeGreaterThanOrEqual(0);
+    expect(m.abajo).toBeLessThanOrEqual(740);
+    expect(m.dentro).toBeLessThanOrEqual(1);
+    expect(m.ancho).toBeLessThanOrEqual(360);
   });
 });

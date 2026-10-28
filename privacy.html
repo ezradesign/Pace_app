@@ -219,6 +219,12 @@
       borra cuando termina.</li>
       <li>Tu código abre PACE completo y se guarda en tu navegador, como lo demás. Para
       comprobarlo, PACE no se conecta a nada.</li>
+      <li id="recuperar">Si lo pierdes, en <strong>pacegrass.app/recuperar</strong> escribes el
+      correo con el que pagaste y el número del recibo: la web los manda a Stripe para
+      buscar tu compra y te vuelve a dar el código, y no guarda ni el correo ni el
+      recibo. Para que nadie pruebe números a ciegas, cuenta los intentos desde una
+      misma conexión, diez por hora como mucho, con un código hecho con tu IP, no la
+      IP, que se borra solo a la hora.</li>
       <li>Si pagas al mes, cuando se acerca el final de cada mes pagado la app pide a
       la web de PACE tu código nuevo (como mucho una vez cada seis horas, hasta que
       llega). Manda solo el código que tienes, nada de tu práctica. Es la única vez
@@ -403,6 +409,12 @@
       while it lasts, deleted when it ends.</li>
       <li>Your code unlocks PACE Complete and is stored in your browser, like
       everything else. To check it, PACE connects to nothing.</li>
+      <li id="recuperar-en">If you lose it, at <strong>pacegrass.app/recuperar</strong> you type
+      the email you paid with and the receipt number: the website sends them to Stripe
+      to find your purchase and gives you the code again, and it keeps neither the
+      email nor the receipt. So that nobody tries numbers blindly, it counts the tries
+      from one connection, ten an hour at most, with a code made from your IP, not the
+      IP, which deletes itself after an hour.</li>
       <li>If you pay monthly, as each paid month nears its end the app asks the PACE
       website for your new code (at most once every six hours, until it arrives). It
       sends only the code you have, nothing about your practice. It is the only time

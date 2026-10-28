@@ -11,7 +11,8 @@
    · sin código, en la web: «PACE completo · Introducir código», que abre la
      invitación con el campo ya puesto;
    · en Android: «PACE completo · pronto». Allí no se canjean códigos propios
-     (state-licencia.js); llegará la compra de Google Play. */
+     (state-licencia.js); llegará la compra de Google Play.
+   Y desde v1, mientras dura la semana de quien ya usaba PACE, «Prueba hasta el …». */
 
 /* La fecha del código: el de los testers lleva el día («YYYY-MM-DD»); el de la mensual, milisegundos. */
 function premiumFechaTexto(datos, lang) {
@@ -53,6 +54,18 @@ function PremiumSection() {
           </AjustesAccion>
         )}
       </React.Fragment>
+    );
+  }
+  /* LA SEMANA DEL PASO A v1 (Ez, 1A del 28 oct. 2026): mientras dura, la fila dice hasta
+     cuándo. En la web se sigue pudiendo poner un código desde aquí. */
+  const prueba = window.pacePruebaV1Hasta ? window.pacePruebaV1Hasta() : null;
+  if (prueba) {
+    const f = new Date(prueba).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+    return (
+      <AjustesAccion onClick={permitida ? () => paceAbrirPremium({ modo: 'codigo' }) : undefined}
+        derecha={<span data-pace-licencia-estado data-pace-licencia-prueba style={{ color: 'var(--focus)' }}>{tn('premium.settings.prueba', { fecha: f })}</span>}>
+        {t('premium.name')}
+      </AjustesAccion>
     );
   }
   if (est.estado === 'caducado' && permitida) {

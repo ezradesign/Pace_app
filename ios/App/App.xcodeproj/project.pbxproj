@@ -18,6 +18,7 @@
 		9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9582B6822FE993A50072D4E8 /* SceneDelegate.swift */; };
 		7ACE00000000000000000001 /* PaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000002 /* PaceViewController.swift */; };
 		7ACE00000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */; };
+		7ACE00000000000000000005 /* PaceValoracion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000006 /* PaceValoracion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		7ACE00000000000000000002 /* PaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceViewController.swift; sourceTree = "<group>"; };
 		7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7ACE00000000000000000006 /* PaceValoracion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceValoracion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			children = (
 				9582B6822FE993A50072D4E8 /* SceneDelegate.swift */,
 				7ACE00000000000000000002 /* PaceViewController.swift */,
+				7ACE00000000000000000006 /* PaceValoracion.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */,
@@ -169,6 +172,7 @@
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */,
 				7ACE00000000000000000001 /* PaceViewController.swift in Sources */,
+				7ACE00000000000000000005 /* PaceValoracion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -148,7 +148,7 @@ const PAGINA = {
           hasTouch: movil, locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light' });
         const page = await ctx.newPage();
         if (resp) await page.route('**/api/recuperar', (r) => r.fulfill({ status: resp.status, contentType: 'application/json', body: JSON.stringify(resp.body) }));
-        await page.goto(BASE + '/docs/traspaso/archivos/vender-punto-12/recuperar.html');
+        await page.goto(BASE + '/recuperar/'); // el borrador ya es la página
         await page.waitForTimeout(400);
         if (resp) {
           await page.fill('[data-recuperar-correo]', 'quien@correo.com');

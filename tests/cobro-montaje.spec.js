@@ -133,7 +133,7 @@ test.describe('1A · la página de gracias', () => {
     const raiz = require('path').join(__dirname, '..');
     const fs = require('fs');
     expect(fs.readFileSync(require('path').join(raiz, 'scripts', 'android-www.js'), 'utf8')).not.toMatch(/gracias/);
-    expect(fs.readFileSync(require('path').join(raiz, 'scripts', 'web-dist.js'), 'utf8')).toContain("const WEB_CARPETAS = ['premium', 'beta', 'gracias'];");
+    expect(fs.readFileSync(require('path').join(raiz, 'scripts', 'web-dist.js'), 'utf8')).toContain("const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar'];");
   });
 
   test('sin compra que encontrar, dice a quién escribir', async ({ page }) => {

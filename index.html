@@ -3556,7 +3556,19 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.onb.aviso': 'Te avisamos dos días antes de que acabe la prueba.',
   'premium.onb.abierto.lede': 'Y hasta v1, PACE completo también está abierto para todos:',
   'premium.onb.abierto.precios': 'Después, {mes} al mes con {dias} días gratis, o {vida} una vez.',
-  'premium.onb.abierto.aviso': 'Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.'
+  'premium.onb.abierto.aviso': 'Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
+  'premium.code.lost': '¿Lo has perdido? Recupéralo con tu correo',
+  'premium.compra.error': 'No se ha podido abrir la compra. Prueba otra vez.',
+  'premium.settings.prueba': 'Prueba hasta el {fecha}',
+  'premium.pasov1.titulo': 'Siete días de PACE completo',
+  'premium.pasov1.cuerpo': 'Desde hoy, PACE completo es de pago. Como ya usabas PACE, lo tienes entero hasta el {fecha}, sin tarjeta y sin pagar nada.',
+  'premium.pasov1.tuyas': 'Y estas se quedan tuyas para siempre, porque ya las hiciste:',
+  'premium.pasov1.mas': 'Y {n} más, también tuyas.',
+  'premium.pasov1.gratis': 'Lo gratis sigue gratis.',
+  'premium.pasov1.vale': 'Entendido',
+  'premium.pasov1.mod.breathe': 'Respira',
+  'premium.pasov1.mod.move': 'Mueve',
+  'premium.pasov1.mod.extra': 'Estira'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3612,7 +3624,19 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.onb.aviso': 'We will remind you two days before the trial ends.',
   'premium.onb.abierto.lede': 'And until v1, PACE Complete is open to everyone too:',
   'premium.onb.abierto.precios': 'Then, {mes} a month with {dias} days free, or {vida} once.',
-  'premium.onb.abierto.aviso': 'When v1 arrives you get your trial week, and the routines you have already done stay yours.'
+  'premium.onb.abierto.aviso': 'When v1 arrives you get your trial week, and the routines you have already done stay yours.',
+  'premium.code.lost': 'Lost it? Get it back with your email',
+  'premium.compra.error': "The purchase couldn't open. Try again.",
+  'premium.settings.prueba': 'Trial until {fecha}',
+  'premium.pasov1.titulo': 'Seven days of PACE Complete',
+  'premium.pasov1.cuerpo': 'From today, PACE Complete is paid. Since you were already using PACE, you have all of it until {fecha}, with no card and nothing to pay.',
+  'premium.pasov1.tuyas': 'And these stay yours for good, because you have already done them:',
+  'premium.pasov1.mas': 'And {n} more, yours too.',
+  'premium.pasov1.gratis': 'What is free stays free.',
+  'premium.pasov1.vale': 'Got it',
+  'premium.pasov1.mod.breathe': 'Breathe',
+  'premium.pasov1.mod.move': 'Move',
+  'premium.pasov1.mod.extra': 'Stretch'
 });
 })();
 </script>
@@ -16091,7 +16115,8 @@ Object.assign(window, {
    ============================================================ */
 
 var PACE_PASO_V1_DIAS = 7;
-var _pacePasoV1 = { calculando: false };
+
+var _pacePasoV1 = { calculando: false, promesa: null };
 
 
 function pacePasoV1Leer() {
@@ -16154,14 +16179,15 @@ function pacePasoV1Catalogo() {
 
 function pacePasoV1() {
   try {
-    if (window.PREMIUM_ABIERTO_HASTA_V1 === true || pacePasoV1Leer() || _pacePasoV1.calculando) return Promise.resolve(pacePasoV1Leer());
+    if (_pacePasoV1.calculando && _pacePasoV1.promesa) return _pacePasoV1.promesa;
+    if (window.PREMIUM_ABIERTO_HASTA_V1 === true || pacePasoV1Leer()) return Promise.resolve(pacePasoV1Leer());
     var at = Date.now();
     if (!pacePasoV1UsabaPace(getState())) {
       setState({ pasoV1: { at: at, previo: false } });
       return Promise.resolve(pacePasoV1Leer());
     }
     _pacePasoV1.calculando = true;
-    return Promise.all([pacePasoV1Sesiones(), pacePasoV1Catalogo()]).then(function (x) {
+    _pacePasoV1.promesa = Promise.all([pacePasoV1Sesiones(), pacePasoV1Catalogo()]).then(function (x) {
       _pacePasoV1.calculando = false;
       if (x[1] && !pacePasoV1Leer()) {
         setState({ pasoV1: { at: at, previo: true, hasta: at + PACE_PASO_V1_DIAS * 86400000,
@@ -16169,6 +16195,7 @@ function pacePasoV1() {
       }
       return pacePasoV1Leer();
     }, function () {_pacePasoV1.calculando = false;return null;});
+    return _pacePasoV1.promesa;
   } catch (e) {
     _pacePasoV1.calculando = false;
     return Promise.resolve(null);
@@ -16180,6 +16207,12 @@ function pacePruebaV1Vigente() {
   if (_pacePasoV1.calculando) return true;
   var r = pacePasoV1Leer();
   return !!(r && r.previo && typeof r.hasta === 'number' && Date.now() < r.hasta);
+}
+
+
+function pacePruebaV1Hasta() {
+  var r = pacePasoV1Leer();
+  return r && r.previo && typeof r.hasta === 'number' && Date.now() < r.hasta ? r.hasta : null;
 }
 
 
@@ -16206,10 +16239,10 @@ function pacePasoV1Avisado() {
 try {pacePasoV1();} catch (e) {}
 
 Object.assign(window, {
-  PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePasoV1Conserva,
+  PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
   pacePasoV1PorAvisar, pacePasoV1Avisado
 });
-;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado });
+;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado });
 })();
 </script>
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
@@ -17796,9 +17829,11 @@ Object.assign(window, {
    valoracion.js — LA VENTANA PARA VALORAR PACE EN LA TIENDA, UNA SOLA VEZ
    ============================================================
    Ez, 15 oct. 2026 («Cómo se vende PACE completo», punto 6): la valoración se pide una
-   sola vez, con la ventana de la tienda (en Android, la In-App Review de Google Play), al
-   terminar la quinta pausa entera. Google no dice si la persona valoró o la cerró, así
-   que no se vuelve a lanzar nunca. Nunca en la bienvenida ni en la web.
+   sola vez, con la ventana de la tienda, al terminar la quinta pausa entera: en Android, la
+   In-App Review de Google Play; en el iPhone, la de Apple (Ez, 4A del 28 oct.), con las
+   mismas reglas. Ninguna de las dos dice si la persona valoró o la cerró, así que no se
+   vuelve a lanzar nunca. Apple, además, la enseña como mucho tres veces al año a cada
+   persona y decide si sale. Nunca en la bienvenida ni en la web.
 
    LA CUENTA. Una pausa entera es una Respira, un Mueve o un Estira que llegó a su final:
    la misma que da logros (`entera`, state-achievements.jsx). La que se termina antes o
@@ -17811,14 +17846,14 @@ Object.assign(window, {
    PACE en el fondo. Si PACE se cierra antes, sale al terminar la siguiente pausa entera.
 
    UNA SOLA VEZ: `valoracion.pedida` se apunta ANTES de llamar a la tienda, porque la tienda
-   no contesta si salió (PaceValoracion.java).
+   no contesta si salió (PaceValoracion.java y PaceValoracion.swift).
 
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
 var PACE_VALORACION_PAUSAS = 5;
 
-var PACE_VALORACION_PLATAFORMAS = ['android'];
+var PACE_VALORACION_PLATAFORMAS = ['android', 'ios'];
 
 var PACE_VALORACION_ESPERA_MS = 10 * 60 * 1000;
 var _paceValoracion = { espera: null };
@@ -21733,7 +21768,20 @@ Object.assign(window, { ToastHost });
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 const PREMIUM_AVISO_ANTES = 2 * 24 * 3600 * 1000;
+
+const PREMIUM_PASOV1_LISTA = 6;
 
 function premiumPruebaPorAvisar() {
   const d = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
@@ -21766,7 +21814,7 @@ function paceAbrirPremium(detalle) {
 const PREMIUM_INCLUYE = ['routines', 'custom', 'letter', 'stats'];
 
 function PremiumInvitacion() {
-  const { t } = useT();
+  const { t, tn, lang } = useT();
   const [abierta, setAbierta] = useStatePI(null);
   const [modo, setModo] = useStatePI('invita');
   const [texto, setTexto] = useStatePI('');
@@ -21779,18 +21827,29 @@ function PremiumInvitacion() {
   abiertaRef.current = abierta;
 
 
+
   useEffectPI(() => {
+    let vivo = true,empezado = false;
     const mirar = () => {
-      if (abiertaRef.current) return;
+      if (!vivo || abiertaRef.current) return;
       const d = premiumPruebaPorAvisar();
-      if (!d) return;
-      setState({ premiumAvisoPrueba: d.order });
-      setAbierta({ nombre: null, prueba: d });
-      setModo('prueba');
+      if (d) {
+        setState({ premiumAvisoPrueba: d.order });
+        setAbierta({ nombre: null, prueba: d });
+        setModo('prueba');
+        return;
+      }
+
+      const v1 = window.pacePasoV1PorAvisar ? window.pacePasoV1PorAvisar() : null;
+      if (!v1 || document.querySelector('[role="dialog"]')) return;
+      window.pacePasoV1Avisado();
+      setAbierta({ nombre: null, pasoV1: v1 });
+      setModo('pasov1');
     };
-    const primero = setTimeout(mirar, 1500);
+    const primero = setTimeout(() => {empezado = true;mirar();}, 1500);
     const cada = setInterval(mirar, 60 * 1000);
-    return () => {clearTimeout(primero);clearInterval(cada);};
+    if (window.pacePasoV1) Promise.resolve(window.pacePasoV1()).then(() => {if (empezado) mirar();}, () => {});
+    return () => {vivo = false;clearTimeout(primero);clearInterval(cada);};
   }, []);
 
   useEffectPI(() => {
@@ -21815,29 +21874,56 @@ function PremiumInvitacion() {
   const cerrar = () => setAbierta(null);
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
 
+  const hecho = (datos) => {
+    setTester(!!(datos && datos.tester != null));
+    setMensual(!!(datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(datos)));
+    setModo('ok');
+  };
+
   const canjear = () => {
     if (comprobando || !texto.trim() || !window.paceLicenciaCanjear) return;
     setComprobando(true);setError(null);
     window.paceLicenciaCanjear(texto).then((r) => {
       setComprobando(false);
-      if (r.ok) {
-        setTester(r.datos && r.datos.tester != null);
-        setMensual(!!(window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(r.datos)));
-        setModo('ok');
-      } else
+      if (r.ok) hecho(r.datos);else
       setError(r.motivo || 'formato');
     });
   };
 
+
+
+  const comprar = (plan) => {
+    if (comprobando || typeof paceComprar !== 'function') return;
+    setComprobando(true);setError(null);
+    paceComprar(plan).then((r) => {
+      setComprobando(false);
+      if (r && r.ok && r.fuera) cerrar();else
+      if (r && r.ok) hecho(r.datos);else
+      if (r && r.motivo === 'error') setError('compra');
+    });
+  };
+
   if (modo === 'prueba') return React.createElement(PremiumAvisoPrueba, { datos: abierta.prueba, cerrar: cerrar });
+  if (modo === 'pasov1') return React.createElement(PremiumPasoV1, { datos: abierta.pasoV1, cerrar: cerrar });
 
   const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : abierta.nombre || t('premium.name');
+  const tienda = modo === 'invita' && !!(window.paceTiendaAbierta && window.paceTiendaAbierta());
+  const planes = tienda ? paceTiendaPlanes(lang) : [];
+  const mes = planes.find((p) => p.plan === 'mes') || null;
+  const vida = planes.find((p) => p.plan === 'vida') || null;
+  const dias = mes && mes.pruebaDias || 7;
+  const tengo = permitida &&
+  React.createElement("button", { type: "button", "data-pace-premium-tengo": true, onClick: () => setModo('codigo'),
+    style: { ...premiumInvitacionStyles.enlace, ...(tienda ? { marginTop: 6 } : null) } },
+  t('premium.code.have')
+  );
+
 
   return (
     React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
     React.createElement("div", { "data-pace-premium-hoja": modo },
     modo !== 'ok' && React.createElement(PremiumSeal, null),
-    React.createElement("h2", { style: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' } }, titulo),
+    React.createElement("h2", { style: premiumInvitacionStyles.titulo }, titulo),
 
     modo === 'ok' ?
     React.createElement(React.Fragment, null,
@@ -21874,17 +21960,38 @@ function PremiumInvitacion() {
     React.createElement(Button, { type: "submit", disabled: comprobando || !texto.trim(), style: premiumInvitacionStyles.ancho },
     t(comprobando ? 'premium.code.checking' : 'premium.code.redeem')
     ),
-    React.createElement(Button, { variant: "secondary", onClick: cerrar, style: { ...premiumInvitacionStyles.ancho, marginTop: 8 } }, t('premium.later'))
+    React.createElement(Button, { variant: "secondary", onClick: cerrar, style: { ...premiumInvitacionStyles.ancho, marginTop: 8 } }, t('premium.later')),
+    React.createElement("a", { href: premiumEnlaceRecuperar(), target: "_blank", rel: "noopener", "data-pace-premium-recuperar": true, style: premiumInvitacionStyles.enlaceA },
+    t('premium.code.lost')
+    )
+    ) :
+    tienda && (mes || vida) ?
+    React.createElement(React.Fragment, null,
+    mes && vida &&
+    React.createElement("p", { "data-pace-premium-precios": true, style: premiumInvitacionStyles.v1 }, tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })),
+
+    error === 'compra' && React.createElement("p", { role: "alert", "data-pace-premium-error": "compra", style: premiumInvitacionStyles.error }, t('premium.compra.error')),
+    React.createElement("div", { style: premiumInvitacionStyles.par },
+    mes &&
+    React.createElement(Button, { disabled: comprobando, onClick: () => comprar('mes'), style: premiumInvitacionStyles.mitad },
+    tn('premium.onb.probar', { dias })
+    ),
+
+    React.createElement(Button, { variant: "secondary", onClick: cerrar, style: premiumInvitacionStyles.mitad }, t('premium.later'))
+    ),
+    mes && React.createElement("p", { style: premiumInvitacionStyles.aviso }, t('premium.onb.aviso')),
+    vida &&
+    React.createElement("button", { type: "button", "data-pace-premium-vida": true, disabled: comprobando, onClick: () => comprar('vida'), style: premiumInvitacionStyles.fantasma },
+    tn('premium.onb.vida', { vida: vida.precio })
+    ),
+
+    tengo
     ) :
 
     React.createElement(React.Fragment, null,
     React.createElement("p", { style: premiumInvitacionStyles.v1 }, t('premium.v1')),
     React.createElement(Button, { variant: "secondary", onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.later')),
-    permitida &&
-    React.createElement("button", { type: "button", "data-pace-premium-tengo": true, onClick: () => setModo('codigo'), style: premiumInvitacionStyles.enlace },
-    t('premium.code.have')
-    )
-
+    tengo
     )
 
     )
@@ -21907,11 +22014,82 @@ const premiumInvitacionStyles = {
   campo: { width: '100%', boxSizing: 'border-box', padding: '10px 12px', marginBottom: 10, fontSize: 14,
     fontFamily: 'var(--font-mono)', color: 'var(--ink)', background: 'var(--paper-2)',
     border: '1px solid var(--line-2)', borderRadius: 'var(--r-sm)' },
-  error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 }
+  error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 },
+  titulo: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' },
+
+  par: { display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' },
+  mitad: { flex: '1 1 160px', justifyContent: 'center', borderRadius: 'var(--r-pill)' },
+  aviso: { fontSize: 12, color: 'var(--ink-3)', margin: '10px 0 2px', textAlign: 'center' },
+  fantasma: { display: 'block', margin: '2px auto 0', background: 'none', border: 0, cursor: 'pointer', padding: '6px 10px',
+    ...displayItalic, fontSize: 15, color: 'var(--ink-2)' },
+
+  enlaceA: { display: 'block', width: 'fit-content', margin: '14px auto 0', textAlign: 'center', textDecoration: 'none',
+    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+  tuyas: { fontSize: 13, color: 'var(--ink-2)', margin: '0 0 6px' },
+  mas: { fontSize: 13, color: 'var(--ink-3)', margin: '-8px 0 16px' }
 };
 
 
-function PremiumAvisoPrueba(_ref2) {let { datos, cerrar } = _ref2;
+function premiumEnlaceRecuperar() {
+  const fuera = location.protocol === 'file:' && typeof PACE_WEB_PUBLICA === 'string';
+  return (fuera ? PACE_WEB_PUBLICA : '') + '/recuperar/';
+}
+
+
+
+function premiumPasoV1Rutina(id) {
+  const b = window.getBreatheRoutine ? window.getBreatheRoutine(id) : null;
+  if (b) return { id, routine: b, mod: 'breathe' };
+  const c = window.resolveBodyRoutine ? window.resolveBodyRoutine(id) : null;
+  return c ? { id, routine: c.routine, mod: c.source } : null;
+}
+
+
+function PremiumPasoV1(_ref2) {let { datos, cerrar } = _ref2;
+  const { t, tn, lang } = useT();
+  const loc = lang === 'en' ? 'en-GB' : 'es-ES';
+  const fecha = new Date(datos.hasta).toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' });
+  const orden = ['breathe', 'move', 'extra'];
+  const todas = (Array.isArray(datos.rutinas) ? datos.rutinas : []).map(premiumPasoV1Rutina).filter(Boolean).
+  sort((a, b) => orden.indexOf(a.mod) - orden.indexOf(b.mod));
+  const vistas = todas.length > PREMIUM_PASOV1_LISTA ? todas.slice(0, PREMIUM_PASOV1_LISTA - 1) : todas;
+  const nombre = (r) => {
+    if (lang !== 'en') return r.routine.name;
+    const v = t(r.id + '.name');
+    return v === r.id + '.name' ? r.routine.name : v;
+  };
+  const titulo = t('premium.pasov1.titulo');
+  return (
+    React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
+    React.createElement("div", { "data-pace-premium-hoja": "pasov1" },
+    React.createElement(PremiumSeal, null),
+    React.createElement("h2", { style: premiumInvitacionStyles.titulo }, titulo),
+    React.createElement("p", { style: premiumInvitacionStyles.sub }, tn('premium.pasov1.cuerpo', { fecha })),
+    vistas.length > 0 &&
+    React.createElement(React.Fragment, null,
+    React.createElement("p", { style: premiumInvitacionStyles.tuyas }, t('premium.pasov1.tuyas')),
+    React.createElement("ul", { "data-pace-pasov1-tuyas": true, style: premiumInvitacionStyles.lista },
+    vistas.map((r) =>
+    React.createElement("li", { key: r.id, "data-pace-pasov1-rutina": r.id, style: premiumInvitacionStyles.item },
+    React.createElement("span", null, nombre(r)),
+    React.createElement("span", { style: premiumInvitacionStyles.detalle }, t('premium.pasov1.mod.' + r.mod))
+    )
+    )
+    ),
+    todas.length > vistas.length &&
+    React.createElement("p", { "data-pace-pasov1-mas": true, style: premiumInvitacionStyles.mas }, tn('premium.pasov1.mas', { n: todas.length - vistas.length }))
+
+    ),
+
+    React.createElement("p", { style: premiumInvitacionStyles.v1 }, t('premium.pasov1.gratis')),
+    React.createElement(Button, { onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.pasov1.vale'))
+    )
+    ));
+
+}
+
+
+function PremiumAvisoPrueba(_ref3) {let { datos, cerrar } = _ref3;
   const { t, tn, lang } = useT();
   const loc = lang === 'en' ? 'en-GB' : 'es-ES';
   const fin = new Date(datos.trialEnd);
@@ -21925,7 +22103,7 @@ function PremiumAvisoPrueba(_ref2) {let { datos, cerrar } = _ref2;
     React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
     React.createElement("div", { "data-pace-premium-hoja": "prueba" },
     React.createElement(PremiumSeal, null),
-    React.createElement("h2", { style: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' } }, titulo),
+    React.createElement("h2", { style: premiumInvitacionStyles.titulo }, titulo),
     React.createElement("p", { style: premiumInvitacionStyles.sub }, tn('premium.trial.body', { fecha, precio })),
     puede && React.createElement("p", { style: premiumInvitacionStyles.v1 }, tn('premium.trial.cancel', { dia })),
     puede &&
@@ -21939,8 +22117,8 @@ function PremiumAvisoPrueba(_ref2) {let { datos, cerrar } = _ref2;
 
 }
 
-Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
-;Object.assign(window, { premiumPruebaPorAvisar, PaceCandado, paceAbrirPremium, PremiumInvitacion, PremiumAvisoPrueba });
+Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
+;Object.assign(window, { premiumPruebaPorAvisar, PaceCandado, paceAbrirPremium, PremiumInvitacion, premiumEnlaceRecuperar, premiumPasoV1Rutina, PremiumPasoV1, PremiumAvisoPrueba });
 })();
 </script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
@@ -38989,6 +39167,7 @@ Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarResc
 
 
 
+
 function premiumFechaTexto(datos, lang) {
   const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt) :
   typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function' ? parseLocalDateKey(datos.expiresAt) : null;
@@ -39027,6 +39206,18 @@ function PremiumSection() {
       t('premium.settings.code')
       )
 
+      ));
+
+  }
+
+
+  const prueba = window.pacePruebaV1Hasta ? window.pacePruebaV1Hasta() : null;
+  if (prueba) {
+    const f = new Date(prueba).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+    return (
+      React.createElement(AjustesAccion, { onClick: permitida ? () => paceAbrirPremium({ modo: 'codigo' }) : undefined,
+        derecha: React.createElement("span", { "data-pace-licencia-estado": true, "data-pace-licencia-prueba": true, style: { color: 'var(--focus)' } }, tn('premium.settings.prueba', { fecha: f })) },
+      t('premium.name')
       ));
 
   }

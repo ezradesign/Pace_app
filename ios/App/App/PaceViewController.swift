@@ -12,7 +12,7 @@ import Capacitor
 /// (su `loadView` es `final`), así que no se puede encoger desde dentro: este
 /// controlador lo lleva como hijo y lo ata a la zona segura.
 class PaceViewController: UIViewController {
-    private let puente = CAPBridgeViewController()
+    private let puente = PacePuente()
     private var vigiaPapel: NSKeyValueObservation?
     private var estiloBarra: UIStatusBarStyle = .default
 
@@ -69,5 +69,15 @@ class PaceViewController: UIViewController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return estiloBarra
+    }
+}
+
+/// El puente de Capacitor con los complementos propios de PACE, que no vienen de npm y
+/// Capacitor no encuentra solo: se registran antes de que cargue la web, y para la web son
+/// `Capacitor.Plugins.<nombre>`. Sin registrar, la web recibe null y no pide nada, sin que
+/// nada falle (lo vigila scripts/verify.ios.js).
+class PacePuente: CAPBridgeViewController {
+    override open func capacitorDidLoad() {
+        bridge?.registerPluginInstance(PaceValoracion())
     }
 }

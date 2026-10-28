@@ -1,9 +1,9 @@
-/* PACE · E2E · LA VENTANA PARA VALORAR PACE EN GOOGLE PLAY (punto 12 del ROADMAP)
- * ===============================================================================
+/* PACE · E2E · LA VENTANA PARA VALORAR PACE EN GOOGLE PLAY Y EN LA APP STORE (punto 12 del ROADMAP)
+ * ================================================================================================
  * Ez, 15 oct. 2026 («Cómo se vende PACE completo», punto 6): la valoración se pide una sola vez,
  * con la ventana de Google (In-App Review), al terminar la quinta pausa entera; Google no dice si
  * la persona valoró o la cerró, así que no se vuelve a lanzar nunca. Nunca en la bienvenida ni en
- * la web.
+ * la web. En el iPhone, la de Apple con las mismas reglas (Ez, 4A del 28 oct.).
  *
  * El PaceValoracion falso apunta cada vez que se le pide la ventana (`__valoraciones`). Las pausas
  * se cierran con las mismas `complete*Session` que usan los runners, y su pantalla final es un
@@ -13,9 +13,10 @@
  *  · Cuatro pausas enteras no la piden; la quinta, sí, y solo cuando su pantalla se ha cerrado.
  *  · Una vez en la vida: ni la sexta ni tras recargar.
  *  · Las que se terminan antes no cuentan.
+ *  · En el iPhone, lo mismo: la quinta, una vez.
  *  · En la web no se apunta nada ni se pide nada.
- * NO CUBRE: que Google enseñe la ventana (tiene su tope y no lo dice); eso, en un móvil con la
- * versión de la prueba cerrada.
+ * NO CUBRE: que Google o Apple enseñen la ventana (tienen su tope y no lo dicen); eso, en un móvil
+ * con la versión de la prueba cerrada o de TestFlight.
  *
  * Contra v0.184.0 caen las tres de Android: no hay PaceValoracion ni cuenta.
  */
@@ -26,19 +27,19 @@ const { sembrar, irAlArtefacto, esperarEnPagina } = require('./helpers');
 
 test.use({ serviceWorkers: 'block' });
 
-/* Un Android falso con lo justo para arrancar y la pieza de la valoración. */
-async function comoAndroid(context) {
-  await context.addInitScript(() => {
+/* Un Android (o un iPhone) falso con lo justo para arrancar y la pieza de la valoración. */
+async function comoAndroid(context, plataforma) {
+  await context.addInitScript((p) => {
     window.__valoraciones = [];
     window.Capacitor = {
-      getPlatform: () => 'android',
+      getPlatform: () => p,
       isNativePlatform: () => true,
       Plugins: {
         App: { addListener: () => ({ remove() {} }), minimizeApp: () => Promise.resolve() },
         PaceValoracion: { pedir: () => { window.__valoraciones.push(Date.now()); return Promise.resolve(); } },
       },
     };
-  });
+  }, plataforma || 'android');
 }
 
 /* Una pausa que acaba con su pantalla final delante; `entera` como la pasa el runner. */
@@ -120,6 +121,20 @@ test.describe('la valoración en Google Play', () => {
     await pausa(page, 'estira', true);
     await cerrarPantalla(page);
     await esperarEnPagina(page, () => window.__valoraciones.length === 1, null, { timeout: 12000 });
+  });
+
+  test('en el iPhone, la ventana de Apple con las mismas reglas: la quinta pausa entera, una vez', async ({ page, context }) => {
+    await comoAndroid(context, 'ios');
+    await sembrar(context);
+    await irAlArtefacto(page);
+    expect(await page.evaluate(() => window.pacePlataformaNativa())).toBe('ios');
+    for (const modo of ['respira', 'mueve', 'estira', 'respira', 'mueve']) { await pausa(page, modo, true); await cerrarPantalla(page); }
+    await esperarEnPagina(page, () => window.__valoraciones.length === 1, null, { timeout: 12000 });
+    await pausa(page, 'estira', true);
+    await cerrarPantalla(page);
+    await page.waitForTimeout(2000);
+    expect(await pedidas(page)).toBe(1);
+    expect((await page.evaluate(() => window.getState().valoracion)).pausas).toBe(5);
   });
 
   test('en la web no se apunta nada ni se pide nada', async ({ page, context }) => {

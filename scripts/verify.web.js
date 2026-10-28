@@ -24,7 +24,7 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 
-var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html',
+var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html', 'gracias/index.html', 'recuperar/index.html',
                   'privacy.html', 'safety.html', 'manifest.webmanifest'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
@@ -80,7 +80,7 @@ function tandaWeb(ctx) {
 
     var sinNecesario = NECESARIOS.filter(function (r) { return !hay.has(r); });
     if (sinNecesario.length) ctx.falla('web: falta en dist/ ' + sinNecesario.join(', '));
-    else ctx.ok('dist/ lleva la app, el service worker, las cabeceras, el calendario, /premium, /beta y lo legal');
+    else ctx.ok('dist/ lleva la app, el service worker, las cabeceras, el calendario, /premium, /beta, /gracias, /recuperar y lo legal');
 
     var ajeno = Array.from(hay).filter(function (r) { return AJENO.test(r) || NO_SE_PUBLICA.indexOf(r) >= 0; });
     if (ajeno.length) ctx.falla('web: dist/ publica lo que no es la app: ' + ajeno.slice(0, 5).join(', '));

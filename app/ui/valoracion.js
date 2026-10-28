@@ -5,9 +5,11 @@
    valoracion.js — LA VENTANA PARA VALORAR PACE EN LA TIENDA, UNA SOLA VEZ
    ============================================================
    Ez, 15 oct. 2026 («Cómo se vende PACE completo», punto 6): la valoración se pide una
-   sola vez, con la ventana de la tienda (en Android, la In-App Review de Google Play), al
-   terminar la quinta pausa entera. Google no dice si la persona valoró o la cerró, así
-   que no se vuelve a lanzar nunca. Nunca en la bienvenida ni en la web.
+   sola vez, con la ventana de la tienda, al terminar la quinta pausa entera: en Android, la
+   In-App Review de Google Play; en el iPhone, la de Apple (Ez, 4A del 28 oct.), con las
+   mismas reglas. Ninguna de las dos dice si la persona valoró o la cerró, así que no se
+   vuelve a lanzar nunca. Apple, además, la enseña como mucho tres veces al año a cada
+   persona y decide si sale. Nunca en la bienvenida ni en la web.
 
    LA CUENTA. Una pausa entera es una Respira, un Mueve o un Estira que llegó a su final:
    la misma que da logros (`entera`, state-achievements.jsx). La que se termina antes o
@@ -20,14 +22,14 @@
    PACE en el fondo. Si PACE se cierra antes, sale al terminar la siguiente pausa entera.
 
    UNA SOLA VEZ: `valoracion.pedida` se apunta ANTES de llamar a la tienda, porque la tienda
-   no contesta si salió (PaceValoracion.java).
+   no contesta si salió (PaceValoracion.java y PaceValoracion.swift).
 
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
 var PACE_VALORACION_PAUSAS = 5;
 /* Dónde hay ventana de la tienda montada. */
-var PACE_VALORACION_PLATAFORMAS = ['android'];
+var PACE_VALORACION_PLATAFORMAS = ['android', 'ios'];
 /* Lo que se espera, como mucho, a que la pantalla de la pausa se cierre (10 min). */
 var PACE_VALORACION_ESPERA_MS = 10 * 60 * 1000;
 var _paceValoracion = { espera: null };

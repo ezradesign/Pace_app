@@ -84,6 +84,33 @@ function chequeaIos(ctx) {
   }
   chequeaFranjas(ctx, crema, oscura);
   chequeaTienda(ctx, icono.archivo);
+  chequeaComplementos(ctx);
+}
+
+/* La ventana de Apple para valorar PACE (Ez, 4A del 28 oct.), con las reglas de la de Android
+   (verify.android.js). Lo que falla sin que nada falle: un .swift que no esta en el proyecto no
+   se compila, y un complemento propio sin registrar es null para la web, que nunca lo pide. */
+function chequeaComplementos(ctx) {
+  var malas = [];
+  var proyecto = texto('ios/App/App.xcodeproj/project.pbxproj');
+  var vista = texto(APP + 'PaceViewController.swift');
+  var pieza = texto(APP + 'PaceValoracion.swift');
+  var web = texto('app/ui/valoracion.js');
+  if (!/public let jsName = "PaceValoracion"/.test(pieza) || !/CAPBridgedPlugin/.test(pieza)) malas.push('PaceValoracion.swift ya no es el complemento «PaceValoracion»');
+  if (!/requestReview\(in: /.test(pieza)) malas.push('PaceValoracion.swift ya no abre la ventana de Apple (requestReview)');
+  if (!/var PACE_VALORACION_PLATAFORMAS = \[[^\]]*'ios'/.test(web)) malas.push('app/ui/valoracion.js ya no pide la ventana en el iPhone (PACE_VALORACION_PLATAFORMAS)');
+  if (!/private let puente = PacePuente\(\)/.test(vista) || !/override open func capacitorDidLoad\(\)/.test(vista)) {
+    malas.push('PaceViewController ya no lleva el puente que registra los complementos propios (PacePuente)');
+  }
+  fs.readdirSync(path.join(ROOT, APP)).filter(function (f) { return /\.swift$/.test(f); }).forEach(function (f) {
+    var clase = f.replace(/\.swift$/, '');
+    if (proyecto.indexOf(f + ' in Sources') === -1) malas.push(f + ' no esta en el proyecto de Xcode: no se compila');
+    if (/CAPBridgedPlugin/.test(texto(APP + f)) && vista.indexOf('registerPluginInstance(' + clase + '())') === -1) {
+      malas.push('PacePuente no registra ' + clase + ': para la web seria null');
+    }
+  });
+  if (malas.length) malas.forEach(function (m) { ctx.falla('ios: ' + m); });
+  else ctx.ok('ios: la valoracion de la App Store se pide una vez, tras la quinta pausa entera, y cada complemento propio esta en el proyecto y registrado');
 }
 
 /* Las franjas de arriba y de abajo siguen la paleta que se ve, no el modo del
@@ -173,6 +200,8 @@ function chequeaTienda(ctx, archivoIcono) {
 var NO_CUBRE_IOS = [
   'ios: se comparan las copias y la configuracion, no como se VEN el icono, el arranque y las franjas ' +
     '-- eso se mira en un iPhone (TestFlight), y si el proyecto compila lo dice el workflow iOS',
+  'ios: de la valoracion se mira que la pieza este en el proyecto y registrada, no que Apple ensene la ventana ' +
+    '(tiene su tope y no lo dice) -- eso, en un iPhone con TestFlight',
 ];
 
 module.exports = { chequeaIos: chequeaIos, NO_CUBRE_IOS: NO_CUBRE_IOS };
