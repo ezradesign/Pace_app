@@ -57,6 +57,18 @@ mi sí»).
    Su bucle avanza el reloj minuto a minuto mientras no ve la pausa, y con el PC cargado se pasa: la pausa del día ya
    había acabado al pulsar «Cambiar», y el botón dice «Empezar otro ciclo» en vez de «Empezar foco». Sola pasa 3 de 3.
    Hay que hacerla esperar a la pausa de verdad, como `ritmo-pausa` y `ritmo-pausa-entera`, que caen igual.
+9. **Dos sesiones abiertas el 28 oct. por la tarde** (Ez arrancó las dos tarjetas: «Sí, los dos»), cada una en su
+   worktree. Ninguna sube la versión ni toca CHANGELOG, STATE, ROADMAP, el LEEME de traspaso, este relevo ni la hoja: lo
+   escribe la coordinadora al juntar, con lo que ellas dejen en `docs/traspaso/archivos/<tema>/LEEME.md`.
+
+   | Sesión | id | Rama (worktree) | Puerto | Lleva |
+   |---|---|---|---|---|
+   | Lo que falta para vender | `local_e4eb528a-15ac-46c0-9d72-7c89f1e9e7b1` | `claude/clever-gagarin-6701aa` | 8805 | El punto 12: la valoración de Play, el paso a v1 sin quitar nada, `/recuperar` y los botones de compra; maqueta antes de lo que se ve |
+   | Los avisos del iPhone | `local_1d52e4b0-b4f6-4804-99c4-cfe421fb3137` | `claude/awesome-albattani-270a62` | 8806 | A1-A4 en `app/ui/ios.js`, el aviso de fin con la pausa, `ritmo-pausa-libre:45` y `generar-pendientes.js` |
+
+   Sus `node_modules` son ENLACES al del repo: `cmd /c rmdir node_modules` antes de quitar cada worktree. Desde la otra
+   cuenta no se ven: para seguir una, `start_session` con `cwd` en su worktree, diciéndole qué falta y que lea su
+   `git log`.
 
 ## AL RELEVO (27 oct., ~23:10 en España; cuenta de EcLj6… con las 5 h al 91 % y la semana al 24 %; se repone a la 01:10)
 

@@ -48,11 +48,11 @@ que piden Play, Apple y Stripe. Lo inmediato:
 2. **Subir la 0.184.0 a la prueba cerrada de Play y a TestFlight**, que hoy tienen la 0.174.0 y la 0.175.0, antes de
    invitar a nadie. El AAB ya está en `subidas-play\` y lo sube Ez; TestFlight sale del trabajo `testflight` de
    `.github/workflows/ios.yml`, a mano y con el sí de Ez. Subidas: `docs/launch/google-play/guia.html`.
-3. **El código que falta para vender** (punto 12 del ROADMAP): la valoración de Play tras la quinta pausa entera, el
+3. **El código que falta para vender** (punto 12 del ROADMAP; en marcha en una sesión desde el 28 oct.): la valoración de Play tras la quinta pausa entera, el
    paso a v1 sin quitar nada, `/recuperar` y la invitación con los botones de compra. Después, Play Billing y la
    compra de Apple, que esperan las altas de Ez. Stripe se enchufa con su cuenta (`docs/launch/cobro-web.md`). El día
    de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
-4. **Lo que dejó para después Android a fondo**: los mismos cuatro fallos de los avisos en el iPhone
+4. **Lo que dejó para después Android a fondo** (en marcha en otra sesión desde el 28 oct.): los mismos cuatro fallos de los avisos en el iPhone
    (`app/ui/ios.js`), el aviso de fin que no nombra la pausa de «A tu ritmo», los botones de verdad del aviso (la C de
    N4) y `scripts/glifos/generar-pendientes.js`, que cae al arrancar.
 5. **STATE.md ya no cabe en una pantalla**: se rehace corto al juntar las dos ramas, con el detalle en el relevo, en
