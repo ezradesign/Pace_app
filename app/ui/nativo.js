@@ -72,17 +72,32 @@ function paceNativoFoco(endsAt, textos) {
   else if (p === 'ios') paceIosFoco(endsAt, textos);
 }
 
+/* Lo que dira el aviso de fin, al programarlo con la app ya en el fondo: con «A tu ritmo», la
+   pausa que viene detras del bloque (`fin`, que FocusTimer saca de `ritmoAvisoFin`) con las
+   mismas palabras que el aviso de la web al acabar; sin el, o si falla, los de siempre. */
+function paceNativoTextosFin(foco) {
+  var r = null;
+  try { r = foco && typeof foco.fin === 'function' ? foco.fin() : null; } catch (e) {}
+  if (r && r.title) return { title: r.title, body: r.body || '' };
+  return { title: (foco && foco.title) || 'PACE', body: (foco && foco.body) || '' };
+}
+
 /* La campana de fin del bloque que acababa en `fin`: `sonar` se llama si es de PACE, y no si
-   el aviso del sistema ya sonó o va a sonar por ese bloque (android.avisos.js). En la web y en
-   el iPhone suena siempre. */
+   el aviso del sistema ya sonó o va a sonar por ese bloque (android.avisos.js, ios.js). En la
+   web suena siempre. */
 function paceNativoCampana(fin, sonar) {
-  if (pacePlataformaNativa() === 'android') { paceAndroidCampana(fin, sonar); return; }
+  var p = pacePlataformaNativa();
+  if (p === 'android') { paceAndroidCampana(fin, sonar); return; }
+  if (p === 'ios') { paceIosCampana(fin, sonar); return; }
   try { sonar(); } catch (e) {}
 }
 
 /* El último aviso que el sistema no dejó poner, o null. Ajustes lo cuenta. */
 function paceNativoAvisoFallo() {
-  return pacePlataformaNativa() === 'android' ? paceAndroidAvisoFallo() : null;
+  var p = pacePlataformaNativa();
+  if (p === 'android') return paceAndroidAvisoFallo();
+  if (p === 'ios') return paceIosAvisoFallo();
+  return null;
 }
 
 /* --- La copia de «Tus datos» y los enlaces -------------------------------- */
@@ -104,5 +119,5 @@ function paceNativoEnlace(ruta) {
 
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace,
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace,
 });

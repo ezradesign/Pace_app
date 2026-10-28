@@ -7,14 +7,15 @@
 
 | | |
 |---|---|
-| **Identidades que la app necesita** | **62** |
-| **Con arte propio ya ingestado** | **59** |
-| **Pendientes** | **3** |
+| **Identidades que la app necesita** | **68** |
+| **Con arte propio ya ingestado** | **58** |
+| **Pendientes** | **10** |
+| Con arte que la app ya no pide (su rutina salió de la lista) | Puente a una pierna |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
 sigue pintando mientras no llegue el arte nuevo; `falta` = hoy no hay nada y
 se pinta el glifo por defecto. **Las dos columnas son trabajo pendiente**: el
-rediseño rehace las 62 piezas, y `falta` solo dice cuáles además están calvas.
+rediseño rehace las 68 piezas, y `falta` solo dice cuáles además están calvas.
 
 El **nombre de archivo** es el que espera la ingesta. Si no coincide, la pieza
 no se empareja y el script lo dice en vez de adivinar.
@@ -43,39 +44,35 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Silla en la pared | `silla-en-la-pared.png` | dibujado | Perfil con la espalda pegada a una **pared vertical**, rodillas a 90°, muslos horizontales. *(«Espalda en pared, rodillas a 90°.»)* |
 | **HECHO** | Zancada profunda | `zancada-profunda.png` | dibujado | Zancada larga de perfil, **rodilla por delante del pie**, rodilla de atrás cerca del suelo. |
 
-## Core y espalda — 0 pendientes de 8
+## Core y espalda — 0 pendientes de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
 | **HECHO** | Apertura con banda | `apertura-con-banda.png` | dibujado | De frente, brazos al pecho abriéndose contra tensión, con la **banda** como línea entre las manos. *(«Sin banda: brazos cruzados + abre con tensión.»)* |
 | **HECHO** | Apretar glúteos | `apretar-gluteos.png` | falta | El más difícil de dibujar: **de pie de perfil, con dos arcos cortos de tensión** en el glúteo. Si no funciona, vale una figura sentada en la silla con los mismos arcos. |
 | **HECHO** | Hueco abdominal | `hueco-abdominal.png` | falta | Boca arriba en **arco cóncavo**: lumbar pegada al suelo, hombros y piernas levantados y extendidos. |
-| **HECHO** | Hueco en silla | `hueco-en-silla.png` | dibujado | Sentado en la **silla**, manos en el asiento, **piernas elevadas** y baja espalda apoyada. |
 | **HECHO** | Juntar omóplatos | `juntar-omoplatos.png` | dibujado | **De espaldas**, vista trasera, codos atrás y dos flechas cortas juntándose entre los omóplatos. |
 | **HECHO** | Plancha | `plancha.png` | falta | Perfil apoyado en **antebrazos**, una sola línea del talón a la cabeza. *(«Antebrazos, cuerpo en línea. Aprieta glúteos.»)* |
 | **HECHO** | Plancha lateral | `plancha-lateral.png` | falta | De lado, **un antebrazo en el suelo**, cadera alta, brazo libre al techo. |
 | **HECHO** | Superman | `superman.png` | falta | Boca abajo en **arco convexo**: pecho, brazos y piernas levantados. |
 
-## Cuello y hombros — 0 pendientes de 10
+## Cuello y hombros — 0 pendientes de 8
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
 | **HECHO** | Apertura de pecho | `apertura-de-pecho.png` | dibujado | **Manos tras la nuca**, codos muy abiertos, mirada al techo. |
 | **HECHO** | Barbilla atrás | `barbilla-atras.png` | dibujado | **Cabeza y cuello de perfil**, con una flecha corta horizontal: la barbilla se desliza atrás y la nuca se alarga. **No es bajar la cabeza.** |
-| **HECHO** | Círculos de hombro | `circulos-de-hombro.png` | falta | Torso de frente con **un brazo estirado** y un **círculo punteado** describiendo su recorrido. |
 | **HECHO** | Cuello y trapecios | `cuello-y-trapecios.png` | dibujado | Cabeza y hombros de frente, **oreja hacia el hombro**, mano opcional guiando. |
 | **HECHO** | Deslizamientos en pared | `deslizamientos-en-pared.png` | dibujado | De frente contra la **pared**, brazos en «W» subiendo a «Y», con flechas. |
 | **HECHO** | Encogimiento de hombros | `encogimiento-de-hombros.png` | dibujado | Torso de frente, **hombros subidos** hacia las orejas, dos flechas cortas hacia arriba. |
 | **HECHO** | Escalenos | `escalenos.png` | dibujado | Sentado, **una mano bajo el glúteo** (ancla el hombro) y la cabeza inclinada al lado opuesto. |
-| **HECHO** | Inclinación lateral | `inclinacion-lateral.png` | dibujado | Igual que el anterior pero **sin mano** y con el arco de recorrido a los dos lados. |
 | **HECHO** | Rotación externa | `rotacion-externa.png` | dibujado | **Codo a 90° pegado al costado**, antebrazo abriéndose hacia fuera, flecha en arco. |
 | **HECHO** | Rotación lenta | `rotacion-lenta.png` | dibujado | Cabeza girada **mirando sobre el hombro**, hombros de frente. |
 
-## Columna — 0 pendientes de 8
+## Columna — 0 pendientes de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
-| **HECHO** | Apertura de costillas + respiración | `apertura-de-costillas-respiracion.png` | dibujado | A cuatro patas (gato/vaca) con **dos arcos en las costillas** que indican el aire entrando. |
 | **HECHO** | Extensión torácica | `extension-toracica.png` | dibujado | Sentado, **arqueado hacia atrás sobre el respaldo** de la silla. |
 | **HECHO** | Gato-camello | `gato-camello.png` | falta | A cuatro patas con la espalda en **dos curvas superpuestas** (una arqueada, otra redondeada) y una flecha doble. |
 | **HECHO** | Giro sentado | `giro-sentado.png` | dibujado | Sentado, **rotado hacia el respaldo**, una mano en él. |
@@ -96,7 +93,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Sentadilla lateral | `sentadilla-lateral.png` | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
 | **HECHO** | Zancada con apertura | `zancada-con-apertura.png` | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
 
-## Suelo y cadena posterior — 0 pendientes de 7
+## Suelo y cadena posterior — 0 pendientes de 6
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -104,11 +101,10 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Isquio a una pierna | `isquio-a-una-pierna.png` | falta | **Talón apoyado en algo bajo** delante, pierna extendida, cadera echada atrás. |
 | **HECHO** | Marcha del elefante | `marcha-del-elefante.png` | dibujado | Doblado por la cadera **tocando el suelo alternando manos**, piernas casi estiradas. |
 | **HECHO** | Pliegue adelante | `pliegue-adelante.png` | falta | **Pies juntos**, tronco colgando, rodillas ligeramente blandas, brazos sueltos. |
-| **HECHO** | Puente isquio a una pierna | `puente-isquio-a-una-pierna.png` | falta | **Tumbado boca arriba**, un pie apoyado en el suelo con la rodilla doblada y **la otra pierna extendida en el aire**; la cadera sube hasta alinear tronco y muslo. Es de UNA pierna: la que está en el aire tiene que verse clara. |
 | **HECHO** | Sentadilla profunda | `sentadilla-profunda.png` | dibujado | Sentadilla completa con **talones en el suelo** y **codos por dentro de las rodillas**. |
 | **HECHO** | Sentarse y levantarse del suelo | `sentarse-y-levantarse-del-suelo.png` | dibujado | Dos siluetas no: **una figura a medio camino entre el suelo y de pie, sin manos apoyadas**. |
 
-## Muñecas, tobillos y pausas — 0 pendientes de 8
+## Muñecas, tobillos y pausas — 0 pendientes de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -117,9 +113,25 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Círculos de tobillo | `circulos-de-tobillo.png` | dibujado | Un pie **bajo la mesa** con un círculo punteado en el tobillo. |
 | **HECHO** | Estiramiento de muñeca | `estiramiento-de-muneca.png` | dibujado | Una mano llevando la otra a **flexión y extensión**, con flecha doble. |
 | **HECHO** | Extensión de dedos | `extension-de-dedos.png` | dibujado | Una mano con **los dedos muy abiertos** en abanico. |
-| **HECHO** | Palmas al suelo | `palmas-al-suelo.png` | falta | Dos manos **sobre la mesa vistas desde arriba**, dedos apuntando al cuerpo. |
 | **HECHO** | Reset respiración | `reset-respiracion.png` | dibujado | Torso de frente con **dos arcos concéntricos** en el pecho: aire que entra. |
 | **HECHO** | Rezo invertido | `rezo-invertido.png` | falta | Dos manos con los **dorsos en contacto** frente al pecho, dedos hacia abajo. |
+
+## Sin grupo en el encargo — 7 pendientes de 12
+
+| Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
+|---|---|---|---|---|
+| — | Bisagra de cadera | `bisagra-de-cadera.png` | ? | — |
+| **HECHO** | Círculos de brazos | `circulos-de-brazos.png` | ? | — |
+| — | Desliza el talón | `desliza-el-talon.png` | ? | — |
+| — | Gemelo en pared | `gemelo-en-pared.png` | ? | — |
+| **HECHO** | Inclinación de cuello | `inclinacion-de-cuello.png` | ? | — |
+| — | Inclinación de tronco | `inclinacion-de-tronco.png` | ? | — |
+| **HECHO** | Palmas en la mesa | `palmas-en-la-mesa.png` | ? | — |
+| **HECHO** | Piernas elevadas sentado | `piernas-elevadas-sentado.png` | ? | — |
+| — | Remo con banda | `remo-con-banda.png` | ? | — |
+| — | Remo con tu mano | `remo-con-tu-mano.png` | ? | — |
+| **HECHO** | Respirar a cuatro apoyos | `respirar-a-cuatro-apoyos.png` | ? | — |
+| — | Rotación torácica de pie | `rotacion-toracica-de-pie.png` | ? | — |
 
 ---
 
@@ -130,7 +142,7 @@ node scripts/ingest-glifos-ejercicio.js --origen "<carpeta con los PNG>"
 ```
 
 Convierte cada PNG en máscara CSS, reescribe el mapa y las filas de precache
-de `sw.js`. **No hace falta que lleguen los 62 de golpe**: lo que no tiene
+de `sw.js`. **No hace falta que lleguen los 68 de golpe**: lo que no tiene
 máscara sigue pintando su SVG. Sale con código 1 si algún PNG no casa con
 ninguna identidad o si queda alguna sin dibujo — un emparejamiento parcial en
 silencio es justo lo que la regla D-4 quiere evitar.

@@ -6,12 +6,14 @@
  * «Cambiar», que también retira el día, igual. Ahora la pausa del día se cierra con él y
  * el aro vuelve al foco; una pausa elegida a mano en la barra sigue como estaba. Contra
  * v0.174.0 fallan las dos primeras.
- * TRAMPA: el bloque se acaba minuto a minuto (s187).
+ * TRAMPA: el bloque se acaba justo a su hora y se espera a la ventana (`terminarBloque`). Con
+ * la suite entera caía en «Empezar otro ciclo»: era el tic del reloj que cae entre un reinicio
+ * y el pintado (useCountdown, tests/aro-modo-identidad.spec.js), no la espera.
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, overlaySuperior, terminarBloque } = require('./helpers');
 const { esperarInit } = require('./eventos.helpers');
 
 const HOY = '2026-10-14';
@@ -31,11 +33,8 @@ async function abrir(page, context) {
 /* El primer bloque, hasta que el aro cuenta su pausa (la ventana se salta). */
 async function hastaLaPausa(page) {
   await vis(page, '[data-pace-cta]').click();
-  await page.waitForTimeout(250);
-  for (let i = 0; i < 60 && !(await page.locator('[data-pace-break-shortcut]').count()); i++) {
-    await page.clock.fastForward(60 * 1000);
-    await page.waitForTimeout(60);
-  }
+  await expect(corriendo(page)).toHaveCount(1);
+  await terminarBloque(page);
   await overlaySuperior(page).getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
   expect(await modo(page), 'GUARD: el aro cuenta la pausa del día').toBe('pausa');
   await expect(corriendo(page)).toHaveCount(1);

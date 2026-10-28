@@ -345,3 +345,53 @@ test.describe('N4 · el aviso fijo con el móvil bloqueado', () => {
     await esperarEnPagina(page, () => window.__nativo.llamadas.some((l) => l.metodo === 'quitar'));
   });
 });
+
+/* El aviso de fin nombra la pausa de «A tu ritmo» (28 oct.). Se programa al irse al fondo, con el
+   bloque aún sin cerrar, y dice lo mismo que dirá el aviso de la web al acabarlo (`ritmoAviso`, la
+   D2 de Ez) y la misma pausa que el aviso fijo. Rojo contra v0.184.0, que decía «Foco completado». */
+const JORNADA = { fecha: '2026-09-17', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
+const programados = async (page) => (await nativo(page, 'llamadas')).filter((l) => l.metodo === 'schedule').map((l) => l.opts.notifications[0]);
+/* Lo que dice la web al acabar el bloque: `ritmoAviso` con los textos de la app, como FocusTimer. */
+const avisoDeLaWeb = (page) => page.evaluate(() => {
+  const s = getState(), S = window.PACE_STRINGS, lang = s.lang;
+  const t = (k) => (S[lang] && S[lang][k] !== undefined ? S[lang][k] : S.en[k] !== undefined ? S.en[k] : k);
+  const tn = (k, v) => Object.keys(v || {}).reduce((x, c) => x.split('{' + c + '}').join(String(v[c])), t(k));
+  return ritmoAviso(s, t, tn, lang);
+});
+
+test.describe('el aviso de fin dice lo que viene', () => {
+  for (const caso of [
+    { lang: 'es', pausa: /^Tu pausa: (.+ · \d+ min)$/, luego: 'Luego, tu pausa: ', cuerpo: /^Bloque 1 de \d+ hecho\. El siguiente, a las \d+:\d\d\.$/ },
+    { lang: 'en', pausa: /^Your break: (.+ · \d+ min)$/, luego: 'Then your break: ', cuerpo: /^Block 1 of \d+ done\. The next one at \d+:\d\d\.$/ },
+  ]) {
+    test(`con «A tu ritmo» (${caso.lang}), nombra la pausa del aviso fijo y dice lo mismo que la web al acabar`, async ({ page, context }) => {
+      await sembrar(context, { soundOn: false, lang: caso.lang, ritmo: { dia: JORNADA } });
+      await comoAndroid(context);
+      await context.clock.install({ time: new Date('2026-09-17T09:00:00+02:00') });
+      await irAlArtefacto(page);
+      await cta(page).click();
+      await esperarEnPagina(page, () => paceAndroidEstado().foco !== null);
+      await alFondo(page);
+      await esperarEnPagina(page, () => !!window.__nativo.puestos[1] && !!window.__nativo.fijo);
+      const [aviso] = await programados(page);
+      const pausa = caso.pausa.exec(aviso.title);
+      expect(pausa, 'el aviso de fin no nombra la pausa: «' + aviso.title + '»').toBeTruthy();
+      expect((await nativo(page, 'fijo')).texto, 'el aviso fijo y el de fin no nombran la misma pausa').toContain(caso.luego + pausa[1]);
+      expect(aviso.body).toMatch(caso.cuerpo);
+      /* El bloque acaba a su hora: lo que diría la web entonces es lo que ya dijo Android. */
+      const fin = await finDelBloque(page);
+      await context.clock.fastForward(fin - await page.evaluate(() => Date.now()) + 2000);
+      await esperarEnPagina(page, () => ritmoPlan(getState()).hechos === 1);
+      expect(await avisoDeLaWeb(page)).toEqual({ title: aviso.title, body: aviso.body });
+    });
+  }
+
+  test('CONTROL · sin «A tu ritmo», el de siempre', async ({ page, context }) => {
+    await abrir(page, context);
+    await empezarFoco(page);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+    const [aviso] = await programados(page);
+    expect([aviso.title, aviso.body]).toEqual(['Foco completado', 'Ciclo cerrado. Elige tu micro-pausa.']);
+  });
+});

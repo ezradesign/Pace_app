@@ -82,7 +82,12 @@ function useCountdown(durationSec, onComplete, modo) {
   // esperar al siguiente tick throttleado).
   useEffectUC(() => {
     if (status !== 'running') return;
+    /* Mira el espejo sincrono antes que la hora: un reinicio (otro reloj, «Cambiar» con la
+       pausa del dia) deja `endsAtRef` en null antes de que React quite este tic, y
+       `Date.now() >= null` es verdadero. El tic que caia en ese hueco daba el reloj por
+       acabado y llamaba a `onComplete` (tests/aro-modo-identidad.spec.js). */
     const check = () => {
+      if (statusRef.current !== 'running' || endsAtRef.current == null) return;
       if (Date.now() >= endsAtRef.current) complete();
       else forceTick(n => n + 1);
     };
