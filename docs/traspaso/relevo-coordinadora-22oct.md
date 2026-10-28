@@ -8,6 +8,25 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (28 oct., ~17:30 en España; cuenta de 5iWBf… con las 5 h al 93 % y la semana al 46 %; se repone a las 19:50)
+
+**Si llegas de la otra cuenta, empieza aquí.** `main` está en **0.184.0** (9f5ec86 subido; encima, f385d39, la hoja con la
+maqueta de vender, que sube con este commit), con el CI y Cloudflare en verde. Nada a medias en `main`. Ez espera a la
+versión de prueba definitiva para subir a Play y a TestFlight a la vez (punto 10 de abajo).
+1. **Lo que falta para vender** (`local_e4eb528a-…`, rama `claude/clever-gagarin-6701aa` en a2ce4d2, puerto 8805): lo de
+   dentro, hecho y en verde (la valoración de Play, el paso a v1 por dentro, la función de `/recuperar`). **Espera la
+   elección de Ez** sobre https://claude.ai/artifact/9MnNL8b5BYWcX9Fsa7vnAa (de esta cuenta): 1 el aviso del día de v1
+   (A hoja · B aviso abajo · C hoja y otra antes del final), 2 recuperar el código (A página + «¿Lo has perdido?» · B solo
+   la página · C dentro de PACE), 3 los botones de compra (A como la bienvenida · B dos planes), 4 valorar también en el
+   iPhone (A sí · B solo Android); se recomienda 1A 2A 3A 4A. Pásale la respuesta con `start_session` y `cwd` en su
+   worktree. **Su Java compila**: el workflow Android en su rama salió en verde (40724919949); no uses ese AAB.
+2. **Los avisos del iPhone** (`local_1d52e4b0-…`, rama `claude/awesome-albattani-270a62`, puerto 8806): se le pidió
+   «wip» y push al relevar; lo que lleva y lo que falta, en `docs/traspaso/archivos/avisos-iphone/LEEME.md` de su rama.
+3. **Ez está con Stripe** (el «Ahora» en curso de su hoja): cuando diga «k2 está», subir la parte pública de k2 de
+   `app/licencia.llaves.js` (en la copia de `main` de este PC) antes de la compra de prueba.
+4. **La hoja de esta cuenta va en la 57**; la de EcLj6… va por detrás: al llegar, republícala desde
+   `docs/traspaso/hoja-de-ruta-20oct.html`. Las páginas de esta cuenta (la maqueta de vender) dan 404 desde la otra.
+
 ## 28 oct., mañana: la auditoría de v0.181.1 (coordina la cuenta de 5iWBf…, desde el 27 oct. a las 23:10)
 
 **Si llegas de la otra cuenta, empieza aquí.** `main` está en **0.184.0**: la auditoría y sus documentos, y
