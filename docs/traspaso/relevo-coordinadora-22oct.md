@@ -17,7 +17,7 @@ de los documentos estaba corriendo al relevar: mira `gh run list`.
    8807. A las ~21:35 se le pidió «wip», push y su LEEME (`docs/traspaso/archivos/cobro-a-prueba/LEEME.md` en su rama).
    Desde la otra cuenta no se ve: busca su rama (`git branch -a | grep -i cobro`) y, si no acabó, retómala con una sesión
    nueva en su worktree y con su LEEME.
-2. **Las siete revisiones de ChatGPT**, enteras en `docs/audits/chatgpt-28oct/` y con su LEEME. Se valoran con Ez ANTES de
+2. **Las ocho revisiones de ChatGPT** (la octava, de volver cada día y el calendario), enteras en `docs/audits/chatgpt-28oct/` y con su LEEME. Se valoran con Ez ANTES de
    montar nada (Ez: «lo que se necesite se valora juntos los dos»). Pendiente de su sí: una sesión para B1-B4, C1-C6, U1,
    U2, R2, R3, R4 y R6, una página de textos de antes y después y una maqueta de producto.
 3. **Ez**: el aviso de Stripe en el modo de prueba (su hoja, el paso «Ahora»). Cuando diga «aviso puesto», un POST sin firma

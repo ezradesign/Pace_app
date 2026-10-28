@@ -36,8 +36,8 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    enseñarla, la frase del móvil y /premium con la variedad y el calendario) y lo de quien empieza (P1-P8: mirar un
    ejercicio antes de empezar, la flecha que dice qué hace, la pausa que se ve, «con una serie basta») y cuando el día se
    tuerce (Q1-Q7), en una maqueta para Ez; recomendado en una actualización durante los 14 días de los testers. Lo que es
-   solo texto (Q1, Q3, Q6, Q7 y P1-P3), en una página de antes y después, puede ir en la versión de prueba. **Las siete
-   revisiones, enteras y con lo comprobado de cada una (también R1-R6), en `docs/audits/chatgpt-28oct/`**: se valoran
+   solo texto (Q1, Q3, Q6, Q7 y P1-P3), en una página de antes y después, puede ir en la versión de prueba. **Las ocho
+   revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba definitiva, a Play y a TestFlight a la vez** (Ez, 28 oct.): esperan los 16 dibujos de
    ejercicios y el logo. El AAB lo baja la coordinadora con el sí de Ez y lo sube Ez; TestFlight, a mano y con su sí

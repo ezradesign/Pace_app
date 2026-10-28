@@ -1,7 +1,8 @@
-# Las siete revisiones de ChatGPT del 28 oct. 2026
+# Las ocho revisiones de ChatGPT del 28 oct. 2026
 
-Ez las pegó en la sesión de la coordinadora (cuenta de 5iWBf…) entre las 20:10 y las 21:30. Aquí están **tal cual**
-(`01-…` a `07-…`), para que no se pierdan al cambiar de cuenta. Cada caso se comprobó contra el código de la 0.185.0 (el
+Ez las pegó en la sesión de la coordinadora (cuenta de 5iWBf…) entre las 20:10 y las 21:45. Aquí están **tal cual**
+(`01-…` a `08-…`), para que no se pierdan al cambiar de cuenta. Ez, de la octava: «valores, guardes e implementemos lo
+útil cuando corresponda». Cada caso se comprobó contra el código de la 0.185.0 (el
 `main` de este PC), no contra el commit que leyó ChatGPT. **Ez, 28 oct.: «luego lo que se necesite se valora juntos los
 dos y vamos implementando lo que sea útil en esta o en la otra cuenta».** Nada de esto está decidido salvo lo que se
 diga abajo; lo que cambie en pantalla se enseña antes en una maqueta.
@@ -17,6 +18,7 @@ diga abajo; lo que cambie en pantalla se enseña antes en una maqueta.
 | 5 · Quien empieza | P1-P8 | Ciertos en el código: la salida de «Tu semana», el tiempo que incluye las pausas, «sin material» con pared, la vista previa sin «cómo se hace», la flecha que no dice qué hace, «una serie basta» con dos series (y una sola deja la rutina sin logros), la cuenta sin «baja, sube» y la pausa que no se ve | Maqueta para Ez; P1-P3 son textos |
 | 6 · El día que se tuerce | Q1-Q7 | Ciertos en el código: «Saltar esta pausa» que solo la aplaza, tocar una pausa futura la cambia, motivos que afirman lo que PACE no sabe, un «No» que veta para siempre (regla de s189), las pausas por tu cuenta, los cierres que dicen cómo te sientes y los dispositivos que no se juntan | Maqueta para Ez; Q1, Q3, Q6 y Q7 son textos |
 | 7 · Entender y repetir | R1-R6 | Ciertos los seis (abajo) | Lo que es dato o texto, con la página de textos; R1 y R5, con la maqueta |
+| 8 · Volver cada día y el calendario | CAL-1 a CAL-6 y V1-V5 | Ciertos en el código (abajo); CAL-2 y CAL-6 son así a propósito, pero no se dicen | Los textos, con la página de textos; lo técnico, con el llavero del calendario; V1-V5, a valorar con Ez |
 
 ## Revisión 7, comprobada (R1-R6)
 
@@ -34,6 +36,31 @@ diga abajo; lo que cambie en pantalla se enseña antes en una maqueta.
 - **R6** «4·7·8» dice 1 min y cuatro ciclos de 19 s: acaba a los 76 s (`handleCycleComplete`, `BreatheSession.jsx`) y la
   barra está llena desde los 60. El progreso, por ciclos, o «4 ciclos · 1 min 20 s».
 
+## Revisión 8, comprobada: volver cada día y el calendario (CAL-1 a CAL-6, V1-V5)
+
+Lo del código, cierto; CAL-2 y CAL-6 son así a propósito, pero la app no lo dice:
+- **CAL-1** `CALENDARIO_IDS` está vacío (`app/ritmo/ritmo.calendario.web.js`): en la web no se ofrece Google ni Outlook
+  hasta las altas de Ez (`docs/CALENDARIO_ALTAS.md`). Ya en la cola: el punto 13 del ROADMAP.
+- **CAL-2** el calendario se pone al día solo con PACE abierto (el motor corre en la página): decirlo, «Se actualiza
+  mientras PACE está abierto». Con PACE cerrado haría falta un servidor: decisión aparte, después.
+- **CAL-3** el pase vive en `sessionStorage` (se olvida al cerrar la pestaña); Google no se renueva y Microsoft, 24 h fijas
+  con `offline_access`. No vender la automatización como desatendida hasta probar una jornada entera y el día siguiente.
+  Va con el llavero del calendario (punto 13), que es justo lo que lo resuelve.
+- **CAL-4** `calendarioRefrescarReuniones` traga el error de lectura y da `false` (`ritmo.calendario.destinos.js`), y
+  «Calendario al día» compara con lo último escrito en el dispositivo: separar «reuniones comprobadas hace 2 min» de «plan
+  enviado», y decir cuándo no se pudieron leer.
+- **CAL-5** solo se lee el calendario principal (`calendars/primary/events`; en Outlook, `me/calendarView`): elegir qué
+  calendarios se leen y en cuál se escribe. Con el llavero.
+- **CAL-6** mover una pausa en Outlook no cambia PACE: en la siguiente vuelta, el plan de PACE la devuelve a su sitio.
+  Para v1, decirlo: «Cambia tus pausas desde PACE».
+- **Lo de producto (V1-V5), para valorar con Ez**: V1 un modo «Solo pausas» para quien no quiere el Pomodoro («A tu
+  ritmo» depende hoy de los bloques de Foco, `state.cycle`), que ChatGPT ve como lo que más ampliaría el uso entre
+  quienes teletrabajan, con maqueta antes; V2 «Repetir la última pausa» junto a «Probar otra»; V3 una salida para los
+  días difíciles («Muévete dos minutos sin mirar la pantalla»), sin acumular pausas pendientes; V4 un resumen del día que
+  cuente lo hecho («tres pausas, ocho minutos») sin afirmar lo que no se sabe; V5 un piloto de dos semanas con
+  teletrabajadores, con sus cinco preguntas. Y el calendario por niveles: primero solo leer las reuniones, escribir en
+  el calendario como opción y, a mano, reservar una pausa concreta.
+
 ## Cómo seguir
 
 1. **Ya en marcha**: la sesión del cobro (A1-A7).
@@ -43,3 +70,6 @@ diga abajo; lo que cambie en pantalla se enseña antes en una maqueta.
 3. **Para Ez, en una página**: los textos de antes y después (P1-P3, Q1, Q3, Q6, Q7), que pueden ir en la versión de prueba.
 4. **Para Ez, en una maqueta**: lo de producto (U3-U5, la oferta de /premium, P4-P8, Q2, Q4, Q5, R1 y R5). Recomendado en
    una actualización durante los 14 días de los testers, para no retrasar la versión de prueba ni v1.
+5. **De la octava**: los textos honestos del calendario (CAL-2, CAL-4, CAL-6) van con la página de textos; CAL-3, CAL-5 y
+   los niveles de lectura y escritura, con el llavero del calendario (punto 13 del ROADMAP), cuando estén las altas de
+   Ez; y V1-V5, a valorar con Ez. «Solo pausas» es la decisión de producto más grande de las ocho revisiones.
