@@ -130,6 +130,11 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
      el pie de Ajustes («Todo vive en tu navegador») y el aviso de importar («se sustituye»); falta decirlo donde se
      decide, al importar. Q1, Q3, Q6 y Q7, y P1-P3, son solo textos: van juntos en UNA página de antes y después para Ez,
      rápidos de montar y que pueden ir en la versión de prueba sin retrasarla.
+   - **Séptima revisión (~21:30), «¿lo entendería y lo repetiría mañana?»: R1-R6, ciertas**: Respira sin puerta para
+     principiantes, «Gemelos subrepticios» que dice «De pie» y vale sentado, las series de ejercicios distintos sumadas,
+     «Glúteos invisibles» con tres aguantes de 10 s en 30 s, la voz sin muestra en Ajustes y «4·7·8» que acaba a los 76 s.
+   - **LAS SIETE, ENTERAS, en `docs/audits/chatgpt-28oct/`** (Ez: «registrar todas las auditorías… por si cambiamos de
+     cuenta»), con su `LEEME.md`: qué es cierto de cada una, sus códigos y adónde va. Se valoran con Ez antes de montar.
 7. **Sesiones**: la del cobro (A1-A7) la arrancó Ez a las ~20:50 (`local_3bee2030-7cba-497a-bf13-c538163aca93`, puerto
    8807). Propuesta, sin arrancar: UNA sesión para B1-B4, C1-C6, U1 y U2 (tocan `app/move/`, `app/custom/`, `app/extra/` y
    `app/main.jsx`; puerto 8808), con maqueta para lo que se vea; y después, una maqueta de U3-U5 y de /premium. Uso a las

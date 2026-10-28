@@ -14,6 +14,10 @@ El mismo día ChatGPT revisó el cobro (seis casos) y las rutinas sin «Auto» (
 código de la 0.185.0, y tiene razón en los diez: van antes de cobrar y antes de la versión de prueba definitiva. La
 lista y los encargos, en el relevo. Y el primer dibujo de la tanda, «Remo con banda», se repite: la flecha iba hacia
 delante y la banda parecían dos palos (su prompt, ya corregido en `GLIFOS_A_DIBUJAR.md` y en la página de los dibujos).
+Esa noche Ez trajo cinco revisiones más (siete en total: el cobro, las rutinas sin «Auto», el valor de PACE, «Tus
+rutinas», quien empieza, el día que se tuerce y si se entiende para repetirlo). **Están enteras en
+`docs/audits/chatgpt-28oct/`**, con un `LEEME.md` que dice qué se comprobó de cada una y adónde va. Ez quiere valorarlas
+con la coordinadora antes de montar lo útil, en una cuenta o en la otra.
 
 ## 28 oct., tarde: lo que falta para vender (1A 2A 3A 4A de Ez) y los avisos del iPhone, en sus ramas
 
