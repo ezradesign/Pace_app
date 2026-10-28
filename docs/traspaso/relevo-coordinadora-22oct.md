@@ -17,7 +17,10 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    las 17:29. **Relanzada a las 20:13 en el 8813** desde esta sesión (`suite-0185b.txt` en su scratchpad): **1051 en verde y 2 saltadas** (el audio del iPhone, como siempre), en 25,3 min.
 2. **Documentos**: STATE rehecho corto (el punto 5 de su «Lo siguiente»), ROADMAP 11 y 12, DECISIONES_PRODUCTO (1A 2A 3A
    4A y la A del aviso, y la 4A en «Cómo se vende»), dos filas técnicas de vender arriba de DECISIONES_TECNICAS, LEEME y
-   la hoja. Subido a `main` con este commit; si este bloque no dice más del CI y la web, mirar `gh run list` y `pace-v0.185.0` en pacegrass.app/sw.js.
+   la hoja. **Subido a `main` (95bfcd6, 20:40) con el CI (verify y los tres e2e), Android, iOS (compila por primera vez
+   `PaceValoracion.swift`) y Cloudflare en verde**; pacegrass.app sirve `pace-v0.185.0`, con HSTS, `/recuperar` en 200 y
+   `/api/stripe` y `/api/recuperar` en 503 «cerrada» (sin sus secretos). Con `STRIPE_AVISO_SECRETO` puesto, un POST sin
+   firma a `/api/stripe` tiene que dar 400 «firma»: así se comprueba el «aviso puesto» de Ez.
 3. **Páginas de esta cuenta** (desde la otra dan 404): la hoja https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6, las
    fotos de vender https://claude.ai/artifact/56cDi1KJYKS4gKqnFKouJP, los textos del aviso
    https://claude.ai/artifact/9BKgTENwuTjts4Wa1N7ZYd y **los 16 dibujos** https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT
@@ -68,6 +71,41 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    - **B4** las seis colocaciones escritas que no se ven (la fila de v0.181.1 de DECISIONES_TECNICAS): «Piernas elevadas
      sentado», primer paso de Core silencioso, dice «Silla sin ruedas» y no sale nunca, y la Pica tras un descanso
      tampoco. Pasa de «no frena v1» a antes de la versión de prueba: es de seguridad. Lo que cambie, maqueta antes.
+6. **Dos revisiones más de ChatGPT (~20:50), también comprobadas**: «Tus rutinas» (C1-C6, todas ciertas) y el valor de
+   PACE (U1-U5, ciertas en el código; lo demás es consejo de producto para Ez).
+   - **C1** desde Estira, el constructor queda DETRÁS de su biblioteca: `ExtraLibrary` no recibe `enPausa` (Mueve sí) y
+     se monta después de `CustomBuilder` en `app/main.jsx`, los dos con `Modal` en z 100. Crear o editar una rutina propia
+     desde Estira parece no hacer nada.
+   - **C2** la tarjeta y el constructor cuentan con `customSegundos` (sin la preparación ni las colocaciones) y la vista
+     previa con `estimateDuration`: 12 pasos de 40 s son 8 min en la tarjeta y 9 en la vista previa.
+   - **C3** `EXERCISE_PIDE` se calla material: Apertura con banda (sin la banda), Piernas elevadas sentado y Extensión
+     torácica (sin la silla; la primera pide «sin ruedas»), Elevación de puntas (dice «contra pared» y declara mesa).
+   - **C4** el constructor copia solo `{ name, dur, cue }` y `moveRutinaGuiada` no añade `instruction` (colocación,
+     acción, cuidado): Fondos en silla pierde «silla sin ruedas, contra la pared». Va con B4.
+   - **C5** «Zancada con apertura» no tiene sus claves en inglés (`app/i18n/content/custom.js` solo tiene las de «World's
+     greatest stretch»): sale en castellano. Y que `verify` pida nombre y cue en los dos idiomas a cada ejercicio del registro.
+   - **C6** guardar con el tope de rutinas o con la rutina borrada en otra pestaña no dice nada (`save` solo cierra si sale).
+   - **U1** en el constructor, Escape, la × o el fondo del selector lo cierran TODO (`onClose`) y el borrador vive solo en
+     el componente: se pierde sin preguntar.
+   - **U2** la tarjeta de una rutina propia es un `div` con `onClick` (`Card`, `app/ui/Primitives.jsx`): con teclado se llega
+     al lápiz, pero no se puede empezar.
+   - **U3** la carta del lunes se abre sola y no se cierra sin contestar (`RitmoCarta`, sin `onClose`); «Dejarla como estaba»
+     rechaza. Propuesta: una tarjeta «Tu resumen está listo» que se abre cuando quieras, con «Ahora no». Ez eligió B·B en
+     la carta (17 oct.): decide Ez, con maqueta.
+   - **U4** la carta pide 3 días de «A tu ritmo» en la semana anterior, de lunes a domingo (`MOTOR_DIAS_CARTA`): quien
+     empieza la prueba un jueves o un viernes no la ve antes del primer cobro. Decide Ez: decir cuándo llega, un ejemplo
+     marcado como ejemplo o una primera carta por días propios.
+   - **U5** en el móvil no sale `RitmoComo` (la frase que dice que los bloques se hacen en el aro), por la altura.
+     Propuesta: un aviso de una sola vez, «Tu día está preparado. Pulsa «Empezar foco»». Con maqueta.
+   - **De producto, para Ez y sin código todavía**: /premium no nombra dos cosas de pago, que las rutinas cambien de un
+     día a otro (`puedeVariar`) y el calendario que se mantiene solo (`puedeMantenerCalendario`); invitaciones según lo que
+     se tocó; plantillas en el constructor; los precios se quedan para validar (la de por vida son unos 6,7 meses); y
+     mirar a 6-8 personas nuevas usarla sin ayuda. Lo que ChatGPT no haría (anuncios, limitar las pausas gratis) ya lo
+     había decidido Ez.
+7. **Sesiones**: la del cobro (A1-A7) la arrancó Ez a las ~20:50 (`local_3bee2030-7cba-497a-bf13-c538163aca93`, puerto
+   8807). Propuesta, sin arrancar: UNA sesión para B1-B4, C1-C6, U1 y U2 (tocan `app/move/`, `app/custom/`, `app/extra/` y
+   `app/main.jsx`; puerto 8808), con maqueta para lo que se vea; y después, una maqueta de U3-U5 y de /premium. Uso a las
+   20:53: 5 h al 43 % con la del cobro en marcha (al 20 % antes de arrancarla); la semana, al 52 %.
 
 ## AL RELEVO (28 oct., ~20:25; EcLj6… al ~91 %): `main` LOCAL en 0.185.0, SIN SUBIR, con la suite corriendo
 
