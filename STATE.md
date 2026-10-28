@@ -21,7 +21,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Lo siguiente
 
-El orden hasta v1, en `ROADMAP.md` («Camino a v1.0»). **La fecha de v1 no depende del código**: la fijan los 12 testers
+El orden hasta v1, en `ROADMAP.md` («Camino a v1.0»), con los paquetes de las ocho revisiones de ChatGPT del 28 oct. (A, B,
+T, M, L y V) debajo de su tabla. **La fecha de v1 no depende del código**: la fijan los 12 testers
 de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar que piden Play, Apple y Stripe.
 
 1. **Stripe en el modo de prueba**, con Ez y su hoja: el aviso de pago, los enlaces de prueba y una compra de mentira.

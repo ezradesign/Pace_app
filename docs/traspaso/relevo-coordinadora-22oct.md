@@ -8,21 +8,25 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
-## AL RELEVO (28 oct., ~21:35; 5iWBf… con las 5 h al 71 %, se repone a la 01:10; la semana al 56 %)
+## AL RELEVO (28 oct., ~21:15; 5iWBf… con las 5 h al 83 %, se repone a la 01:10; la semana al 58 %)
 
-**Si llegas de la otra cuenta (EcLj6…, que se repone a las 22:40), empieza aquí; el detalle, en el bloque de abajo.**
-`main` está en **0.185.0** más documentos (1b91ebe), con el CI de 95bfcd6 en verde y la web sirviendo `pace-v0.185.0`. El CI
-de los documentos estaba corriendo al relevar: mira `gh run list`.
-1. **La sesión del cobro (A1-A7)**, `local_3bee2030-7cba-497a-bf13-c538163aca93`, es de ESTA cuenta: rama propia y puerto
-   8807. A las ~21:35 se le pidió «wip», push y su LEEME (`docs/traspaso/archivos/cobro-a-prueba/LEEME.md` en su rama).
-   Desde la otra cuenta no se ve: busca su rama (`git branch -a | grep -i cobro`) y, si no acabó, retómala con una sesión
-   nueva en su worktree y con su LEEME.
-2. **Las ocho revisiones de ChatGPT** (la octava, de volver cada día y el calendario), enteras en `docs/audits/chatgpt-28oct/` y con su LEEME. Se valoran con Ez ANTES de
-   montar nada (Ez: «lo que se necesite se valora juntos los dos»). Pendiente de su sí: una sesión para B1-B4, C1-C6, U1,
-   U2, R2, R3, R4 y R6, una página de textos de antes y después y una maqueta de producto.
+**Si llegas de la otra cuenta (EcLj6…, que se repone a las 22:40), empieza aquí; el detalle, en el bloque de abajo.** Ez
+dejó llevar esta cuenta hasta el 95 % con todo cerrado. `main` está en **0.185.0** más documentos (el último commit es el
+de este bloque), con el CI de 95bfcd6 en verde y la web sirviendo `pace-v0.185.0`. El CI de los documentos estaba
+corriendo al relevar: mira `gh run list` (los anteriores salen «cancelled» porque cada push reemplaza al otro).
+1. **La sesión del cobro (A1-A7) NO había guardado nada al relevar**: `local_3bee2030-7cba-497a-bf13-c538163aca93`, de ESTA
+   cuenta, en `.claude/worktrees/magical-dhawan-987161` (rama `claude/magical-dhawan-987161`, NO subida), con 13
+   archivos cambiados y 2 nuevos (`tests/cobro-avisos.spec.js`, `tests/cobro.helpers.js`) sin commit, sobre 95bfcd6. El
+   aviso de «wip, push y LEEME» le llega al acabar su paso; si el uso la corta antes, su trabajo sigue en esa carpeta.
+   **Lo primero desde la otra cuenta**: `git -C <ese worktree> status`; si sigue sin commit y la sesión ya no corre,
+   commit «wip» y push de esa rama, y retómala con una sesión nueva en ese worktree (`cwd`), con el brief del punto 5 del
+   bloque de abajo (A1-A7) y puerto 8807. No borres ese worktree.
+2. **Las ocho revisiones de ChatGPT**, enteras en `docs/audits/chatgpt-28oct/` y con su LEEME, y **ordenadas en paquetes
+   en el ROADMAP** («Lo que salió de las ocho revisiones», bajo la tabla de «Camino a v1.0»): A (en marcha), B, T, M, L y V.
+   Se valoran con Ez ANTES de montar nada (Ez: «lo que se necesite se valora juntos los dos»).
 3. **Ez**: el aviso de Stripe en el modo de prueba (su hoja, el paso «Ahora»). Cuando diga «aviso puesto», un POST sin firma
    a `/api/stripe` tiene que dar 400 «firma» (hoy da 503 «cerrada»). Está generando los 16 dibujos en
-   `Pace_app\dibujos-22oct` (a las 21:35, la carpeta seguía vacía).
+   `Pace_app\dibujos-22oct` (a las 21:15, la carpeta seguía vacía).
 4. **Las páginas de esta cuenta dan 404 desde la otra**: la hoja 5iWBfHE7kD3dUVocdskmb6 (versión 62), las fotos de vender
    56cDi1KJYKS4gKqnFKouJP, los textos del aviso 9BKgTENwuTjts4Wa1N7ZYd y los dibujos 3hWPWhj3QmE5S5dWWjcdHT. En la otra,
    republica la hoja desde `docs/traspaso/hoja-de-ruta-20oct.html` y, si Ez la pide, la de los dibujos desde

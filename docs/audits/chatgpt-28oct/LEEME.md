@@ -1,6 +1,6 @@
 # Las ocho revisiones de ChatGPT del 28 oct. 2026
 
-Ez las pegó en la sesión de la coordinadora (cuenta de 5iWBf…) entre las 20:10 y las 21:45. Aquí están **tal cual**
+Ez las pegó en la sesión de la coordinadora (cuenta de 5iWBf…) entre las 20:10 y las 21:10. Aquí están **tal cual**
 (`01-…` a `08-…`), para que no se pierdan al cambiar de cuenta. Ez, de la octava: «valores, guardes e implementemos lo
 útil cuando corresponda». Cada caso se comprobó contra el código de la 0.185.0 (el
 `main` de este PC), no contra el commit que leyó ChatGPT. **Ez, 28 oct.: «luego lo que se necesite se valora juntos los
