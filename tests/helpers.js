@@ -257,7 +257,13 @@ async function esperarEnPagina(page, condicion, arg, opciones) {
   }
 }
 
+/* El reloj de la página, a las 12:00 de hoy. Una prueba que adelanta el reloj (una hora oculta, media hora
+   dormida) desde la hora de verdad cruza la medianoche si corre de noche: la app apunta la sesión al día
+   siguiente y `hoy()`, que mira el día de Node, lee el de antes. A mediodía, ni lo uno ni lo otro. */
+const MEDIODIA = (() => { const d = new Date(); d.setHours(12, 0, 0, 0); return d; })();
+
 module.exports = {
+  MEDIODIA,
   abrirTusDatos,
   esperarEnPagina,
   acabarBienvenida,

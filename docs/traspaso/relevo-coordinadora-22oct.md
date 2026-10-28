@@ -11,15 +11,17 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 ## 28 oct., mañana: la auditoría de v0.181.1 (coordina la cuenta de 5iWBf…, desde el 27 oct. a las 23:10)
 
 **Si llegas de la otra cuenta, empieza aquí.** `main` sigue en 0.181.1, con estos documentos encima: la auditoría, el
-ROADMAP, STATE, este relevo, el LEEME y la hoja. Nada a medias en `main`. Esperan a Ez tres ramas, y **ninguna se junta
-sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin mi sí»).
+ROADMAP, STATE, este relevo, el LEEME y la hoja. Nada a medias en `main`. Esperaban a Ez tres ramas: dos ya están en `main` con
+su «júntalo» y queda Android a fondo. **Ninguna se junta sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin
+mi sí»).
 1. **«Qué te ayuda» (0.183.0), en `main` desde el 28 oct. a mediodía** con el «júntalo» de Ez: sin ningún choque (en `main`
    solo había documentos), el `index.html` igual byte a byte al de la rama, y /premium ya dice «Tu mes, tu año y qué
    te ayuda». Su worktree (con el `node_modules` enlazado: `cmd /c rmdir node_modules` antes de quitarlo) y su sesión de
    EcLj6… (`local_a9b8f784-…`), para quitar y archivar con el sí de Ez. **Android a fondo (0.182.0)**, como dice el
    bloque de abajo, «AL RELEVO (27 oct., ~23:10…)»: la unión se queda en 0.183.0 y sube a **0.184.0 en un commit
    aparte**, con su línea en CHANGELOG.
-2. **`claude/pruebas-medianoche`** (bef9a7d, sin versión): el reloj de la página a `MEDIODIA` en seis archivos de
+2. **`claude/pruebas-medianoche`** (bef9a7d, sin versión), **en `main` desde el 28 oct. con el «júntalo» de Ez** (choque
+   solo en la fila de arriba de DECISIONES; la suite entera, 966 en verde): el reloj de la página a `MEDIODIA` en seis archivos de
    pruebas, y una regla nueva en `scripts/verify.pruebas.js`. El CI de cee0095 cayó en `caza-sesiones` («la hora
    oculta», 1 esperado y 0 recibido) porque corrió a las 23:07: lo que esas pruebas adelantan cruzaba la medianoche, y
    la app apuntaba la sesión al día siguiente, como debe. Lo provoqué a las 23:19 y salió en verde con el arreglo a la

@@ -37,7 +37,7 @@ la noche (a las 23:01, las 23:29 y las 23:39, la última con `ingles-11`).
   `tus-rutinas-auditoria`, `caza-ingles`, `pausa-propone` y `retencion`: 60 pruebas en verde.
 - `scripts/verify.pruebas.js` falla si la trampa vuelve (probado con la versión vieja), y la regla va en la fila de
   arriba de `DECISIONES_TECNICAS_VIGENTES.md`.
-- No lleva versión, porque solo toca pruebas. Espera el «júntalo» de Ez.
+- No lleva versión, porque solo toca pruebas. En `main` desde el 28 oct., con el «júntalo» de Ez.
 
 ## Lo que Ez decidió y aún no está en el código
 

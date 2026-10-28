@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 const MARCAS = { _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true };
 
@@ -23,7 +23,7 @@ async function segundos(page, n) {
 const sesion = (page) => page.locator('[data-pace-session-root]');
 const cierre = (page) => sesion(page).locator('[data-pace-session-done]');
 const leerEstado = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2') || '{}'));
-const hoy = (lista) => (lista || [])[(new Date().getDay() + 6) % 7] || 0;
+const hoy = (lista) => (lista || [])[(MEDIODIA.getDay() + 6) % 7] || 0;
 async function sesiones(page) {
   await page.waitForFunction(() => typeof window.eventsWebReadRaw === 'function');
   return page.evaluate(async () => {
@@ -69,7 +69,7 @@ async function volverAlInicio(page) {
 test('Respira: «Terminar» a mitad suma los minutos pero no da logros; entera, sí', async ({ page }) => {
   test.setTimeout(120_000);
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirRespira(page, '4·7·8');
   await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
@@ -98,7 +98,7 @@ test('Respira: «Terminar» a mitad suma los minutos pero no da logros; entera, 
 test('Estira: cortar los pasos suma los minutos pero no da logros; entera, sí', async ({ page }) => {
   test.setTimeout(150_000);
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'move.neck.3');
   await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
@@ -122,7 +122,7 @@ test('Estira: cortar los pasos suma los minutos pero no da logros; entera, sí',
 
 test('Mueve: «Siguiente» a mitad de un paso suma los minutos pero no da logros', async ({ page }) => {
   const errores = capturarErrores(page);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
   await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();

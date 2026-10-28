@@ -17,7 +17,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { MEDIODIA, sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
 
 const MARCAS = { _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true };
 const sesion = (page) => page.locator('[data-pace-session-root]');
@@ -26,7 +26,7 @@ const fase = (page) => page.locator('[data-pace-v1-raiz]').first().getAttribute(
 const nombrePaso = (page) => page.locator('[data-pace-v1-name]').first();
 const siguiente = async (page) => { await sesion(page).locator('[data-pace-v1-btn="next"]').click(); await page.waitForTimeout(30); };
 const leerEstado = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2') || '{}'));
-const hoy = (lista) => (lista || [])[(new Date().getDay() + 6) % 7] || 0;
+const hoy = (lista) => (lista || [])[(MEDIODIA.getDay() + 6) % 7] || 0;
 const tarjeta = (p) => p.locator('[data-pace-sidebar-accion]');
 
 async function segundos(page, n) {
@@ -117,7 +117,7 @@ test('R2 · una rutina solo con «Descanso» no se guarda, ni nueva ni al editar
 
 test('R2 · una rutina de antes solo con «Descanso» no cuenta como Mueve', async ({ page, context }) => {
   await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Solo aire', [['Descanso', 60]])] }, MARCAS));
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await empezar(page, await abrirPropia(page, 'Solo aire'));
   await segundos(page, 45);
@@ -133,7 +133,7 @@ test('R2 · una rutina de antes solo con «Descanso» no cuenta como Mueve', asy
 /* ------------------------------------------------------------------- R3 · por lados */
 test('R3 · la plancha lateral de una rutina propia se guía por los dos lados', async ({ page, context }) => {
   await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Costados', [['Plancha lateral', 30], ['Giro sentado', 30]])] }, MARCAS));
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   expect(await page.evaluate(() => moveRutinaGuiada(getCustomRoutine('custom.1')).steps.map(s => s.mode)),
     'la plancha lateral no va por lados').toEqual(['perSide', 'timed']);
@@ -160,7 +160,7 @@ test('R3 · en el constructor, un paso por lados dice «por lado» y el total cu
 test('R4 · tras reordenar la rutina, «Continúa» no sigue por otro ejercicio', async ({ page, context }) => {
   await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Tres gestos',
     [['Encogimiento de hombros', 30], ['Giro sentado', 30], ['Círculos de hombro', 30]])] }, MARCAS));
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await empezar(page, await abrirPropia(page, 'Tres gestos'));
   await segundos(page, 12);
@@ -185,7 +185,7 @@ test('R4 · tras reordenar la rutina, «Continúa» no sigue por otro ejercicio'
 test('R5 · cortar un paso con reloj que no es el último deja la sesión como «terminada antes»', async ({ page, context }) => {
   await sembrar(context, Object.assign({ customRoutines: [propia('custom.1', 'Dos gestos',
     [['Encogimiento de hombros', 40], ['Círculos de hombro', 40]])] }, MARCAS));
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await empezar(page, await abrirPropia(page, 'Dos gestos'));
   await segundos(page, 3);
@@ -200,7 +200,7 @@ test('R5 · cortar un paso con reloj que no es el último deja la sesión como �
 
 test('R5 · «Terminar antes» en la primera serie se conserva hasta el final', async ({ page, context }) => {
   await sembrar(context, MARCAS);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCatalogo(page, 'extra.chair.dips');
   await siguiente(page);   // «Empezar ya»
@@ -215,7 +215,7 @@ test('R5 · «Terminar antes» en la primera serie se conserva hasta el final', 
 /* ------------------------------------------------------------------- R6 · lo hecho */
 test('R6 · una serie hecha y dos saltadas: el cierre dice 1 serie, no 3', async ({ page, context }) => {
   await sembrar(context, MARCAS);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCatalogo(page, 'extra.chair.dips');
   await siguiente(page);   // «Empezar ya»

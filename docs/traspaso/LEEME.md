@@ -10,18 +10,18 @@ La pestaña «Qué te ayuda» de Estadísticas, con el 1A 2A 3A de Ez (tres idea
 su candado sin PACE completo), juntada el 28 oct. desde `claude/que-te-ayuda-maqueta-6c3534` sin ningún choque: en
 `main` solo había documentos. El `index.html` juntado es igual byte a byte al de la rama. En la unión, /premium pasa a
 decir «Tu mes, tu año y qué te ayuda», como la invitación de la app. Lo técnico, en la fila de v0.183.0 de
-`DECISIONES_TECNICAS_VIGENTES.md`. Siguen esperando a Ez Android a fondo (entra como 0.184.0) y
-`claude/pruebas-medianoche`.
+`DECISIONES_TECNICAS_VIGENTES.md`. Sigue esperando a Ez Android a fondo (entra como 0.184.0); el arreglo de las
+pruebas de noche se juntó detrás, el mismo día.
 
 ## 28 oct., mañana: la auditoría de v0.181.1, y el arreglo de las pruebas que caían de noche, a la espera de Ez
 
 La auditoría (`docs/audits/auditoria-v0.181.1.md`) deja el código sano y una conclusión: **la fecha de v1 ya no
 depende del código**, sino de los 12 testers de Android con sus 14 días y del alta para cobrar. El orden hasta v1 pasa
 a 17 puntos (`ROADMAP.md`, «Camino a v1.0»), con lo decidido que aún faltaba: la valoración de Play, el paso a v1 sin
-quitar nada, `/recuperar` y lo legal con la función de desistimiento. Una tercera rama espera el «júntalo» de Ez:
-`claude/pruebas-medianoche`, sin versión, que pone a mediodía el reloj de seis archivos de pruebas (de noche cruzaban
-la medianoche: así cayó el CI de cee0095). Cómo juntar las tres: el bloque del 28 oct. de
-`docs/traspaso/relevo-coordinadora-22oct.md`.
+quitar nada, `/recuperar` y lo legal con la función de desistimiento. La rama
+`claude/pruebas-medianoche`, sin versión, pone a mediodía el reloj de seis archivos de pruebas (de noche cruzaban la
+medianoche: así cayó el CI de cee0095); en `main` desde el 28 oct. con el «júntalo» de Ez. Lo que queda por juntar: el
+bloque del 28 oct. de `docs/traspaso/relevo-coordinadora-22oct.md`.
 
 ## 27 oct., noche: v0.181.1 en `main`; «Qué te ayuda» (0.183.0) y Android a fondo (0.182.0), en su rama, a la espera de Ez
 
