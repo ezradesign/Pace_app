@@ -8,6 +8,34 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (28 oct., ~20:05; cuenta de EcLj6… con las 5 h al 83 % y la semana al 35 %; se repone a las 22:40)
+
+**Si llegas de la otra cuenta, empieza aquí.** `main` en **0.184.1** (6fbd24c: la parte pública de k2), con el CI, Android,
+iOS y Cloudflare en verde y la web sirviendo `pace-v0.184.1`. Nada a medias en `main`.
+1. **Dos ramas terminadas y subidas, sin juntar**, cada una a la espera de Ez (Ez: «nunca juntes nada en main sin mi sí»):
+   - `claude/clever-gagarin-6701aa` (9a5db56), lo que falta para vender con 1A 2A 3A 4A, «Las rutinas más profundas»
+     (Ez no quiere «hondas») y dos arreglos de la auditoría de seguridad (`checkout.session.async_payment_succeeded` y
+     HSTS). Fotos para el «júntalo»: https://claude.ai/artifact/Mk11GDb9JBDGXyTrynbaYY. La suite entera no se pasó tras
+     los últimos cambios: pasarla al juntar. CHANGELOG, STATE y ROADMAP propuestos en su LEEME.
+   - `claude/awesome-albattani-270a62` (8b9106a), los avisos del iPhone (suite entera en verde, 1017). Espera la A o B
+     de Ez sobre el aviso de fin: https://claude.ai/artifact/7Hj5sHmFuuzVP5QFntqdN7 (recomendada A).
+   Las dos parten de 0.184.0 y chocan en `app/ui/ios.js` e `index.html`; `main` va ya en 0.184.1: la versión, al juntar,
+   en un commit aparte. **Esas páginas y la hoja de EcLj6… (versión 72) son de esta cuenta: desde la otra dan 404.**
+   Las sesiones que las hicieron (`local_9782ed9f-…`, `local_40fd9c7d-…`) también son de esta cuenta.
+2. **Stripe, con Ez paso a paso** (su hoja, «Stripe, paso a paso»). Hecho: la cuenta (autónomo), «vende por ti» con
+   Stripe Tax, productos y enlaces en REAL y APAGADOS, el portal, k2, y Cloudflare (`PACE_K2_PRIVADA` y el KV
+   `pace-ventas` enlazado como `VENTAS`, en Production): comprobado desde fuera, `/api/codigo` da 404 «pendiente» y
+   `/api/stripe` 503 porque aún no tiene su secreto. **Lo siguiente**, en el MODO DE PRUEBA de Stripe: el aviso de pago
+   (URL `https://pacegrass.app/api/stripe`, eventos `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+   `invoice.paid` y `customer.subscription.deleted`; su `whsec_` como secreto `STRIPE_AVISO_SECRETO` en Production y
+   *Retry deployment*), el producto y los dos enlaces de prueba, y la compra de mentira con 4242 abriendo el enlace desde
+   Stripe. Al pasar a real, el `whsec_` del aviso real sustituye al de prueba. La llave que solo lee (`STRIPE_LECTURA`)
+   hace falta cuando se junte `/recuperar`.
+3. **Ez quiere vender en la web antes de v1.** Propuesto y sin decidir: solo el de por vida, con un botón en /premium
+   (maqueta antes). Antes de vender: lo legal de /premium (aviso legal con nombre, NIF y contacto, condiciones y el botón
+   de desistimiento) y las condiciones en Stripe. Lo de Ez de la auditoría: verificación en dos pasos en GitHub,
+   Cloudflare, Stripe, Google y Apple, y copiar `PACE-llave-play` y `PACE-llave-licencias` a un disco.
+
 ## 28 oct., ~18:20: coordina la cuenta de EcLj6… (5 h al 14 % y la semana al 26 %; se repone a las 22:40)
 
 **Si llegas de la otra cuenta, empieza aquí.** `main` sigue en **0.184.0**: nada juntado desde el relevo de las 17:30.

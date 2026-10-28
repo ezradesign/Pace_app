@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.184.1 · actualizada el 28 de octubre a las 19:35 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.184.1 · actualizada el 28 de octubre a las 20:00 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -130,15 +130,17 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           luego, en tu PC, la llave que firma las ventas; después Cloudflare y Stripe en modo de prueba, y una compra de
           mentira con la tarjeta de prueba para ver que todo funciona. Nadie paga nada de verdad hasta que hables con el
           gestor.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · montando lo que elegiste, 1A 2A 3A 4A</span>
+      <li class="paso luego"><span class="estado">Hecho en su rama · espera tu «júntalo» mirando las fotos</span>
         <span class="t">Lo que falta para vender</span>
         <span class="c"><span class="quien">Una sesión.</span> Lo de dentro, hecho y en verde: la valoración en Play una vez, al acabar
           la quinta pausa entera; que nadie pierda nada el día de v1; y la búsqueda para recuperar el código de una compra.
-          Ahora monta lo que se ve, como elegiste, y te enseña fotos antes de juntarlo.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · retomada desde esta cuenta</span>
+          Montado lo que se ve, como elegiste, con «Las rutinas más profundas» y los dos arreglos de seguridad:
+          <a href="https://claude.ai/artifact/Mk11GDb9JBDGXyTrynbaYY">las fotos</a>. Dime «júntalo» o qué cambiar.</span></li>
+      <li class="paso luego"><span class="estado">Hecho en su rama · espera tu A o B sobre los textos</span>
         <span class="t">Los avisos del iPhone y dos arreglos pequeños</span>
-        <span class="c"><span class="quien">Una sesión, retomada a las 18:20.</span> Primero guarda y sube lo que dejó la otra cuenta, y
-          luego lo termina. Lleva los cuatro fallos de avisos que Android ya no tiene, un aviso de fin que
+        <span class="c"><span class="quien">Tú, cuando acabes con Cloudflare</span> (<a href="https://claude.ai/artifact/7Hj5sHmFuuzVP5QFntqdN7">los
+          textos</a>): A, el móvil dice lo mismo que la web al acabar un bloque (la recomendada); B, sigue con «Foco
+          completado». Todas las pruebas, en verde. Lleva los cuatro fallos de avisos que Android ya no tiene, un aviso de fin que
           dice cuál es tu pausa (te enseña los textos antes), la prueba que falla con el ordenador cargado y el script de los
           dibujos, que se rompía al arrancar.</span></li>
       <li class="paso luego"><span class="estado">Cuando esté todo · lo decidiste el 28 de octubre</span>
@@ -666,7 +668,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           archivos en <code>PACE-llave-licencias</code>: <code>k2.privada.pem</code> (llévala al disco duro con las otras) y
           <code>k2.para-cloudflare.txt</code> (para el paso siguiente; bórralo después). Dime «k2 está»: subo su parte
           pública a la app, que hace falta para que el código de una compra abra PACE completo.</span></li>
-      <li class="paso ahora"><span class="estado">Ahora · tú, unos 10 minutos</span>
+      <li class="paso hecho"><span class="estado">Hecho · comprobado desde aquí el 28 de octubre</span>
         <span class="t">Cloudflare: el secreto de k2 y el almacén de las ventas</span>
         <span class="c"><span class="quien">Tú.</span> En <b>dash.cloudflare.com › Workers y Pages</b> › el proyecto de pacegrass.app:
           <ol>
@@ -676,11 +678,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               <b>Configuración › Enlaces › Añadir › Espacio de nombres KV</b>: variable <code>VENTAS</code>, espacio
               <code>pace-ventas</code>.</li>
           </ol></span></li>
-      <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
+      <li class="paso ahora"><span class="estado">Ahora · tú, en el modo de prueba de Stripe</span>
         <span class="t">El aviso de pago</span>
         <span class="c"><span class="quien">Tú.</span> En Stripe › <b>Desarrolladores › Webhooks</b> (o «Destinos de eventos») › Añadir:
           URL <code>https://pacegrass.app/api/stripe</code> y los eventos <code>checkout.session.completed</code>,
-          <code>invoice.paid</code> y <code>customer.subscription.deleted</code>. Stripe te enseña un secreto que empieza por
+          <code>checkout.session.async_payment_succeeded</code>, <code>invoice.paid</code> y
+          <code>customer.subscription.deleted</code>. Stripe te enseña un secreto que empieza por
           <code>whsec_</code>: pégalo en Cloudflare como otro secreto, <code>STRIPE_AVISO_SECRETO</code>.</span></li>
       <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
         <span class="t">La llave que solo lee, para recuperar códigos</span>
