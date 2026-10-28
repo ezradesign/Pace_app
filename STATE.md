@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.183.0 · 28 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.184.0 · 28 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -13,7 +13,8 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   `scripts/play/capturas-premium.js`).
 - **Android** (Fase 2 de `ROADMAP.md`): cada push a `main` compila el APK de prueba y el AAB firmado para
   Play. La prueba cerrada, aprobada el 21 oct. con la 0.174.0; Ez la probó en su móvil el 22 (sus apuntes, ya
-  arreglados). **iPhone**, dentro de v1 desde el 22 oct. (Ez): la 0.175.0 en TestFlight, firmada y subida desde
+  arreglados), y Android a fondo (los avisos, la cuenta con el móvil bloqueado y el calendario), en la 0.184.0
+  tras probarla el 28. **iPhone**, dentro de v1 desde el 22 oct. (Ez): la 0.175.0 en TestFlight, firmada y subida desde
   GitHub sin Mac, y la App Store el mismo día que Android (`DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
@@ -41,9 +42,8 @@ porqué, en la auditoría del 28 oct. (`docs/audits/auditoria-v0.181.1.md`). **L
 código**: la fijan los 12 testers de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar,
 que piden Play, Apple y Stripe. Lo inmediato:
 
-1. **Juntar Android a fondo con el «júntalo» de Ez** (`claude/android-a-fondo-6edf2e`, después de que Ez la pruebe en
-   su Android; hecha como 0.182.0, entra como 0.184.0 en un commit aparte de la unión). «Qué te ayuda» (0.183.0) y el
-   arreglo de las pruebas que caían de noche, en `main` desde el 28 oct. Lo que choca, en el relevo
+1. **Juntado todo lo que esperaba a Ez** (28 oct.): «Qué te ayuda» (0.183.0), el arreglo de las pruebas que caían de
+   noche y Android a fondo (0.184.0, probada por Ez en su Android). Detalle, en el relevo
    (`docs/traspaso/relevo-coordinadora-22oct.md`, el bloque del 28 oct.).
 2. **Subir la versión juntada a la prueba cerrada de Play y a TestFlight**, que hoy tienen la 0.174.0 y la 0.175.0,
    antes de invitar a nadie. Subidas: `docs/launch/google-play/guia.html`.
@@ -69,10 +69,9 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT y
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora, un «júntalo» y un sí**: probar Android a fondo en su Android con el APK «PACE prueba» y sus seis puntos (en
-  https://github.com/ezradesign/Pace_app/actions/runs/40580116946, `pace-android-debug`) y decir si se junta; y dar el sí
-  para bajar a `subidas-play\` el AAB de la versión juntada. «Qué te ayuda» (0.183.0) y el arreglo de las pruebas de
-  noche ya están en `main`, con sus «júntalo» del 28 oct.
+- **Ahora, un sí**: bajar a `subidas-play\` el AAB de la 0.184.0 (el artefacto `pace-android-play` del commit) para que
+  Ez lo suba a la prueba cerrada antes de invitar a nadie. Las tres ramas que esperaban a Ez ya están en `main`, con
+  sus «júntalo» del 28 oct.
 - **Lo que fija la fecha de v1**: con esa versión en la prueba cerrada, reunir unos 15 testers (tiene 5 o 6; `/beta`
   y el grupo están listos, falta difundirlos: `testers.md`); el gestor y el alta para cobrar; la cuenta de Stripe con
   Managed Payments (confirmar que la ofrecen en España; si no, Paddle) y los datos del aviso legal; volver a exportar el
@@ -117,15 +116,15 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abiert
   v0.174.5) ·
   **avisos de Android** tras la prueba en el móvil de Ez (A1 campana
   doble al volver, A2 cancelar el aviso antes de que llegue, A3 «programado» antes de saber si se
-  programó, A4 permiso de notificaciones sin refrescar) y N4, el aviso fijo con el móvil bloqueado, **con v0.182.0 en su rama**
-  (`claude/android-a-fondo-6edf2e`, a la espera de Ez; `tests/android-avisos.spec.js`) · **seguridad antes de cobrar** (S1
+  programó, A4 permiso de notificaciones sin refrescar) y N4, el aviso fijo con el móvil bloqueado, **en `main` con v0.184.0**
+  (28 oct., probado por Ez en su Android; `tests/android-avisos.spec.js`) · **seguridad antes de cobrar** (S1
   `premiumUnlocked` abre sin compra, S2 licencia aceptada antes de verificarla, S4 «Avísame» sin
   límites, S5 CSP, S6 en Android los eventos de PACE se reconocen por texto), **en `main` con v0.177.0**
   (con el sí de Ez); S3, código portable, es la decisión de Ez · **la hora y la medianoche** (H1-H3 la hora repetida del 25 oct.,
   H4 licencia con fecha caduca 1 h antes, H5 bloque de antes de medianoche según si la página vivió),
   **en `main` con v0.181.0** y la voz de Respira (27 oct., con el sí de Ez; `tests/hora-y-medianoche.spec.js`) ·
   **el puente del calendario de Android** (de C2, 22 oct.: una lista que fallaba se leía como un
-  calendario vacío), **con v0.182.0 en la misma rama** (`tests/android-calendario.spec.js`).
+  calendario vacío), **en `main` con v0.184.0** (`tests/android-calendario.spec.js`).
 - **Al volver los Caminos** (después de v1; hoy `SHOW_CAMINOS = false`), tres casos de la auditoría
   externa del 21 oct.: terminar un paso de cuerpo dentro de un Camino borra `pace.cuerpo.v1` de otra
   rutina a medias (`olvidarCuerpoGuardada` con `inPath`); «¿Salir del Camino?» no suspende la sesión
@@ -138,11 +137,11 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abiert
   Mueve), en v0.176.0; N2 (las franjas del móvil con la paleta) en v0.176.1; N5-N8 (1A 2A 3C 4B de Ez sobre la
   maqueta https://claude.ai/artifact/MLCNMXzaDjwLiZ2K1Rmero) en v0.176.2. Quedan N4 (aviso con el móvil bloqueado)
   y N9 (la barra lateral durante un Foco: no se reproduce; falta el vídeo de Ez). N4, con la A de Ez del 27 oct. (la cuenta que corre sola,
-  sin botones), con v0.182.0 en `claude/android-a-fondo-6edf2e`; falta verlo en su Android. Detalle en la cola de
+  sin botones), en `main` con v0.184.0, probado por Ez en su Android el 28 oct. Detalle en la cola de
   `docs/traspaso/relevo-coordinadora-22oct.md`, punto 1c.
 - **Lo que prometemos sobre los datos** (P1-P5, ChatGPT, 22 oct.): **en `main` con v0.179.0** (26 oct.)
   con el 1A 2A 3A de Ez sobre
-  https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY. La 1A en el calendario del móvil, con v0.182.0 en su rama: una
+  https://claude.ai/artifact/QMy8fBJtxgf4SR8weSi7wY. La 1A en el calendario del móvil, en `main` con v0.184.0: una
   pieza nativa propia (`PaceCalendario`, porque el complemento no tiene `ACCESS_LEVEL`) lo marca privado; falta que
   Ez lo pruebe en su Android. Play y App Store no cambian
   ninguna respuesta hasta la compra dentro de las apps.

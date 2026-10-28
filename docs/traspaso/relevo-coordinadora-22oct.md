@@ -10,16 +10,18 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 
 ## 28 oct., mañana: la auditoría de v0.181.1 (coordina la cuenta de 5iWBf…, desde el 27 oct. a las 23:10)
 
-**Si llegas de la otra cuenta, empieza aquí.** `main` sigue en 0.181.1, con estos documentos encima: la auditoría, el
-ROADMAP, STATE, este relevo, el LEEME y la hoja. Nada a medias en `main`. Esperaban a Ez tres ramas: dos ya están en `main` con
-su «júntalo» y queda Android a fondo. **Ninguna se junta sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin
+**Si llegas de la otra cuenta, empieza aquí.** `main` está en **0.184.0**: la auditoría y sus documentos, y
+encima las tres ramas que esperaban a Ez. Nada a medias en `main`. Las tres ramas que esperaban a Ez ya están en `main`, cada una con
+su «júntalo». **Ninguna se junta sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin
 mi sí»).
 1. **«Qué te ayuda» (0.183.0), en `main` desde el 28 oct. a mediodía** con el «júntalo» de Ez: sin ningún choque (en `main`
    solo había documentos), el `index.html` igual byte a byte al de la rama, y /premium ya dice «Tu mes, tu año y qué
    te ayuda». Su worktree (con el `node_modules` enlazado: `cmd /c rmdir node_modules` antes de quitarlo) y su sesión de
-   EcLj6… (`local_a9b8f784-…`), para quitar y archivar con el sí de Ez. **Android a fondo (0.182.0)**, como dice el
-   bloque de abajo, «AL RELEVO (27 oct., ~23:10…)»: la unión se queda en 0.183.0 y sube a **0.184.0 en un commit
-   aparte**, con su línea en CHANGELOG.
+   EcLj6… (`local_a9b8f784-…`), para quitar y archivar con el sí de Ez. **Android a fondo, en `main` como 0.184.0 desde el 28 oct.**
+   (Ez la probó en su Android: «va bien, júntalo»): la unión se quedó en 0.183.0 (choques en la versión, los documentos
+   y el censo de claves, 1051) y la 0.184.0 va en un commit aparte; la suite entera, 986 en verde. Su worktree y su
+   sesión de EcLj6… (`local_d565db9c-…`), para quitar y archivar con el sí de Ez. **Lo siguiente es el sí de Ez para
+   bajar el AAB de la 0.184.0** (`pace-android-play`) y subirlo a la prueba cerrada antes de invitar testers.
 2. **`claude/pruebas-medianoche`** (bef9a7d, sin versión), **en `main` desde el 28 oct. con el «júntalo» de Ez** (choque
    solo en la fila de arriba de DECISIONES; la suite entera, 966 en verde): el reloj de la página a `MEDIODIA` en seis archivos de
    pruebas, y una regla nueva en `scripts/verify.pruebas.js`. El CI de cee0095 cayó en `caza-sesiones` («la hora
@@ -49,6 +51,10 @@ mi sí»).
    de red en Ashburn y de Durable Objects. La web siguió en 0.181.1 con `main` en 0.183.0. Se reintenta con el
    siguiente push a `main` o con «Retry deployment» en el panel de Pages (proyecto `paceweb`, de Ez). Antes de dar
    una versión por publicada, mirar `sw.js` en pacegrass.app y el check «Cloudflare Pages» del commit.
+8. **Para la cola: `ritmo-pausa-libre:45` cae con la suite entera** (28 oct., en la unión de Android: 1 roja de 989).
+   Su bucle avanza el reloj minuto a minuto mientras no ve la pausa, y con el PC cargado se pasa: la pausa del día ya
+   había acabado al pulsar «Cambiar», y el botón dice «Empezar otro ciclo» en vez de «Empezar foco». Sola pasa 3 de 3.
+   Hay que hacerla esperar a la pausa de verdad, como `ritmo-pausa` y `ritmo-pausa-entera`, que caen igual.
 
 ## AL RELEVO (27 oct., ~23:10 en España; cuenta de EcLj6… con las 5 h al 91 % y la semana al 24 %; se repone a la 01:10)
 
@@ -484,9 +490,8 @@ huecos.
    IP de una hora que guarda «Avísame» para su límite (S4), en `privacy.html`. Antes de conectar «Avísame» y de vender;
    enseñárselo a Ez antes.
 6. ~~Montar lo que Ez elija de N5-N8~~ **HECHO** con la 2 (0.176.2).
-7. ~~Android a fondo~~ **HECHO en su rama** (0.182.0, `claude/android-a-fondo-6edf2e`, 27 oct.): los avisos A1-A4, N4
-   con la A de Ez, el puente del calendario con S6 y lo privado en el calendario del móvil. Espera que Ez lo pruebe en su
-   Android y diga «júntalo».
+7. ~~Android a fondo~~ **HECHO** (0.184.0, en `main` el 28 oct., probada por Ez en su Android): los avisos A1-A4, N4
+   con la A de Ez, el puente del calendario con S6 y lo privado en el calendario del móvil.
 8. ~~La bienvenida y los Ajustes~~ **HECHO** (0.180.0, 27 oct., con el 1C 2A 3A de Ez).
 9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO** (0.183.0, en `main` el 28 oct., con el 1A 2A 3A de Ez y su «júntalo»).
 10. ~~La hora y la medianoche, y la voz de Respira~~ **HECHO** (0.181.0, 27 oct.).

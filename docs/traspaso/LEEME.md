@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.183.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.184.0.
 
 ## 28 oct.: Android a fondo (v0.184.0), en `main` con el «júntalo» de Ez
 
