@@ -72,6 +72,19 @@ function paceNativoFoco(endsAt, textos) {
   else if (p === 'ios') paceIosFoco(endsAt, textos);
 }
 
+/* La campana de fin del bloque que acababa en `fin`: `sonar` se llama si es de PACE, y no si
+   el aviso del sistema ya sonó o va a sonar por ese bloque (android.avisos.js). En la web y en
+   el iPhone suena siempre. */
+function paceNativoCampana(fin, sonar) {
+  if (pacePlataformaNativa() === 'android') { paceAndroidCampana(fin, sonar); return; }
+  try { sonar(); } catch (e) {}
+}
+
+/* El último aviso que el sistema no dejó poner, o null. Ajustes lo cuenta. */
+function paceNativoAvisoFallo() {
+  return pacePlataformaNativa() === 'android' ? paceAndroidAvisoFallo() : null;
+}
+
 /* --- La copia de «Tus datos» y los enlaces -------------------------------- */
 
 /* false en la web, donde toca la descarga de siempre. En el movil, una promesa con lo que pasó
@@ -91,5 +104,5 @@ function paceNativoEnlace(ruta) {
 
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoGuardarArchivo, paceNativoEnlace,
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace,
 });

@@ -61,7 +61,9 @@ function FocusTimer({ onFinish }) {
       return;
     }
     paceFocoContar(bloque, () => {
-      try { playSound('pomodoro.end'); } catch (e) {}
+      /* En Android, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
+      const campana = () => { try { playSound('pomodoro.end'); } catch (e) {} };
+      if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       completeFocusSession('home', { minutes: minutos, bloque,
@@ -149,7 +151,8 @@ function FocusTimer({ onFinish }) {
   useEffectFT(() => {
     if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
-    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
+      fijo: () => (typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null) });   // N4: se lee al irse al fondo
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado. */

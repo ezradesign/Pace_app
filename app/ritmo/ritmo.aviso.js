@@ -67,4 +67,34 @@ function ritmoAviso(s, t, tn, lang) {
   };
 }
 
-Object.assign(window, { ritmoAviso });
+/* EL AVISO FIJO CON EL MÓVIL BLOQUEADO (Ez, N4 A del 27 oct. 2026): mientras corre un Foco y
+   PACE está en el fondo, Android enseña lo que queda, que cuenta solo (PaceAvisoFijo), con
+   este título y este texto: el bloque, la hora a la que acaba y lo que viene detrás.
+     Foco · bloque 2 de 9
+     Hasta las 10:40. Luego, tu pausa: Gemelos subrepticios · 1 min
+   Sin «A tu ritmo», «Foco · 25 min» y la hora. Se lee al irse al fondo, con el bloque aún sin
+   cerrar: el que corre es `focos[hechos]`, y lo de detrás sigue las reglas de `ritmoAviso`
+   (la duración de la rutina; la de la parada en la larga). */
+function ritmoAvisoFijo(s, t, tn, lang, endsAt) {
+  var d = new Date(endsAt);
+  var hasta = tn('notify.fijo.hasta', { hora: ritmoHora(d.getHours() * 60 + d.getMinutes()) });
+  var p = typeof ritmoAro === 'function' && ritmoAro(s, t, tn) && typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (!p || !p.actual) return { titulo: tn('notify.fijo.titulo.manual', { min: (s && s.focusMinutes) || 25 }), texto: hasta };
+  var titulo = tn('notify.fijo.titulo', { n: p.hechos + 1, total: p.total });
+  var it = typeof ritmoDetras === 'function' ? ritmoDetras(p.m, p.actual) : null;
+  var nombre = function (pl) {
+    return typeof ritmoNombre === 'function' ? ritmoNombre(pl.rutina || pl, t, lang) : (pl.name || pl.id || '');
+  };
+  var luego;
+  if (!it) luego = t('notify.fijo.ultimo');
+  else if (it.tipo === 'comida') luego = t('notify.fijo.comida');
+  else if (it.tipo === 'foco') luego = tn('notify.fijo.bloque', { n: p.hechos + 2 });
+  else {
+    var platos = it.platos || [];
+    var clave = it.larga ? 'notify.fijo.larga' : (it.tipo === 'cierre' ? 'notify.fijo.cierre' : 'notify.fijo.pausa');
+    luego = platos.length ? tn(clave, { plato: platos.map(nombre).join(' + '), min: it.larga ? it.dur : platos[0].min }) : '';
+  }
+  return { titulo: titulo, texto: luego ? hasta + ' ' + luego : hasta };
+}
+
+Object.assign(window, { ritmoAviso, ritmoAvisoFijo });

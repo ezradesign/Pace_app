@@ -205,7 +205,9 @@ Desde v0.136.0 la misma web se empaqueta como app de Android con Capacitor 8.
   `versionCode`) sale de `PACE_VERSION`, asi que `npm run bump` tambien la cambia en Android.
 - Lo que el WebView no trae (boton atras, avisos, pantalla encendida, compartir archivos) lo dan
   complementos de Capacitor fijados en `package.json`; tras añadir uno, `npm run android:sync` lo
-  apunta en `android/`. Solo `app/ui/android.js` les habla.
+  apunta en `android/`. Solo les hablan `app/ui/android.js`, `android.avisos.js` (el aviso de fin de Foco)
+  y `android.calendario.js` (el calendario del móvil). Las piezas propias (`PaceBarras`, `PaceCalendario`) están en
+  `android/app/src/main/java/com/ezradesign/pace/` y se registran en `MainActivity`.
 - El icono, el arranque y las barras salen de `android/app/src/main/res/`: la vaca es una copia de
   `icons/icon-512.png` (`drawable-nodpi/pace_logo.png`), el icono de Android 7 es el de iPhone y los
   colores, los de `app/tokens.css` (`values/` y `values-night/pace_colores.xml`). Si cambia algo de

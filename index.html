@@ -3342,6 +3342,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.notify.blocked.ios': 'Los avisos de PACE están desactivados en los ajustes del iPhone.',
   'settings.notify.exact': 'Que el aviso llegue a su hora',
   'settings.notify.exact.sub': 'Android puede retrasarlo unos minutos',
+  'settings.notify.fallo': 'Android no dejó poner el último aviso de fin de Foco.',
   'settings.circle': 'Círculo',
   'settings.circle.sub': 'Respira · {name}',
   'settings.circle.flor': 'Loto',
@@ -3439,6 +3440,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.notify.blocked.ios': 'PACE notifications are turned off in iPhone settings.',
   'settings.notify.exact': 'Get the alert on time',
   'settings.notify.exact.sub': 'Android may delay it a few minutes',
+  'settings.notify.fallo': 'Android did not let PACE set the last end-of-focus alert.',
   'settings.circle': 'Circle',
   'settings.circle.sub': 'Breathe · {name}',
   'settings.circle.flor': 'Lotus',
@@ -3847,6 +3849,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'notify.ritmo.seguido.cuerpo': 'Sigue cuando quieras: la pausa, a las {hora}.',
   'notify.ritmo.comida': 'Hora de comer',
   'notify.ritmo.comida.cuerpo': 'Hasta las {hora}. Luego, el bloque {n}.',
+
+
+  'notify.fijo.titulo': 'Foco · bloque {n} de {total}',
+  'notify.fijo.titulo.manual': 'Foco · {min} min',
+  'notify.fijo.hasta': 'Hasta las {hora}.',
+  'notify.fijo.pausa': 'Luego, tu pausa: {plato} · {min} min',
+  'notify.fijo.larga': 'Luego, tu pausa larga: {plato} · {min} min',
+  'notify.fijo.cierre': 'Luego, para cerrar: {plato} · {min} min',
+  'notify.fijo.comida': 'Luego, a comer.',
+  'notify.fijo.bloque': 'Luego, el bloque {n}.',
+  'notify.fijo.ultimo': 'Con este cierras el día.',
   'ritmo.motivo.estira': 'Antídoto a la silla',
   'ritmo.motivo.mueve': 'Cuerpo activo',
   'ritmo.motivo.cierre': 'Para cerrar la jornada',
@@ -3990,6 +4003,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'notify.ritmo.seguido.cuerpo': 'Carry on when you like: your break is at {hora}.',
   'notify.ritmo.comida': 'Time for lunch',
   'notify.ritmo.comida.cuerpo': 'Until {hora}. Then block {n}.',
+  'notify.fijo.titulo': 'Focus · block {n} of {total}',
+  'notify.fijo.titulo.manual': 'Focus · {min} min',
+  'notify.fijo.hasta': 'Until {hora}.',
+  'notify.fijo.pausa': 'Then your break: {plato} · {min} min',
+  'notify.fijo.larga': 'Then your long break: {plato} · {min} min',
+  'notify.fijo.cierre': 'Then, to close the day: {plato} · {min} min',
+  'notify.fijo.comida': 'Then, lunch.',
+  'notify.fijo.bloque': 'Then block {n}.',
+  'notify.fijo.ultimo': 'This one closes your day.',
   'ritmo.motivo.estira': 'Antidote to the chair',
   'ritmo.motivo.mueve': 'Active body',
   'ritmo.motivo.cierre': 'To close the day',
@@ -11066,8 +11088,38 @@ function ritmoAviso(s, t, tn, lang) {
   };
 }
 
-Object.assign(window, { ritmoAviso });
-;Object.assign(window, { ritmoAviso });
+
+
+
+
+
+
+
+
+function ritmoAvisoFijo(s, t, tn, lang, endsAt) {
+  var d = new Date(endsAt);
+  var hasta = tn('notify.fijo.hasta', { hora: ritmoHora(d.getHours() * 60 + d.getMinutes()) });
+  var p = typeof ritmoAro === 'function' && ritmoAro(s, t, tn) && typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (!p || !p.actual) return { titulo: tn('notify.fijo.titulo.manual', { min: s && s.focusMinutes || 25 }), texto: hasta };
+  var titulo = tn('notify.fijo.titulo', { n: p.hechos + 1, total: p.total });
+  var it = typeof ritmoDetras === 'function' ? ritmoDetras(p.m, p.actual) : null;
+  var nombre = function (pl) {
+    return typeof ritmoNombre === 'function' ? ritmoNombre(pl.rutina || pl, t, lang) : pl.name || pl.id || '';
+  };
+  var luego;
+  if (!it) luego = t('notify.fijo.ultimo');else
+  if (it.tipo === 'comida') luego = t('notify.fijo.comida');else
+  if (it.tipo === 'foco') luego = tn('notify.fijo.bloque', { n: p.hechos + 2 });else
+  {
+    var platos = it.platos || [];
+    var clave = it.larga ? 'notify.fijo.larga' : it.tipo === 'cierre' ? 'notify.fijo.cierre' : 'notify.fijo.pausa';
+    luego = platos.length ? tn(clave, { plato: platos.map(nombre).join(' + '), min: it.larga ? it.dur : platos[0].min }) : '';
+  }
+  return { titulo: titulo, texto: luego ? hasta + ' ' + luego : hasta };
+}
+
+Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
+;Object.assign(window, { ritmoAviso, ritmoAvisoFijo });
 })();
 </script>
   <!-- El dia en el calendario: lo puro (eventos, .ics, reuniones como tramos), Google y
@@ -11739,8 +11791,21 @@ function calendarioAndroidEsDePace(e) {
 }
 
 
+
 function calendarioAndroidCrear(calendarioId, ev) {
-  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {calendarioAndroidApuntar(id, ev);return id;});
+  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {
+    calendarioAndroidApuntar(id, ev);
+    return paceAndroidCalendarioPrivado(id).then(function () {return id;});
+  });
+}
+
+
+
+function calendarioAndroidCambiar(id, ev) {
+  return paceAndroidCalendarioCambiar(id, ev).then(function (r) {
+    calendarioAndroidApuntar(id, ev);
+    return paceAndroidCalendarioPrivado(id).then(function () {return r;});
+  });
 }
 
 function calendarioAndroidBorrar(id) {
@@ -11961,9 +12026,9 @@ try {calendarioArrancar();} catch (e) {}
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
-  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidBorrar
+  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar
 });
-;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, calendarioAndroidCrear, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
+;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
 })();
 </script>
   <!-- El calendario que se mantiene solo (14 oct. 2026): lo puro (qué tiene que haber y qué
@@ -12298,8 +12363,7 @@ function calendarioAplicar(destino, pase, iso, cambios, calendarioId, sigue) {
   });
   cambios.cambiar.forEach(function (c) {
     pasos.push(function () {
-      if (!android) return calendarioWebCambiar(destino, pase, c.id, c.ev);
-      return paceAndroidCalendarioCambiar(c.id, c.ev).then(function (r) {calendarioAndroidApuntar(c.id, c.ev);return r;});
+      return android ? calendarioAndroidCambiar(c.id, c.ev) : calendarioWebCambiar(destino, pase, c.id, c.ev);
     });
   });
   cambios.crear.forEach(function (ev) {
@@ -16629,9 +16693,9 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    WebView no tiene Wake Lock ni la API de avisos, no descarga archivos y el
    boton atras del movil no es suyo. Capacitor lo da con complementos nativos
    que el lado nativo inyecta en `window.Capacitor.Plugins` (sin bundler: aqui
-   no se importa nada). Este archivo es el UNICO que les habla: quien necesita
-   uno pide `paceAndroidPlugin('Nombre')`, y si recibe null sigue por el
-   camino web. En la web, en el standalone y en las pruebas sin Capacitor nada
+   no se importa nada). Este archivo, con android.avisos.js y
+   android.calendario.js, son los UNICOS que les hablan: quien necesita uno
+   pide `paceAndroidPlugin('Nombre')`, y si recibe null sigue por el camino web. En la web, en el standalone y en las pruebas sin Capacitor nada
    de esto existe.
 
    EL BOTON ATRAS hace lo mismo que Escape, que casi todo PACE ya escucha:
@@ -16641,30 +16705,17 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    app se va al fondo como cualquier otra de Android, sin cerrarse: el
    Pomodoro sigue contando por reloj real.
 
-   EL AVISO DE FIN DE FOCO: con la app en el fondo Android congela su JS, asi
-   que el aviso no puede salir de la web cuando acaba el bloque, como en el
-   navegador. Lo programa el sistema para la hora del final, y SOLO mientras la
-   app esta en el fondo: al volver se cancela, porque delante ya lo cuenta la
-   propia app y sonarian los dos.
-
-   A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
-   recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
-   retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
-   pantalla de ajustes en cada `schedule()`, y aqui eso pasaria al salir de la
-   app con un Foco en marcha: por eso solo se pide exacta si ya esta concedido,
-   y el permiso se ofrece desde Ajustes, con un toque de la persona.
+   EL AVISO DE FIN DE FOCO vive en android.avisos.js: lo programa Android para
+   la hora del final mientras la app esta en el fondo, en fila y solo cuando
+   Android confirma.
 
    LA COPIA DE «TUS DATOS» se escribe en la cache de la app y se abre el menu de
    compartir de Android, desde el que se guarda en Drive o en Archivos, o se
    manda por correo.
 
-   EL CALENDARIO DEL MOVIL (complemento CapacitorCalendar): «A tu ritmo» lleva
-   el dia al calendario del telefono, que ya esta sincronizado con la cuenta de
-   Google o de Microsoft que tenga la persona, y lee sus reuniones. Aqui solo
-   van las llamadas, cada una reducida a lo que PACE usa; que eventos se crean,
-   se cambian y se borran lo deciden ritmo.calendario.destinos.js y el motor del
-   calendario que se mantiene solo. Pide los dos permisos (leer y escribir) la
-   primera vez que se pulsa, nunca al arrancar.
+   EL CALENDARIO DEL MOVIL vive en android.calendario.js: las llamadas al
+   complemento CapacitorCalendar, cada una reducida a lo que PACE usa, y lo
+   privado, que pone PaceCalendario.
 
    LAS FRANJAS DE ARRIBA Y DE ABAJO (la hora y la bateria, y Atras) son de
    Android: las pinta el tema, que sigue el modo del movil. El complemento
@@ -16681,14 +16732,8 @@ Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceE
    ============================================================ */
 
 var PACE_WEB_PUBLICA = 'https://pacegrass.app';
-var PACE_AVISO_FOCO_ID = 1;
 
-
-
-
-
-
-var _paceAndroid = { fondo: false, permiso: 'default', exacta: 'default', foco: null, programado: true, atras: 0 };
+var _paceAndroid = { atras: 0 };
 
 function paceEsAndroid() {
   try {
@@ -16706,12 +16751,21 @@ function paceAndroidPlugin(nombre) {
 }
 
 
+
 function paceAndroidLlamar(nombre, metodo, opciones) {
+  return paceAndroidPedir(nombre, metodo, opciones).catch(function () {return null;});
+}
+
+
+
+
+
+function paceAndroidPedir(nombre, metodo, opciones) {
   try {
     var p = paceAndroidPlugin(nombre);
     if (!p || typeof p[metodo] !== 'function') return Promise.resolve(null);
-    return Promise.resolve(p[metodo](opciones)).catch(function () {return null;});
-  } catch (e) {return Promise.resolve(null);}
+    return Promise.resolve(p[metodo](opciones));
+  } catch (e) {return Promise.reject(e);}
 }
 
 
@@ -16739,82 +16793,6 @@ function paceAndroidAtras() {
 
 
 
-function paceAndroidAvisos() {
-  return !!paceAndroidPlugin('LocalNotifications');
-}
-
-
-function paceAndroidAvisoPermiso() {
-  return _paceAndroid.permiso;
-}
-
-function paceAndroidGuardarPermiso(r) {
-  var d = r && r.display;
-  if (d === 'granted' || d === 'denied') _paceAndroid.permiso = d;else
-  if (d) _paceAndroid.permiso = 'default';
-  return _paceAndroid.permiso;
-}
-
-
-
-function paceAndroidAvisoPedir() {
-  return paceAndroidLlamar('LocalNotifications', 'requestPermissions').then(paceAndroidGuardarPermiso);
-}
-
-
-function paceAndroidAvisoExacto() {
-  return _paceAndroid.exacta;
-}
-
-function paceAndroidGuardarExacta(r) {
-  var e = r && r.exact_alarm;
-  if (e === 'granted' || e === 'denied') _paceAndroid.exacta = e;
-  return _paceAndroid.exacta;
-}
-
-function paceAndroidAvisoExactoMirar() {
-  return paceAndroidLlamar('LocalNotifications', 'checkExactNotificationSetting').then(paceAndroidGuardarExacta);
-}
-
-
-function paceAndroidAvisoExactoPedir() {
-  return paceAndroidLlamar('LocalNotifications', 'changeExactNotificationSetting').then(paceAndroidGuardarExacta);
-}
-
-
-
-function paceAndroidFoco(endsAt, textos) {
-  _paceAndroid.foco = endsAt ?
-  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '' } :
-  null;
-  paceAndroidAvisoRecolocar();
-}
-
-function paceAndroidFondo(fondo) {
-  if (_paceAndroid.fondo === !!fondo) return;
-  _paceAndroid.fondo = !!fondo;
-  paceAndroidAvisoRecolocar();
-}
-
-function paceAndroidAvisoRecolocar() {
-  var f = _paceAndroid.foco;
-  if (_paceAndroid.fondo && f && f.endsAt > Date.now()) {
-    _paceAndroid.programado = true;
-    paceAndroidLlamar('LocalNotifications', 'schedule', { notifications: [{
-        id: PACE_AVISO_FOCO_ID, title: f.title, body: f.body,
-
-        schedule: { at: new Date(f.endsAt).toISOString(), allowWhileIdle: true },
-        isExactNotification: _paceAndroid.exacta === 'granted'
-      }] });
-    return;
-  }
-  if (!_paceAndroid.programado) return;
-  _paceAndroid.programado = false;
-  paceAndroidLlamar('LocalNotifications', 'cancel', { notifications: [{ id: PACE_AVISO_FOCO_ID }] });
-}
-
-
-
 
 
 
@@ -16837,6 +16815,362 @@ function paceAndroidGuardarArchivo(nombre, texto, alAbrir) {
 }
 
 
+function paceEnlaceWeb(ruta) {
+  return paceEsAndroid() ? PACE_WEB_PUBLICA + ruta : ruta;
+}
+
+
+
+
+
+
+var _paceBarras = null;
+function paceAndroidBarras(estado) {
+  try {
+    if (!estado || estado.palette !== 'crema' && estado.palette !== 'oscuro') return;
+    var auto = !!estado.paletteAuto;
+    if (_paceBarras && _paceBarras.paleta === estado.palette && _paceBarras.auto === auto) return;
+    if (!paceAndroidPlugin('PaceBarras')) return;
+    _paceBarras = { paleta: estado.palette, auto: auto };
+    paceAndroidLlamar('PaceBarras', 'pintar', { paleta: estado.palette, auto: auto });
+  } catch (e) {}
+}
+
+function paceAndroidArrancar() {
+  if (!paceEsAndroid()) return;
+  var app = paceAndroidPlugin('App');
+  if (app && typeof app.addListener === 'function') {
+    try {app.addListener('backButton', function () {paceAndroidAtras();});} catch (e) {}
+  }
+
+
+  try {
+    paceAndroidBarras(getState());
+    subscribe(function () {paceAndroidBarras(getState());});
+  } catch (e) {}
+}
+
+try {paceAndroidArrancar();} catch (e) {}
+
+Object.assign(window, {
+  paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidPedir, paceAndroidAtras, paceAndroidGuardarArchivo,
+  paceEnlaceWeb, paceAndroidBarras
+});
+;Object.assign(window, { PACE_WEB_PUBLICA, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidPedir, paceAndroidAtras, paceAndroidGuardarArchivo, paceEnlaceWeb, _paceBarras, paceAndroidBarras, paceAndroidArrancar });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   android.avisos.js — EL AVISO DE FIN DE FOCO EN ANDROID
+   ============================================================
+   Con la app en el fondo Android congela su JS, asi que el aviso no puede salir
+   de la web cuando acaba el bloque, como en el navegador. Lo programa el sistema
+   para la hora del final, y SOLO mientras la app esta en el fondo: delante ya lo
+   cuenta la propia app. Habla con el complemento por `paceAndroidLlamar` y
+   `paceAndroidPedir` (android.js).
+
+   EN FILA. Programar y quitar son llamadas que tardan, y la respuesta de
+   programar puede llegar despues de que se pida quitarlo. Todo lo que se le pide
+   al complemento va en fila (`_paceAvisoAndroid.cola`), y cada paso compara lo
+   que deberia haber con lo que Android CONFIRMO (`puesto`, el final del bloque
+   cuyo aviso tiene). Asi, un aviso pedido al salir y quitado al volver no se
+   queda puesto por contestar tarde, y uno que no se pudo quitar se vuelve a
+   quitar al pausar o al reiniciar.
+
+   PUESTO SOLO CUANDO ANDROID CONTESTA. Si `schedule` falla, no hay aviso:
+   `fallo` lo dice (Ajustes lo cuenta) y la campana del final la pone PACE.
+   `puesto` se guarda en `pace.android.aviso`, porque Android puede cerrar PACE
+   en el fondo con el aviso puesto y el proceso siguiente tiene que saberlo.
+
+   UNA SOLA CAMPANA. Un aviso cuya hora ya paso no se quita: esta sonando, o
+   sonara en cuanto Android lo entregue (sin «Alarmas y recordatorios» llega unos
+   minutos tarde). Por eso, si Android tenia el aviso de un bloque, la campana de
+   ese bloque es suya y PACE no toca la suya (`paceAndroidCampana`): ni con el
+   bloque acabando en el fondo, ni al volver, ni al abrir PACE despues de que
+   Android la cerrara. Si no lo tenia (sin permiso, apagado o fallido), suena PACE.
+
+   EL PERMISO. Solo se programa con el permiso dado: sin el, el complemento lo
+   pediria en el acto, con la app ya en el fondo. Al volver a la app se mira otra
+   vez (puede venir de los ajustes de Android) y se avisa con el evento
+   `pace:avisos-android` para que Ajustes se pinte con lo nuevo.
+
+   EL AVISO FIJO CON EL MOVIL BLOQUEADO (Ez, N4 A del 27 oct. 2026): mientras un Foco corre con
+   la app en el fondo, Android enseña lo que queda, que cuenta solo, con el bloque y lo que viene
+   detras (`ritmoAvisoFijo`). Lo pinta una pieza propia, PaceAvisoFijo, porque el complemento no
+   sabe poner una cuenta atras. Va con «Aviso al terminar» y el mismo permiso, en la misma fila:
+   sale al irse al fondo, se va al volver, al pausar o al reiniciar, y al acabar lo quita Android
+   solo. No suena nunca: el que suena es el de fin. Sin botones; la pieza esta lista para ellos.
+
+   A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
+   recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
+   retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
+   pantalla de ajustes en cada `schedule()`, y aqui eso pasaria al salir de la
+   app con un Foco en marcha: por eso solo se pide exacta si ya esta concedido,
+   y el permiso se ofrece desde Ajustes, con un toque de la persona.
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+var PACE_AVISO_FOCO_ID = 1;
+var PACE_AVISO_CLAVE = 'pace.android.aviso';
+
+
+
+
+function paceAndroidAvisoLeer() {
+  try {
+    var crudo = localStorage.getItem(PACE_AVISO_CLAVE);
+    if (crudo === null) return { puesto: null, quizas: true };
+    var v = JSON.parse(crudo);
+    return { puesto: v && typeof v.puesto === 'number' ? v.puesto : null, quizas: false };
+  } catch (e) {return { puesto: null, quizas: true };}
+}
+
+function paceAndroidAvisoGuardar() {
+  try {localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: _paceAvisoAndroid.puesto }));} catch (e) {}
+}
+
+var _paceAvisoAndroidLeido = paceAndroidAvisoLeer();
+var _paceAvisoAndroid = {
+  fondo: false, permiso: 'default', exacta: 'default', foco: null,
+  puesto: _paceAvisoAndroidLeido.puesto, quizas: _paceAvisoAndroidLeido.quizas,
+
+
+  fijo: null, fijoQuizas: true,
+  fallo: null, cola: Promise.resolve()
+};
+
+function paceAndroidAvisos() {
+  return !!paceAndroidPlugin('LocalNotifications');
+}
+
+
+function paceAndroidAvisoContar() {
+  try {window.dispatchEvent(new CustomEvent('pace:avisos-android'));} catch (e) {}
+}
+
+
+function paceAndroidAvisoPermiso() {
+  return _paceAvisoAndroid.permiso;
+}
+
+function paceAndroidGuardarPermiso(r) {
+  var d = r && r.display;
+  var antes = _paceAvisoAndroid.permiso;
+  if (d === 'granted' || d === 'denied') _paceAvisoAndroid.permiso = d;else
+  if (d) _paceAvisoAndroid.permiso = 'default';
+
+
+  if (_paceAvisoAndroid.permiso !== antes) {paceAndroidAvisoContar();paceAndroidAvisoRecolocar();}
+  return _paceAvisoAndroid.permiso;
+}
+
+
+
+function paceAndroidAvisoPedir() {
+  return paceAndroidLlamar('LocalNotifications', 'requestPermissions').then(paceAndroidGuardarPermiso);
+}
+
+function paceAndroidAvisoPermisoMirar() {
+  return paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
+}
+
+
+function paceAndroidAvisoExacto() {
+  return _paceAvisoAndroid.exacta;
+}
+
+function paceAndroidGuardarExacta(r) {
+  var e = r && r.exact_alarm;
+  var antes = _paceAvisoAndroid.exacta;
+  if (e === 'granted' || e === 'denied') _paceAvisoAndroid.exacta = e;
+  if (_paceAvisoAndroid.exacta !== antes) paceAndroidAvisoContar();
+  return _paceAvisoAndroid.exacta;
+}
+
+function paceAndroidAvisoExactoMirar() {
+  return paceAndroidLlamar('LocalNotifications', 'checkExactNotificationSetting').then(paceAndroidGuardarExacta);
+}
+
+
+function paceAndroidAvisoExactoPedir() {
+  return paceAndroidLlamar('LocalNotifications', 'changeExactNotificationSetting').then(paceAndroidGuardarExacta);
+}
+
+
+function paceAndroidAvisoFallo() {
+  return _paceAvisoAndroid.fallo;
+}
+
+
+
+function paceAndroidFoco(endsAt, textos) {
+  _paceAvisoAndroid.foco = endsAt ?
+  { endsAt: endsAt, title: textos && textos.title || 'PACE', body: textos && textos.body || '',
+    fijo: textos && typeof textos.fijo === 'function' ? textos.fijo : null } :
+  null;
+  paceAndroidAvisoRecolocar();
+}
+
+function paceAndroidFondo(fondo) {
+  if (_paceAvisoAndroid.fondo === !!fondo) return;
+  _paceAvisoAndroid.fondo = !!fondo;
+
+  if (!fondo) {paceAndroidAvisoPermisoMirar();paceAndroidAvisoExactoMirar();}
+  paceAndroidAvisoRecolocar();
+}
+
+
+function paceAndroidAvisoEnFila(paso) {
+  var a = _paceAvisoAndroid;
+  a.cola = a.cola.then(paso).catch(function () {});
+  return a.cola;
+}
+
+function paceAndroidAvisoRecolocar() {
+  return paceAndroidAvisoEnFila(paceAndroidAvisoAjustar);
+}
+
+
+
+function paceAndroidAvisoAjustar() {
+  var a = _paceAvisoAndroid,f = a.foco;
+  var quiere = a.fondo && f && f.endsAt > Date.now() && a.permiso === 'granted' ? f : null;
+  return Promise.resolve().then(function () {return paceAndroidAvisoAjustarFin(quiere);}).catch(function () {}).
+  then(function () {return paceAndroidAvisoAjustarFijo(quiere);});
+}
+
+function paceAndroidAvisoAjustarFin(quiere) {
+  var a = _paceAvisoAndroid,ahora = Date.now();
+  if (quiere) {
+    if (a.puesto === quiere.endsAt) return null;
+    return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
+        id: PACE_AVISO_FOCO_ID, title: quiere.title, body: quiere.body,
+
+        schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
+        isExactNotification: a.exacta === 'granted'
+      }] }).then(function () {
+      a.puesto = quiere.endsAt;
+      a.quizas = false;
+      a.fallo = null;
+      paceAndroidAvisoGuardar();
+      paceAndroidAvisoContar();
+    }, function (e) {
+      a.fallo = String(e && e.message || e || 'error');
+      paceAndroidAvisoContar();
+
+      if (/not enabled|disabled/i.test(a.fallo)) paceAndroidGuardarPermiso({ display: 'denied' });
+    });
+  }
+
+
+  if (!a.quizas && (a.puesto === null || a.puesto <= ahora)) return null;
+  return paceAndroidPedir('LocalNotifications', 'cancel', { notifications: [{ id: PACE_AVISO_FOCO_ID }] }).then(function () {
+    a.puesto = null;
+    a.quizas = false;
+    paceAndroidAvisoGuardar();
+  });
+}
+
+
+function paceAndroidAvisoAjustarFijo(quiere) {
+  var a = _paceAvisoAndroid;
+  if (!paceAndroidPlugin('PaceAvisoFijo')) return null;
+  var textos = null;
+  try {textos = quiere && quiere.fijo ? quiere.fijo() : null;} catch (e) {}
+  if (quiere && textos) {
+    if (a.fijo === quiere.endsAt) return null;
+    return paceAndroidPedir('PaceAvisoFijo', 'poner', { titulo: textos.titulo, texto: textos.texto, hasta: quiere.endsAt }).then(function () {
+      a.fijo = quiere.endsAt;
+      a.fijoQuizas = false;
+    });
+  }
+  if (a.fijo === null && !a.fijoQuizas) return null;
+  return paceAndroidPedir('PaceAvisoFijo', 'quitar').then(function () {
+    a.fijo = null;
+    a.fijoQuizas = false;
+  });
+}
+
+
+
+
+function paceAndroidCampana(fin, sonar) {
+  return paceAndroidAvisoEnFila(function () {
+    var a = _paceAvisoAndroid;
+    if (fin && a.puesto === fin) return;
+    try {sonar();} catch (e) {}
+  });
+}
+
+
+function paceAndroidEstado() {
+  var a = _paceAvisoAndroid;
+  return { fondo: a.fondo, permiso: a.permiso, exacta: a.exacta, programado: a.puesto !== null, puesto: a.puesto,
+    fallo: a.fallo, fijo: a.fijo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0 };
+}
+
+function paceAndroidAvisosArrancar() {
+  if (!paceEsAndroid()) return;
+  var app = paceAndroidPlugin('App');
+  if (app && typeof app.addListener === 'function') {
+    try {app.addListener('appStateChange', function (s) {paceAndroidFondo(!(s && s.isActive));});} catch (e) {}
+  }
+
+  try {
+    document.addEventListener('visibilitychange', function () {
+      paceAndroidFondo(document.visibilityState === 'hidden');
+    });
+  } catch (e) {}
+  paceAndroidAvisoPermisoMirar();
+  paceAndroidAvisoExactoMirar();
+}
+
+try {paceAndroidAvisosArrancar();} catch (e) {}
+
+Object.assign(window, {
+  paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto,
+  paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco,
+  paceAndroidCampana, paceAndroidEstado
+});
+;Object.assign(window, { PACE_AVISO_FOCO_ID, PACE_AVISO_CLAVE, paceAndroidAvisoLeer, paceAndroidAvisoGuardar, _paceAvisoAndroidLeido, _paceAvisoAndroid, paceAndroidAvisos, paceAndroidAvisoContar, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoPermisoMirar, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoEnFila, paceAndroidAvisoRecolocar, paceAndroidAvisoAjustar, paceAndroidAvisoAjustarFin, paceAndroidAvisoAjustarFijo, paceAndroidCampana, paceAndroidEstado, paceAndroidAvisosArrancar });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   android.calendario.js — EL CALENDARIO DEL MOVIL
+   ============================================================
+   «A tu ritmo» lleva el dia al calendario del telefono (complemento
+   CapacitorCalendar), que ya esta sincronizado con la cuenta de Google o de
+   Microsoft que tenga la persona, y lee sus reuniones. Aqui solo van las
+   llamadas, cada una reducida a lo que PACE usa; que eventos se crean, se
+   cambian y se borran lo deciden ritmo.calendario.destinos.js y el motor del
+   calendario que se mantiene solo. Pide los dos permisos (leer y escribir) la
+   primera vez que se pulsa, nunca al arrancar.
+
+   LOS ERRORES LLEGAN. Leer, crear, cambiar, borrar y marcar privado van por
+   `paceAndroidPedir`, que rechaza si Android falla. Con `paceAndroidLlamar`,
+   que da null, una lista que fallaba se leia como un calendario vacio: PACE
+   volvia a crear lo que ya estaba, y en el movil nunca salia «No se pudo». Ahora
+   el motor lo cuenta como un fallo, lo dice y lo reintenta, como en la web. Los
+   permisos y la lista de calendarios siguen sin romper: sin respuesta, no hay.
+
+   PRIVADO. El complemento no sabe poner `ACCESS_LEVEL`, asi que lo pone una
+   pieza propia, PaceCalendario (android/app/src/main/java/.../PaceCalendario.java),
+   despues de crear y de cambiar, como Google (`visibility`), Outlook
+   (`sensitivity`) y el archivo (`CLASS`). Quien solo puede ver tu calendario no
+   lee que pausa es. `privacy.html` lo promete y verify.privacidad.js lo cruza.
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
 
 function paceAndroidCalendario() {
   return !!paceAndroidPlugin('CapacitorCalendar');
@@ -16878,9 +17212,11 @@ function paceAndroidCalendarios() {
 
 
 
+
 function paceAndroidCalendarioEventos(desde, hasta, propio) {
-  return paceAndroidLlamar('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
-    return (r && r.result || []).map(function (e) {
+  return paceAndroidPedir('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
+    if (!r || !Array.isArray(r.result)) throw new Error('red');
+    return r.result.map(function (e) {
       var ev = { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
         todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled' };
       if (typeof propio === 'function' && propio(ev)) {
@@ -16904,88 +17240,40 @@ function paceAndroidCalendarioAlarmas(ev) {
 var PACE_ANDROID_LIBRE = 1;
 
 
+
 function paceAndroidCalendarioCrear(calendario, ev) {
   var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: PACE_ANDROID_LIBRE, alerts: paceAndroidCalendarioAlarmas(ev) };
   if (calendario) o.calendarId = String(calendario);
-  return paceAndroidLlamar('CapacitorCalendar', 'createEvent', o).then(function (r) {return r && r.id != null ? String(r.id) : null;});
+  return paceAndroidPedir('CapacitorCalendar', 'createEvent', o).then(function (r) {
+    if (!r || r.id == null) throw new Error('red');
+    return String(r.id);
+  });
 }
 
 
 
 function paceAndroidCalendarioCambiar(id, ev) {
-  return paceAndroidLlamar('CapacitorCalendar', 'modifyEvent', { id: String(id), title: ev.titulo, description: ev.texto,
+  return paceAndroidPedir('CapacitorCalendar', 'modifyEvent', { id: String(id), title: ev.titulo, description: ev.texto,
     startDate: ev.inicio, endDate: ev.fin, availability: PACE_ANDROID_LIBRE, alerts: paceAndroidCalendarioAlarmas(ev) });
 }
 
 function paceAndroidCalendarioBorrar(id) {
-  return paceAndroidLlamar('CapacitorCalendar', 'deleteEvent', { id: String(id) });
-}
-
-
-function paceEnlaceWeb(ruta) {
-  return paceEsAndroid() ? PACE_WEB_PUBLICA + ruta : ruta;
+  return paceAndroidPedir('CapacitorCalendar', 'deleteEvent', { id: String(id) });
 }
 
 
 
 
 
-
-var _paceBarras = null;
-function paceAndroidBarras(estado) {
-  try {
-    if (!estado || estado.palette !== 'crema' && estado.palette !== 'oscuro') return;
-    var auto = !!estado.paletteAuto;
-    if (_paceBarras && _paceBarras.paleta === estado.palette && _paceBarras.auto === auto) return;
-    if (!paceAndroidPlugin('PaceBarras')) return;
-    _paceBarras = { paleta: estado.palette, auto: auto };
-    paceAndroidLlamar('PaceBarras', 'pintar', { paleta: estado.palette, auto: auto });
-  } catch (e) {}
+function paceAndroidCalendarioPrivado(id) {
+  return paceAndroidPedir('PaceCalendario', 'privado', { id: String(id) });
 }
-
-
-function paceAndroidEstado() {
-  return { fondo: _paceAndroid.fondo, permiso: _paceAndroid.permiso, exacta: _paceAndroid.exacta, programado: _paceAndroid.programado,
-    foco: _paceAndroid.foco ? _paceAndroid.foco.endsAt : null, atras: _paceAndroid.atras };
-}
-
-function paceAndroidArrancar() {
-  if (!paceEsAndroid()) return;
-  var app = paceAndroidPlugin('App');
-  if (app && typeof app.addListener === 'function') {
-    try {
-      app.addListener('backButton', function () {paceAndroidAtras();});
-      app.addListener('appStateChange', function (s) {paceAndroidFondo(!(s && s.isActive));});
-    } catch (e) {}
-  }
-
-  try {
-    document.addEventListener('visibilitychange', function () {
-      var oculta = document.visibilityState === 'hidden';
-
-      if (!oculta) paceAndroidAvisoExactoMirar();
-      paceAndroidFondo(oculta);
-    });
-  } catch (e) {}
-  paceAndroidLlamar('LocalNotifications', 'checkPermissions').then(paceAndroidGuardarPermiso);
-  paceAndroidAvisoExactoMirar();
-
-
-  try {
-    paceAndroidBarras(getState());
-    subscribe(function () {paceAndroidBarras(getState());});
-  } catch (e) {}
-}
-
-try {paceAndroidArrancar();} catch (e) {}
 
 Object.assign(window, {
-  paceEsAndroid, paceAndroidPlugin, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso,
-  paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidGuardarArchivo, paceEnlaceWeb, paceAndroidEstado,
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
-  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidBarras
+  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado
 });
-;Object.assign(window, { PACE_WEB_PUBLICA, PACE_AVISO_FOCO_ID, _paceAndroid, paceEsAndroid, paceAndroidPlugin, paceAndroidLlamar, paceAndroidAtras, paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidFoco, paceAndroidFondo, paceAndroidAvisoRecolocar, paceAndroidGuardarArchivo, paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceEnlaceWeb, _paceBarras, paceAndroidBarras, paceAndroidEstado, paceAndroidArrancar });
+;Object.assign(window, { paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado });
 })();
 </script>
   <!-- ios: lo mismo en el iPhone (avisos, pantalla encendida, copia de datos y
@@ -17281,6 +17569,19 @@ function paceNativoFoco(endsAt, textos) {
 
 
 
+function paceNativoCampana(fin, sonar) {
+  if (pacePlataformaNativa() === 'android') {paceAndroidCampana(fin, sonar);return;}
+  try {sonar();} catch (e) {}
+}
+
+
+function paceNativoAvisoFallo() {
+  return pacePlataformaNativa() === 'android' ? paceAndroidAvisoFallo() : null;
+}
+
+
+
+
 
 function paceNativoGuardarArchivo(nombre, texto, alAbrir) {
   var p = pacePlataformaNativa();
@@ -17297,9 +17598,9 @@ function paceNativoEnlace(ruta) {
 
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoGuardarArchivo, paceNativoEnlace
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
 });
-;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoGuardarArchivo, paceNativoEnlace });
+;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
 })();
 </script>
   <!-- pantalla (s198): Screen Wake Lock mientras hay una sesion guiada montada.
@@ -27992,7 +28293,9 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       return;
     }
     paceFocoContar(bloque, () => {
-      try {playSound('pomodoro.end');} catch (e) {}
+
+      const campana = () => {try {playSound('pomodoro.end');} catch (e) {}};
+      if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana);else campana();
 
 
       completeFocusSession('home', { minutes: minutos, bloque,
@@ -28080,7 +28383,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   useEffectFT(() => {
     if (typeof paceNativoFoco !== 'function') return;
     const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
-    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body') });
+    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
+      fijo: () => typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null });
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
 
@@ -39085,6 +39389,17 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
 
+  const [, setAvisosVez] = useStateTW(0);
+  useEffectTW(() => {
+    if (!open || !avisoNativo) return undefined;
+    const alCambiar = () => {setAvisosVez((n) => n + 1);if (exactaAndroid) setExacta(paceAndroidAvisoExacto());};
+    window.addEventListener('pace:avisos-android', alCambiar);
+    return () => window.removeEventListener('pace:avisos-android', alCambiar);
+  }, [open, avisoNativo, exactaAndroid]);
+  const falloAviso = avisoNativo && typeof paceNativoAvisoFallo === 'function' ? paceNativoAvisoFallo() : null;
+
+
+
 
   const enableNotify = () => {
     if (!canNotify) return;
@@ -39293,6 +39608,9 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     })(),
     canNotify && permisoAviso() === 'denied' &&
     React.createElement("div", { className: "pace-aj-nota" }, t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')),
+
+    falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' &&
+    React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-fallo": true }, t('settings.notify.fallo')),
 
     exactaAndroid && state.notifyFocusEnd && permisoAviso() === 'granted' && exacta === 'denied' &&
     React.createElement(AjustesAccion, { suave: true, onClick: pedirExacta, derecha: "\u203A", sub: t('settings.notify.exact.sub') }, t('settings.notify.exact')),

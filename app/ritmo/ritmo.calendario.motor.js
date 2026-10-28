@@ -134,8 +134,7 @@ function calendarioAplicar(destino, pase, iso, cambios, calendarioId, sigue) {
   });
   cambios.cambiar.forEach(function (c) {
     pasos.push(function () {
-      if (!android) return calendarioWebCambiar(destino, pase, c.id, c.ev);
-      return paceAndroidCalendarioCambiar(c.id, c.ev).then(function (r) { calendarioAndroidApuntar(c.id, c.ev); return r; });
+      return android ? calendarioAndroidCambiar(c.id, c.ev) : calendarioWebCambiar(destino, pase, c.id, c.ev);
     });
   });
   cambios.crear.forEach(function (ev) {

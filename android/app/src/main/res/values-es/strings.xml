@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Lo que Android enseña de PACE en castellano, fuera de la web: el canal del aviso fijo. -->
+<resources>
+    <string name="pace_canal_foco">Foco en marcha</string>
+    <string name="pace_canal_foco_texto">Lo que queda del bloque de Foco, con el móvil bloqueado. No suena.</string>
+</resources>

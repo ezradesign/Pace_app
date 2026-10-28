@@ -7,7 +7,8 @@
  *    Google se lo pide con `fields` (sin él daba el título, el lugar y quién va);
  *    Outlook ya lo pedía con `$select`; y el puente de Android no deja salir el
  *    título ni el texto de lo que no puso PACE desde ese móvil.
- *  · P3, lo que PACE escribe en Google, en Outlook y en el archivo va libre y privado;
+ *  · P3, lo que PACE escribe en Google, en Outlook y en el archivo va libre y privado (en el
+ *    calendario del móvil lo marca PaceCalendario: tests/android-calendario.spec.js);
  *  · P5, «Avísame»: cada correo se borra solo al año de apuntarse;
  *  · y que privacy.html no diga que /premium cuenta visitas mientras no las cuente
  *    (eso lo mira `verify`, en scripts/verify.privacidad.js).
@@ -121,8 +122,9 @@ test.describe('P2 · de una reunión, solo las horas', () => {
 });
 
 /* P3 (Ez, 1A del 26 oct.): libre ya lo eran; privado, para que quien solo puede ver tu
-   calendario no lea qué pausa haces. En el calendario del móvil aún no: el complemento
-   no sabe marcarlo, y privacy.html lo dice. */
+   calendario no lea qué pausa haces. En el calendario del móvil lo pone una pieza propia,
+   PaceCalendario, porque el complemento no sabe: lo prueba tests/android-calendario.spec.js y
+   verify.privacidad.js cruza esa pieza con lo que dice privacy.html. */
 test('P3 · lo que PACE escribe va libre y privado en Google, en Outlook y en el archivo', async ({ page, context }) => {
   const errores = capturarErrores(page);
   await abrir(page, context);

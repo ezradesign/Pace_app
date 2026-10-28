@@ -1,0 +1,230 @@
+<title>El aviso con el móvil bloqueado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<!-- PACE · N4, el aviso fijo con el móvil bloqueado: la página para que Ez elija (27 oct. 2026).
+     Los móviles son dibujos: la letra y los colores del aviso los pone Android, no PACE. -->
+<style>
+  /* Página de decisión: una columna de lectura; cada forma, su móvil dibujado y lo que hace al lado. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --cta: #50624D; --focus: #3E5A3A; --reco-bg: #E3E6D8;
+    --pantalla: #23261F; --pantalla-2: #2E3229; --tarjeta: #EEEBE3; --tarjeta-ink: #1E1F1B; --tarjeta-ink-2: #55574F;
+    --boton: #DCE3D3;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --cta: #8E9D88; --focus: #A3BC96; --reco-bg: #2a3025;
+      --pantalla: #0F110D; --pantalla-2: #1A1D17; --tarjeta: #2B2E27; --tarjeta-ink: #ECEAE2; --tarjeta-ink-2: #B9BAB0; --boton: #3A4334;
+      color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --cta: #8E9D88; --focus: #A3BC96; --reco-bg: #2a3025;
+    --pantalla: #0F110D; --pantalla-2: #1A1D17; --tarjeta: #2B2E27; --tarjeta-ink: #ECEAE2; --tarjeta-ink-2: #B9BAB0; --boton: #3A4334;
+    color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 980px; margin: 0 auto; padding-block: 32px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(38px, 8vw, 54px); line-height: 1.05; margin-bottom: 14px; }
+  h2 { font-size: clamp(28px, 6vw, 34px); line-height: 1.1; margin-bottom: 6px; }
+  p { margin: 0 0 12px; color: var(--ink-2); max-width: 40em; }
+  .lede { font-size: 17.5px; }
+  b { color: var(--ink); font-weight: 600; }
+
+  .forma { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 32px; align-items: start;
+    padding-block: 36px; border-top: 1px solid var(--line); }
+  .forma.reco { background: var(--reco-bg); border-radius: 18px; border-top: 0; margin-top: 28px;
+    padding-left: 24px; padding-right: 24px; }
+  .forma.reco + .forma { border-top: 0; }
+  .letra { font: italic 500 22px/1 var(--display); color: var(--focus); margin-right: 6px; }
+  .chip { display: inline-block; font: 600 11px/1 var(--ui); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--paper); background: var(--cta); border-radius: 999px; padding: 6px 10px; margin-bottom: 12px; }
+  dl { margin: 16px 0 0; display: grid; gap: 10px; }
+  dl div { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; }
+  dt { font: 500 12px/1.6 var(--ui); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding-top: 1px; }
+  dd { margin: 0; color: var(--ink-2); }
+  .pega { font-size: 14.5px; color: var(--ink-3); margin-top: 14px; }
+
+  /* El móvil: la pantalla bloqueada de Android, dibujada. */
+  .movil { width: 100%; max-width: 300px; aspect-ratio: 9 / 18.5; border-radius: 34px; padding: 10px;
+    background: var(--ink); justify-self: center; }
+  .pantalla { height: 100%; border-radius: 26px; background: var(--pantalla); color: #EDEBE4; overflow: hidden;
+    display: flex; flex-direction: column; padding: 14px 12px; gap: 10px; position: relative; }
+  .barra { display: flex; justify-content: space-between; font: 500 11px/1 var(--ui); opacity: .8; padding: 0 6px; }
+  .reloj { font: 300 64px/1 var(--ui); letter-spacing: -.02em; text-align: center; margin-top: 26px; font-variant-numeric: tabular-nums; }
+  .fecha { font: 400 13px/1 var(--ui); text-align: center; opacity: .78; margin-bottom: 18px; }
+  .aviso { background: var(--tarjeta); color: var(--tarjeta-ink); border-radius: 20px; padding: 12px 14px; font-size: 13px; line-height: 1.35; }
+  .aviso.fin { opacity: .92; }
+  .cabeza { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--tarjeta-ink-2); margin-bottom: 5px; }
+  .icono { width: 18px; height: 18px; border-radius: 50%; background: var(--focus); display: grid; place-items: center; flex: none; }
+  .icono::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--tarjeta); }
+  .cuenta { font-variant-numeric: tabular-nums; color: var(--tarjeta-ink); font-weight: 600; }
+  .titulo { font-weight: 600; font-size: 13.5px; }
+  .cuerpo { color: var(--tarjeta-ink-2); }
+  .botones { display: flex; gap: 8px; margin-top: 10px; }
+  .botones span { background: var(--boton); border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: 12px; }
+  .luego { font: 500 11px/1.3 var(--ui); letter-spacing: .06em; text-transform: uppercase; opacity: .6; text-align: center; margin-top: 4px; }
+  .pie { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font: 400 11px/1 var(--ui); opacity: .55; }
+
+  .respuesta { margin: 40px 0 8px; border: 1px solid var(--cta); border-radius: 14px; padding: 18px 18px 10px; max-width: 40em; }
+  .respuesta h2 { font-size: 26px; }
+  .respuesta ol { list-style: none; padding: 0; margin: 8px 0 12px; display: grid; gap: 4px; }
+  .respuesta li { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .respuesta li:last-child { border-bottom: 0; }
+  .respuesta .n { font: italic 500 22px/1 var(--display); color: var(--focus); }
+  .linea { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .linea code { font: 600 15px/1 ui-monospace, monospace; background: var(--paper-2); padding: 10px 12px; border-radius: 8px; user-select: all; }
+  button { font: 600 14px/1 var(--ui); color: var(--paper); background: var(--cta); border: 0; border-radius: 999px; padding: 11px 18px; cursor: pointer; }
+  button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+  @media (max-width: 720px) {
+    .forma { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .forma.reco { padding-left: 16px; padding-right: 16px; }
+    dl div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  }
+</style>
+
+<div class="marco">
+  <p class="kicker">PACE · N4 · para Ez · 27 oct.</p>
+  <h1>El aviso con el móvil bloqueado</h1>
+  <p class="lede">Pediste ver, con el móvil bloqueado, cómo va el Foco, en qué bloque estás y qué pausa viene. Hoy no
+    sale nada hasta el final. Estas son tres formas de hacerlo. Elige una y lo monto; mientras, sigo con los otros
+    arreglos de Android.</p>
+  <p>Los móviles son dibujos: la letra y los colores del aviso los pone Android. El ejemplo es un día de «A tu ritmo»
+    a las 10:21, en el segundo de nueve bloques, que acaba a las 10:40.</p>
+
+  <section class="forma reco" aria-labelledby="fa">
+    <div class="movil" aria-hidden="true"><div class="pantalla">
+      <div class="barra"><span>10:21</span><span>87 %</span></div>
+      <div class="reloj">10:21</div>
+      <div class="fecha">lunes, 27 de octubre</div>
+      <div class="aviso">
+        <div class="cabeza"><span class="icono"></span>PACE · <span class="cuenta" data-cuenta="1122">18:42</span></div>
+        <div class="titulo">Foco · bloque 2 de 9</div>
+        <div class="cuerpo">Hasta las 10:40. Luego, tu pausa: Gemelos subrepticios · 1 min</div>
+      </div>
+      <div class="luego">y a las 10:40, en su sitio</div>
+      <div class="aviso fin">
+        <div class="cabeza"><span class="icono"></span>PACE · 10:40</div>
+        <div class="titulo">Foco completado</div>
+        <div class="cuerpo">Ciclo cerrado. Elige tu micro-pausa.</div>
+      </div>
+      <div class="pie">Desliza para desbloquear</div>
+    </div></div>
+    <div>
+      <span class="chip">La que recomiendo</span>
+      <h2 id="fa"><span class="letra">A</span>La cuenta que corre sola</h2>
+      <p>Arriba, lo que queda, que baja segundo a segundo como en el aro de PACE. Debajo, el bloque, la hora a la que
+        acaba y la pausa que viene. Lo cuenta Android solo: PACE no tiene que despertarse y no gasta batería.</p>
+      <dl>
+        <div><dt>Qué dice</dt><dd>«Foco · bloque 2 de 9», lo que queda («18:42») y «Hasta las 10:40. Luego, tu pausa: Gemelos subrepticios · 1 min». Sin «A tu ritmo», «Foco · 25 min» y la hora a la que acaba.</dd></div>
+        <div><dt>Cuándo sale</dt><dd>Al bloquear el móvil o salir de PACE con un Foco en marcha. Con PACE delante no sale: ya lo ves en el aro.</dd></div>
+        <div><dt>Cuándo se va</dt><dd>Al volver a PACE, y al acabar el bloque, cuando lo cambia el aviso de fin, que es el único que suena. El fijo no suena nunca.</dd></div>
+        <div><dt>Botones</dt><dd>Ninguno. Tocarlo abre PACE.</dd></div>
+      </dl>
+      <p class="pega">Por qué la recomiendo: dice lo que pediste sin desbloquear, y sin botones no invita a tocar el
+        móvil a mitad del Foco. Pide una pieza propia en Android, pequeña, porque el complemento que usamos no sabe
+        poner una cuenta que corre sola.</p>
+    </div>
+  </section>
+
+  <section class="forma" aria-labelledby="fb">
+    <div class="movil" aria-hidden="true"><div class="pantalla">
+      <div class="barra"><span>10:21</span><span>87 %</span></div>
+      <div class="reloj">10:21</div>
+      <div class="fecha">lunes, 27 de octubre</div>
+      <div class="aviso">
+        <div class="cabeza"><span class="icono"></span>PACE</div>
+        <div class="titulo">Foco hasta las 10:40</div>
+        <div class="cuerpo">Bloque 2 de 9. Luego, tu pausa: Gemelos subrepticios · 1 min</div>
+      </div>
+      <div class="pie">Desliza para desbloquear</div>
+    </div></div>
+    <div>
+      <h2 id="fb"><span class="letra">B</span>La hora a la que acabas</h2>
+      <p>Lo mismo, sin nada que se mueva: en vez de lo que queda, la hora a la que acaba el bloque. Es la más
+        tranquila; para saber cuánto falta, se mira la hora del móvil.</p>
+      <dl>
+        <div><dt>Qué dice</dt><dd>«Foco hasta las 10:40» y «Bloque 2 de 9. Luego, tu pausa: Gemelos subrepticios · 1 min».</dd></div>
+        <div><dt>Cuándo sale</dt><dd>Como en la A.</dd></div>
+        <div><dt>Cuándo se va</dt><dd>Como en la A.</dd></div>
+        <div><dt>Botones</dt><dd>Ninguno. Tocarlo abre PACE.</dd></div>
+      </dl>
+      <p class="pega">Se hace con lo que ya tenemos, sin pieza propia.</p>
+    </div>
+  </section>
+
+  <section class="forma" aria-labelledby="fc">
+    <div class="movil" aria-hidden="true"><div class="pantalla">
+      <div class="barra"><span>10:21</span><span>87 %</span></div>
+      <div class="reloj">10:21</div>
+      <div class="fecha">lunes, 27 de octubre</div>
+      <div class="aviso">
+        <div class="cabeza"><span class="icono"></span>PACE · <span class="cuenta" data-cuenta="1122">18:42</span></div>
+        <div class="titulo">Foco · bloque 2 de 9</div>
+        <div class="cuerpo">Hasta las 10:40. Luego, tu pausa: Gemelos subrepticios · 1 min</div>
+        <div class="botones"><span>Pausar</span><span>Abrir PACE</span></div>
+      </div>
+      <div class="pie">Desliza para desbloquear</div>
+    </div></div>
+    <div>
+      <h2 id="fc"><span class="letra">C</span>La cuenta con botones</h2>
+      <p>La A con dos botones: «Pausar» y «Abrir PACE».</p>
+      <dl>
+        <div><dt>Qué dice</dt><dd>Como en la A.</dd></div>
+        <div><dt>Cuándo sale</dt><dd>Como en la A.</dd></div>
+        <div><dt>Cuándo se va</dt><dd>Como en la A, y también al pulsar «Pausar».</dd></div>
+        <div><dt>Botones</dt><dd>«Pausar» pide desbloquear y abre PACE con el Foco en pausa. «Abrir PACE» es lo mismo que tocar el aviso.</dd></div>
+      </dl>
+      <p class="pega">Lo que tiene en contra: con PACE dormido en el fondo, «Pausar» no puede hacerse sin abrir la app, así
+        que acaba siendo casi lo mismo que tocarlo; y es la que más invita a mirar el móvil durante el Foco.</p>
+    </div>
+  </section>
+
+  <div class="respuesta">
+    <h2>Tu respuesta</h2>
+    <ol>
+      <li><span class="n">N4</span><span><b>La forma:</b> A, B o C.</span></li>
+      <li><span class="n">N4b</span><span><b>Su interruptor.</b> A: va con «Aviso al terminar», que ya está en Ajustes (lo recomiendo: los Ajustes del móvil caben sin scroll y una fila más los rompería). B: una fila nueva solo para él.</span></li>
+    </ol>
+    <div class="linea">
+      <code id="linea-respuesta">N4: A · N4b: A</code>
+      <button type="button" id="copiar">Copiar</button>
+    </div>
+    <p class="pega" id="copiado" hidden>Copiado. Pégalo en el chat de la sesión.</p>
+  </div>
+</div>
+
+<script>
+  /* La cuenta de la A y la C baja de verdad, como la pintaría Android. */
+  (function () {
+    var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var cuentas = document.querySelectorAll('[data-cuenta]');
+    function pinta(el, s) { el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+    cuentas.forEach(function (el) { pinta(el, Number(el.getAttribute('data-cuenta'))); });
+    if (quieto) return;
+    setInterval(function () {
+      cuentas.forEach(function (el) {
+        var s = Math.max(0, Number(el.getAttribute('data-cuenta')) - 1);
+        if (s === 0) s = 1122;
+        el.setAttribute('data-cuenta', String(s));
+        pinta(el, s);
+      });
+    }, 1000);
+  })();
+  document.getElementById('copiar').addEventListener('click', function () {
+    var texto = document.getElementById('linea-respuesta').textContent;
+    var ok = function () { document.getElementById('copiado').hidden = false; };
+    try {
+      navigator.clipboard.writeText(texto).then(ok, function () {
+        var r = document.createRange(); r.selectNodeContents(document.getElementById('linea-respuesta'));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      });
+    } catch (e) {}
+  });
+</script>

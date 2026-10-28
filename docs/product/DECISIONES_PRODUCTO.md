@@ -19,6 +19,18 @@
 
 ---
 
+## El aviso con el móvil bloqueado: N4 A · N4b A (Ez, 27 oct. 2026)
+
+Sobre la maqueta https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL (`docs/proposals/aviso-bloqueado-27oct.html`), por
+la coordinadora. Ez: «Vale la A ahora». **N4 A, la cuenta que corre sola**: mientras corre un Foco y PACE está en el
+fondo o el móvil bloqueado, un aviso fijo dice «Foco · bloque 2 de 9», lo que queda (la cuenta atrás de Android, que
+no gasta batería) y «Hasta las 10:40. Luego, tu pausa: …»; sin «A tu ritmo», «Foco · 25 min» y la hora. No sale con
+PACE delante; se va al volver, al pausar o al reiniciar, y al acabar lo cambia el aviso de fin, que es el único que
+suena. Sin botones: tocarlo abre PACE. **N4b A**: va con «Aviso al terminar», sin fila nueva en Ajustes. Antes a Ez le
+gustaba la C (con «Pausar») «si los botones funcionan»; tal como estaba dibujada, «Pausar» abría PACE en vez de pausar
+con el móvil bloqueado, y pausar de verdad pide más pieza nativa. **La pieza (`PaceAvisoFijo.java`) queda preparada
+para añadir los botones más adelante, sin montarlos.** Solo Android: en el iPhone sería otra cosa (una Live Activity).
+
 ## «Qué te ayuda»: 1A 2A 3A (Ez, 27 oct. 2026)
 
 Lo último de pago de Estadísticas (§31.4 y §37.4 de `STATS_DESTINO_PROPUESTA.md`). Sobre la maqueta

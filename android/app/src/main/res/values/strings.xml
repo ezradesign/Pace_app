@@ -4,4 +4,7 @@
     <string name="title_activity_main">PACE</string>
     <string name="package_name">com.ezradesign.pace</string>
     <string name="custom_url_scheme">com.ezradesign.pace</string>
+    <!-- El canal del aviso fijo con el movil bloqueado (PaceAvisoFijo), en los ajustes de Android. -->
+    <string name="pace_canal_foco">Focus in progress</string>
+    <string name="pace_canal_foco_texto">What is left of the focus block, with the phone locked. It makes no sound.</string>
 </resources>

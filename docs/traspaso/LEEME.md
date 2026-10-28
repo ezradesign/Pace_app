@@ -4,6 +4,16 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.183.0.
 
+## 28 oct.: Android a fondo (v0.184.0), en `main` con el «júntalo» de Ez
+
+Ez la probó en su Android y dijo «va bien, júntalo». Hecha como 0.182.0 en `claude/android-a-fondo-6edf2e`: los
+avisos A1-A4, el puente del calendario que leía «vacío» cuando Android fallaba (C2/S6), lo privado en el calendario
+del móvil con una pieza propia (`PaceCalendario.java`) y N4, el aviso fijo con el móvil bloqueado (la A de Ez: la
+cuenta que corre sola, sin botones, con `PaceAvisoFijo.java` lista para añadirlos). Entró detrás de «Qué te ayuda»:
+la unión se quedó en 0.183.0 y la 0.184.0 va en un commit aparte. Queda para después, en la cola: los mismos cuatro
+casos de avisos en el iPhone (`app/ui/ios.js`), el aviso de fin que no nombra la pausa de «A tu ritmo» y los botones
+de verdad del aviso (la C de N4). Lo técnico: la fila de v0.184.0 en `DECISIONES_TECNICAS_VIGENTES.md`.
+
 ## 28 oct.: «Qué te ayuda» (v0.183.0), en `main` con el «júntalo» de Ez
 
 La pestaña «Qué te ayuda» de Estadísticas, con el 1A 2A 3A de Ez (tres ideas con umbral, «Todavía es pronto» antes y
