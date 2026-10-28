@@ -23,7 +23,10 @@ corriendo al relevar: mira `gh run list` (los anteriores salen «cancelled» por
    bloque de abajo (A1-A7) y puerto 8807. No borres ese worktree.
 2. **Las ocho revisiones de ChatGPT**, enteras en `docs/audits/chatgpt-28oct/` y con su LEEME, y **ordenadas en paquetes
    en el ROADMAP** («Lo que salió de las ocho revisiones», bajo la tabla de «Camino a v1.0»): A (en marcha), B, T, M, L y V.
-   Se valoran con Ez ANTES de montar nada (Ez: «lo que se necesite se valora juntos los dos»).
+   Se valoran con Ez ANTES de montar nada (Ez: «lo que se necesite se valora juntos los dos»). **Y desde las ~21:30 hay
+   una lista única en tres grupos** (arriba del `LEEME.md` de esa carpeta), con la decisión de Ez: «implementemos lo más
+   útil para lanzar la app y que el resto lo vayamos implementando poco a poco». Los grupos 1 y 2, antes de v1; el 3,
+   después. Pendiente de Ez: el alcance del calendario en v1 (recomendado, beta en la web y completo en Android).
 3. **Ez**: el aviso de Stripe en el modo de prueba (su hoja, el paso «Ahora»). Cuando diga «aviso puesto», un POST sin firma
    a `/api/stripe` tiene que dar 400 «firma» (hoy da 503 «cerrada»). Está generando los 16 dibujos en
    `Pace_app\dibujos-22oct` (a las 21:15, la carpeta seguía vacía).

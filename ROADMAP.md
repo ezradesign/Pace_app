@@ -101,6 +101,11 @@ con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo
 | L · El calendario de verdad: el pase que no caduca, varios calendarios y leer sin escribir | CAL-1, CAL-3, CAL-5 | Con el punto 13 (el llavero) | Espera las altas de Ez |
 | V · Que vuelvan cada día | V1 «Solo pausas» (sin Pomodoro), V2-V5 | Sin fecha: la decide Ez | Para valorar; V1, con maqueta y testers |
 
+**Ez, 28 oct., noche: «implementemos lo más útil para lanzar la app y que el resto lo vayamos implementando poco a poco,
+pero que cuando la lancemos sea realmente útil».** Manda la lista única en tres grupos de `docs/audits/chatgpt-28oct/LEEME.md`:
+el grupo 1 (bloquea publicar o cobrar) y el 2 (bloquea entender PACE el primer día) van antes de v1, y el 2 puede llegar
+como actualizaciones durante los 14 días de los testers; el 3 es mejora después de v1.
+
 **La fecha de v1 ya no depende del código** (auditoría del 28 oct.). La fija esta cadena: subir la versión de prueba
 definitiva a la prueba cerrada (el punto 11), reunir 12 testers durante 14 días seguidos (Ez tiene 5 o 6, y la cuenta
 aún no ha empezado) y pedir el acceso a producción. A la vez corre el alta para cobrar, que piden Play, Apple y Stripe.

@@ -19,6 +19,16 @@
 
 ---
 
+## Lanzar con lo más útil y mejorar después (Ez, 28 oct. 2026, noche)
+
+Tras ocho revisiones de ChatGPT en una noche (`docs/audits/chatgpt-28oct/`) y su consejo de cerrar el alcance, Ez:
+«implementemos lo más útil para lanzar la app y que el resto lo vayamos implementando poco a poco, pero que cuando la
+lancemos sea realmente útil y los siguientes pasos sean de mejora y actualización». Se traduce en la lista única en tres
+grupos del `LEEME.md` de esa carpeta: lo que bloquea publicar o cobrar y lo que bloquea entender PACE el primer día van
+antes de v1; lo demás, después, con lo que digan los testers y las primeras compras. Una recomendación no bloquea v1
+por ser de ChatGPT: cuenta qué daño evita o qué recorrido imprescindible permite. Pendiente de Ez: el alcance del
+calendario en v1.
+
 ## Lo que falta para vender: 1A 2A 3A 4A; y el aviso de fin en los móviles: A (Ez, 28 oct. 2026)
 
 Sobre la maqueta `docs/proposals/vender-punto-12-28oct.html` (el punto 12 del ROADMAP), Ez eligió las cuatro

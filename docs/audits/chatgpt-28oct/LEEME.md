@@ -1,7 +1,31 @@
-# Las ocho revisiones de ChatGPT del 28 oct. 2026
+# Las ocho revisiones de ChatGPT del 28 oct. 2026, y la lista única para lanzar
 
-Ez las pegó en la sesión de la coordinadora (cuenta de 5iWBf…) entre las 20:10 y las 21:10. Aquí están **tal cual**
-(`01-…` a `08-…`), para que no se pierdan al cambiar de cuenta. Ez, de la octava: «valores, guardes e implementemos lo
+## La lista única para lanzar (Ez, 28 oct., ~21:30)
+
+Ez, tras el texto 9 (`09-cerrar-el-alcance.md`): **«implementemos lo más útil para lanzar la app y que el resto lo vayamos
+implementando poco a poco, pero que cuando la lancemos sea realmente útil y los siguientes pasos sean de mejora y
+actualización».** Propuesta de la coordinadora; cada grupo se repasa con Ez antes de montarlo, y «lo recomendó ChatGPT» no
+basta para que algo bloquee v1: cuenta qué daño evita o qué recorrido imprescindible deja hacer.
+
+| Grupo | Qué entra (sin repetir) | Cuándo |
+|---|---|---|
+| **1 · Bloquea publicar o cobrar** (daño, seguridad, compras, lo que se promete) | A1-A7 (el cobro); U1 y C6 (perder lo que se escribe); B4 y C3 (colocación y material que no se dicen: «silla sin ruedas», la banda); que /premium, la ficha de Play y la app solo prometan lo que hay, también del calendario (CAL-2, CAL-4, CAL-6); y lo que ya estaba: lo legal de /premium, Play Billing y la compra de Apple (puntos 14-16) | Antes de v1. A, ya en marcha |
+| **2 · Bloquea entender PACE el primer día o volver al siguiente** | B1-B3, C1, C4, C5, U2, U3 (la carta que no se puede dejar para luego), U5, P1, P2, P5, P6, P8, Q1, Q3, Q6, R2, R3, R4 y R6 | Durante los 14 días de los testers, como actualizaciones de la versión de prueba; antes de v1 |
+| **3 · Mejora después de lanzar** | V1 «Solo pausas» y V2-V5; U4 (la carta dentro de la prueba de 7 días); el resto de la oferta de /premium; P3, P4, P7; Q2, Q4, Q5, Q7; C2; R1, R5; y el calendario de verdad (CAL-1, CAL-3, CAL-5, con el llavero del punto 13) | Después de v1, con lo que digan los testers y las primeras compras |
+
+**Por qué este reparto**: el grupo 1 evita daño o promesas falsas; el 2 es lo que nota alguien nuevo al usar PACE o al
+volver; el 3 son ideas que conviene validar con gente real antes de construir. La versión de prueba puede subir en cuanto
+estén los dibujos, el logo y lo que falle de verdad del grupo 1 en las apps (B4 y C3): así empiezan los 14 días, y el
+grupo 2 llega como actualizaciones durante ese tiempo.
+
+**Decisión pendiente de Ez, el calendario en v1**: (a) entra en PACE completo solo donde es fiable, hoy Android y la web
+con PACE abierto, diciendo sus límites; o (b) se queda como beta, sin venderlo como motivo para pagar, hasta el llavero.
+Recomendado: (b) en la web y (a) en Android.
+
+## Las revisiones
+
+Ez las pegó en la sesión de la coordinadora (cuenta de 5iWBf…) entre las 20:10 y las 21:30. Aquí están **tal cual**
+(`01-…` a `09-…`, el 9 es de estrategia), para que no se pierdan al cambiar de cuenta. Ez, de la octava: «valores, guardes e implementemos lo
 útil cuando corresponda». Cada caso se comprobó contra el código de la 0.185.0 (el
 `main` de este PC), no contra el commit que leyó ChatGPT. **Ez, 28 oct.: «luego lo que se necesite se valora juntos los
 dos y vamos implementando lo que sea útil en esta o en la otra cuenta».** Nada de esto está decidido salvo lo que se
