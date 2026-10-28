@@ -251,11 +251,11 @@ function StatsPanel({ open, onClose }) {
   /* Se abre en «Hoy» (§37.4; Ez, 15 oct. 2026): lo primero es tu día. */
   const [tab, setTab]           = useState('today');
   /* MES, AÑO Y «QUÉ TE AYUDA» SON DE PACE COMPLETO (Ez, 8 oct.; el tercero, 3A del 27 oct.); hasta
-     v1, abiertos para todos (PREMIUM_ABIERTO_HASTA_V1). Cerrados llevan el candado de línea fina en su pestaña y, al
-     tocarla, se abre la invitación de siempre sin cambiar de pestaña (Ez, 15 oct., opción A):
+     v1, abiertos para todos, y desde v1 en la semana de prueba (`paceAbiertoAhora`). Cerrados llevan el candado de línea
+     fina en su pestaña y, al tocarla, se abre la invitación de siempre sin cambiar de pestaña (Ez, 15 oct., opción A):
      tus datos no se tapan, y la copia de «Tus datos» los sigue llevando todos. */
   const cerrada = (key) => (key === 'month' || key === 'year' || key === 'ayuda')
-    && !(window.PREMIUM_ABIERTO_HASTA_V1 || (window.hasPremiumEntitlement && window.hasPremiumEntitlement()));
+    && !((window.paceAbiertoAhora && window.paceAbiertoAhora()) || (window.hasPremiumEntitlement && window.hasPremiumEntitlement()));
   const [jumpYear, setJumpYear] = useState(null);
   const [jumpMonth, setJumpMonth] = useState(null);
 

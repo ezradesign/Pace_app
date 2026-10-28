@@ -54,8 +54,25 @@ Esos tres enlaces **no son secretos**: pásaselos a la coordinadora. Van en la a
 (`PACE_TIENDA_WEB` en `app/state-compra.js`) y desde ese momento salen los botones de compra y
 «Gestionar la suscripción».
 
+## 5. Stripe: la llave que solo lee, para /recuperar
+
+`pacegrass.app/recuperar` busca la compra en Stripe con el correo y el número del recibo, y para eso
+necesita leer, nunca cobrar ni cambiar nada. En Stripe › Desarrolladores › Claves de API › **Crear clave
+restringida**: nombre «PACE recuperar», y solo **Lectura** en Checkout Sessions, Cargos (Charges),
+PaymentIntents y Facturas (Invoices); todo lo demás, «Ninguno». La clave empieza por `rk_`. En
+Cloudflare (como en el paso 2.1), otro secreto: nombre `STRIPE_LECTURA`, valor esa `rk_…`. Sin ella,
+/recuperar dice que aún no se puede y manda escribirte.
+
+Y en Stripe › Configuración › Facturación › Facturas, deja la numeración **por cliente** (la que viene):
+con la numeración seguida de toda la cuenta, los números de factura se adivinan.
+
 ## Cómo saber que funciona
 
 Con Stripe en modo de prueba, compra con la tarjeta `4242 4242 4242 4242`: la página de gracias tiene
 que darte un código y «Abrir PACE con tu código» tiene que abrir PACE completo. Si la página se queda
 esperando, el aviso no llega: mira en Stripe › Webhooks si el destino da error.
+
+Después, en `pacegrass.app/recuperar`, escribe el correo de esa compra y el número de su recibo (el
+correo de Stripe): tiene que darte el mismo código. Si dice que no la encuentra, mira qué número trae
+el recibo de Stripe en su modo «vende por ti» y pásaselo a la coordinadora: la función compara el
+número del recibo y el de la factura (`cobro/stripe.js`, `stripeBuscarCompra`).

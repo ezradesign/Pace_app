@@ -94,3 +94,60 @@ export function stripeLeerFin(evento) {
   if (!o || evento.type !== 'customer.subscription.deleted' || typeof o.id !== 'string') return null;
   return o.id;
 }
+
+/* · stripeBuscarCompra: para /recuperar (functions/api/recuperar.js). Con el correo de la compra
+     y el número de su recibo, busca la compra en Stripe en ese momento, con una llave de solo
+     lectura (`STRIPE_LECTURA`). Vale el número del recibo del cobro y el de la factura (la
+     primera de la mensual o cualquiera de sus renovaciones): no se sabe aún cuál enseña Stripe
+     en su modo «vende por ti», y se mira con su modo de pruebas antes de cobrar a nadie.
+     Lo que se compara se lee y se olvida: aquí no se guarda nada. */
+
+const STRIPE_API = 'https://api.stripe.com/v1/';
+
+/* El número como se compara: en mayúsculas, sin «#», espacios ni guiones. */
+export function stripeNumero(texto) {
+  return String(texto || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+async function stripeLeer(ruta, llave, pedir) {
+  const r = await pedir(STRIPE_API + ruta, { headers: { Authorization: 'Bearer ' + llave } });
+  if (!r || !r.ok) throw new Error('stripe ' + (r && r.status));
+  return r.json();
+}
+
+function numerosDe(...objetos) {
+  const out = [];
+  objetos.forEach((o) => {
+    if (!o || typeof o !== 'object') return;
+    ['receipt_number', 'number'].forEach((k) => { if (typeof o[k] === 'string' && o[k]) out.push(stripeNumero(o[k])); });
+  });
+  return out;
+}
+
+/* -> { plan: 'lifetime', order, devuelta } | { plan: 'monthly', order } | null (sin compra con
+   ese correo y ese número). Lanza si Stripe no contesta. `pedir` es fetch. */
+export async function stripeBuscarCompra(correo, recibo, llave, pedir) {
+  const buscado = stripeNumero(recibo);
+  if (!buscado || !correo || !llave) return null;
+  const correos = [String(correo).trim()];
+  if (correos[0].toLowerCase() !== correos[0]) correos.push(correos[0].toLowerCase());
+  for (const c of correos) {
+    const lista = await stripeLeer('checkout/sessions?status=complete&limit=100&customer_details[email]=' + encodeURIComponent(c) +
+      '&expand[]=data.payment_intent.latest_charge&expand[]=data.invoice', llave, pedir);
+    const sesiones = (lista && Array.isArray(lista.data)) ? lista.data : [];
+    for (const s of sesiones) {
+      if (!s || typeof s.id !== 'string') continue;
+      const cobro = s.payment_intent && s.payment_intent.latest_charge;
+      if (s.mode === 'payment' && s.payment_status === 'paid' && numerosDe(cobro, s.invoice).indexOf(buscado) !== -1) {
+        return { plan: 'lifetime', order: s.id, devuelta: !!(cobro && (cobro.refunded || cobro.disputed)) };
+      }
+      if (s.mode !== 'subscription' || typeof s.subscription !== 'string') continue;
+      if (numerosDe(s.invoice).indexOf(buscado) !== -1) return { plan: 'monthly', order: s.subscription };
+      const facturas = await stripeLeer('invoices?limit=100&subscription=' + encodeURIComponent(s.subscription), llave, pedir);
+      const todas = (facturas && Array.isArray(facturas.data)) ? facturas.data : [];
+      if (todas.some((f) => numerosDe(f).indexOf(buscado) !== -1)) return { plan: 'monthly', order: s.subscription };
+    }
+    if (sesiones.length) break;
+  }
+  return null;
+}
