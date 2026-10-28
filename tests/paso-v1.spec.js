@@ -274,7 +274,13 @@ test.describe('la hoja del día de v1 en un móvil', () => {
     await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', true]]);
     await pasarAV1(page);
     await expect(page.locator(HOJA)).toBeVisible({ timeout: 8000 });
-    await page.waitForTimeout(400);
+    /* La hoja entra animada: se mide quieta. */
+    await page.waitForFunction(() => {
+      const c = document.querySelector('[data-pace-modal-card]');
+      const animaciones = c.getAnimations({ subtree: true });
+      for (let e = c.parentElement; e; e = e.parentElement) animaciones.push(...e.getAnimations());
+      return animaciones.every((a) => a.playState !== 'running');
+    });
     const m = await page.locator('[data-pace-modal-card]').evaluate((c) => {
       const r = c.getBoundingClientRect();
       return { arriba: r.top, abajo: r.bottom, dentro: c.scrollHeight - c.clientHeight, ancho: document.documentElement.scrollWidth };

@@ -33,6 +33,26 @@ async function invitar(page) {
   await page.locator(HOJA).waitFor({ state: 'visible' });
 }
 
+/* La hoja entra animada: medida a medias, cada caja sale de un momento distinto de la animación. Se
+   espera a que la hoja y lo que la envuelve estén quietos, y los dos botones se miden en la misma vuelta. */
+async function quieta(page) {
+  await page.waitForFunction(() => {
+    const c = document.querySelector('[data-pace-modal-card]');
+    if (!c) return false;
+    const animaciones = c.getAnimations({ subtree: true });
+    for (let e = c.parentElement; e; e = e.parentElement) animaciones.push(...e.getAnimations());
+    return animaciones.every((a) => a.playState !== 'running');
+  });
+}
+
+async function dosBotones(page, primero, segundo) {
+  await quieta(page);
+  return page.locator(HOJA).evaluate((hoja, nombres) => nombres.map((n) => {
+    const b = [...hoja.querySelectorAll('button')].find((x) => x.textContent.trim() === n);
+    return { ancho: b.offsetWidth, alto: b.offsetHeight, arriba: b.offsetTop };
+  }), [primero, segundo]);
+}
+
 test.describe('3A · la invitación con la tienda abierta', () => {
   test('sin tienda, como hoy: «Llega con la versión 1» y ningún precio', async ({ page, context }) => {
     await sembrar(context);
@@ -59,12 +79,12 @@ test.describe('3A · la invitación con la tienda abierta', () => {
     await expect(hoja).not.toContainText('Llega con la versión 1.');
     /* Los precios, los de la tienda y escritos en el idioma de la app. */
     await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('19,99 € una vez, o 2,99 € al mes con 7 días gratis.');
-    const probar = hoja.getByRole('button', { name: 'Probar 7 días gratis' });
     const ahora = hoja.getByRole('button', { name: 'Ahora no' });
-    await expect(probar).toBeVisible();
-    const [a, b] = [await probar.boundingBox(), await ahora.boundingBox()];
-    expect(Math.abs(a.width - b.width), '«Ahora no» igual de ancho que «Probar»').toBeLessThan(1);
-    expect(Math.abs(a.height - b.height)).toBeLessThan(1);
+    await expect(hoja.getByRole('button', { name: 'Probar 7 días gratis' })).toBeVisible();
+    const [a, b] = await dosBotones(page, 'Probar 7 días gratis', 'Ahora no');
+    expect(Math.abs(a.ancho - b.ancho), '«Ahora no» igual de ancho que «Probar»').toBeLessThan(1);
+    expect(Math.abs(a.alto - b.alto)).toBeLessThan(1);
+    expect(a.arriba, 'lado a lado en el ordenador').toBe(b.arriba);
     await expect(hoja).toContainText('Te avisamos dos días antes de que acabe la prueba.');
     await expect(hoja.locator('[data-pace-premium-vida]')).toHaveText('Prefiero pagarlo una vez, 19,99 €');
     await expect(hoja.locator('[data-pace-premium-tengo]')).toHaveText('Tengo un código');
@@ -120,9 +140,9 @@ test.describe('3A en un móvil en inglés', () => {
     await invitar(page);
     const hoja = page.locator(HOJA);
     await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('€19.99 once, or €2.99 a month with 7 days free.');
-    const [a, b] = [await hoja.getByRole('button', { name: 'Try 7 days free' }).boundingBox(), await hoja.getByRole('button', { name: 'Not now' }).boundingBox()];
-    expect(Math.abs(a.width - b.width)).toBeLessThan(1);
-    expect(b.y).toBeGreaterThan(a.y + a.height - 1);
+    const [a, b] = await dosBotones(page, 'Try 7 days free', 'Not now');
+    expect(Math.abs(a.ancho - b.ancho)).toBeLessThan(1);
+    expect(b.arriba, 'uno sobre otro en el móvil').toBeGreaterThan(a.arriba + a.alto - 1);
     await expect(hoja.locator('[data-pace-premium-vida]')).toHaveText('I would rather pay once, €19.99');
     const caja = await page.locator('[data-pace-modal-card]').boundingBox();
     expect(caja.y).toBeGreaterThanOrEqual(0);

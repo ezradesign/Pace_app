@@ -22,9 +22,9 @@ el `index.html` de la rama tal cual, fingiendo solo el día de v1 o los enlaces 
    cincuenta pausas la verá tras la quinta de ahora. `verify` (verify.android.js) vigila la pieza, la librería, el
    orden de `pedida` y que cada complemento propio de la carpeta esté registrado en `MainActivity`.
    Prueba: `tests/valoracion-play.spec.js` (cae contra v0.184.0).
-   **El Java no lo ha compilado nadie**: aquí no hay JDK ni SDK de Android, y lanzar el workflow Android en esta rama
-   dejaría un AAB firmado llamado `PACE-0.184.0.aab`, igual que el que Ez va a subir a Play. Lo compila el workflow
-   Android al juntar en `main`; si cae, es esta pieza.
+   **El Java compila**: alguien lanzó a mano el workflow Android en esta rama sobre a2ce4d2, que ya lo lleva (run
+   40724919949, trabajo `apk` en verde, 28 oct. a las 16:20 UTC). Ese AAB se llama `PACE-0.184.0.aab`, igual que el
+   que Ez va a subir a Play: **no se usa**. El bueno sale del workflow Android al juntar en `main`.
 2. **El paso a v1 sin quitar nada** (reseñas, punto 1), por dentro. `app/state-paso-v1.js`: el primer arranque con
    `PREMIUM_ABIERTO_HASTA_V1` en false apunta `pasoV1` una sola vez. Quien ya usaba PACE (la bienvenida acabada o algo
    hecho) recibe siete días con todo abierto y conserva las de pago que hizo: las del registro de eventos (terminadas
@@ -78,7 +78,10 @@ el `index.html` de la rama tal cual, fingiendo solo el día de v1 o los enlaces 
 `tests/recuperar-pagina.spec.js` (la página en sus estados, el inglés y los enlaces); ampliadas `paso-v1.spec.js` (la
 hoja, su fila de Ajustes, con sesión delante, en inglés con «And n more», a 360 px) y `valoracion-play.spec.js` (el
 iPhone). Las de la invitación, la bienvenida, /premium, /gracias, Ajustes y Estadísticas: 137 en verde. `npm run verify`
-en verde. La suite entera con `--workers=1`: ver el commit de cierre.
+en verde. La suite entera con `--workers=1` (sobre 3c2ea8a, 45,6 min): 1017 en verde, 2 saltadas y 1 caída, la de 3A a
+360 px en inglés, que medía los dos botones mientras la hoja aún entraba animada (1,7 px de diferencia con el PC
+cargado). Ya espera a que la hoja esté quieta y mide los dos en la misma vuelta: `premium-compra` y `paso-v1`, tres
+veces seguidas con la suite corriendo al lado, 48 de 48.
 
 ## Para la coordinadora, al juntar
 
