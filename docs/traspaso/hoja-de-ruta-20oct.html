@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 18:25 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.184.1 · actualizada el 28 de octubre a las 19:35 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -643,7 +643,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       con pagos de mentira, en el modo de prueba de Stripe. <b>Las llaves y los secretos nunca van al chat</b>: se pegan
       en Cloudflare. Los enlaces de pago sí me los puedes pasar. La guía entera, en <code>docs/launch/cobro-web.md</code>.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · tú, unos 10 minutos</span>
+      <li class="paso hecho"><span class="estado">Hecho · 28 de octubre, como autónomo</span>
         <span class="t">Crear la cuenta</span>
         <span class="c"><span class="quien">Tú.</span>
           <ol>
@@ -654,18 +654,19 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               empresa?», <b>Software › Software como servicio (SaaS)</b>; si te deja escribir, la frase que te pasé en el chat.</li>
             <li>Lo de «activar pagos» (NIF, IBAN, tu alta), déjalo para cuando hables con el gestor.</li>
           </ol></span></li>
-      <li class="paso luego"><span class="estado">Después · tú, unos 5 minutos</span>
+      <li class="paso hecho"><span class="estado">Hecho · 28 de octubre, con Stripe Tax</span>
         <span class="t">Pedir el modo «vende por ti»</span>
-        <span class="c"><span class="quien">Tú.</span> En el panel, busca «Managed Payments». Si sale como solicitud o lista de espera,
-          apúntate: producto digital, la suscripción de una app, web <code>pacegrass.app/premium</code>. Si en España no lo
-          ofrecen, el plan B que ya decidiste es Paddle.</span></li>
-      <li class="paso luego"><span class="estado">Después · tú, en tu PC, 2 minutos</span>
+        <span class="c"><span class="quien">Tú.</span> Te lo ofrece la «Guía de configuración» del panel: <b>Configurar Managed Payments ›
+          Empezar con Managed Payments</b>, y luego «Cuéntanos qué vendes» con la misma descripción de antes. Si te pide la
+          categoría de impuestos del producto, <b>Software como servicio (SaaS), uso personal</b>. Web
+          <code>pacegrass.app/premium</code>.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · su parte pública, en la app con la 0.184.1</span>
         <span class="t">La llave que firma las ventas (k2)</span>
         <span class="c"><span class="quien">Tú.</span> En la carpeta de PACE, en una terminal: <code>npm run licencia:k2</code>. Deja dos
           archivos en <code>PACE-llave-licencias</code>: <code>k2.privada.pem</code> (llévala al disco duro con las otras) y
           <code>k2.para-cloudflare.txt</code> (para el paso siguiente; bórralo después). Dime «k2 está»: subo su parte
           pública a la app, que hace falta para que el código de una compra abra PACE completo.</span></li>
-      <li class="paso luego"><span class="estado">Después · tú, unos 10 minutos</span>
+      <li class="paso ahora"><span class="estado">Ahora · tú, unos 10 minutos</span>
         <span class="t">Cloudflare: el secreto de k2 y el almacén de las ventas</span>
         <span class="c"><span class="quien">Tú.</span> En <b>dash.cloudflare.com › Workers y Pages</b> › el proyecto de pacegrass.app:
           <ol>
@@ -688,7 +689,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           solo <b>Lectura</b> en Checkout Sessions, Cargos, PaymentIntents y Facturas; todo lo demás, «Ninguno». Empieza por
           <code>rk_</code>: pégala en Cloudflare como otro secreto, <code>STRIPE_LECTURA</code>. Y en Configuración › Facturación ›
           Facturas, deja la numeración <b>por cliente</b>, la que viene.</span></li>
-      <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
+      <li class="paso hecho"><span class="estado">Hecho en real y apagados · 28 de octubre</span>
         <span class="t">Los dos enlaces de pago y el portal</span>
         <span class="c"><span class="quien">Tú.</span> Un enlace de pago de <b>19,99 €, una vez</b>, y otro de <b>2,99 € al mes con 7
           días de prueba</b>. En los dos, la página de después de pagar:

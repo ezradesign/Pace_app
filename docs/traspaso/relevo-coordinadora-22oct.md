@@ -21,6 +21,15 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 3. **La prueba sigue en 7 días**: Ez volvió a preguntar por 3 y se quedó en 7 (el mismo motivo del 15 oct.).
 4. **Ez está creando la cuenta de Stripe** (la actividad de la empresa, contestada). La hoja de esta cuenta va en la 65,
    con Stripe en «Ahora». Cuando diga «k2 está», lo del punto 10 de abajo.
+   **Stripe en real, hecho y apagado** (28 oct., ~19:00): cuenta activada como autónomo, Managed Payments y Stripe Tax,
+   dos productos `PACE completo · PACE Complete` (2,99 €/mes y 19,99 € único, impuestos incluidos) y dos enlaces de pago
+   DESACTIVADOS, con la prueba de 7 días en el mensual y vuelta a `/gracias/?sesion={CHECKOUT_SESSION_ID}`:
+   mensual `https://buy.stripe.com/3cIcN6bVR8oK81IbMJ6wE00` y de por vida
+   `https://buy.stripe.com/4gM6oI0d95cya9Q0416wE01` (confirmado por Ez); el portal,
+   `https://billing.stripe.com/p/login/3cIcN6bVR8oK81IbMJ6wE00` (sí, el mismo código que el mensual: lo enseña el panel).
+   k2 creada por Ez; su parte pública, en la app con v0.184.1. No van a
+   `PACE_TIENDA_WEB` hasta la compra de prueba, lo legal y el sí de Ez; antes de v1 se vendería solo el de por vida
+   en /premium (propuesto, sin decidir).
 5. Huérfanos de la suite parada: PID 23720 y 1984 (Playwright) y 6588 (servidor en el 8806, que sirve esa misma carpeta).
    No molestan; los puede parar Ez.
 

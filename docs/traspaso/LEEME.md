@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.184.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.184.1.
 
 ## 28 oct., tarde: lo que falta para vender (1A 2A 3A 4A de Ez) y los avisos del iPhone, en sus ramas
 
@@ -12,6 +12,8 @@ bienvenida y la ventana de valorar también en el iPhone. La prueba sigue en **7
 se quedó en 7: en tres días no se ve una semana de «A tu ritmo»). Lo monta `claude/clever-gagarin-6701aa`; los avisos
 del iPhone y tres arreglos pequeños, `claude/awesome-albattani-270a62`. Las dos se juntan solo con el «júntalo» de Ez,
 y después sale la versión de prueba definitiva. Estado y sesiones: el bloque del 28 oct., ~18:20, del relevo.
+Stripe, el mismo día: la cuenta de Ez (autónomo), «vende por ti», los productos y los enlaces en real pero apagados, y
+k2 pública en la app (v0.184.1). Ez quiere vender en la web antes de v1; antes hace falta lo legal de /premium.
 
 ## 28 oct.: Android a fondo (v0.184.0), en `main` con el «júntalo» de Ez
 

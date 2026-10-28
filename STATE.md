@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.184.0 · 28 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.184.1 · 28 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -71,9 +71,11 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT y
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora: Stripe para la web** (`docs/launch/cobro-web.md`; los pasos, en su hoja): la cuenta, pedir «vende por ti», k2
-  en su PC (`npm run licencia:k2`; su parte pública la sube la coordinadora a `app/licencia.llaves.js`), los secretos y el
-  KV en Cloudflare, el aviso y los enlaces en el modo de prueba y una compra de mentira. **La versión de prueba
+- **Ahora: Stripe para la web** (`docs/launch/cobro-web.md`; los pasos, en su hoja). Hecho el 28 oct.: la cuenta (como
+  autónomo), «vende por ti» con Stripe Tax, los dos productos y sus enlaces en real y APAGADOS, el portal, y k2 (su parte
+  pública, en la app desde v0.184.1). Falta: los secretos y el KV en Cloudflare, el aviso, la llave que solo lee, los
+  enlaces en el modo de prueba y una compra de mentira. Ez quiere vender en la web antes de v1 (propuesto: solo el de
+  por vida, en /premium); antes, lo legal de /premium. Los enlaces, en el relevo. **La versión de prueba
   definitiva** (Ez, 28 oct.): no sube nada a Play ni a TestFlight hasta tener los dos hilos, sus dibujos y el logo, y
   entonces las dos a la vez. El AAB de la 0.184.0 queda en `subidas-play\` por si acaso.
 - **Lo que fija la fecha de v1**: con esa versión en la prueba cerrada, reunir unos 15 testers (tiene 5 o 6; `/beta`

@@ -20,6 +20,7 @@
    artefacto. */
 
 var PACE_LLAVES_LICENCIA = {
+  k2: { x: 'EByDjuay6PMTYyomTCKmOjcZwETtesKzj74ycsMA8ik', y: 'ZnzA2m4qHAPAuRQLGCi-tSAL0WyBI8TBb3pANdCxp6Q' },
   k1: { x: 'u9eKWp7Q7i59EXpuij5ojJhDyUm1peiOEaf3YmZx_0k', y: 'coPL3XqK9zPq4m0RUOnjz2el12P4ZJrrzUqEO8lwZcY' },
 };
 
