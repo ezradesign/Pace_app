@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, abrirTusDatos } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirTusDatos, MEDIODIA } = require('./helpers');
 const { firmar, conLlaveDePrueba } = require('./licencia.helpers');
 
 test.use({ serviceWorkers: 'block' });
@@ -133,13 +133,41 @@ test.describe('1A · la página de gracias', () => {
     const raiz = require('path').join(__dirname, '..');
     const fs = require('fs');
     expect(fs.readFileSync(require('path').join(raiz, 'scripts', 'android-www.js'), 'utf8')).not.toMatch(/gracias/);
-    expect(fs.readFileSync(require('path').join(raiz, 'scripts', 'web-dist.js'), 'utf8')).toContain("const WEB_CARPETAS = ['premium', 'beta', 'gracias'];");
+    expect(fs.readFileSync(require('path').join(raiz, 'scripts', 'web-dist.js'), 'utf8')).toContain("const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar'];");
   });
 
   test('sin compra que encontrar, dice a quién escribir', async ({ page }) => {
     await page.goto('/gracias/index.html');
     await expect(page.locator('[data-gracias-falta]')).toBeVisible();
     await expect(page.locator('[data-gracias-falta]')).toContainText('número del recibo de Stripe');
+  });
+
+  /* Un adeudo SEPA y parecidos (auditoría de seguridad del 28 oct.): la compra está, el pago aún no. */
+  test('si al minuto no hay código, dice que el pago se está confirmando, dónde saldrá, y lo da en cuanto llega', async ({ page }) => {
+    const codigo = mensual();
+    let pagado = false;
+    await page.route('**/api/codigo?*', (r) => (pagado
+      ? r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, codigo }) })
+      : r.fulfill({ status: 404, contentType: 'application/json', body: '{"ok":false,"pendiente":true}' })));
+    await page.clock.install({ time: MEDIODIA });
+    await page.goto('/gracias/index.html?sesion=' + SESION);
+    await expect(page.locator('[data-gracias-espera]')).toBeVisible();
+    /* El minuto de preguntas rápidas, a golpes de dos segundos: cada respuesta tarda algo de verdad. */
+    const aviso = page.locator('[data-gracias-confirmando]');
+    for (let i = 0; i < 80 && !(await aviso.isVisible()); i++) { await page.clock.runFor(2000); await page.waitForTimeout(50); }
+    await expect(aviso).toBeVisible();
+    await expect(aviso.locator('h1')).toHaveText('Tu pago se está confirmando.');
+    await expect(aviso).toContainText('con un adeudo SEPA y parecidos, unos días');
+    await expect(aviso.locator('a[href="/recuperar/"]')).toHaveText('pacegrass.app/recuperar');
+    await expect(page.locator('[data-gracias-falta]')).toBeHidden();
+
+    /* Stripe lo confirma: al siguiente medio minuto, el código. */
+    pagado = true;
+    const listo = page.locator('[data-gracias-listo]');
+    for (let i = 0; i < 4 && !(await listo.isVisible()); i++) { await page.clock.runFor(31000); await page.waitForTimeout(200); }
+    await expect(listo).toBeVisible();
+    await expect(aviso).toBeHidden();
+    await expect(page.locator('[data-gracias-codigo]')).toHaveText(codigo);
   });
 
   test('«Abrir PACE con tu código» deja PACE completo puesto en este navegador', async ({ page, context }) => {

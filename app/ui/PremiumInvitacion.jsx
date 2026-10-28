@@ -9,12 +9,17 @@
    `nombre` es lo que se tocó (una rutina, «Tus rutinas») y `modo: 'codigo'` la
    abre ya con el campo del código (lo usa la fila de Ajustes).
 
-   HOY NO HAY COMPRA: la hoja dice «Llega con la versión 1». Cuando llegue Play
-   Billing o la tienda de la web, el botón de compra va aquí, con el precio que
-   dé la tienda (nunca escrito en las traducciones).
+   LA COMPRA (Ez, 3A del 28 oct. 2026): con la tienda del canal lista
+   (`paceTiendaAbierta`: en la web, los dos enlaces de pago de Stripe; en Android,
+   Play Billing), la hoja acaba como la última pantalla de la bienvenida: los dos
+   precios de la tienda en una frase (nunca escritos en las traducciones),
+   «Probar 7 días gratis» y «Ahora no» del mismo tamaño, el aviso de antes de
+   cobrar y «Prefiero pagarlo una vez». Hasta entonces dice «Llega con la versión 1».
 
    EN ANDROID NO HAY «Tengo un código»: Google Play no deja desbloquear con
-   códigos propios (state-licencia.js). Allí la hoja solo informa.
+   códigos propios (state-licencia.js). Allí la hoja solo informa. Donde hay
+   código, debajo del campo va «¿Lo has perdido?», que abre pacegrass.app/recuperar
+   (Ez, 2A del 28 oct.): la app no se conecta para buscarlo.
 
    El candado de las tarjetas (`PaceCandado`) vive aquí porque es la misma
    promesa: lo que lo lleva, al tocarlo, abre esta hoja.
@@ -24,8 +29,16 @@
    días antes de `trialEnd` (el código del alta de la mensual), una vez por
    suscripción (`premiumAvisoPrueba`), al abrir PACE y nunca con una sesión delante.
    Sin lista de ventajas: no intenta retener. «Gestionar la suscripción» sale solo
-   si la tienda tiene dónde (en la web, el portal de Stripe). */
+   si la tienda tiene dónde (en la web, el portal de Stripe).
+
+   LA HOJA DEL DÍA DE v1 (Ez, 1A del 28 oct. 2026) es la otra que se abre sola: a
+   quien ya usaba PACE, una vez, al abrir PACE ese día y sin nada delante
+   (`pacePasoV1PorAvisar`, state-paso-v1.js). Cuenta sus siete días con la fecha,
+   las rutinas de pago que se le quedan con su módulo y que lo gratis sigue
+   gratis, con un solo «Entendido»: no vende nada. */
 const PREMIUM_AVISO_ANTES = 2 * 24 * 3600 * 1000;
+/* Las que se le quedan, en la hoja: hasta seis; con más, cinco y «Y n más». */
+const PREMIUM_PASOV1_LISTA = 6;
 
 function premiumPruebaPorAvisar() {
   const d = window.paceLicenciaVigente ? window.paceLicenciaVigente() : null;
@@ -58,9 +71,9 @@ function paceAbrirPremium(detalle) {
 const PREMIUM_INCLUYE = ['routines', 'custom', 'letter', 'stats'];
 
 function PremiumInvitacion() {
-  const { t } = useT();
+  const { t, tn, lang } = useT();
   const [abierta, setAbierta] = useStatePI(null); // null | { nombre, modo }
-  const [modo, setModo] = useStatePI('invita');   // invita · codigo · ok · prueba
+  const [modo, setModo] = useStatePI('invita');   // invita · codigo · ok · prueba · pasov1
   const [texto, setTexto] = useStatePI('');
   const [error, setError] = useStatePI(null);
   const [comprobando, setComprobando] = useStatePI(false);
@@ -70,19 +83,30 @@ function PremiumInvitacion() {
   const abiertaRef = useRefPI(null);
   abiertaRef.current = abierta;
 
-  /* Al abrir PACE (tras comprobar la firma del código) y cada minuto: ¿toca el aviso? */
+  /* Al abrir PACE (tras comprobar la firma del código), cada minuto y cuando acaba el paso a
+     v1 (que espera al registro y puede tardar): ¿toca uno de los dos avisos? */
   useEffectPI(() => {
+    let vivo = true, empezado = false;
     const mirar = () => {
-      if (abiertaRef.current) return;
+      if (!vivo || abiertaRef.current) return;
       const d = premiumPruebaPorAvisar();
-      if (!d) return;
-      setState({ premiumAvisoPrueba: d.order });
-      setAbierta({ nombre: null, prueba: d });
-      setModo('prueba');
+      if (d) {
+        setState({ premiumAvisoPrueba: d.order });
+        setAbierta({ nombre: null, prueba: d });
+        setModo('prueba');
+        return;
+      }
+      /* Sin otro diálogo delante: si lo hay, se mira otra vez al minuto. */
+      const v1 = window.pacePasoV1PorAvisar ? window.pacePasoV1PorAvisar() : null;
+      if (!v1 || document.querySelector('[role="dialog"]')) return;
+      window.pacePasoV1Avisado();
+      setAbierta({ nombre: null, pasoV1: v1 });
+      setModo('pasov1');
     };
-    const primero = setTimeout(mirar, 1500);
+    const primero = setTimeout(() => { empezado = true; mirar(); }, 1500);
     const cada = setInterval(mirar, 60 * 1000);
-    return () => { clearTimeout(primero); clearInterval(cada); };
+    if (window.pacePasoV1) Promise.resolve(window.pacePasoV1()).then(() => { if (empezado) mirar(); }, () => {});
+    return () => { vivo = false; clearTimeout(primero); clearInterval(cada); };
   }, []);
 
   useEffectPI(() => {
@@ -107,29 +131,56 @@ function PremiumInvitacion() {
   const cerrar = () => setAbierta(null);
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
 
+  const hecho = (datos) => {
+    setTester(!!(datos && datos.tester != null));
+    setMensual(!!(datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(datos)));
+    setModo('ok');
+  };
+
   const canjear = () => {
     if (comprobando || !texto.trim() || !window.paceLicenciaCanjear) return;
     setComprobando(true); setError(null);
     window.paceLicenciaCanjear(texto).then((r) => {
       setComprobando(false);
-      if (r.ok) {
-        setTester(r.datos && r.datos.tester != null);
-        setMensual(!!(window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(r.datos)));
-        setModo('ok');
-      }
+      if (r.ok) hecho(r.datos);
       else setError(r.motivo || 'formato');
     });
   };
 
+  /* La compra de la web sigue en la página de Stripe y el código vuelve por la de gracias: la
+     hoja se cierra. La que da un código aquí mismo (Play) acaba como un canje. */
+  const comprar = (plan) => {
+    if (comprobando || typeof paceComprar !== 'function') return;
+    setComprobando(true); setError(null);
+    paceComprar(plan).then((r) => {
+      setComprobando(false);
+      if (r && r.ok && r.fuera) cerrar();
+      else if (r && r.ok) hecho(r.datos);
+      else if (r && r.motivo === 'error') setError('compra');
+    });
+  };
+
   if (modo === 'prueba') return <PremiumAvisoPrueba datos={abierta.prueba} cerrar={cerrar} />;
+  if (modo === 'pasov1') return <PremiumPasoV1 datos={abierta.pasoV1} cerrar={cerrar} />;
 
   const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : (abierta.nombre || t('premium.name'));
+  const tienda = modo === 'invita' && !!(window.paceTiendaAbierta && window.paceTiendaAbierta());
+  const planes = tienda ? paceTiendaPlanes(lang) : [];
+  const mes = planes.find((p) => p.plan === 'mes') || null;
+  const vida = planes.find((p) => p.plan === 'vida') || null;
+  const dias = (mes && mes.pruebaDias) || 7;
+  const tengo = permitida && (
+    <button type="button" data-pace-premium-tengo onClick={() => setModo('codigo')}
+      style={{ ...premiumInvitacionStyles.enlace, ...(tienda ? { marginTop: 6 } : null) }}>
+      {t('premium.code.have')}
+    </button>
+  );
 
   return (
     <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
       <div data-pace-premium-hoja={modo}>
         {modo !== 'ok' && <PremiumSeal />}
-        <h2 style={{ ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' }}>{titulo}</h2>
+        <h2 style={premiumInvitacionStyles.titulo}>{titulo}</h2>
 
         {modo === 'ok' ? (
           <React.Fragment>
@@ -167,16 +218,37 @@ function PremiumInvitacion() {
                   {t(comprobando ? 'premium.code.checking' : 'premium.code.redeem')}
                 </Button>
                 <Button variant="secondary" onClick={cerrar} style={{ ...premiumInvitacionStyles.ancho, marginTop: 8 }}>{t('premium.later')}</Button>
+                <a href={premiumEnlaceRecuperar()} target="_blank" rel="noopener" data-pace-premium-recuperar style={premiumInvitacionStyles.enlaceA}>
+                  {t('premium.code.lost')}
+                </a>
               </form>
+            ) : tienda && (mes || vida) ? (
+              <React.Fragment>
+                {mes && vida && (
+                  <p data-pace-premium-precios style={premiumInvitacionStyles.v1}>{tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}</p>
+                )}
+                {error === 'compra' && <p role="alert" data-pace-premium-error="compra" style={premiumInvitacionStyles.error}>{t('premium.compra.error')}</p>}
+                <div style={premiumInvitacionStyles.par}>
+                  {mes && (
+                    <Button disabled={comprobando} onClick={() => comprar('mes')} style={premiumInvitacionStyles.mitad}>
+                      {tn('premium.onb.probar', { dias })}
+                    </Button>
+                  )}
+                  <Button variant="secondary" onClick={cerrar} style={premiumInvitacionStyles.mitad}>{t('premium.later')}</Button>
+                </div>
+                {mes && <p style={premiumInvitacionStyles.aviso}>{t('premium.onb.aviso')}</p>}
+                {vida && (
+                  <button type="button" data-pace-premium-vida disabled={comprobando} onClick={() => comprar('vida')} style={premiumInvitacionStyles.fantasma}>
+                    {tn('premium.onb.vida', { vida: vida.precio })}
+                  </button>
+                )}
+                {tengo}
+              </React.Fragment>
             ) : (
               <React.Fragment>
                 <p style={premiumInvitacionStyles.v1}>{t('premium.v1')}</p>
                 <Button variant="secondary" onClick={cerrar} style={premiumInvitacionStyles.ancho}>{t('premium.later')}</Button>
-                {permitida && (
-                  <button type="button" data-pace-premium-tengo onClick={() => setModo('codigo')} style={premiumInvitacionStyles.enlace}>
-                    {t('premium.code.have')}
-                  </button>
-                )}
+                {tengo}
               </React.Fragment>
             )}
           </React.Fragment>
@@ -200,7 +272,78 @@ const premiumInvitacionStyles = {
     fontFamily: 'var(--font-mono)', color: 'var(--ink)', background: 'var(--paper-2)',
     border: '1px solid var(--line-2)', borderRadius: 'var(--r-sm)' },
   error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 },
+  titulo: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' },
+  /* La compra: los dos botones iguales, lado a lado si caben y uno sobre otro si no. */
+  par: { display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' },
+  mitad: { flex: '1 1 160px', justifyContent: 'center', borderRadius: 'var(--r-pill)' },
+  aviso: { fontSize: 12, color: 'var(--ink-3)', margin: '10px 0 2px', textAlign: 'center' },
+  fantasma: { display: 'block', margin: '2px auto 0', background: 'none', border: 0, cursor: 'pointer', padding: '6px 10px',
+    ...displayItalic, fontSize: 15, color: 'var(--ink-2)' },
+  /* Un enlace con la letra de los botones-enlace de la hoja. */
+  enlaceA: { display: 'block', width: 'fit-content', margin: '14px auto 0', textAlign: 'center', textDecoration: 'none',
+    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+  tuyas: { fontSize: 13, color: 'var(--ink-2)', margin: '0 0 6px' },
+  mas: { fontSize: 13, color: 'var(--ink-3)', margin: '-8px 0 16px' },
 };
+
+/* pacegrass.app/recuperar: en la web, la página de al lado; en el archivo suelto, la publicada. */
+function premiumEnlaceRecuperar() {
+  const fuera = location.protocol === 'file:' && typeof PACE_WEB_PUBLICA === 'string';
+  return (fuera ? PACE_WEB_PUBLICA : '') + '/recuperar/';
+}
+
+/* El módulo de una rutina de pago, para la lista de la hoja del día de v1. Los ids de Mueve
+   empiezan por `extra.` y los de Estira por `move.`: el módulo lo dice el catálogo, no el id. */
+function premiumPasoV1Rutina(id) {
+  const b = window.getBreatheRoutine ? window.getBreatheRoutine(id) : null;
+  if (b) return { id, routine: b, mod: 'breathe' };
+  const c = window.resolveBodyRoutine ? window.resolveBodyRoutine(id) : null;
+  return c ? { id, routine: c.routine, mod: c.source } : null;
+}
+
+/* La hoja del día de v1: los siete días, lo que se queda y lo que sigue gratis. */
+function PremiumPasoV1({ datos, cerrar }) {
+  const { t, tn, lang } = useT();
+  const loc = lang === 'en' ? 'en-GB' : 'es-ES';
+  const fecha = new Date(datos.hasta).toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' });
+  const orden = ['breathe', 'move', 'extra'];
+  const todas = (Array.isArray(datos.rutinas) ? datos.rutinas : []).map(premiumPasoV1Rutina).filter(Boolean)
+    .sort((a, b) => orden.indexOf(a.mod) - orden.indexOf(b.mod));
+  const vistas = todas.length > PREMIUM_PASOV1_LISTA ? todas.slice(0, PREMIUM_PASOV1_LISTA - 1) : todas;
+  const nombre = (r) => {
+    if (lang !== 'en') return r.routine.name;
+    const v = t(r.id + '.name');
+    return v === r.id + '.name' ? r.routine.name : v;
+  };
+  const titulo = t('premium.pasov1.titulo');
+  return (
+    <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
+      <div data-pace-premium-hoja="pasov1">
+        <PremiumSeal />
+        <h2 style={premiumInvitacionStyles.titulo}>{titulo}</h2>
+        <p style={premiumInvitacionStyles.sub}>{tn('premium.pasov1.cuerpo', { fecha })}</p>
+        {vistas.length > 0 && (
+          <React.Fragment>
+            <p style={premiumInvitacionStyles.tuyas}>{t('premium.pasov1.tuyas')}</p>
+            <ul data-pace-pasov1-tuyas style={premiumInvitacionStyles.lista}>
+              {vistas.map((r) => (
+                <li key={r.id} data-pace-pasov1-rutina={r.id} style={premiumInvitacionStyles.item}>
+                  <span>{nombre(r)}</span>
+                  <span style={premiumInvitacionStyles.detalle}>{t('premium.pasov1.mod.' + r.mod)}</span>
+                </li>
+              ))}
+            </ul>
+            {todas.length > vistas.length && (
+              <p data-pace-pasov1-mas style={premiumInvitacionStyles.mas}>{tn('premium.pasov1.mas', { n: todas.length - vistas.length })}</p>
+            )}
+          </React.Fragment>
+        )}
+        <p style={premiumInvitacionStyles.v1}>{t('premium.pasov1.gratis')}</p>
+        <Button onClick={cerrar} style={premiumInvitacionStyles.ancho}>{t('premium.pasov1.vale')}</Button>
+      </div>
+    </Modal>
+  );
+}
 
 /* La hoja del aviso: el día, lo que se cobra y cómo cancelar. */
 function PremiumAvisoPrueba({ datos, cerrar }) {
@@ -217,7 +360,7 @@ function PremiumAvisoPrueba({ datos, cerrar }) {
     <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
       <div data-pace-premium-hoja="prueba">
         <PremiumSeal />
-        <h2 style={{ ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' }}>{titulo}</h2>
+        <h2 style={premiumInvitacionStyles.titulo}>{titulo}</h2>
         <p style={premiumInvitacionStyles.sub}>{tn('premium.trial.body', { fecha, precio })}</p>
         {puede && <p style={premiumInvitacionStyles.v1}>{tn('premium.trial.cancel', { dia })}</p>}
         {puede && (
@@ -231,4 +374,4 @@ function PremiumAvisoPrueba({ datos, cerrar }) {
   );
 }
 
-Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
+Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });

@@ -13,6 +13,9 @@
      Stripe devuelve aquí con `?sesion={CHECKOUT_SESSION_ID}`. La página pregunta a /api/codigo
      por el código que firmó /api/stripe al recibir el pago (functions/api/), cada dos segundos
      durante un minuto: el aviso del pago puede llegar un poco después que la persona.
+     Si al minuto aún no hay código, el pago se está confirmando (con un adeudo SEPA y parecidos
+     tarda días; auditoría de seguridad del 28 oct.): lo dice, sigue preguntando cada medio
+     minuto mientras la página esté abierta, y cuenta dónde saldrá el código.
 
      LO IMPORTANTE ES QUE NO PIERDA SU CÓDIGO: no hay cuentas, y el código es lo que abre PACE
      completo en otro navegador. «Abrir PACE con tu código» lo deja puesto en este (el enlace
@@ -82,6 +85,13 @@
     <p class="lede" data-en-html="If you have paid, write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; with the receipt number from Stripe and we will send you your code.">Si has pagado, escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> con el número del recibo de Stripe y te mandamos tu código.</p>
   </div>
 
+  <div data-gracias-confirmando hidden>
+    <h1 data-en="Your payment is being confirmed.">Tu pago se está confirmando.</h1>
+    <p class="lede" data-en="With a card it takes a few seconds; with a SEPA direct debit and similar methods, a few days. Stripe confirms it, not us.">Con tarjeta tarda unos segundos; con un adeudo SEPA y parecidos, unos días. Lo confirma Stripe, no nosotros.</p>
+    <p class="estado" role="status" data-en="Your code will appear here as soon as it is confirmed.">Tu código saldrá aquí en cuanto se confirme.</p>
+    <p class="nota" data-en-html="If you close this page, it will also be here when you open this same link again, and at &lt;a href=&quot;/recuperar/&quot;&gt;pacegrass.app/recuperar&lt;/a&gt; with your email and the receipt number. If a few days go by, write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt;.">Si cierras la página, también saldrá al volver a abrir este mismo enlace, y en <a href="/recuperar/">pacegrass.app/recuperar</a> con tu correo y el número del recibo. Si pasan unos días, escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>.</p>
+  </div>
+
   <div data-gracias-listo hidden>
     <h1 data-en="Thank you. It is yours.">Gracias. Ya es tuyo.</h1>
     <p class="lede" data-gracias-lede data-en="Open it here and PACE Complete stays on in this browser.">Ábrelo aquí y PACE completo queda puesto en este navegador.</p>
@@ -96,7 +106,7 @@
     <p class="nota" data-en="Keep it: it opens PACE Complete in another browser or on another computer. «Send it to me» opens your own email with the code inside; it does not go through us.">Guárdalo: con él se abre en otro navegador o en otro ordenador. «Mandármelo» abre tu correo con el código dentro; no pasa por nosotros.</p>
     <div class="caja">
       <h2 data-en="If you lose it">Si lo pierdes</h2>
-      <p class="nota" data-en-html="Write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; with your email and the receipt number from Stripe.">Escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> con tu correo y el número del recibo de Stripe.</p>
+      <p class="nota" data-gracias-recuperar data-en-html="Get it back at &lt;a href=&quot;/recuperar/&quot;&gt;pacegrass.app/recuperar&lt;/a&gt; with your email and the receipt number from Stripe. If that does not work, write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt;.">Recupéralo en <a href="/recuperar/">pacegrass.app/recuperar</a> con tu correo y el número del recibo de Stripe. Si no sale, escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a>.</p>
     </div>
     <div class="caja" data-gracias-prueba hidden>
       <h2 data-en="The trial">La prueba</h2>
@@ -159,6 +169,7 @@
 
   function mostrar() {
     $('[data-gracias-espera]').hidden = true;
+    $('[data-gracias-confirmando]').hidden = true;
     $('[data-gracias-listo]').hidden = false;
     $('[data-gracias-codigo]').textContent = codigo;
     $('[data-gracias-abrir]').href = '/#codigo=' + encodeURIComponent(codigo);
@@ -189,16 +200,27 @@
 
   var sesion = (location.search.match(/[?&]sesion=([^&#]+)/) || [])[1] || '';
   var intentos = 0;
+  /* El primer minuto, cada dos segundos; después, cada medio minuto durante una hora. */
+  var RAPIDOS = 30, LENTOS = 120;
   function faltar() { $('[data-gracias-espera]').hidden = true; $('[data-gracias-falta]').hidden = false; }
+  function confirmando() { $('[data-gracias-espera]').hidden = true; $('[data-gracias-confirmando]').hidden = false; }
   function preguntar() {
     if (!sesion) return faltar();
     fetch('/api/codigo?sesion=' + encodeURIComponent(sesion), { headers: { Accept: 'application/json' } })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { r: r, d: d }; }); })
       .then(function (x) {
         if (x.r.ok && x.d && x.d.codigo) { codigo = x.d.codigo; datos = leer(codigo); return mostrar(); }
-        if (x.r.status === 404 && ++intentos < 30) return setTimeout(preguntar, 2000);
-        faltar();
-      }, function () { if (++intentos < 30) setTimeout(preguntar, 2000); else faltar(); });
+        if (x.r.status !== 404) return faltar();
+        if (++intentos < RAPIDOS) return setTimeout(preguntar, 2000);
+        /* Sin código al minuto, la compra está pero el pago aún no: se está confirmando. */
+        confirmando();
+        if (intentos < RAPIDOS + LENTOS) setTimeout(preguntar, 30000);
+      }, function () {
+        /* Sin red: el primer minuto, otra vez enseguida; mientras se confirma, al medio minuto. */
+        if (++intentos < RAPIDOS) setTimeout(preguntar, 2000);
+        else if (intentos > RAPIDOS && intentos < RAPIDOS + LENTOS) setTimeout(preguntar, 30000);
+        else faltar();
+      });
   }
   preguntar();
 })();

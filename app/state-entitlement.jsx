@@ -52,21 +52,31 @@ function tieneLicenciaPremium() {
    «Tus rutinas» (`puedeCrearRutinas`; las dos, Ez, 20 oct.). Abrirlo
    no es tener PACE completo: `hasPremiumEntitlement` sigue en false sin código ni
    compra. Cuando llegue el cobro, a `false`. Se lee de `window` en cada llamada
-   porque las pruebas lo apagan para medir el candado. */
+   porque las pruebas lo apagan para medir el candado. El día que pase a `false`,
+   quien ya usaba PACE recibe su semana y conserva las de pago que hizo
+   (state-paso-v1.js). */
 const PREMIUM_ABIERTO_HASTA_V1 = true;
+
+/* ¿Está PACE completo abierto ahora sin código ni compra? Hasta v1, para todos; desde v1,
+   durante la semana de prueba de quien ya usaba PACE. Es lo que abría el interruptor. */
+function paceAbiertoAhora() {
+  return window.PREMIUM_ABIERTO_HASTA_V1 === true || !!(window.pacePruebaV1Vigente && window.pacePruebaV1Vigente());
+}
 
 /* canAccessRoutine(routineId, { tasting }) -> boolean
      rutina desconocida  -> true  (fail-open: no es trabajo del guard bloquear
                                     ids que no existen; StepError/lookup ya lo
                                     manejan, y ocultarlos escondería bugs)
      access !== 'premium' -> true
-     premium              -> código || compra || tasting || abierto hasta v1 */
+     premium              -> código || compra || tasting || abierto ahora
+                             || una de las que ya hizo antes de v1 */
 function canAccessRoutine(routineId, opts) {
   const tasting = !!(opts && opts.tasting);
   const routine = resolveAnyRoutine(routineId);
   if (!routine) return true;
   if (routine.access !== 'premium') return true;
-  return hasPremiumEntitlement() || tasting || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || tasting || paceAbiertoAhora()
+    || !!(window.pacePasoV1Conserva && window.pacePasoV1Conserva(routineId));
 }
 
 /* canAccessPath(pathId) -> boolean
@@ -93,7 +103,7 @@ function hasPremiumEntitlement() {
      «Mantenerlo al día solo» en «Al calendario» es de PACE completo; llevar el
      día y esquivar reuniones siguen gratis. Hasta v1, abierto como las rutinas. */
 function puedeMantenerCalendario() {
-  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || paceAbiertoAhora();
 }
 
 /* puedeCrearRutinas() -> boolean   (20 oct. 2026)
@@ -102,21 +112,21 @@ function puedeMantenerCalendario() {
      Android no hay código ni compra con que abrirlo. Quien cree rutinas sin código
      las verá cerradas al llegar v1; Ez lo eligió sabiéndolo. */
 function puedeCrearRutinas() {
-  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || paceAbiertoAhora();
 }
 
 /* puedeAprender() -> boolean   (16 oct. 2026)
      El motor de la semana de «A tu ritmo» y la carta del lunes son de PACE completo; las
      series y su capa 1 siguen gratis. Hasta v1, abierto como las rutinas. */
 function puedeAprender() {
-  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || paceAbiertoAhora();
 }
 
 /* puedeVariar() -> boolean   (20 oct. 2026)
      En «A tu ritmo», mover el cuerpo entero cada día es gratis; que las rutinas cambien de
      un día a otro es de PACE completo (Ez, 20 oct.). Hasta v1, abierto como las rutinas. */
 function puedeVariar() {
-  return hasPremiumEntitlement() || window.PREMIUM_ABIERTO_HASTA_V1 === true;
+  return hasPremiumEntitlement() || paceAbiertoAhora();
 }
 
 /* LA COMPRA PASA POR AQUÍ (Fase 6). La tienda del canal (state-compra.js: Stripe
@@ -186,6 +196,6 @@ function tieneCompraVigente() {
 }
 
 Object.assign(window, {
-  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1,
+  canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
   paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
 });

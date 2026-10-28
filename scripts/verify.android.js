@@ -90,7 +90,37 @@ function chequeaAndroid(ctx) {
   chequeaIconoAviso(ctx, css);
   chequeaBarras(ctx);
   chequeaAvisoFijo(ctx);
+  chequeaValoracion(ctx);
   chequeaPlay(ctx);
+}
+
+/* La ventana de Google Play para valorar PACE (Ez, 15 oct., reseñas punto 6): una sola vez, tras la
+   quinta pausa entera. Si la pieza no esta registrada, la web recibe null y nunca la pide, sin que
+   nada falle; si `pedida` se apuntara despues de llamar, un cierre a destiempo la repetiria. Y el
+   censo: cada complemento propio de la carpeta, registrado en MainActivity. */
+function chequeaValoracion(ctx) {
+  var JAVA = 'android/app/src/main/java/com/ezradesign/pace/';
+  var pieza = (leer(JAVA + 'PaceValoracion.java') || '').toString();
+  var actividad = (leer(JAVA + 'MainActivity.java') || '').toString();
+  var gradle = (leer('android/app/build.gradle') || '').toString();
+  var web = (leer('app/ui/valoracion.js') || '').toString();
+  var logros = (leer('app/state-achievements.jsx') || '').toString();
+  var malas = [];
+  if (!/@CapacitorPlugin\(name = "PaceValoracion"\)/.test(pieza)) malas.push('PaceValoracion.java ya no es el complemento «PaceValoracion»');
+  if (!/requestReviewFlow\(\)/.test(pieza) || !/launchReviewFlow\(/.test(pieza)) malas.push('PaceValoracion ya no abre la ventana de Google (requestReviewFlow y launchReviewFlow)');
+  if (!/implementation "com\.google\.android\.play:review:/.test(gradle)) malas.push('android/app/build.gradle ya no trae la libreria de Google Play para valorar');
+  if (!/var PACE_VALORACION_PAUSAS = 5;/.test(web)) malas.push('la ventana ya no se pide tras la quinta pausa entera (PACE_VALORACION_PAUSAS)');
+  var apunta = web.indexOf('pedida: Date.now()'), pide = web.indexOf('p.pedir()');
+  if (apunta === -1 || pide === -1 || apunta > pide) malas.push('app/ui/valoracion.js ya no apunta `pedida` antes de pedir la ventana: podria salir dos veces');
+  if ((logros.match(/paceValoracionPausa\(entera\)/g) || []).length !== 3) malas.push('las tres complete*Session ya no cuentan la pausa entera para la valoracion');
+  fs.readdirSync(path.join(ROOT, JAVA)).filter(function (f) { return /\.java$/.test(f); }).forEach(function (f) {
+    var clase = f.replace(/\.java$/, '');
+    if (/@CapacitorPlugin\(/.test((leer(JAVA + f) || '').toString()) && actividad.indexOf('registerPlugin(' + clase + '.class)') === -1) {
+      malas.push('MainActivity no registra ' + clase + ': para la web seria null');
+    }
+  });
+  if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  else ctx.ok('android: la valoracion de Google Play se pide una vez, tras la quinta pausa entera, y cada complemento propio esta registrado');
 }
 
 /* Las franjas de arriba y de abajo siguen la paleta que se ve, no el modo del

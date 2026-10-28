@@ -12,7 +12,13 @@
 # Si /premium enciende la analítica de Cloudflare, sus dos dominios van aquí
 # antes (lo vigila tests/cabeceras.spec.js). En las apps de Android y del iPhone
 # no se aplica: estas cabeceras solo las manda Cloudflare.
+#
+# HSTS (auditoría de seguridad del 28 oct., antes de vender en la web): el navegador que
+# ya entró una vez en pacegrass.app no vuelve a probar por http durante un año, así que
+# nadie en medio puede servirle otra página de pago o de gracias. Sin `includeSubDomains`
+# ni `preload`: no se sabe aún qué subdominios habrá, y el `preload` no se deshace fácil.
 /*
+  Strict-Transport-Security: max-age=31536000
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' https://www.googleapis.com https://graph.microsoft.com https://login.microsoftonline.com; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'

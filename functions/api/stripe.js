@@ -1,7 +1,8 @@
 /* PACE · /api/stripe — «PAGO HECHO»: STRIPE AVISA Y LA WEB FIRMA EL CÓDIGO
    ============================================================
    Stripe manda aquí un aviso cada vez que alguien paga (la compra de por vida, el alta
-   de la mensual con su prueba y cada renovación). La función comprueba que el aviso es
+   de la mensual con su prueba y cada renovación; si el pago se confirma días después, como
+   un adeudo SEPA, el aviso de esa confirmación). La función comprueba que el aviso es
    de Stripe (cobro/stripe.js), firma el código PACE1 con k2 (cobro/venta.js) y lo deja
    en el almacén `VENTAS` para la página de gracias (functions/api/codigo.js):
 

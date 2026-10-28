@@ -12,6 +12,11 @@
      un pago hecho. La compra de por vida es un pago único (`mode: payment`, pagado); la
      mensual, una suscripción (`mode: subscription`), con los siete días de prueba
      (`no_payment_required`) o ya pagada. El correo no se lee: el código no lo lleva.
+     LOS PAGOS QUE SE CONFIRMAN TARDE (un adeudo SEPA y parecidos; auditoría de seguridad del
+     28 oct.): la compra llega acabada pero sin pagar (`unpaid`) y no se firma nada; días
+     después Stripe manda `checkout.session.async_payment_succeeded`, con la misma sesión ya
+     pagada, y se firma entonces, igual que una compra pagada al momento. Sin atenderlo,
+     quien pagara así se quedaría sin su código.
 
    Las pruebas (tests/cobro-venta.spec.js) mandan avisos inventados, firmados con un
    secreto de prueba creado en la propia prueba. */
@@ -54,14 +59,18 @@ export async function stripeAvisoValido(cuerpo, cabecera, secreto, ahoraS) {
   return vale;
 }
 
+/* Los dos avisos de una compra pagada: al acabarla, o al confirmarse más tarde el pago. */
+export const STRIPE_COMPRA_PAGADA = ['checkout.session.completed', 'checkout.session.async_payment_succeeded'];
+
 /* evento (el JSON del aviso) -> { plan, order, sesion?, expiresAt? } | null
-   · checkout.session.completed: la compra (por vida) o el alta de la suscripción.
+   · checkout.session.completed o .async_payment_succeeded: la compra (por vida) o el alta
+     de la suscripción, si ya está pagada.
    · invoice.paid de una suscripción: cada renovación; el código nuevo vale hasta el final
      del periodo pagado (más el margen). */
 export function stripeLeerPago(evento, ahora) {
   const o = evento && evento.data && evento.data.object;
   if (!o || typeof o !== 'object') return null;
-  if (evento.type === 'checkout.session.completed') {
+  if (STRIPE_COMPRA_PAGADA.indexOf(evento.type) !== -1) {
     if (o.mode === 'payment' && o.payment_status === 'paid' && typeof o.id === 'string') {
       return { plan: 'lifetime', order: o.id, sesion: o.id };
     }
@@ -93,4 +102,61 @@ export function stripeLeerFin(evento) {
   const o = evento && evento.data && evento.data.object;
   if (!o || evento.type !== 'customer.subscription.deleted' || typeof o.id !== 'string') return null;
   return o.id;
+}
+
+/* · stripeBuscarCompra: para /recuperar (functions/api/recuperar.js). Con el correo de la compra
+     y el número de su recibo, busca la compra en Stripe en ese momento, con una llave de solo
+     lectura (`STRIPE_LECTURA`). Vale el número del recibo del cobro y el de la factura (la
+     primera de la mensual o cualquiera de sus renovaciones): no se sabe aún cuál enseña Stripe
+     en su modo «vende por ti», y se mira con su modo de pruebas antes de cobrar a nadie.
+     Lo que se compara se lee y se olvida: aquí no se guarda nada. */
+
+const STRIPE_API = 'https://api.stripe.com/v1/';
+
+/* El número como se compara: en mayúsculas, sin «#», espacios ni guiones. */
+export function stripeNumero(texto) {
+  return String(texto || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+async function stripeLeer(ruta, llave, pedir) {
+  const r = await pedir(STRIPE_API + ruta, { headers: { Authorization: 'Bearer ' + llave } });
+  if (!r || !r.ok) throw new Error('stripe ' + (r && r.status));
+  return r.json();
+}
+
+function numerosDe(...objetos) {
+  const out = [];
+  objetos.forEach((o) => {
+    if (!o || typeof o !== 'object') return;
+    ['receipt_number', 'number'].forEach((k) => { if (typeof o[k] === 'string' && o[k]) out.push(stripeNumero(o[k])); });
+  });
+  return out;
+}
+
+/* -> { plan: 'lifetime', order, devuelta } | { plan: 'monthly', order } | null (sin compra con
+   ese correo y ese número). Lanza si Stripe no contesta. `pedir` es fetch. */
+export async function stripeBuscarCompra(correo, recibo, llave, pedir) {
+  const buscado = stripeNumero(recibo);
+  if (!buscado || !correo || !llave) return null;
+  const correos = [String(correo).trim()];
+  if (correos[0].toLowerCase() !== correos[0]) correos.push(correos[0].toLowerCase());
+  for (const c of correos) {
+    const lista = await stripeLeer('checkout/sessions?status=complete&limit=100&customer_details[email]=' + encodeURIComponent(c) +
+      '&expand[]=data.payment_intent.latest_charge&expand[]=data.invoice', llave, pedir);
+    const sesiones = (lista && Array.isArray(lista.data)) ? lista.data : [];
+    for (const s of sesiones) {
+      if (!s || typeof s.id !== 'string') continue;
+      const cobro = s.payment_intent && s.payment_intent.latest_charge;
+      if (s.mode === 'payment' && s.payment_status === 'paid' && numerosDe(cobro, s.invoice).indexOf(buscado) !== -1) {
+        return { plan: 'lifetime', order: s.id, devuelta: !!(cobro && (cobro.refunded || cobro.disputed)) };
+      }
+      if (s.mode !== 'subscription' || typeof s.subscription !== 'string') continue;
+      if (numerosDe(s.invoice).indexOf(buscado) !== -1) return { plan: 'monthly', order: s.subscription };
+      const facturas = await stripeLeer('invoices?limit=100&subscription=' + encodeURIComponent(s.subscription), llave, pedir);
+      const todas = (facturas && Array.isArray(facturas.data)) ? facturas.data : [];
+      if (todas.some((f) => numerosDe(f).indexOf(buscado) !== -1)) return { plan: 'monthly', order: s.subscription };
+    }
+    if (sesiones.length) break;
+  }
+  return null;
 }

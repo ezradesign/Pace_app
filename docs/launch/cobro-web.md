@@ -37,7 +37,9 @@ En dash.cloudflare.com › Workers y Pages › el proyecto de pacegrass.app:
 En Stripe › Desarrolladores › Webhooks (o «Destinos de eventos») › Añadir un destino:
 
 - URL: `https://pacegrass.app/api/stripe`
-- Eventos: `checkout.session.completed`, `invoice.paid` y `customer.subscription.deleted`.
+- Eventos: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `invoice.paid` y
+  `customer.subscription.deleted`. El segundo es el de los pagos que se confirman días después (un
+  adeudo SEPA y parecidos): sin él, quien pague así no recibe su código.
 
 Stripe te enseña un secreto que empieza por `whsec_`. En Cloudflare (como en el paso 2.1) añade otro
 secreto: nombre `STRIPE_AVISO_SECRETO`, valor ese `whsec_…`.
@@ -54,8 +56,30 @@ Esos tres enlaces **no son secretos**: pásaselos a la coordinadora. Van en la a
 (`PACE_TIENDA_WEB` en `app/state-compra.js`) y desde ese momento salen los botones de compra y
 «Gestionar la suscripción».
 
+## 5. Stripe: la llave que solo lee, para /recuperar
+
+`pacegrass.app/recuperar` busca la compra en Stripe con el correo y el número del recibo, y para eso
+necesita leer, nunca cobrar ni cambiar nada. En Stripe › Desarrolladores › Claves de API › **Crear clave
+restringida**: nombre «PACE recuperar», y solo **Lectura** en Checkout Sessions, Cargos (Charges),
+PaymentIntents y Facturas (Invoices); todo lo demás, «Ninguno». La clave empieza por `rk_`. En
+Cloudflare (como en el paso 2.1), otro secreto: nombre `STRIPE_LECTURA`, valor esa `rk_…`. Sin ella,
+/recuperar dice que aún no se puede y manda escribirte.
+
+Y en Stripe › Configuración › Facturación › Facturas, deja la numeración **por cliente** (la que viene):
+con la numeración seguida de toda la cuenta, los números de factura se adivinan.
+
 ## Cómo saber que funciona
 
 Con Stripe en modo de prueba, compra con la tarjeta `4242 4242 4242 4242`: la página de gracias tiene
 que darte un código y «Abrir PACE con tu código» tiene que abrir PACE completo. Si la página se queda
 esperando, el aviso no llega: mira en Stripe › Webhooks si el destino da error.
+
+Si dejas pagar con adeudo SEPA (u otro método que se confirma tarde), pruébalo también con el IBAN de
+prueba de Stripe para la confirmación: la página de gracias dice primero que el pago se está
+confirmando y, cuando Stripe lo confirma, el código sale en esa misma página (al volver a abrirla) y en
+/recuperar.
+
+Después, en `pacegrass.app/recuperar`, escribe el correo de esa compra y el número de su recibo (el
+correo de Stripe): tiene que darte el mismo código. Si dice que no la encuentra, mira qué número trae
+el recibo de Stripe en su modo «vende por ti» y pásaselo a la coordinadora: la función compara el
+número del recibo y el de la factura (`cobro/stripe.js`, `stripeBuscarCompra`).

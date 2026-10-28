@@ -90,7 +90,7 @@ que fije Play en cada país. Cuenta los dos planes que eligió Ez el 15 oct. 202
 
 ```
 PACE COMPLETO
-Casi todo PACE es gratis, y lo seguirá siendo. PACE completo añade las rutinas más hondas, tus propias rutinas, una semana a tu medida con la carta del lunes y tu mes y tu año. Pruébalo 7 días gratis y sigue por 2,99 € al mes, o págalo una vez, 19,99 €, y es tuyo para siempre.
+Casi todo PACE es gratis, y lo seguirá siendo. PACE completo añade las rutinas más profundas, tus propias rutinas, una semana a tu medida con la carta del lunes y tu mes y tu año. Pruébalo 7 días gratis y sigue por 2,99 € al mes, o págalo una vez, 19,99 €, y es tuyo para siempre.
 ```
 
 ---

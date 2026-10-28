@@ -5,13 +5,13 @@
  *
  * Lo mismo que capturas.js (el móvil de 360 × 640 a 3×, el estado sembrado, la hora fija y el
  * título encima), pero con lo de pago: una rutina propia en el constructor, la carta del lunes,
- * tu mes, tu año y una rutina honda de Respira. Deja premium/<nombre>-<idioma>.webp a 540 × 960,
+ * tu mes, tu año y una rutina profunda de Respira. Deja premium/<nombre>-<idioma>.webp a 540 × 960,
  * como la tira de /beta. Con `--sin-marco=carpeta`, guarda también ahí la pantalla tal cual, en PNG.
  * Con nombres de escena (`carta mes`), solo esas.
  *
  * Nada de Mueve ni de Estira por su nombre (se rehacen; Ez, 23 oct. 2026): la rutina propia
  * lleva ejercicios cuyo nombre y dibujo se quedan, la carta habla de Respira y de una pausa
- * por su hora, y la rutina honda es de Respira. Por lo mismo, «Tus rutinas» no se fotografía
+ * por su hora, y la rutina profunda es de Respira. Por lo mismo, «Tus rutinas» no se fotografía
  * dentro de la biblioteca de Mueve, cuyos filtros y cifras cambian.
  */
 'use strict';
@@ -128,7 +128,7 @@ const ESCENAS = [
     sub: { es: 'Mes a mes, cómo vas.', en: 'Month by month, how it is going.' } },
   { id: 'respira-honda', reloj: VIERNES, semilla: (l) => base(l),
     llegar: (page) => sesion(page, /^(Respira|Breathe)/, ['nadi']),
-    titulo: { es: 'Las rutinas más hondas', en: 'The deeper routines' },
+    titulo: { es: 'Las rutinas más profundas', en: 'The deeper routines' },
     sub: { es: 'Nadi Shodhana, respiración alterna.', en: 'Nadi Shodhana, alternate breathing.' } },
 ];
 

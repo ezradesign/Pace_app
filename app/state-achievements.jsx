@@ -343,6 +343,7 @@ function completeBreathSession(routineId, durationMin, holdSec, evento, entera) 
   });
   if (entera === false) updateStreak(false);
   else logrosDeRespira(routineId);
+  if (typeof paceValoracionPausa === 'function') paceValoracionPausa(entera);
   /* s172 · dual-write: el evento SIEMPRE detras de la escritura legacy, que es
      la que manda (stats, logros, racha). `evento` lo arma el runner, que es
      quien tiene los tiempos; sin el, no se emite nada y la app sigue igual.
@@ -407,6 +408,7 @@ function completeMoveSession(routineId, durationMin, evento, entera) {
   });
   if (entera === false) updateStreak(false);
   else logrosDeMueve(routineId);
+  if (typeof paceValoracionPausa === 'function') paceValoracionPausa(entera);
   if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, conMinutosQueCuentan(evento, durationMin));
 }
 
@@ -437,6 +439,7 @@ function completeExtraSession(routineId, durationMin, evento, entera) {
   });
   if (entera === false) updateStreak(false);
   else logrosDeEstira(routineId);
+  if (typeof paceValoracionPausa === 'function') paceValoracionPausa(entera);
   /* El enum del esquema llama `stretch` a lo que el codigo llama `extra`: el
      nombre del modulo se traduce AQUI y no en el runner (§8). */
   if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, conMinutosQueCuentan(evento, durationMin > 0 ? durationMin : 0));
