@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 14:35 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 15:10 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -123,12 +123,21 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, un minuto, y luego unos 10 en Play Console</span>
-        <span class="t">Darme el sí para bajar la versión nueva para Play</span>
-        <span class="c"><span class="quien">Tú dices «sí»; yo la bajo y tú la subes.</span> La prueba cerrada de Play tiene la
-          0.174.0, de hace una semana: sin el Mueve y el Estira nuevos, sin la bienvenida y sin la privacidad. Ya está todo
-          junto en la 0.184.0: bajo el archivo a <code>subidas-play\</code> y te digo cómo subirlo. Así tus testers prueban
-          la buena desde el primer día.</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 10 minutos en Play Console</span>
+        <span class="t">Subir la 0.184.0 a la prueba cerrada</span>
+        <span class="c"><span class="quien">Tú.</span> El archivo ya está en <code>Pace_app\subidas-play\PACE-0.184.0.aab</code>. Lo
+          comprobé: va firmado con tu llave, es la 184000 y pide los mismos permisos que la 0.174.0, así que Play no te
+          preguntará nada nuevo.
+          <ol>
+            <li>En <b>play.google.com/console</b>, PACE › <b>Probar y publicar › Pruebas › Prueba cerrada</b> › <b>Crear nueva
+              versión</b>.</li>
+            <li>Arrastra el <code>.aab</code> y espera a que salga <b>184000</b> sin nada en rojo. El nombre, déjalo: 0.184.0.</li>
+            <li><b>Notas de la versión</b>: pega las tres del chat, con sus etiquetas (también están en
+              <code>docs/launch/google-play/SUBIDAS.md</code>).</li>
+            <li><b>Siguiente</b> y <b>Guardar</b>. Los avisos amarillos se pueden seguir; si sale algo en rojo, pégamelo.</li>
+            <li><b>Resumen de la publicación › Enviar cambios a revisión</b>. Sin esto no se sube nada, aunque lo parezca.</li>
+            <li>Dime «subida». Cuando Google la apruebe, tus testers la reciben como una actualización y no pierden nada.</li>
+          </ol></span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
         <span class="t">Buscar testers: avisar a los tuyos y publicar en LinkedIn</span>
         <span class="c"><span class="quien">Tú.</span> Es lo que más adelanta v1: Google pide 12 testers durante 14 días, y los días
@@ -152,7 +161,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 63 pasos</summary>
+      <summary>Lo hecho hasta hoy · 64 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -458,6 +467,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">Juntar Android a fondo y publicarlo</span>
         <span class="c"><span class="quien">Yo.</span> Detrás de «Qué te ayuda», como 0.184.0, con las 986 pruebas en verde con
           todo junto. Ya están en la app las tres piezas que esperaban tu sí.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «sí, bájalo» · 28 de octubre</span>
+        <span class="t">Bajar la versión nueva para Play</span>
+        <span class="c"><span class="quien">Yo la bajé; tú la subes.</span> La prueba cerrada de Play tiene la
+          0.174.0, de hace una semana: sin el Mueve y el Estira nuevos, sin la bienvenida y sin la privacidad. Ya está todo
+          junto en la 0.184.0: bajo el archivo a <code>subidas-play\</code> y te digo cómo subirlo. Así tus testers prueban
+          la buena desde el primer día.</span></li>
       </ol>
     </details>
   </section>
@@ -720,8 +735,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>La hora y la medianoche, y la voz de Respira</b><span>Lo que se descuadra en la hora que se repite al cambiar el horario, un bloque que acaba justo antes de medianoche, y la voz de Respira, que si falla no deja sonar ni el tono de respaldo.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Cuando quieras · te lo enseño antes</span>
         <b>Seis ejercicios que no enseñan cómo colocarse</b><span>Si un ejercicio llega justo después de un descanso, la pantalla no dice dónde van los pies o las manos, aunque esté escrito. Al «Remo con banda» ya se lo arreglé; quedan seis. No frena v1.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera tu sí para la versión nueva</span>
-        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. La 0.184.0 ya lleva 7 y 9: falta subirla a las dos antes de invitar a nadie.</span></div></li>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera que la subas en Play Console</span>
+        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. La 0.184.0 ya lleva 7 y 9, y su archivo para Play está bajado: falta subirla antes de invitar a nadie. TestFlight, con tu sí.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">12 · Lo hago yo, mientras corren los 14 días</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">13 · Espera tus altas en Google y Microsoft</span>
@@ -765,8 +780,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>Tu sí para la versión nueva</b> (arriba, en «Paso a paso»): con eso, la prueba cerrada tiene
-          la versión buena antes de invitar a nadie.</li>
+        <li><b>Subir la 0.184.0 a la prueba cerrada</b> (arriba, en «Paso a paso»): así tus testers prueban la versión
+          buena desde el primer día.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de
           PACE completo de <code>codigos-tester.csv</code>.</li>

@@ -80,7 +80,7 @@ cada pieza.
 | 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
 | 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho**, en `main` (0.184.0, 28 oct., probada por Ez en su Android) |
 | 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho**, en `main` (0.183.0, 28 oct., con el «júntalo» de Ez sobre sus fotos) |
-| 11 | La prueba cerrada de Play con la 0.184.0, que ya lleva 7 y 9 (hoy tiene la 0.174.0), y TestFlight con la misma (hoy, la 0.175.0) | Espera el sí de Ez para bajar el AAB, que sube Ez |
+| 11 | La prueba cerrada de Play con la 0.184.0, que ya lleva 7 y 9 (hoy tiene la 0.174.0), y TestFlight con la misma (hoy, la 0.175.0) | El AAB de la 0.184.0, bajado el 28 oct.: lo sube Ez. TestFlight, con su sí |
 | 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Por hacer** (código). Lo encontró la auditoría del 28 oct. |
 | 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas |
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
@@ -162,7 +162,7 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
 - **Sin Buy Me a Coffee en Android** — **HECHO (v0.138.0)**, por la política de pagos de Google
   Play: ni la pill, ni el modal, ni su logro secreto. En la web sigue igual.
 - **Lo que queda de cualquier app** — **HECHO**: `privacy.html` cubre la app (v0.142.0) y el AAB
-  sale firmado para Play (artefacto `pace-android-play`) con la llave de subida de los secretos del
+  sale firmado para Play (artefacto `pace-play-vX.Y.Z`) con la llave de subida de los secretos del
   repo. Ez lo probó desde Play el 22 oct. (sus seis apuntes, ya arreglados), y Android a fondo, que Ez
   probó en su móvil, está en `main` con la 0.184.0 (28 oct.).
 - **Prueba cerrada en Play Console cuanto antes, con la app tal como esté.** Las cuentas personales

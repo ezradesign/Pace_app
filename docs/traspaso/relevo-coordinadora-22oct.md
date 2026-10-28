@@ -20,8 +20,10 @@ mi sí»).
    EcLj6… (`local_a9b8f784-…`), para quitar y archivar con el sí de Ez. **Android a fondo, en `main` como 0.184.0 desde el 28 oct.**
    (Ez la probó en su Android: «va bien, júntalo»): la unión se quedó en 0.183.0 (choques en la versión, los documentos
    y el censo de claves, 1051) y la 0.184.0 va en un commit aparte; la suite entera, 986 en verde. Su worktree y su
-   sesión de EcLj6… (`local_d565db9c-…`), para quitar y archivar con el sí de Ez. **Lo siguiente es el sí de Ez para
-   bajar el AAB de la 0.184.0** (`pace-android-play`) y subirlo a la prueba cerrada antes de invitar testers.
+   sesión de EcLj6… (`local_d565db9c-…`), para quitar y archivar con el sí de Ez. **El AAB de la 0.184.0, bajado**
+   con el sí de Ez a `subidas-play\PACE-0.184.0.aab` (artefacto `pace-play-v0.184.0`; firmado con `PACE-UPL`, 184000 y
+   los mismos permisos que la 0.174.0): lo sube Ez a la prueba cerrada con las notas de `SUBIDAS.md`, antes de invitar
+   testers. TestFlight sigue en la 0.175.0: el trabajo `testflight`, a mano y con su sí.
 2. **`claude/pruebas-medianoche`** (bef9a7d, sin versión), **en `main` desde el 28 oct. con el «júntalo» de Ez** (choque
    solo en la fila de arriba de DECISIONES; la suite entera, 966 en verde): el reloj de la página a `MEDIODIA` en seis archivos de
    pruebas, y una regla nueva en `scripts/verify.pruebas.js`. El CI de cee0095 cayó en `caza-sesiones` («la hora
@@ -495,8 +497,8 @@ huecos.
 8. ~~La bienvenida y los Ajustes~~ **HECHO** (0.180.0, 27 oct., con el 1C 2A 3A de Ez).
 9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO** (0.183.0, en `main` el 28 oct., con el 1A 2A 3A de Ez y su «júntalo»).
 10. ~~La hora y la medianoche, y la voz de Respira~~ **HECHO** (0.181.0, 27 oct.).
-11. **La prueba cerrada de Play y TestFlight con la versión que quede tras juntar 7 y 9** (hoy tienen la 0.174.0 y la
-   0.175.0), antes de invitar testers. Espera el sí de Ez para bajar el AAB, que sube Ez.
+11. **La prueba cerrada de Play y TestFlight con la 0.184.0** (hoy tienen la 0.174.0 y la 0.175.0), antes de invitar
+   testers. El AAB, bajado el 28 oct. a `subidas-play\`: lo sube Ez. TestFlight, con su sí.
 12. **Lo que falta para vender y no espera a nadie** (auditoría del 28 oct.): la valoración de Play tras la quinta pausa
    entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para
    siempre), `/recuperar` y la invitación con los botones de compra.
