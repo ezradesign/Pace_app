@@ -19,6 +19,20 @@
 
 ---
 
+## Lo que falta para vender: 1A 2A 3A 4A; y el aviso de fin en los móviles: A (Ez, 28 oct. 2026)
+
+Sobre la maqueta `docs/proposals/vender-punto-12-28oct.html` (el punto 12 del ROADMAP), Ez eligió las cuatro
+recomendadas. **1A**: el día de v1, quien ya usaba PACE ve una sola vez una hoja con su semana de prueba y las rutinas de
+pago que se le quedan para siempre, sin vender nada, y Ajustes dice hasta cuándo dura. **2A**: `/recuperar` devuelve el
+código de una compra con el correo y el número del recibo, y PACE enlaza a ella con «¿Lo has perdido?». **3A**: la
+invitación acaba con los botones de compra, como la bienvenida, en cuanto la tienda esté lista. **4A**: la ventana de
+valorar sale también en el iPhone; cambia el «solo Android» del 15 oct. (punto 6 de «Cómo se vende PACE completo»). Dio
+el «júntalo» tras ver las fotos del montaje, y ese día pidió «Las rutinas más profundas» en vez de «más hondas».
+
+Sobre los textos del aviso de fin (`docs/proposals/avisos-iphone-28oct.html`), Ez eligió la **A**: en Android y en el
+iPhone, con «A tu ritmo», el aviso de fin de un bloque dice la pausa que toca y a qué hora vuelves, con las palabras de
+la web, en vez de «Foco completado». Las dos, en `main` con la 0.185.0.
+
 ## La prueba cerrada espera a la versión definitiva (Ez, 28 oct. 2026)
 
 Tras juntar «Qué te ayuda», Android a fondo y el arreglo de las pruebas (0.184.0), Ez decidió no subir esa versión a la
@@ -415,7 +429,8 @@ completo» (abajo) y no cambia nada de lo que se decidió allí.
 5. **Sin el párrafo de «quién lo hace»** (una persona, en España, sin inversores): Ez no lo marcó.
 6. **La valoración en Google Play se pide una sola vez:** con la ventana de Google (In-App Review), al
    terminar la quinta pausa entera. Google no dice si la persona valoró o la cerró, así que no se
-   vuelve a lanzar nunca. Nunca en la bienvenida ni en la web.
+   vuelve a lanzar nunca. Nunca en la bienvenida ni en la web. **Desde el 28 oct., también en el iPhone**
+   (la 4A de Ez, con la ventana de Apple), montado en la 0.185.0.
 7. **La ficha de Play** (`docs/launch/google-play/ficha.md`, ya cambiada): el párrafo de PACE completo
    cuenta los dos planes; fuera «dibujados a mano» y «drawn by hand», porque los dibujos salen de GPT
    Image (del arte de PACE nunca se dice «hecho a mano»; de PACE, «hecha por una persona», sí); el

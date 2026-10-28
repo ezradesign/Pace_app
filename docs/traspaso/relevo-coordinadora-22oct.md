@@ -8,6 +8,90 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 28 oct., ~20:10: coordina la cuenta de 5iWBf… (5 h al 2 % y la semana al 47 %; se repone a la 01:10)
+
+**Si llegas de la otra cuenta, empieza aquí; manda sobre los bloques de abajo.**
+1. **La suite de las ~20:08 murió a los 3 minutos sin culpa del código**: al cerrarse la sesión que la lanzó, cada
+   worker nuevo dio `0xC0000142` (3221225794, STATUS_DLL_INIT_FAILED) y 858 «worker process exited unexpectedly»
+   desde la prueba 184. Sus procesos (PID 15496 y 24360, y su servidor 4076 en el 8812) quedan huérfanos, como los de
+   las 17:29. **Relanzada a las 20:13 en el 8813** desde esta sesión (`suite-0185b.txt` en su scratchpad): **1051 en verde y 2 saltadas** (el audio del iPhone, como siempre), en 25,3 min.
+2. **Documentos**: STATE rehecho corto (el punto 5 de su «Lo siguiente»), ROADMAP 11 y 12, DECISIONES_PRODUCTO (1A 2A 3A
+   4A y la A del aviso, y la 4A en «Cómo se vende»), dos filas técnicas de vender arriba de DECISIONES_TECNICAS, LEEME y
+   la hoja. Subido a `main` con este commit; si este bloque no dice más del CI y la web, mirar `gh run list` y `pace-v0.185.0` en pacegrass.app/sw.js.
+3. **Páginas de esta cuenta** (desde la otra dan 404): la hoja https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6, las
+   fotos de vender https://claude.ai/artifact/56cDi1KJYKS4gKqnFKouJP, los textos del aviso
+   https://claude.ai/artifact/9BKgTENwuTjts4Wa1N7ZYd y **los 16 dibujos** https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT
+   (Ez los va generando en paralelo).
+4. **El primer dibujo, «Remo con banda», se repite**: flecha hacia delante (el remo va atrás), la banda como dos palos
+   que no pasan bajo los pies, manos en la cadera, rodillas rectas, trazo fino y el rojo tocando el contorno (s170). Su
+   prompt y los de «Remo con tu mano» y «Bisagra de cadera» ya dicen «BACKWARD, to the left».
+5. **Dos revisiones de ChatGPT (28 oct.), comprobadas contra el código de la 0.185.0 (ChatGPT leyó c702a11): tiene
+   razón en las diez.** Van antes de cobrar en la web (A) y antes de la versión de prueba definitiva (B). Esperan el sí
+   de Ez a sus dos sesiones; lo que cambie en pantalla, con maqueta antes.
+   - **A1** `functions/api/stripe.js` escribe `suscripcion:<id>` sin mirar lo que hay y la baja lo BORRA: un aviso
+     repetido o desordenado puede poner un código más corto encima o resucitar uno borrado. Lo más probable: una mensual
+     pagada al momento (sin prueba) cuyo `checkout.session.completed` llega DESPUÉS de su `invoice.paid` deja guardado el
+     código de 10 días y la renovación devuelve ese mismo: quien paga se queda sin PACE completo del día 10 al 30.
+     Arreglo: no ir nunca hacia atrás (`expiresAt` mayor o nada), una marca de baja que no se borra, y que todo sea
+     idempotente. KV no tiene transacciones: con las fechas sacadas de Stripe (A2) dos avisos a la vez dan lo mismo.
+   - **A2** `cobro/stripe.js` (`stripeLeerPago`): `trialEnd` = hora de LLEGADA + 7 días (un reintento de Stripe la mueve; la
+     enseñan /gracias y el aviso de dos días antes, que podría llegar después del cobro) y la mensual pagada al alta vale
+     7 + 3 días, no su mes. Arreglo: `evento.created` en vez de `ahora` o, mejor, las fechas reales de Stripe (la factura
+     de 0 € de la prueba trae su periodo; con `STRIPE_LECTURA`, la suscripción).
+   - **A3** `functions/api/renovar.js`: sin la clave contesta 410 «terminada». En la app solo cambia la frase (no borra el
+     código y reintenta cada 6 h, al abrir y al volver la red), pero miente. Arreglo: 410 solo con la marca de baja de
+     A1; sin clave, «pendiente». El negativo de KV en caché (~60 s) pesa más en /gracias, que puede tardar un minuto.
+   - **A4** `app/state-licencia.js`: la renovación guarda el código nuevo sin mirar si el guardado sigue siendo el de
+     partida. Al abrir PACE desde /gracias con una de por vida, `paceLicenciaArranque` canjea el enlace Y renueva a la
+     vez: si la mensual se había renovado, la respuesta llega después y PISA la de por vida. Arreglo: comprobar el
+     guardado justo antes de escribir (tras la firma) y no cambiar nunca una de por vida por una mensual.
+   - **A5** `app/tweaks/TweaksData.jsx` (`importarDeVerdad`): escribe `pace.state.v2` pero `_state` sigue siendo el viejo
+     hasta recargar (900 ms, o lo que tarde en cerrarse el aviso parcial). Cualquier `setState` de ese rato (un Foco que
+     acaba, el cambio de día, el resumen de «A tu ritmo») guarda lo viejo encima. Arreglo: al escribir, el estado en
+     memoria pasa a ser el importado y nada más escribe hasta recargar. Prueba provocándolo en el hueco.
+   - **A6** `stripeLeerPago` y `stripeBuscarCompra` (/recuperar): cualquier pago único de la cuenta da una de por vida y
+     cualquier factura de suscripción, una mensual. Hoy la cuenta solo vende PACE, pero Ez es autónomo, y el id de una
+     compra va en la URL del checkout de Stripe. Arreglo: lista de los enlaces de pago (`payment_link`) o los precios de
+     PACE, en prueba y en real, comprobada en el servidor.
+   - **A7** (de la coordinadora): en el modo de prueba, `/api/stripe` firma con la k2 de verdad, así que una compra de
+     mentira da un código real para siempre (por eso la hoja dice «desactiva el enlace de prueba»). Arreglo: los
+     avisos con `livemode: false` firman códigos que caducan en pocos días.
+   - **B1** `app/move/MoveSessionV1.jsx`: sin «Auto», una cuenta que llega a 00 se queda en `work` y `elapsed` sigue
+     subiendo; los dos relojes (`v1TrabajoActivo` y `useV1SessionClock`, en el support) siguen contando mientras espera
+     a «›»: cinco minutos de espera son cinco minutos más en la semana y en el «Tiempo» del cierre. También en las
+     esperas de colocarse y de cambiar de lado (el reloj de la sesión). Las reps a tu ritmo sí deben seguir contando.
+   - **B2** los efectos `[elapsed, auto]`, `[placeLeft, auto]` y `[changeLeft, auto]` no miran `paused`, y el interruptor
+     de «Auto» se toca en pausa (`MoveSessionV1.cuerpo.jsx`): encenderlo con la rutina pausada y la cuenta en 0 cambia de
+     paso, pasa a trabajar o acaba la rutina.
+   - **B3** un paso `opcional` (la banda) con reps y sin «Auto» solo ofrece «Saltar este paso» (`advanceStep`): hacerlo
+     no cuenta sus reps ni lo marca hecho. Arreglo con dos botones, «›» y «Saltar este paso»: maqueta antes.
+   - **B4** las seis colocaciones escritas que no se ven (la fila de v0.181.1 de DECISIONES_TECNICAS): «Piernas elevadas
+     sentado», primer paso de Core silencioso, dice «Silla sin ruedas» y no sale nunca, y la Pica tras un descanso
+     tampoco. Pasa de «no frena v1» a antes de la versión de prueba: es de seguridad. Lo que cambie, maqueta antes.
+
+## AL RELEVO (28 oct., ~20:25; EcLj6… al ~91 %): `main` LOCAL en 0.185.0, SIN SUBIR, con la suite corriendo
+
+**Si llegas de la otra cuenta, empieza aquí; manda sobre el bloque de abajo.** Ez dio el «júntalo» a vender y la **A**
+a los avisos del iPhone, y las dos ramas están juntadas en el `main` de este PC, **sin push**: 9f062fb (vender, sin
+choques), f0759c3 (avisos; único choque, el censo de `scripts/verify.integridad.js`: 1063 + 1 = 1064) y ab38d25 (bump
+a 0.185.0 y su línea de CHANGELOG). `verify` pasa. **La suite entera se lanzó a las ~20:20** en el puerto 8812
+(`PACE_E2E_PORT=8812 npx playwright test`), con la salida en
+`C:\Users\ezrav\AppData\Local\Temp\claude\C--Users-ezrav--claude-spares-spare-e2P8zl\2b663197-176c-4a75-bb7a-e29e8c7d5c45\scratchpad\suite-0185.txt`.
+Lo que falta, por orden:
+1. Mirar si la suite acabó (al final del archivo, «passed/failed»). Si no hay navegadores de Playwright vivos y no
+   acabó, quedó huérfana: relanzarla en otro puerto. Una caída se pasa sola con `--workers=1` antes de creerla.
+2. Documentos: STATE (versión 0.185.0; puntos 3 y 4 de «Lo siguiente», en `main`), ROADMAP punto 12 (hecho en
+   v0.185.0; quedan Play Billing y la compra de Apple), LEEME (sección nueva y «Última actualización») y la hoja
+   (los dos pasos de las ramas, hechos; la versión). Este bloque, al día.
+3. Commit de documentos, `git push origin main`, `gh run watch` del CI y comprobar `pace-v0.185.0` en
+   pacegrass.app/sw.js y el check «Cloudflare Pages» del commit.
+4. **Las páginas de esta cuenta ya están en el repo** para republicarlas en la otra: la hoja
+   (`docs/traspaso/hoja-de-ruta-20oct.html`), las fotos de vender (`docs/proposals/vender-punto-12-montado-28oct.html`)
+   y los textos de los avisos (`docs/proposals/avisos-iphone-28oct.html`). Si una pesa más de 512 KB, se sacan sus
+   fotos a archivos aparte (como se hizo con la maqueta de vender) antes de publicarla.
+5. Después, con Ez, Stripe sigue en el aviso de pago en modo de prueba (punto 2 del bloque de abajo, con el evento
+   `checkout.session.async_payment_succeeded`, que ya atiende la 0.185.0).
+
 ## AL RELEVO (28 oct., ~20:05; cuenta de EcLj6… con las 5 h al 83 % y la semana al 35 %; se repone a las 22:40)
 
 **Si llegas de la otra cuenta, empieza aquí.** `main` en **0.184.1** (6fbd24c: la parte pública de k2), con el CI, Android,
@@ -587,11 +671,11 @@ huecos.
 9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO** (0.183.0, en `main` el 28 oct., con el 1A 2A 3A de Ez y su «júntalo»).
 10. ~~La hora y la medianoche, y la voz de Respira~~ **HECHO** (0.181.0, 27 oct.).
 11. **La versión de prueba definitiva, a Play y a TestFlight a la vez** (hoy tienen la 0.174.0 y la 0.175.0). Ez decidió
-   el 28 oct. esperar a tenerla entera: el punto 12, los avisos del iPhone, sus 16 dibujos y el logo. El AAB de la
-   0.184.0 queda en `subidas-play\` por si acaso. Mientras, Stripe para la web (lo hace Ez, con su hoja).
-12. **Lo que falta para vender y no espera a nadie** (auditoría del 28 oct.): la valoración de Play tras la quinta pausa
-   entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para
-   siempre), `/recuperar` y la invitación con los botones de compra.
+   el 28 oct. esperar a tenerla entera. El punto 12 y los avisos del iPhone, ya en la 0.185.0; faltan B1-B4 (las rutinas
+   sin «Auto», bloque del 28 oct., ~20:10), los 16 dibujos y el logo. El AAB de la 0.184.0 queda en `subidas-play\` por
+   si acaso. Mientras, Stripe para la web (lo hace Ez, con su hoja).
+12. ~~Lo que falta para vender y no espera a nadie~~ **HECHO** (0.185.0, 28 oct., con el 1A 2A 3A 4A y el «júntalo» de
+   Ez). Antes de cobrar en la web, A1-A7 (el cobro, bloque del 28 oct., ~20:10).
 13. **El llavero del calendario**, cuando Ez tenga las altas de Google y Microsoft. Para abrir Google Calendar a todo el
    mundo, Google verifica la app, y tarda semanas.
 14. **Cobrar en Android (Play Billing)**, con los 12 testers y sus 14 días, y el regalo de los testers. Pide el perfil

@@ -2,7 +2,18 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.184.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.185.0.
+
+## 28 oct., noche: lo que faltaba para vender y los avisos del iPhone (v0.185.0), en `main` con el «júntalo» de Ez
+
+Ez dio el «júntalo» a lo que faltaba para vender (1A 2A 3A 4A, tras ver las fotos del montaje) y eligió la **A** para los
+avisos del iPhone: con «A tu ritmo», el aviso de fin de los dos móviles dice la pausa que toca, como la web. Las dos
+ramas entraron con un solo choque, el censo de `verify` (1063 + 1 = 1064), y la versión fue en un commit aparte. Con eso,
+la versión de prueba definitiva ya tiene todo el código y espera los 16 dibujos y el logo. `STATE.md` se rehízo corto.
+El mismo día ChatGPT revisó el cobro (seis casos) y las rutinas sin «Auto» (cuatro). La coordinadora los comprobó en el
+código de la 0.185.0, y tiene razón en los diez: van antes de cobrar y antes de la versión de prueba definitiva. La
+lista y los encargos, en el relevo. Y el primer dibujo de la tanda, «Remo con banda», se repite: la flecha iba hacia
+delante y la banda parecían dos palos (su prompt, ya corregido en `GLIFOS_A_DIBUJAR.md` y en la página de los dibujos).
 
 ## 28 oct., tarde: lo que falta para vender (1A 2A 3A 4A de Ez) y los avisos del iPhone, en sus ramas
 
