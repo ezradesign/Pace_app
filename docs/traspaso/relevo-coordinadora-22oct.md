@@ -102,6 +102,20 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
      se tocó; plantillas en el constructor; los precios se quedan para validar (la de por vida son unos 6,7 meses); y
      mirar a 6-8 personas nuevas usarla sin ayuda. Lo que ChatGPT no haría (anuncios, limitar las pausas gratis) ya lo
      había decidido Ez.
+   - **Quinta revisión (~21:10), «alguien que empieza», simulada con el código: P1-P8, ciertas en el código.**
+     **P1** la salida de «Tu semana» en la bienvenida se llama «Cada semana es distinta» (`ritmo.st.saltar`): mejor
+     «Ahora no, quiero probar primero» y «la preparas luego en Ajustes». **P2** «¿Cuánto trabajas hoy?» no dice que el
+     tiempo incluye las pausas (es así: «Una hora» acaba a su hora). **P3** «Sin material» deja pasar lo que pide mesa
+     estable o PARED (`ritmoPozos`, `state-ritmo.jsx`): la mesa la decidió Ez el 15 oct. («la mesa cuenta»), la pared
+     entró con ella; en una oficina no siempre hay pared libre (Piernas sin pasos). Como poco, el texto. **P4** en la
+     vista previa los ejercicios no se pueden tocar para ver cómo se hacen sin reloj (`RoutinePreview.jsx`); la hoja de
+     «Ver ejercicio» de la 0.175.0 ya existe y se puede reutilizar. **P5** la flecha del mando dice lo que hace solo en un
+     texto oculto y su `title` (`MoveSessionV1.mando.jsx`): «Terminar antes», «Saltar» o «Siguiente lado» no se ven. Va
+     con B3. **P6** «Levántate y sube» dice «La primera vez, una serie basta» y pone dos; y hacer una sola la deja «no
+     entera» (sin logros). **P7** la cuenta de reps no dice cuándo bajar y subir (tempos 2-1-1 o 5-0-1). **P8** con la
+     rutina en pausa, el cuerpo sigue diciendo la instrucción (`CuerpoV1` recibe `paused` y no lo usa); al volver no hay
+     colocación. Todo es de pantalla: maqueta antes. Recomendado: B, C, U1 y U2 antes de la versión de prueba; P y lo
+     de producto, en una actualización durante los 14 días, para no retrasar la cuenta.
 7. **Sesiones**: la del cobro (A1-A7) la arrancó Ez a las ~20:50 (`local_3bee2030-7cba-497a-bf13-c538163aca93`, puerto
    8807). Propuesta, sin arrancar: UNA sesión para B1-B4, C1-C6, U1 y U2 (tocan `app/move/`, `app/custom/`, `app/extra/` y
    `app/main.jsx`; puerto 8808), con maqueta para lo que se vea; y después, una maqueta de U3-U5 y de /premium. Uso a las
