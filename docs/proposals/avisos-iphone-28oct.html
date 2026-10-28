@@ -1,0 +1,171 @@
+<title>El aviso de fin de Foco</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como las propuestas de PACE: papel crema y tinta, oliva para lo de ahora,
+   terracota tenue para lo de antes. Los avisos se pintan como en la pantalla del móvil. */
+:root{
+  --paper:#F2EDE0;--paper-2:#EAE4D4;--paper-3:#DFD8C4;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.10);
+  --terra:#A85E43;--terra-soft:rgba(201,122,93,.12);
+  --aviso:#FBF8F1;--aviso-sombra:rgba(31,28,23,.10);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.13);
+  --aviso:#2c271f;--aviso-sombra:rgba(0,0,0,.35);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--paper-2:#26211a;--paper-3:#2f2920;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.13);
+  --aviso:#2c271f;--aviso-sombra:rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(25px,4.2vw,30px);margin:48px 0 12px;padding-top:22px;border-top:1px solid var(--line)}
+p{margin:0 0 12px;color:var(--ink-2);max-width:66ch}
+ul{margin:0 0 12px;padding-left:20px;color:var(--ink-2)} li{margin:6px 0;max-width:66ch}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink-2);line-height:1.45;margin-top:14px}
+
+.pregunta{background:var(--olive-soft);border-radius:14px;padding:18px 20px;margin:26px 0 0;display:grid;gap:10px}
+.pregunta .q{font-family:var(--display);font-style:italic;font-size:23px;color:var(--ink);margin:0}
+.opcion{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline}
+.opcion b{font-family:var(--display);font-size:22px;font-weight:500;color:var(--olive)}
+.opcion.b b{color:var(--ink-3)}
+.opcion span{color:var(--ink-2)}
+.rec{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--olive);margin-left:6px}
+
+.par{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 6px}
+.lado{min-width:0;display:grid;gap:8px;align-content:start}
+.lado .rot{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.lado.antes .rot{color:var(--terra)}
+.lado.ahora .rot{color:var(--olive)}
+
+/* El aviso, como sale en la pantalla del móvil */
+.aviso{background:var(--aviso);border-radius:16px;padding:11px 14px 12px;box-shadow:0 1px 3px var(--aviso-sombra);display:grid;grid-template-columns:28px 1fr;gap:2px 10px;min-width:0}
+.aviso .ico{grid-row:1 / span 3;width:28px;height:28px;border-radius:7px;background:var(--olive);align-self:start;margin-top:2px}
+.aviso .app{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;gap:8px}
+.aviso .t{font-weight:600;font-size:15px;color:var(--ink);line-height:1.3;overflow-wrap:anywhere}
+.aviso .c{font-size:14.5px;color:var(--ink-2);line-height:1.35;overflow-wrap:anywhere}
+.lado.antes .aviso{opacity:.82}
+.en{font-size:13.5px;color:var(--ink-3);padding-left:2px}
+.en i{font-style:normal;color:var(--ink-2)}
+
+.casos{display:grid;gap:22px;margin-top:8px}
+.caso{display:grid;grid-template-columns:minmax(140px,190px) 1fr;gap:12px 20px;align-items:start}
+.caso h3{font-family:var(--ui);font-size:14px;font-weight:500;color:var(--ink);margin:6px 0 0}
+.caso h3 small{display:block;font-weight:400;color:var(--ink-3);font-size:13px;margin-top:2px}
+.caso .lado{gap:6px}
+
+.nota{font-size:14px;color:var(--ink-3);max-width:66ch}
+.cambios li{margin:10px 0}
+.pie{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:var(--paper-3);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+
+@media (max-width:620px){
+  .par{grid-template-columns:1fr}
+  .caso{grid-template-columns:1fr;gap:8px}
+  .caso h3{margin:0}
+}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · los avisos del iPhone · 28 oct. 2026</div>
+  <h1>Lo que dice el aviso al acabar un Foco</h1>
+  <p class="lead">Con PACE en el fondo, el móvil avisaba siempre con «Foco completado». Ahora, si sigues tu día con «A tu ritmo», el aviso te dice la pausa que toca y a qué hora vuelves, en Android y en el iPhone. Son las mismas frases que ya usa la web: no hay ninguna nueva.</p>
+
+  <section class="pregunta" aria-labelledby="q">
+    <p class="q" id="q">¿Valen estos textos en el móvil?</p>
+    <div class="opcion"><b>A</b><span>Sí: el móvil dice lo mismo que la web.<span class="rec">recomendada</span></span></div>
+    <div class="opcion b"><b>B</b><span>No: el móvil sigue diciendo «Foco completado», y la web, la pausa.</span></div>
+  </section>
+
+  <h2>Antes y ahora</h2>
+  <p>El primer bloque de una jornada entera, a las 9:45, con PACE en el fondo.</p>
+  <div class="par">
+    <div class="lado antes">
+      <div class="rot">Antes</div>
+      <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>9:45</span></div><div class="t">Foco completado</div><div class="c">Ciclo cerrado. Elige tu micro-pausa.</div></div>
+      <div class="en">En inglés: <i>Focus complete · Cycle closed. Choose your micro-break.</i></div>
+    </div>
+    <div class="lado ahora">
+      <div class="rot">Ahora</div>
+      <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>9:45</span></div><div class="t">Tu pausa: Piernas sin pasos · 3 min</div><div class="c">Bloque 1 de 9 hecho. El siguiente, a las 9:50.</div></div>
+      <div class="en">En inglés: <i>Your break: Legs in Place · 3 min · Block 1 of 9 done. The next one at 9:50.</i></div>
+    </div>
+  </div>
+  <p class="nota">Sin «A tu ritmo» (Foco manual o «Hoy voy por libre») sigue diciendo «Foco completado», como antes.</p>
+
+  <h2>Los cinco avisos de un día</h2>
+  <p>Sacados de la app, de una jornada entera de 9:00 a 17:00 con nueve bloques. El nombre de la pausa cambia cada día; la forma de la frase, no.</p>
+  <div class="casos">
+    <div class="caso">
+      <h3>Pausa corta<small>bloque 1, a las 9:45</small></h3>
+      <div class="lado">
+        <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>9:45</span></div><div class="t">Tu pausa: Piernas sin pasos · 3 min</div><div class="c">Bloque 1 de 9 hecho. El siguiente, a las 9:50.</div></div>
+        <div class="en"><i>Your break: Legs in Place · 3 min</i> · Block 1 of 9 done. The next one at 9:50.</div>
+      </div>
+    </div>
+    <div class="caso">
+      <h3>Pausa larga<small>bloque 3, a las 11:25</small></h3>
+      <div class="lado">
+        <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>11:25</span></div><div class="t">Tu pausa larga: Coherente 432 + Hombros · 15 min</div><div class="c">Bloque 3 de 9 hecho. El siguiente, a las 11:40.</div></div>
+        <div class="en"><i>Your long break: Coherent 432 + Shoulders · 15 min</i> · Block 3 of 9 done. The next one at 11:40.</div>
+      </div>
+    </div>
+    <div class="caso">
+      <h3>La comida<small>bloque 6, a las 14:00</small></h3>
+      <div class="lado">
+        <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>14:00</span></div><div class="t">Hora de comer</div><div class="c">Hasta las 15:00. Luego, el bloque 7.</div></div>
+        <div class="en"><i>Time for lunch</i> · Until 15:00. Then block 7.</div>
+      </div>
+    </div>
+    <div class="caso">
+      <h3>El último bloque<small>bloque 9, a las 16:55</small></h3>
+      <div class="lado">
+        <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>16:55</span></div><div class="t">Para cerrar: Suspiro fisiológico · 2 min</div><div class="c">Bloque 9 de 9 hecho. Con esto cierras el día.</div></div>
+        <div class="en"><i>To close the day: Physiological Sigh · 2 min</i> · Block 9 of 9 done. That is your day.</div>
+      </div>
+    </div>
+    <div class="caso">
+      <h3>Con bloques cortos<small>un bloque sin pausa detrás; números de ejemplo</small></h3>
+      <div class="lado">
+        <div class="aviso"><span class="ico" aria-hidden="true"></span><div class="app"><span>PACE</span><span>10:15</span></div><div class="t">Bloque 2 de 12 hecho</div><div class="c">Sigue cuando quieras: la pausa, a las 10:30.</div></div>
+        <div class="en"><i>Block 2 of 12 done</i> · Carry on when you like: your break is at 10:30.</div>
+      </div>
+    </div>
+  </div>
+  <p class="nota">En Android, con el móvil bloqueado, el aviso fijo ya decía «Luego, tu pausa: Piernas sin pasos · 3 min». Ahora el aviso del final nombra la misma pausa. Si pausas el Foco, el aviso se rehace al volver a irte, con la hora nueva.</p>
+
+  <h2>Qué cambia en el iPhone</h2>
+  <p>Son los cuatro arreglos que Android ya tiene desde la 0.184.0, los que salieron al probarla en tu móvil.</p>
+  <ul class="cambios">
+    <li><strong>Suena una sola vez.</strong> Si el bloque acaba con PACE en el fondo, suena el aviso del iPhone y, al volver a PACE, ya no suena también su campana. Tampoco si el iPhone había cerrado PACE mientras tanto.</li>
+    <li><strong>El aviso se quita a tiempo.</strong> Si vuelves antes de que acabe, pausas o reinicias el bloque, el aviso se quita aunque el iPhone tarde en contestar o falle la primera vez.</li>
+    <li><strong>No dice que está puesto hasta que el iPhone lo confirma.</strong> Si el iPhone no deja ponerlo, Ajustes lo dice («El iPhone no dejó poner el último aviso de fin de Foco.») y suena la campana de PACE, para que no te quedes sin aviso.</li>
+    <li><strong>Ajustes se entera al volver.</strong> Si activas o apagas los avisos en los Ajustes del iPhone, al volver a PACE su Ajustes lo enseña, sin cerrarlo y abrirlo.</li>
+    <li><strong>Sin permiso, no se intenta.</strong> Y si dices que sí a la pregunta del iPhone con un Foco ya en marcha, el aviso se pone igual.</li>
+  </ul>
+  <p>Y en la web y en los dos móviles: al cambiar de reloj con uno en marcha («Cambiar» u «Hoy voy por libre» en plena pausa del día), con el ordenador o el móvil muy cargados, el aro podía darse por acabado y quedarse en «Empezar otro ciclo». Ya no.</p>
+
+  <p class="pie">Lo que no se ha podido mirar aquí: que el iPhone entregue el aviso a su hora y que suene una sola vez de verdad. Eso se prueba en tu iPhone con la versión de TestFlight. Rama <code>claude/awesome-albattani-270a62</code>.</p>
+</main>
