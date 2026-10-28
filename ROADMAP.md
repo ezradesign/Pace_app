@@ -80,7 +80,7 @@ cada pieza.
 | 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
 | 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho**, en `main` (0.184.0, 28 oct., probada por Ez en su Android) |
 | 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho**, en `main` (0.183.0, 28 oct., con el «júntalo» de Ez sobre sus fotos) |
-| 11 | La prueba cerrada de Play con la 0.184.0, que ya lleva 7 y 9 (hoy tiene la 0.174.0), y TestFlight con la misma (hoy, la 0.175.0) | El AAB de la 0.184.0, bajado el 28 oct.: lo sube Ez. TestFlight, con su sí |
+| 11 | La versión de prueba definitiva, a la prueba cerrada de Play y a TestFlight a la vez (hoy tienen la 0.174.0 y la 0.175.0) | Ez espera a tenerla entera (28 oct.): el punto 12, los avisos del iPhone, sus dibujos y el logo. Los 14 días empiezan cuando suba |
 | 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Por hacer** (código). Lo encontró la auditoría del 28 oct. |
 | 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas |
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
@@ -91,8 +91,8 @@ cada pieza.
 **La fecha de v1 ya no depende del código** (auditoría del 28 oct.). La fija esta cadena: juntar 7 y 9, subir esa
 versión a la prueba cerrada, reunir 12 testers durante 14 días seguidos (Ez tiene 5 o 6, y la cuenta aún no ha
 empezado) y pedir el acceso a producción. A la vez corre el alta para cobrar, que piden Play, Apple y Stripe. El código
-de los puntos 12 a 16 cabe dentro de esos 14 días. Si los testers están dentro el 4 de noviembre, v1 podría salir a
-finales de noviembre; cada día que tarden, v1 se retrasa otro.
+de los puntos 12 a 16 cabe dentro de esos 14 días. Ez decidió el 28 oct. esperar a la versión de prueba definitiva
+para subirla: los 14 días empiezan entonces, y v1 puede salir unas tres semanas después.
 
 ### Marco de decisión (Ez, 5 de octubre de 2026 · s200)
 

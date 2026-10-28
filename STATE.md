@@ -45,8 +45,9 @@ que piden Play, Apple y Stripe. Lo inmediato:
 1. **Juntado todo lo que esperaba a Ez** (28 oct.): «Qué te ayuda» (0.183.0), el arreglo de las pruebas que caían de
    noche y Android a fondo (0.184.0, probada por Ez en su Android). Detalle, en el relevo
    (`docs/traspaso/relevo-coordinadora-22oct.md`, el bloque del 28 oct.).
-2. **Subir la 0.184.0 a la prueba cerrada de Play y a TestFlight**, que hoy tienen la 0.174.0 y la 0.175.0, antes de
-   invitar a nadie. El AAB ya está en `subidas-play\` y lo sube Ez; TestFlight sale del trabajo `testflight` de
+2. **La versión de prueba definitiva, a Play y a TestFlight a la vez** (Ez, 28 oct.: espera a tenerla entera), que
+   hoy tienen la 0.174.0 y la 0.175.0; antes no se invita a nadie. El AAB lo baja la coordinadora con el sí de Ez y lo
+   sube Ez; TestFlight sale del trabajo `testflight` de
    `.github/workflows/ios.yml`, a mano y con el sí de Ez. Subidas: `docs/launch/google-play/guia.html`.
 3. **El código que falta para vender** (punto 12 del ROADMAP; en marcha en una sesión desde el 28 oct.): la valoración de Play tras la quinta pausa entera, el
    paso a v1 sin quitar nada, `/recuperar` y la invitación con los botones de compra. Después, Play Billing y la
@@ -70,9 +71,11 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT y
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora**: subir `subidas-play\PACE-0.184.0.aab` (bajado el 28 oct. con su sí; firmado, 184000 y los mismos permisos
-  que la 0.174.0) a la prueba cerrada, con las notas de `docs/launch/google-play/SUBIDAS.md`, y enviarla a revisión,
-  antes de invitar a nadie. Las tres ramas que esperaban a Ez ya están en `main`, con sus «júntalo» del 28 oct.
+- **Ahora: Stripe para la web** (`docs/launch/cobro-web.md`; los pasos, en su hoja): la cuenta, pedir «vende por ti», k2
+  en su PC (`npm run licencia:k2`; su parte pública la sube la coordinadora a `app/licencia.llaves.js`), los secretos y el
+  KV en Cloudflare, el aviso y los enlaces en el modo de prueba y una compra de mentira. **La versión de prueba
+  definitiva** (Ez, 28 oct.): no sube nada a Play ni a TestFlight hasta tener los dos hilos, sus dibujos y el logo, y
+  entonces las dos a la vez. El AAB de la 0.184.0 queda en `subidas-play\` por si acaso.
 - **Lo que fija la fecha de v1**: con esa versión en la prueba cerrada, reunir unos 15 testers (tiene 5 o 6; `/beta`
   y el grupo están listos, falta difundirlos: `testers.md`); el gestor y el alta para cobrar; la cuenta de Stripe con
   Managed Payments (confirmar que la ofrecen en España; si no, Paddle) y los datos del aviso legal; volver a exportar el

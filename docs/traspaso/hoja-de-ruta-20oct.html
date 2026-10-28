@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 16:45 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.184.0 · actualizada el 28 de octubre a las 17:20 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -110,8 +110,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         la 0.184.0, con «Qué te ayuda» y Android a fondo dentro.</li>
       <li><b>La fecha de v1 ya no la pone el código.</b> La ponen los 12 testers de Android, que tienen que tener PACE 14 días
         seguidos (esa cuenta aún no ha empezado), y tu alta para cobrar, que piden Google, Apple y Stripe.</li>
-      <li><b>Un ejemplo de fecha:</b> si hay 12 testers dentro el 4 de noviembre, los 14 días acaban el 18, y v1 podría salir a
-        finales de noviembre. Cada día que tarden, v1 se retrasa otro.</li>
+      <li><b>La fecha:</b> decidiste esperar a la versión de prueba definitiva para subirla a Google y al iPhone a la vez.
+        Los 14 días de los testers empiezan cuando la subas y tengas 12 dentro; desde ahí, v1 puede salir unas tres semanas
+        después.</li>
       <li><b>El código que falta cabe en esos 14 días:</b> cobrar en Android y en iPhone, pedir la valoración en Play una vez,
         que nadie pierda nada el día de v1, recuperar el código de una compra y lo legal de /premium.</li>
       <li><b>Un fallo de las pruebas, no de la app:</b> de noche, seis pruebas adelantaban el reloj más allá de la medianoche y
@@ -123,21 +124,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 10 minutos en Play Console</span>
-        <span class="t">Subir la 0.184.0 a la prueba cerrada</span>
-        <span class="c"><span class="quien">Tú.</span> El archivo ya está en <code>Pace_app\subidas-play\PACE-0.184.0.aab</code>. Lo
-          comprobé: va firmado con tu llave, es la 184000 y pide los mismos permisos que la 0.174.0, así que Play no te
-          preguntará nada nuevo.
-          <ol>
-            <li>En <b>play.google.com/console</b>, PACE › <b>Probar y publicar › Pruebas › Prueba cerrada</b> › <b>Crear nueva
-              versión</b>.</li>
-            <li>Arrastra el <code>.aab</code> y espera a que salga <b>184000</b> sin nada en rojo. El nombre, déjalo: 0.184.0.</li>
-            <li><b>Notas de la versión</b>: pega las tres del chat, con sus etiquetas (también están en
-              <code>docs/launch/google-play/SUBIDAS.md</code>).</li>
-            <li><b>Siguiente</b> y <b>Guardar</b>. Los avisos amarillos se pueden seguir; si sale algo en rojo, pégamelo.</li>
-            <li><b>Resumen de la publicación › Enviar cambios a revisión</b>. Sin esto no se sube nada, aunque lo parezca.</li>
-            <li>Dime «subida». Cuando Google la apruebe, tus testers la reciben como una actualización y no pierden nada.</li>
-          </ol></span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, con calma</span>
+        <span class="t">Stripe, para cobrar en la web</span>
+        <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Primero la cuenta y pedir «vende por ti»;
+          luego, en tu PC, la llave que firma las ventas; después Cloudflare y Stripe en modo de prueba, y una compra de
+          mentira con la tarjeta de prueba para ver que todo funciona. Nadie paga nada de verdad hasta que hables con el
+          gestor.</span></li>
       <li class="paso marcha"><span class="estado">En marcha · una sesión aparte, desde el 28 de octubre</span>
         <span class="t">Lo que falta para vender</span>
         <span class="c"><span class="quien">Una sesión.</span> Pedir la valoración en Play una vez, al acabar la quinta pausa entera; que
@@ -148,17 +140,24 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="c"><span class="quien">Una sesión.</span> Los cuatro fallos de avisos que Android ya no tiene, un aviso de fin que
           dice cuál es tu pausa (te enseña los textos antes), la prueba que falla con el ordenador cargado y el script de los
           dibujos, que se rompía al arrancar.</span></li>
+      <li class="paso luego"><span class="estado">Cuando esté todo · lo decidiste el 28 de octubre</span>
+        <span class="t">La versión de prueba definitiva, a Google y al iPhone a la vez</span>
+        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> Cuando esté todo junto, bajo el archivo para Play, subo
+          la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días de los testers empiezan entonces. Por si
+          acaso, la 0.184.0 ya está en <code>subidas-play\</code>. Falta:
+          <ol>
+            <li>Los dos hilos, que están en marcha, con tu «júntalo».</li>
+            <li>Tus 16 dibujos, en <code>Pace_app\dibujos-22oct</code> (la página está en tu otra cuenta).</li>
+            <li>El logo en PNG con fondo transparente: dentro de la app aún se lee «FVFN».</li>
+            <li>Si quieres, las seis fichas que no enseñan cómo colocarse.</li>
+          </ol></span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
         <span class="t">Buscar testers: avisar a los tuyos y publicar en LinkedIn</span>
         <span class="c"><span class="quien">Tú.</span> Es lo que más adelanta v1: Google pide 12 testers durante 14 días, y los días
-          no empiezan a contar hasta que estén. Primero, la versión nueva en la prueba cerrada (el paso de arriba), y que en Play Console › Resumen de la
+          no empiezan a contar hasta que estén. Primero, la versión definitiva en la prueba cerrada (el paso de arriba), y que en Play Console › Resumen de la
           publicación no quede nada en revisión. Después, a tus testers, que entren en pacegrass.app/beta y se unan al grupo. Y el texto de LinkedIn, ya
           escrito en español y en inglés (<code>docs/launch/google-play/testers.md</code>, «LinkedIn, con la página /beta»):
           manda a la gente a pacegrass.app/beta, así que nadie tiene que mandarte su correo.</span></li>
-      <li class="paso luego"><span class="estado">Después · lo tuyo, unos 10 minutos</span>
-        <span class="t">Crear la cuenta de Stripe</span>
-        <span class="c"><span class="quien">Tú.</span> Los pasos, más abajo, en «Stripe, paso a paso». Solo la cuenta y la
-          verificación en dos pasos; los pagos de verdad, después, con el gestor.</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo</span>
         <span class="t">Los dibujos de Mueve y Estira</span>
         <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT">la página de los
@@ -633,37 +632,67 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 
   <section>
     <h2>Stripe, paso a paso</h2>
-    <p>Con la cuenta abierta, PACE ya se puede probar con pagos de mentira: el modo de prueba de Stripe funciona desde el
-      primer día. Los pagos de verdad se activan más tarde, cuando el gestor te diga cómo darte de alta; hasta entonces nadie
-      paga nada. Elegiste el modo <b>«vende por ti»</b> (Managed Payments): Stripe vende por ti, cobra y paga el IVA de cada
-      país y atiende las reclamaciones.</p>
+    <p>El código de cobrar en la web ya está (0.178.0): falta enchufarlo. Elegiste el modo <b>«vende por ti»</b> (Managed
+      Payments): Stripe vende por ti, cobra y paga el IVA de cada país y atiende las reclamaciones. Todo se prueba antes
+      con pagos de mentira, en el modo de prueba de Stripe. <b>Las llaves y los secretos nunca van al chat</b>: se pegan
+      en Cloudflare. Los enlaces de pago sí me los puedes pasar. La guía entera, en <code>docs/launch/cobro-web.md</code>.</p>
     <ol class="pasos">
-      <li class="paso luego"><span class="estado">Después de los testers · lo tuyo, unos 10 minutos</span>
+      <li class="paso ahora"><span class="estado">Ahora · tú, unos 10 minutos</span>
         <span class="t">Crear la cuenta</span>
         <span class="c"><span class="quien">Tú.</span>
           <ol>
-            <li>Entra en <b>dashboard.stripe.com/register</b> con el correo de PACE (<code>hola.ezradesign@gmail.com</code>), tu
-              nombre y una contraseña nueva; país, <b>España</b>.</li>
-            <li>Confirma el correo que te manda Stripe.</li>
-            <li>Activa la <b>verificación en dos pasos</b> (en tu perfil, Seguridad), con una app de códigos o tu móvil.</li>
-            <li>Nombre de la cuenta: <code>PACE</code>. Si te pide la web: <code>https://pacegrass.app</code>.</li>
-            <li>Lo de «activar pagos» (NIF, IBAN, datos de tu actividad) déjalo para cuando hables con el gestor.</li>
-            <li>Dime «la cuenta de Stripe está».</li>
+            <li>En <b>dashboard.stripe.com/register</b>, con el correo de PACE (<code>hola.ezradesign@gmail.com</code>), tu nombre y
+              una contraseña nueva; país, <b>España</b>. Confirma el correo que te manda Stripe.</li>
+            <li>Activa la <b>verificación en dos pasos</b> (tu perfil › Seguridad).</li>
+            <li>Nombre de la cuenta: <code>PACE</code>; web: <code>https://pacegrass.app</code>. En «¿Cuál es la actividad de tu
+              empresa?», <b>Software › Software como servicio (SaaS)</b>; si te deja escribir, la frase que te pasé en el chat.</li>
+            <li>Lo de «activar pagos» (NIF, IBAN, tu alta), déjalo para cuando hables con el gestor.</li>
           </ol></span></li>
       <li class="paso luego"><span class="estado">Después · tú, unos 5 minutos</span>
         <span class="t">Pedir el modo «vende por ti»</span>
-        <span class="c"><span class="quien">Tú.</span> En el panel, busca «Managed Payments» en el buscador de arriba o en la
-          configuración. Si sale como solicitud o lista de espera, apúntate: producto digital, la suscripción de una app,
-          web <code>pacegrass.app/premium</code>. Si en España no lo ofrecen, el plan B que ya decidiste es Paddle.</span></li>
-      <li class="paso luego"><span class="estado">Cuando yo te lo diga</span>
-        <span class="t">Las llaves de prueba y la llave que firma</span>
-        <span class="c"><span class="quien">Tú, con las órdenes que te paso.</span> Las llaves de prueba de Stripe se pegan en
-          Cloudflare y en GitHub, como las de Apple, nunca en el chat. La llave nueva que firma los códigos de venta (k2) la
-          creas en tu PC con una sola orden. Con eso se prueban pagos de mentira de punta a punta.</span></li>
+        <span class="c"><span class="quien">Tú.</span> En el panel, busca «Managed Payments». Si sale como solicitud o lista de espera,
+          apúntate: producto digital, la suscripción de una app, web <code>pacegrass.app/premium</code>. Si en España no lo
+          ofrecen, el plan B que ya decidiste es Paddle.</span></li>
+      <li class="paso luego"><span class="estado">Después · tú, en tu PC, 2 minutos</span>
+        <span class="t">La llave que firma las ventas (k2)</span>
+        <span class="c"><span class="quien">Tú.</span> En la carpeta de PACE, en una terminal: <code>npm run licencia:k2</code>. Deja dos
+          archivos en <code>PACE-llave-licencias</code>: <code>k2.privada.pem</code> (llévala al disco duro con las otras) y
+          <code>k2.para-cloudflare.txt</code> (para el paso siguiente; bórralo después). Dime «k2 está»: subo su parte
+          pública a la app, que hace falta para que el código de una compra abra PACE completo.</span></li>
+      <li class="paso luego"><span class="estado">Después · tú, unos 10 minutos</span>
+        <span class="t">Cloudflare: el secreto de k2 y el almacén de las ventas</span>
+        <span class="c"><span class="quien">Tú.</span> En <b>dash.cloudflare.com › Workers y Pages</b> › el proyecto de pacegrass.app:
+          <ol>
+            <li><b>Configuración › Variables y secretos › Añadir</b>: tipo «Secreto», nombre <code>PACE_K2_PRIVADA</code> y, de valor,
+              la línea entera de <code>k2.para-cloudflare.txt</code>.</li>
+            <li><b>Almacenamiento › KV › Crear</b> un espacio llamado <code>pace-ventas</code>; luego, en el proyecto,
+              <b>Configuración › Enlaces › Añadir › Espacio de nombres KV</b>: variable <code>VENTAS</code>, espacio
+              <code>pace-ventas</code>.</li>
+          </ol></span></li>
+      <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
+        <span class="t">El aviso de pago</span>
+        <span class="c"><span class="quien">Tú.</span> En Stripe › <b>Desarrolladores › Webhooks</b> (o «Destinos de eventos») › Añadir:
+          URL <code>https://pacegrass.app/api/stripe</code> y los eventos <code>checkout.session.completed</code>,
+          <code>invoice.paid</code> y <code>customer.subscription.deleted</code>. Stripe te enseña un secreto que empieza por
+          <code>whsec_</code>: pégalo en Cloudflare como otro secreto, <code>STRIPE_AVISO_SECRETO</code>.</span></li>
+      <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
+        <span class="t">Los dos enlaces de pago y el portal</span>
+        <span class="c"><span class="quien">Tú.</span> Un enlace de pago de <b>19,99 €, una vez</b>, y otro de <b>2,99 € al mes con 7
+          días de prueba</b>. En los dos, la página de después de pagar:
+          <code>https://pacegrass.app/gracias/?sesion={CHECKOUT_SESSION_ID}</code>, tal cual. Y el <b>portal del cliente</b>
+          (Configuración › Facturación › Portal del cliente), activado. Pásame los tres enlaces: no son secretos. Los de prueba
+          no van a la app; los reales, sí.</span></li>
+      <li class="paso luego"><span class="estado">Después · tú y yo</span>
+        <span class="t">Una compra de mentira</span>
+        <span class="c"><span class="quien">Tú compras; yo miro.</span> Abre el enlace de prueba desde Stripe y paga con la tarjeta de
+          prueba <code>4242 4242 4242 4242</code> (cualquier fecha futura y cualquier código). La página de gracias tiene que
+          darte un código, y «Abrir PACE con tu código» tiene que abrir PACE completo. Después, desactiva ese enlace de
+          prueba y no lo compartas.</span></li>
       <li class="paso luego"><span class="estado">Con el gestor</span>
-        <span class="t">Activar los pagos de verdad</span>
-        <span class="c"><span class="quien">Tú.</span> El alta en Hacienda y en autónomos, tu NIF, la cuenta del banco y lo que
-          pida Stripe. Es lo último antes de vender.</span></li>
+        <span class="t">Los pagos de verdad</span>
+        <span class="c"><span class="quien">Tú; yo pongo los enlaces en la app.</span> El alta en Hacienda y en autónomos, tu NIF, la
+          cuenta del banco y lo que pida Stripe. Luego, lo mismo en el modo real: el aviso, con su <code>whsec_</code> nuevo en
+          Cloudflare, y los dos enlaces y el portal reales. Con ellos en la app salen los botones de compra.</span></li>
     </ol>
   </section>
 

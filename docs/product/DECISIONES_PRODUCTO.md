@@ -19,6 +19,14 @@
 
 ---
 
+## La prueba cerrada espera a la versión definitiva (Ez, 28 oct. 2026)
+
+Tras juntar «Qué te ayuda», Android a fondo y el arreglo de las pruebas (0.184.0), Ez decidió no subir esa versión a la
+prueba cerrada: espera a tener la versión de prueba definitiva, con el punto 12 (lo que falta para vender), los avisos
+del iPhone, sus 16 dibujos y el logo nuevo, y la sube a Google Play y a TestFlight a la vez. Se le dijo antes que los 14
+días de Google empiezan cuando hay 12 testers apuntados, tengan la versión que tengan, así que esperar retrasa v1 lo
+mismo que la espera. Mientras, Stripe para la web.
+
 ## El aviso con el móvil bloqueado: N4 A · N4b A (Ez, 27 oct. 2026)
 
 Sobre la maqueta https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL (`docs/proposals/aviso-bloqueado-27oct.html`), por

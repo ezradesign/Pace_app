@@ -69,6 +69,11 @@ mi sí»).
    Sus `node_modules` son ENLACES al del repo: `cmd /c rmdir node_modules` antes de quitar cada worktree. Desde la otra
    cuenta no se ven: para seguir una, `start_session` con `cwd` en su worktree, diciéndole qué falta y que lea su
    `git log`.
+10. **Ez espera a la versión de prueba definitiva** (28 oct., tras el aviso de que los 14 días empiezan cuando haya 12
+   testers, tengan la versión que tengan): no sube la 0.184.0. Ahora hace Stripe para la web con los pasos de su hoja.
+   Cuando diga «k2 está», `app/licencia.llaves.js` tendrá la parte pública de k2 en su copia: subirla en el siguiente
+   commit de código, antes de la compra de prueba. Los enlaces de prueba de Stripe no van a `PACE_TIENDA_WEB`; los reales,
+   sí.
 
 ## AL RELEVO (27 oct., ~23:10 en España; cuenta de EcLj6… con las 5 h al 91 % y la semana al 24 %; se repone a la 01:10)
 
@@ -509,8 +514,9 @@ huecos.
 8. ~~La bienvenida y los Ajustes~~ **HECHO** (0.180.0, 27 oct., con el 1C 2A 3A de Ez).
 9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO** (0.183.0, en `main` el 28 oct., con el 1A 2A 3A de Ez y su «júntalo»).
 10. ~~La hora y la medianoche, y la voz de Respira~~ **HECHO** (0.181.0, 27 oct.).
-11. **La prueba cerrada de Play y TestFlight con la 0.184.0** (hoy tienen la 0.174.0 y la 0.175.0), antes de invitar
-   testers. El AAB, bajado el 28 oct. a `subidas-play\`: lo sube Ez. TestFlight, con su sí.
+11. **La versión de prueba definitiva, a Play y a TestFlight a la vez** (hoy tienen la 0.174.0 y la 0.175.0). Ez decidió
+   el 28 oct. esperar a tenerla entera: el punto 12, los avisos del iPhone, sus 16 dibujos y el logo. El AAB de la
+   0.184.0 queda en `subidas-play\` por si acaso. Mientras, Stripe para la web (lo hace Ez, con su hoja).
 12. **Lo que falta para vender y no espera a nadie** (auditoría del 28 oct.): la valoración de Play tras la quinta pausa
    entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para
    siempre), `/recuperar` y la invitación con los botones de compra.
