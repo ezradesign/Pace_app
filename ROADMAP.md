@@ -70,14 +70,29 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 > [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. La base del giro es la
 > auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
 
-**Orden vigente desde el 25 oct. 2026 (Ez: «ordena el roadmap de la manera más lógica»).** Es la lista «El orden
-lógico hasta v1» de `docs/traspaso/relevo-coordinadora-22oct.md`, la misma del camino de la hoja de Ez. **Hecho a 26
-oct.**: Mueve y Estira (0.175.2, 0.176.0), las franjas de Android y los cuatro cambios de la maqueta (0.176.1, 0.176.2)
-la seguridad de PACE completo (0.177.0) y cobrar en la web sin esperar a Stripe (0.178.0; se enchufa con la cuenta de
-Ez). **Lo siguiente**: lo
-que prometemos sobre los datos. Siguen Android a fondo, la bienvenida con los precios, «Qué te ayuda», la hora y la
-medianoche y el llavero. Al final, cobrar en Android y en iPhone, y v1. Las fases de abajo quedan como detalle de cada
-pieza.
+**Orden vigente** (Ez, 25 oct. 2026: «ordena el roadmap de la manera más lógica»), puesto al día con la auditoría del
+28 oct. (`docs/audits/auditoria-v0.181.1.md`). Es el mismo orden del camino de la hoja de Ez y de la cola del relevo
+(`docs/traspaso/relevo-coordinadora-22oct.md`, «El orden lógico hasta v1»). Las fases de abajo quedan como detalle de
+cada pieza.
+
+| # | Pieza | Estado (28 oct. 2026) |
+|---|---|---|
+| 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
+| 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho en su rama** (0.182.0). Espera que Ez lo pruebe en su Android y diga «júntalo» |
+| 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho en su rama** (0.183.0). Espera el «júntalo» de Ez sobre sus fotos |
+| 11 | La prueba cerrada de Play con la versión que quede tras juntar 7 y 9 (hoy tiene la 0.174.0), y TestFlight con la misma (hoy, la 0.175.0) | Espera el sí de Ez para bajar el AAB, que sube Ez |
+| 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Por hacer** (código). Lo encontró la auditoría del 28 oct. |
+| 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas |
+| 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
+| 15 | Cobrar en el iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión | Espera el acuerdo de apps de pago de Apple, que pide el alta de Ez |
+| 16 | Lo legal de /premium: condiciones, devoluciones, aviso legal y la función de desistimiento en línea (UE, desde el 19 jun. 2026) | Espera los datos de Ez y, mejor, una revisión profesional |
+| 17 | v1.0: apagar `PREMIUM_ABIERTO_HASTA_V1`, quitar «Da de pastar a la vaca» de la web y probar comprar, restaurar y cancelar en las tres tiendas | Al final |
+
+**La fecha de v1 ya no depende del código** (auditoría del 28 oct.). La fija esta cadena: juntar 7 y 9, subir esa
+versión a la prueba cerrada, reunir 12 testers durante 14 días seguidos (Ez tiene 5 o 6, y la cuenta aún no ha
+empezado) y pedir el acceso a producción. A la vez corre el alta para cobrar, que piden Play, Apple y Stripe. El código
+de los puntos 12 a 16 cabe dentro de esos 14 días. Si los testers están dentro el 4 de noviembre, v1 podría salir a
+finales de noviembre; cada día que tarden, v1 se retrasa otro.
 
 ### Marco de decisión (Ez, 5 de octubre de 2026 · s200)
 
@@ -148,11 +163,13 @@ Lo mínimo para que lo que ya existe sea fiable antes de meterlo en un teléfono
   Play: ni la pill, ni el modal, ni su logro secreto. En la web sigue igual.
 - **Lo que queda de cualquier app** — **HECHO**: `privacy.html` cubre la app (v0.142.0) y el AAB
   sale firmado para Play (artefacto `pace-android-play`) con la llave de subida de los secretos del
-  repo. Falta probarlo todo en un móvil real.
+  repo. Ez lo probó desde Play el 22 oct. (sus seis apuntes, ya arreglados), y Android a fondo (0.182.0)
+  espera su prueba en el móvil.
 - **Prueba cerrada en Play Console cuanto antes, con la app tal como esté.** Las cuentas personales
-  nuevas necesitan **unos 12 testers durante 14 días** antes de poder publicar — *a confirmar en Play
-  Console*. Al final de la prueba se pregunta a los testers **«¿qué echarías de menos?»** para
-  afinar el reparto gratis/pago.
+  nuevas necesitan **12 testers durante 14 días seguidos** antes de poder publicar. Google aprobó la
+  prueba cerrada el 21 oct. (con la 0.174.0); los testers se apuntan solos con el grupo `pace-tests`
+  desde `/beta`, y la cuenta de los 14 días empieza cuando haya 12. Al final de la prueba se pregunta
+  a los testers **«¿qué echarías de menos?»** para afinar el reparto gratis/pago.
 
 ### FASE 3 · «A tu ritmo» semanal — lo que se paga
 
@@ -162,9 +179,11 @@ propone ajustes, con el `origin` de cada sesión que se registra desde v0.124.0)
 (planificar la semana de antemano) sigue aparcada. El `.ics` está hecho: «Al calendario» (v0.140.0)
 lleva el día al calendario del móvil, a Google, a Outlook o a un archivo.
 
-**Estado (18 oct. 2026):** el motor de la semana y la carta del lunes, hechos en v0.173.0
-(`app/ritmo/ritmo.motor.js`); los días diseñados, en curso; del calendario total en la web, el
-llavero, por hacer (espera las altas de Ez en Google y Microsoft; lo total, después de v1).
+**Estado (28 oct. 2026):** el motor de la semana y la carta del lunes, hechos en v0.173.0
+(`app/ritmo/ritmo.motor.js`); los días de cuerpo entero, en v0.174.0; del calendario total en la web,
+el llavero, por hacer (espera las altas de Ez en Google y Microsoft; lo total, después de v1). Sin
+esas altas, el calendario automático de la web no funciona para nadie: los dos ids de
+`CALENDARIO_IDS` (`app/ritmo/ritmo.calendario.web.js`) están vacíos.
 
 **Ez, 16 oct. 2026** (`DECISIONES_PRODUCTO.md`, «Lo que hace bueno a PACE antes de cobrar»): el
 motor de la semana se monta ya, sin esperar semanas de datos; entran los **días diseñados** (cada
@@ -204,11 +223,15 @@ Las fases abiertas del plan de s132 **se cierran tal como están**, sin abrir tr
 
 ### FASE 6 · Venta
 
-**Estado (18 oct. 2026):** hechos en v0.172.0 la landing `/premium` con la lista «Avísame» y el punto
-único de compra con una tienda por canal (`app/state-compra.js`, hoy vacías). Falta, tras /premium:
-la página de gracias y la firma con k2 en una función, el aviso dos días antes del fin de la prueba,
-«Gestionar» en Ajustes, la invitación con los botones de compra, lo legal de /premium, Play Billing,
-la ficha y el QA de compra.
+**Estado (28 oct. 2026):** hechos la landing `/premium` con la lista «Avísame» y el punto único de
+compra con una tienda por canal (v0.172.0, `app/state-compra.js`), la seguridad antes de cobrar
+(v0.177.0) y cobrar en la web sin esperar a Stripe (v0.178.0: la página de gracias, la firma con k2
+en una función, el aviso dos días antes del fin de la prueba, «Gestionar» en Ajustes, sin conexión y
+la renovación de la mensual). Falta lo de los puntos 12 a 17 del orden de arriba: enchufar Stripe con
+la cuenta de Ez, la invitación con los botones de compra, `/recuperar`, la valoración de Play, el
+paso a v1 sin quitar nada, lo legal de /premium (con la función de desistimiento), Play Billing, la
+compra de Apple (`state-compra.js` aún dice que el iPhone no tiene tienda hasta después de v1, de
+antes del 22 oct.), las fichas y el QA de compra.
 
 - **Licencia web**: firmada offline ECDSA P-256 con `expiresAt` opcional + trial explícito.
   **La comprobación y los códigos de tester, HECHOS el 8 oct. 2026** (`app/state-licencia.js`,
@@ -259,9 +282,10 @@ la ficha y el QA de compra.
 **El calendario total en la web con PACE cerrado** (Ez, 18 oct. 2026; el llavero sí entra) ·
 **Travesías** (antigua Fase 7) · **reescritura de Caminos** (antigua Fase 6; los 7 actuales se quedan
 como están, ocultos desde v0.139.0) · **Fase 8 Descubrimiento** (onboarding contextual, filtros, reorganización de
-bibliotecas) · **Viajes de respiración y CTB** (la voz sí está dentro desde s175) · **iOS** ·
+bibliotecas) · **Viajes de respiración y CTB** (la voz sí está dentro desde s175) ·
 **extensión de Chrome** · **Vite/ESM** (Etapa B del build) · Path Builder público · Modo Retiro ·
-temporadas · versión para empresas · Wrapped.
+temporadas · versión para empresas · Wrapped. El iPhone salió de esta lista el 22 oct. de 2026: entra en
+v1 (`DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
 
 **Quitar los Caminos de la home**: hecho en v0.139.0, al ocultarlos hasta después de v1.
 

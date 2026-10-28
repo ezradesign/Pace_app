@@ -8,6 +8,37 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 28 oct., mañana: la auditoría de v0.181.1 (coordina la cuenta de 5iWBf…, desde el 27 oct. a las 23:10)
+
+**Si llegas de la otra cuenta, empieza aquí.** `main` sigue en 0.181.1, con estos documentos encima: la auditoría, el
+ROADMAP, STATE, este relevo, el LEEME y la hoja. Nada a medias en `main`. Esperan a Ez tres ramas, y **ninguna se junta
+sin su «júntalo»** (Ez, 27 oct.: «Nunca juntes nada en main sin mi sí»).
+1. **«Qué te ayuda» (0.183.0) y Android a fondo (0.182.0)**: como dice el bloque de abajo, «AL RELEVO (27 oct.,
+   ~23:10…)», que sigue valiendo entero: el orden, lo que choca, el `node_modules` enlazado y la 0.184.0 en un commit
+   aparte.
+2. **`claude/pruebas-medianoche`** (bef9a7d, sin versión): el reloj de la página a `MEDIODIA` en seis archivos de
+   pruebas, y una regla nueva en `scripts/verify.pruebas.js`. El CI de cee0095 cayó en `caza-sesiones` («la hora
+   oculta», 1 esperado y 0 recibido) porque corrió a las 23:07: lo que esas pruebas adelantan cruzaba la medianoche, y
+   la app apuntaba la sesión al día siguiente, como debe. Lo provoqué a las 23:19 y salió en verde con el arreglo a la
+   misma hora; los seis archivos dan 60 en verde y `verify` pasa. Su CI:
+   https://github.com/ezradesign/Pace_app/actions/runs/40659917411. Explica 4 de las 14 caídas de `main` desde el 18
+   oct. (las tres del 21 por la noche). Las otras dos ramas no tocan sus archivos ni traen pruebas que la regla nueva
+   haga fallar: se junta limpia en cualquier orden, salvo la fila de arriba de DECISIONES.
+3. **La auditoría** (`docs/audits/auditoria-v0.181.1.md`): el código está sano (verify en verde, 955 pruebas, 0 avisos
+   de `npm audit`, ningún secreto en git, la web en la 0.181.1) y **la fecha de v1 ya no depende del código**: la fijan los
+   12 testers con sus 14 días, que no han empezado, y el alta para cobrar. Encontró piezas decididas que el orden no
+   tenía: la valoración de Play, el paso a v1 sin quitar nada, `/recuperar`, lo legal con la función de desistimiento,
+   y que `state-compra.js` aún dice que el iPhone no tiene tienda hasta después de v1. El orden nuevo, abajo («El
+   orden lógico hasta v1», ya de 17 puntos) y en el ROADMAP.
+4. **La hoja de esta cuenta** (https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6), republicada desde
+   `docs/traspaso/hoja-de-ruta-20oct.html` con «Cómo vamos». La de EcLj6… va un paso por detrás: al volver allí,
+   republicarla desde el archivo.
+5. **El PC de Ez se durmió de 23:30 a 09:50**: lo que quede corriendo de noche se para, como ya pasó
+   el 26 oct. (memoria `coordinadora_26oct`).
+6. **Para limpiar, con el sí de Ez**: 16 ramas locales y 16 en GitHub ya juntadas, y 7 worktrees de ramas juntadas
+   (`beta-testers`, `caza-sesiones`, `logros-creditos`, `magical-robinson`, `maqueta-inicio`, `beautiful-perlman` y
+   `happy-allen`), con copia en un bundle, como el 27 oct. `calendario-reescrita` y `play-rutina-subidas` se guardan.
+
 ## AL RELEVO (27 oct., ~23:10 en España; cuenta de EcLj6… con las 5 h al 91 % y la semana al 24 %; se repone a la 01:10)
 
 **Si llegas de la otra cuenta, empieza aquí.** `main` está en **0.181.1** (6185951), con el CI entero en verde (CI,
@@ -430,9 +461,9 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 hoja de Ez. El criterio: primero lo que ya está en marcha; luego lo que otro punto necesita, como la seguridad
 antes de cobrar o los precios antes de la bienvenida; lo que espera algo de Ez, cuando llegue; lo pequeño, en los
 huecos.
-1. ~~Mueve y Estira~~ **HECHO** (0.175.2 y 0.176.0, 24-25 oct.). Quedan los retoques de la revisión de ChatGPT de
-   los textos nuevos (volvió el 27 oct., comprobada: arriba, «27 oct.», punto 4) y los dibujos de Ez (prompts en
-   https://claude.ai/artifact/EkSbpYm7dZYL96ddioiFiM).
+1. ~~Mueve y Estira~~ **HECHO** (0.175.2 y 0.176.0, 24-25 oct.), con los retoques de la revisión de ChatGPT en la
+   0.181.1 (27 oct.). Quedan los dibujos de Ez (https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT, de la cuenta de
+   EcLj6…).
 2. ~~N2 y la maqueta de N5-N8~~ **HECHO** (0.176.1 y 0.176.2, 25-26 oct.). N9 no se reproduce: espera un vídeo de Ez.
 3. ~~La seguridad de PACE completo~~ **HECHO** (0.177.0, 26 oct.; S1, S2, S4, S5, S6).
 4. ~~Cobrar en la web sin Stripe~~ **HECHO** (0.178.0, 26 oct., merge d6dc3fd; suite 876 en verde) con el 1A 2A 3A de Ez: gracias, k2, aviso de fin de
@@ -442,20 +473,28 @@ huecos.
    IP de una hora que guarda «Avísame» para su límite (S4), en `privacy.html`. Antes de conectar «Avísame» y de vender;
    enseñárselo a Ez antes.
 6. ~~Montar lo que Ez elija de N5-N8~~ **HECHO** con la 2 (0.176.2).
-7. **Android a fondo**, con el móvil de Ez: los avisos A1-A4 (punto 11), N4 (aviso con el móvil bloqueado) y el puente
-   del calendario con S6 (punto 9).
-8. **La bienvenida y los Ajustes** (A1-A5, A7, punto 5) y, al final de la bienvenida, PACE completo con los dos
-   precios y «Ahora no» (detrás de 4, que pone los precios). **En marcha**: A1-A7 arreglados en su rama; Ez eligió
-   1C 2A 3A (27 oct.) y la sesión lo monta como 0.180.0. Se adelanta al 7, que pisa sus archivos.
-9. **«Qué te ayuda» en Estadísticas** (punto 13), con maqueta.
-10. **La hora y la medianoche** (H1-H5, punto 12) antes de marzo, y la voz de Respira por `<audio>` (punto 8).
-   Propuesta el 27 oct. como segunda sesión, a la vez que el 8 (no comparten archivos): 0.181.0, puerto 8806.
-11. **El llavero del calendario**, cuando Ez tenga las altas de Google y Microsoft.
-12. **Cobrar en Android (Play Billing)**, con los 12 testers y sus 14 días, y el regalo de los testers.
-13. **El iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión**, a la vez que 12. Antes, el
-   enlace público de TestFlight en `/beta` (5b, en cuanto Apple apruebe).
-14. **v1.0**: apagar `PREMIUM_ABIERTO_HASTA_V1` sin quitar nada a quien lo usaba, y QA de compra, restaurar y
-   cancelar en las tres tiendas.
+7. ~~Android a fondo~~ **HECHO en su rama** (0.182.0, `claude/android-a-fondo-6edf2e`, 27 oct.): los avisos A1-A4, N4
+   con la A de Ez, el puente del calendario con S6 y lo privado en el calendario del móvil. Espera que Ez lo pruebe en su
+   Android y diga «júntalo».
+8. ~~La bienvenida y los Ajustes~~ **HECHO** (0.180.0, 27 oct., con el 1C 2A 3A de Ez).
+9. ~~«Qué te ayuda» en Estadísticas~~ **HECHO en su rama** (0.183.0, `claude/que-te-ayuda-maqueta-6c3534`, con el 1A 2A
+   3A de Ez). Espera su «júntalo» sobre las fotos.
+10. ~~La hora y la medianoche, y la voz de Respira~~ **HECHO** (0.181.0, 27 oct.).
+11. **La prueba cerrada de Play y TestFlight con la versión que quede tras juntar 7 y 9** (hoy tienen la 0.174.0 y la
+   0.175.0), antes de invitar testers. Espera el sí de Ez para bajar el AAB, que sube Ez.
+12. **Lo que falta para vender y no espera a nadie** (auditoría del 28 oct.): la valoración de Play tras la quinta pausa
+   entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para
+   siempre), `/recuperar` y la invitación con los botones de compra.
+13. **El llavero del calendario**, cuando Ez tenga las altas de Google y Microsoft. Para abrir Google Calendar a todo el
+   mundo, Google verifica la app, y tarda semanas.
+14. **Cobrar en Android (Play Billing)**, con los 12 testers y sus 14 días, y el regalo de los testers. Pide el perfil
+   de pagos de Play, que pide el alta de Ez.
+15. **El iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión**, a la vez que 14. Antes, el
+   enlace público de TestFlight en `/beta` (5b, en cuanto Apple apruebe). Pide el acuerdo de apps de pago.
+16. **Lo legal de /premium**: condiciones, devoluciones, aviso legal y la función de desistimiento en línea (UE, desde
+   el 19 jun. 2026), con los datos de Ez y, mejor, una revisión profesional.
+17. **v1.0**: apagar `PREMIUM_ABIERTO_HASTA_V1` sin quitar nada a quien lo usaba, quitar «Da de pastar a la vaca» de la
+   web, y QA de compra, restaurar y cancelar en las tres tiendas.
 - **El punto 7 de abajo** (ejercicios de pie para las pausas cortas) queda dentro del 1: las diez pausas de entrada lo
   cubren.
 - **Lo de Ez, en paralelo**: la cuenta de Stripe (desde el 25 oct.), el gestor y el alta, los testers, las altas de

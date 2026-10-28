@@ -11,10 +11,10 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
   de Play, encendidos el 23 oct.); las dos con la letra y los botones de la app. Desde el 23 oct. por la noche,
   /premium enseña lo de pago en un mosaico de capturas de la app real (Ez eligió la B; las rehace
   `scripts/play/capturas-premium.js`).
-- **Android** (Fase 2 de `ROADMAP.md`) hecho en código y sin probar en un móvil: cada push a `main`
-  compila el APK de prueba y el AAB firmado para Play. **iPhone** preparado (v0.164.0) y, desde el 22
-  oct., **dentro de v1** (Ez): TestFlight en cuanto haya cuenta de Apple, y la App Store el mismo día que
-  Android (`DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
+- **Android** (Fase 2 de `ROADMAP.md`): cada push a `main` compila el APK de prueba y el AAB firmado para
+  Play. La prueba cerrada, aprobada el 21 oct. con la 0.174.0; Ez la probó en su móvil el 22 (sus apuntes, ya
+  arreglados). **iPhone**, dentro de v1 desde el 22 oct. (Ez): la 0.175.0 en TestFlight, firmada y subida desde
+  GitHub sin Mac, y la App Store el mismo día que Android (`DECISIONES_PRODUCTO.md`, «El iPhone entra en v1»).
 - **«A tu ritmo»** sirve el día según tu semana, elige cada pausa con lógica, lleva el día al
   calendario y, desde v0.173.0, aprende de tu semana (`app/ritmo/ritmo.motor.js`, la carta del lunes).
   Desde v0.174.0 cada día mueve el cuerpo entero y equilibrado (gratis) y, con PACE completo, las
@@ -36,78 +36,69 @@ no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Lo siguiente
 
-0. **Play Console, con Ez paso a paso** (20 oct.; la página de pasos de Ez, abajo): app creada como
-   «PACE: Pomodoro, Break Reminder», en inglés como idioma principal y Gratis (`nombre-en-play.html`).
-   **21 oct.: cuestionarios y ficha hechos (capturas nuevas, logo de Ez de gráfico, IA sin etiquetar) y
-   la prueba cerrada APROBADA** (21 oct., 23:40) con 0.174.0 y todos los países. El 22 oct. Ez puso de
-   testers el grupo `pace-tests@googlegroups.com` (sustituye a la lista) y lo envió a revisión: cuando
-   el Resumen de la publicación no tenga nada en revisión, LinkedIn y avisar a sus dos testers
-   (`testers.md`). «Tus rutinas» se abrió
-   hasta v1 (v0.173.3) para que el acceso restringido sea «No» de verdad: se sube 0.174.0 o posterior.
-   Gráfico destacado nuevo, el logo de Ez (`grafico/logo-ez.jpg`); las capturas se rehacen con 0.174.0.
-1. **Fase 2**: probar el APK en un móvil (icono, arranque de día y de noche, importar una copia, que lo
-   guardado sobreviva a una actualización, el aviso de Foco). Subidas: `docs/launch/google-play/guia.html`.
-2. **Antes de cobrar** (Ez, 16 oct.), cada uno en su sesión: **los días diseñados**, en `main` con
-   v0.174.0 (Ez los aprobó mirando la semana, https://claude.ai/artifact/HjcDYcPgAm4fG13uMvKaVm, el
-   20 oct.). Y, del calendario total en la web, **el llavero** (Ez, 18 oct.; espera sus
-   altas). La revisión de los ejercicios y el motor de la semana, hechos; lo total con PACE
-   cerrado, después de v1.
-3. **Fase 6, tras /premium**: **cobrar en la web sin Stripe, en `main` con v0.178.0**
-   (26 oct.): la firma con k2 en una función, la página de gracias (1A de Ez), el aviso dos días antes del
-   fin de la prueba (2A), «Gestionar» en Ajustes (3A), la renovación de la mensual y «sin red» frente a «terminada».
-   Apagado hasta que Ez tenga Stripe y siga `docs/launch/cobro-web.md` (k2, Cloudflare y los enlaces). Falta la
-   invitación con los botones de compra y lo legal de /premium.
-   El día de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
-4. **Auditoría externa del 21 oct.**: los trece casos de datos (v0.174.1) y los seis de «A tu
-   ritmo», el calendario y el aro (v0.174.2), en `main` el 22 oct. con el sí de Ez. De la del 22 oct.,
-   tres del calendario que se mantiene solo, en `main` con v0.174.3 (22 oct., con el
-   sí de Ez): «Desconectar» corta lo pedido y en Android deja de leer, y la hoja dice los
-   cuatro casos que eligió Ez (A, `docs/traspaso/archivos/calendario-estado-22oct/tabla.md`). El 8, dos pestañas que apuntan algo a la vez (se pierde una escritura a 0-10 ms;
-   a 100 ms, nunca), Ez lo acepta como riesgo (A, 22 oct.): lo mide `tests/pestanas-estado.spec.js`,
-   estado-4. Un solo escritor en IndexedDB, si alguna vez hace falta, después de v1.
-5. **Auditoría del 18 oct.** (`docs/audits/auditoria-v0.173.0.md`, página para Ez en
-   https://claude.ai/artifact/7YxZbjgoK33rtT5C84wnGs): la pasada de texto y el e2e en dos trozos,
-   hechos. Ez decidió (`DECISIONES_PRODUCTO.md`, «Tras la auditoría del 18 oct.»): pacegrass.app
-   publica solo la app, lo de PACE va al calendario como **libre** y el llavero entra en v1. «Libre»
-   en el calendario (v0.173.1) y publicar solo la app (v0.173.2, `dist/` con `scripts/web-dist.js`),
-   en `main` desde el 20 oct. con el sí de Ez, que ese día puso en Cloudflare Pages el comando
-   `node scripts/web-dist.js` y la salida `dist`. Las ramas ya juntadas, borradas (copia en
-   `PACE-ramas-borradas-18oct.bundle`, junto a la carpeta del proyecto), y las sesiones terminadas,
-   archivadas.
+El orden hasta v1, con el estado de cada pieza, está en `ROADMAP.md` («Camino a v1.0», la tabla de 17 puntos), y el
+porqué, en la auditoría del 28 oct. (`docs/audits/auditoria-v0.181.1.md`). **La fecha de v1 ya no depende del
+código**: la fijan los 12 testers de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar,
+que piden Play, Apple y Stripe. Lo inmediato:
+
+1. **Juntar, cada una con el «júntalo» de Ez**: «Qué te ayuda» 0.183.0 (`claude/que-te-ayuda-maqueta-6c3534`, sobre
+   sus fotos), Android a fondo 0.182.0 (`claude/android-a-fondo-6edf2e`, después de que Ez la pruebe en su Android) y
+   el arreglo de las pruebas que caían de noche (`claude/pruebas-medianoche`, sin versión). El orden y lo que choca,
+   en el relevo (`docs/traspaso/relevo-coordinadora-22oct.md`, el bloque del 28 oct.).
+2. **Subir la versión juntada a la prueba cerrada de Play y a TestFlight**, que hoy tienen la 0.174.0 y la 0.175.0,
+   antes de invitar a nadie. Subidas: `docs/launch/google-play/guia.html`.
+3. **El código que falta para vender** (punto 12 del ROADMAP): la valoración de Play tras la quinta pausa entera, el
+   paso a v1 sin quitar nada, `/recuperar` y la invitación con los botones de compra. Después, Play Billing y la
+   compra de Apple, que esperan las altas de Ez. Stripe se enchufa con su cuenta (`docs/launch/cobro-web.md`). El día
+   de v1, «Da de pastar a la vaca» sale de la web (Ez, 18 oct.).
+4. **Lo que dejó para después Android a fondo**: los mismos cuatro fallos de los avisos en el iPhone
+   (`app/ui/ios.js`), el aviso de fin que no nombra la pausa de «A tu ritmo», los botones de verdad del aviso (la C de
+   N4) y `scripts/glifos/generar-pendientes.js`, que cae al arrancar.
+5. **STATE.md ya no cabe en una pantalla**: se rehace corto al juntar las dos ramas, con el detalle en el relevo, en
+   `CHANGELOG.md` y en DECISIONES.
+
+Riesgo aceptado: dos pestañas que apuntan algo a la vez (el caso 8 de datos, la A de Ez del 22 oct.); lo mide
+`tests/pestanas-estado.spec.js`, y un solo escritor en IndexedDB, si alguna vez hace falta, después de v1. Lo de antes
+(Play Console paso a paso, las auditorías del 18 y del 21-22 oct., cobrar en la web) está hecho y contado en el
+relevo, en `CHANGELOG.md` y en `DECISIONES_PRODUCTO.md`. Cloudflare Pages publica `dist/` con
+`node scripts/web-dist.js`.
 
 ## Espera a Ez
 
-La lista, por orden y sin jerga, en la hoja de ruta del 20 oct.
-(`docs/traspaso/hoja-de-ruta-20oct.html`, una por cuenta, porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT
-y, desde el 22 oct. por la tarde, https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6). Ez se
-pierde con mucho abierto: a «¿qué toca?», una sola cosa.
+La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-ruta-20oct.html`). Hay una por cuenta,
+porque cada una solo puede poner al día la suya: https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT y
+https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6. Ez se pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Mueve y Estira: Ez eligió 1A 2A 3A 4A** (23 oct., sobre
-  https://claude.ai/artifact/9L6RZTPCYpZH57iywsNnHE; `DECISIONES_PRODUCTO.md`). **En `main`**: los textos como v0.175.2
-  (24 oct.) y las tres capas, los seis ejercicios nuevos y lo gratis como v0.176.0 (25 oct.), los dos con el sí de Ez
-  sobre sus fotos; los logros de ATG y Ancestral, con su A. **La revisión de ChatGPT de los textos nuevos**, en `main`
-  con v0.181.1 (27 oct., con el sí de Ez sobre https://claude.ai/artifact/9Y61HfjdAKzQGKJFGNKUPq). Quedan seis fichas
-  con la colocación escrita que no se ve nunca (un ejercicio tras un descanso no la enseña; fila de
-  `DECISIONES_TECNICAS_VIGENTES.md`): otra tanda, si Ez quiere. Faltan los dibujos de Ez. Detalle en el relevo, «23 oct., noche».
-- **Lo que fija la fecha de v1**: crear la app en Play Console, subir el AAB y reunir unos 15 testers
-  (tiene 5 o 6; el grupo y `/beta` ya están, falta difundirlos: `testers.md`); el
-  gestor, la cuenta de Stripe con Managed Payments y los datos del aviso legal; volver a exportar
-  el logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
-- Copiar `PACE-llave-play` y `PACE-llave-licencias` a su disco duro y mandar a cada tester su enlace
-  de `codigos-tester.csv` (funcionan en la web).
-- «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` conectado como `AVISAME` y el
-  token de Web Analytics solo para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el
-  registro previo de Play.
-- Las altas de PACE en Google Cloud y Microsoft Entra, con sus dos ids (`docs/CALENDARIO_ALTAS.md`; para el
-  llavero, el cliente de Google como «aplicación web» con su secreto).
-- Leer `privacy.html` (es pública) y probar en su Android el calendario que se mantiene solo.
-- Oír la voz de Respira en pacegrass.app (desde v0.167.0 con fundido, `PACE_VOZ_FUNDIDO`) y los
-  cuencos de Mueve y Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
+- **Ahora, tres «júntalo» y un sí**: mirar las fotos de «Qué te ayuda» (https://claude.ai/artifact/1p6iNP6KVETGEBuZKxRPY5,
+  de la cuenta de EcLj6…); probar Android a fondo en su Android con el APK «PACE prueba» y sus seis puntos (en
+  https://github.com/ezradesign/Pace_app/actions/runs/40580116946, `pace-android-debug`); decir si se junta el arreglo
+  de las pruebas de medianoche; y dar el sí para bajar a `subidas-play\` el AAB de la versión juntada.
+- **Lo que fija la fecha de v1**: con esa versión en la prueba cerrada, reunir unos 15 testers (tiene 5 o 6; `/beta`
+  y el grupo están listos, falta difundirlos: `testers.md`); el gestor y el alta para cobrar; la cuenta de Stripe con
+  Managed Payments (confirmar que la ofrecen en España; si no, Paddle) y los datos del aviso legal; volver a exportar el
+  logo (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium).
+- **iPhone**: mirar si llegó el correo de Apple que aprueba la prueba beta (enviada el 23 oct.); con él, invitar a sus
+  testers con el enlace público del grupo «Testers iPhone», que va también a /beta, y pasarles qué mirar, sobre todo el
+  sonido. Para vender: el acuerdo de apps de pago con banco y W-8BEN, el programa para pequeñas empresas y una
+  dirección visible en la UE.
+- Las altas de PACE en Google Cloud y Microsoft Entra, con sus dos ids (`docs/CALENDARIO_ALTAS.md`; para el llavero, el
+  cliente de Google como «aplicación web» con su secreto). Sin ellas, el calendario automático de la web no funciona
+  para nadie, y abrirlo a todo el mundo pide que Google verifique la app, que tarda semanas: si se quiere en v1, son
+  lo más urgente tras los testers.
+- Copiar `PACE-llave-play` y `PACE-llave-licencias` a su disco duro, y mandar a cada tester su enlace de
+  `codigos-tester.csv` (funcionan en la web).
+- «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` conectado como `AVISAME` y el token de Web
+  Analytics solo para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el registro previo de Play.
+- **Mueve y Estira** (1A 2A 3A 4A de Ez, en `main` desde la 0.176.0 y con la revisión de ChatGPT en la 0.181.1): quedan
+  seis fichas con la colocación escrita que no se ve nunca, para otra tanda si Ez quiere (fila de
+  `DECISIONES_TECNICAS_VIGENTES.md`), y los dibujos de Ez.
 - Los dibujos que faltan: la cuenta, en `docs/product/GLIFOS_A_DIBUJAR.md` (38); los 16 de ejercicios, por orden y con
-  «Copiar», en https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT, a `Pace_app\dibujos-22oct` (vacía el 27 oct.).
-- iPhone, que ahora fija la fecha de v1 junto a Play: la cuenta de Apple Developer, validada el 23 oct.;
-  falta su llave (`docs/launch/app-store/guia.html`, punto 4), y pasar a sus testers qué mirar, sobre todo el sonido.
+  «Copiar», en https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT (de la cuenta de EcLj6…), a `Pace_app\dibujos-22oct`.
+- Leer `privacy.html` (es pública) y probar en su Android el calendario que se mantiene solo.
+- Oír la voz de Respira en pacegrass.app (con fundido desde la 0.167.0, `PACE_VOZ_FUNDIDO`) y los cuencos de Mueve y
+  Estira; grabar «Más» y «More» del suspiro (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`).
 - Apagar las propuestas automáticas de Dependabot, dejando las alertas.
+- Con su sí, limpiar lo ya juntado: 16 ramas locales, 16 en GitHub y 7 worktrees, con copia en un bundle.
 
 ## Deuda conocida, sin fecha
 

@@ -2,7 +2,17 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 27 de octubre de 2026, v0.181.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.181.1.
+
+## 28 oct., mañana: la auditoría de v0.181.1, y el arreglo de las pruebas que caían de noche, a la espera de Ez
+
+La auditoría (`docs/audits/auditoria-v0.181.1.md`) deja el código sano y una conclusión: **la fecha de v1 ya no
+depende del código**, sino de los 12 testers de Android con sus 14 días y del alta para cobrar. El orden hasta v1 pasa
+a 17 puntos (`ROADMAP.md`, «Camino a v1.0»), con lo decidido que aún faltaba: la valoración de Play, el paso a v1 sin
+quitar nada, `/recuperar` y lo legal con la función de desistimiento. Una tercera rama espera el «júntalo» de Ez:
+`claude/pruebas-medianoche`, sin versión, que pone a mediodía el reloj de seis archivos de pruebas (de noche cruzaban
+la medianoche: así cayó el CI de cee0095). Cómo juntar las tres: el bloque del 28 oct. de
+`docs/traspaso/relevo-coordinadora-22oct.md`.
 
 ## 27 oct., noche: v0.181.1 en `main`; «Qué te ayuda» (0.183.0) y Android a fondo (0.182.0), en su rama, a la espera de Ez
 
