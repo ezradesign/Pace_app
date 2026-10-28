@@ -8,6 +8,22 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 28 oct., ~18:20: coordina la cuenta de EcLj6… (5 h al 14 % y la semana al 26 %; se repone a las 22:40)
+
+**Si llegas de la otra cuenta, empieza aquí.** `main` sigue en **0.184.0**: nada juntado desde el relevo de las 17:30.
+1. **Ez eligió 1A 2A 3A 4A** en la maqueta de vender, republicada en esta cuenta (https://claude.ai/artifact/VDdAWeb8msGvckeGXxFjWV,
+   las fotos aparte para que pese menos de 512 KB). Lo monta `local_9782ed9f-c30a-4756-9c19-a82d87b1b45c`
+   (vender-montar) en `claude/clever-gagarin-6701aa`, puerto 8805, con fotos para Ez antes del «júntalo».
+2. **Los avisos del iPhone no guardaron al relevar**: la rama seguía en 4e78f62, con 19 archivos cambiados y una prueba
+   nueva sin commit y la suite de las 17:29 huérfana (sin navegador). Los retoma
+   `local_40fd9c7d-0821-4738-83a0-873faaa97e1a` (avisos-iphone), puerto 8806: primero «wip» y push, y los textos del
+   aviso de fin, a Ez antes de darlos por buenos.
+3. **La prueba sigue en 7 días**: Ez volvió a preguntar por 3 y se quedó en 7 (el mismo motivo del 15 oct.).
+4. **Ez está creando la cuenta de Stripe** (la actividad de la empresa, contestada). La hoja de esta cuenta va en la 65,
+   con Stripe en «Ahora». Cuando diga «k2 está», lo del punto 10 de abajo.
+5. Huérfanos de la suite parada: PID 23720 y 1984 (Playwright) y 6588 (servidor en el 8806, que sirve esa misma carpeta).
+   No molestan; los puede parar Ez.
+
 ## AL RELEVO (28 oct., ~17:30 en España; cuenta de 5iWBf… con las 5 h al 93 % y la semana al 46 %; se repone a las 19:50)
 
 **Si llegas de la otra cuenta, empieza aquí.** `main` está en **0.184.0** (9f5ec86 subido; encima, f385d39, la hoja con la

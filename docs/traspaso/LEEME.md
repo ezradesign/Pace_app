@@ -4,6 +4,15 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.184.0.
 
+## 28 oct., tarde: lo que falta para vender (1A 2A 3A 4A de Ez) y los avisos del iPhone, en sus ramas
+
+Ez eligió **1A 2A 3A 4A** en la maqueta del punto 12 (`docs/proposals/vender-punto-12-28oct.html`): la hoja del día
+de v1 con las rutinas que se quedan, `/recuperar` con «¿Lo has perdido?» en PACE, los botones de compra como en la
+bienvenida y la ventana de valorar también en el iPhone. La prueba sigue en **7 días** (Ez volvió a preguntar por 3 y
+se quedó en 7: en tres días no se ve una semana de «A tu ritmo»). Lo monta `claude/clever-gagarin-6701aa`; los avisos
+del iPhone y tres arreglos pequeños, `claude/awesome-albattani-270a62`. Las dos se juntan solo con el «júntalo» de Ez,
+y después sale la versión de prueba definitiva. Estado y sesiones: el bloque del 28 oct., ~18:20, del relevo.
+
 ## 28 oct.: Android a fondo (v0.184.0), en `main` con el «júntalo» de Ez
 
 Ez la probó en su Android y dijo «va bien, júntalo». Hecha como 0.182.0 en `claude/android-a-fondo-6edf2e`: los
@@ -960,7 +969,7 @@ la llave y la lista de testers para los códigos, y la propuesta de textos de lo
 
 ## Frase de arranque para la otra cuenta
 
-> Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (27 oct., ~23:10…)» de
-> docs/traspaso/relevo-coordinadora-22oct.md, y sigue desde ahí: «Qué te ayuda» (0.183.0) y Android a fondo
-> (0.182.0) están terminadas en su rama. Nunca juntes nada en main sin mi sí. Republica mi hoja de pasos de esta
+> Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el primer bloque de
+> docs/traspaso/relevo-coordinadora-22oct.md, y sigue desde ahí: lo que falta para vender y los avisos del iPhone
+> están en sus ramas. Nunca juntes nada en main sin mi sí. Republica mi hoja de pasos de esta
 > cuenta desde docs/traspaso/hoja-de-ruta-20oct.html y dime en pocas líneas dónde estamos y qué espera mi respuesta.
