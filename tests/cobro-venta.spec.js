@@ -145,6 +145,43 @@ test.describe('el cobro en la web', () => {
     expect(mala.status, 'se pide otra cosa del almacén').toBe(400);
   });
 
+  /* Un adeudo SEPA y parecidos: la compra acaba sin pagar y el pago se confirma días después. */
+  test('el pago que se confirma tarde: nada al acabar la compra, y el código al confirmarse, de por vida y mensual', async () => {
+    const kv = almacen();
+    const acaba = JSON.parse(JSON.stringify(COMPRA));
+    acaba.data.object.payment_status = 'unpaid';
+    expect(await (await stripe.onRequestPost({ request: aviso(acaba), env: env(kv) })).json()).toEqual({ ok: true, codigo: false });
+    expect(kv.datos.size).toBe(0);
+
+    const confirmado = JSON.parse(JSON.stringify(COMPRA));
+    confirmado.id = 'evt_5';
+    confirmado.type = 'checkout.session.async_payment_succeeded';
+    expect(await (await stripe.onRequestPost({ request: aviso(confirmado), env: env(kv) })).json()).toEqual({ ok: true, codigo: true });
+    const vida = leerCodigo(kv.datos.get('sesion:cs_test_a1B2c3D4e5F6g7H8'));
+    expect(vida.vale).toBe(true);
+    expect(vida.datos.type).toBe('lifetime');
+    expect(vida.datos.order).toBe('cs_test_a1B2c3D4e5F6g7H8');
+    const g = await codigo.onRequestGet({ request: new Request('https://pacegrass.app/api/codigo?sesion=cs_test_a1B2c3D4e5F6g7H8'), env: { VENTAS: kv } });
+    expect(g.status, 'la página de gracias lo recoge').toBe(200);
+
+    /* La mensual sin prueba, pagada con un adeudo. */
+    const alta = { id: 'evt_6', type: 'checkout.session.async_payment_succeeded',
+      data: { object: { id: 'cs_test_q1W2e3R4t5Y6u7I8', mode: 'subscription', payment_status: 'paid', subscription: 'sub_2GhIjKl' } } };
+    await stripe.onRequestPost({ request: aviso(alta), env: env(kv) });
+    const mes = leerCodigo(kv.datos.get('suscripcion:sub_2GhIjKl'));
+    expect(mes.vale).toBe(true);
+    expect(mes.datos.type).toBe('monthly');
+    expect(kv.datos.get('sesion:cs_test_q1W2e3R4t5Y6u7I8')).toBe(kv.datos.get('suscripcion:sub_2GhIjKl'));
+
+    /* Si el pago falla, no se firma nada. */
+    const falla = JSON.parse(JSON.stringify(acaba));
+    falla.id = 'evt_7';
+    falla.type = 'checkout.session.async_payment_failed';
+    falla.data.object.id = 'cs_test_f1F2f3F4';
+    expect(await (await stripe.onRequestPost({ request: aviso(falla), env: env(kv) })).json()).toEqual({ ok: true, codigo: false });
+    expect(kv.datos.has('sesion:cs_test_f1F2f3F4')).toBe(false);
+  });
+
   test('la renovación: con el código de antes da el último de esa mensual; terminada, ya no', async () => {
     const kv = almacen();
     const pide = (c) => renovar.onRequestPost({ request: new Request('https://pacegrass.app/api/renovar', { method: 'POST', body: JSON.stringify({ codigo: c }) }), env: env(kv) });

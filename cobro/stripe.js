@@ -12,6 +12,11 @@
      un pago hecho. La compra de por vida es un pago único (`mode: payment`, pagado); la
      mensual, una suscripción (`mode: subscription`), con los siete días de prueba
      (`no_payment_required`) o ya pagada. El correo no se lee: el código no lo lleva.
+     LOS PAGOS QUE SE CONFIRMAN TARDE (un adeudo SEPA y parecidos; auditoría de seguridad del
+     28 oct.): la compra llega acabada pero sin pagar (`unpaid`) y no se firma nada; días
+     después Stripe manda `checkout.session.async_payment_succeeded`, con la misma sesión ya
+     pagada, y se firma entonces, igual que una compra pagada al momento. Sin atenderlo,
+     quien pagara así se quedaría sin su código.
 
    Las pruebas (tests/cobro-venta.spec.js) mandan avisos inventados, firmados con un
    secreto de prueba creado en la propia prueba. */
@@ -54,14 +59,18 @@ export async function stripeAvisoValido(cuerpo, cabecera, secreto, ahoraS) {
   return vale;
 }
 
+/* Los dos avisos de una compra pagada: al acabarla, o al confirmarse más tarde el pago. */
+export const STRIPE_COMPRA_PAGADA = ['checkout.session.completed', 'checkout.session.async_payment_succeeded'];
+
 /* evento (el JSON del aviso) -> { plan, order, sesion?, expiresAt? } | null
-   · checkout.session.completed: la compra (por vida) o el alta de la suscripción.
+   · checkout.session.completed o .async_payment_succeeded: la compra (por vida) o el alta
+     de la suscripción, si ya está pagada.
    · invoice.paid de una suscripción: cada renovación; el código nuevo vale hasta el final
      del periodo pagado (más el margen). */
 export function stripeLeerPago(evento, ahora) {
   const o = evento && evento.data && evento.data.object;
   if (!o || typeof o !== 'object') return null;
-  if (evento.type === 'checkout.session.completed') {
+  if (STRIPE_COMPRA_PAGADA.indexOf(evento.type) !== -1) {
     if (o.mode === 'payment' && o.payment_status === 'paid' && typeof o.id === 'string') {
       return { plan: 'lifetime', order: o.id, sesion: o.id };
     }

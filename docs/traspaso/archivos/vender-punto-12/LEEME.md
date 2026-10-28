@@ -83,6 +83,29 @@ en verde. La suite entera con `--workers=1` (sobre 3c2ea8a, 45,6 min): 1017 en v
 cargado). Ya espera a que la hoja esté quieta y mide los dos en la misma vuelta: `premium-compra` y `paso-v1`, tres
 veces seguidas con la suite corriendo al lado, 48 de 48.
 
+## Hecho después, por encargo de la coordinadora (28 oct.)
+
+- **«Las rutinas más hondas» pasa a «Las rutinas más profundas»** (Ez: «hondas» no le gusta), solo en español:
+  `premium.inc.routines`, `premium/index.html` (la descripción, la lista y el texto alternativo de su imagen),
+  `scripts/play/capturas-premium.js` y el README. La imagen `premium/respira-honda-es.webp` lleva el título
+  pintado y está rehecha con ese guion (la inglesa no se ha tocado; el nombre del archivo se queda, porque las
+  pruebas lo buscan así). También `docs/launch/google-play/ficha.md`, que es el texto de la ficha de Play:
+  **si ese texto ya está puesto en Play Console, Ez tiene que cambiarlo allí** (el repo no lo sube). En la
+  invitación a 360 px esa fila ocupa ahora dos líneas (cabe sin scroll); en la bienvenida, una (medido a 640 y
+  740 de alto, con y sin tienda). Las fotos de la invitación de la página de Ez están rehechas con el texto nuevo.
+- **Los pagos que se confirman tarde** (auditoría de seguridad): `stripeLeerPago` atiende
+  `checkout.session.async_payment_succeeded` igual que la compra acabada y pagada (`STRIPE_COMPRA_PAGADA`, de por
+  vida y mensual); la acabada sin pagar y la que falla no firman nada. Prueba en `tests/cobro-venta.spec.js`. El
+  evento está en el paso 3 de `docs/launch/cobro-web.md`, con cómo probarlo. **/gracias** ya no dice «Aún no
+  encontramos tu compra» si al minuto no hay código: dice que el pago se está confirmando (con tarjeta, segundos;
+  con un adeudo SEPA, días), sigue preguntando cada medio minuto durante una hora y cuenta que el código saldrá al
+  volver a abrir el mismo enlace y en /recuperar (que encuentra la compra cuando Stripe la marca pagada). Prueba en
+  `tests/cobro-montaje.spec.js`. Sin `?sesion=`, como antes.
+- **HSTS**: `Strict-Transport-Security: max-age=31536000` en `/*` de `_headers` (sin `includeSubDomains` ni
+  `preload`), con su porqué; `tests/cabeceras.spec.js` lo pide y ahora mira también /recuperar bajo la CSP.
+- Pruebas: las de cobro, gracias, cabeceras, /premium, /recuperar, la invitación, la bienvenida, el código y el
+  paso a v1, 91 en verde. `npm run verify` en verde.
+
 ## Para la coordinadora, al juntar
 
 - **Choques posibles**: `index.html` (se regenera), el censo de `scripts/verify.integridad.js` (si la otra rama también
@@ -93,7 +116,9 @@ veces seguidas con la suite corriendo al lado, 48 de 48.
   (todo listo detrás de `PREMIUM_ABIERTO_HASTA_V1`); pacegrass.app/recuperar devuelve el código de una compra con el
   correo y el número del recibo, enlazada desde gracias, /premium y PACE; la invitación lleva los botones de compra en
   cuanto la tienda esté lista; y la ventana para valorar PACE sale una vez tras la quinta pausa entera, en Google Play y
-  en la App Store.»
+  en la App Store. «Las rutinas más hondas» pasa a «Las rutinas más profundas». Y antes de vender en la web, la
+  auditoría de seguridad: el pago que se confirma días después (un adeudo SEPA) también da su código, /gracias dice
+  que se está confirmando en vez de que no encuentra la compra, y pacegrass.app manda HSTS.»
 - **STATE**, en «Lo siguiente»: el punto 3 (el código que falta para vender) pasa a hecho; queda Play Billing y la
   compra de Apple. En «Espera a Ez»: la llave restringida `STRIPE_LECTURA` al crear la cuenta de Stripe (paso 5 de
   `docs/launch/cobro-web.md`) y mirar en el modo de pruebas qué número trae el recibo.

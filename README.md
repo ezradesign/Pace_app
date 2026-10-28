@@ -165,7 +165,7 @@ manual persiste y siempre gana después.
 El **núcleo de PACE es gratuito** y seguirá estándolo: el Foco entero, «A tu ritmo» de
 cada día, 34 rutinas, Hidrátate, los logros y las estadísticas de hoy y de la semana.
 
-**PACE completo** añade las 19 rutinas más hondas, tus propias rutinas, una semana que
+**PACE completo** añade las 19 rutinas más profundas, tus propias rutinas, una semana que
 aprende de ti y tu mes y tu año. Habrá dos planes, **2,99 € al mes con 7 días gratis o
 19,99 € de por vida**, sin crear una cuenta. **v1.0 será la primera versión de pago**;
 hasta entonces todo lo construido está abierto. La licencia ya existe (v0.157.0): un

@@ -131,6 +131,7 @@ async function par(base, linea, alt) {
     <h2>La invitación con los botones de compra</h2>
     ${P.pa}
     <p class="nota">En el móvil los dos botones van uno encima del otro, igual de anchos. Si la compra no se puede abrir, la hoja lo dice y no se cierra.</p>
+    <p class="nota">Como pediste, «Las rutinas más hondas» ahora dice «Las rutinas más profundas», en la app, en /premium (también su imagen) y en el README; en inglés no cambia. En el móvil, en esta hoja, esa fila ocupa ahora dos líneas, como se ve en la foto, y sigue cabiendo sin scroll. En la última pantalla de la bienvenida cabe en una.</p>
   </section>
 
   <section class="pieza">

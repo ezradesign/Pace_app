@@ -11,7 +11,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.name':                  'PACE completo',
     'premium.part':                  'Es parte de PACE completo.',
     'premium.locked.aria':           'Cerrada · es parte de PACE completo',
-    'premium.inc.routines':          'Las rutinas más hondas',
+    'premium.inc.routines':          'Las rutinas más profundas',
     'premium.inc.routines.d':        'Respira, Mueve, Estira',
     'premium.inc.custom':            'Tus propias rutinas',
     'premium.inc.custom.d':          'con el catálogo',
