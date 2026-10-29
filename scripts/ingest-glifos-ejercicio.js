@@ -113,6 +113,14 @@ const ACLARADO = { 'hueco-abdominal': 1.64, 'elevacion-de-puntas': 1.14 };
    La mancha es un TINTE claro sobre blanco; el trazo es oscuro y solo un poco
    calido. Con un suelo de luminancia se separan sin tocar el dibujo. */
 const ROJO_LUM = numArg('--rojo-lum', 150);
+/* EN ESTOS EL RAYADO BAJO LA MANCHA ROJA SE QUEDA, como con `--con-rojo`. En el arte de antes ese
+   rayado es oscuro, pasa el suelo de arriba y deja la zona sombreada de músculo que lleva casi todo
+   el set (el muslo de «Cuádriceps en pared», el glúteo de «Sentadilla a silla»). En los de Genspark
+   es más claro: el blanqueo se llevaba entre el 7 % y el 20 % de su tinta y salían más lavados que
+   el resto (Ez, 29 oct. 2026: «que los sombreados coincidan»). Medido sobre lo que se pinta, el
+   sombreado de Bisagra, Piernas elevadas y Remo pasa del percentil 13-36 al 55-62 de los 47
+   muñecos enteros. El tinte de la mancha queda por encima de `PISO` y no se pinta. */
+const CON_ROJO = new Set(['bisagra-de-cadera', 'desliza-el-talon', 'gemelo-en-pared', 'piernas-elevadas-sentado', 'remo-con-banda']);
 /* LA MINIATURA TIENE SU PROPIO ARCHIVO (s170). A 30 px la mascara grande no
    funciona y no es cuestion de ajustes: una linea de un pixel promediada 25
    veces se vuelve gris, y el encargo ya lo avisaba («tiene que leerse a 30:
@@ -284,8 +292,9 @@ const PISO = RECORTE > 0 ? RECORTE : SUELO;
        MAS OSCURO del archivo (46 contra 85 del trazo), o sea que ANCLABA la
        normalizacion y hundia el dibujo entero a un 60 % de su contraste. */
     const gris = Buffer.alloc(LADO * LADO);
+    const blanquear = SIN_ROJO && !CON_ROJO.has(p.s);
     for (let i = 0, j = 0; j < gris.length; i += CH, j++) {
-      gris[j] = SIN_ROJO && esRojo(rgb, i) ? 255 : Math.round(lum(rgb, i));
+      gris[j] = blanquear && esRojo(rgb, i) ? 255 : Math.round(lum(rgb, i));
     }
 
     /* Lmin del dibujo: sin normalizar por el pixel MAS OSCURO, un trazo palido
