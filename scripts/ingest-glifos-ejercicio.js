@@ -100,8 +100,21 @@ const numArg = (nombre, porDefecto) => {
 const RECORTE = numArg('--recorte', 220);
 const GAMMA = numArg('--gamma', 3.0);
 const SIN_ROJO = !args.includes('--con-rojo');
-/* Curva de más por dibujo, para los que llegan con más rayado que el resto (ver el paso 3). */
-const ACLARADO = { 'hueco-abdominal': 1.64, 'elevacion-de-puntas': 1.14 };
+/* Curva de más por dibujo, para los que llegan con más rayado que el resto (ver el paso 3).
+   Paloma, Flexor de cadera y Sentadilla a silla se veían más sombreados que el set y Ez pidió
+   aclararlos (29 oct.). Casi todo venía del encogido por un pelo (ver `HOLGURA`); lo que queda
+   lo ajusta cada `k` hasta la mediana del sombreado de `medir-trazo.js` sin bajar la línea:
+   Paloma p51 con la curva solo en el rayado (la entera la hundía a p6), Flexor p41 con la
+   línea en p33 y Sentadilla p48 con la línea en p41. */
+const ACLARADO = { 'hueco-abdominal': 1.64, 'elevacion-de-puntas': 1.14,
+  paloma: { suave: 1.4 }, 'flexor-de-cadera': 1.3, 'sentadilla-a-silla': 1.1 };
+/* `--aclarado slug=k,slug=k` prueba curvas sin tocar la tabla; la que se adopta se escribe en ella.
+   `slug=s2` prueba la curva solo sobre la tinta suave (se escribe `{ suave: 2 }`). */
+const iAclarado = args.indexOf('--aclarado');
+if (iAclarado !== -1) for (const par of (args[iAclarado + 1] || '').split(',')) {
+  const [s, k] = par.split('='); const suave = /^s/.test(k || ''), n = suave ? +k.slice(1) : +k;
+  if (s && isFinite(n)) ACLARADO[s] = suave ? { suave: n } : n;
+}
 /* SUELO DE LUMINANCIA DEL ROJO (s170, y nace de un defecto que el usuario vio
    antes que yo). El detector original era solo de TONO —`r - max(g,b) > 18`— y
    la tinta de estos grabados es SEPIA, o sea calida: medido, entre el 39 % y el
@@ -113,6 +126,11 @@ const ACLARADO = { 'hueco-abdominal': 1.64, 'elevacion-de-puntas': 1.14 };
    La mancha es un TINTE claro sobre blanco; el trazo es oscuro y solo un poco
    calido. Con un suelo de luminancia se separan sin tocar el dibujo. */
 const ROJO_LUM = numArg('--rojo-lum', 150);
+/* LOS DE GENSPARK TAMBIÉN BLANQUEAN EL ROJO. Una tabla conservó la mancha en los cinco primeros
+   para que no salieran lavados, y la máscara la pintaba como una nube gris sobre el músculo. Ez la
+   vio de más («te has pasado con el sombreado, sobre todo en Piernas elevadas sentado») y, entre el
+   blanqueo, el rayado sin la mancha, media mancha y la mancha entera, eligió el blanqueo (29 oct.).
+   El set sombrea solo con rayas; lo que mide cada pieza contra él, `scripts/glifos/medir-trazo.js`. */
 /* LA MINIATURA TIENE SU PROPIO ARCHIVO (s170). A 30 px la mascara grande no
    funciona y no es cuestion de ajustes: una linea de un pixel promediada 25
    veces se vuelve gris, y el encargo ya lo avisaba («tiene que leerse a 30:
@@ -311,7 +329,14 @@ const PISO = RECORTE > 0 ? RECORTE : SUELO;
        rayado suave y apenas toca el contorno; cada `k` deja su dibujo en la mediana de
        «rayado por contorno» de los 57 integrados (tinta suave / tinta fuerte = 0,52). */
     const aclarado = ACLARADO[p.s];
-    if (aclarado) for (let i = 0; i < alfa.length; i++) alfa[i] = Math.round(Math.pow(alfa[i] / 255, aclarado) * 255);
+    if (typeof aclarado === 'number') for (let i = 0; i < alfa.length; i++) alfa[i] = Math.round(Math.pow(alfa[i] / 255, aclarado) * 255);
+    /* SOLO EL RAYADO: cuando la mancha es el sombreado y la línea ya está en su sitio, la curva
+       entera no sirve, porque pasa tinta fuerte a suave y el sombreado medido no baja mientras la
+       línea se hunde (medido el 29 oct.). Esta curva baja solo lo que está por debajo de la mitad
+       y deja el contorno como venía; en 128 empalma sin salto. */
+    else if (aclarado && aclarado.suave) for (let i = 0; i < alfa.length; i++) {
+      if (alfa[i] <= 128) alfa[i] = Math.round(Math.pow(alfa[i] / 128, aclarado.suave) * 128);
+    }
     /* AJUSTE FINO SOBRE EL ALFA YA MONTADO (s170). El recorte de arriba mide la
        tinta con `RECORTE`, pero la mascara incluye todo lo que este por debajo
        de `SUELO` — y entre los dos umbrales hay material tenue que la gamma
@@ -331,7 +356,13 @@ const PISO = RECORTE > 0 ? RECORTE : SUELO;
     const objetivo = RADIO * (LADO / 2);
     const rAlfa = radioAlfa(alfa);
     let alfaFinal = alfa;
-    if (rAlfa > objetivo + 0.5) {
+    /* NO SE REMUESTREA POR UN PELO. Encoger al 99,8 % mueve cada raya un tercio de píxel y el
+       remuestreo la reparte entre dos: el rayado fino se vuelve un velo gris. Medido el 29 oct. en
+       Paloma, Flexor de cadera y Sentadilla a silla: el encogido les doblaba la tinta suave y los
+       sacaba al p96-p98 del sombreado del set. Lo que sobra hasta `HOLGURA` no se ve en el círculo
+       y el guard de abajo lo admite, así que solo se encoge lo que pasa de ahí. */
+    const HOLGURA = 1.5;
+    if (rAlfa > objetivo + HOLGURA) {
       const escala = objetivo / rAlfa;
       const nuevo = Math.max(8, Math.round(LADO * escala));
       const off = Math.round((LADO - nuevo) / 2);
@@ -354,7 +385,7 @@ const PISO = RECORTE > 0 ? RECORTE : SUELO;
        reducida al 17 % de su tamano, y todo paso silencioso hasta que lo mire
        pieza a pieza. Si vuelve a fallar, la ingesta se para y lo dice. */
     const rFinal = radioAlfa(alfaFinal);
-    if (rFinal > objetivo + 1.5) {
+    if (rFinal > objetivo + HOLGURA) {
       console.error('  ' + p.s + ': tras el ajuste el radio sigue en ' + rFinal.toFixed(1) +
         ' (maximo ' + objetivo.toFixed(1) + '). No se escribe nada.');
       process.exit(1);

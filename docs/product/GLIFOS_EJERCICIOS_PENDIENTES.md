@@ -8,8 +8,8 @@
 | | |
 |---|---|
 | **Identidades que la app necesita** | **68** |
-| **Con arte propio ya ingestado** | **58** |
-| **Pendientes** | **10** |
+| **Con arte propio ya ingestado** | **66** |
+| **Pendientes** | **2** |
 | Con arte que la app ya no pide (su rutina salió de la lista) | Puente a una pierna |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
@@ -20,13 +20,13 @@ rediseño rehace las 68 piezas, y `falta` solo dice cuáles además están calva
 El **nombre de archivo** es el que espera la ingesta. Si no coincide, la pieza
 no se empareja y el script lo dice en vez de adivinar.
 
-## Empuje y tracción — 1 pendiente de 5
+## Empuje y tracción — 0 pendientes de 5
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
 | **HECHO** | Flexiones inclinadas | `flexiones-inclinadas.png` | dibujado | Perfil inclinado con las manos en el borde de una **mesa**, cuerpo en línea recta, codos cerca del tronco. *(«Contra el escritorio, codos cerca del cuerpo.»)* |
 | **HECHO** | Fondos en silla | `fondos-en-silla.png` | dibujado | Perfil de espaldas a la **silla**, manos en el asiento, codos hacia atrás, cadera bajando. *(«Baja con control, codos atrás.»)* |
-| — | Pica en escritorio | `pica-en-escritorio.png` | falta | «V» invertida: manos en el borde de la mesa, cadera arriba, cabeza entre los brazos. *(«Cadera arriba, cabeza entre los brazos.»)* |
+| **HECHO** | Pica en escritorio | `pica-en-escritorio.png` | falta | «V» invertida: manos en el borde de la mesa, cadera arriba, cabeza entre los brazos. *(«Cadera arriba, cabeza entre los brazos.»)* |
 | **HECHO** | Suspensión activa | `suspension-activa.png` | falta | La misma barra, pero **hombros abajo y atrás** y el pecho un poco alto: la diferencia con la pasiva tiene que verse. *(«Hombros abajo y atrás, codos rectos.»)* |
 | **HECHO** | Suspensión pasiva | `suspension-pasiva.png` | dibujado | Figura colgando de una **barra horizontal**, cuerpo largo y relajado, hombros altos. *(«Cuelga relajado. Respira.»)* |
 
@@ -116,22 +116,22 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Reset respiración | `reset-respiracion.png` | dibujado | Torso de frente con **dos arcos concéntricos** en el pecho: aire que entra. |
 | **HECHO** | Rezo invertido | `rezo-invertido.png` | falta | Dos manos con los **dorsos en contacto** frente al pecho, dedos hacia abajo. |
 
-## Sin grupo en el encargo — 7 pendientes de 12
+## Sin grupo en el encargo — 0 pendientes de 12
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
-| — | Bisagra de cadera | `bisagra-de-cadera.png` | ? | — |
+| **HECHO** | Bisagra de cadera | `bisagra-de-cadera.png` | ? | — |
 | **HECHO** | Círculos de brazos | `circulos-de-brazos.png` | ? | — |
-| — | Desliza el talón | `desliza-el-talon.png` | ? | — |
-| — | Gemelo en pared | `gemelo-en-pared.png` | ? | — |
+| **HECHO** | Desliza el talón | `desliza-el-talon.png` | ? | — |
+| **HECHO** | Gemelo en pared | `gemelo-en-pared.png` | ? | — |
 | **HECHO** | Inclinación de cuello | `inclinacion-de-cuello.png` | ? | — |
-| — | Inclinación de tronco | `inclinacion-de-tronco.png` | ? | — |
+| **HECHO** | Inclinación de tronco | `inclinacion-de-tronco.png` | ? | — |
 | **HECHO** | Palmas en la mesa | `palmas-en-la-mesa.png` | ? | — |
 | **HECHO** | Piernas elevadas sentado | `piernas-elevadas-sentado.png` | ? | — |
-| — | Remo con banda | `remo-con-banda.png` | ? | — |
-| — | Remo con tu mano | `remo-con-tu-mano.png` | ? | — |
+| **HECHO** | Remo con banda | `remo-con-banda.png` | ? | — |
+| **HECHO** | Remo con tu mano | `remo-con-tu-mano.png` | ? | — |
 | **HECHO** | Respirar a cuatro apoyos | `respirar-a-cuatro-apoyos.png` | ? | — |
-| — | Rotación torácica de pie | `rotacion-toracica-de-pie.png` | ? | — |
+| **HECHO** | Rotación torácica de pie | `rotacion-toracica-de-pie.png` | ? | — |
 
 ---
 
