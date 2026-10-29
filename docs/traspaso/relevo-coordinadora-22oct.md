@@ -8,6 +8,22 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 29 oct., ~10:00: sigue la cuenta de 5iWBf… (5 h al 13 %, se repone a las 14:50; la semana al 62 %)
+
+**Si llegas de la otra cuenta, empieza aquí; manda sobre los bloques de abajo.**
+1. **Ez: «Sí, sin esperar»**: la versión de prueba sube en cuanto estén los 16 dibujos, el logo y B4 y C3; el grupo 2 llega
+   como actualizaciones durante los 14 días (DECISIONES_PRODUCTO, ROADMAP 11 y STATE, al día).
+2. **La sesión del cobro se quedó sin uso a las ~21:25, sin commit pero con todo hecho**: A1-A7 arreglados y provocados en
+   rojo antes, sus 24 pruebas de servidor y las de la app en verde, `verify` en verde y su LEEME
+   (`docs/traspaso/archivos/cobro-a-prueba/LEEME.md` en la rama). La coordinadora lo guardó tal cual: **74d0bc2 en
+   `claude/magical-dhawan-987161`, subido**. Su suite entera corre desde las ~10:00 en el puerto 8814 (salida en
+   `suite-cobro.txt`, en el scratchpad de esta sesión). Con ella en verde, se le pide a Ez el «júntalo».
+3. **Lo que trae para Ez** (su LEEME, «Lo que necesito de Ez»): `PACE_ENLACES_STRIPE` en Cloudflare con los `plink_` de
+   los enlaces, porque tras juntar, sin él, la web no da códigos (paso 4 nuevo de `docs/launch/cobro-web.md`); y una
+   frase de `privacy.html` sobre la marca de baja, que decide Ez. Con A7, una compra de prueba da un código de 3 días.
+4. **Al juntar el cobro**: la versión en un commit aparte, la línea de CHANGELOG y la fila de DECISIONES que propone su
+   LEEME, y la fila del cobro del 26 oct. al día. Ojo: `app/state-core.jsx` queda en 500 líneas justas.
+
 ## AL RELEVO (28 oct., ~21:15; 5iWBf… con las 5 h al 83 %, se repone a la 01:10; la semana al 58 %)
 
 **Si llegas de la otra cuenta (EcLj6…, que se repone a las 22:40), empieza aquí; el detalle, en el bloque de abajo.** Ez

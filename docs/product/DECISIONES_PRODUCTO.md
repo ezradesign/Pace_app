@@ -51,6 +51,11 @@ del iPhone, sus 16 dibujos y el logo nuevo, y la sube a Google Play y a TestFlig
 días de Google empiezan cuando hay 12 testers apuntados, tengan la versión que tengan, así que esperar retrasa v1 lo
 mismo que la espera. Mientras, Stripe para la web.
 
+**Cambia la noche del 28 oct.** Con la lista única para lanzar en tres grupos (`docs/audits/chatgpt-28oct/LEEME.md`), se le
+preguntó a Ez si la versión de prueba subía sin esperar al grupo 2, que llegaría como actualizaciones. Ez: **«Sí, sin
+esperar»**. Sube en cuanto estén los 16 dibujos, el logo y B4 y C3, lo de seguridad del grupo 1 en las apps: los
+ejercicios que no dicen dónde ni con qué colocarse («silla sin ruedas», la banda).
+
 ## El aviso con el móvil bloqueado: N4 A · N4b A (Ez, 27 oct. 2026)
 
 Sobre la maqueta https://claude.ai/artifact/7UeHuMypeom7TinrAXoKpL (`docs/proposals/aviso-bloqueado-27oct.html`), por

@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.185.0 · actualizada el 28 de octubre a las 21:15 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.185.0 · actualizada el 29 de octubre a las 10:01 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -136,9 +136,10 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           llave que firma las ventas y Cloudflare. Ahora, en el modo de prueba de Stripe: el aviso de pago (el paso marcado
           «Ahora» de abajo), los enlaces de prueba y una compra de mentira con la tarjeta de prueba. Nadie paga nada de verdad
           hasta que hables con el gestor y estén los arreglos del cobro.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha el cobro · lo demás espera tu sí</span>
+      <li class="paso marcha"><span class="estado">El cobro, hecho en su rama · comprobándolo entero</span>
         <span class="t">Los arreglos de las ocho revisiones de ChatGPT</span>
-        <span class="c"><span class="quien">Yo, con sesiones aparte.</span> La del cobro ya está en marcha (la arrancaste tú): que un
+        <span class="c"><span class="quien">Yo, con sesiones aparte.</span> La del cobro ya está hecha en su rama y guardada; paso
+          todas las pruebas y te pido el «júntalo». Arregla esto: que un
           aviso de Stripe repetido o desordenado no pise una compra, la fecha real de la prueba, no decir «terminada» sin una
           baja, que una renovación no tape la de por vida, la importación de tus datos y comprobar qué se ha comprado. Cuando
           acabe, otra para Mueve, Estira y «Tus rutinas»: el tiempo que corre mientras esperas a «›», «Auto» que avanza en
@@ -153,13 +154,14 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           realidad la deja para luego, «Llevas 45 minutos sentado», que PACE no lo sabe, o «El cuerpo vuelve a sentirse tuyo»,
           que decide por ti cómo estás) va junto en una página de antes y después: es rápido y puede entrar en la versión de
           prueba.</span></li>
-      <li class="paso luego"><span class="estado">Cuando esté todo · lo decidiste el 28 de octubre</span>
-        <span class="t">La versión de prueba definitiva, a Google y al iPhone a la vez</span>
-        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> Cuando esté todo junto, bajo el archivo para Play, subo
-          la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días de los testers empiezan entonces. Por si
-          acaso, la 0.184.0 ya está en <code>subidas-play\</code>. Falta:
+      <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
+        <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
+        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> En cuanto esté lo de abajo, bajo el archivo para Play, subo
+          la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días de los testers empiezan entonces, y lo que
+          falte para que se entienda bien llega como actualizaciones durante esos días. Por si acaso, la 0.184.0 ya está en
+          <code>subidas-play\</code>. Falta:
           <ol>
-            <li>Los arreglos de las rutinas sin «Auto», con las seis colocaciones (el paso de arriba).</li>
+            <li>Que los ejercicios digan dónde y con qué colocarse (la «silla sin ruedas», la banda).</li>
             <li>Tus 16 dibujos, en <code>Pace_app\dibujos-22oct</code> (<a href="https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT">la página</a>).</li>
             <li>El logo en PNG con fondo transparente: dentro de la app aún se lee «FVFN».</li>
           </ol></span></li>
@@ -740,6 +742,17 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <code>https://pacegrass.app/gracias/?sesion={CHECKOUT_SESSION_ID}</code>, tal cual. Y el <b>portal del cliente</b>
           (Configuración › Facturación › Portal del cliente), activado. Pásame los tres enlaces: no son secretos. Los de prueba
           no van a la app; los reales, sí.</span></li>
+      <li class="paso luego"><span class="estado">Cuando juntemos el cobro · tú, unos 5 minutos</span>
+        <span class="t">Los números de los enlaces de pago, en Cloudflare</span>
+        <span class="c"><span class="quien">Tú.</span> Con el arreglo del cobro, la web solo da códigos a las compras de los enlaces de
+          PACE, así que necesita sus números.
+          <ol>
+            <li>En Stripe, abre <b>Enlaces de pago</b> y entra en cada enlace de PACE (los de prueba y los de verdad). En la barra de
+              direcciones sale algo como <code>…/payment-links/plink_1Q…</code>: copia lo que empieza por <code>plink_</code>.</li>
+            <li>En Cloudflare › el proyecto de pacegrass.app › <b>Configuración › Variables y secretos › Añadir</b>: tipo «Texto»,
+              nombre <code>PACE_ENLACES_STRIPE</code>, y de valor los números separados por comas.</li>
+            <li>Guarda y, en <b>Implementaciones</b>, <b>Reintentar implementación</b>.</li>
+          </ol></span></li>
       <li class="paso luego"><span class="estado">Después · tú y yo</span>
         <span class="t">Una compra de mentira</span>
         <span class="c"><span class="quien">Tú compras; yo miro.</span> Abre el enlace de prueba desde Stripe y paga con la tarjeta de
@@ -833,7 +846,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Antes de la versión de prueba · te lo enseño antes</span>
         <b>Seis ejercicios que no enseñan cómo colocarse</b><span>Si un ejercicio llega justo después de un descanso, o es el primero y va con reloj, la pantalla no dice dónde van los pies o las manos, aunque esté escrito. Al «Remo con banda» ya se lo arreglé; quedan seis, entre ellos el primero de Core silencioso, que pide una silla sin ruedas. Va con los arreglos de las rutinas.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera que la subas en Play Console</span>
-        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Desde la 0.185.0 ya está todo el código; faltan los arreglos de las rutinas sin «Auto», tus dibujos y el logo. Entonces la subes a Play y a TestFlight a la vez, antes de invitar a nadie.</span></div></li>
+        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): en cuanto estén tus dibujos, el logo y que los ejercicios digan dónde colocarse. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">12 · Hecho (0.185.0, 28 oct.)</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">Antes de cobrar · lo hago yo, con tu sí</span>

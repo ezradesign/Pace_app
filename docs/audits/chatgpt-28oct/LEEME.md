@@ -14,9 +14,9 @@ basta para que algo bloquee v1: cuenta qué daño evita o qué recorrido impresc
 | **3 · Mejora después de lanzar** | V1 «Solo pausas» y V2-V5; U4 (la carta dentro de la prueba de 7 días); el resto de la oferta de /premium; P3, P4, P7; Q2, Q4, Q5, Q7; C2; R1, R5; y el calendario de verdad (CAL-1, CAL-3, CAL-5, con el llavero del punto 13) | Después de v1, con lo que digan los testers y las primeras compras |
 
 **Por qué este reparto**: el grupo 1 evita daño o promesas falsas; el 2 es lo que nota alguien nuevo al usar PACE o al
-volver; el 3 son ideas que conviene validar con gente real antes de construir. La versión de prueba puede subir en cuanto
-estén los dibujos, el logo y lo que falle de verdad del grupo 1 en las apps (B4 y C3): así empiezan los 14 días, y el
-grupo 2 llega como actualizaciones durante ese tiempo.
+volver; el 3 son ideas que conviene validar con gente real antes de construir. **Decidido por Ez (28 oct., noche: «Sí,
+sin esperar»)**: la versión de prueba sube en cuanto estén los dibujos, el logo y lo que falle de verdad del grupo 1 en
+las apps (B4 y C3); así empiezan los 14 días, y el grupo 2 llega como actualizaciones durante ese tiempo.
 
 **Decisión pendiente de Ez, el calendario en v1**: (a) entra en PACE completo solo donde es fiable, hoy Android y la web
 con PACE abierto, diciendo sus límites; o (b) se queda como beta, sin venderlo como motivo para pagar, hasta el llavero.
