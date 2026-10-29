@@ -18327,14 +18327,17 @@ function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, t
 
 }
 
-function Card(_ref2) {let { children, onClick, accent, padded = true, style = {} } = _ref2;
+
+
+function Card(_ref2) {let { children, onClick, accent, padded = true, style = {}, hover = false } = _ref2;
+  const vivo = !!(onClick || hover);
   const base = {
     background: 'var(--paper)',
     border: '1px solid var(--line)',
     borderRadius: 'var(--r-md)',
     padding: padded ? 'var(--s-5)' : 0,
     transition: 'all 220ms var(--ease)',
-    cursor: onClick ? 'pointer' : 'default',
+    cursor: vivo ? 'pointer' : 'default',
     position: 'relative',
     ...style
   };
@@ -18342,12 +18345,12 @@ function Card(_ref2) {let { children, onClick, accent, padded = true, style = {}
     React.createElement("div", {
       onClick: onClick,
       style: base,
-      onMouseEnter: onClick ? (e) => {
+      onMouseEnter: vivo ? (e) => {
         e.currentTarget.style.borderColor = accent || 'var(--ink-2)';
         e.currentTarget.style.transform = 'translateY(-1px)';
         e.currentTarget.style.boxShadow = 'var(--sh-soft)';
       } : undefined,
-      onMouseLeave: onClick ? (e) => {
+      onMouseLeave: vivo ? (e) => {
         e.currentTarget.style.borderColor = 'var(--line)';
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'none';
@@ -34846,6 +34849,10 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
 
 
+
+
+
+
 function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accent = 'var(--move)' } = _ref2;
   const { t, tn } = useT();
   const nPasos = Array.isArray(routine.steps) ? routine.steps.length : 0;
@@ -34856,9 +34863,11 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
 
   const minutos = typeof customMinutos === 'function' && nPasos ? customMinutos(routine.steps) : routine.min;
   return (
-    React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, onClick: onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
+    React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, hover: true, padded: false,
+      style: { padding: '16px 18px', position: 'relative', '--tone': locked ? 'var(--premium)' : accent } },
     !locked &&
     React.createElement("button", {
+      type: "button",
       onClick: (e) => {e.stopPropagation();onEdit();},
       title: t('custom.card.edit'),
       "aria-label": t('custom.card.edit'),
@@ -34874,7 +34883,10 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
     React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' } },
     React.createElement(Tag, { color: accent }, t('custom.tag'))
     ),
-    React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } }, routine.name),
+    React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } },
+    React.createElement("button", { type: "button", className: "pace-lib-hit", "data-pace-custom-empezar": true, onClick: onClick,
+      title: locked ? t('premium.locked.aria') : undefined }, routine.name)
+    ),
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, stepsLabel),
     React.createElement("div", { style: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -34918,7 +34930,8 @@ const customRoutinesStyles = {
     color: 'var(--ink-3)',
     background: 'transparent',
     border: '1px solid transparent',
-    transition: 'all 160ms'
+    transition: 'all 160ms',
+    zIndex: 1
   }
 };
 

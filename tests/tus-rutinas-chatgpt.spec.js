@@ -134,3 +134,27 @@ test('R2 y R3 · la tarjeta dice «sentado o de pie» y no suma las series de ej
   expect(await textoTarjeta(page, 'move.neck.3', '.pace-lib-pie'), 'R3: una vez cada uno, sin línea').toBeNull();
   expect(errores).toEqual([]);
 });
+
+/* -------------------------------------------------------------- U2 · con el teclado */
+/* La tarjeta de una rutina propia era un `div` con `onClick`: con el teclado se llegaba al
+   lápiz, pero no se podía empezar. */
+test('U2 · una rutina propia se empieza con el teclado, y el lápiz va aparte', async ({ page, context }) => {
+  await sembrar(context, { customRoutines: [propia('custom.1', 'La de siempre', [['Plancha', 40]])] });
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Mueve' }).first().click();
+  const biblio = page.locator('.pace-lib').filter({ visible: true }).first();
+  await biblio.getByText(/^Tus rutinas/).filter({ visible: true }).first().click();
+  const empezar = biblio.getByRole('button', { name: 'La de siempre', exact: true });
+  await expect(empezar, 'la tarjeta no tiene un botón para empezar').toHaveCount(1);
+  await empezar.focus();
+  await page.keyboard.press('Enter');
+  await expect(overlaySuperior(page)).toContainText('Antes de empezar');
+  await page.keyboard.press('Escape');
+
+  /* El lápiz abre el constructor, no la rutina. */
+  await biblio.getByRole('button', { name: 'Editar' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(overlaySuperior(page)).toContainText('Añadir ejercicio');
+  expect(errores).toEqual([]);
+});

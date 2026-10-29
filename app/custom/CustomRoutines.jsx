@@ -141,7 +141,11 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
 }
 
 /* Card de rutina propia — gemela visual de RoutineCard (que no se toca:
-   es parte del mecanismo de gating) con lápiz de edición añadido. */
+   es parte del mecanismo de gating) con lápiz de edición añadido.
+   SE EMPIEZA CON UN BOTÓN DE VERDAD (revisión de ChatGPT del 28 oct., U2): era un `div` con
+   `onClick` y con el teclado solo se llegaba al lápiz. Como en el catálogo, el encabezado lleva
+   dentro un botón que cubre la tarjeta con su ::after (`.pace-lib-hit`), y el lápiz va encima,
+   aparte: la tarjeta no es un botón gigante, que borraría el encabezado y anidaría botones. */
 function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--move)' }) {
   const { t, tn } = useT();
   const nPasos = Array.isArray(routine.steps) ? routine.steps.length : 0;
@@ -152,9 +156,11 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
      guardado: el de antes no contaba los lados ni las colocaciones. */
   const minutos = typeof customMinutos === 'function' && nPasos ? customMinutos(routine.steps) : routine.min;
   return (
-    <Card accent={locked ? 'var(--premium)' : accent} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={locked ? 'var(--premium)' : accent} hover padded={false}
+      style={{ padding: '16px 18px', position: 'relative', '--tone': locked ? 'var(--premium)' : accent }}>
       {!locked && (
         <button
+          type="button"
           onClick={(e) => { e.stopPropagation(); onEdit(); }}
           title={t('custom.card.edit')}
           aria-label={t('custom.card.edit')}
@@ -170,7 +176,10 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
         <Tag color={accent}>{t('custom.tag')}</Tag>
       </div>
-      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
+      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>
+        <button type="button" className="pace-lib-hit" data-pace-custom-empezar onClick={onClick}
+          title={locked ? t('premium.locked.aria') : undefined}>{routine.name}</button>
+      </h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{stepsLabel}</p>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -215,6 +224,7 @@ const customRoutinesStyles = {
     background: 'transparent',
     border: '1px solid transparent',
     transition: 'all 160ms',
+    zIndex: 1,   // encima del ::after del botón que cubre la tarjeta
   },
 };
 
