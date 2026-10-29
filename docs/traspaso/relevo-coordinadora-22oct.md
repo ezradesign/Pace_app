@@ -20,9 +20,20 @@ limpias en sus worktrees de `.claude/worktrees/`.
    de fin de Foco (9BKgT…).
 2. **Comprobado**: `origin/claude/elegant-pascal-d54e40` tiene el «WIP:» (b121db1c). El CI de 0ed18787 (main): Android, iOS, `verify` y
    `e2e-safari` en verde; los dos trozos de `e2e`, en marcha a las 17:30. Estos docs se suben cuando acabe, para no cancelarlo.
-3. **Espera a Ez**: el «móntalo» de la tercera vuelta del runner y el sí a los cinco dibujos, con la pregunta del Gemelo en
-   pared. Con el sí, sesión nueva con `cwd` en `.claude/worktrees/elegant-pascal-d54e40` (lo que le falta, en el mensaje del
-   commit «WIP:»). Con el «júntalo», los dos retoques del punto 1 del bloque de las 13:15 y lo que dice su punto 2.
+3. **Ez (~17:40): «Monta el runner + dibujos nuevos te has pasado con el sombreado sobre todo en piernas elevadas sentado +
+   tienen que verse todos los glifos bien homogéneos + te he metido más glifos en su carpeta»**. «Su carpeta» es
+   `C:\Users\ezrav\Desktop\Glifos`, no `para-revisar`. Dos sesiones de esta cuenta, cada una con `cwd` en su worktree:
+   - `runner-vuelta3` (`local_83d8567d-129f-445c-98ad-c1c3ed0aeb82`, suite en el 8808): monta la tercera vuelta en todas
+     las rutinas, quita ya la línea «Al reanudar, 3, 2, 1…» (el retoque de esta rama) y hace la página de fotos.
+   - `dibujos-homogeneos` (`local_f64d9ace-334d-44d3-8287-b33cc0f7d8b1`, suite en el 8810): baja el sombreado de los cinco
+     hacia la mediana del set, hace una tira con todos los glifos y mete cuatro nuevos.
+   Revisados contra su paso los seis de `Desktop\Glifos` de las 17:29: valen el Gemelo «pierna proporcionada» (sustituye
+   al pequeño), 90/90, Rotación torácica de pie e Inclinación de tronco. No valen aún: Rodar hacia abajo (rodillas
+   bloqueadas, el paso pide «suaves», y lleva flecha) y Sentarse y levantarse del suelo (sin la mano al suelo ni la
+   flecha parece una zancada quieta); sus prompts ya lo piden en la página de dibujos (versión 6). Faltan ocho: esas
+   dos, Rana, Pica, Remo con tu mano, Gato-camello, Palmas en la mesa y Apretar glúteos.
+   Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
+   dibujos detrás del runner.
 
 ## AL RELEVO (29 oct., ~17:05; 5iWBf… con las 5 h al 88 %, se repone a las 20:30; la semana al 84 %)
 

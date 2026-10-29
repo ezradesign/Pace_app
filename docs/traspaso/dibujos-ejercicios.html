@@ -73,7 +73,7 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
     <ol class="como">
       <li>En tu chat de <b>Genspark</b>, con el muñeco ya validado, pulsa «Copiar el prompt» y pégalo. Solo dice la postura, la
         flecha y dónde va el naranja: la figura y el trazo ya los tiene.</li>
-      <li>Déjalo en <code>Pace_app\dibujos-22oct\para-revisar</code>, con el nombre que quieras, y dime «revisa los dibujos».
+      <li>Déjalo en <code>Escritorio\Glifos</code>, con el nombre que quieras, y dime «revisa los dibujos».
         Lo comparo con el paso del ejercicio y te digo si vale.</li>
       <li>Los que valen los paso yo a PNG con su nombre exacto, el de «Copiar el nombre», que es lo que los empareja con su
         ejercicio.</li>
@@ -136,10 +136,11 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       plato: 'A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. No arrow.' },
     { g: 'sin', nombre: 'Inclinación de tronco', mod: 'Estira · Columna', archivo: 'inclinacion-de-tronco.png', zona: 'the long side of the trunk that is stretched, from the armpit to the hip',
       que: 'De pie y de frente: el tronco se inclina a un lado y la mano baja por el muslo, sin girar.',
+      aviso: 'Revisada el 29: vale. Entra con los demás.',
       plato: 'A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure\'s right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. No twisting, no forward lean, no arrow.' },
     { g: 'sin', nombre: 'Gemelo en pared', mod: 'Estira · Cadena posterior', archivo: 'gemelo-en-pared.png', zona: 'the calf of the back leg',
       que: 'De perfil frente a la pared, con las manos en ella: la pierna de atrás estirada y su talón en el suelo.',
-      aviso: 'Revisado el 29: coincide con su paso.',
+      aviso: 'Revisado el 29: vale el de la pierna proporcionada, que sustituye al primero (salía pequeño).',
       plato: 'A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall.' },
     { g: 'sin', nombre: 'Pica en escritorio', mod: 'Mueve', archivo: 'pica-en-escritorio.png', zona: 'the shoulders and the back of the upper arms',
       que: '«V» invertida con las manos en el borde de la mesa. La mesa es obligatoria: sin ella se confunde con «Marcha del elefante».',
@@ -147,6 +148,7 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       plato: 'a pike push-up with the hands on a desk, in profile facing right. The desk stands at the height of the hips of a standing person: its top is one thin straight horizontal line, with two thin straight vertical legs down to the floor, so it clearly reads as a desk and never as a step or a box. The palms rest on the front edge of that desk top, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps back from the desk, hips the highest point, so the figure forms a clear upside-down V between the floor and the desk top.' },
     { g: 'sin', nombre: 'Rotación torácica de pie', mod: 'Estira · Espalda de pie', archivo: 'rotacion-toracica-de-pie.png', zona: 'the ribs and the middle of the back that turn',
       que: 'De pie y de frente, con los brazos cruzados sobre el pecho: el pecho gira hacia un lado y la cadera se queda quieta.',
+      aviso: 'Revisada el 29: vale. Entra con los demás.',
       plato: 'A standing thoracic rotation, seen from the FRONT. Feet hip-width apart, knees soft, the hips square to the front and still. Both arms are crossed over the chest, each hand resting on the opposite shoulder. The chest and shoulders are turned toward the figure\'s right while the pelvis stays facing forward. A short dotted curved arrow at chest height shows the turn. No bending forward, no twist at the hips.' },
 
     { g: 'nocasa', nombre: 'Piernas elevadas sentado', mod: 'Mueve · Core silencioso', archivo: 'piernas-elevadas-sentado.png', zona: 'the lower belly and the front of the hips',
@@ -158,14 +160,16 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       plato: 'Cat-camel on all fours, in profile facing right: hands under the shoulders, knees under the hips. The back is rounded up in a smooth even arch, the head gently dropped. A short dotted two-headed arc above the middle of the back shows the movement up and down. One figure only.' },
     { g: 'nocasa', nombre: '90/90', mod: 'Estira · Caderas', archivo: '90-90.png', zona: 'the outer hip and the buttock of the front leg',
       que: 'Sentado en el suelo con el tronco alto y las dos piernas dobladas en ángulo, una delante y otra al lado. Que no se confunda con «Paloma».',
+      aviso: 'Revisado el 29: vale. Entra con los demás.',
       plato: 'Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon).' },
     { g: 'nocasa', nombre: 'Sentarse y levantarse del suelo', mod: 'Estira', archivo: 'sentarse-y-levantarse-del-suelo.png', zona: 'the front of the thighs and the buttocks',
       que: 'A medio camino: una rodilla en el suelo, el otro pie delante y una mano bajando al suelo junto a la cadera.',
-      plato: 'Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front, one hand reaching down to the floor beside the hip, ready to sit to the side. A short dotted arrow from the hip points DOWN and to the side.' },
+      aviso: 'El del 29 no vale aún: sin la mano en el suelo ni la flecha se lee como una zancada quieta. Este prompt las pide.',
+      plato: 'Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front. The near hand is flat on the floor beside the back hip, the arm straight and taking weight, and the trunk leans toward that hand, about to sit down to the side; the other hand rests on the front knee. A short curved arrow beside the hip points DOWN and to the side, toward the floor where the buttocks will land. It must never look like a still kneeling lunge.' },
     { g: 'nocasa', nombre: 'Rodar hacia abajo', mod: 'Estira', archivo: 'rodar-hacia-abajo.png', zona: 'the back along the spine and the back of the thighs',
       que: 'De pie, la columna se enrolla hacia delante desde la cabeza, con los brazos colgando.',
-      aviso: 'Si ya tienes el tuyo, el que sí casa, guárdalo con este nombre y sáltate el prompt.',
-      plato: 'A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. No arrow.' },
+      aviso: 'El del 29 no vale aún: las rodillas van estiradas del todo (el paso pide «rodillas suaves») y lleva flecha. Este prompt lo corrige.',
+      plato: 'A standing roll down, in profile facing right. Feet hip-width apart, both knees clearly bent a little and never locked straight. The spine rounds forward from the head down to about halfway, so the whole back is one smooth even curve, not a flat back hinged at the hips; the head hangs, the arms hang loose toward the shins. Do not draw any arrow.' },
 
     { g: 'mal', nombre: 'Palmas en la mesa', mod: 'Estira · Muñecas', archivo: 'palmas-en-la-mesa.png', zona: 'the inner forearms', manos: true,
       que: 'Las dos palmas sobre la mesa, separadas y con los dedos hacia el cuerpo; las muñecas se doblan. Hoy son dos manos juntas que se confunden con «Rezo invertido».',
