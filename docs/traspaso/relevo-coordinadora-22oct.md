@@ -10,8 +10,7 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 
 ## AL RELEVO (29 oct., ~17:05; 5iWBf… con las 5 h al 88 %, se repone a las 20:30; la semana al 84 %)
 
-**Si llegas de la otra cuenta, empieza aquí; manda sobre lo de abajo.** `main` igual que origin (docs subidos, CI en verde
-hasta 11a60591; d27c5e27 en marcha). Nada a medias en las ramas del runner y de «Tus rutinas».
+**Si llegas de la otra cuenta, empieza aquí; manda sobre lo de abajo.** `main` igual que origin (solo docs desde 11a60591, en verde): mira el CI del último commit, que una subida encima cancela el anterior. Nada a medias en las ramas del runner y de «Tus rutinas».
 1. **Runner, tercera vuelta (Ez, ~16:50)**, contestada en cuatro preguntas: «Auto» bajo las palabras de los botones en el
    móvil y en el ordenador; en los móviles altos el círculo crece con tope («el círculo, con tope»); en el ordenador «menos
    aire entre los párrafos y círculo más grande, todo proporcionado, centrado, armónico y geométrico visual»; y «Colócate sin
@@ -26,7 +25,7 @@ hasta 11a60591; d27c5e27 en marcha). Nada a medias en las ramas del runner y de 
 2. **Dibujos**: la sesión `local_10cec9aa-0180-489b-928d-551180393ba3` (de esta cuenta, rama `claude/elegant-pascal-d54e40`)
    tiene los cinco metidos sin commit y su maqueta https://claude.ai/artifact/Q6LWNCb6KNFqexLTRabqoZ. Ez le pidió allí
    (~16:55) que el sombreado, el contorno y el tamaño del muñeco en el círculo casen con los demás («gemelo en pared se ve
-   muy pequeño el muñeco»); está en ello, con D-4 (palancas de la ingesta, nunca retocar `.webp`). Espera el sí de Ez.
+   muy pequeño el muñeco»): hecho en su página v4 con una tabla `CON_ROJO` en la ingesta (D-4), sin retocar `.webp`. El Gemelo sale a 2/3 por su postura en diagonal: recomienda meterlo así y pedir otro más recogido (prompt en su página; si Ez dice sí, va a la página de dibujos). **Al migrar (17:30) se le pidió un commit «WIP:» y push de su rama**: compruébalo con `git log origin/claude/elegant-pascal-d54e40`. Falta `verify`, la suite en el 8810 y su LEEME; para seguir, una sesión nueva con `cwd` en su worktree. Espera el sí de Ez.
 3. Lo que Ez puede adelantar fuera de Claude, por orden: Stripe en modo de prueba, el logo PNG transparente, los dibujos que
    faltan (Rana y Pica, repetir; nueve más), cita con el gestor, avisar a testers, el correo de Apple.
 
