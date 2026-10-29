@@ -117,6 +117,26 @@ function chequeaMaterial(ctx, sb, STR, listaCorta) {
   else ctx.ok('tus rutinas: lo que pide cada ejercicio casa con su texto y con el del catálogo');
 }
 
+/* Nombre y cue en los dos idiomas para cada ejercicio del registro (C5: «Zancada con apertura»
+   solo tenía las claves de su nombre de antes y en inglés salía en castellano). El español es
+   el propio registro; el inglés, `custom.ex.<nombre>.name|cue` en `content/custom.js`. */
+function chequeaIdiomas(ctx, sb, STR, listaCorta) {
+  var mal = [], n = 0;
+  var en = (STR && STR.en) || {};
+  Object.keys(sb.EXERCISE_REGISTRY).forEach(function (g) {
+    sb.EXERCISE_REGISTRY[g].items.forEach(function (it) {
+      n++;
+      if (!it.name || !String(it.cue || '').trim()) mal.push(it.name + ': sin nombre o cue en ES');
+      ['name', 'cue'].forEach(function (c) {
+        var v = en['custom.ex.' + it.name + '.' + c];
+        if (!v || !String(v).trim()) mal.push('custom.ex.' + it.name + '.' + c + ' (EN)');
+      });
+    });
+  });
+  if (mal.length) ctx.falla('tus rutinas: ' + mal.length + ' texto(s) de ejercicio sin traducir: ' + listaCorta(mal, 8));
+  else ctx.ok('tus rutinas: los ' + n + ' ejercicios del registro tienen nombre y cue en ES y EN');
+}
+
 function chequeaRutinas(ctx, STR, listaCorta) {
   var d = cargarDatos(ctx);
   d.errores.forEach(function (e) { ctx.falla('tus rutinas: no se pudo evaluar ' + e); });
@@ -125,6 +145,7 @@ function chequeaRutinas(ctx, STR, listaCorta) {
     return;
   }
   chequeaMaterial(ctx, d.sb, STR, listaCorta);
+  chequeaIdiomas(ctx, d.sb, STR, listaCorta);
 }
 
 var NO_CUBRE_RUTINAS = [

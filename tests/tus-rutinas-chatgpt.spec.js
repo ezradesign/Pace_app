@@ -64,3 +64,16 @@ for (const modulo of ['Estira', 'Mueve']) {
     expect(errores).toEqual([]);
   });
 }
+
+/* ---------------------------------------------------------------- C5 · en inglés */
+/* «Zancada con apertura» solo tenía sus claves con el nombre de antes («World's greatest
+   stretch»): en inglés, el constructor y la vista previa la decían en castellano. */
+test('C5 · en inglés, «Zancada con apertura» sale traducida en la vista previa', async ({ page, context }) => {
+  await sembrar(context, { lang: 'en', customRoutines: [propia('custom.1', 'Hips', [['Zancada con apertura', 30]])] });
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+  const preview = await abrirPropia(page, 'Hips', 'Move');
+  await expect(preview).toContainText("World's greatest stretch");
+  await expect(preview).not.toContainText('Zancada');
+  expect(errores).toEqual([]);
+});
