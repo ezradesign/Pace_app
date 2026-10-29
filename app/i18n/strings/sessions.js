@@ -202,6 +202,19 @@ Object.assign(window.PACE_STRINGS.es, {
     'custom.step.remove':              'Quitar',
     'custom.step.perSide':             '{s} s por lado',
     'custom.builder.needWork':         'Añade al menos un ejercicio: solo con descansos no hay rutina.',
+    // El borrador que espera (Ez, «U1 B», 29 oct.)
+    'custom.draft.seguir':             'Seguir con tu borrador',
+    'custom.draft.sigues':             'Sigues con tu borrador {cuando}.',
+    'custom.draft.sigues.edit':        'Sigues con tus cambios en «{name}».',
+    'custom.draft.cero':               'Empezar de cero',
+    'custom.draft.deshacer':           'Deshacer los cambios',
+    'custom.draft.cuando.hoy':         'de hoy, {h}',
+    'custom.draft.cuando.ayer':        'de ayer, {h}',
+    'custom.draft.cuando.dia':         'del {d}',
+    // Lo que no deja guardar, encima de Guardar (Ez, «C6 A», 29 oct.)
+    'custom.save.tope':                'Ya tienes {n} rutinas, el máximo. Borra una para guardar esta; tu borrador sigue aquí.',
+    'custom.save.borrada':             'Esta rutina se ha borrado en otra pestaña.',
+    'custom.save.comoNueva':           'Guardarla como nueva',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -382,4 +395,17 @@ Object.assign(window.PACE_STRINGS.en, {
     'custom.step.remove':              'Remove',
     'custom.step.perSide':             '{s} s per side',
     'custom.builder.needWork':         'Add at least one exercise: rests alone aren’t a routine.',
+    // The draft that waits (Ez, «U1 B», 29 Oct)
+    'custom.draft.seguir':             'Continue your draft',
+    'custom.draft.sigues':             'Back to your draft {cuando}.',
+    'custom.draft.sigues.edit':        'Back to your changes to “{name}”.',
+    'custom.draft.cero':               'Start over',
+    'custom.draft.deshacer':           'Undo the changes',
+    'custom.draft.cuando.hoy':         'from today, {h}',
+    'custom.draft.cuando.ayer':        'from yesterday, {h}',
+    'custom.draft.cuando.dia':         'from {d}',
+    // What stops a save, above Save (Ez, «C6 A», 29 Oct)
+    'custom.save.tope':                'You already have {n} routines, the maximum. Delete one to save this one; your draft stays here.',
+    'custom.save.borrada':             'This routine was deleted in another tab.',
+    'custom.save.comoNueva':           'Save it as new',
 });

@@ -42,7 +42,7 @@
 const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
 
 function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [pace] = usePace(); // mantiene la suscripcion reactiva: al canjear un
                             // código la seccion re-renderiza y el guard relee el store.
   // El acceso pasa por el guard central de entitlement, como el resto de
@@ -54,6 +54,9 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
+  /* LO QUE DEJASTE SIN GUARDAR va en el sitio de «Crear rutina» (Ez, «U1 B», 29 oct.), también con
+     diez rutinas: es la única puerta a ese borrador, y abre el constructor donde lo dejaste. */
+  const borrador = typeof getCustomDraft === 'function' && pace.customDraft ? getCustomDraft() : null;
 
   const invitar = () => paceAbrirPremium({ nombre: t('custom.section.title') });
   const openBuilder = (id) => {
@@ -108,7 +111,26 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
               onEdit={() => openBuilder(r.id)}
             />
           ))}
-          {!atLimit ? (
+          {borrador ? (
+            <button
+              type="button"
+              data-pace-custom-borrador
+              onClick={() => openBuilder(borrador.editId)}
+              style={customRoutinesStyles.createCard}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = accent; e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-2)'; }}
+            >
+              <span style={{ display: 'block', textAlign: 'center', padding: '8px 14px' }}>
+                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</span>
+                <span style={{ display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.draft.seguir')}</span>
+                <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
+                  {[borrador.name.trim(),
+                    borrador.steps.length === 1 ? t('custom.steps.one') : borrador.steps.length ? tn('custom.steps.many', { n: borrador.steps.length }) : '',
+                    customBorradorCuando(borrador.savedAt, tn, lang)].filter(Boolean).join(' · ')}
+                </span>
+              </span>
+            </button>
+          ) : !atLimit ? (
             <button
               type="button"
               data-pace-custom-crear
@@ -141,21 +163,26 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
 }
 
 /* Card de rutina propia — gemela visual de RoutineCard (que no se toca:
-   es parte del mecanismo de gating) con lápiz de edición añadido. */
+   es parte del mecanismo de gating) con lápiz de edición añadido.
+   SE EMPIEZA CON UN BOTÓN DE VERDAD (revisión de ChatGPT del 28 oct., U2): era un `div` con
+   `onClick` y con el teclado solo se llegaba al lápiz. Como en el catálogo, el encabezado lleva
+   dentro un botón que cubre la tarjeta con su ::after (`.pace-lib-hit`), y el lápiz va encima,
+   aparte: la tarjeta no es un botón gigante, que borraría el encabezado y anidaría botones. */
 function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--move)' }) {
   const { t, tn } = useT();
   const nPasos = Array.isArray(routine.steps) ? routine.steps.length : 0;
   const stepsLabel = nPasos === 1
     ? t('custom.steps.one')
     : tn('custom.steps.many', { n: nPasos });
-  /* Los minutos con los pasos por lados contados dos veces, como el constructor: el `min`
-     guardado antes de que se guiaran por lados se quedaba corto. */
-  const minutos = typeof customSegundos === 'function' && nPasos
-    ? Math.max(1, Math.ceil(customSegundos(routine.steps) / 60)) : routine.min;
+  /* Los mismos minutos que el constructor y la vista previa (`customMinutos`), no el `min`
+     guardado: el de antes no contaba los lados ni las colocaciones. */
+  const minutos = typeof customMinutos === 'function' && nPasos ? customMinutos(routine.steps) : routine.min;
   return (
-    <Card accent={locked ? 'var(--premium)' : accent} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={locked ? 'var(--premium)' : accent} hover padded={false}
+      style={{ padding: '16px 18px', position: 'relative', '--tone': locked ? 'var(--premium)' : accent }}>
       {!locked && (
         <button
+          type="button"
           onClick={(e) => { e.stopPropagation(); onEdit(); }}
           title={t('custom.card.edit')}
           aria-label={t('custom.card.edit')}
@@ -171,7 +198,10 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
         <Tag color={accent}>{t('custom.tag')}</Tag>
       </div>
-      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
+      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>
+        <button type="button" className="pace-lib-hit" data-pace-custom-empezar onClick={onClick}
+          title={locked ? t('premium.locked.aria') : undefined}>{routine.name}</button>
+      </h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{stepsLabel}</p>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -216,6 +246,7 @@ const customRoutinesStyles = {
     background: 'transparent',
     border: '1px solid transparent',
     transition: 'all 160ms',
+    zIndex: 1,   // encima del ::after del botón que cubre la tarjeta
   },
 };
 

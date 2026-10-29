@@ -192,6 +192,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Cossack squat.name':                   'Cossack squat',
   'custom.ex.Sentadilla lateral.cue':               'Weight to one side, other leg straight.',
   'custom.ex.Cossack squat.cue':                    'Weight to one side, other leg straight.',
+  'custom.ex.Zancada con apertura.name':            "World's greatest stretch",
+  'custom.ex.Zancada con apertura.cue':             'Lunge + hand to floor + rotation.',
   "custom.ex.World's greatest stretch.name":        "World's greatest stretch",
   "custom.ex.World's greatest stretch.cue":         'Lunge + hand to floor + rotation.',
 

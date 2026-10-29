@@ -134,14 +134,17 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
   );
 }
 
-function Card({ children, onClick, accent, padded = true, style = {} }) {
+/* `hover`: la tarjeta reacciona al ratón aunque el clic lo lleve un botón de dentro (la de
+   «Tus rutinas», que se empieza con el teclado: un `div` con `onClick` no se enfoca). */
+function Card({ children, onClick, accent, padded = true, style = {}, hover = false }) {
+  const vivo = !!(onClick || hover);
   const base = {
     background: 'var(--paper)',
     border: '1px solid var(--line)',
     borderRadius: 'var(--r-md)',
     padding: padded ? 'var(--s-5)' : 0,
     transition: 'all 220ms var(--ease)',
-    cursor: onClick ? 'pointer' : 'default',
+    cursor: vivo ? 'pointer' : 'default',
     position: 'relative',
     ...style,
   };
@@ -149,12 +152,12 @@ function Card({ children, onClick, accent, padded = true, style = {} }) {
     <div
       onClick={onClick}
       style={base}
-      onMouseEnter={onClick ? (e) => {
+      onMouseEnter={vivo ? (e) => {
         e.currentTarget.style.borderColor = accent || 'var(--ink-2)';
         e.currentTarget.style.transform = 'translateY(-1px)';
         e.currentTarget.style.boxShadow = 'var(--sh-soft)';
       } : undefined}
-      onMouseLeave={onClick ? (e) => {
+      onMouseLeave={vivo ? (e) => {
         e.currentTarget.style.borderColor = 'var(--line)';
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'none';

@@ -161,12 +161,27 @@ function libraryGlifos(rutina) {
    en Estira eso son dos rutinas con un ÚNICO paso de repeticiones entre cuatro
    y cinco (`move.neck.3`, `move.wrists`) — la tarjeta afirmaba «1 SERIES · 5
    REPS» de un movimiento de los cuatro. Una serie no es una serie.
-   Medido: 10 de 28 -> 8 de 28, y las 8 son de Mueve. */
+   Medido: 10 de 28 -> 8 de 28, y las 8 son de Mueve.
+   Y LAS SERIES SON DE UN EJERCICIO (revisión de ChatGPT del 28 oct., R3): sumar los pasos de
+   repeticiones de ejercicios distintos decía «4 series · 5·6 reps» de «Levántate y sube», que
+   son dos ejercicios con dos series cada uno. Con un ejercicio, sus series y sus reps; con
+   varios que tienen las mismas series (dos o más), `ejercicios` y «2 series de cada»; si no,
+   nada: los dibujos ya cuentan los ejercicios. */
 function librarySeries(rutina) {
   var reps = ((rutina && rutina.steps) || []).filter(function (s) {
     return s && s.mode === 'reps';
   });
   if (reps.length < 2) return null;
+  var porEjercicio = {}, nombres = [];
+  reps.forEach(function (s) {
+    if (!porEjercicio[s.name]) { porEjercicio[s.name] = []; nombres.push(s.name); }
+    porEjercicio[s.name].push(s);
+  });
+  if (nombres.length > 1) {
+    var cada = porEjercicio[nombres[0]].length;
+    var iguales = nombres.every(function (n) { return porEjercicio[n].length === cada; });
+    return (iguales && cada >= 2) ? { series: cada, ejercicios: nombres.length, reps: [] } : null;
+  }
   var valores = [];
   reps.forEach(function (s) {
     var n = (s.reps && typeof s.reps === 'object') ? s.reps.target : s.reps;
@@ -174,6 +189,25 @@ function librarySeries(rutina) {
   });
   if (!valores.length) return null;
   return { series: reps.length, reps: valores };
+}
+
+/* DÓNDE SE HACE, en una palabra para la tarjeta (R2): el suelo manda; luego, «sentado o de pie»
+   si CADA ejercicio se puede hacer de las dos formas (`position` no lo dice: «Manos y
+   antebrazos» lleva las dos porque mezcla pasos sentados y de pie); luego, sentado si es lo
+   único, y si no, de pie. Lo que vale para cada ejercicio sale del registro (`ejercicioPide`). */
+function libraryDonde(rutina) {
+  if (!rutina) return 'standing';
+  if (rutina.requiresFloor) return 'floor';
+  var pos = rutina.position || [];
+  if (pos.indexOf('seated') >= 0 && pos.indexOf('standing') >= 0 && typeof window.ejercicioPide === 'function') {
+    var pasos = (rutina.steps || []).filter(function (s) { return s && s.mode !== 'rest' && s.name !== 'Descanso'; });
+    var ambas = pasos.length > 0 && pasos.every(function (s) {
+      var p = window.ejercicioPide(s.name);
+      return !!(p && p.pos && p.pos.indexOf('seated') >= 0 && p.pos.indexOf('standing') >= 0);
+    });
+    if (ambas) return 'either';
+  }
+  return (pos.length === 1 && pos[0] === 'seated') ? 'seated' : 'standing';
 }
 
 /* «por lado» se lleva a la línea de contexto, con el resto del cómo-se-hace. */
@@ -268,6 +302,7 @@ Object.assign(window, {
   libraryOrdenar: libraryOrdenar,
   libraryGlifos: libraryGlifos,
   librarySeries: librarySeries,
+  libraryDonde: libraryDonde,
   libraryPorLado: libraryPorLado,
   libraryDiaOrdinal: libraryDiaOrdinal,
   libraryParaAhora: libraryParaAhora,

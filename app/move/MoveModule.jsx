@@ -48,22 +48,54 @@ function MoveLibrary({ open, onClose, onStart, enPausa }) {
    Lo que no se guarda sale del registro de ejercicios (exercise-registry.js): si un paso se
    hace por lados (la plancha lateral) va `perSide`, con su tiempo por lado, y la rutina lleva
    lo que piden sus pasos (`equipment`, `position`, `requiresFloor`) para «Antes de empezar».
-   Un paso guardado con un nombre de antes se lee con el de hoy (`ejercicioNombreDeHoy`). */
+   Un paso guardado con un nombre de antes se lee con el de hoy (`ejercicioNombreDeHoy`).
+   Y CADA PASO LLEVA LA FICHA DE SU EJERCICIO (`ejercicioFicha`, revisión de ChatGPT del 28 oct.,
+   C4): la colocación, el cuidado, el «colócate» y si se puede saltar, como en el catálogo, y la
+   acción del registro. La colocación va solo donde el ejercicio cambia: dos pasos seguidos del
+   mismo son dos series, y en la segunda ya estás colocado. Los textos van ya en el idioma de la
+   app, porque el runner traduce por la posición del paso en SU rutina y una propia no tiene esas
+   claves: por eso la forma se guarda por objeto Y por idioma. */
 const _moveRutinasGuiadas = new WeakMap();
+function _moveFichaPaso(paso, previo, lang) {
+  const ficha = typeof ejercicioFicha === 'function' ? ejercicioFicha(paso.name) : null;
+  if (!ficha) return paso;
+  const en = lang === 'en' ? ((window.PACE_STRINGS || {}).en || {}) : null;
+  const txt = (clave, es) => (en && en[clave]) || es;
+  const def = typeof getExerciseDef === 'function' ? getExerciseDef(paso.name) : null;
+  const instruction = { action: txt('custom.ex.' + paso.name + '.cue', (def && def.cue) || paso.cue) };
+  if (ficha.care) instruction.care = txt(ficha.careDe + '.instruction.care', ficha.care);
+  const out = { ...paso, instruction };
+  if (!previo || previo.name !== paso.name) {
+    instruction.setup = txt(ficha.setupDe + '.instruction.setup', ficha.setup);
+    if (ficha.ready) out.setup = ficha.ready;
+  }
+  if (ficha.opcional) out.opcional = true;
+  return out;
+}
 function moveRutinaGuiada(routine) {
   if (!routine || !Array.isArray(routine.steps) || routine.steps.every(s => s.mode)) return routine;
-  if (!_moveRutinasGuiadas.has(routine)) {
+  const lang = (typeof getState === 'function' && (getState() || {}).lang) || 'es';
+  if (!_moveRutinasGuiadas.has(routine)) _moveRutinasGuiadas.set(routine, {});
+  const porIdioma = _moveRutinasGuiadas.get(routine);
+  if (!porIdioma[lang]) {
     const lados = (n) => typeof ejercicioPorLados === 'function' && ejercicioPorLados(n);
     const deHoy = (n) => (typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(n) : n);
     const pide = !Array.isArray(routine.equipment) && typeof rutinaPropiaPide === 'function'
       ? rutinaPropiaPide(routine.steps) : {};
-    _moveRutinasGuiadas.set(routine, {
+    let previo = null;
+    porIdioma[lang] = {
       ...routine, ...pide,
-      steps: routine.steps.map(s => (s.mode ? s
-        : { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' })),
-    });
+      steps: routine.steps.map(s => {
+        if (s.mode) return s;
+        const paso = { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' };
+        if (paso.mode === 'rest') return paso;
+        const conFicha = _moveFichaPaso(paso, previo, lang);
+        previo = paso;
+        return conFicha;
+      }),
+    };
   }
-  return _moveRutinasGuiadas.get(routine);
+  return porIdioma[lang];
 }
 
 function MoveSession(props) {

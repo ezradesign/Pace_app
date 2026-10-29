@@ -60,9 +60,9 @@ function PaceApp() {
 
   // Constructor de rutinas premium (F7 · s93). Overlay singleton abierto vía
   // CustomEvent `pace:open-custom-builder` (detail.id: rutina a editar o
-  // null para crear). Mientras está abierto se oculta MoveLibrary para que
-  // solo un Modal escuche Escape; al cerrar, la biblioteca reaparece
-  // (openLibrary conserva 'move').
+  // null para crear). Mientras está abierto se esconde la biblioteca que lo
+  // abrió, Mueve o Estira (`enPausa`), para que solo un Modal escuche Escape;
+  // al cerrar, reaparece en «Tus rutinas» (openLibrary la conserva).
   const [customBuilder, setCustomBuilder] = useStateMain(null); // null | { id }
 
   /* LOS LISTENERS DE `pace:*` (open-custom-builder, cow-click, open-achievements,
@@ -392,10 +392,12 @@ function PaceApp() {
         <BreatheLibrary open={openLibrary === 'breathe'} onClose={() => setOpenLibrary(null)} onStart={handleStartBreathe} />)}
       {red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
         <MoveLibrary open={openLibrary === 'move'} enPausa={!!customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartMove} />)}
+      {red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
+        <ExtraLibrary open={openLibrary === 'extra'} enPausa={!!customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartExtra} />)}
+      {/* El constructor va después de las dos bibliotecas que lo abren: con el mismo z, manda el
+          orden del árbol, y así queda delante aunque una de ellas no se esconda. */}
       {customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
         <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />)}
-      {red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
-        <ExtraLibrary open={openLibrary === 'extra'} onClose={() => setOpenLibrary(null)} onStart={handleStartExtra} />)}
       {red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
         <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />)}
       {red(t('ach.title'), openAchievements, () => setOpenAchievements(false),

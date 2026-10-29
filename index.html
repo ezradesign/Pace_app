@@ -2251,7 +2251,20 @@ Object.assign(window.PACE_STRINGS.es, {
   'custom.step.down': 'Bajar',
   'custom.step.remove': 'Quitar',
   'custom.step.perSide': '{s} s por lado',
-  'custom.builder.needWork': 'Añade al menos un ejercicio: solo con descansos no hay rutina.'
+  'custom.builder.needWork': 'Añade al menos un ejercicio: solo con descansos no hay rutina.',
+
+  'custom.draft.seguir': 'Seguir con tu borrador',
+  'custom.draft.sigues': 'Sigues con tu borrador {cuando}.',
+  'custom.draft.sigues.edit': 'Sigues con tus cambios en “{name}”.',
+  'custom.draft.cero': 'Empezar de cero',
+  'custom.draft.deshacer': 'Deshacer los cambios',
+  'custom.draft.cuando.hoy': 'de hoy, {h}',
+  'custom.draft.cuando.ayer': 'de ayer, {h}',
+  'custom.draft.cuando.dia': 'del {d}',
+
+  'custom.save.tope': 'Ya tienes {n} rutinas, el máximo. Borra una para guardar esta; tu borrador sigue aquí.',
+  'custom.save.borrada': 'Esta rutina se ha borrado en otra pestaña.',
+  'custom.save.comoNueva': 'Guardarla como nueva'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -2431,7 +2444,20 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.step.down': 'Move down',
   'custom.step.remove': 'Remove',
   'custom.step.perSide': '{s} s per side',
-  'custom.builder.needWork': 'Add at least one exercise: rests alone aren’t a routine.'
+  'custom.builder.needWork': 'Add at least one exercise: rests alone aren’t a routine.',
+
+  'custom.draft.seguir': 'Continue your draft',
+  'custom.draft.sigues': 'Back to your draft {cuando}.',
+  'custom.draft.sigues.edit': 'Back to your changes to “{name}”.',
+  'custom.draft.cero': 'Start over',
+  'custom.draft.deshacer': 'Undo the changes',
+  'custom.draft.cuando.hoy': 'from today, {h}',
+  'custom.draft.cuando.ayer': 'from yesterday, {h}',
+  'custom.draft.cuando.dia': 'from {d}',
+
+  'custom.save.tope': 'You already have {n} routines, the maximum. Delete one to save this one; your draft stays here.',
+  'custom.save.borrada': 'This routine was deleted in another tab.',
+  'custom.save.comoNueva': 'Save it as new'
 });
 })();
 </script>
@@ -2506,6 +2532,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.premium': 'Premium',
   'lib.perSide': 'por lado',
   'lib.series': '{s} series · {r} reps',
+  'lib.series.cada': '{e} ejercicios · {s} series de cada',
   'lib.filter.title': 'Filtrar',
   'lib.filter.aqui': 'Aquí mismo',
   'lib.filter.sinmat': 'Sin material',
@@ -2519,6 +2546,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.where.floor': 'en el suelo',
   'lib.where.seated': 'sentado',
   'lib.where.standing': 'de pie',
+  'lib.where.either': 'sentado o de pie',
   'lib.gear.stableDesk': 'con mesa',
   'lib.gear.stableChair': 'con silla',
   'lib.gear.bar': 'con barra',
@@ -2573,6 +2601,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'preview.doneCount.many': 'Lo has hecho {n} veces',
   'preview.eq.stableDesk': 'Una mesa estable',
   'preview.eq.stableChair': 'Una silla estable, sin ruedas',
+  'preview.eq.chair': 'Una silla con respaldo',
   'preview.eq.bar': 'Una barra firme',
   'preview.eq.wall': 'Una pared libre',
   'preview.eq.cushionOptional': 'Un cojín, si lo necesitas',
@@ -2666,6 +2695,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.premium': 'Premium',
   'lib.perSide': 'per side',
   'lib.series': '{s} sets · {r} reps',
+  'lib.series.cada': '{e} exercises · {s} sets each',
   'lib.filter.title': 'Filter',
   'lib.filter.aqui': 'Right here',
   'lib.filter.sinmat': 'No gear',
@@ -2674,6 +2704,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.where.floor': 'on the floor',
   'lib.where.seated': 'seated',
   'lib.where.standing': 'standing',
+  'lib.where.either': 'seated or standing',
   'lib.gear.stableDesk': 'with a desk',
   'lib.gear.stableChair': 'with a chair',
   'lib.gear.bar': 'with a bar',
@@ -2710,6 +2741,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.doneCount.many': 'You have done this {n} times',
   'preview.eq.stableDesk': 'A stable desk',
   'preview.eq.stableChair': 'A stable chair, no wheels',
+  'preview.eq.chair': 'A chair with a backrest',
   'preview.eq.bar': 'A sturdy bar',
   'preview.eq.wall': 'A clear wall',
   'preview.eq.cushionOptional': 'A cushion, if you need one',
@@ -5422,6 +5454,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Cossack squat.name': 'Cossack squat',
   'custom.ex.Sentadilla lateral.cue': 'Weight to one side, other leg straight.',
   'custom.ex.Cossack squat.cue': 'Weight to one side, other leg straight.',
+  'custom.ex.Zancada con apertura.name': "World's greatest stretch",
+  'custom.ex.Zancada con apertura.cue': 'Lunge + hand to floor + rotation.',
   "custom.ex.World's greatest stretch.name": "World's greatest stretch",
   "custom.ex.World's greatest stretch.cue": 'Lunge + hand to floor + rotation.',
 
@@ -6373,6 +6407,17 @@ var FORMAS_AJENAS = { ritmo: 'objeto' };
 
 
 
+function paceBorradorValido(b) {
+  if (!paceEsObjetoPlano(b) || !Array.isArray(b.steps)) return false;
+  if (b.editId !== null && typeof b.editId !== 'string') return false;
+  if (typeof b.name !== 'string' || typeof b.savedAt !== 'number' || !isFinite(b.savedAt)) return false;
+  return b.steps.every(function (p) {
+    return paceEsObjetoPlano(p) && typeof p.name === 'string' && typeof p.dur === 'number' && isFinite(p.dur);
+  });
+}
+
+
+
 
 function paceSanearEstado(parsed, defaults) {
   if (!paceEsObjetoPlano(parsed)) throw new Error('el estado guardado no es un objeto');
@@ -6504,6 +6549,13 @@ function paceSanearEstado(parsed, defaults) {
     }
   }
 
+
+
+
+  if ('customDraft' in e && e.customDraft !== undefined && !paceBorradorValido(e.customDraft)) {
+    delete e.customDraft;reparados.push('customDraft');
+  }
+
   Object.keys(FORMAS_AJENAS).forEach(function (k) {
     if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
       e[k] = undefined;delete e[k];reparados.push(k);
@@ -6544,9 +6596,9 @@ function paceLeerRescate() {
 }
 
 Object.assign(window, {
-  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano
+  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano, paceBorradorValido
 });
-;Object.assign(window, { PACE_RESCATE_KEY, paceEsObjetoPlano, paceCopiaDefecto, PACE_SERIES_SEMANA, paceSerieValida, FORMAS_AJENAS, paceSanearEstado, paceGuardarRescate, paceLeerRescate });
+;Object.assign(window, { PACE_RESCATE_KEY, paceEsObjetoPlano, paceCopiaDefecto, PACE_SERIES_SEMANA, paceSerieValida, FORMAS_AJENAS, paceBorradorValido, paceSanearEstado, paceGuardarRescate, paceLeerRescate });
 })();
 </script>
   <!-- state-core.palette (s163): como la paleta llega al DOM y como se funde
@@ -9572,8 +9624,11 @@ Object.assign(window, {
    Depende de: state-core (getState, setState).
 
    Shape de rutina custom:
-     { id: 'custom.<Date.now()>', name, steps: [{ name, dur, cue }],
+     { id: 'custom.<Date.now()>', name, steps: [{ name, dur }],
        min, createdAt, updatedAt }
+   Un paso guarda qué ejercicio y qué dosis, nada de su texto: la colocación, la acción y el
+   cuidado los pone `moveRutinaGuiada` desde el registro y el catálogo (C4). Las de antes llevan
+   además `cue`, que ya no se lee y se va al guardarlas de nuevo.
    `steps` usa el mismo shape que las rutinas de catálogo — el runner
    (MoveSession) no distingue. `min` se deriva al guardar (`customSegundos`:
    un paso por lados cuenta sus dos lados). El `mode` no se guarda: lo pone
@@ -9619,6 +9674,21 @@ function customSegundos(steps) {
 }
 
 
+
+
+
+
+function customMinutos(steps) {
+  const lista = Array.isArray(steps) ? steps.filter((s) => s && s.name) : [];
+  let seg = customSegundos(lista);
+  if (lista.length && typeof window.moveRutinaGuiada === 'function' && typeof window.estimateDuration === 'function') {
+    const descanso = (getState() || {}).restBetweenSets;
+    seg = window.estimateDuration(window.moveRutinaGuiada({ id: 'custom.medida', steps: lista }), descanso).maxSec;
+  }
+  return Math.max(1, Math.ceil(seg / 60));
+}
+
+
 function sanitizeCustomRoutine(draft) {
   const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
   const steps = (Array.isArray(draft.steps) ? draft.steps : []).
@@ -9626,10 +9696,9 @@ function sanitizeCustomRoutine(draft) {
   map((s) => ({
     name: String(s.name || ''),
     dur: Math.min(CUSTOM_LIMITS.maxDur, Math.max(CUSTOM_LIMITS.minDur,
-    Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
-    cue: String(s.cue || '')
+    Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep))
   }));
-  const min = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+  const min = customMinutos(steps);
   return { name, steps, min };
 }
 
@@ -9664,19 +9733,57 @@ function updateCustomRoutine(id, draft) {
   return updated;
 }
 
+
 function deleteCustomRoutine(id) {
   setState((s) => ({
-    ...s,
+    ...(s.customDraft && s.customDraft.editId === id ? customSinBorrador(s) : s),
     customRoutines: (Array.isArray(s.customRoutines) ? s.customRoutines : []).filter((r) => r.id !== id)
   }));
 }
 
+
+
+
+
+
+function getCustomDraft() {
+  const b = getState().customDraft;
+  return b && typeof paceBorradorValido === 'function' && paceBorradorValido(b) ? b : null;
+}
+
+function setCustomDraft(editId, name, steps) {
+  const customDraft = { editId: editId || null, name: String(name || ''),
+    steps: (Array.isArray(steps) ? steps : []).map((p) => ({ name: p.name, dur: p.dur })), savedAt: Date.now() };
+  setState((s) => ({ ...s, customDraft }));
+}
+
+function customSinBorrador(s) {
+  const resto = { ...s };
+  delete resto.customDraft;
+  return resto;
+}
+
+function clearCustomDraft() {
+  if ('customDraft' in getState()) setState(customSinBorrador);
+}
+
+
+function customBorradorCuando(savedAt, tn, lang) {
+  const d = new Date(savedAt);
+  const hora = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
+  if (d.toDateString() === new Date().toDateString()) return tn('custom.draft.cuando.hoy', { h: hora });
+  if (d.toDateString() === ayer.toDateString()) return tn('custom.draft.cuando.ayer', { h: hora });
+  return tn('custom.draft.cuando.dia', { d: paceFechaCorta(d, lang, { day: 'numeric', month: 'short' }) });
+}
+
 Object.assign(window, {
-  CUSTOM_LIMITS, customTieneTrabajo, customSegundos,
+  CUSTOM_LIMITS, customTieneTrabajo, customSegundos, customMinutos,
   getCustomRoutines, getCustomRoutine,
-  addCustomRoutine, updateCustomRoutine, deleteCustomRoutine
+  addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
+  getCustomDraft, setCustomDraft, clearCustomDraft, customBorradorCuando
 });
-;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine });
+;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, customMinutos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine, getCustomDraft, setCustomDraft, customSinBorrador, clearCustomDraft, customBorradorCuando });
 })();
 </script>
   <!-- Feedback ligero por rutina (s116 · B2.2b-2): recordRoutineFeedback +
@@ -18322,14 +18429,17 @@ function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, t
 
 }
 
-function Card(_ref2) {let { children, onClick, accent, padded = true, style = {} } = _ref2;
+
+
+function Card(_ref2) {let { children, onClick, accent, padded = true, style = {}, hover = false } = _ref2;
+  const vivo = !!(onClick || hover);
   const base = {
     background: 'var(--paper)',
     border: '1px solid var(--line)',
     borderRadius: 'var(--r-md)',
     padding: padded ? 'var(--s-5)' : 0,
     transition: 'all 220ms var(--ease)',
-    cursor: onClick ? 'pointer' : 'default',
+    cursor: vivo ? 'pointer' : 'default',
     position: 'relative',
     ...style
   };
@@ -18337,12 +18447,12 @@ function Card(_ref2) {let { children, onClick, accent, padded = true, style = {}
     React.createElement("div", {
       onClick: onClick,
       style: base,
-      onMouseEnter: onClick ? (e) => {
+      onMouseEnter: vivo ? (e) => {
         e.currentTarget.style.borderColor = accent || 'var(--ink-2)';
         e.currentTarget.style.transform = 'translateY(-1px)';
         e.currentTarget.style.boxShadow = 'var(--sh-soft)';
       } : undefined,
-      onMouseLeave: onClick ? (e) => {
+      onMouseLeave: vivo ? (e) => {
         e.currentTarget.style.borderColor = 'var(--line)';
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'none';
@@ -27466,7 +27576,10 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
 
   const isV1 = !!(guiada.steps && guiada.steps.some((s) => s && s.mode));
   let durLabel = `${routine.min} min`;
-  if (isV1 && typeof window.estimateDuration === 'function') {
+  if (propia && typeof window.customMinutos === 'function') {
+
+    durLabel = `${window.customMinutos(routine.steps)} min`;
+  } else if (isV1 && typeof window.estimateDuration === 'function') {
     const est = window.estimateDuration(guiada, pace.restBetweenSets);
     const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
     durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
@@ -27767,11 +27880,26 @@ function libraryGlifos(rutina) {
 
 
 
+
+
+
+
+
 function librarySeries(rutina) {
   var reps = (rutina && rutina.steps || []).filter(function (s) {
     return s && s.mode === 'reps';
   });
   if (reps.length < 2) return null;
+  var porEjercicio = {},nombres = [];
+  reps.forEach(function (s) {
+    if (!porEjercicio[s.name]) {porEjercicio[s.name] = [];nombres.push(s.name);}
+    porEjercicio[s.name].push(s);
+  });
+  if (nombres.length > 1) {
+    var cada = porEjercicio[nombres[0]].length;
+    var iguales = nombres.every(function (n) {return porEjercicio[n].length === cada;});
+    return iguales && cada >= 2 ? { series: cada, ejercicios: nombres.length, reps: [] } : null;
+  }
   var valores = [];
   reps.forEach(function (s) {
     var n = s.reps && typeof s.reps === 'object' ? s.reps.target : s.reps;
@@ -27779,6 +27907,25 @@ function librarySeries(rutina) {
   });
   if (!valores.length) return null;
   return { series: reps.length, reps: valores };
+}
+
+
+
+
+
+function libraryDonde(rutina) {
+  if (!rutina) return 'standing';
+  if (rutina.requiresFloor) return 'floor';
+  var pos = rutina.position || [];
+  if (pos.indexOf('seated') >= 0 && pos.indexOf('standing') >= 0 && typeof window.ejercicioPide === 'function') {
+    var pasos = (rutina.steps || []).filter(function (s) {return s && s.mode !== 'rest' && s.name !== 'Descanso';});
+    var ambas = pasos.length > 0 && pasos.every(function (s) {
+      var p = window.ejercicioPide(s.name);
+      return !!(p && p.pos && p.pos.indexOf('seated') >= 0 && p.pos.indexOf('standing') >= 0);
+    });
+    if (ambas) return 'either';
+  }
+  return pos.length === 1 && pos[0] === 'seated' ? 'seated' : 'standing';
 }
 
 
@@ -27873,13 +28020,14 @@ Object.assign(window, {
   libraryOrdenar: libraryOrdenar,
   libraryGlifos: libraryGlifos,
   librarySeries: librarySeries,
+  libraryDonde: libraryDonde,
   libraryPorLado: libraryPorLado,
   libraryDiaOrdinal: libraryDiaOrdinal,
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio,
   libraryProponibles: libraryProponibles
 });
-;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryDonde, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
 })();
 </script>
   <script>
@@ -28332,9 +28480,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
   } else {
-    const donde = routine.requiresFloor ? 'floor' :
-    routine.position && routine.position.length === 1 && routine.position[0] === 'seated' ? 'seated' :
-    'standing';
+    const donde = window.libraryDonde ? window.libraryDonde(routine) : 'standing';
     trozos.push({ k: 'donde', txt: t('lib.where.' + donde) });
     (routine.equipment || []).forEach((e) => {
       const s = t('lib.gear.' + e);
@@ -28407,6 +28553,8 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
 
     series &&
     React.createElement("div", { className: "pace-lib-pie" },
+    series.ejercicios ?
+    tn('lib.series.cada', { e: series.ejercicios, s: series.series }) :
     tn('lib.series', { s: series.series, r: series.reps.join('·') })
     )
 
@@ -31621,21 +31769,53 @@ function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
 
 
 
+
+
+
+
+
+
 const _moveRutinasGuiadas = new WeakMap();
+function _moveFichaPaso(paso, previo, lang) {
+  const ficha = typeof ejercicioFicha === 'function' ? ejercicioFicha(paso.name) : null;
+  if (!ficha) return paso;
+  const en = lang === 'en' ? (window.PACE_STRINGS || {}).en || {} : null;
+  const txt = (clave, es) => en && en[clave] || es;
+  const def = typeof getExerciseDef === 'function' ? getExerciseDef(paso.name) : null;
+  const instruction = { action: txt('custom.ex.' + paso.name + '.cue', def && def.cue || paso.cue) };
+  if (ficha.care) instruction.care = txt(ficha.careDe + '.instruction.care', ficha.care);
+  const out = { ...paso, instruction };
+  if (!previo || previo.name !== paso.name) {
+    instruction.setup = txt(ficha.setupDe + '.instruction.setup', ficha.setup);
+    if (ficha.ready) out.setup = ficha.ready;
+  }
+  if (ficha.opcional) out.opcional = true;
+  return out;
+}
 function moveRutinaGuiada(routine) {
   if (!routine || !Array.isArray(routine.steps) || routine.steps.every((s) => s.mode)) return routine;
-  if (!_moveRutinasGuiadas.has(routine)) {
+  const lang = typeof getState === 'function' && (getState() || {}).lang || 'es';
+  if (!_moveRutinasGuiadas.has(routine)) _moveRutinasGuiadas.set(routine, {});
+  const porIdioma = _moveRutinasGuiadas.get(routine);
+  if (!porIdioma[lang]) {
     const lados = (n) => typeof ejercicioPorLados === 'function' && ejercicioPorLados(n);
     const deHoy = (n) => typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(n) : n;
     const pide = !Array.isArray(routine.equipment) && typeof rutinaPropiaPide === 'function' ?
     rutinaPropiaPide(routine.steps) : {};
-    _moveRutinasGuiadas.set(routine, {
+    let previo = null;
+    porIdioma[lang] = {
       ...routine, ...pide,
-      steps: routine.steps.map((s) => s.mode ? s :
-      { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' })
-    });
+      steps: routine.steps.map((s) => {
+        if (s.mode) return s;
+        const paso = { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' };
+        if (paso.mode === 'rest') return paso;
+        const conFicha = _moveFichaPaso(paso, previo, lang);
+        previo = paso;
+        return conFicha;
+      })
+    };
   }
-  return _moveRutinasGuiadas.get(routine);
+  return porIdioma[lang];
 }
 
 function MoveSession(props) {
@@ -31989,7 +32169,7 @@ if (!_paceMoveResponsive) {
 
 
 Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion, moveRutinaGuiada });
-;Object.assign(window, { _extends, MoveLibrary, moveRutinaGuiada, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
+;Object.assign(window, { _extends, MoveLibrary, _moveFichaPaso, moveRutinaGuiada, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
 })();
 </script>
   <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
@@ -34347,11 +34527,11 @@ window.EXTRA_ROUTINES_FUERA = [
 
 
 
-function ExtraLibrary(_ref) {let { open, onClose, onStart } = _ref;
+function ExtraLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
       groups: window.EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
       title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle') }));
 
@@ -34526,20 +34706,23 @@ function getExerciseDef(name) {
 
 
 
+
+
+
 const EXERCISE_PIDE = {
   'Flexiones inclinadas': { eq: ['stableDesk'], pos: ['standing'] },
   'Pica en escritorio': { eq: ['stableDesk'], pos: ['standing'] },
-  'Fondos en silla': { eq: ['stableChair'], pos: ['seated'] },
+  'Fondos en silla': { eq: ['stableChair', 'wall'], pos: ['seated'] },
   'Suspensión pasiva': { eq: ['bar'], pos: ['standing'] },
   'Suspensión activa': { eq: ['bar'], pos: ['standing'] },
   'Sentadilla a silla': { eq: ['stableChair'], pos: ['standing'] },
   'Silla en la pared': { eq: ['wall'], pos: ['standing'] },
-  'Sentadilla búlgara': { eq: ['stableChair'], pos: ['standing'], lados: true },
+  'Sentadilla búlgara': { eq: ['stableChair', 'wall'], pos: ['standing'], lados: true },
   'Zancada profunda': { eq: ['deskOptional'], pos: ['standing'], lados: true },
   'Sentadilla de cuádriceps': { eq: ['deskOptional'], pos: ['standing'] },
   'Nordics': { eq: ['cushionOptional'], pos: ['floor'], suelo: true },
-  'Elevación de puntas': { eq: ['deskOptional'], pos: ['standing'] },
-  'Elevación de talones': { pos: ['seated', 'standing'] },
+  'Elevación de puntas': { eq: ['wall'], pos: ['standing'] },
+  'Elevación de talones': { eq: ['deskOptional'], pos: ['seated', 'standing'] },
   'Puente con marcha': { pos: ['supine'], suelo: true },
   'Puente con los dos pies': { pos: ['supine'], suelo: true },
   'Bisagra de cadera': { pos: ['standing'] },
@@ -34552,10 +34735,10 @@ const EXERCISE_PIDE = {
   'Plancha': { pos: ['floor'], suelo: true },
   'Plancha lateral': { pos: ['floor'], suelo: true, lados: true },
   'Hueco abdominal': { pos: ['supine'], suelo: true },
-  'Piernas elevadas sentado': { pos: ['seated'] },
+  'Piernas elevadas sentado': { eq: ['stableChair'], pos: ['seated'] },
   'Superman': { pos: ['floor'], suelo: true },
   'Juntar omóplatos': { pos: ['seated', 'standing'] },
-  'Apertura con banda': { pos: ['standing'] },
+  'Apertura con banda': { eq: ['band'], pos: ['standing'] },
   'Apretar glúteos': { pos: ['seated'] },
   'Barbilla atrás': { pos: ['seated'] },
   'Cuello y trapecios': { pos: ['seated'], lados: true },
@@ -34569,27 +34752,27 @@ const EXERCISE_PIDE = {
   'Apertura de pecho': { pos: ['seated', 'standing'] },
   'Apertura de pecho sentado': { pos: ['seated'] },
   'Rotación torácica': { pos: ['seated'], lados: true },
-  'Extensión torácica': { pos: ['seated'] },
+  'Extensión torácica': { eq: ['chair'], pos: ['seated'] },
   'Gato-camello': { pos: ['floor'], suelo: true },
   'Onda espinal': { pos: ['standing'] },
   'Puente torácico': { pos: ['floor'], suelo: true },
   'Rodar hacia abajo': { pos: ['standing'] },
-  'Giro sentado': { pos: ['seated'] },
+  'Giro sentado': { eq: ['chair'], pos: ['seated'] },
   'Respirar a cuatro apoyos': { pos: ['floor'], suelo: true },
   'Flexor de cadera': { eq: ['cushionOptional'], pos: ['halfKneeling'], suelo: true, lados: true },
   'Cuádriceps en pared': { eq: ['wall', 'cushionOptional'], pos: ['halfKneeling'], suelo: true, lados: true },
   '90/90': { pos: ['floor'], suelo: true },
-  'Paloma': { pos: ['floor'], suelo: true, lados: true },
-  'Rana': { pos: ['floor'], suelo: true },
+  'Paloma': { eq: ['cushionOptional'], pos: ['floor'], suelo: true, lados: true },
+  'Rana': { eq: ['cushionOptional'], pos: ['floor'], suelo: true },
   'Sentadilla lateral': { pos: ['standing'], lados: true },
-  'Zancada con apertura': { pos: ['standing'], lados: true },
-  'Sentadilla profunda': { pos: ['standing'] },
+  'Zancada con apertura': { eq: ['deskOptional'], pos: ['standing'], lados: true },
+  'Sentadilla profunda': { eq: ['deskOptional'], pos: ['standing'] },
   'Sentadilla profunda sostenida': { pos: ['standing'] },
   'Gateo': { pos: ['floor'], suelo: true },
   'Sentarse y levantarse del suelo': { pos: ['floor', 'standing'], suelo: true },
   'Marcha del elefante': { pos: ['standing'] },
-  'Pliegue adelante': { pos: ['standing'] },
-  'Isquio a una pierna': { pos: ['standing'], lados: true },
+  'Pliegue adelante': { eq: ['deskOptional'], pos: ['standing'] },
+  'Isquio a una pierna': { eq: ['deskOptional'], pos: ['standing'], lados: true },
   'Círculos de muñeca': { pos: ['seated'] },
   'Estiramiento de muñeca': { pos: ['seated'], lados: true },
   'Palmas en la mesa': { eq: ['stableDesk'], pos: ['standing'] },
@@ -34632,6 +34815,45 @@ function ejercicioNombreDeHoy(name) {
 
 
 
+
+
+
+
+
+
+
+
+const FICHA_CUIDADO_DE = {
+
+  'Sentadilla a silla': { rutina: 'extra.chair.squats', paso: 2 }
+};
+let _fichasEjercicio = null;
+function ejercicioFicha(name) {
+  if (!_fichasEjercicio) {
+    const catalogos = [window.MOVE_ROUTINES, window.EXTRA_ROUTINES];
+    if (!catalogos[0] || !catalogos[1]) return null;
+    const fichas = {},porId = {};
+    catalogos.forEach((cat) => Object.keys(cat).forEach((g) => (cat[g] && cat[g].items || []).forEach((r) => {
+      porId[r.id] = r;
+      (r.steps || []).forEach((s, i) => {
+        const n = ejercicioNombreDeHoy(s.name);
+        if (fichas[n] || !s.instruction || !s.instruction.setup) return;
+        fichas[n] = { setup: s.instruction.setup, setupDe: r.id + '.s' + i,
+          care: s.instruction.care || null, careDe: r.id + '.s' + i,
+          ready: s.setup && s.setup.mode === 'ready' ? s.setup : null, opcional: !!s.opcional };
+      });
+    })));
+    Object.keys(FICHA_CUIDADO_DE).forEach((n) => {
+      const o = FICHA_CUIDADO_DE[n],r = porId[o.rutina],s = r && r.steps && r.steps[o.paso];
+      if (fichas[n] && s && s.instruction) {fichas[n].care = s.instruction.care || null;fichas[n].careDe = o.rutina + '.s' + o.paso;}
+    });
+    _fichasEjercicio = fichas;
+  }
+  return _fichasEjercicio[ejercicioNombreDeHoy(name)] || null;
+}
+
+
+
 function rutinaPropiaPide(steps) {
   const equipment = [],position = [];
   let requiresFloor = false,pideIncompleto = false;
@@ -34643,14 +34865,15 @@ function rutinaPropiaPide(steps) {
     if (p.suelo) requiresFloor = true;
   });
 
-  const entero = { deskOptional: 'stableDesk', barOptional: 'bar', wallOptional: 'wall' };
+
+  const entero = { deskOptional: 'stableDesk', barOptional: 'bar', wallOptional: 'wall', chair: 'stableChair' };
   return { equipment: equipment.filter((e) => !entero[e] || equipment.indexOf(entero[e]) < 0),
     position, requiresFloor, pideIncompleto };
 }
 
 Object.assign(window, { EXERCISE_REGISTRY, getExerciseDef, EXERCISE_PIDE, ejercicioPide, ejercicioPorLados, rutinaPropiaPide,
-  EJERCICIO_RENOMBRADO, ejercicioNombreDeHoy });
-;Object.assign(window, { getExerciseDef, ejercicioPide, ejercicioPorLados, ejercicioNombreDeHoy, rutinaPropiaPide });
+  EJERCICIO_RENOMBRADO, ejercicioNombreDeHoy, ejercicioFicha, FICHA_CUIDADO_DE });
+;Object.assign(window, { getExerciseDef, ejercicioPide, ejercicioPorLados, ejercicioNombreDeHoy, ejercicioFicha, rutinaPropiaPide });
 })();
 </script>
   <script>
@@ -34699,7 +34922,7 @@ Object.assign(window, { EXERCISE_REGISTRY, getExerciseDef, EXERCISE_PIDE, ejerci
 const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
 
 function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = _ref;
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [pace] = usePace();
 
 
@@ -34711,6 +34934,9 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
   const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
+
+
+  const borrador = typeof getCustomDraft === 'function' && pace.customDraft ? getCustomDraft() : null;
 
   const invitar = () => paceAbrirPremium({ nombre: t('custom.section.title') });
   const openBuilder = (id) => {
@@ -34765,6 +34991,25 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
       onEdit: () => openBuilder(r.id) }
     )
     ),
+    borrador ?
+    React.createElement("button", {
+      type: "button",
+      "data-pace-custom-borrador": true,
+      onClick: () => openBuilder(borrador.editId),
+      style: customRoutinesStyles.createCard,
+      onMouseEnter: (e) => {e.currentTarget.style.borderColor = accent;e.currentTarget.style.color = 'var(--ink)';},
+      onMouseLeave: (e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.color = 'var(--ink-2)';} },
+
+    React.createElement("span", { style: { display: 'block', textAlign: 'center', padding: '8px 14px' } },
+    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"),
+    React.createElement("span", { style: { display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.draft.seguir')),
+    React.createElement("span", { style: { display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
+    [borrador.name.trim(),
+    borrador.steps.length === 1 ? t('custom.steps.one') : borrador.steps.length ? tn('custom.steps.many', { n: borrador.steps.length }) : '',
+    customBorradorCuando(borrador.savedAt, tn, lang)].filter(Boolean).join(' · ')
+    )
+    )
+    ) :
     !atLimit ?
     React.createElement("button", {
       type: "button",
@@ -34799,6 +35044,10 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
 
 
+
+
+
+
 function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accent = 'var(--move)' } = _ref2;
   const { t, tn } = useT();
   const nPasos = Array.isArray(routine.steps) ? routine.steps.length : 0;
@@ -34807,12 +35056,13 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
   tn('custom.steps.many', { n: nPasos });
 
 
-  const minutos = typeof customSegundos === 'function' && nPasos ?
-  Math.max(1, Math.ceil(customSegundos(routine.steps) / 60)) : routine.min;
+  const minutos = typeof customMinutos === 'function' && nPasos ? customMinutos(routine.steps) : routine.min;
   return (
-    React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, onClick: onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
+    React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, hover: true, padded: false,
+      style: { padding: '16px 18px', position: 'relative', '--tone': locked ? 'var(--premium)' : accent } },
     !locked &&
     React.createElement("button", {
+      type: "button",
       onClick: (e) => {e.stopPropagation();onEdit();},
       title: t('custom.card.edit'),
       "aria-label": t('custom.card.edit'),
@@ -34828,7 +35078,10 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
     React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' } },
     React.createElement(Tag, { color: accent }, t('custom.tag'))
     ),
-    React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } }, routine.name),
+    React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } },
+    React.createElement("button", { type: "button", className: "pace-lib-hit", "data-pace-custom-empezar": true, onClick: onClick,
+      title: locked ? t('premium.locked.aria') : undefined }, routine.name)
+    ),
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, stepsLabel),
     React.createElement("div", { style: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -34872,7 +35125,8 @@ const customRoutinesStyles = {
     color: 'var(--ink-3)',
     background: 'transparent',
     border: '1px solid transparent',
-    transition: 'all 160ms'
+    transition: 'all 160ms',
+    zIndex: 1
   }
 };
 
@@ -34900,25 +35154,88 @@ Object.assign(window, { CustomRoutinesSection, CustomRoutineCard });
 
 
 
-const { useState: useStateCB } = React;
+
+
+
+
+
+const { useState: useStateCB, useEffect: useEffectCB, useRef: useRefCB } = React;
+
+
+function customPasosDeHoy(lista) {
+  return lista.map((p) => ({ ...p, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(p.name) : p.name }));
+}
 
 function CustomBuilder(_ref) {let { editId, onClose } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
 
-  const existing = editId ? getCustomRoutine(editId) : null;
-  const [name, setName] = useStateCB(existing ? existing.name : '');
 
-  const [steps, setSteps] = useStateCB(existing ?
-  existing.steps.map((s) => ({ ...s, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(s.name) : s.name })) :
-  []);
+  const [target, setTarget] = useStateCB(editId || null);
+  const existing = target ? getCustomRoutine(target) : null;
+
+  const [retomado, setRetomado] = useStateCB(() => {
+    const b = getCustomDraft();
+    return b && b.editId === target ? b : null;
+  });
+  const [name, setName] = useStateCB(() => retomado ? retomado.name : existing ? existing.name : '');
+  const [steps, setSteps] = useStateCB(() => customPasosDeHoy(retomado ? retomado.steps : existing ? existing.steps : []));
   const [view, setView] = useStateCB('editor');
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
+  const [noGuarda, setNoGuarda] = useStateCB(null);
   const limits = window.CUSTOM_LIMITS;
 
 
-  const totalMin = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+  const igualQueGuardada = (n, lista) => {
+    const base = existing ? customPasosDeHoy(existing.steps) : [];
+    return n.trim() === (existing ? existing.name : '').trim() && lista.length === base.length &&
+    lista.every((p, i) => p.name === base[i].name && p.dur === base[i].dur);
+  };
+  const ultimo = useRefCB(null);
+  const espera = useRefCB(null);
+  const montado = useRefCB(false);
+  const guardarBorrador = () => {
+    clearTimeout(espera.current);
+    const u = ultimo.current;
+    ultimo.current = null;
+    if (!u) return;
+    if (!u.igual) setCustomDraft(u.target, u.name, u.steps);else
+    if (getCustomDraft() && getCustomDraft().editId === u.target) clearCustomDraft();
+  };
+
+  const soltarBorrador = function () {let ids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [target];
+    clearTimeout(espera.current);
+    ultimo.current = null;
+    if (getCustomDraft() && ids.indexOf(getCustomDraft().editId) >= 0) clearCustomDraft();
+  };
+  useEffectCB(() => {
+    if (!montado.current) {montado.current = true;return;}
+    ultimo.current = { target, name, steps, igual: igualQueGuardada(name, steps) };
+    clearTimeout(espera.current);
+    espera.current = setTimeout(guardarBorrador, 400);
+  }, [name, steps]);
+  useEffectCB(() => {
+    const oculta = () => {if (document.visibilityState === 'hidden') guardarBorrador();};
+    window.addEventListener('pagehide', guardarBorrador);
+    document.addEventListener('visibilitychange', oculta);
+    return () => {
+      window.removeEventListener('pagehide', guardarBorrador);
+      document.removeEventListener('visibilitychange', oculta);
+      guardarBorrador();
+    };
+  }, []);
+
+  const deCero = () => {
+    soltarBorrador();
+    setRetomado(null);
+    setName(existing ? existing.name : '');
+    setSteps(customPasosDeHoy(existing ? existing.steps : []));
+  };
+
+
+
+  const totalMin = customMinutos(steps);
   const segundos = (s) => ejercicioPorLados(s.name) ? tn('custom.step.perSide', { s: s.dur }) : `${s.dur} s`;
 
   const sinTrabajo = steps.length > 0 && !customTieneTrabajo(steps);
@@ -34927,7 +35244,7 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
   const addStep = (ex) => {
     setSteps((prev) => prev.length >= limits.maxSteps ?
     prev :
-    [...prev, { name: ex.name, dur: ex.dur, cue: ex.cue }]);
+    [...prev, { name: ex.name, dur: ex.dur }]);
   };
   const removeStep = (idx) => setSteps((prev) => prev.filter((_, i) => i !== idx));
   const moveStep = (idx, delta) => setSteps((prev) => {
@@ -34942,21 +35259,37 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
   { ...s, dur: Math.min(limits.maxDur, Math.max(limits.minDur, s.dur + delta)) } :
   s));
 
-  const save = () => {
+
+
+
+  const guardarComo = (id) => {
+    const motivo = id && !getCustomRoutine(id) ? 'borrada' :
+    !id && getCustomRoutines().length >= limits.maxRoutines ? 'tope' : null;
+    if (motivo) {
+      clearTimeout(espera.current);
+      ultimo.current = null;
+      setCustomDraft(id, name, steps);
+      setNoGuarda(motivo);
+      return;
+    }
     const draft = { name, steps };
-    const ok = editId ? updateCustomRoutine(editId, draft) : addCustomRoutine(draft);
-    if (ok) onClose();
+    const ok = id ? updateCustomRoutine(id, draft) : addCustomRoutine(draft);
+    if (ok) {soltarBorrador([id, target]);onClose();}
   };
+  const save = () => guardarComo(target);
+  const comoNueva = () => {setTarget(null);guardarComo(null);};
   const del = () => {
     if (!confirmDelete) {setConfirmDelete(true);return;}
-    deleteCustomRoutine(editId);
+    soltarBorrador();
+    deleteCustomRoutine(target);
     onClose();
   };
 
 
+
   if (view === 'picker') {
     return (
-      React.createElement(Modal, { open: true, onClose: onClose, tagLabel: t('custom.builder.tag'), title: t('custom.picker.title'), maxWidth: 720 },
+      React.createElement(Modal, { open: true, onClose: () => setView('editor'), tagLabel: t('custom.builder.tag'), title: t('custom.picker.title'), maxWidth: 720 },
       React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } },
       React.createElement("button", { onClick: () => setView('editor'), style: customBuilderStyles.ghostBtn },
       t('custom.picker.back')
@@ -35000,10 +35333,15 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
       open: true,
       onClose: onClose,
       tagLabel: t('custom.builder.tag'),
-      title: editId ? t('custom.builder.title.edit') : t('custom.builder.title.new'),
+      title: target ? t('custom.builder.title.edit') : t('custom.builder.title.new'),
       subtitle: t('custom.builder.subtitle'),
       maxWidth: 720 },
 
+    retomado && (target ?
+    React.createElement(CustomAviso, { tipo: "borrador", texto: tn('custom.draft.sigues.edit', { name: existing ? existing.name : retomado.name }),
+      boton: t('custom.draft.deshacer'), onBoton: deCero }) :
+    React.createElement(CustomAviso, { tipo: "borrador", texto: tn('custom.draft.sigues', { cuando: customBorradorCuando(retomado.savedAt, tn, lang) }),
+      boton: t('custom.draft.cero'), onBoton: deCero })),
     React.createElement("div", { style: { marginBottom: 18 } },
     React.createElement(Meta, { style: { marginBottom: 6 } }, t('custom.builder.name.label')),
     React.createElement("input", {
@@ -35064,9 +35402,16 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
 
     ),
 
+    noGuarda === 'tope' &&
+    React.createElement(CustomAviso, { tipo: "tope", tono: "var(--breathe)", texto: tn('custom.save.tope', { n: limits.maxRoutines }) }),
+
+    noGuarda === 'borrada' &&
+    React.createElement(CustomAviso, { tipo: "borrada", tono: "var(--breathe)", texto: t('custom.save.borrada'),
+      boton: t('custom.save.comoNueva'), onBoton: comoNueva }),
+
     React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 16 } },
     React.createElement("div", null,
-    editId &&
+    target &&
     React.createElement("button", {
       onClick: del,
       style: {
@@ -35093,7 +35438,28 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
 
 }
 
+
+
+function CustomAviso(_ref3) {let { tipo, texto, boton, onBoton, tono = 'var(--move)' } = _ref3;
+  return (
+    React.createElement("p", { "data-pace-custom-aviso": tipo, style: { ...customBuilderStyles.aviso, borderLeft: '3px solid ' + tono } },
+    React.createElement("span", null, texto),
+    boton && React.createElement("button", { type: "button", onClick: onBoton, style: customBuilderStyles.avisoBtn }, boton)
+    ));
+
+}
+
 const customBuilderStyles = {
+  aviso: {
+    display: 'flex', flexWrap: 'wrap', gap: '6px 12px', alignItems: 'baseline',
+    margin: '0 0 14px', padding: '10px 12px',
+    borderRadius: 'var(--r-sm)', background: 'var(--paper-2)',
+    fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-2)'
+  },
+  avisoBtn: {
+    padding: 0, border: 0, background: 'none', font: 'inherit', fontSize: 13.5,
+    color: 'var(--ink)', textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer'
+  },
   nameInput: {
     width: '100%', boxSizing: 'border-box',
     padding: '10px 12px', fontSize: 15,
@@ -35159,7 +35525,7 @@ const customBuilderStyles = {
 };
 
 Object.assign(window, { CustomBuilder });
-;Object.assign(window, { CustomBuilder });
+;Object.assign(window, { customPasosDeHoy, CustomBuilder, CustomAviso });
 })();
 </script>
   <!-- Caminos - catalogo y resolvers (sesion 49) -->
@@ -48867,10 +49233,12 @@ function PaceApp() {
     React.createElement(BreatheLibrary, { open: openLibrary === 'breathe', onClose: () => setOpenLibrary(null), onStart: handleStartBreathe })),
     red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
     React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
+    red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
+    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
+
+
     customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
     React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) })),
-    red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
-    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
     red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
     React.createElement(HydrateTracker, { open: openHydrate, onClose: () => setOpenHydrate(false) })),
     red(t('ach.title'), openAchievements, () => setOpenAchievements(false),

@@ -64,7 +64,14 @@ function catalogoFuente() {
       equipo: (r.equipment || []).slice(),
       premium: r.access === 'premium',
       safety: !!r.safety,
-      series: (r.steps || []).filter(s => s && s.mode === 'reps').length,
+      /* Las series son de UN ejercicio (R3, 28 oct.): con varios, las de cada uno si todos
+         tienen las mismas; si no, 0 (sin línea). */
+      series: (() => {
+        const por = {};
+        (r.steps || []).filter(s => s && s.mode === 'reps').forEach(s => { por[s.name] = (por[s.name] || 0) + 1; });
+        const n = Object.values(por);
+        return n.length > 1 && n.some(x => x !== n[0]) ? 0 : (n[0] || 0);
+      })(),
     })));
     return out;
   };
