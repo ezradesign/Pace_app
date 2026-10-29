@@ -168,6 +168,63 @@ test('CONTROL · si lo que falla es el registro y no el estado, lo borrado no vu
   expect((await leerContenedor(page)).events.length).toBe(0);
 });
 
+/* A5 (revisión de ChatGPT del 28 oct.): la copia se escribía en `pace.state.v2` pero lo que había en
+   memoria seguía siendo lo de antes hasta recargar (900 ms, o lo que tardara en cerrarse el aviso de
+   la copia a medias). Cualquier cambio de ese rato (un Foco que acaba, el cambio de día, el resumen
+   de «A tu ritmo») guardaba lo de antes encima de la copia. */
+const prepararUnVaso = (page) => page.evaluate(() => {
+  window.__unVaso = () => window.setState((s) => Object.assign({}, s, { water: Object.assign({}, s.water, { today: (s.water.today || 0) + 1 }) }));
+});
+
+test('A5 · un cambio justo después de escribir la copia, antes de recargar, no guarda lo de antes encima', async ({ context, page }) => {
+  await sembrar(context, { totalFocusMin: 500 });
+  await irAlArtefacto(page);
+  await apuntarDialogos(page);
+  await prepararUnVaso(page);
+  /* En cuanto la copia está escrita, algo de la app cambia el estado. */
+  await page.evaluate((clave) => {
+    const escribir = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) {
+      escribir.call(this, k, v);
+      if (k === clave && !window.__provocado && /"totalFocusMin":42\b/.test(v)) {
+        window.__provocado = true;
+        setTimeout(window.__unVaso, 0);
+      }
+    };
+  }, CLAVE_ESTADO);
+  const recarga = page.waitForEvent('load');
+  await entregarCopia(page, { app: 'PACE', state: ESTADO_COPIA });
+  await recarga;
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  expect((await guardado(page)).totalFocusMin, 'lo de antes se guardó encima de la copia').toBe(42);
+  expect(await page.evaluate(() => window.getState().totalFocusMin)).toBe(42);
+});
+
+test('A5 · con el aviso de la copia a medias abierto, un cambio no guarda lo de antes encima', async ({ context, page }) => {
+  await sembrar(context, { totalFocusMin: 500 });
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  await sembrarEventos(page, 3);
+  const seccion = await page.evaluate(() => window.paceEventsExport());
+  await page.evaluate(() => {
+    window.eventsWebReplaceFromImport = () => Promise.resolve({ result: 'rejected', container: null });
+  });
+  await entregarCopia(page, { app: 'PACE', state: ESTADO_COPIA, events: seccion });
+  await page.locator('[data-pace-aj-aviso]').getByRole('button', { name: 'Importar', exact: true }).click();
+  const parcial = page.locator('[data-pace-aj-aviso]', { hasText: PARCIAL });
+  await expect(parcial).toBeVisible();
+  expect((await guardado(page)).totalFocusMin).toBe(42);
+  await prepararUnVaso(page);
+  await page.evaluate(() => window.__unVaso());
+  expect((await guardado(page)).totalFocusMin, 'con el aviso abierto, lo de antes se guardó encima de la copia').toBe(42);
+  expect(await page.evaluate(() => window.getState().totalFocusMin), 'en memoria sigue lo de antes').toBe(42);
+  const recarga = page.waitForEvent('load');
+  await parcial.getByRole('button', { name: 'Entendido' }).click();
+  await recarga;
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  expect((await guardado(page)).totalFocusMin).toBe(42);
+});
+
 test('4 · importar descarta lo pasajero: un Foco de antes no se cuenta en la copia, y no se ofrece seguir lo de antes', async ({ context, page }) => {
   const hoy = new Date().toDateString();
   await sembrar(context, { focusMode: 'foco', focusMinutes: 25, lastActiveDay: hoy });

@@ -56,6 +56,23 @@ Esos tres enlaces **no son secretos**: pásaselos a la coordinadora. Van en la a
 (`PACE_TIENDA_WEB` en `app/state-compra.js`) y desde ese momento salen los botones de compra y
 «Gestionar la suscripción».
 
+**El número de cada enlace de pago, en Cloudflare.** La web solo da código a lo que se compra con
+un enlace de PACE: si un día vendes otra cosa con la misma cuenta de Stripe, eso no abre PACE
+completo. Para que sepa cuáles son:
+
+1. En Stripe, abre **Enlaces de pago** y entra en uno de los de PACE. En la barra de direcciones
+   del navegador sale algo como `dashboard.stripe.com/test/payment-links/plink_1Q…`: copia lo que
+   empieza por `plink_`, hasta el final. Hazlo con los dos (el de por vida y el mensual): ahora los
+   del modo de prueba y, cuando los enciendas, los de verdad.
+2. En Cloudflare (como en el paso 2.1, pero de tipo «Texto»: no es secreto), nombre
+   `PACE_ENLACES_STRIPE` y de valor los números separados por comas, los de prueba y los de verdad
+   juntos: `plink_…, plink_…, plink_…, plink_…`. Guarda y *Retry deployment*.
+
+La dirección que empieza por `https://buy.stripe.com/` no vale: es el enlace para comprar, no su
+número. Sin ningún `plink_`, la web no da códigos (Stripe ve un error y vuelve a mandar el aviso
+durante tres días). Si un día haces otro enlace para PACE, añade aquí su número, o quien compre
+con él se quedará sin código.
+
 ## 5. Stripe: la llave que solo lee, para /recuperar
 
 `pacegrass.app/recuperar` busca la compra en Stripe con el correo y el número del recibo, y para eso
@@ -72,7 +89,12 @@ con la numeración seguida de toda la cuenta, los números de factura se adivina
 
 Con Stripe en modo de prueba, compra con la tarjeta `4242 4242 4242 4242`: la página de gracias tiene
 que darte un código y «Abrir PACE con tu código» tiene que abrir PACE completo. Si la página se queda
-esperando, el aviso no llega: mira en Stripe › Webhooks si el destino da error.
+esperando, el aviso no llega o no es de PACE: mira en Stripe › Webhooks si el destino da error, y que
+el número de ese enlace esté en `PACE_ENLACES_STRIPE`.
+
+Una compra del modo de prueba da un código de **tres días**, de por vida o mensual: sirve para probar
+y nunca abre PACE completo para siempre. Que en Ajustes salga «Hasta el …» con una compra de por vida
+de prueba es lo esperado.
 
 Si dejas pagar con adeudo SEPA (u otro método que se confirma tarde), pruébalo también con el IBAN de
 prueba de Stripe para la confirmación: la página de gracias dice primero que el pago se está

@@ -66,6 +66,8 @@ test('sin la compra, dice por qué: no la encuentra, la mensual terminó, demasi
     [410, { ok: false, motivo: 'terminada' }, 'Esa suscripción ya terminó, así que no tiene un código nuevo.'],
     [429, { ok: false, motivo: 'espera' }, 'Demasiados intentos seguidos. Prueba otra vez dentro de un rato.'],
     [503, { ok: false, motivo: 'cerrada' }, 'Aún no se puede recuperar aquí. Escríbenos y te lo mandamos.'],
+    /* La mensual sin código guardado y sin baja (A3, 28 oct.): no «terminada», sino escribir. */
+    [503, { ok: false, motivo: 'pendiente' }, 'Aún no se puede recuperar aquí. Escríbenos y te lo mandamos.'],
   ];
   let i = 0;
   await page.route('**/api/recuperar', (r) => {

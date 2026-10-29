@@ -6,9 +6,16 @@
    (el de la renovación). Es la única conexión de la app, y solo para quien paga al mes.
 
    POST { codigo }  -> 200 { codigo } con el último de esa suscripción (puede ser el mismo,
-                       si aún no se ha renovado) · 410 { terminada } si la suscripción ya
-                       no sigue · 400 si el código no lo firmó k2 o no es de una mensual ·
-                       503 sin la k2 o sin el almacén.
+                       si aún no se ha renovado) · 410 { terminada } si Stripe avisó de que
+                       terminó · 404 { pendiente } si aún no hay ninguno guardado · 400 si el
+                       código no lo firmó k2 o no es de una mensual · 503 sin la k2 o sin el
+                       almacén.
+
+   «TERMINADA» ES SOLO LA MARCA DE LA BAJA (`baja:`, functions/api/stripe.js; revisión de
+   ChatGPT del 28 oct., A3). Que falte el código guardado no lo dice: KV tarda en llegar a
+   todos sus centros de datos y recuerda un rato que algo no estaba, y el aviso del alta
+   pudo no llegar. Para la app, «pendiente» es como no tener red: sigue con su código hasta
+   su fecha y vuelve a preguntar (app/state-licencia.js).
 
    Traer el código de antes es haber pagado esa suscripción: no hay cuentas ni correo. La
    firma se comprueba con la mitad pública de la k2 que ya tiene la función. */
@@ -34,6 +41,7 @@ export async function onRequestPost({ request, env }) {
   try { pedido = JSON.parse(texto); } catch (e) { return respuesta({ ok: false, motivo: 'formato' }, 400); }
   const datos = await comprobarVenta(pedido && pedido.codigo, env.PACE_K2_PRIVADA);
   if (!datos || datos.type !== 'monthly' || typeof datos.order !== 'string') return respuesta({ ok: false, motivo: 'codigo' }, 400);
+  if (await env.VENTAS.get('baja:' + datos.order)) return respuesta({ ok: false, terminada: true }, 410);
   const ultimo = await env.VENTAS.get('suscripcion:' + datos.order);
-  return ultimo ? respuesta({ ok: true, codigo: ultimo }) : respuesta({ ok: false, terminada: true }, 410);
+  return ultimo ? respuesta({ ok: true, codigo: ultimo }) : respuesta({ ok: false, pendiente: true }, 404);
 }

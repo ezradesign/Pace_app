@@ -226,8 +226,14 @@ function paceLicenciaCuandoSepa() {
    app, solo para quien paga al mes. Sin red, lo ya comprobado sigue valiendo hasta
    su fecha: la firma se comprueba sin servidor. Lo que se aprende de cada intento
    (`_paceRenovar.motivo`) es lo que separa «sin red» de «terminada» cuando caduca:
-     sin-red    no se pudo preguntar (sin conexión, o la web no contestó);
-     terminada  la web dice que esa suscripción ya no sigue (410). */
+     sin-red    no se pudo preguntar (sin conexión, o la web no contestó), o la web aún no
+                tiene el código nuevo («pendiente»): se vuelve a preguntar;
+     terminada  Stripe avisó de que esa suscripción terminó (410, solo con su baja).
+   LA RESPUESTA LLEGA TARDE A VECES (revisión de ChatGPT del 28 oct., A4): al abrir PACE desde
+   /gracias con una de por vida, el enlace se canjea mientras la mensual de antes se renueva.
+   Justo antes de escribir, ya comprobada la firma, se mira que lo guardado siga siendo el
+   código del que partió: si entró otro mientras tanto, no se toca. Así una de por vida no se
+   cambia nunca por una mensual. */
 var PACE_RENOVAR_ANTES = 3.5 * 24 * 3600 * 1000;
 var PACE_RENOVAR_CADA = 6 * 3600 * 1000;
 var _paceRenovar = { ultimo: 0, motivo: null, enCurso: null };
@@ -243,7 +249,8 @@ function paceLicenciaEsMensual(datos) {
   return !!datos && datos.type === 'monthly' && typeof datos.order === 'string' && typeof datos.expiresAt === 'number';
 }
 
-/* -> Promise<'renovada' | 'igual' | 'terminada' | 'sin-red' | null> (null: no tocaba). */
+/* -> Promise<'renovada' | 'igual' | 'otro' | 'terminada' | 'sin-red' | null> (null: no tocaba;
+   'otro': mientras preguntaba, entró otro código y se queda ese). */
 function paceLicenciaRenovar(forzar) {
   if (!paceLicenciaPermitida() || typeof fetch !== 'function') return Promise.resolve(null);
   var g = paceLicenciaGuardada();
@@ -266,7 +273,14 @@ function paceLicenciaRenovar(forzar) {
       var nuevo = d && d.codigo ? paceLicenciaLeer(d.codigo) : null;
       if (!nuevo || !paceLicenciaEsMensual(nuevo.datos) || nuevo.datos.order !== g.datos.order) return fin('sin-red');
       if (!(nuevo.datos.expiresAt > g.datos.expiresAt)) return fin('igual');
-      return paceLicenciaCanjear(d.codigo).then(function (x) { return fin(x && x.ok ? 'renovada' : 'sin-red'); });
+      return paceLicenciaComprobar(d.codigo).then(function (x) {
+        if (!x.ok) return fin('sin-red');
+        var ahora = paceLicenciaGuardada();
+        if (!ahora || ahora.codigo !== g.codigo) return fin('otro');
+        _paceLicenciaFirma = { codigo: x.codigo, estado: 'buena' };
+        setState({ licencia: x.codigo });
+        return fin('renovada');
+      });
     });
   }).catch(function () { return fin('sin-red'); });
   return _paceRenovar.enCurso;

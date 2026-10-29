@@ -4,56 +4,47 @@
  * del recibo, la función busca la compra en Stripe en ese momento y vuelve a dar el código, sin
  * guardar nada. Sin cuenta de Stripe todavía: el Stripe de estas pruebas es falso y contesta como
  * su API (listas de Checkout Sessions por correo y de facturas por suscripción), y la llave k2 se
- * crea en cada pasada. En Node, como tests/cobro-venta.spec.js.
+ * crea en cada pasada. En Node, como tests/cobro-venta.spec.js (lo común, en cobro.helpers.js).
  *
  * QUE DEFIENDE:
- *  · Apagada sin las tres piezas de Ez; solo desde la propia web; formatos y tamaños.
+ *  · Apagada sin las cuatro piezas de Ez; solo desde la propia web; formatos y tamaños.
  *  · La de por vida vuelve a firmarse con k2 y su pedido; la mensual da el último código de su
  *    suscripción (el de /api/renovar), por el número de la primera factura o de una renovación.
  *  · El número se compara sin «#», espacios ni guiones, y el correo sin mayúsculas.
  *  · Sin compra con ese correo y ese número, lo mismo exista o no el correo; devuelta o terminada,
  *    lo dice; Stripe caído, 502. No escribe nada en `VENTAS`.
  *  · Diez intentos por hora desde una conexión; el undécimo, 429.
+ *  · Lo de la revisión de ChatGPT del 28 oct. que también toca aquí: solo las compras de los enlaces
+ *    de PACE (A6), «terminada» solo con la marca de la baja (A3) y una compra del modo de prueba de
+ *    Stripe con un código de pocos días (A7). Esas tres caen contra la 0.185.0.
  * Contra v0.184.0 caen todas: no hay /api/recuperar.
  */
 'use strict';
 
 const crypto = require('crypto');
-const path = require('path');
-const { pathToFileURL } = require('url');
 const { test, expect } = require('@playwright/test');
+const { importar, DIA, ENLACE, almacen, env: envCobro, leerCodigo } = require('./cobro.helpers');
 
-const RAIZ = path.join(__dirname, '..');
-const importar = (rel) => import(pathToFileURL(path.join(RAIZ, rel)).href);
-
-const k2 = crypto.generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
-const K2_PRIVADA = JSON.stringify(k2.privateKey.export({ format: 'jwk' }));
 const LLAVE = 'rk_test_' + crypto.randomBytes(12).toString('hex');
-
-function almacen(inicial) {
-  const datos = new Map(Object.entries(inicial || {}));
-  return { datos, get: async (k) => (datos.has(k) ? datos.get(k) : null), put: async (k, v) => { datos.set(k, v); }, delete: async (k) => { datos.delete(k); } };
-}
-const env = (kv) => ({ STRIPE_LECTURA: LLAVE, PACE_K2_PRIVADA: K2_PRIVADA, VENTAS: kv || almacen() });
-
-function leerCodigo(codigo) {
-  const [pre, datos, firma] = codigo.split('.');
-  const vale = crypto.verify('sha256', Buffer.from(pre + '.' + datos), { key: k2.publicKey, dsaEncoding: 'ieee-p1363' }, Buffer.from(firma, 'base64url'));
-  return { vale, datos: JSON.parse(Buffer.from(datos, 'base64url').toString('utf8')) };
-}
+const env = (kv) => envCobro(kv, { STRIPE_LECTURA: LLAVE });
 
 /* Lo que tiene la cuenta de Stripe de estas pruebas. */
-const POR_VIDA = { id: 'cs_test_vida1A2b3C4d5E6f', object: 'checkout.session', mode: 'payment', payment_status: 'paid', status: 'complete',
-  customer_details: { email: 'Quien@Compra.es' }, invoice: null,
-  payment_intent: { id: 'pi_1', latest_charge: { id: 'ch_1', receipt_number: '1653-2453', refunded: false, disputed: false } } };
-const DEVUELTA = { id: 'cs_test_devu1A2b3C4d5E6f', object: 'checkout.session', mode: 'payment', payment_status: 'paid', status: 'complete',
-  customer_details: { email: 'otra@compra.es' }, invoice: null,
-  payment_intent: { id: 'pi_2', latest_charge: { id: 'ch_2', receipt_number: '2001-0002', refunded: true, disputed: false } } };
-const MENSUAL = { id: 'cs_test_mes1A2b3C4d5E6f7', object: 'checkout.session', mode: 'subscription', payment_status: 'no_payment_required',
-  status: 'complete', subscription: 'sub_1AbCdEf', customer_details: { email: 'mes@compra.es' },
+const cobro = (id, numero, extra) => ({ id: 'pi_' + id, latest_charge: Object.assign({ id: 'ch_' + id, receipt_number: numero, refunded: false, disputed: false }, extra) });
+const POR_VIDA = { id: 'cs_test_vida1A2b3C4d5E6f', object: 'checkout.session', livemode: true, mode: 'payment', payment_status: 'paid', status: 'complete',
+  payment_link: ENLACE.vidaReal, customer_details: { email: 'Quien@Compra.es' }, invoice: null, payment_intent: cobro(1, '1653-2453') };
+const DEVUELTA = { id: 'cs_test_devu1A2b3C4d5E6f', object: 'checkout.session', livemode: true, mode: 'payment', payment_status: 'paid', status: 'complete',
+  payment_link: ENLACE.vidaReal, customer_details: { email: 'otra@compra.es' }, invoice: null, payment_intent: cobro(2, '2001-0002', { refunded: true }) };
+const MENSUAL = { id: 'cs_test_mes1A2b3C4d5E6f7', object: 'checkout.session', livemode: true, mode: 'subscription', payment_status: 'no_payment_required',
+  status: 'complete', subscription: 'sub_1AbCdEf', payment_link: ENLACE.mesReal, customer_details: { email: 'mes@compra.es' },
   invoice: { id: 'in_1', number: 'A1B2C3D4-0001', receipt_number: null }, payment_intent: null };
+/* Una compra de la misma cuenta que no es PACE (A6) y una del modo de prueba de Stripe (A7). */
+const OTRA_COSA = { id: 'cs_test_otro1A2b3C4d5E6f', object: 'checkout.session', livemode: true, mode: 'payment', payment_status: 'paid', status: 'complete',
+  payment_link: 'plink_1OtraCosa000009', customer_details: { email: 'otro@compra.es' }, invoice: null, payment_intent: cobro(4, '4004-0004') };
+const DE_PRUEBA = { id: 'cs_test_prue1A2b3C4d5E6f', object: 'checkout.session', livemode: false, mode: 'payment', payment_status: 'paid', status: 'complete',
+  payment_link: ENLACE.vida, customer_details: { email: 'prueba@compra.es' }, invoice: null, payment_intent: cobro(5, '5005-0005') };
 const STRIPE = {
-  sesiones: { 'quien@compra.es': [POR_VIDA], 'Quien@Compra.es': [POR_VIDA], 'otra@compra.es': [DEVUELTA], 'mes@compra.es': [MENSUAL] },
+  sesiones: { 'quien@compra.es': [POR_VIDA], 'Quien@Compra.es': [POR_VIDA], 'otra@compra.es': [DEVUELTA], 'mes@compra.es': [MENSUAL],
+    'otro@compra.es': [OTRA_COSA], 'prueba@compra.es': [DE_PRUEBA] },
   facturas: { sub_1AbCdEf: [{ id: 'in_1', number: 'A1B2C3D4-0001' }, { id: 'in_2', number: 'A1B2C3D4-0002', receipt_number: '3002-7781' }] },
 };
 
@@ -85,9 +76,9 @@ test.describe('/api/recuperar', () => {
   test.beforeAll(async () => { recuperar = await importar('functions/api/recuperar.js'); fetchDeVerdad = globalThis.fetch; });
   test.afterEach(() => { globalThis.fetch = fetchDeVerdad; delete globalThis.caches; });
 
-  test('sin las tres piezas de Ez está apagada, y solo contesta a la propia web', async () => {
+  test('sin las cuatro piezas de Ez está apagada, y solo contesta a la propia web', async () => {
     conStripe(STRIPE);
-    for (const falta of ['STRIPE_LECTURA', 'PACE_K2_PRIVADA', 'VENTAS']) {
+    for (const falta of ['STRIPE_LECTURA', 'PACE_K2_PRIVADA', 'VENTAS', 'PACE_ENLACES_STRIPE']) {
       const e = env();
       delete e[falta];
       expect((await recuperar.onRequestPost({ request: pedir({ correo: 'quien@compra.es', recibo: '1653-2453' }), env: e })).status, falta).toBe(503);
@@ -127,10 +118,17 @@ test.describe('/api/recuperar', () => {
       expect(await r.json()).toEqual({ ok: true, codigo: 'PACE1.ultimo.codigo' });
     }
     expect(kv.datos.size).toBe(1);
-    /* Si la mensual ya terminó (/api/stripe borró su `suscripcion:`), no hay código nuevo. */
-    const r = await recuperar.onRequestPost({ request: pedir({ correo: 'mes@compra.es', recibo: 'A1B2C3D4-0001' }), env: env(almacen()) });
+    /* Si la mensual ya terminó (/api/stripe dejó la marca de su baja), no hay código nuevo. */
+    const r = await recuperar.onRequestPost({ request: pedir({ correo: 'mes@compra.es', recibo: 'A1B2C3D4-0001' }), env: env(almacen({ 'baja:sub_1AbCdEf': '1761600000' })) });
     expect(r.status).toBe(410);
     expect((await r.json()).motivo).toBe('terminada');
+  });
+
+  test('A3 · la mensual sin su código guardado y sin baja no dice «terminada»: dice que aún no se puede', async () => {
+    conStripe(STRIPE);
+    const r = await recuperar.onRequestPost({ request: pedir({ correo: 'mes@compra.es', recibo: 'A1B2C3D4-0001' }), env: env(almacen()) });
+    expect(r.status, 'dijo que la suscripción había terminado sin la marca de la baja').toBe(503);
+    expect(await r.json()).toEqual({ ok: false, motivo: 'pendiente' });
   });
 
   test('sin compra con ese correo y ese número, lo mismo exista o no el correo; devuelta, lo dice; Stripe caído, 502', async () => {
@@ -144,6 +142,26 @@ test.describe('/api/recuperar', () => {
     expect((await devuelta.json()).motivo).toBe('devuelta');
     conStripe(STRIPE, true);
     expect((await recuperar.onRequestPost({ request: pedir({ correo: 'quien@compra.es', recibo: '1653-2453' }), env: env() })).status).toBe(502);
+  });
+
+  test('A6 · una compra de la misma cuenta que no es de PACE no da código', async () => {
+    conStripe(STRIPE);
+    const kv = almacen();
+    const r = await recuperar.onRequestPost({ request: pedir({ correo: 'otro@compra.es', recibo: '4004-0004' }), env: env(kv) });
+    expect(r.status, 'una compra de otro enlace de pago dio un código de PACE').toBe(404);
+    expect(await r.json()).toEqual({ ok: false, motivo: 'no' });
+    expect(kv.datos.size).toBe(0);
+  });
+
+  test('A7 · una compra del modo de prueba de Stripe da un código de pocos días', async () => {
+    conStripe(STRIPE);
+    const r = await recuperar.onRequestPost({ request: pedir({ correo: 'prueba@compra.es', recibo: '5005-0005' }), env: env() });
+    expect(r.status).toBe(200);
+    const c = leerCodigo((await r.json()).codigo);
+    expect(c.vale).toBe(true);
+    expect(c.datos.type).toBe('lifetime');
+    expect(c.datos.expiresAt, 'una compra de prueba dio PACE completo para siempre').toBeLessThanOrEqual(Date.now() + 3 * DIA);
+    expect(c.datos.expiresAt).toBeGreaterThan(Date.now());
   });
 
   test('diez intentos por hora desde una conexión; el undécimo espera', async () => {

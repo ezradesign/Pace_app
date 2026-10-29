@@ -14,7 +14,8 @@
    PACE_LICENCIAS_ANULADAS). El mensual lleva además `expiresAt` (milisegundos): el
    periodo pagado y unos días de margen; la app pide uno nuevo al acercarse el final. El
    del alta con prueba lleva `trialEnd` (milisegundos): con él la app avisa dos días antes
-   de que acabe la prueba, sin preguntar a nadie.
+   de que acabe la prueba, sin preguntar a nadie. Uno de por vida lleva `expiresAt` solo si
+   es de una compra del modo de prueba de Stripe, que da códigos de pocos días.
 
    Aquí no hay nada de Stripe: si un día cobra otro (Paddle), cambia el que lee el pago,
    no esto. Módulo de Cloudflare (`export`), con WebCrypto, que también tiene Node. */
@@ -37,16 +38,16 @@ export async function ventaLlave(privada) {
     { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
 }
 
-/* venta: { plan: 'lifetime' | 'monthly', order, expiresAt? }  ->  'PACE1.…'
+/* venta: { plan: 'lifetime' | 'monthly', order, expiresAt?, trialEnd? }  ->  'PACE1.…'
    `ahora` (ms) da el día de `issuedAt`, en UTC. */
 export async function firmarVenta(venta, privada, ahora) {
   if (!venta || VENTA_PLANES.indexOf(venta.plan) === -1) throw new Error('plan');
   if (typeof venta.order !== 'string' || !/^[A-Za-z0-9_]{6,255}$/.test(venta.order)) throw new Error('pedido');
   const datos = { type: venta.plan, keyId: VENTA_KEY_ID, issuedAt: new Date(ahora).toISOString().slice(0, 10), order: venta.order };
-  if (venta.plan === 'monthly') {
+  if (venta.plan === 'monthly' || venta.expiresAt != null) {
     if (!(venta.expiresAt > ahora)) throw new Error('caduca');
     datos.expiresAt = Math.round(venta.expiresAt);
-    if (venta.trialEnd > ahora) datos.trialEnd = Math.round(venta.trialEnd);
+    if (venta.plan === 'monthly' && venta.trialEnd > ahora) datos.trialEnd = Math.round(venta.trialEnd);
   }
   const firmado = 'PACE1.' + b64url(new TextEncoder().encode(JSON.stringify(datos)));
   const llave = await ventaLlave(privada);
@@ -57,6 +58,17 @@ export async function firmarVenta(venta, privada, ahora) {
 function deB64url(s) {
   const bin = atob(String(s).replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((String(s).length + 3) % 4));
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+}
+
+/* Los datos de un código SIN comprobar su firma, o null. Para comparar con lo que ya hay en
+   `VENTAS`, donde solo escribe la web (functions/api/stripe.js). */
+export function ventaDatos(codigo) {
+  try {
+    const partes = String(codigo || '').split('.');
+    if (partes.length !== 3 || partes[0] !== 'PACE1') return null;
+    const datos = JSON.parse(new TextDecoder().decode(deB64url(partes[1])));
+    return datos && typeof datos === 'object' ? datos : null;
+  } catch (e) { return null; }
 }
 
 /* ¿Este código lo firmó k2? Con la mitad pública de la privada (x, y). -> sus datos o null.
@@ -71,7 +83,7 @@ export async function comprobarVenta(codigo, privada) {
     const vale = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, llave, deB64url(partes[2]),
       new TextEncoder().encode(partes[0] + '.' + partes[1]));
     if (!vale) return null;
-    const datos = JSON.parse(new TextDecoder().decode(deB64url(partes[1])));
+    const datos = ventaDatos(codigo);
     return datos && datos.keyId === VENTA_KEY_ID ? datos : null;
   } catch (e) { return null; }
 }

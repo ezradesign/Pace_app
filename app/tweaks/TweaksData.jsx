@@ -246,7 +246,20 @@ function TweaksDataSection({ onReset, isWeb }) {
     setPidiendoImportar(null);
     if (!pendiente) return;
     const { incoming, eventsSection } = pendiente;
-    const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+    /* EN CUANTO LA COPIA ESTÁ ESCRITA, LO QUE HAY EN MEMORIA ES LA COPIA, y nada guarda hasta
+       recargar (revisión de ChatGPT del 28 oct., A5). Lo de antes seguía en memoria los 900 ms
+       de la recarga, o lo que tardara en cerrarse el aviso de la copia a medias, y cualquier
+       cambio de ese rato (un Foco que acaba, el cambio de día, el resumen de «A tu ritmo») lo
+       guardaba encima de la copia. Desde que se escribe, siempre se recarga.
+       La copia se lee como al arrancar, igual que la de otra pestaña (state-core.pestanas.js):
+       el objeto que entra no lleva lo que añaden las migraciones, y dibujarlo tumba la app. Si
+       no se pudiera leer, lo de memoria se queda, pero tampoco se guarda. */
+    const writeLegacy = () => {
+      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+      let copia = getState();
+      try { copia = loadState(true); } catch (e) {}
+      try { paceAdoptarEstado(copia, true); } catch (e) {}
+    };
     /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
        hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
        por almacenamiento bloqueado, el estado nuevo no se guardaba, el
@@ -263,8 +276,8 @@ function TweaksDataSection({ onReset, isWeb }) {
          barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
          arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde
          guardarlo (`unavailable`). Si la copia traía registro y no entró, se dice con un
-         aviso que hay que cerrar, y al cerrarlo se recarga: lo que hay en memoria es lo de
-         antes, y el siguiente gesto lo guardaría encima de la copia (auditoría del 21 oct.). */
+         aviso que hay que cerrar, y al cerrarlo se recarga (auditoría del 21 oct.): hasta
+         entonces la app sigue con la copia en memoria y sin guardar nada. */
       const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
       if (traiaRegistro && r.result !== 'committed') { setAvisoParcial(true); return; }
       setMsg({ kind: 'ok', text: t('settings.msg.imported') });

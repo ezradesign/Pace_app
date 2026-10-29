@@ -64,6 +64,46 @@ test('si la suscripción ya no sigue, caducado dice «terminada»', async ({ pag
   expect(await page.evaluate(() => window.hasPremiumEntitlement())).toBe(false);
 });
 
+/* A3 (revisión de ChatGPT del 28 oct.): «terminada» es solo la marca de la baja. Si la web aún no
+   tiene el código nuevo, contesta «pendiente»: para la app es como no tener red, y vuelve a pedirlo. */
+test('A3 · «pendiente» es «sin red», no «terminada», y lo vuelve a pedir', async ({ page, context }) => {
+  const viejo = mensual(-1), nuevo = mensual(30);
+  let listo = false;
+  const pedidos = await abrir(page, context, viejo, (r) => (listo
+    ? r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, codigo: nuevo }) })
+    : r.fulfill({ status: 404, contentType: 'application/json', body: '{"ok":false,"pendiente":true}' })));
+  await expect.poll(() => pedidos.length).toBe(1);
+  expect(await page.evaluate(() => window.paceLicenciaRenovar(true))).toBe('sin-red');
+  expect(await estado(page)).toEqual({ estado: 'caducado', motivo: 'sin-red' });
+  listo = true;
+  await page.evaluate(() => window.dispatchEvent(new Event('online')));
+  await expect.poll(() => page.evaluate(() => window.getState().licencia)).toBe(nuevo);
+  expect(await estado(page)).toEqual({ estado: 'vigente', motivo: null });
+});
+
+/* A4 (revisión de ChatGPT del 28 oct.): al abrir PACE desde /gracias con una de por vida, la app
+   canjea el enlace y renueva la mensual a la vez. La respuesta de la renovación que llega después
+   no puede pisar lo que entró mientras tanto. */
+test('A4 · si mientras renueva entra una de por vida, la respuesta que llega tarde no la pisa', async ({ page, context }) => {
+  const viejo = mensual(2), nuevo = mensual(33);
+  const vida = firmar({ order: 'cs_test_vida1A2b3C4d5E6f' });
+  let soltar;
+  const suelta = new Promise((r) => { soltar = r; });
+  const pedidos = await abrir(page, context, viejo, async (r) => {
+    await suelta;
+    await r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, codigo: nuevo }) });
+  });
+  await expect.poll(() => pedidos.length).toBe(1);
+  /* La renovación del arranque espera su respuesta; esta es su promesa. */
+  await page.evaluate(() => { window.__renovando = window.paceLicenciaRenovar(true); });
+  expect(await page.evaluate((c) => window.paceLicenciaCanjear(c).then((r) => r.ok), vida)).toBe(true);
+  soltar();
+  await page.evaluate(() => window.__renovando);
+  expect(await page.evaluate(() => window.getState().licencia), 'la mensual renovada pisó la de por vida').toBe(vida);
+  expect(await page.evaluate(() => window.hasPremiumEntitlement())).toBe(true);
+  expect(await page.evaluate(() => window.paceLicenciaEstado().datos.expiresAt)).toBeUndefined();
+});
+
 test('un código de otra suscripción no se canjea en la renovación', async ({ page, context }) => {
   const viejo = mensual(2);
   const ajeno = firmar({ type: 'monthly', order: 'sub_OTRA99', expiresAt: Date.now() + 40 * DIA });
