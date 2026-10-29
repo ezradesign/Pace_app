@@ -2251,7 +2251,16 @@ Object.assign(window.PACE_STRINGS.es, {
   'custom.step.down': 'Bajar',
   'custom.step.remove': 'Quitar',
   'custom.step.perSide': '{s} s por lado',
-  'custom.builder.needWork': 'Añade al menos un ejercicio: solo con descansos no hay rutina.'
+  'custom.builder.needWork': 'Añade al menos un ejercicio: solo con descansos no hay rutina.',
+
+  'custom.draft.seguir': 'Seguir con tu borrador',
+  'custom.draft.sigues': 'Sigues con tu borrador {cuando}.',
+  'custom.draft.sigues.edit': 'Sigues con tus cambios en “{name}”.',
+  'custom.draft.cero': 'Empezar de cero',
+  'custom.draft.deshacer': 'Deshacer los cambios',
+  'custom.draft.cuando.hoy': 'de hoy, {h}',
+  'custom.draft.cuando.ayer': 'de ayer, {h}',
+  'custom.draft.cuando.dia': 'del {d}'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -2431,7 +2440,16 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.step.down': 'Move down',
   'custom.step.remove': 'Remove',
   'custom.step.perSide': '{s} s per side',
-  'custom.builder.needWork': 'Add at least one exercise: rests alone aren’t a routine.'
+  'custom.builder.needWork': 'Add at least one exercise: rests alone aren’t a routine.',
+
+  'custom.draft.seguir': 'Continue your draft',
+  'custom.draft.sigues': 'Back to your draft {cuando}.',
+  'custom.draft.sigues.edit': 'Back to your changes to “{name}”.',
+  'custom.draft.cero': 'Start over',
+  'custom.draft.deshacer': 'Undo the changes',
+  'custom.draft.cuando.hoy': 'from today, {h}',
+  'custom.draft.cuando.ayer': 'from yesterday, {h}',
+  'custom.draft.cuando.dia': 'from {d}'
 });
 })();
 </script>
@@ -6381,6 +6399,17 @@ var FORMAS_AJENAS = { ritmo: 'objeto' };
 
 
 
+function paceBorradorValido(b) {
+  if (!paceEsObjetoPlano(b) || !Array.isArray(b.steps)) return false;
+  if (b.editId !== null && typeof b.editId !== 'string') return false;
+  if (typeof b.name !== 'string' || typeof b.savedAt !== 'number' || !isFinite(b.savedAt)) return false;
+  return b.steps.every(function (p) {
+    return paceEsObjetoPlano(p) && typeof p.name === 'string' && typeof p.dur === 'number' && isFinite(p.dur);
+  });
+}
+
+
+
 
 function paceSanearEstado(parsed, defaults) {
   if (!paceEsObjetoPlano(parsed)) throw new Error('el estado guardado no es un objeto');
@@ -6512,6 +6541,13 @@ function paceSanearEstado(parsed, defaults) {
     }
   }
 
+
+
+
+  if ('customDraft' in e && e.customDraft !== undefined && !paceBorradorValido(e.customDraft)) {
+    delete e.customDraft;reparados.push('customDraft');
+  }
+
   Object.keys(FORMAS_AJENAS).forEach(function (k) {
     if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
       e[k] = undefined;delete e[k];reparados.push(k);
@@ -6552,9 +6588,9 @@ function paceLeerRescate() {
 }
 
 Object.assign(window, {
-  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano
+  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano, paceBorradorValido
 });
-;Object.assign(window, { PACE_RESCATE_KEY, paceEsObjetoPlano, paceCopiaDefecto, PACE_SERIES_SEMANA, paceSerieValida, FORMAS_AJENAS, paceSanearEstado, paceGuardarRescate, paceLeerRescate });
+;Object.assign(window, { PACE_RESCATE_KEY, paceEsObjetoPlano, paceCopiaDefecto, PACE_SERIES_SEMANA, paceSerieValida, FORMAS_AJENAS, paceBorradorValido, paceSanearEstado, paceGuardarRescate, paceLeerRescate });
 })();
 </script>
   <!-- state-core.palette (s163): como la paleta llega al DOM y como se funde
@@ -9671,19 +9707,57 @@ function updateCustomRoutine(id, draft) {
   return updated;
 }
 
+
 function deleteCustomRoutine(id) {
   setState((s) => ({
-    ...s,
+    ...(s.customDraft && s.customDraft.editId === id ? customSinBorrador(s) : s),
     customRoutines: (Array.isArray(s.customRoutines) ? s.customRoutines : []).filter((r) => r.id !== id)
   }));
+}
+
+
+
+
+
+
+function getCustomDraft() {
+  const b = getState().customDraft;
+  return b && typeof paceBorradorValido === 'function' && paceBorradorValido(b) ? b : null;
+}
+
+function setCustomDraft(editId, name, steps) {
+  const customDraft = { editId: editId || null, name: String(name || ''),
+    steps: (Array.isArray(steps) ? steps : []).map((p) => ({ name: p.name, dur: p.dur })), savedAt: Date.now() };
+  setState((s) => ({ ...s, customDraft }));
+}
+
+function customSinBorrador(s) {
+  const resto = { ...s };
+  delete resto.customDraft;
+  return resto;
+}
+
+function clearCustomDraft() {
+  if ('customDraft' in getState()) setState(customSinBorrador);
+}
+
+
+function customBorradorCuando(savedAt, tn, lang) {
+  const d = new Date(savedAt);
+  const hora = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  const ayer = new Date();ayer.setDate(ayer.getDate() - 1);
+  if (d.toDateString() === new Date().toDateString()) return tn('custom.draft.cuando.hoy', { h: hora });
+  if (d.toDateString() === ayer.toDateString()) return tn('custom.draft.cuando.ayer', { h: hora });
+  return tn('custom.draft.cuando.dia', { d: paceFechaCorta(d, lang, { day: 'numeric', month: 'short' }) });
 }
 
 Object.assign(window, {
   CUSTOM_LIMITS, customTieneTrabajo, customSegundos, customMinutos,
   getCustomRoutines, getCustomRoutine,
-  addCustomRoutine, updateCustomRoutine, deleteCustomRoutine
+  addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
+  getCustomDraft, setCustomDraft, clearCustomDraft, customBorradorCuando
 });
-;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, customMinutos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine });
+;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, customMinutos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine, getCustomDraft, setCustomDraft, customSinBorrador, clearCustomDraft, customBorradorCuando });
 })();
 </script>
   <!-- Feedback ligero por rutina (s116 · B2.2b-2): recordRoutineFeedback +
@@ -34822,7 +34896,7 @@ Object.assign(window, { EXERCISE_REGISTRY, getExerciseDef, EXERCISE_PIDE, ejerci
 const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
 
 function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = _ref;
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [pace] = usePace();
 
 
@@ -34834,6 +34908,9 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
   const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
+
+
+  const borrador = typeof getCustomDraft === 'function' && pace.customDraft ? getCustomDraft() : null;
 
   const invitar = () => paceAbrirPremium({ nombre: t('custom.section.title') });
   const openBuilder = (id) => {
@@ -34888,6 +34965,25 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
       onEdit: () => openBuilder(r.id) }
     )
     ),
+    borrador ?
+    React.createElement("button", {
+      type: "button",
+      "data-pace-custom-borrador": true,
+      onClick: () => openBuilder(borrador.editId),
+      style: customRoutinesStyles.createCard,
+      onMouseEnter: (e) => {e.currentTarget.style.borderColor = accent;e.currentTarget.style.color = 'var(--ink)';},
+      onMouseLeave: (e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.color = 'var(--ink-2)';} },
+
+    React.createElement("span", { style: { display: 'block', textAlign: 'center', padding: '8px 14px' } },
+    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"),
+    React.createElement("span", { style: { display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.draft.seguir')),
+    React.createElement("span", { style: { display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
+    [borrador.name.trim(),
+    borrador.steps.length === 1 ? t('custom.steps.one') : borrador.steps.length ? tn('custom.steps.many', { n: borrador.steps.length }) : '',
+    customBorradorCuando(borrador.savedAt, tn, lang)].filter(Boolean).join(' · ')
+    )
+    )
+    ) :
     !atLimit ?
     React.createElement("button", {
       type: "button",
@@ -35032,22 +35128,82 @@ Object.assign(window, { CustomRoutinesSection, CustomRoutineCard });
 
 
 
-const { useState: useStateCB } = React;
+
+
+
+
+
+const { useState: useStateCB, useEffect: useEffectCB, useRef: useRefCB } = React;
+
+
+function customPasosDeHoy(lista) {
+  return lista.map((p) => ({ ...p, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(p.name) : p.name }));
+}
 
 function CustomBuilder(_ref) {let { editId, onClose } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
 
-  const existing = editId ? getCustomRoutine(editId) : null;
-  const [name, setName] = useStateCB(existing ? existing.name : '');
+  const [target] = useStateCB(editId || null);
+  const existing = target ? getCustomRoutine(target) : null;
 
-  const [steps, setSteps] = useStateCB(existing ?
-  existing.steps.map((s) => ({ ...s, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(s.name) : s.name })) :
-  []);
+  const [retomado, setRetomado] = useStateCB(() => {
+    const b = getCustomDraft();
+    return b && b.editId === target ? b : null;
+  });
+  const [name, setName] = useStateCB(() => retomado ? retomado.name : existing ? existing.name : '');
+  const [steps, setSteps] = useStateCB(() => customPasosDeHoy(retomado ? retomado.steps : existing ? existing.steps : []));
   const [view, setView] = useStateCB('editor');
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
   const limits = window.CUSTOM_LIMITS;
+
+
+  const igualQueGuardada = (n, lista) => {
+    const base = existing ? customPasosDeHoy(existing.steps) : [];
+    return n.trim() === (existing ? existing.name : '').trim() && lista.length === base.length &&
+    lista.every((p, i) => p.name === base[i].name && p.dur === base[i].dur);
+  };
+  const ultimo = useRefCB(null);
+  const espera = useRefCB(null);
+  const montado = useRefCB(false);
+  const guardarBorrador = () => {
+    clearTimeout(espera.current);
+    const u = ultimo.current;
+    ultimo.current = null;
+    if (!u) return;
+    if (!u.igual) setCustomDraft(u.target, u.name, u.steps);else
+    if (getCustomDraft() && getCustomDraft().editId === u.target) clearCustomDraft();
+  };
+
+  const soltarBorrador = () => {
+    clearTimeout(espera.current);
+    ultimo.current = null;
+    if (getCustomDraft() && getCustomDraft().editId === target) clearCustomDraft();
+  };
+  useEffectCB(() => {
+    if (!montado.current) {montado.current = true;return;}
+    ultimo.current = { target, name, steps, igual: igualQueGuardada(name, steps) };
+    clearTimeout(espera.current);
+    espera.current = setTimeout(guardarBorrador, 400);
+  }, [name, steps]);
+  useEffectCB(() => {
+    const oculta = () => {if (document.visibilityState === 'hidden') guardarBorrador();};
+    window.addEventListener('pagehide', guardarBorrador);
+    document.addEventListener('visibilitychange', oculta);
+    return () => {
+      window.removeEventListener('pagehide', guardarBorrador);
+      document.removeEventListener('visibilitychange', oculta);
+      guardarBorrador();
+    };
+  }, []);
+
+  const deCero = () => {
+    soltarBorrador();
+    setRetomado(null);
+    setName(existing ? existing.name : '');
+    setSteps(customPasosDeHoy(existing ? existing.steps : []));
+  };
 
 
 
@@ -35077,19 +35233,21 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
 
   const save = () => {
     const draft = { name, steps };
-    const ok = editId ? updateCustomRoutine(editId, draft) : addCustomRoutine(draft);
-    if (ok) onClose();
+    const ok = target ? updateCustomRoutine(target, draft) : addCustomRoutine(draft);
+    if (ok) {soltarBorrador();onClose();}
   };
   const del = () => {
     if (!confirmDelete) {setConfirmDelete(true);return;}
-    deleteCustomRoutine(editId);
+    soltarBorrador();
+    deleteCustomRoutine(target);
     onClose();
   };
 
 
+
   if (view === 'picker') {
     return (
-      React.createElement(Modal, { open: true, onClose: onClose, tagLabel: t('custom.builder.tag'), title: t('custom.picker.title'), maxWidth: 720 },
+      React.createElement(Modal, { open: true, onClose: () => setView('editor'), tagLabel: t('custom.builder.tag'), title: t('custom.picker.title'), maxWidth: 720 },
       React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } },
       React.createElement("button", { onClick: () => setView('editor'), style: customBuilderStyles.ghostBtn },
       t('custom.picker.back')
@@ -35133,10 +35291,15 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
       open: true,
       onClose: onClose,
       tagLabel: t('custom.builder.tag'),
-      title: editId ? t('custom.builder.title.edit') : t('custom.builder.title.new'),
+      title: target ? t('custom.builder.title.edit') : t('custom.builder.title.new'),
       subtitle: t('custom.builder.subtitle'),
       maxWidth: 720 },
 
+    retomado && (target ?
+    React.createElement(CustomAviso, { tipo: "borrador", texto: tn('custom.draft.sigues.edit', { name: existing ? existing.name : retomado.name }),
+      boton: t('custom.draft.deshacer'), onBoton: deCero }) :
+    React.createElement(CustomAviso, { tipo: "borrador", texto: tn('custom.draft.sigues', { cuando: customBorradorCuando(retomado.savedAt, tn, lang) }),
+      boton: t('custom.draft.cero'), onBoton: deCero })),
     React.createElement("div", { style: { marginBottom: 18 } },
     React.createElement(Meta, { style: { marginBottom: 6 } }, t('custom.builder.name.label')),
     React.createElement("input", {
@@ -35199,7 +35362,7 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
 
     React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 16 } },
     React.createElement("div", null,
-    editId &&
+    target &&
     React.createElement("button", {
       onClick: del,
       style: {
@@ -35226,7 +35389,28 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
 
 }
 
+
+
+function CustomAviso(_ref3) {let { tipo, texto, boton, onBoton, tono = 'var(--move)' } = _ref3;
+  return (
+    React.createElement("p", { "data-pace-custom-aviso": tipo, style: { ...customBuilderStyles.aviso, borderLeft: '3px solid ' + tono } },
+    React.createElement("span", null, texto),
+    boton && React.createElement("button", { type: "button", onClick: onBoton, style: customBuilderStyles.avisoBtn }, boton)
+    ));
+
+}
+
 const customBuilderStyles = {
+  aviso: {
+    display: 'flex', flexWrap: 'wrap', gap: '6px 12px', alignItems: 'baseline',
+    margin: '0 0 14px', padding: '10px 12px',
+    borderRadius: 'var(--r-sm)', background: 'var(--paper-2)',
+    fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-2)'
+  },
+  avisoBtn: {
+    padding: 0, border: 0, background: 'none', font: 'inherit', fontSize: 13.5,
+    color: 'var(--ink)', textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer'
+  },
   nameInput: {
     width: '100%', boxSizing: 'border-box',
     padding: '10px 12px', fontSize: 15,
@@ -35292,7 +35476,7 @@ const customBuilderStyles = {
 };
 
 Object.assign(window, { CustomBuilder });
-;Object.assign(window, { CustomBuilder });
+;Object.assign(window, { customPasosDeHoy, CustomBuilder, CustomAviso });
 })();
 </script>
   <!-- Caminos - catalogo y resolvers (sesion 49) -->

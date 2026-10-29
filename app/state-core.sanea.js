@@ -67,6 +67,17 @@ function paceSerieValida(a) {
    Solo se exige la forma de arriba: el dueño ya es defensivo con lo de dentro. */
 var FORMAS_AJENAS = { ritmo: 'objeto' };
 
+/* Un borrador se lee entero o no se lee: `{ editId: null | 'custom.…', name, steps: [{ name, dur }],
+   savedAt }`. Lo mira también `getCustomDraft`, por si llega algo sin pasar por aquí. */
+function paceBorradorValido(b) {
+  if (!paceEsObjetoPlano(b) || !Array.isArray(b.steps)) return false;
+  if (b.editId !== null && typeof b.editId !== 'string') return false;
+  if (typeof b.name !== 'string' || typeof b.savedAt !== 'number' || !isFinite(b.savedAt)) return false;
+  return b.steps.every(function (p) {
+    return paceEsObjetoPlano(p) && typeof p.name === 'string' && typeof p.dur === 'number' && isFinite(p.dur);
+  });
+}
+
 /* paceSanearEstado(parsed, defaults) -> { estado, reparados }
    Lanza si `parsed` no es un objeto: ahi no hay nada campo a campo que salvar,
    y el `catch` de loadState guarda el rescate. */
@@ -200,6 +211,13 @@ function paceSanearEstado(parsed, defaults) {
     }
   }
 
+  /* El borrador del constructor (uno solo; Ez, «U1 B», 29 oct.): si no se puede leer entero, se
+     descarta él solo. Es lo que llevabas sin guardar, no una rutina: perderlo cuesta ese rato, y
+     dejarlo a medias tumbaría el constructor al abrirlo. */
+  if ('customDraft' in e && e.customDraft !== undefined && !paceBorradorValido(e.customDraft)) {
+    delete e.customDraft; reparados.push('customDraft');
+  }
+
   Object.keys(FORMAS_AJENAS).forEach(function (k) {
     if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
       e[k] = undefined; delete e[k]; reparados.push(k);
@@ -240,5 +258,5 @@ function paceLeerRescate() {
 }
 
 Object.assign(window, {
-  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano,
+  PACE_RESCATE_KEY, paceSanearEstado, paceGuardarRescate, paceLeerRescate, paceEsObjetoPlano, paceBorradorValido,
 });

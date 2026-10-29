@@ -202,6 +202,15 @@ Object.assign(window.PACE_STRINGS.es, {
     'custom.step.remove':              'Quitar',
     'custom.step.perSide':             '{s} s por lado',
     'custom.builder.needWork':         'Añade al menos un ejercicio: solo con descansos no hay rutina.',
+    // El borrador que espera (Ez, «U1 B», 29 oct.)
+    'custom.draft.seguir':             'Seguir con tu borrador',
+    'custom.draft.sigues':             'Sigues con tu borrador {cuando}.',
+    'custom.draft.sigues.edit':        'Sigues con tus cambios en “{name}”.',
+    'custom.draft.cero':               'Empezar de cero',
+    'custom.draft.deshacer':           'Deshacer los cambios',
+    'custom.draft.cuando.hoy':         'de hoy, {h}',
+    'custom.draft.cuando.ayer':        'de ayer, {h}',
+    'custom.draft.cuando.dia':         'del {d}',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -382,4 +391,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'custom.step.remove':              'Remove',
     'custom.step.perSide':             '{s} s per side',
     'custom.builder.needWork':         'Add at least one exercise: rests alone aren’t a routine.',
+    // The draft that waits (Ez, «U1 B», 29 Oct)
+    'custom.draft.seguir':             'Continue your draft',
+    'custom.draft.sigues':             'Back to your draft {cuando}.',
+    'custom.draft.sigues.edit':        'Back to your changes to “{name}”.',
+    'custom.draft.cero':               'Start over',
+    'custom.draft.deshacer':           'Undo the changes',
+    'custom.draft.cuando.hoy':         'from today, {h}',
+    'custom.draft.cuando.ayer':        'from yesterday, {h}',
+    'custom.draft.cuando.dia':         'from {d}',
 });

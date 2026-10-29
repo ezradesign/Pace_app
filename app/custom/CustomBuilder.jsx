@@ -14,24 +14,84 @@
 
    Solo se llega aquí con `puedeCrearRutinas()` (la sección de la
    biblioteca no ofrece nada clicable en estado bloqueado). Los steppers
-   usan la forma funcional de setState local (decisión s89). */
+   usan la forma funcional de setState local (decisión s89).
 
-const { useState: useStateCB } = React;
+   CERRAR NO PREGUNTA NADA (Ez, «U1 B · Tu borrador te espera», 29 oct.): lo que llevas se
+   guarda solo como borrador (`setCustomDraft`, uno solo) y se abre donde lo dejaste. Se escribe
+   un rato después de cada cambio, y enseguida al cerrar, al guardar mal, al ocultarse la página
+   o al cerrarse la pestaña, así que también lo salva la app que se cierra. */
+
+const { useState: useStateCB, useEffect: useEffectCB, useRef: useRefCB } = React;
+
+/* Un paso guardado con un nombre de antes se edita con el de hoy, y así se guarda. */
+function customPasosDeHoy(lista) {
+  return lista.map(p => ({ ...p, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(p.name) : p.name }));
+}
 
 function CustomBuilder({ editId, onClose }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
 
-  const existing = editId ? getCustomRoutine(editId) : null;
-  const [name, setName] = useStateCB(existing ? existing.name : '');
-  /* Un paso guardado con un nombre de antes se edita con el de hoy, y así se guarda. */
-  const [steps, setSteps] = useStateCB(existing
-    ? existing.steps.map(s => ({ ...s, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(s.name) : s.name }))
-    : []);
+  const [target] = useStateCB(editId || null);
+  const existing = target ? getCustomRoutine(target) : null;
+  /* El borrador se retoma si es de lo mismo que se abre: la rutina nueva o esta rutina. */
+  const [retomado, setRetomado] = useStateCB(() => {
+    const b = getCustomDraft();
+    return b && b.editId === target ? b : null;
+  });
+  const [name, setName] = useStateCB(() => (retomado ? retomado.name : existing ? existing.name : ''));
+  const [steps, setSteps] = useStateCB(() => customPasosDeHoy(retomado ? retomado.steps : existing ? existing.steps : []));
   const [view, setView] = useStateCB('editor'); // 'editor' | 'picker'
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
   const limits = window.CUSTOM_LIMITS;
+
+  /* Igual que lo guardado (o vacía, si es nueva) no hay nada que esperar: sin borrador. */
+  const igualQueGuardada = (n, lista) => {
+    const base = existing ? customPasosDeHoy(existing.steps) : [];
+    return n.trim() === (existing ? existing.name : '').trim() && lista.length === base.length
+      && lista.every((p, i) => p.name === base[i].name && p.dur === base[i].dur);
+  };
+  const ultimo = useRefCB(null);   // lo último que cambiaste y aún no está en el borrador
+  const espera = useRefCB(null);
+  const montado = useRefCB(false);
+  const guardarBorrador = () => {
+    clearTimeout(espera.current);
+    const u = ultimo.current;
+    ultimo.current = null;
+    if (!u) return;
+    if (!u.igual) setCustomDraft(u.target, u.name, u.steps);
+    else if (getCustomDraft() && getCustomDraft().editId === u.target) clearCustomDraft();
+  };
+  /* Al guardar o al empezar de cero, lo pendiente ya no vale, y el borrador, si es de esto, se va. */
+  const soltarBorrador = () => {
+    clearTimeout(espera.current);
+    ultimo.current = null;
+    if (getCustomDraft() && getCustomDraft().editId === target) clearCustomDraft();
+  };
+  useEffectCB(() => {
+    if (!montado.current) { montado.current = true; return; }
+    ultimo.current = { target, name, steps, igual: igualQueGuardada(name, steps) };
+    clearTimeout(espera.current);
+    espera.current = setTimeout(guardarBorrador, 400);
+  }, [name, steps]);
+  useEffectCB(() => {
+    const oculta = () => { if (document.visibilityState === 'hidden') guardarBorrador(); };
+    window.addEventListener('pagehide', guardarBorrador);
+    document.addEventListener('visibilitychange', oculta);
+    return () => {
+      window.removeEventListener('pagehide', guardarBorrador);
+      document.removeEventListener('visibilitychange', oculta);
+      guardarBorrador();   // cerrar por cualquier vía: Cancelar, la ×, Escape o tocar fuera
+    };
+  }, []);
+
+  const deCero = () => {
+    soltarBorrador();
+    setRetomado(null);
+    setName(existing ? existing.name : '');
+    setSteps(customPasosDeHoy(existing ? existing.steps : []));
+  };
 
   /* El total es el de la tarjeta y la vista previa (`customMinutos`). Un paso por lados dura
      su tiempo en cada lado, y su tiempo lo dice. */
@@ -61,19 +121,21 @@ function CustomBuilder({ editId, onClose }) {
 
   const save = () => {
     const draft = { name, steps };
-    const ok = editId ? updateCustomRoutine(editId, draft) : addCustomRoutine(draft);
-    if (ok) onClose();
+    const ok = target ? updateCustomRoutine(target, draft) : addCustomRoutine(draft);
+    if (ok) { soltarBorrador(); onClose(); }
   };
   const del = () => {
     if (!confirmDelete) { setConfirmDelete(true); return; }
-    deleteCustomRoutine(editId);
+    soltarBorrador();
+    deleteCustomRoutine(target);
     onClose();
   };
 
   // ── Vista PICKER ──────────────────────────────────────────────────
+  /* Escape, la × y tocar fuera vuelven a tu rutina, como «← Volver» (U1): no la cierran. */
   if (view === 'picker') {
     return (
-      <Modal open={true} onClose={onClose} tagLabel={t('custom.builder.tag')} title={t('custom.picker.title')} maxWidth={720}>
+      <Modal open={true} onClose={() => setView('editor')} tagLabel={t('custom.builder.tag')} title={t('custom.picker.title')} maxWidth={720}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <button onClick={() => setView('editor')} style={customBuilderStyles.ghostBtn}>
             {t('custom.picker.back')}
@@ -117,10 +179,15 @@ function CustomBuilder({ editId, onClose }) {
       open={true}
       onClose={onClose}
       tagLabel={t('custom.builder.tag')}
-      title={editId ? t('custom.builder.title.edit') : t('custom.builder.title.new')}
+      title={target ? t('custom.builder.title.edit') : t('custom.builder.title.new')}
       subtitle={t('custom.builder.subtitle')}
       maxWidth={720}
     >
+      {retomado && (target
+        ? <CustomAviso tipo="borrador" texto={tn('custom.draft.sigues.edit', { name: existing ? existing.name : retomado.name })}
+            boton={t('custom.draft.deshacer')} onBoton={deCero} />
+        : <CustomAviso tipo="borrador" texto={tn('custom.draft.sigues', { cuando: customBorradorCuando(retomado.savedAt, tn, lang) })}
+            boton={t('custom.draft.cero')} onBoton={deCero} />)}
       <div style={{ marginBottom: 18 }}>
         <Meta style={{ marginBottom: 6 }}>{t('custom.builder.name.label')}</Meta>
         <input
@@ -183,7 +250,7 @@ function CustomBuilder({ editId, onClose }) {
 
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 16 }}>
         <div>
-          {editId && (
+          {target && (
             <button
               onClick={del}
               style={{
@@ -210,7 +277,28 @@ function CustomBuilder({ editId, onClose }) {
   );
 }
 
+/* Una línea dentro del constructor que dice qué pasa y qué puedes hacer, como en la maqueta que
+   eligió Ez: arriba la del borrador, con el color de Mueve; encima de Guardar, la que no deja guardar. */
+function CustomAviso({ tipo, texto, boton, onBoton, tono = 'var(--move)' }) {
+  return (
+    <p data-pace-custom-aviso={tipo} style={{ ...customBuilderStyles.aviso, borderLeft: '3px solid ' + tono }}>
+      <span>{texto}</span>
+      {boton && <button type="button" onClick={onBoton} style={customBuilderStyles.avisoBtn}>{boton}</button>}
+    </p>
+  );
+}
+
 const customBuilderStyles = {
+  aviso: {
+    display: 'flex', flexWrap: 'wrap', gap: '6px 12px', alignItems: 'baseline',
+    margin: '0 0 14px', padding: '10px 12px',
+    borderRadius: 'var(--r-sm)', background: 'var(--paper-2)',
+    fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-2)',
+  },
+  avisoBtn: {
+    padding: 0, border: 0, background: 'none', font: 'inherit', fontSize: 13.5,
+    color: 'var(--ink)', textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer',
+  },
   nameInput: {
     width: '100%', boxSizing: 'border-box',
     padding: '10px 12px', fontSize: 15,

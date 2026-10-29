@@ -42,7 +42,7 @@
 const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
 
 function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [pace] = usePace(); // mantiene la suscripcion reactiva: al canjear un
                             // código la seccion re-renderiza y el guard relee el store.
   // El acceso pasa por el guard central de entitlement, como el resto de
@@ -54,6 +54,9 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const routines = (Array.isArray(pace.customRoutines) ? pace.customRoutines : []).filter((r) => r && typeof r === 'object');
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
+  /* LO QUE DEJASTE SIN GUARDAR va en el sitio de «Crear rutina» (Ez, «U1 B», 29 oct.), también con
+     diez rutinas: es la única puerta a ese borrador, y abre el constructor donde lo dejaste. */
+  const borrador = typeof getCustomDraft === 'function' && pace.customDraft ? getCustomDraft() : null;
 
   const invitar = () => paceAbrirPremium({ nombre: t('custom.section.title') });
   const openBuilder = (id) => {
@@ -108,7 +111,26 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
               onEdit={() => openBuilder(r.id)}
             />
           ))}
-          {!atLimit ? (
+          {borrador ? (
+            <button
+              type="button"
+              data-pace-custom-borrador
+              onClick={() => openBuilder(borrador.editId)}
+              style={customRoutinesStyles.createCard}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = accent; e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-2)'; }}
+            >
+              <span style={{ display: 'block', textAlign: 'center', padding: '8px 14px' }}>
+                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</span>
+                <span style={{ display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.draft.seguir')}</span>
+                <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
+                  {[borrador.name.trim(),
+                    borrador.steps.length === 1 ? t('custom.steps.one') : borrador.steps.length ? tn('custom.steps.many', { n: borrador.steps.length }) : '',
+                    customBorradorCuando(borrador.savedAt, tn, lang)].filter(Boolean).join(' · ')}
+                </span>
+              </span>
+            </button>
+          ) : !atLimit ? (
             <button
               type="button"
               data-pace-custom-crear

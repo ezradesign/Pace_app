@@ -117,15 +117,53 @@ function updateCustomRoutine(id, draft) {
   return updated;
 }
 
+/* Borrar una rutina se lleva también los cambios que esperaban en su borrador. */
 function deleteCustomRoutine(id) {
   setState(s => ({
-    ...s,
+    ...(s.customDraft && s.customDraft.editId === id ? customSinBorrador(s) : s),
     customRoutines: (Array.isArray(s.customRoutines) ? s.customRoutines : []).filter(r => r.id !== id),
   }));
+}
+
+/* EL BORRADOR DEL CONSTRUCTOR (Ez, «U1 B · Tu borrador te espera», 29 oct.). Cerrar el constructor
+   no pregunta: lo que llevas espera aquí, en el estado y en este dispositivo, y «Tus rutinas» lo
+   ofrece. UNO SOLO: `{ editId, name, steps, savedAt }`, con `editId` null para una rutina nueva o
+   el id de la que estabas cambiando, que no se toca hasta que guardes. Se va al guardar, con
+   «Empezar de cero» y al borrar su rutina. El saneador descarta uno que no se pueda leer. */
+function getCustomDraft() {
+  const b = getState().customDraft;
+  return b && typeof paceBorradorValido === 'function' && paceBorradorValido(b) ? b : null;
+}
+
+function setCustomDraft(editId, name, steps) {
+  const customDraft = { editId: editId || null, name: String(name || ''),
+    steps: (Array.isArray(steps) ? steps : []).map(p => ({ name: p.name, dur: p.dur })), savedAt: Date.now() };
+  setState(s => ({ ...s, customDraft }));
+}
+
+function customSinBorrador(s) {
+  const resto = { ...s };
+  delete resto.customDraft;
+  return resto;
+}
+
+function clearCustomDraft() {
+  if ('customDraft' in getState()) setState(customSinBorrador);
+}
+
+/* «de hoy, 10:42», «de ayer, 18:05» o «del 27 oct.»: cuándo se dejó el borrador. */
+function customBorradorCuando(savedAt, tn, lang) {
+  const d = new Date(savedAt);
+  const hora = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  const ayer = new Date(); ayer.setDate(ayer.getDate() - 1);
+  if (d.toDateString() === new Date().toDateString()) return tn('custom.draft.cuando.hoy', { h: hora });
+  if (d.toDateString() === ayer.toDateString()) return tn('custom.draft.cuando.ayer', { h: hora });
+  return tn('custom.draft.cuando.dia', { d: paceFechaCorta(d, lang, { day: 'numeric', month: 'short' }) });
 }
 
 Object.assign(window, {
   CUSTOM_LIMITS, customTieneTrabajo, customSegundos, customMinutos,
   getCustomRoutines, getCustomRoutine,
   addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
+  getCustomDraft, setCustomDraft, clearCustomDraft, customBorradorCuando,
 });
