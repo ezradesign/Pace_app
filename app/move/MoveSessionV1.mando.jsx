@@ -7,9 +7,10 @@
    «Anterior», «Pausar» y lo que hace la flecha ahora. Va DENTRO del botón (no en `aria-label`):
    es su nombre para un lector de pantalla y para las pruebas, y tocarla pulsa el botón. Cuelga
    por debajo a la misma altura en los tres, aunque el del centro sea mayor; el mando reserva ese
-   alto siempre, así que cambiar de palabra no mueve nada.
+   alto siempre, así que cambiar de palabra no mueve nada. Bajo las palabras va «Auto» (Ez, 29 oct.)
+   cuando hay alto para una fila más (`autoAbajo`, el botón; si no, lo pinta la línea de «Siguiente»).
 
-   El «+15 s» de colocarse y del cambio de lado no vive aquí: va junto a la cuenta atrás
+   El «+15 s» de colocarse y del cambio de lado no vive aquí: va bajo la cuenta atrás
    (MoveSessionV1.cuerpo.jsx), que es de lo que habla.
 
    EL FOCO VUELVE A LA SESIÓN TRAS UN CLIC. Si se quedara en el botón, Espacio lo pulsaría otra
@@ -26,7 +27,7 @@ function v1SoltarFoco(e) {
 /* EL ARO DEL «›» (Ez, 1A del 25 oct.): con «Auto», se llena hasta que la pantalla pasa sola
    (`anillo`, de 0 a 1). Sin «Auto», `espera` marca el botón cuando la cuenta ya acabó y lo que
    sigue lo decide quien hace la rutina. */
-function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo }) {
+function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo, autoAbajo }) {
   const tono = acentoModulo || accent;
   const vuelta = 2 * Math.PI * 27;
   const lleno = Math.max(0, Math.min(1, anillo || 0));
@@ -34,7 +35,7 @@ function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, 
   const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
   const pulsa = (fn) => (e) => { v1SoltarFoco(e); if (fn) fn(); };
   return (
-    <div data-pace-v1-mando className="pace-v1-mando">
+    <div data-pace-v1-mando className="pace-v1-mando" {...(autoAbajo ? { 'data-pace-v1-con-auto': '' } : {})}>
       <button type="button" className="pace-v1-redondo" data-pace-v1-btn="prev" onClick={pulsa(prev.onClick)} disabled={prev.disabled}
         title={etiqueta(textos.prev)}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5 9 12l5.5 5.5" /></svg>
@@ -59,6 +60,7 @@ function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, 
         )}
         <span className="pace-v1-rotulo">{etiqueta(next.label)}</span>
       </button>
+      {autoAbajo && <div className="pace-v1-mando-auto">{autoAbajo}</div>}
     </div>
   );
 }

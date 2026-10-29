@@ -45,7 +45,8 @@ async function medirMando(page) {
   return page.evaluate(() => {
     const m = [...document.querySelectorAll('[data-pace-v1-mando]')].find(e => e.getBoundingClientRect().width > 0);
     if (!m) return null;
-    const bs = [...m.querySelectorAll('button')].map(b => b.getBoundingClientRect());
+    /* Los tres redondos: «Auto», con alto, va también en el mando (Ez, 29 oct.). */
+    const bs = [...m.querySelectorAll('[data-pace-v1-btn]')].map(b => b.getBoundingClientRect());
     const pie = document.querySelector('[data-pace-session-footer]').getBoundingClientRect();
     const barra = document.querySelector('[data-pace-v1-progress]').getBoundingClientRect();
     return {

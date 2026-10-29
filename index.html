@@ -2623,12 +2623,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.skipOptional': 'Saltar este paso',
   'move.sideAutoHint': 'El lado siguiente empieza solo',
 
+
   'move.auto': 'Auto',
   'move.auto.title': 'Avanzar solo',
   'move.repsPace': 'reps · a tu ritmo',
   'move.tapDone': 'Pulsa › al acabar',
   'move.tapGo': 'Pulsa › para seguir',
-  'move.placeHintMano': 'Colócate sin prisa · empiezas con ›',
+  'move.placeHintMano': 'Colócate sin prisa · pulsa «Empezar ya»',
 
   'move.flecha.hecho': 'Hecho',
   'move.flecha.descanso': 'Saltar descanso',
@@ -2776,7 +2777,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.repsPace': 'reps · at your pace',
   'move.tapDone': 'Tap › when you are done',
   'move.tapGo': 'Tap › to go on',
-  'move.placeHintMano': 'Get set, no rush · start with ›',
+  'move.placeHintMano': 'Get set, no rush · press Begin now',
 
   'move.flecha.hecho': 'Done',
   'move.flecha.descanso': 'Skip rest',
@@ -32044,25 +32045,33 @@ if (!_paceMoveV1Css) {
     }
     /* En escritorio el dibujo manda (es mayor que en el móvil a igual altura, la regla de la
        piel): con el nombre a 5vh y el número a 9,5vh, a 1530x702 el texto se comía el hueco y
-       el círculo quedaba por debajo del del móvil. */
+       el círculo quedaba por debajo del del móvil. Y menos aire entre piezas, con el número un
+       poco menor (Ez, 29 oct.): el bloque queda junto y el círculo gana unos 25 px. */
     .pace-v1-raiz {
-      --v1-u: clamp(8px, calc(1.3 * var(--pace-vh, 1vh)), 18px);
+      --v1-u: clamp(5px, calc(0.7 * var(--pace-vh, 1vh)), 12px);
       --v1-nombre: clamp(28px, calc(4.2 * var(--pace-vh, 1vh)), 44px);
       --v1-cue: 18px;
-      --v1-num: clamp(52px, calc(8.2 * var(--pace-vh, 1vh)), 84px);
+      --v1-num: clamp(46px, calc(6.8 * var(--pace-vh, 1vh)), 72px);
       --v1-fuerte: 20px;
       flex: 1 1 auto; min-height: 0; width: 100%;
       display: flex; flex-direction: column; align-items: center;
     }
 
+    /* El bloque, junto y centrado (Ez, 29 oct.): el círculo se lleva el alto libre hasta su techo
+       y lo que sobra va arriba y abajo, no entre las piezas. El aire de dentro va en rellenos y en
+       el hueco de la columna, que es lo que cuenta useV1Glifo: con márgenes, el círculo pedía de
+       más. Centra con márgenes automáticos, que son solo lo que sobra, y no con justify-content:
+       si no cabe, el bloque se alinea arriba y lo que sobra cae debajo, como el centro de la
+       sesión (SessionShell). Centrado, a 320x568 se salía también por arriba, bajo la cabecera. */
     .pace-v1 {
       position: relative;
       flex: 1 1 auto; min-height: 0; width: 100%; max-width: 620px; margin: 0 auto;
-      padding-top: var(--v1-u);
+      padding-bottom: var(--v1-u);
       display: flex; flex-direction: column; align-items: center; row-gap: var(--v1-u);
       text-align: center;
     }
-    .pace-v1-aire { flex: 1 1 0; min-height: 0; }
+    .pace-v1 > .pace-v1-glifo { margin-top: auto; }
+    .pace-v1 > .pace-v1-colas { margin-bottom: auto; }
 
     /* El dibujo y su aro. StepGlyph trae su margen en línea; aquí manda la columna. */
     .pace-v1-glifo { position: relative; flex: none; display: grid; place-items: center; }
@@ -32117,6 +32126,8 @@ if (!_paceMoveV1Css) {
 
     /* El número mide lo mismo en todas las fases (lo eligió el usuario en s177); solo cambia
        el color: la cuenta de colocarse va en tinta secundaria. */
+    /* Con el hueco de la columna encima y el relleno del cuerpo debajo de la línea de abajo, el
+       número queda a la misma distancia de la descripción que de la barra (tests/runner-congelado). */
     .pace-v1-numgrupo { flex: none; display: grid; justify-items: center; row-gap: 6px; }
     .pace-v1 [data-pace-v1-num] {
       font-family: var(--font-display); font-style: italic; font-weight: 400;
@@ -32125,7 +32136,8 @@ if (!_paceMoveV1Css) {
          y el 9 de la línea y el número parecía descentrado de una rep a otra. */
       font-variant-numeric: lining-nums tabular-nums;
     }
-    .pace-v1-numfila { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 24px; }
+    /* El hueco de la pastilla, centrado bajo la etiqueta y en todos los pasos (Ez, 29 oct.). */
+    .pace-v1-pastilla { display: flex; align-items: center; justify-content: center; min-height: 24px; }
     [data-pace-v1-numlabel] { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
     .pace-v1-mas {
       font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--ink-2);
@@ -32160,18 +32172,19 @@ if (!_paceMoveV1Css) {
       font-variant-numeric: lining-nums tabular-nums;
     }
     .pace-v1-velo-texto { margin: 0; max-width: 320px; font-size: 14px; line-height: 1.45; color: var(--ink-2); white-space: pre-line; }
-    /* El hueco de «Con una basta», bajo la etiqueta del número, en todos los pasos de la rutina. */
-    .pace-v1-numbasta { display: flex; align-items: center; justify-content: center; min-height: 24px; }
 
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
-    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
+    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: 0 auto calc(var(--v1-u) * 1.6); }
     .pace-v1-siguiente {
       display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 12px;
-      text-align: center; margin-top: 8px; font-size: 10px; line-height: 1.45;
+      text-align: center; margin-top: 4px; font-size: 10px; line-height: 1.45;
       letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
     }
 
-    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. */
+    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. Bajo
+       las palabras del mando si hay alto (Ez, 29 oct.): el mando le guarda su fila abajo. */
+    .pace-v1-mando[data-pace-v1-con-auto] { position: relative; padding-bottom: 56px; }
+    .pace-v1-mando-auto { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
     .pace-v1-auto {
       display: inline-flex; align-items: center; gap: 7px; height: 24px; padding: 0 9px 0 5px;
       border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink-2);
@@ -32236,18 +32249,33 @@ if (!_paceMoveV1Css) {
 
     @media (max-width: 640px) {
       .pace-v1-raiz {
-        --v1-u: clamp(6px, 1.2vh, 12px);
+        --v1-u: clamp(5px, 0.95vh, 12px);
         --v1-nombre: 28px;
         --v1-cue: 17px;
-        --v1-num: clamp(48px, 8vh, 64px);
+        --v1-num: clamp(44px, 6.8vh, 50px);
         --v1-fuerte: 18px;
       }
       .pace-v1-cuidate { font-size: 15px; }
       .pace-v1-mando { gap: 32px; }
     }
+    /* En un móvil alto, con el círculo en su techo, aún sobra aire: las letras suben un punto. */
+    @media (max-width: 640px) and (min-height: 820px) {
+      .pace-v1-raiz { --v1-nombre: 30px; --v1-cue: 18px; --v1-num: 54px; }
+    }
 
-    /* Cuando no cabe ni con el círculo en su suelo. */
-    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 5px; --v1-num: 46px; }
+    /* Cuando no cabe ni con el círculo en su suelo: el número, el menor de los de la piel, y el aire
+       al mínimo. Y la pastilla, junto a su etiqueta y no debajo, porque debajo no cabe (el mismo
+       criterio que «Auto» bajo 700 px): a 320x568 la línea de abajo pisaba la barra de pasos 20 px.
+       La fila guarda los 24 px de la pastilla, salga o no. */
+    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 4px; --v1-num: 44px; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-numgrupo {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 10px;
+    }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-numgrupo > [data-pace-v1-num] { flex-basis: 100%; }
+    .pace-v1-raiz[data-pace-v1-justo] [data-pace-v1-numlabel] { min-height: 24px; display: flex; align-items: center; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-pastilla:empty { display: none; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-pasos { margin-bottom: var(--v1-u); }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-siguiente { margin-top: 2px; }
 
     @media (prefers-reduced-motion: reduce) {
       .pace-v1-aro-arco { transition: none; }
@@ -32763,6 +32791,7 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
 
 
+
 function v1SoltarFoco(e) {
   if (!e || !(e.detail > 0) || !e.currentTarget) return;
   const raiz = e.currentTarget.closest('[data-pace-session-root]');
@@ -32772,7 +32801,7 @@ function v1SoltarFoco(e) {
 
 
 
-function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo } = _ref;
+function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo, autoAbajo } = _ref;
   const tono = acentoModulo || accent;
   const vuelta = 2 * Math.PI * 27;
   const lleno = Math.max(0, Math.min(1, anillo || 0));
@@ -32780,7 +32809,7 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
   const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
   const pulsa = (fn) => (e) => {v1SoltarFoco(e);if (fn) fn();};
   return (
-    React.createElement("div", { "data-pace-v1-mando": true, className: "pace-v1-mando" },
+    React.createElement("div", _extends({ "data-pace-v1-mando": true, className: "pace-v1-mando" }, autoAbajo ? { 'data-pace-v1-con-auto': '' } : {}),
     React.createElement("button", { type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "prev", onClick: pulsa(prev.onClick), disabled: prev.disabled,
       title: etiqueta(textos.prev) },
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M14.5 6.5 9 12l5.5 5.5" })),
@@ -32804,7 +32833,8 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
     ),
 
     React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(next.label))
-    )
+    ),
+    autoAbajo && React.createElement("div", { className: "pace-v1-mando-auto" }, autoAbajo)
     ));
 
 }
@@ -32816,6 +32846,9 @@ Object.assign(window, { MandoV1, v1SoltarFoco });
   <script>
 ;(function () {
 function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
+
+
+
 
 
 
@@ -32876,7 +32909,19 @@ function CueV1(_ref) {let { lead, text, accent, ...resto } = _ref;
 
 }
 
-function ColaV1(_ref2) {let { strong, support, care, t, live } = _ref2;
+
+
+function AutoV1(_ref2) {let { auto, accent, onAuto, t } = _ref2;
+  return (
+    React.createElement("button", { type: "button", className: "pace-v1-auto", "data-pace-v1-auto": true, "aria-pressed": auto ? 'true' : 'false',
+      title: t('move.auto.title'), style: { '--v1-auto': accent },
+      onClick: (e) => {v1SoltarFoco(e);onAuto();} },
+    React.createElement("span", { className: "pace-v1-auto-pista", "aria-hidden": "true" }), t('move.auto')
+    ));
+
+}
+
+function ColaV1(_ref3) {let { strong, support, care, t, live } = _ref3;
   const marca = (attr) => live ? { [attr]: '' } : {};
   return (
     React.createElement("div", null,
@@ -32900,6 +32945,8 @@ function ColaV1(_ref2) {let { strong, support, care, t, live } = _ref2;
 
 
 
+
+
 function useV1Glifo(cuerpoRef, firma) {
   const [glifo, setGlifo] = useStateCV(() => v1GlyphSizeAhora());
   const [justo, setJusto] = useStateCV(false);
@@ -32913,12 +32960,13 @@ function useV1Glifo(cuerpoRef, firma) {
       const escritorio = v1EsEscritorio();
       const alto = paceLienzoAlto() || 800;
       const suelo = escritorio ? 110 : 96;
-      const techo = Math.min(escritorio ? 250 : 210, Math.round(alto * 0.3));
-      const hijos = Array.from(cuerpo.children);
+      const techo = Math.min(escritorio ? 300 : 262, Math.round(alto * (escritorio ? 0.36 : 0.3)));
+
+      const hijos = Array.from(cuerpo.children).filter((h) => !h.classList.contains('pace-v1-velo'));
       const cs = getComputedStyle(cuerpo);
       const hueco = parseFloat(cs.rowGap) || 0;
       let ocupado = hueco * Math.max(0, hijos.length - 1) + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
-      hijos.forEach((h) => {if (!h.classList.contains('pace-v1-aire')) ocupado += h.offsetHeight;});
+      hijos.forEach((h) => {ocupado += h.offsetHeight;});
       const libre = cuerpo.clientHeight - ocupado;
       const e = estado.current;
       const quiere = e.glifo + libre;
@@ -32944,7 +32992,7 @@ function useV1Glifo(cuerpoRef, firma) {
 
 
 
-function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
+function AroV1(_ref4) {let { fraccion, accent, px } = _ref4;
   const f = Math.max(0, Math.min(1, fraccion || 0));
 
 
@@ -32962,9 +33010,9 @@ function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
 function CuerpoV1(p) {
   const { routine, stepIdx, step, side, elapsed, accent, stepAccent, stepAccentSoft, t, tn, tStep, tInstr, lang } = p;
   const cuerpoRef = useRefCV(null);
+  const glifoRef = useRefCV(null);
   const reservas = React.useMemo(() => v1Reservas(routine, t, tn, tStep, tInstr), [routine.id, lang]);
   const { glifo, justo } = useV1Glifo(cuerpoRef, routine.id + ':' + lang);
-  const conBasta = React.useMemo(() => v1ConBasta(routine), [routine.id]);
   const aro = glifo + 14;
   const enTrabajo = p.phase === 'work' && step.mode !== 'rest';
 
@@ -32974,7 +33022,7 @@ function CuerpoV1(p) {
     React.createElement("div", _extends({ "data-pace-v1-raiz": true, "data-pace-v1-fase": step.mode === 'rest' ? 'rest' : p.phase, className: "pace-v1-raiz", style: { '--v1-acento': stepAccent } },
     justo ? { 'data-pace-v1-justo': '' } : {}),
     React.createElement("div", _extends({ ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" }, p.paused ? { 'data-pace-v1-en-pausa': '' } : {}),
-    React.createElement("div", { "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
+    React.createElement("div", { ref: glifoRef, "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
     React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: v1LadoGlifo(step, p.phase, side) }),
     React.createElement(AroV1, { fraccion: p.fraccion, accent: stepAccent, px: aro })
     ),
@@ -32987,7 +33035,6 @@ function CuerpoV1(p) {
     reservas.cues.map((c, i) => React.createElement(CueV1, { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true", lead: c.lead, text: c.text, accent: stepAccent })),
     React.createElement(CueV1, { "data-pace-v1-cue": true, lead: p.sideLead, text: p.cueText, accent: stepAccent })
     ),
-    React.createElement("div", { className: "pace-v1-aire" }),
     React.createElement("div", { className: "pace-v1-numgrupo" },
     p.gateNumber ?
     React.createElement("div", { "data-pace-v1-num": true, "data-pace-v1-num-gate": true, style: { color: 'var(--ink-2)' } }, p.bigNumber) :
@@ -32997,8 +33044,11 @@ function CuerpoV1(p) {
         color: p.repsProgreso == null ? 'var(--ink)' :
         `color-mix(in oklab, var(--focus) ${Math.round(p.repsProgreso * 100)}%, var(--breathe))`
       } }, p.bigNumber),
-    React.createElement("div", { className: "pace-v1-numfila" },
     React.createElement("span", { "data-pace-v1-numlabel": true }, p.bigLabel),
+
+
+
+    React.createElement("div", { className: "pace-v1-pastilla" },
     p.onMas &&
     React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-mas": true, onClick: (e) => {v1SoltarFoco(e);p.onMas();}, title: t('session.moreTime') }, "+",
     V1_MAS_TIEMPO, " s", React.createElement("span", { className: "pace-v1-oculto" }, " \xB7 ", t('session.moreTime'))
@@ -33007,20 +33057,15 @@ function CuerpoV1(p) {
     p.onSaltar &&
     React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-saltar": true, onClick: (e) => {v1SoltarFoco(e);p.onSaltar();} },
     t('move.skipOptional')
-    )
-
     ),
 
 
-    conBasta &&
-    React.createElement("div", { className: "pace-v1-numbasta" },
     p.onBasta &&
     React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-basta": true, onClick: (e) => {v1SoltarFoco(e);p.onBasta();} },
     t('move.unaBasta')
     )
 
     )
-
     ),
     React.createElement("div", { className: "pace-v1-pila pace-v1-colas", "data-pace-v1-pila": "cola" },
     reservas.colas.map((c, i) => React.createElement("div", { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true" }, React.createElement(ColaV1, _extends({}, c, { t: t })))),
@@ -33028,8 +33073,7 @@ function CuerpoV1(p) {
     React.createElement(ColaV1, { strong: p.supportStrong, support: p.support, care: enTrabajo ? p.careText || '' : undefined, t: t, live: true })
     )
     ),
-    React.createElement("div", { className: "pace-v1-aire" }),
-    p.paused && React.createElement(VeloV1, { aro: aro, cuenta: p.vuelta, t: t })
+    p.paused && React.createElement(VeloV1, { glifoRef: glifoRef, cuenta: p.vuelta, t: t })
     ),
 
     React.createElement("div", { "data-pace-v1-progress": true, className: "pace-v1-pasos" },
@@ -33051,19 +33095,15 @@ function CuerpoV1(p) {
     React.createElement("div", { className: "pace-v1-siguiente" },
     React.createElement("span", { "data-pace-v1-siguiente": true }, p.siguienteTexto || (
     routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep'))),
-    React.createElement("button", { type: "button", className: "pace-v1-auto", "data-pace-v1-auto": true, "aria-pressed": p.auto ? 'true' : 'false',
-      title: t('move.auto.title'), style: { '--v1-auto': accent },
-      onClick: (e) => {v1SoltarFoco(e);p.onAuto();} },
-    React.createElement("span", { className: "pace-v1-auto-pista", "aria-hidden": "true" }), t('move.auto')
-    )
+    p.autoBoton
     )
     )
     ));
 
 }
 
-Object.assign(window, { CuerpoV1, v1Reservas });
-;Object.assign(window, { _extends, v1Reservas, CueV1, ColaV1, useV1Glifo, AroV1, CuerpoV1 });
+Object.assign(window, { CuerpoV1, AutoV1, v1Reservas });
+;Object.assign(window, { _extends, v1Reservas, CueV1, AutoV1, ColaV1, useV1Glifo, AroV1, CuerpoV1 });
 })();
 </script>
   <!-- La rutina a medias (pace.cuerpo.v1): se puede seguir como Respira. -->
@@ -33254,6 +33294,7 @@ Object.assign(window, {
 
 
 
+
 function v1BastaDestino(routine, idx) {
   const pasos = routine && routine.steps || [];
   if (!routine || !routine.unaBasta || !pasos[idx] || pasos[idx].mode !== 'rest') return -1;
@@ -33269,9 +33310,21 @@ function v1BastaDestino(routine, idx) {
 
 
 
-function v1ConBasta(routine) {
-  return !!(routine && routine.unaBasta && (routine.steps || []).some((s, i) => v1BastaDestino(routine, i) >= 0));
+
+const V1_AUTO_ABAJO_DESDE = 700;
+
+function useV1AutoAbajo() {
+  const mira = () => (paceLienzoAlto() || 800) >= V1_AUTO_ABAJO_DESDE;
+  const [abajo, setAbajo] = React.useState(mira);
+  React.useEffect(() => {
+    const f = () => setAbajo(mira());
+    window.addEventListener('resize', f);
+    return () => window.removeEventListener('resize', f);
+  }, []);
+  return abajo;
 }
+
+
 
 
 
@@ -33304,18 +33357,33 @@ function useV1Vuelta(paused, setPaused) {
   return { cuenta, pausar, reanudar, alternar };
 }
 
-function VeloV1(_ref) {let { aro, cuenta, t } = _ref;
+function VeloV1(_ref) {let { glifoRef, cuenta, t } = _ref;
   const volviendo = cuenta != null;
+  const [bajo, setBajo] = React.useState(0);
+  React.useLayoutEffect(() => {
+    const g = glifoRef.current;
+    if (!g) return undefined;
+    const mide = () => setBajo(g.offsetTop + g.offsetHeight);
+    mide();
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(mide) : null;
+    if (ro) {ro.observe(g);if (g.parentElement) ro.observe(g.parentElement);}
+    return () => {if (ro) ro.disconnect();};
+  }, []);
+  const texto = t('move.pausa.texto');
+  const corte = texto.indexOf('. ') + 1;
   return (
     React.createElement("div", { "data-pace-v1-velo": true, className: "pace-v1-velo", role: "status",
-      style: { top: 'calc(var(--v1-u) * 1.5 + ' + aro + 'px)' } },
+      style: { top: 'calc(var(--v1-u) * 0.5 + ' + bajo + 'px)' } },
     React.createElement("div", { className: "pace-v1-velo-kicker" }, t(volviendo ? 'move.pausa.vuelta' : 'move.pausa.kicker')),
     React.createElement("div", { className: "pace-v1-velo-pila" },
     React.createElement("div", { className: "pace-v1-velo-titulo", style: volviendo ? { visibility: 'hidden' } : null }, t('move.pausa.titulo')),
-    React.createElement("div", { className: "pace-v1-velo-num", "data-pace-v1-vuelta": true, style: volviendo ? null : { visibility: 'hidden' } }, volviendo ? cuenta : '')
+
+    React.createElement("div", { className: "pace-v1-velo-num", "data-pace-v1-vuelta": true, style: volviendo ? null : { visibility: 'hidden' } }, volviendo ? cuenta : V1_VUELTA_SEGUNDOS)
     ),
 
-    React.createElement("p", { className: "pace-v1-velo-texto" }, t('move.pausa.texto').replace('. ', '.\n'))
+    React.createElement("p", { className: "pace-v1-velo-texto" }, texto.slice(0, corte), '\n',
+    React.createElement("span", { "data-pace-v1-velo-al-volver": true, style: volviendo ? { visibility: 'hidden' } : null }, texto.slice(corte + 1))
+    )
     ));
 
 }
@@ -33345,8 +33413,8 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
   }, []);
 }
 
-Object.assign(window, { v1BastaDestino, v1ConBasta, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
-;Object.assign(window, { v1BastaDestino, v1ConBasta, useV1Vuelta, VeloV1, useV1Teclas });
+Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
+;Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas });
 })();
 </script>
   <script>
@@ -33419,6 +33487,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const [paused, setPaused] = useStateV1(false);
 
   const vuelta = useV1Vuelta(paused, setPaused);
+  const autoAbajo = useV1AutoAbajo();
   const [placeLeft, setPlaceLeft] = useStateV1(0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
   const sessionStart = useRefV1(rein.startedAt);
@@ -33807,6 +33876,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   phase === 'place' ? 1 - placeLeft / Math.max(1, totalesRef.current.place) :
   phase === 'change' ? 1 - changeLeft / Math.max(1, totalesRef.current.change) :
   fraccion;
+  const autoBoton = React.createElement(AutoV1, { auto: auto, accent: accent, onAuto: () => setPace({ cuerpoAuto: !auto }), t: t });
 
   return (
     React.createElement(SessionShell, {
@@ -33815,7 +33885,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused && vuelta.cuenta == null, onPause: vuelta.alternar, anillo: anillo, espera: espera, acentoModulo: accent,
         prev: { onClick: () => {if (stepIdx > 0) {vuelta.reanudar();startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
         next: { label: primary.label, onClick: () => {vuelta.reanudar();primary.onClick();} },
-        textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') } }),
+        textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }, autoAbajo: autoAbajo ? autoBoton : null }),
       hint: t('session.hint') },
 
     React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused,
@@ -33824,7 +33894,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       kicker: kicker, cueText: cueText, sideLead: sideLead, careText: careText,
       bigNumber: bigNumber, bigLabel: bigLabel, gateNumber: gateNumber, repsProgreso: repsProgreso,
       support: support, supportStrong: supportStrong, fraccion: fraccion,
-      auto: auto, onAuto: () => setPace({ cuerpoAuto: !auto }), siguienteTexto: siguienteTexto,
+      autoBoton: autoAbajo ? null : autoBoton, siguienteTexto: siguienteTexto,
       onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null,
       onSaltar: phase === 'work' && step.opcional ? () => {vuelta.reanudar();advanceStep();} : null,
       onBasta: v1BastaDestino(routine, stepIdx) >= 0 ? () => {vuelta.reanudar();conUnaBasta();} : null,

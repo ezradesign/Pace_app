@@ -1,10 +1,11 @@
 /* PACE · El cuerpo del runner de Mueve y Estira (opción A del runner guiado, elegida por Ez)
    =========================================================================================
    De arriba abajo: el dibujo con su aro de tiempo, el rótulo de la fase, el nombre, la
-   instrucción, el número con su etiqueta (y «+15 s» al colocarse o cambiar de lado, o «Saltar este
-   paso» en uno con material; debajo, «Con una basta» donde se ofrece), la línea de abajo y la barra
-   de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx). En pausa, un velo
-   tapa lo de debajo del dibujo (VeloV1, MoveSessionV1.parts.jsx).
+   instrucción, el número con su etiqueta y, debajo, la pastilla del momento en su hueco de siempre
+   («+15 s» al colocarse o cambiar de lado, «Saltar este paso» en uno con material o «Con una
+   basta» donde se ofrece), la línea de abajo y la barra de pasos con «Siguiente». El mando de tres
+   botones va en el pie (MoveSessionV1.mando.jsx), y «Auto» bajo sus palabras si hay alto; si no,
+   junto a «Siguiente». En pausa, un velo tapa lo de debajo del dibujo (VeloV1, .parts.jsx).
 
    CADA PIEZA TIENE SU SITIO FIJO EN TODA LA RUTINA. El nombre, la instrucción y la línea de abajo
    son «pilas»: en la misma celda de rejilla van, invisibles, todos los textos que ese hueco puede
@@ -13,9 +14,11 @@
    altura, y en el móvil de Ez el texto acababa encima de la barra de pasos.
 
    EL DIBUJO SE LLEVA EL ESPACIO QUE SOBRA. Medidas las pilas, `useV1Glifo` da al círculo el alto
-   libre, entre un suelo y un techo por piel. Si ni con el suelo cabe, el cuerpo pasa a «justo»:
-   menos aire entre piezas y el número más pequeño. Sin cortes por altura, que eran los que hacían
-   que a 701 px se aplicara la maqueta de 714 y no cupiera. */
+   libre, entre un suelo y un techo por piel; el techo sube con el alto (Ez, 29 oct.: «el círculo
+   crece donde sobra aire»), y lo que sobra por encima de él se reparte arriba y abajo, con el
+   bloque junto y centrado. Si ni con el suelo cabe, el cuerpo pasa a «justo»: menos aire entre
+   piezas y el número más pequeño. Sin cortes por altura, que eran los que hacían que a 701 px se
+   aplicara la maqueta de 714 y no cupiera. */
 
 const { useState: useStateCV, useLayoutEffect: useLayoutEffectCV, useRef: useRefCV } = React;
 
@@ -59,6 +62,18 @@ function CueV1({ lead, text, accent, ...resto }) {
   );
 }
 
+/* El interruptor «Auto» (Ez, 1A del 25 oct.). Lo pinta el mando bajo sus palabras o, en una
+   pantalla baja, la línea de «Siguiente» (`useV1AutoAbajo`, MoveSessionV1.parts.jsx). */
+function AutoV1({ auto, accent, onAuto, t }) {
+  return (
+    <button type="button" className="pace-v1-auto" data-pace-v1-auto aria-pressed={auto ? 'true' : 'false'}
+      title={t('move.auto.title')} style={{ '--v1-auto': accent }}
+      onClick={(e) => { v1SoltarFoco(e); onAuto(); }}>
+      <span className="pace-v1-auto-pista" aria-hidden="true" />{t('move.auto')}
+    </button>
+  );
+}
+
 function ColaV1({ strong, support, care, t, live }) {
   const marca = (attr) => (live ? { [attr]: '' } : {});
   return (
@@ -76,7 +91,9 @@ function ColaV1({ strong, support, care, t, live }) {
 
 /* El alto del círculo: el que queda libre en el cuerpo, entre un suelo y un techo. Se mide con
    las pilas ya puestas, así que una pasada basta; vuelve a medir al cambiar el tamaño de la
-   ventana, al cargar las fuentes y al cambiar de rutina o de idioma.
+   ventana, al cargar las fuentes y al cambiar de rutina o de idioma. Cuenta alturas, rellenos y
+   huecos de la columna, y no márgenes: el aire de dentro del cuerpo va en `padding` o `row-gap`
+   (un margen no contado hace que el círculo pida de más y algo se salga).
 
    «quiere» es el círculo que llenaría el hueco, y no depende del círculo que haya pintado:
    por eso sirve para decidir. Al pasar a «justo» se guarda cuánto quería sin él, y la
@@ -96,12 +113,13 @@ function useV1Glifo(cuerpoRef, firma) {
       const escritorio = v1EsEscritorio();
       const alto = paceLienzoAlto() || 800;
       const suelo = escritorio ? 110 : 96;
-      const techo = Math.min(escritorio ? 250 : 210, Math.round(alto * 0.3));
-      const hijos = Array.from(cuerpo.children);
+      const techo = Math.min(escritorio ? 300 : 262, Math.round(alto * (escritorio ? 0.36 : 0.3)));
+      /* El velo de la pausa va encima, fuera de la columna: ni ocupa ni lleva hueco. */
+      const hijos = Array.from(cuerpo.children).filter(h => !h.classList.contains('pace-v1-velo'));
       const cs = getComputedStyle(cuerpo);
       const hueco = parseFloat(cs.rowGap) || 0;
       let ocupado = hueco * Math.max(0, hijos.length - 1) + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
-      hijos.forEach(h => { if (!h.classList.contains('pace-v1-aire')) ocupado += h.offsetHeight; });
+      hijos.forEach(h => { ocupado += h.offsetHeight; });
       const libre = cuerpo.clientHeight - ocupado;
       const e = estado.current;
       const quiere = e.glifo + libre;
@@ -145,9 +163,9 @@ function AroV1({ fraccion, accent, px }) {
 function CuerpoV1(p) {
   const { routine, stepIdx, step, side, elapsed, accent, stepAccent, stepAccentSoft, t, tn, tStep, tInstr, lang } = p;
   const cuerpoRef = useRefCV(null);
+  const glifoRef = useRefCV(null);
   const reservas = React.useMemo(() => v1Reservas(routine, t, tn, tStep, tInstr), [routine.id, lang]);
   const { glifo, justo } = useV1Glifo(cuerpoRef, routine.id + ':' + lang);
-  const conBasta = React.useMemo(() => v1ConBasta(routine), [routine.id]);
   const aro = glifo + 14;
   const enTrabajo = p.phase === 'work' && step.mode !== 'rest';
   /* La raíz lleva las medidas (--v1-u y compañía) para el cuerpo Y para la barra de pasos:
@@ -157,7 +175,7 @@ function CuerpoV1(p) {
     <div data-pace-v1-raiz data-pace-v1-fase={step.mode === 'rest' ? 'rest' : p.phase} className="pace-v1-raiz" style={{ '--v1-acento': stepAccent }}
       {...(justo ? { 'data-pace-v1-justo': '' } : {})}>
       <div ref={cuerpoRef} data-pace-v1-body className="pace-v1" {...(p.paused ? { 'data-pace-v1-en-pausa': '' } : {})}>
-        <div data-pace-v1-glyph className="pace-v1-glifo" style={{ width: aro, height: aro }}>
+        <div ref={glifoRef} data-pace-v1-glyph className="pace-v1-glifo" style={{ width: aro, height: aro }}>
           <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glifo} side={v1LadoGlifo(step, p.phase, side)} />
           <AroV1 fraccion={p.fraccion} accent={stepAccent} px={aro} />
         </div>
@@ -170,7 +188,6 @@ function CuerpoV1(p) {
           {reservas.cues.map((c, i) => <CueV1 key={'r' + i} className="pace-v1-reserva" aria-hidden="true" lead={c.lead} text={c.text} accent={stepAccent} />)}
           <CueV1 data-pace-v1-cue lead={p.sideLead} text={p.cueText} accent={stepAccent} />
         </div>
-        <div className="pace-v1-aire" />
         <div className="pace-v1-numgrupo">
           {p.gateNumber
             ? <div data-pace-v1-num data-pace-v1-num-gate style={{ color: 'var(--ink-2)' }}>{p.bigNumber}</div>
@@ -180,8 +197,11 @@ function CuerpoV1(p) {
                 color: p.repsProgreso == null ? 'var(--ink)'
                   : `color-mix(in oklab, var(--focus) ${Math.round(p.repsProgreso * 100)}%, var(--breathe))`,
               }}>{p.bigNumber}</div>}
-          <div className="pace-v1-numfila">
-            <span data-pace-v1-numlabel>{p.bigLabel}</span>
+          <span data-pace-v1-numlabel>{p.bigLabel}</span>
+          {/* La pastilla del momento, centrada bajo la etiqueta (Ez, 29 oct.), en un hueco que va en
+              todos los pasos de todas las rutinas: aparecer y desaparecer no mueve nada. Nunca
+              coinciden dos (+15 s al colocarse, «Saltar» trabajando, «Con una basta» descansando). */}
+          <div className="pace-v1-pastilla">
             {p.onMas && (
               <button type="button" className="pace-v1-mas" data-pace-v1-mas onClick={(e) => { v1SoltarFoco(e); p.onMas(); }} title={t('session.moreTime')}>
                 +{V1_MAS_TIEMPO} s<span className="pace-v1-oculto"> · {t('session.moreTime')}</span>
@@ -192,18 +212,13 @@ function CuerpoV1(p) {
                 {t('move.skipOptional')}
               </button>
             )}
+            {/* «Con una basta» (Ez, P6 A), bajo «SEGUNDOS» en los descansos entre dos series. */}
+            {p.onBasta && (
+              <button type="button" className="pace-v1-mas" data-pace-v1-basta onClick={(e) => { v1SoltarFoco(e); p.onBasta(); }}>
+                {t('move.unaBasta')}
+              </button>
+            )}
           </div>
-          {/* «Con una basta» (Ez, P6 A), centrada bajo «SEGUNDOS». Su hueco va en todos los pasos
-              de la rutina que la ofrece: si apareciera solo en el descanso, movería lo de debajo. */}
-          {conBasta && (
-            <div className="pace-v1-numbasta">
-              {p.onBasta && (
-                <button type="button" className="pace-v1-mas" data-pace-v1-basta onClick={(e) => { v1SoltarFoco(e); p.onBasta(); }}>
-                  {t('move.unaBasta')}
-                </button>
-              )}
-            </div>
-          )}
         </div>
         <div className="pace-v1-pila pace-v1-colas" data-pace-v1-pila="cola">
           {reservas.colas.map((c, i) => <div key={'r' + i} className="pace-v1-reserva" aria-hidden="true"><ColaV1 {...c} t={t} /></div>)}
@@ -211,8 +226,7 @@ function CuerpoV1(p) {
             <ColaV1 strong={p.supportStrong} support={p.support} care={enTrabajo ? (p.careText || '') : undefined} t={t} live />
           </div>
         </div>
-        <div className="pace-v1-aire" />
-        {p.paused && <VeloV1 aro={aro} cuenta={p.vuelta} t={t} />}
+        {p.paused && <VeloV1 glifoRef={glifoRef} cuenta={p.vuelta} t={t} />}
       </div>
 
       <div data-pace-v1-progress className="pace-v1-pasos">
@@ -230,19 +244,15 @@ function CuerpoV1(p) {
             </div>
           ))}
         </div>
-        {/* «Auto» (Ez, 1A del 25 oct.): junto a lo que viene, al alcance del pulgar. */}
+        {/* «Auto» junto a lo que viene solo en una pantalla baja: si no, va bajo el mando. */}
         <div className="pace-v1-siguiente">
           <span data-pace-v1-siguiente>{p.siguienteTexto
             || (routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep'))}</span>
-          <button type="button" className="pace-v1-auto" data-pace-v1-auto aria-pressed={p.auto ? 'true' : 'false'}
-            title={t('move.auto.title')} style={{ '--v1-auto': accent }}
-            onClick={(e) => { v1SoltarFoco(e); p.onAuto(); }}>
-            <span className="pace-v1-auto-pista" aria-hidden="true" />{t('move.auto')}
-          </button>
+          {p.autoBoton}
         </div>
       </div>
     </div>
   );
 }
 
-Object.assign(window, { CuerpoV1, v1Reservas });
+Object.assign(window, { CuerpoV1, AutoV1, v1Reservas });

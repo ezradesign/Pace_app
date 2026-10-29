@@ -66,6 +66,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const [paused, setPaused] = useStateV1(false);
   /* La pausa se ve y al volver cuenta 3, 2, 1 (Ez, P8 B; MoveSessionV1.parts.jsx). */
   const vuelta = useV1Vuelta(paused, setPaused);
+  const autoAbajo = useV1AutoAbajo();   // «Auto», bajo el mando si cabe (Ez, 29 oct.)
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
   const sessionStart = useRefV1(rein.startedAt);   // wall-clock: incluye pausas y colocaciones
@@ -454,6 +455,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     : phase === 'place' ? 1 - placeLeft / Math.max(1, totalesRef.current.place)
     : phase === 'change' ? 1 - changeLeft / Math.max(1, totalesRef.current.change)
     : fraccion;
+  const autoBoton = <AutoV1 auto={auto} accent={accent} onAuto={() => setPace({ cuerpoAuto: !auto })} t={t} />;
 
   return (
     <SessionShell
@@ -462,7 +464,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       footer={<MandoV1 accent={stepAccent} paused={paused && vuelta.cuenta == null} onPause={vuelta.alternar} anillo={anillo} espera={espera} acentoModulo={accent}
         prev={{ onClick: () => { if (stepIdx > 0) { vuelta.reanudar(); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
         next={{ label: primary.label, onClick: () => { vuelta.reanudar(); primary.onClick(); } }}
-        textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} />}
+        textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} autoAbajo={autoAbajo ? autoBoton : null} />}
       hint={t('session.hint')}
     >
       <CuerpoV1 routine={routine} stepIdx={stepIdx} step={step} side={side} phase={phase} elapsed={elapsed} paused={paused}
@@ -471,7 +473,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         kicker={kicker} cueText={cueText} sideLead={sideLead} careText={careText}
         bigNumber={bigNumber} bigLabel={bigLabel} gateNumber={gateNumber} repsProgreso={repsProgreso}
         support={support} supportStrong={supportStrong} fraccion={fraccion}
-        auto={auto} onAuto={() => setPace({ cuerpoAuto: !auto })} siguienteTexto={siguienteTexto}
+        autoBoton={autoAbajo ? null : autoBoton} siguienteTexto={siguienteTexto}
         onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null}
         onSaltar={phase === 'work' && step.opcional ? () => { vuelta.reanudar(); advanceStep(); } : null}
         onBasta={v1BastaDestino(routine, stepIdx) >= 0 ? () => { vuelta.reanudar(); conUnaBasta(); } : null}

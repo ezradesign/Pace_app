@@ -180,13 +180,14 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.finishEarly':                'Terminar serie',
     'move.skipOptional':               'Saltar este paso',
     'move.sideAutoHint':               'El lado siguiente empieza solo',
-    // «Auto» (Ez, 1A del 25 oct. 2026): apagado, cada paso espera a «›»
+    // «Auto» (Ez, 1A del 25 oct. 2026): apagado, cada paso espera a «›». Colocarse nombra el botón
+    // por la palabra que lleva debajo (Ez, 29 oct.)
     'move.auto':                       'Auto',
     'move.auto.title':                 'Avanzar solo',
     'move.repsPace':                   'reps · a tu ritmo',
     'move.tapDone':                    'Pulsa › al acabar',
     'move.tapGo':                      'Pulsa › para seguir',
-    'move.placeHintMano':              'Colócate sin prisa · empiezas con ›',
+    'move.placeHintMano':              'Colócate sin prisa · pulsa «Empezar ya»',
     // Lo que hace la flecha, escrito debajo (Ez, P5 A del 29 oct. 2026)
     'move.flecha.hecho':               'Hecho',
     'move.flecha.descanso':            'Saltar descanso',
@@ -334,7 +335,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.repsPace':                   'reps · at your pace',
     'move.tapDone':                    'Tap › when you are done',
     'move.tapGo':                      'Tap › to go on',
-    'move.placeHintMano':              'Get set, no rush · start with ›',
+    'move.placeHintMano':              'Get set, no rush · press Begin now',
     // What the arrow does, written below it (Ez, P5 A, 29 Oct 2026)
     'move.flecha.hecho':               'Done',
     'move.flecha.descanso':            'Skip rest',

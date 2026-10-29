@@ -4,8 +4,8 @@
      · las PILAS de MoveSessionV1.cuerpo.jsx, que dan a cada texto su sitio fijo en toda la
        rutina (nada se mueve entre colocarse, trabajar, cambiar de lado y descansar);
      · `useV1Glifo`, que da al círculo del dibujo el alto que sobra.
-   Por eso aquí no hay tramos por altura: el aire va en vh con suelo y techo, y la tipografía por
-   piel (móvil hasta 640 px de ancho). Cuando ni con el círculo en su suelo cabe todo, el cuerpo
+   Por eso aquí apenas hay tramos por altura: el aire va en vh con suelo y techo, y la tipografía por
+   piel (móvil hasta 640 px de ancho); solo el móvil alto sube las letras un punto. Cuando ni con el círculo en su suelo cabe todo, el cuerpo
    (su raíz) lleva [data-pace-v1-justo]: menos aire y número más pequeño. Las instrucciones no se recortan
    nunca (jerarquía de s119).
 
@@ -28,25 +28,33 @@ if (!_paceMoveV1Css) {
     }
     /* En escritorio el dibujo manda (es mayor que en el móvil a igual altura, la regla de la
        piel): con el nombre a 5vh y el número a 9,5vh, a 1530x702 el texto se comía el hueco y
-       el círculo quedaba por debajo del del móvil. */
+       el círculo quedaba por debajo del del móvil. Y menos aire entre piezas, con el número un
+       poco menor (Ez, 29 oct.): el bloque queda junto y el círculo gana unos 25 px. */
     .pace-v1-raiz {
-      --v1-u: clamp(8px, calc(1.3 * var(--pace-vh, 1vh)), 18px);
+      --v1-u: clamp(5px, calc(0.7 * var(--pace-vh, 1vh)), 12px);
       --v1-nombre: clamp(28px, calc(4.2 * var(--pace-vh, 1vh)), 44px);
       --v1-cue: 18px;
-      --v1-num: clamp(52px, calc(8.2 * var(--pace-vh, 1vh)), 84px);
+      --v1-num: clamp(46px, calc(6.8 * var(--pace-vh, 1vh)), 72px);
       --v1-fuerte: 20px;
       flex: 1 1 auto; min-height: 0; width: 100%;
       display: flex; flex-direction: column; align-items: center;
     }
 
+    /* El bloque, junto y centrado (Ez, 29 oct.): el círculo se lleva el alto libre hasta su techo
+       y lo que sobra va arriba y abajo, no entre las piezas. El aire de dentro va en rellenos y en
+       el hueco de la columna, que es lo que cuenta useV1Glifo: con márgenes, el círculo pedía de
+       más. Centra con márgenes automáticos, que son solo lo que sobra, y no con justify-content:
+       si no cabe, el bloque se alinea arriba y lo que sobra cae debajo, como el centro de la
+       sesión (SessionShell). Centrado, a 320x568 se salía también por arriba, bajo la cabecera. */
     .pace-v1 {
       position: relative;
       flex: 1 1 auto; min-height: 0; width: 100%; max-width: 620px; margin: 0 auto;
-      padding-top: var(--v1-u);
+      padding-bottom: var(--v1-u);
       display: flex; flex-direction: column; align-items: center; row-gap: var(--v1-u);
       text-align: center;
     }
-    .pace-v1-aire { flex: 1 1 0; min-height: 0; }
+    .pace-v1 > .pace-v1-glifo { margin-top: auto; }
+    .pace-v1 > .pace-v1-colas { margin-bottom: auto; }
 
     /* El dibujo y su aro. StepGlyph trae su margen en línea; aquí manda la columna. */
     .pace-v1-glifo { position: relative; flex: none; display: grid; place-items: center; }
@@ -101,6 +109,8 @@ if (!_paceMoveV1Css) {
 
     /* El número mide lo mismo en todas las fases (lo eligió el usuario en s177); solo cambia
        el color: la cuenta de colocarse va en tinta secundaria. */
+    /* Con el hueco de la columna encima y el relleno del cuerpo debajo de la línea de abajo, el
+       número queda a la misma distancia de la descripción que de la barra (tests/runner-congelado). */
     .pace-v1-numgrupo { flex: none; display: grid; justify-items: center; row-gap: 6px; }
     .pace-v1 [data-pace-v1-num] {
       font-family: var(--font-display); font-style: italic; font-weight: 400;
@@ -109,7 +119,8 @@ if (!_paceMoveV1Css) {
          y el 9 de la línea y el número parecía descentrado de una rep a otra. */
       font-variant-numeric: lining-nums tabular-nums;
     }
-    .pace-v1-numfila { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 24px; }
+    /* El hueco de la pastilla, centrado bajo la etiqueta y en todos los pasos (Ez, 29 oct.). */
+    .pace-v1-pastilla { display: flex; align-items: center; justify-content: center; min-height: 24px; }
     [data-pace-v1-numlabel] { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
     .pace-v1-mas {
       font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--ink-2);
@@ -144,18 +155,19 @@ if (!_paceMoveV1Css) {
       font-variant-numeric: lining-nums tabular-nums;
     }
     .pace-v1-velo-texto { margin: 0; max-width: 320px; font-size: 14px; line-height: 1.45; color: var(--ink-2); white-space: pre-line; }
-    /* El hueco de «Con una basta», bajo la etiqueta del número, en todos los pasos de la rutina. */
-    .pace-v1-numbasta { display: flex; align-items: center; justify-content: center; min-height: 24px; }
 
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
-    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
+    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: 0 auto calc(var(--v1-u) * 1.6); }
     .pace-v1-siguiente {
       display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 12px;
-      text-align: center; margin-top: 8px; font-size: 10px; line-height: 1.45;
+      text-align: center; margin-top: 4px; font-size: 10px; line-height: 1.45;
       letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
     }
 
-    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. */
+    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. Bajo
+       las palabras del mando si hay alto (Ez, 29 oct.): el mando le guarda su fila abajo. */
+    .pace-v1-mando[data-pace-v1-con-auto] { position: relative; padding-bottom: 56px; }
+    .pace-v1-mando-auto { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
     .pace-v1-auto {
       display: inline-flex; align-items: center; gap: 7px; height: 24px; padding: 0 9px 0 5px;
       border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink-2);
@@ -220,18 +232,33 @@ if (!_paceMoveV1Css) {
 
     @media (max-width: 640px) {
       .pace-v1-raiz {
-        --v1-u: clamp(6px, 1.2vh, 12px);
+        --v1-u: clamp(5px, 0.95vh, 12px);
         --v1-nombre: 28px;
         --v1-cue: 17px;
-        --v1-num: clamp(48px, 8vh, 64px);
+        --v1-num: clamp(44px, 6.8vh, 50px);
         --v1-fuerte: 18px;
       }
       .pace-v1-cuidate { font-size: 15px; }
       .pace-v1-mando { gap: 32px; }
     }
+    /* En un móvil alto, con el círculo en su techo, aún sobra aire: las letras suben un punto. */
+    @media (max-width: 640px) and (min-height: 820px) {
+      .pace-v1-raiz { --v1-nombre: 30px; --v1-cue: 18px; --v1-num: 54px; }
+    }
 
-    /* Cuando no cabe ni con el círculo en su suelo. */
-    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 5px; --v1-num: 46px; }
+    /* Cuando no cabe ni con el círculo en su suelo: el número, el menor de los de la piel, y el aire
+       al mínimo. Y la pastilla, junto a su etiqueta y no debajo, porque debajo no cabe (el mismo
+       criterio que «Auto» bajo 700 px): a 320x568 la línea de abajo pisaba la barra de pasos 20 px.
+       La fila guarda los 24 px de la pastilla, salga o no. */
+    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 4px; --v1-num: 44px; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-numgrupo {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 10px;
+    }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-numgrupo > [data-pace-v1-num] { flex-basis: 100%; }
+    .pace-v1-raiz[data-pace-v1-justo] [data-pace-v1-numlabel] { min-height: 24px; display: flex; align-items: center; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-pastilla:empty { display: none; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-pasos { margin-bottom: var(--v1-u); }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-siguiente { margin-top: 2px; }
 
     @media (prefers-reduced-motion: reduce) {
       .pace-v1-aro-arco { transition: none; }

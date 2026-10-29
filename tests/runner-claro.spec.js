@@ -224,13 +224,13 @@ test.describe('P6 · «Con una basta», de verdad', () => {
     expect(await pasoActual(page)).toBe(3);
     await expect(basta(page), 'entre sentadillas y talones no hay series que saltar').toHaveCount(0);
     expect(await piezas(page)).toEqual(enLaSerie);
-    /* En otra rutina de «Para empezar» sin esa promesa no hay pastilla ni hueco. */
+    /* En otra rutina de «Para empezar» sin esa promesa no hay pastilla (su hueco, vacío, va en todas: Ez, 29 oct.). */
     await page.locator('[data-pace-session-header] button').last().click();
     await abrirRutina(page, 'Mueve', 'extra.desk.pushups');
     if ((await fase(page)) === 'place') await flecha(page).click();
     await flecha(page).click(); await page.clock.runFor(300);
     expect(await nombre(page)).toBe('Descanso');
-    await expect(page.locator('.pace-v1-numbasta')).toHaveCount(0);
+    await expect(basta(page)).toHaveCount(0);
     await context.close();
   });
 
@@ -366,8 +366,8 @@ test.describe('B3 · el paso con banda', () => {
     if ((await fase(page)) === 'place') await flecha(page).click();
     expect(await fase(page)).toBe('work');
     expect(await nombre(page)).toBe('Apertura con banda');
-    /* La pastilla vive en la fila del número, como el «+15 s», y no en el mando. */
-    const saltar = page.locator('.pace-v1-numfila [data-pace-v1-saltar]');
+    /* La pastilla vive bajo el número, como el «+15 s», y no en el mando. */
+    const saltar = page.locator('.pace-v1-numgrupo [data-pace-v1-saltar]');
     await expect(saltar, 'no hay «Saltar este paso» junto al número').toBeVisible();
     await expect(saltar).toHaveText('Saltar este paso');
     await expect(page.locator('[data-pace-v1-mando]')).not.toContainText('Saltar este paso');
@@ -407,7 +407,7 @@ test.describe('B3 · el paso con banda', () => {
     await empezar(page, context, 'extra.banda.espalda', { cuerpoAuto: true });
     if ((await fase(page)) === 'place') await flecha(page).click();
     expect(await nombre(page)).toBe('Apertura con banda');
-    await expect(page.locator('.pace-v1-numfila [data-pace-v1-saltar]')).toBeVisible();
+    await expect(page.locator('.pace-v1-numgrupo [data-pace-v1-saltar]')).toBeVisible();
     /* Tres reps guiadas y la flecha: cuentan esas tres, y la rutina sigue entera. */
     await page.clock.runFor(12500);
     await flecha(page).click();
