@@ -184,7 +184,7 @@ var MOVE_ROUTINES = {
             instruction: { action: 'Suelta.' } },
           { name: 'Apretar glúteos', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Ahora aguanta el apretón unos diez segundos y suelta. Tres veces.',
+              action: 'Ahora aguanta el apretón unos ocho segundos y suelta. Tres veces.',
               care: 'Mantén la respiración suelta durante el aguante.' } },
           { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
