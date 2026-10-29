@@ -1,11 +1,11 @@
-# Glifos a dibujar · los 3 que faltan
+# Glifos a dibujar · los 2 que faltan
 
 > **Autocontenido a propósito**: no hace falta abrir ningún otro documento para
 > generar estas piezas. Sale del censo de **s173** — si el catálogo cambia, la
 > verdad la dice el generado
 > [`GLIFOS_EJERCICIOS_PENDIENTES.md`](GLIFOS_EJERCICIOS_PENDIENTES.md), no esto.
 >
-> **62 de 68 identidades ya tienen arte** (29 oct. 2026, con los cinco que entraron ese día; `Nordics` es de las 6 sin arte y no se pide). Aquí sólo está lo que queda, en orden
+> **64 de 68 identidades ya tienen arte** (29 oct. 2026, con los ocho que entraron ese día; `Nordics` es de las 4 sin arte y no se pide). Aquí sólo está lo que queda, en orden
 > de lo que más se nota.
 >
 > **Ojo, el censo decía 61 y son 62.** El generador sacaba los nombres con un patrón
@@ -19,7 +19,7 @@
 
 ## La cuenta de todo lo que falta por dibujar (la única)
 
-A 29 oct. 2026, v0.186.0 y los cinco dibujos que entraron ese día. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
+A 29 oct. 2026, v0.186.0 y los ocho dibujos que entraron ese día. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
 repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
 
 **Los de ejercicios, con su prompt entero y su nombre de archivo para copiar, en una página para Ez**:
@@ -30,16 +30,18 @@ el nombre de hoy, no por el `palmas-al-suelo.webp` que tiene ahora; al entrar, e
 
 | Qué | Cuántos | Cuáles, y dónde están sus prompts |
 |---|---|---|
-| Ejercicios sin dibujo | **5** | Los 3 de la tabla de abajo y 2 de los 6 nuevos de Mueve y Estira (3A), Remo con tu mano e Inclinación de tronco, que mientras llevan el glifo de su módulo («La tanda de Mueve y Estira», abajo). Los otros 4 entraron el 29 oct. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
-| Ejercicios con el dibujo equivocado | **6** | 4 de los 7 que marcó Ez el 23 oct. («La tanda de Mueve y Estira», abajo; Piernas elevadas sentado entró el 29 oct.) y Palmas en la mesa y Apretar glúteos (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1). Sentadilla de cuádriceps y Puente torácico no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
+| Ejercicios sin dibujo | **3** | Los 2 de la tabla de abajo y Remo con tu mano, el único de los 6 nuevos de Mueve y Estira (3A) que sigue con el glifo de su módulo («La tanda de Mueve y Estira», abajo). Los otros 5 entraron el 29 oct. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
+| Ejercicios con el dibujo equivocado | **5** | 3 de los 7 que marcó Ez el 23 oct.: Rodar hacia abajo, Gato-camello y Sentarse y levantarse del suelo («La tanda de Mueve y Estira», abajo; Piernas elevadas sentado y 90/90 entraron el 29 oct.) y Palmas en la mesa y Apretar glúteos (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1). Sentadilla de cuádriceps y Puente torácico no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
 | Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3 |
 | Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3) |
-| **Total** | **33** | |
+| **Total** | **30** | |
 
 Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
 invierno y Cuarto creciente (v0.165.0) y Barbilla atrás (v0.170.1). Del encargo del 23 oct., el 29 oct.:
-Remo con banda (el que Ez pasó por el chat), Bisagra de cadera, Desliza el talón, Gemelo en pared y
-Piernas elevadas sentado. Esa tanda dejó fuera, por repetir, el primer Remo con banda (la banda parece
+Remo con banda (el que Ez pasó por el chat), Bisagra de cadera, Desliza el talón, Gemelo en pared (el más
+recogido, que sustituyó el mismo día al que salía a dos tercios de escala), Piernas elevadas sentado, 90/90,
+Rotación torácica de pie e Inclinación de tronco. Las ocho, con el rojo blanqueado como el resto del set (Ez
+lo eligió el 29 oct. al ver la mancha conservada «de más»). Esa tanda dejó fuera, por repetir, el primer Remo con banda (la banda parece
 un palo que acaba en el talón), Rana (rodillas más abiertas de lo que pide el paso, y sin flecha) y Pica
 en escritorio (la mesa a la altura de un escalón, no de la cadera). Los días diseñados, cuando
 lleguen, pueden pedir más: se suman aquí.
@@ -67,7 +69,7 @@ Classical anatomical plate in the style of a 19th-century medical textbook coppe
 | `remo-con-tu-mano.png` | Mueve · Espalda con banda | A hand-resisted row, standing in profile facing right. In front of the belly, the far hand holds the wrist of the near arm. The near elbow is drawn back along the side of the body while the holding hand resists. A short dotted arrow behind the near elbow points BACKWARD, to the left, away from the face. No band, no object. |
 | `bisagra-de-cadera.png` · **entró el 29 oct.** | Mueve · Piernas · a una | A hip hinge, standing in profile facing right, hands on the hips. The hips are pushed far back, the trunk tilts forward about 45 degrees with a long straight back from the hips to the head, knees only slightly bent, shins nearly vertical. A short dotted arrow at the buttocks points BACKWARD, to the left. The back is never rounded. |
 | `desliza-el-talon.png` · **entró el 29 oct.** | Mueve · Fuerza en suelo | A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. A short dotted arrow along the floor beyond the sliding heel points AWAY from the body. |
-| `inclinacion-de-tronco.png` | Estira · Columna · ondas | A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure's right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. A short dotted arc beside the ribs shows the side bend. No twisting, no forward lean. |
+| `inclinacion-de-tronco.png` · **entró el 29 oct.** | Estira · Columna · ondas | A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure's right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. A short dotted arc beside the ribs shows the side bend. No twisting, no forward lean. |
 | `gemelo-en-pared.png` · **entró el 29 oct.** | Estira · Cadena posterior | A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall. |
 
 ### Los siete que no casan (Ez, 23 oct.)
@@ -77,7 +79,7 @@ Classical anatomical plate in the style of a 19th-century medical textbook coppe
 | `piernas-elevadas-sentado.png` · **entró el 29 oct.** | El de «Core silencioso» no casa | A seated leg raise on a chair, in profile facing right; the chair is only a few thin straight lines (seat, backrest, front legs). The figure sits all the way back, the back resting on the backrest, both hands holding the sides of the seat. Both knees are bent and lifted together so the feet hover a hand-breadth above the floor. |
 | `rodar-hacia-abajo.png` | No casa (Ez tiene uno que sí) | A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. A short dotted arc over the upper back shows the curl downward. |
 | `gato-camello.png` | Puede mejorar mucho | Cat-camel on all fours, in profile facing right: hands under the shoulders, knees under the hips. The back is rounded up in a smooth even arch, the head gently dropped. A short dotted two-headed arc above the middle of the back shows the movement up and down. One figure only. |
-| `90-90.png` | Se ve raro y se confunde con «Paloma» | Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon). |
+| `90-90.png` · **entró el 29 oct.** | Se ve raro y se confunde con «Paloma» | Seated 90/90 hip position on the floor, seen from the FRONT. The trunk is upright and tall, both hands resting lightly on the floor behind. The front leg lies across in front of the body with the knee bent; the other leg lies to the side and behind, its knee also bent, so the two legs make two open angles on the floor. The trunk does not lie forward over the legs (that is Pigeon). |
 | `sentarse-y-levantarse-del-suelo.png` | No enseña eso | Getting down to the floor, in profile facing right, caught mid-way: one knee on the floor and the other foot flat in front, one hand reaching down to the floor beside the hip, ready to sit to the side. A short dotted arrow from the hip points DOWN and to the side. |
 | `sentadilla-de-cuadriceps.png` | Parece otro ejercicio | **No se dibuja (Ez, 27 oct.)**: ya no sale en ninguna rutina de la lista (2A). Propuesta: a supported heel-raised squat, in profile facing right, both hands holding the edge of a desk drawn as one horizontal line. Heels lifted, knees bent and travelling forward over the toes, trunk upright, hips low between the heels. |
 | `puente-toracico.png` | Sale a dos niveles, no en el suelo | **No se dibuja (Ez, 27 oct.)**: tampoco sale ya (2A). Propuesta: a reverse tabletop bridge on the floor, in profile facing right: hands on the floor behind the shoulders, fingers forward, knees bent with feet flat, hips lifted so the trunk and thighs make one level line, chest open. |
@@ -95,7 +97,6 @@ dos versiones de entrada nuevas, «Puente con los dos pies» y «Gateo con rodil
 |---|---|---|---|
 | 1 | `pica-en-escritorio.png` | 1 paso | **glifo por defecto** |
 | 2 | `rana.png` | 1 paso | **glifo por defecto** |
-| 3 | `rotacion-toracica-de-pie.png` | 1 paso («Espalda de pie», 15 oct. 2026): la rotación de `rotacion-toracica` pero de pie, pies al ancho de las caderas y las manos cruzadas sobre el pecho | **glifo por defecto** |
 
 **`Descanso` ya no se dibuja** (Ez, 7 de octubre de 2026): el descanso entre series
 lleva la figura que respira de `Reset respiración`, por alias en

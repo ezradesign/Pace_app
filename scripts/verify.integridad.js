@@ -79,7 +79,7 @@ var CENSO = {
   respira: 20, mueve: 14, estira: 19, caminos: 7,
 
   /* service worker */
-  precache: 238,                // +2 el 21 oct.: la privacidad y la seguridad, por su ruta. Antes, +1 el 14 oct.: el dibujo de «Cuarto creciente». Antes, +6 el 14 oct.: las voces de Respira en inglés (las dos voces, tres palabras). Antes, +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
+  precache: 250,                // +12 el 29 oct.: seis ejercicios con dibujo nuevo, cada uno con su miniatura (Bisagra de cadera, Gemelo en pared, Desliza el talón, Remo con banda, Rotación torácica de pie e Inclinación de tronco). Piernas elevadas sentado y 90/90 cambian de dibujo sin sumar fila. Antes, +2 el 21 oct.: la privacidad y la seguridad, por su ruta. Antes, +1 el 14 oct.: el dibujo de «Cuarto creciente». Antes, +6 el 14 oct.: las voces de Respira en inglés (las dos voces, tres palabras). Antes, +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
                                 //  +20 en s171: la 2a tanda sube el arte de ejercicio de 47 a 57 identidades, y cada una son DOS filas;
                                 //  +4 en s173: la 3a tanda son 4 dibujos pero solo DOS identidades nuevas -- «Fondos en silla» y
                                 //  «Deslizamientos en pared» ya tenian fila y la reutilizan, asi que suman 0)

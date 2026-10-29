@@ -8,8 +8,8 @@
 | | |
 |---|---|
 | **Identidades que la app necesita** | **68** |
-| **Con arte propio ya ingestado** | **58** |
-| **Pendientes** | **10** |
+| **Con arte propio ya ingestado** | **64** |
+| **Pendientes** | **4** |
 | Con arte que la app ya no pide (su rutina salió de la lista) | Puente a una pierna |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
@@ -116,22 +116,22 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Reset respiración | `reset-respiracion.png` | dibujado | Torso de frente con **dos arcos concéntricos** en el pecho: aire que entra. |
 | **HECHO** | Rezo invertido | `rezo-invertido.png` | falta | Dos manos con los **dorsos en contacto** frente al pecho, dedos hacia abajo. |
 
-## Sin grupo en el encargo — 7 pendientes de 12
+## Sin grupo en el encargo — 1 pendiente de 12
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
-| — | Bisagra de cadera | `bisagra-de-cadera.png` | ? | — |
+| **HECHO** | Bisagra de cadera | `bisagra-de-cadera.png` | ? | — |
 | **HECHO** | Círculos de brazos | `circulos-de-brazos.png` | ? | — |
-| — | Desliza el talón | `desliza-el-talon.png` | ? | — |
-| — | Gemelo en pared | `gemelo-en-pared.png` | ? | — |
+| **HECHO** | Desliza el talón | `desliza-el-talon.png` | ? | — |
+| **HECHO** | Gemelo en pared | `gemelo-en-pared.png` | ? | — |
 | **HECHO** | Inclinación de cuello | `inclinacion-de-cuello.png` | ? | — |
-| — | Inclinación de tronco | `inclinacion-de-tronco.png` | ? | — |
+| **HECHO** | Inclinación de tronco | `inclinacion-de-tronco.png` | ? | — |
 | **HECHO** | Palmas en la mesa | `palmas-en-la-mesa.png` | ? | — |
 | **HECHO** | Piernas elevadas sentado | `piernas-elevadas-sentado.png` | ? | — |
-| — | Remo con banda | `remo-con-banda.png` | ? | — |
+| **HECHO** | Remo con banda | `remo-con-banda.png` | ? | — |
 | — | Remo con tu mano | `remo-con-tu-mano.png` | ? | — |
 | **HECHO** | Respirar a cuatro apoyos | `respirar-a-cuatro-apoyos.png` | ? | — |
-| — | Rotación torácica de pie | `rotacion-toracica-de-pie.png` | ? | — |
+| **HECHO** | Rotación torácica de pie | `rotacion-toracica-de-pie.png` | ? | — |
 
 ---
 
