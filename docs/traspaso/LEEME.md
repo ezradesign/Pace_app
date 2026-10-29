@@ -4,6 +4,15 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 29 de octubre de 2026, v0.186.0.
 
+## 29 oct., tarde: «Monta el runner», y sí a catorce dibujos nuevos
+
+Ez dio el «móntalo» a la tercera vuelta de su reparto del runner («Auto» bajo los botones, el círculo mayor con tope donde
+sobra aire, cada pastilla bajo su etiqueta y «pulsa «Empezar ya»»), que se monta en `claude/runner-claro-15db3c`. De los
+dibujos de ejercicio, sí a catorce nuevos con el sombreado en la mediana del set («te has pasado con el sombreado» y «tienen
+que verse todos los glifos bien homogéneos»), y aclarar Paloma, Flexor de cadera y Sentadilla a silla, en
+`claude/elegant-pascal-d54e40`. Faltan Rana y Palmas en la mesa. Las tres ramas se juntan con su «júntalo», en este orden:
+«Tus rutinas», el runner y los dibujos. El estado al detalle, en el bloque «AL RELEVO» de `relevo-coordinadora-22oct.md`.
+
 ## 29 oct., mediodía: Ez elige en las dos maquetas y el calendario en v1
 
 Desde la cuenta de EcLj6… (la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). En el runner: B3 A, P5 A, P6 A con

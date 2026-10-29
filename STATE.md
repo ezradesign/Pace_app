@@ -62,8 +62,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   (`DECISIONES_PRODUCTO.md`), montados y en verde; las fotos, en la hoja. Después, la maqueta de producto.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **La versión de prueba definitiva**: los 16 dibujos (https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT, a
-  `Pace_app\dibujos-22oct`; la cuenta de todo, en `docs/product/GLIFOS_A_DIBUJAR.md`) y el logo en PNG transparente
+- **La versión de prueba definitiva**: los 16 dibujos (catorce con el sí de Ez en `claude/elegant-pascal-d54e40`; faltan
+  Rana y Palmas en la mesa: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
+  `docs/product/GLIFOS_A_DIBUJAR.md`) y el logo en PNG transparente
   (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium). El AAB de la 0.184.0, en `subidas-play\`.
 - **iPhone**: el correo de Apple que aprueba la prueba beta (enviada el 23 oct.), e invitar a sus testers con el
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco

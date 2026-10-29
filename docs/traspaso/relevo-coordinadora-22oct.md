@@ -8,6 +8,39 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (29 oct., ~18:30; EcLj6… con las 5 h al 94 %, se repone a las 22:20; la semana al 63 %)
+
+**Si llegas de la otra cuenta, empieza aquí; manda sobre lo de abajo.** `main` igual que origin: desde 0ed18787 (CI en
+verde entero) solo docs. Ez: «cuando lleguemos al 96 % deja todo listo para migrar a otra cuenta y dame prompt, estira esta
+sesión al máximo pero sin dejar nada sin registrar cuando llegues al 100 %». 5iWBf… se repone a las 20:30.
+1. **Dos sesiones de esta cuenta, invisibles desde la otra.** Se retoman con una sesión nueva con `cwd` en su worktree,
+   leyendo primero el bloque «AL RELEVO (29 oct., ~18:30)» del LEEME de su rama. Al 94 % se les pidió commit «WIP:», push y
+   ese bloque; compruébalo con `git -C <worktree> status -sb` y `git log origin/<rama>`. Si quedó algo sin commit, commit
+   «WIP:» y push desde la coordinadora.
+   - **Runner, tercera vuelta** (Ez: «Monta el runner»): `claude/runner-claro-15db3c`, worktree
+     `.claude/worktrees/runner-claro-15db3c`, sesión `runner-vuelta3`. Estaba sacando el censo de 156 fotos; faltan su página
+     (con versión ligera), `verify`, el build y la suite entera en el 8808. La línea «Al reanudar, 3, 2, 1…» la quita ella.
+   - **Dibujos**: `claude/elegant-pascal-d54e40`, worktree `.claude/worktrees/elegant-pascal-d54e40`, sesión
+     `dibujos-homogeneos`. Catorce dibujos nuevos metidos, con el sombreado en la mediana del set o por debajo. **Ez: «Sí, y
+     aclara los 3»**: sí a los catorce, y aclarar Paloma, Flexor de cadera y Sentadilla a silla desde sus originales hasta la
+     mediana, sin tocar `.webp` (D-4), con su antes y después en la página. Esperaba el final de su suite en el 8810.
+   - **«Tus rutinas»** (`claude/tus-rutinas-c0cf03`), sin cambios: espera el «júntalo».
+2. **Con el «júntalo» de Ez**: primero «Tus rutinas», con las comillas «» en «Sigues con tus cambios en “Cuello de tarde”»;
+   luego el runner y después los dibujos. Lo demás, en el punto 2 del bloque de las 13:15. Suite entera en verde y la
+   versión en un commit aparte.
+3. **Dibujos que faltan, 2 de 16**: Rana y Palmas en la mesa. Palmas se pide ahora en primera persona; la señal que se
+   comprueba es que los pulgares apunten hacia fuera, y si Genspark no puede, se deja el dibujo de Estira. Y el logo en PNG
+   transparente. Ez los deja en `dibujos-22oct\para-revisar` o en `C:\Users\ezrav\Desktop\Glifos`, sin decir cuáles son
+   nuevos: buscar por hora en las dos, descartar copias por md5, revisar cada uno contra su paso (`.data.js`), marcar
+   `vale: true` en `docs/traspaso/dibujos-ejercicios.html` y pasar los que valen a la sesión de dibujos.
+4. **Páginas de esta cuenta** (404 desde la otra): la hoja EcLj6io4wM9pGjtQ5wd1CT (versión 87), los dibujos
+   6RsAsyovu4emmzHhWjhMLT (versión 12), la tercera vuelta del runner R4hc4PDHjn4o94Zirz6scg y los catorce dibujos
+   2A58KUsW3Kp7yGmdxPJ82c. En la otra: la hoja y los dibujos desde `docs/traspaso/`, en sus direcciones de allí
+   (5iWBfHE7kD3dUVocdskmb6 y 3hWPWhj3QmE5S5dWWjcdHT) y con los enlaces de allí (las equivalencias, en el bloque de abajo);
+   las maquetas, con `git show` desde su rama. La de los catorce es `docs/proposals/dibujos-29oct-ligera.html`: la completa
+   pesa 790 KB y el visor de Ez no abre más de 512 KB.
+5. Lo que Ez puede adelantar fuera de Claude: los dos dibujos y el logo, Stripe en el modo de prueba y avisar a testers.
+
 ## 29 oct., ~17:30: coordina EcLj6… (5 h al 1 %, se repone a las 22:20; la semana al 50 %)
 
 **Manda sobre el bloque de abajo donde lo cambie.** `main` igual que origin salvo estos docs; las tres ramas, subidas y
