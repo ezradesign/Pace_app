@@ -4679,7 +4679,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.glutes.stealth.s1.name': 'Rest',
   'extra.glutes.stealth.s1.instruction.action': 'Let go.',
   'extra.glutes.stealth.s2.name': 'Glute squeeze',
-  'extra.glutes.stealth.s2.instruction.action': 'Now hold the squeeze for about ten seconds and release. Three times.',
+  'extra.glutes.stealth.s2.instruction.action': 'Now hold the squeeze for about eight seconds and release. Three times.',
   'extra.glutes.stealth.s2.instruction.care': 'Keep your breathing easy during the hold.',
   'extra.glutes.stealth.s3.name': 'Calf raises',
   'extra.glutes.stealth.s3.instruction.action': 'Finish by raising and lowering your heels, gently.',
@@ -30956,7 +30956,12 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
 
-  const sessionProgress = Math.min(1, getActiveSec() / (routine.min * 60));
+
+
+
+  const cicloSec = sequence.reduce((a, f) => a + (f.duration || 0), 0);
+  const finSec = cicloSec > 0 ? Math.ceil(routine.min * 60 / cicloSec) * cicloSec : routine.min * 60;
+  const sessionProgress = Math.min(1, getActiveSec() / finSec);
 
   const footer =
   React.createElement(React.Fragment, null,
@@ -31280,7 +31285,7 @@ var MOVE_ROUTINES = {
         instruction: { action: 'Suelta.' } },
       { name: 'Apretar glúteos', mode: 'timed', dur: 30,
         instruction: {
-          action: 'Ahora aguanta el apretón unos diez segundos y suelta. Tres veces.',
+          action: 'Ahora aguanta el apretón unos ocho segundos y suelta. Tres veces.',
           care: 'Mantén la respiración suelta durante el aguante.' } },
       { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
         tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
@@ -33223,15 +33228,20 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const auto = pace.cuerpoAuto !== false;
   const totalesRef = useRefV1({ place: 1, change: 1 });
   const esperaRef = useRefV1('');
+  const sonadoRef = useRefV1('');
+
+
+  const esperaMano = !auto && stage === 'run' && (phase === 'place' ? placeLeft <= 0 :
+  phase === 'change' ? changeLeft <= 0 : step.mode !== 'reps' && elapsed >= v1StepDur(step));
 
 
 
 
-  const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused || esperaMano, rein.activoMs);
 
 
 
-  const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
+  const relojSesion = useV1SessionClock(stage, paused || esperaMano, undefined, rein.sesionMs);
   const tiempoSecRef = useRefV1(0);
 
 
@@ -33341,20 +33351,26 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [placeLeft]);
 
-  useEffectV1(() => {
-    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto) beginWork();
-  }, [placeLeft, auto]);
-
-
-
-  useRelojSesion(stage === 'run' && phase === 'work' && !paused, (n) => setElapsed((e) => e + n), [stepIdx, side]);
-
-
-
-
 
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
+    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto && !paused) beginWork();
+  }, [placeLeft, auto, paused]);
+
+
+
+  useRelojSesion(stage === 'run' && phase === 'work' && !paused && !esperaMano, (n) => setElapsed((e) => e + n), [stepIdx, side]);
+
+
+
+
+
+
+
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
+    const marca = stepIdx + ':' + side + ':' + elapsed;
+    const suena = sonadoRef.current !== marca;
+    sonadoRef.current = marca;
     if (step.mode === 'reps') {
       if (!auto) return;
       const repSec = v1RepSeconds(step);
@@ -33366,7 +33382,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
         repsGuidedRef.current += v1RepTarget(step);
         hechosRef.current[stepIdx] = true;
         advanceStep();
-      } else if (elapsed % repSec === 0) {
+      } else if (suena && elapsed % repSec === 0) {
         try {playSound('move.rep');} catch (e) {}
       }
       return;
@@ -33375,7 +33391,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const effDur = v1StepDur(step);
 
 
-    if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
 
@@ -33386,7 +33402,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       if (step.mode === 'perSide' && side === 0) enterChange();else
       advanceStep();
     }
-  }, [elapsed, auto]);
+  }, [elapsed, auto, paused]);
 
 
 
@@ -33397,8 +33413,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [changeLeft]);
   useEffectV1(() => {
-    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto) onSideReady();
-  }, [changeLeft, auto]);
+    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
+  }, [changeLeft, auto, paused]);
 
 
 
