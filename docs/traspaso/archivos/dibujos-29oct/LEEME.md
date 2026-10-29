@@ -34,6 +34,14 @@ listos para la ingesta, en `Pace_app\dibujos-22oct\pagina-29oct\aclarar\` (fuera
    ya hay un `static-server.js` de este worktree escuchando, la suite lo reutiliza (comprobado: sirve los mismos archivos).
 5. Commit con el porqué, sin Co-Authored-By, y push de la rama. El resumen, a la coordinadora.
 
+**Pruebas de curva ya hechas (18:40)**: con k=1 la ingesta reproduce byte a byte las tres máscaras de git (originales
+confirmados). La curva SOLA no llega a la mediana: con k = 1,3 · 1,6 · 2 · 2,5 · 3 el sombreado de Paloma queda en
+p98 · 98 · 98 · 89 · 87, el de Flexor en p96 · 96 · 92 · 89 · 66 y el de Sentadilla en p96 · 96 · 96 · 96 · 89, mientras
+la tinta se hunde (p2-p4 desde k=2,5) y la línea de Paloma baja a p4. Es lo que avisa el «ojo» del paso 1: k pasa
+tinta fuerte a suave. Hace falta otra palanca (por ejemplo, un techo al alfa suave o aclarar solo la tinta por
+debajo de 128) o aceptar un k moderado (1,6-2: tinta en la mediana, sombreado aún alto) y que Ez lo mire. Los tres
+.webp se han dejado como en git.
+
 **La suite de los catorce** se lanzó a las ~18:15 y no había acabado al relevar: el commit de este relevo es «WIP:».
 
 Rama `claude/elegant-pascal-d54e40`, sobre `main` en 11a60591. Catorce dibujos de Genspark que la coordinadora
