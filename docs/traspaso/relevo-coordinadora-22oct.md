@@ -8,6 +8,22 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 29 oct., ~17:30: coordina EcLj6… (5 h al 1 %, se repone a las 22:20; la semana al 50 %)
+
+**Manda sobre el bloque de abajo donde lo cambie.** `main` igual que origin salvo estos docs; las tres ramas, subidas y
+limpias en sus worktrees de `.claude/worktrees/`.
+1. **Republicadas en esta cuenta**: la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT (versión 79, con los enlaces de
+   aquí; los diez que solo existen en 5iWBf… dicen «en tu otra cuenta»), los dibujos https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT
+   (versión 5, un prompt por ejercicio), la tercera vuelta del runner https://claude.ai/artifact/R4hc4PDHjn4o94Zirz6scg (la
+   REAWx… de 5iWBf…) y los cinco dibujos https://claude.ai/artifact/2A58KUsW3Kp7yGmdxPJ82c (la Q6LWN… de 5iWBf…). La hoja usa
+   además Mk11GDb9JBDGXyTrynbaYY por las fotos de vender (56cDi… en 5iWBf…) y 7Hj5sHmFuuzVP5QFntqdN7 por los textos del aviso
+   de fin de Foco (9BKgT…).
+2. **Comprobado**: `origin/claude/elegant-pascal-d54e40` tiene el «WIP:» (b121db1c). El CI de 0ed18787 (main): Android, iOS, `verify` y
+   `e2e-safari` en verde; los dos trozos de `e2e`, en marcha a las 17:30. Estos docs se suben cuando acabe, para no cancelarlo.
+3. **Espera a Ez**: el «móntalo» de la tercera vuelta del runner y el sí a los cinco dibujos, con la pregunta del Gemelo en
+   pared. Con el sí, sesión nueva con `cwd` en `.claude/worktrees/elegant-pascal-d54e40` (lo que le falta, en el mensaje del
+   commit «WIP:»). Con el «júntalo», los dos retoques del punto 1 del bloque de las 13:15 y lo que dice su punto 2.
+
 ## AL RELEVO (29 oct., ~17:05; 5iWBf… con las 5 h al 88 %, se repone a las 20:30; la semana al 84 %)
 
 **Si llegas de la otra cuenta, empieza aquí; manda sobre lo de abajo.** `main` igual que origin (solo docs desde 11a60591, en verde): mira el CI del último commit, que una subida encima cancela el anterior. Nada a medias en las ramas del runner y de «Tus rutinas».
