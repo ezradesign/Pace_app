@@ -35,6 +35,12 @@ limpias en sus worktrees de `.claude/worktrees/`.
    A las 17:37, `pike_pushup_desk_profile_plate_v3.jpg`: tampoco vale (una tabla sin patas a la altura de la rodilla).
    El prompt de la Pica pedía algo imposible, una mesa a la altura de la cadera con una V cerrada; ahora pide una mesa
    normal con patas y una V suave (página de dibujos, versión 7).
+   A las 17:46, en `dibujos-22oct\para-revisar` (Ez usa las dos carpetas; casi todo eran copias, se miran por md5):
+   valen `cat_camel_profile_plate.jpg` (Gato-camello) y `seated_leg_raise_chair_profile_plate_v2.jpg` (Piernas elevadas
+   v2, que sustituye a la primera), pasados por mensaje a `dibujos-homogeneos`. No vale `forearm_stretch_desk_closeup_plate_v2.jpg`
+   (Palmas en la mesa con los dedos hacia fuera); su prompt la pide ahora de lado. La página de dibujos (versión 9) lleva
+   `vale` o `falta` en cada uno y dice arriba «Faltan 7 de 16»: Rana, Remo con tu mano, Pica, Sentarse y levantarse,
+   Rodar hacia abajo, Palmas en la mesa y Apretar glúteos. Al revisar uno nuevo, cambiar su `falta` por `vale: true`.
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
