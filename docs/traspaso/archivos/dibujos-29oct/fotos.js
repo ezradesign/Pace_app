@@ -1,5 +1,5 @@
 'use strict';
-// Fotos de los cinco dibujos en la app de la rama, sin nada pintado encima: el runner en el paso de su
+// Fotos de los ocho dibujos nuevos en la app de la rama, sin nada pintado encima: el runner en el paso de su
 // rutina (360 y 1280 px) y la tarjeta de la biblioteca. Abre las rutinas como runner-claro/montado.js.
 // Uso: node fotos.js <carpeta> [vecinos | solo-un-id]. Levanta el servidor estático del worktree en el 8810.
 const path = require('path');
@@ -20,6 +20,9 @@ const CASOS = [
   { s: 'piernas-elevadas-sentado', bib: 'Mueve', id: 'extra.core.stealth', ej: 'Piernas elevadas sentado' },
   { s: 'desliza-el-talon', bib: 'Mueve', id: 'extra.pausa.suelo', ej: 'Desliza el talón' },
   { s: 'remo-con-banda', bib: 'Mueve', id: 'extra.banda.espalda', ej: 'Remo con banda' },
+  { s: '90-90', bib: 'Estira', id: 'move.hips.5', ej: '90/90' },
+  { s: 'rotacion-toracica-de-pie', bib: 'Estira', id: 'move.back.standing', ej: 'Rotación torácica de pie' },
+  { s: 'inclinacion-de-tronco', bib: 'Estira', id: 'move.spine.waves', ej: 'Inclinación de tronco' },
 ];
 /* Una pieza que ya está en la app al lado de cada nueva, de su rutina o de su módulo: con `vecinos`
    como segundo argumento se fotografían estas en vez de las nuevas. */
@@ -29,6 +32,9 @@ const VECINOS = [
   { s: 'fondos-en-silla', bib: 'Mueve', id: 'extra.chair.dips', ej: 'Fondos en silla' },
   { s: 'hueco-abdominal', bib: 'Mueve', id: 'extra.core.plank', ej: 'Hueco abdominal' },
   { s: 'apertura-con-banda', bib: 'Mueve', id: 'extra.banda.espalda', ej: 'Apertura con banda' },
+  { s: 'paloma', bib: 'Estira', id: 'move.hips.5', ej: 'Paloma' },
+  { s: 'juntar-omoplatos', bib: 'Estira', id: 'move.back.standing', ej: 'Juntar omóplatos' },
+  { s: 'rotacion-toracica', bib: 'Estira', id: 'move.spine.waves', ej: 'Rotación torácica' },
 ];
 
 async function abrirBiblioteca(page, biblioteca) {
