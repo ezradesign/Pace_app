@@ -2506,6 +2506,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.premium': 'Premium',
   'lib.perSide': 'por lado',
   'lib.series': '{s} series · {r} reps',
+  'lib.series.cada': '{e} ejercicios · {s} series de cada',
   'lib.filter.title': 'Filtrar',
   'lib.filter.aqui': 'Aquí mismo',
   'lib.filter.sinmat': 'Sin material',
@@ -2519,6 +2520,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.where.floor': 'en el suelo',
   'lib.where.seated': 'sentado',
   'lib.where.standing': 'de pie',
+  'lib.where.either': 'sentado o de pie',
   'lib.gear.stableDesk': 'con mesa',
   'lib.gear.stableChair': 'con silla',
   'lib.gear.bar': 'con barra',
@@ -2667,6 +2669,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.premium': 'Premium',
   'lib.perSide': 'per side',
   'lib.series': '{s} sets · {r} reps',
+  'lib.series.cada': '{e} exercises · {s} sets each',
   'lib.filter.title': 'Filter',
   'lib.filter.aqui': 'Right here',
   'lib.filter.sinmat': 'No gear',
@@ -2675,6 +2678,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.where.floor': 'on the floor',
   'lib.where.seated': 'seated',
   'lib.where.standing': 'standing',
+  'lib.where.either': 'seated or standing',
   'lib.gear.stableDesk': 'with a desk',
   'lib.gear.stableChair': 'with a chair',
   'lib.gear.bar': 'with a bar',
@@ -27771,11 +27775,26 @@ function libraryGlifos(rutina) {
 
 
 
+
+
+
+
+
 function librarySeries(rutina) {
   var reps = (rutina && rutina.steps || []).filter(function (s) {
     return s && s.mode === 'reps';
   });
   if (reps.length < 2) return null;
+  var porEjercicio = {},nombres = [];
+  reps.forEach(function (s) {
+    if (!porEjercicio[s.name]) {porEjercicio[s.name] = [];nombres.push(s.name);}
+    porEjercicio[s.name].push(s);
+  });
+  if (nombres.length > 1) {
+    var cada = porEjercicio[nombres[0]].length;
+    var iguales = nombres.every(function (n) {return porEjercicio[n].length === cada;});
+    return iguales && cada >= 2 ? { series: cada, ejercicios: nombres.length, reps: [] } : null;
+  }
   var valores = [];
   reps.forEach(function (s) {
     var n = s.reps && typeof s.reps === 'object' ? s.reps.target : s.reps;
@@ -27783,6 +27802,25 @@ function librarySeries(rutina) {
   });
   if (!valores.length) return null;
   return { series: reps.length, reps: valores };
+}
+
+
+
+
+
+function libraryDonde(rutina) {
+  if (!rutina) return 'standing';
+  if (rutina.requiresFloor) return 'floor';
+  var pos = rutina.position || [];
+  if (pos.indexOf('seated') >= 0 && pos.indexOf('standing') >= 0 && typeof window.ejercicioPide === 'function') {
+    var pasos = (rutina.steps || []).filter(function (s) {return s && s.mode !== 'rest' && s.name !== 'Descanso';});
+    var ambas = pasos.length > 0 && pasos.every(function (s) {
+      var p = window.ejercicioPide(s.name);
+      return !!(p && p.pos && p.pos.indexOf('seated') >= 0 && p.pos.indexOf('standing') >= 0);
+    });
+    if (ambas) return 'either';
+  }
+  return pos.length === 1 && pos[0] === 'seated' ? 'seated' : 'standing';
 }
 
 
@@ -27877,13 +27915,14 @@ Object.assign(window, {
   libraryOrdenar: libraryOrdenar,
   libraryGlifos: libraryGlifos,
   librarySeries: librarySeries,
+  libraryDonde: libraryDonde,
   libraryPorLado: libraryPorLado,
   libraryDiaOrdinal: libraryDiaOrdinal,
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio,
   libraryProponibles: libraryProponibles
 });
-;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryDonde, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
 })();
 </script>
   <script>
@@ -28336,9 +28375,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
   } else {
-    const donde = routine.requiresFloor ? 'floor' :
-    routine.position && routine.position.length === 1 && routine.position[0] === 'seated' ? 'seated' :
-    'standing';
+    const donde = window.libraryDonde ? window.libraryDonde(routine) : 'standing';
     trozos.push({ k: 'donde', txt: t('lib.where.' + donde) });
     (routine.equipment || []).forEach((e) => {
       const s = t('lib.gear.' + e);
@@ -28411,6 +28448,8 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
 
     series &&
     React.createElement("div", { className: "pace-lib-pie" },
+    series.ejercicios ?
+    tn('lib.series.cada', { e: series.ejercicios, s: series.series }) :
     tn('lib.series', { s: series.series, r: series.reps.join('·') })
     )
 

@@ -74,9 +74,7 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
   } else {
-    const donde = routine.requiresFloor ? 'floor'
-      : (routine.position && routine.position.length === 1 && routine.position[0] === 'seated') ? 'seated'
-      : 'standing';
+    const donde = window.libraryDonde ? window.libraryDonde(routine) : 'standing';
     trozos.push({ k: 'donde', txt: t('lib.where.' + donde) });
     (routine.equipment || []).forEach(e => {
       const s = t('lib.gear.' + e);
@@ -149,7 +147,9 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
         )}
         {series && (
           <div className="pace-lib-pie">
-            {tn('lib.series', { s: series.series, r: series.reps.join('·') })}
+            {series.ejercicios
+              ? tn('lib.series.cada', { e: series.ejercicios, s: series.series })
+              : tn('lib.series', { s: series.series, r: series.reps.join('·') })}
           </div>
         )}
       </div>

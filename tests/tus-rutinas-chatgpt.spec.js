@@ -104,3 +104,33 @@ test('C2 · la tarjeta, el constructor y la vista previa dicen los mismos minuto
   }
   expect(errores).toEqual([]);
 });
+
+/* ------------------------------------------------ R2 y R3 · lo que dice la tarjeta del catálogo */
+/* R2: «Gemelos subrepticios» vale sentado o de pie y la tarjeta decía «de pie».
+   R3: la línea de series sumaba las de ejercicios distintos: «Levántate y sube» salía
+   «4 series · 5·6 reps» (son dos ejercicios, dos series de cada uno), y «Cuello suave»,
+   «2 series» de dos ejercicios hechos una vez. */
+const textoTarjeta = (page, id, parte) => page.evaluate(([i, p]) => {
+  const c = [...document.querySelectorAll('.pace-lib [data-pace-lib-card="' + i + '"]')].find(e => e.getBoundingClientRect().width > 0)
+    || document.querySelector('.pace-lib [data-pace-lib-card="' + i + '"]');
+  const n = c && c.querySelector(p);
+  return n ? n.textContent.trim() : null;
+}, [id, parte]);
+
+test('R2 y R3 · la tarjeta dice «sentado o de pie» y no suma las series de ejercicios distintos', async ({ page, context }) => {
+  await sembrar(context);
+  const errores = capturarErrores(page);
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /^Mueve/ }).filter({ visible: true }).first().click();
+  await page.locator('.pace-lib').filter({ visible: true }).first().waitFor();
+  expect(await textoTarjeta(page, 'extra.calves', '.pace-lib-ctx'), 'R2').toMatch(/sentado o de pie/i);
+  expect(await textoTarjeta(page, 'extra.grip.squeeze', '.pace-lib-ctx') || '', 'R2: lo que mezcla no es «o»').not.toMatch(/sentado o de pie/i);
+  expect(await textoTarjeta(page, 'extra.chair.squats', '.pace-lib-pie'), 'R3').toBe('2 ejercicios · 2 series de cada');
+  expect(await textoTarjeta(page, 'extra.chair.dips', '.pace-lib-pie'), 'R3: un ejercicio sigue igual').toBe('3 series · 12·10·8 reps');
+  expect(await textoTarjeta(page, 'extra.pausa.suelo', '.pace-lib-pie'), 'R3: series distintas, sin línea').toBeNull();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: /^Estira/ }).filter({ visible: true }).first().click();
+  await page.locator('.pace-lib').filter({ visible: true }).first().waitFor();
+  expect(await textoTarjeta(page, 'move.neck.3', '.pace-lib-pie'), 'R3: una vez cada uno, sin línea').toBeNull();
+  expect(errores).toEqual([]);
+});
