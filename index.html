@@ -34331,11 +34331,11 @@ window.EXTRA_ROUTINES_FUERA = [
 
 
 
-function ExtraLibrary(_ref) {let { open, onClose, onStart } = _ref;
+function ExtraLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
       groups: window.EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
       title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle') }));
 
@@ -48842,10 +48842,12 @@ function PaceApp() {
     React.createElement(BreatheLibrary, { open: openLibrary === 'breathe', onClose: () => setOpenLibrary(null), onStart: handleStartBreathe })),
     red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
     React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
+    red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
+    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
+
+
     customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
     React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) })),
-    red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
-    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
     red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
     React.createElement(HydrateTracker, { open: openHydrate, onClose: () => setOpenHydrate(false) })),
     red(t('ach.title'), openAchievements, () => setOpenAchievements(false),
