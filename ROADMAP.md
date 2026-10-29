@@ -94,7 +94,7 @@ con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo
 
 | Paquete | Códigos | Cuándo | Estado (28 oct., noche) |
 |---|---|---|---|
-| A · El cobro, a prueba de avisos repetidos o desordenados, de fechas, de carreras y de compras ajenas | A1-A7 | Antes de cobrar en la web | En marcha: sesión `local_3bee2030-…`, rama `claude/magical-dhawan-987161` |
+| A · El cobro, a prueba de avisos repetidos o desordenados, de fechas, de carreras y de compras ajenas | A1-A7 | Antes de cobrar en la web | **Hecho**, en `main` con la 0.186.0 (29 oct., con el «júntalo» de Ez) |
 | B · Mueve, Estira y «Tus rutinas»: lo que falla y lo que cambia poco | B1-B4, C1-C6, U1, U2, R2, R3, R4, R6 | Antes de la versión de prueba (punto 11) | Espera el sí de Ez; lo que se vea, con maqueta |
 | T · Los textos que dicen más de lo que saben | P1-P3, Q1, Q3, Q6, Q7, CAL-2, CAL-4, CAL-6 | Pueden entrar en la versión de prueba | Una página de antes y después para Ez |
 | M · Lo de producto: para quien empieza, cuando el día se tuerce y lo que se paga | U3-U5, la oferta de /premium, P4-P8, Q2, Q4, Q5, R1, R5 | Una actualización durante los 14 días de los testers | Una maqueta para Ez |

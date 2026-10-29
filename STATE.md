@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.185.0 · 28 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.186.0 · 29 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -25,10 +25,9 @@ El orden hasta v1, en `ROADMAP.md` («Camino a v1.0»), con los paquetes de las 
 T, M, L y V) debajo de su tabla. **La fecha de v1 no depende del código**: la fijan los 12 testers
 de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar que piden Play, Apple y Stripe.
 
-1. **Stripe en el modo de prueba**, con Ez y su hoja: el aviso de pago, los enlaces de prueba y una compra de mentira.
-   **Antes de cobrar de verdad**, los arreglos del cobro que encontró ChatGPT el 28 oct. (avisos repetidos o
-   desordenados, la fecha de la prueba, «terminada» sin baja, la renovación que pisa la de por vida, la importación y
-   el producto), comprobados en el código: la lista, en el relevo.
+1. **Stripe en el modo de prueba**, con Ez y su hoja: el aviso de pago, los números de los enlaces en Cloudflare
+   (`PACE_ENLACES_STRIPE`, que pide la 0.186.0), los enlaces de prueba y una compra de mentira. **Los arreglos del cobro
+   que encontró ChatGPT (A1-A7), en `main` con la 0.186.0** (29 oct., con el «júntalo» de Ez).
 2. **Mueve, Estira y «Tus rutinas»** (otras tres revisiones de ChatGPT del mismo día, comprobadas: B1-B4, C1-C6 y U1-U5
    en el relevo): el tiempo que corre esperando a «›», «Auto» que avanza en pausa, las repeticiones con banda que no
    cuentan, las seis colocaciones que no se ven, el constructor tapado desde Estira, el borrador que se pierde, el
@@ -53,13 +52,14 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), la llave que
+- **Ahora: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), los números
+  `plink_` de los enlaces en `PACE_ENLACES_STRIPE` (sin ellos, desde la 0.186.0, `/api/stripe` da 503), la llave que
   solo lee (`STRIPE_LECTURA`), los enlaces de prueba y la compra de mentira con 4242, mirando qué número trae el recibo.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.
-- **Su sí a la sesión de Mueve, Estira y «Tus rutinas»** (punto 2; la del cobro la arrancó el 28 oct. a las ~20:50), y
-  elegir sobre maquetas lo que cambie en pantalla y lo de producto.
+- **Elegir sobre las maquetas** que traigan las dos sesiones en marcha (el runner y «Tus rutinas», desde el 29 oct.) y la
+  de producto, y dar el «júntalo» de cada rama.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
 - **La versión de prueba definitiva**: los 16 dibujos (https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT, a

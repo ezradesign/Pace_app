@@ -2,7 +2,17 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 28 de octubre de 2026, v0.185.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 29 de octubre de 2026, v0.186.0.
+
+## 29 oct.: el cobro de la web, a prueba (v0.186.0), en `main` con el «júntalo» de Ez
+
+Los siete casos del cobro de la revisión de ChatGPT (A1-A7), cada uno provocado en rojo antes de arreglarlo. La sesión que
+los hizo se quedó sin uso justo antes de guardar; la coordinadora guardó su trabajo tal cual, le pasó la suite entera
+(1067 en verde) y lo juntó con el «júntalo» de Ez, más su frase de la privacidad: de una mensual que terminó quedan solo
+su número y el día en que terminó. **Desde la 0.186.0, `/api/stripe` y `/api/recuperar` piden también
+`PACE_ENLACES_STRIPE`** (los `plink_` de los enlaces de PACE, en Cloudflare: paso 4 de `docs/launch/cobro-web.md`). A la
+vez trabajan dos sesiones, el runner de Mueve y Estira y «Tus rutinas»; la versión de prueba sube, sin esperar a todo, en
+cuanto estén lo de colocarse y el material (B4 y C3), los dibujos y el logo (Ez: «Sí, sin esperar»).
 
 ## 28 oct., noche: lo que faltaba para vender y los avisos del iPhone (v0.185.0), en `main` con el «júntalo» de Ez
 

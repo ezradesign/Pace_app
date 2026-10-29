@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.185.0 · actualizada el 29 de octubre a las 10:14 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.186.0 · actualizada el 29 de octubre a las 10:14 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -141,8 +141,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="c"><span class="quien">Yo, con sesiones aparte.</span> Desde la mañana del 29 hay dos hilos más, cada uno en su rama:
           el de las rutinas de Mueve y Estira y el de «Tus rutinas». Los dos empiezan por lo que frena la versión de prueba:
           que los ejercicios digan dónde y con qué colocarse. Lo que cambie en pantalla, te lo enseñan antes en una maqueta.
-          La del cobro ya está hecha en su rama y guardada; paso
-          todas las pruebas y te pido el «júntalo». Arregla esto: que un
+          La del cobro ya está en la app, en la 0.186.0, y arregla esto: que un
           aviso de Stripe repetido o desordenado no pise una compra, la fecha real de la prueba, no decir «terminada» sin una
           baja, que una renovación no tape la de por vida, la importación de tus datos y comprobar qué se ha comprado. Cuando
           acabe, otra para Mueve, Estira y «Tus rutinas»: el tiempo que corre mientras esperas a «›», «Auto» que avanza en
@@ -188,7 +187,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 69 pasos</summary>
+      <summary>Lo hecho hasta hoy · 70 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -525,6 +524,10 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           de cuando el día no sale como estaba previsto y seis de si se entiende para repetirlo mañana, y una octava sobre volver cada día y el calendario (la idea más grande: un modo «Solo pausas», sin Pomodoro). Añadí una más: en el
           modo de prueba, una compra de mentira da un código de verdad para siempre. Las ocho, enteras, en
           <code>docs/audits/chatgpt-28oct/</code>, con lo que comprobé de cada una. Los arreglos, arriba.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo» · 29 de octubre · en la app, 0.186.0</span>
+        <span class="t">Juntar el cobro a prueba y publicarlo</span>
+        <span class="c"><span class="quien">Yo.</span> Los siete arreglos del cobro, con las 1067 pruebas en verde y tu frase en la
+          privacidad: de una mensual que terminó quedan solo su número y el día en que terminó. No cambia nada que se vea.</span></li>
       </ol>
     </details>
   </section>
@@ -745,10 +748,10 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <code>https://pacegrass.app/gracias/?sesion={CHECKOUT_SESSION_ID}</code>, tal cual. Y el <b>portal del cliente</b>
           (Configuración › Facturación › Portal del cliente), activado. Pásame los tres enlaces: no son secretos. Los de prueba
           no van a la app; los reales, sí.</span></li>
-      <li class="paso luego"><span class="estado">Cuando juntemos el cobro · tú, unos 5 minutos</span>
+      <li class="paso luego"><span class="estado">Justo después del aviso · tú, unos 5 minutos</span>
         <span class="t">Los números de los enlaces de pago, en Cloudflare</span>
-        <span class="c"><span class="quien">Tú.</span> Con el arreglo del cobro, la web solo da códigos a las compras de los enlaces de
-          PACE, así que necesita sus números.
+        <span class="c"><span class="quien">Tú.</span> Desde la 0.186.0, la web solo da códigos a las compras de los enlaces de PACE, así
+          que necesita sus números; sin ellos, el aviso de pago no funciona.
           <ol>
             <li>En Stripe, abre <b>Enlaces de pago</b> y entra en cada enlace de PACE (los de prueba y los de verdad). En la barra de
               direcciones sale algo como <code>…/payment-links/plink_1Q…</code>: copia lo que empieza por <code>plink_</code>.</li>
@@ -854,7 +857,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): en cuanto estén tus dibujos, el logo y que los ejercicios digan dónde colocarse. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">12 · Hecho (0.185.0, 28 oct.)</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
-      <li><i class="pt yo"></i><div class="que"><span class="estado yo">A · Hecho en su rama · falta tu «júntalo», antes de cobrar</span>
+      <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">A · Hecho (0.186.0, 29 oct.)</span>
         <b>El cobro, a prueba</b><span>Que un aviso de Stripe repetido o desordenado no pise una compra; que la prueba de 7 días acabe cuando dice Stripe; que «terminada» solo salga con una baja de verdad; que una renovación no tape una compra de por vida; que importar tus datos no los pise; que solo den código las compras de PACE; y que una compra de prueba dé un código de tres días.</span></div></li>
       <li><i class="pt yo"></i><div class="que"><span class="estado yo">T · Lo preparo yo · una página para que elijas</span>
         <b>Los textos que dicen más de lo que saben</b><span>«Saltar esta pausa», que en realidad la deja para luego, pasa a «Ahora no». «Llevas 45 minutos sentado» o «Aún no has bebido hoy», que PACE no lo sabe, pasan a lo que sí sabe. «El cuerpo vuelve a sentirse tuyo», a lo que has hecho. La salida de «Tu semana», a «Ahora no, quiero probar primero». Y que se diga que el tiempo del día incluye las pausas, que «sin material» puede pedir pared o mesa y que el calendario se pone al día solo con PACE abierto. Puede ir en la versión de prueba.</span></div></li>

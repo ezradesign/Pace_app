@@ -71,7 +71,10 @@ maqueta (el censo de textos sigue en 1064).
 **Después del arreglo**: las 24 del servidor y las de la app en verde; `importar-borrar` y `eventos-backup` enteras en
 verde (la de «sin almacén» mira además que no salga ningún error en la consola). `npm run verify` en verde (el único
 aviso es el de siempre, el build que reescribe `PACE_standalone.html`, restaurado). La suite entera con
-`--workers=1` en el puerto 8807: RESULTADO_SUITE.
+`--workers=1` en el puerto 8807: no llegó a pasarla (se quedó sin uso). La pasó la coordinadora el 29 oct. en el
+puerto 8814, con dos sesiones más trabajando a la vez: **1067 en verde y 2 saltadas** (el audio del iPhone, como siempre),
+en 22,3 min. Juntada en `main` como **0.186.0** con el «júntalo» de Ez y su frase de la privacidad, afinada: «De una
+que terminó quedan solo su número y el día en que terminó», porque la marca guarda también la fecha del aviso.
 
 Lo común de las pruebas del cobro en Node vive ahora en `tests/cobro.helpers.js` (la llave k2 de cada pasada, el
 almacén en memoria, los avisos firmados y los cuatro enlaces de prueba); `cobro-venta` y `cobro-recuperar` lo usan, y
