@@ -9562,8 +9562,11 @@ Object.assign(window, {
    Depende de: state-core (getState, setState).
 
    Shape de rutina custom:
-     { id: 'custom.<Date.now()>', name, steps: [{ name, dur, cue }],
+     { id: 'custom.<Date.now()>', name, steps: [{ name, dur }],
        min, createdAt, updatedAt }
+   Un paso guarda qué ejercicio y qué dosis, nada de su texto: la colocación, la acción y el
+   cuidado los pone `moveRutinaGuiada` desde el registro y el catálogo (C4). Las de antes llevan
+   además `cue`, que ya no se lee y se va al guardarlas de nuevo.
    `steps` usa el mismo shape que las rutinas de catálogo — el runner
    (MoveSession) no distingue. `min` se deriva al guardar (`customSegundos`:
    un paso por lados cuenta sus dos lados). El `mode` no se guarda: lo pone
@@ -9631,8 +9634,7 @@ function sanitizeCustomRoutine(draft) {
   map((s) => ({
     name: String(s.name || ''),
     dur: Math.min(CUSTOM_LIMITS.maxDur, Math.max(CUSTOM_LIMITS.minDur,
-    Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
-    cue: String(s.cue || '')
+    Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep))
   }));
   const min = customMinutos(steps);
   return { name, steps, min };
@@ -31667,21 +31669,53 @@ function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
 
 
 
+
+
+
+
+
+
 const _moveRutinasGuiadas = new WeakMap();
+function _moveFichaPaso(paso, previo, lang) {
+  const ficha = typeof ejercicioFicha === 'function' ? ejercicioFicha(paso.name) : null;
+  if (!ficha) return paso;
+  const en = lang === 'en' ? (window.PACE_STRINGS || {}).en || {} : null;
+  const txt = (clave, es) => en && en[clave] || es;
+  const def = typeof getExerciseDef === 'function' ? getExerciseDef(paso.name) : null;
+  const instruction = { action: txt('custom.ex.' + paso.name + '.cue', def && def.cue || paso.cue) };
+  if (ficha.care) instruction.care = txt(ficha.careDe + '.instruction.care', ficha.care);
+  const out = { ...paso, instruction };
+  if (!previo || previo.name !== paso.name) {
+    instruction.setup = txt(ficha.setupDe + '.instruction.setup', ficha.setup);
+    if (ficha.ready) out.setup = ficha.ready;
+  }
+  if (ficha.opcional) out.opcional = true;
+  return out;
+}
 function moveRutinaGuiada(routine) {
   if (!routine || !Array.isArray(routine.steps) || routine.steps.every((s) => s.mode)) return routine;
-  if (!_moveRutinasGuiadas.has(routine)) {
+  const lang = typeof getState === 'function' && (getState() || {}).lang || 'es';
+  if (!_moveRutinasGuiadas.has(routine)) _moveRutinasGuiadas.set(routine, {});
+  const porIdioma = _moveRutinasGuiadas.get(routine);
+  if (!porIdioma[lang]) {
     const lados = (n) => typeof ejercicioPorLados === 'function' && ejercicioPorLados(n);
     const deHoy = (n) => typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(n) : n;
     const pide = !Array.isArray(routine.equipment) && typeof rutinaPropiaPide === 'function' ?
     rutinaPropiaPide(routine.steps) : {};
-    _moveRutinasGuiadas.set(routine, {
+    let previo = null;
+    porIdioma[lang] = {
       ...routine, ...pide,
-      steps: routine.steps.map((s) => s.mode ? s :
-      { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' })
-    });
+      steps: routine.steps.map((s) => {
+        if (s.mode) return s;
+        const paso = { ...s, name: deHoy(s.name), mode: s.name === 'Descanso' ? 'rest' : lados(s.name) ? 'perSide' : 'timed' };
+        if (paso.mode === 'rest') return paso;
+        const conFicha = _moveFichaPaso(paso, previo, lang);
+        previo = paso;
+        return conFicha;
+      })
+    };
   }
-  return _moveRutinasGuiadas.get(routine);
+  return porIdioma[lang];
 }
 
 function MoveSession(props) {
@@ -32035,7 +32069,7 @@ if (!_paceMoveResponsive) {
 
 
 Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion, moveRutinaGuiada });
-;Object.assign(window, { _extends, MoveLibrary, moveRutinaGuiada, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
+;Object.assign(window, { _extends, MoveLibrary, _moveFichaPaso, moveRutinaGuiada, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
 })();
 </script>
   <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
@@ -34681,6 +34715,45 @@ function ejercicioNombreDeHoy(name) {
 
 
 
+
+
+
+
+
+
+
+
+const FICHA_CUIDADO_DE = {
+
+  'Sentadilla a silla': { rutina: 'extra.chair.squats', paso: 2 }
+};
+let _fichasEjercicio = null;
+function ejercicioFicha(name) {
+  if (!_fichasEjercicio) {
+    const catalogos = [window.MOVE_ROUTINES, window.EXTRA_ROUTINES];
+    if (!catalogos[0] || !catalogos[1]) return null;
+    const fichas = {},porId = {};
+    catalogos.forEach((cat) => Object.keys(cat).forEach((g) => (cat[g] && cat[g].items || []).forEach((r) => {
+      porId[r.id] = r;
+      (r.steps || []).forEach((s, i) => {
+        const n = ejercicioNombreDeHoy(s.name);
+        if (fichas[n] || !s.instruction || !s.instruction.setup) return;
+        fichas[n] = { setup: s.instruction.setup, setupDe: r.id + '.s' + i,
+          care: s.instruction.care || null, careDe: r.id + '.s' + i,
+          ready: s.setup && s.setup.mode === 'ready' ? s.setup : null, opcional: !!s.opcional };
+      });
+    })));
+    Object.keys(FICHA_CUIDADO_DE).forEach((n) => {
+      const o = FICHA_CUIDADO_DE[n],r = porId[o.rutina],s = r && r.steps && r.steps[o.paso];
+      if (fichas[n] && s && s.instruction) {fichas[n].care = s.instruction.care || null;fichas[n].careDe = o.rutina + '.s' + o.paso;}
+    });
+    _fichasEjercicio = fichas;
+  }
+  return _fichasEjercicio[ejercicioNombreDeHoy(name)] || null;
+}
+
+
+
 function rutinaPropiaPide(steps) {
   const equipment = [],position = [];
   let requiresFloor = false,pideIncompleto = false;
@@ -34699,8 +34772,8 @@ function rutinaPropiaPide(steps) {
 }
 
 Object.assign(window, { EXERCISE_REGISTRY, getExerciseDef, EXERCISE_PIDE, ejercicioPide, ejercicioPorLados, rutinaPropiaPide,
-  EJERCICIO_RENOMBRADO, ejercicioNombreDeHoy });
-;Object.assign(window, { getExerciseDef, ejercicioPide, ejercicioPorLados, ejercicioNombreDeHoy, rutinaPropiaPide });
+  EJERCICIO_RENOMBRADO, ejercicioNombreDeHoy, ejercicioFicha, FICHA_CUIDADO_DE });
+;Object.assign(window, { getExerciseDef, ejercicioPide, ejercicioPorLados, ejercicioNombreDeHoy, ejercicioFicha, rutinaPropiaPide });
 })();
 </script>
   <script>
@@ -34987,7 +35060,7 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
   const addStep = (ex) => {
     setSteps((prev) => prev.length >= limits.maxSteps ?
     prev :
-    [...prev, { name: ex.name, dur: ex.dur, cue: ex.cue }]);
+    [...prev, { name: ex.name, dur: ex.dur }]);
   };
   const removeStep = (idx) => setSteps((prev) => prev.filter((_, i) => i !== idx));
   const moveStep = (idx, delta) => setSteps((prev) => {

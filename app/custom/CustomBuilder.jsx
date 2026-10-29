@@ -44,7 +44,7 @@ function CustomBuilder({ editId, onClose }) {
   const addStep = (ex) => {
     setSteps(prev => prev.length >= limits.maxSteps
       ? prev
-      : [...prev, { name: ex.name, dur: ex.dur, cue: ex.cue }]);
+      : [...prev, { name: ex.name, dur: ex.dur }]);
   };
   const removeStep = (idx) => setSteps(prev => prev.filter((_, i) => i !== idx));
   const moveStep = (idx, delta) => setSteps(prev => {

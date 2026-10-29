@@ -8,8 +8,11 @@
    Depende de: state-core (getState, setState).
 
    Shape de rutina custom:
-     { id: 'custom.<Date.now()>', name, steps: [{ name, dur, cue }],
+     { id: 'custom.<Date.now()>', name, steps: [{ name, dur }],
        min, createdAt, updatedAt }
+   Un paso guarda qué ejercicio y qué dosis, nada de su texto: la colocación, la acción y el
+   cuidado los pone `moveRutinaGuiada` desde el registro y el catálogo (C4). Las de antes llevan
+   además `cue`, que ya no se lee y se va al guardarlas de nuevo.
    `steps` usa el mismo shape que las rutinas de catálogo — el runner
    (MoveSession) no distingue. `min` se deriva al guardar (`customSegundos`:
    un paso por lados cuenta sus dos lados). El `mode` no se guarda: lo pone
@@ -78,7 +81,6 @@ function sanitizeCustomRoutine(draft) {
       name: String(s.name || ''),
       dur: Math.min(CUSTOM_LIMITS.maxDur, Math.max(CUSTOM_LIMITS.minDur,
         Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
-      cue: String(s.cue || ''),
     }));
   const min = customMinutos(steps);
   return { name, steps, min };

@@ -254,6 +254,45 @@ function ejercicioNombreDeHoy(name) {
   return Object.prototype.hasOwnProperty.call(EJERCICIO_RENOMBRADO, name) ? EJERCICIO_RENOMBRADO[name] : name;
 }
 
+/* LA FICHA DE CADA EJERCICIO: dónde colocarse y cómo cuidarse, la del catálogo (revisión de
+   ChatGPT del 28 oct., C4: una rutina propia copiaba solo `{ name, dur, cue }` y «Fondos en silla»
+   perdía «silla sin ruedas, contra la pared»). Es el primer paso del catálogo con ese ejercicio
+   que trae colocación (`instruction.setup`), que es el de la primera serie; de él salen la
+   colocación, el cuidado, el «colócate» con su tiempo (`setup: ready`) y si se puede saltar
+   (`opcional`, la banda). La acción no: la del catálogo cuenta repeticiones de su serie («Tres a
+   cada lado») y en la tuya manda tu tiempo, así que la acción es el cue neutro del registro. El
+   inglés sale de las claves del paso (`<rutina>.s<n>.instruction.*`). Se arma la primera vez que
+   se pide con el catálogo cargado, y no se guarda en la rutina: si el catálogo mejora, la tuya
+   también. */
+const FICHA_CUIDADO_DE = {
+  /* «La primera vez, una serie basta» habla de la rutina del catálogo, no del ejercicio. */
+  'Sentadilla a silla': { rutina: 'extra.chair.squats', paso: 2 },
+};
+let _fichasEjercicio = null;
+function ejercicioFicha(name) {
+  if (!_fichasEjercicio) {
+    const catalogos = [window.MOVE_ROUTINES, window.EXTRA_ROUTINES];
+    if (!catalogos[0] || !catalogos[1]) return null;
+    const fichas = {}, porId = {};
+    catalogos.forEach(cat => Object.keys(cat).forEach(g => ((cat[g] && cat[g].items) || []).forEach(r => {
+      porId[r.id] = r;
+      (r.steps || []).forEach((s, i) => {
+        const n = ejercicioNombreDeHoy(s.name);
+        if (fichas[n] || !s.instruction || !s.instruction.setup) return;
+        fichas[n] = { setup: s.instruction.setup, setupDe: r.id + '.s' + i,
+          care: s.instruction.care || null, careDe: r.id + '.s' + i,
+          ready: s.setup && s.setup.mode === 'ready' ? s.setup : null, opcional: !!s.opcional };
+      });
+    })));
+    Object.keys(FICHA_CUIDADO_DE).forEach(n => {
+      const o = FICHA_CUIDADO_DE[n], r = porId[o.rutina], s = r && r.steps && r.steps[o.paso];
+      if (fichas[n] && s && s.instruction) { fichas[n].care = s.instruction.care || null; fichas[n].careDe = o.rutina + '.s' + o.paso; }
+    });
+    _fichasEjercicio = fichas;
+  }
+  return _fichasEjercicio[ejercicioNombreDeHoy(name)] || null;
+}
+
 /* Lo que pide una rutina propia: la unión de sus pasos, en su orden, con las claves del
    catálogo. `pideIncompleto` si algún paso no tiene fila. */
 function rutinaPropiaPide(steps) {
@@ -274,4 +313,4 @@ function rutinaPropiaPide(steps) {
 }
 
 Object.assign(window, { EXERCISE_REGISTRY, getExerciseDef, EXERCISE_PIDE, ejercicioPide, ejercicioPorLados, rutinaPropiaPide,
-  EJERCICIO_RENOMBRADO, ejercicioNombreDeHoy });
+  EJERCICIO_RENOMBRADO, ejercicioNombreDeHoy, ejercicioFicha, FICHA_CUIDADO_DE });

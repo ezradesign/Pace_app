@@ -158,3 +158,26 @@ test('U2 · una rutina propia se empieza con el teclado, y el lápiz va aparte',
   await expect(overlaySuperior(page)).toContainText('Añadir ejercicio');
   expect(errores).toEqual([]);
 });
+
+/* ----------------------------------------------- C4 · la ficha del ejercicio, también en la tuya */
+/* El constructor copiaba `{ name, dur, cue }` y el runner solo tenía esa frase: «Fondos en silla»
+   perdía «silla sin ruedas, contra la pared» y su cuidado. Ahora la rutina guarda qué ejercicio
+   y qué dosis, y la colocación y el cuidado salen de la ficha del catálogo, en los dos idiomas. */
+for (const [lang, txt] of [['es', { empezar: 'Empezar', ahora: 'Empezar ahora', modulo: 'Mueve', setup: 'Al borde de una silla sin ruedas, contra la pared', care: 'nunca más del ángulo recto' }],
+  ['en', { empezar: 'Start', ahora: 'Start now', modulo: 'Move', setup: 'Edge of a chair with no wheels, against the wall', care: 'never past a right angle' }]]) {
+  test('C4 · ' + lang + ' · «Fondos en silla» en una rutina propia dice dónde colocarse y cómo cuidarse', async ({ page, context }) => {
+    await sembrar(context, { lang, customRoutines: [propia('custom.1', 'Brazos', [['Encogimiento de hombros', 20], ['Fondos en silla', 40]])] });
+    const errores = capturarErrores(page);
+    await irAlArtefacto(page);
+    const preview = await abrirPropia(page, 'Brazos', txt.modulo);
+    await preview.getByRole('button', { name: txt.empezar, exact: true }).click();
+    await page.getByRole('button', { name: txt.ahora }).click();
+    const raiz = page.locator('[data-pace-session-root]');
+    await expect(raiz.locator('[data-pace-v1-mando]')).toBeVisible();
+    await raiz.locator('[data-pace-v1-btn="next"]').click();
+    await expect(page.getByText(txt.setup).filter({ visible: true }), 'no dice dónde colocarse').toHaveCount(1);
+    await raiz.locator('[data-pace-v1-btn="next"]').click();
+    await expect(page.getByText(txt.care).filter({ visible: true }), 'no dice cómo cuidarse').toHaveCount(1);
+    expect(errores).toEqual([]);
+  });
+}

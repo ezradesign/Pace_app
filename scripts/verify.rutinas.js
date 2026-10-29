@@ -137,6 +137,32 @@ function chequeaIdiomas(ctx, sb, STR, listaCorta) {
   else ctx.ok('tus rutinas: los ' + n + ' ejercicios del registro tienen nombre y cue en ES y EN');
 }
 
+/* La ficha que una rutina propia toma del catálogo (C4): habla del ejercicio, no de la serie
+   ni de la rutina de donde sale («La primera vez, una serie basta»), y tiene su inglés. */
+var DE_SU_RUTINA = /\bseries?\b|primera vez|segunda|última|otra vez/i;
+function chequeaFichas(ctx, sb, STR, listaCorta) {
+  var mal = [], n = 0;
+  var en = (STR && STR.en) || {};
+  Object.keys(sb.EXERCISE_REGISTRY).forEach(function (g) {
+    sb.EXERCISE_REGISTRY[g].items.forEach(function (it) {
+      var f = sb.ejercicioFicha(it.name);
+      if (!f) return;
+      n++;
+      [['setup', f.setup, f.setupDe], ['care', f.care, f.careDe]].forEach(function (c) {
+        if (!c[1]) return;
+        if (DE_SU_RUTINA.test(c[1])) mal.push(it.name + ': su ' + c[0] + ' habla de la rutina de ' + c[2] + ' («' + c[1] + '»): FICHA_CUIDADO_DE');
+        if (!en[c[2] + '.instruction.' + c[0]]) mal.push(c[2] + '.instruction.' + c[0] + ': falta en EN');
+      });
+    });
+  });
+  Object.keys(sb.FICHA_CUIDADO_DE || {}).forEach(function (k) {
+    if (!sb.ejercicioFicha(k)) mal.push('FICHA_CUIDADO_DE: «' + k + '» no tiene ficha en el catálogo');
+  });
+  if (!n) mal.push('ninguna ficha: el catálogo no ha cargado y el análisis no ha mirado nada');
+  if (mal.length) ctx.falla('tus rutinas: ' + mal.length + ' ficha(s) de ejercicio que no valen para una rutina propia: ' + listaCorta(mal, 6));
+  else ctx.ok('tus rutinas: ' + n + ' fichas de ejercicio sin texto de su serie y con su inglés');
+}
+
 function chequeaRutinas(ctx, STR, listaCorta) {
   var d = cargarDatos(ctx);
   d.errores.forEach(function (e) { ctx.falla('tus rutinas: no se pudo evaluar ' + e); });
@@ -146,6 +172,7 @@ function chequeaRutinas(ctx, STR, listaCorta) {
   }
   chequeaMaterial(ctx, d.sb, STR, listaCorta);
   chequeaIdiomas(ctx, d.sb, STR, listaCorta);
+  chequeaFichas(ctx, d.sb, STR, listaCorta);
 }
 
 var NO_CUBRE_RUTINAS = [
