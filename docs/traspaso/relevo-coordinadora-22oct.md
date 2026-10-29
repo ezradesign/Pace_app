@@ -52,6 +52,11 @@ limpias en sus worktrees de `.claude/worktrees/`.
    ahora en primera persona (los antebrazos suben desde abajo y los dedos apuntan hacia abajo); la señal que se comprueba es
    que los pulgares apunten hacia fuera. Si Genspark no puede, recomendar dejar el dibujo de Estira en esa tarjeta: el de
    hoy, dos manos juntas, se confunde con «Rezo invertido». `dibujos-homogeneos` ya tiene los once PNG (18:08) en su rama.
+   ~18:20: su página (`docs/proposals/dibujos-29oct-ligera.html`, 158 KB; la completa pesa 790 KB y el visor de Ez no la
+   abre) publicada en https://claude.ai/artifact/2A58KUsW3Kp7yGmdxPJ82c (versión 2): los catorce nuevos con el sombreado en
+   la mediana o por debajo y el set de 67. Pide a Ez el sí a los catorce y si aclara Paloma, Flexor de cadera y Sentadilla a
+   silla (más sombreados; sus originales hay que localizarlos). La rama va 2 commits por delante de origin y con cambios sin
+   commit: la sesión espera a que acabe su suite en el 8810 para subir.
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
