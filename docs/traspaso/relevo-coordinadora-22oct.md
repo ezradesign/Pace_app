@@ -23,6 +23,13 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    frase de `privacy.html` sobre la marca de baja, que decide Ez. Con A7, una compra de prueba da un código de 3 días.
 4. **Al juntar el cobro**: la versión en un commit aparte, la línea de CHANGELOG y la fila de DECISIONES que propone su
    LEEME, y la fila del cobro del 26 oct. al día. Ojo: `app/state-core.jsx` queda en 500 líneas justas.
+5. **Dos hilos más desde las ~10:05 (Ez: «vayamos avanzando en hilos paralelos»)**, de ESTA cuenta, con `effort` high para
+   gastar menos: `runner-claro` (`local_6c19c780-1b38-4b8d-b824-6fb2e35aa61f`, puerto 8808; B1-B4, R4, R6 y una maqueta de
+   B3, P5, P6 y P8) y `tus-rutinas` (`local_0a6f61f9-4597-4bf0-9d88-55bf9e86973e`, puerto 8809; C1-C6, U1, U2, R2, R3 y
+   una maqueta de U1 y C6). Archivos repartidos: el runner no toca `app/custom/`, `app/main.jsx` ni `MoveModule.jsx`, y
+   «Tus rutinas» no toca `MoveSessionV1*`, los `*.data.js` ni `BreatheSession.jsx`. Los dos empiezan por B4 y C3 (lo que
+   frena la versión de prueba) y avisan al tenerlos; commits por caso y push tras cada uno. Al juntar, `index.html` y el
+   censo de textos de `verify` chocarán: se regenera y se suman.
 
 ## AL RELEVO (28 oct., ~21:15; 5iWBf… con las 5 h al 83 %, se repone a la 01:10; la semana al 58 %)
 
