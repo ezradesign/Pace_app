@@ -8,6 +8,23 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
+
+**Manda sobre el bloque de abajo donde lo cambie.** Las dos ramas estaban limpias y subidas (runner a76c9791, dibujos
+27332785). La semana de esta cuenta pasa del 85 % (`docs/WORKFLOW.md` §10): se gasta lo justo y, cuando EcLj6… se reponga
+(22:20), se prefiere esa cuenta.
+1. **Republicadas aquí**: la hoja https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (versión 74, con los enlaces de esta
+   cuenta; las equivalencias, por `git diff 24c778ac 2af4b3a9`: la de los catorce dibujos de EcLj6…, 2A58KUsW…, es aquí
+   Q6LWNCb6KNFqexLTRabqoZ), los dibujos https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT (versión 6) y los catorce dibujos
+   https://claude.ai/artifact/Q6LWNCb6KNFqexLTRabqoZ (versión 5, la ligera, que sustituye a la de los cinco).
+2. **Dos sesiones de esta cuenta**, con `cwd` en su worktree:
+   - `runner-vuelta3` (`local_a11d0717-ffe5-45ce-a750-ad81a664e610`, Sonnet, puerto 8808): la suite entera y la página de
+     fotos en esta cuenta (la MiGd9feEQgLE8GtLSxUULL es de EcLj6…).
+   - `dibujos-homogeneos` (`local_1ca073cd-66d2-4ce0-8406-9f4f8bffe68a`, puerto 8810): aclarar Paloma, Flexor de cadera y
+     Sentadilla a silla, la página en Q6LWN… y la suite.
+   Si esta cuenta se para, se retoman igual desde el bloque «AL RELEVO» del LEEME de su rama.
+3. Sigue en pie lo de abajo: el «júntalo» en su orden y los dos dibujos que faltan, revisados contra su paso.
+
 ## AL RELEVO (29 oct., ~18:30; EcLj6… con las 5 h al 94 %, se repone a las 22:20; la semana al 63 %)
 
 **Si llegas de la otra cuenta, empieza aquí; manda sobre lo de abajo.** `main` igual que origin: desde 0ed18787 (CI en
