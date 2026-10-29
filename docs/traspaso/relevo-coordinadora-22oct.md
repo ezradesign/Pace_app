@@ -43,6 +43,11 @@ limpias en sus worktrees de `.claude/worktrees/`.
    Rodar hacia abajo, Palmas en la mesa y Apretar glúteos. Al revisar uno nuevo, cambiar su `falta` por `vale: true`.
    A las 17:53, Ez pegó en el chat «Remo con tu mano» (`images\1.webp` de esta sesión, 1024×1024): vale, pasado a
    `dibujos-homogeneos`. Quedan seis: Rana, Pica, Sentarse y levantarse, Rodar hacia abajo, Palmas en la mesa y Apretar glúteos.
+   De 17:56 a 18:01, en `para-revisar`: valen `pike_pushup_desk_profile_plate_v5.jpg`, `roll_down_profile_plate_v3.jpg` (la
+   v2 también valía; la v3 redondea mejor), `getting_down_to_floor_profile_plate_v3.jpg` y
+   `seated_glute_squeeze_profile_plate_v2.jpg`, pasados a `dibujos-homogeneos` (once en su tanda). No vale
+   `forearm_stretch_desk_side_plate_v3.jpg`: Genspark pone siempre los dedos hacia fuera, y el prompt insiste ahora en la mano
+   al revés. **Faltan 2 de 16: Rana y Palmas en la mesa**, y el logo.
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
