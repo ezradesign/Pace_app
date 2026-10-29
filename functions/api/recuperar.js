@@ -10,11 +10,17 @@
      · la mensual: el último código de esa suscripción, el mismo que da /api/renovar. Si ya no
        sigue, no hay código nuevo.
 
-   POST { correo, recibo } -> 200 { codigo } · 404 { motivo: 'no' } si no hay compra con ese
-     correo y ese número (lo mismo si el correo no existe, para no decir quién compró) · 410
+   Solo cuentan las compras de los enlaces de pago de PACE (revisión de ChatGPT del 28 oct., A6);
+   una del modo de prueba de Stripe da un código de pocos días (A7), y «terminada» es solo la
+   marca de la baja que deja /api/stripe (A3): sin ella y sin código guardado, la página manda
+   escribir a Ez, que es lo que dice cuando esto aún no puede.
+
+   POST { correo, recibo } -> 200 { codigo } · 404 { motivo: 'no' } si no hay compra de PACE con
+     ese correo y ese número (lo mismo si el correo no existe, para no decir quién compró) · 410
      { motivo: 'terminada' } si la mensual ya terminó · 410 { motivo: 'devuelta' } si la compra se
      devolvió o se reclamó al banco · 400 si falta algo · 403 desde otra web · 413 · 429 · 502 si
-     Stripe no contesta · 503 sin las tres piezas de Ez.
+     Stripe no contesta · 503 { motivo: 'pendiente' } si la mensual aún no tiene código guardado,
+     y 503 sin las cuatro piezas de Ez.
 
    NO SE GUARDA NADA DE NADIE: el correo y el número van a Stripe, que ya los tiene, y se
    olvidan. El límite de intentos (diez por hora desde una misma conexión, para que nadie pruebe
@@ -22,10 +28,11 @@
    el de «Avísame»; si la caché falla, la puerta sigue abierta.
 
    APAGADA hasta que Ez conecte en Cloudflare `STRIPE_LECTURA` (una llave restringida de Stripe
-   que solo lee Checkout Sessions, cobros y facturas), `PACE_K2_PRIVADA` y el KV `VENTAS`
-   (docs/launch/cobro-web.md). La app no la usa. Cloudflare la sirve como módulo. */
+   que solo lee Checkout Sessions, cobros y facturas), `PACE_K2_PRIVADA`, el KV `VENTAS` y
+   `PACE_ENLACES_STRIPE` (docs/launch/cobro-web.md). La app no la usa. Cloudflare la sirve como
+   módulo. */
 
-import { stripeBuscarCompra } from '../../cobro/stripe.js';
+import { stripeBuscarCompra, stripeEnlaces, STRIPE_MODO_PRUEBA_MS } from '../../cobro/stripe.js';
 import { firmarVenta } from '../../cobro/venta.js';
 
 const CORREO = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
@@ -59,7 +66,8 @@ async function demasiados(request) {
 }
 
 export async function onRequestPost({ request, env }) {
-  if (!env.STRIPE_LECTURA || !env.PACE_K2_PRIVADA || !env.VENTAS) return respuesta({ ok: false, motivo: 'cerrada' }, 503);
+  const enlaces = stripeEnlaces(env.PACE_ENLACES_STRIPE);
+  if (!env.STRIPE_LECTURA || !env.PACE_K2_PRIVADA || !env.VENTAS || !enlaces.length) return respuesta({ ok: false, motivo: 'cerrada' }, 503);
   const origen = request.headers.get('Origin');
   if (origen && origen !== new URL(request.url).origin) return respuesta({ ok: false, motivo: 'origen' }, 403);
   if (Number(request.headers.get('Content-Length')) > CUERPO_MAX) return respuesta({ ok: false, motivo: 'formato' }, 413);
@@ -79,13 +87,17 @@ export async function onRequestPost({ request, env }) {
   let compra;
   /* Envuelto: un `fetch` suelto, sin su `this`, puede fallar con «Illegal invocation». */
   const pedir = (url, opciones) => fetch(url, opciones);
-  try { compra = await stripeBuscarCompra(correo, recibo, env.STRIPE_LECTURA, pedir); } catch (e) { return respuesta({ ok: false, motivo: 'stripe' }, 502); }
+  try { compra = await stripeBuscarCompra(correo, recibo, env.STRIPE_LECTURA, pedir, enlaces); } catch (e) { return respuesta({ ok: false, motivo: 'stripe' }, 502); }
   if (!compra) return respuesta({ ok: false, motivo: 'no' }, 404);
   if (compra.devuelta) return respuesta({ ok: false, motivo: 'devuelta' }, 410);
   if (compra.plan === 'monthly') {
+    if (await env.VENTAS.get('baja:' + compra.order)) return respuesta({ ok: false, motivo: 'terminada' }, 410);
     const ultimo = await env.VENTAS.get('suscripcion:' + compra.order);
-    return ultimo ? respuesta({ ok: true, codigo: ultimo }) : respuesta({ ok: false, motivo: 'terminada' }, 410);
+    return ultimo ? respuesta({ ok: true, codigo: ultimo }) : respuesta({ ok: false, motivo: 'pendiente' }, 503);
   }
-  const codigo = await firmarVenta({ plan: 'lifetime', order: compra.order }, env.PACE_K2_PRIVADA, Date.now());
+  const ahora = Date.now();
+  const venta = { plan: 'lifetime', order: compra.order };
+  if (compra.prueba) venta.expiresAt = ahora + STRIPE_MODO_PRUEBA_MS;
+  const codigo = await firmarVenta(venta, env.PACE_K2_PRIVADA, ahora);
   return respuesta({ ok: true, codigo: codigo });
 }

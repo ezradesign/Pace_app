@@ -7080,9 +7080,11 @@ function loadState(estricto) {
 
 let _state = loadState();
 const _listeners = new Set();
+let _paceSinGuardar = false;
 
 
 function persistState() {
+  if (_paceSinGuardar) return;
   try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {
     try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
   }
@@ -7132,7 +7134,9 @@ function subscribe(listener) {
 }
 
 
-function paceAdoptarEstado(nuevo) {
+
+function paceAdoptarEstado(nuevo, hastaRecargar) {
+  if (hastaRecargar) _paceSinGuardar = true;
   const prev = _state;
   _state = nuevo;
   _listeners.forEach((l) => l());
@@ -8659,6 +8663,12 @@ function paceLicenciaCuandoSepa() {
 
 
 
+
+
+
+
+
+
 var PACE_RENOVAR_ANTES = 3.5 * 24 * 3600 * 1000;
 var PACE_RENOVAR_CADA = 6 * 3600 * 1000;
 var _paceRenovar = { ultimo: 0, motivo: null, enCurso: null };
@@ -8673,6 +8683,7 @@ function paceLicenciaGuardada() {
 function paceLicenciaEsMensual(datos) {
   return !!datos && datos.type === 'monthly' && typeof datos.order === 'string' && typeof datos.expiresAt === 'number';
 }
+
 
 
 function paceLicenciaRenovar(forzar) {
@@ -8697,7 +8708,14 @@ function paceLicenciaRenovar(forzar) {
       var nuevo = d && d.codigo ? paceLicenciaLeer(d.codigo) : null;
       if (!nuevo || !paceLicenciaEsMensual(nuevo.datos) || nuevo.datos.order !== g.datos.order) return fin('sin-red');
       if (!(nuevo.datos.expiresAt > g.datos.expiresAt)) return fin('igual');
-      return paceLicenciaCanjear(d.codigo).then(function (x) {return fin(x && x.ok ? 'renovada' : 'sin-red');});
+      return paceLicenciaComprobar(d.codigo).then(function (x) {
+        if (!x.ok) return fin('sin-red');
+        var ahora = paceLicenciaGuardada();
+        if (!ahora || ahora.codigo !== g.codigo) return fin('otro');
+        _paceLicenciaFirma = { codigo: x.codigo, estado: 'buena' };
+        setState({ licencia: x.codigo });
+        return fin('renovada');
+      });
     });
   }).catch(function () {return fin('sin-red');});
   return _paceRenovar.enCurso;
@@ -39185,7 +39203,20 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     setPidiendoImportar(null);
     if (!pendiente) return;
     const { incoming, eventsSection } = pendiente;
-    const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+
+
+
+
+
+
+
+
+    const writeLegacy = () => {
+      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+      let copia = getState();
+      try {copia = loadState(true);} catch (e) {}
+      try {paceAdoptarEstado(copia, true);} catch (e) {}
+    };
 
 
 

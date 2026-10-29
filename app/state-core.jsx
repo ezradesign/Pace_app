@@ -382,9 +382,11 @@ function loadState(estricto) {
 
 let _state = loadState();
 const _listeners = new Set();
+let _paceSinGuardar = false; // una copia importada ya escrita: nada se guarda hasta recargar (paceAdoptarEstado)
 
 /* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda). */
 function persistState() {
+  if (_paceSinGuardar) return;
   try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {
     try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
   }
@@ -433,8 +435,10 @@ function subscribe(listener) {
   return () => _listeners.delete(listener);
 }
 
-/* Otra pestaña guardó: su copia pasa a ser la de esta, SIN escribir (el porqué, en state-core.pestanas.js). */
-function paceAdoptarEstado(nuevo) {
+/* Otra pestaña guardó: su copia pasa a ser la de esta, SIN escribir (el porqué, en state-core.pestanas.js). Con
+   `hastaRecargar`, la copia importada ya escrita (TweaksData.jsx): desde ahí nada guarda lo de antes encima. */
+function paceAdoptarEstado(nuevo, hastaRecargar) {
+  if (hastaRecargar) _paceSinGuardar = true;
   const prev = _state;
   _state = nuevo;
   _listeners.forEach(l => l());
