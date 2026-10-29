@@ -41,6 +41,8 @@ limpias en sus worktrees de `.claude/worktrees/`.
    (Palmas en la mesa con los dedos hacia fuera); su prompt la pide ahora de lado. La página de dibujos (versión 9) lleva
    `vale` o `falta` en cada uno y dice arriba «Faltan 7 de 16»: Rana, Remo con tu mano, Pica, Sentarse y levantarse,
    Rodar hacia abajo, Palmas en la mesa y Apretar glúteos. Al revisar uno nuevo, cambiar su `falta` por `vale: true`.
+   A las 17:53, Ez pegó en el chat «Remo con tu mano» (`images\1.webp` de esta sesión, 1024×1024): vale, pasado a
+   `dibujos-homogeneos`. Quedan seis: Rana, Pica, Sentarse y levantarse, Rodar hacia abajo, Palmas en la mesa y Apretar glúteos.
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
