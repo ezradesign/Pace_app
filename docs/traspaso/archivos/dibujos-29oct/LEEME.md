@@ -26,7 +26,7 @@ listos para la ingesta, en `Pace_app\dibujos-22oct\pagina-29oct\aclarar\` (fuera
    Antes de la primera prueba, con k=1, comprobar que sale lo mismo que en git (`git diff --stat` sin cambios en los tres .webp).
 2. Escribir los tres k en `ACLARADO` (`scripts/ingest-glifos-ejercicio.js`, con el porqué) y reingestar sin `--aclarado`.
 3. En la página: un antes y un después de los tres junto a sus vecinos (las máscaras de antes están en git, en el
-   commit de este relevo; sácalas con `git show HEAD:app/glyphs/assets/ejercicios/paloma.webp > …`), y la tira del
+   commit de este relevo, 30fc197f: `git show 30fc197f:app/glyphs/assets/ejercicios/paloma.webp > …`), y la tira del
    set de nuevo: `node docs/traspaso/archivos/dibujos-29oct/tira.js set "<Pace_app>/dibujos-22oct/pagina-29oct/fotos/tiras/set.png" 104 3 <los catorce, por comas>`.
    La sección «Los que se salen» de `pagina.js` pasa a contar que ya están aclarados. Luego `pagina.js` (la completa y `--ligera`).
 4. `npm run verify`, `node build-standalone.js`, `git checkout -- PACE_standalone.html` y la suite entera:
