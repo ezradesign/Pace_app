@@ -9605,6 +9605,21 @@ function customSegundos(steps) {
 }
 
 
+
+
+
+
+function customMinutos(steps) {
+  const lista = Array.isArray(steps) ? steps.filter((s) => s && s.name) : [];
+  let seg = customSegundos(lista);
+  if (lista.length && typeof window.moveRutinaGuiada === 'function' && typeof window.estimateDuration === 'function') {
+    const descanso = (getState() || {}).restBetweenSets;
+    seg = window.estimateDuration(window.moveRutinaGuiada({ id: 'custom.medida', steps: lista }), descanso).maxSec;
+  }
+  return Math.max(1, Math.ceil(seg / 60));
+}
+
+
 function sanitizeCustomRoutine(draft) {
   const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
   const steps = (Array.isArray(draft.steps) ? draft.steps : []).
@@ -9615,7 +9630,7 @@ function sanitizeCustomRoutine(draft) {
     Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
     cue: String(s.cue || '')
   }));
-  const min = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+  const min = customMinutos(steps);
   return { name, steps, min };
 }
 
@@ -9658,11 +9673,11 @@ function deleteCustomRoutine(id) {
 }
 
 Object.assign(window, {
-  CUSTOM_LIMITS, customTieneTrabajo, customSegundos,
+  CUSTOM_LIMITS, customTieneTrabajo, customSegundos, customMinutos,
   getCustomRoutines, getCustomRoutine,
   addCustomRoutine, updateCustomRoutine, deleteCustomRoutine
 });
-;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine });
+;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, customMinutos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine });
 })();
 </script>
   <!-- Feedback ligero por rutina (s116 · B2.2b-2): recordRoutineFeedback +
@@ -27452,7 +27467,10 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
 
   const isV1 = !!(guiada.steps && guiada.steps.some((s) => s && s.mode));
   let durLabel = `${routine.min} min`;
-  if (isV1 && typeof window.estimateDuration === 'function') {
+  if (propia && typeof window.customMinutos === 'function') {
+
+    durLabel = `${window.customMinutos(routine.steps)} min`;
+  } else if (isV1 && typeof window.estimateDuration === 'function') {
     const est = window.estimateDuration(guiada, pace.restBetweenSets);
     const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
     durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
@@ -34797,8 +34815,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
   tn('custom.steps.many', { n: nPasos });
 
 
-  const minutos = typeof customSegundos === 'function' && nPasos ?
-  Math.max(1, Math.ceil(customSegundos(routine.steps) / 60)) : routine.min;
+  const minutos = typeof customMinutos === 'function' && nPasos ? customMinutos(routine.steps) : routine.min;
   return (
     React.createElement(Card, { accent: locked ? 'var(--premium)' : accent, onClick: onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
     !locked &&
@@ -34908,7 +34925,8 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
   const limits = window.CUSTOM_LIMITS;
 
 
-  const totalMin = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+
+  const totalMin = customMinutos(steps);
   const segundos = (s) => ejercicioPorLados(s.name) ? tn('custom.step.perSide', { s: s.dur }) : `${s.dur} s`;
 
   const sinTrabajo = steps.length > 0 && !customTieneTrabajo(steps);

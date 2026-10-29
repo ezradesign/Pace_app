@@ -78,7 +78,10 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
 
   const isV1 = !!(guiada.steps && guiada.steps.some(s => s && s.mode));
   let durLabel = `${routine.min} min`;
-  if (isV1 && typeof window.estimateDuration === 'function') {
+  if (propia && typeof window.customMinutos === 'function') {
+    /* Una propia, con la cifra de su tarjeta y del constructor (C2). */
+    durLabel = `${window.customMinutos(routine.steps)} min`;
+  } else if (isV1 && typeof window.estimateDuration === 'function') {
     const est = window.estimateDuration(guiada, pace.restBetweenSets);
     const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
     durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;

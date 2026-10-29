@@ -148,10 +148,9 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
   const stepsLabel = nPasos === 1
     ? t('custom.steps.one')
     : tn('custom.steps.many', { n: nPasos });
-  /* Los minutos con los pasos por lados contados dos veces, como el constructor: el `min`
-     guardado antes de que se guiaran por lados se quedaba corto. */
-  const minutos = typeof customSegundos === 'function' && nPasos
-    ? Math.max(1, Math.ceil(customSegundos(routine.steps) / 60)) : routine.min;
+  /* Los mismos minutos que el constructor y la vista previa (`customMinutos`), no el `min`
+     guardado: el de antes no contaba los lados ni las colocaciones. */
+  const minutos = typeof customMinutos === 'function' && nPasos ? customMinutos(routine.steps) : routine.min;
   return (
     <Card accent={locked ? 'var(--premium)' : accent} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {!locked && (

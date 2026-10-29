@@ -33,8 +33,9 @@ function CustomBuilder({ editId, onClose }) {
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
   const limits = window.CUSTOM_LIMITS;
 
-  /* Un paso por lados dura su tiempo en cada lado (`customSegundos`), y su tiempo lo dice. */
-  const totalMin = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+  /* El total es el de la tarjeta y la vista previa (`customMinutos`). Un paso por lados dura
+     su tiempo en cada lado, y su tiempo lo dice. */
+  const totalMin = customMinutos(steps);
   const segundos = (s) => (ejercicioPorLados(s.name) ? tn('custom.step.perSide', { s: s.dur }) : `${s.dur} s`);
   /* Solo con descansos no hay rutina: no se guarda, y se dice por qué. */
   const sinTrabajo = steps.length > 0 && !customTieneTrabajo(steps);

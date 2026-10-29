@@ -54,6 +54,21 @@ function customSegundos(steps) {
   return (Array.isArray(steps) ? steps : []).reduce((acc, s) => acc + (lados(s.name) ? s.dur * 2 + cambio : s.dur), 0);
 }
 
+/* LOS MINUTOS DE UNA RUTINA PROPIA, los mismos en la tarjeta, el constructor y la vista previa
+   (revisión de ChatGPT del 28 oct., C2: la tarjeta contaba solo el trabajo y la vista previa le
+   sumaba la preparación y las colocaciones; 12 pasos de 40 s eran 8 min y 9). Se mide la rutina
+   preparada para el runner (`moveRutinaGuiada`) con `estimateDuration`, como el catálogo; antes
+   de que eso cargue, el trabajo solo. Los pasos propios van con reloj, así que no hay rango. */
+function customMinutos(steps) {
+  const lista = Array.isArray(steps) ? steps.filter(s => s && s.name) : [];
+  let seg = customSegundos(lista);
+  if (lista.length && typeof window.moveRutinaGuiada === 'function' && typeof window.estimateDuration === 'function') {
+    const descanso = (getState() || {}).restBetweenSets;
+    seg = window.estimateDuration(window.moveRutinaGuiada({ id: 'custom.medida', steps: lista }), descanso).maxSec;
+  }
+  return Math.max(1, Math.ceil(seg / 60));
+}
+
 /* Normaliza el borrador del constructor a los límites. */
 function sanitizeCustomRoutine(draft) {
   const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
@@ -65,7 +80,7 @@ function sanitizeCustomRoutine(draft) {
         Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
       cue: String(s.cue || ''),
     }));
-  const min = Math.max(1, Math.ceil(customSegundos(steps) / 60));
+  const min = customMinutos(steps);
   return { name, steps, min };
 }
 
@@ -108,7 +123,7 @@ function deleteCustomRoutine(id) {
 }
 
 Object.assign(window, {
-  CUSTOM_LIMITS, customTieneTrabajo, customSegundos,
+  CUSTOM_LIMITS, customTieneTrabajo, customSegundos, customMinutos,
   getCustomRoutines, getCustomRoutine,
   addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
 });

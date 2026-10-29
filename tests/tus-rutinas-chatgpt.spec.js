@@ -77,3 +77,30 @@ test('C5 · en inglés, «Zancada con apertura» sale traducida en la vista prev
   await expect(preview).not.toContainText('Zancada');
   expect(errores).toEqual([]);
 });
+
+/* -------------------------------------------------------------- C2 · una sola duración */
+/* La tarjeta y el constructor contaban solo el trabajo (`customSegundos`) y la vista previa
+   le sumaba la preparación y las colocaciones (`estimateDuration`): 12 pasos de 40 s eran
+   8 min en la tarjeta y 9 en la vista previa. */
+test('C2 · la tarjeta, el constructor y la vista previa dicen los mismos minutos', async ({ page, context }) => {
+  const doce = Array.from({ length: 12 }, () => ['Encogimiento de hombros', 40]);
+  await sembrar(context, { customRoutines: [propia('custom.1', 'Doce pasos', doce), propia('custom.2', 'Uno', [['Plancha lateral', 30]])] });
+  const errores = capturarErrores(page);
+  for (const nombre of ['Doce pasos', 'Uno']) {
+    await irAlArtefacto(page);
+    await page.getByRole('button', { name: 'Mueve' }).first().click();
+    const biblio = page.locator('.pace-lib').filter({ visible: true }).first();
+    await biblio.getByText(/^Tus rutinas/).filter({ visible: true }).first().click();
+    const tarjeta = biblio.locator('h4:visible', { hasText: nombre }).first().locator('xpath=..');
+    const enTarjeta = (await tarjeta.textContent()).match(/(\d+) min/)[1];
+
+    await tarjeta.getByRole('button', { name: 'Editar' }).click();
+    const enConstructor = (await overlaySuperior(page).textContent()).match(/≈ (\d+) min/)[1];
+    await page.getByRole('button', { name: 'Cancelar' }).click();
+
+    await page.locator('.pace-lib').filter({ visible: true }).first().locator('h4:visible', { hasText: nombre }).first().click();
+    const enPreview = (await overlaySuperior(page).textContent()).match(/(\d+(?:–\d+)?) min/)[1];
+    expect([enTarjeta, enConstructor, enPreview], nombre + ': tarjeta, constructor y vista previa').toEqual([enPreview, enPreview, enPreview]);
+  }
+  expect(errores).toEqual([]);
+});
