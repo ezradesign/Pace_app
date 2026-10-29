@@ -21,11 +21,14 @@ ya está hecho.**
    pacegrass.app/sw.js; si no acabó, relánzala en otro puerto antes de subir.
 2. **Dos sesiones de ESTA cuenta, invisibles desde la otra**, con el aviso de «wip, push y LEEME» enviado a las 10:55:
    - `runner-claro` (`local_6c19c780-…`): worktree `.claude/worktrees/runner-claro-15db3c`, rama
-     `claude/runner-claro-15db3c` (en origin; 91484f6 a las 10:54). **B4 hecho** (fdd74c2). Seguía con B1, B2, R4 y R6;
-     luego, la maqueta de B3, P5, P6 y P8.
+     `claude/runner-claro-15db3c` (en origin). **Hechos y subidos a las ~11:25, nada a medias**: B4 (fdd74c2), B1 y B2, R4,
+     R6 y el material de «Core silencioso» (`stableChair`, c946ffc); suite entera, 1067 en verde. Las tres rutinas con
+     Extensión torácica siguen con `equipment: []` a propósito: piden la clave `chair` de «Tus rutinas», que pone la
+     coordinadora al juntar. **Su maqueta espera a Ez**: https://claude.ai/artifact/Mtv9tKsUy9qWgJgKwfD788 (de esta
+     cuenta; recomendado B3 A, P5 A, P6 A, P8 A).
    - `tus-rutinas` (`local_0a6f61f9-…`): worktree `.claude/worktrees/tus-rutinas-c0cf03`, rama `claude/tus-rutinas-c0cf03`
      (en origin). **Hechos y subidos a las 11:00, cada uno con su prueba**: C3 (f8fe136), C1 (6356312), C5 (a074f8e), C2
-     (d724bab), R2 y R3 (1bee157), U2 (662284d) y C4 (b560f81); su suite entera corría a las 11:00. **Su maqueta de U1 y
+     (d724bab), R2 y R3 (1bee157), U2 (662284d) y C4 (b560f81); su suite entera, 1060 en verde (40efee2e). **Su maqueta de U1 y
      C6 espera la elección de Ez**: https://claude.ai/artifact/LD2aRGw2gsrK2XM2DrovkB (de esta cuenta;
      `docs/proposals/tus-rutinas-u1-c6-29oct.html` en su rama). U1: A, preguntar antes de cerrar; B, el borrador espera y
      se recupera (la recomendada); C, las dos. C6: A, una línea encima de Guardar (la recomendada); B, una ventana. R3
