@@ -19,7 +19,7 @@ hasta 11a60591; d27c5e27 en marcha). Nada a medias en las ramas del runner y de 
    etiqueta en una sola fila con hueco siempre, el bloque junto y centrado. Maqueta pintada con
    `docs/traspaso/archivos/runner-claro/maqueta-c.js` (scratchpad de 5iWBf…; cópialo a la rama si no está): el tope de
    `useV1Glifo` pasa a `escritorio ? 300 : 262` con `alto * (escritorio ? 0.36 : 0.3)`, cambiado en el `index.html` servido.
-   Medido: 412×915 de 224 a 276 px, 1280×720 de 160 a 186, 360×740 igual; «Auto» no toca las palabras. La página va en
+   Medido en catorce pantallas: el círculo nunca encoge (412×915 de 224 a 276, 360×640 de 138 a 156, 1280×720 de 160 a 186); bajo 700 px de alto «Auto» se queda junto a «Siguiente», porque debajo no cabe. Página publicada (versión 4). La página va en
    https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp (si no llegó a publicarse con la tabla de la vuelta 3, rehazla con
    `maqueta-c.js <carpeta> censo todas`). **Espera el «móntalo»**; luego el «júntalo» con los dos retoques del punto 1 del
    bloque «AL RELEVO (29 oct., ~13:15…)».
