@@ -53,6 +53,10 @@ test('en «Colócate» el aro se queda vacío, y avanza cuando empieza el ejerci
   await sembrar(context);
   await irAlArtefacto(page);
   await abrirRutina(page, 'Estira', 'Escritorio express');
+  /* El paso 1 (hombros) también se coloca desde que su colocación escrita se ve (B4). */
+  await expect.poll(() => fase(page)).toBe('place');
+  await siguiente(page);                       // «Empezar ya» en los hombros
+  await expect.poll(() => fase(page)).toBe('work');
   await siguiente(page);                       // paso 2, «Círculos de muñeca», con colocación de 5 s
   await expect.poll(() => fase(page)).toBe('place');
   await page.waitForTimeout(2200);
