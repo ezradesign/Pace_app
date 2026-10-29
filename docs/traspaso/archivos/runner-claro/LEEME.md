@@ -1,7 +1,8 @@
 # El runner de Mueve y Estira, más claro (29 oct. 2026)
 
 Rama `claude/runner-claro-15db3c`, sin juntar en `main`. Casos de las revisiones de ChatGPT del 28 oct.
-(`docs/audits/chatgpt-28oct/LEEME.md`): B1-B4, R4, R6 y, con maqueta, B3, P5, P6 y P8, ya montados.
+(`docs/audits/chatgpt-28oct/LEEME.md`): B1-B4, R4, R6 y, con maqueta, B3, P5, P6 y P8, ya montados; y la tercera vuelta
+del reparto que dibujó Ez (abajo).
 
 ## Hecho (cada uno con su prueba, roja antes del arreglo: B1-R6 contra la 0.185.0; B3-P8 contra esta rama)
 
@@ -45,6 +46,42 @@ que se pueda ver la bola del dibujo arriba» (el segundo «P5A» es la P6).
 «Terminar serie» en siete pruebas; `runner-espera` (espera-3 a 5), `runner-mando` («+15 s» ya no se pulsa en pausa:
 el velo lo tapa), `mueve-reloj` y `caza-sesiones` cuentan los 3 s del 3, 2, 1 como pausa.
 
+## La tercera vuelta del reparto, montada (Ez, «Monta el runner», 29 oct. ~17:40)
+
+Maqueta: `docs/proposals/runner-saltar-debajo-29oct.html` (guion `maqueta-c.js`). Montado en todas las rutinas de Mueve y
+Estira y en «Tus rutinas» (mismo runner), con la regla técnica arriba de `DECISIONES_TECNICAS_VIGENTES.md`:
+- **Una pastilla** en su hueco de siempre bajo la etiqueta del número (`.pace-v1-pastilla`); sale la fila aparte de
+  «Con una basta» (`.pace-v1-numbasta`, `v1ConBasta`).
+- **«Auto»** (`AutoV1`) bajo las palabras del mando si `useV1AutoAbajo` ve ≥ 700 px de alto; si no, junto a «Siguiente».
+- **El círculo**: techo `escritorio ? 300 : 262` con `alto * (escritorio ? 0.36 : 0.3)`; el bloque se centra con márgenes
+  `auto` (no `justify-content`); el velo de la pausa se coloca bajo el círculo medido.
+- **Medidas**: las de la maqueta (`--v1-u`, `--v1-num`, letras un punto más a ≥ 820 px de alto en el móvil).
+- **Textos**: «Colócate sin prisa · pulsa «Empezar ya»» / «Get set, no rush · press Begin now» (misma clave); durante el
+  3, 2, 1 se apaga «Al reanudar…» sin mover nada.
+
+**Fotos para Ez, hoy y montado, con todas las pantallas** (Ez lo pidió: «quiero ver todas las resoluciones del runner para
+móvil y pc»): https://claude.ai/artifact/MiGd9feEQgLE8GtLSxUULL (`docs/proposals/runner-reparto-montado-29oct.html`, 781 KB;
+la ligera, para su visor, `runner-reparto-montado-29oct-ligera.html`, 202 KB). La hacen `censo-montado.js` (fotos y
+`censo.json`; con `fotos ... pausa,vuelta`, la pausa) y `reparto-pagina.js` (la página; con `ligera`, la ligera).
+
+**Decidido al montarlo, a falta de que Ez lo mire en la página de fotos** (lo dice su recuadro):
+- A 320 × 568 («justo») la pastilla va junto a su etiqueta: debajo no cabía y «Cuídate» pisaba la barra 20 px. La maqueta
+  decía 10 px porque, centrada con `justify-content`, el bloque se salía también por arriba y cortaba el círculo bajo la
+  cabecera (su censo no lo miraba; `censo-montado.js` sí).
+- El número a la misma distancia de la descripción que de la barra, y la barra a 1,6 u del mando: lo pedían
+  `runner-congelado` y `runner-mando` (la maqueta los rompía). Frente a la maqueta, el número sube unos 5 px y el círculo
+  los gana.
+- El número oculto del 3, 2, 1 guarda su alto: el texto del velo subía 9 px al empezar la cuenta.
+
+**Censo** (`censo-montado.js`, hoy = `git show 05e2252:index.html`): las 14 pantallas en cinco pasos, en los dos idiomas. El
+círculo no encoge en ninguna, no hay scroll ni texto cortado, y nada se pisa. Pruebas: `tests/runner-reparto.spec.js`
+(r-1 a r-7), rojas contra el index de antes; r-6, también contra dos mutantes. Cambian con esto (lo eligió Ez): `runner-auto`
+(auto-1 busca «Auto» en el mando), `runner-claro` (la pastilla en `.pace-v1-numgrupo`; «Con una basta» sin hueco propio) y
+`runner-mando` (cuenta los tres botones redondos, no todos los del mando).
+
+**Queda, como hoy**: a 320 px de ancho, «Siguiente: nombre largo» con «Auto» al lado parte en dos líneas y sube la barra en
+ese paso. El texto que se ve no la pisa (lo mide r-7), pero la barra se mueve entre pasos. Sería otra maqueta.
+
 ## Para quien siga
 
 - Pruebas en el 8808 (`PACE_E2E_PORT=8808`). Con otras suites a la vez, lo que caiga por tiempo se repite con
@@ -52,4 +89,7 @@ el velo lo tapa), `mueve-reloj` y `caza-sesiones` cuentan los 3 s del 3, 2, 1 co
 - `MoveSessionV1.jsx` ronda las 485 líneas: lo nuevo va en `MoveSessionV1.parts.jsx` (cargado antes que él).
 - `tests/runner-cabe.spec.js` (cabe-2, la barra de 4·7·8) cae a veces con otras suites a la vez («acabó antes de
   cuatro ciclos», «llena 3 s»); sola, en verde.
-- `node_modules` es una unión al del repo principal; se quita con `cmd /c rmdir node_modules`.
+- `node_modules` es una unión al del repo principal; se quita con `cmd /c rmdir node_modules` (y se pone con
+  `New-Item -ItemType Junction`). Sin ella, `build-standalone.js` dice «TypeScript not found».
+- `page.clock.install` deja el reloj corriendo: un aserto que espera (`toBeHidden`, `toHaveCount(0)`) puede pasar porque
+  la cuenta acabó y la pieza se fue. Lo que pasa en un instante se mira con un `evaluate` de una vez (r-6).
