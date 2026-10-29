@@ -57,6 +57,9 @@ limpias en sus worktrees de `.claude/worktrees/`.
    la mediana o por debajo y el set de 67. Pide a Ez el sí a los catorce y si aclara Paloma, Flexor de cadera y Sentadilla a
    silla (más sombreados; sus originales hay que localizarlos). La rama va 2 commits por delante de origin y con cambios sin
    commit: la sesión espera a que acabe su suite en el 8810 para subir.
+   **Ez (~18:25): «Sí, y aclara los 3»**: sí a los catorce, y aclarar Paloma, Flexor de cadera y Sentadilla a silla.
+   Pasado a `dibujos-homogeneos` (desde sus originales, sin tocar `.webp`, con antes y después en la página). A esa hora
+   `runner-vuelta3` seguía con el censo de 156 fotos; después, su página y la suite en el 8808.
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
