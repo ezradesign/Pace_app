@@ -32273,6 +32273,14 @@ function v1StepDur(step) {
 
 
 
+
+
+
+function v1MismoEjercicioAntes(routine, idx) {
+  let j = idx - 1;
+  while (j >= 0 && routine.steps[j].mode === 'rest') j--;
+  return j >= 0 && routine.steps[j].name === routine.steps[idx].name;
+}
 function v1StepSetup(routine, idx) {
   const st = routine.steps[idx];
   if (!st) return { mode: 'none', estimatedSeconds: 0 };
@@ -32281,10 +32289,8 @@ function v1StepSetup(routine, idx) {
   }
   if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
   const clocked = st.mode === 'timed' || st.mode === 'perSide';
-  const prev = idx > 0 ? routine.steps[idx - 1] : null;
-  const afterRest = !!(prev && prev.mode === 'rest');
   if (clocked && idx > 0) return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
-  if (st.mode === 'reps' && st.instruction && st.instruction.setup && !afterRest) {
+  if (st.mode !== 'rest' && st.instruction && st.instruction.setup && !v1MismoEjercicioAntes(routine, idx)) {
     return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
   }
   return { mode: 'none', estimatedSeconds: 0 };
@@ -32658,7 +32664,7 @@ Object.assign(window, {
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock, v1LadoGlifo, v1Prefijo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1MismoEjercicioAntes, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock, v1LadoGlifo, v1Prefijo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
 })();
 </script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
