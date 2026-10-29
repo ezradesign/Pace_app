@@ -24,6 +24,13 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
      Sentadilla a silla, la página en Q6LWN… y la suite.
    Si esta cuenta se para, se retoman igual desde el bloque «AL RELEVO» del LEEME de su rama.
 3. Sigue en pie lo de abajo: el «júntalo» en su orden y los dos dibujos que faltan, revisados contra su paso.
+4. **~22:00, las dos ramas terminadas y subidas.** Runner en d3174d6c (solo docs): suite en el 8808 con 1085 en verde, 2
+   saltadas y 2 caídas por carga (`ritmo-pausa-entera`, `ritmo-reloj`) que pasan solas; fotos de la tercera vuelta aquí:
+   https://claude.ai/artifact/9DyxdcbyTtp2MBT4G5Xgqf. Dibujos en cf020aef: Paloma { suave: 1.4 }, Flexor 1.3 y Sentadilla
+   1.1 en `ACLARADO`, y `HOLGURA` 1.5 (la ingesta ya no encoge por un pelo, que volvía gris el rayado); solo cambian esos
+   tres .webp. Suite en el 8810: 1066 en verde, 2 saltadas y `eventos-origen.spec.js:93` caída por carga, sola pasa.
+   Página en Q6LWN… (versión 6). La hoja (versión 75) pone «Ahora» en mirar las tres y decir «júntalo». Ez autorizó
+   llevar la semana de esta cuenta hasta el 95 % (al 88 % a las 22:00).
 
 ## AL RELEVO (29 oct., ~18:30; EcLj6… con las 5 h al 94 %, se repone a las 22:20; la semana al 63 %)
 

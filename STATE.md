@@ -58,7 +58,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.
-- **Mirar las fotos de las dos ramas y dar su «júntalo»**: el runner y «Tus rutinas», con lo que Ez eligió el 29 oct.
+- **Mirar las fotos de las tres ramas y dar su «júntalo»**: «Tus rutinas», el runner y los catorce dibujos (con Paloma,
+  Flexor de cadera y Sentadilla a silla aclarados), con lo que Ez eligió el 29 oct.
   (`DECISIONES_PRODUCTO.md`), montados y en verde; las fotos, en la hoja. Después, la maqueta de producto.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
