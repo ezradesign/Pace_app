@@ -14,9 +14,16 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    (versión 73, con «Ahora: elegir en las dos maquetas»), la maqueta del runner
    https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1 y la de «Tus rutinas» https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3,
    byte a byte desde sus ramas. Las dos ramas, limpias e iguales a origin (c946ffc1 y 40efee2e).
-2. **Al montar P8 A**, en el ordenador la instrucción de la pausa casi toca el número (fotos 23 y 25 de la maqueta): que
-   quede su hueco. La foto de P5 B saca la línea al borde izquierdo; es de la opción no recomendada.
-3. **Espera a Ez**: las letras de las dos maquetas y la del calendario en v1. Con ellas, una sesión nueva en cada worktree.
+2. **Ez eligió (~12:00)**: «B3A + P5A + P5A (No entiendo bien, de todas formas la pill de con una basta queda mejor
+   cuadrada debajo de segundos) + Me gusta la P8 B pero quizás se pueda ver la bola del dibujo arriba / Para tus rutinas:
+   U1 B · C6 A». El segundo «P5A» es la P6. Es decir: B3 A, P5 A, **P6 A con «Con una basta» centrada debajo de
+   «SEGUNDOS»**, **P8 B con el velo dejando a la vista el círculo del dibujo y su arco** (al reanudar, 3, 2, 1), U1 B y C6 A.
+   El calendario en v1 sigue sin letra.
+3. **Dos sesiones de esta cuenta, en sus worktrees** (`cwd`, `use_worktree: false`): `runner-montaje`
+   (`local_b5c190bf-a38e-44ea-8954-8891b7d1d254`, puerto 8808) y `tus-rutinas-montaje`
+   (`local_b7821895-2157-4f84-b911-e6c37b734612`, puerto 8809), con los mismos archivos repartidos que antes. Cada una
+   acaba con su suite entera, el LEEME al día y una página de fotos («El runner, montado» y «Tus rutinas, montado»).
+   Con las fotos, el «júntalo» de Ez: primero «Tus rutinas» y luego el runner, con la clave `chair` en Extensión torácica.
 
 ## MIGRACIÓN (29 oct., ~11:35; 5iWBf… al 94 %): las decisiones se toman en la otra cuenta
 
