@@ -13,6 +13,12 @@ Rama `claude/runner-claro-15db3c`, sin juntar en `main`. Casos de las revisiones
 | R4 | «Glúteos invisibles», paso 3: «unos ocho segundos… Tres veces» (con diez no cabían en 30 s), en los dos idiomas | `move.data.js`, `i18n/content/move.js` | `tests/runner-cabe.spec.js` (cabe-1, lee la frase en pantalla) |
 | R6 | La barra de 4·7·8 (y de toda Respira por tiempo) se mide contra el final de verdad, ciclos enteros | `finSec` (`BreatheSession.jsx`) | `tests/runner-cabe.spec.js` (cabe-2) |
 
+**Material, con B4 (aviso de la coordinadora, 29 oct.)**: «Core silencioso» declara `equipment: ['stableChair']`
+(«Una silla estable, sin ruedas», clave que ya está en `main`), y «Antes de empezar» lo dice (última prueba de
+`runner-colocacion.spec.js`, roja antes). **Falta, a propósito**: las tres rutinas con «Extensión torácica»
+(`extra.data.js`, dos, y `extra.data.piernas.js`, una) siguen con `equipment: []`; piden silla con respaldo, que es
+la clave nueva `chair` de la rama de «Tus rutinas» (f8fe136). La pone la coordinadora al juntar las dos ramas.
+
 B4 cambió la duración estimada de esas seis rutinas (+5 s) y obligó a ajustar `tests/runner-aro-colocate.spec.js`
 (los hombros de Escritorio express ya se colocan). Filas nuevas arriba de `DECISIONES_TECNICAS_VIGENTES.md`.
 

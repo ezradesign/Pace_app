@@ -105,3 +105,15 @@ test('colocacion · en inglés también se ve la suya', async ({ page, context }
   expect(esperado, 'GUARD: falta la clave en inglés').toBeTruthy();
   expect(await cue(page)).toBe(esperado);
 });
+
+test('colocacion · «Antes de empezar» de Core silencioso pide la silla sin ruedas', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /^Mueve/ }).first().click();
+  await page.locator('.pace-lib').locator('visible=true').first().waitFor();
+  await page.waitForTimeout(500);
+  await page.evaluate(() => [...document.querySelectorAll('[data-pace-lib-card="extra.core.stealth"] .pace-lib-hit')]
+    .find((e) => e.getBoundingClientRect().width > 0).click());
+  const vista = page.locator('[data-pace-modal-card]').locator('visible=true').last();
+  await expect(vista).toContainText('Una silla estable, sin ruedas');
+});

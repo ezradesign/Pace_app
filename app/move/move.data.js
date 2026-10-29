@@ -198,7 +198,7 @@ var MOVE_ROUTINES = {
          literal del rest suave de glutes.stealth («Suelta.» / «Let go.»), sin
          redactar copy nuevo. Acceso premium SIN cambios. */
       { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Piernas elevadas, sentado.', min: 2, access: 'premium',
-        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
+        position: ['seated'], equipment: ['stableChair'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
           /* Al levantar las dos piernas, una silla con ruedas se va: la colocación lo dice. */
           { name: 'Piernas elevadas sentado', mode: 'timed', dur: 30,
