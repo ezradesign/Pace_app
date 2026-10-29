@@ -1,6 +1,7 @@
 /* PACE · el «Auto» de Mueve y Estira y el número de las repeticiones (Ez, 1A y 2A del 25 oct.)
  * ============================================================================================
- * El runner ya avanzaba solo; el interruptor «Auto», junto a «Siguiente», lo deja a la vista y
+ * El runner ya avanzaba solo; el interruptor «Auto», bajo las palabras del mando (junto a
+ * «Siguiente» en una pantalla de menos de 700 px de alto: Ez, 29 oct.), lo deja a la vista y
  * permite apagarlo. Encendido, el «›» lleva un aro que se llena hasta que la pantalla pasa sola.
  * Apagado, cada cuenta espera a «›» y las repeticiones van a tu ritmo. El número de las reps
  * guiadas ya no late: va del terracota de la primera al oliva de la última, con cifras de caja
@@ -36,13 +37,14 @@ async function hasta(page, cond, maxSeg) {
   return cond();
 }
 
-test('auto-1 · encendido de fábrica: el interruptor está junto a «Siguiente» y el aro del «›» se llena', async ({ page, context }) => {
+test('auto-1 · encendido de fábrica: el interruptor está bajo el mando y el aro del «›» se llena', async ({ page, context }) => {
   await sembrar(context);
   await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
   await abrirRutina(page, 'Mueve', 'extra.desk.pushups');
-  const auto = page.locator('.pace-v1-siguiente [data-pace-v1-auto]');
+  /* A 1280x720 hay alto para una fila más: bajo las palabras del mando (Ez, 29 oct.). */
+  const auto = page.locator('[data-pace-v1-mando] [data-pace-v1-auto]');
   await expect(auto).toHaveAttribute('aria-pressed', 'true');
   await expect(auto).toHaveText('Auto');
   expect(await hasta(page, async () => (await fase(page)) === 'work')).toBe(true);

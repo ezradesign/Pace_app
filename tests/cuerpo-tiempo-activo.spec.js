@@ -67,13 +67,13 @@ test('el tiempo activo deja fuera descansos y pausas; el de pared los lleva dent
   await expect(sesion).toHaveCount(1);
 
   /* Hasta que empieza el TRABAJO de la primera serie. Se reconoce por su
-     control propio —«Terminar antes» solo existe en reps guiadas— y no por un
+     control propio —«Terminar serie» solo existe en reps guiadas— y no por un
      numero de segundos, que es lo que haria caducar el aserto si cambiara la
      preparacion. GUARD: si no se llega, lo de abajo mediria una sesion que
      nunca arranco. */
   let trabajando = false;
   for (let s = 0; s < 40 && !trabajando; s++) {
-    trabajando = await sesion.getByRole('button', { name: /Terminar antes/ }).count() > 0;
+    trabajando = await sesion.getByRole('button', { name: /Terminar serie/ }).count() > 0;
     if (!trabajando) await segundos(page, 1);
   }
   expect(trabajando, 'GUARD: la sesion nunca entro en el trabajo de la 1a serie').toBe(true);

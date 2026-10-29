@@ -2648,16 +2648,28 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.sideFirst': 'Empiezas por: {side}',
 
   'move.repsOf': 'de {n} reps',
-  'move.finishEarly': 'Terminar antes',
+  'move.finishEarly': 'Terminar serie',
   'move.skipOptional': 'Saltar este paso',
   'move.sideAutoHint': 'El lado siguiente empieza solo',
+
 
   'move.auto': 'Auto',
   'move.auto.title': 'Avanzar solo',
   'move.repsPace': 'reps · a tu ritmo',
   'move.tapDone': 'Pulsa › al acabar',
   'move.tapGo': 'Pulsa › para seguir',
-  'move.placeHintMano': 'Colócate sin prisa · empiezas con ›',
+  'move.placeHintMano': 'Colócate sin prisa · pulsa «Empezar ya»',
+
+  'move.flecha.hecho': 'Hecho',
+  'move.flecha.descanso': 'Saltar descanso',
+  'move.flecha.lado': 'Siguiente lado',
+
+  'move.unaBasta': 'Con una basta',
+
+  'move.pausa.kicker': 'Sesión en pausa',
+  'move.pausa.titulo': 'Descansa',
+  'move.pausa.texto': 'Sigues desde este punto. Al reanudar, 3, 2, 1 y vuelve la cuenta.',
+  'move.pausa.vuelta': 'Sigues en',
 
   'move.careLabel': 'Cuídate',
   'move.series': 'Series',
@@ -2788,7 +2800,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.sideFirst': 'Start with: {side}',
 
   'move.repsOf': 'of {n} reps',
-  'move.finishEarly': 'Finish early',
+  'move.finishEarly': 'Finish set',
   'move.skipOptional': 'Skip this step',
   'move.sideAutoHint': 'The next side starts on its own',
 
@@ -2797,7 +2809,18 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.repsPace': 'reps · at your pace',
   'move.tapDone': 'Tap › when you are done',
   'move.tapGo': 'Tap › to go on',
-  'move.placeHintMano': 'Get set, no rush · start with ›',
+  'move.placeHintMano': 'Get set, no rush · press Begin now',
+
+  'move.flecha.hecho': 'Done',
+  'move.flecha.descanso': 'Skip rest',
+  'move.flecha.lado': 'Next side',
+
+  'move.unaBasta': 'One is enough',
+
+  'move.pausa.kicker': 'Session paused',
+  'move.pausa.titulo': 'Rest',
+  'move.pausa.texto': 'You pick up from here. When you resume: 3, 2, 1 and the count goes on.',
+  'move.pausa.vuelta': 'Back in',
 
   'move.careLabel': 'Take care',
   'move.series': 'Sets',
@@ -4711,7 +4734,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.glutes.stealth.s1.name': 'Rest',
   'extra.glutes.stealth.s1.instruction.action': 'Let go.',
   'extra.glutes.stealth.s2.name': 'Glute squeeze',
-  'extra.glutes.stealth.s2.instruction.action': 'Now hold the squeeze for about ten seconds and release. Three times.',
+  'extra.glutes.stealth.s2.instruction.action': 'Now hold the squeeze for about eight seconds and release. Three times.',
   'extra.glutes.stealth.s2.instruction.care': 'Keep your breathing easy during the hold.',
   'extra.glutes.stealth.s3.name': 'Calf raises',
   'extra.glutes.stealth.s3.instruction.action': 'Finish by raising and lowering your heels, gently.',
@@ -31122,7 +31145,12 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
 
-  const sessionProgress = Math.min(1, getActiveSec() / (routine.min * 60));
+
+
+
+  const cicloSec = sequence.reduce((a, f) => a + (f.duration || 0), 0);
+  const finSec = cicloSec > 0 ? Math.ceil(routine.min * 60 / cicloSec) * cicloSec : routine.min * 60;
+  const sessionProgress = Math.min(1, getActiveSec() / finSec);
 
   const footer =
   React.createElement(React.Fragment, null,
@@ -31290,6 +31318,9 @@ var MOVE_ROUTINES = {
 
     { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Levántate y sube', desc: 'Sentarte y levantarte, y subir talones. Silla estable, sin ruedas.', min: 3,
       position: ['standing'], equipment: ['stableChair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+
+
+      unaBasta: true,
       steps: [
       { name: 'Sentadilla a silla', mode: 'reps', reps: 5, dur: 20,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
@@ -31446,7 +31477,7 @@ var MOVE_ROUTINES = {
         instruction: { action: 'Suelta.' } },
       { name: 'Apretar glúteos', mode: 'timed', dur: 30,
         instruction: {
-          action: 'Ahora aguanta el apretón unos diez segundos y suelta. Tres veces.',
+          action: 'Ahora aguanta el apretón unos ocho segundos y suelta. Tres veces.',
           care: 'Mantén la respiración suelta durante el aguante.' } },
       { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
         tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
@@ -31460,7 +31491,7 @@ var MOVE_ROUTINES = {
 
 
     { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Piernas elevadas, sentado.', min: 2, access: 'premium',
-      position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
+      position: ['seated'], equipment: ['stableChair'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
       steps: [
 
       { name: 'Piernas elevadas sentado', mode: 'timed', dur: 30,
@@ -32212,24 +32243,33 @@ if (!_paceMoveV1Css) {
     }
     /* En escritorio el dibujo manda (es mayor que en el móvil a igual altura, la regla de la
        piel): con el nombre a 5vh y el número a 9,5vh, a 1530x702 el texto se comía el hueco y
-       el círculo quedaba por debajo del del móvil. */
+       el círculo quedaba por debajo del del móvil. Y menos aire entre piezas, con el número un
+       poco menor (Ez, 29 oct.): el bloque queda junto y el círculo gana unos 25 px. */
     .pace-v1-raiz {
-      --v1-u: clamp(8px, calc(1.3 * var(--pace-vh, 1vh)), 18px);
+      --v1-u: clamp(5px, calc(0.7 * var(--pace-vh, 1vh)), 12px);
       --v1-nombre: clamp(28px, calc(4.2 * var(--pace-vh, 1vh)), 44px);
       --v1-cue: 18px;
-      --v1-num: clamp(52px, calc(8.2 * var(--pace-vh, 1vh)), 84px);
+      --v1-num: clamp(46px, calc(6.8 * var(--pace-vh, 1vh)), 72px);
       --v1-fuerte: 20px;
       flex: 1 1 auto; min-height: 0; width: 100%;
       display: flex; flex-direction: column; align-items: center;
     }
 
+    /* El bloque, junto y centrado (Ez, 29 oct.): el círculo se lleva el alto libre hasta su techo
+       y lo que sobra va arriba y abajo, no entre las piezas. El aire de dentro va en rellenos y en
+       el hueco de la columna, que es lo que cuenta useV1Glifo: con márgenes, el círculo pedía de
+       más. Centra con márgenes automáticos, que son solo lo que sobra, y no con justify-content:
+       si no cabe, el bloque se alinea arriba y lo que sobra cae debajo, como el centro de la
+       sesión (SessionShell). Centrado, a 320x568 se salía también por arriba, bajo la cabecera. */
     .pace-v1 {
+      position: relative;
       flex: 1 1 auto; min-height: 0; width: 100%; max-width: 620px; margin: 0 auto;
-      padding-top: var(--v1-u);
+      padding-bottom: var(--v1-u);
       display: flex; flex-direction: column; align-items: center; row-gap: var(--v1-u);
       text-align: center;
     }
-    .pace-v1-aire { flex: 1 1 0; min-height: 0; }
+    .pace-v1 > .pace-v1-glifo { margin-top: auto; }
+    .pace-v1 > .pace-v1-colas { margin-bottom: auto; }
 
     /* El dibujo y su aro. StepGlyph trae su margen en línea; aquí manda la columna. */
     .pace-v1-glifo { position: relative; flex: none; display: grid; place-items: center; }
@@ -32284,6 +32324,8 @@ if (!_paceMoveV1Css) {
 
     /* El número mide lo mismo en todas las fases (lo eligió el usuario en s177); solo cambia
        el color: la cuenta de colocarse va en tinta secundaria. */
+    /* Con el hueco de la columna encima y el relleno del cuerpo debajo de la línea de abajo, el
+       número queda a la misma distancia de la descripción que de la barra (tests/runner-congelado). */
     .pace-v1-numgrupo { flex: none; display: grid; justify-items: center; row-gap: 6px; }
     .pace-v1 [data-pace-v1-num] {
       font-family: var(--font-display); font-style: italic; font-weight: 400;
@@ -32292,7 +32334,8 @@ if (!_paceMoveV1Css) {
          y el 9 de la línea y el número parecía descentrado de una rep a otra. */
       font-variant-numeric: lining-nums tabular-nums;
     }
-    .pace-v1-numfila { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 24px; }
+    /* El hueco de la pastilla, centrado bajo la etiqueta y en todos los pasos (Ez, 29 oct.). */
+    .pace-v1-pastilla { display: flex; align-items: center; justify-content: center; min-height: 24px; }
     [data-pace-v1-numlabel] { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
     .pace-v1-mas {
       font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--ink-2);
@@ -32300,16 +32343,46 @@ if (!_paceMoveV1Css) {
       padding: 2px 10px; min-height: 24px; cursor: pointer;
     }
     .pace-v1-mas:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    /* La pausa (Ez, P8 B): lo de debajo del dibujo se apaga sin moverse y el velo pone encima su
+       texto, desde debajo del círculo hasta el final del cuerpo; el círculo y su arco quedan a la
+       vista. Un velo translúcido dejaba leer el número de detrás, y con los bordes fundidos para
+       que no se viera una caja, asomaban las líneas largas por los lados. Con opacidad y no con
+       visibility: el texto sigue en la página (lo leen el lector de pantalla y las pruebas). */
+    .pace-v1 > :not([data-pace-v1-glyph]):not(.pace-v1-velo) { transition: opacity 220ms var(--ease); }
+    .pace-v1[data-pace-v1-en-pausa] > :not([data-pace-v1-glyph]):not(.pace-v1-velo) { opacity: 0; pointer-events: none; }
+    .pace-v1-velo {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      padding: 0 16px; text-align: center;
+      animation: pace-v1-velo-entra 220ms var(--ease) both;
+    }
+    @keyframes pace-v1-velo-entra { from { opacity: 0; } to { opacity: 1; } }
+    .pace-v1-velo-kicker { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500; color: var(--ink-3); }
+    .pace-v1-velo-pila { display: grid; place-items: center; }
+    .pace-v1-velo-pila > * { grid-area: 1 / 1; }
+    .pace-v1-velo-titulo {
+      font-family: var(--font-display); font-style: italic; font-weight: 500;
+      font-size: var(--v1-nombre); line-height: 1.12; color: var(--ink);
+    }
+    .pace-v1-velo-num {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: var(--v1-num); line-height: 0.95; color: var(--ink-2);
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    .pace-v1-velo-texto { margin: 0; max-width: 320px; font-size: 14px; line-height: 1.45; color: var(--ink-2); white-space: pre-line; }
 
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
-    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
+    .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: 0 auto calc(var(--v1-u) * 1.6); }
     .pace-v1-siguiente {
       display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 12px;
-      text-align: center; margin-top: 8px; font-size: 10px; line-height: 1.45;
+      text-align: center; margin-top: 4px; font-size: 10px; line-height: 1.45;
       letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
     }
 
-    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. */
+    /* El interruptor «Auto» (Ez, 1A del 25 oct.): encendido, la pista va en el color del módulo. Bajo
+       las palabras del mando si hay alto (Ez, 29 oct.): el mando le guarda su fila abajo. */
+    .pace-v1-mando[data-pace-v1-con-auto] { position: relative; padding-bottom: 56px; }
+    .pace-v1-mando-auto { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
     .pace-v1-auto {
       display: inline-flex; align-items: center; gap: 7px; height: 24px; padding: 0 9px 0 5px;
       border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink-2);
@@ -32338,8 +32411,20 @@ if (!_paceMoveV1Css) {
       background: color-mix(in oklab, var(--v1-tono) 14%, var(--paper-2));
     }
 
-    /* El mando de tres. */
-    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; }
+    /* El mando de tres, con su palabra debajo de cada botón (Ez, P5 A del 29 oct.). La palabra
+       cuelga a la misma distancia del centro en los tres botones (el del centro es mayor) y el
+       mando guarda su alto siempre: cambiar de palabra no mueve nada. */
+    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; padding-bottom: 22px; }
+    .pace-v1-rotulo {
+      position: absolute; top: calc(50% + 34px); left: 50%; transform: translateX(-50%);
+      white-space: nowrap; font: 500 11.5px/1.2 var(--font-ui); letter-spacing: 0.01em; color: var(--ink-2);
+    }
+    [data-pace-v1-btn="prev"] .pace-v1-rotulo { color: var(--ink-3); }
+    [data-pace-v1-btn="next"] .pace-v1-rotulo { color: var(--ink); font-weight: 600; }
+    /* En escritorio las palabras bajan 10 px al margen de abajo de la sesión, que está vacío
+       hasta la línea de atajos (queda a 8 px): sin eso el círculo pagaba los 22 px enteros y a
+       1280x812 salía menor que en el móvil (tests/runner-circulo.spec.js). */
+    @media (min-width: 641px) { .pace-v1-mando { margin-bottom: -10px; } }
     .pace-v1-redondo {
       width: 48px; height: 48px; border-radius: 50%; padding: 0;
       border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink-2);
@@ -32362,23 +32447,40 @@ if (!_paceMoveV1Css) {
 
     @media (max-width: 640px) {
       .pace-v1-raiz {
-        --v1-u: clamp(6px, 1.2vh, 12px);
+        --v1-u: clamp(5px, 0.95vh, 12px);
         --v1-nombre: 28px;
         --v1-cue: 17px;
-        --v1-num: clamp(48px, 8vh, 64px);
+        --v1-num: clamp(44px, 6.8vh, 50px);
         --v1-fuerte: 18px;
       }
       .pace-v1-cuidate { font-size: 15px; }
       .pace-v1-mando { gap: 32px; }
     }
+    /* En un móvil alto, con el círculo en su techo, aún sobra aire: las letras suben un punto. */
+    @media (max-width: 640px) and (min-height: 820px) {
+      .pace-v1-raiz { --v1-nombre: 30px; --v1-cue: 18px; --v1-num: 54px; }
+    }
 
-    /* Cuando no cabe ni con el círculo en su suelo. */
-    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 5px; --v1-num: 46px; }
+    /* Cuando no cabe ni con el círculo en su suelo: el número, el menor de los de la piel, y el aire
+       al mínimo. Y la pastilla, junto a su etiqueta y no debajo, porque debajo no cabe (el mismo
+       criterio que «Auto» bajo 700 px): a 320x568 la línea de abajo pisaba la barra de pasos 20 px.
+       La fila guarda los 24 px de la pastilla, salga o no. */
+    .pace-v1-raiz[data-pace-v1-justo] { --v1-u: 4px; --v1-num: 44px; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-numgrupo {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 10px;
+    }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-numgrupo > [data-pace-v1-num] { flex-basis: 100%; }
+    .pace-v1-raiz[data-pace-v1-justo] [data-pace-v1-numlabel] { min-height: 24px; display: flex; align-items: center; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-pastilla:empty { display: none; }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-pasos { margin-bottom: var(--v1-u); }
+    .pace-v1-raiz[data-pace-v1-justo] .pace-v1-siguiente { margin-top: 2px; }
 
     @media (prefers-reduced-motion: reduce) {
       .pace-v1-aro-arco { transition: none; }
       .pace-v1-redondo { transition: none; }
       .pace-v1-anillo-arco, .pace-v1-auto-pista::after { transition: none; }
+      .pace-v1-velo { animation: none; }
+      .pace-v1 > * { transition: none; }
     }
   `;
   document.head.appendChild(s);
@@ -32471,6 +32573,14 @@ function v1StepDur(step) {
 
 
 
+
+
+
+function v1MismoEjercicioAntes(routine, idx) {
+  let j = idx - 1;
+  while (j >= 0 && routine.steps[j].mode === 'rest') j--;
+  return j >= 0 && routine.steps[j].name === routine.steps[idx].name;
+}
 function v1StepSetup(routine, idx) {
   const st = routine.steps[idx];
   if (!st) return { mode: 'none', estimatedSeconds: 0 };
@@ -32479,10 +32589,8 @@ function v1StepSetup(routine, idx) {
   }
   if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
   const clocked = st.mode === 'timed' || st.mode === 'perSide';
-  const prev = idx > 0 ? routine.steps[idx - 1] : null;
-  const afterRest = !!(prev && prev.mode === 'rest');
   if (clocked && idx > 0) return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
-  if (st.mode === 'reps' && st.instruction && st.instruction.setup && !afterRest) {
+  if (st.mode !== 'rest' && st.instruction && st.instruction.setup && !v1MismoEjercicioAntes(routine, idx)) {
     return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
   }
   return { mode: 'none', estimatedSeconds: 0 };
@@ -32856,13 +32964,17 @@ Object.assign(window, {
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock, v1LadoGlifo, v1Prefijo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1MismoEjercicioAntes, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock, v1LadoGlifo, v1Prefijo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
 })();
 </script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
   <script>
 ;(function () {
 function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
+
+
+
+
 
 
 
@@ -32887,7 +32999,7 @@ function v1SoltarFoco(e) {
 
 
 
-function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo } = _ref;
+function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo, autoAbajo } = _ref;
   const tono = acentoModulo || accent;
   const vuelta = 2 * Math.PI * 27;
   const lleno = Math.max(0, Math.min(1, anillo || 0));
@@ -32895,18 +33007,18 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
   const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
   const pulsa = (fn) => (e) => {v1SoltarFoco(e);if (fn) fn();};
   return (
-    React.createElement("div", { "data-pace-v1-mando": true, className: "pace-v1-mando" },
+    React.createElement("div", _extends({ "data-pace-v1-mando": true, className: "pace-v1-mando" }, autoAbajo ? { 'data-pace-v1-con-auto': '' } : {}),
     React.createElement("button", { type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "prev", onClick: pulsa(prev.onClick), disabled: prev.disabled,
       title: etiqueta(textos.prev) },
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M14.5 6.5 9 12l5.5 5.5" })),
-    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(textos.prev))
+    React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(textos.prev))
     ),
     React.createElement("button", { type: "button", className: "pace-v1-redondo pace-v1-redondo-centro", "data-pace-v1-btn": "pausa", onClick: pulsa(onPause),
       title: etiqueta(paused ? textos.resume : textos.pause), style: { background: accent, borderColor: accent } },
     paused ?
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11l9-5.5z", className: "pace-v1-relleno" })) :
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11M15 6.5v11" })),
-    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(paused ? textos.resume : textos.pause))
+    React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(paused ? textos.resume : textos.pause))
     ),
     React.createElement("button", _extends({ type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "next", onClick: pulsa(next.onClick), title: etiqueta(next.label) },
     espera ? { 'data-pace-v1-espera': '', style: { '--v1-tono': tono } } : {}),
@@ -32918,8 +33030,9 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
       style: { stroke: tono, strokeDasharray: `${(vuelta * lleno).toFixed(1)} ${vuelta.toFixed(1)}`, opacity: lleno > 0 ? 1 : 0 } })
     ),
 
-    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(next.label))
-    )
+    React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(next.label))
+    ),
+    autoAbajo && React.createElement("div", { className: "pace-v1-mando-auto" }, autoAbajo)
     ));
 
 }
@@ -32931,6 +33044,11 @@ Object.assign(window, { MandoV1, v1SoltarFoco });
   <script>
 ;(function () {
 function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
+
+
+
+
+
 
 
 
@@ -32989,7 +33107,19 @@ function CueV1(_ref) {let { lead, text, accent, ...resto } = _ref;
 
 }
 
-function ColaV1(_ref2) {let { strong, support, care, t, live } = _ref2;
+
+
+function AutoV1(_ref2) {let { auto, accent, onAuto, t } = _ref2;
+  return (
+    React.createElement("button", { type: "button", className: "pace-v1-auto", "data-pace-v1-auto": true, "aria-pressed": auto ? 'true' : 'false',
+      title: t('move.auto.title'), style: { '--v1-auto': accent },
+      onClick: (e) => {v1SoltarFoco(e);onAuto();} },
+    React.createElement("span", { className: "pace-v1-auto-pista", "aria-hidden": "true" }), t('move.auto')
+    ));
+
+}
+
+function ColaV1(_ref3) {let { strong, support, care, t, live } = _ref3;
   const marca = (attr) => live ? { [attr]: '' } : {};
   return (
     React.createElement("div", null,
@@ -33013,6 +33143,8 @@ function ColaV1(_ref2) {let { strong, support, care, t, live } = _ref2;
 
 
 
+
+
 function useV1Glifo(cuerpoRef, firma) {
   const [glifo, setGlifo] = useStateCV(() => v1GlyphSizeAhora());
   const [justo, setJusto] = useStateCV(false);
@@ -33026,12 +33158,13 @@ function useV1Glifo(cuerpoRef, firma) {
       const escritorio = v1EsEscritorio();
       const alto = paceLienzoAlto() || 800;
       const suelo = escritorio ? 110 : 96;
-      const techo = Math.min(escritorio ? 250 : 210, Math.round(alto * 0.3));
-      const hijos = Array.from(cuerpo.children);
+      const techo = Math.min(escritorio ? 300 : 262, Math.round(alto * (escritorio ? 0.36 : 0.3)));
+
+      const hijos = Array.from(cuerpo.children).filter((h) => !h.classList.contains('pace-v1-velo'));
       const cs = getComputedStyle(cuerpo);
       const hueco = parseFloat(cs.rowGap) || 0;
       let ocupado = hueco * Math.max(0, hijos.length - 1) + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
-      hijos.forEach((h) => {if (!h.classList.contains('pace-v1-aire')) ocupado += h.offsetHeight;});
+      hijos.forEach((h) => {ocupado += h.offsetHeight;});
       const libre = cuerpo.clientHeight - ocupado;
       const e = estado.current;
       const quiere = e.glifo + libre;
@@ -33057,7 +33190,7 @@ function useV1Glifo(cuerpoRef, firma) {
 
 
 
-function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
+function AroV1(_ref4) {let { fraccion, accent, px } = _ref4;
   const f = Math.max(0, Math.min(1, fraccion || 0));
 
 
@@ -33075,6 +33208,7 @@ function AroV1(_ref3) {let { fraccion, accent, px } = _ref3;
 function CuerpoV1(p) {
   const { routine, stepIdx, step, side, elapsed, accent, stepAccent, stepAccentSoft, t, tn, tStep, tInstr, lang } = p;
   const cuerpoRef = useRefCV(null);
+  const glifoRef = useRefCV(null);
   const reservas = React.useMemo(() => v1Reservas(routine, t, tn, tStep, tInstr), [routine.id, lang]);
   const { glifo, justo } = useV1Glifo(cuerpoRef, routine.id + ':' + lang);
   const aro = glifo + 14;
@@ -33085,8 +33219,8 @@ function CuerpoV1(p) {
   return (
     React.createElement("div", _extends({ "data-pace-v1-raiz": true, "data-pace-v1-fase": step.mode === 'rest' ? 'rest' : p.phase, className: "pace-v1-raiz", style: { '--v1-acento': stepAccent } },
     justo ? { 'data-pace-v1-justo': '' } : {}),
-    React.createElement("div", { ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" },
-    React.createElement("div", { "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
+    React.createElement("div", _extends({ ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" }, p.paused ? { 'data-pace-v1-en-pausa': '' } : {}),
+    React.createElement("div", { ref: glifoRef, "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
     React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: v1LadoGlifo(step, p.phase, side) }),
     React.createElement(AroV1, { fraccion: p.fraccion, accent: stepAccent, px: aro })
     ),
@@ -33099,7 +33233,6 @@ function CuerpoV1(p) {
     reservas.cues.map((c, i) => React.createElement(CueV1, { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true", lead: c.lead, text: c.text, accent: stepAccent })),
     React.createElement(CueV1, { "data-pace-v1-cue": true, lead: p.sideLead, text: p.cueText, accent: stepAccent })
     ),
-    React.createElement("div", { className: "pace-v1-aire" }),
     React.createElement("div", { className: "pace-v1-numgrupo" },
     p.gateNumber ?
     React.createElement("div", { "data-pace-v1-num": true, "data-pace-v1-num-gate": true, style: { color: 'var(--ink-2)' } }, p.bigNumber) :
@@ -33109,11 +33242,25 @@ function CuerpoV1(p) {
         color: p.repsProgreso == null ? 'var(--ink)' :
         `color-mix(in oklab, var(--focus) ${Math.round(p.repsProgreso * 100)}%, var(--breathe))`
       } }, p.bigNumber),
-    React.createElement("div", { className: "pace-v1-numfila" },
     React.createElement("span", { "data-pace-v1-numlabel": true }, p.bigLabel),
+
+
+
+    React.createElement("div", { className: "pace-v1-pastilla" },
     p.onMas &&
     React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-mas": true, onClick: (e) => {v1SoltarFoco(e);p.onMas();}, title: t('session.moreTime') }, "+",
     V1_MAS_TIEMPO, " s", React.createElement("span", { className: "pace-v1-oculto" }, " \xB7 ", t('session.moreTime'))
+    ),
+
+    p.onSaltar &&
+    React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-saltar": true, onClick: (e) => {v1SoltarFoco(e);p.onSaltar();} },
+    t('move.skipOptional')
+    ),
+
+
+    p.onBasta &&
+    React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-basta": true, onClick: (e) => {v1SoltarFoco(e);p.onBasta();} },
+    t('move.unaBasta')
     )
 
     )
@@ -33124,7 +33271,7 @@ function CuerpoV1(p) {
     React.createElement(ColaV1, { strong: p.supportStrong, support: p.support, care: enTrabajo ? p.careText || '' : undefined, t: t, live: true })
     )
     ),
-    React.createElement("div", { className: "pace-v1-aire" })
+    p.paused && React.createElement(VeloV1, { glifoRef: glifoRef, cuenta: p.vuelta, t: t })
     ),
 
     React.createElement("div", { "data-pace-v1-progress": true, className: "pace-v1-pasos" },
@@ -33146,24 +33293,21 @@ function CuerpoV1(p) {
     React.createElement("div", { className: "pace-v1-siguiente" },
     React.createElement("span", { "data-pace-v1-siguiente": true }, p.siguienteTexto || (
     routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep'))),
-    React.createElement("button", { type: "button", className: "pace-v1-auto", "data-pace-v1-auto": true, "aria-pressed": p.auto ? 'true' : 'false',
-      title: t('move.auto.title'), style: { '--v1-auto': accent },
-      onClick: (e) => {v1SoltarFoco(e);p.onAuto();} },
-    React.createElement("span", { className: "pace-v1-auto-pista", "aria-hidden": "true" }), t('move.auto')
-    )
+    p.autoBoton
     )
     )
     ));
 
 }
 
-Object.assign(window, { CuerpoV1, v1Reservas });
-;Object.assign(window, { _extends, v1Reservas, CueV1, ColaV1, useV1Glifo, AroV1, CuerpoV1 });
+Object.assign(window, { CuerpoV1, AutoV1, v1Reservas });
+;Object.assign(window, { _extends, v1Reservas, CueV1, AutoV1, ColaV1, useV1Glifo, AroV1, CuerpoV1 });
 })();
 </script>
   <!-- La rutina a medias (pace.cuerpo.v1): se puede seguir como Respira. -->
   <script>
 ;(function () {
+
 
 
 
@@ -33255,7 +33399,7 @@ function olvidarCuerpoGuardada() {
 
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {} };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
   if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => Number.isFinite(x) && x > 0 ? x : 0;
@@ -33265,10 +33409,14 @@ function cuerpoReanudacion(routine, guardado) {
   (Array.isArray(guardado.hechos) ? guardado.hechos :
   routine.steps.map((s, i) => i).filter((i) => i < step && routine.steps[i].mode !== 'rest')).
   forEach((i) => {if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) hechos[i] = true;});
+
+  const basta = {};
+  (Array.isArray(guardado.basta) ? guardado.basta : []).
+  forEach((i) => {if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) basta[i] = true;});
   return {
     step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
-    reanudada: true, early: guardado.early === true, hechos
+    reanudada: true, early: guardado.early === true, hechos, basta
   };
 }
 
@@ -33301,7 +33449,8 @@ function useCuerpoPersistencia(d) {
         sesionMs: Math.round(c.relojSesion.segundos() * 1000),
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
         reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
-        early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number)
+        early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
+        basta: Object.keys(c.basta && c.basta() || {}).map(Number)
       }));
     } catch (e) {}
   };
@@ -33324,6 +33473,146 @@ Object.assign(window, {
   cuerpoRutina, cuerpoHuella, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia
 });
 ;Object.assign(window, { cuerpoRutina, cuerpoHuella, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia });
+})();
+</script>
+  <!-- Lo que montó la maqueta del 29 oct. («Con una basta» y la pausa), que no cabía en el runner. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function v1BastaDestino(routine, idx) {
+  const pasos = routine && routine.steps || [];
+  if (!routine || !routine.unaBasta || !pasos[idx] || pasos[idx].mode !== 'rest') return -1;
+  let antes = idx - 1;
+  while (antes >= 0 && pasos[antes].mode === 'rest') antes--;
+  let luego = idx + 1;
+  while (luego < pasos.length && pasos[luego].mode === 'rest') luego++;
+  if (antes < 0 || luego >= pasos.length || pasos[luego].name !== pasos[antes].name) return -1;
+  const nombre = pasos[antes].name;
+  while (luego < pasos.length && (pasos[luego].mode === 'rest' || pasos[luego].name === nombre)) luego++;
+  return luego;
+}
+
+
+
+
+const V1_AUTO_ABAJO_DESDE = 700;
+
+function useV1AutoAbajo() {
+  const mira = () => (paceLienzoAlto() || 800) >= V1_AUTO_ABAJO_DESDE;
+  const [abajo, setAbajo] = React.useState(mira);
+  React.useEffect(() => {
+    const f = () => setAbajo(mira());
+    window.addEventListener('resize', f);
+    return () => window.removeEventListener('resize', f);
+  }, []);
+  return abajo;
+}
+
+
+
+
+
+
+
+
+
+
+
+const V1_VUELTA_SEGUNDOS = 3;
+
+function useV1Vuelta(paused, setPaused) {
+  const [cuenta, setCuenta] = React.useState(null);
+  React.useEffect(() => {
+    if (cuenta == null) return undefined;
+    try {playSound('move.warn');} catch (e) {}
+    const to = setTimeout(() => {
+      if (cuenta > 1) setCuenta(cuenta - 1);else
+      {setCuenta(null);setPaused(false);}
+    }, 1000);
+    return () => clearTimeout(to);
+  }, [cuenta]);
+  const pausar = () => {setCuenta(null);setPaused(true);};
+  const reanudar = () => {setCuenta(null);setPaused(false);};
+
+  const alternar = () => {
+    if (!paused) pausar();else
+    setCuenta((c) => c == null ? V1_VUELTA_SEGUNDOS : null);
+  };
+  return { cuenta, pausar, reanudar, alternar };
+}
+
+function VeloV1(_ref) {let { glifoRef, cuenta, t } = _ref;
+  const volviendo = cuenta != null;
+  const [bajo, setBajo] = React.useState(0);
+  React.useLayoutEffect(() => {
+    const g = glifoRef.current;
+    if (!g) return undefined;
+    const mide = () => setBajo(g.offsetTop + g.offsetHeight);
+    mide();
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(mide) : null;
+    if (ro) {ro.observe(g);if (g.parentElement) ro.observe(g.parentElement);}
+    return () => {if (ro) ro.disconnect();};
+  }, []);
+  const texto = t('move.pausa.texto');
+  const corte = texto.indexOf('. ') + 1;
+  return (
+    React.createElement("div", { "data-pace-v1-velo": true, className: "pace-v1-velo", role: "status",
+      style: { top: 'calc(var(--v1-u) * 0.5 + ' + bajo + 'px)' } },
+    React.createElement("div", { className: "pace-v1-velo-kicker" }, t(volviendo ? 'move.pausa.vuelta' : 'move.pausa.kicker')),
+    React.createElement("div", { className: "pace-v1-velo-pila" },
+    React.createElement("div", { className: "pace-v1-velo-titulo", style: volviendo ? { visibility: 'hidden' } : null }, t('move.pausa.titulo')),
+
+    React.createElement("div", { className: "pace-v1-velo-num", "data-pace-v1-vuelta": true, style: volviendo ? null : { visibility: 'hidden' } }, volviendo ? cuenta : V1_VUELTA_SEGUNDOS)
+    ),
+
+    React.createElement("p", { className: "pace-v1-velo-texto" }, texto.slice(0, corte), '\n',
+    React.createElement("span", { "data-pace-v1-velo-al-volver": true, style: volviendo ? { visibility: 'hidden' } : null }, texto.slice(corte + 1))
+    )
+    ));
+
+}
+
+
+
+function useV1Teclas(stage, alternar, onExit, cerrar) {
+  const ref = React.useRef();
+  ref.current = { stage, alternar, onExit, cerrar };
+  React.useEffect(() => {
+    const onKey = (e) => {
+      const c = ref.current;
+      if (e.key === ' ') {
+
+
+        if (sessionKeyOnControl(e)) return;
+        e.preventDefault();
+        if (c.stage === 'run') c.alternar();
+      }
+      if (e.key === 'Escape') c.onExit('exit');
+
+
+      if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) c.cerrar();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+}
+
+Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
+;Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas });
 })();
 </script>
   <script>
@@ -33394,6 +33683,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const [side, setSide] = useStateV1(0);
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
+
+  const vuelta = useV1Vuelta(paused, setPaused);
+  const autoAbajo = useV1AutoAbajo();
   const [placeLeft, setPlaceLeft] = useStateV1(0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
   const sessionStart = useRefV1(rein.startedAt);
@@ -33406,6 +33698,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
   const hechosRef = useRefV1(rein.hechos);
+
+
+  const bastaRef = useRefV1(rein.basta);
   const activeSecRef = useRefV1(0);
   const step = routine.steps[stepIdx];
 
@@ -33415,22 +33710,27 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const auto = pace.cuerpoAuto !== false;
   const totalesRef = useRefV1({ place: 1, change: 1 });
   const esperaRef = useRefV1('');
+  const sonadoRef = useRefV1('');
+
+
+  const esperaMano = !auto && stage === 'run' && (phase === 'place' ? placeLeft <= 0 :
+  phase === 'change' ? changeLeft <= 0 : step.mode !== 'reps' && elapsed >= v1StepDur(step));
 
 
 
 
-  const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused || esperaMano, rein.activoMs);
 
 
 
-  const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
+  const relojSesion = useV1SessionClock(stage, paused || esperaMano, undefined, rein.sesionMs);
   const tiempoSecRef = useRefV1(0);
 
 
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
 
   const dispatchComplete = () => {
 
@@ -33453,7 +33753,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
 
 
-    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n]);
+
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n] || bastaRef.current[n]);
     if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);else
     completeMoveSession(routine.id, realMin, ev, entera);
   };
@@ -33469,9 +33770,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);totalesRef.current.place = su.estimatedSeconds;} else
     setPhase('work');
   };
-  const advanceStep = () => {
-    if (stepIdx + 1 >= routine.steps.length) {dispatchComplete();setStage('done');} else
-    startStep(stepIdx + 1);
+  const irAlPaso = (idx) => {
+    if (idx >= routine.steps.length) {dispatchComplete();setStage('done');} else
+    startStep(idx);
+  };
+  const advanceStep = () => irAlPaso(stepIdx + 1);
+  const conUnaBasta = () => {
+    const destino = v1BastaDestino(routine, stepIdx);
+    for (let n = stepIdx + 1; n < destino; n++) if (routine.steps[n].mode !== 'rest') bastaRef.current[n] = true;
+    irAlPaso(destino);
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
   const addPlaceTime = () => {totalesRef.current.place = Math.max(totalesRef.current.place, placeLeft) + V1_MAS_TIEMPO;setPlaceLeft((c) => c + V1_MAS_TIEMPO);};
@@ -33491,7 +33798,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
     repsGuidedRef.current += hechas;
     if (hechas > 0) hechosRef.current[stepIdx] = true;
-    earlyRef.current = true;
+
+    if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
 
@@ -33527,26 +33835,32 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
   useRelojSesion(stage === 'run' && phase === 'place' && !paused,
   (n) => setPlaceLeft((c) => Math.max(0, c - n)), [stepIdx]);
-  useSesionAlOcultar(stage === 'run', () => setPaused(true));
+  useSesionAlOcultar(stage === 'run', vuelta.pausar);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
     if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [placeLeft]);
 
-  useEffectV1(() => {
-    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto) beginWork();
-  }, [placeLeft, auto]);
-
-
-
-  useRelojSesion(stage === 'run' && phase === 'work' && !paused, (n) => setElapsed((e) => e + n), [stepIdx, side]);
-
-
-
-
 
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
+    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto && !paused) beginWork();
+  }, [placeLeft, auto, paused]);
+
+
+
+  useRelojSesion(stage === 'run' && phase === 'work' && !paused && !esperaMano, (n) => setElapsed((e) => e + n), [stepIdx, side]);
+
+
+
+
+
+
+
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
+    const marca = stepIdx + ':' + side + ':' + elapsed;
+    const suena = sonadoRef.current !== marca;
+    sonadoRef.current = marca;
     if (step.mode === 'reps') {
       if (!auto) return;
       const repSec = v1RepSeconds(step);
@@ -33558,7 +33872,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
         repsGuidedRef.current += v1RepTarget(step);
         hechosRef.current[stepIdx] = true;
         advanceStep();
-      } else if (elapsed % repSec === 0) {
+      } else if (suena && elapsed % repSec === 0) {
         try {playSound('move.rep');} catch (e) {}
       }
       return;
@@ -33567,7 +33881,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const effDur = v1StepDur(step);
 
 
-    if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
 
@@ -33578,7 +33892,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       if (step.mode === 'perSide' && side === 0) enterChange();else
       advanceStep();
     }
-  }, [elapsed, auto]);
+  }, [elapsed, auto, paused]);
 
 
 
@@ -33589,8 +33903,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
   }, [changeLeft]);
   useEffectV1(() => {
-    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto) onSideReady();
-  }, [changeLeft, auto]);
+    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
+  }, [changeLeft, auto, paused]);
 
 
 
@@ -33618,24 +33932,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useEffectV1(() => {try {v1DevCheckDuration(routine, v1RestSeconds());} catch (e) {}}, []);
 
 
-  useEffectV1(() => {
-    const onKey = (e) => {
-      if (e.key === ' ') {
-
-
-        if (sessionKeyOnControl(e)) return;
-        e.preventDefault();
-        if (stage === 'run') setPaused((p) => !p);
-      }
-      if (e.key === 'Escape') onExit('exit');
-
-
-
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [stage, stepIdx, phase, step, paused]);
+  useV1Teclas(stage, vuelta.alternar, onExit, () => onExit(sinContarRef.current ? 'skip' : 'done'));
 
 
   if (stage === 'prep') {
@@ -33691,6 +33988,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;
 
+  const ultimo = stepIdx + 1 >= routine.steps.length;
+
 
   let repsProgreso = null;
   const repsDe = (s) => {
@@ -33712,22 +34011,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     support = t('move.sideAutoHint');
     primary = { label: t('session.beginNow'), onClick: onSideReady };
-  } else if (step.opcional) {
-
-    if (step.mode === 'reps' && auto) {bigNumber = repsDe(step);bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });} else
-    if (step.mode === 'reps') {bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');} else
-    {bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');}
-    primary = { label: t('move.skipOptional'), onClick: advanceStep };
   } else if (step.mode === 'reps' && !auto) {
 
     bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');
-    primary = { label: t('move.next'), onClick: terminarReps };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.flecha.hecho'), onClick: terminarReps };
   } else if (step.mode === 'reps') {
 
 
     bigNumber = repsDe(step);
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.finishEarly'), onClick: finishRepsEarly };
   } else {
 
     bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');
@@ -33742,14 +34035,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       if (remaining > 0 && remaining <= 3) support = t('move.restReady');
     }
     primary = isRest ?
-    { label: t('session.skip'), onClick: advanceStep } :
-    { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
+    { label: t(ultimo ? 'move.finish' : 'move.flecha.descanso'), onClick: advanceStep } :
+    { label: t(step.mode === 'perSide' && side === 0 ? 'move.flecha.lado' : ultimo ? 'move.finish' : 'move.next'), onClick: () => {
 
-        if (auto || remaining > 0) earlyRef.current = true;
+        if (!step.opcional && (auto || remaining > 0)) earlyRef.current = true;
 
         if (step.mode === 'perSide' && side === 0) {if (auto) enterChange();else onSideReady();} else advanceStep();
       } };
   }
+
+
 
   const espera = !auto && (phase === 'place' ? placeLeft <= 0 : phase === 'change' ? changeLeft <= 0 :
   step.mode === 'reps' || remaining <= 0);
@@ -33779,15 +34074,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   phase === 'place' ? 1 - placeLeft / Math.max(1, totalesRef.current.place) :
   phase === 'change' ? 1 - changeLeft / Math.max(1, totalesRef.current.change) :
   fraccion;
+  const autoBoton = React.createElement(AutoV1, { auto: auto, accent: accent, onAuto: () => setPace({ cuerpoAuto: !auto }), t: t });
 
   return (
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
       headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
-      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused, onPause: () => setPaused((x) => !x), anillo: anillo, espera: espera, acentoModulo: accent,
-        prev: { onClick: () => {if (stepIdx > 0) {setPaused(false);startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
-        next: { label: primary.label, onClick: () => {setPaused(false);primary.onClick();} },
-        textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') } }),
+      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused && vuelta.cuenta == null, onPause: vuelta.alternar, anillo: anillo, espera: espera, acentoModulo: accent,
+        prev: { onClick: () => {if (stepIdx > 0) {vuelta.reanudar();startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
+        next: { label: primary.label, onClick: () => {vuelta.reanudar();primary.onClick();} },
+        textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }, autoAbajo: autoAbajo ? autoBoton : null }),
       hint: t('session.hint') },
 
     React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused,
@@ -33796,8 +34092,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       kicker: kicker, cueText: cueText, sideLead: sideLead, careText: careText,
       bigNumber: bigNumber, bigLabel: bigLabel, gateNumber: gateNumber, repsProgreso: repsProgreso,
       support: support, supportStrong: supportStrong, fraccion: fraccion,
-      auto: auto, onAuto: () => setPace({ cuerpoAuto: !auto }), siguienteTexto: siguienteTexto,
-      onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null })
+      autoBoton: autoAbajo ? null : autoBoton, siguienteTexto: siguienteTexto,
+      onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null,
+      onSaltar: phase === 'work' && step.opcional ? () => {vuelta.reanudar();advanceStep();} : null,
+      onBasta: v1BastaDestino(routine, stepIdx) >= 0 ? () => {vuelta.reanudar();conUnaBasta();} : null,
+      vuelta: vuelta.cuenta })
     ));
 
 }

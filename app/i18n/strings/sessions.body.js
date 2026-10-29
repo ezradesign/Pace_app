@@ -180,16 +180,28 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.sideFirst':               'Empiezas por: {side}',
     // Runner guiado (s113): reps con cadencia + transición auto de lado
     'move.repsOf':                     'de {n} reps',
-    'move.finishEarly':                'Terminar antes',
+    'move.finishEarly':                'Terminar serie',
     'move.skipOptional':               'Saltar este paso',
     'move.sideAutoHint':               'El lado siguiente empieza solo',
-    // «Auto» (Ez, 1A del 25 oct. 2026): apagado, cada paso espera a «›»
+    // «Auto» (Ez, 1A del 25 oct. 2026): apagado, cada paso espera a «›». Colocarse nombra el botón
+    // por la palabra que lleva debajo (Ez, 29 oct.)
     'move.auto':                       'Auto',
     'move.auto.title':                 'Avanzar solo',
     'move.repsPace':                   'reps · a tu ritmo',
     'move.tapDone':                    'Pulsa › al acabar',
     'move.tapGo':                      'Pulsa › para seguir',
-    'move.placeHintMano':              'Colócate sin prisa · empiezas con ›',
+    'move.placeHintMano':              'Colócate sin prisa · pulsa «Empezar ya»',
+    // Lo que hace la flecha, escrito debajo (Ez, P5 A del 29 oct. 2026)
+    'move.flecha.hecho':               'Hecho',
+    'move.flecha.descanso':            'Saltar descanso',
+    'move.flecha.lado':                'Siguiente lado',
+    // «La primera vez, una serie basta», de verdad (Ez, P6 A del 29 oct. 2026)
+    'move.unaBasta':                   'Con una basta',
+    // La pausa se ve (Ez, P8 B del 29 oct. 2026): el velo y, al volver, 3, 2, 1
+    'move.pausa.kicker':               'Sesión en pausa',
+    'move.pausa.titulo':               'Descansa',
+    'move.pausa.texto':                'Sigues desde este punto. Al reanudar, 3, 2, 1 y vuelve la cuenta.',
+    'move.pausa.vuelta':               'Sigues en',
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
     'move.careLabel':                  'Cuídate',
     'move.series':                     'Series',
@@ -320,7 +332,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.sideFirst':               'Start with: {side}',
     // Guided runner (s113): cadenced reps + auto side transition
     'move.repsOf':                     'of {n} reps',
-    'move.finishEarly':                'Finish early',
+    'move.finishEarly':                'Finish set',
     'move.skipOptional':               'Skip this step',
     'move.sideAutoHint':               'The next side starts on its own',
     // «Auto» (Ez, 1A, 25 Oct 2026): off, each step waits for «›»
@@ -329,7 +341,18 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.repsPace':                   'reps · at your pace',
     'move.tapDone':                    'Tap › when you are done',
     'move.tapGo':                      'Tap › to go on',
-    'move.placeHintMano':              'Get set, no rush · start with ›',
+    'move.placeHintMano':              'Get set, no rush · press Begin now',
+    // What the arrow does, written below it (Ez, P5 A, 29 Oct 2026)
+    'move.flecha.hecho':               'Done',
+    'move.flecha.descanso':            'Skip rest',
+    'move.flecha.lado':                'Next side',
+    // "The first time, one set is enough", for real (Ez, P6 A, 29 Oct 2026)
+    'move.unaBasta':                   'One is enough',
+    // The pause shows (Ez, P8 B, 29 Oct 2026): the veil and, on resuming, 3, 2, 1
+    'move.pausa.kicker':               'Session paused',
+    'move.pausa.titulo':               'Rest',
+    'move.pausa.texto':                'You pick up from here. When you resume: 3, 2, 1 and the count goes on.',
+    'move.pausa.vuelta':               'Back in',
     // Editorial layer (s114): «Take care» label + final-screen stat labels
     'move.careLabel':                  'Take care',
     'move.series':                     'Sets',

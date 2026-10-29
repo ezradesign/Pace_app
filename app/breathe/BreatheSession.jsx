@@ -353,7 +353,12 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
      (s98): mismo reloj que decide el fin y el credito, asi que las pausas no la
      mueven. El desfase de una respiracion (D1, s164) vivia en la rama de rondas,
      que ya no usa barra. */
-  const sessionProgress = Math.min(1, getActiveSec() / (routine.min * 60));
+  /* El final de verdad: la sesión acaba al cerrar el ciclo en que se cumplen los minutos
+     (`handleCycleComplete`), así que la barra se mide contra ciclos enteros. 4·7·8 son cuatro
+     ciclos de 19 s, 76 s: contra los 60 de `min` estaba llena 16 s antes de acabar. */
+  const cicloSec = sequence.reduce((a, f) => a + (f.duration || 0), 0);
+  const finSec = cicloSec > 0 ? Math.ceil(routine.min * 60 / cicloSec) * cicloSec : routine.min * 60;
+  const sessionProgress = Math.min(1, getActiveSec() / finSec);
 
   const footer = (
     <React.Fragment>

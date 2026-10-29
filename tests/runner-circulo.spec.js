@@ -303,7 +303,7 @@ test('las miniaturas del preview no se pisan entre filas', async ({ page }) => {
    es que se moviera, desaparecia.
    ESTE TEST NO LO CUBRIA EL RECORRIDO DE ARRIBA y por eso hace falta aparte: ese
    avanza a clicks («Empezar ya» / «Siguiente») y un descanso termina SOLO, asi
-   que nunca aterrizaba en uno. Aqui se llega a proposito con «Terminar antes» y
+   que nunca aterrizaba en uno. Aqui se llega a proposito con «Terminar serie» y
    el reloj virtual.
    El tope es el MISMO trinquete de la deuda de arriba: el descanso hereda los
    25 px del footer, no los suyos propios. */
@@ -321,15 +321,15 @@ test('el descanso pinta su circulo, del mismo tamaño que el del trabajo', async
 
   let enTrabajo = false;
   for (let i = 0; i < 40 && !enTrabajo; i++) {
-    enTrabajo = await sesion.getByRole('button', { name: /Terminar antes/ }).count() > 0;
+    enTrabajo = await sesion.getByRole('button', { name: /Terminar serie/ }).count() > 0;
     if (!enTrabajo) await tic(1);
   }
   expect(enTrabajo, 'GUARD: la sesion nunca entro en el trabajo').toBe(true);
   const trabajo = await medirCirculo(page);
   expect(trabajo, 'GUARD: el paso de trabajo no pinta circulo, no hay contra que comparar').toBeTruthy();
 
-  /* «Terminar antes» lleva al descanso entre series sin esperar los 48 s. */
-  await sesion.getByRole('button', { name: /Terminar antes/ }).click();
+  /* «Terminar serie» lleva al descanso entre series sin esperar los 48 s. */
+  await sesion.getByRole('button', { name: /Terminar serie/ }).click();
   await page.waitForTimeout(200);
   let enDescanso = false;
   for (let i = 0; i < 20 && !enDescanso; i++) {

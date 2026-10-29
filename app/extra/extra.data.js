@@ -105,7 +105,7 @@ const EXTRA_ROUTINES = {
          silla» con su id; la inclinación de cuello y la barbilla van en «Cuello suave». */
       { id: 'move.spine.chair', tag: 'SPN', code: 'Columna', name: 'Tronco sentado',
         desc: 'Pecho arriba, giro y apertura, sin levantarte.', min: 2,
-        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Extensión torácica', mode: 'reps', reps: 5, dur: 25,
             tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
@@ -256,7 +256,7 @@ const EXTRA_ROUTINES = {
       /* s118 (B2.3 OLA 1): migrado — control postural (chin tucks + scapular con
          retención → reps con hold) y dos movilizaciones suaves `timed` (§B). */
       { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
-        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
             tempo: { down: 2, hold: 2, up: 2 }, completion: { mode: 'guided' },

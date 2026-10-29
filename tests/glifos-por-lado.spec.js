@@ -43,7 +43,7 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
   await irAlArtefacto(page);
 
   /* «Cuello suave» empieza con dos pasos de reps (la barbilla y la rotación lenta) y acaba con
-     uno `perSide`, la inclinación de cuello: se llega a él con «Terminar antes». */
+     uno `perSide`, la inclinación de cuello: se llega a él con «Terminar serie». */
   await page.getByRole('button', { name: /^Estira/ }).click();
   await page.getByRole('heading', { name: 'Cuello suave', exact: true }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
@@ -54,13 +54,13 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
   /* Paso 0 — reps, NO es por lados: aquí el glifo no puede estar espejado. */
   let enReps = false;
   for (let i = 0; i < 40 && !enReps; i++) {
-    enReps = await sesion.getByRole('button', { name: /Terminar antes/ }).count() > 0;
+    enReps = await sesion.getByRole('button', { name: /Terminar serie/ }).count() > 0;
     if (!enReps) await tic(1);
   }
   expect(enReps, 'GUARD: la sesión nunca entró en el primer paso').toBe(true);
   expect(await espejado(sesion), 'un paso que NO es por lados no debe espejarse').toBe(false);
 
-  await sesion.getByRole('button', { name: /Terminar antes/ }).click();
+  await sesion.getByRole('button', { name: /Terminar serie/ }).click();
   await page.waitForTimeout(200);
 
   /* Paso 2 — «Inclinación de cuello», `perSide`. Primer lado: sin espejo. La rotación lenta de
@@ -70,9 +70,9 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
     const n = await sesion.locator('[data-pace-v1-name]').innerText().catch(() => '');
     porLados = /inclinaci/i.test(n);
     if (porLados) break;
-    if (await sesion.getByRole('button', { name: /Terminar antes/ }).count()) {
+    if (await sesion.getByRole('button', { name: /Terminar serie/ }).count()) {
       expect(await espejado(sesion), 'un paso de reps no debe espejarse').toBe(false);
-      await sesion.getByRole('button', { name: /Terminar antes/ }).click();
+      await sesion.getByRole('button', { name: /Terminar serie/ }).click();
       await page.waitForTimeout(200);
     } else await tic(1);
   }

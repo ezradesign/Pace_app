@@ -17,7 +17,7 @@ Object.assign(window.EXTRA_ROUTINES, {
       /* Los hombros junto a una pared: sin la banda, que va a «Con material», ni la barra (2A). */
       { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros',
         desc: 'Hombros a punto: la pared, el giro del hombro y la espalda alta.', min: 3,
-        position: ['standing', 'seated'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        position: ['standing', 'seated'], equipment: ['wall', 'chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {

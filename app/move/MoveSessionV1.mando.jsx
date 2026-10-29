@@ -1,12 +1,16 @@
 /* PACE · El mando del runner de Mueve y Estira (opción A, «Mando de tres», elegida por Ez)
    ===========================================================================================
    Una sola fila de tres botones redondos: anterior, pausa en el centro y siguiente. «Siguiente»
-   hace lo que toque en cada fase (empezar ya, terminar antes, siguiente, terminar o saltar), así
-   que en el móvil el pie nunca pasa a dos filas y no cambia de forma entre pantallas. Cada botón
-   lleva su acción escrita en un texto oculto (no en `aria-label`): así la lee un lector de pantalla
-   y la encuentran las pruebas que miran el texto del botón.
+   hace lo que toque en cada fase (empezar ya, terminar la serie, hecho, saltar el descanso,
+   siguiente lado, siguiente o terminar), así que en el móvil el pie nunca pasa a dos filas y no
+   cambia de forma entre pantallas. Debajo de cada botón va su palabra (Ez, P5 A del 29 oct.):
+   «Anterior», «Pausar» y lo que hace la flecha ahora. Va DENTRO del botón (no en `aria-label`):
+   es su nombre para un lector de pantalla y para las pruebas, y tocarla pulsa el botón. Cuelga
+   por debajo a la misma altura en los tres, aunque el del centro sea mayor; el mando reserva ese
+   alto siempre, así que cambiar de palabra no mueve nada. Bajo las palabras va «Auto» (Ez, 29 oct.)
+   cuando hay alto para una fila más (`autoAbajo`, el botón; si no, lo pinta la línea de «Siguiente»).
 
-   El «+15 s» de colocarse y del cambio de lado no vive aquí: va junto a la cuenta atrás
+   El «+15 s» de colocarse y del cambio de lado no vive aquí: va bajo la cuenta atrás
    (MoveSessionV1.cuerpo.jsx), que es de lo que habla.
 
    EL FOCO VUELVE A LA SESIÓN TRAS UN CLIC. Si se quedara en el botón, Espacio lo pulsaría otra
@@ -23,7 +27,7 @@ function v1SoltarFoco(e) {
 /* EL ARO DEL «›» (Ez, 1A del 25 oct.): con «Auto», se llena hasta que la pantalla pasa sola
    (`anillo`, de 0 a 1). Sin «Auto», `espera` marca el botón cuando la cuenta ya acabó y lo que
    sigue lo decide quien hace la rutina. */
-function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo }) {
+function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, acentoModulo, autoAbajo }) {
   const tono = acentoModulo || accent;
   const vuelta = 2 * Math.PI * 27;
   const lleno = Math.max(0, Math.min(1, anillo || 0));
@@ -31,18 +35,18 @@ function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, 
   const etiqueta = (s) => String(s || '').replace(/[←→❚▶]/g, '').trim();
   const pulsa = (fn) => (e) => { v1SoltarFoco(e); if (fn) fn(); };
   return (
-    <div data-pace-v1-mando className="pace-v1-mando">
+    <div data-pace-v1-mando className="pace-v1-mando" {...(autoAbajo ? { 'data-pace-v1-con-auto': '' } : {})}>
       <button type="button" className="pace-v1-redondo" data-pace-v1-btn="prev" onClick={pulsa(prev.onClick)} disabled={prev.disabled}
         title={etiqueta(textos.prev)}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5 9 12l5.5 5.5" /></svg>
-        <span className="pace-v1-oculto">{etiqueta(textos.prev)}</span>
+        <span className="pace-v1-rotulo">{etiqueta(textos.prev)}</span>
       </button>
       <button type="button" className="pace-v1-redondo pace-v1-redondo-centro" data-pace-v1-btn="pausa" onClick={pulsa(onPause)}
         title={etiqueta(paused ? textos.resume : textos.pause)} style={{ background: accent, borderColor: accent }}>
         {paused
           ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5z" className="pace-v1-relleno" /></svg>
           : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11M15 6.5v11" /></svg>}
-        <span className="pace-v1-oculto">{etiqueta(paused ? textos.resume : textos.pause)}</span>
+        <span className="pace-v1-rotulo">{etiqueta(paused ? textos.resume : textos.pause)}</span>
       </button>
       <button type="button" className="pace-v1-redondo" data-pace-v1-btn="next" onClick={pulsa(next.onClick)} title={etiqueta(next.label)}
         {...(espera ? { 'data-pace-v1-espera': '', style: { '--v1-tono': tono } } : {})}>
@@ -54,8 +58,9 @@ function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, 
               style={{ stroke: tono, strokeDasharray: `${(vuelta * lleno).toFixed(1)} ${vuelta.toFixed(1)}`, opacity: lleno > 0 ? 1 : 0 }} />
           </svg>
         )}
-        <span className="pace-v1-oculto">{etiqueta(next.label)}</span>
+        <span className="pace-v1-rotulo">{etiqueta(next.label)}</span>
       </button>
+      {autoAbajo && <div className="pace-v1-mando-auto">{autoAbajo}</div>}
     </div>
   );
 }

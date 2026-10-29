@@ -45,7 +45,8 @@ async function medirMando(page) {
   return page.evaluate(() => {
     const m = [...document.querySelectorAll('[data-pace-v1-mando]')].find(e => e.getBoundingClientRect().width > 0);
     if (!m) return null;
-    const bs = [...m.querySelectorAll('button')].map(b => b.getBoundingClientRect());
+    /* Los tres redondos: «Auto», con alto, va también en el mando (Ez, 29 oct.). */
+    const bs = [...m.querySelectorAll('[data-pace-v1-btn]')].map(b => b.getBoundingClientRect());
     const pie = document.querySelector('[data-pace-session-footer]').getBoundingClientRect();
     const barra = document.querySelector('[data-pace-v1-progress]').getBoundingClientRect();
     return {
@@ -80,17 +81,17 @@ for (const [ancho, alto] of [[1530, 702], [360, 640]]) {
     /* La barra de pasos no toca el mando: tiene su aire (antes medía 0). */
     expect(colocate.hueco, 'la barra de pasos está pegada al mando').toBeGreaterThanOrEqual(8);
 
-    /* Trabajo: el mismo mando, en el mismo sitio; la derecha pasa a «Terminar antes». */
+    /* Trabajo: el mismo mando, en el mismo sitio; la derecha pasa a «Terminar serie». */
     await mando(page).getByRole('button', { name: 'Empezar ya' }).click();
     await expect(page.locator('[data-pace-v1-timer]')).toBeVisible();
-    await expect(mando(page).getByRole('button', { name: 'Terminar antes' })).toBeVisible();
+    await expect(mando(page).getByRole('button', { name: 'Terminar serie' })).toBeVisible();
     const trabajo = await medirMando(page);
     expect(trabajo.n).toBe(3);
     expect(trabajo.tops, 'el mando se mueve al pasar de colocarse a trabajar').toEqual(colocate.tops);
     expect(trabajo.pieAlto, 'el pie cambia de alto entre fases').toBe(colocate.pieAlto);
 
     /* Y el de la izquierda vuelve al paso anterior en cuanto hay uno. */
-    await mando(page).getByRole('button', { name: 'Terminar antes' }).click();
+    await mando(page).getByRole('button', { name: 'Terminar serie' }).click();
     await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');
     await expect(mando(page).getByRole('button', { name: 'Anterior' })).toBeEnabled();
     expect(errores).toEqual([]);
@@ -113,12 +114,14 @@ test('la pausa también para la cuenta de colocarse, y «+15 s» le suma', async
   await page.waitForTimeout(2600);
   expect(await numero(page), 'la cuenta de colocarse sigue corriendo en pausa').toBe(parado);
 
-  await page.getByRole('button', { name: /\+15 s/ }).click();
-  expect(await numero(page), '«+15 s» no suma quince segundos').toBe(parado + 15);
-
+  /* Al reanudar, 3, 2, 1 y la cuenta sigue (Ez, P8 B). «+15 s» se pulsa ya en marcha: en pausa
+     el velo tapa lo de debajo del dibujo. */
   await mando(page).getByRole('button', { name: 'Reanudar' }).click();
-  await page.waitForTimeout(2600);
-  expect(await numero(page), 'al reanudar la cuenta no sigue').toBeLessThan(parado + 15);
+  await page.waitForTimeout(3000 + 2600);
+  const sigue = await numero(page);
+  expect(sigue, 'al reanudar la cuenta no sigue').toBeLessThan(parado);
+  await page.getByRole('button', { name: /\+15 s/ }).click();
+  expect(await numero(page), '«+15 s» no suma quince segundos').toBeGreaterThanOrEqual(sigue + 14);
   expect(errores).toEqual([]);
 });
 
@@ -169,7 +172,7 @@ test('una rutina propia corre en el runner guiado, con «Descanso» como descans
   await expect(page.locator('[data-pace-v1-cue]')).toHaveText('Hombros arriba, luego relaja.');
   await expect(page.locator('[data-pace-v1-progress] > div:first-child > div')).toHaveCount(3);
 
-  /* Un paso con tiempo: la derecha es «Siguiente» (el «Terminar antes» es de las reps). */
+  /* Un paso con tiempo: la derecha es «Siguiente» (el «Terminar serie» es de las reps). */
   await mando(page).getByRole('button', { name: 'Siguiente' }).click();
   await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');
   /* Un descanso no lleva «Cuídate»: es la señal de que se pinta como descanso y no como un

@@ -64,6 +64,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const [side, setSide] = useStateV1(0);           // 0 = 1er lado, 1 = 2º lado
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
+  /* La pausa se ve y al volver cuenta 3, 2, 1 (Ez, P8 B; MoveSessionV1.parts.jsx). */
+  const vuelta = useV1Vuelta(paused, setPaused);
+  const autoAbajo = useV1AutoAbajo();   // «Auto», bajo el mando si cabe (Ez, 29 oct.)
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
   const sessionStart = useRefV1(rein.startedAt);   // wall-clock: incluye pausas y colocaciones
@@ -76,6 +79,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   /* Los pasos de trabajo que se hicieron de verdad, para el cierre: una serie saltada no es
      una serie (auditoría del 21 oct.: una hecha y dos saltadas decía «3 series»). */
   const hechosRef = useRefV1(rein.hechos);
+  /* Las series que «Con una basta» dejó sin hacer (Ez, P6 A): no son del cierre, pero la rutina
+     sigue entera (MoveSessionV1.parts.jsx). */
+  const bastaRef = useRefV1(rein.basta);
   const activeSecRef = useRefV1(0);   // congelado al completar, no al renderizar
   const step = routine.steps[stepIdx];
   /* «Auto» (Ez, 1A del 25 oct.): encendido, todo sigue solo, como siempre; apagado, cada cuenta
@@ -85,22 +91,27 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const auto = pace.cuerpoAuto !== false;
   const totalesRef = useRefV1({ place: 1, change: 1 });
   const esperaRef = useRefV1('');
+  const sonadoRef = useRefV1('');
+  /* Sin Auto, una cuenta en 0 que espera a «›» no es hacer la rutina: ningún reloj cuenta esa
+     espera, como no cuentan las pausas. Las reps a tu ritmo sí: ahí se está haciendo el ejercicio. */
+  const esperaMano = !auto && stage === 'run' && (phase === 'place' ? placeLeft <= 0
+    : phase === 'change' ? changeLeft <= 0 : step.mode !== 'reps' && elapsed >= v1StepDur(step));
   /* Reloj de TIEMPO ACTIVO (s170) — lo que Respira tiene desde s98 y esta
      familia no tenía: hasta ahora su único tiempo era `sessionStart`, o sea
      reloj de pared CON LAS PAUSAS DENTRO. La política de qué cuenta vive en
      `v1TrabajoActivo` (support), que es donde puede probarse sola. */
-  const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused || esperaMano, rein.activoMs);
   /* Lo que se acredita a la semana: la sesión en marcha con sus colocaciones y
      descansos (R4), pero sin las pausas ni el rato con la página congelada. Con
      el reloj de pared, una pausa de 20 minutos eran 20 minutos de Mueve. */
-  const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
+  const relojSesion = useV1SessionClock(stage, paused || esperaMano, undefined, rein.sesionMs);
   const tiempoSecRef = useRefV1(0);    // el «Tiempo» del cierre, congelado al completar
   /* No se acredita: con menos de PACE_MINIMO_CUENTA_S (sesiones-7), `true`; sin ningún segundo
      de ejercicio (solo descansos o todo saltado), 'sinTrabajo', que el cierre explica aparte. */
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
 
   const dispatchComplete = () => {
     /* El «Tiempo» del cierre es el de la sesión sin pausas, el mismo que va a la
@@ -122,8 +133,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
     /* Solo la sesión entera gana logros (Ez): sin nada cortado y con cada paso de trabajo hecho;
-       saltar un descanso no cuenta como cortar, ni un paso `opcional` (la banda, Ez, 23 oct.: 2A). */
-    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n]);
+       saltar un descanso no cuenta como cortar, ni un paso `opcional` (la banda, Ez, 23 oct.: 2A),
+       ni las series que quedaban tras «Con una basta». */
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n] || bastaRef.current[n]);
     if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);
     else completeMoveSession(routine.id, realMin, ev, entera);
   };
@@ -139,9 +151,15 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); totalesRef.current.place = su.estimatedSeconds; }
     else setPhase('work');
   };
-  const advanceStep = () => {
-    if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(); setStage('done'); }
-    else startStep(stepIdx + 1);
+  const irAlPaso = (idx) => {
+    if (idx >= routine.steps.length) { dispatchComplete(); setStage('done'); }
+    else startStep(idx);
+  };
+  const advanceStep = () => irAlPaso(stepIdx + 1);
+  const conUnaBasta = () => {
+    const destino = v1BastaDestino(routine, stepIdx);
+    for (let n = stepIdx + 1; n < destino; n++) if (routine.steps[n].mode !== 'rest') bastaRef.current[n] = true;
+    irAlPaso(destino);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
   const addPlaceTime = () => { totalesRef.current.place = Math.max(totalesRef.current.place, placeLeft) + V1_MAS_TIEMPO; setPlaceLeft(c => c + V1_MAS_TIEMPO); };
@@ -161,7 +179,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
     repsGuidedRef.current += hechas;
     if (hechas > 0) hechosRef.current[stepIdx] = true;
-    earlyRef.current = true;   // s172: «Terminar antes» ES el `early` de §6.3
+    // s172: «Terminar antes» ES el `early` de §6.3; no en un paso que se podía saltar entero (B3).
+    if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
   // A tu ritmo (Auto apagado): «›» da las repeticiones por hechas, como el objetivo guiado.
@@ -197,26 +216,32 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // s200: los tres relojes van por MARCA de tiempo (`useRelojSesion`, support).
   useRelojSesion(stage === 'run' && phase === 'place' && !paused,
     n => setPlaceLeft(c => Math.max(0, c - n)), [stepIdx]);
-  useSesionAlOcultar(stage === 'run', () => setPaused(true)); // s200: politica en SESION_AL_OCULTAR
+  useSesionAlOcultar(stage === 'run', vuelta.pausar); // s200: politica en SESION_AL_OCULTAR
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
     if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
   }, [placeLeft]);
-  // Al llegar a 0 empieza solo; sin Auto, espera a «›», y si se enciende Auto ahí, sigue.
+  // Al llegar a 0 empieza solo; sin Auto, espera a «›», y si se enciende Auto ahí, sigue. En pausa,
+  // encender Auto solo cambia la preferencia: lo que toque pasa al reanudar.
   useEffectV1(() => {
-    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto) beginWork();
-  }, [placeLeft, auto]);
+    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto && !paused) beginWork();
+  }, [placeLeft, auto, paused]);
 
   // Ticker de trabajo (fase 'work', pausable). s113: las reps GUIADAS también
-  // corren — el tiempo marca la cadencia (enmienda R2).
-  useRelojSesion(stage === 'run' && phase === 'work' && !paused, n => setElapsed(e => e + n), [stepIdx, side]);
+  // corren — el tiempo marca la cadencia (enmienda R2). Esperando a «›», quieto.
+  useRelojSesion(stage === 'run' && phase === 'work' && !paused && !esperaMano, n => setElapsed(e => e + n), [stepIdx, side]);
   // Umbrales del trabajo: madera suave por rep + avance AUTO al objetivo (reps,
   // acreditando solo las guiadas reales) · fin de segmento → cambio de lado
   // (perSide lado 0) o siguiente paso. Deps [elapsed]: exactamente una
   // evaluación por segundo de trabajo; las transiciones resetean elapsed a 0
   // (guardado) así que no re-disparan.
+  // Con [paused] para que lo que Auto deja pendiente pase al reanudar; los sonidos, una vez por
+  // segundo de trabajo (`sonadoRef`): reanudar o tocar Auto no los repite.
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
+    if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
+    const marca = stepIdx + ':' + side + ':' + elapsed;
+    const suena = sonadoRef.current !== marca;
+    sonadoRef.current = marca;
     if (step.mode === 'reps') {
       if (!auto) return;   // a tu ritmo: ni cadencia ni madera; «›» las da por hechas
       const repSec = v1RepSeconds(step);
@@ -228,7 +253,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         repsGuidedRef.current += v1RepTarget(step);
         hechosRef.current[stepIdx] = true;
         advanceStep();
-      } else if (elapsed % repSec === 0) {
+      } else if (suena && elapsed % repSec === 0) {
         try { playSound('move.rep'); } catch (e) {}
       }
       return;
@@ -237,7 +262,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     const effDur = v1StepDur(step);
     // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
     // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
-    if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn'); } catch (e) {} }
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn'); } catch (e) {} }
     if (elapsed >= effDur) {
       if (!auto) {
         // Sin Auto la cuenta se queda en 0 y suena una vez: lo que sigue lo decide «›».
@@ -248,7 +273,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       if (step.mode === 'perSide' && side === 0) enterChange();
       else advanceStep();
     }
-  }, [elapsed, auto]);
+  }, [elapsed, auto, paused]);
 
   // Transición AUTO de lado (s113, enmienda R3): cuenta que fluye sola con el
   // lado siguiente visible. Al llegar a 0 → el lado 2 empieza solo.
@@ -259,8 +284,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (changeLeft > 0 && changeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
   }, [changeLeft]);
   useEffectV1(() => {
-    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto) onSideReady();
-  }, [changeLeft, auto]);
+    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
+  }, [changeLeft, auto, paused]);
 
   // Sonidos, para seguir la rutina sin mirar (opción A):
   //   · ejercicio nuevo → un cuenco al entrar en el paso, se coloque o no (grave si es descanso);
@@ -287,25 +312,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // real medida. Invisible en prod; la promesa visible sale del helper puro.
   useEffectV1(() => { try { v1DevCheckDuration(routine, v1RestSeconds()); } catch (e) {} }, []);
 
-  // Atajos: Espacio pausa y reanuda cualquier fase en marcha (opción A: la pausa está siempre).
-  useEffectV1(() => {
-    const onKey = (e) => {
-      if (e.key === ' ') {
-        // No robar Espacio a un control con foco (chips de feedback / CTA en
-        // 'done'): que lo active nativamente en vez de hacer preventDefault (s116).
-        if (sessionKeyOnControl(e)) return;
-        e.preventDefault();
-        if (stage === 'run') setPaused(p => !p);
-      }
-      if (e.key === 'Escape') onExit('exit');
-      // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
-      // el propio CTA se activan por su onClick) o haya modificadores/IME —
-      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [stage, stepIdx, phase, step, paused]);
+  // Atajos (MoveSessionV1.parts.jsx): Espacio pausa y reanuda cualquier fase en marcha, con el 3, 2, 1.
+  useV1Teclas(stage, vuelta.alternar, onExit, () => onExit(sinContarRef.current ? 'skip' : 'done'));
 
   // PREPARACIÓN
   if (stage === 'prep') {
@@ -360,6 +368,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;   // place/change: número pequeño, no es el timer
+  /* Lo que hace la flecha se lee debajo (Ez, P5 A): en el último paso, siempre «Terminar». */
+  const ultimo = stepIdx + 1 >= routine.steps.length;
   /* Reps guiadas: lo que va de ellas (0 en la primera, 1 en la última). El número no late
      (Ez, 2A del 25 oct.): cambia de color del terracota al oliva, en CuerpoV1. */
   let repsProgreso = null;
@@ -382,22 +392,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     support = t('move.sideAutoHint');
     primary = { label: t('session.beginNow'), onClick: onSideReady };
-  } else if (step.opcional) {
-    // Un paso con material que no tienes se salta sin cortar la sesión (Ez, 23 oct.: 2A).
-    if (step.mode === 'reps' && auto) { bigNumber = repsDe(step); bigLabel = tn('move.repsOf', { n: v1RepTarget(step) }); }
-    else if (step.mode === 'reps') { bigNumber = String(v1RepTarget(step)); bigLabel = t('move.repsPace'); }
-    else { bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds'); }
-    primary = { label: t('move.skipOptional'), onClick: advanceStep };
   } else if (step.mode === 'reps' && !auto) {
     // A tu ritmo: el número es el objetivo y «›» las da por hechas.
     bigNumber = String(v1RepTarget(step)); bigLabel = t('move.repsPace');
-    primary = { label: t('move.next'), onClick: terminarReps };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.flecha.hecho'), onClick: terminarReps };
   } else if (step.mode === 'reps') {
     // s113: reps guiadas — contador «n de N» a su cadencia; avance auto al objetivo;
-    // «Terminar antes» siempre visible (enmienda R2). El «Cuídate» va abajo (s114).
+    // «Terminar serie» siempre visible (enmienda R2). El «Cuídate» va abajo (s114).
     bigNumber = repsDe(step);
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds');
@@ -412,14 +416,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       if (remaining > 0 && remaining <= 3) support = t('move.restReady');
     }
     primary = isRest
-      ? { label: t('session.skip'), onClick: advanceStep }
-      : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
+      ? { label: t(ultimo ? 'move.finish' : 'move.flecha.descanso'), onClick: advanceStep }
+      : { label: t(step.mode === 'perSide' && side === 0 ? 'move.flecha.lado' : ultimo ? 'move.finish' : 'move.next'), onClick: () => {
           // Cortar un paso con reloj también acorta el trabajo (§6.3); sin Auto y ya en 0, no.
-          if (auto || remaining > 0) earlyRef.current = true;
+          if (!step.opcional && (auto || remaining > 0)) earlyRef.current = true;
           // Sin Auto el otro lado empieza con «›», sin la cuenta de cambio.
           if (step.mode === 'perSide' && side === 0) { if (auto) enterChange(); else onSideReady(); } else advanceStep();
         } };
   }
+  /* Un paso con material que no tienes (la banda) se salta sin cortar la sesión (Ez, 23 oct.: 2A)
+     con la pastilla junto al número, y la flecha cuenta lo hecho, como en cualquier paso (B3 A). */
   /* Sin Auto, lo que está esperando a «›»: el botón se marca y la línea de abajo lo dice. */
   const espera = !auto && (phase === 'place' ? placeLeft <= 0 : phase === 'change' ? changeLeft <= 0
     : step.mode === 'reps' || remaining <= 0);
@@ -449,15 +455,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     : phase === 'place' ? 1 - placeLeft / Math.max(1, totalesRef.current.place)
     : phase === 'change' ? 1 - changeLeft / Math.max(1, totalesRef.current.change)
     : fraccion;
+  const autoBoton = <AutoV1 auto={auto} accent={accent} onAuto={() => setPace({ cuerpoAuto: !auto })} t={t} />;
 
   return (
     <SessionShell
       routine={displayRoutine} onExit={onExit} atmosphere={atmo}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
-      footer={<MandoV1 accent={stepAccent} paused={paused} onPause={() => setPaused(x => !x)} anillo={anillo} espera={espera} acentoModulo={accent}
-        prev={{ onClick: () => { if (stepIdx > 0) { setPaused(false); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
-        next={{ label: primary.label, onClick: () => { setPaused(false); primary.onClick(); } }}
-        textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} />}
+      footer={<MandoV1 accent={stepAccent} paused={paused && vuelta.cuenta == null} onPause={vuelta.alternar} anillo={anillo} espera={espera} acentoModulo={accent}
+        prev={{ onClick: () => { if (stepIdx > 0) { vuelta.reanudar(); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
+        next={{ label: primary.label, onClick: () => { vuelta.reanudar(); primary.onClick(); } }}
+        textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} autoAbajo={autoAbajo ? autoBoton : null} />}
       hint={t('session.hint')}
     >
       <CuerpoV1 routine={routine} stepIdx={stepIdx} step={step} side={side} phase={phase} elapsed={elapsed} paused={paused}
@@ -466,8 +473,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         kicker={kicker} cueText={cueText} sideLead={sideLead} careText={careText}
         bigNumber={bigNumber} bigLabel={bigLabel} gateNumber={gateNumber} repsProgreso={repsProgreso}
         support={support} supportStrong={supportStrong} fraccion={fraccion}
-        auto={auto} onAuto={() => setPace({ cuerpoAuto: !auto })} siguienteTexto={siguienteTexto}
-        onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null} />
+        autoBoton={autoAbajo ? null : autoBoton} siguienteTexto={siguienteTexto}
+        onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null}
+        onSaltar={phase === 'work' && step.opcional ? () => { vuelta.reanudar(); advanceStep(); } : null}
+        onBasta={v1BastaDestino(routine, stepIdx) >= 0 ? () => { vuelta.reanudar(); conUnaBasta(); } : null}
+        vuelta={vuelta.cuenta} />
     </SessionShell>
   );
 }

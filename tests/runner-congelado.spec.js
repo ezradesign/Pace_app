@@ -136,7 +136,7 @@ test.describe('el runner no se mueve entre pantallas', () => {
        desde v0.175.2 y ya no se recorre con «Siguiente».
        Y NO «Fondos en silla», que es la que
        fotografió el usuario: en las rutinas de REPS la pantalla de trabajo no
-       tiene botón «Siguiente» -- son «Anterior · Pausar · Terminar antes»-- así
+       tiene botón «Siguiente» -- son «Anterior · Pausar · Terminar serie»-- así
        que el bucle avanzaba un paso y el test habría salido verde habiendo
        comprobado una sola pantalla. Lo dijo el guard de cero de abajo, no una
        lectura. Ésta se recorre entera y tenía 2 pasos con solape de los 9. */

@@ -78,10 +78,18 @@ function v1StepDur(step) {
    en UNA sola fuente. Toda colocación CUENTA SOLA (opción A del runner guiado):
      ready — declarada en el paso (suelo, pared, material): cuenta al menos
              V1_READY_SECONDS; antes esperaba a «Estoy listo».
-     auto  — pasos con reloj (timed/perSide) e idx>0, o el 1er set de fuerza
-             (reps con instruction.setup y NO tras un rest) → 5 s.
+     auto  — pasos con reloj (timed/perSide) e idx>0, o uno con colocación escrita
+             (`instruction.setup`) que no sea otra serie del mismo ejercicio → 5 s.
      none  — resto. `setup:número` (s112) sigue siendo una cuenta explícita.
-   Las dos primeras devuelven mode 'auto': el runner no distingue. */
+   Las dos primeras devuelven mode 'auto': el runner no distingue.
+   Una colocación escrita es lo que dice dónde y cómo apoyarse («Silla sin ruedas»): si existe,
+   se ve, también en un primer paso con reloj y en un ejercicio nuevo tras un descanso. Lo único
+   que no la repite es otra serie del MISMO ejercicio: ya estás colocado. */
+function v1MismoEjercicioAntes(routine, idx) {
+  let j = idx - 1;
+  while (j >= 0 && routine.steps[j].mode === 'rest') j--;
+  return j >= 0 && routine.steps[j].name === routine.steps[idx].name;
+}
 function v1StepSetup(routine, idx) {
   const st = routine.steps[idx];
   if (!st) return { mode: 'none', estimatedSeconds: 0 };
@@ -90,10 +98,8 @@ function v1StepSetup(routine, idx) {
   }
   if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
   const clocked = st.mode === 'timed' || st.mode === 'perSide';
-  const prev = idx > 0 ? routine.steps[idx - 1] : null;
-  const afterRest = !!(prev && prev.mode === 'rest');
   if (clocked && idx > 0) return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
-  if (st.mode === 'reps' && st.instruction && st.instruction.setup && !afterRest) {
+  if (st.mode !== 'rest' && st.instruction && st.instruction.setup && !v1MismoEjercicioAntes(routine, idx)) {
     return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
   }
   return { mode: 'none', estimatedSeconds: 0 };

@@ -28,6 +28,9 @@ var MOVE_ROUTINES = {
          los logros y «Continúa» la siguen reconociendo. */
       { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Levántate y sube', desc: 'Sentarte y levantarte, y subir talones. Silla estable, sin ruedas.', min: 3,
         position: ['standing'], equipment: ['stableChair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        /* «La primera vez, una serie basta»: el descanso entre dos series lo cumple con «Con una
+           basta», y una de cada cuenta entera (Ez, P6 A del 29 oct.; MoveSessionV1.parts.jsx). */
+        unaBasta: true,
         steps: [
           { name: 'Sentadilla a silla', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
@@ -184,7 +187,7 @@ var MOVE_ROUTINES = {
             instruction: { action: 'Suelta.' } },
           { name: 'Apretar glúteos', mode: 'timed', dur: 30,
             instruction: {
-              action: 'Ahora aguanta el apretón unos diez segundos y suelta. Tres veces.',
+              action: 'Ahora aguanta el apretón unos ocho segundos y suelta. Tres veces.',
               care: 'Mantén la respiración suelta durante el aguante.' } },
           { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
@@ -198,7 +201,7 @@ var MOVE_ROUTINES = {
          literal del rest suave de glutes.stealth («Suelta.» / «Let go.»), sin
          redactar copy nuevo. Acceso premium SIN cambios. */
       { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Piernas elevadas, sentado.', min: 2, access: 'premium',
-        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
+        position: ['seated'], equipment: ['stableChair'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
           /* Al levantar las dos piernas, una silla con ruedas se va: la colocación lo dice. */
           { name: 'Piernas elevadas sentado', mode: 'timed', dur: 30,

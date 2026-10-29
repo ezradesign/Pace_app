@@ -186,7 +186,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.glutes.stealth.s1.name':               'Rest',
   'extra.glutes.stealth.s1.instruction.action': 'Let go.',
   'extra.glutes.stealth.s2.name':               'Glute squeeze',
-  'extra.glutes.stealth.s2.instruction.action': 'Now hold the squeeze for about ten seconds and release. Three times.',
+  'extra.glutes.stealth.s2.instruction.action': 'Now hold the squeeze for about eight seconds and release. Three times.',
   'extra.glutes.stealth.s2.instruction.care':   'Keep your breathing easy during the hold.',
   'extra.glutes.stealth.s3.name':               'Calf raises',
   'extra.glutes.stealth.s3.instruction.action': 'Finish by raising and lowering your heels, gently.',

@@ -45,7 +45,7 @@ async function alTrabajo(page) {
   await expect(sesion).toHaveCount(1);
   let trabajando = false;
   for (let s = 0; s < 40 && !trabajando; s++) {
-    trabajando = await sesion.getByRole('button', { name: /Terminar antes/ }).count() > 0;
+    trabajando = await sesion.getByRole('button', { name: /Terminar serie/ }).count() > 0;
     if (!trabajando) await segundos(page, 1);
   }
   expect(trabajando, 'GUARD: la sesion nunca entro en el trabajo de la 1a serie').toBe(true);
@@ -94,10 +94,10 @@ test('al ocultar la pagina la sesion se pausa, y al volver sigue en pausa', asyn
   await expect(sesion.getByRole('button', { name: /Reanudar/ }), 'al volver la sesion se reanudo sola').toHaveCount(1);
   expect(await rep(sesion), 'el tiempo fuera de la pantalla conto como trabajo').toBe(antes);
 
-  /* Y «Reanudar» la sigue desde donde estaba. */
+  /* Y «Reanudar» la sigue desde donde estaba, tras su 3, 2, 1 (Ez, P8 B), que aún es pausa. */
   await sesion.getByRole('button', { name: /Reanudar/ }).click();
   await page.waitForTimeout(50);
-  await segundos(page, 4);
+  await segundos(page, 3 + 4);
   expect(await rep(sesion)).toBe(antes + 1);
   expect(errores).toEqual([]);
 });
@@ -139,7 +139,7 @@ for (const [forma, id] of [['contrato v1', 'move.shoulders.5'], ['venia del runn
 
     await sesion.getByRole('button', { name: /Reanudar/ }).click();
     await page.waitForTimeout(50);
-    await segundos(page, 2);
+    await segundos(page, 3 + 2);   // el 3, 2, 1 de reanudar (Ez, P8 B) aún es pausa
     expect(Number(await reloj.innerText()), 'al reanudar sigue desde donde estaba').toBe(Number(antes) - 2);
     expect(errores).toEqual([]);
   });
