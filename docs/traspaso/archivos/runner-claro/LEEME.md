@@ -1,5 +1,25 @@
 # El runner de Mueve y Estira, más claro (29 oct. 2026)
 
+## AL RELEVO (29 oct., ~18:30)
+
+- **Montado y subido** (commits `a1071407` código y pruebas, `813a3d38` fotos y guiones): la tercera vuelta del reparto
+  de Ez entera (sección de abajo). `npm run verify` pasa; `index.html` compilado y en el commit.
+- **Medido**: las 14 pantallas en cinco pasos y dos idiomas con `censo-montado.js`: el círculo nunca menor que hoy, nada
+  pisado, ningún texto cortado, sin scroll. Pruebas del runner (`runner-reparto`, `-claro`, `-auto`, `-mando`,
+  `-circulo`, `-letra`, `-congelado`) en verde en el 8808.
+- **Página de fotos hecha**, con la ligera: https://claude.ai/artifact/MiGd9feEQgLE8GtLSxUULL.
+- **Falta**: el resultado de la suite entera en el 8808, que estaba corriendo al relevo. Para retomarla, desde esta carpeta:
+  `PACE_E2E_PORT=8808 npx playwright test --reporter=line`. Si cae una, repetirla sola antes de creerla:
+  `PACE_E2E_PORT=8808 npx playwright test tests/<archivo> -g "<nombre>" --workers=1`. Con verde, nada más: la rama ya
+  está subida, y juntar es de la coordinadora con el «júntalo» de Ez.
+- Si `node_modules` no está (la unión al del repo principal), `build-standalone.js` dice «TypeScript not found»:
+  `New-Item -ItemType Junction -Path node_modules -Target "<repo>\node_modules"` en PowerShell.
+- Para rehacer el censo o la página: `git show 05e2252f:index.html > <tmp>/index-hoy.html`, luego
+  `node docs/traspaso/archivos/runner-claro/censo-montado.js <tmp>/censo <tmp>/index-hoy.html censo todas`,
+  `node docs/traspaso/archivos/runner-claro/censo-montado.js <tmp>/fotos <tmp>/index-hoy.html fotos 360x740,412x915,1280x720,1536x710 pausa,vuelta`
+  y `node docs/traspaso/archivos/runner-claro/reparto-pagina.js <tmp>/censo <tmp>/fotos docs/proposals/runner-reparto-montado-29oct.html`
+  (otra vez con `...-ligera.html ligera` al final).
+
 Rama `claude/runner-claro-15db3c`, sin juntar en `main`. Casos de las revisiones de ChatGPT del 28 oct.
 (`docs/audits/chatgpt-28oct/LEEME.md`): B1-B4, R4, R6 y, con maqueta, B3, P5, P6 y P8, ya montados; y la tercera vuelta
 del reparto que dibujó Ez (abajo).
