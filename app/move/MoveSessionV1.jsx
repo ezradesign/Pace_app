@@ -166,7 +166,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
     repsGuidedRef.current += hechas;
     if (hechas > 0) hechosRef.current[stepIdx] = true;
-    earlyRef.current = true;   // s172: «Terminar antes» ES el `early` de §6.3
+    // s172: «Terminar antes» ES el `early` de §6.3; no en un paso que se podía saltar entero (B3).
+    if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
   // A tu ritmo (Auto apagado): «›» da las repeticiones por hechas, como el objetivo guiado.
@@ -393,12 +394,6 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     support = t('move.sideAutoHint');
     primary = { label: t('session.beginNow'), onClick: onSideReady };
-  } else if (step.opcional) {
-    // Un paso con material que no tienes se salta sin cortar la sesión (Ez, 23 oct.: 2A).
-    if (step.mode === 'reps' && auto) { bigNumber = repsDe(step); bigLabel = tn('move.repsOf', { n: v1RepTarget(step) }); }
-    else if (step.mode === 'reps') { bigNumber = String(v1RepTarget(step)); bigLabel = t('move.repsPace'); }
-    else { bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds'); }
-    primary = { label: t('move.skipOptional'), onClick: advanceStep };
   } else if (step.mode === 'reps' && !auto) {
     // A tu ritmo: el número es el objetivo y «›» las da por hechas.
     bigNumber = String(v1RepTarget(step)); bigLabel = t('move.repsPace');
@@ -426,11 +421,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       ? { label: t('session.skip'), onClick: advanceStep }
       : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
           // Cortar un paso con reloj también acorta el trabajo (§6.3); sin Auto y ya en 0, no.
-          if (auto || remaining > 0) earlyRef.current = true;
+          if (!step.opcional && (auto || remaining > 0)) earlyRef.current = true;
           // Sin Auto el otro lado empieza con «›», sin la cuenta de cambio.
           if (step.mode === 'perSide' && side === 0) { if (auto) enterChange(); else onSideReady(); } else advanceStep();
         } };
   }
+  /* Un paso con material que no tienes (la banda) se salta sin cortar la sesión (Ez, 23 oct.: 2A)
+     con la pastilla junto al número, y la flecha cuenta lo hecho, como en cualquier paso (B3 A). */
   /* Sin Auto, lo que está esperando a «›»: el botón se marca y la línea de abajo lo dice. */
   const espera = !auto && (phase === 'place' ? placeLeft <= 0 : phase === 'change' ? changeLeft <= 0
     : step.mode === 'reps' || remaining <= 0);
@@ -478,7 +475,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         bigNumber={bigNumber} bigLabel={bigLabel} gateNumber={gateNumber} repsProgreso={repsProgreso}
         support={support} supportStrong={supportStrong} fraccion={fraccion}
         auto={auto} onAuto={() => setPace({ cuerpoAuto: !auto })} siguienteTexto={siguienteTexto}
-        onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null} />
+        onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null}
+        onSaltar={phase === 'work' && step.opcional ? () => { setPaused(false); advanceStep(); } : null} />
     </SessionShell>
   );
 }

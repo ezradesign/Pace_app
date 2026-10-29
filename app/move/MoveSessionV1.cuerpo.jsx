@@ -1,8 +1,8 @@
 /* PACE · El cuerpo del runner de Mueve y Estira (opción A del runner guiado, elegida por Ez)
    =========================================================================================
    De arriba abajo: el dibujo con su aro de tiempo, el rótulo de la fase, el nombre, la
-   instrucción, el número con su etiqueta (y «+15 s» al colocarse o cambiar de lado), la línea de
-   abajo y la barra de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx).
+   instrucción, el número con su etiqueta (y «+15 s» al colocarse o cambiar de lado, o «Saltar este
+   paso» en uno con material), la línea de abajo y la barra de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx).
 
    CADA PIEZA TIENE SU SITIO FIJO EN TODA LA RUTINA. El nombre, la instrucción y la línea de abajo
    son «pilas»: en la misma celda de rejilla van, invisibles, todos los textos que ese hueco puede
@@ -182,6 +182,11 @@ function CuerpoV1(p) {
             {p.onMas && (
               <button type="button" className="pace-v1-mas" data-pace-v1-mas onClick={(e) => { v1SoltarFoco(e); p.onMas(); }} title={t('session.moreTime')}>
                 +{V1_MAS_TIEMPO} s<span className="pace-v1-oculto"> · {t('session.moreTime')}</span>
+              </button>
+            )}
+            {p.onSaltar && (
+              <button type="button" className="pace-v1-mas" data-pace-v1-saltar onClick={(e) => { v1SoltarFoco(e); p.onSaltar(); }}>
+                {t('move.skipOptional')}
               </button>
             )}
           </div>

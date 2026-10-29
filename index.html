@@ -32927,6 +32927,11 @@ function CuerpoV1(p) {
     p.onMas &&
     React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-mas": true, onClick: (e) => {v1SoltarFoco(e);p.onMas();}, title: t('session.moreTime') }, "+",
     V1_MAS_TIEMPO, " s", React.createElement("span", { className: "pace-v1-oculto" }, " \xB7 ", t('session.moreTime'))
+    ),
+
+    p.onSaltar &&
+    React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-saltar": true, onClick: (e) => {v1SoltarFoco(e);p.onSaltar();} },
+    t('move.skipOptional')
     )
 
     )
@@ -33309,7 +33314,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
     repsGuidedRef.current += hechas;
     if (hechas > 0) hechosRef.current[stepIdx] = true;
-    earlyRef.current = true;
+
+    if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
 
@@ -33536,12 +33542,6 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     support = t('move.sideAutoHint');
     primary = { label: t('session.beginNow'), onClick: onSideReady };
-  } else if (step.opcional) {
-
-    if (step.mode === 'reps' && auto) {bigNumber = repsDe(step);bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });} else
-    if (step.mode === 'reps') {bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');} else
-    {bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');}
-    primary = { label: t('move.skipOptional'), onClick: advanceStep };
   } else if (step.mode === 'reps' && !auto) {
 
     bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');
@@ -33569,11 +33569,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     { label: t('session.skip'), onClick: advanceStep } :
     { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
 
-        if (auto || remaining > 0) earlyRef.current = true;
+        if (!step.opcional && (auto || remaining > 0)) earlyRef.current = true;
 
         if (step.mode === 'perSide' && side === 0) {if (auto) enterChange();else onSideReady();} else advanceStep();
       } };
   }
+
+
 
   const espera = !auto && (phase === 'place' ? placeLeft <= 0 : phase === 'change' ? changeLeft <= 0 :
   step.mode === 'reps' || remaining <= 0);
@@ -33621,7 +33623,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       bigNumber: bigNumber, bigLabel: bigLabel, gateNumber: gateNumber, repsProgreso: repsProgreso,
       support: support, supportStrong: supportStrong, fraccion: fraccion,
       auto: auto, onAuto: () => setPace({ cuerpoAuto: !auto }), siguienteTexto: siguienteTexto,
-      onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null })
+      onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null,
+      onSaltar: phase === 'work' && step.opcional ? () => {setPaused(false);advanceStep();} : null })
     ));
 
 }
