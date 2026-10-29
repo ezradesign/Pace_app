@@ -13,7 +13,8 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 1. **Republicadas aquí** (las de 5iWBf… dan 404 en esta cuenta): la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT
    (versión 73, con «Ahora: elegir en las dos maquetas»), la maqueta del runner
    https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1 y la de «Tus rutinas» https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3,
-   byte a byte desde sus ramas. Las dos ramas, limpias e iguales a origin (c946ffc1 y 40efee2e).
+   byte a byte desde sus ramas. Las dos ramas, limpias e iguales a origin (c946ffc1 y 40efee2e). Los 16 dibujos, en
+   https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT (versión 2, ya con el remo corregido); `dibujos-22oct`, vacía a las 12:20.
 2. **Ez eligió (~12:00)**: «B3A + P5A + P5A (No entiendo bien, de todas formas la pill de con una basta queda mejor
    cuadrada debajo de segundos) + Me gusta la P8 B pero quizás se pueda ver la bola del dibujo arriba / Para tus rutinas:
    U1 B · C6 A». El segundo «P5A» es la P6. Es decir: B3 A, P5 A, **P6 A con «Con una basta» centrada debajo de
