@@ -18,9 +18,8 @@ volver; el 3 son ideas que conviene validar con gente real antes de construir. *
 sin esperar»)**: la versión de prueba sube en cuanto estén los dibujos, el logo y lo que falle de verdad del grupo 1 en
 las apps (B4 y C3); así empiezan los 14 días, y el grupo 2 llega como actualizaciones durante ese tiempo.
 
-**Decisión pendiente de Ez, el calendario en v1**: (a) entra en PACE completo solo donde es fiable, hoy Android y la web
-con PACE abierto, diciendo sus límites; o (b) se queda como beta, sin venderlo como motivo para pagar, hasta el llavero.
-Recomendado: (b) en la web y (a) en Android.
+**El calendario en v1, decidido por Ez el 29 oct. (la recomendada)**: (a) en Android, donde entra en PACE completo
+diciendo sus límites, y (b) en la web, donde va «en pruebas», sin venderlo como motivo para pagar, hasta el llavero.
 
 ## Las revisiones
 

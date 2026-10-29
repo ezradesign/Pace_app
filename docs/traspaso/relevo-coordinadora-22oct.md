@@ -18,7 +18,8 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    cuadrada debajo de segundos) + Me gusta la P8 B pero quizás se pueda ver la bola del dibujo arriba / Para tus rutinas:
    U1 B · C6 A». El segundo «P5A» es la P6. Es decir: B3 A, P5 A, **P6 A con «Con una basta» centrada debajo de
    «SEGUNDOS»**, **P8 B con el velo dejando a la vista el círculo del dibujo y su arco** (al reanudar, 3, 2, 1), U1 B y C6 A.
-   El calendario en v1 sigue sin letra.
+   **El calendario en v1 (~12:15), la recomendada**: completo en Android y «en pruebas» en la web, sin venderlo como
+   motivo para pagar. Entra en la cola: lo aplican /premium (el paquete M) y la página de textos (T, con CAL-2 y CAL-6).
 3. **Dos sesiones de esta cuenta, en sus worktrees** (`cwd`, `use_worktree: false`): `runner-montaje`
    (`local_b5c190bf-a38e-44ea-8954-8891b7d1d254`, puerto 8808) y `tus-rutinas-montaje`
    (`local_b7821895-2157-4f84-b911-e6c37b734612`, puerto 8809), con los mismos archivos repartidos que antes. Cada una

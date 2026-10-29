@@ -33,7 +33,7 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    cuentan, las seis colocaciones que no se ven, el constructor tapado desde Estira, el borrador que se pierde, el
    material que no se dice y la tarjeta que no se empieza con el teclado. Antes de la versión de prueba definitiva, en
    una sola sesión. Lo de producto (la carta del lunes que se pueda dejar para luego, que la prueba de 7 días llegue a
-   enseñarla, la frase del móvil y /premium con la variedad y el calendario) y lo de quien empieza (P1-P8: mirar un
+   enseñarla, la frase del móvil y /premium con la variedad y el calendario de Android; en la web, «en pruebas», Ez 29 oct.) y lo de quien empieza (P1-P8: mirar un
    ejercicio antes de empezar, la flecha que dice qué hace, la pausa que se ve, «con una serie basta») y cuando el día se
    tuerce (Q1-Q7), en una maqueta para Ez; recomendado en una actualización durante los 14 días de los testers. Lo que es
    solo texto (Q1, Q3, Q6, Q7 y P1-P3), en una página de antes y después, puede ir en la versión de prueba. **Las ocho
@@ -58,8 +58,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.
-- **Elegir sobre las maquetas** que traigan las dos sesiones en marcha (el runner y «Tus rutinas», desde el 29 oct.) y la
-  de producto, y dar el «júntalo» de cada rama.
+- **Mirar las fotos de las dos ramas y dar su «júntalo»**: el runner y «Tus rutinas» montan lo que Ez eligió el 29 oct.
+  (`DECISIONES_PRODUCTO.md`). Después, la maqueta de producto.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
 - **La versión de prueba definitiva**: los 16 dibujos (https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT, a

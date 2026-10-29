@@ -19,6 +19,19 @@
 
 ---
 
+## El runner, «Tus rutinas» y el calendario en v1 (Ez, 29 oct. 2026)
+
+- **El runner** (maqueta `docs/proposals/runner-claro-29oct.html` en su rama): B3 A, la flecha cuenta las repeticiones con
+  banda y «Saltar este paso» va junto al número; P5 A, una palabra bajo cada botón; P6 A, «Con una basta» en el descanso
+  entre dos series de lo mismo, pero **centrada debajo de «SEGUNDOS»** («queda mejor cuadrada debajo de segundos»); y P8 B,
+  el velo de «Sesión en pausa», **dejando a la vista el círculo del dibujo** («que se pueda ver la bola del dibujo arriba»),
+  con 3, 2, 1 al reanudar.
+- **«Tus rutinas»** (maqueta `docs/proposals/tus-rutinas-u1-c6-29oct.html` en su rama): U1 B, un solo borrador que espera
+  en el dispositivo, sin preguntar al cerrar; C6 A, una línea encima de Guardar que dice por qué no se puede.
+- **El calendario en v1**, la recomendada: en Android entra en PACE completo, diciendo sus límites; en la web va «en
+  pruebas» y no se vende como motivo para pagar hasta que esté el llavero (que recuerda la conexión). /premium y los
+  textos lo cuentan así.
+
 ## Lanzar con lo más útil y mejorar después (Ez, 28 oct. 2026, noche)
 
 Tras ocho revisiones de ChatGPT en una noche (`docs/audits/chatgpt-28oct/`) y su consejo de cerrar el alcance, Ez:
@@ -26,8 +39,8 @@ Tras ocho revisiones de ChatGPT en una noche (`docs/audits/chatgpt-28oct/`) y su
 lancemos sea realmente útil y los siguientes pasos sean de mejora y actualización». Se traduce en la lista única en tres
 grupos del `LEEME.md` de esa carpeta: lo que bloquea publicar o cobrar y lo que bloquea entender PACE el primer día van
 antes de v1; lo demás, después, con lo que digan los testers y las primeras compras. Una recomendación no bloquea v1
-por ser de ChatGPT: cuenta qué daño evita o qué recorrido imprescindible permite. Pendiente de Ez: el alcance del
-calendario en v1.
+por ser de ChatGPT: cuenta qué daño evita o qué recorrido imprescindible permite. El alcance del calendario en v1, decidido
+el 29 oct. (arriba).
 
 ## Lo que falta para vender: 1A 2A 3A 4A; y el aviso de fin en los móviles: A (Ez, 28 oct. 2026)
 

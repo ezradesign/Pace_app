@@ -4,6 +4,14 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 29 de octubre de 2026, v0.186.0.
 
+## 29 oct., mediodía: Ez elige en las dos maquetas y el calendario en v1
+
+Desde la cuenta de EcLj6… (la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT). En el runner: B3 A, P5 A, P6 A con
+«Con una basta» centrada debajo de «SEGUNDOS» y P8 B dejando a la vista el círculo del dibujo; en «Tus rutinas», U1 B · C6 A.
+Lo montan dos sesiones en sus ramas (`claude/runner-claro-15db3c` y `claude/tus-rutinas-c0cf03`) y lo juntan con el
+«júntalo» de Ez tras mirar sus fotos. El calendario en v1, el recomendado: completo en Android y «en pruebas» en la web,
+sin venderlo como motivo para pagar. El detalle, en `docs/product/DECISIONES_PRODUCTO.md`.
+
 ## 29 oct.: el cobro de la web, a prueba (v0.186.0), en `main` con el «júntalo» de Ez
 
 Los siete casos del cobro de la revisión de ChatGPT (A1-A7), cada uno provocado en rojo antes de arreglarlo. La sesión que
