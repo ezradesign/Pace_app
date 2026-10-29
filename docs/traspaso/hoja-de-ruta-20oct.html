@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.186.0 · actualizada el 29 de octubre a las 10:14 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.186.0 · actualizada el 29 de octubre a las 11:50 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,8 +106,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> Las 1051 pruebas en verde y la web en la 0.185.0, con lo que faltaba
-        para vender y los avisos del iPhone dentro.</li>
+      <li><b>La app está casi entera y sana.</b> Las 1067 pruebas en verde y la web en la 0.186.0, con el cobro a prueba
+        dentro.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
         código. Seis cosas del cobro van antes de cobrar; hoy no afectan a nadie, porque nadie puede pagar. Cuatro de las
         rutinas sin «Auto» y seis de «Tus rutinas» sí las nota quien las usa: van antes de la versión de prueba definitiva. Y
@@ -130,32 +130,36 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, con calma</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos minutos</span>
+        <span class="t">Elegir en las dos maquetas</span>
+        <span class="c"><span class="quien">Tú, con una línea de letras.</span>
+          <ol>
+            <li><a href="https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1">El runner, más claro</a>: la flecha que cuenta las
+              repeticiones con banda (B3), la palabra bajo cada botón (P5), «Con una basta» (P6) y la pausa que se ve (P8).
+              Recomiendo la A en las cuatro.</li>
+            <li><a href="https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3">Tus rutinas sin perder nada</a>: cerrar el constructor
+              sin perder lo escrito (U1) y Guardar cuando no puede (C6). Recomiendo U1 B · C6 A.</li>
+          </ol>
+          Con tus letras, una sesión en cada rama monta lo elegido y te enseña las fotos antes de juntar.</span></li>
+      <li class="paso luego"><span class="estado">A la vez · lo tuyo, con calma</span>
         <span class="t">Stripe, para cobrar en la web</span>
         <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Ya están la cuenta, «vende por ti», la
-          llave que firma las ventas y Cloudflare. Ahora, en el modo de prueba de Stripe: el aviso de pago (el paso marcado
-          «Ahora» de abajo), los enlaces de prueba y una compra de mentira con la tarjeta de prueba. Nadie paga nada de verdad
-          hasta que hables con el gestor y estén los arreglos del cobro.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · tres hilos a la vez, desde el 29 de octubre</span>
-        <span class="t">Los arreglos de las ocho revisiones de ChatGPT</span>
-        <span class="c"><span class="quien">Yo, con sesiones aparte.</span> Desde la mañana del 29 hay dos hilos más, cada uno en su rama:
-          el de las rutinas de Mueve y Estira y el de «Tus rutinas». Los dos empiezan por lo que frena la versión de prueba:
-          que los ejercicios digan dónde y con qué colocarse. Lo que cambie en pantalla, te lo enseñan antes en una maqueta.
-          La del cobro ya está en la app, en la 0.186.0, y arregla esto: que un
-          aviso de Stripe repetido o desordenado no pise una compra, la fecha real de la prueba, no decir «terminada» sin una
-          baja, que una renovación no tape la de por vida, la importación de tus datos y comprobar qué se ha comprado. Cuando
-          acabe, otra para Mueve, Estira y «Tus rutinas»: el tiempo que corre mientras esperas a «›», «Auto» que avanza en
-          pausa, las repeticiones con banda que no cuentan, las colocaciones que no se ven (como la «silla sin ruedas» de Core
-          silencioso), el constructor que desde Estira queda tapado, el borrador que se pierde con Escape, el material que no
-          se dice y una rutina propia que no se puede empezar con el teclado. Lo que cambie en pantalla, te lo enseño antes;
-          y aparte, en una maqueta, lo de producto: la carta del lunes que se pueda dejar para luego, que la prueba de 7 días
-          llegue a enseñarla, la frase del móvil y /premium contando la variedad y el calendario. Y lo de quien empieza: mirar
-          cómo se hace un ejercicio antes de darle a Empezar, que la flecha diga qué hace, una pausa que se vea como pausa y
-          que «con una serie basta» sea una opción de verdad. Te recomiendo eso en una actualización durante los 14 días de
-          los testers, para no retrasar la versión de prueba. Lo que son solo textos (como «Saltar esta pausa», que en
-          realidad la deja para luego, «Llevas 45 minutos sentado», que PACE no lo sabe, o «El cuerpo vuelve a sentirse tuyo»,
-          que decide por ti cómo estás) va junto en una página de antes y después: es rápido y puede entrar en la versión de
-          prueba.</span></li>
+          llave que firma las ventas, Cloudflare y los arreglos del cobro (0.186.0). Ahora, en el modo de prueba de Stripe: el
+          aviso de pago (el paso marcado «Ahora» de abajo), los números de los enlaces, los enlaces de prueba y una compra de
+          mentira con la tarjeta de prueba. Nadie paga nada de verdad hasta que hables con el gestor.</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · dos ramas, terminadas hasta sus maquetas</span>
+        <span class="t">Los arreglos de Mueve, Estira y «Tus rutinas»</span>
+        <span class="c"><span class="quien">Yo, con una sesión en cada rama.</span> Hecho, sin cambiar nada que se vea: que los
+          ejercicios digan dónde y con qué colocarse (la «silla sin ruedas», la banda, la pared), el tiempo que corría mientras
+          esperabas a «›», «Auto» que avanzaba en pausa, los aguantes de «Glúteos invisibles», la barra del 4·7·8, el
+          constructor tapado desde Estira, el inglés, las tarjetas y el teclado. Las dos ramas pasan todas sus pruebas. Falta
+          montar lo que elijas arriba y tu «júntalo»: primero «Tus rutinas» y luego el runner. Después, aparte, lo de producto
+          (la carta del lunes que se pueda dejar para luego, ver un ejercicio antes de darle a Empezar…) en otra maqueta, y los
+          textos que dicen más de lo que saben, en una página de antes y después.</span></li>
+      <li class="paso luego"><span class="estado">Cuando quieras · lo tuyo, una letra</span>
+        <span class="t">El calendario en v1</span>
+        <span class="c"><span class="quien">Tú.</span> Recomiendo que en v1 vaya como prueba en la web, donde Google tarda semanas en
+          abrirlo a todo el mundo, y completo en Android, que usa el calendario del móvil.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
         <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
         <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> En cuanto esté lo de abajo, bajo el archivo para Play, subo
@@ -163,7 +167,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           falte para que se entienda bien llega como actualizaciones durante esos días. Por si acaso, la 0.184.0 ya está en
           <code>subidas-play\</code>. Falta:
           <ol>
-            <li>Que los ejercicios digan dónde y con qué colocarse (la «silla sin ruedas», la banda).</li>
+            <li>Juntar las dos ramas, que ya hacen que los ejercicios digan dónde y con qué colocarse.</li>
             <li>Tus 16 dibujos, en <code>Pace_app\dibujos-22oct</code> (<a href="https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT">la página</a>).</li>
             <li>El logo en PNG con fondo transparente: dentro de la app aún se lee «FVFN».</li>
           </ol></span></li>

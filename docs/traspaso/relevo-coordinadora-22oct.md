@@ -8,6 +8,16 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 29 oct., ~11:50: coordina la cuenta de EcLj6… (5 h al 2 %, se repone a las 16:30; la semana al 36 %)
+
+1. **Republicadas aquí** (las de 5iWBf… dan 404 en esta cuenta): la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT
+   (versión 73, con «Ahora: elegir en las dos maquetas»), la maqueta del runner
+   https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1 y la de «Tus rutinas» https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3,
+   byte a byte desde sus ramas. Las dos ramas, limpias e iguales a origin (c946ffc1 y 40efee2e).
+2. **Al montar P8 A**, en el ordenador la instrucción de la pausa casi toca el número (fotos 23 y 25 de la maqueta): que
+   quede su hueco. La foto de P5 B saca la línea al borde izquierdo; es de la opción no recomendada.
+3. **Espera a Ez**: las letras de las dos maquetas y la del calendario en v1. Con ellas, una sesión nueva en cada worktree.
+
 ## MIGRACIÓN (29 oct., ~11:35; 5iWBf… al 94 %): las decisiones se toman en la otra cuenta
 
 **Ez: «organiza todo para migrar de cuenta ya y tomamos las decisiones en la otra».** Todo subido; nada a medias en ningún
