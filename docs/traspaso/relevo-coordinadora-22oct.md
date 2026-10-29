@@ -8,6 +8,33 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (29 oct., ~10:55; 5iWBf… con las 5 h al 73 % y subiendo ~1 punto por minuto; la semana al 70 %)
+
+**Si llegas de la otra cuenta, empieza aquí** (Ez: «al 90 % tener todo listo para migrar de cuenta»).
+1. **`main` local en 0.186.0 (el cobro, A1-A7), con el «júntalo» de Ez**: merge 054624f y bump d49b1ae, más este bloque.
+   Si al relevar no estaba subido, es porque la suite entera seguía corriendo (`PACE_E2E_PORT=8815`, salida en
+   `C:\Users\ezrav\AppData\Local\Temp\claude\C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app\c58c9bfe-ace5-4035-90ce-d33260ef917f\scratchpad\suite-0186.txt`;
+   a las 10:54 iba por 703 de 1069, sin fallos). **Lo primero**: `git status -sb`; si `main` va por delante de origin,
+   mira el final de ese archivo («passed/failed»). En verde, `git push origin main`, `gh run watch` y `pace-v0.186.0` en
+   pacegrass.app/sw.js; si no acabó, relánzala en otro puerto antes de subir.
+2. **Dos sesiones de ESTA cuenta, invisibles desde la otra**, con el aviso de «wip, push y LEEME» enviado a las 10:55:
+   - `runner-claro` (`local_6c19c780-…`): worktree `.claude/worktrees/runner-claro-15db3c`, rama
+     `claude/runner-claro-15db3c` (en origin; 91484f6 a las 10:54). **B4 hecho** (fdd74c2). Seguía con B1, B2, R4 y R6;
+     luego, la maqueta de B3, P5, P6 y P8.
+   - `tus-rutinas` (`local_0a6f61f9-…`): worktree `.claude/worktrees/tus-rutinas-c0cf03`, rama `claude/tus-rutinas-c0cf03`
+     (en origin; b560f81). **C3 hecho** (f8fe136). Seguía con C1, C5, C2, R2, R3, U2 y C4; luego, la maqueta de U1 y C6.
+   Desde la otra cuenta: `git -C <worktree> status`. Lo que no tenga commit, guárdalo (commit «wip» y push de su rama) y
+   retoma cada una con una sesión nueva en su worktree (`cwd`), con su LEEME (`docs/traspaso/archivos/runner-claro/` y
+   `…/tus-rutinas-28oct/`) y el brief del bloque «29 oct., ~10:00», punto 5. No borres esos worktrees.
+3. **La versión de prueba** espera los 16 dibujos y el logo de Ez, y juntar esas dos ramas con su «júntalo» (B4 y C3 ya
+   están). Al juntar: la clave `chair` de «Tus rutinas» y el material del catálogo de «Core silencioso» y de Extensión
+   torácica (el runner lo tenía pedido).
+4. **Ez, en Stripe**: el aviso en el modo de prueba y, justo después, `PACE_ENLACES_STRIPE`. El «aviso puesto» se comprueba
+   con un POST sin firma a `/api/stripe`: 400 «firma» solo con las cuatro piezas (hoy, 503 «cerrada»).
+5. Páginas de esta cuenta (404 desde la otra): la hoja 5iWBfHE7kD3dUVocdskmb6, las fotos de vender, los textos del aviso y
+   los dibujos (abajo, en el bloque del 28 oct., ~21:15). En la otra, republica la hoja desde
+   `docs/traspaso/hoja-de-ruta-20oct.html`.
+
 ## 29 oct., ~10:00: sigue la cuenta de 5iWBf… (5 h al 13 %, se repone a las 14:50; la semana al 62 %)
 
 **Si llegas de la otra cuenta, empieza aquí; manda sobre los bloques de abajo.**
