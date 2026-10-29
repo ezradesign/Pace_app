@@ -146,21 +146,24 @@ function getExerciseDef(name) {
    sale cada ejercicio y de su colocación. `lados`: se hace por lados, y el runner los guía
    uno detrás de otro (como `perSide` en el catálogo, con el tiempo por lado).
    Al añadir un ejercicio al registro, va también aquí: sin su fila, «Antes de empezar» dice
-   que de ese paso no se sabe qué pide, nunca que no pide nada. */
+   que de ese paso no se sabe qué pide, nunca que no pide nada. Y lo que pide casa con su texto
+   y con el de sus pasos en el catálogo (`scripts/verify.rutinas.js`): una fila que calla la
+   banda o la silla sin ruedas pasa por completa. `chair` es una silla cualquiera con respaldo;
+   `stableChair`, la que no se mueve (sin ruedas), donde se carga peso. */
 const EXERCISE_PIDE = {
   'Flexiones inclinadas':     { eq: ['stableDesk'], pos: ['standing'] },
   'Pica en escritorio':       { eq: ['stableDesk'], pos: ['standing'] },
-  'Fondos en silla':          { eq: ['stableChair'], pos: ['seated'] },
+  'Fondos en silla':          { eq: ['stableChair', 'wall'], pos: ['seated'] },
   'Suspensión pasiva':        { eq: ['bar'], pos: ['standing'] },
   'Suspensión activa':        { eq: ['bar'], pos: ['standing'] },
   'Sentadilla a silla':       { eq: ['stableChair'], pos: ['standing'] },
   'Silla en la pared':        { eq: ['wall'], pos: ['standing'] },
-  'Sentadilla búlgara':       { eq: ['stableChair'], pos: ['standing'], lados: true },
+  'Sentadilla búlgara':       { eq: ['stableChair', 'wall'], pos: ['standing'], lados: true },
   'Zancada profunda':         { eq: ['deskOptional'], pos: ['standing'], lados: true },
   'Sentadilla de cuádriceps': { eq: ['deskOptional'], pos: ['standing'] },
   'Nordics':                  { eq: ['cushionOptional'], pos: ['floor'], suelo: true },
-  'Elevación de puntas':      { eq: ['deskOptional'], pos: ['standing'] },
-  'Elevación de talones':     { pos: ['seated', 'standing'] },
+  'Elevación de puntas':      { eq: ['wall'], pos: ['standing'] },
+  'Elevación de talones':     { eq: ['deskOptional'], pos: ['seated', 'standing'] },
   'Puente con marcha':        { pos: ['supine'], suelo: true },
   'Puente con los dos pies':  { pos: ['supine'], suelo: true },
   'Bisagra de cadera':        { pos: ['standing'] },
@@ -173,10 +176,10 @@ const EXERCISE_PIDE = {
   'Plancha':                  { pos: ['floor'], suelo: true },
   'Plancha lateral':          { pos: ['floor'], suelo: true, lados: true },
   'Hueco abdominal':          { pos: ['supine'], suelo: true },
-  'Piernas elevadas sentado': { pos: ['seated'] },
+  'Piernas elevadas sentado': { eq: ['stableChair'], pos: ['seated'] },
   'Superman':                 { pos: ['floor'], suelo: true },
   'Juntar omóplatos':         { pos: ['seated', 'standing'] },
-  'Apertura con banda':       { pos: ['standing'] },
+  'Apertura con banda':       { eq: ['band'], pos: ['standing'] },
   'Apretar glúteos':          { pos: ['seated'] },
   'Barbilla atrás':           { pos: ['seated'] },
   'Cuello y trapecios':       { pos: ['seated'], lados: true },
@@ -190,27 +193,27 @@ const EXERCISE_PIDE = {
   'Apertura de pecho':        { pos: ['seated', 'standing'] },
   'Apertura de pecho sentado': { pos: ['seated'] },
   'Rotación torácica':        { pos: ['seated'], lados: true },
-  'Extensión torácica':       { pos: ['seated'] },
+  'Extensión torácica':       { eq: ['chair'], pos: ['seated'] },
   'Gato-camello':             { pos: ['floor'], suelo: true },
   'Onda espinal':             { pos: ['standing'] },
   'Puente torácico':          { pos: ['floor'], suelo: true },
   'Rodar hacia abajo':        { pos: ['standing'] },
-  'Giro sentado':             { pos: ['seated'] },
+  'Giro sentado':             { eq: ['chair'], pos: ['seated'] },
   'Respirar a cuatro apoyos':  { pos: ['floor'], suelo: true },
   'Flexor de cadera':         { eq: ['cushionOptional'], pos: ['halfKneeling'], suelo: true, lados: true },
   'Cuádriceps en pared':      { eq: ['wall', 'cushionOptional'], pos: ['halfKneeling'], suelo: true, lados: true },
   '90/90':                    { pos: ['floor'], suelo: true },
-  'Paloma':                   { pos: ['floor'], suelo: true, lados: true },
-  'Rana':                     { pos: ['floor'], suelo: true },
+  'Paloma':                   { eq: ['cushionOptional'], pos: ['floor'], suelo: true, lados: true },
+  'Rana':                     { eq: ['cushionOptional'], pos: ['floor'], suelo: true },
   'Sentadilla lateral':       { pos: ['standing'], lados: true },
-  'Zancada con apertura':     { pos: ['standing'], lados: true },
-  'Sentadilla profunda':      { pos: ['standing'] },
+  'Zancada con apertura':     { eq: ['deskOptional'], pos: ['standing'], lados: true },
+  'Sentadilla profunda':      { eq: ['deskOptional'], pos: ['standing'] },
   'Sentadilla profunda sostenida': { pos: ['standing'] },
   'Gateo':                    { pos: ['floor'], suelo: true },
   'Sentarse y levantarse del suelo': { pos: ['floor', 'standing'], suelo: true },
   'Marcha del elefante':      { pos: ['standing'] },
-  'Pliegue adelante':         { pos: ['standing'] },
-  'Isquio a una pierna':      { pos: ['standing'], lados: true },
+  'Pliegue adelante':         { eq: ['deskOptional'], pos: ['standing'] },
+  'Isquio a una pierna':      { eq: ['deskOptional'], pos: ['standing'], lados: true },
   'Círculos de muñeca':       { pos: ['seated'] },
   'Estiramiento de muñeca':   { pos: ['seated'], lados: true },
   'Palmas en la mesa':        { eq: ['stableDesk'], pos: ['standing'] },
@@ -263,8 +266,9 @@ function rutinaPropiaPide(steps) {
     (p.pos || []).forEach(e => { if (position.indexOf(e) < 0) position.push(e); });
     if (p.suelo) requiresFloor = true;
   });
-  /* «Una mesa, si la necesitas» sobra si otro paso ya pide la mesa. */
-  const entero = { deskOptional: 'stableDesk', barOptional: 'bar', wallOptional: 'wall' };
+  /* «Una mesa, si la necesitas» sobra si otro paso ya pide la mesa, y una silla con respaldo, si
+     otro pide una sin ruedas. */
+  const entero = { deskOptional: 'stableDesk', barOptional: 'bar', wallOptional: 'wall', chair: 'stableChair' };
   return { equipment: equipment.filter(e => !entero[e] || equipment.indexOf(entero[e]) < 0),
     position, requiresFloor, pideIncompleto };
 }
