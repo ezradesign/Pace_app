@@ -1,48 +1,36 @@
 # Catorce dibujos de ejercicio nuevos, 29 oct.
 
-## AL RELEVO (29 oct., ~18:30)
+## AL RELEVO (29 oct., ~20:30)
 
-**Ez vio la página ligera y dijo «Sí, y aclara los 3»**: sí a los catorce tal como están (ya metidos y subidos en
-esta rama), y aclarar Paloma, Flexor de cadera y Sentadilla a silla hasta la mediana del set con la curva de la
-ingesta, como Hueco abdominal el 14 oct. Ningún .webp a mano (D-4). Sin versión nueva y sin juntar en `main`.
+**Hecho: los tres aclarados** (Ez, «Sí, y aclara los 3»). Sí a los catorce tal como están, y Paloma, Flexor de
+cadera y Sentadilla a silla rehechos desde sus originales (en `Pace_app\dibujos-22oct\pagina-29oct\aclarar\`,
+fuera de git) hasta la mediana del sombreado del set. Ningún .webp a mano (D-4), sin versión nueva y sin juntar.
 
-**Los originales de los tres, localizados** (por imagen: cada candidato pasado por el encuadre de la ingesta y
-comparado con la máscara de hoy; correlación 0,85-0,89 frente a 0,18-0,36 del siguiente). Copiados con su nombre,
-listos para la ingesta, en `Pace_app\dibujos-22oct\pagina-29oct\aclarar\` (fuera de git):
-- `paloma.png` ← `Glifos de ejercicios - Estira\asset_7l2distn8_1787147624020.png`
-- `flexor-de-cadera.png` ← `Glifos de ejercicios - Estira\HIGHEST_PRIORITY_CHARACTER_CONSISTENCY_ACROSS_8_-1787084036298.png`
-- `sentadilla-a-silla.png` ← `Glifos de ejercicios - Estira\asset_bu68cfez4_1787170653696.png`
+**La causa no era el dibujo**: los tres salían encogidos al 99,8 % para caber en el círculo, y ese remuestreo
+reparte cada raya fina entre dos píxeles: medido, les doblaba la tinta suave (de ahí el p96-p98 y la mancha gris).
+Por eso la curva sola no llegaba (lo que se probó a las 18:40). La ingesta ya no encoge si lo que sobra cabe en la
+tolerancia del guard (`HOLGURA` = 1,5 px de 376, invisible). Sin el encogido quedaban en p66, p0 y p38, y la curva de
+`ACLARADO` termina de ajustarlos:
 
-**La ingesta acepta ya `--aclarado slug=k,slug=k`** para probar curvas sin tocar la tabla `ACLARADO`.
+| Dibujo | `ACLARADO` | Sombreado antes → ahora | Línea antes → ahora |
+|---|---|---|---|
+| Paloma | `{ suave: 1.4 }` (curva solo en α ≤ 128, nueva) | p98 → p51 | p40 → p17 |
+| Flexor de cadera | 1.3 | p96 → p42 | p74 → p32 |
+| Sentadilla a silla | 1.1 | p96 → p49 | p83 → p40 |
 
-**Qué falta, por orden** (desde la carpeta del worktree, `Pace_app\.claude\worktrees\elegant-pascal-d54e40`):
-1. Probar curvas y medir. Por cada k (por ejemplo 1, 1.2, 1.4, 1.6, 1.8, 2):
-   `node scripts/ingest-glifos-ejercicio.js --fusionar --origen "<Pace_app>/dibujos-22oct/pagina-29oct/aclarar" --aclarado "paloma=K,flexor-de-cadera=K,sentadilla-a-silla=K"`
-   y `node scripts/glifos/medir-trazo.js paloma,flexor-de-cadera,sentadilla-a-silla` (sale el percentil de cada medida
-   contra el resto de muñecos enteros). Hoy están en sombreado p98. Elegir para cada uno el k que deja el sombreado en
-   la mediana sin que la línea se vaya por debajo de p25, y mirarlo en grande con
-   `node docs/traspaso/archivos/dibujos-29oct/tira.js lista <salida.png> 220 5 app/glyphs/assets/ejercicios/paloma.webp …`.
-   Ojo: el k mueve tinta fuerte a suave, así que el sombreado medido no siempre baja al subir k; hay que medirlo.
-   Antes de la primera prueba, con k=1, comprobar que sale lo mismo que en git (`git diff --stat` sin cambios en los tres .webp).
-2. Escribir los tres k en `ACLARADO` (`scripts/ingest-glifos-ejercicio.js`, con el porqué) y reingestar sin `--aclarado`.
-3. En la página: un antes y un después de los tres junto a sus vecinos (las máscaras de antes están en git, en el
-   commit de este relevo, 30fc197f: `git show 30fc197f:app/glyphs/assets/ejercicios/paloma.webp > …`), y la tira del
-   set de nuevo: `node docs/traspaso/archivos/dibujos-29oct/tira.js set "<Pace_app>/dibujos-22oct/pagina-29oct/fotos/tiras/set.png" 104 3 <los catorce, por comas>`.
-   La sección «Los que se salen» de `pagina.js` pasa a contar que ya están aclarados. Luego `pagina.js` (la completa y `--ligera`).
-4. `npm run verify`, `node build-standalone.js`, `git checkout -- PACE_standalone.html` y la suite entera:
-   `PACE_E2E_PORT=8810 npx playwright test` (otra sesión usa el 8808; si cae una prueba, repetirla sola). Si en el 8810
-   ya hay un `static-server.js` de este worktree escuchando, la suite lo reutiliza (comprobado: sirve los mismos archivos).
-5. Commit con el porqué, sin Co-Authored-By, y push de la rama. El resumen, a la coordinadora.
+La línea de Paloma (185,7 sobre 255, p25 = 186,6) sale así del original sin encoger; la curva solo-suave no la toca.
+Con la curva entera la línea se hundía a p6 y el sombreado subía. `--aclarado slug=s1.4` prueba la curva solo-suave.
 
-**Pruebas de curva ya hechas (18:40)**: con k=1 la ingesta reproduce byte a byte las tres máscaras de git (originales
-confirmados). La curva SOLA no llega a la mediana: con k = 1,3 · 1,6 · 2 · 2,5 · 3 el sombreado de Paloma queda en
-p98 · 98 · 98 · 89 · 87, el de Flexor en p96 · 96 · 92 · 89 · 66 y el de Sentadilla en p96 · 96 · 96 · 96 · 89, mientras
-la tinta se hunde (p2-p4 desde k=2,5) y la línea de Paloma baja a p4. Es lo que avisa el «ojo» del paso 1: k pasa
-tinta fuerte a suave. Hace falta otra palanca (por ejemplo, un techo al alfa suave o aclarar solo la tinta por
-debajo de 128) o aceptar un k moderado (1,6-2: tinta en la mediana, sombreado aún alto) y que Ez lo mire. Los tres
-.webp se han dejado como en git.
+**Ojo para quien reingeste**: `HOLGURA` cambia el resultado de cualquier dibujo que se encogía menos de 1,5 px.
+Desliza el talón (de los catorce, sombreado p74-p81) es uno, y la página le ofrece a Ez rehacerlo igual. Los
+demás del set no se han reingestado: si se rehace la ingesta entera, alguno puede salir más nítido que hoy.
 
-**La suite de los catorce** se lanzó a las ~18:15 y no había acabado al relevar: el commit de este relevo es «WIP:».
+**Página**: `docs/proposals/dibujos-29oct.html` (780 KB, no se publica) y la ligera, publicada en
+https://claude.ai/artifact/Q6LWNCb6KNFqexLTRabqoZ. «Los que se salen» es ahora el antes y después
+(`fotos/tiras/aclarados.png`; las máscaras de antes, en `pagina-29oct\mascaras-antes-aclarar`, de 30fc197f).
+
+**Suite** en el 8810 con estos tres: 1066 en verde, 2 saltadas y 1 caída, `eventos-origen.spec.js:93` (tiempo agotado
+con la suite de otra sesión en el 8808 a la vez). Sola, con `--workers=1`, pasa en 16 s. `verify` en verde.
 
 Rama `claude/elegant-pascal-d54e40`, sobre `main` en 11a60591. Catorce dibujos de Genspark que la coordinadora
 revisó contra el paso de cada ejercicio: Bisagra de cadera, Gemelo en pared (el más recogido), Piernas elevadas
@@ -75,11 +63,10 @@ Se probó a calibrar una curva por dibujo contra la mediana de las cuatro medida
 línea del set es tan pareja (186-192 sobre 255 entre p25 y p75) que la fórmula oscurecía el dibujo entero para
 corregir un 4 % de línea. Por eso no hay curva para ninguno.
 
-## Los que se salen del set (apuntados para Ez, sin tocar)
+## Los que se salen del set (ya aclarados)
 
-**Paloma, Flexor de cadera y Sentadilla a silla**: una mancha oscura en el músculo, sombreado p98. Recomendación:
-aclararlos con la curva de la ingesta (`ACLARADO`), como Hueco abdominal el 14 oct. Sus originales están numerados
-(`scripts/glifos/mapa-estira.txt`: 13, 18 y 19) y hay que localizarlos en `Glifos de ejercicios - Estira`.
+**Paloma, Flexor de cadera y Sentadilla a silla** salían con el sombreado en p96-p98. Ez pidió aclararlos y ya
+están en la mediana (ver «AL RELEVO»); sus originales son los números 13, 18 y 19 de `scripts/glifos/mapa-estira.txt`.
 Sentarse y levantarse del suelo, que salía más grande, ya tiene dibujo nuevo.
 
 ## Cómo se rehace la página
@@ -90,7 +77,7 @@ Desde la carpeta del worktree, con las fotos fuera de git en `Pace_app\dibujos-2
 2. `node docs/traspaso/archivos/dibujos-29oct/fotos.js <fotos>/blanqueado [id,id…]` y
    `… <fotos>/vecinos vecinos [id,id…]` (puerto 8810; si ya hay un servidor de este worktree en él, lo usa).
 3. `node docs/traspaso/archivos/dibujos-29oct/tira.js set <fotos>/tiras/set.png 104 3 <los nuevos, separados por comas>`;
-   `sombreado-29.png` y `se-salen.png` con el modo `lista` (las máscaras del WIP están en `pagina-29oct\mascaras-wip`).
+   `sombreado-29.png` y `aclarados.png` con el modo `lista` (las máscaras del WIP están en `pagina-29oct\mascaras-wip`).
 4. `node docs/traspaso/archivos/dibujos-29oct/pagina.js <fotos> docs/proposals/dibujos-29oct.html` y, con
    `--ligera`, la versión ligera.
 

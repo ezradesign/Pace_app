@@ -1,7 +1,8 @@
 // La página «Catorce dibujos nuevos» para Ez: el set entero en una tira, los que se salen, el sombreado antes y
 // ahora, y cada dibujo nuevo junto a un vecino en el runner, a 360 y a 1280 px.
 // Uso: node pagina.js <carpeta-de-fotos> <salida.html> [--ligera]. Antes: fotos.js <carpeta>/blanqueado y
-// fotos.js <carpeta>/vecinos vecinos; y tira.js para <carpeta>/tiras/set.png, sombreado-29.png y se-salen.png.
+// fotos.js <carpeta>/vecinos vecinos; y tira.js para <carpeta>/tiras/set.png, sombreado-29.png y aclarados.png.
+// Las máscaras de antes de aclarar los tres van en <carpeta>/../mascaras-antes-aclarar (de git, 30fc197f).
 // La ligera lleva solo el círculo del móvil de cada dibujo, para el visor de Ez, que no abre más de 512 KB.
 'use strict';
 const fs = require('fs');
@@ -67,6 +68,18 @@ const CASOS = [
       pc('linea', m.linea) + '</td><td>' + pc('grosor', m.grosor) + '</td></tr>';
   }
 
+  /* Los tres aclarados, antes y después, contra la misma referencia de muñecos enteros. */
+  const ACLARADOS = [['paloma', 'Paloma'], ['flexor-de-cadera', 'Flexor de cadera'], ['sentadilla-a-silla', 'Sentadilla a silla']];
+  const refA = await referencia(sharp, ACLARADOS.map((a) => a[0]));
+  let aclarados = '';
+  for (const [s, nombre] of ACLARADOS) {
+    const antes = await medirArchivo(sharp, path.join(F, '..', 'mascaras-antes-aclarar', s + '.webp'));
+    const ahora = await medirArchivo(sharp, path.join(DESTINO, s + '.webp'));
+    aclarados += '<tr><th>' + nombre + '</th><td>p' + refA.pct('rayado', antes.rayado) + ' → p' + refA.pct('rayado', ahora.rayado) +
+      '</td><td>p' + refA.pct('tinta', antes.tinta) + ' → p' + refA.pct('tinta', ahora.tinta) + '</td><td>p' + refA.pct('linea', antes.linea) +
+      ' → p' + refA.pct('linea', ahora.linea) + '</td></tr>';
+  }
+
   let vistazo = '';
   let juntos = '';
   for (const c of CASOS) {
@@ -87,7 +100,7 @@ const CASOS = [
   const total = fs.readdirSync(DESTINO).filter((x) => /.webp$/.test(x) && !/.min.webp$/.test(x)).length;
   const tiraSet = await img('tiras/set', LIGERA ? 1400 : 2000, 'Los ' + total + ' dibujos de ejercicio en tres filas, al mismo tamaño y por orden alfabético; los catorce nuevos llevan un aro terracota');
   const tiraSombreado = await img('tiras/sombreado-29', 900, 'Los cinco primeros en dos filas: arriba con la mancha conservada, como los viste; abajo con el rojo blanqueado');
-  const tiraSalen = await img('tiras/se-salen', 900, 'Paloma, Flexor de cadera y Sentadilla a silla, y al lado Zancada profunda y Cuádriceps en pared');
+  const tiraSalen = await img('tiras/aclarados', 1000, 'Arriba, Paloma, Flexor de cadera y Sentadilla a silla como estaban; abajo, aclarados; a la derecha, Zancada profunda y Cuádriceps en pared en las dos filas');
 
   const html = `<title>Catorce dibujos nuevos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -157,8 +170,8 @@ const CASOS = [
   <h1>Catorce dibujos nuevos</h1>
   <div class="pide">
     <p class="kicker" style="margin-top:2px">Lo que necesito de ti</p>
-    <p><b>1.</b> Un sí a los catorce tal como se ven aquí, con el rojo blanqueado que elegiste en Piernas elevadas. Con él, la rama queda lista para que la coordinadora la junte cuando digas «júntalo», después del runner y de «Tus rutinas».</p>
-    <p><b>2.</b> Si aclaro <b>Paloma</b>, <b>Flexor de cadera</b> y <b>Sentadilla a silla</b>, que ya estaban y se ven más sombreados que el resto (abajo). Recomiendo que sí.</p>
+    <p>Dijiste que sí a los catorce y que aclarara <b>Paloma</b>, <b>Flexor de cadera</b> y <b>Sentadilla a silla</b>. Ya están aclarados: abajo, el antes y el después junto a sus vecinos.</p>
+    <p>Si te valen, la rama queda lista para que la coordinadora la junte cuando digas «júntalo», después del runner y de «Tus rutinas».</p>
   </div>
   <div class="vistazo">${vistazo}</div>
 
@@ -167,20 +180,24 @@ const CASOS = [
     <h2>El set entero</h2>
     <p>Los ${total} dibujos de ejercicio al mismo tamaño, por orden alfabético. Los catorce nuevos llevan un <span class="aro">aro terracota</span>.</p>
     <div class="tira">${tiraSet}</div>
-    <p class="anclada">Medido contra los ${ref.filas.length} muñecos enteros que ya estaban y se quedan (sin manos ni cabezas de cerca), el sombreado de los nuevos queda en la mediana o por debajo, salvo Desliza el talón, un poco por encima. Llevan menos tinta en total que la media, que es lo más claro que elegiste, y sus líneas, algo más oscuras: es el trazo de Genspark.</p>
+    <p class="anclada">Medido contra los ${ref.filas.length} muñecos enteros que ya estaban y se quedan (sin manos ni cabezas de cerca), el sombreado de los nuevos queda en la mediana o por debajo, salvo Desliza el talón, un poco por encima. Le pasa lo mismo que a los tres de abajo (se encoge un pelo al meterlo en el círculo) y, si quieres, se rehace igual. Llevan menos tinta en total que la media, que es lo más claro que elegiste, y sus líneas, algo más oscuras: es el trazo de Genspark.</p>
     <details><summary>Lo medido, en percentiles del set (p50 = la mediana)</summary>
       <div class="medidas"><table><thead><tr><th>Dibujo</th><th>Tinta</th><th>Sombreado</th><th>Línea</th><th>Grosor</th></tr></thead><tbody>${medidas}</tbody></table></div>
     </details>
   </section>
 
   <section class="bloque" id="se-salen">
-    <span class="num-caso">De los que ya estaban · no los he tocado</span>
+    <span class="num-caso">Lo que pediste · ya aclarados</span>
     <h2>Los que se salen</h2>
     <div class="tira">${tiraSalen}</div>
-    <p class="anclada">De izquierda a derecha: Paloma, Flexor de cadera, Sentadilla a silla y, como referencia, Zancada profunda y Cuádriceps en pared.</p>
+    <p class="anclada">Arriba, como estaban; abajo, aclarados. De izquierda a derecha: Paloma, Flexor de cadera, Sentadilla a silla y, como referencia, Zancada profunda y Cuádriceps en pared, que no cambian.</p>
     <ul class="reco">
-      <li><span class="que">Paloma, Flexor de cadera y Sentadilla a silla, más sombreados</span><p>Llevan una mancha oscura en el músculo, como la que viste en Piernas elevadas, y su sombreado está entre los más altos del set. Recomiendo aclararlos con la curva de la ingesta hasta la mediana, como se hizo con Hueco abdominal el 14 de octubre. No hace falta pedir dibujos nuevos: se rehacen desde sus originales, que están entre los de «Glifos de ejercicios - Estira» con otro nombre y hay que localizar.</p></li>
+      <li><span class="que">Ya no se salen del set</span><p>Estaban entre los más sombreados del set y ahora quedan en la mediana. Casi todo lo que sobraba no venía del dibujo: al meterlos en el círculo se encogían un pelo, y eso emborronaba el rayado fino hasta convertirlo en una mancha gris. Ya no se encogen, y a cada uno le he dado además una curva suave para dejarlo justo en la mediana. Se han rehecho desde sus originales, sin retocar nada a mano.</p></li>
     </ul>
+    <details><summary>Lo medido, antes → ahora, en percentiles del set</summary>
+      <div class="medidas"><table><thead><tr><th>Dibujo</th><th>Sombreado</th><th>Tinta</th><th>Línea</th></tr></thead><tbody>${aclarados}</tbody></table></div>
+      <p class="anclada" style="margin-top:8px">La línea de Paloma queda algo más clara que la del set porque es así en el original: la curva solo toca el rayado.</p>
+    </details>
     <p class="anclada" style="margin-top:12px">Los que se ven más pequeños, como Superman o las suspensiones, lo son por la postura: van de punta a punta del círculo, igual que Plancha. No hace falta cambiarlos.</p>
   </section>
 
