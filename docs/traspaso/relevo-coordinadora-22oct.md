@@ -30,6 +30,13 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    «Tus rutinas» no toca `MoveSessionV1*`, los `*.data.js` ni `BreatheSession.jsx`. Los dos empiezan por B4 y C3 (lo que
    frena la versión de prueba) y avisan al tenerlos; commits por caso y push tras cada uno. Al juntar, `index.html` y el
    censo de textos de `verify` chocarán: se regenera y se suman.
+6. **~10:30: la suite entera de la rama del cobro, 1067 en verde y 2 saltadas (22,3 min)**: lista; espera el «júntalo» de
+   Ez, que se le pidió con la frase de privacidad propuesta. **C3 hecho** en `claude/tus-rutinas-c0cf03` (f8fe136):
+   `EXERCISE_PIDE` pide la banda, la silla sin ruedas y la pared, hay una clave nueva `chair` («Una silla con respaldo»)
+   y `scripts/verify.rutinas.js` cruza en los dos sentidos el texto de cada ejercicio con lo que pide. **Al juntar las dos
+   ramas**: el catálogo de «Core silencioso» (`extra.core.stealth`) y las rutinas con Extensión torácica siguen con
+   `equipment: []` (archivos del runner; se le pidió que lo declare con claves que ya existan, y la clave `chair` la pone
+   la coordinadora al juntar).
 
 ## AL RELEVO (28 oct., ~21:15; 5iWBf… con las 5 h al 83 %, se repone a la 01:10; la semana al 58 %)
 
