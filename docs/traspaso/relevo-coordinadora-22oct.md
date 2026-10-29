@@ -22,7 +22,12 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
      `claude/runner-claro-15db3c` (en origin; 91484f6 a las 10:54). **B4 hecho** (fdd74c2). Seguía con B1, B2, R4 y R6;
      luego, la maqueta de B3, P5, P6 y P8.
    - `tus-rutinas` (`local_0a6f61f9-…`): worktree `.claude/worktrees/tus-rutinas-c0cf03`, rama `claude/tus-rutinas-c0cf03`
-     (en origin; b560f81). **C3 hecho** (f8fe136). Seguía con C1, C5, C2, R2, R3, U2 y C4; luego, la maqueta de U1 y C6.
+     (en origin). **Hechos y subidos a las 11:00, cada uno con su prueba**: C3 (f8fe136), C1 (6356312), C5 (a074f8e), C2
+     (d724bab), R2 y R3 (1bee157), U2 (662284d) y C4 (b560f81); su suite entera corría a las 11:00. **Su maqueta de U1 y
+     C6 espera la elección de Ez**: https://claude.ai/artifact/LD2aRGw2gsrK2XM2DrovkB (de esta cuenta;
+     `docs/proposals/tus-rutinas-u1-c6-29oct.html` en su rama). U1: A, preguntar antes de cerrar; B, el borrador espera y
+     se recupera (la recomendada); C, las dos. C6: A, una línea encima de Guardar (la recomendada); B, una ventana. R3
+     cambia una línea de la tarjeta: «Levántate y sube» pasa de «4 series · 5·6 reps» a «2 ejercicios · 2 series de cada».
    Desde la otra cuenta: `git -C <worktree> status`. Lo que no tenga commit, guárdalo (commit «wip» y push de su rama) y
    retoma cada una con una sesión nueva en su worktree (`cwd`), con su LEEME (`docs/traspaso/archivos/runner-claro/` y
    `…/tus-rutinas-28oct/`) y el brief del bloque «29 oct., ~10:00», punto 5. No borres esos worktrees.
