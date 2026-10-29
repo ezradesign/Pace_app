@@ -10,7 +10,9 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
 
 ## AL RELEVO (29 oct., ~10:55; 5iWBf… con las 5 h al 73 % y subiendo ~1 punto por minuto; la semana al 70 %)
 
-**Si llegas de la otra cuenta, empieza aquí** (Ez: «al 90 % tener todo listo para migrar de cuenta»).
+**Si llegas de la otra cuenta, empieza aquí** (Ez: «al 90 % tener todo listo para migrar de cuenta»). **A las ~11:20, la
+0.186.0 ya estaba subida (6c75939f) y en verde: CI, Android, iOS, Cloudflare y la web en `pace-v0.186.0`; el punto 1
+ya está hecho.**
 1. **`main` local en 0.186.0 (el cobro, A1-A7), con el «júntalo» de Ez**: merge 054624f y bump d49b1ae, más este bloque.
    Si al relevar no estaba subido, es porque la suite entera seguía corriendo (`PACE_E2E_PORT=8815`, salida en
    `C:\Users\ezrav\AppData\Local\Temp\claude\C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app\c58c9bfe-ace5-4035-90ce-d33260ef917f\scratchpad\suite-0186.txt`;
