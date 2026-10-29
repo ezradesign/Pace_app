@@ -174,7 +174,7 @@ test('con el equipo dormido, Estira se queda en pausa en el mismo paso y no lo c
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
   const reloj = sesion(page).locator('[data-pace-v1-timer]');
-  for (let s = 0; s < 30 && !(await sesion(page).getByRole('button', { name: /Terminar antes/ }).count()); s++) await segundos(page, 1);
+  for (let s = 0; s < 30 && !(await sesion(page).getByRole('button', { name: /Terminar serie/ }).count()); s++) await segundos(page, 1);
   await segundos(page, 3);
   const antes = await reloj.innerText();
 

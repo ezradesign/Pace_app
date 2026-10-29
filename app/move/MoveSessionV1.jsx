@@ -372,6 +372,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;   // place/change: número pequeño, no es el timer
+  /* Lo que hace la flecha se lee debajo (Ez, P5 A): en el último paso, siempre «Terminar». */
+  const ultimo = stepIdx + 1 >= routine.steps.length;
   /* Reps guiadas: lo que va de ellas (0 en la primera, 1 en la última). El número no late
      (Ez, 2A del 25 oct.): cambia de color del terracota al oliva, en CuerpoV1. */
   let repsProgreso = null;
@@ -397,13 +399,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   } else if (step.mode === 'reps' && !auto) {
     // A tu ritmo: el número es el objetivo y «›» las da por hechas.
     bigNumber = String(v1RepTarget(step)); bigLabel = t('move.repsPace');
-    primary = { label: t('move.next'), onClick: terminarReps };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.flecha.hecho'), onClick: terminarReps };
   } else if (step.mode === 'reps') {
     // s113: reps guiadas — contador «n de N» a su cadencia; avance auto al objetivo;
-    // «Terminar antes» siempre visible (enmienda R2). El «Cuídate» va abajo (s114).
+    // «Terminar serie» siempre visible (enmienda R2). El «Cuídate» va abajo (s114).
     bigNumber = repsDe(step);
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds');
@@ -418,8 +420,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       if (remaining > 0 && remaining <= 3) support = t('move.restReady');
     }
     primary = isRest
-      ? { label: t('session.skip'), onClick: advanceStep }
-      : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
+      ? { label: t(ultimo ? 'move.finish' : 'move.flecha.descanso'), onClick: advanceStep }
+      : { label: t(step.mode === 'perSide' && side === 0 ? 'move.flecha.lado' : ultimo ? 'move.finish' : 'move.next'), onClick: () => {
           // Cortar un paso con reloj también acorta el trabajo (§6.3); sin Auto y ya en 0, no.
           if (!step.opcional && (auto || remaining > 0)) earlyRef.current = true;
           // Sin Auto el otro lado empieza con «›», sin la cuenta de cambio.

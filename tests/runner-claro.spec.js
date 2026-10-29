@@ -52,8 +52,102 @@ async function empezar(page, context, id, extra) {
   await sembrar(context, Object.assign({ cuerpoAuto: false }, extra || {}));
   await page.clock.install({ time: new Date('2026-10-29T10:00:00+01:00') });
   await irAlArtefacto(page);
-  await abrirRutina(page, 'Mueve', id);
+  await abrirRutina(page, extra && extra.lang === 'en' ? 'Move' : 'Mueve', id);
 }
+
+/* Las palabras bajo los tres botones del mando, con su caja. */
+async function rotulos(page) {
+  return page.evaluate(() => ['prev', 'pausa', 'next'].map((b) => {
+    const boton = document.querySelector('[data-pace-v1-btn="' + b + '"]');
+    const r = boton && boton.querySelector('.pace-v1-rotulo');
+    if (!r) return { texto: null };
+    const c = r.getBoundingClientRect(), cb = boton.getBoundingClientRect();
+    const st = getComputedStyle(r);
+    return { texto: r.textContent.trim(), top: c.top, bottom: c.bottom, left: c.left, right: c.right,
+      bajoElBoton: c.top >= cb.bottom - 1, visible: st.visibility !== 'hidden' && +st.opacity > 0 && c.width > 4 && c.height > 4 };
+  }));
+}
+async function bajoLaFlecha(page) { return (await rotulos(page))[2].texto; }
+/* Las tres palabras se ven, enteras, debajo de su botón, sin pisarse ni salirse de la pantalla. */
+async function rotulosLimpios(page, cuando) {
+  const rs = await rotulos(page);
+  const ancho = page.viewportSize().width, alto = page.viewportSize().height;
+  for (const r of rs) {
+    expect(r.texto, cuando + ': falta una palabra bajo el mando').toBeTruthy();
+    expect(r.visible && r.bajoElBoton, cuando + ': «' + r.texto + '» no se ve bajo su botón').toBe(true);
+    expect(r.left >= 0 && r.right <= ancho && r.bottom <= alto, cuando + ': «' + r.texto + '» se sale').toBe(true);
+  }
+  expect(rs[0].right <= rs[1].left && rs[1].right <= rs[2].left, cuando + ': las palabras se pisan').toBe(true);
+  return rs.map((r) => r.texto);
+}
+
+test.describe('P5 · lo que dice cada botón del mando', () => {
+  test('p5-1 · sin Auto, en el móvil: Anterior, Pausar y lo que hace la flecha en cada momento', async ({ browser, baseURL }) => {
+    test.setTimeout(120000);
+    const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true, locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light' });
+    const page = await context.newPage();
+    const errores = capturarErrores(page);
+    await empezar(page, context, 'extra.banda.espalda');
+    const vistos = [];
+    const mira = async (cuando, espera) => {
+      const t = await rotulosLimpios(page, cuando);
+      expect(t[2], cuando).toBe(espera);
+      vistos.push(t);
+    };
+    await mira('al colocarse', 'Empezar ya');
+    expect(vistos[0].slice(0, 2)).toEqual(['Anterior', 'Pausar']);
+    await flecha(page).click(); await page.clock.runFor(300);
+    await mira('las aperturas a tu ritmo', 'Hecho');
+    await page.locator('[data-pace-v1-btn="pausa"]').click(); await page.clock.runFor(300);
+    expect((await rotulos(page))[1].texto, 'en pausa').toBe('Reanudar');
+    await page.locator('[data-pace-v1-btn="pausa"]').click(); await page.clock.runFor(4000);
+    await flecha(page).click(); await page.clock.runFor(300);
+    await mira('el descanso', 'Saltar descanso');
+    /* La palabra es el nombre del botón: lo que lee un lector de pantalla. */
+    await expect(page.getByRole('button', { name: 'Saltar descanso', exact: true })).toBeVisible();
+    await flecha(page).click(); await page.clock.runFor(300);
+    await mira('el remo con banda, al colocarse', 'Empezar ya');
+    await flecha(page).click(); await page.clock.runFor(300);
+    await flecha(page).click(); await page.clock.runFor(300);
+    await flecha(page).click(); await page.clock.runFor(300);
+    expect(await nombre(page)).toBe('Remo con tu mano');
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(300);
+    await mira('el primer lado', 'Siguiente lado');
+    await flecha(page).click(); await page.clock.runFor(300);
+    await mira('el segundo lado del último paso', 'Terminar');
+    expect(errores).toEqual([]);
+    await context.close();
+  });
+
+  test('p5-2 · con Auto: «Terminar serie» en las reps guiadas y «Siguiente» en un paso con reloj; y en inglés', async ({ page, context }) => {
+    test.setTimeout(120000);
+    const errores = capturarErrores(page);
+    await empezar(page, context, 'extra.desk.pushups', { cuerpoAuto: true });
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(300);
+    expect(await rotulosLimpios(page, 'las flexiones guiadas')).toEqual(['Anterior', 'Pausar', 'Terminar serie']);
+    await expect(page.getByRole('button', { name: 'Terminar serie', exact: true })).toBeVisible();
+    await page.locator('[data-pace-session-header] button').last().click();
+    await abrirRutina(page, 'Mueve', 'extra.core.stealth');
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(300);
+    expect(await bajoLaFlecha(page), 'un aguante que no es el último').toBe('Siguiente');
+    expect(errores).toEqual([]);
+  });
+
+  test('p5-3 · en inglés, en el móvil', async ({ browser, baseURL }) => {
+    const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true, locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light' });
+    const page = await context.newPage();
+    await empezar(page, context, 'extra.desk.pushups', { cuerpoAuto: true, lang: 'en', langAuto: false });
+    expect(await rotulosLimpios(page, 'placing')).toEqual(['Previous', 'Pause', 'Begin now']);
+    await flecha(page).click(); await page.clock.runFor(300);
+    expect(await bajoLaFlecha(page)).toBe('Finish set');
+    await flecha(page).click(); await page.clock.runFor(300);
+    expect(await rotulosLimpios(page, 'rest')).toEqual(['Previous', 'Pause', 'Skip rest']);
+    await context.close();
+  });
+});
 
 test.describe('B3 · el paso con banda', () => {
   test('b3-1 · sin Auto, la flecha cuenta las 8 aperturas y «Saltar este paso» va junto al número', async ({ page, context }) => {

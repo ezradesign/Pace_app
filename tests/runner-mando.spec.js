@@ -80,17 +80,17 @@ for (const [ancho, alto] of [[1530, 702], [360, 640]]) {
     /* La barra de pasos no toca el mando: tiene su aire (antes medía 0). */
     expect(colocate.hueco, 'la barra de pasos está pegada al mando').toBeGreaterThanOrEqual(8);
 
-    /* Trabajo: el mismo mando, en el mismo sitio; la derecha pasa a «Terminar antes». */
+    /* Trabajo: el mismo mando, en el mismo sitio; la derecha pasa a «Terminar serie». */
     await mando(page).getByRole('button', { name: 'Empezar ya' }).click();
     await expect(page.locator('[data-pace-v1-timer]')).toBeVisible();
-    await expect(mando(page).getByRole('button', { name: 'Terminar antes' })).toBeVisible();
+    await expect(mando(page).getByRole('button', { name: 'Terminar serie' })).toBeVisible();
     const trabajo = await medirMando(page);
     expect(trabajo.n).toBe(3);
     expect(trabajo.tops, 'el mando se mueve al pasar de colocarse a trabajar').toEqual(colocate.tops);
     expect(trabajo.pieAlto, 'el pie cambia de alto entre fases').toBe(colocate.pieAlto);
 
     /* Y el de la izquierda vuelve al paso anterior en cuanto hay uno. */
-    await mando(page).getByRole('button', { name: 'Terminar antes' }).click();
+    await mando(page).getByRole('button', { name: 'Terminar serie' }).click();
     await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');
     await expect(mando(page).getByRole('button', { name: 'Anterior' })).toBeEnabled();
     expect(errores).toEqual([]);
@@ -169,7 +169,7 @@ test('una rutina propia corre en el runner guiado, con «Descanso» como descans
   await expect(page.locator('[data-pace-v1-cue]')).toHaveText('Hombros arriba, luego relaja.');
   await expect(page.locator('[data-pace-v1-progress] > div:first-child > div')).toHaveCount(3);
 
-  /* Un paso con tiempo: la derecha es «Siguiente» (el «Terminar antes» es de las reps). */
+  /* Un paso con tiempo: la derecha es «Siguiente» (el «Terminar serie» es de las reps). */
   await mando(page).getByRole('button', { name: 'Siguiente' }).click();
   await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');
   /* Un descanso no lleva «Cuídate»: es la señal de que se pinta como descanso y no como un

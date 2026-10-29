@@ -154,8 +154,20 @@ if (!_paceMoveV1Css) {
       background: color-mix(in oklab, var(--v1-tono) 14%, var(--paper-2));
     }
 
-    /* El mando de tres. */
-    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; }
+    /* El mando de tres, con su palabra debajo de cada botón (Ez, P5 A del 29 oct.). La palabra
+       cuelga a la misma distancia del centro en los tres botones (el del centro es mayor) y el
+       mando guarda su alto siempre: cambiar de palabra no mueve nada. */
+    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; padding-bottom: 22px; }
+    .pace-v1-rotulo {
+      position: absolute; top: calc(50% + 34px); left: 50%; transform: translateX(-50%);
+      white-space: nowrap; font: 500 11.5px/1.2 var(--font-ui); letter-spacing: 0.01em; color: var(--ink-2);
+    }
+    [data-pace-v1-btn="prev"] .pace-v1-rotulo { color: var(--ink-3); }
+    [data-pace-v1-btn="next"] .pace-v1-rotulo { color: var(--ink); font-weight: 600; }
+    /* En escritorio las palabras bajan 10 px al margen de abajo de la sesión, que está vacío
+       hasta la línea de atajos (queda a 8 px): sin eso el círculo pagaba los 22 px enteros y a
+       1280x812 salía menor que en el móvil (tests/runner-circulo.spec.js). */
+    @media (min-width: 641px) { .pace-v1-mando { margin-bottom: -10px; } }
     .pace-v1-redondo {
       width: 48px; height: 48px; border-radius: 50%; padding: 0;
       border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink-2);

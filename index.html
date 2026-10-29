@@ -2619,7 +2619,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.sideFirst': 'Empiezas por: {side}',
 
   'move.repsOf': 'de {n} reps',
-  'move.finishEarly': 'Terminar antes',
+  'move.finishEarly': 'Terminar serie',
   'move.skipOptional': 'Saltar este paso',
   'move.sideAutoHint': 'El lado siguiente empieza solo',
 
@@ -2629,6 +2629,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.tapDone': 'Pulsa › al acabar',
   'move.tapGo': 'Pulsa › para seguir',
   'move.placeHintMano': 'Colócate sin prisa · empiezas con ›',
+
+  'move.flecha.hecho': 'Hecho',
+  'move.flecha.descanso': 'Saltar descanso',
+  'move.flecha.lado': 'Siguiente lado',
 
   'move.careLabel': 'Cuídate',
   'move.series': 'Series',
@@ -2756,7 +2760,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.sideFirst': 'Start with: {side}',
 
   'move.repsOf': 'of {n} reps',
-  'move.finishEarly': 'Finish early',
+  'move.finishEarly': 'Finish set',
   'move.skipOptional': 'Skip this step',
   'move.sideAutoHint': 'The next side starts on its own',
 
@@ -2766,6 +2770,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.tapDone': 'Tap › when you are done',
   'move.tapGo': 'Tap › to go on',
   'move.placeHintMano': 'Get set, no rush · start with ›',
+
+  'move.flecha.hecho': 'Done',
+  'move.flecha.descanso': 'Skip rest',
+  'move.flecha.lado': 'Next side',
 
   'move.careLabel': 'Take care',
   'move.series': 'Sets',
@@ -32145,8 +32153,20 @@ if (!_paceMoveV1Css) {
       background: color-mix(in oklab, var(--v1-tono) 14%, var(--paper-2));
     }
 
-    /* El mando de tres. */
-    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; }
+    /* El mando de tres, con su palabra debajo de cada botón (Ez, P5 A del 29 oct.). La palabra
+       cuelga a la misma distancia del centro en los tres botones (el del centro es mayor) y el
+       mando guarda su alto siempre: cambiar de palabra no mueve nada. */
+    .pace-v1-mando { display: flex; justify-content: center; align-items: center; gap: 28px; padding-bottom: 22px; }
+    .pace-v1-rotulo {
+      position: absolute; top: calc(50% + 34px); left: 50%; transform: translateX(-50%);
+      white-space: nowrap; font: 500 11.5px/1.2 var(--font-ui); letter-spacing: 0.01em; color: var(--ink-2);
+    }
+    [data-pace-v1-btn="prev"] .pace-v1-rotulo { color: var(--ink-3); }
+    [data-pace-v1-btn="next"] .pace-v1-rotulo { color: var(--ink); font-weight: 600; }
+    /* En escritorio las palabras bajan 10 px al margen de abajo de la sesión, que está vacío
+       hasta la línea de atajos (queda a 8 px): sin eso el círculo pagaba los 22 px enteros y a
+       1280x812 salía menor que en el móvil (tests/runner-circulo.spec.js). */
+    @media (min-width: 641px) { .pace-v1-mando { margin-bottom: -10px; } }
     .pace-v1-redondo {
       width: 48px; height: 48px; border-radius: 50%; padding: 0;
       border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink-2);
@@ -32691,6 +32711,9 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
 
 
+
+
+
 function v1SoltarFoco(e) {
   if (!e || !(e.detail > 0) || !e.currentTarget) return;
   const raiz = e.currentTarget.closest('[data-pace-session-root]');
@@ -32712,14 +32735,14 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
     React.createElement("button", { type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "prev", onClick: pulsa(prev.onClick), disabled: prev.disabled,
       title: etiqueta(textos.prev) },
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M14.5 6.5 9 12l5.5 5.5" })),
-    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(textos.prev))
+    React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(textos.prev))
     ),
     React.createElement("button", { type: "button", className: "pace-v1-redondo pace-v1-redondo-centro", "data-pace-v1-btn": "pausa", onClick: pulsa(onPause),
       title: etiqueta(paused ? textos.resume : textos.pause), style: { background: accent, borderColor: accent } },
     paused ?
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11l9-5.5z", className: "pace-v1-relleno" })) :
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11M15 6.5v11" })),
-    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(paused ? textos.resume : textos.pause))
+    React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(paused ? textos.resume : textos.pause))
     ),
     React.createElement("button", _extends({ type: "button", className: "pace-v1-redondo", "data-pace-v1-btn": "next", onClick: pulsa(next.onClick), title: etiqueta(next.label) },
     espera ? { 'data-pace-v1-espera': '', style: { '--v1-tono': tono } } : {}),
@@ -32731,7 +32754,7 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
       style: { stroke: tono, strokeDasharray: `${(vuelta * lleno).toFixed(1)} ${vuelta.toFixed(1)}`, opacity: lleno > 0 ? 1 : 0 } })
     ),
 
-    React.createElement("span", { className: "pace-v1-oculto" }, etiqueta(next.label))
+    React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(next.label))
     )
     ));
 
@@ -33521,6 +33544,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;
 
+  const ultimo = stepIdx + 1 >= routine.steps.length;
+
 
   let repsProgreso = null;
   const repsDe = (s) => {
@@ -33545,13 +33570,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   } else if (step.mode === 'reps' && !auto) {
 
     bigNumber = String(v1RepTarget(step));bigLabel = t('move.repsPace');
-    primary = { label: t('move.next'), onClick: terminarReps };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.flecha.hecho'), onClick: terminarReps };
   } else if (step.mode === 'reps') {
 
 
     bigNumber = repsDe(step);
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
+    primary = { label: t(ultimo ? 'move.finish' : 'move.finishEarly'), onClick: finishRepsEarly };
   } else {
 
     bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');
@@ -33566,8 +33591,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       if (remaining > 0 && remaining <= 3) support = t('move.restReady');
     }
     primary = isRest ?
-    { label: t('session.skip'), onClick: advanceStep } :
-    { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
+    { label: t(ultimo ? 'move.finish' : 'move.flecha.descanso'), onClick: advanceStep } :
+    { label: t(step.mode === 'perSide' && side === 0 ? 'move.flecha.lado' : ultimo ? 'move.finish' : 'move.next'), onClick: () => {
 
         if (!step.opcional && (auto || remaining > 0)) earlyRef.current = true;
 
