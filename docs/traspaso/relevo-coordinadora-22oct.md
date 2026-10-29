@@ -25,6 +25,9 @@ sesión al máximo pero sin dejar nada sin registrar cuando llegues al 100 %». 
      aclara los 3»**: sí a los catorce, y aclarar Paloma, Flexor de cadera y Sentadilla a silla desde sus originales hasta la
      mediana, sin tocar `.webp` (D-4), con su antes y después en la página. Esperaba el final de su suite en el 8810.
    - **«Tus rutinas»** (`claude/tus-rutinas-c0cf03`), sin cambios: espera el «júntalo».
+   - **Al 100 % (~18:35), todo subido y limpio**: runner en 813a3d38 (a1071407 monta el reparto y 813a3d38 trae las fotos de
+     las catorce pantallas; falta comprobar su página, `verify`, el build y la suite entera en el 8808), dibujos en 78887814
+     (30fc197f «WIP:», con los catorce y el rojo blanqueado; falta aclarar los tres y la suite).
 2. **Con el «júntalo» de Ez**: primero «Tus rutinas», con las comillas «» en «Sigues con tus cambios en “Cuello de tarde”»;
    luego el runner y después los dibujos. Lo demás, en el punto 2 del bloque de las 13:15. Suite entera en verde y la
    versión en un commit aparte.
