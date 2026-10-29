@@ -8,6 +8,44 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (29 oct., ~13:15; EcLj6… con las 5 h al 95 %, se repone a las 16:30; la semana al 49 %)
+
+**Si llegas de la otra cuenta, empieza aquí; manda sobre los bloques de abajo.** Nada a medias: las dos ramas, subidas y
+limpias; `main` igual que origin. Ez: «deja toda la sesión lista para migrar».
+1. **Espera a Ez: mirar las fotos y dar el «júntalo»** de las dos ramas, ya montadas:
+   - **«Tus rutinas»** (`claude/tus-rutinas-c0cf03`, 7f0ff036): U1 B (5a76c8d) y C6 A (7a17fc4), suite entera 1073 en verde.
+     Fotos https://claude.ai/artifact/3uABsmongj5csezvonsWWY (`docs/proposals/tus-rutinas-montado-29oct.html` en la rama).
+     No estaba en la maqueta: al cambiar una rutina que ya existe, «Deshacer los cambios» en vez de «Empezar de cero».
+   - **Runner** (`claude/runner-claro-15db3c`, a1cea352): B3 e26f5ed4, P5 845b15b0, P6 f37fb5f0, P8 f0ee231b, suite entera
+     1079 en verde. Fotos https://claude.ai/artifact/CunCYGXWuiHD39gdVmSnif (`docs/proposals/runner-montado-29oct.html`).
+     Montada la lectura recomendada y pintada la otra: P5 «Siguiente» en los pasos con reloj (o «Hecho»); P6 pastilla
+     redonda centrada (o con esquinas), solo en «Levántate y sube»; P8 el círculo fuera del velo (o un velo translúcido).
+   - Recomendado a Ez: lo montado en todo. **Dos retoques antes de juntar**, vistos en las fotos por la coordinadora: en el
+     3, 2, 1 de P8 sigue la línea «Al reanudar, 3, 2, 1 y vuelve la cuenta», que ya sobra (foto «Sigues en 3»); y «Sigues con
+     tus cambios en “Cuello de tarde”» lleva comillas inglesas: van «».
+2. **Al juntar**, con el «júntalo»: primero «Tus rutinas» y luego el runner; la clave `chair` en las tres rutinas con
+   Extensión torácica (dos en `extra.data.js`, una en `extra.data.piernas.js`); el censo `i18nClaves` de
+   `scripts/verify.integridad.js` lo tocan las dos y se suma; `index.html` se regenera; siete pruebas buscan ahora «Terminar
+   serie» y cuatro cuentan el 3, 2, 1 como pausa (es lo elegido, no regresión). Lo demás, en el LEEME de cada rama. La
+   versión, en un commit aparte. Las sesiones `runner-montaje` (`local_b5c190bf-…`, 8808) y `tus-rutinas-montaje`
+   (`local_b7821895-…`, 8809) son de esta cuenta y están paradas; desde la otra, una sesión nueva con `cwd` en su worktree.
+3. **Decidido hoy por Ez**, en DECISIONES_PRODUCTO: las letras de las dos maquetas y el calendario en v1 (completo en
+   Android; en la web, «en pruebas» y sin venderlo como motivo para pagar).
+4. **Dibujos**: Ez los genera en Genspark con «Copiar para Genspark» de https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT
+   (versión 4; en la otra cuenta, republicar `docs/traspaso/dibujos-ejercicios.html`). Antes, con «Subir» (nunca con «Buscar
+   recursos en línea», que trae figuras ajenas), cuatro glifos de `app/glyphs/assets/ejercicios`: rotacion-externa,
+   flexor-de-cadera, zancada-con-apertura y plancha-lateral. **Rana**: de cuatro versiones, la recomendada es la de los pies
+   detrás de las rodillas y la flecha hacia el cuerpo (la tercera); Ez la guarda como `rana.png`. La ingesta solo lee `.png`
+   (`scripts/ingest-glifos-ejercicio.js`): si Ez deja `.webp` o `.jpg`, se pasa a PNG con sharp. Sigue Remo con banda.
+   Idea de Ez para después de los 16: «Apertura sentado», ejercicio nuevo de Estira (rodillas en V de unos 90°, no en el
+   límite), con su maqueta cuando toque.
+5. **Stripe**: a las 12:10 `/api/stripe` seguía en 503 «cerrada». Falta todo el modo de prueba: el aviso, los enlaces de
+   prueba con sus `plink_` en `PACE_ENLACES_STRIPE`, la llave que solo lee y la compra de mentira.
+6. **Páginas de esta cuenta** (404 desde la otra): la hoja EcLj6io4wM9pGjtQ5wd1CT (versión 78), las maquetas
+   MVctqCpaCguGyZjmQgErx1 y U1mVU44sM6ggqnW3bwfhv3, los dibujos 6RsAsyovu4emmzHhWjhMLT y las fotos CunCYGXWuiHD39gdVmSnif y
+   3uABsmongj5csezvonsWWY. En la otra: la hoja y los dibujos desde el repo, y las fotos con `git show
+   origin/claude/<rama>:docs/proposals/<archivo>`, leídas enteras antes.
+
 ## 29 oct., ~11:50: coordina la cuenta de EcLj6… (5 h al 2 %, se repone a las 16:30; la semana al 36 %)
 
 1. **Republicadas aquí** (las de 5iWBf… dan 404 en esta cuenta): la hoja https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT
