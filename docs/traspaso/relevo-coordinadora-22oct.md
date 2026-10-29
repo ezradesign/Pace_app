@@ -8,6 +8,31 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 29 oct., ~16:00: coordina 5iWBf… (5 h al 1 % a las 15:35, se repone a las 20:30; la semana al 73 %)
+
+**Manda sobre el bloque de abajo donde lo cambie.** `main` igual que origin salvo estos docs; las dos ramas, como abajo.
+1. **Republicadas aquí**: la hoja https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 (versión 71, con los enlaces de esta
+   cuenta; los que solo existen en la otra dicen «en tu otra cuenta»), los dibujos https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT
+   y las fotos de las ramas: el runner https://claude.ai/artifact/3BFKtdCfnhPm7u5um4ft6q y «Tus rutinas»
+   https://claude.ai/artifact/3P3ogGhn91etkXQa5iVyE9. Las maquetas en esta cuenta: runner Mtv9tKsUy9qWgJgKwfD788, «Tus
+   rutinas» LD2aRGw2gsrK2XM2DrovkB y vender 9MnNL8b5BYWcX9Fsa7vnAa.
+2. **Retoque nuevo de Ez a B3**: «Saltar este paso» debajo de «REPS · A TU RITMO», en el móvil y en el ordenador, y «el
+   círculo del ejercicio no tiene que variar de tamaño ni en el móvil ni en web […] solo habrá que ajustar el aire arriba y
+   abajo del círculo». Pidió verlo antes. Maqueta https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp
+   (`docs/proposals/runner-saltar-debajo-29oct.html` y su guion `docs/traspaso/archivos/runner-claro/saltar-debajo.js`, en la
+   rama del runner). Lo pintado: la pastilla en su fila, con el hueco en todos los pasos de la rutina como `.pace-v1-numbasta`;
+   `.pace-v1` sin `padding-top`, `[data-pace-v1-kicker]` con alto 0 pintado en medio del hueco y `.pace-v1-pasos` sin margen de
+   arriba. Ojo al montarlo: `useV1Glifo` mide alturas, rellenos y huecos, **no márgenes**; con márgenes negativos el círculo
+   encogía 19 px. Solo «Espalda con banda» tiene pasos `opcional`. **Espera el «móntalo»**; después, el «júntalo» con los dos
+   retoques del punto 1 de abajo.
+3. **Dibujos: Ez los pasa para revisarlos ANTES de guardarlos** («para auditarlos para ver si coinciden con el ejercicio exacto
+   antes de que te los cargue en su carpeta»): no se guarda nada en `dibujos-22oct` por Ez. Y en la página, **un solo prompt
+   por ejercicio, solo la postura, la flecha y el naranja** («en genspark ya tengo el modelo/muñeco validado y no lo quiero
+   confundir»): fuera el estilo, el ancla y GPT Image. Revisados el 29 contra su paso: Bisagra de cadera, vale; Remo con
+   banda, vale el de la banda por debajo del pie (el de la banda tiesa que acaba en el talón, no); Rana, aún no (rodillas más
+   abiertas que «un poco, hasta donde vaya cómodo», la cadera entre ellas y la flecha de lado): su prompt pide ahora menos
+   apertura y la flecha hacia atrás.
+
 ## AL RELEVO (29 oct., ~13:15; EcLj6… con las 5 h al 95 %, se repone a las 16:30; la semana al 49 %)
 
 **Si llegas de la otra cuenta, empieza aquí; manda sobre los bloques de abajo.** Nada a medias: las dos ramas, subidas y

@@ -53,7 +53,6 @@ button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px 
 button.copiado { border-color: var(--breathe); color: var(--breathe); background: transparent; }
 .tengo-l { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); cursor: pointer; margin-left: auto; }
 .tengo-l input { width: 18px; height: 18px; accent-color: var(--focus); }
-.ver { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 details { font-size: 14px; color: var(--ink-3); }
 details summary { cursor: pointer; width: fit-content; }
 details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-wrap: anywhere; }
@@ -72,17 +71,11 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
   <section>
     <h2>Cómo se hace</h2>
     <ol class="como">
-      <li>Un chat nuevo para cada dibujo, en <b>Genspark</b> o en <b>GPT Image</b>.</li>
-      <li><b>En Genspark, primero las referencias</b>: con «Subir», cuatro dibujos de la app de
-        <code>Pace_app\app\glyphs\assets\ejercicios</code>: <code>rotacion-externa.webp</code>,
-        <code>flexor-de-cadera.webp</code>, <code>zancada-con-apertura.webp</code> y <code>plancha-lateral.webp</code>. No uses
-        «Buscar recursos en línea»: de ahí salen figuras que no son la de PACE. Luego pulsa «Copiar para Genspark» y pégalo:
-        pide esa misma figura, con el naranja en lo que trabaja.</li>
-      <li><b>En GPT Image</b>, «Copiar para GPT Image» lleva el estilo escrito delante, sin naranja. Si te deja adjuntar
-        imágenes, añade las mismas cuatro.</li>
-      <li>Si lo bloquea, repítelo una vez en otro chat nuevo: el filtro no siempre salta.</li>
-      <li>Guarda el PNG en <code>Pace_app\dibujos-22oct</code> (la carpeta ya está creada) con el nombre exacto que da «Copiar
-        el nombre». Es lo que lo empareja con su ejercicio: con otro nombre no entra.</li>
+      <li>En tu chat de <b>Genspark</b>, con el muñeco ya validado, pulsa «Copiar el prompt» y pégalo. Solo dice la postura, la
+        flecha y dónde va el naranja: la figura y el trazo ya los tiene.</li>
+      <li>Antes de guardarlo, pásamelo aquí: lo reviso contra el paso del ejercicio y te digo si vale.</li>
+      <li>Si vale, guárdalo en <code>Pace_app\dibujos-22oct</code> con el nombre exacto que da «Copiar el nombre». Es lo que lo
+        empareja con su ejercicio: con otro nombre no entra. Si sale en .webp o .jpg, lo paso yo a PNG.</li>
       <li>Cuando tengas unos cuantos, dime <b>«dibujos en la carpeta»</b>. Los meto en la app, te enseño cómo quedan y solo
         se publican con tu sí.</li>
     </ol>
@@ -116,31 +109,23 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
 
 <script>
 (function () {
-  var ESTILO = 'Classical anatomical plate in the style of a 19th-century medical textbook copperplate engraving, fine-line black ink on plain white, no colour, no grey wash, no solid black areas. One single full-length figure drawn as a smooth sculpted academy study, like a plaster cast in a classical drawing school: an ageless, androgynous, slender adult, about seven and a half heads tall, long neck, long slim limbs, softly modelled and never muscular. Smooth hairless egg-shaped head, small calm neutral face, simple C-shaped ear. The trunk is one seamless featureless sculpted volume, its planes shown only by hatching, like a plaster cast. Carefully drawn hands and feet with separate fingers and toes. One continuous confident outer contour of medium weight, clearly readable as a small thumbnail; shading by fine engraved hatching that follows each form and leaves most of the figure white paper. Floor shown only as a few short hatched contact-shadow strokes under each point of support. No room, no background.';
-  var CIERRE = 'Square format, whole figure inside the frame, generous white margins, one figure only, no text, no border.';
-  var MANOS = ESTILO.replace('One single full-length figure drawn as a smooth sculpted academy study', 'A close study of the forearms and hands of the same smooth sculpted academy figure');
-
-  /* Para Genspark, que ancla la figura con los dibujos que Ez sube: copia la figura, el trazo y el
-     naranja de las referencias, y avisa del cuadriculado, que en ellas es solo la transparencia y el
-     modelo llegó a pintarlo dentro del naranja. */
-  var ANCLA = 'Use the attached reference images as the exact model: the same figure, the same drawing style and the same colours. Draw a new plate of that same figure in a new pose. Do not invent another character and do not use any other reference. Copy from the references: the same slender, ageless, androgynous adult, about seven and a half heads tall, with a smooth bald egg-shaped head, a small calm face with the eyes closed or softly open, a simple C-shaped ear, a long neck and long slim limbs, softly modelled and never muscular; the same subtle chest and smooth groin, with no genitals; carefully drawn hands and feet with separate fingers and toes. The same line: one continuous thin contour in dark warm-brown ink, firm enough to read as a small thumbnail, with fine parallel engraved hatching that follows each form and leaves most of the body white. The same colour: a soft terracotta-orange tint, made of the same fine hatching and fading at its edges, only on the muscles that work or stretch in this pose; everything else stays white paper and brown ink, and the orange never covers or replaces a contour line. The same arrows when the pose needs one: a short thin curved arrow in the same brown ink with a small open arrowhead, beside the body. The same floor: only a few short hatched strokes of contact shadow under each point of support; no room, and furniture only when the pose asks for it, drawn as a few thin straight lines.';
-  var FINAL = 'Background: plain pure white. The grey and white checkerboard in the references is only their transparent background: never draw a checkerboard, a grid, a pattern or a texture anywhere, not in the background and not inside the body or the orange. One single figure in one single view: not a character sheet, not front, side and back views, not several poses. Square format, the whole figure inside the frame with generous white margins, no text, no labels, no border, no signature.';
-
   /* El orden es el de la cola (GLIFOS_A_DIBUJAR.md, 27 oct.): primero lo que sale sin dibujo,
      con «Rana» delante por ser la única tarjeta de la biblioteca sin él. */
   var DIBUJOS = [
     { g: 'sin', nombre: 'Rana', mod: 'Estira', archivo: 'rana.png', zona: 'the inner thighs',
-      que: 'A cuatro apoyos y de frente, con las rodillas muy abiertas y la cadera hacia atrás; una flecha de puntos marca el balanceo. Es la única tarjeta de la biblioteca sin dibujo.',
-      plato: 'the hip-mobility floor stretch from yoga (mandukasana), seen strictly from the front, the face toward the viewer. The figure kneels with both palms flat on the floor under the shoulders and the arms straight; the knees open out to each side, clearly wider than the hips but well short of the limit, only as far as is comfortable, the lower legs point back, and the weight settles back toward the heels. A short thin dotted arrow with a small open chevron tip sits beside the figure at hip height, pointing front-to-back in slight perspective, to show a gentle rocking.' },
+      que: 'A cuatro apoyos y de frente, con las rodillas un poco abiertas, hasta donde vaya cómodo, y la cadera hacia atrás; una flecha marca el balanceo. Es la única tarjeta de la biblioteca sin dibujo.',
+      aviso: 'La del 29 no vale aún: las rodillas van más abiertas de lo que pide el paso, la cadera baja entre ellas y la flecha va de lado. Este prompt pide menos apertura y la flecha hacia atrás.',
+      plato: 'the hip-mobility floor stretch from yoga (mandukasana), seen strictly from the front, the face toward the viewer. The figure is on all fours, both palms flat on the floor under the shoulders and the arms straight. The knees are only a little wider than the hips, as far as is comfortable and far from a full frog split: the thighs stay steep, the pelvis does not drop between the knees, and the lower legs point straight back. The hips are shifted back toward the heels. A short thin curved arrow with a small open chevron tip sits beside the figure at hip height and points backward, into the picture and away from the viewer, to show a gentle rocking back.' },
     { g: 'sin', nombre: 'Remo con banda', mod: 'Mueve · Espalda con banda', archivo: 'remo-con-banda.png', zona: 'the upper back between the shoulder blades and the back of the shoulders',
       que: 'De pie y de perfil, pisando el centro de la banda; los codos tiran hacia atrás pegados a las costillas.',
-      aviso: 'El primero salió con la flecha al revés y la banda como dos palos: este prompt ya lo corrige. Si sale con rojo, que no toque ninguna línea.',
+      aviso: 'Revisado el 29: vale el de la banda que pasa por debajo del pie, con la flecha hacia atrás. El de la banda tiesa que acaba en el talón, no: parece un palo.',
       plato: 'A standing band row, in profile facing right. One elastic band, drawn as one thin flexible line, passes under the middle of BOTH feet; its two ends rise as two thin lines to the hands. No poles, no sticks, no handles. Hips pushed slightly back, back long, knees slightly bent. Both elbows are pulled back close to the ribs, hands at the lower ribs. A short dotted arrow with a small open chevron behind the elbow points BACKWARD, to the left, away from the face.' },
     { g: 'sin', nombre: 'Remo con tu mano', mod: 'Mueve · Espalda con banda', archivo: 'remo-con-tu-mano.png', zona: 'the upper back between the shoulder blades and the back of the shoulders',
       que: 'Igual, pero sin banda: una mano sujeta la muñeca de la otra y frena el codo que va hacia atrás.',
       plato: 'A hand-resisted row, standing in profile facing right. In front of the belly, the far hand holds the wrist of the near arm. The near elbow is drawn back along the side of the body while the holding hand resists. A short dotted arrow behind the near elbow points BACKWARD, to the left, away from the face. No band, no object.' },
     { g: 'sin', nombre: 'Bisagra de cadera', mod: 'Mueve · Piernas', archivo: 'bisagra-de-cadera.png', zona: 'the back of the thighs and the buttocks',
       que: 'De pie, con las manos en la cadera: la cadera va atrás y el tronco se inclina con la espalda recta.',
+      aviso: 'Revisada el 29: la de las manos en la cintura coincide con su paso. Guárdala.',
       plato: 'A hip hinge, standing in profile facing right, hands on the hips. The hips are pushed far back, the trunk tilts forward about 45 degrees with a long straight back from the hips to the head, knees only slightly bent, shins nearly vertical. A short dotted arrow at the buttocks points BACKWARD, to the left. The back is never rounded.' },
     { g: 'sin', nombre: 'Desliza el talón', mod: 'Mueve · Fuerza en suelo', archivo: 'desliza-el-talon.png', zona: 'the lower belly',
       que: 'Boca arriba: una rodilla doblada y la otra pierna se desliza por el suelo hasta quedar casi estirada.',
@@ -153,8 +138,7 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       plato: 'A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall.' },
     { g: 'sin', nombre: 'Pica en escritorio', mod: 'Mueve', archivo: 'pica-en-escritorio.png', zona: 'the shoulders and the back of the upper arms',
       que: '«V» invertida con las manos en el borde de la mesa. La mesa es obligatoria: sin ella se confunde con «Marcha del elefante».',
-      plato: 'a pike push-up with the hands on a desk, in profile facing right. The palms rest on the edge of a desk, drawn only as one thin straight horizontal line at waist height that extends a little beyond the hands; the hands are on that line, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps away from the desk line, so the figure forms a clear upside-down V between the floor and the desk edge.',
-      cierre: 'Square format, whole figure and desk line inside the frame, generous white margins, one figure only, no text, no border.' },
+      plato: 'a pike push-up with the hands on a desk, in profile facing right. The palms rest on the edge of a desk, drawn only as one thin straight horizontal line at waist height that extends a little beyond the hands; the hands are on that line, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps away from the desk line, so the figure forms a clear upside-down V between the floor and the desk edge.' },
     { g: 'sin', nombre: 'Rotación torácica de pie', mod: 'Estira · Espalda de pie', archivo: 'rotacion-toracica-de-pie.png', zona: 'the ribs and the middle of the back that turn',
       que: 'De pie y de frente, con los brazos cruzados sobre el pecho: el pecho gira hacia un lado y la cadera se queda quieta.',
       plato: 'A standing thoracic rotation, seen from the FRONT. Feet hip-width apart, knees soft, the hips square to the front and still. Both arms are crossed over the chest, each hand resting on the opposite shoulder. The chest and shoulders are turned toward the figure\'s right while the pelvis stays facing forward. A short dotted curved arrow at chest height shows the turn. No bending forward, no twist at the hips.' },
@@ -176,7 +160,7 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       aviso: 'Si ya tienes el tuyo, el que sí casa, guárdalo con este nombre y sáltate el prompt.',
       plato: 'A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. A short dotted arc over the upper back shows the curl downward.' },
 
-    { g: 'mal', nombre: 'Palmas en la mesa', mod: 'Estira · Muñecas', archivo: 'palmas-en-la-mesa.png', zona: 'the inner forearms', estilo: MANOS,
+    { g: 'mal', nombre: 'Palmas en la mesa', mod: 'Estira · Muñecas', archivo: 'palmas-en-la-mesa.png', zona: 'the inner forearms', manos: true,
       que: 'Las dos palmas sobre la mesa, separadas y con los dedos hacia el cuerpo; las muñecas se doblan. Hoy son dos manos juntas que se confunden con «Rezo invertido».',
       aviso: 'Antes se llamaba «Palmas al suelo»: guárdalo con el nombre nuevo.',
       plato: 'a forearm stretch at a desk, seen from the front at desk height. Both palms rest flat on a desk surface, drawn as one thin straight horizontal line; the fingers point back toward the viewer (toward the body) and the wrists point away; the forearms lean back gently so the wrists bend. The two hands are apart, side by side, never pressed together.' },
@@ -190,15 +174,13 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
   try { tengo = JSON.parse(localStorage.getItem(CLAVE) || '{}') || {}; } catch (e) { tengo = {}; }
   function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(tengo)); } catch (e) {} }
 
+  /* Solo la postura, la flecha y el naranja: Ez ya tiene el muñeco validado en su chat de
+     Genspark, y el estilo escrito delante lo confundía. Las flechas del muñeco son de trazo
+     seguido, así que el «dotted» de los platos se quita aquí. */
   function promptDe(d) {
-    return (d.estilo || ESTILO) + ' Exercise plate: ' + d.plato + ' ' + (d.cierre || CIERRE);
-  }
-
-  /* Las flechas de las referencias son de trazo seguido: el «dotted» de los platos se quita aquí. */
-  function promptGenspark(d) {
-    var pose = (d.estilo ? 'only the forearms and hands of the same figure, close up: ' : '') + d.plato.replace(/dotted /g, '');
-    var fin = d.estilo ? FINAL.replace('the whole figure inside the frame', 'both forearms and hands inside the frame') : FINAL;
-    return ANCLA + ' Pose: ' + pose + ' Orange on: ' + d.zona + '. ' + fin;
+    var pose = d.plato.replace(/dotted /g, '');
+    pose = pose.charAt(0).toUpperCase() + pose.slice(1);
+    return (d.manos ? 'Only the forearms and hands, close up. ' : '') + pose + ' Orange on ' + d.zona + '.';
   }
 
   /* Copiar: el portapapeles solo dentro del clic; si lo niega, se selecciona el texto para
@@ -236,18 +218,13 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       '<span class="n" aria-hidden="true">' + (tengo[d.archivo] ? '✓' : (i + 1)) + '</span>' +
       '<span class="t">' + d.nombre + ' <span class="mod">' + d.mod + '</span></span>' +
       '<span class="que">' + d.que + (d.aviso ? ' <span class="aviso">' + d.aviso + '</span>' : '') + '</span>' +
-      '<span class="fila"><button type="button" class="prompt">Copiar para Genspark</button>' +
-      '<button type="button" class="gpt">Copiar para GPT Image</button>' +
+      '<span class="fila"><button type="button" class="prompt">Copiar el prompt</button>' +
       '<span class="archivo">' + d.archivo + '</span><button type="button" class="nombre">Copiar el nombre</button>' +
       '<label class="tengo-l" for="' + id + '"><input type="checkbox" id="' + id + '"' + (tengo[d.archivo] ? ' checked' : '') + '> Lo tengo</label></span>' +
-      '<div class="ver"><details><summary>Ver el de Genspark</summary><pre class="pgs"></pre></details>' +
-      '<details><summary>Ver el de GPT Image</summary><pre class="pgpt"></pre></details></div>';
-    var preGs = li.querySelector('.pgs');
-    var pre = li.querySelector('.pgpt');
-    preGs.textContent = promptGenspark(d);
+      '<details><summary>Ver el prompt</summary><pre></pre></details>';
+    var pre = li.querySelector('pre');
     pre.textContent = promptDe(d);
-    li.querySelector('.prompt').addEventListener('click', function (ev) { copiar(ev.currentTarget, promptGenspark(d), 'Copiar para Genspark', preGs); });
-    li.querySelector('.gpt').addEventListener('click', function (ev) { copiar(ev.currentTarget, promptDe(d), 'Copiar para GPT Image', pre); });
+    li.querySelector('.prompt').addEventListener('click', function (ev) { copiar(ev.currentTarget, promptDe(d), 'Copiar el prompt', pre); });
     li.querySelector('.nombre').addEventListener('click', function (ev) { copiar(ev.currentTarget, d.archivo, 'Copiar el nombre', li.querySelector('.archivo')); });
     li.querySelector('input').addEventListener('change', function (ev) {
       if (ev.currentTarget.checked) tengo[d.archivo] = true; else delete tengo[d.archivo];
