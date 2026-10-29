@@ -2634,6 +2634,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.flecha.descanso': 'Saltar descanso',
   'move.flecha.lado': 'Siguiente lado',
 
+  'move.unaBasta': 'Con una basta',
+
   'move.careLabel': 'Cuídate',
   'move.series': 'Series',
   'move.repsCount': 'Reps',
@@ -2774,6 +2776,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.flecha.hecho': 'Done',
   'move.flecha.descanso': 'Skip rest',
   'move.flecha.lado': 'Next side',
+
+  'move.unaBasta': 'One is enough',
 
   'move.careLabel': 'Take care',
   'move.series': 'Sets',
@@ -31137,6 +31141,9 @@ var MOVE_ROUTINES = {
 
     { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Levántate y sube', desc: 'Sentarte y levantarte, y subir talones. Silla estable, sin ruedas.', min: 3,
       position: ['standing'], equipment: ['stableChair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+
+
+      unaBasta: true,
       steps: [
       { name: 'Sentadilla a silla', mode: 'reps', reps: 5, dur: 20,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
@@ -32115,6 +32122,8 @@ if (!_paceMoveV1Css) {
       padding: 2px 10px; min-height: 24px; cursor: pointer;
     }
     .pace-v1-mas:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    /* El hueco de «Con una basta», bajo la etiqueta del número, en todos los pasos de la rutina. */
+    .pace-v1-numbasta { display: flex; align-items: center; justify-content: center; min-height: 24px; }
 
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
     .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }
@@ -32783,6 +32792,7 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
 
 
+
 const { useState: useStateCV, useLayoutEffect: useLayoutEffectCV, useRef: useRefCV } = React;
 
 
@@ -32913,6 +32923,7 @@ function CuerpoV1(p) {
   const cuerpoRef = useRefCV(null);
   const reservas = React.useMemo(() => v1Reservas(routine, t, tn, tStep, tInstr), [routine.id, lang]);
   const { glifo, justo } = useV1Glifo(cuerpoRef, routine.id + ':' + lang);
+  const conBasta = React.useMemo(() => v1ConBasta(routine), [routine.id]);
   const aro = glifo + 14;
   const enTrabajo = p.phase === 'work' && step.mode !== 'rest';
 
@@ -32957,7 +32968,18 @@ function CuerpoV1(p) {
     t('move.skipOptional')
     )
 
+    ),
+
+
+    conBasta &&
+    React.createElement("div", { className: "pace-v1-numbasta" },
+    p.onBasta &&
+    React.createElement("button", { type: "button", className: "pace-v1-mas", "data-pace-v1-basta": true, onClick: (e) => {v1SoltarFoco(e);p.onBasta();} },
+    t('move.unaBasta')
     )
+
+    )
+
     ),
     React.createElement("div", { className: "pace-v1-pila pace-v1-colas", "data-pace-v1-pila": "cola" },
     reservas.colas.map((c, i) => React.createElement("div", { key: 'r' + i, className: "pace-v1-reserva", "aria-hidden": "true" }, React.createElement(ColaV1, _extends({}, c, { t: t })))),
@@ -33005,6 +33027,7 @@ Object.assign(window, { CuerpoV1, v1Reservas });
   <!-- La rutina a medias (pace.cuerpo.v1): se puede seguir como Respira. -->
   <script>
 ;(function () {
+
 
 
 
@@ -33096,7 +33119,7 @@ function olvidarCuerpoGuardada() {
 
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {} };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
   if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => Number.isFinite(x) && x > 0 ? x : 0;
@@ -33106,10 +33129,14 @@ function cuerpoReanudacion(routine, guardado) {
   (Array.isArray(guardado.hechos) ? guardado.hechos :
   routine.steps.map((s, i) => i).filter((i) => i < step && routine.steps[i].mode !== 'rest')).
   forEach((i) => {if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) hechos[i] = true;});
+
+  const basta = {};
+  (Array.isArray(guardado.basta) ? guardado.basta : []).
+  forEach((i) => {if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) basta[i] = true;});
   return {
     step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
-    reanudada: true, early: guardado.early === true, hechos
+    reanudada: true, early: guardado.early === true, hechos, basta
   };
 }
 
@@ -33142,7 +33169,8 @@ function useCuerpoPersistencia(d) {
         sesionMs: Math.round(c.relojSesion.segundos() * 1000),
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
         reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
-        early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number)
+        early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
+        basta: Object.keys(c.basta && c.basta() || {}).map(Number)
       }));
     } catch (e) {}
   };
@@ -33165,6 +33193,45 @@ Object.assign(window, {
   cuerpoRutina, cuerpoHuella, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia
 });
 ;Object.assign(window, { cuerpoRutina, cuerpoHuella, leerCuerpoGuardada, olvidarCuerpoGuardada, cuerpoReanudacion, sesionAMedias, useCuerpoPersistencia });
+})();
+</script>
+  <!-- Lo que montó la maqueta del 29 oct. («Con una basta» y la pausa), que no cabía en el runner. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+function v1BastaDestino(routine, idx) {
+  const pasos = routine && routine.steps || [];
+  if (!routine || !routine.unaBasta || !pasos[idx] || pasos[idx].mode !== 'rest') return -1;
+  let antes = idx - 1;
+  while (antes >= 0 && pasos[antes].mode === 'rest') antes--;
+  let luego = idx + 1;
+  while (luego < pasos.length && pasos[luego].mode === 'rest') luego++;
+  if (antes < 0 || luego >= pasos.length || pasos[luego].name !== pasos[antes].name) return -1;
+  const nombre = pasos[antes].name;
+  while (luego < pasos.length && (pasos[luego].mode === 'rest' || pasos[luego].name === nombre)) luego++;
+  return luego;
+}
+
+
+
+function v1ConBasta(routine) {
+  return !!(routine && routine.unaBasta && (routine.steps || []).some((s, i) => v1BastaDestino(routine, i) >= 0));
+}
+
+Object.assign(window, { v1BastaDestino, v1ConBasta });
+;Object.assign(window, { v1BastaDestino, v1ConBasta });
 })();
 </script>
   <script>
@@ -33247,6 +33314,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
   const hechosRef = useRefV1(rein.hechos);
+
+
+  const bastaRef = useRefV1(rein.basta);
   const activeSecRef = useRefV1(0);
   const step = routine.steps[stepIdx];
 
@@ -33276,7 +33346,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
 
   const dispatchComplete = () => {
 
@@ -33299,7 +33369,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
 
 
-    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n]);
+
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n] || bastaRef.current[n]);
     if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);else
     completeMoveSession(routine.id, realMin, ev, entera);
   };
@@ -33315,9 +33386,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);totalesRef.current.place = su.estimatedSeconds;} else
     setPhase('work');
   };
-  const advanceStep = () => {
-    if (stepIdx + 1 >= routine.steps.length) {dispatchComplete();setStage('done');} else
-    startStep(stepIdx + 1);
+  const irAlPaso = (idx) => {
+    if (idx >= routine.steps.length) {dispatchComplete();setStage('done');} else
+    startStep(idx);
+  };
+  const advanceStep = () => irAlPaso(stepIdx + 1);
+  const conUnaBasta = () => {
+    const destino = v1BastaDestino(routine, stepIdx);
+    for (let n = stepIdx + 1; n < destino; n++) if (routine.steps[n].mode !== 'rest') bastaRef.current[n] = true;
+    irAlPaso(destino);
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
   const addPlaceTime = () => {totalesRef.current.place = Math.max(totalesRef.current.place, placeLeft) + V1_MAS_TIEMPO;setPlaceLeft((c) => c + V1_MAS_TIEMPO);};
@@ -33649,7 +33726,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       support: support, supportStrong: supportStrong, fraccion: fraccion,
       auto: auto, onAuto: () => setPace({ cuerpoAuto: !auto }), siguienteTexto: siguienteTexto,
       onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null,
-      onSaltar: phase === 'work' && step.opcional ? () => {setPaused(false);advanceStep();} : null })
+      onSaltar: phase === 'work' && step.opcional ? () => {setPaused(false);advanceStep();} : null,
+      onBasta: v1BastaDestino(routine, stepIdx) >= 0 ? () => {setPaused(false);conUnaBasta();} : null })
     ));
 
 }

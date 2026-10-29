@@ -28,6 +28,9 @@ var MOVE_ROUTINES = {
          los logros y «Continúa» la siguen reconociendo. */
       { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Levántate y sube', desc: 'Sentarte y levantarte, y subir talones. Silla estable, sin ruedas.', min: 3,
         position: ['standing'], equipment: ['stableChair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+        /* «La primera vez, una serie basta»: el descanso entre dos series lo cumple con «Con una
+           basta», y una de cada cuenta entera (Ez, P6 A del 29 oct.; MoveSessionV1.parts.jsx). */
+        unaBasta: true,
         steps: [
           { name: 'Sentadilla a silla', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },

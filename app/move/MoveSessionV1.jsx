@@ -76,6 +76,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   /* Los pasos de trabajo que se hicieron de verdad, para el cierre: una serie saltada no es
      una serie (auditoría del 21 oct.: una hecha y dos saltadas decía «3 series»). */
   const hechosRef = useRefV1(rein.hechos);
+  /* Las series que «Con una basta» dejó sin hacer (Ez, P6 A): no son del cierre, pero la rutina
+     sigue entera (MoveSessionV1.parts.jsx). */
+  const bastaRef = useRefV1(rein.basta);
   const activeSecRef = useRefV1(0);   // congelado al completar, no al renderizar
   const step = routine.steps[stepIdx];
   /* «Auto» (Ez, 1A del 25 oct.): encendido, todo sigue solo, como siempre; apagado, cada cuenta
@@ -105,7 +108,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
 
   const dispatchComplete = () => {
     /* El «Tiempo» del cierre es el de la sesión sin pausas, el mismo que va a la
@@ -127,8 +130,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
        sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
     const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, earlyRef.current, inPath);
     /* Solo la sesión entera gana logros (Ez): sin nada cortado y con cada paso de trabajo hecho;
-       saltar un descanso no cuenta como cortar, ni un paso `opcional` (la banda, Ez, 23 oct.: 2A). */
-    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n]);
+       saltar un descanso no cuenta como cortar, ni un paso `opcional` (la banda, Ez, 23 oct.: 2A),
+       ni las series que quedaban tras «Con una basta». */
+    const entera = !earlyRef.current && routine.steps.every((paso, n) => paso.mode === 'rest' || paso.opcional || hechosRef.current[n] || bastaRef.current[n]);
     if (kind === 'extra') completeExtraSession(routine.id, realMin, ev, entera);
     else completeMoveSession(routine.id, realMin, ev, entera);
   };
@@ -144,9 +148,15 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); totalesRef.current.place = su.estimatedSeconds; }
     else setPhase('work');
   };
-  const advanceStep = () => {
-    if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(); setStage('done'); }
-    else startStep(stepIdx + 1);
+  const irAlPaso = (idx) => {
+    if (idx >= routine.steps.length) { dispatchComplete(); setStage('done'); }
+    else startStep(idx);
+  };
+  const advanceStep = () => irAlPaso(stepIdx + 1);
+  const conUnaBasta = () => {
+    const destino = v1BastaDestino(routine, stepIdx);
+    for (let n = stepIdx + 1; n < destino; n++) if (routine.steps[n].mode !== 'rest') bastaRef.current[n] = true;
+    irAlPaso(destino);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
   const addPlaceTime = () => { totalesRef.current.place = Math.max(totalesRef.current.place, placeLeft) + V1_MAS_TIEMPO; setPlaceLeft(c => c + V1_MAS_TIEMPO); };
@@ -478,7 +488,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         support={support} supportStrong={supportStrong} fraccion={fraccion}
         auto={auto} onAuto={() => setPace({ cuerpoAuto: !auto })} siguienteTexto={siguienteTexto}
         onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null}
-        onSaltar={phase === 'work' && step.opcional ? () => { setPaused(false); advanceStep(); } : null} />
+        onSaltar={phase === 'work' && step.opcional ? () => { setPaused(false); advanceStep(); } : null}
+        onBasta={v1BastaDestino(routine, stepIdx) >= 0 ? () => { setPaused(false); conUnaBasta(); } : null} />
     </SessionShell>
   );
 }

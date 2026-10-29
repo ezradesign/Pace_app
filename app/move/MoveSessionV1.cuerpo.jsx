@@ -2,7 +2,8 @@
    =========================================================================================
    De arriba abajo: el dibujo con su aro de tiempo, el rótulo de la fase, el nombre, la
    instrucción, el número con su etiqueta (y «+15 s» al colocarse o cambiar de lado, o «Saltar este
-   paso» en uno con material), la línea de abajo y la barra de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx).
+   paso» en uno con material; debajo, «Con una basta» donde se ofrece), la línea de abajo y la barra
+   de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx).
 
    CADA PIEZA TIENE SU SITIO FIJO EN TODA LA RUTINA. El nombre, la instrucción y la línea de abajo
    son «pilas»: en la misma celda de rejilla van, invisibles, todos los textos que ese hueco puede
@@ -145,6 +146,7 @@ function CuerpoV1(p) {
   const cuerpoRef = useRefCV(null);
   const reservas = React.useMemo(() => v1Reservas(routine, t, tn, tStep, tInstr), [routine.id, lang]);
   const { glifo, justo } = useV1Glifo(cuerpoRef, routine.id + ':' + lang);
+  const conBasta = React.useMemo(() => v1ConBasta(routine), [routine.id]);
   const aro = glifo + 14;
   const enTrabajo = p.phase === 'work' && step.mode !== 'rest';
   /* La raíz lleva las medidas (--v1-u y compañía) para el cuerpo Y para la barra de pasos:
@@ -190,6 +192,17 @@ function CuerpoV1(p) {
               </button>
             )}
           </div>
+          {/* «Con una basta» (Ez, P6 A), centrada bajo «SEGUNDOS». Su hueco va en todos los pasos
+              de la rutina que la ofrece: si apareciera solo en el descanso, movería lo de debajo. */}
+          {conBasta && (
+            <div className="pace-v1-numbasta">
+              {p.onBasta && (
+                <button type="button" className="pace-v1-mas" data-pace-v1-basta onClick={(e) => { v1SoltarFoco(e); p.onBasta(); }}>
+                  {t('move.unaBasta')}
+                </button>
+              )}
+            </div>
+          )}
         </div>
         <div className="pace-v1-pila pace-v1-colas" data-pace-v1-pila="cola">
           {reservas.colas.map((c, i) => <div key={'r' + i} className="pace-v1-reserva" aria-hidden="true"><ColaV1 {...c} t={t} /></div>)}

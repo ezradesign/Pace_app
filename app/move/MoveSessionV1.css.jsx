@@ -116,6 +116,8 @@ if (!_paceMoveV1Css) {
       padding: 2px 10px; min-height: 24px; cursor: pointer;
     }
     .pace-v1-mas:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    /* El hueco de «Con una basta», bajo la etiqueta del número, en todos los pasos de la rutina. */
+    .pace-v1-numbasta { display: flex; align-items: center; justify-content: center; min-height: 24px; }
 
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
     .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: var(--v1-u) auto calc(var(--v1-u) * 1.6); }

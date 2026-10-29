@@ -149,6 +149,105 @@ test.describe('P5 · lo que dice cada botón del mando', () => {
   });
 });
 
+/* Dónde está cada pieza del runner, para ver que nada se mueve entre pasos: el dibujo, la barra y
+   el mando, enteros; el número y la línea de abajo, en vertical (su ancho es el de lo que dicen). */
+const piezas = (page) => page.evaluate(() => {
+  const caja = (sel, todo) => {
+    const e = document.querySelector(sel); if (!e) return null;
+    const r = e.getBoundingClientRect();
+    return (todo ? [r.top, r.left, r.width, r.height] : [r.top, r.height]).map(Math.round).join(',');
+  };
+  return { glifo: caja('[data-pace-v1-glyph]', true), num: caja('.pace-v1-numgrupo'), cola: caja('[data-pace-v1-pila="cola"]'),
+    pasos: caja('[data-pace-v1-progress]', true), mando: caja('[data-pace-v1-mando]', true) };
+});
+const basta = (page) => page.locator('[data-pace-v1-basta]');
+async function bastaBajoSegundos(page) {
+  const [b, l] = await Promise.all([basta(page).boundingBox(), page.locator('[data-pace-v1-numlabel]').boundingBox()]);
+  expect(await page.locator('[data-pace-v1-numlabel]').textContent()).toMatch(/segundos/i);
+  expect(Math.abs((b.x + b.width / 2) - (l.x + l.width / 2)), '«Con una basta» no va centrada bajo «SEGUNDOS»').toBeLessThanOrEqual(2);
+  expect(b.y, '«Con una basta» no va debajo de «SEGUNDOS»').toBeGreaterThanOrEqual(l.y + l.height);
+}
+async function hastaPaso(page, idx, maxSeg) {
+  expect(await hasta(page, async () => (await pasoActual(page)) === idx, maxSeg || 60), 'no llegó al paso ' + (idx + 1)).toBe(true);
+}
+const sesionesHechas = (page) => page.evaluate(async () => {
+  const raw = await window.eventsWebReadRaw();
+  return (raw ? JSON.parse(raw).events : []).filter((e) => e.type === 'session.completed').map((e) => e.payload);
+});
+
+test.describe('P6 · «Con una basta», de verdad', () => {
+  test('p6-1 · en «Levántate y sube», «Con una basta» en cada descanso entre dos series: una de cada, y cuenta entera', async ({ page, context }) => {
+    test.setTimeout(120000);
+    const errores = capturarErrores(page);
+    await empezar(page, context, 'extra.chair.squats', { cuerpoAuto: true });
+    await hastaPaso(page, 1, 40);
+    await expect(basta(page), 'en el descanso tras la primera serie no está «Con una basta»').toHaveText('Con una basta');
+    await bastaBajoSegundos(page);
+    await basta(page).click();
+    await page.clock.runFor(300);
+    expect(await pasoActual(page), '«Con una basta» no saltó la segunda serie').toBe(4);
+    expect(await nombre(page)).toBe('Elevación de talones');
+    await hastaPaso(page, 5, 45);
+    await expect(basta(page)).toBeVisible();
+    await basta(page).click();
+    await cierre(page).waitFor({ timeout: 10000 });
+    expect(await cifra(page, 'Series'), 'el cierre inventa las series saltadas').toBe(2);
+    expect(await cifra(page, 'Reps')).toBe(5 + 6);
+    expect((await estado(page)).moveSessionsTotal || 0, 'con una serie de cada, la rutina no contó entera').toBe(1);
+    const [ev] = await sesionesHechas(page);
+    expect(ev && ev.completionReason).toBe('natural');
+    expect(errores).toEqual([]);
+  });
+
+  test('p6-2 · en el móvil y sin Auto: la pastilla tiene su sitio en toda la rutina, nada se mueve, y solo sale donde toca', async ({ browser, baseURL }) => {
+    test.setTimeout(120000);
+    const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true, locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light' });
+    const page = await context.newPage();
+    await empezar(page, context, 'extra.chair.squats');
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(300);
+    const enLaSerie = await piezas(page);
+    await expect(basta(page)).toHaveCount(0);
+    await flecha(page).click(); await page.clock.runFor(2000);
+    expect(await pasoActual(page)).toBe(1);
+    await expect(basta(page)).toBeVisible();
+    await bastaBajoSegundos(page);
+    expect(await piezas(page), 'la pastilla movió algo del descanso').toEqual(enLaSerie);
+    await flecha(page).click(); await page.clock.runFor(300);   // la segunda serie
+    expect(await piezas(page)).toEqual(enLaSerie);
+    await flecha(page).click(); await page.clock.runFor(300);
+    expect(await pasoActual(page)).toBe(3);
+    await expect(basta(page), 'entre sentadillas y talones no hay series que saltar').toHaveCount(0);
+    expect(await piezas(page)).toEqual(enLaSerie);
+    /* En otra rutina de «Para empezar» sin esa promesa no hay pastilla ni hueco. */
+    await page.locator('[data-pace-session-header] button').last().click();
+    await abrirRutina(page, 'Mueve', 'extra.desk.pushups');
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await flecha(page).click(); await page.clock.runFor(300);
+    expect(await nombre(page)).toBe('Descanso');
+    await expect(page.locator('.pace-v1-numbasta')).toHaveCount(0);
+    await context.close();
+  });
+
+  test('p6-3 · salir tras «Con una basta» y seguir luego: sigue contando entera', async ({ page, context }) => {
+    test.setTimeout(150000);
+    const errores = capturarErrores(page);
+    await empezar(page, context, 'extra.chair.squats', { cuerpoAuto: true });
+    await hastaPaso(page, 1, 40);
+    await basta(page).click();
+    await page.clock.runFor(300);
+    expect(await pasoActual(page)).toBe(4);
+    await page.locator('[data-pace-session-root]').getByRole('button', { name: /Salir/ }).click();
+    const tarjeta = page.locator('[data-pace-sidebar-accion]');
+    await expect(tarjeta).toHaveAttribute('data-kind', 'resume');
+    await tarjeta.locator('[data-pace-sidebar-accion-boton]').click();
+    expect(await hasta(page, async () => !!(await cierre(page).count()), 150)).toBe(true);
+    expect(await cifra(page, 'Series')).toBe(3);
+    expect((await estado(page)).moveSessionsTotal || 0, 'al seguir, la serie saltada con «Con una basta» cortó la rutina').toBe(1);
+    expect(errores).toEqual([]);
+  });
+});
+
 test.describe('B3 · el paso con banda', () => {
   test('b3-1 · sin Auto, la flecha cuenta las 8 aperturas y «Saltar este paso» va junto al número', async ({ page, context }) => {
     test.setTimeout(120000);

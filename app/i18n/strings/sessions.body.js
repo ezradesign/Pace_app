@@ -191,6 +191,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.flecha.hecho':               'Hecho',
     'move.flecha.descanso':            'Saltar descanso',
     'move.flecha.lado':                'Siguiente lado',
+    // «La primera vez, una serie basta», de verdad (Ez, P6 A del 29 oct. 2026)
+    'move.unaBasta':                   'Con una basta',
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
     'move.careLabel':                  'Cuídate',
     'move.series':                     'Series',
@@ -332,6 +334,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.flecha.hecho':               'Done',
     'move.flecha.descanso':            'Skip rest',
     'move.flecha.lado':                'Next side',
+    // "The first time, one set is enough", for real (Ez, P6 A, 29 Oct 2026)
+    'move.unaBasta':                   'One is enough',
     // Editorial layer (s114): «Take care» label + final-screen stat labels
     'move.careLabel':                  'Take care',
     'move.series':                     'Sets',

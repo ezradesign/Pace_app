@@ -22,7 +22,8 @@
    · LO QUE SE GUARDA ES DE ESTA VERSIÓN DE LA RUTINA: con el paso va la huella de los pasos
      (`cuerpoHuella`). Si la rutina cambia —una propia reordenada o con otros tiempos—, el
      número de paso ya es otro ejercicio y no se ofrece seguir (auditoría del 21 oct.). Van
-     también la marca de «terminar antes» y los pasos hechos, que el cierre necesita.
+     también la marca de «terminar antes», los pasos hechos, que el cierre necesita, y las series
+     que «Con una basta» dejó sin hacer, que no cortan la rutina.
    · UN EJERCICIO SUELTO («Ver ejercicio») NO SE GUARDA NI BORRA: no es una rutina a medias, y
      al terminar no puede llevarse por delante la que sí lo estaba.
    · EL REGISTRO TIENE UNA SOLA DUEÑA: el efecto de `useCuerpoPersistencia`
@@ -89,7 +90,7 @@ function olvidarCuerpoGuardada() {
    registro de ESTA rutina, el comienzo de siempre: el runner no necesita ramas. */
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {} };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
   if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => (Number.isFinite(x) && x > 0 ? x : 0);
@@ -99,10 +100,14 @@ function cuerpoReanudacion(routine, guardado) {
   (Array.isArray(guardado.hechos) ? guardado.hechos
     : routine.steps.map((s, i) => i).filter(i => i < step && routine.steps[i].mode !== 'rest'))
     .forEach(i => { if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) hechos[i] = true; });
+  /* Las series que «Con una basta» dejó sin hacer: con ellas la rutina sigue entera al volver. */
+  const basta = {};
+  (Array.isArray(guardado.basta) ? guardado.basta : [])
+    .forEach(i => { if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) basta[i] = true; });
   return {
     step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
-    reanudada: true, early: guardado.early === true, hechos,
+    reanudada: true, early: guardado.early === true, hechos, basta,
   };
 }
 
@@ -136,6 +141,7 @@ function useCuerpoPersistencia(d) {
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
         reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
         early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
+        basta: Object.keys((c.basta && c.basta()) || {}).map(Number),
       }));
     } catch (e) {}
   };
