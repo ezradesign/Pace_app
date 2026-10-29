@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.186.0</title>
+  <title>PACE · Foco · Cuerpo — v0.187.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2255,7 +2255,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'custom.draft.seguir': 'Seguir con tu borrador',
   'custom.draft.sigues': 'Sigues con tu borrador {cuando}.',
-  'custom.draft.sigues.edit': 'Sigues con tus cambios en “{name}”.',
+  'custom.draft.sigues.edit': 'Sigues con tus cambios en «{name}».',
   'custom.draft.cero': 'Empezar de cero',
   'custom.draft.deshacer': 'Deshacer los cambios',
   'custom.draft.cuando.hoy': 'de hoy, {h}',
@@ -6791,7 +6791,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.186.0';
+const PACE_VERSION = 'v0.187.0';
 
 
 
@@ -34235,7 +34235,7 @@ const EXTRA_ROUTINES = {
 
     { id: 'move.spine.chair', tag: 'SPN', code: 'Columna', name: 'Tronco sentado',
       desc: 'Pecho arriba, giro y apertura, sin levantarte.', min: 2,
-      position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+      position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Extensión torácica', mode: 'reps', reps: 5, dur: 25,
         tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
@@ -34386,7 +34386,7 @@ const EXTRA_ROUTINES = {
 
 
     { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
-      position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+      position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
         tempo: { down: 2, hold: 2, up: 2 }, completion: { mode: 'guided' },
@@ -34471,7 +34471,7 @@ Object.assign(window.EXTRA_ROUTINES, {
 
     { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros',
       desc: 'Hombros a punto: la pared, el giro del hombro y la espalda alta.', min: 3,
-      position: ['standing', 'seated'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+      position: ['standing', 'seated'], equipment: ['wall', 'chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
         instruction: {
