@@ -32,6 +32,9 @@ limpias en sus worktrees de `.claude/worktrees/`.
    bloqueadas, el paso pide «suaves», y lleva flecha) y Sentarse y levantarse del suelo (sin la mano al suelo ni la
    flecha parece una zancada quieta); sus prompts ya lo piden en la página de dibujos (versión 6). Faltan ocho: esas
    dos, Rana, Pica, Remo con tu mano, Gato-camello, Palmas en la mesa y Apretar glúteos.
+   A las 17:37, `pike_pushup_desk_profile_plate_v3.jpg`: tampoco vale (una tabla sin patas a la altura de la rodilla).
+   El prompt de la Pica pedía algo imposible, una mesa a la altura de la cadera con una V cerrada; ahora pide una mesa
+   normal con patas y una V suave (página de dibujos, versión 7).
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
