@@ -73,12 +73,15 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
     <ol class="como">
       <li>En tu chat de <b>Genspark</b>, con el muñeco ya validado, pulsa «Copiar el prompt» y pégalo. Solo dice la postura, la
         flecha y dónde va el naranja: la figura y el trazo ya los tiene.</li>
-      <li>Antes de guardarlo, pásamelo aquí: lo reviso contra el paso del ejercicio y te digo si vale.</li>
-      <li>Si vale, guárdalo en <code>Pace_app\dibujos-22oct</code> con el nombre exacto que da «Copiar el nombre». Es lo que lo
-        empareja con su ejercicio: con otro nombre no entra. Si sale en .webp o .jpg, lo paso yo a PNG.</li>
+      <li>Déjalo en <code>Pace_app\dibujos-22oct\para-revisar</code>, con el nombre que quieras, y dime «revisa los dibujos».
+        Lo comparo con el paso del ejercicio y te digo si vale.</li>
+      <li>Los que valen los paso yo a PNG con su nombre exacto, el de «Copiar el nombre», que es lo que los empareja con su
+        ejercicio.</li>
       <li>Cuando tengas unos cuantos, dime <b>«dibujos en la carpeta»</b>. Los meto en la app, te enseño cómo quedan y solo
         se publican con tu sí.</li>
     </ol>
+    <p class="nota">Solo llevan flecha los ejercicios cuyo movimiento no se ve en la postura: el remo, la rotación, el gato-camello,
+      sentarse en el suelo, apretar glúteos y el balanceo de la rana. Los demás, sin flecha.</p>
     <p class="nota">Marca «Lo tengo» según los vayas guardando: se queda apuntado en este navegador. <span class="avance" id="avance">0 de 16</span></p>
   </section>
 
@@ -129,22 +132,26 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
       plato: 'A hip hinge, standing in profile facing right, hands on the hips. The hips are pushed far back, the trunk tilts forward about 45 degrees with a long straight back from the hips to the head, knees only slightly bent, shins nearly vertical. A short dotted arrow at the buttocks points BACKWARD, to the left. The back is never rounded.' },
     { g: 'sin', nombre: 'Desliza el talón', mod: 'Mueve · Fuerza en suelo', archivo: 'desliza-el-talon.png', zona: 'the lower belly',
       que: 'Boca arriba: una rodilla doblada y la otra pierna se desliza por el suelo hasta quedar casi estirada.',
-      plato: 'A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. A short dotted arrow along the floor beyond the sliding heel points AWAY from the body.' },
+      aviso: 'Revisado el 29: coincide con su paso.',
+      plato: 'A heel slide, lying on the back in profile, head to the left. One knee bent with the foot flat; the other leg slides out along the floor and is almost straight, the heel touching the floor. Arms rest by the sides, lower back resting on the floor. No arrow.' },
     { g: 'sin', nombre: 'Inclinación de tronco', mod: 'Estira · Columna', archivo: 'inclinacion-de-tronco.png', zona: 'the long side of the trunk that is stretched, from the armpit to the hip',
       que: 'De pie y de frente: el tronco se inclina a un lado y la mano baja por el muslo, sin girar.',
-      plato: 'A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure\'s right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. A short dotted arc beside the ribs shows the side bend. No twisting, no forward lean.' },
+      plato: 'A standing trunk side bend, seen from the FRONT. Feet hip-width apart, the trunk bends sideways to the figure\'s right, the right hand slides down the outer thigh toward the knee, the left arm hangs relaxed, the head following the spine. No twisting, no forward lean, no arrow.' },
     { g: 'sin', nombre: 'Gemelo en pared', mod: 'Estira · Cadena posterior', archivo: 'gemelo-en-pared.png', zona: 'the calf of the back leg',
       que: 'De perfil frente a la pared, con las manos en ella: la pierna de atrás estirada y su talón en el suelo.',
+      aviso: 'Revisado el 29: coincide con su paso.',
       plato: 'A wall calf stretch, in profile facing right toward a wall drawn as one thin vertical line. Both hands rest on the wall at shoulder height. The front knee is bent, the back leg is straight with the back heel flat on the floor, the hips lean toward the wall.' },
     { g: 'sin', nombre: 'Pica en escritorio', mod: 'Mueve', archivo: 'pica-en-escritorio.png', zona: 'the shoulders and the back of the upper arms',
       que: '«V» invertida con las manos en el borde de la mesa. La mesa es obligatoria: sin ella se confunde con «Marcha del elefante».',
-      plato: 'a pike push-up with the hands on a desk, in profile facing right. The palms rest on the edge of a desk, drawn only as one thin straight horizontal line at waist height that extends a little beyond the hands; the hands are on that line, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps away from the desk line, so the figure forms a clear upside-down V between the floor and the desk edge.' },
+      aviso: 'La del 29 no vale aún: la mesa quedó a la altura de un escalón. Este prompt la pide a la altura de la cadera y con patas.',
+      plato: 'a pike push-up with the hands on a desk, in profile facing right. The desk stands at the height of the hips of a standing person: its top is one thin straight horizontal line, with two thin straight vertical legs down to the floor, so it clearly reads as a desk and never as a step or a box. The palms rest on the front edge of that desk top, never on the floor. Arms straight, head between the arms, back long and straight, legs straight, feet on the floor two to three steps back from the desk, hips the highest point, so the figure forms a clear upside-down V between the floor and the desk top.' },
     { g: 'sin', nombre: 'Rotación torácica de pie', mod: 'Estira · Espalda de pie', archivo: 'rotacion-toracica-de-pie.png', zona: 'the ribs and the middle of the back that turn',
       que: 'De pie y de frente, con los brazos cruzados sobre el pecho: el pecho gira hacia un lado y la cadera se queda quieta.',
       plato: 'A standing thoracic rotation, seen from the FRONT. Feet hip-width apart, knees soft, the hips square to the front and still. Both arms are crossed over the chest, each hand resting on the opposite shoulder. The chest and shoulders are turned toward the figure\'s right while the pelvis stays facing forward. A short dotted curved arrow at chest height shows the turn. No bending forward, no twist at the hips.' },
 
     { g: 'nocasa', nombre: 'Piernas elevadas sentado', mod: 'Mueve · Core silencioso', archivo: 'piernas-elevadas-sentado.png', zona: 'the lower belly and the front of the hips',
       que: 'Sentado al fondo de la silla y agarrado al asiento, con las dos rodillas arriba y los pies sin tocar el suelo.',
+      aviso: 'Revisado el 29: coincide con su paso.',
       plato: 'A seated leg raise on a chair, in profile facing right; the chair is only a few thin straight lines (seat, backrest, front legs). The figure sits all the way back, the back resting on the backrest, both hands holding the sides of the seat. Both knees are bent and lifted together so the feet hover a hand-breadth above the floor.' },
     { g: 'nocasa', nombre: 'Gato-camello', mod: 'Estira', archivo: 'gato-camello.png', zona: 'the length of the back along the spine',
       que: 'A cuatro apoyos, con la espalda redondeada en un arco suave; una flecha doble arriba y abajo.',
@@ -158,7 +165,7 @@ details pre { margin: 8px 0 0; white-space: pre-wrap; font-family: var(--mono); 
     { g: 'nocasa', nombre: 'Rodar hacia abajo', mod: 'Estira', archivo: 'rodar-hacia-abajo.png', zona: 'the back along the spine and the back of the thighs',
       que: 'De pie, la columna se enrolla hacia delante desde la cabeza, con los brazos colgando.',
       aviso: 'Si ya tienes el tuyo, el que sí casa, guárdalo con este nombre y sáltate el prompt.',
-      plato: 'A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. A short dotted arc over the upper back shows the curl downward.' },
+      plato: 'A standing roll down, in profile facing right. Feet hip-width apart, knees soft, the spine rounds forward from the head down to about halfway, the head hanging, arms hanging loose toward the shins. No arrow.' },
 
     { g: 'mal', nombre: 'Palmas en la mesa', mod: 'Estira · Muñecas', archivo: 'palmas-en-la-mesa.png', zona: 'the inner forearms', manos: true,
       que: 'Las dos palmas sobre la mesa, separadas y con los dedos hacia el cuerpo; las muñecas se doblan. Hoy son dos manos juntas que se confunden con «Rezo invertido».',

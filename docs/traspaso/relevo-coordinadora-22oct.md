@@ -32,6 +32,23 @@ pendiente vete organizando para ir haciéndolo y no perder nada»): lo que apare
    banda, vale el de la banda por debajo del pie (el de la banda tiesa que acaba en el talón, no); Rana, aún no (rodillas más
    abiertas que «un poco, hasta donde vaya cómodo», la cadera entre ellas y la flecha de lado): su prompt pide ahora menos
    apertura y la flecha hacia atrás.
+4. **Ez dibujó su reparto del runner (~16:20)**, sobre una captura de colocarse en la apertura con banda: «revisa la
+   posición de los textos, círculo y botones, me gusta más en mi sugerencia pero comprueba también que cabe en todas las
+   pantallas y que ningún texto sale cortado, dame sugerencias». Leído: cada pastilla (+15 s, «Saltar este paso») centrada
+   bajo su etiqueta con su hueco siempre; en el móvil, «Siguiente» en su línea y «Auto» debajo; el número algo menor; el
+   círculo, del tamaño de hoy. Sugerido (recomendado): en los móviles altos, el bloque de textos junto y el aire sobrante
+   arriba y abajo (`.pace-v1-aire` a 0 y `.pace-v1` centrado). Maqueta en la misma dirección que la de la pastilla,
+   https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp; guiones `maqueta-ez.js` y `censo-ez.js` en
+   `docs/traspaso/archivos/runner-claro/` de la rama del runner (sirven la rama con `page.route`, sin servidor). Espera el
+   «móntalo» (A tal cual o B con el bloque junto).
+5. **Dibujos: Ez los deja en `dibujos-22oct\para-revisar`** (carpeta creada el 29), con cualquier nombre. Revisados los siete
+   del 29: valen Bisagra de cadera, Gemelo en pared, Piernas elevadas sentado, Desliza el talón y el Remo con
+   banda del chat (`images\1.webp` de la sesión de 5iWBf…, el de la banda bajo el pie); no, `Band row.jpg`, `Rana.jpg` y la
+   Pica (la mesa, a la altura de un escalón). Propuesta una sesión, `dibujos-29oct` (tarjeta task_0b1b27a0), que los mete en
+   su rama con maqueta previa y la suite en el 8810. Ez la arrancó: `local_10cec9aa-0180-489b-928d-551180393ba3`.
+   **Flechas** (Ez, 29 oct.): «solo llevan flecha aquellos ejercicios en los que el movimiento no resulte obvio». Quitadas de
+   los prompts de Desliza el talón, Inclinación de tronco y Rodar hacia abajo; siguen en el remo, la rotación, el
+   gato-camello, sentarse en el suelo, apretar glúteos y la rana. Un dibujo sin flecha donde el movimiento se ve no es defecto.
 
 ## AL RELEVO (29 oct., ~13:15; EcLj6… con las 5 h al 95 %, se repone a las 16:30; la semana al 49 %)
 
