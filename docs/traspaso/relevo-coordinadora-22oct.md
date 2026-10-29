@@ -8,6 +8,22 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## MIGRACIÓN (29 oct., ~11:35; 5iWBf… al 94 %): las decisiones se toman en la otra cuenta
+
+**Ez: «organiza todo para migrar de cuenta ya y tomamos las decisiones en la otra».** Todo subido; nada a medias en ningún
+worktree (los dos hilos, 0 archivos sin commit a las 11:35) y `main` en 0.186.0, igual que origin, en verde y publicada.
+1. **Lo primero en la otra cuenta: republicar** desde el repo las tres páginas que Ez necesita (las de aquí dan 404 allí):
+   la hoja (`docs/traspaso/hoja-de-ruta-20oct.html`, en `main`), la maqueta del runner
+   (`git show origin/claude/runner-claro-15db3c:docs/proposals/runner-claro-29oct.html`) y la de «Tus rutinas»
+   (`git show origin/claude/tus-rutinas-c0cf03:docs/proposals/tus-rutinas-u1-c6-29oct.html`). Léelas enteras antes.
+2. **Las decisiones de Ez, por orden**: (a) la maqueta del runner, B3, P5, P6 y P8 (recomendado A en las cuatro); (b) la
+   de «Tus rutinas», U1 y C6 (recomendado U1 B · C6 A); (c) el calendario en v1 (recomendado: beta en la web y completo en
+   Android). Con (a) y (b), una sesión nueva en cada worktree (`cwd`, con su LEEME) monta lo elegido.
+3. **Después, el «júntalo» de cada rama**, primero «Tus rutinas» (trae la clave `chair`) y luego el runner, con las tres
+   rutinas de Extensión torácica pasando a `chair`. Con las dos dentro, la versión de prueba solo espera los dibujos y el
+   logo de Ez.
+4. Ez, a la vez: el aviso de Stripe en el modo de prueba y `PACE_ENLACES_STRIPE` (su hoja, «Stripe, paso a paso»).
+
 ## AL RELEVO (29 oct., ~10:55; 5iWBf… con las 5 h al 73 % y subiendo ~1 punto por minuto; la semana al 70 %)
 
 **Si llegas de la otra cuenta, empieza aquí** (Ez: «al 90 % tener todo listo para migrar de cuenta»). **A las ~11:20, la
