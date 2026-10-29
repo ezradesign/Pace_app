@@ -1,4 +1,4 @@
-// La página «Ocho dibujos nuevos» para Ez: el set entero en una tira, los que se salen, el sombreado antes y
+// La página «Catorce dibujos nuevos» para Ez: el set entero en una tira, los que se salen, el sombreado antes y
 // ahora, y cada dibujo nuevo junto a un vecino en el runner, a 360 y a 1280 px.
 // Uso: node pagina.js <carpeta-de-fotos> <salida.html> [--ligera]. Antes: fotos.js <carpeta>/blanqueado y
 // fotos.js <carpeta>/vecinos vecinos; y tira.js para <carpeta>/tiras/set.png, sombreado-29.png y se-salen.png.
@@ -27,7 +27,7 @@ const CIRCULO_360 = { left: 130, top: 130, width: 460, height: 460 };
 
 const CASOS = [
   { s: 'piernas-elevadas-sentado', nombre: 'Piernas elevadas sentado', donde: 'Mueve · Core silencioso · pasos 1, 3 y 5',
-    texto: 'El que viste con la mancha de más. Ahora, con el rojo blanqueado, como elegiste.', vecino: ['fondos-en-silla', 'Fondos en silla', 'otro con silla de Mueve'] },
+    texto: 'Es la versión que rehiciste, con el rayado más claro, y con el rojo blanqueado que elegiste.', vecino: ['fondos-en-silla', 'Fondos en silla', 'otro con silla de Mueve'] },
   { s: 'bisagra-de-cadera', nombre: 'Bisagra de cadera', donde: 'Mueve · Piernas · a una · paso 1 de 7',
     texto: 'Cadera atrás, espalda larga y rodillas un poco dobladas, con la flecha hacia atrás.', vecino: ['zancada-profunda', 'Zancada profunda', 'de su misma rutina'] },
   { s: 'gemelo-en-pared', nombre: 'Gemelo en pared', donde: 'Estira · Cadena posterior · paso 3 de 3',
@@ -42,6 +42,18 @@ const CASOS = [
     texto: 'De frente, las manos cruzadas sobre el pecho y el arco de la rotación. Hasta hoy salía el glifo por defecto.', vecino: ['juntar-omoplatos', 'Juntar omóplatos', 'de su misma rutina'] },
   { s: 'inclinacion-de-tronco', nombre: 'Inclinación de tronco', donde: 'Estira · Columna · ondas · paso 3 de 4',
     texto: 'De frente, el tronco hacia un lado y la mano bajando por el muslo. Hasta hoy llevaba el glifo de Estira.', vecino: ['rotacion-toracica', 'Rotación torácica', 'el paso anterior de su rutina'] },
+  { s: 'gato-camello', nombre: 'Gato-camello', donde: 'Estira · Columna · ondas · paso 1 de 4, y Movilidad en suelo',
+    texto: 'Sustituye al que marcaste porque podía mejorar mucho: a cuatro apoyos, la espalda redonda hacia arriba y la cabeza suelta.', vecino: ['rotacion-toracica', 'Rotación torácica', 'el paso siguiente de su rutina'] },
+  { s: 'remo-con-tu-mano', nombre: 'Remo con tu mano', donde: 'Mueve · Espalda con banda · paso 5 de 5',
+    texto: 'Una mano sujeta la muñeca de la otra y el codo va hacia atrás. Es el que pegaste en el chat: aunque llegó comprimido, su sombreado mide como el de Bisagra de cadera, así que no hace falta el original. Hasta hoy llevaba el glifo de Mueve.', vecino: ['apertura-con-banda', 'Apertura con banda', 'de su misma rutina'] },
+  { s: 'pica-en-escritorio', nombre: 'Pica en escritorio', donde: 'Mueve · Empuje · progresión · paso 3 de 5',
+    texto: 'Las manos en el borde de la mesa y la cadera alta. Hasta hoy salía el glifo por defecto.', vecino: ['flexiones-inclinadas', 'Flexiones inclinadas', 'de su misma rutina'] },
+  { s: 'rodar-hacia-abajo', nombre: 'Rodar hacia abajo', donde: 'Estira · Espalda de pie · paso 1 de 5, y Columna · ondas',
+    texto: 'De perfil, la espalda redondeándose hacia abajo y los brazos colgando. Sustituye al que no casaba.', vecino: ['juntar-omoplatos', 'Juntar omóplatos', 'de su misma rutina'] },
+  { s: 'sentarse-y-levantarse-del-suelo', nombre: 'Sentarse y levantarse del suelo', donde: 'Estira · Caderas · suelo · paso 4 de 5',
+    texto: 'A medio camino: una rodilla en el suelo y una mano bajando hacia el suelo. Sustituye al que no enseñaba el ejercicio, que además salía más grande que el resto.', vecino: ['sentadilla-lateral', 'Sentadilla lateral', 'el paso anterior de su rutina'] },
+  { s: 'apretar-gluteos', nombre: 'Apretar glúteos', donde: 'Mueve · Glúteos invisibles · pasos 1 y 3',
+    texto: 'Sentado, como pide el paso: el de antes estaba de pie.', vecino: ['elevacion-de-talones', 'Elevación de talones', 'de su misma rutina'] },
 ];
 
 (async () => {
@@ -66,23 +78,24 @@ const CASOS = [
       '<figure>' + await img('vecinos/' + vs + '_' + vista, ancho, vn + ', ' + que.toLowerCase(), recorte, recorte ? 'redondo' : '') + '<figcaption>' + vn + '</figcaption></figure>' +
       '</div></div>';
     juntos += '<section class="caso" id="' + c.s + '"><span class="num-caso">' + c.donde + '</span><h3>' + c.nombre + '</h3>' +
-      '<p>' + c.texto + ' Al lado, ' + vn + ', ' + por + ', en el mismo momento del paso.</p>' +
+      '<p>' + c.texto + ' Al lado, ' + vn + ', ' + por + ', fotografiado en el mismo momento de su paso.</p>' +
       (LIGERA
         ? await par('runner_360', 240, 'En el móvil', CIRCULO_360)
         : await par('runner_360', 400, 'En el móvil') + await par('runner_1280', 760, 'En el ordenador')) +
       '</section>';
   }
-  const tiraSet = await img('tiras/set', LIGERA ? 1400 : 2000, 'Los 65 dibujos de ejercicio en tres filas, al mismo tamaño y por orden alfabético; los ocho nuevos llevan un aro terracota');
+  const total = fs.readdirSync(DESTINO).filter((x) => /.webp$/.test(x) && !/.min.webp$/.test(x)).length;
+  const tiraSet = await img('tiras/set', LIGERA ? 1400 : 2000, 'Los ' + total + ' dibujos de ejercicio en tres filas, al mismo tamaño y por orden alfabético; los catorce nuevos llevan un aro terracota');
   const tiraSombreado = await img('tiras/sombreado-29', 900, 'Los cinco primeros en dos filas: arriba con la mancha conservada, como los viste; abajo con el rojo blanqueado');
-  const tiraSalen = await img('tiras/se-salen', 900, 'Paloma, Flexor de cadera, Sentadilla a silla y Sentarse y levantarse del suelo, y al lado Zancada profunda y Cuádriceps en pared');
+  const tiraSalen = await img('tiras/se-salen', 900, 'Paloma, Flexor de cadera y Sentadilla a silla, y al lado Zancada profunda y Cuádriceps en pared');
 
-  const html = `<title>Ocho dibujos nuevos</title>
+  const html = `<title>Catorce dibujos nuevos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
-<!-- PACE · los ocho dibujos de ejercicio del 29 oct. 2026 en la app de la rama claude/elegant-pascal-d54e40,
+<!-- PACE · los catorce dibujos de ejercicio del 29 oct. 2026 en la app de la rama claude/elegant-pascal-d54e40,
      con el rojo blanqueado que eligió Ez. Guiones en docs/traspaso/archivos/dibujos-29oct/. -->
 <style>
   /* Una columna de lectura; la tira del set ocupa todo el ancho y cada dibujo va con su vecino al lado. */
@@ -141,10 +154,10 @@ const CASOS = [
 </style>
 <div class="marco">
   <p class="kicker">Dibujos de ejercicio · 29 oct. 2026 · antes de juntar${LIGERA ? ' · versión ligera' : ''}</p>
-  <h1>Ocho dibujos nuevos</h1>
+  <h1>Catorce dibujos nuevos</h1>
   <div class="pide">
     <p class="kicker" style="margin-top:2px">Lo que necesito de ti</p>
-    <p><b>1.</b> Un sí a los ocho tal como se ven aquí, con el rojo blanqueado que elegiste en Piernas elevadas. Con él, la rama queda lista para que la coordinadora la junte cuando digas «júntalo», después del runner y de «Tus rutinas».</p>
+    <p><b>1.</b> Un sí a los catorce tal como se ven aquí, con el rojo blanqueado que elegiste en Piernas elevadas. Con él, la rama queda lista para que la coordinadora la junte cuando digas «júntalo», después del runner y de «Tus rutinas».</p>
     <p><b>2.</b> Si aclaro <b>Paloma</b>, <b>Flexor de cadera</b> y <b>Sentadilla a silla</b>, que ya estaban y se ven más sombreados que el resto (abajo). Recomiendo que sí.</p>
   </div>
   <div class="vistazo">${vistazo}</div>
@@ -152,9 +165,9 @@ const CASOS = [
   <section class="bloque" id="set">
     <span class="num-caso">Lo que pediste · todos juntos</span>
     <h2>El set entero</h2>
-    <p>Los 65 dibujos de ejercicio al mismo tamaño, por orden alfabético. Los ocho nuevos llevan un <span class="aro">aro terracota</span>.</p>
+    <p>Los ${total} dibujos de ejercicio al mismo tamaño, por orden alfabético. Los catorce nuevos llevan un <span class="aro">aro terracota</span>.</p>
     <div class="tira">${tiraSet}</div>
-    <p class="anclada">Medido contra los 46 muñecos enteros que ya estaban (sin manos ni cabezas de cerca), el sombreado de los nuevos queda en la mediana o por debajo, salvo Desliza el talón, un poco por encima. Llevan menos tinta en total que la media, que es lo más claro que elegiste, y sus líneas, algo más oscuras: es el trazo de Genspark.</p>
+    <p class="anclada">Medido contra los ${ref.filas.length} muñecos enteros que ya estaban y se quedan (sin manos ni cabezas de cerca), el sombreado de los nuevos queda en la mediana o por debajo, salvo Desliza el talón, un poco por encima. Llevan menos tinta en total que la media, que es lo más claro que elegiste, y sus líneas, algo más oscuras: es el trazo de Genspark.</p>
     <details><summary>Lo medido, en percentiles del set (p50 = la mediana)</summary>
       <div class="medidas"><table><thead><tr><th>Dibujo</th><th>Tinta</th><th>Sombreado</th><th>Línea</th><th>Grosor</th></tr></thead><tbody>${medidas}</tbody></table></div>
     </details>
@@ -164,10 +177,9 @@ const CASOS = [
     <span class="num-caso">De los que ya estaban · no los he tocado</span>
     <h2>Los que se salen</h2>
     <div class="tira">${tiraSalen}</div>
-    <p class="anclada">De izquierda a derecha: Paloma, Flexor de cadera, Sentadilla a silla, Sentarse y levantarse del suelo y, como referencia, Zancada profunda y Cuádriceps en pared.</p>
+    <p class="anclada">De izquierda a derecha: Paloma, Flexor de cadera, Sentadilla a silla y, como referencia, Zancada profunda y Cuádriceps en pared.</p>
     <ul class="reco">
       <li><span class="que">Paloma, Flexor de cadera y Sentadilla a silla, más sombreados</span><p>Llevan una mancha oscura en el músculo, como la que viste en Piernas elevadas, y su sombreado está entre los más altos del set. Recomiendo aclararlos con la curva de la ingesta hasta la mediana, como se hizo con Hueco abdominal el 14 de octubre. No hace falta pedir dibujos nuevos: se rehacen desde sus originales, que están entre los de «Glifos de ejercicios - Estira» con otro nombre y hay que localizar.</p></li>
-      <li><span class="que">Sentarse y levantarse del suelo, más grande</span><p>El muñeco sale más grande que el resto, sobre todo la cabeza. Ya está en la cola para redibujar porque no enseña el ejercicio: recomiendo esperar a ese dibujo y no tocar este.</p></li>
     </ul>
     <p class="anclada" style="margin-top:12px">Los que se ven más pequeños, como Superman o las suspensiones, lo son por la postura: van de punta a punta del círculo, igual que Plancha. No hace falta cambiarlos.</p>
   </section>
@@ -175,7 +187,7 @@ const CASOS = [
   <section class="bloque" id="sombreado">
     <span class="num-caso">Lo que pediste · ya en la app</span>
     <h2>El sombreado, antes y ahora</h2>
-    <p>Arriba, los cinco primeros como los viste, con la mancha roja conservada. Abajo, como quedan con el rojo blanqueado, igual que el resto del set. Gemelo en pared, además, es ya el dibujo nuevo.</p>
+    <p>Arriba, los cinco primeros como los viste, con la mancha roja conservada. Abajo, como quedan con el rojo blanqueado, igual que el resto del set. Piernas elevadas es ya la versión que rehiciste, y Gemelo en pared, el dibujo más recogido.</p>
     <div class="tira">${tiraSombreado}</div>
   </section>
 
@@ -188,8 +200,8 @@ const CASOS = [
 
   <section class="bloque">
     <span class="num-caso">Lo que no entra</span>
-    <h2>Cuatro que esperan</h2>
-    <p><b>Rodar hacia abajo</b> y <b>Sentarse y levantarse del suelo</b>, que todavía no valen, y <b>Rana</b> y <b>Pica en escritorio</b>, que se repiten. Con estos ocho quedan 8 dibujos de ejercicio por hacer.</p>
+    <h2>Dos que esperan</h2>
+    <p><b>Rana</b>, que se repite, y <b>Palmas en la mesa</b>, porque las versiones revisadas hoy tienen los dedos hacia fuera. Son los dos únicos dibujos de ejercicio que quedan por hacer.</p>
   </section>
 </div>
 `;

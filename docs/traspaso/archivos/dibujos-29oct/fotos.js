@@ -1,7 +1,8 @@
 'use strict';
-// Fotos de los ocho dibujos nuevos en la app de la rama, sin nada pintado encima: el runner en el paso de su
+// Fotos de los dibujos nuevos en la app de la rama, sin nada pintado encima: el runner en el paso de su
 // rutina (360 y 1280 px) y la tarjeta de la biblioteca. Abre las rutinas como runner-claro/montado.js.
-// Uso: node fotos.js <carpeta> [vecinos | solo-un-id]. Levanta el servidor estático del worktree en el 8810.
+// Uso: node fotos.js <carpeta> [vecinos] [id,id…]. Levanta el servidor estático del worktree en el 8810 (si ya hay
+// uno sirviendo este worktree, lo usa).
 const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
@@ -9,7 +10,8 @@ const P = 'C:/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app'
 const W = P + '/.claude/worktrees/elegant-pascal-d54e40';
 const { chromium } = require(P + '/node_modules/playwright');
 const OUT = path.resolve(process.argv[2]);
-const SOLO = process.argv[3];
+const VECINOS_ = process.argv[3] === 'vecinos';
+const SOLO = (VECINOS_ ? process.argv[4] : process.argv[3]) || '';
 fs.mkdirSync(OUT, { recursive: true });
 const PORT = '8810';
 const BASE = 'http://localhost:' + PORT;
@@ -23,6 +25,12 @@ const CASOS = [
   { s: '90-90', bib: 'Estira', id: 'move.hips.5', ej: '90/90' },
   { s: 'rotacion-toracica-de-pie', bib: 'Estira', id: 'move.back.standing', ej: 'Rotación torácica de pie' },
   { s: 'inclinacion-de-tronco', bib: 'Estira', id: 'move.spine.waves', ej: 'Inclinación de tronco' },
+  { s: 'gato-camello', bib: 'Estira', id: 'move.spine.waves', ej: 'Gato-camello' },
+  { s: 'remo-con-tu-mano', bib: 'Mueve', id: 'extra.banda.espalda', ej: 'Remo con tu mano' },
+  { s: 'pica-en-escritorio', bib: 'Mueve', id: 'extra.push.ladder', ej: 'Pica en escritorio' },
+  { s: 'rodar-hacia-abajo', bib: 'Estira', id: 'move.back.standing', ej: 'Rodar hacia abajo' },
+  { s: 'sentarse-y-levantarse-del-suelo', bib: 'Estira', id: 'move.hips.ground', ej: 'Sentarse y levantarse del suelo' },
+  { s: 'apretar-gluteos', bib: 'Mueve', id: 'extra.glutes.stealth', ej: 'Apretar glúteos' },
 ];
 /* Una pieza que ya está en la app al lado de cada nueva, de su rutina o de su módulo: con `vecinos`
    como segundo argumento se fotografían estas en vez de las nuevas. */
@@ -35,6 +43,9 @@ const VECINOS = [
   { s: 'paloma', bib: 'Estira', id: 'move.hips.5', ej: 'Paloma' },
   { s: 'juntar-omoplatos', bib: 'Estira', id: 'move.back.standing', ej: 'Juntar omóplatos' },
   { s: 'rotacion-toracica', bib: 'Estira', id: 'move.spine.waves', ej: 'Rotación torácica' },
+  { s: 'flexiones-inclinadas', bib: 'Mueve', id: 'extra.push.ladder', ej: 'Flexiones inclinadas' },
+  { s: 'sentadilla-lateral', bib: 'Estira', id: 'move.hips.ground', ej: 'Sentadilla lateral' },
+  { s: 'elevacion-de-talones', bib: 'Mueve', id: 'extra.glutes.stealth', ej: 'Elevación de talones' },
 ];
 
 async function abrirBiblioteca(page, biblioteca) {
@@ -95,8 +106,8 @@ async function esperarServidor() {
   try {
     await esperarServidor();
     const browser = await chromium.launch();
-    for (const c of SOLO === 'vecinos' ? VECINOS : CASOS) {
-      if (SOLO && SOLO !== 'vecinos' && SOLO !== c.s) continue;
+    for (const c of VECINOS_ ? VECINOS : CASOS) {
+      if (SOLO && !SOLO.split(',').includes(c.s)) continue;
       for (const w of [360, 1280]) {
         const { ctx, page } = await abrirApp(browser, w);
         try {

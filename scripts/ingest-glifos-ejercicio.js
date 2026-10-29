@@ -102,6 +102,11 @@ const GAMMA = numArg('--gamma', 3.0);
 const SIN_ROJO = !args.includes('--con-rojo');
 /* Curva de más por dibujo, para los que llegan con más rayado que el resto (ver el paso 3). */
 const ACLARADO = { 'hueco-abdominal': 1.64, 'elevacion-de-puntas': 1.14 };
+/* `--aclarado slug=k,slug=k` prueba curvas sin tocar la tabla; la que se adopta se escribe en ella. */
+const iAclarado = args.indexOf('--aclarado');
+if (iAclarado !== -1) for (const par of (args[iAclarado + 1] || '').split(',')) {
+  const [s, k] = par.split('='); if (s && isFinite(+k)) ACLARADO[s] = +k;
+}
 /* SUELO DE LUMINANCIA DEL ROJO (s170, y nace de un defecto que el usuario vio
    antes que yo). El detector original era solo de TONO —`r - max(g,b) > 18`— y
    la tinta de estos grabados es SEPIA, o sea calida: medido, entre el 39 % y el
