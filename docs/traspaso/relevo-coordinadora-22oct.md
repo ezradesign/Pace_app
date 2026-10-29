@@ -48,6 +48,10 @@ limpias en sus worktrees de `.claude/worktrees/`.
    `seated_glute_squeeze_profile_plate_v2.jpg`, pasados a `dibujos-homogeneos` (once en su tanda). No vale
    `forearm_stretch_desk_side_plate_v3.jpg`: Genspark pone siempre los dedos hacia fuera, y el prompt insiste ahora en la mano
    al revés. **Faltan 2 de 16: Rana y Palmas en la mesa**, y el logo.
+   ~18:10, Ez pegó otra Palmas (`images\2.webp`): tampoco vale, los dedos siguen la línea del antebrazo. El prompt la pide
+   ahora en primera persona (los antebrazos suben desde abajo y los dedos apuntan hacia abajo); la señal que se comprueba es
+   que los pulgares apunten hacia fuera. Si Genspark no puede, recomendar dejar el dibujo de Estira en esa tarjeta: el de
+   hoy, dos manos juntas, se confunde con «Rezo invertido». `dibujos-homogeneos` ya tiene los once PNG (18:08) en su rama.
    Con el «júntalo»: el retoque de las comillas de «Tus rutinas» y el orden del punto 2 del bloque de las 13:15, con los
    dibujos detrás del runner.
 
