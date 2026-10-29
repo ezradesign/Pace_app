@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.186.0 · actualizada el 29 de octubre a las 12:00 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.186.0 · actualizada el 29 de octubre a las 12:10 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -132,10 +132,16 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <ol class="pasos">
       <li class="paso ahora"><span class="estado">Ahora · lo tuyo, con calma</span>
         <span class="t">Stripe, para cobrar en la web</span>
-        <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Ya están la cuenta, «vende por ti», la
-          llave que firma las ventas, Cloudflare y los arreglos del cobro (0.186.0). Ahora, en el modo de prueba de Stripe: el
-          aviso de pago (el paso marcado «Ahora» de abajo), los números de los enlaces, los enlaces de prueba y una compra de
-          mentira con la tarjeta de prueba. Nadie paga nada de verdad hasta que hables con el gestor.</span></li>
+        <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Aún no está: el 29 a las 12:10 la web
+          seguía «cerrada». Ya tienes la cuenta, «vende por ti», la llave que firma las ventas, Cloudflare, los dos enlaces de
+          verdad (apagados) y los arreglos del cobro (0.186.0). Falta, todo en el modo de prueba de Stripe:
+          <ol>
+            <li>El aviso de pago (el paso marcado «Ahora» de abajo).</li>
+            <li>Los dos enlaces de pago, también en el modo de prueba, y sus números en Cloudflare.</li>
+            <li>La llave que solo lee.</li>
+            <li>Una compra de mentira con la tarjeta de prueba.</li>
+          </ol>
+          Nadie paga nada de verdad hasta que hables con el gestor.</span></li>
       <li class="paso marcha"><span class="estado">En marcha · dos ramas, terminadas hasta sus maquetas</span>
         <span class="t">Los arreglos de Mueve, Estira y «Tus rutinas»</span>
         <span class="c"><span class="quien">Yo, con una sesión en cada rama.</span> Hecho, sin cambiar nada que se vea: que los
@@ -148,8 +154,11 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           textos que dicen más de lo que saben, en una página de antes y después.</span></li>
       <li class="paso luego"><span class="estado">Cuando quieras · lo tuyo, una letra</span>
         <span class="t">El calendario en v1</span>
-        <span class="c"><span class="quien">Tú.</span> Recomiendo que en v1 vaya como prueba en la web, donde Google tarda semanas en
-          abrirlo a todo el mundo, y completo en Android, que usa el calendario del móvil.</span></li>
+        <span class="c"><span class="quien">Tú.</span> PACE pone tus pausas en tu calendario y mira tus reuniones para no pisarlas. En
+          Android ya funciona, con el calendario del móvil. En la web aún no se ofrece: necesita tus altas en Google y
+          Microsoft, y aun con ellas se olvida al cerrar la pestaña y solo se pone al día con PACE abierto, hasta que esté el
+          llavero que lo recuerda. La pregunta es si se vende como parte de PACE completo. Recomiendo: en Android, sí, diciendo
+          sus límites; en la web, como «en pruebas», sin venderlo como motivo para pagar.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
         <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
         <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> En cuanto esté lo de abajo, bajo el archivo para Play, subo
@@ -752,6 +761,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="c"><span class="quien">Tú.</span> Desde la 0.186.0, la web solo da códigos a las compras de los enlaces de PACE, así
           que necesita sus números; sin ellos, el aviso de pago no funciona.
           <ol>
+            <li>Si aún no los tienes en el modo de prueba, crea allí los mismos dos enlaces que hiciste de verdad (19,99 € una
+              vez; 2,99 € al mes con 7 días de prueba), con la misma página de después de pagar.</li>
             <li>En Stripe, abre <b>Enlaces de pago</b> y entra en cada enlace de PACE (los de prueba y los de verdad). En la barra de
               direcciones sale algo como <code>…/payment-links/plink_1Q…</code>: copia lo que empieza por <code>plink_</code>.</li>
             <li>En Cloudflare › el proyecto de pacegrass.app › <b>Configuración › Variables y secretos › Añadir</b>: tipo «Texto»,
