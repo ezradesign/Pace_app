@@ -7,11 +7,10 @@
 - **Medido**: las 14 pantallas en cinco pasos y dos idiomas con `censo-montado.js`: el círculo nunca menor que hoy, nada
   pisado, ningún texto cortado, sin scroll. Pruebas del runner (`runner-reparto`, `-claro`, `-auto`, `-mando`,
   `-circulo`, `-letra`, `-congelado`) en verde en el 8808.
-- **Página de fotos hecha**, con la ligera: https://claude.ai/artifact/MiGd9feEQgLE8GtLSxUULL.
-- **Falta**: el resultado de la suite entera en el 8808, que estaba corriendo al relevo. Para retomarla, desde esta carpeta:
-  `PACE_E2E_PORT=8808 npx playwright test --reporter=line`. Si cae una, repetirla sola antes de creerla:
-  `PACE_E2E_PORT=8808 npx playwright test tests/<archivo> -g "<nombre>" --workers=1`. Con verde, nada más: la rama ya
-  está subida, y juntar es de la coordinadora con el «júntalo» de Ez.
+- **Página de fotos en la cuenta nueva** (la ligera): https://claude.ai/artifact/9DyxdcbyTtp2MBT4G5Xgqf. La anterior (MiGd9feEQgLE8GtLSxUULL) era de la otra cuenta.
+- **Suite entera en el 8808 (29 oct., noche)**: 1085 pasan, 2 saltadas y 2 caídas por carga (47 min, otra suite a la vez):
+  `ritmo-pausa-entera` (pausa larga con sus dos platos) y `ritmo-reloj` («Dos horas» a las 17:51). Repetidas solas con
+  `--workers=1`, pasan las dos. Verde. Nada más: la rama está subida y juntar es de la coordinadora con el «júntalo» de Ez.
 - Si `node_modules` no está (la unión al del repo principal), `build-standalone.js` dice «TypeScript not found»:
   `New-Item -ItemType Junction -Path node_modules -Target "<repo>\node_modules"` en PowerShell.
 - Para rehacer el censo o la página: `git show 05e2252f:index.html > <tmp>/index-hoy.html`, luego
