@@ -211,6 +211,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'custom.draft.cuando.hoy':         'de hoy, {h}',
     'custom.draft.cuando.ayer':        'de ayer, {h}',
     'custom.draft.cuando.dia':         'del {d}',
+    // Lo que no deja guardar, encima de Guardar (Ez, «C6 A», 29 oct.)
+    'custom.save.tope':                'Ya tienes {n} rutinas, el máximo. Borra una para guardar esta; tu borrador sigue aquí.',
+    'custom.save.borrada':             'Esta rutina se ha borrado en otra pestaña.',
+    'custom.save.comoNueva':           'Guardarla como nueva',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -400,4 +404,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'custom.draft.cuando.hoy':         'from today, {h}',
     'custom.draft.cuando.ayer':        'from yesterday, {h}',
     'custom.draft.cuando.dia':         'from {d}',
+    // What stops a save, above Save (Ez, «C6 A», 29 Oct)
+    'custom.save.tope':                'You already have {n} routines, the maximum. Delete one to save this one; your draft stays here.',
+    'custom.save.borrada':             'This routine was deleted in another tab.',
+    'custom.save.comoNueva':           'Save it as new',
 });

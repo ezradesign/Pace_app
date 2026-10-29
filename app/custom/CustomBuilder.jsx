@@ -33,7 +33,8 @@ function CustomBuilder({ editId, onClose }) {
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
 
-  const [target] = useStateCB(editId || null);
+  /* De qué es: null para una rutina nueva. «Guardarla como nueva» (C6) la pasa a null. */
+  const [target, setTarget] = useStateCB(editId || null);
   const existing = target ? getCustomRoutine(target) : null;
   /* El borrador se retoma si es de lo mismo que se abre: la rutina nueva o esta rutina. */
   const [retomado, setRetomado] = useStateCB(() => {
@@ -44,6 +45,7 @@ function CustomBuilder({ editId, onClose }) {
   const [steps, setSteps] = useStateCB(() => customPasosDeHoy(retomado ? retomado.steps : existing ? existing.steps : []));
   const [view, setView] = useStateCB('editor'); // 'editor' | 'picker'
   const [confirmDelete, setConfirmDelete] = useStateCB(false);
+  const [noGuarda, setNoGuarda] = useStateCB(null); // null | 'tope' | 'borrada' (C6)
   const limits = window.CUSTOM_LIMITS;
 
   /* Igual que lo guardado (o vacía, si es nueva) no hay nada que esperar: sin borrador. */
@@ -64,10 +66,10 @@ function CustomBuilder({ editId, onClose }) {
     else if (getCustomDraft() && getCustomDraft().editId === u.target) clearCustomDraft();
   };
   /* Al guardar o al empezar de cero, lo pendiente ya no vale, y el borrador, si es de esto, se va. */
-  const soltarBorrador = () => {
+  const soltarBorrador = (ids = [target]) => {
     clearTimeout(espera.current);
     ultimo.current = null;
-    if (getCustomDraft() && getCustomDraft().editId === target) clearCustomDraft();
+    if (getCustomDraft() && ids.indexOf(getCustomDraft().editId) >= 0) clearCustomDraft();
   };
   useEffectCB(() => {
     if (!montado.current) { montado.current = true; return; }
@@ -119,11 +121,25 @@ function CustomBuilder({ editId, onClose }) {
     ? { ...s, dur: Math.min(limits.maxDur, Math.max(limits.minDur, s.dur + delta)) }
     : s));
 
-  const save = () => {
+  /* LO QUE NO DEJA GUARDAR SE DICE ENCIMA DE GUARDAR (Ez, «C6 A», 29 oct.): diez rutinas ya (la
+     décima, quizá de otra pestaña) o la rutina borrada en otra pestaña. Guardar no hacía nada y
+     no decía por qué; ahora la rutina sigue en pantalla y en el borrador, que se escribe ya. */
+  const guardarComo = (id) => {
+    const motivo = id && !getCustomRoutine(id) ? 'borrada'
+      : !id && getCustomRoutines().length >= limits.maxRoutines ? 'tope' : null;
+    if (motivo) {
+      clearTimeout(espera.current);
+      ultimo.current = null;
+      setCustomDraft(id, name, steps);
+      setNoGuarda(motivo);
+      return;
+    }
     const draft = { name, steps };
-    const ok = target ? updateCustomRoutine(target, draft) : addCustomRoutine(draft);
-    if (ok) { soltarBorrador(); onClose(); }
+    const ok = id ? updateCustomRoutine(id, draft) : addCustomRoutine(draft);
+    if (ok) { soltarBorrador([id, target]); onClose(); }
   };
+  const save = () => guardarComo(target);
+  const comoNueva = () => { setTarget(null); guardarComo(null); };
   const del = () => {
     if (!confirmDelete) { setConfirmDelete(true); return; }
     soltarBorrador();
@@ -248,6 +264,13 @@ function CustomBuilder({ editId, onClose }) {
         )}
       </div>
 
+      {noGuarda === 'tope' && (
+        <CustomAviso tipo="tope" tono="var(--breathe)" texto={tn('custom.save.tope', { n: limits.maxRoutines })} />
+      )}
+      {noGuarda === 'borrada' && (
+        <CustomAviso tipo="borrada" tono="var(--breathe)" texto={t('custom.save.borrada')}
+          boton={t('custom.save.comoNueva')} onBoton={comoNueva} />
+      )}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 16 }}>
         <div>
           {target && (

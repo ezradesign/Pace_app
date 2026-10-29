@@ -3,6 +3,8 @@
  * Cada caso se vio en rojo contra la rama antes de montarlo:
  *   U1 · en «Elige un ejercicio», Escape y la × cerraban el constructor entero, y al cerrarlo la rutina
  *        a medio hacer se perdía sin preguntar. Ahora lo que llevas espera como borrador, uno solo.
+ *   C6 · con diez rutinas (la décima hecha en otra pestaña) o con la rutina borrada en otra pestaña,
+ *        Guardar no hacía nada y no decía por qué. Ahora lo dice una línea encima de Guardar.
  */
 'use strict';
 
@@ -197,4 +199,88 @@ test('U1 · un borrador de ayer se ofrece con su día, y uno dañado se descarta
     expect(errores).toEqual([]);
     await otra.close();
   }
+});
+
+/* ------------------------------------------------- C6 · lo que no deja guardar, encima de Guardar */
+async function otraPestana(context) {
+  const b = await context.newPage();
+  await b.clock.install({ time: AHORA });
+  await irAlArtefacto(b);
+  return b;
+}
+
+test('C6 · con diez rutinas (la décima, de otra pestaña) lo dice encima de Guardar y tu borrador sigue', async ({ page, context }) => {
+  const nueve = Array.from({ length: 9 }, (_, i) => propia('custom.' + (i + 1), 'Rutina ' + (i + 1), [['Plancha', 30]]));
+  await sembrar(context, { customRoutines: nueve });
+  const errores = capturarErrores(page);
+  await abrir(page);
+  const biblio = await tusRutinas(page);
+  await empezarBorrador(page, biblio);
+
+  const b = await otraPestana(context);
+  await b.evaluate(() => addCustomRoutine({ name: 'La décima', steps: [{ name: 'Plancha', dur: 30 }] }));
+  await expect.poll(() => page.evaluate(() => getCustomRoutines().length), 'esta pestaña no ve la décima').toBe(10);
+
+  const arriba = overlaySuperior(page);
+  await arriba.getByRole('button', { name: 'Guardar', exact: true }).click();
+  await expect(arriba.locator('[data-pace-custom-aviso="tope"]')).toHaveText('Ya tienes 10 rutinas, el máximo. Borra una para guardar esta; tu borrador sigue aquí.');
+  await expect(arriba.getByPlaceholder('Mi rutina'), 'la rutina no sigue en pantalla').toHaveValue('Media mañana');
+  await expect(arriba).toContainText('3 ejercicios');
+  const s = await estado(page);
+  expect(s.customRoutines.length).toBe(10);
+  expect(s.customDraft && s.customDraft.name, 'el borrador no sigue').toBe('Media mañana');
+
+  /* La línea va encima de Guardar, entre la rutina y los botones. */
+  const [linea, guardar] = await Promise.all([arriba.locator('[data-pace-custom-aviso="tope"]').boundingBox(),
+    arriba.getByRole('button', { name: 'Guardar', exact: true }).boundingBox()]);
+  expect(linea.y + linea.height, 'la línea no va encima de Guardar').toBeLessThanOrEqual(guardar.y);
+
+  /* Con una borrada en la otra pestaña, se guarda. */
+  await b.evaluate(() => deleteCustomRoutine('custom.1'));
+  await expect.poll(() => page.evaluate(() => getCustomRoutines().length)).toBe(9);
+  await arriba.getByRole('button', { name: 'Guardar', exact: true }).click();
+  await expect(constructorAbierto(page)).toHaveCount(0);
+  expect((await estado(page)).customDraft).toBeUndefined();
+  expect(errores).toEqual([]);
+});
+
+test('C6 · si la rutina se borró en otra pestaña lo dice, y «Guardarla como nueva» la guarda', async ({ page, context }) => {
+  await sembrar(context, { customRoutines: [CUELLO] });
+  const errores = capturarErrores(page);
+  await abrir(page);
+  const biblio = await tusRutinas(page);
+  await biblio.locator('h4:visible', { hasText: 'Cuello de tarde' }).first().locator('xpath=..').getByRole('button', { name: 'Editar' }).click();
+  await overlaySuperior(page).getByPlaceholder('Mi rutina').fill('Cuello de noche');
+
+  const b = await otraPestana(context);
+  await b.evaluate(() => deleteCustomRoutine('custom.1'));
+  await expect.poll(() => page.evaluate(() => getCustomRoutines().length)).toBe(0);
+
+  const arriba = overlaySuperior(page);
+  await arriba.getByRole('button', { name: 'Guardar', exact: true }).click();
+  const aviso = arriba.locator('[data-pace-custom-aviso="borrada"]');
+  await expect(aviso).toContainText('Esta rutina se ha borrado en otra pestaña.');
+  await expect(arriba.getByPlaceholder('Mi rutina'), 'la rutina no sigue en pantalla').toHaveValue('Cuello de noche');
+
+  await aviso.getByRole('button', { name: 'Guardarla como nueva' }).click();
+  await expect(constructorAbierto(page)).toHaveCount(0);
+  const s = await estado(page);
+  expect(s.customRoutines.map(r => [r.name, r.steps.length])).toEqual([['Cuello de noche', 2]]);
+  expect(s.customRoutines[0].id, 'se guardó con el id de la borrada').not.toBe('custom.1');
+  expect(s.customDraft).toBeUndefined();
+  await expect(biblio.locator('h4:visible', { hasText: 'Cuello de noche' })).toHaveCount(1);
+  expect(errores).toEqual([]);
+});
+
+test('C6 · en inglés, las dos líneas', async ({ page, context }) => {
+  await sembrar(context, { lang: 'en', customRoutines: [CUELLO] });
+  await abrir(page);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:open-custom-builder', { detail: { id: 'custom.1' } })));
+  await overlaySuperior(page).getByPlaceholder('My routine').fill('Evening neck');
+  await page.evaluate(() => deleteCustomRoutine('custom.1'));
+  await overlaySuperior(page).getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(overlaySuperior(page).locator('[data-pace-custom-aviso="borrada"]')).toContainText('This routine was deleted in another tab.');
+  await page.evaluate(() => { for (let i = 0; i < 10; i++) addCustomRoutine({ name: 'R' + i, steps: [{ name: 'Plancha', dur: 30 }] }); });
+  await overlaySuperior(page).getByRole('button', { name: 'Save it as new' }).click();
+  await expect(overlaySuperior(page).locator('[data-pace-custom-aviso="tope"]')).toHaveText('You already have 10 routines, the maximum. Delete one to save this one; your draft stays here.');
 });
