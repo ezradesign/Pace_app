@@ -8,6 +8,28 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## AL RELEVO (29 oct., ~17:05; 5iWBf… con las 5 h al 88 %, se repone a las 20:30; la semana al 84 %)
+
+**Si llegas de la otra cuenta, empieza aquí; manda sobre lo de abajo.** `main` igual que origin (docs subidos, CI en verde
+hasta 11a60591; d27c5e27 en marcha). Nada a medias en las ramas del runner y de «Tus rutinas».
+1. **Runner, tercera vuelta (Ez, ~16:50)**, contestada en cuatro preguntas: «Auto» bajo las palabras de los botones en el
+   móvil y en el ordenador; en los móviles altos el círculo crece con tope («el círculo, con tope»); en el ordenador «menos
+   aire entre los párrafos y círculo más grande, todo proporcionado, centrado, armónico y geométrico visual»; y «Colócate sin
+   prisa · pulsa «Empezar ya»» (EN «Get set, no rush · press Begin now»). Sigue en pie lo de la vuelta 2: pastillas bajo su
+   etiqueta en una sola fila con hueco siempre, el bloque junto y centrado. Maqueta pintada con
+   `docs/traspaso/archivos/runner-claro/maqueta-c.js` (scratchpad de 5iWBf…; cópialo a la rama si no está): el tope de
+   `useV1Glifo` pasa a `escritorio ? 300 : 262` con `alto * (escritorio ? 0.36 : 0.3)`, cambiado en el `index.html` servido.
+   Medido: 412×915 de 224 a 276 px, 1280×720 de 160 a 186, 360×740 igual; «Auto» no toca las palabras. La página va en
+   https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp (si no llegó a publicarse con la tabla de la vuelta 3, rehazla con
+   `maqueta-c.js <carpeta> censo todas`). **Espera el «móntalo»**; luego el «júntalo» con los dos retoques del punto 1 del
+   bloque «AL RELEVO (29 oct., ~13:15…)».
+2. **Dibujos**: la sesión `local_10cec9aa-0180-489b-928d-551180393ba3` (de esta cuenta, rama `claude/elegant-pascal-d54e40`)
+   tiene los cinco metidos sin commit y su maqueta https://claude.ai/artifact/Q6LWNCb6KNFqexLTRabqoZ. Ez le pidió allí
+   (~16:55) que el sombreado, el contorno y el tamaño del muñeco en el círculo casen con los demás («gemelo en pared se ve
+   muy pequeño el muñeco»); está en ello, con D-4 (palancas de la ingesta, nunca retocar `.webp`). Espera el sí de Ez.
+3. Lo que Ez puede adelantar fuera de Claude, por orden: Stripe en modo de prueba, el logo PNG transparente, los dibujos que
+   faltan (Rana y Pica, repetir; nueve más), cita con el gestor, avisar a testers, el correo de Apple.
+
 ## 29 oct., ~16:00: coordina 5iWBf… (5 h al 1 % a las 15:35, se repone a las 20:30; la semana al 73 %)
 
 **Manda sobre el bloque de abajo donde lo cambie.** `main` igual que origin salvo estos docs; las dos ramas, como abajo.
