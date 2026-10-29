@@ -3,7 +3,8 @@
    De arriba abajo: el dibujo con su aro de tiempo, el rótulo de la fase, el nombre, la
    instrucción, el número con su etiqueta (y «+15 s» al colocarse o cambiar de lado, o «Saltar este
    paso» en uno con material; debajo, «Con una basta» donde se ofrece), la línea de abajo y la barra
-   de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx).
+   de pasos. El mando de tres botones va en el pie (MoveSessionV1.mando.jsx). En pausa, un velo
+   tapa lo de debajo del dibujo (VeloV1, MoveSessionV1.parts.jsx).
 
    CADA PIEZA TIENE SU SITIO FIJO EN TODA LA RUTINA. El nombre, la instrucción y la línea de abajo
    son «pilas»: en la misma celda de rejilla van, invisibles, todos los textos que ese hueco puede
@@ -155,7 +156,7 @@ function CuerpoV1(p) {
   return (
     <div data-pace-v1-raiz data-pace-v1-fase={step.mode === 'rest' ? 'rest' : p.phase} className="pace-v1-raiz" style={{ '--v1-acento': stepAccent }}
       {...(justo ? { 'data-pace-v1-justo': '' } : {})}>
-      <div ref={cuerpoRef} data-pace-v1-body className="pace-v1">
+      <div ref={cuerpoRef} data-pace-v1-body className="pace-v1" {...(p.paused ? { 'data-pace-v1-en-pausa': '' } : {})}>
         <div data-pace-v1-glyph className="pace-v1-glifo" style={{ width: aro, height: aro }}>
           <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glifo} side={v1LadoGlifo(step, p.phase, side)} />
           <AroV1 fraccion={p.fraccion} accent={stepAccent} px={aro} />
@@ -211,6 +212,7 @@ function CuerpoV1(p) {
           </div>
         </div>
         <div className="pace-v1-aire" />
+        {p.paused && <VeloV1 aro={aro} cuenta={p.vuelta} t={t} />}
       </div>
 
       <div data-pace-v1-progress className="pace-v1-pasos">

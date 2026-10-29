@@ -2636,6 +2636,11 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'move.unaBasta': 'Con una basta',
 
+  'move.pausa.kicker': 'Sesión en pausa',
+  'move.pausa.titulo': 'Descansa',
+  'move.pausa.texto': 'Sigues desde este punto. Al reanudar, 3, 2, 1 y vuelve la cuenta.',
+  'move.pausa.vuelta': 'Sigues en',
+
   'move.careLabel': 'Cuídate',
   'move.series': 'Series',
   'move.repsCount': 'Reps',
@@ -2778,6 +2783,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.flecha.lado': 'Next side',
 
   'move.unaBasta': 'One is enough',
+
+  'move.pausa.kicker': 'Session paused',
+  'move.pausa.titulo': 'Rest',
+  'move.pausa.texto': 'You pick up from here. When you resume: 3, 2, 1 and the count goes on.',
+  'move.pausa.vuelta': 'Back in',
 
   'move.careLabel': 'Take care',
   'move.series': 'Sets',
@@ -32046,6 +32056,7 @@ if (!_paceMoveV1Css) {
     }
 
     .pace-v1 {
+      position: relative;
       flex: 1 1 auto; min-height: 0; width: 100%; max-width: 620px; margin: 0 auto;
       padding-top: var(--v1-u);
       display: flex; flex-direction: column; align-items: center; row-gap: var(--v1-u);
@@ -32122,6 +32133,33 @@ if (!_paceMoveV1Css) {
       padding: 2px 10px; min-height: 24px; cursor: pointer;
     }
     .pace-v1-mas:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    /* La pausa (Ez, P8 B): lo de debajo del dibujo se apaga sin moverse y el velo pone encima su
+       texto, desde debajo del círculo hasta el final del cuerpo; el círculo y su arco quedan a la
+       vista. Un velo translúcido dejaba leer el número de detrás, y con los bordes fundidos para
+       que no se viera una caja, asomaban las líneas largas por los lados. Con opacidad y no con
+       visibility: el texto sigue en la página (lo leen el lector de pantalla y las pruebas). */
+    .pace-v1 > :not([data-pace-v1-glyph]):not(.pace-v1-velo) { transition: opacity 220ms var(--ease); }
+    .pace-v1[data-pace-v1-en-pausa] > :not([data-pace-v1-glyph]):not(.pace-v1-velo) { opacity: 0; pointer-events: none; }
+    .pace-v1-velo {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      padding: 0 16px; text-align: center;
+      animation: pace-v1-velo-entra 220ms var(--ease) both;
+    }
+    @keyframes pace-v1-velo-entra { from { opacity: 0; } to { opacity: 1; } }
+    .pace-v1-velo-kicker { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500; color: var(--ink-3); }
+    .pace-v1-velo-pila { display: grid; place-items: center; }
+    .pace-v1-velo-pila > * { grid-area: 1 / 1; }
+    .pace-v1-velo-titulo {
+      font-family: var(--font-display); font-style: italic; font-weight: 500;
+      font-size: var(--v1-nombre); line-height: 1.12; color: var(--ink);
+    }
+    .pace-v1-velo-num {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: var(--v1-num); line-height: 0.95; color: var(--ink-2);
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    .pace-v1-velo-texto { margin: 0; max-width: 320px; font-size: 14px; line-height: 1.45; color: var(--ink-2); white-space: pre-line; }
     /* El hueco de «Con una basta», bajo la etiqueta del número, en todos los pasos de la rutina. */
     .pace-v1-numbasta { display: flex; align-items: center; justify-content: center; min-height: 24px; }
 
@@ -32215,6 +32253,8 @@ if (!_paceMoveV1Css) {
       .pace-v1-aro-arco { transition: none; }
       .pace-v1-redondo { transition: none; }
       .pace-v1-anillo-arco, .pace-v1-auto-pista::after { transition: none; }
+      .pace-v1-velo { animation: none; }
+      .pace-v1 > * { transition: none; }
     }
   `;
   document.head.appendChild(s);
@@ -32793,6 +32833,7 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
 
 
+
 const { useState: useStateCV, useLayoutEffect: useLayoutEffectCV, useRef: useRefCV } = React;
 
 
@@ -32932,7 +32973,7 @@ function CuerpoV1(p) {
   return (
     React.createElement("div", _extends({ "data-pace-v1-raiz": true, "data-pace-v1-fase": step.mode === 'rest' ? 'rest' : p.phase, className: "pace-v1-raiz", style: { '--v1-acento': stepAccent } },
     justo ? { 'data-pace-v1-justo': '' } : {}),
-    React.createElement("div", { ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" },
+    React.createElement("div", _extends({ ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" }, p.paused ? { 'data-pace-v1-en-pausa': '' } : {}),
     React.createElement("div", { "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
     React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: v1LadoGlifo(step, p.phase, side) }),
     React.createElement(AroV1, { fraccion: p.fraccion, accent: stepAccent, px: aro })
@@ -32987,7 +33028,8 @@ function CuerpoV1(p) {
     React.createElement(ColaV1, { strong: p.supportStrong, support: p.support, care: enTrabajo ? p.careText || '' : undefined, t: t, live: true })
     )
     ),
-    React.createElement("div", { className: "pace-v1-aire" })
+    React.createElement("div", { className: "pace-v1-aire" }),
+    p.paused && React.createElement(VeloV1, { aro: aro, cuenta: p.vuelta, t: t })
     ),
 
     React.createElement("div", { "data-pace-v1-progress": true, className: "pace-v1-pasos" },
@@ -33211,6 +33253,7 @@ Object.assign(window, {
 
 
 
+
 function v1BastaDestino(routine, idx) {
   const pasos = routine && routine.steps || [];
   if (!routine || !routine.unaBasta || !pasos[idx] || pasos[idx].mode !== 'rest') return -1;
@@ -33230,8 +33273,80 @@ function v1ConBasta(routine) {
   return !!(routine && routine.unaBasta && (routine.steps || []).some((s, i) => v1BastaDestino(routine, i) >= 0));
 }
 
-Object.assign(window, { v1BastaDestino, v1ConBasta });
-;Object.assign(window, { v1BastaDestino, v1ConBasta });
+
+
+
+
+
+
+
+
+const V1_VUELTA_SEGUNDOS = 3;
+
+function useV1Vuelta(paused, setPaused) {
+  const [cuenta, setCuenta] = React.useState(null);
+  React.useEffect(() => {
+    if (cuenta == null) return undefined;
+    try {playSound('move.warn');} catch (e) {}
+    const to = setTimeout(() => {
+      if (cuenta > 1) setCuenta(cuenta - 1);else
+      {setCuenta(null);setPaused(false);}
+    }, 1000);
+    return () => clearTimeout(to);
+  }, [cuenta]);
+  const pausar = () => {setCuenta(null);setPaused(true);};
+  const reanudar = () => {setCuenta(null);setPaused(false);};
+
+  const alternar = () => {
+    if (!paused) pausar();else
+    setCuenta((c) => c == null ? V1_VUELTA_SEGUNDOS : null);
+  };
+  return { cuenta, pausar, reanudar, alternar };
+}
+
+function VeloV1(_ref) {let { aro, cuenta, t } = _ref;
+  const volviendo = cuenta != null;
+  return (
+    React.createElement("div", { "data-pace-v1-velo": true, className: "pace-v1-velo", role: "status",
+      style: { top: 'calc(var(--v1-u) * 1.5 + ' + aro + 'px)' } },
+    React.createElement("div", { className: "pace-v1-velo-kicker" }, t(volviendo ? 'move.pausa.vuelta' : 'move.pausa.kicker')),
+    React.createElement("div", { className: "pace-v1-velo-pila" },
+    React.createElement("div", { className: "pace-v1-velo-titulo", style: volviendo ? { visibility: 'hidden' } : null }, t('move.pausa.titulo')),
+    React.createElement("div", { className: "pace-v1-velo-num", "data-pace-v1-vuelta": true, style: volviendo ? null : { visibility: 'hidden' } }, volviendo ? cuenta : '')
+    ),
+
+    React.createElement("p", { className: "pace-v1-velo-texto" }, t('move.pausa.texto').replace('. ', '.\n'))
+    ));
+
+}
+
+
+
+function useV1Teclas(stage, alternar, onExit, cerrar) {
+  const ref = React.useRef();
+  ref.current = { stage, alternar, onExit, cerrar };
+  React.useEffect(() => {
+    const onKey = (e) => {
+      const c = ref.current;
+      if (e.key === ' ') {
+
+
+        if (sessionKeyOnControl(e)) return;
+        e.preventDefault();
+        if (c.stage === 'run') c.alternar();
+      }
+      if (e.key === 'Escape') c.onExit('exit');
+
+
+      if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) c.cerrar();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+}
+
+Object.assign(window, { v1BastaDestino, v1ConBasta, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
+;Object.assign(window, { v1BastaDestino, v1ConBasta, useV1Vuelta, VeloV1, useV1Teclas });
 })();
 </script>
   <script>
@@ -33302,6 +33417,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const [side, setSide] = useStateV1(0);
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
+
+  const vuelta = useV1Vuelta(paused, setPaused);
   const [placeLeft, setPlaceLeft] = useStateV1(0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
   const sessionStart = useRefV1(rein.startedAt);
@@ -33451,7 +33568,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
   useRelojSesion(stage === 'run' && phase === 'place' && !paused,
   (n) => setPlaceLeft((c) => Math.max(0, c - n)), [stepIdx]);
-  useSesionAlOcultar(stage === 'run', () => setPaused(true));
+  useSesionAlOcultar(stage === 'run', vuelta.pausar);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
     if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
@@ -33548,24 +33665,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useEffectV1(() => {try {v1DevCheckDuration(routine, v1RestSeconds());} catch (e) {}}, []);
 
 
-  useEffectV1(() => {
-    const onKey = (e) => {
-      if (e.key === ' ') {
-
-
-        if (sessionKeyOnControl(e)) return;
-        e.preventDefault();
-        if (stage === 'run') setPaused((p) => !p);
-      }
-      if (e.key === 'Escape') onExit('exit');
-
-
-
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [stage, stepIdx, phase, step, paused]);
+  useV1Teclas(stage, vuelta.alternar, onExit, () => onExit(sinContarRef.current ? 'skip' : 'done'));
 
 
   if (stage === 'prep') {
@@ -33712,9 +33812,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
       headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
-      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused, onPause: () => setPaused((x) => !x), anillo: anillo, espera: espera, acentoModulo: accent,
-        prev: { onClick: () => {if (stepIdx > 0) {setPaused(false);startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
-        next: { label: primary.label, onClick: () => {setPaused(false);primary.onClick();} },
+      footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused && vuelta.cuenta == null, onPause: vuelta.alternar, anillo: anillo, espera: espera, acentoModulo: accent,
+        prev: { onClick: () => {if (stepIdx > 0) {vuelta.reanudar();startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
+        next: { label: primary.label, onClick: () => {vuelta.reanudar();primary.onClick();} },
         textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') } }),
       hint: t('session.hint') },
 
@@ -33726,8 +33826,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
       support: support, supportStrong: supportStrong, fraccion: fraccion,
       auto: auto, onAuto: () => setPace({ cuerpoAuto: !auto }), siguienteTexto: siguienteTexto,
       onMas: phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null,
-      onSaltar: phase === 'work' && step.opcional ? () => {setPaused(false);advanceStep();} : null,
-      onBasta: v1BastaDestino(routine, stepIdx) >= 0 ? () => {setPaused(false);conUnaBasta();} : null })
+      onSaltar: phase === 'work' && step.opcional ? () => {vuelta.reanudar();advanceStep();} : null,
+      onBasta: v1BastaDestino(routine, stepIdx) >= 0 ? () => {vuelta.reanudar();conUnaBasta();} : null,
+      vuelta: vuelta.cuenta })
     ));
 
 }

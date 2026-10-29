@@ -3,6 +3,11 @@
  * Lo que Ez eligió en la maqueta (docs/proposals/runner-claro-29oct.html):
  *   B3 A · en un paso con banda que se puede saltar, la flecha cuenta las repeticiones y «Saltar
  *          este paso» es la pastilla pequeña junto al número, como el «+15 s».
+ *   P5 A · una palabra bajo cada botón del mando; la de la flecha dice lo que hace.
+ *   P6 A · «Con una basta» en el descanso entre dos series de «Levántate y sube», centrada bajo
+ *          «SEGUNDOS» (retoque de Ez); la rutina cuenta entera.
+ *   P8 B · al pausar, un velo con «Sesión en pausa» que deja a la vista el círculo del dibujo y su
+ *          arco (retoque de Ez); al reanudar, 3, 2, 1 y lo que quedaba.
  *
  * Se mira lo que se VE y lo que queda apuntado (el cierre y el estado), no el código. El reloj
  * va instalado (`runFor`).
@@ -245,6 +250,111 @@ test.describe('P6 · «Con una basta», de verdad', () => {
     expect(await cifra(page, 'Series')).toBe(3);
     expect((await estado(page)).moveSessionsTotal || 0, 'al seguir, la serie saltada con «Con una basta» cortó la rutina').toBe(1);
     expect(errores).toEqual([]);
+  });
+});
+
+const velo = (page) => page.locator('[data-pace-v1-velo]');
+const numeroVivo = async (page) => (await page.locator('[data-pace-v1-num]').textContent()).trim();
+const caja = (page, sel) => page.locator(sel).first().boundingBox();
+async function espiarSonidos(page) {
+  await page.evaluate(() => {
+    window.__sonidos = [];
+    const orig = window.playSound;
+    window.playSound = function (n) { window.__sonidos.push(n); return orig && orig.apply(this, arguments); };
+  });
+}
+const sonidos = (page) => page.evaluate(() => window.__sonidos.slice());
+
+test.describe('P8 · la pausa se ve', () => {
+  test('p8-1 · en el móvil: el velo tapa lo de debajo del dibujo, el círculo y su arco se ven, y al reanudar 3, 2, 1', async ({ browser, baseURL }) => {
+    test.setTimeout(120000);
+    const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true, locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light' });
+    const page = await context.newPage();
+    const errores = capturarErrores(page);
+    await empezar(page, context, 'extra.core.stealth', { cuerpoAuto: true });
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(12000);
+    await expect(velo(page)).toHaveCount(0);
+    const mandoAntes = await caja(page, '[data-pace-v1-mando]');
+    await page.locator('[data-pace-v1-btn="pausa"]').click();
+    await page.clock.runFor(300);
+    await expect(velo(page), 'en pausa no hay velo').toBeVisible();
+    await expect(velo(page)).toContainText('Sesión en pausa');
+    await expect(velo(page)).toContainText('Descansa');
+    await expect(velo(page)).toContainText('Sigues desde este punto. Al reanudar, 3, 2, 1 y vuelve la cuenta.');
+    /* El círculo y su arco, a la vista; el nombre, la instrucción y el número, debajo del velo. */
+    const v = await caja(page, '[data-pace-v1-velo]');
+    const glifo = await caja(page, '[data-pace-v1-glyph]');
+    expect(v.y, 'el velo tapa el círculo del dibujo').toBeGreaterThanOrEqual(glifo.y + glifo.height);
+    for (const sel of ['[data-pace-v1-name]', '[data-pace-v1-cue]', '[data-pace-v1-num]']) {
+      const c = await caja(page, sel);
+      expect(c.y >= v.y && c.y + c.height <= v.y + v.height, sel + ' queda fuera del velo').toBe(true);
+    }
+    expect(await page.evaluate(() => {
+      const r = document.querySelector('[data-pace-v1-glyph]').getBoundingClientRect();
+      const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return !!(e && e.closest('[data-pace-v1-glyph]'));
+    }), 'algo tapa el centro del dibujo').toBe(true);
+    /* El mando sigue igual, con «Reanudar». */
+    expect(await caja(page, '[data-pace-v1-mando]')).toEqual(mandoAntes);
+    expect((await rotulos(page))[1].texto).toBe('Reanudar');
+    const parado = await numeroVivo(page);
+    await page.clock.runFor(20000);
+    expect(await numeroVivo(page), 'la cuenta sigue en pausa').toBe(parado);
+    /* Al reanudar: 3, 2, 1 en el velo, con sus maderas, y luego lo que quedaba. */
+    await espiarSonidos(page);
+    await page.locator('[data-pace-v1-btn="pausa"]').click();
+    await page.clock.runFor(100);
+    await expect(page.locator('[data-pace-v1-vuelta]')).toHaveText('3');
+    await expect(velo(page)).toContainText('Sigues en');
+    expect((await rotulos(page))[1].texto, 'durante el 3, 2, 1 el botón del centro vuelve a pausar').toBe('Pausar');
+    await page.clock.runFor(1000);
+    await expect(page.locator('[data-pace-v1-vuelta]')).toHaveText('2');
+    await page.clock.runFor(1000);
+    await expect(page.locator('[data-pace-v1-vuelta]')).toHaveText('1');
+    expect(await numeroVivo(page), 'la cuenta volvió antes del 3, 2, 1').toBe(parado);
+    await page.clock.runFor(1000);
+    await expect(velo(page)).toHaveCount(0);
+    expect((await sonidos(page)).filter((x) => x === 'move.warn'), 'el 3, 2, 1 no suena a madera').toHaveLength(3);
+    await page.clock.runFor(1200);
+    const vuelve = Number(await numeroVivo(page));
+    expect(vuelve < Number(parado) && vuelve >= Number(parado) - 2, 'al reanudar no sigue lo que quedaba: ' + parado + ' → ' + vuelve).toBe(true);
+    expect(errores).toEqual([]);
+    await context.close();
+  });
+
+  test('p8-2 · en inglés y con el teclado: Espacio pausa, y durante el 3, 2, 1 lo para otra vez', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await empezar(page, context, 'extra.core.stealth', { cuerpoAuto: true, lang: 'en', langAuto: false });
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(5000);
+    await page.keyboard.press(' ');
+    await page.clock.runFor(300);
+    await expect(velo(page)).toContainText('Session paused');
+    await expect(velo(page)).toContainText('Rest');
+    await page.keyboard.press(' ');
+    await page.clock.runFor(1100);
+    await expect(page.locator('[data-pace-v1-vuelta]')).toHaveText('2');
+    await expect(velo(page)).toContainText('Back in');
+    await page.keyboard.press(' ');
+    await page.clock.runFor(5000);
+    await expect(velo(page), 'Espacio durante el 3, 2, 1 no lo paró').toBeVisible();
+    await expect(page.locator('[data-pace-v1-vuelta]')).toBeHidden();
+    expect(errores).toEqual([]);
+  });
+
+  test('p8-3 · en pausa, «›» y «‹» van como siempre: sin cuenta, al momento', async ({ page, context }) => {
+    await empezar(page, context, 'extra.core.stealth', { cuerpoAuto: true });
+    if ((await fase(page)) === 'place') await flecha(page).click();
+    await page.clock.runFor(4000);
+    await page.locator('[data-pace-v1-btn="pausa"]').click();
+    await page.clock.runFor(300);
+    await expect(velo(page)).toBeVisible();
+    await flecha(page).click();
+    await page.clock.runFor(300);
+    await expect(velo(page), '«›» en pausa dejó el velo').toHaveCount(0);
+    expect(await pasoActual(page)).toBe(1);
+    expect((await rotulos(page))[1].texto).toBe('Pausar');
   });
 });
 

@@ -113,12 +113,14 @@ test('la pausa también para la cuenta de colocarse, y «+15 s» le suma', async
   await page.waitForTimeout(2600);
   expect(await numero(page), 'la cuenta de colocarse sigue corriendo en pausa').toBe(parado);
 
-  await page.getByRole('button', { name: /\+15 s/ }).click();
-  expect(await numero(page), '«+15 s» no suma quince segundos').toBe(parado + 15);
-
+  /* Al reanudar, 3, 2, 1 y la cuenta sigue (Ez, P8 B). «+15 s» se pulsa ya en marcha: en pausa
+     el velo tapa lo de debajo del dibujo. */
   await mando(page).getByRole('button', { name: 'Reanudar' }).click();
-  await page.waitForTimeout(2600);
-  expect(await numero(page), 'al reanudar la cuenta no sigue').toBeLessThan(parado + 15);
+  await page.waitForTimeout(3000 + 2600);
+  const sigue = await numero(page);
+  expect(sigue, 'al reanudar la cuenta no sigue').toBeLessThan(parado);
+  await page.getByRole('button', { name: /\+15 s/ }).click();
+  expect(await numero(page), '«+15 s» no suma quince segundos').toBeGreaterThanOrEqual(sigue + 14);
   expect(errores).toEqual([]);
 });
 

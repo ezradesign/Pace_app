@@ -282,7 +282,7 @@ test('el «Tiempo» del cierre de Mueve deja fuera las pausas, como la semana', 
   await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
   await page.clock.runFor(20 * 60 * 1000);
   await sesion(page).locator('[data-pace-v1-btn="pausa"]').click();
-  await segundos(page, 5);
+  await segundos(page, 3 + 5);   // el 3, 2, 1 de reanudar (Ez, P8 B) aún es pausa
   await hastaElCierre(page);
   const tiempo = await tiempoDelCierre(page);
   expect(tiempo, 'el cierre lleva la pausa de 20 minutos dentro').toBeLessThan(60);

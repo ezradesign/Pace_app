@@ -40,6 +40,7 @@ if (!_paceMoveV1Css) {
     }
 
     .pace-v1 {
+      position: relative;
       flex: 1 1 auto; min-height: 0; width: 100%; max-width: 620px; margin: 0 auto;
       padding-top: var(--v1-u);
       display: flex; flex-direction: column; align-items: center; row-gap: var(--v1-u);
@@ -116,6 +117,33 @@ if (!_paceMoveV1Css) {
       padding: 2px 10px; min-height: 24px; cursor: pointer;
     }
     .pace-v1-mas:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    /* La pausa (Ez, P8 B): lo de debajo del dibujo se apaga sin moverse y el velo pone encima su
+       texto, desde debajo del círculo hasta el final del cuerpo; el círculo y su arco quedan a la
+       vista. Un velo translúcido dejaba leer el número de detrás, y con los bordes fundidos para
+       que no se viera una caja, asomaban las líneas largas por los lados. Con opacidad y no con
+       visibility: el texto sigue en la página (lo leen el lector de pantalla y las pruebas). */
+    .pace-v1 > :not([data-pace-v1-glyph]):not(.pace-v1-velo) { transition: opacity 220ms var(--ease); }
+    .pace-v1[data-pace-v1-en-pausa] > :not([data-pace-v1-glyph]):not(.pace-v1-velo) { opacity: 0; pointer-events: none; }
+    .pace-v1-velo {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      padding: 0 16px; text-align: center;
+      animation: pace-v1-velo-entra 220ms var(--ease) both;
+    }
+    @keyframes pace-v1-velo-entra { from { opacity: 0; } to { opacity: 1; } }
+    .pace-v1-velo-kicker { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500; color: var(--ink-3); }
+    .pace-v1-velo-pila { display: grid; place-items: center; }
+    .pace-v1-velo-pila > * { grid-area: 1 / 1; }
+    .pace-v1-velo-titulo {
+      font-family: var(--font-display); font-style: italic; font-weight: 500;
+      font-size: var(--v1-nombre); line-height: 1.12; color: var(--ink);
+    }
+    .pace-v1-velo-num {
+      font-family: var(--font-display); font-style: italic; font-weight: 400;
+      font-size: var(--v1-num); line-height: 0.95; color: var(--ink-2);
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    .pace-v1-velo-texto { margin: 0; max-width: 320px; font-size: 14px; line-height: 1.45; color: var(--ink-2); white-space: pre-line; }
     /* El hueco de «Con una basta», bajo la etiqueta del número, en todos los pasos de la rutina. */
     .pace-v1-numbasta { display: flex; align-items: center; justify-content: center; min-height: 24px; }
 
@@ -209,6 +237,8 @@ if (!_paceMoveV1Css) {
       .pace-v1-aro-arco { transition: none; }
       .pace-v1-redondo { transition: none; }
       .pace-v1-anillo-arco, .pace-v1-auto-pista::after { transition: none; }
+      .pace-v1-velo { animation: none; }
+      .pace-v1 > * { transition: none; }
     }
   `;
   document.head.appendChild(s);

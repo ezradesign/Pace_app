@@ -193,6 +193,11 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.flecha.lado':                'Siguiente lado',
     // «La primera vez, una serie basta», de verdad (Ez, P6 A del 29 oct. 2026)
     'move.unaBasta':                   'Con una basta',
+    // La pausa se ve (Ez, P8 B del 29 oct. 2026): el velo y, al volver, 3, 2, 1
+    'move.pausa.kicker':               'Sesión en pausa',
+    'move.pausa.titulo':               'Descansa',
+    'move.pausa.texto':                'Sigues desde este punto. Al reanudar, 3, 2, 1 y vuelve la cuenta.',
+    'move.pausa.vuelta':               'Sigues en',
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
     'move.careLabel':                  'Cuídate',
     'move.series':                     'Series',
@@ -336,6 +341,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.flecha.lado':                'Next side',
     // "The first time, one set is enough", for real (Ez, P6 A, 29 Oct 2026)
     'move.unaBasta':                   'One is enough',
+    // The pause shows (Ez, P8 B, 29 Oct 2026): the veil and, on resuming, 3, 2, 1
+    'move.pausa.kicker':               'Session paused',
+    'move.pausa.titulo':               'Rest',
+    'move.pausa.texto':                'You pick up from here. When you resume: 3, 2, 1 and the count goes on.',
+    'move.pausa.vuelta':               'Back in',
     // Editorial layer (s114): «Take care» label + final-screen stat labels
     'move.careLabel':                  'Take care',
     'move.series':                     'Sets',

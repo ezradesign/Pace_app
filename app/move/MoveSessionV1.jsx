@@ -64,6 +64,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const [side, setSide] = useStateV1(0);           // 0 = 1er lado, 1 = 2º lado
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
+  /* La pausa se ve y al volver cuenta 3, 2, 1 (Ez, P8 B; MoveSessionV1.parts.jsx). */
+  const vuelta = useV1Vuelta(paused, setPaused);
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
   const sessionStart = useRefV1(rein.startedAt);   // wall-clock: incluye pausas y colocaciones
@@ -213,7 +215,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // s200: los tres relojes van por MARCA de tiempo (`useRelojSesion`, support).
   useRelojSesion(stage === 'run' && phase === 'place' && !paused,
     n => setPlaceLeft(c => Math.max(0, c - n)), [stepIdx]);
-  useSesionAlOcultar(stage === 'run', () => setPaused(true)); // s200: politica en SESION_AL_OCULTAR
+  useSesionAlOcultar(stage === 'run', vuelta.pausar); // s200: politica en SESION_AL_OCULTAR
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
     if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
@@ -309,25 +311,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // real medida. Invisible en prod; la promesa visible sale del helper puro.
   useEffectV1(() => { try { v1DevCheckDuration(routine, v1RestSeconds()); } catch (e) {} }, []);
 
-  // Atajos: Espacio pausa y reanuda cualquier fase en marcha (opción A: la pausa está siempre).
-  useEffectV1(() => {
-    const onKey = (e) => {
-      if (e.key === ' ') {
-        // No robar Espacio a un control con foco (chips de feedback / CTA en
-        // 'done'): que lo active nativamente en vez de hacer preventDefault (s116).
-        if (sessionKeyOnControl(e)) return;
-        e.preventDefault();
-        if (stage === 'run') setPaused(p => !p);
-      }
-      if (e.key === 'Escape') onExit('exit');
-      // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
-      // el propio CTA se activan por su onClick) o haya modificadores/IME —
-      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [stage, stepIdx, phase, step, paused]);
+  // Atajos (MoveSessionV1.parts.jsx): Espacio pausa y reanuda cualquier fase en marcha, con el 3, 2, 1.
+  useV1Teclas(stage, vuelta.alternar, onExit, () => onExit(sinContarRef.current ? 'skip' : 'done'));
 
   // PREPARACIÓN
   if (stage === 'prep') {
@@ -474,9 +459,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     <SessionShell
       routine={displayRoutine} onExit={onExit} atmosphere={atmo}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
-      footer={<MandoV1 accent={stepAccent} paused={paused} onPause={() => setPaused(x => !x)} anillo={anillo} espera={espera} acentoModulo={accent}
-        prev={{ onClick: () => { if (stepIdx > 0) { setPaused(false); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
-        next={{ label: primary.label, onClick: () => { setPaused(false); primary.onClick(); } }}
+      footer={<MandoV1 accent={stepAccent} paused={paused && vuelta.cuenta == null} onPause={vuelta.alternar} anillo={anillo} espera={espera} acentoModulo={accent}
+        prev={{ onClick: () => { if (stepIdx > 0) { vuelta.reanudar(); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
+        next={{ label: primary.label, onClick: () => { vuelta.reanudar(); primary.onClick(); } }}
         textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} />}
       hint={t('session.hint')}
     >
@@ -488,8 +473,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         support={support} supportStrong={supportStrong} fraccion={fraccion}
         auto={auto} onAuto={() => setPace({ cuerpoAuto: !auto })} siguienteTexto={siguienteTexto}
         onMas={phase === 'place' ? addPlaceTime : phase === 'change' ? addChangeTime : null}
-        onSaltar={phase === 'work' && step.opcional ? () => { setPaused(false); advanceStep(); } : null}
-        onBasta={v1BastaDestino(routine, stepIdx) >= 0 ? () => { setPaused(false); conUnaBasta(); } : null} />
+        onSaltar={phase === 'work' && step.opcional ? () => { vuelta.reanudar(); advanceStep(); } : null}
+        onBasta={v1BastaDestino(routine, stepIdx) >= 0 ? () => { vuelta.reanudar(); conUnaBasta(); } : null}
+        vuelta={vuelta.cuenta} />
     </SessionShell>
   );
 }

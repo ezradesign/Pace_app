@@ -121,6 +121,15 @@ async function espiarSonidos(page) {
   });
 }
 const sonidos = (page) => page.evaluate(() => window.__sonidos.slice());
+/* Reanudar no sigue al momento (Ez, P8 B del 29 oct.): 3, 2, 1 con sus tres maderas, y luego lo
+   que estuviera pendiente. Se comprueba el 3, 2, 1 y se vacía el espía: lo que suene después es
+   lo que estas pruebas vigilan. */
+async function reanudar(page) {
+  await page.locator('[data-pace-v1-btn="pausa"]').click();
+  await page.clock.runFor(2900);
+  expect(await sonidos(page), 'el 3, 2, 1 al reanudar').toEqual(['move.warn', 'move.warn', 'move.warn']);
+  await page.evaluate(() => { window.__sonidos = []; });
+}
 async function pausarEncenderAutoYEsperar(page) {
   await page.locator('[data-pace-v1-btn="pausa"]').click();
   await expect(page.locator('[data-pace-v1-btn="pausa"]')).toHaveText(/Reanudar/);
@@ -146,7 +155,7 @@ test('espera-3 · en pausa, encender Auto con la colocación en 0 no empieza el 
   expect(await hasta(page, async () => (await fase(page)) === 'place' && (await numero(page)) === '0', 40)).toBe(true);
   await pausarEncenderAutoYEsperar(page);
   /* Al reanudar, con Auto ya encendido, sigue: al ejercicio, con su «¡ya!» una sola vez. */
-  await page.locator('[data-pace-v1-btn="pausa"]').click();
+  await reanudar(page);
   await page.clock.runFor(1500);
   expect(await fase(page)).toBe('work');
   expect((await sonidos(page)).filter((s) => s === 'move.go').length, 'el «¡ya!» sonó de más').toBeLessThanOrEqual(1);
@@ -164,7 +173,7 @@ test('espera-4 · en pausa, encender Auto con el último aguante en 00 no acaba 
   await page.clock.runFor(2000);
   await pausarEncenderAutoYEsperar(page);
   /* Al reanudar acaba, y el aviso de 00 no se repite. */
-  await page.locator('[data-pace-v1-btn="pausa"]').click();
+  await reanudar(page);
   await page.clock.runFor(1500);
   await expect(page.locator('[data-pace-session-done]')).toHaveCount(1);
   const s = await sonidos(page);
@@ -185,7 +194,7 @@ test('espera-5 · en pausa, encender Auto con el primer lado en 00 no cambia de 
   await pausarEncenderAutoYEsperar(page);
   await expect(page.locator('[data-pace-v1-cue] strong')).toHaveText(/Izquierda/);
   /* Al reanudar, con Auto: el cambio de lado, que es lo que haría Auto en 00. */
-  await page.locator('[data-pace-v1-btn="pausa"]').click();
+  await reanudar(page);
   await page.clock.runFor(1500);
   expect(await fase(page)).toBe('change');
 });
