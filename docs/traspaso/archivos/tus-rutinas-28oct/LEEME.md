@@ -23,15 +23,16 @@ El censo de textos pasa de 1064 a 1067 (`preview.eq.chair`, `lib.where.either`, 
 ## Cómo está probado
 
 `npm run verify` en verde tras C4. Las pruebas de «Tus rutinas», de la biblioteca, del runner, del saneador y de los eventos
-pasan (89 en 4,8 min, con `--workers=3`). **La suite entera se lanzó hacia las 11:00 del 29 oct. en el 8809; si este LEEME no
-dice su resultado, no llegó a acabar**: repítela tras `node build-standalone.js` con
-`PACE_E2E_PORT=8809 npx playwright test`, y lo que caiga por tiempo, otra vez con `--workers=1`.
+pasan (89 en 4,8 min, con `--workers=3`). **La suite entera, sobre b560f81 (lo último que toca código), pasa: 1060 en verde y 2 saltadas
+(el audio del iPhone, como siempre), en 27,1 min en el 8809.** Para repetirla, tras `node build-standalone.js`:
+`PACE_E2E_PORT=8809 npx playwright test`.
 
 ## Por dónde seguir
 
 1. Con la respuesta de Ez a la maqueta, montar U1 y C6 en `app/custom/CustomBuilder.jsx` (y `state-custom.jsx` si es la B
    de U1: el borrador en el estado, uno solo), con su prueba que caiga antes contra esta rama y textos en ES y EN.
-2. La suite entera en verde, y quitar la unión de `node_modules` del worktree (`cmd /c rmdir node_modules`).
+2. Tras montarlos, la suite entera otra vez. La unión de `node_modules` se quitó al acabar; para probar, se vuelve a
+   enlazar al del repo principal (`mklink /J`).
 
 ## Espera a Ez: U1 y C6
 
