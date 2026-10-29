@@ -85,15 +85,20 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const auto = pace.cuerpoAuto !== false;
   const totalesRef = useRefV1({ place: 1, change: 1 });
   const esperaRef = useRefV1('');
+  const sonadoRef = useRefV1('');
+  /* Sin Auto, una cuenta en 0 que espera a «›» no es hacer la rutina: ningún reloj cuenta esa
+     espera, como no cuentan las pausas. Las reps a tu ritmo sí: ahí se está haciendo el ejercicio. */
+  const esperaMano = !auto && stage === 'run' && (phase === 'place' ? placeLeft <= 0
+    : phase === 'change' ? changeLeft <= 0 : step.mode !== 'reps' && elapsed >= v1StepDur(step));
   /* Reloj de TIEMPO ACTIVO (s170) — lo que Respira tiene desde s98 y esta
      familia no tenía: hasta ahora su único tiempo era `sessionStart`, o sea
      reloj de pared CON LAS PAUSAS DENTRO. La política de qué cuenta vive en
      `v1TrabajoActivo` (support), que es donde puede probarse sola. */
-  const relojActivo = useV1ActiveClock(stage, phase, step, paused, rein.activoMs);
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused || esperaMano, rein.activoMs);
   /* Lo que se acredita a la semana: la sesión en marcha con sus colocaciones y
      descansos (R4), pero sin las pausas ni el rato con la página congelada. Con
      el reloj de pared, una pausa de 20 minutos eran 20 minutos de Mueve. */
-  const relojSesion = useV1SessionClock(stage, paused, undefined, rein.sesionMs);
+  const relojSesion = useV1SessionClock(stage, paused || esperaMano, undefined, rein.sesionMs);
   const tiempoSecRef = useRefV1(0);    // el «Tiempo» del cierre, congelado al completar
   /* No se acredita: con menos de PACE_MINIMO_CUENTA_S (sesiones-7), `true`; sin ningún segundo
      de ejercicio (solo descansos o todo saltado), 'sinTrabajo', que el cierre explica aparte. */
@@ -202,21 +207,27 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (stage !== 'run' || phase !== 'place') return;
     if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
   }, [placeLeft]);
-  // Al llegar a 0 empieza solo; sin Auto, espera a «›», y si se enciende Auto ahí, sigue.
+  // Al llegar a 0 empieza solo; sin Auto, espera a «›», y si se enciende Auto ahí, sigue. En pausa,
+  // encender Auto solo cambia la preferencia: lo que toque pasa al reanudar.
   useEffectV1(() => {
-    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto) beginWork();
-  }, [placeLeft, auto]);
+    if (stage === 'run' && phase === 'place' && placeLeft <= 0 && auto && !paused) beginWork();
+  }, [placeLeft, auto, paused]);
 
   // Ticker de trabajo (fase 'work', pausable). s113: las reps GUIADAS también
-  // corren — el tiempo marca la cadencia (enmienda R2).
-  useRelojSesion(stage === 'run' && phase === 'work' && !paused, n => setElapsed(e => e + n), [stepIdx, side]);
+  // corren — el tiempo marca la cadencia (enmienda R2). Esperando a «›», quieto.
+  useRelojSesion(stage === 'run' && phase === 'work' && !paused && !esperaMano, n => setElapsed(e => e + n), [stepIdx, side]);
   // Umbrales del trabajo: madera suave por rep + avance AUTO al objetivo (reps,
   // acreditando solo las guiadas reales) · fin de segmento → cambio de lado
   // (perSide lado 0) o siguiente paso. Deps [elapsed]: exactamente una
   // evaluación por segundo de trabajo; las transiciones resetean elapsed a 0
   // (guardado) así que no re-disparan.
+  // Con [paused] para que lo que Auto deja pendiente pase al reanudar; los sonidos, una vez por
+  // segundo de trabajo (`sonadoRef`): reanudar o tocar Auto no los repite.
   useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
+    if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
+    const marca = stepIdx + ':' + side + ':' + elapsed;
+    const suena = sonadoRef.current !== marca;
+    sonadoRef.current = marca;
     if (step.mode === 'reps') {
       if (!auto) return;   // a tu ritmo: ni cadencia ni madera; «›» las da por hechas
       const repSec = v1RepSeconds(step);
@@ -228,7 +239,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         repsGuidedRef.current += v1RepTarget(step);
         hechosRef.current[stepIdx] = true;
         advanceStep();
-      } else if (elapsed % repSec === 0) {
+      } else if (suena && elapsed % repSec === 0) {
         try { playSound('move.rep'); } catch (e) {}
       }
       return;
@@ -237,7 +248,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     const effDur = v1StepDur(step);
     // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
     // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
-    if (effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn'); } catch (e) {} }
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn'); } catch (e) {} }
     if (elapsed >= effDur) {
       if (!auto) {
         // Sin Auto la cuenta se queda en 0 y suena una vez: lo que sigue lo decide «›».
@@ -248,7 +259,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       if (step.mode === 'perSide' && side === 0) enterChange();
       else advanceStep();
     }
-  }, [elapsed, auto]);
+  }, [elapsed, auto, paused]);
 
   // Transición AUTO de lado (s113, enmienda R3): cuenta que fluye sola con el
   // lado siguiente visible. Al llegar a 0 → el lado 2 empieza solo.
@@ -259,8 +270,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (changeLeft > 0 && changeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
   }, [changeLeft]);
   useEffectV1(() => {
-    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto) onSideReady();
-  }, [changeLeft, auto]);
+    if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
+  }, [changeLeft, auto, paused]);
 
   // Sonidos, para seguir la rutina sin mirar (opción A):
   //   · ejercicio nuevo → un cuenco al entrar en el paso, se coloque o no (grave si es descanso);
