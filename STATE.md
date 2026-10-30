@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.187.0 · 29 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.188.0 · 30 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -30,11 +30,10 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    que encontró ChatGPT (A1-A7), en `main` con la 0.186.0** (29 oct., con el «júntalo» de Ez).
 2. **Mueve, Estira y «Tus rutinas», en `main` con la 0.187.0** (29 oct., con el «júntalo» de Ez): B1-B4, C1-C6 y U1-U5
    de las revisiones de ChatGPT, el reparto del runner que dibujó Ez y los catorce dibujos nuevos, con Paloma, Flexor de
-   cadera y Sentadilla a silla aclarados. Lo de producto (la carta del lunes que se pueda dejar para luego, que la prueba de 7 días llegue a
-   enseñarla, la frase del móvil y /premium con la variedad y el calendario de Android; en la web, «en pruebas», Ez 29 oct.) y lo de quien empieza (P1-P8: mirar un
-   ejercicio antes de empezar, la flecha que dice qué hace, la pausa que se ve, «con una serie basta») y cuando el día se
-   tuerce (Q1-Q7), en una maqueta para Ez; recomendado en una actualización durante los 14 días de los testers. Lo que es
-   solo texto (Q1, Q3, Q6, Q7 y P1-P3), en una página de antes y después, puede ir en la versión de prueba. **Las ocho
+   cadera y Sentadilla a silla aclarados. **Y en `main` con la 0.188.0** (30 oct., con el «júntalo» de Ez): la carta del
+   lunes para luego con su sobre, la frase del móvil y mirar un ejercicio antes de empezar (U3, U5 y P4; U4 después de v1),
+   y los textos que no inventan (paquete T: P1-P3, Q1, Q3, Q6, Q7, CAL-2, CAL-4, CAL-6, /premium y la ficha). Con eso, los
+   grupos 1 y 2 de la lista única están hechos salvo cobrar y lo legal; lo demás es del grupo 3, después de v1. **Las ocho
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
@@ -51,6 +50,11 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/E
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Ahora: los dos dibujos que faltan y el logo**, que dejan subir la versión de prueba definitiva (abajo).
+- **Lo legal para vender en la web**: cinco letras de Ez en su página (https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2;
+  recomendada 1A 2A 3A 4A 5A) y las preguntas para el gestor y un jurista. Con Managed Payments el vendedor es Ez. Los
+  borradores, sin publicar, en `claude/infallible-taussig-1af346` (`docs/launch/legal-web.md`).
+- **Volver a pegar en Play Console** el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`, en es y en (cambió
+  con la 0.188.0); el de PACE completo, con la v1.
 - **A la vez: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), los números
   `plink_` de los enlaces en `PACE_ENLACES_STRIPE` (sin ellos, desde la 0.186.0, `/api/stripe` da 503), la llave que
   solo lee (`STRIPE_LECTURA`), los enlaces de prueba y la compra de mentira con 4242, mirando qué número trae el recibo.

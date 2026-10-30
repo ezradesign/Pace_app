@@ -54,6 +54,12 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
    - Lo legal: `claude/infallible-taussig-1af346` f192dea7, solo documentos y borradores sin publicar; página
      https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2 con cinco letras (recomendada 1A 2A 3A 4A 5A). Hallazgo: con
      Managed Payments el vendedor es Ez, no Stripe.
+9. **~23:20, Ez: «Juntalo»** (textos y carta): juntadas en `main` (a36be0ef la carta, 567e7a9b los textos, c39832a9 la
+   0.188.0; el censo de claves, 1086 + 9 + 7 = 1102), suite entera en el 8766 (el 8765 sigue ocupado por la suite muerta
+   de 5iWBf…). **Lo legal: «1a + 2 y si ponemos 7? 3-A 4A 5A» y, explicado que el desistimiento de la ley no baja de 14
+   días, «Sí, 2A»**: 1A 2A 3A 4A 5A, pasadas a `legal-premium` con sus palabras. Esa sesión pone las letras en los
+   borradores y prepara el botón 1A (formulario, función de Cloudflare y acuse por correo, que pide a Ez darse de alta en
+   un servicio de correo), sin tocar /premium ni Ajustes hasta que la 0.188.0 esté en origin/main.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
