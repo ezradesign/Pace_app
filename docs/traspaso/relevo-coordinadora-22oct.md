@@ -22,6 +22,28 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
 3. La hoja de EcLj6… (https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT) vuelve a llevar los enlaces de esta cuenta: el
    cambio inverso al de 4257ae3a (Q6LWN→2A58K, 3hWPW→6RsAs, REAWx→R4hc4, 3BFKt→CunCY, 3P3og→3uABs, 9MnNL→VDdAW,
    56cDi→Mk11G, 9BKgT→7Hj5s, Mtv9t→MVctq, LD2aR→U1mVU, 9Dyxd→MiGd9). «Ahora»: Rana, Palmas en la mesa y el logo.
+4. **~13:20, dos sesiones de esta cuenta**, arrancadas por Ez desde las tarjetas, cada una en su worktree y sin tocar
+   `main`: `textos-honestos` (`local_881df758-f287-4519-9636-4d66a14a4a20`, puerto 8812), la página de antes y después del
+   paquete T (P1-P3, Q1, Q3, Q6, Q7, CAL-2, CAL-4, CAL-6 y lo que prometen /premium y la ficha de Play); y
+   `maqueta-producto` (`local_aab2c3f2-08a0-4c60-b011-3ac9302245b2`, puerto 8814), U3 y U5, con U4 y P4 como «puede
+   esperar». Las dos acaban con `LISTO PARA MAIN`. **El logo lo rehace Ez** («Lo hago yo», 30 oct.): el lema dice «FVFN»
+   en la imagen; se le dio un prompt para la IA con el fondo transparente y «EVEN» con sus tres barras.
+5. **~13:50, Ez eligió en las dos páginas** (pasado a cada sesión con sus palabras; comprobar en su rama que llega):
+   - Textos (https://claude.ai/artifact/TRCBmekA95gLLawszVhpbF): «1A + 2A + 3B + 4A + 5A Pero con Has terminado un Foco de
+     45 minutos mejor que acabbas + 6 la que ya tenemos + 7A + 8A + 9A + 10A + 11A + 12A + 13A por el momento + 14A».
+   - Carta (https://claude.ai/artifact/Y3TxJ1sisYgSFYfHMaux4q): «1A (me gusta lo del sobre al lado de logros estadísticas
+     / etc de hecho se puede utilizar para actualizaciones, alguna notificación puntual y esto y puede ser abierto o
+     cerrado no? + 2A +3A + 4B». Contestado: el sobre, cerrado con algo sin leer y abierto ya leído; preparado para
+     novedades y avisos puntuales más adelante, pero ahora solo con la carta, para no agrandar lo de antes de v1.
+6. **Ez, ~14:00: «Continua aunque lleguemos al 100% y sigue trabajando en esta sesión automáticamente cuando se
+   restablezca»**. Ya no se para al 95 %: al 85 % «wip» y push, y se sigue. Ez arrancó también `legal-premium`
+   (`local_ac306c03-e267-4cb8-940a-1da0c6f44b73`, rama `claude/infallible-taussig-1af346`, puerto 8816): lo legal de
+   /premium en borrador (quién vende con Managed Payments, la función de desistir, condiciones y aviso legal con huecos
+   para los datos de Ez). Ramas: textos `claude/nifty-wozniak-888954`, maqueta `claude/eloquent-dhawan-80bab5`.
+7. **~16:30, las tres sesiones se cortaron con las 5 h al 100 %.** A las 17:24 la coordinadora se retomó sola (un
+   CronCreate de la sesión) y las despertó: textos tenía todo sin commit en su carpeta, la maqueta un commit sin push
+   (f508fbd4) y lo legal su «wip» subido (5cd9ae62). Hay otra retoma programada a las 22:24, tras la reposición de
+   las 22:20. La semana, al 78 % (se repone el 3 nov.).
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
