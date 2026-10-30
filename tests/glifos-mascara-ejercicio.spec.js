@@ -100,16 +100,20 @@ test('cada paso pinta mascara o SVG segun lo que diga el mapa, sin mezclas', asy
       }
       return false;
     };
+    /* Desde el 30 oct. (Ez, 4B) un paso que se puede mirar es un botón con su «›»
+       (`data-pace-preview-paso`); el resto sigue siendo un `div`. */
+    const filaDe = (el) => el.closest('[data-pace-preview-paso]') || el.closest('div');
+    const textoDe = (fila) => (fila.innerText || '').replace(/›/g, '').trim().replace(/\s*×\s*\d+\s*$/, '').trim();
     const out = [];
     for (const svgOrSpan of raiz.querySelectorAll('svg')) {
-      const fila = svgOrSpan.closest('div');
-      if (fila) out.push({ texto: (fila.innerText || '').replace(/\s*×\s*\d+\s*$/, '').trim(), pinta: 'svg' });
+      const fila = filaDe(svgOrSpan);
+      if (fila) out.push({ texto: textoDe(fila), pinta: 'svg' });
     }
     for (const el of raiz.querySelectorAll('span')) {
       const mi = getComputedStyle(el).maskImage || getComputedStyle(el).webkitMaskImage || 'none';
       if (mi === 'none' || mi === 'initial') continue;
-      const fila = el.parentElement && el.parentElement.closest('div');
-      if (fila) out.push({ texto: (fila.innerText || '').replace(/\s*×\s*\d+\s*$/, '').trim(), pinta: 'mascara' });
+      const fila = el.parentElement && filaDe(el.parentElement);
+      if (fila) out.push({ texto: textoDe(fila), pinta: 'mascara' });
     }
     return out.filter(f => f.texto);
   });

@@ -3,12 +3,13 @@
    El motor (ritmo.motor.js) es puro; aquí se le da la semana y se guarda lo que dice,
    dentro de `ritmo` en `pace.state.v2`:
 
-     carta      { lunes, res, respuesta, hora, vista } — la carta de la semana que empieza
-                ese `lunes`: `res` es lo que dijo el motor, `respuesta` la de los cambios
-                ('vale' | 'dejar'), `hora` la de la pregunta de tus horas ('si' | 'no') y
-                `vista` el día en que quedó todo contestado. Se guarda UNA vez por semana, la
-                primera vez que PACE está abierto con el registro listo y hay carta (tres
-                días o más); sin carta no se escribe nada.
+     carta      { lunes, res, respuesta, hora, vista, luego } — la carta de la semana que
+                empieza ese `lunes`: `res` es lo que dijo el motor, `respuesta` la de los
+                cambios ('vale' | 'dejar'), `hora` la de la pregunta de tus horas ('si' | 'no'),
+                `vista` el día en que quedó todo contestado y `luego` el día en que se cerró sin
+                contestar (Ez, 30 oct.: 1A): ya no sale sola y espera en el sobre de arriba. Se
+                guarda UNA vez por semana, la primera vez que PACE está abierto con el registro
+                listo y hay carta (tres días o más); sin carta no se escribe nada.
      aprendido  { descansa, cortas, menos, ayuda, rechazado } — lo que aplicó «Vale» y lo
                 rechazado, cada cosa con su `hasta` (cuatro semanas). Lo leen las series por
                 `ritmoMemoria`, y solo con PACE completo (`puedeAprender`): sin él, el día
@@ -98,13 +99,30 @@ function ritmoMotorRevisar() {
   } catch (e) {}
 }
 
-/* La carta que toca enseñar, o null: la de esta semana, sin contestar, con PACE completo. */
-function ritmoCartaPendiente(s) {
+/* La carta de esta semana, contestada o no, con PACE completo; o null. La de una semana que ya
+   acabó no vale: si se quedó sin contestar, no cambió nada ni cuenta como un «no». */
+function ritmoCartaDeLaSemana(s) {
   if (!ritmoPuedeAprender()) return null;
   var c = s && s.ritmo && s.ritmo.carta;
   var hoy = ritmoHoy();
-  if (!c || !c.res || c.vista || !hoy || c.lunes !== motorLunes(hoy)) return null;
+  if (!c || !c.res || !hoy || c.lunes !== motorLunes(hoy)) return null;
   return c;
+}
+
+/* La carta que toca enseñar, o null: la de esta semana, sin contestar. */
+function ritmoCartaPendiente(s) {
+  var c = ritmoCartaDeLaSemana(s);
+  return c && !c.vista ? c : null;
+}
+
+/* Cerrarla sin contestar (la ×, Escape o tocar fuera) la deja para luego: no aplica ni rechaza
+   nada, solo deja de salir sola. */
+function ritmoCartaLuego() {
+  ritmoGuardar(function (r) {
+    var c = r.carta;
+    if (!c || !c.res || c.vista || c.luego) return {};
+    return { carta: Object.assign({}, c, { luego: ritmoHoy() }) };
+  });
 }
 
 /* Los cambios de la carta, sin la pregunta (esa se contesta aparte). */
@@ -217,7 +235,7 @@ document.addEventListener('visibilitychange', ritmoMotorRevisar);
 setInterval(ritmoMotorRevisar, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
 
 Object.assign(window, {
-  ritmoPuedeAprender, ritmoHorarioDelDia, ritmoMotorEntrada, ritmoMotorRevisar, ritmoCartaPendiente,
-  ritmoCartaCambios, ritmoCartaPregunta, ritmoCartaLleva, ritmoCartaVale, ritmoCartaDejar, ritmoCartaHora,
+  ritmoPuedeAprender, ritmoHorarioDelDia, ritmoMotorEntrada, ritmoMotorRevisar, ritmoCartaDeLaSemana, ritmoCartaPendiente,
+  ritmoCartaLuego, ritmoCartaCambios, ritmoCartaPregunta, ritmoCartaLleva, ritmoCartaVale, ritmoCartaDejar, ritmoCartaHora,
   ritmoAprendidoLista, ritmoAprendidoOlvidar,
 });

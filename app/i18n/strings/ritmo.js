@@ -27,6 +27,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.frase.menu.sin':          'de {inicio} a {salida}',
     'ritmo.frase.movil':             'De {inicio} a {salida} · comida {comida} · {dur}',
     'ritmo.frase.movil.sin':         'De {inicio} a {salida}',
+    'ritmo.frase.movil.empieza':     'empieza en el aro, arriba',
     'ritmo.hecha':                   'hecha',
     'ritmo.saltada':                 'saltada',
     'ritmo.hoy':                     'hoy de {desde} a {hasta}',
@@ -183,6 +184,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.frase.menu.sin':          'from {inicio} to {salida}',
     'ritmo.frase.movil':             'From {inicio} to {salida} · lunch {comida} · {dur}',
     'ritmo.frase.movil.sin':         'From {inicio} to {salida}',
+    'ritmo.frase.movil.empieza':     'start it on the ring above',
     'ritmo.hecha':                   'done',
     'ritmo.saltada':                 'skipped',
     /* Corta a propósito (elegido por Ez): con «today from … to …» la frase del móvil cabía con
