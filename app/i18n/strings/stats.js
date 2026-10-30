@@ -35,7 +35,7 @@ Object.assign(window.PACE_STRINGS.es, {
     // Hoy (Fase 4, Ez 15 oct.): el menú del día con lo que pasó, o las pausas de hoy por libre
     'stats.hoy.vasos.de':              'de {m} vasos',
     'stats.hoy.libre':                 'Por libre',
-    'stats.hoy.vacio':                 'Todavía no has hecho ninguna pausa hoy.',
+    'stats.hoy.vacio':                 'Hoy aún no hay pausas en PACE.',
     'stats.cerrado':                   'Es parte de PACE completo',
     'stats.tab.week':                  'Semana',
     'stats.tab.month':                 'Mes',
@@ -134,7 +134,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // Today (Phase 4): the day's menu with what happened, or today's breaks when free
     'stats.hoy.vasos.de':              'of {m} glasses',
     'stats.hoy.libre':                 'Freestyle',
-    'stats.hoy.vacio':                 'No breaks yet today.',
+    'stats.hoy.vacio':                 'No PACE breaks yet today.',
     'stats.cerrado':                   'Part of PACE Complete',
     'stats.tab.week':                  'Week',
     'stats.tab.month':                 'Month',

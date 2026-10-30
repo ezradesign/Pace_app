@@ -352,6 +352,7 @@
    arriba y abajo para el dedo sin moverse ni pisarse. */
 .pace-rt-mov .pace-rt-cab-der .pace-rt-enlace { padding: 4px 0; margin: -4px 0; }
 .pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
+.pace-rt-cal-cambiar { font-size: 12px; color: var(--ink-3); padding: 2px 12px 8px; }
 .pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }
 .pace-rt-cal-s { font-size: 12px; color: var(--ink-3); margin-top: 2px; }

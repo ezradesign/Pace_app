@@ -50,7 +50,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.prev':                       '← Anterior',
     'move.next':                       'Siguiente →',
     'move.doneMeta':                   'Antídoto completado',
-    'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
+    'move.doneCopy':                   'Un rato para el cuerpo, entre tareas.',
 
     // Focus
     'focus.minutes.custom.title':      'Minutos personalizados (5–180)',
@@ -114,7 +114,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Breathe (sesión)
     'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
-    'breathe.doneCopy':                'Tu cuerpo ha encontrado su ritmo.',
+    'breathe.doneCopy':                'Has dedicado un rato a respirar.',
 
     // Libraries (compartido)
     'lib.tag':                         'Biblioteca',
@@ -251,7 +251,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.prev':                       '← Previous',
     'move.next':                       'Next →',
     'move.doneMeta':                   'Antidote completed',
-    'move.doneCopy':                   'Your body feels like yours again.',
+    'move.doneCopy':                   'A moment for your body, between tasks.',
 
     // Focus
     'focus.minutes.custom.title':      'Custom minutes (5–180)',
@@ -310,7 +310,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Breathe (session)
     'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
-    'breathe.doneCopy':                'Your body has found its rhythm.',
+    'breathe.doneCopy':                'You took a moment to breathe.',
 
     // Libraries (shared)
     'lib.tag':                         'Library',

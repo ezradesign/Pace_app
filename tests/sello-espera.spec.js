@@ -2,7 +2,7 @@
  * ================================================
  * Ez: «los sellos no deben pisar los elementos». El aviso de un sello nuevo salía en el
  * acto, abajo y por encima de todo: con el primer Pomodoro tapaba el pie de la pausa,
- * «Saltar esta pausa» incluido. Ahora espera mientras haya una ventana, una sesión o un
+ * «Ahora no» incluido. Ahora espera mientras haya una ventana, una sesión o un
  * Camino abierto (state-core.toast.jsx) y sale al volver a la home.
  *
  * LO QUE NO CAMBIA, y se aserta: el sello se GANA al instante (s145; lo que espera es el
@@ -49,7 +49,7 @@ test('el primer Pomodoro: el sello no sale encima de la pausa, se gana igual y s
   /* se ha ganado (s145), pero el aviso espera */
   await expect.poll(() => leerUltimoLogro(page), { message: 'GUARD: el primer Pomodoro no ganó su sello' }).toBe('first.step');
   await sinAviso(page, 'el sello sale encima de la pausa');
-  await page.getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
+  await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
   await expect(aviso(page), 'al cerrar la pausa el sello no sale').toContainText('Primer paso');
   /* y en la home sale DENTRO del aro, en el sitio de su línea en cursiva, que se esconde (Ez) */
   await expect(page.locator('[data-pace-sello-aro]'), 'el sello no sale dentro del aro').toBeVisible();

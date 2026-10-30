@@ -1,0 +1,351 @@
+<title>Textos que no inventan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como las propuestas de PACE: papel y tinta, terracota tenue para el
+   texto de hoy y oliva para el propuesto. Cada texto va vestido como sale en la app. */
+:root{
+  --paper:#F2EDE0;--paper-2:#EAE4D4;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.10);
+  --terra:#A85E43;--terra-soft:rgba(201,122,93,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--paper-2:#26211a;--card:#2c271f;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.13);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--paper-2:#26211a;--card:#2c271f;
+  --ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;
+  --line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.14);
+  --terra:#E8A98F;--terra-soft:rgba(217,148,119,.13);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(25px,4.2vw,30px);margin:52px 0 6px;padding-top:22px;border-top:1px solid var(--line)}
+p{margin:0 0 12px;color:var(--ink-2);max-width:66ch}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink-2);line-height:1.45;margin-top:14px}
+.donde{font-size:14px;color:var(--ink-3);margin:0 0 4px}
+
+.respuesta{background:var(--olive-soft);border-radius:14px;padding:16px 20px;margin:24px 0 0;display:grid;gap:6px}
+.respuesta p{margin:0}
+.respuesta .q{font-family:var(--display);font-style:italic;font-size:22px;color:var(--ink)}
+code.cod{font-family:var(--ui);font-weight:600;color:var(--olive);background:var(--card);border-radius:6px;padding:1px 7px;font-size:15px}
+
+/* Un texto: su número, dónde sale y las filas Hoy / A / B */
+.item{margin-top:30px;display:grid;gap:10px}
+.item h3{font-family:var(--ui);font-size:16px;font-weight:600;color:var(--ink);margin:0;display:flex;gap:10px;align-items:baseline}
+.item h3 .n{font-family:var(--display);font-style:italic;font-weight:500;font-size:26px;color:var(--olive);line-height:1;min-width:24px}
+.filas{display:grid;gap:8px}
+.fila{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;background:var(--card);border-radius:12px;padding:12px 14px}
+.fila .et{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding-top:3px}
+.fila.hoy{background:transparent;border:1px dashed var(--line)}
+.fila.hoy .et{color:var(--terra)}
+.fila.rec .et{color:var(--olive);font-weight:600}
+.fila.rec{box-shadow:inset 0 0 0 1.5px var(--olive)}
+.cuerpo{min-width:0;display:grid;gap:6px}
+.es{color:var(--ink);overflow-wrap:anywhere}
+.fila.hoy .es{color:var(--ink-2)}
+.en{font-size:13.5px;color:var(--ink-3);overflow-wrap:anywhere}
+.en::before{content:"EN · ";letter-spacing:.06em}
+.recom{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--olive);display:block;margin-top:2px}
+.nota{font-size:14px;color:var(--ink-3);max-width:66ch;margin:2px 0 0}
+
+/* Cómo va vestido cada texto en la app */
+.boton-fantasma{color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.chip.nuevo{border-color:var(--olive);color:var(--olive)}
+.motivo{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)}
+.cursiva{font-family:var(--display);font-style:italic;font-size:19px;color:var(--ink)}
+.peq{font-size:13px;color:var(--ink-3)}
+.tabla{display:grid;gap:4px}
+.tabla .r{display:grid;grid-template-columns:1fr;gap:2px;padding:6px 0;border-top:1px solid var(--line)}
+.tabla .r:first-child{border-top:0;padding-top:0}
+
+@media (max-width:520px){
+  .fila{grid-template-columns:1fr;gap:6px}
+}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · 30 de octubre · para Ez</div>
+  <h1>Textos que no inventan</h1>
+  <p class="lead">Catorce frases de PACE que dicen más de lo que la app sabe: que llevas 45 minutos sentado, que no has bebido, cómo te sientes al terminar o que el calendario se cuida solo. Aquí están las de hoy y cómo quedarían.</p>
+  <p>Salen de tres revisiones de ChatGPT del 28 de octubre y las he comprobado una a una en la versión de hoy (la 0.187.0). Solo cambian palabras: nada se mueve de sitio, salvo una etiqueta nueva (el 3) y una línea nueva en el calendario (el 11 y el 12). Cada texto va en español y debajo en inglés. La recomendada lleva el borde verde.</p>
+
+  <div class="respuesta">
+    <p class="q">Cómo contestar</p>
+    <p>Con un número y una letra por texto, por ejemplo <code class="cod">1A 2A 3B</code>. Si te valen todas las recomendadas: <code class="cod">todas A</code>. Para dejar uno como está: <code class="cod">5 igual</code>.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>La bienvenida</h2>
+
+  <div class="item">
+    <h3><span class="n">1</span>El botón de abajo de «¿Cómo es tu semana?»</h3>
+    <p class="donde">Es la salida para quien todavía no quiere preparar su semana. «Cada semana es distinta» no describe a quien solo quiere probar antes.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="es boton-fantasma">Cada semana es distinta</span><span class="en">Every week is different</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo">
+        <span class="es boton-fantasma">Ahora no, quiero probar primero</span>
+        <span class="es peq">Puedes prepararla después en Ajustes.</span>
+        <span class="en">Not now, I want to try it first · You can set it up later in Settings.</span></div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es boton-fantasma">Ahora no, quiero probar primero</span><span class="en">Not now, I want to try it first</span></div></div>
+    </div>
+    <p class="nota">En Ajustes ese mismo botón se queda como está: allí quita la semana que ya tenías guardada, y «Ahora no» diría otra cosa.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>«¿Cuánto trabajas hoy?»</h2>
+
+  <div class="item">
+    <h3><span class="n">2</span>La frase debajo de la pregunta</h3>
+    <p class="donde">En el ordenador, bajo «¿Cuánto trabajas hoy?». La duda: si elijo «Una hora», ¿es una hora de trabajo más las pausas? No: las pausas van dentro. En el móvil no hay sitio para la frase, pero ya se ve la hora a la que acabas.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="es">Te preparo la jornada: cuándo parar, qué hacer y cuánto dura.</span><span class="en">I'll plan your day: when to pause, what to do and for how long.</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo"><span class="es">El tiempo incluye las pausas. Te digo cuándo parar y qué hacer.</span><span class="en">Breaks are part of the time. I'll tell you when to pause and what to do.</span></div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Te preparo la jornada con las pausas dentro: cuándo parar, qué hacer y cuánto dura.</span><span class="en">I'll plan your day with the breaks included: when to pause, what to do and for how long.</span></div></div>
+    </div>
+    <p class="nota">La A mide casi lo mismo que la de hoy, así que la tarjeta no crece. La B ocupa más y puede pasar a dos líneas.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>El día servido</h2>
+
+  <div class="item">
+    <h3><span class="n">3</span>Las etiquetas de arriba</h3>
+    <p class="donde">Arriba a la derecha del día en el ordenador, y en «Ver todo» en el móvil. «Sin material» es verdad, pero algunas pausas usan una pared libre o una mesa que no se mueva, como «Empuje sencillo» o «Piernas sin pasos».</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="chips"><span class="chip">Junto a la mesa</span><span class="chip">Sin material</span></span><span class="en">At your desk · No equipment</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo"><span class="chips"><span class="chip">Junto a la mesa</span><span class="chip">Sin material</span><span class="chip nuevo">A veces, pared o mesa</span></span><span class="en">At your desk · No equipment · Sometimes a wall or desk</span></div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="chips"><span class="chip">Junto a la mesa</span><span class="chip nuevo">Sin material, a veces pared o mesa</span></span><span class="en">At your desk · No equipment, sometimes a wall or desk</span></div></div>
+    </div>
+    <p class="nota">Elegir «solo mi sitio, sin apoyos» para que PACE no proponga esas pausas sería una función nueva: va con la maqueta de producto, no aquí.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>La pausa, al acabar un bloque</h2>
+
+  <div class="item">
+    <h3><span class="n">4</span>El enlace de abajo de «Tu pausa»</h3>
+    <p class="donde">Hoy dice «saltar», pero solo cierra la ventana: la pausa sigue en la línea del día hasta que empiezas el bloque siguiente. Quien la deja atrás de verdad es «Seguir con el bloque 2», y eso no cambia. Sale igual en la pausa por libre.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="es boton-fantasma">Saltar esta pausa</span><span class="en">Skip this break</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo"><span class="es boton-fantasma">Ahora no</span><span class="en">Not now</span></div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es boton-fantasma">Luego</span><span class="en">Later</span></div></div>
+    </div>
+    <p class="nota">«Ahora no» es la misma palabra que ya usa la pregunta «¿Te ayudó esta pausa?» para dejarla pasar.</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="n">5</span>Por qué te propone esa pausa (sin «A tu ritmo»)</h3>
+    <p class="donde">La línea pequeña encima de la rutina propuesta, cuando trabajas por libre. PACE sabe cuánto duró tu Foco y lo que apuntaste en la app, pero no si estabas de pie, si bebiste sin apuntarlo o si estiraste por tu cuenta.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="motivo">Llevas 45 minutos sentado</span><span class="en">You have been sitting for 45 minutes</span></div>
+        <div class="r"><span class="motivo">Aún no has bebido hoy</span><span class="en">You have not had any water today</span></div>
+        <div class="r"><span class="motivo">Hoy aún no has estirado</span><span class="en">No stretching yet today</span></div>
+        <div class="r"><span class="motivo">Hoy aún no has movido el cuerpo</span><span class="en">No movement yet today</span></div>
+        <div class="r"><span class="motivo">Hoy aún no has respirado</span><span class="en">No breathing session yet today</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="motivo">Acabas 45 minutos de Foco</span><span class="en">45 minutes of Focus, done</span></div>
+        <div class="r"><span class="motivo">Hoy no has apuntado ningún vaso</span><span class="en">No glasses logged today</span></div>
+        <div class="r"><span class="motivo">Hoy aún no hay sesión de Estira</span><span class="en">No Stretch session yet today</span></div>
+        <div class="r"><span class="motivo">Hoy aún no hay sesión de Mueve</span><span class="en">No Move session yet today</span></div>
+        <div class="r"><span class="motivo">Hoy aún no hay sesión de Respira</span><span class="en">No Breathe session yet today</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo tabla">
+        <div class="r"><span class="motivo">Has terminado un Foco de 45 minutos</span><span class="en">You finished a 45-minute Focus</span></div>
+        <div class="r"><span class="motivo">Hoy no has apuntado ningún vaso</span><span class="en">No glasses logged today</span></div>
+        <div class="r"><span class="motivo">¿Un rato de estirar?</span><span class="en">Time for a stretch?</span></div>
+        <div class="r"><span class="motivo">¿Un poco de movimiento?</span><span class="en">A little movement?</span></div>
+        <div class="r"><span class="motivo">¿Un minuto para respirar?</span><span class="en">A minute to breathe?</span></div>
+      </div></div>
+    </div>
+    <p class="nota">La A sigue diciendo por qué, que es para lo que está esa línea; las preguntas de la B ya no dan un motivo.</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="n">6</span>La frase encima de la pausa, con «A tu ritmo»</h3>
+    <p class="donde">En la pausa y en la línea del día. Las elegiste el 15 de octubre. El número no son los minutos que llevas sentado: son los que han pasado desde la última pausa de pie del plan. Y «sin mover hoy» quiere decir que esa zona aún no ha salido en tus pausas de hoy. Tienen que caber en una línea en un móvil pequeño.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="motivo">Llevas 50 min sentado</span><span class="en">50 min sitting so far</span></div>
+        <div class="r"><span class="motivo">Caderas: sin mover hoy</span><span class="en">Hips: unmoved today</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="motivo">Toca ponerse de pie</span><span class="en">Time to stand up</span></div>
+        <div class="r"><span class="motivo">Caderas: toca hoy</span><span class="en">Hips: due today</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo tabla">
+        <div class="r"><span class="motivo">50 min sin pausa de pie</span><span class="en">50 min, no standing break</span></div>
+        <div class="r"><span class="motivo">Caderas: aún no, hoy</span><span class="en">Hips: not yet today</span></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Al terminar una rutina</h2>
+
+  <div class="item">
+    <h3><span class="n">7</span>La frase en cursiva bajo los números</h3>
+    <p class="donde">Hoy PACE te dice cómo te sientes, y puede que sigas igual de tenso. Debajo viene «¿Te ayudó esta pausa?», que es donde lo cuentas tú.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Mueve y Estira</span><span class="cursiva">El cuerpo vuelve a sentirse tuyo.</span><span class="en">Your body feels like yours again.</span></div>
+        <div class="r"><span class="peq">Respira</span><span class="cursiva">Tu cuerpo ha encontrado su ritmo.</span><span class="en">Your body has found its rhythm.</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Mueve y Estira</span><span class="cursiva">Un rato para el cuerpo, entre tareas.</span><span class="en">A moment for your body, between tasks.</span></div>
+        <div class="r"><span class="peq">Respira</span><span class="cursiva">Has dedicado un rato a respirar.</span><span class="en">You took a moment to breathe.</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Mueve y Estira</span><span class="cursiva">Pausa terminada. Sigue cuando quieras.</span><span class="en">Break done. Carry on when you like.</span></div>
+        <div class="r"><span class="peq">Respira</span><span class="cursiva">Respiración terminada. Sigue cuando quieras.</span><span class="en">Breathing done. Carry on when you like.</span></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Estadísticas</h2>
+
+  <div class="item">
+    <h3><span class="n">8</span>«Hoy», cuando aún no hay nada</h3>
+    <p class="donde">Del mismo tipo que el 5: PACE no sabe si has hecho una pausa por tu cuenta.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="es">Todavía no has hecho ninguna pausa hoy.</span><span class="en">No breaks yet today.</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo"><span class="es">Hoy aún no hay pausas en PACE.</span><span class="en">No PACE breaks yet today.</span></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Ajustes · Tus datos</h2>
+
+  <div class="item">
+    <h3><span class="n">9</span>Lo que se guarda en cada aparato</h3>
+    <p class="donde">Quien usa PACE en el ordenador y en el móvil tiene dos historiales que no se juntan, y al importar una copia lo de ahora se sustituye. Hoy no se dice en ningún sitio que no se sincronizan.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">El pie de Ajustes</span><span class="es">Todo vive en tu navegador. <span class="peq">(en el móvil: «Todo vive en tu móvil.»)</span></span><span class="en">Everything lives in your browser.</span></div>
+        <div class="r"><span class="peq">Al importar una copia</span><span class="es">La copia trae 12 logros y 340 min de foco. Lo que hay ahora en PACE se sustituye, y no se puede deshacer.</span><span class="en">… What PACE has now is replaced, and it cannot be undone.</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">El pie de Ajustes</span><span class="es">Todo vive en este navegador y no se sincroniza con otros. <span class="peq">(en el móvil: «Todo vive en este móvil y no se sincroniza con otros.»)</span></span><span class="en">Everything lives in this browser and doesn't sync with others.</span></div>
+        <div class="r"><span class="peq">Al importar una copia</span><span class="es">La copia trae 12 logros y 340 min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.</span><span class="en">… What PACE has now is replaced by the copy, not merged, and it cannot be undone.</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Solo el cambio al importar; el pie se queda como está.</span></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Tu día en el calendario</h2>
+  <p>La hoja que abre «Al calendario». En Android funciona hoy con el calendario del móvil; en la web, Google y Outlook no se pueden conectar hasta las altas, así que de momento solo se ve en Android.</p>
+
+  <div class="item">
+    <h3><span class="n">10</span>Que se pone al día solo mientras PACE está abierto</h3>
+    <p class="donde">Con PACE cerrado no hay nada que pueda cambiar el calendario: lo escrito y sus avisos se quedan, y al volver se pone al día. Hoy dice «se mantiene solo», sin más.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Bajo «Mantenerlo al día solo»</span><span class="es">Si el día cambia en PACE, cambia también allí, y cada pausa te avisa.</span><span class="en">If your day changes in PACE, it changes there too, and each break reminds you.</span></div>
+        <div class="r"><span class="peq">Ya conectado</span><span class="es">Tu calendario se mantiene solo: lo que queda de hoy, de 10:05 a 18:00, con aviso en cada pausa.</span><span class="en">Your calendar keeps itself up to date: the rest of today, from 10:05 to 18:00, with a reminder at each break.</span></div>
+        <div class="r"><span class="peq">Al conectar</span><span class="es">Hecho: desde ahora tu calendario se mantiene solo.</span><span class="en">Done: from now on your calendar keeps itself up to date.</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Bajo «Mantenerlo al día solo»</span><span class="es">Mientras PACE está abierto, si el día cambia, cambia también allí. Cada pausa te avisa.</span><span class="en">While PACE is open, if your day changes, it changes there too. Each break reminds you.</span></div>
+        <div class="r"><span class="peq">Ya conectado</span><span class="es">Lo que queda de hoy, de 10:05 a 18:00, con aviso en cada pausa. Se pone al día mientras PACE está abierto.</span><span class="en">The rest of today, from 10:05 to 18:00, with a reminder at each break. It updates while PACE is open.</span></div>
+        <div class="r"><span class="peq">Al conectar</span><span class="es">Hecho: mientras PACE esté abierto, tu calendario se pone al día solo.</span><span class="en">Done: while PACE is open, your calendar keeps itself up to date.</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Lo de la A y, además, la casilla se llama «Ponerlo al día con PACE abierto» en vez de «Mantenerlo al día solo».</span><span class="en">Keep it updated while PACE is open</span></div></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <h3><span class="n">11</span>Cuándo leyó tus reuniones, aparte de cuándo envió el plan</h3>
+    <p class="donde">Hoy, si PACE no consigue leer tus reuniones, no lo dice: sigue con las de antes y la hoja pone «Al día». Es la única que pide un poco de código, porque PACE aún no apunta cuándo las leyó bien.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Bajo «Tener en cuenta mis reuniones de hoy»</span><span class="es">PACE solo guarda a qué horas estás ocupado.</span><span class="en">PACE only keeps the times you are busy.</span></div>
+        <div class="r"><span class="peq">Bajo el calendario conectado</span><span class="es">Al día · lo último, a las 10:07</span><span class="en">Up to date · last change at 10:07</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Bajo las reuniones, si se leyeron bien</span><span class="es">Comprobadas a las 10:05. PACE solo guarda a qué horas estás ocupado.</span><span class="en">Checked at 10:05. PACE only keeps the times you are busy.</span></div>
+        <div class="r"><span class="peq">Si falló la última vez</span><span class="es">No se pudieron leer a las 10:20. PACE sigue con las de las 10:05.</span><span class="en">Could not read them at 10:20. PACE is using the ones from 10:05.</span></div>
+        <div class="r"><span class="peq">Si hoy no se han podido leer nunca</span><span class="es">No se pudieron leer. El día de hoy no las tiene en cuenta.</span><span class="en">Could not read them. Today's plan doesn't include them.</span></div>
+        <div class="r"><span class="peq">Bajo el calendario conectado</span><span class="es">Plan enviado a las 10:07</span><span class="en">Plan sent at 10:07</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Solo el aviso cuando falla («No se pudieron leer…»); sin la hora de la última lectura buena y sin cambiar «Al día».</span></div></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <h3><span class="n">12</span>Que las pausas se cambian desde PACE</h3>
+    <p class="donde">Si mueves una pausa en Outlook o en Google, en la siguiente vuelta PACE la devuelve a su sitio, porque manda el plan de PACE. Hoy no se dice.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="es peq">Nada lo dice.</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">En la hoja, ya conectado, una línea pequeña</span><span class="es">Cambia tus pausas desde PACE: si mueves una en el calendario, PACE la devuelve a su sitio.</span><span class="en">Change your breaks in PACE: if you move one in your calendar, PACE puts it back.</span></div>
+        <div class="r"><span class="peq">Y en cada pausa escrita en el calendario, al final</span><span class="es">Cambia esta pausa desde PACE.</span><span class="en">Change this break in PACE.</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Solo la línea de la hoja.</span></div></div>
+    </div>
+    <p class="nota">Recomiendo la A porque quien mueve la pausa está mirando el calendario, no PACE. Al llegar la versión, las pausas de ese día se reescriben una vez para llevar la frase.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Lo que se promete fuera de la app</h2>
+  <p>Con lo que decidiste el 29 de octubre: en Android el calendario entra en PACE completo diciendo sus límites; en la web va «en pruebas» y no se vende como motivo para pagar. Hoy /premium no habla ni de la variedad ni del calendario.</p>
+
+  <div class="item">
+    <h3><span class="n">13</span>/premium</h3>
+    <p class="donde">La lista «PACE completo» y las preguntas de abajo.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo"><span class="es">Las rutinas más profundas · Tus propias rutinas · Una semana a tu medida · Tu mes, tu año y qué te ayuda.</span><span class="es peq">Nada sobre la variedad ni sobre el calendario.</span></div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">Una línea más en «PACE completo»</span><span class="es"><span class="cursiva">Pausas que cambian de un día a otro</span> · <span class="peq">sin tener que elegirlas</span></span><span class="en">Breaks that change from day to day · without having to pick them</span></div>
+        <div class="r"><span class="peq">Una pregunta nueva</span><span class="es"><strong>¿Y el calendario?</strong> En Android, PACE completo mantiene tu día al día en el calendario del móvil mientras PACE está abierto; llevar el día y esquivar tus reuniones es gratis. En la web, el calendario está en pruebas y no entra en lo que compras.</span><span class="en">And the calendar? On Android, PACE Complete keeps your day up to date in your phone calendar while PACE is open; adding your day and working around your meetings is free. On the web, the calendar is in testing and is not part of what you buy.</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Lo de la A y, además, el calendario en la lista: <span class="cursiva">Tu día en el calendario</span> · <span class="peq">en Android, al día con PACE abierto</span>.</span><span class="en">Your day in your calendar · on Android, kept up to date while PACE is open</span></div></div>
+    </div>
+    <p class="nota">Recomiendo dejar el calendario fuera de la lista porque /premium vende la compra de la web, y en la web el calendario está en pruebas.</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="n">14</span>La ficha de Google Play</h3>
+    <p class="donde">Dos párrafos de la descripción larga, en español y en inglés. El de «PACE completo» aún no está en Play: se pega con la v1.</p>
+    <div class="filas">
+      <div class="fila hoy"><span class="et">Hoy</span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">A TU RITMO</span><span class="es">… Si tienes reuniones, PACE las lee de tu calendario y las esquiva, y también puede llevar el día entero a tu calendario.</span></div>
+        <div class="r"><span class="peq">PACE COMPLETO (para la v1)</span><span class="es">… PACE completo añade las rutinas más profundas, tus propias rutinas, una semana a tu medida con la carta del lunes y tu mes y tu año. …</span></div>
+      </div></div>
+      <div class="fila rec"><span class="et">A<span class="recom">recomendada</span></span><div class="cuerpo tabla">
+        <div class="r"><span class="peq">A TU RITMO</span><span class="es">… Si tienes reuniones, PACE las lee del calendario del móvil y las esquiva, y también puede llevar el día entero a tu calendario.</span><span class="en">… If you have meetings, PACE reads them from your phone calendar and works around them, and it can put your whole day in your calendar too.</span></div>
+        <div class="r"><span class="peq">PACE COMPLETO (para la v1)</span><span class="es">… PACE completo añade pausas que cambian de un día a otro, las rutinas más profundas, tus propias rutinas, una semana a tu medida con la carta del lunes, tu mes y tu año, y tu calendario al día mientras PACE está abierto. …</span><span class="en">… PACE Complete adds breaks that change from day to day, the deeper routines, your own routines, a week shaped to you with the Monday letter, your month and year, and your calendar kept up to date while PACE is open. …</span></div>
+      </div></div>
+      <div class="fila"><span class="et">B</span><div class="cuerpo"><span class="es">Lo de la A, pero sin el calendario en el párrafo de «PACE completo»: solo la variedad.</span></div></div>
+    </div>
+    <p class="nota">La ficha es solo de Android, así que aquí el calendario sí puede ir en lo de pago, con su límite dicho. El párrafo de «A tu ritmo» ya está en Play: si eliges la A, hay que volver a pegarlo en la consola.</p>
+  </div>
+
+  <div class="respuesta" style="margin-top:52px">
+    <p class="q">Y después</p>
+    <p>Con tu respuesta los monto en una rama, con su prueba cada uno, y te enseño fotos del antes y el después en la app de verdad, a 360 y a 1280 px. Nada entra en <code class="cod">main</code> hasta tu «júntalo».</p>
+  </div>
+</main>

@@ -79,7 +79,7 @@ test('el Pomodoro cuenta, se pausa, se reanuda y al terminar abre el BreakMenu',
     const propuesta = textoProp.indexOf(nombre) !== -1 ? 1 : 0;
     expect(puertas + propuesta, '«' + nombre + '» no está, o está dos veces (puertas ' + puertas + ', propuesta ' + propuesta + ')').toBe(1);
   }
-  await expect(menu.getByRole('button', { name: 'Saltar esta pausa', exact: true })).toBeVisible();
+  await expect(menu.getByRole('button', { name: 'Ahora no', exact: true })).toBeVisible();
 
   /* El ciclo queda cerrado: el CTA de la home ya ofrece el siguiente. */
   await expect(page.getByRole('button', { name: 'Empezar otro ciclo', exact: true })).toBeVisible();

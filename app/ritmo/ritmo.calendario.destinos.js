@@ -35,6 +35,22 @@
 var CALENDARIO_DESTINOS = ['android', 'google', 'microsoft', 'archivo'];
 var _calendarioRefresco = { ultimo: 0, enCurso: false, gen: 0 };
 
+/* CUÁNDO SE LEYERON LAS REUNIONES, aparte de cuándo se envió el plan (Ez, 11A del 30 oct.,
+   revisión de ChatGPT CAL-4): la hoja dice «Comprobadas a las 10:05» o «No se pudieron leer a
+   las 10:20», porque una lectura que falla deja el día con las de antes y antes no se decía.
+   En memoria y solo de hoy: al abrir PACE se vuelve a leer al momento (calendarioArrancar). */
+var _calendarioLectura = { fecha: null, leidas: 0, fallo: 0 };
+function calendarioLecturaApuntar(iso, bien) {
+  if (_calendarioLectura.fecha !== iso) _calendarioLectura = { fecha: iso, leidas: 0, fallo: 0 };
+  _calendarioLectura[bien ? 'leidas' : 'fallo'] = Date.now();
+  try { window.dispatchEvent(new CustomEvent('pace:calendario-solo')); } catch (e) {}
+}
+/* { leidas, fallo } en ms de hoy (0 si no hubo), para la hoja. */
+function calendarioReunionesEstado() {
+  if (_calendarioLectura.fecha !== ritmoHoy()) return { leidas: 0, fallo: 0 };
+  return { leidas: _calendarioLectura.leidas, fallo: _calendarioLectura.fallo };
+}
+
 /* LO QUE PACE PUSO EN EL CALENDARIO DEL MÓVIL se reconoce por el id que dio Android al
    crearlo, apuntado aquí (`pace.calendario.android`: { id: { fin } }). Nunca por el texto:
    cualquiera puede escribir la marca en una invitación, y entonces PACE la borraba y
@@ -229,7 +245,8 @@ function calendarioLlevar(destino, opciones) {
       ? calendarioLeer(destino, pase, iso).then(function (lista) {
           leidas = lista.length;
           calendarioGuardarOcupado(calendarioTramos(lista, iso), destino, iso);
-        })
+          calendarioLecturaApuntar(iso, true);
+        }, function (e) { calendarioLecturaApuntar(iso, false); throw e; })
       : Promise.resolve();
     return lectura.then(function () {
       var ajustes = { destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso, mantener: solo };
@@ -299,8 +316,12 @@ function calendarioRefrescarReuniones(forzar) {
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
     return acceso.then(function (pase) { return calendarioLeer(c.destino, pase, iso); })
-      .then(function (lista) { return gen === _calendarioRefresco.gen && calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso); })
-      .catch(function () { return false; })
+      .then(function (lista) {
+        if (gen !== _calendarioRefresco.gen) return false;
+        calendarioLecturaApuntar(iso, true);
+        return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso);
+      })
+      .catch(function () { if (gen === _calendarioRefresco.gen) calendarioLecturaApuntar(iso, false); return false; })
       .then(function (r) { _calendarioRefresco.enCurso = false; return r; });
   } catch (e) { _calendarioRefresco.enCurso = false; return Promise.resolve(false); }
 }
@@ -323,7 +344,7 @@ function calendarioArrancar() {
 try { calendarioArrancar(); } catch (e) {}
 
 Object.assign(window, {
-  CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
+  CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones, calendarioReunionesEstado,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
   calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar,
 });

@@ -35,7 +35,7 @@ async function hastaLaPausa(page) {
   await vis(page, '[data-pace-cta]').click();
   await expect(corriendo(page)).toHaveCount(1);
   await terminarBloque(page);
-  await overlaySuperior(page).getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Ahora no', exact: true }).click();
   expect(await modo(page), 'GUARD: el aro cuenta la pausa del día').toBe('pausa');
   await expect(corriendo(page)).toHaveCount(1);
 }

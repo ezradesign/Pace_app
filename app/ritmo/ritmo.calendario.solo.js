@@ -64,6 +64,9 @@ function calendarioEventosConAviso(m, t, tn, lang, callar) {
       });
       if (it.agua) lineas.push(t('cal.texto.agua'));
       if (foco) { dentro[n] = true; lineas.push(tn('cal.p.texto.foco', { min: foco.dur })); }
+      /* Lo que se mueva aquí vuelve a su sitio en la vuelta siguiente: manda el plan de PACE, y
+         la pausa lo dice donde la persona la mueve (Ez, 12A del 30 oct.). */
+      lineas.push(t('cal.p.texto.cambiar'));
       lineas.push('', CALENDARIO_PIE);
       var antes = focos.filter(function (f) { return f.desde < it.desde; }).length;
       fuera.push({
