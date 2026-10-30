@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.186.0 · 29 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.187.0 · 29 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -28,11 +28,9 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
 1. **Stripe en el modo de prueba**, con Ez y su hoja: el aviso de pago, los números de los enlaces en Cloudflare
    (`PACE_ENLACES_STRIPE`, que pide la 0.186.0), los enlaces de prueba y una compra de mentira. **Los arreglos del cobro
    que encontró ChatGPT (A1-A7), en `main` con la 0.186.0** (29 oct., con el «júntalo» de Ez).
-2. **Mueve, Estira y «Tus rutinas»** (otras tres revisiones de ChatGPT del mismo día, comprobadas: B1-B4, C1-C6 y U1-U5
-   en el relevo): el tiempo que corre esperando a «›», «Auto» que avanza en pausa, las repeticiones con banda que no
-   cuentan, las seis colocaciones que no se ven, el constructor tapado desde Estira, el borrador que se pierde, el
-   material que no se dice y la tarjeta que no se empieza con el teclado. Antes de la versión de prueba definitiva, en
-   una sola sesión. Lo de producto (la carta del lunes que se pueda dejar para luego, que la prueba de 7 días llegue a
+2. **Mueve, Estira y «Tus rutinas», en `main` con la 0.187.0** (29 oct., con el «júntalo» de Ez): B1-B4, C1-C6 y U1-U5
+   de las revisiones de ChatGPT, el reparto del runner que dibujó Ez y los catorce dibujos nuevos, con Paloma, Flexor de
+   cadera y Sentadilla a silla aclarados. Lo de producto (la carta del lunes que se pueda dejar para luego, que la prueba de 7 días llegue a
    enseñarla, la frase del móvil y /premium con la variedad y el calendario de Android; en la web, «en pruebas», Ez 29 oct.) y lo de quien empieza (P1-P8: mirar un
    ejercicio antes de empezar, la flecha que dice qué hace, la pausa que se ve, «con una serie basta») y cuando el día se
    tuerce (Q1-Q7), en una maqueta para Ez; recomendado en una actualización durante los 14 días de los testers. Lo que es
@@ -40,8 +38,8 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
-   esperar»): sube en cuanto estén los 16 dibujos de ejercicios, el logo y B4 y C3 (la colocación y el material que no se
-   dicen); el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo baja la coordinadora con el sí de Ez y lo
+   esperar»): sube en cuanto estén Rana, Palmas en la mesa y el logo (B4 y C3, la colocación y el material, ya
+   están en la 0.187.0); el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo baja la coordinadora con el sí de Ez y lo
    sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
 4. Después, Play Billing y la compra de Apple (esperan las altas de Ez) y lo legal de /premium. El día de v1, «Da de
    pastar a la vaca» sale de la web (Ez, 18 oct.).
@@ -52,18 +50,16 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), los números
+- **Ahora: los dos dibujos que faltan y el logo**, que dejan subir la versión de prueba definitiva (abajo).
+- **A la vez: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), los números
   `plink_` de los enlaces en `PACE_ENLACES_STRIPE` (sin ellos, desde la 0.186.0, `/api/stripe` da 503), la llave que
   solo lee (`STRIPE_LECTURA`), los enlaces de prueba y la compra de mentira con 4242, mirando qué número trae el recibo.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.
-- **Mirar las fotos de las tres ramas y dar su «júntalo»**: «Tus rutinas», el runner y los catorce dibujos (con Paloma,
-  Flexor de cadera y Sentadilla a silla aclarados), con lo que Ez eligió el 29 oct.
-  (`DECISIONES_PRODUCTO.md`), montados y en verde; las fotos, en la hoja. Después, la maqueta de producto.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **La versión de prueba definitiva**: los 16 dibujos (catorce con el sí de Ez en `claude/elegant-pascal-d54e40`; faltan
+- **La versión de prueba definitiva**: los 16 dibujos (catorce en `main` con la 0.187.0; faltan
   Rana y Palmas en la mesa: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
   `docs/product/GLIFOS_A_DIBUJAR.md`) y el logo en PNG transparente
   (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium). El AAB de la 0.184.0, en `subidas-play\`.

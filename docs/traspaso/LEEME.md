@@ -2,7 +2,16 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 29 de octubre de 2026, v0.186.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 30 de octubre de 2026, v0.187.0.
+
+## 29 oct., noche: «Tus rutinas», el runner y los dibujos, en `main` (v0.187.0) con el «júntalo» de Ez
+
+Juntadas en su orden, cada una en su commit y la versión aparte: «Tus rutinas» (`claude/tus-rutinas-c0cf03`), el runner
+(`claude/runner-claro-15db3c`) y los dibujos (`claude/elegant-pascal-d54e40`). Al juntar: el aviso del borrador cita la
+rutina con «», el censo de claves suma las dos ramas (1086) y las tres rutinas con «Extensión torácica» piden `chair`, la
+silla con respaldo, que es la de trabajar: no las saca de «A tu ritmo» ni de «Sin material». Faltan dos dibujos (Rana y Palmas en la mesa) y el
+logo para la versión de prueba definitiva. La suite entera, repetida el 30 desde la otra cuenta porque la primera murió al
+dormirse el PC: 1125 en verde y 2 saltadas. Subida a `main` el 30 de octubre.
 
 ## 29 oct., tarde: «Monta el runner», y sí a catorce dibujos nuevos
 

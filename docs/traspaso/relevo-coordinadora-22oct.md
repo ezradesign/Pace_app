@@ -8,6 +8,21 @@ Este archivo es lo que necesita la siguiente para seguir, también desde la otra
 **La cola de abajo es la única lista de lo pendiente** (Ez, 22 oct.: «todo lo que vaya quedando
 pendiente vete organizando para ir haciéndolo y no perder nada»): lo que aparece, entra aquí.
 
+## 30 oct., ~12:25: coordina EcLj6… (5 h al 2 %, se repone a las 17:20; la semana al 64 %, se repone el 3 nov. a las 14:00)
+
+**Manda sobre lo de abajo donde lo cambie.** 5iWBf… se quedó sin uso a media mañana con `main` 46 commits por delante de
+origin (las tres uniones, la 0.187.0 y el arreglo 5bcd8be4: la silla con respaldo no es material y «Colócate» en dos
+pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.187.0 escritos pero sin commit.
+1. **Su segunda suite no vale.** Arrancó a las 09:06; el PC se durmió hacia la prueba 870 y, al despertar con su sesión ya
+   cerrada, los workers murieron con 0xC0000142 desde la 872 (226 «fallos», ninguno de la app). Sus procesos (npx 20832,
+   node 22628 y el servidor del 8765, 25356) quedaron vivos y quietos; desde esta cuenta el clasificador no deja
+   pararlos, así que la suite nueva va en el 8766 (`PACE_E2E_PORT=8766`).
+2. Aquí: `verify` en verde, el build reproduce el `index.html` del commit, y la suite entera repetida sobre 5bcd8be4 en
+   el 8766: 1125 en verde y 2 saltadas en 22,8 min, sin una caída. Con eso, commit de los documentos y push a `main`.
+3. La hoja de EcLj6… (https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT) vuelve a llevar los enlaces de esta cuenta: el
+   cambio inverso al de 4257ae3a (Q6LWN→2A58K, 3hWPW→6RsAs, REAWx→R4hc4, 3BFKt→CunCY, 3P3og→3uABs, 9MnNL→VDdAW,
+   56cDi→Mk11G, 9BKgT→7Hj5s, Mtv9t→MVctq, LD2aR→U1mVU, 9Dyxd→MiGd9). «Ahora»: Rana, Palmas en la mesa y el logo.
+
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
 **Manda sobre el bloque de abajo donde lo cambie.** Las dos ramas estaban limpias y subidas (runner a76c9791, dibujos

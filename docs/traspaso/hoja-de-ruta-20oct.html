@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.186.0 · actualizada el 29 de octubre a las 22:00 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.187.0 · actualizada el 30 de octubre a las 13:00 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,11 +106,10 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> Las 1067 pruebas en verde y la web en la 0.186.0, con el cobro a prueba
-        dentro.</li>
+      <li><b>La app está casi entera y sana.</b> Las 1125 pruebas en verde y la web en la 0.187.0, con «Tus rutinas», el
+        runner claro y los catorce dibujos nuevos dentro.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
-        código. Seis cosas del cobro van antes de cobrar; hoy no afectan a nadie, porque nadie puede pagar. Cuatro de las
-        rutinas sin «Auto» y seis de «Tus rutinas» sí las nota quien las usa: van antes de la versión de prueba definitiva. Y
+        código. Los arreglos del cobro, de las rutinas sin «Auto» y de «Tus rutinas» ya están dentro de la app. Y
         unas veinticinco ideas para quien empieza, para cuando el día no sale como estaba previsto y para que se entienda lo
         que se paga; muchas son solo textos. Las valoramos juntos antes de montar nada. Están en
         <code>docs/audits/chatgpt-28oct/</code>, así que no se pierden al cambiar de cuenta.</li>
@@ -130,23 +129,11 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos minutos</span>
-        <span class="t">Mirar las fotos de las tres ramas y decir «júntalo»</span>
-        <span class="c"><span class="quien">Tú.</span> Las tres están terminadas y con todas las pruebas en verde:
-          <ol>
-            <li>«Tus rutinas», con lo que elegiste el 29 (<a href="https://claude.ai/artifact/3P3ogGhn91etkXQa5iVyE9">las fotos</a>).</li>
-            <li>Tu reparto del runner en todas las rutinas, medido en catorce pantallas: el círculo nunca más pequeño que hoy y
-              ningún texto cortado (<a href="https://claude.ai/artifact/9DyxdcbyTtp2MBT4G5Xgqf">las fotos</a>).</li>
-            <li>Los catorce dibujos nuevos, y «Paloma», «Flexor de cadera» y «Sentadilla a silla» aclarados hasta la mitad del set,
-              con su antes y después (<a href="https://claude.ai/artifact/Q6LWNCb6KNFqexLTRabqoZ">la página</a>).</li>
-          </ol>
-          Con tu «júntalo» las junto en ese orden y te digo cómo salen las pruebas con todo junto. Puedes decirlo a las tres o
-          solo a alguna.</span></li>
-      <li class="paso luego"><span class="estado">A la vez · lo tuyo, en Genspark</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, en Genspark</span>
         <span class="t">Los dos dibujos que faltan, y el logo</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT">la página de los
-          dibujos</a>, con el prompt de cada uno). Ya valen 14 de 16. Con los dos que faltan y el logo sale la versión de
-          prueba. Se repiten:
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT">la página de los
+          dibujos</a>, con el prompt de cada uno). Los otros catorce ya están dentro de la app. Con los dos que faltan y el logo
+          sale la versión de prueba. Se repiten:
           <ol>
             <li>«Rana»: las rodillas menos abiertas y la flecha hacia atrás.</li>
             <li>«Palmas en la mesa»: la mano al revés, con los dedos hacia ti. Las tres que hiciste salieron con los dedos hacia
@@ -154,7 +141,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               para comprobarla, los pulgares tienen que apuntar hacia fuera.</li>
           </ol>
           Y el logo de la app en PNG con fondo transparente: dentro de la app aún se lee «FVFN». Déjalos en
-          <code>dibujos-22octpara-revisar</code> o en <code>EscritorioGlifos</code> y dime «revisa los dibujos».</span></li>
+          <code>dibujos-22oct\para-revisar</code> o en <code>Escritorio\Glifos</code> y dime «revisa los dibujos».</span></li>
       <li class="paso luego"><span class="estado">A la vez · lo tuyo, con calma</span>
         <span class="t">Stripe, para cobrar en la web</span>
         <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Aún no está: el 29 a las 12:10 la web
@@ -167,26 +154,23 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
             <li>Una compra de mentira con la tarjeta de prueba.</li>
           </ol>
           Nadie paga nada de verdad hasta que hables con el gestor.</span></li>
-      <li class="paso marcha"><span class="estado">Hecho en sus ramas · espera tu «júntalo»</span>
-        <span class="t">Los arreglos de Mueve, Estira y «Tus rutinas»</span>
-        <span class="c"><span class="quien">Yo, con una sesión en cada rama.</span> Hecho, sin cambiar nada que se vea: que los
-          ejercicios digan dónde y con qué colocarse (la «silla sin ruedas», la banda, la pared), el tiempo que corría mientras
-          esperabas a «›», «Auto» que avanzaba en pausa, los aguantes de «Glúteos invisibles», la barra del 4·7·8, el
-          constructor tapado desde Estira, el inglés, las tarjetas y el teclado. Y lo que elegiste en las maquetas, montado
-          y con sus fotos (el paso de arriba). Después, aparte, lo de producto
-          (la carta del lunes que se pueda dejar para luego, ver un ejercicio antes de darle a Empezar…) en otra maqueta, y los
-          textos que dicen más de lo que saben, en una página de antes y después.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
         <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
         <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> En cuanto esté lo de abajo, bajo el archivo para Play, subo
           la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días de los testers empiezan entonces, y lo que
           falte para que se entienda bien llega como actualizaciones durante esos días. Por si acaso, la 0.184.0 ya está en
-          <code>subidas-play\</code>. Falta:
+          <code>subidas-play\</code>. Falta lo del paso «Ahora»:
           <ol>
-            <li>Juntar las dos ramas, que ya hacen que los ejercicios digan dónde y con qué colocarse.</li>
-            <li>Tus 16 dibujos, en <code>Pace_app\dibujos-22oct</code> (<a href="https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT">la página</a>).</li>
+            <li>«Rana» y «Palmas en la mesa» (<a href="https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT">la página</a>). Los
+              otros catorce ya están dentro.</li>
             <li>El logo en PNG con fondo transparente: dentro de la app aún se lee «FVFN».</li>
           </ol></span></li>
+      <li class="paso luego"><span class="estado">Después · yo la preparo, tú eliges</span>
+        <span class="t">Lo de quien empieza, en una maqueta</span>
+        <span class="c"><span class="quien">Yo, con una sesión; tú eliges con las letras.</span> Lo que ChatGPT propuso y aún no
+          está: la carta del lunes que se pueda dejar para luego, mirar un ejercicio antes de darle a Empezar, qué hacer cuando
+          el día se tuerce y lo que se paga dicho más claro. Los textos que dicen más de lo que saben, en una página de antes
+          y después. Llega como actualización durante los 14 días de los testers.</span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
         <span class="t">Buscar testers: avisar a los tuyos y publicar en LinkedIn</span>
         <span class="c"><span class="quien">Tú.</span> Es lo que más adelanta v1: Google pide 12 testers durante 14 días, y los días
@@ -200,7 +184,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 75 pasos</summary>
+      <summary>Lo hecho hasta hoy · 76 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -514,17 +498,17 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           la buena desde el primer día.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste 1A 2A 3A 4A</span>
         <span class="t">Elegir en la maqueta de lo que falta para vender</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9MnNL8b5BYWcX9Fsa7vnAa">la maqueta</a>). La hoja
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/VDdAWeb8msGvckeGXxFjWV">la maqueta</a>). La hoja
           del día de v1 con las rutinas que se quedan; la página para recuperar el código y «¿Lo has perdido?» en PACE; los
           botones de compra como en la bienvenida; y la ventana de valorar también en el iPhone.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo»</span>
         <span class="t">Mirar las fotos de lo que falta para vender y decir si se junta</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/56cDi1KJYKS4gKqnFKouJP">las fotos</a>). La hoja
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/Mk11GDb9JBDGXyTrynbaYY">las fotos</a>). La hoja
           del día de v1, la página para recuperar el código, los botones de compra y la valoración en el iPhone, con «Las
           rutinas más profundas» y los dos arreglos de seguridad.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste la A</span>
         <span class="t">Elegir lo que dice el aviso del móvil al acabar un Foco</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9BKgTENwuTjts4Wa1N7ZYd">los textos</a>). Con
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/7Hj5sHmFuuzVP5QFntqdN7">los textos</a>). Con
           «A tu ritmo», el móvil dice la pausa que toca y a qué hora vuelves, como la web.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 28 de octubre · en la app, 0.185.0</span>
         <span class="t">Juntar lo que faltaba para vender y los avisos del iPhone, y publicarlo</span>
@@ -543,8 +527,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           privacidad: de una mensual que terminó quedan solo su número y el día en que terminó. No cambia nada que se vea.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste · 29 de octubre</span>
         <span class="t">Elegir en las dos maquetas</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/Mtv9tKsUy9qWgJgKwfD788">el runner</a> y
-          <a href="https://claude.ai/artifact/LD2aRGw2gsrK2XM2DrovkB">«Tus rutinas»</a>). B3 A, P5 A, P6 A con «Con una basta»
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1">el runner</a> y
+          <a href="https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3">«Tus rutinas»</a>). B3 A, P5 A, P6 A con «Con una basta»
           debajo de «segundos», y P8 B dejando el dibujo a la vista; U1 B · C6 A.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste la recomendada · 29 de octubre</span>
         <span class="t">El calendario en v1</span>
@@ -553,7 +537,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           recuerda la conexión. /premium y los textos lo contarán así.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «móntalo» · 29 de octubre</span>
         <span class="t">Tu reparto del runner</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp">la maqueta</a>).
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/R4hc4PDHjn4o94Zirz6scg">la maqueta</a>).
           Cada pastilla bajo su etiqueta, «Auto» bajo los botones, el círculo mayor donde sobra aire y «pulsa «Empezar ya»».
           Y de los cinco dibujos: menos sombreado, y que todos se vean homogéneos.</span></li>
       <li class="paso hecho"><span class="estado">Hecho en su rama · 29 de octubre</span>
@@ -564,6 +548,11 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">Los catorce dibujos nuevos, y aclarar tres de los antiguos</span>
         <span class="c"><span class="quien">Yo, con una sesión.</span> Los catorce, como los viste. «Paloma», «Flexor de cadera» y
           «Sentadilla a silla» se oscurecían al encogerlos para la app; ahora quedan en la mitad del set. Las pruebas, en verde.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo» · 30 de octubre · en la app, 0.187.0</span>
+        <span class="t">Juntar «Tus rutinas», el runner y los dibujos y publicarlo</span>
+        <span class="c"><span class="quien">Yo.</span> Las tres, en ese orden, con las 1125 pruebas en verde con todo junto. Al
+          juntarlas salió una cosa que arreglé: tres rutinas piden ahora la silla con respaldo, y eso las sacaba de «A tu ritmo»
+          y de «Sin material». Es la silla de trabajar, así que no cuenta como material; sí se dice en «Antes de empezar».</span></li>
       </ol>
     </details>
   </section>
@@ -887,12 +876,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>«Qué te ayuda» en Estadísticas</b><span>Lo último de pago dentro de la app, como elegiste (1A 2A 3A): tres ideas, «Todavía es pronto» mientras no haya bastante y su pestaña con candado.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">10 · Hecho (0.181.0, 27 oct.)</span>
         <b>La hora y la medianoche, y la voz de Respira</b><span>Lo que se descuadra en la hora que se repite al cambiar el horario, un bloque que acaba justo antes de medianoche, y la voz de Respira, que si falla no deja sonar ni el tono de respaldo.</span></div></li>
-      <li><i class="pt yo"></i><div class="que"><span class="estado yo">B · En marcha · lo de colocarse, antes de la versión de prueba</span>
-        <b>Las rutinas de Mueve y Estira, claras</b><span>Que cada ejercicio diga dónde y con qué colocarse, también la «silla sin ruedas» de Core silencioso: esto frena la versión de prueba. Después, que esperar a «›» con la cuenta en 0 no sume minutos, que «Auto» no avance con la rutina en pausa, que los tres aguantes de «Glúteos invisibles» quepan en su tiempo y que la barra del 4·7·8 acabe cuando acaba. Y, con una maqueta para ti: la flecha que dice lo que hace, la pausa que se ve como pausa, «con una serie basta» y un «Hecho» en los pasos con banda.</span></div></li>
-      <li><i class="pt yo"></i><div class="que"><span class="estado yo">C · En marcha · el material, antes de la versión de prueba</span>
-        <b>«Tus rutinas», tan bien explicadas como el catálogo</b><span>Que digan el material que piden (la banda, la silla sin ruedas). Después: el constructor que desde Estira queda tapado, una sola duración en la tarjeta y en la vista previa, «Zancada con apertura» en inglés, empezar una rutina propia con el teclado, que al personalizar no se pierdan las instrucciones, y que las tarjetas digan «Sentado o de pie» y no sumen las series de ejercicios distintos. Con maqueta: que Escape no tire tu borrador y que «Guardar» diga qué pasa si no puede.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera que la subas en Play Console</span>
-        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): en cuanto estén tus dibujos, el logo y que los ejercicios digan dónde colocarse. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
+      <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">B · Hecho (0.187.0, 29 oct.)</span>
+        <b>Las rutinas de Mueve y Estira, claras</b><span>Cada ejercicio dice dónde y con qué colocarse, también la «silla sin ruedas» de Core silencioso; esperar a «›» con la cuenta en 0 no suma minutos, «Auto» no avanza con la rutina en pausa, los tres aguantes de «Glúteos invisibles» caben en su tiempo y la barra del 4·7·8 acaba cuando acaba. Y lo que elegiste: la flecha que dice lo que hace, la pausa que se ve como pausa, «Con una basta» y tu reparto de la pantalla, con los catorce dibujos nuevos.</span></div></li>
+      <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">C · Hecho (0.187.0, 29 oct.)</span>
+        <b>«Tus rutinas», tan bien explicadas como el catálogo</b><span>Dicen el material que piden; el constructor ya no queda tapado desde Estira, una sola duración en la tarjeta y en la vista previa, «Zancada con apertura» en inglés, se empiezan con el teclado, al personalizar no se pierden las instrucciones y las tarjetas dicen «Sentado o de pie». Y lo que elegiste: Escape guarda un borrador y «Guardar» dice qué falta.</span></div></li>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera tus dos dibujos y el logo; luego, que la subas</span>
+        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): lo de colocarse ya está; faltan «Rana», «Palmas en la mesa» y el logo. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">12 · Hecho (0.185.0, 28 oct.)</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">A · Hecho (0.186.0, 29 oct.)</span>
@@ -910,7 +899,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">16 · Espera tus datos</span>
         <b>Lo legal de /premium</b><span>Las condiciones, las devoluciones, el aviso legal con tu nombre, tu NIF y un contacto, y el botón para desistir de una compra que pide la ley europea desde junio de 2026. Mejor si lo mira un profesional.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">A la vez, cuando puedas</span>
-        <b>Los dibujos que faltan</b><span>Los de los seis ejercicios nuevos, los que no casan y los logros. Déjalos en <code>Pace_app\dibujos-22oct</code>, y también tu «Rodar hacia abajo».</span></div></li>
+        <b>Los dibujos que faltan</b><span>«Rana» y «Palmas en la mesa» (arriba, en «Ahora») y, después, los 22 de los logros (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</span></div></li>
       <li><i class="pt meta"></i><div class="que"><span class="estado meta">La meta</span>
         <b>v1.0: PACE se puede comprar</b><span>En la web, en Android y en iPhone: 2,99 € al mes con 7 días gratis, o 19,99 € de por vida. Ese día se cierra lo abierto hasta v1 sin quitar nada a quien ya lo usaba, y se prueba comprar, restaurar y cancelar en los tres.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">V · Después de v1 · lo decides tú, con lo que digan los testers</span>
@@ -946,7 +935,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>Los 16 dibujos y el logo</b>: con ellos sale la versión de prueba definitiva, que subes a Play y a TestFlight a
+        <li><b>Los dos dibujos que faltan (Rana y Palmas en la mesa) y el logo</b>: con ellos sale la versión de prueba definitiva, que subes a Play y a TestFlight a
           la vez. Así tus testers prueban la buena desde el primer día.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de
