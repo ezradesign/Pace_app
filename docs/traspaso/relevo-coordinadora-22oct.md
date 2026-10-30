@@ -44,6 +44,16 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
    CronCreate de la sesión) y las despertó: textos tenía todo sin commit en su carpeta, la maqueta un commit sin push
    (f508fbd4) y lo legal su «wip» subido (5cd9ae62). Hay otra retoma programada a las 22:24, tras la reposición de
    las 22:20. La semana, al 78 % (se repone el 3 nov.).
+8. **~23:10, las tres con `LISTO PARA MAIN`, limpias y subidas; esperan a Ez** (la semana de EcLj6…, al 83 %):
+   - Textos: `claude/nifty-wozniak-888954` 766dc807, 1137 en verde; fotos https://claude.ai/artifact/KyVfsiiWePUzGz45mxy5md.
+     Ez tiene que mirar el 3 (en pantallas grandes la etiqueta va sola y en dos líneas; «3 tal cual» la deja en una).
+     Con el «júntalo», el párrafo «A tu ritmo» de `ficha.md` se vuelve a pegar en Play Console, en es y en.
+   - Carta del lunes: `claude/eloquent-dhawan-80bab5` 0ae34f16, 1145 en verde; fotos
+     https://claude.ai/artifact/XSQNEkkt6Nh3cpFE4CR7Zj. Sube el censo de claves de 1086 a 1095: al juntar con los textos,
+     sumar las nuevas de las dos.
+   - Lo legal: `claude/infallible-taussig-1af346` f192dea7, solo documentos y borradores sin publicar; página
+     https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2 con cinco letras (recomendada 1A 2A 3A 4A 5A). Hallazgo: con
+     Managed Payments el vendedor es Ez, no Stripe.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
