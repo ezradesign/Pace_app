@@ -188,6 +188,9 @@ test('R5 · cortar un paso con reloj que no es el último deja la sesión como �
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await empezar(page, await abrirPropia(page, 'Dos gestos'));
+  /* El primer paso trae su colocación de la ficha del catálogo (C4) y el runner la enseña antes
+     de empezar (B4): «Empezar ya», y se corta a los 3 s de trabajo. */
+  await siguiente(page);   // «Empezar ya»
   await segundos(page, 3);
   await siguiente(page);   // corta el primero a los 3 s
   /* Guardada con el nombre de antes, se corre con el de hoy (1A, v0.175.2). */

@@ -146,7 +146,9 @@ function ritmoPozos(s, iso) {
   };
   var cabe = function (r) {
     if (!r || r.safety || r.requiresFloor) return false;
-    var mesa = function (e) { return (e === 'stableDesk' || e === 'wall') && (r.level || 'accessible') === 'accessible'; };
+    /* La silla con respaldo (`chair`) es la de trabajar, como la mesa y la pared: quien usa «A tu
+       ritmo» ya está en su sitio. La que se carga sin ruedas (`stableChair`) sí es material. */
+    var mesa = function (e) { return (e === 'stableDesk' || e === 'wall' || e === 'chair') && (r.level || 'accessible') === 'accessible'; };
     if ((r.equipment || []).some(function (e) { return !mesa(e) && !/Optional$/.test(e); })) return false;
     if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
     return !window.canAccessRoutine || window.canAccessRoutine(r.id);

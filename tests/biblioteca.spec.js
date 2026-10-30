@@ -136,7 +136,8 @@ test('los tres chips cuentan lo que el catálogo dice, en las dos bibliotecas', 
     expect(textos.length).toBe(3);
     const n = (s) => parseInt((s.match(/(\d+)\s*$/) || [])[1], 10);
     expect(n(textos[0])).toBe(cat.filter(aqui).length);
-    expect(n(textos[1])).toBe(cat.filter(r => r.equipo.length === 0).length);
+    /* La silla con respaldo es la de trabajar: no saca una rutina de «Sin material». */
+    expect(n(textos[1])).toBe(cat.filter(r => r.equipo.every(e => e === 'chair')).length);
     const umbral = parseInt((textos[2].match(/(\d+)\s*min/) || [])[1], 10);
     expect(Number.isFinite(umbral)).toBe(true);
     expect(n(textos[2])).toBe(cat.filter(r => r.min <= umbral).length);

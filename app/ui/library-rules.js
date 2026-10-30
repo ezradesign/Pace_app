@@ -83,7 +83,9 @@ function libraryPredicado(clave, umbral) {
   if (clave === 'aqui') return function (r) {
     return !r.requiresFloor && (r.equipment || []).indexOf('bar') === -1;
   };
-  if (clave === 'sinmat') return function (r) { return (r.equipment || []).length === 0; };
+  /* La silla con respaldo es la de trabajar: no saca una rutina de «Sin material», aunque
+     «Antes de empezar» la diga para que nadie haga la extensión en un taburete. */
+  if (clave === 'sinmat') return function (r) { return (r.equipment || []).every(function (e) { return e === 'chair'; }); };
   if (clave === 'corto') return function (r) { return r.min <= umbral; };
   if (clave === 'sinreten') return function (r) { return !libraryConRetencion(r); };
   return function () { return true; };

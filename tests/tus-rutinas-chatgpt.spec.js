@@ -174,6 +174,8 @@ for (const [lang, txt] of [['es', { empezar: 'Empezar', ahora: 'Empezar ahora', 
     await page.getByRole('button', { name: txt.ahora }).click();
     const raiz = page.locator('[data-pace-session-root]');
     await expect(raiz.locator('[data-pace-v1-mando]')).toBeVisible();
+    /* El primero también se coloca antes de empezar (B4), con la frase de su ficha. */
+    await raiz.locator('[data-pace-v1-btn="next"]').click();   // «Empezar ya»
     await raiz.locator('[data-pace-v1-btn="next"]').click();
     await expect(page.getByText(txt.setup).filter({ visible: true }), 'no dice dónde colocarse').toHaveCount(1);
     await raiz.locator('[data-pace-v1-btn="next"]').click();
