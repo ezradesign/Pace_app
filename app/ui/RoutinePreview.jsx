@@ -25,11 +25,36 @@
 
    El gate `setup:'ready'` del runner v1 NO hace este trabajo: es por PASO
    («colócate para este ejercicio»), no de rutina, y llega cuando ya entraste.
+
+   MIRAR UN EJERCICIO ANTES DE EMPEZAR (Ez, 30 oct. 2026: 4B, P4 de las revisiones de
+   ChatGPT del 28 oct.). Cada paso de la lista es un botón con su «›»: la MISMA ventana
+   pasa a ese ejercicio, con el dibujo grande y sus textos (Colócate, Qué haces, Cuidado),
+   los que salen durante la rutina (`v1Instr`). «‹ Los pasos» vuelve y deja el foco en el
+   paso que se miró. Mirar no cuenta ni empieza nada.
    ============================================================ */
 
+const { useState: useStatePrev, useRef: useRefPrev, useEffect: useEffectPrev } = React;
+
+const flechaVolverPrev = (
+  <svg width="9" height="12" viewBox="0 0 9 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M6.5 1.5L2 6l4.5 4.5" />
+  </svg>
+);
+
 function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
   const [pace] = usePace();
+  /* El paso que se mira, por su índice en la rutina preparada; null = la lista. */
+  const [viendo, setViendo] = useStatePrev(null);
+  const volverRef = useRefPrev(null);
+  const pasoRefs = useRefPrev({});
+  const vueltaRef = useRefPrev(null);
+  useEffectPrev(() => {
+    if (viendo != null) { if (volverRef.current) volverRef.current.focus(); return; }
+    const el = vueltaRef.current != null && pasoRefs.current[vueltaRef.current];
+    vueltaRef.current = null;
+    if (el) el.focus();
+  }, [viendo]);
   if (!routine) return null;
 
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
@@ -119,6 +144,40 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
     </div>
   );
 
+  /* Lo que se lee de un paso, con su rótulo; un paso sin ningún texto no se puede mirar. */
+  const rotulosPaso = { setup: t('session.place'), action: t('preview.paso.haces'), care: t('preview.paso.cuidado') };
+  const textosPaso = (idx) => ['setup', 'action', 'care']
+    .map((k) => [k, typeof v1Instr === 'function' ? v1Instr(tR, guiada, idx, k) : null])
+    .filter(([, v]) => v);
+  const nombrePaso = (s, idx) => tR(clavePaso(idx), s.name);
+  const mirar = (idx) => setViendo(idx);
+  const volver = () => { vueltaRef.current = viendo; setViendo(null); };
+
+  if (viendo != null && guiada.steps && guiada.steps[viendo]) {
+    const paso = guiada.steps[viendo];
+    return (
+      <Modal open={true} onClose={onClose} maxWidth={560} title={nombrePaso(paso, viendo)}
+             tagLabel={
+               <button type="button" ref={volverRef} data-pace-preview-volver onClick={volver} className="pace-meta"
+                       style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '2px 0', color: 'var(--ink-2)', cursor: 'pointer' }}>
+                 {flechaVolverPrev}{t('preview.paso.volver')}
+               </button>}>
+        <div data-pace-preview-ejercicio style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 4 }}>
+          <div aria-hidden="true" style={{ color: accent, display: 'grid', placeItems: 'center', height: 180,
+                                           background: 'var(--paper-2)', borderRadius: 'var(--r-md)' }}>
+            {typeof ExerciseGlyph === 'function' ? <ExerciseGlyph id={paso.name} size={160} /> : null}
+          </div>
+          {textosPaso(viendo).map(([k, v]) => (
+            <div key={k}>
+              <div className="pace-meta" style={{ marginBottom: 4 }}>{rotulosPaso[k]}</div>
+              <div data-pace-preview-texto={k} style={{ fontSize: 14.5, color: 'var(--ink-2)', lineHeight: 1.5 }}>{v}</div>
+            </div>
+          ))}
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <Modal open={true} onClose={onClose} maxWidth={560}
            tagLabel={t('preview.tag')} title={propia ? routine.name : tR(`${routine.id}.name`, routine.name)}>
@@ -165,24 +224,37 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
         {pasos.length > 0 && (
           <Seccion titulo={t('preview.steps')}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {pasos.map(({ s, idx, veces }) => (
-                <div key={`${s.name}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' }}>
-                  <span style={{ color: accent, flexShrink: 0, display: 'grid', placeItems: 'center', width: 30, height: 30 }}>
-                    {typeof ExerciseGlyph === 'function'
-                      ? <ExerciseGlyph id={s.name} size={30} />
-                      : null}
-                  </span>
-                  <span style={{ fontSize: 14, color: 'var(--ink)' }}>
-                    {tR(clavePaso(idx), s.name)}
-                    {veces > 1 && (
-                      <span style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` ×${veces}`}</span>
-                    )}
-                    {s.opcional && (
-                      <span data-pace-preview-opcional style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` · ${t('preview.opcional')}`}</span>
-                    )}
-                  </span>
-                </div>
-              ))}
+              {pasos.map(({ s, idx, veces }) => {
+                const contenidoPaso = (
+                  <React.Fragment>
+                    <span style={{ color: accent, flexShrink: 0, display: 'grid', placeItems: 'center', width: 30, height: 30 }}>
+                      {typeof ExerciseGlyph === 'function'
+                        ? <ExerciseGlyph id={s.name} size={30} />
+                        : null}
+                    </span>
+                    <span style={{ fontSize: 14, color: 'var(--ink)' }}>
+                      {nombrePaso(s, idx)}
+                      {veces > 1 && (
+                        <span style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` ×${veces}`}</span>
+                      )}
+                      {s.opcional && (
+                        <span data-pace-preview-opcional style={{ color: 'var(--ink-3)', fontSize: 12 }}>{` · ${t('preview.opcional')}`}</span>
+                      )}
+                    </span>
+                  </React.Fragment>
+                );
+                const filaPaso = { display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' };
+                if (!textosPaso(idx).length) return <div key={`${s.name}-${idx}`} style={filaPaso}>{contenidoPaso}</div>;
+                return (
+                  <button type="button" key={`${s.name}-${idx}`} data-pace-preview-paso={idx}
+                          ref={(el) => { pasoRefs.current[idx] = el; }} onClick={() => mirar(idx)}
+                          aria-label={tn('preview.paso.ver', { n: nombrePaso(s, idx) })}
+                          style={{ ...filaPaso, width: '100%', textAlign: 'left', cursor: 'pointer', borderRadius: 'var(--r-sm)' }}>
+                    {contenidoPaso}
+                    <span aria-hidden="true" style={{ marginLeft: 'auto', paddingRight: 4, color: 'var(--ink-3)', fontSize: 18, lineHeight: 1 }}>›</span>
+                  </button>
+                );
+              })}
             </div>
           </Seccion>
         )}

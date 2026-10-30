@@ -4,7 +4,8 @@
 
    TopBar (sesion 82 / v0.33.2).
    Barra superior del shell: tabs centrados Foco/Pausa/Larga + 3 iconos
-   top-right (Stats / Logros / Tweaks).
+   top-right (Stats / Logros / Tweaks), y delante el sobre cuando lleva algo
+   (shell/Sobre.jsx; Ez, 30 oct. 2026).
 
    Extraido literal de main.jsx (lineas 365-444) en split mecanico s82.
 
@@ -79,7 +80,8 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
         ))}
       </div>
 
-      {/* Iconos top-right */}
+      {/* Iconos top-right. Primero el sobre, solo cuando lleva algo (shell/Sobre.jsx). */}
+      {typeof PaceSobre === 'function' && <PaceSobre estilo={topBarStyles.iconBtn} />}
       <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title={t('topbar.stats.title')} aria-label={t('topbar.stats.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
