@@ -3,7 +3,9 @@
 Punto 16 del ROADMAP. Lo comprobado en las fuentes, para Ez y para quien le revise los textos (gestor o
 jurista). **No es consejo legal.** Los borradores están en `legal/` (no se publican: `scripts/web-dist.js`
 solo copia las carpetas de su lista, y `legal` no está). La página para Ez, con sus preguntas, en
-`docs/launch/legal-web-para-ez.html`.
+`docs/launch/legal-web-para-ez.html` (https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2). Lo recomendado:
+**1A 2A 3A 4A 5A**. Cuando Ez conteste, los huecos `[DECISIÓN DE EZ, PREGUNTA n]` de los borradores se
+rellenan con su letra.
 
 ## 1. Quién vende con «vende por ti» (Managed Payments)
 
@@ -17,9 +19,12 @@ https://stripe.com/legal/ssa-services-terms, sección «Stripe Managed Payments�
 - Solo **para el IVA**, SMP cuenta como quien hace la venta (interfaz electrónica o comisionista, §2.1(a)
   y §4.1), y por eso cobra, declara e ingresa el IVA y emite la factura al cliente **en su propio nombre**
   (§4.1(e), «agente no revelado»). A Ez le hace una autofactura (§4.5).
-- §4.1(a): para vendedores de **algunos** países, SMP solo lleva el IVA de las ventas a otros países y no
-  las de dentro del país del vendedor. **Hay que comprobar que España no es uno de ellos** (está en la
-  documentación de impuestos de Managed Payments; si lo fuera, Ez declararía el IVA de las ventas a España).
+- §4.1(a): para vendedores de algunos países, SMP solo lleva el IVA de las ventas a otros países. **España
+  no es uno de ellos**: la documentación de impuestos (https://docs.stripe.com/payments/managed-payments/tax-compliance)
+  dice que lleva las ventas dentro del país en todos, salvo Singapur (entre empresas) y Japón, y que lleva las
+  ventas a los 27 de la UE. **Pero no las de los países que no están en su lista**: en Latinoamérica solo
+  cubre México (y algunas islas). Una compra desde Argentina, Chile o Colombia deja a Ez a cargo de sus
+  impuestos allí: pregunta para el gestor (¿se limita la venta a los países cubiertos?).
 
 **Lo seguro:** ante el cliente, el pago lo hace Link («Sold through Link», `LINK.COM*` en el extracto, los
 recibos y facturas salen de Link). **La duda para el jurista:** a efectos de consumo (TRLGDCU), ¿el
@@ -35,7 +40,7 @@ y las condiciones citadas:
 
 | Qué | ¿Lo cubre Stripe? |
 |---|---|
-| IVA de cada país: calcula, cobra, declara | Sí (§4.1), salvo lo dicho de las ventas dentro de España |
+| IVA de cada país: calcula, cobra, declara | Sí en España y en la UE (§4.1); no en los países fuera de su lista |
 | Recibos y facturas al cliente | Sí, desde Link, siempre, con PDF |
 | Página de pago con el pie de condiciones de pago estándar | Sí. Se pueden añadir las condiciones y la privacidad propias en los ajustes de Checkout |
 | Soporte del pago, cancelar la suscripción, cambiar la tarjeta | Sí, en link.com y en el soporte de Link |
