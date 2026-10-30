@@ -36,6 +36,8 @@ for (const [w, h, lado] of [[1536, 864, 216], [1280, 720, 120], [360, 640, 140]]
     test.setTimeout(90_000);
     await page.setViewportSize({ width: w, height: h });
     await hastaElCierre(page, context);
+    /* Dice lo que hiciste, no cómo te sientes (Ez, 7A del 30 oct.: antes, «El cuerpo vuelve a sentirse tuyo»). */
+    await expect(page.locator('[data-pace-session-done]')).toContainText('Un rato para el cuerpo, entre tareas.');
     const m = await medir(page);
     expect(m.lado, 'el dibujo no crece con la pantalla').toBe(lado);
     expect(m.sobra, 'el cierre pide scroll').toBeLessThanOrEqual(1);

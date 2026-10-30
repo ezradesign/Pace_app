@@ -235,7 +235,7 @@ test.describe('en Android', () => {
     await abrirTusDatos(page);
     await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
     await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety');
-    await expect(page.getByText('Todo vive en tu móvil.')).toBeVisible();
+    await expect(page.getByText('Todo vive en este móvil y no se sincroniza con otros.')).toBeVisible();
   });
 
   test('no hay apoyo con Buy Me a Coffee: ni la pill del pie, ni el modal, ni el aviso de la racha', async ({ page, context }) => {
@@ -397,7 +397,7 @@ test.describe('en la web (control)', () => {
     await expect(page.locator('[data-pace-aj-fila="notify"]')).toContainText('Foco · si la pestaña está detrás');
     await abrirTusDatos(page);
     await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', '/privacy');
-    await expect(page.getByText('Todo vive en tu navegador.')).toBeVisible();
+    await expect(page.getByText('Todo vive en este navegador y no se sincroniza con otros.')).toBeVisible();
     const [descarga] = await Promise.all([
       page.waitForEvent('download'),
       page.getByRole('button', { name: 'Exportar una copia', exact: true }).click(),

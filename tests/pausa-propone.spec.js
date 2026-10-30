@@ -76,7 +76,7 @@ test('tras un bloque largo propone una rutina, con nombre y con el porque', asyn
 
   const prop = page.locator('[data-pace-break-prop]');
   await expect(prop, 'no hay propuesta tras 45 minutos sentado').toHaveCount(1);
-  await expect(prop, 'no dice el porque').toContainText('Llevas 45 minutos sentado');
+  await expect(prop, 'no dice el porque').toContainText('Has terminado un Foco de 45 minutos');
   await expect(prop, 'no dice de que modulo es').toContainText('Estira');
   await expect(prop.getByRole('button', { name: 'Empezar' })).toBeVisible();
 
@@ -368,7 +368,7 @@ test('el agua propone «Un vaso más»: lo suma y abre Hidrátate con el vaso co
   await hastaLaPausa(page, 25, null, tarde);
 
   const prop = page.locator('[data-pace-break-prop]');
-  await expect(prop, 'a las cuatro sin haber bebido no propone agua').toContainText('Aún no has bebido hoy');
+  await expect(prop, 'a las cuatro sin haber bebido no propone agua').toContainText('Hoy no has apuntado ningún vaso');
   await expect(prop.getByRole('button', { name: 'Empezar', exact: true })).toHaveCount(0);
   await prop.getByRole('button', { name: 'Un vaso más', exact: true }).click();
 

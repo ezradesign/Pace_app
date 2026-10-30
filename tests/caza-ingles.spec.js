@@ -227,7 +227,7 @@ async function hastaLaPausa(page, context, estado) {
 test('ingles-11 · la pausa no dice «You have not breathed today»', async ({ page, context }) => {
   await hastaLaPausa(page, context, { focusMinutes: 25, water: { today: 3, goal: 8 }, plan: { extra: true, muevete: true } });
   const prop = page.locator('[data-pace-break-prop]');
-  await expect(prop).toContainText('No breathing session yet today');
+  await expect(prop).toContainText('No Breathe session yet today');
   await expect(prop).not.toContainText('have not');
 });
 

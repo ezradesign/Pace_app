@@ -205,9 +205,10 @@ function OnbLogo() {
 
 /* «¿Cómo es tu semana?» (maqueta R2-bienvenida, elegida por Ez el 7 de octubre de 2026).
    Su propio componente para que la bienvenida no lea «A tu ritmo» hasta llegar aquí, ni
-   escriba nada hasta «Comenzar» o «Cada semana es distinta», que guardan y siguen. El
-   borrador (días y horas) se queda en la bienvenida para que «← Atrás» no lo borre, pero
-   no se guarda. Cinco hijos para el reveal.
+   escriba nada hasta «Comenzar» o «Ahora no, quiero probar primero», que guardan y siguen
+   (la segunda, sin semana: aquí no se dice «Cada semana es distinta», que es para quien no
+   tiene semana fija; Ez, 1A del 30 oct.). El borrador (días y horas) se queda en la
+   bienvenida para que «← Atrás» no lo borre, pero no se guarda. Seis hijos para el reveal.
    Vive aquí y no en Onboarding.jsx por las 500 líneas; pinta con `onboardingStyles`, que llega
    por `window` al pintar. */
 function OnbSemanaPaso({ state, ultima, onSeguir, borrador, onBorrador }) {
@@ -225,8 +226,11 @@ function OnbSemanaPaso({ state, ultima, onSeguir, borrador, onBorrador }) {
         {t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')}
       </button>
       <button data-pace-semana-saltar onClick={() => guardar(null)} style={onboardingStyles.ghostBtn}>
-        {t('ritmo.st.saltar')}
+        {t('ritmo.st.ahoraNo')}
       </button>
+      <p data-pace-semana-nota style={{ margin: '-6px 0 0', fontSize: 12, color: 'var(--ink-3)', textAlign: 'center' }}>
+        {t('ritmo.st.ahoraNo.nota')}
+      </p>
     </React.Fragment>
   );
 }

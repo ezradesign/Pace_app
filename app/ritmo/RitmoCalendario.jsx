@@ -242,6 +242,17 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     </div>
   );
 
+  /* Bajo «Tener en cuenta mis reuniones»: cuándo se leyeron y si falló la última vez (Ez, 11A del
+     30 oct.). Sin lectura de hoy en esta página, lo de siempre; y si falló pero el día ya tiene
+     reuniones de antes, no se dice que no las tenga en cuenta. */
+  const lectura = reuniones && typeof calendarioReunionesEstado === 'function' ? calendarioReunionesEstado() : null;
+  const ocupadoHoy = !!(state.ritmo && state.ritmo.ocupado && state.ritmo.ocupado.fecha === ritmoHoy());
+  let subReuniones = t('cal.reuniones.sub');
+  if (lectura && lectura.fallo > lectura.leidas) {
+    if (lectura.leidas) subReuniones = tn('cal.reuniones.fallo', { h: ritmoCalendarioHoraMs(lectura.fallo), antes: ritmoCalendarioHoraMs(lectura.leidas) });
+    else if (!ocupadoHoy) subReuniones = t('cal.reuniones.fallo.nunca');
+  } else if (lectura && lectura.leidas) subReuniones = tn('cal.reuniones.leidas', { h: ritmoCalendarioHoraMs(lectura.leidas) });
+
   const conectados = destinos.filter(calendarioConectado).filter((d) => !solo || d === solo.destino);
   const casillaMantener = !conectados.length || solo ? null : puede ? (
     <label className="pace-rt-cal-chk">
@@ -283,11 +294,13 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     <Modal open onClose={onClose} tagLabel={t('ritmo.nombre')} title={t('cal.hoja.titulo')} maxWidth={520}>
       <div data-pace-ritmo data-pace-cal style={{ textAlign: 'left' }}>
         <div className="pace-rt-cal-resumen" data-pace-cal-resumen>{resumen}</div>
+        {/* Ya se mantiene solo: lo que se mueva en el calendario vuelve a su sitio (Ez, 12A del 30 oct.). */}
+        {solo ? <div className="pace-rt-cal-cambiar" data-pace-cal-cambiar>{t('cal.solo.cambiar')}</div> : null}
         {conectados.map(fila)}
         {conectados.length ? (
           <label className="pace-rt-cal-chk">
             <input type="checkbox" id="pace-cal-reuniones" data-pace-cal-reuniones checked={reuniones} onChange={(e) => cambiarReuniones(e.target.checked)} />
-            <span>{t('cal.reuniones')}<small>{t('cal.reuniones.sub')}</small></span>
+            <span>{t('cal.reuniones')}<small>{subReuniones}</small></span>
           </label>
         ) : null}
         {casillaMantener}

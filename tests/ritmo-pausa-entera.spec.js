@@ -147,7 +147,7 @@ test('el aro cuenta la pausa desde que acaba el bloque y, a cero, espera el bloq
   await page.waitForTimeout(250);
   await terminarBloque(page);
   expect(await page.evaluate(() => getState().focusMode), 'la pausa corta, en su modo').toBe('pausa');
-  await overlaySuperior(page).getByRole('button', { name: 'Saltar esta pausa', exact: true }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Ahora no', exact: true }).click();
   await expect(corriendo(page), 'el aro cuenta la pausa').toHaveCount(1);
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Pausa corta');
   await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Luego, el bloque 2 de 9');

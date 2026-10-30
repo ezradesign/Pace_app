@@ -53,7 +53,7 @@ Foco y pausas activas para quien trabaja sentado. A tu ritmo.
 PACE es un recordatorio de pausas activas con temporizador Pomodoro, para quien trabaja sentado. Te ayuda a concentrarte y a parar a tiempo para una pausa corta y guiada: estirar en el escritorio, respirar, beber agua. Pausas que caben entre dos tareas.
 
 A TU RITMO
-Dile a PACE cuánto trabajas hoy y reparte la jornada en bloques de foco y pausas con nombre, según tu horario y tu hora de comer. Al acabar cada bloque te sirve la pausa que toca, y a lo largo del día las pausas mueven el cuerpo entero: piernas, caderas, espalda, hombros, cuello y manos. Si tienes reuniones, PACE las lee de tu calendario y las esquiva, y también puede llevar el día entero a tu calendario.
+Dile a PACE cuánto trabajas hoy y reparte la jornada en bloques de foco y pausas con nombre, según tu horario y tu hora de comer. Al acabar cada bloque te sirve la pausa que toca, y a lo largo del día las pausas mueven el cuerpo entero: piernas, caderas, espalda, hombros, cuello y manos. Si tienes reuniones, PACE las lee del calendario del móvil y las esquiva, y también puede llevar el día entero a tu calendario.
 
 FOCO
 Un Pomodoro tranquilo de 15, 25, 35 o 45 minutos, o el que elijas. Un aviso al terminar, aunque la app esté en segundo plano.
@@ -81,6 +81,11 @@ PACE no es un producto sanitario ni sustituye el consejo de un profesional. Si t
 
 Unos 2.000 caracteres de 4.000. Rehecha el 20 oct. con las palabras que se buscan (`nombre-en-play.html`): pausas activas en el trabajo, recordatorio, estiramientos para la oficina, ejercicios en el escritorio, temporizador Pomodoro, teletrabajo, postura, calendario. Cada una una vez: Google castiga repetir. Y el cuerpo entero cada día (v0.174.0).
 
+**Cambiada el 30 oct.** (Ez, 14A de `docs/proposals/textos-honestos-30oct.html`): las reuniones se leen «del
+calendario del móvil», y el párrafo de PACE completo cuenta la variedad y el calendario al día «mientras PACE
+está abierto», como decidió Ez el 29 oct. El párrafo de «A tu ritmo» ya estaba en Play: hay que volver a
+pegarlo en Play Console, en español y en inglés.
+
 Del arte de PACE no se dice «dibujado a mano»: los dibujos salen de GPT Image (Ez, 15 oct. 2026,
 `DECISIONES_PRODUCTO.md`). De la app sí se puede decir que la hace una persona.
 
@@ -90,7 +95,7 @@ que fije Play en cada país. Cuenta los dos planes que eligió Ez el 15 oct. 202
 
 ```
 PACE COMPLETO
-Casi todo PACE es gratis, y lo seguirá siendo. PACE completo añade las rutinas más profundas, tus propias rutinas, una semana a tu medida con la carta del lunes y tu mes y tu año. Pruébalo 7 días gratis y sigue por 2,99 € al mes, o págalo una vez, 19,99 €, y es tuyo para siempre.
+Casi todo PACE es gratis, y lo seguirá siendo. PACE completo añade pausas que cambian de un día a otro, las rutinas más profundas, tus propias rutinas, una semana a tu medida con la carta del lunes, tu mes y tu año, y tu calendario al día mientras PACE está abierto. Pruébalo 7 días gratis y sigue por 2,99 € al mes, o págalo una vez, 19,99 €, y es tuyo para siempre.
 ```
 
 ---
@@ -152,7 +157,7 @@ Desk stretches and breathing breaks at your own pace. Focus, then move a little.
 PACE is a break and stretch reminder with a pomodoro timer, for people who work sitting down. It helps you focus, then stop in time for a short guided break: stretch at your desk, breathe, drink some water. Breaks small enough to fit between two tasks.
 
 AT YOUR PACE
-Tell PACE how long you're working today and it lays out your day in focus blocks and named breaks, around your hours and your lunch. At the end of each block it serves the break that fits, and across the day the breaks move your whole body: legs, hips, back, shoulders, neck and hands. If you have meetings, PACE reads them from your calendar and works around them, and it can put your whole day in your calendar too.
+Tell PACE how long you're working today and it lays out your day in focus blocks and named breaks, around your hours and your lunch. At the end of each block it serves the break that fits, and across the day the breaks move your whole body: legs, hips, back, shoulders, neck and hands. If you have meetings, PACE reads them from your phone calendar and works around them, and it can put your whole day in your calendar too.
 
 FOCUS TIMER
 A calm pomodoro of 15, 25, 35 or 45 minutes, or whatever length you choose. A reminder when it ends, even with the app in the background.
@@ -182,7 +187,7 @@ PACE is not a medical device and does not replace professional advice. If you ha
 
 ```
 PACE COMPLETE
-Almost all of PACE is free, and it will stay that way. PACE Complete adds the deeper routines, your own routines, a week shaped to you with the Monday letter, and your month and year. Try it free for 7 days and continue for €2.99 a month, or pay once, €19.99, and it's yours for good.
+Almost all of PACE is free, and it will stay that way. PACE Complete adds breaks that change from day to day, the deeper routines, your own routines, a week shaped to you with the Monday letter, your month and year, and your calendar kept up to date while PACE is open. Try it free for 7 days and continue for €2.99 a month, or pay once, €19.99, and it's yours for good.
 ```
 
 ### Países
