@@ -35,6 +35,15 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
      / etc de hecho se puede utilizar para actualizaciones, alguna notificación puntual y esto y puede ser abierto o
      cerrado no? + 2A +3A + 4B». Contestado: el sobre, cerrado con algo sin leer y abierto ya leído; preparado para
      novedades y avisos puntuales más adelante, pero ahora solo con la carta, para no agrandar lo de antes de v1.
+6. **Ez, ~14:00: «Continua aunque lleguemos al 100% y sigue trabajando en esta sesión automáticamente cuando se
+   restablezca»**. Ya no se para al 95 %: al 85 % «wip» y push, y se sigue. Ez arrancó también `legal-premium`
+   (`local_ac306c03-e267-4cb8-940a-1da0c6f44b73`, rama `claude/infallible-taussig-1af346`, puerto 8816): lo legal de
+   /premium en borrador (quién vende con Managed Payments, la función de desistir, condiciones y aviso legal con huecos
+   para los datos de Ez). Ramas: textos `claude/nifty-wozniak-888954`, maqueta `claude/eloquent-dhawan-80bab5`.
+7. **~16:30, las tres sesiones se cortaron con las 5 h al 100 %.** A las 17:24 la coordinadora se retomó sola (un
+   CronCreate de la sesión) y las despertó: textos tenía todo sin commit en su carpeta, la maqueta un commit sin push
+   (f508fbd4) y lo legal su «wip» subido (5cd9ae62). Hay otra retoma programada a las 22:24, tras la reposición de
+   las 22:20. La semana, al 78 % (se repone el 3 nov.).
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
