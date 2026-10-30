@@ -58,20 +58,52 @@ test('2 · bajo «¿Cuánto trabajas hoy?» dice que el tiempo incluye las pausa
 });
 
 /* ------------------------------------------------------------------ 3 · el día servido */
-test('3 · la etiqueta del material avisa de que a veces hace falta pared o mesa, y cabe a 360 px', async ({ page, context }) => {
+test('3 · la etiqueta del material avisa de que a veces hace falta pared o mesa', async ({ page, context }) => {
   await sembrar(context, Object.assign({ ritmo: { dia: JORNADA } }, PERFIL));
   await page.clock.install({ time: NUEVE });
   await irAlArtefacto(page);
   await expect(vis(page, '.pace-rt-ctx span').nth(1)).toHaveText('Sin material, a veces pared o mesa');
   expect(await cadenas(page, 'en', ['ritmo.ctx.material'])).toEqual(['No equipment, sometimes a wall or desk']);
+});
 
-  await page.setViewportSize({ width: 360, height: 730 });
-  await vis(page, '[data-pace-ritmo-ver]').click();
-  await vis(page, '[data-pace-ritmo-lista]').waitFor();
-  const chip = vis(page, '.pace-rt-ctx span').nth(1);
-  await expect(chip).toHaveText('Sin material, a veces pared o mesa');
-  const caja = await chip.boundingBox();
-  expect(caja.x + caja.width, 'la etiqueta se sale de la pantalla').toBeLessThanOrEqual(360 - 16);
+/* En la fila del título (panel de 1000 px o más) no caben las dos etiquetas con la larga en una línea:
+   el título de la jornada se partía en dos o tres líneas a 1440, 1536 y 1920 (sidebar-cuaderno lo
+   vigila a 1536). Va sola y en dos líneas. */
+test('3 · en un ordenador grande la etiqueta va sola y en dos líneas, y el título del día no se parte', async ({ page, context }) => {
+  await page.setViewportSize({ width: 1536, height: 864 });
+  await sembrar(context, Object.assign({ ritmo: { dia: JORNADA } }, PERFIL));
+  await page.clock.install({ time: NUEVE });
+  await irAlArtefacto(page);
+  await page.evaluate(() => document.fonts.ready);
+  const cab = vis(page, '[data-pace-ritmo-estado="menu"].pace-rt-esc');
+  await expect(cab.locator('.pace-rt-ctx span').filter({ visible: true })).toHaveText(['Sin material, a veces pared o mesa']);
+  const m = await cab.evaluate((p) => {
+    /* El alto del texto, sin el relleno ni el borde de la píldora. */
+    const lineas = (e) => {
+      const c = getComputedStyle(e);
+      const texto = e.clientHeight - parseFloat(c.paddingTop) - parseFloat(c.paddingBottom);
+      return Math.round(texto / parseFloat(c.lineHeight));
+    };
+    return { titulo: lineas(p.querySelector('.pace-rt-titulo')), etiqueta: lineas(p.querySelector('.pace-rt-ctx-material')) };
+  });
+  expect(m.titulo, 'el título del día se parte').toBe(1);
+  expect(m.etiqueta, 'la etiqueta no va en dos líneas').toBe(2);
+});
+
+test.describe('en el móvil', () => {
+  test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
+
+  test('3 · en «Ver todo», la etiqueta del material cabe a 360 px', async ({ page, context }) => {
+    await sembrar(context, Object.assign({ sidebarCollapsed: true, ritmo: { dia: JORNADA } }, PERFIL));
+    await page.clock.install({ time: NUEVE });
+    await irAlArtefacto(page);
+    await vis(page, '[data-pace-ritmo-ver]').click();
+    await vis(page, '[data-pace-ritmo-lista]').waitFor();
+    const chip = vis(page, '.pace-rt-ctx span').nth(1);
+    await expect(chip).toHaveText('Sin material, a veces pared o mesa');
+    const caja = await chip.boundingBox();
+    expect(caja.x + caja.width, 'la etiqueta se sale de la pantalla').toBeLessThanOrEqual(360 - 16);
+  });
 });
 
 /* ------------------------------------------------------------------ 5 · los motivos de la pausa por libre */

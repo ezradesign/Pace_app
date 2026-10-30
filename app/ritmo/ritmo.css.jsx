@@ -94,6 +94,12 @@
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
+  /* En la fila del título, «Sin material, a veces pared o mesa» (Ez, 3B del 30 oct.) va sola y en dos
+     líneas: junto a «Junto a la mesa» y en una línea se comía 126 px y el título de la jornada se
+     partía en dos o tres líneas a 1440, 1536 y 1920, con el panel 24 px más alto (medido). Ya dice
+     «mesa»; en las dos filas de debajo de 1000 y en la hoja del móvil van las dos, en una línea. */
+  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-mesa { display: none; }
+  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-material { white-space: normal; max-width: 13em; text-align: center; line-height: 1.15; padding: 2px 9px; }
 }
 
 /* LAS OPCIONES */

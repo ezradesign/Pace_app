@@ -23,8 +23,8 @@ function RitmoContexto() {
   const { t } = useT();
   return (
     <div className="pace-rt-ctx">
-      <span>{t('ritmo.ctx.mesa')}</span>
-      <span>{t('ritmo.ctx.material')}</span>
+      <span className="pace-rt-ctx-mesa">{t('ritmo.ctx.mesa')}</span>
+      <span className="pace-rt-ctx-material">{t('ritmo.ctx.material')}</span>
     </div>
   );
 }
