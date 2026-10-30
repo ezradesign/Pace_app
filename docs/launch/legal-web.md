@@ -3,9 +3,9 @@
 Punto 16 del ROADMAP. Lo comprobado en las fuentes, para Ez y para quien le revise los textos (gestor o
 jurista). **No es consejo legal.** Los borradores están en `legal/` (no se publican: `scripts/web-dist.js`
 solo copia las carpetas de su lista, y `legal` no está). La página para Ez, con sus preguntas, en
-`docs/launch/legal-web-para-ez.html` (https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2). Lo recomendado:
-**1A 2A 3A 4A 5A**. Cuando Ez conteste, los huecos `[DECISIÓN DE EZ, PREGUNTA n]` de los borradores se
-rellenan con su letra.
+`docs/launch/legal-web-para-ez.html` (https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2). Ez eligió
+**1A, 3A, 4A y 5A** (30 oct.), ya puestas en los borradores; la 2 («¿y si ponemos 7?») está pendiente: el
+desistimiento de la ley no baja de 14 días.
 
 ## 1. Quién vende con «vende por ti» (Managed Payments)
 
@@ -95,7 +95,8 @@ TRLGDCU, texto consolidado del BOE (BOE-A-2007-20555), última actualización pu
    preguntas» que ya promete /premium, que la hace Ez desde Stripe porque Link no la hace.
 4. Junto a los botones de compra, lo que pide Stripe §3.2: «7 días gratis; después 2,99 €/mes, IVA
    incluido; se renueva cada mes hasta que canceles; cancelas en Ajustes o en link.com».
-5. La **función de desistimiento en línea** (opciones en la página para Ez).
+5. La **función de desistimiento en línea**: la 1A de Ez, montada sin publicar, con lo que hace Ez para
+   darla de alta (`docs/launch/desistir.md`).
 6. En Stripe: las condiciones y la privacidad de PACE en los ajustes de Checkout, el correo de soporte
    al día y, si el jurista lo pide, «Upcoming renewals» encendido.
 7. En `privacy.html`, la sección de compras (ya está) con el responsable y el desistimiento.

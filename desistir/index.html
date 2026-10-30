@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Desistir del contrato · PACE</title>
+<meta name="description" content="Desiste de tu compra de PACE completo en la web en los 14 días siguientes.">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- PACE · pacegrass.app/desistir — LA FUNCIÓN DE DESISTIMIENTO EN LÍNEA (Ez, 1A del 30 oct. 2026,
+     https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2)
+
+     Lo pide el art. 11 bis de la Directiva 2011/83 desde el 19 jun. 2026: a esta página se llega con
+     «Desistir del contrato aquí» (el pie de /premium, la página de gracias y Ajustes de la web); pide el
+     nombre, qué compra (el correo, el número del recibo si lo tiene y el plan) y dónde mandar el acuse,
+     y se confirma con «Confirmar desistimiento». /api/desistir (functions/api/desistir.js) se lo manda a
+     Ez y le manda al comprador el acuse con lo que dijo, la fecha y la hora; aquí sale el mismo acuse,
+     para guardarlo o descargarlo.
+
+     Abierta solo cuando la función dice que tiene la llave del correo (GET /api/desistir): mientras, y
+     sin JavaScript, la página manda desistir por correo, que la ley también admite. Con la letra, los
+     colores y el cambio de idioma de /recuperar. Aún no se publica: no está en WEB_CARPETAS de
+     scripts/web-dist.js (docs/launch/desistir.md). -->
+<style>
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/intertight-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/intertight-500-normal.woff2') format('woff2'); }
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --aviso: #9A4A33;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --aviso: #D99477; }
+    header img { filter: invert(1); }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  a { color: var(--focus); }
+  .marco { max-width: 600px; margin: 0 auto; padding: 0 16px 48px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  header img { height: 96px; width: auto; display: block; }
+  .idioma { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+  .idioma b { color: var(--ink); font-weight: 500; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1 { font: italic 500 40px/1.1 var(--display); margin: 0 0 10px; text-wrap: balance; }
+  h2 { font: italic 500 22px/1.2 var(--display); margin: 0 0 6px; }
+  .lede { color: var(--ink-2); margin: 0 0 20px; }
+  label, legend { display: block; font: 500 11px/1.4 var(--ui); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; padding: 0; }
+  input[type=text], input[type=email] { width: 100%; min-height: 46px; padding: 10px 14px; margin: 0 0 4px; border: 1px solid var(--line-2); border-radius: 12px;
+    background: var(--paper-2); color: var(--ink); font: 16px/1.4 var(--ui); }
+  input:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .planes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .planes label { margin: 0; text-transform: none; letter-spacing: 0; font: 15px/1.2 var(--ui); color: var(--ink); display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--line-2); border-radius: 999px; padding: 9px 14px; cursor: pointer; background: var(--paper-2); }
+  .planes input { accent-color: var(--cta); margin: 0; }
+  .campo { margin: 0 0 16px; }
+  .pista { font-size: 13.5px; color: var(--ink-3); margin: 4px 0 0; }
+  .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .boton { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; font: italic 500 17px/1.2 var(--display); letter-spacing: .01em; text-decoration: none; cursor: pointer; border: 1px solid var(--cta); transition: background-color 180ms, color 180ms; }
+  .boton.lleno { background: var(--cta); color: var(--paper); width: 100%; }
+  .boton.hueco { background: transparent; color: var(--cta); }
+  .boton[disabled] { opacity: .6; cursor: default; }
+  .boton:focus-visible, .idioma:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .acuse { margin: 18px 0 14px; padding: 14px 16px; border: 1px dashed var(--line-2); border-radius: 12px; background: var(--paper-2); }
+  .acuse dl { margin: 0; display: grid; grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr); gap: 6px 14px; font-size: 15px; }
+  .acuse dt { color: var(--ink-3); }
+  .acuse dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+  @media (max-width: 420px) { .acuse dl { grid-template-columns: 1fr; gap: 0 0; } .acuse dd { margin-bottom: 8px; } }
+  .acc { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+  .acc .boton { flex: 1 1 auto; min-height: 40px; padding: 6px 14px; font-size: 16px; }
+  .nota { font-size: 13.5px; color: var(--ink-3); margin: 0; }
+  .estado { font-size: 15px; color: var(--ink-2); margin: 0 0 12px; }
+  .estado.mal { color: var(--aviso); }
+  .fallo { font-size: 15px; color: var(--aviso); margin: 12px 0 0; }
+  .caja { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 18px; }
+</style>
+</head>
+<body>
+<!--email_off-->
+<div class="marco">
+  <header>
+    <a href="/" aria-label="Abrir PACE" data-en-aria="Open PACE"><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+    <button class="idioma" type="button" data-idioma aria-label="Cambiar a inglés" data-en-aria="Switch to Spanish"><b data-es-b>ES</b> · <span data-en-b>EN</span></button>
+  </header>
+
+  <p class="kicker" data-en="PACE Complete">PACE completo</p>
+
+  <div data-desistir-inicio>
+    <h1 data-en="Withdraw from the contract">Desistir del contrato</h1>
+    <p class="lede" data-en="You have 14 days from buying, or from starting the subscription, to withdraw without giving a reason. We refund everything you paid.">Tienes 14 días desde que compras, o desde que empiezas la suscripción, para desistir sin dar motivos. Te devolvemos todo lo que pagaste.</p>
+    <p class="estado" data-desistir-cerrada data-en="This form is not open yet. You can withdraw by email: it is just below.">Este formulario aún no está abierto. Puedes desistir por correo: está justo debajo.</p>
+  </div>
+
+  <form data-desistir-form novalidate hidden>
+    <div class="campo">
+      <label for="dst-nombre" data-en="Your name">Tu nombre</label>
+      <input id="dst-nombre" name="nombre" type="text" autocomplete="name" maxlength="120" required data-desistir-nombre>
+    </div>
+    <div class="campo">
+      <label for="dst-correo" data-en="The email you paid with">El correo con el que pagaste</label>
+      <input id="dst-correo" name="correo" type="email" autocomplete="email" inputmode="email" required data-desistir-correo>
+      <p class="pista" data-en="We send the acknowledgement there.">Ahí te mandamos el acuse.</p>
+    </div>
+    <div class="campo">
+      <label for="dst-recibo" data-en="Receipt number, if you have it">Número del recibo, si lo tienes</label>
+      <input id="dst-recibo" name="recibo" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" placeholder="1234-5678" data-desistir-recibo>
+      <p class="pista" data-en="It is at the top of the receipt you got when you paid. Without it, we find the purchase by your email.">Está arriba del todo en el recibo que te llegó al pagar. Sin él, buscamos la compra por tu correo.</p>
+    </div>
+    <fieldset class="campo">
+      <legend data-en="Which plan">Qué plan</legend>
+      <div class="planes">
+        <label><input type="radio" name="plan" value="vida" id="dst-vida"><span data-en="Lifetime">De por vida</span></label>
+        <label><input type="radio" name="plan" value="mes" id="dst-mes"><span data-en="Monthly">Al mes</span></label>
+        <label><input type="radio" name="plan" value="" id="dst-nose" checked><span data-en="Not sure">No lo sé</span></label>
+      </div>
+    </fieldset>
+    <div class="trampa" aria-hidden="true"><label for="dst-web">Web</label><input id="dst-web" name="web" type="text" tabindex="-1" autocomplete="off" data-desistir-trampa></div>
+    <button class="boton lleno" type="submit" data-desistir-boton data-en="Confirm withdrawal">Confirmar desistimiento</button>
+    <p class="fallo" role="alert" data-desistir-fallo hidden></p>
+    <p class="nota" style="margin-top:14px" data-en-html="Your name, your email and the number go to whoever sells PACE, to refund you and send you the acknowledgement. PACE does not keep them. &lt;a href=&quot;/privacy#desistir-en&quot;&gt;Privacy&lt;/a&gt;.">Tu nombre, tu correo y el número le llegan a quien vende PACE, para devolverte el dinero y mandarte el acuse. PACE no los guarda. <a href="/privacy#desistir">Privacidad</a>.</p>
+  </form>
+
+  <div data-desistir-listo hidden>
+    <h1 data-en="We have received your withdrawal.">Hemos recibido tu desistimiento.</h1>
+    <p class="estado" role="status" data-desistir-correo-estado></p>
+    <div class="acuse">
+      <dl>
+        <dt data-en="Name">Nombre</dt><dd data-acuse-nombre></dd>
+        <dt data-en="Purchase email">Correo de la compra</dt><dd data-acuse-correo></dd>
+        <dt data-en="Receipt number">Número del recibo</dt><dd data-acuse-recibo></dd>
+        <dt data-en="Plan">Plan</dt><dd data-acuse-plan></dd>
+        <dt data-en="Date and time">Fecha y hora</dt><dd data-acuse-fecha></dd>
+        <dt data-en="Reference">Referencia</dt><dd data-acuse-referencia></dd>
+      </dl>
+    </div>
+    <div class="acc">
+      <button class="boton hueco" type="button" data-desistir-bajar data-en="Download the acknowledgement">Descargar el acuse</button>
+    </div>
+    <p class="nota" role="status" data-desistir-hecho hidden></p>
+    <h2 data-en="What happens now">Qué pasa ahora</h2>
+    <p class="nota" data-en="We refund everything you paid, using the same payment method, within 14 days at the latest. If you had the monthly plan, it is cancelled and you will not be charged again. Free PACE and your practice, stored on your device, stay as they were.">Te devolvemos todo lo que hayas pagado, por la misma forma de pago, como mucho en 14 días. Si tenías la mensualidad, se cancela y no se te vuelve a cobrar. Lo gratis de PACE y tu práctica, guardada en tu dispositivo, siguen como estaban.</p>
+  </div>
+
+  <div class="caja">
+    <h2 data-en="By email">Por correo</h2>
+    <p class="nota" data-en-html="Write to &lt;a href=&quot;mailto:hola.ezradesign@gmail.com&quot;&gt;hola.ezradesign@gmail.com&lt;/a&gt; saying that you withdraw, with your name, the email you paid with and the receipt number if you have it. We reply with the acknowledgement. The model form and everything else are in &lt;a href=&quot;/legal/desistimiento/#en&quot;&gt;withdrawal and refunds&lt;/a&gt;.">Escríbenos a <a href="mailto:hola.ezradesign@gmail.com">hola.ezradesign@gmail.com</a> diciendo que desistes, con tu nombre, el correo con el que pagaste y el número del recibo si lo tienes. Te contestamos con el acuse. El modelo de formulario y todo lo demás, en <a href="/legal/desistimiento/">desistimiento y devolución</a>.</p>
+  </div>
+</div>
+<!--/email_off-->
+<script>
+(function () {
+  function guardado(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+  function idiomaInicial() {
+    var m = location.search.match(/[?&]lang=(es|en)\b/);
+    if (m) return m[1];
+    var aqui = guardado('pace.premium.lang');
+    if (aqui === 'es' || aqui === 'en') return aqui;
+    try { var app = JSON.parse(guardado('pace.state.v2') || 'null'); if (app && (app.lang === 'es' || app.lang === 'en')) return app.lang; } catch (e) {}
+    return /^en\b/i.test(navigator.language || '') ? 'en' : 'es';
+  }
+  var ATRIBUTOS = [['data-en', 'textContent'], ['data-en-html', 'innerHTML'], ['data-en-aria', 'aria-label']];
+  var idioma = 'es', recibido = null, fallo = null;
+  var $ = function (s) { return document.querySelector(s); };
+  var TX = {
+    es: { enviando: 'Enviando…', bajado: 'Descargado.', sinRecibo: 'No lo has puesto',
+      plan: { vida: 'De por vida', mes: 'Al mes', '': 'No lo sé' },
+      mandado: 'Te hemos mandado este acuse a {correo}. Guárdalo.',
+      noMandado: 'Tu desistimiento nos ha llegado, pero no hemos podido mandarte el correo con el acuse. Guarda o descarga este:',
+      archivo: 'PACE · Acuse de recibo del desistimiento\n\nNombre: {nombre}\nCorreo de la compra: {correo}\nNúmero del recibo: {recibo}\nPlan: {plan}\nFecha y hora: {fecha}\nReferencia: {referencia}\n',
+      formato: 'Escribe tu nombre y el correo con el que pagaste.',
+      envio: 'No se ha podido mandar, así que tu desistimiento aún no nos ha llegado. Escríbenos por correo, abajo.',
+      espera: 'Demasiados intentos seguidos. Prueba dentro de un rato o escríbenos por correo, abajo.',
+      cerrada: 'Este formulario aún no está abierto. Escríbenos por correo, abajo.',
+      red: 'No hay conexión. Prueba otra vez o escríbenos por correo, abajo.' },
+    en: { enviando: 'Sending…', bajado: 'Downloaded.', sinRecibo: 'Not given',
+      plan: { vida: 'Lifetime', mes: 'Monthly', '': 'Not sure' },
+      mandado: 'We have sent this acknowledgement to {correo}. Keep it.',
+      noMandado: 'Your withdrawal has reached us, but we could not email you the acknowledgement. Keep or download this one:',
+      archivo: 'PACE · Acknowledgement of withdrawal\n\nName: {nombre}\nPurchase email: {correo}\nReceipt number: {recibo}\nPlan: {plan}\nDate and time: {fecha}\nReference: {referencia}\n',
+      formato: 'Write your name and the email you paid with.',
+      envio: 'It could not be sent, so your withdrawal has not reached us yet. Write to us by email, below.',
+      espera: 'Too many tries in a row. Try again in a while or write to us by email, below.',
+      cerrada: 'This form is not open yet. Write to us by email, below.',
+      red: 'No connection. Try again or write to us by email, below.' },
+  };
+  function tx(k, v) { return TX[idioma][k].replace(/\{(\w+)\}/g, function (m, n) { return (v || {})[n] || ''; }); }
+  function poner(lang) {
+    idioma = lang;
+    ATRIBUTOS.forEach(function (par) {
+      document.querySelectorAll('[' + par[0] + ']').forEach(function (el) {
+        var prop = par[1], clave = 'es_' + par[0].replace(/-/g, '_');
+        if (!(clave in el.dataset)) el.dataset[clave] = prop === 'textContent' ? el.textContent : prop === 'innerHTML' ? el.innerHTML : (el.getAttribute(prop) || '');
+        var valor = lang === 'en' ? el.getAttribute(par[0]) : el.dataset[clave];
+        if (prop === 'textContent') el.textContent = valor; else if (prop === 'innerHTML') el.innerHTML = valor; else el.setAttribute(prop, valor);
+      });
+    });
+    document.documentElement.lang = lang;
+    document.title = lang === 'en' ? 'Withdraw from the contract · PACE' : 'Desistir del contrato · PACE';
+    $('[data-es-b]').outerHTML = lang === 'en' ? '<span data-es-b>ES</span>' : '<b data-es-b>ES</b>';
+    $('[data-en-b]').outerHTML = lang === 'en' ? '<b data-en-b>EN</b>' : '<span data-en-b>EN</span>';
+    if (recibido) mostrar();
+    if (fallo) decirFallo(fallo);
+  }
+  poner(idiomaInicial());
+  $('[data-idioma]').addEventListener('click', function () {
+    var otro = idioma === 'en' ? 'es' : 'en';
+    try { localStorage.setItem('pace.premium.lang', otro); } catch (e) {}
+    poner(otro);
+  });
+
+  /* El formulario sale solo cuando la función tiene con qué mandar el acuse. */
+  fetch('/api/desistir', { headers: { Accept: 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.abierta) return;
+      $('[data-desistir-cerrada]').hidden = true;
+      $('[data-desistir-form]').hidden = false;
+    }, function () {});
+
+  function decirFallo(motivo) {
+    fallo = motivo;
+    var p = $('[data-desistir-fallo]');
+    p.hidden = false;
+    p.setAttribute('data-motivo', motivo);
+    p.textContent = tx(TX[idioma][motivo] ? motivo : 'envio');
+  }
+  function datosAcuse() {
+    return { nombre: recibido.nombre, correo: recibido.correo, recibo: recibido.recibo || tx('sinRecibo'),
+      plan: TX[idioma].plan[recibido.plan], fecha: recibido.fechaTexto, referencia: recibido.referencia };
+  }
+  function mostrar() {
+    var d = datosAcuse();
+    $('[data-desistir-inicio]').hidden = true;
+    $('[data-desistir-form]').hidden = true;
+    $('[data-desistir-listo]').hidden = false;
+    Object.keys(d).forEach(function (k) { $('[data-acuse-' + k + ']').textContent = d[k]; });
+    var estado = $('[data-desistir-correo-estado]');
+    estado.textContent = recibido.acuse ? tx('mandado', { correo: recibido.correo }) : tx('noMandado');
+    estado.classList.toggle('mal', !recibido.acuse);
+  }
+
+  $('[data-desistir-bajar]').addEventListener('click', function () {
+    var b = new Blob([tx('archivo', datosAcuse())], { type: 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = (idioma === 'en' ? 'PACE-withdrawal-' : 'PACE-desistimiento-') + recibido.referencia + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    var h = $('[data-desistir-hecho]'); h.hidden = false; h.textContent = tx('bajado');
+  });
+
+  var boton = $('[data-desistir-boton]');
+  $('[data-desistir-form]').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var plan = document.querySelector('input[name="plan"]:checked');
+    var envio = { nombre: $('[data-desistir-nombre]').value.trim(), correo: $('[data-desistir-correo]').value.trim(),
+      recibo: $('[data-desistir-recibo]').value.trim(), plan: plan ? plan.value : '', idioma: idioma, web: $('[data-desistir-trampa]').value };
+    if (!envio.nombre || envio.correo.indexOf('@') < 1) return decirFallo('formato');
+    $('[data-desistir-fallo]').hidden = true; fallo = null;
+    boton.disabled = true;
+    var antes = boton.textContent;
+    boton.textContent = tx('enviando');
+    fetch('/api/desistir', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(envio) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { r: r, d: d }; }); })
+      .then(function (x) {
+        boton.disabled = false; boton.textContent = antes;
+        if (x.r.ok && x.d && x.d.ok) {
+          recibido = { nombre: envio.nombre, correo: envio.correo, recibo: envio.recibo, plan: envio.plan,
+            fechaTexto: x.d.fechaTexto, referencia: x.d.referencia, acuse: !!x.d.acuse };
+          return mostrar();
+        }
+        decirFallo(x.r.status === 429 ? 'espera' : x.r.status === 503 ? 'cerrada' : x.r.status === 400 ? 'formato' : 'envio');
+      }, function () { boton.disabled = false; boton.textContent = antes; decirFallo('red'); });
+  });
+})();
+</script>
+</body>
+</html>
