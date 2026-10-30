@@ -28,6 +28,13 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
    `maqueta-producto` (`local_aab2c3f2-08a0-4c60-b011-3ac9302245b2`, puerto 8814), U3 y U5, con U4 y P4 como «puede
    esperar». Las dos acaban con `LISTO PARA MAIN`. **El logo lo rehace Ez** («Lo hago yo», 30 oct.): el lema dice «FVFN»
    en la imagen; se le dio un prompt para la IA con el fondo transparente y «EVEN» con sus tres barras.
+5. **~13:50, Ez eligió en las dos páginas** (pasado a cada sesión con sus palabras; comprobar en su rama que llega):
+   - Textos (https://claude.ai/artifact/TRCBmekA95gLLawszVhpbF): «1A + 2A + 3B + 4A + 5A Pero con Has terminado un Foco de
+     45 minutos mejor que acabbas + 6 la que ya tenemos + 7A + 8A + 9A + 10A + 11A + 12A + 13A por el momento + 14A».
+   - Carta (https://claude.ai/artifact/Y3TxJ1sisYgSFYfHMaux4q): «1A (me gusta lo del sobre al lado de logros estadísticas
+     / etc de hecho se puede utilizar para actualizaciones, alguna notificación puntual y esto y puede ser abierto o
+     cerrado no? + 2A +3A + 4B». Contestado: el sobre, cerrado con algo sin leer y abierto ya leído; preparado para
+     novedades y avisos puntuales más adelante, pero ahora solo con la carta, para no agrandar lo de antes de v1.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
