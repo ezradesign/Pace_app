@@ -60,6 +60,16 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
    días, «Sí, 2A»**: 1A 2A 3A 4A 5A, pasadas a `legal-premium` con sus palabras. Esa sesión pone las letras en los
    borradores y prepara el botón 1A (formulario, función de Cloudflare y acuse por correo, que pide a Ez darse de alta en
    un servicio de correo), sin tocar /premium ni Ajustes hasta que la 0.188.0 esté en origin/main.
+10. **31 oct., mañana: la 0.188.0 publicada** (CI de ffd015ef en verde entero; pacegrass.app sirve la 0.188.0). Un corte
+    de red de la noche (ENOTFOUND) paró `legal-premium`, que se retomó: el botón para desistir con las cinco letras en
+    0fd9e4e6, junto con la 0.188.0, a falta de su suite. Ez: «Aprovechemos la sesion hasta el 96%» (la semana de EcLj6…,
+    al 87 %): al 94 %, «wip»; al 96 %, se para. Abierta `version-de-prueba` (`local_f44a53d4-7b15-476d-8d72-e366e5e946c7`,
+    Sonnet, puerto 8818): las notas de Play y TestFlight y las capturas nuevas, para subir en cuanto estén Rana, Palmas
+    y el logo. Con el «Sí, adelante» de Ez, todas las ramas copiadas en `backups/ramas-31oct-2026.bundle` (ignorado por
+    git) y quitadas las 17 carpetas de `.claude/worktrees/` ya juntadas y sin cambios; las ramas de GitHub siguen ahí.
+    **Ojo:** su `node_modules` era un enlace (junction) al de la carpeta principal: se quitó solo el enlace
+    (`[IO.Directory]::Delete(ruta, $false)`), nunca con borrado recursivo, que vaciaría el `node_modules` de main.
+    Dos carpetas vacías (nifty-wozniak y runner-claro) siguen ahí porque una sesión abierta las tiene en uso.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

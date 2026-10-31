@@ -78,8 +78,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el registro previo de Play.
 - S3, el código portable (un código que se puede pasar a otra persona): es decisión de Ez, sin tomar.
 - Cuando pueda: probar en su Android lo privado del calendario del móvil, leer `privacy.html`, oír la voz de Respira y
-  los cuencos, grabar «Más» y «More» (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`), apagar las propuestas de Dependabot
-  y, con su sí, limpiar las ramas y los worktrees ya juntados (con copia en un bundle).
+  los cuencos, grabar «Más» y «More» (`encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`) y apagar las propuestas de Dependabot.
+  Los worktrees ya juntados se quitaron el 31 oct., con su sí (copia de todas las ramas en `backups/ramas-31oct-2026.bundle`).
 
 ## Deuda conocida, sin fecha
 
