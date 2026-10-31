@@ -274,6 +274,7 @@
       <a href="/privacy" data-en="Privacy">Privacidad</a>
       <a href="/safety" data-en="Safety">Seguridad</a>
       <a href="mailto:hola.ezradesign@gmail.com" data-en="Contact">Contacto</a>
+      <a href="/desistir/" data-premium-desistir hidden data-en="Withdraw from contract here">Desistir del contrato aquí</a>
     </nav>
   </footer>
 </div>
@@ -331,6 +332,13 @@
   fetch('/api/avisame', { headers: { Accept: 'application/json' } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (d) { if (d && d.abierta === true) { form.hidden = false; pronto.hidden = true; } })
+    .catch(function () {});
+  /* «Desistir del contrato aquí» (Ez, 1A del 30 oct. 2026): sale en el pie cuando /api/desistir
+     tiene con qué mandar el acuse, que Ez conecta al encender la venta (docs/launch/desistir.md). */
+  var desistir = document.querySelector('[data-premium-desistir]');
+  fetch('/api/desistir', { headers: { Accept: 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (d && d.abierta === true) desistir.hidden = false; })
     .catch(function () {});
   form.addEventListener('submit', function (e) {
     e.preventDefault();

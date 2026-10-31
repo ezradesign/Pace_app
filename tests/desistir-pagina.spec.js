@@ -8,7 +8,8 @@
  * QUE DEFIENDE: cerrada (sin llave de correo) manda desistir por correo y no enseña el formulario;
  * abierta no manda nada sin nombre y correo; confirmada enseña el acuse con lo dicho, la fecha, la
  * hora y la referencia, dice si salió el correo y deja descargarlo; si no llegó a Ez, lo dice; el
- * inglés; y que el borrador del desistimiento lleva aquí. Contra 5cd9ae62 caen todas: no hay página.
+ * inglés; que el pie de /premium lo enseña solo con la función abierta y gracias siempre; y que el
+ * borrador del desistimiento lleva aquí. Contra 5cd9ae62 caen todas: no hay página.
  */
 'use strict';
 
@@ -49,7 +50,8 @@ test('cerrada: sin la llave del correo, manda desistir por correo y no enseña e
   await expect(page.locator('[data-desistir-cerrada]')).toBeVisible();
   await expect(page.locator('[data-desistir-form]')).toBeHidden();
   await expect(page.locator('.caja a[href="mailto:hola.ezradesign@gmail.com"]')).toBeVisible();
-  await expect(page.locator('.caja a[href="/legal/desistimiento/"]')).toHaveText('desistimiento y devolución');
+  /* Los textos de legal/ aún son borradores: hasta publicarlos, nada los enlaza desde aquí. */
+  await expect(page.locator('a[href^="/legal/"]')).toHaveCount(0);
 });
 
 test('abierta: el formulario, «Confirmar desistimiento», y nada sale sin nombre y correo', async ({ page }) => {
@@ -116,6 +118,30 @@ test('en inglés', async ({ page }) => {
   await expect(page.locator('h1:visible')).toHaveText('We have received your withdrawal.');
   await expect(page.locator('[data-desistir-correo-estado]')).toHaveText('We have sent this acknowledgement to lucia@correo.es. Keep it.');
   await expect(page.locator('[data-acuse-plan]')).toHaveText('Monthly');
+});
+
+test('/premium: «Desistir del contrato aquí» sale en el pie solo cuando la función está abierta', async ({ page }) => {
+  await page.route('**/api/avisame', (r) => r.abort());
+  await conFuncion(page, false);
+  await page.goto('/premium/');
+  const enlace = page.locator('footer a[data-premium-desistir]');
+  await expect(enlace).toHaveAttribute('href', '/desistir/');
+  await expect(enlace).toBeHidden();
+  await page.unroute('**/api/desistir');
+  await conFuncion(page, true);
+  await page.reload();
+  await expect(enlace).toBeVisible();
+  await expect(enlace).toHaveText('Desistir del contrato aquí');
+  await page.click('[data-idioma]');
+  await expect(enlace).toHaveText('Withdraw from contract here');
+});
+
+test('gracias, adonde solo llega quien ha pagado, lleva a desistir junto al código', async () => {
+  const gracias = fs.readFileSync(path.join(__dirname, '..', 'gracias', 'index.html'), 'utf8');
+  const listo = gracias.slice(gracias.indexOf('<div data-gracias-listo'), gracias.indexOf('<div class="caja" data-gracias-prueba'));
+  expect(listo).toContain('<div class="caja" data-gracias-desistir>');
+  expect(listo).toContain('<a href="/desistir/">Desistir del contrato aquí</a>');
+  expect(listo).toContain('Withdraw from contract here');
 });
 
 test('el borrador del desistimiento lleva a esta página, en los dos idiomas', async () => {

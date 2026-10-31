@@ -3605,6 +3605,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.settings.manage': 'Gestionar la suscripción',
   'premium.settings.manage.play': 'Google Play',
   'premium.settings.manage.web': 'Stripe',
+  'premium.settings.desistir': 'Desistir del contrato aquí',
   'premium.settings.sinred': 'Sin conexión para renovar',
   'premium.settings.terminada': 'Terminó el {fecha}',
   'premium.settings.caducada': 'Caducó el {fecha}',
@@ -3673,6 +3674,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.settings.manage': 'Manage subscription',
   'premium.settings.manage.play': 'Google Play',
   'premium.settings.manage.web': 'Stripe',
+  'premium.settings.desistir': 'Withdraw from contract here',
   'premium.settings.sinred': 'No connection to renew',
   'premium.settings.terminada': 'Ended on {fecha}',
   'premium.settings.caducada': 'Expired on {fecha}',
@@ -40300,6 +40302,16 @@ function PremiumSection() {
   ) :
   null;
 
+
+
+
+  const venta = canal === 'web' && !!(est.datos && typeof est.datos.order === 'string');
+  const desistir = venta ?
+  React.createElement(AjustesAccion, { suave: true, onClick: () => {try {window.open('/desistir/', '_blank', 'noopener');} catch (e) {}}, derecha: "\u203A" },
+  t('premium.settings.desistir')
+  ) :
+  null;
+
   if (est.estado === 'vigente') {
     const datos = est.datos;
     const f = premiumFechaTexto(datos, lang);
@@ -40310,6 +40322,7 @@ function PremiumSection() {
       t('premium.name')
       ),
       gestionar,
+      desistir,
       datos.tester != null &&
       React.createElement(AjustesAccion, { suave: true, derecha: tn('premium.settings.tester', { n: datos.tester }) },
       t('premium.settings.code')
