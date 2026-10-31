@@ -57,6 +57,7 @@ const ESCENAS = [
       await page.clock.fastForward(45 * 60 * 1000 + 5000);
       await page.waitForTimeout(1500);
     },
+    espera: 5500,
     titulo: { es: 'La pausa que toca', en: 'The break that fits' },
     sub: { es: 'Cada día, el cuerpo entero: cuello, espalda, piernas…', en: 'Every day, your whole body: neck, back, legs…' } },
   { n: 3, id: 'respira', semilla: (l) => base(l, 'crema'),
@@ -178,6 +179,9 @@ async function main() {
         await page.goto(BASE + '/index.html');
         await page.waitForTimeout(1500);
         if (esc.llegar) await esc.llegar(page);
+        /* Se fotografía lo asentado: con 700 ms el aro y el botón salían a medio aparecer, y al acabar el
+           primer Foco el aviso de «Nuevo sello» (3 s, y se va) se cruzaba con el texto de la hoja. */
+        await page.waitForTimeout(esc.espera || 2500);
         await page.evaluate(() => document.fonts.ready);
         const nombre = esc.n + '-' + esc.id + '.png';
         const cruda = path.join(SALIDA, dirs[dirs.length - 1], lang, nombre);
