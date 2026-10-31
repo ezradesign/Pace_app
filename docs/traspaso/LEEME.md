@@ -2,7 +2,16 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 30 de octubre de 2026, v0.188.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 31 de octubre de 2026, v0.189.0.
+
+## 31 oct.: lo legal y la versión de prueba preparada, en `main` (v0.189.0)
+
+Con el «Junta las dos» de Ez. Lo legal (`claude/infallible-taussig-1af346`): las cinco letras de Ez en los borradores de
+`legal/`, que no se publican hasta sus datos y una revisión profesional; `/desistir` publicada pero cerrada hasta que Ez
+conecte Resend (`docs/launch/desistir.md`); la privacidad, corregida (cobra Link por cuenta de Ez). La versión de prueba
+(`claude/version-de-prueba-7b9668`): notas y capturas en `docs/launch/google-play/SUBIDAS.md` y `capturas/`; cuando
+estén Rana, Palmas en la mesa y el logo, quedan el bump, el build, las capturas de Chromebook (`node scripts/play/capturas.js
+--ordenador`) y la fila de la tabla. Espera el lunes 3: `maqueta-sin-querer` (Q2, Q4 y R1), que arranca sola a las 14:07.
 
 ## 30 oct.: la carta del lunes y los textos que no inventan, en `main` (v0.188.0); lo legal, esperando a Ez
 

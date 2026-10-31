@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.188.0 · 30 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.189.0 · 31 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -50,9 +50,10 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/E
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Ahora: los dos dibujos que faltan y el logo**, que dejan subir la versión de prueba definitiva (abajo).
-- **Lo legal para vender en la web**: cinco letras de Ez en su página (https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2;
-  recomendada 1A 2A 3A 4A 5A) y las preguntas para el gestor y un jurista. Con Managed Payments el vendedor es Ez. Los
-  borradores, sin publicar, en `claude/infallible-taussig-1af346` (`docs/launch/legal-web.md`).
+- **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
+  publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
+  jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
+  `RESEND_CLAVE` en Cloudflare, mejor al encender la venta (`docs/launch/desistir.md`).
 - **Volver a pegar en Play Console** el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`, en es y en (cambió
   con la 0.188.0); el de PACE completo, con la v1.
 - **A la vez: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), los números
@@ -63,7 +64,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   vida, en /premium); antes, lo legal de /premium.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **La versión de prueba definitiva**: los 16 dibujos (catorce en `main` con la 0.187.0; faltan
+- **La versión de prueba definitiva** (notas de Play y TestFlight y capturas nuevas, preparadas en `SUBIDAS.md` con la
+  0.189.0): los 16 dibujos (catorce en `main` con la 0.187.0; faltan
   Rana y Palmas en la mesa: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
   `docs/product/GLIFOS_A_DIBUJAR.md`) y el logo en PNG transparente
   (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium). El AAB de la 0.184.0, en `subidas-play\`.

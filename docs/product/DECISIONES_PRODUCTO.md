@@ -19,6 +19,15 @@
 
 ---
 
+## Lo legal para vender en la web: 1A 2A 3A 4A 5A (Ez, 30 oct. 2026)
+
+Con Managed Payments cobra Link (Stripe) y lleva el IVA, pero el vendedor es Ez (`docs/launch/legal-web.md`). Página:
+`docs/launch/legal-web-para-ez.html`. 1A, el botón «Desistir del contrato aquí» con formulario y acuse por correo (Resend);
+2A, los 14 días de la ley se quedan, sin casilla de renuncia (Ez preguntó por 7: el desistimiento legal no baja de 14, y
+la devolución sin preguntas ya promete 14); 3A, la devolución sin preguntas cuenta desde la compra o el primer cobro; 4A,
+el correo de Link antes de cada cobro; 5A, «de por vida» es mientras PACE se ofrezca, con aviso de 6 meses si cierra.
+Los textos legales se publican con los datos de Ez y tras la revisión de un profesional.
+
 ## Los textos que no inventan y la carta del lunes para luego (Ez, 30 oct. 2026)
 
 - **Los textos** (página `docs/proposals/textos-honestos-30oct.html`): 1A 2A 3B 4A, 5A con «Has terminado un Foco de 45

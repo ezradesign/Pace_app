@@ -70,6 +70,11 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     **Ojo:** su `node_modules` era un enlace (junction) al de la carpeta principal: se quitó solo el enlace
     (`[IO.Directory]::Delete(ruta, $false)`), nunca con borrado recursivo, que vaciaría el `node_modules` de main.
     Dos carpetas vacías (nifty-wozniak y runner-claro) siguen ahí porque una sesión abierta las tiene en uso.
+11. **31 oct., tarde: «Junta las dos»** (lo legal y la versión de prueba): f7208d4f, 126fd5f1 y la 0.189.0 (7eaa9ca5).
+    Suite entera en el 8766: 1174 en verde y 4 caídas por timeout (el PC se durmió: 3,9 h);  y
+    , repetidos solos, 12 de 12. Abierta y en espera: 
+    (, puerto 8820), que arranca sola el lunes 3 a las 14:07. La semana de
+    EcLj6…, al 92-93 %: no se abre nada más hasta el lunes.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.188.0 · actualizada el 30 de octubre a las 23:55 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.189.0 · actualizada el 31 de octubre a las 17:00 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,7 +106,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> Las 1157 pruebas en verde y la web en la 0.188.0, con la carta del lunes
+      <li><b>La app está casi entera y sana.</b> Las 1178 pruebas en verde y la web en la 0.189.0, con la carta del lunes
         para luego y los textos que no inventan dentro. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
         lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
@@ -160,24 +160,31 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> En cuanto esté lo de abajo, bajo el archivo para Play, subo
           la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días de los testers empiezan entonces, y lo que
           falte para que se entienda bien llega como actualizaciones durante esos días. Por si acaso, la 0.184.0 ya está en
-          <code>subidas-play\</code>. Falta lo del paso «Ahora»:
+          <code>subidas-play\</code>. Ya están listas las notas de Play y de TestFlight, las capturas nuevas de la ficha y
+          tus pasos para subirla (<a href="https://claude.ai/artifact/RQ42BRGg1VeuxibL3rYox2">la página</a>). Falta lo del
+          paso «Ahora»:
           <ol>
             <li>«Rana» y «Palmas en la mesa» (<a href="https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT">la página</a>). Los
               otros catorce ya están dentro.</li>
             <li>El logo en PNG con fondo transparente: dentro de la app aún se lee «FVFN».</li>
           </ol></span></li>
+      <li class="paso luego"><span class="estado">El lunes 3, al reponerse la semana · yo la preparo, tú eliges</span>
+        <span class="t">Lo que pasa sin querer y Respira para empezar, en una maqueta</span>
+        <span class="c"><span class="quien">Yo, con una sesión que ya espera.</span> Que un «No» no aparte una rutina para siempre sin
+          avisar, que mirar una pausa de más tarde no la cambie sin querer, y un «¿Es tu primera vez? Empieza aquí» en
+          Respira. Llega como actualización durante los 14 días de los testers.</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 2 minutos</span>
         <span class="t">Pegar en Play Console el párrafo nuevo de «A tu ritmo»</span>
         <span class="c"><span class="quien">Tú.</span> Con los textos que no inventan cambió el párrafo «A tu ritmo» de la ficha de
           Play. Está en <code>docs/launch/google-play/ficha.md</code>: pégalo en Play Console › Ficha de la tienda, en español
           y en inglés. El de PACE completo se cambia el día de v1.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · tú elegiste 1A 2A 3A 4A 5A</span>
-        <span class="t">Lo legal de /premium, en borrador, y el botón para desistir</span>
-        <span class="c"><span class="quien">Yo, con una sesión.</span> Tus letras, en los borradores de las condiciones, el
-          desistimiento y la devolución y el aviso legal; y el botón para desistir con su correo de acuse, sin publicar. Para
-          el correo te diré qué servicio gratuito dar de alta y cómo. Nada sale en la web hasta tus datos (nombre, NIF y un
-          contacto) y una revisión profesional: lleva al gestor y al jurista las preguntas de
-          <a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>.</span></li>
+      <li class="paso luego"><span class="estado">Con el gestor y el jurista · lo tuyo</span>
+        <span class="t">Lo legal: tus datos y una revisión profesional</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>, con
+          las preguntas para copiar). Los borradores ya llevan tus cinco letras y están en la app sin publicar. Faltan tu
+          nombre, tu NIF y un contacto, y que un profesional los revise. Y el día que enciendas la venta, el correo del botón
+          para desistir: darte de alta gratis en resend.com y poner su llave en Cloudflare como <code>RESEND_CLAVE</code> (los
+          pasos, en <code>docs/launch/desistir.md</code>). Con eso el enlace sale en /premium.</span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
         <span class="t">Buscar testers: avisar a los tuyos y publicar en LinkedIn</span>
         <span class="c"><span class="quien">Tú.</span> Es lo que más adelanta v1: Google pide 12 testers durante 14 días, y los días
@@ -191,7 +198,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 79 pasos</summary>
+      <summary>Lo hecho hasta hoy · 81 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -576,6 +583,15 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>). El
           botón para desistir con su correo de acuse, los 14 días se quedan, la devolución cuenta desde la compra o el
           primer cobro, el correo de Stripe antes de cada cobro y «de por vida» mientras PACE exista, con aviso de 6 meses.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «sí, adelante» · 31 de octubre</span>
+        <span class="t">Preparar la versión de prueba y limpiar las carpetas viejas</span>
+        <span class="c"><span class="quien">Yo.</span> Las notas de Play y de TestFlight y las doce capturas nuevas, listas
+          (<a href="https://claude.ai/artifact/RQ42BRGg1VeuxibL3rYox2">la página</a>); y quitadas las carpetas de trabajo ya juntadas, con
+          copia de todas las ramas antes.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «junta las dos» · 31 de octubre · en la app, 0.189.0</span>
+        <span class="t">Juntar lo legal y la versión de prueba, y publicarlo</span>
+        <span class="c"><span class="quien">Yo.</span> Con las 1178 pruebas en verde con todo junto. pacegrass.app/desistir está
+          publicada pero cerrada hasta que conectes el correo; los textos legales, en borrador y sin publicar.</span></li>
       </ol>
     </details>
   </section>
