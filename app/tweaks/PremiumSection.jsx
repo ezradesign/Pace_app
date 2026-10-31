@@ -37,6 +37,16 @@ function PremiumSection() {
       {t('premium.settings.manage')}
     </AjustesAccion>
   ) : null;
+  /* EL DESISTIMIENTO (Ez, 1A del 30 oct. 2026): quien compró en la web (su código lleva el número
+     del pedido; el de un tester, no) tiene a mano «Desistir del contrato aquí», que abre
+     pacegrass.app/desistir. Solo en la web: en Android y en el iPhone se compra y se devuelve en
+     su tienda. La app no pregunta nada a nadie: solo abre la página. */
+  const venta = canal === 'web' && !!(est.datos && typeof est.datos.order === 'string');
+  const desistir = venta ? (
+    <AjustesAccion suave onClick={() => { try { window.open('/desistir/', '_blank', 'noopener'); } catch (e) {} }} derecha="›">
+      {t('premium.settings.desistir')}
+    </AjustesAccion>
+  ) : null;
 
   if (est.estado === 'vigente') {
     const datos = est.datos;
@@ -48,6 +58,7 @@ function PremiumSection() {
           {t('premium.name')}
         </AjustesAccion>
         {gestionar}
+        {desistir}
         {datos.tester != null && (
           <AjustesAccion suave derecha={tn('premium.settings.tester', { n: datos.tester })}>
             {t('premium.settings.code')}

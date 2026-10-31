@@ -8,7 +8,7 @@
  * privacidad, la seguridad, el manifiesto, los iconos, las fuentes y los medios
  * de `app/`) y lo que solo tiene la web: el service worker, las cabeceras
  * (Cloudflare lee `_headers` de la carpeta publicada), la vuelta del permiso del
- * calendario, /premium, /beta, /gracias y /recuperar. `functions/` no entra:
+ * calendario, /premium, /beta, /gracias, /recuperar y /desistir. `functions/` no entra:
  * Cloudflare la lee de la raiz.
  *
  * Una pagina nueva de la web entra en WEB_ARCHIVOS o WEB_CARPETAS, o no se
@@ -27,7 +27,7 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist');
 
 const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html'];
-const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar'];
+const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar', 'desistir'];
 
 /* Lo que va en `dist/`, en rutas relativas a la raiz. */
 function listaWeb() {

@@ -1,0 +1,394 @@
+<title>Lo legal de /premium</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Inter+Tight:wght@400;500;600&display=swap">
+<!-- Página para Ez con lo legal que falta para vender PACE en la web (punto 16 del ROADMAP).
+     Lo averiguado y sus fuentes, en docs/launch/legal-web.md; los borradores, en legal/.
+     Se publica como Artifact; el skeleton lo pone el publicador. -->
+<style>
+  /* Layout: una columna de lectura, con las cinco preguntas en tarjetas y la respuesta fija arriba.
+     Colores y letra, los de PACE (app/tokens.css y DESIGN_SYSTEM.md). */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --card: #F8F4EA; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --cta: #50624D; --focus: #3E5A3A; --premium: #9C6B2E; --warn: #A4512F;
+    --rec-bg: #E3E8DA;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1d1a14; --paper-2: #26211a; --card: #2b261e; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --cta: #8E9D88; --focus: #7A9A6D; --premium: #C99A5B; --warn: #D99477;
+      --rec-bg: #2f3a2b; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1d1a14; --paper-2: #26211a; --card: #2b261e; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --cta: #8E9D88; --focus: #7A9A6D; --premium: #C99A5B; --warn: #D99477;
+    --rec-bg: #2f3a2b; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  .marco { max-width: 760px; margin: 0 auto; padding-block: 28px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; color: var(--ink); }
+  h1 { font-size: clamp(36px, 7vw, 50px); line-height: 1.05; margin: 0 0 14px; }
+  h2 { font-size: clamp(26px, 5vw, 32px); line-height: 1.1; margin: 0 0 12px; }
+  h3 { font-size: 22px; line-height: 1.2; margin: 0 0 8px; }
+  p { margin: 0 0 12px; color: var(--ink-2); max-width: 65ch; }
+  strong { color: var(--ink); font-weight: 600; }
+  a { color: var(--focus); }
+  .lede { font-size: 17px; }
+  .aviso { border: 1px solid var(--warn); color: var(--ink-2); border-radius: 10px; padding: 10px 14px; font-size: 14px; margin: 16px 0 0; }
+  .aviso b { color: var(--warn); }
+  section { padding-block: 36px 8px; border-top: 1px solid var(--line); margin-top: 36px; }
+  .frase { font-family: var(--display); font-style: italic; font-size: clamp(28px, 6vw, 38px); line-height: 1.15; color: var(--ink); margin: 0 0 14px; }
+  .frase em { color: var(--cta); font-style: italic; }
+
+  /* La respuesta: se queda pegada arriba mientras Ez elige. */
+  .respuesta { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper-2); border: 1px solid var(--line-2);
+    border-radius: 12px; padding: 12px 14px; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+  .respuesta .etq { font: 500 11px/1.3 var(--ui); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .respuesta output { font: 600 20px/1.2 var(--ui); letter-spacing: .04em; color: var(--ink); font-variant-numeric: tabular-nums; flex: 1 1 auto; min-width: 0; }
+  .respuesta button, .copiar { font: 500 14px/1 var(--ui); color: var(--paper); background: var(--cta); border: 1px solid var(--cta);
+    border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+  .respuesta button.hueco { background: transparent; color: var(--cta); }
+  button:focus-visible, input:focus-visible + .op, summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .respuesta .ok { font-size: 13px; color: var(--focus); width: 100%; min-height: 1.2em; margin: 0; }
+
+  /* Dos columnas: lo que hace Link y lo que pone PACE. */
+  .reparto { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 8px 0 0; }
+  .col { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+  .col h3 { font-size: 21px; }
+  .col ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 15px; display: grid; gap: 6px; }
+  .col.tuyo { border-color: var(--premium); }
+  @media (max-width: 620px) { .reparto { grid-template-columns: 1fr; } }
+
+  .datos { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 0; }
+  .datos li { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 4px 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .datos li:last-child { border-bottom: 0; }
+  .datos b { font-family: var(--display); font-style: italic; font-weight: 600; font-size: 19px; color: var(--ink); }
+  .datos span { color: var(--ink-2); font-size: 15px; }
+  @media (max-width: 520px) { .datos li { grid-template-columns: 1fr; } }
+
+  /* Cada pregunta, sus opciones como tarjetas que se eligen. */
+  .pregunta { margin: 28px 0 0; }
+  .pregunta .por { font-size: 15px; }
+  .ops { display: grid; gap: 10px; margin: 10px 0 0; }
+  .ops label { display: block; cursor: pointer; }
+  .ops input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .op { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px; transition: border-color 150ms, background-color 150ms; }
+  .op .letra { grid-row: span 2; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-2);
+    display: grid; place-items: center; font: 600 15px/1 var(--ui); color: var(--ink-2); }
+  .op .tit { font-weight: 600; color: var(--ink); }
+  .op .tit .rec { display: inline-block; margin-left: 6px; font: 600 10.5px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--cta); border: 1px solid var(--cta); border-radius: 999px; padding: 4px 7px; vertical-align: 2px; }
+  .op .txt { color: var(--ink-2); font-size: 15px; }
+  .ops input:checked + .op { border-color: var(--cta); background: var(--rec-bg); }
+  .ops input:checked + .op .letra { background: var(--cta); border-color: var(--cta); color: var(--paper); }
+  @media (prefers-reduced-motion: reduce) { .op { transition: none; } }
+
+  .lista { margin: 8px 0 0; padding-left: 22px; color: var(--ink-2); display: grid; gap: 8px; }
+  .lista li { padding-left: 2px; }
+  .bloque { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px 16px; margin: 14px 0 0; }
+  .bloque .copiar { margin-top: 12px; }
+  .bloque .ok { font-size: 13px; color: var(--focus); margin: 6px 0 0; min-height: 1.2em; }
+  code { font: 13px/1.4 ui-monospace, 'Cascadia Mono', Consolas, monospace; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+  .fuentes { font-size: 14px; }
+  .fuentes li { overflow-wrap: anywhere; }
+</style>
+
+<div class="marco">
+  <p class="kicker">PACE · vender en la web · 30 de octubre de 2026</p>
+  <h1>Lo legal que falta para vender en la web</h1>
+  <p class="lede">He leído las condiciones de Stripe para «vende por ti» y la ley española y europea. Aquí tienes qué cubre
+  Stripe, qué te toca, qué datos tuyos hacen falta, cinco cosas que decides tú y las preguntas para el gestor y el jurista.
+  Los tres textos (condiciones, desistimiento y aviso legal) ya están escritos como borrador, esperando tus datos.</p>
+  <p class="aviso"><b>No es consejo legal.</b> Es lo que dicen Stripe y la ley, ordenado para que lo lleves a un
+  profesional. Los borradores no se publican hasta que alguien con título los revise.</p>
+
+  <div class="respuesta" role="group" aria-label="Tu respuesta">
+    <span class="etq">Tu respuesta</span>
+    <output id="resp" aria-live="polite">1A 2A 3A 4A 5A</output>
+    <button type="button" id="copiar-resp">Copiar</button>
+    <button type="button" class="hueco" id="recomendado">Lo recomendado</button>
+    <p class="ok" id="ok-resp"></p>
+  </div>
+
+  <section>
+    <p class="kicker">En una frase</p>
+    <p class="frase">Link cobra. <em>Tú vendes.</em></p>
+    <p>Con «vende por ti», quien cobra es <strong>Link</strong>, la tienda de Stripe: enseña la página de pago, cobra el
+    IVA, manda el recibo y la factura, y atiende los problemas del pago. En el banco del comprador sale
+    <code>LINK.COM*</code>.</p>
+    <p>Pero <strong>el vendedor de PACE completo sigues siendo tú</strong>. Lo dicen las condiciones de Stripe: Link
+    vende «en tu nombre» y «no es el vendedor» del producto. Por eso tus datos, las condiciones de compra, el
+    desistimiento y la devolución los pones tú, en la web de PACE.</p>
+  </section>
+
+  <section>
+    <p class="kicker">El reparto</p>
+    <h2>Qué hace Link y qué te toca</h2>
+    <div class="reparto">
+      <div class="col">
+        <h3>Lo hace Link, sin que hagas nada</h3>
+        <ul>
+          <li>El IVA de España y del resto de la UE: lo calcula, lo cobra y lo paga.</li>
+          <li>Los recibos y las facturas al comprador.</li>
+          <li>Cancelar la suscripción y cambiar la tarjeta, en link.com.</li>
+          <li>Los problemas del pago, las reclamaciones al banco y el fraude.</li>
+          <li>El correo de que la prueba ha empezado.</li>
+        </ul>
+      </div>
+      <div class="col tuyo">
+        <h3>Lo pones tú, en PACE</h3>
+        <ul>
+          <li>Tu nombre, NIF, dirección, correo y teléfono, antes de que paguen.</li>
+          <li>Junto al botón de compra: «7 días gratis; después 2,99 €/mes, IVA incluido; se renueva cada mes; cancelas
+          en Ajustes». Stripe lo exige.</li>
+          <li>Las condiciones de compra.</li>
+          <li>El desistimiento de 14 días y el botón para desistir.</li>
+          <li>La devolución «sin preguntas» de /premium: Link no devuelve por cambiar de idea, así que la haces tú desde
+          Stripe.</li>
+          <li>El aviso de que acaba la prueba: Link solo lo manda en pruebas de más de 7 días, y la tuya es de 7. PACE ya
+          lo hace.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Tus datos</p>
+    <h2>Lo que necesito de ti</h2>
+    <p>Van a salir en el aviso legal, a la vista de todos: así lo pide la ley para cualquiera que venda por internet.</p>
+    <ul class="datos">
+      <li><b>Nombre y apellidos</b><span>Los tuyos, como autónomo. Si tienes un nombre comercial además de PACE, también.</span></li>
+      <li><b>NIF</b><span>El de tu alta en Hacienda.</span></li>
+      <li><b>Dirección en la UE</b><span>Una dirección postal completa donde te pueda llegar una carta. Pregunta al gestor si puede ser otra que la de tu casa (una oficina o un coworking).</span></li>
+      <li><b>Correo</b><span>Hoy, hola.ezradesign@gmail.com. Si sigue ese, no hace falta nada.</span></li>
+      <li><b>Teléfono</b><span>La ley de consumo lo pide para vender a distancia. Puede ser uno solo para esto.</span></li>
+      <li><b>Fecha</b><span>El día en que entran en vigor los textos (el de la primera venta).</span></li>
+    </ul>
+    <p>Cuando los tengas, pásaselos a la coordinadora, que los pone en los tres borradores.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Tus decisiones</p>
+    <h2>Cinco cosas que decides tú</h2>
+    <p>La recomendada viene marcada. Toca otra si la prefieres: tu respuesta se escribe sola arriba.</p>
+
+    <div class="pregunta" role="radiogroup" aria-labelledby="p1">
+      <h3 id="p1">1. El botón para desistir</h3>
+      <p class="por">La UE obliga desde el 19 de junio de 2026 a que quien compra en una web pueda desistir con un botón
+      «Desistir del contrato aquí», con un formulario corto y un acuse. España aún no lo ha pasado a su ley, pero vendes a
+      toda la UE y cuesta poco.</p>
+      <div class="ops">
+        <label><input type="radio" name="q1" value="A" id="q1a" checked><span class="op"><span class="letra">A</span>
+          <span class="tit">Botón, formulario y acuse por correo <span class="rec">Recomendada</span></span>
+          <span class="txt">El botón va en el pie de /premium, en la página de gracias y en Ajustes de la web. Abre una página con
+          nombre, correo de la compra y número del recibo, y «Confirmar desistimiento». Al comprador le llega un correo con lo
+          que pidió, la fecha y la hora, y a ti un aviso para devolver en Stripe. Pide un servicio de envío de correos con plan
+          gratis y una línea en la privacidad.</span></span></label>
+        <label><input type="radio" name="q1" value="B" id="q1b"><span class="op"><span class="letra">B</span>
+          <span class="tit">Botón y formulario, acuse en pantalla</span>
+          <span class="txt">Lo mismo, pero el acuse sale en la pantalla para guardarlo, y tú contestas por correo a mano en uno
+          o dos días. Sin servicio nuevo. Duda para el jurista: si un acuse en pantalla cuenta como «soporte duradero».</span></span></label>
+        <label><input type="radio" name="q1" value="C" id="q1c"><span class="op"><span class="letra">C</span>
+          <span class="tit">Botón que abre un correo ya escrito</span>
+          <span class="txt">Sin formulario: el botón abre el correo del comprador con el mensaje para ti, y tú contestas el
+          acuse a mano. Casi sin código, pero falla si el comprador no tiene un programa de correo, y el acuse depende de
+          que tú contestes enseguida.</span></span></label>
+      </div>
+    </div>
+
+    <div class="pregunta" role="radiogroup" aria-labelledby="p2">
+      <h3 id="p2">2. ¿Quitar el desistimiento al empezar a usar PACE?</h3>
+      <p class="por">La ley deja que, en lo digital, el comprador pierda los 14 días si lo acepta antes de empezar, con una
+      casilla y una confirmación.</p>
+      <div class="ops">
+        <label><input type="radio" name="q2" value="A" id="q2a" checked><span class="op"><span class="letra">A</span>
+          <span class="tit">No, se quedan los 14 días <span class="rec">Recomendada</span></span>
+          <span class="txt">Ya prometes devolver en 14 días sin preguntas, así que no ganas nada y te ahorras una casilla en el
+          pago y un riesgo. Además, con la mensualidad seguramente no vale.</span></span></label>
+        <label><input type="radio" name="q2" value="B" id="q2b"><span class="op"><span class="letra">B</span>
+          <span class="tit">Sí, con una casilla antes de pagar</span>
+          <span class="txt">Solo tendría sentido si quitaras la devolución sin preguntas. No sé si el pago de Link deja poner
+          esa casilla: habría que mirarlo.</span></span></label>
+      </div>
+    </div>
+
+    <div class="pregunta" role="radiogroup" aria-labelledby="p3">
+      <h3 id="p3">3. La devolución «sin preguntas»: ¿desde cuándo cuentan los 14 días?</h3>
+      <p class="por">/premium la promete, pero no dice desde cuándo. Es aparte del desistimiento de la ley, que cuenta desde
+      el día de la compra o del alta, también con la prueba gratis.</p>
+      <div class="ops">
+        <label><input type="radio" name="q3" value="A" id="q3a" checked><span class="op"><span class="letra">A</span>
+          <span class="tit">Desde la compra o el primer cobro <span class="rec">Recomendada</span></span>
+          <span class="txt">El de por vida, 14 días desde que se compra. La mensualidad, 14 días desde el primer cobro (el día
+          8). Cubre a quien se le pasó cancelar la prueba, que es la queja más común.</span></span></label>
+        <label><input type="radio" name="q3" value="B" id="q3b"><span class="op"><span class="letra">B</span>
+          <span class="tit">Desde cada cobro, también cada mes</span>
+          <span class="txt">Más generosa: cualquier mes se puede devolver en sus 14 días. A 2,99 € cuesta poco, pero cada
+          devolución te cuesta además la comisión.</span></span></label>
+        <label><input type="radio" name="q3" value="C" id="q3c"><span class="op"><span class="letra">C</span>
+          <span class="tit">Igual que el desistimiento, desde el alta</span>
+          <span class="txt">Más sencilla de contar, pero con la prueba de 7 días solo quedan 7 días pagados para devolver.</span></span></label>
+      </div>
+    </div>
+
+    <div class="pregunta" role="radiogroup" aria-labelledby="p4">
+      <h3 id="p4">4. El aviso antes de cada cobro mensual</h3>
+      <p class="por">La ley española pide avisar 15 días antes de que venza el plazo para no renovar en los contratos que se
+      renuevan. No está claro que se aplique a una mensualidad que se cancela cuando se quiera.</p>
+      <div class="ops">
+        <label><input type="radio" name="q4" value="A" id="q4a" checked><span class="op"><span class="letra">A</span>
+          <span class="tit">Encender en Stripe el aviso de renovación <span class="rec">Recomendada</span></span>
+          <span class="txt">Un interruptor («Upcoming renewals»): Link manda un correo antes de cada cobro. Sin código. Y el
+          jurista dice si basta o sobra.</span></span></label>
+        <label><input type="radio" name="q4" value="B" id="q4b"><span class="op"><span class="letra">B</span>
+          <span class="tit">Dejarlo como viene y esperar al jurista</span>
+          <span class="txt">Así, Link solo avisa antes de cumplir el año. Menos correos para quien paga, pero el riesgo se
+          queda abierto hasta que el jurista conteste.</span></span></label>
+      </div>
+    </div>
+
+    <div class="pregunta" role="radiogroup" aria-labelledby="p5">
+      <h3 id="p5">5. Qué quiere decir «de por vida»</h3>
+      <p class="por">Hay que decirlo en las condiciones: una promesa vaga es la que más reclamaciones trae.</p>
+      <div class="ops">
+        <label><input type="radio" name="q5" value="A" id="q5a" checked><span class="op"><span class="letra">A</span>
+          <span class="tit">Mientras PACE se ofrezca, con aviso si cierra <span class="rec">Recomendada</span></span>
+          <span class="txt">Si un día PACE dejara de ofrecerse en la web, avisas con al menos 6 meses, y el código sigue
+          abriendo PACE completo en la última versión guardada en el navegador, que funciona sin conexión.</span></span></label>
+        <label><input type="radio" name="q5" value="B" id="q5b"><span class="op"><span class="letra">B</span>
+          <span class="tit">«Para siempre», sin más</span>
+          <span class="txt">Suena mejor, pero promete algo que no depende solo de ti (el navegador, el dominio, tu salud).</span></span></label>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Para llevar</p>
+    <h2>Las preguntas para el gestor y el jurista</h2>
+    <p>El gestor ve el alta y los impuestos; un jurista de consumo, los textos. Con el gestor solo, los textos se quedan sin
+    revisar: te recomiendo los dos.</p>
+
+    <div class="bloque">
+      <h3>Para el gestor</h3>
+      <ol class="lista" id="lista-gestor">
+        <li>¿Qué alta necesito antes de la primera venta (modelo 036 y autónomos)?</li>
+        <li>Stripe («vende por ti») cobra y paga el IVA de España y de la UE, y me hace una autofactura. ¿Tengo que declarar algo de esas ventas en mis modelos de IVA (303, 349)?</li>
+        <li>Stripe no lleva los impuestos de países fuera de su lista (por ejemplo, Argentina, Chile o Colombia). ¿Limito la venta a los países que sí cubre?</li>
+        <li>¿Cómo declaro en el IRPF lo que me ingresa Stripe, ya descontada su comisión? ¿Me toca el modelo 130?</li>
+        <li>¿Puedo poner en el aviso legal una dirección que no sea la de mi casa? ¿Y un teléfono solo para esto?</li>
+        <li>¿Tengo que adherirme a la Junta Arbitral de Consumo o tener hojas de reclamaciones en línea en mi comunidad?</li>
+      </ol>
+      <button type="button" class="copiar" data-copiar="lista-gestor">Copiar las preguntas</button>
+      <p class="ok" aria-live="polite"></p>
+    </div>
+
+    <div class="bloque">
+      <h3>Para el jurista</h3>
+      <ol class="lista" id="lista-jurista">
+        <li>Vendo con Stripe Managed Payments: Link cobra en su nombre y es el «merchant of record», pero sus condiciones dicen que no es el vendedor del producto. Ante el consumidor, ¿el empresario soy yo, Link o los dos? ¿Está bien contado en mis condiciones?</li>
+        <li>PACE completo (de por vida o al mes), ¿es contenido digital o servicio digital a efectos del desistimiento?</li>
+        <li>¿Tengo que dar ya la función de desistimiento en línea de la Directiva 2023/2673, aunque España no la haya transpuesto? ¿Vale la forma que elegí (acuse por correo o en pantalla)?</li>
+        <li>El aviso de 15 días antes de renovar del artículo 97.1.p del TRLGDCU, ¿se aplica a una suscripción mensual que se cancela cuando se quiera? ¿Basta el correo de Stripe antes de cada cobro?</li>
+        <li>Con 7 días gratis al empezar, ¿los 14 días para desistir cuentan desde el alta o desde el primer cobro?</li>
+        <li>¿Es suficiente cómo defino «de por vida»?</li>
+        <li>¿Puedes revisar los tres borradores (condiciones, desistimiento y devolución, y aviso legal), en español y en inglés?</li>
+      </ol>
+      <button type="button" class="copiar" data-copiar="lista-jurista">Copiar las preguntas</button>
+      <p class="ok" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Lo que ya está</p>
+    <h2>Los borradores, listos para tus datos</h2>
+    <p>Tres páginas nuevas de la web, en español y en inglés, con un aviso arriba de que son un borrador y los huecos
+    marcados (<code>[NOMBRE]</code>, <code>[NIF]</code>, <code>[DIRECCIÓN]</code>…). No se publican ni salen en /premium:</p>
+    <ul class="lista">
+      <li><strong>Condiciones de compra:</strong> quién vende y quién cobra, los planes, la prueba, cancelar, el código y
+      «de por vida» (<code>legal/condiciones/</code>).</li>
+      <li><strong>Desistimiento y devolución:</strong> los 14 días de la ley, el modelo de formulario y la devolución sin
+      preguntas, por separado (<code>legal/desistimiento/</code>).</li>
+      <li><strong>Aviso legal:</strong> tus datos, el uso de la web, la propiedad intelectual y la ley aplicable
+      (<code>legal/aviso-legal/</code>).</li>
+    </ul>
+    <p>Con tus letras y tus datos, la coordinadora monta los enlaces en /premium, la frase junto al botón de compra y, si
+    eliges A o B en la 1, el botón para desistir. Antes de encender la venta, un profesional revisa los textos.</p>
+  </section>
+
+  <section class="fuentes">
+    <p class="kicker">De dónde sale</p>
+    <ul class="lista">
+      <li>Condiciones de Stripe Managed Payments (28 sep. 2026), en <a href="https://stripe.com/legal/ssa-services-terms" target="_blank" rel="noopener">stripe.com/legal/ssa-services-terms</a>: Link es el «merchant of record», no el vendedor (§2.1); la suscripción la cuenta el vendedor antes de pagar (§3.2); devoluciones (§3.3); IVA (§4.1).</li>
+      <li>Cómo funciona, en <a href="https://docs.stripe.com/payments/managed-payments/how-it-works" target="_blank" rel="noopener">docs.stripe.com</a>: correos, aviso de fin de prueba solo en pruebas de más de 7 días, aviso de renovación.</li>
+      <li>Impuestos, en <a href="https://docs.stripe.com/payments/managed-payments/tax-compliance" target="_blank" rel="noopener">docs.stripe.com</a>: países cubiertos.</li>
+      <li>Devoluciones de Link, en <a href="https://support.link.com/questions/sold-through-link-refunds" target="_blank" rel="noopener">support.link.com</a>: no devuelve por cambiar de idea.</li>
+      <li>Ley de consumo (TRLGDCU), en el <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2007-20555" target="_blank" rel="noopener">BOE</a>: arts. 97 (lo que se dice antes de vender, y el aviso de 15 días), 102 a 104 (los 14 días) y 103.m (la excepción digital). Texto al día del 28 feb. 2026, sin la función de desistimiento.</li>
+      <li>Directiva (UE) 2023/2673, en <a href="https://eur-lex.europa.eu/eli/dir/2023/2673/oj" target="_blank" rel="noopener">EUR-Lex</a>: la función de desistimiento (art. 11 bis de la Directiva 2011/83), desde el 19 jun. 2026.</li>
+      <li>El detalle, con las citas, en el repositorio: <code>docs/launch/legal-web.md</code>.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+  (function () {
+    var RECOMENDADO = { q1: 'A', q2: 'A', q3: 'A', q4: 'A', q5: 'A' };
+    var CLAVE = 'pace.legal.respuesta';
+    var out = document.getElementById('resp');
+    var okResp = document.getElementById('ok-resp');
+
+    function leer() {
+      return ['q1', 'q2', 'q3', 'q4', 'q5'].map(function (q, i) {
+        var marcada = document.querySelector('input[name="' + q + '"]:checked');
+        return (i + 1) + (marcada ? marcada.value : '?');
+      }).join(' ');
+    }
+    function pintar() {
+      out.textContent = leer();
+      okResp.textContent = '';
+      try { localStorage.setItem(CLAVE, out.textContent); } catch (e) {}
+    }
+    function poner(texto) {
+      (texto || '').split(' ').forEach(function (par) {
+        var n = par.charAt(0), l = par.charAt(1);
+        var input = document.querySelector('input[name="q' + n + '"][value="' + l + '"]');
+        if (input) input.checked = true;
+      });
+    }
+    function copiar(texto, aviso) {
+      function hecho() { aviso.textContent = 'Copiado.'; }
+      function aMano() { aviso.textContent = 'No se ha podido copiar solo: selecciónalo y cópialo.'; }
+      try {
+        navigator.clipboard.writeText(texto).then(hecho, aMano);
+      } catch (e) { aMano(); }
+    }
+
+    try { var guardada = localStorage.getItem(CLAVE); if (guardada) poner(guardada); } catch (e) {}
+    pintar();
+    document.querySelectorAll('.ops input').forEach(function (input) { input.addEventListener('change', pintar); });
+    document.getElementById('recomendado').addEventListener('click', function () {
+      Object.keys(RECOMENDADO).forEach(function (q) {
+        document.querySelector('input[name="' + q + '"][value="' + RECOMENDADO[q] + '"]').checked = true;
+      });
+      pintar();
+    });
+    document.getElementById('copiar-resp').addEventListener('click', function () { copiar(out.textContent, okResp); });
+    document.querySelectorAll('[data-copiar]').forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        var lista = document.getElementById(boton.getAttribute('data-copiar'));
+        var texto = Array.prototype.map.call(lista.querySelectorAll('li'), function (li, i) {
+          return (i + 1) + '. ' + li.textContent.replace(/\s+/g, ' ').trim();
+        }).join('\n');
+        copiar(texto, boton.nextElementSibling);
+      });
+    });
+  })();
+</script>
