@@ -92,7 +92,7 @@ test.describe('en Android', () => {
     const hoja = await hojaMovil(page);
     await hoja.locator('[data-pace-cal-reuniones]').uncheck();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
-    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo');
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se pone al día solo');
     await page.getByRole('button', { name: 'Listo', exact: true }).click();
     const creados = (await llamadas(page, 'createEvent')).length;
     expect(creados).toBe(10);
@@ -137,7 +137,7 @@ test.describe('en Android', () => {
     const hoja = await hojaMovil(page);
     await hoja.locator('[data-pace-cal-reuniones]').uncheck();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
-    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo');
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se pone al día solo');
     const creados = (await llamadas(page, 'createEvent')).length;
     expect(creados).toBe(10);
     expect((await dePace(page)).filter((e) => e.accessLevel === 3), 'lo creado no va privado').toHaveLength(10);

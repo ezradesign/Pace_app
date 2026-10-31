@@ -6,11 +6,11 @@
  * su propio archivo.
  *
  * Lo que se vigila:
- *   · la bienvenida no escribe nada hasta «Continuar» o «Cada semana es distinta» (detrás
+ *   · la bienvenida no escribe nada hasta «Continuar» o «Ahora no, quiero probar primero» (detrás
  *     van PACE completo y la visita: compra-tienda.spec.js y bienvenida-visita.spec.js);
  *   · tocar un día pasa de jornada a media y a libre;
  *   · las horas tocadas se guardan sobre el horario de siempre (`ritmo.horario`);
- *   · «Cada semana es distinta» guarda null: la app sigue como estaba;
+ *   · «Ahora no, quiero probar primero» guarda null: la app sigue como estaba;
  *   · el día se DERIVA de la semana al pintar (ritmoDe), no se escribe.
  */
 'use strict';
@@ -79,7 +79,7 @@ test('«Continuar» guarda la semana tocada y las horas, y cierra la bienvenida 
   expect(errores).toEqual([]);
 });
 
-test('«Cada semana es distinta» guarda que no hay semana y la app sigue como estaba', async ({ page }) => {
+test('«Ahora no, quiero probar primero» guarda que no hay semana y la app sigue como estaba', async ({ page }) => {
   const errores = capturarErrores(page);
   await llegarALaSemana(page);
   await page.locator('[data-pace-semana-saltar]').click();
@@ -100,7 +100,7 @@ test('en inglés la pregunta habla inglés', async ({ page }) => {
   await page.locator(BIENVENIDA + ' [data-pace-cta]').click();
   await page.locator(EDITOR).waitFor({ state: 'visible' });
   await expect(page.locator(BIENVENIDA)).toContainText("What's your week like?");
-  await expect(page.locator(BIENVENIDA)).toContainText('Every week is different');
+  await expect(page.locator(BIENVENIDA)).toContainText('Not now, I want to try it first');
   await expect(page.locator(EDITOR + ' [data-pace-semana-dia="1"]')).toHaveAttribute('aria-label', 'Monday, Full day');
 });
 

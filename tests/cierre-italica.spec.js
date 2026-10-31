@@ -43,6 +43,8 @@ for (const vp of [{ w: 360, h: 640 }, { w: 1280, h: 800 }]) {
   test('el cierre va en la serif itálica · ' + vp.w + '×' + vp.h, async ({ page, context }) => {
     await page.setViewportSize({ width: vp.w, height: vp.h });
     const sesion = await hastaElCierre(page, context);
+    /* Dice lo que hiciste, no cómo te sientes (Ez, 7A del 30 oct.: antes, «Tu cuerpo ha encontrado su ritmo»). */
+    await expect(sesion.locator('[data-pace-session-done]')).toContainText('Has dedicado un rato a respirar.');
     const display = (await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--font-display'))).split(',')[0].trim().replace(/['"]/g, '');
     expect(display, 'GUARD: no se lee la familia de los títulos').not.toBe('');
 

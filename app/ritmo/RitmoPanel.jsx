@@ -10,7 +10,8 @@
        jornada entera en una hoja. s193: con la PAUSA ABIERTA (plan.pausa),
        «Ahora» es la parada y «Luego» el bloque que viene; y hasta que acabe
        el primer bloque del día, una frase dice cómo va la cosa (RitmoComo),
-       solo en escritorio: en el móvil eran 39 px que la home no tenía.
+       solo en escritorio: en el móvil eran 39 px que la home no tenía. En el
+       móvil lo dice la fila «Ahora» hasta que empiezas (RitmoMovil).
      · LA JORNADA CERRADA — cuando ya no queda bloque.
 
    Cada estado existe dos veces (escritorio y móvil) y la hoja de estilos elige.
@@ -23,8 +24,8 @@ function RitmoContexto() {
   const { t } = useT();
   return (
     <div className="pace-rt-ctx">
-      <span>{t('ritmo.ctx.mesa')}</span>
-      <span>{t('ritmo.ctx.material')}</span>
+      <span className="pace-rt-ctx-mesa">{t('ritmo.ctx.mesa')}</span>
+      <span className="pace-rt-ctx-material">{t('ritmo.ctx.material')}</span>
     </div>
   );
 }
@@ -292,7 +293,13 @@ function RitmoMovil({ state, plan, onVer }) {
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
-  const descriptor = typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
+  /* HASTA QUE EMPIEZAS EL PRIMER BLOQUE, la fila «Ahora» dice dónde se empieza (Ez, 30 oct.: 2A,
+     U5 de las revisiones de ChatGPT del 28 oct.): la frase del escritorio (RitmoComo) no cabe, y
+     «Ahora 9:05 · Foco · bloque 1 de 9» parecía un bloque en marcha. Ocupa el sitio del
+     descriptor, que ya está en el aro, así que no añade alto. */
+  const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
+  const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza')
+    : typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
   /* Con la pausa abierta (s193), «Ahora» es la parada y «Luego» el bloque. */
   const filaBloque = (rotulo) => (
     <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>}

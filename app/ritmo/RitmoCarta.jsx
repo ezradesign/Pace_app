@@ -12,6 +12,13 @@
    Espera, como los avisos, a que no haya nada encima de la home: ni un diálogo (la pausa,
    la bienvenida, cualquier ventana) ni una sesión.
 
+   PARA LUEGO, Y EL SOBRE (Ez, 30 oct. 2026: 1A, U3 de las revisiones de ChatGPT del 28 oct.).
+   Sale sola una vez, con la × de todas las ventanas (también Escape o tocar fuera). Cerrarla no
+   dice ni sí ni no (`ritmoCartaLuego`): ya no sale sola y espera en el sobre de arriba
+   (shell/Sobre.jsx), CERRADO mientras está sin contestar y ABIERTO cuando ya se contestó. Desde
+   el sobre se abre igual; contestada, se lee sin botones. Si la semana acaba sin contestarla, no
+   cambia nada ni cuenta como un «no».
+
    Y LO APRENDIDO, en «Tu semana» (RitmoSemanaTipo.jsx): una línea, «PACE ha aprendido 4
    cosas ›», que abre la lista con el «Olvidar» de cada cosa (Ez, 17 oct., opción B: la hoja
    no crece ni pide scroll). */
@@ -19,7 +26,8 @@
 const { useState: useStateRC, useEffect: useEffectRC } = React;
 
 const ritmoCartaStyles = {
-  cab: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 },
+  /* `paddingRight`: el sitio de la × de la ventana, que va arriba a la derecha. */
+  cab: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, paddingRight: 34 },
   meta: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' },
   fechas: { fontSize: 12, color: 'var(--ink-3)', whiteSpace: 'nowrap' },
   resumen: { display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: 12, alignItems: 'end' },
@@ -97,14 +105,41 @@ function RitmoCartaPie({ enlace, onEnlace, pildora, onPildora, datos }) {
   );
 }
 
-function RitmoCartaVentana({ carta }) {
+/* La carta ya contestada, desde el sobre abierto: lo que dijo y lo que contestaste, sin botones. */
+function RitmoCartaLeida({ carta, cambios, pregunta }) {
+  const { t, tn } = useT();
+  const S = ritmoCartaStyles;
+  return (
+    <React.Fragment>
+      {cambios.length || !pregunta ? (
+        <div style={S.parte} data-pace-carta-cambios>
+          <div style={S.meta}>{t('ritmo.carta.semana')}</div>
+          {carta.respuesta === 'dejar' ? <div style={S.pregunta}>{t('ritmo.carta.leida.dejar')}</div>
+            : cambios.length ? cambios.map((c) => <RitmoCartaCambio key={ritmoMotorClave(c)} c={c} />)
+            : <div style={S.pregunta}>{t('ritmo.carta.igual')}</div>}
+        </div>
+      ) : null}
+      {pregunta && carta.hora ? (
+        <div style={S.parte} data-pace-carta-pregunta>
+          <div style={S.meta}>{t('ritmo.carta.pregunta')}</div>
+          <div style={S.pregunta}>
+            {ritmoCartaPreguntaTexto(pregunta, t, tn)} {t(carta.hora === 'si' ? 'ritmo.carta.leida.cambiada' : 'ritmo.carta.leida.dejar')}
+          </div>
+        </div>
+      ) : null}
+    </React.Fragment>
+  );
+}
+
+/* `onCerrar`: la ×, Escape o tocar fuera. `leida`: abierta desde el sobre, ya contestada. */
+function RitmoCartaVentana({ carta, onCerrar, leida }) {
   const { t, tn, lang } = useT();
   const res = carta.res;
   const cambios = ritmoCartaCambios(carta);
   const pregunta = ritmoCartaPregunta(carta);
   const lleva = ritmoCartaLleva(carta);
-  const pasoCambios = lleva.respuesta && !carta.respuesta;
-  const pasoPregunta = !!pregunta && !carta.hora && !pasoCambios;
+  const pasoCambios = !leida && lleva.respuesta && !carta.respuesta;
+  const pasoPregunta = !leida && !!pregunta && !carta.hora && !pasoCambios;
   const dia = t('ritmo.dias').split(',')[motorDiaSemana(ritmoHoy()) - 1] || '';
   const letras = t('ritmo.carta.letras').split(',');
   const barras = res.barras.filter((b, i) => i < 5 || b.total > 0);
@@ -113,8 +148,8 @@ function RitmoCartaVentana({ carta }) {
   const hechas = tn('ritmo.carta.hechas', { h: res.hechas, t: res.total });
   const S = ritmoCartaStyles;
   return (
-    <Modal open maxWidth={420} relleno="20px 18px 14px" ariaLabel={t('ritmo.carta.aria')}>
-      <div data-pace-carta style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <Modal open onClose={onCerrar} maxWidth={420} relleno={leida ? '20px 18px 20px' : '20px 18px 14px'} ariaLabel={t('ritmo.carta.aria')}>
+      <div data-pace-carta={leida ? 'leida' : 'pendiente'} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={S.cab}>
           <span style={S.meta}>{tn('ritmo.carta.titulo', { dia: dia.charAt(0).toUpperCase() + dia.slice(1) })}</span>
           <span style={S.fechas}>{ritmoCartaFechas(res, tn, lang)}</span>
@@ -151,7 +186,8 @@ function RitmoCartaVentana({ carta }) {
             <div style={S.pregunta}>{ritmoCartaPreguntaTexto(pregunta, t, tn)}</div>
           </div>
         )}
-        {pasoCambios
+        {leida ? <RitmoCartaLeida carta={carta} cambios={cambios} pregunta={pregunta} />
+          : pasoCambios
           ? <RitmoCartaPie datos="cambios" enlace={cambios.length ? t('ritmo.carta.dejar') : null} onEnlace={ritmoCartaDejar}
               pildora={t('ritmo.carta.vale')} onPildora={ritmoCartaVale} />
           : <RitmoCartaPie datos="pregunta" enlace={t('ritmo.carta.no')} onEnlace={() => ritmoCartaHora(false)}
@@ -161,13 +197,27 @@ function RitmoCartaVentana({ carta }) {
   );
 }
 
+/* El sobre la abre con este aviso: la raíz lo escucha. */
+function ritmoCartaAbrir() { window.dispatchEvent(new CustomEvent('pace:carta-abrir')); }
+
 /* La raíz: mira si hay carta y espera a que la home esté libre para abrirla. */
 function RitmoCartaRaiz() {
   const [state] = usePace();
   const [libre, setLibre] = useStateRC(false);
-  let carta = null;
-  try { carta = ritmoCartaPendiente(state); } catch (e) { carta = null; }
-  const hay = !!carta;
+  /* Abierta desde el sobre: 'pendiente' (sin contestar) o 'leida'. */
+  const [mano, setMano] = useStateRC(null);
+  let carta = null, semana = null;
+  try { semana = ritmoCartaDeLaSemana(state); carta = ritmoCartaPendiente(state); } catch (e) { semana = null; carta = null; }
+  /* Sale sola una vez: dejada para luego, espera en el sobre. */
+  const hay = !!carta && !carta.luego;
+  const abierta = mano === 'pendiente' ? carta : (mano === 'leida' && semana && semana.vista ? semana : null);
+  useEffectRC(() => {
+    const abrir = () => setMano(ritmoCartaPendiente(getState()) ? 'pendiente' : 'leida');
+    window.addEventListener('pace:carta-abrir', abrir);
+    return () => window.removeEventListener('pace:carta-abrir', abrir);
+  }, []);
+  /* Contestada desde el sobre, o pasada la semana: se cierra. */
+  useEffectRC(() => { if (mano && !abierta) setMano(null); }, [mano, !!abierta]);
   useEffectRC(() => {
     if (!hay || libre) return undefined;
     let timer = null;
@@ -181,8 +231,22 @@ function RitmoCartaRaiz() {
     timer = setTimeout(mirar, 400);
     return () => clearTimeout(timer);
   }, [hay, libre]);
-  if (!carta || !libre) return null;
-  return <RitmoCartaVentana carta={carta} />;
+  if (abierta) {
+    return <RitmoCartaVentana carta={abierta} leida={mano === 'leida'}
+      onCerrar={() => { if (mano === 'pendiente') ritmoCartaLuego(); setMano(null); }} />;
+  }
+  if (!hay || !libre) return null;
+  return <RitmoCartaVentana carta={carta} onCerrar={ritmoCartaLuego} />;
+}
+
+/* La carta en el sobre de arriba: cerrado sin contestar, abierto contestada. Solo la de esta
+   semana y con PACE completo (`ritmoCartaDeLaSemana`). */
+if (typeof paceSobreApuntar === 'function') {
+  paceSobreApuntar({ clave: 'carta', de: (s, t) => {
+    const c = ritmoCartaDeLaSemana(s);
+    if (!c) return null;
+    return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir };
+  } });
 }
 
 /* LO APRENDIDO en «Tu semana»: cada cosa en una frase y su «Olvidar». Sin PACE completo o
@@ -229,4 +293,4 @@ function RitmoAprendido({ state }) {
   );
 }
 
-Object.assign(window, { ritmoCartaStyles, RitmoCartaVentana, RitmoCartaRaiz, RitmoAprendido });
+Object.assign(window, { ritmoCartaStyles, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, RitmoAprendido });

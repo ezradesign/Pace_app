@@ -56,7 +56,7 @@ test('bienvenida, home, barra y biblioteca', async ({ page, context }) => {
   await exigir(page, '[data-pace-scene-card] button[title]', 40, '«ES · EN»');
   await page.getByRole('button', { name: /^Comenzar$/ }).click();
   await exigir(page, '[data-pace-scene-card] [data-pace-toque]', 40, '«← Atrás»');
-  await exigir(page, '[data-pace-semana-saltar]', 34, '«Cada semana es distinta»');
+  await exigir(page, '[data-pace-semana-saltar]', 34, '«Ahora no, quiero probar primero»');
   /* Detrás, PACE completo y la visita guiada (Ez, 2A y 1C del 27 oct.). */
   await page.getByRole('button', { name: /^Continuar$/ }).click();
   await exigir(page, '[data-pace-onb-comenzar]', 40, '«Comenzar» de PACE completo');

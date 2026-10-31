@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.187.0 · actualizada el 30 de octubre a las 13:25 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.188.0 · actualizada el 30 de octubre a las 23:55 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,8 +106,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> Las 1125 pruebas en verde y la web en la 0.187.0, con «Tus rutinas», el
-        runner claro y los catorce dibujos nuevos dentro.</li>
+      <li><b>La app está casi entera y sana.</b> Las 1157 pruebas en verde y la web en la 0.188.0, con la carta del lunes
+        para luego y los textos que no inventan dentro. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
+        lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
         código. Los arreglos del cobro, de las rutinas sin «Auto» y de «Tus rutinas» ya están dentro de la app. Y
         unas veinticinco ideas para quien empieza, para cuando el día no sale como estaba previsto y para que se entienda lo
@@ -165,18 +166,18 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               otros catorce ya están dentro.</li>
             <li>El logo en PNG con fondo transparente: dentro de la app aún se lee «FVFN».</li>
           </ol></span></li>
-      <li class="paso marcha"><span class="estado">En marcha · tú elegiste · 30 de octubre</span>
-        <span class="t">Montar los textos que dicen más de lo que saben</span>
-        <span class="c"><span class="quien">Yo, con una sesión</span> (<a href="https://claude.ai/artifact/TRCBmekA95gLLawszVhpbF">la
-          página</a>). Tus letras: todas A salvo el 3, que es B; el 5 con «Has terminado un Foco de 45 minutos»; el 6 como está
-          hoy; y el 13, la A por el momento. Te paso las fotos y dices «júntalo». Si llega a tiempo, entra en la versión de
-          prueba.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · tú elegiste 1A 2A 3A 4B · 30 de octubre</span>
-        <span class="t">Montar la carta del lunes y el primer día</span>
-        <span class="c"><span class="quien">Yo, con otra sesión</span> (<a href="https://claude.ai/artifact/Y3TxJ1sisYgSFYfHMaux4q">la
-          maqueta</a>). El sobre, junto a logros y estadísticas: cerrado cuando hay algo sin leer y abierto cuando ya lo
-          leíste. Queda preparado para llevar más adelante las novedades de una versión o un aviso puntual; por ahora solo
-          lleva la carta. Te paso las fotos y dices «júntalo».</span></li>
+      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 2 minutos</span>
+        <span class="t">Pegar en Play Console el párrafo nuevo de «A tu ritmo»</span>
+        <span class="c"><span class="quien">Tú.</span> Con los textos que no inventan cambió el párrafo «A tu ritmo» de la ficha de
+          Play. Está en <code>docs/launch/google-play/ficha.md</code>: pégalo en Play Console › Ficha de la tienda, en español
+          y en inglés. El de PACE completo se cambia el día de v1.</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · tú elegiste 1A 2A 3A 4A 5A</span>
+        <span class="t">Lo legal de /premium, en borrador, y el botón para desistir</span>
+        <span class="c"><span class="quien">Yo, con una sesión.</span> Tus letras, en los borradores de las condiciones, el
+          desistimiento y la devolución y el aviso legal; y el botón para desistir con su correo de acuse, sin publicar. Para
+          el correo te diré qué servicio gratuito dar de alta y cómo. Nada sale en la web hasta tus datos (nombre, NIF y un
+          contacto) y una revisión profesional: lleva al gestor y al jurista las preguntas de
+          <a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>.</span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
         <span class="t">Buscar testers: avisar a los tuyos y publicar en LinkedIn</span>
         <span class="c"><span class="quien">Tú.</span> Es lo que más adelanta v1: Google pide 12 testers durante 14 días, y los días
@@ -190,7 +191,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 76 pasos</summary>
+      <summary>Lo hecho hasta hoy · 79 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -559,6 +560,22 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="c"><span class="quien">Yo.</span> Las tres, en ese orden, con las 1125 pruebas en verde con todo junto. Al
           juntarlas salió una cosa que arreglé: tres rutinas piden ahora la silla con respaldo, y eso las sacaba de «A tu ritmo»
           y de «Sin material». Es la silla de trabajar, así que no cuenta como material; sí se dice en «Antes de empezar».</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú elegiste · 30 de octubre</span>
+        <span class="t">Elegir los textos y la carta del lunes</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/TRCBmekA95gLLawszVhpbF">los textos</a> y
+          <a href="https://claude.ai/artifact/Y3TxJ1sisYgSFYfHMaux4q">la carta</a>). Los textos, todas A salvo el 3, que es B, el 5
+          con «Has terminado un Foco de 45 minutos» y el 6 como estaba; la carta, 1A 2A 3A 4B, con el sobre abierto o cerrado
+          y listo para llevar más cosas después.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo» · 30 de octubre · en la app, 0.188.0</span>
+        <span class="t">Juntar la carta del lunes y los textos, y publicarlo</span>
+        <span class="c"><span class="quien">Yo.</span> Las dos, una detrás de otra, con las 1157 pruebas en verde con todo junto
+          (<a href="https://claude.ai/artifact/XSQNEkkt6Nh3cpFE4CR7Zj">las fotos de la carta</a> y
+          <a href="https://claude.ai/artifact/KyVfsiiWePUzGz45mxy5md">las de los textos</a>).</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú elegiste 1A 2A 3A 4A 5A · 30 de octubre</span>
+        <span class="t">Las cinco preguntas de lo legal</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>). El
+          botón para desistir con su correo de acuse, los 14 días se quedan, la devolución cuenta desde la compra o el
+          primer cobro, el correo de Stripe antes de cada cobro y «de por vida» mientras PACE exista, con aviso de 6 meses.</span></li>
       </ol>
     </details>
   </section>
@@ -892,9 +909,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">A · Hecho (0.186.0, 29 oct.)</span>
         <b>El cobro, a prueba</b><span>Que un aviso de Stripe repetido o desordenado no pise una compra; que la prueba de 7 días acabe cuando dice Stripe; que «terminada» solo salga con una baja de verdad; que una renovación no tape una compra de por vida; que importar tus datos no los pise; que solo den código las compras de PACE; y que una compra de prueba dé un código de tres días.</span></div></li>
-      <li><i class="pt yo"></i><div class="que"><span class="estado yo">T · En marcha · una página para que elijas</span>
+      <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">T · Hecho (0.188.0, 30 oct.)</span>
         <b>Los textos que dicen más de lo que saben</b><span>«Saltar esta pausa», que en realidad la deja para luego, pasa a «Ahora no». «Llevas 45 minutos sentado» o «Aún no has bebido hoy», que PACE no lo sabe, pasan a lo que sí sabe. «El cuerpo vuelve a sentirse tuyo», a lo que has hecho. La salida de «Tu semana», a «Ahora no, quiero probar primero». Y que se diga que el tiempo del día incluye las pausas, que «sin material» puede pedir pared o mesa y que el calendario se pone al día solo con PACE abierto. Puede ir en la versión de prueba.</span></div></li>
-      <li><i class="pt yo"></i><div class="que"><span class="estado yo">M · En marcha la carta y la frase del móvil · con una maqueta para ti</span>
+      <li><i class="pt yo"></i><div class="que"><span class="estado yo">M · En parte hecho (0.188.0): la carta para luego, la frase del móvil y mirar un ejercicio; lo demás, después de v1</span>
         <b>Para quien empieza, y para que se entienda lo que se paga</b><span>Ver cómo se hace un ejercicio antes de darle a Empezar; la carta del lunes que se pueda dejar para luego; una frase en el móvil para empezar el día; tocar una pausa del plan sin cambiarla sin querer; que un «No» no aparte una rutina para siempre sin avisar; un «¿Es tu primera vez? Empieza aquí» en Respira; oír la voz antes de elegirla; y que /premium cuente que las rutinas cambian de un día a otro y el calendario que se mantiene solo.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">13 · Espera tus altas en Google y Microsoft</span>
         <b>El llavero del calendario</b><span>Con PACE abierto, tu día se mantiene al día solo toda la jornada. Hoy, sin tus altas, el calendario automático de la web no funciona para nadie; y para abrirlo a todo el mundo Google revisa la app, y tarda semanas. Si lo quieres en v1, las altas son lo más urgente después de los testers. Con él llega también lo que pide ChatGPT para que sea fiable (L): que no haya que volver a conectarlo, elegir qué calendarios se miran y en cuál se escribe, y poder solo leer tus reuniones, sin escribir nada.</span></div></li>

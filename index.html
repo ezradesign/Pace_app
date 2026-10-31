@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.187.0</title>
+  <title>PACE · Foco · Cuerpo — v0.188.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2100,7 +2100,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.prev': '← Anterior',
   'move.next': 'Siguiente →',
   'move.doneMeta': 'Antídoto completado',
-  'move.doneCopy': 'El cuerpo vuelve a sentirse tuyo.',
+  'move.doneCopy': 'Un rato para el cuerpo, entre tareas.',
 
 
   'focus.minutes.custom.title': 'Minutos personalizados (5–180)',
@@ -2164,7 +2164,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'breathe.prepCopy': 'Siéntate cómodo. Respira natural.',
-  'breathe.doneCopy': 'Tu cuerpo ha encontrado su ritmo.',
+  'breathe.doneCopy': 'Has dedicado un rato a respirar.',
 
 
   'lib.tag': 'Biblioteca',
@@ -2301,7 +2301,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.prev': '← Previous',
   'move.next': 'Next →',
   'move.doneMeta': 'Antidote completed',
-  'move.doneCopy': 'Your body feels like yours again.',
+  'move.doneCopy': 'A moment for your body, between tasks.',
 
 
   'focus.minutes.custom.title': 'Custom minutes (5–180)',
@@ -2360,7 +2360,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'breathe.prepCopy': 'Sit comfortably. Breathe naturally.',
-  'breathe.doneCopy': 'Your body has found its rhythm.',
+  'breathe.doneCopy': 'You took a moment to breathe.',
 
 
   'lib.tag': 'Library',
@@ -2610,6 +2610,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'preview.eq.barOptional': 'Una barra, si la tienes',
   'preview.eq.band': 'Una banda elástica, si la tienes',
   'preview.opcional': 'se puede saltar',
+  'preview.paso.ver': 'Cómo se hace: {n}',
+  'preview.paso.volver': 'Los pasos',
+  'preview.paso.haces': 'Qué haces',
+  'preview.paso.cuidado': 'Cuidado',
   'preview.eq.floor': 'Sitio para tumbarte en el suelo',
   'preview.pos.standing': 'De pie',
   'preview.pos.seated': 'Sentado',
@@ -2762,6 +2766,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.eq.barOptional': 'A bar, if you have one',
   'preview.eq.band': 'An elastic band, if you have one',
   'preview.opcional': 'can be skipped',
+  'preview.paso.ver': 'How it’s done: {n}',
+  'preview.paso.volver': 'The steps',
+  'preview.paso.haces': 'What you do',
+  'preview.paso.cuidado': 'Take care',
   'preview.eq.floor': 'Room to lie on the floor',
   'preview.pos.standing': 'Standing',
   'preview.pos.seated': 'Seated',
@@ -3010,7 +3018,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'stats.hoy.vasos.de': 'de {m} vasos',
   'stats.hoy.libre': 'Por libre',
-  'stats.hoy.vacio': 'Todavía no has hecho ninguna pausa hoy.',
+  'stats.hoy.vacio': 'Hoy aún no hay pausas en PACE.',
   'stats.cerrado': 'Es parte de PACE completo',
   'stats.tab.week': 'Semana',
   'stats.tab.month': 'Mes',
@@ -3109,7 +3117,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'stats.hoy.vasos.de': 'of {m} glasses',
   'stats.hoy.libre': 'Freestyle',
-  'stats.hoy.vacio': 'No breaks yet today.',
+  'stats.hoy.vacio': 'No PACE breaks yet today.',
   'stats.cerrado': 'Part of PACE Complete',
   'stats.tab.week': 'Week',
   'stats.tab.month': 'Month',
@@ -3265,16 +3273,16 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.water.label': 'Hidrátate',
   'break.water.desc': 'Un vaso ahora',
   'break.done': 'Ya hecho hoy · otra ronda si quieres',
-  'break.prop.sitting': 'Llevas {n} minutos sentado',
-  'break.prop.water': 'Aún no has bebido hoy',
+  'break.prop.sitting': 'Has terminado un Foco de {n} minutos',
+  'break.prop.water': 'Hoy no has apuntado ningún vaso',
   'break.prop.third': 'Tercer bloque de hoy',
-  'break.prop.pending.extra': 'Hoy aún no has estirado',
-  'break.prop.pending.move': 'Hoy aún no has movido el cuerpo',
-  'break.prop.pending.breathe': 'Hoy aún no has respirado',
+  'break.prop.pending.extra': 'Hoy aún no hay sesión de Estira',
+  'break.prop.pending.move': 'Hoy aún no hay sesión de Mueve',
+  'break.prop.pending.breathe': 'Hoy aún no hay sesión de Respira',
   'break.prop.meta': '{n} min · {m}',
   'break.prop.start': 'Empezar',
   'break.recommended': 'Para ti',
-  'break.skip': 'Saltar esta pausa',
+  'break.skip': 'Ahora no',
   'break.ritmo.tag': 'Bloque {n} de {m} · hecho',
   'break.ritmo.title': 'Tu pausa',
   'break.ritmo.sub': '{h} · Lo que toca ahora.',
@@ -3300,16 +3308,16 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.water.label': 'Hydrate',
   'break.water.desc': 'A glass right now',
   'break.done': 'Done today · another round if you like',
-  'break.prop.sitting': 'You have been sitting for {n} minutes',
-  'break.prop.water': 'You have not had any water today',
+  'break.prop.sitting': 'You finished a {n}-minute Focus',
+  'break.prop.water': 'No glasses logged today',
   'break.prop.third': 'Third block today',
-  'break.prop.pending.extra': 'No stretching yet today',
-  'break.prop.pending.move': 'No movement yet today',
-  'break.prop.pending.breathe': 'No breathing session yet today',
+  'break.prop.pending.extra': 'No Stretch session yet today',
+  'break.prop.pending.move': 'No Move session yet today',
+  'break.prop.pending.breathe': 'No Breathe session yet today',
   'break.prop.meta': '{n} min · {m}',
   'break.prop.start': 'Start',
   'break.recommended': 'For you',
-  'break.skip': 'Skip this break',
+  'break.skip': 'Not now',
   'break.ritmo.tag': 'Block {n} of {m} · done',
   'break.ritmo.title': 'Your break',
   'break.ritmo.sub': '{h} · What comes next.',
@@ -3424,8 +3432,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.data.rescate.title': 'Lo que no se pudo leer al arrancar, tal cual estaba',
   'settings.license': 'Licencia',
   'settings.license.soon': 'pronto',
-  'settings.foot': 'Todo vive en tu navegador.',
-  'settings.foot.app': 'Todo vive en tu móvil.',
+  'settings.foot': 'Todo vive en este navegador y no se sincroniza con otros.',
+  'settings.foot.app': 'Todo vive en este móvil y no se sincroniza con otros.',
   'settings.legal.safety': 'Seguridad',
   'settings.legal.privacy': 'Privacidad',
   'settings.msg.exported': 'Copia descargada.',
@@ -3444,7 +3452,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.reset.cuerpo.app': 'Se borra todo lo que PACE guarda en este móvil: tus días, tus rutinas y tus logros. No se puede deshacer. Si quieres, exporta antes una copia.',
   'settings.reset.si': 'Borrar todo',
   'settings.import.titulo': '¿Cambiar tus datos por los de la copia?',
-  'settings.import.cuerpo': 'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye, y no se puede deshacer.',
+  'settings.import.cuerpo': 'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
   'settings.import.si': 'Importar',
   'settings.import.parcial.titulo': 'Falta el registro de tus sesiones'
 });
@@ -3523,8 +3531,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.data.rescate.title': 'What could not be read at startup, exactly as it was',
   'settings.license': 'License',
   'settings.license.soon': 'soon',
-  'settings.foot': 'Everything lives in your browser.',
-  'settings.foot.app': 'Everything lives on your phone.',
+  'settings.foot': "Everything lives in this browser and doesn't sync with others.",
+  'settings.foot.app': "Everything lives on this phone and doesn't sync with others.",
   'settings.legal.safety': 'Safety',
   'settings.legal.privacy': 'Privacy',
   'settings.msg.exported': 'Copy downloaded.',
@@ -3543,7 +3551,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.reset.cuerpo.app': 'Everything PACE keeps on this phone is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
   'settings.reset.si': 'Delete everything',
   'settings.import.titulo': 'Replace your data with the copy?',
-  'settings.import.cuerpo': 'The copy has {logros} achievements and {foco} min of focus. What PACE has now is replaced, and it cannot be undone.',
+  'settings.import.cuerpo': 'The copy has {logros} achievements and {foco} min of focus. What PACE has now is replaced by the copy, not merged, and it cannot be undone.',
   'settings.import.si': 'Import',
   'settings.import.parcial.titulo': 'Your session log is missing'
 });
@@ -3860,7 +3868,7 @@ Object.assign(window.PACE_STRINGS.en, {
 Object.assign(window.PACE_STRINGS.es, {
   'ritmo.nombre': 'A tu ritmo',
   'ritmo.pregunta': '¿Cuánto trabajas hoy?',
-  'ritmo.sub': 'Te preparo la jornada: cuándo parar, qué hacer y cuánto dura.',
+  'ritmo.sub': 'El tiempo incluye las pausas. Te digo cuándo parar y qué hacer.',
   'ritmo.frase': 'Empiezas a las {inicio}, {comes} a las {comida} durante {dur} y terminas a las {salida}.',
   'ritmo.frase.sin': 'Empiezas a las {inicio}, {comes} y terminas a las {salida}.',
   'ritmo.comes': 'comes',
@@ -3875,6 +3883,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.frase.menu.sin': 'de {inicio} a {salida}',
   'ritmo.frase.movil': 'De {inicio} a {salida} · comida {comida} · {dur}',
   'ritmo.frase.movil.sin': 'De {inicio} a {salida}',
+  'ritmo.frase.movil.empieza': 'empieza en el aro, arriba',
   'ritmo.hecha': 'hecha',
   'ritmo.saltada': 'saltada',
   'ritmo.hoy': 'hoy de {desde} a {hasta}',
@@ -3896,7 +3905,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.ver': 'Ver todo',
   'ritmo.listo': 'Listo',
   'ritmo.ctx.mesa': 'Junto a la mesa',
-  'ritmo.ctx.material': 'Sin material',
+  'ritmo.ctx.material': 'Sin material, a veces pared o mesa',
   'ritmo.resumen': '{f} de foco · {p} pausas · {v}',
   'ritmo.resumen.una': '{f} de foco · 1 pausa · {v}',
   'ritmo.vasos': '{v} de {m} vasos',
@@ -4004,6 +4013,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.st.media': '{nombre} de {mediaInicio} a {mediaSalida}',
   'ritmo.st.libre': '{nombre}, sin plan: PACE te deja en paz',
   'ritmo.st.saltar': 'Cada semana es distinta',
+
+
+  'ritmo.st.ahoraNo': 'Ahora no, quiero probar primero',
+  'ritmo.st.ahoraNo.nota': 'Puedes prepararla después en Ajustes.',
   'ritmo.st.guardar': 'Guardar mi semana',
   'ritmo.st.aria': '{dia}, {tipo}',
   'ritmo.st.ajustes': 'Tu semana',
@@ -4016,7 +4029,7 @@ Object.assign(window.PACE_STRINGS.es, {
 Object.assign(window.PACE_STRINGS.en, {
   'ritmo.nombre': 'At your pace',
   'ritmo.pregunta': 'How many hours today?',
-  'ritmo.sub': "I'll plan your day: when to pause, what to do and for how long.",
+  'ritmo.sub': "Breaks are part of the time. I'll tell you when to pause and what to do.",
   'ritmo.frase': 'You start at {inicio}, {comes} at {comida} for {dur} and finish at {salida}.',
   'ritmo.frase.sin': 'You start at {inicio}, {comes} and finish at {salida}.',
   'ritmo.comes': 'have lunch',
@@ -4031,6 +4044,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.frase.menu.sin': 'from {inicio} to {salida}',
   'ritmo.frase.movil': 'From {inicio} to {salida} · lunch {comida} · {dur}',
   'ritmo.frase.movil.sin': 'From {inicio} to {salida}',
+  'ritmo.frase.movil.empieza': 'start it on the ring above',
   'ritmo.hecha': 'done',
   'ritmo.saltada': 'skipped',
 
@@ -4054,7 +4068,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.ver': 'See all',
   'ritmo.listo': 'Done',
   'ritmo.ctx.mesa': 'At your desk',
-  'ritmo.ctx.material': 'No equipment',
+  'ritmo.ctx.material': 'No equipment, sometimes a wall or desk',
   'ritmo.resumen': '{f} of focus · {p} breaks · {v}',
   'ritmo.resumen.una': '{f} of focus · 1 break · {v}',
   'ritmo.vasos': '{v} of {m} glasses',
@@ -4156,6 +4170,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.st.media': '{nombre} from {mediaInicio} to {mediaSalida}',
   'ritmo.st.libre': '{nombre}, no plan: PACE leaves you be',
   'ritmo.st.saltar': 'Every week is different',
+  'ritmo.st.ahoraNo': 'Not now, I want to try it first',
+  'ritmo.st.ahoraNo.nota': 'You can set it up later in Settings.',
   'ritmo.st.guardar': 'Save my week',
   'ritmo.st.aria': '{dia}, {tipo}',
   'ritmo.st.ajustes': 'Your week',
@@ -4197,6 +4213,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.carta.dejar': 'Dejarla como estaba',
   'ritmo.carta.si': 'Sí, cámbiala',
   'ritmo.carta.no': 'No, déjala',
+  'ritmo.carta.leida.dejar': 'La dejaste como estaba.',
+  'ritmo.carta.leida.cambiada': 'La cambiaste.',
+  'ritmo.carta.sobre': 'La carta de tu semana',
+  'ritmo.carta.sobre.nueva': 'La carta de tu semana, sin leer',
   'ritmo.carta.numeros': 'cero,una,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez',
   'ritmo.carta.diasPlural': 'lunes,martes,miércoles,jueves,viernes,sábados,domingos',
   'ritmo.carta.letras': 'L,M,X,J,V,S,D',
@@ -4235,6 +4255,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.carta.dejar': 'Keep it as it was',
   'ritmo.carta.si': 'Yes, change it',
   'ritmo.carta.no': 'No, leave it',
+  'ritmo.carta.leida.dejar': 'You kept it as it was.',
+  'ritmo.carta.leida.cambiada': 'You changed it.',
+  'ritmo.carta.sobre': 'Your week’s letter',
+  'ritmo.carta.sobre.nueva': 'Your week’s letter, unread',
   'ritmo.carta.numeros': 'zero,one,two,three,four,five,six,seven,eight,nine,ten',
   'ritmo.carta.diasPlural': 'Mondays,Tuesdays,Wednesdays,Thursdays,Fridays,Saturdays,Sundays',
   'ritmo.carta.letras': 'M,T,W,T,F,S,S',
@@ -4294,6 +4318,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.btn.compartir': 'Compartir',
   'cal.reuniones': 'Tener en cuenta mis reuniones de hoy',
   'cal.reuniones.sub': 'PACE solo guarda a qué horas estás ocupado.',
+
+  'cal.reuniones.leidas': 'Comprobadas a las {h}. PACE solo guarda a qué horas estás ocupado.',
+  'cal.reuniones.fallo': 'No se pudieron leer a las {h}. PACE sigue con las de las {antes}.',
+  'cal.reuniones.fallo.nunca': 'No se pudieron leer. El día de hoy no las tiene en cuenta.',
   'cal.trabajando': 'Un momento…',
   'cal.hecho': 'Hecho: {n} bloques en tu calendario.',
   'cal.hecho.uno': 'Hecho: 1 bloque en tu calendario.',
@@ -4317,22 +4345,25 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.p.pausa': 'Pausa',
   'cal.p.texto.plato': '{modulo} · {nombre} ({min} min).',
   'cal.p.texto.foco': 'Después, {min} min de foco.',
+
+  'cal.p.texto.cambiar': 'Cambia esta pausa desde PACE.',
   'cal.mantener': 'Mantenerlo al día solo',
-  'cal.mantener.sub': 'Si el día cambia en PACE, cambia también allí, y cada pausa te avisa.',
+  'cal.mantener.sub': 'Mientras PACE está abierto, si el día cambia, cambia también allí. Cada pausa te avisa.',
   'cal.mantener.cerrado': 'Con PACE completo. Llevar el día y esquivar reuniones siguen gratis.',
-  'cal.solo.resumen': 'Tu calendario se mantiene solo: lo que queda de hoy, de {a} a {b}, con aviso en cada pausa.',
-  'cal.solo.resumen.nada': 'Tu calendario se mantiene solo. De hoy ya no queda nada.',
+  'cal.solo.resumen': 'Lo que queda de hoy, de {a} a {b}, con aviso en cada pausa. Se pone al día mientras PACE está abierto.',
+  'cal.solo.resumen.nada': 'De hoy ya no queda nada. Tu calendario se pone al día mientras PACE está abierto.',
   'cal.solo.resumen.pendiente': 'El día ha cambiado desde las {h} y tu calendario aún no lo sabe.',
   'cal.solo.resumen.pendiente.sin': 'El día ha cambiado y tu calendario aún no lo sabe.',
-  'cal.solo.ultimo': 'Al día · lo último, a las {h}',
-  'cal.solo.hasta': 'Al día · conectado hasta las {h}',
-  'cal.solo.hasta.manana': 'Al día · conectado hasta mañana a las {h}',
+  'cal.solo.ultimo': 'Plan enviado a las {h}',
+  'cal.solo.hasta': 'Plan enviado · conectado hasta las {h}',
+  'cal.solo.hasta.manana': 'Plan enviado · conectado hasta mañana a las {h}',
   'cal.solo.atrasado': 'Al día hasta las {h}',
   'cal.solo.atrasado.sin': 'Pendiente de poner al día',
   'cal.solo.trabajando': 'Poniéndolo al día…',
   'cal.solo.nota.google': 'Google deja escribir a PACE una hora cada vez. «Poner al día» abre su ventana, que se cierra sola si sigues dentro de tu cuenta.',
   'cal.solo.nota.microsoft': 'Microsoft deja escribir a PACE un día cada vez. «Poner al día» abre su ventana, que se cierra sola si sigues dentro de tu cuenta.',
   'cal.solo.nota.android': 'PACE ya no tiene permiso para el calendario del móvil. «Poner al día» lo vuelve a pedir.',
+  'cal.solo.cambiar': 'Cambia tus pausas desde PACE: si mueves una en el calendario, PACE la devuelve a su sitio.',
   'cal.btn.poner': 'Poner al día',
   'cal.btn.desconectar': 'Desconectar',
   'cal.desc.pregunta': 'PACE deja de tocar tu calendario. ¿Y lo que queda de hoy?',
@@ -4340,7 +4371,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.desc.dejar': 'Dejarlo',
   'cal.desc.quitado': 'Desconectado. Lo que quedaba de hoy ya no está en tu calendario.',
   'cal.desc.dejado': 'Desconectado. Lo de hoy se queda como está.',
-  'cal.hecho.solo': 'Hecho: desde ahora tu calendario se mantiene solo.',
+  'cal.hecho.solo': 'Hecho: mientras PACE esté abierto, tu calendario se pone al día solo.',
   'cal.puesto': 'Tu calendario ya está al día.',
   'cal.enlace.aldia': 'Calendario al día',
   'cal.enlace.poner': 'Poner al día',
@@ -4386,6 +4417,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.btn.compartir': 'Share',
   'cal.reuniones': 'Work around my meetings today',
   'cal.reuniones.sub': 'PACE only keeps the times you are busy.',
+  'cal.reuniones.leidas': 'Checked at {h}. PACE only keeps the times you are busy.',
+  'cal.reuniones.fallo': 'Could not read them at {h}. PACE is using the ones from {antes}.',
+  'cal.reuniones.fallo.nunca': "Could not read them. Today's plan doesn't include them.",
   'cal.trabajando': 'One moment…',
   'cal.hecho': 'Done: {n} blocks in your calendar.',
   'cal.hecho.uno': 'Done: 1 block in your calendar.',
@@ -4407,22 +4441,24 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.p.pausa': 'Break',
   'cal.p.texto.plato': '{modulo} · {nombre} ({min} min).',
   'cal.p.texto.foco': 'Then {min} min of focus.',
+  'cal.p.texto.cambiar': 'Change this break in PACE.',
   'cal.mantener': 'Keep it up to date',
-  'cal.mantener.sub': 'If your day changes in PACE, it changes there too, and each break reminds you.',
+  'cal.mantener.sub': 'While PACE is open, if your day changes, it changes there too. Each break reminds you.',
   'cal.mantener.cerrado': 'With PACE complete. Adding your day and working around meetings stay free.',
-  'cal.solo.resumen': 'Your calendar keeps itself up to date: the rest of today, from {a} to {b}, with a reminder at each break.',
-  'cal.solo.resumen.nada': 'Your calendar keeps itself up to date. There is nothing left of today.',
+  'cal.solo.resumen': 'The rest of today, from {a} to {b}, with a reminder at each break. It updates while PACE is open.',
+  'cal.solo.resumen.nada': 'There is nothing left of today. Your calendar updates while PACE is open.',
   'cal.solo.resumen.pendiente': 'Your day has changed since {h} and your calendar does not know yet.',
   'cal.solo.resumen.pendiente.sin': 'Your day has changed and your calendar does not know yet.',
-  'cal.solo.ultimo': 'Up to date · last change at {h}',
-  'cal.solo.hasta': 'Up to date · connected until {h}',
-  'cal.solo.hasta.manana': 'Up to date · connected until tomorrow at {h}',
+  'cal.solo.ultimo': 'Plan sent at {h}',
+  'cal.solo.hasta': 'Plan sent · connected until {h}',
+  'cal.solo.hasta.manana': 'Plan sent · connected until tomorrow at {h}',
   'cal.solo.atrasado': 'Up to date until {h}',
   'cal.solo.atrasado.sin': 'Waiting to be brought up to date',
   'cal.solo.trabajando': 'Bringing it up to date…',
   'cal.solo.nota.google': 'Google lets PACE write for an hour at a time. «Bring up to date» opens its window, which closes by itself if you are still signed in.',
   'cal.solo.nota.microsoft': 'Microsoft lets PACE write for a day at a time. «Bring up to date» opens its window, which closes by itself if you are still signed in.',
   'cal.solo.nota.android': 'PACE no longer has permission for the phone calendar. «Bring up to date» asks again.',
+  'cal.solo.cambiar': 'Change your breaks in PACE: if you move one in your calendar, PACE puts it back.',
   'cal.btn.poner': 'Bring up to date',
   'cal.btn.desconectar': 'Disconnect',
   'cal.desc.pregunta': 'PACE will stop touching your calendar. What about the rest of today?',
@@ -4430,7 +4466,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.desc.dejar': 'Leave it',
   'cal.desc.quitado': 'Disconnected. The rest of today is no longer in your calendar.',
   'cal.desc.dejado': 'Disconnected. Today stays as it is.',
-  'cal.hecho.solo': 'Done: from now on your calendar keeps itself up to date.',
+  'cal.hecho.solo': 'Done: while PACE is open, your calendar keeps itself up to date.',
   'cal.puesto': 'Your calendar is up to date.',
   'cal.enlace.aldia': 'Calendar up to date',
   'cal.enlace.poner': 'Bring up to date',
@@ -6791,7 +6827,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.187.0';
+const PACE_VERSION = 'v0.188.0';
 
 
 
@@ -11945,6 +11981,22 @@ var _calendarioRefresco = { ultimo: 0, enCurso: false, gen: 0 };
 
 
 
+var _calendarioLectura = { fecha: null, leidas: 0, fallo: 0 };
+function calendarioLecturaApuntar(iso, bien) {
+  if (_calendarioLectura.fecha !== iso) _calendarioLectura = { fecha: iso, leidas: 0, fallo: 0 };
+  _calendarioLectura[bien ? 'leidas' : 'fallo'] = Date.now();
+  try {window.dispatchEvent(new CustomEvent('pace:calendario-solo'));} catch (e) {}
+}
+
+function calendarioReunionesEstado() {
+  if (_calendarioLectura.fecha !== ritmoHoy()) return { leidas: 0, fallo: 0 };
+  return { leidas: _calendarioLectura.leidas, fallo: _calendarioLectura.fallo };
+}
+
+
+
+
+
 
 
 
@@ -12135,7 +12187,8 @@ function calendarioLlevar(destino, opciones) {
     calendarioLeer(destino, pase, iso).then(function (lista) {
       leidas = lista.length;
       calendarioGuardarOcupado(calendarioTramos(lista, iso), destino, iso);
-    }) :
+      calendarioLecturaApuntar(iso, true);
+    }, function (e) {calendarioLecturaApuntar(iso, false);throw e;}) :
     Promise.resolve();
     return lectura.then(function () {
       var ajustes = { destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso, mantener: solo };
@@ -12205,8 +12258,12 @@ function calendarioRefrescarReuniones(forzar) {
     _calendarioRefresco.enCurso = true;
     _calendarioRefresco.ultimo = Date.now();
     return acceso.then(function (pase) {return calendarioLeer(c.destino, pase, iso);}).
-    then(function (lista) {return gen === _calendarioRefresco.gen && calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso);}).
-    catch(function () {return false;}).
+    then(function (lista) {
+      if (gen !== _calendarioRefresco.gen) return false;
+      calendarioLecturaApuntar(iso, true);
+      return calendarioGuardarOcupado(calendarioTramos(lista, iso), c.destino, iso);
+    }).
+    catch(function () {if (gen === _calendarioRefresco.gen) calendarioLecturaApuntar(iso, false);return false;}).
     then(function (r) {_calendarioRefresco.enCurso = false;return r;});
   } catch (e) {_calendarioRefresco.enCurso = false;return Promise.resolve(false);}
 }
@@ -12229,11 +12286,11 @@ function calendarioArrancar() {
 try {calendarioArrancar();} catch (e) {}
 
 Object.assign(window, {
-  CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones,
+  CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones, calendarioReunionesEstado,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
   calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar
 });
-;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
+;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, _calendarioLectura, calendarioLecturaApuntar, calendarioReunionesEstado, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
 })();
 </script>
   <!-- El calendario que se mantiene solo (14 oct. 2026): lo puro (qué tiene que haber y qué
@@ -12306,6 +12363,9 @@ function calendarioEventosConAviso(m, t, tn, lang, callar) {
       });
       if (it.agua) lineas.push(t('cal.texto.agua'));
       if (foco) {dentro[n] = true;lineas.push(tn('cal.p.texto.foco', { min: foco.dur }));}
+
+
+      lineas.push(t('cal.p.texto.cambiar'));
       lineas.push('', CALENDARIO_PIE);
       var antes = focos.filter(function (f) {return f.desde < it.desde;}).length;
       fuera.push({
@@ -16644,6 +16704,7 @@ Object.assign(window, {
 
 
 
+
 var RITMO_MOTOR_ESPERA = [2500, 6000, 16000];
 
 function ritmoPuedeAprender() {
@@ -16719,12 +16780,29 @@ function ritmoMotorRevisar() {
 }
 
 
-function ritmoCartaPendiente(s) {
+
+function ritmoCartaDeLaSemana(s) {
   if (!ritmoPuedeAprender()) return null;
   var c = s && s.ritmo && s.ritmo.carta;
   var hoy = ritmoHoy();
-  if (!c || !c.res || c.vista || !hoy || c.lunes !== motorLunes(hoy)) return null;
+  if (!c || !c.res || !hoy || c.lunes !== motorLunes(hoy)) return null;
   return c;
+}
+
+
+function ritmoCartaPendiente(s) {
+  var c = ritmoCartaDeLaSemana(s);
+  return c && !c.vista ? c : null;
+}
+
+
+
+function ritmoCartaLuego() {
+  ritmoGuardar(function (r) {
+    var c = r.carta;
+    if (!c || !c.res || c.vista || c.luego) return {};
+    return { carta: Object.assign({}, c, { luego: ritmoHoy() }) };
+  });
 }
 
 
@@ -16837,11 +16915,11 @@ document.addEventListener('visibilitychange', ritmoMotorRevisar);
 setInterval(ritmoMotorRevisar, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
 
 Object.assign(window, {
-  ritmoPuedeAprender, ritmoHorarioDelDia, ritmoMotorEntrada, ritmoMotorRevisar, ritmoCartaPendiente,
-  ritmoCartaCambios, ritmoCartaPregunta, ritmoCartaLleva, ritmoCartaVale, ritmoCartaDejar, ritmoCartaHora,
+  ritmoPuedeAprender, ritmoHorarioDelDia, ritmoMotorEntrada, ritmoMotorRevisar, ritmoCartaDeLaSemana, ritmoCartaPendiente,
+  ritmoCartaLuego, ritmoCartaCambios, ritmoCartaPregunta, ritmoCartaLleva, ritmoCartaVale, ritmoCartaDejar, ritmoCartaHora,
   ritmoAprendidoLista, ritmoAprendidoOlvidar
 });
-;Object.assign(window, { RITMO_MOTOR_ESPERA, ritmoPuedeAprender, ritmoHorarioDelDia, ritmoMotorMinuto, ritmoMotorEntrada, ritmoMotorRevisar, ritmoCartaPendiente, ritmoCartaCambios, ritmoCartaPregunta, ritmoCartaLleva, ritmoCartaVistaSi, ritmoCartaResponder, ritmoCartaVale, ritmoCartaDejar, ritmoCartaHora, ritmoAprendidoLista, ritmoAprendidoOlvidar });
+;Object.assign(window, { RITMO_MOTOR_ESPERA, ritmoPuedeAprender, ritmoHorarioDelDia, ritmoMotorMinuto, ritmoMotorEntrada, ritmoMotorRevisar, ritmoCartaDeLaSemana, ritmoCartaPendiente, ritmoCartaLuego, ritmoCartaCambios, ritmoCartaPregunta, ritmoCartaLleva, ritmoCartaVistaSi, ritmoCartaResponder, ritmoCartaVale, ritmoCartaDejar, ritmoCartaHora, ritmoAprendidoLista, ritmoAprendidoOlvidar });
 })();
 </script>
   <script>
@@ -23629,20 +23707,37 @@ function focoElapsedSec(inicioMs, durationSec) {
 
 
 
+
+
+const { useEffect: useEffectFTS, useState: useStateFTS } = React;
 var _paceFocoEmpezado = false;
-function paceFocoEmpezadoPon(v) {_paceFocoEmpezado = !!v;}
+function paceFocoEmpezadoPon(v) {
+  if (_paceFocoEmpezado === !!v) return;
+  _paceFocoEmpezado = !!v;
+  try {window.dispatchEvent(new CustomEvent('pace:foco-empezado'));} catch (e) {}
+}
 function paceFocoEmpezado() {return _paceFocoEmpezado;}
+function usePaceFocoEmpezado() {
+  const [v, setV] = useStateFTS(_paceFocoEmpezado);
+  useEffectFTS(() => {
+    const mirar = () => setV(_paceFocoEmpezado);
+    mirar();
+    window.addEventListener('pace:foco-empezado', mirar);
+    return () => window.removeEventListener('pace:foco-empezado', mirar);
+  }, []);
+  return v;
+}
 
 Object.assign(window, {
   focoElapsedSec,
-  paceFocoEmpezadoPon, paceFocoEmpezado,
+  paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado,
 
   curvaSuave, curvaCaida, focusStyles,
 
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
   loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado
 });
-;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado });
+;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado });
 })();
 </script>
   <!-- Piezas de UI del Pomodoro (s124): MinutesPicker extraído. Declara sus
@@ -26501,6 +26596,82 @@ Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
 ;Object.assign(window, { Sidebar, esCajon, fechaCortaSidebar });
 })();
 </script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   EL SOBRE de la barra de arriba (Ez, 30 oct. 2026: 1A)
+   =====================================================
+   Un icono junto a Estadísticas para lo que PACE te deja escrito: CERRADO, con su lacre, mientras
+   hay algo sin leer, y ABIERTO cuando ya lo leíste. Sin nada, no se pinta. Tocarlo lo abre.
+
+   Hoy solo lleva la carta del lunes (ritmo/RitmoCarta.jsx). Ez quiere que más adelante pueda llevar
+   las novedades de una versión o un aviso puntual, así que el sobre no sabe de cartas: cada cosa se
+   apunta como una FUENTE, con su clave y una función que dice si hay algo que enseñar:
+
+     paceSobreApuntar({ clave, de: (state, t) => null | { sinLeer, titulo, abrir } })
+
+   Con varias, manda la primera sin leer y, sin ninguna sin leer, la primera que haya. Este archivo
+   carga antes que los módulos, que se apuntan al evaluarse. */
+
+const paceSobreFuentes = [];
+
+function paceSobreApuntar(fuente) {
+  if (!fuente || !fuente.clave || typeof fuente.de !== 'function') return;
+  const i = paceSobreFuentes.findIndex((f) => f.clave === fuente.clave);
+  if (i >= 0) paceSobreFuentes[i] = fuente;else paceSobreFuentes.push(fuente);
+}
+
+
+function paceSobreHoy(state, t) {
+  const hay = [];
+  paceSobreFuentes.forEach((f) => {
+    let x = null;
+    try {x = f.de(state, t);} catch (e) {x = null;}
+    if (x) hay.push(Object.assign({ clave: f.clave }, x));
+  });
+  return hay.find((x) => x.sinLeer) || hay[0] || null;
+}
+
+
+function PaceSobreIcono(_ref) {let { abierto } = _ref;
+  return (
+    React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
+    abierto ?
+    React.createElement(React.Fragment, null,
+    React.createElement("path", { d: "M3.5 10.5v8A1.5 1.5 0 0 0 5 20h14a1.5 1.5 0 0 0 1.5-1.5v-8" }),
+    React.createElement("path", { d: "M3.5 10.5L12 4l8.5 6.5" }), React.createElement("path", { d: "M3.5 10.5L12 16l8.5-5.5" })
+    ) :
+
+    React.createElement(React.Fragment, null,
+    React.createElement("rect", { x: "3", y: "5.5", width: "18", height: "13", rx: "1.5" }), React.createElement("path", { d: "M3.5 6.5L12 13l8.5-6.5" }),
+    React.createElement("circle", { cx: "12", cy: "13", r: "2.4", fill: "var(--breathe)", stroke: "none" })
+    )
+
+    ));
+
+}
+
+
+function PaceSobre(_ref2) {let { estilo } = _ref2;
+  const [state] = usePace();
+  const { t } = useT();
+  const hoy = paceSobreHoy(state, t);
+  if (!hoy) return null;
+  return (
+    React.createElement("button", { type: "button", "data-pace-topbar-icon": true, "data-pace-sobre": hoy.sinLeer ? 'cerrado' : 'abierto', "data-pace-sobre-de": hoy.clave,
+      onClick: hoy.abrir, style: estilo, title: hoy.titulo, "aria-label": hoy.titulo },
+    React.createElement(PaceSobreIcono, { abierto: !hoy.sinLeer })
+    ));
+
+}
+
+Object.assign(window, { paceSobreApuntar, paceSobreHoy, PaceSobreIcono, PaceSobre });
+;Object.assign(window, { paceSobreApuntar, paceSobreHoy, PaceSobreIcono, PaceSobre });
+})();
+</script>
 
   <!-- visualId + alias (B2.2 · s110): resolveVisualId enruta los duplicados
        de nombre al glifo canónico. ANTES de exercise-glyphs (su consumidor). -->
@@ -27564,11 +27735,36 @@ Object.assign(window.EXERCISE_GLYPHS, {
 
    El gate `setup:'ready'` del runner v1 NO hace este trabajo: es por PASO
    («colócate para este ejercicio»), no de rutina, y llega cuando ya entraste.
+
+   MIRAR UN EJERCICIO ANTES DE EMPEZAR (Ez, 30 oct. 2026: 4B, P4 de las revisiones de
+   ChatGPT del 28 oct.). Cada paso de la lista es un botón con su «›»: la MISMA ventana
+   pasa a ese ejercicio, con el dibujo grande y sus textos (Colócate, Qué haces, Cuidado),
+   los que salen durante la rutina (`v1Instr`). «‹ Los pasos» vuelve y deja el foco en el
+   paso que se miró. Mirar no cuenta ni empieza nada.
    ============================================================ */
 
+const { useState: useStatePrev, useRef: useRefPrev, useEffect: useEffectPrev } = React;
+
+const flechaVolverPrev =
+React.createElement("svg", { width: "9", height: "12", viewBox: "0 0 9 12", fill: "none", stroke: "currentColor", strokeWidth: "1.4", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
+React.createElement("path", { d: "M6.5 1.5L2 6l4.5 4.5" })
+);
+
+
 function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } = _ref;
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
   const [pace] = usePace();
+
+  const [viendo, setViendo] = useStatePrev(null);
+  const volverRef = useRefPrev(null);
+  const pasoRefs = useRefPrev({});
+  const vueltaRef = useRefPrev(null);
+  useEffectPrev(() => {
+    if (viendo != null) {if (volverRef.current) volverRef.current.focus();return;}
+    const el = vueltaRef.current != null && pasoRefs.current[vueltaRef.current];
+    vueltaRef.current = null;
+    if (el) el.focus();
+  }, [viendo]);
   if (!routine) return null;
 
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
@@ -27658,6 +27854,40 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
       ));};
 
 
+
+  const rotulosPaso = { setup: t('session.place'), action: t('preview.paso.haces'), care: t('preview.paso.cuidado') };
+  const textosPaso = (idx) => ['setup', 'action', 'care'].
+  map((k) => [k, typeof v1Instr === 'function' ? v1Instr(tR, guiada, idx, k) : null]).
+  filter((_ref4) => {let [, v] = _ref4;return v;});
+  const nombrePaso = (s, idx) => tR(clavePaso(idx), s.name);
+  const mirar = (idx) => setViendo(idx);
+  const volver = () => {vueltaRef.current = viendo;setViendo(null);};
+
+  if (viendo != null && guiada.steps && guiada.steps[viendo]) {
+    const paso = guiada.steps[viendo];
+    return (
+      React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 560, title: nombrePaso(paso, viendo),
+        tagLabel:
+        React.createElement("button", { type: "button", ref: volverRef, "data-pace-preview-volver": true, onClick: volver, className: "pace-meta",
+          style: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '2px 0', color: 'var(--ink-2)', cursor: 'pointer' } },
+        flechaVolverPrev, t('preview.paso.volver')
+        ) },
+      React.createElement("div", { "data-pace-preview-ejercicio": true, style: { display: 'flex', flexDirection: 'column', gap: 14, marginTop: 4 } },
+      React.createElement("div", { "aria-hidden": "true", style: { color: accent, display: 'grid', placeItems: 'center', height: 180,
+          background: 'var(--paper-2)', borderRadius: 'var(--r-md)' } },
+      typeof ExerciseGlyph === 'function' ? React.createElement(ExerciseGlyph, { id: paso.name, size: 160 }) : null
+      ),
+      textosPaso(viendo).map((_ref5) => {let [k, v] = _ref5;return (
+          React.createElement("div", { key: k },
+          React.createElement("div", { className: "pace-meta", style: { marginBottom: 4 } }, rotulosPaso[k]),
+          React.createElement("div", { "data-pace-preview-texto": k, style: { fontSize: 14.5, color: 'var(--ink-2)', lineHeight: 1.5 } }, v)
+          ));}
+      )
+      )
+      ));
+
+  }
+
   return (
     React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 560,
       tagLabel: t('preview.tag'), title: propia ? routine.name : tR(`${routine.id}.name`, routine.name) },
@@ -27704,24 +27934,37 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
     pasos.length > 0 &&
     React.createElement(Seccion, { titulo: t('preview.steps') },
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 2 } },
-    pasos.map((_ref4) => {let { s, idx, veces } = _ref4;return (
-        React.createElement("div", { key: `${s.name}-${idx}`, style: { display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' } },
-        React.createElement("span", { style: { color: accent, flexShrink: 0, display: 'grid', placeItems: 'center', width: 30, height: 30 } },
-        typeof ExerciseGlyph === 'function' ?
-        React.createElement(ExerciseGlyph, { id: s.name, size: 30 }) :
-        null
-        ),
-        React.createElement("span", { style: { fontSize: 14, color: 'var(--ink)' } },
-        tR(clavePaso(idx), s.name),
-        veces > 1 &&
-        React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 12 } }, ` ×${veces}`),
+    pasos.map((_ref6) => {let { s, idx, veces } = _ref6;
+      const contenidoPaso =
+      React.createElement(React.Fragment, null,
+      React.createElement("span", { style: { color: accent, flexShrink: 0, display: 'grid', placeItems: 'center', width: 30, height: 30 } },
+      typeof ExerciseGlyph === 'function' ?
+      React.createElement(ExerciseGlyph, { id: s.name, size: 30 }) :
+      null
+      ),
+      React.createElement("span", { style: { fontSize: 14, color: 'var(--ink)' } },
+      nombrePaso(s, idx),
+      veces > 1 &&
+      React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 12 } }, ` ×${veces}`),
 
-        s.opcional &&
-        React.createElement("span", { "data-pace-preview-opcional": true, style: { color: 'var(--ink-3)', fontSize: 12 } }, ` · ${t('preview.opcional')}`)
+      s.opcional &&
+      React.createElement("span", { "data-pace-preview-opcional": true, style: { color: 'var(--ink-3)', fontSize: 12 } }, ` · ${t('preview.opcional')}`)
 
-        )
-        ));}
-    )
+      )
+      );
+
+      const filaPaso = { display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' };
+      if (!textosPaso(idx).length) return React.createElement("div", { key: `${s.name}-${idx}`, style: filaPaso }, contenidoPaso);
+      return (
+        React.createElement("button", { type: "button", key: `${s.name}-${idx}`, "data-pace-preview-paso": idx,
+          ref: (el) => {pasoRefs.current[idx] = el;}, onClick: () => mirar(idx),
+          "aria-label": tn('preview.paso.ver', { n: nombrePaso(s, idx) }),
+          style: { ...filaPaso, width: '100%', textAlign: 'left', cursor: 'pointer', borderRadius: 'var(--r-sm)' } },
+        contenidoPaso,
+        React.createElement("span", { "aria-hidden": "true", style: { marginLeft: 'auto', paddingRight: 4, color: 'var(--ink-3)', fontSize: 18, lineHeight: 1 } }, "\u203A")
+        ));
+
+    })
     )
     ),
 
@@ -43874,6 +44117,7 @@ function OnbLogo() {
 
 
 
+
 function OnbSemanaPaso(_ref4) {let { state, ultima, onSeguir, borrador, onBorrador } = _ref4;
   const { t } = useT();
   const b = useRitmoSemanaBorrador(state, borrador);
@@ -43889,7 +44133,10 @@ function OnbSemanaPaso(_ref4) {let { state, ultima, onSeguir, borrador, onBorrad
     t(ultima ? 'onboarding.welcome.cta' : 'onboarding.next')
     ),
     React.createElement("button", { "data-pace-semana-saltar": true, onClick: () => guardar(null), style: onboardingStyles.ghostBtn },
-    t('ritmo.st.saltar')
+    t('ritmo.st.ahoraNo')
+    ),
+    React.createElement("p", { "data-pace-semana-nota": true, style: { margin: '-6px 0 0', fontSize: 12, color: 'var(--ink-3)', textAlign: 'center' } },
+    t('ritmo.st.ahoraNo.nota')
     )
     ));
 
@@ -44831,6 +45078,12 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
+  /* En la fila del título, «Sin material, a veces pared o mesa» (Ez, 3B del 30 oct.) va sola y en dos
+     líneas: junto a «Junto a la mesa» y en una línea se comía 126 px y el título de la jornada se
+     partía en dos o tres líneas a 1440, 1536 y 1920, con el panel 24 px más alto (medido). Ya dice
+     «mesa»; en las dos filas de debajo de 1000 y en la hoja del móvil van las dos, en una línea. */
+  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-mesa { display: none; }
+  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-material { white-space: normal; max-width: 13em; text-align: center; line-height: 1.15; padding: 2px 9px; }
 }
 
 /* LAS OPCIONES */
@@ -45089,6 +45342,7 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
    arriba y abajo para el dedo sin moverse ni pisarse. */
 .pace-rt-mov .pace-rt-cab-der .pace-rt-enlace { padding: 4px 0; margin: -4px 0; }
 .pace-rt-cal-resumen { background: var(--paper-2); border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 4px; }
+.pace-rt-cal-cambiar { font-size: 12px; color: var(--ink-3); padding: 2px 12px 8px; }
 .pace-rt-cal-dest { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--paper-3); }
 .pace-rt-cal-n { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.2; }
 .pace-rt-cal-s { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
@@ -45610,14 +45864,15 @@ Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtique
 
 
 
+
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
 function RitmoContexto() {
   const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-ctx" },
-    React.createElement("span", null, t('ritmo.ctx.mesa')),
-    React.createElement("span", null, t('ritmo.ctx.material'))
+    React.createElement("span", { className: "pace-rt-ctx-mesa" }, t('ritmo.ctx.mesa')),
+    React.createElement("span", { className: "pace-rt-ctx-material" }, t('ritmo.ctx.material'))
     ));
 
 }
@@ -45885,7 +46140,13 @@ function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
-  const descriptor = typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
+
+
+
+
+  const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
+  const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza') :
+  typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
 
   const filaBloque = (rotulo) =>
   React.createElement(RitmoFila, { rotulo: React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(b.desde)),
@@ -46300,6 +46561,17 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   );
 
 
+
+
+
+  const lectura = reuniones && typeof calendarioReunionesEstado === 'function' ? calendarioReunionesEstado() : null;
+  const ocupadoHoy = !!(state.ritmo && state.ritmo.ocupado && state.ritmo.ocupado.fecha === ritmoHoy());
+  let subReuniones = t('cal.reuniones.sub');
+  if (lectura && lectura.fallo > lectura.leidas) {
+    if (lectura.leidas) subReuniones = tn('cal.reuniones.fallo', { h: ritmoCalendarioHoraMs(lectura.fallo), antes: ritmoCalendarioHoraMs(lectura.leidas) });else
+    if (!ocupadoHoy) subReuniones = t('cal.reuniones.fallo.nunca');
+  } else if (lectura && lectura.leidas) subReuniones = tn('cal.reuniones.leidas', { h: ritmoCalendarioHoraMs(lectura.leidas) });
+
   const conectados = destinos.filter(calendarioConectado).filter((d) => !solo || d === solo.destino);
   const casillaMantener = !conectados.length || solo ? null : puede ?
   React.createElement("label", { className: "pace-rt-cal-chk" },
@@ -46341,11 +46613,13 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
     React.createElement(Modal, { open: true, onClose: onClose, tagLabel: t('ritmo.nombre'), title: t('cal.hoja.titulo'), maxWidth: 520 },
     React.createElement("div", { "data-pace-ritmo": true, "data-pace-cal": true, style: { textAlign: 'left' } },
     React.createElement("div", { className: "pace-rt-cal-resumen", "data-pace-cal-resumen": true }, resumen),
+
+    solo ? React.createElement("div", { className: "pace-rt-cal-cambiar", "data-pace-cal-cambiar": true }, t('cal.solo.cambiar')) : null,
     conectados.map(fila),
     conectados.length ?
     React.createElement("label", { className: "pace-rt-cal-chk" },
     React.createElement("input", { type: "checkbox", id: "pace-cal-reuniones", "data-pace-cal-reuniones": true, checked: reuniones, onChange: (e) => cambiarReuniones(e.target.checked) }),
-    React.createElement("span", null, t('cal.reuniones'), React.createElement("small", null, t('cal.reuniones.sub')))
+    React.createElement("span", null, t('cal.reuniones'), React.createElement("small", null, subReuniones))
     ) :
     null,
     casillaMantener,
@@ -46667,10 +46941,18 @@ Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, useRitmoSemanaBorra
 
 
 
+
+
+
+
+
+
+
 const { useState: useStateRC, useEffect: useEffectRC } = React;
 
 const ritmoCartaStyles = {
-  cab: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 },
+
+  cab: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, paddingRight: 34 },
   meta: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' },
   fechas: { fontSize: 12, color: 'var(--ink-3)', whiteSpace: 'nowrap' },
   resumen: { display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: 12, alignItems: 'end' },
@@ -46748,14 +47030,41 @@ function RitmoCartaPie(_ref2) {let { enlace, onEnlace, pildora, onPildora, datos
 
 }
 
-function RitmoCartaVentana(_ref3) {let { carta } = _ref3;
+
+function RitmoCartaLeida(_ref3) {let { carta, cambios, pregunta } = _ref3;
+  const { t, tn } = useT();
+  const S = ritmoCartaStyles;
+  return (
+    React.createElement(React.Fragment, null,
+    cambios.length || !pregunta ?
+    React.createElement("div", { style: S.parte, "data-pace-carta-cambios": true },
+    React.createElement("div", { style: S.meta }, t('ritmo.carta.semana')),
+    carta.respuesta === 'dejar' ? React.createElement("div", { style: S.pregunta }, t('ritmo.carta.leida.dejar')) :
+    cambios.length ? cambios.map((c) => React.createElement(RitmoCartaCambio, { key: ritmoMotorClave(c), c: c })) :
+    React.createElement("div", { style: S.pregunta }, t('ritmo.carta.igual'))
+    ) :
+    null,
+    pregunta && carta.hora ?
+    React.createElement("div", { style: S.parte, "data-pace-carta-pregunta": true },
+    React.createElement("div", { style: S.meta }, t('ritmo.carta.pregunta')),
+    React.createElement("div", { style: S.pregunta },
+    ritmoCartaPreguntaTexto(pregunta, t, tn), " ", t(carta.hora === 'si' ? 'ritmo.carta.leida.cambiada' : 'ritmo.carta.leida.dejar')
+    )
+    ) :
+    null
+    ));
+
+}
+
+
+function RitmoCartaVentana(_ref4) {let { carta, onCerrar, leida } = _ref4;
   const { t, tn, lang } = useT();
   const res = carta.res;
   const cambios = ritmoCartaCambios(carta);
   const pregunta = ritmoCartaPregunta(carta);
   const lleva = ritmoCartaLleva(carta);
-  const pasoCambios = lleva.respuesta && !carta.respuesta;
-  const pasoPregunta = !!pregunta && !carta.hora && !pasoCambios;
+  const pasoCambios = !leida && lleva.respuesta && !carta.respuesta;
+  const pasoPregunta = !leida && !!pregunta && !carta.hora && !pasoCambios;
   const dia = t('ritmo.dias').split(',')[motorDiaSemana(ritmoHoy()) - 1] || '';
   const letras = t('ritmo.carta.letras').split(',');
   const barras = res.barras.filter((b, i) => i < 5 || b.total > 0);
@@ -46764,8 +47073,8 @@ function RitmoCartaVentana(_ref3) {let { carta } = _ref3;
   const hechas = tn('ritmo.carta.hechas', { h: res.hechas, t: res.total });
   const S = ritmoCartaStyles;
   return (
-    React.createElement(Modal, { open: true, maxWidth: 420, relleno: "20px 18px 14px", ariaLabel: t('ritmo.carta.aria') },
-    React.createElement("div", { "data-pace-carta": true, style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+    React.createElement(Modal, { open: true, onClose: onCerrar, maxWidth: 420, relleno: leida ? '20px 18px 20px' : '20px 18px 14px', ariaLabel: t('ritmo.carta.aria') },
+    React.createElement("div", { "data-pace-carta": leida ? 'leida' : 'pendiente', style: { display: 'flex', flexDirection: 'column', gap: 10 } },
     React.createElement("div", { style: S.cab },
     React.createElement("span", { style: S.meta }, tn('ritmo.carta.titulo', { dia: dia.charAt(0).toUpperCase() + dia.slice(1) })),
     React.createElement("span", { style: S.fechas }, ritmoCartaFechas(res, tn, lang))
@@ -46802,6 +47111,7 @@ function RitmoCartaVentana(_ref3) {let { carta } = _ref3;
     React.createElement("div", { style: S.pregunta }, ritmoCartaPreguntaTexto(pregunta, t, tn))
     ),
 
+    leida ? React.createElement(RitmoCartaLeida, { carta: carta, cambios: cambios, pregunta: pregunta }) :
     pasoCambios ?
     React.createElement(RitmoCartaPie, { datos: "cambios", enlace: cambios.length ? t('ritmo.carta.dejar') : null, onEnlace: ritmoCartaDejar,
       pildora: t('ritmo.carta.vale'), onPildora: ritmoCartaVale }) :
@@ -46813,12 +47123,26 @@ function RitmoCartaVentana(_ref3) {let { carta } = _ref3;
 }
 
 
+function ritmoCartaAbrir() {window.dispatchEvent(new CustomEvent('pace:carta-abrir'));}
+
+
 function RitmoCartaRaiz() {
   const [state] = usePace();
   const [libre, setLibre] = useStateRC(false);
-  let carta = null;
-  try {carta = ritmoCartaPendiente(state);} catch (e) {carta = null;}
-  const hay = !!carta;
+
+  const [mano, setMano] = useStateRC(null);
+  let carta = null,semana = null;
+  try {semana = ritmoCartaDeLaSemana(state);carta = ritmoCartaPendiente(state);} catch (e) {semana = null;carta = null;}
+
+  const hay = !!carta && !carta.luego;
+  const abierta = mano === 'pendiente' ? carta : mano === 'leida' && semana && semana.vista ? semana : null;
+  useEffectRC(() => {
+    const abrir = () => setMano(ritmoCartaPendiente(getState()) ? 'pendiente' : 'leida');
+    window.addEventListener('pace:carta-abrir', abrir);
+    return () => window.removeEventListener('pace:carta-abrir', abrir);
+  }, []);
+
+  useEffectRC(() => {if (mano && !abierta) setMano(null);}, [mano, !!abierta]);
   useEffectRC(() => {
     if (!hay || libre) return undefined;
     let timer = null;
@@ -46832,8 +47156,22 @@ function RitmoCartaRaiz() {
     timer = setTimeout(mirar, 400);
     return () => clearTimeout(timer);
   }, [hay, libre]);
-  if (!carta || !libre) return null;
-  return React.createElement(RitmoCartaVentana, { carta: carta });
+  if (abierta) {
+    return React.createElement(RitmoCartaVentana, { carta: abierta, leida: mano === 'leida',
+      onCerrar: () => {if (mano === 'pendiente') ritmoCartaLuego();setMano(null);} });
+  }
+  if (!hay || !libre) return null;
+  return React.createElement(RitmoCartaVentana, { carta: carta, onCerrar: ritmoCartaLuego });
+}
+
+
+
+if (typeof paceSobreApuntar === 'function') {
+  paceSobreApuntar({ clave: 'carta', de: (s, t) => {
+      const c = ritmoCartaDeLaSemana(s);
+      if (!c) return null;
+      return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir };
+    } });
 }
 
 
@@ -46850,7 +47188,7 @@ function ritmoAprendidoTexto(x, t, tn, lang) {
   return tn('ritmo.aprendido.' + x.campo, { dias: ritmoCartaDiasPlural(x.dia, t), hora: ritmoHora(x.hora) });
 }
 
-function RitmoAprendido(_ref4) {let { state } = _ref4;
+function RitmoAprendido(_ref5) {let { state } = _ref5;
   const { t, tn, lang } = useT();
   const [abierto, setAbierto] = useStateRC(false);
   if (!ritmoPuedeAprender()) return null;
@@ -46880,8 +47218,8 @@ function RitmoAprendido(_ref4) {let { state } = _ref4;
 
 }
 
-Object.assign(window, { ritmoCartaStyles, RitmoCartaVentana, RitmoCartaRaiz, RitmoAprendido });
-;Object.assign(window, { ritmoCartaNumero, ritmoCartaRutina, ritmoCartaDiasPlural, ritmoCartaFecha, ritmoCartaFechas, RitmoCartaCambio, ritmoCartaPreguntaTexto, RitmoCartaPie, RitmoCartaVentana, RitmoCartaRaiz, ritmoAprendidoTexto, RitmoAprendido });
+Object.assign(window, { ritmoCartaStyles, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, RitmoAprendido });
+;Object.assign(window, { ritmoCartaNumero, ritmoCartaRutina, ritmoCartaDiasPlural, ritmoCartaFecha, ritmoCartaFechas, RitmoCartaCambio, ritmoCartaPreguntaTexto, RitmoCartaPie, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, ritmoAprendidoTexto, RitmoAprendido });
 })();
 </script>
   <script>
@@ -48640,7 +48978,8 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
 
    TopBar (sesion 82 / v0.33.2).
    Barra superior del shell: tabs centrados Foco/Pausa/Larga + 3 iconos
-   top-right (Stats / Logros / Tweaks).
+   top-right (Stats / Logros / Tweaks), y delante el sobre cuando lleva algo
+   (shell/Sobre.jsx; Ez, 30 oct. 2026).
 
    Extraido literal de main.jsx (lineas 365-444) en split mecanico s82.
 
@@ -48716,6 +49055,7 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
     ),
 
 
+    typeof PaceSobre === 'function' && React.createElement(PaceSobre, { estilo: topBarStyles.iconBtn }),
     React.createElement("button", { "data-pace-topbar-icon": true, onClick: onOpenStats, style: topBarStyles.iconBtn, title: t('topbar.stats.title'), "aria-label": t('topbar.stats.aria') },
     React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" },
     React.createElement("path", { d: "M3 3v18h18" }), React.createElement("path", { d: "M7 14l4-4 4 4 6-6" })

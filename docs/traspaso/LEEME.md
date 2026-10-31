@@ -2,7 +2,17 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 30 de octubre de 2026, v0.187.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 30 de octubre de 2026, v0.188.0.
+
+## 30 oct.: la carta del lunes y los textos que no inventan, en `main` (v0.188.0); lo legal, esperando a Ez
+
+Tres sesiones de EcLj6…: la carta del lunes para luego con su sobre, la frase del móvil y mirar un ejercicio (Ez, 1A 2A
+3A 4B; `claude/eloquent-dhawan-80bab5`), y los textos que no inventan, el paquete T (Ez, todas A salvo 3B, el 5 con «Has
+terminado un Foco de 45 minutos» y el 6 como estaba; `claude/nifty-wozniak-888954`), juntadas con su «júntalo» y la
+versión aparte; el censo de claves suma las dos (1102). Lo legal (`claude/infallible-taussig-1af346`, sin juntar):
+con Managed Payments el vendedor es Ez; cinco decisiones y las preguntas para el gestor y el jurista en su página
+(https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2), y los borradores sin publicar. Ez permite gastar el uso hasta el
+100 % y que la coordinadora se retome sola (CronCreate) al reponerse.
 
 ## 29 oct., noche: «Tus rutinas», el runner y los dibujos, en `main` (v0.187.0) con el «júntalo» de Ez
 

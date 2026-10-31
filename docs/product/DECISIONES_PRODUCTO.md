@@ -19,6 +19,18 @@
 
 ---
 
+## Los textos que no inventan y la carta del lunes para luego (Ez, 30 oct. 2026)
+
+- **Los textos** (página `docs/proposals/textos-honestos-30oct.html`): 1A 2A 3B 4A, 5A con «Has terminado un Foco de 45
+  minutos» («mejor que acabas»), 6 como estaba, 7A 8A 9A 10A 11A 12A, 13A «por el momento» y 14A. El calendario va en
+  /premium en una pregunta, fuera de la lista de lo que se vende. El 3, en la fila del título del escritorio, va solo y
+  en dos líneas, y Ez lo juntó así.
+- **La carta del lunes y el primer día** (maqueta `docs/traspaso/archivos/grupo2-30oct/maqueta.html`): 1A, la carta se
+  deja para luego con su × y espera en un sobre junto a Estadísticas, cerrado sin leer y abierto ya leído; Ez: «se
+  puede utilizar para actualizaciones, alguna notificación puntual», así que el sobre queda listo para otras fuentes,
+  pero hasta v1 solo lleva la carta. 2A, la fila «Ahora» del móvil dice dónde se empieza el día. 3A, que la prueba de 7
+  días llegue a enseñar la carta (U4), después de v1. 4B, en «Antes de empezar» se mira cómo se hace cada ejercicio.
+
 ## El runner, «Tus rutinas» y el calendario en v1 (Ez, 29 oct. 2026)
 
 - **El runner** (maqueta `docs/proposals/runner-claro-29oct.html` en su rama): B3 A, la flecha cuenta las repeticiones con

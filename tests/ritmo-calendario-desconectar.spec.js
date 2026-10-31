@@ -80,7 +80,7 @@ async function conectado(page, context) {
   await irAlArtefacto(page);
   const h = await hoja(page);
   await h.locator('[data-pace-cal-destino="android"] button').click();
-  await expect(h.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo');
+  await expect(h.locator('[data-pace-cal-aviso="ok"]')).toContainText('se pone al día solo');
   expect(await dePace(page), 'GUARD: el día está en el calendario').toBe(10);
   await page.getByRole('button', { name: 'Listo', exact: true }).click();
 }

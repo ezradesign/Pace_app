@@ -104,7 +104,7 @@ test.describe('en el iPhone', () => {
     await irAlArtefacto(page);
     await abrirAjustes(page);
     await abrirTusDatos(page);
-    await expect(page.getByText('Todo vive en tu móvil.')).toBeVisible();
+    await expect(page.getByText('Todo vive en este móvil y no se sincroniza con otros.')).toBeVisible();
     /* La App Store pide que la política de privacidad se abra desde la app. */
     await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
     await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety');

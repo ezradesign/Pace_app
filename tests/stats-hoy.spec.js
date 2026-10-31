@@ -130,7 +130,7 @@ test('por libre: las pausas de hoy con su hora, del registro; sin ninguna, la fr
   await page.waitForFunction(() => typeof window.eventsWebAppend === 'function' && typeof window.makeEvent === 'function');
   await page.getByRole('button', { name: 'Ver estadísticas' }).click();
   await expect(page.locator('[data-pace-hoy-view="libre"]')).toBeVisible();
-  await expect(page.locator('[data-pace-hoy-vacio]')).toHaveText('Todavía no has hecho ninguna pausa hoy.');
+  await expect(page.locator('[data-pace-hoy-vacio]')).toHaveText('Hoy aún no hay pausas en PACE.');
   await page.keyboard.press('Escape');
 
   /* Dos de hoy y una de ayer, por el contrato del registro. La de ayer no puede salir. */

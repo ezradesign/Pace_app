@@ -1,0 +1,182 @@
+<title>Grupo 2, ya montado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Las fotos de lo montado en la rama: la paleta y la letra de PACE, una columna, cada letra
+   elegida con su recorrido de fotos y lo medido al final. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #77705F;
+  --line: #C9C0A8;
+  --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --breathe: #B4664A;
+  --display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995; --line: #4d4536;
+    --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16); --breathe: #D99477; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995; --line: #4d4536;
+  --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16); --breathe: #D99477; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.hoja { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+h1, h2 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(32px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(25px, 3.4vw, 32px); line-height: 1.12; }
+p { margin: 0; max-width: 68ch; color: var(--ink-2); }
+.meta { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.cab, .bloque { display: flex; flex-direction: column; gap: 14px; }
+.bloque { border-top: 1px solid var(--line); padding-top: 26px; }
+.letra { font-family: var(--display); font-style: italic; color: var(--focus); font-size: 30px; line-height: 1; }
+.titulo { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.estado { border: 1px solid var(--focus); background: var(--focus-soft); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.estado b { color: var(--ink); font-weight: 600; }
+.paso { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure button { padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2); cursor: zoom-in; display: block; }
+figure button:focus-visible, .tema button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 12.5px; color: var(--ink-3); max-width: 230px; }
+.movil { width: min(100%, 220px); }
+.ancha { width: min(100%, 640px); }
+.ancha figcaption { max-width: none; }
+.detalle { width: min(100%, 300px); }
+.tema { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; background: var(--paper-2); align-self: flex-start; }
+.tema button { font: 500 11px/1 var(--ui); letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.tema button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+ul { margin: 0; padding-left: 20px; color: var(--ink-2); max-width: 72ch; }
+li + li { margin-top: 6px; }
+code { font-size: 13px; background: var(--paper-2); padding: 1px 5px; border-radius: 5px; }
+.nota { font-size: 13px; color: var(--ink-3); }
+.lupa { position: fixed; inset: 0; z-index: 50; background: rgba(20, 18, 14, 0.82); overflow: auto; display: grid; place-items: start center; cursor: zoom-out;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lupa[hidden] { display: none; }
+.lupa img { max-width: 100%; height: auto; border-radius: 10px; }
+</style>
+
+<div class="hoja">
+  <header class="cab">
+    <span class="meta">PACE · rama claude/eloquent-dhawan-80bab5 · 30 oct. 2026</span>
+    <h1>Grupo 2, ya montado</h1>
+    <p>Lo que elegiste en la maqueta (1A, 2A, 3A y 4B) ya funciona en la rama. Las fotos son de la app compilada tal cual,
+      sin nada metido a mano. Si te parece bien, dile «júntalo» a la coordinadora y llega como actualización durante los 14 días de los testers.</p>
+    <div class="estado">
+      <span><b>Comprobado:</b> las pruebas nuevas fallaban antes del cambio y ahora pasan; <code>verify</code> pasa y la suite entera pasa
+        (1145 pruebas, ninguna cae). Nada pide scroll: ni la home ni las ventanas, a 360×640 en castellano y en inglés, ni a 360×730 y 1280×879.</span>
+    </div>
+    <div class="tema" role="group" aria-label="Fotos en claro u oscuro">
+      <button type="button" data-tema="claro" aria-pressed="true">Claro</button>
+      <button type="button" data-tema="oscuro" aria-pressed="false">Oscuro</button>
+    </div>
+  </header>
+
+  <section class="bloque">
+    <div class="titulo"><span class="letra">1A</span><h2>La carta del lunes, para luego, con el sobre</h2></div>
+    <p>El lunes la carta sale sola como siempre, ahora con su ×. Cerrarla (con la ×, Escape o tocando fuera) no dice ni sí ni no:
+      queda en el sobre, arriba, <b>cerrado y con su lacre</b> mientras está sin contestar. Al tocarlo se abre la misma carta. Cuando la
+      contestas, el sobre se queda <b>abierto</b> hasta que acaba la semana, y desde él la vuelves a leer, ya sin botones.</p>
+    <div class="paso">
+      <figure class="movil"><button type="button"><img data-f="1-carta-m" alt="La carta del lunes con la × arriba a la derecha"></button><figcaption>1 · El lunes sale sola, con la ×</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="1-cerrado-m" alt="La home con el sobre cerrado arriba"></button><figcaption>2 · Cerrada sin contestar: el sobre, cerrado</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="1-abierto-m" alt="La home con el sobre abierto arriba"></button><figcaption>3 · Contestada: el sobre, abierto</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="1-leida-m" alt="La carta ya contestada, sin botones"></button><figcaption>4 · Desde el sobre abierto se relee, sin botones</figcaption></figure>
+    </div>
+    <div class="paso">
+      <figure class="detalle"><button type="button"><img data-f="1-cerrado-zoom" alt="Detalle del sobre cerrado en el escritorio"></button><figcaption>Escritorio · cerrado, sin leer</figcaption></figure>
+      <figure class="detalle"><button type="button"><img data-f="1-abierto-zoom" alt="Detalle del sobre abierto en el escritorio"></button><figcaption>Escritorio · abierto, leído</figcaption></figure>
+    </div>
+    <div class="paso">
+      <figure class="ancha"><button type="button"><img data-f="1-carta-e" alt="La carta con la × en el escritorio"></button><figcaption>Escritorio · la carta con la ×</figcaption></figure>
+      <figure class="ancha"><button type="button"><img data-f="1-leida-e" alt="La carta leída en el escritorio"></button><figcaption>Escritorio · la carta ya contestada</figcaption></figure>
+    </div>
+    <div class="paso">
+      <figure class="movil"><button type="button"><img data-f="1-carta-640-es" data-fijo alt="La carta a 360 por 640 en castellano"></button><figcaption>360×640 · cabe sin scroll</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="1-carta-640-en" data-fijo alt="La carta a 360 por 640 en inglés"></button><figcaption>360×640 en inglés · cabe sin scroll</figcaption></figure>
+    </div>
+    <p class="nota">Si la semana acaba sin contestarla, no cambia nada ni cuenta como un «no», y el sobre se va. El sobre está hecho para
+      que más adelante lleve otras cosas (las novedades de una versión, un aviso puntual), pero hoy solo lleva la carta.</p>
+  </section>
+
+  <section class="bloque">
+    <div class="titulo"><span class="letra">2A</span><h2>En el móvil, cómo se empieza el día</h2></div>
+    <p>Hasta que empiezas el primer bloque, la fila «Ahora» dice «45 min · empieza en el aro, arriba». Al darle a «Empezar jornada»
+      vuelve a lo de siempre. No ocupa más sitio que antes.</p>
+    <div class="paso">
+      <figure class="movil"><button type="button"><img data-f="2-antes-m" alt="La fila Ahora antes de empezar"></button><figcaption>Antes de empezar</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="2-empezado-m" data-fijo alt="La fila Ahora con el bloque en marcha"></button><figcaption>Con el bloque en marcha</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="2-antes-640-en" data-fijo alt="La home en inglés a 360 por 640"></button><figcaption>360×640 en inglés · sin scroll</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <div class="titulo"><span class="letra">3A</span><h2>La primera carta en la prueba de 7 días</h2></div>
+    <p>Queda para después de v1, como elegiste. No se ha tocado nada.</p>
+  </section>
+
+  <section class="bloque">
+    <div class="titulo"><span class="letra">4B</span><h2>Mirar un ejercicio antes de darle a Empezar</h2></div>
+    <p>En «Antes de empezar» cada paso lleva «›». Al tocarlo, la misma ventana enseña ese ejercicio con el dibujo grande y sus
+      tres textos, los mismos que salen durante la rutina. «‹ Los pasos» vuelve. Mirar no empieza nada. Con el teclado también se puede.</p>
+    <div class="paso">
+      <figure class="movil"><button type="button"><img data-f="4-lista-m" alt="Los pasos con su flecha"></button><figcaption>Los pasos, con su «›»</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="4-ejercicio-m" alt="La ventana con el ejercicio"></button><figcaption>Al tocar el primero</figcaption></figure>
+      <figure class="movil"><button type="button"><img data-f="4-ejercicio-640-en" data-fijo alt="El ejercicio en inglés a 360 por 640"></button><figcaption>360×640 en inglés · sin scroll</figcaption></figure>
+    </div>
+    <div class="paso">
+      <figure class="ancha"><button type="button"><img data-f="4-ejercicio-e" alt="El ejercicio en el escritorio"></button><figcaption>Escritorio</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <span class="meta">Lo que se ha comprobado</span>
+    <ul>
+      <li>Pruebas nuevas, en rojo antes del cambio: <code>carta-luego</code> (la ×, Escape y tocar fuera; el sobre cerrado y abierto;
+        que no vuelve sola; la carta leída; sin PACE completo no hay sobre; que no pisa nada de 320 a 1280 px), <code>ritmo-frase-movil</code>
+        y <code>preview-ejercicio</code> (también con el teclado y en inglés).</li>
+      <li><code>verify</code> pasa. El número de textos sube en 9 (los del sobre, la carta leída, la fila «Ahora» y la vista del ejercicio).</li>
+      <li>La suite entera, en el puerto 8814: 1145 pasan, 2 se saltan (las de siempre) y ninguna cae.</li>
+    </ul>
+    <p class="nota">Las fotos: la app compilada de la rama, un lunes 2 y un martes 3 de noviembre a las 9:00, a 360×730 y 360×640 en el
+      móvil y a 1280×879 en el escritorio. Toca una foto para verla en grande.</p>
+  </section>
+</div>
+
+<div class="lupa" id="lupa" hidden><img id="lupa-img" alt=""></div>
+
+<script>
+(function () {
+  var oscuro = document.documentElement.getAttribute('data-theme') === 'dark'
+    || (!document.documentElement.getAttribute('data-theme') && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  try { var g = localStorage.getItem('pace-grupo2-tema'); if (g) oscuro = g === 'oscuro'; } catch (e) {}
+  /* Las fotos que solo existen en claro (los tamaños pequeños y el inglés) no cambian. */
+  function fotos() {
+    document.querySelectorAll('img[data-f]').forEach(function (img) {
+      var fijo = img.hasAttribute('data-fijo');
+      img.src = 'fotos/' + img.getAttribute('data-f') + (oscuro && !fijo ? '-osc' : '') + '.jpg';
+    });
+    document.querySelectorAll('.tema button').forEach(function (b) { b.setAttribute('aria-pressed', String((b.getAttribute('data-tema') === 'oscuro') === oscuro)); });
+  }
+  document.querySelectorAll('.tema button').forEach(function (b) {
+    b.addEventListener('click', function () { oscuro = b.getAttribute('data-tema') === 'oscuro'; try { localStorage.setItem('pace-grupo2-tema', oscuro ? 'oscuro' : 'claro'); } catch (e) {} fotos(); });
+  });
+  var lupa = document.getElementById('lupa'), lupaImg = document.getElementById('lupa-img');
+  document.querySelectorAll('figure button').forEach(function (b) {
+    b.addEventListener('click', function () { var img = b.querySelector('img'); lupaImg.src = img.src; lupaImg.alt = img.alt; lupa.hidden = false; });
+  });
+  lupa.addEventListener('click', function () { lupa.hidden = true; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lupa.hidden = true; });
+  fotos();
+})();
+</script>

@@ -35,6 +35,31 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
      / etc de hecho se puede utilizar para actualizaciones, alguna notificación puntual y esto y puede ser abierto o
      cerrado no? + 2A +3A + 4B». Contestado: el sobre, cerrado con algo sin leer y abierto ya leído; preparado para
      novedades y avisos puntuales más adelante, pero ahora solo con la carta, para no agrandar lo de antes de v1.
+6. **Ez, ~14:00: «Continua aunque lleguemos al 100% y sigue trabajando en esta sesión automáticamente cuando se
+   restablezca»**. Ya no se para al 95 %: al 85 % «wip» y push, y se sigue. Ez arrancó también `legal-premium`
+   (`local_ac306c03-e267-4cb8-940a-1da0c6f44b73`, rama `claude/infallible-taussig-1af346`, puerto 8816): lo legal de
+   /premium en borrador (quién vende con Managed Payments, la función de desistir, condiciones y aviso legal con huecos
+   para los datos de Ez). Ramas: textos `claude/nifty-wozniak-888954`, maqueta `claude/eloquent-dhawan-80bab5`.
+7. **~16:30, las tres sesiones se cortaron con las 5 h al 100 %.** A las 17:24 la coordinadora se retomó sola (un
+   CronCreate de la sesión) y las despertó: textos tenía todo sin commit en su carpeta, la maqueta un commit sin push
+   (f508fbd4) y lo legal su «wip» subido (5cd9ae62). Hay otra retoma programada a las 22:24, tras la reposición de
+   las 22:20. La semana, al 78 % (se repone el 3 nov.).
+8. **~23:10, las tres con `LISTO PARA MAIN`, limpias y subidas; esperan a Ez** (la semana de EcLj6…, al 83 %):
+   - Textos: `claude/nifty-wozniak-888954` 766dc807, 1137 en verde; fotos https://claude.ai/artifact/KyVfsiiWePUzGz45mxy5md.
+     Ez tiene que mirar el 3 (en pantallas grandes la etiqueta va sola y en dos líneas; «3 tal cual» la deja en una).
+     Con el «júntalo», el párrafo «A tu ritmo» de `ficha.md` se vuelve a pegar en Play Console, en es y en.
+   - Carta del lunes: `claude/eloquent-dhawan-80bab5` 0ae34f16, 1145 en verde; fotos
+     https://claude.ai/artifact/XSQNEkkt6Nh3cpFE4CR7Zj. Sube el censo de claves de 1086 a 1095: al juntar con los textos,
+     sumar las nuevas de las dos.
+   - Lo legal: `claude/infallible-taussig-1af346` f192dea7, solo documentos y borradores sin publicar; página
+     https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2 con cinco letras (recomendada 1A 2A 3A 4A 5A). Hallazgo: con
+     Managed Payments el vendedor es Ez, no Stripe.
+9. **~23:20, Ez: «Juntalo»** (textos y carta): juntadas en `main` (a36be0ef la carta, 567e7a9b los textos, c39832a9 la
+   0.188.0; el censo de claves, 1086 + 9 + 7 = 1102), suite entera en el 8766 (el 8765 sigue ocupado por la suite muerta
+   de 5iWBf…). **Lo legal: «1a + 2 y si ponemos 7? 3-A 4A 5A» y, explicado que el desistimiento de la ley no baja de 14
+   días, «Sí, 2A»**: 1A 2A 3A 4A 5A, pasadas a `legal-premium` con sus palabras. Esa sesión pone las letras en los
+   borradores y prepara el botón 1A (formulario, función de Cloudflare y acuse por correo, que pide a Ez darse de alta en
+   un servicio de correo), sin tocar /premium ni Ajustes hasta que la 0.188.0 esté en origin/main.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

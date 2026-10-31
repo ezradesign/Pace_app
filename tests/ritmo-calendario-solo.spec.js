@@ -174,7 +174,7 @@ test.describe('en Android', () => {
     await abrir(page, context, { sidebarCollapsed: true });
     const hoja = await hojaMovil(page);
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
-    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hecho: desde ahora tu calendario se mantiene solo.');
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hecho: mientras PACE esté abierto, tu calendario se pone al día solo.');
     expect(await llamadas(page, 'deleteEvent'), 'quita un evento que no puso').toEqual([]);
     expect((await llamadas(page, 'modifyEvent')).map((o) => o.id), 'cambia un evento que no puso').not.toContain('x1');
     expect(await page.evaluate(() => window.__nativo.eventos.find((e) => e.id === 'x1').description)).toContain('pacegrass.app');
@@ -187,15 +187,15 @@ test.describe('en Android', () => {
     let hoja = await hojaMovil(page);
     await expect(hoja.locator('[data-pace-cal-mantener]')).toBeChecked();
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
-    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hecho: desde ahora tu calendario se mantiene solo.');
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('Hecho: mientras PACE esté abierto, tu calendario se pone al día solo.');
     const creados = await llamadas(page, 'createEvent');
     expect(creados).toHaveLength(10);
     expect(creados.filter((c) => c.alerts.length === 1 && c.alerts[0] === 0)).toHaveLength(8);
     expect(creados.filter((c) => c.alerts.length === 0)).toHaveLength(2);
     expect(creados[0].title).toBe('Foco 1 de 9');
     /* Ya conectado: cómo va, «Desconectar», y la casilla ya no sale. */
-    await expect(hoja.locator('[data-pace-cal-resumen]')).toHaveText('Tu calendario se mantiene solo: lo que queda de hoy, de 9:00 a 17:00, con aviso en cada pausa.');
-    await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText('Al día · lo último, a las 9:00');
+    await expect(hoja.locator('[data-pace-cal-resumen]')).toHaveText('Lo que queda de hoy, de 9:00 a 17:00, con aviso en cada pausa. Se pone al día mientras PACE está abierto.');
+    await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText('Plan enviado a las 9:00');
     await expect(hoja.locator('[data-pace-cal-desconectar]')).toHaveText('Desconectar');
     await expect(hoja.locator('[data-pace-cal-mantener]')).toHaveCount(0);
     expect((await page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2')).ritmo.calendario)).mantener).toBe(true);
@@ -342,12 +342,12 @@ test('con Google: dentro de la hora se cambia lo que está; pasada, «Poner al d
      (tests/ritmo-reuniones-bordes.spec.js). */
   await hoja.locator('[data-pace-cal-reuniones]').uncheck();
   await hoja.locator('[data-pace-cal-destino="google"] button').click();
-  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
+  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se pone al día solo', { timeout: 15_000 });
   const posts = g.vistas.filter((v) => v.metodo === 'POST');
   expect(posts).toHaveLength(10);
   expect(posts.filter((p) => p.cuerpo.reminders.overrides.length === 1 && p.cuerpo.reminders.overrides[0].minutes === 0)).toHaveLength(8);
   posts.forEach((p) => expect(p.cuerpo.extendedProperties.private).toMatchObject({ pace: 'ritmo', paceDia: FECHA, paceClave: expect.stringMatching(/^(b\d+|cierre)$/) }));
-  await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText('Al día · conectado hasta las 10:00');
+  await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText('Plan enviado · conectado hasta las 10:00');
   await page.getByRole('button', { name: 'Listo', exact: true }).click();
   await expect(vis(page, '[data-pace-ritmo-calendario]')).toHaveText('Calendario al día');
 
@@ -387,14 +387,14 @@ test('con Microsoft: pasada la hora, se renueva sin ventana y sigue cambiando lo
   /* Sin leer reuniones, como con Google: el día lo cambia la comida. */
   await hoja.locator('[data-pace-cal-reuniones]').uncheck();
   await hoja.locator('[data-pace-cal-destino="microsoft"] button').click();
-  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
+  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se pone al día solo', { timeout: 15_000 });
   const ventana = m.vistas.find((v) => v.metodo === 'VENTANA');
   expect(decodeURIComponent(ventana.url)).toContain('scope=offline_access https://graph.microsoft.com/Calendars.ReadWrite');
   const posts = m.vistas.filter((v) => v.metodo === 'POST');
   expect(posts).toHaveLength(10);
   expect(posts.filter((p) => p.cuerpo.isReminderOn && p.cuerpo.reminderMinutesBeforeStart === 0)).toHaveLength(8);
   posts.forEach((p) => expect(p.cuerpo.singleValueExtendedProperties.map((x) => x.value)).toEqual([FECHA, expect.stringMatching(/^(b\d+|cierre)$/)]));
-  await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText('Al día · conectado hasta mañana a las 9:00');
+  await expect(hoja.locator('[data-pace-cal-solo="si"] .pace-rt-cal-s')).toHaveText('Plan enviado · conectado hasta mañana a las 9:00');
   await page.getByRole('button', { name: 'Listo', exact: true }).click();
 
   await page.clock.runFor(70 * 60 * 1000);
@@ -436,7 +436,7 @@ test('C2 · los cuatro casos: poniendo al día, no se pudo con «Reintentar», y
   const hoja = page.locator('[data-pace-cal]');
   await hoja.locator('[data-pace-cal-reuniones]').uncheck();
   await hoja.locator('[data-pace-cal-destino="google"] button').click();
-  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se mantiene solo', { timeout: 15_000 });
+  await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('se pone al día solo', { timeout: 15_000 });
   await page.getByRole('button', { name: 'Listo', exact: true }).click();
   const enlace = vis(page, '[data-pace-ritmo-calendario]');
   await expect(enlace).toHaveText('Calendario al día');

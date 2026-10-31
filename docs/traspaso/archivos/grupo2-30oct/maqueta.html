@@ -1,0 +1,417 @@
+<title>Lo que queda del grupo 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una hoja de decisiones de PACE: la paleta y la letra de la app (DESIGN_SYSTEM.md), una columna,
+   cada pregunta con «Hoy» arriba y sus opciones en tarjetas que se eligen con un toque. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #77705F;
+  --line: #C9C0A8;
+  --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --move: #8A6B3F; --move-soft: rgba(154, 123, 79, 0.14);
+  --breathe: #B4664A;
+  --sombra: 0 1px 2px rgba(31, 28, 23, 0.06), 0 6px 20px rgba(31, 28, 23, 0.06);
+  --display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f291f;
+    --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536;
+    --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16);
+    --move: #C9A675; --move-soft: rgba(201, 166, 117, 0.14);
+    --breathe: #D99477;
+    --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f291f;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536;
+  --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16);
+  --move: #C9A675; --move-soft: rgba(201, 166, 117, 0.14);
+  --breathe: #D99477;
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--ui); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.hoja { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; color: var(--ink); }
+h1 { font-size: clamp(32px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(26px, 3.6vw, 34px); line-height: 1.1; }
+h3 { font-size: 21px; line-height: 1.2; }
+p { margin: 0; max-width: 68ch; }
+.meta { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.cab { display: flex; flex-direction: column; gap: 14px; }
+.cab p { color: var(--ink-2); }
+
+/* La respuesta: una fila por pregunta y el botón de copiar. */
+.respuesta { border: 1px solid var(--line); border-radius: 16px; background: var(--paper-2); padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.respuesta .fila { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.codigo { font-family: var(--display); font-size: 28px; font-style: italic; letter-spacing: 0.02em; min-width: 0; }
+.boton { font: 500 14px/1 var(--ui); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--focus); background: var(--focus); color: var(--paper); cursor: pointer; }
+.boton.suave { background: transparent; color: var(--ink-2); border-color: var(--line); }
+.boton:focus-visible, .op button:focus-visible, .tema button:focus-visible, figure button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.nota { font-size: 13px; color: var(--ink-3); }
+
+.tema { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; background: var(--paper-2); }
+.tema button { font: 500 11px/1 var(--ui); letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.tema button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* Una pregunta. */
+.pregunta { display: flex; flex-direction: column; gap: 20px; border-top: 1px solid var(--line); padding-top: 28px; }
+.pregunta .titulo { display: flex; flex-direction: column; gap: 8px; }
+.chip { align-self: flex-start; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; border-radius: 999px; padding: 5px 10px; }
+.chip.espera { color: var(--move); background: var(--move-soft); }
+.hoy { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.hoy .texto { display: flex; flex-direction: column; gap: 6px; }
+.hoy .texto p { color: var(--ink-2); }
+
+.fotos { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure button { padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2); cursor: zoom-in; display: block; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 12px; color: var(--ink-3); }
+.movil { width: min(100%, 230px); }
+.ancha { width: min(100%, 640px); }
+.detalle { width: min(100%, 420px); }
+
+.ops { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 16px; }
+.op { border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: var(--paper); min-width: 0; transition: border-color 160ms, box-shadow 160ms; }
+.op.recomendada { box-shadow: var(--sombra); }
+.op[data-elegida="1"] { border-color: var(--focus); box-shadow: 0 0 0 2px var(--focus-soft), var(--sombra); }
+.op .arriba { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.letra { font-family: var(--display); font-size: 26px; font-style: italic; color: var(--focus); line-height: 1; }
+.rec { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--focus); border: 1px solid var(--focus); border-radius: 999px; padding: 3px 8px; }
+.op p { color: var(--ink-2); font-size: 14.5px; }
+.op .porque { font-size: 14px; color: var(--ink); border-left: 2px solid var(--line); padding-left: 10px; }
+.op .fotos { gap: 10px; }
+.op .movil { width: min(100%, 200px); }
+.op .elegir { margin-top: auto; align-self: flex-start; }
+.op[data-elegida="1"] .elegir { background: var(--focus); color: var(--paper); border-color: var(--focus); }
+
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; min-width: 460px; }
+.tabla { overflow-x: auto; }
+th, td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 500; color: var(--ink-3); font-size: 12px; }
+td.mal { color: var(--breathe); font-weight: 500; }
+
+.fuera { display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); font-size: 14px; }
+.fuera p { color: var(--ink-2); }
+
+/* La foto en grande. */
+.lupa { position: fixed; inset: 0; z-index: 50; background: rgba(20, 18, 14, 0.82); overflow: auto; display: grid; place-items: start center;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; }
+.lupa[hidden] { display: none; }
+.lupa img { max-width: 100%; height: auto; border-radius: 10px; }
+.lupa .cerrar { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+@media (prefers-reduced-motion: reduce) { .op { transition: none; } }
+</style>
+
+<div class="hoja">
+  <header class="cab">
+    <span class="meta">PACE · 0.187.0 · 30 oct. 2026</span>
+    <h1>Lo que queda del grupo 2</h1>
+    <p>Cuatro cosas de las revisiones de ChatGPT del 28 oct. que siguen igual en la app de hoy. Cada foto es la app de verdad con
+      la opción puesta dentro. Elige una letra en cada pregunta. Las dos últimas pueden esperar a después de v1; si las eliges, entran
+      en la misma actualización.</p>
+    <div class="respuesta" aria-live="polite">
+      <span class="meta">Tu respuesta</span>
+      <div class="fila">
+        <span class="codigo" id="codigo">1A · 2A · 3A · 4B</span>
+        <button type="button" class="boton" id="copiar">Copiar</button>
+        <button type="button" class="boton suave" id="recomendado">Volver a lo recomendado</button>
+      </div>
+      <span class="nota" id="nota-respuesta">Ahora pone lo recomendado. Toca «Elijo…» en otra opción para cambiarla, o escríbeme las letras sin más.</span>
+    </div>
+    <div class="fila" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <span class="nota">Fotos en</span>
+      <div class="tema" role="group" aria-label="Fotos en claro u oscuro">
+        <button type="button" data-tema="claro" aria-pressed="true">Claro</button>
+        <button type="button" data-tema="oscuro" aria-pressed="false">Oscuro</button>
+      </div>
+      <span class="nota">Toca una foto para verla en grande.</span>
+    </div>
+  </header>
+
+  <!-- 1 · U3 -->
+  <section class="pregunta" data-q="1" id="carta">
+    <div class="titulo">
+      <span class="meta">Pregunta 1</span>
+      <h2>La carta del lunes, para luego</h2>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>El lunes la carta se abre sola y no se puede cerrar: para seguir hay que contestar. «Vale» aplica los cambios y «Dejarla
+          como estaba» dice que no a todos durante un mes. No hay forma de decir «ahora no».</p>
+      </div>
+      <div class="fotos">
+        <figure class="movil"><button type="button"><img data-f="q1-hoy-m" alt="La carta de hoy en el móvil, sin forma de cerrarla"></button><figcaption>Hoy · móvil</figcaption></figure>
+        <figure class="movil"><button type="button"><img data-f="q1-x-m" alt="La carta con la × arriba a la derecha"></button><figcaption>Con la × · móvil</figcaption></figure>
+        <figure class="movil"><button type="button"><img data-f="q1-sobre-m" alt="La home con un sobre arriba, junto a Estadísticas"></button><figcaption>El sobre, arriba · móvil</figcaption></figure>
+      </div>
+      <div class="fotos">
+        <figure class="ancha"><button type="button"><img data-f="q1-x-e" alt="La carta con la × en el escritorio"></button><figcaption>Con la × · escritorio</figcaption></figure>
+        <figure class="detalle"><button type="button"><img data-f="q1-sobre-zoom-e" alt="Detalle de la barra de arriba con el sobre"></button><figcaption>El sobre · escritorio, de cerca</figcaption></figure>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op recomendada" data-op="A">
+        <div class="arriba"><span class="letra">1A</span><h3>Sale sola y, si la cierras, te espera en un sobre</h3><span class="rec">Recomendada</span></div>
+        <p>El lunes sale como hoy, ahora con la × de todas las ventanas (también vale Escape o tocar fuera). Cerrarla no dice ni sí
+          ni no: arriba aparece un sobre junto a Estadísticas, y la carta sigue dentro, igual, hasta que la contestes.</p>
+        <p class="porque">La ves una vez sin buscarla y después no insiste. Contestar sigue siendo cosa tuya.</p>
+        <button type="button" class="boton suave elegir">Elijo 1A</button>
+      </article>
+      <article class="op" data-op="B">
+        <div class="arriba"><span class="letra">1B</span><h3>Sale sola y, si la cierras, vuelve mañana</h3></div>
+        <p>Con la misma ×, pero sin sobre: la carta vuelve a salir sola al día siguiente, hasta el domingo.</p>
+        <p class="porque">No añade nada a la pantalla, pero puede salirte cinco días seguidos.</p>
+        <button type="button" class="boton suave elegir">Elijo 1B</button>
+      </article>
+      <article class="op" data-op="C">
+        <div class="arriba"><span class="letra">1C</span><h3>No sale sola: solo el sobre</h3></div>
+        <p>Desde el lunes hay un sobre arriba, y la carta se abre al tocarlo.</p>
+        <p class="porque">Lo más tranquilo, pero quien no toque el sobre no verá lo que PACE ha aprendido, que es parte de lo que se paga.</p>
+        <button type="button" class="boton suave elegir">Elijo 1C</button>
+      </article>
+    </div>
+    <p class="nota">En las tres: si la semana acaba sin contestar, no cambia nada y no cuenta como un «no». La carta del lunes siguiente llega como siempre.</p>
+  </section>
+
+  <!-- 2 · U5 -->
+  <section class="pregunta" data-q="2" id="frase">
+    <div class="titulo">
+      <span class="meta">Pregunta 2</span>
+      <h2>En el móvil, cómo se empieza el día</h2>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>En el escritorio, hasta que acaba el primer bloque, el panel dice «Cada bloque es un pomodoro en el aro; al acabar, te
+          sirvo la pausa que toca». En el móvil esa frase no está (se quitó para que la home no pidiera scroll), y la fila
+          «Ahora 9:05 · Foco · bloque 1 de 9» puede hacer pensar que el bloque ya corre.</p>
+      </div>
+      <div class="fotos">
+        <figure class="movil"><button type="button"><img data-f="q2-hoy-m" alt="La home del móvil con el día servido, hoy"></button><figcaption>Hoy · móvil</figcaption></figure>
+        <figure class="ancha"><button type="button"><img data-f="q2-esc" alt="La home del escritorio, con la frase bajo «Jornada entera»"></button><figcaption>Hoy · escritorio, con la frase</figcaption></figure>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op recomendada" data-op="A">
+        <div class="arriba"><span class="letra">2A</span><h3>En la fila «Ahora»</h3><span class="rec">Recomendada</span></div>
+        <p>Hasta que empiezas el primer bloque, la fila dice «45 min · empieza en el aro, arriba» en vez de «Trabajo en
+          profundidad», que ya está en el aro. Al empezar, vuelve a lo de siempre.</p>
+        <p class="porque">Lo dice justo donde nace la duda y no ocupa nada: la home cabe igual en todos los móviles.</p>
+        <div class="fotos"><figure class="movil"><button type="button"><img data-f="q2-A-m" alt="Opción A: la fila Ahora dice empieza en el aro, arriba"></button><figcaption>2A · móvil</figcaption></figure></div>
+        <button type="button" class="boton suave elegir">Elijo 2A</button>
+      </article>
+      <article class="op" data-op="B">
+        <div class="arriba"><span class="letra">2B</span><h3>La frase del escritorio</h3></div>
+        <p>La misma frase que en el escritorio, en el sitio de tus horas, hasta que acaba el primer bloque. Las horas siguen en «Cambiar» y en «Ver todo».</p>
+        <p class="porque">Dice lo mismo en los dos, pero en inglés pide 8 px de scroll a 360×640 y el aro encoge hasta 20 px.</p>
+        <div class="fotos"><figure class="movil"><button type="button"><img data-f="q2-B-m" alt="Opción B: la frase del escritorio bajo Jornada entera"></button><figcaption>2B · móvil</figcaption></figure></div>
+        <button type="button" class="boton suave elegir">Elijo 2B</button>
+      </article>
+      <article class="op" data-op="C">
+        <div class="arriba"><span class="letra">2C</span><h3>En el aro</h3></div>
+        <p>Hasta que acaba el primer bloque, bajo los minutos dice «Al acabar, te sirvo la pausa» en vez de «Trabajo en profundidad».</p>
+        <p class="porque">No ocupa nada y cuenta lo que viene después, pero queda lejos del plan, que es donde surge la duda.</p>
+        <div class="fotos"><figure class="movil"><button type="button"><img data-f="q2-C-m" alt="Opción C: el aro dice Al acabar, te sirvo la pausa"></button><figcaption>2C · móvil</figcaption></figure></div>
+        <button type="button" class="boton suave elegir">Elijo 2C</button>
+      </article>
+    </div>
+    <div class="tabla">
+      <table>
+        <caption class="meta" style="text-align:left;padding-bottom:8px">Scroll de la home y tamaño del aro, medidos</caption>
+        <thead><tr><th>Móvil</th><th>Hoy</th><th>2A</th><th>2B</th><th>2C</th></tr></thead>
+        <tbody>
+          <tr><td>360×640, castellano</td><td>0 · aro 312</td><td>0 · aro 312</td><td>0 · aro 322</td><td>0 · aro 312</td></tr>
+          <tr><td>360×640, inglés</td><td>0 · aro 312</td><td>0 · aro 312</td><td class="mal">8 px · aro 303</td><td>0 · aro 312</td></tr>
+          <tr><td>375×667, castellano</td><td>0 · aro 345</td><td>0 · aro 345</td><td>0 · aro 345</td><td>0 · aro 345</td></tr>
+          <tr><td>375×667, inglés</td><td>0 · aro 345</td><td>0 · aro 345</td><td class="mal">1 px · aro 325</td><td>0 · aro 345</td></tr>
+          <tr><td>360×730, castellano (las fotos)</td><td>0 · aro 331</td><td>0 · aro 331</td><td>0 · aro 331</td><td>0 · aro 331</td></tr>
+          <tr><td>412×844, inglés</td><td>0 · aro 379</td><td>0 · aro 379</td><td>0 · aro 379</td><td>0 · aro 379</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 3 · U4 -->
+  <section class="pregunta" data-q="3" id="prueba">
+    <div class="titulo">
+      <span class="meta">Pregunta 3</span>
+      <h2>Que la prueba de 7 días llegue a enseñar la carta</h2>
+      <span class="chip espera">Puede esperar a después de v1</span>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>La carta pide tres días de «A tu ritmo» dentro de una semana de lunes a domingo. Quien empieza un jueves no la ve hasta
+          10 u 11 días después: con una prueba de 7 días, ya habría pagado sin verla. Hoy no hay prueba que se acabe (PACE completo
+          está abierto para todos hasta v1); empieza con v1.</p>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op recomendada" data-op="A">
+        <div class="arriba"><span class="letra">3A</span><h3>Después de v1</h3><span class="rec">Recomendada</span></div>
+        <p>Se deja como está y se decide con lo que hagan los testers en sus 14 días.</p>
+        <p class="porque">Hasta v1 no hay prueba que se acabe, y el cambio toca lo que decide qué cambia cada semana: mejor no moverlo mientras prueban.</p>
+        <button type="button" class="boton suave elegir">Elijo 3A</button>
+      </article>
+      <article class="op" data-op="B">
+        <div class="arriba"><span class="letra">3B</span><h3>La primera carta, a los tres días</h3></div>
+        <p>En cuanto llevas tres días con «A tu ritmo», la carta llega al día siguiente con esos días («Martes · tus primeros
+          días»), sin esperar al lunes. Después, cada lunes, como hoy.</p>
+        <p class="porque">Toda prueba de 7 días la enseñaría y los testers la verían antes. Pide cambiar cómo se cuenta la semana, con sus pruebas.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="q3-B-m" alt="Opción B: la primera carta un martes, del 29 oct al 2 nov"></button><figcaption>3B · móvil</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="q3-B-e" alt="Opción B en el escritorio"></button><figcaption>3B · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 3B</button>
+      </article>
+    </div>
+  </section>
+
+  <!-- 4 · P4 -->
+  <section class="pregunta" data-q="4" id="ejercicio">
+    <div class="titulo">
+      <span class="meta">Pregunta 4</span>
+      <h2>Mirar un ejercicio antes de darle a Empezar</h2>
+      <span class="chip espera">Puede esperar a después de v1</span>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>En «Antes de empezar» se ven los pasos con su dibujo pequeño, pero no cómo se hacen: para leerlo hay que empezar, y
+          entonces ya corre el tiempo.</p>
+      </div>
+      <div class="fotos">
+        <figure class="movil"><button type="button"><img data-f="q4-hoy-m" alt="Antes de empezar, hoy, en el móvil"></button><figcaption>Hoy · móvil</figcaption></figure>
+        <figure class="ancha"><button type="button"><img data-f="q4-hoy-e" alt="Antes de empezar, hoy, en el escritorio"></button><figcaption>Hoy · escritorio</figcaption></figure>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op" data-op="A">
+        <div class="arriba"><span class="letra">4A</span><h3>Se despliega en la lista</h3></div>
+        <p>Cada paso lleva «›». Al tocarlo se abre ahí mismo: el dibujo, «Colócate», «Qué haces» y «Cuidado», los mismos textos que salen durante la rutina.</p>
+        <p class="porque">No sales de la lista, pero en el móvil «Empezar» baja y hay que deslizar (79 px a 360×730).</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="q4-A-m" alt="Opción A: el primer paso desplegado"></button><figcaption>4A · móvil</figcaption></figure>
+          <figure class="movil"><button type="button"><img data-f="q4-A-abajo-m" alt="Opción A: deslizando hasta Empezar"></button><figcaption>4A · móvil, deslizando</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="q4-A-e" alt="Opción A en el escritorio"></button><figcaption>4A · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 4A</button>
+      </article>
+      <article class="op recomendada" data-op="B">
+        <div class="arriba"><span class="letra">4B</span><h3>La ventana pasa al ejercicio</h3><span class="rec">Recomendada</span></div>
+        <p>Cada paso lleva «›». Al tocarlo, la misma ventana enseña ese ejercicio con el dibujo grande y los tres textos; «‹ Los pasos» vuelve a la rutina. Sin cuenta atrás.</p>
+        <p class="porque">Se lee con calma y en grande, sin scroll ni en el móvil pequeño. Ayuda a los testers, que son quienes empiezan: merece la pena ya.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="q4-B-lista-m" alt="Opción B: los pasos con su flecha"></button><figcaption>4B · los pasos</figcaption></figure>
+          <figure class="movil"><button type="button"><img data-f="q4-B-m" alt="Opción B: la ventana con el ejercicio"></button><figcaption>4B · al tocar el primero</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="q4-B-e" alt="Opción B en el escritorio"></button><figcaption>4B · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 4B</button>
+      </article>
+      <article class="op" data-op="C">
+        <div class="arriba"><span class="letra">4C</span><h3>Después de v1</h3></div>
+        <p>Se deja como está.</p>
+        <p class="porque">Menos que montar ahora, pero quien empieza seguiría aprendiendo cada ejercicio con el reloj en marcha.</p>
+        <button type="button" class="boton suave elegir">Elijo 4C</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="pregunta fuera">
+    <span class="meta">Lo que no entra aquí</span>
+    <p>Lo ya montado en la 0.187.0 (el runner claro, «Tus rutinas», los dibujos) y los textos de antes y después (P1-P3, Q1, Q3,
+      Q6, Q7 y los del calendario), que lleva otra sesión en su propia página.</p>
+    <p class="nota">Las fotos: la app de la rama con cada opción dentro, un lunes 2 y un martes 3 de noviembre a las 9:00, a 360×730
+      en el móvil y a 1280×879 en el escritorio. Con tu elección se monta en la rama, con sus pruebas, y te paso las fotos de lo
+      montado antes de juntarlo.</p>
+  </section>
+</div>
+
+<div class="lupa" id="lupa" hidden>
+  <button type="button" class="boton cerrar" id="lupa-cerrar">Cerrar</button>
+  <img id="lupa-img" alt="">
+</div>
+
+<script>
+(function () {
+  var RECOMENDADO = { 1: 'A', 2: 'A', 3: 'A', 4: 'B' };
+  var CLAVE = 'pace-grupo2-respuesta';
+  var elegido = Object.assign({}, RECOMENDADO);
+  try { var g = JSON.parse(localStorage.getItem(CLAVE) || 'null'); if (g) elegido = Object.assign(elegido, g); } catch (e) {}
+
+  function pintar() {
+    document.querySelectorAll('.pregunta[data-q]').forEach(function (sec) {
+      var q = sec.getAttribute('data-q');
+      sec.querySelectorAll('.op').forEach(function (op) {
+        var si = op.getAttribute('data-op') === elegido[q];
+        op.setAttribute('data-elegida', si ? '1' : '0');
+        var b = op.querySelector('.elegir');
+        if (b) b.textContent = si ? 'Elegida: ' + q + op.getAttribute('data-op') : 'Elijo ' + q + op.getAttribute('data-op');
+      });
+    });
+    var txt = [1, 2, 3, 4].map(function (q) { return q + elegido[q]; }).join(' · ');
+    document.getElementById('codigo').textContent = txt;
+    var igual = [1, 2, 3, 4].every(function (q) { return elegido[q] === RECOMENDADO[q]; });
+    document.getElementById('nota-respuesta').textContent = igual
+      ? 'Ahora pone lo recomendado. Toca «Elijo…» en otra opción para cambiarla, o escríbeme las letras sin más.'
+      : 'Cópiala y pégamela en el chat, o escríbeme las letras sin más.';
+    try { localStorage.setItem(CLAVE, JSON.stringify(elegido)); } catch (e) {}
+  }
+  document.querySelectorAll('.pregunta[data-q] .op .elegir').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var op = b.closest('.op'), q = b.closest('.pregunta').getAttribute('data-q');
+      elegido[q] = op.getAttribute('data-op');
+      pintar();
+    });
+  });
+  document.getElementById('recomendado').addEventListener('click', function () { elegido = Object.assign({}, RECOMENDADO); pintar(); });
+  document.getElementById('copiar').addEventListener('click', function () {
+    var b = this, txt = document.getElementById('codigo').textContent.replace(/ · /g, ' ');
+    var hecho = function () { b.textContent = 'Copiada'; setTimeout(function () { b.textContent = 'Copiar'; }, 1600); };
+    var aMano = function () { var r = document.createRange(); r.selectNodeContents(document.getElementById('codigo')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try { navigator.clipboard.writeText(txt).then(hecho, aMano); } catch (e) { aMano(); }
+  });
+
+  /* Las fotos en claro u oscuro: por defecto, las del tema que ves. */
+  var oscuro = document.documentElement.getAttribute('data-theme') === 'dark'
+    || (!document.documentElement.getAttribute('data-theme') && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  try { var t = localStorage.getItem('pace-grupo2-tema'); if (t) oscuro = t === 'oscuro'; } catch (e) {}
+  function fotos() {
+    document.querySelectorAll('img[data-f]').forEach(function (img) { img.src = 'fotos/' + img.getAttribute('data-f') + (oscuro ? '-osc' : '') + '.jpg'; });
+    document.querySelectorAll('.tema button').forEach(function (b) { b.setAttribute('aria-pressed', String((b.getAttribute('data-tema') === 'oscuro') === oscuro)); });
+  }
+  document.querySelectorAll('.tema button').forEach(function (b) {
+    b.addEventListener('click', function () { oscuro = b.getAttribute('data-tema') === 'oscuro'; try { localStorage.setItem('pace-grupo2-tema', oscuro ? 'oscuro' : 'claro'); } catch (e) {} fotos(); });
+  });
+
+  var lupa = document.getElementById('lupa'), lupaImg = document.getElementById('lupa-img');
+  document.querySelectorAll('figure button').forEach(function (b) {
+    b.addEventListener('click', function () { var img = b.querySelector('img'); lupaImg.src = img.src; lupaImg.alt = img.alt; lupa.hidden = false; document.getElementById('lupa-cerrar').focus(); });
+  });
+  function cerrar() { lupa.hidden = true; }
+  lupa.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+
+  fotos();
+  pintar();
+})();
+</script>

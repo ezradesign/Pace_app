@@ -82,7 +82,7 @@ test('la invitación dice «Ver ejercicio» y abre la hoja: el dibujo del módul
   await expect(hoja).toHaveCount(1);
   await expect(page.locator('[data-pace-modal-title]')).toHaveText('Un momento para moverte');
   await expect(hoja.locator('.pace-break-nombre')).toHaveText('Elevación de talones');
-  await expect(hoja.locator('.pace-break-motivo')).toHaveText('Llevas 20 minutos sentado');
+  await expect(hoja.locator('.pace-break-motivo')).toHaveText('Has terminado un Foco de 20 minutos');
   await expect(hoja.locator('.pace-lib-ctx')).toHaveText('50sMuévete');
   /* el dibujo es el del módulo, no el del ejercicio */
   await expect(hoja.locator('[data-pace-break-glifo].pace-break-glifo-mod')).toHaveCount(1);

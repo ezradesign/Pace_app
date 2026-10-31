@@ -343,14 +343,31 @@ function focoElapsedSec(inicioMs, durationSec) {
 /* ¿Hay un bloque de Foco empezado (en marcha o en pausa)? Lo publica FocusTimer
    y lo lee la barra de arriba: cambiar allí a Pausa o Larga reinicia la cuenta y
    el bloque se pierde sin contar, así que antes se pregunta (Ez, 8 oct. 2026).
-   `var`, no `const`: tiene que cruzar la IIFE del build. */
+   `var`, no `const`: tiene que cruzar la IIFE del build.
+   Cada cambio se avisa con `pace:foco-empezado`, para lo que lo pinta: la fila «Ahora» del
+   móvil dice dónde se empieza hasta que se empieza (Ez, 30 oct.: 2A; RitmoPanel.jsx). */
+const { useEffect: useEffectFTS, useState: useStateFTS } = React;
 var _paceFocoEmpezado = false;
-function paceFocoEmpezadoPon(v) { _paceFocoEmpezado = !!v; }
+function paceFocoEmpezadoPon(v) {
+  if (_paceFocoEmpezado === !!v) return;
+  _paceFocoEmpezado = !!v;
+  try { window.dispatchEvent(new CustomEvent('pace:foco-empezado')); } catch (e) {}
+}
 function paceFocoEmpezado() { return _paceFocoEmpezado; }
+function usePaceFocoEmpezado() {
+  const [v, setV] = useStateFTS(_paceFocoEmpezado);
+  useEffectFTS(() => {
+    const mirar = () => setV(_paceFocoEmpezado);
+    mirar();
+    window.addEventListener('pace:foco-empezado', mirar);
+    return () => window.removeEventListener('pace:foco-empezado', mirar);
+  }, []);
+  return v;
+}
 
 Object.assign(window, {
   focoElapsedSec,
-  paceFocoEmpezadoPon, paceFocoEmpezado,
+  paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado,
   /* s163 · lo que entro con el troceo de FocusTimer.jsx */
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */
