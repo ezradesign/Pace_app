@@ -74,8 +74,10 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   y W-8BEN, el programa para pequeñas empresas y una dirección visible en la UE.
 - Las altas de Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`): sin ellas el calendario automático de la
   web no funciona para nadie, y abrirlo a todos pide que Google verifique la app, que tarda semanas.
-- La verificación en dos pasos en GitHub, Cloudflare, Stripe, Google y Apple; copiar `PACE-llave-play` y
-  `PACE-llave-licencias` a un disco; mandar a cada tester su enlace de `codigos-tester.csv`.
+- La verificación en dos pasos en GitHub, Cloudflare, Stripe, Google y Apple; mandar a cada tester su enlace de
+  `codigos-tester.csv`. **Las llaves ya no están en el PC** (Ez, 31 oct.): `PACE-llave-play`, `-licencias` y `-apple`
+  viven solo en su disco, en `F:\Pace-llaves\` (comprobadas por md5 antes de borrarlas), y en los secretos de GitHub y
+  Cloudflare. Para hacer códigos de tester o de venta a mano, se enchufa el disco. Falta una segunda copia fuera de casa.
 - «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` como `AVISAME` y el token de Web Analytics solo
   para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el registro previo de Play.
 - S3, el código portable (un código que se puede pasar a otra persona): es decisión de Ez, sin tomar.
