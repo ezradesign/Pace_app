@@ -11,7 +11,8 @@ Con el «Junta las dos» de Ez. Lo legal (`claude/infallible-taussig-1af346`): l
 conecte Resend (`docs/launch/desistir.md`); la privacidad, corregida (cobra Link por cuenta de Ez). La versión de prueba
 (`claude/version-de-prueba-7b9668`): notas y capturas en `docs/launch/google-play/SUBIDAS.md` y `capturas/`; cuando
 estén Rana, Palmas en la mesa y el logo, quedan el bump, el build, las capturas de Chromebook (`node scripts/play/capturas.js
---ordenador`) y la fila de la tabla. Espera el lunes 3: `maqueta-sin-querer` (Q2, Q4 y R1), que arranca sola a las 14:07.
+--ordenador`) y la fila de la tabla. Espera el martes 3: `maqueta-sin-querer` (Q2, Q4 y R1), que iba a arrancar sola a
+las 14:07 pero lo perdió al reiniciarse la app (1 nov.): hay que escribirle «Empieza» en su sesión.
 
 ## 30 oct.: la carta del lunes y los textos que no inventan, en `main` (v0.188.0); lo legal, esperando a Ez
 

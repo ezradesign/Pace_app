@@ -73,8 +73,13 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
 11. **31 oct., tarde: «Junta las dos»** (lo legal y la versión de prueba): f7208d4f, 126fd5f1 y la 0.189.0 (7eaa9ca5).
     Suite entera en el 8766: 1174 en verde y 4 caídas por timeout (el PC se durmió: 3,9 h); `runner-auto` y
     `runner-mando`, repetidos solos, 12 de 12. Abierta y en espera: `maqueta-sin-querer`
-    (`local_f4d18628-34a8-440b-8501-1bfb91e802f7`, puerto 8820), que arranca sola el lunes 3 a las 14:07. La semana de
-    EcLj6…, al 92-93 %: no se abre nada más hasta el lunes.
+    (`local_f4d18628-34a8-440b-8501-1bfb91e802f7`, puerto 8820), que arranca sola el martes 3 a las 14:07. La semana de
+    EcLj6…, al 92-93 %: no se abre nada más hasta el martes 3.
+12. **1 nov., mañana: la semana de EcLj6… al 97 %** (se repone el martes 3 a las 13:59). `main` igual que origin y limpio;
+    ni dibujos ni logo nuevos en `Glifos` ni en `para-revisar`. La app se reinició: el arranque de las 14:07 de
+    `maqueta-sin-querer` era un `CronCreate` de su sesión, sin archivo que lo guarde, y casi seguro se perdió. El martes 3
+    desde las 14:00, alguien le escribe «Empieza» en esa sesión (o la arranca una tarea programada de la app). Lo único
+    que adelanta la versión de prueba sigue siendo de Ez: Rana, Palmas en la mesa y el logo.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
