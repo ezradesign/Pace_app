@@ -1,9 +1,10 @@
 # PACE · Foco · Cuerpo
 
-> Web app de productividad y salud para quien pasa muchas horas sentado.
+> App de productividad y salud para quien pasa muchas horas sentado, en la web, en Android y en iPhone.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
 **Estado:** v0.189.0 · Pre-lanzamiento
+**Web:** [pacegrass.app](https://pacegrass.app) · [PACE completo](https://pacegrass.app/premium) · [Pruébala en Android o en iPhone](https://pacegrass.app/beta)
 **Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
@@ -21,8 +22,8 @@ guiadas.
 |---|---|
 | **Foco** | Pomodoro configurable (15 / 25 / 35 / 45 min) con ciclos y pausas |
 | **Respira** | 20 técnicas de breathwork (coherencia, box, 4-7-8, Wim Hof-like, pranayama), 13 gratis |
-| **Mueve** | 15 rutinas de fuerza discreta de oficina (empuje y tracción, sigilo, piernas, espalda y core), 9 gratis |
-| **Estira** | 18 rutinas de movilidad (oficina, hombros y columna, caderas y piernas, flujos), 12 gratis |
+| **Mueve** | 14 rutinas de fuerza discreta de oficina (para empezar, sigilo, con material y para ir a más), 7 gratis |
+| **Estira** | 19 rutinas de movilidad (para empezar, oficina, hombros y columna, caderas y piernas, para ir a más), 15 gratis |
 | **Hidrátate** | Tracker de vasos de agua |
 | **Caminos** | 7 recorridos guiados sobre una lámina ilustrada, ocultos hasta después de v1 (no se ha borrado nada) |
 | **Logros** | 96 sellos coleccionables estilo libreta de campo |
@@ -44,10 +45,11 @@ propias** y una **PWA** instalable que funciona sin conexión.
 | Logros | 96 en catálogo · 88 con detector activo · 78 con arte propio |
 | i18n | ES/EN completo, catálogos troceados por dominio |
 | PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
-| PACE completo | Lo de pago pasa por un solo punto (`app/state-entitlement.jsx`); la licencia firmada existe desde v0.157.0 y hoy la llevan los códigos de los testers; la página `/premium` está publicada. Hasta v1, todo abierto |
+| Android e iPhone | La misma app con Capacitor (`android/`, `ios/`): cada push a `main` compila el APK y el AAB firmado de Android y la app de iPhone. Android está en la prueba cerrada de Google Play e iPhone en TestFlight; las dos tiendas salen el mismo día, con v1 |
+| PACE completo | Lo de pago pasa por un solo punto (`app/state-entitlement.jsx`); la licencia firmada existe desde v0.157.0 y hoy la llevan los códigos de los testers. En la web, `/premium`, la compra con Stripe (en modo de prueba), `/gracias`, `/recuperar` y `/desistir` (cerrada hasta conectar el correo); las condiciones, en borrador. Hasta v1, todo abierto |
 | Robustez | Un dato guardado roto se repara solo (y lo ilegible queda en una copia de rescate) · los diálogos y las sesiones gestionan el foco y el teclado · la pantalla no se apaga en una sesión guiada · si una parte falla, se cierra solo esa parte (con una pantalla de rescate como último recurso) |
-| Código | 196 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
-| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión · `npm run test:e2e` — 733 pruebas en un navegador real (708 en Chromium y 25 en el motor de Safari) |
+| Código | Más de 200 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
+| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto, coherencia de versión y lo que la web promete · `npm run test:e2e` — más de 1100 pruebas en un navegador real, en Chromium y en el motor de Safari, que el CI pasa en cada push |
 
 ---
 
@@ -94,8 +96,11 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ solo para compilar.
 - **React 18.3.1** (UMD de producción, self-hosted en `vendor/`)
 - **Babel standalone 7.29.0** — **solo en desarrollo**; el build compila el JSX a JS
   plano por adelantado y retira Babel del artefacto
-- **Sin bundler y sin backend.** npm solo aporta el toolchain de compilación
-- **Persistencia en `localStorage`** — sin servidor de datos, sin tracking
+- **Sin bundler.** npm solo aporta el toolchain de compilación
+- **Capacitor** para las apps de Android y de iPhone, compiladas en GitHub Actions (también la de iPhone, sin Mac)
+- **Persistencia en `localStorage` e IndexedDB** — sin servidor de datos, sin tracking. Las funciones de Cloudflare
+  (`functions/api/`) solo atienden la compra en la web, el código de PACE completo, el desistimiento y la lista
+  «Avísame»: ninguna recibe lo que haces en PACE
 - **Fuentes self-hosted** (Cormorant Garamond, EB Garamond, Inter Tight)
 
 ---
@@ -112,14 +117,21 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ solo para compilar.
 ├── LICENSE                  ← Elastic License 2.0
 ├── CLAUDE.md · STATE.md · CHANGELOG.md
 ├── DESIGN_SYSTEM.md · CONTENT.md · ROADMAP.md · MONETIZATION.md
+├── premium/ · beta/ · gracias/ · recuperar/ · desistir/   ← las páginas de la web
+├── privacy.html · safety.html · legal/   ← privacidad, seguridad y los borradores legales
+├── functions/api/           ← funciones de Cloudflare: compra, código, desistir, «Avísame»
+├── android/ · ios/          ← las apps nativas (Capacitor)
 │
 ├── docs/
 │   ├── BUILD.md             ← cómo funciona el build
 │   ├── WORKFLOW.md          ← protocolo de cierre Git
 │   ├── product/             ← decisiones vigentes de producto y técnicas
+│   ├── launch/              ← Google Play, App Store, cobro y lo legal
+│   ├── traspaso/            ← para retomar el proyecto desde cero
 │   ├── audits/              ← auditorías con evidencia
 │   └── sessions/            ← diarios de sesión hasta octubre de 2026 (historia)
 │
+├── tests/                   ← las pruebas e2e (Playwright)
 ├── scripts/                 ← verify, ingesta de arte, utilidades
 ├── vendor/                  ← React UMD self-hosted
 ├── fonts/                   ← subsets latin self-hosted
@@ -163,9 +175,9 @@ manual persiste y siempre gana después.
 ## 💛 Gratuito y Premium
 
 El **núcleo de PACE es gratuito** y seguirá estándolo: el Foco entero, «A tu ritmo» de
-cada día, 34 rutinas, Hidrátate, los logros y las estadísticas de hoy y de la semana.
+cada día, 35 rutinas, Hidrátate, los logros y las estadísticas de hoy y de la semana.
 
-**PACE completo** añade las 19 rutinas más profundas, tus propias rutinas, una semana que
+**PACE completo** añade las 18 rutinas más profundas, tus propias rutinas, una semana que
 aprende de ti y tu mes y tu año. Habrá dos planes, **2,99 € al mes con 7 días gratis o
 19,99 € de por vida**, sin crear una cuenta. **v1.0 será la primera versión de pago**;
 hasta entonces todo lo construido está abierto. La licencia ya existe (v0.157.0): un
@@ -218,7 +230,8 @@ Para licencias comerciales alternativas (por ejemplo, uso interno de una organiz
 
 El proyecto se itera en sesiones sucesivas con ayuda de asistentes de diseño. Para retomarlo:
 
-1. [`STATE.md`](./STATE.md) — estado actual, backlog y próximos pasos
+1. [`STATE.md`](./STATE.md) — estado actual, backlog y próximos pasos (desde cero o desde otra cuenta,
+   también [`docs/traspaso/LEEME.md`](./docs/traspaso/LEEME.md))
 2. [`CLAUDE.md`](./CLAUDE.md) — protocolo de trabajo y arquitectura
 3. [`ROADMAP.md`](./ROADMAP.md) — el camino a v1.0
 4. `git log` — qué cambió en cada versión y por qué (los diarios anteriores siguen en [`docs/sessions/`](./docs/sessions/))

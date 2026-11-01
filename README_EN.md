@@ -1,9 +1,10 @@
 # PACE · Foco · Cuerpo
 
-> Productivity and wellness web app for people who spend long hours sitting.
+> Productivity and wellness app for people who spend long hours sitting, on the web, Android and iPhone.
 > Thoughtful micro-interventions throughout the day, not lengthy workouts.
 
 **Status:** v0.189.0 · Pre-launch
+**Web:** [pacegrass.app](https://pacegrass.app) · [PACE Complete](https://pacegrass.app/premium) · [Try it on Android or iPhone](https://pacegrass.app/beta)
 **Build delivered:** `index.html` — web/PWA artifact, installable and offline
 **Author:** [@ezradesign](https://github.com/ezradesign)
 **Code license:** [Elastic License 2.0](./LICENSE) — see [§ License](#-license)
@@ -20,8 +21,8 @@ micro-breaks for breathing, mobility and hydration, chained into guided routines
 |---|---|
 | **Foco** (Focus) | Configurable Pomodoro (15 / 25 / 35 / 45 min) with cycles and breaks |
 | **Respira** (Breathe) | 20 breathwork techniques (coherence, box, 4-7-8, Wim Hof-like, pranayama), 13 free |
-| **Mueve** (Move) | 15 discreet office strength routines (push and pull, stealth, legs, back and core), 9 free |
-| **Estira** (Stretch) | 18 mobility routines (office, shoulders and spine, hips and legs, flows), 12 free |
+| **Mueve** (Move) | 14 discreet office strength routines (start here, stealth, with equipment and go further), 7 free |
+| **Estira** (Stretch) | 19 mobility routines (start here, office, shoulders and spine, hips and legs, go further), 15 free |
 | **Hidrátate** (Hydrate) | Water glass tracker |
 | **Caminos** (Paths) | 7 guided journeys over an illustrated plate, hidden until after v1 (nothing has been deleted) |
 | **Logros** (Achievements) | 96 collectible field-notebook stamps |
@@ -43,10 +44,11 @@ and an installable **PWA** that works offline.
 | Achievements | 96 in catalog · 88 with an active detector · 78 with dedicated artwork |
 | i18n | Full ES/EN, catalogs split by domain |
 | PWA | `manifest.webmanifest` + service worker with precache; self-hosted fonts, zero external requests |
-| PACE Complete | Everything paid goes through a single point (`app/state-entitlement.jsx`); the signed license exists since v0.157.0 and today it ships in the testers' codes; the `/premium` page is live. Until v1, everything is open |
+| Android and iPhone | The same app through Capacitor (`android/`, `ios/`): every push to `main` builds the Android APK and signed AAB and the iPhone app. Android is in Google Play's closed test and iPhone in TestFlight; both stores launch the same day, with v1 |
+| PACE Complete | Everything paid goes through a single point (`app/state-entitlement.jsx`); the signed license exists since v0.157.0 and today it ships in the testers' codes. On the web, `/premium`, checkout with Stripe (in test mode), `/gracias`, `/recuperar` and `/desistir` (closed until email is connected); the terms, in draft. Until v1, everything is open |
 | Robustness | A broken saved field repairs itself (anything unreadable is kept in a rescue copy) · dialogs and sessions manage focus and keyboard · the screen stays on during a guided session · if one part fails, only that part closes (with a recovery screen as a last resort) |
-| Code | 196 code files under `app/` (.js, .jsx, .css), none above 500 lines |
-| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence · `npm run test:e2e` — 733 tests in a real browser (708 in Chromium and 25 in Safari's engine) |
+| Code | Over 200 code files under `app/` (.js, .jsx, .css), none above 500 lines |
+| Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence and what the website promises · `npm run test:e2e` — over 1,100 tests in a real browser, in Chromium and in Safari's engine, run by CI on every push |
 
 ---
 
@@ -93,8 +95,11 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ for building only.
 - **React 18.3.1** (production UMD, self-hosted in `vendor/`)
 - **Babel standalone 7.29.0** — **development only**; the build compiles JSX to plain
   JS ahead of time and strips Babel from the artifact
-- **No bundler, no backend.** npm only provides the build toolchain
-- **`localStorage` persistence** — no data server, no tracking
+- **No bundler.** npm only provides the build toolchain
+- **Capacitor** for the Android and iPhone apps, built on GitHub Actions (the iPhone one too, without a Mac)
+- **`localStorage` and IndexedDB persistence** — no data server, no tracking. The Cloudflare functions
+  (`functions/api/`) only handle web checkout, the PACE Complete code, withdrawal and the "Notify me"
+  list: none of them receives what you do in PACE
 - **Self-hosted fonts** (Cormorant Garamond, EB Garamond, Inter Tight)
 
 ---
@@ -111,14 +116,21 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ for building only.
 ├── LICENSE                  ← Elastic License 2.0
 ├── CLAUDE.md · STATE.md · CHANGELOG.md
 ├── DESIGN_SYSTEM.md · CONTENT.md · ROADMAP.md · MONETIZATION.md
+├── premium/ · beta/ · gracias/ · recuperar/ · desistir/   ← the website pages
+├── privacy.html · safety.html · legal/   ← privacy, safety and the legal drafts
+├── functions/api/           ← Cloudflare functions: checkout, code, withdrawal, "Notify me"
+├── android/ · ios/          ← the native apps (Capacitor)
 │
 ├── docs/
 │   ├── BUILD.md             ← how the build works
 │   ├── WORKFLOW.md          ← Git session-closing protocol
 │   ├── product/             ← standing product and technical decisions
+│   ├── launch/              ← Google Play, App Store, payments and legal
+│   ├── traspaso/            ← to pick the project up from scratch
 │   ├── audits/              ← audits with evidence
 │   └── sessions/            ← session diaries up to October 2026 (history)
 │
+├── tests/                   ← the e2e tests (Playwright)
 ├── scripts/                 ← verify, art ingestion, utilities
 ├── vendor/                  ← self-hosted React UMD
 ├── fonts/                   ← self-hosted latin subsets
@@ -162,10 +174,10 @@ persists and always wins afterwards.
 ## 💛 Free and Premium
 
 The **core of PACE is free** and will stay that way: the whole Focus, «A tu ritmo» (At
-your pace) every day, 34 routines, Hydrate, achievements and the stats for today and
+your pace) every day, 35 routines, Hydrate, achievements and the stats for today and
 the week.
 
-**PACE Complete** adds the 19 deeper routines, your own routines, a week that learns
+**PACE Complete** adds the 18 deeper routines, your own routines, a week that learns
 from you and your month and year. There will be two plans, **€2.99 a month with a
 7-day free trial or €19.99 for life**, with no account to create. **v1.0 will be the
 first paid version**; until then everything built is open. The license already exists
@@ -217,7 +229,8 @@ For alternative commercial licenses (e.g., internal use by an organization that 
 
 The project is iterated across successive sessions with design assistant support. To resume work:
 
-1. [`STATE.md`](./STATE.md) — current state, backlog and next steps
+1. [`STATE.md`](./STATE.md) — current state, backlog and next steps (from scratch or from another account,
+   also [`docs/traspaso/LEEME.md`](./docs/traspaso/LEEME.md))
 2. [`CLAUDE.md`](./CLAUDE.md) — work protocol and architecture
 3. [`ROADMAP.md`](./ROADMAP.md) — the road to v1.0
 4. `git log` — what changed in each version and why (earlier diaries remain in [`docs/sessions/`](./docs/sessions/))

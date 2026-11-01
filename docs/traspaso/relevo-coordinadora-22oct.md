@@ -79,7 +79,10 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     ni dibujos ni logo nuevos en `Glifos` ni en `para-revisar`. La app se reinició: el arranque de las 14:07 de
     `maqueta-sin-querer` era un `CronCreate` de su sesión, sin archivo que lo guarde, y casi seguro se perdió. El martes 3
     desde las 14:00, alguien le escribe «Empieza» en esa sesión (o la arranca una tarea programada de la app). Lo único
-    que adelanta la versión de prueba sigue siendo de Ez: Rana, Palmas en la mesa y el logo.
+    que adelanta la versión de prueba sigue siendo de Ez: Rana, Palmas en la mesa y el logo. Con el 3 % y su «revisa que
+    esté todo al día»: el ROADMAP, los dos README (Android e iPhone, las funciones de Cloudflare, 14 de Mueve y 19 de
+    Estira) y /premium, que decía 34 rutinas gratis desde el 18 oct. y son 35 (y 18 de pago, no 19) desde las capas del
+    23. Lo defiende `scripts/verify.promesas.js`. /beta estaba al día; su enlace del iPhone espera a que Apple apruebe.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

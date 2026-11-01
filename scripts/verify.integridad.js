@@ -37,6 +37,7 @@ var mascaras = require('./verify.mascaras.js'); // mapa/disco/precache del arte 
 var android = require('./verify.android.js');   // las copias de la web en los recursos de Android
 var ios = require('./verify.ios.js');           // lo mismo en el iPhone, y las reglas de la App Store
 var rutinas = require('./verify.rutinas.js');   // lo que pide cada ejercicio de «Tus rutinas» casa con su texto
+var promesas = require('./verify.promesas.js'); // las rutinas gratis y de pago que cuentan /premium y los README
 
 /* --------------------------------------------------------------------------
    CENSO. Cada numero esta MEDIDO del arbol, no estimado, y tiene su sesion.
@@ -448,6 +449,7 @@ function chequeaContenido(ctx) {
   censo(ctx, 'rutinas de Respira', cuentaItems(sb.__B), CENSO.respira);
   censo(ctx, 'rutinas de Mueve',   cuentaItems(sb.__M), CENSO.mueve);
   censo(ctx, 'rutinas de Estira',  cuentaItems(sb.__E), CENSO.estira);
+  promesas.chequeaPromesas(ctx, { respira: sb.__B, mueve: sb.__M, estira: sb.__E });
   censo(ctx, 'Caminos', (sb.__P || []).length, CENSO.caminos);
 }
 

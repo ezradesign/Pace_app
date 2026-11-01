@@ -133,8 +133,8 @@ para subirla: los 14 días empiezan entonces, y v1 puede salir unas tres semanas
 | Gratis | De pago — 2,99 € al mes con 7 días gratis, o 19,99 € de por vida (Ez, 15 oct. 2026) |
 |---|---|
 | Pomodoro completo | «A tu ritmo» **a lo largo de la semana**: variación por día, aprende de «¿te ayudó?», lecturas A y C de s194 |
-| «A tu ritmo» **del día** | Las **19 rutinas premium** |
-| Las **34 rutinas gratuitas** | El **constructor** de rutinas propias |
+| «A tu ritmo» **del día** | Las **18 rutinas premium** |
+| Las **35 rutinas gratuitas** | El **constructor** de rutinas propias |
 | Hidrátate | Stats de **mes y año** y «qué te ayuda» |
 | Logros y Stats **«Hoy»** y **«Semana»** | |
 
