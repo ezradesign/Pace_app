@@ -37,7 +37,7 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
-   esperar»): sube en cuanto estén Rana, Palmas en la mesa y el logo (B4 y C3, la colocación y el material, ya
+   esperar»): sube en cuanto estén Rana y Palmas en la mesa, con el logo como está (Ez, 4 nov.; B4 y C3, la colocación y el material, ya
    están en la 0.187.0); el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo baja la coordinadora con el sí de Ez y lo
    sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
 4. Después, Play Billing y la compra de Apple (esperan las altas de Ez) y lo legal de /premium. El día de v1, «Da de
@@ -49,7 +49,9 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora: los dos dibujos que faltan y el logo**, que dejan subir la versión de prueba definitiva (abajo).
+- **Ahora: los dos dibujos que faltan**, que dejan subir la versión de prueba definitiva (abajo). El logo se queda como
+  está por ahora (Ez, 4 nov.). Con ella va el arreglo de la media jornada que no se pulsa pasada su hora, que vio un
+  tester un sábado a las 15:00 (sesión `media-jornada-tarde`, 4 nov.; lo que se ve, con su página).
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
@@ -67,8 +69,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **La versión de prueba definitiva** (notas de Play y TestFlight y capturas nuevas, preparadas en `SUBIDAS.md` con la
   0.189.0): los 16 dibujos (catorce en `main` con la 0.187.0; faltan
   Rana y Palmas en la mesa: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
-  `docs/product/GLIFOS_A_DIBUJAR.md`) y el logo en PNG transparente
-  (`app/ui/pace-logo.png`: «EVEN» se lee «FVFN», también en /premium). El AAB de la 0.184.0, en `subidas-play\`.
+  `docs/product/GLIFOS_A_DIBUJAR.md`). El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN»
+  (`app/ui/pace-logo.png`, también en /premium). El AAB de la 0.184.0, en `subidas-play\`.
 - **iPhone**: el correo de Apple que aprueba la prueba beta (enviada el 23 oct.), e invitar a sus testers con el
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco
   y W-8BEN, el programa para pequeñas empresas y una dirección visible en la UE.

@@ -2,7 +2,16 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 31 de octubre de 2026, v0.189.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.0.
+
+## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
+
+Ez: «el logo de momento va a quedar así». La versión de prueba definitiva ya solo espera Rana y Palmas en la mesa; las
+capturas de Chromebook siguen vacías hasta que haya logo nuevo. `maqueta-sin-querer` arrancó el 4 con un «Arranca» de
+la coordinadora. Un tester de Android no podía pulsar «Media jornada» un sábado a las 15:00: pasada su hora el chip enseña
+sus horas, y mover solo el inicio la deja «De 15:00 a 13:00», muerta (comprobado con Playwright, desde la v0.144.0). Lo
+arregla `media-jornada-tarde` en su worktree (puerto 8834), con una página para que Ez elija lo que se ve. Stripe: la
+coordinadora guía a Ez paso a paso; `/api/stripe` sigue dando 503 («cerrada») hasta el aviso y `PACE_ENLACES_STRIPE`.
 
 ## 31 oct.: lo legal y la versión de prueba preparada, en `main` (v0.189.0)
 
