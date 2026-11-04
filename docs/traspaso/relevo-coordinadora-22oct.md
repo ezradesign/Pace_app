@@ -107,6 +107,20 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     mentira (partes 3 y 4 de la guía del chat). **La C de la media jornada**, de Ez: «La C pero el submenú tiene que tener la
     paleta de PACE (no blanco) e indicar la hora de inicio (la interfaz tiene que ser clara para el usuario)», pasada a
     `media-jornada-tarde`: el arreglo de lógica en un commit y la C encima, con fotos antes de juntar.
+16. **4 nov., Stripe, partes 3 y 4.** `STRIPE_LECTURA` puesta (Checkout Sessions, Payment Intents, Charges and Refunds e
+    Invoices en Lectura; nada más): `/api/recuperar` contesta «formato» y ya no «cerrada». Dos compras de prueba hechas
+    (la de por vida y la mensual): /gracias dio los dos códigos (k2; `lifetime` con `cs_test_…` y `monthly` con `sub_…`,
+    los dos hasta el 7 nov., el tope del modo de prueba) y PACE completo se abre con ellos. **/recuperar NO encuentra la de
+    por vida** con `hola.ezradesign@gmail.com` y el recibo `2889-1045`: era lo que quedaba por saber del modo «vende por ti»
+    (qué número enseña su recibo, `cobro/stripe.js`, `stripeBuscarCompra`). Se diagnostica con Ez. Ez, de la C de la media
+    jornada vista en fotos: «me vale así»; y luego «Sí, júntala».
+    **Causa probable de /recuperar:** el correo coincide y el recibo de Link dice «Número de recibo 2889-1045» y «Número de
+    factura TXSLKUWF-0001», pero la llave `rk_` se creó en un **sandbox** aparte («Entorno de prueba de… ezradesign», con
+    el aviso «Los cambios que realices aquí no afectarán a clientes ni a pagos reales»), que es otra cuenta. El destino de
+    eventos, los enlaces y las compras están en el **modo de prueba** de `acct_1UVT69JweaohZyG6` (URL con `/test/`, aviso
+    «No se procesarán transacciones reales»). La llave del sandbox no ve esas sesiones: Stripe contesta bien y vacío, y
+    /recuperar da 404 «no» (no 502). Arreglo: rehacer la llave en `dashboard.stripe.com/acct_1UVT69JweaohZyG6/test/apikeys`
+    y cambiar `STRIPE_LECTURA` en Cloudflare.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

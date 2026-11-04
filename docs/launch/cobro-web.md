@@ -75,6 +75,12 @@ con él se quedará sin código.
 
 ## 5. Stripe: la llave que solo lee, para /recuperar
 
+**Ojo, en la misma cuenta que los enlaces.** Stripe tiene dos sitios de prueba que se parecen: el **modo de prueba**
+de tu cuenta (la dirección lleva `/test/` y el aviso de arriba dice «No se procesarán transacciones reales») y un
+**sandbox** aparte («Entorno de prueba de…», con el aviso «Los cambios que realices aquí no afectarán a clientes ni a
+pagos reales»), que es otra cuenta. La llave tiene que salir del mismo sitio que los enlaces de pago y el aviso: si no,
+Stripe contesta bien pero vacío y /recuperar dice que no encuentra la compra (le pasó a Ez el 4 nov.).
+
 `pacegrass.app/recuperar` busca la compra en Stripe con el correo y el número del recibo, y para eso
 necesita leer, nunca cobrar ni cambiar nada. En Stripe › Desarrolladores › Claves de API › **Crear clave
 restringida**: nombre «PACE recuperar», y solo **Lectura** en Checkout Sessions, Cargos (Charges),
