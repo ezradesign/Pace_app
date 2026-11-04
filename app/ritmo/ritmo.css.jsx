@@ -437,11 +437,25 @@
 .pace-rt-preg .pace-rt-chip { padding: 6px 12px 7px !important; }
 .pace-rt-preg .pace-rt-chip b { line-height: 1.08; }
 .pace-rt-preg .pace-rt-chip > span { margin-top: 2px; line-height: 1.12; }
-/* El chip de la media jornada fuera de su hora: no es botón, son sus dos horas. Las cajas de
-   los selectores crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
-.pace-rt-chip.pace-rt-chip-horas { cursor: default; }
-.pace-rt-chip.pace-rt-chip-horas:hover { background: var(--paper) !important; border-color: var(--line) !important; }
+/* El chip de la media jornada fuera de su hora: su nombre es un botón que abre la hora de
+   inicio (RitmoHoraInicio) y cuya caja cubre el chip entero; los dos selectores van encima.
+   Sus cajas crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
+.pace-rt-chip.pace-rt-chip-horas { position: relative; cursor: pointer; }
+.pace-rt-chip-nombre { display: block; width: 100%; padding: 0 !important; border: 0 !important; background: none !important; text-align: left; cursor: pointer; }
+.pace-rt-chip-nombre::after { content: ''; position: absolute; inset: 0; border-radius: var(--r-md); }
+.pace-rt-chip-nombre:focus-visible { outline: none; }
+.pace-rt-chip-nombre:focus-visible::after { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-chip-horas > span { position: relative; z-index: 1; }
 .pace-rt-chip-horas .pace-rt-sel { padding-top: 10px; margin-top: -10px; background-position: right 1px bottom 6px; }
+/* Lo que crecen los selectores no llega a pisar la palabra: tocar «Media jornada» abre su hora. */
+.pace-rt-chip-nombre b { position: relative; z-index: 2; }
+/* La hora de inicio: las horas en cursiva display, como en la frase, y la de ahora en verde. */
+.pace-rt-horas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 18px; }
+.pace-rt-hora { height: 38px; border: 1px solid var(--line) !important; border-radius: var(--r-sm); background: var(--paper) !important; color: var(--ink);
+  font-family: var(--font-display); font-style: italic; font-size: 17px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.pace-rt-hora:hover, .pace-rt-hora[aria-checked="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.pace-rt-hora[aria-checked="true"] { color: var(--focus); font-weight: 500; }
+.pace-rt-hora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 /* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
    derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
    partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */

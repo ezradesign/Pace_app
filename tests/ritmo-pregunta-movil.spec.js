@@ -153,6 +153,56 @@ test.describe('por la tarde, a 360×718', () => {
     expect(errores).toEqual([]);
   });
 
+  /* La C de Ez (4 nov. 2026): tocar el nombre abre la hora de inicio, «con la paleta de PACE
+     (no blanco)» y diciendo qué hora es. Antes el nombre no hacía nada. */
+  test('pasada su hora, tocar «Media jornada» abre su hora de inicio en la paleta de PACE, y las 15:00 la dejan lista', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await sembrar(context, { sidebarCollapsed: true, ritmo: {} });
+    await page.clock.install({ time: new Date('2026-11-07T15:00:00+01:00') });
+    await irAlArtefacto(page);
+    await pulsarComienza(page);
+    const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
+    const horas = pregunta.locator('[data-pace-ritmo-media-horas]');
+    const dialogo = page.getByRole('dialog');
+    /* Toda la caja del chip abre, no solo la palabra: se toca su esquina de arriba a la derecha. */
+    const caja = await horas.boundingBox();
+    await page.mouse.click(caja.x + caja.width - 8, caja.y + 8);
+    await expect(dialogo).toBeVisible();
+    await expect(dialogo.locator('[data-pace-modal-title]')).toHaveText('Hora de inicio');
+    await expect(dialogo).toContainText('Media jornada');
+    await expect(dialogo).toContainText('Ahora va de 9:00 a 13:00.');
+    await expect(dialogo.locator('[data-pace-ritmo-hora="540"]'), 'la hora de ahora, marcada').toHaveAttribute('aria-checked', 'true');
+    const fondo = await dialogo.evaluate((card) => {
+      const muestra = document.createElement('i');
+      muestra.style.background = 'var(--paper)';
+      document.body.appendChild(muestra);
+      const papel = getComputedStyle(muestra).backgroundColor;
+      muestra.remove();
+      return { card: getComputedStyle(card).backgroundColor, papel };
+    });
+    expect(fondo.card, 'el papel de PACE y no el blanco del sistema').toBe(fondo.papel);
+    /* Escape cierra sin cambiar nada. */
+    await page.keyboard.press('Escape');
+    await expect(dialogo).toHaveCount(0);
+    expect(await page.evaluate(() => (getState().ritmo.horario || {}).media)).toBeUndefined();
+    /* Y la palabra entera, también por abajo, donde llegan las cajas crecidas de las horas. */
+    const nombre = await horas.locator('b').boundingBox();
+    for (const x of [0.15, 0.5, 0.85]) {
+      expect(await page.evaluate(([px, py]) => !!document.elementFromPoint(px, py).closest('[data-pace-ritmo-media-abrir]'),
+        [nombre.x + nombre.width * x, nombre.y + nombre.height - 2]), 'la palabra abre la hora de inicio').toBe(true);
+    }
+    await horas.locator('[data-pace-ritmo-media-abrir]').click();
+    await dialogo.locator('[data-pace-ritmo-hora="900"]').click();
+    await expect(dialogo).toHaveCount(0);
+    const chip = pregunta.locator('button[data-pace-ritmo-opcion="media"]');
+    await expect(chip, 'el fin va detrás y el chip vuelve a pulsarse').toBeEnabled();
+    await expect(chip).toContainText('De 15:00 a 19:00');
+    await chip.click();
+    await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Media jornada');
+    expect(await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.opcion, m.desde, m.hasta]; })).toEqual(['media', 900, 1140]);
+    expect(errores).toEqual([]);
+  });
+
   /* Lo que contó un tester de Android: su semana tiene el sábado de media jornada (la de
      fábrica, de 9:00 a 13:00), son las 15:00 y quiere hacerla por la tarde. Movía solo el
      inicio y la media jornada quedaba «de 15:00 a 13:00»: apagada, y el chip seguía sin
