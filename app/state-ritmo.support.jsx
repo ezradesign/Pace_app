@@ -51,6 +51,32 @@ function ritmoHorarioCon(h, cambios, crudo) {
   return out;
 }
 
+/* UN TRAMO NUNCA ACABA ANTES DE EMPEZAR. Las dos jornadas son tramos (inicio → salida y
+   media.inicio → media.salida) y cada hora tiene su selector, así que mover una sola podía
+   dejar «de 15:00 a 13:00»: un tramo apagado todo el día y, en el móvil pasada su hora, un
+   chip de media jornada que no se podía pulsar (lo contó un tester de Android un sábado a
+   las 15:00). Si la hora tocada deja el fin en o antes del inicio, la otra va detrás y el
+   tramo conserva lo que duraba, hasta el tope de su selector (RITMO_RANGOS); guardado ya
+   del revés, dura lo de fábrica. Si no se cruzan, solo cambia la hora tocada: quien entra
+   más tarde puede seguir saliendo a su hora. `h` es el horario de antes del cambio;
+   devuelve los cambios que hay que escribir, `{ campo: minutos }`. */
+var RITMO_TRAMO_PAR = { inicio: 'salida', salida: 'inicio', 'media.inicio': 'media.salida', 'media.salida': 'media.inicio' };
+function ritmoTramoCon(h, campo, valor) {
+  var cambios = {};
+  cambios[campo] = valor;
+  var otro = RITMO_TRAMO_PAR[campo];
+  if (!otro) return cambios;
+  var media = campo.indexOf('media.') === 0;
+  var antes = media ? ritmoMedia(h) : h;   /* la media nunca se lee del revés (ritmoMedia) */
+  var abre = campo === 'inicio' || campo === 'media.inicio';
+  if ((abre ? antes.salida : valor) > (abre ? valor : antes.inicio)) return cambios;
+  var fab = ritmoHorarioInicial();
+  var dur = antes.salida > antes.inicio ? antes.salida - antes.inicio : fab.salida - fab.inicio;
+  var rango = RITMO_RANGOS[otro];
+  cambios[otro] = abre ? Math.min(valor + dur, rango[1]) : Math.max(valor - dur, rango[0]);
+  return cambios;
+}
+
 /* Las reuniones de `fecha` con las que se compone el día (ritmoDe y el resumen). Con
    «Tener en cuenta mis reuniones de hoy» desmarcada, ninguna, aunque queden horas leídas
    antes: la casilla promete que no cuentan. Esas horas no se borran, y al volver a
@@ -124,6 +150,6 @@ function ritmoNombreDia(diaSemana, t) {
    desde lo guardado: la tarjeta enseña el día de HOY sin que haga falta nada aquí. */
 
 Object.assign(window, {
-  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
+  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
   ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia,
 });

@@ -8,7 +8,8 @@
  * En escritorio no cambia nada (lo cubren ritmo.spec.js y ritmo-media.spec.js).
  *
  * Sin la frase de la media jornada, pasada su hora su chip se apagaba y en el
- * móvil no había dónde moverla a la tarde: ahora el chip enseña sus dos horas.
+ * móvil no había dónde moverla a la tarde: ahora el chip enseña sus dos horas, y
+ * mover solo su inicio lleva el fin detrás (ritmoTramoCon).
  *
  * Contra la versión anterior fallan todas: no había línea del día y la home
  * pedía scroll.
@@ -141,14 +142,39 @@ test.describe('por la tarde, a 360×718', () => {
     await expect(horas.locator('select')).toHaveCount(2);
     await asentarGeometria(page);
     expect(await scrollDeLaHome(page), 'enseñar las horas no estira el chip').toBeLessThanOrEqual(1);
+    /* Basta con mover el inicio: el fin va detrás con sus cuatro horas (ritmoTramoCon). */
     await horas.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
-    await horas.locator('select[data-pace-ritmo-horario="media.salida"]').selectOption('1140');
     const chip = pregunta.locator('button[data-pace-ritmo-opcion="media"]');
     await expect(chip, 'con el tramo en la tarde vuelve a ser un chip').toBeEnabled();
     await expect(chip, 'que empieza ahora y acaba a su hora').toContainText('De 15:30 a 19:00');
     await chip.click();
     await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Media jornada');
     expect(await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.opcion, m.hasta]; })).toEqual(['media', 1140]);
+    expect(errores).toEqual([]);
+  });
+
+  /* Lo que contó un tester de Android: su semana tiene el sábado de media jornada (la de
+     fábrica, de 9:00 a 13:00), son las 15:00 y quiere hacerla por la tarde. Movía solo el
+     inicio y la media jornada quedaba «de 15:00 a 13:00»: apagada, y el chip seguía sin
+     poder pulsarse. La prueba de arriba cambiaba las dos horas y por eso no lo veía.
+     Con la semana, en cuanto la media cabe la pregunta llega contestada («como cada
+     sábado», RitmoManana.jsx) y se empieza con «Comienza». */
+  test('un sábado de media jornada a las 15:00, mover solo su inicio lleva el fin detrás y se puede empezar', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await sembrar(context, { sidebarCollapsed: true,
+      ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'media', 'libre'] } });
+    await page.clock.install({ time: new Date('2026-11-07T15:00:00+01:00') });
+    await irAlArtefacto(page);
+    await pulsarComienza(page);
+    const horas = vis(page, '[data-pace-ritmo-estado="pregunta"]').locator('[data-pace-ritmo-media-horas]');
+    await expect(horas.locator('select')).toHaveCount(2);
+    await horas.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
+    const habitual = vis(page, '[data-pace-ritmo-habitual="media"]');
+    await expect(habitual, 'la media cabe en la tarde y el sábado llega contestado').toContainText('como cada sábado');
+    expect(await page.evaluate(() => getState().ritmo.horario.media), 'el fin conserva sus cuatro horas').toEqual({ inicio: 900, salida: 1140 });
+    await habitual.locator('[data-pace-ritmo-habitual-comienza]').click();
+    await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Media jornada');
+    expect(await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.opcion, m.desde, m.hasta]; })).toEqual(['media', 900, 1140]);
     expect(errores).toEqual([]);
   });
 });

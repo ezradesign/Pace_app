@@ -12920,10 +12920,14 @@ function ritmoHorarioInicial() {
 
 
 
+
+
 var RITMO_MEDIA_DUR = 240;
 function ritmoMedia(h) {
   var m = h && h.media;
-  if (m && m.inicio != null && m.salida != null) return { inicio: m.inicio, salida: m.salida };
+  if (m && m.inicio != null && m.salida != null) {
+    return { inicio: m.inicio, salida: m.salida > m.inicio ? m.salida : m.inicio + RITMO_MEDIA_DUR };
+  }
   return { inicio: h.inicio, salida: h.inicio + RITMO_MEDIA_DUR };
 }
 
@@ -13268,10 +13272,15 @@ function ritmoHorario(campo, valor) {
 
 
 
-  if (campo.indexOf('media.') === 0) {
-    horario.media = Object.assign({}, ritmoMedia(horario));
-    horario.media[campo.slice(6)] = Number(valor);
-  } else horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
+
+  if (campo === 'sinComida') horario.sinComida = !!Number(valor);else
+  {
+    var cambios = ritmoTramoCon(horario, campo, Number(valor));
+    if (campo.indexOf('media.') === 0) {
+      horario.media = Object.assign({}, ritmoMedia(horario));
+      Object.keys(cambios).forEach(function (c) {horario.media[c.slice(6)] = cambios[c];});
+    } else Object.assign(horario, cambios);
+  }
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -13451,6 +13460,32 @@ function ritmoHorarioCon(h, cambios, crudo) {
 
 
 
+
+
+
+
+
+var RITMO_TRAMO_PAR = { inicio: 'salida', salida: 'inicio', 'media.inicio': 'media.salida', 'media.salida': 'media.inicio' };
+function ritmoTramoCon(h, campo, valor) {
+  var cambios = {};
+  cambios[campo] = valor;
+  var otro = RITMO_TRAMO_PAR[campo];
+  if (!otro) return cambios;
+  var media = campo.indexOf('media.') === 0;
+  var antes = media ? ritmoMedia(h) : h;
+  var abre = campo === 'inicio' || campo === 'media.inicio';
+  if ((abre ? antes.salida : valor) > (abre ? valor : antes.inicio)) return cambios;
+  var fab = ritmoHorarioInicial();
+  var dur = antes.salida > antes.inicio ? antes.salida - antes.inicio : fab.salida - fab.inicio;
+  var rango = RITMO_RANGOS[otro];
+  cambios[otro] = abre ? Math.min(valor + dur, rango[1]) : Math.max(valor - dur, rango[0]);
+  return cambios;
+}
+
+
+
+
+
 function ritmoOcupadoDe(r, fecha) {
   if (r && r.calendario && r.calendario.reuniones === false) return [];
   var o = r && r.ocupado;
@@ -13520,10 +13555,10 @@ function ritmoNombreDia(diaSemana, t) {
 
 
 Object.assign(window, {
-  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
+  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
   ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia
 });
-;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia });
+;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, RITMO_TRAMO_PAR, ritmoTramoCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia });
 })();
 </script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
@@ -46859,7 +46894,9 @@ function useRitmoSemanaBorrador(state, inicial) {
   return {
     dias, setDias, horas,
     horario: ritmoHorarioCon(R.horario, horas, crudo),
-    onHora: (campo, v) => setHoras((h) => ({ ...h, [campo]: v }))
+
+
+    onHora: (campo, v) => setHoras((h) => ({ ...h, ...ritmoTramoCon(ritmoHorarioCon(R.horario, h, crudo), campo, v) }))
   };
 }
 

@@ -79,7 +79,9 @@ function useRitmoSemanaBorrador(state, inicial) {
   return {
     dias, setDias, horas,
     horario: ritmoHorarioCon(R.horario, horas, crudo),
-    onHora: (campo, v) => setHoras((h) => ({ ...h, [campo]: v })),
+    /* Una hora que cruza la otra de su tramo la lleva detrás, como al guardar en el sitio
+       (ritmoTramoCon): el borrador apunta las dos y «Guardar» escribe las dos. */
+    onHora: (campo, v) => setHoras((h) => ({ ...h, ...ritmoTramoCon(ritmoHorarioCon(R.horario, h, crudo), campo, v) })),
   };
 }
 
