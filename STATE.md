@@ -25,8 +25,8 @@ El orden hasta v1, en `ROADMAP.md` («Camino a v1.0»), con los paquetes de las 
 T, M, L y V) debajo de su tabla. **La fecha de v1 no depende del código**: la fijan los 12 testers
 de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar que piden Play, Apple y Stripe.
 
-1. **Stripe en el modo de prueba**, con Ez y su hoja: el aviso de pago, los números de los enlaces en Cloudflare
-   (`PACE_ENLACES_STRIPE`, que pide la 0.186.0), los enlaces de prueba y una compra de mentira. **Los arreglos del cobro
+1. **Stripe en el modo de prueba**, con Ez: el aviso y los cuatro enlaces en `PACE_ENLACES_STRIPE`, hechos el 4 nov.;
+   faltan la llave que solo lee y una compra de mentira. **Los arreglos del cobro
    que encontró ChatGPT (A1-A7), en `main` con la 0.186.0** (29 oct., con el «júntalo» de Ez).
 2. **Mueve, Estira y «Tus rutinas», en `main` con la 0.187.0** (29 oct., con el «júntalo» de Ez): B1-B4, C1-C6 y U1-U5
    de las revisiones de ChatGPT, el reparto del runner que dibujó Ez y los catorce dibujos nuevos, con Paloma, Flexor de
@@ -58,9 +58,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   `RESEND_CLAVE` en Cloudflare, mejor al encender la venta (`docs/launch/desistir.md`).
 - **Volver a pegar en Play Console** el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`, en es y en (cambió
   con la 0.188.0); el de PACE completo, con la v1.
-- **A la vez: Stripe** (`docs/launch/cobro-web.md`): el aviso en el modo de prueba (`STRIPE_AVISO_SECRETO`), los números
-  `plink_` de los enlaces en `PACE_ENLACES_STRIPE` (sin ellos, desde la 0.186.0, `/api/stripe` da 503), la llave que
-  solo lee (`STRIPE_LECTURA`), los enlaces de prueba y la compra de mentira con 4242, mirando qué número trae el recibo.
+- **A la vez: Stripe** (`docs/launch/cobro-web.md`): la llave que solo lee (`STRIPE_LECTURA`) y la compra de mentira con
+  4242, mirando qué número trae el recibo. Hecho el 4 nov.: el aviso de prueba (`STRIPE_AVISO_SECRETO`, destino «PACE»), los
+  dos enlaces de prueba y los cuatro `plink_` en `PACE_ENLACES_STRIPE`: `/api/stripe` contesta «firma» (400), ya no 503.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.

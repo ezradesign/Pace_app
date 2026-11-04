@@ -99,6 +99,14 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
       puerto 8834): el fin se mueve con el inicio, prueba en rojo antes, y una página con lo que se ve para Ez. Sin bump.
     - Stripe: `/api/stripe` da 503 («cerrada»); se guía a Ez por el aviso de prueba y los `plink_` en el chat.
     - Nada más que abrir: lo demás hasta v1 espera a Ez (altas, datos, testers) o es del grupo 3.
+15. **4 nov., Stripe, partes 1 y 2 hechas por Ez** (en el entorno de prueba de `acct_1UVT69JweaohZyG6`): destino de eventos
+    «PACE» a `https://pacegrass.app/api/stripe` con los cuatro eventos, carga «snapshot» y API 2026-09-30, su `whsec_` en
+    `STRIPE_AVISO_SECRETO`; productos y enlaces de prueba (`plink_1UY0npJweaohZyG68f6WdqSe`, `plink_1UY0olJweaohZyG6fmeaq7wE`)
+    y los de verdad (`plink_1UVayCJweaohZyG6b19AI1S6`, `plink_1UVaxKJweaohZyG6K7Q77Fzn`) en `PACE_ENLACES_STRIPE`, y
+    reimplementado. `/api/stripe` contesta `{"motivo":"firma"}` (400): abierta. Faltan la llave que solo lee y la compra de
+    mentira (partes 3 y 4 de la guía del chat). **La C de la media jornada**, de Ez: «La C pero el submenú tiene que tener la
+    paleta de PACE (no blanco) e indicar la hora de inicio (la interfaz tiene que ser clara para el usuario)», pasada a
+    `media-jornada-tarde`: el arreglo de lógica en un commit y la C encima, con fotos antes de juntar.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
