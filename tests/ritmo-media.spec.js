@@ -86,6 +86,60 @@ test('mover otra hora no congela la media jornada: mientras nadie la toque, sigu
   expect(r.derivada).toEqual({ inicio: 600, salida: 840 });
 });
 
+/* Cada hora tiene su selector, y mover una sola podía dejar un tramo que acaba antes de
+   empezar: «de 15:00 a 13:00», apagado todo el día (un tester de Android, un sábado de
+   media jornada). Ahora la otra hora va detrás y el tramo conserva lo que duraba, hasta el
+   tope de su selector; si no se cruzan, solo cambia la hora tocada. */
+test('una hora que cruza la otra la lleva detrás: ningún tramo acaba antes de empezar', async ({ page, context }) => {
+  await abrir(page, context, { horario: H });
+  const r = await page.evaluate((H) => {
+    const tras = (horario, campo, v) => {
+      ritmoGuardar(() => ({ horario: Object.assign({}, H, horario) }));
+      ritmoHorario(campo, v);
+      const h = getState().ritmo.horario;
+      return { entera: [h.inicio, h.salida], media: h.media ? [h.media.inicio, h.media.salida] : null };
+    };
+    const manana = { media: { inicio: 540, salida: 780 } }, tarde = { media: { inicio: 900, salida: 1140 } };
+    return {
+      mediaATarde: tras(manana, 'media.inicio', 900),
+      mediaAlTope: tras(manana, 'media.inicio', 1260),
+      mediaSinCruzar: tras(manana, 'media.inicio', 600),
+      finDeMediaAntes: tras(tarde, 'media.salida', 840),
+      finDeMediaAlSuelo: tras(manana, 'media.salida', 360),
+      entradaTrasLaSalida: tras({}, 'inicio', 1080),
+      entradaALaSalida: tras({}, 'inicio', 1020),
+      salidaAntesDeEntrar: tras({ inicio: 780 }, 'salida', 720),
+      salidaSinCruzar: tras({}, 'salida', 720),
+      yaDelReves: tras({ inicio: 1080 }, 'inicio', 1110),
+      leidaDelReves: ritmoDe({ ritmo: { horario: Object.assign({}, H, { media: { inicio: 900, salida: 780 } }) } }).horario.media,
+    };
+  }, H);
+  expect(r.mediaATarde, 'la media de 9:00 a 13:00 movida a las 15:00 acaba a las 19:00').toEqual({ entera: [540, 1020], media: [900, 1140] });
+  expect(r.mediaAlTope, 'y no pasa del último fin que ofrece su selector').toEqual({ entera: [540, 1020], media: [1260, 1410] });
+  expect(r.mediaSinCruzar, 'si no se cruzan, el fin se queda donde estaba').toEqual({ entera: [540, 1020], media: [600, 780] });
+  expect(r.finDeMediaAntes, 'un fin antes del inicio lleva el inicio detrás').toEqual({ entera: [540, 1020], media: [600, 840] });
+  expect(r.finDeMediaAlSuelo).toEqual({ entera: [540, 1020], media: [300, 360] });
+  expect(r.entradaTrasLaSalida, 'la jornada entera también; sus ocho horas topan en las 23:30').toEqual({ entera: [1080, 1410], media: null });
+  expect(r.entradaALaSalida, 'empezar a la hora de salir también cruza').toEqual({ entera: [1020, 1410], media: null });
+  expect(r.salidaAntesDeEntrar).toEqual({ entera: [480, 720], media: null });
+  expect(r.salidaSinCruzar, 'salir antes sin cruzar no mueve la entrada').toEqual({ entera: [540, 720], media: null });
+  expect(r.yaDelReves, 'guardada del revés, toma la duración de fábrica').toEqual({ entera: [1110, 1410], media: null });
+  expect(r.leidaDelReves, 'una media guardada del revés se lee con sus cuatro horas desde el inicio').toEqual({ inicio: 900, salida: 1140 });
+});
+
+test('en «Tu semana» el borrador también lleva el fin detrás, y se guarda así', async ({ page, context }) => {
+  await abrir(page, context, { horario: H });
+  await page.evaluate(() => ritmoSemanaAbrir());
+  const hoja = vis(page, '[data-pace-semana-hoja]');
+  await hoja.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
+  await expect(hoja.locator('select[data-pace-ritmo-horario="media.salida"]')).toHaveValue('1140');
+  await hoja.locator('select[data-pace-ritmo-horario="inicio"]').selectOption('1080');
+  await expect(hoja.locator('select[data-pace-ritmo-horario="salida"]')).toHaveValue('1410');
+  await hoja.locator('[data-pace-semana-guardar]').click();
+  const h = await page.evaluate(() => getState().ritmo.horario);
+  expect([h.inicio, h.salida, h.media]).toEqual([1080, 1410, { inicio: 900, salida: 1140 }]);
+});
+
 test('fuera de su tramo se apaga, como la entera tras la salida', async ({ page, context }) => {
   await abrir(page, context, { horario: Object.assign({}, H, { media: { inicio: 540, salida: 780 } }) }, HOY + 'T14:00:00+02:00');
   await pulsarComienza(page);

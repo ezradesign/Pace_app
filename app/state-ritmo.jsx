@@ -74,11 +74,15 @@ function ritmoHorarioInicial() {
 /* Las horas de la media jornada: las guardadas o, mientras nadie las toque, CUATRO
    HORAS desde tu entrada. Derivarlas aquí (y no guardarlas de entrada) es lo que hace
    que una instalación vieja no necesite migración: si mueves la entrada y nunca has
-   tocado la media jornada, te sigue. */
+   tocado la media jornada, te sigue. Una guardada DEL REVÉS (un fin en o antes del inicio,
+   de antes de ritmoTramoCon) no sirve nada en todo el día: se lee con su inicio y sus
+   cuatro horas, como la derivada, y así vuelve sin que la persona tenga que adivinarlo. */
 var RITMO_MEDIA_DUR = 240;
 function ritmoMedia(h) {
   var m = h && h.media;
-  if (m && m.inicio != null && m.salida != null) return { inicio: m.inicio, salida: m.salida };
+  if (m && m.inicio != null && m.salida != null) {
+    return { inicio: m.inicio, salida: m.salida > m.inicio ? m.salida : m.inicio + RITMO_MEDIA_DUR };
+  }
   return { inicio: h.inicio, salida: h.inicio + RITMO_MEDIA_DUR };
 }
 
@@ -422,11 +426,16 @@ function ritmoHorario(campo, valor) {
   var horario = Object.assign(ritmoHorarioInicial(), r.horario || {});
   /* s195b: `sinComida` es un interruptor (1 / 0 → true / false); el resto, minutos.
      s197: «media.inicio» / «media.salida» escriben DENTRO de `media`, que es su propio
-     horario; tocar una de las dos fija las dos (deja de seguir a la entrada). */
-  if (campo.indexOf('media.') === 0) {
-    horario.media = Object.assign({}, ritmoMedia(horario));
-    horario.media[campo.slice(6)] = Number(valor);
-  } else horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
+     horario; tocar una de las dos fija las dos (deja de seguir a la entrada). Una hora que
+     cruza la otra de su tramo la lleva detrás (ritmoTramoCon, state-ritmo.support.jsx). */
+  if (campo === 'sinComida') horario.sinComida = !!Number(valor);
+  else {
+    var cambios = ritmoTramoCon(horario, campo, Number(valor));
+    if (campo.indexOf('media.') === 0) {
+      horario.media = Object.assign({}, ritmoMedia(horario));
+      Object.keys(cambios).forEach(function (c) { horario.media[c.slice(6)] = cambios[c]; });
+    } else Object.assign(horario, cambios);
+  }
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });

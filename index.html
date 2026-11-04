@@ -3990,6 +3990,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aria.salida': 'Hora a la que terminas',
   'ritmo.aria.media.inicio': 'Hora a la que empieza tu media jornada',
   'ritmo.aria.media.salida': 'Hora a la que termina tu media jornada',
+  'ritmo.inicio.titulo': 'Hora de inicio',
+  'ritmo.inicio.sub': 'Ahora va de {a} a {b}.',
   'ritmo.llevas': 'Llevas {b} y {p}',
   'ritmo.llevas.solo': 'Llevas {b}',
   'ritmo.numeros': 'cero,un,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez,once,doce',
@@ -4147,6 +4149,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aria.salida': 'Finish time',
   'ritmo.aria.media.inicio': 'Half day start time',
   'ritmo.aria.media.salida': 'Half day finish time',
+  'ritmo.inicio.titulo': 'Start time',
+  'ritmo.inicio.sub': 'Right now it runs from {a} to {b}.',
   'ritmo.llevas': 'So far, {b} and {p}',
   'ritmo.llevas.solo': 'So far, {b}',
   'ritmo.numeros': 'zero,one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve',
@@ -12920,10 +12924,14 @@ function ritmoHorarioInicial() {
 
 
 
+
+
 var RITMO_MEDIA_DUR = 240;
 function ritmoMedia(h) {
   var m = h && h.media;
-  if (m && m.inicio != null && m.salida != null) return { inicio: m.inicio, salida: m.salida };
+  if (m && m.inicio != null && m.salida != null) {
+    return { inicio: m.inicio, salida: m.salida > m.inicio ? m.salida : m.inicio + RITMO_MEDIA_DUR };
+  }
   return { inicio: h.inicio, salida: h.inicio + RITMO_MEDIA_DUR };
 }
 
@@ -13268,10 +13276,15 @@ function ritmoHorario(campo, valor) {
 
 
 
-  if (campo.indexOf('media.') === 0) {
-    horario.media = Object.assign({}, ritmoMedia(horario));
-    horario.media[campo.slice(6)] = Number(valor);
-  } else horario[campo] = campo === 'sinComida' ? !!Number(valor) : Number(valor);
+
+  if (campo === 'sinComida') horario.sinComida = !!Number(valor);else
+  {
+    var cambios = ritmoTramoCon(horario, campo, Number(valor));
+    if (campo.indexOf('media.') === 0) {
+      horario.media = Object.assign({}, ritmoMedia(horario));
+      Object.keys(cambios).forEach(function (c) {horario.media[c.slice(6)] = cambios[c];});
+    } else Object.assign(horario, cambios);
+  }
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -13451,6 +13464,32 @@ function ritmoHorarioCon(h, cambios, crudo) {
 
 
 
+
+
+
+
+
+var RITMO_TRAMO_PAR = { inicio: 'salida', salida: 'inicio', 'media.inicio': 'media.salida', 'media.salida': 'media.inicio' };
+function ritmoTramoCon(h, campo, valor) {
+  var cambios = {};
+  cambios[campo] = valor;
+  var otro = RITMO_TRAMO_PAR[campo];
+  if (!otro) return cambios;
+  var media = campo.indexOf('media.') === 0;
+  var antes = media ? ritmoMedia(h) : h;
+  var abre = campo === 'inicio' || campo === 'media.inicio';
+  if ((abre ? antes.salida : valor) > (abre ? valor : antes.inicio)) return cambios;
+  var fab = ritmoHorarioInicial();
+  var dur = antes.salida > antes.inicio ? antes.salida - antes.inicio : fab.salida - fab.inicio;
+  var rango = RITMO_RANGOS[otro];
+  cambios[otro] = abre ? Math.min(valor + dur, rango[1]) : Math.max(valor - dur, rango[0]);
+  return cambios;
+}
+
+
+
+
+
 function ritmoOcupadoDe(r, fecha) {
   if (r && r.calendario && r.calendario.reuniones === false) return [];
   var o = r && r.ocupado;
@@ -13520,10 +13559,10 @@ function ritmoNombreDia(diaSemana, t) {
 
 
 Object.assign(window, {
-  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe,
+  RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
   ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia
 });
-;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia });
+;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, RITMO_TRAMO_PAR, ritmoTramoCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia });
 })();
 </script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
@@ -45434,11 +45473,25 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-preg .pace-rt-chip { padding: 6px 12px 7px !important; }
 .pace-rt-preg .pace-rt-chip b { line-height: 1.08; }
 .pace-rt-preg .pace-rt-chip > span { margin-top: 2px; line-height: 1.12; }
-/* El chip de la media jornada fuera de su hora: no es botón, son sus dos horas. Las cajas de
-   los selectores crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
-.pace-rt-chip.pace-rt-chip-horas { cursor: default; }
-.pace-rt-chip.pace-rt-chip-horas:hover { background: var(--paper) !important; border-color: var(--line) !important; }
+/* El chip de la media jornada fuera de su hora: su nombre es un botón que abre la hora de
+   inicio (RitmoHoraInicio) y cuya caja cubre el chip entero; los dos selectores van encima.
+   Sus cajas crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
+.pace-rt-chip.pace-rt-chip-horas { position: relative; cursor: pointer; }
+.pace-rt-chip-nombre { display: block; width: 100%; padding: 0 !important; border: 0 !important; background: none !important; text-align: left; cursor: pointer; }
+.pace-rt-chip-nombre::after { content: ''; position: absolute; inset: 0; border-radius: var(--r-md); }
+.pace-rt-chip-nombre:focus-visible { outline: none; }
+.pace-rt-chip-nombre:focus-visible::after { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.pace-rt-chip-horas > span { position: relative; z-index: 1; }
 .pace-rt-chip-horas .pace-rt-sel { padding-top: 10px; margin-top: -10px; background-position: right 1px bottom 6px; }
+/* Lo que crecen los selectores no llega a pisar la palabra: tocar «Media jornada» abre su hora. */
+.pace-rt-chip-nombre b { position: relative; z-index: 2; }
+/* La hora de inicio: las horas en cursiva display, como en la frase, y la de ahora en verde. */
+.pace-rt-horas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 18px; }
+.pace-rt-hora { height: 38px; border: 1px solid var(--line) !important; border-radius: var(--r-sm); background: var(--paper) !important; color: var(--ink);
+  font-family: var(--font-display); font-style: italic; font-size: 17px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.pace-rt-hora:hover, .pace-rt-hora[aria-checked="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.pace-rt-hora[aria-checked="true"] { color: var(--focus); font-weight: 500; }
+.pace-rt-hora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 /* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
    derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
    partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
@@ -45878,6 +45931,8 @@ Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtique
 
 
 
+const { useState: useStateRP } = React;
+
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
 function RitmoContexto() {
@@ -45924,9 +45979,13 @@ function RitmoSobre(_ref2) {let { m } = _ref2;
 
 
 
+
+
 function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
   const { t, tn } = useT();
-  const horas = editarMedia ? ritmoHuecos(ritmoDe(state).horario) : null;
+  const [inicioAbierto, setInicioAbierto] = useStateRP(false);
+  const horario = editarMedia ? ritmoDe(state).horario : null;
+  const horas = horario ? ritmoHuecos(horario) : null;
   return (
     React.createElement("div", { className: "pace-rt-chips" },
     RITMO_OPCIONES_UI.map((op) => {
@@ -45935,8 +45994,12 @@ function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
       if (horas && op === 'media' && vacia) {
         return (
           React.createElement("div", { key: op, className: "pace-rt-chip pace-rt-chip-horas", "data-pace-ritmo-opcion": op, "data-pace-ritmo-media-horas": true },
-          React.createElement("b", null, t('ritmo.opcion.media')),
-          React.createElement("span", null, React.createElement(RitmoFrase, { plantilla: t('ritmo.tramo'), huecos: { a: horas.mediaInicio, b: horas.mediaSalida } }))
+          React.createElement("button", { type: "button", className: "pace-rt-chip-nombre", "aria-haspopup": "dialog", "data-pace-ritmo-media-abrir": true,
+            onClick: () => setInicioAbierto(true) },
+          React.createElement("b", null, t('ritmo.opcion.media'))
+          ),
+          React.createElement("span", null, React.createElement(RitmoFrase, { plantilla: t('ritmo.tramo'), huecos: { a: horas.mediaInicio, b: horas.mediaSalida } })),
+          inicioAbierto ? React.createElement(RitmoHoraInicio, { horario: horario, onClose: () => setInicioAbierto(false) }) : null
           ));
 
       }
@@ -45957,13 +46020,42 @@ function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
 
 
 
+function RitmoHoraInicio(_ref4) {let { horario, onClose } = _ref4;
+  const { t, tn } = useT();
+  const media = ritmoMedia(horario);
+  const rango = RITMO_RANGOS['media.inicio'];
+  const valores = [];
+  for (let v = rango[0]; v <= rango[1]; v += 30) valores.push(v);
+  const elegir = (nueva) => {
+    if (nueva !== media.inicio) ritmoHorario('media.inicio', nueva);
+    onClose();
+  };
+  return ReactDOM.createPortal(
+    React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 360, relleno: "22px 20px 24px", tagLabel: t('ritmo.opcion.media'),
+      title: t('ritmo.inicio.titulo'), subtitle: tn('ritmo.inicio.sub', { a: ritmoHora(media.inicio), b: ritmoHora(media.salida) }) },
+    React.createElement("div", { className: "pace-rt-horas", role: "radiogroup", "aria-label": t('ritmo.inicio.titulo'), "data-pace-ritmo-hora-inicio": true },
+    valores.map((min) =>
+    React.createElement("button", { key: min, type: "button", role: "radio", "aria-checked": min === media.inicio, className: "pace-rt-hora",
+      "data-pace-ritmo-hora": min, onClick: () => elegir(min) }, ritmoHora(min))
+    )
+    )
+    ),
+    document.body
+  );
+}
+
+
+
+
+
+
 function ritmoSub(op, m, vacia, t, tn) {
   if (vacia) return t('ritmo.fuera');
   if (op === 'media' || op === 'jornada') return tn('ritmo.tramo', { a: ritmoHora(m.desde), b: ritmoHora(m.hasta) });
   return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
 }
 
-function RitmoPregunta(_ref4) {let { state } = _ref4;
+function RitmoPregunta(_ref5) {let { state } = _ref5;
   const { t, tn } = useT();
   const R = ritmoDe(state);
 
@@ -46024,7 +46116,7 @@ function RitmoPregunta(_ref4) {let { state } = _ref4;
 
 
 
-function RitmoDiaLinea(_ref5) {let { horario } = _ref5;
+function RitmoDiaLinea(_ref6) {let { horario } = _ref6;
   const { t } = useT();
   const h = ritmoHuecos(horario);
   const come = !horario.sinComida;
@@ -46057,7 +46149,7 @@ function RitmoDiaLinea(_ref5) {let { horario } = _ref5;
 
 
 
-function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref6;
+function RitmoFraseMenu(_ref7) {let { plan, horario, plantilla, capital } = _ref7;
   const { t, tn } = useT();
   const m = plan.m;
   const huecos = ritmoHuecos(horario);
@@ -46087,13 +46179,13 @@ function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref
 
 
 
-function RitmoComo(_ref7) {let { plan } = _ref7;
+function RitmoComo(_ref8) {let { plan } = _ref8;
   const { t } = useT();
   if (plan.hechos > 0) return null;
   return React.createElement("div", { className: "pace-rt-sub pace-rt-como", "data-pace-ritmo-como": true }, t('ritmo.como'));
 }
 
-function RitmoEscritorio(_ref8) {let { state, plan } = _ref8;
+function RitmoEscritorio(_ref9) {let { state, plan } = _ref9;
   const { t } = useT();
   const R = ritmoDe(state);
   return (
@@ -46116,7 +46208,7 @@ function RitmoEscritorio(_ref8) {let { state, plan } = _ref8;
 
 }
 
-function RitmoFila(_ref9) {let { rotulo, modulo, nombre, meta, claves } = _ref9;
+function RitmoFila(_ref0) {let { rotulo, modulo, nombre, meta, claves } = _ref0;
   const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-fila" },
@@ -46134,7 +46226,7 @@ function RitmoFila(_ref9) {let { rotulo, modulo, nombre, meta, claves } = _ref9;
 
 
 
-function RitmoFilaParada(_ref0) {let { it, rotulo, corta } = _ref0;
+function RitmoFilaParada(_ref1) {let { it, rotulo, corta } = _ref1;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
   if (it.tipo === 'comida') {
@@ -46149,7 +46241,7 @@ function RitmoFilaParada(_ref0) {let { it, rotulo, corta } = _ref0;
     claves: it.platos.map((p) => p.clave) });
 }
 
-function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
+function RitmoMovil(_ref10) {let { state, plan, onVer } = _ref10;
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
@@ -46195,7 +46287,7 @@ function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
 
 }
 
-function RitmoHecho(_ref10) {let { plan } = _ref10;
+function RitmoHecho(_ref11) {let { plan } = _ref11;
   const { t, tn } = useT();
   return (
     React.createElement("div", { className: "pace-rt-panel", "data-pace-ritmo-estado": "hecho" },
@@ -46214,10 +46306,10 @@ function RitmoHecho(_ref10) {let { plan } = _ref10;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoHoraInicio, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoHoraInicio, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -46859,7 +46951,9 @@ function useRitmoSemanaBorrador(state, inicial) {
   return {
     dias, setDias, horas,
     horario: ritmoHorarioCon(R.horario, horas, crudo),
-    onHora: (campo, v) => setHoras((h) => ({ ...h, [campo]: v }))
+
+
+    onHora: (campo, v) => setHoras((h) => ({ ...h, ...ritmoTramoCon(ritmoHorarioCon(R.horario, h, crudo), campo, v) }))
   };
 }
 

@@ -8,7 +8,8 @@
  * En escritorio no cambia nada (lo cubren ritmo.spec.js y ritmo-media.spec.js).
  *
  * Sin la frase de la media jornada, pasada su hora su chip se apagaba y en el
- * móvil no había dónde moverla a la tarde: ahora el chip enseña sus dos horas.
+ * móvil no había dónde moverla a la tarde: ahora el chip enseña sus dos horas, y
+ * mover solo su inicio lleva el fin detrás (ritmoTramoCon).
  *
  * Contra la versión anterior fallan todas: no había línea del día y la home
  * pedía scroll.
@@ -141,14 +142,89 @@ test.describe('por la tarde, a 360×718', () => {
     await expect(horas.locator('select')).toHaveCount(2);
     await asentarGeometria(page);
     expect(await scrollDeLaHome(page), 'enseñar las horas no estira el chip').toBeLessThanOrEqual(1);
+    /* Basta con mover el inicio: el fin va detrás con sus cuatro horas (ritmoTramoCon). */
     await horas.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
-    await horas.locator('select[data-pace-ritmo-horario="media.salida"]').selectOption('1140');
     const chip = pregunta.locator('button[data-pace-ritmo-opcion="media"]');
     await expect(chip, 'con el tramo en la tarde vuelve a ser un chip').toBeEnabled();
     await expect(chip, 'que empieza ahora y acaba a su hora').toContainText('De 15:30 a 19:00');
     await chip.click();
     await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Media jornada');
     expect(await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.opcion, m.hasta]; })).toEqual(['media', 1140]);
+    expect(errores).toEqual([]);
+  });
+
+  /* La C de Ez (4 nov. 2026): tocar el nombre abre la hora de inicio, «con la paleta de PACE
+     (no blanco)» y diciendo qué hora es. Antes el nombre no hacía nada. */
+  test('pasada su hora, tocar «Media jornada» abre su hora de inicio en la paleta de PACE, y las 15:00 la dejan lista', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await sembrar(context, { sidebarCollapsed: true, ritmo: {} });
+    await page.clock.install({ time: new Date('2026-11-07T15:00:00+01:00') });
+    await irAlArtefacto(page);
+    await pulsarComienza(page);
+    const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
+    const horas = pregunta.locator('[data-pace-ritmo-media-horas]');
+    const dialogo = page.getByRole('dialog');
+    /* Toda la caja del chip abre, no solo la palabra: se toca su esquina de arriba a la derecha. */
+    const caja = await horas.boundingBox();
+    await page.mouse.click(caja.x + caja.width - 8, caja.y + 8);
+    await expect(dialogo).toBeVisible();
+    await expect(dialogo.locator('[data-pace-modal-title]')).toHaveText('Hora de inicio');
+    await expect(dialogo).toContainText('Media jornada');
+    await expect(dialogo).toContainText('Ahora va de 9:00 a 13:00.');
+    await expect(dialogo.locator('[data-pace-ritmo-hora="540"]'), 'la hora de ahora, marcada').toHaveAttribute('aria-checked', 'true');
+    const fondo = await dialogo.evaluate((card) => {
+      const muestra = document.createElement('i');
+      muestra.style.background = 'var(--paper)';
+      document.body.appendChild(muestra);
+      const papel = getComputedStyle(muestra).backgroundColor;
+      muestra.remove();
+      return { card: getComputedStyle(card).backgroundColor, papel };
+    });
+    expect(fondo.card, 'el papel de PACE y no el blanco del sistema').toBe(fondo.papel);
+    /* Escape cierra sin cambiar nada. */
+    await page.keyboard.press('Escape');
+    await expect(dialogo).toHaveCount(0);
+    expect(await page.evaluate(() => (getState().ritmo.horario || {}).media)).toBeUndefined();
+    /* Y la palabra entera, también por abajo, donde llegan las cajas crecidas de las horas. */
+    const nombre = await horas.locator('b').boundingBox();
+    for (const x of [0.15, 0.5, 0.85]) {
+      expect(await page.evaluate(([px, py]) => !!document.elementFromPoint(px, py).closest('[data-pace-ritmo-media-abrir]'),
+        [nombre.x + nombre.width * x, nombre.y + nombre.height - 2]), 'la palabra abre la hora de inicio').toBe(true);
+    }
+    await horas.locator('[data-pace-ritmo-media-abrir]').click();
+    await dialogo.locator('[data-pace-ritmo-hora="900"]').click();
+    await expect(dialogo).toHaveCount(0);
+    const chip = pregunta.locator('button[data-pace-ritmo-opcion="media"]');
+    await expect(chip, 'el fin va detrás y el chip vuelve a pulsarse').toBeEnabled();
+    await expect(chip).toContainText('De 15:00 a 19:00');
+    await chip.click();
+    await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Media jornada');
+    expect(await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.opcion, m.desde, m.hasta]; })).toEqual(['media', 900, 1140]);
+    expect(errores).toEqual([]);
+  });
+
+  /* Lo que contó un tester de Android: su semana tiene el sábado de media jornada (la de
+     fábrica, de 9:00 a 13:00), son las 15:00 y quiere hacerla por la tarde. Movía solo el
+     inicio y la media jornada quedaba «de 15:00 a 13:00»: apagada, y el chip seguía sin
+     poder pulsarse. La prueba de arriba cambiaba las dos horas y por eso no lo veía.
+     Con la semana, en cuanto la media cabe la pregunta llega contestada («como cada
+     sábado», RitmoManana.jsx) y se empieza con «Comienza». */
+  test('un sábado de media jornada a las 15:00, mover solo su inicio lleva el fin detrás y se puede empezar', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await sembrar(context, { sidebarCollapsed: true,
+      ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'media', 'libre'] } });
+    await page.clock.install({ time: new Date('2026-11-07T15:00:00+01:00') });
+    await irAlArtefacto(page);
+    await pulsarComienza(page);
+    const horas = vis(page, '[data-pace-ritmo-estado="pregunta"]').locator('[data-pace-ritmo-media-horas]');
+    await expect(horas.locator('select')).toHaveCount(2);
+    await horas.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
+    const habitual = vis(page, '[data-pace-ritmo-habitual="media"]');
+    await expect(habitual, 'la media cabe en la tarde y el sábado llega contestado').toContainText('como cada sábado');
+    expect(await page.evaluate(() => getState().ritmo.horario.media), 'el fin conserva sus cuatro horas').toEqual({ inicio: 900, salida: 1140 });
+    await habitual.locator('[data-pace-ritmo-habitual-comienza]').click();
+    await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toContainText('Media jornada');
+    expect(await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.opcion, m.desde, m.hasta]; })).toEqual(['media', 900, 1140]);
     expect(errores).toEqual([]);
   });
 });
