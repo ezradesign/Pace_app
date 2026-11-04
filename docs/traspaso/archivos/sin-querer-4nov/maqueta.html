@@ -1,0 +1,391 @@
+<title>Pausas, el «No» y Respira</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una hoja de decisiones de PACE: la paleta y la letra de la app (DESIGN_SYSTEM.md), una columna,
+   cada pregunta con «Hoy» arriba y sus opciones en tarjetas que se eligen con un toque. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #77705F;
+  --line: #C9C0A8;
+  --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --move: #8A6B3F; --move-soft: rgba(154, 123, 79, 0.14);
+  --breathe: #B4664A;
+  --sombra: 0 1px 2px rgba(31, 28, 23, 0.06), 0 6px 20px rgba(31, 28, 23, 0.06);
+  --display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f291f;
+    --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536;
+    --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16);
+    --move: #C9A675; --move-soft: rgba(201, 166, 117, 0.14);
+    --breathe: #D99477;
+    --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f291f;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536;
+  --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16);
+  --move: #C9A675; --move-soft: rgba(201, 166, 117, 0.14);
+  --breathe: #D99477;
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--ui); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.hoja { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; color: var(--ink); }
+h1 { font-size: clamp(32px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(26px, 3.6vw, 34px); line-height: 1.1; }
+h3 { font-size: 21px; line-height: 1.2; }
+p { margin: 0; max-width: 68ch; }
+.meta { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.cab { display: flex; flex-direction: column; gap: 14px; }
+.cab p { color: var(--ink-2); }
+
+.respuesta { border: 1px solid var(--line); border-radius: 16px; background: var(--paper-2); padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.respuesta .fila { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.codigo { font-family: var(--display); font-size: 28px; font-style: italic; letter-spacing: 0.02em; min-width: 0; }
+.boton { font: 500 14px/1 var(--ui); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--focus); background: var(--focus); color: var(--paper); cursor: pointer; }
+.boton.suave { background: transparent; color: var(--ink-2); border-color: var(--line); }
+.boton:focus-visible, .op button:focus-visible, .tema button:focus-visible, figure button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.nota { font-size: 13px; color: var(--ink-3); }
+
+.tema { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; background: var(--paper-2); }
+.tema button { font: 500 11px/1 var(--ui); letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.tema button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+.pregunta { display: flex; flex-direction: column; gap: 20px; border-top: 1px solid var(--line); padding-top: 28px; }
+.pregunta .titulo { display: flex; flex-direction: column; gap: 8px; }
+.hoy { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.hoy .texto { display: flex; flex-direction: column; gap: 8px; }
+.hoy .texto p { color: var(--ink-2); }
+
+.fotos { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure button { padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2); cursor: zoom-in; display: block; width: 100%; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 12px; color: var(--ink-3); }
+.movil { width: min(100%, 230px); }
+.ancha { width: min(100%, 640px); }
+.panel { width: 100%; }
+
+.ops { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.op { border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: var(--paper); min-width: 0; transition: border-color 160ms, box-shadow 160ms; }
+.op.recomendada { box-shadow: var(--sombra); }
+.op[data-elegida="1"] { border-color: var(--focus); box-shadow: 0 0 0 2px var(--focus-soft), var(--sombra); }
+.op .arriba { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.letra { font-family: var(--display); font-size: 26px; font-style: italic; color: var(--focus); line-height: 1; }
+.rec { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--focus); border: 1px solid var(--focus); border-radius: 999px; padding: 3px 8px; }
+.op p { color: var(--ink-2); font-size: 14.5px; }
+.op .porque { font-size: 14px; color: var(--ink); border-left: 2px solid var(--line); padding-left: 10px; }
+.op .fotos { gap: 10px; }
+.op .movil { width: min(100%, 200px); }
+.op .elegir { margin-top: auto; align-self: flex-start; }
+.op[data-elegida="1"] .elegir { background: var(--focus); color: var(--paper); border-color: var(--focus); }
+.op.ancho { grid-column: 1 / -1; }
+
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; min-width: 460px; }
+.tabla { overflow-x: auto; }
+th, td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 500; color: var(--ink-3); font-size: 12px; }
+
+.lupa { position: fixed; inset: 0; z-index: 50; background: rgba(20, 18, 14, 0.82); overflow: auto; display: grid; place-items: start center;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; }
+.lupa[hidden] { display: none; }
+.lupa img { max-width: 100%; height: auto; border-radius: 10px; }
+.lupa .cerrar { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+@media (prefers-reduced-motion: reduce) { .op { transition: none; } }
+</style>
+
+<div class="hoja">
+  <header class="cab">
+    <span class="meta">PACE · 0.189.0 · 4 nov. 2026</span>
+    <h1>Pausas, el «No» y Respira</h1>
+    <p>Tres cosas de las revisiones de ChatGPT del 28 oct. que siguen igual en la app de hoy. Las dos primeras cambian algo
+      sin que lo sepas; la tercera es lo primero que ve quien abre Respira. Irían como actualización durante los 14 días de los
+      testers. Cada foto es la app de verdad con la opción puesta dentro. Elige una letra en cada pregunta.</p>
+    <div class="respuesta" aria-live="polite">
+      <span class="meta">Tu respuesta</span>
+      <div class="fila">
+        <span class="codigo" id="codigo">1A · 2A · 3A</span>
+        <button type="button" class="boton" id="copiar">Copiar</button>
+        <button type="button" class="boton suave" id="recomendado">Volver a lo recomendado</button>
+      </div>
+      <span class="nota" id="nota-respuesta">Ahora pone lo recomendado. Toca «Elijo…» en otra opción para cambiarla, o escríbeme las letras sin más.</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <span class="nota">Fotos en</span>
+      <div class="tema" role="group" aria-label="Fotos en claro u oscuro">
+        <button type="button" data-tema="claro" aria-pressed="true">Claro</button>
+        <button type="button" data-tema="oscuro" aria-pressed="false">Oscuro</button>
+      </div>
+      <span class="nota">Toca una foto para verla en grande.</span>
+    </div>
+  </header>
+
+  <!-- 1 · Q2 -->
+  <section class="pregunta" data-q="1" id="pausa-futura">
+    <div class="titulo">
+      <span class="meta">Pregunta 1 · escritorio</span>
+      <h2>Tocar una pausa de más tarde la cambia</h2>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>En el escritorio, la línea del día enseña las pausas que vienen. Si tocas una que aún no toca, para ver qué es, PACE la
+          cambia por otra sin preguntar ni avisar, y no hay forma de volver a la de antes.</p>
+        <p>Y a veces cambia también otra de más tarde. En la foto, al tocar la de las 11:55 (Piernas sin pasos) salió Gemelos
+          subrepticios, y la de las 16:20 pasó de Cadena posterior (Estira) a Piernas sin pasos (Mueve). Es a propósito: PACE reparte
+          el día para mover todo el cuerpo sin repetir zona. Lo que falla es que no lo dice.</p>
+        <p>En el móvil no pasa: la jornada entera tiene un botón «Otra» aparte, y tocar el nombre no hace nada.</p>
+      </div>
+      <div class="fotos">
+        <figure class="panel"><button type="button"><img data-f="q2-hoy-e" alt="La línea del día de hoy, antes de tocar nada"></button><figcaption>Hoy · antes de tocar: 11:55 Piernas sin pasos, 16:20 Cadena posterior</figcaption></figure>
+        <figure class="panel"><button type="button"><img data-f="q2-hoy-tocada-e" alt="La línea del día después de tocar la pausa de las 11:55"></button><figcaption>Hoy · después de tocar la de las 11:55: cambian dos pausas</figcaption></figure>
+        <figure class="movil"><button type="button"><img data-f="q2-jornada-m" alt="La jornada entera en el móvil, con un botón Otra en cada pausa"></button><figcaption>Hoy · móvil, con «Otra» aparte</figcaption></figure>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op recomendada ancho" data-op="A">
+        <div class="arriba"><span class="letra">1A</span><h3>Tocar es mirar; cambiar, un botón aparte</h3><span class="rec">Recomendada</span></div>
+        <p>Al tocar una pausa de más tarde se abre una ficha pequeña debajo, con la hora, los minutos, el módulo, el nombre y su
+          frase. Para cambiarla, «Otra», dentro de la ficha, que enseña la nueva. Si eso mueve otra pausa, la ficha lo dice: «También
+          cambia la de las 16:20, para no repetir zona». «Cerrar», Escape o tocar fuera la cierran sin cambiar nada.</p>
+        <p class="porque">Mirar ya no cambia nada, y cambiar funciona como en el móvil, con «Otra».</p>
+        <div class="fotos">
+          <figure class="panel"><button type="button"><img data-f="q2-A-e" alt="Opción A: la ficha de la pausa de las 11:55, con Otra y Cerrar"></button><figcaption>1A · al tocar la de las 11:55</figcaption></figure>
+          <figure class="panel"><button type="button"><img data-f="q2-A-otra-e" alt="Opción A: la ficha tras pulsar Otra, avisando de que cambia también la de las 16:20"></button><figcaption>1A · después de «Otra»</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 1A</button>
+      </article>
+      <article class="op ancho" data-op="B">
+        <div class="arriba"><span class="letra">1B</span><h3>Tocar sigue cambiando, con «Deshacer»</h3></div>
+        <p>Al tocarla cambia como hoy, y abajo sale un aviso durante unos segundos: «Cambiada por Gemelos subrepticios · también la
+          de las 16:20 · Deshacer».</p>
+        <p class="porque">Es el cambio más pequeño, pero quien solo quería mirar sigue sin poder ver qué era sin cambiarla.</p>
+        <div class="fotos">
+          <figure class="panel"><button type="button"><img data-f="q2-B-e" alt="Opción B: el aviso Cambiada por Gemelos subrepticios con Deshacer"></button><figcaption>1B · al tocar la de las 11:55</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 1B</button>
+      </article>
+    </div>
+    <p class="nota">En las dos, la pausa de «Ahora» se sigue empezando al tocarla, y lo que ya pasó no se toca. En el móvil no cambia nada.</p>
+  </section>
+
+  <!-- 2 · Q4 -->
+  <section class="pregunta" data-q="2" id="el-no">
+    <div class="titulo">
+      <span class="meta">Pregunta 2</span>
+      <h2>Un «No» aparta la rutina para siempre, sin decirlo</h2>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>Al acabar una rutina, PACE pregunta «¿Te ayudó esta pausa?». Si contestas «No», y nunca has dicho «Sí» o «Un poco» de esa
+          rutina, deja de proponértela en las pausas y en «A tu ritmo». Para siempre, y la pantalla solo dice «Gracias». Sigue en su
+          biblioteca, y vuelve a salir solo si ya no quedara nada más que proponer.</p>
+        <p>Quien contesta «No» un día que estaba distraído no sabe que la está apartando; quien quería apartarla no sabe que lo ha
+          hecho ni cómo recuperarla.</p>
+      </div>
+      <div class="fotos">
+        <figure class="movil"><button type="button"><img data-f="q4-hoy-m" alt="La pantalla final con la pregunta Te ayudó esta pausa"></button><figcaption>Hoy · la pregunta</figcaption></figure>
+        <figure class="movil"><button type="button"><img data-f="q4-hoy-no-m" alt="La pantalla final tras contestar No: solo dice Gracias"></button><figcaption>Hoy · tras «No»: «Gracias»</figcaption></figure>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op recomendada" data-op="A">
+        <div class="arriba"><span class="letra">2A</span><h3>El «No» la aparta dos semanas, y lo dice</h3><span class="rec">Recomendada</span></div>
+        <p>Tras «No»: «Gracias. Durante dos semanas no te la propondré en las pausas. Deshacer». Pasadas las dos semanas vuelve
+          sola. «Deshacer» devuelve la pregunta, por si fue sin querer. Las que hoy están apartadas sin fecha vuelven a las dos
+          semanas de su último «No».</p>
+        <p class="porque">Un mal día ya no te quita una rutina para siempre, ves lo que pasa y lo puedes deshacer en el momento.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="q4-A-m" alt="Opción A: tras No, dice que durante dos semanas no te la propondrá, con Deshacer"></button><figcaption>2A · móvil</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="q4-A-e" alt="Opción A en el escritorio"></button><figcaption>2A · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 2A</button>
+      </article>
+      <article class="op" data-op="B">
+        <div class="arriba"><span class="letra">2B</span><h3>El «No» solo cuenta; apartarla es otro botón</h3></div>
+        <p>«No» ya no aparta nada: sale «Gracias · No me la propongas», y solo ese enlace la aparta, también dos semanas, con su
+          «Deshacer».</p>
+        <p class="porque">Separa valorar el día de pedir que no salga, como sugiere ChatGPT, pero añade una decisión más al final de cada
+          rutina, y lo que contesta la gente deja de servir para elegir sus pausas.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="q4-B-m" alt="Opción B: tras No, Gracias y el enlace No me la propongas"></button><figcaption>2B · tras «No»</figcaption></figure>
+          <figure class="movil"><button type="button"><img data-f="q4-B-aparta-m" alt="Opción B: tras tocar No me la propongas, Hecho y Deshacer"></button><figcaption>2B · tras «No me la propongas»</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="q4-B-e" alt="Opción B en el escritorio"></button><figcaption>2B · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 2B</button>
+      </article>
+    </div>
+    <p class="nota">En las dos, un «Sí» o un «Un poco» de antes la protege, como hoy, y la rutina sigue en su biblioteca. Si ya dijiste
+      «Sí» alguna vez, un «No» no la aparta, y la pantalla dice solo «Gracias».</p>
+  </section>
+
+  <!-- 3 · R1 -->
+  <section class="pregunta" data-q="3" id="respira">
+    <div class="titulo">
+      <span class="meta">Pregunta 3</span>
+      <h2>Respira, la primera vez</h2>
+    </div>
+    <div class="hoy">
+      <div class="texto">
+        <span class="meta">Hoy</span>
+        <p>Lo primero que ve quien abre Respira en el móvil es «Para ahora», que cambia cada día (hoy, Coherente 432: 10 minutos con un
+          drone de fondo), y después «Energía», con tres rutinas con aviso de seguridad. En el escritorio, Energía va arriba del todo.</p>
+        <p>«Equilibrio» y «Balance» son grupos distintos con nombres que dicen lo mismo, y ninguna tarjeta dice cuáles te hacen aguantar
+          el aire. Hay que saber qué es «Box» o «Coherente» para elegir.</p>
+      </div>
+      <div class="fotos">
+        <figure class="movil"><button type="button"><img data-f="r1-hoy-m" alt="Respira hoy en el móvil: Para ahora y Energía con avisos"></button><figcaption>Hoy · móvil</figcaption></figure>
+        <figure class="ancha"><button type="button"><img data-f="r1-hoy-e" alt="Respira hoy en el escritorio: Energía arriba"></button><figcaption>Hoy · escritorio</figcaption></figure>
+      </div>
+    </div>
+    <div class="ops">
+      <article class="op recomendada ancho" data-op="A">
+        <div class="arriba"><span class="letra">3A</span><h3>«Empieza aquí» hasta tu primera respiración, y cada tarjeta dice si se aguanta el aire</h3><span class="rec">Recomendada</span></div>
+        <p>Hasta que acabas tu primera respiración, en el sitio de «Para ahora» sale «¿Es tu primera vez? Empieza aquí» con
+          Coherente 5·5: 5 minutos, cinco dentro y cinco fuera. Después vuelve «Para ahora». Cada tarjeta dice «sin aguantar el aire»
+          o «aguantando el aire». Los grupos van de lo suave a lo intenso: Relajación, Coherencia (antes Balance), Equilibrio,
+          Pranayama y, al final, Energía.</p>
+        <p class="porque">Quien llega sabe por dónde empezar y lo intenso queda al final, sin quitar nada ni sumar otra caja.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="r1-A-m" alt="Opción A en el móvil: Es tu primera vez, empieza aquí, con Coherente 5·5"></button><figcaption>3A · móvil</figcaption></figure>
+          <figure class="movil"><button type="button"><img data-s="r1-A-despues-m" alt="Opción A en el móvil tras la primera respiración: vuelve Para ahora"></button><figcaption>3A · tras la primera respiración (solo en claro)</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="r1-A-e" alt="Opción A en el escritorio: Empieza aquí en el lateral y Relajación arriba"></button><figcaption>3A · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 3A</button>
+      </article>
+      <article class="op" data-op="B">
+        <div class="arriba"><span class="letra">3B</span><h3>«Empieza aquí» siempre, encima de todo</h3></div>
+        <p>«¿Es tu primera vez? Empieza aquí» con Coherente 5·5 siempre, encima de «Para ahora» y de los grupos, con el orden y los
+          nombres de hoy. Cada tarjeta dice si se aguanta el aire, como en 3A.</p>
+        <p class="porque">Siempre a mano, pero en el móvil empuja hacia abajo «Para ahora», y Energía sigue arriba con sus avisos.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="r1-B-m" alt="Opción B en el móvil: Empieza aquí, Para ahora y Energía"></button><figcaption>3B · móvil</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="r1-B-e" alt="Opción B en el escritorio: Empieza aquí encima de Energía"></button><figcaption>3B · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 3B</button>
+      </article>
+      <article class="op" data-op="C">
+        <div class="arriba"><span class="letra">3C</span><h3>Sin «Empieza aquí»</h3></div>
+        <p>Solo el orden nuevo (Energía al final), «Coherencia» y la frase de cada tarjeta.</p>
+        <p class="porque">Lo más pequeño, pero sigue sin decir por dónde empezar: lo primero es «Para ahora», que cambia cada día.</p>
+        <div class="fotos">
+          <figure class="movil"><button type="button"><img data-f="r1-C-m" alt="Opción C en el móvil: Para ahora y Relajación"></button><figcaption>3C · móvil</figcaption></figure>
+          <figure class="ancha"><button type="button"><img data-f="r1-C-e" alt="Opción C en el escritorio"></button><figcaption>3C · escritorio</figcaption></figure>
+        </div>
+        <button type="button" class="boton suave elegir">Elijo 3C</button>
+      </article>
+    </div>
+    <p class="nota">En las tres, las rutinas con aviso lo siguen pidiendo antes de empezar; la apnea, siempre con su ventana de seguridad.
+      No se borra nada ni cambian los nombres por dentro: «Coherencia» es solo lo que se lee. En inglés: «First time? Start here»,
+      «no breath holds» o «with breath holds», y «Coherence». La frase hace más altas algunas tarjetas del escritorio (Suspiro, Rítmica
+      yin, Coherente 432), que pasan a dos líneas.</p>
+    <div class="tabla">
+      <table>
+        <caption class="meta" style="text-align:left;padding-bottom:8px">Alto de la biblioteca de Respira, medido (todo lo que hay que bajar)</caption>
+        <thead><tr><th>Pantalla</th><th>Hoy</th><th>3A</th><th>3B</th><th>3C</th></tr></thead>
+        <tbody>
+          <tr><td>Móvil, 360×730</td><td>2.734 px</td><td>2.774 px</td><td>2.804 px</td><td>2.774 px</td></tr>
+          <tr><td>Escritorio, 1280×879</td><td>1.313 px</td><td>1.415 px</td><td>1.431 px</td><td>1.394 px</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="pregunta">
+    <div class="titulo">
+      <span class="meta">Lo que no cambia</span>
+      <h3>Ninguna de las tres toca la home</h3>
+    </div>
+    <p class="nota">La línea del día solo existe en el escritorio, la pregunta del «No» sale al acabar una rutina y Respira es una ventana
+      aparte: la home del móvil sigue sin pedir scroll. Con tus letras lo monto en mi rama, con sus pruebas, y te paso las fotos de lo
+      montado para que digas «júntalo».</p>
+  </section>
+</div>
+
+<div class="lupa" id="lupa" hidden>
+  <img id="lupa-img" alt="">
+  <button type="button" class="boton cerrar" id="lupa-cerrar">Cerrar</button>
+</div>
+
+<script>
+(function () {
+  var RECOMENDADO = { 1: 'A', 2: 'A', 3: 'A' };
+  var CLAVE = 'pace-sin-querer-respuesta';
+  var elegido = Object.assign({}, RECOMENDADO);
+  try { var g = JSON.parse(localStorage.getItem(CLAVE) || 'null'); if (g) elegido = Object.assign(elegido, g); } catch (e) {}
+
+  function pintar() {
+    document.querySelectorAll('.pregunta[data-q]').forEach(function (sec) {
+      var q = sec.getAttribute('data-q');
+      sec.querySelectorAll('.op').forEach(function (op) {
+        var si = op.getAttribute('data-op') === elegido[q];
+        op.setAttribute('data-elegida', si ? '1' : '0');
+        var b = op.querySelector('.elegir');
+        if (b) b.textContent = si ? 'Elegida: ' + q + op.getAttribute('data-op') : 'Elijo ' + q + op.getAttribute('data-op');
+      });
+    });
+    document.getElementById('codigo').textContent = [1, 2, 3].map(function (q) { return q + elegido[q]; }).join(' · ');
+    var igual = [1, 2, 3].every(function (q) { return elegido[q] === RECOMENDADO[q]; });
+    document.getElementById('nota-respuesta').textContent = igual
+      ? 'Ahora pone lo recomendado. Toca «Elijo…» en otra opción para cambiarla, o escríbeme las letras sin más.'
+      : 'Cópiala y pégamela en el chat, o escríbeme las letras sin más.';
+    try { localStorage.setItem(CLAVE, JSON.stringify(elegido)); } catch (e) {}
+  }
+  document.querySelectorAll('.pregunta[data-q] .op .elegir').forEach(function (b) {
+    b.addEventListener('click', function () {
+      elegido[b.closest('.pregunta').getAttribute('data-q')] = b.closest('.op').getAttribute('data-op');
+      pintar();
+    });
+  });
+  document.getElementById('recomendado').addEventListener('click', function () { elegido = Object.assign({}, RECOMENDADO); pintar(); });
+  document.getElementById('copiar').addEventListener('click', function () {
+    var b = this, txt = document.getElementById('codigo').textContent.replace(/ · /g, ' ');
+    var hecho = function () { b.textContent = 'Copiada'; setTimeout(function () { b.textContent = 'Copiar'; }, 1600); };
+    var aMano = function () { var r = document.createRange(); r.selectNodeContents(document.getElementById('codigo')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try { navigator.clipboard.writeText(txt).then(hecho, aMano); } catch (e) { aMano(); }
+  });
+
+  /* Las fotos en claro u oscuro: por defecto, las del tema que ves. Las de `data-s` solo existen en claro. */
+  var oscuro = document.documentElement.getAttribute('data-theme') === 'dark'
+    || (!document.documentElement.getAttribute('data-theme') && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  try { var t = localStorage.getItem('pace-sin-querer-tema'); if (t) oscuro = t === 'oscuro'; } catch (e) {}
+  function fotos() {
+    document.querySelectorAll('img[data-f]').forEach(function (img) { img.src = 'fotos/' + img.getAttribute('data-f') + (oscuro ? '-osc' : '') + '.jpg'; });
+    document.querySelectorAll('img[data-s]').forEach(function (img) { img.src = 'fotos/' + img.getAttribute('data-s') + '.jpg'; });
+    document.querySelectorAll('.tema button').forEach(function (b) { b.setAttribute('aria-pressed', String((b.getAttribute('data-tema') === 'oscuro') === oscuro)); });
+  }
+  document.querySelectorAll('.tema button').forEach(function (b) {
+    b.addEventListener('click', function () { oscuro = b.getAttribute('data-tema') === 'oscuro'; try { localStorage.setItem('pace-sin-querer-tema', oscuro ? 'oscuro' : 'claro'); } catch (e) {} fotos(); });
+  });
+
+  var lupa = document.getElementById('lupa'), lupaImg = document.getElementById('lupa-img');
+  document.querySelectorAll('figure button').forEach(function (b) {
+    b.addEventListener('click', function () { var img = b.querySelector('img'); lupaImg.src = img.src; lupaImg.alt = img.alt; lupa.hidden = false; document.getElementById('lupa-cerrar').focus(); });
+  });
+  function cerrar() { lupa.hidden = true; }
+  lupa.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+
+  fotos();
+  pintar();
+})();
+</script>
