@@ -186,7 +186,10 @@ test('Logros: el modal pinta las mascaras que el catalogo implica, ni una mas', 
   const esperado = await page.evaluate(() => {
     const cat = window.ACHIEVEMENT_CATALOG || [];
     const ganados = JSON.parse(localStorage.getItem('pace.state.v2') || '{}').achievements || {};
+    /* Un logro sin detector no sale en el panel (Ez, 5 nov. 2026), tenga
+       dibujo o no: se cuenta lo que se enseña. */
     return cat
+      .filter(a => window.achievementIsAvailable(a) || ganados[a.id])
       .filter(a => window.achievementMaskUrl && window.achievementMaskUrl(a.id))
       .filter(a => !(a.secret && !ganados[a.id]))
       .length;

@@ -46,12 +46,11 @@ function renderGlyph(a, style) {
   return <span style={{ fontStyle: 'italic', ...style }}>{a.glyph}</span>;
 }
 
-/* §15.4: la regla vive en catalog.js y la comparten sidebar y modal. Se
-   conserva el nombre local para no tocar los tres puntos de uso. */
+/* §15.4: la regla vive en catalog.js y la comparten sidebar y modal. */
 function isImplemented(a) {
-  // Los secretos siempre se pintan como secretos (revelen o no).
-  // El estado "Pronto" es para logros visibles no-secretos sin trigger.
-  return a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id);
+  return window.achievementIsAvailable
+    ? window.achievementIsAvailable(a)
+    : !!(a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id));
 }
 
 function Achievements({ open, onClose }) {
@@ -59,33 +58,29 @@ function Achievements({ open, onClose }) {
   const { t } = useT();
   const unlocked = state.achievements || {};
   const unlockedCount = Object.keys(unlocked).length;
-  // Clasificación sesión 15: disponibles = con trigger hoy; próximamente = sin trigger.
-  // Los secretos se cuentan como disponibles (su mecánica es "intriga", no "pronto").
   const availableCount = window.ACHIEVEMENTS_AVAILABLE
     || ACHIEVEMENT_CATALOG.filter(isImplemented).length;
-  const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
+  /* Un logro sin detector no se ve ni se cuenta (Ez, 5 nov. 2026): su tarjeta
+     decía «Pronto» y la cabecera los sumaba como «Próximamente», una promesa sin
+     fecha. Aparece solo el día que su id entra en IMPLEMENTED_ACHIEVEMENTS. Si
+     ya lo tienes, se queda, como los de ATG y Ancestral en catalog.js. */
+  const visibles = ACHIEVEMENT_CATALOG.filter(a => isImplemented(a) || unlocked[a.id]);
 
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('ach.tag')} title={t('ach.title')} subtitle={t('ach.subtitle')} maxWidth={920}>
       {/* Counter */}
       <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
-        <div>
+        <div data-pace-ach-cuenta>
           <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
           </div>
-          <Meta style={{ marginTop: 4 }}>{t('ach.available')}</Meta>
-        </div>
-        <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
-        <div>
-          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
-            {comingSoonCount}
-          </div>
-          <Meta style={{ marginTop: 4 }}>{t('ach.coming.soon')}</Meta>
+          <Meta style={{ marginTop: 4 }}>{t('ach.collected')}</Meta>
         </div>
       </div>
 
       {Object.entries(CAT_META).map(([cat, meta]) => {
-        const items = ACHIEVEMENT_CATALOG.filter(a => a.cat === cat);
+        const items = visibles.filter(a => a.cat === cat);
+        if (!items.length) return null;
         const gotThisCat = items.filter(a => unlocked[a.id]).length;
         return (
           <div key={cat} data-pace-ach-cat={cat} style={{ marginBottom: 28 }}>
@@ -99,7 +94,6 @@ function Achievements({ open, onClose }) {
                   key={a.id}
                   achievement={a}
                   unlocked={!!unlocked[a.id]}
-                  implemented={isImplemented(a)}
                   color={meta.color}
                 />
               ))}
@@ -111,16 +105,13 @@ function Achievements({ open, onClose }) {
   );
 }
 
-/* Tres estados del sello:
+/* Dos estados del sello:
    1. unlocked         → borde color sólido, opacidad 1, descripción visible.
    2. locked           → borde dashed gris, opacidad 0.55, descripción visible
                          (guía al usuario: "esto se puede cazar").
-   3. comingSoon       → borde dotted gris, opacidad 0.38, glifo opaco 0.25,
-                         descripción sustituida por "Pronto" (crea curiosidad
-                         sin ser opaco). Badge "Pronto" en esquina.
    Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
    título "Secreto") — su mecánica es intriga, no señalización. */
-function Seal({ achievement, unlocked, implemented, color }) {
+function Seal({ achievement, unlocked, color }) {
   const { t, lang } = useT();
   /* s167 — hasta hoy el titulo y la descripcion salian CRUDOS del catalogo, asi
      que en ingles se leian en español (hallazgo de s146, abierto dos versiones).
@@ -130,11 +121,10 @@ function Seal({ achievement, unlocked, implemented, color }) {
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const a = achievement;
   const isSecret = a.secret && !unlocked;
-  const isComingSoon = !unlocked && !implemented && !a.secret;
 
-  const borderStyle = unlocked ? 'solid' : (isComingSoon ? 'dotted' : 'dashed');
+  const borderStyle = unlocked ? 'solid' : 'dashed';
   const borderColor = unlocked ? color : 'var(--line)';
-  const opacity = unlocked ? 1 : (isComingSoon ? 0.38 : 0.55);
+  const opacity = unlocked ? 1 : 0.55;
 
   return (
     <div
@@ -179,25 +169,8 @@ function Seal({ achievement, unlocked, implemented, color }) {
         cursor: 'default',
         textAlign: 'center',
       }}
-      title={isComingSoon ? t('ach.coming.soon') : tR('ach.item.' + a.id + '.desc', a.desc)}
+      title={tR('ach.item.' + a.id + '.desc', a.desc)}
     >
-      {/* Badge "Pronto" — solo en estado coming-soon */}
-      {isComingSoon && (
-        <div style={{
-          position: 'absolute',
-          top: 6, right: 6,
-          fontFamily: 'var(--font-ui)',
-          fontSize: 7.5,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-3)',
-          border: '0.5px solid var(--line-2)',
-          borderRadius: 999,
-          padding: '2px 6px',
-          lineHeight: 1,
-        }}>{t('ach.seal.soon')}</div>
-      )}
-
       {/* Sello circular */}
       <div style={{
         width: 56, height: 56,
@@ -210,7 +183,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
         fontSize: 22,
         position: 'relative',
       }}>
-        <span style={{ opacity: isComingSoon ? 0.25 : 1, width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
+        <span style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
           {isSecret ? <span style={{ fontStyle: 'italic' }}>?</span> : renderGlyph(a)}
         </span>
         {/* Anillo externo sutil */}
@@ -231,7 +204,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
         color: unlocked ? 'var(--ink)' : 'var(--ink-3)',
       }}>{isSecret ? t('ach.seal.secret') : tR('ach.item.' + a.id + '.title', a.title)}</div>
       <div style={{ fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 }}>
-        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : tR('ach.item.' + a.id + '.desc', a.desc))}
+        {isSecret ? '?????' : tR('ach.item.' + a.id + '.desc', a.desc)}
       </div>
     </div>
   );

@@ -3210,8 +3210,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ach.tag': 'Colección',
   'ach.title': 'Logros',
   'ach.subtitle': 'Sellos de libreta de campo. Colección creciente. Explora, no compitas.',
-  'ach.available': 'Disponibles',
-  'ach.coming.soon': 'Próximamente',
+  'ach.collected': 'Sellos reunidos',
   'ach.cat.primeros': 'Primeros pasos',
   'ach.cat.constancia': 'Constancia',
   'ach.cat.exploracion': 'Exploración',
@@ -3219,7 +3218,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'ach.cat.jornada': 'La jornada',
   'ach.cat.secretos': 'Secretos',
   'ach.cat.estacionales': 'Estacionales',
-  'ach.seal.soon': 'Pronto',
   'ach.seal.secret': 'Secreto',
   'ach.seal.discover': 'Por descubrir',
   'ach.toast.new': 'Nuevo sello'
@@ -3230,8 +3228,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.tag': 'Collection',
   'ach.title': 'Achievements',
   'ach.subtitle': "Field notebook stamps. Growing collection. Explore, don't compete.",
-  'ach.available': 'Available',
-  'ach.coming.soon': 'Coming soon',
+  'ach.collected': 'Stamps collected',
   'ach.cat.primeros': 'First steps',
   'ach.cat.constancia': 'Consistency',
   'ach.cat.exploracion': 'Exploration',
@@ -3239,7 +3236,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.cat.jornada': 'The day',
   'ach.cat.secretos': 'Secrets',
   'ach.cat.estacionales': 'Seasonal',
-  'ach.seal.soon': 'Soon',
   'ach.seal.secret': 'Secret',
   'ach.seal.discover': 'To discover',
   'ach.toast.new': 'New stamp'
@@ -37619,11 +37615,10 @@ function renderGlyph(a, style) {
 }
 
 
-
 function isImplemented(a) {
-
-
-  return a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id);
+  return window.achievementIsAvailable ?
+  window.achievementIsAvailable(a) :
+  !!(a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id));
 }
 
 function Achievements(_ref) {let { open, onClose } = _ref;
@@ -37631,33 +37626,29 @@ function Achievements(_ref) {let { open, onClose } = _ref;
   const { t } = useT();
   const unlocked = state.achievements || {};
   const unlockedCount = Object.keys(unlocked).length;
-
-
   const availableCount = window.ACHIEVEMENTS_AVAILABLE ||
   ACHIEVEMENT_CATALOG.filter(isImplemented).length;
-  const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
+
+
+
+
+  const visibles = ACHIEVEMENT_CATALOG.filter((a) => isImplemented(a) || unlocked[a.id]);
 
   return (
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('ach.tag'), title: t('ach.title'), subtitle: t('ach.subtitle'), maxWidth: 920 },
 
     React.createElement("div", { style: { display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' } },
-    React.createElement("div", null,
+    React.createElement("div", { "data-pace-ach-cuenta": true },
     React.createElement("div", { style: { ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 } },
     unlockedCount, React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 20 } }, " / ", availableCount)
     ),
-    React.createElement(Meta, { style: { marginTop: 4 } }, t('ach.available'))
-    ),
-    React.createElement(Divider, { style: { width: 1, height: 'auto', background: 'var(--line)' } }),
-    React.createElement("div", null,
-    React.createElement("div", { style: { ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 } },
-    comingSoonCount
-    ),
-    React.createElement(Meta, { style: { marginTop: 4 } }, t('ach.coming.soon'))
+    React.createElement(Meta, { style: { marginTop: 4 } }, t('ach.collected'))
     )
     ),
 
     Object.entries(CAT_META).map((_ref2) => {let [cat, meta] = _ref2;
-      const items = ACHIEVEMENT_CATALOG.filter((a) => a.cat === cat);
+      const items = visibles.filter((a) => a.cat === cat);
+      if (!items.length) return null;
       const gotThisCat = items.filter((a) => unlocked[a.id]).length;
       return (
         React.createElement("div", { key: cat, "data-pace-ach-cat": cat, style: { marginBottom: 28 } },
@@ -37671,7 +37662,6 @@ function Achievements(_ref) {let { open, onClose } = _ref;
           key: a.id,
           achievement: a,
           unlocked: !!unlocked[a.id],
-          implemented: isImplemented(a),
           color: meta.color }
         )
         )
@@ -37689,10 +37679,7 @@ function Achievements(_ref) {let { open, onClose } = _ref;
 
 
 
-
-
-
-function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
+function Seal(_ref3) {let { achievement, unlocked, color } = _ref3;
   const { t, lang } = useT();
 
 
@@ -37702,11 +37689,10 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const a = achievement;
   const isSecret = a.secret && !unlocked;
-  const isComingSoon = !unlocked && !implemented && !a.secret;
 
-  const borderStyle = unlocked ? 'solid' : isComingSoon ? 'dotted' : 'dashed';
+  const borderStyle = unlocked ? 'solid' : 'dashed';
   const borderColor = unlocked ? color : 'var(--line)';
-  const opacity = unlocked ? 1 : isComingSoon ? 0.38 : 0.55;
+  const opacity = unlocked ? 1 : 0.55;
 
   return (
     React.createElement("div", {
@@ -37751,24 +37737,7 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
         cursor: 'default',
         textAlign: 'center'
       },
-      title: isComingSoon ? t('ach.coming.soon') : tR('ach.item.' + a.id + '.desc', a.desc) },
-
-
-    isComingSoon &&
-    React.createElement("div", { style: {
-        position: 'absolute',
-        top: 6, right: 6,
-        fontFamily: 'var(--font-ui)',
-        fontSize: 7.5,
-        letterSpacing: '0.14em',
-        textTransform: 'uppercase',
-        color: 'var(--ink-3)',
-        border: '0.5px solid var(--line-2)',
-        borderRadius: 999,
-        padding: '2px 6px',
-        lineHeight: 1
-      } }, t('ach.seal.soon')),
-
+      title: tR('ach.item.' + a.id + '.desc', a.desc) },
 
 
     React.createElement("div", { style: {
@@ -37782,7 +37751,7 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
         fontSize: 22,
         position: 'relative'
       } },
-    React.createElement("span", { style: { opacity: isComingSoon ? 0.25 : 1, width: '100%', height: '100%', display: 'grid', placeItems: 'center' } },
+    React.createElement("span", { style: { width: '100%', height: '100%', display: 'grid', placeItems: 'center' } },
     isSecret ? React.createElement("span", { style: { fontStyle: 'italic' } }, "?") : renderGlyph(a)
     ),
 
@@ -37803,7 +37772,7 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
         color: unlocked ? 'var(--ink)' : 'var(--ink-3)'
       } }, isSecret ? t('ach.seal.secret') : tR('ach.item.' + a.id + '.title', a.title)),
     React.createElement("div", { style: { fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 } },
-    isSecret ? '?????' : isComingSoon ? t('ach.seal.soon') : tR('ach.item.' + a.id + '.desc', a.desc)
+    isSecret ? '?????' : tR('ach.item.' + a.id + '.desc', a.desc)
     )
     ));
 

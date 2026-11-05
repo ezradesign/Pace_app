@@ -21,8 +21,8 @@
  * LA TRAMPA DE ESTE ARCHIVO
  * -------------------------
  * Se siembran los 96 como DESBLOQUEADOS a proposito. Sin eso, `Seal` pinta
- * «Secreto» en vez del titulo para los 12 secretos y «Pronto» en vez de la
- * descripcion para los no implementados, y la comparacion mediria otra cosa.
+ * «Secreto» en vez del titulo para los 12 secretos, los que no tienen detector
+ * no salen en el panel, y la comparacion mediria otra cosa.
  */
 'use strict';
 
