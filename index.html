@@ -8586,6 +8586,7 @@ Object.assign(window, { PACE_LLAVES_LICENCIA: PACE_LLAVES_LICENCIA, PACE_LICENCI
 
 
 
+
 var PACE_LICENCIA_PREFIJO = 'PACE1';
 
 
@@ -8645,9 +8646,9 @@ function paceLicenciaAnulada(datos) {
 
 
 
-function paceLicenciaCaducada(datos, ahora) {
+function paceLicenciaFin(datos) {
   var e = datos.expiresAt;
-  if (e == null) return false;
+  if (e == null) return Infinity;
   var fin = NaN;
   if (typeof e === 'number') fin = e;else
   if (typeof e === 'string' && typeof parseLocalDateKey === 'function') {
@@ -8655,7 +8656,11 @@ function paceLicenciaCaducada(datos, ahora) {
     d.setDate(d.getDate() + 1);
     fin = d.getTime();
   }
-  return !(fin > ahora);
+  return fin;
+}
+
+function paceLicenciaCaducada(datos, ahora) {
+  return !(paceLicenciaFin(datos) > ahora);
 }
 
 
@@ -8703,6 +8708,39 @@ function paceLicenciaCanjear(texto) {
     }
     return r;
   });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function paceLicenciaConservar(actual, entrante) {
+  var hay = function (s) {return !!(s && typeof s.licencia === 'string' && s.licencia);};
+  var conLoDeAhora = function () {
+    return Object.assign({}, entrante, {
+      licencia: actual.licencia,
+      premiumAvisoPrueba: actual.premiumAvisoPrueba != null ? actual.premiumAvisoPrueba : entrante.premiumAvisoPrueba != null ? entrante.premiumAvisoPrueba : null
+    });
+  };
+  if (!hay(actual)) return Promise.resolve(entrante);
+  if (!hay(entrante)) return Promise.resolve(conLoDeAhora());
+  if (entrante.licencia === actual.licencia) return Promise.resolve(conLoDeAhora());
+  return Promise.all([paceLicenciaComprobar(actual.licencia), paceLicenciaComprobar(entrante.licencia)]).
+  then(function (r) {
+    if (!r[1].ok) return conLoDeAhora();
+    if (!r[0].ok) return entrante;
+    return paceLicenciaFin(r[1].datos) > paceLicenciaFin(r[0].datos) ? entrante : conLoDeAhora();
+  }).
+  then(null, function () {return conLoDeAhora();});
 }
 
 
@@ -8860,13 +8898,14 @@ Object.assign(window, {
   paceLicenciaLimpiar: paceLicenciaLimpiar,
   paceLicenciaComprobar: paceLicenciaComprobar,
   paceLicenciaCanjear: paceLicenciaCanjear,
+  paceLicenciaConservar: paceLicenciaConservar,
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida,
   paceLicenciaRenovar: paceLicenciaRenovar,
   paceLicenciaEstado: paceLicenciaEstado,
   paceLicenciaEsMensual: paceLicenciaEsMensual
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa, PACE_RENOVAR_ANTES, PACE_RENOVAR_CADA, _paceRenovar, paceLicenciaGuardada, paceLicenciaEsMensual, paceLicenciaRenovar, paceLicenciaEstado });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaFin, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaConservar, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa, PACE_RENOVAR_ANTES, PACE_RENOVAR_CADA, _paceRenovar, paceLicenciaGuardada, paceLicenciaEsMensual, paceLicenciaRenovar, paceLicenciaEstado });
 })();
 </script>
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
@@ -40171,7 +40210,13 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     const pendiente = pidiendoImportar;
     setPidiendoImportar(null);
     if (!pendiente) return;
-    const { incoming, eventsSection } = pendiente;
+
+
+
+    paceLicenciaConservar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+  };
+
+  const escribirCopia = (incoming, eventsSection) => {
 
 
 

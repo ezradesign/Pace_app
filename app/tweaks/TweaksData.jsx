@@ -245,7 +245,13 @@ function TweaksDataSection({ onReset, isWeb }) {
     const pendiente = pidiendoImportar;
     setPidiendoImportar(null);
     if (!pendiente) return;
-    const { incoming, eventsSection } = pendiente;
+    /* EL CÓDIGO DE PACE COMPLETO NO SE VA CON LA COPIA: viaja dentro del estado y una hecha antes
+       de comprar lo pisaba (revisión de ChatGPT del 5 nov., punto 2). `paceLicenciaConservar`
+       (state-licencia.js) dice cuál se queda; comprobar dos códigos es asíncrono, y lo demás espera. */
+    paceLicenciaConservar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+  };
+
+  const escribirCopia = (incoming, eventsSection) => {
     /* EN CUANTO LA COPIA ESTÁ ESCRITA, LO QUE HAY EN MEMORIA ES LA COPIA, y nada guarda hasta
        recargar (revisión de ChatGPT del 28 oct., A5). Lo de antes seguía en memoria los 900 ms
        de la recarga, o lo que tardara en cerrarse el aviso de la copia a medias, y cualquier
