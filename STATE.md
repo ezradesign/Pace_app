@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.189.0 · 31 de octubre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.189.1 · 4 de noviembre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -25,8 +25,8 @@ El orden hasta v1, en `ROADMAP.md` («Camino a v1.0»), con los paquetes de las 
 T, M, L y V) debajo de su tabla. **La fecha de v1 no depende del código**: la fijan los 12 testers
 de Android con sus 14 días seguidos, que aún no han empezado, y el alta para cobrar que piden Play, Apple y Stripe.
 
-1. **Stripe en el modo de prueba**, con Ez: el aviso y los cuatro enlaces en `PACE_ENLACES_STRIPE`, hechos el 4 nov.;
-   faltan la llave que solo lee y una compra de mentira. **Los arreglos del cobro
+1. **Stripe en el modo de prueba, hecho y comprobado** con Ez (4-5 nov.): el aviso, los cuatro enlaces, la llave de lectura
+   y dos compras de mentira con su código, que /recuperar devuelve; el modo real, con el gestor. **Los arreglos del cobro
    que encontró ChatGPT (A1-A7), en `main` con la 0.186.0** (29 oct., con el «júntalo» de Ez).
 2. **Mueve, Estira y «Tus rutinas», en `main` con la 0.187.0** (29 oct., con el «júntalo» de Ez): B1-B4, C1-C6 y U1-U5
    de las revisiones de ChatGPT, el reparto del runner que dibujó Ez y los catorce dibujos nuevos, con Paloma, Flexor de
@@ -50,17 +50,18 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/E
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **Ahora: los dos dibujos que faltan**, que dejan subir la versión de prueba definitiva (abajo). El logo se queda como
-  está por ahora (Ez, 4 nov.). Con ella va el arreglo de la media jornada que no se pulsa pasada su hora, que vio un
-  tester un sábado a las 15:00 (sesión `media-jornada-tarde`, 4 nov.; lo que se ve, con su página).
+  está por ahora (Ez, 4 nov.). Con ella va la 0.189.1: la media jornada que un tester no podía pulsar un sábado a las
+  15:00, arreglada con la C de Ez («Hora de inicio» con la paleta de PACE).
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
   `RESEND_CLAVE` en Cloudflare, mejor al encender la venta (`docs/launch/desistir.md`).
 - **Volver a pegar en Play Console** el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`, en es y en (cambió
   con la 0.188.0); el de PACE completo, con la v1.
-- **A la vez: Stripe** (`docs/launch/cobro-web.md`): la llave que solo lee (`STRIPE_LECTURA`) y la compra de mentira con
-  4242, mirando qué número trae el recibo. Hecho el 4 nov.: el aviso de prueba (`STRIPE_AVISO_SECRETO`, destino «PACE»), los
-  dos enlaces de prueba y los cuatro `plink_` en `PACE_ENLACES_STRIPE`: `/api/stripe` contesta «firma» (400), ya no 503.
+- **Stripe** (`docs/launch/cobro-web.md`): el modo de prueba, entero y comprobado el 5 nov.: el aviso, la llave de lectura
+  (`STRIPE_LECTURA`, del modo de prueba de la cuenta y no del sandbox), dos compras con 4242 y /recuperar con el recibo de Link;
+  y los cuatro `plink_` en `PACE_ENLACES_STRIPE`. **Modo real (5 nov.)**: cuenta activada tras el alta con el gestor, y el
+  aviso (`whsec_` real) y la llave de lectura (`rk_live_`) ya en Cloudflare. Faltan lo legal, Resend y encender los enlaces.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.
