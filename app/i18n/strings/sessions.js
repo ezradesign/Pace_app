@@ -140,6 +140,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.feedback.no':             'No',
     'session.feedback.later':          'Ahora no',
     'session.feedback.thanks':         'Gracias',
+    'session.feedback.aparta':         'Gracias. Durante una semana no te la propondré en las pausas.',
+    'session.feedback.deshacer':       'Deshacer',
 
     // Hydrate
     'hydrate.tag':                     'Hidratación',
@@ -333,6 +335,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.feedback.no':             'No',
     'session.feedback.later':          'Not now',
     'session.feedback.thanks':         'Thank you',
+    'session.feedback.aparta':         'Thank you. I won’t suggest it in your breaks for a week.',
+    'session.feedback.deshacer':       'Undo',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',

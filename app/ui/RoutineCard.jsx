@@ -73,6 +73,9 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
   } else if (variant === 'breathe') {
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
+    /* Lo que se hace, para elegir sin saber qué es «Box» (Ez, 5 nov. 2026: 3A). */
+    const aire = window.libraryAire ? window.libraryAire(routine) : null;
+    if (aire) trozos.push({ k: 'aire', txt: t('lib.air.' + aire) });
   } else {
     const donde = window.libraryDonde ? window.libraryDonde(routine) : 'standing';
     trozos.push({ k: 'donde', txt: t('lib.where.' + donde) });

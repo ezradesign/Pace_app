@@ -161,7 +161,7 @@ function ritmoPozos(s, iso) {
   var cuerpo = function (cat) {
     return lista(cat, Object.keys(cat || {}).filter(function (g) { return varia ? !cat[g].aparte : !!cat[g].entrada; }));
   };
-  var vetadas = typeof breakVetadas === 'function' ? breakVetadas((s || {}).routineFeedback) : {};
+  var vetadas = typeof breakVetadas === 'function' ? breakVetadas((s || {}).routineFeedback, iso) : {};
   var dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(iso) : 0;
   var prepara = function (rutinas) {
     var pozo = rutinas.filter(cabe);

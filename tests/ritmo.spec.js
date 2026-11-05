@@ -384,11 +384,15 @@ test('la hora de salida y la de comer se cambian dentro de la frase', async ({ p
   expect(horario).toMatchObject({ salida: 1080, comida: 780 });
 });
 
-test('tocar una parada sirve otra rutina del mismo módulo', async ({ page, context }) => {
+/* Ez, 5 nov. 2026 (1A): tocarla abre su ficha y no la cambia; la cambia «Otra», dentro
+   de la ficha (linea-ficha.spec.js). */
+test('«Otra», en la ficha de una parada, sirve otra rutina', async ({ page, context }) => {
   await abrir(page, context, { dia: JORNADA });
   const parada = vis(page, '[data-pace-ritmo-parada]').first();
   const antes = await parada.getAttribute('aria-label');
   await parada.click();
+  await expect(vis(page, '[data-pace-ritmo-parada]').first(), 'tocar la parada la ha cambiado').toHaveAttribute('aria-label', antes);
+  await vis(page, '[data-pace-ritmo-ficha] [data-pace-ficha-otra]').click();
   await expect(vis(page, '[data-pace-ritmo-parada]').first()).not.toHaveAttribute('aria-label', antes);
 });
 

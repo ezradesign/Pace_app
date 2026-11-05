@@ -2190,6 +2190,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.feedback.no': 'No',
   'session.feedback.later': 'Ahora no',
   'session.feedback.thanks': 'Gracias',
+  'session.feedback.aparta': 'Gracias. Durante una semana no te la propondré en las pausas.',
+  'session.feedback.deshacer': 'Deshacer',
 
 
   'hydrate.tag': 'Hidratación',
@@ -2383,6 +2385,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.feedback.no': 'No',
   'session.feedback.later': 'Not now',
   'session.feedback.thanks': 'Thank you',
+  'session.feedback.aparta': 'Thank you. I won’t suggest it in your breaks for a week.',
+  'session.feedback.deshacer': 'Undo',
 
 
   'hydrate.tag': 'Hydration',
@@ -2528,6 +2532,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.journey.parts': '{n} tramos',
   'lib.journey.audio': 'con música',
   'lib.now': 'Para ahora',
+  'lib.primera': '¿Es tu primera vez? Empieza aquí',
   'lib.back': 'Volver',
   'lib.premium': 'Premium',
   'lib.perSide': 'por lado',
@@ -2579,6 +2584,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.rhythm.nadi': 'alterna',
   'lib.rhythm.kapalabhati': 'exhalaciones cortas, 3 rondas',
   'lib.rhythm.co2': 'sostén en vacío',
+  'lib.air.sin': 'sin aguantar el aire',
+  'lib.air.con': 'aguantando el aire',
 
 
 
@@ -2707,6 +2714,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.journey.parts': '{n} parts',
   'lib.journey.audio': 'with music',
   'lib.now': 'For now',
+  'lib.primera': 'First time? Start here',
   'lib.back': 'Back',
   'lib.premium': 'Premium',
   'lib.perSide': 'per side',
@@ -2744,6 +2752,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.rhythm.nadi': 'alternate nostril',
   'lib.rhythm.kapalabhati': 'short exhales, 3 rounds',
   'lib.rhythm.co2': 'hold on empty',
+  'lib.air.sin': 'no breath holds',
+  'lib.air.con': 'with breath holds',
 
   'preview.tag': 'Before you start',
   'preview.need': 'What you need',
@@ -3897,7 +3907,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.volver': 'Ponle ritmo al día',
   'ritmo.cambiar': 'Cambiar',
   'ritmo.otra': 'Otra',
-  'ritmo.toca': 'toca para cambiarla',
+  'ritmo.toca': 'toca para ver qué es',
+  'ritmo.ficha.cerrar': 'Cerrar',
+  'ritmo.ficha.y': ' y ',
+  'ritmo.ficha.tambien.1': 'También cambia la de las {h}, para no repetir rutina ni zona.',
+  'ritmo.ficha.tambien.n': 'También cambian las de las {h}, para no repetir rutina ni zona.',
   'ritmo.empieza': 'toca para empezarla',
   'ritmo.como': 'Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.',
   'ritmo.ver': 'Ver todo',
@@ -4076,7 +4090,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.volver': 'Give your day a rhythm',
   'ritmo.cambiar': 'Change',
   'ritmo.otra': 'Another',
-  'ritmo.toca': 'tap to swap it',
+  'ritmo.toca': 'tap to see it',
+  'ritmo.ficha.cerrar': 'Close',
+  'ritmo.ficha.y': ' and ',
+  'ritmo.ficha.tambien.1': 'The {h} break changes too, so no routine or area repeats.',
+  'ritmo.ficha.tambien.n': 'The {h} breaks change too, so no routine or area repeats.',
   'ritmo.empieza': 'tap to start it',
   'ritmo.como': 'Each block is a pomodoro on the ring; when it ends, I serve you the break that comes next.',
   'ritmo.ver': 'See all',
@@ -4537,7 +4555,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.cat.energia.aside': 'Wakes up the system',
   'breathe.cat.equilibrio.label': 'Equilibrium',
   'breathe.cat.equilibrio.aside': 'Regulates the nervous system',
-  'breathe.cat.balance.label': 'Balance',
+  'breathe.cat.balance.label': 'Coherence',
   'breathe.cat.balance.aside': 'A soft, steady rhythm',
   'breathe.cat.relajacion.label': 'Relaxation',
   'breathe.cat.relajacion.aside': 'Quiets the mind',
@@ -4562,10 +4580,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.box.6.code': 'Equilibrium',
   'breathe.coherent.55.name': 'Coherent 5·5',
   'breathe.coherent.55.desc': 'A steady five-and-five rhythm. Meant to find an even cadence.',
-  'breathe.coherent.55.code': 'Balance',
+  'breathe.coherent.55.code': 'Coherence',
   'breathe.coherent.66.name': 'Coherent 6·6',
   'breathe.coherent.66.desc': 'Deeper version. 5 cycles per minute.',
-  'breathe.coherent.66.code': 'Balance',
+  'breathe.coherent.66.code': 'Coherence',
   'breathe.478.name': '4·7·8',
   'breathe.478.desc': 'Long exhale, four cycles. Meant to let go of the day and ease into rest.',
   'breathe.478.code': 'Relaxation',
@@ -4594,7 +4612,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.co2.code': 'Equilibrium',
   'breathe.coherent.432.name': 'Coherent 432',
   'breathe.coherent.432.desc': 'Coherence 6·6 over a background drone. Immersive.',
-  'breathe.coherent.432.code': 'Balance',
+  'breathe.coherent.432.code': 'Coherence',
   'breathe.exhale.46.name': 'Exhale 4·6',
   'breathe.exhale.46.desc': 'Exhale longer than you inhale. A gentle brake.',
   'breathe.exhale.46.code': 'Relaxation',
@@ -9891,8 +9909,9 @@ Object.assign(window, {
 
    Modelo de datos — slice `routineFeedback` bajo pace.state.v2:
      routineFeedback: {
-       [routineId]: { yes, some, no, lastPromptDay }
+       [routineId]: { yes, some, no, lastPromptDay, lastNoDay }
      }
+   `lastNoDay` es el día del último «No» (desde el 5 nov. 2026; lo de antes no lo trae).
    Conteos COMPLETOS (decisión s116): se guardan los tres contadores; `answered`
    y cualquier `helpScore` se DERIVAN, NUNCA se persisten (evita fijar una
    ponderación prematura). «Ahora no» (later) NO incrementa contadores pero SÍ
@@ -9950,6 +9969,10 @@ function nextRoutineFeedback(prev, routineId, response) {
   };
 
 
+  if (resp === 'no') nextEntry.lastNoDay = nextEntry.lastPromptDay;else
+  if (typeof cur.lastNoDay === 'string') nextEntry.lastNoDay = cur.lastNoDay;
+
+
 
 
 
@@ -9960,7 +9983,7 @@ function nextRoutineFeedback(prev, routineId, response) {
 
 
 
-function recordRoutineFeedback(routineId, response) {
+function recordRoutineFeedback(routineId, response, opciones) {
   const id = sanitizeRoutineId(routineId);
   const resp = sanitizeFeedbackResponse(response);
   if (!id || !resp) return;
@@ -9972,7 +9995,23 @@ function recordRoutineFeedback(routineId, response) {
 
 
 
+
+
+  if (opciones && opciones.sinEvento) return;
   if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
+}
+
+
+
+function restaurarRoutineFeedback(routineId, antes) {
+  const id = sanitizeRoutineId(routineId);
+  if (!id) return;
+  setState((prev) => {
+    const fb = Object.assign({}, prev.routineFeedback && typeof prev.routineFeedback === 'object' ? prev.routineFeedback : {});
+    if (antes && typeof antes === 'object') fb[id] = Object.assign({}, antes);else
+    delete fb[id];
+    return { ...prev, routineFeedback: fb };
+  });
 }
 
 
@@ -9991,9 +10030,10 @@ Object.assign(window, {
   feedbackCount,
   nextRoutineFeedback,
   recordRoutineFeedback,
+  restaurarRoutineFeedback,
   shouldPromptRoutineFeedback
 });
-;Object.assign(window, { sanitizeFeedbackResponse, feedbackCount, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, shouldPromptRoutineFeedback });
+;Object.assign(window, { sanitizeFeedbackResponse, feedbackCount, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, restaurarRoutineFeedback, shouldPromptRoutineFeedback });
 })();
 </script>
   <!-- «A tu ritmo» (s192): la REGLA pura que compone el día y su ESTADO
@@ -13034,7 +13074,7 @@ function ritmoPozos(s, iso) {
   var cuerpo = function (cat) {
     return lista(cat, Object.keys(cat || {}).filter(function (g) {return varia ? !cat[g].aparte : !!cat[g].entrada;}));
   };
-  var vetadas = typeof breakVetadas === 'function' ? breakVetadas((s || {}).routineFeedback) : {};
+  var vetadas = typeof breakVetadas === 'function' ? breakVetadas((s || {}).routineFeedback, iso) : {};
   var dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(iso) : 0;
   var prepara = function (rutinas) {
     var pozo = rutinas.filter(cabe);
@@ -20085,7 +20125,7 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
        (en la ventana de Ez, 1536x710; de 431 a 620 de alto en escritorio; con el nombre
        de una rutina propia en dos líneas, casi en cualquier pantalla, y también las
        respuestas). Ahora el cierre es una columna del alto del centro: arriba y abajo,
-       aire que solo crece (centra el bloque y se queda en 0 cuando falta sitio), y el
+       aire que solo crece (centra el bloque y arriba se queda en 0 cuando falta sitio), y el
        dibujo encoge lo que falte. Los márgenes de una columna flexible no se funden, así
        que el de arriba de «¿Te ayudó?» (4 px, que antes se perdía dentro de los 36 de la
        frase) se quita aquí. Lo vigila tests/cierre-sin-pisar.spec.js. */
@@ -20095,6 +20135,9 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
     [data-pace-session-done] { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
     [data-pace-session-done]::before,
     [data-pace-session-done]::after { content: ''; flex: 1 1 0; }
+    /* Con «Ahora no» en su línea (Ez, 5 nov.), el aire de abajo podía quedarse en 0 y el enlace,
+       pegado a «Volver al inicio». Este suelo lo paga el dibujo. */
+    [data-pace-session-done]::after { min-height: 14px; }
     [data-pace-session-done] > * { flex: none; }
     [data-pace-session-done] > [data-pace-session-feedback] { margin-top: 0 !important; }
     /* El dibujo del cierre (sessionDoneGlifo) llena su caja, sin el borde ni el fondo
@@ -20174,11 +20217,22 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
      re-renderice (doble clic / doble Enter); al decidir, el bloque se sustituye
      por el acuse efímero «Gracias», así los controles dejan de existir.
 
+   EL «NO» DICE LO QUE HACE (Ez, 5 nov. 2026: 2A, «pero durante una semana»). Un «No»
+   a una rutina que nunca ayudó la aparta una semana de lo que PACE propone
+   (breakVetadas), y hasta entonces solo se leía «Gracias». Ahora el acuse lo dice y
+   lleva «Deshacer», que devuelve la pregunta y la entrada de antes. Por eso el evento
+   de ese «No» espera a que se deje la pantalla (o la página): el registro no se
+   reescribe, y un «No» deshecho no debe quedar en él. Solo se promete apartar lo que
+   se propone de verdad (breakProponible).
+
+   «AHORA NO», EN SU LÍNEA (Ez, 5 nov. 2026): debajo de Sí · Un poco · No, centrado.
+   Hasta entonces iba al final de la misma fila (Ez, 16 oct., opción B).
+
    Props: routineId (clave del conteo) · kind ('move'|'extra'|'breathe', informa
    el acento) · accent (color CSS var del módulo, para el hover de los chips).
 */
 
-const { useState: useStateSF, useRef: useRefSF } = React;
+const { useState: useStateSF, useRef: useRefSF, useEffect: useEffectSF } = React;
 
 function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--move)' } = _ref;
   const { t } = useT();
@@ -20187,15 +20241,46 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
     try {return shouldPromptRoutineFeedback(routineId);} catch (e) {return false;}
   });
   const [decided, setDecided] = useStateSF(false);
+  const [aparta, setAparta] = useStateSF(false);
   const lockRef = useRefSF(false);
+
+  const pendienteRef = useRefSF(null);
+
+  useEffectSF(() => {
+    const emitir = () => {
+      if (!pendienteRef.current) return;
+      pendienteRef.current = null;
+      try {if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(routineId, 'no');} catch (e) {}
+    };
+    window.addEventListener('pagehide', emitir);
+    return () => {window.removeEventListener('pagehide', emitir);emitir();};
+  }, [routineId]);
 
   if (!shouldShow) return null;
 
   const answer = (response) => {
     if (lockRef.current) return;
     lockRef.current = true;
-    try {recordRoutineFeedback(routineId, response);} catch (e) {}
+    const no = response === 'no';
+    let antes = null;
+    try {antes = no ? (getState().routineFeedback || {})[routineId] || null : null;} catch (e) {}
+    try {recordRoutineFeedback(routineId, response, { sinEvento: no });} catch (e) {}
+    if (no) {
+      pendienteRef.current = { antes: antes };
+      let si = false;
+      try {si = breakProponible(routineId) && !!breakVetadas(getState().routineFeedback)[routineId];} catch (e) {}
+      setAparta(si);
+    }
     setDecided(true);
+  };
+
+  const deshacer = () => {
+    const p = pendienteRef.current;
+    pendienteRef.current = null;
+    try {restaurarRoutineFeedback(routineId, p ? p.antes : null);} catch (e) {}
+    lockRef.current = false;
+    setAparta(false);
+    setDecided(false);
   };
 
   const wrapStyle = {
@@ -20209,6 +20294,13 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
     React.createElement("div", { "data-pace-fb-rule": true, style: sessionFeedbackStyles.rule }),
     decided ?
     React.createElement("div", { "data-pace-fb-thanks": true, style: sessionFeedbackStyles.thanks },
+    aparta ?
+    React.createElement(React.Fragment, null,
+    t('session.feedback.aparta'), ' ',
+    React.createElement("button", { type: "button", "data-pace-fb-deshacer": true, onClick: deshacer, style: sessionFeedbackStyles.deshacer },
+    t('session.feedback.deshacer')
+    )
+    ) :
     t('session.feedback.thanks')
     ) :
 
@@ -20228,11 +20320,11 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
     React.createElement("button", { type: "button", "data-pace-fb-chip": true, disabled: decided,
       onClick: () => answer('no'), style: sessionFeedbackStyles.chip },
     t('session.feedback.no')
+    )
     ),
     React.createElement("button", { type: "button", "data-pace-fb-ghost": true, disabled: decided,
       onClick: () => answer('later'), style: sessionFeedbackStyles.ghost },
     t('session.feedback.later')
-    )
     )
     )
 
@@ -20257,6 +20349,7 @@ const sessionFeedbackStyles = {
   },
 
 
+
   chips: {
     display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 10
   },
@@ -20275,9 +20368,16 @@ const sessionFeedbackStyles = {
   ghost: {
     ...displayItalic,
     fontSize: 15, color: 'var(--ink-3)',
-    background: 'none', border: 'none', padding: '4px 10px',
+    background: 'none', border: 'none', padding: '4px 10px', marginTop: 8,
     textDecoration: 'underline', textUnderlineOffset: 3,
     transition: 'color 160ms ease'
+  },
+
+  deshacer: {
+    ...displayItalic,
+    fontSize: 'inherit', color: 'var(--ink-2)',
+    background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer',
+    textDecoration: 'underline', textUnderlineOffset: 3
   },
   thanks: {
     ...displayItalic,
@@ -20318,6 +20418,7 @@ if (!_paceSessionFeedbackCss) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }
       [data-pace-fb-question] { font-size: 15px !important; margin-bottom: 10px !important; }
       [data-pace-fb-chip] { padding: 0 18px !important; min-height: 38px !important; }
+      [data-pace-fb-ghost] { margin-top: 4px !important; padding: 2px 10px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-session-feedback] { margin-top: 0 !important; }
@@ -28127,6 +28228,18 @@ function libraryConRetencion(r) {
 
 
 
+function libraryAire(r) {
+  if (!r || r.pattern === 'co2') return null;
+  var sostiene = r.pattern === 'rounds' || Array.isArray(r.cycle) && (r.cycle[1] > 0 || r.cycle[3] > 0) ||
+  LIB_PATRONES_CON_SOSTEN.indexOf(r.pattern) !== -1;
+  if (r.safety && !sostiene) return null;
+  return libraryConRetencion(r) ? 'con' : 'sin';
+}
+
+
+
+
+
 
 
 
@@ -28368,6 +28481,7 @@ Object.assign(window, {
   LIB_FILTROS: LIB_FILTROS,
   LIB_FILTROS_RESPIRA: LIB_FILTROS_RESPIRA,
   libraryConRetencion: libraryConRetencion,
+  libraryAire: libraryAire,
   libraryUmbralCorto: libraryUmbralCorto,
   libraryPredicado: libraryPredicado,
   libraryFiltrar: libraryFiltrar,
@@ -28381,7 +28495,7 @@ Object.assign(window, {
   libraryMotivoVacio: libraryMotivoVacio,
   libraryProponibles: libraryProponibles
 });
-;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryDonde, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryAire, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryDonde, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
 })();
 </script>
   <script>
@@ -28833,6 +28947,9 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
   } else if (variant === 'breathe') {
     const ritmo = routineRhythmText(routine, tn, t);
     if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
+
+    const aire = window.libraryAire ? window.libraryAire(routine) : null;
+    if (aire) trozos.push({ k: 'aire', txt: t('lib.air.' + aire) });
   } else {
     const donde = window.libraryDonde ? window.libraryDonde(routine) : 'standing';
     trozos.push({ k: 'donde', txt: t('lib.where.' + donde) });
@@ -28983,7 +29100,7 @@ const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = 
 
 function LibraryShell(_ref)
 
-{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false } = _ref;
+{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false, primeraVez = null } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
@@ -29030,7 +29147,13 @@ function LibraryShell(_ref)
 
   const proponibles = useMemoLib(() => new Set(libraryProponibles(groups)), [groups]);
   const abiertas = visibles.filter((r) => proponibles.has(r) && (!window.canAccessRoutine || window.canAccessRoutine(r.id)));
-  const ahora = libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
+
+
+
+
+  const primera = primeraVez && pasa(primeraVez) && (!window.canAccessRoutine || window.canAccessRoutine(primeraVez.id)) ? primeraVez : null;
+  const ahora = primera ? [primera] : libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
+  const tituloAhora = primera ? t('lib.primera') : t('lib.now');
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
 
@@ -29084,10 +29207,10 @@ function LibraryShell(_ref)
 
 
   const bloqueAhora = ahora.length > 0 &&
-  React.createElement("section", { "data-pace-lib-now": true },
+  React.createElement("section", { "data-pace-lib-now": true, "data-pace-lib-primera": primera ? '' : undefined },
 
 
-  React.createElement("h3", { className: "pace-lib-now" }, t('lib.now')),
+  React.createElement("h3", { className: "pace-lib-now" }, tituloAhora),
   tarjetas(ahora)
   );
 
@@ -29166,14 +29289,14 @@ function LibraryShell(_ref)
     tuyas,
     ahora.length > 0 &&
     React.createElement(React.Fragment, null,
-    React.createElement("p", { className: "pace-lib-lateral-tit" }, t('lib.now')),
+    React.createElement("p", { className: "pace-lib-lateral-tit" }, tituloAhora),
 
 
 
 
 
 
-    React.createElement("div", { "data-pace-lib-now": true }, tarjetas(ahora))
+    React.createElement("div", { "data-pace-lib-now": true, "data-pace-lib-primera": primera ? '' : undefined }, tarjetas(ahora))
     )
 
     ),
@@ -30464,13 +30587,16 @@ const BREATHE_ROUTINES = {
     { id: 'breathe.co2', tag: 'EQU', code: 'Equilibrio', name: 'Tolerancia CO₂', desc: 'Exhala y sostén en vacío. Entrena la calma con menos aire.', min: 6, pattern: 'co2', safety: true, access: 'premium' }]
 
   },
+
+
+
   balance: {
-    label: 'Balance',
+    label: 'Coherencia',
     aside: 'Ritmo suave y constante',
     items: [
-    { id: 'breathe.coherent.55', tag: 'BAL', code: 'Balance', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5, 0, 5, 0] },
-    { id: 'breathe.coherent.66', tag: 'BAL', code: 'Balance', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0] },
-    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Balance', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
+    { id: 'breathe.coherent.55', tag: 'BAL', code: 'Coherencia', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5, 0, 5, 0] },
+    { id: 'breathe.coherent.66', tag: 'BAL', code: 'Coherencia', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0] },
+    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
 
   },
   relajacion: {
@@ -30533,12 +30659,27 @@ const BREATHE_ROUTINES = {
 
 
 
+
+
+
+
+
+
+
+const BREATHE_ORDEN_BIBLIOTECA = ['relajacion', 'balance', 'equilibrio', 'pranayama', 'energia'];
+const BREATHE_PRIMERA_VEZ = 'breathe.coherent.55';
+
+const BREATHE_BIBLIOTECA = BREATHE_ORDEN_BIBLIOTECA.concat(Object.keys(BREATHE_ROUTINES).filter((k) => BREATHE_ORDEN_BIBLIOTECA.indexOf(k) === -1)).
+reduce((o, k) => {if (BREATHE_ROUTINES[k]) o[k] = BREATHE_ROUTINES[k];return o;}, {});
+
 function BreatheLibrary(_ref) {let { open, onClose, onStart } = _ref;
   const { t } = useT();
+  const [pace] = usePace();
+  const primera = (pace.breatheSessionsTotal || 0) > 0 ? null : getBreatheRoutine(BREATHE_PRIMERA_VEZ);
   return (
     React.createElement(LibraryShell, {
       open: open, onClose: onClose, onStart: onStart,
-      groups: BREATHE_ROUTINES, tone: "var(--breathe)", catPrefix: "breathe",
+      groups: BREATHE_BIBLIOTECA, tone: "var(--breathe)", catPrefix: "breathe", primeraVez: primera,
       title: t('lib.breathe.title'), subtitle: t('lib.breathe.subtitle'),
       variant: "breathe",
       filtros: window.LIB_FILTROS_RESPIRA,
@@ -36566,6 +36707,12 @@ Object.assign(window, { HydrateTracker });
 
 
 
+
+
+
+
+
+
 function breakPozo(catalogo) {
   const out = [];
   try {
@@ -36588,17 +36735,32 @@ function breakPozo(catalogo) {
 
 
 
-function breakVetadas(feedback) {
+
+var BREAK_VETO_DIAS = 7;
+function breakVetadas(feedback, hoy) {
   const out = {};
+  if (typeof libraryDiaOrdinal !== 'function') return out;
+  const dia = libraryDiaOrdinal(hoy || (typeof todayISO === 'function' ? todayISO() : ''));
   try {
     Object.keys(feedback || {}).forEach(function (id) {
       const f = feedback[id] || {};
       const no = Number(f.no) || 0;
       const ayudo = (Number(f.yes) || 0) + (Number(f.some) || 0);
-      if (no > 0 && ayudo === 0) out[id] = true;
+      if (!(no > 0 && ayudo === 0)) return;
+      const desde = libraryDiaOrdinal(f.lastNoDay || f.lastPromptDay);
+      if (desde && dia - desde >= 0 && dia - desde < BREAK_VETO_DIAS) out[id] = true;
     });
   } catch (e) {return {};}
   return out;
+}
+
+
+
+
+function breakProponible(id) {
+  return ['MOVE_ROUTINES', 'EXTRA_ROUTINES', 'BREATHE_ROUTINES'].some(function (k) {
+    return breakPozo(window[k]).some(function (r) {return r.id === id && !r.safety;});
+  });
 }
 
 
@@ -36642,7 +36804,7 @@ function breakPropuesta(state, ctx) {
   const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);
 
 
-  const vetadas = breakVetadas(s.routineFeedback);
+  const vetadas = breakVetadas(s.routineFeedback, iso);
   const elige = (cat) => breakElige(cat, iso, { vetadas: vetadas, salto: bloqueDeHoy - 1 });
 
 
@@ -36693,8 +36855,8 @@ function breakPropuesta(state, ctx) {
   return null;
 }
 
-Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });
-;Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });
+Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta });
+;Object.assign(window, { breakPozo, BREAK_VETO_DIAS, breakVetadas, breakProponible, breakElige, breakPropuesta });
 })();
 </script>
   <script>
@@ -45251,6 +45413,18 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-etiq .pace-rt-m { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 1px; white-space: nowrap; }
 .pace-rt-etiq .pace-rt-gota { width: 10px; height: 10px; margin-left: 3px; }
 .pace-rt-zona { height: 52px; }
+/* La ficha de una parada que aún no toca (Ez, 5 nov. 2026: 1A): el papel del panel, encima
+   de las etiquetas; la coloca el JS (abajo, o encima si abajo no cabe). */
+.pace-rt-ficha { position: absolute; top: 34px; z-index: 6; width: 300px; max-width: calc(100% + 16px); text-align: left;
+  background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: var(--sh-soft); padding: 12px 14px 10px; }
+.pace-rt-ficha .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; font-variant-numeric: tabular-nums; }
+.pace-rt-ficha-plato { margin-top: 6px; }
+.pace-rt-ficha-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }
+.pace-rt-ficha-d { font-size: 12.5px; line-height: 1.35; color: var(--ink-2); margin-top: 2px; }
+.pace-rt-ficha .pace-rt-sub { margin-top: 8px; }
+.pace-rt-ficha-pie { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 10px; }
+.pace-rt-ficha-pie .pace-rt-enlace { font-size: 14px; padding: 6px 0; margin: -6px 0; background: none; border: none; cursor: pointer; }
+.pace-rt-ficha-pie .pace-rt-ficha-x { font-size: 13px; text-decoration: none; }
 
 /* COMPACTO (móvil) */
 .pace-rt-mini { display: flex; align-items: center; height: 12px; margin: 14px 0 10px; }
@@ -45864,7 +46038,11 @@ Object.assign(window, {
 
 
 
-const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL } = React;
+
+
+
+
+const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL, useState: useStateRL, useEffect: useEffectRL, useCallback: useCallbackRL } = React;
 
 function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado } = _ref;
   let nombre, meta;
@@ -45954,13 +46132,89 @@ function ritmoEmpezarParada(it) {
   window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }));
 }
 
-function RitmoLinea(_ref2) {let { plan } = _ref2;
+
+function ritmoNombresParadas(m, t, lang) {
+  const o = {};
+  m.items.forEach((x, k) => {if (x.tipo !== 'comida' && x.platos && x.platos.length) o[k] = ritmoPlatos(x, t, lang);});
+  return o;
+}
+
+
+
+
+function RitmoFicha(_ref2) {let { m, ficha, lin, boton, onCerrar, onOtra } = _ref2;
+  const { t, tn, lang } = useT();
+  const caja = useRefRL(null);
+  const otraRef = useRefRL(null);
+  const [sitio, setSitio] = useStateRL(null);
+  const it = m.items[ficha.i];
+
+
+  useLayoutEffectRL(() => {
+    if (!caja.current || !lin.current || !boton) return;
+    const l = paceCaja(lin.current),b = paceCaja(boton),w = caja.current.offsetWidth;
+    const izq = Math.round(Math.max(-8, Math.min(b.left - l.left + b.width / 2 - w / 2, l.width - w + 8)));
+    const arriba = l.top + 34 + paceCaja(caja.current).height > paceLienzoAlto() - 8;
+    if (!sitio || sitio.izq !== izq || sitio.arriba !== arriba) setSitio({ izq, arriba });
+  });
+  useEffectRL(() => {if (otraRef.current) otraRef.current.focus();}, [ficha.i]);
+  useEffectRL(() => {
+    const tecla = (e) => {if (e.key === 'Escape') {e.stopPropagation();onCerrar(true);}};
+    const fuera = (e) => {if (caja.current && !caja.current.contains(e.target) && !(boton && boton.contains(e.target))) onCerrar(false);};
+    document.addEventListener('keydown', tecla, true);
+    document.addEventListener('pointerdown', fuera, true);
+    return () => {document.removeEventListener('keydown', tecla, true);document.removeEventListener('pointerdown', fuera, true);};
+  }, [boton, onCerrar]);
+
+  const tR = (k, fb) => {if (lang !== 'en') return fb;const v = t(k);return v === k ? fb : v;};
+  const ahora = ritmoNombresParadas(m, t, lang);
+  const horas = ficha.antes ? Object.keys(ahora).filter((k) => Number(k) !== ficha.i && ficha.antes[k] != null && ficha.antes[k] !== ahora[k]).
+  map((k) => ritmoHora(m.items[k].desde)) : [];
+  const lista = horas.length > 1 ? horas.slice(0, -1).join(', ') + t('ritmo.ficha.y') + horas[horas.length - 1] : horas[0];
+  const estilo = { left: sitio ? sitio.izq : 0, visibility: sitio ? 'visible' : 'hidden' };
+  if (sitio && sitio.arriba) {estilo.top = 'auto';estilo.bottom = 34;}
+  return (
+    React.createElement("div", { ref: caja, className: "pace-rt-ficha", "data-pace-ritmo-ficha": true, role: "group", style: estilo,
+      "aria-label": ritmoHora(it.desde) + ' · ' + ritmoPlatos(it, t, lang) },
+    React.createElement("div", { className: "pace-rt-meta" }, ritmoHora(it.desde), " \xB7 ", it.larga ? tn('ritmo.larga', { n: it.dur }) : it.platos[0].min + ' min · ' + ritmoModulo(it.platos[0].modulo, t)),
+    it.platos.map((p) =>
+    React.createElement("div", { key: p.id, className: "pace-rt-ficha-plato" },
+    React.createElement("div", { className: "pace-rt-ficha-n" }, ritmoNombre(p.rutina, t, lang)),
+    React.createElement("div", { className: "pace-rt-ficha-d" }, p.rutina ? tR(p.rutina.id + '.desc', p.rutina.desc) : '')
+    )
+    ),
+    horas.length ? React.createElement("div", { className: "pace-rt-sub", "data-pace-ficha-tambien": true }, tn(horas.length > 1 ? 'ritmo.ficha.tambien.n' : 'ritmo.ficha.tambien.1', { h: lista })) : null,
+    React.createElement("div", { className: "pace-rt-ficha-pie" },
+    React.createElement("button", { ref: otraRef, type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-ficha-otra": true, onClick: onOtra }, t('ritmo.otra')),
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-ficha-x", "data-pace-ficha-cerrar": true, onClick: () => onCerrar(true) }, t('ritmo.ficha.cerrar'), " \xD7")
+    )
+    ));
+
+}
+
+function RitmoLinea(_ref3) {let { plan } = _ref3;
   const { t, tn, lang } = useT();
   const lin = useRefRL(null);
   const zona = useRefRL(null);
+  const botones = useRefRL({});
+  const [ficha, setFicha] = useStateRL(null);
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
   const ultimo = m.items.length - 1;
+
+  const fichaVale = ficha && ficha.i > iActual && m.items[ficha.i] && m.items[ficha.i].platos && m.items[ficha.i].platos.length;
+  const fichaRef = useRefRL(null);
+  fichaRef.current = ficha;
+  const cerrarFicha = useCallbackRL((volver) => {
+    const f = fichaRef.current;
+    setFicha(null);
+    if (volver && f && botones.current[f.i]) botones.current[f.i].focus();
+  }, []);
+  const otra = () => {
+    const it = m.items[ficha.i];
+    setFicha({ i: ficha.i, antes: ritmoNombresParadas(m, t, lang) });
+    ritmoOtra(it.platos.map((p) => p.clave));
+  };
 
   useLayoutEffectRL(() => {
     const colocar = () => ritmoColocarEtiquetas(lin.current, zona.current);
@@ -46010,20 +46264,22 @@ function RitmoLinea(_ref2) {let { plan } = _ref2;
 
       const estado = pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
       return (
-        React.createElement("button", { key: i, type: "button", "data-pace-ritmo-parada": it.platos.map((p) => p.clave).join(','),
+        React.createElement("button", { key: i, ref: (el) => {botones.current[i] = el;}, type: "button", "data-pace-ritmo-parada": it.platos.map((p) => p.clave).join(','),
+          "aria-expanded": !pasado && !abierta ? !!(fichaVale && ficha.i === i) : undefined,
           "data-pace-ritmo-estado-parada": estado || undefined,
           className: 'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca') + (abierta ? ' pace-rt-ahora' : '') + (estado ? ' pace-rt-' + estado : ''),
           style: { '--c': RITMO_COLOR[it.platos[0].modulo] },
           title: pasado ? nombres + (estado ? ' · ' + t('ritmo.' + estado) : '') : nombres + ' · ' + t(abierta ? 'ritmo.empieza' : 'ritmo.toca'),
           "aria-label": ritmoHora(it.desde) + ' · ' + nombres + (abierta ? ' · ' + t('ritmo.ahora') : '') + (estado ? ' · ' + t('ritmo.' + estado) : ''),
           disabled: pasado,
-          onClick: () => abierta ? ritmoEmpezarParada(it) : ritmoOtra(it.platos.map((p) => p.clave)) },
+          onClick: () => abierta ? ritmoEmpezarParada(it) : setFicha((f) => f && f.i === i ? null : { i, antes: null }) },
         abierta ? React.createElement("span", { className: "pace-rt-ahora-tag" }, t('ritmo.ahora')) : null,
         it.platos.map((p) => React.createElement(RitmoGlifo, { key: p.id, modulo: p.modulo })),
         React.createElement(RitmoEtiqueta, { it: it, final: i === ultimo, t: t, tn: tn, lang: lang, estado: estado })
         ));
 
-    })
+    }),
+    fichaVale ? React.createElement(RitmoFicha, { m: m, ficha: ficha, lin: lin, boton: botones.current[ficha.i], onCerrar: cerrarFicha, onOtra: otra }) : null
     ),
     React.createElement("div", { className: "pace-rt-zona", ref: zona })
     ));
@@ -46031,7 +46287,7 @@ function RitmoLinea(_ref2) {let { plan } = _ref2;
 }
 
 
-function RitmoMini(_ref3) {let { plan } = _ref3;
+function RitmoMini(_ref4) {let { plan } = _ref4;
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
   return (
@@ -46049,8 +46305,8 @@ function RitmoMini(_ref3) {let { plan } = _ref3;
 
 }
 
-Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, ritmoColocarEtiquetas, ritmoIndiceAhora, ritmoEmpezarParada });
-;Object.assign(window, { RitmoEtiqueta, ritmoColocarEtiquetas, ritmoIndiceAhora, ritmoEmpezarParada, RitmoLinea, RitmoMini });
+Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, RitmoFicha, ritmoColocarEtiquetas, ritmoIndiceAhora, ritmoEmpezarParada, ritmoNombresParadas });
+;Object.assign(window, { RitmoEtiqueta, ritmoColocarEtiquetas, ritmoIndiceAhora, ritmoEmpezarParada, ritmoNombresParadas, RitmoFicha, RitmoLinea, RitmoMini });
 })();
 </script>
   <script>

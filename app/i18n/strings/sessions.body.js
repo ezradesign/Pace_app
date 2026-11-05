@@ -60,6 +60,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.journey.parts':               '{n} tramos',
     'lib.journey.audio':               'con música',
     'lib.now':                         'Para ahora',
+    'lib.primera':                     '¿Es tu primera vez? Empieza aquí',
     'lib.back':                        'Volver',
     'lib.premium':                     'Premium',
     'lib.perSide':                     'por lado',
@@ -111,6 +112,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.rhythm.nadi':                 'alterna',
     'lib.rhythm.kapalabhati':          'exhalaciones cortas, 3 rondas',
     'lib.rhythm.co2':                  'sostén en vacío',
+    'lib.air.sin':                     'sin aguantar el aire',
+    'lib.air.con':                     'aguantando el aire',
 
     /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
        dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
@@ -239,6 +242,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.journey.parts':               '{n} parts',
     'lib.journey.audio':               'with music',
     'lib.now':                         'For now',
+    'lib.primera':                     'First time? Start here',
     'lib.back':                        'Back',
     'lib.premium':                     'Premium',
     'lib.perSide':                     'per side',
@@ -276,6 +280,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.rhythm.nadi':                 'alternate nostril',
     'lib.rhythm.kapalabhati':          'short exhales, 3 rounds',
     'lib.rhythm.co2':                  'hold on empty',
+    'lib.air.sin':                     'no breath holds',
+    'lib.air.con':                     'with breath holds',
 
     'preview.tag':                     'Before you start',
     'preview.need':                    'What you need',
