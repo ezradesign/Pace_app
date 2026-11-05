@@ -62,7 +62,7 @@ function RitmoSobre({ m }) {
 /* `editarMedia` (la pregunta del móvil): allí no está la frase de la media jornada, porque
    sus horas se ponen al elegirla; pero pasada su hora el chip se apaga y no se podría
    elegir para moverla a la tarde. Entonces el chip enseña sus dos horas para cambiarlas en
-   el sitio, y tocar su nombre abre la hora de inicio (RitmoHoraInicio): es donde toca quien
+   el sitio, y tocar su nombre abre la hora de inicio (RitmoHoraPaso): es donde toca quien
    quiere la media jornada, y un nombre que no hacía nada no decía que lo que se toca son
    las horas. En cuanto el tramo vuelve a caber en el día, es un chip más. */
 /* `tuyo` (el día ya contestado, RitmoManana.jsx): la opción de tu semana va marcada; se
@@ -86,7 +86,7 @@ function RitmoChips({ state, editarMedia, tuyo }) {
                 <b>{t('ritmo.opcion.media')}</b>
               </button>
               <span><RitmoFrase plantilla={t('ritmo.tramo')} huecos={{ a: horas.mediaInicio, b: horas.mediaSalida }} /></span>
-              {inicioAbierto ? React.createElement(window.__MAQ && window.__MAQ.forma === 'B' ? RitmoHorarioHoja : window.__MAQ && 'DEF'.indexOf(window.__MAQ.forma || 'x') >= 0 ? RitmoHoraMaq : RitmoHoraLista, { campo: 'media.inicio', horario, onClose: () => setInicioAbierto(false) }) : null}
+              {inicioAbierto ? <RitmoHoraPaso campo="media.inicio" horario={horario} onClose={() => setInicioAbierto(false)} /> : null}
             </div>
           );
         }

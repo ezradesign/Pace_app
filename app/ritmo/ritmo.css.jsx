@@ -117,8 +117,9 @@
 .pace-rt-ctx span { font-size: 10px; letter-spacing: 0.08em; color: var(--ink-2); border: 1px solid var(--line);
   border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
 
-/* EL HORARIO se edita dentro de la frase: <select> nativo con aspecto de texto
-   subrayado. El padding vertical agranda la zona de toque sin mover la línea. */
+/* EL HORARIO se edita dentro de la frase: un botón con aspecto de texto subrayado que abre
+   su paso a paso (RitmoHoraPaso); el <select> de los bloques y del calendario lleva la misma
+   clase. El padding vertical agranda la zona de toque sin mover la línea. */
 .pace-rt-sel { appearance: none; -webkit-appearance: none; font: inherit; color: var(--ink); cursor: pointer;
   background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%2377705F' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
   border: 0; border-bottom: 1px dotted var(--line-2); border-radius: 0; padding: 6px 11px 1px 1px; margin: -6px 1px 0;
@@ -438,7 +439,7 @@
 .pace-rt-preg .pace-rt-chip b { line-height: 1.08; }
 .pace-rt-preg .pace-rt-chip > span { margin-top: 2px; line-height: 1.12; }
 /* El chip de la media jornada fuera de su hora: su nombre es un botón que abre la hora de
-   inicio (RitmoHoraInicio) y cuya caja cubre el chip entero; los dos selectores van encima.
+   inicio (RitmoHoraPaso) y cuya caja cubre el chip entero; los dos selectores van encima.
    Sus cajas crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
 .pace-rt-chip.pace-rt-chip-horas { position: relative; cursor: pointer; }
 .pace-rt-chip-nombre { display: block; width: 100%; padding: 0 !important; border: 0 !important; background: none !important; text-align: left; cursor: pointer; }
@@ -449,60 +450,27 @@
 .pace-rt-chip-horas .pace-rt-sel { padding-top: 10px; margin-top: -10px; background-position: right 1px bottom 6px; }
 /* Lo que crecen los selectores no llega a pisar la palabra: tocar «Media jornada» abre su hora. */
 .pace-rt-chip-nombre b { position: relative; z-index: 2; }
-/* La hora de inicio: las horas en cursiva display, como en la frase, y la de ahora en verde. */
-.pace-rt-horas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 18px; }
-.pace-rt-hora { height: 38px; border: 1px solid var(--line) !important; border-radius: var(--r-sm); background: var(--paper) !important; color: var(--ink);
-  font-family: var(--font-display); font-style: italic; font-size: 17px; font-variant-numeric: tabular-nums; cursor: pointer; }
-.pace-rt-hora[aria-checked="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
-@media (hover: hover) { .pace-rt-hora:hover:not([aria-checked="true"]) { background: var(--paper-2) !important; border-color: var(--ink-3) !important; } }
-.pace-rt-hora { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
-.pace-rt-hora-check { flex-shrink: 0; margin-left: -4px; }
-.pace-rt-horas-pie { display: flex; justify-content: center; margin-top: 6px; }
-.pace-rt-horas-dejar { min-height: 44px; padding: 0 14px !important; font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2);
+/* EL PASO A PASO DE LAS HORAS (RitmoHoraPaso): un número grande en la serif de PACE entre
+   − y +. Sin arrastre ni menú al mantener el dedo, que es como se avanza seguido. */
+.pace-rt-paso { display: grid; grid-template-columns: 56px 1fr 56px; align-items: center; margin-top: 22px; }
+.pace-rt-paso-mas { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--line) !important; background: var(--paper) !important; color: var(--ink);
+  display: grid; place-items: center; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.pace-rt-paso-mas[aria-disabled="true"] { opacity: 0.35; cursor: default; }
+@media (hover: hover) { .pace-rt-paso-mas:hover:not([aria-disabled="true"]) { background: var(--paper-2) !important; border-color: var(--ink-3) !important; } }
+.pace-rt-paso-mas:active:not([aria-disabled="true"]) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.pace-rt-paso-hora { text-align: center; font-family: var(--font-display); font-style: italic; font-size: 60px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pace-rt-paso-dura { font-size: 44px; }
+.pace-rt-paso-nota { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 18px; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.pace-rt-paso-nota svg { color: var(--focus); }
+.pace-rt-paso-oido { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pace-rt-paso-pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 0 -14px; }
+.pace-rt-paso-dejar { min-height: 44px; padding: 0 14px !important; font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); white-space: nowrap;
   text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 4px; }
-.pace-rt-horas-dejar:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
-.pace-rt-hora[aria-checked="true"] { color: var(--focus); font-weight: 500; }
-.pace-rt-hora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
-/* MAQUETA B */
-.maq-hoja-filas { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
-.maq-hoja-fila { display: grid; grid-template-columns: 96px 1fr 1fr; gap: 6px; align-items: center; }
-.maq-hoja-grupo { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); line-height: 1.2; }
-.maq-hoja-campo { display: flex; flex-direction: column; align-items: flex-start; padding: 5px 10px !important; border: 1px solid var(--line) !important;
-  border-radius: var(--r-sm); background: var(--paper) !important; text-align: left; }
-.maq-hoja-campo span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
-.maq-hoja-campo b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.15; }
-.maq-hoja-campo[aria-pressed="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
-.maq-hoja-horas { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: 14px; gap: 5px; }
-.maq-hoja-horas .pace-rt-hora { height: 34px; font-size: 15px; }
-.maq-hoja-pie { display: flex; justify-content: flex-end; margin-top: 10px; }
-.maq-pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
-.maq-pie .pace-rt-horas-dejar { margin-left: -14px; }
-.maq-pie-solo { justify-content: center; }
-.maq-pie-solo .pace-rt-horas-dejar { margin-left: 0; }
-.maq-paso { display: grid; grid-template-columns: 56px 1fr 56px; align-items: center; margin-top: 22px; }
-.maq-mas { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--line) !important; background: var(--paper) !important; color: var(--ink);
-  display: grid; place-items: center; }
-.maq-mas:disabled { opacity: 0.35; }
-.maq-paso-hora { text-align: center; font-family: var(--font-display); font-style: italic; font-size: 60px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
-.maq-paso-nota { text-align: center; margin-top: 10px; font-size: 13px; color: var(--ink-3); display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 18px; }
-.maq-paso-nota .pace-rt-hora-check { margin: 0; color: var(--focus); }
-.maq-rueda { position: relative; height: 200px; margin-top: 16px; }
-.maq-rueda-lista { height: 200px; overflow-y: auto; scroll-snap-type: y mandatory; padding: 80px 0; box-sizing: border-box; scrollbar-width: none; outline: none;
-  -webkit-mask-image: linear-gradient(transparent, #000 32%, #000 68%, transparent); mask-image: linear-gradient(transparent, #000 32%, #000 68%, transparent); }
-.maq-rueda-lista::-webkit-scrollbar { display: none; }
-.maq-rueda-lista:focus-visible + * , .maq-rueda:focus-within .maq-rueda-banda { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
-.maq-rueda-item { height: 40px; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;
-  font-family: var(--font-display); font-style: italic; font-size: 21px; color: var(--ink-3); cursor: pointer; font-variant-numeric: tabular-nums; }
-.maq-rueda-item.maq-sel { color: var(--ink); font-size: 26px; font-weight: 500; }
-.maq-rueda-item .pace-rt-hora-check { margin: 0; color: var(--focus); }
-.maq-rueda-banda { position: absolute; left: 0; right: 0; top: 80px; height: 40px; background: var(--focus-soft); border-top: 1px solid var(--focus-cta); border-bottom: 1px solid var(--focus-cta); pointer-events: none; }
-.maq-cerca { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
-.maq-cerca .pace-rt-hora { height: 44px; font-size: 16px; }
-.maq-otra { display: block; margin: 12px auto 0; min-height: 40px; padding: 0 14px !important; font-family: var(--font-display); font-style: italic; font-size: 17px; color: var(--focus); }
-.maq-ahora { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 12px 16px !important; border-radius: var(--r-md);
-  border: 1px solid var(--focus-cta) !important; background: var(--focus-soft) !important; color: var(--ink); text-align: left; }
-.maq-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
-.maq-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
+.pace-rt-paso-ahora { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 12px 16px !important; border-radius: var(--r-md);
+  border: 1px solid var(--focus-cta) !important; background: var(--focus-soft) !important; color: var(--ink); text-align: left; cursor: pointer; }
+.pace-rt-paso-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
+.pace-rt-paso-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
+.pace-rt-paso-mas:focus-visible, .pace-rt-paso-hora:focus-visible, .pace-rt-paso-dejar:focus-visible, .pace-rt-paso-ahora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 /* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
    derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
    partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */

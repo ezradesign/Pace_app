@@ -101,8 +101,8 @@ function RitmoFrase({ plantilla, huecos }) {
   );
 }
 
-/* Una hora editable DENTRO de la frase: un <select> nativo con aspecto de texto.
-   En móvil abre el selector del sistema.
+/* Una hora editable DENTRO de la frase: un botón con aspecto de texto que abre su paso a
+   paso (RitmoHoraPaso), en la paleta de PACE y diciendo qué hora es.
    RANGOS (s194): el inicio llegaba solo hasta las 13:00 y quien trabaja por la
    tarde no podía decir su hora (lo encontró el usuario a las 17:20). Ahora:
    inicio 5:00–21:00 · comida 11:00–17:00 · salida 12:00–23:30, de media en media
@@ -112,7 +112,7 @@ var RITMO_RANGOS = { inicio: [300, 1260], comida: [660, 1020], salida: [720, 141
   /* s197: la media jornada es de mañana O DE TARDE, así que su inicio llega hasta las
      21:00 como el de la entera y su fin hasta la medianoche y media. */
   'media.inicio': [300, 1260], 'media.salida': [360, 1410] };
-const { useState: useStateRPz } = React;
+const { useState: useStateRPz, useEffect: useEffectRPz, useRef: useRefRPz } = React;
 
 /* «media.inicio» / «media.salida» leen dentro de `horario.media` (s197). */
 function ritmoHoraDe(horario, campo) {
@@ -121,12 +121,12 @@ function ritmoHoraDe(horario, campo) {
 function ritmoHoraTexto(campo, v) {
   return campo === 'comidaDur' ? (v < 60 ? v + ' min' : ritmoDuracion(v, true)) : ritmoHora(v);
 }
-/* Las horas que se eligen, con la de ahora aunque no caiga en la media hora. */
+/* Los pasos, con la hora de ahora aunque no caiga en la media hora. */
 function ritmoHoraValores(campo, actual) {
   let valores = [];
   if (campo === 'comidaDur') valores = [30, 45, 60, 90, 120];
   else for (let v = RITMO_RANGOS[campo][0]; v <= RITMO_RANGOS[campo][1]; v += 30) valores.push(v);
-  if (actual != null && valores.indexOf(actual) === -1) valores = valores.concat([actual]).sort((a, b) => a - b);
+  if (valores.indexOf(actual) === -1) valores = valores.concat([actual]).sort((a, b) => a - b);
   return valores;
 }
 
@@ -136,207 +136,124 @@ function RitmoSelector({ campo, horario, onCambio }) {
   const { t } = useT();
   const [abierta, setAbierta] = useStateRPz(false);
   const texto = ritmoHoraTexto(campo, ritmoHoraDe(horario, campo));
-  const forma = window.__MAQ && window.__MAQ.forma;
-  const Lista = forma === 'B' ? RitmoHorarioHoja : 'DEF'.indexOf(forma || 'x') >= 0 ? RitmoHoraMaq : RitmoHoraLista;
   return (
     <React.Fragment>
       <button type="button" className="pace-rt-sel" data-pace-ritmo-horario={campo} aria-haspopup="dialog"
         aria-label={t('ritmo.aria.' + campo) + ', ' + texto} onClick={() => setAbierta(true)}>{texto}</button>
-      {abierta ? <Lista campo={campo} horario={horario} onCambio={onCambio} onClose={() => setAbierta(false)} /> : null}
+      {abierta ? <RitmoHoraPaso campo={campo} horario={horario} onCambio={onCambio} onClose={() => setAbierta(false)} /> : null}
     </React.Fragment>
   );
 }
 
+/* MANTENER PULSADO AVANZA SEGUIDO: de 9:00 a 15:00 no pueden ser doce toques (Ez, 5 nov.
+   2026). El primer paso sale al apretar y el resto tras una espera, para que un toque
+   normal sea un paso. El `click` solo cuenta si no vino del puntero: es lo que llega del
+   teclado y del lector de pantalla, que no aprietan nada. */
+var RITMO_PASO_ESPERA = 400, RITMO_PASO_CADENCIA = 110;
+function useRitmoSostener(paso) {
+  const reloj = useRefRPz(null);
+  const apretado = useRefRPz(false);
+  const parar = () => clearTimeout(reloj.current);
+  useEffectRPz(() => parar, []);
+  const soltar = () => { parar(); apretado.current = false; };
+  return (d) => ({
+    onPointerDown: (e) => {
+      if (e.button !== 0) return;
+      apretado.current = true;
+      paso(d);
+      const seguir = () => { paso(d); reloj.current = setTimeout(seguir, RITMO_PASO_CADENCIA); };
+      parar();
+      reloj.current = setTimeout(seguir, RITMO_PASO_ESPERA);
+    },
+    onPointerUp: parar, onPointerLeave: soltar, onPointerCancel: soltar,
+    onClick: () => { if (!apretado.current) paso(d); apretado.current = false; },
+    onContextMenu: (e) => e.preventDefault(),
+  });
+}
+
 var RITMO_HORA_GRUPO = { inicio: 'ritmo.opcion.jornada', salida: 'ritmo.opcion.jornada', comida: 'ritmo.comida', comidaDur: 'ritmo.comida',
   'media.inicio': 'ritmo.opcion.media', 'media.salida': 'ritmo.opcion.media' };
+const RITMO_HORA_CHECK = <svg width="11" height="8" viewBox="0 0 11 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 4.2 3.9 7 10 1" /></svg>;
+const ritmoHoraSigno = (mas) => <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M3 9h12" />{mas ? <path d="M9 3v12" /> : null}</svg>;
 
-function RitmoHoraLista({ campo, horario, onCambio, onClose }) {
+/* Pasada la media jornada, su inicio ofrece «ahora»: el atajo de quien la quiere para ya.
+   Solo pone la hora; el día empieza al tocar «Media jornada» (Ez, 4 nov. 2026). No sale en
+   un borrador (`onCambio`): «Tu semana» habla de cada semana, no de hoy. Con el fin ya
+   pasado, el inicio lo cruza y el fin va detrás (ritmoTramoCon). */
+function ritmoHoraYa(campo, horario, onCambio) {
+  if (campo !== 'media.inicio' || onCambio) return null;
+  const ahora = ritmoAhora();
+  return ahora >= ritmoMedia(horario).salida && ahora <= RITMO_RANGOS[campo][1] ? ahora : null;
+}
+
+/* TODAS LAS HORAS SE ELIGEN IGUAL (la D de Ez, 5 nov. 2026): «− 9:00 +», una sola hora grande
+   en vez de la lista del sistema o una rejilla de 33 botones, con el título de qué hora es,
+   cómo está ahora y una salida que no cambia nada. El número es un `spinbutton`: las flechas
+   mueven media hora, Av Pág y Re Pág una hora, Inicio y Fin van al tope e Intro guarda.
+   Lleva el foco al abrir, pero tras el efecto del `Modal`, que apunta a quién devolvérselo.
+   `aria-disabled` y no `disabled` en los extremos: un botón apagado perdería el foco. El
+   Modal va en un portal porque `.pace-rt-panel` encierra lo fijo, y en la capa 130 porque
+   la bienvenida, donde también se eligen horas, va en la 120. */
+function RitmoHoraPaso({ campo, horario, onCambio, onClose }) {
   const { t, tn } = useT();
-  const actual = ritmoHoraDe(horario, campo);
-  const tramo = campo.indexOf('media.') === 0 ? ritmoMedia(horario) : horario;
-  const titulo = t('ritmo.hora.titulo.' + campo.replace('media.', ''));
-  const sub = campo === 'comida' || campo === 'comidaDur'
-    ? tn('ritmo.hora.sub.comida', { h: ritmoHora(horario.comida), d: ritmoDuracion(horario.comidaDur) })
-    : tn('ritmo.inicio.sub', { a: ritmoHora(tramo.inicio), b: ritmoHora(tramo.salida) });
-  const elegir = (v) => {
-    if (v !== actual) (onCambio ? onCambio(campo, v) : ritmoHorario(campo, v));
-    onClose();
-  };
-  const pistas = window.__MAQ && window.__MAQ.forma === 'C';
-  const texto = ritmoHoraTexto(campo, actual);
-  return ReactDOM.createPortal(
-    <Modal open onClose={onClose} maxWidth={360} relleno={pistas ? '22px 20px 12px' : '22px 20px 24px'} tagLabel={t(RITMO_HORA_GRUPO[campo])} title={titulo} subtitle={sub}>
-      <div className="pace-rt-horas" role="radiogroup" aria-label={titulo} data-pace-ritmo-hora-lista={campo}>
-        {ritmoHoraValores(campo, actual).map((v) => (
-          <button key={v} type="button" role="radio" aria-checked={v === actual} className="pace-rt-hora"
-            data-pace-ritmo-hora={v} onClick={() => elegir(v)}>
-            {pistas && v === actual ? (
-              <svg className="pace-rt-hora-check" width="11" height="8" viewBox="0 0 11 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 4.2 3.9 7 10 1" /></svg>
-            ) : null}
-            {ritmoHoraTexto(campo, v)}
-          </button>
-        ))}
-      </div>
-      {pistas ? (
-        <div className="pace-rt-horas-pie">
-          <button type="button" className="pace-rt-horas-dejar" onClick={onClose}>{(campo === 'comidaDur' ? 'Dejar ' : 'Dejar las ') + texto}</button>
-        </div>
-      ) : null}
-    </Modal>,
-    document.body
-  );
-}
-
-/* MAQUETA D, E y F: menos botones. */
-function ritmoMaqCab(campo, horario, t, tn) {
-  const tramo = campo.indexOf('media.') === 0 ? ritmoMedia(horario) : horario;
-  return {
-    tag: t(RITMO_HORA_GRUPO[campo]), titulo: t('ritmo.hora.titulo.' + campo.replace('media.', '')),
-    sub: campo === 'comida' || campo === 'comidaDur'
-      ? tn('ritmo.hora.sub.comida', { h: ritmoHora(horario.comida), d: ritmoDuracion(horario.comidaDur) })
-      : tn('ritmo.inicio.sub', { a: ritmoHora(tramo.inicio), b: ritmoHora(tramo.salida) }),
-  };
-}
-const RITMO_MAQ_CHECK = <svg className="pace-rt-hora-check" width="11" height="8" viewBox="0 0 11 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 4.2 3.9 7 10 1" /></svg>;
-
-function RitmoRuedaMaq({ valores, actual, sel, setSel, texto, etiqueta }) {
-  const ref = React.useRef(null);
-  const ALTO = 40;
-  React.useLayoutEffect(() => { ref.current.scrollTop = valores.indexOf(sel) * ALTO; }, []);
-  const onScroll = () => {
-    const i = Math.max(0, Math.min(valores.length - 1, Math.round(ref.current.scrollTop / ALTO)));
-    if (valores[i] !== sel) setSel(valores[i]);
-  };
-  const ir = (i) => ref.current.scrollTo({ top: i * ALTO, behavior: 'smooth' });
-  const onKey = (e) => {
-    const i = valores.indexOf(sel);
-    if (e.key === 'ArrowDown') { e.preventDefault(); ir(Math.min(valores.length - 1, i + 1)); }
-    if (e.key === 'ArrowUp') { e.preventDefault(); ir(Math.max(0, i - 1)); }
-  };
-  return (
-    <div className="maq-rueda">
-      <div className="maq-rueda-banda" aria-hidden="true" />
-      <div ref={ref} className="maq-rueda-lista" role="listbox" tabIndex={0} aria-label={etiqueta} onScroll={onScroll} onKeyDown={onKey} data-maq-rueda>
-        {valores.map((v, i) => (
-          <div key={v} role="option" aria-selected={v === sel} className={'maq-rueda-item' + (v === sel ? ' maq-sel' : '')}
-            data-pace-ritmo-hora={v} onClick={() => ir(i)}>{v === actual ? RITMO_MAQ_CHECK : null}{texto(v)}</div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RitmoHoraMaq({ campo, horario, onCambio, onClose }) {
-  const { t, tn } = useT();
-  const forma = window.__MAQ.forma;
-  const cab = ritmoMaqCab(campo, horario, t, tn);
   const actual = ritmoHoraDe(horario, campo);
   const valores = ritmoHoraValores(campo, actual);
   const [sel, setSel] = useStateRPz(actual);
-  const [toda, setToda] = useStateRPz(false);
+  /* Con los botones el foco no está en el número, y el lector no diría la hora nueva. */
+  const [decirla, setDecirla] = useStateRPz(false);
+  const numero = useRefRPz(null);
+  useEffectRPz(() => { queueMicrotask(() => numero.current && numero.current.focus({ preventScroll: true })); }, []);
   const texto = (v) => ritmoHoraTexto(campo, v);
-  const las = (v) => (campo === 'comidaDur' ? '' : 'las ') + texto(v);
-  const guardar = (v) => { if (v !== actual) (onCambio ? onCambio(campo, v) : ritmoHorario(campo, v)); onClose(); };
-  const ahora = ritmoAhora();
-  const desde = campo === 'media.inicio' && ahora > ritmoMedia(horario).salida && ahora <= RITMO_RANGOS['media.inicio'][1] ? ahora : null;
-  const ya = desde != null ? (
-    <button type="button" className="maq-ahora" onClick={() => guardar(desde)}>
-      <b>Desde ahora</b><span>{ritmoHora(desde)} a {ritmoHora(desde + ritmoMedia(horario).salida - ritmoMedia(horario).inicio)}</span>
-    </button>
-  ) : null;
-  const pie = (cambiar) => (
-    <div className={'maq-pie' + (cambiar ? '' : ' maq-pie-solo')}>
-      <button type="button" className="pace-rt-horas-dejar" onClick={onClose}>{'Dejar ' + las(actual)}</button>
-      {cambiar ? (
-        <button type="button" className="pace-rt-tm-comienza" style={{ visibility: sel === actual ? 'hidden' : 'visible' }} onClick={() => guardar(sel)}>
-          <span className="pace-rt-tm-pildora">{'Cambiar a ' + las(sel)}</span>
+  const las = (v) => (campo === 'comidaDur' ? texto(v) : tn('ritmo.hora.las', { h: texto(v) }));
+  const guardar = (v) => {
+    if (v !== actual) (onCambio ? onCambio(campo, v) : ritmoHorario(campo, v));
+    onClose();
+  };
+  const hasta = (a) => valores[Math.max(0, Math.min(valores.length - 1, a))];
+  const paso = (d) => { setDecirla(true); setSel((s) => hasta(valores.indexOf(s) + d)); };
+  const sostener = useRitmoSostener(paso);
+  const i = valores.indexOf(sel);
+  const onKey = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); guardar(sel); return; }
+    const a = { ArrowUp: i + 1, ArrowRight: i + 1, ArrowDown: i - 1, ArrowLeft: i - 1, PageUp: i + 2, PageDown: i - 2, Home: 0, End: valores.length - 1 }[e.key];
+    if (a == null) return;
+    e.preventDefault();
+    setDecirla(false);
+    setSel(hasta(a));
+  };
+  const dura = campo === 'comidaDur';
+  const titulo = t('ritmo.hora.titulo.' + campo.replace('media.', ''));
+  const tramo = campo.indexOf('media.') === 0 ? ritmoMedia(horario) : horario;
+  const sub = campo === 'comida' || dura
+    ? tn('ritmo.hora.sub.comida', { h: ritmoHora(horario.comida), d: ritmoDuracion(horario.comidaDur) })
+    : tn('ritmo.hora.sub.tramo', { a: ritmoHora(tramo.inicio), b: ritmoHora(tramo.salida) });
+  const ya = ritmoHoraYa(campo, horario, onCambio);
+  return ReactDOM.createPortal(
+    <Modal open onClose={onClose} maxWidth={360} relleno="22px 20px 12px" capa={130} tagLabel={t(RITMO_HORA_GRUPO[campo])} title={titulo} subtitle={sub}>
+      {ya != null ? (
+        <button type="button" className="pace-rt-paso-ahora" data-pace-ritmo-ahora onClick={() => guardar(ya)}>
+          <b>{t('ritmo.hora.ahora')}</b>
+          <span>{tn('ritmo.tramo', { a: ritmoHora(ya), b: ritmoHora(ritmoTramoCon(horario, campo, ya)['media.salida']) })}</span>
         </button>
       ) : null}
-    </div>
-  );
-  const boton = (v) => (
-    <button key={v} type="button" role="radio" aria-checked={v === actual} className="pace-rt-hora" data-pace-ritmo-hora={v} onClick={() => guardar(v)}>
-      {v === actual ? RITMO_MAQ_CHECK : null}{texto(v)}
-    </button>
-  );
-  let cuerpo;
-  if (forma === 'D') {
-    const i = valores.indexOf(sel);
-    const signo = (d) => <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M3 9h12" />{d ? <path d="M9 3v12" /> : null}</svg>;
-    cuerpo = (
-      <React.Fragment>
-        {ya}
-        <div className="maq-paso">
-          <button type="button" className="maq-mas" aria-label="Media hora antes" disabled={i <= 0} onClick={() => setSel(valores[i - 1])} data-maq-menos>{signo(false)}</button>
-          <div className="maq-paso-hora" aria-live="polite">{texto(sel)}</div>
-          <button type="button" className="maq-mas" aria-label="Media hora después" disabled={i >= valores.length - 1} onClick={() => setSel(valores[i + 1])} data-maq-mas>{signo(true)}</button>
-        </div>
-        <div className="maq-paso-nota">{sel === actual ? <React.Fragment>{RITMO_MAQ_CHECK} La que tienes</React.Fragment> : 'Tenías ' + las(actual)}</div>
-        {pie(true)}
-      </React.Fragment>
-    );
-  } else if (forma === 'E') {
-    cuerpo = (
-      <React.Fragment>
-        {ya}
-        <RitmoRuedaMaq valores={valores} actual={actual} sel={sel} setSel={setSel} texto={texto} etiqueta={cab.titulo} />
-        {pie(true)}
-      </React.Fragment>
-    );
-  } else {
-    let a = Math.max(0, valores.indexOf(actual) - 2);
-    const b = Math.min(valores.length, a + 5);
-    a = Math.max(0, b - 5);
-    const cerca = campo === 'comidaDur' ? valores : valores.slice(a, b);
-    cuerpo = (
-      <React.Fragment>
-        {ya}
-        <div className={'pace-rt-horas' + (toda ? '' : ' maq-cerca')} role="radiogroup" aria-label={cab.titulo}>{(toda ? valores : cerca).map(boton)}</div>
-        {!toda && cerca.length < valores.length ? <button type="button" className="maq-otra" onClick={() => setToda(true)} data-maq-otra>Otra hora…</button> : null}
-        {pie(false)}
-      </React.Fragment>
-    );
-  }
-  return ReactDOM.createPortal(
-    <Modal open onClose={onClose} maxWidth={360} relleno="22px 20px 12px" tagLabel={cab.tag} title={cab.titulo} subtitle={cab.sub}>{cuerpo}</Modal>,
-    document.body
-  );
-}
-
-/* MAQUETA B: una sola hoja con todas las horas; elegir no cierra. */
-var RITMO_HOJA_FILAS = [
-  ['ritmo.opcion.jornada', [['inicio', 'Empieza'], ['salida', 'Termina']]],
-  ['ritmo.comida', [['comida', 'A las'], ['comidaDur', 'Dura']]],
-  ['ritmo.opcion.media', [['media.inicio', 'Empieza'], ['media.salida', 'Termina']]],
-];
-function RitmoHorarioHoja({ campo, horario, onCambio, onClose }) {
-  const { t } = useT();
-  const [elegido, setElegido] = useStateRPz(campo);
-  const actual = ritmoHoraDe(horario, elegido);
-  const elegir = (v) => { if (v !== actual) (onCambio ? onCambio(elegido, v) : ritmoHorario(elegido, v)); };
-  return ReactDOM.createPortal(
-    <Modal open onClose={onClose} maxWidth={400} relleno="22px 20px 20px" tagLabel={t('ritmo.nombre')} title="Tu horario"
-      subtitle="Toca qué cambiar y elige su hora.">
-      <div className="maq-hoja-filas">
-        {RITMO_HOJA_FILAS.filter((f) => !(horario.sinComida && f[0] === 'ritmo.comida')).map(([grupo, campos]) => (
-          <div key={grupo} className="maq-hoja-fila">
-            <span className="maq-hoja-grupo">{t(grupo)}</span>
-            {campos.map(([c, rotulo]) => (
-              <button key={c} type="button" aria-pressed={c === elegido} className="maq-hoja-campo" data-maq-campo={c} onClick={() => setElegido(c)}>
-                <span>{rotulo}</span><b>{ritmoHoraTexto(c, ritmoHoraDe(horario, c))}</b>
-              </button>
-            ))}
-          </div>
-        ))}
+      <div className="pace-rt-paso">
+        <button type="button" className="pace-rt-paso-mas" aria-label={t(dura ? 'ritmo.hora.menos' : 'ritmo.hora.antes')}
+          aria-disabled={i <= 0} data-pace-ritmo-menos {...sostener(-1)}>{ritmoHoraSigno(false)}</button>
+        <div ref={numero} className={'pace-rt-paso-hora' + (dura ? ' pace-rt-paso-dura' : '')} role="spinbutton" tabIndex={0} aria-label={titulo}
+          aria-valuemin={valores[0]} aria-valuemax={valores[valores.length - 1]} aria-valuenow={sel} aria-valuetext={texto(sel)}
+          data-pace-ritmo-paso={campo} onKeyDown={onKey}>{texto(sel)}</div>
+        <button type="button" className="pace-rt-paso-mas" aria-label={t(dura ? 'ritmo.hora.mas' : 'ritmo.hora.despues')}
+          aria-disabled={i >= valores.length - 1} data-pace-ritmo-mas {...sostener(1)}>{ritmoHoraSigno(true)}</button>
       </div>
-      <div className="pace-rt-horas maq-hoja-horas" role="radiogroup">
-        {ritmoHoraValores(elegido, actual).map((v) => (
-          <button key={elegido + v} type="button" role="radio" aria-checked={v === actual} className="pace-rt-hora"
-            data-pace-ritmo-hora={v} onClick={() => elegir(v)}>{ritmoHoraTexto(elegido, v)}</button>
-        ))}
+      <div className="pace-rt-paso-nota" data-pace-ritmo-nota>
+        {sel === actual ? <React.Fragment>{RITMO_HORA_CHECK} {t('ritmo.hora.tuya')}</React.Fragment> : tn('ritmo.hora.tenias', { h: las(actual) })}
       </div>
-      <div className="maq-hoja-pie">
-        <button type="button" className="pace-rt-tm-comienza" onClick={onClose}><span className="pace-rt-tm-pildora">Hecho</span></button>
+      <span className="pace-rt-paso-oido" aria-live="polite">{decirla ? texto(sel) : ''}</span>
+      <div className="pace-rt-paso-pie">
+        <button type="button" className="pace-rt-paso-dejar" data-pace-ritmo-dejar onClick={onClose}>{tn('ritmo.hora.dejar', { h: las(actual) })}</button>
+        <button type="button" className="pace-rt-tm-comienza" data-pace-ritmo-cambiar style={{ visibility: sel === actual ? 'hidden' : 'visible' }} onClick={() => guardar(sel)}>
+          <span className="pace-rt-tm-pildora">{tn('ritmo.hora.cambiar', { h: las(sel) })}</span>
+        </button>
       </div>
     </Modal>,
     document.body
@@ -386,5 +303,5 @@ function ritmoHuecos(horario, onCambio) {
 
 Object.assign(window, {
   RITMO_COLOR, RitmoGlifo, RitmoMetaGota, RitmoInterruptorComida, ritmoNombre, ritmoPlatos, ritmoModulo, ritmoResumen, ritmoMetaVasos, ritmoMetaPlato,
-  RitmoFrase, RitmoSelector, RitmoHoraLista, RitmoHorarioHoja, ritmoHuecos,
+  RitmoFrase, RitmoSelector, RitmoHoraPaso, ritmoHuecos,
 });
