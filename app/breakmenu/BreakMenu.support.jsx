@@ -48,6 +48,12 @@
      · VETO — una rutina con «No» y sin ningún «Sí»/«Un poco» sale del pozo de la
        PROPUESTA. Sigue en la biblioteca: esto no esconde catálogo, solo deja de
        ofrecerte lo que ya dijiste que no te servía.
+     · DURA UNA SEMANA, Y SE DICE (Ez, 5 nov. 2026: 2A de la maqueta, «pero durante una
+       semana»). Para siempre, un «No» de un día distraído te quitaba la rutina sin
+       saberlo (Q4 de ChatGPT, 28 oct.). Cuenta desde el último «No» (`lastNoDay`; lo
+       guardado antes, desde la última vez que se preguntó), y sin fecha no aparta: nada
+       se aparta para siempre. La pantalla del final lo dice y deja deshacerlo
+       (SessionFeedback.jsx).
      · AMNISTÍA — si el veto vaciara el pozo, se IGNORA. Medido: quien responde
        «No» a todo deja Estira sin pozo en 12 días (9 en Mueve, gratis), y a
        partir de ahí un bloque de 45 minutos sentado acabaría proponiendo beber
@@ -86,24 +92,39 @@ function breakPozo(catalogo) {
   return out;
 }
 
-/* breakVetadas(routineFeedback) -> { [id]: true } de lo que se rechazó y nunca
-   ayudó. PURA y DEFENSIVA: un slice a medias, con cadenas donde van números o
-   sin la clave, devuelve el veto vacío en vez de reventar la propuesta.
+/* breakVetadas(routineFeedback, hoy) -> { [id]: true } de lo que se rechazó esta
+   semana y nunca ayudó. `hoy` es la clave ISO del día (por defecto, hoy). PURA y
+   DEFENSIVA: un slice a medias, con cadenas donde van números o sin la clave,
+   devuelve el veto vacío en vez de reventar la propuesta.
 
    «Un poco» CUENTA COMO AYUDA, y es la razón de que s116 guardase los tres
    contadores en vez de un booleano: quien contesta «Un poco» está diciendo que
    algo hizo, no que no le sirvió. */
-function breakVetadas(feedback) {
+var BREAK_VETO_DIAS = 7;
+function breakVetadas(feedback, hoy) {
   const out = {};
+  if (typeof libraryDiaOrdinal !== 'function') return out;
+  const dia = libraryDiaOrdinal(hoy || (typeof todayISO === 'function' ? todayISO() : ''));
   try {
     Object.keys(feedback || {}).forEach(function (id) {
       const f = feedback[id] || {};
       const no = Number(f.no) || 0;
       const ayudo = (Number(f.yes) || 0) + (Number(f.some) || 0);
-      if (no > 0 && ayudo === 0) out[id] = true;
+      if (!(no > 0 && ayudo === 0)) return;
+      const desde = libraryDiaOrdinal(f.lastNoDay || f.lastPromptDay);
+      if (desde && dia - desde >= 0 && dia - desde < BREAK_VETO_DIAS) out[id] = true;
     });
   } catch (e) { return {}; }
   return out;
+}
+
+/* breakProponible(id) -> si PACE puede proponer esa rutina en una pausa: está en un
+   pozo (abierta y fuera de lo que va aparte) y no lleva aviso de seguridad. La
+   pantalla del final solo promete apartar lo que se propone. */
+function breakProponible(id) {
+  return ['MOVE_ROUTINES', 'EXTRA_ROUTINES', 'BREATHE_ROUTINES'].some(function (k) {
+    return breakPozo(window[k]).some(function (r) { return r.id === id && !r.safety; });
+  });
 }
 
 /* breakElige(catalogo, iso, opts) -> UNA rutina, o null.
@@ -147,7 +168,7 @@ function breakPropuesta(state, ctx) {
   const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);
   /* Lo rechazado y sin ayuda, y el salto de la rotación: la PRIMERA pausa del
      día no salta (bloque 1 → 0), la segunda coge la siguiente de la lista. */
-  const vetadas = breakVetadas(s.routineFeedback);
+  const vetadas = breakVetadas(s.routineFeedback, iso);
   const elige = (cat) => breakElige(cat, iso, { vetadas: vetadas, salto: bloqueDeHoy - 1 });
 
   /* 0 · s192 · CON «A TU RITMO» MANDA EL MENÚ DEL DÍA: lo que sirve detrás del
@@ -198,4 +219,4 @@ function breakPropuesta(state, ctx) {
   return null;
 }
 
-Object.assign(window, { breakPozo, breakVetadas, breakElige, breakPropuesta });
+Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta });

@@ -13,6 +13,7 @@
  *
  * Ez eligió la B (16 oct., con fotos de la app real): «Ahora no» va en la fila de las
  * respuestas, el cierre ocupa el alto del centro y, si aun así no cabe, el dibujo encoge.
+ * El 5 nov. «Ahora no» bajó a su propia línea, debajo de las respuestas; el resto sigue.
  *
  * Se mide lo que ve la persona: la caja de cada botón (las tres respuestas, «Ahora no»,
  * «Volver al inicio» y «Salir»), que ninguna caja pise a otra y que cada botón se vea
@@ -94,12 +95,11 @@ test('Estira · ningún botón del cierre pisa a otro, de 1280×440 a 1920×1080
   test.setTimeout(120_000);
   await page.setViewportSize({ width: 1536, height: 864 });
   await hastaElCierre(page, context, { modulo: /^Estira/, rutina: 'Escritorio express' });
-  /* Ez eligió la B: «Ahora no» al final de la fila de las respuestas, no debajo. */
-  const fila = await page.evaluate(() => {
-    const centro = (el) => { const r = el.getBoundingClientRect(); return (r.top + r.bottom) / 2; };
-    return Math.abs(centro(document.querySelector('[data-pace-fb-ghost]')) - centro([...document.querySelectorAll('[data-pace-fb-chip]')].pop()));
-  });
-  expect(fila, '«Ahora no» no va en la fila de las respuestas').toBeLessThan(4);
+  /* Ez, 5 nov. 2026: «Ahora no», en su línea, debajo de las respuestas (el 16 oct. iba al
+     final de la fila; feedback-una-semana.spec.js mide que vaya centrado). */
+  const debajo = await page.evaluate(() => document.querySelector('[data-pace-fb-ghost]').getBoundingClientRect().top
+    - Math.max(...[...document.querySelectorAll('[data-pace-fb-chip]')].map((e) => e.getBoundingClientRect().bottom)));
+  expect(debajo, '«Ahora no» no va debajo de las respuestas').toBeGreaterThanOrEqual(0);
   await comprobarEn(page, COMUNES
     .concat(alturas(1536, 701, 719, 3))
     .concat(alturas(1280, 440, 900, 10))
@@ -111,6 +111,21 @@ test('Mueve, en inglés · ningún botón del cierre pisa a otro', async ({ page
   await page.setViewportSize({ width: 1536, height: 864 });
   await hastaElCierre(page, context, { extra: { lang: 'en' }, modulo: /^Move/, rutina: 'Stealth Calf Raises' });
   await comprobarEn(page, COMUNES.concat(alturas(1536, 701, 719, 6)).concat(alturas(1280, 450, 650, 20)));
+});
+
+/* Ez, 5 nov. 2026: con «Ahora no» en su línea, en su ventana y con el dibujo grande de Estira,
+   el enlace quedaba a 0 px de «Volver al inicio». Se ve entero, así que lo de arriba no lo ve. */
+test('Estira · «Ahora no» deja aire hasta «Volver al inicio»', async ({ page, context }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 1536, height: 708 });
+  await hastaElCierre(page, context, { modulo: /^Estira/, rutina: 'Escritorio express' });
+  const aire = async () => page.evaluate(() => document.querySelector('[data-pace-session-footer] button').getBoundingClientRect().top
+    - document.querySelector('[data-pace-fb-ghost]').getBoundingClientRect().bottom);
+  for (const [w, h] of [[1536, 708], [1536, 720], [1366, 700], [1280, 720], [360, 640]]) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+    expect(await aire(), 'a ' + w + '×' + h + ' «Ahora no» va pegado a «Volver al inicio»').toBeGreaterThanOrEqual(12);
+  }
 });
 
 /* Respira lleva su dibujo a 72 px y ya se tapaba en las ventanas más bajas del escritorio. */

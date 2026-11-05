@@ -30,8 +30,8 @@ const medir = (page) => page.evaluate(() => {
   return { lado: g ? Math.round(paceCaja(g).height) : 0, sobra: c.scrollHeight - c.clientHeight };
 });
 
-/* [ancho, alto, tamaño esperado] */
-for (const [w, h, lado] of [[1536, 864, 216], [1280, 720, 120], [360, 640, 140]]) {
+/* [ancho, alto, tamaño esperado]. A 1280×720 son 110: el suelo de aire bajo «Ahora no» (la A de Ez, 5 nov.) lo paga el dibujo. */
+for (const [w, h, lado] of [[1536, 864, 216], [1280, 720, 110], [360, 640, 140]]) {
   test('Estira · el dibujo del cierre mide ' + lado + ' px a ' + w + '×' + h + ' y no pide scroll', async ({ page, context }) => {
     test.setTimeout(90_000);
     await page.setViewportSize({ width: w, height: h });

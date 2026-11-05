@@ -75,31 +75,44 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 (`docs/traspaso/relevo-coordinadora-22oct.md`, «El orden lógico hasta v1»). Las fases de abajo quedan como detalle de
 cada pieza.
 
-| # | Pieza | Estado (1 nov. 2026) |
+| # | Pieza | Estado (5 nov. 2026) |
 |---|---|---|
 | 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
 | 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho**, en `main` (0.184.0, 28 oct., probada por Ez en su Android) |
 | 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho**, en `main` (0.183.0, 28 oct., con el «júntalo» de Ez sobre sus fotos) |
-| 11 | La versión de prueba definitiva, a la prueba cerrada de Play y a TestFlight a la vez (hoy tienen la 0.174.0 y la 0.175.0) | Sube SIN esperar al grupo 2 (Ez, 28 oct., noche: «Sí, sin esperar»). Solo faltan dos dibujos de 16 (Rana y Palmas en la mesa); el logo se queda como está (Ez, 4 nov.). Ya están B4 y C3 y catorce dibujos (0.187.0), el punto 12 y los avisos del iPhone (0.185.0), y las notas y capturas (0.189.0, `docs/launch/google-play/SUBIDAS.md`). Los 14 días empiezan cuando suba |
+| 11 | La versión de prueba definitiva, a la prueba cerrada de Play y a TestFlight a la vez (hoy tienen la 0.174.0 y la 0.175.0) | Sube SIN esperar al grupo 2 (Ez, 28 oct., noche: «Sí, sin esperar»), pero con lo de abajo dentro (Ez, 5 nov.): los 16 dibujos, ya juntados en la 0.190.0, y antes de subir los cuatro arreglos de datos y compra, /premium y `capas-y-pausa` (Escape o Atrás, «Auto», la pausa sobre una sesión y Espacio). El logo se queda como está (Ez, 4 nov.). Las notas y capturas, en `docs/launch/google-play/SUBIDAS.md`, hay que repasarlas con la versión final. Los 14 días empiezan cuando suba |
 | 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Hecho**, en `main` (0.185.0, 28 oct., con el 1A 2A 3A 4A y el «júntalo» de Ez). Los arreglos del cobro que encontró ChatGPT el 28 oct., también (0.186.0) |
 | 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas |
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
 | 15 | Cobrar en el iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión | Espera el acuerdo de apps de pago de Apple, que pide el alta de Ez |
-| 16 | Lo legal de /premium: condiciones, devoluciones, aviso legal y la función de desistimiento en línea (UE, desde el 19 jun. 2026) | Los borradores con las letras de Ez (1A-5A) y `/desistir` cerrada, en `main` (0.189.0). Esperan los datos de Ez (nombre, NIF y un contacto), la revisión de un profesional y, para `/desistir`, el alta de Ez en Resend |
+| 16 | Lo legal de /premium: condiciones, devoluciones, aviso legal y la función de desistimiento en línea (UE, desde el 19 jun. 2026) | Los borradores con las letras de Ez (1A-5A) y `/desistir` cerrada, en `main` (0.189.0). Ez (5 nov.): sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor. Para `/desistir` falta su alta en Resend |
+| 16 bis | Vender antes de v1: solo el de por vida, solo en la web (Ez, 5 nov.) | La tienda con un plan y /premium 1C, en `premium-solo-vida`. Para encender: los arreglos 1 y 2, la parte legal de la revisión de ChatGPT, Resend y la dirección del enlace real. El mensual llega con v1, y antes hay que cerrar `guardar()` en `functions/api/stripe.js` |
 | 17 | v1.0: apagar `PREMIUM_ABIERTO_HASTA_V1`, quitar «Da de pastar a la vaca» de la web y probar comprar, restaurar y cancelar en las tres tiendas | Al final |
 
 **Lo que salió de las ocho revisiones de ChatGPT del 28 oct.** Están enteras en `docs/audits/chatgpt-28oct/`, y su
 `LEEME.md` dice qué es cierto de cada una, con sus códigos. Se montan por paquetes, en este orden, y cada uno se valora
 con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo que sea útil»):
 
-| Paquete | Códigos | Cuándo | Estado (1 nov.) |
+| Paquete | Códigos | Cuándo | Estado (5 nov.) |
 |---|---|---|---|
 | A · El cobro, a prueba de avisos repetidos o desordenados, de fechas, de carreras y de compras ajenas | A1-A7 | Antes de cobrar en la web | **Hecho**, en `main` con la 0.186.0 (29 oct., con el «júntalo» de Ez) |
 | B · Mueve, Estira y «Tus rutinas»: lo que falla y lo que cambia poco | B1-B4, C1-C6, U1, U2, R2, R3, R4, R6 | Antes de la versión de prueba (punto 11) | **Hecho**, en `main` con la 0.187.0 (29 oct., con el «júntalo» de Ez) |
 | T · Los textos que dicen más de lo que saben | P1-P3, Q1, Q3, Q6, Q7, CAL-2, CAL-4, CAL-6 | Pueden entrar en la versión de prueba | **Hecho**, en `main` con la 0.188.0 (30 oct., con el «júntalo» de Ez) |
-| M · Lo de producto: para quien empieza, cuando el día se tuerce y lo que se paga | U3-U5, la oferta de /premium, P4-P8, Q2, Q4, Q5, R1, R5 | Una actualización durante los 14 días de los testers | U3, U5, P4, P5, P6 y P8, en `main` (0.187.0 y 0.188.0); U4, después de v1. La maqueta de Q2, Q4 y R1 (`maqueta-sin-querer`), en marcha desde el 4 nov. Lo demás es del grupo 3 |
+| M · Lo de producto: para quien empieza, cuando el día se tuerce y lo que se paga | U3-U5, la oferta de /premium, P4-P8, Q2, Q4, Q5, R1, R5 | Una actualización durante los 14 días de los testers | U3, U5, P4, P5, P6 y P8, en `main` (0.187.0 y 0.188.0); Q2, Q4 y R1, en la 0.190.0 (5 nov.); U4, después de v1. Lo demás es del grupo 3 |
 | L · El calendario de verdad: el pase que no caduca, varios calendarios y leer sin escribir | CAL-1, CAL-3, CAL-5 | Con el punto 13 (el llavero) | Espera las altas de Ez |
 | V · Que vuelvan cada día | V1 «Solo pausas» (sin Pomodoro), V2-V5 | Sin fecha: la decide Ez | Para valorar; V1, con maqueta y testers |
+
+**Lo que salió de las revisiones de ChatGPT del 5 nov.**, enteras y comprobadas en `docs/audits/chatgpt-5nov/`:
+
+| Tanda | Estado (5 nov.) |
+|---|---|
+| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en marcha. `guardar()`, antes de encender el mensual |
+| Datos y compra (`revision-5nov-datos-y-compra.md`) | Los cuatro arreglos, listos en su rama y aprobados por Ez para juntar. «Dónde funciona tu compra», en /premium |
+| Cuando una sesión coincide con otra cosa (`revision-5nov-capas.md`) | En marcha en `capas-y-pausa`. Dos pestañas, riesgo ya aceptado |
+| Cambiar de idea a mitad (`revision-5nov-sesiones.md`) | «Auto», en `capas-y-pausa`. El catálogo vacío, las cifras y qué explica «Auto», en un hilo después de ese |
+| La jornada como paso actual (`jornada-como-paso-actual.md`) | Ez eligió 1A 2B en la maqueta. Se monta sobre la 0.190.0, y el aro más grande entra ahí |
+
+**También abierto el 5 nov.:** la maqueta del sobre (actualizaciones, novedades y avisos puntuales), la landing y la estructura de la web, para pensar, y el reparto del calendario contra lo decidido el 29 oct. Después de v1: un descanso de manos nuevo. Los 22 dibujos de logros, según los traiga Ez.
 
 **Ez, 28 oct., noche: «implementemos lo más útil para lanzar la app y que el resto lo vayamos implementando poco a poco,
 pero que cuando la lancemos sea realmente útil».** Manda la lista única en tres grupos de `docs/audits/chatgpt-28oct/LEEME.md`:

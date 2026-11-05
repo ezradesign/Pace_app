@@ -8,8 +8,8 @@
 | | |
 |---|---|
 | **Identidades que la app necesita** | **68** |
-| **Con arte propio ya ingestado** | **66** |
-| **Pendientes** | **2** |
+| **Con arte propio ya ingestado** | **67** |
+| **Pendientes** | **1** |
 | Con arte que la app ya no pide (su rutina salió de la lista) | Puente a una pierna |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
@@ -81,7 +81,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Rodar hacia abajo | `rodar-hacia-abajo.png` | falta | De pie doblándose, columna en **espiral suave**, brazos colgando; flecha descendente. |
 | **HECHO** | Rotación torácica | `rotacion-toracica.png` | dibujado | **Sentado en la silla**, manos cruzadas al pecho, tronco rotado, cadera al frente. |
 
-## Caderas — 1 pendiente de 7
+## Caderas — 0 pendientes de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -89,7 +89,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Cuádriceps en pared | `cuadriceps-en-pared.png` | falta | De rodillas con el **empeine contra la pared** (o la silla) y la rodilla al fondo. |
 | **HECHO** | Flexor de cadera | `flexor-de-cadera.png` | dibujado | **Una rodilla en el suelo**, la otra delante a 90°, pelvis empujando adelante. |
 | **HECHO** | Paloma | `paloma.png` | dibujado | **Tibia delantera cruzada** en el suelo, pierna de atrás extendida, peso adelante. |
-| — | Rana | `rana.png` | falta | Vista desde atrás/arriba: **rodillas muy abiertas** y cadera retrasada, mecido suave. |
+| **HECHO** | Rana | `rana.png` | falta | Vista desde atrás/arriba: **rodillas muy abiertas** y cadera retrasada, mecido suave. |
 | **HECHO** | Sentadilla lateral | `sentadilla-lateral.png` | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
 | **HECHO** | Zancada con apertura | `zancada-con-apertura.png` | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
 

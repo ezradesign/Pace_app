@@ -41,7 +41,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, pulsarComienza } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, pulsarComienza, ponerHora } = require('./helpers');
 
 const NUEVE = new Date('2026-09-17T09:00:00+02:00');   /* 9:00 en Madrid (CEST) */
 const FECHA = '2026-09-17';
@@ -113,7 +113,7 @@ test('la home pregunta cuánto trabajas, con el horario en la frase y la hora de
   await expect(vis(page, '[data-pace-ritmo-opcion="media"]')).toContainText('De 9:00 a 13:00');
   await expect(vis(page, '[data-pace-ritmo-opcion="jornada"]')).toContainText('De 9:00 a 17:00');
   /* cuatro de la jornada entera (entrada, comida, cuánto dura, salida) + dos de la media (s197) */
-  await expect(vis(page, 'select[data-pace-ritmo-horario]')).toHaveCount(6);
+  await expect(vis(page, '[data-pace-ritmo-horario]')).toHaveCount(6);
   await expect(page.locator('[data-pace-dial-label]').first()).toHaveText('Foco manual');
   expect(errores).toEqual([]);
 });
@@ -376,19 +376,23 @@ test('«Hoy voy por libre» devuelve la carta con la tarjeta del ritmo; una lose
 
 test('la hora de salida y la de comer se cambian dentro de la frase', async ({ page, context }) => {
   await abrir(page, context, { dia: JORNADA });
-  await vis(page, 'select[data-pace-ritmo-horario="salida"]').selectOption('1080');
+  await ponerHora(vis(page, '[data-pace-ritmo-horario="salida"]'), 1080);
   await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Hasta las 18:00');
-  await vis(page, 'select[data-pace-ritmo-horario="comida"]').selectOption('780');
+  await ponerHora(vis(page, '[data-pace-ritmo-horario="comida"]'), 780);
   await expect(vis(page, '[data-pace-ritmo-tramo="comida"] [data-pace-ritmo-etiq]')).toContainText('13:00');
   const horario = await page.evaluate(() => getState().ritmo.horario);
   expect(horario).toMatchObject({ salida: 1080, comida: 780 });
 });
 
-test('tocar una parada sirve otra rutina del mismo módulo', async ({ page, context }) => {
+/* Ez, 5 nov. 2026 (1A): tocarla abre su ficha y no la cambia; la cambia «Otra», dentro
+   de la ficha (linea-ficha.spec.js). */
+test('«Otra», en la ficha de una parada, sirve otra rutina', async ({ page, context }) => {
   await abrir(page, context, { dia: JORNADA });
   const parada = vis(page, '[data-pace-ritmo-parada]').first();
   const antes = await parada.getAttribute('aria-label');
   await parada.click();
+  await expect(vis(page, '[data-pace-ritmo-parada]').first(), 'tocar la parada la ha cambiado').toHaveAttribute('aria-label', antes);
+  await vis(page, '[data-pace-ritmo-ficha] [data-pace-ficha-otra]').click();
   await expect(vis(page, '[data-pace-ritmo-parada]').first()).not.toHaveAttribute('aria-label', antes);
 });
 

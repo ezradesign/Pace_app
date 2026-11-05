@@ -53,6 +53,18 @@ function libraryConRetencion(r) {
   return !!r.safety || LIB_PATRONES_CON_SOSTEN.indexOf(r.pattern) !== -1;
 }
 
+/* LO QUE LA TARJETA DE RESPIRA DICE DEL AIRE (Ez, 5 nov. 2026: 3A; R1 de ChatGPT): 'sin'
+   («sin aguantar el aire») o 'con' («aguantando el aire»), con la misma regla que «Sin
+   retención». Sin frase (null) lo que ya lo dice («sostén en vacío») y lo que solo
+   hiperventila (el fuelle, Kapalabhati), que lleva aviso pero no aguanta. */
+function libraryAire(r) {
+  if (!r || r.pattern === 'co2') return null;
+  var sostiene = r.pattern === 'rounds' || (Array.isArray(r.cycle) && (r.cycle[1] > 0 || r.cycle[3] > 0))
+    || LIB_PATRONES_CON_SOSTEN.indexOf(r.pattern) !== -1;
+  if (r.safety && !sostiene) return null;
+  return libraryConRetencion(r) ? 'con' : 'sin';
+}
+
 /* EL UMBRAL DE «CORTO» ES RELATIVO A CADA BIBLIOTECA, y no un número escrito
    aquí. Medido en s174: con «≤ 3 min» fijo, el chip deja 12 de 14 en Mueve
    —quita dos: no filtra— y 3 de 14 en Estira. El mismo texto hacía dos cosas
@@ -298,6 +310,7 @@ Object.assign(window, {
   LIB_FILTROS: LIB_FILTROS,
   LIB_FILTROS_RESPIRA: LIB_FILTROS_RESPIRA,
   libraryConRetencion: libraryConRetencion,
+  libraryAire: libraryAire,
   libraryUmbralCorto: libraryUmbralCorto,
   libraryPredicado: libraryPredicado,
   libraryFiltrar: libraryFiltrar,

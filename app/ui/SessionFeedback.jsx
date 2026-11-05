@@ -21,11 +21,22 @@
      re-renderice (doble clic / doble Enter); al decidir, el bloque se sustituye
      por el acuse efímero «Gracias», así los controles dejan de existir.
 
+   EL «NO» DICE LO QUE HACE (Ez, 5 nov. 2026: 2A, «pero durante una semana»). Un «No»
+   a una rutina que nunca ayudó la aparta una semana de lo que PACE propone
+   (breakVetadas), y hasta entonces solo se leía «Gracias». Ahora el acuse lo dice y
+   lleva «Deshacer», que devuelve la pregunta y la entrada de antes. Por eso el evento
+   de ese «No» espera a que se deje la pantalla (o la página): el registro no se
+   reescribe, y un «No» deshecho no debe quedar en él. Solo se promete apartar lo que
+   se propone de verdad (breakProponible).
+
+   «AHORA NO», EN SU LÍNEA (Ez, 5 nov. 2026): debajo de Sí · Un poco · No, centrado.
+   Hasta entonces iba al final de la misma fila (Ez, 16 oct., opción B).
+
    Props: routineId (clave del conteo) · kind ('move'|'extra'|'breathe', informa
    el acento) · accent (color CSS var del módulo, para el hover de los chips).
 */
 
-const { useState: useStateSF, useRef: useRefSF } = React;
+const { useState: useStateSF, useRef: useRefSF, useEffect: useEffectSF } = React;
 
 function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
   const { t } = useT();
@@ -34,15 +45,46 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
     try { return shouldPromptRoutineFeedback(routineId); } catch (e) { return false; }
   });
   const [decided, setDecided] = useStateSF(false);
+  const [aparta, setAparta] = useStateSF(false);
   const lockRef = useRefSF(false);
+  /* El «No» que aún se puede deshacer: { antes } con la entrada previa. */
+  const pendienteRef = useRefSF(null);
+
+  useEffectSF(() => {
+    const emitir = () => {
+      if (!pendienteRef.current) return;
+      pendienteRef.current = null;
+      try { if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(routineId, 'no'); } catch (e) {}
+    };
+    window.addEventListener('pagehide', emitir);
+    return () => { window.removeEventListener('pagehide', emitir); emitir(); };
+  }, [routineId]);
 
   if (!shouldShow) return null;
 
   const answer = (response) => {
     if (lockRef.current) return;            // guard SÍNCRONO: máx UNA decisión
     lockRef.current = true;
-    try { recordRoutineFeedback(routineId, response); } catch (e) {}
+    const no = response === 'no';
+    let antes = null;
+    try { antes = no ? ((getState().routineFeedback || {})[routineId] || null) : null; } catch (e) {}
+    try { recordRoutineFeedback(routineId, response, { sinEvento: no }); } catch (e) {}
+    if (no) {
+      pendienteRef.current = { antes: antes };
+      let si = false;
+      try { si = breakProponible(routineId) && !!breakVetadas(getState().routineFeedback)[routineId]; } catch (e) {}
+      setAparta(si);
+    }
     setDecided(true);
+  };
+
+  const deshacer = () => {
+    const p = pendienteRef.current;
+    pendienteRef.current = null;
+    try { restaurarRoutineFeedback(routineId, p ? p.antes : null); } catch (e) {}
+    lockRef.current = false;
+    setAparta(false);
+    setDecided(false);
   };
 
   const wrapStyle = {
@@ -56,7 +98,14 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
       <div data-pace-fb-rule style={sessionFeedbackStyles.rule} />
       {decided ? (
         <div data-pace-fb-thanks style={sessionFeedbackStyles.thanks}>
-          {t('session.feedback.thanks')}
+          {aparta ? (
+            <React.Fragment>
+              {t('session.feedback.aparta')}{' '}
+              <button type="button" data-pace-fb-deshacer onClick={deshacer} style={sessionFeedbackStyles.deshacer}>
+                {t('session.feedback.deshacer')}
+              </button>
+            </React.Fragment>
+          ) : t('session.feedback.thanks')}
         </div>
       ) : (
         <React.Fragment>
@@ -76,11 +125,11 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
                     onClick={() => answer('no')} style={sessionFeedbackStyles.chip}>
               {t('session.feedback.no')}
             </button>
-            <button type="button" data-pace-fb-ghost disabled={decided}
-                    onClick={() => answer('later')} style={sessionFeedbackStyles.ghost}>
-              {t('session.feedback.later')}
-            </button>
           </div>
+          <button type="button" data-pace-fb-ghost disabled={decided}
+                  onClick={() => answer('later')} style={sessionFeedbackStyles.ghost}>
+            {t('session.feedback.later')}
+          </button>
         </React.Fragment>
       )}
     </div>
@@ -102,8 +151,9 @@ const sessionFeedbackStyles = {
     fontSize: 17, color: 'var(--ink-2)',
     marginBottom: 14,
   },
-  /* «Ahora no» va en la fila de las respuestas, al final (Ez, 16 oct., opción B): debajo,
-     el bloque era 40 px más alto y en las ventanas bajas «Volver al inicio» lo tapaba. */
+  /* «Ahora no» va en su línea, debajo (Ez, 5 nov.). El 16 oct. (opción B) iba al final de esta
+     fila porque debajo, en las ventanas bajas, «Volver al inicio» lo tapaba; desde entonces el
+     cierre ocupa el alto del centro y el dibujo encoge (lo mide cierre-sin-pisar.spec.js). */
   chips: {
     display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 10,
   },
@@ -122,9 +172,16 @@ const sessionFeedbackStyles = {
   ghost: {
     ...displayItalic,
     fontSize: 15, color: 'var(--ink-3)',
-    background: 'none', border: 'none', padding: '4px 10px',
+    background: 'none', border: 'none', padding: '4px 10px', marginTop: 8,
     textDecoration: 'underline', textUnderlineOffset: 3,
     transition: 'color 160ms ease',
+  },
+  /* «Deshacer», dentro del acuse: el mismo enlace, en su línea de texto. */
+  deshacer: {
+    ...displayItalic,
+    fontSize: 'inherit', color: 'var(--ink-2)',
+    background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer',
+    textDecoration: 'underline', textUnderlineOffset: 3,
   },
   thanks: {
     ...displayItalic,
@@ -165,6 +222,7 @@ if (!_paceSessionFeedbackCss) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }
       [data-pace-fb-question] { font-size: 15px !important; margin-bottom: 10px !important; }
       [data-pace-fb-chip] { padding: 0 18px !important; min-height: 38px !important; }
+      [data-pace-fb-ghost] { margin-top: 4px !important; padding: 2px 10px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-session-feedback] { margin-top: 0 !important; }

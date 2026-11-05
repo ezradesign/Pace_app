@@ -17,7 +17,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const DESTINO = path.join(ROOT, 'app', 'glyphs', 'assets', 'ejercicios');
 const PRIMER_PLANO = ['abrir-y-cerrar-el-puno', 'barbilla-atras', 'circulos-de-muneca', 'circulos-de-tobillo', 'cuello-y-trapecios',
-  'escalenos', 'estiramiento-de-muneca', 'extension-de-dedos', 'inclinacion-lateral', 'apertura-de-pecho', 'palmas-al-suelo'];
+  'escalenos', 'estiramiento-de-muneca', 'extension-de-dedos', 'inclinacion-lateral', 'apertura-de-pecho', 'palmas-en-la-mesa'];
 const METRICAS = ['tinta', 'rayado', 'linea', 'grosor'];
 
 function medirAlfa(data, W, H) {

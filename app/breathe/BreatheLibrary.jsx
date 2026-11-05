@@ -33,13 +33,16 @@ const BREATHE_ROUTINES = {
       { id: 'breathe.co2', tag: 'EQU', code: 'Equilibrio', name: 'Tolerancia CO₂', desc: 'Exhala y sostén en vacío. Entrena la calma con menos aire.', min: 6, pattern: 'co2', safety: true, access: 'premium' },
     ]
   },
+  /* «Balance» SE LEE «COHERENCIA» (Ez, 5 nov. 2026: 3A): junto a «Equilibrio» los dos nombres
+     decían lo mismo (R1 de ChatGPT), y sus tres rutinas se llaman «Coherente». La clave sigue
+     siendo `balance`: la leen los pozos de «A tu ritmo». */
   balance: {
-    label: 'Balance',
+    label: 'Coherencia',
     aside: 'Ritmo suave y constante',
     items: [
-      { id: 'breathe.coherent.55', tag: 'BAL', code: 'Balance', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5,0,5,0] },
-      { id: 'breathe.coherent.66', tag: 'BAL', code: 'Balance', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6,0,6,0] },
-      { id: 'breathe.coherent.432', tag: 'BAL', code: 'Balance', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6,0,6,0], drone: true, access: 'premium' },
+      { id: 'breathe.coherent.55', tag: 'BAL', code: 'Coherencia', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5,0,5,0] },
+      { id: 'breathe.coherent.66', tag: 'BAL', code: 'Coherencia', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6,0,6,0] },
+      { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6,0,6,0], drone: true, access: 'premium' },
     ]
   },
   relajacion: {
@@ -100,14 +103,29 @@ const BREATHE_ROUTINES = {
        que llevan aviso: una sugerencia no puede ser algo que primero te obliga
        a leer una advertencia.
 
-   LOS CINCO GRUPOS SIGUEN COMO ESTABAN, en su orden. Lo unico que cambia del
-   catalogo es que ahora se puede filtrar dentro de el. */
+   LA PRIMERA VEZ (Ez, 5 nov. 2026: 3A de la maqueta; R1 de ChatGPT, 28 oct.). Respira
+   abria con «Energia», cuyas tres rutinas llevan aviso de seguridad, y nada decia por
+   donde empezar. Ahora:
+     · hasta la primera respiracion terminada (`breatheSessionsTotal`), el sitio de
+       «Para ahora» es «¿Es tu primera vez? Empieza aqui», con Coherente 5·5: cinco
+       dentro y cinco fuera, sin aguantar el aire. Despues vuelve «Para ahora»;
+     · los grupos se PINTAN de lo suave a lo intenso, con Energia al final. El orden
+       del CATALOGO (`BREATHE_ROUTINES`) no se toca: los pozos de «A tu ritmo» lo
+       recorren, y moverlo cambiaria que respiracion sirve cada dia. */
+const BREATHE_ORDEN_BIBLIOTECA = ['relajacion', 'balance', 'equilibrio', 'pranayama', 'energia'];
+const BREATHE_PRIMERA_VEZ = 'breathe.coherent.55';
+/* Un grupo que no este en la lista se pinta al final: ninguno desaparece por olvidarlo aqui. */
+const BREATHE_BIBLIOTECA = BREATHE_ORDEN_BIBLIOTECA.concat(Object.keys(BREATHE_ROUTINES).filter((k) => BREATHE_ORDEN_BIBLIOTECA.indexOf(k) === -1))
+  .reduce((o, k) => { if (BREATHE_ROUTINES[k]) o[k] = BREATHE_ROUTINES[k]; return o; }, {});
+
 function BreatheLibrary({ open, onClose, onStart }) {
   const { t } = useT();
+  const [pace] = usePace();
+  const primera = (pace.breatheSessionsTotal || 0) > 0 ? null : getBreatheRoutine(BREATHE_PRIMERA_VEZ);
   return (
     <LibraryShell
       open={open} onClose={onClose} onStart={onStart}
-      groups={BREATHE_ROUTINES} tone="var(--breathe)" catPrefix="breathe"
+      groups={BREATHE_BIBLIOTECA} tone="var(--breathe)" catPrefix="breathe" primeraVez={primera}
       title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
       variant="breathe"
       filtros={window.LIB_FILTROS_RESPIRA}

@@ -2,7 +2,59 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 5 de noviembre de 2026, v0.189.1.
+
+## AL RELEVO (5 nov., ~12:15): 5iWBf… hacia el 90 %; se sigue en EcLj6… cuando se reponga, a las 15:30
+
+Ez: «Migramos al 90% y luego ya continuamos en la otra sesión cuando se reponga». **Si llegas de la otra cuenta, empieza aquí.**
+Coordinaba `local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a` en 5iWBf… (las 5 h se reponen a las 16:20; la semana, al 9 %). `main` sigue en la v0.189.1:
+desde 9fe51aee, CI en verde entero, solo hay documentos. El detalle, en `relevo-coordinadora-22oct.md`, puntos 21 a 27 y «Nuevo el 5 nov.» de la cola.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (5 nov., ~12:15)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de main, retoma las siete sesiones de sus worktrees y republica mi hoja de pasos en esta cuenta.
+```
+
+1. **Antes de nada, en cada carpeta:** `git -C <carpeta> status` y la hora de sus archivos; el LEEME de una rama puede ir por detrás de lo que hay.
+   Lo que quede sin commit, «WIP:» y push desde la coordinadora; `node scripts/relevo-hilo.js .claude/worktrees/<carpeta>` rescata su hilo. Se retoman
+   con sesión nueva, `cwd` en su carpeta y `use_worktree: false`. **Ninguna suite cortada vale** (sin navegador y `0xC0000142` en el log), aunque sus
+   procesos sigan vivos, y sus servidores se quedan con el puerto: usar del 8860 en adelante. En Bash no hay `rg`: sale vacío sin decir nada.
+2. **Las siete**, cada una con rama `claude/<carpeta>`. Ninguna sube a `main` ni la versión:
+
+| Sesión | Carpeta | Qué falta |
+|---|---|---|
+| **Rana y Palmas, la primera** | `rana-y-palmas-88359b` | El texto de Palmas a «dedos hacia delante» y los dos dibujos a PNG e ingesta (fuentes en `dibujos-22oct/para-revisar/`: `rana-5nov.webp` y `palmas-en-la-mesa-5nov.webp`), con página para Ez. **Es lo que deja subir la versión de prueba** |
+| Todas las horas | `hungry-borg-a27a1a` | La D montada y sus pruebas al día (WIP de las 11:57); mutantes, suite y fotos a 360 y 1280 |
+| Logros sin «Próximamente» | `logros-sin-pronto-ddf6d6` | La suite, y republicar en la cuenta de Ez sus dos páginas |
+| Lo que pasa sin querer | `sweet-moser-38e06d` | La suite, sus fotos y la página con las dos lecturas del «Ahora no», que elige Ez |
+| Solo el de por vida | `premium-solo-vida-e1a044` | Tienda con un plan, nada de compra en las apps, y página para que Ez elija /premium, con «dónde funciona tu compra» |
+| Cuatro arreglos de datos y compra | `elegant-sammet-66e8b5` | Los cuatro de `docs/audits/chatgpt-5nov/revision-5nov-datos-y-compra.md`; el 1 y el 2, antes de vender |
+| Maqueta de la jornada | `maqueta-jornada-40d7ea` | Solo la página: cinco momentos, dos caminos y el aro. Nada que juntar hasta la letra de Ez |
+
+3. **Al juntar, siempre con el «júntalo» de Ez:** Rana y Palmas primero, y luego la versión de prueba, que ya no espera nada más (bump, AAB y TestFlight con su sí).
+   Las horas y «sin querer» comparten `ritmo.css.jsx`: una detrás de otra. El censo de `verify.integridad.js` se suma a mano. No más de dos suites a la vez.
+4. **Para encender la venta** (solo el de por vida, solo en la web, hasta v1): la tienda y /premium, los arreglos 1 y 2, la revisión legal de ChatGPT, Resend y la
+   dirección del enlace real. **Con la primera venta real, ese mismo día,** pedir a Ez sus datos y publicar `legal/`: decidido por Ez, no se reabre.
+5. **Espera a Ez:** pasar a ChatGPT el prompt de la hoja, porque lo que trajo no trae lo legal; y elegir en las páginas que lleguen. Dos ya están, solo desde 5iWBf…:
+   «sin querer» (WagDPPQz4kS2UdQvDiTauq; su suite iba por 922/1200 con 4 caídas por tiempo o por repetir). **Ez ya eligió ahí: «El ahora no va en A, perfecto por lo demás»**: si la rama no lo tiene, se monta la A de esa página, y falta su «júntalo» y las horas (Lo2X1rRoczGPHkyoLhje9Y).
+   **Para revisar:** `docs/audits/chatgpt-5nov/revision-5nov-sesiones.md`, cuatro puntos de Ez sobre Mueve y Estira, sin comprobar: valóralos con Ez antes de montar nada.
+6. **La hoja:** en EcLj6… se republica `docs/traspaso/hoja-de-ruta-20oct.html` en EcLj6io4wM9pGjtQ5wd1CT, con la versión de hoy al día. Seis enlaces del plegado
+   están con los ids de 5iWBf… (commit 7903bbb8 y anterior): al publicarla allí vuelven a VDdAWeb8msGvckeGXxFjWV, Mk11GDb9JBDGXyTrynbaYY,
+   7Hj5sHmFuuzVP5QFntqdN7, MVctqCpaCguGyZjmQgErx1, U1mVU44sM6ggqnW3bwfhv3 y R4hc4PDHjn4o94Zirz6scg. Lo publicado hoy en 5iWBf… da 404 desde allí.
+
+## 5 nov., ~12:00: coordina 5iWBf…, con tres sesiones en marcha
+
+`local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a`, en la cuenta de la hoja 5iWBfHE7kD3dUVocdskmb6 (las 5 h se reponen a las 16:20).
+CI de 9fe51aee, en verde entero. Lo pendiente, en `relevo-coordinadora-22oct.md`, puntos 21 a 24 y «Nuevo el 5 nov.» de la cola:
+las sesiones con sus puertos nuevos, Palmas partiendo de una foto, la revisión de ChatGPT (`docs/audits/chatgpt-5nov/`) y lo que decidió Ez: solo el de por vida, solo en la web, hasta v1, con sus datos al registrar la primera venta real. El bloque de abajo sigue valiendo para lo de Stripe.
+
+## AL RELEVO (5 nov.) · «Todas las horas», rama `claude/hungry-borg-a27a1a`, puerto 8842
+
+- **Hecho:** la D de Ez montada de verdad (`RitmoHoraPaso`, en `app/ritmo/RitmoPiezas.jsx`) para todas las horas, también la «Hora de inicio» de la 0.189.1; mantener pulsado; «Empezar ahora»; toda la maqueta fuera; pruebas adaptadas, `tests/ritmo-horas.spec.js` nueva (16 pruebas, en verde); fila arriba en `DECISIONES_TECNICAS_VIGENTES.md`; censo de textos en 1119 (+14; logros baja 2, se suma a mano al juntar); `npm run verify` en verde.
+- **Falta:** solo la suite entera con `PACE_E2E_PORT=8842`, después del build, y oírlo con TalkBack en un móvil. Las fotos para Ez ya están publicadas en esta cuenta: https://claude.ai/artifact/Lo2X1rRoczGPHkyoLhje9Y (privada). Sin subir versión ni tocar `STATE.md` ni `CHANGELOG.md`.
+- **Para `STATE.md` y `CHANGELOG.md` al juntar:** todas las horas de «A tu ritmo» con el paso a paso «− 9:00 +» (la D de Ez), mantener pulsado y «Empezar ahora».
+- **Ojo:** `ritmo.css.jsx` también lo toca `sin-querer`: va por 484 líneas y el tope es 500.
 
 ## AL RELEVO (5 nov., ~11:30): EcLj6… al 85 % de las 5 h; se migra a la otra cuenta al 90 % (regla de Ez)
 
@@ -43,6 +95,17 @@ ordenador y la línea del día) siguen abriendo la lista blanca del sistema: pas
 lo quiere. Stripe, en el modo de prueba de `acct_1UVT69JweaohZyG6`: el aviso, los cuatro `plink_` y dos compras de
 prueba que dan su código; /recuperar no encontraba la compra porque la llave de lectura salió de un sandbox aparte
 (el detalle, en el relevo, punto 16).
+
+## 5 nov.: logros sin «Pronto» y la página de los 22 dibujos de logros, en su rama
+
+Ez: «Esto de los logros imagino que puede sobrar + habría que diseñar los logros que faltan». En la rama
+`claude/logros-sin-pronto-ddf6d6` (commits 0ffe6902 y a1e8042b, sin versión): los 8 logros sin detector ya no se ven ni
+se cuentan, y «Disponibles» pasa a «Sellos reunidos». **Páginas para Ez, ya en esta cuenta** (las de EF6X… y 8w1P… eran de la
+otra y dan 404 aquí): antes y después https://claude.ai/artifact/J8ADhnvWTxLeiQWYix5U37 (fuente y fotos en
+`docs/proposals/logros-sin-pronto-5nov/`); dibujos https://claude.ai/artifact/9N2zHN5t28CaQ5oRkVDnuB
+(`docs/traspaso/dibujos-logros.html`). **Suite entera pasada** (puerto 8845, sobre `main` 9fe51aee ya traída y `verify` en
+verde): 1183 pasan y 2 saltadas de 1187; 2 cayeron por carga (`respira-progreso:125` y `ritmo-bloque-siguiente:41`) y pasan con `--workers=1`.
+**LISTO PARA MAIN.** Al juntar con las horas, el censo de textos de `verify.integridad.js` suma a mano (el mío es −2).
 
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 

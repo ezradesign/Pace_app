@@ -57,6 +57,7 @@ header, section { display: flex; flex-direction: column; gap: 14px; }
 .paso.hecho .c { color: var(--ink-3); }
 .paso .quien { font-weight: 600; color: var(--ink); }
 .pasos ol { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 3px; }
+.prompt { margin: 8px 0; padding: 10px 12px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
 
 /* Lo hecho, plegado debajo de lo pendiente: así el «Ahora» es lo primero que se ve. */
 .plegado { border-top: 1px solid var(--line); padding-top: 10px; }
@@ -94,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre a las 16:32 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,8 +107,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> Las 1178 pruebas en verde y la web en la 0.189.0, con la carta del lunes
-        para luego y los textos que no inventan dentro. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
+      <li><b>La app está casi entera y sana.</b> La web va por la 0.189.1, con la carta del lunes para luego y los textos que
+        no inventan dentro. Las últimas pruebas enteras: 1176 en verde, y seis que cayeron con el PC dormido y pasan al
+        repetirlas solas. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
         lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
         código. Los arreglos del cobro, de las rutinas sin «Auto» y de «Tus rutinas» ya están dentro de la app. Y
@@ -128,58 +130,73 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 
   <section>
     <h2>Paso a paso</h2>
-    <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola.</p>
+    <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, en Genspark</span>
-        <span class="t">Los dos dibujos que faltan</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT">la página de los
-          dibujos</a>, con el prompt de cada uno). Los otros catorce ya están dentro de la app. Con los dos que faltan
-          sale la versión de prueba. Se repiten:
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos minutos</span>
+        <span class="t">Decir si juntamos las cuatro ramas</span>
+        <span class="c"><span class="quien">Tú.</span> Las cuatro están hechas. En vez de repetir las pruebas cuatro veces, las junto y las pruebo todas a la vez, que gasta
+          mucho menos:
           <ol>
-            <li>«Rana»: las rodillas menos abiertas y la flecha hacia atrás.</li>
-            <li>«Palmas en la mesa»: la mano al revés, con los dedos hacia ti. Las tres que hiciste salieron con los dedos hacia
-              fuera, como al apoyarse en la mesa, y eso no estira el antebrazo. El prompt nuevo la pide vista desde tus ojos;
-              para comprobarla, los pulgares tienen que apuntar hacia fuera.</li>
+            <li>Rana y Palmas en la mesa (<a href="https://claude.ai/artifact/7w8TYPv5aQSh52g6B9uGj7">la página</a>): los dos dibujos y el texto nuevo.</li>
+            <li>Logros sin «Próximamente» (<a href="https://claude.ai/artifact/J8ADhnvWTxLeiQWYix5U37">antes y después</a>), con todas las pruebas en verde.</li>
+            <li>Todas las horas con el «− 9:00 +» (<a href="https://claude.ai/artifact/Lo2X1rRoczGPHkyoLhje9Y">las fotos</a>).</li>
+            <li>Lo que pasa sin querer (<a href="https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq">las fotos</a>), con tu A en el «Ahora no».</li>
           </ol>
-          El logo se queda como está, como decidiste el 4 de noviembre. Déjalos en
-          <code>dibujos-22oct\para-revisar</code> o en <code>Escritorio\Glifos</code> y dime «revisa los dibujos».</span></li>
-      <li class="paso hecho"><span class="estado">Hecho en el modo de prueba · 5 de noviembre</span>
-        <span class="t">Stripe, para cobrar en la web</span>
-        <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Desde el 4 de noviembre la web ya recibe los avisos de Stripe; antes
-          seguía «cerrada». Ya tienes la cuenta, «vende por ti», la llave que firma las ventas, Cloudflare, los dos enlaces de
-          verdad (apagados) y los arreglos del cobro (0.186.0). Falta, todo en el modo de prueba de Stripe:
-          <ol>
-            <li>Hecho el 4 de noviembre: el aviso de pago.</li>
-            <li>Hecho el 4 de noviembre: los dos enlaces de prueba, y los números de los cuatro en Cloudflare.</li>
-            <li>Hecho el 4 de noviembre: la llave que solo lee, en el modo de prueba de tu cuenta.</li>
-            <li>Hecho el 5 de noviembre: dos compras de mentira con su código, y /recuperar lo devuelve.</li>
-          </ol>
-          Nadie paga nada de verdad hasta que hables con el gestor.</span></li>
+          Con ellas dentro ya se puede preparar la versión de prueba.</span></li>
+      <li class="paso luego"><span class="estado">Lista · espera tu letra</span>
+        <span class="t">La jornada como paso actual, en un html</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/JT45Q7FuqAurUChGqLhqgg">la página</a>). Los cinco momentos, los dos caminos y lo del aro,
+          comparados con lo de hoy. La recomendada: 1A 2B. Nada se monta hasta que elijas.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
         <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
-        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> En cuanto esté lo de abajo, bajo el archivo para Play, subo
-          la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días de los testers empiezan entonces, y lo que
-          falte para que se entienda bien llega como actualizaciones durante esos días. Por si acaso, la 0.184.0 ya está en
-          <code>subidas-play\</code>. Ya están listas las notas de Play y de TestFlight, las capturas nuevas de la ficha y
-          tus pasos para subirla (<a href="https://claude.ai/artifact/RQ42BRGg1VeuxibL3rYox2">la página</a>). Falta lo del
-          paso «Ahora»:
+        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> Solo falta juntar los dos dibujos del paso de arriba: el logo se queda como
+          está. Entonces bajo el archivo para Play, subo la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días
+          de los testers empiezan ahí, y lo que falte para que se entienda bien llega como actualizaciones durante esos
+          días. Va dentro la 0.189.1, con la media jornada arreglada. Las notas, las capturas nuevas y tus pasos para subirla ya
+          están listos (<a href="https://claude.ai/artifact/RQ42BRGg1VeuxibL3rYox2">la página</a>, en tu otra cuenta). Por si
+          acaso, la 0.184.0 ya está en <code>subidas-play\</code>.</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · una sesión</span>
+        <span class="t">Preparar la venta: solo el de por vida, solo en la web</span>
+        <span class="c"><span class="quien">Yo.</span> La tienda enseña solo lo que tiene enlace, y en Android y iPhone no sale ningún botón
+          de compra. Te paso una página para que elijas cómo queda /premium sin el mensual, y luego me dices «júntalo».</span></li>
+      <li class="paso luego"><span class="estado">Después · lo tuyo · la venta sigue apagada</span>
+        <span class="t">Encender la venta en la web</span>
+        <span class="c"><span class="quien">Tú; yo lo pongo en la app.</span> Decidiste el 5 de noviembre: solo el de por vida, solo en la web,
+          hasta v1. El mensual llega con v1. Tu cuenta está activada, y el aviso y la llave que solo lee ya están en real. Cuando
+          esté el paso de arriba:
           <ol>
-            <li>«Rana» y «Palmas en la mesa» (<a href="https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT">la página</a>). Los
-              otros catorce ya están dentro.</li>
-            <li>El logo no: se queda como está (lo decidiste el 4 de noviembre).</li>
-          </ol></span></li>
-      <li class="paso marcha"><span class="estado">En marcha desde el 4 de noviembre · yo la preparo, tú eliges</span>
-        <span class="t">Lo que pasa sin querer y Respira para empezar, en una maqueta</span>
-        <span class="c"><span class="quien">Yo, con una sesión que ya ha empezado.</span> Que un «No» no aparte una rutina para siempre sin
-          avisar, que mirar una pausa de más tarde no la cambie sin querer, y un «¿Es tu primera vez? Empieza aquí» en
-          Respira. Cuando esté, te paso la página y eliges con letras. Llega como actualización durante los 14 días de los
-          testers.</span></li>
-      <li class="paso marcha"><span class="estado">Juntada como 0.189.1 · se publica en cuanto acaben las pruebas</span>
-        <span class="t">«Media jornada», que no se podía pulsar por la tarde</span>
-        <span class="c"><span class="quien">Yo, con una sesión.</span> Lo que vio tu tester es cierto: pasada su hora, «Media jornada»
-          enseña sus horas en vez de pulsarse, y si mueves solo el inicio a las 15:00 se queda «De 15:00 a 13:00» y sigue sin
-          pulsarse. Lo arreglo para que el fin se mueva con el inicio, con una prueba que lo vigile, y te paso una página para
-          que elijas cómo se entiende. Llega con la versión de prueba.</span></li>
+            <li>Arreglar lo que encontró ChatGPT y he comprobado: importar una copia antigua te quita la compra, y /recuperar te echa la
+              culpa cuando falla Stripe.</li>
+            <li>Pasar a ChatGPT la revisión del paso de abajo. Lo que bloquee la primera venta se arregla antes de encender.</li>
+            <li>Dar de alta el correo del botón para desistir (<code>docs/launch/desistir.md</code>).</li>
+            <li>Encender en Stripe solo el enlace de 19,99 € y pasarme su dirección.</li>
+          </ol>
+          <b>Con la primera venta real</b>, me das tu nombre, NIF, dirección, correo y teléfono, y publico el aviso legal y las
+          condiciones. Lo decidiste sabiendo que lo apuntado los pide antes de cobrar. La revisión del profesional, en un
+          mes. «Configura Tax» se deja hasta que lo confirme el gestor.</span></li>
+      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos</span>
+        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
+        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
+          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
+          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
+
+Contexto:
+- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
+- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
+- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
+
+Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
+
+Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Ya sé dos cosas y no hace falta que las repitas: guardar() en functions/api/stripe.js no es atómico si llegan dos avisos a la vez, y paceTiendaWebLista() exige los dos enlaces.
+
+Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
+
+Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
+      <li class="paso luego"><span class="estado">Después de la versión de prueba · con una maqueta para ti</span>
+        <span class="t">El sobre: actualizaciones, novedades y avisos puntuales</span>
+        <span class="c"><span class="quien">Yo te la preparo.</span> Lo que pediste el 30 de octubre: «actualizaciones, alguna notificación
+          puntual». Hoy el sobre solo lleva la carta del lunes y, si hubiera varias cosas, abriría solo una. La maqueta enseña cómo
+          caben, sin añadir otro icono.</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 2 minutos</span>
         <span class="t">Pegar en Play Console el párrafo nuevo de «A tu ritmo»</span>
         <span class="c"><span class="quien">Tú.</span> Con los textos que no inventan cambió el párrafo «A tu ritmo» de la ficha de
@@ -187,9 +204,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           y en inglés. El de PACE completo se cambia el día de v1.</span></li>
       <li class="paso luego"><span class="estado">Con el gestor y el jurista · lo tuyo</span>
         <span class="t">Lo legal: tus datos y una revisión profesional</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>, con
-          las preguntas para copiar). Los borradores ya llevan tus cinco letras y están en la app sin publicar. Faltan tu
-          nombre, tu NIF y un contacto, y que un profesional los revise. Y el día que enciendas la venta, el correo del botón
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>, en tu
+          otra cuenta, con las preguntas para copiar). Los borradores ya llevan tus cinco letras y están en la app sin publicar. Faltan tu
+          nombre, tu NIF, una dirección en la UE, un correo y un teléfono, y que un profesional los revise. Y el día que enciendas la venta, el correo del botón
           para desistir: darte de alta gratis en resend.com y poner su llave en Cloudflare como <code>RESEND_CLAVE</code> (los
           pasos, en <code>docs/launch/desistir.md</code>). Con eso el enlace sale en /premium.</span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo, unos 15 minutos</span>
@@ -205,7 +222,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 81 pasos</summary>
+      <summary>Lo hecho hasta hoy · 84 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -519,17 +536,17 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           la buena desde el primer día.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste 1A 2A 3A 4A</span>
         <span class="t">Elegir en la maqueta de lo que falta para vender</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/VDdAWeb8msGvckeGXxFjWV">la maqueta</a>). La hoja
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9MnNL8b5BYWcX9Fsa7vnAa">la maqueta</a>). La hoja
           del día de v1 con las rutinas que se quedan; la página para recuperar el código y «¿Lo has perdido?» en PACE; los
           botones de compra como en la bienvenida; y la ventana de valorar también en el iPhone.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo»</span>
         <span class="t">Mirar las fotos de lo que falta para vender y decir si se junta</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/Mk11GDb9JBDGXyTrynbaYY">las fotos</a>). La hoja
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/56cDi1KJYKS4gKqnFKouJP">las fotos</a>). La hoja
           del día de v1, la página para recuperar el código, los botones de compra y la valoración en el iPhone, con «Las
           rutinas más profundas» y los dos arreglos de seguridad.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste la A</span>
         <span class="t">Elegir lo que dice el aviso del móvil al acabar un Foco</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/7Hj5sHmFuuzVP5QFntqdN7">los textos</a>). Con
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9BKgTENwuTjts4Wa1N7ZYd">los textos</a>). Con
           «A tu ritmo», el móvil dice la pausa que toca y a qué hora vuelves, como la web.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 28 de octubre · en la app, 0.185.0</span>
         <span class="t">Juntar lo que faltaba para vender y los avisos del iPhone, y publicarlo</span>
@@ -548,8 +565,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           privacidad: de una mensual que terminó quedan solo su número y el día en que terminó. No cambia nada que se vea.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste · 29 de octubre</span>
         <span class="t">Elegir en las dos maquetas</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1">el runner</a> y
-          <a href="https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3">«Tus rutinas»</a>). B3 A, P5 A, P6 A con «Con una basta»
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/Mtv9tKsUy9qWgJgKwfD788">el runner</a> y
+          <a href="https://claude.ai/artifact/LD2aRGw2gsrK2XM2DrovkB">«Tus rutinas»</a>). B3 A, P5 A, P6 A con «Con una basta»
           debajo de «segundos», y P8 B dejando el dibujo a la vista; U1 B · C6 A.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste la recomendada · 29 de octubre</span>
         <span class="t">El calendario en v1</span>
@@ -558,7 +575,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           recuerda la conexión. /premium y los textos lo contarán así.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «móntalo» · 29 de octubre</span>
         <span class="t">Tu reparto del runner</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/R4hc4PDHjn4o94Zirz6scg">la maqueta</a>).
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp">la maqueta</a>).
           Cada pastilla bajo su etiqueta, «Auto» bajo los botones, el círculo mayor donde sobra aire y «pulsa «Empezar ya»».
           Y de los cinco dibujos: menos sombreado, y que todos se vean homogéneos.</span></li>
       <li class="paso hecho"><span class="estado">Hecho en su rama · 29 de octubre</span>
@@ -599,6 +616,18 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <span class="t">Juntar lo legal y la versión de prueba, y publicarlo</span>
         <span class="c"><span class="quien">Yo.</span> Con las 1178 pruebas en verde con todo junto. pacegrass.app/desistir está
           publicada pero cerrada hasta que conectes el correo; los textos legales, en borrador y sin publicar.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «sí, júntala» · en la app, 0.189.1</span>
+        <span class="t">«Media jornada», que no se podía pulsar por la tarde</span>
+        <span class="c"><span class="quien">Yo, con una sesión.</span> Lo que vio tu tester era cierto. Ahora, al mover el inicio, el fin
+          se mueve con él; y pasada su hora, el nombre abre «Hora de inicio» con la paleta de PACE, como elegiste.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «sí, cambia el texto» · 5 de noviembre</span>
+        <span class="t">Decidir «Palmas en la mesa»</span>
+        <span class="c"><span class="quien">Tú.</span> Se queda el dibujo con los dedos hacia delante y el texto se ajusta a él: la misma zona del
+          antebrazo, algo más suave.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 5 de noviembre</span>
+        <span class="t">Stripe en el modo de prueba, entero</span>
+        <span class="c"><span class="quien">Tú, conmigo.</span> El aviso de pago, los cuatro enlaces, la llave que solo lee y dos compras
+          de mentira con su código, que /recuperar devuelve.</span></li>
       </ol>
     </details>
   </section>
@@ -838,11 +867,11 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           prueba <code>4242 4242 4242 4242</code> (cualquier fecha futura y cualquier código). La página de gracias tiene que
           darte un código, y «Abrir PACE con tu código» tiene que abrir PACE completo. Después, desactiva ese enlace de
           prueba y no lo compartas.</span></li>
-      <li class="paso luego"><span class="estado">Con el gestor</span>
+      <li class="paso luego"><span class="estado">En parte hecho · 5 de noviembre</span>
         <span class="t">Los pagos de verdad</span>
-        <span class="c"><span class="quien">Tú; yo pongo los enlaces en la app.</span> El alta en Hacienda y en autónomos, tu NIF, la
-          cuenta del banco y lo que pida Stripe. Luego, lo mismo en el modo real: el aviso, con su <code>whsec_</code> nuevo en
-          Cloudflare, y los dos enlaces y el portal reales. Con ellos en la app salen los botones de compra.</span></li>
+        <span class="c"><span class="quien">Tú; yo pongo los enlaces en la app.</span> Hecho: el alta con el gestor, la cuenta activada, y
+          en Cloudflare el aviso real y la llave real que solo lee, comprobados. Falta lo de arriba, en «Stripe en real»: lo
+          legal, el correo para desistir y encender los dos enlaces. Con ellos en la app salen los botones de compra.</span></li>
     </ol>
   </section>
 
@@ -926,8 +955,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <b>Las rutinas de Mueve y Estira, claras</b><span>Cada ejercicio dice dónde y con qué colocarse, también la «silla sin ruedas» de Core silencioso; esperar a «›» con la cuenta en 0 no suma minutos, «Auto» no avanza con la rutina en pausa, los tres aguantes de «Glúteos invisibles» caben en su tiempo y la barra del 4·7·8 acaba cuando acaba. Y lo que elegiste: la flecha que dice lo que hace, la pausa que se ve como pausa, «Con una basta» y tu reparto de la pantalla, con los catorce dibujos nuevos.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">C · Hecho (0.187.0, 29 oct.)</span>
         <b>«Tus rutinas», tan bien explicadas como el catálogo</b><span>Dicen el material que piden; el constructor ya no queda tapado desde Estira, una sola duración en la tarjeta y en la vista previa, «Zancada con apertura» en inglés, se empiezan con el teclado, al personalizar no se pierden las instrucciones y las tarjetas dicen «Sentado o de pie». Y lo que elegiste: Escape guarda un borrador y «Guardar» dice qué falta.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera tus dos dibujos; luego, que la subas</span>
-        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): lo de colocarse ya está; faltan «Rana» y «Palmas en la mesa»; el logo se queda como está. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera a que entren los dibujos; luego, que la subas</span>
+        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): lo de colocarse ya está, «Rana» y «Palmas en la mesa» valen y se están metiendo; el logo se queda como está. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">12 · Hecho (0.185.0, 28 oct.)</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">A · Hecho (0.186.0, 29 oct.)</span>
@@ -945,11 +974,11 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">16 · Espera tus datos</span>
         <b>Lo legal de /premium</b><span>Las condiciones, las devoluciones, el aviso legal con tu nombre, tu NIF y un contacto, y el botón para desistir de una compra que pide la ley europea desde junio de 2026. Mejor si lo mira un profesional.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">A la vez, cuando puedas</span>
-        <b>Los dibujos que faltan</b><span>«Rana» y «Palmas en la mesa» (arriba, en «Ahora») y, después, los 22 de los logros (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</span></div></li>
+        <b>Los dibujos que faltan</b><span>Los 22 de los logros (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</span></div></li>
       <li><i class="pt meta"></i><div class="que"><span class="estado meta">La meta</span>
         <b>v1.0: PACE se puede comprar</b><span>En la web, en Android y en iPhone: 2,99 € al mes con 7 días gratis, o 19,99 € de por vida. Ese día se cierra lo abierto hasta v1 sin quitar nada a quien ya lo usaba, y se prueba comprar, restaurar y cancelar en los tres.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">V · Después de v1 · lo decides tú, con lo que digan los testers</span>
-        <b>Que vuelvan cada día</b><span>Un modo «Solo pausas» para quien ya organiza su trabajo y no quiere el Foco, que es la idea más grande de las ocho revisiones; «Repetir la última pausa» al lado de «Probar otra»; una salida para los días difíciles, como «Muévete dos minutos»; un resumen del día que solo cuente lo hecho; y un piloto de dos semanas con gente que teletrabaja.</span></div></li>
+        <b>Que vuelvan cada día</b><span>Un modo «Solo pausas» para quien ya organiza su trabajo y no quiere el Foco, que es la idea más grande de las ocho revisiones; «Repetir la última pausa» al lado de «Probar otra»; una salida para los días difíciles, como «Muévete dos minutos»; un resumen del día que solo cuente lo hecho; un piloto de dos semanas con gente que teletrabaja; y un descanso de manos nuevo, con el dibujo de las palmas boca arriba.</span></div></li>
     </ol>
     <p class="nota">Las letras (A, B, C, T, M, L y V) son los paquetes de las ocho revisiones de ChatGPT del 28 de octubre. Están
       enteras, con lo que comprobé de cada una, en <code>docs/audits/chatgpt-28oct/</code>, y el orden, en el ROADMAP.</p>
@@ -968,7 +997,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       <div><h3>Yo</h3>
         <ul class="lista">
           <li>Todo el código y sus pruebas.</li>
-          <li>Repartir el trabajo en sesiones, como mucho dos a la vez, y vigilarlas.</li>
+          <li>Repartir el trabajo en sesiones y vigilarlas.</li>
           <li>Pasar lo terminado a la app publicada, siempre con tu sí.</li>
           <li>Llevar esta página al día, para que no tengas que llevar la cuenta tú.</li>
         </ul></div>
@@ -981,7 +1010,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>Los dos dibujos que faltan (Rana y Palmas en la mesa)</b>: con ellos sale la versión de prueba definitiva, que subes a Play y a TestFlight a
+        <li><b>Los dibujos ya están elegidos</b>: en cuanto entren sale la versión de prueba definitiva, que subes a Play y a TestFlight a
           la vez. Así tus testers prueban la buena desde el primer día.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de
@@ -989,13 +1018,13 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
         <li><b>Testers de iPhone:</b> mira si te llegó el correo de Apple que aprueba la prueba (la enviaste el 23). Si llegó,
           invítalos con el enlace público del grupo «Testers iPhone». No cuentan para los 12 de Android, pero prueban lo
           mismo.</li>
-        <li><b>El gestor:</b> pedirle cita. Cómo darte de alta para cobrar (Hacienda y autónomos); sin eso no se activan los
-          pagos de Stripe, de Google ni de Apple.</li>
+        <li><b>El gestor:</b> el alta ya está (5 de noviembre) y Stripe, activado. Con ella puedes dar los pasos de cobrar en
+          Google y en Apple.</li>
       </ul></div>
     <div class="grupo"><h3>2 · Cuentas a tu nombre, unos minutos cada una</h3>
       <ul class="lista">
-        <li><b>Stripe:</b> el modo de prueba ya está entero (5 de noviembre); lo que queda son los pagos de verdad, con el gestor (arriba,
-          «Stripe, paso a paso»).</li>
+        <li><b>Stripe:</b> el modo de prueba, entero, y en real ya están la cuenta, el aviso y la llave. Lo que queda, arriba, en
+          «Stripe en real».</li>
         <li><b>Google Cloud y Microsoft Entra:</b> dar de alta PACE (<code>docs/CALENDARIO_ALTAS.md</code>). Con eso hago el
           llavero del calendario, que entra en v1. Google tarda semanas en revisar la app para abrirla a todo el mundo: si
           quieres el calendario en v1, esto va lo primero de este grupo.</li>

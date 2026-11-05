@@ -147,6 +147,45 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     dos enlaces reales y ponerlos con el portal en `PACE_TIENDA_WEB` (`app/state-compra.js`). La 0.189.1, en `main` y
     subida (b9d4da13): suite sobre `main` 1176 en verde, 2 saltadas y 6 de `android-avisos` caídas con el PC dormido, que
     solas pasan 20 de 20. Rana: la segunda de Genspark vale (rodillas abiertas, flecha recta atrás); falta Palmas.
+21. **5 nov., ~11:30: relevo a 5iWBf…** (`local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a`; 5 h al 1 %, se reponen a las 16:20). Las sesiones viejas
+    se cortaron a las 11:23 sin uso. `todas-las-horas` no llegó a su «WIP»: 285 líneas solo en su carpeta, y eran la maqueta
+    con la D sin montar; guardadas en b49819e7. Las dos suites murieron con `0xC0000142` al cerrarse sus sesiones y no valen; sus
+    servidores siguen en el 8844 y el 8820, así que se repiten en otro puerto. Sesiones nuevas, en las mismas carpetas:
+    `todas-las-horas` `local_dcc78396-9803-4ea7-acc5-0fe8278768e1` (8842), `logros-sin-pronto`
+    `local_f61e65b6-ea46-4de7-89d4-1c0cd9146195` (8845, en Sonnet) y `sin-querer` `local_a3cce92c-9597-44dd-9f0f-684e15926017` (8822, fotos en
+    8821). CI de 9fe51aee, en verde entero. La hoja de esta cuenta estaba en la 0.186.0: puesta al día, con las copias de
+    esta cuenta de seis maquetas, porque cada cuenta tiene sus ids.
+22. **5 nov., Palmas:** Ez trajo otro dibujo y no vale: brazos desde arriba y palmas a la vista, boca arriba, con la muñeca recta.
+    Cumple las dos señales que se le dieron (dedos abajo, pulgares fuera), que no bastaban: la buena es que se vean nudillos
+    y uñas. Se cambia de táctica: foto de una mano de lado y prompt que la calca (en la hoja). Rana aprobada: Ez la pasó y está
+    en `dibujos-22oct/para-revisar/` como `rana-5nov` (la ingesta solo lee `.png`: hay que convertirla al meterla).
+23. **5 nov., ChatGPT sobre 9fe51aee:** entera y comprobada en `docs/audits/chatgpt-5nov/revision-5nov.md`. Acierta en los dos
+    puntos de código. Recomienda llevar la candidata a los testers antes de añadir capas.
+24. **5 nov., Ez:** «actualizaciones, novedades y algo más» en el sobre: a la cola, con su frase del 30 oct. («alguna notificación
+    puntual»). Y de lo legal: «esto lo hacemos en un mes mientras la app empieza a ver si factura algo, hablado con gestor».
+    **Choca con `docs/launch/legal-web.md`** (art. 97.1 del TRLGDCU, LSSI art. 10 y Stripe Payments Terms §3.4(b): sus datos, antes de
+    pedir la tarjeta y a cargo de Ez). La revisión profesional puede esperar; los datos, según eso, no. Se le pidió
+    preguntarlo al gestor.
+25. **5 nov., ~12:00, Ez, ya con eso delante:** «solo el de por vida hasta v1 y en web (no android e ios) ya podríamos cerrar la
+    parte premium» y, de sus datos, «vamos con esto así hasta que registremos la primera venta real». Decidido por Ez: el riesgo
+    de cobrar sin esos datos publicados se le dijo una vez y no se reabre. **Al registrar la primera venta real, pedirle sus datos y
+    publicar `legal/` ese mismo día.** Abierta `premium-solo-vida` (worktree propio, puerto 8848, en Sonnet): tienda con un plan,
+    /premium sin ofrecer el mensual, con página para que Ez elija, y nada de compra en Android ni iPhone. Sin la suite: la
+    coordinadora le avisa cuando acaben las otras. Para encender faltan la revisión de ChatGPT, Resend y la dirección del enlace real.
+26. **5 nov., ~12:05:** dos cosas más de ChatGPT, las dos en `docs/audits/chatgpt-5nov/`: datos y compra, comprobada (la cola, 5; no trae lo legal
+    que se le pidió), y la jornada como paso actual, sin comprobar, que Ez quiere «ver en un html antes de implementar nada»: abierta
+    `maqueta-jornada`, sin tocar la app. **Palmas:** el dibujo de la foto enseña nudillos y uñas, pero los dedos miran hacia delante.
+    Propuesto a Ez aceptarlo y cambiar el texto (dedos hacia delante, cuerpo hacia delante): misma zona, más suave. Espera su letra. Se
+    guardó en `dibujos-22oct/para-revisar/palmas-en-la-mesa-5nov.webp`. Con su sí, una sesión mete Rana y Palmas (PNG, ingesta) y cambia
+    el texto en español e inglés, también `custom.ex.Palmas en la mesa`.
+27. **5 nov., ~12:10, Ez: «Sí, cambia el texto».** Sesiones de 5iWBf… a esta hora, cada una en su worktree y su rama, ninguna con la suite
+    entera salvo donde se dice: `todas-las-horas` `local_dcc78396-9803-4ea7-acc5-0fe8278768e1` (8842; le falta su suite), `logros-sin-pronto`
+    `local_f61e65b6-ea46-4de7-89d4-1c0cd9146195` (8845, suite en marcha), `sin-querer` `local_a3cce92c-9597-44dd-9f0f-684e15926017` (8822, suite en marcha),
+    `premium-solo-vida` `local_90a278a4-570d-4431-8268-6562fd63f50f` (8848), `maqueta-jornada` `local_39af6801-6a3d-4990-be0e-b567a9e5baee` (8852, solo página),
+    `cuatro-arreglos-de-datos` `local_0bb1183d-73d8-4b52-ba93-6da7fd988d18` (8854, arrancada por Ez con su tarjeta) y `rana-y-palmas`
+    `local_6d34b87b-a279-4786-ab8d-74c53aee36a0` (8856). Las tres últimas con push a `claude/…`, sin suite: la coordinadora les avisa. Falta de Ez la parte
+    legal de la revisión de ChatGPT, con el prompt de la hoja. 5 h al 58 % a las 12:07 y unos 120 puntos por hora: avisar a las
+    sesiones al 70 %, «WIP:» y push al 85 %, y migrar al 90 %; EcLj6… se repone a las 15:30.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
@@ -1207,6 +1246,36 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
+
+### Nuevo el 5 nov.
+
+1. **La tienda web con un solo plan**, en marcha en `premium-solo-vida`: `paceTiendaWebLista` exige los dos enlaces (`every`) y
+   `planes()` filtra por precio y no por enlace (`app/state-compra.js`). Pequeño, con su prueba.
+2. **Antes de encender la mensual:** `guardar()` en `functions/api/stripe.js` no serializa (KV no tiene transacciones) y su
+   comentario promete de más: «dos a la vez escriben lo mismo» solo vale para el mismo aviso repetido. Prueba con intercalado de
+   verdad, no con `await` en fila, y una solución que garantice el orden por suscripción.
+3. **El sobre: actualizaciones, novedades y avisos puntuales** (Ez, 30 oct. y 5 nov.), con maqueta y después de la versión de
+   prueba. Cada cosa, una fuente con `paceSobreApuntar` (`app/shell/Sobre.jsx`), no otro icono. Hoy, con varias, abre solo una:
+   la maqueta tiene que resolver cómo caben.
+4. **El aro de la home, antes de elegir el día, dentro de `maqueta-jornada`** (Ez, 5 nov., solo en la web): a 1917×857 mide ~380 px frente a ~447 con el día
+   elegido. Encoge por altura para que quepan las actividades y «¿Cuánto trabajas hoy?» sin scroll: maqueta con opciones de a qué
+   quitar alto, medida con `tests/home-sin-scroll.spec.js` en dos idiomas.
+5. **Cuatro arreglos de datos y compra** (ChatGPT, 5 nov., comprobados; `docs/audits/chatgpt-5nov/revision-5nov-datos-y-compra.md`). Los dos
+   primeros, antes de encender la venta: importar no quita la licencia y /recuperar dice el fallo que es. Después, exportar
+   desde Ajustes lo que hay en memoria y la copia de rescate con su resultado.
+5 bis. **Con la primera venta real, ese mismo día:** pedir a Ez nombre, NIF, dirección, correo y teléfono y publicar `legal/`.
+6. **El reparto gratis y de pago del calendario:** contrastar los textos de `app/i18n/strings/calendario.js` con lo decidido el 29 oct.
+   (`docs/product/DECISIONES_PRODUCTO.md`), lo que ChatGPT marca como decisión sin cerrar.
+
+**Comprobadas el 5 nov., por la tarde, esperan el sí de Ez:** `docs/audits/chatgpt-5nov/revision-5nov-capas.md` y `revision-5nov-sesiones.md`. Antes de los testers: Escape o Atrás que saca de la sesión, encender «Auto» que da la serie por hecha, la pausa que se abre sobre una sesión y mantener Espacio. Después: el catálogo vacío al ensanchar, las cifras al repetir una serie y qué explica «Auto». Dos pestañas: riesgo aceptado.
+
+**Ez, 5 nov., tarde, con sus respuestas:** juntar los cuatro arreglos tras la 0.190.0; la versión de prueba espera a esos arreglos, /premium y `capas-y-pausa`; al acabar, quitar los worktrees ya juntados con copia antes (un bundle, como el 31 oct.); y cuatro hilos: `maqueta-sobre` `local_de773665-9fbd-4a40-bd3e-e22720396ef2`, `landing-web` `local_795cb4bb-b415-46de-8795-dfcdb232c130`, el reparto del calendario (solo lee) y «catálogo, cifras y Auto», que se abre al acabar `capas-y-pausa` `local_f7e2ad80-845f-40c2-b9cc-ae6c64efe23b`. Los glifos de logros los deja en `dibujos-22oct/para-revisar` y dirá «dibujos de logros en la carpeta».
+
+**Más de la tarde del 5 nov.:** el párrafo «A tu ritmo» de Play se pega con Ez al subir la siguiente beta. Ez ya busca testers. `premium-solo-vida`, con la C montada: `LISTO PARA MAIN`, solo falta la suite. Calendario: en /premium casa con lo del 29 oct.; en Android el candado no dice el límite, y en la web, al darse de alta los ids de Google y Microsoft, la hoja vendería «mantenerlo al día» antes de que exista el llavero: hay que cambiarlo antes de esas altas. Repasar el README cuando salga la versión de prueba.
+
+**Ez, 5 nov., tarde:** jornada 1A 2B y /premium 1C. La jornada se monta en `maqueta-jornada` (`local_39af6801-6a3d-4990-be0e-b567a9e5baee`) en cuanto la 0.190.0 esté en `main`.
+
+**Después de v1 (Ez, 5 nov.: «Sí, para después»):** un ejercicio nuevo de descanso de manos, con los antebrazos en la mesa y las palmas arriba, con el dibujo `dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`.
 
 ### El orden lógico hasta v1 (Ez, 25 oct.: «ordena el roadmap de la manera más lógica»)
 

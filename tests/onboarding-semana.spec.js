@@ -16,7 +16,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, acabarBienvenida, RUTA_ARTEFACTO } = require('./helpers');
+const { sembrar, capturarErrores, irAlArtefacto, acabarBienvenida, RUTA_ARTEFACTO, ponerHora } = require('./helpers');
 
 const BIENVENIDA = '[data-pace-scene-card][role="dialog"]';
 const EDITOR = '[data-pace-semana-editor]';
@@ -60,7 +60,7 @@ test('«Continuar» guarda la semana tocada y las horas, y cierra la bienvenida 
   await dia(5).click();               // viernes: jornada → media
   await dia(6).click();               // sábado: libre → jornada
   await expect(dia(3)).toHaveAttribute('aria-label', 'miércoles, Libre');
-  await page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]').selectOption('480');
+  await ponerHora(page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]'), 480);
 
   await page.locator('[data-pace-semana-guardar]').click();
   await acabarBienvenida(page);

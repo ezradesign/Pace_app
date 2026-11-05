@@ -151,7 +151,7 @@ test('«Tu semana» dice lo aprendido en una línea, lo enseña al tocarla y cad
   await page.evaluate(() => ritmoSemanaAbrir());
   const hoja = page.locator('[data-pace-semana-hoja]');
   await expect(hoja).toBeVisible();
-  await expect(hoja.locator('[data-pace-ritmo-horario="inicio"]').first(), 'en la hoja, tu entrada de siempre').toHaveValue('540');
+  await expect(hoja.locator('[data-pace-ritmo-horario="inicio"]').first(), 'en la hoja, tu entrada de siempre').toHaveText('9:00');
   await expect(page.locator('[data-pace-aprendido]'), 'cerrada hasta tocarla').toHaveCount(0);
   await expect(page.locator('[data-pace-aprendidos-abrir]')).toHaveText(/PACE ha aprendido 2 cosas/);
   await page.locator('[data-pace-aprendidos-abrir]').click();

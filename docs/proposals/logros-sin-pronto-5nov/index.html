@@ -1,0 +1,145 @@
+<title>Logros sin «Pronto»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna con el cambio contado arriba y debajo las fotos de la app real, antes y después, con
+   dos interruptores (ancho y paleta). Colores y letras, los de la app (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --breathe: #9E4F33; --mark: rgba(62, 90, 58, 0.10);
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 36px; }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 8vw, 52px); line-height: 1.02; }
+h2 { font-size: 28px; line-height: 1.1; }
+h3 { font-size: 22px; line-height: 1.15; }
+p { margin: 0; max-width: 64ch; color: var(--ink-2); }
+b { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 14px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.cambios { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; color: var(--ink-2); max-width: 64ch; }
+.cuentas { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 15px; }
+.cuentas th, .cuentas td { text-align: left; padding: 7px 10px 7px 0; border-bottom: 1px solid var(--line); }
+.cuentas th { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.cuentas td:nth-child(n+2) { white-space: nowrap; }
+.cuentas .igual { color: var(--ink-3); }
+.tabla { overflow-x: auto; }
+
+/* Los interruptores: el ancho y la paleta de las fotos. */
+.mandos { display: flex; flex-wrap: wrap; gap: 10px 16px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--paper); padding-block: 10px; border-bottom: 1px solid var(--line); }
+.grupo { display: inline-flex; border: 1px solid var(--focus); border-radius: 999px; overflow: hidden; }
+.grupo button { font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 6px 14px; border: 0; background: transparent; color: var(--focus); }
+.grupo button[aria-pressed="true"] { background: var(--focus); color: var(--paper); }
+.grupo button:focus-visible { outline: 2px solid var(--breathe); outline-offset: -2px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+
+.par { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); align-items: start; }
+.par.ancho { grid-template-columns: minmax(0, 1fr); }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+figcaption.despues { color: var(--focus); font-weight: 600; }
+figure img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); background: var(--paper-2); }
+.par:not(.ancho) figure img { max-width: 360px; }
+</style>
+<main class="hoja">
+  <header>
+    <div class="eyebrow">PACE · Logros · 5 de noviembre</div>
+    <h1>Logros sin «Pronto»</h1>
+    <p>Dijiste que «Próximamente» podía sobrar. Ya no sale: los ocho logros que todavía no se pueden ganar desaparecen de la
+      colección y de sus cuentas, y aparecen solos el día que se puedan ganar. Está montado en su rama, sin juntar; las
+      fotos son de la app de verdad.</p>
+  </header>
+
+  <section>
+    <h2>Qué cambia</h2>
+    <ul class="cambios">
+      <li><b>Ocho tarjetas menos.</b> Primavera, Verano, Otoño, Invierno, Cuatro estaciones y La rueda del año, en Estacionales;
+        Semana fuerte, en Maestría, y Nunca a medianoche, en La jornada. Llevaban el sello «Pronto» y no había forma de
+        ganarlos.</li>
+      <li><b>La caja de arriba dice «Sellos reunidos».</b> «Disponibles» solo se entendía al lado de «8 Próximamente»: solo,
+        «2 / 83 Disponibles» se lee como «hay 2 disponibles». El 83 no cambia, porque ya contaba solo lo que se puede
+        ganar.</li>
+      <li><b>Cada familia cuenta lo que enseña.</b> Estacionales decía «0 / 10» con cuatro que se pueden ganar.</li>
+      <li><b>Si alguien ya tuviera uno de los ocho, lo sigue viendo</b>, como pasa con los de ATG y Ancestral. Hoy nadie puede
+        tenerlos.</li>
+    </ul>
+    <div class="tabla">
+      <table class="cuentas">
+        <thead><tr><th>Cuenta</th><th>Antes</th><th>Ahora</th></tr></thead>
+        <tbody>
+          <tr><td>Arriba</td><td>2 / 83 · 8 Próximamente</td><td>2 / 83 Sellos reunidos</td></tr>
+          <tr><td>Estacionales</td><td>0 / 10</td><td>0 / 4</td></tr>
+          <tr><td>Maestría</td><td>0 / 16</td><td>0 / 15</td></tr>
+          <tr><td>La jornada</td><td>0 / 9</td><td>0 / 8</td></tr>
+          <tr class="igual"><td>Las otras cuatro familias</td><td>igual</td><td>igual</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota">En inglés, igual: sale «Stamps collected» y ya no hay «Coming soon» ni «Soon».</p>
+  </section>
+
+  <section aria-labelledby="fotos-t">
+    <h2 id="fotos-t">Antes y después</h2>
+    <div class="mandos" role="group" aria-label="Qué fotos ver">
+      <div class="grupo" role="group" aria-label="Ancho">
+        <button type="button" id="ancho-360" data-ancho="360" aria-pressed="true">Móvil, 360 px</button>
+        <button type="button" id="ancho-1280" data-ancho="1280" aria-pressed="false">Ordenador, 1280 px</button>
+      </div>
+      <div class="grupo" role="group" aria-label="Paleta">
+        <button type="button" id="paleta-claro" data-paleta="claro" aria-pressed="true">Claro</button>
+        <button type="button" id="paleta-oscuro" data-paleta="oscuro" aria-pressed="false">Oscuro</button>
+      </div>
+    </div>
+
+    <h3>Al abrir Logros</h3>
+    <div class="par" data-par>
+      <figure><figcaption>Antes</figcaption><img data-foto="antes" data-sitio="arriba" alt="Antes: la caja de arriba con 2 / 83 Disponibles y 8 Próximamente" src="fotos/antes-360-claro-arriba.webp" width="720" height="1520"></figure>
+      <figure><figcaption class="despues">Después</figcaption><img data-foto="despues" data-sitio="arriba" alt="Después: la caja de arriba con 2 / 83 Sellos reunidos" src="fotos/despues-360-claro-arriba.webp" width="720" height="1520"></figure>
+    </div>
+
+    <h3>Estacionales, al final del panel</h3>
+    <div class="par" data-par>
+      <figure><figcaption>Antes</figcaption><img data-foto="antes" data-sitio="estacionales" alt="Antes: Estacionales 0 / 10, con seis tarjetas que dicen Pronto" src="fotos/antes-360-claro-estacionales.webp" width="720" height="1520"></figure>
+      <figure><figcaption class="despues">Después</figcaption><img data-foto="despues" data-sitio="estacionales" alt="Después: Estacionales 0 / 4, solo los solsticios y los equinoccios" src="fotos/despues-360-claro-estacionales.webp" width="720" height="1520"></figure>
+    </div>
+    <p class="nota">Las fotos son de alguien con dos sellos ganados, Primer paso y Primer aliento.</p>
+  </section>
+
+  <section>
+    <h2>Lo que no se ha tocado</h2>
+    <p>El «Próximamente» de Estadísticas: el texto existe, pero ninguna pantalla lo enseña, así que no se ve en ningún sitio.
+      Se queda como está.</p>
+    <p>Los dibujos de los ocho siguen en la app, sin enseñarse. Los que faltan de toda la colección tienen su propia página,
+      con Verano y La rueda del año al final de la cola.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  var ancho = '360', paleta = 'claro';
+  function pintar() {
+    document.querySelectorAll('img[data-foto]').forEach(function (img) {
+      img.src = 'fotos/' + img.dataset.foto + '-' + ancho + '-' + paleta + '-' + img.dataset.sitio + '.webp';
+      img.width = ancho === '360' ? 720 : 1600;
+      img.height = ancho === '360' ? 1520 : 1000;
+    });
+    document.querySelectorAll('[data-par]').forEach(function (par) { par.classList.toggle('ancho', ancho === '1280'); });
+    document.querySelectorAll('[data-ancho]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.ancho === ancho)); });
+    document.querySelectorAll('[data-paleta]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.paleta === paleta)); });
+  }
+  document.querySelectorAll('[data-ancho]').forEach(function (b) { b.addEventListener('click', function () { ancho = b.dataset.ancho; pintar(); }); });
+  document.querySelectorAll('[data-paleta]').forEach(function (b) { b.addEventListener('click', function () { paleta = b.dataset.paleta; pintar(); }); });
+})();
+</script>

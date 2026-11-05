@@ -5,8 +5,8 @@
 > verdad la dice el generado
 > [`GLIFOS_EJERCICIOS_PENDIENTES.md`](GLIFOS_EJERCICIOS_PENDIENTES.md), no esto.
 >
-> **66 de 68 identidades ya tienen arte** (29 oct. 2026, con los catorce que entraron ese día; `Nordics` es de las 2 sin arte y no se pide). Aquí sólo está lo que queda, en orden
-> de lo que más se nota.
+> **67 de 68 identidades ya tienen arte** (5 nov. 2026, con Rana y Palmas en la mesa, los dos últimos de ejercicio; `Nordics` es la única sin arte y no se pide). De ejercicio
+> no queda nada por dibujar: lo que sigue de las fichas es el registro de lo pedido y el modo de ingerir.
 >
 > **Ojo, el censo decía 61 y son 62.** El generador sacaba los nombres con un patrón
 > que sólo veía los pasos con `mode:` —el contrato del runner v1— y **los pasos
@@ -19,22 +19,26 @@
 
 ## La cuenta de todo lo que falta por dibujar (la única)
 
-A 29 oct. 2026, v0.186.0 y los catorce dibujos que entraron ese día. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
+A 5 nov. 2026, v0.189.1 y los dos dibujos que entraron ese día (Rana y Palmas en la mesa). **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
 repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
+
+**Los 22 de logros, con lo que premia cada uno, su prompt corto para el chat de Genspark de los logros y su nombre de archivo**,
+en otra página para Ez (5 nov. 2026): https://claude.ai/artifact/8w1pvFu1EZHKZxsBeV48Tf (`docs/traspaso/dibujos-logros.html`). Van en
+el orden en que se notan: primero lo que todo el mundo ve, luego los secretos y al final Verano y La rueda del año.
 
 **Los de ejercicios, con su prompt entero y su nombre de archivo para copiar, en una página para Ez**:
 https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT en la cuenta de 5iWBf… y
 https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT en la de EcLj6… (`docs/traspaso/dibujos-ejercicios.html`). Van a
-`Pace_app\dibujos-22oct`. «Palmas en la mesa» se guarda como `palmas-en-la-mesa.png` (la ingesta empareja por
-el nombre de hoy, no por el `palmas-al-suelo.webp` que tiene ahora; al entrar, el .webp viejo y su miniatura sobran).
+`Pace_app\dibujos-22oct`. La ingesta solo lee `.png` y empareja por el nombre del archivo: los dos últimos entraron el 5 nov. como
+`rana.png` y `palmas-en-la-mesa.png`, y el `palmas-al-suelo.webp` viejo se borró con su miniatura.
 
 | Qué | Cuántos | Cuáles, y dónde están sus prompts |
 |---|---|---|
-| Ejercicios sin dibujo | **1** | Rana, la de la tabla de abajo. Los 6 nuevos de Mueve y Estira (3A) entraron el 29 oct. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
-| Ejercicios con el dibujo equivocado | **1** | Palmas en la mesa (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1): las versiones revisadas el 29 oct. tienen los dedos hacia fuera. Los 7 que marcó Ez el 23 oct. y Apretar glúteos entraron el 29 oct. («La tanda de Mueve y Estira», abajo), menos Sentadilla de cuádriceps y Puente torácico, que no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
-| Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3 |
-| Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3) |
-| **Total** | **24** | |
+| Ejercicios sin dibujo | **0** | Rana entró el 5 nov. Los 6 nuevos de Mueve y Estira (3A) entraron el 29 oct. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
+| Ejercicios con el dibujo equivocado | **0** | Palmas en la mesa entró el 5 nov. con los dedos hacia delante (Genspark no consigue la mano al revés), y Ez cambió el texto al dibujo. Los 7 que marcó Ez el 23 oct. y Apretar glúteos entraron el 29 oct. («La tanda de Mueve y Estira», abajo), menos Sentadilla de cuádriceps y Puente torácico, que no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
+| Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3; los cortos para Genspark, en la página de logros de arriba. Verano va al final: no tiene detector y desde el 5 nov. no sale en Logros |
+| Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3). La rueda del año, al final, como Verano |
+| **Total** | **22** | |
 
 Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
 invierno y Cuarto creciente (v0.165.0) y Barbilla atrás (v0.170.1). Del encargo del 23 oct., el 29 oct.:
@@ -44,8 +48,9 @@ que rehízo Ez), 90/90, Rotación torácica de pie, Inclinación de tronco, Gato
 en el chat), Pica en escritorio, Rodar hacia abajo, Sentarse y levantarse del suelo y Apretar glúteos (sentado).
 Los catorce, con el rojo blanqueado como el resto del set (Ez lo eligió el 29 oct. al ver la mancha
 conservada «de más»). Esa tanda dejó fuera, por repetir, el primer Remo con banda (la banda parece un palo
-que acaba en el talón) y Rana (rodillas más abiertas de lo que pide el paso, y sin flecha). Los días diseñados, cuando
-lleguen, pueden pedir más: se suman aquí.
+que acaba en el talón) y Rana (rodillas más abiertas de lo que pide el paso, y sin flecha). El 5 nov. entraron Rana (la segunda de
+Genspark, de perfil y con la flecha hacia atrás) y Palmas en la mesa (dedos hacia delante, con el texto cambiado al dibujo: «Sí, cambia el texto»).
+Los días diseñados, cuando lleguen, pueden pedir más: se suman aquí.
 
 ---
 
@@ -94,17 +99,15 @@ dos versiones de entrada nuevas, «Puente con los dos pies» y «Gateo con rodil
 
 ## Lo que hay que dibujar, por orden
 
-| # | Archivo | ¿Dónde sale? | Hoy se ve como |
-|---|---|---|---|
-| 1 | `rana.png` | 1 paso | **glifo por defecto** |
+Ninguno de ejercicio (5 nov. 2026): `rana.png` entró ese día y era el último.
 
 **`Descanso` ya no se dibuja** (Ez, 7 de octubre de 2026): el descanso entre series
 lleva la figura que respira de `Reset respiración`, por alias en
 `app/custom/exercise-aliases.js`, como ya hacía `Respiraciones profundas`. Las dos
 barras de pausa del SVG ya no salen en el runner.
 
-`Rana` es la **capitular** de `Caderas · suelo` y la **única de las tarjetas de la
-biblioteca que sale sin dibujo** (el usuario la reportó mirando la app).
+`Rana` es la **capitular** de `Caderas · suelo` y era la **única de las tarjetas de la
+biblioteca que salía sin dibujo** (el usuario la reportó mirando la app). Entró el 5 nov.
 
 ---
 
@@ -232,7 +235,10 @@ perfil sólo se vería un brazo y quedaría demasiado cerca de `Onda espinal`.
 > una «V» invertida en el suelo y duplica la silueta de `Marcha del elefante` — pasó
 > en la tanda anterior y ese dibujo hubo que descartarlo por eso.
 
-## 3 · `rana.png`
+## 3 · `rana.png` · entró el 5 nov.
+
+> Entró la segunda de Genspark, **de perfil** y no de frente como decidió s175, con la flecha hacia atrás; Ez la aprobó mirándola.
+> Lo que sigue es la ficha tal como se pidió.
 
 *En pantalla dice: «Rodillas anchas, empuja cadera atrás. Mece suave.»*
 

@@ -6,7 +6,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, CLAVE_ESTADO, RUTA_ARTEFACTO } = require('./helpers');
+const { sembrar, irAlArtefacto, CLAVE_ESTADO, RUTA_ARTEFACTO, ponerHora } = require('./helpers');
 
 const leerEstado = (page) => page.evaluate((clave) => JSON.parse(localStorage.getItem(clave) || '{}'), CLAVE_ESTADO);
 
@@ -33,14 +33,14 @@ test('A3 · volver atrás desde «¿Cómo es tu semana?» no borra lo que ya se 
   await page.locator(EDITOR).waitFor({ state: 'visible' });
 
   await dia(3).click();                 // miércoles: jornada → media
-  await page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]').selectOption('480');
+  await ponerHora(page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]'), 480);
   await expect(dia(3)).toHaveAttribute('aria-label', 'miércoles, Media');
 
   await page.getByRole('button', { name: /Atrás/ }).click();
   await page.getByRole('button', { name: 'Comenzar' }).click();
   await page.locator(EDITOR).waitFor({ state: 'visible' });
   await expect(dia(3), 'volver atrás borró el día tocado').toHaveAttribute('aria-label', 'miércoles, Media');
-  await expect(page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]'), 'volver atrás borró la hora').toHaveValue('480');
+  await expect(page.locator(EDITOR + ' [data-pace-ritmo-horario="inicio"]'), 'volver atrás borró la hora').toHaveText('8:00');
 
   /* Sigue sin escribir nada hasta guardar, y lo que guarda es el borrador entero. */
   expect(await leerEstado(page)).toEqual({});

@@ -1,0 +1,272 @@
+<title>Lo que pasa sin querer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una hoja de decisión de PACE, con la paleta y la letra de la app (DESIGN_SYSTEM.md): arriba la
+   pregunta, con las dos opciones una al lado de la otra; debajo, lo montado y cómo va. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+  --line: #C9C0A8;
+  --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --velo: rgba(20, 18, 14, 0.82);
+  --sombra: 0 1px 2px rgba(31, 28, 23, 0.06), 0 6px 20px rgba(31, 28, 23, 0.06);
+  --display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --ui: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f291f;
+    --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536;
+    --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16);
+    --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f291f;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536;
+  --focus: #8FAE80; --focus-soft: rgba(122, 154, 109, 0.16);
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--ui); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.hoja { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; color: var(--ink); }
+h1 { font-size: clamp(32px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(26px, 3.6vw, 34px); line-height: 1.1; }
+h3 { font-size: 21px; line-height: 1.2; }
+p { margin: 0; max-width: 68ch; }
+ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 68ch; }
+.meta { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.cab, .bloque { display: flex; flex-direction: column; gap: 14px; }
+.cab p, .bloque > p { color: var(--ink-2); }
+.seccion { display: flex; flex-direction: column; gap: 24px; border-top: 1px solid var(--line); padding-top: 28px; }
+
+.tema { display: inline-flex; align-self: flex-start; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; background: var(--paper-2); }
+.tema button { font: 500 11px/1 var(--ui); letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.tema button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* Las dos opciones siempre en dos columnas, también en el móvil: se comparan mirando de un lado a otro. */
+.par { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.par.movil { max-width: 560px; }
+.opcion { display: flex; flex-direction: column; gap: 6px; min-width: 0; border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--paper-2); }
+.opcion .arriba { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.letra { font-family: var(--display); font-size: 28px; font-style: italic; color: var(--focus); line-height: 1; }
+.rec { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--focus); border: 1px solid var(--focus); border-radius: 999px; padding: 3px 8px; }
+.opcion h3 { font-size: 19px; }
+.opcion p { color: var(--ink-2); font-size: 14px; }
+.opcion.recomendada { box-shadow: var(--sombra); }
+
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure button { padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2); cursor: zoom-in; display: block; width: 100%; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 12px; color: var(--ink-3); }
+.fotos { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.fotos .m { width: min(100%, 220px); }
+.fotos .e { width: min(100%, 460px); }
+.fotos .a { width: 100%; }
+.tamano { font-size: 12.5px; color: var(--ink-3); font-weight: 500; margin-bottom: -14px; }
+
+.tabla { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; min-width: 440px; }
+th, td { text-align: left; padding: 7px 14px 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 500; color: var(--ink-3); font-size: 12px; }
+
+.respuesta { border: 1px solid var(--focus); border-radius: 14px; padding: 16px 18px; background: var(--focus-soft); }
+.respuesta p { color: var(--ink); }
+
+.boton { font: 500 14px/1 var(--ui); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper-2); color: var(--ink); cursor: pointer; }
+.boton:focus-visible, .tema button:focus-visible, figure button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.lupa { position: fixed; inset: 0; z-index: 50; background: var(--velo); overflow: auto; display: grid; place-items: start center;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; }
+.lupa[hidden] { display: none; }
+.lupa img { max-width: 100%; height: auto; border-radius: 10px; }
+.lupa .cerrar { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+</style>
+
+<div class="hoja">
+  <header class="cab">
+    <span class="meta">PACE · 5 nov. 2026</span>
+    <h1>Lo que pasa sin querer</h1>
+    <p>Tus letras ya están montadas: 1A, 2A de una semana y 3A. Queda una sola pregunta, dónde va «Ahora no». Todas las
+      fotos son la app de verdad, con la 0.189.1 ya dentro. Toca una foto para verla grande.</p>
+    <div class="tema" role="group" aria-label="Fotos en claro u oscuro">
+      <button type="button" data-tema="claro" aria-pressed="true">Claro</button>
+      <button type="button" data-tema="oscuro" aria-pressed="false">Oscuro</button>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="bloque">
+      <span class="meta">La pregunta</span>
+      <h2>¿Dónde va «Ahora no»?</h2>
+      <p>Escribiste: «el ahora no debería estar en la linea de abajo de si/un poco/no». Se puede leer de dos formas, así que
+        aquí están las dos, una al lado de la otra.</p>
+    </div>
+
+    <div class="par">
+      <div class="opcion recomendada">
+        <div class="arriba"><span class="letra">A</span><span class="rec">Recomendada</span></div>
+        <h3>En su línea, debajo</h3>
+        <p>«Que baje a la línea de abajo». Es lo que está montado.</p>
+      </div>
+      <div class="opcion">
+        <div class="arriba"><span class="letra">B</span></div>
+        <h3>En la misma fila, al final</h3>
+        <p>«Que no baje». Es como está hoy en la app publicada.</p>
+      </div>
+    </div>
+
+    <span class="tamano">En el móvil (360 px)</span>
+    <div class="par movil">
+      <figure><button type="button"><img data-f="abajo-m" alt="Opción A en el móvil: Ahora no, centrado debajo de Sí, Un poco y No"></button><figcaption>A · móvil</figcaption></figure>
+      <figure><button type="button"><img data-f="fila-m" alt="Opción B en el móvil: Ahora no, a la derecha de No, en la misma fila"></button><figcaption>B · móvil</figcaption></figure>
+    </div>
+
+    <span class="tamano">En el escritorio (1280 px)</span>
+    <div class="par">
+      <figure><button type="button"><img data-f="abajo-e" alt="Opción A en el escritorio"></button><figcaption>A · escritorio</figcaption></figure>
+      <figure><button type="button"><img data-f="fila-e" alt="Opción B en el escritorio"></button><figcaption>B · escritorio</figcaption></figure>
+    </div>
+
+    <span class="tamano">En tu ventana (1536 × 708), al acabar Estira, que es el cierre con menos sitio</span>
+    <div class="par">
+      <figure><button type="button"><img data-s="abajo-ez-estira" alt="Opción A en la ventana de Ez al acabar Escritorio express"></button><figcaption>A · Escritorio express</figcaption></figure>
+      <figure><button type="button"><img data-s="fila-ez-estira" alt="Opción B en la ventana de Ez al acabar Escritorio express"></button><figcaption>B · Escritorio express</figcaption></figure>
+    </div>
+
+    <div class="bloque">
+      <h3>Por qué recomiendo la A</h3>
+      <ul>
+        <li>En todas las fotos que viste, «Ahora no» ya iba en la misma fila. Si hubieras querido que no bajara, no habría nada
+          que cambiar, así que leo que pedías bajarlo.</li>
+        <li>Separa dos botones que ahora hacen cosas muy distintas. «No» aparta la rutina una semana y «Ahora no» no aparta
+          nada. En la fila quedan a un dedo de distancia.</li>
+      </ul>
+      <h3>Lo que hay que saber antes de elegir</h3>
+      <ul>
+        <li>El 16 de octubre elegiste la fila porque «Volver al inicio» tapaba este enlace. La B sigue dejando más aire.</li>
+        <li>Con la A, en tu ventana y al acabar Estira, «Ahora no» queda pegado a «Volver al inicio». Se ve en la foto de arriba y hay que arreglarlo: si eliges la A, le doy unos 14 px de aire y encoge un poco el dibujo. El arreglo aún no está montado.</li>
+      </ul>
+    </div>
+
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Medido en la app</th><th>A · debajo</th><th>B · en la fila</th></tr></thead>
+        <tbody>
+          <tr><td>Alto del bloque de la pregunta</td><td>134 px</td><td>100 px</td></tr>
+          <tr><td>Aire hasta «Volver al inicio», en tu ventana, con Respira</td><td>20 px</td><td>45 px</td></tr>
+          <tr><td>Aire hasta «Volver al inicio», en tu ventana, con Estira</td><td>0 px, pendiente de arreglar</td><td>21 px</td></tr>
+          <tr><td>Aire en un portátil bajo (1280 × 600), con Respira</td><td>13 px</td><td>38 px</td></tr>
+          <tr><td>Se ve entero en todos los tamaños probados</td><td>Sí, en la suite de hoy</td><td>Sí, en las 8 ventanas de las fotos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="respuesta"><p>Contéstame <strong>A</strong> o <strong>B</strong>. Con eso se cierra lo que falta para juntarlo.</p></div>
+  </section>
+
+  <section class="seccion">
+    <div class="bloque">
+      <span class="meta">Ya montado, nada que elegir</span>
+      <h2>Lo que eligieron tus letras</h2>
+    </div>
+
+    <div class="bloque">
+      <h3>1A · Tocar una pausa de más tarde ya no la cambia</h3>
+      <p>En el escritorio, tocarla abre su ficha con «Otra» y «Cerrar». Si «Otra» mueve otra pausa del día, la ficha lo dice. El
+        móvil no cambia y la home sigue sin scroll.</p>
+      <div class="fotos">
+        <figure class="e"><button type="button"><img data-f="ficha-e" alt="La ficha de una pausa futura sobre la línea del día"></button><figcaption>Al tocar una pausa</figcaption></figure>
+        <figure class="e"><button type="button"><img data-f="ficha-otra-e" alt="La ficha tras pulsar Otra, avisando de que cambia otra pausa"></button><figcaption>Tras «Otra», si mueve otra</figcaption></figure>
+        <figure class="m"><button type="button"><img data-f="home-m" alt="La home del móvil con el día servido"></button><figcaption>El móvil, igual</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="bloque">
+      <h3>2A · El «No» aparta una semana, y lo dice</h3>
+      <p>Solo cuando la rutina se propone de verdad y nunca dijiste «Sí» ni «Un poco». «Deshacer» devuelve la pregunta, y un «No»
+        deshecho no queda guardado.</p>
+      <div class="fotos">
+        <figure class="m"><button type="button"><img data-f="no-m" alt="Tras No: Durante una semana no te la propondré en las pausas, con Deshacer"></button><figcaption>Móvil</figcaption></figure>
+        <figure class="e"><button type="button"><img data-f="no-e" alt="Tras No en el escritorio"></button><figcaption>Escritorio</figcaption></figure>
+        <figure class="m"><button type="button"><img data-s="no-m-en" alt="Tras No, en inglés"></button><figcaption>En inglés</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="bloque">
+      <h3>3A · Respira, la primera vez</h3>
+      <p>«¿Es tu primera vez? Empieza aquí», con Coherente 5·5, hasta tu primera respiración. Cada tarjeta dice si se aguanta el
+        aire, Energía va al final y «Balance» se lee «Coherencia». Las respiraciones con el aire aguantado siguen pidiendo su
+        aviso de seguridad antes de empezar.</p>
+      <div class="fotos">
+        <figure class="m"><button type="button"><img data-f="primera-m" alt="Respira la primera vez en el móvil"></button><figcaption>La primera vez</figcaption></figure>
+        <figure class="m"><button type="button"><img data-s="abajo-primera-m" alt="Más abajo en Respira: las tarjetas y Energía al final"></button><figcaption>Más abajo</figcaption></figure>
+        <figure class="m"><button type="button"><img data-s="despues-m" alt="Respira después de la primera respiración"></button><figcaption>Después de la primera</figcaption></figure>
+        <figure class="e"><button type="button"><img data-f="primera-e" alt="Respira la primera vez en el escritorio"></button><figcaption>Escritorio</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="bloque">
+      <span class="meta">Cómo va</span>
+      <h2>Lo comprobado</h2>
+      <ul>
+        <li>La prueba entera de la app está en marcha sobre lo montado y aún no ha acabado. Quedan por repetir con calma tres pruebas que se pasaron de tiempo con el PC cargado. Hasta entonces esto no está dado por bueno.</li>
+        <li>Nada de esto está en la app publicada todavía. Va en su rama hasta que digas «júntalo».</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="lupa" id="lupa" hidden>
+  <img id="lupa-img" alt="">
+  <button type="button" class="boton cerrar" id="lupa-cerrar">Cerrar</button>
+</div>
+
+<script>
+(function () {
+  /* Las fotos en claro u oscuro: por defecto, las del tema que ves. Las de `data-s` solo existen en claro. */
+  var oscuro = document.documentElement.getAttribute('data-theme') === 'dark'
+    || (!document.documentElement.getAttribute('data-theme') && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  try { var t = localStorage.getItem('pace-montado-tema'); if (t) oscuro = t === 'oscuro'; } catch (e) {}
+  function fotos() {
+    document.querySelectorAll('img[data-f]').forEach(function (img) { img.src = 'fotos/' + img.getAttribute('data-f') + (oscuro ? '-osc' : '') + '.jpg'; });
+    document.querySelectorAll('img[data-s]').forEach(function (img) { img.src = 'fotos/' + img.getAttribute('data-s') + '.jpg'; });
+    document.querySelectorAll('.tema button').forEach(function (b) { b.setAttribute('aria-pressed', String((b.getAttribute('data-tema') === 'oscuro') === oscuro)); });
+  }
+  document.querySelectorAll('.tema button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      oscuro = b.getAttribute('data-tema') === 'oscuro';
+      try { localStorage.setItem('pace-montado-tema', oscuro ? 'oscuro' : 'claro'); } catch (e) {}
+      fotos();
+    });
+  });
+  fotos();
+
+  var lupa = document.getElementById('lupa'), lupaImg = document.getElementById('lupa-img');
+  document.querySelectorAll('figure button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var img = b.querySelector('img');
+      lupaImg.src = img.src; lupaImg.alt = img.alt; lupa.hidden = false;
+      document.getElementById('lupa-cerrar').focus();
+    });
+  });
+  function cerrar() { lupa.hidden = true; }
+  lupa.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+})();
+</script>

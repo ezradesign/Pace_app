@@ -175,6 +175,22 @@ async function pulsarComienza(page) {
   await page.locator('[data-pace-ritmo-comienza], [data-pace-ritmo-ajustar]').filter({ visible: true }).first().click();
 }
 
+/* LAS HORAS DE «A TU RITMO» SE ELIGEN CON EL PASO A PASO (RitmoHoraPaso, Ez, 5 nov. 2026), no
+   con un `select`: esto abre la hora con `boton` y hace lo que haría alguien con el teclado,
+   flechas hasta `minutos` e Intro. Lo demás del diálogo vive en ritmo-horas.spec.js. */
+async function ponerHora(boton, minutos) {
+  await boton.click();
+  const numero = boton.page().locator('[data-pace-ritmo-paso]');
+  await numero.waitFor({ state: 'visible' });
+  for (let v = Number(await numero.getAttribute('aria-valuenow')), n = 0; v !== minutos; n++) {
+    if (n > 40) throw new Error('ponerHora: ' + minutos + ' no es un paso de esta hora');
+    await numero.press(v < minutos ? 'ArrowUp' : 'ArrowDown');
+    v = Number(await numero.getAttribute('aria-valuenow'));
+  }
+  await numero.press('Enter');
+  await numero.waitFor({ state: 'detached' });
+}
+
 /* BORRAR E IMPORTAR PREGUNTAN CON UN AVISO DE PACE (Ez, 3A del 27 oct. 2026), no con el
    `confirm()` del navegador: `AjustesAviso` (TweaksPanel.parts.jsx). Esto los acepta solos,
    como antes `page.on('dialog', d => d.accept())`, también tras recargar, y apunta el texto de
@@ -286,6 +302,7 @@ module.exports = {
   acabarBienvenida,
   aceptarAvisosPace,
   pulsarComienza,
+  ponerHora,
   esperarModalAsentado,
   CLAVE_ESTADO,
   RUTA_ARTEFACTO,

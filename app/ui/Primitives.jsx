@@ -29,7 +29,7 @@ const displayItalic = {
   fontStyle: 'italic',
 };
 
-function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno }) {
+function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno, capa = 100 }) {
   const { t } = useT();
   /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
      titulo para el lector de pantalla, el foco DENTRO al abrir, Tab que da la
@@ -64,7 +64,8 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
         position: 'fixed', inset: 0,
         background: 'rgba(31, 28, 23, 0.28)',
         backdropFilter: 'blur(3px)',
-        zIndex: 100,
+        /* `capa`: la hora de «A tu ritmo» se abre también sobre la bienvenida (120). */
+        zIndex: capa,
         display: 'grid',
         placeItems: 'center',
         padding: 24,
