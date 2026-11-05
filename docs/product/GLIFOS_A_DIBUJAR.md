@@ -19,12 +19,12 @@
 
 ## La cuenta de todo lo que falta por dibujar (la única)
 
-A 5 nov. 2026, v0.189.1 y los dos dibujos que entraron ese día (Rana y Palmas en la mesa). **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
+A 5 nov. 2026, v0.190.0 y los dibujos que entraron ese día: Rana y Palmas en la mesa, y 20 de los 22 de logros. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
 repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
 
 **Los 22 de logros, con lo que premia cada uno, su prompt corto para el chat de Genspark de los logros y su nombre de archivo**,
-en otra página para Ez (5 nov. 2026): https://claude.ai/artifact/8w1pvFu1EZHKZxsBeV48Tf (`docs/traspaso/dibujos-logros.html`). Van en
-el orden en que se notan: primero lo que todo el mundo ve, luego los secretos y al final Verano y La rueda del año.
+en otra página para Ez (5 nov. 2026): https://claude.ai/artifact/8w1pvFu1EZHKZxsBeV48Tf (`docs/traspaso/dibujos-logros.html`). De esos 22,
+Ez generó 21 el mismo 5 nov. y entraron 20: solo quedan Vaca feliz (sin generar) y Año nuevo (el dibujo no se lee a 56 px; su prompt corregido, abajo).
 
 **Los de ejercicios, con su prompt entero y su nombre de archivo para copiar, en una página para Ez**:
 https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT en la cuenta de 5iWBf… y
@@ -36,9 +36,9 @@ https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT en la de EcLj6… (`docs/trasp
 |---|---|---|
 | Ejercicios sin dibujo | **0** | Rana entró el 5 nov. Los 6 nuevos de Mueve y Estira (3A) entraron el 29 oct. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
 | Ejercicios con el dibujo equivocado | **0** | Palmas en la mesa entró el 5 nov. con los dedos hacia delante (Genspark no consigue la mano al revés), y Ez cambió el texto al dibujo. Los 7 que marcó Ez el 23 oct. y Apretar glúteos entraron el 29 oct. («La tanda de Mueve y Estira», abajo), menos Sentadilla de cuádriceps y Puente torácico, que no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
-| Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3; los cortos para Genspark, en la página de logros de arriba. Verano va al final: no tiene detector y desde el 5 nov. no sale en Logros |
-| Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3). La rueda del año, al final, como Verano |
-| **Total** | **22** | |
+| Logros sin dibujo propio | **2** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 94 con dibujo. **Vaca feliz** (`secret.cow.click`), que Ez aún no ha generado, y **Año nuevo** (`secret.new.year`), cuyo dibujo del 5 nov. a 56 px se lee como un palo: el brote con hojas, que es lo único que dice «año nuevo», desaparece. Prompt corregido de Año nuevo: *A short, stout pruned tree branch standing upright, with a clean diagonal cut across its top. Just below the cut, one fresh green shoot grows out to the side: a curved stem with two broad open leaves, together as tall as a third of the whole branch, so the shoot is the first thing you notice. One single object, centred, with a generous margin.* El de Vaca feliz, en la página de logros de arriba |
+| Logros con el dibujo equivocado o repetido | **0** | Primer ritual (flor de cuatro pétalos), La rueda del año (rueda de carro), Búho (búho) y Larga sesión (vela) cambiaron de dibujo el 5 nov.; los cuatro viejos se quedan en la carpeta de originales, sin logro |
+| **Total** | **2** | |
 
 Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
 invierno y Cuarto creciente (v0.165.0) y Barbilla atrás (v0.170.1). Del encargo del 23 oct., el 29 oct.:
@@ -50,6 +50,9 @@ Los catorce, con el rojo blanqueado como el resto del set (Ez lo eligió el 29 o
 conservada «de más»). Esa tanda dejó fuera, por repetir, el primer Remo con banda (la banda parece un palo
 que acaba en el talón) y Rana (rodillas más abiertas de lo que pide el paso, y sin flecha). El 5 nov. entraron Rana (la segunda de
 Genspark, de perfil y con la flecha hacia atrás) y Palmas en la mesa (dedos hacia delante, con el texto cambiado al dibujo: «Sí, cambia el texto»).
+El 5 nov. entraron 20 de los 22 dibujos de logros (Flor, Equinoccio otoño, Vela, Luna casi llena, Fuelle, Plomada, las dos baldosas, los dos
+troncos, la llama, los dos yugos, el reloj de sol, el búho, la nube, el calendario, el ensō, la espiga y la rueda de carro), ingeridos con el
+nombre del archivo igual al id del logro; Ez los generó en Genspark a 1024 px, sin texto ni números dentro.
 Los días diseñados, cuando lleguen, pueden pedir más: se suman aquí.
 
 ---
