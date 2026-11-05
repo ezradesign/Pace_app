@@ -24470,13 +24470,22 @@ function paceFocoPausaPendiente(id) {
 }
 
 
+
+
+
+
+const PAUSA_REINTENTO_MS = 500;
+
 function usePausaALaVista(pendiente, abrir) {
   const abrirRef = useRefFTP(abrir);
   abrirRef.current = abrir;
   useEffectFTP(() => {
+    let reintento = null;
     const intentar = () => {
+      if (reintento) {clearTimeout(reintento);reintento = null;}
       const p = getState().focoPausa;
       if (!p || !p.id || p.dia !== new Date().toDateString() || document.visibilityState !== 'visible') return;
+      if (document.querySelector('[data-pace-session-root]')) {reintento = setTimeout(intentar, PAUSA_REINTENTO_MS);return;}
       const coger = () => {
         const s = getState();
         if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
@@ -24493,7 +24502,7 @@ function usePausaALaVista(pendiente, abrir) {
     };
     intentar();
     document.addEventListener('visibilitychange', intentar);
-    return () => document.removeEventListener('visibilitychange', intentar);
+    return () => {document.removeEventListener('visibilitychange', intentar);if (reintento) clearTimeout(reintento);};
   }, [pendiente]);
 }
 
