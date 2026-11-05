@@ -17,7 +17,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, pulsarComienza } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, pulsarComienza, ponerHora } = require('./helpers');
 const { asentarGeometria } = require('./home.helpers');
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
@@ -50,13 +50,13 @@ for (const vp of [{ w: 375, h: 667 }, { w: 360, h: 640 }]) {
       const dia = pregunta.locator('[data-pace-ritmo-dia]');
       await expect(dia).toBeVisible();
       for (const campo of ['inicio', 'comida', 'comidaDur', 'salida']) {
-        await expect(dia.locator('select[data-pace-ritmo-horario="' + campo + '"]')).toHaveCount(1);
+        await expect(dia.locator('[data-pace-ritmo-horario="' + campo + '"]')).toHaveCount(1);
       }
       await expect(dia).toContainText('Empiezas');
       await expect(dia).toContainText('Terminas');
       /* Un solo horario: ni la frase ni las horas de la media jornada. */
       await expect(pregunta.locator('.pace-rt-frase')).toHaveCount(0);
-      await expect(pregunta.locator('select[data-pace-ritmo-horario^="media."]')).toHaveCount(0);
+      await expect(pregunta.locator('[data-pace-ritmo-horario^="media."]')).toHaveCount(0);
       /* «Hoy voy por libre» en la fila del título, a su derecha. */
       const g = await page.evaluate(() => {
         const p = Array.from(document.querySelectorAll('[data-pace-ritmo-estado="pregunta"]')).find((e) => e.getBoundingClientRect().width > 0);
@@ -105,11 +105,11 @@ test.describe('360×718, el móvil de Ez', () => {
     await expect(sw).toHaveAttribute('aria-checked', 'false');
     await expect(sw).toContainText('no comes');
     await expect(sw).toHaveAccessibleName('no comes');
-    await expect(pregunta.locator('select[data-pace-ritmo-horario="comida"]')).toHaveCount(0);
+    await expect(pregunta.locator('[data-pace-ritmo-horario="comida"]')).toHaveCount(0);
     await expect(pregunta.locator('.pace-rt-dia-comida')).toHaveCount(0);
     expect(await page.evaluate(() => getState().ritmo.horario.sinComida)).toBe(true);
     await sw.click();
-    await expect(pregunta.locator('select[data-pace-ritmo-horario="comida"]')).toHaveCount(1);
+    await expect(pregunta.locator('[data-pace-ritmo-horario="comida"]')).toHaveCount(1);
   });
 
   test('en inglés nada se sale del panel', async ({ page, context }) => {
@@ -139,11 +139,11 @@ test.describe('por la tarde, a 360×718', () => {
     const pregunta = vis(page, '[data-pace-ritmo-estado="pregunta"]');
     const horas = pregunta.locator('[data-pace-ritmo-media-horas]');
     await expect(horas).toContainText('Media jornada');
-    await expect(horas.locator('select')).toHaveCount(2);
+    await expect(horas.locator('[data-pace-ritmo-horario]')).toHaveCount(2);
     await asentarGeometria(page);
     expect(await scrollDeLaHome(page), 'enseñar las horas no estira el chip').toBeLessThanOrEqual(1);
     /* Basta con mover el inicio: el fin va detrás con sus cuatro horas (ritmoTramoCon). */
-    await horas.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
+    await ponerHora(horas.locator('[data-pace-ritmo-horario="media.inicio"]'), 900);
     const chip = pregunta.locator('button[data-pace-ritmo-opcion="media"]');
     await expect(chip, 'con el tramo en la tarde vuelve a ser un chip').toBeEnabled();
     await expect(chip, 'que empieza ahora y acaba a su hora').toContainText('De 15:30 a 19:00');
@@ -171,7 +171,8 @@ test.describe('por la tarde, a 360×718', () => {
     await expect(dialogo.locator('[data-pace-modal-title]')).toHaveText('Hora de inicio');
     await expect(dialogo).toContainText('Media jornada');
     await expect(dialogo).toContainText('Ahora va de 9:00 a 13:00.');
-    await expect(dialogo.locator('[data-pace-ritmo-hora="540"]'), 'la hora de ahora, marcada').toHaveAttribute('aria-checked', 'true');
+    await expect(dialogo.getByRole('spinbutton'), 'la hora de ahora').toHaveAttribute('aria-valuetext', '9:00');
+    await expect(dialogo.locator('[data-pace-ritmo-nota]'), 'dicha como la que tienes').toContainText('La que tienes');
     const fondo = await dialogo.evaluate((card) => {
       const muestra = document.createElement('i');
       muestra.style.background = 'var(--paper)';
@@ -191,8 +192,7 @@ test.describe('por la tarde, a 360×718', () => {
       expect(await page.evaluate(([px, py]) => !!document.elementFromPoint(px, py).closest('[data-pace-ritmo-media-abrir]'),
         [nombre.x + nombre.width * x, nombre.y + nombre.height - 2]), 'la palabra abre la hora de inicio').toBe(true);
     }
-    await horas.locator('[data-pace-ritmo-media-abrir]').click();
-    await dialogo.locator('[data-pace-ritmo-hora="900"]').click();
+    await ponerHora(horas.locator('[data-pace-ritmo-media-abrir]'), 900);
     await expect(dialogo).toHaveCount(0);
     const chip = pregunta.locator('button[data-pace-ritmo-opcion="media"]');
     await expect(chip, 'el fin va detrás y el chip vuelve a pulsarse').toBeEnabled();
@@ -217,8 +217,8 @@ test.describe('por la tarde, a 360×718', () => {
     await irAlArtefacto(page);
     await pulsarComienza(page);
     const horas = vis(page, '[data-pace-ritmo-estado="pregunta"]').locator('[data-pace-ritmo-media-horas]');
-    await expect(horas.locator('select')).toHaveCount(2);
-    await horas.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
+    await expect(horas.locator('[data-pace-ritmo-horario]')).toHaveCount(2);
+    await ponerHora(horas.locator('[data-pace-ritmo-horario="media.inicio"]'), 900);
     const habitual = vis(page, '[data-pace-ritmo-habitual="media"]');
     await expect(habitual, 'la media cabe en la tarde y el sábado llega contestado').toContainText('como cada sábado');
     expect(await page.evaluate(() => getState().ritmo.horario.media), 'el fin conserva sus cuatro horas').toEqual({ inicio: 900, salida: 1140 });

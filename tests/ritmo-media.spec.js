@@ -22,7 +22,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, pulsarComienza } = require('./helpers');
+const { sembrar, irAlArtefacto, pulsarComienza, ponerHora } = require('./helpers');
 
 const HOY = '2026-09-22';
 const H = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
@@ -61,13 +61,13 @@ test('sus horas son suyas, se recuerdan y se editan en su cabecera', async ({ pa
     HOY + 'T15:05:00+02:00');
   const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
   await expect(panel.locator('.pace-rt-titulo')).toContainText('Media jornada');
-  const sels = panel.locator('select[data-pace-ritmo-horario^="media."]');
+  const sels = panel.locator('[data-pace-ritmo-horario^="media."]');
   await expect(sels, 'dos selectores, los suyos, y ninguno de comida').toHaveCount(2);
-  await expect(panel.locator('select[data-pace-ritmo-horario="comida"]')).toHaveCount(0);
+  await expect(panel.locator('[data-pace-ritmo-horario="comida"]')).toHaveCount(0);
   const antes = await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.desde, m.hasta]; });
   expect(antes).toEqual([900, 1140]);
   /* cambiar su fin recompone el día y se guarda como preferencia */
-  await sels.nth(1).selectOption('1200');
+  await ponerHora(sels.nth(1), 1200);
   await page.waitForTimeout(400);
   const despues = await page.evaluate(() => { const s = getState(); const m = ritmoPlan(s).m; return { tramo: [m.desde, m.hasta], guardado: s.ritmo.horario.media, entera: [s.ritmo.horario.inicio, s.ritmo.horario.salida] }; });
   expect(despues.tramo, 'el día llega hasta la hora nueva').toEqual([900, 1200]);
@@ -131,10 +131,10 @@ test('en «Tu semana» el borrador también lleva el fin detrás, y se guarda as
   await abrir(page, context, { horario: H });
   await page.evaluate(() => ritmoSemanaAbrir());
   const hoja = vis(page, '[data-pace-semana-hoja]');
-  await hoja.locator('select[data-pace-ritmo-horario="media.inicio"]').selectOption('900');
-  await expect(hoja.locator('select[data-pace-ritmo-horario="media.salida"]')).toHaveValue('1140');
-  await hoja.locator('select[data-pace-ritmo-horario="inicio"]').selectOption('1080');
-  await expect(hoja.locator('select[data-pace-ritmo-horario="salida"]')).toHaveValue('1410');
+  await ponerHora(hoja.locator('[data-pace-ritmo-horario="media.inicio"]'), 900);
+  await expect(hoja.locator('[data-pace-ritmo-horario="media.salida"]')).toHaveText('19:00');
+  await ponerHora(hoja.locator('[data-pace-ritmo-horario="inicio"]'), 1080);
+  await expect(hoja.locator('[data-pace-ritmo-horario="salida"]')).toHaveText('23:30');
   await hoja.locator('[data-pace-semana-guardar]').click();
   const h = await page.evaluate(() => getState().ritmo.horario);
   expect([h.inicio, h.salida, h.media]).toEqual([1080, 1410, { inicio: 900, salida: 1140 }]);
@@ -187,14 +187,14 @@ test('«Ajustar el horario» lleva una segunda frase con las horas de la media j
   const media = pregunta.locator('[data-pace-ritmo-frase-media]');
   await expect(media).toHaveCount(1);
   await expect(media).toContainText('Media jornada');
-  await expect(media.locator('select[data-pace-ritmo-horario^="media."]'), 'con sus dos horas editables aquí').toHaveCount(2);
+  await expect(media.locator('[data-pace-ritmo-horario^="media."]'), 'con sus dos horas editables aquí').toHaveCount(2);
   /* la primera frase sigue siendo la de la jornada entera, con su interruptor de comida */
   const primera = pregunta.locator('.pace-rt-frase').first();
   await expect(primera.locator('[data-pace-ritmo-comes]')).toHaveCount(1);
   await expect(primera, 'y la comida no se cuela en la de la media jornada').toContainText('comes');
   await expect(media).not.toContainText('comes');
   /* cambiarla aquí la guarda y el chip lo dice */
-  await media.locator('select').nth(1).selectOption('720');
+  await ponerHora(media.locator('[data-pace-ritmo-horario]').nth(1), 720);
   await page.waitForTimeout(400);
   await expect(vis(page, '[data-pace-ritmo-opcion="media"]')).toContainText('De 9:00 a 12:00');
 });

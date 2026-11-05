@@ -1,11 +1,12 @@
 /* PACE · E2E · LO QUE PINTA EL NAVEGADOR SE LEE EN LAS DOS PALETAS (oscuro-1 y oscuro-4)
  * ======================================================================================
- * La lista de horas de «A tu ritmo» salía blanca con las horas en crema en oscuro
- * (1,25:1, solo se leía la elegida). Ez eligió que la dibuje PACE (opción C) en las dos
- * paletas: `appearance: base-select` en `.pace-rt-sel`, con papel, línea y la serif.
- * Aquí se abre de verdad en la pregunta y en el día servido, en móvil y escritorio, y
- * se pide que la lista salga dentro de la página y que sus horas, la elegida también,
- * se lean sobre el papel de la lista (4,5:1).
+ * La lista del selector salía blanca con el texto en crema en oscuro (1,25:1, solo se
+ * leía lo elegido). Ez eligió que la dibuje PACE (opción C) en las dos paletas:
+ * `appearance: base-select` en `.pace-rt-sel`, con papel, línea y la serif. Las horas de
+ * «A tu ritmo» ya no son un selector (ritmo-horas.spec.js), y la clase sigue en el de los
+ * bloques del aro. Aquí se abre de verdad, en móvil y escritorio, y se pide que la lista
+ * salga dentro de la página y que sus opciones, la elegida también, se lean sobre el papel
+ * de la lista (4,5:1). Y lo que se lee del paso a paso de las horas, en las dos paletas.
  *
  * La casilla «Lo he leído» del aviso de apnea era un cuadrado blanco en oscuro y azul
  * de Chrome al marcarla: ahora va en oscuro y con el verde de la casa.
@@ -15,10 +16,9 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, overlaySuperior, pulsarComienza } = require('./helpers');
 
 const FECHA = '2026-10-08';
-const DIA = { dia: { fecha: FECHA, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } };
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 
@@ -38,45 +38,60 @@ const PANTALLAS = [
   { nombre: 'móvil', viewport: { width: 360, height: 718 }, isMobile: true, hasTouch: true },
 ];
 
+async function abrirPantalla(browser, palette, pantalla, extra) {
+  const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: pantalla.viewport,
+    isMobile: !!pantalla.isMobile, hasTouch: !!pantalla.hasTouch, locale: 'es-ES', timezoneId: 'Europe/Madrid' });
+  await sembrar(context, Object.assign({ palette, sidebarCollapsed: !!pantalla.isMobile }, extra || {}));
+  const page = await context.newPage();
+  await page.clock.install({ time: new Date(FECHA + 'T10:00:00+02:00') });
+  await irAlArtefacto(page);
+  return { context, page };
+}
+
 for (const palette of ['oscuro', 'crema']) {
   for (const pantalla of PANTALLAS) {
-    for (const sitio of ['la pregunta', 'el día servido']) {
-      test(palette + ' · ' + pantalla.nombre + ' · ' + sitio + ': la lista de horas abierta se lee', async ({ browser }) => {
-        const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: pantalla.viewport,
-          isMobile: !!pantalla.isMobile, hasTouch: !!pantalla.hasTouch, locale: 'es-ES', timezoneId: 'Europe/Madrid' });
-        await sembrar(context, Object.assign({ palette, sidebarCollapsed: !!pantalla.isMobile }, sitio === 'el día servido' ? { ritmo: DIA } : {}));
-        const page = await context.newPage();
-        await page.clock.install({ time: new Date(FECHA + 'T10:00:00+02:00') });
-        await irAlArtefacto(page);
-        if (sitio === 'la pregunta') {
-          if (pantalla.isMobile) await vis(page, '[data-pace-ritmo-comienza]').first().click();
-          else await vis(page, 'button').filter({ hasText: 'Ajustar el horario' }).first().click();
-        }
-        const sel = vis(page, 'select.pace-rt-sel[data-pace-ritmo-horario="inicio"]').first();
-        await sel.click();
-        const m = await sel.evaluate((e) => {
-          const fondo = getComputedStyle(e, '::picker(select)').backgroundColor;
-          const elegida = e.selectedOptions[0];
-          const otra = Array.from(e.options).find((o) => o !== elegida);
-          const caja = elegida.getBoundingClientRect();
-          return { abierta: e.matches(':open'), fondo, caja: { w: caja.width, h: caja.height, top: caja.top, bottom: caja.bottom },
-            alto: innerHeight, elegida: [getComputedStyle(elegida).color, getComputedStyle(elegida).backgroundColor],
-            otra: [getComputedStyle(otra).color, getComputedStyle(otra).backgroundColor] };
-        });
-        expect(m.abierta).toBe(true);
-        /* La lista va dentro de la página: la hora elegida tiene caja y se ve entera. */
-        expect(m.caja.h).toBeGreaterThan(20);
-        expect(m.caja.top).toBeGreaterThanOrEqual(0);
-        expect(m.caja.bottom).toBeLessThanOrEqual(m.alto);
-        /* Una hora cualquiera y la elegida (con su lavado encima del papel de la lista). */
-        expect(contraste(m.otra[0], m.fondo)).toBeGreaterThanOrEqual(4.5);
-        const papelElegida = m.elegida[1];
-        const sobre = (fr, bk) => { const a = fr.match(/[\d.]+/g).map(Number), b = bk.match(/[\d.]+/g).map(Number), al = a.length > 3 ? a[3] : 1;
-          return 'rgb(' + [0, 1, 2].map((i) => a[i] * al + b[i] * (1 - al)).join(',') + ')'; };
-        expect(contraste(m.elegida[0], sobre(papelElegida, m.fondo))).toBeGreaterThanOrEqual(4.5);
-        await context.close();
+    test(palette + ' · ' + pantalla.nombre + ' · la lista abierta del selector se lee', async ({ browser }) => {
+      const { context, page } = await abrirPantalla(browser, palette, pantalla, { focusMinutes: 10, ritmo: { horario: { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 } } });
+      await page.evaluate(() => ritmoElegir('jornada'));
+      await page.evaluate(() => setState({ focusMinutes: 10 }));
+      const sel = vis(page, 'select.pace-rt-sel[data-pace-bloques-sel]').first();
+      await sel.click();
+      const m = await sel.evaluate((e) => {
+        const fondo = getComputedStyle(e, '::picker(select)').backgroundColor;
+        const elegida = e.selectedOptions[0];
+        const otra = Array.from(e.options).find((o) => o !== elegida);
+        const caja = elegida.getBoundingClientRect();
+        return { abierta: e.matches(':open'), fondo, caja: { w: caja.width, h: caja.height, top: caja.top, bottom: caja.bottom },
+          alto: innerHeight, elegida: [getComputedStyle(elegida).color, getComputedStyle(elegida).backgroundColor],
+          otra: [getComputedStyle(otra).color, getComputedStyle(otra).backgroundColor] };
       });
-    }
+      expect(m.abierta).toBe(true);
+      /* La lista va dentro de la página: lo elegido tiene caja y se ve entero. */
+      expect(m.caja.h).toBeGreaterThan(20);
+      expect(m.caja.top).toBeGreaterThanOrEqual(0);
+      expect(m.caja.bottom).toBeLessThanOrEqual(m.alto);
+      /* Una opción cualquiera y la elegida (con su lavado encima del papel de la lista). */
+      expect(contraste(m.otra[0], m.fondo)).toBeGreaterThanOrEqual(4.5);
+      const papelElegida = m.elegida[1];
+      const sobre = (fr, bk) => { const a = fr.match(/[\d.]+/g).map(Number), b = bk.match(/[\d.]+/g).map(Number), al = a.length > 3 ? a[3] : 1;
+        return 'rgb(' + [0, 1, 2].map((i) => a[i] * al + b[i] * (1 - al)).join(',') + ')'; };
+      expect(contraste(m.elegida[0], sobre(papelElegida, m.fondo))).toBeGreaterThanOrEqual(4.5);
+      await context.close();
+    });
+
+    test(palette + ' · ' + pantalla.nombre + ' · el paso a paso de las horas se lee', async ({ browser }) => {
+      const { context, page } = await abrirPantalla(browser, palette, pantalla);
+      await pulsarComienza(page);
+      await vis(page, '[data-pace-ritmo-horario="inicio"]').first().click();
+      await page.locator('[data-pace-ritmo-mas]').click();
+      const m = await page.locator('[data-pace-modal-card]').evaluate((card) => {
+        const color = (s) => getComputedStyle(card.querySelector(s)).color;
+        return { papel: getComputedStyle(card).backgroundColor, numero: color('[data-pace-ritmo-paso]'), nota: color('[data-pace-ritmo-nota]'),
+          dejar: color('[data-pace-ritmo-dejar]'), cambiar: color('[data-pace-ritmo-cambiar] span'), mas: color('[data-pace-ritmo-mas]') };
+      });
+      for (const c of ['numero', 'nota', 'dejar', 'cambiar', 'mas']) expect(contraste(m[c], m.papel), c).toBeGreaterThanOrEqual(4.5);
+      await context.close();
+    });
   }
 }
 
