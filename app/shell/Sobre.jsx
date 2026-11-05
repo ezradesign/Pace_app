@@ -7,14 +7,21 @@
    Un icono junto a Estadísticas para lo que PACE te deja escrito: CERRADO, con su lacre, mientras
    hay algo sin leer, y ABIERTO cuando ya lo leíste. Sin nada, no se pinta. Tocarlo lo abre.
 
-   Hoy solo lleva la carta del lunes (ritmo/RitmoCarta.jsx). Ez quiere que más adelante pueda llevar
-   las novedades de una versión o un aviso puntual, así que el sobre no sabe de cartas: cada cosa se
-   apunta como una FUENTE, con su clave y una función que dice si hay algo que enseñar:
+   Lleva la carta del lunes (ritmo/RitmoCarta.jsx) y las novedades de cada versión
+   (Sobre.novedades.js). Cada cosa se apunta como una FUENTE, con su clave y una función que dice si hay
+   algo que enseñar:
 
-     paceSobreApuntar({ clave, de: (state, t) => null | { sinLeer, titulo, abrir } })
+     paceSobreApuntar({ clave, de: (state, t, tn, lang) => null | {
+       sinLeer, titulo, fecha, tipo, cuando, tituloHoja, resumen | lineas, abrir + enlace | leer } })
 
-   Con varias, manda la primera sin leer y, sin ninguna sin leer, la primera que haya. Este archivo
-   carga antes que los módulos, que se apuntan al evaluarse. */
+   Con una sola cosa y larga (la carta), tocar el icono la abre, como siempre. Con más, o con una que se
+   lee en la hoja, el icono abre UNA HOJA con todo, lo más nuevo arriba (Ez, 5 nov. 2026: 1C): lo corto se
+   lee ahí mismo y lo largo, con su enlace, abre su ventana. Abrir la hoja da por leído lo que se lee en
+   ella (`leer`); la carta, cuando se abre la carta. Sin contador: un punto de lacre por cosa sin leer, y
+   el icono cerrado mientras quede alguna. Entrar no obliga a nada. Este archivo carga antes que los
+   módulos, que se apuntan al evaluarse. */
+
+const { useState: useStateSB, useEffect: useEffectSB } = React;
 
 const paceSobreFuentes = [];
 
@@ -24,15 +31,22 @@ function paceSobreApuntar(fuente) {
   if (i >= 0) paceSobreFuentes[i] = fuente; else paceSobreFuentes.push(fuente);
 }
 
-/* Lo que lleva el sobre ahora, o null. Una fuente que falla no tumba la barra. */
-function paceSobreHoy(state, t) {
+/* Todo lo que lleva el sobre, lo más nuevo arriba. Una fuente que falla no tumba la barra. */
+function paceSobreLista(state, t, tn, lang) {
   const hay = [];
-  paceSobreFuentes.forEach((f) => {
+  paceSobreFuentes.forEach((f, i) => {
     let x = null;
-    try { x = f.de(state, t); } catch (e) { x = null; }
-    if (x) hay.push(Object.assign({ clave: f.clave }, x));
+    try { x = f.de(state, t, tn, lang); } catch (e) { x = null; }
+    if (x) hay.push({ x: Object.assign({ clave: f.clave }, x), i: i });
   });
-  return hay.find((x) => x.sinLeer) || hay[0] || null;
+  hay.sort((a, b) => String(b.x.fecha || '').localeCompare(String(a.x.fecha || '')) || a.i - b.i);
+  return hay.map((h) => h.x);
+}
+
+/* Lo que manda en el icono: la primera sin leer y, sin ninguna, la primera que haya. */
+function paceSobreHoy(state, t, tn, lang) {
+  const lista = paceSobreLista(state, t, tn, lang);
+  return lista.find((x) => x.sinLeer) || lista[0] || null;
 }
 
 /* Cerrado: el sobre con su lacre. Abierto: la solapa arriba. El trazo, el de los iconos de al lado. */
@@ -54,18 +68,83 @@ function PaceSobreIcono({ abierto }) {
   );
 }
 
-/* `estilo`: el de los iconos de la barra (topBarStyles, TopBar.jsx). */
-function PaceSobre({ estilo }) {
-  const [state] = usePace();
+const paceSobreStyles = {
+  cab: { paddingRight: 34 },
+  meta: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' },
+  parte: { borderTop: '1px solid var(--line)', paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 6 },
+  tipo: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' },
+  titulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 17, lineHeight: 1.12, color: 'var(--ink)' },
+  texto: { fontSize: 13, lineHeight: 1.4, color: 'var(--ink-2)' },
+  linea: { display: 'grid', gridTemplateColumns: '10px minmax(0,1fr)', gap: 9, alignItems: 'baseline', fontSize: 13, lineHeight: 1.4, color: 'var(--ink-2)' },
+  punto: { width: 8, height: 8, borderRadius: '50%', borderWidth: 1.5, borderStyle: 'solid', borderColor: 'var(--ink-3)', display: 'block', transform: 'translateY(-1px)' },
+  enlace: { alignSelf: 'flex-start' },
+};
+
+/* El punto de lacre de lo que está sin leer; leído, un círculo vacío. */
+function PaceSobreLacre({ sinLeer }) {
+  return <i aria-hidden="true" style={{ width: 8, height: 8, borderRadius: '50%', flex: 'none', display: 'block',
+    background: sinLeer ? 'var(--breathe)' : 'transparent', border: sinLeer ? '0' : '1.5px solid var(--line-2)' }} />;
+}
+
+/* La hoja con todo. Más de tres cosas: las más viejas se pliegan bajo «Antes». */
+function PaceSobreHoja({ lista, onCerrar }) {
   const { t } = useT();
-  const hoy = paceSobreHoy(state, t);
-  if (!hoy) return null;
+  const S = paceSobreStyles;
+  /* Lo que estaba sin leer al abrir se queda marcado mientras la hoja está abierta. */
+  const [sinLeer] = useStateSB(() => lista.filter((x) => x.sinLeer).map((x) => x.clave));
+  const [todas, setTodas] = useStateSB(false);
+  useEffectSB(() => { lista.forEach((x) => { if (x.sinLeer && typeof x.leer === 'function') x.leer(); }); }, []);
+  const vistas = todas ? lista : lista.slice(0, 3);
   return (
-    <button type="button" data-pace-topbar-icon data-pace-sobre={hoy.sinLeer ? 'cerrado' : 'abierto'} data-pace-sobre-de={hoy.clave}
-      onClick={hoy.abrir} style={estilo} title={hoy.titulo} aria-label={hoy.titulo}>
-      <PaceSobreIcono abierto={!hoy.sinLeer} />
-    </button>
+    <Modal open onClose={onCerrar} maxWidth={420} relleno="20px 18px 16px" ariaLabel={t('sobre.titulo')}>
+      <div data-pace-sobre-hoja style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={S.cab}><span style={S.meta}>{t('sobre.titulo')}</span></div>
+        {vistas.map((x) => {
+          const sin = sinLeer.indexOf(x.clave) >= 0;
+          return (
+            <div key={x.clave} data-pace-sobre-item={x.clave} data-pace-sobre-item-estado={sin ? 'sin-leer' : 'leido'} style={S.parte}>
+              <div style={S.tipo}><PaceSobreLacre sinLeer={sin} /><span>{x.tipo} · {x.cuando}</span></div>
+              <div style={S.titulo}>{x.tituloHoja}</div>
+              {x.lineas && x.lineas.map((l, k) => (
+                <div key={k} style={S.linea}><i style={S.punto} /><span>{l}</span></div>
+              ))}
+              {x.resumen && <div style={S.texto}>{x.resumen}</div>}
+              {x.abrir && x.enlace && (
+                <button type="button" className="pace-rt-enlace" style={S.enlace} data-pace-sobre-abrir={x.clave}
+                  onClick={() => { onCerrar(); x.abrir(); }}>{x.enlace} ›</button>
+              )}
+            </div>
+          );
+        })}
+        {!todas && lista.length > 3 && (
+          <button type="button" className="pace-rt-enlace" style={S.enlace} onClick={() => setTodas(true)}>{t('sobre.antes')} ›</button>
+        )}
+      </div>
+    </Modal>
   );
 }
 
-Object.assign(window, { paceSobreApuntar, paceSobreHoy, PaceSobreIcono, PaceSobre });
+/* `estilo`: el de los iconos de la barra (topBarStyles, TopBar.jsx). */
+function PaceSobre({ estilo }) {
+  const [state] = usePace();
+  const { t, tn, lang } = useT();
+  const [hoja, setHoja] = useStateSB(false);
+  const lista = paceSobreLista(state, t, tn, lang);
+  if (!lista.length) return null;
+  const sin = lista.filter((x) => x.sinLeer);
+  const manda = sin[0] || lista[0];
+  /* Una sola cosa y larga (la carta): el icono la abre, como siempre. */
+  const directo = lista.length === 1 && typeof manda.abrir === 'function' && !manda.lineas;
+  const titulo = lista.length === 1 ? manda.titulo : t(sin.length ? 'sobre.nuevas' : 'sobre.titulo');
+  return (
+    <React.Fragment>
+      <button type="button" data-pace-topbar-icon data-pace-sobre={sin.length ? 'cerrado' : 'abierto'} data-pace-sobre-de={manda.clave}
+        onClick={directo ? manda.abrir : () => setHoja(true)} style={estilo} title={titulo} aria-label={titulo}>
+        <PaceSobreIcono abierto={!sin.length} />
+      </button>
+      {hoja && <PaceSobreHoja lista={lista} onCerrar={() => setHoja(false)} />}
+    </React.Fragment>
+  );
+}
+
+Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobreIcono, PaceSobreHoja, PaceSobre });

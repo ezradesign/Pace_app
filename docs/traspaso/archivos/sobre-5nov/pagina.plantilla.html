@@ -73,6 +73,29 @@
   </header>
 
   <section>
+    <h2>Lo montado, con tu 1C y tu 3A</h2>
+    <div class="texto">
+      <p>Ya está en la rama, sin subir la versión. Son fotos de la app compilada, sin nada pegado por encima, a 360 y 1280 px, en claro y oscuro. La barra tiene el mismo único icono; abre una hoja con las novedades de la última versión (tus dos líneas, escritas a mano en español y en inglés) y la carta del lunes, que sigue abriendo su ventana de siempre.</p>
+      <ul class="suave">
+        <li><b>Novedades:</b> lo más destacado de cada versión, una o dos líneas que entienda cualquiera, escritas en un solo archivo (<code>app/shell/novedades.data.js</code>) y no copiadas del CHANGELOG. Solo las ve quien ya usaba PACE cuando salió esa versión. La de hoy habla de las horas de la jornada y de Logros.</li>
+        <li><b>Leído:</b> abrir el sobre da por leídas las novedades; la carta, cuando abres la carta. Sin contador, solo el punto de lacre. La home mide {{M_HOME}} px de scroll sobrante con la hoja cerrada y abierta; la hoja mide {{M_ALTO}} px en el móvil y no necesita scroll.</li>
+        <li><b>2B, el archivo en pacegrass.app, queda fuera:</b> haría que PACE salga a internet al abrirse, cambia lo que promete la política de privacidad y necesita su propia copia sin conexión; no es cosa de una hora. El aviso del permiso de Android queda sin montar: no lo pediste.</li>
+      </ul>
+    </div>
+    <div class="fotos"><div class="fm">
+      <figure>{{M_M}}<figcaption>Móvil, claro</figcaption></figure>
+      <figure>{{M_MO}}<figcaption>Móvil, oscuro</figcaption></figure>
+      <figure>{{M_BARRA}}<figcaption>La barra al cerrar la hoja: sigue cerrado porque la carta no se ha leído.</figcaption></figure>
+    </div><div class="fe">
+      <figure>{{M_E}}<figcaption>Ordenador, claro</figcaption></figure>
+      <figure>{{M_EO}}<figcaption>Ordenador, oscuro</figcaption></figure>
+    </div></div>
+  </section>
+
+  <hr>
+  <div class="texto"><p class="meta">Lo que se propuso antes de montarlo</p></div>
+
+  <section>
     <h2>Lo que es igual en las tres</h2>
     <div class="texto">
       <p><b>Un solo icono, el que ya hay.</b> Cerrado y con su lacre <span class="lacre"></span> mientras algo está sin leer; abierto cuando ya lo has leído todo; sin nada, no se pinta. No hay número, ni rojo, ni «3 sin leer».</p>

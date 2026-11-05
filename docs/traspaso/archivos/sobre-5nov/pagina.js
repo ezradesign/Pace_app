@@ -22,8 +22,16 @@ const homeIgual = todas.every((k) => med[k].homeAntes === med[k].homeDespues);
 const maxScrollHoja = Math.max.apply(null, todas.map((k) => med[k].scrollHoja));
 const altoM = (op) => med[op + '-m'].alto;
 
+const MON = path.join(process.env.PACE_FOTOS, 'montado');
+const mimg = (n, alt) => '<img alt="' + alt + '" src="data:image/jpeg;base64,' + fs.readFileSync(path.join(MON, n + '.jpg')).toString('base64') + '">';
+const mm = JSON.parse(fs.readFileSync(path.join(MON, 'medidas.json'), 'utf8'));
+
 let html = fs.readFileSync(path.join(__dirname, 'pagina.plantilla.html'), 'utf8');
 const sust = {
+  '{{M_M}}': mimg('m', 'El sobre montado en el móvil, claro'), '{{M_MO}}': mimg('m-osc', 'El sobre montado en el móvil, oscuro'),
+  '{{M_E}}': mimg('e', 'El sobre montado en el ordenador, claro'), '{{M_EO}}': mimg('e-osc', 'El sobre montado en el ordenador, oscuro'),
+  '{{M_BARRA}}': mimg('barra-despues', 'La barra con el sobre cerrado'),
+  '{{M_HOME}}': String(mm.m.homeAntes), '{{M_ALTO}}': String(mm.m.alto),
   '{{PAR_A}}': par('A', extra('A-detalle-m', 'Un toque en «Novedades»')),
   '{{PAR_B}}': par('B', extra('B-2-m', 'El paso 2 de 3')),
   '{{PAR_C}}': par('C'),

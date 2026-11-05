@@ -242,10 +242,12 @@ function RitmoCartaRaiz() {
 /* La carta en el sobre de arriba: cerrado sin contestar, abierto contestada. Solo la de esta
    semana y con PACE completo (`ritmoCartaDeLaSemana`). */
 if (typeof paceSobreApuntar === 'function') {
-  paceSobreApuntar({ clave: 'carta', de: (s, t) => {
+  paceSobreApuntar({ clave: 'carta', de: (s, t, tn, lang) => {
     const c = ritmoCartaDeLaSemana(s);
     if (!c) return null;
-    return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir };
+    return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir,
+      fecha: c.lunes, tipo: t('sobre.carta.tipo'), cuando: paceFechaCorta(c.lunes, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
+      tituloHoja: t('ritmo.carta.sobre'), resumen: tn('ritmo.carta.hechas', { h: c.res.hechas, t: c.res.total }) + '.', enlace: t('sobre.carta.abrir') };
   } });
 }
 

@@ -30,6 +30,8 @@ const SEMILLA = {
      varias pruebas falsean el reloj y el «hoy» de la semilla no casaría con el de
      la app. Las de A tu ritmo siembran su propio `ritmo`. */
   ritmo: { libre: true },
+  /* Las novedades del sobre apagadas: sin esto la barra llevaría un sobre en cada prueba (Ez, 5 nov. 2026). */
+  novedadesVistas: '*',
 };
 
 /**
