@@ -36,7 +36,9 @@ Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RE
    Las horas y «sin querer» comparten `ritmo.css.jsx`: una detrás de otra. El censo de `verify.integridad.js` se suma a mano. No más de dos suites a la vez.
 4. **Para encender la venta** (solo el de por vida, solo en la web, hasta v1): la tienda y /premium, los arreglos 1 y 2, la revisión legal de ChatGPT, Resend y la
    dirección del enlace real. **Con la primera venta real, ese mismo día,** pedir a Ez sus datos y publicar `legal/`: decidido por Ez, no se reabre.
-5. **Espera a Ez:** pasar a ChatGPT el prompt de la hoja, porque lo que trajo no trae lo legal; y elegir en las páginas que lleguen.
+5. **Espera a Ez:** pasar a ChatGPT el prompt de la hoja, porque lo que trajo no trae lo legal; y elegir en las páginas que lleguen. Dos ya están, solo desde 5iWBf…:
+   «sin querer» (WagDPPQz4kS2UdQvDiTauq; su suite iba por 922/1200 con 4 caídas por tiempo o por repetir) y las horas (Lo2X1rRoczGPHkyoLhje9Y).
+   **Para revisar:** `docs/audits/chatgpt-5nov/revision-5nov-sesiones.md`, cuatro puntos de Ez sobre Mueve y Estira, sin comprobar: valóralos con Ez antes de montar nada.
 6. **La hoja:** en EcLj6… se republica `docs/traspaso/hoja-de-ruta-20oct.html` en EcLj6io4wM9pGjtQ5wd1CT, con la versión de hoy al día. Seis enlaces del plegado
    están con los ids de 5iWBf… (commit 7903bbb8 y anterior): al publicarla allí vuelven a VDdAWeb8msGvckeGXxFjWV, Mk11GDb9JBDGXyTrynbaYY,
    7Hj5sHmFuuzVP5QFntqdN7, MVctqCpaCguGyZjmQgErx1, U1mVU44sM6ggqnW3bwfhv3 y R4hc4PDHjn4o94Zirz6scg. Lo publicado hoy en 5iWBf… da 404 desde allí.

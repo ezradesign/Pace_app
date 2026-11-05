@@ -1267,6 +1267,11 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 6. **El reparto gratis y de pago del calendario:** contrastar los textos de `app/i18n/strings/calendario.js` con lo decidido el 29 oct.
    (`docs/product/DECISIONES_PRODUCTO.md`), lo que ChatGPT marca como decisión sin cerrar.
 
+**Para revisar en la siguiente sesión (Ez, 5 nov.):** `docs/audits/chatgpt-5nov/revision-5nov-sesiones.md`, sin comprobar: encender «Auto» a mitad de una serie la da por
+hecha, «Tus rutinas» deja el catálogo vacío al ensanchar la ventana, repetir una serie descuadra el cierre, y qué explica «Auto».
+
+**Después de v1 (Ez, 5 nov.: «Sí, para después»):** un ejercicio nuevo de descanso de manos, con los antebrazos en la mesa y las palmas arriba, con el dibujo `dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`.
+
 ### El orden lógico hasta v1 (Ez, 25 oct.: «ordena el roadmap de la manera más lógica»)
 
 **Manda sobre la numeración de abajo**, que se queda como detalle de cada punto. Es el mismo orden que el camino de la
