@@ -37,7 +37,7 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
-   esperar»): sube en cuanto esté Palmas en la mesa (Rana vale, 5 nov.), con el logo como está (Ez, 4 nov.; B4 y C3, la colocación y el material, ya
+   esperar»): sube en cuanto entren Rana y Palmas en la mesa (las dos valen, 5 nov.), con el logo como está (Ez, 4 nov.; B4 y C3, la colocación y el material, ya
    están en la 0.187.0); el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo baja la coordinadora con el sí de Ez y lo
    sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
 4. Después, Play Billing y la compra de Apple (esperan las altas de Ez) y lo legal de /premium. El día de v1, «Da de
@@ -49,7 +49,7 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Ahora: decidir «Palmas en la mesa»**: el último dibujo vale si el texto pasa a «dedos hacia delante». Es lo que deja subir la versión de prueba definitiva (abajo). Rana vale y ya está en `dibujos-22oct/para-revisar/`. El logo se queda como
+- **En marcha: meter Rana y Palmas**, con Palmas a «dedos hacia delante» (Ez, 5 nov.: «Sí, cambia el texto»). Es lo que deja subir la versión de prueba definitiva (abajo). Rana vale y ya está en `dibujos-22oct/para-revisar/`. El logo se queda como
   está por ahora (Ez, 4 nov.). Con ella va la 0.189.1: la media jornada que un tester no podía pulsar un sábado a las
   15:00, arreglada con la C de Ez («Hora de inicio» con la paleta de PACE).
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
@@ -67,8 +67,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
 - **La versión de prueba definitiva** (notas de Play y TestFlight y capturas nuevas, preparadas en `SUBIDAS.md` con la
-  0.189.0): los 16 dibujos (catorce en `main` con la 0.187.0; Rana vale y falta
-  Palmas en la mesa: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
+  0.189.0): los 16 dibujos (catorce en `main` con la 0.187.0; Rana y
+  Palmas en la mesa, aprobadas el 5 nov. y entrando en `rana-y-palmas`: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
   `docs/product/GLIFOS_A_DIBUJAR.md`). El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN»
   (`app/ui/pace-logo.png`, también en /premium). El AAB de la 0.184.0, en `subidas-play\`.
 - **iPhone**: el correo de Apple que aprueba la prueba beta (enviada el 23 oct.), e invitar a sus testers con el

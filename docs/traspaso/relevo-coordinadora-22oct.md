@@ -178,6 +178,14 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     Propuesto a Ez aceptarlo y cambiar el texto (dedos hacia delante, cuerpo hacia delante): misma zona, más suave. Espera su letra. Se
     guardó en `dibujos-22oct/para-revisar/palmas-en-la-mesa-5nov.webp`. Con su sí, una sesión mete Rana y Palmas (PNG, ingesta) y cambia
     el texto en español e inglés, también `custom.ex.Palmas en la mesa`.
+27. **5 nov., ~12:10, Ez: «Sí, cambia el texto».** Sesiones de 5iWBf… a esta hora, cada una en su worktree y su rama, ninguna con la suite
+    entera salvo donde se dice: `todas-las-horas` `local_dcc78396-9803-4ea7-acc5-0fe8278768e1` (8842; le falta su suite), `logros-sin-pronto`
+    `local_f61e65b6-ea46-4de7-89d4-1c0cd9146195` (8845, suite en marcha), `sin-querer` `local_a3cce92c-9597-44dd-9f0f-684e15926017` (8822, suite en marcha),
+    `premium-solo-vida` `local_90a278a4-570d-4431-8268-6562fd63f50f` (8848), `maqueta-jornada` `local_39af6801-6a3d-4990-be0e-b567a9e5baee` (8852, solo página),
+    `cuatro-arreglos-de-datos` `local_0bb1183d-73d8-4b52-ba93-6da7fd988d18` (8854, arrancada por Ez con su tarjeta) y `rana-y-palmas`
+    `local_6d34b87b-a279-4786-ab8d-74c53aee36a0` (8856). Las tres últimas con push a `claude/…`, sin suite: la coordinadora les avisa. Falta de Ez la parte
+    legal de la revisión de ChatGPT, con el prompt de la hoja. 5 h al 58 % a las 12:07 y unos 120 puntos por hora: avisar a las
+    sesiones al 70 %, «WIP:» y push al 85 %, y migrar al 90 %; EcLj6… se repone a las 15:30.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

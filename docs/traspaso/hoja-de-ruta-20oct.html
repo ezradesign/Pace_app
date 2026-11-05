@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre a las 12:03 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre a las 12:07 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -132,12 +132,28 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, una palabra</span>
-        <span class="t">Decidir «Palmas en la mesa»</span>
-        <span class="c"><span class="quien">Tú.</span> El último dibujo está muy bien: se ven los nudillos y las uñas. Pero los dedos miran hacia
-          delante, no hacia ti, y la ficha dice «dedos hacia ti». Te propongo aceptarlo y ajustar el texto al dibujo: dedos hacia
-          delante y llevar el cuerpo un poco hacia delante. Estira lo mismo, algo más suave, y deja de frenar la versión de prueba.
-          La otra opción es seguir intentando el dibujo.</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos</span>
+        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
+        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
+          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
+          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
+
+Contexto:
+- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
+- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
+- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
+
+Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
+
+Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Ya sé dos cosas y no hace falta que las repitas: guardar() en functions/api/stripe.js no es atómico si llegan dos avisos a la vez, y paceTiendaWebLista() exige los dos enlaces.
+
+Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
+
+Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
+      <li class="paso marcha"><span class="estado">En marcha · una sesión · dijiste «sí, cambia el texto»</span>
+        <span class="t">Meter Rana y Palmas en la app</span>
+        <span class="c"><span class="quien">Yo.</span> Los dos dibujos, y el texto de Palmas con los dedos hacia delante, en español y en inglés. Te
+          paso una página para verlos al tamaño real y me dices «júntalo». Con eso ya se puede preparar la versión de prueba.</span></li>
       <li class="paso marcha"><span class="estado">En marcha · una sesión, desde hoy en esta cuenta</span>
         <span class="t">Todas las horas con el «− 9:00 +»</span>
         <span class="c"><span class="quien">Yo.</span> Elegiste la D. Se monta en todas las horas, también en «Hora de inicio», y
@@ -159,7 +175,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           viste del aro, más pequeño antes de elegir el día. Nada se monta hasta que elijas.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
         <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
-        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> Solo falta el dibujo del paso «Ahora»: el logo se queda como
+        <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> Solo falta juntar los dos dibujos del paso de arriba: el logo se queda como
           está. Entonces bajo el archivo para Play, subo la del iPhone a TestFlight con tu sí y te paso las notas. Los 14 días
           de los testers empiezan ahí, y lo que falte para que se entienda bien llega como actualizaciones durante esos
           días. Va dentro la 0.189.1, con la media jornada arreglada. Las notas, las capturas nuevas y tus pasos para subirla ya
@@ -184,24 +200,6 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <b>Con la primera venta real</b>, me das tu nombre, NIF, dirección, correo y teléfono, y publico el aviso legal y las
           condiciones. Lo decidiste sabiendo que lo apuntado los pide antes de cobrar. La revisión del profesional, en un
           mes. «Configura Tax» se deja hasta que lo confirme el gestor.</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos</span>
-        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
-        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
-          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
-          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
-
-Contexto:
-- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
-- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
-- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
-
-Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
-
-Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Ya sé dos cosas y no hace falta que las repitas: guardar() en functions/api/stripe.js no es atómico si llegan dos avisos a la vez, y paceTiendaWebLista() exige los dos enlaces.
-
-Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
-
-Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
       <li class="paso luego"><span class="estado">Después de la versión de prueba · con una maqueta para ti</span>
         <span class="t">El sobre: actualizaciones, novedades y avisos puntuales</span>
         <span class="c"><span class="quien">Yo te la preparo.</span> Lo que pediste el 30 de octubre: «actualizaciones, alguna notificación
@@ -232,7 +230,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 83 pasos</summary>
+      <summary>Lo hecho hasta hoy · 84 pasos</summary>
       <ol class="pasos">
       <li class="paso hecho"><span class="estado">Hecho</span>
         <span class="t">Mirar cómo está todo</span>
@@ -630,6 +628,10 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
         <span class="t">«Media jornada», que no se podía pulsar por la tarde</span>
         <span class="c"><span class="quien">Yo, con una sesión.</span> Lo que vio tu tester era cierto. Ahora, al mover el inicio, el fin
           se mueve con él; y pasada su hora, el nombre abre «Hora de inicio» con la paleta de PACE, como elegiste.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «sí, cambia el texto» · 5 de noviembre</span>
+        <span class="t">Decidir «Palmas en la mesa»</span>
+        <span class="c"><span class="quien">Tú.</span> Se queda el dibujo con los dedos hacia delante y el texto se ajusta a él: la misma zona del
+          antebrazo, algo más suave.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 5 de noviembre</span>
         <span class="t">Stripe en el modo de prueba, entero</span>
         <span class="c"><span class="quien">Tú, conmigo.</span> El aviso de pago, los cuatro enlaces, la llave que solo lee y dos compras
@@ -961,8 +963,8 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
         <b>Las rutinas de Mueve y Estira, claras</b><span>Cada ejercicio dice dónde y con qué colocarse, también la «silla sin ruedas» de Core silencioso; esperar a «›» con la cuenta en 0 no suma minutos, «Auto» no avanza con la rutina en pausa, los tres aguantes de «Glúteos invisibles» caben en su tiempo y la barra del 4·7·8 acaba cuando acaba. Y lo que elegiste: la flecha que dice lo que hace, la pausa que se ve como pausa, «Con una basta» y tu reparto de la pantalla, con los catorce dibujos nuevos.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">C · Hecho (0.187.0, 29 oct.)</span>
         <b>«Tus rutinas», tan bien explicadas como el catálogo</b><span>Dicen el material que piden; el constructor ya no queda tapado desde Estira, una sola duración en la tarjeta y en la vista previa, «Zancada con apertura» en inglés, se empiezan con el teclado, al personalizar no se pierden las instrucciones y las tarjetas dicen «Sentado o de pie». Y lo que elegiste: Escape guarda un borrador y «Guardar» dice qué falta.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera tu último dibujo; luego, que la subas</span>
-        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): lo de colocarse ya está y «Rana» vale; falta «Palmas en la mesa»; el logo se queda como está. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera a que entren los dibujos; luego, que la subas</span>
+        <b>La prueba cerrada, con la versión buena</b><span>Play tiene la 0.174.0 y TestFlight la 0.175.0. Sube sin esperar a todo (lo decidiste el 28 por la noche): lo de colocarse ya está, «Rana» y «Palmas en la mesa» valen y se están metiendo; el logo se queda como está. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">12 · Hecho (0.185.0, 28 oct.)</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">A · Hecho (0.186.0, 29 oct.)</span>
@@ -980,7 +982,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">16 · Espera tus datos</span>
         <b>Lo legal de /premium</b><span>Las condiciones, las devoluciones, el aviso legal con tu nombre, tu NIF y un contacto, y el botón para desistir de una compra que pide la ley europea desde junio de 2026. Mejor si lo mira un profesional.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">A la vez, cuando puedas</span>
-        <b>Los dibujos que faltan</b><span>«Palmas en la mesa» (arriba, en «Ahora») y, después, los 22 de los logros (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</span></div></li>
+        <b>Los dibujos que faltan</b><span>Los 22 de los logros (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</span></div></li>
       <li><i class="pt meta"></i><div class="que"><span class="estado meta">La meta</span>
         <b>v1.0: PACE se puede comprar</b><span>En la web, en Android y en iPhone: 2,99 € al mes con 7 días gratis, o 19,99 € de por vida. Ese día se cierra lo abierto hasta v1 sin quitar nada a quien ya lo usaba, y se prueba comprar, restaurar y cancelar en los tres.</span></div></li>
       <li><i class="pt espera"></i><div class="que"><span class="estado espera">V · Después de v1 · lo decides tú, con lo que digan los testers</span>
@@ -1016,7 +1018,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>El dibujo que falta (Palmas en la mesa)</b>: con él sale la versión de prueba definitiva, que subes a Play y a TestFlight a
+        <li><b>Los dibujos ya están elegidos</b>: en cuanto entren sale la versión de prueba definitiva, que subes a Play y a TestFlight a
           la vez. Así tus testers prueban la buena desde el primer día.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de
