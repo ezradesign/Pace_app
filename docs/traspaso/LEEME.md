@@ -4,6 +4,24 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.0.
 
+## AL RELEVO (5 nov.): Q2, Q4 y R1 montados en `claude/sweet-moser-38e06d`, sin fotos ni suite entera
+
+**Hecho** (commit 8ea0a66b; `verify` verde; las 3 pruebas nuevas y las 5 vecinas, 95 en verde en el 8820): las letras de
+Ez a la maqueta (https://claude.ai/artifact/6eyroLktjNB2grtwdLHAaF), «1A + 2A pero durante una semana y el ahora no
+debería estar en la linea de abajo de si/un poco/no + 3A». 1A: tocar una parada futura abre su ficha y «Otra» la
+cambia. 2A: el «No» aparta una semana, lo dice y tiene «Deshacer». 3A: «¿Es tu primera vez? Empieza aquí», la frase del
+aire, Energía al final y «Coherencia». Detalle y archivos: `docs/traspaso/archivos/sin-querer-4nov/LEEME.md`.
+
+**El «Ahora no»**: se leyó como «que baje a su línea» y así está montado (centrado bajo Sí · Un poco · No). La otra
+lectura, «que no baje», es como estaba (en la fila, al final): enseñar las dos en las fotos y que Ez elija.
+
+**Falta**: (1) la suite entera en el **8820**: arrancó a las ~10:20 del 5 nov. y su log cae en
+`%TEMP%\pace-sin-querer-4nov\suite.log` (si no acabó o se cortó, repetirla); (2) las fotos de lo montado con
+`node docs/traspaso/archivos/sin-querer-4nov/montado.js` y `MAQ_PORT=8821` (nunca en el puerto de una suite en marcha),
+`imagenes.js` adaptado y la página para Ez; (3) con su «júntalo», `LISTO PARA MAIN`. CHANGELOG, STATE y DECISIONES
+propuestos, en el mensaje de 8ea0a66b. `origin/main` seguía en la 0.189.0 al juntarlo: la 0.189.1 (media jornada) toca
+`app/ritmo/` y `state-ritmo*.jsx`; esta rama toca `RitmoLinea.jsx`, `ritmo.css.jsx` y una línea de `state-ritmo.jsx`.
+
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 
 Ez: «el logo de momento va a quedar así». La versión de prueba definitiva ya solo espera Rana y Palmas en la mesa; las
