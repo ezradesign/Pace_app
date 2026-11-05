@@ -239,13 +239,15 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
     ? { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere), outline: 'none' }
     : { ...sessionShellStyles.root, outline: 'none' };
   /* s198 · LA SESION TOMA EL FOCO al montarse, y Tab no sale de ella
-     (ui/Dialogo.jsx; el Escape sigue siendo de cada sesion: no se le pasa). Si
+     (ui/Dialogo.jsx; el Escape sigue siendo de cada sesion: no se le pasa, y ella
+     le pregunta a `paceEscapeDeSesion` si le toca, para no salir con un aviso
+     encima). Si
      se empezaba desde un boton que SIGUE en el DOM (la tarjeta «Continua» de la
      barra lateral, una parada de «A tu ritmo»), el foco se quedaba en el,
      escondido detras de la sesion, y la barra espaciadora lo PULSABA en vez de
      pausar -- con «ESPACIO PAUSAR» escrito en pantalla. Medido en v0.130.0. */
   const rootRef = useRefSS(null);
-  usePaceDialogo(rootRef, true);
+  usePaceDialogo(rootRef, true, { sesion: true });
   return (
     <div data-pace-session-root ref={rootRef} tabIndex={-1} role="dialog" aria-modal="true"
       aria-label={routine && routine.name ? routine.name : undefined} style={rootStyle}>

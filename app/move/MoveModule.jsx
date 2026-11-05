@@ -210,7 +210,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         if (sessionKeyOnControl(e)) return;
         e.preventDefault(); setPaused(p => !p);
       }
-      if (e.key === 'Escape') onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'ArrowRight') goNext();
       if (e.key === 'ArrowLeft') goPrev();
       // Enter cierra el DONE salvo foco en un control / modificadores / IME —
