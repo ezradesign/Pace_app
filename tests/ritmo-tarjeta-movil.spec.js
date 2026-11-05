@@ -72,7 +72,7 @@ test.describe('360×718, el móvil de Ez', () => {
     await irAlArtefacto(page);
     const tarjeta = vis(page, '[data-pace-ritmo-tarjeta-movil]');
     await expect(tarjeta).toContainText('You choose the hours');
-    await expect(tarjeta.locator('[data-pace-ritmo-comienza]')).toHaveText('Start');
+    await expect(tarjeta.locator('[data-pace-ritmo-comienza]')).toHaveText('Plan my day');
   });
 });
 

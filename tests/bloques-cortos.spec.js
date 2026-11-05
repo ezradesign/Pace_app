@@ -75,7 +75,7 @@ test('4a · con el día y el aro a 10, el aro invita al acabar el bloque 2 y no 
 
   await visible(page, '[data-pace-invita-seguir]').click();
   await expect(visible(page, '[data-pace-invita]')).toHaveCount(0);
-  await expect(visible(page, '[data-pace-cta]')).toHaveText('Pausar');
+  await expect(visible(page, '[data-pace-cta]')).toHaveText('Pausar foco');
   await page.clock.fastForward(10 * 60 * 1000 + 2000);
   await page.waitForTimeout(300);
   /* el bloque 3 llega a 30 min: detrás va la pausa con rutina, y entonces no se invita */

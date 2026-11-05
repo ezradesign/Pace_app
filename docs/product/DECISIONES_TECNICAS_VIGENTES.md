@@ -13,6 +13,8 @@ de borrarla.
 
 ---
 
+- **El botón del aro en la pausa propone solo un plato sin hacer** (5 nov. 2026, `app/focus/FocusTimer.jornada.jsx`). `aroPlatoPendiente` y no `ritmoPlatoQueToca`, que con todo hecho devuelve el primero para poder repetirlo: el aro volvería a proponer lo ya hecho. Y `aroPausaTerminada` exige que el tiempo haya acabado y que la parada sea una pausa, porque la parada sigue abierta hasta empezar el bloque, también con la comida. Con la ventana de la pausa abierta hay dos botones «Hacer la pausa» en el árbol: las pruebas van por `overlaySuperior`.
+
 ## Decisiones activas
 
 | Decision | Desde | Detalle |

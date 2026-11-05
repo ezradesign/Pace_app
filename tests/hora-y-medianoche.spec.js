@@ -50,7 +50,7 @@ async function unaHoraYEmpezar(page, cuando) {
   await irAlArtefacto(page);
   await page.evaluate(() => ritmoElegir('1h'));
   await page.locator('[data-pace-cta]').click();
-  await expect(page.locator('[data-pace-cta]')).toHaveText('Pausar');
+  await expect(page.locator('[data-pace-cta]')).toHaveText('Pausar foco');
 }
 
 test.describe('H1 · terminar un bloque al otro lado del cambio de hora', () => {

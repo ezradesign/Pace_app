@@ -108,7 +108,7 @@ test('«Hacer la pausa» entra en el plato, y al terminarlo la parada queda hech
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
   await page.waitForTimeout(250);
   await terminarBloque(page);
-  await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   await expect(page.locator('[data-pace-session-root]')).toHaveCount(1);
   const done = page.locator('[data-pace-session-done]');
