@@ -113,6 +113,21 @@ test('Mueve, en inglés · ningún botón del cierre pisa a otro', async ({ page
   await comprobarEn(page, COMUNES.concat(alturas(1536, 701, 719, 6)).concat(alturas(1280, 450, 650, 20)));
 });
 
+/* Ez, 5 nov. 2026: con «Ahora no» en su línea, en su ventana y con el dibujo grande de Estira,
+   el enlace quedaba a 0 px de «Volver al inicio». Se ve entero, así que lo de arriba no lo ve. */
+test('Estira · «Ahora no» deja aire hasta «Volver al inicio»', async ({ page, context }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 1536, height: 708 });
+  await hastaElCierre(page, context, { modulo: /^Estira/, rutina: 'Escritorio express' });
+  const aire = async () => page.evaluate(() => document.querySelector('[data-pace-session-footer] button').getBoundingClientRect().top
+    - document.querySelector('[data-pace-fb-ghost]').getBoundingClientRect().bottom);
+  for (const [w, h] of [[1536, 708], [1536, 720], [1366, 700], [1280, 720], [360, 640]]) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+    expect(await aire(), 'a ' + w + '×' + h + ' «Ahora no» va pegado a «Volver al inicio»').toBeGreaterThanOrEqual(12);
+  }
+});
+
 /* Respira lleva su dibujo a 72 px y ya se tapaba en las ventanas más bajas del escritorio. */
 test('Respira · ningún botón del cierre pisa a otro', async ({ page, context }) => {
   test.setTimeout(120_000);

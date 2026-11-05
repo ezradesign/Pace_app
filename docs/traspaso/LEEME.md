@@ -64,6 +64,8 @@ misma fila, móvil y escritorio. **Encontrado**: en la ventana de Ez (1536×708)
 hasta 0. Arreglo pensado, sin montar ni medir: `min-height` de unos 14 px en ese `::after`, para que encoja el dibujo; se
 pasa después `cierre-sin-pisar.spec.js`, que hoy no lo ve (mira que no se pisen, no el aire). No tocar `app/` con la suite en marcha.
 
+**Aire (5 nov., ~12:25)**: `min-height` en el `::after` del cierre y su prueba, escritos en `SessionShell.responsive.js` y `cierre-sin-pisar.spec.js`, SIN compilar: el `index.html` no los lleva hasta que acabe la suite en marcha.
+
 **Página para Ez**: https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq (cuenta del 5 nov., ~12:15; fuente, `montado.html`). Ez
 ya eligió en ella; prometía unos 14 px de aire si elegía la A, y la suite aún no había acabado. **Falta, por
 orden**: (1) acabar la suite y repetir con `--workers=1` lo que cayó por tiempo; (2) el aire del punto anterior, build y sus
