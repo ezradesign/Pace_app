@@ -48,9 +48,12 @@ prueba que dan su código; /recuperar no encontraba la compra porque la llave de
 
 Ez: «Esto de los logros imagino que puede sobrar + habría que diseñar los logros que faltan». En la rama
 `claude/logros-sin-pronto-ddf6d6` (commits 0ffe6902 y a1e8042b, sin versión): los 8 logros sin detector ya no se ven ni
-se cuentan, y «Disponibles» pasa a «Sellos reunidos». Antes y después: https://claude.ai/artifact/EF6XxCFPnGjx518mpm6FqQ.
-Dibujos: https://claude.ai/artifact/8w1pvFu1EZHKZxsBeV48Tf (`docs/traspaso/dibujos-logros.html`). `verify` pasa. **Falta la suite
-entera**: en el relevo iba por la 920 de 1187 en el puerto 8844, sin fallos; hay que repetirla antes de juntar.
+se cuentan, y «Disponibles» pasa a «Sellos reunidos». **Páginas para Ez, ya en esta cuenta** (las de EF6X… y 8w1P… eran de la
+otra y dan 404 aquí): antes y después https://claude.ai/artifact/J8ADhnvWTxLeiQWYix5U37 (fuente y fotos en
+`docs/proposals/logros-sin-pronto-5nov/`); dibujos https://claude.ai/artifact/9N2zHN5t28CaQ5oRkVDnuB
+(`docs/traspaso/dibujos-logros.html`). **Suite entera pasada** (puerto 8845, sobre `main` 9fe51aee ya traída y `verify` en
+verde): 1183 pasan y 2 saltadas de 1187; 2 cayeron por carga (`respira-progreso:125` y `ritmo-bloque-siguiente:41`) y pasan con `--workers=1`.
+**LISTO PARA MAIN.** Al juntar con las horas, el censo de textos de `verify.integridad.js` suma a mano (el mío es −2).
 
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 
