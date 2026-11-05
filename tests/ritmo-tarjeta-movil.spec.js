@@ -55,11 +55,11 @@ test.describe('360×718, el móvil de Ez', () => {
     expect(errores).toEqual([]);
   });
 
-  test('«Comienza» se toca bien con el dedo y abre la pregunta entera', async ({ page, context }) => {
+  test('«Preparar jornada» se toca bien con el dedo y abre la pregunta entera', async ({ page, context }) => {
     await sembrar(context, { sidebarCollapsed: true });
     await irAlArtefacto(page);
     const boton = vis(page, '[data-pace-ritmo-comienza]');
-    await expect(boton).toHaveText('Comienza');
+    await expect(boton).toHaveText('Preparar jornada');
     const caja = await boton.boundingBox();
     expect(caja.height, 'la zona de toque').toBeGreaterThanOrEqual(44);
     await boton.click();

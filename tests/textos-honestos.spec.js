@@ -53,7 +53,8 @@ test('2 · bajo «¿Cuánto trabajas hoy?» dice que el tiempo incluye las pausa
   await sembrar(context, { ritmo: {} });
   await page.clock.install({ time: NUEVE });
   await irAlArtefacto(page);
-  await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tarjeta-s')).toHaveText('El tiempo incluye las pausas. Te digo cuándo parar y qué hacer.');
+  await vis(page, '[data-pace-ritmo-ajustar]').click();
+  await expect(vis(page, '[data-pace-ritmo-estado="pregunta"] .pace-rt-sub').first()).toHaveText('El tiempo incluye las pausas. Te digo cuándo parar y qué hacer.');
   expect(await cadenas(page, 'en', ['ritmo.sub'])).toEqual(["Breaks are part of the time. I'll tell you when to pause and what to do."]);
 });
 

@@ -33,7 +33,7 @@ test('en el móvil, antes del primer bloque la fila «Ahora» dice dónde se emp
   await expect(visible(page, '[data-pace-ritmo-estado="menu"] .pace-rt-fila').first()).toContainText('Ahora');
   await expect(filaAhora(page)).toHaveText('45 min · empieza en el aro, arriba');
   await visible(page, '[data-pace-cta]').first().click();
-  await expect(visible(page, '[data-pace-cta]').first()).toHaveText('Pausar');
+  await expect(visible(page, '[data-pace-cta]').first()).toHaveText('Pausar foco');
   await expect(filaAhora(page)).toHaveText('45 min · Trabajo en profundidad');
   /* En pausa el bloque sigue empezado. */
   await visible(page, '[data-pace-cta]').first().click();
@@ -48,7 +48,7 @@ test('en inglés, lo mismo', async ({ page, context }) => {
 test('al volver a la home con el bloque ya empezado, la fila no lo dice', async ({ page, context }) => {
   await abrir(page, context);
   await visible(page, '[data-pace-cta]').first().click();
-  await expect(visible(page, '[data-pace-cta]').first()).toHaveText('Pausar');
+  await expect(visible(page, '[data-pace-cta]').first()).toHaveText('Pausar foco');
   await page.reload();
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
   await expect(filaAhora(page)).toHaveText('45 min · Trabajo en profundidad');

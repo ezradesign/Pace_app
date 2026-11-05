@@ -12,8 +12,8 @@
    por libre la home pedía scroll (63 px a 360×730). Ez eligió mirándola en la
    maqueta: la pregunta, el ESQUEMA de la línea del día sin ninguna
    hora (las horas se eligen después), «Tú eliges las horas» y una píldora de
-   papel «Comienza» que abre la pregunta entera. «Comienza» y no «Empieza»: arriba
-   ya está «Empezar foco». Las dos versiones van en el DOM y la media query del
+   papel «Preparar jornada» que abre la pregunta entera (Ez, 5 nov. 2026: 1A; antes
+   «Comienza», que no decía que aún no empieza nada). Las dos versiones van en el DOM y la media query del
    corte de móvil elige (la misma que cambia la piel), como el panel. Sin la ceja
    «A TU RITMO» encima (Ez: «no aporta nada»): eran 15 px que la home no tenía a
    360×640. Solo queda esa fila si hay Caminos, para su enlace.
@@ -25,8 +25,8 @@
    sitio. Con un Camino en curso no se pinta (PathRunner manda), como antes.
 
    DESDE LA 1A (Ez, 22 oct. 2026) TAMBIÉN SIN CONTESTAR: la home abre siempre con los módulos
-   y esta tarjeta, y «Comienza» abre la pregunta (ritmoAbrirPregunta). Con tu semana guardada
-   dice tu día de siempre («Hoy, como cada jueves · Jornada entera, 9:00–17:00») y «Comienza»
+   y esta tarjeta, y «Preparar jornada» abre la pregunta (ritmoAbrirPregunta). Con tu semana guardada
+   dice tu día de siempre («Hoy, como cada jueves · Jornada entera, 9:00–17:00») y el botón
    abre ese día ya contestado, para empezarlo. */
 
 /* El esquema: una jornada tipo (las paradas de «Jornada entera» con la comida en
@@ -65,12 +65,10 @@ function RitmoTarjeta() {
       <div data-pace-spc-card data-pace-ritmo-tarjeta className="pace-rt-tarjeta">
         <div className="pace-rt-tj-esc">
           {/* Una sola fila de cabecera: la pregunta a la izquierda, los dos enlaces a la
-              derecha. Un pie aparte costaba 34 px de aro a 1536×704 (medido). */}
+              derecha. Sin subtítulo (Ez, 5 nov. 2026: 2B): esa línea y unas losetas más bajas le
+              dan al aro 61 px a 1917×857, el tamaño que tendrá con el día en marcha. */}
           <div className="pace-rt-tarjeta-cab">
-            <div>
-              <div className="pace-rt-tarjeta-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
-              <div className="pace-rt-tarjeta-s">{t('ritmo.sub')}</div>
-            </div>
+            <div className="pace-rt-tarjeta-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
             <div className="pace-rt-tarjeta-enlaces">
               <button className="pace-rt-enlace" data-pace-ritmo-ajustar onClick={ritmoAbrirPregunta}>{t('ritmo.tarjeta.ajustar')}</button>
               {conCaminos && (

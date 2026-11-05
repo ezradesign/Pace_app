@@ -151,7 +151,7 @@ test('el aro cuenta la pausa desde que acaba el bloque y, a cero, espera el bloq
   await expect(corriendo(page), 'el aro cuenta la pausa').toHaveCount(1);
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Pausa corta');
   await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Luego, el bloque 2 de 9');
-  await expect(cta(page)).toHaveText('Empezar ya el bloque 2');
+  await expect(cta(page)).toHaveText('Hacer la pausa');
   await expect(vis(page, '[data-pace-dial-number]')).toHaveText(/^0[45]:\d\d$/);
 
   await minutos(page, 5);

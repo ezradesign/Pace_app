@@ -231,6 +231,7 @@ function FocusTimer({ onFinish }) {
      - pausa/larga: conservan su copy propio (invariante: copys de pausa). */
   const subtitle = bloques.subtitulo ? bloques.subtitulo
     : enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de })
+    : aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada')
     : isFocoMode
     ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
     : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
@@ -337,6 +338,9 @@ function FocusTimer({ onFinish }) {
     ctaLabel = startLabel;
     ctaAction = handleNormalStart;
   }
+  /* Con «A tu ritmo», el aro es el paso actual: lo que eso cambia, en FocusTimer.jornada.jsx. */
+  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa });
+  if (jornada.cta) { ctaLabel = jornada.cta.label; ctaAction = jornada.cta.action || ctaAction; }
 
   /* Dots de ciclo (4 puntitos + etiqueta «CICLO N / 4»).
      En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
@@ -348,17 +352,7 @@ function FocusTimer({ onFinish }) {
   const cycleLabel = (isFocoMode && isCompleted)
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
-  const cycleDotsEl = (
-    <div style={aro || enPausaRitmo ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots}>
-      {[0,1,2,3].map(i => (
-        <span key={i} style={{
-          width: 4, height: 4, borderRadius: '50%',
-          background: (state.cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
-        }} />
-      ))}
-      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{cycleLabel}</span>
-    </div>
-  );
+  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo} fila={jornada.fila} />;
 
   /* Bloque de controles + ciclo inyectado DENTRO del aro (layout ref. usuario).
      Para otros estilos se renderiza debajo en un bloque aparte. */
@@ -367,7 +361,7 @@ function FocusTimer({ onFinish }) {
       <button
         data-pace-cta
         onClick={ctaAction}
-        style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
+        style={running && !jornada.lleno ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
       >
         {ctaLabel}
       </button>

@@ -3886,7 +3886,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aria.comes': 'Comer hoy',
   'ritmo.tarjeta.ajustar': 'Ajustar el horario',
   'ritmo.tarjeta.horas': 'Tú eliges las horas',
-  'ritmo.tarjeta.comienza': 'Comienza',
+  'ritmo.tarjeta.comienza': 'Preparar jornada',
   'ritmo.frase.menu': 'de {inicio} a {salida} · comida a las {comida} durante {dur}',
   'ritmo.frase.menu.sin': 'de {inicio} a {salida}',
   'ritmo.frase.movil': 'De {inicio} a {salida} · comida {comida} · {dur}',
@@ -3983,6 +3983,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aro.empezar': 'Empezar jornada',
   'ritmo.aro.siguiente': 'Empezar bloque {n}',
 
+  'ritmo.aro.hacerPausa': 'Hacer la pausa',
+  'ritmo.aro.pausar': 'Pausar foco',
+  'ritmo.aro.reanudar': 'Reanudar foco',
+  'ritmo.aro.pausaTerminada': 'Pausa terminada',
+  'ritmo.aro.despues': 'Después: {q}',
+  'ritmo.aro.despues.bloque': 'bloque {n}',
+
   'bloques.invita': 'Un momento para moverte',
   'bloques.hacerla': 'Ver ejercicio',
   'bloques.seguir': 'Seguir',
@@ -4067,7 +4074,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aria.comes': 'Lunch today',
   'ritmo.tarjeta.ajustar': 'Adjust the schedule',
   'ritmo.tarjeta.horas': 'You choose the hours',
-  'ritmo.tarjeta.comienza': 'Start',
+  'ritmo.tarjeta.comienza': 'Plan my day',
   'ritmo.frase.menu': 'from {inicio} to {salida} · lunch at {comida} for {dur}',
   'ritmo.frase.menu.sin': 'from {inicio} to {salida}',
   'ritmo.frase.movil': 'From {inicio} to {salida} · lunch {comida} · {dur}',
@@ -4160,6 +4167,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aro.bloque': 'Block {n} of {m}',
   'ritmo.aro.empezar': 'Start the day',
   'ritmo.aro.siguiente': 'Start block {n}',
+  'ritmo.aro.hacerPausa': 'Take the break',
+  'ritmo.aro.pausar': 'Pause focus',
+  'ritmo.aro.reanudar': 'Resume focus',
+  'ritmo.aro.pausaTerminada': 'Break over',
+  'ritmo.aro.despues': 'Next: {q}',
+  'ritmo.aro.despues.bloque': 'block {n}',
   'bloques.invita': 'A moment to move',
   'bloques.hacerla': 'See exercise',
   'bloques.seguir': 'Keep going',
@@ -29475,6 +29488,133 @@ Object.assign(window, { RitmoHacerla });
 ;Object.assign(window, { RitmoHacerla });
 })();
 </script>
+  <!-- El aro como paso actual de la jornada. Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function aroPlatoPendiente(s) {
+  const a = typeof ritmoPausaAbierta === 'function' ? ritmoPausaAbierta(s) : null;
+  if (!a) return null;
+  return a.platos.find((p) => a.hechos.indexOf(p.id) === -1) || null;
+}
+
+
+
+
+function aroPausaTerminada(s) {
+  if (typeof ritmoPausaCuenta !== 'function' || ritmoPausaCuenta(s)) return false;
+  const a = ritmoPausaAbierta(s);
+  return !!a && a.it.tipo === 'pausa';
+}
+
+
+
+function aroDespues(s, t, tn) {
+  const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  const it = p && p.actual ? ritmoDetras(p.m, p.actual) : null;
+  if (!it) return null;
+  if (it.tipo === 'comida') return t('ritmo.comida') + ' · ' + ritmoDuracion(it.dur);
+  if (it.tipo === 'foco') return tn('ritmo.aro.despues.bloque', { n: p.hechos + 2 });
+  const platos = it.platos || [];
+  if (platos.length > 1) {
+    return tn('ritmo.y', { a: ritmoModulo(platos[0].modulo, t), b: ritmoModulo(platos[1].modulo, t) }) + ' · ' + it.dur + ' min';
+  }
+  if (!platos.length) return null;
+  const r = platos[0].rutina;
+  return ritmoModulo(platos[0].modulo, t) + ' · ' + (r && r.min || it.dur) + ' min';
+}
+
+
+
+function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa } = _ref;
+  if (enPausaRitmo) {
+    const plato = aroPlatoPendiente(state);
+    if (!plato) return {};
+    return {
+      lleno: true,
+      cta: {
+        label: t('ritmo.aro.hacerPausa'),
+        action: () => window.dispatchEvent(new CustomEvent('pace:sidebar-action', { detail: { kind: 'suggest', targetId: plato.id, parada: true } }))
+      },
+      fila:
+      React.createElement("button", { type: "button", className: "pace-aro-seguir", "data-pace-aro-seguir": true, onClick: empezarYa },
+      tn('ritmo.pausa.ya', { n: pausaRitmo.n })
+      )
+
+    };
+  }
+  if (!aro) return {};
+  const despues = aroDespues(state, t, tn);
+  return {
+    cta: status === 'running' ? { label: t('ritmo.aro.pausar') } :
+    status === 'paused' ? { label: t('ritmo.aro.reanudar') } :
+    null,
+    fila: despues ? React.createElement("span", { className: "pace-aro-despues", "data-pace-aro-despues": true }, tn('ritmo.aro.despues', { q: despues })) : null
+  };
+}
+
+
+
+function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
+  const fuera = oculta || !!fila;
+  const callado = fuera ? { visibility: 'hidden' } : null;
+  return (
+    React.createElement("div", { style: fila ? { ...focusStyles.cycleDots, position: 'relative' } : oculta ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots },
+    fila ? React.createElement("span", { className: "pace-aro-fila", "data-pace-aro-fila": true }, fila) : null,
+    [0, 1, 2, 3].map((i) =>
+    React.createElement("span", { key: i, style: {
+        ...callado,
+        width: 4, height: 4, borderRadius: '50%',
+        background: cycle % 4 > i ? 'var(--focus)' : 'var(--line-2)'
+      } })
+    ),
+    React.createElement("span", { style: { ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
+    ));
+
+}
+
+(function paceAroJornadaCss() {
+  if (document.getElementById('pace-aro-jornada-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-aro-jornada-css';
+  s.textContent = `
+.pace-aro-fila { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; }
+.pace-aro-despues, .pace-aro-seguir { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--ink-2); }
+.pace-aro-seguir { background: none; border: 0; padding: 2px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.pace-aro-seguir:hover { color: var(--ink); }
+.pace-aro-seguir:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+@media ${PACE_CORTE_MOVIL} { .pace-aro-despues { display: none; } }
+`;
+  document.head.appendChild(s);
+})();
+
+Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, AroFila });
+;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroJornada, AroFila });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -29710,6 +29850,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   const subtitle = bloques.subtitulo ? bloques.subtitulo :
   enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
+  aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') :
   isFocoMode ?
   isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)) :
   state.focusMode === 'pausa' ? t('focus.subtitle.pause') :
@@ -29817,6 +29958,9 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     ctaAction = handleNormalStart;
   }
 
+  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa });
+  if (jornada.cta) {ctaLabel = jornada.cta.label;ctaAction = jornada.cta.action || ctaAction;}
+
 
 
 
@@ -29827,17 +29971,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
-  const cycleDotsEl =
-  React.createElement("div", { style: aro || enPausaRitmo ? { ...focusStyles.cycleDots, visibility: 'hidden' } : focusStyles.cycleDots },
-  [0, 1, 2, 3].map((i) =>
-  React.createElement("span", { key: i, style: {
-      width: 4, height: 4, borderRadius: '50%',
-      background: state.cycle % 4 > i ? 'var(--focus)' : 'var(--line-2)'
-    } })
-  ),
-  React.createElement("span", { style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
-  );
-
+  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo, fila: jornada.fila });
 
 
 
@@ -29846,7 +29980,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   React.createElement("button", {
     "data-pace-cta": true,
     onClick: ctaAction,
-    style: running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary },
+    style: running && !jornada.lleno ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary },
 
   ctaLabel
   ),
@@ -45485,20 +45619,19 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
    las separa del pie. La loseta se enciende al pasar con el lavado del foco y
    el borde de la acción; el pie lleva «Ajustar el horario» y «Ver caminos». */
 .pace-rt-tarjeta { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
-  box-shadow: var(--sh-soft); padding: 16px 22px 16px; text-align: left; }
+  box-shadow: var(--sh-soft); padding: 12px 22px 12px; text-align: left; }
 .pace-rt-tarjeta-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
 .pace-rt-tarjeta-enlaces { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-bottom: 2px; }
 .pace-rt-tarjeta-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 1.1; color: var(--ink); }
-.pace-rt-tarjeta-s { font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-3); margin-top: 4px; }
-.pace-rt-losetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.pace-rt-losetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }
 .pace-rt-loseta { flex: 1 1 0; min-width: 0; border: 1px solid var(--line) !important; border-radius: var(--r-md);
-  padding: 12px 14px 11px !important; text-align: left; background: var(--paper) !important;
+  padding: 8px 14px 7px !important; text-align: left; background: var(--paper) !important;
   transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease), transform var(--dur-quick) var(--ease); }
 .pace-rt-loseta:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; transform: translateY(-1px); }
 .pace-rt-loseta:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-loseta:disabled { opacity: 0.5; cursor: default; }
 .pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
-.pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
+.pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 2px; }
 @media ${PACE_CORTE_MOVIL} {
   .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
   .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }
@@ -47183,11 +47316,9 @@ function RitmoTarjeta() {
     React.createElement("div", { className: "pace-rt-tj-esc" },
 
 
+
     React.createElement("div", { className: "pace-rt-tarjeta-cab" },
-    React.createElement("div", null,
     React.createElement("div", { className: "pace-rt-tarjeta-t", "data-pace-ritmo-tarjeta-titulo": true }, titulo),
-    React.createElement("div", { className: "pace-rt-tarjeta-s" }, t('ritmo.sub'))
-    ),
     React.createElement("div", { className: "pace-rt-tarjeta-enlaces" },
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoAbrirPregunta }, t('ritmo.tarjeta.ajustar')),
     conCaminos &&
