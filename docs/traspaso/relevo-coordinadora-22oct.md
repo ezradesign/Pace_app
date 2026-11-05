@@ -1267,8 +1267,11 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 6. **El reparto gratis y de pago del calendario:** contrastar los textos de `app/i18n/strings/calendario.js` con lo decidido el 29 oct.
    (`docs/product/DECISIONES_PRODUCTO.md`), lo que ChatGPT marca como decisión sin cerrar.
 
-**Para revisar en la siguiente sesión (Ez, 5 nov.):** `docs/audits/chatgpt-5nov/revision-5nov-sesiones.md`, sin comprobar: encender «Auto» a mitad de una serie la da por
-hecha, «Tus rutinas» deja el catálogo vacío al ensanchar la ventana, repetir una serie descuadra el cierre, y qué explica «Auto».
+**Comprobadas el 5 nov., por la tarde, esperan el sí de Ez:** `docs/audits/chatgpt-5nov/revision-5nov-capas.md` y `revision-5nov-sesiones.md`. Antes de los testers: Escape o Atrás que saca de la sesión, encender «Auto» que da la serie por hecha, la pausa que se abre sobre una sesión y mantener Espacio. Después: el catálogo vacío al ensanchar, las cifras al repetir una serie y qué explica «Auto». Dos pestañas: riesgo aceptado.
+
+**Ez, 5 nov., tarde, con sus respuestas:** juntar los cuatro arreglos tras la 0.190.0; la versión de prueba espera a esos arreglos, /premium y `capas-y-pausa`; al acabar, quitar los worktrees ya juntados con copia antes (un bundle, como el 31 oct.); y cuatro hilos: `maqueta-sobre` `local_de773665-9fbd-4a40-bd3e-e22720396ef2`, `landing-web` `local_795cb4bb-b415-46de-8795-dfcdb232c130`, el reparto del calendario (solo lee) y «catálogo, cifras y Auto», que se abre al acabar `capas-y-pausa` `local_f7e2ad80-845f-40c2-b9cc-ae6c64efe23b`. Los glifos de logros los deja en `dibujos-22oct/para-revisar` y dirá «dibujos de logros en la carpeta».
+
+**Ez, 5 nov., tarde:** jornada 1A 2B y /premium 1C. La jornada se monta en `maqueta-jornada` (`local_39af6801-6a3d-4990-be0e-b567a9e5baee`) en cuanto la 0.190.0 esté en `main`.
 
 **Después de v1 (Ez, 5 nov.: «Sí, para después»):** un ejercicio nuevo de descanso de manos, con los antebrazos en la mesa y las palmas arriba, con el dibujo `dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`.
 

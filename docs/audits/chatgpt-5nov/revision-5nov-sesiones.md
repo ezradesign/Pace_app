@@ -1,7 +1,13 @@
 # Revisión de ChatGPT del 5 nov. 2026: cambiar de idea a mitad de una sesión (7903bbb8)
 
-Ez: «para guardar y revisar en la siguiente sesión». **Sin comprobar todavía:** cada punto se mira en el código antes de montar nada, y se
-valora con Ez. La toca `MoveSessionV1.jsx`, `LibraryShell.jsx` y `library.css.jsx`, que ninguna sesión de hoy tiene entre manos.
+Ez: «para guardar y revisar en la siguiente sesión». Comprobado leyendo el código, sin reproducirlo. Se monta solo con el sí de Ez.
+
+| # | Punto | Veredicto |
+|---|---|---|
+| 1 | Encender «Auto» da la serie por hecha | **Cierto.** Sin «Auto» el reloj sigue (`MoveSessionV1.jsx:232`) y al encenderlo `:252` compara ese tiempo con el objetivo. Da por hechas repeticiones que nadie confirmó |
+| 2 | «Tus rutinas» vacía el catálogo al ensanchar | **Cierto.** `LibraryShell.jsx:249` cambia el catálogo por un bloque que `library.css.jsx:326` oculta en escritorio. Solo pasa al cambiar el tamaño de la ventana |
+| 3 | Repetir una serie descuadra el cierre | **Cierto.** Las repeticiones suman (`:180`) y las series cuentan pasos únicos (`v1DoneStats`). Hay que decidir qué se cuenta |
+| 4 | Lo que explica «Auto» | Es de producto, con una página para Ez |
 
 Sí. He seguido por las sesiones de Mueve y Estira y la navegación por sus bibliotecas, centrándome en lo que pasa cuando la persona cambia de idea: desactiva «Auto», vuelve atrás o cambia el tamaño de la pantalla.
 Esta tanda contiene dos fallos concretos, una incoherencia de recuento y una mejora de comprensión. Es revisión de código, no una prueba ejecutada en Android. El último commit consultado de `main` es `7903bbb8`, del 5 de noviembre. [Fuente](https://api.github.com/repos/ezradesign/Pace_app/commits/main)
