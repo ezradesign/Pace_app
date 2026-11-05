@@ -22,6 +22,10 @@
 A 29 oct. 2026, v0.186.0 y los catorce dibujos que entraron ese día. **Esta tabla es la única cuenta**: `STATE.md` y `ROADMAP.md` no
 repiten cifras y apuntan aquí. Cuando entre o se pida un dibujo, se cambia aquí y solo aquí.
 
+**Los 22 de logros, con lo que premia cada uno, su prompt corto para el chat de Genspark de los logros y su nombre de archivo**,
+en otra página para Ez (5 nov. 2026): https://claude.ai/artifact/8w1pvFu1EZHKZxsBeV48Tf (`docs/traspaso/dibujos-logros.html`). Van en
+el orden en que se notan: primero lo que todo el mundo ve, luego los secretos y al final Verano y La rueda del año.
+
 **Los de ejercicios, con su prompt entero y su nombre de archivo para copiar, en una página para Ez**:
 https://claude.ai/artifact/3hWPWhj3QmE5S5dWWjcdHT en la cuenta de 5iWBf… y
 https://claude.ai/artifact/6RsAsyovu4emmzHhWjhMLT en la de EcLj6… (`docs/traspaso/dibujos-ejercicios.html`). Van a
@@ -32,8 +36,8 @@ el nombre de hoy, no por el `palmas-al-suelo.webp` que tiene ahora; al entrar, e
 |---|---|---|
 | Ejercicios sin dibujo | **1** | Rana, la de la tabla de abajo. Los 6 nuevos de Mueve y Estira (3A) entraron el 29 oct. `Nordics` no se pide: solo sale en el constructor y ya tiene SVG |
 | Ejercicios con el dibujo equivocado | **1** | Palmas en la mesa (`docs/traspaso/archivos/encargos-14oct/PROMPTS_IMAGENES.md` §1): las versiones revisadas el 29 oct. tienen los dedos hacia fuera. Los 7 que marcó Ez el 23 oct. y Apretar glúteos entraron el 29 oct. («La tanda de Mueve y Estira», abajo), menos Sentadilla de cuádriceps y Puente torácico, que no se dibujan (Ez, 27 oct.): ya no salen en ninguna rutina |
-| Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3 |
-| Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3) |
+| Logros sin dibujo propio | **18** | [`GLIFOS_LOGROS_ENCARGO.md`](GLIFOS_LOGROS_ENCARGO.md), cuya cifra vigila el `verify`: 96 del catálogo menos 78 con dibujo. Los prompts, en `PROMPTS_IMAGENES.md` §4 y, para Rondas maestra, §3; los cortos para Genspark, en la página de logros de arriba. Verano va al final: no tiene detector y desde el 5 nov. no sale en Logros |
+| Logros con el dibujo equivocado o repetido | **4** | Primer ritual, La rueda del año, Búho y Larga sesión (`PROMPTS_IMAGENES.md` §3). La rueda del año, al final, como Verano |
 | **Total** | **24** | |
 
 Ya entraron del encargo del 14 oct.: Elevación de puntas, Hueco abdominal, Primer día, Solsticio
