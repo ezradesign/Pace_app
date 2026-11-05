@@ -132,7 +132,7 @@
    navegador les ponía fondo blanco, y en oscuro no se leían. */
 .pace-rt-sel option { background-color: var(--paper); color: var(--ink); }
 @supports (appearance: base-select) {
-  .pace-rt-sel, .pace-rt-sel::picker(select) { appearance: base-select; }
+  select.pace-rt-sel, .pace-rt-sel::picker(select) { appearance: base-select; }
   .pace-rt-sel::picker-icon { display: none; }
   .pace-rt-sel::picker(select) { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line);
     border-radius: var(--r-md); box-shadow: var(--sh-card); padding: 4px; max-height: 280px; font-size: 15px; }
@@ -453,9 +453,56 @@
 .pace-rt-horas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 18px; }
 .pace-rt-hora { height: 38px; border: 1px solid var(--line) !important; border-radius: var(--r-sm); background: var(--paper) !important; color: var(--ink);
   font-family: var(--font-display); font-style: italic; font-size: 17px; font-variant-numeric: tabular-nums; cursor: pointer; }
-.pace-rt-hora:hover, .pace-rt-hora[aria-checked="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.pace-rt-hora[aria-checked="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+@media (hover: hover) { .pace-rt-hora:hover:not([aria-checked="true"]) { background: var(--paper-2) !important; border-color: var(--ink-3) !important; } }
+.pace-rt-hora { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.pace-rt-hora-check { flex-shrink: 0; margin-left: -4px; }
+.pace-rt-horas-pie { display: flex; justify-content: center; margin-top: 6px; }
+.pace-rt-horas-dejar { min-height: 44px; padding: 0 14px !important; font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2);
+  text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 4px; }
+.pace-rt-horas-dejar:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-hora[aria-checked="true"] { color: var(--focus); font-weight: 500; }
 .pace-rt-hora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+/* MAQUETA B */
+.maq-hoja-filas { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+.maq-hoja-fila { display: grid; grid-template-columns: 96px 1fr 1fr; gap: 6px; align-items: center; }
+.maq-hoja-grupo { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); line-height: 1.2; }
+.maq-hoja-campo { display: flex; flex-direction: column; align-items: flex-start; padding: 5px 10px !important; border: 1px solid var(--line) !important;
+  border-radius: var(--r-sm); background: var(--paper) !important; text-align: left; }
+.maq-hoja-campo span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.maq-hoja-campo b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--ink); line-height: 1.15; }
+.maq-hoja-campo[aria-pressed="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.maq-hoja-horas { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: 14px; gap: 5px; }
+.maq-hoja-horas .pace-rt-hora { height: 34px; font-size: 15px; }
+.maq-hoja-pie { display: flex; justify-content: flex-end; margin-top: 10px; }
+.maq-pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.maq-pie .pace-rt-horas-dejar { margin-left: -14px; }
+.maq-pie-solo { justify-content: center; }
+.maq-pie-solo .pace-rt-horas-dejar { margin-left: 0; }
+.maq-paso { display: grid; grid-template-columns: 56px 1fr 56px; align-items: center; margin-top: 22px; }
+.maq-mas { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--line) !important; background: var(--paper) !important; color: var(--ink);
+  display: grid; place-items: center; }
+.maq-mas:disabled { opacity: 0.35; }
+.maq-paso-hora { text-align: center; font-family: var(--font-display); font-style: italic; font-size: 60px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.maq-paso-nota { text-align: center; margin-top: 10px; font-size: 13px; color: var(--ink-3); display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 18px; }
+.maq-paso-nota .pace-rt-hora-check { margin: 0; color: var(--focus); }
+.maq-rueda { position: relative; height: 200px; margin-top: 16px; }
+.maq-rueda-lista { height: 200px; overflow-y: auto; scroll-snap-type: y mandatory; padding: 80px 0; box-sizing: border-box; scrollbar-width: none; outline: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 32%, #000 68%, transparent); mask-image: linear-gradient(transparent, #000 32%, #000 68%, transparent); }
+.maq-rueda-lista::-webkit-scrollbar { display: none; }
+.maq-rueda-lista:focus-visible + * , .maq-rueda:focus-within .maq-rueda-banda { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+.maq-rueda-item { height: 40px; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: var(--font-display); font-style: italic; font-size: 21px; color: var(--ink-3); cursor: pointer; font-variant-numeric: tabular-nums; }
+.maq-rueda-item.maq-sel { color: var(--ink); font-size: 26px; font-weight: 500; }
+.maq-rueda-item .pace-rt-hora-check { margin: 0; color: var(--focus); }
+.maq-rueda-banda { position: absolute; left: 0; right: 0; top: 80px; height: 40px; background: var(--focus-soft); border-top: 1px solid var(--focus-cta); border-bottom: 1px solid var(--focus-cta); pointer-events: none; }
+.maq-cerca { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+.maq-cerca .pace-rt-hora { height: 44px; font-size: 16px; }
+.maq-otra { display: block; margin: 12px auto 0; min-height: 40px; padding: 0 14px !important; font-family: var(--font-display); font-style: italic; font-size: 17px; color: var(--focus); }
+.maq-ahora { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 12px 16px !important; border-radius: var(--r-md);
+  border: 1px solid var(--focus-cta) !important; background: var(--focus-soft) !important; color: var(--ink); text-align: left; }
+.maq-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
+.maq-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
 /* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
    derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
    partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
