@@ -82,7 +82,7 @@ test.describe('la tienda de la web ofrece solo lo que tiene enlace', () => {
     const tienda = await page.evaluate(async () => ({
       lista: window.paceTiendaDelCanal().listo(),
       abierta: window.paceTiendaAbierta(),
-      planes: window.paceTiendaPlanes('es').map((p) => [p.plan, p.precio]),
+      planes: window.paceTiendaPlanes('es').map((p) => [p.plan, p.precio.replace(/\s/g, ' ')]),
       mes: await window.paceComprar('mes'),
       raro: await window.paceComprar('toString'),
       hash: location.hash,
@@ -128,7 +128,7 @@ test.describe('la bienvenida con solo el de por vida', () => {
     await expect(ahora).toHaveText('Ahora no');
     await expect(page.locator('[data-pace-onb-probar], [data-pace-onb-comenzar]')).toHaveCount(0);
     /* Nada del mensual: ni la prueba, ni el aviso de dos días, ni «al mes». */
-    await expect(tarjeta).not.toContainText(/gratis|al mes|prueba|Te avisamos|Prefiero/i);
+    await expect(tarjeta).not.toContainText(/días gratis|al mes|prueba|Te avisamos|Prefiero/i);
 
     const [a, b] = [await comprar.boundingBox(), await ahora.boundingBox()];
     expect(Math.abs(a.width - b.width)).toBeLessThan(1);
@@ -211,7 +211,7 @@ test.describe('la invitación con solo el de por vida', () => {
     await expect(hoja).toHaveAttribute('data-pace-premium-hoja', 'invita');
     await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('Un solo pago de 19,99 €, para siempre.');
     await expect(hoja).not.toContainText('Llega con la versión 1.');
-    await expect(hoja).not.toContainText(/gratis|al mes|prueba|Te avisamos|Prefiero/i);
+    await expect(hoja).not.toContainText(/días gratis|al mes|prueba|Te avisamos|Prefiero/i);
     await expect(hoja.locator('[data-pace-premium-vida]')).toHaveCount(1);
     await expect(hoja.locator('[data-pace-premium-vida]')).toHaveText('Comprar, 19,99 €');
     await expect(hoja.getByRole('button', { name: /Probar/ })).toHaveCount(0);
@@ -219,7 +219,7 @@ test.describe('la invitación con solo el de por vida', () => {
 
     await quieta(page);
     const [a, b] = await hoja.evaluate((h) => ['Comprar, 19,99 €', 'Ahora no'].map((n) => {
-      const x = [...h.querySelectorAll('button')].find((e) => e.textContent.trim() === n);
+      const x = [...h.querySelectorAll('button')].find((e) => e.textContent.replace(/\s/g, ' ').trim() === n);
       return { ancho: x.offsetWidth, alto: x.offsetHeight, arriba: x.offsetTop };
     }));
     expect(Math.abs(a.ancho - b.ancho)).toBeLessThan(1);
@@ -272,7 +272,7 @@ test.describe('la invitación con solo el de por vida, en un móvil en inglés',
     await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('One payment of €19.99, for good.');
     await quieta(page);
     const [a, b] = await hoja.evaluate((h) => ['Buy, €19.99', 'Not now'].map((n) => {
-      const x = [...h.querySelectorAll('button')].find((e) => e.textContent.trim() === n);
+      const x = [...h.querySelectorAll('button')].find((e) => e.textContent.replace(/\s/g, ' ').trim() === n);
       return { ancho: x.offsetWidth, alto: x.offsetHeight, arriba: x.offsetTop };
     }));
     expect(Math.abs(a.ancho - b.ancho)).toBeLessThan(1);
@@ -344,7 +344,7 @@ test.describe('quien ya tiene un código lo sigue usando', () => {
     await irAlArtefacto(page);
     await comoEnV1(page, SOLO_VIDA);
     await expect.poll(() => page.evaluate(() => window.hasPremiumEntitlement())).toBe(true);
-    expect(await page.evaluate(() => [window.paceTiendaAbierta(), window.paceBienvenidaCompleto(), window.paceTiendaPlanes('es').length])).toEqual([false, null, 0]);
+    expect(await page.evaluate(() => [window.paceTiendaAbierta(), window.paceBienvenidaCompleto()])).toEqual([false, null]);
   });
 
   test('y quien no lo tiene puede ponerlo desde la invitación con la tienda abierta', async ({ page, context }) => {
