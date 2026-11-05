@@ -214,6 +214,18 @@
 .pace-rt-etiq .pace-rt-m { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 1px; white-space: nowrap; }
 .pace-rt-etiq .pace-rt-gota { width: 10px; height: 10px; margin-left: 3px; }
 .pace-rt-zona { height: 52px; }
+/* La ficha de una parada que aún no toca (Ez, 5 nov. 2026: 1A): el papel del panel, encima
+   de las etiquetas; la coloca el JS (abajo, o encima si abajo no cabe). */
+.pace-rt-ficha { position: absolute; top: 34px; z-index: 6; width: 300px; max-width: calc(100% + 16px); text-align: left;
+  background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: var(--sh-soft); padding: 12px 14px 10px; }
+.pace-rt-ficha .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; font-variant-numeric: tabular-nums; }
+.pace-rt-ficha-plato { margin-top: 6px; }
+.pace-rt-ficha-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }
+.pace-rt-ficha-d { font-size: 12.5px; line-height: 1.35; color: var(--ink-2); margin-top: 2px; }
+.pace-rt-ficha .pace-rt-sub { margin-top: 8px; }
+.pace-rt-ficha-pie { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 10px; }
+.pace-rt-ficha-pie .pace-rt-enlace { font-size: 14px; padding: 6px 0; margin: -6px 0; background: none; border: none; cursor: pointer; }
+.pace-rt-ficha-pie .pace-rt-ficha-x { font-size: 13px; text-decoration: none; }
 
 /* COMPACTO (móvil) */
 .pace-rt-mini { display: flex; align-items: center; height: 12px; margin: 14px 0 10px; }

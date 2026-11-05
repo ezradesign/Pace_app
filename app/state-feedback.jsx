@@ -9,8 +9,9 @@
 
    Modelo de datos — slice `routineFeedback` bajo pace.state.v2:
      routineFeedback: {
-       [routineId]: { yes, some, no, lastPromptDay }
+       [routineId]: { yes, some, no, lastPromptDay, lastNoDay }
      }
+   `lastNoDay` es el día del último «No» (desde el 5 nov. 2026; lo de antes no lo trae).
    Conteos COMPLETOS (decisión s116): se guardan los tres contadores; `answered`
    y cualquier `helpScore` se DERIVAN, NUNCA se persisten (evita fijar una
    ponderación prematura). «Ahora no» (later) NO incrementa contadores pero SÍ
@@ -66,6 +67,10 @@ function nextRoutineFeedback(prev, routineId, response) {
     no:   feedbackCount(cur.no),
     lastPromptDay: todayISO(),
   };
+  /* El día del último «No»: el veto de la pausa dura una semana desde él (breakVetadas,
+     Ez, 5 nov. 2026). Las otras respuestas lo conservan. */
+  if (resp === 'no') nextEntry.lastNoDay = nextEntry.lastPromptDay;
+  else if (typeof cur.lastNoDay === 'string') nextEntry.lastNoDay = cur.lastNoDay;
   /* Suma sin volver a coaccionar: los tres campos de `nextEntry` ya son enteros
      por construccion. Coaccionar aqui TAMBIEN seria una segunda guarda del
      mismo invariante, y el banco de mutantes lo demostro -- con las dos puestas,
@@ -78,7 +83,7 @@ function nextRoutineFeedback(prev, routineId, response) {
 /* recordRoutineFeedback — acción pública. setState con updater FUNCIONAL (sin
    side-effects dentro del updater: los sonidos/handlers viven en la UI). Ignora
    silenciosamente id vacío o respuesta no reconocida. */
-function recordRoutineFeedback(routineId, response) {
+function recordRoutineFeedback(routineId, response, opciones) {
   const id = sanitizeRoutineId(routineId);
   const resp = sanitizeFeedbackResponse(response);
   if (!id || !resp) return;
@@ -89,8 +94,24 @@ function recordRoutineFeedback(routineId, response) {
   /* s172 · dual-write: el contador de arriba sigue siendo la fuente de verdad
      de «que te ayuda»; el evento se anade al lado. `later` NO emite (§15.2) y
      tampoco emite si la sesion correlacionada no es esta rutina — el `runId`
-     de §7.1 referencia una sesion que EXISTE, no se inventa. */
+     de §7.1 referencia una sesion que EXISTE, no se inventa.
+     `sinEvento`: el «No» se puede deshacer mientras la pantalla sigue abierta, y el
+     registro no se reescribe, asi que SessionFeedback lo emite al salir. */
+  if (opciones && opciones.sinEvento) return;
   if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
+}
+
+/* restaurarRoutineFeedback — «Deshacer»: deja la entrada de la rutina como estaba antes
+   de contestar (`antes` null o ausente = no habia ninguna). */
+function restaurarRoutineFeedback(routineId, antes) {
+  const id = sanitizeRoutineId(routineId);
+  if (!id) return;
+  setState(prev => {
+    const fb = Object.assign({}, (prev.routineFeedback && typeof prev.routineFeedback === 'object') ? prev.routineFeedback : {});
+    if (antes && typeof antes === 'object') fb[id] = Object.assign({}, antes);
+    else delete fb[id];
+    return { ...prev, routineFeedback: fb };
+  });
 }
 
 /* shouldPromptRoutineFeedback — ¿mostrar la pregunta para esta rutina AHORA?
@@ -109,5 +130,6 @@ Object.assign(window, {
   feedbackCount,
   nextRoutineFeedback,
   recordRoutineFeedback,
+  restaurarRoutineFeedback,
   shouldPromptRoutineFeedback,
 });

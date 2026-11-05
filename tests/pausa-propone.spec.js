@@ -263,21 +263,26 @@ test('un «No» saca esa rutina de la propuesta, y un «Si» la protege', async 
       const out = window.breakPropuesta(Object.assign({}, base, { routineFeedback: fb || {} }), ctx);
       return out && out.rutina ? out.rutina.id : null;
     };
+    /* El «No» de ayer: el veto dura una semana desde él (Ez, 5 nov. 2026; la regla y su
+       caducidad, en feedback-una-semana.spec.js). */
+    const ayer = { lastNoDay: '2026-09-15', lastPromptDay: '2026-09-15' };
     const primera = prop({});
-    const tras1No = prop({ [primera]: { yes: 0, some: 0, no: 1 } });
-    const traNoYSi = prop({ [primera]: { yes: 1, some: 0, no: 1 } });
-    const traNoYPoco = prop({ [primera]: { yes: 0, some: 1, no: 1 } });
+    const tras1No = prop({ [primera]: Object.assign({ yes: 0, some: 0, no: 1 }, ayer) });
+    const traNoYSi = prop({ [primera]: Object.assign({ yes: 1, some: 0, no: 1 }, ayer) });
+    const traNoYPoco = prop({ [primera]: Object.assign({ yes: 0, some: 1, no: 1 }, ayer) });
+    const traNoViejo = prop({ [primera]: { yes: 0, some: 0, no: 1, lastNoDay: '2026-09-09', lastPromptDay: '2026-09-09' } });
     /* Y el veto es de la PROPUESTA, no del catalogo: la rutina vetada sigue
        estando disponible para elegirla a mano. */
     const sigueEnElPozo = window.breakPozo(window.EXTRA_ROUTINES).some(x => x.id === primera);
-    return { primera, tras1No, traNoYSi, traNoYPoco, sigueEnElPozo,
-             veta: window.breakVetadas({ a: { no: 2 }, b: { no: 2, some: 1 }, c: { yes: 1 } }) };
+    return { primera, tras1No, traNoYSi, traNoYPoco, traNoViejo, sigueEnElPozo,
+             veta: window.breakVetadas({ a: Object.assign({ no: 2 }, ayer), b: Object.assign({ no: 2, some: 1 }, ayer), c: Object.assign({ yes: 1 }, ayer) }, '2026-09-16') };
   });
 
   expect(r.primera, 'GUARD: la rama de los 45 minutos no propone nada').toBeTruthy();
   expect(r.tras1No, 'se sigue proponiendo la rutina que se acaba de rechazar').not.toBe(r.primera);
   expect(r.traNoYSi, 'un «No» posterior tumba una rutina que YA habia ayudado').toBe(r.primera);
   expect(r.traNoYPoco, '«Un poco» no cuenta como ayuda y deberia').toBe(r.primera);
+  expect(r.traNoViejo, 'un «No» de hace una semana sigue apartando la rutina').toBe(r.primera);
   expect(r.sigueEnElPozo, 'el veto ha borrado la rutina del catalogo, no solo de la propuesta').toBe(true);
   expect(r.veta, 'breakVetadas veta lo que ayudo, o perdona lo que no').toEqual({ a: true });
 });
@@ -294,7 +299,7 @@ test('con TODO rechazado la pausa sigue proponiendo (amnistia)', async ({ page, 
   const r = await page.evaluate(() => {
     const fb = {};
     window.breakPozo(window.EXTRA_ROUTINES).forEach(x => {
-      fb[x.id] = { yes: 0, some: 0, no: 3 };
+      fb[x.id] = { yes: 0, some: 0, no: 3, lastNoDay: '2026-09-16', lastPromptDay: '2026-09-16' };
     });
     const out = window.breakPropuesta(
       { focusMinutes: 45, cycle: 1, water: { today: 0, goal: 8 }, plan: {}, routineFeedback: fb },

@@ -41,7 +41,7 @@ const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = 
 
 function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix,
                        variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240,
-                       viajes, enPausa = false }) {
+                       viajes, enPausa = false, primeraVez = null }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
@@ -88,7 +88,13 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   /* Ni lo que va aparte («Con material», «Para ir a más»): solo sale si se elige. */
   const proponibles = useMemoLib(() => new Set(libraryProponibles(groups)), [groups]);
   const abiertas = visibles.filter(r => proponibles.has(r) && (!window.canAccessRoutine || window.canAccessRoutine(r.id)));
-  const ahora = libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
+  /* «EMPIEZA AQUÍ» OCUPA EL SITIO DE «PARA AHORA» la primera vez (Respira, Ez, 5 nov.
+     2026: 3A): una sola tarjeta y fija, en vez de la que rota cada día. Mismo sitio y
+     mismo marcador, así que el lateral no crece (s175) y sale de su grupo como las demás.
+     Si el filtro la esconde o está cerrada, vuelve «Para ahora». */
+  const primera = primeraVez && pasa(primeraVez) && (!window.canAccessRoutine || window.canAccessRoutine(primeraVez.id)) ? primeraVez : null;
+  const ahora = primera ? [primera] : libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
+  const tituloAhora = primera ? t('lib.primera') : t('lib.now');
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
   /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya
@@ -142,10 +148,10 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   );
 
   const bloqueAhora = ahora.length > 0 && (
-    <section data-pace-lib-now>
+    <section data-pace-lib-now data-pace-lib-primera={primera ? '' : undefined}>
       {/* la cabecera SÓLO existe si hay algo debajo: una cabecera que se pinta
           con nada es el fallo que el verify vigila en las familias de logro */}
-      <h3 className="pace-lib-now">{t('lib.now')}</h3>
+      <h3 className="pace-lib-now">{tituloAhora}</h3>
       {tarjetas(ahora)}
     </section>
   );
@@ -224,14 +230,14 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
             {tuyas}
             {ahora.length > 0 && (
               <React.Fragment>
-                <p className="pace-lib-lateral-tit">{t('lib.now')}</p>
+                <p className="pace-lib-lateral-tit">{tituloAhora}</p>
                 {/* MISMO MARCADOR que la copia de móvil. Las dos existen en el
                     DOM y la hoja apaga la que sobra (s166 quitó el lector de
                     piel en JS a propósito: costaba un re-render de la home en
                     cada cruce del breakpoint). Si sólo una llevara el atributo,
                     cualquier sonda daría CERO en la otra piel sin decir por
                     qué -- pasó cuatro veces midiendo esta sesión. */}
-                <div data-pace-lib-now>{tarjetas(ahora)}</div>
+                <div data-pace-lib-now data-pace-lib-primera={primera ? '' : undefined}>{tarjetas(ahora)}</div>
               </React.Fragment>
             )}
           </aside>
