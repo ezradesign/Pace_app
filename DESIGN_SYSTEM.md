@@ -822,9 +822,12 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
   chips · píldora— y el panel no crece; sin sitio, **dos filas a la derecha**, chips arriba y resumen
   debajo, 4 px entre ellas. La línea lleva 18 px de margen sobre la cabecera (eran 22): «AHORA» necesita
   14 y sobran 4 de aire.
-- **Las horas se editan dentro de la frase**: un `<select>` nativo con aspecto de texto —la cifra
-  en `--ink`, subrayado punteado `--line-2`, chevron de 7×5 px en `--ink-3`— y un relleno vertical
-  que agranda la zona de toque sin mover la línea. En móvil abre el selector del sistema.
+- **Las horas se editan dentro de la frase**: un botón con aspecto de texto —la cifra en `--ink`,
+  subrayado punteado `--line-2`, chevron de 7×5 px en `--ink-3`— y un relleno vertical que agranda
+  la zona de toque sin mover la línea. Todas abren el mismo **paso a paso** (la D de Ez, 5 nov. 2026):
+  grupo y título arriba, cómo está ahora, «− 9:00 +» con el número a 60 px en la serif itálica (44 px
+  la duración) entre dos círculos de 56 px, y abajo «Dejar las 9:00» subrayado y «Cambiar a las 9:30»
+  en la píldora de «Comienza», que solo aparece si hay algo que cambiar.
 - **Las opciones** son tarjetas de `--r-md` con el nombre en cursiva 16 px y la hora de fin en
   versalita; en hover, lavado `--focus-soft` y borde `--focus-cta`. En móvil, rejilla 2×2.
 - **Las dos pieles son dos copias en el DOM** (`.pace-rt-esc` / `.pace-rt-mov`, corte 768/769), **y también

@@ -117,8 +117,9 @@
 .pace-rt-ctx span { font-size: 10px; letter-spacing: 0.08em; color: var(--ink-2); border: 1px solid var(--line);
   border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
 
-/* EL HORARIO se edita dentro de la frase: <select> nativo con aspecto de texto
-   subrayado. El padding vertical agranda la zona de toque sin mover la línea. */
+/* EL HORARIO se edita dentro de la frase: un botón con aspecto de texto subrayado que abre
+   su paso a paso (RitmoHoraPaso); el <select> de los bloques y del calendario lleva la misma
+   clase. El padding vertical agranda la zona de toque sin mover la línea. */
 .pace-rt-sel { appearance: none; -webkit-appearance: none; font: inherit; color: var(--ink); cursor: pointer;
   background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Cpath d='M.5.8 3.5 4 6.5.8' fill='none' stroke='%2377705F' stroke-width='1.1'/%3E%3C/svg%3E") no-repeat right 1px center / 7px 5px;
   border: 0; border-bottom: 1px dotted var(--line-2); border-radius: 0; padding: 6px 11px 1px 1px; margin: -6px 1px 0;
@@ -132,7 +133,7 @@
    navegador les ponía fondo blanco, y en oscuro no se leían. */
 .pace-rt-sel option { background-color: var(--paper); color: var(--ink); }
 @supports (appearance: base-select) {
-  .pace-rt-sel, .pace-rt-sel::picker(select) { appearance: base-select; }
+  select.pace-rt-sel, .pace-rt-sel::picker(select) { appearance: base-select; }
   .pace-rt-sel::picker-icon { display: none; }
   .pace-rt-sel::picker(select) { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line);
     border-radius: var(--r-md); box-shadow: var(--sh-card); padding: 4px; max-height: 280px; font-size: 15px; }
@@ -438,7 +439,7 @@
 .pace-rt-preg .pace-rt-chip b { line-height: 1.08; }
 .pace-rt-preg .pace-rt-chip > span { margin-top: 2px; line-height: 1.12; }
 /* El chip de la media jornada fuera de su hora: su nombre es un botón que abre la hora de
-   inicio (RitmoHoraInicio) y cuya caja cubre el chip entero; los dos selectores van encima.
+   inicio (RitmoHoraPaso) y cuya caja cubre el chip entero; los dos selectores van encima.
    Sus cajas crecen hacia arriba para el dedo sin mover el chip ni su subrayado. */
 .pace-rt-chip.pace-rt-chip-horas { position: relative; cursor: pointer; }
 .pace-rt-chip-nombre { display: block; width: 100%; padding: 0 !important; border: 0 !important; background: none !important; text-align: left; cursor: pointer; }
@@ -449,13 +450,27 @@
 .pace-rt-chip-horas .pace-rt-sel { padding-top: 10px; margin-top: -10px; background-position: right 1px bottom 6px; }
 /* Lo que crecen los selectores no llega a pisar la palabra: tocar «Media jornada» abre su hora. */
 .pace-rt-chip-nombre b { position: relative; z-index: 2; }
-/* La hora de inicio: las horas en cursiva display, como en la frase, y la de ahora en verde. */
-.pace-rt-horas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 18px; }
-.pace-rt-hora { height: 38px; border: 1px solid var(--line) !important; border-radius: var(--r-sm); background: var(--paper) !important; color: var(--ink);
-  font-family: var(--font-display); font-style: italic; font-size: 17px; font-variant-numeric: tabular-nums; cursor: pointer; }
-.pace-rt-hora:hover, .pace-rt-hora[aria-checked="true"] { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
-.pace-rt-hora[aria-checked="true"] { color: var(--focus); font-weight: 500; }
-.pace-rt-hora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
+/* EL PASO A PASO DE LAS HORAS (RitmoHoraPaso): un número grande en la serif de PACE entre
+   − y +. Sin arrastre ni menú al mantener el dedo, que es como se avanza seguido. */
+.pace-rt-paso { display: grid; grid-template-columns: 56px 1fr 56px; align-items: center; margin-top: 22px; }
+.pace-rt-paso-mas { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--line) !important; background: var(--paper) !important; color: var(--ink);
+  display: grid; place-items: center; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.pace-rt-paso-mas[aria-disabled="true"] { opacity: 0.35; cursor: default; }
+@media (hover: hover) { .pace-rt-paso-mas:hover:not([aria-disabled="true"]) { background: var(--paper-2) !important; border-color: var(--ink-3) !important; } }
+.pace-rt-paso-mas:active:not([aria-disabled="true"]) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
+.pace-rt-paso-hora { text-align: center; font-family: var(--font-display); font-style: italic; font-size: 60px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pace-rt-paso-dura { font-size: 44px; }
+.pace-rt-paso-nota { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 18px; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.pace-rt-paso-nota svg { color: var(--focus); }
+.pace-rt-paso-oido { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pace-rt-paso-pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 0 -14px; }
+.pace-rt-paso-dejar { min-height: 44px; padding: 0 14px !important; font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); white-space: nowrap;
+  text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 4px; }
+.pace-rt-paso-ahora { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 12px 16px !important; border-radius: var(--r-md);
+  border: 1px solid var(--focus-cta) !important; background: var(--focus-soft) !important; color: var(--ink); text-align: left; cursor: pointer; }
+.pace-rt-paso-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
+.pace-rt-paso-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
+.pace-rt-paso-mas:focus-visible, .pace-rt-paso-hora:focus-visible, .pace-rt-paso-dejar:focus-visible, .pace-rt-paso-ahora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 /* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
    derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
    partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
