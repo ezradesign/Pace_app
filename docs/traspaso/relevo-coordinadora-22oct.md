@@ -83,6 +83,22 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     esté todo al día»: el ROADMAP, los dos README (Android e iPhone, las funciones de Cloudflare, 14 de Mueve y 19 de
     Estira) y /premium, que decía 34 rutinas gratis desde el 18 oct. y son 35 (y 18 de pago, no 19) desde las capas del
     23. Lo defiende `scripts/verify.promesas.js`. /beta estaba al día; su enlace del iPhone espera a que Apple apruebe.
+13. **4 nov. (miércoles): EcLj6… repuesta** (5 h y semana al 0 %; la semana se repone el 10 nov. a las 14:00). `main` igual
+    que origin, limpio y con el CI de 7b9649a8 en verde entero. Ni dibujos ni logo nuevos: `para-revisar` sigue con lo del
+    29 oct. y `Escritorio\Glifos` ya no existe. `maqueta-sin-querer` no había arrancado (su rama seguía en 436c4300, sin
+    commits): se le escribió «Arranca», con traer `main` a su rama antes de mirar Q2, Q4 y R1. La hoja (versión 99) la
+    pone «en marcha».
+14. **4 nov., Ez: «Pásame los prompts de los dos ejercicios + el logo de momento va a quedar así + guíame con el proceso
+    del Stripe + creo que he detectado un bug en uno de los beta testers con la sesión de media jornada que en el móvil un
+    fin de semana a las 15h no podía pulsar, compruébalo. Si hay algo más que hacer abre los hilos correspondientes».**
+    - Prompts de Rana y Palmas, pasados en el chat (los de `docs/traspaso/dibujos-ejercicios.html`, `promptDe`).
+    - El logo se queda: la versión de prueba ya solo espera los dos dibujos (STATE, ROADMAP, LEEME y la hoja, al día).
+    - El fallo, cierto y reproducido con Playwright a 360×718 (sábado 7 nov. a las 15:00, con y sin semana): pasada su
+      hora, el chip de «Media jornada» es un `div` con sus dos horas, y mover solo el inicio a las 15:00 lo deja «De 15:00
+      a 13:00» y muerto. Lo arregla `media-jornada-tarde` (`local_ae719da3-b056-4096-80eb-0f45cbecd088`, worktree propio,
+      puerto 8834): el fin se mueve con el inicio, prueba en rojo antes, y una página con lo que se ve para Ez. Sin bump.
+    - Stripe: `/api/stripe` da 503 («cerrada»); se guía a Ez por el aviso de prueba y los `plink_` en el chat.
+    - Nada más que abrir: lo demás hasta v1 espera a Ez (altas, datos, testers) o es del grupo 3.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
