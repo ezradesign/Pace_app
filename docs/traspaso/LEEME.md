@@ -4,6 +4,14 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.0.
 
+## 5 nov.: logros sin «Pronto» y la página de los 22 dibujos de logros, en su rama
+
+Ez: «Esto de los logros imagino que puede sobrar + habría que diseñar los logros que faltan». En la rama
+`claude/logros-sin-pronto-ddf6d6` (commits 0ffe6902 y a1e8042b, sin versión): los 8 logros sin detector ya no se ven ni
+se cuentan, y «Disponibles» pasa a «Sellos reunidos». Antes y después: https://claude.ai/artifact/EF6XxCFPnGjx518mpm6FqQ.
+Dibujos: https://claude.ai/artifact/8w1pvFu1EZHKZxsBeV48Tf (`docs/traspaso/dibujos-logros.html`). `verify` pasa. **Falta la suite
+entera**: en el relevo iba por la 920 de 1187 en el puerto 8844, sin fallos; hay que repetirla antes de juntar.
+
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 
 Ez: «el logo de momento va a quedar así». La versión de prueba definitiva ya solo espera Rana y Palmas en la mesa; las
