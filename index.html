@@ -40027,6 +40027,7 @@ function paceDiaArchivo() {
 
 
 
+
 function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
@@ -40103,7 +40104,10 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
   const exportJSON = () => {
     const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
-    Promise.resolve(paceDescargarCopia(null, alAbrir)).then((como) => {
+
+
+
+    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
       if (como === 'descargada' || como === 'compartida') {
         if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
 

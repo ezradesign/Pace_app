@@ -60,8 +60,9 @@ function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
 }
 
-/* `enMemoria`: el estado de la app, para cuando el navegador no deja guardar (AvisoNoGuarda) y lo
-   guardado es viejo o ni se puede leer. Devuelve lo de `paceBajarJSON`, o false si ni se armó. */
+/* `enMemoria`: el estado de la app. Ajustes y el aviso de «No se puede guardar» lo pasan (`getState()`);
+   sin él (`null`) se lee del disco, que es la vía de la pantalla de error y de los rescates, donde la
+   interfaz puede estar caída y lo guardado ser viejo o ni poder leerse. Devuelve lo de `paceBajarJSON`, o false si ni se armó. */
 function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
@@ -138,7 +139,10 @@ function TweaksDataSection({ onReset, isWeb }) {
      la app elegida no se sabe, así que nunca se dice «guardada». */
   const exportJSON = () => {
     const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
-    Promise.resolve(paceDescargarCopia(null, alAbrir)).then((como) => {
+    /* Desde la app funcionando, lo que se ve: el estado en memoria, que es lo único al día si el
+       navegador no deja guardar (revisión de ChatGPT del 5 nov., punto 1). Leer del disco es solo
+       para la pantalla de error, que existe cuando el árbol se ha caído. */
+    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
       if (como === 'descargada' || como === 'compartida') {
         if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
         /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
