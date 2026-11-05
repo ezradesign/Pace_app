@@ -1271,6 +1271,8 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
 **Ez, 5 nov., tarde, con sus respuestas:** juntar los cuatro arreglos tras la 0.190.0; la versión de prueba espera a esos arreglos, /premium y `capas-y-pausa`; al acabar, quitar los worktrees ya juntados con copia antes (un bundle, como el 31 oct.); y cuatro hilos: `maqueta-sobre` `local_de773665-9fbd-4a40-bd3e-e22720396ef2`, `landing-web` `local_795cb4bb-b415-46de-8795-dfcdb232c130`, el reparto del calendario (solo lee) y «catálogo, cifras y Auto», que se abre al acabar `capas-y-pausa` `local_f7e2ad80-845f-40c2-b9cc-ae6c64efe23b`. Los glifos de logros los deja en `dibujos-22oct/para-revisar` y dirá «dibujos de logros en la carpeta».
 
+**Más de la tarde del 5 nov.:** el párrafo «A tu ritmo» de Play se pega con Ez al subir la siguiente beta. Ez ya busca testers. `premium-solo-vida`, con la C montada: `LISTO PARA MAIN`, solo falta la suite. Calendario: en /premium casa con lo del 29 oct.; en Android el candado no dice el límite, y en la web, al darse de alta los ids de Google y Microsoft, la hoja vendería «mantenerlo al día» antes de que exista el llavero: hay que cambiarlo antes de esas altas. Repasar el README cuando salga la versión de prueba.
+
 **Ez, 5 nov., tarde:** jornada 1A 2B y /premium 1C. La jornada se monta en `maqueta-jornada` (`local_39af6801-6a3d-4990-be0e-b567a9e5baee`) en cuanto la 0.190.0 esté en `main`.
 
 **Después de v1 (Ez, 5 nov.: «Sí, para después»):** un ejercicio nuevo de descanso de manos, con los antebrazos en la mesa y las palmas arriba, con el dibujo `dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`.

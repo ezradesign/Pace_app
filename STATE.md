@@ -56,7 +56,7 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
   `RESEND_CLAVE` en Cloudflare, mejor al encender la venta (`docs/launch/desistir.md`).
-- **Volver a pegar en Play Console** el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`, en es y en (cambió
+- **Volver a pegar en Play Console, juntos al subir la siguiente beta** (Ez, 5 nov.), el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`, en es y en (cambió
   con la 0.188.0); el de PACE completo, con la v1.
 - **Stripe** (`docs/launch/cobro-web.md`): el modo de prueba, entero y comprobado el 5 nov.: el aviso, la llave de lectura
   (`STRIPE_LECTURA`, del modo de prueba de la cuenta y no del sandbox), dos compras con 4242 y /recuperar con el recibo de Link;
