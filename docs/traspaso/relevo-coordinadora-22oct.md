@@ -139,6 +139,14 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     paso a paso · los dibujos de Rana y Palmas los hace Ez antes de subir la versión de prueba (no se sube sin ellos):
     prompts nuevos en el chat, con Rana en tres cuartos (la flecha hacia atrás no se ve de frente) y Palmas en primera
     persona, y la idea de anclar con una foto de sus manos o con `app/glyphs/assets/ejercicios/gato-camello.webp`.
+20. **5 nov., Stripe en real:** la Guía de configuración de Stripe tiene hecho todo menos «Configura Tax» (se deja: con
+    Managed Payments vende Stripe; Ez lo confirma con el gestor). Ez puso el `whsec_` del destino real en
+    `STRIPE_AVISO_SECRETO` y la `rk_live_` («PACE recuperar», las cuatro en Lectura) en `STRIPE_LECTURA`, y reimplementó:
+    `/api/stripe` da «firma» y `/api/recuperar` ya NO encuentra la compra de prueba (404), señal de que lee la cuenta real.
+    Las compras de prueba ya no dan código. Faltan lo legal (datos de Ez y revisión), Resend para `/desistir`, encender los
+    dos enlaces reales y ponerlos con el portal en `PACE_TIENDA_WEB` (`app/state-compra.js`). La 0.189.1, en `main` y
+    subida (b9d4da13): suite sobre `main` 1176 en verde, 2 saltadas y 6 de `android-avisos` caídas con el PC dormido, que
+    solas pasan 20 de 20. Rana: la segunda de Genspark vale (rodillas abiertas, flecha recta atrás); falta Palmas.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

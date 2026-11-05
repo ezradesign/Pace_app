@@ -4,6 +4,36 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.1.
 
+## AL RELEVO (5 nov., ~11:30): EcLj6… al 85 % de las 5 h; se migra a la otra cuenta al 90 % (regla de Ez)
+
+**Si llegas de la otra cuenta, empieza aquí.** Coordinaba `local_30b3e868-e7bd-44ae-bfd0-ca5b062fffba` en EcLj6… (las 5 h se
+reponen a las 15:30; la semana, al 25 %). Regla nueva de Ez: cada cuenta hasta el 90 % y se migra (WORKFLOW §10).
+`main` = origin, v0.189.1 publicada (CI de b9d4da13 en marcha al irme; mirarlo con `gh run list`). El detalle de estos
+dos días, en `relevo-coordinadora-22oct.md`, puntos 13 a 20.
+
+1. **Tres sesiones de esta cuenta, invisibles desde la otra.** Se retoman con una sesión nueva con `cwd` en su worktree,
+   leyendo antes el bloque «AL RELEVO (5 nov.)» del LEEME de su rama (se les pidió «WIP:» y push al 85 %; si quedó algo
+   sin commit, «WIP:» y push desde la coordinadora):
+   - **Todas las horas** (`.claude/worktrees/hungry-borg-a27a1a`, `claude/hungry-borg-a27a1a`, puerto 8842): Ez eligió la
+     **D** («− 9:00 +», «la E rompe un poco el diseño de PACE»), con mantener pulsado y «Empezar ahora» si encaja, y la
+     «Hora de inicio» de la 0.189.1 también en D. Página: https://claude.ai/artifact/4N7PYTUgWe6ZWaTF9hDb1U (de EcLj6…).
+     Fotos de lo montado a Ez antes de juntar.
+   - **Logros sin «Próximamente»** (`.claude/worktrees/logros-sin-pronto-ddf6d6`, `claude/logros-sin-pronto-ddf6d6`, puerto
+     8844): montado (0ffe6902) y la página de los 22 dibujos (a1e8042b); faltaba cerrar su suite. Al juntar con las horas,
+     el censo de textos de `verify.integridad.js` suma los dos cambios a mano. Páginas: EF6XxCFPnGjx518mpm6FqQ (antes y
+     después) y 8w1pvFu1EZHKZxsBeV48Tf (dibujos de logros).
+   - **Lo que pasa sin querer** (`.claude/worktrees/sweet-moser-38e06d`, `claude/sweet-moser-38e06d`, puerto 8820): Ez,
+     «1A + 2A pero durante una semana y el ahora no debería estar en la linea de abajo de si/un poco/no + 3A». Montando.
+2. **Stripe en real, conectado** (aviso y llave de lectura en Cloudflare, comprobados). Para vender: los datos del aviso
+   legal de Ez (nombre, NIF, dirección en la UE, correo y teléfono) y la revisión profesional (Ez reafirmó 1A-5A el 5
+   nov.; se le preguntó si ya la revisó un profesional), Resend justo antes de encender, una revisión con ChatGPT del cobro
+   y lo legal, y encender los dos enlaces reales y ponerlos con el portal en `PACE_TIENDA_WEB`. Pendiente de Ez: ¿en la
+   web solo el de por vida o también el mensual? «Configura Tax» se deja hasta que lo confirme el gestor.
+3. **Dibujos:** la Rana (la segunda de Genspark) vale; falta Palmas en la mesa, con el prompt en primera persona. La
+   versión de prueba definitiva se sube cuando estén las dos (Ez prefiere esperarlas).
+4. **Páginas de EcLj6… (404 desde la otra):** la hoja EcLj6io4wM9pGjtQ5wd1CT (versión 102); en la otra cuenta se
+   republica `docs/traspaso/hoja-de-ruta-20oct.html` en su hoja 5iWBfHE7kD3dUVocdskmb6.
+
 ## 4 nov., tarde: la media jornada, en `main` (v0.189.1); Stripe, conectado salvo /recuperar
 
 Con el «Sí, júntala» de Ez: `claude/media-jornada-tarde-a30820` (d70dc263, una hora que cruza la otra de su tramo la

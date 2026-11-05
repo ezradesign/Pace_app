@@ -60,7 +60,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   con la 0.188.0); el de PACE completo, con la v1.
 - **Stripe** (`docs/launch/cobro-web.md`): el modo de prueba, entero y comprobado el 5 nov.: el aviso, la llave de lectura
   (`STRIPE_LECTURA`, del modo de prueba de la cuenta y no del sandbox), dos compras con 4242 y /recuperar con el recibo de Link;
-  y los cuatro `plink_` en `PACE_ENLACES_STRIPE`. Para vender de verdad: el alta con el gestor y lo mismo en el modo real.
+  y los cuatro `plink_` en `PACE_ENLACES_STRIPE`. **Modo real (5 nov.)**: cuenta activada tras el alta con el gestor, y el
+  aviso (`whsec_` real) y la llave de lectura (`rk_live_`) ya en Cloudflare. Faltan lo legal, Resend y encender los enlaces.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). Quiere vender en la web antes de v1 (propuesto: solo el de por
   vida, en /premium); antes, lo legal de /premium.
