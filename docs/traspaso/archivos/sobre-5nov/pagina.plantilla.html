@@ -1,0 +1,181 @@
+<title>El sobre de PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<!-- PACE · el sobre con varias cosas: la página para que Ez elija (5 nov. 2026).
+     Las fotos son de PACE.html (0.190.0) con la hoja de cada opción montada por fuera, con el Modal y los estilos de la carta;
+     los textos de ejemplo salen de lo que ya existe. Guiones en docs/traspaso/archivos/sobre-5nov/. -->
+<style>
+  /* Una columna de lectura; cada opción con sus fotos (móvil y ordenador, claro y oscuro) y su pro y su contra. Los tokens son los de la app. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --cta: #50624D; --lacre: #C97A5D; --reco-bg: #E3E6D8;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --cta: #8E9D88; --lacre: #D99477; --reco-bg: #2a3025; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --cta: #8E9D88; --lacre: #D99477; --reco-bg: #2a3025; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.55;
+    padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  main { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  section { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .texto { max-width: 66ch; display: flex; flex-direction: column; gap: 12px; }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; line-height: 1.1; text-wrap: balance; }
+  h1 { font-size: clamp(36px, 7vw, 52px); }
+  h2 { font-size: clamp(28px, 5vw, 36px); }
+  h3 { font-size: 22px; }
+  p { margin: 0; }
+  .meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+  .suave { color: var(--ink-2); }
+  .fino { color: var(--ink-3); font-size: 14px; }
+  hr { border: 0; border-top: 1px solid var(--line); width: 100%; margin: 0; }
+  .tabla { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 14px 10px 0; border-top: 1px solid var(--line); }
+  th { font-weight: 600; width: 16%; }
+  thead th { border-top: 0; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .barra { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; align-items: start; }
+  .barra figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  figcaption { font-size: 12px; color: var(--ink-3); }
+  img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; }
+  .opcion { display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
+  .cab { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .letra { font-family: var(--display); font-style: italic; font-size: 44px; line-height: 1; color: var(--cta); }
+  .reco { font-size: 12px; background: var(--reco-bg); color: var(--ink); padding: 3px 10px; border-radius: 99px; letter-spacing: .04em; }
+  .pc { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px 32px; font-size: 14px; }
+  .pc div { min-width: 0; }
+  .pc b { font-weight: 600; }
+  .fotos { display: flex; flex-direction: column; gap: 18px; }
+  .fm { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  .fm figure { margin: 0; width: min(100%, 250px); display: flex; flex-direction: column; gap: 6px; }
+  .fe { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 16px; }
+  .fe figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .preguntas { display: flex; flex-direction: column; gap: 22px; }
+  .q { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; background: var(--paper-2); border-radius: 12px; }
+  .q ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .q li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 6px; }
+  .q li b { font-family: var(--display); font-style: italic; font-size: 20px; line-height: 1.2; color: var(--cta); font-weight: 500; }
+  .q .r { font-size: 14px; color: var(--ink-2); }
+  .lacre { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--lacre); vertical-align: baseline; }
+  .vacio { display: inline-block; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--ink-3); vertical-align: baseline; }
+</style>
+
+<main>
+  <header class="texto">
+    <div class="meta">PACE · el sobre · 5 nov. 2026</div>
+    <h1>El sobre, cuando lleva varias cosas</h1>
+    <p class="suave">Hoy el sobre solo guarda la carta del lunes. Querías que sirviera también para las novedades de una versión y para algún aviso puntual. Con varias cosas dentro, hoy se abre solo la primera sin leer y no hay lista, así que hace falta decidir cómo caben. Aquí van tres formas, con fotos de la app, y una recomendación.</p>
+  </header>
+
+  <section>
+    <h2>Lo que es igual en las tres</h2>
+    <div class="texto">
+      <p><b>Un solo icono, el que ya hay.</b> Cerrado y con su lacre <span class="lacre"></span> mientras algo está sin leer; abierto cuando ya lo has leído todo; sin nada, no se pinta. No hay número, ni rojo, ni «3 sin leer».</p>
+    </div>
+    <div class="barra">
+      <figure>{{BARRA_M}}<figcaption>Móvil, con algo sin leer: cerrado, con lacre.</figcaption></figure>
+      <figure>{{BARRA_ABIERTO}}<figcaption>Móvil, todo leído: abierto.</figcaption></figure>
+      <figure>{{BARRA_E}}<figcaption>Ordenador: el mismo sitio, delante de Estadísticas.</figcaption></figure>
+    </div>
+    <div class="texto">
+      <p><b>Entrar no obliga a nada.</b> Mirar el sobre no contesta, no cambia tu semana y no activa nada. Cada cosa tiene, como mucho, un enlace opcional («Abrir la carta», «Ver el permiso»). Cerrar la ventana con la × o con Escape deja todo como estaba, como ya pasa con la carta.</p>
+      <p><b>No pide scroll en la home.</b> El sobre se abre en una ventana encima de la home, la misma que usa la carta, así que la home no se mueve. {{HOME_IGUAL}} La ventana mide como mucho el 85 % de la pantalla y, si algún día no cupiera, hace scroll por dentro; en estas fotos (360×{{VH}}) la hoja no lo necesita (sobrante: {{SCROLL_HOJA}} px).</p>
+      <p><b>Un punto de lacre en cada cosa sin leer</b>, en lugar de un contador. Cuando la lees, el punto pasa a círculo vacío <span class="vacio"></span>. Lo más nuevo, arriba.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>De dónde saldría cada cosa</h2>
+    <div class="texto"><p class="suave">En todas las opciones el sobre sigue siendo una lista de fuentes: cada fuente dice si hoy tiene algo. Lo único que cambia es cómo se ve y se abre. Los textos de las fotos son de ejemplo: el aviso sale de lo que ya dice el código del aviso de fin de bloque en Android, y las novedades están escritas con los títulos de lo que se juntó en la 0.190.0 (habría que cotejarlas con el CHANGELOG antes de enseñarlas de verdad).</p></div>
+    <div class="tabla">
+      <table>
+        <thead><tr><th></th><th>Carta</th><th>Novedades</th><th>Aviso puntual</th></tr></thead>
+        <tbody>
+          <tr><th>De dónde sale</th><td>De «A tu ritmo»: el motor de la semana la prepara el lunes con lo que hiciste. Ya existe.</td><td>De un archivo de novedades dentro de la app, escrito a mano al sacar una versión que cambie algo que se nota. Las versiones que no cambian nada visible no escriben nada.</td><td>De algo que PACE ya sabe de tu aparato, sin salir a internet: por ejemplo, que en Android falta el permiso «Alarmas y recordatorios» y el aviso llegaría tarde.</td></tr>
+          <tr><th>Cuándo aparece</th><td>El lunes, solo con PACE completo.</td><td>La primera vez que abres PACE tras actualizar. En una instalación nueva no sale: no son novedades de algo que nunca viste.</td><td>Mientras la situación exista.</td></tr>
+          <tr><th>Cuándo se va</th><td>Al llegar la carta de la semana siguiente.</td><td>Cuando sale la siguiente versión con novedades.</td><td>Al arreglarse, o a los 14 días si no.</td></tr>
+          <tr><th>Qué pide</th><td>Nada; si quieres, «Abrir la carta».</td><td>Nada.</td><td>Nada; si quieres, un enlace al ajuste.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="texto"><p class="fino">Queda fuera, a propósito, un servidor que mande avisos a todo el mundo: sería una llamada a internet al abrir PACE y una cosa más que mantener. Está como pregunta 2.</p></div>
+  </section>
+
+  <section class="opcion">
+    <div class="cab"><span class="letra">A</span><h3>Una lista, y cada cosa se abre aparte</h3></div>
+    <div class="texto">
+      <p class="suave">El sobre abre una hoja con una fila por cosa: tipo y fecha, título y una línea. Tocas una fila y esa cosa se abre en la misma ventana, con «‹ El sobre» para volver. Si solo hay una cosa, abre directamente esa, como hoy.</p>
+    </div>
+    <div class="pc">
+      <div><b>A favor.</b> Ves de un vistazo qué hay y eliges qué leer; cabe cualquier número de cosas; cada cosa tiene su espacio.</div>
+      <div><b>En contra.</b> Un toque más para leer algo corto; son dos niveles dentro de una ventana. La hoja mide unos {{ALTO_A}} px en el móvil.</div>
+    </div>
+    {{PAR_A}}
+  </section>
+
+  <section class="opcion">
+    <div class="cab"><span class="letra">B</span><h3>Una tras otra, con «Siguiente»</h3></div>
+    <div class="texto">
+      <p class="suave">Como hoy, pero sin quedarse en la primera: el sobre abre la cosa sin leer más nueva y abajo dice «1 de 3». «Siguiente» pasa a la otra; «Dejar el resto» cierra y las demás siguen sin leer, esperando.</p>
+    </div>
+    <div class="pc">
+      <div><b>A favor.</b> Es lo más cercano a lo que hay: una cosa por vez, sin lista. Cada una tiene toda la ventana, también la carta con sus botones.</div>
+      <div><b>En contra.</b> No ves cuántas hay ni cuáles hasta llegar; para volver a una anterior hay que retroceder paso a paso. La hoja mide unos {{ALTO_B}} px.</div>
+    </div>
+    {{PAR_B}}
+  </section>
+
+  <section class="opcion">
+    <div class="cab"><span class="letra">C</span><h3>Una sola hoja, lo corto se lee ahí mismo</h3><span class="reco">Mi recomendación</span></div>
+    <div class="texto">
+      <p class="suave">La ventana enseña todo a la vez, separado por líneas finas: el aviso y las novedades se leen enteros en su sitio, y la carta, que es larga y lleva sus botones, se queda en dos líneas con «Abrir la carta ›», que abre la ventana de siempre. Si algún día hay más de tres cosas, las más viejas se pliegan bajo «Antes ›».</p>
+    </div>
+    <div class="pc">
+      <div><b>A favor.</b> Un solo nivel: abres el sobre y ya lo has leído, sin tocar nada más. Lo corto no pide un toque extra. La carta conserva su ventana tal cual.</div>
+      <div><b>En contra.</b> Es la hoja más alta, unos {{ALTO_C}} px en el móvil, y por eso lleva el límite de tres. Una novedad muy larga no cabría: tendría que ser breve (tres líneas como mucho).</div>
+    </div>
+    {{PAR_C}}
+  </section>
+
+  <section>
+    <h2>Mi recomendación</h2>
+    <div class="texto">
+      <p><b>La C.</b> Tus tres ejemplos son cosas cortas, calmadas y sin nada que contestar, y la C las deja leer de un tirón, sin pasos. La carta, que sí pide decidir, sigue abriéndose en su ventana. Y no mete prisa: no hay contador, no hay orden que seguir, no hay nada que «quede por hacer».</p>
+      <p>Cuándo se da por leído: al abrir el sobre, lo que se ve en la hoja (aviso y novedades) pasa a leído; la carta, cuando abres su ventana. El icono se abre cuando ya no queda nada sin leer.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lo que hay que decidir</h2>
+    <div class="preguntas">
+      <div class="q">
+        <h3>1. ¿Cómo se abre el sobre con varias cosas?</h3>
+        <ul>
+          <li><b>A</b><span>Una lista y cada cosa se abre aparte.</span></li>
+          <li><b>B</b><span>Una tras otra, con «Siguiente».</span></li>
+          <li><b>C</b><span>Una sola hoja con todo; la carta se abre aparte. <span class="r">(mi recomendación)</span></span></li>
+        </ul>
+      </div>
+      <div class="q">
+        <h3>2. ¿De dónde salen los avisos puntuales?</h3>
+        <ul>
+          <li><b>A</b><span>Solo de lo que PACE ya sabe de tu aparato, sin internet. Un aviso por cada situación que PACE sepa reconocer (de momento, el de Android). <span class="r">(mi recomendación)</span></span></li>
+          <li><b>B</b><span>Además, un archivo en pacegrass.app que PACE lee al abrirse, para poder avisar de algo que nosotros queramos decir, como un fallo conocido. No enviaría nada tuyo, pero necesita internet y algo que mantener.</span></li>
+        </ul>
+      </div>
+      <div class="q">
+        <h3>3. ¿Cuándo hay novedades?</h3>
+        <ul>
+          <li><b>A</b><span>Solo en las versiones donde cambia algo que se nota, escritas a mano en tres líneas como mucho. Sin novedades en una instalación nueva. <span class="r">(mi recomendación)</span></span></li>
+          <li><b>B</b><span>En todas las versiones, con un resumen del CHANGELOG. Más trabajo y más ruido.</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="fino">Contesta con letras, por ejemplo «1C 2A 3A».</p>
+  </section>
+</main>
