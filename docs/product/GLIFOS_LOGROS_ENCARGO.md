@@ -124,7 +124,7 @@ elemento más**, no un dibujo distinto.
 > ~~**Estos dos van al final de la cola**~~ **YA NO APLICA A NADIE** — los dos
 > están entregados. Se conserva el criterio, que sigue siendo bueno para lo que
 > venga: `master.extra.all.week` y `master.midnight.never` **no tienen
-> detector**, así que su sello se pinta «Pronto» aunque llegue el arte. No es
+> detector**, así que no salen en la colección aunque llegue el arte (desde el 5 nov. 2026). No es
 > motivo para no dibujarlos; sí para no ponerlos primeros.
 
 ---

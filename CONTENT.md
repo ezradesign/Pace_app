@@ -420,7 +420,8 @@ hombro, gato-camello. Más activar los **15 glifos pendientes** (D-4 de
 > secretos del catálogo se pueden descubrir ya**: antes 11 de 21 eran
 > indistinguibles de los reales porque un secreto sin detector se pinta igual
 > que uno alcanzable. Los 8 que siguen sin detector son **no-secretos** y se
-> pintan «Pronto», que es honesto. Medición reproducible:
+> pintaban «Pronto»; desde el 5 nov. 2026 no salen en la colección ni en sus
+> cuentas hasta tener detector (Ez: «puede sobrar»). Medición reproducible:
 > `node scripts/audit/logros.js`.
 
 Estética: sello circular, tinta oliva/terracota sobre crema, glifo

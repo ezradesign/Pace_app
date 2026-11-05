@@ -9,7 +9,7 @@
    - CAT_META             — map de 7 categorías → { labelKey, color } para
      iterar el catálogo agrupado por categoría con sus colores semánticos.
    - IMPLEMENTED_ACHIEVEMENTS — Set de ids con detector activo. Los
-     logros NO incluidos aquí se pintan como "Pronto" (estado coming-soon).
+     logros NO incluidos aquí no salen en la colección ni se cuentan.
      Los secretos NO necesitan estar aquí: su mecánica es intriga, se
      pintan siempre como secretos hasta desbloquearse.
 
@@ -176,9 +176,9 @@ const CAT_META = {
 };
 
 /* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
-   El resto se pinta en la colección como "Pronto" — visible para incentivar
-   curiosidad, pero sin prometer lo que el código todavía no puede detectar.
-   Decisión sesión 15. Cuando un logro gane su trigger, mover su id aquí.
+   El resto no sale en la colección ni cuenta en ella (Ez, 5 nov. 2026): un
+   «Pronto» sin fecha era una promesa. Cuando un logro gane su trigger, mover su
+   id aquí y aparece solo.
 
    Los secretos NO se revelan: aunque estén sin implementar, se pintan como
    secretos normales (glifo "?" + título oculto). Por eso esta lista solo
