@@ -41,7 +41,7 @@ async function abrir(browser, o) {
   page.on('pageerror', (e) => console.log('pageerror', e.message));
   if (o.rutas) {
     for (const [ruta, texto] of Object.entries(o.rutas)) {
-      await page.route('**/' + ruta, (r) => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: texto }));
+      await page.route('**/' + ruta, (r) => r.fulfill({ status: 200, contentType: (ruta.endsWith('.html') ? 'text/html' : 'text/javascript') + '; charset=utf-8', body: texto }));
     }
   }
   await page.clock.install({ time: o.hora });

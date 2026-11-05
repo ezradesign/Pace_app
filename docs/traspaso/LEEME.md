@@ -44,23 +44,32 @@ lo quiere. Stripe, en el modo de prueba de `acct_1UVT69JweaohZyG6`: el aviso, lo
 prueba que dan su código; /recuperar no encontraba la compra porque la llave de lectura salió de un sandbox aparte
 (el detalle, en el relevo, punto 16).
 
-## AL RELEVO (5 nov.): Q2, Q4 y R1 montados en `claude/sweet-moser-38e06d`, sin fotos ni suite entera
+## AL RELEVO (5 nov., ~12:00): Q2, Q4 y R1 montados en `claude/sweet-moser-38e06d`, con la 0.189.1 dentro y la suite a medias
 
-**Hecho** (commit 8ea0a66b; `verify` verde; las 3 pruebas nuevas y las 5 vecinas, 95 en verde en el 8820): las letras de
-Ez a la maqueta (https://claude.ai/artifact/6eyroLktjNB2grtwdLHAaF), «1A + 2A pero durante una semana y el ahora no
-debería estar en la linea de abajo de si/un poco/no + 3A». 1A: tocar una parada futura abre su ficha y «Otra» la
-cambia. 2A: el «No» aparta una semana, lo dice y tiene «Deshacer». 3A: «¿Es tu primera vez? Empieza aquí», la frase del
-aire, Energía al final y «Coherencia». Detalle y archivos: `docs/traspaso/archivos/sin-querer-4nov/LEEME.md`.
+**Hecho**: 8ea0a66b con las letras de Ez a la maqueta (https://claude.ai/artifact/6eyroLktjNB2grtwdLHAaF, de la otra cuenta),
+«1A + 2A pero durante una semana y el ahora no debería estar en la linea de abajo de si/un poco/no + 3A». 6f5b37ce trae
+`origin/main` (0.189.1): solo chocó el censo de textos, que suma las dos ramas (1103 + 9 + 2 = 1114); `verify` en verde.
+Detalle y archivos: `docs/traspaso/archivos/sin-querer-4nov/LEEME.md`.
 
-**El «Ahora no»**: se leyó como «que baje a su línea» y así está montado (centrado bajo Sí · Un poco · No). La otra
-lectura, «que no baje», es como estaba (en la fila, al final): enseñar las dos en las fotos y que Ez elija.
+**Suite**: entera en el **8822** desde las 11:33, log en `%TEMP%\pace-sin-querer-4nov\suite-8822.log`, por la 884 de 1200 al
+relevo, sobre 6f5b37ce. Si no acabó, repetirla: `PACE_E2E_PORT=8822 npx playwright test`. La del 8820 NO vale (940 workers
+muertos con `0xC0000142`), y en el 8820 sigue un servidor huérfano. Lo que caiga por tiempo se repite con `--workers=1`
+antes de darlo por roto (ya cayó por tiempo `bloques-cortos.spec.js:201`, con fotos y otras sesiones cargando el PC).
 
-**Falta**: (1) la suite entera en el **8820**: arrancó a las ~10:20 del 5 nov. y su log cae en
-`%TEMP%\pace-sin-querer-4nov\suite.log` (si no acabó o se cortó, repetirla); (2) las fotos de lo montado con
-`node docs/traspaso/archivos/sin-querer-4nov/montado.js` y `MAQ_PORT=8821` (nunca en el puerto de una suite en marcha),
-`imagenes.js` adaptado y la página para Ez; (3) con su «júntalo», `LISTO PARA MAIN`. CHANGELOG, STATE y DECISIONES
-propuestos, en el mensaje de 8ea0a66b. `origin/main` seguía en la 0.189.0 al juntarlo: la 0.189.1 (media jornada) toca
-`app/ritmo/` y `state-ritmo*.jsx`; esta rama toca `RitmoLinea.jsx`, `ritmo.css.jsx` y una línea de `state-ritmo.jsx`.
+**El «Ahora no»**: está montado «que baje a su línea». La otra lectura, «que no baje», es como estaba en la 0.189.1. Mide
+`ahora-no.js` (la versión en fila sale de parchear el index compilado con `page.route`). En las fotos que vio Ez iba en la
+misma fila, móvil y escritorio. **Encontrado**: en la ventana de Ez (1536×708) con Estira, en su línea queda a 0 px de
+«Volver al inicio» (en fila, a 21), porque el aire de `[data-pace-session-done]::after` (`SessionShell.responsive.js`) cede
+hasta 0. Arreglo pensado, sin montar ni medir: `min-height` de unos 14 px en ese `::after`, para que encoja el dibujo; se
+pasa después `cierre-sin-pisar.spec.js`, que hoy no lo ve (mira que no se pisen, no el aire). No tocar `app/` con la suite en marcha.
+
+**Falta, por orden**: (1) acabar la suite y repetir lo que caiga; (2) el aire del punto anterior, build y sus pruebas;
+(3) `node docs/traspaso/archivos/sin-querer-4nov/ahora-no.js` y `montado.js` con `MAQ_PORT=8821`, y
+`PACE_PAGINA=<carpeta> node imagenes.js montado`; (4) rellenar los `__…__` de `montado.html` (la página para Ez) y publicarla
+en la cuenta que esté activa, con las dos lecturas al lado, recomendada la A; (5) con la elección de Ez, la suite en verde
+con lo elegido y su «júntalo», `LISTO PARA MAIN`. Sin subir versión ni tocar STATE ni CHANGELOG: lo propuesto va en el
+mensaje de 8ea0a66b. Si Ez elige la fila, deshacer el traslado en `ui/SessionFeedback.jsx`, `cierre-sin-pisar.spec.js` y
+`feedback-una-semana.spec.js`.
 
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 
