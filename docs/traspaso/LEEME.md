@@ -63,11 +63,12 @@ misma fila, móvil y escritorio. **Encontrado**: en la ventana de Ez (1536×708)
 hasta 0. Arreglo pensado, sin montar ni medir: `min-height` de unos 14 px en ese `::after`, para que encoja el dibujo; se
 pasa después `cierre-sin-pisar.spec.js`, que hoy no lo ve (mira que no se pisen, no el aire). No tocar `app/` con la suite en marcha.
 
-**Falta, por orden**: (1) acabar la suite y repetir lo que caiga; (2) el aire del punto anterior, build y sus pruebas;
-(3) `node docs/traspaso/archivos/sin-querer-4nov/ahora-no.js` y `montado.js` con `MAQ_PORT=8821`, y
-`PACE_PAGINA=<carpeta> node imagenes.js montado`; (4) rellenar los `__…__` de `montado.html` (la página para Ez) y publicarla
-en la cuenta que esté activa, con las dos lecturas al lado, recomendada la A; (5) con la elección de Ez, la suite en verde
-con lo elegido y su «júntalo», `LISTO PARA MAIN`. Sin subir versión ni tocar STATE ni CHANGELOG: lo propuesto va en el
+**Página para Ez**: https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq (cuenta del 5 nov., ~12:15; fuente, `montado.html`). Ya
+enseña las dos lecturas, recomendada la A, y dice que el aire está sin montar y que la suite no ha acabado. **Falta, por
+orden**: (1) acabar la suite y repetir con `--workers=1` lo que cayó por tiempo; (2) el aire del punto anterior, build y sus
+pruebas; (3) repetir `ahora-no.js` con `MAQ_PORT=8821`, `PACE_PAGINA=<carpeta> node imagenes.js montado`, y poner al día la
+página (su medida de Estira y «Lo comprobado»); (4) con la elección de Ez, la suite en verde con lo elegido y su «júntalo»,
+`LISTO PARA MAIN`. Sin subir versión ni tocar STATE ni CHANGELOG: lo propuesto va en el
 mensaje de 8ea0a66b. Si Ez elige la fila, deshacer el traslado en `ui/SessionFeedback.jsx`, `cierre-sin-pisar.spec.js` y
 `feedback-una-semana.spec.js`.
 
