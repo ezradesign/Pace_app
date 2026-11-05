@@ -302,9 +302,9 @@ const EXTRA_ROUTINES = {
               care: 'Presión ligera. Nunca hasta el dolor.' } },
           { name: 'Palmas en la mesa', mode: 'timed', dur: 30,
             instruction: {
-              setup: 'De pie frente a la mesa, palmas apoyadas y dedos hacia ti. Codos estirados, sin bloquear.',
-              action: 'Lleva la cadera un poco atrás, despacio, hasta notar un estirón suave en el antebrazo.',
-              care: 'Casi sin peso sobre las manos. Si molesta, sepárate un poco de la mesa.' } },
+              setup: 'De pie frente a la mesa, palmas apoyadas y dedos hacia delante. Codos estirados, sin bloquear.',
+              action: 'Lleva el cuerpo un poco hacia delante, despacio, hasta notar un estirón suave en el antebrazo.',
+              care: 'Casi sin peso sobre las manos. Si molesta, vuelve un poco atrás.' } },
           { name: 'Rezo invertido', mode: 'timed', dur: 30,
             instruction: {
               action: 'Junta los dorsos de las manos frente al pecho, con los dedos hacia abajo y un contacto ligero.',
