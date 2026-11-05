@@ -376,6 +376,76 @@ test.describe('/premium y la tienda cuentan lo mismo', () => {
     }
   });
 
+  test('apagada, /premium dice «Avísame» y que el de por vida se abre pronto; el mensual llega con la versión 1, y «dónde funciona tu compra» va antes de pagar', async ({ page }) => {
+    await page.goto('/premium/');
+    const vida = page.locator('.plato[data-plan=vida]');
+    const mes = page.locator('.plato[data-plan=mes]');
+    await expect(vida.locator('a.boton')).toHaveText('Avísame');
+    await expect(mes.locator('.pronto')).toHaveText('Llega con la versión 1');
+    await expect(mes.locator('a.boton')).toHaveText('Avísame');
+    await expect(page.locator('[data-venta=apagada]')).toHaveText('IVA incluido. El de por vida se abre pronto; el mensual y las apps, con la versión 1.');
+    await expect(page.locator('[data-venta=encendida]')).toBeHidden();
+    const donde = page.locator('.donde');
+    await expect(donde).toContainText('En las apps de Android y de iPhone no vale');
+    await expect(donde).toContainText('no se sincronizan');
+    await expect(donde).toContainText('vuelve el acceso, no el historial');
+    /* Antes de pagar: «Dónde funciona tu compra» va después de los platos y antes de la lista de avisos. */
+    const [a, b, c] = await Promise.all(['.platos', '.donde', '#avisame'].map((q) => page.locator(q).evaluate((e) => e.getBoundingClientRect().top + scrollY)));
+    expect(a).toBeLessThan(b);
+    expect(b).toBeLessThan(c);
+    await expect(page.getByRole('heading', { name: 'La prueba, sin sorpresas' })).toBeVisible();
+    await expect(page.getByText('Cuando llegue el plan al mes:')).toBeVisible();
+
+    await page.goto('/premium/?lang=en');
+    await expect(page.locator('.donde .kicker')).toHaveText('Where your purchase works');
+    await expect(mes.locator('.pronto')).toHaveText('Arrives with version 1');
+    await expect(page.locator('[data-venta=apagada]')).toHaveText('VAT included. Lifetime opens soon; monthly and the apps arrive with version 1.');
+  });
+
+  test('el enlace de /premium (ENLACE_VIDA) es el de la tienda de la web', async ({ page }) => {
+    await page.goto(RUTA_ARTEFACTO);
+    await page.waitForFunction(() => typeof window.paceTiendaPlanes === 'function');
+    const tienda = await page.evaluate(() => window.PACE_TIENDA_WEB.enlaces.vida);
+    const m = fs.readFileSync(path.join(RAIZ, 'premium/index.html'), 'utf8').match(/var ENLACE_VIDA = (null|'[^']+');/);
+    expect(m, 'premium/index.html tiene su ENLACE_VIDA').not.toBeNull();
+    expect(m[1] === 'null' ? null : m[1].slice(1, -1)).toBe(tienda);
+  });
+
+  test('encendida (con un pago de mentira), el plato de por vida compra y la nota dice que hasta v1 todo está abierto; el mensual sigue en la lista', async ({ page }) => {
+    await page.route(/\/premium\/(\?.*)?$/, async (route) => {
+      const r = await route.fetch();
+      const cuerpo = (await r.text()).replace('var ENLACE_VIDA = null;', "var ENLACE_VIDA = 'https://buy.stripe.example/test_vida';");
+      await route.fulfill({ response: r, body: cuerpo });
+    });
+    await page.goto('/premium/');
+    const compra = page.locator('.plato[data-plan=vida] a.boton');
+    await expect(compra).toHaveText('Comprar');
+    await expect(compra).toHaveAttribute('href', 'https://buy.stripe.example/test_vida');
+    await expect(page.locator('[data-venta=apagada]')).toBeHidden();
+    await expect(page.locator('[data-venta=encendida]')).toContainText('Hasta la versión 1, PACE completo está abierto para todos');
+    await expect(page.locator('.plato[data-plan=mes] a.boton')).toHaveAttribute('href', '#avisame');
+
+    await page.goto('/premium/?lang=en');
+    await expect(compra).toHaveText('Buy');
+    await expect(page.locator('[data-venta=encendida]')).toContainText('Until version 1, PACE Complete is open to everyone');
+    await page.locator('[data-idioma]').click();
+    await expect(compra).toHaveText('Comprar');
+  });
+
+  test.describe('a 360 px', () => {
+    test.use({ viewport: { width: 360, height: 740 } });
+    test('los dos platos y «dónde funciona tu compra» caben a lo ancho', async ({ page }) => {
+      await page.goto('/premium/');
+      await page.locator('#precio').scrollIntoViewIfNeeded();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+      for (const q of ['.plato[data-plan=vida]', '.plato[data-plan=mes]', '.donde']) {
+        const c = await page.locator(q).boundingBox();
+        expect(c.x).toBeGreaterThanOrEqual(0);
+        expect(c.x + c.width).toBeLessThanOrEqual(360);
+      }
+    });
+  });
+
   test('ningún archivo de la app lleva un enlace de pago fuera de la tienda de la web', async () => {
     const sospechosos = [];
     const recorrer = (d) => {
