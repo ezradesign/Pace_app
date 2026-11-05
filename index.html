@@ -19772,13 +19772,19 @@ function sessionDoneKeyBlocked(e) {
   return !!(e.isComposing || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || sessionKeyOnControl(e));
 }
 
+
+
+function sessionPausaKeyBlocked(e) {
+  return !!(e && (e.repeat || e.isComposing || e.ctrlKey || e.metaKey || e.altKey));
+}
+
 Object.assign(window, {
   SessionShell, SessionHeader, SessionDone, SessionStat,
   sessionShellStyles, sessionAtmosphere,
   paceGrainUrl, paceGlowRamp, PaceDither,
-  sessionKeyOnControl, sessionDoneKeyBlocked
+  sessionKeyOnControl, sessionDoneKeyBlocked, sessionPausaKeyBlocked
 });
-;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, sessionDoneGlifo, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, sessionDoneGlifo, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked, sessionPausaKeyBlocked });
 })();
 </script>
   <!-- Pantalla de preparación (s174), extraída de SessionShell.jsx al pasar
@@ -31450,7 +31456,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
         if (sessionKeyOnControl(e)) return;
-        e.preventDefault();setPaused((p) => !p);
+        e.preventDefault();
+        if (!sessionPausaKeyBlocked(e)) setPaused((p) => !p);
       }
       if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
@@ -32453,7 +32460,8 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
 
 
         if (sessionKeyOnControl(e)) return;
-        e.preventDefault();setPaused((p) => !p);
+        e.preventDefault();
+        if (!sessionPausaKeyBlocked(e)) setPaused((p) => !p);
       }
       if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'ArrowRight') goNext();
@@ -34093,7 +34101,7 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
 
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if (c.stage === 'run') c.alternar();
+        if (c.stage === 'run' && !sessionPausaKeyBlocked(e)) c.alternar();
       }
       if (e.key === 'Escape' && paceEscapeDeSesion(e)) c.onExit('exit');
 

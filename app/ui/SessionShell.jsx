@@ -474,10 +474,16 @@ function sessionDoneKeyBlocked(e) {
   if (!e) return false;
   return !!(e.isComposing || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || sessionKeyOnControl(e));
 }
+/* Espacio alterna pausa y reanudación: una pulsación física, un cambio. No lo alternan las repeticiones
+   de la barra mantenida (`e.repeat`), una composición (IME) ni Ctrl/Cmd/Alt, como los atajos del menú de
+   pausa. El preventDefault se queda igual: mantenida, la barra no debe desplazar la página. */
+function sessionPausaKeyBlocked(e) {
+  return !!(e && (e.repeat || e.isComposing || e.ctrlKey || e.metaKey || e.altKey));
+}
 
 Object.assign(window, {
   SessionShell, SessionHeader, SessionDone, SessionStat,
   sessionShellStyles, sessionAtmosphere,
   paceGrainUrl, paceGlowRamp, PaceDither,
-  sessionKeyOnControl, sessionDoneKeyBlocked,
+  sessionKeyOnControl, sessionDoneKeyBlocked, sessionPausaKeyBlocked,
 });
