@@ -56,21 +56,21 @@ relevo, sobre 6f5b37ce. Si no acabó, repetirla: `PACE_E2E_PORT=8822 npx playwri
 muertos con `0xC0000142`), y en el 8820 sigue un servidor huérfano. Lo que caiga por tiempo se repite con `--workers=1`
 antes de darlo por roto (ya cayó por tiempo `bloques-cortos.spec.js:201`, con fotos y otras sesiones cargando el PC).
 
-**El «Ahora no»**: está montado «que baje a su línea». La otra lectura, «que no baje», es como estaba en la 0.189.1. Mide
+**Ez eligió en la página (5 nov.)**: «El ahora no va en A, perfecto por lo demás»: «Ahora no» en su línea, debajo de Sí · Un
+poco · No, y el resto aprobado. **El «Ahora no»**: la otra lectura, «que no baje», era como estaba en la 0.189.1. Mide
 `ahora-no.js` (la versión en fila sale de parchear el index compilado con `page.route`). En las fotos que vio Ez iba en la
 misma fila, móvil y escritorio. **Encontrado**: en la ventana de Ez (1536×708) con Estira, en su línea queda a 0 px de
 «Volver al inicio» (en fila, a 21), porque el aire de `[data-pace-session-done]::after` (`SessionShell.responsive.js`) cede
 hasta 0. Arreglo pensado, sin montar ni medir: `min-height` de unos 14 px en ese `::after`, para que encoja el dibujo; se
 pasa después `cierre-sin-pisar.spec.js`, que hoy no lo ve (mira que no se pisen, no el aire). No tocar `app/` con la suite en marcha.
 
-**Página para Ez**: https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq (cuenta del 5 nov., ~12:15; fuente, `montado.html`). Ya
-enseña las dos lecturas, recomendada la A, y dice que el aire está sin montar y que la suite no ha acabado. **Falta, por
+**Página para Ez**: https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq (cuenta del 5 nov., ~12:15; fuente, `montado.html`). Ez
+ya eligió en ella; prometía unos 14 px de aire si elegía la A, y la suite aún no había acabado. **Falta, por
 orden**: (1) acabar la suite y repetir con `--workers=1` lo que cayó por tiempo; (2) el aire del punto anterior, build y sus
 pruebas; (3) repetir `ahora-no.js` con `MAQ_PORT=8821`, `PACE_PAGINA=<carpeta> node imagenes.js montado`, y poner al día la
-página (su medida de Estira y «Lo comprobado»); (4) con la elección de Ez, la suite en verde con lo elegido y su «júntalo»,
+página (su medida de Estira y «Lo comprobado»); (4) la suite en verde con lo elegido (la A, con el aire) y su «júntalo»,
 `LISTO PARA MAIN`. Sin subir versión ni tocar STATE ni CHANGELOG: lo propuesto va en el
-mensaje de 8ea0a66b. Si Ez elige la fila, deshacer el traslado en `ui/SessionFeedback.jsx`, `cierre-sin-pisar.spec.js` y
-`feedback-una-semana.spec.js`.
+mensaje de 8ea0a66b.
 
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 
