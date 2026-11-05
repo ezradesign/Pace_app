@@ -156,7 +156,7 @@ el *cue* real que el usuario lee en la app, que es la fuente de verdad del gesto
 |---|---|---|
 | Círculos de muñeca | dibujado | **Dos manos** con las muñecas sueltas y un **círculo punteado** en cada una. |
 | Estiramiento de muñeca | dibujado | Una mano llevando la otra a **flexión y extensión**, con flecha doble. |
-| Palmas al suelo | **falta** | Dos manos **sobre la mesa vistas desde arriba**, dedos apuntando al cuerpo. |
+| Palmas al suelo | dibujado (5 nov.) | Dos manos **sobre la mesa**, dedos hacia delante. Se pidió con los dedos hacia el cuerpo; Genspark no consiguió la mano al revés y Ez cambió el texto al dibujo. |
 | Rezo invertido | **falta** | Dos manos con los **dorsos en contacto** frente al pecho, dedos hacia abajo. |
 | Abrir y cerrar el puño | dibujado | Una mano **abierta y un puño** cerrado, en dos estados claros. |
 | Extensión de dedos | dibujado | Una mano con **los dedos muy abiertos** en abanico. |

@@ -119,7 +119,7 @@ const EXERCISE_REGISTRY = {
     items: [
       { name: 'Círculos de muñeca', dur: 20, cue: 'Círculos en cada sentido, muñecas sueltas.' },
       { name: 'Estiramiento de muñeca', dur: 30, cue: 'Flexión y extensión, suave.' },
-      { name: 'Palmas en la mesa', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti.' },
+      { name: 'Palmas en la mesa', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia delante.' },
       { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
       { name: 'Abrir y cerrar el puño', dur: 20, cue: 'Cierra sin apretar al máximo y abre despacio.' },
       { name: 'Extensión de dedos', dur: 20, cue: 'Abre los dedos, sin forzar.' },
