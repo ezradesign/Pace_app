@@ -20100,7 +20100,7 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
        (en la ventana de Ez, 1536x710; de 431 a 620 de alto en escritorio; con el nombre
        de una rutina propia en dos líneas, casi en cualquier pantalla, y también las
        respuestas). Ahora el cierre es una columna del alto del centro: arriba y abajo,
-       aire que solo crece (centra el bloque y se queda en 0 cuando falta sitio), y el
+       aire que solo crece (centra el bloque y arriba se queda en 0 cuando falta sitio), y el
        dibujo encoge lo que falte. Los márgenes de una columna flexible no se funden, así
        que el de arriba de «¿Te ayudó?» (4 px, que antes se perdía dentro de los 36 de la
        frase) se quita aquí. Lo vigila tests/cierre-sin-pisar.spec.js. */
@@ -20110,6 +20110,9 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
     [data-pace-session-done] { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
     [data-pace-session-done]::before,
     [data-pace-session-done]::after { content: ''; flex: 1 1 0; }
+    /* Con «Ahora no» en su línea (Ez, 5 nov.), el aire de abajo podía quedarse en 0 y el enlace,
+       pegado a «Volver al inicio». Este suelo lo paga el dibujo. */
+    [data-pace-session-done]::after { min-height: 14px; }
     [data-pace-session-done] > * { flex: none; }
     [data-pace-session-done] > [data-pace-session-feedback] { margin-top: 0 !important; }
     /* El dibujo del cierre (sessionDoneGlifo) llena su caja, sin el borde ni el fondo

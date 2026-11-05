@@ -64,7 +64,10 @@ misma fila, móvil y escritorio. **Encontrado**: en la ventana de Ez (1536×708)
 hasta 0. Arreglo pensado, sin montar ni medir: `min-height` de unos 14 px en ese `::after`, para que encoja el dibujo; se
 pasa después `cierre-sin-pisar.spec.js`, que hoy no lo ve (mira que no se pisen, no el aire). No tocar `app/` con la suite en marcha.
 
-**Aire (5 nov., ~12:25)**: `min-height` en el `::after` del cierre y su prueba, escritos en `SessionShell.responsive.js` y `cierre-sin-pisar.spec.js`, SIN compilar: el `index.html` no los lleva hasta que acabe la suite en marcha.
+**Suite del 8822, acabada a las 12:33, sobre 6f5b37ce (sin el aire)**: 1192 en verde, 2 saltadas, 6 caídas, sin ningún
+`0xC0000142`. Las seis, sin repetir todavía con `--workers=1`: `bloques-cortos:201`, `eventos-origen:93`, `retencion:74`,
+`runner-cabe:61`, `runner-espera:77` y `:164`. **Aire**: `min-height` en el `::after` del cierre y su prueba, compilados en
+este commit; falta medirlo con `cierre-sin-pisar.spec.js`, repetir `ahora-no.js` y poner al día la página.
 
 **Página para Ez**: https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq (cuenta del 5 nov., ~12:15; fuente, `montado.html`). Ez
 ya eligió en ella; prometía unos 14 px de aire si elegía la A, y la suite aún no había acabado. **Falta, por
