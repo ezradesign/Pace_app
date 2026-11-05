@@ -94,7 +94,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.189.0 · actualizada el 4 de noviembre · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -143,16 +143,16 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           </ol>
           El logo se queda como está, como decidiste el 4 de noviembre. Déjalos en
           <code>dibujos-22oct\para-revisar</code> o en <code>Escritorio\Glifos</code> y dime «revisa los dibujos».</span></li>
-      <li class="paso luego"><span class="estado">A la vez · lo tuyo, con calma</span>
+      <li class="paso hecho"><span class="estado">Hecho en el modo de prueba · 5 de noviembre</span>
         <span class="t">Stripe, para cobrar en la web</span>
-        <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Aún no está: el 29 a las 12:10 la web
+        <span class="c"><span class="quien">Tú, con «Stripe, paso a paso», más abajo.</span> Desde el 4 de noviembre la web ya recibe los avisos de Stripe; antes
           seguía «cerrada». Ya tienes la cuenta, «vende por ti», la llave que firma las ventas, Cloudflare, los dos enlaces de
           verdad (apagados) y los arreglos del cobro (0.186.0). Falta, todo en el modo de prueba de Stripe:
           <ol>
-            <li>El aviso de pago (el paso marcado «Ahora» de abajo).</li>
-            <li>Los dos enlaces de pago, también en el modo de prueba, y sus números en Cloudflare.</li>
-            <li>La llave que solo lee.</li>
-            <li>Una compra de mentira con la tarjeta de prueba.</li>
+            <li>Hecho el 4 de noviembre: el aviso de pago.</li>
+            <li>Hecho el 4 de noviembre: los dos enlaces de prueba, y los números de los cuatro en Cloudflare.</li>
+            <li>Hecho el 4 de noviembre: la llave que solo lee, en el modo de prueba de tu cuenta.</li>
+            <li>Hecho el 5 de noviembre: dos compras de mentira con su código, y /recuperar lo devuelve.</li>
           </ol>
           Nadie paga nada de verdad hasta que hables con el gestor.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
@@ -174,7 +174,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           avisar, que mirar una pausa de más tarde no la cambie sin querer, y un «¿Es tu primera vez? Empieza aquí» en
           Respira. Cuando esté, te paso la página y eliges con letras. Llega como actualización durante los 14 días de los
           testers.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha desde el 4 de noviembre · yo lo arreglo, tú eliges lo que se ve</span>
+      <li class="paso marcha"><span class="estado">Juntada como 0.189.1 · se publica en cuanto acaben las pruebas</span>
         <span class="t">«Media jornada», que no se podía pulsar por la tarde</span>
         <span class="c"><span class="quien">Yo, con una sesión.</span> Lo que vio tu tester es cierto: pasada su hora, «Media jornada»
           enseña sus horas en vez de pulsarse, y si mueves solo el inicio a las 15:00 se queda «De 15:00 a 13:00» y sigue sin
@@ -787,7 +787,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               <b>Configuración › Enlaces › Añadir › Espacio de nombres KV</b>: variable <code>VENTAS</code>, espacio
               <code>pace-ventas</code>.</li>
           </ol></span></li>
-      <li class="paso ahora"><span class="estado">Ahora · tú, en el modo de prueba de Stripe, unos 10 minutos</span>
+      <li class="paso hecho"><span class="estado">Hecho · 4 de noviembre, en el entorno de prueba</span>
         <span class="t">El aviso de pago</span>
         <span class="c"><span class="quien">Tú.</span>
           <ol>
@@ -805,7 +805,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
             <li>En <b>Implementaciones</b>, la última de Production › <b>Reintentar implementación</b>, para que la web lo lea.</li>
             <li>Dime «aviso puesto»: lo compruebo desde aquí, sin tocar nada tuyo.</li>
           </ol></span></li>
-      <li class="paso luego"><span class="estado">Después · tú, en el modo de prueba de Stripe</span>
+      <li class="paso hecho"><span class="estado">Hecho · 4 de noviembre, en el modo de prueba de tu cuenta</span>
         <span class="t">La llave que solo lee, para recuperar códigos</span>
         <span class="c"><span class="quien">Tú.</span> La usa la página para recuperar el código de una compra, que llega con lo que falta
           para vender. En Stripe › <b>Desarrolladores › Claves de API › Crear clave restringida</b>: nombre «PACE recuperar» y
@@ -819,7 +819,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <code>https://pacegrass.app/gracias/?sesion={CHECKOUT_SESSION_ID}</code>, tal cual. Y el <b>portal del cliente</b>
           (Configuración › Facturación › Portal del cliente), activado. Pásame los tres enlaces: no son secretos. Los de prueba
           no van a la app; los reales, sí.</span></li>
-      <li class="paso luego"><span class="estado">Justo después del aviso · tú, unos 5 minutos</span>
+      <li class="paso hecho"><span class="estado">Hecho · 4 de noviembre, los dos de prueba y los dos de verdad</span>
         <span class="t">Los números de los enlaces de pago, en Cloudflare</span>
         <span class="c"><span class="quien">Tú.</span> Desde la 0.186.0, la web solo da códigos a las compras de los enlaces de PACE, así
           que necesita sus números; sin ellos, el aviso de pago no funciona.
@@ -832,7 +832,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               nombre <code>PACE_ENLACES_STRIPE</code>, y de valor los números separados por comas.</li>
             <li>Guarda y, en <b>Implementaciones</b>, <b>Reintentar implementación</b>.</li>
           </ol></span></li>
-      <li class="paso luego"><span class="estado">Después · tú y yo</span>
+      <li class="paso hecho"><span class="estado">Hecho · 5 de noviembre: las dos dieron su código y /recuperar lo devuelve</span>
         <span class="t">Una compra de mentira</span>
         <span class="c"><span class="quien">Tú compras; yo miro.</span> Abre el enlace de prueba desde Stripe y paga con la tarjeta de
           prueba <code>4242 4242 4242 4242</code> (cualquier fecha futura y cualquier código). La página de gracias tiene que
@@ -994,7 +994,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
       </ul></div>
     <div class="grupo"><h3>2 · Cuentas a tu nombre, unos minutos cada una</h3>
       <ul class="lista">
-        <li><b>Stripe:</b> el aviso de pago, la llave que solo lee y la compra de mentira, en el modo de prueba (arriba,
+        <li><b>Stripe:</b> el modo de prueba ya está entero (5 de noviembre); lo que queda son los pagos de verdad, con el gestor (arriba,
           «Stripe, paso a paso»).</li>
         <li><b>Google Cloud y Microsoft Entra:</b> dar de alta PACE (<code>docs/CALENDARIO_ALTAS.md</code>). Con eso hago el
           llavero del calendario, que entra en v1. Google tarda semanas en revisar la app para abrirla a todo el mundo: si

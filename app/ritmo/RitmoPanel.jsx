@@ -18,6 +18,8 @@
    «Hoy voy por libre» es la única salida: era lo mismo que «Ver la carta» y lo
    explica mejor (ronda 3). */
 
+const { useState: useStateRP } = React;
+
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
 function RitmoContexto() {
@@ -59,14 +61,18 @@ function RitmoSobre({ m }) {
 
 /* `editarMedia` (la pregunta del móvil): allí no está la frase de la media jornada, porque
    sus horas se ponen al elegirla; pero pasada su hora el chip se apaga y no se podría
-   elegir para moverla a la tarde. Entonces el chip deja de ser botón y enseña sus dos horas
-   para cambiarlas en el sitio; en cuanto el tramo vuelve a caber en el día, es un chip más. */
+   elegir para moverla a la tarde. Entonces el chip enseña sus dos horas para cambiarlas en
+   el sitio, y tocar su nombre abre la hora de inicio (RitmoHoraInicio): es donde toca quien
+   quiere la media jornada, y un nombre que no hacía nada no decía que lo que se toca son
+   las horas. En cuanto el tramo vuelve a caber en el día, es un chip más. */
 /* `tuyo` (el día ya contestado, RitmoManana.jsx): la opción de tu semana va marcada; se
    sigue eligiendo como las otras. Sin etiqueta «Tu martes»: a 1280 partía el nombre de la
    opción en dos líneas, y el título ya dice «Hoy, como cada martes». */
 function RitmoChips({ state, editarMedia, tuyo }) {
   const { t, tn } = useT();
-  const horas = editarMedia ? ritmoHuecos(ritmoDe(state).horario) : null;
+  const [inicioAbierto, setInicioAbierto] = useStateRP(false);
+  const horario = editarMedia ? ritmoDe(state).horario : null;
+  const horas = horario ? ritmoHuecos(horario) : null;
   return (
     <div className="pace-rt-chips">
       {RITMO_OPCIONES_UI.map((op) => {
@@ -75,8 +81,12 @@ function RitmoChips({ state, editarMedia, tuyo }) {
         if (horas && op === 'media' && vacia) {
           return (
             <div key={op} className="pace-rt-chip pace-rt-chip-horas" data-pace-ritmo-opcion={op} data-pace-ritmo-media-horas>
-              <b>{t('ritmo.opcion.media')}</b>
+              <button type="button" className="pace-rt-chip-nombre" aria-haspopup="dialog" data-pace-ritmo-media-abrir
+                onClick={() => setInicioAbierto(true)}>
+                <b>{t('ritmo.opcion.media')}</b>
+              </button>
               <span><RitmoFrase plantilla={t('ritmo.tramo')} huecos={{ a: horas.mediaInicio, b: horas.mediaSalida }} /></span>
+              {inicioAbierto ? <RitmoHoraInicio horario={horario} onClose={() => setInicioAbierto(false)} /> : null}
             </div>
           );
         }
@@ -89,6 +99,35 @@ function RitmoChips({ state, editarMedia, tuyo }) {
         );
       })}
     </div>
+  );
+}
+
+/* LA HORA DE INICIO DE LA MEDIA JORNADA, en la paleta de PACE y diciendo qué hora se elige
+   (Ez, 4 nov. 2026: «la interfaz tiene que ser clara»); la lista del sistema salía blanca y
+   sin título. Son las horas del selector (RITMO_RANGOS) con la de ahora marcada. Elegir una
+   la guarda como el selector del chip, con ritmoHorario (si cruza el fin, el fin va detrás),
+   y cierra. Va en un portal: el panel lleva `container-type`, que encierra lo fijo. */
+function RitmoHoraInicio({ horario, onClose }) {
+  const { t, tn } = useT();
+  const media = ritmoMedia(horario);
+  const rango = RITMO_RANGOS['media.inicio'];
+  const valores = [];
+  for (let v = rango[0]; v <= rango[1]; v += 30) valores.push(v);
+  const elegir = (nueva) => {
+    if (nueva !== media.inicio) ritmoHorario('media.inicio', nueva);
+    onClose();
+  };
+  return ReactDOM.createPortal(
+    <Modal open onClose={onClose} maxWidth={360} relleno="22px 20px 24px" tagLabel={t('ritmo.opcion.media')}
+      title={t('ritmo.inicio.titulo')} subtitle={tn('ritmo.inicio.sub', { a: ritmoHora(media.inicio), b: ritmoHora(media.salida) })}>
+      <div className="pace-rt-horas" role="radiogroup" aria-label={t('ritmo.inicio.titulo')} data-pace-ritmo-hora-inicio>
+        {valores.map((min) => (
+          <button key={min} type="button" role="radio" aria-checked={min === media.inicio} className="pace-rt-hora"
+            data-pace-ritmo-hora={min} onClick={() => elegir(min)}>{ritmoHora(min)}</button>
+        ))}
+      </div>
+    </Modal>,
+    document.body
   );
 }
 
@@ -354,6 +393,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoHoraInicio, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

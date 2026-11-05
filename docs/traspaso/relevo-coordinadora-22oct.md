@@ -99,6 +99,54 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
       puerto 8834): el fin se mueve con el inicio, prueba en rojo antes, y una página con lo que se ve para Ez. Sin bump.
     - Stripe: `/api/stripe` da 503 («cerrada»); se guía a Ez por el aviso de prueba y los `plink_` en el chat.
     - Nada más que abrir: lo demás hasta v1 espera a Ez (altas, datos, testers) o es del grupo 3.
+15. **4 nov., Stripe, partes 1 y 2 hechas por Ez** (en el entorno de prueba de `acct_1UVT69JweaohZyG6`): destino de eventos
+    «PACE» a `https://pacegrass.app/api/stripe` con los cuatro eventos, carga «snapshot» y API 2026-09-30, su `whsec_` en
+    `STRIPE_AVISO_SECRETO`; productos y enlaces de prueba (`plink_1UY0npJweaohZyG68f6WdqSe`, `plink_1UY0olJweaohZyG6fmeaq7wE`)
+    y los de verdad (`plink_1UVayCJweaohZyG6b19AI1S6`, `plink_1UVaxKJweaohZyG6K7Q77Fzn`) en `PACE_ENLACES_STRIPE`, y
+    reimplementado. `/api/stripe` contesta `{"motivo":"firma"}` (400): abierta. Faltan la llave que solo lee y la compra de
+    mentira (partes 3 y 4 de la guía del chat). **La C de la media jornada**, de Ez: «La C pero el submenú tiene que tener la
+    paleta de PACE (no blanco) e indicar la hora de inicio (la interfaz tiene que ser clara para el usuario)», pasada a
+    `media-jornada-tarde`: el arreglo de lógica en un commit y la C encima, con fotos antes de juntar.
+16. **4 nov., Stripe, partes 3 y 4.** `STRIPE_LECTURA` puesta (Checkout Sessions, Payment Intents, Charges and Refunds e
+    Invoices en Lectura; nada más): `/api/recuperar` contesta «formato» y ya no «cerrada». Dos compras de prueba hechas
+    (la de por vida y la mensual): /gracias dio los dos códigos (k2; `lifetime` con `cs_test_…` y `monthly` con `sub_…`,
+    los dos hasta el 7 nov., el tope del modo de prueba) y PACE completo se abre con ellos. **/recuperar NO encuentra la de
+    por vida** con `hola.ezradesign@gmail.com` y el recibo `2889-1045`: era lo que quedaba por saber del modo «vende por ti»
+    (qué número enseña su recibo, `cobro/stripe.js`, `stripeBuscarCompra`). Se diagnostica con Ez. Ez, de la C de la media
+    jornada vista en fotos: «me vale así»; y luego «Sí, júntala».
+    **Causa probable de /recuperar:** el correo coincide y el recibo de Link dice «Número de recibo 2889-1045» y «Número de
+    factura TXSLKUWF-0001», pero la llave `rk_` se creó en un **sandbox** aparte («Entorno de prueba de… ezradesign», con
+    el aviso «Los cambios que realices aquí no afectarán a clientes ni a pagos reales»), que es otra cuenta. El destino de
+    eventos, los enlaces y las compras están en el **modo de prueba** de `acct_1UVT69JweaohZyG6` (URL con `/test/`, aviso
+    «No se procesarán transacciones reales»). La llave del sandbox no ve esas sesiones: Stripe contesta bien y vacío, y
+    /recuperar da 404 «no» (no 502). Arreglo: rehacer la llave en `dashboard.stripe.com/acct_1UVT69JweaohZyG6/test/apikeys`
+    y cambiar `STRIPE_LECTURA` en Cloudflare.
+17. **5 nov.: Stripe en el modo de prueba, entero.** Con la llave del modo de prueba en `STRIPE_LECTURA` (Ez la había
+    puesto primero como `STRIPE_LECTURA_PRUEBA`, que el código no lee; se borraron las dos y se añadió una) y reimplementado,
+    `/api/recuperar` con el correo y `2889-1045` da 200 y un código `lifetime` k2 de la misma `cs_test_…`, nuevo y de tres
+    días desde ese momento (las de prueba siempre duran poco). Vale el «Número de recibo» del correo de Link. Para vender
+    de verdad falta el modo real, que espera el alta con el gestor. **La media jornada, juntada** (2edc30a0) y la 0.189.1
+    aparte (5b048d7b); su suite entera sobre `main`, en el 8840, se paró de noche con el PC dormido y siguió al despertar.
+18. **5 nov., Ez:** «Quiero que todas se vean como la nueva, enséñame las opciones, la UI debe ser muy amigable e
+    intuitiva» (pasado a `todas-las-horas`, `local_d15c6d7d-f59a-4d30-a1d8-84b42e5d509f`, puerto 8842) · «lo del gestor está
+    listo, podemos avanzar con el stripe» (el alta hecha: falta activar los pagos en Stripe, el modo real y lo legal) ·
+    **regla nueva: usar cada cuenta hasta el 90 % y migrar** (WORKFLOW §10) · una landing y la estructura de la web y los
+    worktrees, para pensar · auditoría con ChatGPT «si lo consideras necesario» · los logros: «Próximamente» sobra y faltan
+    sus dibujos (`logros-sin-pronto`, `local_2d1368d2-5f2b-47e3-841b-a25cd1a1a94d`, puerto 8844). La página de
+    `maqueta-sin-querer` (https://claude.ai/artifact/6eyroLktjNB2grtwdLHAaF, recomendada 1A 2A 3A) espera sus letras.
+19. **5 nov., Ez:** «Lo que pasa sin querer 1A + 2A pero durante una semana y el ahora no debería estar en la linea de
+    abajo de si/un poco/no + 3A» (pasado a `maqueta-sin-querer` con sus palabras, trayendo antes `main`) · Stripe en real,
+    paso a paso · los dibujos de Rana y Palmas los hace Ez antes de subir la versión de prueba (no se sube sin ellos):
+    prompts nuevos en el chat, con Rana en tres cuartos (la flecha hacia atrás no se ve de frente) y Palmas en primera
+    persona, y la idea de anclar con una foto de sus manos o con `app/glyphs/assets/ejercicios/gato-camello.webp`.
+20. **5 nov., Stripe en real:** la Guía de configuración de Stripe tiene hecho todo menos «Configura Tax» (se deja: con
+    Managed Payments vende Stripe; Ez lo confirma con el gestor). Ez puso el `whsec_` del destino real en
+    `STRIPE_AVISO_SECRETO` y la `rk_live_` («PACE recuperar», las cuatro en Lectura) en `STRIPE_LECTURA`, y reimplementó:
+    `/api/stripe` da «firma» y `/api/recuperar` ya NO encuentra la compra de prueba (404), señal de que lee la cuenta real.
+    Las compras de prueba ya no dan código. Faltan lo legal (datos de Ez y revisión), Resend para `/desistir`, encender los
+    dos enlaces reales y ponerlos con el portal en `PACE_TIENDA_WEB` (`app/state-compra.js`). La 0.189.1, en `main` y
+    subida (b9d4da13): suite sobre `main` 1176 en verde, 2 saltadas y 6 de `android-avisos` caídas con el PC dormido, que
+    solas pasan 20 de 20. Rana: la segunda de Genspark vale (rodillas abiertas, flecha recta atrás); falta Palmas.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 
