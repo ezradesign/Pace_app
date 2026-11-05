@@ -121,6 +121,24 @@ pruebas de «Tus rutinas»), sin subir, y con STATE, CHANGELOG y LEEME de la 0.1
     «No se procesarán transacciones reales»). La llave del sandbox no ve esas sesiones: Stripe contesta bien y vacío, y
     /recuperar da 404 «no» (no 502). Arreglo: rehacer la llave en `dashboard.stripe.com/acct_1UVT69JweaohZyG6/test/apikeys`
     y cambiar `STRIPE_LECTURA` en Cloudflare.
+17. **5 nov.: Stripe en el modo de prueba, entero.** Con la llave del modo de prueba en `STRIPE_LECTURA` (Ez la había
+    puesto primero como `STRIPE_LECTURA_PRUEBA`, que el código no lee; se borraron las dos y se añadió una) y reimplementado,
+    `/api/recuperar` con el correo y `2889-1045` da 200 y un código `lifetime` k2 de la misma `cs_test_…`, nuevo y de tres
+    días desde ese momento (las de prueba siempre duran poco). Vale el «Número de recibo» del correo de Link. Para vender
+    de verdad falta el modo real, que espera el alta con el gestor. **La media jornada, juntada** (2edc30a0) y la 0.189.1
+    aparte (5b048d7b); su suite entera sobre `main`, en el 8840, se paró de noche con el PC dormido y siguió al despertar.
+18. **5 nov., Ez:** «Quiero que todas se vean como la nueva, enséñame las opciones, la UI debe ser muy amigable e
+    intuitiva» (pasado a `todas-las-horas`, `local_d15c6d7d-f59a-4d30-a1d8-84b42e5d509f`, puerto 8842) · «lo del gestor está
+    listo, podemos avanzar con el stripe» (el alta hecha: falta activar los pagos en Stripe, el modo real y lo legal) ·
+    **regla nueva: usar cada cuenta hasta el 90 % y migrar** (WORKFLOW §10) · una landing y la estructura de la web y los
+    worktrees, para pensar · auditoría con ChatGPT «si lo consideras necesario» · los logros: «Próximamente» sobra y faltan
+    sus dibujos (`logros-sin-pronto`, `local_2d1368d2-5f2b-47e3-841b-a25cd1a1a94d`, puerto 8844). La página de
+    `maqueta-sin-querer` (https://claude.ai/artifact/6eyroLktjNB2grtwdLHAaF, recomendada 1A 2A 3A) espera sus letras.
+19. **5 nov., Ez:** «Lo que pasa sin querer 1A + 2A pero durante una semana y el ahora no debería estar en la linea de
+    abajo de si/un poco/no + 3A» (pasado a `maqueta-sin-querer` con sus palabras, trayendo antes `main`) · Stripe en real,
+    paso a paso · los dibujos de Rana y Palmas los hace Ez antes de subir la versión de prueba (no se sube sin ellos):
+    prompts nuevos en el chat, con Rana en tres cuartos (la flecha hacia atrás no se ve de frente) y Palmas en primera
+    persona, y la idea de anclar con una foto de sus manos o con `app/glyphs/assets/ejercicios/gato-camello.webp`.
 
 ## 29 oct., ~21:10: coordina 5iWBf… (5 h al 6 %, se repone a las 02:00; la semana al 87 %, se repone el 2 nov. a las 18:00)
 

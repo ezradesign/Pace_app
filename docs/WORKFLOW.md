@@ -254,6 +254,7 @@ cuando cruza un umbral:
 
 | Uso de las 5 horas | Qué se hace |
 |---|---|
+| **Regla general desde el 5 nov.** (Ez: «podemos usar esta cuenta hasta que llegue al 90% y luego migrar a otra como regla general para estas sesiones») | al 85 %, «wip» y push de cada sesión y relevo de LEEME escrito; **al 90 %, se migra a la otra cuenta**. Manda sobre las filas de abajo |
 | menos del 85 % | trabajo normal |
 | 85-95 % | **relevo** (Ez, 14 oct., noche: «a partir del 85 % ir guardando todos los hilos»): no se abren sesiones nuevas ni se empieza nada largo; cada sesión en paralelo hace un commit «wip(...)» y push de su rama, sin esperar a que se lo pidan; la coordinadora pone al día el relevo de LEEME (versión, CI, sesiones con carpeta, rama y puerto, preguntas pendientes para Ez, y a qué hora se repone esta cuenta). Se puede seguir hasta el 95 % con todo ya atado |
 | 95 % | **tope**: se para todo y Ez cambia de cuenta. Nada pasa de aquí |

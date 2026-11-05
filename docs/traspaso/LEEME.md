@@ -2,7 +2,17 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.1.
+
+## 4 nov., tarde: la media jornada, en `main` (v0.189.1); Stripe, conectado salvo /recuperar
+
+Con el «Sí, júntala» de Ez: `claude/media-jornada-tarde-a30820` (d70dc263, una hora que cruza la otra de su tramo la
+lleva detrás, `ritmoTramoCon`; cf73140b, la C de Ez: pasada su hora, el nombre del chip abre «Hora de inicio» en un
+`Modal` con la paleta de PACE), y la versión aparte. Queda abierto que las demás horas (el «9:00» del chip, la frase del
+ordenador y la línea del día) siguen abriendo la lista blanca del sistema: pasarlas a la de PACE es trabajo aparte si Ez
+lo quiere. Stripe, en el modo de prueba de `acct_1UVT69JweaohZyG6`: el aviso, los cuatro `plink_` y dos compras de
+prueba que dan su código; /recuperar no encontraba la compra porque la llave de lectura salió de un sandbox aparte
+(el detalle, en el relevo, punto 16).
 
 ## 4 nov.: el logo se queda; la maqueta de Q2, Q4 y R1 y el arreglo de la media jornada, en marcha
 
