@@ -8,10 +8,7 @@ tarjeta sin jornada sin subtítulo y más baja (el aro pasó de 391 a más de 44
 pruebas que esperaban los textos viejos. `npm run verify` pasaba en el último intento. Decisión y regla, en `docs/product/`.
 
 **Falta, en este orden:**
-1. Ver si está en verde la última tanda de vecinas (`bloques-cortos`, `hora-y-medianoche`, `ritmo-pausa-entera`, `ritmo-pausa`,
-   `ritmo-tarjeta-movil`, `ver-ejercicio`, `eventos-origen`, `ritmo-reloj`, `ritmo-panel`, `home-a11y`, `inicio-modulos`,
-   `aro-modo-identidad`, `toques-movil`, `lienzo`, `aro-jornada`, en Chromium). La lanzó esta sesión y no llegó a leerse el resultado.
-   La tanda anterior dio 115 verdes y 11 rojas, todas ya corregidas en las pruebas, sin confirmar.
+1. Hecho: las vecinas de esa lista dieron 92 verdes y 0 rojas en Chromium sobre el último compilado (`bloques-cortos`, `hora-y-medianoche`, `ritmo-pausa-entera`, `ritmo-pausa`, `ritmo-tarjeta-movil`, `ver-ejercicio`, `eventos-origen`, `ritmo-reloj`, `ritmo-panel`, `home-a11y`, `inicio-modulos`, `aro-modo-identidad`, `toques-movil`, `lienzo`, `aro-jornada`).
 2. Mutantes: `mutantes.js` (aquí) deshace cada cambio en el `index.html` compilado. Sin correr.
 3. Medir que la home no pide scroll en dos idiomas y hacer las fotos de lo montado a 360 y 1280: `montado.js`. Sin correr.
 4. `npm run verify`, `node build-standalone.js` y, después de eso, `LISTO PARA MAIN`. La versión la pone la coordinadora.
