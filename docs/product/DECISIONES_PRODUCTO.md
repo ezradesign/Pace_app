@@ -19,6 +19,14 @@
 
 ---
 
+## Vender antes de v1 (Ez, 5 nov. 2026)
+
+- **Solo el de por vida, solo en la web, hasta v1.** «Solo el de por vida hasta v1 y en web (no android e ios) ya podríamos cerrar
+  la parte premium». Hasta v1 PACE completo está abierto: quien pagara cada mes pagaría por algo gratis. El mensual llega con v1, y
+  antes hay que cerrar la concurrencia de `guardar()` en `functions/api/stripe.js`.
+- **Sus datos legales, al registrar la primera venta real; la revisión profesional, en un mes**, hablado con el gestor. Ez lo decide
+  sabiendo que `docs/launch/legal-web.md` pide esos datos antes de cobrar.
+
 ## Lo legal para vender en la web: 1A 2A 3A 4A 5A (Ez, 30 oct. 2026)
 
 Con Managed Payments cobra Link (Stripe) y lleva el IVA, pero el vendedor es Ez (`docs/launch/legal-web.md`). Página:

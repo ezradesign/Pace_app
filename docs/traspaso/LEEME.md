@@ -2,7 +2,13 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 5 de noviembre de 2026, v0.189.1.
+
+## 5 nov., ~12:00: coordina 5iWBf…, con tres sesiones en marcha
+
+`local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a`, en la cuenta de la hoja 5iWBfHE7kD3dUVocdskmb6 (las 5 h se reponen a las 16:20).
+CI de 9fe51aee, en verde entero. Lo pendiente, en `relevo-coordinadora-22oct.md`, puntos 21 a 24 y «Nuevo el 5 nov.» de la cola:
+las sesiones con sus puertos nuevos, Palmas partiendo de una foto, la revisión de ChatGPT (`docs/audits/chatgpt-5nov/`) y lo que decidió Ez: solo el de por vida, solo en la web, hasta v1, con sus datos al registrar la primera venta real. El bloque de abajo sigue valiendo para lo de Stripe.
 
 ## AL RELEVO (5 nov., ~11:30): EcLj6… al 85 % de las 5 h; se migra a la otra cuenta al 90 % (regla de Ez)
 
