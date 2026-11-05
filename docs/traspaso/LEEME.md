@@ -4,6 +4,17 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de noviembre de 2026, v0.189.1.
 
+## 5 nov.: solo el de por vida, solo en la web, en su rama
+
+Ez: «solo el de por vida hasta v1 y en web (no android e ios)». Rama `claude/premium-solo-vida-e1a044` (commit 8437490d y el de los
+docs, sin versión): la tienda de la web ofrece solo los planes con enlace y precio; con `enlaces.vida` puesto y `enlaces.mes` en
+`null` está lista y vende uno. `enlaces.vida` sigue en `null`: la venta sigue apagada. La bienvenida y la invitación dicen «Un solo
+pago…» con «Comprar» y «Ahora no» iguales; en Android y el iPhone no hay compra ni enlace. Prueba nueva: `tests/compra-solo-vida.spec.js`
+(20; 11 caen sin el cambio). `verify` pasa y las 105 vecinas de cobro y /premium, también. **Falta la suite entera.** Censo de textos
++2 (suma a mano al juntar). **Espera a Ez**: cómo cuenta /premium un solo plan, A, B o C (con «dónde funciona tu compra» y «hasta v1
+todo abierto» en las tres): https://claude.ai/artifact/165bLJFWDD63yUU22fu5ep. No se monta `/premium` hasta su letra.
+
+
 ## AL RELEVO (5 nov., ~11:30): EcLj6… al 85 % de las 5 h; se migra a la otra cuenta al 90 % (regla de Ez)
 
 **Si llegas de la otra cuenta, empieza aquí.** Coordinaba `local_30b3e868-e7bd-44ae-bfd0-ca5b062fffba` en EcLj6… (las 5 h se
