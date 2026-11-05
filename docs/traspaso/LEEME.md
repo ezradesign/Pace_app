@@ -6,7 +6,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 4 de n
 
 ## AL RELEVO (5 nov.) · «Todas las horas», rama `claude/hungry-borg-a27a1a`, puerto 8842
 
-- **Hecho:** la D de Ez montada de verdad (`RitmoHoraPaso`, en `app/ritmo/RitmoPiezas.jsx`) para todas las horas, también la «Hora de inicio» de la 0.189.1; mantener pulsado; «Empezar ahora»; toda la maqueta fuera; pruebas adaptadas, `tests/ritmo-horas.spec.js` nueva (17 en verde); fila arriba en `DECISIONES_TECNICAS_VIGENTES.md`; censo de textos en 1119 (+14; logros baja 2, se suma a mano al juntar); `npm run verify` en verde.
+- **Hecho:** la D de Ez montada de verdad (`RitmoHoraPaso`, en `app/ritmo/RitmoPiezas.jsx`) para todas las horas, también la «Hora de inicio» de la 0.189.1; mantener pulsado; «Empezar ahora»; toda la maqueta fuera; pruebas adaptadas, `tests/ritmo-horas.spec.js` nueva (16 pruebas, en verde); fila arriba en `DECISIONES_TECNICAS_VIGENTES.md`; censo de textos en 1119 (+14; logros baja 2, se suma a mano al juntar); `npm run verify` en verde.
 - **Falta:** la suite entera con `PACE_E2E_PORT=8842` después del build, y publicar en ESTA cuenta la página de fotos para Ez (las fotos se repiten con el guion del scratchpad: pregunta, tarde, semana y bienvenida a 360 px en claro y oscuro, y 1280 px). Sin subir versión ni tocar `STATE.md` ni `CHANGELOG.md`.
 - **Ojo:** `ritmo.css.jsx` también lo toca `sin-querer`: va por 484 líneas y el tope es 500.
 
