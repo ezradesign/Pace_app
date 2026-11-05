@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.189.1 · 4 de noviembre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.190.0 · 5 de noviembre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -37,7 +37,7 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
-   esperar»): sube en cuanto entren Rana y Palmas en la mesa (las dos valen, 5 nov.), con el logo como está (Ez, 4 nov.; B4 y C3, la colocación y el material, ya
+   esperar»): sube en cuanto estén dentro los cuatro arreglos de datos y compra, /premium 1C y `capas-y-pausa` (Ez, 5 nov.), con el logo como está (Ez, 4 nov.; B4 y C3, la colocación y el material, ya
    están en la 0.187.0); el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo baja la coordinadora con el sí de Ez y lo
    sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
 4. Después, Play Billing y la compra de Apple (esperan las altas de Ez) y lo legal de /premium. El día de v1, «Da de
@@ -49,7 +49,7 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **En marcha: meter Rana y Palmas**, con Palmas a «dedos hacia delante» (Ez, 5 nov.: «Sí, cambia el texto»). Es lo que deja subir la versión de prueba definitiva (abajo). Rana vale y ya está en `dibujos-22oct/para-revisar/`. El logo se queda como
+- **Rana y Palmas, ya dentro con la 0.190.0**, con Palmas a «dedos hacia delante». Lo que falta para subir la versión de prueba definitiva (abajo). Rana vale y ya está en `dibujos-22oct/para-revisar/`. El logo se queda como
   está por ahora (Ez, 4 nov.). Con ella va la 0.189.1: la media jornada que un tester no podía pulsar un sábado a las
   15:00, arreglada con la C de Ez («Hora de inicio» con la paleta de PACE).
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
