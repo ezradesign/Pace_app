@@ -34341,7 +34341,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
 
+
+
+
+  const autoAntes = useRefV1(auto);
   useEffectV1(() => {
+    const encendido = auto && !autoAntes.current;
+    autoAntes.current = auto;
+    if (encendido && stage === 'run' && phase === 'work' && step.mode === 'reps') {setElapsed(0);return;}
     if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
     const marca = stepIdx + ':' + side + ':' + elapsed;
     const suena = sonadoRef.current !== marca;

@@ -237,7 +237,14 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // (guardado) así que no re-disparan.
   // Con [paused] para que lo que Auto deja pendiente pase al reanudar; los sonidos, una vez por
   // segundo de trabajo (`sonadoRef`): reanudar o tocar Auto no los repite.
+  // Encender «Auto» dentro de una serie de reps que iba a tu ritmo: el reloj siguió corriendo sin guía, y
+  // compararlo con el objetivo daba la serie por hecha y sus reps por acreditadas. La guía empieza desde
+  // cero, también con la pausa puesta. En un paso con reloj, Auto sí deja seguir lo que esperaba.
+  const autoAntes = useRefV1(auto);
   useEffectV1(() => {
+    const encendido = auto && !autoAntes.current;
+    autoAntes.current = auto;
+    if (encendido && stage === 'run' && phase === 'work' && step.mode === 'reps') { setElapsed(0); return; }
     if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
     const marca = stepIdx + ':' + side + ':' + elapsed;
     const suena = sonadoRef.current !== marca;
