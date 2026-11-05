@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre a las 12:20 · seguimos en la otra cuenta a las 15:30</div>
+    <div class="eyebrow">PACE · versión 0.189.1 · actualizada el 5 de noviembre a las 16:32 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -132,47 +132,21 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos</span>
-        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
-        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
-          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
-          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
-
-Contexto:
-- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
-- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
-- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
-
-Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
-
-Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Ya sé dos cosas y no hace falta que las repitas: guardar() en functions/api/stripe.js no es atómico si llegan dos avisos a la vez, y paceTiendaWebLista() exige los dos enlaces.
-
-Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
-
-Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
-      <li class="paso marcha"><span class="estado">En marcha · una sesión · dijiste «sí, cambia el texto»</span>
-        <span class="t">Meter Rana y Palmas en la app</span>
-        <span class="c"><span class="quien">Yo.</span> Los dos dibujos, y el texto de Palmas con los dedos hacia delante, en español y en inglés. Te
-          paso una página para verlos al tamaño real y me dices «júntalo». Con eso ya se puede preparar la versión de prueba.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · una sesión, desde hoy en esta cuenta</span>
-        <span class="t">Todas las horas con el «− 9:00 +»</span>
-        <span class="c"><span class="quien">Yo.</span> Elegiste la D. Se monta en todas las horas, también en «Hora de inicio», y
-          manteniendo pulsado avanza seguido. <a href="https://claude.ai/artifact/Lo2X1rRoczGPHkyoLhje9Y">Las fotos</a> ya están, en esta cuenta; faltan las pruebas enteras.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · una sesión · se repiten las pruebas</span>
-        <span class="t">Lo que pasa sin querer y Respira para empezar</span>
-        <span class="c"><span class="quien">Yo.</span> Lo que elegiste (1A, 2A de una semana y 3A) ya está montado. Las pruebas se
-          cortaron al cambiar de cuenta y se repiten. <a href="https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq">Las fotos</a> ya están, en esta cuenta, con
-          la pregunta de dónde va el «Ahora no».</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · una sesión · se repiten las pruebas</span>
-        <span class="t">Logros sin «Próximamente»</span>
-        <span class="c"><span class="quien">Yo.</span> Los 8 logros que aún no se pueden ganar ya no se ven ni se cuentan, y «Disponibles»
-          pasa a «Sellos reunidos». Cuando pasen las pruebas te paso el antes y el después, y me dices «júntalo». Con ellos,
-          la página de los 22 dibujos de logros, para cuando acabes los de ejercicios.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · una sesión · sin tocar la app</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos minutos</span>
+        <span class="t">Decir si juntamos las cuatro ramas</span>
+        <span class="c"><span class="quien">Tú.</span> Las cuatro están hechas. En vez de repetir las pruebas cuatro veces, las junto y las pruebo todas a la vez, que gasta
+          mucho menos:
+          <ol>
+            <li>Rana y Palmas en la mesa (<a href="https://claude.ai/artifact/7w8TYPv5aQSh52g6B9uGj7">la página</a>): los dos dibujos y el texto nuevo.</li>
+            <li>Logros sin «Próximamente» (<a href="https://claude.ai/artifact/J8ADhnvWTxLeiQWYix5U37">antes y después</a>), con todas las pruebas en verde.</li>
+            <li>Todas las horas con el «− 9:00 +» (<a href="https://claude.ai/artifact/Lo2X1rRoczGPHkyoLhje9Y">las fotos</a>).</li>
+            <li>Lo que pasa sin querer (<a href="https://claude.ai/artifact/WagDPPQz4kS2UdQvDiTauq">las fotos</a>), con tu A en el «Ahora no».</li>
+          </ol>
+          Con ellas dentro ya se puede preparar la versión de prueba.</span></li>
+      <li class="paso luego"><span class="estado">Lista · espera tu letra</span>
         <span class="t">La jornada como paso actual, en un html</span>
-        <span class="c"><span class="quien">Yo te la preparo; tú eliges.</span> La idea que me trajiste: una jornada, un botón principal y el aro
-          como el paso de ahora. Cinco momentos, en el móvil y en el ordenador, comparados con lo de hoy. Entra también lo que
-          viste del aro, más pequeño antes de elegir el día. Nada se monta hasta que elijas.</span></li>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/JT45Q7FuqAurUChGqLhqgg">la página</a>). Los cinco momentos, los dos caminos y lo del aro,
+          comparados con lo de hoy. La recomendada: 1A 2B. Nada se monta hasta que elijas.</span></li>
       <li class="paso luego"><span class="estado">Sin esperar a lo demás · lo decidiste el 28 de octubre por la noche</span>
         <span class="t">La versión de prueba, a Google y al iPhone a la vez</span>
         <span class="c"><span class="quien">Tú la subes; yo la preparo.</span> Solo falta juntar los dos dibujos del paso de arriba: el logo se queda como
@@ -200,6 +174,24 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           <b>Con la primera venta real</b>, me das tu nombre, NIF, dirección, correo y teléfono, y publico el aviso legal y las
           condiciones. Lo decidiste sabiendo que lo apuntado los pide antes de cobrar. La revisión del profesional, en un
           mes. «Configura Tax» se deja hasta que lo confirme el gestor.</span></li>
+      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos</span>
+        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
+        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
+          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
+          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
+
+Contexto:
+- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
+- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
+- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
+
+Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
+
+Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Ya sé dos cosas y no hace falta que las repitas: guardar() en functions/api/stripe.js no es atómico si llegan dos avisos a la vez, y paceTiendaWebLista() exige los dos enlaces.
+
+Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
+
+Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
       <li class="paso luego"><span class="estado">Después de la versión de prueba · con una maqueta para ti</span>
         <span class="t">El sobre: actualizaciones, novedades y avisos puntuales</span>
         <span class="c"><span class="quien">Yo te la preparo.</span> Lo que pediste el 30 de octubre: «actualizaciones, alguna notificación
