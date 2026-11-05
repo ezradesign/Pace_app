@@ -40062,13 +40062,14 @@ function paceDescargarCopia(enMemoria, alAbrir) {
 
 
 
-function paceDescargarRescate() {
+
+
+function paceDescargarRescate(alAbrir) {
   try {
     const r = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (!r) return false;
-    paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
-    'pace-rescate-' + paceDiaArchivo() + '.json');
-    return true;
+    return paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
+    'pace-rescate-' + paceDiaArchivo() + '.json', alAbrir);
   } catch (e) {return false;}
 }
 
@@ -40102,22 +40103,27 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
+  const avisarSalida = (como) => {
+    if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);else
+    if (como === 'cancelada') avisar('ok', 'settings.msg.export.cancel', 2600);else
+    if (como !== 'compartida') avisar('err', 'settings.msg.export.err', 2600);
+  };
+
   const exportJSON = () => {
     const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
 
 
 
     Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
-      if (como === 'descargada' || como === 'compartida') {
-        if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
+      avisarSalida(como);
 
-        unlockAchievement('secret.backup');
-      } else if (como === 'cancelada') {
-        avisar('ok', 'settings.msg.export.cancel', 2600);
-      } else {
-        avisar('err', 'settings.msg.export.err', 2600);
-      }
+      if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
     });
+  };
+
+
+  const bajarRescate = () => {
+    Promise.resolve(paceDescargarRescate(() => avisar('ok', 'settings.msg.exported.app', 4000))).then(avisarSalida);
   };
 
 
@@ -40283,7 +40289,7 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' } }, msg.text),
 
     rescate &&
-    React.createElement(AjustesAccion, { onClick: () => paceDescargarRescate(), title: t('settings.data.rescate.title'), derecha: React.createElement(DownloadIcon, null) },
+    React.createElement(AjustesAccion, { onClick: bajarRescate, title: t('settings.data.rescate.title'), derecha: React.createElement(DownloadIcon, null) },
     React.createElement("span", { "data-pace-aj-rescate": true }, t('settings.data.rescate'), " ", React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: '.92em' } }, "\xB7 ", rescateFecha))
     ),
 

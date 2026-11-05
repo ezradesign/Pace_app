@@ -96,14 +96,15 @@ function paceDescargarCopia(enMemoria, alAbrir) {
 }
 
 /* s198 · B2 (decision del usuario): la copia de rescate se descarga SOLA, desde su
-   fila en «Tus datos», que solo existe si hay rescate. */
-function paceDescargarRescate() {
+   fila en «Tus datos», que solo existe si hay rescate. Devuelve lo mismo que la copia normal
+   (lo de `paceBajarJSON`, o false si ni se armó) para que su fila diga cómo le fue: antes daba
+   `true` sin esperar a la hoja de compartir (revisión de ChatGPT del 5 nov., punto 4). */
+function paceDescargarRescate(alAbrir) {
   try {
     const r = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (!r) return false;
-    paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
-      'pace-rescate-' + paceDiaArchivo() + '.json');
-    return true;
+    return paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
+      'pace-rescate-' + paceDiaArchivo() + '.json', alAbrir);
   } catch (e) { return false; }
 }
 
@@ -137,22 +138,27 @@ function TweaksDataSection({ onReset, isWeb }) {
      menú abierto, «elige dónde guardarla»; si se cierra sin elegir, o el archivo no se pudo
      escribir, no se da por hecha ni da su logro (auditoría del 21 oct.). Lo que haga después
      la app elegida no se sabe, así que nunca se dice «guardada». */
+  const avisarSalida = (como) => {
+    if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
+    else if (como === 'cancelada') avisar('ok', 'settings.msg.export.cancel', 2600);
+    else if (como !== 'compartida') avisar('err', 'settings.msg.export.err', 2600);
+  };
+
   const exportJSON = () => {
     const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
     /* Desde la app funcionando, lo que se ve: el estado en memoria, que es lo único al día si el
        navegador no deja guardar (revisión de ChatGPT del 5 nov., punto 1). Leer del disco es solo
        para la pantalla de error, que existe cuando el árbol se ha caído. */
     Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
-      if (como === 'descargada' || como === 'compartida') {
-        if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
-        /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
-        unlockAchievement('secret.backup');
-      } else if (como === 'cancelada') {
-        avisar('ok', 'settings.msg.export.cancel', 2600);
-      } else {
-        avisar('err', 'settings.msg.export.err', 2600);
-      }
+      avisarSalida(como);
+      /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
+      if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
     });
+  };
+
+  /* La copia de rescate dice cómo le fue igual que la normal, pero no da el logro de exportar. */
+  const bajarRescate = () => {
+    Promise.resolve(paceDescargarRescate(() => avisar('ok', 'settings.msg.exported.app', 4000))).then(avisarSalida);
   };
 
   /* La fila del rescate (B2): la fecha, corta y en el idioma de la app. */
@@ -318,7 +324,7 @@ function TweaksDataSection({ onReset, isWeb }) {
         <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' }}>{msg.text}</div>
       )}
       {rescate && (
-        <AjustesAccion onClick={() => paceDescargarRescate()} title={t('settings.data.rescate.title')} derecha={<DownloadIcon />}>
+        <AjustesAccion onClick={bajarRescate} title={t('settings.data.rescate.title')} derecha={<DownloadIcon />}>
           <span data-pace-aj-rescate>{t('settings.data.rescate')} <span style={{ color: 'var(--ink-3)', fontSize: '.92em' }}>· {rescateFecha}</span></span>
         </AjustesAccion>
       )}
