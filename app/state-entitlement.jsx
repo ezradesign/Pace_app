@@ -143,7 +143,8 @@ function paceTiendaAbierta() {
   return !!(tienda && tienda.listo()) && !hasPremiumEntitlement();
 }
 
-/* Los planes con su precio escrito en el idioma de la app, en el orden de la tienda. */
+/* Los planes que se pueden comprar ahora (los que tienen enlace), con su precio escrito en el
+   idioma de la app, en el orden de la tienda. Con solo el de por vida a la venta, solo trae ese. */
 function paceTiendaPlanes(lang) {
   const tienda = tiendaDelCanal();
   if (!tienda || !tienda.listo()) return [];
@@ -153,11 +154,13 @@ function paceTiendaPlanes(lang) {
 /* Los planes con su precio aunque aún no se pueda comprar: mientras PACE completo está abierto
    hasta v1, la bienvenida dice lo que costará después. Solo los sabe la tienda que los tiene
    escritos (la web); Play los da cuando llegue Billing, así que en Android y en el iPhone sale
-   vacío y la bienvenida no dice ningún importe. */
+   vacío y la bienvenida no dice ningún importe. Son los de `precios()`, no los de `planes()`: con
+   solo el de por vida a la venta, `planes()` no trae el mensual, que costará lo que dice al llegar v1. */
 function paceTiendaPrecios(lang) {
   const tienda = tiendaDelCanal();
   if (!tienda) return [];
-  return tienda.planes().map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
+  const lista = tienda.precios ? tienda.precios() : tienda.planes();
+  return lista.map((p) => Object.assign({}, p, { precio: window.paceTiendaPrecioTexto(p, lang) }));
 }
 
 /* La pantalla de PACE completo que cierra la bienvenida: 'compra' con la tienda abierta (la del

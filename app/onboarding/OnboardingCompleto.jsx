@@ -15,6 +15,11 @@
      bienvenida pasa sola a la de comprar.
    Los precios son los de la tienda, nunca de las traducciones; donde la tienda aún no los
    tiene (Android antes de Play Billing, el iPhone), la frase del precio no sale.
+   SOLO EL DE POR VIDA (Ez, 5 nov. 2026: hasta v1 no se vende el mensual): si la tienda solo
+   trae ese plan, la frase dice un solo pago, el botón principal compra ese plan con «Ahora no»
+   del mismo tamaño, y no sale la prueba ni el aviso de dos días antes ni «Prefiero pagarlo una
+   vez», que solo tienen sentido al lado del mensual. Con la tienda abierta antes de v1 (todo sigue
+   abierto para todos), el arranque lo dice, como en 'abierto'.
    Sin escena: como «¿Cómo es tu semana?».
 
    `onFin(plan)`: null es «Ahora no» o «Comenzar»; 'mes' o 'vida', la compra. La
@@ -28,11 +33,13 @@ function OnbCompletoPaso({ modo, onFin }) {
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
   const dias = (mes && mes.pruebaDias) || 7;
+  const soloVida = !abierto && !mes && !!vida;
+  const todoAbierto = abierto || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 
   return (
     <React.Fragment>
       <h2 style={onboardingStyles.title}>{t('premium.onb.titulo')}</h2>
-      <p style={onboardingStyles.lede}>{t(abierto ? 'premium.onb.abierto.lede' : 'premium.onb.lede')}</p>
+      <p style={onboardingStyles.lede}>{t(todoAbierto ? 'premium.onb.abierto.lede' : 'premium.onb.lede')}</p>
       <ul style={onbCompletoStyles.lista}>
         {PREMIUM_INCLUYE.map((k, ik) => (
           <li key={k} style={{ ...onbCompletoStyles.item, ...(ik === PREMIUM_INCLUYE.length - 1 ? { borderBottom: 0 } : null) }}>
@@ -46,6 +53,7 @@ function OnbCompletoPaso({ modo, onFin }) {
           {tn(abierto ? 'premium.onb.abierto.precios' : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}
         </p>
       )}
+      {soloVida && <p data-pace-onb-precios style={onbCompletoStyles.precios}>{tn('premium.onb.vida.sola', { vida: vida.precio })}</p>}
       {abierto ? (
         <React.Fragment>
           <button data-pace-cta data-pace-onb-comenzar onClick={() => onFin(null)} style={onboardingStyles.cta}>
@@ -61,18 +69,25 @@ function OnbCompletoPaso({ modo, onFin }) {
                 {tn('premium.onb.probar', { dias })}
               </button>
             )}
+            {soloVida && (
+              <button data-pace-cta data-pace-onb-vida onClick={() => onFin('vida')} style={{ ...onboardingStyles.cta, ...onbCompletoStyles.mitad }}>
+                {tn('premium.onb.comprar', { vida: vida.precio })}
+              </button>
+            )}
             <button data-pace-onb-ahora onClick={() => onFin(null)} style={{ ...onbCompletoStyles.gemelo, ...onbCompletoStyles.mitad }}>
               {t('premium.later')}
             </button>
           </div>
-          <div style={onbCompletoStyles.pie}>
-            <p style={onbCompletoStyles.aviso}>{t('premium.onb.aviso')}</p>
-            {vida && (
-              <button data-pace-onb-vida onClick={() => onFin('vida')} style={onboardingStyles.ghostBtn}>
-                {tn('premium.onb.vida', { vida: vida.precio })}
-              </button>
-            )}
-          </div>
+          {mes && (
+            <div style={onbCompletoStyles.pie}>
+              <p style={onbCompletoStyles.aviso}>{t('premium.onb.aviso')}</p>
+              {vida && (
+                <button data-pace-onb-vida onClick={() => onFin('vida')} style={onboardingStyles.ghostBtn}>
+                  {tn('premium.onb.vida', { vida: vida.precio })}
+                </button>
+              )}
+            </div>
+          )}
         </React.Fragment>
       )}
     </React.Fragment>

@@ -183,7 +183,7 @@ function Tag({ children, color = 'var(--ink-2)', muted = false }) {
   );
 }
 
-function Button({ children, onClick, variant = 'primary', size = 'md', icon, disabled, style = {}, type = 'button' }) {
+function Button({ children, onClick, variant = 'primary', size = 'md', icon, disabled, style = {}, type = 'button', ...resto }) {
   const sizes = {
     sm: { padding: '6px 14px', fontSize: 13, height: 32 },
     md: { padding: '10px 22px', fontSize: 14, height: 42 },
@@ -213,6 +213,7 @@ function Button({ children, onClick, variant = 'primary', size = 'md', icon, dis
   };
   return (
     <button
+      {...resto}
       type={type}
       onClick={onClick}
       disabled={disabled}

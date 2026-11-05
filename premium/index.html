@@ -34,7 +34,9 @@
 
      HASTA QUE HAYA STRIPE, los botones de compra llevan a la lista. Los precios son los de la
      tienda de la web (`PACE_TIENDA_WEB`, app/state-compra.js): si cambian, cambian en los dos
-     sitios. Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
+     sitios. Cada plato lleva su `data-plan`: el botón de un plan solo deja la lista cuando la
+     tienda tiene el enlace de ese plan (tests/compra-solo-vida.spec.js), y entonces apunta a él.
+     Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
 <style>
   @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/cormorantgaramond-400-italic.woff2') format('woff2'); }
   @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
@@ -211,13 +213,13 @@
   <section id="precio">
     <h2 data-en="Two ways to have it">Dos maneras de tenerlo</h2>
     <div class="platos">
-      <div class="plato delante">
+      <div class="plato delante" data-plan="vida">
         <p class="kicker" data-en="Lifetime">De por vida</p>
         <p class="importe" data-precio="vida" data-en="€19.99">19,99 €</p>
         <p class="sub" data-en="one payment, for good">un pago, para siempre</p>
         <a class="boton lleno" href="#avisame" data-en="Notify me">Avísame</a>
       </div>
-      <div class="plato">
+      <div class="plato" data-plan="mes">
         <p class="kicker" data-en="Monthly">Al mes</p>
         <p class="importe" data-precio="mes" data-en="€2.99">2,99 €</p>
         <p class="sub" data-en="with 7 days free">con 7 días gratis</p>
