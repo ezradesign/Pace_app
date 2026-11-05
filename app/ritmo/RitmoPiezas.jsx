@@ -190,7 +190,7 @@ function ritmoHoraYa(campo, horario, onCambio) {
    en vez de la lista del sistema o una rejilla de 33 botones, con el título de qué hora es,
    cómo está ahora y una salida que no cambia nada. El número es un `spinbutton`: las flechas
    mueven media hora, Av Pág y Re Pág una hora, Inicio y Fin van al tope e Intro guarda.
-   Lleva el foco al abrir, pero tras el efecto del `Modal`, que apunta a quién devolvérselo.
+   Lleva el foco al abrir: el `Modal`, que es hijo, ya ha apuntado a quién devolvérselo.
    `aria-disabled` y no `disabled` en los extremos: un botón apagado perdería el foco. El
    Modal va en un portal porque `.pace-rt-panel` encierra lo fijo, y en la capa 130 porque
    la bienvenida, donde también se eligen horas, va en la 120. */
@@ -202,7 +202,7 @@ function RitmoHoraPaso({ campo, horario, onCambio, onClose }) {
   /* Con los botones el foco no está en el número, y el lector no diría la hora nueva. */
   const [decirla, setDecirla] = useStateRPz(false);
   const numero = useRefRPz(null);
-  useEffectRPz(() => { queueMicrotask(() => numero.current && numero.current.focus({ preventScroll: true })); }, []);
+  useEffectRPz(() => { numero.current.focus({ preventScroll: true }); }, []);
   const texto = (v) => ritmoHoraTexto(campo, v);
   const las = (v) => (campo === 'comidaDur' ? texto(v) : tn('ritmo.hora.las', { h: texto(v) }));
   const guardar = (v) => {

@@ -45755,7 +45755,7 @@ function RitmoHoraPaso(_ref5) {let { campo, horario, onCambio, onClose } = _ref5
 
   const [decirla, setDecirla] = useStateRPz(false);
   const numero = useRefRPz(null);
-  useEffectRPz(() => {queueMicrotask(() => numero.current && numero.current.focus({ preventScroll: true }));}, []);
+  useEffectRPz(() => {numero.current.focus({ preventScroll: true });}, []);
   const texto = (v) => ritmoHoraTexto(campo, v);
   const las = (v) => campo === 'comidaDur' ? texto(v) : tn('ritmo.hora.las', { h: texto(v) });
   const guardar = (v) => {
