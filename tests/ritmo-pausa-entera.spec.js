@@ -91,7 +91,7 @@ test('la pausa larga nombra sus dos platos y los hace seguidos: Respira, «Segui
   await expect(ventana).toContainText('Respira y Estira');
   await expect(ventana.locator('.pace-lib-ctx b'), 'con los minutos de la parada, no los de Respira').toHaveText('15');
 
-  await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await expect(sesion(page)).toHaveCount(1);
   await hastaElCierre(page);
   await expect(sesion(page)).toContainText('Exhalación 4·6');
@@ -151,7 +151,7 @@ test('el aro cuenta la pausa desde que acaba el bloque y, a cero, espera el bloq
   await expect(corriendo(page), 'el aro cuenta la pausa').toHaveCount(1);
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Pausa corta');
   await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Luego, el bloque 2 de 9');
-  await expect(cta(page)).toHaveText('Empezar ya el bloque 2');
+  await expect(cta(page)).toHaveText('Hacer la pausa');
   await expect(vis(page, '[data-pace-dial-number]')).toHaveText(/^0[45]:\d\d$/);
 
   await minutos(page, 5);
@@ -177,7 +177,7 @@ test('la pausa sigue al recargar, y «Empezar ya el bloque 2» la corta y arranc
   await expect(corriendo(page), 'recargar no pierde la pausa').toHaveCount(1);
   await expect(vis(page, '[data-pace-dial-number]'), 'ni lo que lleva').toHaveText(/^0[23]:\d\d$/);
 
-  await cta(page).click();
+  await vis(page, '[data-pace-aro-seguir]').click();
   await expect(corriendo(page)).toHaveCount(1);
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Bloque 2 de 9');
   expect(await page.evaluate(() => [getState().focusMode, getState().ritmo.dia.pausa, getState().ritmo.dia.estados]))

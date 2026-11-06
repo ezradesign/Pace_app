@@ -108,7 +108,7 @@ test('«Hacer la pausa» entra en el plato, y al terminarlo la parada queda hech
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
   await page.waitForTimeout(250);
   await terminarBloque(page);
-  await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   await expect(page.locator('[data-pace-session-root]')).toHaveCount(1);
   const done = page.locator('[data-pace-session-done]');
@@ -162,10 +162,10 @@ test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba
   /* a los 10 minutos lo pausas 3 y sigues: el bloque acaba a las 9:28, no a las 9:25 del plan */
   await page.clock.fastForward(10 * 60 * 1000);
   await page.waitForTimeout(100);
-  await page.getByRole('button', { name: 'Pausar', exact: true }).click();
+  await page.getByRole('button', { name: 'Pausar foco', exact: true }).click();
   await page.clock.fastForward(3 * 60 * 1000);
   await page.waitForTimeout(100);
-  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByRole('button', { name: 'Reanudar foco', exact: true }).click();
   await terminarBloque(page);
   const d = await page.evaluate(() => {
     const p = ritmoPlan(getState()), dia = getState().ritmo.dia;

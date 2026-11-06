@@ -354,7 +354,7 @@
     var dPrevio = D;
     for (var i = 0; i < MAX_FIT_PASSES; i++) {
       var over = medirOver();
-      if (over <= 1 || D <= piso) { reintentos = 0; break; }
+      if (over <= 0 || D <= piso) { reintentos = 0; break; }   // sin tolerancia: 1 px ya saca barra de scroll en Windows
       /* NUNCA ENCOGER A CIEGAS (s156). Si la pasada anterior redujo D y el
          desbordamiento no mejoró, la medida no está respondiendo al cambio y
          seguir restando es dar palos: se vuelve al último D no desmentido y se

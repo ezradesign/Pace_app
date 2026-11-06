@@ -99,7 +99,7 @@ test('la invitación dice «Ver ejercicio» y abre la hoja: el dibujo del módul
   /* «Seguir con el bloque 3» la salta: empieza el bloque */
   await page.locator('[data-pace-hacerla-seguir]').click();
   await expect(hoja).toHaveCount(0);
-  await expect(visible(page, '[data-pace-cta]').first()).toHaveText('Pausar');
+  await expect(visible(page, '[data-pace-cta]').first()).toHaveText('Pausar foco');
   expect(errores).toEqual([]);
 });
 

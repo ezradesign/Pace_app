@@ -200,8 +200,6 @@
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
   display: grid; place-items: center; }
 .pace-rt-comida-nodo .pace-rt-g { width: 17px; height: 17px; }
-/* La frase de la primera vez, bajo la cabecera (RitmoComo) */
-.pace-rt-como { margin-top: 5px; }
 /* Las etiquetas las coloca el JS (hasta tres niveles, de forma voraz) */
 .pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
   text-align: center; line-height: 1.22; pointer-events: none; }
@@ -287,20 +285,19 @@
    las separa del pie. La loseta se enciende al pasar con el lavado del foco y
    el borde de la acción; el pie lleva «Ajustar el horario» y «Ver caminos». */
 .pace-rt-tarjeta { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
-  box-shadow: var(--sh-soft); padding: 16px 22px 16px; text-align: left; }
+  box-shadow: var(--sh-soft); padding: 12px 22px 12px; text-align: left; }
 .pace-rt-tarjeta-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
 .pace-rt-tarjeta-enlaces { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-bottom: 2px; }
 .pace-rt-tarjeta-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 1.1; color: var(--ink); }
-.pace-rt-tarjeta-s { font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-3); margin-top: 4px; }
-.pace-rt-losetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.pace-rt-losetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }
 .pace-rt-loseta { flex: 1 1 0; min-width: 0; border: 1px solid var(--line) !important; border-radius: var(--r-md);
-  padding: 12px 14px 11px !important; text-align: left; background: var(--paper) !important;
+  padding: 8px 14px 7px !important; text-align: left; background: var(--paper) !important;
   transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease), transform var(--dur-quick) var(--ease); }
 .pace-rt-loseta:hover:not(:disabled) { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; transform: translateY(-1px); }
 .pace-rt-loseta:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-loseta:disabled { opacity: 0.5; cursor: default; }
 .pace-rt-loseta b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; color: var(--ink); line-height: 1.1; }
-.pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 5px; }
+.pace-rt-loseta > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 2px; }
 @media ${PACE_CORTE_MOVIL} {
   .pace-rt-tarjeta-cab { flex-wrap: wrap; align-items: flex-start; }
   .pace-rt-tarjeta-enlaces { width: 100%; justify-content: space-between; padding-bottom: 0; margin-top: 6px; }

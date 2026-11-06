@@ -108,7 +108,7 @@ test('el aro con plan es «aro» servido por el menú, y la propuesta de la paus
   await expect(prop).toContainText('Piernas: sin mover hoy');
   await expect(prop, 'la propuesta no es la del menú').toHaveAttribute('data-pace-break-ritmo', '');
   /* s195: con menú, el modal es «Tu pausa» y el botón del plato es «Hacer la pausa» */
-  await page.getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Hacer la pausa', exact: true }).click();
   await empezarDesdePreview(page);
   await terminarSesionCuerpo(page);
   const plato = await ultimaSesion(page, 2);

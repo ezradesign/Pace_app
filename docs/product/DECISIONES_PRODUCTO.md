@@ -19,6 +19,17 @@
 
 ---
 
+## El aro como paso actual de la jornada: 1A y 2B (Ez, 5 nov. 2026)
+
+Sobre la propuesta de ChatGPT, mirando `docs/proposals/jornada-paso-actual.html` (https://claude.ai/artifact/JT45Q7FuqAurUChGqLhqgg).
+**1A, el camino contenido**: la ventana de la pausa se queda; si se cierra, el botón del aro es «Hacer la pausa» y «Empezar ya el
+bloque 2» baja a enlace. «Comienza» pasa a «Preparar jornada». Dentro de la jornada, «Pausar foco» y «Reanudar foco». «Después: …»
+en el escritorio y «Pausa terminada» al acabar el tiempo. Foco / Pausa / Larga y los minutos se quedan a la vista: quitarlos fue
+el camino B, descartado, y también la propuesta de ChatGPT de añadir «Terminar por hoy» (la salida sigue siendo «Hoy voy por libre»).
+**2B**: la tarjeta sin jornada del escritorio pierde el subtítulo y baja las losetas, y el aro crece. **Y con la jornada elegida se
+quita la frase «Cada bloque es un pomodoro…»** (X, la recomendada, sobre https://claude.ai/artifact/14Ufp389qs3tXZUkPgW8vX): el aro
+pasa de 392 a 426 px a 1917×857 y de 305 a 332 a 1536×710.
+
 ## Vender antes de v1 (Ez, 5 nov. 2026)
 
 - **Solo el de por vida, solo en la web, hasta v1.** «Solo el de por vida hasta v1 y en web (no android e ios) ya podríamos cerrar

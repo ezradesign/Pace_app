@@ -179,8 +179,7 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   const tramos = linea.locator('[data-pace-ritmo-tramo="foco"]');
   const parada = linea.locator('[data-pace-ritmo-parada]').first();
   const lateral = page.locator('[data-pace-sidebar]');
-  /* antes de empezar: la frase, el tramo encendido y vacío, nada abierto */
-  await expect(vis(page, '[data-pace-ritmo-como]')).toBeVisible();
+  /* antes de empezar: el tramo encendido y vacío, nada abierto */
   expect(await bloqueDe(page)).toBe('0');
   await expect(tramos.nth(0)).toHaveClass(/pace-rt-ahora/);
   await expect(parada).not.toHaveClass(/pace-rt-ahora/);
@@ -213,7 +212,6 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   await expect(parada).toBeEnabled();
   await expect(tramos.nth(0)).toHaveClass(/pace-rt-hecho/);
   await expect(tramos.nth(1)).not.toHaveClass(/pace-rt-ahora/);
-  await expect(vis(page, '[data-pace-ritmo-como]')).toHaveCount(0);
   expect(await bloqueDe(page)).toBe('0');
   await expect(lateral).toContainText(/Tu pausa\s*Ahora, /);
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(1);
@@ -444,7 +442,6 @@ test.describe('móvil', () => {
     await expect(filas.nth(1)).toContainText('Luego');
     await expect(filas.nth(1)).toContainText('Foco · bloque 2 de 9');
     await expect(panel.locator('.pace-rt-mini .pace-rt-punto').first()).toHaveClass(/pace-rt-ahora/);
-    await expect(panel.locator('[data-pace-ritmo-como]')).toHaveCount(0);
     await vis(page, '[data-pace-ritmo-ver]').click();
     const lista = page.locator('[data-pace-ritmo-lista]');
     await expect(lista.locator('[data-pace-ritmo-fila="pausa"]').first()).toContainText('ahora');
