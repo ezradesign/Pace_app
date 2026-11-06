@@ -1247,6 +1247,11 @@ Sabe que al 85 % hacen «wip» y push, y que al 90 % dejan su punto en el bloque
 Cuando una sesión acaba y se junta, entra la siguiente de esta lista que no pise archivos de la otra.
 El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
+### Nuevo el 6 nov.
+
+De la lista de abajo ya están en `main` el 1, el 3, el 5 y el 6; el 4 entra con `maqueta-jornada` y sigue el 2 (`guardar()`), antes
+del mensual. Lo que toca, por orden, en el bloque «AL RELEVO (6 nov., ~21:25)» de `LEEME.md`.
+
 ### Nuevo el 5 nov.
 
 1. **La tienda web con un solo plan**, en marcha en `premium-solo-vida`: `paceTiendaWebLista` exige los dos enlaces (`every`) y

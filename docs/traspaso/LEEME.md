@@ -2,13 +2,36 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 5 de noviembre de 2026, v0.189.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de noviembre de 2026, v0.191.1.
 
-## 6 nov., ~18:45: sigue 5iWBf…; v0.191.1 subida. Empieza aquí
+## AL RELEVO (6 nov., ~21:25): 5iWBf… al 89 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+Coordinaba `local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a` en 5iWBf… (sus 5 h se reponen a las 21:59; la semana, al 38 %). No hay nada en marcha: ninguna sesión corre, y las 14 carpetas de `.claude/worktrees/` están limpias y sin nada por subir (comprobado a las 21:14). `main` = origin en v0.191.1 más este commit de relevo, solo documentos. **CI de cf8156c1, en verde entero:** verify, e2e 1/2, e2e 2/2, e2e-safari, Android e iOS. Borrador `v0.191.1` en GitHub, con `PACE-0.191.1.aab` (15,2 MB). Empieza con coordinadora nueva: esta conversación pesaba 725 000 tokens y, tras una hora parada, volver a hablarle costaba un 10-12 % de las 5 h.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (6 nov., ~21:25)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de main y republica mi hoja de pasos en esta cuenta. Sí a la versión de prueba 0.191.1: baja el archivo de Play y lanza TestFlight.
+```
+
+El sí a la versión de prueba vale solo si está en el mensaje de Ez. Si no viene, pregúntaselo antes de bajar nada.
+
+1. **Primero:** mira el CI del commit de relevo y baja el AAB con su Android ya terminado. La hoja: publica `docs/traspaso/hoja-de-ruta-20oct.html` en EcLj6io4wM9pGjtQ5wd1CT (léela antes con `action: read`) con la hora al día, «seguimos desde esta cuenta» y los seis ids del bloque de las 12:15. Las fotos de la jornada y la landing dan 404 allí: republícalas desde sus ramas (la landing, `docs/proposals/landing-5nov.html`) y cambia sus enlaces.
+2. **La versión de prueba, con el sí de Ez:**
+   a. `gh release download v0.191.1 -p "PACE-0.191.1.aab" -D subidas-play`. Lo sube Ez a la pista que diga `docs/launch/google-play/guia.html`.
+   b. TestFlight: `gh workflow run ios.yml --ref main` (el trabajo `testflight` solo corre a mano) y mira que acabe en verde.
+   c. Con Ez, una pantalla por mensaje: las notas de `docs/launch/google-play/SUBIDAS.md` y el párrafo «A tu ritmo» de `ficha.md`, en es y en. Apunta la fila en `SUBIDAS.md`.
+   d. Capturas: `SUBIDAS.md` dice que `6-logros` y `3-respira` están viejas y aconseja rehacer las seis una sola vez, al final, con la jornada dentro. Díselo a Ez: se lo prometí al preparar la subida.
+3. **Después, con su «júntalo»:** `maqueta-jornada-40d7ea` (88597eb8; jornada 1A 2B y X; fotos en 5P7oysx4zRBMe7qvhRjFgZ; sin probar en WebKit ni en móvil real) y `catalogo-cifras-auto-5ba756` (01086d31; carpeta `version-de-prueba-7b9668`; Auto B). En una tanda, con una suite, y salen como actualización durante los 14 días.
+4. **Espera a Ez:** el estado de TestFlight (si está lista, el enlace público va a /beta); la parte legal de ChatGPT, con el prompt de la hoja; las letras de la landing (E3tcsR3FnywQNmnCpymxrp); Año nuevo, que se repite, y Vaca feliz; oír las horas con TalkBack; y los testers, que ya busca.
+5. **Para encender la venta:** Resend y la dirección real de 19,99 € en `PACE_TIENDA_WEB.enlaces.vida`. Con la primera venta real, ese mismo día, sus datos y publicar `legal/`. La revisión profesional, en un mes.
+6. **Propuesto y sin decidir, tras la beta:** un recorrido entero en móvil y escritorio, y arreglar `guardar()` antes del mensual; pide el OK de Ez. Descanso de manos, después de v1 (`dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`). Quitar los worktrees juntados, con un bundle antes: Ez dijo sí.
+
+## 6 nov., ~18:45: v0.191.1 subida
 
 `main` = origin en v0.191.1: suite de la 0.191.0, 1281 en verde en local; la 0.191.1 añade Textos, con verify y 38 vecinas. Dentro: arreglos de datos y compra, /premium 1C, capas, 20 logros, el sobre 1C 3A y los textos. El CI de 35241cdc solo falló en e2e-safari: las 38 cayeron en `browserType.launch`, sin abrir la app; ayer pasó. Se repitió en la 0.191.1: en `ubuntu-26.04`, el nuevo `ubuntu-latest`, el MiniBrowser de WebKit no arranca (exit 127). `e2e-safari` queda fijado en `ubuntu-24.04`; mira que su CI salga en verde. **Lo siguiente: con el CI en verde, la versión de prueba:** AAB con el sí de Ez, TestFlight con su sí y pegar con Ez el párrafo de Play. Falta saber qué estado vio Ez en TestFlight. Ramas por juntar, con su júntalo: `maqueta-jornada-40d7ea` (jornada 1A 2B y X, `LISTO`, con fotos en 5P7oysx4zRBMe7qvhRjFgZ) y `catalogo-cifras-auto-5ba756` (catálogo, cifras y Auto B, `LISTO`), las dos después de la versión de prueba. La landing espera letras. Lo demás del bloque de abajo sigue valiendo.
 
-## AL RELEVO (5 nov., ~17:35): 5iWBf… al 90 %; Ez migra ya. Empieza aquí; manda sobre el bloque de las 12:15
+## AL RELEVO (5 nov., ~17:35): lo de entonces, ya juntado casi todo
 
 Coordinaba `local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a` en 5iWBf… (se repone a las 21:30). `main` = origin en v0.190.0 (47fd7569): suite 1217 en verde con Rana y Palmas, logros, las horas y «sin querer»; iOS y Android en verde; **el CI de 47fd7569 seguía en marcha: míralo**. Detalle: `relevo-coordinadora-22oct.md`, puntos 21 a 27 y «Nuevo el 5 nov.».
 

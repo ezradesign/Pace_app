@@ -37,9 +37,8 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
-   esperar»): sube en cuanto estén dentro los cuatro arreglos de datos y compra, /premium 1C y `capas-y-pausa` (Ez, 5 nov.), con el logo como está (Ez, 4 nov.; B4 y C3, la colocación y el material, ya
-   están en la 0.187.0); el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo baja la coordinadora con el sí de Ez y lo
-   sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
+   esperar»): la 0.191.1 lleva dentro lo que Ez pidió; el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo
+   baja la coordinadora con el sí de Ez y lo sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
 4. Después, Play Billing y la compra de Apple (esperan las altas de Ez) y lo legal de /premium. El día de v1, «Da de
    pastar a la vaca» sale de la web (Ez, 18 oct.).
 
@@ -49,9 +48,9 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **Rana y Palmas, ya dentro con la 0.190.0**, con Palmas a «dedos hacia delante». Lo que falta para subir la versión de prueba definitiva (abajo). Rana vale y ya está en `dibujos-22oct/para-revisar/`. El logo se queda como
-  está por ahora (Ez, 4 nov.). Con ella va la 0.189.1: la media jornada que un tester no podía pulsar un sábado a las
-  15:00, arreglada con la C de Ez («Hora de inicio» con la paleta de PACE).
+- **La versión de prueba, 0.191.1: solo falta su sí** (6 nov.). CI en verde entero; `PACE-0.191.1.aab`, en el borrador de GitHub.
+  Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
+  vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
@@ -61,17 +60,15 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **Stripe** (`docs/launch/cobro-web.md`): el modo de prueba, entero y comprobado el 5 nov.: el aviso, la llave de lectura
   (`STRIPE_LECTURA`, del modo de prueba de la cuenta y no del sandbox), dos compras con 4242 y /recuperar con el recibo de Link;
   y los cuatro `plink_` en `PACE_ENLACES_STRIPE`. **Modo real (5 nov.)**: cuenta activada tras el alta con el gestor, y el
-  aviso (`whsec_` real) y la llave de lectura (`rk_live_`) ya en Cloudflare. Faltan lo legal, Resend y encender los enlaces. **Ez (5 nov.): solo el de por vida, solo en la web, hasta v1. Sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor**: sabe que `docs/launch/legal-web.md` los pide antes de cobrar. Para encender: la rama `premium-solo-vida`, Resend y la dirección del enlace real.
+  aviso (`whsec_` real) y la llave de lectura (`rk_live_`) ya en Cloudflare. Faltan lo legal, Resend y encender los enlaces. **Ez (5 nov.): solo el de por vida, solo en la web, hasta v1. Sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor**: sabe que `docs/launch/legal-web.md` los pide antes de cobrar. Para encender: Resend y la dirección del enlace real (`PACE_TIENDA_WEB.enlaces.vida`); la tienda de un plan ya está en `main`.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). En la web, antes de v1, solo el de por vida (Ez, 5 nov.).
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **La versión de prueba definitiva** (notas de Play y TestFlight y capturas nuevas, preparadas en `SUBIDAS.md` con la
-  0.189.0): los 16 dibujos (catorce en `main` con la 0.187.0; Rana y
-  Palmas en la mesa, aprobadas el 5 nov. y entrando en `rana-y-palmas`: `docs/traspaso/dibujos-ejercicios.html`, y la cuenta de todo, en
-  `docs/product/GLIFOS_A_DIBUJAR.md`). El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN»
-  (`app/ui/pace-logo.png`, también en /premium). El AAB de la 0.184.0, en `subidas-play\`.
-- **iPhone**: el correo de Apple que aprueba la prueba beta (enviada el 23 oct.), e invitar a sus testers con el
+- **Esperan su «júntalo», después de la versión de prueba:** la jornada (`claude/maqueta-jornada-40d7ea`, 1A 2B y la frase X) y
+  catálogo, cifras y Auto (`claude/catalogo-cifras-auto-5ba756`), en una tanda y con una suite. La landing
+  (`claude/landing-web-5ec1e5`) espera sus letras; y faltan dos dibujos de logros: Año nuevo, que se repite, y Vaca feliz.
+- **iPhone**: qué estado ve Ez en TestFlight (la prueba beta se envió el 23 oct.) e invitar a sus testers con el
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco
   y W-8BEN, el programa para pequeñas empresas y una dirección visible en la UE.
 - Las altas de Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`): sin ellas el calendario automático de la
