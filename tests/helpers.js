@@ -275,6 +275,27 @@ async function esperarEnPagina(page, condicion, arg, opciones) {
   }
 }
 
+/* CAMBIAR EL TAMAÑO DE LA VENTANA Y ESPERAR A QUE LA APP LO HAYA RECOGIDO. Con `page.clock`
+   instalado, `requestAnimationFrame` es del reloj falso y no espera a ningún fotograma de verdad:
+   «setViewportSize y dos rAF» vuelve a los ~32 ms, con el PC cargado antes de que el navegador
+   haya entregado el `resize`. El lienzo (app/main/_lienzo.js) pone y quita su `zoom` en ese
+   `resize`, así que al bajar de 1920×1080 a 1536×708 se medía el cierre con el zoom 1,25 de la
+   ventana anterior: «Sí», «Un poco», «No» y «Ahora no» al 0 % y las tres respuestas encima de
+   «Volver al inicio» (32×53, 119×53 y 40×53 px), solo en el CI y solo en esa bajada. Aquí se
+   espera a que la ventana sea la pedida y a que la escala del lienzo sea la que la fórmula de
+   `_lienzo.js` da para ella. Lo vigila tests/lienzo.spec.js. */
+async function fijarViewport(page, ancho, alto) {
+  await page.setViewportSize({ width: ancho, height: alto });
+  await esperarEnPagina(page, ([w, h]) => {
+    if (window.innerWidth !== w || window.innerHeight !== h || !window.paceLienzo) return false;
+    const s = Math.min(w / window.PACE_LIENZO_ANCHO, h / window.PACE_LIENZO_ALTO);
+    const escala = s > 1 ? Math.floor(s * 1000) / 1000 : 1;
+    return window.paceLienzo.escala === escala
+      && document.documentElement.hasAttribute('data-pace-lienzo') === (escala !== 1);
+  }, [ancho, alto]);
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+}
+
 /* EL BLOQUE DE FOCO, JUSTO HASTA SU FINAL Y SU VENTANA. El reloj salta al final que guardó el motor
    (`pace.timer.v1`) y se espera, con el reloj de verdad, a que salga la ventana de la pausa. Antes cada
    prueba avanzaba de minuto en minuto mientras no la veía, y con el PC cargado la ventana tardaba más que
@@ -300,6 +321,7 @@ module.exports = {
   MEDIODIA,
   abrirTusDatos,
   esperarEnPagina,
+  fijarViewport,
   terminarBloque,
   acabarBienvenida,
   aceptarAvisosPace,

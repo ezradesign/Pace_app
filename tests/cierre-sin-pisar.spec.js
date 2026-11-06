@@ -19,13 +19,17 @@
  * «Volver al inicio» y «Salir»), que ninguna caja pise a otra y que cada botón se vea
  * entero (una rejilla de puntos sobre su caja, preguntando qué elemento hay encima).
  *
+ * Cada tamaño se pone con `fijarViewport`, que espera al lienzo: en el CI de c9b50e50 el cierre se
+ * midió a 1536×708 con el zoom 1,25 de los 1920×1080 anteriores y todo salió al 0 % (no era falta de
+ * sitio: a 1536×708 «Ahora no» deja 20 px hasta «Volver al inicio» en Windows y en Linux).
+ *
  * Contra v0.170.1 cae: «Ahora no» se ve al 33 % a 1536×702, y a 1280×500 las tres
  * respuestas quedan debajo de «Volver al inicio».
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, overlaySuperior, fijarViewport } = require('./helpers');
 
 async function hastaElCierre(page, context, { extra, modulo, rutina, empezarAhora }) {
   await sembrar(context, extra);
@@ -71,8 +75,7 @@ const medir = (page) => page.evaluate(() => {
 async function comprobarEn(page, tamanos) {
   const fallos = [];
   for (const [w, h] of tamanos) {
-    await page.setViewportSize({ width: w, height: h });
-    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+    await fijarViewport(page, w, h);
     const m = await medir(page);
     expect(m.botones.length, 'GUARD: a ' + w + '×' + h + ' no están los seis botones del cierre').toBe(6);
     const tapados = m.botones.filter((b) => b.visto < 100).map((b) => '«' + b.nombre + '» al ' + b.visto + ' %');
@@ -122,8 +125,7 @@ test('Estira · «Ahora no» deja aire hasta «Volver al inicio»', async ({ pag
   const aire = async () => page.evaluate(() => document.querySelector('[data-pace-session-footer] button').getBoundingClientRect().top
     - document.querySelector('[data-pace-fb-ghost]').getBoundingClientRect().bottom);
   for (const [w, h] of [[1536, 708], [1536, 720], [1366, 700], [1280, 720], [360, 640]]) {
-    await page.setViewportSize({ width: w, height: h });
-    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+    await fijarViewport(page, w, h);
     expect(await aire(), 'a ' + w + '×' + h + ' «Ahora no» va pegado a «Volver al inicio»').toBeGreaterThanOrEqual(12);
   }
 });
