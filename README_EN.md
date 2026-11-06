@@ -25,7 +25,7 @@ micro-breaks for breathing, mobility and hydration, chained into guided routines
 | **Estira** (Stretch) | 19 mobility routines (start here, office, shoulders and spine, hips and legs, go further), 15 free |
 | **Hidrátate** (Hydrate) | Water glass tracker |
 | **Caminos** (Paths) | 7 guided journeys over an illustrated plate, hidden until after v1 (nothing has been deleted) |
-| **Logros** (Achievements) | 96 collectible field-notebook stamps |
+| **Logros** (Achievements) | Collectible field-notebook stamps; the panel shows the ones you can already earn, and the rest appear the day they get their detector |
 | **Estadísticas** (Stats) | Today · week · month · year (heatmap) |
 
 Plus: a **welcome** that asks what your week looks like, a **custom routine builder**,
@@ -40,12 +40,12 @@ and an installable **PWA** that works offline.
 | At your pace | The home asks "how long are you working today?" and serves the whole day: focus blocks and named breaks, around your schedule, and when a block ends the system notification tells you which break is next. The full menu is one tap away |
 | Core modules | Focus · Breathe · Move · Stretch · Hydrate — stable |
 | Paths | Complete system (library, step runner, completion screen, stats and yearly heatmap), hidden until after v1 with `SHOW_CAMINOS` in `app/flags.js` |
-| Body content | Step contract v1 (mode, sidedness, dosage, requirements) + "before you start" preview |
-| Achievements | 96 in catalog · 88 with an active detector · 78 with dedicated artwork |
+| Body content | Step contract v1 (mode, sidedness, dosage, requirements) + "before you start" preview, and a drawing of its own for every exercise in the routines |
+| Achievements | 96 in catalog · 88 with an active detector · the panel only shows and counts the ones you can earn today · the artwork still missing is counted in `docs/product/GLIFOS_A_DIBUJAR.md` |
 | i18n | Full ES/EN, catalogs split by domain |
 | PWA | `manifest.webmanifest` + service worker with precache; self-hosted fonts, zero external requests |
 | Android and iPhone | The same app through Capacitor (`android/`, `ios/`): every push to `main` builds the Android APK and signed AAB and the iPhone app. Android is in Google Play's closed test and iPhone in TestFlight; both stores launch the same day, with v1 |
-| PACE Complete | Everything paid goes through a single point (`app/state-entitlement.jsx`); the signed license exists since v0.157.0 and today it ships in the testers' codes. On the web, `/premium`, checkout with Stripe (in test mode), `/gracias`, `/recuperar` and `/desistir` (closed until email is connected); the terms, in draft. Until v1, everything is open |
+| PACE Complete | Everything paid goes through a single point (`app/state-entitlement.jsx`); the signed license exists since v0.157.0 and today it ships in the testers' codes. On the web, `/premium` (with the lifetime plan; the monthly arrives with v1), checkout with Stripe (checked in test mode and not switched on yet), `/gracias`, `/recuperar` and `/desistir` (closed until email is connected); the terms, in draft. There is no purchase in the apps until v1. Until v1, PACE Complete is open to everyone |
 | Robustness | A broken saved field repairs itself (anything unreadable is kept in a rescue copy) · dialogs and sessions manage focus and keyboard · the screen stays on during a guided session · if one part fails, only that part closes (with a recovery screen as a last resort) |
 | Code | Over 200 code files under `app/` (.js, .jsx, .css), none above 500 lines |
 | Safety net | `npm run verify` — syntax, build, scope analysis of the artifact, version coherence and what the website promises · `npm run test:e2e` — over 1,100 tests in a real browser, in Chromium and in Safari's engine, run by CI on every push |
@@ -178,10 +178,12 @@ your pace) every day, 35 routines, Hydrate, achievements and the stats for today
 the week.
 
 **PACE Complete** adds the 18 deeper routines, your own routines, a week that learns
-from you and your month and year. There will be two plans, **€2.99 a month with a
-7-day free trial or €19.99 for life**, with no account to create. **v1.0 will be the
-first paid version**; until then everything built is open. The license already exists
-(v0.157.0): a signed code the app checks on its own, which the testers carry today.
+from you and your month and year. There will be two plans, **€19.99 for life or €2.99
+a month with a 7-day free trial**, with no account to create. Until **v1.0**, PACE
+Complete is open to everyone and the web will sell only the lifetime plan; there is no
+purchase in the apps. With v1.0 it stops being open, the monthly plan arrives and you
+will be able to buy in Android and iPhone too. The license already exists (v0.157.0): a
+signed code the app checks on its own, which the testers carry today.
 
 ---
 
@@ -216,8 +218,8 @@ The PACE **source code** is published under the [Elastic License 2.0](./LICENSE)
 Elastic License 2.0 covers the repository **source code**. The **Premium** license is
 a **separate** commercial license applied to the compiled product to unlock premium
 content and features. See [`MONETIZATION.md`](./MONETIZATION.md) for the model — with
-the caveat that its historical part is marked as such: at launch there are **two
-plans** (€2.99 a month or €19.99 for life), not four routes.
+the caveat that its historical part is marked as such: there are **two plans**
+(€19.99 for life and, with v1, €2.99 a month), not four routes.
 
 ### Other uses
 

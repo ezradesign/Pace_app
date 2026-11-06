@@ -14,7 +14,8 @@
 
    EL CALENDARIO QUE SE MANTIENE SOLO (Ez, 14 oct. 2026, mirando las fotos de la
    propuesta): la casilla «Mantenerlo al día solo», marcada de entrada, bajo la
-   de las reuniones (con el candado de PACE completo si no hay derecho). Ya
+   de las reuniones (con el candado de PACE completo si no hay derecho, solo en Android; en la
+web va «en pruebas» y sin candado). Ya
    conectado, la hoja enseña solo ese destino, con cómo va y «Desconectar»; los
    otros dos se esconden para no escribir el día en dos calendarios y avisar dos
    veces. Sin permiso vivo y con el día cambiado, «Poner al día»; tras un fallo
@@ -254,13 +255,16 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   } else if (lectura && lectura.leidas) subReuniones = tn('cal.reuniones.leidas', { h: ritmoCalendarioHoraMs(lectura.leidas) });
 
   const conectados = destinos.filter(calendarioConectado).filter((d) => !solo || d === solo.destino);
+  /* En la web va «en pruebas» (Ez, 29 oct.): el permiso de Google dura una hora y el de Microsoft un
+     día, y hasta que haya un llavero que recuerde la conexión no se vende. Quien ya tiene PACE completo
+     la ve, avisada; quien no, no ve candado ni invitación: no es un motivo para pagar. */
   const casillaMantener = !conectados.length || solo ? null : puede ? (
     <label className="pace-rt-cal-chk">
       <input type="checkbox" id="pace-cal-mantener" data-pace-cal-mantener checked={mantener} onChange={(e) => setMantener(e.target.checked)} />
-      <span>{t('cal.mantener')}<small>{t('cal.mantener.sub')}</small></span>
+      <span>{t('cal.mantener')}<small>{t(android ? 'cal.mantener.sub' : 'cal.mantener.sub.web')}</small></span>
     </label>
-  ) : (
-    /* Cerrada: un botón que abre la invitación, con la casilla dibujada vacía. */
+  ) : !android ? null : (
+    /* Cerrada, en Android: un botón que abre la invitación, con la casilla dibujada vacía. */
     <button type="button" className="pace-rt-cal-chk pace-rt-cerrado" data-pace-cal-mantener-cerrado
       onClick={() => paceAbrirPremium({ nombre: t('cal.mantener') })}>
       <span className="pace-rt-cal-caja" aria-hidden="true" />
