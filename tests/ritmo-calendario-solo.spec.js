@@ -266,7 +266,7 @@ test.describe('en Android', () => {
     await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
     const hoja = await hojaMovil(page);
     const cerrada = hoja.locator('[data-pace-cal-mantener-cerrado]');
-    await expect(cerrada).toContainText('Con PACE completo.');
+    await expect(cerrada).toContainText('Con PACE completo, mientras PACE está abierto.');
     await expect(cerrada.locator('[data-pace-candado]')).toHaveCount(1);
     await hoja.locator('[data-pace-cal-destino="android"] button').click();
     await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('bloques en tu calendario');

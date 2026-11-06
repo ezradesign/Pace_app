@@ -240,6 +240,61 @@ test.describe('el calendario, en Android', () => {
       "Could not read them. Today's plan doesn't include them.",
     ]);
   });
+
+  /* Lo que decidió Ez el 29 oct.: en Android entra en PACE completo diciendo sus límites. El
+     candado solo sale desde v1 (hasta entonces está abierto), así que se cierra a mano. */
+  test('29 oct. · sin PACE completo, el candado del calendario dice que solo se pone al día con PACE abierto', async ({ page, context }) => {
+    await abrir(page, context);
+    await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+    const h = await hoja(page);
+    await expect(h.locator('[data-pace-cal-mantener-cerrado] small'))
+      .toHaveText('Con PACE completo, mientras PACE está abierto. Llevar el día y esquivar reuniones siguen gratis.');
+    expect(await cadenas(page, 'en', ['cal.mantener.cerrado']))
+      .toEqual(['With PACE Complete, while PACE is open. Adding your day and working around meetings stay free.']);
+  });
+});
+
+/* En la web el calendario va «en pruebas» y no se vende hasta que haya un llavero que recuerde la
+   conexión (Ez, 29 oct.). Los ids de Google y Microsoft están vacíos en el código y la hoja no
+   enseña esos destinos; aquí se ponen solo en la prueba, como harán las altas. */
+test.describe('el calendario, en la web con Google y Microsoft dados de alta', () => {
+  async function hojaWeb(page, context, cerrar) {
+    await sembrar(context, Object.assign({ ritmo: { dia: JORNADA } }, PERFIL));
+    await page.clock.install({ time: NUEVE });
+    await irAlArtefacto(page);
+    await page.evaluate((cerrado) => {
+      CALENDARIO_IDS.google = 'id-de-prueba';
+      CALENDARIO_IDS.microsoft = 'id-de-prueba';
+      if (cerrado) window.PREMIUM_ABIERTO_HASTA_V1 = false;
+    }, !!cerrar);
+    await vis(page, '[data-pace-ritmo-calendario]').click();
+    const h = page.locator('[data-pace-cal]');
+    await expect(h.locator('[data-pace-cal-destino="google"]')).toBeVisible();
+    await expect(h.locator('[data-pace-cal-destino="microsoft"]')).toBeVisible();
+    return h;
+  }
+
+  test('sin PACE completo no hay candado ni invitación: mantenerlo al día no es un motivo para pagar', async ({ page, context }) => {
+    const h = await hojaWeb(page, context, true);
+    await expect(h.locator('[data-pace-cal-mantener-cerrado]')).toHaveCount(0);
+    await expect(h.locator('[data-pace-cal-mantener]')).toHaveCount(0);
+    await expect(h.locator('[data-pace-candado]')).toHaveCount(0);
+    await expect(h).not.toContainText('Mantenerlo al día solo');
+    await expect(h).not.toContainText('Con PACE completo');
+    /* Llevar el día y esquivar reuniones siguen como siempre. */
+    await expect(h.locator('[data-pace-cal-reuniones]')).toBeVisible();
+    await expect(h.locator('[data-pace-cal-destino="google"] button')).toHaveText('Conectar');
+  });
+
+  test('con PACE completo la casilla sale, y dice que está en pruebas', async ({ page, context }) => {
+    const h = await hojaWeb(page, context, false);
+    await expect(h.locator('[data-pace-cal-mantener]')).toBeChecked();
+    await expect(h.locator('label:has([data-pace-cal-mantener]) small'))
+      .toHaveText('En pruebas. Mientras PACE está abierto y el permiso dura, si el día cambia, cambia también allí. Cada pausa te avisa.');
+    await expect(h.locator('[data-pace-cal-mantener-cerrado]')).toHaveCount(0);
+    expect(await cadenas(page, 'en', ['cal.mantener.sub.web']))
+      .toEqual(['In testing. While PACE is open and the permission lasts, if your day changes, it changes there too. Each break reminds you.']);
+  });
 });
 
 /* ------------------------------------------------------------------ 13 · /premium */

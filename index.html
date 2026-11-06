@@ -4401,7 +4401,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.p.texto.cambiar': 'Cambia esta pausa desde PACE.',
   'cal.mantener': 'Mantenerlo al día solo',
   'cal.mantener.sub': 'Mientras PACE está abierto, si el día cambia, cambia también allí. Cada pausa te avisa.',
-  'cal.mantener.cerrado': 'Con PACE completo. Llevar el día y esquivar reuniones siguen gratis.',
+  'cal.mantener.sub.web': 'En pruebas. Mientras PACE está abierto y el permiso dura, si el día cambia, cambia también allí. Cada pausa te avisa.',
+  'cal.mantener.cerrado': 'Con PACE completo, mientras PACE está abierto. Llevar el día y esquivar reuniones siguen gratis.',
   'cal.solo.resumen': 'Lo que queda de hoy, de {a} a {b}, con aviso en cada pausa. Se pone al día mientras PACE está abierto.',
   'cal.solo.resumen.nada': 'De hoy ya no queda nada. Tu calendario se pone al día mientras PACE está abierto.',
   'cal.solo.resumen.pendiente': 'El día ha cambiado desde las {h} y tu calendario aún no lo sabe.',
@@ -4496,7 +4497,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.p.texto.cambiar': 'Change this break in PACE.',
   'cal.mantener': 'Keep it up to date',
   'cal.mantener.sub': 'While PACE is open, if your day changes, it changes there too. Each break reminds you.',
-  'cal.mantener.cerrado': 'With PACE complete. Adding your day and working around meetings stay free.',
+  'cal.mantener.sub.web': 'In testing. While PACE is open and the permission lasts, if your day changes, it changes there too. Each break reminds you.',
+  'cal.mantener.cerrado': 'With PACE Complete, while PACE is open. Adding your day and working around meetings stay free.',
   'cal.solo.resumen': 'The rest of today, from {a} to {b}, with a reminder at each break. It updates while PACE is open.',
   'cal.solo.resumen.nada': 'There is nothing left of today. Your calendar updates while PACE is open.',
   'cal.solo.resumen.pendiente': 'Your day has changed since {h} and your calendar does not know yet.',
@@ -46969,6 +46971,7 @@ Object.assign(window, { RitmoLista, RitmoHoja });
 
 
 
+
 const { useState: useStateRC, useEffect: useEffectRC } = React;
 
 function ritmoCalendarioAbrir() {
@@ -47201,12 +47204,15 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   } else if (lectura && lectura.leidas) subReuniones = tn('cal.reuniones.leidas', { h: ritmoCalendarioHoraMs(lectura.leidas) });
 
   const conectados = destinos.filter(calendarioConectado).filter((d) => !solo || d === solo.destino);
+
+
+
   const casillaMantener = !conectados.length || solo ? null : puede ?
   React.createElement("label", { className: "pace-rt-cal-chk" },
   React.createElement("input", { type: "checkbox", id: "pace-cal-mantener", "data-pace-cal-mantener": true, checked: mantener, onChange: (e) => setMantener(e.target.checked) }),
-  React.createElement("span", null, t('cal.mantener'), React.createElement("small", null, t('cal.mantener.sub')))
+  React.createElement("span", null, t('cal.mantener'), React.createElement("small", null, t(android ? 'cal.mantener.sub' : 'cal.mantener.sub.web')))
   ) :
-
+  !android ? null :
 
   React.createElement("button", { type: "button", className: "pace-rt-cal-chk pace-rt-cerrado", "data-pace-cal-mantener-cerrado": true,
     onClick: () => paceAbrirPremium({ nombre: t('cal.mantener') }) },
