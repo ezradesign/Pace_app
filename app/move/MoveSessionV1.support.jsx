@@ -255,11 +255,13 @@ function v1DevCheckDuration(routine, restBetweenSets) {
    récords ni comparaciones. `tiempo` llega ya formateado y `t` es el traductor
    del llamador — así el helper se queda puro.
    El TIPO de rutina sale de sus pasos; las CIFRAS, de lo hecho (`hechos`, índices de los pasos
-   con trabajo): una serie saltada no cuenta. Sin `hechos`, todos. */
-function v1DoneStats(routine, guided, tiempo, t, hechos) {
+   con trabajo): una serie saltada no cuenta. Sin `hechos`, todos. Las series son las HECHAS, una
+   repetida con «Anterior» incluida (`hechas`, y así cuadran con las reps, que también suman); los
+   ejercicios son los distintos que se hicieron. Sin `hechas`, los pasos de reps hechos. */
+function v1DoneStats(routine, guided, tiempo, t, hechos, hechas) {
   const hecho = (i) => !hechos || !!hechos[i];
   const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
-  const series = routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
+  const series = Number.isFinite(hechas) ? hechas : routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
   const planReps = routine.steps.filter(s => s.mode === 'reps').length;
   const stats = [{ label: t('common.time'), value: tiempo }];
   if (planReps > 0 && planReps === routine.steps.filter(s => s.mode !== 'rest').length) {

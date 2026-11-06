@@ -79,6 +79,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   /* Los pasos de trabajo que se hicieron de verdad, para el cierre: una serie saltada no es
      una serie (auditoría del 21 oct.: una hecha y dos saltadas decía «3 series»). */
   const hechosRef = useRefV1(rein.hechos);
+  /* Las series que se hicieron, repetidas incluidas («Anterior» vuelve a una serie y se hace otra vez):
+     el cierre cuenta lo hecho. Si la rutina cuenta entera lo dice `hechosRef`, pasos del plan. */
+  const seriesRef = useRefV1(rein.series);
   /* Las series que «Con una basta» dejó sin hacer (Ez, P6 A): no son del cierre, pero la rutina
      sigue entera (MoveSessionV1.parts.jsx). */
   const bastaRef = useRefV1(rein.basta);
@@ -111,7 +114,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current, series: () => seriesRef.current });
 
   const dispatchComplete = () => {
     /* El «Tiempo» del cierre es el de la sesión sin pausas, el mismo que va a la
@@ -175,18 +178,17 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     try { playSound('move.side'); } catch (e) {}
   };
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
+  const darSerie = (reps) => { repsGuidedRef.current += reps; hechosRef.current[stepIdx] = true; seriesRef.current += 1; };
   const finishRepsEarly = () => {
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    repsGuidedRef.current += hechas;
-    if (hechas > 0) hechosRef.current[stepIdx] = true;
+    if (hechas > 0) darSerie(hechas);
     // s172: «Terminar antes» ES el `early` de §6.3; no en un paso que se podía saltar entero (B3).
     if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
   // A tu ritmo (Auto apagado): «›» da las repeticiones por hechas, como el objetivo guiado.
   const terminarReps = () => {
-    repsGuidedRef.current += v1RepTarget(step);
-    hechosRef.current[stepIdx] = true;
+    darSerie(v1RepTarget(step));
     advanceStep();
   };
 
@@ -257,8 +259,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       // y la madera corren igual; los 5 pilotos son guided → comportamiento intacto.
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        repsGuidedRef.current += v1RepTarget(step);
-        hechosRef.current[stepIdx] = true;
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
         try { playSound('move.rep'); } catch (e) {}
@@ -327,7 +328,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     return (
       <SessionPrep
         routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft} prepCount={prepCount}
-        copy={sessionPrepCopy(routine, tn)}
+        copy={v1PrepCopia(routine, t, tn, auto)}
         onSkip={() => { setPrepCount(0); arrancar(); }}
         atmosphere={atmo}
       />
@@ -344,7 +345,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     // Stats HONESTAS (s114) — el reparto por tipo de rutina vive en el support
     // desde s170 (regla §1); el criterio no cambió.
     const stats = v1DoneStats(routine, repsGuidedRef.current,
-                              `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current);
+                              `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current, seriesRef.current);
     const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (
       <SessionDone

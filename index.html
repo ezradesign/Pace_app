@@ -2671,6 +2671,10 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.tapGo': 'Pulsa › para seguir',
   'move.placeHintMano': 'Colócate sin prisa · pulsa «Empezar ya»',
 
+  'move.auto.on': 'PACE marca el ritmo y pasa al siguiente paso.',
+  'move.auto.off': 'Hazlo a tu ritmo y pulsa › para continuar.',
+  'move.auto.prep': 'A tu ritmo · tú decides cuándo seguir.',
+
   'move.flecha.hecho': 'Hecho',
   'move.flecha.descanso': 'Saltar descanso',
   'move.flecha.lado': 'Siguiente lado',
@@ -2828,6 +2832,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.tapDone': 'Tap › when you are done',
   'move.tapGo': 'Tap › to go on',
   'move.placeHintMano': 'Get set, no rush · press Begin now',
+
+  'move.auto.on': 'PACE sets the pace and moves on to the next step.',
+  'move.auto.off': 'Go at your own pace and tap › to go on.',
+  'move.auto.prep': 'Your pace · you decide when to go on.',
 
   'move.flecha.hecho': 'Done',
   'move.flecha.descanso': 'Skip rest',
@@ -29150,6 +29158,8 @@ Object.assign(window, {
 @media ${PACE_CORTE_MOVIL} {
   .pace-lib-hd h2 { font-size: 24px; }
   .pace-lib-lateral { display: none; }
+  /* con «Tus rutinas» abierta, el catálogo cede la pantalla; en escritorio no se aparta */
+  .pace-lib-main[data-vista="tuyas"] > .pace-lib-catalogo { display: none; }
 }
 
 /* EL CHROME DEL MODAL SE RECORTA PARA LA BIBLIOTECA, y esto salió de MEDIR la
@@ -29614,15 +29624,22 @@ function LibraryShell(_ref)
     )
 
     ),
-    React.createElement("div", { className: "pace-lib-main" },
+    React.createElement("div", { className: "pace-lib-main", "data-vista": vista },
     cabecera,
 
 
     React.createElement("div", { className: "pace-lib-solo-movil" }, chips),
-    vista === 'tuyas' ?
-    React.createElement("div", { className: "pace-lib-solo-movil" }, tuyas) :
 
-    React.createElement(React.Fragment, null,
+
+    vista === 'tuyas' && React.createElement("div", { className: "pace-lib-solo-movil" }, tuyas),
+
+
+
+
+
+
+
+    React.createElement("div", { className: "pace-lib-catalogo" },
 
 
 
@@ -29637,7 +29654,6 @@ function LibraryShell(_ref)
     React.createElement("div", { className: "pace-lib-solo-movil" }, bloqueAhora),
     React.createElement("div", { className: "pace-lib-rejilla" }, listaGrupos)
     )
-
     )
     )
     )
@@ -33656,10 +33672,12 @@ function v1DevCheckDuration(routine, restBetweenSets) {
 
 
 
-function v1DoneStats(routine, guided, tiempo, t, hechos) {
+
+
+function v1DoneStats(routine, guided, tiempo, t, hechos, hechas) {
   const hecho = (i) => !hechos || !!hechos[i];
   const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
-  const series = routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
+  const series = Number.isFinite(hechas) ? hechas : routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
   const planReps = routine.steps.filter((s) => s.mode === 'reps').length;
   const stats = [{ label: t('common.time'), value: tiempo }];
   if (planReps > 0 && planReps === routine.steps.filter((s) => s.mode !== 'rest').length) {
@@ -34018,12 +34036,40 @@ function CueV1(_ref) {let { lead, text, accent, ...resto } = _ref;
 
 
 
+
+
+
+const V1_AUTO_AVISO_MS = 4000;
+const v1AutoAvisoStyles = {
+  nota: {
+    position: 'fixed', left: '50%', transform: 'translateX(-50%)', zIndex: 91, pointerEvents: 'none',
+    width: 'max-content', maxWidth: 'calc(100vw - 32px)', boxSizing: 'border-box', textAlign: 'center',
+    padding: '8px 14px', borderRadius: 999, border: '1px solid var(--line-2)', background: 'var(--paper-2)',
+    color: 'var(--ink)', font: '400 12.5px/1.35 var(--font-ui)'
+  }
+};
 function AutoV1(_ref2) {let { auto, accent, onAuto, t } = _ref2;
+  const [aviso, setAviso] = React.useState(null);
+  React.useEffect(() => {
+    if (!aviso) return undefined;
+    const to = setTimeout(() => setAviso(null), V1_AUTO_AVISO_MS);
+    return () => clearTimeout(to);
+  }, [aviso, auto]);
+  const toca = (e) => {
+    v1SoltarFoco(e);onAuto();
+    const mando = document.querySelector('[data-pace-v1-mando]') || e.currentTarget;
+    setAviso({ abajo: Math.round(paceLienzoAlto() - paceCaja(mando).top + 8) });
+  };
   return (
+    React.createElement(React.Fragment, null,
     React.createElement("button", { type: "button", className: "pace-v1-auto", "data-pace-v1-auto": true, "aria-pressed": auto ? 'true' : 'false',
-      title: t('move.auto.title'), style: { '--v1-auto': accent },
-      onClick: (e) => {v1SoltarFoco(e);onAuto();} },
+      title: t('move.auto.title'), style: { '--v1-auto': accent }, onClick: toca },
     React.createElement("span", { className: "pace-v1-auto-pista", "aria-hidden": "true" }), t('move.auto')
+    ),
+    aviso && ReactDOM.createPortal(
+      React.createElement("div", { role: "status", "data-pace-v1-auto-aviso": true, style: { ...v1AutoAvisoStyles.nota, bottom: aviso.abajo } },
+      t(auto ? 'move.auto.on' : 'move.auto.off')
+      ), document.body)
     ));
 
 }
@@ -34308,7 +34354,7 @@ function olvidarCuerpoGuardada() {
 
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, series: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
   if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => Number.isFinite(x) && x > 0 ? x : 0;
@@ -34322,8 +34368,11 @@ function cuerpoReanudacion(routine, guardado) {
   const basta = {};
   (Array.isArray(guardado.basta) ? guardado.basta : []).
   forEach((i) => {if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) basta[i] = true;});
+
+  const series = Number.isFinite(guardado.series) && guardado.series >= 0 ? guardado.series :
+  routine.steps.filter((s, i) => s.mode === 'reps' && hechos[i]).length;
   return {
-    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
+    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps), series,
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
     reanudada: true, early: guardado.early === true, hechos, basta
   };
@@ -34357,7 +34406,7 @@ function useCuerpoPersistencia(d) {
         v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx, huella: cuerpoHuella(c.routine),
         sesionMs: Math.round(c.relojSesion.segundos() * 1000),
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
-        reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
+        reps: c.reps(), series: c.series ? c.series() : 0, startedAt: c.startedAt(), savedAt: Date.now(),
         early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
         basta: Object.keys(c.basta && c.basta() || {}).map(Number)
       }));
@@ -34413,6 +34462,21 @@ function v1BastaDestino(routine, idx) {
   const nombre = pasos[antes].name;
   while (luego < pasos.length && (pasos[luego].mode === 'rest' || pasos[luego].name === nombre)) luego++;
   return luego;
+}
+
+
+
+
+const v1PrepStyles = {
+  auto: { display: 'block', marginTop: 12, font: '400 13px/1.4 var(--font-ui)', fontStyle: 'normal', letterSpacing: '0.01em', color: 'var(--ink-3)' }
+};
+function v1PrepCopia(routine, t, tn, auto) {
+  return (
+    React.createElement(React.Fragment, null,
+    sessionPrepCopy(routine, tn),
+    !auto && React.createElement("span", { "data-pace-v1-prep-auto": true, style: v1PrepStyles.auto }, t('move.auto.prep'))
+    ));
+
 }
 
 
@@ -34520,8 +34584,8 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
   }, []);
 }
 
-Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
-;Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas });
+Object.assign(window, { v1BastaDestino, v1PrepCopia, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
+;Object.assign(window, { v1BastaDestino, v1PrepCopia, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas });
 })();
 </script>
   <script>
@@ -34609,6 +34673,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const hechosRef = useRefV1(rein.hechos);
 
 
+  const seriesRef = useRefV1(rein.series);
+
+
   const bastaRef = useRefV1(rein.basta);
   const activeSecRef = useRefV1(0);
   const step = routine.steps[stepIdx];
@@ -34639,7 +34706,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current, series: () => seriesRef.current });
 
   const dispatchComplete = () => {
 
@@ -34703,18 +34770,17 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     try {playSound('move.side');} catch (e) {}
   };
 
+  const darSerie = (reps) => {repsGuidedRef.current += reps;hechosRef.current[stepIdx] = true;seriesRef.current += 1;};
   const finishRepsEarly = () => {
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    repsGuidedRef.current += hechas;
-    if (hechas > 0) hechosRef.current[stepIdx] = true;
+    if (hechas > 0) darSerie(hechas);
 
     if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
 
   const terminarReps = () => {
-    repsGuidedRef.current += v1RepTarget(step);
-    hechosRef.current[stepIdx] = true;
+    darSerie(v1RepTarget(step));
     advanceStep();
   };
 
@@ -34785,8 +34851,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        repsGuidedRef.current += v1RepTarget(step);
-        hechosRef.current[stepIdx] = true;
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
         try {playSound('move.rep');} catch (e) {}
@@ -34855,7 +34920,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     return (
       React.createElement(SessionPrep, {
         routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft, prepCount: prepCount,
-        copy: sessionPrepCopy(routine, tn),
+        copy: v1PrepCopia(routine, t, tn, auto),
         onSkip: () => {setPrepCount(0);arrancar();},
         atmosphere: atmo }
       ));
@@ -34872,7 +34937,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
     const stats = v1DoneStats(routine, repsGuidedRef.current,
-    `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current);
+    `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current, seriesRef.current);
     const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (
       React.createElement(SessionDone, {

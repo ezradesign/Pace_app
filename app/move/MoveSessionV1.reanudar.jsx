@@ -90,7 +90,7 @@ function olvidarCuerpoGuardada() {
    registro de ESTA rutina, el comienzo de siempre: el runner no necesita ramas. */
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, series: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
   if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => (Number.isFinite(x) && x > 0 ? x : 0);
@@ -104,8 +104,11 @@ function cuerpoReanudacion(routine, guardado) {
   const basta = {};
   (Array.isArray(guardado.basta) ? guardado.basta : [])
     .forEach(i => { if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) basta[i] = true; });
+  /* Las series hechas: lo guardado o, en un registro de antes, los pasos de reps hechos. */
+  const series = Number.isFinite(guardado.series) && guardado.series >= 0 ? guardado.series
+    : routine.steps.filter((s, i) => s.mode === 'reps' && hechos[i]).length;
   return {
-    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
+    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps), series,
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
     reanudada: true, early: guardado.early === true, hechos, basta,
   };
@@ -139,7 +142,7 @@ function useCuerpoPersistencia(d) {
         v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx, huella: cuerpoHuella(c.routine),
         sesionMs: Math.round(c.relojSesion.segundos() * 1000),
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
-        reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
+        reps: c.reps(), series: c.series ? c.series() : 0, startedAt: c.startedAt(), savedAt: Date.now(),
         early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
         basta: Object.keys((c.basta && c.basta()) || {}).map(Number),
       }));

@@ -334,6 +334,8 @@
 @media ${PACE_CORTE_MOVIL} {
   .pace-lib-hd h2 { font-size: 24px; }
   .pace-lib-lateral { display: none; }
+  /* con «Tus rutinas» abierta, el catálogo cede la pantalla; en escritorio no se aparta */
+  .pace-lib-main[data-vista="tuyas"] > .pace-lib-catalogo { display: none; }
 }
 
 /* EL CHROME DEL MODAL SE RECORTA PARA LA BIBLIOTECA, y esto salió de MEDIR la
