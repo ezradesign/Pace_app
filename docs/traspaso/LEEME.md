@@ -4,6 +4,10 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 5 de noviembre de 2026, v0.189.1.
 
+## 6 nov., ~17:30: sigue 5iWBf…; `main` local 19 commits por delante, sin subir
+
+El CI de c9b50e50 salió en rojo: `cierre-sin-pisar.spec.js:132`, Respira a 1536×708, que en Windows pasa. Lo arregla `cierre-respira` (`local_52b1e458-d22e-4a39-8c33-2fd20db40963`, puerto 8872). En local ya están juntados los cuatro arreglos, /premium 1C y capas, con `verify` en verde y sin suite. Falta: juntar el cierre, versión 0.191.0, suite, push y la versión de prueba. Hilos: `catalogo-cifras-auto` (`local_7961fd6a-3523-4a5f-8765-2a68011b9a45`, 8874) y `textos-beta` (8876). Censo de ramas hecho: fuera de `main` solo quedan sobre, glifos, jornada y landing, que esperan a Ez. Lo de abajo sigue valiendo para lo demás.
+
 ## AL RELEVO (5 nov., ~17:35): 5iWBf… al 90 %; Ez migra ya. Empieza aquí; manda sobre el bloque de las 12:15
 
 Coordinaba `local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a` en 5iWBf… (se repone a las 21:30). `main` = origin en v0.190.0 (47fd7569): suite 1217 en verde con Rana y Palmas, logros, las horas y «sin querer»; iOS y Android en verde; **el CI de 47fd7569 seguía en marcha: míralo**. Detalle: `relevo-coordinadora-22oct.md`, puntos 21 a 27 y «Nuevo el 5 nov.».
