@@ -76,7 +76,6 @@ const CHOQUES = () => {
      alguien lo devuelve a la línea (la pasada de control contra HEAD lo comprobó). */
   add('.pace-rt-esc .pace-rt-sobre .pace-rt-meta', 'resumen');
   add('.pace-rt-esc .pace-rt-sobre button', 'cambiar');
-  add('.pace-rt-esc .pace-rt-como', 'cómo');
   add('.pace-rt-esc .pace-rt-ahora-tag', 'AHORA');
   add('.pace-rt-esc [data-pace-ritmo-etiq]', 'etiqueta');
   add('.pace-rt-esc .pace-rt-nodo', 'parada');

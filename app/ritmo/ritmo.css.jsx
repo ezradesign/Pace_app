@@ -200,8 +200,6 @@
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
   display: grid; place-items: center; }
 .pace-rt-comida-nodo .pace-rt-g { width: 17px; height: 17px; }
-/* La frase de la primera vez, bajo la cabecera (RitmoComo) */
-.pace-rt-como { margin-top: 5px; }
 /* Las etiquetas las coloca el JS (hasta tres niveles, de forma voraz) */
 .pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
   text-align: center; line-height: 1.22; pointer-events: none; }

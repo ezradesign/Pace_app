@@ -804,8 +804,6 @@ Ocupa el sitio de Actividades y del Camino sugerido. Aprobado en cuatro rondas d
   «AHORA» encima (9 px, tracking 0,16 em, en su color, 27 px sobre el aro); la pasada conserva su
   fuerza y solo deja de poder tocarse. En la mini línea de móvil el punto de la parada abierta se
   rellena de su color.
-- **La frase de la primera vez** (`RitmoComo`) va bajo la cabecera como `.pace-rt-sub` (cursiva
-  display 13 px, `--ink-3`), 5 px de margen, y desaparece con el primer bloque hecho.
 - **«Hoy voy por libre» (s194 · v0.125.0, variante E elegida entre cinco fotografiadas)**: la única
   salida del menú es una **píldora** de 10 px en versalita (tracking 0,1 em) en `--focus-cta` con borde
   de 1 px del mismo color y lavado `--focus-soft` al pasar; en escritorio vive en la **cabecera**, junto

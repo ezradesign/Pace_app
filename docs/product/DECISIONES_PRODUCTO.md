@@ -26,8 +26,9 @@ Sobre la propuesta de ChatGPT, mirando `docs/proposals/jornada-paso-actual.html`
 bloque 2» baja a enlace. «Comienza» pasa a «Preparar jornada». Dentro de la jornada, «Pausar foco» y «Reanudar foco». «Después: …»
 en el escritorio y «Pausa terminada» al acabar el tiempo. Foco / Pausa / Larga y los minutos se quedan a la vista: quitarlos fue
 el camino B, descartado, y también la propuesta de ChatGPT de añadir «Terminar por hoy» (la salida sigue siendo «Hoy voy por libre»).
-**2B**: la tarjeta sin jornada del escritorio pierde el subtítulo y baja las losetas, y el aro crece. Ez lo escribió «2b (en la
-jornada)»; si eso alcanza también al día ya elegido quedó preguntado (`docs/traspaso/archivos/jornada-5nov/LEEME.md`).
+**2B**: la tarjeta sin jornada del escritorio pierde el subtítulo y baja las losetas, y el aro crece. **Y con la jornada elegida se
+quita la frase «Cada bloque es un pomodoro…»** (X, la recomendada, sobre https://claude.ai/artifact/14Ufp389qs3tXZUkPgW8vX): el aro
+pasa de 392 a 426 px a 1917×857 y de 305 a 332 a 1536×710.
 
 ## Vender antes de v1 (Ez, 5 nov. 2026)
 

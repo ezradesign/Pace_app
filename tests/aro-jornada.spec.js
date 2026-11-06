@@ -143,6 +143,15 @@ test('la tarjeta sin jornada no lleva subtítulo y le deja alto al aro', async (
   expect(await page.evaluate(() => { const b = document.querySelector('[data-pace-home-body]'); return b.scrollHeight - b.clientHeight; })).toBeLessThanOrEqual(1);
 });
 
+test('con la jornada preparada, sin la frase de ayuda, el aro también crece', async ({ page, context }) => {
+  await page.setViewportSize({ width: 1917, height: 857 });
+  await abrir(page, context);
+  await page.waitForTimeout(500);
+  await expect(vis(page, '[data-pace-ritmo-panel]')).not.toContainText('Cada bloque es un pomodoro');
+  const aro = await page.evaluate(() => Math.round(document.querySelector('[data-pace-dial-fit]').getBoundingClientRect().width));
+  expect(aro, 'con la frase medía 392').toBeGreaterThan(410);
+});
+
 test('la tarjeta del móvil dice qué hace el botón, en los dos idiomas', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await sembrar(context, { ritmo: {}, sidebarCollapsed: true });

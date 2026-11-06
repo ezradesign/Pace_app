@@ -3913,7 +3913,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.ficha.tambien.1': 'También cambia la de las {h}, para no repetir rutina ni zona.',
   'ritmo.ficha.tambien.n': 'También cambian las de las {h}, para no repetir rutina ni zona.',
   'ritmo.empieza': 'toca para empezarla',
-  'ritmo.como': 'Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.',
   'ritmo.ver': 'Ver todo',
   'ritmo.listo': 'Listo',
   'ritmo.ctx.mesa': 'Junto a la mesa',
@@ -4103,7 +4102,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.ficha.tambien.1': 'The {h} break changes too, so no routine or area repeats.',
   'ritmo.ficha.tambien.n': 'The {h} breaks change too, so no routine or area repeats.',
   'ritmo.empieza': 'tap to start it',
-  'ritmo.como': 'Each block is a pomodoro on the ring; when it ends, I serve you the break that comes next.',
   'ritmo.ver': 'See all',
   'ritmo.listo': 'Done',
   'ritmo.ctx.mesa': 'At your desk',
@@ -45532,8 +45530,6 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
   display: grid; place-items: center; }
 .pace-rt-comida-nodo .pace-rt-g { width: 17px; height: 17px; }
-/* La frase de la primera vez, bajo la cabecera (RitmoComo) */
-.pace-rt-como { margin-top: 5px; }
 /* Las etiquetas las coloca el JS (hasta tres niveles, de forma voraz) */
 .pace-rt-etiq { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 132px;
   text-align: center; line-height: 1.22; pointer-events: none; }
@@ -46680,16 +46676,7 @@ function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref
 
 }
 
-
-
-
-function RitmoComo(_ref7) {let { plan } = _ref7;
-  const { t } = useT();
-  if (plan.hechos > 0) return null;
-  return React.createElement("div", { className: "pace-rt-sub pace-rt-como", "data-pace-ritmo-como": true }, t('ritmo.como'));
-}
-
-function RitmoEscritorio(_ref8) {let { state, plan } = _ref8;
+function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
   const { t } = useT();
   const R = ritmoDe(state);
   return (
@@ -46706,13 +46693,12 @@ function RitmoEscritorio(_ref8) {let { state, plan } = _ref8;
     React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoContexto, null), React.createElement(RitmoLibre, null))
     )
     ),
-    React.createElement(RitmoComo, { plan: plan }),
     React.createElement(RitmoLinea, { plan: plan })
     ));
 
 }
 
-function RitmoFila(_ref9) {let { rotulo, modulo, nombre, meta, claves } = _ref9;
+function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves } = _ref8;
   const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-fila" },
@@ -46730,7 +46716,7 @@ function RitmoFila(_ref9) {let { rotulo, modulo, nombre, meta, claves } = _ref9;
 
 
 
-function RitmoFilaParada(_ref0) {let { it, rotulo, corta } = _ref0;
+function RitmoFilaParada(_ref9) {let { it, rotulo, corta } = _ref9;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
   if (it.tipo === 'comida') {
@@ -46745,7 +46731,7 @@ function RitmoFilaParada(_ref0) {let { it, rotulo, corta } = _ref0;
     claves: it.platos.map((p) => p.clave) });
 }
 
-function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
+function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
@@ -46791,7 +46777,7 @@ function RitmoMovil(_ref1) {let { state, plan, onVer } = _ref1;
 
 }
 
-function RitmoHecho(_ref10) {let { plan } = _ref10;
+function RitmoHecho(_ref1) {let { plan } = _ref1;
   const { t, tn } = useT();
   return (
     React.createElement("div", { className: "pace-rt-panel", "data-pace-ritmo-estado": "hecho" },
@@ -46811,9 +46797,9 @@ function RitmoHecho(_ref10) {let { plan } = _ref10;
 
 Object.assign(window, {
   RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
-  RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
+  RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoComo, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>

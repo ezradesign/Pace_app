@@ -8,10 +8,10 @@
      · EL MENÚ SERVIDO — escritorio: título + frase + contexto, y la línea del
        día. Móvil: «Ahora» y «Luego» con sus glifos, la línea con puntos y la
        jornada entera en una hoja. s193: con la PAUSA ABIERTA (plan.pausa),
-       «Ahora» es la parada y «Luego» el bloque que viene; y hasta que acabe
-       el primer bloque del día, una frase dice cómo va la cosa (RitmoComo),
-       solo en escritorio: en el móvil eran 39 px que la home no tenía. En el
-       móvil lo dice la fila «Ahora» hasta que empiezas (RitmoMovil).
+       «Ahora» es la parada y «Luego» el bloque que viene. Sin frase de ayuda
+       (Ez, 5 nov. 2026: «Empezar jornada» y «Después» ya lo dicen, y son 34 px de
+       aro a 1917×857). En el móvil lo dice la fila «Ahora» hasta que empiezas
+       (RitmoMovil).
      · LA JORNADA CERRADA — cuando ya no queda bloque.
 
    Cada estado existe dos veces (escritorio y móvil) y la hoja de estilos elige.
@@ -234,15 +234,6 @@ function RitmoFraseMenu({ plan, horario, plantilla, capital }) {
   );
 }
 
-/* «Cada bloque es un pomodoro en el aro; al acabar, te sirvo la pausa que toca.»
-   Solo hasta que acabe el primer bloque del día: después ya lo has visto pasar.
-   El usuario la dio por necesaria en s193 (ronda 1). */
-function RitmoComo({ plan }) {
-  const { t } = useT();
-  if (plan.hechos > 0) return null;
-  return <div className="pace-rt-sub pace-rt-como" data-pace-ritmo-como>{t('ritmo.como')}</div>;
-}
-
 function RitmoEscritorio({ state, plan }) {
   const { t } = useT();
   const R = ritmoDe(state);
@@ -260,7 +251,6 @@ function RitmoEscritorio({ state, plan }) {
           <div className="pace-rt-der"><RitmoContexto /><RitmoLibre /></div>
         </div>
       </div>
-      <RitmoComo plan={plan} />
       <RitmoLinea plan={plan} />
     </div>
   );
@@ -304,8 +294,8 @@ function RitmoMovil({ state, plan, onVer }) {
   const R = ritmoDe(state);
   const b = plan.actual;
   /* HASTA QUE EMPIEZAS EL PRIMER BLOQUE, la fila «Ahora» dice dónde se empieza (Ez, 30 oct.: 2A,
-     U5 de las revisiones de ChatGPT del 28 oct.): la frase del escritorio (RitmoComo) no cabe, y
-     «Ahora 9:05 · Foco · bloque 1 de 9» parecía un bloque en marcha. Ocupa el sitio del
+     U5 de las revisiones de ChatGPT del 28 oct.): «Ahora 9:05 · Foco · bloque 1 de 9» sin más
+     parecía un bloque en marcha. Ocupa el sitio del
      descriptor, que ya está en el aro, así que no añade alto. */
   const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
   const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza')
@@ -365,5 +355,5 @@ function RitmoHecho({ plan }) {
 
 Object.assign(window, {
   RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
-  RitmoComo, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
+  RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });
