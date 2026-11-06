@@ -4,9 +4,9 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 5 de noviembre de 2026, v0.189.1.
 
-## 6 nov., ~17:30: sigue 5iWBf…; `main` local 19 commits por delante, sin subir
+## 6 nov., ~18:45: sigue 5iWBf…; v0.191.1 subida. Empieza aquí
 
-El CI de c9b50e50 salió en rojo: `cierre-sin-pisar.spec.js:132`, Respira a 1536×708, que en Windows pasa. Lo arregla `cierre-respira` (`local_52b1e458-d22e-4a39-8c33-2fd20db40963`, puerto 8872). En local ya están juntados los cuatro arreglos, /premium 1C y capas, con `verify` en verde y sin suite. Falta: juntar el cierre, versión 0.191.0, suite, push y la versión de prueba. Hilos: `catalogo-cifras-auto` (`local_7961fd6a-3523-4a5f-8765-2a68011b9a45`, 8874) y `textos-beta` (8876). Censo de ramas hecho: fuera de `main` solo quedan sobre, glifos, jornada y landing, que esperan a Ez. Lo de abajo sigue valiendo para lo demás.
+`main` = origin en v0.191.1: suite de la 0.191.0, 1281 en verde en local; la 0.191.1 añade Textos, con verify y 38 vecinas. Dentro: arreglos de datos y compra, /premium 1C, capas, 20 logros, el sobre 1C 3A y los textos. El CI de 35241cdc solo falló en e2e-safari: las 38 cayeron en `browserType.launch`, sin abrir la app; ayer pasó. Si se repite en el de la 0.191.1, es la máquina de GitHub (el aviso de Ubuntu 26): fijar `ubuntu-24.04` o instalar las dependencias de WebKit en el workflow. **Lo siguiente: con el CI en verde, la versión de prueba:** AAB con el sí de Ez, TestFlight con su sí y pegar con Ez el párrafo de Play. Falta saber qué estado vio Ez en TestFlight. Ramas por juntar, con su júntalo: `maqueta-jornada-40d7ea` (jornada 1A 2B y X, sin Quitar la frase aún confirmado) y `catalogo-cifras-auto-5ba756` (catálogo, cifras y Auto B). La landing espera letras. Lo demás del bloque de abajo sigue valiendo.
 
 ## AL RELEVO (5 nov., ~17:35): 5iWBf… al 90 %; Ez migra ya. Empieza aquí; manda sobre el bloque de las 12:15
 
