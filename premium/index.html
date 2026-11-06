@@ -34,7 +34,11 @@
 
      HASTA QUE HAYA STRIPE, los botones de compra llevan a la lista. Los precios son los de la
      tienda de la web (`PACE_TIENDA_WEB`, app/state-compra.js): si cambian, cambian en los dos
-     sitios. Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
+     sitios. Cada plato lleva su `data-plan`: el botón de un plan solo deja la lista cuando la
+     tienda tiene el enlace de ese plan (tests/compra-solo-vida.spec.js), y entonces apunta a él.
+     «Premium 1C», Ez, 5 nov. 2026: con solo el de por vida a la venta, los dos platos se quedan, el
+     mensual dice «Llega con la versión 1», y «Dónde funciona tu compra» va antes de pagar.
+     Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
 <style>
   @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/cormorantgaramond-400-italic.woff2') format('woff2'); }
   @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
@@ -98,6 +102,11 @@
   .plato .sub { font-family: var(--display); font-style: italic; font-size: 18px; color: var(--ink-2); margin: 0 0 12px; }
   .plato .boton { width: 100%; }
   .nota { font-size: 13.5px; color: var(--ink-3); }
+  .plato .pronto { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink-2); margin: 12px 0; }
+  /* «Dónde funciona tu compra»: lo que la compra abre y lo que no, antes de pagar. */
+  .donde { margin: 24px 0 6px; max-width: 640px; border-top: 1px dashed var(--line-2); padding-top: 16px; }
+  .donde .kicker { margin-bottom: 6px; }
+  .donde p:not(.kicker) { font-size: 15px; margin: 0 0 8px; }
   .promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
   .promesas li { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 23px; color: var(--ink); padding-left: 22px; position: relative; }
   .promesas li::before { content: ''; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--cta); }
@@ -211,20 +220,27 @@
   <section id="precio">
     <h2 data-en="Two ways to have it">Dos maneras de tenerlo</h2>
     <div class="platos">
-      <div class="plato delante">
+      <div class="plato delante" data-plan="vida">
         <p class="kicker" data-en="Lifetime">De por vida</p>
         <p class="importe" data-precio="vida" data-en="€19.99">19,99 €</p>
         <p class="sub" data-en="one payment, for good">un pago, para siempre</p>
         <a class="boton lleno" href="#avisame" data-en="Notify me">Avísame</a>
       </div>
-      <div class="plato">
+      <div class="plato" data-plan="mes">
         <p class="kicker" data-en="Monthly">Al mes</p>
         <p class="importe" data-precio="mes" data-en="€2.99">2,99 €</p>
         <p class="sub" data-en="with 7 days free">con 7 días gratis</p>
+        <p class="pronto" data-en="Arrives with version 1">Llega con la versión 1</p>
         <a class="boton hueco" href="#avisame" data-en="Notify me">Avísame</a>
       </div>
     </div>
-    <p class="nota" data-en="VAT included. It arrives with version 1. What you buy on the web unlocks PACE on the web; in the Android and iPhone apps it is bought on Google Play and the App Store.">IVA incluido. Llega con la versión 1. Lo que compras en la web abre PACE en la web; en las apps de Android y de iPhone se compra en Google Play y en la App Store.</p>
+    <p class="nota" data-venta="apagada" data-en="VAT included. Lifetime opens soon; monthly and the apps arrive with version 1.">IVA incluido. El de por vida se abre pronto; el mensual y las apps, con la versión 1.</p>
+    <p class="nota" data-venta="encendida" hidden data-en="VAT included. Until version 1, PACE Complete is open to everyone: if you buy it now, it is to have it for good when it stops being open.">IVA incluido. Hasta la versión 1, PACE completo está abierto para todos: si lo compras ahora, es para tenerlo para siempre cuando deje de estarlo.</p>
+    <div class="donde">
+      <p class="kicker" data-en="Where your purchase works">Dónde funciona tu compra</p>
+      <p data-en="It unlocks PACE Complete on the web, in the browser where you enter your code. It does not work in the Android and iPhone apps: there it is bought on Google Play and the App Store, with version 1.">Abre PACE completo en la web, en el navegador donde pongas tu código. En las apps de Android y de iPhone no vale: allí se compra en Google Play y en la App Store, con la versión 1.</p>
+      <p data-en="Your data stays on each device and is not synced; you carry it from one to another with a copy. If you lose your code, you get it back with your email: you recover access, not your history.">Tus datos se guardan en cada dispositivo y no se sincronizan; los llevas de uno a otro con una copia. Si pierdes el código, lo recuperas con tu correo: vuelve el acceso, no el historial.</p>
+    </div>
 
     <div class="avisame" id="avisame">
       <h2 data-en="Let me know when it is out">Avísame cuando salga</h2>
@@ -250,7 +266,7 @@
     </div>
     <div>
       <h2 data-en="The trial, without surprises">La prueba, sin sorpresas</h2>
-      <p data-en="Two days before the 7 free days end, PACE reminds you. If you do not want to go on, you cancel it in two taps from Settings.">Dos días antes de que acaben los 7 días gratis, PACE te avisa. Si no quieres seguir, la cancelas en dos toques desde Ajustes.</p>
+      <p data-en="When the monthly plan arrives: two days before the 7 free days end, PACE reminds you. If you do not want to go on, you cancel it in two taps from Settings.">Cuando llegue el plan al mes: dos días antes de que acaben los 7 días gratis, PACE te avisa. Si no quieres seguir, la cancelas en dos toques desde Ajustes.</p>
       <p data-en="And if PACE Complete does not convince you, we refund your money within 14 days, no questions asked.">Y si PACE completo no te convence, te devolvemos el dinero en 14 días, sin preguntas.</p>
     </div>
   </section>
@@ -259,7 +275,7 @@
     <h2 data-en="Questions">Preguntas</h2>
     <details><summary data-en="Do I need an account?">¿Necesito una cuenta?</summary><p data-en="No. PACE has no accounts. When you buy, you get a code that unlocks PACE Complete in your browser.">No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</p></details>
     <details><summary data-en="What if I change computer or browser?">¿Y si cambio de ordenador o de navegador?</summary><p data-premium-recuperar data-en-html="Open your code's link in the new one, or carry it inside the «Your data» copy. If you lose it, &lt;a href=&quot;/recuperar/&quot;&gt;you get it back&lt;/a&gt; with your email and the receipt number.">Abre el enlace de tu código en el nuevo, o llévalo dentro de la copia de «Tus datos». Si lo pierdes, <a href="/recuperar/">lo recuperas</a> con tu correo y el número del recibo.</p></details>
-    <details><summary data-en="Does it work on Android and iPhone?">¿Sirve en Android y en iPhone?</summary><p data-en="What you buy on the web unlocks PACE on the web. In the Android and iPhone apps, PACE Complete is bought on Google Play and the App Store.">Lo que compras en la web abre PACE en la web. En las apps de Android y de iPhone, PACE completo se compra en Google Play y en la App Store.</p></details>
+    <details><summary data-en="Does it work on Android and iPhone?">¿Sirve en Android y en iPhone?</summary><p data-en="What you buy on the web unlocks PACE on the web. It does not work in the Android and iPhone apps: there, PACE Complete is bought on Google Play and the App Store, with version 1.">Lo que compras en la web abre PACE en la web. No vale en las apps de Android y de iPhone: allí, PACE completo se compra en Google Play y en la App Store, con la versión 1.</p></details>
     <!-- El calendario, con lo que decidió Ez el 29 oct.: en Android entra en PACE completo diciendo
          sus límites; en la web va en pruebas y no se vende (13A del 30 oct., «por el momento»). -->
     <details><summary data-en="And the calendar?">¿Y el calendario?</summary><p data-en="On Android, PACE Complete keeps your day up to date in your phone calendar while PACE is open; adding your day and working around your meetings is free. On the web, the calendar is in testing and is not part of what you buy.">En Android, PACE completo mantiene tu día al día en el calendario del móvil mientras PACE está abierto; llevar el día y esquivar tus reuniones es gratis. En la web, el calendario está en pruebas y no entra en lo que compras.</p></details>
@@ -281,6 +297,18 @@
 <!--/email_off-->
 <script>
 (function () {
+  /* LA VENTA DE POR VIDA (Ez, 5 nov. 2026: hasta v1, solo el de por vida y solo en la web). Apagada, el
+     plato dice «Avísame». Encendida, con el enlace de pago de Stripe que Ez pase (el mismo que
+     `PACE_TIENDA_WEB.enlaces.vida`, app/state-compra.js), el plato dice «Comprar» y lleva a él, y
+     la nota dice que hasta v1 todo está abierto. El mensual no se enciende aquí: llega con v1.
+     tests/compra-solo-vida.spec.js falla si este enlace y el de la tienda no son el mismo. */
+  var ENLACE_VIDA = null;
+  if (typeof ENLACE_VIDA === 'string' && ENLACE_VIDA) {
+    var comprar = document.querySelector('.plato[data-plan="vida"] a.boton');
+    comprar.href = ENLACE_VIDA; comprar.textContent = 'Comprar'; comprar.setAttribute('data-en', 'Buy');
+    document.querySelectorAll('[data-venta="apagada"]').forEach(function (el) { el.hidden = true; });
+    document.querySelectorAll('[data-venta="encendida"]').forEach(function (el) { el.hidden = false; });
+  }
   /* EL IDIOMA: ?lang=en, el que se eligió aquí, el de la app en este navegador o el del
      navegador. Sin JavaScript, castellano. */
   function guardado(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }

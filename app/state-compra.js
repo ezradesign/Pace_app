@@ -11,16 +11,26 @@
    invitación.
 
    HOY LAS DOS ESTÁN VACÍAS: `listo()` dice que no y nada enseña un botón de
-   compra. Para abrir la de la web basta con poner los dos enlaces de pago de
-   Stripe en `PACE_TIENDA_WEB.enlaces`; la de Play se rellena en
-   `paceTiendaPlay` cuando la app lleve el complemento de Play Billing.
+   compra. La tienda de la web ofrece SOLO LOS PLANES QUE TIENEN ENLACE (Ez, 5 nov.
+   2026: hasta v1, solo el de por vida y solo en la web): con `enlaces.vida` puesto
+   y `enlaces.mes` en `null`, la tienda está lista y vende un plan. El mensual y
+   su código de Stripe se quedan: vuelve con v1 en cuanto `enlaces.mes` tenga un
+   valor, sin tocar nada más. Ninguna tienda enseña un plan sin enlace, y `precios()`
+   (lo que costará después, para la bienvenida de «abierto hasta v1») sigue
+   diciendo los dos. La de Play se rellena en `paceTiendaPlay` cuando la app lleve
+   el complemento de Play Billing, y hasta entonces ni Android ni el iPhone
+   tienen nada que comprar: ni botón, ni enlace a /premium.
 
    LA FORMA DE UNA TIENDA:
      listo()        -> true si en este canal ya se puede comprar.
      planes()       -> [{ plan: 'vida'|'mes', importe, moneda, texto?, pruebaDias? }]
-                       La tienda manda sobre importe y moneda (ROADMAP, Fase 6):
-                       ningún precio vive en las traducciones. `texto` es el precio
-                       ya escrito por la tienda (Play lo da así) y gana al importe.
+                       Los que SE PUEDEN COMPRAR ahora. La tienda manda sobre importe
+                       y moneda (ROADMAP, Fase 6): ningún precio vive en las
+                       traducciones. `texto` es el precio ya escrito por la tienda
+                       (Play lo da así) y gana al importe.
+     precios()      -> lo mismo, pero con los planes que aún no se pueden comprar:
+                       lo que costará después. Solo lo usa la bienvenida de «abierto
+                       hasta v1», que dice los importes sin ofrecer nada.
      comprar(plan)  -> Promise<{ ok, motivo?, fuera?, licencia? }>
                        `fuera`: la compra sigue en otra página (la de Stripe), y el
                        código llega luego por el enlace de la página de gracias.
@@ -37,8 +47,10 @@
    (nativo.js, que carga después) al llamarse, nunca al evaluarse. */
 
 /* La tienda de la web. Los importes llevan el IVA dentro (Stripe cobra el de cada
-   país y el precio no cambia). `enlaces` son los Payment Links de Stripe: con los
-   dos puestos, la tienda se abre. */
+   país y el precio no cambia). `enlaces` son los Payment Links de Stripe: cada
+   plan con enlace se vende y el que no lo tiene no existe para la app; con
+   alguno puesto, la tienda se abre. Hoy los dos son `null` y la venta está apagada:
+   `vida` lo enciende Ez cuando pase su dirección, y `mes` vuelve con v1. */
 var PACE_TIENDA_WEB = {
   precios: {
     vida: { importe: 19.99, moneda: 'EUR' },
@@ -50,22 +62,32 @@ var PACE_TIENDA_WEB = {
 
 var PACE_TIENDA_PLANES = ['vida', 'mes'];
 
-function paceTiendaWebLista() {
+/* Los planes que se pueden comprar: con su precio y con su enlace. */
+function paceTiendaWebCompra() {
+  var pr = PACE_TIENDA_WEB.precios || {};
   var e = PACE_TIENDA_WEB.enlaces || {};
-  return PACE_TIENDA_PLANES.every(function (p) { return typeof e[p] === 'string' && e[p].length > 0; });
+  return PACE_TIENDA_PLANES.filter(function (p) { return !!pr[p] && typeof e[p] === 'string' && e[p].length > 0; });
+}
+
+function paceTiendaWebLista() {
+  return paceTiendaWebCompra().length > 0;
 }
 
 var paceTiendaWeb = {
   listo: paceTiendaWebLista,
   planes: function () {
     var pr = PACE_TIENDA_WEB.precios || {};
+    return paceTiendaWebCompra().map(function (p) { return Object.assign({ plan: p }, pr[p]); });
+  },
+  precios: function () {
+    var pr = PACE_TIENDA_WEB.precios || {};
     return PACE_TIENDA_PLANES.filter(function (p) { return !!pr[p]; }).map(function (p) {
       return Object.assign({ plan: p }, pr[p]);
     });
   },
   comprar: function (plan) {
-    var enlace = (PACE_TIENDA_WEB.enlaces || {})[plan];
-    if (!enlace) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+    if (paceTiendaWebCompra().indexOf(plan) < 0) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+    var enlace = PACE_TIENDA_WEB.enlaces[plan];
     try { window.location.assign(enlace); } catch (e) { return Promise.resolve({ ok: false, motivo: 'error' }); }
     return Promise.resolve({ ok: true, fuera: true });
   },
@@ -83,6 +105,7 @@ var paceTiendaWeb = {
 var paceTiendaPlay = {
   listo: function () { return false; },
   planes: function () { return []; },
+  precios: function () { return []; },
   comprar: function () { return Promise.resolve({ ok: false, motivo: 'cerrada' }); },
   vigente: function () { return false; },
   /* Con Play Billing: las suscripciones de Google Play, si hay una. */
@@ -93,6 +116,7 @@ var paceTiendaPlay = {
 var paceTiendaNinguna = {
   listo: function () { return false; },
   planes: function () { return []; },
+  precios: function () { return []; },
   comprar: function () { return Promise.resolve({ ok: false, motivo: 'cerrada' }); },
   vigente: function () { return false; },
   puedeGestionar: function () { return false; },

@@ -15,6 +15,10 @@
    precios de la tienda en una frase (nunca escritos en las traducciones),
    «Probar 7 días gratis» y «Ahora no» del mismo tamaño, el aviso de antes de
    cobrar y «Prefiero pagarlo una vez». Hasta entonces dice «Llega con la versión 1».
+   La hoja ofrece solo lo que tiene enlace (Ez, 5 nov. 2026: hasta v1, solo el de por
+   vida): con ese plan solo, dice un solo pago y su botón principal compra ese plan,
+   con «Ahora no» del mismo tamaño; sin prueba, sin aviso de los dos días y sin la
+   línea de «Prefiero pagarlo una vez».
 
    EN ANDROID NO HAY «Tengo un código»: Google Play no deja desbloquear con
    códigos propios (state-licencia.js). Allí la hoja solo informa. Donde hay
@@ -169,6 +173,7 @@ function PremiumInvitacion() {
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
   const dias = (mes && mes.pruebaDias) || 7;
+  const soloVida = !mes && !!vida;
   const tengo = permitida && (
     <button type="button" data-pace-premium-tengo onClick={() => setModo('codigo')}
       style={{ ...premiumInvitacionStyles.enlace, ...(tienda ? { marginTop: 6 } : null) }}>
@@ -227,6 +232,9 @@ function PremiumInvitacion() {
                 {mes && vida && (
                   <p data-pace-premium-precios style={premiumInvitacionStyles.v1}>{tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}</p>
                 )}
+                {soloVida && (
+                  <p data-pace-premium-precios style={premiumInvitacionStyles.v1}>{tn('premium.onb.vida.sola', { vida: vida.precio })}</p>
+                )}
                 {error === 'compra' && <p role="alert" data-pace-premium-error="compra" style={premiumInvitacionStyles.error}>{t('premium.compra.error')}</p>}
                 <div style={premiumInvitacionStyles.par}>
                   {mes && (
@@ -234,10 +242,15 @@ function PremiumInvitacion() {
                       {tn('premium.onb.probar', { dias })}
                     </Button>
                   )}
+                  {soloVida && (
+                    <Button data-pace-premium-vida disabled={comprobando} onClick={() => comprar('vida')} style={premiumInvitacionStyles.mitad}>
+                      {tn('premium.onb.comprar', { vida: vida.precio })}
+                    </Button>
+                  )}
                   <Button variant="secondary" onClick={cerrar} style={premiumInvitacionStyles.mitad}>{t('premium.later')}</Button>
                 </div>
                 {mes && <p style={premiumInvitacionStyles.aviso}>{t('premium.onb.aviso')}</p>}
-                {vida && (
+                {mes && vida && (
                   <button type="button" data-pace-premium-vida disabled={comprobando} onClick={() => comprar('vida')} style={premiumInvitacionStyles.fantasma}>
                     {tn('premium.onb.vida', { vida: vida.precio })}
                   </button>

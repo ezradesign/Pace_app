@@ -46,13 +46,15 @@ secreto: nombre `STRIPE_AVISO_SECRETO`, valor ese `whsec_…`.
 
 ## 4. Stripe: los dos enlaces de pago y el portal
 
-- Un enlace de pago de **19,99 €, una vez** (PACE completo para siempre).
-- Otro de **2,99 € al mes con 7 días de prueba**.
-- En los dos, la página de después de pagar: `https://pacegrass.app/gracias/?sesion={CHECKOUT_SESSION_ID}`
+- Un enlace de pago de **19,99 €, una vez** (PACE completo para siempre). **Hasta v1 es el único que hace falta** (Ez, 5 nov.):
+  la app solo ofrece los planes que tienen enlace, y /premium dice dónde se compra.
+- Otro de **2,99 € al mes con 7 días de prueba**, y el portal del cliente: se hacen al llegar v1. Mientras no estén,
+  no se pasan: el mensual no sale en la app.
+- En cada enlace, la página de después de pagar: `https://pacegrass.app/gracias/?sesion={CHECKOUT_SESSION_ID}`
   (tal cual, con las llaves: Stripe pone ahí el número de la compra).
 - El **portal del cliente** (Configuración › Facturación › Portal del cliente): actívalo y copia su enlace.
 
-Esos tres enlaces **no son secretos**: pásaselos a la coordinadora. Van en la app
+Esos enlaces **no son secretos**: pásaselos a la coordinadora. Van en la app
 (`PACE_TIENDA_WEB` en `app/state-compra.js`) y desde ese momento salen los botones de compra y
 «Gestionar la suscripción».
 
