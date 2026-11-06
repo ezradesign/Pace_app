@@ -14,6 +14,8 @@ const M = [
   ['terminada-corriendo', "if (typeof ritmoPausaCuenta !== 'function' || ritmoPausaCuenta(s)) return false;", ''],
   ['terminada-comida', "return !!a && a.it.tipo === 'pausa';", 'return !!a;'],
   ['losetas-altas', 'padding: 8px 14px 7px !important; text-align: left;', 'padding: 16px 14px 15px !important; text-align: left;'],
+  ['tolerancia', 'if (over <= 0 || D <= piso)', 'if (over <= 1 || D <= piso)'],
+  ['frase', '__NADA__', ''],
   ['preparar', "'ritmo.tarjeta.comienza': 'Preparar jornada'", "'ritmo.tarjeta.comienza': 'Comienza'"],
 ];
 const bin = path.join(R, 'node_modules/@playwright/test/cli.js');
@@ -22,14 +24,15 @@ try {
   for (const [n, a, b] of M) {
     const norm = a.replace(/\n/g, '\n');
     let t = orig;
+    if (n === 'frase') { t = require('child_process').execFileSync('git', ['-C', R, 'show', 'c33ebafb:index.html'], { encoding: 'utf8', maxBuffer: 1 << 28 }); fs.writeFileSync(I, t); } else
     if (!t.includes(norm)) {
       const re = new RegExp(norm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\\?\s+/g, '\\s+'));
       if (!re.test(t)) { res[n] = 'NO CASA'; continue; }
       t = t.replace(re, () => b);
     } else t = t.replace(norm, () => b);
     fs.writeFileSync(I, t);
-    const r = spawnSync(process.execPath, [bin, 'test', 'tests/aro-jornada.spec.js', '--project=chromium', '--workers=2', '--reporter=line'],
-      { cwd: R, env: Object.assign({}, process.env, { PACE_E2E_PORT: '8852' }), encoding: 'utf8', timeout: 90000 });
+    const r = spawnSync(process.execPath, [bin, 'test', 'tests/aro-jornada.spec.js', '--project=chromium', '--workers=1', '--reporter=line'],
+      { cwd: R, env: Object.assign({}, process.env, { PACE_E2E_PORT: '8852' }), encoding: 'utf8', timeout: 170000 });
     const out = (r.stdout || '') + (r.stderr || '');
     const f = /(\d+) failed/.exec(out), p = /(\d+) passed/.exec(out);
     res[n] = (f ? f[1] : '0') + ' rojas, ' + (p ? p[1] : '0') + ' verdes';

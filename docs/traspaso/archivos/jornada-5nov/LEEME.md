@@ -1,21 +1,18 @@
-# El aro como paso actual: 1A y 2B (Ez, 5 nov. 2026)
+# El aro como paso actual: 1A, 2B y sin la frase de ayuda (Ez, 5-6 nov. 2026)
 
-Rama `claude/maqueta-jornada-40d7ea`, ya con la 0.190.0 de `main`. Página elegida: https://claude.ai/artifact/JT45Q7FuqAurUChGqLhqgg
+Rama `claude/maqueta-jornada-40d7ea`. Terminada, a falta de juntarla. Páginas: la elegida,
+https://claude.ai/artifact/JT45Q7FuqAurUChGqLhqgg (`docs/proposals/jornada-paso-actual.html`); la del tamaño del aro, con cuentas
+de la otra cuenta (`jornada-aro-tamanos.html`); y lo montado, `docs/proposals/jornada-montada.html`.
 
-**Hecho:** `app/focus/FocusTimer.jornada.jsx` (nuevo) con «Hacer la pausa» en el aro y «Empezar ya el bloque N» como enlace,
-«Pausar foco» / «Reanudar foco», «Después: …» en el escritorio y «Pausa terminada»; «Preparar jornada» en vez de «Comienza»; la
-tarjeta sin jornada sin subtítulo y más baja (el aro pasó de 391 a más de 440 px a 1917×857). `tests/aro-jornada.spec.js` y las
-pruebas que esperaban los textos viejos. `npm run verify` pasaba en el último intento. Decisión y regla, en `docs/product/`.
+**Montado:** `app/focus/FocusTimer.jornada.jsx` (nuevo) con «Hacer la pausa» en el aro y «Empezar ya el bloque N» como enlace,
+«Pausar foco» / «Reanudar foco», «Después: …» solo en el escritorio y «Pausa terminada». «Preparar jornada» en lugar de «Comienza».
+La tarjeta sin jornada, sin subtítulo y más baja. Sin la frase «Cada bloque es un pomodoro…» (`RitmoComo`). Y `home-geometry.js`
+sin la tolerancia de 1 px, que dejaba 1 px de scroll a 1280×800.
 
-**Falta, en este orden:**
-1. Hecho: las vecinas de esa lista dieron 92 verdes y 0 rojas en Chromium sobre el último compilado (`bloques-cortos`, `hora-y-medianoche`, `ritmo-pausa-entera`, `ritmo-pausa`, `ritmo-tarjeta-movil`, `ver-ejercicio`, `eventos-origen`, `ritmo-reloj`, `ritmo-panel`, `home-a11y`, `inicio-modulos`, `aro-modo-identidad`, `toques-movil`, `lienzo`, `aro-jornada`).
-2. Mutantes: `mutantes.js` (aquí) deshace cada cambio en el `index.html` compilado. Sin correr.
-3. Medir que la home no pide scroll en dos idiomas y hacer las fotos de lo montado a 360 y 1280: `montado.js`. Sin correr.
-4. `npm run verify`, `node build-standalone.js` y, después de eso, `LISTO PARA MAIN`. La versión la pone la coordinadora.
+**El aro:** 1917×857, de 391 a 445 sin jornada y de 392 a 426 con ella preparada; 1536×710, de 327 a 372 y de 305 a 332.
 
-**Sin respuesta, pregunta a Ez sobre «2b (en la jornada)»:** con la jornada entera ya elegida el aro sigue en 392 px (305 a
-1536×710). X: quitar la frase «Cada bloque es un pomodoro en el aro…», que da 426 (332 a 1536×710). Y: dejarla, 2B era solo la
-tarjeta. Si no contesta, se queda Y.
+**Probado:** `npm run verify`; 138 pruebas vecinas en Chromium; once mutantes, todos en rojo; 100 medidas de scroll (cinco momentos,
+dos idiomas, diez tamaños) con máximo 0 px. **Sin probar:** la suite entera, WebKit, y un móvil o un iPhone de verdad.
 
-Los guiones llevan rutas absolutas de esta carpeta y usan `node_modules` del repo principal; el servidor, el puerto 8852.
-`capas-y-pausa` toca `FocusTimer.pestanas.jsx`, `main.jsx` y los teclados de las sesiones: aquí no se han tocado.
+La versión, `STATE.md` y `CHANGELOG.md` los pone la coordinadora al juntar. `main.jsx`, `FocusTimer.pestanas.jsx` y los teclados
+de las sesiones no se han tocado. Los guiones de esta carpeta llevan rutas absolutas y usan el puerto 8852.
