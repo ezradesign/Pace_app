@@ -328,7 +328,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     return (
       <SessionPrep
         routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft} prepCount={prepCount}
-        copy={sessionPrepCopy(routine, tn)}
+        copy={v1PrepCopia(routine, t, tn, auto)}
         onSkip={() => { setPrepCount(0); arrancar(); }}
         atmosphere={atmo}
       />

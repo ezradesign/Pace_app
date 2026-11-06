@@ -198,6 +198,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.tapDone':                    'Pulsa › al acabar',
     'move.tapGo':                      'Pulsa › para seguir',
     'move.placeHintMano':              'Colócate sin prisa · pulsa «Empezar ya»',
+    // Lo que acaba de cambiar al tocar «Auto» (Ez, 6 nov. 2026: B) y la línea de «Prepárate» con Auto apagado
+    'move.auto.on':                    'PACE marca el ritmo y pasa al siguiente paso.',
+    'move.auto.off':                   'Hazlo a tu ritmo y pulsa › para continuar.',
+    'move.auto.prep':                  'A tu ritmo · tú decides cuándo seguir.',
     // Lo que hace la flecha, escrito debajo (Ez, P5 A del 29 oct. 2026)
     'move.flecha.hecho':               'Hecho',
     'move.flecha.descanso':            'Saltar descanso',
@@ -356,6 +360,10 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.tapDone':                    'Tap › when you are done',
     'move.tapGo':                      'Tap › to go on',
     'move.placeHintMano':              'Get set, no rush · press Begin now',
+    // What just changed when «Auto» is tapped (Ez, 6 Nov 2026: B) and the Get ready line with Auto off
+    'move.auto.on':                    'PACE sets the pace and moves on to the next step.',
+    'move.auto.off':                   'Go at your own pace and tap › to go on.',
+    'move.auto.prep':                  'Your pace · you decide when to go on.',
     // What the arrow does, written below it (Ez, P5 A, 29 Oct 2026)
     'move.flecha.hecho':               'Done',
     'move.flecha.descanso':            'Skip rest',

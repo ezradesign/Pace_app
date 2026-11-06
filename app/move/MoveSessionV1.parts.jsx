@@ -26,6 +26,21 @@ function v1BastaDestino(routine, idx) {
   return luego;
 }
 
+/* LA FRASE DE «PREPÁRATE» (`sessionPrepCopy`) Y, CON «AUTO» APAGADO, UNA LÍNEA MÁS: se guarda para las sesiones
+   siguientes y se olvida, así que al empezar se recuerda cómo se va a hacer (Ez, 6 nov.: B). Sin ventana ni
+   confirmación; la pantalla tiene sitio de sobra. */
+const v1PrepStyles = {
+  auto: { display: 'block', marginTop: 12, font: '400 13px/1.4 var(--font-ui)', fontStyle: 'normal', letterSpacing: '0.01em', color: 'var(--ink-3)' },
+};
+function v1PrepCopia(routine, t, tn, auto) {
+  return (
+    <React.Fragment>
+      {sessionPrepCopy(routine, tn)}
+      {!auto && <span data-pace-v1-prep-auto style={v1PrepStyles.auto}>{t('move.auto.prep')}</span>}
+    </React.Fragment>
+  );
+}
+
 /* «AUTO», DEBAJO DE LAS PALABRAS DEL MANDO (Ez, 29 oct.), en el móvil y en el ordenador. Por debajo
    de 700 px de alto no cabe una fila más sin encoger el círculo, y se queda junto a «Siguiente»,
    como antes. Se mira el alto del lienzo (el de la app con el zoom, `paceLienzoAlto`). */
@@ -131,4 +146,4 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
   }, []);
 }
 
-Object.assign(window, { v1BastaDestino, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });
+Object.assign(window, { v1BastaDestino, v1PrepCopia, useV1AutoAbajo, useV1Vuelta, VeloV1, useV1Teclas, V1_VUELTA_SEGUNDOS });

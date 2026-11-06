@@ -63,14 +63,42 @@ function CueV1({ lead, text, accent, ...resto }) {
 }
 
 /* El interruptor «Auto» (Ez, 1A del 25 oct.). Lo pinta el mando bajo sus palabras o, en una
-   pantalla baja, la línea de «Siguiente» (`useV1AutoAbajo`, MoveSessionV1.parts.jsx). */
+   pantalla baja, la línea de «Siguiente» (`useV1AutoAbajo`, MoveSessionV1.parts.jsx).
+   AL TOCARLO dice cuatro segundos lo que acaba de cambiar (Ez, 6 nov.: B, no una línea fija): «Auto»
+   mueve a la vez si los pasos avanzan solos y si las repeticiones llevan cadencia, y se guarda para
+   las sesiones siguientes. Sin tocarlo no hay nada nuevo en pantalla. */
+const V1_AUTO_AVISO_MS = 4000;
+const v1AutoAvisoStyles = {
+  nota: {
+    position: 'fixed', left: '50%', transform: 'translateX(-50%)', zIndex: 91, pointerEvents: 'none',
+    width: 'max-content', maxWidth: 'calc(100vw - 32px)', boxSizing: 'border-box', textAlign: 'center',
+    padding: '8px 14px', borderRadius: 999, border: '1px solid var(--line-2)', background: 'var(--paper-2)',
+    color: 'var(--ink)', font: '400 12.5px/1.35 var(--font-ui)',
+  },
+};
 function AutoV1({ auto, accent, onAuto, t }) {
+  const [aviso, setAviso] = React.useState(null);   // { abajo } mientras la nota está puesta
+  React.useEffect(() => {
+    if (!aviso) return undefined;
+    const to = setTimeout(() => setAviso(null), V1_AUTO_AVISO_MS);
+    return () => clearTimeout(to);
+  }, [aviso, auto]);
+  const toca = (e) => {
+    v1SoltarFoco(e); onAuto();
+    const mando = document.querySelector('[data-pace-v1-mando]') || e.currentTarget;
+    setAviso({ abajo: Math.round(paceLienzoAlto() - paceCaja(mando).top + 8) });   // en px CSS: con el lienzo, la ventana va escalada
+  };
   return (
-    <button type="button" className="pace-v1-auto" data-pace-v1-auto aria-pressed={auto ? 'true' : 'false'}
-      title={t('move.auto.title')} style={{ '--v1-auto': accent }}
-      onClick={(e) => { v1SoltarFoco(e); onAuto(); }}>
-      <span className="pace-v1-auto-pista" aria-hidden="true" />{t('move.auto')}
-    </button>
+    <React.Fragment>
+      <button type="button" className="pace-v1-auto" data-pace-v1-auto aria-pressed={auto ? 'true' : 'false'}
+        title={t('move.auto.title')} style={{ '--v1-auto': accent }} onClick={toca}>
+        <span className="pace-v1-auto-pista" aria-hidden="true" />{t('move.auto')}
+      </button>
+      {aviso && ReactDOM.createPortal(
+        <div role="status" data-pace-v1-auto-aviso style={{ ...v1AutoAvisoStyles.nota, bottom: aviso.abajo }}>
+          {t(auto ? 'move.auto.on' : 'move.auto.off')}
+        </div>, document.body)}
+    </React.Fragment>
   );
 }
 
