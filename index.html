@@ -28948,6 +28948,8 @@ Object.assign(window, {
 @media ${PACE_CORTE_MOVIL} {
   .pace-lib-hd h2 { font-size: 24px; }
   .pace-lib-lateral { display: none; }
+  /* con «Tus rutinas» abierta, el catálogo cede la pantalla; en escritorio no se aparta */
+  .pace-lib-main[data-vista="tuyas"] > .pace-lib-catalogo { display: none; }
 }
 
 /* EL CHROME DEL MODAL SE RECORTA PARA LA BIBLIOTECA, y esto salió de MEDIR la
@@ -29412,15 +29414,22 @@ function LibraryShell(_ref)
     )
 
     ),
-    React.createElement("div", { className: "pace-lib-main" },
+    React.createElement("div", { className: "pace-lib-main", "data-vista": vista },
     cabecera,
 
 
     React.createElement("div", { className: "pace-lib-solo-movil" }, chips),
-    vista === 'tuyas' ?
-    React.createElement("div", { className: "pace-lib-solo-movil" }, tuyas) :
 
-    React.createElement(React.Fragment, null,
+
+    vista === 'tuyas' && React.createElement("div", { className: "pace-lib-solo-movil" }, tuyas),
+
+
+
+
+
+
+
+    React.createElement("div", { className: "pace-lib-catalogo" },
 
 
 
@@ -29435,7 +29444,6 @@ function LibraryShell(_ref)
     React.createElement("div", { className: "pace-lib-solo-movil" }, bloqueAhora),
     React.createElement("div", { className: "pace-lib-rejilla" }, listaGrupos)
     )
-
     )
     )
     )

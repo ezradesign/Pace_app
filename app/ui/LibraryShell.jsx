@@ -241,30 +241,36 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
               </React.Fragment>
             )}
           </aside>
-          <div className="pace-lib-main">
+          <div className="pace-lib-main" data-vista={vista}>
             {cabecera}
             {/* en móvil los chips van bajo la cabecera; en escritorio ya están
                 en el lateral y la hoja esconde ESTA copia */}
             <div className="pace-lib-solo-movil">{chips}</div>
-            {vista === 'tuyas'
-              ? <div className="pace-lib-solo-movil">{tuyas}</div>
-              : (
-                <React.Fragment>
-                  {/* «Para ahora» de móvil va FUERA de la rejilla. Estuvo dentro
-                      (como hijo a todo el ancho) y era una verruga: un subárbol
-                      OCULTO metido en la rejilla hace que toda consulta a
-                      `.pace-lib-rejilla ...` lo encuentre PRIMERO y mida cero.
-                      Costó cinco medidas equivocadas en s174 antes de mover el
-                      nodo en vez de seguir esquivándolo. Fuera de la rejilla no
-                      necesita `grid-column` y no estorba a nadie. */}
-                  {/* Los viajes van ANTES que «Para ahora» y en las DOS
-                      pieles (no son «lo que cabe donde estas», asi que no
-                      pertenecen al lateral): son el estante de arriba. */}
-                  {bloqueViajes}
-                  <div className="pace-lib-solo-movil">{bloqueAhora}</div>
-                  <div className="pace-lib-rejilla">{listaGrupos}</div>
-                </React.Fragment>
-              )}
+            {/* «Tus rutinas» a pantalla completa es cosa del móvil. En escritorio
+                ya vive en el lateral, así que este bloque lleva `solo-movil`. */}
+            {vista === 'tuyas' && <div className="pace-lib-solo-movil">{tuyas}</div>}
+            {/* EL CATÁLOGO SE PINTA SIEMPRE y es la hoja la que lo aparta, solo en
+                móvil y solo mientras `vista` es «tuyas». Antes la vista cambiaba
+                el catálogo por el bloque de móvil EN EL JSX: al ensanchar la
+                ventana con «Tus rutinas» abierta, ese bloque y el enlace de volver
+                se ocultaban por CSS y la columna quedaba sin nada (revisión de
+                ChatGPT, 5 nov. 2026). Así el filtro tampoco se toca: el estado
+                sigue en este componente. */}
+            <div className="pace-lib-catalogo">
+              {/* «Para ahora» de móvil va FUERA de la rejilla. Estuvo dentro
+                  (como hijo a todo el ancho) y era una verruga: un subárbol
+                  OCULTO metido en la rejilla hace que toda consulta a
+                  `.pace-lib-rejilla ...` lo encuentre PRIMERO y mida cero.
+                  Costó cinco medidas equivocadas en s174 antes de mover el
+                  nodo en vez de seguir esquivándolo. Fuera de la rejilla no
+                  necesita `grid-column` y no estorba a nadie. */}
+              {/* Los viajes van ANTES que «Para ahora» y en las DOS
+                  pieles (no son «lo que cabe donde estas», asi que no
+                  pertenecen al lateral): son el estante de arriba. */}
+              {bloqueViajes}
+              <div className="pace-lib-solo-movil">{bloqueAhora}</div>
+              <div className="pace-lib-rejilla">{listaGrupos}</div>
+            </div>
           </div>
         </div>
       </div>
