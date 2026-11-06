@@ -4,6 +4,28 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 5 de noviembre de 2026, v0.189.1.
 
+## AL RELEVO (5 nov., ~17:35): 5iWBf… al 90 %; Ez migra ya. Empieza aquí; manda sobre el bloque de las 12:15
+
+Coordinaba `local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a` en 5iWBf… (se repone a las 21:30). `main` = origin en v0.190.0 (47fd7569): suite 1217 en verde con Rana y Palmas, logros, las horas y «sin querer»; iOS y Android en verde; **el CI de 47fd7569 seguía en marcha: míralo**. Detalle: `relevo-coordinadora-22oct.md`, puntos 21 a 27 y «Nuevo el 5 nov.».
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (5 nov., ~17:35)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de main, retoma lo que dice el relevo y republica mi hoja de pasos en esta cuenta.
+```
+
+1. **Primero, en cada carpeta:** `git -C <carpeta> status`, y lo que quede, «WIP:» y push. Ramas `claude/<carpeta>`, en `.claude/worktrees/`. Se retoman con sesión nueva, `cwd` en su carpeta y `use_worktree: false`, leyendo su LEEME. Puertos del 8870 en adelante. No más de tres sesiones a la vez: siete llevaron la cuenta del 10 al 90 % en una hora.
+2. **Lo que toca, por orden:**
+   a. `vigilant-jackson-bb58ac` (`capas-y-pausa`): Escape o Atrás, «Auto», la pausa sobre una sesión y Espacio. Terminarla.
+   b. Juntar en una tanda, **con el sí de Ez ya dado**: capas, `elegant-sammet-66e8b5` (los cuatro arreglos, «Sí, júntalos», `LISTO`) y `premium-solo-vida-e1a044` (/premium 1C, «Sí, júntalo», `LISTO`; solo falta la suite). Una suite con todo, versión aparte, push y CI.
+   c. **La versión de prueba:** Ez decidió que salga con eso dentro. AAB, TestFlight con su sí, repasar notas y capturas de `docs/launch/google-play/SUBIDAS.md`, y el párrafo «A tu ritmo» de Play se pega con Ez.
+3. **Esperan el «júntalo» de Ez:** `glifos-logros-fbcc3d` (20 de 21 insertados, 94 de 96 con dibujo; faltan Año nuevo, que se repite, y Vaca feliz, que no estaba entre los archivos) y `maqueta-sobre-c81985` (1C y 3A montados, con el aviso de novedades; la 2B fuera). Sin suite: entran en la tanda siguiente.
+4. **`maqueta-jornada-40d7ea`: la jornada 1A 2B, a medias.** No entra en la versión de prueba. **Pregunta sin contestar a Ez:** con la jornada preparada, ¿quitar la frase «Cada bloque es un pomodoro en el aro…»? X, quitarla: el aro pasa de 392 a 426 px (recomendada). Y, dejarla, que es lo que hace la sesión si no contesta.
+5. **Hilos pendientes:** «catálogo, cifras y Auto», al acabar capas (`revision-5nov-sesiones.md`); la landing espera las letras de Ez (`landing-web-5ec1e5`, `docs/proposals/landing-5nov.html`); y el calendario, dos ajustes de texto: el candado de Android no dice el límite, y antes de las altas la hoja web no puede vender «mantenerlo al día».
+6. **Espera a Ez:** el estado de TestFlight en App Store Connect (estaba mirándolo; si está lista, el enlace público va a /beta); la parte legal de ChatGPT, con el prompt de la hoja; y testers, que ya busca. Para encender la venta, además: Resend y la dirección del enlace real de 19,99 €. **Con la primera venta real, sus datos y publicar `legal/`.**
+7. **Al final:** quitar los worktrees ya juntados, con un bundle de todas las ramas antes (Ez dijo sí), y repasar el README: dice que v1 es la primera de pago, dos planes y 96 sellos.
+8. **Las páginas de hoy dan 404 en EcLj6…:** republicar desde la rama de cada una las que Ez deba ver: /premium, el sobre y la landing (`docs/proposals/`), y los dibujos (`claude/glifos-logros-fbcc3d`). La hoja, en EcLj6io4wM9pGjtQ5wd1CT, con los ids de allí (la lista, en el bloque de las 12:15).
+
 ## AL RELEVO (5 nov., ~12:15): 5iWBf… hacia el 90 %; se sigue en EcLj6… cuando se reponga, a las 15:30
 
 Ez: «Migramos al 90% y luego ya continuamos en la otra sesión cuando se reponga». **Si llegas de la otra cuenta, empieza aquí.**
