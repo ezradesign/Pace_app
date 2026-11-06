@@ -7,11 +7,12 @@
    (cobro/venta.js) y lo deja en el almacén `VENTAS` para la página de gracias
    (functions/api/codigo.js):
 
-     sesion:<id de la compra>       el código, para la página de gracias (90 días)
-     suscripcion:<id de la mensual> el último código de esa mensual, para renovarlo
-     baja:<id de la mensual>        la marca de que terminó (con la fecha del aviso)
+     sesion:<id de la compra>          el código, para la página de gracias (90 días)
+     periodo:<id de la mensual>:<fin>  el código de cada periodo pagado, para renovarlo
+     suscripcion:<id de la mensual>    el último que se escribió, como antes (cobro/mensual.js)
+     baja:<id de la mensual>           la marca de que terminó (con la fecha del aviso)
 
-   Cuando una mensual termina (customer.subscription.deleted), se borra su `suscripcion:` y
+   Cuando una mensual termina (customer.subscription.deleted), se borran sus códigos y
    queda su `baja:`, que no se borra: /api/renovar contesta desde entonces que terminó. De una
    suscripción sin código (otra cosa de la cuenta, o una de PACE cuya compra aún no ha llegado)
    la marca dura un mes, más de lo que Stripe sigue mandando aquella compra: si llega, no da
@@ -19,12 +20,15 @@
 
    EN CUALQUIER ORDEN Y LAS VECES QUE SEA (revisión de ChatGPT del 28 oct., A1). Stripe no
    promete el orden de sus avisos ni que lleguen una sola vez, y reintenta durante tres días.
-   Aquí nada va hacia atrás: `suscripcion:` solo cambia por un código que dura más, `sesion:`
-   se escribe una vez, y tras la baja ningún aviso vuelve a dar código. Las fechas son las de
-   Stripe y no las de la llegada (cobro/stripe.js), así que un aviso repetido no escribe nada
-   y dos a la vez escriben lo mismo: KV no tiene transacciones. Una factura no dice de qué
-   enlace de pago viene: es de PACE si su suscripción ya tiene código, el que dio la compra.
-   Si llega antes que la compra se ignora, y no falta nada: la compra lleva el mismo mes.
+   Aquí nada va hacia atrás: una mensual solo guarda un código que dura más que los suyos,
+   `sesion:` se escribe una vez, y tras la baja ningún aviso vuelve a dar código. Las fechas son
+   las de Stripe y no las de la llegada (cobro/stripe.js), así que un aviso repetido no escribe
+   nada. KV no tiene transacciones: dos avisos a la vez leen lo mismo y, en una misma llave, gana
+   el último que escribe. Dos renovaciones distintas solapadas dejaban así la más corta (revisión
+   de ChatGPT del 5 nov.); por eso cada periodo tiene su llave y se lee el que más dura de todos
+   (cobro/mensual.js), escriba quien escriba el último. Una factura no dice de qué enlace de
+   pago viene: es de PACE si su suscripción ya tiene código, el que dio la compra. Si llega
+   antes que la compra se ignora, y no falta nada: la compra lleva el mismo mes.
 
    Solo eso: ni el correo ni el nombre. Lo demás de Stripe no se toca (contesta 200 para
    que no lo vuelva a mandar).
@@ -37,6 +41,7 @@
 
 import { stripeAvisoValido, stripeLeerPago, stripeLeerFin, stripeEnlaces } from '../../cobro/stripe.js';
 import { firmarVenta, ventaDatos } from '../../cobro/venta.js';
+import { mensualUltimo, mensualGuardar, mensualBorrar } from '../../cobro/mensual.js';
 
 const CUERPO_MAX = 256 * 1024;
 const SESION_DIAS = 90;
@@ -49,13 +54,13 @@ function respuesta(datos, estado) {
   });
 }
 
-/* La baja de una suscripción: su marca, una vez (repetida no se acorta), y fuera su código. */
+/* La baja de una suscripción: su marca, una vez (repetida no se acorta), y fuera sus códigos. */
 async function darDeBaja(kv, sub, fecha) {
   if (!(await kv.get('baja:' + sub))) {
-    if (await kv.get('suscripcion:' + sub)) await kv.put('baja:' + sub, fecha);
+    if (await mensualUltimo(kv, sub)) await kv.put('baja:' + sub, fecha);
     else await kv.put('baja:' + sub, fecha, { expirationTtl: BAJA_SIN_CODIGO_DIAS * 24 * 3600 });
   }
-  await kv.delete('suscripcion:' + sub);
+  await mensualBorrar(kv, sub);
 }
 
 /* Guarda el código de un pago donde falte. -> si la compra tiene su código (escrito ahora o antes). */
@@ -64,7 +69,7 @@ async function guardar(env, pago, ahora) {
   let suscripcion = false;
   if (pago.plan === 'monthly') {
     if (await kv.get('baja:' + pago.order)) return false;
-    const guardado = ventaDatos(await kv.get('suscripcion:' + pago.order));
+    const guardado = ventaDatos(await mensualUltimo(kv, pago.order));
     if (pago.factura && !guardado) return false;
     suscripcion = !(guardado && guardado.expiresAt >= pago.expiresAt);
   }
@@ -72,7 +77,7 @@ async function guardar(env, pago, ahora) {
   if (sesion || suscripcion) {
     const codigo = await firmarVenta(pago, env.PACE_K2_PRIVADA, ahora);
     if (sesion) await kv.put('sesion:' + pago.sesion, codigo, { expirationTtl: SESION_DIAS * 24 * 3600 });
-    if (suscripcion) await kv.put('suscripcion:' + pago.order, codigo);
+    if (suscripcion) await mensualGuardar(kv, pago.order, codigo);
   }
   return true;
 }
