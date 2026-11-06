@@ -3,7 +3,7 @@
  * Las funciones de Cloudflare (functions/api/*.js) se prueban a pelo, en Node, sin cuenta de
  * Stripe: los avisos son inventados y van firmados con un secreto de prueba, la llave k2 se crea
  * en cada pasada (nunca la de verdad) y el almacén `VENTAS` vive en memoria. Lo usan
- * cobro-venta, cobro-avisos y cobro-recuperar.
+ * cobro-venta, cobro-avisos, cobro-a-la-vez y cobro-recuperar.
  */
 'use strict';
 
@@ -24,12 +24,39 @@ const DIA = 24 * 3600 * 1000;
 const ENLACE = { vida: 'plink_1VidaPrueba00001', mes: 'plink_1MesPrueba000002', vidaReal: 'plink_1VidaReal000003', mesReal: 'plink_1MesReal0000004' };
 const ENLACES = Object.values(ENLACE).join(', ');
 
-/* `VENTAS` en memoria; apunta también la caducidad con la que se guardó cada clave. */
+/* `VENTAS` en memoria; apunta también la caducidad con la que se guardó cada clave. `list` contesta
+   como el de Cloudflare: en orden, por páginas de `limit` (mil si no se dice) y con su `cursor`. */
 function almacen(inicial) {
   const datos = new Map(Object.entries(inicial || {}));
-  return { datos, get: async (k) => (datos.has(k) ? datos.get(k) : null),
+  const list = async (o) => {
+    const prefijo = (o && o.prefix) || '', desde = Number((o && o.cursor) || 0), limite = (o && o.limit) || 1000;
+    const nombres = [...datos.keys()].filter((k) => k.startsWith(prefijo) && !k.startsWith('ttl:')).sort();
+    const pagina = nombres.slice(desde, desde + limite);
+    const completa = desde + limite >= nombres.length;
+    return Object.assign({ keys: pagina.map((name) => ({ name })), list_complete: completa }, completa ? {} : { cursor: String(desde + limite) });
+  };
+  return { datos, list, get: async (k) => (datos.has(k) ? datos.get(k) : null),
     put: async (k, v, o) => { datos.set(k, v); datos.set('ttl:' + k, o && o.expirationTtl); },
     delete: async (k) => { datos.delete(k); datos.delete('ttl:' + k); } };
+}
+
+/* Dos entregas a la vez sobre el mismo `VENTAS`, en el peor orden: las dos leen todo lo que leen
+   antes de que ninguna escriba; después escribe entera la segunda, y la primera, la última
+   (lectura A, lectura B, escritura B, escritura A). KV no tiene transacciones: dos peticiones a la
+   vez pueden ir así. Cada una ve el almacén por su vista, que para su primera escritura hasta que
+   la otra haya llegado a la suya (o haya acabado sin escribir). `a` y `b` reciben su vista. */
+function aLaVez(kv, a, b) {
+  let llegadas = 0, soltarB, soltarA;
+  const turnoB = new Promise((r) => { soltarB = r; });
+  const turnoA = new Promise((r) => { soltarA = r; });
+  const vista = (turno) => {
+    let llego = false;
+    const llega = () => { if (!llego) { llego = true; if (++llegadas === 2) soltarB(); } };
+    const escribe = (op) => async (...args) => { llega(); await turno; return op(...args); };
+    return { llega, kv: Object.assign({}, kv, { put: escribe(kv.put), delete: escribe(kv.delete) }) };
+  };
+  const va = vista(turnoA), vb = vista(turnoB);
+  return Promise.all([a(va.kv).finally(va.llega), b(vb.kv).finally(() => { vb.llega(); soltarA(); })]);
 }
 
 const env = (kv, extra) => Object.assign({ STRIPE_AVISO_SECRETO: SECRETO, PACE_K2_PRIVADA: K2_PRIVADA, VENTAS: kv || almacen(),
@@ -71,4 +98,4 @@ function mesDespues(s) {
     d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()) / 1000;
 }
 
-module.exports = { importar, k2, K2_PRIVADA, SECRETO, DIA, ENLACE, ENLACES, almacen, env, evento, firmaStripe, aviso, leerCodigo, mesDespues };
+module.exports = { importar, k2, K2_PRIVADA, SECRETO, DIA, ENLACE, ENLACES, almacen, aLaVez, env, evento, firmaStripe, aviso, leerCodigo, mesDespues };
