@@ -33341,10 +33341,12 @@ function v1DevCheckDuration(routine, restBetweenSets) {
 
 
 
-function v1DoneStats(routine, guided, tiempo, t, hechos) {
+
+
+function v1DoneStats(routine, guided, tiempo, t, hechos, hechas) {
   const hecho = (i) => !hechos || !!hechos[i];
   const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
-  const series = routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
+  const series = Number.isFinite(hechas) ? hechas : routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
   const planReps = routine.steps.filter((s) => s.mode === 'reps').length;
   const stats = [{ label: t('common.time'), value: tiempo }];
   if (planReps > 0 && planReps === routine.steps.filter((s) => s.mode !== 'rest').length) {
@@ -33993,7 +33995,7 @@ function olvidarCuerpoGuardada() {
 
 function cuerpoReanudacion(routine, guardado) {
   const ahora = Date.now();
-  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
+  const cero = { step: 0, sesionMs: 0, activoMs: 0, reps: 0, series: 0, startedAt: ahora, reanudada: false, early: false, hechos: {}, basta: {} };
   if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
   if (typeof guardado.huella === 'string' && guardado.huella !== cuerpoHuella(routine)) return cero;
   const n = (x) => Number.isFinite(x) && x > 0 ? x : 0;
@@ -34007,8 +34009,11 @@ function cuerpoReanudacion(routine, guardado) {
   const basta = {};
   (Array.isArray(guardado.basta) ? guardado.basta : []).
   forEach((i) => {if (Number.isInteger(i) && i >= 0 && i < routine.steps.length) basta[i] = true;});
+
+  const series = Number.isFinite(guardado.series) && guardado.series >= 0 ? guardado.series :
+  routine.steps.filter((s, i) => s.mode === 'reps' && hechos[i]).length;
   return {
-    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps),
+    step, sesionMs: n(guardado.sesionMs), activoMs: n(guardado.activoMs), reps: n(guardado.reps), series,
     startedAt: Number.isFinite(guardado.startedAt) && guardado.startedAt <= ahora ? guardado.startedAt : ahora,
     reanudada: true, early: guardado.early === true, hechos, basta
   };
@@ -34042,7 +34047,7 @@ function useCuerpoPersistencia(d) {
         v: 1, routineId: c.routine.id, kind: c.kind, step: c.stepIdx, huella: cuerpoHuella(c.routine),
         sesionMs: Math.round(c.relojSesion.segundos() * 1000),
         activoMs: Math.round(c.relojActivo.segundos() * 1000),
-        reps: c.reps(), startedAt: c.startedAt(), savedAt: Date.now(),
+        reps: c.reps(), series: c.series ? c.series() : 0, startedAt: c.startedAt(), savedAt: Date.now(),
         early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
         basta: Object.keys(c.basta && c.basta() || {}).map(Number)
       }));
@@ -34294,6 +34299,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const hechosRef = useRefV1(rein.hechos);
 
 
+  const seriesRef = useRefV1(rein.series);
+
+
   const bastaRef = useRefV1(rein.basta);
   const activeSecRef = useRefV1(0);
   const step = routine.steps[stepIdx];
@@ -34324,7 +34332,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const sinContarRef = useRefV1(false);
   useCuerpoPersistencia({ routine, kind, inPath, stage, stepIdx, paused, relojSesion, relojActivo,
     reps: () => repsGuidedRef.current, startedAt: () => sessionStart.current,
-    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current });
+    early: () => earlyRef.current, hechos: () => hechosRef.current, basta: () => bastaRef.current, series: () => seriesRef.current });
 
   const dispatchComplete = () => {
 
@@ -34388,18 +34396,17 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     try {playSound('move.side');} catch (e) {}
   };
 
+  const darSerie = (reps) => {repsGuidedRef.current += reps;hechosRef.current[stepIdx] = true;seriesRef.current += 1;};
   const finishRepsEarly = () => {
     const hechas = Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    repsGuidedRef.current += hechas;
-    if (hechas > 0) hechosRef.current[stepIdx] = true;
+    if (hechas > 0) darSerie(hechas);
 
     if (!step.opcional) earlyRef.current = true;
     advanceStep();
   };
 
   const terminarReps = () => {
-    repsGuidedRef.current += v1RepTarget(step);
-    hechosRef.current[stepIdx] = true;
+    darSerie(v1RepTarget(step));
     advanceStep();
   };
 
@@ -34470,8 +34477,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        repsGuidedRef.current += v1RepTarget(step);
-        hechosRef.current[stepIdx] = true;
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
         try {playSound('move.rep');} catch (e) {}
@@ -34557,7 +34563,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
     const stats = v1DoneStats(routine, repsGuidedRef.current,
-    `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current);
+    `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current, seriesRef.current);
     const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (
       React.createElement(SessionDone, {
