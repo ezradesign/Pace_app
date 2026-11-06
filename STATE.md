@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.190.0 · 5 de noviembre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.191.0 · 6 de noviembre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
