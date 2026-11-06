@@ -10,12 +10,13 @@
        100 %, y quien amplía para leer;
      · por encima, la app llena la ventana justa, sin scroll, y la home queda en el mismo
        sitio que en la ventana efectiva: el aro, las actividades y el panel del día;
-     · el runner abre sin errores y su mando cabe en la pantalla.
+     · el runner abre sin errores y su mando cabe en la pantalla;
+     · `fijarViewport` (tests/helpers.js) no devuelve hasta que el lienzo ha recogido el tamaño nuevo.
    La prueba ingenua (un `zoom` sin más) hacía la home tres veces más alta que la ventana:
    el primer aserto de altura es el que lo caza.
 */
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, fijarViewport } = require('./helpers');
 
 async function abrirEn(browser, ancho, alto) {
   const u = test.info().project.use;
@@ -101,5 +102,39 @@ test('el runner abre con el lienzo y su mando cabe en la pantalla', async ({ bro
   });
   expect(m.abajo, 'el mando se sale de la pantalla').toBeLessThanOrEqual(m.ventana);
   expect(errores).toEqual([]);
+  await context.close();
+});
+
+/* EL CIERRE SE MIDIÓ CON EL ZOOM DE LA VENTANA ANTERIOR (CI de c9b50e50). Al bajar de 1920×1080 a
+   1536×708 el lienzo quita su zoom 1,25 en el `resize`, y con el reloj falso de `page.clock` dos rAF
+   no esperan a ese `resize`: cierre-sin-pisar medía con zoom y daba todo al 0 %. Aquí el lienzo tarda
+   1,5 s a propósito (el index.html servido lleva su `resize` y su observador con retraso, como un PC
+   cargado); sin esperar, la ventana sigue con 1,25, y `fijarViewport` solo vuelve cuando ya no. */
+test('fijarViewport espera a que el lienzo recoja el tamaño nuevo, aunque tarde', async ({ browser }) => {
+  const u = test.info().project.use;
+  const context = await browser.newContext({
+    viewport: { width: 1920, height: 1080 },
+    baseURL: u.baseURL, locale: u.locale, timezoneId: u.timezoneId, colorScheme: u.colorScheme,
+  });
+  await sembrar(context);
+  const page = await context.newPage();
+  const tarde = (llamada) => 'function () { setTimeout(' + llamada + ', 1500); }';
+  let retrasos = 0;
+  await page.route('**/index.html', async (route) => {
+    const respuesta = await route.fetch();
+    const html = (await respuesta.text())
+      .replace("window.addEventListener('resize', aplicar);", () => { retrasos++; return "window.addEventListener('resize', " + tarde('aplicar') + ');'; })
+      .replace('new window.ResizeObserver(aplicar)', () => { retrasos++; return 'new window.ResizeObserver(' + tarde('aplicar') + ')'; });
+    await route.fulfill({ response: respuesta, body: html });
+  });
+  await irAlArtefacto(page);
+  expect(retrasos, 'GUARD: no encuentro el resize y el observador del lienzo en index.html').toBe(2);
+  const lienzo = () => page.evaluate(() => ({ escala: window.paceLienzo.escala, zoom: document.documentElement.style.zoom, attr: document.documentElement.hasAttribute('data-pace-lienzo') }));
+  expect((await lienzo()).escala, 'GUARD: a 1920×1080 no hay lienzo').toBe(1.25);
+
+  await page.setViewportSize({ width: 1536, height: 708 });
+  expect((await lienzo()).escala, 'GUARD: sin esperar, la ventana nueva aún lleva el zoom de la anterior').toBe(1.25);
+  await fijarViewport(page, 1536, 708);
+  expect(await lienzo(), 'fijarViewport volvió con el zoom de la ventana anterior').toEqual({ escala: 1, zoom: '', attr: false });
   await context.close();
 });
