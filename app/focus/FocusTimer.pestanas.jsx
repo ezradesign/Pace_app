@@ -57,14 +57,23 @@ function paceFocoPausaPendiente(id) {
   setState(prev => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString() } }));
 }
 
-/* `pendiente` es el id de `state.focoPausa`: el efecto se rehace cuando otra pestaña la deja o la quita. */
+/* `pendiente` es el id de `state.focoPausa`: el efecto se rehace cuando otra pestaña la deja o la quita.
+   Con una sesión de Respira, Mueve o Estira delante, la pausa ESPERA: mientras alguien hace una pausa,
+   esa práctica manda. El menú es un Modal por encima de la sesión, que seguía corriendo debajo. Sigue
+   pendiente en el estado (no se coge ni se borra) y se reintenta cada medio segundo, como los avisos
+   de logro, hasta que la sesión se acaba o se sale de ella: entonces sale una sola vez. */
+const PAUSA_REINTENTO_MS = 500;
+
 function usePausaALaVista(pendiente, abrir) {
   const abrirRef = useRefFTP(abrir);
   abrirRef.current = abrir;
   useEffectFTP(() => {
+    let reintento = null;
     const intentar = () => {
+      if (reintento) { clearTimeout(reintento); reintento = null; }
       const p = getState().focoPausa;
       if (!p || !p.id || p.dia !== new Date().toDateString() || document.visibilityState !== 'visible') return;
+      if (document.querySelector('[data-pace-session-root]')) { reintento = setTimeout(intentar, PAUSA_REINTENTO_MS); return; }
       const coger = () => {
         const s = getState();
         if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
@@ -81,7 +90,7 @@ function usePausaALaVista(pendiente, abrir) {
     };
     intentar();
     document.addEventListener('visibilitychange', intentar);
-    return () => document.removeEventListener('visibilitychange', intentar);
+    return () => { document.removeEventListener('visibilitychange', intentar); if (reintento) clearTimeout(reintento); };
   }, [pendiente]);
 }
 

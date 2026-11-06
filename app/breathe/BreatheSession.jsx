@@ -164,9 +164,10 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         // No robar Espacio a un control con foco (chips de feedback / CTA en
         // 'done'): activación nativa en vez de preventDefault (guard s116).
         if (sessionKeyOnControl(e)) return;
-        e.preventDefault(); setPaused(p => !p);
+        e.preventDefault();
+        if (!sessionPausaKeyBlocked(e)) setPaused(p => !p);
       }
-      if (e.key === 'Escape') onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
       // Enter cierra el DONE salvo foco en un control / modificadores / IME —
       // guard P0 s116 (evita una SEGUNDA salida desde el listener global).

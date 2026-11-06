@@ -208,9 +208,10 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         // No robar Espacio a un control con foco (chips de feedback / CTA en
         // 'done'): activación nativa en vez de preventDefault (guard s116).
         if (sessionKeyOnControl(e)) return;
-        e.preventDefault(); setPaused(p => !p);
+        e.preventDefault();
+        if (!sessionPausaKeyBlocked(e)) setPaused(p => !p);
       }
-      if (e.key === 'Escape') onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'ArrowRight') goNext();
       if (e.key === 'ArrowLeft') goPrev();
       // Enter cierra el DONE salvo foco en un control / modificadores / IME —

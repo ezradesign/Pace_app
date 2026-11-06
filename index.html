@@ -17231,6 +17231,17 @@ function paceHayDialogo() {
   return _paceDialogos.length > 0;
 }
 
+
+
+
+
+
+function paceEscapeDeSesion(e) {
+  if (e && (e.__paceDialogoAtendido || e.repeat)) return false;
+  const arriba = _paceDialogos[_paceDialogos.length - 1];
+  return !arriba || arriba.sesion === true;
+}
+
 const PACE_ENFOCABLES = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
 'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
 
@@ -17262,7 +17273,7 @@ function usePaceDialogo(ref, abierto, opciones) {
 
   useEffectDlg(() => {
     if (!abierto) return undefined;
-    const yo = {};
+    const yo = { sesion: op.sesion === true };
     _paceDialogos.push(yo);
     const previo = document.activeElement;
     const cont = ref.current;
@@ -17313,8 +17324,8 @@ function usePaceDialogo(ref, abierto, opciones) {
   }, [abierto]);
 }
 
-Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEnfocables });
-;Object.assign(window, { paceDialogoArriba, paceHayDialogo, paceEnfocables, paceFocoDevolvible, usePaceDialogo });
+Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables });
+;Object.assign(window, { paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables, paceFocoDevolvible, usePaceDialogo });
 })();
 </script>
   <!-- android: lo que el WebView de Android no trae (boton atras, avisos,
@@ -19601,8 +19612,10 @@ function SessionShell(_ref2) {let { routine, onExit, headerExtra, children, foot
 
 
 
+
+
   const rootRef = useRefSS(null);
-  usePaceDialogo(rootRef, true);
+  usePaceDialogo(rootRef, true, { sesion: true });
   return (
     React.createElement("div", { "data-pace-session-root": true, ref: rootRef, tabIndex: -1, role: "dialog", "aria-modal": "true",
       "aria-label": routine && routine.name ? routine.name : undefined, style: rootStyle },
@@ -19830,13 +19843,19 @@ function sessionDoneKeyBlocked(e) {
   return !!(e.isComposing || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || sessionKeyOnControl(e));
 }
 
+
+
+function sessionPausaKeyBlocked(e) {
+  return !!(e && (e.repeat || e.isComposing || e.ctrlKey || e.metaKey || e.altKey));
+}
+
 Object.assign(window, {
   SessionShell, SessionHeader, SessionDone, SessionStat,
   sessionShellStyles, sessionAtmosphere,
   paceGrainUrl, paceGlowRamp, PaceDither,
-  sessionKeyOnControl, sessionDoneKeyBlocked
+  sessionKeyOnControl, sessionDoneKeyBlocked, sessionPausaKeyBlocked
 });
-;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, sessionDoneGlifo, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, sessionDoneGlifo, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked, sessionPausaKeyBlocked });
 })();
 </script>
   <!-- Pantalla de preparación (s174), extraída de SessionShell.jsx al pasar
@@ -24541,13 +24560,22 @@ function paceFocoPausaPendiente(id) {
 }
 
 
+
+
+
+
+const PAUSA_REINTENTO_MS = 500;
+
 function usePausaALaVista(pendiente, abrir) {
   const abrirRef = useRefFTP(abrir);
   abrirRef.current = abrir;
   useEffectFTP(() => {
+    let reintento = null;
     const intentar = () => {
+      if (reintento) {clearTimeout(reintento);reintento = null;}
       const p = getState().focoPausa;
       if (!p || !p.id || p.dia !== new Date().toDateString() || document.visibilityState !== 'visible') return;
+      if (document.querySelector('[data-pace-session-root]')) {reintento = setTimeout(intentar, PAUSA_REINTENTO_MS);return;}
       const coger = () => {
         const s = getState();
         if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
@@ -24564,7 +24592,7 @@ function usePausaALaVista(pendiente, abrir) {
     };
     intentar();
     document.addEventListener('visibilitychange', intentar);
-    return () => document.removeEventListener('visibilitychange', intentar);
+    return () => {document.removeEventListener('visibilitychange', intentar);if (reintento) clearTimeout(reintento);};
   }, [pendiente]);
 }
 
@@ -31512,9 +31540,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
 
 
         if (sessionKeyOnControl(e)) return;
-        e.preventDefault();setPaused((p) => !p);
+        e.preventDefault();
+        if (!sessionPausaKeyBlocked(e)) setPaused((p) => !p);
       }
-      if (e.key === 'Escape') onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
 
 
@@ -32515,9 +32544,10 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
 
 
         if (sessionKeyOnControl(e)) return;
-        e.preventDefault();setPaused((p) => !p);
+        e.preventDefault();
+        if (!sessionPausaKeyBlocked(e)) setPaused((p) => !p);
       }
-      if (e.key === 'Escape') onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) onExit('exit');
       if (e.key === 'ArrowRight') goNext();
       if (e.key === 'ArrowLeft') goPrev();
 
@@ -34155,9 +34185,9 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
 
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if (c.stage === 'run') c.alternar();
+        if (c.stage === 'run' && !sessionPausaKeyBlocked(e)) c.alternar();
       }
-      if (e.key === 'Escape') c.onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) c.onExit('exit');
 
 
       if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) c.cerrar();
@@ -34412,7 +34442,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
 
+
+
+
+  const autoAntes = useRefV1(auto);
   useEffectV1(() => {
+    const encendido = auto && !autoAntes.current;
+    autoAntes.current = auto;
+    if (encendido && stage === 'run' && phase === 'work' && step.mode === 'reps') {setElapsed(0);return;}
     if (stage !== 'run' || phase !== 'work' || elapsed === 0 || paused) return;
     const marca = stepIdx + ':' + side + ':' + elapsed;
     const suena = sonadoRef.current !== marca;

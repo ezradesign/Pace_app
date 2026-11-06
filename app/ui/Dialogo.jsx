@@ -50,6 +50,17 @@ function paceHayDialogo() {
   return _paceDialogos.length > 0;
 }
 
+/* ¿Le toca ESTE Escape (o Atras de Android, que llega como un Escape) a la sesion?
+   Las sesiones escuchan en `window` por su cuenta, no por la pila, asi que se lo
+   preguntan aqui: solo si nadie lo atendio y lo de arriba de la pila es la propia
+   sesion (o no hay pila). Con un aviso encima, el primer Escape es del aviso, y las
+   repeticiones de una tecla MANTENIDA no son un segundo Escape. */
+function paceEscapeDeSesion(e) {
+  if (e && (e.__paceDialogoAtendido || e.repeat)) return false;
+  const arriba = _paceDialogos[_paceDialogos.length - 1];
+  return !arriba || arriba.sesion === true;
+}
+
 const PACE_ENFOCABLES = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), '
   + 'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
 
@@ -81,7 +92,7 @@ function usePaceDialogo(ref, abierto, opciones) {
 
   useEffectDlg(() => {
     if (!abierto) return undefined;
-    const yo = {};
+    const yo = { sesion: op.sesion === true };
     _paceDialogos.push(yo);
     const previo = document.activeElement;
     const cont = ref.current;
@@ -132,4 +143,4 @@ function usePaceDialogo(ref, abierto, opciones) {
   }, [abierto]);
 }
 
-Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEnfocables });
+Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables });

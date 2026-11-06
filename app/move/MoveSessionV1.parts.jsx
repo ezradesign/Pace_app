@@ -119,9 +119,9 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
         // active nativamente en vez de hacer preventDefault (s116).
         if (sessionKeyOnControl(e)) return;
         e.preventDefault();
-        if (c.stage === 'run') c.alternar();
+        if (c.stage === 'run' && !sessionPausaKeyBlocked(e)) c.alternar();
       }
-      if (e.key === 'Escape') c.onExit('exit');
+      if (e.key === 'Escape' && paceEscapeDeSesion(e)) c.onExit('exit');
       // Enter cierra el DONE, salvo que el foco esté en un control (feedback o el propio CTA se
       // activan por su onClick) o haya modificadores/IME: guard P0 s116 (evita una SEGUNDA salida).
       if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) c.cerrar();
