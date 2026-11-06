@@ -26,7 +26,7 @@ guiadas.
 | **Estira** | 19 rutinas de movilidad (para empezar, oficina, hombros y columna, caderas y piernas, para ir a más), 15 gratis |
 | **Hidrátate** | Tracker de vasos de agua |
 | **Caminos** | 7 recorridos guiados sobre una lámina ilustrada, ocultos hasta después de v1 (no se ha borrado nada) |
-| **Logros** | 96 sellos coleccionables estilo libreta de campo |
+| **Logros** | Sellos coleccionables estilo libreta de campo; el panel enseña los que ya se pueden ganar, y los demás aparecen el día que tengan su detector |
 | **Estadísticas** | Hoy · semana · mes · año (heatmap) |
 
 Además: una **bienvenida** que pregunta cómo es tu semana, el **constructor de rutinas
@@ -41,12 +41,12 @@ propias** y una **PWA** instalable que funciona sin conexión.
 | A tu ritmo | La home pregunta «¿cuánto trabajas hoy?» y sirve la jornada: bloques de foco y pausas con nombre, según tu horario, y al acabar cada bloque el aviso del sistema te dice qué pausa toca. La carta sigue a un toque |
 | Módulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
 | Caminos | Sistema completo (biblioteca, runner por pasos, cierre, stats y heatmap anual), oculto hasta después de v1 con `SHOW_CAMINOS` en `app/flags.js` |
-| Contenido de cuerpo | Contrato de pasos v1 (modo, lateralidad, dosis, requisitos) + preview «antes de empezar» |
-| Logros | 96 en catálogo · 88 con detector activo · 78 con arte propio |
+| Contenido de cuerpo | Contrato de pasos v1 (modo, lateralidad, dosis, requisitos) + preview «antes de empezar», y un dibujo propio para cada ejercicio de las rutinas |
+| Logros | 96 en catálogo · 88 con detector activo · el panel solo enseña y cuenta los que se pueden ganar hoy · el arte que falta lo cuenta `docs/product/GLIFOS_A_DIBUJAR.md` |
 | i18n | ES/EN completo, catálogos troceados por dominio |
 | PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
 | Android e iPhone | La misma app con Capacitor (`android/`, `ios/`): cada push a `main` compila el APK y el AAB firmado de Android y la app de iPhone. Android está en la prueba cerrada de Google Play e iPhone en TestFlight; las dos tiendas salen el mismo día, con v1 |
-| PACE completo | Lo de pago pasa por un solo punto (`app/state-entitlement.jsx`); la licencia firmada existe desde v0.157.0 y hoy la llevan los códigos de los testers. En la web, `/premium`, la compra con Stripe (en modo de prueba), `/gracias`, `/recuperar` y `/desistir` (cerrada hasta conectar el correo); las condiciones, en borrador. Hasta v1, todo abierto |
+| PACE completo | Lo de pago pasa por un solo punto (`app/state-entitlement.jsx`); la licencia firmada existe desde v0.157.0 y hoy la llevan los códigos de los testers. En la web, `/premium` (con el de por vida; el mensual llega con v1), la compra con Stripe (comprobada en modo de prueba y aún sin encender), `/gracias`, `/recuperar` y `/desistir` (cerrada hasta conectar el correo); las condiciones, en borrador. En las apps no hay compra hasta v1. Hasta v1, PACE completo está abierto para todos |
 | Robustez | Un dato guardado roto se repara solo (y lo ilegible queda en una copia de rescate) · los diálogos y las sesiones gestionan el foco y el teclado · la pantalla no se apaga en una sesión guiada · si una parte falla, se cierra solo esa parte (con una pantalla de rescate como último recurso) |
 | Código | Más de 200 archivos de código en `app/` (.js, .jsx, .css), ninguno por encima de 500 líneas |
 | Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto, coherencia de versión y lo que la web promete · `npm run test:e2e` — más de 1100 pruebas en un navegador real, en Chromium y en el motor de Safari, que el CI pasa en cada push |
@@ -178,10 +178,12 @@ El **núcleo de PACE es gratuito** y seguirá estándolo: el Foco entero, «A tu
 cada día, 35 rutinas, Hidrátate, los logros y las estadísticas de hoy y de la semana.
 
 **PACE completo** añade las 18 rutinas más profundas, tus propias rutinas, una semana que
-aprende de ti y tu mes y tu año. Habrá dos planes, **2,99 € al mes con 7 días gratis o
-19,99 € de por vida**, sin crear una cuenta. **v1.0 será la primera versión de pago**;
-hasta entonces todo lo construido está abierto. La licencia ya existe (v0.157.0): un
-código firmado que la app comprueba por su cuenta y que hoy llevan los testers.
+aprende de ti y tu mes y tu año. Habrá dos planes, **19,99 € de por vida o 2,99 € al mes
+con 7 días gratis**, sin crear una cuenta. Hasta **v1.0**, PACE completo está abierto para
+todos y en la web solo se venderá el de por vida; en las apps no hay compra. Con v1.0
+deja de estar abierto, llega el mensual y se podrá comprar también en Android y en iPhone.
+La licencia ya existe (v0.157.0): un código firmado que la app comprueba por su cuenta y
+que hoy llevan los testers.
 
 ---
 
@@ -217,8 +219,8 @@ La Elastic License 2.0 cubre el **código fuente** del repositorio. La licencia
 **Premium** es una licencia comercial **separada**, aplicada sobre el producto
 compilado para habilitar contenido y funciones premium. Ver
 [`MONETIZATION.md`](./MONETIZATION.md) para el detalle del modelo — con la
-advertencia de que su parte histórica está marcada como tal: al lanzamiento hay
-**dos planes** (2,99 € al mes o 19,99 € de por vida), no cuatro vías.
+advertencia de que su parte histórica está marcada como tal: hay
+**dos planes** (19,99 € de por vida y, con v1, 2,99 € al mes), no cuatro vías.
 
 ### Otros usos
 
