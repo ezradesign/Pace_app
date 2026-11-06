@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.191.1 · 6 de noviembre de 2026. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.192.0 · 6 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -67,9 +67,12 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). En la web, antes de v1, solo el de por vida (Ez, 5 nov.).
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **Esperan su «júntalo», después de la versión de prueba:** la jornada (`claude/maqueta-jornada-40d7ea`, 1A 2B y la frase X) y
-  catálogo, cifras y Auto (`claude/catalogo-cifras-auto-5ba756`), en una tanda y con una suite. La landing
-  (`claude/landing-web-5ec1e5`) espera sus letras; y faltan dos dibujos de logros: Año nuevo, que se repite, y Vaca feliz.
+- **Espera su «júntalo» y la revisión de ChatGPT:** `guardar()` a prueba de dos renovaciones a la vez
+  (`claude/guardar-atomico-166e3f`: un periodo por llave en `cobro/mensual.js`; 89 pruebas del cobro en verde). Ez le pasa a
+  ChatGPT el texto de la hoja, que también pide revisar ese arreglo. La jornada y catálogo, cifras y Auto ya están en `main`
+  (0.192.0, con su «Júntalo»). En marcha, el recorrido entero de la app (`claude/recorrido-6nov-645d6b`): lo visual llega
+  en una página para Ez. La landing (`claude/landing-web-5ec1e5`) espera sus letras; y faltan dos dibujos de logros: Año
+  nuevo, que se repite, y Vaca feliz.
 - **iPhone**: qué estado ve Ez en TestFlight (la prueba beta se envió el 23 oct.) e invitar a sus testers con el
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco
   y W-8BEN, el programa para pequeñas empresas y una dirección visible en la UE.

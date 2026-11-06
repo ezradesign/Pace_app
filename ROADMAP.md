@@ -80,7 +80,7 @@ cada pieza.
 | 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
 | 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho**, en `main` (0.184.0, 28 oct., probada por Ez en su Android) |
 | 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho**, en `main` (0.183.0, 28 oct., con el «júntalo» de Ez sobre sus fotos) |
-| 11 | La versión de prueba definitiva, a la prueba cerrada de Play y a TestFlight a la vez (hoy tienen la 0.174.0 y la 0.175.0) | La 0.191.1 lleva dentro lo que Ez pidió y el CI está en verde entero: **solo falta su sí** (6 nov.). Sube SIN esperar al grupo 2 (Ez, 28 oct., noche: «Sí, sin esperar»), que llega como actualizaciones durante los 14 días |
+| 11 | La versión de prueba definitiva, a la prueba cerrada de Play y a TestFlight a la vez (hoy tienen la 0.174.0 y la 0.175.0) | La 0.191.1, con el sí de Ez (6 nov.): el AAB, bajado a `subidas-play\`, y la del iPhone, en TestFlight (191001). **Falta que Ez la suba a Play y la dé a sus testers de iPhone.** Sube SIN esperar al grupo 2 (Ez, 28 oct., noche: «Sí, sin esperar»), que llega como actualizaciones durante los 14 días |
 | 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Hecho**, en `main` (0.185.0, 28 oct., con el 1A 2A 3A 4A y el «júntalo» de Ez). Los arreglos del cobro que encontró ChatGPT el 28 oct., también (0.186.0) |
 | 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas |
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
@@ -106,11 +106,11 @@ con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo
 
 | Tanda | Estado (5 nov.) |
 |---|---|
-| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en marcha. `guardar()`, antes de encender el mensual |
-| Datos y compra (`revision-5nov-datos-y-compra.md`) | Los cuatro arreglos, listos en su rama y aprobados por Ez para juntar. «Dónde funciona tu compra», en /premium |
-| Cuando una sesión coincide con otra cosa (`revision-5nov-capas.md`) | En marcha en `capas-y-pausa`. Dos pestañas, riesgo ya aceptado |
-| Cambiar de idea a mitad (`revision-5nov-sesiones.md`) | «Auto», en `capas-y-pausa`. El catálogo vacío, las cifras y qué explica «Auto», en un hilo después de ese |
-| La jornada como paso actual (`jornada-como-paso-actual.md`) | Ez eligió 1A 2B en la maqueta. Montada en `maqueta-jornada-40d7ea`, con la frase X y el aro más grande; espera el «júntalo» de Ez, después de la versión de prueba |
+| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en `main` (0.191.0). `guardar()`, arreglado en `claude/guardar-atomico-166e3f` (un periodo por llave): espera la revisión de ChatGPT y el «júntalo» de Ez |
+| Datos y compra (`revision-5nov-datos-y-compra.md`) | Los cuatro arreglos, en `main` (0.191.0). «Dónde funciona tu compra», en /premium |
+| Cuando una sesión coincide con otra cosa (`revision-5nov-capas.md`) | En `main` (0.191.0). Dos pestañas, riesgo ya aceptado |
+| Cambiar de idea a mitad (`revision-5nov-sesiones.md`) | «Auto» (0.191.0), y el catálogo vacío, las cifras y qué explica «Auto» (0.192.0), en `main` |
+| La jornada como paso actual (`jornada-como-paso-actual.md`) | En `main` con la 0.192.0 (6 nov., con el «Júntalo» de Ez): 1A 2B y la frase X |
 
 **También abierto el 5 nov.:** la maqueta del sobre (actualizaciones, novedades y avisos puntuales), la landing y la estructura de la web, para pensar, y el reparto del calendario contra lo decidido el 29 oct. Después de v1: un descanso de manos nuevo. Los 22 dibujos de logros, según los traiga Ez.
 
