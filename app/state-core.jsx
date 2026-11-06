@@ -104,7 +104,7 @@ const defaultState = {
   // lo abría cualquiera desde las herramientas del navegador.
   licencia: null,
   // La suscripción (`order`) cuyo aviso del fin de la prueba ya salió (PremiumInvitacion.jsx).
-  premiumAvisoPrueba: null,
+  premiumAvisoPrueba: null, novedadesVistas: null, /* el id de las novedades del sobre ya leídas; '*' las apaga (shell/Sobre.novedades.js) */
 
   // Foco
   focusMode: 'foco',

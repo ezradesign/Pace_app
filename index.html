@@ -4333,6 +4333,37 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
 
+Object.assign(window.PACE_STRINGS.es, {
+  'sobre.titulo': 'El sobre',
+  'sobre.nuevas': 'El sobre, con cosas sin leer',
+  'sobre.antes': 'Antes',
+  'sobre.novedades': 'Novedades de PACE',
+  'sobre.novedades.nueva': 'Novedades de PACE, sin leer',
+  'sobre.novedades.tipo': 'Novedades',
+  'sobre.novedades.titulo': 'Qué hay de nuevo',
+  'sobre.carta.tipo': 'Carta',
+  'sobre.carta.abrir': 'Abrir la carta'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+  'sobre.titulo': 'The envelope',
+  'sobre.nuevas': 'The envelope, with unread things',
+  'sobre.antes': 'Earlier',
+  'sobre.novedades': 'What’s new in PACE',
+  'sobre.novedades.nueva': 'What’s new in PACE, unread',
+  'sobre.novedades.tipo': 'What’s new',
+  'sobre.novedades.titulo': 'What’s new',
+  'sobre.carta.tipo': 'Letter',
+  'sobre.carta.abrir': 'Open the letter'
+});
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
 
 
 
@@ -6965,7 +6996,7 @@ const defaultState = {
 
   licencia: null,
 
-  premiumAvisoPrueba: null,
+  premiumAvisoPrueba: null, novedadesVistas: null,
 
 
   focusMode: 'foco',
@@ -26886,14 +26917,21 @@ Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
    Un icono junto a Estadísticas para lo que PACE te deja escrito: CERRADO, con su lacre, mientras
    hay algo sin leer, y ABIERTO cuando ya lo leíste. Sin nada, no se pinta. Tocarlo lo abre.
 
-   Hoy solo lleva la carta del lunes (ritmo/RitmoCarta.jsx). Ez quiere que más adelante pueda llevar
-   las novedades de una versión o un aviso puntual, así que el sobre no sabe de cartas: cada cosa se
-   apunta como una FUENTE, con su clave y una función que dice si hay algo que enseñar:
+   Lleva la carta del lunes (ritmo/RitmoCarta.jsx) y las novedades de cada versión
+   (Sobre.novedades.js). Cada cosa se apunta como una FUENTE, con su clave y una función que dice si hay
+   algo que enseñar:
 
-     paceSobreApuntar({ clave, de: (state, t) => null | { sinLeer, titulo, abrir } })
+     paceSobreApuntar({ clave, de: (state, t, tn, lang) => null | {
+       sinLeer, titulo, fecha, tipo, cuando, tituloHoja, resumen | lineas, abrir + enlace | leer } })
 
-   Con varias, manda la primera sin leer y, sin ninguna sin leer, la primera que haya. Este archivo
-   carga antes que los módulos, que se apuntan al evaluarse. */
+   Con una sola cosa y larga (la carta), tocar el icono la abre, como siempre. Con más, o con una que se
+   lee en la hoja, el icono abre UNA HOJA con todo, lo más nuevo arriba (Ez, 5 nov. 2026: 1C): lo corto se
+   lee ahí mismo y lo largo, con su enlace, abre su ventana. Abrir la hoja da por leído lo que se lee en
+   ella (`leer`); la carta, cuando se abre la carta. Sin contador: un punto de lacre por cosa sin leer, y
+   el icono cerrado mientras quede alguna. Entrar no obliga a nada. Este archivo carga antes que los
+   módulos, que se apuntan al evaluarse. */
+
+const { useState: useStateSB, useEffect: useEffectSB } = React;
 
 const paceSobreFuentes = [];
 
@@ -26904,14 +26942,21 @@ function paceSobreApuntar(fuente) {
 }
 
 
-function paceSobreHoy(state, t) {
+function paceSobreLista(state, t, tn, lang) {
   const hay = [];
-  paceSobreFuentes.forEach((f) => {
+  paceSobreFuentes.forEach((f, i) => {
     let x = null;
-    try {x = f.de(state, t);} catch (e) {x = null;}
-    if (x) hay.push(Object.assign({ clave: f.clave }, x));
+    try {x = f.de(state, t, tn, lang);} catch (e) {x = null;}
+    if (x) hay.push({ x: Object.assign({ clave: f.clave }, x), i: i });
   });
-  return hay.find((x) => x.sinLeer) || hay[0] || null;
+  hay.sort((a, b) => String(b.x.fecha || '').localeCompare(String(a.x.fecha || '')) || a.i - b.i);
+  return hay.map((h) => h.x);
+}
+
+
+function paceSobreHoy(state, t, tn, lang) {
+  const lista = paceSobreLista(state, t, tn, lang);
+  return lista.find((x) => x.sinLeer) || lista[0] || null;
 }
 
 
@@ -26933,22 +26978,166 @@ function PaceSobreIcono(_ref) {let { abierto } = _ref;
 
 }
 
+const paceSobreStyles = {
+  cab: { paddingRight: 34 },
+  meta: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' },
+  parte: { borderTop: '1px solid var(--line)', paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 6 },
+  tipo: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' },
+  titulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 17, lineHeight: 1.12, color: 'var(--ink)' },
+  texto: { fontSize: 13, lineHeight: 1.4, color: 'var(--ink-2)' },
+  linea: { display: 'grid', gridTemplateColumns: '10px minmax(0,1fr)', gap: 9, alignItems: 'baseline', fontSize: 13, lineHeight: 1.4, color: 'var(--ink-2)' },
+  punto: { width: 8, height: 8, borderRadius: '50%', borderWidth: 1.5, borderStyle: 'solid', borderColor: 'var(--ink-3)', display: 'block', transform: 'translateY(-1px)' },
+  enlace: { alignSelf: 'flex-start' }
+};
 
-function PaceSobre(_ref2) {let { estilo } = _ref2;
-  const [state] = usePace();
+
+function PaceSobreLacre(_ref2) {let { sinLeer } = _ref2;
+  return React.createElement("i", { "aria-hidden": "true", style: { width: 8, height: 8, borderRadius: '50%', flex: 'none', display: 'block',
+      background: sinLeer ? 'var(--breathe)' : 'transparent', border: sinLeer ? '0' : '1.5px solid var(--line-2)' } });
+}
+
+
+function PaceSobreHoja(_ref3) {let { lista, onCerrar } = _ref3;
   const { t } = useT();
-  const hoy = paceSobreHoy(state, t);
-  if (!hoy) return null;
+  const S = paceSobreStyles;
+
+  const [sinLeer] = useStateSB(() => lista.filter((x) => x.sinLeer).map((x) => x.clave));
+  const [todas, setTodas] = useStateSB(false);
+  useEffectSB(() => {lista.forEach((x) => {if (x.sinLeer && typeof x.leer === 'function') x.leer();});}, []);
+  const vistas = todas ? lista : lista.slice(0, 3);
   return (
-    React.createElement("button", { type: "button", "data-pace-topbar-icon": true, "data-pace-sobre": hoy.sinLeer ? 'cerrado' : 'abierto', "data-pace-sobre-de": hoy.clave,
-      onClick: hoy.abrir, style: estilo, title: hoy.titulo, "aria-label": hoy.titulo },
-    React.createElement(PaceSobreIcono, { abierto: !hoy.sinLeer })
+    React.createElement(Modal, { open: true, onClose: onCerrar, maxWidth: 420, relleno: "20px 18px 16px", ariaLabel: t('sobre.titulo') },
+    React.createElement("div", { "data-pace-sobre-hoja": true, style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+    React.createElement("div", { style: S.cab }, React.createElement("span", { style: S.meta }, t('sobre.titulo'))),
+    vistas.map((x) => {
+      const sin = sinLeer.indexOf(x.clave) >= 0;
+      return (
+        React.createElement("div", { key: x.clave, "data-pace-sobre-item": x.clave, "data-pace-sobre-item-estado": sin ? 'sin-leer' : 'leido', style: S.parte },
+        React.createElement("div", { style: S.tipo }, React.createElement(PaceSobreLacre, { sinLeer: sin }), React.createElement("span", null, x.tipo, " \xB7 ", x.cuando)),
+        React.createElement("div", { style: S.titulo }, x.tituloHoja),
+        x.lineas && x.lineas.map((l, k) =>
+        React.createElement("div", { key: k, style: S.linea }, React.createElement("i", { style: S.punto }), React.createElement("span", null, l))
+        ),
+        x.resumen && React.createElement("div", { style: S.texto }, x.resumen),
+        x.abrir && x.enlace &&
+        React.createElement("button", { type: "button", className: "pace-rt-enlace", style: S.enlace, "data-pace-sobre-abrir": x.clave,
+          onClick: () => {onCerrar();x.abrir();} }, x.enlace, " \u203A")
+
+        ));
+
+    }),
+    !todas && lista.length > 3 &&
+    React.createElement("button", { type: "button", className: "pace-rt-enlace", style: S.enlace, onClick: () => setTodas(true) }, t('sobre.antes'), " \u203A")
+
+    )
     ));
 
 }
 
-Object.assign(window, { paceSobreApuntar, paceSobreHoy, PaceSobreIcono, PaceSobre });
-;Object.assign(window, { paceSobreApuntar, paceSobreHoy, PaceSobreIcono, PaceSobre });
+
+function PaceSobre(_ref4) {let { estilo } = _ref4;
+  const [state] = usePace();
+  const { t, tn, lang } = useT();
+  const [hoja, setHoja] = useStateSB(false);
+  const lista = paceSobreLista(state, t, tn, lang);
+  if (!lista.length) return null;
+  const sin = lista.filter((x) => x.sinLeer);
+  const manda = sin[0] || lista[0];
+
+  const directo = lista.length === 1 && typeof manda.abrir === 'function' && !manda.lineas;
+  const titulo = lista.length === 1 ? manda.titulo : t(sin.length ? 'sobre.nuevas' : 'sobre.titulo');
+  return (
+    React.createElement(React.Fragment, null,
+    React.createElement("button", { type: "button", "data-pace-topbar-icon": true, "data-pace-sobre": sin.length ? 'cerrado' : 'abierto', "data-pace-sobre-de": manda.clave,
+      onClick: directo ? manda.abrir : () => setHoja(true), style: estilo, title: titulo, "aria-label": titulo },
+    React.createElement(PaceSobreIcono, { abierto: !sin.length })
+    ),
+    hoja && React.createElement(PaceSobreHoja, { lista: lista, onCerrar: () => setHoja(false) })
+    ));
+
+}
+
+Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobreIcono, PaceSobreHoja, PaceSobre });
+;Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobreIcono, PaceSobreLacre, PaceSobreHoja, PaceSobre });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   LAS NOVEDADES DEL SOBRE: lo más destacado de cada versión, escrito a mano (Ez, 5 nov. 2026: 3A).
+   ===========================================================================
+   Una o dos cosas por versión que cambien algo que se nota, dichas como las entendería cualquiera: sin
+   números de versión, sin nombres internos y sin copiar el CHANGELOG. Una versión que no cambia nada
+   visible no escribe nada aquí. La más nueva va PRIMERA: es la única que enseña el sobre.
+
+     id     — único y estable: es lo que guarda `novedadesVistas` al leerla.
+     desde  — el día en que sale. Quien empezó con PACE ese día o después no la ve: no son novedades de
+              algo que nunca vio (Sobre.novedades.js).
+     es, en — las líneas, de una en una y cortas. */
+
+const PACE_NOVEDADES = [
+{
+  id: 'jornada-y-logros',
+  desde: '2026-11-05',
+  es: [
+  'Todas las horas de tu jornada se cambian ahora paso a paso, con − y +: el inicio, el final y la comida.',
+  'En Logros ya no hay una parte «Próximamente»: ahora cuenta los sellos que has reunido.'],
+
+  en: [
+  'Every hour of your day now changes step by step, with − and +: the start, the end and lunch.',
+  'Achievements no longer has a “Coming soon” part: it now counts the stamps you have collected.']
+
+}];
+
+
+window.PACE_NOVEDADES = PACE_NOVEDADES;
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   LAS NOVEDADES EN EL SOBRE (Ez, 5 nov. 2026: 3A)
+   ===============================================
+   Una fuente del sobre (shell/Sobre.jsx) con lo más destacado de la última versión, escrito a mano en
+   shell/novedades.data.js, en español y en inglés. Se lee en la hoja del sobre, sin ventana propia.
+
+   Cuándo hay: la última versión con novedades, hasta que sale la siguiente, y solo para quien ya usaba PACE
+   cuando salió (`firstSeen` anterior a su día): quien llega después no ve novedades de algo que nunca vio,
+   y sin `firstSeen` (la bienvenida sin cerrar) tampoco. `novedadesVistas` guarda el id leído; '*' (lo
+   siembra la suite) las apaga. Leerlas no pide nada ni cambia nada más. */
+
+function paceNovedadActual() {
+  const lista = window.PACE_NOVEDADES || [];
+  return lista.length ? lista[0] : null;
+}
+
+paceSobreApuntar({ clave: 'novedades', de: (s, t, tn, lang) => {
+    const n = paceNovedadActual();
+    if (!n || s.novedadesVistas === '*' || s.firstSeen == null) return null;
+    const sinLeer = s.novedadesVistas !== n.id;
+    const dia = typeof parseLocalDateKey === 'function' ? parseLocalDateKey(n.desde) : null;
+    if (sinLeer && dia && !(s.firstSeen < dia.getTime())) return null;
+    const lineas = (lang === 'en' ? n.en : n.es) || n.es;
+    return {
+      sinLeer: sinLeer,
+      titulo: t(sinLeer ? 'sobre.novedades.nueva' : 'sobre.novedades'),
+      fecha: n.desde,
+      tipo: t('sobre.novedades.tipo'),
+      cuando: paceFechaCorta(n.desde, lang, { day: 'numeric', month: 'short' }),
+      tituloHoja: t('sobre.novedades.titulo'),
+      lineas: lineas,
+      leer: () => {if (getState().novedadesVistas !== n.id) setState({ novedadesVistas: n.id });}
+    };
+  } });
+
+Object.assign(window, { paceNovedadActual });
+;Object.assign(window, { paceNovedadActual });
 })();
 </script>
 
@@ -47813,10 +48002,12 @@ function RitmoCartaRaiz() {
 
 
 if (typeof paceSobreApuntar === 'function') {
-  paceSobreApuntar({ clave: 'carta', de: (s, t) => {
+  paceSobreApuntar({ clave: 'carta', de: (s, t, tn, lang) => {
       const c = ritmoCartaDeLaSemana(s);
       if (!c) return null;
-      return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir };
+      return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir,
+        fecha: c.lunes, tipo: t('sobre.carta.tipo'), cuando: paceFechaCorta(c.lunes, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
+        tituloHoja: t('ritmo.carta.sobre'), resumen: tn('ritmo.carta.hechas', { h: c.res.hechas, t: c.res.total }) + '.', enlace: t('sobre.carta.abrir') };
     } });
 }
 
