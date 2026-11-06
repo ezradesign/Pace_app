@@ -1,20 +1,22 @@
-# Encargo de arte · los 18 glifos de LOGRO que faltan
+# Encargo de arte · los 2 glifos de LOGRO que faltan
 
-**Remedido del árbol en s169 (v0.99.0).** Catálogo: **96 logros** · con arte:
-**78** · **sin arte: 18** (el 14 oct. de 2026 entró «Cuarto creciente», `streak.7`).
+**Remedido el 5 nov. 2026 (v0.190.0).** Catálogo: **96 logros** · con arte: **94** ·
+**sin arte: 2** (`secret.cow.click`, que Ez aún no ha generado, y `secret.new.year`, cuyo
+dibujo del 5 nov. no se lee a 56 px y hay que repetir).
 
-> **Este documento decía 38 y ya sólo faltan 19.** El cálculo original es de s164
-> (v0.94.0), cuando había 58 con arte; **s167 entregó los 19 que faltaban para
-> llegar a 77** y nadie volvió a tocar esta lista, así que la mitad de lo que
-> pedía **ya estaba dibujado**. Las 38 filas siguen aquí, pero las entregadas van
-> tachadas y marcadas **ENTREGADO**: lo que no lleva marca es lo que falta.
+> **Ya casi está.** El 5 nov. entraron 20 de los 22 dibujos que Ez generó en Genspark
+> (el encargo corto, con su prompt y su nombre de archivo, vive en
+> `docs/traspaso/dibujos-logros.html`): 16 de las filas de abajo y los cuatro logros que
+> llevaban un dibujo equivocado (Primer ritual, Larga sesión, Búho y La rueda del año, que
+> no tienen fila aquí porque ya figuraban como entregados con el dibujo erróneo). Las filas
+> entregadas van tachadas y marcadas **ENTREGADO**: lo que no lleva marca es lo que falta.
 >
-> Cómo se remidió: cargando `catalog.js` y `achievement-masks.js` —cada uno en su
-> propia IIFE, como en el artefacto— y cruzando **id a id** las filas de este
-> documento contra el mapa de máscaras real. La cuenta cierra por **biyección**:
-> **20 entregadas + 18 sin arte = 38 filas**, **cero** ids que no existan en el
-> catálogo y **cero** logros sin arte que este documento no liste. Si algún día
-> no cierra, es que una de las dos partes se movió sin la otra.
+> Cómo se remide: cargando `catalog.js` y `achievement-masks.js` —cada uno en su propia
+> IIFE, como en el artefacto— y cruzando **id a id** las filas de este documento contra el
+> mapa de máscaras real. La cuenta cierra por **biyección**: **36 entregadas + 2 sin arte =
+> 38 filas**, **cero** ids que no existan en el catálogo y **cero** logros sin arte que este
+> documento no liste. Si algún día no cierra, es que una de las dos partes se movió sin la otra.
+> Lo vigila `npm run verify`.
 
 
 ---
@@ -53,7 +55,7 @@ borde y su anillo de categoría— a tamaño y a 3×.
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
-| `season.equinox.autumn` | Equinoccio otoño | 22 de septiembre | carácter `⚖` | **Una balanza de dos platos a la misma altura**, con una hoja en un plato y una espiga en el otro. |
+| ~~`season.equinox.autumn`~~ **ENTREGADO** (5 nov. 2026) | Equinoccio otoño | 22 de septiembre | carácter `⚖` | **Una balanza de dos platos a la misma altura**, con una hoja en un plato y una espiga en el otro. |
 | ~~`hydrate.week.perfect`~~ **ENTREGADO** | Semana hidratada | 8 vasos, 7 días | carácter `◌` | **Una jarra o cántaro de barro con siete marcas de nivel** en el costado. Se le quitó su dibujo en s147 porque llevaba un pincel de caligrafía, que no dice nada de agua. Alternativa: una gota grande con seis gotas menores en arco. |
 
 **Por qué es el primero, y no porque su sello falle** — el `⚖` de texto aguanta
@@ -71,27 +73,27 @@ huecos sueltos y este es un **desparejado**, que se ve más.
 
 ---
 
-## 3 · Constancia · **3 sin arte** de 3
+## 3 · Constancia · **0 sin arte** de 3
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
 | ~~`streak.7`~~ **ENTREGADO** (14 oct. 2026: la media luna del cuarto creciente) | *(ver nota de nombre abajo)* | 7 días seguidos | SVG heráldico | **Siete espigas de trigo atadas en un haz.** Encaja con la vaca y el pacer; siete tallos contables de un vistazo. |
-| `streak.14` | Quince días | 14 días seguidos | carácter `XIV` | **Dos haces de siete cruzados**, o una luna en cuarto creciente con catorce muescas en el borde. Debe leerse como «el doble del anterior». |
-| `breathe.sessions.50` | 50 respiraciones | sesiones acumuladas | SVG heráldico | **Un fuelle de herrero**, o un abanico de cinco pliegues abierto. Aire acumulado, no aire soplando. |
+| ~~`streak.14`~~ **ENTREGADO** (5 nov. 2026) | Quince días | 14 días seguidos | carácter `XIV` | **Dos haces de siete cruzados**, o una luna en cuarto creciente con catorce muescas en el borde. Debe leerse como «el doble del anterior». |
+| ~~`breathe.sessions.50`~~ **ENTREGADO** (5 nov. 2026) | 50 respiraciones | sesiones acumuladas | SVG heráldico | **Un fuelle de herrero**, o un abanico de cinco pliegues abierto. Aire acumulado, no aire soplando. |
 
 ---
 
-## 4 · Exploración · **5 sin arte** de 10 · «tres sesiones de…»
+## 4 · Exploración · **0 sin arte** de 10 · «tres sesiones de…»
 
 Son diez hermanas y **se ven juntas en la rejilla**, así que conviene que
 compartan familia visual: mismo peso de trazo y motivos del mismo tamaño óptico.
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
-| `explore.box` | Box asentada | 3 × Box 4·4·4·4 | SVG | **Un cuadrado de esquinas redondeadas con un punto en cada lado**: los cuatro tiempos iguales. |
-| `explore.rounds` | Rondas | 3 sesiones en rondas | SVG | **Tres anillos concéntricos con un corte** en el más externo: rondas que se cierran. |
-| `explore.kapalabhati` | Kapalabhati | 3 × el kriya | carácter `✦` | **Una llama corta con tres chispas ascendentes** (limpieza, calor, exhalación rápida). |
-| `explore.shoulders` | Hombros resetados | 3 sesiones de hombros | carácter `⌢` | **Un yugo de madera** —la pieza que descansa sobre los hombros— visto de frente. |
+| ~~`explore.box`~~ **ENTREGADO** (5 nov. 2026) | Box asentada | 3 × Box 4·4·4·4 | SVG | **Un cuadrado de esquinas redondeadas con un punto en cada lado**: los cuatro tiempos iguales. |
+| ~~`explore.rounds`~~ **ENTREGADO** (5 nov. 2026) | Rondas | 3 sesiones en rondas | SVG | **Tres anillos concéntricos con un corte** en el más externo: rondas que se cierran. |
+| ~~`explore.kapalabhati`~~ **ENTREGADO** (5 nov. 2026) | Kapalabhati | 3 × el kriya | carácter `✦` | **Una llama corta con tres chispas ascendentes** (limpieza, calor, exhalación rápida). |
+| ~~`explore.shoulders`~~ **ENTREGADO** (5 nov. 2026) | Hombros resetados | 3 sesiones de hombros | carácter `⌢` | **Un yugo de madera** —la pieza que descansa sobre los hombros— visto de frente. |
 | ~~`explore.atg`~~ **ENTREGADO** | ATG asentado | 3 sesiones en rango profundo | SVG | **Una rodilla flexionada de perfil, geometrizada**: dos segmentos y un arco cerrado. |
 | ~~`explore.ancestral`~~ **ENTREGADO** | Ancestral | 3 sesiones ancestrales | SVG | **Una huella de pie descalzo.** |
 | ~~`explore.neck`~~ **ENTREGADO** | Cuello atendido | 3 sesiones de cuello | carácter `~` | **Tres vértebras cervicales apiladas**, muy simplificadas, con una curva suave. |
@@ -101,20 +103,20 @@ compartan familia visual: mismo peso de trazo y motivos del mismo tamaño óptic
 
 ---
 
-## 5 · Maestría · **3 sin arte** de 12 · el escalón alto de cada familia
+## 5 · Maestría · **0 sin arte** de 12 · el escalón alto de cada familia
 
 Deben leerse como «la versión mayor» de su exploración: **el mismo motivo con un
 elemento más**, no un dibujo distinto.
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
-| `master.pomodoro.8` | Jornada de ocho | 8 Pomodoros en un día | SVG | **Un reloj de sol** con ocho marcas en el arco. |
+| ~~`master.pomodoro.8`~~ **ENTREGADO** (5 nov. 2026) | Jornada de ocho | 8 Pomodoros en un día | SVG | **Un reloj de sol** con ocho marcas en el arco. |
 | ~~`master.long.focus`~~ **ENTREGADO** | Larga sesión | 5 bloques de 45 min | SVG | **Una vela consumida a la mitad** con la llama alta y quieta. |
-| `master.box.15` | Caja maestra | 15 sesiones Box | carácter `▣` | El cuadrado de `explore.box` **con un segundo cuadrado inscrito**. |
-| `master.rounds.15` | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. Lo que llevaba era la piedra de amolar de «Fuerte en la oficina», que pasó a su logro el 8 de octubre de 2026. |
+| ~~`master.box.15`~~ **ENTREGADO** (5 nov. 2026) | Caja maestra | 15 sesiones Box | carácter `▣` | El cuadrado de `explore.box` **con un segundo cuadrado inscrito**. |
+| ~~`master.rounds.15`~~ **ENTREGADO** (5 nov. 2026) | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. Lo que llevaba era la piedra de amolar de «Fuerte en la oficina», que pasó a su logro el 8 de octubre de 2026. |
 | ~~`master.atg.20`~~ **ENTREGADO** | Rodillas de acero | 20 sesiones ATG | carácter `△` | La rodilla de `explore.atg` **con un remache o refuerzo** en el vértice. |
 | ~~`master.hips.20`~~ **ENTREGADO** | Bisagra suelta (antes «Caderas libres») | 20 sesiones de caderas | carácter `◇` | **Una bisagra abierta de par en par**: dos placas y su eje. |
-| `master.shoulders.20` | Hombros libres | 20 sesiones de hombros | carácter `⌢` | El yugo de `explore.shoulders` **partido o desatado**: se ha quitado el peso. |
+| ~~`master.shoulders.20`~~ **ENTREGADO** (5 nov. 2026) | Hombros libres | 20 sesiones de hombros | carácter `⌢` | El yugo de `explore.shoulders` **partido o desatado**: se ha quitado el peso. |
 | ~~`master.ancestral.10`~~ **ENTREGADO** | Primitiva | 10 sesiones ancestrales | carácter `☖` | **Una lasca de sílex** o una punta de piedra tallada. |
 | ~~`master.hydrate.30`~~ **ENTREGADO** | Río constante | 30 días de 8 vasos | carácter `≈` | **Un río de tres ondas paralelas entre dos orillas.** |
 | ~~`master.hydrate.90`~~ **ENTREGADO** | Manantial | 90 días de 8 vasos | carácter `∿` | **Una fuente brotando de una roca**, con la lámina de agua cayendo. Es el escalón por encima del río. |
@@ -129,7 +131,7 @@ elemento más**, no un dibujo distinto.
 
 ---
 
-## 6 · Secretos · **5 sin arte** de 7 · el dibujo solo se ve al desbloquear
+## 6 · Secretos · **2 sin arte** de 7 · el dibujo solo se ve al desbloquear
 
 Mientras están bloqueados pintan `?`, así que aquí **el arte es recompensa pura**.
 Margen para que sean los más juguetones del conjunto.
@@ -138,21 +140,21 @@ Margen para que sean los más juguetones del conjunto.
 |---|---|---|---|
 | `secret.cow.click` | Vaca feliz | hacerle cosquillas al logo | **La vaca de PACE con los ojos cerrados y una pata levantada.** Hoy tiene SVG heráldico; es el que más gana con arte propio. |
 | ~~`secret.lunch`~~ **ENTREGADO** | Pausa de mediodía | sesión a las 14:00 | **Un plato y un tenedor cruzados con una ramita**, muy simple. |
-| `secret.rain` | Lluvia mental | 3 respiraciones seguidas | **Una nube con tres gotas largas** cayendo en paralelo. |
-| `secret.first.monday` | Primer lunes | el primer lunes del mes | **Una hoja de calendario con la esquina doblada** y una marca en la primera casilla. |
-| `secret.new.year` | Año nuevo | 1 de enero | **Una rama con un brote nuevo saliendo de un corte de poda.** Nada de cohetes ni de copas. |
+| ~~`secret.rain`~~ **ENTREGADO** (5 nov. 2026) | Lluvia mental | 3 respiraciones seguidas | **Una nube con tres gotas largas** cayendo en paralelo. |
+| ~~`secret.first.monday`~~ **ENTREGADO** (5 nov. 2026) | Primer lunes | el primer lunes del mes | **Una hoja de calendario con la esquina doblada** y una marca en la primera casilla. |
+| `secret.new.year` | Año nuevo | 1 de enero | **Una rama con un brote nuevo saliendo de un corte de poda.** Nada de cohetes ni de copas. **5 nov.: a repetir.** El dibujo de Ez a 56 px se lee como un palo, porque el brote y sus hojas, que son lo que dice «año nuevo», salen diminutos y claros: el brote tiene que ser lo más grande (prompt corregido en `GLIFOS_A_DIBUJAR.md`). |
 | ~~`secret.dark.mode`~~ **ENTREGADO** | Modo oscuro | 7 días en oscuro **elegido** | **Una lámpara de aceite apagada con el humo subiendo**, o una luna con siete estrellas mínimas. |
-| `secret.zen` | Zen accidental | 30 min de Respira en un día | **Un círculo trazado a mano alzada que no cierra del todo** (ensō). El más obvio y el más bonito de los siete. |
+| ~~`secret.zen`~~ **ENTREGADO** (5 nov. 2026) | Zen accidental | 30 min de Respira en un día | **Un círculo trazado a mano alzada que no cierra del todo** (ensō). El más obvio y el más bonito de los siete. |
 
 ---
 
-## 7 · Estadísticas y estacionales · **2 sin arte** de 4
+## 7 · Estadísticas y estacionales · **0 sin arte** de 4
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
-| `stats.month.focus` | Mes profundo | 20 h de foco en un mes | carácter `✦` | **Una plomada colgando de su cuerda**: profundidad medida. |
+| ~~`stats.month.focus`~~ **ENTREGADO** (5 nov. 2026) | Mes profundo | 20 h de foco en un mes | carácter `✦` | **Una plomada colgando de su cuerda**: profundidad medida. |
 | ~~`stats.streak.30`~~ **ENTREGADO** | Treinta amaneceres | un mes sin perder el ritmo | carácter `✦` | **Un sol saliendo tras una línea de horizonte, con treinta muescas** en la línea. Rima con el amanecer de la home. |
-| `season.summer` | Verano | 1 sesión/día en verano | carácter `☀` | **Una espiga madura y una cigarra**, o un sol alto con la sombra corta de un árbol. |
+| ~~`season.summer`~~ **ENTREGADO** (5 nov. 2026) | Verano | 1 sesión/día en verano | carácter `☀` | **Una espiga madura y una cigarra**, o un sol alto con la sombra corta de un árbol. |
 | ~~`season.autumn`~~ **ENTREGADO** | Otoño | 1 sesión/día en otoño | carácter `❦` | **Dos hojas cayendo en diagonal**, una de ellas curvada. |
 
 > `season.equinox.autumn` **estaba aquí y se ha subido a §2**: es el único de los

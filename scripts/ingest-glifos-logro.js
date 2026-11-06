@@ -91,7 +91,7 @@ const MAPEO = {
   "first.extra":              "uxj5jdlym",
   "first.plan":               "os48f5hru",
   "first.return":             "y0xmmncb2",
-  "first.ritual":             "omig7agjk",
+  "first.ritual":             "first.ritual.png",
   "first.sip":                "i90fy649u",
   "first.step":               "bdowo37js",
   "first.stretch":            "0z4j7yu1d",
@@ -114,7 +114,7 @@ const MAPEO = {
   "master.silent.day":        "e9mbhmqvg",
   "morning.5":                "u94subsdz",
   "move.sessions.25":         "bhx1h1gvi",
-  "season.cycle":             "vz6tgc28s",
+  "season.cycle":             "season.cycle.png",
   "season.equinox.spring":    "u1rbeljzr",
   "season.four":              "Premium_editorial_zen_seal_a_precise_circular_whe-1785709550699.png",
   "season.solstice.summer":   "Premium_editorial_zen_seal_a_radiant_sun_at_the_c-1785709408863.png",
@@ -127,7 +127,7 @@ const MAPEO = {
   /* Llave: abre lo que estaba cerrado. Y es SECRETO, asi que el sello sale «?»
      hasta ganarlo y la llave aparece como recompensa, que es su mejor momento. */
   "secret.bilingual":         "26csd6y16",
-  "secret.night.owl":         "j2tkqas66",
+  "secret.night.owl":         "secret.night.owl.png",
   "secret.safety.read":       "p627xvvdx",
   "secret.supporter":         "knqug1tzj",
   /* s147 — era `hydrate.week.perfect`, y el usuario lo rechazo: «no cuadra para
@@ -162,7 +162,7 @@ const MAPEO = {
   "explore.atg":              "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993928079.png",
   "master.atg.20":            "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993961530.png",
   "hydrate.week.perfect":     "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993968160.png",
-  "master.long.focus":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993983560.png",
+  "master.long.focus":        "master.long.focus.png",
   "explore.neck":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994002665.png",
   "explore.desk":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994006895.png",
   "explore.all.move":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994016561.png",
@@ -188,6 +188,30 @@ const MAPEO = {
   "secret.lunch":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997912255.png",
   "master.hydrate.30":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997917267.png",
   "season.autumn":            "Premium_editorial_zen_seal_exlibris_handcraft_T-1786996555473.png",
+
+  /* 5 nov. 2026 · los dibujos de logro que Ez generó en Genspark, de uno en uno y con el nombre del
+     archivo igual al id del logro, que es lo que los empareja (la clave es el nombre entero). Cuatro
+     sustituyen a uno equivocado, y ya van arriba con su propio nombre: «Primer ritual» (círculo de
+     puntos → flor de cuatro pétalos), «Larga sesión» (aceitera → vela), «Búho» (luna con estrellas →
+     búho) y «La rueda del año» (concha → rueda de carro). Los cuatro dibujos viejos se quedan en la
+     carpeta de originales, sin logro. Con dibujos nuevos cambia la mediana de tinta del conjunto y
+     las máscaras viejas se recalculan, como cada vez que entra un lote. */
+  "breathe.sessions.50":      "breathe.sessions.50.png",
+  "explore.box":              "explore.box.png",
+  "explore.kapalabhati":      "explore.kapalabhati.png",
+  "explore.rounds":           "explore.rounds.png",
+  "explore.shoulders":        "explore.shoulders.png",
+  "master.box.15":            "master.box.15.png",
+  "master.pomodoro.8":        "master.pomodoro.8.png",
+  "master.rounds.15":         "master.rounds.15.png",
+  "master.shoulders.20":      "master.shoulders.20.png",
+  "season.equinox.autumn":    "season.equinox.autumn.png",
+  "season.summer":            "season.summer.png",
+  "secret.first.monday":      "secret.first.monday.png",
+  "secret.rain":              "secret.rain.png",
+  "secret.zen":               "secret.zen.png",
+  "stats.month.focus":        "stats.month.focus.png",
+  "streak.14":                "streak.14.png",
 };
 
 /* Guardarrail: un id que no exista en el catálogo produciría una máscara que no
