@@ -152,6 +152,13 @@ test('con la jornada preparada, sin la frase de ayuda, el aro también crece', a
   expect(aro, 'con la frase medía 392').toBeGreaterThan(410);
 });
 
+test('ni un píxel de scroll con la jornada preparada a 1280×800: en Windows 1 px ya saca la barra', async ({ page, context }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await abrir(page, context);
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => { const b = document.querySelector('[data-pace-home-body]'); return b.scrollHeight - b.clientHeight; })).toBe(0);
+});
+
 test('la tarjeta del móvil dice qué hace el botón, en los dos idiomas', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await sembrar(context, { ritmo: {}, sidebarCollapsed: true });
