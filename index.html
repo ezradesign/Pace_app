@@ -2554,6 +2554,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.where.either': 'sentado o de pie',
   'lib.gear.stableDesk': 'con mesa',
   'lib.gear.stableChair': 'con silla',
+  'lib.gear.chair': 'con silla',
   'lib.gear.bar': 'con barra',
   'lib.gear.wall': 'contra la pared',
   'lib.gear.cushionOptional': 'cojín opcional',
@@ -2735,6 +2736,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.where.either': 'seated or standing',
   'lib.gear.stableDesk': 'with a desk',
   'lib.gear.stableChair': 'with a chair',
+  'lib.gear.chair': 'with a chair',
   'lib.gear.bar': 'with a bar',
   'lib.gear.wall': 'against a wall',
   'lib.gear.cushionOptional': 'cushion optional',
@@ -7517,7 +7519,9 @@ function onToast(listener) {
   return () => _toastListeners.delete(listener);
 }
 
-Object.assign(window, { showToast, onToast, setCaminoUiActive });
+
+
+Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia });
 ;Object.assign(window, { _avisoTaparia, _intentarAvisos, _esperarHueco, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
@@ -22242,11 +22246,26 @@ function toastHuecoDelAro() {
     return { x: x, y: y, ancho: Math.round(ancho), fs: fs };
   } catch (e) {return null;}
 }
+
+
+
+
+const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
-  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }';
+  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }' +
+  TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
   document.head.appendChild(st);
+}
+
+
+
+function toastTapado() {
+  try {
+    if (typeof paceAvisoTaparia === 'function' && paceAvisoTaparia()) return true;
+    return [...document.querySelectorAll('[role="dialog"]')].some((d) => d.getClientRects().length > 0);
+  } catch (e) {return false;}
 }
 
 
@@ -22302,8 +22321,14 @@ function ToastHost() {
   const colaRef = useRefTO([]);
   const activoRef = useRefTO(false);
   const siguienteRef = useRefTO(null);
+  const esperaRef = useRefTO(null);
   siguienteRef.current = () => {
     if (activoRef.current || !colaRef.current.length) return;
+
+    if (toastTapado()) {
+      if (!esperaRef.current) esperaRef.current = setTimeout(() => {esperaRef.current = null;siguienteRef.current();}, 500);
+      return;
+    }
     const sig = colaRef.current.shift();
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
@@ -22418,7 +22443,7 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost });
-;Object.assign(window, { toastHuecoDelAro, SelloEnAro, ToastHost });
+;Object.assign(window, { toastHuecoDelAro, toastTapado, SelloEnAro, ToastHost });
 })();
 </script>
   <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
@@ -37465,7 +37490,10 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
     React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--c': plato.boton }, onClick: onPropuesta },
     t(comida ? 'break.ritmo.comer' : 'break.ritmo.hacer')
     ),
+
+    plan.hechos < plan.total &&
     React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-tonal", onClick: onSeguir }, tn('break.ritmo.seguir', { n: plan.hechos + 1 }))
+
     ),
 
     agua && !comida &&

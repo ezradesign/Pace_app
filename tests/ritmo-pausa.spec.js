@@ -196,3 +196,22 @@ test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba
   expect(e.pendiente).toBe(false);
   expect(e.hechos).toBe(1);
 });
+
+/* EL ÚLTIMO BLOQUE NO OFRECE UN BLOQUE QUE NO EXISTE (recorrido del 6 nov. 2026). La ventana
+   pintaba «Seguir con el bloque N+1» siempre, también con «Bloque 1 de 1 · hecho»: la media jornada
+   elegida a las 12:00 ofrecía «Seguir con el bloque 2». Detrás del último solo queda la pausa de
+   cierre, y se salta con «Ahora no», como cualquier otra. */
+test('en el último bloque la ventana no ofrece seguir con el siguiente', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  const MEDIA = { fecha: '2026-09-18', opcion: 'media', desde: 720, cicloBase: 0, cambios: {} };
+  await abrir(page, context, { ritmo: { dia: MEDIA } }, new Date('2026-09-18T12:00:00+02:00'));
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
+  await page.waitForTimeout(250);
+  await terminarBloque(page);
+  const modal = page.locator('[data-pace-modal-backdrop]');
+  await expect(modal, 'GUARD: no es el último bloque').toContainText('Bloque 1 de 1 · hecho');
+  await expect(modal.getByRole('button', { name: 'Hacer la pausa', exact: true })).toHaveCount(1);
+  await expect(modal.getByRole('button', { name: /^Seguir con el bloque/ }), 'ofrece un bloque que no existe').toHaveCount(0);
+  await expect(modal.getByRole('button', { name: 'Ahora no', exact: true })).toHaveCount(1);
+  expect(errores).toEqual([]);
+});
