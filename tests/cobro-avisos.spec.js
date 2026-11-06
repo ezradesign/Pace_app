@@ -72,10 +72,12 @@ test.describe('A1 · lo guardado de una mensual nunca va hacia atrás, y su baja
     const delAlta = kv.datos.get('sesion:' + SESION);
     expect(await manda(kv, BAJA)).toEqual({ ok: true, codigo: false });
     expect(kv.datos.has('suscripcion:' + SUB), 'el código de una mensual terminada sigue guardado').toBe(false);
+    expect([...kv.datos.keys()].filter((k) => k.startsWith('periodo:')), 'la baja dejó el código de un periodo').toEqual([]);
     for (const ev of [RENOVACION, FACTURA1, ALTA, BAJA, RENOVACION]) {
       expect(await manda(kv, ev), ev.type + ' después de la baja').toEqual({ ok: true, codigo: false });
     }
     expect(kv.datos.has('suscripcion:' + SUB), 'un aviso de después de la baja la resucitó').toBe(false);
+    expect([...kv.datos.keys()].filter((k) => k.startsWith('periodo:')), 'un aviso de después de la baja guardó un periodo').toEqual([]);
     const r = await pideRenovar(kv, delAlta);
     expect(r.status).toBe(410);
     expect(await r.json()).toEqual({ ok: false, terminada: true });
