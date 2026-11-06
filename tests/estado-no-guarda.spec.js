@@ -9,7 +9,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, CLAVE_ESTADO } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirTusDatos, CLAVE_ESTADO } = require('./helpers');
 
 const aviso = (p) => p.locator('[data-pace-no-guarda]');
 const unVaso = (p) => p.locator('[data-pace-sidebar]').getByRole('button', { name: /Añadir un vaso/ }).click();
@@ -45,6 +45,33 @@ test('estado-5 · si no se puede guardar, una barra lo dice una vez y deja expor
   await unVaso(page);
   await page.waitForTimeout(300);
   await expect(aviso(page)).toHaveCount(0);
+});
+
+test('estado-5b · exportar desde Ajustes y desde el aviso da el mismo estado, el que se ve (revisión de ChatGPT del 5 nov.)', async ({ page, context }) => {
+  await sembrar(context);
+  await context.addInitScript((clave) => {
+    const orig = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) {
+      if (k === clave && this.getItem(clave)) throw new DOMException('lleno', 'QuotaExceededError');
+      return orig.call(this, k, v);
+    };
+  }, CLAVE_ESTADO);
+  await irAlArtefacto(page);
+  await unVaso(page);
+  await unVaso(page);
+  await expect(aviso(page)).toBeVisible();
+  const bajar = async (boton) => {
+    const [d] = await Promise.all([page.waitForEvent('download'), boton.click()]);
+    return JSON.parse(require('fs').readFileSync(await d.path(), 'utf8'));
+  };
+  const delAviso = await bajar(aviso(page).getByRole('button', { name: 'Exportar una copia' }));
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
+  const deAjustes = await bajar(page.locator('[data-pace-tweaks-panel]').getByRole('button', { name: 'Exportar una copia' }));
+  expect(deAjustes.state.water.today, 'Ajustes exportó lo guardado y no lo que se ve').toBe(2);
+  /* Abrir Ajustes gana un logro («explore.tweaks») entre una copia y otra; lo demás es lo mismo. */
+  const sinLogros = ({ achievements, achievementQueue, ...resto }) => resto;
+  expect(sinLogros(deAjustes.state)).toEqual(sinLogros(delAviso.state));
 });
 
 test('CONTROL · si se guarda bien, no sale ningún aviso', async ({ page, context }) => {

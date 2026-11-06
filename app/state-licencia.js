@@ -14,7 +14,8 @@
 
    CÓMO LLEGA: un enlace `…/#codigo=PACE1…` o el campo «Tengo un código» de la
    invitación. El código se guarda en el estado (`licencia`), así que viaja con
-   la copia de «Tus datos» y se recupera al importarla.
+   la copia de «Tus datos» y se recupera al importarla; importar una copia que no
+   lo trae no quita el de ahora (`paceLicenciaConservar`).
 
    EN LAS APPS (ANDROID Y IPHONE) NO: ni Google Play ni la App Store dejan
    desbloquear contenido digital con códigos propios, ni con licencias compradas
@@ -93,9 +94,9 @@ function paceLicenciaAnulada(datos) {
    de quien lo usa) o milisegundos. Sin él, para siempre. El final del día es la
    medianoche del siguiente por calendario y no 24 h después: el día del cambio de
    hora dura 25 h (el código caducaba a las 23:00) o 23 (valía hasta la 1:00). */
-function paceLicenciaCaducada(datos, ahora) {
+function paceLicenciaFin(datos) {
   var e = datos.expiresAt;
-  if (e == null) return false;
+  if (e == null) return Infinity;
   var fin = NaN;
   if (typeof e === 'number') fin = e;
   else if (typeof e === 'string' && typeof parseLocalDateKey === 'function') {
@@ -103,7 +104,11 @@ function paceLicenciaCaducada(datos, ahora) {
     d.setDate(d.getDate() + 1);
     fin = d.getTime();
   }
-  return !(fin > ahora);
+  return fin;
+}
+
+function paceLicenciaCaducada(datos, ahora) {
+  return !(paceLicenciaFin(datos) > ahora);
 }
 
 /* Lo que se puede decir sin criptografía. null si nada lo impide. */
@@ -151,6 +156,39 @@ function paceLicenciaCanjear(texto) {
     }
     return r;
   });
+}
+
+/* AL IMPORTAR UNA COPIA, EL CÓDIGO DE AHORA NO SE PIERDE NI SE CAMBIA A CIEGAS. `licencia` va dentro
+   del estado y la copia lo pisa entero: una hecha antes de comprar dejaba a quien la importaba sin su
+   compra en ese navegador (revisión de ChatGPT del 5 nov., punto 2). La regla, con el estado de
+   ahora (`actual`) y el que entra (`entrante`):
+     · la copia no trae código  -> se queda el de ahora, se pueda comprobar o no: un código guardado
+       no se borra desde aquí;
+     · ahora no hay código      -> entra el de la copia (así se recupera una compra con la copia);
+     · son el mismo             -> el mismo;
+     · son distintos            -> se COMPRUEBAN LOS DOS (firma, anulado, caducado) y gana el que sale
+       bueno. Si salen buenos los dos, el que vale más tiempo (para siempre, y si no el que acaba más
+       tarde); a igualdad, y si no sale bueno ninguno, el de ahora.
+   `premiumAvisoPrueba` (la suscripción cuyo aviso ya salió) es de su código y va con él.
+   -> Promise<estado que debe escribirse>; nunca se rechaza. */
+function paceLicenciaConservar(actual, entrante) {
+  var hay = function (s) { return !!(s && typeof s.licencia === 'string' && s.licencia); };
+  var conLoDeAhora = function () {
+    return Object.assign({}, entrante, {
+      licencia: actual.licencia,
+      premiumAvisoPrueba: actual.premiumAvisoPrueba != null ? actual.premiumAvisoPrueba : (entrante.premiumAvisoPrueba != null ? entrante.premiumAvisoPrueba : null),
+    });
+  };
+  if (!hay(actual)) return Promise.resolve(entrante);
+  if (!hay(entrante)) return Promise.resolve(conLoDeAhora());
+  if (entrante.licencia === actual.licencia) return Promise.resolve(conLoDeAhora());
+  return Promise.all([paceLicenciaComprobar(actual.licencia), paceLicenciaComprobar(entrante.licencia)])
+    .then(function (r) {
+      if (!r[1].ok) return conLoDeAhora();
+      if (!r[0].ok) return entrante;
+      return paceLicenciaFin(r[1].datos) > paceLicenciaFin(r[0].datos) ? entrante : conLoDeAhora();
+    })
+    .then(null, function () { return conLoDeAhora(); });
 }
 
 /* Empieza a comprobar la firma del código guardado, una vez por código. Cuando
@@ -308,6 +346,7 @@ Object.assign(window, {
   paceLicenciaLimpiar: paceLicenciaLimpiar,
   paceLicenciaComprobar: paceLicenciaComprobar,
   paceLicenciaCanjear: paceLicenciaCanjear,
+  paceLicenciaConservar: paceLicenciaConservar,
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida,
   paceLicenciaRenovar: paceLicenciaRenovar,

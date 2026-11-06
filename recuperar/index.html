@@ -137,6 +137,8 @@
       devuelta: 'Esa compra se devolvió, así que su código ya no vale.',
       espera: 'Demasiados intentos seguidos. Prueba otra vez dentro de un rato.',
       cerrada: 'Aún no se puede recuperar aquí. Escríbenos y te lo mandamos.',
+      pendiente: 'Tu código todavía no está disponible. Prueba otra vez dentro de un rato o escríbenos.',
+      stripe: 'Ahora no podemos consultar tu compra, y no es por tus datos. Prueba otra vez dentro de un rato.',
       red: 'No hay conexión. Prueba otra vez.' },
     en: { copiado: 'Copied.', bajado: 'Downloaded.', asunto: 'My PACE Complete code', buscando: 'Looking…',
       cuerpo: 'Open PACE Complete with this link:\n{enlace}\n\nOr paste the code in PACE, in Settings › PACE Complete:\n{codigo}',
@@ -147,6 +149,8 @@
       devuelta: 'That purchase was refunded, so its code is no longer valid.',
       espera: 'Too many tries in a row. Try again in a while.',
       cerrada: 'It cannot be recovered here yet. Write to us and we will send it to you.',
+      pendiente: 'Your code is not available yet. Try again in a while, or write to us.',
+      stripe: 'We cannot check your purchase right now, and it is not because of your details. Try again in a while.',
       red: 'No connection. Try again.' },
   };
   function tx(k, v) { return TX[idioma][k].replace(/\{(\w+)\}/g, function (m, n) { return (v || {})[n] || ''; }); }
@@ -176,6 +180,15 @@
 
   function enlace() { return location.origin + '/#codigo=' + encodeURIComponent(codigo); }
   function decir(t) { var h = $('[data-recuperar-hecho]'); h.hidden = false; h.textContent = t; }
+  /* Qué pasó, según la función (`motivo`) y, si no lo dijo —un error de Cloudflare, una respuesta que no es
+     JSON—, según el estado. «No la encontramos» es solo de un 404 de la función: nada de lo demás es culpa
+     de quien escribe, así que cae en «no podemos consultar», nunca en «revisa tus datos». */
+  var FALLOS = ['formato', 'no', 'terminada', 'devuelta', 'espera', 'cerrada', 'pendiente', 'stripe'];
+  function motivoDe(estado, d) {
+    var m = d && d.motivo;
+    if (FALLOS.indexOf(m) !== -1) return m;
+    return estado === 429 ? 'espera' : estado === 404 ? 'no' : estado === 503 ? 'cerrada' : 'stripe';
+  }
   function decirFallo(motivo) {
     fallo = motivo;
     var p = $('[data-recuperar-fallo]');
@@ -223,7 +236,7 @@
       .then(function (x) {
         boton.disabled = false; boton.textContent = antes;
         if (x.r.ok && x.d && x.d.codigo) { codigo = x.d.codigo; return mostrar(); }
-        decirFallo(x.r.status === 429 ? 'espera' : x.r.status === 503 ? 'cerrada' : (x.d && x.d.motivo) || 'no');
+        decirFallo(motivoDe(x.r.status, x.d));
       }, function () { boton.disabled = false; boton.textContent = antes; decirFallo('red'); });
   });
 })();

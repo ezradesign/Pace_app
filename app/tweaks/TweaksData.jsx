@@ -60,8 +60,9 @@ function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
 }
 
-/* `enMemoria`: el estado de la app, para cuando el navegador no deja guardar (AvisoNoGuarda) y lo
-   guardado es viejo o ni se puede leer. Devuelve lo de `paceBajarJSON`, o false si ni se armó. */
+/* `enMemoria`: el estado de la app. Ajustes y el aviso de «No se puede guardar» lo pasan (`getState()`);
+   sin él (`null`) se lee del disco, que es la vía de la pantalla de error y de los rescates, donde la
+   interfaz puede estar caída y lo guardado ser viejo o ni poder leerse. Devuelve lo de `paceBajarJSON`, o false si ni se armó. */
 function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
@@ -95,14 +96,15 @@ function paceDescargarCopia(enMemoria, alAbrir) {
 }
 
 /* s198 · B2 (decision del usuario): la copia de rescate se descarga SOLA, desde su
-   fila en «Tus datos», que solo existe si hay rescate. */
-function paceDescargarRescate() {
+   fila en «Tus datos», que solo existe si hay rescate. Devuelve lo mismo que la copia normal
+   (lo de `paceBajarJSON`, o false si ni se armó) para que su fila diga cómo le fue: antes daba
+   `true` sin esperar a la hoja de compartir (revisión de ChatGPT del 5 nov., punto 4). */
+function paceDescargarRescate(alAbrir) {
   try {
     const r = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (!r) return false;
-    paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
-      'pace-rescate-' + paceDiaArchivo() + '.json');
-    return true;
+    return paceBajarJSON({ app: 'PACE', kind: 'rescate', version: PACE_VERSION, exportedAt: new Date().toISOString(), rescate: r },
+      'pace-rescate-' + paceDiaArchivo() + '.json', alAbrir);
   } catch (e) { return false; }
 }
 
@@ -136,19 +138,27 @@ function TweaksDataSection({ onReset, isWeb }) {
      menú abierto, «elige dónde guardarla»; si se cierra sin elegir, o el archivo no se pudo
      escribir, no se da por hecha ni da su logro (auditoría del 21 oct.). Lo que haga después
      la app elegida no se sabe, así que nunca se dice «guardada». */
+  const avisarSalida = (como) => {
+    if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
+    else if (como === 'cancelada') avisar('ok', 'settings.msg.export.cancel', 2600);
+    else if (como !== 'compartida') avisar('err', 'settings.msg.export.err', 2600);
+  };
+
   const exportJSON = () => {
     const alAbrir = () => avisar('ok', 'settings.msg.exported.app', 4000);
-    Promise.resolve(paceDescargarCopia(null, alAbrir)).then((como) => {
-      if (como === 'descargada' || como === 'compartida') {
-        if (como === 'descargada') avisar('ok', 'settings.msg.exported', 2200);
-        /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
-        unlockAchievement('secret.backup');
-      } else if (como === 'cancelada') {
-        avisar('ok', 'settings.msg.export.cancel', 2600);
-      } else {
-        avisar('err', 'settings.msg.export.err', 2600);
-      }
+    /* Desde la app funcionando, lo que se ve: el estado en memoria, que es lo único al día si el
+       navegador no deja guardar (revisión de ChatGPT del 5 nov., punto 1). Leer del disco es solo
+       para la pantalla de error, que existe cuando el árbol se ha caído. */
+    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
+      avisarSalida(como);
+      /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
+      if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
     });
+  };
+
+  /* La copia de rescate dice cómo le fue igual que la normal, pero no da el logro de exportar. */
+  const bajarRescate = () => {
+    Promise.resolve(paceDescargarRescate(() => avisar('ok', 'settings.msg.exported.app', 4000))).then(avisarSalida);
   };
 
   /* La fila del rescate (B2): la fecha, corta y en el idioma de la app. */
@@ -245,7 +255,13 @@ function TweaksDataSection({ onReset, isWeb }) {
     const pendiente = pidiendoImportar;
     setPidiendoImportar(null);
     if (!pendiente) return;
-    const { incoming, eventsSection } = pendiente;
+    /* EL CÓDIGO DE PACE COMPLETO NO SE VA CON LA COPIA: viaja dentro del estado y una hecha antes
+       de comprar lo pisaba (revisión de ChatGPT del 5 nov., punto 2). `paceLicenciaConservar`
+       (state-licencia.js) dice cuál se queda; comprobar dos códigos es asíncrono, y lo demás espera. */
+    paceLicenciaConservar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+  };
+
+  const escribirCopia = (incoming, eventsSection) => {
     /* EN CUANTO LA COPIA ESTÁ ESCRITA, LO QUE HAY EN MEMORIA ES LA COPIA, y nada guarda hasta
        recargar (revisión de ChatGPT del 28 oct., A5). Lo de antes seguía en memoria los 900 ms
        de la recarga, o lo que tardara en cerrarse el aviso de la copia a medias, y cualquier
@@ -308,7 +324,7 @@ function TweaksDataSection({ onReset, isWeb }) {
         <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' }}>{msg.text}</div>
       )}
       {rescate && (
-        <AjustesAccion onClick={() => paceDescargarRescate()} title={t('settings.data.rescate.title')} derecha={<DownloadIcon />}>
+        <AjustesAccion onClick={bajarRescate} title={t('settings.data.rescate.title')} derecha={<DownloadIcon />}>
           <span data-pace-aj-rescate>{t('settings.data.rescate')} <span style={{ color: 'var(--ink-3)', fontSize: '.92em' }}>· {rescateFecha}</span></span>
         </AjustesAccion>
       )}
