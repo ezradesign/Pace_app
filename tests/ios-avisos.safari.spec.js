@@ -280,7 +280,7 @@ test.describe('en el iPhone, el aviso de fin dice lo que viene', () => {
     await context.clock.install({ time: new Date('2026-09-17T09:00:00+02:00') });
     await irAlArtefacto(page);
     await cta(page).click();
-    await expect(cta(page)).toHaveText('Pausar');
+    await expect(cta(page)).toHaveText('Pausar foco');
     await alFondo(page);
     await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
     const [aviso] = await programados(page);
