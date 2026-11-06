@@ -264,7 +264,9 @@ jobs:
   # ==========================================================================
   e2e-safari:
     name: e2e-safari
-    runs-on: ubuntu-latest
+    # Fijado: en ubuntu-26.04, el ubuntu-latest desde nov. 2026, el MiniBrowser de Playwright no
+    # arranca (exit 127, falta una librería) y caen las 38 pruebas sin abrir la app.
+    runs-on: ubuntu-24.04
     needs: verify
     timeout-minutes: 45
 
