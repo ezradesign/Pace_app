@@ -37,8 +37,9 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
    revisiones, enteras y con lo comprobado de cada una (también R1-R6 y la del calendario), en `docs/audits/chatgpt-28oct/`**: se valoran
    con Ez antes de montar nada.
 3. **La versión de prueba, a Play y a TestFlight a la vez, SIN esperar al grupo 2** (Ez, 28 oct., noche: «Sí, sin
-   esperar»): la 0.191.1 lleva dentro lo que Ez pidió; el grupo 2 llega como actualizaciones durante los 14 días. El AAB lo
-   baja la coordinadora con el sí de Ez y lo sube Ez; TestFlight, a mano y con su sí (`docs/launch/google-play/guia.html`).
+   esperar»): la 0.191.1 lleva dentro lo que Ez pidió; el grupo 2 llega como actualizaciones durante los 14 días. **Con su
+   sí (6 nov.): el AAB, bajado a `subidas-play\`, y la del iPhone, en TestFlight (191001)**; falta que Ez la suba a Play
+   y la dé a sus testers de iPhone (`docs/launch/google-play/SUBIDAS.md`).
 4. Después, Play Billing y la compra de Apple (esperan las altas de Ez) y lo legal de /premium. El día de v1, «Da de
    pastar a la vaca» sale de la web (Ez, 18 oct.).
 
@@ -48,8 +49,9 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **La versión de prueba, 0.191.1: solo falta su sí** (6 nov.). CI en verde entero; `PACE-0.191.1.aab`, en el borrador de GitHub.
-  Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
+- **La versión de prueba, 0.191.1: subirla** (Ez dijo sí el 6 nov.). `subidas-play\PACE-0.191.1.aab`, a la prueba interna y
+  de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
+  ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el

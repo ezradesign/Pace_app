@@ -4,6 +4,10 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de noviembre de 2026, v0.191.1.
 
+## 6 nov., ~21:50: coordina EcLj6…; la 0.191.1, bajada y en TestFlight
+
+Coordinadora nueva en EcLj6… (las 5 h al 2 %, la semana al 28 %), con el sí de Ez a la versión de prueba en su mensaje. Hechos los puntos 1, 2a y 2b del relevo de abajo: CI de 35ee22b9 en verde entero; `subidas-play\PACE-0.191.1.aab` bajado y comprobado (firmado, 0.191.1 en el manifiesto); TestFlight lanzado a mano y en verde (ejecución 42290322689, compilación 191001, «Upload succeeded» a las 21:43; Apple la procesa). La hoja, en EcLj6io4wM9pGjtQ5wd1CT con los seis ids de esta cuenta, y lo que daba 404 aquí, republicado: las fotos de la jornada en G4kprWWqpUfjEbGnvhVh1c y la landing en JwFknwwkJhmypQwiZ7npnB (en 5iWBf… siguen 5P7oysx4zRBMe7qvhRjFgZ y E3tcsR3FnywQNmnCpymxrp). **Lo siguiente es 2c con Ez**: subir el AAB a la prueba interna y promocionarlo a la cerrada, las notas y el párrafo «A tu ritmo», una pantalla por mensaje; y en TestFlight, la 191001 al grupo «Testers iPhone» con su «Qué probar» (`SUBIDAS.md`). Después, 2d y lo demás del bloque de abajo.
+
 ## AL RELEVO (6 nov., ~21:25): 5iWBf… al 89 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
 
 Coordinaba `local_6e8f0a4b-24b5-44f4-8917-3f7fec165c7a` en 5iWBf… (sus 5 h se reponen a las 21:59; la semana, al 38 %). No hay nada en marcha: ninguna sesión corre, y las 14 carpetas de `.claude/worktrees/` están limpias y sin nada por subir (comprobado a las 21:14). `main` = origin en v0.191.1 más este commit de relevo, solo documentos. **CI de cf8156c1, en verde entero:** verify, e2e 1/2, e2e 2/2, e2e-safari, Android e iOS. Borrador `v0.191.1` en GitHub, con `PACE-0.191.1.aab` (15,2 MB). Empieza con coordinadora nueva: esta conversación pesaba 725 000 tokens y, tras una hora parada, volver a hablarle costaba un 10-12 % de las 5 h.

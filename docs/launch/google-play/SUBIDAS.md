@@ -51,7 +51,13 @@ Move and Stretch, renewed: short breaks to start with, new exercises and clearer
 </en-US>
 ```
 
-### La versión de prueba definitiva (la que toque tras la 0.190.0), para la prueba cerrada
+### 0.191.1 (191001), la versión de prueba definitiva, para la prueba cerrada
+
+Bajado el 6 nov. 2026, con el sí de Ez, a `subidas-play\PACE-0.191.1.aab` (15 249 266 bytes, md5 `e44956b5…`) desde el
+borrador de release `v0.191.1`, compilado sobre 35ee22b9: firmado, y el manifiesto dice 0.191.1. Entra por la prueba interna
+y se promociona a la cerrada (`guia.html`, punto 5). La del iPhone subió a TestFlight el mismo día: compilación 191001,
+ejecución 42290322689 de `ios.yml`, «Upload succeeded» a las 21:43; falta darla al grupo «Testers iPhone» con el texto de
+abajo.
 
 Sustituye a las de la 0.184.0, que no llegó a subirse. Parten de lo que ya tiene la gente en Play (la 0.174.0) y llegan
 hasta `main` con la 0.190.0 y lo que se junte antes de subirla: todos los dibujos de ejercicio (Rana y Palmas en la mesa,
