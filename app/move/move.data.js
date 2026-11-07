@@ -151,11 +151,11 @@ var MOVE_ROUTINES = {
   },
   sigilo: {
     label: 'Sigilo',
-    aside: 'Nadie se entera',
+    aside: 'Movimientos pequeños, en tu mesa',
     items: [
       /* s118 (B2.3 OLA 1): migrado — fuerza ligera de gemelo, 2 series de reps
          guiadas (cadencia rápida 2 s/rep). */
-      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 2,
+      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, sentado o de pie.', min: 2,
         position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,
@@ -174,7 +174,7 @@ var MOVE_ROUTINES = {
       /* s118 (B2.3 OLA 1): migrado — reps de apretón + descanso corto (NO
          betweenSets: es actividad suave, conserva su dur 15) + un bloque
          isométrico `timed` (3 aguantes de ~10 s, BASE §D) + cierre de gemelo. */
-      { id: 'extra.glutes.stealth', tag: 'STEALTH', code: 'Glúteos', name: 'Glúteos invisibles', desc: 'Actívalos sentado. Invisible total.', min: 2,
+      { id: 'extra.glutes.stealth', tag: 'STEALTH', code: 'Glúteos', name: 'Glúteos en la silla', desc: 'Actívalos sin levantarte de la silla.', min: 2,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Apretar glúteos', mode: 'reps', reps: 20, dur: 30,

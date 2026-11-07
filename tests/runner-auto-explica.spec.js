@@ -19,7 +19,7 @@ const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
 
 const LETRA = {
   es: { on: 'PACE marca el ritmo y pasa al siguiente paso.', off: 'Hazlo a tu ritmo y pulsa › para continuar.', prep: 'A tu ritmo · tú decides cuándo seguir.' },
-  en: { on: 'PACE sets the pace and moves on to the next step.', off: 'Go at your own pace and tap › to go on.', prep: 'Your pace · you decide when to go on.' },
+  en: { on: 'PACE sets the pace and moves on to the next step.', off: 'Go at your pace and tap › to continue.', prep: 'At your pace · you decide when to continue.' },
 };
 
 async function abrirRutina(page, id) {

@@ -10,7 +10,8 @@
  * Decisiones de Ez del 8 de octubre que se defienden aquí: en inglés nunca
  * suena la voz castellana (ingles-2; desde el 14 oct., la voz habla inglés); cambiar de modo arriba con un Foco
  * empezado pregunta antes (ingles-3); la pestaña sigue al idioma y la PWA se
- * llama «PACE» (ingles-6); «stamp» para el sello (ingles-14).
+ * llama «PACE» (ingles-6); ni «seal» ni «badge» (ingles-14; desde el 7 nov., la barra dice «Latest
+ * achievement», como el «Último logro» del español).
  */
 'use strict';
 
@@ -69,7 +70,7 @@ test('ingles-3 · arriba dice Break y Long break, y con un Foco empezado pregunt
   await tabs.nth(1).click();
   expect(await modo()).toBe('pausa');
   await tabs.nth(0).click();
-  await page.getByRole('button', { name: 'Start focus', exact: true }).click();
+  await page.getByRole('button', { name: 'Start Focus', exact: true }).click();
   await page.clock.fastForward(5 * 60 * 1000);
   await tabs.nth(1).click();
   const dialogo = page.getByRole('dialog', { name: 'Switch to a short break?' });
@@ -140,9 +141,9 @@ test('ingles-5 · Estadísticas › Year dice «1 day» en singular', async ({ p
   await page.evaluate(() => completeBreathSession('breathe.box', 2, 0));
   await page.keyboard.press('s');
   await page.getByRole('button', { name: 'Year', exact: true }).click();
-  const pie = page.getByText(/with rhythm/);
-  await expect(pie).toHaveText('1 day with rhythm');
-  await expect(page.getByText(/max streak/)).toHaveText('max streak: 1 day');
+  const pie = page.getByText(/active day/);
+  await expect(pie).toHaveText('1 active day');
+  await expect(page.getByText(/longest streak/)).toHaveText('longest streak: 1 day');
 });
 
 /* ingles-6 */
@@ -180,16 +181,16 @@ test('ingles-8 · el «I donated →» se explica en inglés', async ({ page, co
   await irAlArtefacto(page);
   await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:open-support')));
   const boton = page.getByRole('button', { name: /I donated/ });
-  await expect(boton).toHaveAttribute('title', 'Marks a private stamp — on trust');
+  await expect(boton).toHaveAttribute('title', 'Add a private stamp. No verification needed.');
 });
 
 /* ingles-10 */
 for (const [w, h] of [[360, 718], [1280, 720]]) {
-  test(`ingles-10 · «At your own pace.» va entera en su línea · ${w}`, async ({ page, context }) => {
+  test(`ingles-10 · «At your pace.» va entera en su línea · ${w}`, async ({ page, context }) => {
     await page.setViewportSize({ width: w, height: h });
     await sembrar(context, Object.assign({ firstSeen: null }, EN));
     await page.goto('/index.html');
-    const sub = page.getByText('At your own pace.', { exact: true });
+    const sub = page.getByText('At your pace.', { exact: true });
     await sub.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
     const lineas = await sub.evaluate((el) => {
@@ -213,7 +214,7 @@ async function hastaLaPausa(page, context, estado) {
      `lastActiveDay` con el día de verdad. */
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
-  await page.getByRole('button', { name: 'Start focus', exact: true }).click();
+  await page.getByRole('button', { name: 'Start Focus', exact: true }).click();
   await page.waitForTimeout(250);
   for (let i = 0; i < 30; i++) {
     await page.clock.fastForward(60 * 1000);
@@ -256,10 +257,10 @@ test('ingles-12 · la pausa de «A tu ritmo» habla inglés natural', async ({ p
 });
 
 /* ingles-14 */
-test('ingles-14 · el sello se llama «stamp» en todas partes', async ({ page, context }) => {
+test('ingles-14 · ni «seal» ni «badge»: la barra dice «Latest achievement», como «Último logro»', async ({ page, context }) => {
   await sembrar(context, EN);
   await irAlArtefacto(page);
-  await expect(page.getByText('Latest stamp', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Latest achievement', { exact: true }).first()).toBeVisible();
   const raros = await page.evaluate(() => Object.entries(window.PACE_STRINGS.en)
     .filter(([, v]) => /\b(seals?|badges?)\b/i.test(String(v))).map(([k, v]) => k + ' = ' + v));
   expect(raros, 'quedan textos en inglés con «seal» o «badge»').toEqual([]);
@@ -315,6 +316,6 @@ test('ingles-16 · el aviso de grupo vacío no dice «All 2 in flows»', async (
   await abrirBiblioteca(page, 'Stretch');
   await page.getByRole('button', { name: /^Right here/ }).first().click();
   const lib = page.locator('.pace-lib').first();
-  await expect(lib).toContainText('Every routine in');
+  await expect(lib).toContainText(/(All|None of the) \d+ routines in/);
   await expect(lib).not.toContainText(/All \d+ in/);
 });

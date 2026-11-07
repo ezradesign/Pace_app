@@ -348,7 +348,7 @@ test('dos pausas del mismo dia no proponen la misma rutina', async ({ page, cont
  * copia aqui, que envejeceria al primer cambio de copy. */
 test('la propuesta habla en ingles', async ({ page, context }) => {
   await sembrarEstado(context, { focusMinutes: 45, lang: 'en', langAuto: false });
-  await hastaLaPausa(page, 45, 'Start focus');
+  await hastaLaPausa(page, 45, 'Start Focus');
 
   const prop = page.locator('[data-pace-break-prop]');
   await expect(prop, 'no hay propuesta con la app en ingles').toHaveCount(1);
