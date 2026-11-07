@@ -228,12 +228,22 @@ test('tras el último bloque, un Foco por libre acaba con «Ciclo completado» y
   await terminarBloque(page);
   await expect(page.locator('[data-pace-modal-backdrop]'), 'GUARD: no es el último bloque').toContainText('Bloque 1 de 1 · hecho');
   await page.keyboard.press('Escape');
+  /* Lo que acabar el Foco libre no puede tocar: `ritmoPropuesta` ya no abre su ventana, pero la guarda
+     de `ritmoBloqueTerminado` es la que evita que el día se recoloque desde la hora en que acaba
+     (congelar lo hecho en `pasado`, mover `desde` y volver a abrir la pausa que empezar cerró). */
+  const diaDe = () => page.evaluate(() => {
+    const d = getState().ritmo.dia;
+    return JSON.stringify({ pasado: d.pasado || null, desde: d.desde, pausa: d.pausa == null ? null : d.pausa });
+  });
   await page.evaluate(() => setState({ focusMinutes: 3 }));
   await vis(page, '[data-pace-cta]').first().click();
+  await page.waitForTimeout(250);
+  const antes = await diaDe();
   await terminarBloque(page);
   expect(await page.evaluate(() => new Date().getHours() * 60 + new Date().getMinutes()), 'GUARD: el Foco libre acabó pasada la salida').toBeLessThan(13 * 60);
   const ventana = page.locator('[data-pace-modal-backdrop]');
   await expect(ventana).toContainText('Ciclo completado');
   await expect(ventana, 'la ventana repite la pausa de cierre').not.toContainText('Bloque 1 de 1');
   expect(await page.evaluate(() => Object.values(getState().ritmo.dia.estados || {}))).toEqual(['saltada']);
+  expect(await diaDe(), 'el Foco libre recoloca el día terminado').toBe(antes);
 });
