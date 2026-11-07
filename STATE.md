@@ -53,12 +53,14 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
   ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
-- **El inglés, con sus letras (1A 2A 3A 4A 5A, 7 nov.)**: la revisión de ChatGPT de los textos en inglés, comprobada (239 tal
-  cual, 15 retocadas, 4 no y 23 con su letra), en `docs/audits/chatgpt-7nov-ingles/` (el encargo, en su `LEEME.md`). Lo
-  monta `claude/textos-ingles-7nov-a227ea` (en marcha desde el 7 nov.); el español nuevo de Respira y Mueve, Ez lo ve antes de juntar.
-- **Dos páginas con letras, elegidas** (7 nov.: E1 A · V1 A · V2 A y 1B · 2B · 3B, sin montar): PACE abierto horas y
-  accesibilidad (tres colores de poco contraste), con sus ramas listas; y el recorrido, casi listo, con su página del después. En marcha, dos cazas de bugs
-  como usuario real (el día de v1 con la compra, y una semana entera). El detalle, en el relevo de `docs/traspaso/LEEME.md`.
+- **Dos síes para juntar (7 nov.)**: el «júntalo» del recorrido (`claude/recorrido-6nov-645d6b`, cerrado: suite entera y cinco
+  mutantes en rojo) y el visto bueno al español nuevo de Respira y Mueve del inglés (`claude/textos-ingles-7nov-a227ea`, montado
+  con 1A-5A; página en la hoja). Con los dos, versión nueva con la novedad del sobre `jornada-cerrada` (textos en el relevo de `LEEME.md`).
+- **Cuatro letras del día de v1** (`claude/caza-v1-compra-79e3e4`, hecha: importar una copia vieja ya no reabre otra semana de
+  PACE completo; recomendadas 1A 2A 3A 4A).
+- **En marcha, con las letras de Ez** (7 nov.): 1B 2B 3B del contraste en `claude/accesibilidad-7nov-e36d06`; E1 A, y sobre el
+  recorrido V1 A y V2 A, en `claude/abierta-horas-7nov-a2419d`; y la caza de la semana (`claude/caza-semana-21914d`, tres fallos
+  arreglados). El detalle, en el relevo de `docs/traspaso/LEEME.md`.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga

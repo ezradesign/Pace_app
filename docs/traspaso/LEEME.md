@@ -4,6 +4,29 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.192.0.
 
+## 7 nov., ~18:45: coordina 5iWBf…; el recorrido, cerrado; tres sesiones con las letras de Ez y la semana
+
+Coordinadora nueva en 5iWBf… (las 5 h al 2 % al empezar y al 31 % a los 20 minutos con tres sesiones; la semana al 55 %).
+Las seis ramas estaban limpias y en origin. **El recorrido, cerrado** (`claude/recorrido-6nov-645d6b`, **81f9d80d**): la prueba
+«tras el último bloque, un Foco por libre…» de `ritmo-pausa.spec.js` compara ahora `ritmo.dia` (`pasado`, `desde`, `pausa`)
+antes y después de acabar ese Foco; con el mutante de `deMas` cae (`desde` 720 → 778). Los cinco mutantes en rojo, la suite
+entera en verde (1323, 59,7 min) y `verify` en verde. **Espera el «júntalo» de Ez**, a la vez que su sí al español nuevo del
+inglés; con los dos, una versión nueva con la novedad `jornada-cerrada` (textos en el bloque de abajo).
+
+| Rama | Sesión (5iWBf…) | Puerto | Encargo |
+|---|---|---|---|
+| `claude/caza-semana-21914d` | `caza-semana`, `local_254049f7…` | 8892-8893 | Su «Dónde me quedo»: la zona con un worker, oficina limpia, la persona media, Estadísticas y Logros, y la página de Ez en la rama |
+| `claude/accesibilidad-7nov-e36d06` | `contraste`, `local_7eb24f1a…` | 8886-8887 | Montar 1B 2B 3B (un token hondo por módulo en `app/tokens.css`, claro, oscuro y envejecido), medir, prueba con mutante, las 26 `ritmo-*`, fotos y «Montado» en su página |
+| `claude/abierta-horas-7nov-a2419d` | `abierta-horas`, `local_d676a709…` | 8884-8885 | E1 A; luego `merge` del recorrido a su rama y, sobre él, V1 A y V2 A («Jornada cerrada» en el aro); fotos y «Montado» en su página |
+
+Las tres hacen «WIP:» con push al 85 % de las 5 h y paran al 90 %. Choques al juntar: caza-semana y abierta-horas tocan
+`app/state-ritmo.jsx` y `state-ritmo.recolocar.jsx` (S1 de la semana va con E1); el inglés y accesibilidad, solo `index.html`.
+
+**Las páginas, en esta cuenta:** el inglés montado (el español nuevo para Ez) **QNng9nK83cABewcErossmJ** (en EcLj6, RaUErpS4…),
+el día de v1 con sus cuatro letras **6stHAifXWoCnzX58mhL8Pz** (en EcLj6, 1AzBCEn8…), el recorrido 3deGGg5MHvUmihZHqwEj99, volver
+LsDSi3X7Gbd4kBWdpPcpPj y el contraste 2Fv1mCERFo1zLQ8XJyDvoV. **La hoja**, en 5iWBfHE7kD3dUVocdskmb6 (versión 88) y en el repo
+con los ids de 5iWBf: para EcLj6, dar la vuelta a los doce del bloque de las 16:20 y a estos dos.
+
 ## AL RELEVO (7 nov., ~16:25): EcLj6… al 58 % y subiendo 3 puntos por minuto; se sigue en 5iWBf… cuando se reponga (hacia las 17:15)
 
 Escrito antes de tiempo, por si la cuenta se queda sin uso: lo que corre está en el bloque de abajo («~16:20»).
