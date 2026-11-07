@@ -81,3 +81,28 @@ test('el aplazamiento de los Caminos sigue: el sello espera a que se cierre su p
   await page.evaluate(() => setCaminoUiActive(false));
   await expect(aviso(page), 'al salir del Camino el sello no sale').toContainText('Primer paso');
 });
+
+/* UNA VENTANA QUE SE ABRE CON EL SELLO YA A LA VISTA (recorrido del 6 nov. 2026). El aviso esperaba
+   a que no hubiera nada abierto para SALIR, pero una vez fuera se quedaba sus tres segundos por
+   encima de todo (z 200): quien volvía de una sesión y tocaba enseguida «Hacer la pausa» o un
+   módulo leía «Nuevo sello · 50 horas de foco» encima del título de «Antes de empezar» y luego
+   encima del runner. Y el siguiente sello de la fila salía igual, con la ventana abierta. */
+test('el sello del aro se esconde si se abre una ventana encima, y el siguiente espera a que se cierre', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await page.evaluate(() => ['first.step', 'first.sip'].forEach((id) => showToast({ id, type: 'achievement' })));
+  const sello = page.locator('[data-pace-sello-aro]');
+  await expect(sello, 'GUARD: el primer sello no sale en el aro').toContainText('Primer paso');
+  await page.getByRole('button', { name: /^Mueve/ }).click();
+  await expect(page.locator('[data-pace-modal-backdrop]'), 'GUARD: no se abrió la biblioteca').toHaveCount(1);
+  /* Una lectura, no `toBeHidden`: esa reintenta y acaba en verde cuando el sello se va solo. */
+  await page.waitForTimeout(300);
+  expect(await sello.isVisible(), 'el sello se pinta encima de la biblioteca').toBe(false);
+  /* El primero se acaba (3 s y su fundido): el segundo no sale mientras la biblioteca siga abierta. */
+  await page.waitForTimeout(4200);
+  expect(await aviso(page).textContent(), 'el segundo sello sale encima de la biblioteca').not.toContain('Primer sorbo');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-pace-modal-backdrop]'), 'GUARD: la biblioteca no se cerró').toHaveCount(0);
+  await expect(aviso(page), 'al cerrar la biblioteca el segundo sello no sale').toContainText('Primer sorbo');
+  await expect(sello).toBeVisible();
+});

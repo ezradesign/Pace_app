@@ -54,6 +54,16 @@ function aroDespues(s, t, tn) {
   return ritmoModulo(platos[0].modulo, t) + ' · ' + ((r && r.min) || it.dur) + ' min';
 }
 
+/* PASADA LA SALIDA (Ez, 1A del 7 nov. 2026; state-ritmo.recolocar.jsx): el rótulo dice «Tu jornada
+   ya terminó» y la línea de la hora, lo hecho («45 min de foco»). El reloj y el botón son los de por
+   libre, así que quien quiera sigue; con un Foco libre en marcha, el aro es el de siempre. */
+function aroCerrado(s, t, tn) {
+  const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (!p || !p.cerrado) return null;
+  const f = ritmoFocoHecho(p);
+  return { label: t('ritmo.fuera'), hecho: f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null };
+}
+
 /* Lo que la jornada le cambia al aro según el momento. `cta`, si manda en el botón;
    `lleno`, si ese botón va relleno aunque el reloj corra; `fila`, la línea de debajo. */
 function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa }) {
@@ -118,4 +128,4 @@ function AroFila({ cycle, cycleLabel, oculta, fila }) {
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, AroFila });
+Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });

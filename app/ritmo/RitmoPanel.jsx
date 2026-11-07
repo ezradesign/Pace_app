@@ -342,7 +342,10 @@ function RitmoHecho({ plan }) {
       <div className="pace-rt-cab">
         <div>
           <div className="pace-rt-titulo">{t('ritmo.hecho')}</div>
-          <div className="pace-rt-sub">{tn('ritmo.hecho.sub', { f: ritmoDuracion(plan.m.focoMin) })}</div>
+          {/* Cerrado por la hora, lo hecho son los bloques terminados, no los del plan (Ez, 1A del 7 nov.). */}
+          {(!plan.cerrado || ritmoFocoHecho(plan) > 0) && (
+            <div className="pace-rt-sub">{tn('ritmo.hecho.sub', { f: ritmoDuracion(plan.cerrado ? ritmoFocoHecho(plan) : plan.m.focoMin) })}</div>
+          )}
         </div>
         <div className="pace-rt-der">
           <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
