@@ -75,3 +75,7 @@ de después de esa copia, así que es caro). Es del riesgo ya aceptado («lo gua
 
 Hecho y subido el arreglo 1 con su prueba (commit WIP 0b657fcb y lo que sigue). El punto 3, comprobado simulando
 la app de Android en el navegador; falta verlo en un móvil de verdad.
+
+La suite e2e entera, tras el build y con un worker (puerto 8891): 1318 en verde, 2 saltadas y 1 en rojo,
+`aro-jornada` («con el plato hecho no propone repetirlo»: el botón aún con relleno con el reloj en marcha). Repetida
+sola, 11 de 11 en verde: falso rojo por la carga del PC, nada que ver con lo tocado.
