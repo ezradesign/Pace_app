@@ -56,7 +56,7 @@ de después de esa copia, así que es caro). Es del riesgo ya aceptado («lo gua
    logros». Recomendada A: una frase más cuando hay código. Pide una clave nueva de i18n.
 2. **Sus rutinas propias se cierran al acabar la semana y la hoja del día de v1 no lo dice.** Recomendada A: una
    línea en la hoja.
-3. **En las apps, el día de v1, sin compra de la tienda todavía** (visto leyendo el código, no en un móvil): la
+3. **En las apps, el día de v1, sin compra de la tienda todavía** (visto en el navegador con el canal de Android simulado, foto `p6-android-sin-tienda-es-360.png`; no en un móvil): la
    hoja de PACE completo dice «Llega con la versión 1» y allí no hay ni compra ni código. Recomendada A: en una app
    cuya tienda no está lista, PACE completo sigue abierto como hasta v1.
 4. **Textos que dirán «hasta v1» el día de v1**: la nota de /premium («Hasta la versión 1, PACE completo está
@@ -73,5 +73,5 @@ de después de esa copia, así que es caro). Es del riesgo ya aceptado («lo gua
 
 ## Dónde me quedo
 
-Hecho y subido el arreglo 1 con su prueba (commit WIP 0b657fcb y lo que sigue). No se llegó a recorrer en un
-móvil Android o iPhone de verdad el punto 3, ni a fotografiar la hoja de las apps.
+Hecho y subido el arreglo 1 con su prueba (commit WIP 0b657fcb y lo que sigue). El punto 3, comprobado simulando
+la app de Android en el navegador; falta verlo en un móvil de verdad.
