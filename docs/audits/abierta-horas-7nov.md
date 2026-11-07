@@ -76,6 +76,34 @@ enseña la línea, por eso no lo toco.
   bloque (en uno de once, el 12), porque `BreakMenu.ritmo.jsx` pinta siempre `plan.hechos + 1`. La duración del
   bloque ya sale bien con A1; lo demás es del cierre de la jornada.
 
+## Montado: E1 A · V1 A · V2 A (Ez, 7 nov.)
+
+Sobre esta rama con el recorrido ya juntado (`origin/claude/recorrido-6nov-645d6b`, conflictos en
+`state-ritmo.jsx`, `state-ritmo.recolocar.jsx`, DECISIONES e `index.html`, este rehecho con el build).
+Cada caso con su prueba en `tests/abierta-horas.spec.js`, sus mutantes en rojo y su fila en DECISIONES.
+
+- **E1 A.** Elegido el día y sin empezar nada (ningún bloque hecho, ninguno en marcha o en pausa, ninguna
+  pausa abierta), `ritmoPlan` lo compone desde `ritmoAhora()` sin escribir `dia.desde`
+  (`app/state-ritmo.ahora.jsx`): elegida «Jornada entera» a las 8:00 y de vuelta a las 11:00, «Bloque 1 de
+  8», la barra «A las 11:45» y la línea desde las 11:00. Empezar lo fija, también a la misma hora. Como
+  cambia la hora y no el estado, el vigilante del minuto repinta sin escribir. Si desde ahora ya no cabe un
+  bloque, manda la hora guardada (y pasada la salida, el cierre del recorrido). Tres mutantes en rojo.
+  **Decidido sin preguntar:** el calendario que se mantiene solo sigue con el día como se eligió hasta
+  empezar (`comoSeEligio`); si siguiera la hora, se reescribiría cada cinco minutos. No toca
+  `ritmoDurSiEmpiezas` de la caza de la semana: el aro mide la duración del primer bloque del plan leído
+  desde ahora, y su arreglo de la reunión se suma encima al juntar.
+- **V1 A.** La pausa pendiente lleva hasta cuándo dura su parada (`focoPausa.hasta`, `ritmoParadaHasta`):
+  la pausa y el cierre, desde que acabó el bloque; la comida, a su hora. Si al volver ya pasó, la ventana no
+  sale y se quita; el aro dice «Pausa terminada» y «Empezar bloque 2». Pestaña oculta de 8:10 a 12:10 y
+  portátil cerrado de 8:20 a 9:20, sin ventana; de vuelta a las 8:47, dentro de la pausa, sale como
+  siempre (la prueba de control). Sin «A tu ritmo» la ventana sale como siempre. Dos mutantes en rojo.
+- **V2 A.** Lo que quitó el recorrido («Seguir con el bloque N+1» tras el último) se queda. Hechos todos
+  los bloques, el aro dice «Jornada cerrada», «45 min de foco», «Lo que queda del día es tuyo» y «Seguir
+  por libre» (`ritmo.aro.tuyo` y `ritmo.aro.libre`, en es y en: «The rest of the day is yours» y «Keep
+  going freestyle»), antes o después de la salida; si el día se cerró por la hora con bloques sin hacer,
+  sigue el «Tu jornada ya terminó» del recorrido. Con la tapa cerrada de 17:30 a 18:15, la ventana del
+  cierre no sale (V1). Tres mutantes en rojo; el censo de claves sube a 1151.
+
 ## Lo que se midió y salió bien
 
 ### Una jornada entera abierta (8:00-18:00, comida 14:00)
@@ -177,6 +205,16 @@ Además, ningún arreglo añade trabajo en lo que recorren: el vigilante de cada
 cuelga dos componentes, que se repintan una vez por minuto), y A1 y A3 no están en su camino.
 `ritmo-pausa:106` avanza el reloj segundo a segundo hasta 400 veces: si cae en el CI, que es donde cuenta, el
 arreglo es suyo (pasos más largos o `test.slow()`), no de esta rama.
+
+## Dónde me quedo (7 nov., tarde, con el uso al 71 % de las 5 h)
+
+- Hecho y en la rama: E1 A, la unión con el recorrido, V1 A y V2 A, con sus pruebas (las ocho de
+  `abierta-horas` pasan), sus diez mutantes en rojo, sus tres filas de DECISIONES y los textos en es y en.
+- `verify`: falló solo el censo de claves (1149 → 1151, las dos nuevas), ya subido; falta pasarlo otra vez.
+- Las pruebas de la zona (`abierta-horas`, `aro-jornada`, `cambio-de-dia`, `bloques-cortos` y `ritmo-*`) con
+  un worker en el 8884: en marcha al subir este WIP; el resultado va en el commit siguiente.
+- Falta: las fotos del después a 360 y 1280 (E1 a las 11:00, V1 a las 12:10, V2 a las 17:55 con la ventana y
+  con el aro) y la sección «Montado» en `abierta-horas-7nov/pagina-ez.html`, publicada.
 
 ## Dónde queda la rama (7 nov., 13:10)
 
