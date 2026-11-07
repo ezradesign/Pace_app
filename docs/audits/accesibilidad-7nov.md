@@ -85,7 +85,24 @@ de 3 px del color del papel a 2 px de oliva; «Preparar jornada» pinta el aro e
 
 ## Lo que se vería distinto: espera a Ez
 
-En preparación: la página con las fotos y las opciones va en el siguiente commit.
+Medido con el medidor de la tarde (peor fondo de cada caso). La página «Contraste de PACE» las enseña con fotos
+de la app real a 360 y 1280 px, en claro y oscuro, con cada opción pintada encima solo en la foto. **No se ha
+montado ninguna.** Página: PENDIENTE-URL
+
+| | Qué pasa | Opciones | Recomendación |
+|---|---|---|---|
+| **1. Lo apagado** | Los logros sin ganar van al 55 % de opacidad entera: 2,0 a 1 en claro, 3,2 en oscuro. La fecha de la barra («sáb 7 nov») al 75 %: 2,6 en claro, 4,48 en oscuro | A como está · B se apaga el sello y el borde, y el nombre y la frase van en el gris de siempre (4,2); la fecha sin transparencia (3,9) | **B** |
+| **2. La letra de color** | Títulos y marcas en el color del módulo («¿Es tu primera vez? Empieza aquí», «Para ahora», «Premium», el ⚠, «+ vaso», los títulos de familia de Logros): Respira 2,3-2,8, Mueve 2,8-3,4, Estira 3,0-3,7, Hidrátate 2,6-3,2, Logros 2,1-2,5, Premium 3,2-3,9. En oscuro fallan Mueve, Estira e Hidrátate (3,2-4,4) | A como está · B cada módulo con una versión de su color solo para la letra (OKLCH, mismo tono y croma, otra luz), 4,6 o más sobre cualquier fondo · C esa letra en `--ink-2` y el color solo en el dibujo | **B** |
+| **3. Botones de color** | «Hacer la pausa» 2,8-3,7 según el módulo, «Empezar» de Mueve 3,4 y de Estira 3,7, «Un vaso más» 3,2; en oscuro, Mueve y Estira 4,0-4,4 | A como está · B el relleno en el color hondo de la 2B (5,5 o más; en oscuro 5,8) | **B** |
+
+Los colores de la 2B: en claro, Respira `#93492D`, Mueve `#75582C`, Estira `#4F5E72`, Hidrátate `#396373`, Logros
+`#7B5900` y Premium `#81520D`; en oscuro, Mueve `#B09063`, Estira `#8696AB` e Hidrátate `#719CAE` (los otros tres
+ya pasan). Si Ez elige, cada uno sería un token nuevo por módulo en `app/tokens.css` (en claro y oscuro, y falta
+medir el envejecido), usado solo en la letra y en el relleno de esos botones.
+
+**Lo que no se pregunta:** el gris de los rótulos (`--ink-3`) da 4,2 a 1 sobre el crema y 3,9 sobre la barra y las
+tarjetas, por debajo del 4,5. Lo eligió Ez el 16 oct. (`docs/audits/gris-16oct.html`) y se queda; en /premium y
+/beta, 4,4.
 
 ## Lo que esta auditoría no cubre
 
