@@ -18,7 +18,7 @@
 
 Object.assign(window.PACE_STRINGS.es, {
     // Session (compartido: shell + prep + done)
-    'session.exit':                    '× Salir',
+    'session.exit':                    'Salir',
     'session.prep':                    'Prepárate',
     'session.startNow':                'Empezar ahora',
     'session.backToHome':              'Volver al inicio',
@@ -54,6 +54,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Focus
     'focus.minutes.custom.title':      'Minutos personalizados (5–180)',
+    'focus.minutes.grupo':             'Minutos del bloque de foco',
+    'focus.minutes.n':                 '{n} minutos',
     'focus.cycle':                     'Ciclo',
     'focus.cycleOf':                   'Ciclo {n} / 4',
     'focus.cycleNext':                 'Siguiente · Ciclo {n} / 4',
@@ -221,7 +223,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
     // Session (shared: shell + prep + done)
-    'session.exit':                    '× Exit',
+    'session.exit':                    'Exit',
     'session.prep':                    'Get ready',
     'session.startNow':                'Start now',
     'session.backToHome':              'Back to home',
@@ -257,6 +259,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Focus
     'focus.minutes.custom.title':      'Custom minutes (5–180)',
+    'focus.minutes.grupo':             'Focus block minutes',
+    'focus.minutes.n':                 '{n} minutes',
     'focus.cycle':                     'Cycle',
     'focus.cycleOf':                   'Cycle {n} / 4',
     'focus.cycleNext':                 'Next · Cycle {n} / 4',

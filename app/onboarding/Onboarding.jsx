@@ -181,6 +181,7 @@ function Onboarding() {
             <button data-pace-toque
               onClick={toggleLang}
               title={t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs')}
+              aria-label={t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs')}
               style={onboardingStyles.langToggle}
             >
               <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>

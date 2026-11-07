@@ -38,7 +38,7 @@ test('foco-1 · otros minutos con un bloque empezado preguntan antes, y «Seguir
   await context.clock.runFor(1000);
   const antes = await numero(page).textContent();
 
-  await page.getByRole('button', { name: '35', exact: true }).click();
+  await page.getByRole('button', { name: '35 minutos', exact: true }).click();
   await expect(pregunta(page)).toBeVisible();
   await expect(pregunta(page)).toContainText('¿Cambiar a un bloque de 35 min?');
   /* Tapa toda la home, como las demás ventanas: dentro del aro, recortado al horizonte, su fondo
@@ -53,7 +53,7 @@ test('foco-1 · otros minutos con un bloque empezado preguntan antes, y «Seguir
   /* En pausa también pregunta; y «Cambiar» hace lo de siempre. */
   await cta(page).click();
   await expect(cta(page)).toHaveText('Continuar');
-  await page.getByRole('button', { name: '35', exact: true }).click();
+  await page.getByRole('button', { name: '35 minutos', exact: true }).click();
   await pregunta(page).getByRole('button', { name: 'Cambiar', exact: true }).click();
   await expect(numero(page)).toHaveText('35:00');
   await expect(cta(page)).toHaveText('Empezar foco');
@@ -61,7 +61,7 @@ test('foco-1 · otros minutos con un bloque empezado preguntan antes, y «Seguir
 
 test('CONTROL · sin un bloque empezado, los minutos cambian sin preguntar', async ({ page, context }) => {
   await abrirConReloj(page, context);
-  await page.getByRole('button', { name: '35', exact: true }).click();
+  await page.getByRole('button', { name: '35 minutos', exact: true }).click();
   await expect(numero(page)).toHaveText('35:00');
   await expect(pregunta(page)).toHaveCount(0);
 });

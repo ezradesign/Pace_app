@@ -27,7 +27,11 @@
    4. DEVOLVER EL FOCO al cerrar, a quien lo tenia al abrir — SALVO que ya lo
       tenga otro (el dialogo de debajo, o una SESION que acaba de montarse: el
       foco en un boton de la home detras de una sesion es justo el defecto de
-      «Espacio no pausa», ver SessionShell.jsx).
+      «Espacio no pausa», ver SessionShell.jsx). Si quien lo tenia ya no existe,
+      a quien abrio el dialogo de debajo: una sesion se empieza desde una
+      tarjeta de la biblioteca, la biblioteca se cierra, y al salir de la sesion
+      el foco caia en <body> (auditoria del 7 nov.); ahora vuelve al chip que
+      abrio la biblioteca.
 
    LO QUE NO HACE: no decide que se ve. Ni un pixel cambia — el contenedor lleva
    `outline: none` porque el foco programatico no es una seleccion del usuario.
@@ -40,6 +44,12 @@
 const { useEffect: useEffectDlg, useRef: useRefDlg } = React;
 
 const _paceDialogos = [];
+
+/* La cadena de un dialogo que se cerro sin poder devolver el foco (habia una sesion montada
+   encima), para el que se abre en el mismo instante: la biblioteca se cierra y la sesion se
+   monta en el mismo render, y cuando la sesion mira quien tenia el foco ya es <body>. Dura
+   ese render y nada mas. */
+let _paceCadenaSuelta = null;
 
 function paceDialogoArriba(yo) {
   return _paceDialogos.length > 0 && _paceDialogos[_paceDialogos.length - 1] === yo;
@@ -92,10 +102,14 @@ function usePaceDialogo(ref, abierto, opciones) {
 
   useEffectDlg(() => {
     if (!abierto) return undefined;
-    const yo = { sesion: op.sesion === true };
-    _paceDialogos.push(yo);
     const previo = document.activeElement;
     const cont = ref.current;
+    /* A quien devolver el foco, por orden: quien lo tenia y, si estaba dentro de otro
+       dialogo de la pila, lo que ese guardaba para el suyo. */
+    const dueno = _paceDialogos.slice().reverse().find((d) => d.cont && previo && d.cont.contains(previo));
+    const suelta = (!previo || previo === document.body) ? _paceCadenaSuelta : null;
+    const yo = { sesion: op.sesion === true, cont, cadena: [previo].concat(dueno ? dueno.cadena : (suelta || [])) };
+    _paceDialogos.push(yo);
     if (cont && !cont.contains(document.activeElement)) {
       try { cont.focus({ preventScroll: true }); } catch (e) {}
     }
@@ -136,11 +150,15 @@ function usePaceDialogo(ref, abierto, opciones) {
          dialogo ya no esta en el DOM) o dentro de lo que se cierra. */
       const ahora = document.activeElement;
       const libre = !ahora || ahora === document.body || (cont && cont.contains(ahora));
-      if (libre && paceFocoDevolvible(previo)) {
-        try { previo.focus({ preventScroll: true }); } catch (e) {}
+      const destino = libre ? yo.cadena.find(paceFocoDevolvible) : null;
+      if (destino) {
+        try { destino.focus({ preventScroll: true }); } catch (e) {}
+      } else if (libre) {
+        _paceCadenaSuelta = yo.cadena;
+        setTimeout(() => { _paceCadenaSuelta = null; }, 0);
       }
     };
   }, [abierto]);
 }
 
-Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables });
+Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables, paceFocoDevolvible });

@@ -250,12 +250,17 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
    breathwork guiado perdia su funcion. WCAG 2.3.3 exime el motion ESENCIAL
    a la funcionalidad. Convencion: un subtree marcado data-pace-essential
    queda exento del kill; todo lo decorativo (fades, slide-ups, pulsos,
-   anillos de timer) sigue congelado. */
+   anillos de timer) sigue congelado.
+   UNA VUELTA, NO INFINITAS: aplastar la duracion de una animacion infinita
+   no la para, la hace dar cien mil vueltas por segundo, y cada fotograma
+   pinta un punto cualquiera de ella. El pulso de «Retén» de Respira
+   temblaba asi entre 0,96 y 1,05. Con una sola vuelta acaba quieto. */
 @media (prefers-reduced-motion: reduce) {
   *:not([data-pace-essential], [data-pace-essential] *),
   *:not([data-pace-essential], [data-pace-essential] *)::before,
   *:not([data-pace-essential], [data-pace-essential] *)::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

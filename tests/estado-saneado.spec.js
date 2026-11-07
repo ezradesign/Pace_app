@@ -55,7 +55,7 @@ test('un weeklyStats roto se repara SOLO, y la historia, los minutos y los logro
   expect(enMemoria.reparados).toContain('weeklyStats');
 
   /* Un gesto que ESCRIBE: es la escritura la que pisaba lo bueno. */
-  await page.getByRole('button', { name: '15', exact: true }).click();
+  await page.getByRole('button', { name: '15 minutos', exact: true }).click();
   await page.waitForTimeout(200);
   const g = await leerGuardado(page);
   expect(g.totalFocusMin, 'la primera escritura piso el estado bueno con el de fabrica').toBe(4321);

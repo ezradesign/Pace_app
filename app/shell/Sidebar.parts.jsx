@@ -276,7 +276,7 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
   if (!ultimo) {
     return (
       <button style={sidebarStyles.logroFila} onClick={onOpen} data-pace-sidebar-ultimo="">
-        <span style={{ ...sidebarStyles.logroSello, opacity: 0.6 }}>·</span>
+        <span style={{ ...sidebarStyles.logroSello, opacity: 0.6 }} aria-hidden="true">·</span>
         <span style={sidebarStyles.logroTexto}>
           <span style={{ ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' }}>{t('sidebar.latest.none')}</span>
           {enlace}
@@ -287,7 +287,7 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
   const mini = achMini(ultimo.id, tR);
   return (
     <button style={sidebarStyles.logroFila} onClick={onOpen} title={mini.title} data-pace-sidebar-ultimo={ultimo.id}>
-      <span style={sidebarStyles.logroSello}>{mini.nodo}</span>
+      <span style={sidebarStyles.logroSello} aria-hidden="true">{mini.nodo}</span>
       <span style={sidebarStyles.logroTexto}>
         <span style={sidebarStyles.logroTitulo} data-pace-sidebar-ultimo-titulo>{mini.title}</span>
         {mini.desc ? <span style={sidebarStyles.logroDesc}>{mini.desc}</span> : null}

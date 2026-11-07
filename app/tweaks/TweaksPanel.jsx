@@ -176,6 +176,39 @@ function TweaksPanel({ open, onClose }) {
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  /* EL TECLADO NO SALE DEL PANEL (auditoría del 7 nov.). Para el ratón sigue siendo un panel
+     no modal, pero con el teclado el foco se quedaba en la rueda al abrirlo y el Tab caía en
+     botones de la home que el panel tapa: 6 de 38 paradas a 360 px y 3 de 54 a 1280. Ahora el
+     foco entra al abrir (a la caja, sin aro, como en ui/Dialogo.jsx), da la vuelta dentro y
+     vuelve a la rueda al cerrar. Si el ratón lo ha llevado fuera, el Tab es el de siempre; y
+     un diálogo de la pila encima se lleva su Tab (`__paceDialogoAtendido`). */
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const p = panelRef.current;
+    const previo = document.activeElement;
+    if (p && !p.contains(previo)) { try { p.focus({ preventScroll: true }); } catch (e) {} }
+    const onTab = (e) => {
+      if (e.key !== 'Tab' || e.__paceDialogoAtendido || !p) return;
+      const activo = document.activeElement;
+      if (!p.contains(activo)) return;
+      const lista = paceEnfocables(p);
+      if (lista.length === 0) return;
+      const primero = lista[0], ultimo = lista[lista.length - 1];
+      if (e.shiftKey ? (activo === primero || activo === p) : activo === ultimo) {
+        e.preventDefault();
+        (e.shiftKey ? ultimo : primero).focus();
+      }
+    };
+    document.addEventListener('keydown', onTab);
+    return () => {
+      document.removeEventListener('keydown', onTab);
+      const ahora = document.activeElement;
+      if ((!ahora || ahora === document.body || (p && p.contains(ahora))) && paceFocoDevolvible(previo)) {
+        try { previo.focus({ preventScroll: true }); } catch (e) {}
+      }
+    };
+  }, [open]);
+
   if (!open) return null;
 
   /* Idioma y paleta comparten gramática (s139 / s161): «Auto» es un MODO que
@@ -204,7 +237,8 @@ function TweaksPanel({ open, onClose }) {
 
   return (
     <div ref={panelRef} data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined}
-      data-pace-aj-bajo={bajo ? '' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" style={{
+      data-pace-aj-bajo={bajo ? '' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" tabIndex={-1} style={{
+      outline: 'none',
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,

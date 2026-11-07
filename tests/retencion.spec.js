@@ -201,7 +201,7 @@ test('sin retencion en la semana la linea NO existe, y el backup la lleva igual'
      viva ahi -- pero «basta» es una deduccion y esto lo comprueba. */
   /* Un gesto que ESCRIBE estado, para medir el almacen y no la memoria. */
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: '15', exact: true }).click();
+  await page.getByRole('button', { name: '15 minutos', exact: true }).click();
   await page.waitForTimeout(200);
   const enElAlmacen = await page.evaluate(() => {
     const raw = localStorage.getItem('pace.state.v2');

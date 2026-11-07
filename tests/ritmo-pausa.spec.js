@@ -154,7 +154,7 @@ test('a la hora de comer, «Ir a comer» suma el vaso de la comida y cierra, sin
 test('si acortas el pomodoro, el día va con esa duración; y si el bloque acaba tarde, la pausa se abre a la hora que es', async ({ page, context }) => {
   await abrir(page, context, { ritmo: { dia: JORNADA } });
   /* el plan dice 45; tú pones el aro a 25 y empiezas: el día se recompone con bloques de 25 */
-  await page.getByRole('button', { name: '25', exact: true }).click();
+  await page.getByRole('button', { name: '25 minutos', exact: true }).click();
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
   await page.waitForTimeout(250);
   expect(await page.evaluate(() => { const p = ritmoPlan(getState()); return { bloque: getState().ritmo.dia.bloque, dur: p.actual.dur, pausa1: p.m.items[1].desde }; }),

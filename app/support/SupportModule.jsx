@@ -210,7 +210,7 @@ function SupportModal({ open, onClose }) {
   };
 
   return (
-    <Modal open={open} onClose={onClose} maxWidth={540}>
+    <Modal open={open} onClose={onClose} maxWidth={540} ariaLabel={t('support.title.main')}>
       <div style={supportStyles.inner}>
         {/* Ícono grande de vaca — no emoji, trazo a mano */}
         <div style={supportStyles.heroIcon}>

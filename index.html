@@ -609,12 +609,17 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
    breathwork guiado perdia su funcion. WCAG 2.3.3 exime el motion ESENCIAL
    a la funcionalidad. Convencion: un subtree marcado data-pace-essential
    queda exento del kill; todo lo decorativo (fades, slide-ups, pulsos,
-   anillos de timer) sigue congelado. */
+   anillos de timer) sigue congelado.
+   UNA VUELTA, NO INFINITAS: aplastar la duracion de una animacion infinita
+   no la para, la hace dar cien mil vueltas por segundo, y cada fotograma
+   pinta un punto cualquiera de ella. El pulso de «Retén» de Respira
+   temblaba asi entre 0,96 y 1,05. Con una sola vuelta acaba quieto. */
 @media (prefers-reduced-motion: reduce) {
   *:not([data-pace-essential], [data-pace-essential] *),
   *:not([data-pace-essential], [data-pace-essential] *)::before,
   *:not([data-pace-essential], [data-pace-essential] *)::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
@@ -2068,7 +2073,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 Object.assign(window.PACE_STRINGS.es, {
 
-  'session.exit': '× Salir',
+  'session.exit': 'Salir',
   'session.prep': 'Prepárate',
   'session.startNow': 'Empezar ahora',
   'session.backToHome': 'Volver al inicio',
@@ -2104,6 +2109,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'focus.minutes.custom.title': 'Minutos personalizados (5–180)',
+  'focus.minutes.grupo': 'Minutos del bloque de foco',
+  'focus.minutes.n': '{n} minutos',
   'focus.cycle': 'Ciclo',
   'focus.cycleOf': 'Ciclo {n} / 4',
   'focus.cycleNext': 'Siguiente · Ciclo {n} / 4',
@@ -2271,7 +2278,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
 
-  'session.exit': '× Exit',
+  'session.exit': 'Exit',
   'session.prep': 'Get ready',
   'session.startNow': 'Start now',
   'session.backToHome': 'Back to home',
@@ -2307,6 +2314,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'focus.minutes.custom.title': 'Custom minutes (5–180)',
+  'focus.minutes.grupo': 'Focus block minutes',
+  'focus.minutes.n': '{n} minutes',
   'focus.cycle': 'Cycle',
   'focus.cycleOf': 'Cycle {n} / 4',
   'focus.cycleNext': 'Next · Cycle {n} / 4',
@@ -17260,7 +17269,11 @@ Object.assign(window, {
    4. DEVOLVER EL FOCO al cerrar, a quien lo tenia al abrir — SALVO que ya lo
       tenga otro (el dialogo de debajo, o una SESION que acaba de montarse: el
       foco en un boton de la home detras de una sesion es justo el defecto de
-      «Espacio no pausa», ver SessionShell.jsx).
+      «Espacio no pausa», ver SessionShell.jsx). Si quien lo tenia ya no existe,
+      a quien abrio el dialogo de debajo: una sesion se empieza desde una
+      tarjeta de la biblioteca, la biblioteca se cierra, y al salir de la sesion
+      el foco caia en <body> (auditoria del 7 nov.); ahora vuelve al chip que
+      abrio la biblioteca.
 
    LO QUE NO HACE: no decide que se ve. Ni un pixel cambia — el contenedor lleva
    `outline: none` porque el foco programatico no es una seleccion del usuario.
@@ -17273,6 +17286,12 @@ Object.assign(window, {
 const { useEffect: useEffectDlg, useRef: useRefDlg } = React;
 
 const _paceDialogos = [];
+
+
+
+
+
+let _paceCadenaSuelta = null;
 
 function paceDialogoArriba(yo) {
   return _paceDialogos.length > 0 && _paceDialogos[_paceDialogos.length - 1] === yo;
@@ -17325,10 +17344,14 @@ function usePaceDialogo(ref, abierto, opciones) {
 
   useEffectDlg(() => {
     if (!abierto) return undefined;
-    const yo = { sesion: op.sesion === true };
-    _paceDialogos.push(yo);
     const previo = document.activeElement;
     const cont = ref.current;
+
+
+    const dueno = _paceDialogos.slice().reverse().find((d) => d.cont && previo && d.cont.contains(previo));
+    const suelta = !previo || previo === document.body ? _paceCadenaSuelta : null;
+    const yo = { sesion: op.sesion === true, cont, cadena: [previo].concat(dueno ? dueno.cadena : suelta || []) };
+    _paceDialogos.push(yo);
     if (cont && !cont.contains(document.activeElement)) {
       try {cont.focus({ preventScroll: true });} catch (e) {}
     }
@@ -17369,14 +17392,18 @@ function usePaceDialogo(ref, abierto, opciones) {
 
       const ahora = document.activeElement;
       const libre = !ahora || ahora === document.body || cont && cont.contains(ahora);
-      if (libre && paceFocoDevolvible(previo)) {
-        try {previo.focus({ preventScroll: true });} catch (e) {}
+      const destino = libre ? yo.cadena.find(paceFocoDevolvible) : null;
+      if (destino) {
+        try {destino.focus({ preventScroll: true });} catch (e) {}
+      } else if (libre) {
+        _paceCadenaSuelta = yo.cadena;
+        setTimeout(() => {_paceCadenaSuelta = null;}, 0);
       }
     };
   }, [abierto]);
 }
 
-Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables });
+Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables, paceFocoDevolvible });
 ;Object.assign(window, { paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables, paceFocoDevolvible, usePaceDialogo });
 })();
 </script>
@@ -19710,7 +19737,8 @@ function SessionHeader(_ref3) {let { routine, onExit, extra } = _ref3;
     ),
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 16 } },
     extra,
-    React.createElement("button", { "data-pace-toque": true, onClick: () => onExit('exit'), style: sessionShellStyles.exitBtn }, t('session.exit'))
+
+    React.createElement("button", { "data-pace-toque": true, onClick: () => onExit('exit'), style: sessionShellStyles.exitBtn }, React.createElement("span", { "aria-hidden": "true" }, "\xD7 "), t('session.exit'))
     )
     ));
 
@@ -24087,7 +24115,7 @@ const { useState: useStateFP, useEffect: useEffectFP, useRef: useRefFP } = React
 
 
 function MinutesPicker(_ref) {let { value, onChange } = _ref;
-  const { t } = useT();
+  const { t, tn } = useT();
   const presets = [15, 25, 35, 45];
   const isCustom = !presets.includes(value);
   const [editing, setEditing] = useStateFP(false);
@@ -24135,14 +24163,18 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     justifyContent: 'center'
   };
 
+
+
   return (
-    React.createElement("div", { style: { display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' } },
-    React.createElement("span", { style: {
+    React.createElement("div", { "data-pace-minutos": true, role: "group", "aria-label": t('focus.minutes.grupo'),
+      style: { display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' } },
+    React.createElement("span", { "aria-hidden": "true", style: {
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500
       } }, t('focus.min')),
     presets.map((m) =>
     React.createElement("button", { key: m, "data-pace-toque": true, onClick: () => {onChange(m);setEditing(false);},
+      "aria-label": tn('focus.minutes.n', { n: m }), "aria-pressed": value === m,
       style: {
         ...pillBase,
         fontWeight: value === m ? 600 : 400,
@@ -24163,6 +24195,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
         if (e.key === 'Enter') commit();else
         if (e.key === 'Escape') cancel();
       },
+      "aria-label": t('focus.minutes.custom.title'),
       style: {
         ...pillBase,
         width: 52,
@@ -24179,6 +24212,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     React.createElement("button", { "data-pace-toque": true,
       onClick: () => setEditing(true),
       title: t('focus.minutes.custom.title'),
+      "aria-label": tn('focus.minutes.n', { n: value }), "aria-pressed": true,
       style: {
         ...pillBase,
         fontWeight: 600,
@@ -24913,7 +24947,7 @@ function SupportModal(_ref4) {let { open, onClose } = _ref4;
   };
 
   return (
-    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 540 },
+    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 540, ariaLabel: t('support.title.main') },
     React.createElement("div", { style: supportStyles.inner },
 
     React.createElement("div", { style: supportStyles.heroIcon },
@@ -26545,7 +26579,7 @@ function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   if (!ultimo) {
     return (
       React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, "data-pace-sidebar-ultimo": "" },
-      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 } }, "\xB7"),
+      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 }, "aria-hidden": "true" }, "\xB7"),
       React.createElement("span", { style: sidebarStyles.logroTexto },
       React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none')),
       enlace
@@ -26556,7 +26590,7 @@ function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   const mini = achMini(ultimo.id, tR);
   return (
     React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title, "data-pace-sidebar-ultimo": ultimo.id },
-    React.createElement("span", { style: sidebarStyles.logroSello }, mini.nodo),
+    React.createElement("span", { style: sidebarStyles.logroSello, "aria-hidden": "true" }, mini.nodo),
     React.createElement("span", { style: sidebarStyles.logroTexto },
     React.createElement("span", { style: sidebarStyles.logroTitulo, "data-pace-sidebar-ultimo-titulo": true }, mini.title),
     mini.desc ? React.createElement("span", { style: sidebarStyles.logroDesc }, mini.desc) : null,
@@ -29497,9 +29531,11 @@ function LibraryShell(_ref)
 
   const chips =
   React.createElement("div", { className: "pace-lib-chips", role: "group", "aria-label": t('lib.filter.title') },
+
   listaFiltros.map((k) =>
   React.createElement("button", { key: k, type: "button", className: "pace-lib-chip",
     "aria-pressed": activos.indexOf(k) !== -1,
+    "aria-label": nombreChip(k) + ' (' + cuenta(k) + ')',
     onClick: () => alterna(k) },
   nombreChip(k), React.createElement("b", null, cuenta(k))
   )
@@ -29598,7 +29634,8 @@ function LibraryShell(_ref)
   null;
 
   return (
-    React.createElement(Modal, { open: open && !enPausa, onClose: onClose, maxWidth: ancho },
+
+    React.createElement(Modal, { open: open && !enPausa, onClose: onClose, maxWidth: ancho, ariaLabel: title },
     React.createElement("div", { className: "pace-lib", style: { '--tone': tone } },
     React.createElement("div", { className: "pace-lib-cuerpo" },
 
@@ -31158,18 +31195,20 @@ function BreatheSafety(_ref2) {let { routine, onAccept, onCancel } = _ref2;
   const { t, lang } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
+  const nombre = lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name;
+
   return (
-    React.createElement(Modal, { open: true, onClose: onCancel, maxWidth: 520 },
+    React.createElement(Modal, { open: true, onClose: onCancel, maxWidth: 520, ariaLabel: t('breathe.safety.before') + ' · ' + nombre },
     React.createElement("div", { style: { display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 18 } },
     React.createElement("div", { style: {
         width: 40, height: 40, borderRadius: 'var(--r-md)',
         background: 'var(--breathe-soft)',
         display: 'grid', placeItems: 'center',
         color: 'var(--breathe)', fontSize: 20, flexShrink: 0
-      } }, "\u26A0"),
+      }, "aria-hidden": "true" }, "\u26A0"),
     React.createElement("div", null,
     React.createElement("div", { className: "pace-meta", style: { marginBottom: 4 } }, t('breathe.safety.before')),
-    React.createElement("h3", { style: { ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 } }, lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name)
+    React.createElement("h3", { style: { ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 } }, nombre)
     )
     ),
     React.createElement("p", { style: { fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' } },
@@ -40457,6 +40496,7 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
 
   filter((_ref3) => {let { key } = _ref3;return key !== 'paths' || window.SHOW_CAMINOS !== false;}).map((_ref4) => {let { key, label } = _ref4;return (
       React.createElement("button", { key: key, style: statsPanelTabStyles.tab(tab === key), "data-pace-stats-tab": key,
+        "aria-pressed": tab === key,
         "data-pace-stats-cerrada": cerrada(key) ? '' : undefined,
         "aria-label": cerrada(key) ? label + ' · ' + t('stats.cerrado') : undefined,
         onClick: () => {if (cerrada(key)) {paceAbrirPremium({ nombre: label });return;}setTab(key);} },
@@ -41821,6 +41861,39 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+
+
+
+
+
+
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const p = panelRef.current;
+    const previo = document.activeElement;
+    if (p && !p.contains(previo)) {try {p.focus({ preventScroll: true });} catch (e) {}}
+    const onTab = (e) => {
+      if (e.key !== 'Tab' || e.__paceDialogoAtendido || !p) return;
+      const activo = document.activeElement;
+      if (!p.contains(activo)) return;
+      const lista = paceEnfocables(p);
+      if (lista.length === 0) return;
+      const primero = lista[0],ultimo = lista[lista.length - 1];
+      if (e.shiftKey ? activo === primero || activo === p : activo === ultimo) {
+        e.preventDefault();
+        (e.shiftKey ? ultimo : primero).focus();
+      }
+    };
+    document.addEventListener('keydown', onTab);
+    return () => {
+      document.removeEventListener('keydown', onTab);
+      const ahora = document.activeElement;
+      if ((!ahora || ahora === document.body || p && p.contains(ahora)) && paceFocoDevolvible(previo)) {
+        try {previo.focus({ preventScroll: true });} catch (e) {}
+      }
+    };
+  }, [open]);
+
   if (!open) return null;
 
 
@@ -41849,7 +41922,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
   return (
     React.createElement("div", { ref: panelRef, "data-pace-tweaks-panel": true, "data-pace-aj-vista": vistaDatos ? 'datos' : undefined,
-      "data-pace-aj-bajo": bajo ? '' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
+      "data-pace-aj-bajo": bajo ? '' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", tabIndex: -1, style: {
+        outline: 'none',
         position: 'fixed',
         right: 24, bottom: 24,
         width: 320,
@@ -45227,6 +45301,7 @@ function Onboarding() {
     React.createElement("button", { "data-pace-toque": true,
       onClick: toggleLang,
       title: t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
+      "aria-label": t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
       style: onboardingStyles.langToggle },
 
     React.createElement("span", { style: { fontWeight: state.lang === 'es' ? 600 : 400 } }, "ES"),
@@ -50063,8 +50138,9 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
         padding: 3,
         gap: 2
       } },
+
     modes.map((m) =>
-    React.createElement("button", { key: m.v, onClick: () => elegirModo(m.v),
+    React.createElement("button", { key: m.v, onClick: () => elegirModo(m.v), "aria-pressed": state.focusMode === m.v,
       style: {
         padding: '6px 18px',
         fontSize: 11,
