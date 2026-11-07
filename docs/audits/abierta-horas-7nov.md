@@ -49,6 +49,10 @@ su arreglo un momento) tumba solo la suya. Las tres reglas tienen su fila arriba
 
 ## Para Ez (cambia lo que hace o lo que se ve)
 
+Los tres casos, con la foto del antes, las opciones por letras y la recomendada (A en los tres), en la página
+**[Lo que ves al volver](https://claude.ai/artifact/LsDSi3X7Gbd4kBWdpPcpPj)**. Ez contesta con tres letras
+(«E1 A · V1 A · V2 A»). E1 se monta en esta rama; V1 y V2, en la de la ventana de la pausa y el cierre.
+
 ### E1 · Elegido el día y sin empezar, el plan se queda en la hora de elegir · molesta
 
 Elegir «Jornada entera» a las 8:00 y volver a las 11:00 sin haber empezado: el aro dice «Bloque 1 de 11»,
@@ -65,9 +69,12 @@ enseña la línea, por eso no lo toco.
   el bloque 2», mientras el aro dice «Pausa terminada». Igual con el portátil cerrado de 9:20 a 10:20: el aro
   dice «Pausa terminada» y la ventana ofrece la pausa. **Recomendación:** si la pausa entera ya pasó al volver,
   no abrir la ventana sola, o que diga la hora de verdad.
-- **V2 · El último bloque con la tapa cerrada hasta pasada la salida.** De 17:30 a 18:15: el bloque cuenta
-  una vez, el aro queda en «Foco manual · Ciclo completado» con «Empezar otro ciclo» y la ventana abre el
-  cierre «Tu pausa». La duración del bloque ya sale bien con A1; lo demás es del cierre de la jornada.
+- **V2 · El último bloque del día ofrece un bloque que no existe · molesta.** De 17:30 a 18:15 con la tapa
+  cerrada: el bloque cuenta una vez, el aro queda en «Foco manual · Ciclo completado» con «Empezar otro
+  ciclo» y la ventana abre el cierre «Tu pausa» con «18:15 · Lo que toca ahora». **Y también sin tapa:**
+  cuando el último bloque acaba a su hora (17:55), la ventana ofrece «Seguir con el bloque 2» en un día de un
+  bloque (en uno de once, el 12), porque `BreakMenu.ritmo.jsx` pinta siempre `plan.hechos + 1`. La duración del
+  bloque ya sale bien con A1; lo demás es del cierre de la jornada.
 
 ## Lo que se midió y salió bien
 
@@ -126,26 +133,64 @@ no vuelve al estado de fábrica) y la barra lo avisa una vez; el único camino q
 
 ### Sin red y con un service worker viejo
 
-**Sin medir todavía** (ver «Dónde me quedé»). Lo que dice el código de `sw.js`, sin reproducir y por eso sin
-apuntarlo como fallo: el HTML va primero a la red y el resto primero a la caché, y `caches.match` busca en todas
-las cachés. Con una versión nueva publicada y el service worker viejo aún al mando (hasta pulsar «Hay una
-versión nueva» o cerrar todas las pestañas), el HTML nuevo puede convivir con un dibujo viejo del mismo nombre.
-El código de la app no se mezcla, porque va entero dentro de `index.html`. El banco que lo comprueba está
-escrito (`sw.js` en el scratchpad: v1 y v2 de `dist/` servidas por turnos en el 8880, con un dibujo cambiado).
+Banco `sw.js` (en el scratchpad, puerto 8885): v1 es `dist/` de esta rama; v2, la misma con otro
+`CACHE_NAME`, una marca en el HTML y el dibujo de «Elevación de puntas» cambiado con el mismo nombre (el
+primer paso de «Piernas sin pasos»: `.webp` de 24.078 a 48.532 bytes, `.min.webp` de 4.212 a 9.590), como
+cuando se redibuja un ejercicio. Se sirven por turnos y se mira lo que recibe la página por el service worker.
+**Dos pasadas, idénticas.**
 
-## Dónde me quedé (7 nov., cuenta al 90 % de las 5 h)
+| Paso | HTML | Dibujo que llega | Cachés | ¿Verdad? |
+|---|---|---|---|---|
+| v1 instalada, con red | v1 | v1 | `pace-v0.192.0` | sí |
+| v2 publicada, recargada con red | v2 | **v1** | las dos; v2 esperando y «Hay una versión nueva» a la vista | ver abajo |
+| Sin red, recargada / pestaña nueva | v2 | v1 | las dos | la app monta; cero peticiones fallidas |
+| Bloque empezado y «Actualizar» sin red | v2 | v2 | solo `pace-v9.9.9` | sí: recarga sin red y el bloque sigue (1.498 → 1.495 s por delante) |
+| «Luego», se cierran todas las pestañas, se abre otra | v2 | v2 | solo la nueva | sí |
+| v1 abierta por primera vez sin red: home, los cuatro módulos, una vista previa con dibujo, Logros, Estadísticas | v1 | v1 | la suya | sí: cero peticiones fallidas, cero errores |
 
-- Hecho y en el commit: los tres arreglos, sus pruebas (5 en verde con el arreglo; rojas contra v0.192.0;
-  los tres mutantes, rojos) y las tres filas de DECISIONES.
-- `npm run verify`: pasa, 0 problemas.
-- Las pruebas vecinas (`hora-y-medianoche`, `cambio-de-dia`, `estado-no-guarda`, `ritmo-pausa*`, `ritmo-juntos`,
-  `ritmo-larga-sin-sitio`, `aro-jornada`, `ritmo-reloj`, `pestanas-estado`, `inicio-modulos`, `ritmo-aviso`,
-  `cambio-de-hora`, `ritmo` y la nueva) en el 8880: 97 de 99 en una pasada de 9,6 min con el PC cargado por
-  otras sesiones. Las dos que cayeron (`ritmo-aviso.spec.js:95` y `ritmo-pausa.spec.js:106`) pasan solas; repetidas
-  tres veces cayeron 4 de 6 en una pasada lenta (5,2 min) y pasaron 6 de 6 en otra normal (1,2 min); con el
-  `index.html` de v0.192.0, 6 de 6 (1,1 min). Lo leo como carga y no como el arreglo, pero **no está
-  demostrado**: que la coordinadora lo mire al pasar la suite entera.
-- Falta: el banco del service worker sin red.
+**Medido, sin fallo que arreglar aquí.** Lo único que no casa es el paso dos: con la versión nueva publicada y la
+vieja aún al mando, el HTML nuevo enseña el dibujo viejo hasta pulsar «Actualizar» o cerrar todas las pestañas
+(`caches.match` encuentra antes la caché vieja, y el que responde es el service worker viejo, que no se puede
+cambiar desde la versión nueva). No rompe nada ni pierde nada, y es justo lo que el aviso de versión nueva
+gobierna. Sí pesa en un caso: si se corrige un dibujo que estaba mal (una mano al revés), quien pulsa «Luego»
+y deja PACE abierto días lo sigue viendo mal. Lo limpio sería que cada dibujo lleve su versión en la dirección
+(`?v=` o un resumen en el nombre), en el build, en `sw.js` y en lo que mira `verify`: es un cambio del build,
+no de esta auditoría, y queda para la coordinadora.
+
+## Las dos pruebas que caían bajo carga: no es el arreglo
+
+En la primera pasada de las vecinas cayeron `ritmo-aviso.spec.js:95` y `ritmo-pausa.spec.js:106`. Repetidas con
+`--workers=1` en el 8884, por tandas y alternando el `index.html` de la rama con el de `main` (el de v0.192.0;
+las dos pruebas y `helpers.js` son iguales en las dos):
+
+| Tanda (7 nov.) | `index.html` | `ritmo-aviso:95` | `ritmo-pausa:106` | Tiempo |
+|---|---|---|---|---|
+| 12:25 | rama | 5 de 5 (23-36 s) | 4 de 5 (20-54 s; una, más de 60 s) | 8,4 min |
+| 12:34 | `main` | 5 de 5 (21-37 s) | 5 de 5 (17-27 s) | 4,2 min |
+| 12:39 | rama | 5 de 5 (23-29 s) | 5 de 5 (22-33 s) | 4,6 min |
+| 12:44-13:05, alternando de dos en dos, el PC más cargado | `main` / rama | | pasan: `main` 3 de 6; rama 2 de 5 | |
+
+Las que caen, caen siempre igual y con las dos versiones: se acaban los 60 s de la prueba con lo que espera ya
+en pantalla (el bloque 2 en marcha y la parada en «hecha»). Mientras tanto el PC tenía 3,4 GB libres de 15,7,
+18 procesos de Node y 6 navegadores de otras sesiones: la falta de memoria que ya describe `playwright.config.js`.
+Además, ningún arreglo añade trabajo en lo que recorren: el vigilante de cada minuto ya existía (A2 solo le
+cuelga dos componentes, que se repintan una vez por minuto), y A1 y A3 no están en su camino.
+`ritmo-pausa:106` avanza el reloj segundo a segundo hasta 400 veces: si cae en el CI, que es donde cuenta, el
+arreglo es suyo (pasos más largos o `test.slow()`), no de esta rama.
+
+## Dónde queda la rama (7 nov., 13:10)
+
+- Hecho y en el commit: los tres arreglos con sus pruebas, sus mutantes y sus filas de DECISIONES; el banco
+  del service worker, medido dos veces; las dos pruebas dudosas, comprobadas; la página para Ez, publicada.
+- `npm run verify`: pasa, 0 problemas. `node build-standalone.js` no cambia `index.html`.
+- Las pruebas vecinas (las de antes más `sw-legales`), en marcha en el 8884 al escribir esto.
+
+## Visto de paso (fuera de esta auditoría, no lo toco)
+
+- **«chair» en inglés en las tarjetas de Estira.** «Tronco sentado» dice «1–2 min · sentado · chair» (foto del
+  banco sin red). Tres rutinas llevan `equipment: ['chair']` y no existe `lib.gear.chair`; `RoutineCard.jsx`
+  pinta la clave cruda cuando falta la traducción. Falta decidir si dice «con silla» o nada, porque
+  «sentado» ya lo dice.
 
 ## Lo que no se cubre
 
