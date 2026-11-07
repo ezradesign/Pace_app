@@ -93,3 +93,49 @@ test('360×718 · tres sellos a la vez salen uno detrás de otro, sin pisarse ni
   expect(choques, 'un sello pisa el aro').toEqual([]);
   expect(vistos.size, 'no salieron los tres, uno detrás de otro').toBe(ids.length);
 });
+
+/* EL SELLO SIGUE AL HUECO SI EL ARO CAMBIA MIENTRAS SE VE (caza de la semana, 7 nov. 2026). El hueco
+   se medía una vez, al salir, y el sello es `position: fixed`: con la pausa en el aro, su línea en
+   cursiva («Luego, el bloque 2») va justo bajo el número; al pulsar «Empezar ya el bloque 2» el aro
+   pasa a ser el del bloque, el número crece y su línea baja, y el sello se quedaba donde estaba,
+   ENCIMA del número («Nuevo sello · Día de foco» sobre el 45:00), y lo mismo al cerrarse el día. */
+const RITMO = {
+  semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'],
+  horario: { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 },
+};
+for (const [ancho, alto] of [[1280, 720], [360, 718]]) {
+  test(`${ancho}×${alto} · un sello a la vista sigue en el hueco del aro cuando el aro pasa de la pausa al bloque`, async ({ page, context }) => {
+    const { terminarBloque } = require('./helpers');
+    await page.setViewportSize({ width: ancho, height: alto });
+    await sembrar(context, { ritmo: RITMO, lastActiveDay: new Date(2026, 10, 8).toDateString() });
+    await page.clock.install({ time: new Date(2026, 10, 9, 9, 0) });
+    await irAlArtefacto(page);
+    const vis = (sel) => page.locator(sel).filter({ visible: true });
+    const comienza = vis('[data-pace-ritmo-comienza]');
+    if (await comienza.count()) await comienza.first().click();
+    await vis('[data-pace-ritmo-habitual-comienza], [data-pace-ritmo-loseta="jornada"]').first().click();
+    await vis('[data-pace-cta]').first().click();
+    await page.waitForTimeout(250);
+    await terminarBloque(page);
+    await vis('[data-pace-break-shortcut] button').first().click();
+    await page.waitForTimeout(300);
+
+    /* El sello sale con la pausa en el aro (el reloj quieto: no se va a los 3 s). */
+    await page.evaluate(() => showToast({ id: 'first.step', type: 'achievement' }));
+    await page.clock.fastForward(1200);
+    await expect(page.locator('[data-pace-sello-aro]'), 'GUARD: el sello no salió en el aro').toHaveCount(1);
+    await page.waitForTimeout(500);   /* su fundido de entrada va con el reloj de verdad */
+    const centro = (c) => (c.t + c.b) / 2;
+    const sub = () => page.evaluate(() => { const r = document.querySelector('[data-pace-dial-subtitle]').getBoundingClientRect(); return { t: r.top, b: r.bottom }; });
+    const antes = await foto(page);
+    expect(Math.abs(centro(antes.sellos[0].caja) - centro(await sub())), 'GUARD: con la pausa, el sello está en el hueco de su línea').toBeLessThan(3);
+
+    await vis('button').filter({ hasText: /^Empezar ya el bloque 2$/ }).first().click();
+    await page.waitForTimeout(400);
+    const f = await foto(page);
+    expect(f.sellos.length, 'GUARD: el sello sigue a la vista').toBe(1);
+    expect(centro(f.numero) - centro(antes.numero), 'GUARD: el aro cambió de forma').not.toBe(0);
+    expect(choca(f.sellos[0].caja, f.numero), 'el sello pisa el número del aro').toBe(false);
+    expect(Math.abs(centro(f.sellos[0].caja) - centro(await sub())), 'el sello sigue en el hueco de la línea del aro').toBeLessThan(3);
+  });
+}

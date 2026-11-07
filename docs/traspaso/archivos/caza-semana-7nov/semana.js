@@ -114,6 +114,9 @@ async function loQueHayEncima(p, dia) {
 async function prepararDia(p, como) {
   if (como === 'distinto:jornada' || como === 'distinto:media') {
     const op = como.split(':')[1];
+    /* «Hoy es distinto» vive en la ficha de tu día de siempre, que abre «Preparar jornada». */
+    const comienza = vis(p, '[data-pace-ritmo-comienza]');
+    if (await comienza.count()) { await comienza.first().click(); await p.waitForTimeout(500); }
     const d = vis(p, '[data-pace-ritmo-distinto]');
     if (await d.count()) { await d.first().click(); await p.waitForTimeout(500); }
     await vis(p, 'button[data-pace-ritmo-opcion="' + op + '"], [data-pace-ritmo-loseta="' + op + '"]').first().click();
@@ -127,7 +130,8 @@ async function prepararDia(p, como) {
 
 async function finDelBloque(p) {
   const fin = await p.evaluate(() => { try { return JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt || null; } catch (e) { return null; } });
-  if (!fin) return false;
+  /* El bloque acabó con el portátil cerrado: al abrirlo ya está su ventana. */
+  if (!fin) return (await vis(p, '[data-pace-break-shortcut]').count()) > 0;
   await p.clock.fastForward(Math.max(0, fin - await p.evaluate(() => Date.now())) + 1000);
   await p.locator('[data-pace-break-shortcut]').first().waitFor({ state: 'attached', timeout: 15000 }).catch(() => {});
   await p.waitForTimeout(500);
@@ -136,6 +140,9 @@ async function finDelBloque(p) {
 
 /* «Hacer la pausa»: la sesión hasta su cierre, «¿Te ayudó?» y vuelta a la home. */
 async function hacerPausa(p, respuesta) {
+  /* La ventana de siempre (sin pausa del día detrás, p. ej. antes de una reunión) no trae la
+     pausa propuesta: se cierra con «Ahora no». */
+  if (!(await vis(p, '[data-pace-break-acciones] button').count())) { await ahoraNo(p); return 'ventana de siempre: ahora no'; }
   await vis(p, '[data-pace-break-acciones] button').first().click();
   await p.waitForTimeout(600);
   const done = p.locator('[data-pace-session-done]');
@@ -227,6 +234,16 @@ async function dia(d, plan) {
       if (hasta != null) await irA(p, D(d, Math.floor(hasta / 60), hasta % 60));
     } else if (espera) await p.clock.fastForward(espera * 60000);
     await p.waitForTimeout(400);
+    /* En una reunión no se empieza un bloque: se espera a que acabe. */
+    const reunion = await p.evaluate(() => {
+      const o = (getState().ritmo || {}).ocupado, n = new Date(Date.now()), m = n.getHours() * 60 + n.getMinutes();
+      const t = o && o.fecha === ritmoHoy() && Array.isArray(o.tramos) ? o.tramos.find((x) => m >= x[0] && m < x[0] + x[1]) : null;
+      return t ? t[0] + t[1] : null;
+    });
+    if (reunion != null) {
+      apunta(nombre + ' en reunión', await leer(p));
+      await irA(p, D(d, Math.floor(reunion / 60), reunion % 60));
+    }
     if (plan.salirA && (await p.evaluate(() => new Date(Date.now()).getHours() * 60 + new Date(Date.now()).getMinutes())) >= plan.salirA) { apunta(nombre + ' se va', await leer(p)); break; }
     const ahora = await leer(p);
     const seguir = vis(p, '[data-pace-aro-seguir]');
@@ -272,9 +289,13 @@ async function hacerPausaDesdeLaHome(p) {
   await L.lanzar();
   try {
     for (const plan of P.dias) {
+      let fallo = false;
       try { await dia(plan.d, plan); }
-      catch (e) { apunta('ERROR ' + plan.nombre, e.message.split('\n')[0]); if (page) await L.foto(page, tag(plan.nombre + '-ERROR')); }
+      catch (e) { fallo = true; apunta('ERROR ' + plan.nombre, e.message.split('\n')[0]); if (page) await L.foto(page, tag(plan.nombre + '-ERROR')); }
       if (page) apunta(plan.nombre + ' estado', await estadoEntero(page).then((x) => ({ cola: x.cola, resumido: x.resumido, dias: x.dias.map((y) => y.f), streak: x.streak })));
+      /* Un día que falla cierra su pestaña como diga su noche: si no, el día siguiente abre otra y
+         corre con dos (el martes de oficina dejó la suya abierta y el miércoles salió raro). */
+      if (fallo && plan.noche !== 'abierta') await cerrarPagina();
     }
     /* El lunes siguiente y el martes: la carta y lo aplicado. */
     for (const fin of P.final || []) {

@@ -11,7 +11,8 @@ const platos = (p) => p.evaluate(() => {
 });
 
 async function stats(p, o, dia) {
-  const abre = o.vis(p, '[data-pace-sidebar] button, nav button').filter({ hasText: o.EN ? /^Stats|Statistics/ : /^Estad/ });
+  /* El icono de arriba a la derecha: sin texto, se busca por su `aria-label`. */
+  const abre = o.vis(p, '[aria-label="' + (o.EN ? 'View stats' : 'Ver estadísticas') + '"]');
   if (!(await abre.count())) { o.apunta(dia + ' stats', 'sin botón'); return; }
   await abre.first().click();
   await p.waitForTimeout(700);
@@ -27,7 +28,7 @@ async function stats(p, o, dia) {
 }
 
 async function logros(p, o, dia) {
-  const abre = o.vis(p, '[data-pace-sidebar-ultimo], [data-pace-sidebar] button').filter({ hasText: o.EN ? /Achievements|achievement/i : /Logros|logro/i });
+  const abre = o.vis(p, '[aria-label="' + (o.EN ? 'View achievements' : 'Ver logros') + '"]');
   if (!(await abre.count())) { o.apunta(dia + ' logros', 'sin botón'); return; }
   await abre.first().click();
   await p.waitForTimeout(700);

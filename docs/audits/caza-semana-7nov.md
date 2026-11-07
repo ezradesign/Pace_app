@@ -20,21 +20,47 @@ otro banco que lo compartía (pasó dos veces).
   «Otra», se salta casi todas y el miércoles no abre PACE (portátil cerrado del martes al jueves). El lunes 16
   acepta los cambios de la carta y dice que no a la pregunta de las horas.
 
-## Dónde me quedo (7 nov., uso de la cuenta al 88 %: paro aquí)
+## Dónde me quedo (7 nov., tarde: tope del 80 % de la cuenta; paro aquí)
 
-Hecho: el banco; la semana entera de **oficina** y de **salta**, con su lunes 16 (la carta) y su martes 17;
-S1 y S2 arreglados con su prueba (`tests/ritmo-reunion-tarde.spec.js`, roja con cada arreglo quitado: el aro
-en 18:00, y la ventana con «45 minutos») y su fila en `DECISIONES_TECNICAS_VIGENTES.md`; `verify` en verde.
-S4 arreglado con su prueba (roja sin el arreglo) y su fila; `verify` en verde tras cada arreglo. Las pruebas de la zona («ritmo-*», `aro-jornada`, `cambio-de-dia`) **no se han pasado aún** con `--workers=1`: es lo primero.
-**Falta, por orden:** la zona con un worker; repetir
-**oficina** limpia (el martes el banco se paró a las 10:52 tras la ventana de siempre y dejó esa página abierta, así
-que el miércoles corrió con dos pestañas: de ahí el resumen del 11 repetido y la pregunta «¿Pongo tu salida a las
-13:15?», que salen de lo que el banco dejó de hacer); la persona **media** (en, 360); Estadísticas y Logros (el banco
-no encontró sus botones: son «Ver estadísticas» y «Ver logros», por `aria-label`); es/en a 360 y 1280; la suite
-de la zona con `--workers=1`; y la página de Ez en `docs/audits/caza-semana-7nov/pagina-ez.html` con sus fotos.
-Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano y
-`PACE_E2E_PORT=8892 RECORRIDO_FOTOS=<carpeta> node docs/traspaso/archivos/caza-semana-7nov/semana.js oficina es escritorio`
-(y `salta es movil`, `media en movil`, en el 8893 con su servidor).
+Hecho en esta tanda:
+- **La zona con un worker, en verde**: `ritmo-*`, `aro-jornada`, `cambio-de-dia`, `ritmo-reunion-tarde` y
+  `ritmo-otra-resumen`, 181 de 181 (6,9 min, puerto 8892).
+- **S4 de punta a punta**: `tests/ritmo-otra-carta.spec.js`. «Otra» sobre «Empuje sencillo» el lunes, el martes
+  y el jueves (el miércoles no sale: las rutinas cambian de un día a otro), los bloques empezados antes de su
+  hora y la página abierta de un día a otro; el lunes 16 la carta propone `descansa:extra.desk.pushups` y la
+  enseña. Mutante: sin `dia.descartes` en el resumen, cae (0 de 3 resúmenes con lo descartado).
+- **S5 arreglado** (abajo): el sello del aro se quedaba encima del número. `tests/sello-aro.spec.js`, dos pruebas
+  nuevas (1280 y 360), rojas sin el arreglo; fila arriba del todo en `DECISIONES_TECNICAS_VIGENTES.md`. Las
+  vecinas (`sello-*`, `logros-*`, `checklist-estado`, `caza-respira`): 48 de 48.
+- **media (en, 360) entera**: los cinco días, la carta y el martes 17. Sin cortes ni textos sin traducir.
+- **es/en a 360 y 1280** (`medidas.js`): la carta, Estadísticas (Semana y «Qué te ayuda»), Logros, la home
+  preparada, la ventana de la pausa y la home tras la jornada: sin scroll ni cortes. Los «solapes» que salen son
+  la caja del número grande (no se tocan a la vista) y el sello de S5; el «Tu» sin traducir es el martes en inglés.
+- **El banco**, corregido: Estadísticas y Logros por su `aria-label`; un día que falla cierra su pestaña; «Hoy
+  es distinto» pulsa antes «Preparar jornada»; tras el portátil cerrado sigue con la ventana; la ventana de
+  siempre se cierra con «Ahora no»; en una reunión espera a que acabe.
+
+**Falta, por orden:**
+1. Repetir **oficina** (`semana.js oficina es escritorio`, 8892) con la última corrección del banco (la espera de
+   la reunión no miraba la fecha de `ocupado` y esperaba también el miércoles, jueves y viernes; ya mira
+   `o.fecha === ritmoHoy()`). La carta de esa pasada («¿Pongo tu salida a las 19:05?») es del banco, no de la app.
+2. **La página de Ez** en `docs/audits/caza-semana-7nov/pagina-ez.html`, con sus fotos en webp al lado, y
+   publicarla. Las fotos se sacan con `fotos-ez.js` (8893): S3 (`ez-s3-*-hoy-manana`, `ez-s3-*-A-manana`), la
+   comida (`ez-comida-*-hoy-antes`, `-hoy-empezado`, `-A-empezado`) y la carta corta (`ez-corta-*-carta`). Los
+   tres casos, con las letras que propongo:
+   - **S3 · el Foco manual tras la jornada**: A (recomendada) vuelve a tus minutos de antes del día (25 si
+     nunca los cambiaste); B el bloque de siempre de tu día (45); C como ahora (los del último bloque: 33, 42, 60).
+   - **La comida saltada con un bloque** (13:46, «Empezar ya el bloque 7» da 45 min hasta las 14:31 y el día pasa
+     de 9 a 10 bloques): A (recomendada) el bloque acaba a la hora de comer, como antes de una reunión; B como
+     ahora; C sin «Empezar ya el bloque» en la pausa de antes de comer. Lo mismo pasa al empezar un bloque en plena
+     reunión (el aro ofrece «Empezar bloque 3 · 45:00» a las 10:04).
+   - **S6 · la carta que no cambia nada**: A (recomendada) si lo que saltaste ya era de 2 minutos, la carta no
+     lo propone y deja el sitio a otra cosa; B como ahora.
+3. `salta es movil` otra vez, para ver en el banco la carta con «descansa» (la prueba ya lo cubre).
+
+Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano (y 8893 para el segundo) y
+`PACE_E2E_PORT=8892 RECORRIDO_FOTOS=<carpeta> node docs/traspaso/archivos/caza-semana-7nov/semana.js oficina es escritorio`.
+No compiles (`build-standalone.js`) mientras corre una suite en la misma carpeta: la suite prueba lo que haya.
 
 ## Lo encontrado hasta ahora
 
@@ -83,6 +109,23 @@ Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano y
   empezado antes de su hora (la pausa queda en `dia.pasado`) y, al día siguiente, el resumen dice `antes: [la
   rutina descartada]`. Roja con el arreglo quitado (`antes: []`). Falta la prueba de punta a punta: tres días con
   «Otra» sobre la misma rutina y la carta del lunes que propone que descanse.
+
+### S5 · El sello del aro se queda encima del número si el aro cambia mientras se ve · molesta (código) · ARREGLADO
+
+- **Pasos** (`fotos-ez.js`, la comida): viernes, jornada entera; en la pausa de las 13:45 sale «Nuevo sello · Día
+  de foco» en el aro, en el sitio de «Luego, el bloque 7»; «Ahora no» y «Empezar ya el bloque 7».
+- **Qué pasa:** el aro pasa a ser el del bloque (el número crece, su línea baja) y el sello se queda donde
+  estaba, encima del 45:00. A 360, tras la jornada, «Nuevo sello · Primer paso» sobre el 45:00.
+- **Por qué:** `toastHuecoDelAro` se medía una vez, al salir, y el sello es `position: fixed`.
+- **Arreglo:** `SelloEnAro` vuelve a medir con cada cambio de la página o de la ventana (y cada 250 ms).
+
+### S6 · La carta propone «pasa a ser de 2 minutos» para una pausa que ya era de 2 · para Ez
+
+- **Pasos:** la persona **media** (en, 360): la pausa de las 12:15 saltada lunes, miércoles y jueves, con
+  «Escritorio express» y «Tronco sentado», las dos de 2 minutos. El lunes 16 la carta: «La pausa de las 12:15, que
+  saltaste tres días, pasa a ser de 2 minutos». Aceptada, el martes 17 sirve otra de 2 minutos: no cambia nada.
+- **Por qué:** el motor no sabe los minutos de lo servido (el resumen guarda ids, no minutos). Cambia lo que
+  propone la carta: va a la página de Ez.
 
 ### S3 · Al acabar la jornada, el «Foco manual» se queda con la duración del último bloque · pulido (por mirar)
 

@@ -72,6 +72,26 @@ const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: '
 function SelloEnAro({ toast, t }) {
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
+  /* EL HUECO SE SIGUE MIENTRAS SE VE (caza de la semana, 7 nov. 2026). Se mide al salir, pero el
+     aro puede cambiar de forma en sus 3 s: con la pausa en el aro su línea va justo bajo el número,
+     y al pulsar «Empezar ya el bloque» el número crece y la línea baja; el sello, `fixed`, se
+     quedaba ENCIMA del número. Se vuelve a medir con cada cambio de la página y de la ventana. */
+  const [aro, setAro] = useStateTO(toast.aro);
+  useEffectTO(() => {
+    let ultimo = toast.aro;
+    const medir = () => {
+      const h = toastHuecoDelAro();
+      if (!h || (ultimo && h.x === ultimo.x && h.y === ultimo.y && h.ancho === ultimo.ancho && h.fs === ultimo.fs)) return;
+      ultimo = h;
+      setAro(h);
+    };
+    const obs = new MutationObserver(medir);
+    obs.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+    window.addEventListener('resize', medir);
+    /* Lo que se mueve sin tocar el DOM (una transición del aro). */
+    const cada = setInterval(medir, 250);
+    return () => { obs.disconnect(); window.removeEventListener('resize', medir); clearInterval(cada); };
+  }, []);
   useLayoutEffectTO(() => {
     const el = textoRef.current;
     if (!el || el.scrollWidth <= el.clientWidth + 1) return;
@@ -80,11 +100,11 @@ function SelloEnAro({ toast, t }) {
     else if (!ajuste.corto) setAjuste({ escala: 1, corto: true });
     else if (ajuste.escala === 1) setAjuste({ escala: Math.max(0.6, cabe * 0.98), corto: true });
   }, [ajuste]);
-  const fs = toast.aro.fs;
+  const fs = aro.fs;
   return (
     <div data-pace-sello-aro style={{
-      position: 'fixed', left: toast.aro.x, top: toast.aro.y,
-      transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
+      position: 'fixed', left: aro.x, top: aro.y,
+      transform: 'translate(-50%, -50%)', maxWidth: aro.ancho,
       display: 'flex', alignItems: 'center',
       whiteSpace: 'nowrap', color: 'var(--achievement)',
       fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
