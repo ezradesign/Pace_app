@@ -10,7 +10,16 @@ Escrito antes de tiempo, por si la cuenta se queda sin uso: lo que corre está e
 **Ez, 7 nov., ~16:30:** esta cuenta, hasta el 93 % (las sesiones: WIP al 90 %, paran al 93 %); a las 16:30 iba al 82 %. Preguntó por qué no ve el
 sobre en la web: la web sirve la v0.192.0 (comprobado), pero el sobre solo se pinta con algo dentro. Las novedades (`app/shell/novedades.data.js`)
 son las del 5 nov. y solo salen a quien usaba PACE en ese navegador antes del 5 nov. (`Sobre.novedades.js`); la 0.192.0 no escribió
-ninguna. Propuesto a Ez: una novedad para la versión que lleve el recorrido y el inglés, con el texto para que lo vea.
+ninguna. **Ez: «Sí, escríbela».** Una novedad para la versión que lleve el recorrido y el inglés, con el texto para que lo vea.
+Se monta en `app/shell/novedades.data.js` (PRIMERA de la lista, `desde` = el día en que salga, id `jornada-cerrada`) con la
+versión que junte el recorrido; antes, comprobar que cada línea dice lo que hace la app montada:
+- es: «Tu jornada se cierra sola al pasar tu hora de salida, con lo que hiciste; si quieres, sigues por libre.» · «Si dejas
+  abierta la ventana de una pausa, a la mañana siguiente ya no te espera: PACE abre tu día nuevo.»
+- en: “Your workday now wraps up on its own once your finish time has passed, with what you did; you can keep going without
+  a plan.” · “If you leave a break window open, it no longer waits for you the next morning: PACE opens your new day.”
+**Caza del día de v1** (`claude/caza-v1-compra-79e3e4`, 1fbca049, sesión parada): arregló que importar una copia de antes de v1
+reabría otra semana de PACE completo, sin fin (con prueba y mutante). Informe `docs/audits/caza-v1-compra-7nov.md`; página de Ez
+https://claude.ai/artifact/1AzBCEn8XpnhWVKbMJRSdg (EcLj6), en la rama. Sin suite entera: solo sus tres pruebas y `verify`.
 **Ez eligió las recomendadas en las dos páginas (7 nov., ~16:22): E1 A · V1 A · V2 A y 1B · 2B · 3B.** Aún no se ha montado ninguna.
 
 **Para abrir la otra cuenta, Ez pega esto:**
