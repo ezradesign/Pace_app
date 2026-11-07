@@ -206,15 +206,20 @@ cuelga dos componentes, que se repintan una vez por minuto), y A1 y A3 no están
 `ritmo-pausa:106` avanza el reloj segundo a segundo hasta 400 veces: si cae en el CI, que es donde cuenta, el
 arreglo es suyo (pasos más largos o `test.slow()`), no de esta rama.
 
-## Dónde me quedo (7 nov., tarde, con el uso al 71 % de las 5 h)
+## Dónde me quedo (7 nov., tarde, con el uso al 79 % de las 5 h)
 
-- Hecho y en la rama: E1 A, la unión con el recorrido, V1 A y V2 A, con sus pruebas (las ocho de
-  `abierta-horas` pasan), sus diez mutantes en rojo, sus tres filas de DECISIONES y los textos en es y en.
-- `verify`: falló solo el censo de claves (1149 → 1151, las dos nuevas), ya subido; falta pasarlo otra vez.
+- Hecho y en la rama: E1 A, la unión con el recorrido, V1 A y V2 A, con sus pruebas, sus diez mutantes en
+  rojo, sus tres filas de DECISIONES y los textos en es y en. `npm run verify`: pasa, 0 problemas.
 - Las pruebas de la zona (`abierta-horas`, `aro-jornada`, `cambio-de-dia`, `bloques-cortos` y `ritmo-*`) con
-  un worker en el 8884: en marcha al subir este WIP; el resultado va en el commit siguiente.
-- Falta: las fotos del después a 360 y 1280 (E1 a las 11:00, V1 a las 12:10, V2 a las 17:55 con la ventana y
-  con el aro) y la sección «Montado» en `abierta-horas-7nov/pagina-ez.html`, publicada.
+  un worker en el 8884 sobre el `index.html` recompilado: 195 de 197 en 10,8 min. Las dos que cayeron lo
+  hicieron por las letras de Ez, no por carga, y se pusieron al día (pasan solas, 10 de 10):
+  `ritmo-media:59` abre una media jornada sin empezar a las 15:05 y ahora se lee desde las 15:05 (E1), y
+  `aro-jornada:219` acaba los dos bloques pasada la salida y el aro dice «Jornada cerrada» (V2) en vez de
+  «Tu jornada ya terminó», que queda para el día cerrado por la hora con bloques sin hacer.
+- Fotos del después a 1280 y 360 en la sección «Montado» de `abierta-horas-7nov/pagina-ez.html`.
+- Visto y no tocado: con la jornada cerrada, debajo del botón sigue la fila del ciclo por libre
+  («Siguiente · ciclo 2 / 4»), como en el día cerrado del recorrido.
+- Lo que espera a la coordinadora: juntar la rama (lleva el recorrido dentro) y la suite entera.
 
 ## Dónde queda la rama (7 nov., 13:10)
 

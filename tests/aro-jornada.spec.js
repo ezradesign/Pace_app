@@ -226,6 +226,7 @@ test('el bloque que empezó antes de la salida acaba con su pausa de cierre, y l
   await expect(overlaySuperior(page)).toContainText('Para cerrar');
   await page.keyboard.press('Escape');
   await hastaLas(page, '17:50');
-  await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Tu jornada ya terminó');
+  /* Hechos los dos bloques, el aro dice «Jornada cerrada» también pasada la salida (Ez, V2 A del 7 nov.). */
+  await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Jornada cerrada');
   await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('1 h 30 min de foco');
 });
