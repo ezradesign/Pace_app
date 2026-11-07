@@ -37,7 +37,8 @@ Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RE
 - **Caza de la semana** `claude/caza-semana-21914d`, 645eba28 (WIP): tres fallos arreglados con su prueba (un bloque empezado tarde antes
   de una reunión; la ventana tras ese bloque; lo descartado con «Otra» en el resumen del día). Paró al 88 %: faltan las pruebas vecinas con
   un worker, la persona «media» y la página de Ez. Su «Dónde me quedo», en `docs/audits/caza-semana-7nov.md`.
-- **Recorrido**: la suite iba por la 1005 de 1325 a las 16:50.
+- **Recorrido**: **la suite entera, en verde** (1323 pasan y 2 se saltan, con un worker, 59,7 min, de 16:07 a 17:06, sobre 42ae69c7 y con
+  la caza del día de v1 corriendo la suya a la vez). Solo falta el aserto de `deMas` (abajo) y enseñárselo a Ez para su «júntalo».
 
 1. **Primero, las tres ramas** del bloque de abajo: `git status` y `git log -3` en su worktree (`.claude/worktrees/textos-ingles-7nov-a227ea`,
    `caza-v1-compra-79e3e4` y `caza-semana-21914d`); lo que no tenga commit, un «WIP:» con push sin `PACE_standalone.html`. Se
