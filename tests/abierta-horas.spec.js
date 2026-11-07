@@ -11,6 +11,8 @@
  *    y nada las repintaba: abierta a las 9:00 y sin tocar, a las 11:00 seguía «Hasta las 10:00».
  *  · A3 · si el navegador no deja guardar, lo hecho solo vive en memoria, y la medianoche
  *    relevaba el día desde lo guardado: el día de ayer se archivaba sin lo de la tarde.
+ *  · E1 · (Ez, E1 A) elegida la jornada a las 8:00 y de vuelta a las 11:00 sin empezar, el aro
+ *    decía «Bloque 1 de 11» y la barra «A las 8:45»: el día sin empezar se lee desde ahora.
  * Calibrado en ROJO contra el `index.html` de v0.192.0.
  */
 'use strict';
@@ -95,6 +97,30 @@ test('A2 · con PACE abierto y sin tocar, las losetas siguen la hora', async ({ 
   await page.clock.fastForward(60 * 60 * 1000);
   await ponerVisibilidad(page, 'visible');
   await expect(unaHora).toContainText('Hasta las 13:00', { timeout: 2000 });
+});
+
+test('E1 · elegida la jornada a las 8:00 y sin empezar, a las 11:00 el día va desde las 11:00', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  const ocho = { inicio: 480, comida: 840, comidaDur: 60, salida: 1080 };
+  await sembrar(context, { sidebarCollapsed: false, ritmo: { horario: ocho, dia: { fecha: HOY, opcion: 'jornada', desde: 480, cicloBase: 0, cambios: {} } } });
+  await page.clock.install({ time: a('08:00') });
+  await irAlArtefacto(page);
+  const rotulo = page.locator('[data-pace-dial-label]').filter({ visible: true });
+  await expect(rotulo).toHaveText('Bloque 1 de 11');
+  /* Tres horas en una reunión, con PACE de fondo; al volver, el día empieza ahora. */
+  await ponerVisibilidad(page, 'hidden');
+  await page.clock.fastForward(3 * 60 * 60 * 1000);
+  await ponerVisibilidad(page, 'visible');
+  await expect(rotulo, 'el aro seguía en el plan de las 8:00').toHaveText('Bloque 1 de 8');
+  await expect(page.locator('aside').first(), 'la barra decía «A las 8:45»').toContainText('11:45');
+  expect((await elDia(page)).items[0], 'la línea empezaba a las 8:00').toEqual(['foco', 660, 45]);
+  expect(await page.evaluate(() => getState().ritmo.dia.desde), 'leerlo no escribe nada').toBe(480);
+  /* Empezar a la misma hora lo fija: con el bloque en marcha ya no se lee desde ahora. */
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
+  await expect(page.locator('[data-pace-cta]').filter({ visible: true })).toHaveText('Pausar foco');
+  expect(await page.evaluate(() => getState().ritmo.dia.desde)).toBe(660);
+  expect((await elDia(page)).items[0], 'empezado a las 11:00, el día volvía a las 8:00').toEqual(['foco', 660, 45]);
+  expect(errores).toEqual([]);
 });
 
 test('A3 · sin poder guardar, la medianoche no tira lo hecho por la tarde', async ({ page, context }) => {

@@ -60,4 +60,4 @@ function usePaceMinuto() {
 document.addEventListener('visibilitychange', paceDiaMirar);
 setInterval(paceDiaMirar, PACE_DIA_CADA_MS);
 
-Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar, usePaceMinuto });
+Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar, usePaceMinuto, paceMinutoSuscribir });

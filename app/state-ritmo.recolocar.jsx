@@ -99,6 +99,8 @@ function ritmoBloqueEmpezado(minutos) {
     cambios.pausaPendiente = false;
     if (otraDuracion) cambios.bloque = mins;
   }
+  /* Sin empezar, el día se leía desde ahora (state-ritmo.ahora.jsx): empezar a esa misma hora lo fija. */
+  if (p && p.desdeAhora != null && cambios.desde == null) cambios.desde = t;
   if (!Object.keys(cambios).length) return;
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }

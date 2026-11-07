@@ -7588,7 +7588,7 @@ function usePaceMinuto() {
 document.addEventListener('visibilitychange', paceDiaMirar);
 setInterval(paceDiaMirar, PACE_DIA_CADA_MS);
 
-Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar, usePaceMinuto });
+Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar, usePaceMinuto, paceMinutoSuscribir });
 ;Object.assign(window, { PACE_DIA_CADA_MS, paceMinutoVisto, paceMinutoOyentes, paceDiaMirar, paceMinutoSuscribir, usePaceMinuto });
 })();
 </script>
@@ -12611,7 +12611,7 @@ function calendarioDeseados(s, textos) {
   if (!hoy) return null;
   if (R.libre) return { fecha: hoy, eventos: [] };
   if (!R.dia) return null;
-  var plan = ritmoPlan(s);
+  var plan = ritmoPlan(s, { comoSeEligio: true });
   if (!plan) return null;
   var corre = plan.actual && typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
   var callar = corre ? plan.actual.desde + plan.actual.dur : null;
@@ -13329,17 +13329,23 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
 
 
 
-function ritmoPlan(s) {
+
+
+
+function ritmoPlan(s, o) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
-  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null);
+  var ahora = !(o && o.comoSeEligio) && typeof ritmoDesdeSinEmpezar === 'function' ? ritmoDesdeSinEmpezar(s, R) : null;
+  var menu = function (desde) {return ritmoMenu(s, R.dia.opcion, R.dia.cambios, desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null);};
+  var m = ahora != null ? menu(ahora) : null;
+  if (!m || !m.focos.length) {ahora = null;m = menu(R.dia.desde);}
   if (!m) return null;
   var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
   var actual = m.focos[hechos] || null;
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
   if (pausa && pausa.tipo === 'foco') pausa = null;
 
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {} };
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora };
 }
 
 
@@ -13614,12 +13620,62 @@ function ritmoBloqueEmpezado(minutos) {
     cambios.pausaPendiente = false;
     if (otraDuracion) cambios.bloque = mins;
   }
+
+  if (p && p.desdeAhora != null && cambios.desde == null) cambios.desde = t;
   if (!Object.keys(cambios).length) return;
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
 
 Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado });
 ;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado });
+})();
+</script>
+  <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function ritmoDesdeSinEmpezar(s, R) {
+  var d = R && R.dia;
+  if (!d || R.libre || d.pausa != null) return null;
+  if ((Number((s || {}).cycle) || 0) - (d.cicloBase || 0) > 0) return null;
+  if (typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo()) return null;
+  var ahora = ritmoAhora();
+  return ahora > (Number(d.desde) || 0) ? ahora : null;
+}
+
+
+
+var _ritmoSinEmpezarVisto = null;
+function ritmoMirarSinEmpezar() {
+  try {
+    var s = getState();
+    var d = ritmoDesdeSinEmpezar(s, ritmoDe(s));
+    if (d === _ritmoSinEmpezarVisto) return;
+    _ritmoSinEmpezarVisto = d;
+    if (d != null && typeof paceAdoptarEstado === 'function') paceAdoptarEstado(Object.assign({}, s));
+  } catch (e) {}
+}
+if (typeof paceMinutoSuscribir === 'function') paceMinutoSuscribir(ritmoMirarSinEmpezar);
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar });
+;Object.assign(window, { ritmoDesdeSinEmpezar, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar });
 })();
 </script>
   <script>
