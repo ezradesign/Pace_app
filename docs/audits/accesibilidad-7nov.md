@@ -19,7 +19,7 @@ Ez en una página con opciones.
 | El teclado | Tab y Mayús+Tab de verdad, 45-60 pulsaciones por pantalla: si el foco se ve, si cae dentro de la ventana, si queda tapado por otra capa y adónde vuelve al cerrar | Home, Respira, Estadísticas y Ajustes, a 360 y a 1280 px, en claro y oscuro |
 | El contraste | Un medidor propio (`getComputedStyle` de cada texto visible, su fondo componiendo las capas semitransparentes y la opacidad heredada) contra el mínimo de WCAG 2.2 AA: 4,5 a 1, o 3 a 1 desde 24 px (18,66 px en negrita) | Las mismas pantallas, a 360 y a 1280 px, en crema y en oscuro; las páginas sueltas, en claro y oscuro del sistema |
 | Menos movimiento | `prefers-reduced-motion: reduce` emulado, con `document.getAnimations()` en la retención de Rondas express | Respira |
-| Texto grande | Lectura del código: la letra va en px, así que crece con el zoom del navegador y no con el tamaño de letra del sistema | Toda la app |
+| Texto grande y zoom | La letra va en px: crece con el zoom del navegador y no con el tamaño de letra del sistema. La home a 640×400 de CSS (1280×800 al 200 %) y a 320×568: nada se sale por los lados, y lo que no cabe se alcanza con el scroll propio de la home (`data-pace-home-body`) y con Tab | Home |
 
 ## Qué se arregló, y su prueba
 
@@ -48,6 +48,18 @@ Siete pruebas viejas buscaban un botón por el nombre que tenía antes («15», 
 buscarlo por el nuevo: `caza-foco`, `estado-saneado`, `onboarding-semana`, `retencion`, `ritmo-bloque-siguiente`,
 `ritmo-pausa-entera` y `ritmo-pausa`. La regla nueva está arriba del todo en `DECISIONES_TECNICAS_VIGENTES.md`;
 el panel de Ajustes, en `DESIGN_SYSTEM.md` («Focus visible»), y el censo de claves sube a 1150 (+4: dos del Foco y dos de los vasos).
+
+### Las pruebas vecinas
+
+Corridas sobre el `index.html` de esta rama en el puerto 8886: `caza-foco`, `estado-saneado`, `onboarding-semana`,
+`retencion`, `hidratate-botones`, `checklist-estado`, `capa-de-arriba`, `logros-capas`, `teclado-foco` y
+`pausa-teclado`, 61 de 61. Dos cayeron en la primera pasada, con el PC cargado por otras cuatro sesiones
+(`capa-de-arriba` · Atrás de Android en Respira y `retencion` · el último tramo), y solas pasan las cinco de esas
+líneas. La suite entera se paró en la prueba 294 de 1341, sin ningún rojo hasta ahí (entran las cuatro de Ajustes,
+`bienvenida-ajustes` y las del aro), porque a ese ritmo eran dos horas.
+
+**Dónde me quedo (89 % de las 5 h):** falta correr en local las 26 `ritmo-*`, que cambian solo de nombre de botón
+(«15 minutos», «Salir»). La coordinadora puede correrlas al juntar o esperar al CI, que corre la suite entera.
 
 ### Los mutantes
 
@@ -87,7 +99,8 @@ de 3 px del color del papel a 2 px de oliva; «Preparar jornada» pinta el aro e
 
 Medido con el medidor de la tarde (peor fondo de cada caso). La página «Contraste de PACE» las enseña con fotos
 de la app real a 360 y 1280 px, en claro y oscuro, con cada opción pintada encima solo en la foto. **No se ha
-montado ninguna.** Página: PENDIENTE-URL
+montado ninguna.** Página: https://claude.ai/artifact/2Fv1mCERFo1zLQ8XJyDvoV (privada: se abre con la cuenta de Claude que la publicó, la de la tarde; desde la otra hay que compartirla en
+su menú «Compartir»).
 
 | | Qué pasa | Opciones | Recomendación |
 |---|---|---|---|
