@@ -4,6 +4,36 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.192.0.
 
+## AL RELEVO (7 nov., ~13:40): 5iWBf… al 91 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+`main` = origin con este commit (el CI de 034a08a4, en verde entero). Nada sin subir: las ramas están en origin.
+Ninguna se ha juntado. Las tres sesiones de 5iWBf acabaron su turno; la del recorrido aún corría sus mutantes, que
+cambian `index.html` y lo devuelven al acabar: **mira `git status` en su worktree y, si `index.html` sale modificado,
+`git checkout -- index.html`** (es lo compilado).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~13:40)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Termina lo que falta del recorrido, lanza el inglés con mis letras (1A 2A 3A 4A 5A) y republica mi hoja de pasos en esta cuenta.
+```
+
+| Rama | Punta | Estado | Lo que falta |
+|---|---|---|---|
+| `claude/recorrido-6nov-645d6b` | 42ae69c7 | Las 12 rojas, resueltas: 8 eran la 1A a propósito (puestas al día), 3 carga y 1 fallo del cambio de hora (arreglado, con mutante). Fotos del después y página (3deGGg5MHvUmihZHqwEj99) | Los cinco mutantes sobre el último build (el script, en su `LEEME.md`) y la suite entera con `--workers=1`; luego, el «júntalo» de Ez |
+| `claude/abierta-horas-7nov-a2419d` | 0057b120 | Lista: tres fallos con prueba; sin red PACE abre entero; las dos dudosas caen igual con `main` (carga) | Ez elige E1, V1 y V2 (página LsDSi3X7Gbd4kBWdpPcpPj) y dice «júntalo» |
+| `claude/accesibilidad-7nov-e36d06` | a6c6ac71 | Lista: 24 pruebas nuevas, 20 mutantes en rojo, informe `docs/audits/accesibilidad-7nov.md` | Correr las 26 `ritmo-*` (solo cambian nombres de botón) o dejarlo al CI al juntar; Ez, tres letras de contraste (página 2Fv1mCERFo1zLQ8XJyDvoV) |
+| `claude/guardar-atomico-166e3f` | 62ad02da | Terminado | La revisión de ChatGPT y el «júntalo» |
+| `claude/landing-web-5ec1e5` | 23c17eca | Propuesta | Las letras de Ez |
+
+**El inglés:** Ez eligió 1A 2A 3A 4A 5A. El encargo, entero, en `docs/audits/chatgpt-7nov-ingles/LEEME.md` («Para
+montarlo»), con `comprobado.md` como lista de lo que queda. Una sesión en una rama nueva sobre `main`; choca con
+accesibilidad en `app/i18n/strings/sessions.js` (dos claves nuevas), así que mejor juntar antes accesibilidad.
+
+**Las páginas de Ez están en 5iWBf** y en EcLj6 dan 404: la hoja (5iWBfHE7kD3dUVocdskmb6, versión 87), el inglés
+(EEBgoRtHUytnXGzeTXXftD, `docs/audits/chatgpt-7nov-ingles/pagina-ez.html`), el recorrido, PACE abierto horas y
+accesibilidad (sus archivos, en sus ramas). Para la hoja de EcLj6 (EcLj6io4wM9pGjtQ5wd1CT): leerla antes, dar la vuelta a
+los ocho ids del relevo de las 10:45 y poner los de las cuatro páginas publicadas de nuevo allí.
+
 ## 7 nov., ~12:50: coordina 5iWBf…; las tres ramas a medias, retomadas; el inglés, comprobado
 
 Coordinadora nueva en 5iWBf… (`local_` de esta sesión en la app; las 5 h al 2 %, la semana al 39 %). Las sesiones de EcLj6…
