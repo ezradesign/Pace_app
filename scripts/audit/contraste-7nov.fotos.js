@@ -48,7 +48,7 @@ const CASOS = [
     await boton(p, /^Mueve/);
     await vis(p, '.pace-lib [data-pace-lib-card] h4 button').first().click();
     await p.waitForTimeout(800);
-  }, ancla: '[data-pace-cta]' },
+  }, ancla: '[data-pace-modal-backdrop] [data-pace-cta]' },
   { id: 'boton-agua', alto: 380, abajo: 40, ir: (p) => boton(p, /^Hidrátate/), ancla: '[data-pace-hidr-acciones]' },
 ];
 
@@ -103,6 +103,7 @@ async function foto(navegador, caso, ancho, tema) {
   try {
     for (const ancho of [360, 1280]) for (const tema of ['crema', 'oscuro']) for (const caso of CASOS) {
       if (caso.solo && caso.solo !== ancho) continue;
+      if (process.env.SOLO && caso.id !== process.env.SOLO) continue;
       try { console.log(path.basename(await foto(navegador, caso, ancho, tema))); }
       catch (e) { console.log('FALLO', caso.id, ancho, tema, e.message.split('\n')[0]); }
     }

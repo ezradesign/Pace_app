@@ -166,12 +166,14 @@ siete miran la app pintada y hacen un censo: ninguna letra ni botón en el color
 botón de la pausa (1), «Un vaso más» (1), «+ vaso» (1), la fecha al 75 % (1), la tarjeta del logro apagada entera
 (1), `letraDe` devolviendo el color de módulo (4) y el «Empezar» de «Antes de empezar» (1).
 
-**Dónde me quedo (WIP, 80 % de las 5 h):** el código, los tokens, el medidor, la prueba y sus mutantes están
-hechos. Falta: (1) las fotos del después con `node scripts/audit/contraste-7nov.fotos.js 8887` (el script está
-escrito y sin correr) y la sección «Montado» de la página de Ez; (2) las 26 `ritmo-*` y las de accesibilidad
-(`accesibilidad-nombres`, `accesibilidad-teclado`, `movimiento-reducido`, `contraste-rotulos`) con
-`PACE_E2E_PORT=8886`, más las que tocan los botones cambiados (`hidratate-botones`, `logros-capas`,
-`pausa-sin-repetir`, `aviso-antes-de-empezar`); (3) `npm run verify`, que aún no ha corrido sobre esto. La paleta ya está en `DESIGN_SYSTEM.md` y la regla, arriba en `DECISIONES_TECNICAS_VIGENTES.md`.
+**Dónde me quedo (WIP, 76 % de las 5 h):** el código, los tokens, el medidor, la prueba y sus mutantes están
+hechos, y las 28 fotos del después están en `docs/audits/accesibilidad-7nov/fotos/` con la letra D
+(`<caso>-D-<tema>-<ancho>.webp`, sacadas con `node scripts/audit/contraste-7nov.fotos.js 8887`). Falta: (1) la sección
+«Montado» de `pagina-ez.html` con la A y la D lado a lado, y publicarla; (2) el resultado de las 26 `ritmo-*`, las
+de accesibilidad y las vecinas de los botones cambiados (`hidratate-botones`, `logros-capas`, `pausa-sin-repetir`,
+`aviso-antes-de-empezar`): estaban corriendo con `PACE_E2E_PORT=8886` al parar y no se leyeron; (3) `npm run verify`,
+que aún no ha corrido sobre esto. La paleta ya está en `DESIGN_SYSTEM.md` y la regla, arriba en
+`DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Lo que esta auditoría no cubre
 
