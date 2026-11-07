@@ -88,7 +88,7 @@ function ritmoBloqueEmpezado(minutos) {
   var mins = Number(minutos) || 0;
   /* s195: si el aro no marca lo que el plan (pusiste 25 con un plan de 45), también
      se recoloca, y esa duración manda en los bloques que vienen (`dia.bloque`). */
-  var otraDuracion = !!(p && p.actual && mins && mins !== p.actual.dur);
+  var otraDuracion = !!(p && p.actual && mins && mins !== ritmoDurSiEmpiezas(p, t));
   if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
     cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
     cambios.desde = t;

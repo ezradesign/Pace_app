@@ -13428,12 +13428,39 @@ function ritmoFocoCorriendo() {
 }
 
 
+
+
+
+
+function ritmoDurSiEmpiezas(p, t) {
+  if (!p || !p.actual) return null;
+  var a = p.actual,i = p.m.items.indexOf(a),pausa = 0,o = null;
+  if (t <= a.desde) return a.dur;
+  while (++i < p.m.items.length && !o) {
+    var x = p.m.items[i];
+    if (x.tipo === 'foco') break;
+    if (x.tipo === 'pausa') pausa += x.dur;
+    if (x.tipo === 'ocupado') o = x;
+  }
+  if (!o || t >= o.desde || t + a.dur + pausa <= o.desde) return a.dur;
+  var d = o.desde - t - pausa;
+  return Math.min(a.dur, d >= 15 ? d : o.desde - t);
+}
+
+
+
 function ritmoSincronizar() {
   var s = getState();
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
-  if (p && p.actual && s.focusMinutes !== p.actual.dur) setState({ focusMinutes: p.actual.dur });
+  var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
+  if (dur && s.focusMinutes !== dur) setState({ focusMinutes: dur });
 }
+function ritmoSincronizarALaVista() {
+  if (document.visibilityState !== 'hidden') {try {ritmoSincronizar();} catch (e) {}}
+}
+document.addEventListener('visibilitychange', ritmoSincronizarALaVista);
+setInterval(ritmoSincronizarALaVista, 60 * 1000);
 
 
 function ritmoGuardar(cambio) {
@@ -13506,11 +13533,11 @@ function ritmoHorario(campo, valor) {
 Object.assign(window, {
   ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
-  ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
+  ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoDurSiEmpiezas, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
   ritmoOrdinal
 });
-;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoDurSiEmpiezas, ritmoSincronizar, ritmoSincronizarALaVista, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <!-- Terminar y empezar un bloque: la pausa, recolocar el día y el cambio de hora. -->
@@ -13606,7 +13633,7 @@ function ritmoBloqueEmpezado(minutos) {
   var mins = Number(minutos) || 0;
 
 
-  var otraDuracion = !!(p && p.actual && mins && mins !== p.actual.dur);
+  var otraDuracion = !!(p && p.actual && mins && mins !== ritmoDurSiEmpiezas(p, t));
   if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
     cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
     cambios.desde = t;
@@ -37450,7 +37477,16 @@ function breakPropuesta(state, ctx) {
   const hora = typeof c.hora === 'number' ? c.hora : new Date().getHours();
   const agua = s.water || { today: 0, goal: 8 };
   const plan = s.plan || {};
-  const minutos = Number(s.focusMinutes) || 0;
+
+
+
+  const hechoRitmo = (() => {
+    try {
+      const p = typeof ritmoPlanBase === 'function' ? ritmoPlanBase(s) : null;
+      return p && p.hechos > 0 && !p.deMas ? p.m.focos[p.hechos - 1] : null;
+    } catch (e) {return null;}
+  })();
+  const minutos = hechoRitmo ? hechoRitmo.dur : Number(s.focusMinutes) || 0;
 
 
   const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);
