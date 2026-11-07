@@ -2207,6 +2207,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'hydrate.glasses.today': 'Vasos hoy',
   'hydrate.less': 'Un vaso menos',
   'hydrate.more': 'Un vaso más',
+  'hydrate.vaso.lleno': 'Vaso {n} de {total}, lleno',
+  'hydrate.vaso.vacio': 'Vaso {n} de {total}, vacío',
   'hydrate.tip.label': 'Tip:',
   'hydrate.tip': 'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
@@ -2404,6 +2406,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'hydrate.glasses.today': 'Glasses today',
   'hydrate.less': 'One less glass',
   'hydrate.more': 'One more glass',
+  'hydrate.vaso.lleno': 'Glass {n} of {total}, full',
+  'hydrate.vaso.vacio': 'Glass {n} of {total}, empty',
   'hydrate.tip.label': 'Tip:',
   'hydrate.tip': 'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 
@@ -23196,7 +23200,7 @@ function TimerDialPunto(_ref2) {let { giro, angulo, color, nace, deGolpe } = _re
   const naceRef = useRefTD(nace);
   const R = DIAL_R;
   return (
-    React.createElement("div", { "data-pace-dial-punto": true, "data-pace-dial-punto-nace": naceRef.current ? '' : undefined,
+    React.createElement("div", { "data-pace-dial-punto": true, "aria-hidden": "true", "data-pace-dial-punto-nace": naceRef.current ? '' : undefined,
       style: timerDialStyles.ringLayer },
     React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
@@ -23281,7 +23285,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, s
 
 
 
-    React.createElement("div", { "data-pace-dial-ring": true, style: timerDialStyles.ringLayer },
+    React.createElement("div", { "data-pace-dial-ring": true, "aria-hidden": "true", style: timerDialStyles.ringLayer },
     ticks ?
     React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
@@ -29343,7 +29347,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
     React.createElement("span", { className: "pace-lib-viaje-marca", "aria-hidden": "true" }, React.createElement(window.ABBreathe)),
 
     routine.safety &&
-    React.createElement("i", { className: "pace-lib-safety", title: t('breathe.safety.required'), "aria-label": t('breathe.safety.required') }, "\u26A0"),
+    React.createElement("i", { className: "pace-lib-safety", role: "img", title: t('breathe.safety.required'), "aria-label": t('breathe.safety.required') }, "\u26A0"),
 
     glifos.length > 0 &&
     React.createElement("span", { className: "pace-lib-cap", "aria-hidden": "true" },
@@ -36975,7 +36979,7 @@ window.resolveBodyRoutine = resolveBodyRoutine;
 
 function HydrateTracker(_ref) {let { open, onClose } = _ref;
   const [state] = usePace();
-  const { t } = useT();
+  const { t, tn } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, today / goal * 100);
 
@@ -36998,7 +37002,7 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
 
     React.createElement("div", { style: { display: 'grid', gridTemplateColumns: `repeat(${goal > 8 ? Math.ceil(goal / 2) : goal}, 1fr)`, gap: 8, marginBottom: 24 } },
     Array.from({ length: goal }).map((_, i) =>
-    React.createElement("button", { key: i,
+    React.createElement("button", { key: i, "aria-label": tn(i < today ? 'hydrate.vaso.lleno' : 'hydrate.vaso.vacio', { n: i + 1, total: goal }),
       onClick: () => {if (i < today) {addWaterGlass(-1);} else {addWaterGlass(1);try {playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip');} catch (e) {}}},
       style: {
         aspectRatio: '1/1.3',

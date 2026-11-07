@@ -152,6 +152,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'hydrate.glasses.today':           'Vasos hoy',
     'hydrate.less':                    'Un vaso menos',
     'hydrate.more':                    'Un vaso más',
+    'hydrate.vaso.lleno':              'Vaso {n} de {total}, lleno',
+    'hydrate.vaso.vacio':              'Vaso {n} de {total}, vacío',
     'hydrate.tip.label':               'Tip:',
     'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
@@ -349,6 +351,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'hydrate.glasses.today':           'Glasses today',
     'hydrate.less':                    'One less glass',
     'hydrate.more':                    'One more glass',
+    'hydrate.vaso.lleno':              'Glass {n} of {total}, full',
+    'hydrate.vaso.vacio':              'Glass {n} of {total}, empty',
     'hydrate.tip.label':               'Tip:',
     'hydrate.tip':                     'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 

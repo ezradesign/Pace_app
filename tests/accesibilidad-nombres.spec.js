@@ -14,6 +14,8 @@
  *  · Salir de una sesión se leía «por Salir» (la × iba en el texto) y el idioma de la
  *    bienvenida, «E S punto E N».
  *  · El último logro de la barra lateral empezaba por «·».
+ *  · Los vasos de Hidrátate se oían «1», «2», «3», sin decir si estaban llenos.
+ *  · El aro del Foco eran dos «imagen» sueltas, sin nombre, fuera de todo botón.
  *
  * Nada de esto cambia un píxel: son nombres, estados y adornos ocultos al lector. Cada prueba
  * cae con su arreglo quitado (comprobado con un mutante por arreglo).
@@ -70,6 +72,26 @@ test.describe('nombres y estados en la home', () => {
     await expect(boton).toHaveCount(1);
     await expect(boton).toHaveAccessibleName(/^Aún no hay ninguno/);
   });
+
+  test('el aro del Foco no son imágenes sin nombre: el tiempo lo dice el número', async ({ page, context }) => {
+    await sembrar(context);
+    await irAlArtefacto(page);
+    await expect(page.locator('[data-pace-dial-ring] svg').first(), 'GUARD: el aro no se pintó').toBeVisible();
+    await expect(page.locator('[data-pace-dial-ring]').getByRole('img')).toHaveCount(0);
+    await expect(page.locator('[data-pace-dial-number]')).toHaveText('25:00');
+  });
+});
+
+test('los vasos de Hidrátate dicen cuál es cada uno y si está lleno', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /^Hidrátate/ }).first().click();
+  const vasos = page.getByRole('dialog', { name: /Hidrátate/ });
+  await expect(vasos.getByRole('button', { name: 'Vaso 1 de 8, vacío', exact: true })).toBeVisible();
+  await vasos.getByRole('button', { name: 'Un vaso más', exact: true }).click();
+  await expect(vasos.getByRole('button', { name: 'Vaso 1 de 8, lleno', exact: true })).toBeVisible();
+  await expect(vasos.getByRole('button', { name: 'Vaso 2 de 8, vacío', exact: true })).toBeVisible();
+  for (const n of ['1', '2', '8']) await expect(vasos.getByRole('button', { name: n, exact: true })).toHaveCount(0);
 });
 
 test.describe('los diálogos tienen nombre', () => {
