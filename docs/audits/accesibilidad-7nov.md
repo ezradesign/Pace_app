@@ -169,9 +169,10 @@ botón de la pausa (1), «Un vaso más» (1), «+ vaso» (1), la fecha al 75 % (
 **Dónde me quedo (WIP, 76 % de las 5 h):** el código, los tokens, el medidor, la prueba y sus mutantes están
 hechos, y las 28 fotos del después están en `docs/audits/accesibilidad-7nov/fotos/` con la letra D
 (`<caso>-D-<tema>-<ancho>.webp`, sacadas con `node scripts/audit/contraste-7nov.fotos.js 8887`). Falta: (1) la sección
-«Montado» de `pagina-ez.html` con la A y la D lado a lado, y publicarla; (2) el resultado de las 26 `ritmo-*`, las
-de accesibilidad y las vecinas de los botones cambiados (`hidratate-botones`, `logros-capas`, `pausa-sin-repetir`,
-`aviso-antes-de-empezar`): estaban corriendo con `PACE_E2E_PORT=8886` al parar y no se leyeron; (3) `npm run verify`,
+«Montado» de `pagina-ez.html` con la A y la D lado a lado, y publicarla; (2) hecho: las 26 `ritmo-*`, las de accesibilidad (`accesibilidad-nombres`, `accesibilidad-teclado`,
+`movimiento-reducido`, `contraste-rotulos`, `contraste-modulos`) y las vecinas de los botones cambiados
+(`hidratate-botones`, `logros-capas`, `pausa-sin-repetir`, `aviso-antes-de-empezar`), 231 de 231 en el 8886 sobre el
+`index.html` compilado; (3) `npm run verify`,
 que aún no ha corrido sobre esto. La paleta ya está en `DESIGN_SYSTEM.md` y la regla, arriba en
 `DECISIONES_TECNICAS_VIGENTES.md`.
 
