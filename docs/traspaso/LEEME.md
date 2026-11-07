@@ -4,22 +4,27 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.193.0.
 
-## AL RELEVO (7 nov., ~19:00): 5iWBf… al 74 % de las 5 h; la 0.193.0, juntada y en pruebas
+## AL RELEVO (7 nov., ~19:25): 5iWBf… al 80 % de las 5 h; la 0.193.0, en `main` y con su CI en marcha
 
-**Ez, 7 nov., ~18:50: «Júntalos»** (el recorrido y el inglés). Hecho en `main` local: `git merge --no-ff` de las dos ramas
-(sin choques), la novedad `jornada-cerrada` PRIMERA en `app/shell/novedades.data.js` (`desde` 2026-11-07, las líneas del bloque
-de las 16:25), `tests/sobre-hoja.spec.js` puesto al día (la novedad nueva, y quien empieza el 8 nov. no la ve), `verify` en verde,
-`npm run bump -- 0.193.0`, build y CHANGELOG/STATE. **La suite entera con dos workers, en marcha desde las ~18:55** (puerto 8880,
-log en el scratchpad de 5iWBf: `C:\Users\ezrav\AppData\Local\Temp\claude\9ce4ccc7e40cf683\14245c02-ec7a-4b86-ba17-dc81f6b8a47c\scratchpad\union\suite.log`).
-Si el relevo llega antes del push: mira `git status` y `git log origin/main..main` en la carpeta principal; si la suite no
-acabó, otra vez (`PACE_E2E_PORT=8880 npx playwright test --workers=1`), una roja se mira sola dos veces; luego push a `main` y
-`gh run watch`. **Las tres sesiones** paran al 80 % con «WIP:» y push (se les pidió a las 18:50); se retoman con sesión nueva,
-`cwd` en su carpeta y `use_worktree: false`, leyendo su informe. abierta-horas ya puede traer `origin/main` para V1/V2.
+**Ez, 7 nov., ~18:50: «Júntalos»** (el recorrido y el inglés). En `main` y subido (c7d23fff): `git merge --no-ff` de las dos
+ramas (sin choques), la novedad `jornada-cerrada` PRIMERA en `app/shell/novedades.data.js` (`desde` 2026-11-07),
+`tests/sobre-hoja.spec.js` al día (quien empieza el 8 nov. no la ve), `npm run bump -- 0.193.0`, build, CHANGELOG y STATE. La
+suite entera con dos workers: 1319 en verde y 4 rojas, todas del inglés: la hoja del día de v1 en inglés (cambio a propósito,
+prueba al día) y `extra.calves.s0` en inglés, que volvía a decir «as high as you can» y «Lower slowly» en un paso de 1 s (ahora
+«only as far as you can control. Lower with control.», como el español). Las cuatro, en verde; `verify` en verde. **Falta:**
+ver el CI de c7d23fff (`gh run list -b main`) y, si sale rojo, arreglarlo. La hoja, versión 89 en 5iWBf.
+
+**Las tres sesiones, paradas al 80 %** (todo en origin): `abierta-horas` con E1 A, V1 A y V2 A montados sobre el recorrido
+(97b8db95; `verify` y la zona en verde; falta la suite entera y las fotos del después en su página); `contraste` con 1B 2B 3B
+montados (6c70dde6; 231 pruebas en verde, 10 mutantes en rojo, 28 fotos; falta la sección «Montado» de su página y `verify`);
+`caza-semana` (8e2334da, WIP: cuatro fallos con prueba, S4 de punta a punta, 181 de la zona en verde; falta repetir «oficina»
+y la página de Ez). Se retoman con sesión nueva, `cwd` en su carpeta y `use_worktree: false`, leyendo su informe.
+Antes de juntar abierta-horas y caza-semana: traer `origin/main` (las dos tocan `app/state-ritmo*.jsx`).
 
 **Para abrir la otra cuenta, Ez pega esto:**
 
 ```
-Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~19:00)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Termina de subir la 0.193.0 con su CI en verde, retoma las tres sesiones donde pararon y republica mi hoja de pasos en esta cuenta.
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~19:25)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de la 0.193.0, retoma las tres sesiones donde pararon y republica mi hoja de pasos en esta cuenta.
 ```
 
 ## 7 nov., ~18:45: coordina 5iWBf…; el recorrido, cerrado; tres sesiones con las letras de Ez y la semana
