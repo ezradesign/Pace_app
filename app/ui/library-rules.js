@@ -141,7 +141,7 @@ function libraryOrdenar(rutinas) {
    suspension pasiva y la activa: son dos dibujos distintos y en la sesion cada
    paso conserva el suyo, pero a 20 px se leen igual, y la tira repetia en
    pequeño el dibujo grande. Ez lo vio en su movil: «al ser el mismo, ¿esto
-   realmente aporta algo?». Igual en «Gluteos invisibles»: el apreton de
+   realmente aporta algo?». Igual en «Gluteos en la silla»: el apreton de
    gluteos y la elevacion de talones que la cierra son dos figuras de pie y de
    perfil que en pequeño no se distinguen, y Ez la leyo como un ejercicio
    repetido. «Empuje · progresion», la otra rutina con dos dibujos, enseña dos

@@ -86,7 +86,7 @@ function acuse(d) {
       '· Plan: ' + PLAN.en[d.plan],
       '· Date and time: ' + d.fechaTexto,
       '· Reference: ' + d.referencia, '',
-      'What happens now: we refund everything you paid, using the same payment method, within 14 days at the latest. If you had the monthly plan, it is cancelled and you will not be charged again. Free PACE and your practice, stored on your device, stay as they were.', '',
+      'What happens now: we refund everything you paid, using the same payment method, within 14 days at the latest. If you had the monthly plan, it is canceled and you will not be charged again. Free PACE and your practice, stored on your device, stay as they were.', '',
       'If something does not add up, reply to this email.', '',
       'PACE · pacegrass.app'].join('\n') };
   }

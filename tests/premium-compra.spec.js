@@ -143,7 +143,7 @@ test.describe('3A en un móvil en inglés', () => {
     const [a, b] = await dosBotones(page, 'Try 7 days free', 'Not now');
     expect(Math.abs(a.ancho - b.ancho)).toBeLessThan(1);
     expect(b.arriba, 'uno sobre otro en el móvil').toBeGreaterThan(a.arriba + a.alto - 1);
-    await expect(hoja.locator('[data-pace-premium-vida]')).toHaveText('I would rather pay once, €19.99');
+    await expect(hoja.locator('[data-pace-premium-vida]')).toHaveText('I’d rather pay once: €19.99');
     const caja = await page.locator('[data-pace-modal-card]').boundingBox();
     expect(caja.y).toBeGreaterThanOrEqual(0);
     expect(caja.y + caja.height).toBeLessThanOrEqual(740);

@@ -406,9 +406,9 @@ test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «ta
 
 test('en inglés, la pregunta y la hora de salida', async ({ page, context }) => {
   await abrir(page, context, {}, { lang: 'en' });
-  /* v0.146.0: el título corto, para que a 360×640 quepa con «I'll go freestyle today» (Ez). */
+  /* v0.146.0: el título corto, para que a 360×640 quepa con «No plan today» (Ez). */
   await pulsarComienza(page);
-  await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('How many hours today?');
+  await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('How long are you working today?');
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   await expect(page.getByRole('button', { name: 'Start the day', exact: true })).toBeVisible();
   await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Until 17:00');
