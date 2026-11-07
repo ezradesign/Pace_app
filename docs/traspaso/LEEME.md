@@ -7,6 +7,10 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de n
 ## AL RELEVO (7 nov., ~16:25): EcLj6… al 58 % y subiendo 3 puntos por minuto; se sigue en 5iWBf… cuando se reponga (hacia las 17:15)
 
 Escrito antes de tiempo, por si la cuenta se queda sin uso: lo que corre está en el bloque de abajo («~16:20»).
+**Ez, 7 nov., ~16:30:** esta cuenta, hasta el 93 % (las sesiones: WIP al 90 %, paran al 93 %); a las 16:30 iba al 82 %. Preguntó por qué no ve el
+sobre en la web: la web sirve la v0.192.0 (comprobado), pero el sobre solo se pinta con algo dentro. Las novedades (`app/shell/novedades.data.js`)
+son las del 5 nov. y solo salen a quien usaba PACE en ese navegador antes del 5 nov. (`Sobre.novedades.js`); la 0.192.0 no escribió
+ninguna. Propuesto a Ez: una novedad para la versión que lleve el recorrido y el inglés, con el texto para que lo vea.
 **Ez eligió las recomendadas en las dos páginas (7 nov., ~16:22): E1 A · V1 A · V2 A y 1B · 2B · 3B.** Aún no se ha montado ninguna.
 
 **Para abrir la otra cuenta, Ez pega esto:**
