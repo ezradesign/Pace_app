@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.192.0</title>
+  <title>PACE · Foco · Cuerpo — v0.193.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -6939,7 +6939,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.192.0';
+const PACE_VERSION = 'v0.193.0';
 
 
 
@@ -27230,6 +27230,18 @@ Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobr
      es, en — las líneas, de una en una y cortas. */
 
 const PACE_NOVEDADES = [
+{
+  id: 'jornada-cerrada',
+  desde: '2026-11-07',
+  es: [
+  'Tu jornada se cierra sola al pasar tu hora de salida, con lo que hiciste; si quieres, sigues por libre.',
+  'Si dejas abierta la ventana de una pausa, a la mañana siguiente ya no te espera: PACE abre tu día nuevo.'],
+
+  en: [
+  'Your workday now wraps up on its own once your finish time has passed, with what you did; you can keep going without a plan.',
+  'If you leave a break window open, it no longer waits for you the next morning: PACE opens your new day.']
+
+},
 {
   id: 'jornada-y-logros',
   desde: '2026-11-05',

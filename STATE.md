@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.192.0 · 6 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.193.0 · 7 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -53,9 +53,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
   ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
-- **Dos síes para juntar (7 nov.)**: el «júntalo» del recorrido (`claude/recorrido-6nov-645d6b`, cerrado: suite entera y cinco
-  mutantes en rojo) y el visto bueno al español nuevo de Respira y Mueve del inglés (`claude/textos-ingles-7nov-a227ea`, montado
-  con 1A-5A; página en la hoja). Con los dos, versión nueva con la novedad del sobre `jornada-cerrada` (textos en el relevo de `LEEME.md`).
+- **El recorrido y el inglés, en `main` con la 0.193.0** (7 nov., con el «Júntalos» de Ez), con la novedad del sobre
+  `jornada-cerrada`. Si Play se sube el domingo con la 0.191.1, esta llega como actualización.
 - **Cuatro letras del día de v1** (`claude/caza-v1-compra-79e3e4`, hecha: importar una copia vieja ya no reabre otra semana de
   PACE completo; recomendadas 1A 2A 3A 4A).
 - **En marcha, con las letras de Ez** (7 nov.): 1B 2B 3B del contraste en `claude/accesibilidad-7nov-e36d06`; E1 A, y sobre el
