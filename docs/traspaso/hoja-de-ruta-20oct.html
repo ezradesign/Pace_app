@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.191.1 · actualizada el 6 de noviembre a las 21:45 · seguimos desde esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.192.0 · actualizada el 6 de noviembre a las 23:45 · seguimos desde esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -107,7 +107,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> La web va por la 0.191.1, con todo lo del 5 y el 6 de noviembre
+      <li><b>La app está casi entera y sana.</b> La web va por la 0.192.0, con todo lo del 5 y el 6 de noviembre
         dentro. Las últimas pruebas enteras: 1281 en verde, y GitHub en verde entero, también Safari, Android y el iPhone. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
         lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
@@ -148,13 +148,19 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           y la subió a las 21:43, y Apple la está procesando. Cuando salga en App Store Connect › TestFlight, se añade al grupo
           «Testers iPhone» con el «Qué probar» que te paso, y Apple la revisa antes de que les llegue. Dime qué estado ves: si
           está lista, el enlace público del grupo va también a /beta.</span></li>
-      <li class="paso luego"><span class="estado">Después de la versión de prueba · espera tu «júntalo»</span>
-        <span class="t">La jornada como paso actual, sin la frase del aro</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/G4kprWWqpUfjEbGnvhVh1c">las fotos</a>). Montada con tu 1A 2B y la X. Entra como
-          actualización, junto con lo de abajo y una prueba entera.</span></li>
-      <li class="paso luego"><span class="estado">Después de la versión de prueba · espera tu «júntalo»</span>
-        <span class="t">El catálogo, las cifras del cierre y «Auto»</span>
-        <span class="c"><span class="quien">Tú.</span> Terminado en su rama, con la B que te recomendé para «Auto».</span></li>
+      <li class="paso marcha"><span class="estado">En marcha desde las 21:55 · una sesión</span>
+        <span class="t">Un recorrido entero por la app, buscando fallos</span>
+        <span class="c"><span class="quien">Una sesión aparte.</span> Usa la app como lo haría alguien de verdad, en el móvil, en el
+          portátil y en tu ventana, en los dos idiomas y en claro y oscuro, con la jornada y el catálogo ya dentro. Arregla lo
+          que sea un fallo claro, con una prueba para cada uno; lo que cambie cómo se ve te llega en una página con fotos y
+          letras para elegir.</span></li>
+      <li class="paso luego"><span class="estado">Hecho en su rama · espera tu «júntalo»</span>
+        <span class="t">Que dos cobros de la mensual a la vez no acorten el código</span>
+        <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo.</span> Lo que encontró ChatGPT: si dos renovaciones de la
+          mensual llegaban justo a la vez, el código de quien paga podía quedarse un mes más corto de lo pagado. Ahora cada mes
+          pagado se guarda aparte y la web da siempre el que llega más lejos, llegue en el orden que llegue. Las 89 pruebas del
+          cobro, en verde. No afecta al pago de por vida, que es lo único que se vende antes de v1. ChatGPT lo revisa en el
+          paso de abajo.</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo</span>
         <span class="t">Elegir las letras de la landing</span>
         <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/JwFknwwkJhmypQwiZ7npnB">la página</a>). Hasta entonces, la web sigue como está.</span></li>
@@ -173,7 +179,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <b>Con la primera venta real</b>, me das tu nombre, NIF, dirección, correo y teléfono, y publico el aviso legal y las
           condiciones. Lo decidiste sabiendo que lo apuntado los pide antes de cobrar. La revisión del profesional, en un
           mes. «Configura Tax» se deja hasta que lo confirme el gestor.</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos</span>
+      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
         <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
         <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
           ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
@@ -186,7 +192,7 @@ Contexto:
 
 Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
 
-Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Ya sé dos cosas y no hace falta que las repitas: guardar() en functions/api/stripe.js no es atómico si llegan dos avisos a la vez, y paceTiendaWebLista() exige los dos enlaces.
+Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Una cosa ya la sé y está arreglada en la rama claude/guardar-atomico-166e3f, aún sin juntar a main: guardar() en functions/api/stripe.js no era atómico y dos renovaciones de la mensual a la vez podían dejar el código más corto. Revisa ese arreglo en esa rama (cobro/mensual.js, functions/api/stripe.js, renovar.js y recuperar.js, y tests/cobro-a-la-vez.spec.js) y dime si se le escapa algún caso.
 
 Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
 
@@ -211,8 +217,22 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           cómo salieron las pruebas.</span></li>
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 84 pasos</summary>
+      <summary>Lo hecho hasta hoy · 87 pasos</summary>
       <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo» · 6 de noviembre · en la app, 0.192.0</span>
+        <span class="t">Juntar la jornada y el catálogo, y publicarlo</span>
+        <span class="c"><span class="quien">Yo.</span> La jornada como paso actual, con tu 1A 2B y la X
+          (<a href="https://claude.ai/artifact/G4kprWWqpUfjEbGnvhVh1c">las fotos</a>), y el catálogo, las cifras del cierre y «Auto»
+          con la B. Las 1315 pruebas en verde con todo junto; dos de los avisos esperaban «Pausar» y dentro de la jornada el
+          botón dice «Pausar foco», como elegiste. Es la primera actualización para tus testers.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 6 de noviembre, con tu sí de hace tiempo</span>
+        <span class="t">Quitar las carpetas de trabajo ya juntadas</span>
+        <span class="c"><span class="quien">Yo.</span> Once carpetas que ya estaban dentro de la app, con una copia de todas las ramas
+          antes (<code>backups\ramas-6nov-2026.bundle</code>). Quedan solo las que tienen trabajo vivo.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «sí» · 6 de noviembre</span>
+        <span class="t">Bajar la 0.191.1 para Play y subirla a TestFlight</span>
+        <span class="c"><span class="quien">Yo.</span> El archivo de Play, en <code>subidas-play\</code>, y la del iPhone, en Apple a las
+          21:43. Lo que queda es tuyo: subirla a Play y darla a tus testers de iPhone (arriba).</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 6 de noviembre</span>
         <span class="t">La 0.190.0 y la 0.191.1, juntadas y con GitHub en verde</span>
         <span class="c"><span class="quien">Yo.</span> Rana y Palmas, los logros sin «Próximamente», las horas con «− 9:00 +», los arreglos de datos y

@@ -299,7 +299,7 @@ test.describe('N4 · el aviso fijo con el móvil bloqueado', () => {
     await context.clock.install({ time: new Date('2026-09-17T09:00:00+02:00') });
     await irAlArtefacto(page);
     await cta(page).click();
-    await expect(cta(page)).toHaveText('Pausar');
+    await expect(cta(page)).toHaveText('Pausar foco');
     await alFondo(page);
     await esperarEnPagina(page, () => !!window.__nativo.fijo);
     const fin = await finDelBloque(page);
