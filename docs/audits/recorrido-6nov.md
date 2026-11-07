@@ -36,7 +36,9 @@ Las dos reglas nuevas, arriba del todo en `docs/product/DECISIONES_TECNICAS_VIGE
 
 ## Montado con lo que eligió Ez (7 nov.: 1A 2A 3A 4C 5A)
 
-Sobre `main` con la 0.192.0 (juntado en la rama). Cada uno con su prueba, roja con el arreglo quitado (cinco mutantes), y dos filas nuevas arriba en `DECISIONES_TECNICAS_VIGENTES.md`. Fotos del después en `fotos/despues-*.webp` y en la página de Ez.
+Sobre `main` con la 0.192.0 (juntado en la rama). Cada uno con su prueba, roja con el arreglo quitado (cinco mutantes), y dos filas nuevas arriba en `DECISIONES_TECNICAS_VIGENTES.md`. Fotos del después en `fotos/despues-*.webp` y en la página de Ez: https://claude.ai/artifact/3deGGg5MHvUmihZHqwEj99.
+
+Las pruebas vecinas (7 nov.): las que caían por la 1A describían «Una hora» empezada a las 17:20 y retomada a las 19:30, con su hora (18:20) y la salida (19:00) ya pasadas: un día que ahora está cerrado. `ritmo-linea` (7) pasa a «Dos horas» retomada a las 19:15, antes de su fin, y el móvil de `ritmo-panel` recoloca el bloque 2 a las 18:10. `hora-y-medianoche` (H2, marzo) era un fallo: el cierre llegaba a los 50 minutos de «Una hora» la noche del cambio de hora, porque la hora que no existe contaba; ahora el reloj se cuenta con el de cuando empezó (`ritmoTrasElFin`). `ritmo-pausa:106`, `ritmo-aviso:95` y `ritmo-bloque-siguiente:26` eran carga: pasan con un solo worker.
 
 | # | Lo que eligió | Cómo queda | Prueba |
 |---|---|---|---|
@@ -48,8 +50,9 @@ Sobre `main` con la 0.192.0 (juntado en la rama). Cada uno con su prueba, roja c
 
 ## Lo que esperaba a Ez (ya elegido)
 
-La página para elegir, con fotos y letras: https://claude.ai/artifact/Pd8CZq71NjTMimaydP3caM
-(fuente: `docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`). E1 es su pregunta 1, E2 la 2, E3 la 3, P2 la 4 y P1 la 5.
+La página para elegir, con fotos y letras, estaba en la otra cuenta (Pd8CZq71NjTMimaydP3caM, allí). Ahora
+la misma fuente (`docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`) enseña lo elegido con su antes y
+su después: https://claude.ai/artifact/3deGGg5MHvUmihZHqwEj99. E1 es su pregunta 1, E2 la 2, E3 la 3, P2 la 4 y P1 la 5.
 
 | # | Dónde | Qué pasa | Qué debería pasar | Clase · gravedad | Recomendación |
 |---|---|---|---|---|---|

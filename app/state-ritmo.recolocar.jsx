@@ -36,7 +36,7 @@ function ritmoBloqueTerminado(inicioMs) {
   /* Un Foco por libre no reabre la pausa de cierre (Ez, 2A del 7 nov. 2026): el que va detrás del
      último bloque, o el que se empezó con el día ya cerrado. Si no, su ventana volvía a ser
      «Bloque 1 de 1 · hecho» con la pausa de cierre. */
-  if (p.deMas || (p.m.fin != null && ritmoMinutoDe(inicioMs) >= p.m.fin)) return;
+  if (p.deMas || (typeof inicioMs === 'number' && isFinite(inicioMs) && ritmoTrasElFin(p.m, inicioMs))) return;
   var cambios = { pausa: p.hechos };
   /* s195: RECOLOCAR TAMBIÉN AL TERMINAR (decisión del usuario: «la línea dice la
      verdad» vale también para la pausa abierta, que ya no puede estar en el
@@ -107,12 +107,27 @@ function ritmoBloqueEmpezado(minutos) {
    del plan en marcha (empezado antes de la salida) ni la pausa abierta dentro de su rato: el bloque
    que cruza la salida acaba y su pausa de cierre se ofrece. Después, por libre. */
 function ritmoPasadaLaSalida(p) {
-  if (!p || !p.m || p.m.fin == null) return false;
+  if (!p || !p.m || !ritmoTrasElFin(p.m, Date.now())) return false;
   var t = ritmoAhoraExacto();
-  if (t < p.m.fin) return false;
   if (p.pausa && t < p.pausa.desde + p.pausa.dur) return false;
-  var desde = ritmoMinutoDe(ritmoFocoEmpezo());
-  return !(desde != null && desde < p.m.fin);
+  var empezo = ritmoFocoEmpezo();
+  return !(empezo != null && !ritmoTrasElFin(p.m, empezo));
+}
+
+/* Si el instante `ms` cae en la hora de acabar el día o después. El reloj de «Una hora» y «Dos
+   horas» cuenta desde que empezó (`m.finDesde`): el día del cambio de hora se mira en el reloj de
+   entonces. Si no, «Una hora» empezada a la 1:20 del último domingo de marzo se cerraba a las 3:10,
+   a los 50 minutos, porque la hora que no existió contaba (tests/hora-y-medianoche.spec.js, H2). */
+function ritmoTrasElFin(m, ms) {
+  if (!m || m.fin == null) return false;
+  var d = new Date(ms);
+  var min = d.getHours() * 60 + d.getMinutes();
+  if (m.finDesde != null) {
+    var desde = new Date(ms);
+    desde.setHours(0, m.finDesde, 0, 0);
+    min += d.getTimezoneOffset() - desde.getTimezoneOffset();
+  }
+  return min >= m.fin;
 }
 
 /* QUE LA HOME SE ENTERE DE LA SALIDA. Al pasar la hora no cambia nada en el estado y nadie volvía a
@@ -143,16 +158,9 @@ function ritmoFocoEmpezo() {
   } catch (e) { return null; }
 }
 
-/* La hora del reloj (minutos del día) de un instante en ms, o null. */
-function ritmoMinutoDe(ms) {
-  if (typeof ms !== 'number' || !isFinite(ms)) return null;
-  var d = new Date(ms);
-  return d.getHours() * 60 + d.getMinutes();
-}
-
 /* Los minutos de foco hechos hoy en el plan: los de sus bloques terminados. */
 function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + (f.dur || 0); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutoDe, ritmoFocoHecho });
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });

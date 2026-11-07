@@ -10549,7 +10549,10 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
 
 
-    salida: salida, fin: Math.min(fin, 24 * 60), comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
+
+
+    salida: salida, fin: Math.min(fin, 24 * 60), finDesde: forma.reloj && fin === arranque + forma.reloj && fin < 24 * 60 ? arranque : null,
+    comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
     sinComida: !!horario.sinComida,
     focos: focos, pausas: pausas.length, focoMin: dia.foco,
     vasos: dia.items.filter(function (it) {return it.agua;}).length
@@ -13551,7 +13554,7 @@ function ritmoBloqueTerminado(inicioMs) {
 
 
 
-  if (p.deMas || p.m.fin != null && ritmoMinutoDe(inicioMs) >= p.m.fin) return;
+  if (p.deMas || typeof inicioMs === 'number' && isFinite(inicioMs) && ritmoTrasElFin(p.m, inicioMs)) return;
   var cambios = { pausa: p.hechos };
 
 
@@ -13622,12 +13625,27 @@ function ritmoBloqueEmpezado(minutos) {
 
 
 function ritmoPasadaLaSalida(p) {
-  if (!p || !p.m || p.m.fin == null) return false;
+  if (!p || !p.m || !ritmoTrasElFin(p.m, Date.now())) return false;
   var t = ritmoAhoraExacto();
-  if (t < p.m.fin) return false;
   if (p.pausa && t < p.pausa.desde + p.pausa.dur) return false;
-  var desde = ritmoMinutoDe(ritmoFocoEmpezo());
-  return !(desde != null && desde < p.m.fin);
+  var empezo = ritmoFocoEmpezo();
+  return !(empezo != null && !ritmoTrasElFin(p.m, empezo));
+}
+
+
+
+
+
+function ritmoTrasElFin(m, ms) {
+  if (!m || m.fin == null) return false;
+  var d = new Date(ms);
+  var min = d.getHours() * 60 + d.getMinutes();
+  if (m.finDesde != null) {
+    var desde = new Date(ms);
+    desde.setHours(0, m.finDesde, 0, 0);
+    min += d.getTimezoneOffset() - desde.getTimezoneOffset();
+  }
+  return min >= m.fin;
 }
 
 
@@ -13659,19 +13677,12 @@ function ritmoFocoEmpezo() {
 }
 
 
-function ritmoMinutoDe(ms) {
-  if (typeof ms !== 'number' || !isFinite(ms)) return null;
-  var d = new Date(ms);
-  return d.getHours() * 60 + d.getMinutes();
-}
-
-
 function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + (f.dur || 0);}, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutoDe, ritmoFocoHecho });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutoDe, ritmoFocoHecho });
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
 })();
 </script>
   <script>

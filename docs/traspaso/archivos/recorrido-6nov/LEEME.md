@@ -1,7 +1,7 @@
 # Recorrido del 6 nov. 2026 · scripts
 
-El informe: `docs/audits/recorrido-6nov.md`. La página para Ez: https://claude.ai/artifact/Pd8CZq71NjTMimaydP3caM
-(`pagina-ez.html`, con las fotos de `fotos/`).
+El informe: `docs/audits/recorrido-6nov.md`. La página para Ez: https://claude.ai/artifact/3deGGg5MHvUmihZHqwEj99
+(`pagina-ez.html`, con las fotos de `fotos/`; la de antes, Pd8CZq71NjTMimaydP3caM, es de la otra cuenta).
 
 Se corren desde la raíz del repo contra `index.html` servido en el 8876 (`lib.js` lo arranca si no
 lo está), con `RECORRIDO_FOTOS=<carpeta>` para las capturas:
@@ -15,18 +15,30 @@ lo está), con `RECORRIDO_FOTOS=<carpeta>` para las capturas:
 - Los `_*.js` reproducen cada fallo apuntado (`_silla`, `_sello`, `_tarde`, `_tarde2`, `_tras-la-jornada`, `_noche`)
   o lo que se descartó (`_tab-constructor`, `_agua`, `_404`).
 
-**7 nov., dónde me quedé (uso al 83 %):** montado 1A 2A 3A 5A (4C sin tocar), con sus pruebas, cinco
-mutantes en rojo y `verify` en verde; commit «WIP:». Falta: el resultado de las pruebas vecinas
-(aro-jornada, ritmo-*, hora-y-medianoche, bloques-cortos, cambio-de-dia, pausa-*), rehacer las fotos
-del después con `_despues.js` (las del scratchpad son de antes del último ajuste del aro) y
-publicarlas en la página de Ez (`pagina-ez.html`, misma URL).
+**7 nov., tarde: la rama lista para juntar.** Montado 1A 2A 3A 5A (4C sin tocar), cada uno con su
+prueba y su mutante en rojo. Las 12 pruebas vecinas que salieron rojas sobre d7995d2e, pasadas otra vez
+con `--workers=1`:
+- `ritmo-pausa:106`, `ritmo-aviso:95` y `ritmo-bloque-siguiente:26` pasan: era carga.
+- La 1A, a propósito (8): `ritmo-linea` (7) y el móvil de `ritmo-panel` describían «Una hora» empezada
+  a las 17:20 y retomada a las 19:30, con su hora (18:20) y la salida (19:00) ya pasadas: ese día ahora
+  está cerrado. `ritmo-linea` usa «Dos horas» retomada a las 19:15 (antes de su fin, 19:20; hueco de
+  419 px y «AHORA» al 74 %) y `ritmo-panel` recoloca el bloque 2 a las 18:10.
+- Fallo (1): `hora-y-medianoche:111` (H2, marzo). «Una hora» desde la 1:20 de la noche del cambio de
+  hora se cerraba a las 3:10, a los 50 minutos, porque la hora que no existe contaba. El motor da
+  `m.finDesde` y `ritmoTrasElFin` mira el instante en el reloj de cuando empezó; mutante en rojo.
+- Decidido sin preguntar, y dicho en la página de Ez por si no le convence: «Una hora» y «Dos horas»
+  también se cierran a su hora, contada desde que empezaste, aunque la salida sea más tarde.
 
-**Pruebas vecinas sobre d7995d2e: 251 en verde y 12 en rojo (21,5 min).** Sin mirar aún, por el uso.
-Lo más probable es que el cierre por la hora (1A) choque con pruebas que siembran un día y ponen el
-reloj cerca o pasada la salida: `ritmo-linea` (7: «al final del día nada se pisa», el resumen que cambia
-de fila, el hueco del retraso; todos `locator.click` que ya no encuentran la línea), `ritmo-panel`
-(móvil, la frase compacta), `ritmo-pausa:106` («Hacer la pausa» entra en el plato), `ritmo-aviso:95`
-(el último bloque cierra el día) y `hora-y-medianoche:111` (CONTROL marzo, 3:10). `ritmo-bloque-siguiente:26`
-cayó con «browser has been closed» (puede ser carga). Hay que decidir caso a caso si la prueba
-describe algo que la 1A cambia a propósito o si el cierre es demasiado pronto (p. ej., `m.fin` de
-«Una hora» o de un día recolocado).
+Fotos del después hechas con `_despues.js` (`PACE_E2E_PORT=8882`) a 360 y a 1280 px y pasadas a webp
+en `fotos/despues-*.webp`.
+
+**7 nov., dónde me quedo (uso al 90 % de las 5 h):** `verify` en verde y la zona con un worker en
+verde salvo `ritmo-pausa:106`, que es carga: con el PC tranquilo pasa 3 de 3 (19-25 s); bajo carga
+tarda hasta 2 min. Medido con CDP, un minuto de sesión cuesta lo mismo con el `index.html` de `main`
+que con el de la rama. Página de Ez publicada en esta cuenta. Falta: los cinco mutantes de 1A 2A 3A
+5A sobre este último build (el del cambio de hora ya salió rojo) y la suite entera con `--workers=1`.
+El script de los mutantes estaba en el scratchpad: cada uno quita un arreglo de `index.html`
+(`ritmoPasadaLaSalida(p)) {` → `false) {`; `if (!p || !p.cerrado || s === _ritmoCierrePintado` →
+`if (true || s === _ritmoCierrePintado`; `if (p.deMas || typeof inicioMs` → `if (false || typeof
+inicioMs`; `if (!diaRef.current || !hoy || diaRef.current === hoy) return;` → `return;`; el
+`"aria-label": tn('hydrate.glass'` → `"data-x": ...`), corre su prueba y vuelve a compilar.

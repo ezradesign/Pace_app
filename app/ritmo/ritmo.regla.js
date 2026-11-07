@@ -376,8 +376,11 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   return {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
     /* `fin`: la hora a la que acaba el día que elegiste (tu salida, o el reloj de «Una hora» desde
-       que empezó). Pasada, el día se cierra (state-ritmo.recolocar.jsx, `ritmoPasadaLaSalida`). */
-    salida: salida, fin: Math.min(fin, 24 * 60), comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
+       que empezó). Pasada, el día se cierra (state-ritmo.recolocar.jsx, `ritmoPasadaLaSalida`).
+       `finDesde`: si `fin` es ese reloj, la hora desde la que cuenta; el día del cambio de hora,
+       `fin` está en el reloj de entonces y no en el de ahora (`ritmoTrasElFin`). */
+    salida: salida, fin: Math.min(fin, 24 * 60), finDesde: forma.reloj && fin === arranque + forma.reloj && fin < 24 * 60 ? arranque : null,
+    comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
     sinComida: !!horario.sinComida,
     focos: focos, pausas: pausas.length, focoMin: dia.foco,
     vasos: dia.items.filter(function (it) { return it.agua; }).length,
