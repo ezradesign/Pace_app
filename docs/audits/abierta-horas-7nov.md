@@ -183,7 +183,11 @@ arreglo es suyo (pasos más largos o `test.slow()`), no de esta rama.
 - Hecho y en el commit: los tres arreglos con sus pruebas, sus mutantes y sus filas de DECISIONES; el banco
   del service worker, medido dos veces; las dos pruebas dudosas, comprobadas; la página para Ez, publicada.
 - `npm run verify`: pasa, 0 problemas. `node build-standalone.js` no cambia `index.html`.
-- Las pruebas vecinas (las de antes más `sw-legales`), en marcha en el 8884 al escribir esto.
+- Las pruebas vecinas (las de antes más `sw-legales`) en el 8884, con la rama ya en su commit: 99 de 102 en
+  10,4 min. Las tres caen por los 60 s, ninguna por un aserto: las dos de arriba y `ritmo-reloj.spec.js:110`,
+  que sola pasa dos de dos (38 y 46 s). Es la misma carga; la suite entera la pasa la coordinadora al juntar.
+- Lo que espera a Ez: las tres letras de la página. Lo que espera a la coordinadora: juntar la rama, y si
+  quiere, el dibujo con su versión en la dirección y el «chair» de Estira.
 
 ## Visto de paso (fuera de esta auditoría, no lo toco)
 
