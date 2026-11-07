@@ -4,6 +4,33 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.192.0.
 
+## 7 nov., ~16:20: coordina EcLj6… (`local_915c0c64…`); el inglés y dos cazas de bugs, en marcha
+
+Con el mensaje de Ez: «Termina lo que falta del recorrido, lanza el inglés con mis letras… + abramos los hilos que sean
+necesarios + caza de bugs + test como si fuéramos un usuario real». Tres sesiones, cada una en su worktree nuevo:
+
+| Rama | Sesión (EcLj6…) | Puerto | Encargo |
+|---|---|---|---|
+| `claude/textos-ingles-7nov-a227ea` (de `main`) | `ingles`, `local_d3ead9c9…` | 8888 | `comprobado.md` con 1A 2A 3A 4A 5A, el español nuevo en una página para Ez, fotos a 360 px. Sin suite entera |
+| `claude/caza-v1-compra-79e3e4` (de `main`) | `caza-v1`, `local_30baba18…` | 8890 | Cinco personas el día de v1 y al comprar; no toca `cobro/` ni `functions/api/` (guardar-atomico) |
+| `claude/caza-semana-21914d` (del recorrido) | `caza-semana`, `local_6b90ac69…` | 8892 | Tres personas de lunes a lunes con `page.clock`: la carta, lo aprendido, el calendario, la medianoche |
+
+**El recorrido** lo cierra la coordinadora en su worktree (8882; script en el scratchpad, el mismo que describe su
+`LEEME.md`): el build no cambia `index.html`, y 4 de los 5 mutantes salen rojos. El de `deMas` (`state-ritmo.recolocar.jsx:39`,
+`if (p.deMas || …` → `if (false || …`) **vive**: la ventana ya la guarda `ritmoPropuesta` (`state-ritmo.jsx:339`), y
+lo que hace esa línea es no recolocar el día, que la prueba de `ritmo-pausa.spec.js:223` no mira; falta un aserto sobre
+`ritmo.dia` (pasado y desde) antes y después del Foco libre. La suite entera con `--workers=1`, en marcha desde las 16:07.
+
+**Las páginas, aquí:** el inglés `5Pbk8cpueqEVwu3Nn6VyJJ`, el recorrido `TuaC3kyiChcNgF1H7pRHVX`, PACE abierto horas
+`Uv6u27mKhGnhZyQUXuk9MV` y el contraste `Mwq1wanupBNsxj1DZzJdjF` (en 5iWBf: EEBgo…, 3deGG…, LsDSi… y 2Fv1m…). Las dos últimas
+solo vivían en el scratchpad de su sesión: ahora están en sus ramas (`docs/audits/abierta-horas-7nov/pagina-ez.html`,
+c4a0dce3; `docs/audits/accesibilidad-7nov/pagina-ez.html` con sus fotos, 02fb6001). **La hoja**, en EcLj6io4wM9pGjtQ5wd1CT
+(versión 112) y en el repo con los ids de EcLj6: para 5iWBf, dar la vuelta a los doce (los ocho del relevo de las 10:45 y
+estos cuatro). La auditoría de ChatGPT que Ez reenvió a las 16:05 es la misma de `revision.md`: nada nuevo.
+
+**Ez, 7 nov.:** subir la 0.191.1 a Play y darla a los testers de TestFlight, **el domingo 9**. Lo suyo ahora: las letras
+de las dos páginas (E1 V1 V2 y 1-3 del contraste). Uso: las 5 h al 38 % a los 15 minutos de arrancar las tres sesiones.
+
 ## AL RELEVO (7 nov., ~13:40): 5iWBf… al 91 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
 
 `main` = origin con este commit (el CI de 034a08a4, en verde entero). Nada sin subir: las ramas están en origin.
