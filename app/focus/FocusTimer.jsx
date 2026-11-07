@@ -77,7 +77,7 @@ function FocusTimer({ onFinish }) {
          y `onFinish` (ritmoBloqueTerminado) ha recolocado el día si llegaste
          tarde. El `finally` conserva lo de antes: aunque `onFinish` fallara, avisa. */
       try {
-        onFinish && onFinish(inicio);
+        onFinish && onFinish(inicio, finBloque);
       } finally {
         /* Con bloques cortos, antes de decidir la ventana: la invitación y la cuenta sin día (22 oct.). */
         try { bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos)); } catch (e) {}

@@ -207,13 +207,14 @@ function PaceApp() {
     setPreviewRoutine({ routine, kind: esPropia ? 'move' : 'extra' });
   };
 
-  const handleFocusFinish = (inicio) => {
+  const handleFocusFinish = (inicio, fin) => {
     /* Al acabar un Pomodoro → menú pausa, que abre la pestaña que miras
        (usePausaALaVista, arriba). s193: y con «A tu ritmo», la pausa del
        día queda ABIERTA (la línea pone «Ahora» en la parada) hasta que empiece el
        bloque siguiente. `completePomodoro` ya subió `cycle` antes de llegar aquí.
-       `inicio`, cuándo empezó el bloque: cuenta lo que duró si cambió la hora. */
-    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio);
+       `inicio`, cuándo empezó el bloque: cuenta lo que duró si cambió la hora; `fin`,
+       cuándo acabó, aunque PACE se entere después (el portátil cerrado). */
+    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio, fin);
   };
 
   /* s195 · «Seguir con el bloque N+1» (la pausa con menú): cierra el modal y arranca

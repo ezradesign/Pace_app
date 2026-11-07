@@ -53,6 +53,7 @@ function RitmoEsquema() {
 
 function RitmoTarjeta() {
   const [state] = usePace();
+  usePaceMinuto();   /* las losetas dicen horas desde ahora (state-core.dia.js) */
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
   const H = ritmoHabitual(state);

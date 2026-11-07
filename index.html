@@ -7155,8 +7155,6 @@ const defaultState = {
 
 
 
-
-
 function loadState(estricto) {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   let raw = null;
@@ -7298,10 +7296,12 @@ const _listeners = new Set();
 let _paceSinGuardar = false;
 
 
+
+let _paceGuardadoAtrasado = false;
 function persistState() {
   if (_paceSinGuardar) return;
-  try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {
-    try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
+  try {localStorage.setItem(LS_KEY, JSON.stringify(_state));_paceGuardadoAtrasado = false;} catch (e) {
+    _paceGuardadoAtrasado = true;try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
   }
 }
 
@@ -7381,9 +7381,10 @@ function usePace() {
 
 
 
+
 function ensureDayFresh(desdeDisco) {
   let base = _state;
-  if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
+  if (desdeDisco && !_paceGuardadoAtrasado && _state.lastActiveDay !== new Date().toDateString()) {
     try {if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(true);} catch (e) {}
   }
   const next = rolloverIfNeeded(base);
@@ -7394,7 +7395,6 @@ function ensureDayFresh(desdeDisco) {
     try {checkStatsAchievements();} catch (e) {}
   }
 }
-
 
 
 
@@ -7557,16 +7557,39 @@ Object.assign(window, { showToast, onToast, setCaminoUiActive });
 
 var PACE_DIA_CADA_MS = 60 * 1000;
 
+
+
+
+
+
+var paceMinutoVisto = Math.floor(Date.now() / 60000);
+var paceMinutoOyentes = new Set();
+
 function paceDiaMirar() {
   if (document.visibilityState === 'hidden') return;
   ensureDayFresh(true);
+  var minuto = Math.floor(Date.now() / 60000);
+  if (minuto !== paceMinutoVisto) {
+    paceMinutoVisto = minuto;
+    paceMinutoOyentes.forEach(function (f) {f();});
+  }
+}
+
+function paceMinutoSuscribir(f) {
+  paceMinutoOyentes.add(f);
+  return function () {paceMinutoOyentes.delete(f);};
+}
+
+
+function usePaceMinuto() {
+  return React.useSyncExternalStore(paceMinutoSuscribir, function () {return paceMinutoVisto;});
 }
 
 document.addEventListener('visibilitychange', paceDiaMirar);
 setInterval(paceDiaMirar, PACE_DIA_CADA_MS);
 
-Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
-;Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
+Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar, usePaceMinuto });
+;Object.assign(window, { PACE_DIA_CADA_MS, paceMinutoVisto, paceMinutoOyentes, paceDiaMirar, paceMinutoSuscribir, usePaceMinuto });
 })();
 </script>
   <!-- state-core.pestanas: lo que guarda otra pestaña pasa a esta sin reescribirlo, para que
@@ -13512,16 +13535,20 @@ Object.assign(window, {
 
 
 
-function ritmoDesfase(ms) {
+function ritmoDesfase(ms, hasta) {
   if (typeof ms !== 'number' || !isFinite(ms)) return 0;
-  return new Date().getTimezoneOffset() - new Date(ms).getTimezoneOffset();
+  var ref = typeof hasta === 'number' && isFinite(hasta) ? new Date(hasta) : new Date();
+  return ref.getTimezoneOffset() - new Date(ms).getTimezoneOffset();
 }
 
 
 
 
 
-function ritmoBloqueTerminado(inicioMs) {
+
+
+
+function ritmoBloqueTerminado(inicioMs, finMs) {
   var p = ritmoPlan(getState());
   if (!p || p.hechos < 1) return;
   var cambios = { pausa: p.hechos };
@@ -13532,9 +13559,13 @@ function ritmoBloqueTerminado(inicioMs) {
 
   var ultimo = p.m.focos[p.hechos - 1];
   var t = ritmoAhoraExacto();
+  var finReal = typeof finMs === 'number' && isFinite(finMs) && finMs <= Date.now() &&
+  new Date(finMs).toDateString() === new Date().toDateString() ? new Date(finMs) : null;
 
 
-  var fin = t + ritmoDesfase(inicioMs);
+  var fin = finReal ?
+  finReal.getHours() * 60 + finReal.getMinutes() + ritmoDesfase(inicioMs, finReal.getTime()) :
+  t + ritmoDesfase(inicioMs);
   if (ultimo && fin <= ultimo.desde) fin = ultimo.desde + ultimo.dur;
   var desde = Math.max(t, fin);
   if (ultimo && desde !== ultimo.desde + ultimo.dur) {
@@ -30013,7 +30044,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
       try {
-        onFinish && onFinish(inicio);
+        onFinish && onFinish(inicio, finBloque);
       } finally {
 
         try {bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos));} catch (e) {}
@@ -47717,6 +47748,7 @@ function RitmoEsquema() {
 
 function RitmoTarjeta() {
   const [state] = usePace();
+  usePaceMinuto();
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
   const H = ritmoHabitual(state);
@@ -48358,6 +48390,7 @@ function RitmoVuelta() {
 
 function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
   const [state] = usePace();
+  usePaceMinuto();
   const { tn } = useT();
   const [hoja, setHoja] = useStateRH(false);
   const R = ritmoDe(state);
@@ -50732,13 +50765,14 @@ function PaceApp() {
     setPreviewRoutine({ routine, kind: esPropia ? 'move' : 'extra' });
   };
 
-  const handleFocusFinish = (inicio) => {
+  const handleFocusFinish = (inicio, fin) => {
 
 
 
 
 
-    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio);
+
+    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio, fin);
   };
 
 
