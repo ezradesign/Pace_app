@@ -76,6 +76,6 @@ versión (la sube la coordinadora al juntar). La página para Ez: `montado-ez.ht
 
 ## Al juntar
 
-Juntar antes `claude/accesibilidad-7nov-e36d06`. Choca en una línea de `app/i18n/strings/sessions.js`: `focus.minutes.custom.title`, justo encima de las dos claves que
-  añade esa rama; se resuelve quedándose con las dos cosas. Antes de juntar, que Ez vea `montado-ez.html`
+Juntar antes `claude/accesibilidad-7nov-e36d06`. Con `git merge-tree`, lo único que choca es `index.html`, que se regenera con el build; `sessions.js` se junta solo.
+  Antes de juntar, que Ez vea `montado-ez.html`
   (https://claude.ai/artifact/RaUErpS4TGbnmUcdgwv9Bp).
