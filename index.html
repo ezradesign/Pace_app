@@ -9368,6 +9368,18 @@ function paceGestionarCompra() {
 }
 
 
+
+
+
+
+function paceConservarAlImportar(actual, entrante) {
+  const licencia = window.paceLicenciaConservar ? window.paceLicenciaConservar(actual, entrante) : Promise.resolve(entrante);
+  return Promise.resolve(licencia).then((e) => {
+    try {return window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e;} catch (x) {return e;}
+  });
+}
+
+
 function tieneCompraVigente() {
   const tienda = tiendaDelCanal();
   return !!(tienda && tienda.vigente && tienda.vigente());
@@ -9375,9 +9387,10 @@ function tieneCompraVigente() {
 
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
-  paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente
+  paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceConservarAlImportar
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, paceAbiertoAhora, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, paceAbiertoAhora, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, paceConservarAlImportar, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -16693,13 +16706,35 @@ function pacePasoV1Avisado() {
   if (r && !r.avisado) setState({ pasoV1: Object.assign({}, r, { avisado: true }) });
 }
 
+
+
+
+
+
+
+
+
+
+
+function pacePasoV1Conservar(actual, entrante) {
+  var forma = function (r) {return r && typeof r === 'object' && !Array.isArray(r) && typeof r.at === 'number' ? r : null;};
+  var ahora = forma(actual && actual.pasoV1);
+  if (!ahora || !ahora.previo || !entrante) return entrante;
+  var trae = forma(entrante.pasoV1);
+  var suyas = trae ? trae.previo && Array.isArray(trae.rutinas) ? trae.rutinas : [] : pacePasoV1Rutinas(entrante, {});
+  var juntas = (Array.isArray(ahora.rutinas) ? ahora.rutinas : []).
+  concat(suyas.filter(function (id) {return typeof id === 'string' && pacePasoV1EsDePago(id);}));
+  var rutinas = juntas.filter(function (id, i) {return juntas.indexOf(id) === i;}).sort();
+  return Object.assign({}, entrante, { pasoV1: Object.assign({}, ahora, { rutinas: rutinas }) });
+}
+
 try {pacePasoV1();} catch (e) {}
 
 Object.assign(window, {
   PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
-  pacePasoV1PorAvisar, pacePasoV1Avisado
+  pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar
 });
-;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado });
+;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar });
 })();
 </script>
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
@@ -40871,7 +40906,9 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
-    paceLicenciaConservar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+
+
+    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
   };
 
   const escribirCopia = (incoming, eventsSection) => {

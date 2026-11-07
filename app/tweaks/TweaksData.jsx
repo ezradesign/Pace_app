@@ -257,8 +257,10 @@ function TweaksDataSection({ onReset, isWeb }) {
     if (!pendiente) return;
     /* EL CÓDIGO DE PACE COMPLETO NO SE VA CON LA COPIA: viaja dentro del estado y una hecha antes
        de comprar lo pisaba (revisión de ChatGPT del 5 nov., punto 2). `paceLicenciaConservar`
-       (state-licencia.js) dice cuál se queda; comprobar dos códigos es asíncrono, y lo demás espera. */
-    paceLicenciaConservar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+       (state-licencia.js) dice cuál se queda; comprobar dos códigos es asíncrono, y lo demás espera.
+       Lo mismo con la semana del día de v1 y las rutinas que se quedan (`paceConservarAlImportar`,
+       state-entitlement.jsx): una copia de antes de v1 no la trae y volvía a empezar. */
+    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
   };
 
   const escribirCopia = (incoming, eventsSection) => {

@@ -192,6 +192,18 @@ function paceGestionarCompra() {
   return !!(tienda && tienda.gestionar());
 }
 
+/* AL IMPORTAR UNA COPIA, LO QUE ABRE PACE COMPLETO NO SE CAMBIA A CIEGAS: el código
+   (`paceLicenciaConservar`, state-licencia.js) y la semana del día de v1 con las rutinas que se
+   quedan (`pacePasoV1Conservar`, state-paso-v1.js). Las dos van dentro del estado y la copia lo
+   pisa entero: una copia de antes de v1 no trae `pasoV1`, y el arranque siguiente volvía a dar
+   siete días de todo, tantas veces como se importara. -> Promise<estado que debe escribirse>. */
+function paceConservarAlImportar(actual, entrante) {
+  const licencia = window.paceLicenciaConservar ? window.paceLicenciaConservar(actual, entrante) : Promise.resolve(entrante);
+  return Promise.resolve(licencia).then((e) => {
+    try { return window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e; } catch (x) { return e; }
+  });
+}
+
 /* La tercera fuente de PACE completo: lo que la tienda sabe que ya tienes (Play). */
 function tieneCompraVigente() {
   const tienda = tiendaDelCanal();
@@ -201,4 +213,5 @@ function tieneCompraVigente() {
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
   paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceConservarAlImportar,
 });
