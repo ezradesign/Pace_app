@@ -2,7 +2,15 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.193.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, ~21:10, v0.193.0.
+
+## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
+
+A las 20:30 esta cuenta estaba al 94 % (tope 95 %): nada arrancado, y una vuelta programada para las 21:03. **Una vuelta programada
+no puede arrancar sesiones** (la app solo las deja empezar con palabras de Ez): se le pide un clic. **La hoja**, publicada en
+EcLj6io4wM9pGjtQ5wd1CT (versión 114) con los catorce ids de esta cuenta, y así en el repo; para 5iWBf, darles la vuelta otra vez
+(la tabla, en el script del commit). Las cuatro ramas, limpias y en origin, donde dice el bloque de abajo; el encargo de cada
+sesión es el de su «Orden para la otra cuenta».
 
 ## AL RELEVO (7 nov., ~19:50): 5iWBf… al 85 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
 
