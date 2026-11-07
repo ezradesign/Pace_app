@@ -4,6 +4,31 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.192.0.
 
+## AL RELEVO (7 nov., ~16:25): EcLj6… al 58 % y subiendo 3 puntos por minuto; se sigue en 5iWBf… cuando se reponga (hacia las 17:15)
+
+Escrito antes de tiempo, por si la cuenta se queda sin uso: lo que corre está en el bloque de abajo («~16:20»).
+**Ez eligió las recomendadas en las dos páginas (7 nov., ~16:22): E1 A · V1 A · V2 A y 1B · 2B · 3B.** Aún no se ha montado ninguna.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~16:25)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira cómo dejaron sus ramas las tres sesiones, cierra el recorrido, monta mis letras (E1A V1A V2A y 1B 2B 3B) y republica mi hoja de pasos en esta cuenta.
+```
+
+1. **Primero, las tres ramas** del bloque de abajo: `git status` y `git log -3` en su worktree (`.claude/worktrees/textos-ingles-7nov-a227ea`,
+   `caza-v1-compra-79e3e4` y `caza-semana-21914d`); lo que no tenga commit, un «WIP:» con push sin `PACE_standalone.html`. Se
+   retoman con sesión nueva, `cwd` en su carpeta y `use_worktree: false`, leyendo su informe. No más de tres a la vez.
+2. **El recorrido** (`.claude/worktrees/recorrido-6nov-645d6b`): la suite entera, en `scratchpad/recorrido-out/suite.log` de la
+   coordinadora de EcLj6 (`C:\Users\ezrav\AppData\Local\Temp\claude\51fb229bb2336eab\a1f656d0-4d3a-45d1-adbe-c0f8a5bed143\`);
+   si no acabó, otra vez con `PACE_E2E_PORT=8882 npx playwright test --workers=1`. Falta el aserto de `deMas` (abajo). Luego, a Ez
+   para su «júntalo», con la página TuaC3kyiChcNgF1H7pRHVX (EcLj6) o 3deGGg5MHvUmihZHqwEj99 (5iWBf).
+3. **Las letras de Ez:** 1B 2B 3B, en `claude/accesibilidad-7nov-e36d06` (el color hondo de cada módulo para la letra y los
+   botones; las cifras, en `docs/audits/accesibilidad-7nov.md`), con fotos a 360 y 1280, en claro y oscuro. E1 A, en
+   `claude/abierta-horas-7nov-a2419d`. V1 A y V2 A tocan la ventana de la pausa y el cierre del día, que cambia el recorrido: se
+   montan en abierta-horas **después** de juntar el recorrido a `main` y traerlo a la rama (V2 A ya está casi entero en el recorrido:
+   sin «Seguir con el bloque N+1» y el día cerrado pasada la salida; falta que el aro diga «Jornada cerrada» tras el último bloque).
+4. La hoja: en 5iWBfHE7kD3dUVocdskmb6, con los doce ids de 5iWBf (ver abajo). Play y TestFlight, el domingo 9.
+
 ## 7 nov., ~16:20: coordina EcLj6… (`local_915c0c64…`); el inglés y dos cazas de bugs, en marcha
 
 Con el mensaje de Ez: «Termina lo que falta del recorrido, lanza el inglés con mis letras… + abramos los hilos que sean

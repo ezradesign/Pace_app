@@ -56,8 +56,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **El inglés, con sus letras (1A 2A 3A 4A 5A, 7 nov.)**: la revisión de ChatGPT de los textos en inglés, comprobada (239 tal
   cual, 15 retocadas, 4 no y 23 con su letra), en `docs/audits/chatgpt-7nov-ingles/` (el encargo, en su `LEEME.md`). Lo
   monta `claude/textos-ingles-7nov-a227ea` (en marcha desde el 7 nov.); el español nuevo de Respira y Mueve, Ez lo ve antes de juntar.
-- **Dos páginas con letras** (7 nov.): PACE abierto horas (E1, V1 y V2) y accesibilidad (tres colores de poco
-  contraste), con sus ramas listas; y el recorrido, casi listo, con su página del después. En marcha, dos cazas de bugs
+- **Dos páginas con letras, elegidas** (7 nov.: E1 A · V1 A · V2 A y 1B · 2B · 3B, sin montar): PACE abierto horas y
+  accesibilidad (tres colores de poco contraste), con sus ramas listas; y el recorrido, casi listo, con su página del después. En marcha, dos cazas de bugs
   como usuario real (el día de v1 con la compra, y una semana entera). El detalle, en el relevo de `docs/traspaso/LEEME.md`.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
