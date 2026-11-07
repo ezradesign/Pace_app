@@ -34,7 +34,19 @@ jornada» a las 12:00, empezar y dejar acabar el bloque.
 
 Las dos reglas nuevas, arriba del todo en `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
-## Espera a Ez
+## Montado con lo que eligió Ez (7 nov.: 1A 2A 3A 4C 5A)
+
+Sobre `main` con la 0.192.0 (juntado en la rama). Cada uno con su prueba, roja con el arreglo quitado (cinco mutantes), y dos filas nuevas arriba en `DECISIONES_TECNICAS_VIGENTES.md`. Fotos del después en `fotos/despues-*.webp` y en la página de Ez.
+
+| # | Lo que eligió | Cómo queda | Prueba |
+|---|---|---|---|
+| E1 · 1A | Pasada la salida, el día se cierra | El motor da la hora de salida del día (`m.fin`); pasada, sin un bloque empezado antes en marcha ni la pausa abierta en su rato, `ritmoPlan` lo da por terminado. El aro dice «Tu jornada ya terminó» y lo hecho («45 min de foco») en su rótulo y en la línea de la hora; la tarjeta, «Jornada cerrada» con los bloques terminados; el botón y el reloj, los de por libre. El bloque que empezó antes de la salida acaba y ofrece su pausa de cierre. La home se repinta sola cada minuto y al volver a la pestaña, sin escribir | `tests/aro-jornada.spec.js` (abierta a pasos de 5 min, recargada, y el bloque que cruza la salida) |
+| E2 · 2A | La pausa de cierre, saltada al empezar otra cosa | Ya se daba por saltada al empezar otro Foco; lo que la reabría era el final de ese Foco (`ritmoBloqueTerminado`). Un Foco por encima del plan (`deMas`) o empezado con el día cerrado ya no la reabre ni la propone: su ventana es «Ciclo completado» | `tests/ritmo-pausa.spec.js` |
+| E3 · 3A | La ventana de ayer se cierra sola | `usePausaALaVista` cierra la pausa que abrió cuando cambia `lastActiveDay`; la de un Foco que acaba pasada la medianoche nace con el día nuevo y no se toca. El aro deja el «Ciclo completado» de ayer | `tests/cambio-de-dia.spec.js` |
+| P2 · 4C | La «× Salir» de Respira se queda | Sin tocar | — |
+| P1 · 5A | Los vasos con nombre | `aria-label` «Vaso 3 de 8» / «Glass 3 of 8»; se sigue viendo el número | `tests/hidratate-botones.spec.js` |
+
+## Lo que esperaba a Ez (ya elegido)
 
 La página para elegir, con fotos y letras: https://claude.ai/artifact/Pd8CZq71NjTMimaydP3caM
 (fuente: `docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`). E1 es su pregunta 1, E2 la 2, E3 la 3, P2 la 4 y P1 la 5.

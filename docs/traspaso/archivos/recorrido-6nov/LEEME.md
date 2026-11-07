@@ -14,3 +14,9 @@ lo está), con `RECORRIDO_FOTOS=<carpeta>` para las capturas:
 - `resumen.js salida.json` resume lo que salta; `hoja.js` hace hojas de contactos.
 - Los `_*.js` reproducen cada fallo apuntado (`_silla`, `_sello`, `_tarde`, `_tarde2`, `_tras-la-jornada`, `_noche`)
   o lo que se descartó (`_tab-constructor`, `_agua`, `_404`).
+
+**7 nov., dónde me quedé (uso al 83 %):** montado 1A 2A 3A 5A (4C sin tocar), con sus pruebas, cinco
+mutantes en rojo y `verify` en verde; commit «WIP:». Falta: el resultado de las pruebas vecinas
+(aro-jornada, ritmo-*, hora-y-medianoche, bloques-cortos, cambio-de-dia, pausa-*), rehacer las fotos
+del después con `_despues.js` (las del scratchpad son de antes del último ajuste del aro) y
+publicarlas en la página de Ez (`pagina-ez.html`, misma URL).

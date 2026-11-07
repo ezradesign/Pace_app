@@ -30,8 +30,13 @@ function ritmoDesfase(ms) {
    el siguiente la cierra. Sin menú no hay nada que abrir. `inicioMs` es cuándo
    empezó el bloque (FocusTimer), para contarlo bien si cambió la hora mientras. */
 function ritmoBloqueTerminado(inicioMs) {
-  var p = ritmoPlan(getState());
+  /* El plan base: el bloque que cruzó la salida aún abre su pausa de cierre aunque ya sea la hora. */
+  var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
+  /* Un Foco por libre no reabre la pausa de cierre (Ez, 2A del 7 nov. 2026): el que va detrás del
+     último bloque, o el que se empezó con el día ya cerrado. Si no, su ventana volvía a ser
+     «Bloque 1 de 1 · hecho» con la pausa de cierre. */
+  if (p.deMas || (p.m.fin != null && ritmoMinutoDe(inicioMs) >= p.m.fin)) return;
   var cambios = { pausa: p.hechos };
   /* s195: RECOLOCAR TAMBIÉN AL TERMINAR (decisión del usuario: «la línea dice la
      verdad» vale también para la pausa abierta, que ya no puede estar en el
@@ -95,4 +100,59 @@ function ritmoBloqueEmpezado(minutos) {
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado });
+/* PASADA LA SALIDA, EL DÍA SE CIERRA (Ez, 1A del 7 nov. 2026). Quien dejaba la jornada en la pausa
+   de las 9:35 y volvía a las 17:40 (salida a las 17:00) leía «Bloque 2 de 9 · Hasta las 17:00» y
+   «Tu pausa · Ahora…», y al pulsar empezaba un bloque hasta las 18:30. Cerrado = pasada `m.fin`
+   (la salida que usó el motor: la tuya, o el reloj de «Una hora» desde que empezó) sin un bloque
+   del plan en marcha (empezado antes de la salida) ni la pausa abierta dentro de su rato: el bloque
+   que cruza la salida acaba y su pausa de cierre se ofrece. Después, por libre. */
+function ritmoPasadaLaSalida(p) {
+  if (!p || !p.m || p.m.fin == null) return false;
+  var t = ritmoAhoraExacto();
+  if (t < p.m.fin) return false;
+  if (p.pausa && t < p.pausa.desde + p.pausa.dur) return false;
+  var desde = ritmoMinutoDe(ritmoFocoEmpezo());
+  return !(desde != null && desde < p.m.fin);
+}
+
+/* QUE LA HOME SE ENTERE DE LA SALIDA. Al pasar la hora no cambia nada en el estado y nadie volvía a
+   pintar la home: con la página abierta, «Bloque 2 de 9» seguía hasta el primer gesto. Cada minuto
+   con la página a la vista, y al volver a ella, si el día acaba de cerrarse se repinta SIN escribir
+   (la misma copia, como al adoptar la de otra pestaña): una pestaña vieja no pisa lo guardado.
+   Se repinta una vez por copia: si nada ha cambiado desde la última, ya se pintó cerrado. */
+var _ritmoCierrePintado = null;
+function ritmoMirarSalida() {
+  try {
+    if (document.visibilityState === 'hidden') return;
+    var s = getState(), p = ritmoPlan(s);
+    if (!p || !p.cerrado || s === _ritmoCierrePintado || typeof paceAdoptarEstado !== 'function') return;
+    _ritmoCierrePintado = Object.assign({}, s);
+    paceAdoptarEstado(_ritmoCierrePintado);
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', ritmoMirarSalida);
+setInterval(ritmoMirarSalida, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
+
+/* Cuándo empezó el Foco en marcha o en pausa (ms), o null: lo dice la clave del aro. */
+function ritmoFocoEmpezo() {
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    if (!v) return null;
+    if (v.endsAt && v.endsAt > Date.now()) return v.endsAt - (Number(v.minutes) || 0) * 60000;
+    return v.pausaMs > 0 && v.dia === new Date().toDateString() ? (v.inicio || null) : null;
+  } catch (e) { return null; }
+}
+
+/* La hora del reloj (minutos del día) de un instante en ms, o null. */
+function ritmoMinutoDe(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return null;
+  var d = new Date(ms);
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+/* Los minutos de foco hechos hoy en el plan: los de sus bloques terminados. */
+function ritmoFocoHecho(p) {
+  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + (f.dur || 0); }, 0) : 0;
+}
+
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutoDe, ritmoFocoHecho });

@@ -175,3 +175,57 @@ test('la tarjeta del móvil dice qué hace el botón, en los dos idiomas', async
   });
   expect(fuera, 'el botón cabe en la tarjeta').toBe(false);
 });
+
+/* PASADA LA SALIDA, EL DÍA SE CIERRA (Ez, 1A del 7 nov. 2026, del recorrido del 6 nov.). Quien
+   dejaba la jornada en la pausa de las 9:45 y volvía a las 17:40 (salida a las 17:00) leía
+   «Bloque 2 de 9 · Hasta las 17:00» y «Tu pausa · Ahora…», y al pulsar empezaba un bloque hasta las
+   18:30. Ahora el aro dice «Tu jornada ya terminó» con lo hecho, la tarjeta «Jornada cerrada», y
+   quien quiera sigue por libre: con la página abierta (a pasos de 5 min, sin gesto) y al recargar. */
+const hastaLas = async (page, hhmm) => {
+  for (let i = 0; i < 200 && await page.evaluate(() => Date.now()) < a(hhmm).getTime(); i++) {
+    await page.clock.fastForward(Math.min(5 * 60 * 1000, a(hhmm).getTime() - await page.evaluate(() => Date.now())));
+    await page.waitForTimeout(20);
+  }
+  await page.waitForTimeout(300);
+};
+async function cerrada(page, porque) {
+  await expect(vis(page, '[data-pace-dial-label]'), porque).toHaveText('Tu jornada ya terminó');
+  await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('45 min de foco');
+  await expect(cta(page)).toHaveText('Empezar foco');
+  await expect(vis(page, '[data-pace-ritmo-estado="hecho"]')).toContainText('Jornada cerrada');
+  await expect(page.locator('[data-pace-sidebar]')).not.toContainText('Tu pausa');
+}
+
+test('pasada la salida el día se cierra, con la página abierta y al recargar, y se sigue por libre', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await hastaLaPausa(page, context);
+  await hastaLas(page, '16:55');
+  await expect(vis(page, '[data-pace-dial-label]'), 'GUARD: antes de la salida el día sigue').toHaveText('Bloque 2 de 9');
+  await hastaLas(page, '17:40');
+  await cerrada(page, 'con la página abierta, el día no se cierra');
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').first().waitFor();
+  await cerrada(page, 'al recargar, el día no se cierra');
+  /* Por libre: el Foco es el de siempre y su ventana también, sin la pausa de cierre. */
+  await cta(page).click();
+  await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Foco manual');
+  await terminarBloque(page);
+  const ventana = overlaySuperior(page);
+  await expect(ventana).toContainText('Ciclo completado');
+  await expect(ventana).not.toContainText('Bloque');
+  expect(errores).toEqual([]);
+});
+
+test('el bloque que empezó antes de la salida acaba con su pausa de cierre, y luego el día se cierra', async ({ page, context }) => {
+  await hastaLaPausa(page, context);
+  await hastaLas(page, '16:50');
+  await cta(page).click();
+  await expect(vis(page, '[data-pace-dial-label]'), 'GUARD: el bloque 2 no es el último').toHaveText('Bloque 2 de 2');
+  await terminarBloque(page);
+  await expect(overlaySuperior(page), 'el bloque que cruza la salida no abre su cierre').toContainText('Bloque 2 de 2 · hecho');
+  await expect(overlaySuperior(page)).toContainText('Para cerrar');
+  await page.keyboard.press('Escape');
+  await hastaLas(page, '17:50');
+  await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Tu jornada ya terminó');
+  await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('1 h 30 min de foco');
+});
