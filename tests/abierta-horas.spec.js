@@ -143,3 +143,96 @@ test('A3 · sin poder guardar, la medianoche no tira lo hecho por la tarde', asy
   const ayer = await page.evaluate(() => (getState().history.days['2026-10-14'] || {}).waterGlasses || 0);
   expect(ayer, 'el día de ayer se archivó desde lo guardado, sin los tres vasos').toBe(3);
 });
+
+/* V1 y V2 (Ez, A y A del 7 nov. 2026). La jornada de 8:00 a 18:00 con la comida a las 14:00. */
+const OCHO = { inicio: 480, comida: 840, comidaDur: 60, salida: 1080 };
+const DIA_OCHO = { fecha: HOY, opcion: 'jornada', desde: 480, cicloBase: 0, cambios: {} };
+const vis = (page, sel) => page.locator(sel).filter({ visible: true });
+
+/* Apunta si la ventana de la pausa llega a salir: que no esté al mirar no prueba que no salió. */
+const vigilarVentana = (page) => page.evaluate(() => {
+  window.__ventana = !!document.querySelector('[data-pace-break-shortcut]');
+  new MutationObserver(() => { if (document.querySelector('[data-pace-break-shortcut]')) window.__ventana = true; })
+    .observe(document.body, { childList: true, subtree: true });
+});
+
+async function empezarA(page, context, hhmm) {
+  await sembrar(context, { ritmo: { horario: OCHO, dia: DIA_OCHO } });
+  await page.clock.install({ time: a(hhmm) });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
+  await expect(vis(page, '[data-pace-cta]')).toHaveText('Pausar foco');
+}
+
+/* Vuelve al frente y espera a que la pausa pendiente se resuelva: abierta o quitada. */
+async function volver(page) {
+  await ponerVisibilidad(page, 'visible');
+  await expect.poll(() => page.evaluate(() => getState().focoPausa)).toBe(null);
+  await page.waitForTimeout(500);
+  return page.evaluate(() => window.__ventana);
+}
+
+test.describe('V1 · si al volver la pausa entera ya pasó, la ventana no sale', () => {
+  test('pestaña de fondo de 8:10 a 12:10: el aro dice «Pausa terminada» y no sale la ventana de las 8:45', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await empezarA(page, context, '08:00');
+    await page.clock.fastForward(10 * 60 * 1000);
+    await ponerVisibilidad(page, 'hidden');
+    await vigilarVentana(page);
+    await page.clock.fastForward(36 * 60 * 1000);   // el bloque acaba de fondo, a las 8:45
+    for (let i = 0; i < 6; i++) await page.clock.fastForward(60 * 1000);   // y su pausa, a las 8:50
+    await expect.poll(() => page.evaluate(() => ritmoPlan(getState()).hechos)).toBe(1);
+    await page.clock.fastForward((3 * 60 + 18) * 60 * 1000);   // las 12:10
+    expect(await volver(page), 'salió «8:45 · Lo que toca ahora» a las 12:10').toBe(false);
+    await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Pausa terminada');
+    await expect(vis(page, '[data-pace-cta]')).toHaveText('Empezar bloque 2');
+    expect(errores).toEqual([]);
+  });
+
+  test('portátil cerrado de 8:20 a 9:20: tampoco sale', async ({ page, context }) => {
+    await empezarA(page, context, '08:00');
+    await page.clock.fastForward(20 * 60 * 1000);
+    await ponerVisibilidad(page, 'hidden');
+    await vigilarVentana(page);
+    await page.clock.fastForward(60 * 60 * 1000);
+    expect(await volver(page)).toBe(false);
+    await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Pausa terminada');
+  });
+
+  test('CONTROL: de vuelta dentro de la pausa (8:47), la ventana sale como siempre', async ({ page, context }) => {
+    await empezarA(page, context, '08:00');
+    await page.clock.fastForward(20 * 60 * 1000);
+    await ponerVisibilidad(page, 'hidden');
+    await vigilarVentana(page);
+    await page.clock.fastForward(27 * 60 * 1000);
+    expect(await volver(page), 'la pausa aún no había pasado').toBe(true);
+    await expect(page.locator('[data-pace-break-ritmo]').first()).toBeVisible();
+  });
+});
+
+test.describe('V2 · el último bloque cierra el día también en el aro', () => {
+  test('acaba a su hora (17:55): «Jornada cerrada», «Seguir por libre» y la ventana sin bloque siguiente', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await empezarA(page, context, '17:10');
+    await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Bloque 1 de 1');
+    await terminarBloque(page);
+    await expect(page.locator('[data-pace-break-ritmo]').first()).toBeVisible();
+    await expect(page.locator('[data-pace-break-acciones]').first()).not.toContainText('Seguir con el bloque');
+    await expect(vis(page, '[data-pace-dial-label]'), 'el aro decía «Foco manual»').toHaveText('Jornada cerrada');
+    await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('45 min de foco');
+    await expect(vis(page, '[data-pace-dial-subtitle]'), 'decía «Ciclo completado»').toHaveText('Lo que queda del día es tuyo');
+    await expect(vis(page, '[data-pace-cta]'), 'ofrecía «Empezar otro ciclo»').toHaveText('Seguir por libre');
+    expect(errores).toEqual([]);
+  });
+
+  test('tapa cerrada de 17:30 a 18:15: sin ventana de «18:15 · Lo que toca ahora» y el día cerrado', async ({ page, context }) => {
+    await empezarA(page, context, '17:10');
+    await page.clock.fastForward(20 * 60 * 1000);
+    await ponerVisibilidad(page, 'hidden');
+    await vigilarVentana(page);
+    await page.clock.fastForward(45 * 60 * 1000);
+    expect(await volver(page), 'salió la pausa de cierre a las 18:15').toBe(false);
+    await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Jornada cerrada');
+    await expect(vis(page, '[data-pace-cta]')).toHaveText('Seguir por libre');
+  });
+});

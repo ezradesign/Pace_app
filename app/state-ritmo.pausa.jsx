@@ -126,6 +126,22 @@ function ritmoPausaEmpieza(fin) {
   });
 }
 
+/* HASTA CUÁNDO DURA LA PARADA DEL BLOQUE QUE ACABA DE TERMINAR, en ms (Ez, V1 A del 7 nov. 2026).
+   Con la pestaña de fondo o el portátil cerrado, la ventana de la pausa salía al volver, horas
+   después, con «8:45 · Lo que toca ahora», y el aro ya decía «Pausa terminada». La ventana pendiente
+   lleva esta hora (`focoPausa.hasta`, FocusTimer.pestanas.jsx) y, si al volver ya pasó, no sale. La
+   pausa y el cierre cuentan desde que acabó el bloque, como el aro (ritmoPausaEmpieza); la comida va
+   a su hora. null sin «A tu ritmo» o tras un Foco por libre de más: la ventana sale como siempre. */
+function ritmoParadaHasta(fin) {
+  var p = typeof ritmoPlanBase === 'function' ? ritmoPlanBase(getState()) : null;
+  if (!p || p.hechos < 1 || p.deMas) return null;
+  var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
+  if (!it || it.tipo === 'foco') return null;
+  var ahora = Date.now();
+  if (it.tipo === 'comida') { var d = new Date(ahora); d.setHours(0, it.desde + it.dur, 0, 0); return d.getTime(); }
+  return (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + it.dur * 60000;
+}
+
 /* La pausa que el aro está contando: { modo, hasta, n, de }, o null. `n de` es el bloque
    que viene («Luego, el bloque 3 de 9»). Mira primero la hora guardada, que es barato:
    el aro lo pregunta en cada segundo. */
@@ -173,5 +189,5 @@ function ritmoPausaCerrarConElDia() {
 
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
-  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia,
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
 });
