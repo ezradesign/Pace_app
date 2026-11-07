@@ -137,10 +137,15 @@ escrito (`sw.js` en el scratchpad: v1 y v2 de `dist/` servidas por turnos en el 
 
 - Hecho y en el commit: los tres arreglos, sus pruebas (5 en verde con el arreglo; rojas contra v0.192.0;
   los tres mutantes, rojos) y las tres filas de DECISIONES.
-- Lanzadas y sin leer el resultado: las pruebas vecinas (`hora-y-medianoche`, `cambio-de-dia`,
-  `estado-no-guarda`, `ritmo-pausa*`, `ritmo-juntos`, `ritmo-larga-sin-sitio`, `aro-jornada`, `ritmo-reloj`,
-  `pestanas-estado`, `inicio-modulos`, `ritmo-aviso`, `cambio-de-hora`, `ritmo`) en el 8880.
-- Falta: `npm run verify`, el banco del service worker sin red y leer esas pruebas vecinas.
+- `npm run verify`: pasa, 0 problemas.
+- Las pruebas vecinas (`hora-y-medianoche`, `cambio-de-dia`, `estado-no-guarda`, `ritmo-pausa*`, `ritmo-juntos`,
+  `ritmo-larga-sin-sitio`, `aro-jornada`, `ritmo-reloj`, `pestanas-estado`, `inicio-modulos`, `ritmo-aviso`,
+  `cambio-de-hora`, `ritmo` y la nueva) en el 8880: 97 de 99 en una pasada de 9,6 min con el PC cargado por
+  otras sesiones. Las dos que cayeron (`ritmo-aviso.spec.js:95` y `ritmo-pausa.spec.js:106`) pasan solas; repetidas
+  tres veces cayeron 4 de 6 en una pasada lenta (5,2 min) y pasaron 6 de 6 en otra normal (1,2 min); con el
+  `index.html` de v0.192.0, 6 de 6 (1,1 min). Lo leo como carga y no como el arreglo, pero **no está
+  demostrado**: que la coordinadora lo mire al pasar la suite entera.
+- Falta: el banco del service worker sin red.
 
 ## Lo que no se cubre
 
