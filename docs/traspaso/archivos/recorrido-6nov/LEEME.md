@@ -20,3 +20,13 @@ mutantes en rojo y `verify` en verde; commit «WIP:». Falta: el resultado de la
 (aro-jornada, ritmo-*, hora-y-medianoche, bloques-cortos, cambio-de-dia, pausa-*), rehacer las fotos
 del después con `_despues.js` (las del scratchpad son de antes del último ajuste del aro) y
 publicarlas en la página de Ez (`pagina-ez.html`, misma URL).
+
+**Pruebas vecinas sobre d7995d2e: 251 en verde y 12 en rojo (21,5 min).** Sin mirar aún, por el uso.
+Lo más probable es que el cierre por la hora (1A) choque con pruebas que siembran un día y ponen el
+reloj cerca o pasada la salida: `ritmo-linea` (7: «al final del día nada se pisa», el resumen que cambia
+de fila, el hueco del retraso; todos `locator.click` que ya no encuentran la línea), `ritmo-panel`
+(móvil, la frase compacta), `ritmo-pausa:106` («Hacer la pausa» entra en el plato), `ritmo-aviso:95`
+(el último bloque cierra el día) y `hora-y-medianoche:111` (CONTROL marzo, 3:10). `ritmo-bloque-siguiente:26`
+cayó con «browser has been closed» (puede ser carga). Hay que decidir caso a caso si la prueba
+describe algo que la 1A cambia a propósito o si el cierre es demasiado pronto (p. ej., `m.fin` de
+«Una hora» o de un día recolocado).
