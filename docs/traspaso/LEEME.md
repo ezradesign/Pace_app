@@ -2,7 +2,25 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de noviembre de 2026, v0.191.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.192.0.
+
+## 7 nov., ~12:50: coordina 5iWBf…; las tres ramas a medias, retomadas; el inglés, comprobado
+
+Coordinadora nueva en 5iWBf… (`local_` de esta sesión en la app; las 5 h al 2 %, la semana al 39 %). Las sesiones de EcLj6…
+siguieron escribiendo hasta las 12:00 tras el relevo: accesibilidad dejó cinco cambios sin guardar, que su sesión nueva recoge.
+Retomadas con sesión nueva en su carpeta, sin worktree propio:
+
+| Rama | Sesión (5iWBf…) | Puerto | Encargo |
+|---|---|---|---|
+| `claude/recorrido-6nov-645d6b` | `recorrido`, `local_90c3fc17…` | 8882 | Las 12 pruebas vecinas en rojo, caso a caso (¿la 1A a propósito o un cierre demasiado pronto?), las fotos del después y la página de Ez publicada de nuevo en esta cuenta |
+| `claude/abierta-horas-7nov-a2419d` | `abierta-horas`, `local_6939ec77…` | 8884-8885 | El banco del service worker sin red, las dos pruebas dudosas (`ritmo-aviso:95`, `ritmo-pausa:106`) y una página para Ez con E1, V1 y V2 |
+| `claude/accesibilidad-7nov-e36d06` | `accesibilidad`, `local_8fc623cd…` | 8886 | Reconstruir y terminar, el informe `docs/audits/accesibilidad-7nov.md` y la página con lo visual |
+
+`guardar-atomico` y la landing siguen como dice el relevo de abajo. **El inglés:** Ez trajo la revisión de ChatGPT de los
+textos en inglés; está entera en `docs/audits/chatgpt-7nov-ingles/revision.md`, comprobada (las 257 claves que cita tienen
+hoy ese texto) y clasificada fila a fila en `comprobado.md`; las cinco preguntas, en su `LEEME.md` y en la página
+EEBgoRtHUytnXGzeTXXftD (solo en 5iWBf). **La hoja de 5iWBf, publicada** (versión 85) con los ids de esta cuenta: para
+publicarla en EcLj6 hay que dar la vuelta a los ocho del relevo de abajo y volver a publicar allí la página del inglés.
 
 ## AL RELEVO (7 nov., ~10:45): EcLj6… al 92 %; se sigue en 5iWBf…. Empieza aquí; manda sobre todo lo de abajo
 

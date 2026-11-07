@@ -53,6 +53,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
   ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
+- **Las cinco letras del inglés** (P1-P5): la revisión de ChatGPT de los textos en inglés, comprobada el 7 nov. (239 tal
+  cual, 15 retocadas, 4 no y 23 que esperan su letra), en `docs/audits/chatgpt-7nov-ingles/` y su página
+  (EEBgoRtHUytnXGzeTXXftD, en 5iWBf). Con sus letras, una rama nueva lo monta después de juntar accesibilidad.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
