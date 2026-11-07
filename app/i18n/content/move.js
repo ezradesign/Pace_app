@@ -71,7 +71,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.calves.code':                        'Calves',
   'extra.calves.s0.name':                     'Calf raises',
   'extra.calves.s0.instruction.setup':        'Seated or standing, feet flat on the floor, hip-width apart.',
-  'extra.calves.s0.instruction.action':       'Raise your heels only as high as you can control. Lower slowly.',
+  'extra.calves.s0.instruction.action':       'Raise your heels only as far as you can control. Lower with control.',
   'extra.calves.s0.instruction.care':         'Small, controlled movement. Hold the desk for support if you need to.',
   'extra.calves.s1.name':                     'Calf raises',
   'extra.calves.s1.instruction.action':       'Slower now: lower in 3 s. Feel the calf on each lift.',
