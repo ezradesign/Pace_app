@@ -21,7 +21,7 @@ const { sembrar, irAlArtefacto } = require('./helpers');
 const PANEL = '[data-pace-tweaks-panel]';
 const TX = {
   es: { abrir: 'Abrir ajustes', datos: 'Copias, borrar y PACE completo', seccion: 'Tus datos', exportar: /Exportar/ },
-  en: { abrir: 'Open settings', datos: 'Backups, data deletion and PACE Complete', seccion: 'Your data', exportar: /Export/ },
+  en: { abrir: 'Open settings', datos: 'Copies, data deletion and PACE Complete', seccion: 'Your data', exportar: /Export/ },
 };
 
 /* Lo que añade Android cuando falta «Alarmas y recordatorios»: una fila con su línea pequeña. */

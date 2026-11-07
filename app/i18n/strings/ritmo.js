@@ -228,7 +228,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.tramo':                   'From {a} to {b}',
     'ritmo.frase.media':             'Half day: from {mediaInicio} to {mediaSalida}.',
     'ritmo.fuera':                   'Your workday is over',
-    'ritmo.libre':                   'I’ll go without a plan today',
+    'ritmo.libre':                   'No plan today',
     'ritmo.volver':                  'Give your day a rhythm',
     'ritmo.cambiar':                 'Change',
     'ritmo.otra':                    'Another',
@@ -286,7 +286,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.motivo.respira':          'Slow down',
     /* A 360 px tienen que caber en una línea: «Shoulders: not moved today» y «Two hours:
        leave the chair» se partían (medido en la app, docs/traspaso/archivos/series-15oct/). */
-    'ritmo.frase.zona':              '{zona}: not moved yet today',
+    'ritmo.frase.zona':              '{zona}: unmoved today',
     'ritmo.frase.sentado':           '{n} min sitting so far',
     'ritmo.frase.larga':             'Two hours: time to stand',
     'ritmo.frase.cierre':            'A gentle finish',

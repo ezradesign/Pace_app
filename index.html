@@ -1950,7 +1950,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.hoy.focus': '{x} of focus',
   'sidebar.hoy.breathe': '{x} breathing',
   'sidebar.hoy.body': '{x} moving',
-  'sidebar.agua.ninguno': '0 of {m} glasses',
+  'sidebar.agua.ninguno': 'Zero glasses of {m}',
   'sidebar.agua.de': '{x} of {m}',
   'sidebar.agua.meta': '{x} today',
   'sidebar.agua.meta.x': 'All {m} glasses',
@@ -2032,7 +2032,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'red.global.texto': 'This screen couldn’t load. Your activity is still saved on this device.',
   'red.global.empezar': 'Start again',
   'red.global.copia': 'Download a copy of your data',
-  'red.global.pie': 'If this happens again, keep the backup. It may help recover your data.',
+  'red.global.pie': 'If this happens again, keep the copy. It may help recover your data.',
   'update.msg': 'A new version of PACE is ready',
   'update.cta': 'Update',
   'update.applying': 'Updating…',
@@ -3477,7 +3477,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.sec.oir': 'Sound',
   'settings.sec.sesiones': 'Sessions',
   'settings.sec.datos': 'Your data',
-  'settings.datos.abrir': 'Backups, data deletion and PACE Complete',
+  'settings.datos.abrir': 'Copies, data deletion and PACE Complete',
   'settings.visita': 'Guided tour',
   'settings.datos.volver': 'Back to settings',
 
@@ -3536,12 +3536,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.water.sub': 'Hydrate',
 
 
-  'settings.data.export': 'Export backup',
+  'settings.data.export': 'Export a copy',
   'settings.data.export.title': 'Download a copy of your data',
-  'settings.data.import': 'Import backup',
+  'settings.data.import': 'Import a copy',
   'settings.data.import.title': 'Replace your data with a copy',
   'settings.data.reset': 'Delete all my data',
-  'settings.data.rescate': 'Download recovery backup',
+  'settings.data.rescate': 'Download a recovery copy',
   'settings.data.rescate.title': 'What could not be read at startup, exactly as it was',
   'settings.license': 'License',
   'settings.license.soon': 'soon',
@@ -3549,12 +3549,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.foot.app': "Everything lives on this phone and doesn't sync with others.",
   'settings.legal.safety': 'Safety',
   'settings.legal.privacy': 'Privacy',
-  'settings.msg.exported': 'Backup downloaded.',
-  'settings.msg.exported.app': 'Backup ready. Choose where to save it.',
+  'settings.msg.exported': 'Copy downloaded.',
+  'settings.msg.exported.app': 'Copy ready. Choose where to save it.',
   'settings.msg.export.err': 'Could not export.',
   'settings.msg.export.cancel': 'Export canceled.',
   'settings.msg.imported': 'Imported — reloading…',
-  'settings.msg.import.invalid': 'This file isn’t a PACE backup.',
+  'settings.msg.import.invalid': 'This file isn’t a PACE copy.',
   'settings.msg.import.json.err': 'That file cannot be read.',
   'settings.msg.import.storage.err': 'Could not save. Your data is untouched.',
   'settings.msg.import.partial': 'Your data was imported, but not your session log. You can import the copy again.',
@@ -3565,7 +3565,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.reset.cuerpo.app': 'Everything PACE keeps on this phone is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
   'settings.reset.si': 'Delete everything',
   'settings.import.titulo': 'Replace your data with the copy?',
-  'settings.import.cuerpo': 'This backup contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+  'settings.import.cuerpo': 'This copy contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
   'settings.import.si': 'Import',
   'settings.import.parcial.titulo': 'Your session log is missing'
 });
@@ -4104,7 +4104,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.tramo': 'From {a} to {b}',
   'ritmo.frase.media': 'Half day: from {mediaInicio} to {mediaSalida}.',
   'ritmo.fuera': 'Your workday is over',
-  'ritmo.libre': 'I’ll go without a plan today',
+  'ritmo.libre': 'No plan today',
   'ritmo.volver': 'Give your day a rhythm',
   'ritmo.cambiar': 'Change',
   'ritmo.otra': 'Another',
@@ -4162,7 +4162,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.motivo.respira': 'Slow down',
 
 
-  'ritmo.frase.zona': '{zona}: not moved yet today',
+  'ritmo.frase.zona': '{zona}: unmoved today',
   'ritmo.frase.sentado': '{n} min sitting so far',
   'ritmo.frase.larga': 'Two hours: time to stand',
   'ritmo.frase.cierre': 'A gentle finish',
@@ -4757,7 +4757,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.wall.sit.s2.instruction.care': 'Choose a height that lets you breathe easy.',
 
   'extra.calves.name': 'Stealth Calf Raises',
-  'extra.calves.desc': 'Under your desk, seated or standing.',
+  'extra.calves.desc': 'Under your desk, heels up and down.',
   'extra.calves.code': 'Calves',
   'extra.calves.s0.name': 'Calf raises',
   'extra.calves.s0.instruction.setup': 'Seated or standing, feet flat on the floor, hip-width apart.',
@@ -32371,7 +32371,7 @@ var MOVE_ROUTINES = {
     items: [
 
 
-    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, sentado o de pie.', min: 2,
+    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, talones arriba y abajo.', min: 2,
       position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,

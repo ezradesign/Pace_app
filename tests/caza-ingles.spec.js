@@ -75,7 +75,7 @@ test('ingles-3 · arriba dice Break y Long break, y con un Foco empezado pregunt
   await tabs.nth(1).click();
   const dialogo = page.getByRole('dialog', { name: 'Switch to a short break?' });
   await expect(dialogo, 'el bloque se perdía sin preguntar').toBeVisible();
-  await expect(dialogo).toContainText('it is lost and does not count');
+  await expect(dialogo).toContainText('Switching now ends it without counting it');
   expect(await modo()).toBe('foco');
   /* «Keep focusing» deja el bloque como estaba. */
   await dialogo.getByRole('button', { name: 'Keep focusing', exact: true }).click();

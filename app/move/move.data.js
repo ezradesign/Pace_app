@@ -155,7 +155,7 @@ var MOVE_ROUTINES = {
     items: [
       /* s118 (B2.3 OLA 1): migrado — fuerza ligera de gemelo, 2 series de reps
          guiadas (cadencia rápida 2 s/rep). */
-      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, sentado o de pie.', min: 2,
+      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, talones arriba y abajo.', min: 2,
         position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,

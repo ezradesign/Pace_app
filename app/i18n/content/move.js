@@ -67,7 +67,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.wall.sit.s2.instruction.care':  'Choose a height that lets you breathe easy.',
 
   'extra.calves.name':                        'Stealth Calf Raises',
-  'extra.calves.desc':                        'Under your desk, seated or standing.',
+  'extra.calves.desc':                        'Under your desk, heels up and down.',
   'extra.calves.code':                        'Calves',
   'extra.calves.s0.name':                     'Calf raises',
   'extra.calves.s0.instruction.setup':        'Seated or standing, feet flat on the floor, hip-width apart.',
