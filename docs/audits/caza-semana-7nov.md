@@ -20,12 +20,13 @@ otro banco que lo compartía (pasó dos veces).
   «Otra», se salta casi todas y el miércoles no abre PACE (portátil cerrado del martes al jueves). El lunes 16
   acepta los cambios de la carta y dice que no a la pregunta de las horas.
 
-## Dónde me quedo (7 nov., uso de la cuenta al 77 %)
+## Dónde me quedo (7 nov., uso de la cuenta al 88 %: paro aquí)
 
 Hecho: el banco; la semana entera de **oficina** y de **salta**, con su lunes 16 (la carta) y su martes 17;
 S1 y S2 arreglados con su prueba (`tests/ritmo-reunion-tarde.spec.js`, roja con cada arreglo quitado: el aro
 en 18:00, y la ventana con «45 minutos») y su fila en `DECISIONES_TECNICAS_VIGENTES.md`; `verify` en verde.
-**Falta, por orden:** arreglar S4 (lo más grave: el motor no puede aprender qué rutina descansa); repetir
+S4 arreglado con su prueba (roja sin el arreglo) y su fila; `verify` en verde tras cada arreglo. Las pruebas de la zona («ritmo-*», `aro-jornada`, `cambio-de-dia`) **no se han pasado aún** con `--workers=1`: es lo primero.
+**Falta, por orden:** la zona con un worker; repetir
 **oficina** limpia (el martes el banco se paró a las 10:52 tras la ventana de siempre y dejó esa página abierta, así
 que el miércoles corrió con dos pestañas: de ahí el resumen del 11 repetido y la pregunta «¿Pongo tu salida a las
 13:15?», que salen de lo que el banco dejó de hacer); la persona **media** (en, 360); Estadísticas y Logros (el banco
@@ -68,7 +69,7 @@ Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano y
   bloque hecho del plan. Comprobado con `_reunion.js`: a las 9:45 el aro dice 15:00, el bloque acaba a las 10:00,
   la reunión sigue de 10:00 a 11:00 y el bloque de las 11:00 sigue de 45.
 
-### S4 · Lo que se cambia con «Otra» llega al resumen del día sin la rutina descartada · bloquea lo que aprende (código, SIN ARREGLAR)
+### S4 · Lo que se cambia con «Otra» llega al resumen del día sin la rutina descartada · bloquea lo que aprende (código) · ARREGLADO
 
 - **Pasos:** el banco de **salta** (`semana.js salta es movil`): «Otra» en la primera pausa el lunes, el martes y el
   jueves, y se hace la nueva. El lunes 16, en el registro: `10:25 pausa hecha extra.legs.standing ×1 []`.
@@ -77,9 +78,11 @@ Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano y
   congelado (`!it.congelado`), y en un día de verdad todo lo pasado está congelado: cada bloque que empieza o acaba
   a una hora que no es la del plan congela lo de antes. El motor cuenta lo descartado para proponer que una rutina
   descanse (`ritmo.motor.js`, `otras[id]`): **nunca puede proponerlo** con datos de uso real.
-- **Arreglo propuesto:** que `ritmoOtra` apunte en el día los ids del plato que se descarta en ese momento
-  (`dia.descartes[clave]`) y que el resumen los use antes que recomponer. Con su prueba: tres días con «Otra» en
-  la misma rutina y la carta del lunes la propone para descansar.
+- **Arreglo:** `ritmoOtra` apunta en el día el id del plato que se descarta al pulsar (`dia.descartes[clave]`) y el
+  resumen lo usa antes que recomponer. `tests/ritmo-otra-resumen.spec.js`: «Otra» en la primera pausa, el bloque 2
+  empezado antes de su hora (la pausa queda en `dia.pasado`) y, al día siguiente, el resumen dice `antes: [la
+  rutina descartada]`. Roja con el arreglo quitado (`antes: []`). Falta la prueba de punta a punta: tres días con
+  «Otra» sobre la misma rutina y la carta del lunes que propone que descanse.
 
 ### S3 · Al acabar la jornada, el «Foco manual» se queda con la duración del último bloque · pulido (por mirar)
 

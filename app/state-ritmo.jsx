@@ -446,12 +446,21 @@ function ritmoPreguntar() { ritmoPausaCerrarConElDia(); ritmoGuardar(function ()
 function ritmoPorLibre() { ritmoPausaCerrarConElDia(); ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
 function ritmoVolver() { ritmoGuardar(function () { return { libre: null, distinto: ritmoHoy() }; }); }
 
+/* Lo que se descarta se apunta al pulsar (`dia.descartes`): el resumen del día no puede sacarlo
+   recomponiendo una parada congelada, y en un día de verdad casi todo lo pasado lo está. */
 function ritmoOtra(claves) {
+  var p = null;
+  try { p = ritmoPlan(getState()); } catch (e) {}
+  var viejos = {};
+  (p ? p.m.items : []).forEach(function (it) { (it.platos || []).forEach(function (pl) { if ((claves || []).indexOf(pl.clave) !== -1) viejos[pl.clave] = pl.id; }); });
   ritmoGuardar(function (r) {
     if (!r.dia) return {};
-    var cambios = Object.assign({}, r.dia.cambios || {});
-    (claves || []).forEach(function (k) { cambios[k] = (cambios[k] || 0) + 1; });
-    return { dia: Object.assign({}, r.dia, { cambios: cambios }) };
+    var cambios = Object.assign({}, r.dia.cambios || {}), descartes = Object.assign({}, r.dia.descartes || {});
+    (claves || []).forEach(function (k) {
+      cambios[k] = (cambios[k] || 0) + 1;
+      if (viejos[k]) descartes[k] = (descartes[k] || []).filter(function (id) { return id !== viejos[k]; }).concat([viejos[k]]).slice(-5);
+    });
+    return { dia: Object.assign({}, r.dia, { cambios: cambios, descartes: descartes }) };
   });
 }
 

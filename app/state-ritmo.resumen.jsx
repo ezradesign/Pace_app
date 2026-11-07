@@ -107,8 +107,10 @@ function ritmoResumenDe(s, dia) {
       reunion: reunion,
       platos: it.platos.map(function (pl) {
         var veces = Number(cambios[pl.clave]) || 0;
+        /* Lo apuntado al pulsar «Otra» (ritmoOtra) manda: recomponer no sirve en lo congelado. */
+        var apuntado = dia.descartes && Array.isArray(dia.descartes[pl.clave]) ? dia.descartes[pl.clave] : null;
         return { modulo: pl.modulo, id: pl.id, otras: veces,
-                 antes: veces && !it.congelado ? ritmoDescartados(s, dia, pl.clave, veces) : [] };
+                 antes: !veces ? [] : apuntado ? apuntado.slice(0, 5) : !it.congelado ? ritmoDescartados(s, dia, pl.clave, veces) : [] };
       }),
     });
   });
