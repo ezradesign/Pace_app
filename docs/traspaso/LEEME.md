@@ -28,6 +28,17 @@ https://claude.ai/artifact/1AzBCEn8XpnhWVKbMJRSdg (EcLj6), en la rama. Sin suite
 Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~16:25)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira cómo dejaron sus ramas las tres sesiones, cierra el recorrido, monta mis letras (E1A V1A V2A y 1B 2B 3B) y republica mi hoja de pasos en esta cuenta.
 ```
 
+**Las tres sesiones, paradas (7 nov., ~16:50):**
+- **Inglés** `claude/textos-ingles-7nov-a227ea`, 646e2508: las 281 filas con 1A-5A, `verify` y las pruebas tocadas en verde. Espera que Ez
+  vea el español nuevo de Respira y Mueve en https://claude.ai/artifact/RaUErpS4TGbnmUcdgwv9Bp (EcLj6; el archivo, en la rama). Choca con
+  accesibilidad solo en `index.html` (rehacer con el build): `montado.md`.
+- **Caza del día de v1** `claude/caza-v1-compra-79e3e4`, 1fbca049: hecha (ver arriba). Dejó **su suite entera corriendo** en su worktree a la
+  vez que la del recorrido: si alguna sale roja, repetir esa sola con el PC tranquilo antes de creerla.
+- **Caza de la semana** `claude/caza-semana-21914d`, 645eba28 (WIP): tres fallos arreglados con su prueba (un bloque empezado tarde antes
+  de una reunión; la ventana tras ese bloque; lo descartado con «Otra» en el resumen del día). Paró al 88 %: faltan las pruebas vecinas con
+  un worker, la persona «media» y la página de Ez. Su «Dónde me quedo», en `docs/audits/caza-semana-7nov.md`.
+- **Recorrido**: la suite iba por la 1005 de 1325 a las 16:50.
+
 1. **Primero, las tres ramas** del bloque de abajo: `git status` y `git log -3` en su worktree (`.claude/worktrees/textos-ingles-7nov-a227ea`,
    `caza-v1-compra-79e3e4` y `caza-semana-21914d`); lo que no tenga commit, un «WIP:» con push sin `PACE_standalone.html`. Se
    retoman con sesión nueva, `cwd` en su carpeta y `use_worktree: false`, leyendo su informe. No más de tres a la vez.
