@@ -117,6 +117,62 @@ medir el envejecido), usado solo en la letra y en el relleno de esos botones.
 tarjetas, por debajo del 4,5. Lo eligió Ez el 16 oct. (`docs/audits/gris-16oct.html`) y se queda; en /premium y
 /beta, 4,4.
 
+## Montado: 1B · 2B · 3B (Ez, 7 nov.)
+
+Ez eligió la B de las tres. **1B:** en el logro sin ganar se apagan el sello (55 %) y el borde de puntos, y el
+nombre y la frase van enteros en el gris de los rótulos; la fecha de la barra, sin transparencia. **2B y 3B:** cada
+módulo tiene un token hondo en `app/tokens.css` (`--breathe-deep`, `--move-deep`, `--extra-deep`, `--hydrate-deep`,
+`--achievement-deep`, `--premium-deep`), con el mismo tono y croma en OKLCH y otra luz, para la letra de color y el
+relleno de los botones con la letra del papel. En los componentes que reciben el color como prop
+(`'var(--breathe)'`), `letraDe()` (`Primitives.jsx`) da el hondo del mismo módulo; en las hojas, `--tone-deep` y
+`--cd`. Dibujos, puntos, filos, barras y fondos suaves siguen en el color de siempre.
+
+**El papel envejecido no existe:** se retiró en la 0.28.9 y el estado viejo migra a crema (`state-core.jsx`).
+Las paletas son crema y oscuro; «auto» elige una de las dos. No hay tercera que medir.
+
+Medido con `scripts/audit/contraste-7nov.js` (21 pantallas, 360 y 1280 px, crema y oscuro; el peor caso de cada
+pieza):
+
+| Pieza | Crema antes → después | Oscuro antes → después |
+|---|---|---|
+| «¿Es tu primera vez? Empieza aquí» (Respira) | 2,80 → 5,56 | 6,99 → 6,99 |
+| «Para ahora» de Mueve / Estira | 3,38 / 3,74 → 5,63 / 5,66 | 4,40 / 3,97 → 5,80 / 5,76 |
+| ⚠ en la tarjeta / en el aviso | 2,32 / 2,50 → 4,62 / 4,98 | 5,03 / 5,51 → igual |
+| «Premium» (tarjeta, lateral, barra) | 3,63 / 3,44 / 3,19 → 5,26 / 4,98 / 4,61 | 6,28 / 6,02 / 5,50 → igual |
+| «Tus rutinas ›» | 3,94 → 5,71 | 6,82 → igual |
+| «+ vaso» de la barra | 2,64 → 4,61 | 3,66 → 4,63 |
+| Títulos de Logros: Maestría, Exploración, La jornada, Estacionales | 2,46-3,38 → 5,49-5,63 | 4,40-6,99 → 5,80-6,99 |
+| Duración en «Antes de empezar» (Mueve / Estira) | 3,38 / 3,74 → 5,63 / 5,66 | 4,40 / 3,97 → 5,80 / 5,76 |
+| Motivo de la pausa («Piernas: sin mover hoy») | 3,11-3,44 → 5,19-5,21 | 3,65-4,05 → 5,30-5,34 |
+| Cifra de Hidrátate / de la cuenta atrás de Respira | 3,21 / 2,80 → 5,60 / 5,56 | 4,62 / 6,99 → 5,84 / 6,99 |
+| **Botón** «Hacer la pausa» (Mueve) / «Empezar» de la pausa (Estira) | 3,38 / 3,74 → 5,63 / 5,66 | 4,40 / 3,97 → 5,80 / 5,76 |
+| **Botón** «Empezar» de Mueve / Estira | 3,38 / 3,74 → 5,63 / 5,66 | 4,40 / 3,97 → 5,80 / 5,76 |
+| **Botón** «Un vaso más» | 3,21 → 5,60 | 4,62 → 5,84 |
+| Logro sin ganar: nombre y frase | 2,02 → 3,88 | 3,17 → 5,51 |
+| La fecha de la barra | 2,60 → 3,88 | 4,48 → 6,85 |
+
+Sobre el papel del modal de Logros y de la barra (`--paper-2`) el gris de los rótulos da 3,9, no el 4,2 que daba
+la página sobre el crema: es el gris que Ez eligió el 16 oct., y se queda. Suspensos por pantalla en crema, antes →
+después: Respira 44 → 29, Mueve 51 → 42, Estira 54 → 48, la pausa 7-9 → 5-7, Hidrátate 15 → 13; en oscuro, Logros
+180 → 13 y todo lo de color de módulo a cero. Lo que queda en rojo es el gris de los rótulos y, fuera de estas tres
+preguntas: botones desactivados (exentos en WCAG: «Empezar sesión» antes de marcar el aviso, las filas atenuadas
+de Ajustes), puntos de adorno, el gris de `/premium/` y `/beta/` (4,36) y un falso aviso del medidor («AHORA» de A
+tu ritmo va encima de su barra, no sobre ella).
+
+**La prueba:** `tests/contraste-modulos.spec.js`, 9 de 9. Las dos primeras leen los tokens (mismo tono y croma,
+letra de 4,5 o más sobre papel, tarjeta y fondo suave, botón de 5,45 o más en crema y 5,7 en oscuro); las otras
+siete miran la app pintada y hacen un censo: ninguna letra ni botón en el color de módulo. Diez mutantes sobre el
+`index.html` compilado, los diez en rojo: token claro (1 cae), token oscuro (2), la letra de la biblioteca (1), el
+botón de la pausa (1), «Un vaso más» (1), «+ vaso» (1), la fecha al 75 % (1), la tarjeta del logro apagada entera
+(1), `letraDe` devolviendo el color de módulo (4) y el «Empezar» de «Antes de empezar» (1).
+
+**Dónde me quedo (WIP, 80 % de las 5 h):** el código, los tokens, el medidor, la prueba y sus mutantes están
+hechos. Falta: (1) las fotos del después con `node scripts/audit/contraste-7nov.fotos.js 8887` (el script está
+escrito y sin correr) y la sección «Montado» de la página de Ez; (2) las 26 `ritmo-*` y las de accesibilidad
+(`accesibilidad-nombres`, `accesibilidad-teclado`, `movimiento-reducido`, `contraste-rotulos`) con
+`PACE_E2E_PORT=8886`, más las que tocan los botones cambiados (`hidratate-botones`, `logros-capas`,
+`pausa-sin-repetir`, `aviso-antes-de-empezar`); (3) `npm run verify`, que aún no ha corrido sobre esto. La paleta ya está en `DESIGN_SYSTEM.md` y la regla, arriba en `DECISIONES_TECNICAS_VIGENTES.md`.
+
 ## Lo que esta auditoría no cubre
 
 - **Un lector de pantalla de verdad.** Se miró lo que Chromium entrega al lector (el árbol de accesibilidad), no
@@ -128,7 +184,7 @@ tarjetas, por debajo del 4,5. Lo eligió Ez el 16 oct. (`docs/audits/gris-16oct.
   la pausa de cada ejercicio, no. Respira se miró en la preparación y, con menos movimiento, en la retención.
 - **El contraste sobre la luz del sol de la home.** El medidor compone el fondo de cada caja, no lo que pinta
   detrás otra capa (la luz del aro, los degradados): lo que va encima de la luz se miró en las fotos.
-- **El papel envejecido.** Se midieron crema y oscuro; la tercera paleta no.
+- **El papel envejecido** no se midió porque no existe: se retiró en la 0.28.9.
 - **Las páginas sueltas en oscuro** salen igual que en claro en lo que importa (el gris de los rótulos), y no se
   midieron una a una.
 - **Lo que no se lee con los ojos ni con el teclado:** voz y control por voz, subtítulos (la app no tiene vídeo)

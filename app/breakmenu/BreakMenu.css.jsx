@@ -11,7 +11,9 @@
    rellenas de color, como antes (Ez).
 
    El color va en `--c`, que pone cada elemento: el del MÓDULO de la rutina, no el
-   terracota de Respira para todo, que era lo que desentonaba.
+   terracota de Respira para todo, que era lo que desentonaba. El filo y el glifo van en
+   `--c`; la letra de color y el relleno del botón, en `--cd`, su hondo (Ez, 2B y 3B · 7 nov.
+   2026): en `--c`, «Hacer la pausa» daba 2,8-3,7 a 1 con la letra del papel encima.
 
    Hoja inyectada una vez, patrón de `library.css.jsx`. Ni un backtick dentro del
    template literal: el build aborta. */
@@ -21,7 +23,7 @@
   s.id = 'pace-break-css';
   s.textContent = `
 .pace-break-plato {
-  --c: var(--extra);
+  --c: var(--extra); --cd: var(--extra-deep);
   background: var(--paper-2); border-radius: var(--r-md); border-left: 3px solid var(--c);
   padding: 14px 16px 14px 14px; display: grid; grid-template-columns: 60px minmax(0, 1fr);
   gap: 0 16px; align-items: center; color: var(--ink);
@@ -33,7 +35,7 @@
 .pace-break-glifo-mod > svg { width: 74%; height: 74%; }
 .pace-break-motivo {
   font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
-  color: var(--c); line-height: 1.35;
+  color: var(--cd); line-height: 1.35;
 }
 .pace-break-nombre {
   font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 26px;
@@ -47,8 +49,8 @@
   line-height: 1; white-space: nowrap;
   transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease);
 }
-.pace-break-llena { --c: var(--extra); background: var(--c); color: var(--paper); border: 1px solid var(--c); }
-.pace-break-llena:hover { background: color-mix(in srgb, var(--c) 86%, var(--ink)); }
+.pace-break-llena { --cd: var(--extra-deep); background: var(--cd); color: var(--paper); border: 1px solid var(--cd); }
+.pace-break-llena:hover { background: color-mix(in srgb, var(--cd) 86%, var(--ink)); }
 .pace-break-tonal { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line-2); }
 .pace-break-tonal:hover { border-color: var(--ink-3); }
 .pace-break-pildora:focus-visible, .pace-break-agua:focus-visible, .pace-break-saltar:focus-visible {

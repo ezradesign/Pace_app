@@ -91,7 +91,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
             onClick={onConfirm}
             style={{
               padding: '8px 18px', borderRadius: 'var(--r-sm)',
-              background: 'var(--breathe)', border: 'none',
+              background: 'var(--breathe-deep)', border: 'none',   /* el hondo: letra clara encima (Ez, 3B) */
               color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
             }}
           >

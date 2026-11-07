@@ -184,7 +184,8 @@
 .pace-rt-nodo.pace-rt-toca { cursor: pointer; }
 .pace-rt-nodo.pace-rt-toca:hover { transform: scale(1.12); background: color-mix(in srgb, var(--c) 12%, var(--paper)); }
 .pace-rt-nodo.pace-rt-ahora { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--paper)); }
-.pace-rt-nodo .pace-rt-ahora-tag { left: 50%; transform: translateX(-50%); bottom: 27px; color: var(--c); }
+/* En claro, el hondo del módulo (Ez, 2B · 7 nov. 2026): en --c, a 9 px no llegaba. */
+.pace-rt-nodo .pace-rt-ahora-tag { left: 50%; transform: translateX(-50%); bottom: 27px; color: var(--cd, var(--c)); }
 /* El de una PAUSA va del color de su módulo, que en oscuro se leía a 3,4 (Estira) y 3,7
    (Mueve): se mezcla con la tinta como el del bloque, solo en oscuro (Ez, 15 oct. 2026). */
 [data-palette="oscuro"] .pace-rt-nodo .pace-rt-ahora-tag { color: color-mix(in srgb, var(--c) 72%, var(--ink)); }

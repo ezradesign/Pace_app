@@ -120,7 +120,7 @@ function OnbChoice({ label, sub, accent, selected, onSelect }) {
           display: 'block',
           fontFamily: 'var(--font-display)', fontStyle: 'italic',
           fontSize: 20, fontWeight: 500, lineHeight: 1.15,
-          color: selected ? accent : 'var(--ink)',
+          color: selected ? letraDe(accent) : 'var(--ink)',   /* letra de color: el hondo (Ez, 2B) */
           transition: 'color 180ms',
         }}>{label}</span>
         <span style={{

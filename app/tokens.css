@@ -167,6 +167,20 @@
   --premium: #9C6B2E;
   --premium-soft: rgba(156, 107, 46, 0.12);
 
+  /* EL COLOR HONDO DE CADA MÓDULO (Ez, 2B y 3B · 7 nov. 2026). El color de módulo es claro para
+     ser dibujo, y como letra sobre el crema no llegaba al mínimo de lectura (Respira 2,3 a 1,
+     Logros 2,1). Esta es su versión para la LETRA de color (títulos, rótulos y marcas) y para el
+     RELLENO de los botones de color con la letra del papel encima: mismo tono y croma en OKLCH,
+     menos luz. Da 4,6 a 1 o más sobre el papel, las tarjetas y su fondo suave, y el botón, 5,5.
+     Nunca en dibujos, puntos, filos ni fondos suaves: ahí sigue el color de siempre. Lo vigila
+     tests/contraste-modulos.spec.js. */
+  --breathe-deep: #93492D;
+  --move-deep: #75582C;
+  --extra-deep: #4F5E72;
+  --hydrate-deep: #396373;
+  --achievement-deep: #7B5900;
+  --premium-deep: #81520D;
+
   /* TIPOGRAFÍA */
   --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
   --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
@@ -275,6 +289,15 @@
      3,9:1; al 8 % da 4,8. */
   --premium: #C99A5B;
   --premium-soft: rgba(201, 154, 91, 0.08);
+  /* El color hondo en oscuro es MÁS CLARO que el de módulo: Mueve, Estira e Hidrátate daban
+     3,2-4,4 como letra y sus botones 4,0-4,4. Respira, Logros y Premium ya pasaban y se
+     quedan en su color; se escriben igual para que el claro no se cuele aquí. */
+  --breathe-deep: #D99477;
+  --move-deep: #B09063;
+  --extra-deep: #8696AB;
+  --hydrate-deep: #719CAE;
+  --achievement-deep: #B8934A;
+  --premium-deep: #C99A5B;
   /* Las horas del sol en oscuro (s158). Sobre papel oscuro la misma luz
      necesita algo más de cuerpo para no desaparecer, y los tonos suben de
      valor: un azul profundo de paleta clara sobre #1d1a14 sería un agujero

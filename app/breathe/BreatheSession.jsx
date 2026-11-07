@@ -295,12 +295,12 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         routine={displayRoutine}
         onExit={onExit}
         atmosphere={atmo}
-        headerExtra={<div data-pace-breathe-round-label style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
+        headerExtra={<div data-pace-breathe-round-label style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe-deep)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
         <div style={{ textAlign: 'center', maxWidth: 520 }}>
           <style>{`@keyframes pace-hold-pulse { from { transform: scale(0.96); opacity: 0.85; } to { transform: scale(1.05); opacity: 1; } }`}</style>
-          <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 30, fontWeight: 500 }}>
+          <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe-deep)', marginBottom: 30, fontWeight: 500 }}>
             {t('session.hold')}
           </div>
           {/* s139 — banding: esta es LA pantalla de la captura del usuario
@@ -417,7 +417,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         {anyLongPhase && (
           <div data-pace-breathe-countdown={showCountdown ? String(remaining) : ''} style={{
             ...displayItalic,
-            fontSize: 28, color: 'var(--breathe)',
+            fontSize: 28, color: 'var(--breathe-deep)',
             fontVariantNumeric: 'tabular-nums', marginTop: 4,
             visibility: showCountdown ? 'visible' : 'hidden',
           }}>{showCountdown ? remaining : '0'}</div>

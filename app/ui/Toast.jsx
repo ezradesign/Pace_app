@@ -71,7 +71,7 @@ function SelloEnAro({ toast, t }) {
       position: 'fixed', left: toast.aro.x, top: toast.aro.y,
       transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
       display: 'flex', alignItems: 'center',
-      whiteSpace: 'nowrap', color: 'var(--achievement)',
+      whiteSpace: 'nowrap', color: 'var(--achievement-deep)',   /* letra de color: el hondo (Ez, 2B) */
       fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
       animation: 'pace-fade-in 320ms var(--ease)',
       opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out',

@@ -50,8 +50,8 @@ function PathHydrateStep({ step, onExit }) {
         data-pace-cta
         onClick={handleDrink}
         style={Object.assign({}, btnBase, {
-          background: 'var(--hydrate)',
-          border: '1px solid var(--hydrate)',
+          background: 'var(--hydrate-deep)',   /* relleno de color con letra clara: el hondo (Ez, 3B) */
+          border: '1px solid var(--hydrate-deep)',
           color: 'var(--paper)',
         })}
       >
@@ -68,7 +68,7 @@ function PathHydrateStep({ step, onExit }) {
           fontFamily: "'EB Garamond', Georgia, serif",
           fontStyle: 'italic',
           fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
-          color: 'var(--hydrate)',
+          color: 'var(--hydrate-deep)',
         }}>
           {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
         </div>

@@ -15,7 +15,7 @@ function HydrateTracker({ open, onClose }) {
           fontStyle: 'italic',
           fontSize: 96, fontWeight: 400, lineHeight: 1,
           paddingBottom: '0.12em',
-          color: 'var(--hydrate)',
+          color: 'var(--hydrate-deep)',   /* la cifra es letra: el hondo (Ez, 2B) */
         }}>
           {today}<span style={{ color: 'var(--ink-3)', fontSize: 40 }}> / {goal}</span>
         </div>
@@ -35,7 +35,7 @@ function HydrateTracker({ open, onClose }) {
               display: 'grid', placeItems: 'end center',
               padding: '0 0 8px',
               fontSize: 10,
-              color: i < today ? 'var(--hydrate)' : 'var(--ink-3)',
+              color: i < today ? 'var(--hydrate-deep)' : 'var(--ink-3)',
               letterSpacing: '0.1em',
               fontWeight: 500,
               transition: 'all 200ms',
@@ -67,8 +67,9 @@ function HydrateTracker({ open, onClose }) {
       {/* Un botón nunca parte su texto: si los dos no caben en una fila, el segundo baja entero. */}
       <div data-pace-hidr-acciones style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
         <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md" style={{ whiteSpace: 'nowrap' }}>{t('hydrate.less')}</Button>
+        {/* Relleno de color con la letra del papel: el hondo de Hidrátate (Ez, 3B · 7 nov. 2026). */}
         <Button onClick={() => { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} }} icon="+" size="md"
-          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)', whiteSpace: 'nowrap' }}>{t('hydrate.more')}</Button>
+          style={{ background: 'var(--hydrate-deep)', borderColor: 'var(--hydrate-deep)', whiteSpace: 'nowrap' }}>{t('hydrate.more')}</Button>
       </div>
 
       <Divider style={{ margin: '24px 0 16px' }} />

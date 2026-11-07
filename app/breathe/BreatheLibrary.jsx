@@ -162,7 +162,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
           width: 40, height: 40, borderRadius: 'var(--r-md)',
           background: 'var(--breathe-soft)',
           display: 'grid', placeItems: 'center',
-          color: 'var(--breathe)', fontSize: 20, flexShrink: 0,
+          color: 'var(--breathe-deep)', fontSize: 20, flexShrink: 0,
         }} aria-hidden="true">⚠</div>
         <div>
           <div className="pace-meta" style={{ marginBottom: 4 }}>{t('breathe.safety.before')}</div>

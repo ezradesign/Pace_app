@@ -121,7 +121,7 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-2)'; }}
             >
               <span style={{ display: 'block', textAlign: 'center', padding: '8px 14px' }}>
-                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</span>
+                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: letraDe(accent) }}>+</span>
                 <span style={{ display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.draft.seguir')}</span>
                 <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
                   {[borrador.name.trim(),
@@ -142,7 +142,7 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
               {/* Un BOTÓN y no un div: con el teclado no se llegaba y el lector de pantalla no
                   lo anunciaba. Dentro solo van spans (un <p> no vale dentro de un botón). */}
               <span style={{ display: 'block', textAlign: 'center', padding: '8px 14px' }}>
-                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</span>
+                <span style={{ display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: letraDe(accent) }}>+</span>
                 <span style={{ display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.create')}</span>
                 {routines.length === 0 && (
                   <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
@@ -211,9 +211,9 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
           {t('custom.code')}
         </span>
         {locked ? (
-          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}><PaceCandado />{t('lib.premium')}</span>
+          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium-deep)', fontWeight: 500 }}><PaceCandado />{t('lib.premium')}</span>
         ) : (
-          <span style={{ ...displayItalic, fontSize: 16, color: accent, fontWeight: 500 }}>{minutos} min</span>
+          <span style={{ ...displayItalic, fontSize: 16, color: letraDe(accent), fontWeight: 500 }}>{minutos} min</span>
         )}
       </div>
     </Card>
@@ -234,7 +234,7 @@ const customRoutinesStyles = {
     transition: 'all 220ms var(--ease)',
   },
   candado: {
-    ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500,
+    ...displayItalic, fontSize: 16, color: 'var(--premium-deep)', fontWeight: 500,
     background: 'none', border: 0, padding: 0, cursor: 'pointer',
   },
   editBtn: {

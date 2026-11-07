@@ -219,7 +219,8 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   return (
     /* Sin nombre, el lector decía «diálogo» a secas: se llama como su título. */
     <Modal open={open && !enPausa} onClose={onClose} maxWidth={ancho} ariaLabel={title}>
-      <div className="pace-lib" style={{ '--tone': tone }}>
+      {/* `--tone` pinta los filos y los dibujos; `--tone-deep`, la letra de color (Ez, 2B). */}
+      <div className="pace-lib" style={{ '--tone': tone, '--tone-deep': letraDe(tone) }}>
         <div className="pace-lib-cuerpo">
           {/* LATERAL: sólo escritorio (la hoja lo oculta por debajo de 769 px).
               Lleva los filtros en vertical, «Tus rutinas» y «Para ahora», y así

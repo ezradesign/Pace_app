@@ -90,7 +90,7 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
   const wrapStyle = {
     ...sessionFeedbackStyles.wrap,
     // El hover de los chips toma el acento del módulo vía esta custom prop.
-    '--pace-fb-accent': accent,
+    '--pace-fb-accent': letraDe(accent),   /* pinta letra y filo: el hondo (Ez, 2B) */
   };
 
   return (

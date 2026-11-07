@@ -102,7 +102,7 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
         + (esViaje ? ' pace-lib-card-viaje' : '')}
       data-pace-lib-card={routine.id}
       data-locked={isLocked ? '1' : undefined}
-      style={{ '--tone': color }}
+      style={{ '--tone': color, '--tone-deep': letraDe(color) }}
     >
       {esViaje && typeof window.ABBreathe === 'function' && (
         /* Los pulmones del modulo, GRANDES y al fondo. Es el mismo dibujo que

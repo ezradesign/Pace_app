@@ -85,7 +85,7 @@ function Achievements({ open, onClose }) {
         return (
           <div key={cat} data-pace-ach-cat={cat} style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{t(meta.labelKey)}</h3>
+              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: letraDe(meta.color) }}>{t(meta.labelKey)}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
@@ -107,8 +107,10 @@ function Achievements({ open, onClose }) {
 
 /* Dos estados del sello:
    1. unlocked         → borde color sólido, opacidad 1, descripción visible.
-   2. locked           → borde dashed gris, opacidad 0.55, descripción visible
-                         (guía al usuario: "esto se puede cazar").
+   2. locked           → borde dashed gris y el sello al 55 %; el nombre y la frase,
+                         enteros en el gris de los rótulos (guía al usuario: "esto se
+                         puede cazar", y se lee qué es y cómo se gana). Hasta el 7 nov.
+                         iba al 55 % la tarjeta entera y la letra daba 2,0 a 1 (Ez, 1B).
    Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
    título "Secreto") — su mecánica es intriga, no señalización. */
 function Seal({ achievement, unlocked, color }) {
@@ -123,7 +125,8 @@ function Seal({ achievement, unlocked, color }) {
   const isSecret = a.secret && !unlocked;
 
   const borderStyle = unlocked ? 'solid' : 'dashed';
-  const borderColor = unlocked ? color : 'var(--line)';
+  /* Apagado = lo que antes hacía la opacidad de la tarjeta, solo en el borde y el sello. */
+  const borderColor = unlocked ? color : 'color-mix(in srgb, var(--line) 55%, transparent)';
   const opacity = unlocked ? 1 : 0.55;
 
   return (
@@ -163,7 +166,6 @@ function Seal({ achievement, unlocked, color }) {
         border: `1px ${borderStyle} ${borderColor}`,
         borderRadius: 'var(--r-md)',
         background: unlocked ? 'var(--paper)' : 'transparent',
-        opacity,
         position: 'relative',
         transition: 'all 220ms',
         cursor: 'default',
@@ -172,7 +174,8 @@ function Seal({ achievement, unlocked, color }) {
       title={tR('ach.item.' + a.id + '.desc', a.desc)}
     >
       {/* Sello circular */}
-      <div style={{
+      <div data-pace-ach-sello style={{
+        opacity,
         width: 56, height: 56,
         borderRadius: '50%',
         border: `1.2px solid ${unlocked ? color : 'var(--line-2)'}`,

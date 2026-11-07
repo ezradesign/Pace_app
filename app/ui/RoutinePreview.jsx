@@ -265,9 +265,10 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
           {t('preview.aviso')}
         </p>
 
+        {/* El relleno en el hondo del módulo: con su color, «Empezar» daba 3,4 a 1 en Mueve (Ez, 3B). */}
         <button onClick={onStart} data-pace-cta style={{
           width: '100%', marginTop: 6, padding: '13px 20px',
-          background: accent, color: 'var(--paper)', border: 'none',
+          background: letraDe(accent), color: 'var(--paper)', border: 'none',
           borderRadius: 'var(--r-pill)', cursor: 'pointer', minHeight: 44,
           fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, fontWeight: 500,
         }}>{t('preview.start')}</button>

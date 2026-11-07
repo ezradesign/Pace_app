@@ -29,6 +29,15 @@ const displayItalic = {
   fontStyle: 'italic',
 };
 
+/* LA LETRA DE COLOR (Ez, 2B · 7 nov. 2026). Los colores de módulo viajan como prop
+   ('var(--breathe)') y el mismo valor pinta el dibujo y el texto de al lado. Para el texto, y
+   para el relleno de un botón con letra clara, va el hondo del mismo módulo (`--breathe-deep`,
+   tokens.css); cualquier otro color pasa igual. */
+function letraDe(color) {
+  const m = /^var\(--(breathe|move|extra|hydrate|achievement|premium)\)$/.exec(String(color || '').trim());
+  return m ? 'var(--' + m[1] + '-deep)' : color;
+}
+
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno, capa = 100 }) {
   const { t } = useT();
   /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
@@ -168,6 +177,7 @@ function Card({ children, onClick, accent, padded = true, style = {}, hover = fa
 }
 
 function Tag({ children, color = 'var(--ink-2)', muted = false }) {
+  const tono = letraDe(color);   /* la marca es letra: en el hondo de su módulo (Ez, 2B) */
   return (
     <span style={{
       display: 'inline-flex',
@@ -176,8 +186,8 @@ function Tag({ children, color = 'var(--ink-2)', muted = false }) {
       letterSpacing: '0.12em',
       textTransform: 'uppercase',
       borderRadius: 'var(--r-pill)',
-      border: `1px solid ${muted ? 'var(--line)' : color}`,
-      color: muted ? 'var(--ink-3)' : color,
+      border: `1px solid ${muted ? 'var(--line)' : tono}`,
+      color: muted ? 'var(--ink-3)' : tono,
       fontWeight: 500,
       background: 'transparent',
     }}>{children}</span>
@@ -206,10 +216,12 @@ function Button({ children, onClick, variant = 'primary', size = 'md', icon, dis
       color: 'var(--ink-2)',
       border: '1px solid transparent',
     },
+    /* El relleno de color con la letra del papel va en el hondo del módulo (Ez, 3B · 7 nov.
+       2026): con --breathe, «Empezar sesión» daba 2,8 a 1. */
     terracota: {
-      background: 'var(--breathe)',
+      background: 'var(--breathe-deep)',
       color: 'var(--paper)',
-      border: '1px solid var(--breathe)',
+      border: '1px solid var(--breathe-deep)',
     },
   };
   return (
@@ -241,7 +253,7 @@ function Button({ children, onClick, variant = 'primary', size = 'md', icon, dis
         if (variant === 'primary') e.currentTarget.style.background = 'var(--focus-2)';
         if (variant === 'secondary') e.currentTarget.style.background = 'var(--paper-2)';
         if (variant === 'ghost') e.currentTarget.style.background = 'var(--paper-2)';
-        if (variant === 'terracota') e.currentTarget.style.background = 'var(--breathe-2)';
+        if (variant === 'terracota') e.currentTarget.style.background = 'color-mix(in srgb, var(--breathe-deep) 78%, var(--ink))';
       }}
       onMouseLeave={(e) => {
         if (disabled) return;
@@ -276,8 +288,9 @@ function Meta({ children, style = {} }) {
 
 /* PremiumSeal — sello de contenido de pago (s87 · bloque Contenido+Premium F3a).
    Chip inline reutilizable: lo coloca el consumidor (RoutineCard hoy; Tweaks /
-   Caminos en F3b). Usa --premium / --premium-soft. `label` permite override sin
-   depender de i18n; por defecto lee la clave 'premium.seal'. */
+   Caminos en F3b). La letra y el filo, en --premium-deep (Ez, 2B); el fondo, en
+   --premium-soft. `label` permite override sin depender de i18n; por defecto lee
+   la clave 'premium.seal'. */
 function PremiumSeal({ label, style = {} }) {
   const { t } = useT();
   return (
@@ -286,8 +299,8 @@ function PremiumSeal({ label, style = {} }) {
       padding: '3px 9px',
       fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
       borderRadius: 'var(--r-pill)',
-      border: '1px solid var(--premium)',
-      color: 'var(--premium)',
+      border: '1px solid var(--premium-deep)',
+      color: 'var(--premium-deep)',
       background: 'var(--premium-soft)',
       fontWeight: 600,
       ...style,
@@ -387,4 +400,4 @@ function PaceConIcono({ texto }) {
   return <React.Fragment>{m[3]} <span aria-hidden="true">{m[4]}</span></React.Fragment>;
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, paceSinIcono, PaceConIcono });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, paceSinIcono, PaceConIcono });

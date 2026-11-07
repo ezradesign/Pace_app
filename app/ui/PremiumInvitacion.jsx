@@ -279,12 +279,12 @@ const premiumInvitacionStyles = {
   v1: { ...displayItalic, fontSize: 18, color: 'var(--ink)', margin: '0 0 14px' },
   ancho: { width: '100%', justifyContent: 'center', borderRadius: 'var(--r-pill)' },
   enlace: { display: 'block', margin: '14px auto 0', background: 'none', border: 0, cursor: 'pointer',
-    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+    ...displayItalic, fontSize: 16, color: 'var(--premium-deep)' },
   etiqueta: { display: 'block', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 6 },
   campo: { width: '100%', boxSizing: 'border-box', padding: '10px 12px', marginBottom: 10, fontSize: 14,
     fontFamily: 'var(--font-mono)', color: 'var(--ink)', background: 'var(--paper-2)',
     border: '1px solid var(--line-2)', borderRadius: 'var(--r-sm)' },
-  error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 },
+  error: { fontSize: 13, color: 'var(--breathe-deep)', margin: '0 0 10px', lineHeight: 1.45 },
   titulo: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' },
   /* La compra: los dos botones iguales, lado a lado si caben y uno sobre otro si no. */
   par: { display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' },
@@ -294,7 +294,7 @@ const premiumInvitacionStyles = {
     ...displayItalic, fontSize: 15, color: 'var(--ink-2)' },
   /* Un enlace con la letra de los botones-enlace de la hoja. */
   enlaceA: { display: 'block', width: 'fit-content', margin: '14px auto 0', textAlign: 'center', textDecoration: 'none',
-    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+    ...displayItalic, fontSize: 16, color: 'var(--premium-deep)' },
   tuyas: { fontSize: 13, color: 'var(--ink-2)', margin: '0 0 6px' },
   mas: { fontSize: 13, color: 'var(--ink-3)', margin: '-8px 0 16px' },
 };
