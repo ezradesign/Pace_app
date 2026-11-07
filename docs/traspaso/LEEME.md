@@ -11,8 +11,8 @@ ramas (sin choques), la novedad `jornada-cerrada` PRIMERA en `app/shell/novedade
 `tests/sobre-hoja.spec.js` al día (quien empieza el 8 nov. no la ve), `npm run bump -- 0.193.0`, build, CHANGELOG y STATE. La
 suite entera con dos workers: 1319 en verde y 4 rojas, todas del inglés: la hoja del día de v1 en inglés (cambio a propósito,
 prueba al día) y `extra.calves.s0` en inglés, que volvía a decir «as high as you can» y «Lower slowly» en un paso de 1 s (ahora
-«only as far as you can control. Lower with control.», como el español). Las cuatro, en verde; `verify` en verde. **Falta:**
-ver el CI de c7d23fff (`gh run list -b main`) y, si sale rojo, arreglarlo. La hoja, versión 89 en 5iWBf.
+«only as far as you can control. Lower with control.», como el español). Las cuatro, en verde; `verify` en verde. **El CI de
+c7d23fff, en verde entero** (verify, los dos trozos de e2e, Safari, Android e iOS). La hoja, versión 89 en 5iWBf.
 
 **Las tres sesiones, paradas al 80 %** (todo en origin): `abierta-horas` con E1 A, V1 A y V2 A montados sobre el recorrido
 (97b8db95; `verify` y la zona en verde; falta la suite entera y las fotos del después en su página); `contraste` con 1B 2B 3B
