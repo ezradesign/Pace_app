@@ -25,6 +25,10 @@ El detalle fila a fila, con el texto que queda, en `comprobado.md`: **239 se pon
 
 ## Lo que decide Ez (la página: ver la hoja de pasos)
 
+**Ez eligió 1A 2A 3A 4A 5A (7 nov. 2026, ~13:00)**: las cinco recomendadas. Inglés americano; «The antidote to
+sitting» (y «to desk work», «to typing»); las promesas de Respira, fuera en los dos idiomas; «sin equipo» y «nadie se
+entera», corregidos en los dos; y las promesas de lo gratis se quedan, mejorando solo el inglés.
+
 | | Pregunta | Recomendada |
 |---|---|---|
 | P1 | Inglés americano (A) o británico (B), igual en toda la app y la web | **A**: es lo que ya hay y la ficha de Play; cambian tres palabras en vez de veinticinco |
@@ -35,7 +39,11 @@ El detalle fila a fila, con el texto que queda, en `comprobado.md`: **239 se pon
 
 ## Para montarlo
 
-Una rama nueva sobre `main`, cuando Ez dé sus letras. Las claves no cambian nunca (las de contenido son ids:
+Una rama nueva sobre `main` (`claude/textos-ingles-7nov`). El encargo: poner `comprobado.md` tal cual, con la columna
+«Queda» como texto final, y en las filas «Ez Pn» la letra de arriba; con P1 = A, lo británico de las propuestas va en
+americano (color theme, practice, catalog, center, license, analog, toward) y las tres palabras británicas que hay hoy
+(«centre», «catalogue», «energising») también. Con P3 = A y P4 = A, el español nuevo se escribe con el mismo criterio
+que el inglés, sin prometer efectos ni absolutos, y va a la página de Ez para que lo vea antes de juntar. Las claves no cambian nunca (las de contenido son ids:
 `custom.ex.Shrug + round.name` es el alias de las rutinas guardadas, y el `code: 'Equilibrio'` de Respira
 se queda); solo el texto. Si P3 o P4 son A, el español va en los datos (`app/breathe/BreatheLibrary.jsx`,
 `app/move/move.data.js`) y en `CONTENT.md`. Lo que pide comprobarse a 360 px: las etiquetas de fase de Respira
